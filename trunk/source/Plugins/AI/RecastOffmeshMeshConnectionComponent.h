@@ -34,7 +34,7 @@ namespace GASS
 		virtual void OnInitialize();
 		Vec3 GetStartPos() const {return m_StartPos;}
 		Vec3 GetEndPos() const {return m_EndPos;}
-		ADD_ATTRIBUTE(std::string,Mode)
+		ADD_PROPERTY(std::string,Mode)
 		float GetRadius() const;
 	protected:
 		void OnStartNodeTransformation(TransformationNotifyMessagePtr message);

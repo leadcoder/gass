@@ -72,7 +72,7 @@ namespace GASS
 		ext.push_back("tga");
 
 		ComponentFactory::GetPtr()->Register("GrassLoaderComponent",new Creator<GrassLoaderComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("GrassLoaderComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLoaderComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Can only be specified in template",PF_VISIBLE)));
 		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap,

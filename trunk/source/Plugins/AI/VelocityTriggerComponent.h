@@ -25,9 +25,9 @@ namespace GASS
 		double GetDelay() const;
 		double GetVelocity() const;
 
-		ADD_ATTRIBUTE(Vec2,RandomDelay)
-		ADD_ATTRIBUTE(Vec2,RandomVelocity)
-		ADD_ATTRIBUTE(bool,Enable)
+		ADD_PROPERTY(Vec2,RandomDelay)
+		ADD_PROPERTY(Vec2,RandomVelocity)
+		ADD_PROPERTY(bool,Enable)
 
 		bool m_Initialized;
 	};

@@ -53,7 +53,7 @@ namespace GASS
 	void SceneObject::RegisterReflection()
 	{
 		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Container for all components", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Container for all components", OF_VISIBLE)));
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID);
 		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Globally Unique IDentifier",PF_VISIBLE)));

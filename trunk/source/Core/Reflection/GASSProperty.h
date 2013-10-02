@@ -18,12 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
-
 #ifndef GASS_PROPERTY_H
 #define GASS_PROPERTY_H
 
@@ -92,7 +86,7 @@ namespace GASS
 	/**
 	Template class used to define a property of a specific type.
 	@param OwnerType class that has the getter and setter functions
-	@param T Poperty type
+	@param T Property type
 	*/
 	template <class OwnerType, class T>
 	class Property : public TypedProperty<T>
@@ -228,8 +222,8 @@ namespace GASS
 		PropertyMetaDataPtr m_MetaData;
 	};
 
-#define REG_ATTRIBUTE(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );
-#define ADD_ATTRIBUTE(TYPE,NAME) TYPE m_ ## NAME ; \
+#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );
+#define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \
 	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}
 }

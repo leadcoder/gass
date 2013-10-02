@@ -64,10 +64,10 @@ namespace GASS
 		bool& toggleAutoReverse, 
 		bool& newIsMovingForwardSlowly) const;
 	protected:
-		ADD_ATTRIBUTE(SceneObjectRef,FrontLeftWheel);
-		ADD_ATTRIBUTE(SceneObjectRef,FrontRightWheel);
-		ADD_ATTRIBUTE(SceneObjectRef,RearLeftWheel);
-		ADD_ATTRIBUTE(SceneObjectRef,RearRightWheel);
+		ADD_PROPERTY(SceneObjectRef,FrontLeftWheel);
+		ADD_PROPERTY(SceneObjectRef,FrontRightWheel);
+		ADD_PROPERTY(SceneObjectRef,RearLeftWheel);
+		ADD_PROPERTY(SceneObjectRef,RearRightWheel);
 
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;

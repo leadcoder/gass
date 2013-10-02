@@ -88,7 +88,7 @@ namespace GASS
 	void FollowWaypointListComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("FollowWaypointListComponent",new Creator<FollowWaypointListComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
 			//BasePropertyMetaDataPtr(new BasePropertyMetaData("Waypoint list that we should follow",PF_VISIBLE | PF_EDITABLE)));
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration)));

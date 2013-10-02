@@ -18,15 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
-
 #ifndef GASS_OBJECT_META_DATA_H
 #define GASS_OBJECT_META_DATA_H
-
 
 #include "Core/Common.h"
 #include <assert.h>
@@ -35,23 +28,36 @@ This class is based on the Game Programming Gems 5 article
 
 namespace GASS
 {
-	enum ObjectFlags
+	/**
+		Flags that indicate the state of this class
+	*/
+	enum ClassFlags 
 	{
 		OF_VISIBLE  =   1 << 0,
 	};
 	
-	class ObjectMetaData
+	/**
+		Class holding meta data for RTTI based classes like component containers or components.
+		This is the base class for class meta data and implements some basic settings like annotation/description and
+		class flags that can be used inside editor environment to give class information. 
+		Properties have it' own meta data found in GASSPropertyMetaData.h
+		More complex meta data can be created by inheritance from this class.
+		Class meta data is static stored and it's purpose is to reflect 
+		settings for all instances of the owner RTTI class.
+	*/
+
+	class ClassMetaData
 	{
 	public:
-		ObjectMetaData(const std::string &annotation, ObjectFlags flags = static_cast<ObjectFlags>(0)): m_Annotation(annotation), m_Flags(flags) {}
+		ClassMetaData(const std::string &annotation, ClassFlags flags = static_cast<ClassFlags>(0)): m_Annotation(annotation), m_Flags(flags) {}
 		std::string GetAnnotation() const {return m_Annotation;}
 		void SetAnnotation(const std::string &value) {m_Annotation= value;}
-		ObjectFlags GetFlags() const {return m_Flags;}
-		void SetFlags(ObjectFlags value) {m_Flags= value;}
+		ClassFlags GetFlags() const {return m_Flags;}
+		void SetFlags(ClassFlags value) {m_Flags= value;}
 	private:
 		std::string m_Annotation;
-		ObjectFlags m_Flags;
+		ClassFlags m_Flags;
 	};
-	typedef SPTR<ObjectMetaData> ObjectMetaDataPtr;
+	typedef SPTR<ClassMetaData> ClassMetaDataPtr;
 }
 #endif

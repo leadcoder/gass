@@ -24,7 +24,7 @@ namespace GASS
 	void AIRoadLaneComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadLaneComponent",new Creator<AIRoadLaneComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadLaneSectionComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadLaneSectionComponent", OF_VISIBLE)));
 
 		RegisterProperty<Float>("Width", &AIRoadLaneComponent::GetWidth, &AIRoadLaneComponent::SetWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

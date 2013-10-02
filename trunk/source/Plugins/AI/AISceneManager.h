@@ -39,7 +39,7 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return false;}
 	protected:
-		ADD_ATTRIBUTE(bool,Paused)
+		ADD_PROPERTY(bool,Paused)
 	};
 	typedef SPTR<AISceneManager> AISceneManagerPtr; 
 

@@ -47,8 +47,8 @@ namespace GASS
 		virtual std::string GetWaypointTemplate() const;
 		float GetRadius()const;
 	protected:
-		ADD_ATTRIBUTE(bool,ShowPathLine);
-		ADD_ATTRIBUTE(bool,Closed);
+		ADD_PROPERTY(bool,ShowPathLine);
+		ADD_PROPERTY(bool,Closed);
 		
 		
 		void SetRadius(float radius);

@@ -53,7 +53,7 @@ namespace GASS
 		void OnExit(ExitVehicleMessagePtr message);
 
 		std::string m_PreferredViewport;
-		ADD_ATTRIBUTE(SceneObjectRef,InputHandlerObject);
+		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
 	};
 	typedef SPTR<VehicleCameraComponent> VehicleCameraComponentPtr;
 }

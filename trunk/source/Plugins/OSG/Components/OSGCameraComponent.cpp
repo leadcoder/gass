@@ -60,7 +60,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OSGCameraComponent, IComponent>);
 		
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("CameraComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 
 		RegisterProperty<float>("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));

@@ -35,9 +35,9 @@ namespace GASS
 		void SetEndNode(SceneObjectRef node);
 		SceneObjectRef GetEndNode() const;
 		void UpdateMesh();
-		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
-		ADD_ATTRIBUTE(SceneObjectRef ,LaneSectionsObject);
-		ADD_ATTRIBUTE(SceneObjectRef ,LaneDebugObject);
+		ADD_PROPERTY(SceneObjectRef ,WaypointsObject);
+		ADD_PROPERTY(SceneObjectRef ,LaneSectionsObject);
+		ADD_PROPERTY(SceneObjectRef ,LaneDebugObject);
 		std::vector<SceneObjectPtr>  GetConnectionSelection() const;
 		Vec3 GetStartPoint() const;
 		Vec3 GetEndPoint() const;

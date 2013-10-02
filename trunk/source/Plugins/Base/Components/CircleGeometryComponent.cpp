@@ -52,7 +52,7 @@ namespace GASS
 	void CircleGeometryComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("CircleGeometryComponent",new GASS::Creator<CircleGeometryComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("CircleGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CircleGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::CircleGeometryComponent::GetRadius, &GASS::CircleGeometryComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Circle Radius",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Color", &GASS::CircleGeometryComponent::GetColor, &GASS::CircleGeometryComponent::SetColor);

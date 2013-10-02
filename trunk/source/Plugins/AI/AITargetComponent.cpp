@@ -26,10 +26,10 @@ namespace GASS
 	void AITargetComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AITargetComponent",new Creator<AITargetComponent, IComponent>);
-		REG_ATTRIBUTE(bool,Debug,AITargetComponent)
-		REG_ATTRIBUTE(bool,Enable,AITargetComponent)
-		REG_ATTRIBUTE(Vec2,RandomDelay,AITargetComponent)
-		REG_ATTRIBUTE(Vec2,RandomVelocity,AITargetComponent)
+		REG_PROPERTY(bool,Debug,AITargetComponent)
+		REG_PROPERTY(bool,Enable,AITargetComponent)
+		REG_PROPERTY(Vec2,RandomDelay,AITargetComponent)
+		REG_PROPERTY(Vec2,RandomVelocity,AITargetComponent)
 		//Set get target type by string
 		RegisterProperty<std::string>("Type", &GetType, &SetType);
 	}

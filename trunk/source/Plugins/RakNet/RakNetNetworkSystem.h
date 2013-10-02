@@ -119,8 +119,8 @@ namespace GASS
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
-		ADD_ATTRIBUTE(bool,Debug);
-		ADD_ATTRIBUTE(bool,RelayInputOnServer);
+		ADD_PROPERTY(bool,Debug);
+		ADD_PROPERTY(bool,RelayInputOnServer);
 	private:
 		void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
@@ -146,7 +146,7 @@ namespace GASS
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
 		
-		ADD_ATTRIBUTE(double,SleepTime);
+		ADD_PROPERTY(double,SleepTime);
 
 		
 

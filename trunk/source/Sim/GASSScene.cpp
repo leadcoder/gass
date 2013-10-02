@@ -63,7 +63,7 @@ namespace GASS
 
 	void Scene::RegisterReflection()
 	{
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("The scene object", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("The scene object", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);

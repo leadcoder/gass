@@ -22,7 +22,7 @@ namespace GASS
 	void AIRoadSignalComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadSignalComponent",new Creator<AIRoadSignalComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadSignalComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadSignalComponent", OF_VISIBLE)));
 		
 		RegisterProperty<SceneObjectRef>("RedLight", &AIRoadSignalComponent::GetRedLight, &AIRoadSignalComponent::SetRedLight);
 		RegisterProperty<SceneObjectRef>("YellowLight", &AIRoadSignalComponent::GetYellowLight, &AIRoadSignalComponent::SetYellowLight);

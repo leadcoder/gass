@@ -75,8 +75,8 @@ namespace GASS
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 	protected:
 
-		ADD_ATTRIBUTE(bool,UpdateMessagePump);
-		ADD_ATTRIBUTE(bool,UseShaderCache);
+		ADD_PROPERTY(bool,UpdateMessagePump);
+		ADD_PROPERTY(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnReloadMaterial(ReloadMaterialPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);

@@ -88,9 +88,9 @@ namespace GASS
 		virtual bool sliderMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd sliderID
 		virtual bool povMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd povID
 	private:
-		//ADD_ATTRIBUTE(double,UpdateFrequency);
-		ADD_ATTRIBUTE(float,GameControllerAxisMinValue);
-		ADD_ATTRIBUTE(bool,OnlyProxy);
+		//ADD_PROPERTY(double,UpdateFrequency);
+		ADD_PROPERTY(float,GameControllerAxisMinValue);
+		ADD_PROPERTY(bool,OnlyProxy);
 
 		int	 GetJoystickIndex() { return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }

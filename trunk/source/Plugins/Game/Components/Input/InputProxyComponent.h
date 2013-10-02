@@ -48,7 +48,7 @@ namespace GASS
 		virtual void OnDelete();
 		void OnPlayerInput(InputControllerMessagePtr  message);
 	private:
-		ADD_ATTRIBUTE(SceneObjectRef,InputHandlerObject);
+		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
 	};
 
 	typedef SPTR<InputProxyComponent> InputProxyComponentPtr;

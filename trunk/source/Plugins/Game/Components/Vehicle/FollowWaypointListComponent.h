@@ -57,7 +57,7 @@ namespace GASS
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		
 
-		ADD_ATTRIBUTE(Float,WaypointRadius);
+		ADD_PROPERTY(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
 		void SetWaypointList(SceneObjectRef waypointlist);

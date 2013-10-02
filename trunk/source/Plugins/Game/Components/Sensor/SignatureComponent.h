@@ -22,9 +22,9 @@ namespace GASS
 		Vec3 GetPosition() const {return m_Pos;}
 		Quaternion GetRotation() const {return m_Rotation;}
 		Vec3 GetVelocity() const {return m_Velocity;}
-		ADD_ATTRIBUTE(float,RadarCrossSection)
-		ADD_ATTRIBUTE(PlatformTypeReflection,PlatformType)
-		ADD_ATTRIBUTE(PlatformTeamReflection,PlatformTeam)
+		ADD_PROPERTY(float,RadarCrossSection)
+		ADD_PROPERTY(PlatformTypeReflection,PlatformType)
+		ADD_PROPERTY(PlatformTeamReflection,PlatformTeam)
 	protected:
 		void SetPlatformType(PlatformType pt) {m_PlatformType = pt;}
 		void OnLoad(MessagePtr message);

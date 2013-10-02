@@ -56,7 +56,7 @@ namespace GASS
 	void AIRoadComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadComponent",new Creator<AIRoadComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadComponent", OF_VISIBLE)));
 		
 		RegisterProperty<SceneObjectRef>("StartNode", &AIRoadComponent::GetStartNode, &AIRoadComponent::SetStartNode,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Start Node Connection",PF_VISIBLE,ConnectionEnumeration)));

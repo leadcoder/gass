@@ -18,12 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
-
 #ifndef GASS_VECTOR_PROPERTY_H
 #define GASS_VECTOR_PROPERTY_H
 
@@ -58,7 +52,7 @@ namespace GASS
 	/**
 	Template class used to define a vector property of a specific type.
 	@param OwnerType class that has the getter and setter functions
-	@param T Poperty type
+	@param T Property type
 	*/
 	
 	template <class OwnerType, class T>

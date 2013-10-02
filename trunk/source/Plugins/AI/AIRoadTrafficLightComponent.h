@@ -23,9 +23,9 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		ADD_ATTRIBUTE(SceneObjectRef,RedLight);
-		ADD_ATTRIBUTE(SceneObjectRef,GreenLight);
-		ADD_ATTRIBUTE(SceneObjectRef,YellowLight);
+		ADD_PROPERTY(SceneObjectRef,RedLight);
+		ADD_PROPERTY(SceneObjectRef,GreenLight);
+		ADD_PROPERTY(SceneObjectRef,YellowLight);
 
 		void OnTrafficLightState(TrafficLightStateMessagePtr message);
 		void SetDistance(Float distance);

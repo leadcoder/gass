@@ -91,19 +91,19 @@ namespace GASS
 		SceneObjectWeakPtr m_TargetObject;
 		SceneObjectRef m_AutoAimObject;
 
-		ADD_ATTRIBUTE(int,AutoAimPriority);
-		ADD_ATTRIBUTE(std::string,SendDesiredPointController);
-		ADD_ATTRIBUTE(std::string,ResetToBarrelController);
-		ADD_ATTRIBUTE(std::string,ToggleZoomController);
-		ADD_ATTRIBUTE(std::string,ActivateController);
-		ADD_ATTRIBUTE(std::string,YawController);
-		ADD_ATTRIBUTE(std::string,PitchController);
-		ADD_ATTRIBUTE(std::string,TargetObjectTemplate);
-		ADD_ATTRIBUTE(std::string,TargetDistanceController);
-		ADD_ATTRIBUTE(std::vector<float>,ZoomValues);
-		ADD_ATTRIBUTE(bool,Debug);
-		ADD_ATTRIBUTE(bool,ResetToBarrelWhileInactive);
-		ADD_ATTRIBUTE(int,TurnInputExp);
+		ADD_PROPERTY(int,AutoAimPriority);
+		ADD_PROPERTY(std::string,SendDesiredPointController);
+		ADD_PROPERTY(std::string,ResetToBarrelController);
+		ADD_PROPERTY(std::string,ToggleZoomController);
+		ADD_PROPERTY(std::string,ActivateController);
+		ADD_PROPERTY(std::string,YawController);
+		ADD_PROPERTY(std::string,PitchController);
+		ADD_PROPERTY(std::string,TargetObjectTemplate);
+		ADD_PROPERTY(std::string,TargetDistanceController);
+		ADD_PROPERTY(std::vector<float>,ZoomValues);
+		ADD_PROPERTY(bool,Debug);
+		ADD_PROPERTY(bool,ResetToBarrelWhileInactive);
+		ADD_PROPERTY(int,TurnInputExp);
 	};
 	typedef SPTR<SightComponent> SightComponentPtr;
 }

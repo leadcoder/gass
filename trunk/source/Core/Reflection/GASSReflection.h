@@ -18,10 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This code is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
 
 #ifndef GASS_REFLECTION_H
 #define GASS_REFLECTION_H
@@ -39,7 +35,7 @@ namespace GASS
 	static std::string UnDecorateClassName(const std::string &name)
 	{
 		//substr(6) is used for removing "class_" from string returned by typeid,
-		//we dont want to use any prefix when accessing classes by name,
+		//we don't want to use any prefix when accessing classes by name,
 
 		std::string ret = name.substr(6);
 		//remove namespace
@@ -74,22 +70,15 @@ namespace GASS
 		{
 		}
 
-		//This function make abtract functions in classes, use objectfactory instead!
-		/*virtual SPTR<BaseReflectionObject> CreateInstance()
-		{
-			SPTR<T>  instance (new T());
-			return instance;
-        }*/
-
 		// Default reflection registration function. Does nothing by default.
 		static void	RegisterReflection()
 		{
 
         }
 
-		//----------------------------------------------------------------------------------------------
-		// Registers a property. Takes in the property name, its getter and setter functions, and the property
-		// type as a template parameter. Should be called from within a user-defined RegisterReflection function.
+		/** Registers a property. Takes in the property name, its getter and setter functions, and the property
+		 type as a template parameter. Should be called from within a user-defined RegisterReflection function.
+		*/
 		template <class PropertyType>
 		static void RegisterProperty(const std::string &name, 
 			typename Property<T, PropertyType>::GetterType getter,
@@ -130,25 +119,17 @@ namespace GASS
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-
-		//----------------------------------------------------------------------------------------------
-		// Returns RTTI info associated with this class type.
 		static inline RTTI* GetClassRTTI()
 		{
 			return &m_RTTI;
 		}
 
-		//----------------------------------------------------------------------------------------------
-		// Returns RTTI info associated with this class instance.
 		virtual RTTI* GetRTTI() const
 		{
 			return &m_RTTI;
 		}
-
-
-
 	protected :
-		static RTTI	m_RTTI;
+			static RTTI	m_RTTI;
 
 	};
 

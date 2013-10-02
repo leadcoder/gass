@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGB.h"
-#include "Core/Reflection/GASSPropertyData.h"
+#include "Core/Reflection/GASSPropertyMetaData.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"

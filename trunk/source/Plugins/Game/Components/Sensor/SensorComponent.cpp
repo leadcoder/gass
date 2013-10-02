@@ -35,9 +35,9 @@ namespace GASS
 	void SensorComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SensorComponent",new Creator<SensorComponent, IComponent>);
-		REG_ATTRIBUTE(Float,DefaultMaxDetectionDistance,SensorComponent)
-		REG_ATTRIBUTE(Float,UpdateFrequency,SensorComponent)
-		REG_ATTRIBUTE(bool,Debug,SensorComponent)
+		REG_PROPERTY(Float,DefaultMaxDetectionDistance,SensorComponent)
+		REG_PROPERTY(Float,UpdateFrequency,SensorComponent)
+		REG_PROPERTY(bool,Debug,SensorComponent)
 		
 	}
 

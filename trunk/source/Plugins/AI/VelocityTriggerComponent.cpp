@@ -23,9 +23,9 @@ namespace GASS
 	void VelocityTriggerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VelocityTriggerComponent",new Creator<VelocityTriggerComponent, IComponent>);
-		REG_ATTRIBUTE(bool,Enable,VelocityTriggerComponent)
-		REG_ATTRIBUTE(Vec2,RandomDelay,VelocityTriggerComponent)
-		REG_ATTRIBUTE(Vec2,RandomVelocity,VelocityTriggerComponent)
+		REG_PROPERTY(bool,Enable,VelocityTriggerComponent)
+		REG_PROPERTY(Vec2,RandomDelay,VelocityTriggerComponent)
+		REG_PROPERTY(Vec2,RandomVelocity,VelocityTriggerComponent)
 	}
 
 	void VelocityTriggerComponent::OnInitialize()

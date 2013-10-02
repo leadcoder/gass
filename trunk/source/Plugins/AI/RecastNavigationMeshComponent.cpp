@@ -85,7 +85,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, IComponent>);
 
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
 		
 		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

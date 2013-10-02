@@ -18,18 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
 
 #ifndef GASS_RTTI_H
 #define GASS_RTTI_H
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSIProperty.h"
-#include "Core/Reflection/GASSObjectMetaData.h"
+#include "Core/Reflection/GASSClassMetaData.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS
@@ -61,7 +56,7 @@ namespace GASS
 		@param class_name	undecorated class name
 		@param base_class_rtti	Pointer to parent class type RTTI implementation
 		@param factory	A factory function for creating an instances of RTTI class type
-		@param reflection_func	optinoal funcation pointer to register class properties, this function is called in this function
+		@param reflection_func	optional function pointer to register class properties, this function is called in this function
 		*/
 		RTTI(const std::string  &class_name, RTTI* base_class_rtti,/* ClassFactoryFunc factory,*/ RegisterReflectionFunc reflection_func ) : m_ClassName(class_name),
 			//m_ObjectFactory(factory),
@@ -160,7 +155,7 @@ namespace GASS
 		information about the property like documentation, max min values etc.
 		*/
 		
-		ObjectMetaDataPtr GetMetaData() const
+		ClassMetaDataPtr GetMetaData() const
 		{
 			if(m_MetaData)
 			{
@@ -172,7 +167,7 @@ namespace GASS
 		/**
 			Set meta data for this property
 		*/
-		void SetMetaData(ObjectMetaDataPtr data)
+		void SetMetaData(ClassMetaDataPtr data)
 		{
 			m_MetaData = data;
 		}
@@ -181,7 +176,7 @@ namespace GASS
 		std::string m_ClassName;		// Class name
 		RTTI* m_BaseRTTI;			// Base class RTTI structure
 		std::list<IProperty*> m_Properties;	 // Property list
-		ObjectMetaDataPtr m_MetaData;
+		ClassMetaDataPtr m_MetaData;
 	};
 }
 #endif

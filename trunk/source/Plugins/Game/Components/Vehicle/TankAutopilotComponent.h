@@ -45,11 +45,11 @@ namespace GASS
 		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta);
 	private:
-		ADD_ATTRIBUTE(bool,Enable);
-		ADD_ATTRIBUTE(float,DesiredSpeed);
-		ADD_ATTRIBUTE(float,DesiredPosRadius);
-		ADD_ATTRIBUTE(PIDControl,TurnPID);
-		ADD_ATTRIBUTE(PIDControl,TrottlePID);
+		ADD_PROPERTY(bool,Enable);
+		ADD_PROPERTY(float,DesiredSpeed);
+		ADD_PROPERTY(float,DesiredPosRadius);
+		ADD_PROPERTY(PIDControl,TurnPID);
+		ADD_PROPERTY(PIDControl,TrottlePID);
 
 		//PIDControl m_TurnPID;
 		//PIDControl m_TrottlePID;

@@ -23,7 +23,7 @@ namespace GASS
 	void AIRoadLaneSectionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadLaneSectionComponent",new Creator<AIRoadLaneSectionComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadLaneSectionComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadLaneSectionComponent", OF_VISIBLE)));
 		
 		RegisterProperty<Float>("Distance", &AIRoadLaneSectionComponent::GetDistance, &AIRoadLaneSectionComponent::SetDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

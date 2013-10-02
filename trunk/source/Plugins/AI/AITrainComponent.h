@@ -40,11 +40,11 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
-		ADD_ATTRIBUTE(Float,AccelerationDistance);
-		ADD_ATTRIBUTE(Float,StopDistance);
-		ADD_ATTRIBUTE(Float,StopTime);
-		ADD_ATTRIBUTE(Float,DoorDelay);
-		ADD_ATTRIBUTE(SceneObjectID,TrainObject);
+		ADD_PROPERTY(Float,AccelerationDistance);
+		ADD_PROPERTY(Float,StopDistance);
+		ADD_PROPERTY(Float,StopTime);
+		ADD_PROPERTY(Float,DoorDelay);
+		ADD_PROPERTY(SceneObjectID,TrainObject);
 		
 		void CreateSpline();
 

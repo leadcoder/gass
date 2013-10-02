@@ -56,7 +56,7 @@ namespace GASS
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		
 
-		ADD_ATTRIBUTE(SceneObjectRef,DriveWheel)
+		ADD_PROPERTY(SceneObjectRef,DriveWheel)
 		
 		bool m_Initialized;
 		Vec2 m_AnimationSpeedFactor;

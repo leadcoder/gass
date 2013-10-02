@@ -25,7 +25,7 @@ namespace GASS
 		void UpdateConnectionLines();
 		void AutoLineConnection();
 	private:
-		ADD_ATTRIBUTE(SceneObjectRef ,ConnectionDebugObject);
+		ADD_PROPERTY(SceneObjectRef ,ConnectionDebugObject);
 		
 		bool m_AllowLeftTurn;
 		bool m_DisableTrafficLight;

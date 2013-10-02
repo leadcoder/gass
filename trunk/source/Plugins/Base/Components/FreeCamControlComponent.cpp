@@ -76,7 +76,7 @@ namespace GASS
 	void FreeCamControlComponent::RegisterReflection()                         // static
 	{
 		ComponentFactory::GetPtr()->Register("FreeCamControlComponent",new Creator<FreeCamControlComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("FreeCamControlComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("FreeCamControlComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("RunSpeed", &GASS::FreeCamControlComponent::GetRunSpeed, &GASS::FreeCamControlComponent::SetRunSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Alternative Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Float>("WalkSpeed", &GASS::FreeCamControlComponent::GetWalkSpeed, &GASS::FreeCamControlComponent::SetWalkSpeed,

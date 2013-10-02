@@ -18,12 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
-
 #ifndef GASS_PROPERTY_DATA_H
 #define GASS_PROPERTY_DATA_H
 
@@ -72,9 +66,9 @@ namespace GASS
 
 	/**
 		Base implementation of the property meta data interface
-		Property meta data can hold information about properties such as documenetaion, max	min values, 
-		flags that indicate if its readonly, visisble etc inside editor environment
-		This base class is a convenience class that implements anotation and flags
+		Property meta data can hold information about properties such as documentation, max	min values, 
+		flags that indicate if it's read-only, visible etc. inside editor environment
+		This base class is a convenience class that implements annotation and flags
 	*/
 
 	class BasePropertyMetaData : public IPropertyMetaData
@@ -112,7 +106,7 @@ namespace GASS
 	
 	/**
 		Meta data class that can be used for static enumeration properties, 
-		ie enumeration is kown when property is registred
+		enumeration is known when property is registered
 	*/
 
 	class StaticEnumerationPropertyMetaData : public EnumerationPropertyMetaData
@@ -193,7 +187,7 @@ namespace GASS
 
 
 	/**
-		Meta data class for file path properties that want to support extenstion filters ect
+		Meta data class for file path properties that want to support extention filters ect.
 	*/
 
 	class FilePathPropertyMetaData : public BasePropertyMetaData

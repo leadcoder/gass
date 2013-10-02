@@ -58,7 +58,7 @@ namespace GASS
 		
 		std::string m_BoneName;
 		bool m_Active;
-		ADD_ATTRIBUTE(SceneObjectRef, SourceObject);
+		ADD_PROPERTY(SceneObjectRef, SourceObject);
 	};
 }
 #endif

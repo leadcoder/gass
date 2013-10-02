@@ -81,7 +81,7 @@ namespace GASS
 		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh);
 
 	protected:
-		ADD_ATTRIBUTE(std::string,EnumerationResourceGroup)
+		ADD_PROPERTY(std::string,EnumerationResourceGroup)
 		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}

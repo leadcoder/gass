@@ -28,7 +28,7 @@ namespace GASS
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
 	private:
-		ADD_ATTRIBUTE(Vec4,SelectedColor)
+		ADD_PROPERTY(Vec4,SelectedColor)
 		
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
 		void OnObjectLock(ObjectLockChangedEventPtr message);

@@ -60,7 +60,7 @@ namespace GASS
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		ADD_ATTRIBUTE(Float,WaypointRadius);
+		ADD_PROPERTY(Float,WaypointRadius);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
 		RoadSegmentComponentPtr GetFreeRoad(RoadSegmentComponentPtr road);

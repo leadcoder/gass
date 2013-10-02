@@ -51,10 +51,10 @@ namespace GASS
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
 	private:
-		ADD_ATTRIBUTE(int,LaneBufferSize);
-		ADD_ATTRIBUTE(Vec2,RandomSpeed);
-		ADD_ATTRIBUTE(bool, Debug);
-		ADD_ATTRIBUTE(Float,WaypointRadius);
+		ADD_PROPERTY(int,LaneBufferSize);
+		ADD_PROPERTY(Vec2,RandomSpeed);
+		ADD_PROPERTY(bool, Debug);
+		ADD_PROPERTY(Float,WaypointRadius);
 
 		AIRoadLaneComponentPtr GetFreeLane(AIRoadLaneComponentPtr lane);
 		void UpdateLaneBuffer();

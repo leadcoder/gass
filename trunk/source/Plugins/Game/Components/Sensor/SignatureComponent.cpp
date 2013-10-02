@@ -32,9 +32,9 @@ namespace GASS
 	void SignatureComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SignatureComponent",new Creator<SignatureComponent, IComponent>);
-		REG_ATTRIBUTE(float,RadarCrossSection,SignatureComponent)
-		REG_ATTRIBUTE(PlatformTypeReflection,PlatformType,SignatureComponent)
-		REG_ATTRIBUTE(PlatformTeamReflection,PlatformTeam,SignatureComponent)
+		REG_PROPERTY(float,RadarCrossSection,SignatureComponent)
+		REG_PROPERTY(PlatformTypeReflection,PlatformType,SignatureComponent)
+		REG_PROPERTY(PlatformTeamReflection,PlatformTeam,SignatureComponent)
 	}
 
 	void SignatureComponent::OnInitialize()

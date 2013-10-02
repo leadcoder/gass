@@ -59,8 +59,8 @@ namespace GASS
 		std::vector<Vec3> GetWaypoints() const {return m_Waypoints;}
 		std::vector<Vec3> * GetWaypointsPtr() {return &m_Waypoints;}
 		std::vector<AIRoadLaneComponentPtr>* GetNextLanesPtr() {return &m_NextLanes;}
-		ADD_ATTRIBUTE(LaneDirectionBinder,Direction);
-		ADD_ATTRIBUTE(int ,LaneID);
+		ADD_PROPERTY(LaneDirectionBinder,Direction);
+		ADD_PROPERTY(int ,LaneID);
 		void RegisterLaneObject(LaneObject* object);
 		void UnregisterLaneObject(LaneObject* object);
 
@@ -74,9 +74,9 @@ namespace GASS
 		bool FirstFreeLocation(Vec3 &pos, Quaternion &rot, Float &distance, Float vehicle_separation);
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
-		//ADD_ATTRIBUTE(SceneObjectID,NextLane);
-		//ADD_ATTRIBUTE(SceneObjectID,PrevLane);
-		ADD_ATTRIBUTE(SceneObjectRef ,WaypointsObject);
+		//ADD_PROPERTY(SceneObjectID,NextLane);
+		//ADD_PROPERTY(SceneObjectID,PrevLane);
+		ADD_PROPERTY(SceneObjectRef ,WaypointsObject);
 	
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		Float m_Width;

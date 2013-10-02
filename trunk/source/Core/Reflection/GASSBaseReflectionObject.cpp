@@ -294,7 +294,7 @@ namespace GASS
 		return pRTTI->HasMetaData();
 	}
 
-	ObjectMetaDataPtr BaseReflectionObject::GetMetaData() const
+	ClassMetaDataPtr BaseReflectionObject::GetMetaData() const
 	{
 		RTTI* pRTTI = GetRTTI();
 		return pRTTI->GetMetaData();

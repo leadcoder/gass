@@ -29,7 +29,7 @@ namespace GASS
 	void AIRoadTrafficLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadTrafficLightComponent",new Creator<AIRoadTrafficLightComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadTrafficLightComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadTrafficLightComponent", OF_VISIBLE)));
 		
 		RegisterProperty<Float>("Distance", &AIRoadTrafficLightComponent::GetDistance, &AIRoadTrafficLightComponent::SetDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

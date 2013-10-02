@@ -24,7 +24,7 @@ namespace GASS
 	void AIRoadIntersectionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadIntersectionComponent",new Creator<AIRoadIntersectionComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("AIRoadIntersectionComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadIntersectionComponent", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("ConnectionDebugObject", &AIRoadIntersectionComponent::GetConnectionDebugObject, &AIRoadIntersectionComponent::SetConnectionDebugObject);
 	}
 

@@ -28,9 +28,9 @@ namespace GASS
 		bool IsNewTarget(SignatureComponentWeakPtr sig) const;
 		bool RemoveTarget(SignatureComponentWeakPtr sig);
 	private:
-		ADD_ATTRIBUTE(Float,DefaultMaxDetectionDistance)
-		ADD_ATTRIBUTE(Float,UpdateFrequency)
-		ADD_ATTRIBUTE(bool,Debug)
+		ADD_PROPERTY(Float,DefaultMaxDetectionDistance)
+		ADD_PROPERTY(Float,UpdateFrequency)
+		ADD_PROPERTY(bool,Debug)
 
 		void Update();
 		bool m_Initialized;

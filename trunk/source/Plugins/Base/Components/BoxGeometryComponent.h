@@ -38,7 +38,7 @@ namespace GASS
 		virtual bool IsPointInside(const Vec3 &point) const;
 		Vec3 GetRandomPoint() const;
 	protected:
-		ADD_ATTRIBUTE(bool,Lines);
+		ADD_PROPERTY(bool,Lines);
 		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);
 		void UpdateMesh();

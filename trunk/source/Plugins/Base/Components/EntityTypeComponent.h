@@ -43,13 +43,13 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		
-		ADD_ATTRIBUTE(int,EntityKind)
-		ADD_ATTRIBUTE(int,Domain)
-		ADD_ATTRIBUTE(int,CountryCode)
-		ADD_ATTRIBUTE(int,Category)
-		ADD_ATTRIBUTE(int,Subcategory)
-		ADD_ATTRIBUTE(int,Specific)
-		ADD_ATTRIBUTE(int,Extra)
+		ADD_PROPERTY(int,EntityKind)
+		ADD_PROPERTY(int,Domain)
+		ADD_PROPERTY(int,CountryCode)
+		ADD_PROPERTY(int,Category)
+		ADD_PROPERTY(int,Subcategory)
+		ADD_PROPERTY(int,Specific)
+		ADD_PROPERTY(int,Extra)
 	
 	};
 

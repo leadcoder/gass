@@ -57,10 +57,10 @@ namespace GASS
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
 
-		ADD_ATTRIBUTE(SceneObjectRef,FireSoundObject1P);
-		ADD_ATTRIBUTE(SceneObjectRef,FireSoundObject3P);
-		ADD_ATTRIBUTE(std::string,FireController);
-		ADD_ATTRIBUTE(std::string,ReloadController);
+		ADD_PROPERTY(SceneObjectRef,FireSoundObject1P);
+		ADD_PROPERTY(SceneObjectRef,FireSoundObject3P);
+		ADD_PROPERTY(std::string,FireController);
+		ADD_PROPERTY(std::string,ReloadController);
 
 		//get/set section
 		float GetProjectileStartOffset() const;

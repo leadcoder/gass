@@ -45,7 +45,7 @@ namespace GASS
 		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
 		void OnHingeUpdated(HingeJointNotifyMessagePtr message);
 
-		ADD_ATTRIBUTE(Float,MaxVolumeAtSpeed)
+		ADD_PROPERTY(Float,MaxVolumeAtSpeed)
 
 		Float m_HingeAngle;
 	};

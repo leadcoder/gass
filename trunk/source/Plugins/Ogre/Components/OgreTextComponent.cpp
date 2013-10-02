@@ -81,7 +81,7 @@ namespace GASS
 	void OgreTextComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OgreTextComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("TextComponent")));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TextComponent")));
 		RegisterProperty<std::string>("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
 		RegisterProperty<float>("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
 		RegisterProperty<float>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);

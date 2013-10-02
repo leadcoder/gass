@@ -40,7 +40,7 @@ namespace GASS
 	void AISceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("AISceneManager",new GASS::Creator<AISceneManager, ISceneManager>);
-		REG_ATTRIBUTE(bool,Paused,AISceneManager)
+		REG_PROPERTY(bool,Paused,AISceneManager)
 	}
 
 	void AISceneManager::OnCreate()

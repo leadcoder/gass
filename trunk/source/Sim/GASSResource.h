@@ -23,7 +23,7 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSFilePath.h"
-#include "Core/Reflection/GASSPropertyData.h"
+#include "Core/Reflection/GASSPropertyMetaData.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSResourceLocation.h"
 

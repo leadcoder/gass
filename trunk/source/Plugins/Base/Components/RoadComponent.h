@@ -60,10 +60,10 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		ADD_ATTRIBUTE(float,CustomDitchTexturePercent)
-		ADD_ATTRIBUTE(bool,CAP)
-		ADD_ATTRIBUTE(bool,FadeStart)
-		ADD_ATTRIBUTE(bool,FadeEnd)
+		ADD_PROPERTY(float,CustomDitchTexturePercent)
+		ADD_PROPERTY(bool,CAP)
+		ADD_PROPERTY(bool,FadeStart)
+		ADD_PROPERTY(bool,FadeEnd)
 		
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;

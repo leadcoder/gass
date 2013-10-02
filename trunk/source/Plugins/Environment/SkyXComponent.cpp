@@ -59,7 +59,7 @@ namespace GASS
 	void SkyXComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SkyXComponent",new Creator<SkyXComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("SkyXComponent", OF_VISIBLE )));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXComponent", OF_VISIBLE )));
 		RegisterProperty<double>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,

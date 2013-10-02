@@ -36,7 +36,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		ADD_ATTRIBUTE(std::string,Material);
+		ADD_PROPERTY(std::string,Material);
 		physx::PxShape* CreateShape();
 		void SetRadius(Float radius);
 		Float GetRadius() const;

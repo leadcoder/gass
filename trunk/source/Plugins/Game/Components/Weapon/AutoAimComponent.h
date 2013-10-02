@@ -46,8 +46,8 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		ADD_ATTRIBUTE(Float, MaxYawVelocity)
-		ADD_ATTRIBUTE(Float, MaxPitchVelocity)
+		ADD_PROPERTY(Float, MaxYawVelocity)
+		ADD_PROPERTY(Float, MaxPitchVelocity)
 		void SetBarrelObject(const SceneObjectRef &value);
 		SceneObjectRef GetBarrelObject() const;
 		void SetTurretObject(const SceneObjectRef &value);

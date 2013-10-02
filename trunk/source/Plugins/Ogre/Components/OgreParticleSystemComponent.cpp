@@ -59,7 +59,7 @@ namespace GASS
 	void OgreParticleSystemComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("ParticleSystemComponent",new GASS::Creator<OgreParticleSystemComponent, IComponent>);
-		GetClassRTTI()->SetMetaData(ObjectMetaDataPtr(new ObjectMetaData("ParticleSystemComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ParticleSystemComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("ParticleTemplate", &GASS::OgreParticleSystemComponent::GetParticleTemplate, &GASS::OgreParticleSystemComponent::SetParticleTemplate);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreParticleSystemComponent::GetCastShadow, &GASS::OgreParticleSystemComponent::SetCastShadow);
 		RegisterProperty<float>("TimeToLive", &GASS::OgreParticleSystemComponent::GetTimeToLive, &GASS::OgreParticleSystemComponent::SetTimeToLive);

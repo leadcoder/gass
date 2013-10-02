@@ -101,7 +101,7 @@ namespace GASS
 		/**
 			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
 		*/
-		ObjectMetaDataPtr GetMetaData() const;
+		ClassMetaDataPtr GetMetaData() const;
 
 		//internal stuff
 		void LoadProperties(TiXmlElement *elem);

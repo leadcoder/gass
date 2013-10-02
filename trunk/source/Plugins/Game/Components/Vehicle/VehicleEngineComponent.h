@@ -77,7 +77,7 @@ namespace GASS
 		float GetNormRPM();
 	private:
 
-		ADD_ATTRIBUTE(float,TurnRPMAmount)
+		ADD_PROPERTY(float,TurnRPMAmount)
 		std::vector<SceneObjectRef> GetWheels() const;
 		void SetWheels(const std::vector<SceneObjectRef> &wheels);
 

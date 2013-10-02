@@ -106,11 +106,11 @@ namespace GASS
 		dtCrowd* m_Crowd;
 		RecastNavigationMeshComponentWeakPtr m_Mesh;
 
-		ADD_ATTRIBUTE(bool,AnticipateTurns);
-		ADD_ATTRIBUTE(bool,OptimizeVis);
-		ADD_ATTRIBUTE(bool,OptimizeTopo);
-		ADD_ATTRIBUTE(bool,Separation);
-		ADD_ATTRIBUTE(bool,ObstacleAvoidance);
+		ADD_PROPERTY(bool,AnticipateTurns);
+		ADD_PROPERTY(bool,OptimizeVis);
+		ADD_PROPERTY(bool,OptimizeTopo);
+		ADD_PROPERTY(bool,Separation);
+		ADD_PROPERTY(bool,ObstacleAvoidance);
 
 		float m_SeparationWeight;
 

@@ -18,12 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
-
-
 #ifndef GASS_TYPED_PROPERTY_H
 #define GASS_TYPED_PROPERTY_H
 
@@ -77,7 +71,7 @@ namespace GASS
 		Set the value of this property.
 		@param object BaseReflectionObject that is owner of this property
 		*/
-		virtual void	SetValue(BaseReflectionObject* object, const T &value) = 0;
+		virtual void SetValue(BaseReflectionObject* object, const T &value) = 0;
 	};
 
 	template <class T>
@@ -92,9 +86,6 @@ namespace GASS
 	{
 		return &typeid(T);
 	}
-
-	
-
 
 	template <class T>
 	std::string TypedProperty<T>::GetTypeName() const

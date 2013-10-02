@@ -32,7 +32,10 @@ class TiXmlDocument;
 
 namespace GASS
 {
-	
+	/**
+		Class holding meta data (as TiXmlElement) for a specific class
+		Class name is stored in m_Name
+	*/
 	class GASSCoreExport SchemaObject
 	{
 	public:
@@ -44,7 +47,13 @@ namespace GASS
 		TiXmlElement* m_Object;
 		std::string m_Name;
 	};
-	
+	/**
+		Helper class is used for overriding default meta data for RTTI based classes and it's properties.
+		New meta data is loaded from from xml-schema file (xsd-file) and replace default meta data with data found in 
+		xsd file. Storing meta data in xsd file can be convenient for editor environment where, for instance, visibility flags 
+		may alter on application basis. This class can also generate xsd files from all registered   Component and ComponentContainer
+		that can be used as a starting point for meta data specialization.
+	*/
 	class GASSCoreExport SchemaManager 
 	{
 	public:

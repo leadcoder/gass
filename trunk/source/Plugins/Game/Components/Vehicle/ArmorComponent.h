@@ -53,7 +53,7 @@ namespace GASS
 		void SetDamageEffect1(const std::string &name);
 		
 
-		ADD_ATTRIBUTE(float,OutOfArmorForce);
+		ADD_PROPERTY(float,OutOfArmorForce);
 		float m_Armor;
 		float m_CurrentArmor;
 		std::string m_DamageMesh;

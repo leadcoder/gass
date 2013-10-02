@@ -43,7 +43,7 @@ namespace GASS
 		void OnSpeedMessage(DesiredSpeedMessagePtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 
-		ADD_ATTRIBUTE(Float,Acceleration);
+		ADD_PROPERTY(Float,Acceleration);
 		std::string GetWaypointList() const;
 		void SetWaypointList(const std::string &value);
 		IWaypointListComponent* FindWaypointList(const std::string &name) const;

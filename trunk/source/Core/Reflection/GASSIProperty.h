@@ -18,16 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-/*
-This class is based on the Game Programming Gems 5 article
-"Using Templates for Reflection in C++" by Dominic Filion.
-*/
 
 #ifndef GASS_I_PROPERTY_H
 #define GASS_I_PROPERTY_H
 
 #include "Core/Common.h"
-#include "Core/Reflection/GASSPropertyData.h"
+#include "Core/Reflection/GASSPropertyMetaData.h"
 
 namespace GASS
 {

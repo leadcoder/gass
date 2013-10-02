@@ -34,16 +34,16 @@ namespace GASS
 		double GetDelay() const;
 		double GetVelocity() const;
 		AITargetComponent::TargetType GetTargetType() {return m_Type;}
-		ADD_ATTRIBUTE(bool,Enable)
+		ADD_PROPERTY(bool,Enable)
 	protected:
 		void OnTransChanged(TransformationNotifyMessagePtr);
 		void OnActivate(DoorMessagePtr message);
 		bool IsInside(SceneObjectWeakPtr obj) const;
 		bool RemoveInside(SceneObjectWeakPtr obj);
 	private:
-		ADD_ATTRIBUTE(bool,Debug)
-		ADD_ATTRIBUTE(Vec2,RandomDelay)
-		ADD_ATTRIBUTE(Vec2,RandomVelocity)
+		ADD_PROPERTY(bool,Debug)
+		ADD_PROPERTY(Vec2,RandomDelay)
+		ADD_PROPERTY(Vec2,RandomVelocity)
 		void SetType(const std::string &value);
 		std::string GetType() const;
 		bool m_Initialized;

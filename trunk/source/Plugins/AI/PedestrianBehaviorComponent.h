@@ -45,10 +45,10 @@ namespace GASS
 		void SetHealth(Float health);
 		Float GetHealth() const;
 	
-		ADD_ATTRIBUTE(Float,GoalRadius)
-		ADD_ATTRIBUTE(SceneObjectID ,ExitLocationID)
-		ADD_ATTRIBUTE(Float,FleeThreshold)
-		ADD_ATTRIBUTE(Float,FleeSpeed)
+		ADD_PROPERTY(Float,GoalRadius)
+		ADD_PROPERTY(SceneObjectID ,ExitLocationID)
+		ADD_PROPERTY(Float,FleeThreshold)
+		ADD_PROPERTY(Float,FleeSpeed)
 		
 
 		void OnLoad(LocationLoadedMessagePtr message);
