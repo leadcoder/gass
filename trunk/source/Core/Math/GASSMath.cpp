@@ -294,8 +294,8 @@ namespace GASS
 	{
 		Float dtheta,theta1,theta2;
 
-		theta1 = (Float)atan2(y1,x1);
-		theta2 = (Float)atan2(y2,x2);
+		theta1 = atan(y1,x1);
+		theta2 = atan(y2,x2);
 		dtheta = theta2 - theta1;
 		while (dtheta > MY_PI)
 			dtheta -= 2.0f*(Float)MY_PI;

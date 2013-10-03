@@ -530,17 +530,17 @@ namespace GASS
 		{ 
 			rotx = mat[2][2] / C; 
 			roty = mat[2][1]  / C; 
-			X = atan2f( roty, rotx ); 
+			X = atan2( roty, rotx ); 
 			rotx =  mat[0][0] / C; 
 			roty = mat[1][0] / C; 
-			Z = atan2f( roty, rotx ); 
+			Z = atan2( roty, rotx ); 
 		} 
 		else 
 		{
 			X  = 0.0f; 
 			rotx = -mat[1][1]; 
 			roty = mat[1][0]; 
-			Z  = atan2f( roty, rotx ); 
+			Z  = atan2( roty, rotx ); 
 		} 
 
 		if (fabs(X)>=2*MY_PI) X=0.00f; 
