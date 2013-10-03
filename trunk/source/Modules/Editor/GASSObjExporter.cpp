@@ -113,21 +113,15 @@ namespace GASS
 
 						if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
 						{
-							if(!dds_tex && m_FlipDDSTexCoords)
+							for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
 							{
-								for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+								Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
+								tc.y = -tc.y;
+								if(m_FlipDDSTexCoords && dds_tex)
 								{
-									Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
 									tc.y = -tc.y;
-									TexCoordVector.push_back(tc);
 								}
-							}
-							else
-							{
-								for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
-								{
-									TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
-								}
+								TexCoordVector.push_back(tc);
 							}
 						}
 						else
