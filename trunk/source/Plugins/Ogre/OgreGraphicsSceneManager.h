@@ -155,6 +155,7 @@ namespace GASS
 
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
+		void OnExportMesh(ExportMeshRequestPtr message);
 	private:	
 		//fog
 		float m_FogDensity;

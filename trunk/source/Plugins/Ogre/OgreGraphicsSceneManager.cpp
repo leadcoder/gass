@@ -19,6 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Plugins/Ogre/Helpers/OgreText.h"
+#include "Plugins/Ogre/Helpers/GASSOgreMeshExporter.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 
@@ -144,6 +145,8 @@ namespace GASS
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawLine,DrawLineRequest ,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle,DrawCircleRequest ,0));
 
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnExportMesh,ExportMeshRequest,0));
+
 		//create unique name
 		static unsigned int scene_man_id = 0;
 		std::stringstream ss;
@@ -166,6 +169,13 @@ namespace GASS
 
 		m_SceneMgr->addRenderQueueListener(system->GetOverlaySystem());
 		
+	}
+
+
+	void OgreGraphicsSceneManager::OnExportMesh(ExportMeshRequestPtr message)
+	{
+		OgreMeshExporter exporter;
+		exporter.Export(message->m_Filename, message->m_RootObject);
 	}
 
 	void OgreGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)

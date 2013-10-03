@@ -62,116 +62,106 @@ namespace GASS
 				for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				{
 					GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
-					//unsigned int base_index = PositionVector.size();
 
-					if(sub_mesh->MaterialName != "")
-						Materials[sub_mesh->MaterialName] = sub_mesh->Material;
-					else 
+					if(sub_mesh->Type ==TRIANGLE_LIST)
 					{
-						sub_mesh->MaterialName = "DefaultMat";
-						sub_mesh->Material = def_mat;
-					}
-					for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
-					{
-						PositionVector.push_back(sub_mesh->PositionVector[j]);
-					}
 
-					//generate normals if not present
-					if(sub_mesh->NormalVector.size() == 0)
-					{
-						sub_mesh->NormalVector.resize(sub_mesh->PositionVector.size());
-						for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
+						if(sub_mesh->MaterialName != "")
+							Materials[sub_mesh->MaterialName] = sub_mesh->Material;
+						else 
 						{
-							Vec3 p1 = sub_mesh->PositionVector[sub_mesh->IndexVector[j]];
-							Vec3 p2 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+1]];
-							Vec3 p3 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+2]];
-							Vec3 v1 = p1 - p3;
-							Vec3 v2 = p2 - p3;
-							Vec3 norm = Math::Cross(v1,v2);
-							norm.FastNormalize();
-							sub_mesh->NormalVector[sub_mesh->IndexVector[j]] = norm;
-							sub_mesh->NormalVector[sub_mesh->IndexVector[j+1]] = norm;
-							sub_mesh->NormalVector[sub_mesh->IndexVector[j+2]] = norm;
+							sub_mesh->MaterialName = "DefaultMat";
+							sub_mesh->Material = def_mat;
 						}
-					}
-
-					for(int j = 0 ; j < sub_mesh->NormalVector.size(); j++)
-					{
-						NormalVector.push_back(sub_mesh->NormalVector[j]);
-					}
-
-
-					bool dds_tex = false;
-					if(sub_mesh->Material.Textures.size() > 0)
-					{
-						std::string ext = StringUtils::ToLower(FileUtils::GetExtension(sub_mesh->Material.Textures[0]));
-						if(ext == "dds") 
-							dds_tex = true;
-					}
-
-					if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
-					{
-						if(!dds_tex && m_FlipDDSTexCoords)
+						for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
 						{
-							for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+							PositionVector.push_back(sub_mesh->PositionVector[j]);
+						}
+
+						//generate normals if not present
+						if(sub_mesh->NormalVector.size() == 0)
+						{
+							sub_mesh->NormalVector.resize(sub_mesh->PositionVector.size());
+							for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
 							{
-								Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
-								tc.y = -tc.y;
-								TexCoordVector.push_back(tc);
+								Vec3 p1 = sub_mesh->PositionVector[sub_mesh->IndexVector[j]];
+								Vec3 p2 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+1]];
+								Vec3 p3 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+2]];
+								Vec3 v1 = p1 - p3;
+								Vec3 v2 = p2 - p3;
+								Vec3 norm = Math::Cross(v1,v2);
+								norm.FastNormalize();
+								sub_mesh->NormalVector[sub_mesh->IndexVector[j]] = norm;
+								sub_mesh->NormalVector[sub_mesh->IndexVector[j+1]] = norm;
+								sub_mesh->NormalVector[sub_mesh->IndexVector[j+2]] = norm;
+							}
+						}
+
+						for(int j = 0 ; j < sub_mesh->NormalVector.size(); j++)
+						{
+							NormalVector.push_back(sub_mesh->NormalVector[j]);
+						}
+
+
+						bool dds_tex = false;
+						if(sub_mesh->Material.Textures.size() > 0)
+						{
+							std::string ext = StringUtils::ToLower(FileUtils::GetExtension(sub_mesh->Material.Textures[0]));
+							if(ext == "dds") 
+								dds_tex = true;
+						}
+
+						if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
+						{
+							if(!dds_tex && m_FlipDDSTexCoords)
+							{
+								for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+								{
+									Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
+									tc.y = -tc.y;
+									TexCoordVector.push_back(tc);
+								}
+							}
+							else
+							{
+								for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+								{
+									TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
+								}
 							}
 						}
 						else
 						{
-							for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+							for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
 							{
-								TexCoordVector.push_back(sub_mesh->TexCoordsVector[0].at(j));
+								TexCoordVector.push_back(Vec4(1,0,0,0));
 							}
 						}
 					}
-					else
-					{
-						for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
-						{
-							TexCoordVector.push_back(Vec4(1,0,0,0));
-						}
-					}
-
-					/* for(int j = 0 ; j < sub_mesh->IndexVector.size(); j++)
-					{
-					FaceVector.push_back(sub_mesh->IndexVector[j]+base_index);
-					}*/
-
-
-
-					//serliaze
-					//delete[] mesh_data_vec[i]->FaceVector;
-					//delete[] mesh_data_vec[i]->VertexVector;
-					//delete mesh_data_vec[i];
-					//mesh_data_vec[i] = NULL;
 				}
 			}
 
-			std::stringstream ss;
+			//std::stringstream ss;
 			std::ofstream file_ptr;   
 			file_ptr.open(out_file + ".obj");      
 
 			//std::string mat_file = out_file
 
-			ss << "\n";
-			ss << "mtllib " << FileUtils::GetFilename(out_file) << ".mtl" << "\n";
-			ss << "\n";
+			file_ptr << "\n";
+			file_ptr << "mtllib " << FileUtils::GetFilename(out_file) << ".mtl" << "\n";
+			file_ptr << "\n";
 
-			ss << "#num verts" << PositionVector.size() << "\n";
+			file_ptr << "#num verts" << PositionVector.size() << "\n";
 			//Serialize mesh data to obj format!
 			for(size_t i = 0; i < PositionVector.size() ; i++)
-				ss << "v " << PositionVector[i] << "\n";
-			ss << "\n";
+				file_ptr << "v " << PositionVector[i] << "\n";
+			file_ptr << "\n";
 			for(size_t i = 0; i < TexCoordVector.size() ; i++)
-				ss << "vt " << TexCoordVector[i].x  << " " << TexCoordVector[i].y << "\n";
-			ss << "\n";
+				file_ptr << "vt " << TexCoordVector[i].x  << " " << TexCoordVector[i].y << "\n";
+			file_ptr << "\n";
 			for(size_t i = 0; i < NormalVector.size() ; i++)
-				ss << "vn " << NormalVector[i] << "\n";
-			ss << "\n";
+				file_ptr << "vn " << NormalVector[i] << "\n";
+			file_ptr << "\n";
 
 			int sub_mesh_index = 0;
 			unsigned int base_index = 1;//VertexVector.size();
@@ -179,26 +169,30 @@ namespace GASS
 			{
 				for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				{
-					GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
-					ss << "g " << "submesh" << sub_mesh_index << "\n";
-					sub_mesh_index++;
+					
+						GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
+						if(sub_mesh->Type == TRIANGLE_LIST)
+						{
+						file_ptr << "g " << "submesh" << sub_mesh_index << "\n";
+						sub_mesh_index++;
 
-					ss << "usemtl " << sub_mesh->MaterialName << "\n";
+						file_ptr << "usemtl " << sub_mesh->MaterialName << "\n";
 
 
-					ss << "#num faces" << (sub_mesh->IndexVector.size()/3) << "\n";
+						file_ptr << "#num faces" << (sub_mesh->IndexVector.size()/3) << "\n";
 
 
-					for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
-					{
-						unsigned int v_index_1 = sub_mesh->IndexVector[j] + base_index;
-						unsigned int v_index_2 = sub_mesh->IndexVector[j+1] + base_index;
-						unsigned int v_index_3 = sub_mesh->IndexVector[j+2] + base_index;
-						ss << "f " << v_index_1 << "/" << v_index_1 << "/" << v_index_1 << " "
-							<< v_index_2 << "/" << v_index_2 << "/" << v_index_2 << " "
-							<< v_index_3 << "/" << v_index_3 << "/" << v_index_3 << "\n";
+						for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
+						{
+							unsigned int v_index_1 = sub_mesh->IndexVector[j] + base_index;
+							unsigned int v_index_2 = sub_mesh->IndexVector[j+1] + base_index;
+							unsigned int v_index_3 = sub_mesh->IndexVector[j+2] + base_index;
+							file_ptr << "f " << v_index_1 << "/" << v_index_1 << "/" << v_index_1 << " "
+								<< v_index_2 << "/" << v_index_2 << "/" << v_index_2 << " "
+								<< v_index_3 << "/" << v_index_3 << "/" << v_index_3 << "\n";
+						}
+						base_index += sub_mesh->PositionVector.size();
 					}
-					base_index += sub_mesh->PositionVector.size();
 				}
 			}
 
@@ -214,11 +208,19 @@ namespace GASS
 			<< FaceVector[i+1]+1 << "/" << FaceVector[i+1]+1 << "/" << i/3+1 << " "
 			<< FaceVector[i+2]+1 << "/" << FaceVector[i+2]+1 << "/" << i/3+1 << "\n";
 			*/
-			ss << "\n";
-			file_ptr << ss.str().c_str();     
-			file_ptr.close(); 
+			file_ptr << "\n";
+			try
 			{
-				std::stringstream ss;
+				//file_ptr << ss.str().c_str();     
+				file_ptr.close(); 
+			}
+			catch (std::exception &e)
+			{
+				LogManager::getSingleton().stream() << "Failed to write obj data to file:" << e.what();
+			}
+			
+			{
+				
 				std::ofstream file_ptr;   
 				file_ptr.open(out_file + ".mtl");
 
@@ -226,17 +228,16 @@ namespace GASS
 				while(iter != Materials.end())
 				{
 					GraphicsMaterial mat = iter->second;
-					ss << "\n";
-					ss << "newmtl " << iter->first << "\n";
-					ss << "Kd " << mat.GetDiffuse() << "\n";
-					ss << "Ka " << mat.GetAmbient() << "\n";
-					ss << "illum " << "1" << "\n";
+					file_ptr << "\n";
+					file_ptr << "newmtl " << iter->first << "\n";
+					file_ptr << "Kd " << mat.GetDiffuse() << "\n";
+					file_ptr << "Ka " << mat.GetAmbient() << "\n";
+					file_ptr << "illum " << "1" << "\n";
 					if(mat.Textures.size() > 0 && mat.Textures[0] !="")
-						ss << "map_Kd " << mat.Textures[0] << "\n";
-					ss << "\n";
+						file_ptr << "map_Kd " << mat.Textures[0] << "\n";
+					file_ptr << "\n";
 					iter++;
 				}
-				file_ptr << ss.str().c_str();     
 				file_ptr.close(); 
 
 				//copy textures

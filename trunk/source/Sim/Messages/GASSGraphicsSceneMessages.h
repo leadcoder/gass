@@ -187,6 +187,18 @@ namespace GASS
 
 
 
+	class ExportMeshRequest : public SceneRequestMessage
+	{
+	public:
+		ExportMeshRequest(const std::string &filename, SceneObjectPtr root_object, SenderID sender_id = -1, double delay= 0) :  m_Filename(filename),  m_RootObject(root_object),	  SceneRequestMessage(sender_id , delay)  
+		{
+
+		}
+		std::string m_Filename;
+		SceneObjectPtr m_RootObject;
+	};
+	typedef SPTR<ExportMeshRequest> ExportMeshRequestPtr;
+
 }
 
 #endif

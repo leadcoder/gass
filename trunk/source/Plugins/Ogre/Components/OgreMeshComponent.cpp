@@ -254,7 +254,7 @@ namespace GASS
 			{
 				Ogre::Technique* tech = mat->getBestTechnique();
 				//Get last pass and save materials
-				if(tech->getNumPasses() > 0)
+				if(tech && tech->getNumPasses() > 0)
 				{
 					Ogre::Pass*  pass = tech->getPass(tech->getNumPasses()-1);
 
@@ -358,7 +358,6 @@ namespace GASS
 				//curNormals++;
 			}
 			nbuf->unlock();
-
 		}
 		const Ogre::VertexElement* textureElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_TEXTURE_COORDINATES);
 
