@@ -143,7 +143,7 @@ namespace GASS
 
 
 
-					//serlize
+					//serliaze
 					//delete[] mesh_data_vec[i]->FaceVector;
 					//delete[] mesh_data_vec[i]->VertexVector;
 					//delete mesh_data_vec[i];
@@ -231,7 +231,7 @@ namespace GASS
 					ss << "Kd " << mat.GetDiffuse() << "\n";
 					ss << "Ka " << mat.GetAmbient() << "\n";
 					ss << "illum " << "1" << "\n";
-					if(mat.Textures.size() > 0)
+					if(mat.Textures.size() > 0 && mat.Textures[0] !="")
 						ss << "map_Kd " << mat.Textures[0] << "\n";
 					ss << "\n";
 					iter++;

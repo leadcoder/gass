@@ -273,7 +273,8 @@ namespace GASS
 					{
 						Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
 						std::string texture_name = textureUnit->getTextureName();
-						sub_mesh_data->Material.Textures.push_back(texture_name);
+						if(texture_name != "")
+							sub_mesh_data->Material.Textures.push_back(texture_name);
 					}
 				}
 			}
