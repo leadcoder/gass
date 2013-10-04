@@ -18,6 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+
+#include "Plugins/Ogre/Components/OgreMeshComponent.h"
+#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/OgreConvert.h"
+
+#include <OgreBone.h>
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
@@ -37,15 +44,13 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/Components/OgreMeshComponent.h"
-#include "Plugins/Ogre/Components/OgreLocationComponent.h"
-#include "Plugins/Ogre/OgreConvert.h"
-#include <OgreBone.h>
+
 using namespace Ogre;
 
 namespace GASS
 {
+
+	OgreMeshComponent::MeshMaterialCache OgreMeshComponent::m_MeshMaterialCache;
 
 	std::vector<std::string> OgreMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
 	{
@@ -78,19 +83,14 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 
-
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
 			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
 		RegisterProperty<std::string>("EnumerationResourceGroup", &OgreMeshComponent::GetEnumerationResourceGroup, &OgreMeshComponent::SetEnumerationResourceGroup,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
-		
-		//RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
-		//	FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("Mesh filename",PF_VISIBLE,"","MESH")));
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
-
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
@@ -334,8 +334,6 @@ namespace GASS
 			pbuf->unlock();
 		}
 
-
-
 		const Ogre::VertexElement* normElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_NORMAL);
 		if(normElem)
 		{
@@ -397,8 +395,8 @@ namespace GASS
 			
 			tbuf->unlock();
 		}
-
 	}
+
 
 	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh) 
 	{
@@ -440,6 +438,37 @@ namespace GASS
 					mesh->IndexVector.push_back(index + offset);
 				}
 				ibuf->unlock();
+			}
+		}
+	}
+
+	void OgreMeshComponent::RebuildMaterialCache()
+	{
+		if(m_MeshMaterialCache.find(m_MeshResource.Name()) == m_MeshMaterialCache.end())
+		{
+			std::vector<std::string> sub_mesh_mats;
+			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+			{
+				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+				Ogre::MaterialPtr mat = se->getMaterial();
+				sub_mesh_mats.push_back(mat->getName());
+			}
+			m_MeshMaterialCache[m_MeshResource.Name()] = sub_mesh_mats;
+		}
+	}
+
+	void OgreMeshComponent::RestoreMaterialsFromCache()
+	{
+		if(m_MeshMaterialCache.find(m_MeshResource.Name()) != m_MeshMaterialCache.end())
+		{
+			std::vector<std::string> sub_mesh_mats = m_MeshMaterialCache[m_MeshResource.Name()];
+			if(sub_mesh_mats .size() == m_OgreEntity->getNumSubEntities())
+			{
+				for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
+				{
+					Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
+					se->setMaterialName(sub_mesh_mats [i]);
+				}
 			}
 		}
 	}

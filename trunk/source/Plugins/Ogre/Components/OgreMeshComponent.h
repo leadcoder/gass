@@ -55,6 +55,7 @@ namespace GASS
 	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent 
 	{
 	public:
+		typedef	std::map<std::string, std::vector<std::string> > MeshMaterialCache;
 		OgreMeshComponent (void);
 		~OgreMeshComponent (void);
 		static void RegisterReflection();
@@ -90,7 +91,6 @@ namespace GASS
 		void SetCastShadow(bool castShadow);
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-
 		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDelete();
@@ -100,9 +100,10 @@ namespace GASS
 		void OnVisibilityMessage(MeshVisibilityMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
-	
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
+		void RebuildMaterialCache();
+		void RestoreMaterialsFromCache();
 
 		Ogre::Entity* m_OgreEntity;
 		RenderQueueBinder m_RenderQueue;
@@ -111,6 +112,9 @@ namespace GASS
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;
 		GeometryFlags m_GeomFlags;
+
+		//material cache
+		static MeshMaterialCache m_MeshMaterialCache;
 	};
 
 	typedef SPTR<OgreMeshComponent> OgreMeshComponentPtr;
