@@ -18,60 +18,44 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-
-
-#include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
+
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSGraphicsMesh.h"
+#include "Sim/GASSResource.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSSphere.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Plugins/Ogre/OgreRenderQueueBinder.h"
+#include <OgreEntity.h>
+#include <OgreSubEntity.h>
 #include <OgreManualObject.h>
 
-namespace Ogre
-{
-	class ManualObject;
-}
 
 namespace GASS
 {
-	
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IMeshComponent, public IGeometryComponent
+	class GASSPluginExport OgreMaterialCache 
 	{
 	public:
-		OgreManualMeshComponent(void);
-		~OgreManualMeshComponent(void);
-		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
+		OgreMaterialCache()
+		{
 
-		//IMeshComponent
-		virtual GraphicsMesh GetMeshData() const;
-	protected:
-		void SetCastShadow(bool castShadow);
-		bool GetCastShadow() const {return m_CastShadows;}
+		}
+		~OgreMaterialCache()
+		{
 
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnDataMessage(ManualMeshDataMessagePtr message);
-		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
-		void OnTextureMessage(TextureMessagePtr message);
-		void OnResetMaterial(ResetMaterialMessagePtr message);
-
-		void CreateMesh(ManualMeshDataPtr data);
-		void CreateMesh(GraphicsMeshPtr data);
-		void Clear();
-		void RecreateUserMaterials();
-
-		Ogre::ManualObject* m_MeshObject;
-		std::vector<GraphicsMesh> m_MeshData;
-		bool m_CastShadows;
-		GeometryFlags m_GeomFlags;
-		std::map<int,Ogre::MaterialPtr> m_UserMaterials;
+		}
+		static void Add(const std::string &name,Ogre::Entity* entity);
+		static void Restore(const std::string &name, Ogre::Entity* entity);
+		static void Add(Ogre::ManualObject* mo);
+		static void Restore(Ogre::ManualObject* mo );
+	private:		
+		//material cache
+		typedef	std::map<std::string, std::vector<std::string> > MaterialCacheMap;
+		static MaterialCacheMap m_MaterialCacheMap;
 	};
 }
 

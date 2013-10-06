@@ -79,10 +79,10 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "Blue";
 
 		std::vector<Vec3> conrners;
-		std::vector<Vec3> tex_coords;
+		std::vector<Vec4> tex_coords;
 
 		conrners.push_back(Vec3( size.x ,size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,size.y , size.z));
@@ -127,63 +127,63 @@ namespace GASS
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
 			postions.push_back(Vec3( size.x ,-size.y , -size.z));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
 			postions.push_back(Vec3( size.x ,size.y , -size.z));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 
 			
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
 			postions.push_back(Vec3( -size.x ,size.y , -size.z));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
 			postions.push_back(Vec3( -size.x ,-size.y , size.z));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
-			tex_coords.push_back(Vec3( 1, 0 , 0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
+			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
 			postions.push_back(Vec3( size.x ,-size.y , size.z));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
-			tex_coords.push_back(Vec3( 0, 0 , 0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
+			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 
 			postions.push_back(Vec3( size.x ,size.y , size.z));
 			postions.push_back(Vec3( size.x ,size.y , size.z));
 			postions.push_back(Vec3( size.x ,size.y , size.z));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
-			tex_coords.push_back(Vec3( 0, 1 , 0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
+			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
 			postions.push_back(Vec3( -size.x ,size.y , size.z));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
-			tex_coords.push_back(Vec3( 1, 1 , 0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
+			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 
 			//bottom
 			sub_mesh_data->IndexVector.push_back(0);
@@ -275,15 +275,16 @@ namespace GASS
 			normal_indcies.push_back(3);
 			normal_indcies.push_back(1);
 
-			std::vector<Vec4> tex_coords;
+			//std::vector<Vec4> tex_coords;
 			for(int i = 0; i < postions.size(); i++)
 			{
 				Vec3 normal = normals[normal_indcies[i]]; 
 				Vec4 tex_coord(tex_coords[i].x,tex_coords[i].y,0,0);
 				sub_mesh_data->PositionVector.push_back(postions[i]);
 				sub_mesh_data->NormalVector.push_back(normal);
-				tex_coords.push_back(tex_coord);
+				//tex_coords.push_back(tex_coord);
 			}
+
 			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 		}
 		

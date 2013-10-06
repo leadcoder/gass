@@ -52,11 +52,11 @@
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/OgreMaterialCache.h"
 
 namespace GASS
 {
 	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),
-		m_UniqueMaterialCreated(false),
 		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
 		m_CastShadows(false)
 	{
@@ -83,7 +83,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
 
 	}
 
@@ -182,28 +182,24 @@ namespace GASS
 				m_MeshObject->end();
 			}
 		}
+		OgreMaterialCache::Add(m_MeshObject);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
+
+	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
+	{
+		OgreMaterialCache::Restore(m_MeshObject);
+	}
 
 	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
 	{
 		if(message->GetTexture() == "")
 			return;
-
-		if(!m_UniqueMaterialCreated) 
+		m_MeshObject->getSection(0)->setMaterialName(m_UserMaterials[0]->getName());
+		if(m_UserMaterials[0]->getNumTechniques() > 0)
 		{
-			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
-			std::string mat_name = m_MeshObject->getName() + mat->getName();
-			mat = mat->clone(mat_name);
-			m_MeshObject->getSection(0)->setMaterialName(mat_name);
-			m_UniqueMaterialCreated = true;
-		}
-		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
-
-		if(mat->getNumTechniques() > 0)
-		{
-			Ogre::Technique * technique = mat->getTechnique(0);
+			Ogre::Technique * technique = m_UserMaterials[0]->getTechnique(0);
 			if(technique->getNumPasses() > 0)
 			{
 				Ogre::Pass* pass = technique->getPass(0);
@@ -228,30 +224,33 @@ namespace GASS
 		}
 	}
 
+
+	void OgreManualMeshComponent::RecreateUserMaterials()
+	{
+		m_UserMaterials.clear();
+
+		for(size_t i= 0;  i< m_MeshObject->getNumSections(); i++)
+		{
+			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(i)->getMaterialName());
+			std::string mat_name = m_MeshObject->getName() + mat->getName();
+			m_UserMaterials[i] = mat->clone(mat_name);
+		}
+	}
+	
+
 	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
-
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
-		if(!m_UniqueMaterialCreated) 
-		{
-			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
-			if(mat.isNull()) 
-				return;
-			std::string mat_name = m_MeshObject->getName() + mat->getName();
-			mat = mat->clone(mat_name);
-			m_MeshObject->getSection(0)->setMaterialName(mat_name);
-			m_UniqueMaterialCreated = true;
-		}
-
+		
+		Ogre::MaterialPtr mat = m_UserMaterials[0];
+		m_MeshObject->getSection(0)->setMaterialName(mat->getName());
+		
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();
 		Vec3 si = message->GetSelfIllumination();
-		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(0)->getMaterialName());
-		if(mat.isNull()) 
-			return;
-
+		
 		if(diffuse.w >= 0)
 			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
 		if(ambient.x >= 0)

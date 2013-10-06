@@ -104,7 +104,7 @@ namespace GASS
 		Vec3 p1,p2,p3,p4;
 		Vec3 n1,n2,n3,n4;
 
-		sub_mesh_data->MaterialName = "PlaneGeometry";//"WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "White";
 		
 		ColorRGBA color(1,1,1,m_Transparency);
 		sub_mesh_data->Type = TRIANGLE_LIST;

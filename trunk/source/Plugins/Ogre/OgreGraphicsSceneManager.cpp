@@ -60,7 +60,7 @@ namespace GASS
 		m_FogMode(Ogre::FOG_LINEAR),
 		m_FogDensity(0.01),
 		m_FogColor(1,1,1),
-		m_AmbientColor(1,1,1),
+		m_AmbientColor(0.5,0.5,0.5),
 		//Shadows
 		m_ShadowMode(TEXTURE_SHADOWS_ADDITIVE_INTEGRATED),
 		m_ShadowCasterMaterial("DepthShadowmap_Caster_Float"),

@@ -23,6 +23,7 @@
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/OgreMaterialCache.h"
 
 #include <OgreBone.h>
 #include <OgreSceneNode.h>
@@ -49,9 +50,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-
-	OgreMeshComponent::MeshMaterialCache OgreMeshComponent::m_MeshMaterialCache;
-
 	std::vector<std::string> OgreMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
 	{
 		std::vector<std::string> content;
@@ -101,6 +99,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,MeshVisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
 	}
@@ -152,8 +152,9 @@ namespace GASS
 			//LoadLightmap();
 			SetCastShadow(m_CastShadow);
 			SetRenderQueue(m_RenderQueue);
-
+			OgreMaterialCache::Add(m_MeshResource.Name(),m_OgreEntity);
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			
 		}
 	}
 
@@ -442,37 +443,6 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::RebuildMaterialCache()
-	{
-		if(m_MeshMaterialCache.find(m_MeshResource.Name()) == m_MeshMaterialCache.end())
-		{
-			std::vector<std::string> sub_mesh_mats;
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				sub_mesh_mats.push_back(mat->getName());
-			}
-			m_MeshMaterialCache[m_MeshResource.Name()] = sub_mesh_mats;
-		}
-	}
-
-	void OgreMeshComponent::RestoreMaterialsFromCache()
-	{
-		if(m_MeshMaterialCache.find(m_MeshResource.Name()) != m_MeshMaterialCache.end())
-		{
-			std::vector<std::string> sub_mesh_mats = m_MeshMaterialCache[m_MeshResource.Name()];
-			if(sub_mesh_mats .size() == m_OgreEntity->getNumSubEntities())
-			{
-				for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-				{
-					Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-					se->setMaterialName(sub_mesh_mats [i]);
-				}
-			}
-		}
-	}
-
 	void OgreMeshComponent::SetTexCoordSpeed(const Vec2 &speed)
 	{
 		if(!m_OgreEntity)
@@ -586,6 +556,10 @@ namespace GASS
 		}
 	}
 
+	void OgreMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
+	{
+		OgreMaterialCache::Restore(m_MeshResource.Name(),m_OgreEntity);
+	}
 
 	void OgreMeshComponent::SetCastShadow(bool castShadow) 
 	{

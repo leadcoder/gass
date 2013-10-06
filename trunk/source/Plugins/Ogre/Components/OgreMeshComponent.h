@@ -97,6 +97,8 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
 		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnResetMaterial(ResetMaterialMessagePtr message);
+
 		void OnVisibilityMessage(MeshVisibilityMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
@@ -112,9 +114,6 @@ namespace GASS
 		bool m_ReadyToLoadMesh;
 		bool m_UniqueMaterialCreated;
 		GeometryFlags m_GeomFlags;
-
-		//material cache
-		static MeshMaterialCache m_MeshMaterialCache;
 	};
 
 	typedef SPTR<OgreMeshComponent> OgreMeshComponentPtr;
