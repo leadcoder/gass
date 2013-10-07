@@ -22,6 +22,7 @@
 
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystem.h"
+#include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
@@ -67,14 +68,15 @@ namespace GASS
 		virtual RenderWindowVector GetRenderWindows() const;
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
-		
+		virtual void AddMaterial(const std::string &mat_name, const GraphicsMaterial &material);
+		virtual void AddMaterial(const std::string &mat_name, const std::string &base_mat_name,const GraphicsMaterial &material);
 	public: //ogre specific
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
+		static void SetMaterial(Ogre::MaterialPtr mat , const GraphicsMaterial &material);
 	protected:
-
 		ADD_PROPERTY(bool,UpdateMessagePump);
 		ADD_PROPERTY(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);

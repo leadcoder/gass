@@ -370,6 +370,31 @@ namespace GASS
 		//ReloadMaterials();
 	}
 
+	void OgreGraphicsSystem::AddMaterial(const std::string &mat_name, const GraphicsMaterial &material)
+	{
+		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create( mat_name , Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true );
+		SetMaterial(mat , material);
+	}
+
+	void OgreGraphicsSystem::AddMaterial(const std::string &mat_name, const std::string &base_mat_name,const GraphicsMaterial &material)
+	{
+		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName( mat_name);
+		SetMaterial(mat , material);
+	}
+
+	void OgreGraphicsSystem::SetMaterial(Ogre::MaterialPtr mat , const GraphicsMaterial &material)
+	{
+		ColorRGBA diffuse = material.GetDiffuse();
+		ColorRGB ambient = material.GetAmbient();
+		ColorRGB specular = material.GetSpecular();
+		ColorRGB si = material.GetSelfIllumination();
+		mat->setDiffuse(diffuse.r,diffuse.g,diffuse.b,diffuse.a);
+		mat->setAmbient(ambient.r,ambient.g,ambient.b);
+		mat->setSpecular(specular.r,specular.g,specular.b,1);
+		mat->setSelfIllumination(si.r,si.g,si.b);
+		mat->setShininess(material.GetShininess());
+	}
+
 /*	void OgreGraphicsSystem::ReloadMaterials()
 	{
 		// This is optional if you don't need textures to update
