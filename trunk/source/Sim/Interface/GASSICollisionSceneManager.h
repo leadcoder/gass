@@ -90,8 +90,9 @@ namespace GASS
 			implementation is threaded and therefore is busy processing other requests
 		*/
 		virtual void Force(CollisionRequest &request, CollisionResult &result) const = 0;
+
 	protected:
 	};
 
-	typedef boost::shared_ptr<ICollisionSceneManager> CollisionSceneManagerPtr;
+	typedef SPTR<ICollisionSceneManager> CollisionSceneManagerPtr;
 }

@@ -183,6 +183,7 @@ namespace GASS
 			}
 		}
 		OgreMaterialCache::Add(m_MeshObject);
+		RecreateUserMaterials();
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 

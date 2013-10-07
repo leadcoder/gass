@@ -427,6 +427,16 @@ namespace GASS
 	};
 	typedef SPTR<MaterialMessage> MaterialMessagePtr;
 
+	class ResetMaterialMessage : public BaseMessage
+	{
+	public:
+		ResetMaterialMessage(SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay){}
+	private:
+	};
+	typedef SPTR<ResetMaterialMessage> ResetMaterialMessagePtr;
+	
+
 
 	/**
 	Message used to change texture of manual mesh object

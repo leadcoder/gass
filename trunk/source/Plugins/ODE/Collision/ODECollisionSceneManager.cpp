@@ -195,40 +195,7 @@ namespace GASS
 			}
 		}
 	}
-
-	Float ODECollisionSceneManager::GetHeight(const Vec3 &pos, bool absolute) const
-	{
-		CollisionRequest request;
-		CollisionResult result;
-
-		Vec3 up(0,1,0);
-
-		Vec3 ray_start = pos;
-		Vec3 ray_direction = -up;
-		//max raycast 2000000 units down
-		ray_direction = ray_direction*2000000;
-
-		request.LineStart = ray_start;
-		request.LineEnd = ray_start + ray_direction;
-		request.Type = COL_LINE;
-		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
-		ODELineCollision raycast(&request,&result,(dGeomID)GetSpace());
-		raycast.Process();
-
-		if(result.Coll)
-		{
-			Vec3 col_pos;
-			if(absolute)
-				col_pos  = result.CollPosition;
-			else
-				col_pos = pos - result.CollPosition;
-
-			col_pos = col_pos *up;
-			return col_pos.Length();
-		}
-		return 0;
-	}
+	
 
 	//use cache
 	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr physics_mesh)

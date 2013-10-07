@@ -230,7 +230,7 @@ namespace GASS
 		}
 	}
 	
-	Float OSGCollisionSceneManager::GetHeight(const Vec3 &pos, bool absolute) const
+	/*Float OSGCollisionSceneManager::GetHeight(const Vec3 &pos, bool absolute) const
 	{
 		CollisionRequest request;
 		CollisionResult result;
@@ -266,7 +266,7 @@ namespace GASS
 			return col_pos.Length();
 		}
 		return 0;
-	}
+	}*/
 
 	void OSGCollisionSceneManager::ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const
 	{
