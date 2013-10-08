@@ -543,59 +543,6 @@ namespace GASS
 	}
 
 
-	void OSGGraphicsSystem::UpdateStateSet(osg::ref_ptr<osg::StateSet> state_set, const GraphicsMaterial &material)
-	{
-		ColorRGBA diffuse = material.Diffuse;
-		ColorRGB ambient = material.Ambient;
-		ColorRGB specular = material.Specular;
-		ColorRGB si = material.SelfIllumination;
-
-		osg::ref_ptr<osg::Material> mat (new osg::Material);
-		if( diffuse.r >= 0)
-			mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.r,diffuse.g,diffuse.b,diffuse.a));
-		if( ambient.r >= 0)
-			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.r,ambient.g,ambient.b,1));
-		if( specular.r >= 0)
-			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.r,specular.g,specular.b,1));
-		if( material.Shininess >= 0)
-			mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
-		if( si.r >= 0)
-			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
-		
-		state_set->setAttribute(mat.get());
-		if(material.DepthTest)
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
-		else
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-		
-		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-        // Turn on blending
-		if(diffuse.a < 1.0)
-		{
-			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
-			state_set->setAttributeAndModes(bf);
-
-			// Enable blending, select transparent bin.
-			state_set->setMode( GL_BLEND, osg::StateAttribute::ON );
-			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-			// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
-			state_set->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
-
-			// Conversely, disable writing to depth buffer so that
-			// a transparent polygon will allow polygons behind it to shine through.
-			// OSG renders transparent polygons after opaque ones.
-			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
-			depth->setWriteMask( false );
-			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
-		}
-		else //restore blending
-		{
-
-		}
-	}
-
-
 	std::vector<std::string> OSGGraphicsSystem::GetMaterialNames(std::string resource_group) const
 	{
 		std::vector<std::string> content;
@@ -624,6 +571,93 @@ namespace GASS
 		}
 		return content;
 	}
+
+	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name)
+	{
+
+		osg::ref_ptr<osg::StateSet> state_set;
+		SetOSGStateSet(material, state_set);
+		m_Materials[material.Name] = state_set;
+	}
+
+	bool OSGGraphicsSystem::HasMaterial(const std::string &mat_name) const
+	{
+		if(m_Materials.find(mat_name) ==m_Materials.end())
+			return false;
+		return true;
+	}
+	void OSGGraphicsSystem::RemoveMaterial(const std::string &mat_name)
+	{
+		m_Materials.erase(m_Materials.find(mat_name));
+	}
+
+	GraphicsMaterial OSGGraphicsSystem::GetMaterial(const std::string &mat_name)
+	{
+		GraphicsMaterial ret;
+		SetGASSMaterial(m_Materials[mat_name],ret);
+		return ret;
+	}
+
+	void OSGGraphicsSystem::SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set,GraphicsMaterial &material)
+	{
+		osg::Material* mat  = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
+		const osg::Vec4 &ambient = mat->getAmbient(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4 &diffuse = mat->getDiffuse(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4 &specular = mat->getSpecular(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4 &si = mat->getEmission(osg::Material::FRONT_AND_BACK);
+		material.Ambient.Set(ambient.x(),ambient.y(),ambient.z());
+		material.Diffuse.Set(diffuse.x(),diffuse.y(),diffuse.z(),diffuse.w());
+		material.Specular.Set(specular.x(),specular.y(),specular.z());
+		material.SelfIllumination.Set(si.x(),si.y(),si.z());
+
+		//copy textures!
+	}
+
+	void OSGGraphicsSystem::SetOSGStateSet(const GraphicsMaterial &material, osg::ref_ptr<osg::StateSet> state_set)
+	{
+		ColorRGBA diffuse = material.Diffuse;
+		ColorRGB ambient = material.Ambient;
+		ColorRGB specular = material.Specular;
+		ColorRGB si = material.SelfIllumination;
+
+		osg::ref_ptr<osg::Material> mat (new osg::Material);
+		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.r,diffuse.g,diffuse.b,diffuse.a));
+		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.r,ambient.g,ambient.b,1));
+		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.r,specular.g,specular.b,1));
+		mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
+		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
+		state_set->setAttribute(mat.get());
+		if(material.DepthTest)
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
+		else
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		// Turn on blending
+		if(diffuse.a < 1.0)
+		{
+			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			state_set->setAttributeAndModes(bf);
+
+			// Enable blending, select transparent bin.
+			state_set->setMode( GL_BLEND, osg::StateAttribute::ON );
+			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+			// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
+			state_set->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+
+			// Conversely, disable writing to depth buffer so that
+			// a transparent polygon will allow polygons behind it to shine through.
+			// OSG renders transparent polygons after opaque ones.
+			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
+			depth->setWriteMask( false );
+			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
+		}
+		else //restore blending
+		{
+
+		}
+	}
+
 
 }
 

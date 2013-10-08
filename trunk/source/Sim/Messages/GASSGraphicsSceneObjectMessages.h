@@ -410,16 +410,16 @@ namespace GASS
 	class ReplaceMaterialMessage : public BaseMessage
 	{
 	public:
-		ReplaceMaterialMessage(const std::string &material_name, unsigned int sub_mesh_id = -1, SenderID sender_id = -1, double delay= 0) :
+		ReplaceMaterialMessage(const std::string &material_name, int sub_mesh_id = -1, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_MaterialName(material_name),m_SubMeshID(sub_mesh_id)
 		  {
 
 		  }
 		  std::string GetMaterialName() const {return m_MaterialName;}
-		  unsigned int GetSubMeshID()const {return m_SubMeshID;}
+		  int GetSubMeshID()const {return m_SubMeshID;}
 	private:
 		std::string m_MaterialName;
-		unsigned int m_SubMeshID;
+		int m_SubMeshID;
 	};
 	typedef SPTR<ReplaceMaterialMessage> ReplaceMaterialMessagePtr;
 

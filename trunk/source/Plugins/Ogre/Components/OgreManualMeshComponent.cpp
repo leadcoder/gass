@@ -84,7 +84,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
-
 	}
 
 	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -185,7 +184,6 @@ namespace GASS
 		OgreMaterialCache::Add(m_MeshObject);
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
-
 
 	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
 	{
@@ -294,8 +292,6 @@ namespace GASS
 		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);
 		//remove mesh!
 		Ogre::MeshManager::getSingleton().remove("ConvertedTempMesh");
-
-
 		return mesh_data;
 	}
 }

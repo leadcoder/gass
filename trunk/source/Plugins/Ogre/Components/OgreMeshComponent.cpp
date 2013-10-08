@@ -24,6 +24,8 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/OgreMaterialCache.h"
+#include "Plugins/Ogre/OgreGraphicsSystem.h"
+
 
 #include <OgreBone.h>
 #include <OgreSceneNode.h>
@@ -100,7 +102,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
-		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,MeshVisibilityMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
 	}
@@ -157,7 +158,6 @@ namespace GASS
 			
 		}
 	}
-
 
 	void OgreMeshComponent::OnVisibilityMessage(MeshVisibilityMessagePtr message)
 	{
@@ -251,7 +251,9 @@ namespace GASS
 			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
 			
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
-			if (!mat.isNull()) 
+			OgreGraphicsSystem::SetGASSMaterial(mat,sub_mesh_data->Material);
+			
+			/*if (!mat.isNull()) 
 			{
 				Ogre::Technique* tech = mat->getBestTechnique();
 				//Get last pass and save materials
@@ -278,7 +280,7 @@ namespace GASS
 							sub_mesh_data->Material.Textures.push_back(texture_name);
 					}
 				}
-			}
+			}*/
 
 			if (!sub_mesh->useSharedVertices)
 			{
@@ -401,17 +403,6 @@ namespace GASS
 
 	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh) 
 	{
-		//const unsigned int prev_size = mesh->NumFaces;
-		//mesh->NumFaces += (unsigned int)data->indexCount;
-
-		/*unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
-		if (mesh->FaceVector)
-		{
-			memcpy (tmp_ind, mesh->FaceVector, sizeof(unsigned int) * prev_size);
-			delete[] mesh->FaceVector;
-		}
-		mesh->FaceVector = tmp_ind;*/
-
 		if(index_data->indexCount > 0)
 		{
 

@@ -51,13 +51,16 @@ namespace GASS
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const;
 
-		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = ""){}
-		virtual bool HasMaterial(const std::string &mat_name) const {return false;}
+		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "");
+		virtual bool HasMaterial(const std::string &mat_name) const;
+		virtual void RemoveMaterial(const std::string &mat_name);
+		virtual GraphicsMaterial GetMaterial(const std::string &mat_name);
 
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
-		static void UpdateStateSet(osg::ref_ptr<osg::StateSet> state, const GraphicsMaterial &material);
+		static void SetOSGStateSet(const GraphicsMaterial &material,osg::ref_ptr<osg::StateSet> state);
+		static void SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set,GraphicsMaterial &material);
 	protected:
 		ADD_PROPERTY(bool,FlipDDS);
 		void LoadXML(TiXmlElement *elem);
@@ -78,7 +81,8 @@ namespace GASS
 		std::string m_ShadowSettingsFile;
 		TextBox* m_DebugTextBox;
 		std::map<std::string,TextBox*>  m_TextBoxes;
-		
+		typedef std::map<std::string, osg::ref_ptr<osg::StateSet> > MaterialMap;
+		MaterialMap m_Materials;
 	};
 	typedef SPTR<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef WPTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

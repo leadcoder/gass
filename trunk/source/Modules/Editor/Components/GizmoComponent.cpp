@@ -71,8 +71,8 @@ namespace GASS
 			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
 
 		// create materials
-		const std::string m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
-		const std::string m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
+		m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
+		m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
 		
 		GraphicsMaterial regmat;
 		regmat.Name = m_RegularMat;
@@ -86,10 +86,10 @@ namespace GASS
 		
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if(!gfx_sys->HasMaterial(m_RegularMat))
-			gfx_sys->AddMaterial(regmat);
+			gfx_sys->AddMaterial(regmat,"GizmoArrowMat");
 
 		if(!gfx_sys->HasMaterial(m_HighlightMat))
-			gfx_sys->AddMaterial(hlmat);
+			gfx_sys->AddMaterial(hlmat,"GizmoArrowMat");
 	}
 
 	void GizmoComponent::OnDelete()
@@ -559,7 +559,7 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				MessagePtr mat_mess(new ReplaceMaterialMessage(m_RegularMat));
+				MessagePtr mat_mess(new ReplaceMaterialMessage(m_HighlightMat));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = true;
@@ -568,7 +568,7 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				MessagePtr mat_mess(new ReplaceMaterialMessage(m_HighlightMat));
+				MessagePtr mat_mess(new ReplaceMaterialMessage(m_RegularMat));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = false;
