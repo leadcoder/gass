@@ -63,14 +63,13 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnInitialize()
 	{
+		m_GFXSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 
-
-		//m_OSGGeometry = new osg::Geometry();
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
@@ -85,14 +84,12 @@ namespace GASS
 		m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
 		m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
 
-		//m_GeoNode->addDrawable(m_OSGGeometry.get());
-
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(m_GeomFlags);
-
-
 		BaseSceneComponent::OnInitialize();
+		
+
 	}
 
 	void OSGManualMeshComponent::SetCastShadow(bool value)
@@ -133,7 +130,6 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
 	{
-
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
@@ -148,7 +144,6 @@ namespace GASS
 		CreateMesh(data);
 	}
 
-
 	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshMessagePtr message)
 	{
 		Clear();
@@ -162,38 +157,11 @@ namespace GASS
 			m_GeoNode->removeDrawable(m_OSGGeometries[i]);
 		}
 		m_OSGGeometries.clear();
-
-		/*osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
-		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
-		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
-		osg::Vec2Array* tex_coords_0 = static_cast<osg::Vec2Array*>( m_OSGGeometry->getTexCoordArray(0));
-
-		if(vertices)
-		vertices->clear();
-		if(colors)
-		colors->clear();
-
-		if(normals)
-		normals->clear();
-
-		if(tex_coords_0)
-		tex_coords_0->clear();
-
-
-
-		m_OSGGeometry->setVertexArray(vertices);
-		m_OSGGeometry->setColorArray(colors);
-
-
-		if(m_OSGGeometry->getNumPrimitiveSets() > 0)
-		m_OSGGeometry->removePrimitiveSet(0);
-
-		m_OSGGeometry->dirtyBound();*/
 	}
 
 	void OSGManualMeshComponent::CreateSubMesh(GraphicsSubMeshPtr sm, osg::ref_ptr<osg::Geometry> geom )
 	{
-
+		
 		/*if(data->Material != m_CurrentMaterial) //try loading material
 		{
 		m_CurrentMaterial = data->Material;
@@ -214,8 +182,13 @@ namespace GASS
 		//m_OSGGeometry->setStateSet(state_copy);
 		}*/
 
+		if(sm->MaterialName != "" && m_GFXSystem->HasMaterial(sm->MaterialName))
+		{
+			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(sm->MaterialName);
+			geom->setStateSet(state_set);
+		}
+	
 		osg::PrimitiveSet::Mode op;
-
 		switch(sm->Type)
 		{
 		case LINE_LIST:
@@ -223,7 +196,6 @@ namespace GASS
 			break;
 		case POINT_LIST:
 			op = osg::PrimitiveSet::POINTS;
-
 			break;
 		case LINE_STRIP:
 			op = osg::PrimitiveSet::LINE_STRIP;
@@ -254,181 +226,61 @@ namespace GASS
 			geom->addPrimitiveSet(new osg::DrawArrays(op, 0, sm->PositionVector.size()));
 		}
 
-		/*osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( geom->getVertexArray());
-		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( geom->getColorArray());
-		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( geom->getNormalArray());
-		osg::Vec2Array* tex_coords_0 = static_cast<osg::Vec2Array*>( geom->getTexCoordArray(0));*/
-		//osg::ref_ptr<osg::Vec2Array> tex_coords_0 = static_cast<osg::Vec2Array*>( geom->getTexCoordArray(0));
 		osg::ref_ptr<osg::Vec3Array> positions = new osg::Vec3Array();
-		osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array;
-		osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array;
-		osg::ref_ptr<osg::Vec2Array> tex_coords_0 = new osg::Vec2Array;
-		/*vertices->resize(sm->PositionVector.size());
-		colors->resize(sm->ColorVector.size());
-		normals->resize(sm->NormalVector.size());
-		tex_coords_0->resize(sm->TexCoordVector.size());*/
 		for(size_t  i = 0; i < sm->PositionVector.size(); i++)
 		{
 			positions->push_back(OSGConvert::Get().ToOSG(sm->PositionVector[i]));
 		}
+		geom->setVertexArray(positions);
 
-		for(size_t i = 0; i < sm->NormalVector.size(); i++)
+		if(sm->NormalVector.size() > 0)
 		{
-			normals->push_back(OSGConvert::Get().ToOSG(sm->NormalVector[i]));
+			osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array;
+			for(size_t i = 0; i < sm->NormalVector.size(); i++)
+			{
+				normals->push_back(OSGConvert::Get().ToOSG(sm->NormalVector[i]));
+			}
+			geom->setNormalArray(normals);
+			geom->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
 		}
 
-		geom->setVertexArray(positions);
-		geom->setColorArray(colors);
-		geom->setNormalArray(normals);
-		geom->setTexCoordArray(0,tex_coords_0);
-		//geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-		//geom->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
+		if(sm->ColorVector.size() > 0)
+		{
+			osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array;
+			for(size_t i = 0; i < sm->ColorVector.size(); i++)
+			{
+				ColorRGBA color = sm->ColorVector[i];
+				colors->push_back(osg::Vec4(color.r,color.g,color.b,color.a));
+			}
+			geom->setColorArray(colors);
+			geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+		}
+
+		for(size_t i = 0; i < sm->TexCoordsVector.size(); i++)
+		{
+			osg::ref_ptr<osg::Vec2Array> tex_coords = new osg::Vec2Array;
+			for(size_t j = 0; j < sm->TexCoordsVector[i].size(); j++)
+			{
+				Vec4 texc = sm->TexCoordsVector[i][j];
+				tex_coords->push_back(osg::Vec2(texc.x,texc.y));
+			}
+			geom->setTexCoordArray(i,tex_coords);
+		}
 		geom->dirtyBound();
 	}
 
-
 	void OSGManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
 	{
+		Clear();
 		for(size_t i = 0; i < data->SubMeshVector.size(); i++)
 		{
 			GraphicsSubMeshPtr sm = data->SubMeshVector[i];
 			osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 			CreateSubMesh(sm,geom );
+			m_OSGGeometries.push_back(geom);
+			m_GeoNode->addDrawable(geom.get());
 		}
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-
-	/*	if(data->Material != m_CurrentMaterial) //try loading material
-		{
-			m_CurrentMaterial = data->Material;
-
-			const std::string osg_mat = data->Material + ".osg";
-			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-			if(rm->HasResource(osg_mat))
-			{
-				ResourceHandle res(osg_mat);
-				osg::ref_ptr<osg::Group> material = (osg::Group*) osgDB::readNodeFile(res.GetResource()->Path().GetFullPath());
-				osg::ref_ptr<osg::Node> node = material->getChild(0);
-				osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
-				osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
-				m_OSGGeometry->setStateSet(state_set);
-				//mat->setColorMode(osg::Material::ColorMode::DIFFUSE)
-			}
-			//osg::StateSet* state_copy =  static_cast<osg::StateSet*> (state_set->clone(osg::CopyOp::DEEP_COPY_STATESETS));
-			//m_OSGGeometry->setStateSet(state_copy);
-		}
-
-		if(m_OSGGeometry == NULL)
-			return;
-		osg::PrimitiveSet::Mode op;
-
-		switch(data->Type)
-		{
-		case LINE_LIST:
-			op = osg::PrimitiveSet::LINES;
-			break;
-		case POINT_LIST:
-			op = osg::PrimitiveSet::POINTS;
-
-			break;
-		case LINE_STRIP:
-			op = osg::PrimitiveSet::LINE_STRIP;
-			break;
-		case TRIANGLE_FAN:
-			op = osg::PrimitiveSet::TRIANGLE_FAN;
-			break;
-		case TRIANGLE_LIST:
-			op = osg::PrimitiveSet::TRIANGLES;
-			break;
-		case TRIANGLE_STRIP:
-			op = osg::PrimitiveSet::TRIANGLE_STRIP;
-			break;
-		}
-
-		osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>( m_OSGGeometry->getVertexArray());
-		osg::Vec4Array* colors = static_cast<osg::Vec4Array*>( m_OSGGeometry->getColorArray());
-		osg::Vec3Array* normals = static_cast<osg::Vec3Array*>( m_OSGGeometry->getNormalArray());
-		osg::Vec2Array* tex_coords_0 = static_cast<osg::Vec2Array*>( m_OSGGeometry->getTexCoordArray(0));
-
-		if(vertices)
-			vertices->clear();
-		else
-			vertices = new osg::Vec3Array();
-
-		if(colors)
-			colors->clear();
-		else
-			colors = new osg::Vec4Array;
-
-		if(normals)
-			normals->clear();
-		else
-			normals = new osg::Vec3Array;
-
-		if(tex_coords_0)
-			tex_coords_0->clear();
-		else
-			tex_coords_0 = new osg::Vec2Array;
-
-
-
-		vertices->resize(data->VertexVector.size());
-		colors->resize(data->VertexVector.size());
-		normals->resize(data->VertexVector.size());
-		tex_coords_0->resize(data->VertexVector.size());
-
-		if(data->IndexVector.size() > 0)
-		{
-			osg::DrawElementsUInt* de = new osg::DrawElementsUInt(op);
-			for(int i = 0; i < data->IndexVector.size(); i++)
-			{
-				de->push_back(data->IndexVector[i]);
-			}
-			if(m_OSGGeometry->getNumPrimitiveSets() > 0)
-				m_OSGGeometry->setPrimitiveSet(0,de);
-			else
-				m_OSGGeometry->addPrimitiveSet(de);
-		}
-		else
-		{
-			if(m_OSGGeometry->getNumPrimitiveSets() > 0)
-				m_OSGGeometry->setPrimitiveSet(0,new osg::DrawArrays(op, 0, data->VertexVector.size()));
-			else 
-				m_OSGGeometry->addPrimitiveSet(new osg::DrawArrays(op, 0, data->VertexVector.size()));
-		}
-
-		osg::Vec3Array::iterator vitr = vertices->begin();
-		osg::Vec4Array::iterator citr = colors->begin();
-		osg::Vec3Array::iterator nitr = normals->begin();
-		osg::Vec2Array::iterator titr = tex_coords_0->begin();
-
-
-		for(int i = 0; i < data->VertexVector.size(); i++)
-		{
-			Vec3 pos = data->VertexVector[i].Pos;
-			Vec3 normal = data->VertexVector[i].Normal;
-			Vec2 tex_coord  = data->VertexVector[i].TexCoord;
-			Vec4 color  = data->VertexVector[i].Color;
-
-			osg::Vec3 o_pos = OSGConvert::Get().ToOSG(pos); 
-			osg::Vec3 o_normal = OSGConvert::Get().ToOSG(normal); 
-			osg::Vec2 o_tex_coord;
-			o_tex_coord.set(tex_coord.x,tex_coord.y); 
-
-			(vitr++)->set(o_pos.x(), o_pos.y(), o_pos.z());
-			(citr++)->set(color.x, color.y, color.z,color.w);
-			(nitr++)->set(o_normal.x(), o_normal.y(), o_normal.z());
-			(titr++)->set(o_tex_coord.x(), o_tex_coord.y());
-		}
-
-		m_OSGGeometry->setVertexArray(vertices);
-		m_OSGGeometry->setColorArray(colors);
-		m_OSGGeometry->setTexCoordArray(0,tex_coords_0);
-
-
-		m_OSGGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-		m_OSGGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-		m_OSGGeometry->dirtyBound();*/
 	}
 
 	AABox OSGManualMeshComponent::GetBoundingBox() const

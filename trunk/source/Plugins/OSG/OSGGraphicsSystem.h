@@ -61,6 +61,7 @@ namespace GASS
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
 		static void SetOSGStateSet(const GraphicsMaterial &material,osg::ref_ptr<osg::StateSet> state);
 		static void SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set,GraphicsMaterial &material);
+		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
 	protected:
 		ADD_PROPERTY(bool,FlipDDS);
 		void LoadXML(TiXmlElement *elem);

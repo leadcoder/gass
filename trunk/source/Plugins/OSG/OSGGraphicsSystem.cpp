@@ -613,6 +613,11 @@ namespace GASS
 		//copy textures!
 	}
 
+	osg::ref_ptr<osg::StateSet> OSGGraphicsSystem::GetStateSet(const std::string &material_name)
+	{
+		return m_Materials[material_name];
+	}
+
 	void OSGGraphicsSystem::SetOSGStateSet(const GraphicsMaterial &material, osg::ref_ptr<osg::StateSet> state_set)
 	{
 		ColorRGBA diffuse = material.Diffuse;

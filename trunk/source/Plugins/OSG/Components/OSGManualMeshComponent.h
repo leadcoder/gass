@@ -20,6 +20,7 @@
 #pragma once
 
 #include "Sim/GASS.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include <osg/Geometry>
 
 namespace GASS
@@ -54,6 +55,7 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 		std::string m_CurrentMaterial; //book keep current material file
 		bool m_CastShadow;
+		OSGGraphicsSystemPtr m_GFXSystem;
 	};
 }
 
