@@ -403,7 +403,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-				bdrige_seg_obj2->PostMessage(GASS::MessagePtr(new GASS::MaterialMessage(GASS::Vec4(1,1,1,1),GASS::Vec3(1,1,1))));
+				//bdrige_seg_obj2->PostMessage(GASS::MessagePtr(new GASS::MaterialMessage(GASS::Vec4(1,1,1,1),GASS::Vec3(1,1,1))));
 			}
 		}
 		else if(GetAsyncKeyState(VK_F4))
