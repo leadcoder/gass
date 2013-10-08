@@ -14,7 +14,7 @@
   <Plugin PluginFile = "GASSPluginGame"/>
   <Plugin PluginFile = "GASSPluginBase"/>
   <Plugin PluginFile = "GASSPluginRakNet"/>
-  <Plugin PluginFile = "GASSPluginMyGUI"/>
+  <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
 </Plugins>
 <SetDataPath value="../../data/"/>
