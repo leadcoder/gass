@@ -14,6 +14,7 @@
   <Plugin PluginFile = "GASSPluginGame"/>
   <Plugin PluginFile = "GASSPluginBase"/>
   <Plugin PluginFile = "GASSPluginRakNet"/>
+  <Plugin PluginFile = "GASSPluginMyGUI"/>
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->
 </Plugins>
 <SetDataPath value="../../data/"/>
@@ -27,6 +28,9 @@
   </ResourceGroup>
   <ResourceGroup name="HYDRAX">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
+  </ResourceGroup>
+  <ResourceGroup name="MyGUI">
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI" type="FileSystem" recursive="true"/>
   </ResourceGroup>
   <ResourceGroup name="PagedGeometry">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
