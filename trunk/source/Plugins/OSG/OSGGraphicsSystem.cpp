@@ -575,7 +575,7 @@ namespace GASS
 	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name)
 	{
 
-		osg::ref_ptr<osg::StateSet> state_set;
+		osg::ref_ptr<osg::StateSet> state_set = new osg::StateSet();
 		SetOSGStateSet(material, state_set);
 		m_Materials[material.Name] = state_set;
 	}

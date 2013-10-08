@@ -38,7 +38,7 @@ namespace GASS
 			Specular(0,0,0),
 			SelfIllumination(0,0,0),
 			Shininess(0), 
-			DepthTest(false)
+			DepthTest(true)
 		{}
 		GraphicsMaterial(const std::string &name, const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : Diffuse(diffuse),
 			Ambient(ambient),

@@ -56,6 +56,16 @@ namespace GASS
 
 	void BoxGeometryComponent::OnInitialize()
 	{
+		const std::string mat_name = "BoxMaterial";
+		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		if(!gfx_sys->HasMaterial(mat_name))
+		{
+			GraphicsMaterial mat;
+			mat.Name = mat_name;
+			mat.Diffuse.Set(0,0,1,1);
+			mat.Ambient.Set(1,1,1);
+			gfx_sys->AddMaterial(mat);
+		}
 		UpdateMesh();
 	}
 
@@ -79,7 +89,7 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
-		sub_mesh_data->MaterialName = "Blue";
+		sub_mesh_data->MaterialName = "BoxMaterial";
 
 		std::vector<Vec3> conrners;
 		std::vector<Vec4> tex_coords;
