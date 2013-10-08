@@ -183,7 +183,7 @@ namespace GASS
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
 		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void OnVisibilityMessage(VisibilityMessagePtr message);
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);

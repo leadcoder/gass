@@ -98,7 +98,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
 		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,MeshVisibilityMessage ,0));
@@ -264,7 +264,7 @@ namespace GASS
 					const Ogre::ColourValue specular = pass->getSpecular();
 					const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
 					const Ogre::ColourValue emissive = pass->getEmissive();
-					GraphicsMaterial gfx_mat(ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
+					GraphicsMaterial gfx_mat(sub_mesh->getMaterialName(),ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
 						ColorRGB(ambient.r,ambient.g,ambient.b),
 						ColorRGB(specular.r,specular.g,specular.b));
 
@@ -506,53 +506,15 @@ namespace GASS
 		SetTexCoordSpeed(uv);
 	}
 
-	void OgreMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
+	void OgreMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
 	{
 		if(!m_OgreEntity)
 			return;
-		if(!m_UniqueMaterialCreated) 
-		{
-			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
-			{
-				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-				Ogre::MaterialPtr mat = se->getMaterial();
-				mat = mat->clone(m_OgreEntity->getName() + mat->getName());
-				se->setMaterial(mat);
-			}
-			m_UniqueMaterialCreated = true;
-		}
-
+	
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
-			Ogre::MaterialPtr mat = se->getMaterial();
-			Vec4 diffuse = message->GetDiffuse();
-			Vec3 ambient = message->GetAmbient();
-			Vec3 specular = message->GetSpecular();
-			Vec3 si = message->GetSelfIllumination();
-
-			if(diffuse.w >= 0)
-				mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
-			if(ambient.x >= 0)
-				mat->setAmbient(ambient.x,ambient.y,ambient.z);
-			if(specular.x >= 0)
-				mat->setSpecular(specular.x,specular.y,specular.z,1);
-			if(si.x >= 0)
-				mat->setSelfIllumination(si.x,si.y,si.z);
-			if(message->GetShininess() >= 0)
-				mat->setShininess(message->GetShininess());
-
-			//mat->setAmbient(ambinet.x,ambinet.y,ambinet.z);
-			if(diffuse.w < 1.0)
-			{
-				mat->setDepthWriteEnabled(false);
-				mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
-			}
-			else
-			{
-				mat->setDepthWriteEnabled(true);
-				mat->setSceneBlending(SBT_REPLACE);
-			}
+			se->setMaterialName(message->GetMaterialName());
 		}
 	}
 

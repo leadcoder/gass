@@ -67,4 +67,6 @@ namespace GASS
 		SceneWeakPtr m_Scene;
 		std::vector<SceneManagerListenerWeakPtr> m_Listeners;
 	};
+
+	typedef SPTR<BaseSceneManager> BaseSceneManagerPtr;
 }

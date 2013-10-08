@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	
+	class GraphicsMaterial;
 
 	/**
 		Interface that all graphics systems should be derived from.
@@ -63,16 +63,6 @@ namespace GASS
 		*/
 
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0) = 0;
-		/**
-			Create new viewport in render window 
-			@param name Unique viewport name
-			@param render_window Name of host render window
-			@param left Normalized viewport left position (where render window width pixels  goes from 0-1)
-			@param top Normalized viewport top position (where render window height pixels  goes from 0-1)
-			@param width Normalized viewport width  (where render window width == 1.0)
-			@param height Normalized viewport height (where render window height == 1.0)
-		*/
-//		virtual void CreateViewport(const std::string &name, const std::string &render_window, float  left, float top, float width, float height) = 0;
 
 		/**
 			Get material names from rendersystem. This function can be used by external components that want to enumerate materials inside the rendersytem. 
@@ -81,6 +71,8 @@ namespace GASS
 		*/
 
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const = 0;
+		virtual void AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name ="") = 0;
+		virtual bool HasMaterial(const std::string &mat_name) const = 0;
 	protected:
 	};
 	typedef SPTR<IGraphicsSystem> GraphicsSystemPtr;

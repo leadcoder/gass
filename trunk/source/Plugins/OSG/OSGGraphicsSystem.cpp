@@ -545,10 +545,10 @@ namespace GASS
 
 	void OSGGraphicsSystem::UpdateStateSet(osg::ref_ptr<osg::StateSet> state_set, const GraphicsMaterial &material)
 	{
-		ColorRGBA diffuse = material.GetDiffuse();
-		ColorRGB ambient = material.GetAmbient();
-		ColorRGB specular = material.GetSpecular();
-		ColorRGB si = material.GetSelfIllumination();
+		ColorRGBA diffuse = material.Diffuse;
+		ColorRGB ambient = material.Ambient;
+		ColorRGB specular = material.Specular;
+		ColorRGB si = material.SelfIllumination;
 
 		osg::ref_ptr<osg::Material> mat (new osg::Material);
 		if( diffuse.r >= 0)
@@ -557,13 +557,13 @@ namespace GASS
 			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.r,ambient.g,ambient.b,1));
 		if( specular.r >= 0)
 			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.r,specular.g,specular.b,1));
-		if( material.GetShininess() >= 0)
-			mat->setShininess(osg::Material::FRONT_AND_BACK,material.GetShininess());
+		if( material.Shininess >= 0)
+			mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
 		if( si.r >= 0)
 			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
 		
 		state_set->setAttribute(mat.get());
-		if(material.GetDepthTest())
+		if(material.DepthTest)
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 		else
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);

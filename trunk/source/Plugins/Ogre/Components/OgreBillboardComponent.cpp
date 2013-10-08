@@ -88,7 +88,7 @@ namespace GASS
 	void OgreBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,MaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,ReplaceMaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
 
@@ -191,11 +191,11 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
+	void OgreBillboardComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
 	{
-		const Vec4 color = message->GetDiffuse();
+		/*const Vec4 color = message->GetDiffuse();
 		if(m_Billboard)
-			m_Billboard->setColour(Ogre::ColourValue(color.x,color.y,color.z,color.w));
+			m_Billboard->setColour(Ogre::ColourValue(color.x,color.y,color.z,color.w));*/
 	}
 
 	void OgreBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)

@@ -186,16 +186,16 @@ namespace GASS
 	void OSGMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
 	}
 
 
-	void OSGMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
+	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
 	{
-		Vec4 diffuse = message->GetDiffuse();
+		/*Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();
 		Vec3 si = message->GetSelfIllumination();
@@ -221,7 +221,7 @@ namespace GASS
 		{
 			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			nodess->setAttributeAndModes(bf);
-		}
+		}*/
 	}
 
 

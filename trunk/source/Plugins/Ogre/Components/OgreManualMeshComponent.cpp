@@ -81,7 +81,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
 
@@ -183,7 +183,6 @@ namespace GASS
 			}
 		}
 		OgreMaterialCache::Add(m_MeshObject);
-		RecreateUserMaterials();
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
@@ -195,9 +194,8 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
 	{
-		if(message->GetTexture() == "")
+		/*if(message->GetTexture() == "")
 			return;
-		m_MeshObject->getSection(0)->setMaterialName(m_UserMaterials[0]->getName());
 		if(m_UserMaterials[0]->getNumTechniques() > 0)
 		{
 			Ogre::Technique * technique = m_UserMaterials[0]->getTechnique(0);
@@ -222,57 +220,25 @@ namespace GASS
 					}
 				}
 			}
-		}
+		}*/
 	}
 
-
-	void OgreManualMeshComponent::RecreateUserMaterials()
-	{
-		m_UserMaterials.clear();
-
-		for(size_t i= 0;  i< m_MeshObject->getNumSections(); i++)
-		{
-			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(m_MeshObject->getSection(i)->getMaterialName());
-			std::string mat_name = m_MeshObject->getName() + mat->getName();
-			m_UserMaterials[i] = mat->clone(mat_name);
-		}
-	}
-	
-
-	void OgreManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
+	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialMessagePtr message)
 	{
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
-		
-		Ogre::MaterialPtr mat = m_UserMaterials[0];
-		m_MeshObject->getSection(0)->setMaterialName(mat->getName());
-		
-		Vec4 diffuse = message->GetDiffuse();
-		Vec3 ambient = message->GetAmbient();
-		Vec3 specular = message->GetSpecular();
-		Vec3 si = message->GetSelfIllumination();
-		
-		if(diffuse.w >= 0)
-			mat->setDiffuse(diffuse.x,diffuse.y,diffuse.z,diffuse.w);
-		if(ambient.x >= 0)
-			mat->setAmbient(ambient.x,ambient.y,ambient.z);
-		if(specular.x >= 0)
-			mat->setSpecular(specular.x,specular.y,specular.z,1);
-		if(si.x >= 0)
-			mat->setSelfIllumination(si.x,si.y,si.z);
-		if(message->GetShininess() >= 0)
-			mat->setShininess(message->GetShininess());
-
-		/*if(diffuse.w < 1.0)
+	
+		if(message->GetSubMeshID() >= 0)
 		{
-		mat->setDepthCheckEnabled(false);
-		mat->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+			m_MeshObject->getSection(message->GetSubMeshID())->setMaterialName(message->GetMaterialName());
 		}
 		else
 		{
-		//mat->setDepthCheckEnabled(true);
-		mat->setSceneBlending(Ogre::SBT_REPLACE);
-		}*/
+			for(size_t i= 0;  i< m_MeshObject->getNumSections(); i++)
+			{
+				m_MeshObject->getSection(i)->setMaterialName(message->GetMaterialName());
+			}
+		}
 	}
 
 	AABox OgreManualMeshComponent::GetBoundingBox() const

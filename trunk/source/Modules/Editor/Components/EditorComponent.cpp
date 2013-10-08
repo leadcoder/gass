@@ -9,6 +9,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -19,7 +20,6 @@
 	
 namespace GASS
 {
-
 	EditorComponent::EditorComponent() : m_Lock (false), 
 		m_Visible(true), 
 		m_VisibilityTransparency(0.3), 
@@ -30,6 +30,7 @@ namespace GASS
 		m_ShowInTree(false),
 		m_AllowRemove(false),
 		m_AllowDragAndDrop(false)
+		
 	{
 		
 	}
@@ -52,7 +53,6 @@ namespace GASS
 		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
 		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
 		RegisterProperty<Vec4>("SelectedColor",&EditorComponent::GetSelectedColor, &EditorComponent::SetSelectedColor);
-		
 	}
 
 	void EditorComponent::OnInitialize()
@@ -61,6 +61,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+
 		SetLock(m_Lock); 
 		SetVisible(m_Visible);
 	}
@@ -146,7 +147,7 @@ namespace GASS
 		if(!m_ChangeMaterialWhenSelected)
 			return;
 		SceneObjectPtr new_selection = message->GetSceneObject();
-		if(GetSceneObject() == new_selection)
+		/*if(GetSceneObject() == new_selection)
 		{
 			m_Selected = true;
 			if(m_Visible)
@@ -157,7 +158,7 @@ namespace GASS
 			if(m_Visible)
 				GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(1,1,1))));
 			m_Selected = false;
-		}
+		}*/
 	}
 }
 

@@ -30,8 +30,11 @@ namespace GASS
 {
 	typedef std::string SceneObjectID; 
 	class SceneObjectTemplate;
+	class BaseSceneComponent;
+
 	typedef SPTR<SceneObjectTemplate> SceneObjectTemplatePtr;
 	typedef WPTR<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
+	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
 	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate , BaseComponentContainerTemplate>
 	{
@@ -43,6 +46,16 @@ namespace GASS
 		SceneObjectID GetID() const {return m_ID;}
 		void SetInstantiable(bool value) {m_Instantiable = value;}
 		bool GetInstantiable() const {return m_Instantiable;}
+		/**
+		Convinces function for BaseSceneComponent's that call AddComponent on BaseComponentContainerTemplate
+		*/
+		BaseSceneComponentPtr AddBaseSceneComponent(const std::string &comp_name);
+
+
+		/**
+		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainerTemplate
+		*/
+		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
 	protected:
 		SceneObjectID m_ID;
 		bool m_Instantiable;

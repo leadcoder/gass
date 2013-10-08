@@ -58,20 +58,18 @@ namespace GASS
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnReplaceMaterial(ReplaceMaterialMessagePtr message);
 		void OnTextureMessage(TextureMessagePtr message);
 		void OnResetMaterial(ResetMaterialMessagePtr message);
 
 		void CreateMesh(ManualMeshDataPtr data);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
-		void RecreateUserMaterials();
-
+		
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadows;
 		GeometryFlags m_GeomFlags;
-		std::map<int,Ogre::MaterialPtr> m_UserMaterials;
 	};
 }
 

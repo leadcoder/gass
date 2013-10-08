@@ -370,29 +370,47 @@ namespace GASS
 		//ReloadMaterials();
 	}
 
-	void OgreGraphicsSystem::AddMaterial(const std::string &mat_name, const GraphicsMaterial &material)
+	bool OgreGraphicsSystem::HasMaterial(const std::string &mat_name) const
 	{
-		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create( mat_name , Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true );
-		SetMaterial(mat , material);
+		return Ogre::MaterialManager::getSingleton().resourceExists(mat_name);
 	}
 
-	void OgreGraphicsSystem::AddMaterial(const std::string &mat_name, const std::string &base_mat_name,const GraphicsMaterial &material)
+	void OgreGraphicsSystem::AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name)
 	{
-		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName( mat_name);
+		Ogre::MaterialPtr mat;
+		const std::string mat_name = material.Name;
+		if(base_mat_name != "")
+		{
+			mat = Ogre::MaterialManager::getSingleton().getByName( mat_name);
+		}
+		else
+		{
+			mat = Ogre::MaterialManager::getSingleton().create( mat_name , Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true );
+		}
 		SetMaterial(mat , material);
 	}
 
 	void OgreGraphicsSystem::SetMaterial(Ogre::MaterialPtr mat , const GraphicsMaterial &material)
 	{
-		ColorRGBA diffuse = material.GetDiffuse();
-		ColorRGB ambient = material.GetAmbient();
-		ColorRGB specular = material.GetSpecular();
-		ColorRGB si = material.GetSelfIllumination();
+		ColorRGBA diffuse = material.Diffuse;
+		ColorRGB ambient = material.Ambient;
+		ColorRGB specular = material.Specular;
+		ColorRGB si = material.SelfIllumination;
 		mat->setDiffuse(diffuse.r,diffuse.g,diffuse.b,diffuse.a);
 		mat->setAmbient(ambient.r,ambient.g,ambient.b);
 		mat->setSpecular(specular.r,specular.g,specular.b,1);
 		mat->setSelfIllumination(si.r,si.g,si.b);
-		mat->setShininess(material.GetShininess());
+		mat->setShininess(material.Shininess);
+		/*if(diffuse.w < 1.0)
+		{
+			mat->setDepthWriteEnabled(false);
+			mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
+		}
+		else
+		{
+			mat->setDepthWriteEnabled(true);
+			mat->setSceneBlending(SBT_REPLACE);
+		}*/
 	}
 
 /*	void OgreGraphicsSystem::ReloadMaterials()

@@ -71,6 +71,9 @@ namespace GASS
 		Float m_GridDist;
 		bool m_Active;
 		EditorSceneManagerPtr m_EditorSceneManager;
+		std::string m_RegularMat;
+		std::string m_HighlightMat;
+
 	};
 
 	typedef SPTR<GizmoComponent> GizmoComponentPtr;

@@ -653,6 +653,10 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 	}
 
 
+	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name)
+	{
+		return DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
+	}
 
 	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
 	{

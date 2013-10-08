@@ -68,8 +68,8 @@ namespace GASS
 		virtual RenderWindowVector GetRenderWindows() const;
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
-		virtual void AddMaterial(const std::string &mat_name, const GraphicsMaterial &material);
-		virtual void AddMaterial(const std::string &mat_name, const std::string &base_mat_name,const GraphicsMaterial &material);
+		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "");
+		virtual bool HasMaterial(const std::string &mat_name) const;
 	public: //ogre specific
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}

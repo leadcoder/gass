@@ -66,7 +66,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,MaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 
 
@@ -360,9 +360,9 @@ namespace GASS
 	}
 
 
-	void OSGManualMeshComponent::OnMaterialMessage(MaterialMessagePtr message)
+	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
 	{
-		Vec4 diffuse = message->GetDiffuse();
+		/*Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
 		Vec3 specular = message->GetSpecular();
 		Vec3 si = message->GetSelfIllumination();
@@ -412,6 +412,6 @@ namespace GASS
 			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
 			depth->setWriteMask( false );
 			nodess->setAttributeAndModes( depth, osg::StateAttribute::ON );
-		}
+		}*/
 	}
 }

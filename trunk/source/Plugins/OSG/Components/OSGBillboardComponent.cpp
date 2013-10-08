@@ -77,7 +77,7 @@ namespace GASS
 	void OSGBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
 	}
 
@@ -182,7 +182,7 @@ namespace GASS
 
 	}
 
-	void OSGBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
+	/*void OSGBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
 	{
 		Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
@@ -213,7 +213,7 @@ namespace GASS
 			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			nodess->setAttributeAndModes(bf);
 		}
-	}
+	}*/
 
 	//From OSG billboard example
 	osg::ref_ptr<osg::Geometry> OSGBillboardComponent::CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image)

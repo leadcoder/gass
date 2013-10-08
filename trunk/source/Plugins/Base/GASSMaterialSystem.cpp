@@ -129,7 +129,6 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-
 	void MaterialSystem::AddMaterial(const PhysicsMaterial& mat) 
 	{
 		if(HasMaterial(mat.Name))

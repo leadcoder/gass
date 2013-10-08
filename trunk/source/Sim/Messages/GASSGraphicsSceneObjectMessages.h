@@ -403,10 +403,27 @@ namespace GASS
 	typedef SPTR<TextureCoordinateMessage> TextureCoordinateMessagePtr;
 
 	/**
-	Change material of mesh components
+	Replace material for sub mesh.
+	@param material_name New material name
+	@param sub_mesh_id Select which sub mesh id to replace/mod. If sub_mesh_id is -1 all sub_meshes are effected
 	*/
+	class ReplaceMaterialMessage : public BaseMessage
+	{
+	public:
+		ReplaceMaterialMessage(const std::string &material_name, unsigned int sub_mesh_id = -1, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_MaterialName(material_name),m_SubMeshID(sub_mesh_id)
+		  {
 
-	class MaterialMessage : public BaseMessage
+		  }
+		  std::string GetMaterialName() const {return m_MaterialName;}
+		  unsigned int GetSubMeshID()const {return m_SubMeshID;}
+	private:
+		std::string m_MaterialName;
+		unsigned int m_SubMeshID;
+	};
+	typedef SPTR<ReplaceMaterialMessage> ReplaceMaterialMessagePtr;
+
+	/*class MaterialMessage : public BaseMessage
 	{
 	public:
 		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(-1,-1,-1), const Vec3 &selfIllumination = Vec3(-1,-1,-1), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) :
@@ -425,17 +442,20 @@ namespace GASS
 		float m_Shininess;
 		bool m_DepthTest;
 	};
-	typedef SPTR<MaterialMessage> MaterialMessagePtr;
+	typedef SPTR<MaterialMessage> MaterialMessagePtr;*/
 
+
+	/**
+		Reset material to original state. After sending MaterialMessage request this message can
+		be used to reset material back to it's start state
+	*/
 	class ResetMaterialMessage : public BaseMessage
 	{
 	public:
-		ResetMaterialMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay){}
+		ResetMaterialMessage(SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay){}
 	private:
 	};
 	typedef SPTR<ResetMaterialMessage> ResetMaterialMessagePtr;
-	
 
 
 	/**

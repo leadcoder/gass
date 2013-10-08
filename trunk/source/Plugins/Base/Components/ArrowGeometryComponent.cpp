@@ -193,13 +193,13 @@ namespace GASS
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);
 
-		MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
+		/*MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),
 				Vec3(0,0,0),
 					Vec3(m_Color.x,m_Color.y,m_Color.z),
 					0,
 					false));
-		GetSceneObject()->PostMessage(mat_mess);
+		GetSceneObject()->PostMessage(mat_mess);*/
 	}
 	
 	void ArrowGeometryComponent::OnLoad(MessagePtr message)

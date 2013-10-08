@@ -224,8 +224,8 @@ namespace GASS
 					GraphicsMaterial mat = iter->second;
 					file_ptr << "\n";
 					file_ptr << "newmtl " << iter->first << "\n";
-					file_ptr << "Kd " << mat.GetDiffuse() << "\n";
-					file_ptr << "Ka " << mat.GetAmbient() << "\n";
+					file_ptr << "Kd " << mat.Diffuse << "\n";
+					file_ptr << "Ka " << mat.Ambient << "\n";
 					file_ptr << "illum " << "1" << "\n";
 					if(mat.Textures.size() > 0 && mat.Textures[0] !="")
 						file_ptr << "map_Kd " << mat.Textures[0] << "\n";

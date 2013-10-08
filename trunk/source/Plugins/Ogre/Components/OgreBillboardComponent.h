@@ -65,7 +65,7 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
 		std::string m_RenderQueue;
 		OgreMaterial m_Material;
 		bool m_CastShadow;

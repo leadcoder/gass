@@ -51,6 +51,9 @@ namespace GASS
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0);
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const;
 
+		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = ""){}
+		virtual bool HasMaterial(const std::string &mat_name) const {return false;}
+
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}

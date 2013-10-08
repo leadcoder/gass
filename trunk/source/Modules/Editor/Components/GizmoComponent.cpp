@@ -16,6 +16,7 @@
 #include "Sim/Interface/GASSIViewport.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #define MOVMENT_EPSILON 0.0000001
 #define MAX_SCALE_DISTANCE 300.0 //meters
@@ -62,13 +63,33 @@ namespace GASS
 		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 		m_Mode = m_EditorSceneManager->GetMouseToolController()->GetEditMode();
 
-		//Change geomtry flags
+		//Change geometry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(m_Type == GT_AXIS || m_Type == GT_PLANE)
 			gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
 		else
 			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
 
+		// create materials
+		const std::string m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
+		const std::string m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
+		
+		GraphicsMaterial regmat;
+		regmat.Name = m_RegularMat;
+		regmat.Diffuse.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5,m_Color.a);
+		regmat.Ambient.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
+
+		GraphicsMaterial hlmat;
+		hlmat.Name = m_HighlightMat;
+		hlmat.Diffuse = m_Color;
+		hlmat.Ambient.Set(m_Color.r,m_Color.g,m_Color.b);
+		
+		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		if(!gfx_sys->HasMaterial(m_RegularMat))
+			gfx_sys->AddMaterial(regmat);
+
+		if(!gfx_sys->HasMaterial(m_HighlightMat))
+			gfx_sys->AddMaterial(hlmat);
 	}
 
 	void GizmoComponent::OnDelete()
@@ -538,12 +559,7 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.a),
-					Vec3(0,0,0),
-					Vec3(0,0,0),
-					Vec3(m_Color.r,m_Color.g,m_Color.b),
-					0,
-					false));
+				MessagePtr mat_mess(new ReplaceMaterialMessage(m_RegularMat));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = true;
@@ -552,14 +568,7 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				Vec3 color(m_Color.r*0.5, m_Color.g*0.5,m_Color.b*0.5);
-
-				MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.a),
-					Vec3(0,0,0),
-					Vec3(0,0,0),
-					color,
-					0,
-					false));
+				MessagePtr mat_mess(new ReplaceMaterialMessage(m_HighlightMat));
 				GetSceneObject()->PostMessage(mat_mess);
 			}
 			m_Highlight = false;

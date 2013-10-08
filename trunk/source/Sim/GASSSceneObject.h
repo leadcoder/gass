@@ -35,6 +35,7 @@ namespace GASS
 	class MessageManager;
 	class Scene;
 	class SceneObject;
+	class BaseSceneComponent;
 
 	typedef SPTR<Scene> ScenePtr;
 	typedef WPTR<Scene> SceneWeakPtr;
@@ -42,6 +43,7 @@ namespace GASS
 	typedef SPTR<MessageManager> MessageManagerPtr;
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
 
 	/**
@@ -260,6 +262,11 @@ namespace GASS
 		void GenerateNewGUID(bool recursively);
 		void GenerateGUID(bool recursive);
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
+	
+		/**
+		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainer
+		*/
+		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
 	protected:
 		void InitializePointers();
 		void Initialize(ScenePtr scene);

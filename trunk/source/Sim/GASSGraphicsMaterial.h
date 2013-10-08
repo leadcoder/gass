@@ -33,37 +33,31 @@ namespace GASS
 	class GraphicsMaterial
 	{
 	public:
-		GraphicsMaterial() : m_Diffuse(1,1,1,1),
-			m_Ambient(1,1,1),
-			m_Specular(0,0,0),
-			m_SelfIllumination(0,0,0),
-			m_Shininess(0), 
-			m_DepthTest(false)
+		GraphicsMaterial() : Diffuse(1,1,1,1),
+			Ambient(1,1,1),
+			Specular(0,0,0),
+			SelfIllumination(0,0,0),
+			Shininess(0), 
+			DepthTest(false)
 		{}
-		GraphicsMaterial(const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : m_Diffuse(diffuse),
-			m_Ambient(ambient),
-			m_Specular(specular),
-			m_SelfIllumination(selfIllumination ),
-			m_Shininess(shininess), 
-			m_DepthTest(depth_test_on)
+		GraphicsMaterial(const std::string &name, const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : Diffuse(diffuse),
+			Ambient(ambient),
+			Specular(specular),
+			SelfIllumination(selfIllumination ),
+			Shininess(shininess), 
+			DepthTest(depth_test_on),
+			Name(name)
 		{
 
 		}
-		  ColorRGBA GetDiffuse()const {return m_Diffuse;}
-		  ColorRGB GetAmbient()const {return m_Ambient;}
-		  ColorRGB GetSpecular()const {return m_Specular;}
-		  ColorRGB GetSelfIllumination()const {return m_SelfIllumination;}
-		  float GetShininess()const {return m_Shininess;}
-		  bool GetDepthTest()const {return m_DepthTest;}
 		  std::vector<std::string> Textures;
-	private:
-		ColorRGBA m_Diffuse;
-		ColorRGB m_Ambient;
-		ColorRGB m_Specular;
-		ColorRGB m_SelfIllumination;
-		
-		float m_Shininess;
-		bool m_DepthTest;
+		  ColorRGBA Diffuse;
+		  ColorRGB Ambient;
+		  ColorRGB Specular;
+		  ColorRGB SelfIllumination;
+		  std::string Name;
+		  float Shininess;
+		  bool DepthTest;
 	};
 	typedef SPTR<GraphicsMaterial> GraphicsMaterialPtr;
 

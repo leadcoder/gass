@@ -63,34 +63,38 @@ namespace GASS
 
 		if(m_GreenLight.IsValid())
 		{
-			MessagePtr mat_mess(new MaterialMessage(green_color,
+			/*MessagePtr mat_mess(new MaterialMessage(green_color,
 				Vec3(0,0,0),
 				Vec3(0,0,0),
 				Vec3(green_color.x,green_color.y,green_color.z),
 				0,
-				true));
+				true));*/
+
+			MessagePtr mat_mess(new ReplaceMaterialMessage("GreenLight"));
 			m_GreenLight->PostMessage(mat_mess);
 		}
 
 		if(m_YellowLight.IsValid())
 		{
-			MessagePtr mat_mess(new MaterialMessage(yellow_color,
+			/*MessagePtr mat_mess(new MaterialMessage(yellow_color,
 				Vec3(0,0,0),
 				Vec3(0,0,0),
 				Vec3(yellow_color.x,yellow_color.y,yellow_color.z),
 				0,
-				true));
+				true));*/
+			MessagePtr mat_mess(new ReplaceMaterialMessage("YellowLight"));
 			m_YellowLight->PostMessage(mat_mess);
 		}
 
 		if(m_RedLight.IsValid())
 		{
-			MessagePtr mat_mess(new MaterialMessage(red_color,
+			/*MessagePtr mat_mess(new MaterialMessage(red_color,
 				Vec3(0,0,0),
 				Vec3(0,0,0),
 				Vec3(red_color.x,red_color.y,red_color.z),
 				0,
-				true));
+				true));*/
+			MessagePtr mat_mess(new ReplaceMaterialMessage("RedLight"));
 			m_RedLight->PostMessage(mat_mess);
 		}
 	}

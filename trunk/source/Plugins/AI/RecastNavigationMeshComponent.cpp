@@ -1332,8 +1332,8 @@ static int convexhull(const float* pts, int npts, int* out)
 				{
 					MessagePtr mesh_message(new ManualMeshDataMessage(m_NavVisTriMesh,-1,0.1));
 					obj->PostMessage(mesh_message);
-					MessagePtr material_message(new MaterialMessage(Vec4(0,0,1,float(m_Transparency)/100.0f),Vec3(1,1,1)));
-					obj->PostMessage(material_message);
+					//MessagePtr material_message(new MaterialMessage(Vec4(0,0,1,float(m_Transparency)/100.0f),Vec3(1,1,1)));
+					//obj->PostMessage(material_message);
 				}
 				else
 				{

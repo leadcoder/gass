@@ -96,7 +96,7 @@ namespace GASS
 		void OnDelete();
 		void OnMeshFileNameMessage(MeshFileMessagePtr message);
 		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
 		void OnResetMaterial(ResetMaterialMessagePtr message);
 
 		void OnVisibilityMessage(MeshVisibilityMessagePtr message);

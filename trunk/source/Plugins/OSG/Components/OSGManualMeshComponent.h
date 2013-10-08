@@ -42,7 +42,7 @@ namespace GASS
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnDataMessage(ManualMeshDataMessagePtr message);
 		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnMaterialMessage(MaterialMessagePtr message);
+		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
