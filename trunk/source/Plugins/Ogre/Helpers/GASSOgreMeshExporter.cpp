@@ -87,6 +87,7 @@ namespace GASS
 
 		if(comps.size()>0)
 		{
+			LocationComponentPtr root_lc = root_obj->GetFirstComponentByClass<ILocationComponent>();
 			std::map<std::string, std::vector<GraphicsSubMeshPtr> > mesh_data_map;
 			for(size_t i = 0;  i <  comps.size(); i++)
 			{
@@ -97,8 +98,9 @@ namespace GASS
 				//Transform to world coordinates!
 				GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-				if(lc)
+				if(lc && lc != root_lc) //ignore root transformation?
 				{
+					
 					Vec3 world_pos = lc->GetWorldPosition();
 					Vec3 scale = lc->GetScale();
 					Quaternion world_rot = lc->GetWorldRotation();
@@ -125,7 +127,7 @@ namespace GASS
 				GraphicsSubMeshPtr new_sm(new GraphicsSubMesh);
 				new_mesh->SubMeshVector.push_back(new_sm);
 				new_sm->MaterialName = iter->first;
-				new_sm->MaterialName = TRIANGLE_LIST;				
+				new_sm->Type = TRIANGLE_LIST;
 				unsigned int base_index = 0;
 				bool has_color = true;
 				bool has_normal = true;
@@ -145,7 +147,7 @@ namespace GASS
 						has_tex_coords = false;
 				}
 
-				new_sm->Type = TRIANGLE_LIST;
+				
 
 				for(size_t i = 0; i < iter->second.size(); i++)
 				{
@@ -201,8 +203,9 @@ namespace GASS
 					GraphicsSubMeshPtr sm = iter->second.at(i);
 					for(size_t j = 0; j < sm->IndexVector.size(); j++)
 						new_sm->IndexVector.push_back(sm->IndexVector[j] + base_index);
-					base_index += sm->IndexVector.size();
+					base_index += sm->PositionVector.size();
 				}
+				iter++;
 				//create new submesh and copy all data
 			}
 			//create manual object and save to file!

@@ -47,7 +47,7 @@ namespace GASS
 
 	SceneObject::~SceneObject(void)
 	{
-		
+
 	}
 
 	void SceneObject::RegisterReflection()
@@ -146,7 +146,7 @@ namespace GASS
 		}
 	}
 
-	
+
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
@@ -207,7 +207,7 @@ namespace GASS
 		}
 	}
 
-	
+
 	//Override
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
@@ -229,7 +229,7 @@ namespace GASS
 		while (iter != m_ComponentVector.end())
 		{
 			BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
-			
+
 			bsc->OnDelete();
 			++iter;
 		}
@@ -251,9 +251,9 @@ namespace GASS
 		SceneObjectPtr this_obj = STATIC_PTR_CAST<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
-	
+
 		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
-	
+
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
@@ -281,7 +281,7 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot()
 	{
-		 ComponentContainerPtr container = shared_from_this();
+		ComponentContainerPtr container = shared_from_this();
 
 		SceneObjectPtr root = GetScene()->GetRootSceneObject();
 
@@ -293,23 +293,7 @@ namespace GASS
 	}
 
 
-	/*SceneObjectPtr SceneObject::GetFirstInstantiable() const
-	{
-		 SceneObjectPtr inst;
-		 SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(shared_from_this());
-		 if(so->GetInstantiable())
-		 {
-			 inst = so;
-		 }
 
-		 while(!inst && so->GetParentSceneObject())
-		 {
-			 so = so->GetParentSceneObject();
-			 if(so->GetInstantiable())
-				inst = so;
-		 }
-		 return inst;
-	}*/
 
 	struct MessageSyncExecutor
 	{
@@ -336,8 +320,8 @@ namespace GASS
 		m_MessageManager->Update(delta_time);
 		if(recursive)
 		{
-			
-			
+
+
 			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
@@ -350,10 +334,10 @@ namespace GASS
 			IComponentContainer::ComponentContainerVector::const_iterator go_iter;
 			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); ++go_iter)
 			{
-				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>( *go_iter);
-				child->SyncMessages(delta_time);
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>( *go_iter);
+			child->SyncMessages(delta_time);
 			}*/
-			
+
 
 
 			//parallel update, problem with set world position that have to use parent transforms
@@ -365,7 +349,7 @@ namespace GASS
 	size_t  SceneObject::GetQueuedMessages() const
 	{
 		size_t num = m_MessageManager->GetQueuedMessages();
-		
+
 		IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
@@ -439,7 +423,7 @@ namespace GASS
 			comp_iter++;
 			if(child->GetGUID() == guid)
 			{
-					return child;
+				return child;
 			}
 		}
 		ComponentContainerVector::const_iterator iter =  m_ComponentContainerVector.begin();
@@ -453,7 +437,7 @@ namespace GASS
 		}
 		return SceneObjectPtr();
 	}
-	
+
 	void SceneObject::GetChildrenByName(SceneObjectVector &objects, const std::string &name, bool exact_math, bool recursive) const
 	{
 		if(recursive)
@@ -511,7 +495,7 @@ namespace GASS
 		if(recursive)
 		{
 			ComponentContainerVector::const_iterator cc_iter =  m_ComponentContainerVector.begin();
-			
+
 			while(cc_iter  != m_ComponentContainerVector.end())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(*cc_iter );
@@ -536,7 +520,7 @@ namespace GASS
 				return child;
 			}
 		}
- 		
+
 		iter =  m_ComponentContainerVector.begin();
 		while(iter != m_ComponentContainerVector.end())
 		{
@@ -581,7 +565,7 @@ namespace GASS
 		}
 	}
 
-int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
+	int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr callback, int priority )
 	{
 		return m_MessageManager->RegisterForMessage(type, callback, priority);
 	}
@@ -607,11 +591,11 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 		SetName(name);
 	}
 
-	void SceneObject::LoadFromFile(const std::string &filename)
+	/*void SceneObject::LoadFromFile(const std::string &filename)
 	{
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
-		
+
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if(!xmlDoc->LoadFile())
 		{
@@ -620,7 +604,7 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
 		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
-		
+
 		if(!so_elem)
 		{
 			delete xmlDoc;
@@ -632,9 +616,47 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;
+	}*/
+
+
+	SceneObjectPtr SceneObject::LoadFromXML(const std::string &filename)
+	{
+		if(filename =="") 
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
+
+		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
+		if(!xmlDoc->LoadFile())
+		{
+			delete xmlDoc;
+			//Fatal error, cannot load
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
+		}
+		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
+		
+		SceneObjectPtr so;
+		if(so_elem->Attribute("from_template"))
+		{
+			std::string template_name = so_elem->Attribute("from_template");
+			so = STATIC_PTR_CAST<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+		}
+		else
+		{
+			const std::string cc_name = so_elem->Value();
+			so = STATIC_PTR_CAST<SceneObject>(ComponentContainerFactory::Get().Create(cc_name));
+		}
+
+		if(!so_elem)
+		{
+			delete xmlDoc;
+			//Fatal error, cannot load
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"cant find SceneObject tag in: " + filename , "SceneObject::LoadFromFile");
+		}
+		so->LoadXML(so_elem);
+		xmlDoc->Clear();
+		//Delete our allocated document and return success ;)
+		delete xmlDoc;
+		return so;
 	}
-
-
 
 	void SceneObject::SaveToFile(const std::string &filename)
 	{
@@ -660,7 +682,7 @@ int SceneObject::RegisterForMessage( const MessageType &type, MessageFuncPtr cal
 
 	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
 	{
-		
+
 		ComponentContainerPtr cc;
 		if(cc_elem->Attribute("from_template"))
 		{

@@ -245,7 +245,7 @@ namespace GASS
 
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
-		void LoadFromFile(const std::string &filename);
+		
 		void SaveToFile(const std::string &filename);
 		size_t GetQueuedMessages() const;
 		void ClearMessages() const;
@@ -267,6 +267,9 @@ namespace GASS
 		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainer
 		*/
 		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
+
+		//void LoadFromFile(const std::string &filename);
+		static SceneObjectPtr LoadFromXML(const std::string &filename);
 	protected:
 		void InitializePointers();
 		void Initialize(ScenePtr scene);

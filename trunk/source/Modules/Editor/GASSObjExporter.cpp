@@ -23,6 +23,8 @@ namespace GASS
 
 		if(comps.size()>0)
 		{
+			
+			
 			std::vector<GraphicsMesh> mesh_data_vec;
 			for(int i = 0;  i <  comps.size(); i++)
 			{

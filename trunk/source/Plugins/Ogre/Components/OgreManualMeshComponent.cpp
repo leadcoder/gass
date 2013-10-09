@@ -139,11 +139,13 @@ namespace GASS
 			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
 			{
 				GraphicsSubMeshPtr sub_mesh =   data->SubMeshVector[i];
+				size_t num_pos = sub_mesh->PositionVector.size();
+				if(num_pos == 0)
+					continue;
+				
 				Ogre::RenderOperation::OperationType op = OgreConvert::ToOgre(sub_mesh->Type);
 				//use material name or create new material?
 				m_MeshObject->begin(sub_mesh->MaterialName, op);
-
-				size_t num_pos = sub_mesh->PositionVector.size();
 
 				bool has_normals = false;
 				bool has_tangents = false;
@@ -286,7 +288,7 @@ namespace GASS
 
 		if(m_MeshObject == NULL)
 			return mesh_data;
-		if(m_MeshObject->getCurrentVertexCount() == 0)
+		if(m_MeshObject->getNumSections() > 0)
 			return mesh_data;
 		Ogre::MeshPtr mesh = m_MeshObject->convertToMesh("ConvertedTempMesh");
 		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);

@@ -205,11 +205,12 @@ namespace GASS
 
 		//Create new scenery node
 		m_Root->RemoveChildSceneObject(SceneObjectPtr(m_TerrainObjects));
-		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		//SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr  scenery =  SceneObject::LoadFromXML(GetSceneFolder().GetFullPath() + "/instances.xml");
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
 		m_TerrainObjects = scenery;
-		scenery->LoadFromFile(GetSceneFolder().GetFullPath() + "/instances.xml");
+		
 		m_Root->AddChildSceneObject(scenery,true);
 
 		//scene loaded!
@@ -317,7 +318,7 @@ namespace GASS
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
 		{
 			SceneManagerPtr sm = m_SceneManagers[i];
-			if(sm->GetSerialize()) //should we save this scene mananer settings to sceen?
+			if(sm->GetSerialize()) //should we save this scene manager settings to scene?
 			{
 				XMLSerializePtr serialize = DYNAMIC_PTR_CAST<IXMLSerialize>(sm);
 				if(serialize)
@@ -448,7 +449,6 @@ namespace GASS
 					{
 						std::string scene_name = iter->path().filename().generic_string();
 						scene_names.push_back(scene_name);
-						//m_Scenes.push_back(iter->path().string());
 					}
 				}
 			}
