@@ -397,6 +397,15 @@ namespace GASS
 			Vec3 tangent = *v3 - *v1;
 			tangent.Normalize();
 
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i]]) = normal;
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+1]]) = normal;
+			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+2]]) = normal;
+
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i]]) = tangent;
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+1]]) = tangent;
+			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+2]]) = tangent;
+
+
 			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+3]]) = normal;
 			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+4]]) = normal;
 			(sub_mesh_data->NormalVector[sub_mesh_data->IndexVector[i+5]]) = normal;
