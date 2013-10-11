@@ -288,7 +288,7 @@ namespace GASS
 
 		if(m_MeshObject == NULL)
 			return mesh_data;
-		if(m_MeshObject->getNumSections() > 0)
+		if(m_MeshObject->getNumSections() == 0)
 			return mesh_data;
 		Ogre::MeshPtr mesh = m_MeshObject->convertToMesh("ConvertedTempMesh");
 		OgreMeshComponent::CopyMeshToMeshData(mesh, mesh_data);

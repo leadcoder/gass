@@ -88,6 +88,11 @@ namespace GASS
 		if(comps.size()>0)
 		{
 			LocationComponentPtr root_lc = root_obj->GetFirstComponentByClass<ILocationComponent>();
+			Vec3 offset(0,0,0); 
+			if(root_lc)
+			{
+				offset = -root_lc->GetWorldPosition();
+			}
 			std::map<std::string, std::vector<GraphicsSubMeshPtr> > mesh_data_map;
 			for(size_t i = 0;  i <  comps.size(); i++)
 			{
@@ -98,10 +103,10 @@ namespace GASS
 				//Transform to world coordinates!
 				GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-				if(lc && lc != root_lc) //ignore root transformation?
+				if(lc) //ignore root transformation?
 				{
 					
-					Vec3 world_pos = lc->GetWorldPosition();
+					Vec3 world_pos = lc->GetWorldPosition() + offset;
 					Vec3 scale = lc->GetScale();
 					Quaternion world_rot = lc->GetWorldRotation();
 					Mat4 trans_mat;

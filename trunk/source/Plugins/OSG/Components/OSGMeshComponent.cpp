@@ -667,6 +667,11 @@ namespace GASS
 		m_MeshNode->accept(mv);
 
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+		
+
+		//TODO: get materials and sub meshes!!
+
+		sub_mesh_data->Type = TRIANGLE_LIST;
 		mesh_data.SubMeshVector.push_back(sub_mesh_data);
 
 		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;
