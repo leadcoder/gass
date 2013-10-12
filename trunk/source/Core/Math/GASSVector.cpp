@@ -63,33 +63,4 @@ namespace GASS
 		sprintf(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
 		return ret;
 	}
-
-
-	
-
-
-
-	/*void Vec3::Print()  const
-	{
-	printf("%f,%f,%f",x,y,z);
-	}
-
-	std::string Vec3::ToString()
-	{
-	char ret[128];
-	sprintf(ret,"%.3f;%.3f;%.3f",x,y,z);
-	return ret;
-	}
-
-	/*void Vec3::Transform3(const Mat4 &m)
-	{
-	Vec3 vec;
-	vec.x = x*m.m_Data2[0]+y*m.m_Data2[4]+z*m.m_Data2[8]+m.m_Data2[12];
-	vec.y = x*m.m_Data2[1]+y*m.m_Data2[5]+z*m.m_Data2[9]+m.m_Data2[13];
-	vec.z = x*m.m_Data2[2]+y*m.m_Data2[6]+z*m.m_Data2[10]+m.m_Data2[14];
-	x = vec.x;
-	y = vec.y;
-	z = vec.z;
-	}*/
-	
 }

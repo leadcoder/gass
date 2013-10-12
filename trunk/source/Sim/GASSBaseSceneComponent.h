@@ -51,7 +51,6 @@ namespace GASS
 		void InitializeSceneObjectRef();
 		//called by sceneobject to resolve SceneObjectRef 
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
-
 	};
 	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef WPTR<BaseSceneComponent> BaseSceneComponentWeakPtr;

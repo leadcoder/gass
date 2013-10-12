@@ -28,7 +28,7 @@ namespace GASS
 {
 	/**
 		Class that hold physics mesh data used by physics systems.
-		This class is used to send data to and from physics systems.
+		This class is used to send mesh data to and from physics systems.
 	*/
 	class GASSExport PhysicsMesh
 	{

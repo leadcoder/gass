@@ -152,12 +152,9 @@ namespace GASS
 
 			preExp = -0.25 * (part1 + part2);
 			m_Tangents[i] = p * preExp.Exp();
-
 		}
-
-
-
 	}
+
 	//---------------------------------------------------------------------
 	void RotationSpline::Clear(void)
 	{

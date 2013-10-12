@@ -79,7 +79,7 @@ namespace GASS
 		void BuildInterpolationSplines(void);
 		void AutoCalulateRotation() ;
 		Key GetBoneKeyFrame(Float weight,int index0, int index1) const;
-	//private:
+	//public for fast access
 		std::vector<Key> m_KeyVector;
 		int m_InterpolateMode;
 		int m_Loop;

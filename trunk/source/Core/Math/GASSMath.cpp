@@ -796,60 +796,6 @@ namespace GASS
 
 		return (a + V);
 	}
-
-	/*bool Math::GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root) 
-	{
-		// Check if a solution exists
-		Float determinant = b*b - 4.0f*a*c;
-		// If determinant is negative it means no solutions.
-		if (determinant < 0.0f) return false;
-		// calculate the two roots: (if determinant == 0 then
-		// x1==x2 but let’s disregard that slight optimization)
-		Float sqrtD = sqrt(determinant);
-		Float r1 = (-b - sqrtD) / (2*a);
-		Float r2 = (-b + sqrtD) / (2*a);
-		// Sort so x1 <= x2
-		if (r1 > r2) {
-			Float temp = r2;
-			r2 = r1;
-			r1 = temp;
-		}
-		// Get lowest root:
-		if (r1 > 0 && r1 < maxR) {
-			*root = r1;
-			return true;
-		}
-		// It is possible that we want x2 - this can happen
-		// if x1 < 0
-		if (r2 > 0 && r2 < maxR) {
-			*root = r2;
-			return true;
-		}
-		// No (valid) solutions
-		return false;
-	}*/
-
-	/*Float Math::GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2)
-	{
-		Vec3 v1_xz = v1;
-		Vec3 v2_xz = v2;
-		v1_xz.y = 0;
-		v1_xz.Normalize();
-		v2_xz.y = 0;
-		v2_xz.Normalize();
-		Float cos_angle = Math::Dot(v1_xz,v2_xz); //north
-		Vec3 vec_cross = Math::Cross(v1_xz,v2_xz);
-		if(cos_angle > 1) cos_angle= 1;
-		if(cos_angle < -1) cos_angle= -1;
-		Float angle = acos(cos_angle);
-
-		if(vec_cross.y < 0)
-		{
-			angle = -angle;
-			//if(angle_to_dir < angle) angle_to_dir = 2*MY_PI+angle_to_dir;
-		}
-		return angle;
-	}*/
 }
 
 

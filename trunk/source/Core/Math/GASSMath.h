@@ -139,9 +139,7 @@ namespace GASS
 		static bool TriangleIsectTriangle(const Vec3 &t1_v1,const Vec3 &t1_v2,const Vec3 &t1_v3,const Vec3 &t2_v1,const Vec3 &t2_v2,const Vec3 &t2_v3,Vec3 &isect_point);
 		static Float Min(const Float &v1,const Float &v2);
 		static Float Max(const Float &v1,const Float &v2);
-				
-
-
+	
 		// path utilities, to be moved to path class?
 		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
 		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
@@ -164,13 +162,6 @@ namespace GASS
 		}
 
 		/**
-			Project vectors on horizontal plane (normal == UNIT_Y) and return angle between projected angles
-			
-		*/
-		//Should be removed and placed in some other utility function!
-		//static Float GetHorizontalAngleBetweenVectors(const Vec3 &v1, const Vec3 &v2);
-		
-		/**
 			Project vector on plane
 		*/
 		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
@@ -178,15 +169,12 @@ namespace GASS
 	private:
 		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
 		static int CheckPointInTriangle3(const Vec3& point, const Vec3& pa,const Vec3& pb, const Vec3& pc);
-		//static bool GetLowestRoot(Float a, Float b, Float c, Float maxR,Float* root);
-
 		static Vec3 ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
 		static int	ClassifyPoint(const Vec3 &point, const Polygon &poly);
 		static int	ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);
 		static char	GetMaxCoord(const Vec3 &coord);
 		static bool	CheckPointInTriangle2(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
 		static Float Angle2D(Float x1, Float y1, Float x2, Float y2);
-
 	};
 }
 

@@ -40,8 +40,7 @@ namespace GASS
 		void AddController(Controller *controller, const std::string &name,int action);
 		virtual Controller* GetController(const std::string &input) const;
 		IInputSystem* GetInputSystem() const {return m_Input;}
-		//MessageManager* GetMessageManager() const {return m_MM;}
-
+	
 		//public for fast acess
 		typedef std::map<std::string,Controller*> ControllerMap;
 		std::map<std::string,int> m_NameToIndex;

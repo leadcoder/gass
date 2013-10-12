@@ -32,11 +32,6 @@ namespace GASS
 
 	const Float Mat4::EPSILON = 0.0001;
 	
-	/*Mat4::Mat4(const Vec3 &pos, const Quaternion &rot, const Vec3 &scale)
-	{
-
-	}*/
-
 	Mat4 Mat4::operator* (const Mat4 &mat) const
 	{
 		Mat4 ret;
@@ -106,8 +101,6 @@ namespace GASS
 		}
 		return ret;
 	}
-
-
 
 	void Mat4::Translate(Float x,Float y,Float z)
 	{
@@ -379,31 +372,6 @@ namespace GASS
 		return res;
 	}
 
-
-
-	/*void Mat4::InverseRotateVect( Vec3 &vec) 
-	{
-	Vec3 temp;
-	Mat4 mat = Transpose();
-
-	temp.x = vec.x*mat.m_Data2[0]+vec.y*mat.m_Data2[1]+vec.z*mat.m_Data2[2];
-	temp.y = vec.x*mat.m_Data2[4]+vec.y*mat.m_Data2[5]+vec.z*mat.m_Data2[6];
-	temp.z = vec.x*mat.m_Data2[8]+vec.y*mat.m_Data2[9]+vec.z*mat.m_Data2[10];
-
-	vec = temp;
-
-
-	}
-
-	void Mat4::InverseTranslateVect( Vec3 &vec) 
-	{
-	Mat4 mat = Transpose();
-	vec.x = vec.x -mat.m_Data2[12];
-	vec.y = vec.y -mat.m_Data2[13];
-	vec.z = vec.z -mat.m_Data2[14];
-
-	}*/
-
 	void Mat4::InverseRotateVect( Vec3 &vec) 
 	{
 		Vec3 temp;
@@ -417,11 +385,9 @@ namespace GASS
 
 	void Mat4::InverseTranslateVect( Vec3 &vec) 
 	{
-
 		vec.x = vec.x -m_Data2[12];
 		vec.y = vec.y -m_Data2[13];
 		vec.z = vec.z -m_Data2[14];
-
 	}
 
 	Vec3 Mat4::GetTranslation()  const
@@ -433,17 +399,11 @@ namespace GASS
 		return ret;
 	}
 
-
-
-
 	Mat4 Mat4::GetRotation() const
 	{
 
 		Mat4 ret;
 		ret = *this;
-		//ret.m_Data[0][0] = 1;
-		//ret.m_Data[1][1] = 1;
-		//ret.m_Data[2][2] = 1;
 		ret.m_Data[3][0] = 0;
 		ret.m_Data[3][1] = 0;
 		ret.m_Data[3][2] = 0;
@@ -554,9 +514,7 @@ namespace GASS
 
 	Float Mat4::GetEulerHeading() const
 	{
-
 		Vec3 dir;
-
 		dir.Set(m_Data2[8],0,m_Data2[10]);
 		dir.Normalize();
 		Vec3 north_dir(0,0,1);
@@ -569,14 +527,13 @@ namespace GASS
 		else if (cos_h < -1.0f)
 			cos_h = -1.0f;
 
-		//Float h_deg = Math::Rad2Deg(acos(cos_h));
-		Float h_deg = acos(cos_h);
+		Float h_rad = acos(cos_h);
 
 		if(cross.y < 0)
 		{
-			h_deg = -h_deg;
+			h_rad = -h_rad;
 		}
-		return h_deg;
+		return h_rad;
 	}
 
 	Float Mat4::GetEulerPitch() const
@@ -585,52 +542,46 @@ namespace GASS
 		dir.Set(m_Data2[8],m_Data2[9],m_Data2[10]);
 		Vec3 xz_dir(m_Data2[8],0,m_Data2[10]);
 		xz_dir.Normalize();
-		Float cos_h = Math::Dot(xz_dir,dir);
+		Float cos_p = Math::Dot(xz_dir,dir);
 		Vec3 cross = Math::Cross(xz_dir,dir);
 		cross.Normalize();
 		cross = Math::Cross(cross,xz_dir);
 
 		// Dot product may give values slightly higher than one due to normalization/precision error
-		if (cos_h > 1.0f)
-			cos_h = 1.0f;
-		else if (cos_h < -1.0f)
-			cos_h = -1.0f;
+		if (cos_p > 1.0f)
+			cos_p = 1.0f;
+		else if (cos_p < -1.0f)
+			cos_p = -1.0f;
 
-		//Float h_deg = Math::Rad2Deg(acos(cos_h));
-		Float h_deg = acos(cos_h);
+		Float p_rad = acos(cos_p);
 		if(cross.y > 0)
 		{
-			h_deg = -h_deg;
+			p_rad = -p_rad;
 		}
-		return h_deg;
+		return p_rad;
 	}
 	Float Mat4::GetEulerRoll() const
 	{
 		Vec3 left_dir;
-
 		left_dir.Set(m_Data2[0],m_Data2[1],m_Data2[2]);
 		Vec3 xz_dir(m_Data2[0],0,m_Data2[2]);
 		xz_dir.Normalize();
-
-		Float cos_h = Math::Dot(xz_dir,left_dir);
+		Float cos_r = Math::Dot(xz_dir,left_dir);
 		Vec3 cross = Math::Cross(xz_dir,left_dir);
 		cross.Normalize();
 		cross = Math::Cross(cross,xz_dir);
-
-		//Float h_deg = Math::Rad2Deg(acos(cos_h));
-
 		// Dot product may give values slightly higher than one due to normalization/precision error
-		if (cos_h > 1.0f)
-			cos_h = 1.0f;
-		else if (cos_h < -1.0f)
-			cos_h = -1.0f;
-		Float h_deg = acos(cos_h);
+		if (cos_r > 1.0f)
+			cos_r = 1.0f;
+		else if (cos_r < -1.0f)
+			cos_r = -1.0f;
+		Float r_rad = acos(cos_r);
 
 		if(cross.y > 0)
 		{
-			h_deg = -h_deg;
+			r_rad = -r_rad;
 		}
-		return h_deg;
+		return r_rad;
 	}
 
 	static Float Det2x2(Float a1, Float a2, Float b1, Float b2)

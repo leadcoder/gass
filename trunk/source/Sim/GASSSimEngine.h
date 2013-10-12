@@ -113,24 +113,16 @@ namespace GASS
 		See BaseComponentContainerTemplateManager inside the component system from more info.
 		*/
 		BaseComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
-		
-		/**
-		Get the control settings manager. 
-		*/
-		//TODO: This should be moved to it's own system
-		//ControlSettingsManagerPtr GetControlSettingsManager() {return m_ControlSettingsManager;}
 
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
 		*/
 		RunTimeControllerPtr GetRuntimeController() const {return m_RTC;}
 
-
 		/**
 		Return elapsed time
 		*/
 		double GetTime() const {return m_CurrentTime;}
-		
 		
 		/**
 			Convience function to create new objects from templates
@@ -140,26 +132,20 @@ namespace GASS
 		/**
 			Reload all templates in resource group GASS_TEMPLATES
 		*/
-
 		void ReloadTemplates();
 
 		void DestroyScene(SceneWeakPtr scene);
 		SceneWeakPtr CreateScene(const std::string &name);
 		ConstSceneIterator GetScenes() const;
 		SceneIterator GetScenes();
-
-		
-
 		FilePath GetLogFolder() const {return m_LogFolder;}
 		void SetLogFolder(const FilePath &path) {m_LogFolder = path;}
-
 		FilePath GetScenePath() const {return m_ScenePath;}
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
 		std::vector<std::string> GetSavedScenes() const;
 		void SyncMessages(double delta_time);
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 	private:
-		
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		SimSystemManagerPtr m_SystemManager;
@@ -169,7 +155,6 @@ namespace GASS
 		SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
-		//ScenePtr m_Scene;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
 	};

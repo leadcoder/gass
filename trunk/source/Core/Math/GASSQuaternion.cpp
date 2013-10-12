@@ -106,54 +106,6 @@ namespace GASS
 	//-----------------------------------------------------------------------
 	void Quaternion::ToRotationMatrix(Mat4& kRot) const
 	{
-		/*float fTx  = 2.0*x;
-		float fTy  = 2.0*y;
-		float fTz  = 2.0*z;
-		float fTwx = fTx*w;
-		float fTwy = fTy*w;
-		float fTwz = fTz*w;
-		float fTxx = fTx*x;
-		float fTxy = fTy*x;
-		float fTxz = fTz*x;
-		float fTyy = fTy*y;
-		float fTyz = fTz*y;
-		float fTzz = fTz*z;
-
-		kRot.m_Data[0][0] = 1.0-(fTyy+fTzz);
-		kRot.m_Data[0][1] = fTxy-fTwz;
-		kRot.m_Data[0][2] = fTxz+fTwy;
-		kRot.m_Data[1][0] = fTxy+fTwz;
-		kRot.m_Data[1][1] = 1.0-(fTxx+fTzz);
-		kRot.m_Data[1][2] = fTyz-fTwx;
-		kRot.m_Data[2][0] = fTxz-fTwy;
-		kRot.m_Data[2][1] = fTyz+fTwx;
-		kRot.m_Data[2][2] = 1.0-(fTxx+fTyy);*/
-
-
-		/*kRot.m_Data[0][0] = 1.0f - 2.0f * ( y * y + z * z );  
-		kRot.m_Data[0][1] = 2.0f * ( x * y - w * z );  
-		kRot.m_Data[0][2] = 2.0f * ( x * z + w * y );  
-		kRot.m_Data[0][3] = 0.0f;  
-
-		// Second row
-		kRot.m_Data[1][0] = 2.0f * ( x * y + w * z );  
-		kRot.m_Data[1][1] = 1.0f - 2.0f * ( x * x + z * z );  
-		kRot.m_Data[1][2] = 2.0f * ( y * z - w * x );  
-		kRot.m_Data[1][3] = 0.0f;  
-
-		// Third row
-		kRot.m_Data[2][0] = 2.0f * ( x * z - w * y );  
-		kRot.m_Data[2][1] = 2.0f * ( y * z + w * x );  
-		kRot.m_Data[2][2] = 1.0f - 2.0f * ( x * x + y * y );  
-		kRot.m_Data[2][3] = 0.0f;  
-
-		// Fourth row
-		kRot.m_Data[3][0] = 0;  
-		kRot.m_Data[3][1] = 0;  
-		kRot.m_Data[3][2] = 0;  
-		kRot.m_Data[3][3] = 1.0f;*/
-
-
 
 		/*
 		If q is guaranteed to be a unit quaternion, s will always

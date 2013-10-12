@@ -17,6 +17,7 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+//NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d?
 
 #ifndef GASS_QUARTERNION_H
 #define GASS_QUARTERNION_H

@@ -133,9 +133,6 @@ namespace GASS
 
 	};
 
-
-
-
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
 		(StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
 		(RegisterReflectionFunc)T::RegisterReflection );
