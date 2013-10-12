@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Sim/GASSSceneObject.h"
+#include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSBaseSceneComponent.h"
@@ -412,6 +413,20 @@ namespace GASS
 			}
 		}
 		return ComponentPtr();
+	}
+
+	bool SceneObject::Accept(SceneObjectVisitorPtr visitor)
+	{
+		if(!visitor->Visit(DYNAMIC_PTR_CAST<SceneObject>(shared_from_this())))
+			return false;
+		IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+		while(cc_iter.hasMoreElements())
+		{
+			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
+			if(!child->Accept(visitor))
+				return false;
+		}
+		return true;
 	}
 
 	SceneObjectPtr SceneObject::GetChildByGUID(const SceneObjectGUID &guid)

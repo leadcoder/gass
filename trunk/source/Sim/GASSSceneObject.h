@@ -36,9 +36,11 @@ namespace GASS
 	class Scene;
 	class SceneObject;
 	class BaseSceneComponent;
+	class SceneObjectVisitor;
 
 	typedef SPTR<Scene> ScenePtr;
 	typedef WPTR<Scene> SceneWeakPtr;
+	typedef SPTR<SceneObjectVisitor> SceneObjectVisitorPtr; 
 
 	typedef SPTR<MessageManager> MessageManagerPtr;
 	typedef SPTR<SceneObject> SceneObjectPtr;
@@ -85,6 +87,8 @@ namespace GASS
 			//no dynamic cast because we are sure that all objects are derived from the SceneObject
 			return STATIC_PTR_CAST<SceneObject>(GetParent());
 		}
+
+		bool Accept(SceneObjectVisitorPtr visitor);
 
 		/**Get all components of certain class. This function allow you to pass the class name as a string
 			@components Return componnets that are found
