@@ -23,6 +23,7 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/OSGGeometryRecorder.h"
 
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
@@ -551,7 +552,6 @@ namespace GASS
 		m_MeshNode =mesh;
 		CalulateBoundingbox(mesh.get());
 	}
-
 
 	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
 	{

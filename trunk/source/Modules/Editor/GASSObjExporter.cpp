@@ -16,15 +16,47 @@ namespace GASS
 
 	}
 
-	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj)
+	void ObjExporter::ExportFiles(const std::string &out_dir, SceneObjectPtr root_obj)
 	{
 		IComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,true);
+		std::map<std::string, SceneObjectPtr > meshmap;
+		for(int i = 0;  i <  comps.size(); i++)
+		{
+			SceneObjectPtr obj = (DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
+			MeshComponentPtr mesh =  DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
+			ResourceComponentPtr res =  DYNAMIC_PTR_CAST<IResourceComponent>(comps[i]);
+			if(mesh && res)
+			{
+				std::string out_file = FileUtils::RemoveExtension(res->GetResource().Name());
+				out_file = out_dir + "/"+ out_file;
+				meshmap[out_file] = obj;
+			}
+		}
+
+		std::map<std::string, SceneObjectPtr >::iterator iter = meshmap.begin();
+		while(iter != meshmap.end())
+		{
+			Export(iter->first, iter->second,false);
+			iter++;
+		}
+
+	}
+
+	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive)
+	{
+		IComponentContainer::ComponentVector comps;
+		root_obj->GetComponentsByClass<IMeshComponent>(comps,recursive);
+
+		LocationComponentPtr root_lc = root_obj->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 offset(0,0,0); 
+		if(root_lc)
+		{
+			offset = -root_lc->GetWorldPosition();
+		}
 
 		if(comps.size()>0)
 		{
-			
-			
 			std::vector<GraphicsMesh> mesh_data_vec;
 			for(int i = 0;  i <  comps.size(); i++)
 			{
@@ -35,16 +67,15 @@ namespace GASS
 				//Transform to world coordinates!
 				GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-				if(lc)
+				if(lc && lc != root_lc)
 				{
-					Vec3 world_pos = lc->GetWorldPosition();
+					Vec3 world_pos = lc->GetWorldPosition() + offset;
 					Vec3 scale = lc->GetScale();
 					Quaternion world_rot = lc->GetWorldRotation();
 					Mat4 trans_mat;
 					trans_mat.Identity();
 					trans_mat.SetTransformation(world_pos,world_rot,scale);
 					mesh_data.Transform(trans_mat);
-
 				}
 				mesh_data_vec.push_back(mesh_data);  
 			}
@@ -65,7 +96,7 @@ namespace GASS
 				{
 					GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
 
-					if(sub_mesh->Type ==TRIANGLE_LIST)
+					if(sub_mesh->Type == TRIANGLE_LIST)
 					{
 
 						if(sub_mesh->MaterialName != "")
@@ -103,7 +134,6 @@ namespace GASS
 						{
 							NormalVector.push_back(sub_mesh->NormalVector[j]);
 						}
-
 
 						bool dds_tex = false;
 						if(sub_mesh->Material.Textures.size() > 0)
@@ -192,18 +222,6 @@ namespace GASS
 				}
 			}
 
-			/*ss << "g " << "root" << "\n";
-
-			ss << "usemtl " << "ExportMat1" << "\n";
-
-			ss << "#num faces" << (FaceVector.size()/3) << "\n";
-
-
-			for(size_t i = 0; i < FaceVector.size() ; i += 3)
-			ss << "f " << FaceVector[i]+1 << "/" << FaceVector[i]+1 << "/" << i/3+1 << " "
-			<< FaceVector[i+1]+1 << "/" << FaceVector[i+1]+1 << "/" << i/3+1 << " "
-			<< FaceVector[i+2]+1 << "/" << FaceVector[i+2]+1 << "/" << i/3+1 << "\n";
-			*/
 			file_ptr << "\n";
 			try
 			{

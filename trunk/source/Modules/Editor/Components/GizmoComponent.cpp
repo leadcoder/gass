@@ -76,13 +76,15 @@ namespace GASS
 		
 		GraphicsMaterial regmat;
 		regmat.Name = m_RegularMat;
-		regmat.Diffuse.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5,m_Color.a);
-		regmat.Ambient.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
+		//regmat.Diffuse.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5,m_Color.a);
+		//regmat.Ambient.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
+		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
 
 		GraphicsMaterial hlmat;
 		hlmat.Name = m_HighlightMat;
-		hlmat.Diffuse = m_Color;
-		hlmat.Ambient.Set(m_Color.r,m_Color.g,m_Color.b);
+		//hlmat.Diffuse = m_Color;
+		//hlmat.Ambient.Set(m_Color.r,m_Color.g,m_Color.b);
+		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
 		
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if(!gfx_sys->HasMaterial(m_RegularMat))

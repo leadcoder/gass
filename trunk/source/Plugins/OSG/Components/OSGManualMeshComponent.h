@@ -21,12 +21,12 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
 #include <osg/Geometry>
 
 namespace GASS
 {
-	
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent , public IMeshComponent
 	{
 	public:
 		OSGManualMeshComponent(void);
@@ -37,6 +37,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual GraphicsMesh GetMeshData() const;
 	protected:
 		void CreateSubMesh(GraphicsSubMeshPtr sm, osg::ref_ptr<osg::Geometry> geom );
 		void SetCastShadow(bool value);
@@ -53,7 +54,6 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<GraphicsMesh> m_MeshData;
 		GeometryFlags m_GeomFlags;
-		std::string m_CurrentMaterial; //book keep current material file
 		bool m_CastShadow;
 		OSGGraphicsSystemPtr m_GFXSystem;
 	};

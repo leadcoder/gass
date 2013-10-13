@@ -26,6 +26,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Plugins/OSG/OSGGeometryRecorder.h"
 
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -325,6 +326,27 @@ namespace GASS
 			sphere.m_Radius *= Math::Max(scale.x,scale.y,scale.z);
 		}
 		return sphere;
+	}
+
+	GraphicsMesh OSGManualMeshComponent::GetMeshData() const
+	{
+		GraphicsMesh mesh_data;
+
+		DrawableVisitor<TriangleRecorder> mv;	
+		m_GeoNode->accept(mv);
+
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+
+		//TODO: get materials and sub meshes!!
+
+		sub_mesh_data->Type = TRIANGLE_LIST;
+		mesh_data.SubMeshVector.push_back(sub_mesh_data);
+
+		sub_mesh_data->PositionVector = mv.mFunctor.mVertices;
+		sub_mesh_data->IndexVector = mv.mFunctor.mTriangles;
+
+		return mesh_data;
+		
 	}
 
 

@@ -46,7 +46,6 @@ namespace GASS
 	protected:
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		//void OnMaterialMessage(MaterialMessagePtr message);
 		float GetWidth() const;
