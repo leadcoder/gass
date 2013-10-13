@@ -58,7 +58,7 @@ namespace GASS
 		m_FogMode ("Linear"),
 		m_FogDensity ( 0.01),
 		m_FogColor(1,1,1),
-		m_AmbientColor(1,1,1)
+		m_AmbientColor(0.5,0.5,0.5)
 	{
 	}
 

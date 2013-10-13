@@ -64,6 +64,7 @@ namespace GASS
 			mat.Name = mat_name;
 			mat.Diffuse.Set(0,0,1,1);
 			mat.Ambient.Set(1,1,1);
+			mat.DepthTest = true;
 			gfx_sys->AddMaterial(mat);
 		}
 		UpdateMesh();
@@ -91,21 +92,19 @@ namespace GASS
 	
 		sub_mesh_data->MaterialName = "BoxMaterial";
 
-		std::vector<Vec3> conrners;
-		std::vector<Vec4> tex_coords;
-
-		conrners.push_back(Vec3( size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,size.y ,-size.z));
-
-		conrners.push_back(Vec3( size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
-
 		if(m_Lines)
 		{
+			std::vector<Vec3> conrners;
+			conrners.push_back(Vec3( size.x ,size.y , size.z));
+			conrners.push_back(Vec3(-size.x ,size.y , size.z));
+			conrners.push_back(Vec3(-size.x ,size.y ,-size.z));
+			conrners.push_back(Vec3( size.x ,size.y ,-size.z));
+
+			conrners.push_back(Vec3( size.x ,-size.y , size.z));
+			conrners.push_back(Vec3(-size.x ,-size.y , size.z));
+			conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
+			conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
+
 			sub_mesh_data->Type = LINE_LIST;
 
 			for(int i = 0; i < 4; i++)
@@ -131,69 +130,95 @@ namespace GASS
 		}
 		else
 		{
+
 			sub_mesh_data->Type = TRIANGLE_LIST;
-			std::vector<Vec3> postions;
+			std::vector<Vec4> tex_coords;
 
-			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
-			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
-			postions.push_back(Vec3( -size.x ,-size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
-
-			postions.push_back(Vec3( size.x ,-size.y , -size.z));
-			postions.push_back(Vec3( size.x ,-size.y , -size.z));
-			postions.push_back(Vec3( size.x ,-size.y , -size.z));
+			
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
-			postions.push_back(Vec3( size.x ,size.y , -size.z));
-			postions.push_back(Vec3( size.x ,size.y , -size.z));
-			postions.push_back(Vec3( size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 
 			
-			postions.push_back(Vec3( -size.x ,size.y , -size.z));
-			postions.push_back(Vec3( -size.x ,size.y , -size.z));
-			postions.push_back(Vec3( -size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
-			postions.push_back(Vec3( -size.x ,-size.y , size.z));
-			postions.push_back(Vec3( -size.x ,-size.y , size.z));
-			postions.push_back(Vec3( -size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 			tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
-			postions.push_back(Vec3( size.x ,-size.y , size.z));
-			postions.push_back(Vec3( size.x ,-size.y , size.z));
-			postions.push_back(Vec3( size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 			tex_coords.push_back(Vec4( 0, 0 , 0,0));
 
-			postions.push_back(Vec3( size.x ,size.y , size.z));
-			postions.push_back(Vec3( size.x ,size.y , size.z));
-			postions.push_back(Vec3( size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 			tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
-			postions.push_back(Vec3( -size.x ,size.y , size.z));
-			postions.push_back(Vec3( -size.x ,size.y , size.z));
-			postions.push_back(Vec3( -size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
+			sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
 			tex_coords.push_back(Vec4( 1, 1 , 0,0));
+
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
+			sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
+			sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
+			sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
+			sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
+			sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
+			sub_mesh_data->NormalVector.push_back(Vec3(1,-0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
+			sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
+			sub_mesh_data->NormalVector.push_back(Vec3(-0,0,1));
+			sub_mesh_data->NormalVector.push_back(Vec3(-1,-0,-0));
+			sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
 
 			//bottom
 			sub_mesh_data->IndexVector.push_back(0);
@@ -239,63 +264,8 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(11);
 			sub_mesh_data->IndexVector.push_back(23);
 
-
-			std::vector<Vec3> normals;
-
-			normals.push_back(Vec3(+1, 0, 0));
-			normals.push_back(Vec3(-1, 0, 0));
-			normals.push_back(Vec3(0, +1, 0));
-			normals.push_back(Vec3(0, -1, 0));
-			normals.push_back(Vec3(0, 0, +1));
-			normals.push_back(Vec3(0, 0, -1));
-
-			std::vector<int> normal_indcies;
-
-			// bottom front left                   
-
-			normal_indcies.push_back(5);
-			normal_indcies.push_back(3);
-			normal_indcies.push_back(0);
-			// bottom front right
-			normal_indcies.push_back(5);
-			normal_indcies.push_back(2);
-			normal_indcies.push_back(0);
-			// bottom back right
-			normal_indcies.push_back(5);
-			normal_indcies.push_back(2);
-			normal_indcies.push_back(1);
-			// bottom back left
-			normal_indcies.push_back(5);
-			normal_indcies.push_back(3);
-			normal_indcies.push_back(1);
-			// top front left                  
-			normal_indcies.push_back(4);
-			normal_indcies.push_back(3);
-			normal_indcies.push_back(0);
-			// top front right
-			normal_indcies.push_back(4);
-			normal_indcies.push_back(2);
-			normal_indcies.push_back(0);
-			// top back right
-			normal_indcies.push_back(4);
-			normal_indcies.push_back(2);
-			normal_indcies.push_back(1);
-			// top back left
-			normal_indcies.push_back(4);
-			normal_indcies.push_back(3);
-			normal_indcies.push_back(1);
-
-			//std::vector<Vec4> tex_coords;
-			for(int i = 0; i < postions.size(); i++)
-			{
-				Vec3 normal = normals[normal_indcies[i]]; 
-				Vec4 tex_coord(tex_coords[i].x,tex_coords[i].y,0,0);
-				sub_mesh_data->PositionVector.push_back(postions[i]);
-				sub_mesh_data->NormalVector.push_back(normal);
-				//tex_coords.push_back(tex_coord);
-			}
-
 			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
+			
 		}
 		
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));

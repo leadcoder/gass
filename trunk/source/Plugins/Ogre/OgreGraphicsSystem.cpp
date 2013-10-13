@@ -378,7 +378,9 @@ namespace GASS
 		}
 		else
 		{
-			ogre_mat = Ogre::MaterialManager::getSingleton().create( mat_name , Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true );
+			//ogre_mat = Ogre::MaterialManager::getSingleton().create( mat_name , Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true );
+			Ogre::MaterialPtr base_mat = Ogre::MaterialManager::getSingleton().getByName( "GASS_ColorOnly");
+			ogre_mat = base_mat->clone(mat_name);
 		}
 		SetOgreMaterial(material, ogre_mat);
 	}
@@ -411,6 +413,9 @@ namespace GASS
 		mat->setSpecular(specular.r,specular.g,specular.b,1);
 		mat->setSelfIllumination(si.r,si.g,si.b);
 		mat->setShininess(material.Shininess);
+		mat->setDepthCheckEnabled(true);
+		mat->setDepthWriteEnabled(true);
+		
 		/*if(diffuse.w < 1.0)
 		{
 			mat->setDepthWriteEnabled(false);

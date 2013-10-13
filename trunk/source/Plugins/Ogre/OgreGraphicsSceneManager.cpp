@@ -280,6 +280,15 @@ namespace GASS
 		bool tex_shadow = false;
 		switch(m_ShadowMode.GetValue())
 		{
+		case SHADOWS_DISABLED:
+			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_NONE);
+			break;
+		case STENCIL_SHADOWS_ADDITIVE:
+			
+			break;
+		case STENCIL_SHADOWS_MODULATIVE:
+			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
+			break;
 		case TEXTURE_SHADOWS_ADDITIVE_INTEGRATED:
 			{
 				tex_shadow = true;
@@ -289,8 +298,9 @@ namespace GASS
 				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
 				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
 				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
+				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial.GetName());
 				//sm->setShadowCasterRenderBackFaces(true);
-
+				m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
 				//sm->setShadowCasterRenderBackFaces(false);
 				//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
 			}
@@ -301,6 +311,8 @@ namespace GASS
 				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
 				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+				m_SceneMgr->setShadowTexturePixelFormat(PF_X8R8G8B8);
+				m_SceneMgr->setShadowTextureSelfShadow(false);
 			}
 			break;
 		case TEXTURE_SHADOWS_MODULATIVE: 
@@ -309,6 +321,8 @@ namespace GASS
 				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
 				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
+				m_SceneMgr->setShadowTexturePixelFormat(PF_X8R8G8B8);
+				m_SceneMgr->setShadowTextureSelfShadow(false);
 			}
 			break;
 		}
@@ -317,13 +331,7 @@ namespace GASS
 		{
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
-			m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
-			//sm->setShadowTextureCasterMaterial("DepthShadowmap_Caster_Float");
-			//if(m_ShadowCasterMaterial.Valid())
-			{
-				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial.GetName());
-			}
-
+		
 			ShadowCameraSetupPtr currentShadowCameraSetup;
 			switch(m_TextureShadowProjection.GetValue())
 			{
@@ -339,8 +347,7 @@ namespace GASS
 			case UNIFORM:
 				{
 					currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
-					m_SceneMgr->setShadowCasterRenderBackFaces(false);
-
+					//m_SceneMgr->setShadowCasterRenderBackFaces(false);
 				}
 				break;
 			case UNIFORM_FOCUSED:
@@ -356,7 +363,6 @@ namespace GASS
 			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
-		//
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
 		
 		//m_SceneMgr->setShadowTextureSelfShadow(true);
