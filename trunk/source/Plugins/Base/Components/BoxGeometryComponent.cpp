@@ -50,8 +50,13 @@ namespace GASS
 	void BoxGeometryComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("BoxGeometryComponent",new GASS::Creator<BoxGeometryComponent, IComponent>);
-		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize);
-		RegisterProperty<bool>("Lines", &GASS::BoxGeometryComponent::GetLines, &GASS::BoxGeometryComponent::SetLines);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("BoxGeometryComponent", OF_VISIBLE)));
+	
+		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of box",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<bool>("Lines", &GASS::BoxGeometryComponent::GetLines, &GASS::BoxGeometryComponent::SetLines,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Wireframe or solid",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void BoxGeometryComponent::OnInitialize()

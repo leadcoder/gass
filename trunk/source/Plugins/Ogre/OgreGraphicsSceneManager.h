@@ -192,10 +192,9 @@ namespace GASS
 		float m_OptimalAdjustFactor;
 		float m_FarShadowDistance;
 		float m_ShadowDirectionalLightExtrusionDistance;
-		Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
+		//Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
 		Ogre::SceneManager* m_SceneMgr;
 		WPTR<OgreGraphicsSystem> m_GFXSystem;
-		//std::vector<IComponent*> m_GFXComponents;
 		DebugDrawer* m_DebugDrawer;
 	};
 	typedef SPTR<OgreGraphicsSceneManager> OgreGraphicsSceneManagerPtr;

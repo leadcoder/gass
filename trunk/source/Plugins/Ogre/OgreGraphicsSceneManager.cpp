@@ -312,7 +312,7 @@ namespace GASS
 				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTexturePixelFormat(PF_X8R8G8B8);
-				m_SceneMgr->setShadowTextureSelfShadow(false);
+				m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
 			}
 			break;
 		case TEXTURE_SHADOWS_MODULATIVE: 
@@ -322,7 +322,7 @@ namespace GASS
 				m_SceneMgr->setShadowTextureCasterMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTextureReceiverMaterial(Ogre::StringUtil::BLANK);
 				m_SceneMgr->setShadowTexturePixelFormat(PF_X8R8G8B8);
-				m_SceneMgr->setShadowTextureSelfShadow(false);
+				m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
 			}
 			break;
 		}
@@ -332,21 +332,21 @@ namespace GASS
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
 		
-			ShadowCameraSetupPtr currentShadowCameraSetup;
+			ShadowCameraSetupPtr new_shadow_camera_setup;
 			switch(m_TextureShadowProjection.GetValue())
 			{
 			case LISPSM:
 				{
-					m_LiSPSMSetup = new LiSPSMShadowCameraSetup();
-					currentShadowCameraSetup = ShadowCameraSetupPtr(m_LiSPSMSetup);
-					m_LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
-					m_LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
-					m_LiSPSMSetup->setCameraLightDirectionThreshold(Ogre::Degree( 10));
+					LiSPSMShadowCameraSetupPtr LiSPSMSetup = new LiSPSMShadowCameraSetup();
+					new_shadow_camera_setup = ShadowCameraSetupPtr(LiSPSMSetup);
+					LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
+					LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
+					LiSPSMSetup->setCameraLightDirectionThreshold(Ogre::Degree( 10));
 				}
 				break;
 			case UNIFORM:
 				{
-					currentShadowCameraSetup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
+					new_shadow_camera_setup = ShadowCameraSetupPtr(new DefaultShadowCameraSetup());
 					//m_SceneMgr->setShadowCasterRenderBackFaces(false);
 				}
 				break;
@@ -354,13 +354,14 @@ namespace GASS
 				{
 					Ogre::FocusedShadowCameraSetup* fscs = new Ogre::FocusedShadowCameraSetup();
 					fscs->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
-					currentShadowCameraSetup = ShadowCameraSetupPtr(fscs);
-
+					new_shadow_camera_setup = ShadowCameraSetupPtr(fscs);
 				}
 				break;
 			}
-			//GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Undefined projection " + m_ShadowProjType, "OgreGraphicsSceneManager::UpdateShadowSettings");
-			m_SceneMgr->setShadowCameraSetup(currentShadowCameraSetup);
+			//delete old;
+			ShadowCameraSetupPtr old_scs = m_SceneMgr->getShadowCameraSetup();
+			delete old_scs;
+			m_SceneMgr->setShadowCameraSetup(new_shadow_camera_setup);
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);

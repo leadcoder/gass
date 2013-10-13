@@ -30,6 +30,7 @@
 #include <OgreMaterialManager.h>
 #include <OgreManualObject.h>
 #include <OgreCommon.h>
+#include <OgreEdgeListBuilder.h>
 
 
 #include "Core/Utils/GASSLogManager.h"
@@ -71,7 +72,7 @@ namespace GASS
 	void OgreManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, IComponent>);
-
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
 		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 	}
@@ -102,6 +103,7 @@ namespace GASS
 		m_MeshObject = sm->createManualObject(name);
 		m_MeshObject->setDynamic(true);
 		m_MeshObject->setCastShadows(m_CastShadows);
+		
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 	}
@@ -181,10 +183,18 @@ namespace GASS
 					m_MeshObject->index(sub_mesh->IndexVector[j]);
 				}
 				m_MeshObject->end();
+
+				
+
 			}
+			Ogre::EdgeData::EdgeGroupList::iterator itShadow, itEndShadow;
+			if(m_MeshObject->getEdgeList())
+				for( itShadow=m_MeshObject->getEdgeList()->edgeGroups.begin(), itEndShadow=m_MeshObject->getEdgeList()->edgeGroups.end(); itShadow!=itEndShadow; itShadow++ )
+					const_cast<Ogre::VertexData*>((*itShadow).vertexData)->prepareForShadowVolume();
+			OgreMaterialCache::Add(m_MeshObject);
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
-		OgreMaterialCache::Add(m_MeshObject);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		
 	}
 
 	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
