@@ -332,12 +332,14 @@ namespace GASS
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
 		
+			//shared pointer!
 			ShadowCameraSetupPtr new_shadow_camera_setup;
+
 			switch(m_TextureShadowProjection.GetValue())
 			{
 			case LISPSM:
 				{
-					LiSPSMShadowCameraSetupPtr LiSPSMSetup = new LiSPSMShadowCameraSetup();
+					Ogre::LiSPSMShadowCameraSetup* LiSPSMSetup = new LiSPSMShadowCameraSetup();
 					new_shadow_camera_setup = ShadowCameraSetupPtr(LiSPSMSetup);
 					LiSPSMSetup->setOptimalAdjustFactor(m_OptimalAdjustFactor);
 					LiSPSMSetup->setUseAggressiveFocusRegion(m_UseAggressiveFocusRegion);
@@ -358,9 +360,6 @@ namespace GASS
 				}
 				break;
 			}
-			//delete old;
-			ShadowCameraSetupPtr old_scs = m_SceneMgr->getShadowCameraSetup();
-			delete old_scs;
 			m_SceneMgr->setShadowCameraSetup(new_shadow_camera_setup);
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
