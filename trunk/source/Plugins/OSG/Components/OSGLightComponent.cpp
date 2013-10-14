@@ -45,16 +45,24 @@ namespace GASS
 	void OSGLightComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used for lights", OF_VISIBLE)));
+
 		RegisterProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light Type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
-		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams);
-		RegisterProperty<Vec3>("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams);
-		RegisterProperty<bool>("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow);
-		RegisterProperty<int>("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId);
-
-		RegisterProperty<Vec3>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse);
-		RegisterProperty<Vec3>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular);
-		RegisterProperty<Vec3>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient);
+		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void OSGLightComponent::OnInitialize()

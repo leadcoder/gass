@@ -106,8 +106,6 @@ namespace GASS
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterProperty<bool>("FlipDDS", &GASS::OSGGraphicsSystem::GetFlipDDS, &GASS::OSGGraphicsSystem::SetFlipDDS);
 
-
-
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";

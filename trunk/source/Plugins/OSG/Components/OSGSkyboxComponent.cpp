@@ -93,13 +93,16 @@ namespace GASS
 	osg::TextureCubeMap* OSGSkyboxComponent::ReadCubeMap()
 	{
 		osg::TextureCubeMap* cubemap = new osg::TextureCubeMap();
+
+		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options("dds_flip");
+
 		
-		osg::Image* imagePosX = osgDB::readImageFile(GetTexturePath("east"));
-		osg::Image* imageNegX = osgDB::readImageFile(GetTexturePath("west"));
-		osg::Image* imagePosY = osgDB::readImageFile(GetTexturePath("up"));
-		osg::Image* imageNegY = osgDB::readImageFile(GetTexturePath("down"));
-		osg::Image* imagePosZ = osgDB::readImageFile(GetTexturePath("north"));
-		osg::Image* imageNegZ = osgDB::readImageFile(GetTexturePath("south"));
+		osg::Image* imagePosX = osgDB::readImageFile(GetTexturePath("east"),options);
+		osg::Image* imageNegX = osgDB::readImageFile(GetTexturePath("west"),options);
+		osg::Image* imagePosY = osgDB::readImageFile(GetTexturePath("up"),options);
+		osg::Image* imageNegY = osgDB::readImageFile(GetTexturePath("down"),options);
+		osg::Image* imagePosZ = osgDB::readImageFile(GetTexturePath("north"),options);
+		osg::Image* imageNegZ = osgDB::readImageFile(GetTexturePath("south"),options);
 
 		if (imagePosX && imageNegX && imagePosY && imageNegY && imagePosZ && imageNegZ)
 		{

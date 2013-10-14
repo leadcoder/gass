@@ -70,12 +70,19 @@ namespace GASS
 	void OSGGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OSGGraphicsSceneManager",new GASS::Creator<OSGGraphicsSceneManager, ISceneManager>);
-		RegisterProperty<std::string>( "FogMode", &GetFogMode, &SetFogMode);
-		RegisterProperty<float>( "FogStart", &GetFogStart, &SetFogStart);
-		RegisterProperty<float>( "FogEnd", &GetFogEnd, &SetFogEnd);
-		RegisterProperty<float>( "FogDensity", &GetFogDensity, &SetFogDensity);
-		RegisterProperty<Vec3>( "FogColor", &GetFogColor, &SetFogColor);
-		RegisterProperty<Vec3>( "AmbientColor", &GetAmbientColor, &SetAmbientColor);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
+		RegisterProperty<std::string>( "FogMode", &GetFogMode, &SetFogMode,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>( "FogStart", &GetFogStart, &SetFogStart,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>( "FogEnd", &GetFogEnd, &SetFogEnd,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>( "FogDensity", &GetFogDensity, &SetFogDensity,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>( "FogColor", &GetFogColor, &SetFogColor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<Vec3>( "AmbientColor", &GetAmbientColor, &SetAmbientColor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void OSGGraphicsSceneManager::OnCreate()
@@ -203,7 +210,7 @@ namespace GASS
 		if(m_RootNode)
 		{
 			osg::StateSet* state = m_RootNode->getOrCreateStateSet();
-			short attr = osg::StateAttribute::OFF;
+			short attr = osg::StateAttribute::ON;
 			state->setMode(GL_FOG, attr);
 		}
 
