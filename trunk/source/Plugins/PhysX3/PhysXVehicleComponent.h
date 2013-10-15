@@ -71,6 +71,8 @@ namespace GASS
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels)
 		ADD_PROPERTY(bool,UseAutoReverse);
 
+
+		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;

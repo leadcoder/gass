@@ -37,7 +37,6 @@ namespace GASS
 		m_InReverseMode(false),
 		m_UseDigitalInputs(false),
 		m_UseAutoReverse(false)
-		
 	{
 		m_ChassisData.mMass = 1500;
 	}
@@ -387,6 +386,12 @@ namespace GASS
 		//Set the autogear mode of the instantiate car.
 		m_Vehicle->mDriveDynData.setUseAutoGears(true);
 		scene_manager->RegisterVehicle(m_Vehicle);
+
+		for(size_t i= 0; i < wheel_objects.size(); i++)
+		{
+			m_AllWheels.push_back(wheel_objects[i]);
+		}
+
 		m_Initialized = true;
 	}
 
@@ -479,43 +484,49 @@ namespace GASS
 	void PhysXVehicleComponent::SceneManagerTick(double delta)
 	{
 		int from_id = (int)this; //use address as id
-
 		Vec3 current_pos  = GetPosition();
-
-		//std::cout << "Current Px pos:"<< current_pos <<"\n";
-
+		
 		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
-
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
-		//int mNumVehicles = 1;
 
-		std::vector<SceneObjectPtr> wheels;
+		//TODO: save on startup as weak pointers
+		/*std::vector<SceneObjectPtr> wheels;
 		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
 		while(cc_iter1.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<GASS::SceneObject>(cc_iter1.getNext());
 			wheels.push_back(child);
-		}
+		}*/
 
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
 		m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
 
-		for(int i = 0; i < numShapes-1; i++)
+		if(m_AllWheels.size() == numShapes-1)
 		{
-			//Vec3 pos = PxConvert::ToGASS(carShapes[i]->getLocalPose().p);
-			Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
-			MessagePtr pos_msg(new PositionMessage(pos,from_id));
-			wheels[i]->PostMessage(pos_msg);
+			for(int i = 0; i < numShapes-1; i++)
+			{
+				SceneObjectPtr wheel(m_AllWheels[i]);
+				if(wheel)
+				{
+					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
+					MessagePtr pos_msg(new PositionMessage(pos,from_id));
+					wheel->PostMessage(pos_msg);
 
-			Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
-			//Quaternion rot = PxConvert::ToGASS(carShapes[i]->getLocalPose().q);
-			MessagePtr rot_msg(new RotationMessage(rot,from_id));
-			wheels[i]->PostMessage(rot_msg);
+					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
+					MessagePtr rot_msg(new RotationMessage(rot,from_id));
+					wheel->PostMessage(rot_msg);
+				}
+			}
 		}
+		else
+		{
+			GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
+		}
+	
 
 		PxVehicleDrive4WRawInputData rawInputData;
 
