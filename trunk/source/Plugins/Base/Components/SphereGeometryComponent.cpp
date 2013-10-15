@@ -174,6 +174,7 @@ namespace GASS
 			}
 		}
 
+		Vec3 normal;
 		//Top(j=0)
 		for(i = 0;i < nSlice; i++)
 		{
@@ -181,16 +182,25 @@ namespace GASS
 			p3 = p[i+1][1]; 
 
 			pos.Set(p1[0],p1[1],p1[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
-
+			sub_mesh_data->NormalVector.push_back(normal);
+			
 			pos.Set(p2[0],p2[1],p2[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
+			sub_mesh_data->NormalVector.push_back(normal);
 
 			pos.Set(p3[0],p3[1],p3[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
+			sub_mesh_data->NormalVector.push_back(normal);
 		}
 		//Bottom
 		j=nStack-1;
@@ -200,16 +210,26 @@ namespace GASS
 			p3 = p[i+1][j]; 
 
 			pos.Set(p1[0],p1[1],p1[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
+			sub_mesh_data->NormalVector.push_back(normal);
 
 			pos.Set(p2[0],p2[1],p2[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
+			sub_mesh_data->NormalVector.push_back(normal);
 
 			pos.Set(p3[0],p3[1],p3[2]);
+			normal = pos;
+			normal.Normalize();
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
+			sub_mesh_data->NormalVector.push_back(normal);
+
 		}
 
 		for(i = 0;i < nSlice;i++)
@@ -221,30 +241,49 @@ namespace GASS
 				
 				
 				pos.Set(p1[0],p1[1],p1[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->NormalVector.push_back(normal);
 
 				pos.Set(p2[0],p2[1],p2[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->NormalVector.push_back(normal);
+
 
 				pos.Set(p3[0],p3[1],p3[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->NormalVector.push_back(normal);
+
 
 
 				pos.Set(p1[0],p1[1],p1[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->NormalVector.push_back(normal);
 
 				pos.Set(p3[0],p3[1],p3[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
+				sub_mesh_data->NormalVector.push_back(normal);
 
 				pos.Set(p4[0],p4[1],p4[2]);
+				normal = pos;
+				normal.Normalize();
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
-				
+				sub_mesh_data->NormalVector.push_back(normal);
 			}
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));

@@ -74,9 +74,9 @@ namespace GASS
 		RegisterProperty<Vec3>("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("CastShadow",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("DiffuseLightColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse,
+		RegisterProperty<ColorRGB>("DiffuseColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("SpecularLightColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,
+		RegisterProperty<ColorRGB>("SpecularColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 

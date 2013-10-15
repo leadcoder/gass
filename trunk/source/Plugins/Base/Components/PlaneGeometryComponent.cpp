@@ -57,6 +57,18 @@ namespace GASS
 
 	void PlaneGeometryComponent::OnInitialize()
 	{
+		const std::string mat_name = "PlaneMaterial";
+		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		if(!gfx_sys->HasMaterial(mat_name))
+		{
+			GraphicsMaterial mat;
+			mat.Name = mat_name;
+			mat.Diffuse.Set(1,1,1,1);
+			mat.Ambient.Set(1,1,1);
+			mat.DepthTest = true;
+			gfx_sys->AddMaterial(mat);
+		}
+
 		GenerateMesh();
 		SetTexture(m_Texture);
 	}
@@ -104,7 +116,7 @@ namespace GASS
 		Vec3 p1,p2,p3,p4;
 		Vec3 n1,n2,n3,n4;
 
-		sub_mesh_data->MaterialName = "White";
+		sub_mesh_data->MaterialName = "PlaneMaterial";
 		
 		ColorRGBA color(1,1,1,m_Transparency);
 		sub_mesh_data->Type = TRIANGLE_LIST;

@@ -51,7 +51,8 @@ namespace GASS
 		m_Ortho(false),
 		m_Camera(NULL),
 		m_ClipToFog(false),
-		m_PolygonMode(Ogre::PM_SOLID)
+		m_PolygonMode(Ogre::PM_SOLID),
+		m_MaterialScheme("ALM_STD")
 	{
 		
 	}
@@ -131,6 +132,7 @@ namespace GASS
 		SetFov(m_Fov);
 		SetOrtho(m_Ortho);
 		SetPolygonMode(m_PolygonMode);
+		SetMaterialScheme(m_MaterialScheme);
         lc->GetOgreNode()->attachObject(m_Camera);
 	}
 

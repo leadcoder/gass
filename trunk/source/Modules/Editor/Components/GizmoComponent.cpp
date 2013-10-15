@@ -636,33 +636,37 @@ namespace GASS
 		SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
-			Quaternion selected_rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
-
-			Vec3 r_vec = rot_mat.GetRightVector();
-			Vec3 v_vec = rot_mat.GetViewDirVector();
-			Vec3 up_vec = rot_mat.GetUpVector();
-
-			r_vec.Normalize();
-			//v_vec = v_vec* delta;
-			static float rest_angle = 0;
-			Quaternion final_rot;
-			float angle = delta;
-			angle = m_EditorSceneManager->GetMouseToolController()->SnapAngle(angle+rest_angle);
-			if(angle == 0)
+			LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
+			if(location)
 			{
-				rest_angle += delta;
-			}
-			else
-			{
-				rest_angle= 0;
-			}
+				Quaternion selected_rot = location->GetWorldRotation();
+				Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+				Mat4 rot_mat;
+				rot_mat.Identity();
+				rot.ToRotationMatrix(rot_mat);
 
-			final_rot.FromAngleAxis(angle,r_vec);
-			return selected_rot*final_rot;	
+				Vec3 r_vec = rot_mat.GetRightVector();
+				Vec3 v_vec = rot_mat.GetViewDirVector();
+				Vec3 up_vec = rot_mat.GetUpVector();
+
+				r_vec.Normalize();
+				//v_vec = v_vec* delta;
+				static float rest_angle = 0;
+				Quaternion final_rot;
+				float angle = delta;
+				angle = m_EditorSceneManager->GetMouseToolController()->SnapAngle(angle+rest_angle);
+				if(angle == 0)
+				{
+					rest_angle += delta;
+				}
+				else
+				{
+					rest_angle= 0;
+				}
+
+				final_rot.FromAngleAxis(angle,r_vec);
+				return selected_rot*final_rot;	
+			}
 		}
 		return Quaternion::IDENTITY;
 	}

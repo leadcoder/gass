@@ -67,7 +67,7 @@ namespace GASS
 		{
 			GraphicsMaterial mat;
 			mat.Name = mat_name;
-			mat.Diffuse.Set(0,0,1,1);
+			mat.Diffuse.Set(1,1,1,1);
 			mat.Ambient.Set(1,1,1);
 			mat.DepthTest = true;
 			gfx_sys->AddMaterial(mat);
