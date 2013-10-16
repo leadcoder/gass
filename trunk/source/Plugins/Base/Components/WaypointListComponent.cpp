@@ -294,8 +294,11 @@ namespace GASS
 						Vec3 norm_tangent = tangent*(1.0/weight);
 						spline.GetTangents()[i] = norm_tangent*m_Radius;
 					}
-					wp_vec[i]->SetTangent(tangent);
-					wp_vec[i]->SetTangentLength(weight);
+					if(i < wp_vec.size())
+					{
+						wp_vec[i]->SetTangent(tangent);
+						wp_vec[i]->SetTangentLength(weight);
+					}
 				}
 			}
 			//update tangents
