@@ -69,11 +69,12 @@ namespace GASS
 
 	std::string FileUtils::GetFilename(const std::string &path)
 	{
-		std::string ret = StringUtils::Replace(path,"\\","/");;
-		std::string::size_type pos = ret.find_last_of("/",0);
+		//std::string ret = StringUtils::Replace(path,"\\","/");;
+		std::string ret;
+		std::string::size_type pos = path.find_last_of("/\\");
 		if(pos != std::string::npos)
 		{
-			ret = ret.substr(pos+1);
+			ret = path.substr(pos+1);
 		}
 		return ret;
 	}
@@ -81,7 +82,7 @@ namespace GASS
 	std::string FileUtils::RemoveFilename(const std::string &path)
 	{
 		std::string ret = StringUtils::Replace(path,"\\","/");
-		std::string::size_type pos = ret.find_last_of("/",ret.size());
+		std::string::size_type pos = ret.find_last_of("/");
 		
 		if(pos != std::string::npos)
 		{
