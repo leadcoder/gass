@@ -114,9 +114,9 @@ namespace GASS
 			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
 		}
 
-		SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
-		if(top_obj)
-			top_obj->SendImmediate(pos_msg);
+		//SceneObjectPtr top_obj = scene->LoadObjectFromTemplate("TopCameraObject",scene->GetRootSceneObject());
+		//if(top_obj)
+		//	top_obj->SendImmediate(pos_msg);
 	}
 	
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
