@@ -54,8 +54,6 @@ namespace GASS
 		RegisterProperty<float>("MaxSteerVelocity", &SteerComponent::GetMaxSteerVelocity, &SteerComponent::SetMaxSteerVelocity);
 		RegisterProperty<float>("MaxSteerAngle", &SteerComponent::GetMaxSteerAngle, &SteerComponent::SetMaxSteerAngle);
 		RegisterProperty<float>("SpeedMultiplier", &SteerComponent::GetSpeedMultiplier, &SteerComponent::SetSpeedMultiplier);
-		
-
 	}
 
 	void SteerComponent::OnInitialize()
@@ -78,7 +76,6 @@ namespace GASS
 			float max_rad_angle = Math::Deg2Rad(m_MaxSteerAngle);
 			m_DesiredAngle = -value*max_rad_angle;
 		}
-
 		/*float value = boost::any_cast<float>(any_mess->GetData("Value"));
 		float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")
@@ -90,7 +87,6 @@ namespace GASS
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
 		}*/
-
 	}
 
 	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)

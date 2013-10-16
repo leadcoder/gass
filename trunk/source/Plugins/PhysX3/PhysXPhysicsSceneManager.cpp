@@ -280,11 +280,6 @@ namespace GASS
 			PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
 			PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),(int)m_Vehicles.size(),&m_Vehicles[0]);
 		}
-
-		/*for(int i = 0 ; i < m_Bodies.size();i++)
-		{
-			m_Bodies[i]->SendTransformation();
-		}*/
 		BaseSceneManager::SystemTick(delta_time);
 	}
 

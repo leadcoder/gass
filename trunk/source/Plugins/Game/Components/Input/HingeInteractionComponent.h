@@ -18,36 +18,35 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once 
+#ifndef STEER_COMPONENT_H
+#define STEER_COMPONENT_H
 
-#include "Core/Common.h"
 
-#include "PhysXPhysicsSceneManager.h"
-#include "PhysXBaseGeometryComponent.h"
-#include "PhysXCommon.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Plugins/Game/GameMessages.h"
+
 
 namespace GASS
 {
-	class IGeometryComponent;
-	class PhysXPhysicsSceneManager;
-	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
-	
-	class PhysXConvexGeometryComponent : public Reflection<PhysXConvexGeometryComponent,BaseSceneComponent>
+
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,BaseSceneComponent>
 	{
-	friend class PhysXPhysicsSceneManager;
 	public:
-		PhysXConvexGeometryComponent();
-		virtual ~PhysXConvexGeometryComponent();
+		HingeInteractionComponent();
+		virtual ~HingeInteractionComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
-		PhysXConvexMesh GetConvexMesh() const {return m_ConvexMesh;}
-	protected:
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
-	protected:
-		physx::PxShape *m_Shape;
-		PhysXConvexMesh m_ConvexMesh;
+	private:
+		void OnInput(InputControllerMessagePtr message);
 	};
-	typedef SPTR<PhysXConvexGeometryComponent> PhysXConvexGeometryComponentPtr;
 }
+#endif

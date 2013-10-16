@@ -226,10 +226,12 @@ namespace GASS
 		//zRear = (-z-cm)/2                                                                     (6b)
 		//Substituting (6a-b) into (5) gives
 		//massRear = 0.5*mass*(z-3cm)/z                                         (7)
-		const PxF32 massRear=0.5f * m_ChassisData.mMass * (chassisDims.z-3*chassisCMOffset.z)/chassisDims.z;
+		PxF32 massRear=0.5f * m_ChassisData.mMass * (chassisDims.z-3*chassisCMOffset.z)/chassisDims.z;
 		const PxF32 massFront=m_ChassisData.mMass - massRear;
+		massRear = massRear/PxF32 (wheels.size()-2);
+		
 
-
+		float tot = massRear*4 + massFront;
 
 		//Disable the handbrake from the front wheels and enable for the rear wheels
 		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxHandBrakeTorque=0.0f;
@@ -244,9 +246,17 @@ namespace GASS
 
 		susps[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mSprungMass=massFront*0.5f;
 		susps[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mSprungMass=massFront*0.5f;
-		susps[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mSprungMass=massRear*0.5f;
-		susps[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mSprungMass=massRear*0.5f;
+		susps[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mSprungMass=massRear;
+		susps[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mSprungMass=massRear;
 
+		//Set mass of extra wheels
+		for(size_t i = 4; i < wheels.size() ; i++)
+		{
+			susps[i].mSprungMass=massRear;
+			wheels[i].mMaxSteer=0.0f;
+			wheels[i].mMaxHandBrakeTorque=4000.0f;
+		}
+	
 		//We need to set up geometry data for the suspension, wheels, and tires.
 		//We already know the wheel centers described as offsets from the rigid body centre of mass.
 		//From here we can approximate application points for the tire and suspension forces.
@@ -391,7 +401,7 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
-
+		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
 		m_Initialized = true;
 	}
 
@@ -491,16 +501,6 @@ namespace GASS
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
-
-		//TODO: save on startup as weak pointers
-		/*std::vector<SceneObjectPtr> wheels;
-		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
-		while(cc_iter1.hasMoreElements())
-		{
-			SceneObjectPtr child = DYNAMIC_PTR_CAST<GASS::SceneObject>(cc_iter1.getNext());
-			wheels.push_back(child);
-		}*/
-
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
 		m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
@@ -527,7 +527,6 @@ namespace GASS
 			GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
 		}
 	
-
 		PxVehicleDrive4WRawInputData rawInputData;
 
 		if(m_UseDigitalInputs)

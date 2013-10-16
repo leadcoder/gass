@@ -45,9 +45,6 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<PhysXBodyComponent, IComponent>);
 		RegisterProperty<float>("Mass", &PhysXBodyComponent::GetMass, &PhysXBodyComponent::SetMass);
 		RegisterProperty<bool>("Kinematic", &PhysXBodyComponent::GetKinematic, &PhysXBodyComponent::SetKinematic);
-		//RegisterProperty<Vec3>("CGPosition",&PhysXBodyComponent::GetCGPosition, &PhysXBodyComponent::SetCGPosition);
-		//RegisterProperty<Vec3>("SymmetricInertia",&PhysXBodyComponent::GetSymmetricInertia, &PhysXBodyComponent::SetSymmetricInertia);
-		//RegisterProperty<Vec3>("AssymetricInertia",&PhysXBodyComponent::GetAssymetricInertia, &PhysXBodyComponent::SetAssymetricInertia);
 		RegisterProperty<bool>("EffectJoints",&PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
 	}
 
@@ -161,33 +158,6 @@ namespace GASS
 		AddTorque(message->GetTorque());
 	}
 
-/*	void PhysXBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
-	{
-		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
-		Vec3 value = message->GetValue();
-		
-		//wake body!!
-		WakeUp();
-		switch(type)
-		{
-		case PhysicsBodyMessage::FORCE:
-			{
-				AddForce(value,true);
-			}
-			break;
-		case PhysicsBodyMessage::TORQUE:
-			{
-				AddTorque(value);
-				break;
-			}
-		case PhysicsBodyMessage::VELOCITY:
-			{
-				SetVelocity(value);
-				break;
-			}
-		}
-	}*/
-
 	Vec3 PhysXBodyComponent::GetPosition() const
 	{
 		Vec3 pos(0,0,0);
@@ -221,21 +191,7 @@ namespace GASS
 						body->SetPosition(pos);
 					}
 				}
-
-				/*components.clear();
-				GetSceneObject()->GetComponentsByClass(components,"PhysXJoint");
-				
-				for(int i = 0 ; i < components.size(); i++)
-				{
-					PhysXJointPtr joint = STATIC_PTR_CAST<PhysXJoint>(components[i]);
-					//if(joint.get() != this)
-					{
-						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponent<ILocationComponent>();
-						Vec3 pos = location->GetPosition();
-						pos = pos + trans_vec;
-						joint->SetPosition(pos);
-					}
-				}*/
+			
 
 				components.clear();
 				GetSceneObject()->GetComponentsByClass(components,"PhysXSuspensionComponent");
@@ -251,23 +207,6 @@ namespace GASS
 						joint->SetPosition(pos);
 					}
 				}
-
-
-				/*int num_joints = dBodyGetNumJoints(m_PhysXBodyComponent);
-				for(int i = 0 ; i < num_joints ;i++)
-				{
-					dJointID joint = dBodyGetJoint(m_PhysXBodyComponent,i);
-					dBodyID b2 = dJointGetBody (joint, 1);
-					PhysXBodyComponent* child_body = (PhysXBodyComponent*) dBodyGetData(b2);
-					if(child_body && child_body != this)
-					{
-						const dReal *p = dBodyGetPosition(b2);
-						Vec3 pos(p[0],p[1],p[2]);
-						pos = pos + trans_vec;
-						child_body->SetPosition(pos);
-					}
-
-				}*/
 			}
 		}
 	}

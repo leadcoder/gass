@@ -18,36 +18,54 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once 
+#include "HingeInteractionComponent.h"
+#include "GameMessages.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
 
-#include "Core/Common.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
 
-#include "PhysXPhysicsSceneManager.h"
-#include "PhysXBaseGeometryComponent.h"
-#include "PhysXCommon.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+
 
 namespace GASS
 {
-	class IGeometryComponent;
-	class PhysXPhysicsSceneManager;
-	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
-	
-	class PhysXConvexGeometryComponent : public Reflection<PhysXConvexGeometryComponent,BaseSceneComponent>
+	HingeInteractionComponent::HingeInteractionComponent() 
 	{
-	friend class PhysXPhysicsSceneManager;
-	public:
-		PhysXConvexGeometryComponent();
-		virtual ~PhysXConvexGeometryComponent();
-		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		PhysXConvexMesh GetConvexMesh() const {return m_ConvexMesh;}
-	protected:
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
-	protected:
-		physx::PxShape *m_Shape;
-		PhysXConvexMesh m_ConvexMesh;
-	};
-	typedef SPTR<PhysXConvexGeometryComponent> PhysXConvexGeometryComponentPtr;
+
+	}
+
+	HingeInteractionComponent::~HingeInteractionComponent()
+	{
+
+	}
+
+	void HingeInteractionComponent::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("HingeInteractionComponent",new Creator<HingeInteractionComponent, IComponent>);
+	}
+
+	void HingeInteractionComponent::OnInitialize()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HingeInteractionComponent::OnInput,InputControllerMessage,0));
+	}
+
+	void HingeInteractionComponent::OnInput(InputControllerMessagePtr message)
+	{
+		std::string name = message->GetController();
+		float value = message->GetValue();
+		if (name == "Steer")
+		{
+			float angular_vel = value * Math::Deg2Rad(30);
+			MessagePtr vel_msg(new PhysicsHingeJointVelocityRequest(angular_vel));
+			GetSceneObject()->PostMessage(vel_msg);
+		}
+	}
 }

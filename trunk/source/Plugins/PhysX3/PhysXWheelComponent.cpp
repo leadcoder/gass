@@ -36,6 +36,7 @@ namespace GASS
 		m_SuspensionData.mMaxDroop = 0.1f;
 		m_SuspensionData.mSpringStrength = 35000.0f;
 		m_SuspensionData.mSpringDamperRate = 4500.0f;
+		//m_SuspensionData.mSprungMass = 1.0;
 	}
 
 	PhysXWheelComponent::~PhysXWheelComponent()
@@ -46,8 +47,6 @@ namespace GASS
 	void PhysXWheelComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, IComponent>);
-		//RegisterProperty<float>("Damping", &GASS::PhysXWheelComponent::GetDamping, &GASS::PhysXWheelComponent::SetDamping);
-		//RegisterProperty<float>("Strength", &GASS::PhysXWheelComponent::GetStrength, &GASS::PhysXWheelComponent::SetStrength);
 		RegisterProperty<float>("Mass", &GASS::PhysXWheelComponent::GetMass, &GASS::PhysXWheelComponent::SetMass);
 	}
 

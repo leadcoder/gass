@@ -21,12 +21,13 @@
 #pragma once
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
+#include "IPhysXRigidDynamic.h"
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>
+	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>, public IPhysXRigidDynamic
 	{
 	public:
 		enum MassRepresentationType
@@ -43,8 +44,8 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 		
-		void SendTransformation();
-		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
+		//IPhysXBody
+		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void WakeUp();
@@ -59,7 +60,6 @@ namespace GASS
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
 		//void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);

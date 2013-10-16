@@ -109,7 +109,7 @@ namespace GASS
 		{
 			physx::PxReal mass = m_Body->GetMass();
 			const physx::PxVec3 localPos = physx::PxVec3(m_Offset.x,m_Offset.y,m_Offset.z);
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxActor(), mass,&localPos);
+			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
 		}
 	}
 

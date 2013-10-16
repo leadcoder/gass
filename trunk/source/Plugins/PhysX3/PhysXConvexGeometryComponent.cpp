@@ -44,7 +44,7 @@ using namespace physx;
 
 namespace GASS
 {
-	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent()
+	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent() : m_Shape(0)
 	{
 
 	}
@@ -63,12 +63,12 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXConvexGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		//assert(scene_manager);
-		//m_SceneManager = scene_manager;
+		
 	}
 
 	void PhysXConvexGeometryComponent::OnDelete()
 	{
+
 	}
 
 	void PhysXConvexGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -85,6 +85,37 @@ namespace GASS
 			col_mesh_id = res->GetResource().Name();
 		}
 		m_ConvexMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
+
+
+		PhysXBodyComponentPtr body = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
+		if(body)
+		{
+			if(m_Shape)
+				m_Shape->release();
+			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+			physx::PxMaterial* material = system->GetDefaultMaterial();
+
+
+			PxConvexMeshGeometry convex_geom(m_ConvexMesh.m_ConvexMesh);
+			m_Shape = body->GetPxRigidDynamic()->createShape(convex_geom, *material);
+			//update collision flags
+			GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+			physx::PxFilterData collFilterData;
+			if(geom)
+			{
+				GeometryFlags against = GeometryFlagManager::GetMask(geom->GetGeometryFlags());
+				collFilterData.word0 = geom->GetGeometryFlags();
+				collFilterData.word1 = against;
+				m_Shape->setSimulationFilterData(collFilterData);
+			}
+			//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+			if(body)
+			{
+				physx::PxReal mass = body->GetMass();
+				const physx::PxVec3 localPos = physx::PxVec3(0,0,0);
+				physx::PxRigidBodyExt::updateMassAndInertia(*body->GetPxRigidDynamic(), mass,&localPos);
+			}
+		}
 	}
 }
 

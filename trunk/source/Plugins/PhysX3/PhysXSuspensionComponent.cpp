@@ -72,33 +72,12 @@ namespace GASS
 	void PhysXSuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,BodyLoadedMessage,2));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnWheelVelocityRequest,PhysicsSuspensionWheelVelocityRequest,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionSteerVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxSteerTorqueRequest,PhysicsSuspensionJointMaxSteerTorqueRequest,0));
-
-
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnPositionChanged,PositionMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-
 	}
-
-
-	/*void PhysXSuspensionComponent::OnWheelVelocityRequest(PhysicsSuspensionWheelVelocityRequestPtr message)
-	{
-		SetDriveVelocity(message->GetTargetVelocity());
-		if(message->GetMaxForce() > 0)
-			SetDriveMaxTorque(message->GetMaxForce());
-	}
-
-	void PhysXSuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionSteerVelocityRequestPtr message)
-	{
-		SetAngularSteerVelocity(message->GetTargetVelocity());
-	}*/
-
 
 	void PhysXSuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
 	{
@@ -146,8 +125,8 @@ namespace GASS
 		PhysXBodyComponentPtr chassis_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
 		PhysXBodyComponentPtr wheel_comp = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();
 
-		physx::PxRigidDynamic* chassis_actor = chassis_comp->GetPxActor();
-		physx::PxRigidDynamic* wheel_actor = wheel_comp->GetPxActor();
+		physx::PxRigidDynamic* chassis_actor= chassis_comp->GetPxRigidDynamic();
+		physx::PxRigidDynamic* wheel_actor = wheel_comp->GetPxRigidDynamic();
 
 		Vec3 chassis_pos = chassis_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
@@ -160,7 +139,7 @@ namespace GASS
 		m_SuspensionActor->setMass(wheel_comp->GetMass());
 		sm->GetPxScene()->addActor(*m_SuspensionActor);
 
-		//Calcualte positions relative to parentfor suspension joint
+		//Calculate positions relative to parent for suspension joint
 		physx::PxVec3 susp_pos = PxConvert::ToPx(wheel_pos - chassis_pos);
 		physx::PxQuat susp_rot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
 

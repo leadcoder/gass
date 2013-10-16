@@ -75,23 +75,7 @@ namespace GASS
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxVec3 dims(size.x/2.0,size.y/2.0,size.z/2.0);
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxBoxGeometry(dims), *material,offset);
-		
-	
-		//physx::PxReal mass = m_Body->GetMass();
-		//physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxActor(), mass);
-
-		/*float mass = 1;
-		physx::PxVec3 chassisDims(15,1,15);
-		physx::PxVec3 chassisMOI
-			((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*mass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*mass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*mass/12.0f);
-		
-		m_Body->GetPxActor()->setMass(mass);
-		m_Body->GetPxActor()->setMassSpaceInertiaTensor(chassisMOI);
-		m_Body->GetPxActor()->setCMassLocalPose(physx::PxTransform(physx::PxVec3(0,-0.5,0),physx::PxQuat::createIdentity()));
-		*/
+		physx::PxShape* shape = m_Body->GetPxRigidDynamic()->createShape(physx::PxBoxGeometry(dims), *material,offset);
 		return shape;
 	}
 	

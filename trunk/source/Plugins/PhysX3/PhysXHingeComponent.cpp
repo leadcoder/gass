@@ -66,9 +66,6 @@ namespace GASS
 		RegisterProperty<bool>("EnableDrive", &GASS::PhysXHingeComponent::GetEnableDrive, &GASS::PhysXHingeComponent::SetEnableDrive);
 	}
 
-
-
-
 	void PhysXHingeComponent::OnInitialize()
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
@@ -90,21 +87,21 @@ namespace GASS
 				return;
 		}
 		
-		PhysXBodyComponentPtr b1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>();
+		PhysXBodyPtr b1 = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>();
 		if(!b1)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"First body not found, your second object don't have a PhysXBodyComponent","PhysXHingeComponent::RegisterReflection");
-
-		PhysXBodyComponentPtr b2 = m_Body2->GetFirstComponentByClass<PhysXBodyComponent>();
-		if(!b2)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Second body not found, your second object don't have a PhysXBodyComponent","PhysXHingeComponent::RegisterReflection");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"The first body object you try to attach is not derived from IPhysXBody interface", "PhysXHingeComponent::OnInitialize");
 	
+		PhysXBodyPtr b2 = m_Body2->GetFirstComponentByClass<IPhysXRigidDynamic>();
+		if(!b1)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"The second body object you try to attach is not derived from IPhysXBody interface", "PhysXHingeComponent::OnInitialize");
+
 		// Check if bodies are already are loaded
-		if(m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+		if(b1->GetPxRigidDynamic())
 			m_Body1Loaded = true;
 		else //wait for body to be loaded
 			m_Body1->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnBody1Loaded,BodyLoadedMessage,0));
 
-		if(m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+		if(b2->GetPxRigidDynamic())
 			m_Body2Loaded = true;
 		else //wait for body to be loaded
 			m_Body2->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnBody2Loaded,BodyLoadedMessage,0));
@@ -112,13 +109,7 @@ namespace GASS
 		//both bodies are loaded -> create joint
 		if(m_Body1Loaded && m_Body2Loaded)
 			CreateJoint();
-		
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnPositionChanged,PositionMessage,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 	}
-
-
 	
 	void PhysXHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
 	{
@@ -143,8 +134,8 @@ namespace GASS
 		if(!(m_Body1.IsValid() && m_Body1.IsValid()))
 			return;
 		
-		physx::PxRigidDynamic* a1 = m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor();
-		physx::PxRigidDynamic* a2 = m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor();
+		physx::PxRigidDynamic* a1 = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>()->GetPxRigidDynamic();
+		physx::PxRigidDynamic* a2 = m_Body2->GetFirstComponentByClass<IPhysXRigidDynamic>()->GetPxRigidDynamic();
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
@@ -174,7 +165,12 @@ namespace GASS
 		 m_Body1 = value;
 		 if(m_Body1.IsValid())
 		 {
-			 if(m_Body1->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+			 PhysXBodyPtr b = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>();
+			 if(!b)
+			 {
+				 GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"The object you try to attach is not derived from IPhysXBody interface", "PhysXHingeComponent::SetBody1");
+			 }
+			 if(b->GetPxRigidDynamic())
 				 m_Body1Loaded = true;
 			 else
 				 m_Body1Loaded = false;
@@ -190,7 +186,12 @@ namespace GASS
 		 m_Body2 = value;
 		 if(m_Body2.IsValid())
 		 {
-			 if(m_Body2->GetFirstComponentByClass<PhysXBodyComponent>()->GetPxActor())
+			 PhysXBodyPtr b = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>();
+			 if(!b)
+			 {
+				 GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"The object you try to attach is not derived from IPhysXBody interface", "PhysXHingeComponent::SetBody2");
+			 }
+			 if(b->GetPxRigidDynamic())
 				 m_Body2Loaded = true;
 			 else
 				 m_Body2Loaded = false;
@@ -257,20 +258,6 @@ namespace GASS
 				m_RevoluteJoint->setLimit(physx::PxJointLimitPair(Math::Deg2Rad(m_LowStop), Math::Deg2Rad(m_HighStop), 0.1f)); 
 			}
 		}
-
-		/*float PhysXHingeComponent::GetAngle()
-		{
-			if(m_RevoluteJoint)
-				return m_RevoluteJoint->getAngle();
-			return 0;
-		}
-
-		float PhysXHingeComponent::GetAngleRate()
-		{
-			if(m_RevoluteJoint)
-				return 0;//m_RevoluteJoint->getVelocity();
-			return 0;
-		}*/
 
 		void PhysXHingeComponent::UpdateMotor()
 		{

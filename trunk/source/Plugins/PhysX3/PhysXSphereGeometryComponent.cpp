@@ -68,7 +68,7 @@ namespace GASS
 	
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = m_Body->GetPxActor()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
+		physx::PxShape* shape = m_Body->GetPxRigidDynamic()->createShape(physx::PxSphereGeometry(rad), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
 	
 		return shape;
 	}

@@ -90,6 +90,7 @@ namespace GASS
 		float m_LowStop;
 		bool m_Body1Loaded;
 		bool m_Body2Loaded;
+		
 		bool m_EnableLimit;
 		bool m_EnableDrive;
 		

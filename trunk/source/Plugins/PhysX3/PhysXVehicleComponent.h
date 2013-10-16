@@ -23,20 +23,21 @@
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSceneObjectRef.h"
+#include "IPhysXRigidDynamic.h"
 
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent>
+	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent> , public IPhysXRigidDynamic
 	{
 	public:
 		PhysXVehicleComponent();
 		virtual ~PhysXVehicleComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
+		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		float GetMass() const {return m_ChassisData.mMass;}
 		void SetMass(float mass);
 		void SceneManagerTick(double delta);

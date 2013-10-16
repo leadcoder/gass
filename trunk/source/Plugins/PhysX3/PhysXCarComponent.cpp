@@ -239,6 +239,10 @@ namespace GASS
 		susps[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mSprungMass=massRear*0.5f;
 		susps[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mSprungMass=massRear*0.5f;
 
+		
+		
+
+
 		//We need to set up geometry data for the suspension, wheels, and tires.
 		//We already know the wheel centers described as offsets from the rigid body centre of mass.
 		//From here we can approximate application points for the tire and suspension forces.
