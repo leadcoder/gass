@@ -25,6 +25,7 @@
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -41,9 +42,11 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
+		void OnBody1Loaded(BodyLoadedMessagePtr message);
+		void OnBody2Loaded(BodyLoadedMessagePtr message);
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
 		void OnMaxTorqueRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
-		void OnBodyLoaded(BodyLoadedMessagePtr message);
+		//void OnBodyLoaded(BodyLoadedMessagePtr message);
 		void SetAxisVel(float velocity);
 		float GetMaxTorque()const {return m_MaxTorque;}
 		void SetMaxTorque(float value);
@@ -67,12 +70,24 @@ namespace GASS
 		void SetHighStop(float value);
 		float GetLowStop()const {return m_LowStop;}
 		void SetLowStop(float value);
+
+		SceneObjectRef GetBody1() const {return m_Body1;}
+		void SetBody1(SceneObjectRef value);
+		SceneObjectRef GetBody2()const {return m_Body2;}
+		void SetBody2(SceneObjectRef value);
+
+
 	private:
 		void SendJointUpdate(VelocityNotifyMessagePtr message);
 		dJointID m_ODEJoint;
 
-		ODEBodyComponent* m_Body1;
-		ODEBodyComponent* m_Body2;
+
+		SceneObjectRef m_Body1;
+		SceneObjectRef m_Body2;
+		bool m_Body1Loaded;
+		bool m_Body2Loaded;
+		dBodyID m_ODEBody1;
+		dBodyID m_ODEBody2;
 		
 		float m_MaxTorque;
 		float m_SwayForce;

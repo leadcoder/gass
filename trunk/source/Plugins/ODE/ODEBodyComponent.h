@@ -122,5 +122,6 @@ namespace GASS
 		MassRepresentationType m_MassRepresentation;
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
+	typedef SPTR<ODEBodyComponent> ODEBodyComponentPtr;
 }
 

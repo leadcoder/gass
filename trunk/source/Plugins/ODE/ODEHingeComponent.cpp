@@ -34,14 +34,16 @@
 
 namespace GASS
 {
-	ODEHingeComponent::ODEHingeComponent() : m_Body1 (NULL),
-		m_Body2 (NULL),
-		m_MaxTorque (0),
+	ODEHingeComponent::ODEHingeComponent() : m_MaxTorque (0),
 		m_Anchor (0,0,0),
 		m_Axis (0,0,0),
 		m_ODEJoint (0),
 		m_HighStop(0),
-		m_LowStop(0)
+		m_LowStop(0),
+		m_Body1Loaded(0),
+		m_Body2Loaded(0),
+		m_ODEBody1(0),
+		m_ODEBody2(0)
 	{
 	}
 
@@ -57,61 +59,124 @@ namespace GASS
 		RegisterProperty<float>("LowStop", &GASS::ODEHingeComponent::GetLowStop, &GASS::ODEHingeComponent::SetLowStop);
 		RegisterProperty<Vec3>("Axis", &GASS::ODEHingeComponent::GetAxis, &GASS::ODEHingeComponent::SetAxis);
 		RegisterProperty<Vec3>("Anchor", &GASS::ODEHingeComponent::GetAnchor, &GASS::ODEHingeComponent::SetAnchor);
+		RegisterProperty<SceneObjectRef>("Body1", &GASS::ODEHingeComponent::GetBody1, &GASS::ODEHingeComponent::SetBody1);
+		RegisterProperty<SceneObjectRef>("Body2", &GASS::ODEHingeComponent::GetBody2, &GASS::ODEHingeComponent::SetBody2);
 	}
 	
 	void ODEHingeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
+		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
+		m_SceneManager = scene_manager;
+		
+//		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnMaxTorqueRequest,PhysicsHingeJointMaxTorqueRequest,0));
+
+		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
+		{
+			//Check if this hinge should link this parent with this node
+			ODEBodyComponentPtr bc1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>();
+			ODEBodyComponentPtr bc2 = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>();
+			if(bc1 && bc2)
+			{
+				m_ODEBody1  = bc1->GetODEBodyComponent();
+				m_ODEBody2  = bc2->GetODEBodyComponent();
+				m_Body1 = SceneObjectRef(bc1->GetSceneObject());
+				m_Body2 = SceneObjectRef(bc2->GetSceneObject());
+			}
+		}
+	}
+
+	void ODEHingeComponent::SetBody1(SceneObjectRef value) 
+	{
+		 m_Body1 = value;
+		 if(m_Body1.IsValid())
+		 {
+			 m_ODEBody1  = m_Body1->GetFirstComponentByClass<ODEBodyComponent>()->GetODEBodyComponent();
+			 if(m_ODEBody1)
+				 m_Body1Loaded = true;
+			 else
+				 m_Body1Loaded = false;
+			 if(m_Body1Loaded && m_Body2Loaded)
+			 	CreateJoint();
+		 }
+		 else
+			 m_Body1Loaded = false;
+	}
+
+	void ODEHingeComponent::SetBody2(SceneObjectRef value) 
+	{
+		 m_Body2 = value;
+		 if(m_Body2.IsValid())
+		 {
+			 m_ODEBody2  = m_Body2->GetFirstComponentByClass<ODEBodyComponent>()->GetODEBodyComponent();
+			 if(m_ODEBody2)
+				 m_Body2Loaded = true;
+			 else
+				 m_Body2Loaded = false;
+			 if(m_Body1Loaded && m_Body2Loaded)
+				CreateJoint();
+		 }
+		 else
+			m_Body2Loaded = false;
+	}
+
+	void ODEHingeComponent::OnBody1Loaded(BodyLoadedMessagePtr message)
+	{
+		m_Body1Loaded = true;
+		if(m_Body2Loaded)
+			CreateJoint();
+	}
+
+	void ODEHingeComponent::OnBody2Loaded(BodyLoadedMessagePtr message)
+	{
+		m_Body2Loaded = true;
+		if(m_Body1Loaded)
+			CreateJoint();
 	}
 
 	void ODEHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
 	{
-		if(m_Body1)
+		if(m_ODEBody1)
 		{
-			m_Body1->Wake();
+			//m_ODEBody1->Wake();
 			SetAxisVel(message->GetVelocity());
 		}
 	}
 
 	void ODEHingeComponent::OnMaxTorqueRequest(PhysicsHingeJointMaxTorqueRequestPtr message)
 	{
-		if(m_Body1)
+		if(m_ODEBody1)
 		{
-			m_Body1->Wake();
+			//m_ODEBody1->Wake();
 			SetMaxTorque(message->GetMaxTorque());
 		}
 	}
 
-	void ODEHingeComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	/*void ODEHingeComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		m_SceneManager = scene_manager;
 		assert(scene_manager);
 		CreateJoint();
-	}
+	}*/
 
 	void ODEHingeComponent::CreateJoint()
 	{
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
+		//m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 
-		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
-		
-
-		if(m_Body1)
+		if(m_ODEBody1 && m_ODEBody2)
 		{
-			m_Body2 = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
+			//m_Body2 = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 
-			dBodyID b1 = m_Body1->GetODEBodyComponent();
-			dBodyID b2 = m_Body2->GetODEBodyComponent();
-
+			
 			if(m_ODEJoint)
 				dJointDestroy(m_ODEJoint);
 
 			m_ODEJoint = dJointCreateHinge(world,0);
 			GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
-			dJointAttach(m_ODEJoint, b1,b2);
+			dJointAttach(m_ODEJoint, m_ODEBody1,m_ODEBody2);
 
 			dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
 			dJointSetHingeParam(m_ODEJoint,dParamBounce,0.5);
@@ -133,11 +198,10 @@ namespace GASS
 
 	void ODEHingeComponent::UpdateJointAxis()
 	{
-		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-
+		LocationComponentPtr location1 = m_Body1->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr location2 = m_Body2->GetFirstComponentByClass<ILocationComponent>();
+		
 		Quaternion rot = location1->GetRotation();
-
 		dReal ode_rot_mat[12];
 		Mat4 rot_mat;
 		rot_mat.Identity();
@@ -151,7 +215,6 @@ namespace GASS
 			dJointSetHingeAxis(m_ODEJoint,m_Axis.x,m_Axis.y,m_Axis.z);
 			else
 				dJointSetHingeAxis(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
-			
 	}
 
 	void ODEHingeComponent::SetAnchor(const Vec3 &value)
@@ -164,7 +227,7 @@ namespace GASS
 	void ODEHingeComponent::UpdateAnchor()
 	{
 		//LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		LocationComponentPtr location2 = m_Body2->GetFirstComponentByClass<ILocationComponent>();
 
 		//Vec3 pos_b1 = location1->GetPosition();
 		Vec3 pos_b2 = location2->GetPosition();
