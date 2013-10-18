@@ -70,7 +70,7 @@ namespace GASS
 	std::string FileUtils::GetFilename(const std::string &path)
 	{
 		//std::string ret = StringUtils::Replace(path,"\\","/");;
-		std::string ret;
+		std::string ret = path;
 		std::string::size_type pos = path.find_last_of("/\\");
 		if(pos != std::string::npos)
 		{
