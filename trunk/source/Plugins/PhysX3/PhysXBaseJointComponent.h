@@ -24,7 +24,6 @@
 #include <extensions/PxRevoluteJoint.h>
 #include <extensions/PxPrismaticJoint.h>
 #include "PhysXCommon.h"
-#include "PhysXBaseJointComponent.h"
 #include "Sim/GASS.h"
 #include "Sim/GASSSceneObjectRef.h"
 
@@ -34,57 +33,30 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,PhysXBaseJointComponent>
+	class PhysXBaseJointComponent : public Reflection<PhysXBaseJointComponent,BaseSceneComponent>
 	{
 	public:
-		PhysXHingeComponent();
-		virtual ~PhysXHingeComponent();
+		PhysXBaseJointComponent();
+		virtual ~PhysXBaseJointComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void CreateJoint();
 	protected:
-		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
-		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
-		
-		//Helpers
-		
-		void UpdateSuspension();
-		void UpdateMotor();
-		void UpdateLimits();
+		void OnBody1Loaded(BodyLoadedMessagePtr message);
+		void OnBody2Loaded(BodyLoadedMessagePtr message);
 
 		//get set section
-		float GetDriveForceLimit()const {return m_DriveForceLimit;}
-		void SetDriveForceLimit(float value);	
-		void SetDriveTargetVelocity(float value);
-		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
-		float GetDamping()const {return m_Damping;}
-		void SetDamping(float value){m_Damping =value;}
-		float GetStrength()const {return m_Strength;}
-		void SetStrength(float value){m_Strength =value;}
-		Vec3 GetRotationAxis()const {return m_RotationAxis;}
-		void SetRotationAxis(const Vec3 &value);
-		float GetHighStop()const {return m_HighStop;}
-		void SetHighStop(float value);
-		float GetLowStop()const {return m_LowStop;}
-		void SetLowStop(float value);
-		void SetEnableLimits(bool value);
-		bool GetEnableLimits() const {return m_EnableLimit;}
-		void SetEnableDrive(bool value);
-		bool GetEnableDrive() const {return m_EnableDrive;}
+		SceneObjectRef GetBody1() const {return m_Body1;}
+		void SetBody1(SceneObjectRef value);
+		SceneObjectRef GetBody2()const {return m_Body2;}
+		void SetBody2(SceneObjectRef value);
+		virtual void CreateJoint() = 0;
+
+		SceneObjectRef m_Body1;
+		SceneObjectRef m_Body2;
+		bool m_Body1Loaded;
+		bool m_Body2Loaded;
 	private:
-		float m_DriveForceLimit;
-		float m_DriveTargetVelocity;
-		Vec3 m_RotationAxis;
-		float m_SpringJointForce;
-		float m_Strength;
-		float m_Damping;
-		float m_HighStop;
-		float m_LowStop;
-		bool m_EnableLimit;
-		bool m_EnableDrive;
-		//PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRevoluteJoint *m_RevoluteJoint;
 	};
-	typedef SPTR<PhysXHingeComponent> PhysXHingeComponentPtr;
+	typedef SPTR<PhysXBaseJointComponent> PhysXBaseJointComponentPtr;
 }
 
