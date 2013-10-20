@@ -50,6 +50,9 @@ namespace GASS
 		void SetMass(float mass);
 		void WakeUp();
 	protected:
+		ADD_PROPERTY(bool,DisableGravity)
+		ADD_PROPERTY(int,PositionIterCount)
+		ADD_PROPERTY(int,VelocityIterCount)
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);

@@ -81,6 +81,59 @@ namespace GASS
 	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
 	/**
+	Set desired linear velocity for prismatic joint. 
+	*/
+	class PhysicsPrismaticJointVelocityRequest : public BaseMessage
+	{
+	public:
+		PhysicsPrismaticJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsPrismaticJointVelocityRequest> PhysicsPrismaticJointVelocityRequestPtr;
+
+	/**
+	Set desired position for prismatic joint. 
+	*/
+	class PhysicsPrismaticJointPositionRequest : public BaseMessage
+	{
+	public:
+		PhysicsPrismaticJointPositionRequest(Float position, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Position(position)
+		  {
+
+		  }
+		  Float GetPosition()const {return m_Position;}
+	private:
+		Float m_Position;
+	};
+	typedef SPTR<PhysicsPrismaticJointPositionRequest> PhysicsPrismaticJointPositionRequestPtr;
+
+
+		/**
+	Set max force used by a prismatic joint to get to it's desired velocity 
+	*/
+
+	class PhysicsPrismaticJointMaxForceRequest : public BaseMessage
+	{
+	public:
+		PhysicsPrismaticJointMaxForceRequest(Float max_force, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_MaxForce(max_force)
+		  {
+
+		  }
+		  Float GetMaxForce()const {return m_MaxForce;}
+	private:
+		Float m_MaxForce;
+	};
+	typedef SPTR<PhysicsPrismaticJointMaxForceRequest> PhysicsPrismaticJointMaxForceRequestPtr;
+
+	/**
 	Set desired angular velocity for hinge joint. 
 	*/
 	class PhysicsHingeJointVelocityRequest : public BaseMessage
@@ -98,8 +151,9 @@ namespace GASS
 	typedef SPTR<PhysicsHingeJointVelocityRequest> PhysicsHingeJointVelocityRequestPtr;
 
 	/**
-	Set max torque used by a hinge joint to get to i'ts desired velocity 
+	Set max torque used by a hinge joint to get to it's desired velocity 
 	*/
+
 	class PhysicsHingeJointMaxTorqueRequest : public BaseMessage
 	{
 	public:

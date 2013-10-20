@@ -75,6 +75,7 @@ namespace GASS
 		virtual void Enable();
 		virtual void SetScale(const Vec3 &value);
 	protected:
+		ADD_PROPERTY(bool,SimulationCollision);
 		//messages functions
 		void OnLoad(MessagePtr message);
 		void OnTransformationChanged(TransformationNotifyMessagePtr message);

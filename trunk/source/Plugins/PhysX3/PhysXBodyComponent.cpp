@@ -29,7 +29,10 @@ namespace GASS
 		m_Mass(1),
 		m_Actor(NULL),
 		m_Kinematic(false),
-		m_EffectJoints(true)
+		m_DisableGravity(false),
+		m_EffectJoints(true),
+		m_PositionIterCount(40),
+		m_VelocityIterCount(40)
 	{
 
 	}
@@ -43,9 +46,12 @@ namespace GASS
 	void PhysXBodyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<PhysXBodyComponent, IComponent>);
-		RegisterProperty<float>("Mass", &PhysXBodyComponent::GetMass, &PhysXBodyComponent::SetMass);
-		RegisterProperty<bool>("Kinematic", &PhysXBodyComponent::GetKinematic, &PhysXBodyComponent::SetKinematic);
-		RegisterProperty<bool>("EffectJoints",&PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
+		REG_PROPERTY(float,Mass,PhysXBodyComponent);
+		REG_PROPERTY(bool,Kinematic,PhysXBodyComponent);
+		REG_PROPERTY(bool,DisableGravity,PhysXBodyComponent);
+		REG_PROPERTY(int,PositionIterCount,PhysXBodyComponent)
+		REG_PROPERTY(int,VelocityIterCount,PhysXBodyComponent)
+		//RegisterProperty<bool>("EffectJoints",&PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
 	}
 
 	void PhysXBodyComponent::OnInitialize()
@@ -73,9 +79,11 @@ namespace GASS
 		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
 		//physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
-		
+		m_Actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, m_DisableGravity);
 		//transfer loaded attributes to actor
 		SetKinematic(m_Kinematic);
+
+		m_Actor->setSolverIterationCounts(m_PositionIterCount,m_VelocityIterCount);
 		
 		//SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);

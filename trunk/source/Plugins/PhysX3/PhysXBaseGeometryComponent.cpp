@@ -28,7 +28,8 @@ namespace GASS
 
 	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :m_StaticActor(NULL),
 		m_Shape(NULL),
-		m_Offset(0,0,0)
+		m_Offset(0,0,0),
+		m_SimulationCollision(true)
 	{
 	}
 
@@ -47,9 +48,7 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
-	//	RegisterProperty<>("Material", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
-		
-		//RegisterProperty<bool>("Debug", &GASS::PhysXBaseGeometryComponent::GetDebug, &GASS::PhysXBaseGeometryComponent::SetDebug);
+		RegisterProperty<bool>("SimulationCollision", &GASS::PhysXBaseGeometryComponent::GetSimulationCollision, &GASS::PhysXBaseGeometryComponent::SetSimulationCollision);
 	}
 
 	void PhysXBaseGeometryComponent::OnInitialize()
@@ -104,12 +103,13 @@ namespace GASS
 		{
 
 		}
-		//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,m_SimulationCollision);
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
 			const physx::PxVec3 localPos = physx::PxVec3(m_Offset.x,m_Offset.y,m_Offset.z);
-			physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
+			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
+			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
 		}
 	}
 

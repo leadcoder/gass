@@ -263,6 +263,8 @@ namespace GASS
 		if(delta_time > 1.0/60.0)
 			delta_time = 1.0/60.0;
 		
+
+		
 		m_PxScene->simulate(delta_time);
 			
 		

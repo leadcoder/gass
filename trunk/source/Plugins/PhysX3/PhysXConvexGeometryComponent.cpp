@@ -44,7 +44,8 @@ using namespace physx;
 
 namespace GASS
 {
-	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent() : m_Shape(0)
+	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent() : m_Shape(0),
+		m_SimulationCollision(true)
 	{
 
 	}
@@ -57,6 +58,8 @@ namespace GASS
 	void PhysXConvexGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsConvexGeometryComponent",new Creator<PhysXConvexGeometryComponent, IComponent>);
+		RegisterProperty<bool>("SimulationCollision", &GASS::PhysXConvexGeometryComponent::GetSimulationCollision, &GASS::PhysXConvexGeometryComponent::SetSimulationCollision);
+
 	}
 
 	void PhysXConvexGeometryComponent::OnInitialize()
@@ -108,12 +111,15 @@ namespace GASS
 				collFilterData.word1 = against;
 				m_Shape->setSimulationFilterData(collFilterData);
 			}
-			//m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+			m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,m_SimulationCollision);
 			if(body)
 			{
 				physx::PxReal mass = body->GetMass();
 				const physx::PxVec3 localPos = physx::PxVec3(0,0,0);
-				physx::PxRigidBodyExt::updateMassAndInertia(*body->GetPxRigidDynamic(), mass,&localPos);
+				physx::PxRigidBodyExt::setMassAndUpdateInertia(*body->GetPxRigidDynamic(), mass,&localPos);
+
+				//density!!!
+				//physx::PxRigidBodyExt::updateMassAndInertia(*body->GetPxRigidDynamic(), mass,&localPos);
 			}
 		}
 	}

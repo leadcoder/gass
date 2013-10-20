@@ -30,15 +30,17 @@
 namespace GASS
 {
 	PhysXHingeComponent::PhysXHingeComponent() : m_DriveTargetVelocity (0),
-		m_DriveForceLimit(0),
-		m_Strength(1),
-		m_Damping(2),
+		m_DriveForceLimit(PX_MAX_F32),
 		m_RevoluteJoint(0),
 		m_HighStop(0),
 		m_LowStop(0),
 		m_EnableDrive(true),
 		m_EnableLimit(false),
-		m_RotationAxis(1,0,0)
+		m_RotationAxis(1,0,0),
+		m_Offset(0,0,0),
+		m_TargetAngle(0),
+		m_Spring(0),
+		m_Damping(0)
 	{
 
 	}
@@ -53,8 +55,6 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsHingeComponent",new Creator<PhysXHingeComponent, IComponent>);
 		RegisterProperty<SceneObjectRef>("Body1", &GASS::PhysXHingeComponent::GetBody1, &GASS::PhysXHingeComponent::SetBody1);
 		RegisterProperty<SceneObjectRef>("Body2", &GASS::PhysXHingeComponent::GetBody2, &GASS::PhysXHingeComponent::SetBody2);
-		RegisterProperty<float>("Damping", &GASS::PhysXHingeComponent::GetDamping, &GASS::PhysXHingeComponent::SetDamping);
-		RegisterProperty<float>("Strength", &GASS::PhysXHingeComponent::GetStrength, &GASS::PhysXHingeComponent::SetStrength);
 		RegisterProperty<Vec3>("RotationAxis", &GASS::PhysXHingeComponent::GetRotationAxis, &GASS::PhysXHingeComponent::SetRotationAxis);
 		RegisterProperty<float>("DriveForceLimit", &GASS::PhysXHingeComponent::GetDriveForceLimit, &GASS::PhysXHingeComponent::SetDriveForceLimit);
 		RegisterProperty<float>("DriveTargetVelocity", &GASS::PhysXHingeComponent::GetDriveTargetVelocity, &GASS::PhysXHingeComponent::SetDriveTargetVelocity);
@@ -62,6 +62,10 @@ namespace GASS
 		RegisterProperty<float>("LowStop", &GASS::PhysXHingeComponent::GetLowStop, &GASS::PhysXHingeComponent::SetLowStop);
 		RegisterProperty<bool>("EnableLimits", &GASS::PhysXHingeComponent::GetEnableLimits, &GASS::PhysXHingeComponent::SetEnableLimits);
 		RegisterProperty<bool>("EnableDrive", &GASS::PhysXHingeComponent::GetEnableDrive, &GASS::PhysXHingeComponent::SetEnableDrive);
+		RegisterProperty<Vec3>("Offset", &GASS::PhysXHingeComponent::GetOffset, &GASS::PhysXHingeComponent::SetOffset);
+		RegisterProperty<float>("Spring", &GASS::PhysXHingeComponent::GetSpring, &GASS::PhysXHingeComponent::SetSpring);
+		RegisterProperty<float>("Damping", &GASS::PhysXHingeComponent::GetDamping, &GASS::PhysXHingeComponent::SetDamping);
+
 	}
 
 	void PhysXHingeComponent::OnInitialize()
@@ -69,8 +73,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnForceRequest,PhysicsHingeJointMaxTorqueRequest,0));
 		PhysXBaseJointComponent::OnInitialize();
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>()->Register(listener);
 	}
-	
+
 	void PhysXHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)
 	{
 		if(m_Body2.IsValid())
@@ -93,38 +100,57 @@ namespace GASS
 	{
 		if(!(m_Body1.IsValid() && m_Body1.IsValid()))
 			return;
-		
+
 		physx::PxRigidDynamic* a1 = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>()->GetPxRigidDynamic();
 		physx::PxRigidDynamic* a2 = m_Body2->GetFirstComponentByClass<IPhysXRigidDynamic>()->GetPxRigidDynamic();
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		
+
 		LocationComponentPtr location1 = m_Body1->GetFirstComponentByClass<ILocationComponent>();
 		LocationComponentPtr location2 = m_Body2->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 a2_pos = location2->GetPosition() - location1->GetPosition();
-		
+		Vec3 a1_pos = location2->GetPosition() - location1->GetPosition();
+
 		// use provided axis....maybe add support to use body rotation also?
 		Vec3 base(1,0,0);
 		Vec3 transform_axis = Math::Cross(base,m_RotationAxis);
 		transform_axis.Normalize();
+		//Vec3 transform_axis = m_RotationAxis;
 		double angle = acos(Math::Dot(base,m_RotationAxis));
 		physx::PxQuat rot(angle,physx::PxVec3(transform_axis.x,transform_axis.y,transform_axis.z));
-		
-		m_RevoluteJoint = PxRevoluteJointCreate(*system->GetPxSDK(),
-			 a1, physx::PxTransform(physx::PxVec3(a2_pos.x, a2_pos.y, a2_pos.z),rot), 
-			 a2, physx::PxTransform(physx::PxVec3(0,0,0),rot));
-		m_RevoluteJoint->setDriveGearRatio(1);
 
+
+		m_RevoluteJoint = PxD6JointCreate(*system->GetPxSDK(),
+			a1, physx::PxTransform(physx::PxVec3(a1_pos.x, a1_pos.y, a1_pos.z),rot), 
+			a2, physx::PxTransform(PxConvert::ToPx(m_Offset),rot));
+
+		
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLOCKED);
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eSWING2, physx::PxD6Motion::eLOCKED);
+
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eX, physx::PxD6Motion::eLOCKED);
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLOCKED);
+		m_RevoluteJoint->setMotion(physx::PxD6Axis::eZ, physx::PxD6Motion::eLOCKED);
 		SetEnableLimits(m_EnableLimit);
 		SetEnableDrive(m_EnableDrive);
+		SetDriveForceLimit(m_DriveForceLimit);
 		UpdateLimits();
+		//m_RevoluteJoint->setProjectionLinearTolerance(0.01);
+		//m_RevoluteJoint->setProjectionAngularTolerance(0.01);
+		//m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::ePROJECTION, true);
+		
 	}
-	
+
 	void PhysXHingeComponent::SetEnableLimits(bool value)
 	{
 		m_EnableLimit = value;
 		if(m_RevoluteJoint)
-			m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eLIMIT_ENABLED, m_EnableLimit);
+		{
+			if(m_EnableLimit)
+				m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
+			else
+				m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+		}
 		if(m_EnableLimit)
 			UpdateLimits();
 	}
@@ -133,9 +159,12 @@ namespace GASS
 	{
 		m_EnableDrive = value;
 		if(m_RevoluteJoint)
-			m_RevoluteJoint->setRevoluteJointFlag(physx::PxRevoluteJointFlag::eDRIVE_ENABLED, m_EnableDrive);
+		{
+			physx::PxD6JointDrive drive(m_Spring, m_Damping, m_DriveForceLimit, false);
+			m_RevoluteJoint->setDrive(physx::PxD6Drive::eTWIST, drive);
+		}
 	}
-		
+
 	void PhysXHingeComponent::SetRotationAxis(const Vec3 &axis)
 	{
 		m_RotationAxis = axis;
@@ -144,57 +173,60 @@ namespace GASS
 
 	void PhysXHingeComponent::SetLowStop(float value)
 	{
-			m_LowStop = value;
-			UpdateLimits();
+		m_LowStop = value;
+		UpdateLimits();
 	}
 
-		void PhysXHingeComponent::SetHighStop(float value)
-		{
-			m_HighStop = value;
-			UpdateLimits();
-		}
-
-		void PhysXHingeComponent::UpdateLimits()
-		{
-			if(m_RevoluteJoint && m_EnableLimit)
-			{
-				m_RevoluteJoint->setLimit(physx::PxJointLimitPair(Math::Deg2Rad(m_LowStop), Math::Deg2Rad(m_HighStop), 0.1f)); 
-			}
-		}
-
-		void PhysXHingeComponent::UpdateMotor()
-		{
-			if(m_RevoluteJoint)
-			{
-				m_RevoluteJoint->setDriveVelocity(m_DriveTargetVelocity);
-				m_RevoluteJoint->setDriveForceLimit(m_DriveForceLimit);
-			}
-		}
-
-		void PhysXHingeComponent::SetDriveTargetVelocity(float velocity)
-		{
-			m_DriveTargetVelocity  = velocity;
-			UpdateMotor();
-		}
-
-		void PhysXHingeComponent::SetDriveForceLimit(float value)
-		{
-			m_DriveForceLimit = value;
-			UpdateMotor();
-		}
-
-
-		/*void PhysXHingeComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
-		{
-			MessagePtr joint_message;
-			if(m_Joint)
-			{
-				
-			//	float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
-			//	joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
-			//	if	(joint_message)
-			//		GetSceneObject()->SendImmediate(joint_message);
-			}
-		}*/
-
+	void PhysXHingeComponent::SetHighStop(float value)
+	{
+		m_HighStop = value;
+		UpdateLimits();
 	}
+
+	void PhysXHingeComponent::UpdateLimits()
+	{
+		if(m_RevoluteJoint && m_EnableLimit)
+		{
+			m_RevoluteJoint->setSwingLimit(physx::PxJointLimitCone(m_HighStop,m_HighStop,0.1));
+		}
+	}
+
+	void PhysXHingeComponent::SceneManagerTick(double delta_time)
+	{
+		m_TargetAngle -= m_DriveTargetVelocity*delta_time;
+		//std::cout << m_DriveTargetVelocity << " Angle:" << m_TargetAngle << "\n";
+		//clamp to limits
+		UpdateMotor();
+	}
+
+
+	void PhysXHingeComponent::UpdateMotor()
+	{
+		if(m_RevoluteJoint)
+		{
+			//m_TargetAngle += m_DriveTargetVelocity;
+			physx::PxQuat rot(m_TargetAngle, physx::PxVec3(1,0,0));
+			physx::PxTransform drive_trans(physx::PxVec3(0,0,0), rot); 
+			m_RevoluteJoint->setDrivePosition(drive_trans);
+			//m_RevoluteJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_DriveTargetVelocity,m_DriveTargetVelocity,m_DriveTargetVelocity));
+			//m_RevoluteJoint->setDriveForceLimit(m_DriveForceLimit);
+			//m_RevoluteJoint->setBreakForce(1000000,1000000);
+		}
+	}
+
+	void PhysXHingeComponent::SetDriveTargetVelocity(float velocity)
+	{
+		m_DriveTargetVelocity  = velocity;
+		//UpdateMotor();
+	}
+
+	void PhysXHingeComponent::SetDriveForceLimit(float value)
+	{
+		m_DriveForceLimit = value;
+		if(m_RevoluteJoint)
+		{
+			SetEnableDrive(m_EnableDrive);
+		}
+	}
+
+}

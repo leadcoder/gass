@@ -38,18 +38,17 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
-	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,BaseSceneComponent>
+	class PrismaticInteractionComponent :  public Reflection<PrismaticInteractionComponent,BaseSceneComponent>
 	{
 	public:
-		HingeInteractionComponent();
-		virtual ~HingeInteractionComponent();
+		PrismaticInteractionComponent();
+		virtual ~PrismaticInteractionComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
 		ADD_PROPERTY(std::string,InputMapping);
-		ADD_PROPERTY(Float,MaxAngularVelocity);
+		ADD_PROPERTY(Float,MaxVelocity);
 		void OnInput(InputControllerMessagePtr message);
-		
 	};
 }
 #endif

@@ -44,6 +44,7 @@ namespace GASS
 		virtual void OnDelete();
 		PhysXConvexMesh GetConvexMesh() const {return m_ConvexMesh;}
 	protected:
+		ADD_PROPERTY(bool,SimulationCollision);
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 	protected:
 		physx::PxShape *m_Shape;

@@ -34,19 +34,20 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,PhysXBaseJointComponent>
+	class PhysXPrismaticComponent : public Reflection<PhysXPrismaticComponent,PhysXBaseJointComponent>
 	{
 	public:
-		PhysXHingeComponent();
-		virtual ~PhysXHingeComponent();
+		PhysXPrismaticComponent();
+		virtual ~PhysXPrismaticComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void CreateJoint();
+		virtual void SceneManagerTick(double delta_time);
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
-		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
-		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
-		void SceneManagerTick(double delta_time);
+		void OnVelocityRequest(PhysicsPrismaticJointVelocityRequestPtr message);
+		void OnForceRequest(PhysicsPrismaticJointMaxForceRequestPtr message);
+		void OnPositionRequest(PhysicsPrismaticJointPositionRequestPtr message);
 		//Helpers
 		
 		void UpdateSuspension();
@@ -54,38 +55,39 @@ namespace GASS
 		void UpdateLimits();
 
 		//get set section
-		float GetDriveForceLimit()const {return m_DriveForceLimit;}
-		void SetDriveForceLimit(float value);	
-		void SetDriveTargetVelocity(float value);
-		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
-		float GetDamping()const {return m_Damping;}
-		void SetDamping(float value){m_Damping =value;}
 		float GetSpring()const {return m_Spring;}
-		void SetSpring(float value){m_Spring =value;}
+		void SetSpring(float value);	
+		void SetDamping(float value);
+		float GetDamping() const {return m_Damping;}
 		Vec3 GetRotationAxis()const {return m_RotationAxis;}
 		void SetRotationAxis(const Vec3 &value);
-		float GetHighStop()const {return m_HighStop;}
-		void SetHighStop(float value);
-		float GetLowStop()const {return m_LowStop;}
-		void SetLowStop(float value);
+		void SetLimit(float value);
+		float GetLimit()const {return m_Limit;}
 		void SetEnableLimits(bool value);
 		bool GetEnableLimits() const {return m_EnableLimit;}
 		void SetEnableDrive(bool value);
 		bool GetEnableDrive() const {return m_EnableDrive;}
+
+		void SetDriveTargetVelocity(float velocity);
+		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
+		void SetDriveForceLimit(float value);
+		float GetDriveForceLimit() const {return m_DriveForceLimit;}
+
+		void SetDriveTargetPosition(float position);
+		float GetDriveTargetPosition() const {return m_DriveTargetPosition;}
+
 	private:
-		float m_DriveForceLimit;
-		float m_DriveTargetVelocity;
-		Vec3 m_RotationAxis;
-		float m_SpringJointForce;
-		float m_HighStop;
-		float m_LowStop;
-		bool m_EnableLimit;
-		bool m_EnableDrive;
-		float m_TargetAngle;
 		float m_Damping;
 		float m_Spring;
-		physx::PxD6Joint *m_RevoluteJoint;
+		Vec3 m_RotationAxis;
+		float m_Limit;
+		bool m_EnableLimit;
+		bool m_EnableDrive;
+		float m_DriveTargetVelocity;
+		float m_DriveForceLimit;
+		Float m_DriveTargetPosition;
+		physx::PxD6Joint *m_PrismaticJoint;
 	};
-	typedef SPTR<PhysXHingeComponent> PhysXHingeComponentPtr;
+	typedef SPTR<PhysXPrismaticComponent> PhysXPrismaticComponentPtr;
 }
 

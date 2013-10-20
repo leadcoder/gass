@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "HingeInteractionComponent.h"
+#include "PrismaticInteractionComponent.h"
 #include "GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -37,37 +37,46 @@
 
 namespace GASS
 {
-	HingeInteractionComponent::HingeInteractionComponent() : m_MaxAngularVelocity(5)
+	PrismaticInteractionComponent::PrismaticInteractionComponent() : m_MaxVelocity(1)
 	{
 
 	}
 
-	HingeInteractionComponent::~HingeInteractionComponent()
+	PrismaticInteractionComponent::~PrismaticInteractionComponent()
 	{
 
 	}
 
-	void HingeInteractionComponent::RegisterReflection()
+	void PrismaticInteractionComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("HingeInteractionComponent",new Creator<HingeInteractionComponent, IComponent>);
-		RegisterProperty<std::string>("InputMapping", &HingeInteractionComponent::GetInputMapping, &HingeInteractionComponent::SetInputMapping);
-		RegisterProperty<Float>("MaxAngularVelocity", &HingeInteractionComponent::GetMaxAngularVelocity, &HingeInteractionComponent::SetMaxAngularVelocity);
+		ComponentFactory::GetPtr()->Register("PrismaticInteractionComponent",new Creator<PrismaticInteractionComponent, IComponent>);
+		RegisterProperty<std::string>("InputMapping", &PrismaticInteractionComponent::GetInputMapping, &PrismaticInteractionComponent::SetInputMapping);
+		RegisterProperty<Float>("MaxVelocity", &PrismaticInteractionComponent::GetMaxVelocity, &PrismaticInteractionComponent::SetMaxVelocity);
 	}
 
-	void HingeInteractionComponent::OnInitialize()
+	void PrismaticInteractionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HingeInteractionComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PrismaticInteractionComponent::OnInput,InputControllerMessage,0));
 	}
 
-	void HingeInteractionComponent::OnInput(InputControllerMessagePtr message)
+	void PrismaticInteractionComponent::OnInput(InputControllerMessagePtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
 		if (name == m_InputMapping)
 		{
-			float angular_vel = value * Math::Deg2Rad(m_MaxAngularVelocity);
-			MessagePtr vel_msg(new PhysicsHingeJointVelocityRequest(angular_vel));
-			GetSceneObject()->PostMessage(vel_msg);
+			//static float pos = 0;
+			float linear_vel = value*m_MaxVelocity;
+			//pos += linear_vel;
+			//std::cout  << pos << "\n";
+			//MessagePtr vel_msg2(new PhysicsPrismaticJointVelocityRequest(linear_vel));
+			//GetSceneObject()->PostMessage(vel_msg2);
+
+			//MessagePtr message(new PhysicsPrismaticJointPositionRequest(pos));
+			//GetSceneObject()->PostMessage(message);
+
+			MessagePtr vel_msg2(new PhysicsPrismaticJointVelocityRequest(linear_vel));
+			GetSceneObject()->PostMessage(vel_msg2);
 		}
 	}
 }
