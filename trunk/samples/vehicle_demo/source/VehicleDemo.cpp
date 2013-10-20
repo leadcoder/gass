@@ -132,9 +132,9 @@ int run(int argc, char* argv[])
 	//GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("ToyotaLandcruiser",scene->GetRootSceneObject());
 	//tlc->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,4,-13))));
 	
-
-	GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("Truck",scene->GetRootSceneObject());
-	tlc->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,4,-13))));
+	GASS::Vec3 tp(0,4,-13);
+	GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("Excavator",scene->GetRootSceneObject());
+	tlc->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(tp)));
 
 
 	//create free camera and set start pos
@@ -192,6 +192,8 @@ int run(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
+				tp.x += 1;
+				tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
 //				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("wheel.3ds")));
 			}
 		}
@@ -199,6 +201,10 @@ int run(int argc, char* argv[])
 		{
 			if(!key_down)
 			{
+
+				tp.y += 0.2;
+				tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
+
 				key_down = true;
 	//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
 			}
