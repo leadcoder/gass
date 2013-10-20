@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ControlSettings>
-  <VehicleEngineInputSettings>
+  <TruckInputSettings>
     <!--<MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_0" Invert="false"/>-->
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
-  </VehicleEngineInputSettings>
+	<MapControllerToInput Controller="CraneSteer1"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_Z" NegKey="INPUT_X"/>
+    <MapControllerToInput Controller="CraneSteer2"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_C" NegKey="INPUT_V"/>
+	<MapControllerToInput Controller="CraneSteer3"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_B" NegKey="INPUT_N"/>
+	<MapControllerToInput Controller="CraneSteer4"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
+	<MapControllerToInput Controller="CraneSteer5"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_M" NegKey="INPUT_L"/>
+  </TruckInputSettings>
   <TankInputSettings>
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
     <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_K" NegKey="INPUT_H"/>
