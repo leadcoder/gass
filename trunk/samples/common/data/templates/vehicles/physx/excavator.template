@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Templates>
 	<SceneObjectTemplate>
-		<Name value="Truck"/>
+		<Name value="Excavator"/>
 		<ID value="CHASSIS"/>
 		<Components>
 			<LocationComponent>
 				<AttachToParent value="0"/>
 			</LocationComponent>
-			<ManualMeshComponent>
+			<!--<ManualMeshComponent>
 				<CastShadow value="true"/>
 			</ManualMeshComponent>
 			<BoxGeometryComponent>
 				<Size value="2 0.5 4"/>
 				<Lines value="false"/>
-			</BoxGeometryComponent>
+			</BoxGeometryComponent>-->
+			<MeshComponent>
+				<CastShadow value="true"/>
+				<Filename value="ExChassis.3ds"/>
+		    </MeshComponent>
+							
 			<!--<MeshComponent>
 				<Filename value="tlc_chassis.3ds"/>
 				<CastShadow value="1"/>
 			</MeshComponent>-->
 			<PhysicsBodyComponent>
-				<Mass value="2"/>
+				<Mass value="5"/>
 				<DisableGravity value="false"/>
 			</PhysicsBodyComponent>
 			<InputHandlerComponent>
@@ -31,25 +36,22 @@
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
-				<Name value="CranePart1"/>
+				<Name value="Trurret"/>
 				<ID value="CRANE_BOOM_1"/>
 				<Components>
 					<LocationComponent>
-						<Position value="0 0.6 0"/>
+						<Position value="0 0.4 0"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
-					<MeshComponent>
-						<CastShadow value="true"/>
-						<Filename value="ExBoom_1.3ds"/>
-					</MeshComponent>
 					
-					<!---<ManualMeshComponent>
+					
+					<ManualMeshComponent>
 						<CastShadow value="true"/>
 					</ManualMeshComponent>
 					<BoxGeometryComponent>
-						<Size value="0.5 2 0.5"/>
+						<Size value="2 0.5 4"/>
 						<Lines value="false"/>
-					</BoxGeometryComponent>-->
+					</BoxGeometryComponent>
 					<PhysicsBodyComponent>
 						<Mass value="0"/>
 						<DisableGravity value="true"/>
@@ -57,7 +59,7 @@
 					<PhysicsHingeComponent>
 						<Body1 value="CHASSIS"/>
 						<Body2 value="CRANE_BOOM_1"/>
-						<Offset value="0 -1 0"/>
+						<Offset value="0 -0.3 0"/>
 						<RotationAxis value="0 1 0"/>
 						<Damping value="0.0"/>
 						<Spring value="1000.0"/>
@@ -79,16 +81,13 @@
 						<ID value="CRANE_BOOM_2"/>
 						<Components>
 							<LocationComponent>
-								<Position value="0 1.9 0"/>
+								<Position value="0 0.2 -1"/>
 								<AttachToParent value="false"/>
 							</LocationComponent>
-							<ManualMeshComponent>
+							<MeshComponent>
 								<CastShadow value="true"/>
-							</ManualMeshComponent>
-							<BoxGeometryComponent>
-								<Size value="0.5 2 0.5"/>
-								<Lines value="false"/>
-							</BoxGeometryComponent>
+								<Filename value="ExBoom_1.3ds"/>
+							</MeshComponent>
 							<PhysicsBodyComponent>
 								<Mass value="0.3"/>
 								<DisableGravity value="true"/>
@@ -96,7 +95,7 @@
 							<PhysicsHingeComponent>
 								<Body1 value="CRANE_BOOM_1"/>
 								<Body2 value="CRANE_BOOM_2"/>
-								<Offset value="0 -1 0"/>
+								<Offset value="0 0 0"/>
 								<RotationAxis value="1 0 0"/>
 								<Damping value="200000.0"/>
 								<Spring value="100000000.0"/>
@@ -118,16 +117,13 @@
 								<ID value="CRANE_BOOM_3"/>
 								<Components>
 									<LocationComponent>
-										<Position value="0 4 0"/>
+										<Position value="0 2 -2"/>
 										<AttachToParent value="false"/>
 									</LocationComponent>
-									<ManualMeshComponent>
-										<CastShadow value="true"/>
-									</ManualMeshComponent>
-									<BoxGeometryComponent>
-										<Size value="0.3 2 0.3"/>
-										<Lines value="false"/>
-									</BoxGeometryComponent>
+									<MeshComponent>
+								<CastShadow value="true"/>
+								<Filename value="ExBoom_2.3ds"/>
+									</MeshComponent>
 									<PhysicsBodyComponent>
 										<Mass value="0"/>
 										<DisableGravity value="true"/>
@@ -135,7 +131,7 @@
 									<PhysicsHingeComponent>
 										<Body1 value="CRANE_BOOM_2"/>
 										<Body2 value="CRANE_BOOM_3"/>
-										<Offset value="0 -1 0"/>
+										<Offset value="0 0 0"/>
 										<RotationAxis value="1 0 0"/>
 										<Damping value="100000.0"/>
 										<Spring value="50000000.0"/>
