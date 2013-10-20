@@ -19,10 +19,7 @@
 				<Filename value="ExChassis.3ds"/>
 		    </MeshComponent>
 							
-			<!--<MeshComponent>
-				<Filename value="tlc_chassis.3ds"/>
-				<CastShadow value="1"/>
-			</MeshComponent>-->
+			
 			<PhysicsBodyComponent>
 				<Mass value="5"/>
 				<DisableGravity value="false"/>
@@ -40,22 +37,26 @@
 				<ID value="CRANE_BOOM_1"/>
 				<Components>
 					<LocationComponent>
-						<Position value="0 0.4 0"/>
+						<Position value="0 0.9 0"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					
 					
-					<ManualMeshComponent>
+					<!--<ManualMeshComponent>
 						<CastShadow value="true"/>
 					</ManualMeshComponent>
 					<BoxGeometryComponent>
 						<Size value="2 0.5 4"/>
 						<Lines value="false"/>
-					</BoxGeometryComponent>
+					</BoxGeometryComponent>-->
 					<PhysicsBodyComponent>
 						<Mass value="0"/>
 						<DisableGravity value="true"/>
 					</PhysicsBodyComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExTurret.3ds"/>
+					</MeshComponent>
 					<PhysicsHingeComponent>
 						<Body1 value="CHASSIS"/>
 						<Body2 value="CRANE_BOOM_1"/>
@@ -81,7 +82,7 @@
 						<ID value="CRANE_BOOM_2"/>
 						<Components>
 							<LocationComponent>
-								<Position value="0 0.2 -1"/>
+								<Position value="0 1.0 -1"/>
 								<AttachToParent value="false"/>
 							</LocationComponent>
 							<MeshComponent>
@@ -117,7 +118,7 @@
 								<ID value="CRANE_BOOM_3"/>
 								<Components>
 									<LocationComponent>
-										<Position value="0 2 -2"/>
+										<Position value="0 3 -2"/>
 										<AttachToParent value="false"/>
 									</LocationComponent>
 									<MeshComponent>
