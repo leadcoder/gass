@@ -30,7 +30,5 @@ namespace GASS
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
-
-
 	};
 }

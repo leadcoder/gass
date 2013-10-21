@@ -41,12 +41,13 @@ namespace GASS
 {
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
-		m_DesiredPosRadius ( 4),
+		m_DesiredPosRadius(0),
 		m_DesiredPos(0,0,0),
 		m_CurrentPos(0,0,0),
 		m_LastPos(0,0,0),
 		m_DesiredSpeed(0),
-		m_Enable(false)
+		m_Enable(false),
+		m_WPReached(false)
 
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
@@ -61,13 +62,23 @@ namespace GASS
 	void CarAutopilotComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("CarAutopilotComponent",new Creator<CarAutopilotComponent, IComponent>);
-		RegisterProperty<std::string>("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput);
-		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput);
-		RegisterProperty<float>("DesiredSpeed", &CarAutopilotComponent::GetDesiredSpeed, &CarAutopilotComponent::SetDesiredSpeed);
-		RegisterProperty<bool>("Enable", &CarAutopilotComponent::GetEnable, &CarAutopilotComponent::SetEnable);
-		RegisterProperty<float>("DesiredPosRadius", &CarAutopilotComponent::GetDesiredPosRadius, &CarAutopilotComponent::SetDesiredPosRadius);
-		RegisterProperty<PIDControl>("TurnPID", &CarAutopilotComponent::GetTurnPID, &CarAutopilotComponent::SetTurnPID);
-		RegisterProperty<PIDControl>("TrottlePID", &CarAutopilotComponent::GetTrottlePID, &CarAutopilotComponent::SetTrottlePID);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CarAutopilotComponent", OF_VISIBLE)));
+
+		RegisterProperty<std::string>("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for steer",PF_VISIBLE)));
+		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for throttle",PF_VISIBLE)));
+		RegisterProperty<float>("DesiredSpeed", &CarAutopilotComponent::GetDesiredSpeed, &CarAutopilotComponent::SetDesiredSpeed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Desired speed",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<bool>("Enable", &CarAutopilotComponent::GetEnable, &CarAutopilotComponent::SetEnable,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<float>("DesiredPosRadius", &CarAutopilotComponent::GetDesiredPosRadius, &CarAutopilotComponent::SetDesiredPosRadius,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
+
+		RegisterProperty<PIDControl>("TurnPID", &CarAutopilotComponent::GetTurnPID, &CarAutopilotComponent::SetTurnPID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<PIDControl>("TrottlePID", &CarAutopilotComponent::GetTrottlePID, &CarAutopilotComponent::SetTrottlePID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Throttle PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
 	}
 
 	void CarAutopilotComponent::OnInitialize()
@@ -90,13 +101,13 @@ namespace GASS
 	void CarAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
-		m_DesiredPos.Set(pos.x,0,pos.z);
+		m_DesiredPos.Set(pos.x,pos.y,pos.z);
+		m_WPReached = false;
 	}
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
 		m_DesiredSpeed = message->GetSpeed();
-		
 	}
 
 	void CarAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
@@ -132,7 +143,6 @@ namespace GASS
 	void CarAutopilotComponent::DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time)
 	{
 		Vec3 v_pos = m_CurrentPos;
-
 		const float current_speed = -m_VehicleSpeed.z;
 
 		/*v_pos.y = 0;
@@ -145,7 +155,7 @@ namespace GASS
 		Vec3 dir_to_wp = pos - v_pos;
 		float dist_to_wp = dir_to_wp.Length();*/
 
-		Vec3 target_pos;
+		Vec3 target_pos = pos;
 
 		
 		
@@ -173,16 +183,18 @@ namespace GASS
 		}
 		else*/
 		
-		target_pos = pos;
+		
 
 		//float dist_to_line = (closest_point_on_line - m_UGV->GetAbsPos()).Length();
 		//Vec3 drive_dir = pos - m_UGV->GetAbsPos();
 		Vec3 drive_dir = target_pos - v_pos;
-
 		float drive_dist = drive_dir.Length();
 
+		if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
+			m_WPReached = true;
+
 		//Font::DebugPrint("drive_dist %f ",drive_dist);
-		if(drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
+		if(!m_WPReached && drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
 		{
 			drive_dir.y = 0;
 			drive_dir.Normalize();

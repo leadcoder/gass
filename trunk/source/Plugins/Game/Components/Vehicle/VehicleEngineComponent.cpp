@@ -126,28 +126,49 @@ namespace GASS
 	void VehicleEngineComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleEngineComponent", OF_VISIBLE)));
+		
 		RegisterVectorProperty<SceneObjectRef>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
-		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType);
-		RegisterProperty<bool>("Automatic", &VehicleEngineComponent::GetAutomatic, &VehicleEngineComponent::SetAutomatic);
-		RegisterProperty<bool>("InvertDrivetrainOutput", &VehicleEngineComponent::GetInvert, &VehicleEngineComponent::SetInvert);
-		RegisterProperty<float>("BrakeTorque", &VehicleEngineComponent::GetBrakeTorque, &VehicleEngineComponent::SetBrakeTorque);
-		RegisterProperty<float>("ConstantTorque", &VehicleEngineComponent::GetConstantTorque, &VehicleEngineComponent::SetConstantTorque);
-		RegisterProperty<float>("DeclutchTimeChangeGear", &VehicleEngineComponent::GetDeclutchTimeChangeGear, &VehicleEngineComponent::SetDeclutchTimeChangeGear);
-		RegisterProperty<float>("ClutchTimeChangeGear", &VehicleEngineComponent::GetClutchTimeChangeGear, &VehicleEngineComponent::SetClutchTimeChangeGear);
 
-		RegisterProperty<float>("MaxRPM", &VehicleEngineComponent::GetMaxRPM, &VehicleEngineComponent::SetMaxRPM);
-		RegisterProperty<float>("MinRPM", &VehicleEngineComponent::GetMinRPM, &VehicleEngineComponent::SetMinRPM);
+		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Engine type (tank or car?)",PF_VISIBLE)));
+		RegisterProperty<bool>("Automatic", &VehicleEngineComponent::GetAutomatic, &VehicleEngineComponent::SetAutomatic,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Use automatic gearbox",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("InvertDrivetrainOutput", &VehicleEngineComponent::GetInvert, &VehicleEngineComponent::SetInvert,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("BrakeTorque", &VehicleEngineComponent::GetBrakeTorque, &VehicleEngineComponent::SetBrakeTorque,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("ConstantTorque", &VehicleEngineComponent::GetConstantTorque, &VehicleEngineComponent::SetConstantTorque,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("DeclutchTimeChangeGear", &VehicleEngineComponent::GetDeclutchTimeChangeGear, &VehicleEngineComponent::SetDeclutchTimeChangeGear,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("ClutchTimeChangeGear", &VehicleEngineComponent::GetClutchTimeChangeGear, &VehicleEngineComponent::SetClutchTimeChangeGear,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<float>("RPMGearChangeUp", &VehicleEngineComponent::GetRPMGearChangeUp, &VehicleEngineComponent::SetRPMGearChangeUp);
-		RegisterProperty<float>("RPMGearChangeDown", &VehicleEngineComponent::GetRPMGearChangeDown, &VehicleEngineComponent::SetRPMGearChangeDown);
-		RegisterProperty<float>("Power", &VehicleEngineComponent::GetPower, &VehicleEngineComponent::SetPower);
-		//RegisterProperty<float>("TurnForce", &VehicleEngineComponent::GetTurnForce, &VehicleEngineComponent::SetTurnForce);
-		RegisterProperty<PIDControl>("SteerPID", &VehicleEngineComponent::GetSteerPID, &VehicleEngineComponent::SetSteerPID);
-		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio);
-		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput);
-		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug);
-		RegisterProperty<float>("TurnRPMAmount", &VehicleEngineComponent::GetTurnRPMAmount, &VehicleEngineComponent::SetTurnRPMAmount);
-		RegisterProperty<float>("MaxTurnVel", &VehicleEngineComponent::GetMaxTurnVel, &VehicleEngineComponent::SetMaxTurnVel);
+		RegisterProperty<float>("MaxRPM", &VehicleEngineComponent::GetMaxRPM, &VehicleEngineComponent::SetMaxRPM,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("MinRPM", &VehicleEngineComponent::GetMinRPM, &VehicleEngineComponent::SetMinRPM,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<float>("RPMGearChangeUp", &VehicleEngineComponent::GetRPMGearChangeUp, &VehicleEngineComponent::SetRPMGearChangeUp,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("RPMGearChangeDown", &VehicleEngineComponent::GetRPMGearChangeDown, &VehicleEngineComponent::SetRPMGearChangeDown,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("Power", &VehicleEngineComponent::GetPower, &VehicleEngineComponent::SetPower,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		
+		RegisterProperty<PIDControl>("SteerPID", &VehicleEngineComponent::GetSteerPID, &VehicleEngineComponent::SetSteerPID,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("TurnRPMAmount", &VehicleEngineComponent::GetTurnRPMAmount, &VehicleEngineComponent::SetTurnRPMAmount,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("MaxTurnVel", &VehicleEngineComponent::GetMaxTurnVel, &VehicleEngineComponent::SetMaxTurnVel,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		
 		
 	}

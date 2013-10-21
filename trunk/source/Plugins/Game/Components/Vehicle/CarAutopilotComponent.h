@@ -76,6 +76,7 @@ namespace GASS
 		std::string m_SteerInput;
 		Vec3 m_VehicleSpeed;
 		Mat4 m_Transformation;
+		bool m_WPReached;
 	};
 }
 #endif
