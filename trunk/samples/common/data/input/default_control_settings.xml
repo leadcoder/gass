@@ -8,8 +8,8 @@
 	<MapControllerToInput Controller="CraneSteer1"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_Z" NegKey="INPUT_X"/>
     <MapControllerToInput Controller="CraneSteer2"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_C" NegKey="INPUT_V"/>
 	<MapControllerToInput Controller="CraneSteer3"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_B" NegKey="INPUT_N"/>
-	<MapControllerToInput Controller="CraneSteer4"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
-	<MapControllerToInput Controller="CraneSteer5"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_M" NegKey="INPUT_L"/>
+	<MapControllerToInput Controller="CraneSteer4"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_LEFT" NegKey="INPUT_RIGHT"/>
+	<MapControllerToInput Controller="CraneSteer5"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_UP" NegKey="INPUT_DOWN"/>
   </TruckInputSettings>
   <TankInputSettings>
     <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
