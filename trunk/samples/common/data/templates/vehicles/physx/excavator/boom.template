@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="LibherrMainBoom"/>
+		<ID value="MAIN_BOOM"/>
+		<Components>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<MeshComponent>
+				<CastShadow value="true"/>
+				<Filename value="ExMainBoom.ive"/>
+			</MeshComponent>
+			<PhysicsBodyComponent>
+				<Mass value="1.0"/>
+				<DisableGravity value="true"/>
+			</PhysicsBodyComponent>
+			<PhysicsHingeComponent>
+				<Body1 value="HOUSE"/>
+				<Body2 value="MAIN_BOOM"/>
+				<Offset value="0 0 0"/>
+				<RotationAxis value="1 0 0"/>
+				<Damping value="200000.0"/>
+				<Spring value="100000000.0"/>
+			</PhysicsHingeComponent>
+			<HingeInteractionComponent>
+				<InputMapping value="CraneSteer2"/>
+				<MaxAngularVelocity value = "20"/>
+			</HingeInteractionComponent>
+			<InputProxyComponent>
+				<InputHandlerObject value="UNDERCARRIAGE"/>
+			</InputProxyComponent>
+			<PhysicsConvexGeometryComponent>
+				<SimulationCollision value="true"/>
+			</PhysicsConvexGeometryComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LibherrSecondBoom"/>
+				<ID value="SECOND_BOOM"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.23 3.8 -1.4"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSecondBoom.ive"/>
+					</MeshComponent>
+					<PhysicsBodyComponent>
+						<Mass value="1.0"/>
+						<DisableGravity value="true"/>
+					</PhysicsBodyComponent>
+					<PhysicsHingeComponent>
+						<Body1 value="MAIN_BOOM"/>
+						<Body2 value="SECOND_BOOM"/>
+						<Offset value="0 0 0"/>
+						<RotationAxis value="1 0 0"/>
+						<Damping value="100000.0"/>
+						<Spring value="50000000.0"/>
+					</PhysicsHingeComponent>
+					<HingeInteractionComponent>
+						<InputMapping value="CraneSteer3"/>
+						<MaxAngularVelocity value = "20"/>
+					</HingeInteractionComponent>
+					<InputProxyComponent>
+						<InputHandlerObject value="UNDERCARRIAGE"/>
+					</InputProxyComponent>
+					<PhysicsConvexGeometryComponent>
+						<SimulationCollision value="false"/>
+					</PhysicsConvexGeometryComponent>
+				</Components>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="LibherrThirdBoom"/>
+						<ID value="THIRD_BOOM"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0.23 4.2 -4.8"/>
+								<AttachToParent value="false"/>
+							</LocationComponent>
+							<MeshComponent>
+								<CastShadow value="true"/>
+								<Filename value="ExThirdBoom.ive"/>
+							</MeshComponent>
+							<PhysicsBodyComponent>
+								<Mass value="1.0"/>
+								<DisableGravity value="true"/>
+							</PhysicsBodyComponent>
+							<PhysicsHingeComponent>
+								<Body1 value="SECOND_BOOM"/>
+								<Body2 value="THIRD_BOOM"/>
+								<Offset value="0 0 0"/>
+								<RotationAxis value="1 0 0"/>
+								<Damping value="100000.0"/>
+								<Spring value="50000000.0"/>
+							</PhysicsHingeComponent>
+							<HingeInteractionComponent>
+								<InputMapping value="CraneSteer4"/>
+								<MaxAngularVelocity value = "20"/>
+							</HingeInteractionComponent>
+							<InputProxyComponent>
+								<InputHandlerObject value="UNDERCARRIAGE"/>
+							</InputProxyComponent>
+							<PhysicsConvexGeometryComponent>
+								<SimulationCollision value="false"/>
+							</PhysicsConvexGeometryComponent>
+						</Components>
+						<ComponentContainers>
+							<SceneObjectTemplate>
+								<Name value="LibherrBucket"/>
+								<ID value="BUCKET"/>
+								<Components>
+									<LocationComponent>
+										<Position value="0.23 2.3 -6.3"/>
+										<AttachToParent value="false"/>
+									</LocationComponent>
+									<MeshComponent>
+										<CastShadow value="true"/>
+										<Filename value="ExBucket.ive"/>
+									</MeshComponent>
+									<PhysicsBodyComponent>
+										<Mass value="1.0"/>
+										<DisableGravity value="true"/>
+									</PhysicsBodyComponent>
+									<PhysicsHingeComponent>
+										<Body1 value="THIRD_BOOM"/>
+										<Body2 value="BUCKET"/>
+										<Offset value="0 0 0"/>
+										<RotationAxis value="1 0 0"/>
+										<Damping value="100000.0"/>
+										<Spring value="50000000.0"/>
+									</PhysicsHingeComponent>
+									<HingeInteractionComponent>
+										<InputMapping value="CraneSteer5"/>
+										<MaxAngularVelocity value = "20"/>
+									</HingeInteractionComponent>
+									<InputProxyComponent>
+										<InputHandlerObject value="UNDERCARRIAGE"/>
+									</InputProxyComponent>
+									<PhysicsConvexGeometryComponent>
+										<SimulationCollision value="true"/>
+									</PhysicsConvexGeometryComponent>
+								</Components>
+								<ComponentContainers/>
+							</SceneObjectTemplate>
+						</ComponentContainers>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

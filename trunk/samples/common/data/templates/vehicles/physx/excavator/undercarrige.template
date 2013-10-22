@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="Liebherr"/>
+		<ID value="UNDERCARRIAGE"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="ExUndercarriage.ive"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysXVehicleComponent>
+			    <!--<Mass value="20"/>-->
+				<UseAutoReverse value="true"/>
+				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
+				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
+				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
+				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
+			</PhysXVehicleComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="TruckInputSettings"/>
+			</InputHandlerComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<ID value="FRONT_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 0.422 -1.2"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExLWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<ID value="FRONT_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 0.422 -1.2"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExRWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<ID value="REAR_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 0.422 1.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExLWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<ID value="REAR_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 0.422 1.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExRWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent/>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrHouse"/>
+				<Inheritance value="LibherrHouse"/>  <!-- house is defined in other file-->
+				<ID value="HOUSE"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 1.2 0"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

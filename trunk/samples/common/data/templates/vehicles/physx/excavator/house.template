@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="LibherrHouse"/>
+		<ID value="HOUSE"/>
+		<Components>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<PhysicsBodyComponent>
+				<Mass value="2"/>
+				<DisableGravity value="true"/>
+			</PhysicsBodyComponent>
+			<MeshComponent>
+				<CastShadow value="true"/>
+				<Filename value="ExHouse.ive"/>
+			</MeshComponent>
+			<PhysicsHingeComponent>
+				<Body1 value="UNDERCARRIAGE"/>
+				<Body2 value="HOUSE"/>
+				<Offset value="0 0 0"/>
+				<RotationAxis value="0 1 0"/>
+				<Damping value="200000.0"/>
+				<Spring value="100000000.0"/>
+			</PhysicsHingeComponent>
+			<HingeInteractionComponent>
+				<InputMapping value="CraneSteer1"/>
+				<MaxAngularVelocity value = "10"/>
+			</HingeInteractionComponent>
+			<InputProxyComponent>
+				<InputHandlerObject value="UNDERCARRIAGE"/>
+			</InputProxyComponent>
+			<PhysicsConvexGeometryComponent>
+				<SimulationCollision value="true"/>
+			</PhysicsConvexGeometryComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LibherrHouseMainBoom"/>
+				<Inheritance value="LibherrMainBoom"/>  <!-- house is defined in other file-->
+				<ID value="MAIN_BOOM"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.23 1.92 -0.34"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>
