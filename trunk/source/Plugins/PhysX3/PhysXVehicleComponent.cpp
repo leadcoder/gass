@@ -27,6 +27,7 @@
 using namespace physx;
 namespace GASS
 {
+	static double m_ScaleMass = 0.05;
 	PhysXVehicleComponent::PhysXVehicleComponent(): m_Actor(NULL),
 		m_ThrottleInput(0),
 		m_SteerInput(0),
@@ -38,7 +39,7 @@ namespace GASS
 		m_UseDigitalInputs(false),
 		m_UseAutoReverse(false)
 	{
-		m_ChassisData.mMass = 1500;
+		m_ChassisData.mMass = 1500*m_ScaleMass;
 	}
 
 	PhysXVehicleComponent::~PhysXVehicleComponent()
@@ -236,8 +237,8 @@ namespace GASS
 		//Disable the handbrake from the front wheels and enable for the rear wheels
 		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxHandBrakeTorque=0.0f;
 		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxHandBrakeTorque=0.0f;
-		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxHandBrakeTorque=4000.0f;
-		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxHandBrakeTorque=4000.0f;
+		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
+		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
 		//Enable steering for the front wheels and disable for the front wheels.
 		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxSteer=PxPi*0.3333f;
 		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxSteer=PxPi*0.3333f;
@@ -254,7 +255,8 @@ namespace GASS
 		{
 			susps[i].mSprungMass=massRear;
 			wheels[i].mMaxSteer=0.0f;
-			wheels[i].mMaxHandBrakeTorque=4000.0f;
+			wheels[i].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
+			wheels[i].mMaxBrakeTorque = 1500.0f*m_ScaleMass;
 		}
 	
 		//We need to set up geometry data for the suspension, wheels, and tires.
@@ -300,18 +302,23 @@ namespace GASS
 
 		//Engine
 		PxVehicleEngineData engine;
-		engine.mPeakTorque=500.0f;
+		
+		engine.mPeakTorque=500.0*m_ScaleMass;
 		engine.mMaxOmega=600.0f;//approx 6000 rpm
+		//engine.mDampingRateFullThrottle *= m_ScaleMass;
+		//engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
+		//engine.mDampingRateZeroThrottleClutchEngaged *= m_ScaleMass;
 		driveSimData.setEngineData(engine);
 
 		//Gears
 		PxVehicleGearsData gears;
+		
 		gears.mSwitchTime=0.5f;
 		driveSimData.setGearsData(gears);
 
 		//Clutch
 		PxVehicleClutchData clutch;
-		clutch.mStrength=10.0f;
+		clutch.mStrength=10.0f*m_ScaleMass;
 		driveSimData.setClutchData(clutch);
 
 		//Ackermann steer accuracy

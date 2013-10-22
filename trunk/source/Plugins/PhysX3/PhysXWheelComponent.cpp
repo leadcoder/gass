@@ -27,15 +27,19 @@
 using namespace physx;
 namespace GASS
 {
+	static double m_ScaleMass = 0.05;
 	PhysXWheelComponent::PhysXWheelComponent() 
 	{
-		m_WheelData.mMass = 20;
-		m_WheelData.mMaxHandBrakeTorque = 4000.0f;
+		m_WheelData.mMass = 20*m_ScaleMass;
+		m_WheelData.mMaxHandBrakeTorque = 4000.0f*m_ScaleMass;
 		m_WheelData.mMaxSteer  = PxPi*0.3333f;
+		m_WheelData.mDampingRate = m_WheelData.mDampingRate*m_ScaleMass;
 		m_SuspensionData.mMaxCompression = 0.3f;
 		m_SuspensionData.mMaxDroop = 0.1f;
-		m_SuspensionData.mSpringStrength = 35000.0f;
-		m_SuspensionData.mSpringDamperRate = 4500.0f;
+		m_SuspensionData.mSpringStrength = 35000.0f*m_ScaleMass;
+		m_SuspensionData.mSpringDamperRate = 4500.0f*m_ScaleMass;
+
+		m_TireData.mLongitudinalStiffnessPerUnitGravity = m_TireData.mLongitudinalStiffnessPerUnitGravity* m_ScaleMass;
 		//m_SuspensionData.mSprungMass = 1.0;
 	}
 
