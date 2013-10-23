@@ -15,6 +15,8 @@
 			<PhysicsBodyComponent>
 				<Mass value="1.0"/>
 				<DisableGravity value="true"/>
+				<PositionIterCount value="60"/>
+				<VelocityIterCount value="60"/>
 			</PhysicsBodyComponent>
 			<PhysicsHingeComponent>
 				<Body1 value="HOUSE"/>
@@ -51,6 +53,8 @@
 					<PhysicsBodyComponent>
 						<Mass value="1.0"/>
 						<DisableGravity value="true"/>
+						<PositionIterCount value="60"/>
+						<VelocityIterCount value="60"/>
 					</PhysicsBodyComponent>
 					<PhysicsHingeComponent>
 						<Body1 value="MAIN_BOOM"/>
@@ -87,6 +91,8 @@
 							<PhysicsBodyComponent>
 								<Mass value="1.0"/>
 								<DisableGravity value="true"/>
+								<PositionIterCount value="60"/>
+								<VelocityIterCount value="60"/>
 							</PhysicsBodyComponent>
 							<PhysicsHingeComponent>
 								<Body1 value="SECOND_BOOM"/>
@@ -123,6 +129,8 @@
 									<PhysicsBodyComponent>
 										<Mass value="1.0"/>
 										<DisableGravity value="true"/>
+										<PositionIterCount value="60"/>
+										<VelocityIterCount value="60"/>					
 									</PhysicsBodyComponent>
 									<PhysicsHingeComponent>
 										<Body1 value="THIRD_BOOM"/>

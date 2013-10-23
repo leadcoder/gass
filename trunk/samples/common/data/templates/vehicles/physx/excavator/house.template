@@ -11,6 +11,8 @@
 			<PhysicsBodyComponent>
 				<Mass value="2"/>
 				<DisableGravity value="true"/>
+				<PositionIterCount value="60"/>
+				<VelocityIterCount value="60"/>
 			</PhysicsBodyComponent>
 			<MeshComponent>
 				<CastShadow value="true"/>
@@ -26,7 +28,7 @@
 			</PhysicsHingeComponent>
 			<HingeInteractionComponent>
 				<InputMapping value="CraneSteer1"/>
-				<MaxAngularVelocity value = "10"/>
+				<MaxAngularVelocity value = "15"/>
 			</HingeInteractionComponent>
 			<InputProxyComponent>
 				<InputHandlerObject value="UNDERCARRIAGE"/>

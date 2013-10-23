@@ -12,13 +12,19 @@
 				<CastShadow value="1"/>
 			</MeshComponent>
 			<PhysXVehicleComponent>
-			    <!--<Mass value="20"/>-->
+			    <Mass value="1405"/>
+				<ScaleMass value="0.03"/>
+				<EnginePeakTorque value ="100"/>
+				<ClutchStrength value = "10"/>
+				<GearRatios value="-16;0;16;8;4"/>
+				<!--<GearRatios value="-4;0;4;2;1.5;1.1;1.0"/>-->
+				<GearSwitchTime value = "0.5"/>
 				<UseAutoReverse value="true"/>
 				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
 				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
 				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
 				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
-			</PhysXVehicleComponent>
+				</PhysXVehicleComponent>
 			<InputHandlerComponent>
 				<ControlSetting value ="TruckInputSettings"/>
 			</InputHandlerComponent>
@@ -26,6 +32,7 @@
 		<ComponentContainers>
 			<SceneObjectTemplate>
 				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrFrontWheelBase"/> 
 				<ID value="FRONT_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
@@ -36,12 +43,11 @@
 						<Filename value="ExLWheel.ive"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
-					<PhysXWheelComponent/>
-					<PhysicsConvexGeometryComponent/>
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
 				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrFrontWheelBase"/> 
 				<ID value="FRONT_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
@@ -52,12 +58,11 @@
 						<Filename value="ExRWheel.ive"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
-					<PhysXWheelComponent/>
-					<PhysicsConvexGeometryComponent/>
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
 				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrRearWheelBase"/> 
 				<ID value="REAR_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
@@ -68,12 +73,11 @@
 						<Filename value="ExLWheel.ive"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
-					<PhysXWheelComponent/>
-					<PhysicsConvexGeometryComponent/>
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
 				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrRearWheelBase"/> 
 				<ID value="REAR_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
@@ -84,8 +88,6 @@
 						<Filename value="ExRWheel.ive"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
-					<PhysXWheelComponent/>
-					<PhysicsConvexGeometryComponent/>
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
@@ -100,5 +102,39 @@
 				</Components>
 			</SceneObjectTemplate>
 		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="LiebherrFrontWheelBase"/>
+		<Components>
+			<PhysXWheelComponent>
+				<Mass value="20"/>
+				<MaxHandBrakeTorque value="4000.0f"/>
+				<MaxSteer value= "60.0f"/>
+				<DampingRate value="0.25f"/>
+				<SuspensionMaxCompression value="0.3f"/>
+				<SuspensionMaxDroop value="0.1f"/>
+				<SuspensionSpringStrength value="35000.0f"/>
+				<SuspensionSpringDamperRate value="4500.0f"/>
+				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+			</PhysXWheelComponent>
+			<PhysicsConvexGeometryComponent/>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="LiebherrRearWheelBase"/>
+		<Components>
+			<PhysXWheelComponent>
+				<Mass value="20"/>
+				<MaxHandBrakeTorque value="4000.0f"/>
+				<MaxSteer value= "0.0f"/>
+				<DampingRate value="0.25f"/>
+				<SuspensionMaxCompression value="0.3f"/>
+				<SuspensionMaxDroop value="0.1f"/>
+				<SuspensionSpringStrength value="35000.0f"/>
+				<SuspensionSpringDamperRate value="4500.0f"/>
+				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+			</PhysXWheelComponent>
+			<PhysicsConvexGeometryComponent/>
+		</Components>
 	</SceneObjectTemplate>
 </Templates>
