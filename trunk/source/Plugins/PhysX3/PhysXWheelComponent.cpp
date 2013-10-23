@@ -27,20 +27,21 @@
 using namespace physx;
 namespace GASS
 {
-	static double m_ScaleMass = 0.05;
-	PhysXWheelComponent::PhysXWheelComponent() 
+	PhysXWheelComponent::PhysXWheelComponent() :
+		m_Mass(20),
+		m_MaxHandBrakeTorque(4000.0f),
+		m_MaxBrakeTorque(1500.0f),
+		m_MaxSteer(60.0f),
+		m_DampingRate(0.25f),
+		m_SuspensionMaxCompression(0.3f),
+		m_SuspensionMaxDroop(0.1f),
+		m_SuspensionSpringStrength(35000.0f),
+		m_SuspensionSpringDamperRate(4500.0f),
+		m_TireLongitudinalStiffnessPerUnitGravity(1000.0f),
+		m_Initialized(false),
+		m_TireType("SLICKS")
 	{
-		m_WheelData.mMass = 20*m_ScaleMass;
-		m_WheelData.mMaxHandBrakeTorque = 4000.0f*m_ScaleMass;
-		m_WheelData.mMaxSteer  = PxPi*0.3333f;
-		m_WheelData.mDampingRate = m_WheelData.mDampingRate*m_ScaleMass;
-		m_SuspensionData.mMaxCompression = 0.3f;
-		m_SuspensionData.mMaxDroop = 0.1f;
-		m_SuspensionData.mSpringStrength = 35000.0f*m_ScaleMass;
-		m_SuspensionData.mSpringDamperRate = 4500.0f*m_ScaleMass;
-
-		m_TireData.mLongitudinalStiffnessPerUnitGravity = m_TireData.mLongitudinalStiffnessPerUnitGravity* m_ScaleMass;
-		//m_SuspensionData.mSprungMass = 1.0;
+	
 	}
 
 	PhysXWheelComponent::~PhysXWheelComponent()
@@ -51,17 +52,17 @@ namespace GASS
 	void PhysXWheelComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, IComponent>);
-		RegisterProperty<float>("Mass", &GASS::PhysXWheelComponent::GetMass, &GASS::PhysXWheelComponent::SetMass);
-	}
-
-	float PhysXWheelComponent::GetMass() const
-	{
-		return m_WheelData.mMass;
-	}
-
-	void PhysXWheelComponent::SetMass(float mass)
-	{
-		m_WheelData.mMass = mass;
+		REG_PROPERTY(float,Mass,PhysXWheelComponent)
+		REG_PROPERTY(float,MaxBrakeTorque,PhysXWheelComponent)
+		REG_PROPERTY(float,MaxHandBrakeTorque,PhysXWheelComponent)
+		REG_PROPERTY(float,MaxSteer,PhysXWheelComponent)
+		REG_PROPERTY(float,DampingRate,PhysXWheelComponent)
+		REG_PROPERTY(float,SuspensionMaxCompression,PhysXWheelComponent)
+		REG_PROPERTY(float,SuspensionMaxDroop,PhysXWheelComponent)
+		REG_PROPERTY(float,SuspensionSpringStrength,PhysXWheelComponent)
+		REG_PROPERTY(float,SuspensionSpringDamperRate,PhysXWheelComponent)
+		REG_PROPERTY(float,TireLongitudinalStiffnessPerUnitGravity,PhysXWheelComponent)
+		REG_PROPERTY(std::string,TireType,PhysXWheelComponent)
 	}
 
 	void PhysXWheelComponent::ComputeWheelDim(PxConvexMesh* wheel_convex_mesh, PxF32 &wheel_width, PxF32 &wheel_rad)
@@ -91,6 +92,18 @@ namespace GASS
 
 	void PhysXWheelComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
 	{
+		m_WheelData.mMass = m_Mass;
+		m_WheelData.mMaxBrakeTorque = m_MaxBrakeTorque;
+		m_WheelData.mMaxHandBrakeTorque = m_MaxHandBrakeTorque;
+		m_WheelData.mMaxSteer  = Math::Deg2Rad(m_MaxSteer);
+		m_WheelData.mDampingRate = m_DampingRate;
+		m_SuspensionData.mMaxCompression = m_SuspensionMaxCompression;
+		m_SuspensionData.mMaxDroop = m_SuspensionMaxDroop;
+		m_SuspensionData.mSpringStrength = m_SuspensionSpringStrength ;
+		m_SuspensionData.mSpringDamperRate = m_SuspensionSpringDamperRate;
+		m_TireData.mLongitudinalStiffnessPerUnitGravity = m_TireLongitudinalStiffnessPerUnitGravity;
+		//m_SuspensionData.mSprungMass = 1.0;
+		
 		PhysXConvexGeometryComponentPtr cgc = GetSceneObject()->GetFirstComponentByClass<PhysXConvexGeometryComponent>();
 		PxF32 wheel_width;
 		PxF32 wheel_rad;
@@ -102,6 +115,7 @@ namespace GASS
 		m_WheelData.mWidth = wheel_width;
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		m_TireData.mType = system->GetTireIDFromName("SLICKS");
+		m_TireData.mType = system->GetTireIDFromName(m_TireType);
+		m_Initialized = true;
 	}
 }

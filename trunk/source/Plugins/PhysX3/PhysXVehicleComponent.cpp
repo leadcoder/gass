@@ -27,7 +27,6 @@
 using namespace physx;
 namespace GASS
 {
-	static double m_ScaleMass = 0.05;
 	PhysXVehicleComponent::PhysXVehicleComponent(): m_Actor(NULL),
 		m_ThrottleInput(0),
 		m_SteerInput(0),
@@ -37,9 +36,21 @@ namespace GASS
 		m_IsMovingForwardSlowly(false),
 		m_InReverseMode(false),
 		m_UseDigitalInputs(false),
-		m_UseAutoReverse(false)
+		m_UseAutoReverse(false),
+		m_ScaleMass(1.0),
+		m_Mass(1500),
+		m_EnginePeakTorque(500),
+		m_ClutchStrength(10),
+		m_GearSwitchTime(0.5)
 	{
-		m_ChassisData.mMass = 1500*m_ScaleMass;
+		//add some default gears, start with reverse!
+		m_GearRatios.push_back(-4); //reverse
+		m_GearRatios.push_back(0); //neutral
+		m_GearRatios.push_back(4); //first gear
+		m_GearRatios.push_back(2);
+		m_GearRatios.push_back(1.5);
+		m_GearRatios.push_back(1.1);
+		m_GearRatios.push_back(1.0);
 	}
 
 	PhysXVehicleComponent::~PhysXVehicleComponent()
@@ -55,13 +66,19 @@ namespace GASS
 	void PhysXVehicleComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, IComponent>);
-		RegisterProperty<float>("Mass", &PhysXVehicleComponent::GetMass, &PhysXVehicleComponent::SetMass);
-		RegisterProperty<bool>("UseAutoReverse", &PhysXVehicleComponent::GetUseAutoReverse, &PhysXVehicleComponent::SetUseAutoReverse);
-		RegisterProperty<SceneObjectRef>("FrontLeftWheel", &PhysXVehicleComponent::GetFrontLeftWheel, &PhysXVehicleComponent::SetFrontLeftWheel);
-		RegisterProperty<SceneObjectRef>("FrontRightWheel", &PhysXVehicleComponent::GetFrontRightWheel, &PhysXVehicleComponent::SetFrontRightWheel);
-		RegisterProperty<SceneObjectRef>("RearLeftWheel", &PhysXVehicleComponent::GetRearLeftWheel, &PhysXVehicleComponent::SetRearLeftWheel);
-		RegisterProperty<SceneObjectRef>("RearRightWheel", &PhysXVehicleComponent::GetRearRightWheel, &PhysXVehicleComponent::SetRearRightWheel);
-		RegisterVectorProperty<SceneObjectRef>("ExtraWheels", &PhysXVehicleComponent::GetExtraWheels, &PhysXVehicleComponent::SetExtraWheels);
+		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
+		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
+		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
+		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
+		REG_VECTOR_PROPERTY(float,GearRatios,PhysXVehicleComponent)
+		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
+		REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+		REG_VECTOR_PROPERTY(SceneObjectRef,ExtraWheels,PhysXVehicleComponent)
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)
@@ -100,6 +117,8 @@ namespace GASS
 	{
 		if(!m_Vehicle)
 			return;
+
+
 		//Set the car back to its rest state.
 		m_Vehicle->setToRestState();
 		//Set the car to first gear.
@@ -112,19 +131,16 @@ namespace GASS
 		{
 			m_Vehicle->setWheelShapeMapping(i,i);
 		}
-
-		/*m_Vehicle->setWheelShapeMapping(0,0);
-		m_Vehicle->setWheelShapeMapping(1,1);
-		m_Vehicle->setWheelShapeMapping(2,2);
-		m_Vehicle->setWheelShapeMapping(3,3);
-		*/
 	}
 
 	void PhysXVehicleComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
+		physx::PxVehicleChassisData chassisData;
 		
+		chassisData.mMass = m_Mass*m_ScaleMass;
+
 		//Get chassis mesh
 		std::string col_mesh_id = GetSceneObject()->GetName();
 		ResourceComponentPtr res = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
@@ -185,32 +201,30 @@ namespace GASS
 			susps[i]  = wheel_comp->GetSuspensionData();
 			tires[i]  = wheel_comp->GetTireData();
 		}
-
+		
 		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(num_wheels);
 		PxVehicleDriveSimData4W driveSimData;
-
-
 
 		//Extract the chassis AABB dimensions from the chassis convex mesh.
 		const PxVec3 chassisDims=ComputeDim(chassisMesh.m_ConvexMesh);
 
 		//The origin is at the center of the chassis mesh.
 		//Set the center of mass to be below this point and a little towards the front.
-		const PxVec3 chassisCMOffset=PxVec3(0.0f,-chassisDims.y*0.5f+0.65f,0.25f);
+		const PxVec3 chassisCMOffset=PxVec3(0.0f,-chassisDims.y*0.5f+0.65f,-0.25f);
 
 		//Now compute the chassis mass and moment of inertia.
 		//Use the moment of inertia of a cuboid as an approximate value for the chassis moi.
 		PxVec3 chassisMOI
-			((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*m_ChassisData.mMass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*m_ChassisData.mMass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*m_ChassisData.mMass/12.0f);
+			((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisData.mMass/12.0f,
+			(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*chassisData.mMass/12.0f,
+			(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisData.mMass/12.0f);
 		//A bit of tweaking here.  The car will have more responsive turning if we reduce the
 		//y-component of the chassis moment of inertia.
 		chassisMOI.y*=0.8f;
 
 		//Let's set up the chassis data structure now.
-		m_ChassisData.mMOI=chassisMOI;
-		m_ChassisData.mCMOffset=chassisCMOffset;
+		chassisData.mMOI=chassisMOI;
+		chassisData.mCMOffset=chassisCMOffset;
 
 		//Work out the front/rear mass split from the cm offset.
 		//This is a very approximate calculation with lots of assumptions.
@@ -227,15 +241,13 @@ namespace GASS
 		//zRear = (-z-cm)/2                                                                     (6b)
 		//Substituting (6a-b) into (5) gives
 		//massRear = 0.5*mass*(z-3cm)/z                                         (7)
-		PxF32 massRear=0.5f * m_ChassisData.mMass * (chassisDims.z-3*chassisCMOffset.z)/chassisDims.z;
-		const PxF32 massFront=m_ChassisData.mMass - massRear;
+		PxF32 massRear=0.5f * chassisData.mMass * (chassisDims.z-3*chassisCMOffset.z)/chassisDims.z;
+		const PxF32 massFront=chassisData.mMass - massRear;
 		massRear = massRear/PxF32 (wheels.size()-2);
-		
-
 		float tot = massRear*4 + massFront;
 
 		//Disable the handbrake from the front wheels and enable for the rear wheels
-		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxHandBrakeTorque=0.0f;
+		/*wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxHandBrakeTorque=0.0f;
 		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxHandBrakeTorque=0.0f;
 		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
 		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
@@ -243,8 +255,9 @@ namespace GASS
 		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxSteer=PxPi*0.3333f;
 		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxSteer=PxPi*0.3333f;
 		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxSteer=0.0f;
-		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxSteer=0.0f;
+		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxSteer=0.0f;*/
 
+		//set mSprungMass from vehicle mass move this to wheel?
 		susps[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mSprungMass=massFront*0.5f;
 		susps[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mSprungMass=massFront*0.5f;
 		susps[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mSprungMass=massRear;
@@ -254,9 +267,20 @@ namespace GASS
 		for(size_t i = 4; i < wheels.size() ; i++)
 		{
 			susps[i].mSprungMass=massRear;
-			wheels[i].mMaxSteer=0.0f;
-			wheels[i].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
-			wheels[i].mMaxBrakeTorque = 1500.0f*m_ScaleMass;
+			//wheels[i].mMaxSteer=0.0f;
+			//wheels[i].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
+			//wheels[i].mMaxBrakeTorque = 1500.0f*m_ScaleMass;
+		}
+
+		//apply mass scale to wheels
+		for(size_t i = 0; i < wheels.size() ; i++)
+		{
+			wheels[i].mMaxHandBrakeTorque *= m_ScaleMass;
+			wheels[i].mMaxBrakeTorque *= m_ScaleMass;
+			wheels[i].mDampingRate *= m_ScaleMass;
+			susps[i].mSpringStrength *= m_ScaleMass;
+			susps[i].mSpringDamperRate *= m_ScaleMass;
+			tires[i].mLongitudinalStiffnessPerUnitGravity *= m_ScaleMass;
 		}
 	
 		//We need to set up geometry data for the suspension, wheels, and tires.
@@ -303,7 +327,7 @@ namespace GASS
 		//Engine
 		PxVehicleEngineData engine;
 		
-		engine.mPeakTorque=500.0*m_ScaleMass;
+		engine.mPeakTorque=m_EnginePeakTorque;
 		engine.mMaxOmega=600.0f;//approx 6000 rpm
 		//engine.mDampingRateFullThrottle *= m_ScaleMass;
 		//engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
@@ -313,12 +337,21 @@ namespace GASS
 		//Gears
 		PxVehicleGearsData gears;
 		
-		gears.mSwitchTime=0.5f;
+		if(m_GearRatios.size() >= PxVehicleGearsData::eMAX_NUM_GEAR_RATIOS)
+		{
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "To many gear in vehicle","PhysXVehicleComponent::OnPostSceneObjectInitializedEvent");
+		}
+		gears.mNumRatios = m_GearRatios.size();
+		for(size_t i = 0 ; i< m_GearRatios.size(); i++)
+		{
+			gears.mRatios[i] = m_GearRatios[i];
+		}
+		gears.mSwitchTime = m_GearSwitchTime;
 		driveSimData.setGearsData(gears);
 
 		//Clutch
 		PxVehicleClutchData clutch;
-		clutch.mStrength=10.0f*m_ScaleMass;
+		clutch.mStrength = m_ClutchStrength*m_ScaleMass;
 		driveSimData.setClutchData(clutch);
 
 		//Ackermann steer accuracy
@@ -330,7 +363,7 @@ namespace GASS
 		driveSimData.setAckermannGeometryData(ackermann);
 
 		//////////////
-		//PxRigidDynamic* vehActor=createVehicleActor4W(m_ChassisData,&wheelConvexMeshes4[0],chassisMesh.m_ConvexMesh,*scene_manager->GetPxScene(),*system->GetPxSDK(),*system->GetDefaultMaterial());
+		//PxRigidDynamic* vehActor=createVehicleActor4W(chassisData,&wheelConvexMeshes4[0],chassisMesh.m_ConvexMesh,*scene_manager->GetPxScene(),*system->GetPxSDK(),*system->GetDefaultMaterial());
 		//m_Actor = vehActor;
 
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
@@ -375,9 +408,9 @@ namespace GASS
 		chassisShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
 		chassisShape->setLocalPose(PxTransform::createIdentity());
 
-		m_Actor->setMass(m_ChassisData.mMass);
-		m_Actor->setMassSpaceInertiaTensor(m_ChassisData.mMOI);
-		m_Actor->setCMassLocalPose(PxTransform(m_ChassisData.mCMOffset,PxQuat::createIdentity()));
+		m_Actor->setMass(chassisData.mMass);
+		m_Actor->setMassSpaceInertiaTensor(chassisData.mMOI);
+		m_Actor->setCMassLocalPose(PxTransform(chassisData.mCMOffset,PxQuat::createIdentity()));
 
 		m_Vehicle = PxVehicleDrive4W::allocate(num_wheels);
 		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-num_wheels);
@@ -651,11 +684,12 @@ namespace GASS
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
-			
-			GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));*/
+			*/
 
-		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
-		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
+		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+
+		std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
+		std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
 		//std::cout << "Steer:" << m_SteerInput << "\n";
 
@@ -762,11 +796,6 @@ namespace GASS
 				}
 			}
 		}
-	}
-
-	void PhysXVehicleComponent::SetMass(float mass)
-	{
-		m_ChassisData.mMass = mass;
 	}
 
 	void PhysXVehicleComponent::SetPosition(const Vec3 &value)

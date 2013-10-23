@@ -59,7 +59,8 @@ namespace GASS
 	protected:
 		void LoadTires(const std::string &file);
 	private:
-		// Physics
+		ADD_PROPERTY(int,MaxNumThreads)
+		// PhysX
 		physx::PxPhysics* m_PhysicsSDK;
 		physx::PxFoundation* m_Foundation;
 		physx::PxMaterial* m_DefaultMaterial;

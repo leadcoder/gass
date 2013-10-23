@@ -93,7 +93,8 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
-		RegisterProperty<float>("Gravity", &GASS::PhysXPhysicsSceneManager::GetGravity, &GASS::PhysXPhysicsSceneManager::SetGravity);
+		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
+		
 	}
 
 	void PhysXPhysicsSceneManager::SetGravity(float gravity)
@@ -265,6 +266,14 @@ namespace GASS
 		
 
 		
+		/*m_PxScene->simulate(delta_time*0.5);
+
+		
+		while(!m_PxScene->fetchResults())
+		{
+
+		}*/
+
 		m_PxScene->simulate(delta_time);
 			
 		

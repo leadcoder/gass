@@ -38,8 +38,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
-		float GetMass() const {return m_ChassisData.mMass;}
-		void SetMass(float mass);
 		void SceneManagerTick(double delta);
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
@@ -71,7 +69,12 @@ namespace GASS
 		ADD_PROPERTY(SceneObjectRef,RearRightWheel);
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels)
 		ADD_PROPERTY(bool,UseAutoReverse);
-
+		ADD_PROPERTY(float,ScaleMass);
+		ADD_PROPERTY(float,EnginePeakTorque)
+		ADD_PROPERTY(float,ClutchStrength)
+		ADD_PROPERTY(float,Mass)
+		ADD_PROPERTY(float,GearSwitchTime)
+		ADD_PROPERTY(std::vector<float>,GearRatios)
 
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
@@ -80,7 +83,6 @@ namespace GASS
 		physx::PxVehicleDrive4W* m_Vehicle;
 		float m_ThrottleInput;
 		float m_SteerInput;
-		physx::PxVehicleChassisData m_ChassisData;
 		bool m_DigBrakeInput;
 		bool m_DigAccelInput;
 		bool m_IsMovingForwardSlowly;

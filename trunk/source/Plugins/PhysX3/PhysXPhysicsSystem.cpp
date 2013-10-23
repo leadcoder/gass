@@ -80,6 +80,7 @@ namespace GASS
 	void PhysXPhysicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, ISystem>);
+		REG_PROPERTY(int,MaxNumThreads,PhysXPhysicsSystem);
 	}
 
 	PxGASSErrorCallback myErrorCallback;

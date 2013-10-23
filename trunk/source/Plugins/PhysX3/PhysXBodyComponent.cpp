@@ -31,8 +31,8 @@ namespace GASS
 		m_Kinematic(false),
 		m_DisableGravity(false),
 		m_EffectJoints(true),
-		m_PositionIterCount(60),
-		m_VelocityIterCount(60)
+		m_PositionIterCount(4),
+		m_VelocityIterCount(4)
 	{
 
 	}

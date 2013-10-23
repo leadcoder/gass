@@ -38,15 +38,27 @@ namespace GASS
 		physx::PxVehicleWheelData GetWheelData() const {return m_WheelData;}
 		physx::PxVehicleSuspensionData GetSuspensionData() const {return m_SuspensionData;}
 		physx::PxVehicleTireData  GetTireData () const {return m_TireData;}
+		bool IsInitialized() const{return m_Initialized;}
 	protected:
 		void OnGeometryChanged(GeometryChangedMessagePtr message);
 		void ComputeWheelDim(physx::PxConvexMesh* wheel_convex_mesh, physx::PxF32 &wheel_width, physx::PxF32 &wheel_rad);
-		float GetMass() const;
-		void SetMass(float  mass);
+		ADD_PROPERTY(float,Mass)
+		ADD_PROPERTY(float,MaxBrakeTorque)
+		ADD_PROPERTY(float,MaxHandBrakeTorque)
+		ADD_PROPERTY(float,MaxSteer)
+		ADD_PROPERTY(float,DampingRate)
+		ADD_PROPERTY(float,SuspensionMaxCompression)
+		ADD_PROPERTY(float,SuspensionMaxDroop)
+		ADD_PROPERTY(float,SuspensionSpringStrength)
+		ADD_PROPERTY(float,SuspensionSpringDamperRate)
+		ADD_PROPERTY(float,TireLongitudinalStiffnessPerUnitGravity)
+		ADD_PROPERTY(std::string,TireType)
+
 	private:
 		physx::PxVehicleSuspensionData m_SuspensionData;
 		physx::PxVehicleTireData m_TireData;
 		physx::PxVehicleWheelData m_WheelData;
+		bool m_Initialized;
 	};
 	typedef SPTR<PhysXWheelComponent> PhysXWheelComponentPtr;
 }
