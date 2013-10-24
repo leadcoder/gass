@@ -67,6 +67,7 @@ namespace GASS
 
 	void VehicleCameraComponent::OnInitialize()
 	{
+		BaseSceneComponent::InitializeSceneObjectRef();
 		BaseSceneComponent::OnInitialize();
 		
 		if(!m_InputHandlerObject.IsValid())
@@ -108,9 +109,5 @@ namespace GASS
 	{
 
 	}
-
-	
-
-	
 
 }

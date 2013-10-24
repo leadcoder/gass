@@ -74,6 +74,21 @@ namespace GASS
 	typedef SPTR<GotoPositionMessage> GotoPositionMessagePtr;
 
 
+	class PathfindToPositionMessage : public BaseMessage
+	{
+	public:
+		PathfindToPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Position(pos)
+		  {
+
+		  }
+		  Vec3 GetPosition() const {return m_Position;}
+	private:
+		Vec3 m_Position;
+	};
+	typedef SPTR<PathfindToPositionMessage> PathfindToPositionMessagePtr;
+
+
 	class DesiredSpeedMessage : public BaseMessage
 	{
 	public:

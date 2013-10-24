@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef FOLLOW_WAYPOINT_LIST_H
-#define FOLLOW_WAYPOINT_LIST_H
+#ifndef GO_TO_LOCATION_COMPONENT_H
+#define GO_TO_LOCATION_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
@@ -36,55 +36,23 @@
 
 namespace GASS
 {
-
-	enum PathFollowMode
-	{
-		PFM_STOP_AT_END,
-		PFM_LOOP_TO_START,
-		PFM_REVERSE_LOOP
-	};
-
-
-	START_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
-		BIND(PFM_STOP_AT_END)
-		BIND(PFM_LOOP_TO_START)
-		BIND(PFM_REVERSE_LOOP)
-	END_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
-
-
-	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>
+	class GoToLocationComponent :  public Reflection<GoToLocationComponent,BaseSceneComponent>
 	{
 	public:
-		FollowWaypointListComponent();
-		virtual ~FollowWaypointListComponent();
+		GoToLocationComponent();
+		virtual ~GoToLocationComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
 		void SceneManagerTick(double delta);
-		std::vector<SceneObjectPtr>  GetWaypointListEnumeration() const;
 		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
-		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
-		void OnTransMessage(TransformationNotifyMessagePtr message);
-		ADD_PROPERTY(Float,WaypointRadius);
+		void OnTransformationMessage(TransformationNotifyMessagePtr message);
+		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		ADD_PROPERTY(SceneObjectRef,NavigationObject);
-		void SetInvertDirection(bool value);
-		bool GetInvertDirection() const;
-		void SetWaypointList(SceneObjectRef waypointlist);
-		SceneObjectRef GetWaypointList() const;
-		PathFollowModeBinder GetMode() const;
-		void SetMode(const PathFollowModeBinder &mode);
-		int GetCloesetWaypoint();
+		Vec3 m_CurrentLocation;
+		Vec3 m_DestinationLocation;
+		std::vector<Vec3> m_Path;
 		
-		
-		Vec3  m_CurrentPos;
-		std::vector<Vec3> m_Waypoints;
-		SceneObjectRef m_WaypointList;
-		float m_Direction;
-		bool m_InvertDirection;
-		bool m_HasWaypoints;
-		int m_CurrentWaypoint;
-		PathFollowModeBinder m_Mode;
 	};
 }
 #endif
