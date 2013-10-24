@@ -23,6 +23,9 @@
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorMessages.h"
+#include "Sim/Interface/GASSINavigationComponent.h"
+
+
 #include "LandCoverType.h"
 
 class dtNavMesh;
@@ -76,7 +79,7 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape, public INavigationComponent
 	{
 	public:
 		RecastNavigationMeshComponent();
@@ -84,17 +87,22 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		
+		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
+
 		dtNavMesh* GetNavMesh() const {return m_NavMesh;}
 		dtNavMeshQuery* GetNavMeshQuery() const {return m_NavQuery;}
 		virtual bool IsPointInside(const Vec3 &point) const;
 		virtual Vec3 GetRandomPoint() const;
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
-
 		//need to be public for enumerator access it
 		std::vector<SceneObjectPtr> GetMeshSelectionEnum();
 	protected:
+		static const int MAX_POLYS_IN_PATH = 2048;
+		static void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos);
+		static void RecastToGASS(float* in_pos,GASS::Vec3 &out_pos);
+
+
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 
@@ -161,9 +169,6 @@ namespace GASS
 		FilePath GetImportMesh() const;
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
-
-		
-
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
 		GraphicsMeshPtr m_NavVisTriMesh;

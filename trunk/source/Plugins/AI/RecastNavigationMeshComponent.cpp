@@ -86,7 +86,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, IComponent>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
-		
+
 		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("CellHeight", &GetCellHeight, &SetCellHeight,
@@ -154,6 +154,17 @@ namespace GASS
 		}
 		//initlize visibility
 		SetVisible(m_Visible);
+
+
+		std::vector<SceneObjectRef>::iterator iter = m_SelectedMeshes.begin();
+		//remove invalid pointers!
+		while(iter!=  m_SelectedMeshes.end())
+		{
+			if(!(*iter).IsValid())
+				iter = m_SelectedMeshes.erase(iter);
+			else
+				iter++;
+		}
 		m_Initialized = true;
 	}
 
@@ -196,51 +207,51 @@ namespace GASS
 
 	// Quick and dirty convex hull.
 
-// Returns true if 'c' is left of line 'a'-'b'.
-inline bool left(const float* a, const float* b, const float* c)
-{ 
-	const float u1 = b[0] - a[0];
-	const float v1 = b[2] - a[2];
-	const float u2 = c[0] - a[0];
-	const float v2 = c[2] - a[2];
-	return u1 * v2 - v1 * u2 < 0;
-}
-
-// Returns true if 'a' is more lower-left than 'b'.
-inline bool cmppt(const float* a, const float* b)
-{
-	if (a[0] < b[0]) return true;
-	if (a[0] > b[0]) return false;
-	if (a[2] < b[2]) return true;
-	if (a[2] > b[2]) return false;
-	return false;
-}
-// Calculates convex hull on xz-plane of points on 'pts',
-// stores the indices of the resulting hull in 'out' and
-// returns number of points on hull.
-static int convexhull(const float* pts, int npts, int* out)
-{
-	// Find lower-leftmost point.
-	int hull = 0;
-	for (int i = 1; i < npts; ++i)
-		if (cmppt(&pts[i*3], &pts[hull*3]))
-			hull = i;
-	// Gift wrap hull.
-	int endpt = 0;
-	int i = 0;
-	do
-	{
-		out[i++] = hull;
-		endpt = 0;
-		for (int j = 1; j < npts; ++j)
-			if (hull == endpt || left(&pts[hull*3], &pts[endpt*3], &pts[j*3]))
-				endpt = j;
-		hull = endpt;
+	// Returns true if 'c' is left of line 'a'-'b'.
+	inline bool left(const float* a, const float* b, const float* c)
+	{ 
+		const float u1 = b[0] - a[0];
+		const float v1 = b[2] - a[2];
+		const float u2 = c[0] - a[0];
+		const float v2 = c[2] - a[2];
+		return u1 * v2 - v1 * u2 < 0;
 	}
-	while (endpt != out[0]);
 
-	return i;
-}
+	// Returns true if 'a' is more lower-left than 'b'.
+	inline bool cmppt(const float* a, const float* b)
+	{
+		if (a[0] < b[0]) return true;
+		if (a[0] > b[0]) return false;
+		if (a[2] < b[2]) return true;
+		if (a[2] > b[2]) return false;
+		return false;
+	}
+	// Calculates convex hull on xz-plane of points on 'pts',
+	// stores the indices of the resulting hull in 'out' and
+	// returns number of points on hull.
+	static int convexhull(const float* pts, int npts, int* out)
+	{
+		// Find lower-leftmost point.
+		int hull = 0;
+		for (int i = 1; i < npts; ++i)
+			if (cmppt(&pts[i*3], &pts[hull*3]))
+				hull = i;
+		// Gift wrap hull.
+		int endpt = 0;
+		int i = 0;
+		do
+		{
+			out[i++] = hull;
+			endpt = 0;
+			for (int j = 1; j < npts; ++j)
+				if (hull == endpt || left(&pts[hull*3], &pts[endpt*3], &pts[j*3]))
+					endpt = j;
+			hull = endpt;
+		}
+		while (endpt != out[0]);
+
+		return i;
+	}
 
 
 
@@ -252,7 +263,7 @@ static int convexhull(const float* pts, int npts, int* out)
 		}
 		IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastConvexVolumeComponent>(components,true);
-		
+
 		for(size_t i = 0; i < components.size(); i++)
 		{
 			RecastConvexVolumeComponentPtr comp = DYNAMIC_PTR_CAST<RecastConvexVolumeComponent>(components[i]);
@@ -292,21 +303,21 @@ static int convexhull(const float* pts, int npts, int* out)
 
 				/*int hull[12];
 				std::vector<float> hull_points;
-				
+
 				int nhull = convexhull(&points[0], 4, hull);
 				for(size_t j = 0; j < nhull; j++)
 				{
-					float x = points[hull[j]*3];
-					float y = points[hull[j]*3+1];
-					float z = points[hull[j]*3+2];
-					hull_points.push_back(x);
-					hull_points.push_back(y);
-					hull_points.push_back(z);
+				float x = points[hull[j]*3];
+				float y = points[hull[j]*3+1];
+				float z = points[hull[j]*3+2];
+				hull_points.push_back(x);
+				hull_points.push_back(y);
+				hull_points.push_back(z);
 
-					if(y < minh)
-						minh = y;
-					if(y > maxh)
-						maxh = y;
+				if(y < minh)
+				minh = y;
+				if(y > maxh)
+				maxh = y;
 				}
 				m_Geom->addConvexVolume(&hull_points[0], nhull, minh-1, maxh+1, area);*/
 			}
@@ -347,11 +358,11 @@ static int convexhull(const float* pts, int npts, int* out)
 
 			p1[0] =pos1.x;p1[1] =pos1.y;p1[2] =pos1.z;
 			p2[0] =pos2.x;p2[1] =pos2.y;p2[2] =pos2.z;
-			
+
 			//m_Geom->addOffMeshConnection(p1, p2, m_AgentRadius, bidir, area, flags);
 			m_Geom->addOffMeshConnection(p1, p2, comp->GetRadius(), bidir, area, flags);
-			
-			
+
+
 		}
 	}
 
@@ -382,7 +393,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	bool RecastNavigationMeshComponent::GenerateTiles()
 	{
 
-		
+
 
 		RawNavMeshData rnm_data;
 		rnm_data.BMax = NULL;
@@ -399,12 +410,12 @@ static int convexhull(const float* pts, int npts, int* out)
 		m_Geom->createMesh(rnm_data.Verts, rnm_data.TriNorm, rnm_data.Tris, rnm_data.NumVerts,rnm_data.NumTris);
 		m_Geom->setMeshBoundsMax(rnm_data.BMax);
 		m_Geom->setMeshBoundsMin(rnm_data.BMin);
-		
-		
+
+
 
 		UpdateConvexVolumes();
 		UpdateOffmeshConnections();
-		
+
 
 		dtStatus status;
 		dtFreeNavMesh(m_NavMesh);
@@ -557,8 +568,8 @@ static int convexhull(const float* pts, int npts, int* out)
 		m_Ctx->log(RC_LOG_PROGRESS, " - %.1fK verts, %.1fK tris", nverts/1000.0f, ntris/1000.0f);
 
 		// Allocate voxel heightfield where we rasterize our input data to.
-		
-		
+
+
 
 		rcHeightfield* solid = rcAllocHeightfield();
 		if (!solid)
@@ -682,8 +693,8 @@ static int convexhull(const float* pts, int npts, int* out)
 		}
 
 
-		
-		
+
+
 		// Create contours.
 		rcContourSet* cset = rcAllocContourSet();
 		if (!cset)
@@ -703,8 +714,8 @@ static int convexhull(const float* pts, int npts, int* out)
 		}
 
 		// Build polygon navmesh from the contours.
-		
-		
+
+
 		rcPolyMesh* pmesh = rcAllocPolyMesh();
 		if (!pmesh)
 		{
@@ -947,7 +958,7 @@ static int convexhull(const float* pts, int npts, int* out)
 
 	bool RecastNavigationMeshComponent::GetBuild() const 
 	{
-		
+
 		return false;
 	}
 
@@ -956,7 +967,7 @@ static int convexhull(const float* pts, int npts, int* out)
 		return m_TileSize;
 	}
 
-	
+
 
 	void RecastNavigationMeshComponent::SetCellSize(const float value) {m_CellSize = value;}
 	void RecastNavigationMeshComponent::SetCellHeight(const float value) {m_CellHeight = value;}
@@ -1045,7 +1056,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	{
 		if(m_Initialized && m_NavMesh)
 		{
-			
+
 			SaveAllTiles(value.GetFullPath().c_str(), m_NavMesh);
 		}
 	}
@@ -1117,7 +1128,6 @@ static int convexhull(const float* pts, int npts, int* out)
 					}
 					m_MeshBounding.Union(box);
 				}
-
 			}
 		}
 	}
@@ -1133,7 +1143,7 @@ static int convexhull(const float* pts, int npts, int* out)
 					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
-						 
+
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 
 						GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
@@ -1239,10 +1249,10 @@ static int convexhull(const float* pts, int npts, int* out)
 	void RecastNavigationMeshComponent::UpdateNavMeshVis()
 	{
 		std::vector<Vec3> nav_tris =  GetVisualNavMesh();
-		
+
 		m_NavVisLineMesh->SubMeshVector.clear();
 		m_NavVisTriMesh->SubMeshVector.clear();
-		
+
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_NavVisLineMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
@@ -1256,31 +1266,31 @@ static int convexhull(const float* pts, int npts, int* out)
 			Vec3 v1 = nav_tris[i];
 			Vec3 v2 = nav_tris[i+1];
 			Vec3 v3 = nav_tris[i+2];
-			
+
 			sub_mesh_data->PositionVector.push_back(v1);
 			sub_mesh_data->ColorVector.push_back(color);
-			
+
 			sub_mesh_data->PositionVector.push_back(v2);
 			sub_mesh_data->ColorVector.push_back(color);
 
 			sub_mesh_data->PositionVector.push_back(v2);
 			sub_mesh_data->ColorVector.push_back(color);
-			
+
 			sub_mesh_data->PositionVector.push_back(v3);
 			sub_mesh_data->ColorVector.push_back(color);
 
 			sub_mesh_data->PositionVector.push_back(v3);
 			sub_mesh_data->ColorVector.push_back(color);
-			
+
 			sub_mesh_data->PositionVector.push_back(v1);
 			sub_mesh_data->ColorVector.push_back(color);
 		}
-		
+
 		sub_mesh_data = GraphicsSubMeshPtr(new GraphicsSubMesh());
 		m_NavVisTriMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = TRIANGLE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
-		
+
 		for(int i = 0; i < nav_tris.size(); i++)
 		{
 			sub_mesh_data->PositionVector.push_back(nav_tris[i]);
@@ -1345,7 +1355,7 @@ static int convexhull(const float* pts, int npts, int* out)
 	}
 
 
-	
+
 
 
 	// from recast tile example
@@ -1524,14 +1534,14 @@ static int convexhull(const float* pts, int npts, int* out)
 				const dtPoly* p = &tile->polys[j];
 				if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
 					continue;
-				
+
 				/*if (p->flags & SAMPLE_POLYFLAGS_DISABLED)
 				{
-					color.Set(1,0,0,float(m_Transparency)/100.0f);
+				color.Set(1,0,0,float(m_Transparency)/100.0f);
 				}
 				else if (p->flags & SAMPLE_POLYFLAGS_DOOR)
 				{
-					color.Set(0,1,0,float(m_Transparency)/100.0f);
+				color.Set(0,1,0,float(m_Transparency)/100.0f);
 				}*/
 
 				const dtPolyDetail* pd = &tile->detailMeshes[j];
@@ -1541,7 +1551,7 @@ static int convexhull(const float* pts, int npts, int* out)
 					const unsigned char* t = &tile->detailTris[(pd->triBase+k)*4];
 					for (int l = 0; l < 3; ++l)
 					{
-						
+
 						float* pos;
 						if (t[l] < p->vertCount)
 						{
@@ -1551,12 +1561,100 @@ static int convexhull(const float* pts, int npts, int* out)
 						{
 							pos = &tile->detailVerts[(pd->vertBase+t[l]-p->vertCount)*3];
 						}
-						
+
 						tris.push_back(Vec3(pos[0],pos[1],pos[2]));
 					}
 				}
 			}
 		}
 		return tris;
+	}
+
+
+	void RecastNavigationMeshComponent::GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos)
+	{
+		out_pos[0] = in_pos.x;
+		out_pos[1] = in_pos.y;
+		out_pos[2] = in_pos.z;
+	}
+
+	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos,GASS::Vec3 &out_pos)
+	{
+		out_pos.x = in_pos[0];
+		out_pos.y = in_pos[1];
+		out_pos.z = in_pos[2];
+	}
+
+	bool RecastNavigationMeshComponent::GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const
+	{
+		if(!m_NavMesh)
+			GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "m_NavMesh not initialized","RecastNavigationMeshComponent::GetShortestPath");
+
+		float rescast_from_pos[3];
+		float rescast_to_pos[3];
+		GASSToRecast(from,rescast_from_pos);
+		GASSToRecast(to,rescast_to_pos);
+		float polyPickExt[3];
+		GASSToRecast(GASS::Vec3(4,4,4),polyPickExt);
+
+		dtQueryFilter filter;
+		/*filter.setIncludeFlags(settings.IncludeFlags);
+		filter.setExcludeFlags(settings.ExcludeFlags);
+		for(int i = 0; i < MAX_COST_MATERIALS; i++)
+		filter.setAreaCost(i,settings.MaterialCost[i]);*/
+		//for(int i = 0; i < MAX_COST_MATERIALS; i++)
+		//	filter.setAreaCost(i,1.1);
+
+		dtPolyRef start_ref = 0;
+		dtPolyRef end_ref  = 0;
+		dtStatus ret  =0;
+		ret = m_NavQuery->findNearestPoly(rescast_from_pos, polyPickExt, &filter, &start_ref, 0);
+		if(dtStatusFailed(ret)) //cast exception
+			GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to find start polygon","RecastNavigationMeshComponent::GetShortestPath");
+		if(start_ref)
+		{
+			ret = m_NavQuery->findNearestPoly(rescast_to_pos, polyPickExt, &filter, &end_ref, 0);
+			if(dtStatusFailed(ret)) //cast exception
+				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to find end polygon","RecastNavigationMeshComponent::GetShortestPath");
+			if(end_ref)
+			{
+				dtPolyRef polys[MAX_POLYS_IN_PATH];
+				int num_polys = 0;
+				ret = m_NavQuery->findPath(start_ref , end_ref , rescast_from_pos, rescast_to_pos, &filter, polys, &num_polys , MAX_POLYS_IN_PATH);
+				if(dtStatusFailed(ret)) //cast exception
+					GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to findPath","RecastNavigationMeshComponent::GetShortestPath");
+				if(num_polys)
+				{
+					// In case of partial path, make sure the end point is clamped to the last polygon.
+					float epos[3];
+					dtVcopy(epos, rescast_to_pos);
+					if (polys[num_polys-1] != end_ref)
+						m_NavQuery->closestPointOnPoly(polys[num_polys-1], rescast_to_pos, epos);
+
+
+					float straight_path[MAX_POLYS_IN_PATH*3];
+					unsigned char straight_path_flags[MAX_POLYS_IN_PATH];
+					int straight_path_options = 0;
+
+					dtPolyRef straight_polys[MAX_POLYS_IN_PATH];
+					int num_straight_polys = 0;
+
+					ret = m_NavQuery->findStraightPath(rescast_from_pos, epos, polys, num_polys, straight_path, straight_path_flags, straight_polys, &num_straight_polys, MAX_POLYS_IN_PATH);//, straight_path_options);
+					if(dtStatusFailed(ret)) //cast exception
+						GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to findStraightPath","RecastNavigationMeshComponent::GetShortestPath");
+					for(int i = 0; i < num_straight_polys; i++)
+					{
+						GASS::Vec3 pos;
+						pos.x = straight_path[i*3];
+						pos.y = straight_path[i*3+1];
+						pos.z = straight_path[i*3+2];
+						path.push_back(pos);
+					}
+					if(num_straight_polys > 0)
+						return true;
+				}
+			}
+		}	
+		return false;
 	}
 }

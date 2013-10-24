@@ -331,13 +331,6 @@ namespace GASS
 			}
 
 			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(desired_speed)));
-
-			//if(m_LeftTurn)
-			//target_point.y = desired_speed;
-
-			//std::cout << "now_distance" << now_distance << " pos:" << target_point << "\n";
-			//Get aim point on path
-			//if(Math::GetClosestPointOnPath(m_CurrentPos,wps3,index,point))
 			
 			GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
 			
