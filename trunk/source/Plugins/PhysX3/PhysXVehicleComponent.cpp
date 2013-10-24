@@ -23,6 +23,7 @@
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 
 using namespace physx;
 namespace GASS
@@ -40,6 +41,7 @@ namespace GASS
 		m_ScaleMass(1.0),
 		m_Mass(1500),
 		m_EnginePeakTorque(500),
+		m_EngineMaxRotationSpeed(600),
 		m_ClutchStrength(10),
 		m_GearSwitchTime(0.5)
 	{
@@ -69,6 +71,7 @@ namespace GASS
 		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
 		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
 		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
+		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
 		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
 		REG_VECTOR_PROPERTY(float,GearRatios,PhysXVehicleComponent)
 		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
@@ -111,6 +114,11 @@ namespace GASS
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->Register(shared_from_this());
+
+
+		//Play engine sound
+		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostMessage(sound_msg);
 	}
 
 	void PhysXVehicleComponent::Reset()
@@ -328,7 +336,7 @@ namespace GASS
 		PxVehicleEngineData engine;
 		
 		engine.mPeakTorque=m_EnginePeakTorque;
-		engine.mMaxOmega=600.0f;//approx 6000 rpm
+		engine.mMaxOmega=m_EngineMaxRotationSpeed;//approx 6000 rpm
 		//engine.mDampingRateFullThrottle *= m_ScaleMass;
 		//engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
 		//engine.mDampingRateZeroThrottleClutchEngaged *= m_ScaleMass;
@@ -679,6 +687,24 @@ namespace GASS
 		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 
+
+
+		//pitch engine sound
+		float pitch=1.0;
+
+		//rps (rad/s)
+		const float engine_rot_speed = fabs(driveDynData.getEngineRotationSpeed());
+		float norm_engine_rot_speed = engine_rot_speed/m_EngineMaxRotationSpeed;
+
+		if(norm_engine_rot_speed > 1.0)
+			norm_engine_rot_speed = 1.0;
+		pitch += norm_engine_rot_speed;
+
+		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+		GetSceneObject()->PostMessage(sound_msg);
+
+		std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
+
 		/*std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
 			ss  <<  "\nGear::" << currentGear;
@@ -688,8 +714,8 @@ namespace GASS
 
 		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
 
-		std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
-		std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
+		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
+		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
 		//std::cout << "Steer:" << m_SteerInput << "\n";
 

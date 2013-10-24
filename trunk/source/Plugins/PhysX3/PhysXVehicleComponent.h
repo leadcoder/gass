@@ -71,6 +71,7 @@ namespace GASS
 		ADD_PROPERTY(bool,UseAutoReverse);
 		ADD_PROPERTY(float,ScaleMass);
 		ADD_PROPERTY(float,EnginePeakTorque)
+		ADD_PROPERTY(float,EngineMaxRotationSpeed)
 		ADD_PROPERTY(float,ClutchStrength)
 		ADD_PROPERTY(float,Mass)
 		ADD_PROPERTY(float,GearSwitchTime)
