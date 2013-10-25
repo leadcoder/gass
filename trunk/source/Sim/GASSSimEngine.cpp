@@ -54,6 +54,7 @@
 #include "Sim/Interface/GASSIProjectionSceneManager.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
 #include "Sim/Interface/GASSIGroupComponent.h"
+#include "Sim/Interface/GASSINavigationComponent.h"
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"

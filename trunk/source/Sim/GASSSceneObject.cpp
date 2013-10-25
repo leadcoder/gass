@@ -70,7 +70,7 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::CreateCopyRec(bool copy_children_recursively) const
 	{
-		// use object factory intead to support derives from scene object?
+		// use object factory instead to support derives from scene object?
 		SceneObjectPtr new_obj(new  SceneObject());
 		//set object properties
 		CopyPropertiesTo(new_obj);
