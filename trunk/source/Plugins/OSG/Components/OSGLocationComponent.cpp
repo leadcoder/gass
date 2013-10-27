@@ -149,8 +149,7 @@ namespace GASS
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
 		{
-			osg::Quat final = OSGConvert::Get().ToOSG(value);//osg::Quat(-value.x,value.z,-value.y,value.w);
-			//osg::Quat final = osg::Quat(-value.x,value.y,value.z,value.w);
+			osg::Quat final = OSGConvert::Get().ToOSG(value);
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
 		}
@@ -161,10 +160,11 @@ namespace GASS
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
 		{
-			osg::Quat final = OSGConvert::Get().ToOSG(value);//osg::Quat(-value.x,value.z,-value.y,value.w);
-			//osg::Quat final = osg::Quat(-value.x,value.y,value.z,value.w);
-			m_TransformNode->setAttitude(final);
-			SendTransMessage();
+			//osg::Quat final = OSGConvert::Get().ToOSG(value);
+			//m_TransformNode->setAttitude(final);
+			//SendTransMessage();
+			SetWorldRotation(value);
+			
 		}
 	}
 
@@ -255,31 +255,7 @@ namespace GASS
 		}
 	}
 
-	/*Vec3 OSGLocationComponent::FromOSGToGASS(const osg::Vec3d &value) const 
-	{
-		Mat4 in_trans = m_Tranform.Invert();
-		const Vec3 trans_pos = in_trans*Vec3(value.x(),value.y(),value.z());
-		return trans_pos;
-	}
-
-	osg::Vec3d OSGLocationComponent::ToOSGFromGASS(const Vec3 &value) const
-	{
-		const Vec3 trans_pos = m_Tranform*value;
-		return osg::Vec3d(trans_pos.x,trans_pos.y,trans_pos.z);
-	}
-
-	Quaternion OSGLocationComponent::FromOSGToGASS(const osg::Quat &value) const
-	{
-		//return Quaternion(value.w(),value.x(),-value.z(),-value.y());
-		return Quaternion(-value.w(),value.x(),value.y(),value.z());
-	}
-
-	osg::Quat OSGLocationComponent::ToOSGFromGASS(const Quaternion &value) const
-	{
-		//return osg::Quat(-value.x,value.z,-value.y,value.w);
-		return osg::Quat(value.x,value.y,value.z,-value.w);
-	}*/
-
+	
 	Vec3 OSGLocationComponent::GetWorldPosition() const 
 	{
 		if(m_TransformNode.valid())
@@ -307,7 +283,6 @@ namespace GASS
 		m_QRot = value;
 		if(m_TransformNode.valid())
 		{
-			
 			MessagePtr rot_msg(new RotationMessage(Quaternion(value)));
 			GetSceneObject()->PostMessage(rot_msg);
 		}

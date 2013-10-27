@@ -211,35 +211,32 @@ namespace GASS
 	void Quaternion::FromAxes (const Vec3* akAxis)
 	{
 		Mat4 kRot;
-
+		kRot.Identity();
 		for (int iCol = 0; iCol < 3; iCol++)
 		{
 			kRot.m_Data[0][iCol] = akAxis[iCol].x;
 			kRot.m_Data[1][iCol] = akAxis[iCol].y;
 			kRot.m_Data[2][iCol] = akAxis[iCol].z;
 		}
-
 		FromRotationMatrix(kRot);
 	}
 	//-----------------------------------------------------------------------
 	void Quaternion::FromAxes (const Vec3& xAxis, const Vec3& yAxis, const Vec3& zAxis)
 	{
 		Mat4 kRot;
-
+		kRot.Identity();
 		kRot.m_Data[0][0] = xAxis.x;
-		kRot.m_Data[1][0] = xAxis.y;
-		kRot.m_Data[2][0] = xAxis.z;
+		kRot.m_Data[0][1] = xAxis.y;
+		kRot.m_Data[0][2] = xAxis.z;
 
-		kRot.m_Data[0][1] = yAxis.x;
+		kRot.m_Data[1][0] = yAxis.x;
 		kRot.m_Data[1][1] = yAxis.y;
-		kRot.m_Data[2][1] = yAxis.z;
+		kRot.m_Data[1][2] = yAxis.z;
 
-		kRot.m_Data[0][2] = zAxis.x;
-		kRot.m_Data[1][2] = zAxis.y;
+		kRot.m_Data[2][0] = zAxis.x;
+		kRot.m_Data[2][1] = zAxis.y;
 		kRot.m_Data[2][2] = zAxis.z;
-
 		FromRotationMatrix(kRot);
-
 	}
 	//-----------------------------------------------------------------------
 	void Quaternion::ToAxes (Vec3* akAxis) const

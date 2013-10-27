@@ -28,7 +28,7 @@ namespace GASS
 	OSGLightComponent::OSGLightComponent(): 	m_LightType (LT_DIRECTIONAL),
 		m_Diffuse(1,1,1),
 		m_Specular(1,1,1),
-		m_Ambient(0.2,0.2,0.2),
+		m_Ambient(1,1,1),
 		m_AttenuationParams(0,1,0,20),
 		m_CastShadow(true),
 		m_SpotParams(1,30,40),

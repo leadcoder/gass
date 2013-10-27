@@ -17,19 +17,33 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+#ifndef LOOK_AT_COMPONENT_H
+#define LOOK_AT_COMPONENT_H
 
-#pragma once
-
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSSceneOBjectRef.h"
+#include "Core/Utils/GASSColorRGB.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+
 namespace GASS
 {
-	typedef std::vector<Vec3> NavigationPath;
-	class GASSExport INavigationComponent
+	class LookAtComponent : public Reflection<LookAtComponent,BaseSceneComponent>
 	{
 	public:
-		virtual ~INavigationComponent(){}
-		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
+		LookAtComponent(void);
+		~LookAtComponent(void);
+		static void RegisterReflection();
+		virtual void OnInitialize();
+		virtual void SceneManagerTick(double delta);
 	protected:
+		void OnTransformation(TransformationNotifyMessagePtr message);
+		ADD_PROPERTY(SceneObjectRef,LookAt);
+	private:
+		Vec3 m_LookAtPos;
+		Quaternion m_LookAtRot;
 	};
-	typedef SPTR<INavigationComponent> NavigationComponentPtr;
 }
+#endif
