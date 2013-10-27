@@ -11,8 +11,8 @@
 			<PhysicsBodyComponent>
 				<Mass value="2"/>
 				<DisableGravity value="true"/>
-				<PositionIterCount value="60"/>
-				<VelocityIterCount value="60"/>
+				<PositionIterCount value="6"/>
+				<VelocityIterCount value="6"/>
 			</PhysicsBodyComponent>
 			<MeshComponent>
 				<CastShadow value="true"/>
@@ -47,6 +47,40 @@
 						<Position value="0.23 1.92 -0.34"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LibherrMainBoomHydralicsCylinder"/>
+				<ID value="MAIN_BOOM_HYDRALIC_CYLINDER"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.23 0.35 -0.74"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExMainHydralicsCylinder.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="MAIN_BOOM_HYDRALIC_PISTON"/>
+					</LookAtComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LibherrSecondBoomHydralicsCylinder"/>
+				<ID value="SECOND_BOOM_HYDRALIC_CYLINDER"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.23 0.48 -0.54"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSecondHydralicsCylinder.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="SECOND_BOOM_HYDRALIC_PISTON"/>
+					</LookAtComponent>
 				</Components>
 			</SceneObjectTemplate>
 		</ComponentContainers>

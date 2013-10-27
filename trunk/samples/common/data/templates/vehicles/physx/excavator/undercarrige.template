@@ -11,8 +11,9 @@
 				<Filename value="ExUndercarriage.ive"/>
 				<CastShadow value="1"/>
 			</MeshComponent>
+
 			<PhysXVehicleComponent>
-			    <Mass value="1405"/>
+				<Mass value="1405"/>
 				<ScaleMass value="0.03"/>
 				<EnginePeakTorque value ="100"/>
 				<ClutchStrength value = "10"/>
@@ -24,7 +25,14 @@
 				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
 				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
 				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
-				</PhysXVehicleComponent>
+			</PhysXVehicleComponent>
+			<!--<OpenALSoundComponent>
+				<Name value="EngineSound"/>
+				<SoundFile value="hydralic2.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>-->
 			<InputHandlerComponent>
 				<ControlSetting value ="TruckInputSettings"/>
 			</InputHandlerComponent>
@@ -113,8 +121,8 @@
 				<DampingRate value="0.25f"/>
 				<SuspensionMaxCompression value="0.3f"/>
 				<SuspensionMaxDroop value="0.1f"/>
-				<SuspensionSpringStrength value="35000.0f"/>
-				<SuspensionSpringDamperRate value="4500.0f"/>
+				<SuspensionSpringStrength value="350000.0f"/>
+				<SuspensionSpringDamperRate value="45000.0f"/>
 				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
 			</PhysXWheelComponent>
 			<PhysicsConvexGeometryComponent/>
@@ -130,8 +138,8 @@
 				<DampingRate value="0.25f"/>
 				<SuspensionMaxCompression value="0.3f"/>
 				<SuspensionMaxDroop value="0.1f"/>
-				<SuspensionSpringStrength value="35000.0f"/>
-				<SuspensionSpringDamperRate value="4500.0f"/>
+				<SuspensionSpringStrength value="350000.0f"/>
+				<SuspensionSpringDamperRate value="45000.0f"/>
 				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
 			</PhysXWheelComponent>
 			<PhysicsConvexGeometryComponent/>
