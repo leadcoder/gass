@@ -80,11 +80,7 @@ namespace GASS
 	void OgreManualMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
+		
 	}
 
 	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
@@ -106,6 +102,12 @@ namespace GASS
 		
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
+
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
 	}
 
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
@@ -235,6 +237,8 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialMessagePtr message)
 	{
+		if(m_MeshObject == NULL)
+			return;
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
 	
