@@ -50,6 +50,7 @@ namespace GASS
 		void SetTangent(const Vec3 &tangent);
 		Vec3 GetTangent() const;
 		bool GetCustomTangent() const {return m_CustomTangent;}
+		void Rotate(const Quaternion &rot);
 	protected:
 		void SetTangentWeight(Float value);
 		void NotifyUpdate();

@@ -136,6 +136,13 @@ namespace GASS
 		//NotifyUpdate();
 	}
 
+
+	void WaypointComponent::Rotate(const Quaternion &rot)
+	{
+		int id = (int) this;
+		GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot,id)));
+	}
+
 	void WaypointComponent::OnRotate(WorldRotationMessagePtr message)
 	{
 		//use custom tangent?

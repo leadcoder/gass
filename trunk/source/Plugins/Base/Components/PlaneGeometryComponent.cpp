@@ -68,7 +68,6 @@ namespace GASS
 			mat.DepthTest = true;
 			gfx_sys->AddMaterial(mat);
 		}
-
 		GenerateMesh();
 		SetTexture(m_Texture);
 	}

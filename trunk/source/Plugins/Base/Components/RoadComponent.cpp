@@ -223,7 +223,6 @@ namespace GASS
 		if(!m_Initialized)
 			return;
 
-
 		HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		const Vec3 origo = location->GetWorldPosition();
@@ -530,15 +529,6 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(color);
 				sub_mesh_data->NormalVector.push_back(normal);
 				sub_mesh_data->TangentVector.push_back(normal);
-
-				
-				
-				
-
-				
-				
-
-
 			} 
 		}
 

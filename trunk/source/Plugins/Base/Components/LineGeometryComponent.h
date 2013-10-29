@@ -22,76 +22,60 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Utils/GASSColorRGB.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Core/Utils/GASSEnumBinder.h"
+#include "Core/Utils/GASSColorRGB.h"
 
 namespace GASS
 {
-	class SplineAnimation;
-	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>, public IWaypointListComponent
+	class LineGeometryComponent : public Reflection<LineGeometryComponent,BaseSceneComponent>
 	{
-		friend class WaypointComponent;
 	public:
-		WaypointListComponent();
-		virtual ~WaypointListComponent();
+		LineGeometryComponent();
+		virtual ~LineGeometryComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const;
-		virtual std::string GetWaypointTemplate() const;
-		float GetRadius()const;
 	protected:
-		ADD_PROPERTY(bool,ShowPathLine);
-		ADD_PROPERTY(bool,Closed);
-		ADD_PROPERTY(bool,AutoRotateWaypoints);
-		
-		void SetRadius(float radius);
-		int GetSplineSteps()const;
-		void SetSplineSteps(int steps);
-
-		
-		void SetWaypointTemplate(const std::string &name);
-		
-		bool GetEnableSpline()const;
-		void SetEnableSpline(bool value);
-
-		void SetShowWaypoints(bool value);
-		bool GetShowWaypoints() const;
-
-		bool GetAutoUpdateTangents()const;
-		void SetAutoUpdateTangents(bool value);
-
+		ADD_PROPERTY(float,CustomDitchTexturePercent)
+		ADD_PROPERTY(bool,FadeStart)
+		ADD_PROPERTY(bool,FadeEnd)
+		ADD_PROPERTY(bool,ClampToTerrain)
+		ADD_PROPERTY(ColorRGBA,Color)
+		ADD_PROPERTY(Vec2,TileScale)
+		ADD_PROPERTY(SceneObjectRef,WapointListObject)
+		ADD_PROPERTY(bool,RotateTexture)
 		
 		
+		void SetWidth(float value) {m_Width = value;UpdateMesh();}
+		float GetWidth() const {return m_Width;}
 
-		void SetExport(const FilePath &filename);
-		FilePath GetExport() const;
-		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
-		void OnMoved(TransformationNotifyMessagePtr message);
+		void SetOffset(float value) {m_Offset = value;UpdateMesh();}
+		float GetOffset() const {return m_Offset;}
+		
+		void SetMaterial(const std::string &value);
+		std::string GetMaterial() const;
+
+		//Vec2 GetTileScale() const {return m_TileScale;}
+		//void SetTileScale(const Vec2 &value) {m_TileScale = value;}
+		
+		void UpdateMesh();
 		void OnUpdate(UpdateWaypointListMessagePtr message);
-		//Helpers
-		
-		void UpdatePath();
 
-		float m_Radius;
-		int m_SplineSteps;
-		bool m_EnableSpline;
 		bool m_Initialized;
-		bool m_AutoUpdateTangents;
-		bool m_ShowWaypoints;
-		ColorRGBA m_LineColor;
-		std::string m_WaypointTemplate;
-		
+		float m_Width;
+		float m_Offset;
+		std::string m_Material;
 	};
 
-	//typedef SPTR<WaypointListComponent> WaypointListComponentPtr;
-	//typedef WPTR<WaypointListComponent> WaypointListComponentWeakPtr;
-	
+	typedef SPTR<LineGeometryComponent> LineComponentPtr;
+	typedef WPTR<LineGeometryComponent> LineComponentWeakPtr;
+
 }
 

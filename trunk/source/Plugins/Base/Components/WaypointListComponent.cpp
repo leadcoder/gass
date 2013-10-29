@@ -58,7 +58,8 @@ namespace GASS
 		m_ShowPathLine(false),
 		m_LineColor(0,0,1,1),
 		m_WaypointTemplate("Waypoint"),
-		m_Closed(false)
+		m_Closed(false),
+		m_AutoRotateWaypoints(false)
 	{
 
 	}
@@ -93,6 +94,8 @@ namespace GASS
 		RegisterProperty<std::string>("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		RegisterProperty<bool>("Closed", &WaypointListComponent::GetClosed, &WaypointListComponent::SetClosed,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterProperty<bool>("AutoRotateWaypoints", &WaypointListComponent::GetAutoRotateWaypoints, &WaypointListComponent::SetAutoRotateWaypoints,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		
 	}
@@ -218,6 +221,10 @@ namespace GASS
 			}
 		}
 		SetShowWaypoints(m_ShowWaypoints);
+
+
+		
+
 	
 		//create absolute positions
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
@@ -244,6 +251,7 @@ namespace GASS
 		Spline spline;
 		std::vector<Vec3> pos_vec;
 		std::vector<WaypointComponentPtr> wp_vec;
+		std::vector<SceneObjectPtr> obj_vec;
 		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
@@ -254,6 +262,7 @@ namespace GASS
 				LocationComponentPtr wp_location = child_obj->GetFirstComponentByClass<ILocationComponent>();
 				pos_vec.push_back(wp_location->GetPosition()+offset);
 				wp_vec.push_back(comp);
+				obj_vec.push_back(child_obj);
 			}
 		}
 		if(m_Closed && pos_vec.size() > 2)
@@ -262,7 +271,40 @@ namespace GASS
 		}
 
 
-		
+		//auto rotate waypoints?
+		if(m_AutoRotateWaypoints)
+		{
+			Mat4 rot;
+			rot.Identity();
+
+			for(size_t i = 0; i < wp_vec.size(); i++)
+			{
+				Vec3 dir;
+				if(i == 0)
+				{
+					dir = pos_vec[i] - pos_vec[i+1];
+				}
+				else if(i == wp_vec.size()-1)
+				{
+					dir = pos_vec[i-1] - pos_vec[i];
+				}
+				else
+					dir = pos_vec[i-1] - pos_vec[i+1];
+
+				dir.Normalize();
+				Vec3 left = Math::Cross(dir,Vec3(0,1,0));
+				left.Normalize();
+				Vec3 up = Math::Cross(left,dir);
+				up.Normalize();
+				rot.SetViewDirVector(dir);
+				rot.SetUpVector(up);
+				rot.SetRightVector(-left);
+				Quaternion q;
+				q.FromRotationMatrix(rot);
+				wp_vec[i]->Rotate(q);
+			}
+		}
+
 		const double steps = m_SplineSteps;
 		
 		if(m_EnableSpline)
@@ -356,8 +398,6 @@ namespace GASS
 			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 world_pos = location->GetWorldPosition();
 		
-
-
 			std::stringstream ss;
 			std::ofstream file_ptr;   
 			file_ptr.open(filename.GetFullPath().c_str());      
