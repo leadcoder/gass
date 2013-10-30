@@ -108,6 +108,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityMessage ,0));
 	}
 
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
@@ -295,6 +296,12 @@ namespace GASS
 		m_GeomFlags = flags;
 	}
 
+	void OgreManualMeshComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)
+	{
+		if(m_MeshObject == NULL)
+			return;
+		m_MeshObject->setVisible(message->GetValue());
+	}
 
 	GraphicsMesh OgreManualMeshComponent::GetMeshData() const
 	{

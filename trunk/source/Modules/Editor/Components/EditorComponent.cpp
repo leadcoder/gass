@@ -30,7 +30,6 @@ namespace GASS
 		m_ShowInTree(false),
 		m_AllowRemove(false),
 		m_AllowDragAndDrop(false)
-		
 	{
 		
 	}
@@ -52,7 +51,7 @@ namespace GASS
 		RegisterProperty<bool>("ShowInTree",&EditorComponent::GetShowInTree, &EditorComponent::SetShowInTree);
 		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
 		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
-		RegisterProperty<Vec4>("SelectedColor",&EditorComponent::GetSelectedColor, &EditorComponent::SetSelectedColor);
+		RegisterProperty<ColorRGBA>("SelectedColor",&EditorComponent::GetSelectedColor, &EditorComponent::SetSelectedColor);
 	}
 
 	void EditorComponent::OnInitialize()
@@ -118,10 +117,10 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Visible = message->GetVisible();
-			GetSceneObject()->PostMessage(MessagePtr(new MeshVisibilityMessage(m_Visible)));
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryVisibilityMessage(m_Visible)));
 			GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(m_Visible)));
-			/*
-			if(m_Visible)
+			
+			/*if(m_Visible)
 			{
 
 				//if(m_ChangeMaterialWhenSelected)
@@ -147,18 +146,18 @@ namespace GASS
 		if(!m_ChangeMaterialWhenSelected)
 			return;
 		SceneObjectPtr new_selection = message->GetSceneObject();
-		/*if(GetSceneObject() == new_selection)
+		if(GetSceneObject() == new_selection)
 		{
 			m_Selected = true;
-			if(m_Visible)
-				GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(m_SelectedColor,Vec3(1,1,1))));
+			//if(m_Visible)
+			GetSceneObject()->PostMessage(MessagePtr(new BillboardColorMessage(m_SelectedColor)));
 		}
 		else if(m_Selected)
 		{
-			if(m_Visible)
-				GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(1,1,1))));
+			//if(m_Visible)
+			GetSceneObject()->PostMessage(MessagePtr(new BillboardColorMessage(ColorRGBA(1,1,1,1))));
 			m_Selected = false;
-		}*/
+		}
 	}
 }
 

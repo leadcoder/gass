@@ -16,8 +16,6 @@
 
 #include "Core/Utils/GASSLogManager.h"
 
-
-
 #define MOVMENT_EPSILON 0.0000001
 #define SELECTION_COMP_SENDER 998
 

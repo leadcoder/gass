@@ -1,6 +1,8 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Core/Utils/GASSColorRGB.h"
+
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorSceneManager.h"
@@ -28,7 +30,7 @@ namespace GASS
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
 	private:
-		ADD_PROPERTY(Vec4,SelectedColor)
+		ADD_PROPERTY(ColorRGBA,SelectedColor)
 		
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
 		void OnObjectLock(ObjectLockChangedEventPtr message);

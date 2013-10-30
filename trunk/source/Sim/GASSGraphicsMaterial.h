@@ -38,14 +38,16 @@ namespace GASS
 			Specular(0,0,0),
 			SelfIllumination(0,0,0),
 			Shininess(0), 
-			DepthTest(true)
+			DepthTest(true),
+			DepthWrite(true)
 		{}
-		GraphicsMaterial(const std::string &name, const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true) : Diffuse(diffuse),
+		GraphicsMaterial(const std::string &name, const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true, bool depth_write_on = true) : Diffuse(diffuse),
 			Ambient(ambient),
 			Specular(specular),
 			SelfIllumination(selfIllumination ),
 			Shininess(shininess), 
 			DepthTest(depth_test_on),
+			DepthWrite(depth_write_on),
 			Name(name)
 		{
 
@@ -58,6 +60,7 @@ namespace GASS
 		  std::string Name;
 		  float Shininess;
 		  bool DepthTest;
+		  bool DepthWrite;
 	};
 	typedef SPTR<GraphicsMaterial> GraphicsMaterialPtr;
 

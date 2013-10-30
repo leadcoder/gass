@@ -75,7 +75,6 @@ namespace GASS
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
-
 	void OgreBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
 	{
 		SetGeometryFlags(value.GetValue());
@@ -88,8 +87,9 @@ namespace GASS
 	void OgreBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnMaterialMessage,ReplaceMaterialMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnSetColorMessage,BillboardColorMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnVisibilityMessage,GeometryVisibilityMessage,0));
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -111,6 +111,7 @@ namespace GASS
 
 	void OgreBillboardComponent::SetHeight(float height)
 	{
+
 		m_Height = height;
 		if(m_Billboard) 
 			m_Billboard->setDimensions(m_Width,m_Height);
@@ -161,7 +162,8 @@ namespace GASS
 		billboard->setTexcoordRect(0, 0,1, 1);
 		m_Billboard = billboard;
 		float bbsize = m_Height;
-		if(m_Width > m_Height) bbsize = m_Width;
+		if(m_Width > m_Height) 
+			bbsize = m_Width;
 		bbsize *=  0.5f;
 		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
@@ -191,13 +193,13 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
+	void OgreBillboardComponent::OnSetColorMessage(BillboardColorMessagePtr message)
 	{
-		/*const Vec4 color = message->GetDiffuse();
+		const ColorRGBA color = message->GetColor();
 		if(m_Billboard)
-			m_Billboard->setColour(Ogre::ColourValue(color.x,color.y,color.z,color.w));*/
+			m_Billboard->setColour(Ogre::ColourValue(color.r,color.g,color.b,color.a));
 	}
-
+	
 	void OgreBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)
 	{
 		const Vec3 scale = message->GetScale();
@@ -216,5 +218,14 @@ namespace GASS
 	void OgreBillboardComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+
+	void OgreBillboardComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)
+	{
+		if(m_BillboardSet)
+		{
+			m_BillboardSet->setVisible(message->GetValue());
+		}
 	}
 }

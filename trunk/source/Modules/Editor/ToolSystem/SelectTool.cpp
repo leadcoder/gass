@@ -36,15 +36,13 @@ namespace GASS
 	{
 		m_MouseIsDown = true;
 		SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
-		if(obj_under_cursor)// && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
+		if(obj_under_cursor && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
 		{
 			m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 			if(m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
 			{
 				m_SelectedObject = obj_under_cursor;
 				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,(int) this));
-				//bool value = false;
-				//col_msg->SetData("Enable",value);
 				obj_under_cursor->PostMessage(col_msg);
 			}
 		}

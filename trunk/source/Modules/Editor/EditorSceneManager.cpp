@@ -38,6 +38,7 @@ namespace GASS
 	void EditorSceneManager::OnCreate()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged,CameraChangedEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnPostSceneLoaded,PostSceneLoadEvent,0));
 	}
 
 	void EditorSceneManager::OnInit()
@@ -48,20 +49,20 @@ namespace GASS
 
 		ScenePtr scene = GetScene();
 		m_MouseTools->Init();
+		SetObjectSite(scene->GetRootSceneObject());
+
+		//Load some objects, why???
 		
+		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
+	}
+
+	void EditorSceneManager::OnPostSceneLoaded(PostSceneLoadEventPtr message)
+	{
 		if(!m_SceneObjectsSelectable) //add static objects
 		{
-			IComponentContainer::ComponentContainerIterator iter = scene->GetRootSceneObject()->GetChildren();
-			while(iter.hasMoreElements())
-			{
-				//Lock recursive?
-				SceneObjectPtr obj = STATIC_PTR_CAST<SceneObject>(iter.getNext());
-				AddStaticObject(obj, true);
-			}
+			AddStaticObject(message->GetScene()->GetRootSceneObject(),true);
 		}
-		SetObjectSite(scene->GetRootSceneObject());
-		//Load some objects
-		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
+		SetObjectSite(message->GetScene()->GetRootSceneObject());
 	}
 
 	void EditorSceneManager::OnShutdown()

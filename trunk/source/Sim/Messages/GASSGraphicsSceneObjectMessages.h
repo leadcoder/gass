@@ -27,6 +27,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Core/Utils/GASSColorRGB.h"
 
 
 /**
@@ -241,10 +242,10 @@ namespace GASS
 	typedef SPTR<VisibilityMessage> VisibilityMessagePtr;
 
 
-	class MeshVisibilityMessage : public BaseMessage
+	class GeometryVisibilityMessage : public BaseMessage
 	{
 	public:
-		MeshVisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
+		GeometryVisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
 		  BaseMessage(sender_id , delay), m_Visible(visible)
 		  {
 
@@ -254,7 +255,7 @@ namespace GASS
 		bool m_Visible;
 	};
 
-	typedef SPTR<MeshVisibilityMessage> MeshVisibilityMessagePtr;
+	typedef SPTR<GeometryVisibilityMessage> GeometryVisibilityMessagePtr;
 
 
 
@@ -423,27 +424,6 @@ namespace GASS
 	};
 	typedef SPTR<ReplaceMaterialMessage> ReplaceMaterialMessagePtr;
 
-	/*class MaterialMessage : public BaseMessage
-	{
-	public:
-		MaterialMessage(const Vec4 &diffuse,const Vec3 &ambient,const Vec3 &specular = Vec3(-1,-1,-1), const Vec3 &selfIllumination = Vec3(-1,-1,-1), float shininess = -1,bool depth_test_on = true,SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Diffuse(diffuse),m_Ambient(ambient),m_Specular(specular),m_SelfIllumination(selfIllumination ),m_Shininess(shininess), m_DepthTest(depth_test_on){}
-		  Vec4 GetDiffuse()const {return m_Diffuse;}
-		  Vec3 GetAmbient()const {return m_Ambient;}
-		  Vec3 GetSpecular()const {return m_Specular;}
-		  Vec3 GetSelfIllumination()const {return m_SelfIllumination;}
-		  float GetShininess()const {return m_Shininess;}
-		  bool GetDepthTest()const {return m_DepthTest;}
-	private:
-		Vec4 m_Diffuse;
-		Vec3 m_Ambient;
-		Vec3 m_Specular;
-		Vec3 m_SelfIllumination;
-		float m_Shininess;
-		bool m_DepthTest;
-	};
-	typedef SPTR<MaterialMessage> MaterialMessagePtr;*/
-
 
 	/**
 		Reset material to original state. After sending MaterialMessage request this message can
@@ -456,6 +436,21 @@ namespace GASS
 	private:
 	};
 	typedef SPTR<ResetMaterialMessage> ResetMaterialMessagePtr;
+
+
+	/**
+		Message used to change billboard color
+	*/
+	
+	class BillboardColorMessage  : public BaseMessage
+	{
+	public:
+		BillboardColorMessage(const ColorRGBA &color, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , m_Color(color){}
+		ColorRGBA GetColor() const {return m_Color;}
+	private:
+		ColorRGBA m_Color;
+	};
+	typedef SPTR<BillboardColorMessage> BillboardColorMessagePtr;
 
 
 	/**

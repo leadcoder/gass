@@ -49,11 +49,11 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
-		
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-
 		void OnGeometryScale(GeometryScaleMessagePtr message);
+		void OnVisibilityMessage(GeometryVisibilityMessagePtr message);
+
 		float GetWidth() const;
 		void SetWidth(float width);
 		float GetHeight() const;
@@ -65,11 +65,11 @@ namespace GASS
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
+		void OnSetColorMessage(BillboardColorMessagePtr message);
+		
 		std::string m_RenderQueue;
 		OgreMaterial m_Material;
 		bool m_CastShadow;
-
 		Ogre::BillboardSet* m_BillboardSet;
 		Ogre::Billboard* m_Billboard;
 		float m_Width;

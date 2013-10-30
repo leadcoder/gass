@@ -57,7 +57,7 @@ namespace GASS
 		void UnhideObject(SceneObjectWeakPtr obj);
 		void HideObject(SceneObjectWeakPtr obj);
 		bool IsObjectStatic(SceneObjectWeakPtr obj);
-		void AddStaticObject(SceneObjectPtr obj, bool rec);
+		
 	
 		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
 		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
@@ -69,7 +69,8 @@ namespace GASS
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,NO_THROW);}
 
 	protected:
-
+		void OnPostSceneLoaded(PostSceneLoadEventPtr message);
+		void AddStaticObject(SceneObjectPtr obj, bool rec);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;

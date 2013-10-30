@@ -413,8 +413,8 @@ namespace GASS
 		mat->setSpecular(specular.r,specular.g,specular.b,1);
 		mat->setSelfIllumination(si.r,si.g,si.b);
 		mat->setShininess(material.Shininess);
-		mat->setDepthCheckEnabled(true);
-		mat->setDepthWriteEnabled(true);
+		mat->setDepthCheckEnabled(material.DepthTest);
+		mat->setDepthWriteEnabled(material.DepthWrite);
 		
 		/*if(diffuse.w < 1.0)
 		{

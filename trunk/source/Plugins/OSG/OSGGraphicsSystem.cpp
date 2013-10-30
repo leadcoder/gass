@@ -634,9 +634,14 @@ namespace GASS
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 		else
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+
+		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
+		depth->setWriteMask( material.DepthWrite );
+		state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
 		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		
 		// Turn on blending
-		if(diffuse.a < 1.0)
+		if(diffuse.a < 1.0) //TODO: provide blending mode in material!
 		{
 			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			state_set->setAttributeAndModes(bf);

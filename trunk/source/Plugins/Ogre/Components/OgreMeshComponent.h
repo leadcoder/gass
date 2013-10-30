@@ -99,7 +99,7 @@ namespace GASS
 		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
 		void OnResetMaterial(ResetMaterialMessagePtr message);
 
-		void OnVisibilityMessage(MeshVisibilityMessagePtr message);
+		void OnVisibilityMessage(GeometryVisibilityMessagePtr message);
 		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
