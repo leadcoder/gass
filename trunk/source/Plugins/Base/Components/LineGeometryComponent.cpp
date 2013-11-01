@@ -244,7 +244,7 @@ namespace GASS
 				for (int j = 0; j < num_horizontal_pts; j++) 
 					curr_vertices[j].y = curr_height + m_Offset; 
 			}
-			last_pos = curr_vertices[2]; 
+			last_pos = curr_vertices[1]; 
 			
 			for (int j = 1; j < num_horizontal_pts; j++) 
 			{ 
