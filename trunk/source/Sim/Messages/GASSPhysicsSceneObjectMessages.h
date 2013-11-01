@@ -80,6 +80,45 @@ namespace GASS
 
 	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
+
+	/**
+	Event casted by joints to inform about applied forces.
+	*/
+	class PhysicsJointForceEvent : public BaseMessage
+	{
+	public:
+		PhysicsJointForceEvent(const Vec3 &force, const Vec3 &torq, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Force(force), m_Torque(torq)
+		  {
+
+		  }
+		  Vec3 GetForce()const {return m_Force;}
+		  Vec3 GetTorque()const {return m_Torque;}
+	private:
+		Vec3 m_Force;
+		Vec3 m_Torque;
+	};
+	typedef SPTR<PhysicsJointForceEvent > PhysicsJointForceEventPtr;
+
+	/**
+	Event casted by joints to inform about local velocities.
+	*/
+	class PhysicsJointVelocityEvent : public BaseMessage
+	{
+	public:
+		PhysicsJointVelocityEvent(const Vec3 &linear, const Vec3 &angular, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_Linear(linear), m_Angular(angular)
+		  {
+
+		  }
+		  Vec3 GetLinearVelocity()const {return m_Linear;}
+		  Vec3 GetAngularVelocity()const {return m_Angular;}
+	private:
+		Vec3 m_Linear;
+		Vec3 m_Angular;
+	};
+	typedef SPTR<PhysicsJointVelocityEvent> PhysicsJointVelocityEventPtr;
+	
 	/**
 	Set desired linear velocity for prismatic joint. 
 	*/
@@ -115,7 +154,7 @@ namespace GASS
 	typedef SPTR<PhysicsPrismaticJointPositionRequest> PhysicsPrismaticJointPositionRequestPtr;
 
 
-		/**
+	/**
 	Set max force used by a prismatic joint to get to it's desired velocity 
 	*/
 
