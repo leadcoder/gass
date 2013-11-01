@@ -18,37 +18,61 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef PRISMATIC_INTERACTION_COMPONENT_H
-#define PRISMATIC_INTERACTION_COMPONENT_H
+#include "PhysicsProxyComponent.h"
+#include "GameMessages.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Plugins/Game/GameSceneManager.h"
 
 
-#include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 
 
 namespace GASS
 {
-
-	class SceneObject;
-	typedef SPTR<SceneObject> SceneObjectPtr;
-	typedef WPTR<SceneObject> SceneObjectWeakPtr;
-
-	class PrismaticInteractionComponent :  public Reflection<PrismaticInteractionComponent,BaseSceneComponent>
+	PhysicsProxyComponent::PhysicsProxyComponent() 
 	{
-	public:
-		PrismaticInteractionComponent();
-		virtual ~PrismaticInteractionComponent();
-		static void RegisterReflection();
-		virtual void OnInitialize();
-	private:
-		ADD_PROPERTY(std::string,InputMapping);
-		ADD_PROPERTY(Float,MaxVelocity);
-		void OnInput(InputControllerMessagePtr message);
-	};
+
+	}
+
+	PhysicsProxyComponent::~PhysicsProxyComponent()
+	{
+
+	}
+
+	void PhysicsProxyComponent::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("PhysicsProxyComponent",new Creator<PhysicsProxyComponent, IComponent>);
+	}
+
+	void PhysicsProxyComponent::OnInitialize()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysicsProxyComponent::OnForceEvent,PhysicsJointForceEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysicsProxyComponent::OnVelocityEvent,PhysicsJointVelocityEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysicsProxyComponent::OnHingeVelocity,PhysicsHingeJointVelocityRequest,0));
+	}
+
+	void PhysicsProxyComponent::OnVelocityEvent(PhysicsJointVelocityEventPtr message)
+	{
+		
+	}
+
+	void PhysicsProxyComponent::OnForceEvent(PhysicsJointForceEventPtr message)
+	{
+
+	}
+
+	void PhysicsProxyComponent::OnHingeVelocity(PhysicsHingeJointVelocityRequestPtr message)
+	{
+
+	}
 }
-#endif

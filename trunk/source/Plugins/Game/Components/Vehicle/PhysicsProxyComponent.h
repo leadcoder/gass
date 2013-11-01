@@ -18,12 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef PRISMATIC_INTERACTION_COMPONENT_H
-#define PRISMATIC_INTERACTION_COMPONENT_H
+#ifndef PHYSICS_PROXY_COMPONENT_H
+#define PHYSICS_PROXY_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -33,22 +34,18 @@
 
 namespace GASS
 {
-
-	class SceneObject;
-	typedef SPTR<SceneObject> SceneObjectPtr;
-	typedef WPTR<SceneObject> SceneObjectWeakPtr;
-
-	class PrismaticInteractionComponent :  public Reflection<PrismaticInteractionComponent,BaseSceneComponent>
+	class PhysicsProxyComponent :  public Reflection<PhysicsProxyComponent,BaseSceneComponent>
 	{
 	public:
-		PrismaticInteractionComponent();
-		virtual ~PrismaticInteractionComponent();
+		PhysicsProxyComponent();
+		virtual ~PhysicsProxyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		ADD_PROPERTY(std::string,InputMapping);
-		ADD_PROPERTY(Float,MaxVelocity);
-		void OnInput(InputControllerMessagePtr message);
+		ADD_PROPERTY(SceneObjectRef,TargetObject);
+		void OnForceEvent(PhysicsJointForceEventPtr message);
+		void OnVelocityEvent(PhysicsJointVelocityEventPtr message);
+		void OnHingeVelocity(PhysicsHingeJointVelocityRequestPtr message);
 	};
 }
 #endif

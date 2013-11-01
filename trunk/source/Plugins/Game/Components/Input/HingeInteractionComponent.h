@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef STEER_COMPONENT_H
-#define STEER_COMPONENT_H
+#ifndef HINGE_INTERACTION_COMPONENT_H
+#define HINGE_INTERACTION_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"

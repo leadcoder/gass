@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef PRISMATIC_INTERACTION_COMPONENT_H
-#define PRISMATIC_INTERACTION_COMPONENT_H
+#ifndef FORCE_TO_SOUND_COMPONENT_H
+#define FORCE_TO_SOUND_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
@@ -38,17 +38,28 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
-	class PrismaticInteractionComponent :  public Reflection<PrismaticInteractionComponent,BaseSceneComponent>
+	class ForceToSoundComponent :  public Reflection<ForceToSoundComponent,BaseSceneComponent>
 	{
 	public:
-		PrismaticInteractionComponent();
-		virtual ~PrismaticInteractionComponent();
+		ForceToSoundComponent();
+		virtual ~ForceToSoundComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void SceneManagerTick(double delta_time);
 	private:
 		ADD_PROPERTY(std::string,InputMapping);
-		ADD_PROPERTY(Float,MaxVelocity);
-		void OnInput(InputControllerMessagePtr message);
+		ADD_PROPERTY(Float,MaxAngularVelocity);
+		void OnForceEvent(PhysicsJointForceEventPtr message);
+		void OnVelocityEvent(PhysicsJointVelocityEventPtr message);
+		void OnHingeVelocity(PhysicsHingeJointVelocityRequestPtr message);
+
+		Float m_Pitch;
+		Float m_TargetPitch;
+		//Float m_CurrentVel;
+		Vec3 m_CurrentVel;
+		Vec3 m_CurrentAcc;
+		double m_DT;
+		Float m_CurrentVelRequest;
 	};
 }
 #endif
