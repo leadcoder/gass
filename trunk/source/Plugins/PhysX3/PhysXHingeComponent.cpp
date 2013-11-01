@@ -65,7 +65,6 @@ namespace GASS
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXHingeComponent::GetOffset, &GASS::PhysXHingeComponent::SetOffset);
 		RegisterProperty<float>("Spring", &GASS::PhysXHingeComponent::GetSpring, &GASS::PhysXHingeComponent::SetSpring);
 		RegisterProperty<float>("Damping", &GASS::PhysXHingeComponent::GetDamping, &GASS::PhysXHingeComponent::SetDamping);
-
 	}
 
 	void PhysXHingeComponent::OnInitialize()
@@ -135,6 +134,9 @@ namespace GASS
 		SetEnableDrive(m_EnableDrive);
 		SetDriveForceLimit(m_DriveForceLimit);
 		UpdateLimits();
+		
+		m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::eREPORTING,m_ForceReport);
+
 		//m_RevoluteJoint->setProjectionLinearTolerance(0.01);
 		//m_RevoluteJoint->setProjectionAngularTolerance(0.01);
 		//m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::ePROJECTION, true);
@@ -194,9 +196,30 @@ namespace GASS
 	void PhysXHingeComponent::SceneManagerTick(double delta_time)
 	{
 		m_TargetAngle -= m_DriveTargetVelocity*delta_time;
-		//std::cout << m_DriveTargetVelocity << " Angle:" << m_TargetAngle << "\n";
+		
 		//clamp to limits
 		UpdateMotor();
+
+		if(m_ForceReport)
+		{
+
+			physx::PxRigidActor* a1,*a2;
+			m_RevoluteJoint->getActors(a1,a2);
+			physx::PxVec3 force,torque;
+			GetJoint()->getConstraint()->getForce(force, torque);
+			//torque = a1->getGlobalPose().rotateInv(torque);
+			//force = a1->getGlobalPose().rotateInv(force);
+
+			PhysicsJointForceEventPtr force_message(new PhysicsJointForceEvent(PxConvert::ToGASS(force), PxConvert::ToGASS(torque)));
+			GetSceneObject()->PostMessage(force_message);
+			//std::cout << " Torque:" << PxConvert::ToGASS(torque) << " Force: " << PxConvert::ToGASS(force) << std::endl;
+			
+			
+			physx::PxVec3 vel = a2->is<physx::PxRigidDynamic>()->getAngularVelocity();
+			vel = a1->getGlobalPose().rotateInv(vel);
+			PhysicsJointVelocityEventPtr vel_message(new PhysicsJointVelocityEvent(Vec3(0,0,0), PxConvert::ToGASS(vel)));
+			GetSceneObject()->PostMessage(vel_message);
+		}
 	}
 
 
@@ -208,6 +231,31 @@ namespace GASS
 			physx::PxQuat rot(m_TargetAngle, physx::PxVec3(1,0,0));
 			physx::PxTransform drive_trans(physx::PxVec3(0,0,0), rot); 
 			m_RevoluteJoint->setDrivePosition(drive_trans);
+
+			
+
+
+			/*if(m_ForceReport)
+			{
+				//const physx::PxF32 cosTheta=physx::PxAbs(a1->getGlobalPose().q.getBasisVector1().y);
+				//const physx::PxF32 theta=physx::PxAcos(cosTheta);
+				//std::cout <<"Y: " << theta;
+				physx::PxF32 theta;
+				physx::PxVec3 axis;
+				
+				physx::PxTransform inv_t = a1->getGlobalPose().getInverse();
+				physx::PxTransform local_t = inv_t.transform(a2->getGlobalPose());
+				local_t.q.toRadiansAndUnitAxis(theta,axis);
+				physx::PxVec3 vel = a2->is<physx::PxRigidDynamic>()->getAngularVelocity();
+				vel = a1->getGlobalPose().rotateInv(vel);
+				std::cout <<"Vel:" << vel.x << " " << vel.y << " " << vel.z << std::endl;
+				//inv_t.transform()
+				//std::cout <<"A: " << theta << " axis:" << axis.x << " " << axis.y << " " <<axis.z << std::endl;
+				physx::PxQuat q1 = a1->getGlobalPose().q;
+				physx::PxQuat q2 = a2->getGlobalPose().q;
+				physx::PxReal angle = q1.getAngle(q2);
+				std::cout <<"A: " << angle << std::endl;
+			}*/
 			//m_RevoluteJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_DriveTargetVelocity,m_DriveTargetVelocity,m_DriveTargetVelocity));
 			//m_RevoluteJoint->setDriveForceLimit(m_DriveForceLimit);
 			//m_RevoluteJoint->setBreakForce(1000000,1000000);

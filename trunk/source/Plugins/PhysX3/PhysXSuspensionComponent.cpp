@@ -236,7 +236,7 @@ namespace GASS
 	void PhysXSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 	{
 		MessagePtr joint_message;
-		/*if(m_Joint)
+	/*	if(m_Joint)
 		{
 		physx::PxTransform  t1  = m_RollAxisActor->getGlobalPose();
 		physx::PxTransform  t2 = m_WheelActor->getGlobalPose();

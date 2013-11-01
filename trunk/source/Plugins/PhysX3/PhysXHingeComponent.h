@@ -42,6 +42,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void CreateJoint();
+		physx::PxJoint* GetJoint() const  {return m_RevoluteJoint;}
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);

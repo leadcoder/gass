@@ -703,7 +703,7 @@ namespace GASS
 		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
 		GetSceneObject()->PostMessage(sound_msg);
 
-		std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
+		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 
 		/*std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();

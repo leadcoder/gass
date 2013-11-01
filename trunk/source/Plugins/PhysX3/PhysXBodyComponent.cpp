@@ -32,7 +32,8 @@ namespace GASS
 		m_DisableGravity(false),
 		m_EffectJoints(true),
 		m_PositionIterCount(4),
-		m_VelocityIterCount(4)
+		m_VelocityIterCount(4),
+		m_ForceReport(false)
 	{
 
 	}
@@ -82,10 +83,8 @@ namespace GASS
 		m_Actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, m_DisableGravity);
 		//transfer loaded attributes to actor
 		SetKinematic(m_Kinematic);
-
 		m_Actor->setSolverIterationCounts(m_PositionIterCount,m_VelocityIterCount);
 		
-		//SetMass(m_Mass);
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
@@ -247,8 +246,6 @@ namespace GASS
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 		
-//		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
-//		GetSceneObject()->PostMessage(physics_msg);
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec)
@@ -281,6 +278,7 @@ namespace GASS
 		Vec3 vel(0,0,0);
 		if(m_Actor)
 		{
+			
 			physx::PxVec3 pxvel = m_Actor->getAngularVelocity();
 			vel.Set(pxvel.x,pxvel.y,pxvel.z);
 		}

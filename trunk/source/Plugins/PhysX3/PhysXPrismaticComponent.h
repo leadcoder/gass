@@ -43,6 +43,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void CreateJoint();
 		virtual void SceneManagerTick(double delta_time);
+		physx::PxJoint* GetJoint() const  {return m_PrismaticJoint;}
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsPrismaticJointVelocityRequestPtr message);

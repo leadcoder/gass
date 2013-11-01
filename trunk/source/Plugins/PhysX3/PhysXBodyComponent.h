@@ -53,6 +53,8 @@ namespace GASS
 		ADD_PROPERTY(bool,DisableGravity)
 		ADD_PROPERTY(int,PositionIterCount)
 		ADD_PROPERTY(int,VelocityIterCount)
+		ADD_PROPERTY(bool,ForceReport)
+		
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);

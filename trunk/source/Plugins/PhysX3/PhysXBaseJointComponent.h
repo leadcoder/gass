@@ -40,9 +40,12 @@ namespace GASS
 		virtual ~PhysXBaseJointComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual physx::PxJoint* GetJoint() const  = 0;
+		//virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnBody1Loaded(BodyLoadedMessagePtr message);
 		void OnBody2Loaded(BodyLoadedMessagePtr message);
+		ADD_PROPERTY(bool,ForceReport)
 
 		//get set section
 		SceneObjectRef GetBody1() const {return m_Body1;}
