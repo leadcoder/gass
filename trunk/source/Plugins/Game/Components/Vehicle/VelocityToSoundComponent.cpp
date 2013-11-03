@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "ForceToSoundComponent.h"
+#include "VelocityToSoundComponent.h"
 #include "GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -39,31 +39,33 @@
 
 namespace GASS
 {
-	ForceToSoundComponent::ForceToSoundComponent() : 
+	VelocityToSoundComponent::VelocityToSoundComponent() : 
 		m_TargetPitch(1.0),
 		m_Pitch(1.0),
-		m_MaxVelRequest(0),
-		m_MaxForce(0),
-		m_ForceLimit(300)
+		m_Volume(1.0),
+		m_MinMaxVolume(0,1),
+		m_MinMaxPitch(1,1),
+		m_VelocityLimit(16)
 	{
 
 	}
 
-	ForceToSoundComponent::~ForceToSoundComponent()
+	VelocityToSoundComponent::~VelocityToSoundComponent()
 	{
 
 	}
 
-	void ForceToSoundComponent::RegisterReflection()
+	void VelocityToSoundComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ForceToSoundComponent",new Creator<ForceToSoundComponent, IComponent>);
-		RegisterVectorProperty<Vec2>("ForceToPitch", &ForceToSoundComponent::GetForceToPitch, &ForceToSoundComponent::SetForceToPitch);
-		REG_PROPERTY(Float ,ForceLimit,ForceToSoundComponent);
+		ComponentFactory::GetPtr()->Register("VelocityToSoundComponent",new Creator<VelocityToSoundComponent, IComponent>);
+		RegisterProperty<Vec2>("MinMaxPitch", &VelocityToSoundComponent::GetMinMaxPitch, &VelocityToSoundComponent::SetMinMaxPitch);
+		RegisterProperty<Vec2>("MinMaxVolume", &VelocityToSoundComponent::GetMinMaxVolume, &VelocityToSoundComponent::SetMinMaxVolume);
+		REG_PROPERTY(Float ,VelocityLimit,VelocityToSoundComponent);
 	}
 
-	void ForceToSoundComponent::OnInitialize()
+	void VelocityToSoundComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ForceToSoundComponent::OnHingeReport,PhysicsHingeJointReportEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VelocityToSoundComponent::OnHingeReport,PhysicsHingeJointReportEvent,0));
 		
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -73,38 +75,47 @@ namespace GASS
 		GetSceneObject()->PostMessage(sound_msg);
 	}
 
-	void ForceToSoundComponent::SceneManagerTick(double delta_time)
+	void VelocityToSoundComponent::SceneManagerTick(double delta_time)
 	{
-		//m_DT = delta_time;
-		m_TargetPitch = 1.2;
-		Float normalized_force = std::min<Float>(1.0, m_MaxForce/m_ForceLimit);
+		//std::cout << m_MaxVelRequest << std::endl;
+		m_TargetPitch = 1.0;
+		Float normalized_vel = std::min<Float>(1.0, m_MaxVelRequest/m_VelocityLimit);
 
-		if(abs(m_MaxVelRequest) > 0.05)
-		{
-			for(size_t i = 0; i < m_ForceToPitch.size(); i++)
-			{
-				if(normalized_force > m_ForceToPitch[i].x)
-					m_TargetPitch = m_ForceToPitch[i].y;
-			}
-		}
-		
-		if(m_TargetPitch > m_Pitch) 
+		m_TargetPitch = m_MinMaxPitch.x + normalized_vel* (m_MinMaxPitch.y-m_MinMaxPitch.x);
+		m_Pitch  = m_TargetPitch ; 
+		/*if(m_TargetPitch > m_Pitch) 
 			m_Pitch += delta_time*0.5;
 		else
 			m_Pitch -= delta_time*0.5;
+		*/
 
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch));
-		GetSceneObject()->PostMessage(sound_msg);
+		m_Pitch = std::max<Float>(m_Pitch,m_MinMaxPitch.x);
+		m_Pitch = std::min<Float>(m_Pitch,m_MinMaxPitch.y);
+
+		m_TargetVolume = 0.0;
+		
+		m_TargetVolume = m_MinMaxVolume.x + normalized_vel* (m_MinMaxVolume.y-m_MinMaxVolume.x);
+		m_Volume = m_TargetVolume; 
+		/*if(m_TargetVolume > m_Volume) 
+			m_Volume += delta_time*2.1;
+		else
+			m_Volume -= delta_time*2.1;
+			*/
+		m_Volume = std::max<Float>(m_Volume,m_MinMaxVolume.x);
+		m_Volume = std::min<Float>(m_Volume,m_MinMaxVolume.y);
+	
+		MessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch));
+		GetSceneObject()->PostMessage(pitch_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,m_Volume));
+		GetSceneObject()->PostMessage(volume_msg);
 
 		//reset!
 		m_MaxVelRequest = 0;
-		m_MaxForce = 0;
 	}
 
-	void ForceToSoundComponent::OnHingeReport(PhysicsHingeJointReportEventPtr message)
+	void VelocityToSoundComponent::OnHingeReport(PhysicsHingeJointReportEventPtr message)
 	{
-		Float t = message->GetForce().Length();
-		m_MaxForce = std::max<Float>(t,m_MaxForce);
 		m_MaxVelRequest = std::max<Float>(abs(message->GetTargetVelocity()),m_MaxVelRequest);
 	}
 	

@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "ForceToSoundComponent.h"
+#include "PhysicsReportProxyComponent.h"
 #include "GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -39,73 +39,30 @@
 
 namespace GASS
 {
-	ForceToSoundComponent::ForceToSoundComponent() : 
-		m_TargetPitch(1.0),
-		m_Pitch(1.0),
-		m_MaxVelRequest(0),
-		m_MaxForce(0),
-		m_ForceLimit(300)
+	PhysicsReportProxyComponent::PhysicsReportProxyComponent() 
 	{
 
 	}
 
-	ForceToSoundComponent::~ForceToSoundComponent()
+	PhysicsReportProxyComponent::~PhysicsReportProxyComponent()
 	{
 
 	}
 
-	void ForceToSoundComponent::RegisterReflection()
+	void PhysicsReportProxyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ForceToSoundComponent",new Creator<ForceToSoundComponent, IComponent>);
-		RegisterVectorProperty<Vec2>("ForceToPitch", &ForceToSoundComponent::GetForceToPitch, &ForceToSoundComponent::SetForceToPitch);
-		REG_PROPERTY(Float ,ForceLimit,ForceToSoundComponent);
+		ComponentFactory::GetPtr()->Register("PhysicsReportProxyComponent",new Creator<PhysicsReportProxyComponent, IComponent>);
+		RegisterProperty<SceneObjectRef>("TargetObject", &PhysicsReportProxyComponent::GetTargetObject, &PhysicsReportProxyComponent::SetTargetObject);
 	}
 
-	void ForceToSoundComponent::OnInitialize()
+	void PhysicsReportProxyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ForceToSoundComponent::OnHingeReport,PhysicsHingeJointReportEvent,0));
-		
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-
-		//Play engine sound
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(sound_msg);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysicsReportProxyComponent::OnHingeJointReport,PhysicsHingeJointReportEvent,0));
 	}
 
-	void ForceToSoundComponent::SceneManagerTick(double delta_time)
+	void PhysicsReportProxyComponent::OnHingeJointReport(PhysicsHingeJointReportEventPtr message)
 	{
-		//m_DT = delta_time;
-		m_TargetPitch = 1.2;
-		Float normalized_force = std::min<Float>(1.0, m_MaxForce/m_ForceLimit);
-
-		if(abs(m_MaxVelRequest) > 0.05)
-		{
-			for(size_t i = 0; i < m_ForceToPitch.size(); i++)
-			{
-				if(normalized_force > m_ForceToPitch[i].x)
-					m_TargetPitch = m_ForceToPitch[i].y;
-			}
-		}
-		
-		if(m_TargetPitch > m_Pitch) 
-			m_Pitch += delta_time*0.5;
-		else
-			m_Pitch -= delta_time*0.5;
-
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch));
-		GetSceneObject()->PostMessage(sound_msg);
-
-		//reset!
-		m_MaxVelRequest = 0;
-		m_MaxForce = 0;
+		if(m_TargetObject.IsValid())
+			m_TargetObject->SendImmediate(message);
 	}
-
-	void ForceToSoundComponent::OnHingeReport(PhysicsHingeJointReportEventPtr message)
-	{
-		Float t = message->GetForce().Length();
-		m_MaxForce = std::max<Float>(t,m_MaxForce);
-		m_MaxVelRequest = std::max<Float>(abs(message->GetTargetVelocity()),m_MaxVelRequest);
-	}
-	
 }

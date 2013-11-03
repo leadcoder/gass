@@ -18,12 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef FORCE_TO_SOUND_COMPONENT_H
-#define FORCE_TO_SOUND_COMPONENT_H
+#ifndef PHYSICS_PROXY_COMPONENT_H
+#define PHYSICS_PROXY_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -33,31 +34,16 @@
 
 namespace GASS
 {
-
-	class SceneObject;
-	typedef SPTR<SceneObject> SceneObjectPtr;
-	typedef WPTR<SceneObject> SceneObjectWeakPtr;
-
-	class ForceToSoundComponent :  public Reflection<ForceToSoundComponent,BaseSceneComponent>
+	class PhysicsReportProxyComponent :  public Reflection<PhysicsReportProxyComponent,BaseSceneComponent>
 	{
 	public:
-		ForceToSoundComponent();
-		virtual ~ForceToSoundComponent();
+		PhysicsReportProxyComponent();
+		virtual ~PhysicsReportProxyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
 	private:
-		//ADD_PROPERTY(std::string,InputMapping);
-		//ADD_PROPERTY(Float,MaxAngularVelocity);
-		ADD_PROPERTY(std::vector<Vec2>,ForceToPitch)
-		ADD_PROPERTY(Float,ForceLimit)
-		
-		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
-		Float m_Pitch;
-		Float m_TargetPitch;
-		Float m_MaxVelRequest;
-		Float m_MaxForce;
-		
+		ADD_PROPERTY(SceneObjectRef,TargetObject);
+		void OnHingeJointReport(PhysicsHingeJointReportEventPtr message);
 	};
 }
 #endif
