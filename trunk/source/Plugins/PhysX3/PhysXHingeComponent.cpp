@@ -135,7 +135,7 @@ namespace GASS
 		SetDriveForceLimit(m_DriveForceLimit);
 		UpdateLimits();
 		
-		m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::eREPORTING,m_ForceReport);
+		m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::eREPORTING,m_Report);
 
 		//m_RevoluteJoint->setProjectionLinearTolerance(0.01);
 		//m_RevoluteJoint->setProjectionAngularTolerance(0.01);
@@ -148,10 +148,10 @@ namespace GASS
 		m_EnableLimit = value;
 		if(m_RevoluteJoint)
 		{
-			if(m_EnableLimit)
+			/*if(m_EnableLimit)
 				m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eLIMITED);
 			else
-				m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
+				m_RevoluteJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);*/
 		}
 		if(m_EnableLimit)
 			UpdateLimits();
@@ -189,18 +189,34 @@ namespace GASS
 	{
 		if(m_RevoluteJoint && m_EnableLimit)
 		{
-			m_RevoluteJoint->setSwingLimit(physx::PxJointLimitCone(m_HighStop,m_HighStop,0.1));
+	//		m_RevoluteJoint->setSwingLimit(physx::PxJointLimitCone(m_HighStop,m_HighStop,0.1));
 		}
 	}
 
 	void PhysXHingeComponent::SceneManagerTick(double delta_time)
 	{
 		m_TargetAngle -= m_DriveTargetVelocity*delta_time;
-		
+
+		if(m_EnableLimit)
+		{
+			if(m_TargetAngle > m_HighStop)
+			{
+				if(m_DriveTargetVelocity < 0)
+					m_DriveTargetVelocity = 0;
+				m_TargetAngle = m_HighStop;
+			}
+
+			if(m_TargetAngle < m_LowStop)
+			{
+				if(m_DriveTargetVelocity > 0)
+					m_DriveTargetVelocity = 0;
+				m_TargetAngle = m_LowStop;
+			}
+		}
 		//clamp to limits
 		UpdateMotor();
 
-		if(m_ForceReport)
+		if(m_Report)
 		{
 
 			physx::PxRigidActor* a1,*a2;
@@ -210,15 +226,13 @@ namespace GASS
 			//torque = a1->getGlobalPose().rotateInv(torque);
 			//force = a1->getGlobalPose().rotateInv(force);
 
-			PhysicsJointForceEventPtr force_message(new PhysicsJointForceEvent(PxConvert::ToGASS(force), PxConvert::ToGASS(torque)));
-			GetSceneObject()->PostMessage(force_message);
+			PhysicsHingeJointReportEventPtr report_message(new PhysicsHingeJointReportEvent(m_DriveTargetVelocity,PxConvert::ToGASS(force), PxConvert::ToGASS(torque)));
+			GetSceneObject()->PostMessage(report_message);
 			//std::cout << " Torque:" << PxConvert::ToGASS(torque) << " Force: " << PxConvert::ToGASS(force) << std::endl;
-			
-			
-			physx::PxVec3 vel = a2->is<physx::PxRigidDynamic>()->getAngularVelocity();
+			/*physx::PxVec3 vel = a2->is<physx::PxRigidDynamic>()->getAngularVelocity();
 			vel = a1->getGlobalPose().rotateInv(vel);
 			PhysicsJointVelocityEventPtr vel_message(new PhysicsJointVelocityEvent(Vec3(0,0,0), PxConvert::ToGASS(vel)));
-			GetSceneObject()->PostMessage(vel_message);
+			GetSceneObject()->PostMessage(vel_message);*/
 		}
 	}
 
@@ -235,7 +249,7 @@ namespace GASS
 			
 
 
-			/*if(m_ForceReport)
+			/*if(m_Report)
 			{
 				//const physx::PxF32 cosTheta=physx::PxAbs(a1->getGlobalPose().q.getBasisVector1().y);
 				//const physx::PxF32 theta=physx::PxAcos(cosTheta);

@@ -45,7 +45,7 @@ namespace GASS
 	protected:
 		void OnBody1Loaded(BodyLoadedMessagePtr message);
 		void OnBody2Loaded(BodyLoadedMessagePtr message);
-		ADD_PROPERTY(bool,ForceReport)
+		ADD_PROPERTY(bool,Report)
 
 		//get set section
 		SceneObjectRef GetBody1() const {return m_Body1;}

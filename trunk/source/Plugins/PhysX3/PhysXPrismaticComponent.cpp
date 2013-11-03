@@ -208,12 +208,12 @@ namespace GASS
 		//clamp to limits
 		UpdateMotor();
 
-		if(m_ForceReport)
+		if(m_Report)
 		{
-			physx::PxVec3 force,torque;
+			/*physx::PxVec3 force,torque;
 			GetJoint()->getConstraint()->getForce(force, torque);
 			PhysicsJointForceEventPtr message(new PhysicsJointForceEvent(PxConvert::ToGASS(force),PxConvert::ToGASS(torque)));
-			GetSceneObject()->PostMessage(message);
+			GetSceneObject()->PostMessage(message);*/
 		}
 	}
 

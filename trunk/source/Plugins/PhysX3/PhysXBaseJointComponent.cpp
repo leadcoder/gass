@@ -30,7 +30,7 @@ namespace GASS
 {
 	PhysXBaseJointComponent::PhysXBaseJointComponent() : m_Body1Loaded(false),
 		m_Body2Loaded(false),
-		m_ForceReport(false)
+		m_Report(false)
 	{
 
 	}
@@ -44,7 +44,7 @@ namespace GASS
 	{
 		REG_PROPERTY(SceneObjectRef,Body1,PhysXBaseJointComponent);
 		REG_PROPERTY(SceneObjectRef,Body2,PhysXBaseJointComponent);
-		REG_PROPERTY(bool,ForceReport,PhysXBaseJointComponent)
+		REG_PROPERTY(bool,Report,PhysXBaseJointComponent)
 
 	}
 
@@ -87,7 +87,7 @@ namespace GASS
 		if(m_Body1Loaded && m_Body2Loaded)
 			CreateJoint();
 
-		/*if(m_ForceReport)
+		/*if(m_Report)
 		{
 			PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 			SceneManagerListenerPtr listener = shared_from_this();
