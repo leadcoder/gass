@@ -15,8 +15,8 @@
 			<PhysicsBodyComponent>
 				<Mass value="1.0"/>
 				<DisableGravity value="true"/>
-				<PositionIterCount value="6"/>
-				<VelocityIterCount value="6"/>
+				<PositionIterCount value="50"/>
+				<VelocityIterCount value="50"/>
 			</PhysicsBodyComponent>
 			<PhysicsHingeComponent>
 				<Body1 value="HOUSE"/>
@@ -25,10 +25,15 @@
 				<RotationAxis value="1 0 0"/>
 				<Damping value="200000.0"/>
 				<Spring value="100000000.0"/>
+				<Report value="true"/>
+				<HighStop value="0.6"/>
+				<LowStop value="-0.9"/>
+				<EnableLimits value ="true"/>
 			</PhysicsHingeComponent>
 			<HingeInteractionComponent>
-				<InputMapping value="CraneSteer2"/>
+				<InputMapping value="Boom1"/>
 				<MaxAngularVelocity value = "13"/>
+
 			</HingeInteractionComponent>
 			<InputProxyComponent>
 				<InputHandlerObject value="UNDERCARRIAGE"/>
@@ -36,6 +41,21 @@
 			<PhysicsConvexGeometryComponent>
 				<SimulationCollision value="true"/>
 			</PhysicsConvexGeometryComponent>
+			<PhysicsReportProxyComponent>
+				<TargetObject value="HOUSE"/>
+			</PhysicsReportProxyComponent>
+			<VelocityToSoundComponent>
+				<MinMaxVolume value="0 0.13"/>
+				<MinMaxPitch value="0.93 1.0"/>
+				<VelocityLimit value = "0.2"/>
+			</VelocityToSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="HydraulicSound"/>
+				<SoundFile value="hydraulic3.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
@@ -70,8 +90,8 @@
 					<PhysicsBodyComponent>
 						<Mass value="1.0"/>
 						<DisableGravity value="true"/>
-						<PositionIterCount value="6"/>
-						<VelocityIterCount value="6"/>
+						<PositionIterCount value="50"/>
+						<VelocityIterCount value="50"/>
 					</PhysicsBodyComponent>
 					<PhysicsHingeComponent>
 						<Body1 value="MAIN_BOOM"/>
@@ -80,9 +100,13 @@
 						<RotationAxis value="1 0 0"/>
 						<Damping value="100000.0"/>
 						<Spring value="50000000.0"/>
+						<Report value="true"/>
+						<HighStop value="0.6"/>
+						<LowStop value="-0.6"/>
+						<EnableLimits value ="true"/>
 					</PhysicsHingeComponent>
 					<HingeInteractionComponent>
-						<InputMapping value="CraneSteer3"/>
+						<InputMapping value="Boom2"/>
 						<MaxAngularVelocity value = "20"/>
 					</HingeInteractionComponent>
 					<InputProxyComponent>
@@ -91,6 +115,21 @@
 					<PhysicsConvexGeometryComponent>
 						<SimulationCollision value="false"/>
 					</PhysicsConvexGeometryComponent>
+					<PhysicsReportProxyComponent>
+						<TargetObject value="HOUSE"/>
+					</PhysicsReportProxyComponent>
+					<VelocityToSoundComponent>
+						<MinMaxVolume value="0 0.13"/>
+						<MinMaxPitch value="0.93 1.0"/>
+						<VelocityLimit value = "0.2"/>
+					</VelocityToSoundComponent>
+					<OpenALSoundComponent>
+						<Name value="HydraulicSound"/>
+						<SoundFile value="hydraulic3.wav"/>
+						<Loop value="1"/>
+						<MinDistance value="5"/>
+						<RolloffFactor value="1"/>
+					</OpenALSoundComponent>
 				</Components>
 				<ComponentContainers>
 					<SceneObjectTemplate>
@@ -142,8 +181,8 @@
 							<PhysicsBodyComponent>
 								<Mass value="1.0"/>
 								<DisableGravity value="true"/>
-								<PositionIterCount value="6"/>
-								<VelocityIterCount value="6"/>
+								<PositionIterCount value="50"/>
+								<VelocityIterCount value="50"/>
 							</PhysicsBodyComponent>
 							<PhysicsHingeComponent>
 								<Body1 value="SECOND_BOOM"/>
@@ -152,9 +191,13 @@
 								<RotationAxis value="1 0 0"/>
 								<Damping value="100000.0"/>
 								<Spring value="50000000.0"/>
+								<Report value="true"/>
+								<HighStop value="0.8"/>
+								<LowStop value="-1.0"/>
+								<EnableLimits value ="true"/>
 							</PhysicsHingeComponent>
 							<HingeInteractionComponent>
-								<InputMapping value="CraneSteer4"/>
+								<InputMapping value="Boom3"/>
 								<MaxAngularVelocity value = "25"/>
 							</HingeInteractionComponent>
 							<InputProxyComponent>
@@ -163,6 +206,21 @@
 							<PhysicsConvexGeometryComponent>
 								<SimulationCollision value="false"/>
 							</PhysicsConvexGeometryComponent>
+							<PhysicsReportProxyComponent>
+								<TargetObject value="HOUSE"/>
+							</PhysicsReportProxyComponent>
+							<VelocityToSoundComponent>
+								<MinMaxVolume value="0 0.13"/>
+								<MinMaxPitch value="0.93 1.0"/>
+								<VelocityLimit value = "0.2"/>
+							</VelocityToSoundComponent>
+							<OpenALSoundComponent>
+								<Name value="HydraulicSound"/>
+								<SoundFile value="hydraulic3.wav"/>
+								<Loop value="1"/>
+								<MinDistance value="5"/>
+								<RolloffFactor value="1"/>
+							</OpenALSoundComponent>
 						</Components>
 						<ComponentContainers>
 							<SceneObjectTemplate>
@@ -250,8 +308,8 @@
 									<PhysicsBodyComponent>
 										<Mass value="1.0"/>
 										<DisableGravity value="true"/>
-										<PositionIterCount value="6"/>
-										<VelocityIterCount value="6"/>					
+										<PositionIterCount value="50"/>
+										<VelocityIterCount value="50"/>					
 									</PhysicsBodyComponent>
 									<PhysicsHingeComponent>
 										<Body1 value="THIRD_BOOM"/>
@@ -260,9 +318,13 @@
 										<RotationAxis value="1 0 0"/>
 										<Damping value="100000.0"/>
 										<Spring value="50000000.0"/>
+										<Report value="true"/>
+										<HighStop value="2.6"/>
+										<LowStop value="-0.5"/>
+										<EnableLimits value ="true"/>
 									</PhysicsHingeComponent>
 									<HingeInteractionComponent>
-										<InputMapping value="CraneSteer5"/>
+										<InputMapping value="Bucket"/>
 										<MaxAngularVelocity value = "30"/>
 									</HingeInteractionComponent>
 									<InputProxyComponent>
@@ -271,6 +333,21 @@
 									<PhysicsConvexGeometryComponent>
 										<SimulationCollision value="true"/>
 									</PhysicsConvexGeometryComponent>
+									<PhysicsReportProxyComponent>
+										<TargetObject value="HOUSE"/>
+									</PhysicsReportProxyComponent>
+									<VelocityToSoundComponent>
+										<MinMaxVolume value="0 0.13"/>
+										<MinMaxPitch value="0.93 1.0"/>
+										<VelocityLimit value = "0.2"/>
+									</VelocityToSoundComponent>
+									<OpenALSoundComponent>
+										<Name value="HydraulicSound"/>
+										<SoundFile value="hydraulic3.wav"/>
+										<Loop value="1"/>
+										<MinDistance value="5"/>
+										<RolloffFactor value="1"/>
+									</OpenALSoundComponent>
 								</Components>
 								<ComponentContainers>
 									<SceneObjectTemplate>

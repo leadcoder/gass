@@ -34,7 +34,7 @@
 				<RolloffFactor value="1"/>
 			</OpenALSoundComponent>-->
 			<InputHandlerComponent>
-				<ControlSetting value ="TruckInputSettings"/>
+				<ControlSetting value ="LiebherrInputSettings"/>
 			</InputHandlerComponent>
 		</Components>
 		<ComponentContainers>

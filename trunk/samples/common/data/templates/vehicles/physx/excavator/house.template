@@ -11,8 +11,8 @@
 			<PhysicsBodyComponent>
 				<Mass value="2"/>
 				<DisableGravity value="true"/>
-				<PositionIterCount value="6"/>
-				<VelocityIterCount value="6"/>
+				<PositionIterCount value="50"/>
+				<VelocityIterCount value="50"/>
 			</PhysicsBodyComponent>
 			<MeshComponent>
 				<CastShadow value="true"/>
@@ -27,7 +27,7 @@
 				<Spring value="100000000.0"/>
 			</PhysicsHingeComponent>
 			<HingeInteractionComponent>
-				<InputMapping value="CraneSteer1"/>
+				<InputMapping value="House"/>
 				<MaxAngularVelocity value = "15"/>
 			</HingeInteractionComponent>
 			<InputProxyComponent>
@@ -36,6 +36,30 @@
 			<PhysicsConvexGeometryComponent>
 				<SimulationCollision value="true"/>
 			</PhysicsConvexGeometryComponent>
+			<ForceToSoundComponent>
+				<ForceToPitch value="0   1.18;
+									 0.08 1.15;
+									 0.16 1.1;
+									 0.33 1.0;
+									 0.4 0.94;
+									 1.0 0.8
+									 "/>
+				<ForceLimit value = "300"/>
+			</ForceToSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="EngineSound"/>
+				<SoundFile value="engine.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="EngineSound"/>
+				<SoundFile value="hydralic4.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
