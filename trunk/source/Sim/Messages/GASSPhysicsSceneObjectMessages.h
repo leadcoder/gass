@@ -82,23 +82,26 @@ namespace GASS
 
 
 	/**
-	Event casted by joints to inform about applied forces.
+	Event casted by hinge joints to inform about applied forces and velocities.
 	*/
-	class PhysicsJointForceEvent : public BaseMessage
+	class PhysicsHingeJointReportEvent : public BaseMessage
 	{
 	public:
-		PhysicsJointForceEvent(const Vec3 &force, const Vec3 &torq, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Force(force), m_Torque(torq)
+		PhysicsHingeJointReportEvent(Float target_velocity, const Vec3 &force, const Vec3 &torq, SenderID sender_id = -1, double delay= 0) :
+		  BaseMessage(sender_id , delay), m_TargetVelocity(target_velocity), m_Force(force), m_Torque(torq)
 		  {
 
 		  }
+		  
+		  Float GetTargetVelocity()const {return m_TargetVelocity;}
 		  Vec3 GetForce()const {return m_Force;}
 		  Vec3 GetTorque()const {return m_Torque;}
 	private:
 		Vec3 m_Force;
 		Vec3 m_Torque;
+		Float m_TargetVelocity;
 	};
-	typedef SPTR<PhysicsJointForceEvent > PhysicsJointForceEventPtr;
+	typedef SPTR<PhysicsHingeJointReportEvent> PhysicsHingeJointReportEventPtr;
 
 	/**
 	Event casted by joints to inform about local velocities.
