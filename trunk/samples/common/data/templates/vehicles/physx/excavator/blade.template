@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="LibherrBlade"/>
+		<ID value="BLADE"/>
+		<Components>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<MeshComponent>
+				<CastShadow value="true"/>
+				<Filename value="ExBlade.obj"/>
+			</MeshComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.05"/>
+				<DisableGravity value="true"/>
+				<PositionIterCount value="50"/>
+				<VelocityIterCount value="50"/>
+			</PhysicsBodyComponent>
+			<PhysicsHingeComponent>
+				<Body1 value="UNDERCARRIAGE"/>
+				<Body2 value="BLADE"/>
+				<Offset value="0 0 0"/>
+				<RotationAxis value="1 0 0"/>
+				<Damping value="200000.0"/>
+				<Spring value="100000000.0"/>
+				<Report value="true"/>
+				<HighStop value="0.2"/>
+				<LowStop value="-1.2"/>
+				<EnableLimits value ="true"/>
+			</PhysicsHingeComponent>
+			<HingeInteractionComponent>
+				<InputMapping value="Blade"/>
+				<MaxAngularVelocity value = "13"/>
+			</HingeInteractionComponent>
+			<InputProxyComponent>
+				<InputHandlerObject value="UNDERCARRIAGE"/>
+			</InputProxyComponent>
+			<PhysicsConvexGeometryComponent>
+				<SimulationCollision value="true"/>
+			</PhysicsConvexGeometryComponent>
+			<!--<PhysicsReportProxyComponent>
+				<TargetObject value="HOUSE"/>
+			</PhysicsReportProxyComponent>
+			<VelocityToSoundComponent>
+				<MinMaxVolume value="0 0.13"/>
+				<MinMaxPitch value="0.93 1.0"/>
+				<VelocityLimit value = "0.2"/>
+			</VelocityToSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="HydraulicSound"/>
+				<SoundFile value="hydraulic3.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>-->
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LibherrMainBoomHydralicsPiston"/>
+				<ID value="BLADE_HYDRAULIC_PISTON"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.0 0.22 -0.3"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSmallPiston.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="BLADE_HYDRAULIC_CYLINDER"/>
+					</LookAtComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

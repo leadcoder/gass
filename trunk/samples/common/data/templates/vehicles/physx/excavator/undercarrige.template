@@ -11,13 +11,13 @@
 				<Filename value="ExUndercarriage.ive"/>
 				<CastShadow value="1"/>
 			</MeshComponent>
-
 			<PhysXVehicleComponent>
 				<Mass value="1405"/>
 				<ScaleMass value="0.03"/>
-				<EnginePeakTorque value ="100"/>
+				<EnginePeakTorque value ="200"/>
+				<EngineMaxRotationSpeed value="300"/>
 				<ClutchStrength value = "10"/>
-				<GearRatios value="-16;0;16;8;4"/>
+				<GearRatios value="-16;0;16;11;6"/>
 				<!--<GearRatios value="-4;0;4;2;1.5;1.1;1.0"/>-->
 				<GearSwitchTime value = "0.5"/>
 				<UseAutoReverse value="true"/>
@@ -26,13 +26,20 @@
 				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
 				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
 			</PhysXVehicleComponent>
-			<!--<OpenALSoundComponent>
+			<OpenALSoundComponent>
 				<Name value="EngineSound"/>
-				<SoundFile value="hydralic2.wav"/>
+				<SoundFile value="hydralic6.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
-			</OpenALSoundComponent>-->
+			</OpenALSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="EngineSound2"/>
+				<SoundFile value="engine2.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
 			<InputHandlerComponent>
 				<ControlSetting value ="LiebherrInputSettings"/>
 			</InputHandlerComponent>
@@ -44,7 +51,7 @@
 				<ID value="FRONT_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="1 0.422 -1.2"/>
+						<Position value="1 0.44 -1.2"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
@@ -59,7 +66,7 @@
 				<ID value="FRONT_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-1 0.422 -1.2"/>
+						<Position value="-1 0.44 -1.2"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
@@ -74,7 +81,7 @@
 				<ID value="REAR_LEFT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="1 0.422 1.3"/>
+						<Position value="1 0.44 1.3"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
@@ -89,7 +96,7 @@
 				<ID value="REAR_RIGHT_WHEEL"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-1 0.422 1.3"/>
+						<Position value="-1 0.44 1.3"/>
 						<AttachToParent value="false"/>
 					</LocationComponent>
 					<MeshComponent>
@@ -109,6 +116,34 @@
 					</LocationComponent>
 				</Components>
 			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrBlade"/>
+				<Inheritance value="LibherrBlade"/>  <!-- blade is defined in other file-->
+				<ID value="BLADE"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0.35 -1.9"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LibherrBladeHydraulicsCylinder"/>
+				<ID value="BLADE_HYDRAULIC_CYLINDER"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0.75 -1.95"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSmallCylinder.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="BLADE_HYDRAULIC_PISTON"/>
+					</LookAtComponent>
+				</Components>
+			</SceneObjectTemplate>
 		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
@@ -121,8 +156,8 @@
 				<DampingRate value="0.25f"/>
 				<SuspensionMaxCompression value="0.3f"/>
 				<SuspensionMaxDroop value="0.1f"/>
-				<SuspensionSpringStrength value="350000.0f"/>
-				<SuspensionSpringDamperRate value="45000.0f"/>
+				<SuspensionSpringStrength value="65000.0f"/>
+				<SuspensionSpringDamperRate value="7500.0f"/>
 				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
 			</PhysXWheelComponent>
 			<PhysicsConvexGeometryComponent/>
@@ -138,8 +173,8 @@
 				<DampingRate value="0.25f"/>
 				<SuspensionMaxCompression value="0.3f"/>
 				<SuspensionMaxDroop value="0.1f"/>
-				<SuspensionSpringStrength value="350000.0f"/>
-				<SuspensionSpringDamperRate value="45000.0f"/>
+				<SuspensionSpringStrength value="65000.0f"/>
+				<SuspensionSpringDamperRate value="7500.0f"/>
 				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
 			</PhysXWheelComponent>
 			<PhysicsConvexGeometryComponent/>

@@ -28,7 +28,7 @@
 			</PhysicsHingeComponent>
 			<HingeInteractionComponent>
 				<InputMapping value="House"/>
-				<MaxAngularVelocity value = "15"/>
+				<MaxAngularVelocity value = "30"/>
 			</HingeInteractionComponent>
 			<InputProxyComponent>
 				<InputHandlerObject value="UNDERCARRIAGE"/>
