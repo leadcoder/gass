@@ -47,7 +47,8 @@ namespace GASS
 		m_LastPos(0,0,0),
 		m_DesiredSpeed(0),
 		m_Enable(false),
-		m_WPReached(false)
+		m_WPReached(false),
+		m_VehicleSpeed(0,0,0)
 
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);

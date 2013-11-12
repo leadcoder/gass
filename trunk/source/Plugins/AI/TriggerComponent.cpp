@@ -19,15 +19,18 @@ namespace GASS
 	void TriggerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("TriggerComponent",new Creator<TriggerComponent, IComponent>);
-		RegisterProperty<SceneObjectID>("ListenerID", &GetListenerID, &SetListenerID);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TriggerComponent", OF_VISIBLE)));
+
+		RegisterProperty<SceneObjectID>("ListenerID", &GetListenerID, &SetListenerID,
+				BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void TriggerComponent::OnInitialize()
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
-		SetListenerID(m_ListenerID);
 		m_Initialized = true;
+		SetListenerID(m_ListenerID);
 	}
 
 	SceneObjectID  TriggerComponent::GetListenerID() const

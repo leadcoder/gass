@@ -276,7 +276,6 @@ namespace GASS
 			m_TerrainProfile->SetFadeOutColor(GetFadeOutColor());
 			m_TerrainProfile->SetNearColorWeight(GetNearColorWeight());
 
-
 			m_TerrainProfile->setLayerNormalMappingEnabled(m_EnableLayerNormal);
 			m_TerrainProfile->setLayerParallaxMappingEnabled(m_EnableLayerParallax);
 			m_TerrainProfile->setLayerSpecularMappingEnabled(m_EnableLayerSpecular);
@@ -286,6 +285,7 @@ namespace GASS
 		m_TerrainGlobals->setMaxPixelError(8);
 		// testing composite map
 		m_TerrainGlobals->setCompositeMapDistance(20000);
+		
 
 		//mTerrainGlobals->setUseRayBoxDistanceCalculation(true);
 		//mTerrainGlobals->getDefaultMaterialGenerator()->setDebugLevel(1);

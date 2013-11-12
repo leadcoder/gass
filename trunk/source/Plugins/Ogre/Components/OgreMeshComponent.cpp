@@ -514,7 +514,8 @@ namespace GASS
 
 	void OgreMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
 	{
-		OgreMaterialCache::Restore(m_MeshResource.Name(),m_OgreEntity);
+		if(m_OgreEntity)
+			OgreMaterialCache::Restore(m_MeshResource.Name(),m_OgreEntity);
 	}
 
 	void OgreMeshComponent::SetCastShadow(bool castShadow) 
