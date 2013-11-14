@@ -41,7 +41,7 @@ namespace GASS
 		m_ScaleMass(1.0),
 		m_Mass(1500),
 		m_EnginePeakTorque(500),
-		m_EngineMaxRotationSpeed(600),
+		m_EngineMaxRotationSpeed(200),
 		m_ClutchStrength(10),
 		m_GearSwitchTime(0.5)
 	{
@@ -218,7 +218,7 @@ namespace GASS
 
 		//The origin is at the center of the chassis mesh.
 		//Set the center of mass to be below this point and a little towards the front.
-		const PxVec3 chassisCMOffset=PxVec3(0.0f,-chassisDims.y*0.5f+0.65f,-0.25f);
+		const PxVec3 chassisCMOffset=PxVec3(0.0f,-chassisDims.y*0.5f+0.65f,0.125f);
 
 		//Now compute the chassis mass and moment of inertia.
 		//Use the moment of inertia of a cuboid as an approximate value for the chassis moi.
@@ -283,6 +283,7 @@ namespace GASS
 		//apply mass scale to wheels
 		for(size_t i = 0; i < wheels.size() ; i++)
 		{
+			//wheels[i].mMOI *= m_ScaleMass;
 			wheels[i].mMaxHandBrakeTorque *= m_ScaleMass;
 			wheels[i].mMaxBrakeTorque *= m_ScaleMass;
 			wheels[i].mDampingRate *= m_ScaleMass;
@@ -337,9 +338,10 @@ namespace GASS
 		
 		engine.mPeakTorque=m_EnginePeakTorque;
 		engine.mMaxOmega=m_EngineMaxRotationSpeed;//approx 6000 rpm
-		//engine.mDampingRateFullThrottle *= m_ScaleMass;
-		//engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
-		//engine.mDampingRateZeroThrottleClutchEngaged *= m_ScaleMass;
+		/*engine.mDampingRateFullThrottle *= m_ScaleMass;
+		engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
+		engine.mDampingRateZeroThrottleClutchEngaged *= m_ScaleMass;
+		*/
 		driveSimData.setEngineData(engine);
 
 		//Gears
@@ -690,7 +692,8 @@ namespace GASS
 
 
 		//pitch engine sound
-		float pitch=1.0;
+		float pitch = 1.0;
+		float volume = 0;
 
 		//rps (rad/s)
 		const float engine_rot_speed = fabs(driveDynData.getEngineRotationSpeed());
@@ -698,10 +701,16 @@ namespace GASS
 
 		if(norm_engine_rot_speed > 1.0)
 			norm_engine_rot_speed = 1.0;
+		
 		pitch += norm_engine_rot_speed;
+		volume += norm_engine_rot_speed;
+		volume = sqrt(volume)*1.05;
 
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-		GetSceneObject()->PostMessage(sound_msg);
+		MessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+		GetSceneObject()->PostMessage(pitch_msg);
+
+		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+		GetSceneObject()->PostMessage(volume_msg);
 
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 

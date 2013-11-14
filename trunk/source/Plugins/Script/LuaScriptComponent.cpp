@@ -78,7 +78,7 @@ namespace GASS
 	void LuaScriptComponent::OnInitialize()
 	{
 		m_ScriptWrapper->SetSceneObject(GetSceneObject());
-		m_State = lua_open();
+		m_State = luaL_newstate();
 		luaopen_base(m_State);
 		luaopen_string(m_State);
 		luaopen_math(m_State);
@@ -133,8 +133,11 @@ namespace GASS
 		
 		int top;
 		top = lua_gettop(m_State);  /* for later */
+		
+
 		lua_pushstring(m_State, "onUpdate");                                  /* function name */
-		lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
+		//lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
+		//lua_rawgeti(m_State, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		if (!lua_isfunction(m_State, -1)) {
 			std::cout << "[C++] error: cannot find function 'onUpdate'\n";
 			lua_settop(m_State, top);  // reset
@@ -158,7 +161,8 @@ namespace GASS
 		int top;
 		top = lua_gettop(m_State);  /* for later */
 		lua_pushstring(m_State, "onInit");                                  /* function name */
-		lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
+		//lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
+		//lua_rawgeti(m_State, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		if (!lua_isfunction(m_State, -1)) {
 			std::cout << "[C++] error: cannot find function 'onInit'\n";
 			lua_settop(m_State, top);  // reset
