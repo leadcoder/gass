@@ -15,5 +15,6 @@
 //%include "Common.i"
 //%include "Vector.i"
 %include "LuaScriptSceneObject.i"
+%include "ScriptComponentWrapper.i"
 
 #endif

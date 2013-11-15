@@ -22,7 +22,8 @@ public:
 	GASS::Vec3 GetVec3Attribute(const std::string &name) const;
 	void SetVec3tAttribute(const std::string &name, GASS::Vec3  value);
 	void LogMessage(const std::string &message);
-	GASS::BaseSceneComponentPtr GetComponent();
+	GASS::BaseSceneComponentPtr GetComponent() const ;
+	void SetComponent(GASS::BaseSceneComponentPtr comp) {m_Component = comp;}
 private:
 	GASS::BaseSceneComponentWeakPtr m_Component;
 };

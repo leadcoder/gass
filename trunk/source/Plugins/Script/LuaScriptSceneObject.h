@@ -3,6 +3,7 @@
 #include "Sim/GASS.h"
 #include "LuaScriptComponent.h"
 
+class ScriptComponentWrapper;
 class LuaScriptSceneObject
 {
 	friend class GASS::LuaScriptComponent;
@@ -11,6 +12,8 @@ public:
 	virtual ~LuaScriptSceneObject();
 
 	//functions called from lua script
+	ScriptComponentWrapper* GetComponent(const std::string &name);
+
     float GetFloatAttribute(const std::string &name) const;
 	void SetFloatAttribute(const std::string &name, float value);
 	double GetDoubleAttribute(const std::string &name) const;
@@ -28,13 +31,14 @@ public:
 	
 private:
 	//functions called from LuaScriptComponent
-	void SetSceneObject(GASS::SceneObjectPtr object) {m_SceneObject = object;}	
+	void SetSceneObject(GASS::SceneObjectPtr object);
 	void Reset();
 	bool InsideObject(GASS::SceneObjectPtr obj) const;
 	GASS::SceneObjectPtr GetSceneObject() const {return GASS::SceneObjectPtr(m_SceneObject,boost::detail::sp_nothrow_tag());}
 	GASS::SceneObjectWeakPtr m_SceneObject;
 	typedef std::map<std::string,std::vector<GASS::SceneObjectWeakPtr> > ObjectCache;
 	ObjectCache m_CachedObjects;
+	std::map<std::string,ScriptComponentWrapper*> m_Components;
 };
 
 

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "LuaScriptSceneObject.h"
+#include "ScriptComponentWrapper.h"
 
 LuaScriptSceneObject::LuaScriptSceneObject() 
 {
@@ -15,9 +16,9 @@ LuaScriptSceneObject::~LuaScriptSceneObject()
 	
 }
 
-LuaComponentWrapper* LuaScriptSceneObject::GetComponent(const std::string &name) const
+ScriptComponentWrapper* LuaScriptSceneObject::GetComponent(const std::string &name)
 {
-	return m_Compnents[name];
+	return m_Components[name];
 }
 
 float LuaScriptSceneObject::GetFloatAttribute(const std::string &name) const
@@ -215,4 +216,27 @@ bool LuaScriptSceneObject::AddTriggerObjectByID(const std::string &object_id)
 void LuaScriptSceneObject::Reset()
 {
 	m_CachedObjects.clear();
+}
+
+void LuaScriptSceneObject::SetSceneObject(GASS::SceneObjectPtr object)
+{
+	m_SceneObject = object;
+	//create component wrappers!
+	GASS::IComponentContainer::ComponentIterator comp_iter = object->GetComponents();
+	while(comp_iter.hasMoreElements())
+	{
+		GASS::ComponentPtr comp = STATIC_PTR_CAST<GASS::IComponent>(comp_iter.getNext());
+		GASS::BaseSceneComponentPtr temp_comp = DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(comp);
+		if(temp_comp)
+		{
+			const std::string name =  temp_comp->GetRTTI()->GetClassName();
+			ScriptComponentWrapper* wrapper = new ScriptComponentWrapper();
+			wrapper->SetComponent(temp_comp);
+			m_Components[name] = wrapper;
+			//ComponentPtr template_comp = temp_comp->CreateCopy();
+			//AddComponent(template_comp);
+		}
+	}
+
+
 }
