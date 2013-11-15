@@ -143,6 +143,8 @@ namespace GASS
 			lua_settop(m_State, top);  // reset
 			return;
 		}
+
+
 		// push the event object
 		push_pointer(m_State, m_ScriptWrapper, "LuaScriptSceneObject *", 0);
 		if (lua_pcall(m_State, 1, 0, 0) != 0)  /* call function with 1 arguments and no result */
@@ -155,28 +157,54 @@ namespace GASS
 	}
 
 
+	void LuaScriptComponent::_PushObjectWrapper()
+	{
+		swig_type_info* typeinfo = SWIG_TypeQuery( m_State, "LuaScriptSceneObject *" );
+		if ( typeinfo == NULL )
+		{   
+			return;
+		}   
+		int own =1;
+		SWIG_NewPointerObj( m_State, m_ScriptWrapper, typeinfo, own );
+	}
+
 	void LuaScriptComponent::InitScript()
 	{
-		m_ScriptWrapper->Reset();
-		int top;
-		top = lua_gettop(m_State);  /* for later */
-		lua_pushstring(m_State, "onInit");                                  /* function name */
-		//lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
-		//lua_rawgeti(m_State, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
-		if (!lua_isfunction(m_State, -1)) {
-			std::cout << "[C++] error: cannot find function 'onInit'\n";
-			lua_settop(m_State, top);  // reset
-			return;
-		}
+		lua_getglobal(m_State, "onInit");  /* function to be called */
+		_PushObjectWrapper();
 		// push the event object
-		push_pointer(m_State, m_ScriptWrapper, "LuaScriptSceneObject *", 0);
 		if (lua_pcall(m_State, 1, 0, 0) != 0)  /* call function with 1 arguments and no result */
 		{
 			std::cout << "[C++] error running function `onInit':"<<  lua_tostring(m_State, -1) << "\n";
-			lua_settop(m_State, top);  // reset
+			//lua_settop(m_State, top);  // reset
 			return;
 		}
-		lua_settop(m_State, top);  /* reset stack */
+
+	//	if (lua_pcall(L, 2, 1, 0) != 0)
+	//		error(L, "error running function `f': %s",
+	//		lua_tostring(L, -1));
+
+		//m_ScriptWrapper->Reset();
+		//int top;
+		//top = lua_gettop(m_State);  for later 
+		//
+		//lua_pushstring(m_State, "onInit");                                  /* function name */
+		////lua_gettable(m_State, LUA_GLOBALSINDEX);               /* function to be called */
+		////lua_rawgeti(m_State, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
+		//if (!lua_isfunction(m_State, -1)) {
+		//	std::cout << "[C++] error: cannot find function 'onInit'\n";
+		//	lua_settop(m_State, top);  // reset
+		//	return;
+		//}
+		//// push the event object
+		//push_pointer(m_State, m_ScriptWrapper, "LuaScriptSceneObject *", 0);
+		//if (lua_pcall(m_State, 1, 0, 0) != 0)  /* call function with 1 arguments and no result */
+		//{
+		//	std::cout << "[C++] error running function `onInit':"<<  lua_tostring(m_State, -1) << "\n";
+		//	lua_settop(m_State, top);  // reset
+		//	return;
+		//}
+		//lua_settop(m_State, top);  /* reset stack */
 	}
 
 	

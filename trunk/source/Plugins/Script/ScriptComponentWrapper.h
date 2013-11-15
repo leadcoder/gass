@@ -3,12 +3,12 @@
 #include "Sim/GASS.h"
 #include "LuaScriptComponent.h"
 
-class LuaScriptSceneObject
+class ScriptComponentWrapper
 {
 	friend class GASS::LuaScriptComponent;
 public:
-	LuaScriptSceneObject();
-	virtual ~LuaScriptSceneObject();
+	ScriptComponentWrapper();
+	virtual ~ScriptComponentWrapper();
 
 	//functions called from lua script
     float GetFloatAttribute(const std::string &name) const;
@@ -21,20 +21,10 @@ public:
 	void SetStringAttribute(const std::string &name, const std::string &value);
 	GASS::Vec3 GetVec3Attribute(const std::string &name) const;
 	void SetVec3tAttribute(const std::string &name, GASS::Vec3  value);
-
 	void LogMessage(const std::string &message);
-	bool GetInsideTriggerObject(const std::string &object_id) const;
-	bool AddTriggerObjectByID(const std::string &object_id);
-	
+	GASS::BaseSceneComponentPtr GetComponent();
 private:
-	//functions called from LuaScriptComponent
-	void SetSceneObject(GASS::SceneObjectPtr object) {m_SceneObject = object;}	
-	void Reset();
-	bool InsideObject(GASS::SceneObjectPtr obj) const;
-	GASS::SceneObjectPtr GetSceneObject() const {return GASS::SceneObjectPtr(m_SceneObject,boost::detail::sp_nothrow_tag());}
-	GASS::SceneObjectWeakPtr m_SceneObject;
-	typedef std::map<std::string,std::vector<GASS::SceneObjectWeakPtr> > ObjectCache;
-	ObjectCache m_CachedObjects;
+	GASS::BaseSceneComponentWeakPtr m_Component;
 };
 
 

@@ -40,6 +40,10 @@ namespace GASS
 
 		void SetScriptFile(const std::string &script_file);
 		std::string GetScriptFile() const;
+
+
+		void _PushObjectWrapper();
+
 		lua_State *m_State;
 		std::string m_Script;
 		LuaScriptSceneObject* m_ScriptWrapper;

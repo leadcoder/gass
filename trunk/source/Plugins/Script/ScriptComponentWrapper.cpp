@@ -2,28 +2,23 @@
 
 
 #include <iostream>
-#include "LuaScriptSceneObject.h"
+#include "ScriptComponentWrapper.h"
 
-LuaScriptSceneObject::LuaScriptSceneObject() 
+ScriptComponentWrapper::ScriptComponentWrapper() 
 {
 	
 
 }
 
-LuaScriptSceneObject::~LuaScriptSceneObject()
+ScriptComponentWrapper::~ScriptComponentWrapper()
 {
 	
 }
 
-LuaComponentWrapper* LuaScriptSceneObject::GetComponent(const std::string &name) const
-{
-	return m_Compnents[name];
-}
-
-float LuaScriptSceneObject::GetFloatAttribute(const std::string &name) const
+float ScriptComponentWrapper::GetFloatAttribute(const std::string &name) const
 {
 	float value;
-	GASS::SceneObjectPtr so = GetSceneObject();
+	
 	if(so)
 	{
 		boost::any any_value;
@@ -35,7 +30,7 @@ float LuaScriptSceneObject::GetFloatAttribute(const std::string &name) const
 	return value;
 }
 
-void LuaScriptSceneObject::SetFloatAttribute(const std::string &name, float value)
+void ScriptComponentWrapper::SetFloatAttribute(const std::string &name, float value)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -44,7 +39,7 @@ void LuaScriptSceneObject::SetFloatAttribute(const std::string &name, float valu
 	}
 }
 
-double LuaScriptSceneObject::GetDoubleAttribute(const std::string &name) const
+double ScriptComponentWrapper::GetDoubleAttribute(const std::string &name) const
 {
 	double value;
 	GASS::SceneObjectPtr so = GetSceneObject();
@@ -59,7 +54,7 @@ double LuaScriptSceneObject::GetDoubleAttribute(const std::string &name) const
 	return value;
 }
 
-void LuaScriptSceneObject::SetDoubleAttribute(const std::string &name, double value)
+void ScriptComponentWrapper::SetDoubleAttribute(const std::string &name, double value)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -68,7 +63,7 @@ void LuaScriptSceneObject::SetDoubleAttribute(const std::string &name, double va
 	}
 }
 
-int LuaScriptSceneObject::GetIntAttribute(const std::string &name) const
+int ScriptComponentWrapper::GetIntAttribute(const std::string &name) const
 {
 	int value;
 	GASS::SceneObjectPtr so = GetSceneObject();
@@ -83,7 +78,7 @@ int LuaScriptSceneObject::GetIntAttribute(const std::string &name) const
 	return value;
 }
 
-void LuaScriptSceneObject::SetIntAttribute(const std::string &name, int value)
+void ScriptComponentWrapper::SetIntAttribute(const std::string &name, int value)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -92,7 +87,7 @@ void LuaScriptSceneObject::SetIntAttribute(const std::string &name, int value)
 	}
 }
 
-std::string LuaScriptSceneObject::GetStringAttribute(const std::string &name) const
+std::string ScriptComponentWrapper::GetStringAttribute(const std::string &name) const
 {
 	std::string value;
 	GASS::SceneObjectPtr so = GetSceneObject();
@@ -103,7 +98,7 @@ std::string LuaScriptSceneObject::GetStringAttribute(const std::string &name) co
 	return value;
 }
 
-void LuaScriptSceneObject::SetStringAttribute(const std::string &name, const std::string &value)
+void ScriptComponentWrapper::SetStringAttribute(const std::string &name, const std::string &value)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -112,7 +107,7 @@ void LuaScriptSceneObject::SetStringAttribute(const std::string &name, const std
 	}
 }
 
-GASS::Vec3 LuaScriptSceneObject::GetVec3Attribute(const std::string &name) const
+GASS::Vec3 ScriptComponentWrapper::GetVec3Attribute(const std::string &name) const
 {
 	GASS::Vec3 value;
 	GASS::SceneObjectPtr so = GetSceneObject();
@@ -127,7 +122,7 @@ GASS::Vec3 LuaScriptSceneObject::GetVec3Attribute(const std::string &name) const
 	return value;
 }
 
-void LuaScriptSceneObject::SetVec3tAttribute(const std::string &name, GASS::Vec3  value)
+void ScriptComponentWrapper::SetVec3tAttribute(const std::string &name, GASS::Vec3  value)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -136,12 +131,12 @@ void LuaScriptSceneObject::SetVec3tAttribute(const std::string &name, GASS::Vec3
 	}
 }
 
-void LuaScriptSceneObject::LogMessage(const std::string &message)
+void ScriptComponentWrapper::LogMessage(const std::string &message)
 {
 	std::cout << message << "\n";
 }
 
-bool LuaScriptSceneObject::InsideObject(GASS::SceneObjectPtr obj) const
+bool ScriptComponentWrapper::InsideObject(GASS::SceneObjectPtr obj) const
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -164,7 +159,7 @@ bool LuaScriptSceneObject::InsideObject(GASS::SceneObjectPtr obj) const
 	return false;
 }
 
-bool LuaScriptSceneObject::GetInsideTriggerObject(const std::string &object_id) const
+bool ScriptComponentWrapper::GetInsideTriggerObject(const std::string &object_id) const
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -189,7 +184,7 @@ bool LuaScriptSceneObject::GetInsideTriggerObject(const std::string &object_id) 
 	return false;
 }
 
-bool LuaScriptSceneObject::AddTriggerObjectByID(const std::string &object_id)
+bool ScriptComponentWrapper::AddTriggerObjectByID(const std::string &object_id)
 {
 	GASS::SceneObjectPtr so = GetSceneObject();
 	if(so)
@@ -212,7 +207,7 @@ bool LuaScriptSceneObject::AddTriggerObjectByID(const std::string &object_id)
 }
 
 
-void LuaScriptSceneObject::Reset()
+void ScriptComponentWrapper::Reset()
 {
 	m_CachedObjects.clear();
 }

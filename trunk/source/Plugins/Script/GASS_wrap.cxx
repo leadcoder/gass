@@ -11,7 +11,7 @@
 #define SWIGLUA
 #define SWIG_LUA_TARGET SWIG_LUA_FLAVOR_LUA
 #define SWIG_LUA_MODULE_GLOBAL
-#pragma comment(lib, lua)
+//#pragma comment(lib, lua)
 
 #ifdef __cplusplus
 /* SwigValueWrapper is described in swig.swg */
