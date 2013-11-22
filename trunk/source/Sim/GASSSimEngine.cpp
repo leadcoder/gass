@@ -64,6 +64,7 @@
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
+#include "Sim/GASSScriptManager.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -75,6 +76,7 @@ namespace GASS
 	SimEngine::SimEngine() : m_CurrentTime(0), 
 		m_MaxUpdateFreq(0), 
 		m_PluginManager(new PluginManager()),
+		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
 		m_SceneObjectTemplateManager(new BaseComponentContainerTemplateManager()),
@@ -114,6 +116,7 @@ namespace GASS
 			log_man->createLog(log_file, true, true);
 		}
 	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
+		m_ScriptManager->Init();
 		m_PluginManager->LoadFromFile(configuration.GetFullPath());
 		
 		LoadSettings(configuration);

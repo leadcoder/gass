@@ -208,7 +208,7 @@ namespace GASS
 					GraphicsSubMeshPtr sm = iter->second.at(i);
 					for(size_t j = 0; j < sm->IndexVector.size(); j++)
 						new_sm->IndexVector.push_back(sm->IndexVector[j] + base_index);
-					base_index += sm->PositionVector.size();
+					base_index += static_cast<int>(sm->PositionVector.size());
 				}
 				iter++;
 				//create new submesh and copy all data

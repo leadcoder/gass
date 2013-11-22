@@ -46,12 +46,10 @@ namespace GASS
 		return m_RandomVelocity.x + norm_rand*(m_RandomVelocity.y - m_RandomVelocity.x);
 	}
 
-
 	void VelocityTriggerComponent::OnTriggerEnter(TriggerEnterMessagePtr message)
 	{
 		MessagePtr vel_message(new DesiredSpeedMessage(GetVelocity(),(int) (this),GetDelay()));
 		message->GetTrigger()->PostMessage(vel_message);
 	}
 
-	
 }

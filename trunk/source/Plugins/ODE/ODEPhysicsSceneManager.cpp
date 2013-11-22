@@ -347,9 +347,9 @@ namespace GASS
 			dGeomTriMeshDataBuildDouble(id,
 			&(physics_mesh->PositionVector[0]),
 			sizeof(Float)*3,
-			physics_mesh->PositionVector.size(),
+			static_cast<int>(physics_mesh->PositionVector.size()),
 			(unsigned int*)&physics_mesh->IndexVector[0],
-			physics_mesh->IndexVector.size(),
+			static_cast<int>(physics_mesh->IndexVector.size()),
 			3 * sizeof(unsigned int));
 		}
 		else
@@ -357,9 +357,9 @@ namespace GASS
 			dGeomTriMeshDataBuildSingle(id,
 			&(physics_mesh->PositionVector[0]),
 			sizeof(Float)*3,
-			physics_mesh->PositionVector.size(),
+			static_cast<int>(physics_mesh->PositionVector.size()),
 			(unsigned int*)&physics_mesh->IndexVector[0],
-			physics_mesh->IndexVector.size(),
+			static_cast<int>(physics_mesh->IndexVector.size()),
 			3 * sizeof(unsigned int));
 		}
 		//Save id for this collision mesh

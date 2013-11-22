@@ -36,6 +36,7 @@ namespace GASS
 	FDECL(BaseComponentContainerTemplateManager)
 	FDECL(SceneObject)
 	FDECL(Scene)
+	FDECL(ScriptManager)
 	class TaskNode;
 
 	/** \addtogroup GASSSim
@@ -145,9 +146,11 @@ namespace GASS
 		std::vector<std::string> GetSavedScenes() const;
 		void SyncMessages(double delta_time);
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
+		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
+		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
 		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		RunTimeControllerPtr m_RTC;

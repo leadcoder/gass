@@ -97,9 +97,9 @@ namespace GASS
 				
 						if(!(*iter).Inside)
 						{
-						//enter
-						(*iter).Inside = true;
-						GetSceneObject()->PostMessage(MessagePtr(new TriggerEnterMessage(obj)));
+							//enter
+							(*iter).Inside = true;
+							GetSceneObject()->PostMessage(MessagePtr(new TriggerEnterMessage(obj)));
 						}
 					}	
 					else

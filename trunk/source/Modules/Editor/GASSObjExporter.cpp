@@ -217,7 +217,7 @@ namespace GASS
 								<< v_index_2 << "/" << v_index_2 << "/" << v_index_2 << " "
 								<< v_index_3 << "/" << v_index_3 << "/" << v_index_3 << "\n";
 						}
-						base_index += sub_mesh->PositionVector.size();
+						base_index += static_cast<int>(sub_mesh->PositionVector.size());
 					}
 				}
 			}

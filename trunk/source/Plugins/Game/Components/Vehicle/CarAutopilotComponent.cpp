@@ -250,7 +250,6 @@ namespace GASS
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
 
-
 		/*	if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp || fabs(angle_to_drive_dir) > 80) //back up
 			{
 				throttle = -1;

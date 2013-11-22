@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://sourceforge.net/projects/gass/                                 *
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
@@ -18,44 +18,43 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Sim/GASSPhysicsMesh.h"
+#pragma once
+
+
+#include "Sim/GASSCommon.h"
+#include "Sim/GASSResourceLocation.h"
+#include "Sim/GASSResource.h"
+class TiXmlElement;
+class asIScriptEngine;
 
 namespace GASS
 {
-	PhysicsMesh::PhysicsMesh(const GraphicsMesh &mesh)
+	/**
+		ScriptManager
+	*/
+	class GASSExport ScriptController
 	{
-		AddMesh(mesh);
-	}
+	public:
+		ScriptController(){}
+		virtual ~ScriptController(){}
+	private:
+	};
+	typedef SPTR<ScriptController> ScriptControllerPtr;
 
-	PhysicsMesh::~PhysicsMesh()
+	/**
+		ScriptManager
+	*/
+	class GASSExport ScriptManager
 	{
-
-	}
-
-	void PhysicsMesh::AddMesh(const GraphicsMesh &mesh)
-	{
-		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)
-		{
-			//only support triangle data
-			if(mesh.SubMeshVector[i]->Type == TRIANGLE_LIST)
-			{
-				unsigned int offset = static_cast<unsigned int>(PositionVector.size());
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
-				{
-					IndexVector.push_back(mesh.SubMeshVector[i]->IndexVector[j] + offset);
-				}
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->PositionVector.size() ; j++)
-				{
-					PositionVector.push_back(mesh.SubMeshVector[i]->PositionVector[j]);
-				}
-
-				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size()/3 ; j++)
-				{
-					MaterialIDVector.push_back(0);
-				}
-			}
-		}
-	}
+	public:
+		ScriptManager();
+		virtual ~ScriptManager();
+		void Init();
+		ScriptControllerPtr LoadScript(const std::string &script);
+		asIScriptEngine *GetEngine() const {return m_Engine;}
+	private:
+		asIScriptEngine *m_Engine;
+		std::map<std::string,ScriptControllerPtr> m_ScriptControllers;
+	};
+	typedef SPTR<ScriptManager> ScriptManagerPtr;
 }
