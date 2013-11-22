@@ -157,8 +157,8 @@ namespace GASS
 			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			
 			//auto build edge list
-			if(!m_OgreEntity->getMesh()->getEdgeList())
-				m_OgreEntity->getMesh()->buildEdgeList();
+			//if(!m_OgreEntity->getMesh()->getEdgeList())
+			//	m_OgreEntity->getMesh()->buildEdgeList();
 		}
 	}
 

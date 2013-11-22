@@ -72,7 +72,7 @@ namespace GASS
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
 		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); assert( r >= 0 );
 
-		ScriptControllerPtr  controller = LoadScript("c:/temp/test.as");
+		/*ScriptControllerPtr  controller = LoadScript("c:/temp/test.as");
 
 		asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick()");
 		r = ctx->Prepare(my_func);
@@ -102,7 +102,7 @@ namespace GASS
 		}
 		else
 			std::cout << "The script ended for some unforeseen reason (" << r << ")." << endl;
-		}
+		}*/
 	}
 
 	ScriptControllerPtr ScriptManager::LoadScript(const std::string &script)
