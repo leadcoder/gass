@@ -49,9 +49,14 @@ set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
 set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
-set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${PROJECT_SOURCE_DIR}/Source" 	"${GASS_DEPENDENCIES_DIR}/tinyxml"	"${GASS_DEPENDENCIES_DIR}/tbb/include")
-set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/")
-set(GASS_COMMON_LINK_LIBRARIES optimized tinyxml debug tinyxml_d)
+set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${PROJECT_SOURCE_DIR}/Source" 	"${GASS_DEPENDENCIES_DIR}/tinyxml"	"${GASS_DEPENDENCIES_DIR}/tbb/include" "${GASS_DEPENDENCIES_DIR}/angelscript/include")
+set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/angelscript/lib")
+set(GASS_COMMON_LINK_LIBRARIES 
+	optimized tinyxml
+	optimized angelscript	
+	debug tinyxml_d 
+	debug angelscriptd
+	)
 #set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 
 add_subdirectory( Source )
