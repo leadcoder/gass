@@ -21,6 +21,7 @@
 #include "Sim/GASSScriptManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
@@ -66,44 +67,75 @@ namespace GASS
 		m_Engine->Release();
 	}
 
+template<class A, class B>
+B* refCast(A* a)
+{
+    // If the handle already is a null handle, then just return the null handle
+    if( !a ) return 0;
+    // Now try to dynamically cast the pointer to the wanted type
+    B* b = dynamic_cast<B*>(a);
+    if( b != 0 )
+    {
+        // Since the cast was made, we need to increase the ref counter for the returned handle
+        //b->addref();
+    }
+    return b;
+}
+
 	void ScriptManager::Init()
 	{
 		RegisterStdString(m_Engine);
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
 		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); assert( r >= 0 );
 
-		/*ScriptControllerPtr  controller = LoadScript("c:/temp/test.as");
+		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
 
-		asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick()");
-		r = ctx->Prepare(my_func);
-		if( r < 0 ) 
-		{
-			cout << "Failed to prepare the context." << endl;
-			return;
-		}
 
-		r = ctx->Execute();
-	if( r != asEXECUTION_FINISHED )
-	{
-		// The execution didn't finish as we had planned. Determine why.
-		if( r == asEXECUTION_ABORTED )
-			std::cout << "The script was aborted before it could finish. Probably it timed out." << endl;
-		else if( r == asEXECUTION_EXCEPTION )
-		{
-			std::cout << "The script ended with an exception." << endl;
+		m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectBehaviour("BaseComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<BaseComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
 
-			// Write some information about the script exception
-			asIScriptFunction *func = ctx->GetExceptionFunction();
-			std::cout << "func: " << func->GetDeclaration() << endl;
-			std::cout << "modl: " << func->GetModuleName() << endl;
-			std::cout << "sect: " << func->GetScriptSectionName() << endl;
-			std::cout << "line: " << ctx->GetExceptionLineNumber() << endl;
-			std::cout << "desc: " << ctx->GetExceptionString() << endl;
-		}
-		else
-			std::cout << "The script ended for some unforeseen reason (" << r << ")." << endl;
-		}*/
+		ScriptControllerPtr  controller = LoadScript("c:\\temp\\test.as");
+
+		asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick(SceneObject @)");
+		asIScriptContext *ctx = PrepareContextFromPool(my_func);
+		
+		SceneObjectPtr hej (new SceneObject());
+		hej->SetName("cool");
+		ctx->SetArgObject(0, hej.get());
+		
+		ExecuteCall(ctx);
+		ReturnContextToPool(ctx);
 	}
+
+	int ScriptManager::ExecuteCall(asIScriptContext *ctx)
+	{
+		int r = ctx->Execute();
+		if( r != asEXECUTION_FINISHED )
+		{
+			// The execution didn't finish as we had planned. Determine why.
+			if( r == asEXECUTION_ABORTED )
+				std::cout << "The script was aborted before it could finish. Probably it timed out." << std::endl;
+			else if( r == asEXECUTION_EXCEPTION )
+			{
+				std::cout << "The script ended with an exception." << std::endl;
+
+				// Write some information about the script exception
+				asIScriptFunction *func = ctx->GetExceptionFunction();
+				std::cout << "func: " << func->GetDeclaration() << std::endl;
+				std::cout << "modl: " << func->GetModuleName() << std::endl;
+				std::cout << "sect: " << func->GetScriptSectionName() << std::endl;
+				std::cout << "line: " << ctx->GetExceptionLineNumber() << std::endl;
+				std::cout << "desc: " << ctx->GetExceptionString() << std::endl;
+			}
+			else
+				std::cout << "The script ended for some unforeseen reason (" << r << ")." << std::endl;
+		}
+		return r;
+	}
+
 
 	ScriptControllerPtr ScriptManager::LoadScript(const std::string &script)
 	{
@@ -131,12 +163,12 @@ namespace GASS
 
 		// If the script file doesn't exist, then there is no script controller for this type
 		FILE *f;
-		if( (f = fopen((script + ".as").c_str(), "r")) == 0 )
+		if( (f = fopen((script).c_str(), "r")) == 0 )
 			return 0;
 		fclose(f);
 
 		// Let the builder load the script, and do the necessary pre-processing (include files, etc)
-		r = builder.AddSectionFromFile((script + ".as").c_str());
+		r = builder.AddSectionFromFile((script).c_str());
 		if( r < 0 )
 			return 0;
 
@@ -144,13 +176,15 @@ namespace GASS
 		if( r < 0 )
 			return 0;
 
+		
 		// Cache the functions and methods that will be used
-		ScriptControllerPtr ctrl(new ScriptController());
-		m_ScriptControllers[script] = ctrl;
 		//ctrl->module = script;
 		// Find the class that implements the IController interface
 		mod = m_Engine->GetModule(script.c_str(), asGM_ONLY_IF_EXISTS);
 		asIObjectType *type = 0;
+		ScriptControllerPtr ctrl(new ScriptController(mod));
+		m_ScriptControllers[script] = ctrl;
+		
 		return ctrl;
 		/*int tc = mod->GetObjectTypeCount();
 		for( int n = 0; n < tc; n++ )
@@ -201,6 +235,31 @@ namespace GASS
 		// Add the cache as user data to the type for quick access
 		type->SetUserData(ctrl);*/
 
+	}
+
+	asIScriptContext *ScriptManager::PrepareContextFromPool(asIScriptFunction *func)
+	{
+		asIScriptContext *ctx = 0;
+		if( m_Contexts.size() )
+		{
+			ctx = *m_Contexts.rbegin();
+			m_Contexts.pop_back();
+		}
+		else
+			ctx = m_Engine->CreateContext();
+
+		int r = ctx->Prepare(func); assert( r >= 0 );
+
+		return ctx;
+	}
+
+	void ScriptManager::ReturnContextToPool(asIScriptContext *ctx)
+	{
+		m_Contexts.push_back(ctx);
+
+		// Unprepare the context to free any objects that might be held
+		// as we don't know when the context will be used again.
+		ctx->Unprepare();
 	}
 }
 

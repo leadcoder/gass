@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://sourceforge.net/projects/gass/                                 *
+* See http://code.google.com/p/gass/                                 *
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *
@@ -18,57 +18,24 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef AS_SCRIPT_COMPONENT_H
+#define AS_SCRIPT_COMPONENT_H
 
-
-#include "Sim/GASSCommon.h"
-#include "Sim/GASSResourceLocation.h"
-#include "Sim/GASSResource.h"
-class TiXmlElement;
-class asIScriptEngine;
-class asIScriptModule;
-class asIScriptContext;
-class asIScriptFunction;
+#include "Sim/GASS.h"
 
 namespace GASS
 {
-	/**
-		ScriptManager
-	*/
-	class GASSExport ScriptController
+	class ASScriptComponent:  public Reflection<ASScriptComponent,BaseSceneComponent>
 	{
 	public:
-		ScriptController(asIScriptModule *mod) : m_Module(mod){}
-		virtual ~ScriptController(){}
-		asIScriptModule* GetModule() const{return m_Module;}
+		ASScriptComponent();
+		virtual ~ASScriptComponent();
+		static void RegisterReflection();
+		virtual void OnInitialize();
 	private:
-		asIScriptModule *m_Module;
+		void SetScriptFile(const std::string &script_file);
+		std::string GetScriptFile() const;
+		std::string m_Script;
 	};
-	typedef SPTR<ScriptController> ScriptControllerPtr;
-
-	/**
-		ScriptManager
-	*/
-	class GASSExport ScriptManager
-	{
-	public:
-		ScriptManager();
-		virtual ~ScriptManager();
-		void Init();
-		ScriptControllerPtr LoadScript(const std::string &script);
-		asIScriptEngine *GetEngine() const {return m_Engine;}
-		void ReturnContextToPool(asIScriptContext *ctx);
-		asIScriptContext *PrepareContextFromPool(asIScriptFunction *func);
-		int ExecuteCall(asIScriptContext *ctx);
-	private:
-		asIScriptEngine *m_Engine;
-		std::map<std::string,ScriptControllerPtr> m_ScriptControllers;
-
-		// Our pool of script contexts. This is used to avoid allocating
-		// the context objects all the time. The context objects are quite
-		// heavy weight and should be shared between function calls.
-		std::vector<asIScriptContext *> m_Contexts;
-
-	};
-	typedef SPTR<ScriptManager> ScriptManagerPtr;
 }
+#endif
