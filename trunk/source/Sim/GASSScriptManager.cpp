@@ -82,16 +82,49 @@ B* refCast(A* a)
     return b;
 }
 
+	static void Vec3DefaultConstructor(Vec3 *self)
+	{
+        new(self) Vec3();
+	}
+
+    static void Vec3Constructor2(double x, double y, double z, Vec3 *self)
+	{
+        new(self) Vec3(x, y, z);
+	}
+
+    static void Vec3CopyConstruct(const Vec3 &other, Vec3 *thisPointer)
+    {
+        new(thisPointer) Vec3(other);
+    }
+
+    static void Vec3Destruct(Vec3 *thisPointer)
+    {
+	    thisPointer->~Vec3();
+    }
+
+    static Vec3 &Vec3Assignment(Vec3 *other, Vec3 *self)
+    {
+	    return *self = *other;
+    }
+
 	void ScriptManager::Init()
 	{
 		RegisterStdString(m_Engine);
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
 		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); assert( r >= 0 );
+		r = m_Engine->RegisterObjectType("Vec3", sizeof(Vec3), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
+		
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(Vec3DefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f(double, double, double)",	asFUNCTION(Vec3Constructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
+        r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(Vec3Destruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
+	    r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 &opAssign(Vec3&in)", asFUNCTION(Vec3Assignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Vec3", "double x", offsetof(Vec3, x)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); assert( r >= 0 );
+		
 
 		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
-
-
 		m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("BaseComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<BaseComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
@@ -107,7 +140,20 @@ B* refCast(A* a)
 		ctx->SetArgObject(0, hej.get());
 		
 		ExecuteCall(ctx);
-		ReturnContextToPool(ctx);*/
+		ReturnContextToPool(ctx);
+
+
+		my_func = controller->GetModule()->GetFunctionByDecl("void onTestPos(const Vec3 &in)");
+		ctx = PrepareContextFromPool(my_func);
+		
+		Vec3 pos(10,0,0);
+		//hej->SetName("cool");
+		ctx->SetArgAddress(0, &pos);
+		//ctx->SetArgObject(0, pos);
+		
+		ExecuteCall(ctx);
+		ReturnContextToPool(ctx);
+		*/
 	}
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)

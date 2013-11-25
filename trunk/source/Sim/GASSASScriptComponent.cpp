@@ -20,6 +20,7 @@
 
 #include "GASSASScriptComponent.h"
 #include "GASSScriptManager.h"
+#include <angelscript.h>
 
 namespace GASS
 {
@@ -40,17 +41,12 @@ namespace GASS
 
 	void ASScriptComponent::OnInitialize()
 	{
-		//SimEngine::Get().GetScriptManager()->GetEngine();
-		
 		ScriptControllerPtr  controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as");
-		/*asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick()");
-		asIScriptContext *ctx = PrepareContextFromPool(my_func);
-
-		SceneObjectPtr hej (new SceneObject());
-		hej->SetName("cool");
-		ctx->SetArgObject(0, hej.get());
-		ExecuteCall(ctx);
-		ReturnContextToPool(ctx);*/
+		asIScriptFunction *init_func = controller->GetModule()->GetFunctionByDecl("void onInit(SceneObject @)");
+		asIScriptContext *ctx = SimEngine::Get().GetScriptManager()->PrepareContextFromPool(init_func);
+		ctx->SetArgObject(0, GetSceneObject().get());
+		SimEngine::Get().GetScriptManager()->ExecuteCall(ctx);
+		SimEngine::Get().GetScriptManager()->ReturnContextToPool(ctx);
 	}
 
 	void ASScriptComponent::SetScriptFile(const std::string &script_file)
