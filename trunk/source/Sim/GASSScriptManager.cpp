@@ -97,7 +97,7 @@ B* refCast(A* a)
 		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
 
-		ScriptControllerPtr  controller = LoadScript("c:\\temp\\test.as");
+		/*ScriptControllerPtr  controller = LoadScript("c:\\temp\\test.as");
 
 		asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick(SceneObject @)");
 		asIScriptContext *ctx = PrepareContextFromPool(my_func);
@@ -107,7 +107,7 @@ B* refCast(A* a)
 		ctx->SetArgObject(0, hej.get());
 		
 		ExecuteCall(ctx);
-		ReturnContextToPool(ctx);
+		ReturnContextToPool(ctx);*/
 	}
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)
