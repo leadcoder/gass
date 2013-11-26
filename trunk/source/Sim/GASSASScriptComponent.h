@@ -22,9 +22,12 @@
 #define AS_SCRIPT_COMPONENT_H
 
 #include "Sim/GASS.h"
+class asIScriptObject;
 
 namespace GASS
 {
+	FDECL(ScriptController);
+
 	class ASScriptComponent:  public Reflection<ASScriptComponent,BaseSceneComponent>
 	{
 	public:
@@ -32,10 +35,14 @@ namespace GASS
 		virtual ~ASScriptComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void SceneManagerTick(double delta_time);
 	private:
+
 		void SetScriptFile(const std::string &script_file);
 		std::string GetScriptFile() const;
 		std::string m_Script;
+		asIScriptObject *m_ScriptObject;
+		ScriptControllerPtr  m_Controller;
 	};
 }
 #endif

@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	ASScriptComponent::ASScriptComponent() 
+	ASScriptComponent::ASScriptComponent() : m_ScriptObject(NULL)
 	{
 	}
 
@@ -41,30 +41,48 @@ namespace GASS
 
 	void ASScriptComponent::OnInitialize()
 	{
-		ScriptControllerPtr  controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as");
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<BaseSceneManager>()->Register(listener);
+
+
+		m_Controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as");
 		//asIScriptFunction *init_func = controller->GetModule()->GetFunctionByDecl("void onInit(SceneObject @)");
 
-		if(controller->m_FactoryFunction)
+		if(m_Controller->m_FactoryFunction)
 		{
-			asIScriptContext *ctx = SimEngine::Get().GetScriptManager()->PrepareContextFromPool(controller->m_FactoryFunction);
+			asIScriptContext *ctx = SimEngine::Get().GetScriptManager()->PrepareContextFromPool(m_Controller->m_FactoryFunction);
 			
 			SimEngine::Get().GetScriptManager()->ExecuteCall(ctx);
 			
 			// Get the object that was created
-			asIScriptObject *obj = *(asIScriptObject**)ctx->GetAddressOfReturnValue();
+			m_ScriptObject = *(asIScriptObject**)ctx->GetAddressOfReturnValue();
 			// If you're going to store the object you must increase the reference,
 			// otherwise it will be destroyed when the context is reused or destroyed.
-			obj->AddRef();
-			if(controller->m_InitFunction)
+			m_ScriptObject->AddRef();
+			if(m_Controller->m_InitFunction)
 			{
-				ctx->Prepare(controller->m_InitFunction);
+				ctx->Prepare(m_Controller->m_InitFunction);
 				//Set the object pointer
-				ctx->SetObject(obj);
+				ctx->SetObject(m_ScriptObject);
 				ctx->SetArgObject(0, GetSceneObject().get());
 				SimEngine::Get().GetScriptManager()->ExecuteCall(ctx);
 			}
 			SimEngine::Get().GetScriptManager()->ReturnContextToPool(ctx);
 		}
+	}
+
+	void ASScriptComponent::SceneManagerTick(double delta_time)
+	{
+		if(m_ScriptObject)
+		{
+			asIScriptContext *ctx = SimEngine::Get().GetScriptManager()->PrepareContextFromPool(m_Controller->m_UpdateFunction);
+			//Set the object pointer
+			ctx->SetObject(m_ScriptObject);
+			ctx->SetArgDouble(0, delta_time);
+			SimEngine::Get().GetScriptManager()->ExecuteCall(ctx);
+			SimEngine::Get().GetScriptManager()->ReturnContextToPool(ctx);
+		}
+		
 	}
 
 	void ASScriptComponent::SetScriptFile(const std::string &script_file)
@@ -76,5 +94,4 @@ namespace GASS
 	{
 		return m_Script;
 	}
-	
 }
