@@ -702,9 +702,16 @@ namespace GASS
 		return DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
 	}
 
+
+	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name)
+	{
+		const std::string factory_class_name = ComponentFactory::Get().GetClassName(comp_name);
+		GASS::BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetFirstComponentByClass(factory_class_name,false));
+		return bsc.get();
+	}
+
 	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
 	{
-
 		ComponentContainerPtr cc;
 		if(cc_elem->Attribute("from_template"))
 		{

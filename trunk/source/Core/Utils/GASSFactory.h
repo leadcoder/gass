@@ -85,6 +85,7 @@ namespace GASS
 		BasePtr Create(ObjectType type);
 		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
 		bool Remove(ObjectType type);
+		std::string GetClassName(const std::string &factory_name);
 		std::string GetFactoryName(const std::string &class_name);
 		std::vector<std::string> GetFactoryNames();
 	private:
@@ -132,6 +133,18 @@ namespace GASS
 				return (*it).first;
 			}
 			++it;
+		}
+		return std::string("");
+	}
+
+
+	template<class Base, class ObjectType>
+	std::string Factory<Base,ObjectType>::GetClassName(const std::string &factory_name)
+	{
+		typename CreatorMap::iterator it = m_creatorMap.find(factory_name);
+		if (it != m_creatorMap.end())
+		{
+			return (*it).second->GetClassName();
 		}
 		return std::string("");
 	}

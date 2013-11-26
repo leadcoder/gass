@@ -26,11 +26,13 @@
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/ComponentSystem/GASSBaseComponent.h"
 #include <tinyxml.h>
 #include <angelscript.h>
 //addons
 #include "Sim/Utils/Script/scriptstdstring.h"
 #include "Sim/Utils/Script/ScriptBuilder.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 namespace GASS
 {
 
@@ -66,21 +68,6 @@ namespace GASS
 		// Release the engine
 		m_Engine->Release();
 	}
-
-template<class A, class B>
-B* refCast(A* a)
-{
-    // If the handle already is a null handle, then just return the null handle
-    if( !a ) return 0;
-    // Now try to dynamically cast the pointer to the wanted type
-    B* b = dynamic_cast<B*>(a);
-    if( b != 0 )
-    {
-        // Since the cast was made, we need to increase the ref counter for the returned handle
-        //b->addref();
-    }
-    return b;
-}
 
 	static void Vec3DefaultConstructor(Vec3 *self)
 	{
@@ -122,13 +109,22 @@ B* refCast(A* a)
 		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); assert( r >= 0 );
 		
-
+		m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);
+		
 		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
 		m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("BaseComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<BaseComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
+		m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL);
+
+
+		//r = m_Engine->RegisterObjectType("ILocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "ILocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent,ILocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGLocationComponent,BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectMethod("ILocationComponent", "Vec3 GetPosition() const", asMETHODPR(ILocationComponent, GetPosition,() const, Vec3), asCALL_THISCALL);assert(r >= 0);
 
 		/*ScriptControllerPtr  controller = LoadScript("c:\\temp\\test.as");
 
@@ -187,11 +183,12 @@ B* refCast(A* a)
 	{
 		int r;
 		// Find the cached controller
-		/*for( unsigned int n = 0; n < m_CachedScripts.size(); n++ )
+
+		std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
+		if( iter != m_ScriptControllers.end())
 		{
-		if( m_CachedScripts[n]->module == script )
-		return m_CachedScripts[n];
-		}*/
+			return iter->second;
+		}
 
 		// No controller, check if the script has already been loaded
 		asIScriptModule *mod = m_Engine->GetModule(script.c_str(), asGM_ONLY_IF_EXISTS);

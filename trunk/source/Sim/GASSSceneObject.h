@@ -272,6 +272,10 @@ namespace GASS
 		*/
 		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
 
+		/**
+		Function used by scripts to get components by class name, note that this will return a raw pointer!
+		*/
+		BaseSceneComponent* GetComponentByClassName(const std::string &comp_name);
 		//void LoadFromFile(const std::string &filename);
 		static SceneObjectPtr LoadFromXML(const std::string &filename);
 	protected:
@@ -282,7 +286,6 @@ namespace GASS
 		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
 		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
-		
 
 		ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
 		SceneWeakPtr m_Scene;
