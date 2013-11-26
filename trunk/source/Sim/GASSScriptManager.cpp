@@ -71,47 +71,48 @@ namespace GASS
 
 	static void Vec3DefaultConstructor(Vec3 *self)
 	{
-        new(self) Vec3();
+		new(self) Vec3();
 	}
 
-    static void Vec3Constructor2(double x, double y, double z, Vec3 *self)
+	static void Vec3Constructor2(double x, double y, double z, Vec3 *self)
 	{
-        new(self) Vec3(x, y, z);
+		new(self) Vec3(x, y, z);
 	}
 
-    static void Vec3CopyConstruct(const Vec3 &other, Vec3 *thisPointer)
-    {
-        new(thisPointer) Vec3(other);
-    }
+	static void Vec3CopyConstruct(const Vec3 &other, Vec3 *thisPointer)
+	{
+		new(thisPointer) Vec3(other);
+	}
 
-    static void Vec3Destruct(Vec3 *thisPointer)
-    {
-	    thisPointer->~Vec3();
-    }
+	static void Vec3Destruct(Vec3 *thisPointer)
+	{
+		thisPointer->~Vec3();
+	}
 
-    static Vec3 &Vec3Assignment(Vec3 *other, Vec3 *self)
-    {
-	    return *self = *other;
-    }
+	static Vec3 &Vec3Assignment(Vec3 *other, Vec3 *self)
+	{
+		return *self = *other;
+	}
 
 	void ScriptManager::Init()
 	{
+		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
 		RegisterStdString(m_Engine);
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
 		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); assert( r >= 0 );
 		r = m_Engine->RegisterObjectType("Vec3", sizeof(Vec3), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
-		
+
 		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(Vec3DefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f(double, double, double)",	asFUNCTION(Vec3Constructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
-        r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(Vec3Destruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
-	    r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 &opAssign(Vec3&in)", asFUNCTION(Vec3Assignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(Vec3Destruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 &opAssign(Vec3&in)", asFUNCTION(Vec3Assignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Vec3", "double x", offsetof(Vec3, x)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); assert( r >= 0 );
-		
+
 		m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);
-		
+
 		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
 		m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
@@ -130,23 +131,23 @@ namespace GASS
 
 		asIScriptFunction *my_func = controller->GetModule()->GetFunctionByDecl("void onTick(SceneObject @)");
 		asIScriptContext *ctx = PrepareContextFromPool(my_func);
-		
+
 		SceneObjectPtr hej (new SceneObject());
 		hej->SetName("cool");
 		ctx->SetArgObject(0, hej.get());
-		
+
 		ExecuteCall(ctx);
 		ReturnContextToPool(ctx);
 
 
 		my_func = controller->GetModule()->GetFunctionByDecl("void onTestPos(const Vec3 &in)");
 		ctx = PrepareContextFromPool(my_func);
-		
+
 		Vec3 pos(10,0,0);
 		//hej->SetName("cool");
 		ctx->SetArgAddress(0, &pos);
 		//ctx->SetArgObject(0, pos);
-		
+
 		ExecuteCall(ctx);
 		ReturnContextToPool(ctx);
 		*/
@@ -219,65 +220,60 @@ namespace GASS
 		if( r < 0 )
 			return 0;
 
-		
+
 		// Cache the functions and methods that will be used
 		//ctrl->module = script;
 		// Find the class that implements the IController interface
 		mod = m_Engine->GetModule(script.c_str(), asGM_ONLY_IF_EXISTS);
-		asIObjectType *type = 0;
 		ScriptControllerPtr ctrl(new ScriptController(mod));
 		m_ScriptControllers[script] = ctrl;
-		
-		return ctrl;
-		/*int tc = mod->GetObjectTypeCount();
+
+		//return ctrl;
+		asIObjectType *type = 0;
+		int tc = mod->GetObjectTypeCount();
 		for( int n = 0; n < tc; n++ )
 		{
-		bool found = false;
-		type = mod->GetObjectTypeByIndex(n);
-		int ic = type->GetInterfaceCount();
-		for( int i = 0; i < ic; i++ )
+			bool found = false;
+			type = mod->GetObjectTypeByIndex(n);
+			int ic = type->GetInterfaceCount();
+			for( int i = 0; i < ic; i++ )
+			{
+				if( strcmp(type->GetName(), "ScriptController") == 0 )
+				{
+					found = true;
+					break;
+				}
+			}
+			if( found == true )
+			{
+				break;
+			}
+		}
+
+		if( type != NULL)
 		{
-		if( strcmp(type->GetInterface(i)->GetName(), "IController") == 0 )
-		{
-		found = true;
-		break;
-		}
-		}
 
-		if( found == true )
-		{
-		ctrl->type = type;
-		break;
+			// Find the factory function
+			// The game engine will pass in the owning CGameObj to the controller for storage
+			//string s = string(type->GetName()) + "@ " + string(type->GetName()) + "(CGameObj @)";
+			//ctrl->factoryFunc = type->GetFactoryByDecl(s.c_str());
+			/*if( ctrl->factoryFunc == 0 )
+			{
+			cout << "Couldn't find the appropriate factory for the type '" << script << "'" << endl;
+			controllers.pop_back();
+			delete ctrl;
+			return 0;
+			}*/
+
+			
+			// Get the factory function from the object type
+			ctrl->m_FactoryFunction = type->GetFactoryByDecl("ScriptController @ScriptController()");
+
+			// Find the optional event handlers
+			ctrl->m_UpdateFunction     = type->GetMethodByDecl("void OnUpdate(double)");
+			ctrl->m_InitFunction     = type->GetMethodByDecl("void OnInit(SceneObject @)");
 		}
-		}
-
-		if( ctrl->type == 0 )
-		{
-		cout << "Couldn't find the controller class for the type '" << script << "'" << endl;
-		controllers.pop_back();
-		delete ctrl;
-		return 0;
-		}
-
-		// Find the factory function
-		// The game engine will pass in the owning CGameObj to the controller for storage
-		string s = string(type->GetName()) + "@ " + string(type->GetName()) + "(CGameObj @)";
-		ctrl->factoryFunc = type->GetFactoryByDecl(s.c_str());
-		if( ctrl->factoryFunc == 0 )
-		{
-		cout << "Couldn't find the appropriate factory for the type '" << script << "'" << endl;
-		controllers.pop_back();
-		delete ctrl;
-		return 0;
-		}
-
-		// Find the optional event handlers
-		ctrl->onThinkMethod     = type->GetMethodByDecl("void OnThink()");
-		ctrl->onMessageMethod   = type->GetMethodByDecl("void OnMessage(ref @msg, const CGameObj @sender)");
-
-		// Add the cache as user data to the type for quick access
-		type->SetUserData(ctrl);*/
-
+		return ctrl;
 	}
 
 	asIScriptContext *ScriptManager::PrepareContextFromPool(asIScriptFunction *func)

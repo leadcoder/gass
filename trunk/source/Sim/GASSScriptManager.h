@@ -38,9 +38,20 @@ namespace GASS
 	class GASSExport ScriptController
 	{
 	public:
-		ScriptController(asIScriptModule *mod) : m_Module(mod){}
+		ScriptController(asIScriptModule *mod) : m_Module(mod),
+		m_UpdateFunction(NULL),
+		m_InitFunction(NULL),
+		m_FactoryFunction(NULL)
+		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}
+		//void SetUpdateFunction(asIScriptFunction * update_f) {m_UpdateFunction= update_f;}
+		//void SetInitFunction(asIScriptFunction * init_f) {m_InitFunction= init_f;}
+		//asIScriptFunction* GetUpdateFunction() const {return m_UpdateFunction;}
+		//asIScriptFunction* GetInitFunction() const {return m_InitFunction;}
+		asIScriptFunction *m_UpdateFunction;
+		asIScriptFunction *m_InitFunction;
+		asIScriptFunction *m_FactoryFunction;
 	private:
 		asIScriptModule *m_Module;
 	};

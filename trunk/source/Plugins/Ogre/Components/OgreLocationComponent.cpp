@@ -35,7 +35,8 @@
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 
-
+#include "Sim/GASSScriptManager.h"
+#include <angelscript.h>
 
 namespace GASS
 {
@@ -72,6 +73,19 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("If true this node is attached to first ancestor SceneObject that has a location component",PF_VISIBLE | PF_EDITABLE)));
+	
+		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
+		int r;
+		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		
+		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent,OgreLocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OgreLocationComponent,BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+
+		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OgreLocationComponent, SetAttachToParent), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OgreLocationComponent, GetAttachToParent), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHOD(OgreLocationComponent, GetPosition), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetPosition(const Vec3 &in)", asMETHOD(OgreLocationComponent, SetPosition), asCALL_THISCALL);assert(r >= 0);
 	}
 
 	void OgreLocationComponent::OnInitialize()
