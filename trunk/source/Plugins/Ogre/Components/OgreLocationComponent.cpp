@@ -86,6 +86,13 @@ namespace GASS
 		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OgreLocationComponent, GetAttachToParent), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHOD(OgreLocationComponent, GetPosition), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetPosition(const Vec3 &in)", asMETHOD(OgreLocationComponent, SetPosition), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetWorldPosition() const", asMETHOD(OgreLocationComponent, GetWorldPosition), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetWorldPosition(const Vec3 &in)", asMETHOD(OgreLocationComponent, SetWorldPosition), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "Quaternion GetRotation() const", asMETHOD(OgreLocationComponent, GetRotation), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetRotation), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "Quaternion GetWorldRotation() const", asMETHOD(OgreLocationComponent, GetWorldRotation), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetWorldRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetWorldRotation), asCALL_THISCALL);assert(r >= 0);
+		
 	}
 
 	void OgreLocationComponent::OnInitialize()

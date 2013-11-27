@@ -280,7 +280,7 @@ namespace GASS
 		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
 	}
 
-	SceneObjectPtr SceneObject::GetObjectUnderRoot()
+	SceneObjectPtr SceneObject::GetObjectUnderRoot() 
 	{
 		ComponentContainerPtr container = shared_from_this();
 
@@ -365,10 +365,10 @@ namespace GASS
 		m_MessageManager->Clear();
 	}
 
-	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive)
+	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive) const
 	{
 		//Check all components
-		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
 			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -380,7 +380,7 @@ namespace GASS
 
 		if(recursive)
 		{
-			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -389,10 +389,10 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr SceneObject::GetFirstComponentByClass(const std::string &class_name, bool recursive) 
+	ComponentPtr SceneObject::GetFirstComponentByClass(const std::string &class_name, bool recursive) const 
 	{
 		//Check all components
-		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
 			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -403,7 +403,7 @@ namespace GASS
 		}
 		if(recursive)
 		{
-			IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -429,7 +429,7 @@ namespace GASS
 		return true;
 	}
 
-	SceneObjectPtr SceneObject::GetChildByGUID(const SceneObjectGUID &guid)
+	SceneObjectPtr SceneObject::GetChildByGUID(const SceneObjectGUID &guid) const
 	{
 		ComponentContainerVector::const_iterator comp_iter =  m_ComponentContainerVector.begin();
 		while(comp_iter != m_ComponentContainerVector.end())
@@ -697,17 +697,29 @@ namespace GASS
 	}
 
 
-	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name)
+	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name) const
 	{
 		return DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
 	}
 
 
-	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name)
+	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name) const
 	{
 		const std::string factory_class_name = ComponentFactory::Get().GetClassName(comp_name);
 		GASS::BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetFirstComponentByClass(factory_class_name,false));
 		return bsc.get();
+	}
+
+	SceneObject* SceneObject::GetSceneObjectByName(const std::string &name) const
+	{
+		SceneObjectPtr so = GetScene()->GetRootSceneObject()->GetFirstChildByName(name,true, true);
+		return so.get();
+	}
+
+	SceneObject* SceneObject::GetSceneObjectByID(const std::string &id) const
+	{
+		SceneObjectPtr so = GetScene()->GetRootSceneObject()->GetChildByID(id);
+		return so.get();
 	}
 
 	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const

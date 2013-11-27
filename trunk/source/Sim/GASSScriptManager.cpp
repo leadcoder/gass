@@ -94,6 +94,32 @@ namespace GASS
 		return *self = *other;
 	}
 
+	static void QuaternionDefaultConstructor(Quaternion *self)
+	{
+		new(self) Quaternion();
+	}
+
+	static void QuaternionConstructor2(double x, double y, double z, double w, Quaternion *self)
+	{
+		new(self) Quaternion(x, y, z, w);
+	}
+
+	static void QuaternionCopyConstruct(const Quaternion &other, Quaternion *thisPointer)
+	{
+		new(thisPointer) Quaternion(other);
+	}
+
+	static void QuaternionDestruct(Quaternion *thisPointer)
+	{
+		thisPointer->~Quaternion();
+	}
+
+	static Quaternion &QuaternionAssignment(Quaternion *other, Quaternion *self)
+	{
+		return *self = *other;
+	}
+
+
 	void ScriptManager::Init()
 	{
 		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
@@ -110,16 +136,34 @@ namespace GASS
 		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); assert( r >= 0 );
 
-		m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opAdd(const Vec3 &in) const", asMETHODPR(Vec3, operator+, (const Vec3&) const,	Vec3),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opSub(const Vec3 &in) const", asMETHODPR(Vec3, operator-, (const Vec3&) const,	Vec3),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Vec3, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(double) const", asMETHODPR(Vec3, operator*, (Float) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opNeg() const", asMETHODPR(Vec3, operator-, () const, Vec3), asCALL_THISCALL); assert(r >= 0);
+		
+		r = m_Engine->RegisterObjectType("Quaternion", sizeof(Quaternion), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(QuaternionDefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f(double, double, double, double)",	asFUNCTION(QuaternionConstructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(QuaternionDestruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double x", offsetof(Quaternion, x)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double y", offsetof(Quaternion, y)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double z", offsetof(Quaternion, z)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double w", offsetof(Quaternion, w)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
+		
+		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);
 
 		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
-		m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("BaseComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<BaseComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
-		m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL);
 
 
 		//r = m_Engine->RegisterObjectType("ILocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );

@@ -1170,9 +1170,9 @@ namespace GASS
 					}
 				}
 			}
-			int tot_verts = 0;
-			int tot_faces = 0;
-			for(int i = 0; i < mesh_data_vec.size() ; i++)
+			unsigned int tot_verts = 0;
+			unsigned int tot_faces = 0;
+			for(unsigned int i = 0; i < mesh_data_vec.size() ; i++)
 			{
 				tot_verts += mesh_data_vec[i]->PositionVector.size();
 				tot_faces  += mesh_data_vec[i]->IndexVector.size()/3;

@@ -96,14 +96,14 @@ namespace GASS
 						and not the one you have registred to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true);
+		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true) const;
 
 		/**Get first component of certain class. This function allow you to pass the class name as a string
 			@class_name Name of the component class to search for, note that this is the c++ class name 
 						and not the one you have registred to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true);
+		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true) const;
 
 
 		/**Get all components of certain class. This function allow you to pass the class as a template argument
@@ -222,7 +222,7 @@ namespace GASS
 		/** Get child scene objects that match GUID. 
 			@name The object GUID to search for
 		*/
-		SceneObjectPtr GetChildByGUID(const SceneObjectGUID &guid);
+		SceneObjectPtr GetChildByGUID(const SceneObjectGUID &guid) const;
 
 
 		/** Get first child scene objects that match id.
@@ -270,12 +270,14 @@ namespace GASS
 		/**
 		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainer
 		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
+		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name) const;
 
 		/**
 		Function used by scripts to get components by class name, note that this will return a raw pointer!
 		*/
-		BaseSceneComponent* GetComponentByClassName(const std::string &comp_name);
+		BaseSceneComponent* GetComponentByClassName(const std::string &comp_name) const;
+		SceneObject* GetSceneObjectByName(const std::string &name) const;
+		SceneObject* GetSceneObjectByID(const std::string &id) const;
 		//void LoadFromFile(const std::string &filename);
 		static SceneObjectPtr LoadFromXML(const std::string &filename);
 	protected:
