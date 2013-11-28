@@ -7,10 +7,7 @@
 
 namespace GASS
 {
-	VehicleControllerComponent::VehicleControllerComponent(void) :
-		m_Initialized(false),
-		m_RandomDelay(0,0),
-		m_RandomVelocity(0,0)
+	VehicleControllerComponent::VehicleControllerComponent(void) : m_Initialized(false)
 	{
 		
 	}	
@@ -23,30 +20,33 @@ namespace GASS
 	void VehicleControllerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("VehicleControllerComponent",new Creator<VehicleControllerComponent, IComponent>);
+		RegisterProperty<std::string>("VehicleTemplate", &VehicleControllerComponent::GetVehicleTemplate, &VehicleControllerComponent::SetVehicleTemplate);
 	}
 
 	void VehicleControllerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnTriggerEnter,TriggerEnterMessage,0));
 		m_Initialized = true;
+		SetVehicleTemplate(m_VehicleTemplate);
 	}
 
-	double VehicleControllerComponent::GetDelay() const
+	std::string VehicleControllerComponent::GetVehicleTemplate() const
 	{
-		double norm_rand = rand() / double(RAND_MAX);
-		return m_RandomDelay.x + norm_rand*(m_RandomDelay.y - m_RandomDelay.x);
+		return m_VehicleTemplate;
 	}
 
-	double VehicleControllerComponent::GetVelocity() const
+	void VehicleControllerComponent::SetVehicleTemplate(const std::string &template_name)
 	{
-		double norm_rand = rand() / double(RAND_MAX);
-		return m_RandomVelocity.x + norm_rand*(m_RandomVelocity.y - m_RandomVelocity.x);
+		m_VehicleTemplate = template_name;
+		if(m_Initialized)
+		{
+			//TODO: Remove previous vehicle
+			SceneObjectPtr vehicle = SimEngine::Get().CreateObjectFromTemplate(template_name);
+			if(vehicle)
+			{
+				m_Vehicle = vehicle;
+				GetSceneObject()->AddChildSceneObject(vehicle,false);
+				//Set to start location?
+			}
+		}
 	}
-
-	void VehicleControllerComponent::OnTriggerEnter(TriggerEnterMessagePtr message)
-	{
-		MessagePtr vel_message(new DesiredSpeedMessage(GetVelocity(),(int) (this),GetDelay()));
-		message->GetTrigger()->PostMessage(vel_message);
-	}
-
 }

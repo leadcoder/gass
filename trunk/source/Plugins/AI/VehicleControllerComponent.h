@@ -1,6 +1,6 @@
 
-#ifndef AI_TARGET__COMPONENT
-#define AI_TARGET__COMPONENT
+#ifndef AI_VEHICLE_CONTROLLER_COMPONENT
+#define AI_VEHICLE_CONTROLLER_COMPONENT
 
 #include "Sim/GASS.h"
 #include "Core/Utils/GASSFilePath.h"
@@ -19,17 +19,12 @@ namespace GASS
 		~VehicleControllerComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-	protected:
-		void OnTriggerEnter(TriggerEnterMessagePtr message);
 	private:
-		double GetDelay() const;
-		double GetVelocity() const;
-
-		ADD_PROPERTY(Vec2,RandomDelay)
-		ADD_PROPERTY(Vec2,RandomVelocity)
-		ADD_PROPERTY(bool,Enable)
-
+		void SetVehicleTemplate(const std::string &template_name);
+		std::string GetVehicleTemplate() const;
 		bool m_Initialized;
+		SceneObjectWeakPtr m_Vehicle;
+		std::string  m_VehicleTemplate;
 	};
 
 	typedef SPTR<VehicleControllerComponent> VehicleControllerComponentPtr;
