@@ -50,7 +50,6 @@ namespace GASS
 		return DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(AddComponent(comp_name));
 	}
 
-
 	BaseSceneComponentPtr SceneObjectTemplate::GetBaseSceneComponent(const std::string &comp_name)
 	{
 		return DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));

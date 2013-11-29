@@ -272,7 +272,7 @@ namespace GASS
 		}
 		else 
 		{
-			//only check if we should reflect paused flag and if so if we the sim ulation is paused.
+			//only check if we should reflect paused flag and if so if we the simulation is paused.
 			if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused())) 
 			{
 				UpdateListeners(delta_time,parent);

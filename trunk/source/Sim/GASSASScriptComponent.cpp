@@ -43,8 +43,7 @@ namespace GASS
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<BaseSceneManager>()->Register(listener);
-
-
+		
 		m_Controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as");
 		//asIScriptFunction *init_func = controller->GetModule()->GetFunctionByDecl("void onInit(SceneObject @)");
 
@@ -82,7 +81,6 @@ namespace GASS
 			SimEngine::Get().GetScriptManager()->ExecuteCall(ctx);
 			SimEngine::Get().GetScriptManager()->ReturnContextToPool(ctx);
 		}
-		
 	}
 
 	void ASScriptComponent::SetScriptFile(const std::string &script_file)

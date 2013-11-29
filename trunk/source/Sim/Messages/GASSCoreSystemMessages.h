@@ -102,6 +102,27 @@ namespace GASS
 	typedef SPTR<TimeStepRequest> TimeStepRequestPtr;
 
 
+	enum ScenarioState
+	{
+		SS_PAUSED,
+		SS_PLAY,
+		SS_STOP
+	};
+
+	class ScenarioStateRequest : public SystemRequestMessage
+	{
+	public:
+		ScenarioStateRequest  (ScenarioState state, SenderID sender_id = -1, double delay= 0) : SystemRequestMessage(sender_id , delay), m_State(state)
+		{
+
+		}
+		ScenarioState GetState()const {return m_State;}
+	private:
+		ScenarioState m_State;
+	};
+	typedef SPTR<ScenarioStateRequest> ScenarioStateRequestPtr;
+
+
 	//////////////////////////
 	//event message section
 	////////////////////////

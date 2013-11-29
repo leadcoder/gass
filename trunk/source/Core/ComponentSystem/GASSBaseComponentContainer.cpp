@@ -367,6 +367,16 @@ namespace GASS
 		return m_Serialize;
 	}
 
+	size_t BaseComponentContainer::GetNumChildren() const
+	{
+		return m_ComponentContainerVector.size();
+	}
+
+	ComponentContainerPtr BaseComponentContainer::GetChild(size_t index) const
+	{
+		return m_ComponentContainerVector[index];
+	}
+
 
 	#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void BaseComponentContainer::DebugPrint(int tc)
@@ -406,8 +416,7 @@ namespace GASS
 	}
 
 
-
-
+	
 }
 
 

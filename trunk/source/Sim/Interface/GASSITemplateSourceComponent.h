@@ -29,6 +29,7 @@ namespace GASS
 	public:
 		virtual ~ITemplateSourceComponent(){}
 		virtual std::vector<std::string> GetTemplates() const = 0;
+		virtual Vec3 GetOffset() const = 0;
 	protected:
 	};
 	typedef SPTR<ITemplateSourceComponent> TemplateSourceComponentPtr;

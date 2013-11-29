@@ -36,6 +36,7 @@ namespace GASS
 		virtual void OnInitialize();
 		void SetTemplates(const std::vector<std::string> &template_vec) {m_Templates = template_vec;}
 		std::vector<std::string>  GetTemplates() const {return m_Templates;}
+		Vec3 GetOffset() const {return Vec3(0,0,0);}
 	protected:
 		void OnLoad(MessagePtr message);
 		std::vector<std::string> m_Templates;

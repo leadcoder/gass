@@ -89,6 +89,11 @@ namespace GASS
 			m_Shape->release();
 		m_Shape = CreateShape();
 
+		if(m_Shape == NULL)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create shape","PhysXBaseGeometryComponent::OnLoad");
+		}
+
 		//update collision flags
 		GeometryComponentPtr geom  = GetGeometry();
 		physx::PxFilterData collFilterData;

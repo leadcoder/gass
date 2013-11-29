@@ -71,6 +71,8 @@ namespace GASS
 		virtual ComponentPtr GetComponent(const std::string &name) const;
 		virtual ConstComponentIterator GetComponents() const;
 		virtual ComponentIterator GetComponents();
+		virtual size_t GetNumChildren() const;
+		virtual ComponentContainerPtr GetChild(size_t index) const;
 
 		//xml serialize interface
 		virtual void LoadXML(TiXmlElement *obj_elem);

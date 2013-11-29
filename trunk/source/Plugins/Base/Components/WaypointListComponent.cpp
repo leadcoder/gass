@@ -272,7 +272,7 @@ namespace GASS
 
 
 		//auto rotate waypoints?
-		if(m_AutoRotateWaypoints)
+		if(m_AutoRotateWaypoints && wp_vec.size() > 1)
 		{
 			Mat4 rot;
 			rot.Identity();

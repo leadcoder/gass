@@ -96,9 +96,21 @@ namespace GASS
 		virtual ComponentContainerIterator GetChildren() = 0;
 
 		virtual ConstComponentContainerIterator GetChildren() const = 0;
+
+		/**
+			Get Number of children
+		*/
+		virtual size_t GetNumChildren() const  = 0;
+
+		/**
+			Get child by index, used carefully in for-loops, one child can remove the other! 
+			Use ComponentContainerIterator returned by GetChildren instead
+		*/
+		virtual ComponentContainerPtr GetChild(size_t index) const =0;
+
 		/**
 			Get component by name,
-			only serach this containers components and first one is returned
+			only search this containers components and first one is returned
 		*/
 		virtual ComponentPtr GetComponent(const std::string &name) const = 0;
 
