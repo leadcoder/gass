@@ -94,7 +94,7 @@ namespace GASS
 				const double target_radius = 5;
 				FollowPath(path, target_radius);
 				//Get speed!
-				GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(9)));
+				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(9)));
 			}
 		}
 	}
@@ -130,11 +130,11 @@ namespace GASS
 			}
 			Float new_distance = now_distance + look_ahead;
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, false, wp_index);
-			GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+			vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
 		}
 		else
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+			vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
 		}
 	}
 }
