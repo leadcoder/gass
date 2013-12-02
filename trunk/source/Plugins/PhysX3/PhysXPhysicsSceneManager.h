@@ -65,6 +65,7 @@ namespace GASS
 	protected:
 		void SystemTick(double delta);
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
+		void OnActivateMessage(ActivatePhysicsMessagePtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		bool HasConvexMesh(const std::string &name) const;

@@ -24,10 +24,14 @@ namespace GASS
 		SceneObjectPtr GetVehicle() const {return SceneObjectPtr(m_Vehicle,boost::detail::sp_nothrow_tag());}
 		void FollowPath(const std::vector<Vec3> path, double target_radius);
 		bool GetTargetReached() const {return m_TargetReached;}
-		void Apply(VehicleBehaviorComponentPtr comp);
+		//void Apply(VehicleBehaviorComponentPtr comp);
+		void SetBehaviorList(std::vector<VehicleBehaviorComponentPtr> behaviors);
 		void OnUpdate(double);
+		bool GetRelativePosition(Float behinde_dist, Vec3 &target_position);
 	private:
-		
+		void OnPathfollow(double);
+		void Apply(VehicleBehaviorComponentPtr comp);
+		void OnScenarioEvent(ScenarioStateRequestPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void SetVehicleTemplate(const std::string &template_name);
 		std::string GetVehicleTemplate() const;
@@ -39,6 +43,9 @@ namespace GASS
 		std::vector<Vec3> m_Path;
 		bool m_TargetReached;
 		Float m_TargetRadius;
+		ScenarioState m_ScenarioState;
+		Float m_CurrentPathDist;
+		std::vector<VehicleBehaviorComponentPtr> m_BehaviorWaypoints;
 	};
 
 	typedef SPTR<VehicleControllerComponent> VehicleControllerComponentPtr;

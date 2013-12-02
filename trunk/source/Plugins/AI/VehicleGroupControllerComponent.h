@@ -40,6 +40,7 @@ namespace GASS
 		std::vector<std::string> m_Templates;
 		std::vector<VehicleBehaviorComponentPtr> m_BehaviorWaypoints;
 		VehicleControllerComponentWeakPtr  m_Leader;
+		std::vector<VehicleControllerComponentWeakPtr> m_Slaves;
 		bool m_Update;
 	};
 

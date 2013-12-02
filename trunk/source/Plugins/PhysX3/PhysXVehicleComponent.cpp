@@ -109,6 +109,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPositionChanged,PositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnRotationChanged,RotationMessage,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldRotationChanged,WorldRotationMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
@@ -125,7 +126,6 @@ namespace GASS
 	{
 		if(!m_Vehicle)
 			return;
-
 
 		//Set the car back to its rest state.
 		m_Vehicle->setToRestState();
@@ -476,6 +476,16 @@ namespace GASS
 	}
 
 	void PhysXVehicleComponent::OnRotationChanged(RotationMessagePtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		{
+			Quaternion rot = message->GetRotation();
+			SetRotation(rot);
+		}
+	}
+
+	void PhysXVehicleComponent::OnWorldRotationChanged(WorldRotationMessagePtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class

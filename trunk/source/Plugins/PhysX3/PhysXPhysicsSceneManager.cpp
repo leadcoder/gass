@@ -110,12 +110,13 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnCreate()
 	{
 		ScenePtr scene = GetScene();
-		//scene->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnSceneObjectLoaded, PostComponentsInitializedEvent,0));
+		GetScene()->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
 	}
 
-	//physx::PxRevoluteJoint *m_RollJoint ;
-	//PxRigidDynamic* m_Body;
-	//PxRigidDynamic* m_Wheel;
+	void PhysXPhysicsSceneManager::OnActivateMessage(ActivatePhysicsMessagePtr message)
+	{
+		m_Paused = !message->GetActivate();
+	}
 
 	void PhysXPhysicsSceneManager::OnInit()
 	{
@@ -176,6 +177,7 @@ namespace GASS
 		std::cerr<<"create shape failed!"<<std::endl;
 		m_PxScene->addActor(*plane);
 		*/
+
 		m_Init = true;
 
 	}
@@ -215,82 +217,30 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr body,wheel;
-
 	void PhysXPhysicsSceneManager::SystemTick(double delta_time)
 	{
-		if(m_Paused)
-			return;
-
-		/*if(!body)
+		if(!m_Paused)
 		{
-			body = GetScene()->LoadObjectFromTemplate("TestBody",GetScene()->GetRootSceneObject());
-		}
-		Vec3 pos = PxConvert::ToGASS(m_Body->getGlobalPose().p);
-		Quaternion q = PxConvert::ToGASS(m_Body->getGlobalPose().q);
+			if(delta_time > 1.0/60.0)
+				delta_time = 1.0/60.0;
 
-		MessagePtr pos_msg(new WorldPositionMessage(pos));
-		body->PostMessage(pos_msg);
+			m_PxScene->simulate(delta_time);
 
-		MessagePtr rot_msg(new WorldRotationMessage(q));
-		body->PostMessage(rot_msg);
+			while(!m_PxScene->fetchResults())
+			{
 
-		if(!wheel)
-		{
-			wheel = GetScene()->LoadObjectFromTemplate("TestWheel",GetScene()->GetRootSceneObject());
-		}
-		pos = PxConvert::ToGASS(m_Wheel->getGlobalPose().p);
-		q = PxConvert::ToGASS(m_Wheel->getGlobalPose().q);
+			}
 
-		 pos_msg = MessagePtr(new WorldPositionMessage(pos));
-		wheel->PostMessage(pos_msg);
-
-		rot_msg = MessagePtr (new WorldRotationMessage(q));
-		wheel->PostMessage(rot_msg);
-
-		
-		static float angular_vel = 0.1;
-		if(GetAsyncKeyState(VK_UP))
-		{
-			angular_vel += 1.7;
-		}
-		if(GetAsyncKeyState(VK_DOWN))
-		{
-			angular_vel -= 1.7;
-		}
-		m_RollJoint->setDriveVelocity(angular_vel);*/
-
-
-		if(delta_time > 1.0/60.0)
-			delta_time = 1.0/60.0;
-		
-
-		
-		/*m_PxScene->simulate(delta_time*0.5);
-
-		
-		while(!m_PxScene->fetchResults())
-		{
-
-		}*/
-
-		m_PxScene->simulate(delta_time);
-			
-		
-		//m_PxScene->simulate(0.016666660f);
-
-		while(!m_PxScene->fetchResults())
-		{
-
+			//Process vehicles
+			if(m_Vehicles.size()  > 0)
+			{
+				PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
+				PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),(int)m_Vehicles.size(),&m_Vehicles[0]);
+			}
 		}
 
-		//Process vehicles
-		if(m_Vehicles.size()  > 0)
-		{
-			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-			PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
-			PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),(int)m_Vehicles.size(),&m_Vehicles[0]);
-		}
+		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 	}
 

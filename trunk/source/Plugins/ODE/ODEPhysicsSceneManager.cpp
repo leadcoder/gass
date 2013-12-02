@@ -84,7 +84,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsMessagePtr message)
 	{
-		if(message->Activate())
+		if(message->GetActivate())
 			m_Paused = false;
 		else 
 			m_Paused = true;

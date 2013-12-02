@@ -149,7 +149,6 @@ namespace GASS
 		SetVelocity(message->GetVelocity());
 	}
 
-
 	void PhysXBodyComponent::OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message)
 	{
 		SetAngularVelocity(message->GetAngularVelocity());

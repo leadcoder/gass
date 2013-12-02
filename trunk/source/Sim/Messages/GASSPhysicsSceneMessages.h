@@ -34,9 +34,9 @@ namespace GASS
 	//*********************************************************
 
 	/**
-		Message used to activate/deactive physics
+		Message used to activate/deactivate physics
 	*/
-	class ActivatePhysicsMessage : public BaseMessage
+	class ActivatePhysicsMessage : public SceneMessage
 	{
 	public:
 		/**
@@ -44,9 +44,9 @@ namespace GASS
 		@param activate Indicate mode (0 == inactive, 1==active)
 		*/
 		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		  SceneMessage(sender_id , delay) ,
 			  m_Activate(activate){}
-		  int Activate() const {return m_Activate;}
+		  int GetActivate() const {return m_Activate;}
 	private:
 		int m_Activate;
 	};

@@ -81,13 +81,26 @@ namespace GASS
 				VehicleBehaviorComponentPtr vbc = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(comps[i]);
 				m_BehaviorWaypoints.push_back(vbc);
 			}
-			//SPTR<IWaypointListComponent> wpl_comp = m_WaypointList->GetFirstComponentByClass<IWaypointListComponent>();
-			//std::vector<Vec3> points =  wpl_comp->GetWaypoints(false);
 			VehicleControllerComponentPtr vcc = GetSceneObject()->GetFirstComponentByClass<VehicleControllerComponent>(true);
-			//float target_radius = 10;
-			//vcc->FollowPath(points,target_radius);
-			m_Leader = vcc;
-			vcc->Apply(m_BehaviorWaypoints.front());
+
+			//Get slaves!
+			m_Slaves.clear();
+			IComponentContainerTemplate::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass<VehicleControllerComponent>(components);
+			for(int i = 0;  i< components.size(); i++)
+			{
+				VehicleControllerComponentPtr comp = DYNAMIC_PTR_CAST<VehicleControllerComponent>(components[i]);
+				if(i == 0)
+				{
+					if(m_BehaviorWaypoints.size() > 0)
+						comp->SetBehaviorList(m_BehaviorWaypoints);
+					m_Leader = comp;
+				}
+				else
+				{
+					m_Slaves.push_back(comp);
+				}
+			}
 		}
 	}
 
@@ -108,19 +121,56 @@ namespace GASS
 		if(leader)
 		{
 			//Vec3 pos = leader->GetCurrentLocation();
-			if(leader->GetTargetReached())
+			/*if(leader->GetTargetReached())
 			{
 				//remove waypoints
 				if(m_BehaviorWaypoints.size() > 0)
 				{
 					//apply behavior!
 					m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
-					leader->Apply(m_BehaviorWaypoints.front());
+					if(m_BehaviorWaypoints.size() > 0)
+						leader->Apply(m_BehaviorWaypoints.front());
 				}
 				//Check waypoint behavior
-			}
+			}*/
 			leader->OnUpdate(delta_time);
+
+			for(size_t i = 0;  i < m_Slaves.size(); i++)
+			{
+				VehicleControllerComponentPtr slave(m_Slaves[i],NO_THROW);
+				if(slave)
+				{
+					SceneObjectPtr vehicle = slave->GetVehicle();
+					if(vehicle)
+					{
+						Vec3 target_point;
+						if(leader->GetRelativePosition((i+1)*20, target_point))
+						{
+							vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+							
+								Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+								Float distance = (vehicle_pos - target_point).Length();
+								Float speed = 0;
+								
+								if(distance < 20)
+								{
+									speed = distance*0.5;
+								}
+								else
+									speed = 20;
+
+								/*else if(distance > 10)
+								{
+									speed = -1;
+								}*/
+								vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(speed)));
+							
+						}
+						else
+							vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+					}
+				}
+			}
 		}
 	}
-	
 }
