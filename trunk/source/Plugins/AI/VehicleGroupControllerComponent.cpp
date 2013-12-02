@@ -146,15 +146,17 @@ namespace GASS
 						Vec3 target_point;
 						if(leader->GetRelativePosition((i+1)*20, target_point))
 						{
+							slave->GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_point)));
 							vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
 							
 								Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 								Float distance = (vehicle_pos - target_point).Length();
 								Float speed = 0;
 								
-								if(distance < 20)
+								if(distance < 10)
 								{
-									speed = distance*0.5;
+									Float w = distance/10.0;
+									speed = w*20 + (1.0-w)*9;
 								}
 								else
 									speed = 20;
