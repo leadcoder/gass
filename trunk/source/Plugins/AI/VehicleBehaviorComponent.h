@@ -10,6 +10,20 @@
 
 namespace GASS
 {
+	enum FormationType
+	{
+		FT_UNCHANGED,
+		FT_LINE,
+		FT_WALL,
+	};
+
+	START_ENUM_BINDER(FormationType,FormationTypeBinder)
+		BIND(FT_UNCHANGED)
+		BIND(FT_LINE)
+		BIND(FT_WALL)
+	END_ENUM_BINDER(FormationType,FormationTypeBinder)
+
+
 	class VehicleBehaviorComponent :  public Reflection<VehicleBehaviorComponent,BaseSceneComponent> 
 	{
 	public:
@@ -17,8 +31,11 @@ namespace GASS
 		~VehicleBehaviorComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		ADD_PROPERTY(FormationTypeBinder,Formation)
+		ADD_PROPERTY(Float,Speed)
 	private:
 		bool m_Initialized;
+	
 	};
 
 	typedef SPTR<VehicleBehaviorComponent> VehicleBehaviorComponentPtr;

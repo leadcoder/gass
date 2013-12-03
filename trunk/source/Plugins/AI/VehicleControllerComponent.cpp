@@ -12,7 +12,13 @@ namespace GASS
 		m_TargetReached(false),
 		m_TargetRadius(0),
 		m_ScenarioState(SS_STOP),
-		m_CurrentPathDist(0)
+		m_CurrentPathDist(0),
+		m_TargetSpeed(0),
+		m_HasTargetDist(false),
+		m_TargetDist(0),
+		m_PathOffset(0),
+		m_GroupID(0),
+		m_CurrentFormation(FT_LINE)
 	{
 
 	}	
@@ -102,25 +108,30 @@ namespace GASS
 	{
 		//Always goto to waypoint
 		//LocationComponentPtr location = comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-	//	if(location)
+		//if(location)
 		{
-		//	Vec3 pos = location->GetWorldPosition();
-			//TODO: Get path to this waypoint! ,Just generate straight path for now!
+			//Vec3 pos = location->GetWorldPosition();
+			//TODO: Get path to this waypoint! , Just generate straight path for now!
 			SceneObjectPtr vehicle = GetVehicle();
 			if(vehicle)
 			{
-				/*Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-				std::vector<Vec3> path;
-				path.push_back(vehicle_pos);
-				path.push_back(pos);
-				const double target_radius = 5;
-				FollowPath(path, target_radius);*/
-				//TODO: Get speed from behavior!
-				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(9)));
+				if(m_GroupID == 0) //leader
+				{
+					m_TargetSpeed = comp->GetSpeed();
+					vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(m_TargetSpeed)));
+				}
+				else //just do formation!
+				{
+					m_TargetSpeed = comp->GetSpeed();
+					if(comp->GetFormation().GetValue() != FT_UNCHANGED)
+						m_CurrentFormation = comp->GetFormation().GetValue();
+
+					if(comp->GetFormation().GetValue() != FT_WALL)
+						OffsetPath(5*m_GroupID);
+				}
 			}
 		}
 	}
-
 
 	void VehicleControllerComponent::OnUpdate(double time)
 	{
@@ -129,7 +140,6 @@ namespace GASS
 		{
 			if(m_BehaviorWaypoints.size() > 0)
 			{
-
 				VehicleBehaviorComponentPtr  behavior = m_BehaviorWaypoints.front();
 				LocationComponentPtr location = behavior->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(location)
@@ -151,9 +161,12 @@ namespace GASS
 	
 	void VehicleControllerComponent::OnPathfollow(double time)
 	{
+		
+		
 		SceneObjectPtr vehicle = GetVehicle();
 		if(vehicle && !m_TargetReached && m_Path.size() > 0)
 		{
+
 			Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 			//follow path!
 			int num_waypoints = (int) m_Path.size();
@@ -180,11 +193,50 @@ namespace GASS
 			}
 			Float new_distance = m_CurrentPathDist + look_ahead;
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, false, wp_index);
+
 			vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+
+			//check if we have path target distance!
+			if(m_GroupID != 0)
+			{
+				switch(m_CurrentFormation)
+				{
+				case FT_UNCHANGED:
+					break;
+				case FT_LINE:
+					{
+						Float dist_behinde = 10 + (m_GroupID)*m_TargetSpeed*3;
+						SetTargetDistance(GetLeader()->GetCurrentDistance() - dist_behinde);
+					}
+					break;
+				case FT_WALL:
+					{
+						SetTargetDistance(GetLeader()->GetCurrentDistance());
+					}
+					break;
+				}
+				//if(m_HasTargetDist)
+				Vec3 tp = Math::GetPointOnPath(m_TargetDist, m_Path, false, wp_index);
+				GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(tp)));
+
+				if(m_CurrentPathDist  > m_TargetDist)
+				{
+					//try to sett correct speed
+					vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+				}
+				else
+				{
+					Float new_speed = (m_TargetDist - m_CurrentPathDist)*0.5;
+					if(new_speed > 20)
+						new_speed = 20;
+					vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(new_speed)));
+				}
+			}
 		}
 		else
 		{
-			vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+			m_TargetSpeed = 0;
+			vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(m_TargetSpeed)));
 		}
 	}
 
@@ -209,13 +261,23 @@ namespace GASS
 				}
 			}
 
-			if(m_BehaviorWaypoints.size() > 0)
-				Apply(m_BehaviorWaypoints.front());
+			if(behaviors.size() > 0)
+				Apply(behaviors.front());
 			const double target_radius = 5;
+
 			FollowPath(path, target_radius);
 			//Check waypoint behavior
 			m_BehaviorWaypoints = behaviors;
+			//m_OrgPath = path;
+			if(m_PathOffset != 0)
+				m_Path = Math::GenerateOffset(m_OrgPath,m_PathOffset);
+			
 		}
+	}
+
+	void VehicleControllerComponent::OffsetPath(Float offset)
+	{
+		m_Path = Math::GenerateOffset(m_OrgPath,offset);
 	}
 
 	bool VehicleControllerComponent::GetRelativePosition(Float behinde_dist, Vec3 &target_position)
@@ -232,6 +294,26 @@ namespace GASS
 			}
 		}
 		return false;
+	}
+
+
+	bool VehicleControllerComponent::GetPathDistance(const Vec3 &point, Float &distance)
+	{
+		SceneObjectPtr vehicle = GetVehicle();
+		if(vehicle && m_Path.size() > 0)
+		{
+			int wp_index;
+			Float ditance_to_path_dist;
+			distance = Math::GetPathDistance(point,m_Path,wp_index,ditance_to_path_dist);
+		}
+		return false;
+	}
+
+	void VehicleControllerComponent::SetTargetDistance(Float dist)
+	{
+		m_TargetDist = dist;
+		m_HasTargetDist = true;
+	
 	}
 }
 
