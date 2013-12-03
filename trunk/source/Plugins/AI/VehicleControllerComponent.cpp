@@ -161,12 +161,9 @@ namespace GASS
 	
 	void VehicleControllerComponent::OnPathfollow(double time)
 	{
-		
-		
 		SceneObjectPtr vehicle = GetVehicle();
 		if(vehicle && !m_TargetReached && m_Path.size() > 0)
 		{
-
 			Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 			//follow path!
 			int num_waypoints = (int) m_Path.size();
@@ -240,6 +237,105 @@ namespace GASS
 		}
 	}
 
+	bool VehicleControllerComponent::GetFormationPosition(int id, Vec3 &target_pos, Float &path_distance)
+	{
+		switch(m_CurrentFormation)
+		{
+			case FT_LINE:
+			{
+				Float dist_behinde = 10 + (id)*m_TargetSpeed*3;
+				path_distance = m_CurrentPathDist - dist_behinde;
+				int wp_index;
+				target_pos = Math::GetPointOnPath(path_distance, m_Path, false, wp_index);
+			}
+			break;
+			case FT_WALL:
+			{
+				int wp_index;
+				target_pos = Math::GetPointOnPath(m_CurrentPathDist, m_Path, false, wp_index);
+				target_pos = target_pos + m_Normals[wp_index]*5;
+				path_distance = m_CurrentPathDist;
+				
+			}
+			break;
+		}
+		return true;
+	}
+	
+
+	void VehicleControllerComponent::OnFormationPathfollow(double time)
+	{
+		SceneObjectPtr vehicle = GetVehicle();
+		if(vehicle && m_Path.size() > 0)
+		{
+			Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+			//follow path!
+			int num_waypoints = (int) m_Path.size();
+			int wp_index;
+			Vec3 point_on_path;
+			Float ditance_to_path_dist;
+			Float leader_path_distance;
+			Vec3 target_pos;
+			GetLeader()->GetFormationPosition(m_GroupID, target_pos, leader_path_distance);
+			m_CurrentPathDist = Math::GetPathDistance(vehicle_pos ,m_Path,wp_index, ditance_to_path_dist);
+			Float target_dist = Math::GetPathDistance(target_pos ,m_Path,wp_index,ditance_to_path_dist);
+			//check distance 
+			if(m_CurrentPathDist < target_dist)
+			{
+				vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_pos)));
+				GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_pos)));
+			}
+			else
+				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+		}
+		else
+		{
+			m_TargetSpeed = 0;
+			vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(m_TargetSpeed)));
+		}
+	}
+
+	void VehicleControllerComponent::OnLeaderPathfollow(double time)
+	{
+		SceneObjectPtr vehicle = GetVehicle();
+		if(vehicle && !m_TargetReached && m_Path.size() > 0)
+		{
+			Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+			//follow path!
+			int num_waypoints = (int) m_Path.size();
+			int wp_index;
+			Vec3 point_on_path;
+			Float ditance_to_path_dist;
+			m_CurrentPathDist = Math::GetPathDistance(vehicle_pos,m_Path,wp_index,ditance_to_path_dist);
+			
+			double look_ahead = 10;
+			if(look_ahead < 3)
+				look_ahead = 3;
+			if(look_ahead > 10)
+				look_ahead = 10;
+			
+			if(wp_index == num_waypoints-2)
+			{
+				Vec3 last_wp = m_Path[num_waypoints-1];
+				//Check distance to last wp
+				if((last_wp - vehicle_pos).FastLength() < m_TargetRadius)
+				{
+					//GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+					m_TargetReached = true;
+				}
+			}
+			Float new_distance = m_CurrentPathDist + look_ahead;
+			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, false, wp_index);
+			vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+		}
+		else
+		{ 
+			//end of path
+			m_TargetSpeed = 0;
+			vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(m_TargetSpeed)));
+		}
+	}
+
 	void VehicleControllerComponent::SetBehaviorList(std::vector<VehicleBehaviorComponentPtr> behaviors)
 	{
 		//generate complete path!
@@ -264,13 +360,13 @@ namespace GASS
 			if(behaviors.size() > 0)
 				Apply(behaviors.front());
 			const double target_radius = 5;
-
+			m_Normals = Math::GenerateNormals(path);
 			FollowPath(path, target_radius);
 			//Check waypoint behavior
 			m_BehaviorWaypoints = behaviors;
 			//m_OrgPath = path;
-			if(m_PathOffset != 0)
-				m_Path = Math::GenerateOffset(m_OrgPath,m_PathOffset);
+			//if(m_PathOffset != 0)
+			//	m_Path = Math::GenerateOffset(m_OrgPath,m_PathOffset);
 			
 		}
 	}
@@ -313,7 +409,6 @@ namespace GASS
 	{
 		m_TargetDist = dist;
 		m_HasTargetDist = true;
-	
 	}
 }
 

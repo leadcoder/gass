@@ -41,6 +41,11 @@ namespace GASS
 		void SetLeader(VehicleControllerComponentPtr leader) {m_Leader= leader;}
 		void SetGroupID(int id) {m_GroupID = id;}
 	private:
+		bool GetFormationPosition(int id, Vec3 &target_pos, Float &path_distance);
+		void OnFormationPathfollow(double time);
+		void OnLeaderPathfollow(double time);
+	
+
 		void OnPathfollow(double);
 		void Apply(VehicleBehaviorComponentPtr comp);
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
@@ -54,6 +59,7 @@ namespace GASS
 		Quaternion m_Rot;
 		std::vector<Vec3> m_Path;
 		std::vector<Vec3> m_OrgPath;
+		std::vector<Vec3> m_Normals;
 		bool m_TargetReached;
 		Float m_TargetRadius;
 		Float m_TargetSpeed;
