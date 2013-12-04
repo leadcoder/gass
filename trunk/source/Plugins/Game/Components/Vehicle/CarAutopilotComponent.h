@@ -50,16 +50,13 @@ namespace GASS
 		ADD_PROPERTY(float,DesiredPosRadius);
 		ADD_PROPERTY(PIDControl,TurnPID);
 		ADD_PROPERTY(PIDControl,TrottlePID);
-
-		//PIDControl m_TurnPID;
-		//PIDControl m_TrottlePID;
 		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
 		
-		void NewDriveTo(const Vec3 &pos, float desired_speed, float time);
+		void _UpdateDrive(double  delta_time);
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);
@@ -69,7 +66,6 @@ namespace GASS
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
-		Vec3 m_LastPos;
 		Vec3 m_DesiredPos;
 		
 		std::string m_ThrottleInput;

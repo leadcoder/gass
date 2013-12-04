@@ -44,7 +44,6 @@ namespace GASS
 		m_DesiredPosRadius(0),
 		m_DesiredPos(0,0,0),
 		m_CurrentPos(0,0,0),
-		m_LastPos(0,0,0),
 		m_DesiredSpeed(0),
 		m_Enable(false),
 		m_WPReached(false),
@@ -113,7 +112,6 @@ namespace GASS
 
 	void CarAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
 	{
-		m_LastPos = m_CurrentPos;
 		m_CurrentPos = message->GetPosition();
 		Quaternion  rot = message->GetRotation();
 		m_Transformation.Identity();
@@ -139,7 +137,7 @@ namespace GASS
 	{
 		if(m_Enable)
 		{
-			NewDriveTo(m_DesiredPos,m_DesiredSpeed, delta);
+			_UpdateDrive(delta);
 			//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 		}
 	}
@@ -288,31 +286,26 @@ namespace GASS
 		}*/
 	}
 
-
-
-	void CarAutopilotComponent::NewDriveTo(const Vec3 &pos, float desired_speed, float time)
+	void CarAutopilotComponent::_UpdateDrive(double delta_time)
 	{
-		Vec3 v_pos = m_CurrentPos;
-		const float current_speed = -m_VehicleSpeed.z;
-		Vec3 target_pos = pos;
-		Vec3 drive_dir = target_pos - v_pos;
-		float drive_dist = drive_dir.Length();
-
-		//if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
-		//	m_WPReached = true;
+		Vec3 target_pos  = m_DesiredPos;
+		Float desired_speed	= m_DesiredSpeed;
+		Vec3 current_dir = -m_Transformation.GetViewDirVector();
+		float current_speed = -m_VehicleSpeed.z; 
+		Vec3 current_pos = m_CurrentPos;
 		
+		Vec3 drive_dir = target_pos - current_pos;
+		float drive_dist = drive_dir.Length();
 		if(!m_WPReached && drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
 		{
 			drive_dir.y = 0;
 			drive_dir.Normalize();
-			Mat4 trans = m_Transformation;
-			Vec3 hull_dir = -trans.GetViewDirVector();
-			//Vec3 hull_dir = trans.GetViewDirVector();
-			hull_dir.y = 0;
-			hull_dir.Normalize();
 			
-			Vec3 cross = Math::Cross(hull_dir,drive_dir);
-			float cos_angle = Math::Dot(hull_dir,drive_dir);
+			current_dir.y = 0;
+			current_dir.Normalize();
+			
+			Vec3 cross = Math::Cross(current_dir,drive_dir);
+			float cos_angle = Math::Dot(current_dir,drive_dir);
 
 			if(cos_angle > 1) 
 				cos_angle = 1;
@@ -321,10 +314,9 @@ namespace GASS
 			float angle_to_drive_dir = Math::Rad2Deg(acos(cos_angle));
 			if(cross.y < 0) 
 				angle_to_drive_dir *= -1;
-
 			
 			m_TurnPID.set(0);
-			float turn = m_TurnPID.update(angle_to_drive_dir,time);
+			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
 			
 			//float m_TurnRadius = 3.0;
 			//float m_BrakeDist= 10.0;
@@ -366,8 +358,6 @@ namespace GASS
 					turn *=-1;
 				else //damp turn, we try to reverse!
 					turn *= 0.03;
-
-
 			}
 			else
 			{
@@ -375,7 +365,6 @@ namespace GASS
 				if(current_speed < 0) //you want to go forward but rolling backward, invert steering
 					turn *=-1;
 			}
-			
 
 			if(drive_dist < desired_speed)
 				desired_speed *= 0.5;
@@ -384,10 +373,9 @@ namespace GASS
 			{
 				desired_speed = 0;
 			}
-				
 
 			m_TrottlePID.set(desired_speed);
-			float throttle = m_TrottlePID.update(current_speed,time);
+			float throttle = m_TrottlePID.update(current_speed,delta_time);
 
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
@@ -416,7 +404,6 @@ namespace GASS
 		else
 		{
 			//std::cout << "Dist 0\n";
-
 			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
 			GetSceneObject()->SendImmediate(throttle_message);
 
