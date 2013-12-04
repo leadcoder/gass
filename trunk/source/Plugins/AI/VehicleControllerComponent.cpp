@@ -308,7 +308,7 @@ namespace GASS
 			m_CurrentPathDist = Math::GetPathDistance(vehicle_pos ,m_Path,wp_index, ditance_to_path_dist);
 			Float target_dist = Math::GetPathDistance(target_pos ,m_Path,wp_index,ditance_to_path_dist);
 			//check distance 
-			if(m_CurrentPathDist < target_dist)
+			//if(m_CurrentPathDist < target_dist)
 			{
 				vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_pos)));
 				GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_pos)));
@@ -317,8 +317,8 @@ namespace GASS
 				Float new_speed = 20;
 				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(new_speed)));
 			}
-			else
-				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+			//else
+			//	vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
 		}
 		else
 		{
@@ -359,6 +359,8 @@ namespace GASS
 			Float new_distance = m_CurrentPathDist + look_ahead;
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, false, wp_index);
 			vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+			GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_point)));
+				
 		}
 		else
 		{ 
