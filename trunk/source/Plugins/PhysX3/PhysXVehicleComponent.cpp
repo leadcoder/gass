@@ -724,14 +724,14 @@ namespace GASS
 
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 
-		/*std::stringstream ss;
+		std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
-			*/
+			
 
-		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
@@ -835,10 +835,11 @@ namespace GASS
 
 				//If the car was brought to rest through braking then the player needs to release the brake then reapply
 				//to indicate that the gears should toggle between reverse and forward.
-				if(isMovingForwardSlowly && !brakeRaw && !accelRaw && !handbrakeRaw)
+				/*if(isMovingForwardSlowly && !brakeRaw && !accelRaw && !handbrakeRaw)
 				{
 					newIsMovingForwardSlowly = true;
-				}
+				}*/
+				newIsMovingForwardSlowly = isMovingForwardSlowly;
 			}
 		}
 	}

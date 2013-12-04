@@ -119,8 +119,11 @@ namespace GASS
 				{
 					m_TargetSpeed = comp->GetSpeed();
 					vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(m_TargetSpeed)));
+
+					if(comp->GetFormation().GetValue() != FT_UNCHANGED)
+						m_CurrentFormation = comp->GetFormation().GetValue();
 				}
-				else //just do formation!
+				/*else //just do formation!
 				{
 					m_TargetSpeed = comp->GetSpeed();
 					if(comp->GetFormation().GetValue() != FT_UNCHANGED)
@@ -128,7 +131,7 @@ namespace GASS
 
 					if(comp->GetFormation().GetValue() != FT_WALL)
 						OffsetPath(5*m_GroupID);
-				}
+				}*/
 			}
 		}
 	}
@@ -138,24 +141,30 @@ namespace GASS
 		SceneObjectPtr vehicle = GetVehicle();
 		if(vehicle)
 		{
-			if(m_BehaviorWaypoints.size() > 0)
+			if(m_GroupID == 0) //leader
 			{
-				VehicleBehaviorComponentPtr  behavior = m_BehaviorWaypoints.front();
-				LocationComponentPtr location = behavior->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(location)
+				if(m_BehaviorWaypoints.size() > 0)
 				{
-					Vec3 pos = location->GetWorldPosition();
-					Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-
-					if((pos - vehicle_pos).Length() < m_TargetRadius)
+					VehicleBehaviorComponentPtr  behavior = m_BehaviorWaypoints.front();
+					LocationComponentPtr location = behavior->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+					if(location)
 					{
-						m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
-						if(m_BehaviorWaypoints.size() > 0)
-							Apply(m_BehaviorWaypoints.front());
+						Vec3 pos = location->GetWorldPosition();
+						Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+
+						if((pos - vehicle_pos).Length() < m_TargetRadius)
+						{
+							m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
+							if(m_BehaviorWaypoints.size() > 0)
+								Apply(m_BehaviorWaypoints.front());
+						}
 					}
 				}
+				OnLeaderPathfollow(time);
 			}
-			OnPathfollow(time);
+			else
+				OnFormationPathfollow(time);
+			
 		}
 	}
 	
@@ -252,9 +261,28 @@ namespace GASS
 			case FT_WALL:
 			{
 				int wp_index;
-				target_pos = Math::GetPointOnPath(m_CurrentPathDist, m_Path, false, wp_index);
-				target_pos = target_pos + m_Normals[wp_index]*5;
-				path_distance = m_CurrentPathDist;
+				Float offset = 10; 
+				if(id & 1) //is even
+					offset = -offset;
+
+				SceneObjectPtr vehicle = GetVehicle();
+				if(vehicle)
+				{
+					Quaternion vehicle_rot = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetRotation();
+					Mat4 mat;
+					mat.Identity();
+					vehicle_rot.ToRotationMatrix(mat);
+					Vec3 dir = mat.GetViewDirVector();
+					Float x = -dir.z;
+					dir.z = dir.x;
+					dir.x = x;
+					dir.y = 0;
+					dir.Normalize();
+
+					target_pos = Math::GetPointOnPath(m_CurrentPathDist, m_Path, false, wp_index);
+					target_pos = target_pos + dir * offset;
+					path_distance = m_CurrentPathDist;
+				}
 				
 			}
 			break;
@@ -284,6 +312,10 @@ namespace GASS
 			{
 				vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_pos)));
 				GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_pos)));
+				//Float new_speed = (target_dist - m_CurrentPathDist)*0.7;
+				//if(new_speed > 20)
+				Float new_speed = 20;
+				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(new_speed)));
 			}
 			else
 				vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));

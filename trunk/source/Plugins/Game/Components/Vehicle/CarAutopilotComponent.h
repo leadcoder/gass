@@ -59,7 +59,7 @@ namespace GASS
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
 		
-
+		void NewDriveTo(const Vec3 &pos, float desired_speed, float time);
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);

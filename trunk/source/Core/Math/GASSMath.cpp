@@ -731,8 +731,6 @@ namespace GASS
 		return offset_path;
 	}
 
-
-	
 	std::vector<Vec3> Math::GenerateOffset(const std::vector<Vec3> &wps, Float offset)
 	{
 		std::vector<Vec3> offset_path;
