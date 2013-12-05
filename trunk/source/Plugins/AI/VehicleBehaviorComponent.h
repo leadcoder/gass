@@ -21,8 +21,22 @@ namespace GASS
 		BIND(FT_UNCHANGED)
 		BIND(FT_LINE)
 		BIND(FT_WALL)
-	END_ENUM_BINDER(FormationType,FormationTypeBinder)
+		END_ENUM_BINDER(FormationType,FormationTypeBinder)
 
+	enum SpeedType
+	{
+		ST_UNCHANGED,
+		ST_SLOW,
+		ST_REGULAR,
+		ST_FAST,
+	};
+
+	START_ENUM_BINDER(SpeedType,SpeedTypeBinder)
+		BIND(ST_UNCHANGED)
+		BIND(ST_SLOW)
+		BIND(ST_REGULAR)
+		BIND(ST_FAST)
+	END_ENUM_BINDER(SpeedType,SpeedTypeBinder)
 
 	class VehicleBehaviorComponent :  public Reflection<VehicleBehaviorComponent,BaseSceneComponent> 
 	{
@@ -31,10 +45,15 @@ namespace GASS
 		~VehicleBehaviorComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		Float GetSpeed() const;
+		Float GetWaypointRadius() const;
+		void SetWaypointRadius(Float radius);
 		ADD_PROPERTY(FormationTypeBinder,Formation)
-		ADD_PROPERTY(Float,Speed)
+		ADD_PROPERTY(SpeedTypeBinder,SpeedMode)
+		ADD_PROPERTY(Float,RegularSpeedValue)
 	private:
 		bool m_Initialized;
+		Float m_Radius;
 	
 	};
 

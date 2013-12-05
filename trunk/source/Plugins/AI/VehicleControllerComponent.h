@@ -24,7 +24,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		SceneObjectPtr GetVehicle() const {return SceneObjectPtr(m_Vehicle,boost::detail::sp_nothrow_tag());}
-		void FollowPath(const std::vector<Vec3> path, double target_radius);
+		//void FollowPath(const std::vector<Vec3> path, double target_radius);
 		bool GetTargetReached() const {return m_TargetReached;}
 		void SetTargetDistance(Float dist);
 		Float GetCurrentDistance() const {return m_CurrentPathDist;}
@@ -35,7 +35,7 @@ namespace GASS
 		Float GetTargetSpeed() const {return m_TargetSpeed;}
 		bool GetPathDistance(const Vec3 &point, Float &distance);
 		void SetOffset(Float offset) {m_PathOffset = offset;}
-		void OffsetPath(Float offset);
+		//void OffsetPath(Float offset);
 
 		VehicleControllerComponentPtr GetLeader() const {return VehicleControllerComponentPtr(m_Leader);}
 		void SetLeader(VehicleControllerComponentPtr leader) {m_Leader= leader;}
@@ -44,10 +44,8 @@ namespace GASS
 		bool GetFormationPosition(int id, Vec3 &target_pos, Float &path_distance);
 		void OnFormationPathfollow(double time);
 		void OnLeaderPathfollow(double time);
-	
-
-		void OnPathfollow(double);
-		void Apply(VehicleBehaviorComponentPtr comp);
+		
+		void _Apply(VehicleBehaviorComponentPtr comp, bool first_behavior);
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void SetVehicleTemplate(const std::string &template_name);
@@ -58,13 +56,14 @@ namespace GASS
 		Vec3 m_Pos;
 		Quaternion m_Rot;
 		std::vector<Vec3> m_Path;
-		std::vector<Vec3> m_OrgPath;
-		std::vector<Vec3> m_Normals;
+		std::vector<Vec3> m_FullPath;
+		
 		bool m_TargetReached;
 		Float m_TargetRadius;
 		Float m_TargetSpeed;
 		ScenarioState m_ScenarioState;
 		Float m_CurrentPathDist;
+		Float m_PreviousDist;
 		std::vector<VehicleBehaviorComponentPtr> m_BehaviorWaypoints;
 		bool m_HasTargetDist;
 		Float m_TargetDist;

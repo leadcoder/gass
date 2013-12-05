@@ -66,7 +66,7 @@ namespace GASS
 	{
 		size_t num_vehicles  = GetSceneObject()->GetNumChildren()-1;
 		Vec3 new_pos = m_Pos;
-		new_pos.x += 5*num_vehicles;
+		new_pos.z += 10*num_vehicles;
 		return new_pos;
 	}
 
