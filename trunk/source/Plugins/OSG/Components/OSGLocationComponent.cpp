@@ -61,7 +61,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion",PF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 

@@ -3,6 +3,7 @@
 #include "AISceneManager.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
+#include "Sim/Interface/GASSINavigationComponent.h"
 
 
 
@@ -41,6 +42,12 @@ namespace GASS
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnScenarioEvent,ScenarioStateRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnTransformation,TransformationNotifyMessage,0));
+
+		//std::vector<Vec3> final_path;
+		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("AI_NAVIGATION_MESH");
+		if(obj)
+			m_Navigation = obj->GetFirstComponentByClass<INavigationComponent>();
+
 		m_Initialized = true;
 		SetVehicleTemplate(m_VehicleTemplate);
 	}
@@ -120,25 +127,24 @@ namespace GASS
 			}
 			//update path 
 			LocationComponentPtr wp_location = comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			
 			if(wp_location)
 			{
+				Vec3 start_pos;
 				Vec3 wp_pos = wp_location->GetWorldPosition();
 				m_TargetReached = false;
 				//TODO: nav_mesh search!
-
+				NavigationComponentPtr nav = _GetNavigation();
 				if(first_behavior) //first wp add current vehicle position as start position
 				{
-					const Vec3 start_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+					start_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 					m_Path.clear();
-					m_Path.push_back(start_pos);
 					m_FullPath.clear();
-					m_FullPath.push_back(start_pos);
 					m_PreviousDist = 0;
 				}
 				else 
 				{
-					const Vec3 start_pos = m_Path.back(); 
-
+					start_pos = m_Path.back(); 
 					//add previous path distance
 					Float path_dist = 0; 
 					for(size_t i = 1; i <m_Path.size() ; i++ )
@@ -146,11 +152,39 @@ namespace GASS
 						m_PreviousDist += (m_Path[i-1] - m_Path[i]).Length();
 					}
 					m_Path.clear();
-					m_Path.push_back(start_pos);
-					
 				}
-				m_Path.push_back(wp_pos); //add next waypoint!
-				m_FullPath.push_back(wp_pos);
+
+				if(nav)
+				{
+					//search navigation mesh for path
+					bool path_found = nav->GetShortestPath(start_pos,wp_pos,m_Path);
+					if(path_found)
+					{
+						size_t i = 0;
+						if(first_behavior)
+							i = 1;
+						for(size_t i = 0 ; i < m_Path.size(); i++)
+						{
+							m_FullPath.push_back(m_Path[i]);
+						}
+					}
+				}
+				else
+				{
+					if(first_behavior)
+					{
+						m_Path.push_back(start_pos);
+						m_FullPath.push_back(start_pos);
+					}
+					else
+					{
+						m_Path.push_back(start_pos);
+					}
+
+					m_Path.push_back(wp_pos); //add next waypoint!
+					m_FullPath.push_back(wp_pos);
+				}
+				
 				m_CurrentPathDist = 0;
 			}
 		}
@@ -317,7 +351,8 @@ namespace GASS
 			//because autopilot try to slow down if distance_to_target < speed and we dont want to accelerate/deaccelerate 
 			//while moving along path between waypoints
 
-			double look_ahead = m_TargetSpeed*2;
+			//double look_ahead = m_TargetSpeed*2;
+			double look_ahead = m_TargetSpeed;
 			//do some clamping
 			if(look_ahead < 3) // we need to be at least outside autopilot target radius
 				look_ahead = 3;

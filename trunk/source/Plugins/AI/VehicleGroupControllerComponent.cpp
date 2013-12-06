@@ -59,7 +59,6 @@ namespace GASS
 			//OnStop();
 			m_Update = false;
 		}
-
 	}
 
 	Vec3 VehicleGroupControllerComponent::GetOffset() const 

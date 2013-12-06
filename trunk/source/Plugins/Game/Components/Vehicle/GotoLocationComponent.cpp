@@ -106,7 +106,7 @@ namespace GASS
 		
 		if(m_NavigationObject.IsValid())
 		{
-			std::vector<Vec3> final_path;
+			//std::vector<Vec3> final_path;
 			NavigationComponentPtr nav = m_NavigationObject->GetFirstComponentByClass<INavigationComponent>();
 			m_Path.clear();
 			bool path_found = nav->GetShortestPath(m_CurrentLocation,m_DestinationLocation,m_Path);

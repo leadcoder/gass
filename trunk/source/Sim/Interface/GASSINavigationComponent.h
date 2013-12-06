@@ -32,4 +32,5 @@ namespace GASS
 	protected:
 	};
 	typedef SPTR<INavigationComponent> NavigationComponentPtr;
+	typedef WPTR<INavigationComponent> NavigationComponentWeakPtr;
 }

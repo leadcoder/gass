@@ -14,6 +14,7 @@ namespace GASS
 {
 	//FDECL(VehicleBehaviorComponent);
 	FDECL(VehicleControllerComponent);
+	IFDECL(NavigationComponent);
 	
 	class VehicleControllerComponent :  public Reflection<VehicleControllerComponent,BaseSceneComponent> 
 	{
@@ -44,7 +45,7 @@ namespace GASS
 		bool GetFormationPosition(int id, Vec3 &target_pos, Float &path_distance);
 		void OnFormationPathfollow(double time);
 		void OnLeaderPathfollow(double time);
-		
+		NavigationComponentPtr _GetNavigation() const {return NavigationComponentPtr(m_Navigation);}
 		void _Apply(VehicleBehaviorComponentPtr comp, bool first_behavior);
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
@@ -71,9 +72,7 @@ namespace GASS
 		int m_GroupID;
 		VehicleControllerComponentWeakPtr m_Leader;
 		FormationType m_CurrentFormation;
+		NavigationComponentWeakPtr m_Navigation;
 	};
-
-	
-	
 }
 #endif
