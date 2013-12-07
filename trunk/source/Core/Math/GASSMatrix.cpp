@@ -468,7 +468,7 @@ namespace GASS
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 4; col++) {
 				const Float sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
-				result.m_Data2[col * 4 + row] = sign * Determinant(col, row) / det;
+				result.m_Data2[col * 4 + row] = sign * _Determinant(col, row) / det;
 			}
 		}
 		return result;
