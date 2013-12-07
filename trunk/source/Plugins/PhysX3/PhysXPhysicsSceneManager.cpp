@@ -316,7 +316,7 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateConvexMesh");
-			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], physics_mesh->PositionVector.size(), *system->GetPxSDK(), *system->GetPxCooking());
+			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], static_cast<physx::PxU32>(physics_mesh->PositionVector.size()), *system->GetPxSDK(), *system->GetPxCooking());
 			return m_ConvexMeshMap[col_mesh_id];
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
@@ -344,7 +344,7 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateTriangleMesh");
-			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], physics_mesh->PositionVector.size() , *system->GetPxSDK(), *system->GetPxCooking());
+			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], static_cast<physx::PxU32>(physics_mesh->PositionVector.size()) , *system->GetPxSDK(), *system->GetPxCooking());
 			return m_TriangleMeshMap[col_mesh_id];
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");

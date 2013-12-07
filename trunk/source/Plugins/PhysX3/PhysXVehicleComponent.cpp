@@ -137,7 +137,7 @@ namespace GASS
 		m_InReverseMode = false;
 		for(size_t i = 0; i < m_Vehicle->mWheelsSimData.getNumWheels(); i++)
 		{
-			m_Vehicle->setWheelShapeMapping(i,i);
+			m_Vehicle->setWheelShapeMapping(static_cast<physx::PxI32>(i),static_cast<physx::PxU32>(i));
 		}
 	}
 
@@ -210,7 +210,7 @@ namespace GASS
 			tires[i]  = wheel_comp->GetTireData();
 		}
 		
-		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(num_wheels);
+		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(static_cast<physx::PxU32>(num_wheels));
 		PxVehicleDriveSimData4W driveSimData;
 
 		//Extract the chassis AABB dimensions from the chassis convex mesh.
@@ -351,7 +351,7 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "To many gear in vehicle","PhysXVehicleComponent::OnPostSceneObjectInitializedEvent");
 		}
-		gears.mNumRatios = m_GearRatios.size();
+		gears.mNumRatios = static_cast<physx::PxU32>(m_GearRatios.size());
 		for(size_t i = 0 ; i< m_GearRatios.size(); i++)
 		{
 			gears.mRatios[i] = m_GearRatios[i];
@@ -422,12 +422,12 @@ namespace GASS
 		m_Actor->setMassSpaceInertiaTensor(chassisData.mMOI);
 		m_Actor->setCMassLocalPose(PxTransform(chassisData.mCMOffset,PxQuat::createIdentity()));
 
-		m_Vehicle = PxVehicleDrive4W::allocate(num_wheels);
-		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-num_wheels);
+		m_Vehicle = PxVehicleDrive4W::allocate(static_cast<physx::PxU32>(num_wheels));
+		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-static_cast<physx::PxU32>(num_wheels));
 		
 		for(size_t i = 0; i < num_wheels; i++)
 		{
-			m_Vehicle->setWheelShapeMapping(i,i);
+			m_Vehicle->setWheelShapeMapping(static_cast<physx::PxI32>(i),static_cast<physx::PxU32>(i));
 		}
 		
 		//Free the sim data because we don't need that any more.
