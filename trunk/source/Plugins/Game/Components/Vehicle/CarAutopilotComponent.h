@@ -46,10 +46,12 @@ namespace GASS
 		virtual void SceneManagerTick(double delta);
 	private:
 		ADD_PROPERTY(bool,Enable);
-		ADD_PROPERTY(float,DesiredSpeed);
-		ADD_PROPERTY(float,DesiredPosRadius);
+		ADD_PROPERTY(Float,DesiredSpeed);
+		ADD_PROPERTY(Float,DesiredPosRadius);
 		ADD_PROPERTY(PIDControl,TurnPID);
 		ADD_PROPERTY(PIDControl,TrottlePID);
+		ADD_PROPERTY(Float,BrakeDistanceFactor);
+		
 		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}

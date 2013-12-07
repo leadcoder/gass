@@ -47,8 +47,8 @@ namespace GASS
 		m_DesiredSpeed(0),
 		m_Enable(false),
 		m_WPReached(false),
-		m_VehicleSpeed(0,0,0)
-
+		m_VehicleSpeed(0,0,0),
+		m_BrakeDistanceFactor(1.0)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -68,13 +68,15 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for steer",PF_VISIBLE)));
 		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for throttle",PF_VISIBLE)));
-		RegisterProperty<float>("DesiredSpeed", &CarAutopilotComponent::GetDesiredSpeed, &CarAutopilotComponent::SetDesiredSpeed,
+		RegisterProperty<Float>("DesiredSpeed", &CarAutopilotComponent::GetDesiredSpeed, &CarAutopilotComponent::SetDesiredSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Desired speed",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<bool>("Enable", &CarAutopilotComponent::GetEnable, &CarAutopilotComponent::SetEnable,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<float>("DesiredPosRadius", &CarAutopilotComponent::GetDesiredPosRadius, &CarAutopilotComponent::SetDesiredPosRadius,
+		RegisterProperty<Float>("DesiredPosRadius", &CarAutopilotComponent::GetDesiredPosRadius, &CarAutopilotComponent::SetDesiredPosRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-
+		RegisterProperty<Float>("BrakeDistanceFactor", &CarAutopilotComponent::GetBrakeDistanceFactor, &CarAutopilotComponent::SetBrakeDistanceFactor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Multiplier for default linear brake distance (1m at 1m/s) ",PF_VISIBLE  | PF_EDITABLE)));
+		
 		RegisterProperty<PIDControl>("TurnPID", &CarAutopilotComponent::GetTurnPID, &CarAutopilotComponent::SetTurnPID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<PIDControl>("TrottlePID", &CarAutopilotComponent::GetTrottlePID, &CarAutopilotComponent::SetTrottlePID,
@@ -317,31 +319,11 @@ namespace GASS
 			
 			m_TurnPID.set(0);
 			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
-			
-			//float m_TurnRadius = 3.0;
-			//float m_BrakeDist= 10.0;
-
-			//std::cout << "Drive dir angle:" << angle_to_drive_dir << "turn:" << turn << std::endl;
-
-
 		
-			//if(m_ActionHandler->GetOwner()->GetFirstPhysicsBody())
-			//current_speed = m_ActionHandler->GetOwner()->GetFirstPhysicsBody()->GetVelocity().Length();
-		/*/	if(drive_dist < m_BrakeDist)
-			{
-				desired_speed = desired_speed*(1-(m_BrakeDist  - drive_dist)/m_BrakeDist);
-			}*/
 
-
-
-			/*if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp)// || fabs(angle_to_drive_dir) > 80) //back up
-			{
-				desired_speed *= -1;
-				turn *=-1;
-			}*/
-
+			
+	
 			// damp speed if we have to turn sharp
-
 			if(fabs(angle_to_drive_dir) > 90 && drive_dist > 20)// do three point turn if more than 20 meters turn on point
 			{
 				desired_speed *= -1;
@@ -361,14 +343,33 @@ namespace GASS
 			}
 			else
 			{
+				//slow down if we are turning sharp
 				desired_speed = desired_speed * 0.2 + 0.8 * (desired_speed * fabs(cos_angle)); 
 				if(current_speed < 0) //you want to go forward but rolling backward, invert steering
 					turn *=-1;
 			}
 
-			if(drive_dist < desired_speed)
-				desired_speed *= 0.5;
 
+			//Linear damp speed if we are inside radius from waypoint, 
+			//the radius is dynamic and is based on the desired speed of the vehicle.
+			//The vehicle will have longer brake distance at high speed
+			//and this is compensated by taking the speed in consideration.
+			//The user can tweek this radius with the m_BrakeDistanceFactor based
+			//on the properties of the vehicle, better brakes == lower m_BrakeDistanceFactor value
+			//By default this value is 1 which means that the vehicle can come to rest
+			//after 1m if traveling at 1 m/s. This formula should probably be expanded to support
+			//more non linear behavior 
+			Float radius = fabs(desired_speed)*m_BrakeDistanceFactor;
+			if(drive_dist > 0 && drive_dist < radius)
+			{
+				 desired_speed = desired_speed * (drive_dist/radius);
+			}
+
+			
+			//if(drive_dist < fabs(desired_speed))
+			//	desired_speed *= 0.5;
+
+	
 			if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
 			{
 				desired_speed = 0;
@@ -380,19 +381,10 @@ namespace GASS
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
 
-		/*	if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp || fabs(angle_to_drive_dir) > 80) //back up
-			{
-				throttle = -1;
-				turn *=-1;
-			}*/
-
 			//turn = -turn;
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 
-			//if(current_speed < 0.01 &&  throttle < 0)
-			//	throttle  = 0;
-				
 			//Send input message
 
 			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
