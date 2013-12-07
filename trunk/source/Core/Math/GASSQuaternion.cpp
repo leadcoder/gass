@@ -103,6 +103,8 @@ namespace GASS
 			*apkQuat[k] = (kRot.m_Data[k][i]+kRot.m_Data[i][k])*froot;
 		}
 	}
+
+	
 	//-----------------------------------------------------------------------
 	void Quaternion::ToRotationMatrix(Mat4& kRot) const
 	{

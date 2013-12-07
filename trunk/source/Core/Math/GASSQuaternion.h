@@ -51,6 +51,13 @@ namespace GASS
 
 		void FromEulerAngles (const Vec3 &rot);
 		void FromRotationMatrix (const Mat4& kRot);
+		Mat4 GetRotationMatrix() const
+		{
+			Mat4 rot_mat;
+			rot_mat.Identity();
+			ToRotationMatrix(rot_mat);
+			return rot_mat;
+		}
 		void ToRotationMatrix (Mat4& kRot) const;
 		void FromAngleAxis (const Float& rfAngle, const Vec3& rkAxis);
 		void ToAngleAxis (Float& rfAngle, Vec3& rkAxis) const;
