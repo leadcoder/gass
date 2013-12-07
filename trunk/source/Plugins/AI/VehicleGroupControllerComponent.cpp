@@ -79,6 +79,7 @@ namespace GASS
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
 				VehicleBehaviorComponentPtr vbc = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(comps[i]);
+				vbc->Reset();
 				m_BehaviorWaypoints.push_back(vbc);
 			}
 			VehicleControllerComponentPtr vcc = GetSceneObject()->GetFirstComponentByClass<VehicleControllerComponent>(true);

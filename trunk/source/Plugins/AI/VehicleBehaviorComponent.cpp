@@ -7,14 +7,60 @@
 
 namespace GASS
 {
+
+	std::vector<SceneObjectPtr> VehicleBehaviorComponentSyncEnumeration(BaseReflectionObjectPtr obj)
+	{
+		SPTR<VehicleBehaviorComponent> comp = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(obj);
+		return  comp->_GetSyncEnumeration();
+	}
+
+	std::vector<SceneObjectPtr>  VehicleBehaviorComponent::_GetSyncEnumeration() const
+	{
+		std::vector<SceneObjectPtr> ret;
+		SceneObjectPtr so = GetSceneObject();
+		if(so)
+		{
+			IComponentContainer::ComponentVector comps;
+			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<VehicleBehaviorComponent>(comps);
+			for(int i = 0 ; i < comps.size();i++)
+			{
+				VehicleBehaviorComponentPtr comp = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(comps[i]);
+				if(comp->GetSceneObject() && comp->GetSceneObject()->GetParentSceneObject() != GetSceneObject()->GetParentSceneObject())
+				{
+					//also check that we not already are in sync
+					bool already_synced = false;
+					SceneObjectRef sync_obj = comp->GetSynchronize();
+					if(sync_obj.GetRefObject())
+					{
+						if(sync_obj.GetRefObject() == GetSceneObject())
+						{
+							already_synced = true;
+						}
+					}
+					if(!already_synced)
+					{
+						SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(comp->GetOwner());
+						ret.push_back(so);
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+
+
 	VehicleBehaviorComponent::VehicleBehaviorComponent(void) : m_Initialized(false),
 		m_Formation(FT_UNCHANGED),
 		m_SpeedMode(ST_UNCHANGED),
 		m_RegularSpeedValue(5),
-		m_Radius(5)
+		m_Radius(5),
+		m_Delay(0,0),
+		m_Complete(false)
 	{
 		
-	}	
+	}
+
 
 	VehicleBehaviorComponent::~VehicleBehaviorComponent(void)
 	{
@@ -35,8 +81,9 @@ namespace GASS
 		RegisterProperty<Float>("RegularSpeedValue", &VehicleBehaviorComponent::GetRegularSpeedValue, &VehicleBehaviorComponent::SetRegularSpeedValue,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Speed value used in regular speed mode, other speed modes divided or multiply this value. [m/s]",PF_VISIBLE  | PF_EDITABLE)));
 
+		RegisterProperty<Vec2>("Delay", &VehicleBehaviorComponent::GetDelay, &VehicleBehaviorComponent::SetDelay,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Random time interval to wait at waypoint before going to next. (to equal values disable any random behavior) Unit is [s]",PF_VISIBLE  | PF_EDITABLE)));
 
-		
 		std::vector<std::string> radius_enumeration;
 		//predefined radius
 		radius_enumeration.push_back("1"); 
@@ -47,11 +94,14 @@ namespace GASS
 
 		RegisterProperty<Float>("WaypointRadius", &VehicleBehaviorComponent::GetWaypointRadius, &VehicleBehaviorComponent::SetWaypointRadius,
 			StaticEnumerationPropertyMetaDataPtr(new StaticEnumerationPropertyMetaData("Radius used to consider waypoint reached [m]",PF_VISIBLE | PF_EDITABLE,radius_enumeration)));
-			//BasePropertyMetaDataPtr(new BasePropertyMetaData("Radius used to consider waypoint reached [m]",PF_VISIBLE  | PF_EDITABLE)));
+
+		RegisterProperty<SceneObjectRef>("Synchronize", &VehicleBehaviorComponent::GetSynchronize, &VehicleBehaviorComponent::SetSynchronize,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with this waypoint",PF_VISIBLE,VehicleBehaviorComponentSyncEnumeration)));
 	}
 
 	void VehicleBehaviorComponent::OnInitialize()
 	{
+		BaseSceneComponent::InitializeSceneObjectRef();
 		m_Initialized = true;
 		SetWaypointRadius(m_Radius);
 	}
@@ -90,5 +140,42 @@ namespace GASS
 	{
 		return m_Radius;
 	}
-	
+
+	Float VehicleBehaviorComponent::GenerateRandomDelay() const
+	{
+		Float delay_span = m_Delay.y - m_Delay.x;
+		Float norm_rand = (Float)rand()/(Float)RAND_MAX;
+		return m_Delay.x + norm_rand * delay_span;;
+	}
+
+	void VehicleBehaviorComponent::Reset()
+	{
+		m_Complete = false;
+	}
+
+	void VehicleBehaviorComponent::SetComplete(bool value)
+	{
+		m_Complete = value;
+	}
+
+	bool VehicleBehaviorComponent::GetComplete() const
+	{
+		return m_Complete;
+	}
+
+
+	bool VehicleBehaviorComponent::IsSyncronized() const
+	{
+		if(m_Synchronize.GetRefObject())
+		{
+			if(m_Complete)
+			{
+				VehicleBehaviorComponentPtr syn_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
+				return syn_comp->IsSyncronized();
+			}
+			return false;
+		}
+		else
+			return m_Complete;
+	}
 }

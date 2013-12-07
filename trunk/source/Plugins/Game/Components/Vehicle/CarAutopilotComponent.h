@@ -52,14 +52,11 @@ namespace GASS
 		ADD_PROPERTY(PIDControl,TrottlePID);
 		ADD_PROPERTY(Float,BrakeDistanceFactor);
 		
-		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
-		
 		void _UpdateDrive(double  delta_time);
-		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputControllerMessagePtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);

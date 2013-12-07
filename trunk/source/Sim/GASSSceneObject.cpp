@@ -151,7 +151,7 @@ namespace GASS
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
-		child->InitializePointers(); //intialize SceneObjectLink:s
+		child->InitializePointers(); //initialize SceneObjectLink:s
 
 		BaseComponentContainer::AddChild(child);
 

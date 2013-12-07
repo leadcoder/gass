@@ -140,152 +140,7 @@ namespace GASS
 		if(m_Enable)
 		{
 			_UpdateDrive(delta);
-			//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 		}
-	}
-
-	void CarAutopilotComponent::DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time)
-	{
-		Vec3 v_pos = m_CurrentPos;
-		const float current_speed = -m_VehicleSpeed.z;
-
-		/*v_pos.y = 0;
-		//pos.y = 0;
-		//go to current way point
-		Vec3 follow_line = pos - last_pos;
-		float speed = follow_line.Length();
-		
-		Vec3 dir_to_wp = pos - v_pos;
-		float dist_to_wp = dir_to_wp.Length();*/
-
-		Vec3 target_pos = pos;
-
-		/*if(speed > 0.01)
-		{
-			follow_line.Normalize();
-			Vec3 closest_point_on_line = Math::ClosestPointOnLine(pos,last_pos, v_pos);
-
-			if(Math::Dot(follow_line,dir_to_wp) > 0) // check that we are not "behide" the waypoint
-			{
-				//Try to goto a postion 20m ahead
-				float look_ahead = fabs(current_speed);
-				if(look_ahead > 20.0f)
-					look_ahead = 20.0f;
-
-				if(look_ahead < 4)
-					look_ahead = 4;
-				
-
-				target_pos = closest_point_on_line + follow_line*look_ahead;
-			}
-			else
-				target_pos = pos;
-		}
-		else*/
-		
-		
-
-		//float dist_to_line = (closest_point_on_line - m_UGV->GetAbsPos()).Length();
-		//Vec3 drive_dir = pos - m_UGV->GetAbsPos();
-		Vec3 drive_dir = target_pos - v_pos;
-		float drive_dist = drive_dir.Length();
-
-		if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
-			m_WPReached = true;
-
-		//Font::DebugPrint("drive_dist %f ",drive_dist);
-		//if(!m_WPReached && drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
-		{
-			drive_dir.y = 0;
-			drive_dir.Normalize();
-			Mat4 trans = m_Transformation;
-			Vec3 hull_dir = -trans.GetViewDirVector();
-			//Vec3 hull_dir = trans.GetViewDirVector();
-			hull_dir.y = 0;
-			hull_dir.Normalize();
-			
-			Vec3 cross = Math::Cross(hull_dir,drive_dir);
-			float cos_angle = Math::Dot(hull_dir,drive_dir);
-
-			if(cos_angle > 1) 
-				cos_angle = 1;
-			if(cos_angle < -1) 
-				cos_angle = -1;
-			float angle_to_drive_dir = Math::Rad2Deg(acos(cos_angle));
-			if(cross.y < 0) 
-				angle_to_drive_dir *= -1;
-
-			
-			m_TurnPID.set(0);
-			float turn = m_TurnPID.update(angle_to_drive_dir,time);
-			
-			//float m_TurnRadius = 3.0;
-			//float m_BrakeDist= 10.0;
-
-			//std::cout << "Drive dir angle:" << angle_to_drive_dir << "turn:" << turn << std::endl;
-
-
-		
-			//if(m_ActionHandler->GetOwner()->GetFirstPhysicsBody())
-			//current_speed = m_ActionHandler->GetOwner()->GetFirstPhysicsBody()->GetVelocity().Length();
-		/*/	if(drive_dist < m_BrakeDist)
-			{
-				desired_speed = desired_speed*(1-(m_BrakeDist  - drive_dist)/m_BrakeDist);
-			}*/
-
-
-
-			//if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp)// || fabs(angle_to_drive_dir) > 80) //back up
-			/*if(fabs(angle_to_drive_dir) > 90  && drive_dist < 100)// || fabs(angle_to_drive_dir) > 80) //back up
-			{
-				desired_speed *= -1;
-				turn *=-1;
-			}
-			else*/
-			{
-				// damp speed if we have to turn sharp (forward only)
-				desired_speed = desired_speed * 0.2 + 0.8 * (desired_speed * fabs(cos_angle)); 
-			}
-
-			
-			m_TrottlePID.set(desired_speed);
-			float throttle = m_TrottlePID.update(current_speed,time);
-
-			if(throttle > 1) throttle = 1;
-			if(throttle < -1) throttle = -1;
-
-		/*	if(fabs(sin(Math::Deg2Rad(angle_to_drive_dir))* m_TurnRadius*2) > dist_to_wp || fabs(angle_to_drive_dir) > 80) //back up
-			{
-				throttle = -1;
-				turn *=-1;
-			}*/
-
-			//turn = -turn;
-			if(turn > 1) turn  = 1;
-			if(turn < -1) turn  = -1;
-
-			if(current_speed < 0.01 &&  throttle < 0)
-				throttle  = 0;
-				
-			//Send input message
-
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
-		}
-		/*else
-		{
-			//std::cout << "Dist 0\n";
-
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,0,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
-
-		}*/
 	}
 
 	void CarAutopilotComponent::_UpdateDrive(double delta_time)
@@ -319,12 +174,9 @@ namespace GASS
 			
 			m_TurnPID.set(0);
 			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
-		
-
-			
 	
 			// damp speed if we have to turn sharp
-			if(fabs(angle_to_drive_dir) > 90 && drive_dist > 20)// do three point turn if more than 20 meters turn on point
+			if(fabs(angle_to_drive_dir) > 90 && drive_dist > 5)// do three point turn if more than 20 meters turn on point
 			{
 				desired_speed *= -1;
 				if(current_speed < 0)  //check that not rolling forward
@@ -333,7 +185,7 @@ namespace GASS
 				//	turn = 0;
 
 			}
-			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < 20)// do three point turn or just reverse
+			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse
 			{
 				desired_speed *= -1;
 				if(current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
@@ -348,7 +200,6 @@ namespace GASS
 				if(current_speed < 0) //you want to go forward but rolling backward, invert steering
 					turn *=-1;
 			}
-
 
 			//Linear damp speed if we are inside radius from waypoint, 
 			//the radius is dynamic and is based on the desired speed of the vehicle.

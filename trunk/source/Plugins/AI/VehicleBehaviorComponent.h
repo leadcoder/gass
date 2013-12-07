@@ -45,15 +45,24 @@ namespace GASS
 		~VehicleBehaviorComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		void Reset();
 		Float GetSpeed() const;
 		Float GetWaypointRadius() const;
 		void SetWaypointRadius(Float radius);
+		Float GenerateRandomDelay() const;
+		void SetComplete(bool value);
+		bool GetComplete() const;
+		bool IsSyncronized() const;
 		ADD_PROPERTY(FormationTypeBinder,Formation)
 		ADD_PROPERTY(SpeedTypeBinder,SpeedMode)
 		ADD_PROPERTY(Float,RegularSpeedValue)
+		ADD_PROPERTY(Vec2,Delay)
+		ADD_PROPERTY(SceneObjectRef,Synchronize);
+		std::vector<SceneObjectPtr>  _GetSyncEnumeration() const;
 	private:
 		bool m_Initialized;
 		Float m_Radius;
+		bool m_Complete;
 	
 	};
 
