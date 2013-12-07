@@ -271,7 +271,7 @@ namespace GASS
 					{
 						StaticGeometry::GeometryBucket* geom = geomIt.getNext();
 
-						OgreMeshComponent::AddIndexData(geom->getIndexData(), sub_mesh_data->PositionVector.size(), sub_mesh_data);
+						OgreMeshComponent::AddIndexData(geom->getIndexData(), static_cast<unsigned int>(sub_mesh_data->PositionVector.size()), sub_mesh_data);
 						OgreMeshComponent::AddVertexData(geom->getVertexData(), sub_mesh_data);
 
 						//AddIndexData(geom->getIndexData(),mesh_data->NumVertex,mesh_data);
