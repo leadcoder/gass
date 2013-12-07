@@ -458,7 +458,7 @@ namespace GASS
 				tex2.x = t2.Length();
 
 				ColorRGBA color(1,1,1,1);
-				int start_ind = sub_mesh_data->PositionVector.size();
+				int start_ind = static_cast<int>(sub_mesh_data->PositionVector.size());
 				sub_mesh_data->IndexVector.push_back(start_ind);
 				sub_mesh_data->IndexVector.push_back(start_ind+1);
 				sub_mesh_data->IndexVector.push_back(start_ind+2);
@@ -503,7 +503,7 @@ namespace GASS
 				t2.y = 0;
 				tex2.x = t2.Length();
 
-				start_ind = sub_mesh_data->PositionVector.size();
+				start_ind = static_cast<int>(sub_mesh_data->PositionVector.size());
 				//Reverse order
 				sub_mesh_data->IndexVector.push_back(start_ind+2);
 				sub_mesh_data->IndexVector.push_back(start_ind+1);
