@@ -124,88 +124,15 @@ namespace GASS
 		VehicleControllerComponentPtr leader = GetLeader();
 		if(leader)
 		{
-			//Vec3 pos = leader->GetCurrentLocation();
-			/*if(leader->GetTargetReached())
-			{
-				//remove waypoints
-				if(m_BehaviorWaypoints.size() > 0)
-				{
-					//apply behavior!
-					m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
-					if(m_BehaviorWaypoints.size() > 0)
-						leader->Apply(m_BehaviorWaypoints.front());
-				}
-				//Check waypoint behavior
-			}*/
 			leader->OnUpdate(delta_time);
-			//Float target_speed = leader->GetTargetSpeed();
-
 			for(size_t i = 0;  i < m_Slaves.size(); i++)
 			{
-				//"3 second rule" and add min distance 10 m"
-				//Float target_dist = 10 + (i+1)*target_speed*3;
 				VehicleControllerComponentPtr slave(m_Slaves[i],NO_THROW);
 				if(slave)
 				{
-					//target_dist = leader->GetCurrentDistance() - target_dist;
-					//slave->SetTargetDistance(target_dist);
-					//slave->SetOffset(5); 
 					slave->OnUpdate(delta_time);
 				}
 			}
 		}
-
-			/*for(size_t i = 0;  i < m_Slaves.size(); i++)
-			{
-				VehicleControllerComponentPtr slave(m_Slaves[i],NO_THROW);
-				if(slave)
-				{
-					SceneObjectPtr vehicle = slave->GetVehicle();
-					if(vehicle)
-					{
-						Vec3 vehicle_pos = vehicle->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-						Float my_dist = 0;
-						if(leader->GetPathDistance(vehicle_pos,my_dist))
-						{
-							target_dist = (i+1)*target_speed*3;
-							Float dist_to_go = target_dist - my_dist;
-							if(dist_to_go > 0)
-							{
-								Vec3 target_point;
-								if(leader->GetRelativePosition(, target_point))
-								{
-								slave->GetSceneObject()->GetChildByID("TARGET")->PostMessage(MessagePtr(new PositionMessage(target_point)));
-								vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
-								
-								Float distance = (vehicle_pos - target_point).Length();
-								Float speed = 0;
-								
-								//Start break!
-								if(distance < target_speed*0.5)
-								{
-									speed = 0;
-									//Float w = distance/10.0;
-									//speed = w*20 + (1.0-w)*target_speed;
-								}
-								if(distance < target_speed)
-								{
-									speed = target_speed;
-									//Float w = distance/10.0;
-									//speed = w*20 + (1.0-w)*target_speed;
-								}
-								else
-									speed = target_speed*1.5;
-
-								
-								vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(speed)));
-							
-						}
-						else
-							vehicle->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
-						}
-					}
-				}
-			}
-		}*/
 	}
 }

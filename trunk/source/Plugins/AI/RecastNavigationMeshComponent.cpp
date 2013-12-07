@@ -1174,8 +1174,8 @@ namespace GASS
 			unsigned int tot_faces = 0;
 			for(unsigned int i = 0; i < mesh_data_vec.size() ; i++)
 			{
-				tot_verts += mesh_data_vec[i]->PositionVector.size();
-				tot_faces  += mesh_data_vec[i]->IndexVector.size()/3;
+				tot_verts += static_cast<unsigned int>(mesh_data_vec[i]->PositionVector.size());
+				tot_faces  += static_cast<unsigned int>(mesh_data_vec[i]->IndexVector.size())/3;
 			}
 			if(tot_verts > 0 && tot_faces > 0 && sizeof(Float) == 8) //double precision
 			{

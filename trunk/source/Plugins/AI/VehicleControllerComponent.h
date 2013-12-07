@@ -25,37 +25,35 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		SceneObjectPtr GetVehicle() const {return SceneObjectPtr(m_Vehicle,boost::detail::sp_nothrow_tag());}
-		//void FollowPath(const std::vector<Vec3> path, double target_radius);
-		bool GetTargetReached() const {return m_TargetReached;}
-		void SetTargetDistance(Float dist);
-		Float GetCurrentDistance() const {return m_CurrentPathDist;}
-		//void Apply(VehicleBehaviorComponentPtr comp);
 		void SetBehaviorList(std::vector<VehicleBehaviorComponentPtr> behaviors);
 		void OnUpdate(double);
-		bool GetRelativePosition(Float behinde_dist, Vec3 &target_position);
 		Float GetTargetSpeed() const {return m_TargetSpeed;}
-		bool GetPathDistance(const Vec3 &point, Float &distance);
-		void SetOffset(Float offset) {m_PathOffset = offset;}
-		//void OffsetPath(Float offset);
-
 		VehicleControllerComponentPtr GetLeader() const {return VehicleControllerComponentPtr(m_Leader);}
 		void SetLeader(VehicleControllerComponentPtr leader) {m_Leader= leader;}
 		void SetGroupID(int id) {m_GroupID = id;}
+		int GetGroupID() const {return m_GroupID;}
+		
 	private:
-		bool GetFormationPosition(int id, Vec3 &target_pos, Float &path_distance);
-		void OnFormationPathfollow(double time);
-		void OnLeaderPathfollow(double time);
-		NavigationComponentPtr _GetNavigation() const {return NavigationComponentPtr(m_Navigation);}
-		void _Apply(VehicleBehaviorComponentPtr comp, bool first_behavior);
+		Vec3 GetVehiclePos() const{return m_VehiclePos;}
+		bool GetFormationPosition(VehicleControllerComponentPtr slave, Vec3 &target_pos, Float &path_distance);
+		void OnVehicleVelocity(VelocityNotifyMessagePtr message);
+		void OnVehicleTransformation(TransformationNotifyMessagePtr message);
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
+		
+		void _UpdateFormationPathfollow(double time);
+		void _UpdateLeaderPathfollow(double time);
+		NavigationComponentPtr _GetNavigation() const {return NavigationComponentPtr(m_Navigation,NO_THROW);}
+		void _Apply(VehicleBehaviorComponentPtr comp, bool first_behavior);
+		
 		void SetVehicleTemplate(const std::string &template_name);
 		std::string GetVehicleTemplate() const;
+		
 		bool m_Initialized;
 		SceneObjectWeakPtr m_Vehicle;
 		std::string  m_VehicleTemplate;
-		Vec3 m_Pos;
-		Quaternion m_Rot;
+		Vec3 m_StartPos;
+		Quaternion m_StartRot;
 		std::vector<Vec3> m_Path;
 		std::vector<Vec3> m_FullPath;
 		
@@ -67,12 +65,13 @@ namespace GASS
 		Float m_PreviousDist;
 		std::vector<VehicleBehaviorComponentPtr> m_BehaviorWaypoints;
 		bool m_HasTargetDist;
-		Float m_TargetDist;
-		Float m_PathOffset;
 		int m_GroupID;
 		VehicleControllerComponentWeakPtr m_Leader;
 		FormationType m_CurrentFormation;
 		NavigationComponentWeakPtr m_Navigation;
+		Vec3 m_VehiclePos;
+		Quaternion m_VehicleRot;
+		Float m_VehicleSpeed;
 	};
 }
 #endif

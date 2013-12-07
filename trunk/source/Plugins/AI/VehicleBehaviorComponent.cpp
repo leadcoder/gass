@@ -70,7 +70,7 @@ namespace GASS
 			return m_RegularSpeedValue*2;
 			break;
 		}
-		return 0;
+		return m_RegularSpeedValue;
 	}
 
 	void VehicleBehaviorComponent::SetWaypointRadius(Float radius)
