@@ -1,13 +1,17 @@
 #include "VehicleBehaviorComponent.h"
+#include "VehicleTriggerComponent.h"
 #include "AISceneManager.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
 
-
-
 namespace GASS
 {
-
+	
+	std::vector<SceneObjectPtr> VehicleBehaviorComponentTriggerEnumeration(BaseReflectionObjectPtr obj)
+	{
+		SPTR<VehicleBehaviorComponent> comp = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(obj);
+		return  comp->_GetTriggerEnumeration();
+	}
 	std::vector<SceneObjectPtr> VehicleBehaviorComponentSyncEnumeration(BaseReflectionObjectPtr obj)
 	{
 		SPTR<VehicleBehaviorComponent> comp = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(obj);
@@ -47,6 +51,28 @@ namespace GASS
 		}
 		return ret;
 	}
+
+	std::vector<SceneObjectPtr>  VehicleBehaviorComponent::_GetTriggerEnumeration() const
+	{
+		std::vector<SceneObjectPtr> ret;
+		SceneObjectPtr so = GetSceneObject();
+		if(so)
+		{
+			IComponentContainer::ComponentVector comps;
+			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<VehicleTriggerComponent>(comps);
+			for(int i = 0 ; i < comps.size();i++)
+			{
+				VehicleTriggerComponentPtr comp = DYNAMIC_PTR_CAST<VehicleTriggerComponent>(comps[i]);
+				if(comp->GetSceneObject())
+				{
+					SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(comp->GetOwner());
+					ret.push_back(so);
+				}
+			}
+		}
+		return ret;
+	}
+
 
 
 
@@ -97,6 +123,9 @@ namespace GASS
 
 		RegisterProperty<SceneObjectRef>("Synchronize", &VehicleBehaviorComponent::GetSynchronize, &VehicleBehaviorComponent::SetSynchronize,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with this waypoint",PF_VISIBLE,VehicleBehaviorComponentSyncEnumeration)));
+
+		RegisterVectorProperty<SceneObjectRef>("Triggers", &VehicleBehaviorComponent::GetTriggers, &VehicleBehaviorComponent::SetTriggers,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with triggers",PF_VISIBLE,VehicleBehaviorComponentTriggerEnumeration,true)));
 	}
 
 	void VehicleBehaviorComponent::OnInitialize()
@@ -163,19 +192,45 @@ namespace GASS
 		return m_Complete;
 	}
 
-
 	bool VehicleBehaviorComponent::IsSyncronized() const
+	{
+		if(m_Complete)
+		{
+			if(_CheckTriggers())
+			{
+				return _CheckWaypoints();
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+
+	bool VehicleBehaviorComponent::_CheckWaypoints() const
 	{
 		if(m_Synchronize.GetRefObject())
 		{
-			if(m_Complete)
-			{
-				VehicleBehaviorComponentPtr syn_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
-				return syn_comp->IsSyncronized();
-			}
-			return false;
+			VehicleBehaviorComponentPtr syn_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
+			return syn_comp->IsSyncronized();
 		}
-		else
-			return m_Complete;
+		return true;
+	}
+
+	bool VehicleBehaviorComponent::_CheckTriggers() const
+	{
+		for(size_t i = 0; i < m_Triggers.size(); i++)
+		{
+			SceneObjectPtr so = m_Triggers[i].GetRefObject();
+			if(so)
+			{
+				VehicleTriggerComponentPtr trigger_comp = so->GetFirstComponentByClass<VehicleTriggerComponent>();
+				if(!trigger_comp->IsActive())
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

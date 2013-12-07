@@ -58,8 +58,13 @@ namespace GASS
 		ADD_PROPERTY(Float,RegularSpeedValue)
 		ADD_PROPERTY(Vec2,Delay)
 		ADD_PROPERTY(SceneObjectRef,Synchronize);
+		ADD_PROPERTY(std::vector<SceneObjectRef>,Triggers);
 		std::vector<SceneObjectPtr>  _GetSyncEnumeration() const;
+		std::vector<SceneObjectPtr>  _GetTriggerEnumeration() const;
 	private:
+		bool _CheckTriggers() const;
+		bool _CheckWaypoints() const;
+
 		bool m_Initialized;
 		Float m_Radius;
 		bool m_Complete;

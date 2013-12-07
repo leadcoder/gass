@@ -34,8 +34,9 @@ namespace GASS
 		int GetGroupID() const {return m_GroupID;}
 		void SetCurrentDistance(Float value){m_CurrentPathDist = value;}
 		Float GetCurrentDistance() const {return m_CurrentPathDist;}
-	private:
 		Vec3 GetVehiclePos() const{return m_VehiclePos;}
+	private:
+		
 		bool GetFormationPosition(VehicleControllerComponentPtr slave, Vec3 &target_pos, Float &path_distance);
 		void OnVehicleVelocity(VelocityNotifyMessagePtr message);
 		void OnVehicleTransformation(TransformationNotifyMessagePtr message);
