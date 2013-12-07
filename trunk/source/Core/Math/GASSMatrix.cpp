@@ -416,13 +416,13 @@ namespace GASS
 
 		for (int col = 0; col < 4; col++) {
 			const Float sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
-			det += sign * m_Data[0][col] * Determinant(0, col);
+			det += sign * m_Data[0][col] * _Determinant(0, col);
 		}
 		return det;
 	}
 
 
-	Float Mat4::Determinant(int row, int col) 
+	Float Mat4::_Determinant(int row, int col) 
 	{
 		assert(row >= 0 && row < 4 && col >= 0 && col < 4);
 

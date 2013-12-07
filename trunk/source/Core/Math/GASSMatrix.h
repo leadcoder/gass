@@ -103,7 +103,7 @@ namespace GASS
 		void SetTransformation(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale);
 		void SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
 		Float Determinant();
-		Float Determinant(int row, int col);
+		Float _Determinant(int row, int col);
 		Mat4 Invert();
 		Mat4 Invert2();
 		Mat4 GetRotation() const;
