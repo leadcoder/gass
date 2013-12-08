@@ -42,8 +42,6 @@ namespace GASS
 		Float GetRadius() const;
 	protected:
 		ADD_PROPERTY(bool, Wireframe);
-		void DrawSolid(int nSlice, int nStack);
-		void DrawWireframe();
 		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();
@@ -52,7 +50,6 @@ namespace GASS
 	private:
 		Float m_Radius;
 		ColorRGBA m_Color;
-		
 	};
 }
 #endif

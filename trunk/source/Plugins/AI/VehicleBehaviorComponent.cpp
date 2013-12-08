@@ -73,9 +73,6 @@ namespace GASS
 		return ret;
 	}
 
-
-
-
 	VehicleBehaviorComponent::VehicleBehaviorComponent(void) : m_Initialized(false),
 		m_Formation(FT_UNCHANGED),
 		m_SpeedMode(ST_UNCHANGED),
@@ -232,5 +229,41 @@ namespace GASS
 			}
 		}
 		return true;
+	}
+
+	void VehicleBehaviorComponent::_UpdateMesh()
+	{
+		if(m_Initialized)
+		{
+			ColorRGBA color(0,1,0,1);
+			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+			sub_mesh_data->MaterialName = "";
+			sub_mesh_data->Type = LINE_LIST;
+					
+			Vec3 wp_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+					
+			//Add line datat;
+			for(size_t i = 0; i < m_Triggers.size(); i++)
+			{
+				SceneObjectPtr so = m_Triggers[i].GetRefObject();
+				if(so)
+				{
+					sub_mesh_data->PositionVector.push_back(wp_pos);
+					LocationComponentPtr location_comp = so->GetFirstComponentByClass<ILocationComponent>();
+					sub_mesh_data->PositionVector.push_back(location_comp->GetWorldPosition());
+				}
+			}
+			if(m_Synchronize.GetRefObject())
+			{
+				LocationComponentPtr location_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<ILocationComponent>();
+				sub_mesh_data->PositionVector.push_back(wp_pos);
+				sub_mesh_data->PositionVector.push_back(location_comp->GetWorldPosition());
+			}
+
+			GraphicsMeshPtr mesh_data(new GraphicsMesh());
+			mesh_data->SubMeshVector.push_back(sub_mesh_data);
+			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+			GetSceneObject()->PostMessage(mesh_message);
+		}
 	}
 }

@@ -9,6 +9,19 @@
 
 namespace GASS
 {
+
+	enum TriggerAreaType
+	{
+		TAT_ELLIPSOID,
+		TAT_BOX,
+	};
+
+	START_ENUM_BINDER(TriggerAreaType,TriggerAreaTypeBinder)
+		BIND(TAT_ELLIPSOID)
+		BIND(TAT_BOX)
+	END_ENUM_BINDER(TriggerAreaType,TriggerAreaTypeBinder)
+
+
 	struct ActivationObject
 	{
 		SceneObjectWeakPtr Object;
@@ -36,9 +49,18 @@ namespace GASS
 		ADD_PROPERTY(bool,Repeatedly);
 		ADD_PROPERTY(bool,Present);
 		ADD_PROPERTY(bool,Strict);
+		ADD_PROPERTY(bool,2DArea);
+		
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ActivationGroups);
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ActivationControllers);
+		TriggerAreaTypeBinder GetAreaType() const {return m_AreaType;}
+		Vec3 GetAreaSize() const {return m_AreaSize;}
+		void SetAreaType(TriggerAreaTypeBinder at) {m_AreaType = at; _UpdateArea();}
+		void SetAreaSize(const Vec3 &as) {m_AreaSize = as; _UpdateArea();}
+		void _UpdateArea();
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
+		void OnTransformation(TransformationNotifyMessagePtr message);
+		bool _IsPointInside(const Vec3 &point);
 		void _OnPlay();
 		bool m_Initialized;
 		void SetActive(bool value);
@@ -48,7 +70,9 @@ namespace GASS
 		ActivationVector m_AllActivators;
 		bool m_Active;
 		bool m_Update;
-		
+		TriggerAreaTypeBinder m_AreaType;
+		Vec3 m_AreaSize;
+		Mat4 m_InverseTransform;
 	};
 	typedef SPTR<VehicleTriggerComponent> VehicleTriggerComponentPtr;
 }

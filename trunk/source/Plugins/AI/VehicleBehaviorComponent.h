@@ -21,7 +21,7 @@ namespace GASS
 		BIND(FT_UNCHANGED)
 		BIND(FT_LINE)
 		BIND(FT_WALL)
-		END_ENUM_BINDER(FormationType,FormationTypeBinder)
+	END_ENUM_BINDER(FormationType,FormationTypeBinder)
 
 	enum SpeedType
 	{
@@ -62,6 +62,7 @@ namespace GASS
 		std::vector<SceneObjectPtr>  _GetSyncEnumeration() const;
 		std::vector<SceneObjectPtr>  _GetTriggerEnumeration() const;
 	private:
+		void _UpdateMesh();
 		bool _CheckTriggers() const;
 		bool _CheckWaypoints() const;
 

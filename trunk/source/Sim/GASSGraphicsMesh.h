@@ -58,6 +58,7 @@ namespace GASS
 		{
 
 		}
+		
 		/**
 			Vector holding all positions
 		*/
@@ -120,6 +121,15 @@ namespace GASS
 		virtual ~GraphicsMesh();
 		void Transform(const Mat4 &transformation );
 		std::vector<GraphicsSubMeshPtr> SubMeshVector;
+
+		/**
+			Helper function to generate sphere sub mesh
+		*/
+		static GraphicsSubMeshPtr GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material="", int segments = 30);
+		static GraphicsSubMeshPtr GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material="", int segments = 30);
+		static GraphicsSubMeshPtr GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+		static GraphicsSubMeshPtr GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+	
 	};
 	typedef SPTR<GraphicsMesh> GraphicsMeshPtr;
 }

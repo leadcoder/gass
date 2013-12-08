@@ -500,5 +500,6 @@ namespace GASS
 		if(behaviors.size() > 0)
 			_Apply(behaviors.front(), true);
 	}
+	
 }
 

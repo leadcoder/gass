@@ -66,7 +66,10 @@ namespace GASS
 		m_Active(false),
 		m_Repeatedly(false),
 		m_Update(false),
-		m_Strict(false)
+		m_Strict(false),
+		m_AreaType(TAT_ELLIPSOID),
+		m_AreaSize(40,40,10),
+		m_2DArea(false)
 	{
 
 	}	
@@ -80,6 +83,13 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("VehicleTriggerComponent",new Creator<VehicleTriggerComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleTriggerComponent", OF_VISIBLE)));
+		RegisterProperty<TriggerAreaTypeBinder>("AreaType", &VehicleTriggerComponent::GetAreaType, &VehicleTriggerComponent::SetAreaType,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Area type",PF_VISIBLE,&TriggerAreaTypeBinder::GetStringEnumeration)));
+		RegisterProperty<Vec3>("AreaSize", &VehicleTriggerComponent::GetAreaSize, &VehicleTriggerComponent::SetAreaSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Area size",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<bool>("2DArea", &VehicleTriggerComponent::Get2DArea, &VehicleTriggerComponent::Set2DArea,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if we should igonre y-axis in area checks",PF_VISIBLE  | PF_EDITABLE)));
+	
 		RegisterProperty<bool>("Repeatedly", &VehicleTriggerComponent::GetRepeatedly, &VehicleTriggerComponent::SetRepeatedly,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if this trigger should be active repeatedly or once",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<bool>("Present", &VehicleTriggerComponent::GetPresent, &VehicleTriggerComponent::SetPresent,
@@ -98,16 +108,31 @@ namespace GASS
 
 	void VehicleTriggerComponent::OnInitialize()
 	{
+
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleTriggerComponent::OnTransformation,TransformationNotifyMessage,0));
+
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(VehicleTriggerComponent::OnScenarioEvent,ScenarioStateRequest,0));
 		m_Initialized = true;
+		//update mesh
+		_UpdateArea();
+	}
+
+	void VehicleTriggerComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	{
+		Vec3 pos = message->GetPosition();
+		Quaternion rot = message->GetRotation();
+		//Mat4 trans;
+		m_InverseTransform.SetTransformation(pos,rot,Vec3(1,1,1));
+		m_InverseTransform = m_InverseTransform.Invert();
 	}
 
 	void VehicleTriggerComponent::OnScenarioEvent(ScenarioStateRequestPtr message)
 	{
 		if(message->GetState() == SS_PLAY)
 		{
+			_UpdateArea();
 			_OnPlay();
 			m_Update = true;
 		}
@@ -183,10 +208,8 @@ namespace GASS
 			{
 				VehicleControllerComponentPtr vehicle = obj->GetFirstComponentByClass<VehicleControllerComponent>();
 				const Vec3 pos = vehicle->GetVehiclePos();
-				ShapePtr shape = GetSceneObject()->GetFirstComponentByClass<IShape>();
-				if(shape)
 				{
-					if(shape->IsPointInside(pos))
+					if(_IsPointInside(pos))
 					{
 						some_one_inside = true;
 						if(!(*iter).Inside)
@@ -268,5 +291,43 @@ namespace GASS
 	{
 		m_AllActivators.clear();
 		m_Active = false;
+	}
+
+	void VehicleTriggerComponent::_UpdateArea()
+	{
+		if(m_Initialized)
+		{
+			ColorRGBA color(1,1,1,1);
+			GraphicsSubMeshPtr sub_mesh_data;
+			if(m_AreaType == TAT_BOX)
+				sub_mesh_data = GraphicsMesh::GenerateWireframeBox(m_AreaSize, color, "WhiteTransparentNoLighting");
+			else if(m_AreaType == TAT_ELLIPSOID)
+				sub_mesh_data = GraphicsMesh::GenerateWireframeEllipsoid(m_AreaSize*0.5, color, "WhiteTransparentNoLighting", 30);
+			
+			GraphicsMeshPtr mesh_data(new GraphicsMesh());
+			mesh_data->SubMeshVector.push_back(sub_mesh_data);
+			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+			GetSceneObject()->PostMessage(mesh_message);
+		}
+	}
+
+	bool VehicleTriggerComponent::_IsPointInside(const Vec3 &point)
+	{
+		Vec3 trans_point = m_InverseTransform * point;
+		Vec3 size = m_AreaSize*0.5;
+		if(m_AreaType == TAT_BOX)
+		{
+			return (trans_point.x < size.x && trans_point.x > -size.x &&
+				trans_point.z < size.z && trans_point.z > -size.z &&
+				(m_2DArea || (trans_point.y < size.y && trans_point.y > -size.y))
+				);
+		}
+		else
+		{
+			trans_point.x = trans_point.x / size.x;
+			trans_point.z = trans_point.z / size.z;
+			trans_point.y = (m_2DArea) ? 0 : trans_point.y / size.y;;
+			return (trans_point.Length() < 1.0);
+		}
 	}
 }
