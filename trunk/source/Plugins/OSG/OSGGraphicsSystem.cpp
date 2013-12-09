@@ -633,7 +633,13 @@ namespace GASS
 		if(material.DepthTest)
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 		else
+		{
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+			//render late!
+			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+			//after transparent bin
+			state_set->setRenderBinDetails( 11, "RenderBin");
+		}
 
 		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
 		depth->setWriteMask( material.DepthWrite );

@@ -38,6 +38,8 @@ namespace GASS
 		TRIANGLE_LIST,
 		TRIANGLE_STRIP,
 	};
+
+	FDECL(GraphicsSubMesh);
 	
 
 	/**
@@ -106,8 +108,36 @@ namespace GASS
 			Sub mesh type
 		*/
 		GraphicsSubMeshType Type;
+
+		/** Add line ellipsoid shaped geometry*/
+		void AddWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, int segments = 30);
+		/** Add a triangle ellipsoid shaped geometry*/
+		void AddSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,int segments = 30);
+		/** Add line box shaped geometry*/
+		void AddWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color);
+		/** Add a triangle box shaped geometry*/
+		void AddSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color);
+
+		/** Add line rectangle shaped geometry*/
+		void AddWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color);
+
+		/** Add line ellipse shaped geometry*/
+		void AddWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, int segments);
+		
+		/** Add a arrow shaped geometry*/
+		void AddArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color);
+
+		
+		//	Helper function to generate allocatate and add geomtries
+		static GraphicsSubMeshPtr GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material="", int segments = 30);
+		static GraphicsSubMeshPtr GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material="", int segments = 30);
+		static GraphicsSubMeshPtr GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+		static GraphicsSubMeshPtr GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+		static GraphicsSubMeshPtr GenerateWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+		static GraphicsSubMeshPtr GenerateWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments);
+		static GraphicsSubMeshPtr GenerateArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color, const std::string &material);
 	};
-	typedef SPTR<GraphicsSubMesh> GraphicsSubMeshPtr;
+	//typedef SPTR<GraphicsSubMesh> GraphicsSubMeshPtr;
 	
 
 	/**
@@ -121,15 +151,6 @@ namespace GASS
 		virtual ~GraphicsMesh();
 		void Transform(const Mat4 &transformation );
 		std::vector<GraphicsSubMeshPtr> SubMeshVector;
-
-		/**
-			Helper function to generate sphere sub mesh
-		*/
-		static GraphicsSubMeshPtr GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material="", int segments = 30);
-		static GraphicsSubMeshPtr GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material="", int segments = 30);
-		static GraphicsSubMeshPtr GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
-		static GraphicsSubMeshPtr GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
-	
 	};
 	typedef SPTR<GraphicsMesh> GraphicsMeshPtr;
 }

@@ -6,7 +6,7 @@
 
 namespace GASS
 {
-	
+
 	std::vector<SceneObjectPtr> VehicleBehaviorComponentTriggerEnumeration(BaseReflectionObjectPtr obj)
 	{
 		SPTR<VehicleBehaviorComponent> comp = DYNAMIC_PTR_CAST<VehicleBehaviorComponent>(obj);
@@ -81,7 +81,7 @@ namespace GASS
 		m_Delay(0,0),
 		m_Complete(false)
 	{
-		
+
 	}
 
 
@@ -94,7 +94,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("VehicleBehaviorComponent",new Creator<VehicleBehaviorComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleBehaviorComponent", OF_VISIBLE)));
-		
+
 		RegisterProperty<FormationTypeBinder>("Formation", &VehicleBehaviorComponent::GetFormation, &VehicleBehaviorComponent::SetFormation,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Formation type",PF_VISIBLE,&FormationTypeBinder::GetStringEnumeration)));
 
@@ -128,6 +128,10 @@ namespace GASS
 	void VehicleBehaviorComponent::OnInitialize()
 	{
 		BaseSceneComponent::InitializeSceneObjectRef();
+
+		SceneManagerListenerPtr listener = shared_from_this();
+		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
+		m_ConnectionLines = GetSceneObject()->GetChildByID("CONNECTION_LINES");
 		m_Initialized = true;
 		SetWaypointRadius(m_Radius);
 	}
@@ -158,7 +162,7 @@ namespace GASS
 			if(sphere_comp)
 				sphere_comp->SetPropertyByType("Radius",m_Radius);
 		}
-		
+
 		//update sphere size
 	}
 
@@ -231,39 +235,49 @@ namespace GASS
 		return true;
 	}
 
-	void VehicleBehaviorComponent::_UpdateMesh()
+
+	void VehicleBehaviorComponent::SceneManagerTick(double delta_time)
+	{
+		_UpdateConnectionLines();
+	}
+
+	void VehicleBehaviorComponent::_UpdateConnectionLines()
 	{
 		if(m_Initialized)
 		{
-			ColorRGBA color(0,1,0,1);
-			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
-			sub_mesh_data->MaterialName = "";
-			sub_mesh_data->Type = LINE_LIST;
-					
-			Vec3 wp_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-					
-			//Add line datat;
-			for(size_t i = 0; i < m_Triggers.size(); i++)
+			SceneObjectPtr line_obj = _GetConnectionLines();
+			if(line_obj)
 			{
-				SceneObjectPtr so = m_Triggers[i].GetRefObject();
-				if(so)
-				{
-					sub_mesh_data->PositionVector.push_back(wp_pos);
-					LocationComponentPtr location_comp = so->GetFirstComponentByClass<ILocationComponent>();
-					sub_mesh_data->PositionVector.push_back(location_comp->GetWorldPosition());
-				}
-			}
-			if(m_Synchronize.GetRefObject())
-			{
-				LocationComponentPtr location_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<ILocationComponent>();
-				sub_mesh_data->PositionVector.push_back(wp_pos);
-				sub_mesh_data->PositionVector.push_back(location_comp->GetWorldPosition());
-			}
+				ColorRGBA color(0,1,0,1);
+				Float arrow_size = 1;
+				GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+				sub_mesh_data->MaterialName = "";
+				sub_mesh_data->Type = LINE_LIST;
+				Vec3 wp_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
-			GraphicsMeshPtr mesh_data(new GraphicsMesh());
-			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			GetSceneObject()->PostMessage(mesh_message);
+				//Add line datat;
+				for(size_t i = 0; i < m_Triggers.size(); i++)
+				{
+					SceneObjectPtr so = m_Triggers[i].GetRefObject();
+					if(so)
+					{
+						LocationComponentPtr location_comp = so->GetFirstComponentByClass<ILocationComponent>();
+						Vec3 end_pos = location_comp->GetWorldPosition();
+						sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
+					}
+				}
+				if(m_Synchronize.GetRefObject())
+				{
+					LocationComponentPtr location_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<ILocationComponent>();
+					Vec3 end_pos = location_comp->GetWorldPosition();
+					sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
+				}
+
+				GraphicsMeshPtr mesh_data(new GraphicsMesh());
+				mesh_data->SubMeshVector.push_back(sub_mesh_data);
+				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+				line_obj->PostMessage(mesh_message);
+			}
 		}
 	}
 }

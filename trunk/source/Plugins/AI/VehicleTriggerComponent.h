@@ -13,12 +13,16 @@ namespace GASS
 	enum TriggerAreaType
 	{
 		TAT_ELLIPSOID,
+		TAT_ELLIPSE,
 		TAT_BOX,
+		TAT_RECTANGLE,
 	};
 
 	START_ENUM_BINDER(TriggerAreaType,TriggerAreaTypeBinder)
 		BIND(TAT_ELLIPSOID)
+		BIND(TAT_ELLIPSE)
 		BIND(TAT_BOX)
+		BIND(TAT_RECTANGLE)
 	END_ENUM_BINDER(TriggerAreaType,TriggerAreaTypeBinder)
 
 
@@ -49,10 +53,10 @@ namespace GASS
 		ADD_PROPERTY(bool,Repeatedly);
 		ADD_PROPERTY(bool,Present);
 		ADD_PROPERTY(bool,Strict);
-		ADD_PROPERTY(bool,2DArea);
 		
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ActivationGroups);
 		ADD_PROPERTY(std::vector<SceneObjectRef>,ActivationControllers);
+
 		TriggerAreaTypeBinder GetAreaType() const {return m_AreaType;}
 		Vec3 GetAreaSize() const {return m_AreaSize;}
 		void SetAreaType(TriggerAreaTypeBinder at) {m_AreaType = at; _UpdateArea();}

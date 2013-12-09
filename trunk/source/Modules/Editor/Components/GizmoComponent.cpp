@@ -340,10 +340,13 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.clear();
 		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
-		
+		sub_mesh_data->MaterialName = m_RegularMat;
+
 		//Arrow
 		if(m_Type == GT_AXIS)
 		{
+			sub_mesh_data->Type = TRIANGLE_LIST;
+
 			float box_volume = m_Size * 0.01;
 			Vec3 offset(0,-box_volume,box_volume);
 			Vec3 pos = Vec3(0,box_volume,box_volume)  + offset;
@@ -440,11 +443,12 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(11);
 			sub_mesh_data->IndexVector.push_back(12);
 			sub_mesh_data->IndexVector.push_back(8);
-			sub_mesh_data->MaterialName = "GizmoArrowMat";
-			sub_mesh_data->Type = TRIANGLE_LIST;
+			
 		}
 		else if(m_Type == GT_PLANE)
 		{
+			sub_mesh_data->Type = TRIANGLE_LIST;
+
 			float thickness = 0.01;
 			
 			Vec3 pos = Vec3(0,-thickness,0);
@@ -502,14 +506,15 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(11);
 			sub_mesh_data->IndexVector.push_back(10);
 			sub_mesh_data->IndexVector.push_back(9);
-
-			sub_mesh_data->MaterialName = "GizmoArrowMat";
-			sub_mesh_data->Type = TRIANGLE_LIST;
 		}
 
 
 		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 		{
+
+			
+			sub_mesh_data->Type = LINE_LIST;
+
 			Vec3 pos(0,0,0);
 			
 			float grid_size = 0;
@@ -543,8 +548,7 @@ namespace GASS
 				sub_mesh_data->IndexVector.push_back(index++);
 				sub_mesh_data->IndexVector.push_back(index++);
 			}
-			sub_mesh_data->MaterialName = "PlaneGeometry";
-			sub_mesh_data->Type = LINE_LIST;
+			
 		}
 		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);

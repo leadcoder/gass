@@ -60,7 +60,7 @@ namespace GASS
 		return ret;
 	}
 
-	
+
 
 	VehicleTriggerComponent::VehicleTriggerComponent(void) : m_Initialized(false),
 		m_Active(false),
@@ -68,8 +68,7 @@ namespace GASS
 		m_Update(false),
 		m_Strict(false),
 		m_AreaType(TAT_ELLIPSOID),
-		m_AreaSize(40,40,10),
-		m_2DArea(false)
+		m_AreaSize(40,40,10)
 	{
 
 	}	
@@ -87,17 +86,15 @@ namespace GASS
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Area type",PF_VISIBLE,&TriggerAreaTypeBinder::GetStringEnumeration)));
 		RegisterProperty<Vec3>("AreaSize", &VehicleTriggerComponent::GetAreaSize, &VehicleTriggerComponent::SetAreaSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Area size",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<bool>("2DArea", &VehicleTriggerComponent::Get2DArea, &VehicleTriggerComponent::Set2DArea,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if we should igonre y-axis in area checks",PF_VISIBLE  | PF_EDITABLE)));
-	
+
 		RegisterProperty<bool>("Repeatedly", &VehicleTriggerComponent::GetRepeatedly, &VehicleTriggerComponent::SetRepeatedly,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if this trigger should be active repeatedly or once",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<bool>("Present", &VehicleTriggerComponent::GetPresent, &VehicleTriggerComponent::SetPresent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if this trigger should be active when objects are inside or out side area",PF_VISIBLE  | PF_EDITABLE)));
-	
+
 		RegisterProperty<bool>("Strict", &VehicleTriggerComponent::GetStrict, &VehicleTriggerComponent::SetStrict,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Choose if this trigger should be active when all or someone is trus",PF_VISIBLE  | PF_EDITABLE)));
-		
+
 		RegisterVectorProperty<SceneObjectRef>("ActivationGroups", &VehicleTriggerComponent::GetActivationGroups, &VehicleTriggerComponent::SetActivationGroups,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Groups",PF_VISIBLE,VehicleTriggerComponentGroupEnumeration,true)));
 
@@ -147,7 +144,7 @@ namespace GASS
 		Reset();
 
 		//Get all vehicles and add them as triggers
-		
+
 		for(int i = 0 ; i < m_ActivationControllers.size();i++)
 		{
 			ActivationObject ao;
@@ -179,12 +176,12 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<VehicleControllerComponent>(comps);
 		for(int i = 0 ; i < comps.size();i++)
 		{
-			VehicleControllerComponentPtr comp = DYNAMIC_PTR_CAST<VehicleControllerComponent>(comps[i]);
-			//no filters!
-			ActivationObject ao;
-			ao.Inside = false;
-			ao.Object = comp->GetSceneObject();
-			m_AllActivators.push_back(ao);
+		VehicleControllerComponentPtr comp = DYNAMIC_PTR_CAST<VehicleControllerComponent>(comps[i]);
+		//no filters!
+		ActivationObject ao;
+		ao.Inside = false;
+		ao.Object = comp->GetSceneObject();
+		m_AllActivators.push_back(ao);
 		}*/
 	}
 
@@ -200,7 +197,7 @@ namespace GASS
 		bool some_one_left = false;
 		bool some_one_inside = false;
 		bool all_inside = true;
-		
+
 		while(iter != m_AllActivators.end())
 		{
 			SceneObjectPtr obj((*iter).Object,NO_THROW);
@@ -238,7 +235,7 @@ namespace GASS
 				iter = m_AllActivators.erase(iter);
 			}
 		}
-		
+
 		bool activate = false;
 
 		if(m_Strict)
@@ -297,12 +294,24 @@ namespace GASS
 	{
 		if(m_Initialized)
 		{
-			ColorRGBA color(1,1,1,1);
+			ColorRGBA color(0.6,0,0,1);
 			GraphicsSubMeshPtr sub_mesh_data;
-			if(m_AreaType == TAT_BOX)
-				sub_mesh_data = GraphicsMesh::GenerateWireframeBox(m_AreaSize, color, "WhiteTransparentNoLighting");
-			else if(m_AreaType == TAT_ELLIPSOID)
-				sub_mesh_data = GraphicsMesh::GenerateWireframeEllipsoid(m_AreaSize*0.5, color, "WhiteTransparentNoLighting", 30);
+
+			switch(m_AreaType.GetValue())
+			{
+			case TAT_BOX:
+				sub_mesh_data = GraphicsSubMesh::GenerateWireframeBox(m_AreaSize, color, "WhiteTransparentNoLighting");
+				break;
+			case TAT_RECTANGLE:
+				sub_mesh_data = GraphicsSubMesh::GenerateWireframeRectangle(Vec2(m_AreaSize.x,m_AreaSize.z), color, "WhiteTransparentNoLighting");
+				break;
+			case TAT_ELLIPSOID:
+				sub_mesh_data = GraphicsSubMesh::GenerateWireframeEllipsoid(m_AreaSize*0.5, color, "WhiteTransparentNoLighting", 30);
+				break;
+			case TAT_ELLIPSE:
+				sub_mesh_data = GraphicsSubMesh::GenerateWireframeEllipse(Vec2(m_AreaSize.x*0.5,m_AreaSize.z*0.5), color, "WhiteTransparentNoLighting",30);
+				break;
+			}
 			
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
@@ -315,19 +324,37 @@ namespace GASS
 	{
 		Vec3 trans_point = m_InverseTransform * point;
 		Vec3 size = m_AreaSize*0.5;
-		if(m_AreaType == TAT_BOX)
+		switch(m_AreaType.GetValue())
 		{
-			return (trans_point.x < size.x && trans_point.x > -size.x &&
-				trans_point.z < size.z && trans_point.z > -size.z &&
-				(m_2DArea || (trans_point.y < size.y && trans_point.y > -size.y))
-				);
+		case TAT_BOX:
+			{
+				return (trans_point.x < size.x && trans_point.x > -size.x &&
+					trans_point.z < size.z && trans_point.z > -size.z &&
+					trans_point.y < size.y && trans_point.y > -size.y);
+			}
+			break;
+		case TAT_RECTANGLE:
+			{
+				return (trans_point.x < size.x && trans_point.x > -size.x &&
+					trans_point.z < size.z && trans_point.z > -size.z);
+			}
+			break;
+		case TAT_ELLIPSOID:
+			{
+				trans_point.x = trans_point.x / size.x;
+				trans_point.z = trans_point.z / size.z;
+				trans_point.y = trans_point.y / size.y;;
+				return (trans_point.Length() < 1.0);
+			}break;
+		case TAT_ELLIPSE:
+			{
+				trans_point.x = trans_point.x / size.x;
+				trans_point.z = trans_point.z / size.z;
+				trans_point.y = 0;
+				return (trans_point.Length() < 1.0);
+			}
+			break;
 		}
-		else
-		{
-			trans_point.x = trans_point.x / size.x;
-			trans_point.z = trans_point.z / size.z;
-			trans_point.y = (m_2DArea) ? 0 : trans_point.y / size.y;;
-			return (trans_point.Length() < 1.0);
-		}
+		return true;
 	}
 }

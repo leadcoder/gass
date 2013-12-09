@@ -617,17 +617,7 @@ namespace GASS
 			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
 			if (geode) 
 			{
-				//SPTR<OSGLocationComponent> lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-				//lc->GetOSGNode()->addChild(geode);
-
 				osg::BoundingBox bbox = geode->getBoundingBox();
-
-				/*osg::Matrix trans;
-				trans.set(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
-				Math::Deg2Rad(180),osg::Vec3(0,1,0),
-				Math::Deg2Rad(0),osg::Vec3(0,0,1)));*/
-				//osg::Vec3 t_max = bbox._max*trans;
-				//osg::Vec3 t_min = bbox._min*trans;
 
 				osg::Vec3d p1 = bbox._max*M;
 				osg::Vec3d p2 = bbox._min*M;
@@ -636,8 +626,6 @@ namespace GASS
 				box.Union(OSGConvert::Get().ToGASS(p1));
 				box.Union(OSGConvert::Get().ToGASS(p2));
 				m_BBox.Union(box);
-				//shape.M = osg::Matrix::translate(bbox.center()) * M;
-				//shape.p1 = max3(bbox.xMax()-bbox.xMin(), bbox.yMax()-bbox.yMin(), shape.p3 = bbox.zMax()-bbox.zMin())/2.0;
 				// Traverse drawables
 				for (unsigned int i = 0; i < geode->getNumDrawables(); i++) 
 				{

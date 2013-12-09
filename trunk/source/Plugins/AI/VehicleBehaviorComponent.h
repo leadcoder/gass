@@ -45,6 +45,7 @@ namespace GASS
 		~VehicleBehaviorComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void SceneManagerTick(double delta_time);
 		void Reset();
 		Float GetSpeed() const;
 		Float GetWaypointRadius() const;
@@ -61,14 +62,16 @@ namespace GASS
 		ADD_PROPERTY(std::vector<SceneObjectRef>,Triggers);
 		std::vector<SceneObjectPtr>  _GetSyncEnumeration() const;
 		std::vector<SceneObjectPtr>  _GetTriggerEnumeration() const;
+		
 	private:
-		void _UpdateMesh();
+		void _UpdateConnectionLines();
 		bool _CheckTriggers() const;
 		bool _CheckWaypoints() const;
-
+		SceneObjectPtr _GetConnectionLines() const {return SceneObjectPtr(m_ConnectionLines,NO_THROW);}
 		bool m_Initialized;
 		Float m_Radius;
 		bool m_Complete;
+		SceneObjectWeakPtr m_ConnectionLines;
 	
 	};
 

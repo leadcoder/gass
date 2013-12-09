@@ -195,8 +195,16 @@ namespace GASS
 			}
 			else
 			{
-				//slow down if we are turning sharp
-				desired_speed = desired_speed * 0.2 + 0.8 * (desired_speed * fabs(cos_angle)); 
+				//slow down if we are turning sharp and speed is to high
+				Float min_steer_speed = 5;
+				Float max_steer_speed = 20;
+
+				if(current_speed > min_steer_speed)
+				{
+					Float w = (current_speed - min_steer_speed)/(max_steer_speed - min_steer_speed);
+					desired_speed = desired_speed * (1.0 - w) + w * (desired_speed * fabs(cos_angle)); 
+				}
+				
 				if(current_speed < 0) //you want to go forward but rolling backward, invert steering
 					turn *=-1;
 			}

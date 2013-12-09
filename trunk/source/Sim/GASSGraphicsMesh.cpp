@@ -58,12 +58,17 @@ namespace GASS
 		}
 	}
 
-	GraphicsSubMeshPtr GraphicsMesh::GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments)
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments)
 	{
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		sub_mesh_data->Type = LINE_LIST;
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->AddWireframeEllipsoid(radius,vertex_color , segments);
+		return sub_mesh_data;
+	}
 
+	void  GraphicsSubMesh::AddWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, int segments)
+	{
 		Float samples = segments;
 		Float rad = 2*MY_PI/samples;
 
@@ -74,56 +79,93 @@ namespace GASS
 			x = cos(rad*i)*radius.x;
 			y = sin(rad*i)*radius.y;
 			pos.Set(x,y,0);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 
 			x = cos(rad*(i+1))*radius.x;
 			y = sin(rad*(i+1))*radius.y;
 			pos.Set(x,y,0);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 		}
-		//sub_mesh_data->PositionVector.push_back(pos);
-		//sub_mesh_data->ColorVector.push_back(vertex_color);
 
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*radius.x;
 			z = sin(rad*i)*radius.z;
 			pos.Set(x,0,z);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 
 			x = cos(rad*(i+1))*radius.x;
 			z = sin(rad*(i+1))*radius.z;
 			pos.Set(x,0,z);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 
 		}
-		//sub_mesh_data->PositionVector.push_back(pos);
-		//sub_mesh_data->ColorVector.push_back(vertex_color);
 
 		for(float i = 0 ; i <= samples; i++)
 		{
 			y = cos(rad*i)*radius.y;
 			z = sin(rad*i)*radius.z;
 			pos.Set(0,y,z);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 
 			y = cos(rad*(i+1))*radius.y;
 			z = sin(rad*(i+1))*radius.z;
 			pos.Set(0,y,z);
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
 		}
-		//sub_mesh_data->PositionVector.push_back(pos);
-		//sub_mesh_data->ColorVector.push_back(vertex_color);
+	}
+
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments)
+	{
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->AddWireframeEllipse(radius, vertex_color, segments);
 		return sub_mesh_data;
 	}
 
-	GraphicsSubMeshPtr GraphicsMesh::GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material, int segments)
+
+
+	void GraphicsSubMesh::AddWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, int segments)
+	{
+		Float samples = segments;
+		Float rad = 2*MY_PI/samples;
+
+		Vec3 pos(0,0,0);
+		Float x,z;
+	
+		for(float i = 0 ;i <= samples; i++)
+		{
+			x = cos(rad*i)*radius.x;
+			z = sin(rad*i)*radius.y;
+			pos.Set(x,0,z);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+
+			x = cos(rad*(i+1))*radius.x;
+			z = sin(rad*(i+1))*radius.y;
+			pos.Set(x,0,z);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+		}
+	}
+
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material, int segments)
+	{
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+		sub_mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->AddSolidEllipsoid(radius, vertex_color,segments);
+		return sub_mesh_data;
+	}
+
+	void GraphicsSubMesh::AddSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,int segments)
 	{
 		int i, j;
 		Float phi; //
@@ -135,12 +177,6 @@ namespace GASS
 
 		if(nSlice > 30) nSlice = 30;
 		if(nStack > 30) nStack = 30;
-
-		GraphicsMeshPtr mesh_data(new GraphicsMesh());
-		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
-		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-		sub_mesh_data->Type = TRIANGLE_LIST;
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 		Vec3 pos(0,0,0);
 		//Vertex
 		for(i = 0;i <= nSlice;i++)
@@ -165,23 +201,23 @@ namespace GASS
 			pos.Set(p1[0],p1[1],p1[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 
 			pos.Set(p2[0],p2[1],p2[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 
 			pos.Set(p3[0],p3[1],p3[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 		}
 		//Bottom
 		j=nStack-1;
@@ -193,23 +229,23 @@ namespace GASS
 			pos.Set(p1[0],p1[1],p1[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 
 			pos.Set(p2[0],p2[1],p2[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 
 			pos.Set(p3[0],p3[1],p3[2]);
 			normal = pos;
 			normal.Normalize();
-			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(vertex_color);
-			sub_mesh_data->NormalVector.push_back(normal);
+			PositionVector.push_back(pos);
+			ColorVector.push_back(vertex_color);
+			NormalVector.push_back(normal);
 
 		}
 
@@ -224,58 +260,104 @@ namespace GASS
 				pos.Set(p1[0],p1[1],p1[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 
 				pos.Set(p2[0],p2[1],p2[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 
 
 				pos.Set(p3[0],p3[1],p3[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 
 
 
 				pos.Set(p1[0],p1[1],p1[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 
 				pos.Set(p3[0],p3[1],p3[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 
 				pos.Set(p4[0],p4[1],p4[2]);
 				normal = pos;
 				normal.Normalize();
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(vertex_color);
-				sub_mesh_data->NormalVector.push_back(normal);
+				PositionVector.push_back(pos);
+				ColorVector.push_back(vertex_color);
+				NormalVector.push_back(normal);
 			}
 		}
+	}
+
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color,const std::string &material)
+	{
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->AddWireframeRectangle(box_size, vertex_color);
 		return sub_mesh_data;
 	}
 
+	void GraphicsSubMesh::AddWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color)
+	{
+		Vec3 size;
+		size.x = box_size.x*0.5;
+		size.y = box_size.y*0.5;
+		std::vector<Vec3> conrners;
+		conrners.push_back(Vec3( size.x ,0 , size.y));
+		conrners.push_back(Vec3(-size.x ,0 , size.y));
+		conrners.push_back(Vec3(-size.x ,0 ,-size.y));
+		conrners.push_back(Vec3( size.x ,0 ,-size.y));
+		
+		
 
-	GraphicsSubMeshPtr GraphicsMesh::GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
+		for(int i = 0; i < 4; i++)
+		{
+			Vec3 pos =conrners[i];
+			PositionVector.push_back(pos);
+			pos =conrners[(i+1)%4];
+			PositionVector.push_back(pos);
+
+			pos =conrners[i];
+			PositionVector.push_back(pos);
+			pos =conrners[i+4];
+			PositionVector.push_back(pos);
+		}
+		for(size_t i = 0; i < PositionVector.size(); i++)
+		{
+			ColorVector.push_back(vertex_color);
+		}
+	}
+
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
 	{
 		Vec3 size = box_size*0.5;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->AddWireframeBox(box_size, vertex_color);
+		return sub_mesh_data;
+	}
+
+	void GraphicsSubMesh::AddWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color)
+	{
+		Vec3 size = box_size*0.5;
 		std::vector<Vec3> conrners;
 		conrners.push_back(Vec3( size.x ,size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,size.y , size.z));
@@ -286,180 +368,222 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x ,-size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
 		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
-
-		sub_mesh_data->Type = LINE_LIST;
+		
 
 		for(int i = 0; i < 4; i++)
 		{
 			Vec3 pos =conrners[i];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 			pos =conrners[(i+1)%4];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 
 			pos =conrners[i];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 			pos =conrners[i+4];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 		}
 
 		for(int i = 0; i < 4; i++)
 		{
 			Vec3 pos = conrners[4 + i];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 			pos =conrners[4 + ((i+1)%4)];
-			sub_mesh_data->PositionVector.push_back(pos);
+			PositionVector.push_back(pos);
 		}
-		for(size_t i = 0; i < sub_mesh_data->PositionVector.size(); i++)
+		for(size_t i = 0; i < PositionVector.size(); i++)
 		{
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			ColorVector.push_back(vertex_color);
 		}
-		return sub_mesh_data;
 	}
 
-	GraphicsSubMeshPtr GraphicsMesh::GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
 	{
 		Vec3 size= box_size*0.5;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		sub_mesh_data->MaterialName = material;
-
 		sub_mesh_data->Type = TRIANGLE_LIST;
+		sub_mesh_data->AddSolidBox(box_size, vertex_color);
+		return sub_mesh_data;
+	}
+
+
+	void GraphicsSubMesh::AddSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color)
+	{
+		Vec3 size= box_size*0.5;
 		std::vector<Vec4> tex_coords;
 
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 
 
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 		tex_coords.push_back(Vec4( 1, 0 , 0,0));
 
 
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 		tex_coords.push_back(Vec4( 0, 0 , 0,0));
 
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 		tex_coords.push_back(Vec4( 0, 1 , 0,0));
 
 
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
-		sub_mesh_data->PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
+		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 		tex_coords.push_back(Vec4( 1, 1 , 0,0));
 
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
-		sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
-		sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
-		sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,-1));
-		sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
-		sub_mesh_data->NormalVector.push_back(Vec3(-1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
-		sub_mesh_data->NormalVector.push_back(Vec3(1,-0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,-1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,0,1));
-		sub_mesh_data->NormalVector.push_back(Vec3(1,0,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
-		sub_mesh_data->NormalVector.push_back(Vec3(-0,0,1));
-		sub_mesh_data->NormalVector.push_back(Vec3(-1,-0,-0));
-		sub_mesh_data->NormalVector.push_back(Vec3(0,1,0));
+		NormalVector.push_back(Vec3(0,0,-1));
+		NormalVector.push_back(Vec3(-1,0,0));
+		NormalVector.push_back(Vec3(0,-1,0));
+		NormalVector.push_back(Vec3(0,0,-1));
+		NormalVector.push_back(Vec3(1,0,0));
+		NormalVector.push_back(Vec3(0,-1,0));
+		NormalVector.push_back(Vec3(0,0,-1));
+		NormalVector.push_back(Vec3(1,0,0));
+		NormalVector.push_back(Vec3(0,1,0));
+		NormalVector.push_back(Vec3(0,0,-1));
+		NormalVector.push_back(Vec3(-1,0,0));
+		NormalVector.push_back(Vec3(0,1,0));
+		NormalVector.push_back(Vec3(0,0,1));
+		NormalVector.push_back(Vec3(-1,0,0));
+		NormalVector.push_back(Vec3(0,-1,0));
+		NormalVector.push_back(Vec3(0,0,1));
+		NormalVector.push_back(Vec3(1,-0,0));
+		NormalVector.push_back(Vec3(0,-1,0));
+		NormalVector.push_back(Vec3(0,0,1));
+		NormalVector.push_back(Vec3(1,0,0));
+		NormalVector.push_back(Vec3(0,1,0));
+		NormalVector.push_back(Vec3(-0,0,1));
+		NormalVector.push_back(Vec3(-1,-0,-0));
+		NormalVector.push_back(Vec3(0,1,0));
 
 		//bottom
-		sub_mesh_data->IndexVector.push_back(0);
-		sub_mesh_data->IndexVector.push_back(9);
-		sub_mesh_data->IndexVector.push_back(3);
-		sub_mesh_data->IndexVector.push_back(9);
-		sub_mesh_data->IndexVector.push_back(6);
-		sub_mesh_data->IndexVector.push_back(3);
+		IndexVector.push_back(0);
+		IndexVector.push_back(9);
+		IndexVector.push_back(3);
+		IndexVector.push_back(9);
+		IndexVector.push_back(6);
+		IndexVector.push_back(3);
 
 		// top
-		sub_mesh_data->IndexVector.push_back(21);  //face 3
-		sub_mesh_data->IndexVector.push_back(12);
-		sub_mesh_data->IndexVector.push_back(18);
-		sub_mesh_data->IndexVector.push_back(12);  //face 4
-		sub_mesh_data->IndexVector.push_back(15);
-		sub_mesh_data->IndexVector.push_back(18);
+		IndexVector.push_back(21);  //face 3
+		IndexVector.push_back(12);
+		IndexVector.push_back(18);
+		IndexVector.push_back(12);  //face 4
+		IndexVector.push_back(15);
+		IndexVector.push_back(18);
 		// left
-		sub_mesh_data->IndexVector.push_back(22);  //face 5
-		sub_mesh_data->IndexVector.push_back(10);
-		sub_mesh_data->IndexVector.push_back(13);
-		sub_mesh_data->IndexVector.push_back(10);  //face 6
-		sub_mesh_data->IndexVector.push_back(1);
-		sub_mesh_data->IndexVector.push_back(13);
+		IndexVector.push_back(22);  //face 5
+		IndexVector.push_back(10);
+		IndexVector.push_back(13);
+		IndexVector.push_back(10);  //face 6
+		IndexVector.push_back(1);
+		IndexVector.push_back(13);
 		// right
-		sub_mesh_data->IndexVector.push_back(16);  //face 7
-		sub_mesh_data->IndexVector.push_back(4);
-		sub_mesh_data->IndexVector.push_back(19);
-		sub_mesh_data->IndexVector.push_back(4);  //face 8
-		sub_mesh_data->IndexVector.push_back(7);
-		sub_mesh_data->IndexVector.push_back(19);
+		IndexVector.push_back(16);  //face 7
+		IndexVector.push_back(4);
+		IndexVector.push_back(19);
+		IndexVector.push_back(4);  //face 8
+		IndexVector.push_back(7);
+		IndexVector.push_back(19);
 		// front
-		sub_mesh_data->IndexVector.push_back(14);  //face 9
-		sub_mesh_data->IndexVector.push_back(2);
-		sub_mesh_data->IndexVector.push_back(17);
-		sub_mesh_data->IndexVector.push_back(2);   //face 10
-		sub_mesh_data->IndexVector.push_back(5);
-		sub_mesh_data->IndexVector.push_back(17);
+		IndexVector.push_back(14);  //face 9
+		IndexVector.push_back(2);
+		IndexVector.push_back(17);
+		IndexVector.push_back(2);   //face 10
+		IndexVector.push_back(5);
+		IndexVector.push_back(17);
 		// back
-		sub_mesh_data->IndexVector.push_back(20);  //face 11
-		sub_mesh_data->IndexVector.push_back(8);
-		sub_mesh_data->IndexVector.push_back(23);
-		sub_mesh_data->IndexVector.push_back(8);   //face 12
-		sub_mesh_data->IndexVector.push_back(11);
-		sub_mesh_data->IndexVector.push_back(23);
-		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
+		IndexVector.push_back(20);  //face 11
+		IndexVector.push_back(8);
+		IndexVector.push_back(23);
+		IndexVector.push_back(8);   //face 12
+		IndexVector.push_back(11);
+		IndexVector.push_back(23);
+		TexCoordsVector.push_back(tex_coords);
 
-		for(size_t i = 0; i < sub_mesh_data->PositionVector.size(); i++)
+		for(size_t i = 0; i < PositionVector.size(); i++)
 		{
-			sub_mesh_data->ColorVector.push_back(vertex_color);
+			ColorVector.push_back(vertex_color);
 		}
+	}
+	
+	
+
+
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color, const std::string &material)
+	{
+		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+		sub_mesh_data->Type = LINE_LIST;
+		sub_mesh_data->MaterialName = material;
+		sub_mesh_data->AddArrow(start, end, pointer_size, vertex_color);
 		return sub_mesh_data;
+	}
+
+	void GraphicsSubMesh::AddArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color)
+	{
+		PositionVector.push_back(start);
+		PositionVector.push_back(end);
+
+		Vec3 dir = end -start;
+		dir.Normalize();
+		Vec3 left = dir;
+		left.x = dir.z;
+		left.z = -dir.x;
+
+		Vec3 p1 = end + (left - dir)*pointer_size;
+		Vec3 p2 = end + (-left - dir)*pointer_size;
+
+		PositionVector.push_back(p1);
+		PositionVector.push_back(end);
+
+		PositionVector.push_back(p2);
+		PositionVector.push_back(end);
+
+		for(size_t i = 0; i < PositionVector.size(); i++)
+		{
+			ColorVector.push_back(vertex_color);
+		}
 	}
 }

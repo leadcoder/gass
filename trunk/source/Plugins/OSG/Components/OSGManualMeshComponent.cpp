@@ -290,8 +290,10 @@ namespace GASS
 		for(size_t i = 0; i < m_OSGGeometries.size(); i++)
 		{
 			osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
-			AABox box(OSGConvert::Get().ToGASS(osg_box._min),OSGConvert::Get().ToGASS(osg_box._max));
-			comp_box.Union(box);
+			Vec3 p1 = OSGConvert::Get().ToGASS(osg_box._min);
+			Vec3 p2 = OSGConvert::Get().ToGASS(osg_box._max);
+			comp_box.Union(p1);
+			comp_box.Union(p2);
 		}
 		
 		
@@ -299,6 +301,9 @@ namespace GASS
 		if(lc)
 		{
 			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());
+			//scale should not flip
+			scale.z = -scale.z;
+
 			comp_box.m_Max = comp_box.m_Max*scale;
 			comp_box.m_Min = comp_box.m_Min*scale;
 		}
@@ -323,6 +328,9 @@ namespace GASS
 		if(lc)
 		{
 			Vec3 scale = OSGConvert::Get().ToGASS(lc->GetOSGNode()->getScale());
+			//scale should not flip
+			scale.z = -scale.z;
+			
 			sphere.m_Radius *= Math::Max(scale.x,scale.y,scale.z);
 		}
 		return sphere;
@@ -352,6 +360,27 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
 	{
+
+		std::string mat_name = message->GetMaterialName();
+		int geom_index = message->GetSubMeshID();
+		if(mat_name != "" && m_GFXSystem->HasMaterial(mat_name))
+		{
+			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(mat_name);
+
+			if(geom_index > 0)
+			{
+				if(geom_index  < m_OSGGeometries.size())
+					m_OSGGeometries[geom_index]->setStateSet(state_set);
+			}
+			else
+			{
+				for(size_t i = 0; i < m_OSGGeometries.size(); i++)
+				{
+					m_OSGGeometries[i]->setStateSet(state_set);
+				}
+			}
+		}
+
 
 		/*Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
