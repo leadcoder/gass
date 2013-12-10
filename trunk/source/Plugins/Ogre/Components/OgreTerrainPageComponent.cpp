@@ -895,6 +895,7 @@ namespace GASS
 		unsigned int index_size = (tWidth - 1) * (tHeight - 1) * 6;
 		//mesh_data->FaceVector = new unsigned int[index_size];
 		sub_mesh_data->IndexVector.resize(index_size);
+		sub_mesh_data->Type = TRIANGLE_LIST;
 		//mesh_data->NumFaces = static_cast<unsigned int>(index_size/3);
 		for( unsigned int x = 0; x < tWidth - 1; x++)
 		{

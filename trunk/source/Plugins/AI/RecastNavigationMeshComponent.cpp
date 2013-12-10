@@ -53,6 +53,7 @@ namespace GASS
 		m_Transparency(30),
 		m_Visible(true),
 		m_Initialized(false),
+		m_AutoCollectMeshes(true),
 		m_CellSize (0.3f),
 		m_CellHeight (0.2f),
 		m_AgentHeight ( 2.0f),
@@ -72,6 +73,7 @@ namespace GASS
 		m_Ctx( new rcContext(true)),
 		m_MonotonePartitioning ( false)
 	{
+		m_MeshBounding = AABox();
 	}
 
 	RecastNavigationMeshComponent::~RecastNavigationMeshComponent()
@@ -130,7 +132,7 @@ namespace GASS
 		RegisterProperty<int>("Transparency", &GetTransparency, &SetTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterVectorProperty<SceneObjectRef>("MeshSelection", &GetSelectedMeshes, &SetSelectedMeshes,
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE,NavMeshEnumeration)));
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration)));
 		RegisterProperty<std::string>("BoundingBoxFromShape", &GetBoundingBoxFromShape, &SetBoundingBoxFromShape,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
@@ -1134,6 +1136,23 @@ namespace GASS
 
 	bool RecastNavigationMeshComponent::GetRawMeshData(RawNavMeshData &rnm_data)
 	{
+		if(m_AutoCollectMeshes)
+		{
+			std::vector<SceneObjectPtr> objs;
+			m_SelectedMeshes.clear();
+			m_MeshBounding = AABox();
+			if(GetSceneObject())
+			{
+				IComponentContainer::ComponentVector components;
+				GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
+				for(size_t i = 0; i < components.size() ; i++)
+				{
+					BaseSceneComponentPtr comp = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
+					m_SelectedMeshes.push_back(comp->GetSceneObject());
+				}
+			}
+		}
+	
 		if(m_SelectedMeshes.size()>0)
 		{
 			std::vector<PhysicsMeshPtr> mesh_data_vec;
@@ -1143,30 +1162,34 @@ namespace GASS
 					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
-
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
-
-						GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
-						PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-						if(lc)
+						if(geom && geom->GetGeometryFlags() & GEOMETRY_FLAG_SCENE_OBJECTS)
 						{
-							Vec3 world_pos = lc->GetWorldPosition();
-							Vec3 scale = lc->GetScale();
-							Quaternion world_rot = lc->GetWorldRotation();
-							Mat4 trans_mat;
-							trans_mat.Identity();
-							//world_rot.ToRotationMatrix(trans_mat);
-							//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
-							trans_mat.SetTransformation(world_pos,world_rot,scale);
-							for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
+							AABox box = geom->GetBoundingBox();
+							GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
+							PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+							LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+							if(lc)
 							{
-								physics_mesh->PositionVector[j] = trans_mat*physics_mesh->PositionVector[j];
+								Vec3 world_pos = lc->GetWorldPosition();
+								Vec3 scale = lc->GetScale();
+								Quaternion world_rot = lc->GetWorldRotation();
+								Mat4 trans_mat;
+								trans_mat.Identity();
+								//world_rot.ToRotationMatrix(trans_mat);
+								//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+								trans_mat.SetTransformation(world_pos,world_rot,scale);
+								box.Transform(trans_mat);
+								for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
+								{
+									physics_mesh->PositionVector[j] = trans_mat*physics_mesh->PositionVector[j];
+								}
 							}
+							if(m_AutoCollectMeshes)
+								m_MeshBounding.Union(box);
+							mesh_data_vec.push_back(physics_mesh);
 						}
-						mesh_data_vec.push_back(physics_mesh);
 					}
 				}
 			}
