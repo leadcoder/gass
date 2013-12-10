@@ -9,6 +9,18 @@
 
 namespace GASS
 {
+
+	std::vector<std::string> VehicleTemplateEnumerationProxyMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
+	{
+		std::vector<std::string> content;
+		VehicleControllerComponentPtr vcc = DYNAMIC_PTR_CAST<VehicleControllerComponent>(object);
+		if(vcc)
+		{
+			content = vcc->GetSupportedVehicles();
+		}
+		return content;
+	}
+
 	VehicleControllerComponent::VehicleControllerComponent(void) : m_Initialized(false),
 		m_TargetReached(false),
 		m_TargetRadius(0),
@@ -36,7 +48,12 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("VehicleControllerComponent",new Creator<VehicleControllerComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleControllerComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("VehicleTemplate", &VehicleControllerComponent::GetVehicleTemplate, &VehicleControllerComponent::SetVehicleTemplate,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Vehicle Template",PF_VISIBLE)));
+			VehicleTemplateEnumerationProxyMetaDataPtr(new VehicleTemplateEnumerationProxyMetaData("Vehicle Template",PF_VISIBLE)));
+
+		RegisterVectorProperty<std::string>("SupportedVehicles", &VehicleControllerComponent::GetSupportedVehicles, &VehicleControllerComponent::SetSupportedVehicles,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_RESET)));
+
+		
 	}
 
 	void VehicleControllerComponent::OnInitialize()
@@ -48,8 +65,25 @@ namespace GASS
 		if(obj)
 			m_Navigation = obj->GetFirstComponentByClass<INavigationComponent>();
 
+		if(m_VehicleTemplate != "")
+		{
+			SceneObjectPtr vehicle = SimEngine::Get().CreateObjectFromTemplate(m_VehicleTemplate );
+			if(vehicle)
+			{
+				m_Vehicle = vehicle;
+				GetSceneObject()->AddChildSceneObject(vehicle,false);
+				vehicle->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnVehicleVelocity,VelocityNotifyMessage,0));
+				vehicle->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnVehicleTransformation,TransformationNotifyMessage,0));
+			
+
+				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+
+				vehicle->PostMessage(MessagePtr(new WorldPositionMessage(location->GetWorldPosition())));
+				vehicle->PostMessage(MessagePtr(new WorldRotationMessage(location->GetWorldRotation())));
+			}
+		}
 		m_Initialized = true;
-		SetVehicleTemplate(m_VehicleTemplate);
+
 	}
 
 	void VehicleControllerComponent::OnScenarioEvent(ScenarioStateRequestPtr message)
@@ -89,20 +123,30 @@ namespace GASS
 
 	void VehicleControllerComponent::SetVehicleTemplate(const std::string &template_name)
 	{
-		m_VehicleTemplate = template_name;
-		if(m_Initialized)
+		
+		if(m_Initialized && m_VehicleTemplate != template_name)
 		{
 			//TODO: Remove previous vehicle
+			SceneObjectPtr prev_vehicle = GetVehicle();
+			if(prev_vehicle)
+			{
+				GetSceneObject()->RemoveChildSceneObject(prev_vehicle);
+				prev_vehicle.reset();
+			}
+			
 			SceneObjectPtr vehicle = SimEngine::Get().CreateObjectFromTemplate(template_name);
 			if(vehicle)
 			{
 				m_Vehicle = vehicle;
-				GetSceneObject()->AddChildSceneObject(vehicle,false);
+				GetSceneObject()->AddChildSceneObject(vehicle,true);
 				vehicle->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnVehicleVelocity,VelocityNotifyMessage,0));
 				vehicle->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnVehicleTransformation,TransformationNotifyMessage,0));
+				vehicle->PostMessage(MessagePtr(new WorldPositionMessage(m_VehiclePos)));
+				vehicle->PostMessage(MessagePtr(new WorldRotationMessage(m_VehicleRot)));
 				//Set to start location?
 			}
 		}
+		m_VehicleTemplate = template_name;
 	}
 
 	void VehicleControllerComponent::OnVehicleVelocity(VelocityNotifyMessagePtr message)

@@ -130,7 +130,7 @@ namespace GASS
 		RegisterProperty<int>("Transparency", &GetTransparency, &SetTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterVectorProperty<SceneObjectRef>("MeshSelection", &GetSelectedMeshes, &SetSelectedMeshes,
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Transmitter connection",PF_VISIBLE,NavMeshEnumeration)));
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE,NavMeshEnumeration)));
 		RegisterProperty<std::string>("BoundingBoxFromShape", &GetBoundingBoxFromShape, &SetBoundingBoxFromShape,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,

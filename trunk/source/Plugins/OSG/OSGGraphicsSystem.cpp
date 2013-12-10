@@ -631,19 +631,21 @@ namespace GASS
 		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
 		state_set->setAttribute(mat.get());
 		if(material.DepthTest)
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		else
 		{
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
 			//render late!
+			//state_set->setRenderBinDetails( 11, "DepthSortedBin");
 			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+			//new osgUtil::RenderBin(osgUtil::RenderBin::SORT_BACK_TO_FRONT);
 			//after transparent bin
-			state_set->setRenderBinDetails( 11, "RenderBin");
+			//state_set->setRenderBinDetails( 11, "RenderBin");
 		}
 
 		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
 		depth->setWriteMask( material.DepthWrite );
-		state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
+		state_set->setAttributeAndModes( depth, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		
 		// Turn on blending
@@ -666,7 +668,7 @@ namespace GASS
 			depth->setWriteMask( false );
 			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
 		}
-		else //restore blending
+		else //restore blending?
 		{
 
 		}

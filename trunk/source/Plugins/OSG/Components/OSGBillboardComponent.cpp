@@ -148,7 +148,6 @@ namespace GASS
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
-
 		//m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
 		//m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
 		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
@@ -240,6 +239,16 @@ namespace GASS
 		(*tcoords)[2].set(1.0f,1.0f);
 		(*tcoords)[3].set(0.0f,1.0f);
 		geom->setTexCoordArray(0,tcoords.get());
+
+		osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(4);
+		(*colors)[0].set(1.0f,1.0f,1.0f,1.0f);
+		(*colors)[1].set(1.0f,1.0f,1.0f,1.0f);
+		(*colors)[2].set(1.0f,1.0f,1.0f,1.0f);
+		(*colors)[3].set(1.0f,1.0f,1.0f,1.0f);
+		geom->setColorArray(colors);
+		geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+
+
 		osg::ref_ptr<osg::DrawArrays> arrays = new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4);
 		geom->addPrimitiveSet(arrays.get());
 		if (image)

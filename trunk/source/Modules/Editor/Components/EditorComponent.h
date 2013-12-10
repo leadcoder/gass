@@ -20,6 +20,7 @@ namespace GASS
 		virtual void OnDelete();
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
 		std::string GetIconFile() const { return m_IconFile;}
+		void SetIconFile(const std::string &value) { m_IconFile = value;}
 		void SetShowInTree(bool value) {m_ShowInTree = value;}
 		bool GetShowInTree() const {return m_ShowInTree;}
 		bool GetAllowRemove() const {return m_AllowRemove;}
@@ -39,7 +40,6 @@ namespace GASS
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
-		void SetIconFile(const std::string &value) { m_IconFile = value;}
 		void SetShowBBWhenSelected(bool value) {m_ShowBBWhenSelected = value;}
 		void SetAllowDragAndDrop(bool value) {m_AllowDragAndDrop = value;}
 		

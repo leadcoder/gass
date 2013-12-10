@@ -80,7 +80,7 @@ namespace GASS
 		regmat.Ambient.Set(0,0,0);
 		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
 		regmat.DepthTest = false;
-
+		
 		GraphicsMaterial hlmat;
 		hlmat.Name = m_HighlightMat;
 		hlmat.Diffuse.Set(0,0,0,1);

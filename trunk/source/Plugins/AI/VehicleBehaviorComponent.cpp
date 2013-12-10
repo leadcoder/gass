@@ -129,6 +129,20 @@ namespace GASS
 	{
 		BaseSceneComponent::InitializeSceneObjectRef();
 
+		//Check that all triggers are valid!
+		std::vector<SceneObjectRef>::iterator iter = m_Triggers.begin();
+		while(iter != m_Triggers.end())
+		{
+			SceneObjectPtr so = (*iter).GetRefObject();
+			if(so)
+			{
+				iter++;
+			}
+			else
+				iter = m_Triggers.erase(iter);
+
+		}
+
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 		m_ConnectionLines = GetSceneObject()->GetChildByID("CONNECTION_LINES");
@@ -255,6 +269,9 @@ namespace GASS
 				sub_mesh_data->Type = LINE_LIST;
 				Vec3 wp_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
+				//offset 1dm
+				wp_pos.y += 0.1;
+
 				//Add line datat;
 				for(size_t i = 0; i < m_Triggers.size(); i++)
 				{
@@ -263,6 +280,8 @@ namespace GASS
 					{
 						LocationComponentPtr location_comp = so->GetFirstComponentByClass<ILocationComponent>();
 						Vec3 end_pos = location_comp->GetWorldPosition();
+						//offset 1dm
+						end_pos.y += 0.1;
 						sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
 					}
 				}
@@ -270,6 +289,8 @@ namespace GASS
 				{
 					LocationComponentPtr location_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 end_pos = location_comp->GetWorldPosition();
+					//offset 1dm
+					end_pos.y += 0.1;
 					sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
 				}
 

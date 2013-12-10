@@ -64,7 +64,7 @@ namespace GASS
 	Vec3 VehicleGroupControllerComponent::GetOffset() const 
 	{
 		size_t num_vehicles  = GetSceneObject()->GetNumChildren()-1;
-		Vec3 new_pos = m_Pos;
+		Vec3 new_pos(0,0,0);
 		new_pos.z += 10*num_vehicles;
 		return new_pos;
 	}

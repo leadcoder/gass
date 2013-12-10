@@ -12,13 +12,21 @@
 
 namespace GASS
 {
-	//FDECL(VehicleBehaviorComponent);
+	class VehicleTemplateEnumerationProxyMetaData : public EnumerationPropertyMetaData
+	{
+	public:
+		VehicleTemplateEnumerationProxyMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+	private:
+	};
+	typedef SPTR<VehicleTemplateEnumerationProxyMetaData> VehicleTemplateEnumerationProxyMetaDataPtr;
+
+
 	FDECL(VehicleControllerComponent);
 	IFDECL(NavigationComponent);
 	
 	class VehicleControllerComponent :  public Reflection<VehicleControllerComponent,BaseSceneComponent> 
 	{
-		
 	public:
 		VehicleControllerComponent(void);
 		~VehicleControllerComponent(void);
@@ -35,6 +43,7 @@ namespace GASS
 		void SetCurrentDistance(Float value){m_CurrentPathDist = value;}
 		Float GetCurrentDistance() const {return m_CurrentPathDist;}
 		Vec3 GetVehiclePos() const{return m_VehiclePos;}
+		ADD_PROPERTY(std::vector<std::string>, SupportedVehicles);
 	private:
 		
 		bool GetFormationPosition(VehicleControllerComponentPtr slave, Vec3 &target_pos, Float &path_distance);

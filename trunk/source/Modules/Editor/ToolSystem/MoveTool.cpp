@@ -23,7 +23,7 @@ namespace GASS
 		m_MoveUpdateCount(0),
 		m_UseGizmo(true),
 		m_Active(false),
-		m_SnapToMouse(false)
+		m_SnapToMouse(true)
 	{
 		m_Controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(MoveTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
@@ -45,8 +45,6 @@ namespace GASS
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				Vec3 new_position = gc->GetPosition(info.m_RayStart,info.m_RayDir);
-
-				
 				
 				if(m_MoveUpdateCount == 0)
 				{

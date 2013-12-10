@@ -105,15 +105,17 @@ namespace GASS
 
 	void VehicleTriggerComponent::OnInitialize()
 	{
-
+		BaseSceneComponent::InitializeSceneObjectRef();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleTriggerComponent::OnTransformation,TransformationNotifyMessage,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(VehicleTriggerComponent::OnScenarioEvent,ScenarioStateRequest,0));
+		m_ConnectionLines = GetSceneObject()->GetChildByID("CONNECTION_LINES");
 		m_Initialized = true;
 		//update mesh
 		_UpdateArea();
+		_UpdateActivator();
 	}
 
 	void VehicleTriggerComponent::OnTransformation(TransformationNotifyMessagePtr message)
@@ -141,10 +143,14 @@ namespace GASS
 
 	void VehicleTriggerComponent::_OnPlay()
 	{
-		Reset();
+		_Reset();
+		_UpdateActivator();
+	}
 
-		//Get all vehicles and add them as triggers
-
+	void VehicleTriggerComponent::_UpdateActivator()
+	{
+		m_AllActivators.clear();
+		//Get all vehicles and add them as activators
 		for(int i = 0 ; i < m_ActivationControllers.size();i++)
 		{
 			ActivationObject ao;
@@ -170,27 +176,19 @@ namespace GASS
 				}
 			}
 		}
-
-		//Add groups
-		/*IComponentContainer::ComponentVector comps;
-		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<VehicleControllerComponent>(comps);
-		for(int i = 0 ; i < comps.size();i++)
-		{
-		VehicleControllerComponentPtr comp = DYNAMIC_PTR_CAST<VehicleControllerComponent>(comps[i]);
-		//no filters!
-		ActivationObject ao;
-		ao.Inside = false;
-		ao.Object = comp->GetSceneObject();
-		m_AllActivators.push_back(ao);
-		}*/
 	}
 
 	void VehicleTriggerComponent::SceneManagerTick(double delta_time)
 	{
+
+		_UpdateConnectionLines();
+
 		if(!m_Update) 
 			return;
 		if(m_AllActivators.size() == 0)
 			return;
+
+
 
 		ActivationVector::iterator  iter = m_AllActivators.begin();
 		bool some_one_entered = false;
@@ -284,7 +282,7 @@ namespace GASS
 		return m_Active;	
 	}
 
-	void VehicleTriggerComponent::Reset()
+	void VehicleTriggerComponent::_Reset()
 	{
 		m_AllActivators.clear();
 		m_Active = false;
@@ -356,5 +354,45 @@ namespace GASS
 			break;
 		}
 		return true;
+	}
+
+
+	void VehicleTriggerComponent::_UpdateConnectionLines()
+	{
+		if(m_Initialized)
+		{
+			SceneObjectPtr line_obj = _GetConnectionLines();
+			if(line_obj)
+			{
+				ColorRGBA color(0,1,1,1);
+				Float arrow_size = 1;
+				GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
+				sub_mesh_data->MaterialName = "";
+				sub_mesh_data->Type = LINE_LIST;
+				Vec3 wp_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+				//offset 1dm
+				wp_pos.y += 0.1;
+
+				ActivationVector::iterator  iter = m_AllActivators.begin();
+				
+				while(iter != m_AllActivators.end())
+				{
+					SceneObjectPtr obj((*iter).Object,NO_THROW);
+					if(obj)
+					{
+						LocationComponentPtr location_comp = obj->GetFirstComponentByClass<ILocationComponent>();
+						Vec3 end_pos = location_comp->GetWorldPosition();
+						//offset 1dm
+						end_pos.y += 0.1;
+						sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
+					}
+					iter++;
+				}
+				GraphicsMeshPtr mesh_data(new GraphicsMesh());
+				mesh_data->SubMeshVector.push_back(sub_mesh_data);
+				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+				line_obj->PostMessage(mesh_message);
+			}
+		}
 	}
 }

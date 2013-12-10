@@ -572,8 +572,8 @@ namespace GASS
 		left.x = dir.z;
 		left.z = -dir.x;
 
-		Vec3 p1 = end + (left - dir)*pointer_size;
-		Vec3 p2 = end + (-left - dir)*pointer_size;
+		Vec3 p1 = end + (left - dir*2.0)*pointer_size;
+		Vec3 p2 = end + (-left - dir*2.0)*pointer_size;
 
 		PositionVector.push_back(p1);
 		PositionVector.push_back(end);
