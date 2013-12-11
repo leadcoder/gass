@@ -274,12 +274,15 @@ namespace GASS
 							m_DelayAtWaypoint -= time;
 						else
 						{
-							m_BehaviorWaypoints.front()->SetComplete(true);
-							if(m_BehaviorWaypoints.front()->IsSyncronized())
+							if(m_BehaviorWaypoints.front()->GetComplete() || m_BehaviorWaypoints.front()->_CheckTriggers())
 							{
-								m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
-								if(m_BehaviorWaypoints.size() > 0)
-									_Apply(m_BehaviorWaypoints.front(),false);
+								m_BehaviorWaypoints.front()->SetComplete(true);
+								if(m_BehaviorWaypoints.front()->IsSyncronized())
+								{
+									m_BehaviorWaypoints.erase(m_BehaviorWaypoints.begin());
+									if(m_BehaviorWaypoints.size() > 0)
+										_Apply(m_BehaviorWaypoints.front(),false);
+								}
 							}
 						}
 					}

@@ -106,6 +106,7 @@ namespace GASS
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 
+		ADD_PROPERTY(bool,AutoCollectMeshes)
 		float GetCellSize() const; 
 		float GetCellHeight() const; 
 		float GetAgentHeight() const;
@@ -203,7 +204,7 @@ namespace GASS
 		rcContext* m_Ctx;
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
-		bool m_AutoCollectMeshes;
+		
 	};
 	typedef SPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
 	typedef WPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;

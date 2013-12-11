@@ -67,8 +67,8 @@ namespace GASS
 		m_Repeatedly(false),
 		m_Update(false),
 		m_Strict(false),
-		m_AreaType(TAT_ELLIPSOID),
-		m_AreaSize(40,40,10)
+		m_AreaType(TAT_ELLIPSE),
+		m_AreaSize(40,40,40)
 	{
 
 	}	

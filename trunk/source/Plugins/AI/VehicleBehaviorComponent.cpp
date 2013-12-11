@@ -33,14 +33,14 @@ namespace GASS
 				{
 					//also check that we not already are in sync
 					bool already_synced = false;
-					SceneObjectRef sync_obj = comp->GetSynchronize();
+					/*SceneObjectRef sync_obj = comp->GetSynchronize();
 					if(sync_obj.GetRefObject())
 					{
 						if(sync_obj.GetRefObject() == GetSceneObject())
 						{
 							already_synced = true;
 						}
-					}
+					}*/
 					if(!already_synced)
 					{
 						SceneObjectPtr so = DYNAMIC_PTR_CAST<SceneObject>(comp->GetOwner());
@@ -49,6 +49,8 @@ namespace GASS
 				}
 			}
 		}
+		//add null object!
+		//ret.push_back(SceneObjectPtr());
 		return ret;
 	}
 
@@ -69,7 +71,9 @@ namespace GASS
 					ret.push_back(so);
 				}
 			}
+
 		}
+	
 		return ret;
 	}
 
@@ -118,8 +122,8 @@ namespace GASS
 		RegisterProperty<Float>("WaypointRadius", &VehicleBehaviorComponent::GetWaypointRadius, &VehicleBehaviorComponent::SetWaypointRadius,
 			StaticEnumerationPropertyMetaDataPtr(new StaticEnumerationPropertyMetaData("Radius used to consider waypoint reached [m]",PF_VISIBLE | PF_EDITABLE,radius_enumeration)));
 
-		RegisterProperty<SceneObjectRef>("Synchronize", &VehicleBehaviorComponent::GetSynchronize, &VehicleBehaviorComponent::SetSynchronize,
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with this waypoint",PF_VISIBLE,VehicleBehaviorComponentSyncEnumeration)));
+		RegisterVectorProperty<SceneObjectRef>("SynchronizedWaypoints", &VehicleBehaviorComponent::GetSynchronizedWaypoints, &VehicleBehaviorComponent::SetSynchronizedWaypoints,
+			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with this waypoint",PF_VISIBLE,VehicleBehaviorComponentSyncEnumeration,true)));
 
 		RegisterVectorProperty<SceneObjectRef>("Triggers", &VehicleBehaviorComponent::GetTriggers, &VehicleBehaviorComponent::SetTriggers,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Synchronize with triggers",PF_VISIBLE,VehicleBehaviorComponentTriggerEnumeration,true)));
@@ -180,6 +184,33 @@ namespace GASS
 		//update sphere size
 	}
 
+	void VehicleBehaviorComponent::SetSynchronizedWaypoints(const std::vector<SceneObjectRef> &value) 
+	{
+		m_SynchronizedWaypoints = value;
+
+		for(size_t  i = 0;  i < m_SynchronizedWaypoints.size(); i++)
+		{
+			SceneObjectRef ref = m_SynchronizedWaypoints[i];
+			if(ref.IsValid())
+			{
+				VehicleBehaviorComponentPtr syn_comp = ref.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
+				std::vector<SceneObjectRef> new_values = syn_comp->GetSynchronizedWaypoints();
+				bool present = false;
+				for(size_t  j = 0;  j < new_values.size(); j++)
+				{
+					if(new_values[j].GetRefObject() == GetSceneObject())
+						present = true;
+				}
+				if(!present)
+				{
+
+					new_values.push_back(SceneObjectRef(GetSceneObject()));
+					syn_comp->SetSynchronizedWaypoints(new_values);
+				}
+			}
+		}
+	}
+
 	Float VehicleBehaviorComponent::GetWaypointRadius() const
 	{
 		return m_Radius;
@@ -211,12 +242,8 @@ namespace GASS
 	{
 		if(m_Complete)
 		{
-			if(_CheckTriggers())
-			{
-				return _CheckWaypoints();
-			}
-			else
-				return false;
+			//if(_CheckTriggers())
+			return _CheckWaypoints();
 		}
 		else
 			return false;
@@ -224,12 +251,17 @@ namespace GASS
 
 	bool VehicleBehaviorComponent::_CheckWaypoints() const
 	{
-		if(m_Synchronize.GetRefObject())
+		bool sync = true;
+		for(size_t  i = 0;  i < m_SynchronizedWaypoints.size(); i++)
 		{
-			VehicleBehaviorComponentPtr syn_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
-			return syn_comp->IsSyncronized();
+			SceneObjectRef ref = m_SynchronizedWaypoints[i];
+			if(ref.IsValid())
+			{
+				VehicleBehaviorComponentPtr syn_comp = ref.GetRefObject()->GetFirstComponentByClass<VehicleBehaviorComponent>();
+				sync = sync && syn_comp->GetComplete();
+			}
 		}
-		return true;
+		return sync;
 	}
 
 	bool VehicleBehaviorComponent::_CheckTriggers() const
@@ -285,14 +317,27 @@ namespace GASS
 						sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
 					}
 				}
-				if(m_Synchronize.GetRefObject())
+				for(size_t i = 0; i < m_SynchronizedWaypoints.size(); i++)
+				{
+					SceneObjectPtr so = m_SynchronizedWaypoints[i].GetRefObject();
+					if(so)
+					{
+						LocationComponentPtr location_comp = so->GetFirstComponentByClass<ILocationComponent>();
+						Vec3 end_pos = location_comp->GetWorldPosition();
+						//offset 1dm
+						end_pos.y += 0.1;
+						sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
+					}
+				}
+
+				/*if(m_Synchronize.GetRefObject())
 				{
 					LocationComponentPtr location_comp = m_Synchronize.GetRefObject()->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 end_pos = location_comp->GetWorldPosition();
 					//offset 1dm
 					end_pos.y += 0.1;
 					sub_mesh_data->AddArrow(wp_pos,end_pos,arrow_size,color);
-				}
+				}*/
 
 				GraphicsMeshPtr mesh_data(new GraphicsMesh());
 				mesh_data->SubMeshVector.push_back(sub_mesh_data);

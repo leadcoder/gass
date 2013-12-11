@@ -88,7 +88,10 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, IComponent>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
-
+		RegisterProperty<bool>("AutoCollectMeshes", &GetAutoCollectMeshes, &SetAutoCollectMeshes,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("Build", &GetBuild, &SetBuild,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("CellHeight", &GetCellHeight, &SetCellHeight,
@@ -115,8 +118,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("DetailSampleMaxError", &GetDetailSampleMaxError, &SetDetailSampleMaxError,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Build", &GetBuild, &SetBuild,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		
 		RegisterProperty<bool>("Visible", &GetVisible, &SetVisible,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("ShowMeshLines", &GetShowMeshLines, &SetShowMeshLines,
@@ -1164,7 +1166,9 @@ namespace GASS
 					{
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-						if(geom && geom->GetGeometryFlags() & GEOMETRY_FLAG_SCENE_OBJECTS)
+						
+						//if(geom && geom->GetGeometryFlags() & GEOMETRY_FLAG_SCENE_OBJECTS)
+						if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
 						{
 							AABox box = geom->GetBoundingBox();
 							GraphicsMesh gfx_mesh_data = mesh->GetMeshData();

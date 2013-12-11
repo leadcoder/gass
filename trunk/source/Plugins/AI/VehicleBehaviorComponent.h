@@ -58,20 +58,23 @@ namespace GASS
 		ADD_PROPERTY(SpeedTypeBinder,SpeedMode)
 		ADD_PROPERTY(Float,RegularSpeedValue)
 		ADD_PROPERTY(Vec2,Delay)
-		ADD_PROPERTY(SceneObjectRef,Synchronize);
 		ADD_PROPERTY(std::vector<SceneObjectRef>,Triggers);
+		std::vector<SceneObjectRef> GetSynchronizedWaypoints() const {return m_SynchronizedWaypoints;}
+		void SetSynchronizedWaypoints(const std::vector<SceneObjectRef> &value);
+		bool _CheckTriggers() const;
 		std::vector<SceneObjectPtr>  _GetSyncEnumeration() const;
 		std::vector<SceneObjectPtr>  _GetTriggerEnumeration() const;
 		
 	private:
 		void _UpdateConnectionLines();
-		bool _CheckTriggers() const;
+		
 		bool _CheckWaypoints() const;
 		SceneObjectPtr _GetConnectionLines() const {return SceneObjectPtr(m_ConnectionLines,NO_THROW);}
 		bool m_Initialized;
 		Float m_Radius;
 		bool m_Complete;
 		SceneObjectWeakPtr m_ConnectionLines;
+		std::vector<SceneObjectRef> m_SynchronizedWaypoints;
 	
 	};
 
