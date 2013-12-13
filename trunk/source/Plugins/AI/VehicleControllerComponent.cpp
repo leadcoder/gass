@@ -83,7 +83,6 @@ namespace GASS
 			}
 		}
 		m_Initialized = true;
-
 	}
 
 	void VehicleControllerComponent::OnScenarioEvent(ScenarioStateRequestPtr message)
@@ -100,16 +99,22 @@ namespace GASS
 			//reset start position
 			GetVehicle()->PostMessage(MessagePtr(new WorldPositionMessage(m_StartPos)));
 			GetVehicle()->PostMessage(MessagePtr(new WorldRotationMessage(m_StartRot)));
+
+			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(m_StartPos)));
+			GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_StartRot)));
 		}
 	}
 
 
 	void VehicleControllerComponent::OnTransformation(TransformationNotifyMessagePtr message)
 	{
-		m_StartPos = message->GetPosition();
-		m_StartRot = message->GetRotation();
+		if(m_ScenarioState == SS_STOP)
+		{
+			m_StartPos = message->GetPosition();
+			m_StartRot = message->GetRotation();
+		}
 		//if paused!
-		if(GetVehicle() && m_ScenarioState != SS_PLAY)
+		if(GetVehicle() && m_ScenarioState == SS_STOP)
 		{
 			GetVehicle()->PostMessage(MessagePtr(new WorldPositionMessage(m_StartPos)));
 			GetVehicle()->PostMessage(MessagePtr(new WorldRotationMessage(m_StartRot)));
@@ -158,6 +163,11 @@ namespace GASS
 	{
 		m_VehiclePos = message->GetPosition();
 		m_VehicleRot = message->GetRotation();
+		if(m_ScenarioState == SS_PLAY)
+		{
+			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(m_VehiclePos)));
+			GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_VehicleRot)));
+		}
 	}
 
 	void VehicleControllerComponent::_Apply(VehicleBehaviorComponentPtr comp, bool first_behavior)

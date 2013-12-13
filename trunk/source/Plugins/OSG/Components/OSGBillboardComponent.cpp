@@ -48,7 +48,7 @@ namespace GASS
 
 	OSGBillboardComponent::~OSGBillboardComponent()
 	{
-		//m_OSGBillboard.release();
+		
 	}
 
 	void OSGBillboardComponent::RegisterReflection()
@@ -77,8 +77,8 @@ namespace GASS
 	void OSGBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnMaterialMessage,MaterialMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsMessage,0));
 	}
 
 
@@ -160,13 +160,6 @@ namespace GASS
 		max_size *= 0.5f;
 		AABox box(Vec3(-max_size,-max_size+offset,-max_size),Vec3(max_size,max_size+offset,max_size));
 		return box;
-		//Vec3 up = OSGConvert::Get().ToGASS(osg::Vec3(0,0,m_Height));
-		//Vec3 east = OSGConvert::Get().ToGASS(osg::Vec3(m_Width,0,0));
-		//Vec3 north = OSGConvert::Get().ToGASS(osg::Vec3(0,m_Width,0));
-		//Vec3 corner = -east*0.5 - north*0.5;
-		//AABox box(corner,corner+east+up+north);
-		//return box;
-
 	}
 	Sphere OSGBillboardComponent::GetBoundingSphere() const
 	{
@@ -309,7 +302,7 @@ namespace GASS
 		{
 			if(message->EnableCollision())
 			{
-				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags, m_OSGBillboard);
+ 				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags, m_OSGBillboard);
 			}
 			else
 			{

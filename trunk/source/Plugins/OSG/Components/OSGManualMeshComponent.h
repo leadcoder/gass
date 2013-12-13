@@ -39,7 +39,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual GraphicsMesh GetMeshData() const;
 	protected:
-		void CreateSubMesh(GraphicsSubMeshPtr sm, osg::ref_ptr<osg::Geometry> geom );
+		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		bool GetCastShadow() const {return m_CastShadow;}
 		void OnLocationLoaded(LocationLoadedMessagePtr message);

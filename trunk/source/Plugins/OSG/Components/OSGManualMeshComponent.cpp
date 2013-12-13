@@ -160,8 +160,9 @@ namespace GASS
 		m_OSGGeometries.clear();
 	}
 
-	void OSGManualMeshComponent::CreateSubMesh(GraphicsSubMeshPtr sm, osg::ref_ptr<osg::Geometry> geom )
+	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::_CreateSubMesh(GraphicsSubMeshPtr sm)
 	{
+		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 		
 		/*if(data->Material != m_CurrentMaterial) //try loading material
 		{
@@ -212,7 +213,7 @@ namespace GASS
 			break;
 		}
 
-		osg::DrawElementsUInt* de = new osg::DrawElementsUInt(op);
+		osg::ref_ptr<osg::DrawElementsUInt> de = new osg::DrawElementsUInt(op);
 
 		if(sm->IndexVector.size() > 0)
 		{
@@ -268,6 +269,7 @@ namespace GASS
 			geom->setTexCoordArray(i,tex_coords);
 		}
 		geom->dirtyBound();
+		return geom;
 	}
 
 	void OSGManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
@@ -276,8 +278,8 @@ namespace GASS
 		for(size_t i = 0; i < data->SubMeshVector.size(); i++)
 		{
 			GraphicsSubMeshPtr sm = data->SubMeshVector[i];
-			osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
-			CreateSubMesh(sm,geom );
+			//osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
+			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
 		}
