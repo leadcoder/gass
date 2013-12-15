@@ -20,6 +20,7 @@
 
 #pragma once
 #include "PhysXCommon.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 #define MAX_NUM_WHEELS 256
 namespace physx
@@ -59,7 +60,7 @@ namespace GASS
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
-	
+		CollisionResult CollisionCheck(const CollisionRequest &request) const;
 		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:

@@ -180,13 +180,10 @@ namespace GASS
 
 	void AIRoadComponent::OnWaypointsChanged(UpdateWaypointListMessagePtr message)
 	{
-		
 		//update itersection connections
 		UpdateLanes();
-		//AutoConnectToIntersection();
+		AutoConnectToIntersection();
 		UpdateMesh();
-
-		
 	}
 
 	void AIRoadComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)

@@ -239,7 +239,6 @@ namespace GASS
 				PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),(int)m_Vehicles.size(),&m_Vehicles[0]);
 			}
 		}
-
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 	}
@@ -294,7 +293,6 @@ namespace GASS
 		return (iter!= m_TriangleMeshMap.end()); 
 	}
 
-
 	PhysXConvexMesh PhysXPhysicsSceneManager::CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{
 		if(HasConvexMesh(col_mesh_id))
@@ -322,6 +320,20 @@ namespace GASS
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 
+	CollisionResult PhysXPhysicsSceneManager::CollisionCheck(const CollisionRequest &request) const
+	{
+		CollisionResult res;
+		if(request.Type == COL_LINE)
+		{
+			Vec3 ray_dir = request.LineEnd - request.LineStart;
+			Float ray_length = ray_dir.Length();
+			ray_dir = ray_dir*(1.0/ray_length);
+			PxRaycastHit rayHit;	
+			m_PxScene->raycastSingle(PxConvert::ToPx(request.LineStart), PxConvert::ToPx(ray_dir), ray_length, PxSceneQueryFlag::eIMPACT, rayHit);
+			//rayHit.impact 
+		}
+		return res;
+	}
 
 	PhysXTriangleMesh PhysXPhysicsSceneManager::CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
 	{

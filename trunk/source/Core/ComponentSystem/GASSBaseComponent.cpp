@@ -25,6 +25,9 @@
 
 namespace GASS
 {
+
+	std::set<std::string> BaseComponent::m_Dependencies;
+
 	BaseComponent::BaseComponent(void) : m_Owner(ComponentContainerWeakPtr())
 	{
 	
@@ -109,7 +112,12 @@ namespace GASS
 	{
 		BaseComponentPtr  dest_base_comp = STATIC_PTR_CAST<BaseComponent>(dest_comp);
 		BaseReflectionObject::CopyPropertiesTo(dest_base_comp);
-	}	
+	}
+
+	void BaseComponent::AddDependency(const std::string &component_name)
+	{
+		m_Dependencies.insert(component_name);
+	}
 	
 }
 

@@ -129,7 +129,6 @@ namespace GASS
 		*/
 		void Clear();
 	protected:
-		//void AddRecursive(IComponentContainer* ct);
 		bool m_AddObjectIDToName;
 		std::string m_ObjectIDPrefix;
 		std::string m_ObjectIDSuffix;

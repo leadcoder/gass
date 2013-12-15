@@ -27,6 +27,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Core/ComponentSystem/GASSIComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSBaseComponent.h"
 
 #include <iostream>
 #include <iomanip>
@@ -365,6 +366,37 @@ namespace GASS
 	bool BaseComponentContainer::GetSerialize()  const 
 	{
 		return m_Serialize;
+	}
+
+
+	void BaseComponentContainer::CheckComponentDependencies() const
+	{
+		//get all names
+		std::set<std::string> names;
+		ComponentVector::const_iterator comp_iter = m_ComponentVector.begin();
+		while (comp_iter != m_ComponentVector.end())
+		{
+			BaseComponentPtr comp = DYNAMIC_PTR_CAST<BaseComponent>(*comp_iter);
+			names.insert(comp->GetRTTI()->GetClassName());
+			++comp_iter;
+		}
+
+		comp_iter = m_ComponentVector.begin();
+		
+		while (comp_iter != m_ComponentVector.end())
+		{
+			ComponentPtr comp = (*comp_iter);
+			const std::set<std::string> deps = comp->GetDependencies();
+			std::set<std::string>::const_iterator dep_iter = deps.begin();
+			while(dep_iter != deps.end())
+			{
+				const std::string comp_name = *dep_iter;
+				if(names.find(comp_name) == names.end())
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find dependent component:" + comp_name + " in component:" + GetName(),"BaseComponentContainer::Serialize");
+				dep_iter++;
+			}
+			++comp_iter;
+		}
 	}
 
 	size_t BaseComponentContainer::GetNumChildren() const

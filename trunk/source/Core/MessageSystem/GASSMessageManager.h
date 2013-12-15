@@ -102,7 +102,6 @@ namespace GASS
 		void Clear();
 		size_t GetQueuedMessages() const {return m_MessageQueue.size();}
 	private:
-		//#pragma deprecated(AddMessageToSystem)
 		void AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;

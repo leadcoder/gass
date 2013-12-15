@@ -69,6 +69,11 @@ namespace GASS
 			Get the owner of the component
 		*/
 		virtual ComponentContainerPtr GetOwner() const = 0;
+
+		/**
+			Get all dependencies.
+		*/
+		virtual const std::set<std::string>  & GetDependencies() = 0;
 	};
 
 	typedef SPTR<IComponent> ComponentPtr;

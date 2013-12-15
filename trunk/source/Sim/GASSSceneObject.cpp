@@ -245,6 +245,9 @@ namespace GASS
 
 	void SceneObject::Initialize(ScenePtr scene)
 	{
+		//check dependencies
+		CheckComponentDependencies();
+
 		if(m_GUID.is_nil())
 			m_GUID = boost::uuids::random_generator()();
 		m_Scene = scene;

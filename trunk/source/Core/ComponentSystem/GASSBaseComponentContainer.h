@@ -101,6 +101,8 @@ namespace GASS
 		by default all containers are serialized*/
 		bool GetSerialize()  const;
 	protected:
+		void CheckComponentDependencies() const;
+	
 		//Help functions for template creation
 		std::string CreateUniqueName();
 		void InheritComponentData(ComponentContainerPtr cc);
