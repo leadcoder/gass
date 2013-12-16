@@ -11,16 +11,15 @@ Open dependencies.sln in side the dependencies folder and build both release and
 
 2. GASS
 
-Generate GASS.sln with cmake (after configuring depedencies and GASS) 
-Open GASSSim.sln and build
+Generate GASS.sln with cmake (after configuring depedencies and GASS)
+	Using CMake GUI point "Where is the source code:" to root folder of checked out GASS-folder.
+	Point "Wehre to build the binaries:" to a folder where you want this specific configuration of compiled GASS to end up.
+	Set CMAKE_INSTALL_PREFIX to point to the folder you want the "SDK-version" of GASS to end up, i.e your dependencies-folder. 
+	When setup, press Configure-button in the GUI.
+	If everything went ok, press Generate-button.
+	In the source code folder you should now have sln and project files for GASS.
 
-
-
-
-
-
-
-
-
-
+Open GASSSim.sln and build solution
+Then build INSTALL-project in the same solution, explicitely. VS will then install the SDK-version of GASS in the folder you specified 
+in the variable CMAKE_INSTALL_PREFIX.
 
