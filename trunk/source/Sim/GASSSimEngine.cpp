@@ -278,16 +278,13 @@ namespace GASS
 
 	void SimEngine::Tick(double delta_time)
 	{
-
 		//ProfileSample::ResetAll();
 		{
 		PROFILE("SimEngine::Update")
 		//update systems
-
-		//GetSimSystemManager()->Update(delta_time);
-		m_RTC->Update(delta_time);
 		
-
+		m_RTC->Update(delta_time);
+	
 		m_CurrentTime += delta_time;
 		}
 #ifdef PROFILER

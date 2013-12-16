@@ -56,7 +56,7 @@ namespace GASS
 
 		m_SimulationTaskNode = TaskNodePtr(new TaskNode());
 
-		//Hack to support asyncron request
+		//Hack to support asynchronous time stepping
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest,TimeStepRequest,0));
 		
 	}

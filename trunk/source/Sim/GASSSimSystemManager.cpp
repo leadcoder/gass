@@ -38,14 +38,7 @@
 
 namespace GASS
 {
-	SimSystemManager::SimSystemManager() // :m_SimulationPaused(true), 
-		//m_SimulationUpdateInterval(1.0/60.0),
-		//m_SimulationTimeToProcess(0),
-		//m_MaxSimSteps(4),
-		//m_SimulateRealTime(true),
-		//m_LastNumSimulationSteps(0),
-		//m_StepSimulationRequest(false),
-		//m_RequestDeltaTime(0)
+	SimSystemManager::SimSystemManager() 
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
 		//m_SimStats = new SimpleProfileDataMap;

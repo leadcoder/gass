@@ -32,7 +32,10 @@
 
 namespace GASS
 {
-	TaskNode::TaskNode() : m_NodeMode(SEQUENCE), m_OnlyUpdateOnRequest(false), m_RespondToPause(true)
+	TaskNode::TaskNode() : m_NodeMode(SEQUENCE), m_OnlyUpdateOnRequest(false), m_RespondToPause(true),
+		m_TimeToProcess(0),
+		m_UpdateFrequency(0)
+
 	{
 
 	}
@@ -88,6 +91,13 @@ namespace GASS
 			int value = m_RespondToPause;
 			xml_elem->QueryIntAttribute("respondToPause",&value);
 			m_RespondToPause = value;
+		}
+
+		if(xml_elem->Attribute("updateFrequency"))
+		{
+			int value = m_UpdateFrequency;
+			xml_elem->QueryIntAttribute("updateFrequency",&value);
+			m_UpdateFrequency = value;
 		}
 
 		TiXmlElement *xml_child_elem = xml_elem->FirstChildElement("TaskNode");
@@ -266,8 +276,32 @@ namespace GASS
 			if(SimEngine::Get().GetRuntimeController()->HasUpdateRequest())
 			{
 				double request_time = SimEngine::Get().GetRuntimeController()->GetUpdateRequestTimeStep();
-				UpdateListeners(request_time,parent);
-				UpdateChildren(request_time,parent);
+
+				if(m_UpdateFrequency > 0)
+				{
+					double update_interval = 1.0/double (m_UpdateFrequency);
+					//do some time slicing
+					m_TimeToProcess += request_time;
+					int num_steps = (int) (m_TimeToProcess / update_interval);
+					int clamp_num_steps = num_steps;
+					//Take max 10 simulation step each frame
+					if(num_steps > 10) 
+						clamp_num_steps = 10;
+
+					for (int i = 0; i < clamp_num_steps; ++i)
+					{
+						UpdateListeners(update_interval,parent);
+						UpdateChildren(update_interval,parent);
+
+						SimEngine::Get().SyncMessages(update_interval);
+					}
+					m_TimeToProcess -= update_interval * num_steps;
+				}
+				else
+				{
+					UpdateListeners(request_time,parent);
+					UpdateChildren(request_time,parent);
+				}
 			}
 		}
 		else 

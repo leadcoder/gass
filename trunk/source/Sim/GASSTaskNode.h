@@ -39,7 +39,7 @@ namespace GASS
 
 	typedef WPTR<ITaskNodeListener> TaskNodeListenerWeakPtr;
 	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
-	class TaskNode
+	class GASSExport TaskNode
 	{
 	public:
 		typedef std::vector<TaskNodeListenerWeakPtr> Listeners;
@@ -62,6 +62,8 @@ namespace GASS
 		
 		void Register(TaskNodeListenerPtr listener);
 		void Unregister(TaskNodeListenerPtr listener);
+		void SetOnlyUpdateOnRequest(bool value) { m_OnlyUpdateOnRequest = value;}
+		bool GetOnlyUpdateOnRequest() const {return m_OnlyUpdateOnRequest;}
 	private:
 		TaskNodeVector m_Children;
 		std::string m_Name;
@@ -69,6 +71,10 @@ namespace GASS
 		Listeners m_Listeners;
 		bool m_OnlyUpdateOnRequest;
 		bool m_RespondToPause;
+		int m_UpdateFrequency;
+
+		//helper
+		double m_TimeToProcess;
 	};
 }
 
