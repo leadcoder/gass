@@ -392,7 +392,7 @@ namespace GASS
 			{
 				const std::string comp_name = *dep_iter;
 				if(names.find(comp_name) == names.end())
-					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find dependent component:" + comp_name + " in component:" + GetName(),"BaseComponentContainer::Serialize");
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find dependent component:" + comp_name + " in component:" + GetName(),"BaseComponentContainer::CheckComponentDependencies");
 				dep_iter++;
 			}
 			++comp_iter;

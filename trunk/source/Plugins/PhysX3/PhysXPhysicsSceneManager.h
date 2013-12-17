@@ -72,7 +72,7 @@ namespace GASS
 		bool HasConvexMesh(const std::string &name) const;
 		bool HasTriangleMesh(const std::string &name) const;
 		physx::PxConvexMesh* CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
-		physx::PxTriangleMesh* CreateTriangleMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
+		physx::PxTriangleMesh* _CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount);
 	private:
 		float m_Gravity;
 		bool m_Paused;

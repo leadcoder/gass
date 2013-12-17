@@ -23,6 +23,7 @@
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
 
@@ -165,13 +166,21 @@ namespace GASS
 			physx::PxHeightFieldGeometry hfGeom(heightField, physx::PxMeshGeometryFlags(), heightScale, scale_x, scale_z);
 			shape = hfActor->createShape(hfGeom, *system->GetDefaultMaterial());
 
+
 			physx::PxFilterData collFilterData;
-			collFilterData.word0=GEOMETRY_FLAG_GROUND;
-			collFilterData.word1=COLLISION_FLAG_GROUND_AGAINST;
+			GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
+			collFilterData.word0 = GEOMETRY_FLAG_GROUND;
+			collFilterData.word1 = against;
 			shape->setSimulationFilterData(collFilterData);
+
+			PxFilterData queryFilterData;
+			VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
+			shape->setQueryFilterData(queryFilterData);
 
 			PhysXPhysicsSceneManagerPtr sm = PhysXPhysicsSceneManagerPtr(m_SceneManager);
 			sm->GetPxScene()->addActor(*hfActor);
+
+			
 		}
 		return shape;
 	}

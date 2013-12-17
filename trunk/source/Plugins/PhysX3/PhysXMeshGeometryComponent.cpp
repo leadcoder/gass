@@ -100,6 +100,9 @@ namespace GASS
 		
 		physx::PxTriangleMeshGeometry geometry = physx::PxTriangleMeshGeometry(m_TriangleMesh.m_TriangleMesh);
 		m_Shape = m_Actor->createShape(geometry, *material);
+
+		if(!m_Shape)
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"failed to create shape","PhysXMeshGeometryComponent::OnGeometryChanged");
 		
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);

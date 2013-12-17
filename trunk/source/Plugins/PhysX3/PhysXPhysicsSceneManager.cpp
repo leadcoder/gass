@@ -263,13 +263,17 @@ namespace GASS
 		return convexMesh;
 	}
 
-	physx::PxTriangleMesh* PhysXPhysicsSceneManager::CreateTriangleMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
+	physx::PxTriangleMesh* PhysXPhysicsSceneManager::_CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount)
 	{
 		PxTriangleMeshDesc desc;
 		desc.setToDefault();
 		desc.points.count			= numVerts;
 		desc.points.stride		= sizeof(physx::PxVec3);
 		desc.points.data			= verts;
+
+		desc.triangles.count		= triCount;
+		desc.triangles.stride		= 3*sizeof(PxU32);
+		desc.triangles.data			= indices32;
 		
 		physx::PxTriangleMesh* triMesh = NULL;
 		MemoryOutputStream buf;
@@ -277,8 +281,9 @@ namespace GASS
 		{
 			MemoryInputData mid(buf.getData(), buf.getSize());
 			triMesh = physics.createTriangleMesh(mid);
+			return triMesh;
 		}
-		return triMesh;
+		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to cook triangles", "PhysXPhysicsSceneManager::CreateTriangleMesh");
 	}
 
 	bool PhysXPhysicsSceneManager::HasConvexMesh(const std::string &name) const
@@ -356,7 +361,12 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateTriangleMesh");
-			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh(&verts[0], static_cast<physx::PxU32>(physics_mesh->PositionVector.size()) , *system->GetPxSDK(), *system->GetPxCooking());
+			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = _CreateTriangleMesh( *system->GetPxSDK(), 
+				*system->GetPxCooking(), 
+				&verts[0], 
+				static_cast<physx::PxU32>(physics_mesh->PositionVector.size()),
+				&physics_mesh->IndexVector[0], 
+				static_cast<physx::PxU32>(physics_mesh->IndexVector.size()/3));
 			return m_TriangleMeshMap[col_mesh_id];
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
