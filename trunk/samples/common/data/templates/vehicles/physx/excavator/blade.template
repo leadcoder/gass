@@ -31,7 +31,7 @@
 				<EnableLimits value ="true"/>
 			</PhysicsHingeComponent>
 			<HingeInteractionComponent>
-				<InputMapping value="Blade"/>
+				<InputMapping value="Legs"/>
 				<MaxAngularVelocity value = "13"/>
 			</HingeInteractionComponent>
 			<InputProxyComponent>
@@ -40,25 +40,10 @@
 			<PhysicsConvexGeometryComponent>
 				<SimulationCollision value="true"/>
 			</PhysicsConvexGeometryComponent>
-			<!--<PhysicsReportProxyComponent>
-				<TargetObject value="HOUSE"/>
-			</PhysicsReportProxyComponent>
-			<VelocityToSoundComponent>
-				<MinMaxVolume value="0 0.13"/>
-				<MinMaxPitch value="0.93 1.0"/>
-				<VelocityLimit value = "0.2"/>
-			</VelocityToSoundComponent>
-			<OpenALSoundComponent>
-				<Name value="HydraulicSound"/>
-				<SoundFile value="hydraulic3.wav"/>
-				<Loop value="1"/>
-				<MinDistance value="5"/>
-				<RolloffFactor value="1"/>
-			</OpenALSoundComponent>-->
 		</Components>
 		<ComponentContainers>
 			<SceneObjectTemplate>
-				<Name value="LibherrMainBoomHydralicsPiston"/>
+				<Name value="LibherrBladePiston"/>
 				<ID value="BLADE_HYDRAULIC_PISTON"/>
 				<Components>
 					<LocationComponent>

@@ -62,6 +62,24 @@
 			</OpenALSoundComponent>
 		</Components>
 		<ComponentContainers>
+			<!--<SceneObjectTemplate>
+				<Name value="LibherrHouseMainBoom"/>
+				<ID value="CABIN_CAMERA"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.67 1.42 -0.6"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<VehicleCameraComponent>
+						<InputHandlerObject value="UNDERCARRIAGE"/>
+					</VehicleCameraComponent>
+					<CameraComponent>
+						<Fov value ="60"/>
+					</CameraComponent>
+					
+				</Components>
+			</SceneObjectTemplate>-->
+		
 			<SceneObjectTemplate>
 				<Name value="LibherrHouseMainBoom"/>
 				<Inheritance value="LibherrMainBoom"/>  <!-- house is defined in other file-->
