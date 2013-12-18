@@ -38,7 +38,7 @@ namespace GASS
 
 	}
 
-	
+
 	std::string FileUtils::GetExtension(const std::string &file_name)
 	{
 		std::string ret, reversed_string;
@@ -65,7 +65,7 @@ namespace GASS
 		return ret;
 	}
 
-	
+
 
 	std::string FileUtils::GetFilename(const std::string &path)
 	{
@@ -83,7 +83,7 @@ namespace GASS
 	{
 		std::string ret = StringUtils::Replace(path,"\\","/");
 		std::string::size_type pos = ret.find_last_of("/");
-		
+
 		if(pos != std::string::npos)
 		{
 			ret = ret.substr(0,pos+1);
@@ -92,7 +92,7 @@ namespace GASS
 			return "";
 		return ret;
 	}
-	
+
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
 		boost::filesystem::path boost_path(path); 

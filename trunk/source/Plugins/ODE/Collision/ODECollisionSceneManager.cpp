@@ -193,6 +193,11 @@ namespace GASS
 				ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),m_MaxRaySegment);
 				raycast.Process();
 			}
+			else if(request.Type == COL_LINE_VERTICAL)
+			{
+				ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),0);
+				raycast.Process();
+			}
 		}
 	}
 	

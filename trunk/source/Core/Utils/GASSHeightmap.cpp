@@ -11,7 +11,7 @@ namespace GASS
 
 	}
 	
-	Heightmap::Heightmap(const Vec3 &min_bound,const Vec3 &max_bound, int width, int height, float *data) : m_Data(NULL),
+	Heightmap::Heightmap(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width, unsigned int height, float *data) : m_Data(NULL),
 		m_Min(min_bound),
 		m_Max(max_bound),
 		m_Width(width),
@@ -46,8 +46,8 @@ namespace GASS
 		Float fxindex = m_Width * (x - m_Min.x) / bounds_width;
 		Float fzindex = m_Height * (z - m_Min.z) / bounds_height;
 		//round?
-		int xindex = fxindex;
-		int zindex = fzindex;
+		unsigned int xindex = fxindex;
+		unsigned int zindex = fzindex;
 		
 		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
 			return 0.0f;
@@ -61,7 +61,7 @@ namespace GASS
 		//use all 4 combos
 		//x0 <= x <= x1
 		//z0 <= z <= z1
-		int x0, z0, x1, z1;
+		unsigned int x0, z0, x1, z1;
 		x0 = xindex;
 		x1 = xindex + 1;
 		z0 = zindex;
@@ -92,16 +92,21 @@ namespace GASS
 		Float bounds_width = m_Max.x - m_Min.x;
 		Float bounds_height = m_Max.z - m_Min.z;
 
-		int xindex = m_Width * (x - m_Min.x) / bounds_width;
-		int zindex = m_Height * (z - m_Min.z) / bounds_height;
+		unsigned int xindex = m_Width * (x - m_Min.x) / bounds_width;
+		unsigned int zindex = m_Height * (z - m_Min.z) / bounds_height;
 		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
 			return;
 		m_Data[xindex + zindex*m_Height] = height;
 	}
 
-	void Heightmap::SetHeight(int x, int z, float height)
+	void Heightmap::SetHeight(unsigned int x, unsigned int z, float height)
 	{
 		m_Data[x + z*m_Height] = height;
+	}
+
+	float Heightmap::GetHeight(unsigned int x, unsigned int z) const
+	{
+		return m_Data[x + z*m_Height];
 	}
 
 	void Heightmap::ImportRAWFile(const std::string &filename, float max_height, float min_height)
@@ -114,9 +119,9 @@ namespace GASS
 		delete[] m_Data;
 		m_Data = new float[file.m_Height*file.m_Width];
 
-		for(int i = 0 ; i < file.m_Height; i++)
+		for(unsigned int i = 0 ; i < file.m_Height; i++)
 		{
-			for(int j = 0 ; j < file.m_Width; j++)
+			for(unsigned int j = 0 ; j < file.m_Width; j++)
 			{
 				unsigned int hm_index = (i * (file.m_Width) + j)*file.m_BPP/8;
 				float height;

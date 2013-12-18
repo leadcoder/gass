@@ -31,22 +31,8 @@ namespace GASS
 		unsigned long file_size=ftell(fp);
 		fseek(fp,0,SEEK_SET);
 
-		//unsigned char *buffer=new unsigned char[file_size];
-		//fread(buffer,1,file_size,fp);
 		fclose(fp);
-
-
-		/*ifstream readFile(filename.c_str(), ios::nocreate | ios::binary);
-		if (readFile.fail()) 
-		{
-		Log::Warning("RawFile::Load - Failed to load sm file:%s",filename.c_str());
-		return 0;
-		}
-
-		// detemine length of file //
-		readFile.seekg( 0, ios::end );
-		unsigned long file_size = readFile.tellg();
-		readFile.close();*/
+		
 		file_size = sqrt((long double)file_size / (bpp/8));
 		return file_size;
 	}

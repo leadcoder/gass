@@ -22,22 +22,37 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
-	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent>
+	class Heightmap;
+	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent> , public IHeightmapTerrainComponent
 	{
 	public:
 		HeightmapComponent(void);
 		~HeightmapComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void SaveXML(TiXmlElement *obj_elem);
 
+		//IHeightmapTerrainComponent
+		virtual Float GetHeightAtPoint(int x, int z) const;
+		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
+		virtual unsigned int GetSamples() const;
+		virtual float* GetHeightData() const;
 	protected:
-		void UpdateData();
+		void SetUpdate(bool value);
+		bool  GetUpdate() const;
+		ADD_PROPERTY(Vec2,Size)
+		ADD_PROPERTY(Float,Resolution)
+
+		//internal
+		void _UpdateData();
+		FilePath _GetFilePath() const;
 	private:
-		Float* m_Data;
+		Heightmap* m_HM;
 	};
 }
 #endif

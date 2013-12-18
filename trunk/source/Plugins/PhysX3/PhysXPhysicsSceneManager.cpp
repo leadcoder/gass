@@ -328,7 +328,7 @@ namespace GASS
 	CollisionResult PhysXPhysicsSceneManager::CollisionCheck(const CollisionRequest &request) const
 	{
 		CollisionResult res;
-		if(request.Type == COL_LINE)
+		if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
 		{
 			Vec3 ray_dir = request.LineEnd - request.LineStart;
 			Float ray_length = ray_dir.Length();

@@ -34,7 +34,8 @@ namespace GASS
 	enum CollisionType
 	{
 		COL_SPHERE,
-		COL_LINE
+		COL_LINE,
+		COL_LINE_VERTICAL
 	};
 
 	struct CollisionRequest

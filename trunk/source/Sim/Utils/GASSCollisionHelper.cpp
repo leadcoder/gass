@@ -29,7 +29,7 @@ namespace GASS
 
 		request.LineStart = ray_start;
 		request.LineEnd = ray_start + ray_direction;
-		request.Type = COL_LINE;
+		request.Type = COL_LINE_VERTICAL;
 		request.ReturnFirstCollisionPoint = false;
 		request.CollisionBits = flags;
 		result.Coll = false;

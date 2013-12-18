@@ -24,6 +24,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSHeightmap.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -31,47 +32,141 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Utils/GASSCollisionHelper.h"
 
 namespace GASS
 {
-	HeightmapComponent::HeightmapComponent(void) : m_Data(NULL)
+	HeightmapComponent::HeightmapComponent(void) : m_HM(NULL),
+		m_Size(200,200),
+		m_Resolution(1.0)
 	{
 
 	}
 
 	HeightmapComponent::~HeightmapComponent(void)
 	{
-		
+
 	}
 
 	void HeightmapComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("HeightmapComponent",new GASS::Creator<HeightmapComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
-		
+
+		RegisterProperty<Vec2>("Size", &GASS::HeightmapComponent::GetSize, &GASS::HeightmapComponent::SetSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of hightmap in [m]",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<Float>("Resolution", &GASS::HeightmapComponent::GetResolution, &GASS::HeightmapComponent::SetResolution,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("[samples/m]",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<bool>("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Update height values from scene geometry",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void HeightmapComponent::OnInitialize()
 	{
-		UpdateData();
-	}
-
-	void HeightmapComponent::UpdateData()
-	{
-	
-		//generate heightmap
-		//Float corner_x ;
-		//Float corner_z;
-		GeometryFlags flags;
-		ScenePtr scene = GetSceneObject()->GetScene();
-/*		for(int i = 0; i < m_Width; i++)
+		//Try to load from file!	
+		FilePath full_path = _GetFilePath();
+		if(full_path.Exist()) //Check if file exist
 		{
-			for(int j = 0; j < m_Height; j++)
-			{
-				Vec3 pos(m_Box.x + i*dist,0,m_Box.z + j*dist); 
-				Float h = CollisionHelper::GetHeightAtPosition(scene, pos, flags, true);
-			}
-		}*/
+			m_HM = new Heightmap();
+			m_HM->Load(full_path.GetFullPath());
+		}
+		//try to load present file
 	}
 
+	FilePath HeightmapComponent::_GetFilePath() const
+	{
+		ScenePtr  scene = GetSceneObject()->GetScene();
+		std::string scene_path = scene->GetSceneFolder().GetFullPath();
+		std::string filename = "heightmap_" + GetName() + ".hm";
+		FilePath full_path(scene_path + "/" + filename);
+		return full_path;
+	}
+
+
+	void HeightmapComponent::SaveXML(TiXmlElement *obj_elem)
+	{
+		BaseSceneComponent::SaveXML(obj_elem);
+		if(m_HM)
+		{
+			m_HM->Save(_GetFilePath().GetFullPath());
+		}
+	}
+
+	void HeightmapComponent::SetUpdate(bool value)
+	{
+		_UpdateData();
+	}
+
+	bool  HeightmapComponent::GetUpdate() const
+	{
+		return false;
+	}
+
+	void HeightmapComponent::_UpdateData()
+	{
+		if(!GetSceneObject())
+			return;
+		//Get current location component
+		Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+
+		Float half_width = m_Size.x*0.5;
+		Float half_height = m_Size.y*0.5;
+
+		Vec3 min_bound(pos.x-half_width,0,pos.z-half_width);
+		Vec3 max_bound(pos.x+half_height,0,pos.z+half_height);
+
+
+		const unsigned int px_width = m_Size.x*m_Resolution;
+		const unsigned int pz_height = m_Size.y*m_Resolution;
+
+		Float inv_sample_ratio = 1.0/m_Resolution;
+
+		//GEOMETRY_FLAG_GROUND
+		GeometryFlags flags =  GEOMETRY_FLAG_SCENE_OBJECTS;
+		ScenePtr scene = GetSceneObject()->GetScene();
+
+		delete m_HM;
+		m_HM = new Heightmap(min_bound,max_bound,px_width,pz_height);
+
+		for(unsigned int i = 0; i <  px_width; i++)
+		{
+			for(unsigned int j = 0; j <  pz_height; j++)
+			{
+				Vec3 pos(min_bound.x + i*inv_sample_ratio, 0, min_bound.z + j*inv_sample_ratio); 
+				Float h = CollisionHelper::GetHeightAtPosition(scene, pos, flags, true);
+				m_HM->SetHeight(i,j,h);
+			}	
+		}
+		m_HM->Save(_GetFilePath().GetFullPath());
+	}
+
+
+	Float HeightmapComponent::GetHeightAtPoint(int x, int z) const
+	{
+		if(m_HM)
+			return m_HM->GetHeight(x,z);
+		return 0;
+	}
+	Float HeightmapComponent::GetHeightAtWorldLocation(Float x, Float z) const
+	{
+		if(m_HM)
+			return m_HM->GetInterpolatedHeight(x,z);
+		return 0;
+	}
+
+	unsigned int HeightmapComponent::GetSamples() const
+	{
+		if(m_HM)
+			return m_HM->GetWidth();
+		return 0;
+	}
+
+	float* HeightmapComponent::GetHeightData() const
+	{
+		if(m_HM)
+			return m_HM->GetData();
+		return NULL;
+	}
 }

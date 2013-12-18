@@ -162,15 +162,13 @@ namespace GASS
 				if(views.size() > 0)
 				{
 
-					//if(gfx_sm)
-					//{
-					if(request.Type == COL_LINE)
+					if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
 					{
 						CollisionResult result;
-						ProcessRaycast(&request,&result,views[0]->getCamera());//gfx_sm->GetOSGRootNode());
+						ProcessRaycast(&request,&result,views[0]->getCamera());
 						resultMap[handle] = result;
 					}
-					//}
+					
 				}
 			}
 		}
@@ -222,7 +220,7 @@ namespace GASS
 
 			if(gfx_sm)
 			{
-				if(request.Type == COL_LINE)
+				if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
 				{
 					ProcessRaycast(&request,&result,views[0]->getCamera());
 				}
