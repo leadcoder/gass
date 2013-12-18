@@ -47,7 +47,6 @@ namespace GASS
 		m_DamgeRadius = -1;
 		m_DieAfterColl = 1;
 		m_Velocity.Set(0,-0.1,0);
-		m_ColHandle = 0;
 		m_HasColHandle = false;
 		m_PhysicsDeltaTime = 0;
 	}
@@ -112,6 +111,22 @@ namespace GASS
 		Vec3 right,up;
 
 
+			bool impact = false;
+			if(m_TimeLeft < time && m_ExplodeNearEnemyDistance < 0) //do not explode on time stop if mine
+			{
+				//Check for expolsion
+				if(m_DamgeRadius > 0)
+				{
+					impact = true;
+				}
+				else
+				{
+					SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
+					GetSceneObject()->GetScene()->PostMessage(remove_msg);
+
+					return;
+				}
+			}
 
 		//calc some basic physics
 		if(m_Velocity.SquaredLength() > 0.000001)
@@ -152,54 +167,72 @@ namespace GASS
 			ray_start = m_Pos; 
 			ray_end = new_pos; 
 			ray_dir = ray_end - ray_start;
-			float l = ray_dir.FastLength();
-
-			GASS::CollisionRequest request;
-
-			request.LineStart = ray_start;
-			request.LineEnd = ray_start + ray_dir;
-			request.Type = COL_LINE;
-			request.ReturnFirstCollisionPoint = false;
-			request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
-				
-
-			m_ColHandle = m_ColSM->Request(request);
-			m_HasColHandle = true;
-
+			GASS::CollisionResult result;
+			m_ColSM->Raycast(ray_start,ray_dir,GEOMETRY_FLAG_SCENE_OBJECTS,result);
 			m_Pos = new_pos;
-			//std::cout << "pos:" << m_Pos.x << " y"<< m_Pos.y << " z" << m_Pos.z<< std::endl;
 			m_Rot.FromRotationMatrix(rot_mat);
+		
+
+			if(result.Coll)
+			{
+				if(m_DieAfterColl)	
+					impact = true;
+					//correct postition
+				m_Pos = result.CollPosition;
+			}
+				//send position and rotaion update
+			int id = (int) this;
+			MessagePtr pos_msg(new PositionMessage(m_Pos,id));
+			MessagePtr rot_msg(new RotationMessage(m_Rot,id));
+			GetSceneObject()->PostMessage(pos_msg);
+			GetSceneObject()->PostMessage(rot_msg);
+		
+
+			if(impact)
+			{
+				if(m_DamgeRadius > 0)
+				{
+
+				}
+				else 
+				{
+					Vec3 proj_dir = m_Velocity;
+					proj_dir.FastNormalize();
+
+					float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
+					float damage_value = angle_falloff*m_MaxDamage;
+
+					MessagePtr hit_msg(new HitMessage(damage_value,m_Pos,proj_dir));
+					SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
+
+					//Send force message to indicate hit
+					Vec3 force = proj_dir*m_ImpactForce;
+					MessagePtr force_msg(new PhysicsBodyAddForceRequest(force));
+					SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
+				}
+				SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
+				GetSceneObject()->GetScene()->PostMessage(remove_msg);
+
+				if(m_EndEffectTemplateName != "")
+					SpawnEffect(m_EndEffectTemplateName);
+			}
 		}
 	}
 
 	void ProjectileComponent::SceneManagerTick(double time)
 	{
 		//std::cout << "Update proj:" << GetSceneObject()->GetName() << std::endl;
-		bool impact = false;
+		
 		m_TimeLeft -= time;
 		m_PhysicsDeltaTime += time;
-		if(m_TimeLeft < time && m_ExplodeNearEnemyDistance < 0) //do not explode on time stop if mine
-		{
-			//Check for expolsion
-			if(m_DamgeRadius > 0)
-			{
-				impact = true;
-			}
-			else
-			{
-				SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
-				GetSceneObject()->GetScene()->PostMessage(remove_msg);
+		StepPhysics(time);
 
-				return;
-			}
-		}
-
-		GASS::CollisionResult result;
-		if(m_HasColHandle)
+		
+		
+		/*if(m_HasColHandle)
 		{
 			if(m_ColSM->Check(m_ColHandle,result))
 			{
-				m_HasColHandle = false;
 				if(result.Coll)
 				{
 					if(m_DieAfterColl)	
@@ -249,7 +282,7 @@ namespace GASS
 			return;
 		}
 		StepPhysics(m_PhysicsDeltaTime);
-		m_PhysicsDeltaTime = 0;
+		m_PhysicsDeltaTime = 0;*/
 	}
 
 	void ProjectileComponent::SpawnEffect(const std::string &effect)

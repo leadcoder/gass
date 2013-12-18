@@ -30,7 +30,7 @@ namespace GASS
 	class ODELineCollision
 	{
 	public:
-		ODELineCollision(CollisionRequest *request,CollisionResult *result, dGeomID space, float segment_length = 0);
+		ODELineCollision(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags,bool return_first_collision,CollisionResult *result, dGeomID space, float segment_length = 0);
 		virtual ~ODELineCollision();
 		void Process();
 	private:
@@ -40,12 +40,12 @@ namespace GASS
 		Vec3 m_RayDir;
 		Vec3 m_RayStart;
 		double m_RayLength;
-		CollisionRequest* m_Request;
 		CollisionResult* m_Result;
 		dGeomID m_Space;
 		float m_SegmentLength;
+		bool m_ReturnFirstCollisionPoint;
+		GeometryFlags m_CollisionBits;
 	};
-	
 }
 
 #endif

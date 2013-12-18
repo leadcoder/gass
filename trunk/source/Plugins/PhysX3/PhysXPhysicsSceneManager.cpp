@@ -94,7 +94,7 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
 		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
-		
+
 	}
 
 	void PhysXPhysicsSceneManager::SetGravity(float gravity)
@@ -137,7 +137,7 @@ namespace GASS
 		} 
 		if(!sceneDesc.filterShader)
 			sceneDesc.filterShader  = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
-		
+
 		sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
 		sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 
@@ -184,7 +184,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnShutdown()
 	{
-		
+
 	}
 
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
@@ -195,7 +195,7 @@ namespace GASS
 		//Save all bodies
 		PhysXBodyComponentPtr body = obj->GetFirstComponentByClass<PhysXBodyComponent>();
 		if(body)
-			m_Bodies.push_back(body);*/
+		m_Bodies.push_back(body);*/
 	}
 
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
@@ -243,7 +243,7 @@ namespace GASS
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
-	
+
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
 	{
 		// Create descriptor for convex mesh
@@ -274,7 +274,7 @@ namespace GASS
 		desc.triangles.count		= triCount;
 		desc.triangles.stride		= 3*sizeof(PxU32);
 		desc.triangles.data			= indices32;
-		
+
 		physx::PxTriangleMesh* triMesh = NULL;
 		MemoryOutputStream buf;
 		if(cooking.cookTriangleMesh(desc, buf))
@@ -304,7 +304,7 @@ namespace GASS
 		{
 			return m_ConvexMeshMap[col_mesh_id];
 		}
-		
+
 		GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 		PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
 
@@ -325,19 +325,13 @@ namespace GASS
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 
-	CollisionResult PhysXPhysicsSceneManager::CollisionCheck(const CollisionRequest &request) const
+	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
 	{
-		CollisionResult res;
-		if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
-		{
-			Vec3 ray_dir = request.LineEnd - request.LineStart;
-			Float ray_length = ray_dir.Length();
-			ray_dir = ray_dir*(1.0/ray_length);
-			PxRaycastHit rayHit;	
-			m_PxScene->raycastSingle(PxConvert::ToPx(request.LineStart), PxConvert::ToPx(ray_dir), ray_length, PxSceneQueryFlag::eIMPACT, rayHit);
-			//rayHit.impact 
-		}
-		return res;
+		Float ray_length = ray_dir.Length();
+		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);
+		PxRaycastHit rayHit;	
+		m_PxScene->raycastSingle(PxConvert::ToPx(ray_start), PxConvert::ToPx(norm_ray_dir), ray_length, PxSceneQueryFlag::eIMPACT, rayHit);
+		//rayHit.impact 
 	}
 
 	PhysXTriangleMesh PhysXPhysicsSceneManager::CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
@@ -371,5 +365,5 @@ namespace GASS
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
-	
+
 }

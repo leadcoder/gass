@@ -72,7 +72,6 @@ namespace GASS
 		float m_DamgeRadius;
 		float m_ExplodeNearEnemyDistance;
 		double m_PhysicsDeltaTime;
-		CollisionHandle m_ColHandle;
 		CollisionSceneManagerPtr m_ColSM;
 		Vec3 m_Pos;
 		Quaternion m_Rot;

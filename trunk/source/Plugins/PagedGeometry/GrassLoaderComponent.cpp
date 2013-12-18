@@ -328,7 +328,7 @@ namespace GASS
 	{
 		if(m_CollisionSM)
 		{
-			GASS::CollisionRequest request;
+/*			GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
@@ -339,7 +339,7 @@ namespace GASS
 			result.Coll = false;
 			m_CollisionSM->Force(request,result);
 			if(result.Coll)
-				return result.CollPosition.y;
+				return result.CollPosition.y;*/
 		}
 		return 0;
 	}

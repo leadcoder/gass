@@ -60,10 +60,10 @@ namespace GASS
 		virtual void SystemTick(double delta_time);
 		virtual bool GetSerialize() const {return false;}
 		//ICollisionSceneManager
-		virtual CollisionHandle Request(const CollisionRequest &request);
-		virtual bool Check(CollisionHandle handle, CollisionResult &result);
-		virtual void Force(CollisionRequest &request, CollisionResult &result) const;
-		//virtual Float GetHeight(const Vec3 &pos, bool absolute=true) const;
+		//virtual CollisionHandle Request(const CollisionRequest &request);
+		//virtual bool Check(CollisionHandle handle, CollisionResult &result);
+		//virtual void Force(CollisionRequest &request, CollisionResult &result) const;
+		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const;
 	protected:
 		void Process();
 		//used by collision geometry
@@ -74,13 +74,13 @@ namespace GASS
 		bool HasCollisionMesh(const std::string &name);
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 	private:
-		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
-		typedef std::map<CollisionHandle,CollisionResult> ResultMap;
+//		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
+	//	typedef std::map<CollisionHandle,CollisionResult> ResultMap;
 		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
 
-		RequestMap m_RequestMap;
-		ResultMap m_ResultMap;
-		unsigned int m_HandleCount;
+		//RequestMap m_RequestMap;
+		//ResultMap m_ResultMap;
+		//unsigned int m_HandleCount;
 		tbb::spin_mutex m_RequestMutex;
 		tbb::spin_mutex m_ResultMutex;
 		float m_MaxRaySegment;

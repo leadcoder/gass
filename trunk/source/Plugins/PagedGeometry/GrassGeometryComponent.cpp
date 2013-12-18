@@ -218,8 +218,8 @@ namespace GASS
 				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
 				//m_DensityImage.save(fp_denmap);
 			}
-			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
-			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+			m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_GrassLayer->setDensityMap(m_DensityTexture);
 		}
 		if(m_ColorMapFilename != "")
@@ -541,7 +541,7 @@ namespace GASS
 	{
 		if(m_CollisionSM)
 		{
-			GASS::CollisionRequest request;
+			/*GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE;
@@ -551,7 +551,7 @@ namespace GASS
 			result.Coll = false;
 			m_CollisionSM->Force(request,result);
 			if(result.Coll)
-				return result.CollPosition.y;
+				return result.CollPosition.y;*/
 		}
 		return 0;
 

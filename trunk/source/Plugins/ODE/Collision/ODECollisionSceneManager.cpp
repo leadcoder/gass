@@ -72,8 +72,8 @@ namespace GASS
 	{
 		dSpaceDestroy(m_Space);
 		m_Space = 0;
-		m_RequestMap.clear();
-		m_ResultMap.clear();
+		//m_RequestMap.clear();
+		//m_ResultMap.clear();
  	}
 
 	void ODECollisionSceneManager::OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message)
@@ -111,7 +111,7 @@ namespace GASS
 		return m_Space;
 	}
 
-	CollisionHandle ODECollisionSceneManager::Request(const CollisionRequest &request)
+	/*CollisionHandle ODECollisionSceneManager::Request(const CollisionRequest &request)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
 		//assert(request.Scene);
@@ -119,11 +119,11 @@ namespace GASS
 		CollisionHandle handle = m_HandleCount;
 		m_RequestMap[handle] = request;
 		return handle;
-	}
+	}*/
 
 	void ODECollisionSceneManager::SystemTick(double delta_time)
 	{
-		RequestMap::iterator iter;
+		/*RequestMap::iterator iter;
 		RequestMap requestMap;
 		ResultMap resultMap;
 		ResultMap::iterator res_iter;
@@ -132,13 +132,7 @@ namespace GASS
 			requestMap = m_RequestMap;
 			m_RequestMap.clear();
 		}
-		/*{
-			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-			resultMap = m_ResultMap;
-		}*/
-		//std::cout << "ResultMap:" << m_ResultMap.size() << "\n";
-		//std::cout << "RequestMap:" << requestMap.size() << "\n";
-
+	
 		for(iter = requestMap.begin(); iter != requestMap.end(); ++iter)
 		{
 			CollisionRequest request =  iter->second;
@@ -166,11 +160,11 @@ namespace GASS
 				m_ResultMap[handle] = res_iter->second;
 			}
 		}
-		//update listeners
+		//update listeners*/
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
-	bool ODECollisionSceneManager::Check(CollisionHandle handle, CollisionResult &result)
+	/*bool ODECollisionSceneManager::Check(CollisionHandle handle, CollisionResult &result)
 	{
 		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
 		ResultMap::iterator iter = m_ResultMap.find(handle);
@@ -198,6 +192,19 @@ namespace GASS
 				ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),0);
 				raycast.Process();
 			}
+		}
+	}*/
+
+	void ODECollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
+	{
+		ScenePtr scene = GetScene();
+		if(scene)
+		{
+			Float seg_l = m_MaxRaySegment;
+			if(fabs(ray_dir.x) + fabs(ray_dir.z) < 0.001) //check if vertical
+				seg_l = 0; // skip ray splitting
+			ODELineCollision raycast( ray_start, ray_dir, flags,return_at_first_hit, &result,(dGeomID)GetSpace(),seg_l);
+			raycast.Process();
 		}
 	}
 	

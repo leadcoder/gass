@@ -28,14 +28,15 @@
 
 namespace GASS
 {
-	ODELineCollision::ODELineCollision(CollisionRequest *request,CollisionResult *result,dGeomID space_id, float segment_length) :	m_Request(request),
-		m_Result(result),
+	ODELineCollision::ODELineCollision(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags,bool return_first_collision, CollisionResult *result,dGeomID space_id, float segment_length) :m_Result(result),
 		m_Space(space_id),
 		m_RayGeom(0),
-		m_SegmentLength(segment_length)
+		m_SegmentLength(segment_length),
+		m_ReturnFirstCollisionPoint(return_first_collision),
+		m_CollisionBits(flags),
+		m_RayStart(ray_start),
+		m_RayDir(ray_dir)
 	{
-		m_RayDir = request->LineEnd - request->LineStart;
-		m_RayStart = request->LineStart;
 		m_RayLength = m_RayDir.Length();
 		m_RayDir = m_RayDir*(1.0/m_RayLength);
 	}
@@ -50,11 +51,57 @@ namespace GASS
 		//ScenePtr scene = SimEngine::Get().GetScenes().getNext();
 		//GraphicsSceneManagerPtr gsm = scene->GetFirstSceneManagerByClass<IGraphicsSceneManager>();
 
-		//split ray into segments
+		//HACK: split ray into segments to support terrain heightmaps!
 		if(m_SegmentLength > 0)
 		{
-			dGeomID ray = dCreateRay (0, m_SegmentLength);
-			dGeomSetCollideBits (ray,m_Request->CollisionBits);
+			//calculate segments based on projected ray distance 
+			Vec3 dir = m_RayDir * m_RayLength;
+			dir.y = 0;
+			Float l = dir.Length();
+			const int segments = l / m_SegmentLength;
+			Float ray_segment = m_RayLength / (Float)segments;
+			double last_ray_length =  m_RayLength - segments * ray_segment;
+			
+			dGeomID ray = dCreateRay (0, ray_segment);
+			dGeomSetCollideBits (ray,m_CollisionBits);
+			dGeomSetCategoryBits(ray,0);
+			m_Result->Coll = false;
+			m_Result->CollDist = 0;
+
+			for(int i=0 ; i < segments; i++)
+			{
+				m_Result->Coll = false;
+				m_Result->CollDist = 0;
+				const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*ray_segment);
+				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
+				
+				if(m_Result->Coll == true)
+				{
+					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollDist = m_Result->CollDist+i*ray_segment;
+					dGeomDestroy(ray);
+					return;
+				}
+			}
+			if(last_ray_length > 0)
+			{
+				m_Result->Coll = false;
+				m_Result->CollDist = 0;
+				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment);
+				dGeomRaySetLength(ray,last_ray_length);
+				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
+				if(m_Result->Coll == true)
+				{
+					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollDist = m_Result->CollDist+segments*ray_segment;
+				}
+			}
+
+
+			/*dGeomID ray = dCreateRay (0, m_SegmentLength);
+			dGeomSetCollideBits (ray,m_CollisionBits);
 			dGeomSetCategoryBits(ray,0);
 			const int segments = int (m_RayLength/m_SegmentLength);
 			double last_ray_length =  m_RayLength - segments * m_SegmentLength;
@@ -69,14 +116,7 @@ namespace GASS
 				const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*m_SegmentLength);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
-
-
-				/*Vec3 debugRayStart = rayStart;
-				debugRayStart.x += 5;
-
-				gsm->DrawLine(debugRayStart,Vec3(debugRayStart.x,debugRayStart.y+10,debugRayStart.z),Vec4(0,0,0,0.6));
-				gsm->DrawLine(debugRayStart,debugRayStart + m_RayDir*m_SegmentLength,Vec4(Float(i)/Float(5),0,0,1));*/
-
+				
 				if(m_Result->Coll == true)
 				{
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
@@ -98,14 +138,14 @@ namespace GASS
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
 					m_Result->CollDist = m_Result->CollDist+segments*m_SegmentLength;
 				}
-			}
+			}*/
 			dGeomDestroy(ray);
 		}
 		else
 		{
 			m_RayGeom = dCreateRay (0, m_RayLength);
-			dGeomSetCollideBits (m_RayGeom,m_Request->CollisionBits);
-			dGeomSetCategoryBits(m_RayGeom,m_Request->CollisionBits);
+			dGeomSetCollideBits (m_RayGeom,m_CollisionBits);
+			dGeomSetCategoryBits(m_RayGeom,m_CollisionBits);
 			dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 			assert(m_Result);
 			m_Result->Coll = false;
@@ -167,7 +207,7 @@ namespace GASS
 		int num_contact_points = 10;
 		dContact contact[10];
 
-		if(m_Request->ReturnFirstCollisionPoint)
+		if(m_ReturnFirstCollisionPoint)
 		{
 			num_contact_points = 1;
 		}
@@ -198,9 +238,4 @@ namespace GASS
 			}
 		}
 	}
-
-	/*void ODELineCollision::TriangleCallback(dGeomID tri_mesh, dGeomID ray, int triangle_index, dReal u, dReal v)
-	{
-
-	}*/
 }

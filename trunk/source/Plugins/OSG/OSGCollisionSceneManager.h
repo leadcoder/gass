@@ -33,8 +33,6 @@ namespace GASS
 	class OSGCollisionSceneManager : public Reflection<OSGCollisionSceneManager, BaseSceneManager> , public ICollisionSceneManager
 	{
 	public:
-		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
-		typedef std::map<CollisionHandle,CollisionResult> ResultMap;
 	public:
 		OSGCollisionSceneManager();
 		virtual ~OSGCollisionSceneManager();
@@ -46,17 +44,19 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 
 		//ICollisionSceneManager
-		virtual CollisionHandle Request(const CollisionRequest &request);
-		virtual bool Check(CollisionHandle handle, CollisionResult &result);
-		virtual void Force(CollisionRequest &request, CollisionResult &result) const;
+		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const;
+		//virtual CollisionHandle Request(const CollisionRequest &request);
+		//virtual bool Check(CollisionHandle handle, CollisionResult &result);
+		//virtual void Force(CollisionRequest &request, CollisionResult &result) const;
 		//virtual Float GetHeight(const Vec3 &pos, bool absolute=true) const;
 	private:
-		void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
-		RequestMap m_RequestMap;
-		ResultMap m_ResultMap;
-		unsigned int m_HandleCount;
-		tbb::spin_mutex m_RequestMutex;
-		tbb::spin_mutex m_ResultMutex;
+		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
+		//void ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const;
+		//RequestMap m_RequestMap;
+		//ResultMap m_ResultMap;
+		//unsigned int m_HandleCount;
+		//tbb::spin_mutex m_RequestMutex;
+		//tbb::spin_mutex m_ResultMutex;
 	};
 	typedef SPTR<OSGCollisionSceneManager> OSGCollisionSceneManagerPtr;
 

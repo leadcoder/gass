@@ -60,7 +60,7 @@ namespace GASS
 		physx::PxScene* GetPxScene() {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
-		CollisionResult CollisionCheck(const CollisionRequest &request) const;
+		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit = false) const;
 		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 	protected:

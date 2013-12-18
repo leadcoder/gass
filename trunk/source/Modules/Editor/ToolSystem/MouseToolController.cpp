@@ -233,13 +233,7 @@ namespace GASS
 			Vec3 ray_direction;
 			cam->GetCameraToViewportRay(viewport_pos.x, viewport_pos.y,ray_start,ray_direction);
 			ray_direction = ray_direction*raycast_distance;
-			GASS::CollisionRequest request;
-			request.LineStart = ray_start;
-			request.LineEnd = ray_start + ray_direction;
-			request.Type = COL_LINE;
-			request.ReturnFirstCollisionPoint = false;
-			request.CollisionBits = col_bits;
-			col_sm->Force(request,result);
+			col_sm->Raycast(ray_start,ray_direction,col_bits,result);
 		}
 		return result;
 	}

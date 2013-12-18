@@ -18,7 +18,6 @@ namespace GASS
 	Float CollisionHelper::GetHeightAtPosition(ScenePtr scene, const Vec3 &pos, GeometryFlags flags, bool absolute )
 	{
 		static const Float max_terrain_height = 2000000;
-		CollisionRequest request;
 		CollisionResult result;
 
 		Vec3 ray_start = pos;
@@ -26,16 +25,9 @@ namespace GASS
 
 		Vec3 ray_direction(0,-1,0);
 		ray_direction = ray_direction*(max_terrain_height*2.0);
-
-		request.LineStart = ray_start;
-		request.LineEnd = ray_start + ray_direction;
-		request.Type = COL_LINE_VERTICAL;
-		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = flags;
-		result.Coll = false;
-
+		
 		CollisionSceneManagerPtr csm = scene->GetFirstSceneManagerByClass<ICollisionSceneManager>();
-		csm->Force(request,result);
+		csm->Raycast(ray_start,ray_direction,flags,result);
 
 		if(result.Coll)
 		{

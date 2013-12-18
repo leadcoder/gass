@@ -101,7 +101,6 @@ namespace GASS
 
 	OSGCollisionSceneManager::OSGCollisionSceneManager()
 	{
-		m_HandleCount = 5;
 	}
 
 	OSGCollisionSceneManager::~OSGCollisionSceneManager()
@@ -129,85 +128,13 @@ namespace GASS
 
 	void OSGCollisionSceneManager::OnShutdown()
 	{
-		m_RequestMap.clear();
-		m_ResultMap.clear();
 	}
 
 	void OSGCollisionSceneManager::SystemTick(double delta_time)
 	{
-		RequestMap::iterator iter;
-		RequestMap requestMap;
-		ResultMap resultMap;
-		ResultMap::iterator res_iter;
-		{
-			tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-			requestMap = m_RequestMap;
-			m_RequestMap.clear();
-		}
-
-		for(iter = requestMap.begin(); iter != requestMap.end(); ++iter)
-		{
-			CollisionRequest request =  iter->second;
-			CollisionHandle handle = iter->first;
-			ScenePtr scene = GetScene();
-
-			if(scene)
-			{
-				OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
-				OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-
-				osgViewer::ViewerBase::Views views;
-				gfx_sys->GetViewer()->getViews(views);
-				//set same scene in all viewports for the moment 
-				if(views.size() > 0)
-				{
-
-					if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
-					{
-						CollisionResult result;
-						ProcessRaycast(&request,&result,views[0]->getCamera());
-						resultMap[handle] = result;
-					}
-					
-				}
-			}
-		}
-		{
-			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-			//transfer results
-			for(res_iter = resultMap.begin(); res_iter != resultMap.end(); ++res_iter)
-			{
-				CollisionHandle handle = res_iter->first;
-				m_ResultMap[handle] = res_iter->second;
-			}
-		}
 	}
 
-	
-	CollisionHandle OSGCollisionSceneManager::Request(const CollisionRequest &request)
-	{
-		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-		//assert(request.Scene);
-		m_HandleCount = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
-		CollisionHandle handle = m_HandleCount;
-		m_RequestMap[handle] = request;
-		return handle;
-	}
-
-	bool OSGCollisionSceneManager::Check(CollisionHandle handle, CollisionResult &result)
-	{
-		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-		ResultMap::iterator iter = m_ResultMap.find(handle);
-		if(iter != m_ResultMap.end())
-		{
-			result = m_ResultMap[handle];
-			m_ResultMap.erase(iter);
-			return true;
-		}
-		return false;
-	}
-
-	void OSGCollisionSceneManager::Force(CollisionRequest &request, CollisionResult &result) const
+	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
 	{
 		ScenePtr scene = GetScene();
 		if(scene)
@@ -220,10 +147,7 @@ namespace GASS
 
 			if(gfx_sm)
 			{
-				if(request.Type == COL_LINE || request.Type == COL_LINE_VERTICAL)
-				{
-					ProcessRaycast(&request,&result,views[0]->getCamera());
-				}
+				_ProcessRaycast(ray_start, ray_dir, flags,&result,views[0]->getCamera());
 			}
 		}
 	}
@@ -266,10 +190,10 @@ namespace GASS
 		return 0;
 	}*/
 
-	void OSGCollisionSceneManager::ProcessRaycast(CollisionRequest *request,CollisionResult *result, osg::Node *node) const
+	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const
 	{
-		osg::Vec3d start = OSGConvert::Get().ToOSG(request->LineStart);
-		osg::Vec3d end = OSGConvert::Get().ToOSG(request->LineEnd);
+		osg::Vec3d start = OSGConvert::Get().ToOSG(ray_start);
+		osg::Vec3d end = OSGConvert::Get().ToOSG(ray_start + ray_dir);
 
 		result->Coll = false;
 
@@ -277,7 +201,7 @@ namespace GASS
 		//osgUtil::IntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
 		CustomIntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
 
-		int mask = OSGConvert::Get().ToOSGNodeMask(request->CollisionBits);
+		int mask = OSGConvert::Get().ToOSGNodeMask(flags);
 		intersectVisitor.setTraversalMask(mask);
 
 		node->accept(intersectVisitor);
@@ -313,10 +237,10 @@ namespace GASS
 									if(geom)
 									{
 									
-										if(request->CollisionBits && geom->GetGeometryFlags())
+										if(flags && geom->GetGeometryFlags())
 										{
 											Vec3 col_pos = OSGConvert::Get().ToGASS(intersection.getWorldIntersectPoint());
-											Float col_dist = (col_pos - request->LineStart).FastLength(); 
+											Float col_dist = (col_pos - ray_start).FastLength(); 
 
 											result->CollDist = col_dist;
 											result->Coll = true;

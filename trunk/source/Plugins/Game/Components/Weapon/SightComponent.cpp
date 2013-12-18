@@ -409,15 +409,11 @@ namespace GASS
 	void SightComponent::UpdateTargetDistance()
 	{
 		CollisionSceneManagerPtr col_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
-		GASS::CollisionRequest request;
 		CollisionResult result;
-		request.LineStart = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*10;
+		Vec3 ray_start = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*10;
 		//max distance is 20000m
-		request.LineEnd = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*20000;
-		request.Type = COL_LINE;
-		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
-		col_sm->Force(request,result);
+		Vec3 ray_dir = -m_BaseTransformation.GetViewDirVector()*20000;
+		col_sm->Raycast(ray_start,ray_dir,GEOMETRY_FLAG_SCENE_OBJECTS,result);
 		if(result.Coll)
 		{
 			//m_TargetDistance = (request.LineStart - result.CollPosition).Length() + 10;
