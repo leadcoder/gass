@@ -27,15 +27,15 @@
 				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
 			</PhysXVehicleComponent>
 			<OpenALSoundComponent>
-				<Name value="EngineSound"/>
-				<SoundFile value="hydralic6.wav"/>
+				<Name value="EngineSound1"/>
+				<SoundFile value="hydraulic_engine.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
 			</OpenALSoundComponent>
 			<OpenALSoundComponent>
 				<Name value="EngineSound2"/>
-				<SoundFile value="engine2.wav"/>
+				<SoundFile value="diesel_engine.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>

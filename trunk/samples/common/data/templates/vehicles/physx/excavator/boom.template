@@ -51,7 +51,7 @@
 			</VelocityToSoundComponent>
 			<OpenALSoundComponent>
 				<Name value="HydraulicSound"/>
-				<SoundFile value="hydraulic3.wav"/>
+				<SoundFile value="piston.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
@@ -125,7 +125,7 @@
 					</VelocityToSoundComponent>
 					<OpenALSoundComponent>
 						<Name value="HydraulicSound"/>
-						<SoundFile value="hydraulic3.wav"/>
+						<SoundFile value="piston.wav"/>
 						<Loop value="1"/>
 						<MinDistance value="5"/>
 						<RolloffFactor value="1"/>
@@ -216,7 +216,7 @@
 							</VelocityToSoundComponent>
 							<OpenALSoundComponent>
 								<Name value="HydraulicSound"/>
-								<SoundFile value="hydraulic3.wav"/>
+								<SoundFile value="piston.wav"/>
 								<Loop value="1"/>
 								<MinDistance value="5"/>
 								<RolloffFactor value="1"/>
@@ -343,7 +343,7 @@
 									</VelocityToSoundComponent>
 									<OpenALSoundComponent>
 										<Name value="HydraulicSound"/>
-										<SoundFile value="hydraulic3.wav"/>
+										<SoundFile value="piston.wav"/>
 										<Loop value="1"/>
 										<MinDistance value="5"/>
 										<RolloffFactor value="1"/>

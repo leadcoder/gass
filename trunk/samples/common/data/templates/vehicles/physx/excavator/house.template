@@ -47,15 +47,15 @@
 				<ForceLimit value = "300"/>
 			</ForceToSoundComponent>
 			<OpenALSoundComponent>
-				<Name value="EngineSound"/>
-				<SoundFile value="engine.wav"/>
+				<Name value="EngineSound1"/>
+				<SoundFile value="diesel_engine.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
 			</OpenALSoundComponent>
 			<OpenALSoundComponent>
-				<Name value="EngineSound"/>
-				<SoundFile value="hydralic4.wav"/>
+				<Name value="EngineSound2"/>
+				<SoundFile value="pump.wav"/>
 				<Loop value="1"/>
 				<MinDistance value="5"/>
 				<RolloffFactor value="1"/>
