@@ -15,9 +15,9 @@
 			</LocationComponent>
 			<ManualMeshComponent>
 			</ManualMeshComponent>
-			<OgreRoadComponent>
+			<RoadComponent>
 				<Material value ="DefaultRoad"/>
-			</OgreRoadComponent>
+			</RoadComponent>
 		</Components>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>

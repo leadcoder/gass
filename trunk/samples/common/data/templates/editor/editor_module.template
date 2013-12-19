@@ -207,9 +207,6 @@
 						<Color value="1 0 0 0.5"/>
 						<Size value ="0.5"/>
 					</GizmoComponent>
-					<PhysicsBoxGeometryComponent>
-						<Offset value="0 0 0" />
-					</PhysicsBoxGeometryComponent>
 					<EditorComponent>
 						<Visible value="true" />
 						<Lock value="0"/>

@@ -27,6 +27,77 @@
 			</GrassLayerComponent>
 		</Components>
 	</SceneObjectTemplate>
+	
+	<SceneObjectTemplate>
+		<Name value="GroundVegetationObject"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<GrassLoaderComponent>
+				<Name value = "GRASS_LOADER"/>
+				<PageSize value = "45"/>
+				<ViewDistance value ="100"/>
+				<DensityMap value= ""/>
+				<!--<ColorMap value= "grass_color.png"/>-->
+			</GrassLoaderComponent>
+			<GrassLayerComponent>
+				<Name value = "VEG_LAYER1"/>
+				<Material value="VegGrass01"/>
+				<DensityFactor value= "1"/>
+				<MaxSize value="1.3 0.7"/>
+				<MinSize value="0.8 0.5"/>
+				<EnableSway value="true"/>
+				<SwaySpeed value="0.1"/>
+				<SwayLength value="0.1"/>
+				<SwayDistribution value="10"/>
+				<FadeTechnique value ="FADETECH_ALPHA"/>
+				<RenderTechnique value ="GRASSTECH_QUAD"/>
+				<BlendWithGround value="false"/>
+			</GrassLayerComponent>
+			<!--<GrassLayerComponent>
+				<Name value = "VEG_LAYER2"/>
+				<Material value="VegPlant01"/>
+				<DensityFactor value= "1"/>
+				<MaxSize value="2.0 0.7"/>
+				<MinSize value="1.5 0.5"/>
+				<EnableSway value="true"/>
+				<SwaySpeed value="0.1"/>
+				<SwayLength value="0.1"/>
+				<SwayDistribution value="10"/>
+				<FadeTechnique value ="FADETECH_ALPHA"/>
+				<RenderTechnique value ="GRASSTECH_QUAD"/>
+				<BlendWithGround value="false"/>
+			</GrassLayerComponent>
+			<GrassLayerComponent>
+				<Name value = "VEG_LAYER3"/>
+				<Material value="VegPlant02"/>
+				<DensityFactor value= "1"/>
+				<MaxSize value="2.0 0.7"/>
+				<MinSize value="1.5 0.5"/>
+				<EnableSway value="true"/>
+				<SwaySpeed value="0.1"/>
+				<SwayLength value="0.1"/>
+				<SwayDistribution value="10"/>
+				<FadeTechnique value ="FADETECH_ALPHA"/>
+				<RenderTechnique value ="GRASSTECH_QUAD"/>
+				<BlendWithGround value="false"/>
+			</GrassLayerComponent>
+			<GrassLayerComponent>
+				<Name value = "VEG_LAYER4"/>
+				<Material value="VegPlant03"/>
+				<DensityFactor value= "1"/>
+				<MaxSize value="2.0 0.7"/>
+				<MinSize value="1.5 0.5"/>
+				<EnableSway value="true"/>
+				<SwaySpeed value="0.1"/>
+				<SwayLength value="0.1"/>
+				<SwayDistribution value="10"/>
+				<FadeTechnique value ="FADETECH_ALPHA"/>
+				<RenderTechnique value ="GRASSTECH_QUAD"/>
+				<BlendWithGround value="false"/>
+			</GrassLayerComponent>-->
+		</Components>
+	</SceneObjectTemplate>
+	
 	<SceneObjectTemplate>
 		<Name value="FirVegetationObject"/>
 		<Instantiable value="true"/>

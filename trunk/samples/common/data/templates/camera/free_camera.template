@@ -6,6 +6,7 @@
 		<Components>
 			<CameraComponent>
 				<Ortho value="0"/>
+				<!--<MaterialScheme value="STD_FFP"/>-->
 				<!--<PostFilters value="Bloom"/>-->
 				<!--<PostFilters value="Bloom"/>-->
 			</CameraComponent>

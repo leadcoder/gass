@@ -15,7 +15,7 @@
 			</LocationComponent>
 			<ManualMeshComponent>
 			</ManualMeshComponent>
-			<OgreRoadComponent>
+			<RoadComponent>
 				<Material value ="RoadFence"/>
 				<RoadWidth value="0"/>
 				<RoadOffset value="2.5"/>
@@ -24,7 +24,7 @@
 				<CustomDitchTexturePercent value="0.25"/>
 				<CAP value="false"/>
 				<ClampToTerrain value="false"/>
-			</OgreRoadComponent>
+			</RoadComponent>
 		</Components>
 	</SceneObjectTemplate>
 
