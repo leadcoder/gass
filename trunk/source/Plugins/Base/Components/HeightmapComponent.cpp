@@ -71,6 +71,8 @@ namespace GASS
 		{
 			m_HM = new Heightmap();
 			m_HM->Load(full_path.GetFullPath());
+			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			
 		}
 		//try to load present file
 	}
@@ -140,6 +142,7 @@ namespace GASS
 			}	
 		}
 		m_HM->Save(_GetFilePath().GetFullPath());
+		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 
@@ -168,5 +171,25 @@ namespace GASS
 		if(m_HM)
 			return m_HM->GetData();
 		return NULL;
+	}
+
+	AABox HeightmapComponent::GetBoundingBox() const
+	{
+		AABox bounds;
+		if(m_HM)
+		{
+			bounds = m_HM->GetBoundingBox();
+		}
+		return bounds;
+	}
+
+	Sphere HeightmapComponent::GetBoundingSphere() const
+	{
+		return GetBoundingBox().GetBoundingSphere();
+	}
+
+	GeometryFlags HeightmapComponent::GetGeometryFlags() const
+	{
+		return GEOMETRY_FLAG_GROUND;
 	}
 }

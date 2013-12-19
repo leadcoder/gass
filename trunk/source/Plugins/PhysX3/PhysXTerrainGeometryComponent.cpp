@@ -94,41 +94,39 @@ namespace GASS
 	physx::PxShape* PhysXTerrainGeometryComponent::CreateTerrain()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-
 		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
-		GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
-
+		//GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainGeom = terrain.get();
-
 		physx::PxShape* shape = NULL;	
 
 		if(terrain)
 		{
-			m_TerrainBounds = geom->GetBoundingBox();
+			//m_TerrainBounds = geom->GetBoundingBox();
 			int samples_x = terrain->GetSamples();
 			int samples_z = terrain->GetSamples();
+			m_TerrainBounds = terrain->GetBoundingBox();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
-			m_SampleWidth = size_x/(samples_x-1);
-			m_SampleHeight = size_z/(samples_z-1);
+			//m_SampleWidth = size_x/(samples_x-1);
+			//m_SampleHeight = size_z/(samples_z-1);
 
 			Float scale_x = size_x/(Float) samples_x;
 			Float scale_z = size_z/(Float) samples_z;
 			//physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) system->GetAllocator()->allocate(sizeof(physx::PxHeightFieldSample)*samples_x*samples_z,0,__FILE__, __LINE__);
 			physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) new physx::PxHeightFieldSample[samples_x*samples_z];//(sizeof(physx::PxHeightFieldSample)*(samples_x*samples_z));
 
-			const physx::PxReal heightScale = 0.01f;
+			const physx::PxReal heightScale = 0.1f;
 			memset(samples,0,samples_x*samples_z*sizeof(physx::PxHeightFieldSample));
 
 			for(physx::PxU32 x = 0; x < samples_x; x++)
 			{
 				for(physx::PxU32 z = 0; z < samples_z; z++)
 				{
-					Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
-					Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
-					Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
-
+					//Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
+					//Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
+					//Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
+					Float height = m_TerrainGeom->GetHeightAtPoint((int)x,(int)z);
 					samples[z+x*samples_x].height = (physx::PxI16)(height/heightScale);
 					//samples[x+z*samples_x].setTessFlag();
 					samples[z+x*samples_x].materialIndex0=0;

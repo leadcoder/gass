@@ -54,8 +54,6 @@ namespace GASS
 		physx::PxShape* CreateTerrain();
 		HeightmapTerrainComponentPtr GetTerrainComponent() const;
 	protected:
-		Float m_SampleWidth;
-		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		IHeightmapTerrainComponent* m_TerrainGeom;
 		std::string m_GeometryTemplate;

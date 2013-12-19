@@ -163,4 +163,10 @@ namespace GASS
 		m_Data = new float[m_Width*m_Height];
 		fin.read((char *) &m_Data[0], sizeof(float)*m_Width*m_Height);
 	}
+
+	AABox Heightmap::GetBoundingBox() const
+	{
+		return AABox(m_Min,m_Max);
+	}
+	
 }

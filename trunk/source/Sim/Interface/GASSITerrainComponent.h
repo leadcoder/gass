@@ -21,6 +21,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSGraphicsMesh.h"
+#include "Core/Math//GASSAABox.h"
 
 
 namespace GASS
@@ -55,6 +56,13 @@ namespace GASS
 		Get pointer to terrain data height field, if not available return NULL
 		*/
 		virtual float* GetHeightData() const = 0;
+
+
+		/**
+		Get terrain bounds in world coordinates
+		*/
+		virtual AABox GetBoundingBox() const = 0;
+
 	private:
 	};
 	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;

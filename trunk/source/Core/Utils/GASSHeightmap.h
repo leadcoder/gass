@@ -3,6 +3,7 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSAABox.h"
 
 namespace GASS
 {
@@ -32,6 +33,7 @@ namespace GASS
 		unsigned int GetHeight() const {return m_Height;}
 		unsigned int GetWidth() const {return m_Width;}
 		float* GetData() const {return m_Data;}
+		AABox GetBoundingBox() const;
 	private:
 		void SetDimensions(const Vec3 &min,const Vec3 &max);
 		float *m_Data;

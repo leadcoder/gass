@@ -83,6 +83,7 @@ namespace GASS
 		ODECollisionGeometryComponentPtr comp = object->GetFirstComponentByClass<ODECollisionGeometryComponent>();
 		if(!comp) //only add if not already present
 		{
+			//don't auto add heightfields?
 			if(object->GetFirstComponentByClass<IHeightmapTerrainComponent>())
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
