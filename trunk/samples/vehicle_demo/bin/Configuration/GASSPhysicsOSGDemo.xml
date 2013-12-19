@@ -103,6 +103,8 @@
   </ODECollisionSystem>
   <OSGGraphicsSystem>
     <TaskNode value="POST_SIM"/>
+	<!--<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="200" TextureSize="1024" BaseTextureUnit="0" ShadowTextureUnit="5"/>-->
+	<ShadowSettings type="ParallelSplitShadowMap" MaxFarDistance="100" TextureSize="1024" NumCount="5" MinNearDistanceForSplits="5" MoveVCamBehindRCamFactor="1" PolyOffsetFactor="2.1"/>
   </OSGGraphicsSystem>
 </Systems>
 <RTC>
