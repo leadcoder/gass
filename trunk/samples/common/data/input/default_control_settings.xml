@@ -20,6 +20,8 @@
     <MapControllerToInput Controller="Boom2"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_LEFT" NegKey="INPUT_RIGHT"/>
 	<MapControllerToInput Controller="Boom3"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="false"/>
 	<MapControllerToInput Controller="Bucket"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_2" Invert="false"/>
+	<MapControllerToInput Controller="Blade"   InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_UP" NegKey="INPUT_DOWN" Invert="false"/>
+	<MapControllerToInput Controller="Legs"   InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_C" NegKey="INPUT_V" Invert="false"/>
   </LiebherrInputSettings>
   
   <TankInputSettings>
