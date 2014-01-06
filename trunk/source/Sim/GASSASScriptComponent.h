@@ -1,6 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/										*
 *                                                                           *
 * Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
 *                                                                           *

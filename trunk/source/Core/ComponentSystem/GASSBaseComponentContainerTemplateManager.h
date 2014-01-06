@@ -25,17 +25,12 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSIComponentContainerTemplateManager.h"
 
-#include <vector>
-#include <map>
-#include <string>
-
-
 namespace GASS
 {
 	class IComponentContainer;
 	class IComponentContainerTemplate;
 	class BaseObjectTemplate;
-
+	
 	typedef SPTR<IComponentContainer> ComponentContainerPtr;
 	/** \addtogroup GASSCore
 	*  @{
@@ -59,6 +54,7 @@ namespace GASS
 	{
 		friend class IComponentContainerTemplate;
 	public:
+		/** Map holding templates*/
 		typedef std::map<std::string,ComponentContainerTemplatePtr> TemplateMap;
 	public:
 		BaseComponentContainerTemplateManager();

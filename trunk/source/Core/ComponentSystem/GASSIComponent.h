@@ -75,8 +75,16 @@ namespace GASS
 		*/
 		virtual const std::set<std::string>  & GetDependencies() = 0;
 	};
+	
+	/**
+	 Smart pointer to component
+	*/
 
 	typedef SPTR<IComponent> ComponentPtr;
+	
+	/**
+	 Weak pointer to component
+	*/
 	typedef WPTR<IComponent> ComponentWeakPtr;
 
 }

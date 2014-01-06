@@ -65,7 +65,7 @@ namespace GASS
 		typedef ConstVectorIterator<SceneVector> ConstSceneIterator;
 
 	public:
-		SimEngine();
+		SimEngine(const FilePath &log_folder = FilePath("./"));
 		virtual ~SimEngine();
 		static SimEngine* GetPtr();
 		static SimEngine& Get();
@@ -77,7 +77,7 @@ namespace GASS
 			@param configuration_file xml-file listing all plugins to load.
 			@param log_folder Alternative File path for log files. 
 		*/
-		void Init(const FilePath &configuration_file = FilePath("gass.xml"), const FilePath &log_folder = FilePath(""));
+		void Init(const FilePath &configuration_file = FilePath("gass.xml"));
 
 		/**
 		Main update for GASS.
@@ -147,6 +147,7 @@ namespace GASS
 		void SyncMessages(double delta_time);
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
+		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;

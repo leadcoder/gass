@@ -46,14 +46,14 @@ namespace GASS
 	class GASSCoreExport Math
 	{
 	public:
-		/**\fn static float Rad2Deg(float deg)
+		/**\fn static float Rad2Deg(Float deg)
 		* \brief Convert radians to degrees.
 		* \param rad Number of radians, as a float.
 		* \return Number of degrees.
 		*/
 		static Float Rad2Deg(Float rad);
 
-		/**\fn static float Deg2Rad(float deg)
+		/**\fn static float Deg2Rad(Float deg)
 		* \brief Convert degrees to radians.
 		* \param deg Number of degrees, as a float.
 		* \return Number of radians.

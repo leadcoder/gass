@@ -39,10 +39,10 @@ namespace GASS
 
 	void PluginManager::LoadFromFile(const std::string &filename)
 	{
-		
+
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
-		
+
 		LogManager::getSingleton().stream() << "Start loading plugins from " << filename;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
@@ -50,7 +50,7 @@ namespace GASS
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
 		}
-		
+
 
 		TiXmlElement *plugins = xmlDoc->FirstChildElement("GASS");
 		if (!plugins)
@@ -67,20 +67,7 @@ namespace GASS
 				if(std::string(plugins->Value()) == "Plugin")
 				{
 					std::string name = plugins->Attribute("PluginFile");
-#ifdef DEBUG
-					name += "_d";
-#endif
-
-#ifndef WIN32
-					name += ".so";
-#else
-					name += ".dll";
-#endif
-
-					DynamicModule* module = new DynamicModule(name);
-					module->Load();
-					LogManager::getSingleton().stream() << name << " loaded";
-					m_Plugins.push_back(module);
+					LoadPlugin(name);
 				}
 				else if(std::string(plugins->Value()) == "Directory")
 				{
@@ -104,7 +91,16 @@ namespace GASS
 		m_Plugins.clear();
 	}
 
-	void PluginManager::Reload()
+	void PluginManager::UnloadPlugin(const std::string &name)
+	{
+		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		{
+			if(m_Plugins[i]->GetModuleName() == name)
+				m_Plugins[i]->Unload();
+		}
+	}
+
+	void PluginManager::ReloadAll()
 	{
 		for(size_t i = 0 ; i < m_Plugins.size(); i++)
 		{
@@ -113,6 +109,23 @@ namespace GASS
 		}
 	}
 
+	void PluginManager::LoadPlugin(const std::string &name)
+	{
+		std::string file_name = name;
+#ifdef DEBUG
+		file_name += "_d";
+#endif
+
+#ifndef WIN32
+		file_name += ".so";
+#else
+		file_name += ".dll";
+#endif
+		DynamicModule* module = new DynamicModule(file_name);
+		module->Load();
+		LogManager::getSingleton().stream() << file_name << " loaded";
+		m_Plugins.push_back(module);
+	}
 
 	void PluginManager::LoadPluginsFromDirectory(const std::string &directory)
 	{
@@ -122,11 +135,11 @@ namespace GASS
 		const std::string ext = ".dll";
 #endif
 		boost::filesystem::path path(directory); 
-		
+
 		std::vector<std::string> plugins;
 		if( boost::filesystem::exists( path) )  
 		{
-			
+
 			boost::filesystem::directory_iterator end ;    
 			for( boost::filesystem::directory_iterator iter(path) ; iter != end ; ++iter )      
 			{

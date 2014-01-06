@@ -67,17 +67,31 @@ namespace GASS
 		*/
 		void LoadFromFile(const std::string &filename);
 
+		/*
+			Load single plugin
+		*/
+		void LoadPlugin(const std::string &name);
+
+		/*
+			Unload single plugin
+		*/
+		void UnloadPlugin(const std::string &name);
+
 		/**
 			Reload all loaded plugins
 		*/
-		void Reload();
-
+		void ReloadAll();
+		
 		/**
 			Free all loaded plugins
 		*/
 		void Shutdown();
-	protected:
+
+		/**
+			Load all plugins from directory
+		*/
 		void LoadPluginsFromDirectory(const std::string &directory);
+	protected:
 		std::vector<DynamicModule*> m_Plugins;
 	};
 }

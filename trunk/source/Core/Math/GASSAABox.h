@@ -49,17 +49,64 @@ namespace GASS
 		AABox();
 		AABox(const Vec3 &min_pos, const Vec3 &max_pos);
 		virtual ~AABox();
+		/**
+			Merge this bounding box with other
+		*/
 		void Union(const AABox &aabox);
+		
+		/**
+			Extened bounding box to include 3d point
+		*/
 		void Union(Float x,Float y,Float z);
+		
+		/**
+			Extened bounding box to include 3d point
+		*/
 		void Union(const Vec3 &point);
+		
+		/**
+			Check if polygon is inside bounds
+		*/
 		bool PolyInside(const Polygon &poly) const;
+		
+		/**
+			Check if line is inside bounds
+		*/
 		bool LineInside(const Vec3 &p1,const Vec3 &p2) const;
+
+		/**
+			Check if point is inside bounds
+		*/
 		bool PointInside(const Vec3 &point) const;
+		
+		/**
+			Transform this bounding box by matrix
+		*/
 		void Transform(const Mat4 &mat);
+
+		/**
+			Get bounding sphere of this box
+		*/
 		Sphere GetBoundingSphere() const;
+		
+		/**
+			Get bounding box size
+		*/
 		Vec3 GetSize() const;
+
+		/**
+			Get bounding box from polygons
+		*/
 		static AABox GetAABox(std::vector<Polygon> &poly_vec);
+		
+		/**
+			Get bounding box from polygon
+		*/
 		static AABox GetAABox(const Polygon &poly);
+
+		/**
+			Get all corner points of thsi box
+		*/
 		std::vector<Vec3> GetCorners() const;
 
 		//public for fast access

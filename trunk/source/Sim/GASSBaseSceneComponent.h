@@ -31,7 +31,7 @@ namespace GASS
 {
 	
 	/**
-	Base class for all gass components
+	Base class for all sim gass components
 	*/
 
 	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
@@ -40,9 +40,28 @@ namespace GASS
 	public:
 		BaseSceneComponent();
 		virtual ~BaseSceneComponent();
+		/**
+			Get owner scene object. 
+			Same as get owner but cast owner from ComponentContainer to SceneObject 
+		*/
 		SceneObjectPtr GetSceneObject() const;
+		/**
+			Called by SceneObject during initialization. 
+		*/
 		virtual void OnInitialize();
+
+		/**
+			Called by SceneObject when dito deleted.
+			default implementation to minize concreate components implementation
+		*/
 		virtual void OnDelete(){};
+
+
+		//ISceneManagerListener
+		/**
+			Implements the ISceneManagerListener interface
+			Called by reponsible SceneManager if components is registerred as listener.
+		*/
 		virtual void SceneManagerTick(double delta) {(void)delta;}
 		virtual void Update(double delta) {(void)delta;};
 	protected:

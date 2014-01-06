@@ -24,10 +24,10 @@
 #include "Core/Math/GASSVector.h"
 namespace GASS
 {
-
-
-
-
+	/**
+		Class holding ellipsod data. 
+		TODO: extened this class with more functions, pointinside, merge etc
+	*/
 	class GASSCoreExport Ellipsoid
 	{
 	public:

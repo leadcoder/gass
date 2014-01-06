@@ -73,7 +73,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine() : m_CurrentTime(0), 
+	SimEngine::SimEngine(const FilePath &log_folder) : m_CurrentTime(0), 
 		m_MaxUpdateFreq(0), 
 		m_PluginManager(new PluginManager()),
 		m_ScriptManager(new ScriptManager()),
@@ -81,9 +81,16 @@ namespace GASS
 		m_SystemManager(new SimSystemManager()),
 		m_SceneObjectTemplateManager(new BaseComponentContainerTemplateManager()),
 		m_RTC(new RunTimeController()),
-		m_LogFolder("")
+		m_LogFolder(log_folder)
 	{
-		
+		// Create log manager
+		if(LogManager::getSingletonPtr() == 0)
+		{
+			LogManager* log_man = new LogManager();
+			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
+			log_man->createLog(log_file, true, true);
+		}
+		m_ScriptManager->Init();
 	}
 
 	SimEngine::~SimEngine()
@@ -104,9 +111,10 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void SimEngine::Init(const FilePath &configuration, const FilePath &log_folder)
+	void SimEngine::Init(const FilePath &configuration)
 	{
-		m_LogFolder = log_folder;
+		LogManager::getSingleton().stream() << "SimEngine Initialization Started";
+		/*m_LogFolder = log_folder;
 		// Create log manager
 		if(LogManager::getSingletonPtr() == 0)
 		{
@@ -115,21 +123,29 @@ namespace GASS
 			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
 			log_man->createLog(log_file, true, true);
 		}
-	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";
-		m_ScriptManager->Init();
-		m_PluginManager->LoadFromFile(configuration.GetFullPath());
+	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";*/
+		//m_ScriptManager->Init();
+		if(configuration.GetFullPath() != "")
+			m_PluginManager->LoadFromFile(configuration.GetFullPath());
 		
-		LoadSettings(configuration);
-		
+		if(configuration.GetFullPath() != "")
+			LoadSettings(configuration);
 		//Initialize systems
 		m_SystemManager->Init();
 
 		//load collision masks
 		ResourceHandle res("collision_settings.xml");
-		GeometryFlagManager::LoadGeometryFlagsFile(res.GetResource()->Path().GetFullPath());
+		try
+		{
+			GeometryFlagManager::LoadGeometryFlagsFile(res.GetResource()->Path().GetFullPath());
+		}
+		catch(...)
+		{
 
+		}
+		//Load templates
 		ReloadTemplates();
-		
+
 		//intilize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();

@@ -28,12 +28,10 @@
 
 namespace GASS
 {
-
-
 	/**
-		Scene manager that owns all sim components.  This scene manager can 
-		also be used by plugins that only provid some new sim components but dont want to create
-		a brand new scene manager.
+		Scene manager that owns sim components.  This scene manager can 
+		also be used by plugins that only provide some new sim components but dont want to create
+		a new scene manager.
 	*/
 	class CoreSceneManager : public Reflection<CoreSceneManager, BaseSceneManager>
 	{
@@ -48,7 +46,5 @@ namespace GASS
 	protected:
 	};
 	typedef SPTR<CoreSceneManager> CoreSceneManagerPtr; 
-	
-	
 }
 #endif

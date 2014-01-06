@@ -46,7 +46,8 @@ namespace GASS
 		SimEngine *se = SimEngine::GetPtr();
 
 		const std::string gass_config_file = config_path + gass_configuration;
-		se->Init(gass_config_file,m_LogFolder);
+		//se->Init(gass_config_file,m_LogFolder);
+		se->Init(gass_config_file);
 
 		//load keyboard config!
 		ControlSettingsSystemPtr css = se->GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
