@@ -26,11 +26,11 @@ namespace GASS
 		m_ServerPort(2001),
 		m_ClientPort(2002)
 	{
-		new SimEngine();
-		LogManager* log_man = new LogManager();
-		const std::string log_file = log_folder.GetFullPath() + "GASS.log";
-		log_man->createLog(log_file, true, true);
-		m_LogFolder = log_folder;
+		new SimEngine(log_folder);
+		//LogManager* log_man = new LogManager();
+		//const std::string log_file = log_folder.GetFullPath() + "GASS.log";
+		//log_man->createLog(log_file, true, true);
+		//m_LogFolder = log_folder;
 	}
 
 	EditorApplication::~EditorApplication(void)

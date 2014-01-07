@@ -30,7 +30,7 @@ namespace GASS
 		volatile bool m_StepSimulation;
 		double m_SimStepDeltaTime;
 		bool m_ExternalUpdate;
-		FilePath m_LogFolder;
+		//FilePath m_LogFolder;
 	};
 }
 
