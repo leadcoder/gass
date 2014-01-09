@@ -165,6 +165,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::OnInitialize()
 	{
+		//LogManager::getSingleton().stream() << "Start "<<  " OgreTerrainPageComponent::OnInitialize";
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerMessage,0));
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -178,17 +179,23 @@ namespace GASS
 			m_TerrainGroup = terrain_man->GetTerrainGroup();
 			if(m_TerrainGroup)
 			{
+				//LogManager::getSingleton().stream() << "Before  generateFilename"<<  " OgreTerrainPageComponent::OnInitialize";
 				Ogre::String filename = m_TerrainGroup->generateFilename(m_IndexX, m_IndexY);
 				if (Ogre::ResourceGroupManager::getSingleton().resourceExists(m_TerrainGroup->getResourceGroup(), filename))
 				{
+					//LogManager::getSingleton().stream() << "defineTerrain1"<<  " OgreTerrainPageComponent::OnInitialize";
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY);
 				}
 				else
 				{
+					//LogManager::getSingleton().stream() << "defineTerrain2"<<  " OgreTerrainPageComponent::OnInitialize";
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
 					
 				}
+
+				//LogManager::getSingleton().stream() << "loadTerrain"<<  " OgreTerrainPageComponent::OnInitialize";
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
+				//LogManager::getSingleton().stream() << "getTerrain"<<  " OgreTerrainPageComponent::OnInitialize";
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 			
 				if(m_HeightMapFile.Valid()) //import height map
@@ -196,17 +203,20 @@ namespace GASS
 
 				
 				
-
+				//LogManager::getSingleton().stream() << "SetRenderQueue"<<  " OgreTerrainPageComponent::OnInitialize";
 				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
-	
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
 				
 				if(m_Pos != Vec3(0,0,0))
 					SetPosition(m_Pos);
+
+				LogManager::getSingleton().stream() << "UpdatePosition"<<  " OgreTerrainPageComponent::OnInitialize";
 				UpdatePosition();
 
 				//WaitWhileLoading();
+
+				//LogManager::getSingleton().stream() << "Start Import"<<  " OgreTerrainPageComponent::OnInitialize";
 
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource()->Path());
@@ -266,7 +276,7 @@ namespace GASS
 					SetTilingLayer4(m_TilingLayer4);
 
 				
-				
+				//LogManager::getSingleton().stream() << "DONE!"<<  " OgreTerrainPageComponent::OnInitialize";
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
 				//std::cout << "bb size:" << m_Terrain->getAABB().getMaximum().x <<" "<< m_Terrain->getAABB().getMaximum().y <<" " << m_Terrain->getAABB().getMaximum().z << "\n";

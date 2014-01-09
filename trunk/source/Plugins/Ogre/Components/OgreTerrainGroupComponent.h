@@ -63,6 +63,7 @@ namespace GASS
 		int GetImportTerrainSize() const;
 		Vec3 GetScale() const {return m_Scale;}
 	protected:
+		ADD_PROPERTY(bool, EnableLightmap);
 		ResourceHandle GetTerrainResource()const {return m_TerrainResource;}
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
@@ -149,6 +150,7 @@ namespace GASS
 		float m_NearColorWeight;
 		//Ogre::TerrainMaterialGeneratorB::SM2Profile* m_TerrainProfile;
 		Ogre::TerrainMaterialGeneratorC::SM2Profile* m_TerrainProfile;
+		//Ogre::TerrainMaterialGeneratorA::SM2Profile* m_TerrainProfile;
 		GeometryFlags m_GeomFlags;
 	};
 	typedef SPTR<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;

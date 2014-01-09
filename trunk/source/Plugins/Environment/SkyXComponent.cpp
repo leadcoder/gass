@@ -74,7 +74,6 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-			
 		RegisterProperty<Float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples,
@@ -287,6 +286,7 @@ namespace GASS
 
 		delete m_SkyX;
 		m_SkyX = new SkyX::SkyX(sm, ocam);
+
 		// No smooth fading
 		m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
 		
@@ -298,8 +298,6 @@ namespace GASS
 		atOpt.InnerRadius = 9.92f;
 		atOpt.OuterRadius = 10.3311f;
 		m_SkyX->getAtmosphereManager()->setOptions(atOpt);
-		
-
 		
 		UpdateOptions();
 

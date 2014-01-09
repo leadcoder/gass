@@ -172,14 +172,28 @@ namespace GASS
 					m_DensityImage.save(fp_denmap);
 				}
 				stream.setNull();
+				
+#if (OGRE_19_RC1)
 				m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+#else
+				m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first.staticCast<Ogre::Texture>();
+				//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+#endif
+
 			}
 			else
 			{
 				Ogre::uchar *data = OGRE_ALLOC_T(Ogre::uchar, m_DensityMapSize * m_DensityMapSize * 4, Ogre::MEMCATEGORY_GENERAL);
 				memset(data, 0, m_DensityMapSize * m_DensityMapSize * 4);
 				m_DensityImage.loadDynamicImage(data, m_DensityMapSize, m_DensityMapSize, 1, Ogre::PF_A8R8G8B8, true);
+#if (OGRE_19_RC1)
 				m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname,GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+#else
+				m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname,GetSceneObject()->GetScene()->GetResourceGroupName()).first.staticCast<Ogre::Texture>();
+				//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname,GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+#endif
+				
+			
 				m_DensityTexture->loadImage(m_DensityImage);
 			}
 		}
@@ -331,7 +345,7 @@ namespace GASS
 /*			GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
-			request.Type = COL_LINE;
+			request.Type = COL_LINE_VERTICAL;
 			
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;

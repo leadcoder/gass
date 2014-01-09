@@ -52,7 +52,12 @@ namespace GASS
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
 			while(iter.hasMoreElements())
 			{
+#if (OGRE_19_RC1)
 				Ogre::MaterialPtr ptr = iter.getNext();
+#else
+				Ogre::MaterialPtr ptr = iter.getNext().staticCast<Ogre::Material>();
+				//Ogre::MaterialPtr ptr = iter.getNext();
+#endif
 				if(ptr->getGroup() == "GASS_VEGETATION_MATERIALS")
 				{
 					content.push_back(ptr->getName());

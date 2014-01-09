@@ -218,8 +218,20 @@ namespace GASS
 				m_DensityImage.loadDynamicImage(data, densize, densize, 1, Ogre::PF_A8R8G8B8, true);
 				//m_DensityImage.save(fp_denmap);
 			}
+
+#if (OGRE_19_RC1)
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+#else
+			m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first.staticCast<Ogre::Texture>();
 			//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
-			m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+#endif
+
+			
+			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+			//m_DensityTexture = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve(denmapname, GetSceneObject()->GetScene()->GetResourceGroupName()).first;
+			//m_DensityTexture = Ogre::TextureManager::getSingleton().load("pg_default_densitymap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
 			m_GrassLayer->setDensityMap(m_DensityTexture);
 		}
 		if(m_ColorMapFilename != "")
@@ -544,7 +556,7 @@ namespace GASS
 			/*GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
-			request.Type = COL_LINE;
+			request.Type = COL_LINE_VERTICAL;
 			request.ReturnFirstCollisionPoint = false;
 			request.CollisionBits =  GEOMETRY_FLAG_SCENE_OBJECTS;
 			GASS::CollisionResult result;

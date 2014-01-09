@@ -146,6 +146,8 @@ namespace GASS
 		//TODO: Add attributes for this settings
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
+
+		LogManager::getSingleton().stream() << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
       
 	}
 
@@ -333,7 +335,12 @@ namespace GASS
 		Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
 		while(iter.hasMoreElements())
 		{
+#if (OGRE_19_RC1)
 			Ogre::MaterialPtr ptr = iter.getNext();
+#else
+			//Ogre::MaterialPtr ptr = iter.getNext();
+			Ogre::MaterialPtr ptr = iter.getNext().staticCast<Ogre::Material>();
+#endif
 			if(resource_group == "" ||  ptr->getGroup() == resource_group)
 			{
 				content.push_back(ptr->getName());

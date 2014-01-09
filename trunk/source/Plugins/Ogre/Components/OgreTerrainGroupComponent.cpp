@@ -30,8 +30,6 @@
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
 
@@ -61,6 +59,7 @@ namespace GASS
 		,m_EnableLayerSpecular(true)
 		,m_EnableLayerNormal(true)
 		,m_TerrainScale(10)
+		,m_EnableLightmap(false)
 		,m_GeomFlags(GEOMETRY_FLAG_GROUND)
 	{
 		m_TerrainResource.SetName("OgrePagedTerrain");
@@ -105,6 +104,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("EnableLayerParallax", &GASS::OgreTerrainGroupComponent::GetEnableLayerParallax, &GASS::OgreTerrainGroupComponent::SetEnableLayerParallax,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("EnableLightmap", &GASS::OgreTerrainGroupComponent::GetEnableLightmap, &GASS::OgreTerrainGroupComponent::SetEnableLightmap,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		
 	}
 
 	void OgreTerrainGroupComponent::OnInitialize()
@@ -263,9 +265,15 @@ namespace GASS
 		{
 			//m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorB()));
 			//m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
+			
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorC()));
 			m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorC::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
-			m_TerrainProfile->setLightmapEnabled(false);
+			//m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorA::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
+			
+			//we don't support composite maps, recursion bug in when doing synchronized load -> stack overflow.  
+			m_TerrainProfile->setCompositeMapEnabled(false);
+
+			m_TerrainProfile->setLightmapEnabled(m_EnableLightmap);
 
 			m_TerrainProfile->setReceiveDynamicShadowsEnabled(true);
 			m_TerrainProfile->setReceiveDynamicShadowsDepth(true);
