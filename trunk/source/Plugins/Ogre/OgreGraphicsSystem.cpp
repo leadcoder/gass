@@ -136,10 +136,7 @@ namespace GASS
 		m_Root->initialise(false);
 
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
-		//wait that first render window is created before send message that graphic system is initialized
-
-		if(m_UseShaderCache)
-			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(true);
+	
 		m_ResourceManager->Init(); 
 
 
@@ -244,16 +241,17 @@ namespace GASS
 		m_Windows[name] = win;
 		void* window_hnd = 0;
 		window->getCustomAttribute("WINDOW", &window_hnd);
-		//We send a event when a render window is cretated, usefull for other plugins to get hold of window handles
+		//We send a event when a render window is created, useful for other plugins to get hold of window handles
 		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new RenderWindowCreatedEvent(window_hnd)));
 
-		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initlized
+		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initialized
 		{
 			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
 
 
 			
-			const std::string file = "shader_cache.bin";
+			const std::string file = "gass_shader_cache.bin";
+			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(m_UseShaderCache);
 			
 			if(m_UseShaderCache)
 			{
