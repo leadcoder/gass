@@ -14,7 +14,7 @@
 		<Plugin PluginFile = "GASSPluginEnvironment"/>
 		<Plugin PluginFile = "GASSPluginAI"/>
 	</Plugins>
-	<SetDataPath value="../../../../samples/common/data/"/>
+	<SetDataPath value="../data/"/>
 	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">
