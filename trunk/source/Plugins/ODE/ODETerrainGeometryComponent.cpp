@@ -170,7 +170,8 @@ namespace GASS
 
 	Float ODETerrainGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
-		return m_TerrainGeom->GetHeightAtPoint(x,m_Samples-1-z);
+		//return m_TerrainGeom->GetHeightAtPoint(x,m_Samples-1-z);
+		return m_TerrainGeom->GetHeightAtPoint(x,z);
 		/*Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 		Float h = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);

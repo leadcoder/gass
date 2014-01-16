@@ -330,21 +330,24 @@ namespace GASS
 
 
 		//update lane pointers!
-		for(size_t i =  0; i < m_LaneSections.size()-1; i++)
+		if(m_LaneSections.size() > 0)
 		{
-			std::vector<AIRoadLaneComponentPtr> lanes = m_LaneSections[i]->GetLanes();
-			for(int j = 0 ;  j < lanes.size(); j++)
-			{ 
-				if(lanes[i]->GetDirection().GetValue() == LD_DOWNSTREAM) 
-				{
-					std::vector<AIRoadLaneComponentPtr> next_lanes = m_LaneSections[i+1]->GetLanesByID(lanes[i]->GetLaneID());
-					std::vector<AIRoadLaneComponentPtr>* connections = lanes[i]->GetNextLanesPtr();
-					connections->clear();
-					for(int k = 0 ;  k < next_lanes.size(); k++)
+			for(size_t i =  0; i < m_LaneSections.size()-1; i++)
+			{
+				std::vector<AIRoadLaneComponentPtr> lanes = m_LaneSections[i]->GetLanes();
+				for(int j = 0 ;  j < lanes.size(); j++)
+				{ 
+					if(lanes[i]->GetDirection().GetValue() == LD_DOWNSTREAM) 
 					{
-						if(next_lanes[i]->GetDirection() == lanes[i]->GetDirection())
+						std::vector<AIRoadLaneComponentPtr> next_lanes = m_LaneSections[i+1]->GetLanesByID(lanes[i]->GetLaneID());
+						std::vector<AIRoadLaneComponentPtr>* connections = lanes[i]->GetNextLanesPtr();
+						connections->clear();
+						for(int k = 0 ;  k < next_lanes.size(); k++)
 						{
-							connections->push_back(next_lanes[k]);
+							if(next_lanes[i]->GetDirection() == lanes[i]->GetDirection())
+							{
+								connections->push_back(next_lanes[k]);
+							}
 						}
 					}
 				}

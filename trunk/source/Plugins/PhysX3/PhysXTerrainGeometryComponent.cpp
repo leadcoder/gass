@@ -111,8 +111,8 @@ namespace GASS
 			//m_SampleWidth = size_x/(samples_x-1);
 			//m_SampleHeight = size_z/(samples_z-1);
 
-			Float scale_x = size_x/(Float) samples_x;
-			Float scale_z = size_z/(Float) samples_z;
+			Float scale_x = size_x/((Float) samples_x-1);
+			Float scale_z = size_z/((Float) samples_z-1);
 			//physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) system->GetAllocator()->allocate(sizeof(physx::PxHeightFieldSample)*samples_x*samples_z,0,__FILE__, __LINE__);
 			physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) new physx::PxHeightFieldSample[samples_x*samples_z];//(sizeof(physx::PxHeightFieldSample)*(samples_x*samples_z));
 
@@ -149,15 +149,15 @@ namespace GASS
 
 			physx::PxTransform pose = physx::PxTransform::createIdentity();
 
-			Vec3 center_position;
-			center_position.x = m_TerrainBounds.m_Min.x;
-			center_position.z = m_TerrainBounds.m_Min.z;
+			Vec3 position;
+			position.x = m_TerrainBounds.m_Min.x;
+			position.z = m_TerrainBounds.m_Min.z;
 		//	center_position.x = m_TerrainBounds.m_Min.x + (m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x)*0.5;
 		//	center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
 			
-			center_position.y = 0;
+			position.y = 0;
 
-			pose.p = physx::PxVec3(center_position.x,center_position.y,center_position.z);
+			pose.p = physx::PxVec3(position.x,position.y,position.z);
 
 			physx::PxRigidStatic* hfActor = system->GetPxSDK()->createRigidStatic(pose);
 
