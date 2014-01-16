@@ -10,6 +10,7 @@
   <Plugin PluginFile = "GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPluginGame"/>
   <Plugin PluginFile = "GASSPluginBase"/>
+  <!--<Plugin PluginFile = "GASSPluginScript"/>-->
   
 </Plugins>
 <SetDataPath value="../../data/"/>
