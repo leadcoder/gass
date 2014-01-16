@@ -31,8 +31,6 @@ namespace GASS
 	class SimSceneManager;
 	class ISceneManager;
 	class IGeometryComponent;
-	struct ManualMeshData;
-	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 

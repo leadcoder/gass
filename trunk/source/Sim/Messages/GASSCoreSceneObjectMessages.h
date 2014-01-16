@@ -44,8 +44,6 @@ namespace GASS
 	class ISceneManager;
 	class IGeometryComponent;
 	class CoreSceneManager;
-	struct ManualMeshData;
-	typedef SPTR<ManualMeshData> ManualMeshDataPtr;
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 	typedef SPTR<CoreSceneManager> CoreSceneManagerPtr; 

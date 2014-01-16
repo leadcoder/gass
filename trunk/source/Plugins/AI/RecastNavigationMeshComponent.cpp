@@ -1160,7 +1160,7 @@ namespace GASS
 			std::vector<PhysicsMeshPtr> mesh_data_vec;
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
-				{
+				
 					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
@@ -1194,7 +1194,7 @@ namespace GASS
 								m_MeshBounding.Union(box);
 							mesh_data_vec.push_back(physics_mesh);
 						}
-					}
+					
 				}
 			}
 			unsigned int tot_verts = 0;

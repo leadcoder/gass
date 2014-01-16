@@ -132,8 +132,10 @@ namespace GASS
 		delete m_HM;
 		m_HM = new Heightmap(min_bound,max_bound,px_width,pz_height);
 
+		LogManager::Get().stream() << "START building heightmap\n";
 		for(unsigned int i = 0; i <  px_width; i++)
 		{
+			LogManager::Get().stream() << "row" << i << "\n";
 			for(unsigned int j = 0; j <  pz_height; j++)
 			{
 				Vec3 pos(min_bound.x + i*inv_sample_ratio, 0, min_bound.z + j*inv_sample_ratio); 
