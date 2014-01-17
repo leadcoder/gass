@@ -147,7 +147,6 @@ namespace GASS
 	{
 		BaseSceneComponent::InitializeSceneObjectRef();
 
-
 		if(m_StartNode.IsValid())
 		{
 			AIRoadIntersectionComponentPtr intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
@@ -167,7 +166,6 @@ namespace GASS
 				intersection->AddRoad(this_ptr);
 			}
 		}
-		
 		m_WaypointsObject->RegisterForMessage(REG_TMESS(AIRoadComponent::OnWaypointsChanged,UpdateWaypointListMessage,0));
 		UpdateLanes();
 		m_Initialized = true;
