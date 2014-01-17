@@ -27,4 +27,15 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("AIRoadNetwork",new Creator<AIRoadNetwork, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadNetwork", OF_VISIBLE)));
 	}
+
+	void AIRoadNetwork::OnInitialize()
+	{
+		//Get all roads and build search graph!
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass<AIRoadComponent>(components);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			AIRoadComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadComponent>(components[i]);
+		}
+	}
 }

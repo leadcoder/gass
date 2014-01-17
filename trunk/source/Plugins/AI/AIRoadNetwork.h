@@ -22,8 +22,8 @@ namespace GASS
 	public:
 		AIRoadNetwork(void);
 		~AIRoadNetwork(void);
+		void OnInitialize();
 		static void RegisterReflection();
-		virtual void OnInitialize();
 	private:
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
