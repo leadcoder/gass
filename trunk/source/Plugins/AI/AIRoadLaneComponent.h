@@ -13,6 +13,7 @@
 
 namespace GASS
 {
+	class RoadEdge;
 
 	class LaneObject
 	{
@@ -72,6 +73,8 @@ namespace GASS
 		//bool IsRoadFree(double in_distance);
 		//bool IsStartOfRoadFree(double in_distance);
 		bool FirstFreeLocation(Vec3 &pos, Quaternion &rot, Float &distance, Float vehicle_separation);
+
+		RoadEdge* m_Edge; 
 	private:
 		std::vector<Vec3> GenerateOffset(std::vector<Vec3> wps, Float offset);
 		//ADD_PROPERTY(SceneObjectID,NextLane);
@@ -85,6 +88,8 @@ namespace GASS
 		std::vector<AIRoadLaneComponentPtr> m_NextLanes;
 		tbb::spin_mutex m_LaneMutex;
 		std::vector<LaneObject*> m_LaneObjects;
+
+		
 	};
 
 	

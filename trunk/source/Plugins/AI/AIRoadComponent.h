@@ -49,6 +49,7 @@ namespace GASS
 
 		std::vector<AIRoadLaneComponentPtr> GetIncommingLanes(SceneObjectPtr connection) const;
 		std::vector<AIRoadLaneComponentPtr> GetOutgoingLanes(SceneObjectPtr connection) const;
+		std::vector<AIRoadLaneSectionComponentPtr> GetLaneSections() const {return m_LaneSections;}
 	private:
 		void UpdateLanes();
 		void AutoConnectToRoads();

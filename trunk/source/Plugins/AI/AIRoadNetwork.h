@@ -25,8 +25,32 @@ namespace GASS
 		void OnInitialize();
 		static void RegisterReflection();
 	private:
+		void Rebuild();
+		void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
+
+	class RoadNode;
+
+	class RoadEdge
+	{
+	public:
+
+		RoadEdge()
+		{
+
+		}
+		virtual ~RoadEdge()
+		{
+
+		}
+		std::vector<Vec3> Waypoints;
+		Float Distance;
+		RoadNode* StartNode;
+		RoadNode* EndNode;
+	};
+
+
 
 	class RoadNode
 	{
@@ -41,7 +65,7 @@ namespace GASS
 
 		}
 		Vec3 Position;
-		std::vector<RoadNode*> Edges;
+		std::vector<RoadEdge*> Edges;
 	};
 
 	class RoadNavigation  : public micropather::Graph
@@ -108,14 +132,14 @@ namespace GASS
 
 		virtual void AdjacentCost( void* node, std::vector< micropather::StateCost > *neighbors ) 
 		{
-			RoadNode* start = VoidToRoadNode(node);
+			RoadNode* road_node = VoidToRoadNode(node);
 
-			for(size_t i = 0; i < start->Edges.size(); i++)
+			for(size_t i = 0; i < road_node->Edges.size(); i++)
 			{
-				RoadNode* end = start->Edges[i];
-				float cost = (float) (start->Position-end->Position).Length();
-				micropather::StateCost nodeCost = { RoadNodeToVoid(start->Edges[i]), cost};
-				neighbors->push_back( nodeCost );
+				RoadEdge* edge = road_node->Edges[i];
+				float cost = (float) edge->Distance;
+				micropather::StateCost nodeCost = { RoadNodeToVoid(road_node->Edges[i]->EndNode), cost};
+				neighbors->push_back(nodeCost);
 			}
 		}
 

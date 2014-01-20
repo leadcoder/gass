@@ -11,7 +11,8 @@ namespace GASS
 	AIRoadLaneComponent::AIRoadLaneComponent(void) : m_Initialized(false),
 		m_Width(4),
 		m_Direction(LD_DOWNSTREAM),
-		m_LaneID(0)
+		m_LaneID(0),
+		m_Edge(0)
 	{
 
 	}	
