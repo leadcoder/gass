@@ -130,4 +130,46 @@ namespace GASS
 		}
 	}
 
+
+
+	void AIRoadNetwork::GenerateGraph()
+	{
+		std::map<AIRoadIntersectionComponentPtr,RoadNode*> node_mapping;
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadIntersectionComponent>(components);
+		for(size_t i = 0 ;  i < components.size(); i++)
+		{
+			AIRoadIntersectionComponentPtr inter_comp = DYNAMIC_PTR_CAST<AIRoadIntersectionComponent>(components[i]);
+			Vec3 inter_pos = inter_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			RoadNode* road_node = new RoadNode();
+			road_node->Position = inter_pos;
+			node_mapping[inter_comp] = road_node; 
+		}
+
+		components.clear();
+		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadComponent>(components);
+		for(size_t i = 0 ;  i < components.size(); i++)
+		{
+			AIRoadComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadComponent>(components[i]);
+			std::vector<Vec3> road_wps = road_comp->GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
+			RoadEdge* edge = new RoadEdge();
+			edge->Waypoints = road_wps;
+			edge->Distance =  Math::GetPathLength(road_wps);
+			if(road_comp->GetStartNode().IsValid())
+			{
+				AIRoadIntersectionComponentPtr start_inter = road_comp->GetStartNode()->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+				RoadNode* start_node = node_mapping.find(start_inter)->second;
+				edge->StartNode = start_node;
+				start_node->Edges.push_back(edge);
+			}
+
+			if(road_comp->GetEndNode().IsValid())
+			{
+				AIRoadIntersectionComponentPtr end_inter = road_comp->GetEndNode()->GetFirstComponentByClass<AIRoadIntersectionComponent>();
+				RoadNode* end_node = node_mapping.find(end_inter)->second;
+				edge->EndNode = end_node;
+				end_node->Edges.push_back(edge);
+			}
+		}
+	}
 }

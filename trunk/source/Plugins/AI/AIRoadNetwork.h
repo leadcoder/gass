@@ -27,6 +27,7 @@ namespace GASS
 		void OnInitialize();
 		static void RegisterReflection();
 	private:
+		void GenerateGraph();
 		bool GetBuild() const;
 		void SetBuild(bool value);
 		void Rebuild();
