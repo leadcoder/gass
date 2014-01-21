@@ -36,7 +36,18 @@ namespace GASS
 
 	void AIRoadIntersectionComponent::AddRoad(AIRoadComponentPtr road)
 	{
-		m_Connections.push_back(road);
+		bool road_exist = false;
+		std::vector<AIRoadComponentPtr>::iterator iter = m_Connections.begin();
+		while(iter != m_Connections.end())
+		{
+			if(*iter == road )
+				road_exist = true;
+			iter++;
+		}
+
+		if(!road_exist)
+			m_Connections.push_back(road);
+
 		AutoLineConnection();
 		UpdateConnectionLines();
 	}

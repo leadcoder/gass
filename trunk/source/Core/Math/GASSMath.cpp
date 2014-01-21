@@ -350,67 +350,67 @@ namespace GASS
 		return (( int(z) & ~(int(x)|int(y)) ) & 0x80000000);
 	}
 
-/*	Vec3 Math::GetTangent(Vec3 &pos1, Vec3 &pos2, Vec3 &pos3, Vec3 &texc1, Vec3 &texc2, Vec3 &texc3)
+	/*	Vec3 Math::GetTangent(Vec3 &pos1, Vec3 &pos2, Vec3 &pos3, Vec3 &texc1, Vec3 &texc2, Vec3 &texc3)
 	{
-		Vec3 tangent;
-		Vec3 edge1 = pos2 - pos1;	
-		Vec3 edge2 = pos3 - pos1;	
-		Vec3 dsdt1 = texc2  - texc1;
-		Vec3 dsdt2 = texc3  - texc1;
+	Vec3 tangent;
+	Vec3 edge1 = pos2 - pos1;	
+	Vec3 edge2 = pos3 - pos1;	
+	Vec3 dsdt1 = texc2  - texc1;
+	Vec3 dsdt2 = texc3  - texc1;
 
 
-		tangent = (edge2 * (dsdt1.y/(dsdt2.x*dsdt1.y-dsdt1.x*dsdt2.y)))-
-			(edge1 * (dsdt2.y/(dsdt2.x*dsdt1.y-dsdt1.x*dsdt2.y)));
+	tangent = (edge2 * (dsdt1.y/(dsdt2.x*dsdt1.y-dsdt1.x*dsdt2.y)))-
+	(edge1 * (dsdt2.y/(dsdt2.x*dsdt1.y-dsdt1.x*dsdt2.y)));
 
 
-		tangent.Normalize();	  
-		return tangent;
+	tangent.Normalize();	  
+	return tangent;
 	}
 
 
 	void Math::GetTangentAndBinormal(Vec3 &v0, Vec3 &v1, Vec3 &v2, Vec3 &t0, Vec3 &t1, Vec3 &t2,Vec3 &tangent,Vec3 &binormal)
 	{
-		Vec3 cp;
-		Vec3 e0;
-		Vec3 e1;
-		e0.Set(v1.x-v0.x, t1.x-t0.x, t1.y-t0.y);
-		e1.Set(v2.x-v0.x, t2.x-t0.x, t2.y-t0.y);
+	Vec3 cp;
+	Vec3 e0;
+	Vec3 e1;
+	e0.Set(v1.x-v0.x, t1.x-t0.x, t1.y-t0.y);
+	e1.Set(v2.x-v0.x, t2.x-t0.x, t2.y-t0.y);
 
-		cp.x=e0.y*e1.z - e0.z*e1.y;
-		cp.y=e0.z*e1.x - e0.x*e1.z;
-		cp.z=e0.x*e1.y - e0.y*e1.x;
+	cp.x=e0.y*e1.z - e0.z*e1.y;
+	cp.y=e0.z*e1.x - e0.x*e1.z;
+	cp.z=e0.x*e1.y - e0.y*e1.x;
 
-		if(fabs(cp.x)>0.00001f)
-		{
-			tangent.x=-cp.y/cp.x;
-			binormal.x=-cp.z/cp.x;
-		}
+	if(fabs(cp.x)>0.00001f)
+	{
+	tangent.x=-cp.y/cp.x;
+	binormal.x=-cp.z/cp.x;
+	}
 
-		e0.x=v1.y-v0.y;
-		e1.x=v2.y-v0.y;
+	e0.x=v1.y-v0.y;
+	e1.x=v2.y-v0.y;
 
-		cp.x=e0.y*e1.z-e0.z*e1.y;
-		cp.y=e0.z*e1.x-e0.x*e1.z;
-		cp.z=e0.x*e1.y-e0.y*e1.x;
+	cp.x=e0.y*e1.z-e0.z*e1.y;
+	cp.y=e0.z*e1.x-e0.x*e1.z;
+	cp.z=e0.x*e1.y-e0.y*e1.x;
 
-		if(fabs(cp.x)>0.00001f)
-		{
-			tangent.y=-cp.y/cp.x;
-			binormal.y=-cp.z/cp.x;
-		}
+	if(fabs(cp.x)>0.00001f)
+	{
+	tangent.y=-cp.y/cp.x;
+	binormal.y=-cp.z/cp.x;
+	}
 
-		e0.x=v1.z - v0.z;
-		e1.x=v2.z - v0.z;
+	e0.x=v1.z - v0.z;
+	e1.x=v2.z - v0.z;
 
-		cp.x=e0.y*e1.z - e0.z*e1.y;
-		cp.y=e0.z*e1.x - e0.x*e1.z;
-		cp.z=e0.x*e1.y - e0.y*e1.x;
+	cp.x=e0.y*e1.z - e0.z*e1.y;
+	cp.y=e0.z*e1.x - e0.x*e1.z;
+	cp.z=e0.x*e1.y - e0.y*e1.x;
 
-		if(fabs(cp.x) > 0.00001f)
-		{
-			tangent.z=-cp.y/cp.x;
-			binormal.z=-cp.z/cp.x;
-		}
+	if(fabs(cp.x) > 0.00001f)
+	{
+	tangent.z=-cp.y/cp.x;
+	binormal.z=-cp.z/cp.x;
+	}
 	}*/
 
 	Float Math::Min(const Float &v1,const Float &v2)
@@ -598,7 +598,7 @@ namespace GASS
 				break;
 			}
 		}
-	    return result;
+		return result;
 	}
 
 
@@ -659,11 +659,11 @@ namespace GASS
 				break;
 			}
 		}
-		
+
 		for (unsigned int i = index; i < wps.size(); i++)
 		{
 			Float segmentLength = lengths[i-1];
-			
+
 			if (segmentLength < end_remaining)
 			{
 				end_remaining -= segmentLength;
@@ -679,7 +679,7 @@ namespace GASS
 				break;
 			}
 		}
-	    return path;
+		return path;
 	}
 
 	std::vector<Vec3> Math::GenerateOffset(const std::vector<Vec3> &wps, Float start_offset,Float end_offset)
@@ -807,6 +807,17 @@ namespace GASS
 			normals.push_back(side*width_mult);
 		}
 		return normals;
+	}
+
+
+	Float Math::GetPathLength(const std::vector<Vec3> &wps)
+	{
+		Float  total_path_length  = 0;
+		for (unsigned int i = 1; i < wps.size(); i++)
+		{
+			total_path_length += (wps[i-1] - wps[i]).Length();
+		}
+		return total_path_length;
 	}
 
 

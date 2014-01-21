@@ -14,7 +14,7 @@ namespace GASS
 {
 	AIRoadNetwork::AIRoadNetwork(void) 
 	{
-		
+
 	}	
 
 	AIRoadNetwork::~AIRoadNetwork(void)
@@ -26,18 +26,32 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadNetwork",new Creator<AIRoadNetwork, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadNetwork", OF_VISIBLE)));
+
+		RegisterProperty<bool>("Build", &AIRoadNetwork::GetBuild, &AIRoadNetwork::SetBuild,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void AIRoadNetwork::OnInitialize()
 	{
-		
+
+	}
+
+	bool AIRoadNetwork::GetBuild() const
+	{
+		return false;
+	}
+
+	void AIRoadNetwork::SetBuild(bool value) 
+	{
+		if(GetSceneObject())
+			Rebuild();
 	}
 
 	void AIRoadNetwork::Rebuild()
 	{
 		//Get all roads and build search graph!
 		IComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass<AIRoadComponent>(components);
+		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
 			AIRoadComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadComponent>(components[i]);
@@ -51,7 +65,6 @@ namespace GASS
 				}
 			}
 		}
-
 
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
@@ -67,6 +80,12 @@ namespace GASS
 				}
 			}
 		}
+
+		//test
+		RoadNavigation nav;
+		std::vector<RoadNode*> path;
+		//int ret = nav.GetPath(from_node, to_node, path);
+
 	}
 
 	void AIRoadNetwork::AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge)
@@ -78,10 +97,17 @@ namespace GASS
 			start_node = prev_edge->EndNode;
 		}
 		else
+		{
 			start_node = new RoadNode();
+			start_node->Position = points.front();
+		}
+
 
 		RoadNode* end_node = new RoadNode();
+		end_node->Position = points.back();
 		RoadEdge* edge = new RoadEdge();
+		edge->Waypoints = points;
+		edge->Distance =  Math::GetPathLength(points);
 		edge->StartNode = start_node;
 		edge->EndNode = end_node;
 		start_node->Edges.push_back(edge);
@@ -103,5 +129,5 @@ namespace GASS
 
 		}
 	}
-	
+
 }

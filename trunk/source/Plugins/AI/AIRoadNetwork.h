@@ -15,6 +15,8 @@
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
+	class RoadNode;
+
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
 	class AIRoadNetwork :  public Reflection<AIRoadNetwork,BaseSceneComponent> 
@@ -25,12 +27,14 @@ namespace GASS
 		void OnInitialize();
 		static void RegisterReflection();
 	private:
+		bool GetBuild() const;
+		void SetBuild(bool value);
 		void Rebuild();
 		void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
-	class RoadNode;
+	
 
 	class RoadEdge
 	{
