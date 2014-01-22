@@ -127,6 +127,9 @@ namespace GASS
 		/** Add a arrow shaped geometry*/
 		void AddArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color);
 
+		/** Add a path geometry*/
+		void AddPath(const std::vector<Vec3> &path, const ColorRGBA &vertex_color);
+
 		
 		//	Helper function to generate allocatate and add geomtries
 		static GraphicsSubMeshPtr GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material="", int segments = 30);
@@ -136,6 +139,7 @@ namespace GASS
 		static GraphicsSubMeshPtr GenerateWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
 		static GraphicsSubMeshPtr GenerateWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments);
 		static GraphicsSubMeshPtr GenerateArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color, const std::string &material);
+		static GraphicsSubMeshPtr GeneratePath(const std::vector<Vec3> &path, const ColorRGBA &vertex_color, const std::string &material);
 	};
 	//typedef SPTR<GraphicsSubMesh> GraphicsSubMeshPtr;
 	
