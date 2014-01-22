@@ -11,11 +11,13 @@
 #include <set>
 #include <tbb/atomic.h>
 #include "Plugins/AI/micropather.h"
+#include "Plugins/Game/GameMessages.h"
 
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
 	class RoadNode;
+	class RoadEdge;
 
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
@@ -26,12 +28,20 @@ namespace GASS
 		~AIRoadNetwork(void);
 		void OnInitialize();
 		static void RegisterReflection();
+		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
+		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
 	private:
 		void GenerateGraph();
 		bool GetBuild() const;
 		void SetBuild(bool value);
 		void Rebuild();
 		void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
+		RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
+		RoadEdge* GetCloesestEdge(const Vec3 &point);
+		RoadNode* GetCloesestNode(const Vec3 &point);
+		void RemoveNode(RoadNode* node);
+		std::vector<RoadNode*> m_Nodes;
+		std::vector<RoadEdge*> m_Edges;
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
