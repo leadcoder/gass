@@ -101,7 +101,6 @@ namespace GASS
 			start_node->Position = points.front();
 		}
 
-
 		RoadNode* end_node = new RoadNode();
 		end_node->Position = points.back();
 		RoadEdge* edge = new RoadEdge();
@@ -178,23 +177,14 @@ namespace GASS
 				m_Nodes.push_back(end_node);
 			}
 
-			RoadEdge* edge1 = new RoadEdge();
-			edge1->Waypoints = road_wps;
-			edge1->Distance =  Math::GetPathLength(road_wps);
-			edge1->StartNode = start_node;
-			edge1->EndNode = end_node;
-			start_node->Edges.push_back(edge1);
-			m_Edges.push_back(edge1);
-
-			std::reverse(road_wps.begin(), road_wps.end());
-
-			RoadEdge* edge2 = new RoadEdge();
-			edge2->Waypoints = road_wps;
-			edge2->Distance =  edge1->Distance;
-			edge2->StartNode = end_node;
-			edge2->EndNode = start_node;
-			end_node->Edges.push_back(edge2);
-			m_Edges.push_back(edge2);
+			RoadEdge* edge = new RoadEdge();
+			edge->Waypoints = road_wps;
+			edge->Distance =  Math::GetPathLength(road_wps);
+			edge->StartNode = start_node;
+			edge->EndNode = end_node;
+			start_node->Edges.push_back(edge);
+			end_node->Edges.push_back(edge);
+			m_Edges.push_back(edge);
 		}
 	}
 
@@ -232,16 +222,16 @@ namespace GASS
 
 			if(start_seg_index < end_seg_index)
 			{
-				for(int i = start_seg_index+1; i < end_seg_index; i++)
+				for(int i = start_seg_index+1; i <= end_seg_index; i++)
 				{
 					path.push_back(from_edge->Waypoints[i]);
 				}
 			}
 			else if(start_seg_index > end_seg_index)
 			{
-				for(int i = end_seg_index+1; i < start_seg_index; i++)
+				for(int i = start_seg_index; i > end_seg_index; i--)
 				{
-					path.push_back(from_edge->Waypoints[start_seg_index-i]);
+					path.push_back(from_edge->Waypoints[i]);
 				}
 			}
 			else //same segment
@@ -252,8 +242,6 @@ namespace GASS
 		}
 		else
 		{
-			//RoadNode* start_node = GetCloesestNode(from_point);
-			//RoadNode* end_node = GetCloesestNode(to_point);
 			RoadNode* start_node = InsertNodeOnEdge(from_point,from_edge);
 			RoadNode* end_node = InsertNodeOnEdge(to_point,to_edge);
 			//do search!
@@ -270,10 +258,18 @@ namespace GASS
 					RoadNode* n2 = node_path[i+1];
 					//Get edge!
 					RoadEdge* edge = NULL;
+					bool invert_dir = false;
 					for(size_t j = 0; j < n1->Edges.size(); j++)
 					{
-						if(n1->Edges[j]->EndNode == n2)
+						if(n1->Edges[j]->EndNode == n2 )
 						{
+							edge = n1->Edges[j];
+							break;
+						}
+
+						if(n1->Edges[j]->StartNode == n2 )
+						{
+							invert_dir = true;
 							edge = n1->Edges[j];
 							break;
 						}
@@ -281,10 +277,21 @@ namespace GASS
 					if(edge)
 					{
 						//edge_path.push_back(edge);
-						for(size_t j = 0; j < edge->Waypoints.size(); j++)
+						if(invert_dir)
 						{
-							path.push_back(edge->Waypoints[j]);
+							for(size_t j = 0; j < edge->Waypoints.size(); j++)
+							{
+								path.push_back(edge->Waypoints[edge->Waypoints.size()-j-1]);
+							}
 						}
+						else
+						{
+							for(size_t j = 0; j < edge->Waypoints.size(); j++)
+							{
+								path.push_back(edge->Waypoints[j]);
+							}
+						}
+						
 					}
 				}
 			}
@@ -292,6 +299,8 @@ namespace GASS
 			//remove temp nodes
 			RemoveNode(start_node);
 			RemoveNode(end_node);
+			from_edge->Enabled = true;
+			to_edge->Enabled = true;
 		}
 		path.push_back(to_point);
 		return path;
@@ -304,9 +313,8 @@ namespace GASS
 			std::vector<RoadEdge*>::iterator iter = node->Edges[i]->EndNode->Edges.begin();
 			while(iter != node->Edges[i]->EndNode->Edges.end())
 			{
-				if((*iter)->EndNode == node)
+				if((*iter)->StartNode == node)
 				{
-					delete  *iter;
 					iter = node->Edges[i]->EndNode->Edges.erase(iter);
 				}
 				else
@@ -326,48 +334,35 @@ namespace GASS
 
 		RoadEdge* edge1 = new RoadEdge();
 		RoadEdge* edge2 = new RoadEdge();
-		RoadEdge* edge3 = new RoadEdge();
-		RoadEdge* edge4 = new RoadEdge();
-
-		RoadNode* start_node = new RoadNode();
-		start_node->Position = target_point;
+		
+		RoadNode* new_node = new RoadNode();
+		new_node->Position = target_point;
 		edge1->Waypoints.push_back(target_point);
 		edge2->Waypoints.push_back(target_point);
-		edge3->Waypoints.push_back(edge->Waypoints.front());
-		edge4->Waypoints.push_back(edge->Waypoints.back());
 		
 		for(size_t i = 0;  i < seg_index+1; i++)
 		{
 			edge1->Waypoints.push_back(edge->Waypoints[seg_index - i]);
-			edge3->Waypoints.push_back(edge->Waypoints[i]);
 		}
 
-		for(size_t i = seg_index;  i < edge->Waypoints.size(); i++)
+		for(size_t i = seg_index+1;  i < edge->Waypoints.size(); i++)
 		{
 			edge2->Waypoints.push_back(edge->Waypoints[i]);
-			edge4->Waypoints.push_back(edge->Waypoints[edge->Waypoints.size()-1-i]);
 		}
-
+		
 		edge1->Distance =  Math::GetPathLength(edge1->Waypoints);
-		edge1->StartNode = start_node;
+		edge1->StartNode = new_node;
 		edge1->EndNode = edge->StartNode;
-		start_node->Edges.push_back(edge1);
+		new_node->Edges.push_back(edge1);
+		edge->StartNode->Edges.push_back(edge1);
 
 		edge2->Distance =  Math::GetPathLength(edge2->Waypoints);
-		edge2->StartNode = start_node;
+		edge2->StartNode = new_node;
 		edge2->EndNode = edge->EndNode;
-		start_node->Edges.push_back(edge2);
-		
-		edge3->Distance =  Math::GetPathLength(edge3->Waypoints);
-		edge3->StartNode = edge->StartNode;
-		edge3->EndNode = start_node;
-		edge->StartNode->Edges.push_back(edge3);
-	
-		edge4->Distance =  Math::GetPathLength(edge4->Waypoints);
-		edge4->StartNode = edge->EndNode;
-		edge4->EndNode = start_node;
-		edge->EndNode->Edges.push_back(edge4);
-		return start_node;
+		new_node->Edges.push_back(edge2);
+		edge->EndNode->Edges.push_back(edge2);
+		edge->Enabled = false;
+		return new_node;
 	}
 
 	RoadEdge* AIRoadNetwork::GetCloesestEdge(const Vec3 &point)

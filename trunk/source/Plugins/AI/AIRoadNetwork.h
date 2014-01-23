@@ -12,6 +12,7 @@
 #include <tbb/atomic.h>
 #include "Plugins/AI/micropather.h"
 #include "Plugins/Game/GameMessages.h"
+#include "Sim/Interface/GASSIGraphComponent.h"
 
 namespace GASS
 {
@@ -21,12 +22,13 @@ namespace GASS
 
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
-	class AIRoadNetwork :  public Reflection<AIRoadNetwork,BaseSceneComponent> 
+	class AIRoadNetwork :  public Reflection<AIRoadNetwork,BaseSceneComponent> , IGraphComponent
 	{
 	public:
 		AIRoadNetwork(void);
 		~AIRoadNetwork(void);
 		void OnInitialize();
+		std::string GetNodeTemplate() const {return "AINODE";}
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
@@ -45,13 +47,22 @@ namespace GASS
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
-	
+	enum RoadDirection
+	{
+		UPSTREAM,
+		DOWNSTREAM,
+		BIDIR,
+	};
 
 	class RoadEdge
 	{
 	public:
 
-		RoadEdge()
+		RoadEdge() : Enabled(true),
+			StartNode(NULL),
+			EndNode(NULL),
+			Distance(-1),
+			Dir(BIDIR)
 		{
 
 		}
@@ -61,17 +72,17 @@ namespace GASS
 		}
 		std::vector<Vec3> Waypoints;
 		Float Distance;
+		bool Enabled;
+		RoadDirection Dir;
 		RoadNode* StartNode;
 		RoadNode* EndNode;
 	};
-
-
 
 	class RoadNode
 	{
 		public:
 
-		RoadNode()
+		RoadNode() : Position(0,0,0)
 		{
 
 		}
@@ -152,9 +163,20 @@ namespace GASS
 			for(size_t i = 0; i < road_node->Edges.size(); i++)
 			{
 				RoadEdge* edge = road_node->Edges[i];
-				float cost = (float) edge->Distance;
-				micropather::StateCost nodeCost = { RoadNodeToVoid(road_node->Edges[i]->EndNode), cost};
-				neighbors->push_back(nodeCost);
+				if(edge->Enabled && (edge->Dir == BIDIR || 
+					(edge->Dir == DOWNSTREAM && road_node == road_node->Edges[i]->StartNode) ||
+					(edge->Dir == UPSTREAM && road_node == road_node->Edges[i]->EndNode)))
+				{
+					float cost = (float) edge->Distance;
+					RoadNode* target_node;
+					if(road_node->Edges[i]->StartNode == road_node)
+						target_node = road_node->Edges[i]->EndNode;
+					else
+						target_node = road_node->Edges[i]->StartNode;
+
+					micropather::StateCost nodeCost = { RoadNodeToVoid(target_node), cost};
+					neighbors->push_back(nodeCost);
+				}
 			}
 		}
 
