@@ -19,3 +19,4 @@
 #define TID_EDIT_POS "EditPositionTool"
 #define TID_MEASUREMENT "MeasurementTool"
 #define TID_CREATE "CreateTool"
+#define TID_GRAPH "GraphTool"

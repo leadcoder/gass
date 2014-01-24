@@ -587,19 +587,19 @@ namespace GASS
 		}
 	}
 
-	GraphicsSubMeshPtr GraphicsSubMesh::GeneratePath(const std::vector<Vec3> &path, const ColorRGBA &vertex_color, const std::string &material)
+	GraphicsSubMeshPtr GraphicsSubMesh::GenerateLines(const std::vector<Vec3> &lines, const ColorRGBA &vertex_color, const std::string &material, bool strip)
 	{
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
-		sub_mesh_data->Type = LINE_STRIP;
+		sub_mesh_data->Type = (strip) ?  LINE_STRIP: LINE_LIST;
 		sub_mesh_data->MaterialName = material;
-		sub_mesh_data->AddPath(path, vertex_color);
+		sub_mesh_data->AddLines(lines, vertex_color);
 		return sub_mesh_data;
 	}
 
-	void GraphicsSubMesh::AddPath(const std::vector<Vec3> &path, const ColorRGBA &vertex_color)
+	void GraphicsSubMesh::AddLines(const std::vector<Vec3> &lines, const ColorRGBA &vertex_color)
 	{
-		PositionVector = path;
-		for(size_t i = 0; i < path.size(); i++)
+		PositionVector = lines;
+		for(size_t i = 0; i < lines.size(); i++)
 		{
 			ColorVector.push_back(vertex_color);
 		}

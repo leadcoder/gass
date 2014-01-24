@@ -34,6 +34,8 @@
 #include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
+#include "Modules/Editor/ToolSystem/GraphTool.h"
+
 
 
 
@@ -98,6 +100,9 @@ namespace GASS
 		AddTool(tool);
 		tool = new PaintTool(this);
 		AddTool(tool);
+		tool = new GraphTool(this);
+		AddTool(tool);
+
 		SelectTool(TID_SELECT);
 		SetActive(true);
 	}

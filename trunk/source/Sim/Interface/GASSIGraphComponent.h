@@ -29,7 +29,10 @@ namespace GASS
 	public:
 		virtual ~IGraphComponent(){}
 		virtual std::string GetNodeTemplate() const = 0;
+		virtual std::string GetEdgeTemplate() const = 0;
+		virtual void RebuildGraph() = 0;
 	protected:
 	};
 	typedef SPTR<IGraphComponent> GraphComponentPtr;
+	typedef WPTR<IGraphComponent> GraphComponentWeakPtr;
 }

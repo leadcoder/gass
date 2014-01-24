@@ -3,6 +3,8 @@
 #include "AISceneManager.h"
 #include "AIRoadLaneSectionComponent.h"
 #include "AIRoadLaneComponent.h"
+#include "AIRoadNodeComponent.h"
+#include "AIRoadEdgeComponent.h"
 #include "AIRoadIntersectionComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
@@ -30,6 +32,11 @@ namespace GASS
 
 		RegisterProperty<bool>("Build", &AIRoadNetwork::GetBuild, &AIRoadNetwork::SetBuild,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<std::string>("NodeTemplate", &AIRoadNetwork::GetNodeTemplate, &AIRoadNetwork::SetNodeTemplate,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE )));
+		RegisterProperty<std::string>("EdgeTemplate", &AIRoadNetwork::GetEdgeTemplate, &AIRoadNetwork::SetEdgeTemplate,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE )));
 	}
 
 	void AIRoadNetwork::OnInitialize()
@@ -48,6 +55,43 @@ namespace GASS
 			GenerateGraph();
 			//Rebuild();
 	}
+
+	void AIRoadNetwork::RebuildGraph()
+	{
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass<AIRoadNodeComponent>(components);
+		for(size_t i = 0 ;  i < components.size(); i++)
+		{
+			AIRoadNodeComponentPtr node_comp = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(components[i]);
+		}
+
+		std::vector<Vec3> pos_vec;
+		components.clear();
+		GetSceneObject()->GetComponentsByClass<AIRoadEdgeComponent>(components);
+		for(size_t i = 0 ;  i < components.size(); i++)
+		{
+			AIRoadEdgeComponentPtr edge_comp = DYNAMIC_PTR_CAST<AIRoadEdgeComponent>(components[i]);
+			AIRoadNodeComponentPtr start_node = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(edge_comp->GetStartNode());
+			AIRoadNodeComponentPtr end_node = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(edge_comp->GetEndNode());
+			if(start_node && end_node)
+			{
+				Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				Vec3 end_pos  = end_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				pos_vec.push_back(start_pos);
+				pos_vec.push_back(end_pos);
+			}
+		}
+
+		SceneObjectPtr debug = GetSceneObject()->GetChildByID("DEBUG_NODE");
+		if(debug)
+		{
+			GraphicsMeshPtr mesh_data(new GraphicsMesh());
+			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",false));
+			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+			debug->PostMessage(mesh_message);
+		}
+	}
+
 
 	void AIRoadNetwork::Rebuild()
 	{
@@ -193,14 +237,14 @@ namespace GASS
 		Vec3 from = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		std::vector<Vec3> path = Search(from,message->GetPosition());
 
-		SceneObjectPtr debug = GetSceneObject()->GetChildByID("DEBUG_NODE");
+		/*SceneObjectPtr debug = GetSceneObject()->GetChildByID("DEBUG_NODE");
 		if(debug)
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
-			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GeneratePath(path, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting"));
+			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",true));
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			debug->PostMessage(mesh_message);
-		}
+		}*/
 
 	}
 

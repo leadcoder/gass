@@ -12,27 +12,25 @@
 #include <tbb/atomic.h>
 #include "Plugins/AI/micropather.h"
 #include "Plugins/Game/GameMessages.h"
-#include "Sim/Interface/GASSIGraphComponent.h"
+#include "Sim/Interface/GASSIGraphNodeComponent.h"
+#include "Sim/Interface/GASSIGraphEdgeComponent.h"
 
 namespace GASS
 {
-	class AIRoadLaneSectionComponent;
-	class RoadNode;
-	class RoadEdge;
 
-	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
-
-	class AIRoadNodeComponent :  public Reflection<AIRoadNodeComponent,BaseSceneComponent> , IGraphComponent
+	class AIRoadNodeComponent :  public Reflection<AIRoadNodeComponent,BaseSceneComponent> , public IGraphNodeComponent
 	{
 	public:
 		AIRoadNodeComponent(void);
 		~AIRoadNodeComponent(void);
 		void OnInitialize();
-		std::string GetNodeTemplate() const {return "AINODE";}
 		static void RegisterReflection();
+		virtual void AddEdge(GraphEdgeComponentPtr edge) {m_Edges.push_back(edge);}
+		virtual void RemoveEdge(GraphEdgeComponentPtr edge) {};
 	private:
-		std::vector<AIRoadNodeComponentPtr> m_Edges;
+		std::vector<GraphEdgeComponentWeakPtr> m_Edges;
 	};
 	typedef SPTR<AIRoadNodeComponent> AIRoadNodeComponentPtr;
+	typedef WPTR<AIRoadNodeComponent> AIRoadNodeComponentWeakPtr;
 }
 #endif

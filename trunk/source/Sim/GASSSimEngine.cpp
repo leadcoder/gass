@@ -57,6 +57,7 @@
 #include "Sim/Interface/GASSINavigationComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
+#include "Sim/Interface/GASSIGraphEdgeComponent.h"
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"

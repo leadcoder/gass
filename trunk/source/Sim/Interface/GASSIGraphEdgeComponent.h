@@ -24,19 +24,18 @@
 
 namespace GASS
 {
-	class IGraphEdgeComponent;
+	class IGraphNodeComponent;
+	typedef SPTR<IGraphNodeComponent> GraphNodeComponentPtr;
 
-	typedef SPTR<IGraphEdgeComponent> GraphEdgeComponentPtr;
-
-	class GASSExport IGraphNodeComponent
+	class GASSExport IGraphEdgeComponent
 	{
 	public:
-		virtual ~IGraphNodeComponent(){}
-		virtual void AddEdge(GraphEdgeComponentPtr edge) = 0;
-		virtual void RemoveEdge(GraphEdgeComponentPtr edge) = 0;
+		virtual ~IGraphEdgeComponent(){}
+		virtual void SetStartNode(GraphNodeComponentPtr node) = 0;
+		virtual void SetEndNode(GraphNodeComponentPtr  node) = 0;
 	protected:
 	};
-	typedef SPTR<IGraphNodeComponent> GraphNodeComponentPtr;
-	typedef WPTR<IGraphNodeComponent> GraphNodeComponentWeakPtr;
+	typedef SPTR<IGraphEdgeComponent> GraphEdgeComponentPtr;
+	typedef WPTR<IGraphEdgeComponent> GraphEdgeComponentWeakPtr;
 	
 }

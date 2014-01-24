@@ -34,7 +34,6 @@ namespace GASS
 
 	void AIRoadNodeComponent::OnInitialize()
 	{
-
+		
 	}
-	
 }

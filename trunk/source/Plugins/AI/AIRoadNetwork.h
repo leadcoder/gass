@@ -22,16 +22,20 @@ namespace GASS
 
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
-	class AIRoadNetwork :  public Reflection<AIRoadNetwork,BaseSceneComponent> , IGraphComponent
+	class AIRoadNetwork :  public Reflection<AIRoadNetwork,BaseSceneComponent> , public IGraphComponent
 	{
 	public:
 		AIRoadNetwork(void);
 		~AIRoadNetwork(void);
 		void OnInitialize();
-		std::string GetNodeTemplate() const {return "AINODE";}
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
+
+		//IGprahComponent interface
+		ADD_PROPERTY(std::string,NodeTemplate)
+		ADD_PROPERTY(std::string,EdgeTemplate)
+		void RebuildGraph();
 	private:
 		void GenerateGraph();
 		bool GetBuild() const;
