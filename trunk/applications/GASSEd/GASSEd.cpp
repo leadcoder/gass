@@ -35,10 +35,13 @@
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
+#include "Modules/Editor/ToolSystem/GraphTool.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
-
+#include "Sim/Interface/GASSIGraphComponent.h"
+#include "Sim/Interface/GASSIGraphNodeComponent.h"
+#include "Sim/Interface/GASSIGraphEdgeComponent.h"
 
 
 
@@ -165,6 +168,15 @@ void GASSEd::SetupMenuBar()
 	m_AddWaypointsAct->setEnabled(false);
 	m_AddWaypointsAct->setVisible(false);
 	connect(m_AddWaypointsAct, SIGNAL(triggered()), this, SLOT(OnAddWaypoints()));
+
+
+	
+
+	m_AddGraphNodeAct = m_EditMenu->addAction(tr("&Add Graph Node..."));
+	m_AddGraphNodeAct->setEnabled(false);
+	m_AddGraphNodeAct->setVisible(false);
+	connect(m_AddGraphNodeAct, SIGNAL(triggered()), this, SLOT(OnAddGraphNode()));
+
 
 
 	m_ChangeSiteAct = m_EditMenu->addAction(tr("&Make root for new objects"));
@@ -394,6 +406,21 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 			m_AddWaypointsAct->setEnabled(true);
 			m_AddWaypointsAct->setVisible(true);
 		}
+
+		GASS::GraphComponentPtr graph = obj->GetFirstComponentByClass<GASS::IGraphComponent>();
+		if(graph)
+		{
+			m_AddGraphNodeAct->setEnabled(true);
+			m_AddGraphNodeAct->setVisible(true);
+		}
+
+		GASS::GraphNodeComponentPtr node = obj->GetFirstComponentByClass<GASS::IGraphNodeComponent>();
+		if(node)
+		{
+			m_AddGraphNodeAct->setEnabled(true);
+			m_AddGraphNodeAct->setVisible(true);
+		}
+
 		m_AddTemplateMenu->clear();
 		m_AddTemplateMenu->setVisible(false);
 
@@ -466,6 +493,40 @@ void GASSEd::OnAddWaypoints()
 		}
 	}
 }
+
+void GASSEd::OnAddGraphNode()
+{
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	if(obj)
+	{
+		GASS::GraphComponentPtr graph = obj->GetFirstComponentByClass<GASS::IGraphComponent>();
+		if(graph)
+		{
+			GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+			sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+			GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+			tool->SetParentObject(obj);
+			tool->SetNodeTemplateName(graph->GetNodeTemplate());
+			tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+		}
+		GASS::GraphNodeComponentPtr node = obj->GetFirstComponentByClass<GASS::IGraphNodeComponent>();
+		if(node)
+		{
+			GASS::GraphComponentPtr graph = obj->GetParentSceneObject()->GetFirstComponentByClass<GASS::IGraphComponent>();
+			if(graph)
+			{
+				GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+				sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+				GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+				tool->SetParentObject(obj->GetParentSceneObject());
+				tool->SetConnetionObject(obj);
+				tool->SetNodeTemplateName(graph->GetNodeTemplate());
+				tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+			}
+		}
+	}
+}
+
 void GASSEd::OnExport()
 {
 	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
