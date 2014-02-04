@@ -5,6 +5,7 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOIS"/>
 		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>-->
+		<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX3"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
@@ -22,6 +23,7 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/OSG/Materials" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/OSG/3dmodels" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS_TEMPLATES">
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
@@ -35,6 +37,9 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
+		<MaterialSystem>
+			<TaskNode value="SIM"/> 
+		</MaterialSystem>
 		<EditorSystem>
 			<TaskNode value="PRE_SIM"/> 
 		</EditorSystem>

@@ -27,6 +27,7 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/AI" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>

@@ -33,6 +33,7 @@ private:
 	QAction *m_ChangeSiteAct;
 	QAction *m_ExportAct;
 	QAction *m_AddGraphNodeAct;
+	QAction *m_InsertGraphNodeAct;
 
 	QMenu *m_AddTemplateMenu;
     std::string m_Config;
@@ -60,6 +61,7 @@ public slots:
 	void OnDelete();
 	void OnAddWaypoints();
 	void OnAddGraphNode();
+	void OnInsertGraphNode();
 	void OnAddTemplate();
 	void OnSetAsSite();
 	void OnExport();

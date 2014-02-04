@@ -73,7 +73,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bin\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin_$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">GASSEd</TargetName>
@@ -81,7 +81,7 @@
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bin\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin_$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">GASSEd</TargetName>
@@ -112,7 +112,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\QtGuid4.lib;$(QTDIR)\lib\QtCored4.lib;QtSolutions_PropertyBrowser-2.5d.lib;GASSCore_d.lib;GASSSim_d.lib;GASSEditorModule_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\QtGuid4.lib;$(QTDIR)\lib\QtCored4.lib;QtSolutions_PropertyBrowser-2.5d4.lib;GASSCore_d.lib;GASSSim_d.lib;GASSEditorModule_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -186,12 +186,12 @@
       <Outputs>ad</Outputs>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>copy $(QTDIR)\bin\QtGuid4.dll bin\debug
-copy $(QTDIR)\bin\QtGui4.dll bin\release
-copy $(QTDIR)\bin\QtCored4.dll bin\debug
-copy $(QTDIR)\bin\QtCore4.dll bin\release
-copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5d.dll bin\debug
-copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release</Command>
+      <Command>rem copy $(QTDIR)\bin\QtGuid4.dll bin\debug
+rem copy $(QTDIR)\bin\QtGui4.dll bin\release
+rem copy $(QTDIR)\bin\QtCored4.dll bin\debug
+rem copy $(QTDIR)\bin\QtCore4.dll bin\release
+rem copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5d.dll bin\debug
+rem copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -214,7 +214,7 @@ copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;$(QTDIR)\lib\QtGui4.lib;$(QTDIR)\lib\QtCore4.lib;QtSolutions_PropertyBrowser-2.5.lib;GASSCore.lib;GASSSim.lib;GASSEditorModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;$(QTDIR)\lib\QtGui4.lib;$(QTDIR)\lib\QtCore4.lib;QtSolutions_PropertyBrowser-2.54.lib;GASSCore.lib;GASSSim.lib;GASSEditorModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(GASS_DEPENDENCIES)\qtpropertybrowser-2.5_1\lib;$(BOOST_HOME)\lib;$(GASS_HOME)\lib\$(Configuration);$(GASS_HOME)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -587,7 +587,7 @@ copy qtpropertybrowser-2.5_1\lib\QtSolutions_PropertyBrowser-2.5.dll bin\release
   <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties QtVersion_x0020_Win32="$(DefaultQtVersion)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" QtVersion_x0020_x64="x64" />
+      <UserProperties QtVersion_x0020_Win32="$(DefaultQtVersion)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" QtVersion_x0020_x64="4,8.3" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

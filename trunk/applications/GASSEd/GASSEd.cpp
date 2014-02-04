@@ -57,6 +57,7 @@ Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 	m_PasteAct(NULL),
 	m_DeleteAct(NULL),
 	m_AddWaypointsAct(NULL),
+	m_InsertGraphNodeAct(NULL),
 	m_ChangeSiteAct(NULL),
 	m_ExportAct(NULL),
 	m_AddTemplateMenu(NULL)
@@ -176,6 +177,12 @@ void GASSEd::SetupMenuBar()
 	m_AddGraphNodeAct->setEnabled(false);
 	m_AddGraphNodeAct->setVisible(false);
 	connect(m_AddGraphNodeAct, SIGNAL(triggered()), this, SLOT(OnAddGraphNode()));
+
+
+	m_InsertGraphNodeAct = m_EditMenu->addAction(tr("&Insert Graph Node..."));
+	m_InsertGraphNodeAct->setEnabled(false);
+	m_InsertGraphNodeAct->setVisible(false);
+	connect(m_InsertGraphNodeAct, SIGNAL(triggered()), this, SLOT(OnInsertGraphNode()));
 
 
 
@@ -380,6 +387,12 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 	m_AddWaypointsAct->setEnabled(false);
 	m_AddWaypointsAct->setVisible(false);
 
+	m_AddGraphNodeAct->setEnabled(false);
+	m_AddGraphNodeAct->setVisible(false);
+
+	m_InsertGraphNodeAct->setEnabled(false);
+	m_InsertGraphNodeAct->setVisible(false);
+
 	GASS::SceneObjectPtr obj(m_SelectedObject, NO_THROW);
 	if(obj)
 	{
@@ -412,6 +425,8 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 		{
 			m_AddGraphNodeAct->setEnabled(true);
 			m_AddGraphNodeAct->setVisible(true);
+			m_InsertGraphNodeAct->setEnabled(true);
+			m_InsertGraphNodeAct->setVisible(true);
 		}
 
 		GASS::GraphNodeComponentPtr node = obj->GetFirstComponentByClass<GASS::IGraphNodeComponent>();
@@ -505,6 +520,7 @@ void GASSEd::OnAddGraphNode()
 			GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
 			sm->GetMouseToolController()->SelectTool(TID_GRAPH);
 			GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+			tool->SetMode(GASS::GTM_ADD);
 			tool->SetParentObject(obj);
 			tool->SetNodeTemplateName(graph->GetNodeTemplate());
 			tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
@@ -519,10 +535,30 @@ void GASSEd::OnAddGraphNode()
 				sm->GetMouseToolController()->SelectTool(TID_GRAPH);
 				GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
 				tool->SetParentObject(obj->GetParentSceneObject());
+				tool->SetMode(GASS::GTM_ADD);
 				tool->SetConnetionObject(obj);
 				tool->SetNodeTemplateName(graph->GetNodeTemplate());
 				tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
 			}
+		}
+	}
+}
+
+void GASSEd::OnInsertGraphNode()
+{
+	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	if(obj)
+	{
+		GASS::GraphComponentPtr graph = obj->GetFirstComponentByClass<GASS::IGraphComponent>();
+		if(graph)
+		{
+			GASS::EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+			sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+			GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+			tool->SetMode(GASS::GTM_INSERT);
+			tool->SetParentObject(obj);
+			tool->SetNodeTemplateName(graph->GetNodeTemplate());
+			tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
 		}
 	}
 }
