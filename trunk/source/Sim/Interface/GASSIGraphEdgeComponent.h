@@ -33,6 +33,8 @@ namespace GASS
 		virtual ~IGraphEdgeComponent(){}
 		virtual void SetStartNode(GraphNodeComponentPtr node) = 0;
 		virtual void SetEndNode(GraphNodeComponentPtr  node) = 0;
+		virtual GraphNodeComponentPtr GetStartNode() const = 0;
+		virtual GraphNodeComponentPtr GetEndNode() const = 0;
 	protected:
 	};
 	typedef SPTR<IGraphEdgeComponent> GraphEdgeComponentPtr;

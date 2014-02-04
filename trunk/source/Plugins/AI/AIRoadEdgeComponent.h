@@ -23,6 +23,7 @@ namespace GASS
 		AIRoadEdgeComponent(void);
 		~AIRoadEdgeComponent(void);
 		void OnInitialize();
+		void OnDelete();
 		static void RegisterReflection();
 		void SetStartNode(GraphNodeComponentPtr node) {m_StartNode = node;}
 		void SetEndNode(GraphNodeComponentPtr node) {m_EndNode = node;}

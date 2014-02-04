@@ -8,6 +8,8 @@
 #include "Plugins/Game/GameMessages.h"
 #include "RoadIntersectionComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSIGraphComponent.h"
+
 #include <algorithm>
 
 
@@ -27,14 +29,27 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadEdgeComponent",new Creator<AIRoadEdgeComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadEdgeComponent", OF_VISIBLE)));
-
-		//RegisterProperty<bool>("Build", &AIRoadEdgeComponent::GetBuild, &AIRoadEdgeComponent::SetBuild,
-		//	BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void AIRoadEdgeComponent::OnInitialize()
 	{
 
 	}
-	
+
+
+	void AIRoadEdgeComponent::OnDelete()
+	{
+
+		GraphNodeComponentPtr start_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(GetStartNode());
+		GraphNodeComponentPtr end_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(GetEndNode());
+		GraphEdgeComponentPtr edge = DYNAMIC_PTR_CAST<IGraphEdgeComponent>(shared_from_this());
+		if(start_node)
+			start_node->RemoveEdge(edge);
+		if(end_node)
+			end_node->RemoveEdge(edge);
+		//update graph
+		//GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
+		//GASSAssert(graph,"Failed to find IGraphComponent in AIRoadEdgeComponent::OnDelete()");
+		//graph->RebuildGraph();
+	}
 }

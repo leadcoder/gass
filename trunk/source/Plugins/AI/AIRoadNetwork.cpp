@@ -92,8 +92,7 @@ namespace GASS
 		}
 	}
 
-
-	void AIRoadNetwork::Rebuild()
+	/*void AIRoadNetwork::Rebuild()
 	{
 		//Get all roads and build search graph!
 		IComponentContainer::ComponentVector components;
@@ -126,9 +125,6 @@ namespace GASS
 				}
 			}
 		}
-
-		
-
 	}
 
 	void AIRoadNetwork::AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge)
@@ -170,7 +166,7 @@ namespace GASS
 		{
 
 		}
-	}
+	}*/
 
 
 	void AIRoadNetwork::GenerateGraph()
@@ -255,7 +251,7 @@ namespace GASS
 		RoadEdge* from_edge = GetCloesestEdge(from_point);
 		RoadEdge* to_edge = GetCloesestEdge(to_point);
 
-		if(from_edge == to_edge) //no need to path find!
+		if(from_edge && from_edge == to_edge) //no need to path find!
 		{
 			Vec3 start_point,end_point;
 			int start_seg_index,end_seg_index;

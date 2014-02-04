@@ -41,7 +41,7 @@ namespace GASS
 		bool GetBuild() const;
 		void SetBuild(bool value);
 		void Rebuild();
-		void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
+		//void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
 		RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
 		RoadEdge* GetCloesestEdge(const Vec3 &point);
 		RoadNode* GetCloesestNode(const Vec3 &point);

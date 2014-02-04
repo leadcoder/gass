@@ -12,6 +12,13 @@ namespace GASS
 	class SceneObject;
 	class MouseToolController;
 
+	enum GraphToolMode
+	{
+		GTM_ADD,
+		GTM_INSERT
+	};
+	
+
 	class EditorModuleExport GraphTool :  public IMouseTool
 	{
 	public:
@@ -29,6 +36,7 @@ namespace GASS
 		void SetConnetionObject(SceneObjectPtr object) {m_PrevObject = object;}
 		void SetNodeTemplateName(const std::string &name) {m_NodeObjectName= name;}
 		void SetEdgeTemplateName(const std::string &name) {m_EdgeObjectName= name;}
+		void SetMode(GraphToolMode mode) {m_Mode= mode;}
 	private:
 		void OnToolChanged(ToolChangedEventPtr message);
 		bool m_MouseIsDown;
@@ -39,5 +47,6 @@ namespace GASS
 		std::string m_EdgeObjectName;
 		GASS::SceneObjectWeakPtr m_ParentObject; 
 		GASS::SceneObjectWeakPtr m_PrevObject; 
+		GraphToolMode m_Mode;
 	};
 }
