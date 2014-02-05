@@ -15,7 +15,7 @@
 
 namespace GASS
 {
-	AIRoadNetwork::AIRoadNetwork(void) : m_Edit(false)
+	AIRoadNetwork::AIRoadNetwork(void) : m_Edit(true)
 	{
 
 	}	
@@ -46,7 +46,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIRoadNetwork::OnPathfindToLocation,PathfindToPositionMessage,0));
 
-		std::vector<Vec3> pos_vec;
+		/*std::vector<Vec3> pos_vec;
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
 			pos_vec.push_back(m_Edges[i]->StartNode->Position);
@@ -60,9 +60,7 @@ namespace GASS
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",false));
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			debug->PostMessage(mesh_message);
-		}
-
-		
+		}*/
 	}
 
 	bool AIRoadNetwork::GetBuild() const
@@ -82,19 +80,12 @@ namespace GASS
 		{
 			if(value)
 			{
-				//create all nodes and  edges!
-
-				for(size_t i = 0; i < m_Nodes.size();i++)
-				{
-
-				}
-
+				_ExpandFromNetwork();
 			}
 			else
 			{
-				BuildNetwork();
+				_RebuildNetwork();
 				//remove all nodes and edges
-
 				IComponentContainer::ComponentVector components;
 				GetSceneObject()->GetComponentsByClass<AIRoadNodeComponent>(components);
 				for(size_t i = 0 ;  i < components.size(); i++)
@@ -102,22 +93,40 @@ namespace GASS
 					AIRoadNodeComponentPtr node_comp = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(components[i]);
 					GetSceneObject()->RemoveChildSceneObject(node_comp->GetSceneObject());
 				}
-				/*components.clear();
-				GetSceneObject()->GetComponentsByClass<AIRoadEdgeComponent>(components);
-				for(size_t i = 0 ;  i < components.size(); i++)
-				{
-					AIRoadEdgeComponentPtr edge_comp = DYNAMIC_PTR_CAST<AIRoadEdgeComponent>(components[i]);
-				}*/
-
 			}
 		}
-		
+	}
+
+	void AIRoadNetwork::_ExpandFromNetwork()
+	{
+		//create all nodes and  edges!
+		std::map<RoadNode*,GraphNodeComponentPtr> mapping;
+		for(size_t i = 0; i < m_Network.m_Nodes.size();i++)
+		{
+			SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
+			GASSAssert(node_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
+			node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(m_Network.m_Nodes[i]->Position)));
+			mapping[m_Network.m_Nodes[i]] = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
+		}
+
+		//create all nodes and  edges!
+		for(size_t i = 0; i < m_Network.m_Edges.size(); i++)
+		{
+			SceneObjectPtr edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
+			GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
+			GraphEdgeComponentPtr edge_comp = edge_obj->GetFirstComponentByClass<IGraphEdgeComponent>();
+			GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
+			edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
+			edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
+			mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
+			mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
+		}
 	}
 
 	void AIRoadNetwork::SetBuild(bool value) 
 	{
 		//if(GetSceneObject())
-		//	BuildNetwork();
+		//	RebuildNetwork();
 		//GenerateGraph();
 		//Rebuild();
 	}
@@ -160,96 +169,9 @@ namespace GASS
 		}
 	}
 
-	/*void AIRoadNetwork::Rebuild()
+	void AIRoadNetwork::_RebuildNetwork()
 	{
-	//Get all roads and build search graph!
-	IComponentContainer::ComponentVector components;
-	GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadComponent>(components);
-	for(size_t i = 0 ;  i < components.size(); i++)
-	{
-	AIRoadComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadComponent>(components[i]);
-	std::vector<AIRoadLaneSectionComponentPtr> ls = road_comp->GetLaneSections();
-	for(size_t j = 0; j < ls.size(); j++)
-	{
-	std::vector<AIRoadLaneComponentPtr>  lanes = ls[j]->GetLanes();
-	for(size_t k = 0; k < lanes.size(); k++)
-	{
-	lanes[k]->m_Edge = 0;
-	}
-	}
-	}
-
-	for(size_t i = 0 ;  i < components.size(); i++)
-	{
-	AIRoadComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadComponent>(components[i]);
-	std::vector<AIRoadLaneSectionComponentPtr> ls = road_comp->GetLaneSections();
-	for(size_t j = 0; j < ls.size(); j++)
-	{
-	std::vector<AIRoadLaneComponentPtr>  lanes = ls[j]->GetLanes();
-	for(size_t k = 0; k < lanes.size(); k++)
-	{
-	if(lanes[k]->m_Edge == NULL)
-	AddLane(lanes[k], NULL);
-	}
-	}
-	}
-	}
-
-	void AIRoadNetwork::AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge)
-	{
-	std::vector<Vec3> points = lane->GetWaypoints();
-	RoadNode* start_node;
-	if(prev_edge)
-	{
-	start_node = prev_edge->EndNode;
-	}
-	else
-	{
-	start_node = new RoadNode();
-	start_node->Position = points.front();
-	}
-
-	RoadNode* end_node = new RoadNode();
-	end_node->Position = points.back();
-	RoadEdge* edge = new RoadEdge();
-	edge->Waypoints = points;
-	edge->Distance =  Math::GetPathLength(points);
-	edge->StartNode = start_node;
-	edge->EndNode = end_node;
-	start_node->Edges.push_back(edge);
-	lane->m_Edge =edge;
-	std::vector<AIRoadLaneComponentPtr>* connections = lane->GetNextLanesPtr();
-	if(connections->size() > 0)
-	{
-	for(size_t l = 0; l < connections->size() ; l++)
-	{
-	AIRoadLaneComponentPtr next_lane = connections->at(l);
-	if(next_lane->m_Edge == NULL)
-	{
-	AddLane(next_lane,edge);
-	}
-	}
-	}
-	else //?
-	{
-
-	}
-	}*/
-
-	void AIRoadNetwork::BuildNetwork()
-	{
-		for(size_t i = 0; i < m_Edges.size();i++)
-		{
-			delete m_Edges[i];
-		}
-		m_Edges.clear();
-
-		for(size_t i = 0; i < m_Nodes.size();i++)
-		{
-			delete m_Nodes[i];
-		}
-		m_Nodes.clear();
-
+		m_Network.Clear();
 		std::map<AIRoadNodeComponentPtr,RoadNode*> node_mapping;
 		IComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass<AIRoadNodeComponent>(components);
@@ -260,7 +182,7 @@ namespace GASS
 			RoadNode* road_node = new RoadNode();
 			road_node->Position = node_pos;
 			node_mapping[node_comp] = road_node; 
-			m_Nodes.push_back(road_node);
+			m_Network.m_Nodes.push_back(road_node);
 		}
 
 		components.clear();
@@ -277,16 +199,7 @@ namespace GASS
 				start_node = node_mapping.find(start_rn)->second;
 				Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				road_wps.push_back(start_pos);
-
 			}
-			/*else //Create end node
-			{
-
-			start_node = new RoadNode();
-			start_node ->Position = road_wps.front();
-			m_Nodes.push_back(start_node);
-			}*/
-
 			RoadNode* end_node;
 			if(road_comp->GetEndNode())
 			{
@@ -295,13 +208,7 @@ namespace GASS
 				Vec3 end_pos  = end_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				road_wps.push_back(end_pos);
 			}
-			/*else
-			{
-			end_node = new RoadNode();
-			end_node->Position = road_wps.back();
-			m_Nodes.push_back(end_node);
-			}*/
-
+		
 			RoadEdge* edge = new RoadEdge();
 			edge->Waypoints = road_wps;
 			edge->Distance =  Math::GetPathLength(road_wps);
@@ -309,11 +216,11 @@ namespace GASS
 			edge->EndNode = end_node;
 			start_node->Edges.push_back(edge);
 			end_node->Edges.push_back(edge);
-			m_Edges.push_back(edge);
+			m_Network.m_Edges.push_back(edge);
 		}
 	}
 
-	void AIRoadNetwork::GenerateGraph()
+	/*void AIRoadNetwork::GenerateGraph()
 	{
 		std::map<AIRoadIntersectionComponentPtr,RoadNode*> node_mapping;
 		IComponentContainer::ComponentVector components;
@@ -370,12 +277,12 @@ namespace GASS
 			end_node->Edges.push_back(edge);
 			m_Edges.push_back(edge);
 		}
-	}
+	}*/
 
 	void AIRoadNetwork::OnPathfindToLocation(PathfindToPositionMessagePtr message)
 	{
 		Vec3 from = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-		std::vector<Vec3> path = Search(from,message->GetPosition());
+		std::vector<Vec3> path = m_Network.Search(from,message->GetPosition());
 
 		SceneObjectPtr debug = GetSceneObject()->GetChildByID("DEBUG_NODE");
 		if(debug)
@@ -385,10 +292,9 @@ namespace GASS
 			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
 			debug->PostMessage(mesh_message);
 		}
-
 	}
 
-	std::vector<Vec3> AIRoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point)
+	/*std::vector<Vec3> AIRoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point)
 	{
 		std::vector<Vec3> path;
 		path.push_back(from_point);
@@ -587,27 +493,18 @@ namespace GASS
 			}
 		}
 		return best_node;
-	}
-
-	/*void AIRoadNetwork::Load(const std::string &filename)
-	{
-
-	}
-
-	void AIRoadNetwork::Save(const std::string &filename)
-	{
-	//TiXmlDocument doc;  
-	//TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
-	//doc.LinkEndChild( decl); 
 	}*/
 
 	void AIRoadNetwork::SaveXML(TiXmlElement * elem)
 	{
+		if(m_Edit)
+			_RebuildNetwork();
 		m_Edit = false;
 		BaseSceneComponent::SaveXML(elem);
 
 		TiXmlElement *  net_elem = elem->FirstChildElement("AIRoadNetwork");
-		TiXmlElement * nodes_elem = new TiXmlElement("Nodes");  
+		m_Network.SaveXML(net_elem);
+		/*TiXmlElement * nodes_elem = new TiXmlElement("Nodes");  
 		net_elem->LinkEndChild( nodes_elem);  
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{
@@ -637,64 +534,18 @@ namespace GASS
 				std::string pos = m_Edges[i]->Waypoints[j].ToString(" ");
 				wp_prop_elem->SetAttribute("Position",pos.c_str());
 			}
-		}
-		
+		}*/
 	}
 
 
 	void AIRoadNetwork::LoadXML(TiXmlElement * elem)
 	{
-		std::map<int,RoadNode*> mapping;
+		m_Network.LoadXML(elem);
 		TiXmlElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			std::string prop_name = prop_elem->Value();
-			if(prop_name == "Nodes")
-			{
-				TiXmlElement *node_elem = prop_elem->FirstChildElement("Node");
-				while(node_elem)
-				{
-					int id;
-					RoadNode* node = new RoadNode();
-					node_elem->QueryIntAttribute("ID",&id);
-					std::string pos = node_elem->Attribute("Position");
-					node_elem = node_elem->NextSiblingElement();
-					std::stringstream ss(pos);
-					ss >> node->Position;
-					m_Nodes.push_back(node);
-					mapping[id] = node;
-				}
-			}
-			else if(prop_name == "Edges")
-			{
-				TiXmlElement *edge_elem = prop_elem->FirstChildElement("Edge");
-				while(edge_elem)
-				{
-					RoadEdge* edge = new RoadEdge();
-					int sn_id,en_id;
-					edge_elem->QueryIntAttribute("StartNode",&sn_id);
-					edge_elem->QueryIntAttribute("EndNode",&en_id);
-					edge->StartNode = mapping[sn_id];
-					edge->EndNode = mapping[en_id];
-					edge->StartNode->Edges.push_back(edge);
-					edge->EndNode->Edges.push_back(edge);
-
-					TiXmlElement *wps_elem = edge_elem->FirstChildElement("Waypoints");
-					wps_elem = wps_elem->FirstChildElement("WP");
-					while(wps_elem)
-					{
-						std::string pos_str = wps_elem->Attribute("Position");
-						Vec3 pos;
-						std::stringstream ss(pos_str);
-						ss >> pos;
-						edge->Waypoints.push_back(pos);
-						wps_elem = wps_elem->NextSiblingElement();
-					}
-					m_Edges.push_back(edge);
-					edge_elem = edge_elem->NextSiblingElement();
-				}
-			}
-			else
+			if(prop_name != "RoadNetwork")
 			{
 				std::string prop_val = prop_elem->FirstAttribute()->Value();
 				SetPropertyByString(prop_name,prop_val);

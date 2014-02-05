@@ -13,14 +13,12 @@
 #include "Plugins/AI/micropather.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
+#include "RoadNetwork.h"
 class TiXmlElement;
 
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
-	class RoadNode;
-	class RoadEdge;
-	
 
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
@@ -33,36 +31,37 @@ namespace GASS
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
-
 		bool GetEdit() const;
 		void SetEdit(bool value);
-
-		//IGprahComponent interface
 		ADD_PROPERTY(std::string,NodeTemplate)
 		ADD_PROPERTY(std::string,EdgeTemplate)
+
+		//IGraphComponent interface
 		void RebuildGraph();
 	private:
-		void GenerateGraph();
+		void _ExpandFromNetwork();
+		void _RebuildNetwork();
 		bool GetBuild() const;
 		void SetBuild(bool value);
 		void Rebuild();
+		//void GenerateGraph();
 		//void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
-		RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
-		RoadEdge* GetCloesestEdge(const Vec3 &point);
-		RoadNode* GetCloesestNode(const Vec3 &point);
-		void RemoveNode(RoadNode* node);
-		void BuildNetwork();
-		void Load(const std::string &filename);
-		void Save(const std::string &filename);
+		//RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
+		//RoadEdge* GetCloesestEdge(const Vec3 &point);
+		//RoadNode* GetCloesestNode(const Vec3 &point);
+		//void RemoveNode(RoadNode* node);
+		//void Load(const std::string &filename);
+		//void Save(const std::string &filename);
 		void SaveXML(TiXmlElement * elem);
 		void LoadXML(TiXmlElement * elem);
-		std::vector<RoadNode*> m_Nodes;
-		std::vector<RoadEdge*> m_Edges;
+		//std::vector<RoadNode*> m_Nodes;
+		//std::vector<RoadEdge*> m_Edges;
 		bool m_Edit;
+		RoadNetwork m_Network;
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
-	enum RoadDirection
+	/*enum RoadDirection
 	{
 		UPSTREAM,
 		DOWNSTREAM,
@@ -109,7 +108,7 @@ namespace GASS
 		std::vector<RoadEdge*> Edges;
 	};
 
-	class RoadNavigation  : public micropather::Graph
+	/*class RoadNavigation  : public micropather::Graph
 	{
 	private:
 		RoadNavigation( const RoadNavigation& );
@@ -164,10 +163,6 @@ namespace GASS
 			RoadNode* start = VoidToRoadNode( nodeStart);
 			RoadNode* end = VoidToRoadNode( nodeEnd);
 
-			/* Compute the minimum path cost using distance measurement. It is possible
-			to compute the exact minimum path using the fact that you can move only 
-			on a straight line or on a diagonal, and this will yield a better result.
-			*/
 			return (float) (start->Position - end->Position).Length();
 		}
 
@@ -201,6 +196,6 @@ namespace GASS
 			//NodeToXY( node, &x, &y );
 			//printf( "(%d,%d)", x, y );
 		}
-	};
+	};*/
 }
 #endif

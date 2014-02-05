@@ -124,11 +124,13 @@ namespace GASS
 			else if(m_Mode == GTM_ADD)
 			{
 				{
+					SceneObjectPtr prev_obj(m_PrevObject,NO_THROW);
+
 					//Check if object under cursor has IGraphNodeComponent to support reconnection
 					GraphNodeComponentPtr current_node = obj_under_cursor->GetFirstComponentByClass<IGraphNodeComponent>();
 					SceneObjectPtr current_obj;
 
-					if(!current_node)
+					if(!current_node && prev_obj != obj_under_cursor)
 					{
 						current_obj = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_NodeObjectName,parent_obj);
 						GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
@@ -138,7 +140,6 @@ namespace GASS
 						current_obj->SendImmediate(pos_msg);
 						current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
-
 						//auto insert?
 						_TryInsert(current_obj, info.m_3DPos, parent_obj);
 					}
@@ -146,7 +147,7 @@ namespace GASS
 					{
 						current_obj = obj_under_cursor;
 					}
-					SceneObjectPtr prev_obj(m_PrevObject,NO_THROW);
+					
 					if(prev_obj)
 					{
 						GraphNodeComponentPtr prev_node = prev_obj->GetFirstComponentByClass<IGraphNodeComponent>();
