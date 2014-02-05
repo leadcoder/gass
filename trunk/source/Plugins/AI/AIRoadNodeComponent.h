@@ -28,7 +28,7 @@ namespace GASS
 		void OnDelete();
 		static void RegisterReflection();
 		virtual void AddEdge(GraphEdgeComponentPtr edge) {m_Edges.push_back(edge);}
-		virtual void RemoveEdge(GraphEdgeComponentPtr edge) {};
+		virtual void RemoveEdge(GraphEdgeComponentPtr edge);
 	private:
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		std::vector<GraphEdgeComponentWeakPtr> m_Edges;

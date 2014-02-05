@@ -397,7 +397,7 @@ namespace GASS
 	void Scene::OnRemoveSceneObject(RemoveSceneObjectRequestPtr message)
 	{
 		SceneObjectPtr so = message->GetSceneObject();
-		if(so)
+		if(so && so->GetParentSceneObject())
 			so->GetParentSceneObject()->RemoveChildSceneObject(so);
 	}
 

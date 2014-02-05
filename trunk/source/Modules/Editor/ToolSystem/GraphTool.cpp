@@ -13,7 +13,6 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
-#include "Sim/Interface/GASSIGraphEdgeComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 
 
@@ -61,7 +60,7 @@ namespace GASS
 		{
 			if(m_Mode == GTM_INSERT)
 			{
-				Float min_dist  = 1;
+				/*Float min_dist  = 1;
 				int index = -1;
 				//get closest edge and check if it's within threshold!
 				IComponentContainer::ComponentVector comps;
@@ -84,9 +83,11 @@ namespace GASS
 						}
 					}
 				}
-				if(index > -1)
+				*/
+				GraphEdgeComponentPtr edge =  _GetClosestEdge(parent_obj,info.m_3DPos , 1.0); 
+				if(edge)
 				{
-					GraphEdgeComponentPtr edge = DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[index]);
+					
 					GraphNodeComponentPtr start_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
 					GraphNodeComponentPtr end_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetEndNode());
 
@@ -137,9 +138,14 @@ namespace GASS
 						current_obj->SendImmediate(pos_msg);
 						current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
+
+						//auto insert?
+						_TryInsert(current_obj, info.m_3DPos, parent_obj);
 					}
 					else
+					{
 						current_obj = obj_under_cursor;
+					}
 					SceneObjectPtr prev_obj(m_PrevObject,NO_THROW);
 					if(prev_obj)
 					{
@@ -156,12 +162,11 @@ namespace GASS
 						edge_comp->SetEndNode(current_node);
 						prev_node->AddEdge(edge_comp);
 						current_node->AddEdge(edge_comp);
-						m_PrevObject = current_obj;
-
 						GraphComponentPtr graph = parent_obj->GetFirstComponentByClass<IGraphComponent>();
 						GASSAssert(graph,"Failed to find IGraphComponent in GraphTool::MouseDown");
 						graph->RebuildGraph();
 					}
+					m_PrevObject = current_obj;
 				}
 			}
 		}
@@ -170,6 +175,68 @@ namespace GASS
 	void GraphTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
+	}
+
+	void GraphTool::_TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const
+	{
+		GraphEdgeComponentPtr edge = _GetClosestEdge(parent_obj, obj_pos,1.0);
+		if(edge)
+		{
+			GraphNodeComponentPtr start_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
+			GraphNodeComponentPtr end_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetEndNode());
+		
+			GraphNodeComponentPtr current_node = new_obj->GetFirstComponentByClass<IGraphNodeComponent>();
+			GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::_Insert");
+
+			edge->SetEndNode(current_node);
+			current_node->AddEdge(edge);
+			end_node->RemoveEdge(edge);
+
+			GASS::SceneObjectPtr edge_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_EdgeObjectName,parent_obj);
+			GASSAssert(edge_object,"Failed to LoadObjectFromTemplate in GraphTool::_Insert");
+			GraphEdgeComponentPtr new_edge = edge_object->GetFirstComponentByClass<IGraphEdgeComponent>();
+			GASSAssert(new_edge,"Failed to find IGraphEdgeComponent in GraphTool::_Insert");
+
+			new_edge->SetStartNode(current_node);
+			new_edge->SetEndNode(end_node);
+			end_node->AddEdge(new_edge);
+			current_node->AddEdge(new_edge);
+		}
+	}
+
+
+	GraphEdgeComponentPtr GraphTool::_GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const 
+	{
+		GraphEdgeComponentPtr edge;
+		int index = -1;
+		Float min_dist = treshhold_dist;
+		//get closest edge and check if it's within threshold!
+		IComponentContainer::ComponentVector comps;
+		graph_obj->GetComponentsByClass<IGraphEdgeComponent>(comps,true);
+		for(size_t i =  0; i < comps.size(); i++)
+		{
+			GraphEdgeComponentPtr edge = DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
+			BaseSceneComponentPtr start_node = DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetStartNode());
+			BaseSceneComponentPtr end_node = DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetEndNode());
+			if(start_node && end_node)
+			{
+				Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				Vec3 end_pos  = end_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				Vec3 cpos = Math::ClosestPointOnLine(start_pos, end_pos, pos);
+				Float dist = (cpos - pos).Length();
+				if(dist < min_dist) 
+				{
+					min_dist = dist;
+					index = i;
+				}
+			}
+		}
+
+		if(index > -1)
+		{
+			edge = DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[index]);
+		}
+		return edge;
 	}
 
 }

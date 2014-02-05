@@ -50,17 +50,33 @@ namespace GASS
 		std::vector<GraphEdgeComponentWeakPtr> edges =  m_Edges;
 		for (size_t i= 0; i < edges.size(); i++)
 		{
-			GraphEdgeComponentPtr edge(edges[i]);
+			GraphEdgeComponentPtr edge(edges[i],NO_THROW);
 			if(edge)
 			{
 				//Delete edge object
 				BaseSceneComponentPtr bso = DYNAMIC_PTR_CAST<BaseSceneComponent>(edge);
-				GetSceneObject()->GetParentSceneObject()->RemoveChildSceneObject(bso->GetSceneObject());
+				//GetSceneObject()->GetParentSceneObject()->RemoveChildSceneObject(bso->GetSceneObject());
+				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new RemoveSceneObjectRequest(bso->GetSceneObject())));
 			}
 		}
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
 		GASSAssert(graph,"Failed to find IGraphComponent in AIRoadEdgeComponent::OnDelete()");
 		graph->RebuildGraph();
+	}
+
+	void AIRoadNodeComponent::RemoveEdge(GraphEdgeComponentPtr edge)
+	{
+		std::vector<GraphEdgeComponentWeakPtr>::iterator iter = m_Edges.begin();
+		while(iter !=m_Edges.end())
+		{
+			GraphEdgeComponentPtr edge_ptr(*iter,NO_THROW);
+			if(edge_ptr == edge)
+			{
+				iter = m_Edges.erase(iter);
+			}
+			else
+				iter++;
+		}
 	}
 }

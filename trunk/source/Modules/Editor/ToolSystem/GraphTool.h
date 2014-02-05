@@ -6,6 +6,7 @@
 #include "CursorInfo.h"
 #include "../EditorMessages.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSIGraphEdgeComponent.h"
 
 namespace GASS
 {
@@ -17,8 +18,10 @@ namespace GASS
 		GTM_ADD,
 		GTM_INSERT
 	};
-	
 
+	//class GraphEdgeComponent;
+	//typedef SPTR<GraphEdgeComponent> GraphEdgeComponentPtr;
+	
 	class EditorModuleExport GraphTool :  public IMouseTool
 	{
 	public:
@@ -38,6 +41,8 @@ namespace GASS
 		void SetEdgeTemplateName(const std::string &name) {m_EdgeObjectName= name;}
 		void SetMode(GraphToolMode mode) {m_Mode= mode;}
 	private:
+		void _TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const;
+		GraphEdgeComponentPtr _GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const;
 		void OnToolChanged(ToolChangedEventPtr message);
 		bool m_MouseIsDown;
 		GASS::Vec3 m_Offset;

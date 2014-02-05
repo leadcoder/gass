@@ -25,7 +25,6 @@
 namespace GASS
 {
 	class IGraphEdgeComponent;
-
 	typedef SPTR<IGraphEdgeComponent> GraphEdgeComponentPtr;
 
 	class GASSExport IGraphNodeComponent

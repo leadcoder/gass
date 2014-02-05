@@ -13,12 +13,14 @@
 #include "Plugins/AI/micropather.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
+class TiXmlElement;
 
 namespace GASS
 {
 	class AIRoadLaneSectionComponent;
 	class RoadNode;
 	class RoadEdge;
+	
 
 	typedef SPTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
@@ -31,6 +33,9 @@ namespace GASS
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
+
+		bool GetEdit() const;
+		void SetEdit(bool value);
 
 		//IGprahComponent interface
 		ADD_PROPERTY(std::string,NodeTemplate)
@@ -46,8 +51,14 @@ namespace GASS
 		RoadEdge* GetCloesestEdge(const Vec3 &point);
 		RoadNode* GetCloesestNode(const Vec3 &point);
 		void RemoveNode(RoadNode* node);
+		void BuildNetwork();
+		void Load(const std::string &filename);
+		void Save(const std::string &filename);
+		void SaveXML(TiXmlElement * elem);
+		void LoadXML(TiXmlElement * elem);
 		std::vector<RoadNode*> m_Nodes;
 		std::vector<RoadEdge*> m_Edges;
+		bool m_Edit;
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
