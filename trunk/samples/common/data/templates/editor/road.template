@@ -4,6 +4,7 @@
 	<SceneObjectTemplate>
 		<Name value="AIRoadNode"/>
 		<Instantiable value="true"/>
+		<Serialize value="false"/>
 		<Components>
 			<AIRoadNodeComponent>
 			</AIRoadNodeComponent>
@@ -24,6 +25,7 @@
 	<SceneObjectTemplate>
 		<Name value="AIRoadEdge"/>
 		<Instantiable value="true"/>
+		<Serialize value="false"/>
 		<Components>
 			<AIRoadEdgeComponent>
 			</AIRoadEdgeComponent>
