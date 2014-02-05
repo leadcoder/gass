@@ -169,11 +169,9 @@ void GASSEd::SetupMenuBar()
 	m_AddWaypointsAct->setEnabled(false);
 	m_AddWaypointsAct->setVisible(false);
 	connect(m_AddWaypointsAct, SIGNAL(triggered()), this, SLOT(OnAddWaypoints()));
-
-
 	
 
-	m_AddGraphNodeAct = m_EditMenu->addAction(tr("&Add Graph Node..."));
+	m_AddGraphNodeAct = m_EditMenu->addAction(tr("&Add Graph Edges..."));
 	m_AddGraphNodeAct->setEnabled(false);
 	m_AddGraphNodeAct->setVisible(false);
 	connect(m_AddGraphNodeAct, SIGNAL(triggered()), this, SLOT(OnAddGraphNode()));
@@ -184,25 +182,17 @@ void GASSEd::SetupMenuBar()
 	m_InsertGraphNodeAct->setVisible(false);
 	connect(m_InsertGraphNodeAct, SIGNAL(triggered()), this, SLOT(OnInsertGraphNode()));
 
-
-
 	m_ChangeSiteAct = m_EditMenu->addAction(tr("&Make root for new objects"));
 	m_ChangeSiteAct->setEnabled(false);
 	m_ChangeSiteAct->setVisible(false);
 	connect(m_ChangeSiteAct, SIGNAL(triggered()), this, SLOT(OnSetAsSite()));
-
-
-
 
 	m_ExportAct = m_EditMenu->addAction(tr("&Export..."));
 	m_ExportAct->setEnabled(false);
 	m_ExportAct->setVisible(false);
 	connect(m_ExportAct, SIGNAL(triggered()), this, SLOT(OnExport()));
 
-
 	m_AddTemplateMenu = m_EditMenu->addMenu(tr("&Add..."));
-
-
 }
 
 void GASSEd::saveLayout()
@@ -522,6 +512,7 @@ void GASSEd::OnAddGraphNode()
 			GASS::GraphTool* tool = static_cast<GASS::GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
 			tool->SetMode(GASS::GTM_ADD);
 			tool->SetParentObject(obj);
+			tool->SetConnetionObject(GASS::SceneObjectPtr());
 			tool->SetNodeTemplateName(graph->GetNodeTemplate());
 			tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
 		}
