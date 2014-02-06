@@ -29,6 +29,7 @@ namespace GASS
 		{
 			delete m_Nodes[i];
 		}
+		m_Nodes.clear();
 	}
 
 	std::vector<Vec3> RoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point)
@@ -47,24 +48,35 @@ namespace GASS
 
 			path.push_back(start_point);
 
+
+			std::vector<Vec3> edge_path;
+			
 			if(start_seg_index < end_seg_index)
 			{
 				for(int i = start_seg_index+1; i <= end_seg_index; i++)
 				{
-					path.push_back(from_edge->Waypoints[i]);
+					edge_path.push_back(from_edge->Waypoints[i]);
 				}
 			}
 			else if(start_seg_index > end_seg_index)
 			{
 				for(int i = start_seg_index; i > end_seg_index; i--)
 				{
-					path.push_back(from_edge->Waypoints[i]);
+					edge_path.push_back(from_edge->Waypoints[i]);
 				}
 			}
 			else //same segment
 			{
 
 			}
+
+			//add edge offset
+			//edge_path = Math::GenerateOffset(edge_path,2);
+			for(size_t j = 0; j < edge_path.size(); j++)
+			{
+				path.push_back(edge_path[j]);
+			}
+
 			path.push_back(end_point);
 		}
 		else if(from_edge && to_edge)
@@ -103,26 +115,24 @@ namespace GASS
 					}
 					if(edge)
 					{
-						//edge_path.push_back(edge);
+						std::vector<Vec3> edge_path;
+						edge_path = edge->Waypoints;
 						if(invert_dir)
 						{
-							for(size_t j = 0; j < edge->Waypoints.size(); j++)
-							{
-								path.push_back(edge->Waypoints[edge->Waypoints.size()-j-1]);
-							}
-						}
-						else
-						{
-							for(size_t j = 0; j < edge->Waypoints.size(); j++)
-							{
-								path.push_back(edge->Waypoints[j]);
-							}
+							std::reverse(edge_path.begin(),edge_path.end());
 						}
 
+						//add edge offset
+						//edge_path = Math::GenerateOffset(edge_path,2);
+					
+						for(size_t j = 0; j < edge_path.size(); j++)
+						{
+							path.push_back(edge_path[j]);
+						}
 					}
 				}
 			}
-
+		
 			//remove temp nodes
 			RemoveNode(start_node);
 			RemoveNode(end_node);

@@ -156,7 +156,6 @@ namespace GASS
 			}
 			else
 			{
-
 				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
 				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
 			}

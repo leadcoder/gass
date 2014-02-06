@@ -41,9 +41,10 @@ namespace GASS
 	private:
 		void _ExpandFromNetwork();
 		void _RebuildNetwork();
-		bool GetBuild() const;
-		void SetBuild(bool value);
+		bool GetShowGraph() const;
+		void SetShowGraph(bool value);
 		void Rebuild();
+		bool DebugSearchGraph();
 		//void GenerateGraph();
 		//void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
 		//RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
@@ -57,6 +58,7 @@ namespace GASS
 		//std::vector<RoadNode*> m_Nodes;
 		//std::vector<RoadEdge*> m_Edges;
 		bool m_Edit;
+		bool m_ShowGraph;
 		RoadNetwork m_Network;
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
