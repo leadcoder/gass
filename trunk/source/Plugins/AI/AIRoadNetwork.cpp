@@ -53,6 +53,18 @@ namespace GASS
 		return m_ShowGraph;
 	}
 
+	void Offset(Float offset, Vec3 &p1, Vec3 &p2)
+	{
+		Vec3 dir = p2 - p1;
+		Float temp = dir.z;
+		dir.z = dir.x;
+		dir.z = -temp;
+		dir.y = 0;
+		dir.Normalize();
+		p1 = p1 +  dir * offset;
+		p2 = p2 +  dir * offset;
+	}
+
 	void AIRoadNetwork::SetShowGraph(bool value) 
 	{
 		m_ShowGraph = value;
@@ -78,18 +90,13 @@ namespace GASS
 						wps_vec.push_back(wps);
 					}
 
-					/*for(size_t j = 0; j < wps_vec.size(); j++)
+					for(size_t j = 0; j < wps_vec.size(); j++)
 					{
+						Vec3 p1 = wps_vec[j].at(0);
+						Vec3 p2 = wps_vec[j].at(1);
 						Float w = 2.0;
-						Vec3 dir = wps_vec[j].at(0) - wps_vec[j].at(1);
-						Float temp = dir.z;
-						dir.z = dir.x;
-						dir.z = -temp;
-						dir.y = 0;
-						dir.Normalize();
-						wps_vec[i] = wps_vec[i] +  dir*w;
-						wps_vec[i] = wps_vec[i] +  dir*w;
-					}*/
+						Offset(w,p1,p2);
+					}
 				}
 
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
