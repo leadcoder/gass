@@ -63,10 +63,69 @@ namespace GASS
 			if(value)
 			{
 				std::vector<Vec3> pos_vec;
+
+				for(size_t i = 0; i < m_Network.m_Nodes.size();i++)
+				{
+					std::vector< std::vector<Vec3> > wps_vec;
+					for(size_t j = 0; j < m_Network.m_Nodes[i]->Edges.size(); j++)
+					{
+						std::vector<Vec3> wps;
+						wps = m_Network.m_Nodes[i]->Edges[j]->Waypoints; 
+						if(m_Network.m_Nodes[i]->Edges[j]->StartNode == m_Network.m_Nodes[i])
+						{
+							std::reverse(wps.begin(),wps.end());
+						}
+						wps_vec.push_back(wps);
+					}
+
+					/*for(size_t j = 0; j < wps_vec.size(); j++)
+					{
+						Float w = 2.0;
+						Vec3 dir = wps_vec[j].at(0) - wps_vec[j].at(1);
+						Float temp = dir.z;
+						dir.z = dir.x;
+						dir.z = -temp;
+						dir.y = 0;
+						dir.Normalize();
+						wps_vec[i] = wps_vec[i] +  dir*w;
+						wps_vec[i] = wps_vec[i] +  dir*w;
+					}*/
+				}
+
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
 				{
 					pos_vec.push_back(m_Network.m_Edges[i]->StartNode->Position);
 					pos_vec.push_back(m_Network.m_Edges[i]->EndNode->Position);
+
+					std::vector<Vec3> lane1 = Math::GenerateOffset(m_Network.m_Edges[i]->Waypoints,2);
+
+					pos_vec.push_back(lane1[0]);
+					pos_vec.push_back(lane1[1]);
+
+					std::vector<Vec3> lane2 = Math::GenerateOffset(m_Network.m_Edges[i]->Waypoints,-2);
+
+					pos_vec.push_back(lane2[0]);
+					pos_vec.push_back(lane2[1]);
+
+					/*for(size_t j = 0; j < m_Network.m_Edges[i]->StartNode->m_Edges.size())
+					{
+						if(m_Network.m_Edges[i]->StartNode->m_Edges[j] != m_Network.m_Edges[i])
+						{
+							m_Network.m_Edges[i]->StartNode->m_Edges[j]->m_Waypoints[0];
+							std::vector<Vec3> in_lane = Math::GenerateOffset(m_Network.m_Edges[i]->Waypoints,-2);
+							Vec2 p1(in_lane[0].x,in_lane[0].z);
+							Vec2 p2(in_lane[1].x,in_lane[1].z);
+
+							Vec2 p3(lane1[0].x,lane1[0].z);
+							Vec2 p4(lane1[1].x,lane1[1].z);
+
+							Vec2 isect;
+							if(Math::GetLineIntersection(p1, p2, p3, p4, isect))
+							{
+
+							}
+						}
+					}*/
 				}
 				if(debug)
 				{
