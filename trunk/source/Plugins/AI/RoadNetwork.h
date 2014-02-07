@@ -42,6 +42,9 @@ namespace GASS
 		RoadDirection Dir;
 		RoadNode* StartNode;
 		RoadNode* EndNode;
+
+		std::vector<Vec3> Lane1;
+		std::vector<Vec3> Lane2;
 	};
 
 	class RoadNode
