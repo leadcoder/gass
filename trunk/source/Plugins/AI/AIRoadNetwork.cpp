@@ -65,6 +65,83 @@ namespace GASS
 		p2 = p2 +  dir * offset;
 	}
 
+	std::vector<Vec3> GetIncomingPoints(RoadEdge* edge, RoadNode* node)
+	{
+		std::vector<Vec3> points;
+		
+		Vec3 start_p;
+		Vec3 end_p;
+
+		if(edge->StartNode == node)
+		{
+			start_p = edge->Waypoints[0];
+			end_p = edge->Waypoints[1];
+		}
+		else
+		{
+			start_p = edge->Waypoints[1];
+			end_p = edge->Waypoints[0];
+		}
+		
+		Offset(2,start_p,end_p);
+		points.push_back(start_p);
+		points.push_back(end_p);
+
+		return points;
+	}
+
+	void Clip(RoadEdge* edge, RoadNode* node)
+	{
+		Vec3 start_p;
+		Vec3 end_p;
+
+		if(edge->StartNode == node)
+		{
+			start_p = edge->Waypoints[0];
+			end_p = edge->Waypoints[1];
+		}
+		else
+		{
+			start_p = edge->Waypoints[1];
+			end_p = edge->Waypoints[0];
+		}
+
+		Offset(2,start_p,end_p);
+		Vec2 isect(start_p.x,end_p.z);
+		//Generate clip lines
+		for(size_t i = 0; i < node->Edges.size(); i++)
+		{
+			bool invert = false;
+			if(edge != node->Edges[i])
+			{
+				std::vector<Vec3> incoming = GetIncomingPoints(node->Edges[i],node);
+				//offset
+				Offset(2,incoming[0],incoming[1]);
+				if(Math::GetLineIntersection(isect, Vec2(end_p.x, end_p.z), Vec2(incoming[0].x, incoming[0].z), Vec2(incoming[1].x, incoming[1].z), isect))
+				{
+								
+				}
+			}
+		}
+
+		start_p.x = isect.x;
+		start_p.z = isect.x;
+
+		if(edge->StartNode == node)
+		{
+			edge->StartP1 = start_p; 
+		}
+		else
+		{
+			edge->EndP1 = start_p; 
+		}
+	}
+
+	void GenPath(RoadEdge* edge)
+	{
+		Clip(edge,edge->StartNode);
+	}
+
 	void AIRoadNetwork::SetShowGraph(bool value) 
 	{
 		m_ShowGraph = value;
@@ -74,31 +151,15 @@ namespace GASS
 
 			if(value)
 			{
-				std::vector<Vec3> pos_vec;
 
-				for(size_t i = 0; i < m_Network.m_Nodes.size();i++)
+				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
 				{
-					std::vector< std::vector<Vec3> > wps_vec;
-					for(size_t j = 0; j < m_Network.m_Nodes[i]->Edges.size(); j++)
-					{
-						std::vector<Vec3> wps;
-						wps = m_Network.m_Nodes[i]->Edges[j]->Waypoints; 
-						if(m_Network.m_Nodes[i]->Edges[j]->StartNode == m_Network.m_Nodes[i])
-						{
-							std::reverse(wps.begin(),wps.end());
-						}
-						wps_vec.push_back(wps);
-					}
-
-					for(size_t j = 0; j < wps_vec.size(); j++)
-					{
-						Vec3 p1 = wps_vec[j].at(0);
-						Vec3 p2 = wps_vec[j].at(1);
-						Float w = 2.0;
-						Offset(w,p1,p2);
-					}
+					
+					//Generate clipped path
+					GenPath(m_Network.m_Edges[i]);
 				}
 
+				std::vector<Vec3> pos_vec;
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
 				{
 					pos_vec.push_back(m_Network.m_Edges[i]->StartNode->Position);
