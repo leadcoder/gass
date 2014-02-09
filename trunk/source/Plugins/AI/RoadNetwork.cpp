@@ -140,7 +140,16 @@ namespace GASS
 			to_edge->Enabled = true;
 		}
 		path.push_back(to_point);
-		return path;
+		//trim 
+
+		std::vector<Vec3> final_path;
+		for(size_t i = 0; i < path.size(); i++)
+		{
+			if(i > 0 && (path[i-1] -path[i]).Length() > 0.01) 
+				final_path.push_back(path[i]);
+		}
+		final_path = Math::GenerateOffset(final_path,2);
+		return final_path ;
 	}
 
 	void RoadNetwork::RemoveNode(RoadNode* node)

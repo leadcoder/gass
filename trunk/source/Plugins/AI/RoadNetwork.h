@@ -45,6 +45,11 @@ namespace GASS
 
 		std::vector<Vec3> Lane1;
 		std::vector<Vec3> Lane2;
+
+		Vec3 StartP1;
+		Vec3 EndP1;
+		Vec3 StartP2;
+		Vec3 EndP2;
 	};
 
 	class RoadNode
