@@ -28,7 +28,10 @@ namespace GASS
 			StartNode(NULL),
 			EndNode(NULL),
 			Distance(-1),
-			Dir(BIDIR)
+			Dir(BIDIR),
+			LaneWidth(1),
+			LeftLanes(1),
+			RightLanes(1)
 		{
 
 		}
@@ -42,14 +45,19 @@ namespace GASS
 		RoadDirection Dir;
 		RoadNode* StartNode;
 		RoadNode* EndNode;
+		Float LaneWidth;
+		int LeftLanes;
+		int RightLanes;
 
-		std::vector<Vec3> Lane1;
-		std::vector<Vec3> Lane2;
-
-		Vec3 StartP1;
+		//debug
+		std::vector< std::vector<Vec3> > LLWaypoints;
+		std::vector< std::vector<Vec3> > RLWaypoints;
+		//std::vector<Vec3> Lane1;
+		//std::vector<Vec3> Lane2;
+		/*Vec3 StartP1;
 		Vec3 EndP1;
 		Vec3 StartP2;
-		Vec3 EndP2;
+		Vec3 EndP2;*/
 	};
 
 	class RoadNode
@@ -74,6 +82,7 @@ namespace GASS
 		RoadNetwork(void);
 		~RoadNetwork(void);
 		void Clear();
+		void GenerateLanes();
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point);
 		void Load(const std::string &filename);
 		void Save(const std::string &filename);
