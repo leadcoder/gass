@@ -7,6 +7,17 @@
 
 namespace GASS
 {
+
+	RoadEdge::~RoadEdge()
+	{
+		//remove this from start and end node
+		if(StartNode)
+			StartNode->RemoveEdge(this);
+		if(EndNode)
+			EndNode->RemoveEdge(this);
+	}
+
+
 	/* Helper class to generate lanes to road network*/
 	class LaneBuilder
 	{
@@ -177,12 +188,14 @@ namespace GASS
 			for(size_t i = 0; i < network.m_Edges.size() ; i++)
 			{
 				RoadEdge* e = network.m_Edges[i];
+				e->LLWaypoints.clear();
 				for(size_t j = 0; j < e->LeftLanes; j++)
 				{
 					e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth*j + 0.5*e->LaneWidth)));
 					//e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth)));
 				}
 
+				e->RLWaypoints.clear();
 				for(size_t j = 0; j < e->RightLanes; j++)
 				{
 					e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth*j + 0.5*e->LaneWidth)));
@@ -347,8 +360,8 @@ namespace GASS
 			}
 
 			//remove temp nodes
-			RemoveNode(start_node);
-			RemoveNode(end_node);
+			_RemoveNode(start_node);
+			_RemoveNode(end_node);
 			from_edge->Enabled = true;
 			to_edge->Enabled = true;
 		}
@@ -365,7 +378,7 @@ namespace GASS
 		return final_path ;
 	}
 
-	void RoadNetwork::RemoveNode(RoadNode* node)
+	void RoadNetwork::_RemoveNode(RoadNode* node)
 	{
 		for(size_t i = 0; i < node->Edges.size(); i++)
 		{
@@ -382,6 +395,87 @@ namespace GASS
 			delete node->Edges[i];
 		}
 		delete node;
+	}
+
+
+	void RoadNetwork::RemoveEdge(RoadEdge* edge)
+	{
+		std::vector<RoadEdge*>::iterator iter =  m_Edges.begin();
+		while(iter != m_Edges.end())
+		{
+			if(*iter == edge)
+				iter = m_Edges.erase(iter);
+			else
+				iter++;
+		}
+	}
+
+
+	void RoadNetwork::RemoveNode(RoadNode* node)
+	{
+		std::vector<RoadNode*>::iterator iter =  m_Nodes.begin();
+		while(iter != m_Nodes.end())
+		{
+			if(*iter == node)
+				iter = m_Nodes.erase(iter);
+			else
+				iter++;
+		}
+	}
+
+	void RoadNetwork::_ConvertNodeToWaypoint(RoadNode* node)
+	{
+		std::vector<Vec3>  wps1 = node->Edges[0]->Waypoints;
+		std::vector<Vec3>  wps2 = node->Edges[1]->Waypoints;
+		RoadNode* start_node = NULL;
+		RoadNode* end_node = NULL;
+		if(node->Edges[0]->StartNode == node)
+		{
+			std::reverse(wps1.begin(),wps1.end());
+			start_node = node->Edges[0]->EndNode;
+		}
+		else
+			start_node = node->Edges[0]->StartNode;
+
+		std::vector<Vec3>  final_wps = wps1;
+
+		if(node->Edges[1]->StartNode != node)
+		{
+			std::reverse(wps2.begin(),wps2.end());
+			end_node = node->Edges[1]->StartNode;
+		}
+		else
+			end_node = node->Edges[1]->EndNode;
+
+		for(size_t i= 1; i < wps2.size() ; i++)
+			final_wps.push_back(wps2[i]);
+
+		RoadEdge* edge = new RoadEdge;
+		edge->Waypoints = final_wps;
+		edge->Distance =  Math::GetPathLength(edge->Waypoints);
+		edge->StartNode = start_node;
+		edge->EndNode = end_node;
+		start_node->Edges.push_back(edge);
+		end_node->Edges.push_back(edge);
+		m_Edges.push_back(edge);
+		//remove old node
+		
+		RemoveEdge(node->Edges[0]);
+		RemoveEdge(node->Edges[1]);
+		delete node->Edges[0];
+		delete node->Edges[1];
+		RemoveNode(node);
+		delete node;
+	}
+
+	void RoadNetwork::ConvertNodesToWaypoint()
+	{
+		std::vector<RoadNode*> nodes = m_Nodes;
+		for(size_t i = 0; i < nodes.size();i++)
+		{
+			if(nodes[i]->Edges.size() == 2)
+				_ConvertNodeToWaypoint(nodes[i]);
+		}
 	}
 
 	RoadNode* RoadNetwork::InsertNodeOnEdge(const Vec3& point,RoadEdge* edge)
