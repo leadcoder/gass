@@ -75,6 +75,7 @@ namespace GASS
 				delete *iter;
 				iter = Edges.begin();
 			}*/
+			//reset  edge pointers
 			std::vector<RoadEdge*>::iterator iter = Edges.begin();
 			while(iter != Edges.end())
 			{
@@ -82,8 +83,7 @@ namespace GASS
 					(*iter)->StartNode = NULL;
 				if((*iter)->EndNode == this)
 					(*iter)->EndNode = NULL;
-
-
+				iter++;
 			}
 
 		}

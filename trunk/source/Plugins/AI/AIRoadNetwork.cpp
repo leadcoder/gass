@@ -83,16 +83,19 @@ namespace GASS
 					m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-1] = m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-1] + dir*4;
 				}*/
 
-				m_Network.GenerateLanes();
+				//m_Network.GenerateLanes();
 				
 				std::vector<Vec3> pos_vec;
 				
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
 				{
-					for(size_t j = 1; j < m_Network.m_Edges[i]->Waypoints.size();j++)
+					for(size_t j = 0; j < m_Network.m_Edges[i]->LLWaypoints.size();j++)
 					{
-						pos_vec.push_back(m_Network.m_Edges[i]->Waypoints[j-1]);
-						pos_vec.push_back(m_Network.m_Edges[i]->Waypoints[j]);
+						for(size_t k = 1; k < m_Network.m_Edges[i]->LLWaypoints[j].size();k++)
+						{
+							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k-1));
+							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k));
+						}
 					}
 					
 					/*pos_vec.push_back(m_Network.m_Edges[i]->StartNode->Position);
@@ -185,20 +188,26 @@ namespace GASS
 			if(m_Network.m_Edges[i]->Waypoints.size() > 2)
 			{
 				edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
+				mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
 				for(size_t j = 1 ; j < m_Network.m_Edges[i]->Waypoints.size()-1; j++)
 				{
 					SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
 					GASSAssert(node_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
 					node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(m_Network.m_Edges[i]->Waypoints[j])));
-					edge_comp->SetEndNode(node_obj->GetFirstComponentByClass<IGraphNodeComponent>());
+					GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
+					edge_comp->SetEndNode(node_comp);
+					node_comp->AddEdge(edge_comp);
 				
 					edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
 					GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
 					edge_comp = edge_obj->GetFirstComponentByClass<IGraphEdgeComponent>();
 					GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
-					edge_comp->SetStartNode(node_obj->GetFirstComponentByClass<IGraphNodeComponent>());
+					edge_comp->SetStartNode(node_comp);
+					node_comp->AddEdge(edge_comp);
+
 				}
 				edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
+				mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
 			}
 			else
 			{
@@ -301,7 +310,9 @@ namespace GASS
 		}
 
 		///remove extra nodes!
-		m_Network.ConvertNodesToWaypoint();
+		
+		//m_Network.ConvertNodesToWaypoint();
+		m_Network.GenerateLanes();
 	}
 
 	/*void AIRoadNetwork::GenerateGraph()

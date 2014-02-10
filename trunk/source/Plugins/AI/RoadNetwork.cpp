@@ -345,11 +345,18 @@ namespace GASS
 						edge_path = edge->Waypoints;
 						if(invert_dir)
 						{
+							//if(edge->LLWaypoints.size() >  0)
+							//	edge_path = edge->LLWaypoints[0];
 							std::reverse(edge_path.begin(),edge_path.end());
+						}
+						else
+						{
+							//if(edge->RLWaypoints.size() >  0)
+							//	edge_path = edge->RLWaypoints[0];
 						}
 
 						//add edge offset
-						//edge_path = Math::GenerateOffset(edge_path,2);
+						edge_path = Math::GenerateOffset(edge_path,edge->LaneWidth);
 
 						for(size_t j = 0; j < edge_path.size(); j++)
 						{
@@ -367,32 +374,22 @@ namespace GASS
 		}
 		path.push_back(to_point);
 		//trim 
-
 		std::vector<Vec3> final_path;
 		for(size_t i = 0; i < path.size(); i++)
 		{
-			if(i > 0 && (path[i-1] -path[i]).Length() > 0.01) 
+			if(i > 0 && (path[i-1] - path[i]).Length() > 0.01) 
 				final_path.push_back(path[i]);
 		}
-		final_path = Math::GenerateOffset(final_path,2);
-		return final_path ;
+		//final_path = Math::GenerateOffset(final_path,2);
+		return final_path;
 	}
 
 	void RoadNetwork::_RemoveNode(RoadNode* node)
 	{
-		for(size_t i = 0; i < node->Edges.size(); i++)
+		std::vector<RoadEdge*> edges = node->Edges;
+		for(size_t i = 0; i < edges.size(); i++)
 		{
-			std::vector<RoadEdge*>::iterator iter = node->Edges[i]->EndNode->Edges.begin();
-			while(iter != node->Edges[i]->EndNode->Edges.end())
-			{
-				if((*iter)->StartNode == node)
-				{
-					iter = node->Edges[i]->EndNode->Edges.erase(iter);
-				}
-				else
-					iter++;
-			}
-			delete node->Edges[i];
+			delete edges[i];
 		}
 		delete node;
 	}
@@ -462,8 +459,10 @@ namespace GASS
 		
 		RemoveEdge(node->Edges[0]);
 		RemoveEdge(node->Edges[1]);
-		delete node->Edges[0];
-		delete node->Edges[1];
+		RoadEdge* edge0 = node->Edges[0];
+		RoadEdge* edge1 = node->Edges[1];
+		delete edge0;
+		delete edge1;
 		RemoveNode(node);
 		delete node;
 	}
