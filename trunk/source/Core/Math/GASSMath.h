@@ -31,6 +31,7 @@ namespace GASS
 {
 	class Polygon;
 	class Vec3;
+	class Vec2;
 
 
 	/** \addtogroup GASSCore
@@ -167,6 +168,7 @@ namespace GASS
 			Project vector on plane
 		*/
 		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
+		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
 #define MY_PI 3.14159265358
 	private:
 		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
