@@ -170,6 +170,11 @@ namespace GASS
 		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
 		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
 #define MY_PI 3.14159265358
+
+		/**
+			Get projected line intersection
+		*/
+		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect); 
 	private:
 		static bool	CheckPointInTriangle1(const Vec3 &point, const Vec3 &a, const Vec3 &b, const Vec3 &c, const Vec3 &normal);
 		static int CheckPointInTriangle3(const Vec3& point, const Vec3& pa,const Vec3& pb, const Vec3& pc);
