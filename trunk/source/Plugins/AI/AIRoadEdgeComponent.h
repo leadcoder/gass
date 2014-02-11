@@ -14,6 +14,8 @@
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
+
 
 namespace GASS
 {
@@ -31,6 +33,10 @@ namespace GASS
 		GraphNodeComponentPtr GetEndNode() const {return GraphNodeComponentPtr(m_EndNode,NO_THROW);}
 		void SetLaneWidth(Float value) { m_LaneWidth = value;}
 		Float GetLaneWidth() const { return m_LaneWidth;}
+		WaypointListComponentPtr GetWaypointList() const;
+		SceneObjectPtr GetWaypointListObject() const;
+		void SetWaypoints(const std::vector<Vec3> &wps);
+		std::vector<Vec3> GetWaypoints() const;
 	private:
 		Float m_LaneWidth;
 		GraphNodeComponentWeakPtr m_StartNode;

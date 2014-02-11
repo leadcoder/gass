@@ -192,7 +192,10 @@ namespace GASS
 	void ODECollisionGeometryComponent::Reset()
 	{
 		if(m_GeomID)
+		{
 			dGeomDestroy(m_GeomID);
+			m_GeomID = 0;
+		}
 	}
 
 	void ODECollisionGeometryComponent::SetPosition(const Vec3 &pos)

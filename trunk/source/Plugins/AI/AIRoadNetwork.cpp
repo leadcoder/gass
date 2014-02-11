@@ -176,39 +176,49 @@ namespace GASS
 			GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
 			edge_comp->SetLaneWidth(m_Network.m_Edges[i]->LaneWidth);
 
-			if(m_Network.m_Edges[i]->Waypoints.size() > 2)
+			if(!m_Optimize)
 			{
-				edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
-				mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
-				for(size_t j = 1 ; j < m_Network.m_Edges[i]->Waypoints.size()-1; j++)
+				if(m_Network.m_Edges[i]->Waypoints.size() > 2)
 				{
-					SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
-					GASSAssert(node_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
-					node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(m_Network.m_Edges[i]->Waypoints[j])));
-					GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
-					edge_comp->SetEndNode(node_comp);
-					node_comp->AddEdge(edge_comp);
-				
-					edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
-					GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
-					edge_comp = edge_obj->GetFirstComponentByClass<AIRoadEdgeComponent>();
-					GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
-					edge_comp->SetStartNode(node_comp);
-					node_comp->AddEdge(edge_comp);
-					edge_comp->SetLaneWidth(m_Network.m_Edges[i]->LaneWidth);
+					edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
+					mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
+					for(size_t j = 1 ; j < m_Network.m_Edges[i]->Waypoints.size()-1; j++)
+					{
+						SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
+						GASSAssert(node_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
+						node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(m_Network.m_Edges[i]->Waypoints[j])));
+						GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
+						edge_comp->SetEndNode(node_comp);
+						node_comp->AddEdge(edge_comp);
 
+						edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
+						GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
+						edge_comp = edge_obj->GetFirstComponentByClass<AIRoadEdgeComponent>();
+						GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
+						edge_comp->SetStartNode(node_comp);
+						node_comp->AddEdge(edge_comp);
+						edge_comp->SetLaneWidth(m_Network.m_Edges[i]->LaneWidth);
+
+					}
+					edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
+					mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
 				}
-				edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
-				mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
+				else
+				{
+					edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
+					edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
+					mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
+					mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
+				}
 			}
 			else
 			{
 				edge_comp->SetStartNode(mapping[m_Network.m_Edges[i]->StartNode]);
 				edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
+				edge_comp->SetWaypoints(m_Network.m_Edges[i]->Waypoints);
 				mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
 				mapping[m_Network.m_Edges[i]->EndNode]->AddEdge(edge_comp);
 			}
-			
 		}
 	}
 
@@ -228,8 +238,15 @@ namespace GASS
 		GetSceneObject()->GetComponentsByClass<AIRoadEdgeComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
+
 			AIRoadEdgeComponentPtr edge_comp = DYNAMIC_PTR_CAST<AIRoadEdgeComponent>(components[i]);
-			AIRoadNodeComponentPtr start_node = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(edge_comp->GetStartNode());
+			std::vector<Vec3> wps = edge_comp->GetWaypoints();
+			for(size_t i = 1 ; i < wps.size(); i++) 
+			{
+				pos_vec.push_back(wps[i-1]);
+				pos_vec.push_back(wps[i]);
+			}
+			/*AIRoadNodeComponentPtr start_node = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(edge_comp->GetStartNode());
 			AIRoadNodeComponentPtr end_node = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(edge_comp->GetEndNode());
 			if(start_node && end_node)
 			{
@@ -237,7 +254,7 @@ namespace GASS
 				Vec3 end_pos  = end_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				pos_vec.push_back(start_pos);
 				pos_vec.push_back(end_pos);
-			}
+			}*/
 		}
 		
 		SceneObjectPtr debug = GetSceneObject()->GetChildByID("EDIT_EDGES");
@@ -272,23 +289,22 @@ namespace GASS
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
 			AIRoadEdgeComponentPtr road_comp = DYNAMIC_PTR_CAST<AIRoadEdgeComponent>(components[i]);
-			std::vector<Vec3> road_wps;// = road_comp->GetWaypointsObject()->GetFirstComponentByClass<IWaypointListComponent>()->GetWaypoints();
-
+			std::vector<Vec3> road_wps = road_comp->GetWaypoints();
 			RoadNode* start_node;
 			if(road_comp->GetStartNode())
 			{
 				AIRoadNodeComponentPtr start_rn = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(road_comp->GetStartNode());
 				start_node = node_mapping.find(start_rn)->second;
-				Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-				road_wps.push_back(start_pos);
+				//Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				//road_wps.push_back(start_pos);
 			}
 			RoadNode* end_node;
 			if(road_comp->GetEndNode())
 			{
 				AIRoadNodeComponentPtr end_rn = DYNAMIC_PTR_CAST<AIRoadNodeComponent>(road_comp->GetEndNode());
 				end_node = node_mapping.find(end_rn)->second;
-				Vec3 end_pos  = end_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-				road_wps.push_back(end_pos);
+				//Vec3 end_pos  = end_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				//road_wps.push_back(end_pos);
 			}
 		
 			RoadEdge* edge = new RoadEdge();
