@@ -29,7 +29,10 @@ namespace GASS
 		void SetEndNode(GraphNodeComponentPtr node) {m_EndNode = node;}
 		GraphNodeComponentPtr GetStartNode() const {return GraphNodeComponentPtr(m_StartNode,NO_THROW);}
 		GraphNodeComponentPtr GetEndNode() const {return GraphNodeComponentPtr(m_EndNode,NO_THROW);}
+		void SetLaneWidth(Float value) { m_LaneWidth = value;}
+		Float GetLaneWidth() const { return m_LaneWidth;}
 	private:
+		Float m_LaneWidth;
 		GraphNodeComponentWeakPtr m_StartNode;
 		GraphNodeComponentWeakPtr  m_EndNode;
 	};

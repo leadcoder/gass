@@ -16,7 +16,8 @@
 namespace GASS
 {
 	AIRoadNetwork::AIRoadNetwork(void) : m_Edit(true),
-		m_ShowGraph(false)
+		m_ShowGraph(false),
+		m_Optimize(true)
 	{
 
 	}	
@@ -32,6 +33,9 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadNetwork", OF_VISIBLE)));
 
 		RegisterProperty<bool>("ShowGraph", &AIRoadNetwork::GetShowGraph, &AIRoadNetwork::SetShowGraph,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<bool>("Optimize", &AIRoadNetwork::GetOptimize, &AIRoadNetwork::SetOptimize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<bool>("Edit", &AIRoadNetwork::GetEdit, &AIRoadNetwork::SetEdit,
@@ -61,30 +65,6 @@ namespace GASS
 			SceneObjectPtr debug = GetSceneObject()->GetChildByID("SEARCH_GRAPH");
 			if(value)
 			{
-				/*for(size_t i = 0; i < m_Network.m_Edges.size();i++)
-				{
-					m_Network.m_Edges[i]->Lane1 = Math::GenerateOffset(m_Network.m_Edges[i]->Waypoints,2);
-					m_Network.m_Edges[i]->Lane2 = Math::GenerateOffset(m_Network.m_Edges[i]->Waypoints,-2);
-					//extened
-					Vec3 dir = m_Network.m_Edges[i]->Lane1[0] - m_Network.m_Edges[i]->Lane1[1];
-					dir.Normalize();
-					m_Network.m_Edges[i]->Lane1[0] = m_Network.m_Edges[i]->Lane1[0] + dir*4;
-
-					dir = m_Network.m_Edges[i]->Lane1[m_Network.m_Edges[i]->Lane1.size()-1] - m_Network.m_Edges[i]->Lane1[m_Network.m_Edges[i]->Lane1.size()-2];
-					dir.Normalize();
-					m_Network.m_Edges[i]->Lane1[m_Network.m_Edges[i]->Lane1.size()-1] = m_Network.m_Edges[i]->Lane1[m_Network.m_Edges[i]->Lane1.size()-1] + dir*4;
-
-					dir = m_Network.m_Edges[i]->Lane2[0] - m_Network.m_Edges[i]->Lane2[1];
-					dir.Normalize();
-					m_Network.m_Edges[i]->Lane2[0] = m_Network.m_Edges[i]->Lane2[0] + dir*4;
-
-					dir = m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-1] - m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-2];
-					dir.Normalize();
-					m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-1] = m_Network.m_Edges[i]->Lane2[m_Network.m_Edges[i]->Lane2.size()-1] + dir*4;
-				}*/
-
-				//m_Network.GenerateLanes();
-				
 				std::vector<Vec3> pos_vec;
 				
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
@@ -95,6 +75,15 @@ namespace GASS
 						{
 							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k-1));
 							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k));
+						}
+					}
+
+					for(size_t j = 0; j < m_Network.m_Edges[i]->RLWaypoints.size();j++)
+					{
+						for(size_t k = 1; k < m_Network.m_Edges[i]->RLWaypoints[j].size();k++)
+						{
+							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k-1));
+							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k));
 						}
 					}
 					
@@ -162,6 +151,7 @@ namespace GASS
 				{
 					debug->PostMessage(MessagePtr(new ClearManualMeshMessage()));
 				}
+				SetShowGraph(m_ShowGraph);
 			}
 		}
 	}
@@ -182,8 +172,9 @@ namespace GASS
 		{
 			SceneObjectPtr edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
 			GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
-			GraphEdgeComponentPtr edge_comp = edge_obj->GetFirstComponentByClass<IGraphEdgeComponent>();
+			AIRoadEdgeComponentPtr edge_comp = edge_obj->GetFirstComponentByClass<AIRoadEdgeComponent>();
 			GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
+			edge_comp->SetLaneWidth(m_Network.m_Edges[i]->LaneWidth);
 
 			if(m_Network.m_Edges[i]->Waypoints.size() > 2)
 			{
@@ -200,10 +191,11 @@ namespace GASS
 				
 					edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
 					GASSAssert(edge_obj,"Failed to create scene object in void AIRoadNetwork::SetEdit");
-					edge_comp = edge_obj->GetFirstComponentByClass<IGraphEdgeComponent>();
+					edge_comp = edge_obj->GetFirstComponentByClass<AIRoadEdgeComponent>();
 					GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in AIRoadNetwork::SetEdit");
 					edge_comp->SetStartNode(node_comp);
 					node_comp->AddEdge(edge_comp);
+					edge_comp->SetLaneWidth(m_Network.m_Edges[i]->LaneWidth);
 
 				}
 				edge_comp->SetEndNode(mapping[m_Network.m_Edges[i]->EndNode]);
@@ -304,14 +296,14 @@ namespace GASS
 			edge->Distance =  Math::GetPathLength(road_wps);
 			edge->StartNode = start_node;
 			edge->EndNode = end_node;
+			edge->LaneWidth = road_comp->GetLaneWidth(); 
 			start_node->Edges.push_back(edge);
 			end_node->Edges.push_back(edge);
 			m_Network.m_Edges.push_back(edge);
 		}
-
 		///remove extra nodes!
-		
-		//m_Network.ConvertNodesToWaypoint();
+		if(m_Optimize)
+			m_Network.ConvertNodesToWaypoint();
 		m_Network.GenerateLanes();
 	}
 
@@ -394,6 +386,7 @@ namespace GASS
 		if(m_Edit)
 			_RebuildNetwork();
 		m_Edit = false;
+		m_ShowGraph = false;
 		BaseSceneComponent::SaveXML(elem);
 
 		TiXmlElement *  net_elem = elem->FirstChildElement("AIRoadNetwork");

@@ -35,7 +35,7 @@ namespace GASS
 		void SetEdit(bool value);
 		ADD_PROPERTY(std::string,NodeTemplate)
 		ADD_PROPERTY(std::string,EdgeTemplate)
-
+		ADD_PROPERTY(bool,Optimize)
 		//IGraphComponent interface
 		void RebuildGraph();
 	private:
@@ -45,159 +45,13 @@ namespace GASS
 		void SetShowGraph(bool value);
 		void Rebuild();
 		bool DebugSearchGraph();
-		//void GenerateGraph();
-		//void AddLane(AIRoadLaneComponentPtr lane, RoadEdge* prev_edge);
-		//RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge);
-		//RoadEdge* GetCloesestEdge(const Vec3 &point);
-		//RoadNode* GetCloesestNode(const Vec3 &point);
-		//void RemoveNode(RoadNode* node);
-		//void Load(const std::string &filename);
-		//void Save(const std::string &filename);
 		void SaveXML(TiXmlElement * elem);
 		void LoadXML(TiXmlElement * elem);
-		//std::vector<RoadNode*> m_Nodes;
-		//std::vector<RoadEdge*> m_Edges;
 		bool m_Edit;
 		bool m_ShowGraph;
 		RoadNetwork m_Network;
 	};
 	typedef SPTR<AIRoadNetwork> AIRoadNetworkPtr;
 
-	/*enum RoadDirection
-	{
-		UPSTREAM,
-		DOWNSTREAM,
-		BIDIR,
-	};
-
-	class RoadEdge
-	{
-	public:
-
-		RoadEdge() : Enabled(true),
-			StartNode(NULL),
-			EndNode(NULL),
-			Distance(-1),
-			Dir(BIDIR)
-		{
-
-		}
-		virtual ~RoadEdge()
-		{
-
-		}
-		std::vector<Vec3> Waypoints;
-		Float Distance;
-		bool Enabled;
-		RoadDirection Dir;
-		RoadNode* StartNode;
-		RoadNode* EndNode;
-	};
-
-	class RoadNode
-	{
-		public:
-
-		RoadNode() : Position(0,0,0)
-		{
-
-		}
-		virtual ~RoadNode()
-		{
-
-		}
-		Vec3 Position;
-		std::vector<RoadEdge*> Edges;
-	};
-
-	/*class RoadNavigation  : public micropather::Graph
-	{
-	private:
-		RoadNavigation( const RoadNavigation& );
-		void operator=( const RoadNavigation& );
-
-		micropather::MicroPather* pather;
-	public:
-		RoadNavigation()  
-		{
-			pather = new micropather::MicroPather( this, 20 );	// Use a very small memory block to stress the pather
-		}
-
-		virtual ~RoadNavigation() {
-			delete pather;
-		}
-
-		unsigned Checksum() { return pather->Checksum(); }
-
-		int GetPath( RoadNode *from_node, RoadNode* to_node, std::vector<RoadNode*>  &path ) 
-		{
-			int result = 0;
-			float totalCost;
-			std::vector<void*> void_path;
-			result = pather->Solve( RoadNodeToVoid( from_node), RoadNodeToVoid( to_node), &void_path, &totalCost );
-
-			for(size_t i = 0; i < void_path.size(); i++)
-			{
-				path.push_back((RoadNode*)void_path[i]);
-			}
-
-			if ( result == micropather::MicroPather::SOLVED ) 
-			{
-				//playerX = nx;
-				//playerY = ny;
-			}
-			printf( "Pather returned %d\n", result );
-			return result;
-		}
-
-		RoadNode * VoidToRoadNode( void* node) 
-		{
-			return (RoadNode*)node;
-		}
-
-		void* RoadNodeToVoid( RoadNode* inter)
-		{
-			return (void*) inter;
-		}
-
-		virtual float LeastCostEstimate( void* nodeStart, void* nodeEnd ) 
-		{
-			RoadNode* start = VoidToRoadNode( nodeStart);
-			RoadNode* end = VoidToRoadNode( nodeEnd);
-
-			return (float) (start->Position - end->Position).Length();
-		}
-
-		virtual void AdjacentCost( void* node, std::vector< micropather::StateCost > *neighbors ) 
-		{
-			RoadNode* road_node = VoidToRoadNode(node);
-
-			for(size_t i = 0; i < road_node->Edges.size(); i++)
-			{
-				RoadEdge* edge = road_node->Edges[i];
-				if(edge->Enabled && (edge->Dir == BIDIR || 
-					(edge->Dir == DOWNSTREAM && road_node == road_node->Edges[i]->StartNode) ||
-					(edge->Dir == UPSTREAM && road_node == road_node->Edges[i]->EndNode)))
-				{
-					float cost = (float) edge->Distance;
-					RoadNode* target_node;
-					if(road_node->Edges[i]->StartNode == road_node)
-						target_node = road_node->Edges[i]->EndNode;
-					else
-						target_node = road_node->Edges[i]->StartNode;
-
-					micropather::StateCost nodeCost = { RoadNodeToVoid(target_node), cost};
-					neighbors->push_back(nodeCost);
-				}
-			}
-		}
-
-		virtual void PrintStateInfo( void* node ) 
-		{
-			//int x, y;
-			//NodeToXY( node, &x, &y );
-			//printf( "(%d,%d)", x, y );
-		}
-	};*/
 }
 #endif

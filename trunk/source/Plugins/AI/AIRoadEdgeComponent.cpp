@@ -15,7 +15,7 @@
 
 namespace GASS
 {
-	AIRoadEdgeComponent::AIRoadEdgeComponent(void) 
+	AIRoadEdgeComponent::AIRoadEdgeComponent(void) : m_LaneWidth(2)
 	{
 
 	}	
@@ -29,13 +29,14 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadEdgeComponent",new Creator<AIRoadEdgeComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadEdgeComponent", OF_VISIBLE)));
+		RegisterProperty<Float>("LaneWidth", &AIRoadEdgeComponent::GetLaneWidth, &AIRoadEdgeComponent::SetLaneWidth,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Lane width",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void AIRoadEdgeComponent::OnInitialize()
 	{
 
 	}
-
 
 	void AIRoadEdgeComponent::OnDelete()
 	{
@@ -47,9 +48,5 @@ namespace GASS
 			start_node->RemoveEdge(edge);
 		if(end_node)
 			end_node->RemoveEdge(edge);
-		//update graph
-		//GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
-		//GASSAssert(graph,"Failed to find IGraphComponent in AIRoadEdgeComponent::OnDelete()");
-		//graph->RebuildGraph();
 	}
 }

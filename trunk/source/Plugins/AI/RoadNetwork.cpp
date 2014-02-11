@@ -49,8 +49,6 @@ namespace GASS
 				{
 					SetRightPath(_Clip(GetRightPath(i), clip_right),i);
 				}
-				//SetLeftPath(_Clip(GetLeftPath(), clip_left));
-				//SetRightPath(_Clip(GetRightPath(), clip_right));
 			}
 			double GetAngle() const {return Angle;}
 			EdgeLine GetLeftClip() const {return LeftClip;}
@@ -91,8 +89,9 @@ namespace GASS
 					Center.p2 = wps[1];
 				}
 				Vec3 dir = Center.p2 - Center.p1;
+				dir.y = 0;
 				dir.Normalize();
-				dir = dir * 100;
+				dir = dir * Edge->LaneWidth*4;
 				Center.p1 = Center.p1-dir;
 				//Edge = network.m_Nodes[i]->Edges[j]; 
 				Angle = atan2(dir.z,dir.x);
@@ -183,6 +182,19 @@ namespace GASS
 			return edge1.GetAngle() < edge2.GetAngle();
 		}
 
+		void Extend(std::vector<Vec3> &waypoints, Float dist)
+		{
+			Vec3 dir = waypoints[0] - waypoints[1];
+			dir.y = 0;
+			dir.Normalize();
+			waypoints[0] = waypoints[0] + dir*dist;
+
+			dir = waypoints[waypoints.size()-1] - waypoints[waypoints.size()-2];
+			dir.y = 0;
+			dir.Normalize();
+			waypoints[waypoints.size()-1] = waypoints[waypoints.size()-1] + dir*dist;
+		}
+
 		void CreateLanes(const RoadNetwork &network)
 		{
 			for(size_t i = 0; i < network.m_Edges.size() ; i++)
@@ -191,19 +203,20 @@ namespace GASS
 				e->LLWaypoints.clear();
 				for(size_t j = 0; j < e->LeftLanes; j++)
 				{
-					e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth*j + 0.5*e->LaneWidth)));
-					//e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth)));
+					e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth*(j+1))));
+					//extend end points to support better clipping
+					//Extend(e->LLWaypoints[j], e->LaneWidth*e->LeftLanes*4);
 				}
 
 				e->RLWaypoints.clear();
 				for(size_t j = 0; j < e->RightLanes; j++)
 				{
-					e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth*j + 0.5*e->LaneWidth)));
-					//e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth)));
+					e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth*(j+1))));
+					//Extend(e->RLWaypoints[j],e->LaneWidth*e->RightLanes*4);
 				}
 			}
 
-			for(size_t i = 0; i < network.m_Nodes.size();i++)
+			/*for(size_t i = 0; i < network.m_Nodes.size();i++)
 			{
 				std::vector<EdgeConnection> sorted_edges;
 				for(size_t j = 0; j < network.m_Nodes[i]->Edges.size();j++)
@@ -223,7 +236,7 @@ namespace GASS
 						prev_j = sorted_edges.size()-1;
 					sorted_edges[j].ClipPaths(sorted_edges[next_j].GetLeftClip(), sorted_edges[prev_j].GetRightClip());
 				}
-			}
+			}*/
 		}
 	};
 
@@ -302,8 +315,9 @@ namespace GASS
 			{
 				path.push_back(edge_path[j]);
 			}
-
 			path.push_back(end_point);
+			path = Math::GenerateOffset(path,from_edge->LaneWidth*0.5);
+			
 		}
 		else if(from_edge && to_edge)
 		{
@@ -356,13 +370,41 @@ namespace GASS
 						}
 
 						//add edge offset
-						edge_path = Math::GenerateOffset(edge_path,edge->LaneWidth);
+						edge_path = Math::GenerateOffset(edge_path,edge->LaneWidth*0.5);
+
+						if(edge_path.size() > 1 && path.size() > 1)
+						{
+							Vec3 p1 = path[path.size()-2];
+							Vec3 p2 = path[path.size()-1];
+
+
+							//extend p2 
+							Vec3 dir = p2 - p1;
+							dir.Normalize();
+							p2 = p1 + dir*20;
+
+							Vec3 p3 = edge_path[0];
+							Vec3 p4 = edge_path[1];
+
+							//extend p4 
+							dir = p4 - p3;
+							dir.Normalize();
+							p4 = p3 + dir*20;
+
+							Vec2 isect;
+							if(Math::GetLineIntersection(Vec2(p1.x,p1.z),Vec2(p2.x,p2.z), Vec2(p3.x ,p3.z), Vec2(p4.x, p4.z), isect))
+							{
+								Vec3 new_p(isect.x,p1.y,isect.y);							
+								path[path.size()-1]  = new_p;
+								edge_path[0] = new_p;
+							}
+						}
 
 						for(size_t j = 0; j < edge_path.size(); j++)
 						{
 							path.push_back(edge_path[j]);
 						}
-					}
+					}	
 				}
 			}
 
@@ -472,7 +514,10 @@ namespace GASS
 		std::vector<RoadNode*> nodes = m_Nodes;
 		for(size_t i = 0; i < nodes.size();i++)
 		{
-			if(nodes[i]->Edges.size() == 2)
+			if(nodes[i]->Edges.size() == 2 && 
+				nodes[i]->Edges[0]->LaneWidth == nodes[i]->Edges[1]->LaneWidth &&
+				nodes[i]->Edges[0]->LeftLanes == nodes[i]->Edges[1]->LeftLanes &&
+				nodes[i]->Edges[0]->RightLanes == nodes[i]->Edges[1]->RightLanes)
 				_ConvertNodeToWaypoint(nodes[i]);
 		}
 	}
@@ -505,12 +550,19 @@ namespace GASS
 		edge1->Distance =  Math::GetPathLength(edge1->Waypoints);
 		edge1->StartNode = new_node;
 		edge1->EndNode = edge->StartNode;
+		edge1->LaneWidth = edge->LaneWidth;
+		edge1->LeftLanes = edge->LeftLanes;
+		edge1->RightLanes = edge->RightLanes;
 		new_node->Edges.push_back(edge1);
 		edge->StartNode->Edges.push_back(edge1);
 
 		edge2->Distance =  Math::GetPathLength(edge2->Waypoints);
 		edge2->StartNode = new_node;
 		edge2->EndNode = edge->EndNode;
+		edge2->LaneWidth = edge->LaneWidth;
+		edge2->LeftLanes = edge->LeftLanes;
+		edge2->RightLanes = edge->RightLanes;
+
 		new_node->Edges.push_back(edge2);
 		edge->EndNode->Edges.push_back(edge2);
 		edge->Enabled = false;
@@ -582,6 +634,7 @@ namespace GASS
 			edge_prop_elem ->SetAttribute("StartNode",(int) m_Edges[i]->StartNode);
 			edge_prop_elem ->SetAttribute("EndNode",(int) m_Edges[i]->EndNode);
 			edge_prop_elem ->SetAttribute("Distance",m_Edges[i]->Distance);
+			edge_prop_elem ->SetAttribute("LaneWidth",m_Edges[i]->LaneWidth);
 			TiXmlElement *wps_elem = new TiXmlElement( "Waypoints");
 			edge_prop_elem->LinkEndChild( wps_elem);  
 			for(size_t j = 0; j < m_Edges[i]->Waypoints.size(); j++)
@@ -627,6 +680,9 @@ namespace GASS
 					int sn_id,en_id;
 					edge_elem->QueryIntAttribute("StartNode",&sn_id);
 					edge_elem->QueryIntAttribute("EndNode",&en_id);
+					edge_elem->QueryDoubleAttribute("LaneWidth",&edge->LaneWidth);
+					edge_elem->QueryDoubleAttribute("Distance",&edge->Distance);
+					
 					edge->StartNode = mapping[sn_id];
 					edge->EndNode = mapping[en_id];
 					edge->StartNode->Edges.push_back(edge);
@@ -647,6 +703,7 @@ namespace GASS
 					edge_elem = edge_elem->NextSiblingElement();
 				}
 			}
+			GenerateLanes();
 		}
 	}
 }
