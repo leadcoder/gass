@@ -10,12 +10,12 @@ namespace GASS
 	public:
 		RawFile();
 		virtual ~RawFile();
-		bool Load(const std::string filename,int width, int height, int bpp);
+		bool Load(const std::string filename,unsigned int width, unsigned int height, int bpp);
 		bool Load(const std::string filename,int bpp);
 		int GetSize(const std::string filename, int bpp);
 		unsigned char *m_Data;
-		int m_Width;
-		int m_Height;
+		unsigned int m_Width;
+		unsigned int m_Height;
 		int m_BPP;
 	};
 }

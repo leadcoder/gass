@@ -37,7 +37,7 @@ namespace GASS
 		return file_size;
 	}
 
-	bool RawFile::Load(const std::string filename,int width, int height, int bpp)
+	bool RawFile::Load(const std::string filename,unsigned int width, unsigned int height, int bpp)
 	{
 		FILE *file = fopen(filename.c_str(), "rb");						
 		if(	!file)
