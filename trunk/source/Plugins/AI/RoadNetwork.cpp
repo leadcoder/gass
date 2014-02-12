@@ -271,7 +271,7 @@ namespace GASS
 		builder.CreateLanes(*this);
 	}
 
-	std::vector<Vec3> RoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point)
+	std::vector<Vec3> RoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point) const
 	{
 		std::vector<Vec3> path;
 		path.push_back(from_point);
@@ -309,13 +309,14 @@ namespace GASS
 
 			}
 
-			//add edge offset
-			//edge_path = Math::GenerateOffset(edge_path,2);
+			
+		
 			for(size_t j = 0; j < edge_path.size(); j++)
 			{
 				path.push_back(edge_path[j]);
 			}
 			path.push_back(end_point);
+			//add edge offset
 			path = Math::GenerateOffset(path,from_edge->LaneWidth*0.5);
 			
 		}
@@ -394,7 +395,7 @@ namespace GASS
 							Vec2 isect;
 							if(Math::GetLineIntersection(Vec2(p1.x,p1.z),Vec2(p2.x,p2.z), Vec2(p3.x ,p3.z), Vec2(p4.x, p4.z), isect))
 							{
-								Vec3 new_p(isect.x,p1.y,isect.y);							
+								Vec3 new_p(isect.x,p3.y,isect.y);							
 								path[path.size()-1]  = new_p;
 								edge_path[0] = new_p;
 							}
@@ -426,7 +427,7 @@ namespace GASS
 		return final_path;
 	}
 
-	void RoadNetwork::_RemoveNode(RoadNode* node)
+	void RoadNetwork::_RemoveNode(RoadNode* node) const
 	{
 		std::vector<RoadEdge*> edges = node->Edges;
 		for(size_t i = 0; i < edges.size(); i++)
@@ -448,7 +449,6 @@ namespace GASS
 				iter++;
 		}
 	}
-
 
 	void RoadNetwork::RemoveNode(RoadNode* node)
 	{
@@ -522,7 +522,7 @@ namespace GASS
 		}
 	}
 
-	RoadNode* RoadNetwork::InsertNodeOnEdge(const Vec3& point,RoadEdge* edge)
+	RoadNode* RoadNetwork::InsertNodeOnEdge(const Vec3& point,RoadEdge* edge) const
 	{
 		int seg_index;
 		Vec3 target_point;
@@ -569,7 +569,7 @@ namespace GASS
 		return new_node;
 	}
 
-	RoadEdge* RoadNetwork::GetCloesestEdge(const Vec3 &point)
+	RoadEdge* RoadNetwork::GetCloesestEdge(const Vec3 &point) const
 	{
 		int seg_index;
 		RoadEdge* best_edge = NULL;
@@ -592,7 +592,7 @@ namespace GASS
 		return best_edge;
 	}
 
-	RoadNode* RoadNetwork::GetCloesestNode(const Vec3 &point)
+	RoadNode* RoadNetwork::GetCloesestNode(const Vec3 &point) const
 	{
 		RoadNode* best_node = NULL;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();

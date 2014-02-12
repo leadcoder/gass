@@ -28,7 +28,6 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("AIRoadNodeComponent",new Creator<AIRoadNodeComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AIRoadNodeComponent", OF_VISIBLE)));
-		
 	}
 
 	void AIRoadNodeComponent::OnInitialize()
@@ -40,7 +39,7 @@ namespace GASS
 	{
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
-		GASSAssert(graph,"Failed to find IGraphComponent in AIRoadEdgeComponent::OnDelete()");
+		GASSAssert(graph,"Failed to find IGraphComponent in AIRoadNodeComponent::OnTransformation");
 		graph->RebuildGraph();
 	}
 

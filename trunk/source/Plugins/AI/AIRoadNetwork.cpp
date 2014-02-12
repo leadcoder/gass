@@ -397,6 +397,12 @@ namespace GASS
 		}
 	}
 
+	bool AIRoadNetwork::GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const
+	{
+		path = m_Network.Search(from,to);
+		return true;
+	}
+
 	void AIRoadNetwork::SaveXML(TiXmlElement * elem)
 	{
 		if(m_Edit)

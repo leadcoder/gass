@@ -51,7 +51,7 @@ namespace GASS
 		m_UniqueMaterialCreated(false),
 		m_RegionSize(300.0),
 		m_GlobalScale(1,1,1),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
 	{
 
 	}

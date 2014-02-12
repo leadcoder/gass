@@ -43,7 +43,7 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_CastShadow(false)
 	{
 

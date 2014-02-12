@@ -91,16 +91,25 @@ namespace GASS
 
 	void AIRoadEdgeComponent::SetWaypoints(const std::vector<Vec3> &wps)
 	{
-		//std::string wp_template = GetWaypointList()->GetWaypointTemplate();
 		//Add waypoints
 		if(wps.size() > 2)
 		{
 			for(size_t i = 1; i < wps.size()-1; i++)
 			{
 				SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate("RoadWP",GetSceneObject());
+
+				node_obj->RegisterForMessage(REG_TMESS(AIRoadEdgeComponent::OnTransformation,TransformationNotifyMessage,0));
 				GASSAssert(node_obj,"Failed to create scene object in void AIRoadEdgeComponent::SetWaypoints");
 				node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(wps[i])));
 			}
 		}
+	}
+
+	void AIRoadEdgeComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	{
+		//update graph
+		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
+		GASSAssert(graph,"Failed to find IGraphComponent in AIRoadEdgeComponent::OnTransformation");
+		graph->RebuildGraph();
 	}
 }

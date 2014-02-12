@@ -67,7 +67,7 @@ namespace GASS
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_RenderQueue(RENDER_QUEUE_MAIN)
 	{
 

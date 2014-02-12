@@ -58,7 +58,7 @@ namespace GASS
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
 		m_Lighting(true),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_Expand(false),
 		m_FlipDDS(true)
 		

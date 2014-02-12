@@ -133,7 +133,7 @@ namespace GASS
 			if(m_GeomID == NULL)
 			{
 				CreateGeometry();
-				SetFlags(GEOMETRY_FLAG_UNKOWN);
+				SetFlags(GEOMETRY_FLAG_UNKNOWN);
 			}
 			return;
 		}

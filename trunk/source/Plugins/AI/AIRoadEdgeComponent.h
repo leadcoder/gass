@@ -38,6 +38,7 @@ namespace GASS
 		void SetWaypoints(const std::vector<Vec3> &wps);
 		std::vector<Vec3> GetWaypoints() const;
 	private:
+		void OnTransformation(TransformationNotifyMessagePtr message);
 		Float m_LaneWidth;
 		GraphNodeComponentWeakPtr m_StartNode;
 		GraphNodeComponentWeakPtr  m_EndNode;

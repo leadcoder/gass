@@ -53,7 +53,7 @@ namespace GASS
 		m_Billboard(NULL),
 		m_Width(1.0f),
 		m_Height(1.0f),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
 	{
 
 	}

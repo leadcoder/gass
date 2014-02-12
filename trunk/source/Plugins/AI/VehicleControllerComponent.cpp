@@ -61,9 +61,17 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnScenarioEvent,ScenarioStateRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleControllerComponent::OnTransformation,TransformationNotifyMessage,0));
 
+
+		//NOTE: Only support one type of navigation system for now, to be extended
 		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("AI_NAVIGATION_MESH");
 		if(obj)
 			m_Navigation = obj->GetFirstComponentByClass<INavigationComponent>();
+		else
+		{
+			obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("AI_ROAD_NETWORK");
+			if(obj)
+				m_Navigation = obj->GetFirstComponentByClass<INavigationComponent>();
+		}
 
 		if(m_VehicleTemplate != "")
 		{

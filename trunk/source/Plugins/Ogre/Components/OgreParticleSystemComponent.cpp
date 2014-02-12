@@ -46,7 +46,7 @@ namespace GASS
 		m_CastShadow(true),
 		m_ParticleSystem(NULL),
 		m_TimeToLive(-1),
-		m_GeomFlags(GEOMETRY_FLAG_UNKOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
 	{
 
 	}
