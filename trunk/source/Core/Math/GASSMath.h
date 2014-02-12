@@ -168,7 +168,7 @@ namespace GASS
 			Project vector on plane
 		*/
 		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
-		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
+		
 #define MY_PI 3.14159265358
 
 		/**
