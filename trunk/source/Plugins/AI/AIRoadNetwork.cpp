@@ -1,5 +1,7 @@
 #include <limits>
 #include "AIRoadNetwork.h"
+#include "RoadEdge.h"
+#include "RoadNode.h"
 #include "AISceneManager.h"
 #include "AIRoadLaneSectionComponent.h"
 #include "AIRoadLaneComponent.h"

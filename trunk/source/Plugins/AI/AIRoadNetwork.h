@@ -10,7 +10,7 @@
 #include <tbb/spin_mutex.h>
 #include <set>
 #include <tbb/atomic.h>
-#include "Plugins/AI/micropather.h"
+//#include "Plugins/AI/micropather.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
