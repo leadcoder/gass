@@ -24,15 +24,14 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
-
-
+#include "Sim/Interface/GASSIMissionSceneManager.h"
 
 namespace GASS
 {
 	/**
 		Scene manager that owns all game components.
 	*/
-	class GameSceneManager : public Reflection<GameSceneManager, BaseSceneManager>
+	class GameSceneManager : public Reflection<GameSceneManager, BaseSceneManager>, public IMissionSceneManager
 	{
 	public:
 		GameSceneManager();

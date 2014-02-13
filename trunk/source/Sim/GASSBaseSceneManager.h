@@ -41,7 +41,7 @@ namespace GASS
 		impossible, so we keep it public for now.
 	*/
 
-	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public SHARE_CLASS<BaseSceneManager>, public ISceneManager, public IXMLSerialize, public IMessageListener, public ISystemListener
+	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public SHARE_CLASS<BaseSceneManager>, public virtual ISceneManager, public IXMLSerialize, public IMessageListener, public ISystemListener
 	{
 	public:
 		BaseSceneManager();

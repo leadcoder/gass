@@ -213,7 +213,7 @@ namespace GASS
 			//the radius is dynamic and is based on the desired speed of the vehicle.
 			//The vehicle will have longer brake distance at high speed
 			//and this is compensated by taking the speed in consideration.
-			//The user can tweek this radius with the m_BrakeDistanceFactor based
+			//The user can tweak this radius with the m_BrakeDistanceFactor based
 			//on the properties of the vehicle, better brakes == lower m_BrakeDistanceFactor value
 			//By default this value is 1 which means that the vehicle can come to rest
 			//after 1m if traveling at 1 m/s. This formula should probably be expanded to support

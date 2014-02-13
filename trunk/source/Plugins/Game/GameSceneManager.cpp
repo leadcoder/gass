@@ -32,11 +32,6 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
-
-
-
-
-
 namespace GASS
 {
 	GameSceneManager::GameSceneManager() 

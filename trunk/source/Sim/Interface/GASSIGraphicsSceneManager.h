@@ -27,14 +27,8 @@
 
 namespace GASS
 {
-	
-
 	/**
-		Interface that all graphics systems should be derived from.
-
-		Note that interaction with this interface during RTC update is undefined 
-		if running GASS in multi-threaded mode. Interaction with systems should 
-		instead be done through messages.
+		Interface that all graphics scene managers should be derived from.
 	*/
 	class GASSExport IGraphicsSceneManager
 	{
