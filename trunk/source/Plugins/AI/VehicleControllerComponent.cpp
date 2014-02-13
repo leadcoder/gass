@@ -516,7 +516,7 @@ namespace GASS
 		if(vehicle && !m_TargetReached && m_Path.size() > 0)
 		{
 			//follow path!
-			int num_waypoints = (int) m_Path.size();
+			//int num_waypoints = (int) m_Path.size();
 			int wp_index;
 			Vec3 point_on_path;
 			Float dist_to_path_dist;
@@ -526,16 +526,29 @@ namespace GASS
 			//because autopilot try to slow down if distance_to_target < speed and we dont want to accelerate/deaccelerate 
 			//while moving along path between waypoints
 
-			//double look_ahead = m_TargetSpeed*2;
-			double look_ahead = m_TargetSpeed;
+			
+			double look_ahead = m_TargetSpeed*0.5;
 			//do some clamping
 			if(look_ahead < 3) // we need to be at least outside autopilot target radius
 				look_ahead = 3;
-			if(look_ahead > 100)
-				look_ahead = 100;
+			if(look_ahead > 20)
+				look_ahead = 20;
 
 			Float new_distance = m_CurrentPathDist + look_ahead;
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, false, wp_index);
+
+			
+			
+			Vec3 last_wp = m_Path.back();
+			if((last_wp - target_point).Length() > m_TargetSpeed)  //we don't want overshoot last way point
+			{
+				Vec3 dir = target_point - m_VehiclePos; 
+				dir.Normalize();
+				//Move target point in front of vehicle extra distance
+				//because autopilot try to slow down if distance_to_target < speed and we dont want to accelerate/deaccelerate 
+				//while moving along path
+				target_point += dir*m_TargetSpeed*0.5;
+			}
 			
 			vehicle->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
 			
