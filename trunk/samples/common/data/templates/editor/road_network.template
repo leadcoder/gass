@@ -54,10 +54,10 @@
 		<Name value="RNRoadNetwork"/>
 		<Instantiable value="true"/>
 		<Components>
-			<RNRoadNetwork>
+			<RNRoadNetworkComponent>
 				<NodeTemplate value="RNRoadNode"/>
 				<EdgeTemplate value="RNRoadEdge"/>
-			</RNRoadNetwork>
+			</RNRoadNetworkComponent>
 			<LocationComponent>
 			</LocationComponent>
 		</Components>
