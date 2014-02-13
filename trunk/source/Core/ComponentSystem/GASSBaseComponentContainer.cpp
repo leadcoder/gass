@@ -386,8 +386,8 @@ namespace GASS
 		while (comp_iter != m_ComponentVector.end())
 		{
 			ComponentPtr comp = (*comp_iter);
-			const std::set<std::string> deps = comp->GetDependencies();
-			std::set<std::string>::const_iterator dep_iter = deps.begin();
+			const std::vector<std::string> deps = comp->GetDependencies();
+			std::vector<std::string>::const_iterator dep_iter = deps.begin();
 			while(dep_iter != deps.end())
 			{
 				const std::string comp_name = *dep_iter;

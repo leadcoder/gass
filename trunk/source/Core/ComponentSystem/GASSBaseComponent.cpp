@@ -26,7 +26,7 @@
 namespace GASS
 {
 
-	std::set<std::string> BaseComponent::m_Dependencies;
+	std::map<RTTI* ,std::vector<std::string> >  BaseComponent::m_Dependencies;
 
 	BaseComponent::BaseComponent(void) : m_Owner(ComponentContainerWeakPtr())
 	{
@@ -114,9 +114,9 @@ namespace GASS
 		BaseReflectionObject::CopyPropertiesTo(dest_base_comp);
 	}
 
-	void BaseComponent::AddDependency(const std::string &component_name)
+	std::vector<std::string> BaseComponent::GetDependencies()
 	{
-		m_Dependencies.insert(component_name);
+		return m_Dependencies[GetRTTI()];
 	}
 	
 }

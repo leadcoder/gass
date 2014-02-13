@@ -18,74 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef ICOMPONENT_HH
-#define ICOMPONENT_HH
+#pragma once
 
-#include "Core/Common.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/Interface/GASSISceneManager.h"
 
 namespace GASS
 {
-	class IComponentContainer;
-
-	typedef SPTR<IComponentContainer> ComponentContainerPtr;
-	typedef WPTR<IComponentContainer> ComponentContainerWeakPtr;
-
-	/** \addtogroup GASSCore
-	*  @{
-	*/
-	/** \addtogroup Component
-	*  @{
-
-	*/
-	/**
-		Interface that every component have to implement
-		A component is the core building block in the component system,
-		here we find actual functionality like vehicle models,
-		graphics, network capability etc. All components that should work together is
-		owned by a ComponentContainer. A ComponentContainer is the owner of 
-		the components and has it's functionality in it's components.
-	*/
-	class GASSCoreExport IComponent
+	class GASSExport IMissionSceneManager : public virtual ISceneManager
 	{
 	public:
-		virtual ~IComponent(){}
-
-		/**
-			Return the name of the component
-		*/
-		virtual std::string GetName() const = 0;
-
-		/**
-			Set the name of the component
-		*/
-		virtual void SetName(const std::string &name) = 0;
-
-		/**
-			Set the owner of the component
-		*/
-		virtual void SetOwner(ComponentContainerPtr owner) = 0;
-
-		/**
-			Get the owner of the component
-		*/
-		virtual ComponentContainerPtr GetOwner() const = 0;
-
-		/**
-			Get all dependencies.
-		*/
-		virtual std::vector<std::string> GetDependencies() = 0;
+		virtual ~IMissionSceneManager(){}
+	protected:
 	};
-	
-	/**
-	 Smart pointer to component
-	*/
-
-	typedef SPTR<IComponent> ComponentPtr;
-	
-	/**
-	 Weak pointer to component
-	*/
-	typedef WPTR<IComponent> ComponentWeakPtr;
-
+	typedef SPTR<IMissionSceneManager> MissionSceneManagerPtr;
 }
-#endif // #ifndef ICOMPONENT_HH

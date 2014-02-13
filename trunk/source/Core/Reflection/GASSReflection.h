@@ -130,7 +130,6 @@ namespace GASS
 		}
 	protected :
 			static RTTI	m_RTTI;
-
 	};
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI

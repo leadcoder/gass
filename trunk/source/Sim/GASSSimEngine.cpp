@@ -58,7 +58,6 @@
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
-#include "Sim/Interface/GASSIMissionSystem.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 
 #include "Sim/GASSSimSystemManager.h"

@@ -140,17 +140,13 @@ namespace GASS
 		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
 
 		/**
-			Add dependency component
-		* \param component_name The registred component name.
-		*/
-		static void AddDependency(const std::string &component_name);
-		/**
 			Get all dependencies
 		*/
-		const std::set<std::string>  & GetDependencies() {return m_Dependencies;}
+		std::vector<std::string> GetDependencies();
+	protected:
+		static std::map<RTTI*,std::vector<std::string> > m_Dependencies;
 	protected:
 		std::string m_Name;
-		static std::set<std::string> m_Dependencies;
 		ComponentContainerWeakPtr m_Owner;
 	};
 	PDECL(BaseComponent);
