@@ -52,6 +52,10 @@ namespace GASS
 		}
 	};
 
+	/**
+		Component that create road geomtry
+	*/
+
 	class RoadComponent : public Reflection<RoadComponent,BaseSceneComponent>
 	{
 	public:

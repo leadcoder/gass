@@ -239,7 +239,6 @@ namespace GASS
 		return m_Script;
 	}
 
-
 	void DetourCrowdComponent::OnChangeName(GASS::MessagePtr message)
 	{
 
@@ -328,7 +327,6 @@ namespace GASS
 			CircularScattering(m_ScatteringSelection,m_NumberOfScattringCharacters, pos, m_ScatteringRadius);
 		}
 	}
-
 
 	bool DetourCrowdComponent::GetNavMeshScattering() const 
 	{

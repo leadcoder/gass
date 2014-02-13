@@ -28,6 +28,11 @@
 
 namespace GASS
 {
+
+	/**
+		Component that impl. IHeightmapTerrainComponent interface used for terrain interaction
+	*/
+
 	class Heightmap;
 	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent> , public IHeightmapTerrainComponent, public IGeometryComponent
 	{

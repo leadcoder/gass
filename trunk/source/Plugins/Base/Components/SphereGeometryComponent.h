@@ -28,6 +28,10 @@
 
 namespace GASS
 {
+	/**
+		Component that create sphere geometry
+	*/
+
 	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,BaseSceneComponent> , public IShape
 	{
 	public:

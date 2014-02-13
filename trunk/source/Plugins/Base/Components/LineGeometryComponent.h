@@ -35,6 +35,10 @@
 
 namespace GASS
 {
+	/**
+		Component that create  line/path (with material and width) 
+	*/
+
 	class LineGeometryComponent : public Reflection<LineGeometryComponent,BaseSceneComponent>
 	{
 	public:

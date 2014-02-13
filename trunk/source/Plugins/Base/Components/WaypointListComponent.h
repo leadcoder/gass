@@ -35,6 +35,11 @@
 namespace GASS
 {
 	class SplineAnimation;
+
+	/**
+		Component that handles waypoints lists. 
+	*/
+
 	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>, public IWaypointListComponent
 	{
 		friend class WaypointComponent;

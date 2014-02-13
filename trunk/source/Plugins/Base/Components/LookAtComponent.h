@@ -30,6 +30,11 @@
 
 namespace GASS
 {
+
+	/**
+		Component that roatate scene object to target object 
+	*/
+
 	class LookAtComponent : public Reflection<LookAtComponent,BaseSceneComponent>
 	{
 	public:

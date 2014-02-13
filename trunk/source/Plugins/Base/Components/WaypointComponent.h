@@ -37,6 +37,11 @@ namespace GASS
 	class WaypointComponent;
 	typedef WPTR<WaypointComponent> WaypointComponentWeakPtr;
 
+
+	/**
+		Component that hold waypoint data for WaypointListComponent
+	*/
+
 	class WaypointComponent : public Reflection<WaypointComponent,BaseSceneComponent>
 	{
 	public:

@@ -26,6 +26,10 @@
 
 namespace GASS
 {
+	/**
+		Component that render plane geometry with texture/material
+	*/
+
 	class PlaneGeometryComponent : public Reflection<PlaneGeometryComponent,BaseSceneComponent>
 	{
 	public:

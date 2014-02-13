@@ -27,6 +27,11 @@
 
 namespace GASS
 {
+
+	/**
+		Component that hold a template list of scene objects that can be added as child to owner scene object
+	*/
+
 	class TemplateSourceComponent : public Reflection<TemplateSourceComponent,BaseSceneComponent>, public ITemplateSourceComponent
 	{
 	public:

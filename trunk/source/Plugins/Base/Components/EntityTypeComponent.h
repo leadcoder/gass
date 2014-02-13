@@ -33,6 +33,10 @@
 
 namespace GASS
 {
+	/**
+		Component that hold DIS entity code
+	*/
+
 	class EntityTypeComponent;
 	typedef WPTR<EntityTypeComponent> EntityTypeComponentWeakPtr;
 	class EntityTypeComponent : public Reflection<EntityTypeComponent,BaseSceneComponent>

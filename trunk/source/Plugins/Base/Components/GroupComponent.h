@@ -26,6 +26,11 @@
 
 namespace GASS
 {
+	/**
+		Component that is used to indicate that scene object is group object
+		Deprecated due to unkonwn usage 
+	*/
+
 	class GroupComponent : public Reflection<GroupComponent,BaseSceneComponent> , public IGroupComponent
 	{
 	public:

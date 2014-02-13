@@ -27,6 +27,10 @@
 
 namespace GASS
 {
+	/**
+		Component that create  circle geometry
+	*/
+
 	class CircleGeometryComponent : public Reflection<CircleGeometryComponent,BaseSceneComponent> , public IShape
 	{
 	public:

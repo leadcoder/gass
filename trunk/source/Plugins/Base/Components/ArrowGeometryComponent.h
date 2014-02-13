@@ -27,6 +27,9 @@
 
 namespace GASS
 {
+	/**
+		Component that create  3d arrow geometry
+	*/
 	class ArrowGeometryComponent : public Reflection<ArrowGeometryComponent,BaseSceneComponent>
 	{
 	public:

@@ -28,6 +28,10 @@
 
 namespace GASS
 {
+	/**
+		Component that create  box geometry
+	*/
+
 	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,BaseSceneComponent> , public IShape
 	{
 	public:

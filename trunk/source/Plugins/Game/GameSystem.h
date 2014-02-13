@@ -22,14 +22,13 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/Interface/GASSIMissionSystem.h"
 #include <string>
 
 namespace GASS
 {
 	class SimSystemManager;
 
-	class GameSystem : public Reflection<GameSystem, SimSystem>, public IMissionSystem
+	class GameSystem : public Reflection<GameSystem, SimSystem>
 	{
 	public:
 		GameSystem();

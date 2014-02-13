@@ -26,6 +26,11 @@
 
 namespace GASS
 {
+
+	/**
+		Debug component that show scene object name
+	*/
+
 	class DebugComponent : public Reflection<DebugComponent,BaseSceneComponent>
 	{
 	public:
