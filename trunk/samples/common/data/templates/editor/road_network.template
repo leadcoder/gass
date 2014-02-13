@@ -1,4 +1,6 @@
-<SceneObjectTemplate>
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
 		<Name value="RNRoadNode"/>
 		<Instantiable value="true"/>
 		<Serialize value="false"/>
@@ -28,7 +30,7 @@
 			</LocationComponent>
 		</Components>
 		<ComponentContainers>
-			
+
 		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
@@ -101,3 +103,4 @@
 			</SceneObjectTemplate>
 		</ComponentContainers>
 	</SceneObjectTemplate>
+</Templates>
