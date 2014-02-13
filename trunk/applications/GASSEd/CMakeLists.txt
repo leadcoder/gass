@@ -157,6 +157,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/release/GASSPluginEnvironment.dll
 	${GASS_DIR}/bin/release/GASSPluginOpenAL.dll
 	${GASS_DIR}/bin/release/GASSPluginGame.dll
+	${GASS_DIR}/bin/release/GASSPluginRoadNetwork.dll
 	${GASS_DIR}/bin/release/GASSPluginBase.dll
 	${GASS_DIR}/bin/release/GASSPluginRakNet.dll
 	${GASS_DIR}/bin/release/GASSPluginAI.dll
@@ -217,6 +218,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/debug/GASSPluginEnvironment_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginOpenAL_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginGame_d.dll
+	${GASS_DIR}/bin/debug/GASSPluginRoadNetwork_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginBase_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginRakNet_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginAI_d.dll

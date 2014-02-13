@@ -4,7 +4,8 @@
 #include "VariantFactory.h"
 #include "CustomTypes.h"
 #include "Core/Utils/GASSColorRGB.h"
-#include "Core/Reflection/GASSObjectMetaData.h"
+
+//#include "Core/Reflection/GASSObjectMetaData.h"
 #include "Modules/Editor/EditorApplication.h"
 #include "Modules/Editor/EditorSystem.h"
 
@@ -211,7 +212,28 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			bool editable = (meta_data->GetFlags() & GASS::PF_EDITABLE);
 			std::string documentation = meta_data->GetAnnotation();
 
-			if(DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
+			
+			if(DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data))
+			{
+				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
+				GASS::SceneObjectEnumerationPropertyMetaDataPtr enumeration_data = DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data);
+				std::vector<GASS::SceneObjectPtr> enumeration = enumeration_data->GetEnumeration(obj);
+
+				QStringList enumNames;
+				int select = -1;
+				for(size_t i = 0 ; i < enumeration.size() ; i++)
+				{
+					std::string obj_name = enumeration[i]->GetName();
+					gp.m_Options.push_back(obj_name);
+					enumNames << obj_name.c_str();
+					if(prop_value == obj_name)
+						select = (int)i;
+				}
+				item->setAttribute(QLatin1String("enumNames"), enumNames);
+				if(select > -1)
+					item->setValue(select);
+			}
+			else if(DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
 				GASS::EnumerationPropertyMetaDataPtr enumeration_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
