@@ -19,17 +19,18 @@
 *****************************************************************************/
 
 #pragma once
-
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSISceneManager.h"
-
 namespace GASS
 {
+	/**
+		Interface that all mission scene mangers should be derived from.
+	*/
 	class GASSExport IMissionSceneManager : public virtual ISceneManager
 	{
 	public:
 		virtual ~IMissionSceneManager(){}
 	protected:
 	};
-	typedef SPTR<IMissionSceneManager> MissionSceneManagerPtr;
+	typedef boost::shared_ptr<IMissionSceneManager> MissionSceneManagerPtr;
 }
