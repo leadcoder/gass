@@ -34,6 +34,7 @@ copy "%GASS_HOME%\\bin\\debug\\GASSPluginPagedGeometry_d.dll" %OUT_DIR%\\debug\\
 copy "%GASS_HOME%\\bin\\debug\\GASSPluginRaknet_d.dll" %OUT_DIR%\\debug\\GASSPlugins
 copy "%GASS_HOME%\\bin\\debug\\GASSPluginOpenAL_d.dll" %OUT_DIR%\\debug\\GASSPlugins
 copy "%GASS_HOME%\\bin\\debug\\GASSPluginAI_d.dll" %OUT_DIR%\\debug\\GASSPlugins
+copy "%GASS_HOME%\\bin\\debug\\GASSPluginRoadNetwork_d.dll" %OUT_DIR%\\debug\\GASSPlugins
 
 
 copy "%GASS_HOME%\\bin\\release\\GASSCore.dll" %OUT_DIR%\\release
@@ -51,6 +52,7 @@ copy "%GASS_HOME%\\bin\\release\\GASSPluginPagedGeometry.dll" %OUT_DIR%\\release
 copy "%GASS_HOME%\\bin\\release\\GASSPluginRaknet.dll" %OUT_DIR%\\release\\GASSPlugins
 copy "%GASS_HOME%\\bin\\release\\GASSPluginOpenAL.dll" %OUT_DIR%\\release\\GASSPlugins
 copy "%GASS_HOME%\\bin\\release\\GASSPluginAI.dll" %OUT_DIR%\\release\\GASSPlugins
+copy "%GASS_HOME%\\bin\\release\\GASSPluginRoadNetwork.dll" %OUT_DIR%\\release\\GASSPlugins
 
 copy "%GASS_DEPENDENCIES%\lib\tbb_debug.dll" %OUT_DIR%\\Debug
 copy "%GASS_DEPENDENCIES%\lib\tbb.dll" %OUT_DIR%\\Release
