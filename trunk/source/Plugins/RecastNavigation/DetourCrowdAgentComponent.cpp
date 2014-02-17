@@ -9,7 +9,6 @@ namespace GASS
 {
 	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new GraphicsMesh()), 
 		m_Radius(0.5),
-		m_Group("BLUE"),
 		m_Agent(NULL),
 		m_Index(-1),
 		m_Height(2),
@@ -17,7 +16,9 @@ namespace GASS
 		m_MaxSpeed(3.5),
 		m_AccTime(0),
 		m_SeparationWeight(1),
-		m_VelSmoother(100,Vec3(0,0,0))
+		m_VelSmoother(120,Vec3(0,0,0)),
+		m_TargetPos(0,0,0),
+		m_LastPos(0,0,0)
 	{
 
 	}	
@@ -205,6 +206,7 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnGoToPosition(GotoPositionMessagePtr message)
 	{
+		m_TargetPos = message->GetPosition();
 		DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 		if(crowd_comp)
 		{
@@ -225,6 +227,9 @@ namespace GASS
 				navquery->findNearestPoly(pos, ext, filter, &targetRef, targetPos);
 				if(targetRef)
 				{
+					m_TargetPos.x = targetPos[0];
+					m_TargetPos.y = targetPos[1];
+					m_TargetPos.z = targetPos[2];
 					crowd->requestMoveTarget(m_Index, targetRef, targetPos);
 				}
 			}
@@ -267,31 +272,75 @@ namespace GASS
 			{
 				const float* pos = m_Agent->npos;
 				int id = (int) this;
-				MessagePtr pos_msg(new WorldPositionMessage(Vec3(pos[0],pos[1],pos[2]),id));
+				Vec3 current_pos(pos[0],pos[1],pos[2]);
+				MessagePtr pos_msg(new WorldPositionMessage(current_pos,id));
 				GetSceneObject()->PostMessage(pos_msg);
 
-				//generate rotation from accumulated velocity
+				Vec3 dist = current_pos - m_TargetPos;
+				
+				if(dist.Length() < 0.5)
+				{
+					//we have arrived!
+					DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
+			
+					float zero_vel[3];
+					zero_vel[0] = 0;
+					zero_vel[1] = 0;
+					zero_vel[2] = 0;
+					crowd_comp->GetCrowd()->requestMoveVelocity(m_Index, zero_vel);
+				}
+				
 				const float* vel = m_Agent->vel;
 				Vec3 view_dir(vel[0],vel[1],vel[2]);
-
-				m_AccTime += delta_time;
-
-				if(view_dir.Length() > 0.1)
+				Float speed = view_dir.Length();
+				
+				Float speed2 = (current_pos - m_LastPos).Length();
+				speed2 = speed2/delta_time;
+				m_LastPos = current_pos;
+				std::cout << speed << " S2:" << speed2 << std::endl;
+				if(speed > 0.00001)
 				{
+					view_dir.y = 0;
 					view_dir.Normalize();
-					m_CurrentDir = view_dir;
-					m_CurrentDir = m_VelSmoother.Update(m_CurrentDir);
 
+					Vec3 final_dir;
+					//m_CurrentDir = view_dir;
+					//if(speed < 0.2)
+					{
+						if(m_AccTime > 0.02)
+						{
+							m_CurrentDir = m_VelSmoother.Update(view_dir);
+							m_AccTime = 0;
+							m_CurrentDir.Normalize();
+						}
+						m_AccTime += delta_time;
+					}
+					Float max_speed = 2;
+					Float min_speed = 0.6;
+					if(speed > min_speed && speed < max_speed)
+					{
+						Float ratio = (speed-min_speed)/(max_speed - min_speed);
+						final_dir = view_dir*ratio + m_CurrentDir*(1.0-ratio);
+						final_dir.Normalize();
+					}
+					else if(speed >= max_speed)
+						final_dir = view_dir;
+					else if(speed <= min_speed)
+						final_dir = m_CurrentDir;
+				
 					Vec3 up(0,1,0);
-					Vec3 right = -Math::Cross(m_CurrentDir,up);
+					Vec3 right = final_dir;
+					right.x = final_dir.z;
+					right.z = -final_dir.x;
+					//Vec3 right = -Math::Cross(m_CurrentDir,up);
 					GASS::Mat4 rot_mat;
 					rot_mat.Identity();
-					rot_mat.SetViewDirVector(m_CurrentDir);
+					rot_mat.SetViewDirVector(final_dir);
 					rot_mat.SetRightVector(right);
 					rot_mat.SetUpVector(up);
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
-					m_DesiredRot = rot;
+					//m_DesiredRot = rot;
 
 					MessagePtr rot_msg(new WorldRotationMessage(rot,id));
 					GetSceneObject()->PostMessage(rot_msg);

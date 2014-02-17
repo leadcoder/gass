@@ -87,11 +87,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-
-		//std::string GetScript() const;
-		//void SetScript(const std::string &name);
-		//std::string GetGroup() const;
-		//void SetGroup(const std::string &name);
 		void Init(dtCrowd* crowd);
 		void UpdateLocation(double delta_time);
 		int GetIndex() const {return m_Index;}
@@ -101,7 +96,7 @@ namespace GASS
 		float GetHeight() const;
 		void SetMaxSpeed(float radius);
 		float GetMaxSpeed() const;
-		bool GetRandomMeshPosition(Vec3 &pos);
+		//bool GetRandomMeshPosition(Vec3 &pos);
 		void SetSeparationWeight(float value);
 		float GetSeparationWeight() const {return m_SeparationWeight;} 
 	protected:
@@ -115,28 +110,25 @@ namespace GASS
 		void OnChangeName(GASS::MessagePtr message);
 		void SetMaxAcceleration(float radius);
 		float GetMaxAcceleration() const;
-
+		Vec3 m_TargetPos;
 		float m_Radius;
 		float m_MaxSpeed;
 		float m_MaxAcceleration;
 		float m_Height;
 		float m_SeparationWeight;
 
-		std::string m_Script;
-		std::string m_Group;
-		Vec3 m_LastPos;
+		//std::string m_Script;
+		//std::string m_Group;
+		//Vec3 m_LastPos;
 		GraphicsMeshPtr m_MeshData;
 		const dtCrowdAgent* m_Agent;
 		int m_Index;
-
-
 		Smoother<Vec3> m_VelSmoother;
-
-		Quaternion m_CurrentRot;
-		Quaternion m_DesiredRot;
-
+		//Quaternion m_CurrentRot;
+		//Quaternion m_DesiredRot;
 		Vec3 m_CurrentDir;
 		double m_AccTime;
+		Vec3 m_LastPos;
 		DetourCrowdComponentWeakPtr m_CrowdComp;
 	};
 	typedef SPTR<DetourCrowdAgentComponent> DetourCrowdAgentComponentPtr;
