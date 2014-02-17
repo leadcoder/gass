@@ -287,7 +287,7 @@ namespace GASS
 				MessagePtr pos_msg(new WorldPositionMessage(Vec3(pos[0],pos[1],pos[2]),id));
 				GetSceneObject()->PostMessage(pos_msg);
 
-				//generate rotatation from accumulated velocity
+				//generate rotation from accumulated velocity
 				const float* vel = m_Agent->vel;
 				Vec3 view_dir(vel[0],vel[1],vel[2]);
 
