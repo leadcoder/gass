@@ -163,7 +163,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/release/GASSPluginRoadNetwork.dll
 	${GASS_DIR}/bin/release/GASSPluginBase.dll
 	${GASS_DIR}/bin/release/GASSPluginRakNet.dll
-	${GASS_DIR}/bin/release/GASSPluginAI.dll
+	${GASS_DIR}/bin/release/GASSPluginRecastNavigation.dll
 	${GASS_DIR}/bin/release/GASSEditorModule.dll
 	${QT_DIR}/bin/QtCore4.dll
 	${QT_DIR}/bin/QtGui4.dll
@@ -224,7 +224,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/debug/GASSPluginRoadNetwork_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginBase_d.dll
 	${GASS_DIR}/bin/debug/GASSPluginRakNet_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginAI_d.dll
+	${GASS_DIR}/bin/debug/GASSPluginRecastNavigation_d.dll
 	${GASS_DIR}/bin/debug/GASSEditorModule_d.dll
 	${QT_DIR}/bin/QtCored4.dll
 	${QT_DIR}/bin/QtGuid4.dll

@@ -8,7 +8,8 @@
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
-		<Plugin PluginFile = "GASSPluginAI"/>
+		<!--<Plugin PluginFile = "GASSPluginAI"/>-->
+		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 	</Plugins>
 	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
@@ -69,9 +70,9 @@
 		<PhysXPhysicsSystem>
 			<TaskNode value="SIM"/>
 		</PhysXPhysicsSystem>
-		<AISystem>
+		<!--<AISystem>
 			<TaskNode value="SIM"/>
-		</AISystem>
+		</AISystem>-->
 		<OSGCollisionSystem>
 			<TaskNode value="PRE_SIM"/>
 		</OSGCollisionSystem>
