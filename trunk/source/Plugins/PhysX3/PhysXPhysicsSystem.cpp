@@ -164,6 +164,8 @@ namespace GASS
 			}
 		}
 
+		m_ControllerManager = PxCreateControllerManager(*m_Foundation);
+
 		//physx::PxExtensionVisualDebugger::connect(mSDK->getPvdConnectionManager(), "127.0.0.1", 5425, 10, true,physx::PxGetDefaultDebuggerFlags());
 	}
 

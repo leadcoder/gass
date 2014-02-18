@@ -56,6 +56,7 @@ namespace GASS
 		physx::PxCooking* GetPxCooking() const {return m_Cooking;}
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* GetSurfaceTirePairs()const {return m_SurfaceTirePairs;}
 		int GetTireIDFromName(const std::string &name) const;
+		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
 		void LoadTires(const std::string &file);
 	private:
@@ -75,6 +76,7 @@ namespace GASS
 		std::vector<physx::PxMaterial*> m_DrivableMaterials;
 		std::map<std::string,physx::PxMaterial*> m_Materials;
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
+		physx::PxControllerManager* m_ControllerManager;
 	};
 
 	typedef SPTR<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;

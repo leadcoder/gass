@@ -44,6 +44,9 @@
 #include <geometry/PxConvexMeshGeometry.h>
 #include <geometry/PxTriangleMeshGeometry.h>
 
+#include <characterkinematic/PxCapsuleController.h>
+#include <characterkinematic/PxControllerManager.h>
+
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
