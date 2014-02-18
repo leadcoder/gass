@@ -104,6 +104,7 @@ namespace GASS
 		dtCrowdAgentParams GetAgentParams() const;
 		void UpdateAgentParams();
 		void OnGoToPosition(GotoPositionMessagePtr message);
+		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void UpdateGeometry();
 		void OnWorldPosition(WorldPositionMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);

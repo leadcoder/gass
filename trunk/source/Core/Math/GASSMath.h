@@ -144,7 +144,7 @@ namespace GASS
 		// path utilities, to be moved to path class?
 		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
 		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
-		static Float GetPathDistance(const Vec3& point, std::vector<Vec3> &wps,int &index,Float &distance_to_path);
+		static Float GetPathDistance(const Vec3& point, const std::vector<Vec3> &wps,int &index,Float &distance_to_path);
 		static Float GetPathLength(const std::vector<Vec3> &wps);
 		static std::vector<Vec3> ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps);
 		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float offset);

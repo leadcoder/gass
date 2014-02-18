@@ -45,6 +45,12 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
+	}
+
+	void DetourCrowdAgentComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
+	{
+		SetMaxSpeed(message->GetSpeed());
 	}
 
 	void DetourCrowdAgentComponent::OnLoad(LocationLoadedMessagePtr message)
@@ -88,7 +94,7 @@ namespace GASS
 	void DetourCrowdAgentComponent::SetMaxSpeed(float value)
 	{
 		m_MaxSpeed = value;
-		UpdateAgentParams();
+		//UpdateAgentParams();
 	}
 
 	float DetourCrowdAgentComponent::GetMaxAcceleration() const
@@ -131,7 +137,6 @@ namespace GASS
 			UpdateAgentParams();
 		}
 	}
-
 
 	void DetourCrowdAgentComponent::SetSeparationWeight(float value)
 	{
@@ -236,24 +241,6 @@ namespace GASS
 		}
 	}
 
-
-	/*static float frand()
-	{
-	return (float)rand()/(float)RAND_MAX;
-	}*/
-
-	/*bool DetourCrowdAgentComponent::GetRandomMeshPosition(Vec3 &pos)
-	{
-	DetourCrowdComponentPtr crowd_comp = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<DetourCrowdComponent>();
-	if(crowd_comp)
-	{
-
-	Vec3 center = crowd_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-	return crowd_comp->GetRandomPointInCircle(pos,center,500);
-	}
-	return false;
-	}*/
-
 	void DetourCrowdAgentComponent::OnDelete()
 	{
 		DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
@@ -276,28 +263,50 @@ namespace GASS
 				MessagePtr pos_msg(new WorldPositionMessage(current_pos,id));
 				GetSceneObject()->PostMessage(pos_msg);
 
-				Vec3 dist = current_pos - m_TargetPos;
+				Vec3 target_dir = current_pos - m_TargetPos;
+				Float dist = target_dir.Length();
+				DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
+
+				const float* vel = m_Agent->vel;
+				Vec3 view_dir(vel[0],vel[1],vel[2]);
+				Float speed = view_dir.Length();
+				Float dist_to_stop = 0.5;
+				Float dist_to_slow_down = speed + dist_to_stop;
 				
-				if(dist.Length() < 0.5)
+				if(dist < dist_to_stop)
 				{
 					//we have arrived!
-					DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
-			
 					float zero_vel[3];
 					zero_vel[0] = 0;
 					zero_vel[1] = 0;
 					zero_vel[2] = 0;
 					crowd_comp->GetCrowd()->requestMoveVelocity(m_Index, zero_vel);
 				}
+				else if (dist < dist_to_slow_down)
+				{
+					float ratio = (dist-dist_to_stop)/(dist_to_slow_down - dist_to_stop);
+					/*float damp_vel[3];
+					damp_vel[0] = ratio*m_Agent->vel[0];
+					damp_vel[1] = ratio*m_Agent->vel[1];
+					damp_vel[2] = ratio*m_Agent->vel[2];
+					
+					crowd_comp->GetCrowd()->requestMoveVelocity(m_Index, damp_vel);*/
+					dtCrowdAgentParams ap = GetAgentParams();
+					ap.maxSpeed = m_MaxSpeed*ratio;
+					crowd_comp->GetCrowd()->updateAgentParameters(m_Index,&ap);
+				}
+				else
+				{
+					dtCrowdAgentParams ap = GetAgentParams();
+					ap.maxSpeed = m_MaxSpeed;
+					crowd_comp->GetCrowd()->updateAgentParameters(m_Index,&ap);
+				}
+
 				
-				const float* vel = m_Agent->vel;
-				Vec3 view_dir(vel[0],vel[1],vel[2]);
-				Float speed = view_dir.Length();
-				
-				Float speed2 = (current_pos - m_LastPos).Length();
-				speed2 = speed2/delta_time;
+				//Float speed2 = (current_pos - m_LastPos).Length();
+				//speed2 = speed2/delta_time;
 				m_LastPos = current_pos;
-				std::cout << speed << " S2:" << speed2 << std::endl;
+				//std::cout << speed << " S2:" << speed2 << std::endl;
 				if(speed > 0.00001)
 				{
 					view_dir.y = 0;

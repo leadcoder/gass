@@ -65,8 +65,9 @@
 // disable: "signed/unsigned mismatch"
 #   pragma warning( disable: 4018)
 
-// disable: "macro redefinition"
-//#   pragma warning( disable: 4005)
+
+//class inherits via dominance warning
+#  pragma warning( disable: 4250)
 
 #endif /* WIN32 */
 

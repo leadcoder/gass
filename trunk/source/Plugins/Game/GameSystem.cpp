@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	GameSystem::GameSystem(void)
+	GameSystem::GameSystem(void) : m_Update(true)
 	{
 	
 	}
@@ -47,6 +47,25 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GameSystem::OnScenarioEvent,ScenarioStateRequest,0));
+	}
+
+	void GameSystem::OnScenarioEvent(ScenarioStateRequestPtr message)
+	{
+		if(message->GetState() == SS_PLAY)
+		{
+			m_Update = true;
+		}
+		else if(message->GetState() == SS_STOP)
+		{
+			m_Update = false;
+		}
+	}
+
+	void GameSystem::Update(double delta)
+	{
+		if(m_Update)
+			SimSystem::Update(delta);
 	}
 }
 
