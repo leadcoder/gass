@@ -43,7 +43,8 @@ namespace GASS
 		m_EnginePeakTorque(500),
 		m_EngineMaxRotationSpeed(200),
 		m_ClutchStrength(10),
-		m_GearSwitchTime(0.5)
+		m_GearSwitchTime(0.5),
+		m_ChassisDim(0,0,0)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -120,6 +121,16 @@ namespace GASS
 		//Play engine sound
 		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
 		GetSceneObject()->PostMessage(sound_msg);
+	}
+
+	Vec3 PhysXVehicleComponent::GetSize() const
+	{
+		return m_ChassisDim;
+	}
+
+	Float PhysXVehicleComponent::GetMaxSpeed() const
+	{
+		return 0;
 	}
 
 	void PhysXVehicleComponent::Reset()
@@ -215,6 +226,9 @@ namespace GASS
 
 		//Extract the chassis AABB dimensions from the chassis convex mesh.
 		const PxVec3 chassisDims=ComputeDim(chassisMesh.m_ConvexMesh);
+
+		m_ChassisDim = PxConvert::ToGASS(chassisDims);
+		
 
 		//The origin is at the center of the chassis mesh.
 		//Set the center of mass to be below this point and a little towards the front.

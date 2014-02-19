@@ -22,6 +22,7 @@
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "IPhysXRigidDynamic.h"
 
@@ -30,7 +31,7 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent> , public IPhysXRigidDynamic
+	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent> , public IPhysXRigidDynamic, public IPlatformComponent
 	{
 	public:
 		PhysXVehicleComponent();
@@ -39,6 +40,10 @@ namespace GASS
 		virtual void OnInitialize();
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		void SceneManagerTick(double delta);
+
+		PlatformType GetType() const {return PT_CAR;}
+		Vec3 GetSize() const;
+		Float GetMaxSpeed() const;
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
@@ -90,6 +95,8 @@ namespace GASS
 		bool m_IsMovingForwardSlowly;
 		bool m_InReverseMode;
 		bool m_UseDigitalInputs;
+
+		Vec3 m_ChassisDim;
 	};
 	typedef SPTR<PhysXVehicleComponent> PhysXVehicleComponentPtr;
 }
