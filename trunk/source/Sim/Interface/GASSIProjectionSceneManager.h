@@ -32,7 +32,7 @@ namespace GASS
 		A projection scene manager support transformations from local scene space to 
 		diffrent coordiante systems
 	*/
-	class GASSExport IProjectionSceneManager
+	class IProjectionSceneManager
 	{
 	public:
 		virtual ~IProjectionSceneManager(){}

@@ -79,7 +79,7 @@ namespace GASS
 	};
 	typedef SPTR<InputControllerMessage> InputControllerMessagePtr;
 
-	class GASSExport IControlSettingsSystem 
+	class IControlSettingsSystem 
 	{
 	public:
 		virtual ~IControlSettingsSystem(){};

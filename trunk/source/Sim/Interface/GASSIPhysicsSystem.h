@@ -30,7 +30,7 @@ namespace GASS
 	/**
 		Interface that all physics systems must be derived from
 	*/
-	class GASSExport IPhysicsSystem
+	class IPhysicsSystem
 	{
 	public:
 		virtual ~IPhysicsSystem(){}

@@ -39,7 +39,7 @@ namespace GASS
 
 	typedef std::vector<RenderWindowPtr> RenderWindowVector;
 
-	class GASSExport IGraphicsSystem
+	class IGraphicsSystem
 	{
 	public:
 		virtual ~IGraphicsSystem(){}

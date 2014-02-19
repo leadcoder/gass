@@ -33,7 +33,7 @@ namespace GASS
 		instead be done through messages.
 		
 	*/
-	class GASSExport IMeshComponent
+	class IMeshComponent
 	{
 	public:
 		virtual ~IMeshComponent(){}

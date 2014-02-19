@@ -30,7 +30,7 @@ namespace GASS
 	/**
 		Interface that all graphics scene managers should be derived from.
 	*/
-	class GASSExport IGraphicsSceneManager
+	class IGraphicsSceneManager
 	{
 	public:
 		virtual ~IGraphicsSceneManager(){}

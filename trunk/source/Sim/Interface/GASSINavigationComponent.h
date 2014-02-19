@@ -24,11 +24,12 @@
 namespace GASS
 {
 	typedef std::vector<Vec3> NavigationPath;
-	class GASSExport INavigationComponent
+	class INavigationComponent
 	{
 	public:
 		virtual ~INavigationComponent(){}
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
+
 	protected:
 	};
 	typedef SPTR<INavigationComponent> NavigationComponentPtr;

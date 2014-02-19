@@ -34,7 +34,7 @@ namespace GASS
 		instead be done through messages.
 	*/
 	
-	class GASSExport ICameraComponent
+	class ICameraComponent
 	{
 	public:
 		virtual ~ICameraComponent(){}

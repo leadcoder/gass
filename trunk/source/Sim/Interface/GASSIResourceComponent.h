@@ -27,7 +27,7 @@ namespace GASS
 	/**
 		Interface that all resource components should be derived from.
 	*/
-	class GASSExport IResourceComponent
+	class IResourceComponent
 	{
 	public:
 		virtual ~IResourceComponent(){}

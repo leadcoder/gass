@@ -45,7 +45,7 @@ namespace GASS
 		by a scene.
 	*/
 
-	class GASSExport ISceneManager
+	class ISceneManager
 	{
 	public:
 		virtual ~ISceneManager(){}

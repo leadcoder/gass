@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	class GASSExport IShape
+	class IShape
 	{
 	public:
 		virtual ~IShape(){}

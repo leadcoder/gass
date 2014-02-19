@@ -67,7 +67,7 @@ namespace GASS
 		in multi-threaded mode. 
 	*/
 
-	class GASSExport ICollisionSceneManager
+	class ICollisionSceneManager
 	{
 	public:
 		virtual ~ICollisionSceneManager(){}

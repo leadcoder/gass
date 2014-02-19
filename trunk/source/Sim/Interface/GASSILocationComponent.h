@@ -34,7 +34,7 @@ namespace GASS
 		instead be done through messages.
 	*/
 
-	class GASSExport ILocationComponent
+	class ILocationComponent
 	{
 	public:
 		virtual ~ILocationComponent(){}

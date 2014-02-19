@@ -256,7 +256,7 @@ namespace GASS
 		MBID_7
 	};
 
-	class GASSExport IKeyListener
+	class IKeyListener
 	{
 	public:
 		virtual ~IKeyListener() {}
@@ -278,7 +278,7 @@ namespace GASS
 		float YAbsNorm;
 	};
 
-	class GASSExport IMouseListener
+	class IMouseListener
 	{
 	public:
 		virtual ~IMouseListener() {}
@@ -287,7 +287,7 @@ namespace GASS
 		virtual bool MouseReleased(const MouseData &data, MouseButtonId id ) = 0;
 	};
 
-	class GASSExport IGameControllerListener
+	class IGameControllerListener
 	{
 	public:
 		virtual ~IGameControllerListener() {}
@@ -307,7 +307,7 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with systems should 
 		instead be done through messages or at syncpoints.
 	*/
-	class GASSExport IInputSystem  
+	class IInputSystem  
 	{
 	public:
 		virtual ~IInputSystem(){}
@@ -340,7 +340,7 @@ namespace GASS
 	typedef SPTR<IInputSystem> InputSystemPtr;
 
 	
-	class GASSExport IProxyInputSystem  
+	class IProxyInputSystem  
 	{
 	public:
 		virtual ~IProxyInputSystem(){}

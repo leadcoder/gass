@@ -38,7 +38,7 @@ namespace GASS
 		instead be done through messages.
 	*/
 
-	class GASSExport IGeometryComponent 
+	class IGeometryComponent 
 	{
 	public:
 		virtual ~IGeometryComponent(){}

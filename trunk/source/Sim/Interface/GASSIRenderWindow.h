@@ -29,7 +29,7 @@ namespace GASS
 	class IViewport;
 	typedef boost::shared_ptr<IViewport> ViewportPtr;
 
-	class GASSExport IRenderWindow
+	class IRenderWindow
 	{
 	public:
 		IRenderWindow() 

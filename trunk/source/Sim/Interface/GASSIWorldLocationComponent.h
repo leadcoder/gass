@@ -27,7 +27,7 @@ namespace GASS
 		Interface that world referenced location components can expose.
 	*/
 
-	class GASSExport IWorldLocationComponent
+	class IWorldLocationComponent
 	{
 	public:
 		virtual ~IWorldLocationComponent(){}

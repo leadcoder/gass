@@ -26,7 +26,7 @@ namespace GASS
 	/**
 		Interface that all mission scene mangers should be derived from.
 	*/
-	class GASSExport IMissionSceneManager : public virtual ISceneManager
+	class IMissionSceneManager : public virtual ISceneManager
 	{
 	public:
 		virtual ~IMissionSceneManager(){}

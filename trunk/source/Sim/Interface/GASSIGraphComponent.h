@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class GASSExport IGraphComponent
+	class IGraphComponent
 	{
 	public:
 		virtual ~IGraphComponent(){}

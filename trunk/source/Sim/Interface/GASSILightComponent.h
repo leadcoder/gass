@@ -49,7 +49,7 @@ namespace GASS
 		At present this interface is only used for searching for all objects that 
 		has light components in a scene. 
 	*/
-	class GASSExport ILightComponent
+	class ILightComponent
 	{
 	public:
 		virtual ~ILightComponent(){}

@@ -36,7 +36,7 @@ namespace GASS
 		if running GASS in multi-threaded mode. Interaction with components should 
 		instead be done through messages.
 	*/
-	class GASSExport IHeightmapTerrainComponent
+	class IHeightmapTerrainComponent
 	{
 	public:
 		virtual ~IHeightmapTerrainComponent(){}

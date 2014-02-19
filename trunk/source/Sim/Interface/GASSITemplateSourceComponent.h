@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class GASSExport ITemplateSourceComponent
+	class ITemplateSourceComponent
 	{
 	public:
 		virtual ~ITemplateSourceComponent(){}

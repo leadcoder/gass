@@ -32,7 +32,7 @@ namespace GASS
 		Collision system interface
 	*/
 
-	class GASSExport ICollisionSystem
+	class ICollisionSystem
 	{
 	public:
 		virtual ~ICollisionSystem(){}

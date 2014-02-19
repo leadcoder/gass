@@ -29,7 +29,7 @@ namespace GASS
 		This component is used to indicate that child scene objects are connected to 
 		this object. The group component hold information about this group. 
 	*/
-	class GASSExport IGroupComponent
+	class IGroupComponent
 	{
 	public:
 		virtual ~IGroupComponent(){}

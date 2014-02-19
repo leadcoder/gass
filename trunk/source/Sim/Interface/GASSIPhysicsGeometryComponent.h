@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class GASSExport IPhysicsGeometryComponent
+	class IPhysicsGeometryComponent
 	{
 	public:
 		virtual ~IPhysicsGeometryComponent(){}

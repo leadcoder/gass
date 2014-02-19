@@ -34,7 +34,7 @@ namespace GASS
 		instead be done through messages.
 	*/
 	
-	class GASSExport INetworkComponent
+	class INetworkComponent
 	{
 	public:
 		virtual ~INetworkComponent(){}

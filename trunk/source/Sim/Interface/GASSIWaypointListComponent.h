@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class GASSExport IWaypointListComponent
+	class IWaypointListComponent
 	{
 	public:
 		virtual ~IWaypointListComponent(){}

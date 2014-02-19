@@ -31,7 +31,7 @@ namespace GASS
 	typedef boost::weak_ptr<ICameraComponent> CameraComponentWeakPtr;
 	
 
-	class GASSExport IViewport
+	class IViewport
 	{
 	public:
 		IViewport() 
