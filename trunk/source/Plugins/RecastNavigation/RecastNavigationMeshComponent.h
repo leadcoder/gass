@@ -23,7 +23,7 @@
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorMessages.h"
-#include "Sim/Interface/GASSINavigationComponent.h"
+#include "Sim/Interface/GASSINavigationMeshComponent.h"
 
 
 #include "LandCoverType.h"
@@ -80,7 +80,7 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public IShape, public INavigationComponent
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public INavigationMeshComponent //, public IShape
 	{
 	public:
 		RecastNavigationMeshComponent();
@@ -88,12 +88,16 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
+		//INavigationComponent
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
+		virtual Vec3 GetRandomPoint() const;
+		virtual bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
+		virtual bool IsPointInside(const Vec3 &point) const;
+
+		//Internal
 
 		dtNavMesh* GetNavMesh() const {return m_NavMesh;}
 		dtNavMeshQuery* GetNavMeshQuery() const {return m_NavQuery;}
-		virtual bool IsPointInside(const Vec3 &point) const;
-		virtual Vec3 GetRandomPoint() const;
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
 		//need to be public for enumerator access it
@@ -102,11 +106,8 @@ namespace GASS
 		static const int MAX_POLYS_IN_PATH = 2048;
 		static void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos);
 		static void RecastToGASS(float* in_pos,GASS::Vec3 &out_pos);
-
-
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
-
 		ADD_PROPERTY(bool,AutoCollectMeshes)
 		float GetCellSize() const; 
 		float GetCellHeight() const; 

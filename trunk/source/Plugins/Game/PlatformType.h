@@ -5,10 +5,12 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSEnumBinder.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 
 namespace GASS
 {
-	enum PlatformType
+	//MOVED to GASSIPlatformComponent
+	/*enum PlatformType
 	{
 		PT_HUMAN,
 		PT_CAR,
@@ -17,7 +19,7 @@ namespace GASS
 		PT_AIRCRAFT,
 		PT_BUILDING,
 		PT_WEAPON_SYSTEM,
-	};
+	};*/
 
 	class PlatformTypeReflection : public SingleEnumBinder<PlatformType,PlatformTypeReflection>
 	{

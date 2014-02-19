@@ -1545,6 +1545,50 @@ namespace GASS
 	}
 
 
+	bool RecastNavigationMeshComponent::GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const
+	{
+		if(!m_NavMesh)
+			return false;
+		//const dtQueryFilter* filter = crowd->getFilter();
+		float ext[3];
+		dtPolyRef start_ref;
+		float c_pos[3];
+		
+		ext[0] = 1;
+		ext[1] = 1;
+		ext[2] = 1;
+
+		c_pos[0] = circle_center.x;
+		c_pos[1] = circle_center.y;
+		c_pos[2] = circle_center.z;
+
+		float q_pos[3];
+		dtQueryFilter filter;
+
+		m_NavQuery->findNearestPoly(c_pos, ext, &filter, &start_ref, q_pos);
+		if(start_ref)
+		{
+			dtStatus status = DT_FAILURE;
+			dtPolyRef end_ref;
+			float end_pos[3];
+			Float dist =  radius+1;
+			int tries = 0;
+			while(dist > radius && tries < 200)
+			{
+				tries++;
+				status = m_NavQuery->findRandomPointAroundCircle(start_ref, q_pos, radius, &filter, frand, &end_ref, end_pos);
+				if (dtStatusSucceed(status))
+				{
+					point.Set(end_pos[0],end_pos[1],end_pos[2]);
+					dist = (circle_center - point).Length();
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+
 	std::vector<Vec3> RecastNavigationMeshComponent::GetVisualNavMesh()
 	{
 		std::vector<Vec3> tris;

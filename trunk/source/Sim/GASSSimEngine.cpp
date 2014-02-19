@@ -31,7 +31,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
 //include to ensure interface export
-#include "Sim/Interface/GASSIGraphicsSceneManager.h"
+/*#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSILightComponent.h"
@@ -54,11 +54,10 @@
 #include "Sim/Interface/GASSIProjectionSceneManager.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
 #include "Sim/Interface/GASSIGroupComponent.h"
-#include "Sim/Interface/GASSINavigationComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Interface/GASSIMissionSceneManager.h"*/
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"
@@ -69,7 +68,9 @@
 #include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
 #include "Sim/GASSScriptManager.h"
+#include "Sim/GASSResourceHandle.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/GASSGeometryFlags.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <tinyxml.h>

@@ -32,11 +32,11 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("DetourCrowdAgentComponent",new Creator<DetourCrowdAgentComponent, IComponent>);
 		//RegisterProperty<std::string>("Group", &DetourCrowdAgentComponent::GetGroup, &DetourCrowdAgentComponent::SetGroup);
-		RegisterProperty<float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
-		RegisterProperty<float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
-		RegisterProperty<float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
-		RegisterProperty<float>("MaxSpeed", &DetourCrowdAgentComponent::GetMaxSpeed, &DetourCrowdAgentComponent::SetMaxSpeed);
-		RegisterProperty<float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
+		RegisterProperty<Float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
+		RegisterProperty<Float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
+		RegisterProperty<Float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
+		RegisterProperty<Float>("MaxSpeed", &DetourCrowdAgentComponent::GetMaxSpeed, &DetourCrowdAgentComponent::SetMaxSpeed);
+		RegisterProperty<Float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
 	}
 
 	void DetourCrowdAgentComponent::OnInitialize()
@@ -47,6 +47,15 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 	}
+
+
+	Vec3 DetourCrowdAgentComponent::GetSize() const
+	{
+		return Vec3(GetRadius()*2,GetHeight(),GetRadius()*2);
+	}
+
+	
+
 
 	void DetourCrowdAgentComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
@@ -86,34 +95,34 @@ namespace GASS
 		SceneObjectNameMessagePtr nm = STATIC_PTR_CAST<SceneObjectNameMessage>(message);
 	}
 
-	float DetourCrowdAgentComponent::GetMaxSpeed() const
+	Float DetourCrowdAgentComponent::GetMaxSpeed() const
 	{
 		return m_MaxSpeed;
 	}
 
-	void DetourCrowdAgentComponent::SetMaxSpeed(float value)
+	void DetourCrowdAgentComponent::SetMaxSpeed(Float value)
 	{
 		m_MaxSpeed = value;
 		//UpdateAgentParams();
 	}
 
-	float DetourCrowdAgentComponent::GetMaxAcceleration() const
+	Float DetourCrowdAgentComponent::GetMaxAcceleration() const
 	{
 		return m_MaxAcceleration;
 	}
 
-	void DetourCrowdAgentComponent::SetMaxAcceleration(float value)
+	void DetourCrowdAgentComponent::SetMaxAcceleration(Float value)
 	{
 		m_MaxAcceleration = value;
 		UpdateAgentParams();
 	}
 
-	float DetourCrowdAgentComponent::GetRadius() const
+	Float DetourCrowdAgentComponent::GetRadius() const
 	{
 		return m_Radius;
 	}
 
-	void DetourCrowdAgentComponent::SetRadius(float value)
+	void DetourCrowdAgentComponent::SetRadius(Float value)
 	{
 		m_Radius = value;
 		if(m_Agent)
@@ -123,12 +132,12 @@ namespace GASS
 		}
 	}
 
-	float DetourCrowdAgentComponent::GetHeight() const
+	Float DetourCrowdAgentComponent::GetHeight() const
 	{
 		return m_Height;
 	}
 
-	void DetourCrowdAgentComponent::SetHeight(float value)
+	void DetourCrowdAgentComponent::SetHeight(Float value)
 	{
 		m_Height = value;
 		if(m_Agent)
@@ -138,7 +147,7 @@ namespace GASS
 		}
 	}
 
-	void DetourCrowdAgentComponent::SetSeparationWeight(float value)
+	void DetourCrowdAgentComponent::SetSeparationWeight(Float value)
 	{
 		m_SeparationWeight = value;
 		if(m_Agent)

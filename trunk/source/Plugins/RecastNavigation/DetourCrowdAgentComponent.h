@@ -21,6 +21,7 @@
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
 #include "DetourCrowd.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 struct dtCrowdAgent;
 
 namespace GASS
@@ -79,7 +80,8 @@ namespace GASS
 	typedef SPTR<DetourCrowdComponent> DetourCrowdComponentPtr;
 	typedef WPTR<DetourCrowdComponent> DetourCrowdComponentWeakPtr;
 
-	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , BaseSceneComponent>
+	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , BaseSceneComponent>, public IPlatformComponent
+
 	{
 	public:
 		DetourCrowdAgentComponent(void);
@@ -87,18 +89,23 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
+		//IPlatformComponent
+		PlatformType GetType() const {return PT_HUMAN;}
+		Vec3 GetSize() const;
+		Float GetMaxSpeed() const;
+		//Float GetMaxSpeed() const;
+
 		void Init(dtCrowd* crowd);
 		void UpdateLocation(double delta_time);
 		int GetIndex() const {return m_Index;}
-		void SetRadius(float radius);
-		float GetRadius() const;
-		void SetHeight(float radius);
-		float GetHeight() const;
-		void SetMaxSpeed(float radius);
-		float GetMaxSpeed() const;
-		//bool GetRandomMeshPosition(Vec3 &pos);
-		void SetSeparationWeight(float value);
-		float GetSeparationWeight() const {return m_SeparationWeight;} 
+		void SetRadius(Float radius);
+		Float GetRadius() const;
+		void SetHeight(Float radius);
+		Float GetHeight() const;
+		void SetMaxSpeed(Float speed);
+		
+		void SetSeparationWeight(Float value);
+		Float GetSeparationWeight() const {return m_SeparationWeight;} 
 	protected:
 		DetourCrowdComponentPtr GetCrowdComp() const {return DetourCrowdComponentPtr(m_CrowdComp,NO_THROW);}
 		dtCrowdAgentParams GetAgentParams() const;
@@ -109,14 +116,14 @@ namespace GASS
 		void OnWorldPosition(WorldPositionMessagePtr message);
 		void OnLoad(LocationLoadedMessagePtr message);
 		void OnChangeName(GASS::MessagePtr message);
-		void SetMaxAcceleration(float radius);
-		float GetMaxAcceleration() const;
+		void SetMaxAcceleration(Float radius);
+		Float GetMaxAcceleration() const;
 		Vec3 m_TargetPos;
-		float m_Radius;
-		float m_MaxSpeed;
-		float m_MaxAcceleration;
-		float m_Height;
-		float m_SeparationWeight;
+		Float m_Radius;
+		Float m_MaxSpeed;
+		Float m_MaxAcceleration;
+		Float m_Height;
+		Float m_SeparationWeight;
 
 		//std::string m_Script;
 		//std::string m_Group;

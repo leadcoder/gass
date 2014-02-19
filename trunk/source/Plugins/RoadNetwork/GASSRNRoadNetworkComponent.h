@@ -25,12 +25,12 @@ namespace GASS
 		void OnInitialize();
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
-		//std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point) const;
 		bool GetEdit() const;
 		void SetEdit(bool value);
 		ADD_PROPERTY(std::string,NodeTemplate)
 		ADD_PROPERTY(std::string,EdgeTemplate)
 		ADD_PROPERTY(bool,Optimize)
+
 		//IGraphComponent interface
 		virtual void RebuildGraph();
 		//INavigationComponent
