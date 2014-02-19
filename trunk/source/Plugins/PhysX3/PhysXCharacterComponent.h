@@ -24,6 +24,10 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSceneObjectRef.h"
 
+#include "PxSimulationEventCallback.h"
+#include "characterkinematic/PxControllerBehavior.h"
+
+
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
@@ -33,7 +37,10 @@ namespace GASS
 		Component that utialize physx raycast car. 
 	*/
 	
-	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>
+	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>, 
+		public physx::PxControllerBehaviorCallback, 
+		public physx::PxUserControllerHitReport
+						
 	{
 	public:
 		PhysXCharacterComponent();
@@ -44,6 +51,17 @@ namespace GASS
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void SceneManagerTick(double delta);
+
+		// Implements PxControllerBehaviorCallback
+		virtual physx::PxU32 getBehaviorFlags(const physx::PxShape&)		{ return 0;	}
+		virtual physx::PxU32 getBehaviorFlags(const physx::PxController&)	{ return 0;	}
+		virtual physx::PxU32 getBehaviorFlags(const physx::PxObstacle&)		{ return 0;	}
+
+		// Implements PxUserControllerHitReport
+		virtual void onShapeHit(const physx::PxControllerShapeHit& hit);
+		virtual void onControllerHit(const physx::PxControllersHit& hit) {}
+		virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) {}
+
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
@@ -61,12 +79,16 @@ namespace GASS
 		//helpers
 		void Reset();
 	protected:
+
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
 		float m_ThrottleInput;
 		float m_SteerInput;
 		float m_Mass;
+		float m_StandingSize;
+		float m_Radius;
+		Float m_Yaw;
 		physx::PxCapsuleController* m_Controller;
 	};
 	typedef SPTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;

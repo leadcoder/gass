@@ -29,9 +29,12 @@ namespace GASS
 {
 	PhysXCharacterComponent::PhysXCharacterComponent() : m_Actor(NULL),
 		m_ThrottleInput(0),
-		m_SteerInput(0)
+		m_SteerInput(0),
+		m_StandingSize(1.8),
+		m_Radius(0.4),
+		m_Yaw(0)
 	{
-		
+
 	}
 
 	PhysXCharacterComponent::~PhysXCharacterComponent()
@@ -74,8 +77,6 @@ namespace GASS
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
-		
-		
 		m_Initialized = true;
 	}
 
@@ -113,6 +114,59 @@ namespace GASS
 	{
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
+		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+
+
+		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 pos = location->GetPosition();
+		Quaternion rot = location->GetRotation();
+
+		PxExtendedVec3 px_vec(pos.x,pos.y,pos.z);
+
+		PxCapsuleControllerDesc cDesc;
+		cDesc.material			= system->GetDefaultMaterial();
+		cDesc.position			= px_vec;
+		cDesc.height			= m_StandingSize;
+		cDesc.radius			= m_Radius;
+		cDesc.slopeLimit		= 0.0f;
+		cDesc.contactOffset		= 0.1f;
+		cDesc.stepOffset		= 0.02f;
+		cDesc.callback			= this;
+		cDesc.behaviorCallback	= this;
+
+
+		m_Controller = static_cast<PxCapsuleController*>(system->GetControllerManager()->createController(*system->GetPxSDK(),sm->GetPxScene(),cDesc));
+		// remove controller shape from scene query for standup overlap test
+		PxRigidDynamic* actor = m_Controller->getActor();
+		if(actor)
+		{
+			if(actor->getNbShapes())
+			{
+				PxShape* ctrlShape;
+				actor->getShapes(&ctrlShape,1);
+				ctrlShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE,false);
+			}
+			//else
+			//	fatalError("character actor has no shape");
+		}
+		//else
+		//	fatalError("character could not create actor");
+	}
+
+	void PhysXCharacterComponent::onShapeHit(const PxControllerShapeHit& hit)
+	{
+		PxRigidDynamic* actor = hit.shape->getActor().is<PxRigidDynamic>();
+		if(actor)
+		{
+			// We only allow horizontal pushes. Vertical pushes when we stand on dynamic objects creates
+			// useless stress on the solver. It would be possible to enable/disable vertical pushes on
+			// particular objects, if the gameplay requires it.
+			if(hit.dir.y==0.0f)
+			{
+				PxReal coeff = actor->getMass() * hit.length;
+				PxRigidBodyExt::addForceAtLocalPos(*actor,hit.dir*coeff, PxVec3(0,0,0), PxForceMode::eIMPULSE);
+			}
+		}
 	}
 
 	void PhysXCharacterComponent::SceneManagerTick(double delta)
@@ -120,12 +174,38 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 
 		Vec3 current_pos  = GetPosition();
-	
+
 		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
 		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
+
+		PxVec3 targetKeyDisplacement(0);
+		PxVec3 targetPadDisplacement(0);
+
+		PxVec3 forward;// = m_ViewDir;
+		forward.y = 0;
+		forward.normalize();
+		PxVec3 up = PxVec3(0,1,0);
+		PxVec3 right = forward.cross(up);
+
+		if(m_ThrottleInput > 0)	
+			targetKeyDisplacement += forward;
+		if(m_ThrottleInput < 0)	
+			targetKeyDisplacement -= forward;
+
+		//if(m_SteerInput > 0)	
+		//	targetKeyDisplacement += right;
+		//if(m_SteerInput < 0)	
+		//	targetKeyDisplacement -= right;
+		m_Yaw += m_SteerInput * delta;
+		//m_Pitch		+= mGamepadPitchInc * dtime;
+		// Clamp pitch
+		//camera.setRot(PxVec3(0,-m_TargetYaw,0));
+		targetKeyDisplacement += PxVec3(0,-9.81,0);
+		targetKeyDisplacement *= delta;
+		PxU32 flags = m_Controller->move(targetKeyDisplacement, 0.001f, delta, PxControllerFilters(0));
 	}
 
 	void PhysXCharacterComponent::SetMass(float mass)
@@ -139,7 +219,6 @@ namespace GASS
 		{
 			Reset();
 			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
-			
 		}
 	}
 
@@ -165,7 +244,6 @@ namespace GASS
 	Quaternion PhysXCharacterComponent::GetRotation()
 	{
 		Quaternion q;
-
 		if(m_Actor)
 		{
 			q = PxConvert::ToGASS(m_Actor->getGlobalPose().q);
@@ -180,7 +258,6 @@ namespace GASS
 
 		if (name == "Throttle")
 		{
-			
 			m_ThrottleInput = value;
 		}
 		else if (name == "Steer")

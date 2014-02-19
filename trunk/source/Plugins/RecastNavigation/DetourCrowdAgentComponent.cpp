@@ -350,7 +350,6 @@ namespace GASS
 					Vec3 right = final_dir;
 					right.x = final_dir.z;
 					right.z = -final_dir.x;
-					//Vec3 right = -Math::Cross(m_CurrentDir,up);
 					GASS::Mat4 rot_mat;
 					rot_mat.Identity();
 					rot_mat.SetViewDirVector(final_dir);
@@ -358,8 +357,7 @@ namespace GASS
 					rot_mat.SetUpVector(up);
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
-					//m_DesiredRot = rot;
-
+					
 					MessagePtr rot_msg(new WorldRotationMessage(rot,id));
 					GetSceneObject()->PostMessage(rot_msg);
 				}
