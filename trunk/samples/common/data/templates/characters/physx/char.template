@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="PXTestCharacter"/>
+		<Instantiable value="true"/>
+		<ID value="CHARACTER"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<BoxGeometryComponent>
+				<Size value="0.4 1.8 0.4"/>
+				<Lines value="false"/>
+			</BoxGeometryComponent>
+			<ManualMeshComponent/>
+			<PhysXCharacterComponent>
+			  <StandingSize value="1.8"/>
+			  <Radius value="0.4"/>
+			</PhysXCharacterComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="TankInputSettings"/>
+			</InputHandlerComponent>
+		</Components>
+		<ComponentContainers>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>
