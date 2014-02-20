@@ -4,13 +4,12 @@
 		<!-- load all from path-->
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>-->
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
-		<!--<Plugin PluginFile = "GASSPluginAI"/>-->
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
+		<Plugin PluginFile = "GASSPluginPhysX3"/>
 	</Plugins>
 	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
 	<ScenePath value="%GASS_DATA_HOME%/sceneries/osg"/>
@@ -38,6 +37,8 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
+		<MaterialSystem>
+		</MaterialSystem>
 		<EditorSystem>
 			<TaskNode value="PRE_SIM"/> 
 		</EditorSystem>
@@ -61,18 +62,9 @@
 		<OpenALSoundSystem>
 			<TaskNode value="PRE_SIM"/>
 		</OpenALSoundSystem>
-		<CEGUISystem>
-			<TaskNode value="PRE_SIM"/>
-		</CEGUISystem>
-		<LuaScriptSystem>
-			<TaskNode value="PRE_SIM"/>
-		</LuaScriptSystem>
 		<PhysXPhysicsSystem>
 			<TaskNode value="SIM"/>
 		</PhysXPhysicsSystem>
-		<!--<AISystem>
-			<TaskNode value="SIM"/>
-		</AISystem>-->
 		<OSGCollisionSystem>
 			<TaskNode value="PRE_SIM"/>
 		</OSGCollisionSystem>

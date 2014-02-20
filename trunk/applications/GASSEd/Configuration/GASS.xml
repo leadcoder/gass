@@ -12,7 +12,7 @@
 		<Plugin PluginFile = "GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPluginEnvironment"/>
-		<Plugin PluginFile = "GASSPluginAI"/>
+		<!--<Plugin PluginFile = "GASSPluginPhysX"/>-->
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 	</Plugins>
 	<SetDataPath value="../data/"/>
