@@ -202,6 +202,8 @@ namespace GASS
 			return temp_v;
 		}
 
+		
+
 		inline Vec3 operator- () const
 		{
 			Vec3 temp_v;
@@ -211,6 +213,14 @@ namespace GASS
 			temp_v.z= - z;
 
 			return temp_v;
+		}
+
+		inline Vec3& operator -= ( const Vec3& v )
+		{
+			x -= v.x;
+			y -= v.y;
+			z -= v.z;
+			return *this;
 		}
 
 		inline Vec3 operator* (const Float scalar) const
@@ -224,6 +234,14 @@ namespace GASS
 			return temp_v;
 		}
 
+		inline Vec3& operator *= ( const Float scalar)
+		{
+			x *= scalar;
+			y *= scalar;
+			z *= scalar;
+			return *this;
+		}
+
 		inline Vec3 operator* (const Vec3 &v) const
 		{
 			Vec3 temp_v;
@@ -234,12 +252,30 @@ namespace GASS
 			return temp_v;
 		}
 
+		inline Vec3& operator *= ( const Vec3& v )
+		{
+			x *= v.x;
+			y *= v.y;
+			z *= v.z;
+			return *this;
+		}
+
 		inline Vec3 operator/ (const Vec3 &v) const
 		{
 			Vec3 temp_v;
 			temp_v.x= x / v.x;
 			temp_v.y= y / v.y;
 			temp_v.z= z / v.z;
+			return temp_v;
+		}
+
+		inline Vec3 operator/ (const Float scalar) const
+		{
+			Vec3 temp_v;
+
+			temp_v.x= x / scalar;
+			temp_v.y= y / scalar;
+			temp_v.z= z / scalar;
 			return temp_v;
 		}
 

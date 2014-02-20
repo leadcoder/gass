@@ -51,6 +51,8 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysXCharacterComponent",new Creator<PhysXCharacterComponent, IComponent>);
 		RegisterProperty<float>("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
+		RegisterProperty<Float>("Radius", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
+		RegisterProperty<Float>("StandingSize", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
 	}
 
 	void PhysXCharacterComponent::OnInitialize()
@@ -116,12 +118,11 @@ namespace GASS
 		m_SceneManager = sm;
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
-
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
 		Quaternion rot = location->GetRotation();
 
-		PxExtendedVec3 px_vec(pos.x,pos.y,pos.z);
+		PxExtendedVec3 px_vec(pos.x,pos.y+20,pos.z);
 
 		PxCapsuleControllerDesc cDesc;
 		cDesc.material			= system->GetDefaultMaterial();
@@ -137,13 +138,13 @@ namespace GASS
 
 		m_Controller = static_cast<PxCapsuleController*>(system->GetControllerManager()->createController(*system->GetPxSDK(),sm->GetPxScene(),cDesc));
 		// remove controller shape from scene query for standup overlap test
-		PxRigidDynamic* actor = m_Controller->getActor();
-		if(actor)
+		m_Actor = m_Controller->getActor();
+		if(m_Actor)
 		{
-			if(actor->getNbShapes())
+			if(m_Actor->getNbShapes())
 			{
 				PxShape* ctrlShape;
-				actor->getShapes(&ctrlShape,1);
+				m_Actor->getShapes(&ctrlShape,1);
 				ctrlShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE,false);
 			}
 			//else
@@ -173,39 +174,44 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 
-		Vec3 current_pos  = GetPosition();
-
+		const Vec3 current_pos  = GetPosition();
 		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
+		//const Quaternion rot = GetRotation();
+		m_Yaw += m_SteerInput * delta;
+		
+		Quaternion new_rot(Vec3(m_Yaw,0,0));
+		MessagePtr rot_msg(new WorldRotationMessage(new_rot,from_id));
 		GetSceneObject()->PostMessage(rot_msg);
+		
+		Mat4 rot_mat;
+		rot_mat.Identity();
+		new_rot.ToRotationMatrix(rot_mat);
+		Vec3 forward = rot_mat.GetViewDirVector();
 
-		PxVec3 targetKeyDisplacement(0);
-		PxVec3 targetPadDisplacement(0);
-
-		PxVec3 forward;// = m_ViewDir;
+		Vec3 target_displacement(0,0,0);
 		forward.y = 0;
-		forward.normalize();
-		PxVec3 up = PxVec3(0,1,0);
-		PxVec3 right = forward.cross(up);
+		forward.Normalize();
+		Vec3 up(0,1,0);
+		Vec3 right = Math::Cross(forward,up);
 
 		if(m_ThrottleInput > 0)	
-			targetKeyDisplacement += forward;
+			target_displacement += forward;
 		if(m_ThrottleInput < 0)	
-			targetKeyDisplacement -= forward;
+			target_displacement -= forward;
 
 		//if(m_SteerInput > 0)	
 		//	targetKeyDisplacement += right;
 		//if(m_SteerInput < 0)	
 		//	targetKeyDisplacement -= right;
-		m_Yaw += m_SteerInput * delta;
+		
 		//m_Pitch		+= mGamepadPitchInc * dtime;
 		// Clamp pitch
 		//camera.setRot(PxVec3(0,-m_TargetYaw,0));
-		targetKeyDisplacement += PxVec3(0,-9.81,0);
-		targetKeyDisplacement *= delta;
-		PxU32 flags = m_Controller->move(targetKeyDisplacement, 0.001f, delta, PxControllerFilters(0));
+		target_displacement += Vec3(0,-9.81,0);
+		target_displacement *= delta;
+		PxU32 flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, delta, PxControllerFilters(0));
 	}
 
 	void PhysXCharacterComponent::SetMass(float mass)
@@ -215,10 +221,11 @@ namespace GASS
 
 	void PhysXCharacterComponent::SetPosition(const Vec3 &value)
 	{
-		if(m_Actor)
+		if(m_Controller)
 		{
 			Reset();
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
+			m_Controller->setPosition(PxExtendedVec3(value.x, m_StandingSize + value.y, value.z));
+			//m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
 		}
 	}
 

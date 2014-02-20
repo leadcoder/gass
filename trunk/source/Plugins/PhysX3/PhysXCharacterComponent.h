@@ -79,15 +79,14 @@ namespace GASS
 		//helpers
 		void Reset();
 	protected:
-
+		ADD_PROPERTY(Float,StandingSize)
+		ADD_PROPERTY(Float,Radius)
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
 		float m_ThrottleInput;
 		float m_SteerInput;
 		float m_Mass;
-		float m_StandingSize;
-		float m_Radius;
 		Float m_Yaw;
 		physx::PxCapsuleController* m_Controller;
 	};
