@@ -54,9 +54,6 @@ namespace GASS
 		return Vec3(GetRadius()*2,GetHeight(),GetRadius()*2);
 	}
 
-	
-
-
 	void DetourCrowdAgentComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
 		SetMaxSpeed(message->GetSpeed());
@@ -234,11 +231,15 @@ namespace GASS
 				dtPolyRef targetRef;
 				float targetPos[3];
 				float pos[3];
+				float expand_ext[3];
+				expand_ext[0] = ext[0];
+				expand_ext[1] = 1;
+				expand_ext[2] = ext[2];
 				pos[0] = message->GetPosition().x;
 				pos[1] = message->GetPosition().y;
 				pos[2] = message->GetPosition().z;
 
-				navquery->findNearestPoly(pos, ext, filter, &targetRef, targetPos);
+				navquery->findNearestPoly(pos, expand_ext, filter, &targetRef, targetPos);
 				if(targetRef)
 				{
 					m_TargetPos.x = targetPos[0];
