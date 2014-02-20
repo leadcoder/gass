@@ -5,14 +5,14 @@
 		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPluginOgre"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX"/>-->
+		<Plugin PluginFile = "GASSPluginPhysX3"/>
 		<Plugin PluginFile = "GASSPluginODE"/>
 		<Plugin PluginFile = "GASSPluginPagedGeometry"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPluginEnvironment"/>
-		<!--<Plugin PluginFile = "GASSPluginPhysX"/>-->
+		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 	</Plugins>
 	<SetDataPath value="../data/"/>
@@ -63,7 +63,8 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/characters/physx" type="FileSystem" recursive="false"/>
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>
@@ -72,6 +73,7 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
+		<MaterialSystem/>
 		<EditorSystem>
 			<TaskNode value="PRE_SIM"/> 
 		</EditorSystem>
@@ -104,22 +106,13 @@
 		<LuaScriptSystem>
 			<TaskNode value="PRE_SIM"/>
 		</LuaScriptSystem>
-		<!--<PhysXPhysicsSystem>
-			<TaskNode value="SIM"/>
-		</PhysXPhysicsSystem>-->
+		
 		<ODECollisionSystem>
 			<TaskNode value="PRE_SIM"/>
 		</ODECollisionSystem>
-		
-		<ODEPhysicsSystem>
-			<TaskNode value="SIM"/>
-		</ODEPhysicsSystem>
-
-		<AISystem>
-			<TaskNode value="SIM"/>
-		</AISystem>
-
-		
+		<PhysXPhysicsSystem>
+			<TaskNode value="PRE_SIM"/>
+		</PhysXPhysicsSystem>
 		<OgreGraphicsSystem>
 			<CreateMainWindowOnInit value="0"/>
 			<UpdateMessagePump value="false"/>

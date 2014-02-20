@@ -178,7 +178,8 @@ void StandardToolBar::OnMove()
 
 void StandardToolBar::OnRotate()
 {
-	m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->SelectTool(TID_ROTATE);
+	//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->SelectTool(TID_ROTATE);
+	m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->SelectTool(TID_GOTO_POS);
 }
 
 void StandardToolBar::OnTerrainDeform()
