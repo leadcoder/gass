@@ -155,22 +155,6 @@ namespace GASS
 	};
 	typedef SPTR<BarrelTransformationMessage> BarrelTransformationMessagePtr;
 
-	/*class PlayerInputMessage : public BaseMessage
-	{
-	public:
-		PlayerInputMessage(const std::string &controller,float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Controller(controller), m_Value(value)
-		  {
-
-		  }
-		  std::string GetController() const {return m_Controller;}
-		  float GetValue() const {return m_Value;}
-	private:
-		std::string m_Controller;
-		float m_Value;
-	};
-	typedef SPTR<PlayerInputMessage> PlayerInputMessagePtr;*/
-
 
 	class ReloadMessage : public BaseMessage
 	{
@@ -304,9 +288,6 @@ namespace GASS
 	};
 	typedef SPTR<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
 
-
-	
-
 	class SensorMessage : public BaseMessage
 	{
 	public:
@@ -342,8 +323,37 @@ namespace GASS
 	};
 	typedef SPTR<SensorLostTargetMessage> SensorLostTargetMessagePtr;
 
-	
 
-	
+	class CharacterAnimationRequest : public BaseMessage
+	{
+	public:
+		CharacterAnimationRequest(const std::string &animation_name, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_AnimationName(animation_name)
+		  {
+
+		  }
+		  std::string GetAnimationName() const {return m_AnimationName;}
+	private:
+		std::string m_AnimationName;
+	};
+	typedef SPTR<CharacterAnimationRequest> CharacterAnimationRequestPtr;
+
+	class CharacterInputRequest : public BaseMessage
+	{
+	public:
+		CharacterInputRequest(const std::string &input_name,float value, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_InputName(input_name),
+			  m_Value(value)
+		  {
+
+		  }
+		  std::string GetInputName() const {return m_InputName;}
+		  float GetValue() const {return m_Value;}
+	private:
+		std::string m_InputName;
+		float m_Value;
+	};
+	typedef SPTR<CharacterInputRequest> CharacterInputRequestPtr;
+
 }
 #endif
