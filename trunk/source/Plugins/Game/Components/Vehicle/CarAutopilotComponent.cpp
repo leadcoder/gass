@@ -185,7 +185,7 @@ namespace GASS
 				//	turn = 0;
 
 			}
-			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse
+			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse?
 			{
 				desired_speed *= -1;
 				if(current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
