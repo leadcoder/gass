@@ -268,16 +268,6 @@ namespace GASS
 		massRear = massRear/PxF32 (wheels.size()-2);
 		float tot = massRear*4 + massFront;
 
-		//Disable the handbrake from the front wheels and enable for the rear wheels
-		/*wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxHandBrakeTorque=0.0f;
-		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxHandBrakeTorque=0.0f;
-		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
-		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
-		//Enable steering for the front wheels and disable for the front wheels.
-		wheels[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mMaxSteer=PxPi*0.3333f;
-		wheels[PxVehicleDrive4W::eFRONT_RIGHT_WHEEL].mMaxSteer=PxPi*0.3333f;
-		wheels[PxVehicleDrive4W::eREAR_LEFT_WHEEL].mMaxSteer=0.0f;
-		wheels[PxVehicleDrive4W::eREAR_RIGHT_WHEEL].mMaxSteer=0.0f;*/
 
 		//set mSprungMass from vehicle mass move this to wheel?
 		susps[PxVehicleDrive4W::eFRONT_LEFT_WHEEL].mSprungMass=massFront*0.5f;
@@ -712,7 +702,6 @@ namespace GASS
 
 		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
-
 
 
 		//pitch engine sound

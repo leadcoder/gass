@@ -36,21 +36,35 @@ namespace GASS
 	/**
 		Message used to activate/deactivate physics
 	*/
-	class ActivatePhysicsMessage : public SceneMessage
+	class ActivatePhysicsRequest : public SceneRequestMessage
 	{
 	public:
 		/**
 		Constructor
 		@param activate Indicate mode (0 == inactive, 1==active)
 		*/
-		ActivatePhysicsMessage(int activate, SenderID sender_id = -1, double delay= 0) :
-		  SceneMessage(sender_id , delay) ,
+		ActivatePhysicsRequest(int activate, SenderID sender_id = -1, double delay= 0) :
+		  SceneRequestMessage(sender_id , delay) ,
 			  m_Activate(activate){}
 		  int GetActivate() const {return m_Activate;}
 	private:
 		int m_Activate;
 	};
-	typedef boost::shared_ptr<ActivatePhysicsMessage> ActivatePhysicsMessagePtr;
+	typedef SPTR<ActivatePhysicsRequest> ActivatePhysicsRequestPtr;
+
+	/**
+		Message sent by physics scene manager after physics update
+	*/
+	class PostPhysicsSceneUpdateEvent : public SceneEventMessage
+	{
+	public:
+		PostPhysicsSceneUpdateEvent(double delta_time, SenderID sender_id = -1, double delay= 0) :
+		  SceneEventMessage(sender_id , delay), m_DeltaTime(delta_time) {}
+		  double GetDeltaTime() const {return m_DeltaTime;}
+	private:
+		double m_DeltaTime;
+	};
+	typedef SPTR<PostPhysicsSceneUpdateEvent> PostPhysicsSceneUpdateEventPtr;
 }
 
 #endif

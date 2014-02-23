@@ -51,7 +51,9 @@ namespace GASS
 		ADD_PROPERTY(PIDControl,TurnPID);
 		ADD_PROPERTY(PIDControl,TrottlePID);
 		ADD_PROPERTY(Float,BrakeDistanceFactor);
-		
+		ADD_PROPERTY(bool,InvertBackWardSteering);
+		ADD_PROPERTY(bool,Support3PointTurn);
+	
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}

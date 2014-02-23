@@ -61,7 +61,6 @@ namespace GASS
 		virtual void onShapeHit(const physx::PxControllerShapeHit& hit);
 		virtual void onControllerHit(const physx::PxControllersHit& hit) {}
 		virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) {}
-
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
@@ -70,7 +69,8 @@ namespace GASS
 		void OnRotationChanged(RotationMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputControllerMessagePtr message);
-		
+		void OnPostUpdate(PostPhysicsSceneUpdateEventPtr message);
+	
 		//reflection functions
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
@@ -81,6 +81,10 @@ namespace GASS
 	protected:
 		ADD_PROPERTY(Float,StandingSize)
 		ADD_PROPERTY(Float,Radius)
+		ADD_PROPERTY(Float,YawMaxVelocity)
+		ADD_PROPERTY(Float,MaxSpeed)
+		ADD_PROPERTY(Float,Acceleration)
+		
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
@@ -88,6 +92,7 @@ namespace GASS
 		float m_SteerInput;
 		float m_Mass;
 		Float m_Yaw;
+		Float m_CurrentVel;
 		physx::PxCapsuleController* m_Controller;
 	};
 	typedef SPTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;

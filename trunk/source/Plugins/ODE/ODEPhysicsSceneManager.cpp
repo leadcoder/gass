@@ -79,10 +79,10 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsRequest,0));
 	}
 
-	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsMessagePtr message)
+	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
 	{
 		if(message->GetActivate())
 			m_Paused = false;

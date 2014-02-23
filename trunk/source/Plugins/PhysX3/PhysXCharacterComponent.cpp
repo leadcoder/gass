@@ -32,7 +32,11 @@ namespace GASS
 		m_SteerInput(0),
 		m_StandingSize(1.8),
 		m_Radius(0.4),
-		m_Yaw(0)
+		m_Yaw(0),
+		m_YawMaxVelocity(2),
+		m_Acceleration(5.2),
+		m_MaxSpeed(4),
+		m_CurrentVel(0)
 	{
 
 	}
@@ -53,6 +57,10 @@ namespace GASS
 		RegisterProperty<float>("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
 		RegisterProperty<Float>("Radius", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
 		RegisterProperty<Float>("StandingSize", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
+		RegisterProperty<Float>("YawMaxVelocity", &PhysXCharacterComponent::GetYawMaxVelocity, &PhysXCharacterComponent::SetYawMaxVelocity);
+		RegisterProperty<Float>("Acceleration", &PhysXCharacterComponent::GetAcceleration, &PhysXCharacterComponent::SetAcceleration);
+		RegisterProperty<Float>("MaxSpeed", &PhysXCharacterComponent::GetMaxSpeed, &PhysXCharacterComponent::SetMaxSpeed);
+		
 	}
 
 	void PhysXCharacterComponent::OnInitialize()
@@ -63,7 +71,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputControllerMessage,0));
-
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
+		
 
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
@@ -172,6 +181,11 @@ namespace GASS
 
 	void PhysXCharacterComponent::SceneManagerTick(double delta)
 	{
+	}
+
+	void PhysXCharacterComponent::OnPostUpdate(PostPhysicsSceneUpdateEventPtr message)
+	{
+		Float delta = message->GetDeltaTime();
 		int from_id = (int)this; //use address as id
 
 		const Vec3 current_pos  = GetPosition();
@@ -179,7 +193,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(pos_msg);
 
 		//const Quaternion rot = GetRotation();
-		m_Yaw += m_SteerInput * delta;
+		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
 		
 		Quaternion new_rot(Vec3(m_Yaw,0,0));
 		MessagePtr rot_msg(new WorldRotationMessage(new_rot,from_id));
@@ -195,16 +209,42 @@ namespace GASS
 		forward.Normalize();
 		Vec3 up(0,1,0);
 		Vec3 right = Math::Cross(forward,up);
+		m_CurrentVel += m_Acceleration*m_ThrottleInput*delta;
+		if(m_CurrentVel > m_MaxSpeed)
+			m_CurrentVel = m_MaxSpeed;
+		if(m_CurrentVel < -m_MaxSpeed)
+			m_CurrentVel = -m_MaxSpeed;
 
-		if(m_ThrottleInput > 0)	
-			target_displacement += forward;
-		if(m_ThrottleInput < 0)	
+		/*if(m_ThrottleInput > 0)
+		{
+			target_displacement += forward*m_CurrentVel;
+		}
+		else if(m_ThrottleInput < 0)	
 			target_displacement -= forward;
+*/
+		//damp
+		if(m_ThrottleInput == 0)
+		{
+			if(m_CurrentVel > 0)
+			{
+				m_CurrentVel -= m_Acceleration*delta;
+				if(m_CurrentVel < 0)
+					m_CurrentVel = 0;
+			}
+			else if(m_CurrentVel < 0)
+			{
+				m_CurrentVel += m_Acceleration*delta;
+				if(m_CurrentVel > 0)
+					m_CurrentVel = 0;
+			}
+		}
+		//std::cout << m_CurrentVel << "\n";
+		target_displacement += forward*m_CurrentVel;
 
 		//if(m_SteerInput > 0)	
-		//	targetKeyDisplacement += right;
+		//	target_displacement += right;
 		//if(m_SteerInput < 0)	
-		//	targetKeyDisplacement -= right;
+		//	target_displacement -= right;
 		
 		//m_Pitch		+= mGamepadPitchInc * dtime;
 		// Clamp pitch
@@ -212,6 +252,10 @@ namespace GASS
 		target_displacement += Vec3(0,-9.81,0);
 		target_displacement *= delta;
 		PxU32 flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, delta, PxControllerFilters(0));
+
+		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id));
+		GetSceneObject()->PostMessage(physics_msg);
+
 	}
 
 	void PhysXCharacterComponent::SetMass(float mass)
@@ -265,7 +309,7 @@ namespace GASS
 
 		if (name == "Throttle")
 		{
-			m_ThrottleInput = value;
+			m_ThrottleInput = -value;
 		}
 		else if (name == "Steer")
 		{

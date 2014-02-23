@@ -48,7 +48,9 @@ namespace GASS
 		m_Enable(false),
 		m_WPReached(false),
 		m_VehicleSpeed(0,0,0),
-		m_BrakeDistanceFactor(1.0)
+		m_BrakeDistanceFactor(1.0),
+		m_InvertBackWardSteering(true),
+		m_Support3PointTurn(true)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -81,6 +83,12 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<PIDControl>("TrottlePID", &CarAutopilotComponent::GetTrottlePID, &CarAutopilotComponent::SetTrottlePID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Throttle PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
+		
+		RegisterProperty<bool>("Support3PointTurn", &CarAutopilotComponent::GetSupport3PointTurn, &CarAutopilotComponent::SetSupport3PointTurn,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable Three Point Turn",PF_VISIBLE  | PF_EDITABLE)));
+
+		RegisterProperty<bool>("InvertBackWardSteering", &CarAutopilotComponent::GetInvertBackWardSteering, &CarAutopilotComponent::SetInvertBackWardSteering,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE  | PF_EDITABLE)));
 	}
 
 	void CarAutopilotComponent::OnInitialize()
@@ -146,6 +154,7 @@ namespace GASS
 	void CarAutopilotComponent::_UpdateDrive(double delta_time)
 	{
 		Vec3 target_pos  = m_DesiredPos;
+		target_pos.y = m_CurrentPos.y;
 		Float desired_speed	= m_DesiredSpeed;
 		Vec3 current_dir = -m_Transformation.GetViewDirVector();
 		float current_speed = -m_VehicleSpeed.z; 
@@ -176,19 +185,19 @@ namespace GASS
 			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
 	
 			// damp speed if we have to turn sharp
-			if(fabs(angle_to_drive_dir) > 90 && drive_dist > 5)// do three point turn if more than 20 meters turn on point
+			if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 90 && drive_dist > 5)// do three point turn if more than 20 meters turn on point
 			{
 				desired_speed *= -1;
-				if(current_speed < 0)  //check that not rolling forward
+				if(m_InvertBackWardSteering && current_speed < 0)  //check that not rolling forward
 					turn *=-1;
 				//else
 				//	turn = 0;
 
 			}
-			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse?
+			else if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse?
 			{
 				desired_speed *= -1;
-				if(current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
+				if(m_InvertBackWardSteering && current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
 					turn *=-1;
 				else //damp turn, we try to reverse!
 					turn *= 0.03;
@@ -205,7 +214,7 @@ namespace GASS
 					desired_speed = desired_speed * (1.0 - w) + w * (desired_speed * fabs(cos_angle)); 
 				}
 				
-				if(current_speed < 0) //you want to go forward but rolling backward, invert steering
+				if(m_InvertBackWardSteering && current_speed < 0) //you want to go forward but rolling backward, invert steering
 					turn *=-1;
 			}
 
@@ -223,15 +232,11 @@ namespace GASS
 			{
 				 desired_speed = desired_speed * (drive_dist/radius);
 			}
-
-			
-			//if(drive_dist < fabs(desired_speed))
-			//	desired_speed *= 0.5;
-
-	
+		
 			if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
 			{
 				desired_speed = 0;
+				turn = 0;
 			}
 
 			m_TrottlePID.set(desired_speed);
@@ -240,7 +245,6 @@ namespace GASS
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
 
-			//turn = -turn;
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 

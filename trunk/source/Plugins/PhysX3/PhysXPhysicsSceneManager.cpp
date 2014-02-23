@@ -110,10 +110,10 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnCreate()
 	{
 		ScenePtr scene = GetScene();
-		GetScene()->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnActivateMessage,ActivatePhysicsMessage,0));
+		GetScene()->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnActivateMessage,ActivatePhysicsRequest,0));
 	}
 
-	void PhysXPhysicsSceneManager::OnActivateMessage(ActivatePhysicsMessagePtr message)
+	void PhysXPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
 	{
 		m_Paused = !message->GetActivate();
 	}
@@ -241,8 +241,9 @@ namespace GASS
 		}
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
-	}
 
+		GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
+	}
 
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
 	{
