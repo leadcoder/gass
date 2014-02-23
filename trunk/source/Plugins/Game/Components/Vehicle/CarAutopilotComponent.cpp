@@ -52,7 +52,8 @@ namespace GASS
 		m_InvertBackWardSteering(true),
 		m_Support3PointTurn(true),
 		m_FaceDirection(0,0,0),
-		m_HasDir(false)
+		m_HasDir(false),
+		m_MaxReverseDistance(5)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -80,6 +81,8 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<Float>("BrakeDistanceFactor", &CarAutopilotComponent::GetBrakeDistanceFactor, &CarAutopilotComponent::SetBrakeDistanceFactor,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Multiplier for default linear brake distance (1m at 1m/s) ",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<Float>("MaxReverseDistance", &CarAutopilotComponent::GetMaxReverseDistance, &CarAutopilotComponent::SetMaxReverseDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max waypoint distance to use reverse",PF_VISIBLE  | PF_EDITABLE)));
 		
 		RegisterProperty<PIDControl>("TurnPID", &CarAutopilotComponent::GetTurnPID, &CarAutopilotComponent::SetTurnPID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
@@ -172,8 +175,9 @@ namespace GASS
 		Vec3 current_pos = m_CurrentPos;
 		
 		Vec3 drive_dir = target_pos - current_pos;
-		float drive_dist = drive_dir.Length();
-		if(!m_WPReached && drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
+		const Float drive_dist = drive_dir.Length();
+		std::cout << drive_dist << std::endl; 
+		if(drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
 		{
 			drive_dir.y = 0;
 			drive_dir.Normalize();
@@ -196,7 +200,7 @@ namespace GASS
 			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
 	
 			// damp speed if we have to turn sharp
-			if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 90 && drive_dist > 5)// do three point turn if more than 20 meters turn on point
+			if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 90 && drive_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
 			{
 				desired_speed *= -1;
 				if(m_InvertBackWardSteering && current_speed < 0)  //check that not rolling forward
@@ -205,13 +209,20 @@ namespace GASS
 				//	turn = 0;
 
 			}
-			else if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 80 && drive_dist < 5)// do three point turn or just reverse?
+			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < m_MaxReverseDistance)// do three point turn or just reverse?
 			{
 				desired_speed *= -1;
-				if(m_InvertBackWardSteering && current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
+				if(m_Support3PointTurn && m_InvertBackWardSteering)
+				{
+					if(current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
+						turn *=-1;
+					else //damp turn, we try to reverse!
+						turn *= 0.03;
+				}
+				else if(!m_InvertBackWardSteering)
 					turn *=-1;
-				else //damp turn, we try to reverse!
-					turn *= 0.03;
+				
+				
 			}
 			else
 			{
@@ -248,22 +259,23 @@ namespace GASS
 			{
 				desired_speed = 0;
 				turn = 0;
+				m_WPReached = true;
+			}
 
-				if(m_HasDir)
-				{
-					Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
-					float cos_angle = Math::Dot(current_dir,m_FaceDirection);
+			if(m_HasDir && m_WPReached) //apply desired end rotation if we have reached end location
+			{
+				Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
+				float cos_angle = Math::Dot(current_dir,m_FaceDirection);
 
-					if(cos_angle > 1) 
-						cos_angle = 1;
-					if(cos_angle < -1) 
-						cos_angle = -1;
-					float angle_to_face = Math::Rad2Deg(acos(cos_angle));
-					if(cross.y < 0) 
-						angle_to_face *= -1;
-					m_TurnPID.set(0);
-					turn = m_TurnPID.update(angle_to_face, delta_time);
-				}
+				if(cos_angle > 1) 
+					cos_angle = 1;
+				if(cos_angle < -1) 
+					cos_angle = -1;
+				float angle_to_face = Math::Rad2Deg(acos(cos_angle));
+				if(cross.y < 0) 
+					angle_to_face *= -1;
+				m_TurnPID.set(0);
+				turn = m_TurnPID.update(angle_to_face, delta_time);
 			}
 
 			m_TrottlePID.set(desired_speed);
