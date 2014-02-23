@@ -220,11 +220,7 @@ namespace GASS
 				GetSceneObject()->PostMessage(mesh_message);
 			}
 		}
-		SetShowWaypoints(m_ShowWaypoints);
-
-
-		
-
+		//SetShowWaypoints(m_ShowWaypoints);
 	
 		//create absolute positions
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();

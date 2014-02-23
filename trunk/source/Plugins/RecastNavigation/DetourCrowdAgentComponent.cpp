@@ -277,7 +277,7 @@ namespace GASS
 				Float dist = target_dir.Length();
 				DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 
-				const float* vel = m_Agent->vel;
+				const float* vel = m_Agent->nvel;
 				Vec3 view_dir(vel[0],vel[1],vel[2]);
 				Float speed = view_dir.Length();
 				Float dist_to_stop = 0.5;
@@ -312,7 +312,7 @@ namespace GASS
 					crowd_comp->GetCrowd()->updateAgentParameters(m_Index,&ap);
 				}
 
-				
+				Vec3 c_velocity = (current_pos - m_LastPos)/delta_time;
 				//Float speed2 = (current_pos - m_LastPos).Length();
 				//speed2 = speed2/delta_time;
 				m_LastPos = current_pos;
@@ -362,7 +362,9 @@ namespace GASS
 					MessagePtr rot_msg(new WorldRotationMessage(rot,id));
 					GetSceneObject()->PostMessage(rot_msg);
 				}
-				MessagePtr vel_msg(new VelocityNotifyMessage(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
+				//MessagePtr vel_msg(new VelocityNotifyMessage(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
+				MessagePtr vel_msg(new VelocityNotifyMessage(c_velocity,Vec3(0,0,0),id));
+				
 				GetSceneObject()->PostMessage(vel_msg);
 			}
 		}

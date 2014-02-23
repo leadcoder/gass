@@ -50,7 +50,9 @@ namespace GASS
 		m_VehicleSpeed(0,0,0),
 		m_BrakeDistanceFactor(1.0),
 		m_InvertBackWardSteering(true),
-		m_Support3PointTurn(true)
+		m_Support3PointTurn(true),
+		m_FaceDirection(0,0,0),
+		m_HasDir(false)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -96,6 +98,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
+			
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
 
@@ -113,6 +117,13 @@ namespace GASS
 		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,pos.y,pos.z);
 		m_WPReached = false;
+		m_HasDir = false;
+	}
+
+	void CarAutopilotComponent::OnFaceDirectionRequest(FaceDirectionRequestPtr message)
+	{
+		m_FaceDirection = message->GetDirection();
+		m_HasDir = true;
 	}
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
@@ -237,6 +248,22 @@ namespace GASS
 			{
 				desired_speed = 0;
 				turn = 0;
+
+				if(m_HasDir)
+				{
+					Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
+					float cos_angle = Math::Dot(current_dir,m_FaceDirection);
+
+					if(cos_angle > 1) 
+						cos_angle = 1;
+					if(cos_angle < -1) 
+						cos_angle = -1;
+					float angle_to_face = Math::Rad2Deg(acos(cos_angle));
+					if(cross.y < 0) 
+						angle_to_face *= -1;
+					m_TurnPID.set(0);
+					turn = m_TurnPID.update(angle_to_face, delta_time);
+				}
 			}
 
 			m_TrottlePID.set(desired_speed);

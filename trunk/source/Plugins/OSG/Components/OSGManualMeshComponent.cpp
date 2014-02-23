@@ -43,7 +43,7 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN),
 		m_CastShadow(false)
 	{
 
@@ -59,7 +59,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, IComponent>);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		//RegisterProperty<GeometryFlags>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlags, &OSGManualMeshComponent::SetGeometryFlags);
+		
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlagsBinder, &OSGManualMeshComponent::SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
 	void OSGManualMeshComponent::OnInitialize()
@@ -87,7 +89,7 @@ namespace GASS
 
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
-		SetGeometryFlags(m_GeomFlags);
+		SetGeometryFlags(GetGeometryFlags());
 		BaseSceneComponent::OnInitialize();
 		
 
@@ -106,7 +108,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::SetGeometryFlags(GeometryFlags value)
 	{
-		m_GeomFlags = value;
+		m_GeometryFlagsBinder.SetValue(value);
 		if(m_GeoNode.valid())
 		{
 			OSGConvert::Get().SetOSGNodeMask(value,m_GeoNode.get());
@@ -115,7 +117,7 @@ namespace GASS
 
 	GeometryFlags OSGManualMeshComponent::GetGeometryFlags() const
 	{
-		return m_GeomFlags;
+		return m_GeometryFlagsBinder.GetValue();
 	}
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
@@ -123,7 +125,7 @@ namespace GASS
 		if(m_GeoNode)
 		{
 			if(message->EnableCollision())
-				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_GeoNode.get());
+				OSGConvert::Get().SetOSGNodeMask(GetGeometryFlags(),m_GeoNode.get());
 			else
 				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_GeoNode.get());
 		}

@@ -39,6 +39,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual GraphicsMesh GetMeshData() const;
 	protected:
+		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
 		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		bool GetCastShadow() const {return m_CastShadow;}
@@ -53,7 +54,6 @@ namespace GASS
 		std::vector<osg::ref_ptr<osg::Geometry> > m_OSGGeometries;
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<GraphicsMesh> m_MeshData;
-		GeometryFlags m_GeomFlags;
 		bool m_CastShadow;
 		OSGGraphicsSystemPtr m_GFXSystem;
 	};

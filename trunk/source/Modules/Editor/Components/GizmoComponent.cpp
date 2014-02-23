@@ -80,6 +80,8 @@ namespace GASS
 		regmat.Ambient.Set(0,0,0);
 		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
 		regmat.DepthTest = false;
+		regmat.DepthWrite = true;
+		
 		
 		GraphicsMaterial hlmat;
 		hlmat.Name = m_HighlightMat;
@@ -87,6 +89,8 @@ namespace GASS
 		hlmat.Ambient.Set(0,0,0);
 		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
 		hlmat.DepthTest = false;
+		hlmat.DepthWrite = true;
+		
 		
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if(!gfx_sys->HasMaterial(m_RegularMat))
@@ -455,14 +459,14 @@ namespace GASS
 			sub_mesh_data->PositionVector.push_back(pos);
 			pos = Vec3(m_Size,-thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(m_Size,-thickness,-m_Size);
+			pos = Vec3(m_Size,-thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
 
 			pos = Vec3(0,-thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(m_Size,-thickness,-m_Size);
+			pos = Vec3(m_Size,-thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(0,-thickness,-m_Size);
+			pos = Vec3(0,-thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
 
 			sub_mesh_data->IndexVector.push_back(0);
@@ -483,14 +487,14 @@ namespace GASS
 			sub_mesh_data->PositionVector.push_back(pos);
 			pos = Vec3(m_Size,thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(m_Size,thickness,-m_Size);
+			pos = Vec3(m_Size,thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
 
 			pos = Vec3(0,-thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(m_Size,thickness,-m_Size);
+			pos = Vec3(m_Size,thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
-			pos = Vec3(0,thickness,-m_Size);
+			pos = Vec3(0,thickness,m_Size);
 			sub_mesh_data->PositionVector.push_back(pos);
 
 			sub_mesh_data->IndexVector.push_back(6);

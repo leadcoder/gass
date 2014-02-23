@@ -26,6 +26,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSGeometryFlags.h"
 #include <OgreManualObject.h>
 
 namespace Ogre
@@ -52,6 +53,7 @@ namespace GASS
 		//IMeshComponent
 		virtual GraphicsMesh GetMeshData() const;
 	protected:
+		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
 
@@ -68,7 +70,6 @@ namespace GASS
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadows;
-		GeometryFlags m_GeomFlags;
 	};
 }
 

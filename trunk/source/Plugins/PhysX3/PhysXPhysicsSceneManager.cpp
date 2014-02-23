@@ -189,13 +189,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
 	{
-		/*SceneObjectPtr obj = message->GetSceneObject();
-		assert(obj);
-
-		//Save all bodies
-		PhysXBodyComponentPtr body = obj->GetFirstComponentByClass<PhysXBodyComponent>();
-		if(body)
-		m_Bodies.push_back(body);*/
+		
 	}
 
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
@@ -238,11 +232,12 @@ namespace GASS
 				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
 				PxVehicleUpdates(delta_time,physx::PxVec3(0, m_Gravity, 0),*system->GetSurfaceTirePairs(),(int)m_Vehicles.size(),&m_Vehicles[0]);
 			}
+			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
 		}
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 
-		GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
+		
 	}
 
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)

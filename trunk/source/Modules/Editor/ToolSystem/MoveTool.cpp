@@ -101,7 +101,7 @@ namespace GASS
 					}
 					else
 					{
-						//move seleced object
+						//move selected object
 
 						if(m_SnapToMouse)
 							m_Offset.Set(0,0,0);

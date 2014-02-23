@@ -64,6 +64,8 @@ namespace GASS
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnGotoPosition(GotoPositionMessagePtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
+		void OnFaceDirectionRequest(FaceDirectionRequestPtr message);
+		
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
@@ -74,6 +76,10 @@ namespace GASS
 		Vec3 m_VehicleSpeed;
 		Mat4 m_Transformation;
 		bool m_WPReached;
+
+
+		Vec3 m_FaceDirection;
+		bool m_HasDir;
 	};
 }
 #endif

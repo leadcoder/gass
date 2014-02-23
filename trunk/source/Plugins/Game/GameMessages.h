@@ -73,6 +73,21 @@ namespace GASS
 	};
 	typedef SPTR<GotoPositionMessage> GotoPositionMessagePtr;
 
+	class FaceDirectionRequest : public BaseMessage
+	{
+	public:
+		FaceDirectionRequest(const Vec3 &direction, SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay),m_Dir(direction)
+		  {
+
+		  }
+		  Vec3 GetDirection() const {return m_Dir;}
+	private:
+		Vec3 m_Dir;
+	};
+	typedef SPTR<FaceDirectionRequest> FaceDirectionRequestPtr;
+
+
 
 	class PathfindToPositionMessage : public BaseMessage
 	{

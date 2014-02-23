@@ -50,6 +50,8 @@
 #include "Sim/GASSSimSystemManager.h"
 
 
+
+
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
@@ -59,8 +61,7 @@ namespace GASS
 {
 	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),
 		//m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
-		m_GeomFlags(GEOMETRY_FLAG_DYNAMIC_OBJECT),
-		
+		m_GeometryFlagsBinder(GEOMETRY_FLAG_DYNAMIC_OBJECT),
 		m_CastShadows(false)
 	{
 
@@ -78,6 +79,9 @@ namespace GASS
 		ADD_DEPENDENCY("OgreLocationComponent")
 		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreManualMeshComponent::GetGeometryFlagsBinder, &OgreManualMeshComponent::SetGeometryFlagsBinder,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
 	void OgreManualMeshComponent::OnInitialize()
@@ -252,7 +256,7 @@ namespace GASS
 		}
 		else
 		{
-			for(size_t i= 0;  i< m_MeshObject->getNumSections(); i++)
+			for(unsigned int i= 0;  i< m_MeshObject->getNumSections(); i++)
 			{
 				m_MeshObject->getSection(i)->setMaterialName(message->GetMaterialName());
 			}
@@ -291,12 +295,12 @@ namespace GASS
 
 	GeometryFlags OgreManualMeshComponent::GetGeometryFlags() const
 	{
-		return m_GeomFlags;
+		return m_GeometryFlagsBinder.GetValue();
 	}
 
 	void OgreManualMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
-		m_GeomFlags = flags;
+		m_GeometryFlagsBinder.SetValue(flags);
 	}
 
 	void OgreManualMeshComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)

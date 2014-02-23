@@ -22,6 +22,7 @@
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 
 #include "PxSimulationEventCallback.h"
@@ -34,13 +35,13 @@ namespace GASS
 	typedef WPTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 	
 	/**
-		Component that utialize physx raycast car. 
+		Component that utilize physx character controller. 
 	*/
 	
 	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>, 
 		public physx::PxControllerBehaviorCallback, 
-		public physx::PxUserControllerHitReport
-						
+		public physx::PxUserControllerHitReport,
+		public IPlatformComponent
 	{
 	public:
 		PhysXCharacterComponent();
@@ -51,6 +52,11 @@ namespace GASS
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void SceneManagerTick(double delta);
+
+
+		PlatformType GetType() const {return PT_HUMAN;}
+		Vec3 GetSize() const{return Vec3(m_Radius,m_StandingSize,m_Radius);}
+		ADD_PROPERTY(Float,MaxSpeed)
 
 		// Implements PxControllerBehaviorCallback
 		virtual physx::PxU32 getBehaviorFlags(const physx::PxShape&)		{ return 0;	}
@@ -82,7 +88,6 @@ namespace GASS
 		ADD_PROPERTY(Float,StandingSize)
 		ADD_PROPERTY(Float,Radius)
 		ADD_PROPERTY(Float,YawMaxVelocity)
-		ADD_PROPERTY(Float,MaxSpeed)
 		ADD_PROPERTY(Float,Acceleration)
 		
 		bool m_Initialized;

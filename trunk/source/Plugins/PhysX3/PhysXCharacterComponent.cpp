@@ -36,7 +36,8 @@ namespace GASS
 		m_YawMaxVelocity(2),
 		m_Acceleration(5.2),
 		m_MaxSpeed(4),
-		m_CurrentVel(0)
+		m_CurrentVel(0),
+		m_Controller(NULL)
 	{
 
 	}
@@ -238,7 +239,7 @@ namespace GASS
 					m_CurrentVel = 0;
 			}
 		}
-		//std::cout << m_CurrentVel << "\n";
+		
 		target_displacement += forward*m_CurrentVel;
 
 		//if(m_SteerInput > 0)	
@@ -253,6 +254,7 @@ namespace GASS
 		target_displacement *= delta;
 		PxU32 flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, delta, PxControllerFilters(0));
 
+		//LogManager::getSingleton().stream() << m_CurrentVel << "\n";
 		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 
@@ -268,7 +270,7 @@ namespace GASS
 		if(m_Controller)
 		{
 			Reset();
-			m_Controller->setPosition(PxExtendedVec3(value.x, m_StandingSize + value.y, value.z));
+			m_Controller->setFootPosition(PxExtendedVec3(value.x, value.y, value.z));
 			//m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
 		}
 	}
@@ -276,9 +278,10 @@ namespace GASS
 	Vec3  PhysXCharacterComponent::GetPosition() const
 	{
 		Vec3 pos(0,0,0);
-		if(m_Actor)
+		if(m_Controller)
 		{
-			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
+			PxExtendedVec3 foot_pos = m_Controller->getFootPosition();
+			pos.Set(foot_pos.x,foot_pos.y,foot_pos.z);
 		}
 		return pos;
 	}
