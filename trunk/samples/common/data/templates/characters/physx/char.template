@@ -9,17 +9,29 @@
 				<AttachToParent value="0"/>
 			</LocationComponent>
 			<BoxGeometryComponent>
-				<Size value="0.4 1.8 0.4"/>
+				<Size value="0.6 1.8 0.6"/>
 				<Lines value="false"/>
 			</BoxGeometryComponent>
 			<ManualMeshComponent/>
 			<PhysXCharacterComponent>
 			  <StandingSize value="1.8"/>
-			  <Radius value="0.4"/>
+			  <Radius value="0.3"/>
+			  <YawMaxVelocity value="4"/>
+			  <Acceleration value="5"/>
 			</PhysXCharacterComponent>
 			<InputHandlerComponent>
 				<ControlSetting value ="TankInputSettings"/>
 			</InputHandlerComponent>
+			<CarAutopilotComponent>
+				<DesiredPosRadius value="0.2"/>
+				<DesiredSpeed value="3.0"/>
+				<Enable value="true"/>
+				<TurnPID value="0.0251 0 0"/>
+				<TrottlePID value="0.251 0 0"/>
+				<BrakeDistanceFactor value="2"/>
+				<Support3PointTurn value="false"/>
+				<InvertBackWardSteering value="false"/>
+			</CarAutopilotComponent>
 		</Components>
 		<ComponentContainers>
 		</ComponentContainers>
