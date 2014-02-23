@@ -82,7 +82,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
-
+		ADD_DEPENDENCY("OgreLocationComponent")
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
 			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
 		RegisterProperty<std::string>("EnumerationResourceGroup", &OgreMeshComponent::GetEnumerationResourceGroup, &OgreMeshComponent::SetEnumerationResourceGroup,

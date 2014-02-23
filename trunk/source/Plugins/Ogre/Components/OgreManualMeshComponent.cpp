@@ -75,6 +75,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, IComponent>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
+		ADD_DEPENDENCY("OgreLocationComponent")
 		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 	}

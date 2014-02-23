@@ -36,7 +36,7 @@
 #include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
 
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/Components/OgreLocationComponent.h"
+//#include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 
 

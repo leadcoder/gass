@@ -65,7 +65,7 @@ namespace GASS
 	void OgreCameraComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, IComponent>);
-		
+		ADD_DEPENDENCY("OgreLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 
 		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance,

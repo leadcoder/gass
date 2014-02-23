@@ -227,5 +227,7 @@ namespace GASS
 #define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \
 	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}
+
+#define ADD_DEPENDENCY(COMPONENT_NAME) m_Dependencies[GetClassRTTI()].push_back(COMPONENT_NAME);
 }
 #endif

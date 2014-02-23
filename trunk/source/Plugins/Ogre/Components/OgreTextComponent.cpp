@@ -32,7 +32,7 @@
 #include "OgreTextComponent.h"
 #include "Plugins/Ogre/Helpers/MovableTextOverlay.h"
 #include "Plugins/Ogre/Helpers/RectLayoutManager.h"
-#include "Plugins/Ogre/Components/OgreLocationComponent.h"
+//#include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
