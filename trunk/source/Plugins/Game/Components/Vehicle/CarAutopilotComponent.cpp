@@ -268,7 +268,26 @@ namespace GASS
 				m_WPReached = true;
 			}
 
-			if(m_HasDir && m_WPReached) //apply desired end rotation if we have reached end location
+		
+			m_TrottlePID.set(desired_speed);
+			float throttle = m_TrottlePID.update(current_speed,delta_time);
+
+			if(throttle > 1) throttle = 1;
+			if(throttle < -1) throttle = -1;
+
+			if(turn > 1) turn  = 1;
+			if(turn < -1) turn  = -1;
+
+			//Send input message
+			if(!m_WPReached)
+			{
+				MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
+				GetSceneObject()->SendImmediate(throttle_message);
+
+				MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
+				GetSceneObject()->SendImmediate(steering_message);
+			}
+			else if(m_HasDir && m_WPReached) //apply desired end rotation if we have reached end location
 			{
 				Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
 				float cos_angle = Math::Dot(current_dir,m_FaceDirection);
@@ -282,24 +301,14 @@ namespace GASS
 					angle_to_face *= -1;
 				m_TurnPID.set(0);
 				turn = m_TurnPID.update(angle_to_face, delta_time);
+
+				MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
+				GetSceneObject()->SendImmediate(steering_message);
+
+				MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
+				GetSceneObject()->SendImmediate(throttle_message);
+
 			}
-
-			m_TrottlePID.set(desired_speed);
-			float throttle = m_TrottlePID.update(current_speed,delta_time);
-
-			if(throttle > 1) throttle = 1;
-			if(throttle < -1) throttle = -1;
-
-			if(turn > 1) turn  = 1;
-			if(turn < -1) turn  = -1;
-
-			//Send input message
-
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
 		}
 		else
 		{
