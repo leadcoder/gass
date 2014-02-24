@@ -44,6 +44,35 @@ material WhiteTransparentNoLighting
 	} 
 } 
 
+
+material White
+{ 
+	technique 
+	{ 
+		pass 
+		{ 
+			ambient 1 1 1
+			diffuse 1 1 1 1
+			
+		}
+	} 
+} 
+
+
+material Blue
+{ 
+	technique 
+	{ 
+		pass 
+		{ 
+			ambient 0 0 1
+			diffuse 0 0 1 1
+			
+		}
+	} 
+} 
+
+
 material NodeMaterialNoTexture
 {
 technique
@@ -67,9 +96,7 @@ technique
 	   scene_blend alpha_blend
 	   depth_write off
 	   depth_check off
-
-         lighting off
-         
+       lighting off
       }
    }
 }

@@ -1,3 +1,25 @@
+fragment_program PGGrassFP unified
+{
+	delegate PGGrassFP_HLAS
+	delegate PGGrassFP_Cg
+}
+
+fragment_program PGGrassFP_HLAS hlsl 
+{ 
+   source pg_grass.shader
+   entry_point pg_grass_fp 
+   target ps_2_b   
+   preprocessor_defines INTEGRATED_SHADOWS
+}
+
+fragment_program PGGrassFP_Cg cg
+{ 
+   source pg_grass.shader
+   entry_point pg_grass_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 
+}
+
 fragment_program PGGrassFP_Cg cg
 { 
    source pg_grass.shader
@@ -34,7 +56,7 @@ material PGGrassTemplate
 			//vertex program is assigned by paged geometry
 			
 			//Fragment program 
-			fragment_program_ref PGGrassFP_Cg
+			fragment_program_ref PGGrassFP
 			{ 
 				param_named_auto ambient derived_ambient_light_colour 
 				
