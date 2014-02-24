@@ -94,12 +94,12 @@ namespace GASS
 	{
 		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,0,pos.z);
+		m_Enable = true;
 	}
 
 	void TankAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
 		m_DesiredSpeed = message->GetSpeed();
-		
 	}
 
 	void TankAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)

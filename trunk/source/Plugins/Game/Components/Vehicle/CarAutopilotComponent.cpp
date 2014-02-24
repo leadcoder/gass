@@ -121,12 +121,14 @@ namespace GASS
 		m_DesiredPos.Set(pos.x,pos.y,pos.z);
 		m_WPReached = false;
 		m_HasDir = false;
+		m_Enable = true; 
 	}
 
 	void CarAutopilotComponent::OnFaceDirectionRequest(FaceDirectionRequestPtr message)
 	{
 		m_FaceDirection = message->GetDirection();
 		m_HasDir = true;
+
 	}
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
@@ -219,10 +221,14 @@ namespace GASS
 					else //damp turn, we try to reverse!
 						turn *= 0.03;
 				}
+				//else if(!m_InvertBackWardSteering)
+				//	turn *=-1;
 				else if(!m_InvertBackWardSteering)
-					turn *=-1;
-				
-				
+				{
+					m_TurnPID.set(180);
+					turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
+				}
+					
 			}
 			else
 			{

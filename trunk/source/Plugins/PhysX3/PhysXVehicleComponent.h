@@ -38,9 +38,10 @@ namespace GASS
 		virtual ~PhysXVehicleComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		void SceneManagerTick(double delta);
-
+		
 		PlatformType GetType() const {return PT_CAR;}
 		Vec3 GetSize() const;
 		Float GetMaxSpeed() const;

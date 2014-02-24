@@ -52,6 +52,16 @@ namespace GASS
 		SetMass(message->GetMass());
 	}
 
+	void PhysXCharacterComponent::OnDelete()
+	{
+		if(m_Controller)
+		{
+			m_Controller->release();
+			m_Controller= NULL;
+		}
+	}
+
+
 	void PhysXCharacterComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXCharacterComponent",new Creator<PhysXCharacterComponent, IComponent>);

@@ -48,6 +48,7 @@ namespace GASS
 		virtual ~PhysXCharacterComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
@@ -55,7 +56,7 @@ namespace GASS
 
 
 		PlatformType GetType() const {return PT_HUMAN;}
-		Vec3 GetSize() const{return Vec3(m_Radius,m_StandingSize,m_Radius);}
+		Vec3 GetSize() const{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
 		ADD_PROPERTY(Float,MaxSpeed)
 
 		// Implements PxControllerBehaviorCallback

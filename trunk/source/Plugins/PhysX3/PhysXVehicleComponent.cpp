@@ -61,6 +61,19 @@ namespace GASS
 
 	}
 
+
+	void PhysXVehicleComponent::OnDelete()
+	{
+		if(m_Vehicle)
+		{
+			PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+			scene_manager->UnregisterVehicle(m_Vehicle);
+			m_Vehicle->free();
+			m_Vehicle = NULL;
+		}
+	}
+
+
 	void PhysXVehicleComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
 		SetMass(message->GetMass());
