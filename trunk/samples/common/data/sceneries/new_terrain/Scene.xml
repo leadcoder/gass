@@ -11,10 +11,10 @@
             <FogEnd value="2000" />
             <FogDensity value="0.01" />
             <FogColor value="1 1 1" />
-            <AmbientColor value="0.4196078431 0.4196078431 0.4196078431" />
+            <AmbientColor value="0.6156862745 0.6156862745 0.6156862745" />
             <SceneManagerType value="OctreeSceneManager" />
             <UseSkybox value="false" />
-            <SkyboxMaterial value="CTSkybox" />
+            <SkyboxMaterial value="" />
             <SelfShadowing value="false" />
             <UseAggressiveFocusRegion value="true" />
             <FarShadowDistance value="100" />
