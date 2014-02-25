@@ -154,7 +154,7 @@ namespace GASS
 							//extend p2 
 							Vec3 dir = p2 - p1;
 							dir.Normalize();
-							p2 = p1 + dir*20;
+							p2 = p2 + dir*20;
 
 							Vec3 p3 = edge_path[0];
 							Vec3 p4 = edge_path[1];
@@ -162,7 +162,7 @@ namespace GASS
 							//extend p4 
 							dir = p4 - p3;
 							dir.Normalize();
-							p4 = p3 + dir*20;
+							p3 = p3 - dir*20;
 
 							Vec2 isect;
 							if(Math::GetLineIntersection(Vec2(p1.x,p1.z),Vec2(p2.x,p2.z), Vec2(p3.x ,p3.z), Vec2(p4.x, p4.z), isect))

@@ -53,7 +53,8 @@ namespace GASS
 		m_Support3PointTurn(true),
 		m_FaceDirection(0,0,0),
 		m_HasDir(false),
-		m_MaxReverseDistance(5)
+		m_MaxReverseDistance(5),
+		m_PlatformType(PT_CAR)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -108,6 +109,12 @@ namespace GASS
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
+
+		PlatformComponentPtr platform = GetSceneObject()->GetFirstComponentByClass<IPlatformComponent>();
+		if(platform)
+		{
+			m_PlatformType = platform->GetType();
+		}
 	}
 
 	void CarAutopilotComponent::OnDelete()
@@ -278,37 +285,34 @@ namespace GASS
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 
-			//Send input message
-			if(!m_WPReached)
+			if(m_WPReached) //apply desired end rotation if we have reached end location
 			{
-				MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
-				GetSceneObject()->SendImmediate(throttle_message);
+				if(m_HasDir)
+				{
+					Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
+					float cos_angle = Math::Dot(current_dir,m_FaceDirection);
 
-				MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-				GetSceneObject()->SendImmediate(steering_message);
+					if(cos_angle > 1) 
+						cos_angle = 1;
+					if(cos_angle < -1) 
+						cos_angle = -1;
+					float angle_to_face = Math::Rad2Deg(acos(cos_angle));
+					if(cross.y < 0) 
+						angle_to_face *= -1;
+					m_TurnPID.set(0);
+					turn = m_TurnPID.update(angle_to_face, delta_time);
+					throttle = 0;
+				}
+				if(m_PlatformType == PT_HUMAN)
+					throttle = 0;
 			}
-			else if(m_HasDir && m_WPReached) //apply desired end rotation if we have reached end location
-			{
-				Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
-				float cos_angle = Math::Dot(current_dir,m_FaceDirection);
 
-				if(cos_angle > 1) 
-					cos_angle = 1;
-				if(cos_angle < -1) 
-					cos_angle = -1;
-				float angle_to_face = Math::Rad2Deg(acos(cos_angle));
-				if(cross.y < 0) 
-					angle_to_face *= -1;
-				m_TurnPID.set(0);
-				turn = m_TurnPID.update(angle_to_face, delta_time);
+			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
+			GetSceneObject()->SendImmediate(throttle_message);
 
-				MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-				GetSceneObject()->SendImmediate(steering_message);
+			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
+			GetSceneObject()->SendImmediate(steering_message);
 
-				MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
-				GetSceneObject()->SendImmediate(throttle_message);
-
-			}
 		}
 		else
 		{

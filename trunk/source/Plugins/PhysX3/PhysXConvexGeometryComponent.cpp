@@ -52,7 +52,8 @@ namespace GASS
 
 	PhysXConvexGeometryComponent::~PhysXConvexGeometryComponent()
 	{
-
+		if(m_Shape)
+			m_Shape->release();
 	}
 
 	void PhysXConvexGeometryComponent::RegisterReflection()

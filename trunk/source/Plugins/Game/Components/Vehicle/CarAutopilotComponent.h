@@ -76,7 +76,7 @@ namespace GASS
 		Vec3 m_VehicleSpeed;
 		Mat4 m_Transformation;
 		bool m_WPReached;
-
+		PlatformType m_PlatformType;
 
 		Vec3 m_FaceDirection;
 		bool m_HasDir;

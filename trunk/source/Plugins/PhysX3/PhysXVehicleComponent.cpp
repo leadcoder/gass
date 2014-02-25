@@ -570,6 +570,9 @@ namespace GASS
 
 	void PhysXVehicleComponent::SceneManagerTick(double delta)
 	{
+		if(!m_Vehicle)
+			return;
+
 		int from_id = (int)this; //use address as id
 		Vec3 current_pos  = GetPosition();
 		
