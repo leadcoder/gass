@@ -1,10 +1,9 @@
 /*
 --------------------------------------------------------------------------------
 This source file is part of SkyX.
-Visit ---
+Visit http://www.paradise-studios.net/products/skyx/
 
-Copyright (C) 2009 Xavier Verguín González <xavierverguin@hotmail.com>
-                                           <xavyiy@gmail.com>
+Copyright (C) 2009-2012 Xavier Verguín González <xavyiy@gmail.com>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free Software
@@ -88,9 +87,9 @@ void main_vp(
 	float fScaledLength = fSampleLength * uScale;
 	float3 v3SampleRay = v3Ray * fSampleLength;
 	float3 v3SamplePoint = v3Start + v3SampleRay * 0.5f;
-	
+
 	// Loop the ray
-	float3 color;
+	float3 color = float3(0,0,0);
 	for (int i = 0; i < uNumberOfSamples; i++)
 	{
 		float fHeight = length(v3SamplePoint);
@@ -105,7 +104,7 @@ void main_vp(
 		// Accumulate color
 		v3Attenuate *= (fDepth * fScaledLength);
 		color += v3Attenuate;
-		
+
 		// Next sample point
 		v3SamplePoint += v3SampleRay;
 	}
@@ -136,12 +135,8 @@ void main_fp(
 	uniform float3 uLightDir,
     // Phase function
 	uniform float  uG,
-	uniform float  uG2
-	// Exposure
-#ifdef LDR 
-    ,
+	uniform float  uG2,
 	uniform float  uExposure
-#endif // LDR
 #ifdef STARFIELD
     ,
 	uniform sampler2D uStarfield : register(s0)
@@ -159,15 +154,23 @@ void main_fp(
 #ifdef LDR
 	oColor = float4((1 - exp(-uExposure * (rayleighPhase * iRayleighColor + miePhase * iMieColor))), iOpacity);
 #else // HDR
-    oColor = float4(rayleighPhase * iRayleighColor + miePhase * iMieColor, iOpacity);
+    oColor = float4(uExposure * (rayleighPhase * iRayleighColor + miePhase * iMieColor), iOpacity);
 #endif // LDR
 	
 	// For night rendering
 	float nightmult = saturate(1 - max(oColor.x, max(oColor.y, oColor.z))*10);
 	
 #ifdef STARFIELD
-	oColor.xyz += nightmult *(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3) + tex2D(uStarfield, iUV+uTime)*(0.35f + saturate(-uLightDir.y*0.45f))); 
+	#ifdef LDR
+		oColor.xyz += nightmult *(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3) + tex2D(uStarfield, iUV+uTime)*(0.35f + saturate(-uLightDir.y*0.45f))); 
+	#else // HDR (Linear pipeline -> Gamma correction)
+		oColor.xyz += nightmult *(pow(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3),2.2) + tex2D(uStarfield, iUV+uTime)*(0.35f + saturate(-uLightDir.y*0.45f))); 
+	#endif // LDR
 #else // NO STARFIELD
-	oColor.xyz += nightmult *(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3)); 
+	#ifdef LDR
+		oColor.xyz += nightmult *(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3)); 
+	#else // HDR (Linear pipeline -> Gamma correction)
+		oColor.xyz += nightmult * pow(float3(0.05, 0.05, 0.1)*(2-0.75*saturate(-uLightDir.y))*pow(iHeight,3), 2.2); 
+	#endif // LDR
 #endif // STARFIELD	
 }

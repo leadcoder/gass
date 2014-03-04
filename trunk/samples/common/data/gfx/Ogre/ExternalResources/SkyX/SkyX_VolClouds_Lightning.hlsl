@@ -21,7 +21,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 --------------------------------------------------------------------------------
 */
 
-// ------------------------- SkyX volumetric clouds -----------------------------
+// ------------------- SkyX volumetric clouds + lightning -----------------------
 
 void main_vp(
     // IN
@@ -36,6 +36,7 @@ void main_vp(
 	out float  oOpacity         : TEXCOORD2,
 	out float3 oEyePixel        : TEXCOORD3,
 	out float  oDistance        : TEXCOORD4,
+	out float4 oPositionAtt     : TEXCOORD5,
 	// UNIFORM
 	uniform float4x4 uWorldViewProj,
 	uniform float3   uCameraPosition,
@@ -55,15 +56,19 @@ void main_vp(
     
     // Distance in [0,1] range
     oDistance = length(float2(iPosition.x, iPosition.z)) / uRadius;
+	
+	oPositionAtt.xyz = iPosition.xyz;
+	oPositionAtt.w = 225.0/uRadius;
 }
 
 void main_fp(
     // IN
-    float3 i3DCoord  : TEXCOORD0,
-    float2 iNoiseUV  : TEXCOORD1,
-    float  iOpacity  : TEXCOORD2,
-    float3 iEyePixel : TEXCOORD3,
-    float  iDistance : TEXCOORD4,
+    float3 i3DCoord     : TEXCOORD0,
+    float2 iNoiseUV     : TEXCOORD1,
+    float  iOpacity     : TEXCOORD2,
+    float3 iEyePixel    : TEXCOORD3,
+    float  iDistance    : TEXCOORD4,
+	float4 iPositionAtt : TEXCOORD5,
 	// OUT 
 	out float4 oColor		: COLOR,
 	// UNIFORM
@@ -73,6 +78,10 @@ void main_fp(
 	uniform float3    uSunColor,
 	uniform float4    uLightResponse,
 	uniform float4    uAmbientFactors,
+	uniform float4    uLightning0,
+	uniform float4    uLightning1,
+	uniform float4    uLightning2,
+	uniform float3    uLightningColor,
 	uniform sampler3D uDensity0 : register(s0),
 	uniform sampler3D uDensity1 : register(s1),
 	uniform sampler2D uNoise    : register(s2))
@@ -111,6 +120,15 @@ void main_fp(
 	    
 		finalcolor = uAmbientColor*ambientaccumulation + uSunColor*sunaccumulation;
 		Opacity = (1 - exp(-Density.x*(7.5-6.5*i3DCoord.z)))*iOpacity;
+		
+		float3 lightningColor = uLightningColor*2*(1-saturate(finalcolor));
+		
+		// Lightning 0
+		finalcolor += lightningColor * uLightning0.w / (0.85 + iPositionAtt.w*length(uLightning0.xyz - iPositionAtt.xyz));
+		// Lightning 1
+		finalcolor += lightningColor * uLightning1.w / (0.85 + iPositionAtt.w*length(uLightning1.xyz - iPositionAtt.xyz));
+		// Lightning 2
+		finalcolor += lightningColor * uLightning2.w / (0.85 + iPositionAtt.w*length(uLightning2.xyz - iPositionAtt.xyz));
 	}
 	
     oColor = float4(finalcolor, Opacity);
