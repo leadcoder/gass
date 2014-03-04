@@ -230,13 +230,13 @@ namespace GASS
 		{
 			skyx->GetSkyX()->getVCloudsManager()->remove();
 
-			float save_clip  = skyx->GetSkyX()->getCamera()->getFarClipDistance();
-			skyx->GetSkyX()->getCamera()->setFarClipDistance(m_Radius);
+			//float save_clip  = skyx->GetSkyX()->getCamera()->getFarClipDistance();
+			//skyx->GetSkyX()->getCamera()->setFarClipDistance(m_Radius);
 			m_CloudManager = skyx->GetSkyX()->getVCloudsManager();
 			// Volumetric clouds
 			m_CloudManager->setHeight(OgreConvert::ToOgre(m_Height));
-			m_CloudManager->create();
-			skyx->GetSkyX()->getCamera()->setFarClipDistance(save_clip );
+			m_CloudManager->create(m_Radius);
+			//skyx->GetSkyX()->getCamera()->setFarClipDistance(save_clip );
 
 
 			SetNoiseScale(m_NoiseScale);
