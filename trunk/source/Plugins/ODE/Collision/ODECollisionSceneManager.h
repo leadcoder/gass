@@ -27,7 +27,7 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include <tbb/spin_mutex.h>
+#include "Sim/GASSThreading.h"
 
 namespace GASS
 {
@@ -49,8 +49,6 @@ namespace GASS
 	{
 		friend class ODECollisionGeometryComponent;
 	public:
-		
-
 		ODECollisionSceneManager();
 		virtual ~ODECollisionSceneManager();
 		static void RegisterReflection();
@@ -59,34 +57,26 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual void SystemTick(double delta_time);
 		virtual bool GetSerialize() const {return false;}
-		//ICollisionSceneManager
-		//virtual CollisionHandle Request(const CollisionRequest &request);
-		//virtual bool Check(CollisionHandle handle, CollisionResult &result);
-		//virtual void Force(CollisionRequest &request, CollisionResult &result) const;
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const;
 	protected:
 		void Process();
 		//used by collision geometry
 		ODECollisionMeshInfo CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr mesh);
-		ODECollisionMeshInfo CreateCollisionMesh(PhysicsMeshPtr mesh);
 		dSpaceID GetSpace() const;
 		ODECollisionMeshInfo GetCollisionMesh(const std::string &name);
 		bool HasCollisionMesh(const std::string &name);
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
+		GASS_MUTEX& GetMutex() const {return m_Mutex;}
 	private:
-//		typedef std::map<CollisionHandle,CollisionRequest> RequestMap;
-	//	typedef std::map<CollisionHandle,CollisionResult> ResultMap;
-		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
+		ODECollisionMeshInfo _CreateCollisionMesh(PhysicsMeshPtr mesh);
 
-		//RequestMap m_RequestMap;
-		//ResultMap m_ResultMap;
-		//unsigned int m_HandleCount;
-		tbb::spin_mutex m_RequestMutex;
-		tbb::spin_mutex m_ResultMutex;
+		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
+		mutable GASS_MUTEX m_Mutex;
 		float m_MaxRaySegment;
 		SceneWeakPtr m_Scene;
 		CollisionMeshMap m_ColMeshMap;
 		dSpaceID m_Space;
+		
 	};
 	typedef boost::shared_ptr<ODECollisionSceneManager> ODECollisionSceneManagerPtr; 
 	

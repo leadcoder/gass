@@ -72,6 +72,8 @@ namespace GASS
 			return StringUtils::ToLower(str1).compare(ToLower(str2));
 		}
 		static std::string Demangle(const std::string &name);
+
+
 	};
 }
 

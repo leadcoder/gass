@@ -32,8 +32,9 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Core/System/GASSBaseSystem.h"
-#include <tbb/spin_mutex.h>
+#include "Sim/GASSThreading.h"
+
+
 
 namespace GASS
 {
@@ -47,6 +48,7 @@ namespace GASS
 		//virtual void Update(double delta_time);
 		virtual std::string GetSystemName() const {return "ODECollisionSystem";}
 	private:
+
 	};
 	typedef boost::shared_ptr<ODECollisionSystem> ODECollisionSystemPtr;
 }

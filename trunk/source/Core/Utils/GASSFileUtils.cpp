@@ -93,6 +93,13 @@ namespace GASS
 		return ret;
 	}
 
+	bool FileUtils::FileExist(const std::string &file_name)
+	{
+		boost::filesystem::path boost_path(file_name); 
+		return boost::filesystem::exists(boost_path);
+	}
+
+
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
 		boost::filesystem::path boost_path(path); 

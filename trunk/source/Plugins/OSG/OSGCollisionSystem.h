@@ -25,7 +25,6 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
-#include <tbb/spin_mutex.h>
 #include <osg/Geode>
 
 namespace GASS

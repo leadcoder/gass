@@ -40,7 +40,8 @@
 
 namespace GASS
 {
-	ODECollisionSceneManager::ODECollisionSceneManager() : m_Space(0) , m_MaxRaySegment(30)
+	ODECollisionSceneManager::ODECollisionSceneManager() : m_Space(0) , 
+		m_MaxRaySegment(30)
 	{
 
 	}
@@ -70,6 +71,7 @@ namespace GASS
 
 	void ODECollisionSceneManager::OnShutdown()
 	{
+		GASS_MUTEX_LOCK(m_Mutex)
 		dSpaceDestroy(m_Space);
 		m_Space = 0;
 		//m_RequestMap.clear();
@@ -112,92 +114,14 @@ namespace GASS
 		return m_Space;
 	}
 
-	/*CollisionHandle ODECollisionSceneManager::Request(const CollisionRequest &request)
-	{
-		tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-		//assert(request.Scene);
-		m_HandleCount = ( m_HandleCount + 1 ) % 0xFFFFFFFE;
-		CollisionHandle handle = m_HandleCount;
-		m_RequestMap[handle] = request;
-		return handle;
-	}*/
-
 	void ODECollisionSceneManager::SystemTick(double delta_time)
 	{
-		/*RequestMap::iterator iter;
-		RequestMap requestMap;
-		ResultMap resultMap;
-		ResultMap::iterator res_iter;
-		{
-			tbb::spin_mutex::scoped_lock lock(m_RequestMutex);
-			requestMap = m_RequestMap;
-			m_RequestMap.clear();
-		}
-	
-		for(iter = requestMap.begin(); iter != requestMap.end(); ++iter)
-		{
-			CollisionRequest request =  iter->second;
-			CollisionHandle handle = iter->first;
-			ScenePtr scene = GetScene();
-			
-			if(scene)
-			{
-			
-				if(request.Type == COL_LINE)
-				{
-					CollisionResult result;
-					ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),m_MaxRaySegment);
-					raycast.Process();
-					resultMap[handle] = result;
-				}
-			}
-		}
-		{
-			tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-			//transfer results
-			for(res_iter = resultMap.begin(); res_iter != resultMap.end(); ++res_iter)
-			{
-				CollisionHandle handle = res_iter->first;
-				m_ResultMap[handle] = res_iter->second;
-			}
-		}
-		//update listeners*/
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
-	/*bool ODECollisionSceneManager::Check(CollisionHandle handle, CollisionResult &result)
-	{
-		tbb::spin_mutex::scoped_lock lock(m_ResultMutex);
-		ResultMap::iterator iter = m_ResultMap.find(handle);
-		if(iter != m_ResultMap.end())
-		{
-			result = (*iter).second;
-			m_ResultMap.erase(iter);
-			return true;
-		}
-		return false;
-	}
-
-	void ODECollisionSceneManager::Force(CollisionRequest &request, CollisionResult &result) const
-	{
-		ScenePtr scene = GetScene();
-		if(scene)
-		{
-			if(request.Type == COL_LINE)
-			{
-				ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),m_MaxRaySegment);
-				raycast.Process();
-			}
-			else if(request.Type == COL_LINE_VERTICAL)
-			{
-				ODELineCollision raycast(&request,&result,(dGeomID)GetSpace(),0);
-				raycast.Process();
-			}
-		}
-	}*/
-
 	void ODECollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
 	{
+		GASS_MUTEX_LOCK(m_Mutex)
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
@@ -208,22 +132,22 @@ namespace GASS
 			raycast.Process();
 		}
 	}
-	
 
 	//use cache
 	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr physics_mesh)
 	{
+		//GASS_MUTEX_LOCK(m_Mutex)
 		if(HasCollisionMesh(cache_id)) //check cache
 		{
 			return m_ColMeshMap[cache_id];
 		}
-		ODECollisionMeshInfo id = CreateCollisionMesh(physics_mesh);
+		ODECollisionMeshInfo id = _CreateCollisionMesh(physics_mesh);
 		//save to cache
 		m_ColMeshMap[cache_id] = id;
 		return id;
 	}
 
-	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(PhysicsMeshPtr physics_mesh)
+	ODECollisionMeshInfo ODECollisionSceneManager::_CreateCollisionMesh(PhysicsMeshPtr physics_mesh)
 	{
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{
@@ -265,6 +189,7 @@ namespace GASS
 
 	bool ODECollisionSceneManager::HasCollisionMesh(const std::string &name)
 	{
+		
 		CollisionMeshMap::iterator iter;
 		iter = m_ColMeshMap.find(name);
 		if (iter!= m_ColMeshMap.end()) //in map.

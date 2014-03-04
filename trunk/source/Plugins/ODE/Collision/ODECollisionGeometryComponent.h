@@ -118,7 +118,7 @@ namespace GASS
 			int m_Samples;
 		};
 		TerrainData* m_TerrainData;
-
+		ODECollisionSceneManagerPtr m_CollisionSceneManager;
 	};
 
 	typedef boost::shared_ptr<ODECollisionGeometryComponent> ODECollisionGeometryComponentPtr;
