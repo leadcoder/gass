@@ -412,7 +412,7 @@ namespace GASS
 		if(skyx->GetSkyX() == NULL)
 			return;
 		
-		Ogre::Vector3 lightDir = skyx->GetSkyX()->getAtmosphereManager()->getSunDirection();
+		Ogre::Vector3 lightDir = -skyx->GetSkyX()->getController()->getSunDirection();
 		float point = (-lightDir.y + 1.0f) / 2.0f;
 
 
@@ -434,7 +434,7 @@ namespace GASS
 
 		Ogre::Vector3 sunPos(0,0,0);
 		if(m_CurrentCamera)
-			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*skyx->GetSkyX()->getMeshManager()->getSkydomeRadius()*0.1;
+			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*skyx->GetSkyX()->getMeshManager()->getSkydomeRadius(m_CurrentCamera)*0.1;
 		if(m_Hydrax)
 			m_Hydrax->setSunPosition(sunPos);
 

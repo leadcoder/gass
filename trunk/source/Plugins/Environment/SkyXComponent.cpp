@@ -46,7 +46,8 @@ namespace GASS
 		m_Radius(5000),
 		m_Target(NULL), 
 		m_SkyDomeFog(false),
-		m_Initialized (false)
+		m_Initialized (false),
+		m_BasicController(NULL)
 	{
 				
 	}
@@ -91,7 +92,7 @@ namespace GASS
 
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayRequest,TimeOfDayRequest,0));
 
-		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+		/*Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		
 		Ogre::Camera* ocam = NULL;
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
@@ -114,8 +115,8 @@ namespace GASS
 				ocam = sm->getCamera("DummyCamera");
 			else
 				ocam = sm->createCamera("DummyCamera");
-		}
-		Ogre::Root::getSingleton().addFrameListener(this);
+		}*/
+		//Ogre::Root::getSingleton().addFrameListener(this);
 		//float save_clip  = ocam->getFarClipDistance();
 		
 		//ocam->setFarClipDistance(m_Radius);
@@ -124,18 +125,118 @@ namespace GASS
 			//m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
 
 		// Create SkyX object
-		Init(ocam);
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
+		Init();
+//		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
 		m_Initialized = true;
+	}
+
+	void SkyXComponent::Init()
+	{
+	    Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
+
+		delete m_BasicController;
+		m_BasicController = new SkyX::BasicController();
+		
+		delete m_SkyX;
+		m_SkyX = new SkyX::SkyX(sm, m_BasicController);
+
+		// No smooth fading
+		//m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
+		
+		
+		// A little change to default atmosphere settings :)
+		SkyX::AtmosphereManager::Options atOpt = m_SkyX->getAtmosphereManager()->getOptions();
+		atOpt.RayleighMultiplier = 0.003075f;
+		atOpt.MieMultiplier = 0.00125f;
+		atOpt.InnerRadius = 9.92f;
+		atOpt.OuterRadius = 10.3311f;
+		m_SkyX->getAtmosphereManager()->setOptions(atOpt);
+		
+		UpdateOptions();
+
+		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
+		//m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
+		m_MoonSize = m_SkyX->getMoonManager()->getMoonSize();
+
+		// Create the sky
+		m_SkyX->create();
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)// && target->getNumViewports() > 0 && target->getViewport(0)->getCamera() )
+			{
+				
+				target->addListener(m_SkyX);
+				break;
+			}
+		}
+
+		Ogre::Root::getSingletonPtr()->addFrameListener(m_SkyX);
+
+		SetSkyDomeFog(m_SkyDomeFog);
+		//ocam->setFarClipDistance(save_clip);
+
+		//create clouds
+		IComponentContainer::ComponentVector components;
+		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			SkyXCloudLayerComponentPtr layer = DYNAMIC_PTR_CAST<SkyXCloudLayerComponent>(components[i]);
+			layer->CreateLayer();
+		}
+
+		components.clear();
+		GetSceneObject()->GetComponentsByClass(components, "SkyXVolumeCloudComponent", true);
+		for(int i = 0 ;  i < components.size(); i++)
+		{
+			SkyXVolumeCloudComponentPtr volume = DYNAMIC_PTR_CAST<SkyXVolumeCloudComponent>(components[i]);
+			volume->CreateVolume();
+		}
+		m_SkyX->update(0);
+	}
+
+	void SkyXComponent::SetSkyDomeFog(bool value)
+	{
+		m_SkyDomeFog  = value;
+		if(m_SkyX)
+		{
+			Ogre::String mat_name = m_SkyX->getMeshManager()->getMaterialName();
+			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(mat_name);
+
+			if(!mat.isNull() && mat->getNumTechniques() > 0)
+			{
+				Ogre::Technique * technique = mat->getTechnique(0);
+				if(technique && technique->getNumPasses() > 0)
+				{
+					Ogre::Pass* pass = technique->getPass(0);
+					if(pass)
+						pass->setFog(!value);
+				}
+			}
+		}
 	}
 
 
 	void SkyXComponent::OnDelete()
 	{
-		Ogre::Root::getSingleton().removeFrameListener(this);
+		//Ogre::Root::getSingleton().removeFrameListener(this);
+	    Ogre::Root::getSingleton().removeFrameListener(m_SkyX);
+
+		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
+		while (iter.hasMoreElements())
+		{
+			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
+			if(target)
+			{
+				target->removeListener(m_SkyX);
+				break;
+			}
+		}
+
 		delete m_SkyX;
 		m_SkyX = NULL;
-		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
+		//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
 	void SkyXComponent::SetMoonSize(const Float &value)
@@ -249,16 +350,19 @@ namespace GASS
 
 	Vec3 SkyXComponent::GetTime() const 
 	{
-		return OgreConvert::ToGASS(m_SkyXOptions.Time);
+		if(m_BasicController)
+			return OgreConvert::ToGASS(m_BasicController->getTime());
+
+		return Vec3(0,0,0);
 	}
 
 	void SkyXComponent::SetTime(const Vec3 &value)
 	{
-		m_SkyXOptions.Time = OgreConvert::ToOgre(value);
-		UpdateOptions();
+		if(m_BasicController)
+			m_BasicController->setTime(OgreConvert::ToOgre(value));
+		//m_SkyXOptions.Time = OgreConvert::ToOgre(value);
+		//UpdateOptions();
 	}
-
-	
 
 
 	void SkyXComponent::UpdateOptions()
@@ -269,79 +373,18 @@ namespace GASS
 		}
 	}
 
-	void SkyXComponent::OnChangeCamera(CameraChangedEventPtr message)
+	/*void SkyXComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		if(m_SkyX)
 		{
 			OgreCameraProxyPtr camera_proxy = DYNAMIC_PTR_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
 			//Ogre::Camera * cam = static_cast<Ogre::Camera*> (message->GetUserData());
-			Init(camera_proxy->GetOgreCamera());
+			//Init(camera_proxy->GetOgreCamera());
 		}
-	}
+	}*/
 
-	void SkyXComponent::Init(Ogre::Camera* ocam)
-	{
-		
-		Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 
-		delete m_SkyX;
-		m_SkyX = new SkyX::SkyX(sm, ocam);
-
-		// No smooth fading
-		m_SkyX->getMeshManager()->setSkydomeFadingParameters(false);
-		
-		
-		// A little change to default atmosphere settings :)
-		SkyX::AtmosphereManager::Options atOpt = m_SkyX->getAtmosphereManager()->getOptions();
-		atOpt.RayleighMultiplier = 0.003075f;
-		atOpt.MieMultiplier = 0.00125f;
-		atOpt.InnerRadius = 9.92f;
-		atOpt.OuterRadius = 10.3311f;
-		m_SkyX->getAtmosphereManager()->setOptions(atOpt);
-		
-		UpdateOptions();
-
-		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
-		//m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
-		m_MoonSize = m_SkyX->getMoonManager()->getMoonSize();
-
-		// Create the sky
-		m_SkyX->create();
-
-		Ogre::String mat_name = m_SkyX->getMeshManager()->getMaterialName();
-		Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(mat_name);
-
-		if(!mat.isNull() && mat->getNumTechniques() > 0)
-		{
-			Ogre::Technique * technique = mat->getTechnique(0);
-			if(technique && technique->getNumPasses() > 0)
-			{
-				Ogre::Pass* pass = technique->getPass(0);
-				if(pass)
-					pass->setFog(m_SkyDomeFog);
-			}
-		}
-		//ocam->setFarClipDistance(save_clip);
-
-		//create clouds
-		IComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
-		for(int i = 0 ;  i < components.size(); i++)
-		{
-			SkyXCloudLayerComponentPtr layer = DYNAMIC_PTR_CAST<SkyXCloudLayerComponent>(components[i]);
-			layer->CreateLayer();
-		}
-
-		components.clear();
-		GetSceneObject()->GetComponentsByClass(components, "SkyXVolumeCloudComponent", true);
-		for(int i = 0 ;  i < components.size(); i++)
-		{
-			SkyXVolumeCloudComponentPtr volume = DYNAMIC_PTR_CAST<SkyXVolumeCloudComponent>(components[i]);
-			volume->CreateVolume();
-		}
-	}
-
-	bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)
+	/*bool  SkyXComponent::frameStarted(const Ogre::FrameEvent& evt)
 	{
 		double c_time = SimEngine::Get().GetTime();
 		static double prev_time = 0;
@@ -350,10 +393,10 @@ namespace GASS
 			m_SkyX->update(0.1);
 		else
 			m_SkyX->update(c_time - prev_time);
-
+		
 		prev_time = c_time;
 		return true;
-	}
+	}*/
 
 	void SkyXComponent::OnTimeOfDayRequest(TimeOfDayRequestPtr message)
 	{

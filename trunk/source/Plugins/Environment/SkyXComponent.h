@@ -35,7 +35,7 @@
 
 namespace GASS
 {
-	class SkyXComponent : public Reflection<SkyXComponent,BaseSceneComponent> , public Ogre::FrameListener
+	class SkyXComponent : public Reflection<SkyXComponent,BaseSceneComponent>// , public Ogre::FrameListener
 	{
 	public:
 		SkyXComponent(void);
@@ -46,9 +46,10 @@ namespace GASS
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
 		void OnTimeOfDayRequest(TimeOfDayRequestPtr message);
-		void OnChangeCamera(CameraChangedEventPtr message);
-
-		bool frameStarted(const Ogre::FrameEvent& evt);
+		
+		//void OnChangeCamera(CameraChangedEventPtr message);
+		//bool frameStarted(const Ogre::FrameEvent& evt);
+		
 		void SetInnerRadius(const Float &value);
 		Float GetInnerRadius() const;
 		void SetOuterRadius(const Float &value);
@@ -74,9 +75,9 @@ namespace GASS
 		void UpdateOptions();
 
 		bool GetSkyDomeFog() const {return m_SkyDomeFog;}
-		void SetSkyDomeFog(bool value) {m_SkyDomeFog=value;}
+		void SetSkyDomeFog(bool value);// {m_SkyDomeFog=value;}
 	private:
-		void Init(Ogre::Camera* ocam);
+		void Init();
 		Ogre::RenderTarget* m_Target;
 		double m_TimeMultiplier;
 		SkyX::SkyX* m_SkyX;
@@ -85,6 +86,7 @@ namespace GASS
 		Float m_Radius;
 		bool m_SkyDomeFog;
 		bool m_Initialized;
+		SkyX::BasicController* m_BasicController;
 	};
 	typedef SPTR<SkyXComponent> SkyXComponentPtr;
 

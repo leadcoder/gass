@@ -107,13 +107,13 @@ namespace GASS
 
 	void SkyXCloudLayerComponent::SetNormalMultiplier(const Float &value)
 	{
-		m_Options.NormalMultiplier = value;
-		UpdateOptions();
+		//m_Options.NormalMultiplier = value;
+		//UpdateOptions();
 	}
 
 	Float SkyXCloudLayerComponent::GetNormalMultiplier() const 
 	{
-		return m_Options.NormalMultiplier;
+		return 0;//m_Options.NormalMultiplier;
 	}
 	
 	void SkyXCloudLayerComponent::SetDetailAttenuation(const Float &value)
