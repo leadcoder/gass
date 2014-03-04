@@ -110,6 +110,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
 	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
 	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
+	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Release/SkyX.dll
 	${OGRE_DIR}/bin/release/OgreMain.dll
 	${OGRE_DIR}/bin/release/OgreTerrain.dll
 	${OGRE_DIR}/bin/release/OgrePaging.dll
@@ -173,6 +174,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
 	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll	
 	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
+	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Debug/SkyX_d.dll
 	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
 	${OGRE_DIR}/bin/debug/OgreMain_d.dll
 	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
