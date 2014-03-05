@@ -27,14 +27,14 @@
 
 namespace GASS
 {
-	class UpdateWaypointListMessage : public BaseMessage
+	/*class UpdateWaypointListMessage : public BaseMessage
 	{
 	public:
 		UpdateWaypointListMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay){}
 	private:
 	};
-	typedef SPTR<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;
+	typedef SPTR<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;*/
 
 	class WaypointListUpdatedMessage : public BaseMessage
 	{

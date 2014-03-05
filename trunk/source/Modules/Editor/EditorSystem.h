@@ -36,8 +36,10 @@ namespace GASS
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "EditorSystem";}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
+		ADD_PROPERTY(bool,LockTerrainObjects)
 	protected:
 		GUISchemaLoader* m_GUISettings;
+		
 	};
 	typedef SPTR<EditorSystem> EditorSystemPtr;
 }

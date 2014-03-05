@@ -24,7 +24,6 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
-
 #include "PxSimulationEventCallback.h"
 #include "characterkinematic/PxControllerBehavior.h"
 
@@ -53,8 +52,7 @@ namespace GASS
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void SceneManagerTick(double delta);
-
-
+		
 		PlatformType GetType() const {return PT_HUMAN;}
 		Vec3 GetSize() const{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
 		ADD_PROPERTY(Float,MaxSpeed)
@@ -69,7 +67,6 @@ namespace GASS
 		virtual void onControllerHit(const physx::PxControllersHit& hit) {}
 		virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit) {}
 	protected:
-		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedMessagePtr message);
 		void OnPositionChanged(PositionMessagePtr message);
 		void OnWorldPositionChanged(WorldPositionMessagePtr message);

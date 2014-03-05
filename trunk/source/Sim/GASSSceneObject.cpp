@@ -268,7 +268,7 @@ namespace GASS
 		MessagePtr load_msg(new PostComponentsInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(load_msg);
 		//Pump message system, some components may use PostMessage instead of SendImmediate, 
-		//a reson for this could be to make use of the message listener priority flag 
+		//a reason for this could be to make use of the message listener priority flag 
 		//to take control of initialization order
 		SyncMessages(0,false);
 

@@ -108,7 +108,7 @@ namespace GASS
 		void SetTerrainPaintLayer(TerrainLayerBinder value) {m_TerrainPaintLayer = value;}
 		TerrainLayerBinder GetTerrainPaintLayer() const {return m_TerrainPaintLayer;}
 		void UpdateRoadMesh();
-		void OnUpdate(UpdateWaypointListMessagePtr message);
+		void OnUpdate(WaypointListUpdatedMessagePtr message);
 
 		bool m_Initialized;
 		bool m_UseSkirts;

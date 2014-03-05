@@ -102,7 +102,18 @@ namespace GASS
 
 	void WaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUpdate,UpdateWaypointListMessage,1));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUpdate,UpdateWaypointListMessage,1));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
+		//m_Initialized = true;
+		//UpdatePath();
+		//SetShowWaypoints(m_ShowWaypoints);
+	}
+
+	void WaypointListComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
+	{
+		if(message->GetSceneObject() != GetSceneObject())
+			return;
+
 		m_Initialized = true;
 		UpdatePath();
 		SetShowWaypoints(m_ShowWaypoints);
@@ -120,7 +131,7 @@ namespace GASS
 	{
 		m_SplineSteps = steps;
 		if(m_Initialized)
-			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+			UpdatePath();
 	}
 
 
@@ -133,7 +144,7 @@ namespace GASS
 	{
 		m_Radius = radius;
 		if(m_Initialized)
-			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+			UpdatePath();
 	}
 
 	bool WaypointListComponent::GetEnableSpline() const
@@ -145,7 +156,7 @@ namespace GASS
 	{
 		m_EnableSpline = value;
 		if(m_Initialized)
-			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+			UpdatePath();
 		//UpdatePath();
 	}
 
@@ -183,11 +194,6 @@ namespace GASS
 		}
 	}
 
-	void WaypointListComponent::OnUpdate(UpdateWaypointListMessagePtr message)
-	{
-		UpdatePath();
-	}
-
 	void WaypointListComponent::UpdatePath()
 	{
 		if(!m_Initialized)
@@ -221,7 +227,6 @@ namespace GASS
 			}
 		}
 		//SetShowWaypoints(m_ShowWaypoints);
-	
 		//create absolute positions
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 world_pos = location->GetWorldPosition();
@@ -229,9 +234,7 @@ namespace GASS
 		{
 			wps[i] += world_pos;
 		}
-
 		GetSceneObject()->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wps)));
-
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints(bool relative_position) const
@@ -380,7 +383,7 @@ namespace GASS
 	{
 		m_AutoUpdateTangents = value;
 		if(m_Initialized)
-			GetSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+			UpdatePath();
 	}
 
 	void WaypointListComponent::SetExport(const FilePath &filename)

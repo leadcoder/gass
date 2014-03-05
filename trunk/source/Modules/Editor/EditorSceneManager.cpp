@@ -18,7 +18,7 @@
 
 namespace GASS
 {
-	EditorSceneManager::EditorSceneManager() : m_SceneObjectsSelectable(false)
+	EditorSceneManager::EditorSceneManager() : m_LockTerrainObjects(true)
 	{
 		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
 	}
@@ -46,6 +46,7 @@ namespace GASS
 		SystemListenerPtr listener = shared_from_this();
 		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		system->Register(listener);
+		m_LockTerrainObjects = system->GetLockTerrainObjects();
 
 		ScenePtr scene = GetScene();
 		m_MouseTools->Init();
@@ -58,7 +59,7 @@ namespace GASS
 
 	void EditorSceneManager::OnPostSceneLoaded(PostSceneLoadEventPtr message)
 	{
-		if(!m_SceneObjectsSelectable) //add static objects
+		if(m_LockTerrainObjects) //add static objects
 		{
 			AddStaticObject(message->GetScene()->GetRootSceneObject(),true);
 		}

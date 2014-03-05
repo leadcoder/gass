@@ -19,11 +19,8 @@
 *****************************************************************************/
 
 #include "Plugins/PhysX3/PhysXCharacterComponent.h"
-#include "Plugins/PhysX3/PhysXWheelComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
-
 using namespace physx;
 namespace GASS
 {
@@ -83,9 +80,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputControllerMessage,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
-		
-
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->Register(shared_from_this());
 	}
@@ -93,13 +87,6 @@ namespace GASS
 	void PhysXCharacterComponent::Reset()
 	{
 
-	}
-
-	void PhysXCharacterComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
-	{
-		if(message->GetSceneObject() != GetSceneObject())
-			return;
-		m_Initialized = true;
 	}
 
 	void PhysXCharacterComponent::OnPositionChanged(PositionMessagePtr message)
@@ -170,6 +157,7 @@ namespace GASS
 			//else
 			//	fatalError("character actor has no shape");
 		}
+		m_Initialized = true;
 		//else
 		//	fatalError("character could not create actor");
 	}

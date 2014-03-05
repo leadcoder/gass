@@ -15,7 +15,7 @@
 
 namespace GASS
 {
-	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader)
+	EditorSystem::EditorSystem()	: m_GUISettings(new GUISchemaLoader), m_LockTerrainObjects(true)
 	{
 	}
 
@@ -28,6 +28,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, ISystem>);
 		SceneManagerFactory::GetPtr()->Register("EditorSceneManager",new GASS::Creator<EditorSceneManager, ISceneManager>);
+		RegisterProperty<bool>("LockTerrainObjects",&EditorSystem::GetLockTerrainObjects, &EditorSystem::SetLockTerrainObjects);
 	}
 
 	void EditorSystem::Init()

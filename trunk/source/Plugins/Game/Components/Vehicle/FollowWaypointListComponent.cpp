@@ -362,8 +362,10 @@ namespace GASS
 			{
 				m_CurrentWaypoint = 0;
 				waypointlist->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
+				
 				//force update				
-				waypointlist->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+				WaypointListComponentPtr wpl = waypointlist->GetFirstComponentByClass<IWaypointListComponent>();
+				waypointlist->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wpl->GetWaypoints())));
 			}
 		}
 		m_WaypointList = waypointlist; 

@@ -63,12 +63,19 @@ namespace GASS
 
 	void WaypointComponent::OnInitialize()
 	{
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationMessage,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnChangeName,SceneObjectNameMessage,0));
+	}
 
+	void WaypointComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
+	{
+		if(message->GetSceneObject() != GetSceneObject())
+			return;
 
+		//notify parent
 		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 		if(tangent)
 		{
@@ -77,13 +84,9 @@ namespace GASS
 		}
 		else
 			std::cout << "Failed to find tangent in waypoint compoenent\n";
-	
 
-		m_Initialized = true;
-		//notify parent
 
-		GetSceneObject()->GetParentSceneObject()->SendImmediate(MessagePtr(new UpdateWaypointListMessage()));
-
+		//GetSceneObject()->GetParentSceneObject()->SendImmediate(MessagePtr(new UpdateWaypointListMessage()));
 		SPTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 		if(list)
 		{
@@ -98,7 +101,7 @@ namespace GASS
 				tangent->PostMessage(MessagePtr(new CollisionSettingsMessage(show)));
 			}
 		}
-	
+		m_Initialized = true;
 	}
 
 	void WaypointComponent::OnDelete()
@@ -136,7 +139,6 @@ namespace GASS
 		//NotifyUpdate();
 	}
 
-
 	void WaypointComponent::Rotate(const Quaternion &rot)
 	{
 		int id = (int) this;
@@ -156,9 +158,12 @@ namespace GASS
 	void WaypointComponent::NotifyUpdate()
 	{
 		if(m_Initialized)
-			GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new UpdateWaypointListMessage()));
+		{
+			SPTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+			if(list)
+				list->UpdatePath();
+		}
 	}
-
 	
 	Float WaypointComponent::GetTangentWeight()const
 	{

@@ -95,14 +95,14 @@ namespace GASS
 	{
 		if(m_WapointListObject.IsValid())
 		{
-			m_WapointListObject->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,UpdateWaypointListMessage,1));
+			m_WapointListObject->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		}
 		else
 		{
 			SPTR<IWaypointListComponent> wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 			if(!wpl)
 				LogManager::getSingleton().stream() << "WARNING:LineComponent depends on WaypointListComponent";
-			GetSceneObject()->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,UpdateWaypointListMessage,1));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		}
 
 		m_Initialized = true;
@@ -119,7 +119,7 @@ namespace GASS
 		return m_Material;
 	}
 	
-	void LineGeometryComponent::OnUpdate(UpdateWaypointListMessagePtr message)
+	void LineGeometryComponent::OnUpdate(WaypointListUpdatedMessagePtr message)
 	{
 		UpdateMesh();
 	}

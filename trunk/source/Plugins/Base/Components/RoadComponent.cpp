@@ -116,7 +116,7 @@ namespace GASS
 
 	void RoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,UpdateWaypointListMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RoadComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		
 		//get waypoint list
 		SPTR<IWaypointListComponent> wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
@@ -213,7 +213,7 @@ namespace GASS
 	}
 
 
-	void RoadComponent::OnUpdate(UpdateWaypointListMessagePtr message)
+	void RoadComponent::OnUpdate(WaypointListUpdatedMessagePtr message)
 	{
 		UpdateRoadMesh();
 	}

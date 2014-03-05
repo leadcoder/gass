@@ -70,7 +70,7 @@ namespace GASS
 		//void SetTileScale(const Vec2 &value) {m_TileScale = value;}
 		
 		void UpdateMesh();
-		void OnUpdate(UpdateWaypointListMessagePtr message);
+		void OnUpdate(WaypointListUpdatedMessagePtr message);
 
 		bool m_Initialized;
 		float m_Width;

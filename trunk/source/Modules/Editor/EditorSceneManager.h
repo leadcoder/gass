@@ -57,10 +57,10 @@ namespace GASS
 		void UnhideObject(SceneObjectWeakPtr obj);
 		void HideObject(SceneObjectWeakPtr obj);
 		bool IsObjectStatic(SceneObjectWeakPtr obj);
-		
 	
-		void SetSceneObjectsSelectable(bool value) {m_SceneObjectsSelectable = value;}
-		bool GetSceneObjectsSelectable() const {return m_SceneObjectsSelectable;}
+		//void SetSceneObjectsSelectable(bool value) {m_LockTerrainObjects = value;}
+		//bool GetSceneObjectsSelectable() const {return m_LockTerrainObjects;}
+
 		void SetObjectSite(SceneObjectPtr obj);
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
@@ -79,7 +79,7 @@ namespace GASS
 		std::set<GASS::SceneObjectWeakPtr> m_LockedObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_InvisibleObjects;
 		std::set<GASS::SceneObjectWeakPtr> m_StaticObjects;
-		bool m_SceneObjectsSelectable;
+		bool m_LockTerrainObjects;
 		SceneObjectWeakPtr m_CurrentSite;
 	};
 	typedef SPTR<EditorSceneManager> EditorSceneManagerPtr;

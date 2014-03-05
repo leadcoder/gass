@@ -52,36 +52,26 @@ namespace GASS
 		virtual std::string GetWaypointTemplate() const;
 		float GetRadius()const;
 	protected:
+		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		ADD_PROPERTY(bool,ShowPathLine);
 		ADD_PROPERTY(bool,Closed);
 		ADD_PROPERTY(bool,AutoRotateWaypoints);
-		
 		void SetRadius(float radius);
 		int GetSplineSteps()const;
 		void SetSplineSteps(int steps);
-
-		
 		void SetWaypointTemplate(const std::string &name);
-		
 		bool GetEnableSpline()const;
 		void SetEnableSpline(bool value);
-
 		void SetShowWaypoints(bool value);
 		bool GetShowWaypoints() const;
-
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
-
-		
-		
-
 		void SetExport(const FilePath &filename);
 		FilePath GetExport() const;
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
 		void OnMoved(TransformationNotifyMessagePtr message);
-		void OnUpdate(UpdateWaypointListMessagePtr message);
+		//void OnUpdate(UpdateWaypointListMessagePtr message);
 		//Helpers
-		
 		void UpdatePath();
 
 		float m_Radius;
