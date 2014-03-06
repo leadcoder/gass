@@ -19,5 +19,5 @@ target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES}
 
 gass_install_plugin_target()	
 
-#install(FILES  ${CMAKE_CURRENT_SOURCE_DIR}/AIMessages.h DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/plugins/AI)
+install(FILES  ${CMAKE_CURRENT_SOURCE_DIR}/../AI/AIMessages.h DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/plugins/AI)
 
