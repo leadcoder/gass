@@ -229,8 +229,6 @@ namespace GASS
 		return m_WaterGradientValues;
 	}
 
-
-
 	void EnvironmentManagerComponent::SetWaterGradientWeights(const std::vector<float> &value)
 	{
 		m_WaterGradientWeights = value;
@@ -246,7 +244,6 @@ namespace GASS
 	{
 		return m_WaterGradientWeights;
 	}
-
 
 	void EnvironmentManagerComponent::SetSunGradient(const std::vector<Vec3> &value)
 	{
@@ -270,13 +267,10 @@ namespace GASS
 		}
 	}
 
-
 	std::vector<Vec3>  EnvironmentManagerComponent::GetSunGradient() const 
 	{
 		return m_SunGradientValues;
 	}
-
-
 
 	void EnvironmentManagerComponent::SetSunGradientWeights(const std::vector<float> &value)
 	{
@@ -316,13 +310,10 @@ namespace GASS
 		}
 	}
 
-
 	std::vector<Vec3>  EnvironmentManagerComponent::GetAmbientGradient() const 
 	{
 		return m_AmbientGradientValues;
 	}
-
-
 
 	void EnvironmentManagerComponent::SetAmbientGradientWeights(const std::vector<float> &value)
 	{
@@ -362,13 +353,10 @@ namespace GASS
 		}
 	}
 
-
 	std::vector<Vec3>  EnvironmentManagerComponent::GetFogGradient() const 
 	{
 		return m_FogGradientValues;
 	}
-
-
 
 	void EnvironmentManagerComponent::SetFogGradientWeights(const std::vector<float> &value)
 	{
@@ -386,16 +374,11 @@ namespace GASS
 		return m_FogGradientWeights;
 	}
 
-
-
 	void EnvironmentManagerComponent::OnChangeCamera(CameraChangedEventPtr message)
 	{
 		OgreCameraProxyPtr camera_proxy = DYNAMIC_PTR_CAST<IOgreCameraProxy>(message->GetViewport()->GetCamera());
 		m_CurrentCamera = camera_proxy->GetOgreCamera();
 	}
-
-	
-
 
 	bool  EnvironmentManagerComponent::frameStarted(const Ogre::FrameEvent& evt)
 	{
@@ -471,7 +454,6 @@ namespace GASS
 		//ss << "Fog color :" << fogColour.r << fogColour.g << fogColour.b << "\n";
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(ss.str())));*/
 	}
-
 }
 
 

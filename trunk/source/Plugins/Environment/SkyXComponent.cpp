@@ -47,7 +47,8 @@ namespace GASS
 		m_Target(NULL), 
 		m_SkyDomeFog(false),
 		m_Initialized (false),
-		m_BasicController(NULL)
+		m_BasicController(NULL),
+		m_Time(12,7,18)
 	{
 				
 	}
@@ -91,46 +92,12 @@ namespace GASS
 			return;
 
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(SkyXComponent::OnTimeOfDayRequest,TimeOfDayRequest,0));
-
-		/*Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
-		
-		Ogre::Camera* ocam = NULL;
-		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
-		while (iter.hasMoreElements())
-		{
-			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
-			if(target)
-			{
-				if(target->getNumViewports() > 0)
-				{
-					ocam = target->getViewport(0)->getCamera();
-					break;
-				}
-			}
-		}
-
-		if(ocam == NULL)
-		{
-			if(sm->hasCamera("DummyCamera"))
-				ocam = sm->getCamera("DummyCamera");
-			else
-				ocam = sm->createCamera("DummyCamera");
-		}*/
-		//Ogre::Root::getSingleton().addFrameListener(this);
-		//float save_clip  = ocam->getFarClipDistance();
-		
-		//ocam->setFarClipDistance(m_Radius);
-		//Ogre::MaterialPtr terrain_mat = static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName("TerrainMat"));
-		//if(terrain_mat.get())
-			//m_Hydrax->getMaterialManager()->addDepthTechnique(terrain_mat->createTechnique());
-
 		// Create SkyX object
-		Init();
-//		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent,0));
+		_Init();
 		m_Initialized = true;
 	}
 
-	void SkyXComponent::Init()
+	void SkyXComponent::_Init()
 	{
 	    Ogre::SceneManager* sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 
@@ -155,6 +122,7 @@ namespace GASS
 		UpdateOptions();
 
 		m_SkyX->setTimeMultiplier(m_TimeMultiplier);
+		SetTime(m_Time);
 		//m_SkyXOptions = m_SkyX->getAtmosphereManager()->getOptions();
 		m_MoonSize = m_SkyX->getMoonManager()->getMoonSize();
 
@@ -350,18 +318,16 @@ namespace GASS
 
 	Vec3 SkyXComponent::GetTime() const 
 	{
-		if(m_BasicController)
-			return OgreConvert::ToGASS(m_BasicController->getTime());
-
-		return Vec3(0,0,0);
+		//if(m_BasicController)
+		//	return OgreConvert::ToGASS(m_BasicController->getTime());
+		return m_Time;
 	}
 
 	void SkyXComponent::SetTime(const Vec3 &value)
 	{
+		m_Time = value;
 		if(m_BasicController)
 			m_BasicController->setTime(OgreConvert::ToOgre(value));
-		//m_SkyXOptions.Time = OgreConvert::ToOgre(value);
-		//UpdateOptions();
 	}
 
 

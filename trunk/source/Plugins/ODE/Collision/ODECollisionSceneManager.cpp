@@ -48,7 +48,14 @@ namespace GASS
 
 	ODECollisionSceneManager::~ODECollisionSceneManager()
 	{
-
+		//Fee all meshes in cache
+		CollisionMeshMap::iterator iter = m_ColMeshMap.begin();
+		while (iter!= m_ColMeshMap.end()) //in map.
+		{
+			if(iter->second.ID)
+				dGeomTriMeshDataDestroy(iter->second.ID);
+			iter++;
+		}
 	}
 
 	void ODECollisionSceneManager::RegisterReflection()
@@ -85,7 +92,7 @@ namespace GASS
 		ODECollisionGeometryComponentPtr comp = object->GetFirstComponentByClass<ODECollisionGeometryComponent>();
 		if(!comp) //only add if not already present
 		{
-			//don't auto add heightfields?
+			//don't auto add height fields?
 			if(object->GetFirstComponentByClass<IHeightmapTerrainComponent>())
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());

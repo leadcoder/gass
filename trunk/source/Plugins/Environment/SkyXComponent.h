@@ -46,10 +46,6 @@ namespace GASS
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
 		void OnTimeOfDayRequest(TimeOfDayRequestPtr message);
-		
-		//void OnChangeCamera(CameraChangedEventPtr message);
-		//bool frameStarted(const Ogre::FrameEvent& evt);
-		
 		void SetInnerRadius(const Float &value);
 		Float GetInnerRadius() const;
 		void SetOuterRadius(const Float &value);
@@ -69,6 +65,9 @@ namespace GASS
 		void SetMoonSize(const Float &value);
 		Float GetMoonSize() const ;
 
+		/** Set time
+		    @param value Time, where x = time in [0, 24]h range, y = sunrise hour in [0, 24]h range, z = sunset hour in [0, 24] range
+		 */
 		void SetTime(const Vec3 &value);
 		Vec3 GetTime() const;
 
@@ -77,7 +76,7 @@ namespace GASS
 		bool GetSkyDomeFog() const {return m_SkyDomeFog;}
 		void SetSkyDomeFog(bool value);// {m_SkyDomeFog=value;}
 	private:
-		void Init();
+		void _Init();
 		Ogre::RenderTarget* m_Target;
 		double m_TimeMultiplier;
 		SkyX::SkyX* m_SkyX;
@@ -87,6 +86,7 @@ namespace GASS
 		bool m_SkyDomeFog;
 		bool m_Initialized;
 		SkyX::BasicController* m_BasicController;
+		Vec3 m_Time;
 	};
 	typedef SPTR<SkyXComponent> SkyXComponentPtr;
 

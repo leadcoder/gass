@@ -28,6 +28,7 @@
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSThreading.h"
+#include "ODECollisionInfo.h"
 
 namespace GASS
 {
@@ -35,12 +36,6 @@ namespace GASS
 	typedef boost::shared_ptr<IMeshComponent> MeshComponentPtr;
 	class PhysicsMesh;
 	typedef SPTR<PhysicsMesh> PhysicsMeshPtr;
-
-	struct ODECollisionMeshInfo
-	{
-		PhysicsMeshPtr Mesh;
-		dTriMeshDataID ID;
-	};
 
 	/**
 		Collision Scene Manager

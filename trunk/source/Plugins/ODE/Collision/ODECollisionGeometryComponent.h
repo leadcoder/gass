@@ -29,7 +29,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
-
+#include "ODECollisionInfo.h"
 
 namespace GASS
 {
@@ -119,6 +119,8 @@ namespace GASS
 		};
 		TerrainData* m_TerrainData;
 		ODECollisionSceneManagerPtr m_CollisionSceneManager;
+		ODECollisionMeshInfo m_ColMeshInfo;
+		
 	};
 
 	typedef boost::shared_ptr<ODECollisionGeometryComponent> ODECollisionGeometryComponentPtr;

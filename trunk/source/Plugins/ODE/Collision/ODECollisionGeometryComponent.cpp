@@ -55,12 +55,16 @@ namespace GASS
 		m_Offset(0,0,0),
 		m_TerrainData(NULL)
 	{
-
+		m_ColMeshInfo.ID = 0;
 	}
 
 	ODECollisionGeometryComponent::~ODECollisionGeometryComponent()
 	{
 		delete m_TerrainData;
+		if(m_ColMeshInfo.ID)
+		{
+			dGeomTriMeshDataDestroy(m_ColMeshInfo.ID);
+		}
 	}
 
 	void ODECollisionGeometryComponent::RegisterReflection()
@@ -322,21 +326,20 @@ namespace GASS
 				}
 				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
 			}
-
-			/*MeshData gfx_mesh_data = mesh->GetMeshData();
-			PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-
-			if(physics_mesh->PositionVector.size() > 0)
+			else //probably manual mesh
 			{
-				if(!has_col_mesh)
+				GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
+				PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+				if(physics_mesh->PositionVector.size() > 0 )
 				{
-					if(res)
-						col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
-					else
-						col_mesh = GetCollisionSceneManager()->CreateCollisionMesh(physics_mesh);
+					if(m_ColMeshInfo.ID)
+					{
+						dGeomTriMeshDataDestroy(m_ColMeshInfo.ID);
+					}
+					m_ColMeshInfo = GetCollisionSceneManager()->_CreateCollisionMesh(physics_mesh);
+					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, 0, 0, 0);
 				}
-				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
-			}*/
+			}
 		}
 		else
 		{
