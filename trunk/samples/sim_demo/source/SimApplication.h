@@ -41,7 +41,7 @@ public:
 	  {
 		  m_Engine = new GASS::SimEngine();
 		  m_Engine->Init(GASS::FilePath("GASSSimDemo.xml"));
-
+		  
 		  GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 
 		  GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
@@ -59,15 +59,33 @@ public:
 		  GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		  GASS::PositionMessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
 		  if(free_obj)
 		  {
-			  free_obj->SendImmediate(pos_msg);
+			  free_obj->SendImmediateRequest(pos_msg);
 
 			  GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
 			  m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 		  }
-		
+		 
+
+		  /*		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
+		  GASS::Vec3 pos = scene->GetStartPos();
+		  GASS::MessagePtr pos_msg2(new GASS::WorldPositionMessage(pos));
+		  if(object)
+		  object->SendImmediate(pos_msg2);*/
+
+		  /*for(int i = 0; i <  m_Objects.size();i++)
+		  {
+		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate(m_Objects[i],scene->GetRootSceneObject());
+		  GASS::Vec3 pos = scene->GetStartPos();
+		  pos.z -= 10*(i+1);
+
+		  GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
+		  if(object)
+		  object->SendImmediate(pos_msg);
+		  }*/
+
 		  m_Engine->GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::GUIScriptRequest("GUI.xml")));
 		  return true;
 	  }
