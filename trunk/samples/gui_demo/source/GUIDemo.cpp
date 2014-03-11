@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
 				//pos.x = 0;
 				//pos.y = 10;
 				//pos.z = 0;
-				boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionMessage(pos));
+				boost::shared_ptr<GASS::IMessage> pos_msg(new GASS::PositionRequest(pos));
 				scene_object->SendImmediate(pos_msg);
 
 				if(i==0)

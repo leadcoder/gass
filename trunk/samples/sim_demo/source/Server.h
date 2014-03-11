@@ -48,7 +48,7 @@ public:
 		scene->Load(m_SceneName);
 		//create free camera and set start pos
 		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		GASS::MessagePtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
@@ -62,7 +62,7 @@ public:
 
 			GASS::Vec3 pos = scene->GetStartPos();
 			pos.x += 10*i;
-			GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+			GASS::MessagePtr pos_msg(new GASS::PositionRequest(pos));
 			if(object)
 				object->SendImmediate(pos_msg);
 		}

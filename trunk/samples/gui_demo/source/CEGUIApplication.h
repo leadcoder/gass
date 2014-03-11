@@ -84,7 +84,7 @@ public:
 		/*GASS::SceneObjectPtr object = scene->GetObjectManager()->LoadFromTemplate("JimTank");
 
 		GASS::Vec3 pos = scene->GetStartPos();
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(pos));
+		GASS::MessagePtr pos_msg(new GASS::PositionRequest(pos));
 		if(object)
 			object->SendImmediate(pos_msg);
 	*/}

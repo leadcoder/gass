@@ -59,7 +59,7 @@ public:
 		  GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  GASS::PositionMessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		  GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		  if(free_obj)
 		  {
 			  free_obj->SendImmediateRequest(pos_msg);
@@ -71,7 +71,7 @@ public:
 
 		  /*		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
 		  GASS::Vec3 pos = scene->GetStartPos();
-		  GASS::MessagePtr pos_msg2(new GASS::WorldPositionMessage(pos));
+		  GASS::MessagePtr pos_msg2(new GASS::WorldPositionRequest(pos));
 		  if(object)
 		  object->SendImmediate(pos_msg2);*/
 
@@ -81,7 +81,7 @@ public:
 		  GASS::Vec3 pos = scene->GetStartPos();
 		  pos.z -= 10*(i+1);
 
-		  GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(pos));
+		  GASS::MessagePtr pos_msg(new GASS::WorldPositionRequest(pos));
 		  if(object)
 		  object->SendImmediate(pos_msg);
 		  }*/

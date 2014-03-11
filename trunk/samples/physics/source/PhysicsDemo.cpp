@@ -212,6 +212,11 @@ int main(int argc, char* argv[])
 		GASS::BaseSceneComponentPtr box_comp  = bridge_seg_template->AddBaseSceneComponent("BoxGeometryComponent");
 		box_comp->SetPropertyByType("Size",GASS::Vec3(2,0.3,0.6));
 		box_comp->SetPropertyByType("Lines",false);
+
+		//test
+		GASS::BaseSceneComponentPtr script_comp  = bridge_seg_template->AddBaseSceneComponent("ASScriptComponent");
+		//std::string script ="c:/temp/test.lua";
+		//script_comp->SetPropertyByType("Script",script);
 	
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
 
@@ -232,14 +237,14 @@ int main(int argc, char* argv[])
 	}
 
 	GASS::SceneObjectPtr terrain_obj = scene->LoadObjectFromTemplate("PlaneObject",scene->GetRootSceneObject());
-	terrain_obj->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(0,0,0))));
-	//terrain_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("terrain.3DS")));
+	terrain_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0,0,0))));
+	//terrain_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("terrain.3DS")));
 
 	GASS::SceneObjectPtr light_obj = scene->LoadObjectFromTemplate("LightObject",scene->GetRootSceneObject());
-	light_obj->SendImmediateRequest(GASS::RotationMessagePtr(new GASS::RotationMessage(GASS::Vec3(40,32,0))));
+	light_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(GASS::Vec3(40,32,0))));
 	
 	GASS::SceneObjectPtr bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment",scene->GetRootSceneObject());
-	bdrige_seg_obj2->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(10,2,0))));
+	bdrige_seg_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,2,0))));
 	
 	GASS::BaseSceneComponentPtr body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
 	try
@@ -251,7 +256,7 @@ int main(int argc, char* argv[])
 	{
 		GASS::SceneObjectPtr bdrige_seg_obj1 = bdrige_seg_obj2; 
 		bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment",scene->GetRootSceneObject());
-		bdrige_seg_obj2->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(10,2,i))));
+		bdrige_seg_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,2,i))));
 		
 		GASS::SceneObjectPtr bdrige_hinge_obj = scene->LoadObjectFromTemplate("BridgeHinge",scene->GetRootSceneObject());
 		GASS::BaseSceneComponentPtr hinge_comp = bdrige_hinge_obj->GetBaseSceneComponent("PhysicsHingeComponent");
@@ -277,13 +282,13 @@ int main(int argc, char* argv[])
 	
 	/*GASS::SceneObjectPtr intersection1;
 	GASS::SceneObjectPtr intersection2  = scene->LoadObjectFromTemplate("TestInter",scene->GetRootSceneObject());
-	intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,0))));
+	intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,2,0))));
 	
 	for(int i = 1 ; i < 11 ; i++)
 	{
 		intersection1 = intersection2;
 		intersection2  = scene->LoadObjectFromTemplate("TestInter",scene->GetRootSceneObject());
-		intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,2,i*50))));
+		intersection2->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,2,i*50))));
 		
 		GASS::SceneObjectPtr road_seg = scene->LoadObjectFromTemplate("TestRoad",scene->GetRootSceneObject());
 		GASS::BaseComponentPtr rs_comp = DYNAMIC_PTR_CAST<GASS::BaseComponent>(road_seg->GetFirstComponentByClass("RoadSegmentComponent"));
@@ -293,8 +298,8 @@ int main(int argc, char* argv[])
 
 
 	/*GASS::SceneObjectPtr mesh_obj = scene->LoadObjectFromTemplate("MeshObject",scene->GetRootSceneObject());
-	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
-	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,5,1))));
+	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("car.3ds")));
+	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,5,1))));
 	*/
 	//GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 	//scene->Load(m_SceneName);
@@ -303,22 +308,22 @@ int main(int argc, char* argv[])
 	//create bridge
 
 	GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
-	box_obj->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(10,0.6,2))));
+	box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,0.6,2))));
 
 	GASS::SceneObjectPtr box_obj2 = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
-	box_obj2->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(10,0.6,20))));
+	box_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,0.6,20))));
 
 	
 	//GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
-	//vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,3,5))));
+	//vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,5))));
 	
 	//GASS::SceneObjectPtr car_obj = scene->LoadObjectFromTemplate("PxCar",scene->GetRootSceneObject());
-	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,3,0))));
+	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,0))));
 	
 
 	//create free camera and set start pos
 	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-	GASS::PositionMessagePtr pos_msg(new GASS::PositionMessage(GASS::Vec3(0,2,0)));
+	GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(GASS::Vec3(0,2,0)));
 	if(free_obj)
 	{
 		free_obj->SendImmediateRequest(pos_msg);
@@ -358,8 +363,8 @@ int main(int argc, char* argv[])
 				GASS::Vec3 torq(0,0,2000);
 				torq = rot_mat * torq;
 				GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
-				box_obj->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(pos)));
-				box_obj->SendImmediateRequest(GASS::RotationMessagePtr(new GASS::RotationMessage(rot)));
+				box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(pos)));
+				box_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(rot)));
 				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddForceRequestPtr(new GASS::PhysicsBodyAddForceRequest(vel)));
 				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddTorqueRequestPtr(new GASS::PhysicsBodyAddTorqueRequest(torq)));
 			}
@@ -377,7 +382,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-//				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("wheel.3ds")));
+//				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("wheel.3ds")));
 			}
 		}
 		else if(GetAsyncKeyState(VK_F2))
@@ -385,7 +390,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-	//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
+	//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("car.3ds")));
 			}
 		}
 		else if(GetAsyncKeyState(VK_F3))
@@ -401,7 +406,7 @@ int main(int argc, char* argv[])
 			if(!key_down)
 			{
 				key_down = true;
-				bdrige_seg_obj2->PostRequest(GASS::ResetMaterialMessagePtr(new GASS::ResetMaterialMessage()));
+				bdrige_seg_obj2->PostRequest(GASS::ResetMaterialRequestPtr(new GASS::ResetMaterialRequest()));
 			}
 		}
 		

@@ -29,7 +29,7 @@ public:
 		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 
 		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		GASS::MessagePtr pos_msg(new GASS::PositionMessage(scene->GetStartPos()));
+		GASS::MessagePtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		if(free_obj)
 		{
 			free_obj->SendImmediate(pos_msg);
