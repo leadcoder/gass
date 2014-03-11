@@ -51,14 +51,14 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
-		ruler->PostRequest(ClearManualMeshMessagePtr(new ClearManualMeshMessage()));
+		ruler->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
 
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
 			BaseReflectionObjectPtr props = DYNAMIC_PTR_CAST<BaseReflectionObject>(text);
 			std::string measurement_value = "";
-			ruler->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(measurement_value)));
+			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
 		}
 	}
 
@@ -88,7 +88,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(1);
 
 		
-		ruler->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		ruler->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -98,8 +98,8 @@ namespace GASS
 			sstream << std::fixed << std::setprecision(2) << value << "m";
 			std::string measurement_value = sstream.str();
 			
-			ruler->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(measurement_value)));
-			ruler->PostRequest(PositionMessagePtr(new PositionMessage(text_pos)));
+			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
+			ruler->PostRequest(PositionRequestPtr(new PositionRequest(text_pos)));
 		}
 	}
 

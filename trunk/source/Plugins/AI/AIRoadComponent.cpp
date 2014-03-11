@@ -75,7 +75,7 @@ namespace GASS
 		{
 			if(m_StartNode.GetRefObject() != node.GetRefObject())
 			{
-				//m_StartNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
+				//m_StartNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationChangedEvent));
 				AIRoadIntersectionComponentPtr old_intersection = m_StartNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
 				if(old_intersection)
 				{
@@ -96,7 +96,7 @@ namespace GASS
 			{
 				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
 				new_intersection->AddRoad(this_ptr);
-				//m_StartNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+				//m_StartNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationChangedEvent,0));
 			}
 		}
 	}
@@ -112,7 +112,7 @@ namespace GASS
 		{
 			if(m_EndNode.GetRefObject() != node.GetRefObject())
 			{
-				//m_EndNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage));
+				//m_EndNode->UnregisterForMessage(UNREG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationChangedEvent));
 				AIRoadIntersectionComponentPtr old_intersection = m_EndNode->GetFirstComponentByClass<AIRoadIntersectionComponent>();
 
 				if(old_intersection)
@@ -134,7 +134,7 @@ namespace GASS
 				AIRoadComponentPtr this_ptr = DYNAMIC_PTR_CAST<AIRoadComponent>(shared_from_this());
 				new_intersection->AddRoad(this_ptr);
 			}
-			//m_EndNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			//m_EndNode->RegisterForMessage(REG_TMESS(AIRoadComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		}
 	}
 
@@ -184,7 +184,7 @@ namespace GASS
 		UpdateMesh();
 	}
 
-	void AIRoadComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void AIRoadComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		
 	}
@@ -581,7 +581,7 @@ namespace GASS
 			}
 		}
 	
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 		m_LaneDebugObject->PostMessage(mesh_message);
 	}
 }

@@ -47,9 +47,9 @@ namespace GASS
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;
 				
-				selected->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot,from_id)));
+				selected->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
 
-				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesMessage(from_id)));
+				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
 
 				const double time = SimEngine::Get().GetTime();
 				static double last_time = 0;
@@ -254,7 +254,7 @@ namespace GASS
 			int from_id = (int) this;
 			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(value,from_id));
 			SendMessageRec(gizmo,col_msg);
-			VisibilityMessagePtr vis_msg(new VisibilityMessage(value,from_id));
+			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}

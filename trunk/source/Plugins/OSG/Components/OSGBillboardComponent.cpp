@@ -76,8 +76,8 @@ namespace GASS
 
 	void OSGBillboardComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsMessage,0));
 	}
 
@@ -116,7 +116,7 @@ namespace GASS
 			OSGConvert::Get().SetOSGNodeMask(flags, m_OSGBillboard);
 	}
 
-	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
@@ -150,7 +150,7 @@ namespace GASS
 		SetGeometryFlags(m_GeomFlags);
 		//m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
 		//m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
@@ -271,7 +271,7 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	void OSGBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
 	{
 		const Vec3 scale = message->GetScale();
 		UpdateSize(m_Width*scale.x,m_Height*scale.y);

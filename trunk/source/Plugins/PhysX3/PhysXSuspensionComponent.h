@@ -40,8 +40,8 @@ namespace GASS
 		virtual void OnInitialize();
 		void SetPosition(const Vec3 &value);
 	protected:
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
+		void OnPositionChanged(PositionRequestPtr message);
+		void OnWorldPositionChanged(WorldPositionRequestPtr message);
 		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
 		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
 		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);

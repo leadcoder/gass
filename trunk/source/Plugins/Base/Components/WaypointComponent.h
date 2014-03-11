@@ -63,8 +63,8 @@ namespace GASS
 		void OnChangeName(GASS::SceneObjectNameMessagePtr message);
 		void OnMoved(MessagePtr message);
 		void OnTangentMoved(MessagePtr message);
-		void OnPosition(PositionMessagePtr message);
-		void OnRotate(WorldRotationMessagePtr message);
+		void OnPosition(PositionRequestPtr message);
+		void OnRotate(WorldRotationRequestPtr message);
 		void UpdateTangentLine();
 		
 		Vec3 m_Tangent;

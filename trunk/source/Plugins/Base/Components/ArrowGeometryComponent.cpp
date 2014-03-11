@@ -193,7 +193,7 @@ namespace GASS
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 
 		/*MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),
@@ -214,7 +214,7 @@ namespace GASS
 		m_Texture = texture_name;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(TextureMessagePtr(new TextureMessage(texture_name.Name())));
+			GetSceneObject()->PostRequest(TextureRequestPtr(new TextureRequest(texture_name.Name())));
 		}
 	}
 

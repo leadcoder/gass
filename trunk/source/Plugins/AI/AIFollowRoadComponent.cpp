@@ -96,7 +96,7 @@ namespace GASS
 
 	void AIFollowRoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnTransMessage,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnSpawnOnRoad,SpawnOnRoadMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -112,7 +112,7 @@ namespace GASS
 
 	}
 
-	void AIFollowRoadComponent::OnTransMessage(TransformationNotifyMessagePtr message)
+	void AIFollowRoadComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentPos = message->GetPosition();
 	}
@@ -151,13 +151,13 @@ namespace GASS
 			{
 				//Clear messages
 				GetSceneObject()->ClearMessages();
-				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionRequest(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationRequest(rot)));
 			}
 			else
 			{
-				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionRequest(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationRequest(rot)));
 			}
 		}
 		//else
@@ -338,7 +338,7 @@ namespace GASS
 			if(m_Debug)
 			{
 				if(GetSceneObject()->GetChildByID("AIM_POINT"))
-					GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionMessage(target_point)));
+					GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionRequest(target_point)));
 
 				GraphicsMeshPtr mesh_data(new GraphicsMesh());
 				GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
@@ -359,7 +359,7 @@ namespace GASS
 					sub_mesh_data->PositionVector.push_back(pos);
 					sub_mesh_data->ColorVector.push_back(color);
 				}
-				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+				MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 				GetSceneObject()->GetChildByID("CPATH")->PostMessage(mesh_message);
 
 				//if(m_Debug)
@@ -372,7 +372,7 @@ namespace GASS
 					ss  <<  "\nSpeed:" << desired_speed;
 
 					ss  <<  "\nDist to Path:" << m_CurrentDistanceToPath;
-					GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+					GetSceneObject()->PostMessage(MessagePtr(new TextCaptionRequest(ss.str())));
 				}
 			}
 		}

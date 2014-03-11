@@ -51,8 +51,8 @@ namespace GASS
 		ADD_PROPERTY(Float,FleeSpeed)
 		
 
-		void OnLoad(LocationLoadedMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnLoad(LocationLoadedEventPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnTriggerEnter(TriggerEnterMessagePtr);
 		void OnTriggerExit(TriggerExitMessagePtr);
 		void OnHealthChanged(HealthChangedMessagePtr message);

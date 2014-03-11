@@ -85,18 +85,18 @@ namespace GASS
 		if(m_Body)
 		{
 			if(m_SizeFromMesh)
-				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 			else
 				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
 		}
 		else
 		{
 			if(m_SizeFromMesh && geom)
-				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 			else
 			{
 				if(location)
-					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedMessage,1));
+					GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnLocationLoaded,LocationLoadedEvent,1));
 				else
 				{
 					ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
@@ -108,7 +108,7 @@ namespace GASS
 				}
 			}
 		}
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
@@ -129,7 +129,7 @@ namespace GASS
 			SetDebug(true);
 	}
 
-	void ODEBaseGeometryComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void ODEBaseGeometryComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -139,7 +139,7 @@ namespace GASS
 			SetDebug(true);
 	}
 
-	void ODEBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void ODEBaseGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -148,7 +148,7 @@ namespace GASS
 		SetSizeFromMesh(true);
 	}
 
-	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		if(m_Body == 0) //only update position for static geometry 
 		{
@@ -343,7 +343,7 @@ namespace GASS
 			else
 			{
 				SceneObjectPtr obj = GetDebugObject();
-				obj->UnregisterForMessage(UNREG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
+				obj->UnregisterForMessage(UNREG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationChangedEvent));
 				GetSceneObject()->GetScene()->PostMessage(RemoveSceneObjectRequestPtr(new RemoveSceneObjectRequest(obj)));
 			}
 		}
@@ -394,14 +394,14 @@ namespace GASS
 				scene_object = SimEngine::Get().CreateObjectFromTemplate("DebugPhysics");
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
-			scene_object->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));
+			scene_object->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationChangedEvent,0));
 			GetSceneObject()->AddChildSceneObject(scene_object,true);
 		}
 		return scene_object;
 	}
 
 
-	void ODEBaseGeometryComponent::OnDebugTransformation(TransformationNotifyMessagePtr message)
+	void ODEBaseGeometryComponent::OnDebugTransformation(TransformationChangedEventPtr message)
 	{
 		SceneObjectPtr obj = GetDebugObject();
 		Vec3 pos  =obj->GetFirstComponentByClass<ILocationComponent>()->GetPosition();

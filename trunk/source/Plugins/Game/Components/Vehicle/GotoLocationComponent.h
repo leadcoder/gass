@@ -46,7 +46,7 @@ namespace GASS
 		void SceneManagerTick(double delta);
 		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
-		void OnTransformationMessage(TransformationNotifyMessagePtr message);
+		void OnTransformationMessage(TransformationChangedEventPtr message);
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		ADD_PROPERTY(SceneObjectRef,NavigationObject);
 		Vec3 m_CurrentLocation;

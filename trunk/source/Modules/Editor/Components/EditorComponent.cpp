@@ -117,7 +117,7 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Visible = message->GetVisible();
-			GetSceneObject()->PostRequest(GeometryVisibilityMessagePtr(new GeometryVisibilityMessage(m_Visible)));
+			GetSceneObject()->PostRequest(GeometryVisibilityRequestPtr(new GeometryVisibilityRequest(m_Visible)));
 			GetSceneObject()->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_Visible)));
 			
 			/*if(m_Visible)
@@ -150,12 +150,12 @@ namespace GASS
 		{
 			m_Selected = true;
 			//if(m_Visible)
-			GetSceneObject()->PostRequest(BillboardColorMessagePtr(new BillboardColorMessage(m_SelectedColor)));
+			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(m_SelectedColor)));
 		}
 		else if(m_Selected)
 		{
 			//if(m_Visible)
-			GetSceneObject()->PostRequest(BillboardColorMessagePtr(new BillboardColorMessage(ColorRGBA(1,1,1,1))));
+			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(ColorRGBA(1,1,1,1))));
 			m_Selected = false;
 		}
 	}

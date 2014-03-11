@@ -66,8 +66,8 @@ namespace GASS
 
 	void ProjectileComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnPositionMessage,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnRotationMessage,RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ProjectileComponent::OnVelocityRequest,PhysicsBodyVelocityRequest,0));
 
 		m_TimeLeft = m_TimeToLive;
@@ -88,13 +88,13 @@ namespace GASS
 	}
 
 
-	void ProjectileComponent::OnPositionMessage(PositionMessagePtr message)
+	void ProjectileComponent::OnPositionMessage(PositionRequestPtr message)
 	{
 		if(message->GetSenderID() != (int) this)
 			m_Pos = message->GetPosition();
 	}
 
-	void ProjectileComponent::OnRotationMessage(RotationMessagePtr message)
+	void ProjectileComponent::OnRotationMessage(RotationRequestPtr message)
 	{
 		if(message->GetSenderID() != (int) this)
 			m_Rot = message->GetRotation();
@@ -182,8 +182,8 @@ namespace GASS
 			int id = (int) this;
 			
 			
-			GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,id)));
-			GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(m_Rot,id)));
+			GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,id)));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(m_Rot,id)));
 		
 
 			if(impact)
@@ -238,8 +238,8 @@ namespace GASS
 				}
 				//send position and rotaion update
 				int id = (int) this;
-				MessagePtr pos_msg(new PositionMessage(m_Pos,id));
-				MessagePtr rot_msg(new RotationMessage(m_Rot,id));
+				MessagePtr pos_msg(new PositionRequest(m_Pos,id));
+				MessagePtr rot_msg(new RotationRequest(m_Rot,id));
 				GetSceneObject()->PostMessage(pos_msg);
 				GetSceneObject()->PostMessage(rot_msg);
 			}

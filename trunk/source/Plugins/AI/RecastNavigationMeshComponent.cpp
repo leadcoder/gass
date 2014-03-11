@@ -861,7 +861,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(value)));
+			GetSceneObject()->PostMessage(MessagePtr(new VisibilityRequest(value)));
 		}
 	}
 
@@ -1343,14 +1343,14 @@ namespace GASS
 			{
 				if(m_ShowMeshLines)
 				{
-					MessagePtr mesh_message(new ManualMeshDataMessage(m_NavVisLineMesh,-1,0.1));
+					MessagePtr mesh_message(new ManualMeshDataRequest(m_NavVisLineMesh,-1,0.1));
 					obj->PostMessage(mesh_message);
 					//MessagePtr material_message(new MaterialMessage(Vec4(1,0,0,1),Vec3(1,1,1)));
 					//obj->PostMessage(material_message);
 				}
 				else
 				{
-					obj->PostMessage(MessagePtr(new ClearManualMeshMessage()));
+					obj->PostMessage(MessagePtr(new ClearManualMeshRequest()));
 				}
 			}
 		}
@@ -1367,7 +1367,7 @@ namespace GASS
 			{
 				if(m_ShowMeshSolid)
 				{
-					MessagePtr mesh_message(new ManualMeshDataMessage(m_NavVisTriMesh,-1,0.1));
+					MessagePtr mesh_message(new ManualMeshDataRequest(m_NavVisTriMesh,-1,0.1));
 					obj->PostMessage(mesh_message);
 					//MessagePtr material_message(new MaterialMessage(Vec4(0,0,1,float(m_Transparency)/100.0f),Vec3(1,1,1)));
 					//obj->PostMessage(material_message);
@@ -1375,7 +1375,7 @@ namespace GASS
 				else
 				{
 					//Hide mesh
-					obj->PostMessage(MessagePtr(new ClearManualMeshMessage()));
+					obj->PostMessage(MessagePtr(new ClearManualMeshRequest()));
 				}
 			}
 		}

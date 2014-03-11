@@ -38,8 +38,8 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void UpdateDescriptionFromNode();
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnGeomChanged(GeometryChangedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnGeomChanged(GeometryChangedEventPtr message);
 		void SetDescriptionList(const std::vector<std::string>  &list);
 		std::vector<std::string> GetDescriptionList() const;
 

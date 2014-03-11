@@ -64,8 +64,8 @@ namespace GASS
 
 		void OnInput(InputRelayEventPtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnParentTransformation(TransformationNotifyMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnParentTransformation(TransformationChangedEventPtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		
 		std::string m_Controller;

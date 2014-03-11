@@ -66,7 +66,7 @@ namespace GASS
 		virtual GraphicsMesh  GetMeshData() const;
 		virtual void LoadXML(TiXmlElement *elem);
 	protected:
-		void OnMeshFileNameMessage(MeshFileMessagePtr message);
+		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}

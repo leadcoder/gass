@@ -42,7 +42,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnLoad(LocationLoadedMessagePtr message);
+		void OnLoad(LocationLoadedEventPtr message);
 		void OnHit(HitMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		float GetArmor() const; 

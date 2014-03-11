@@ -69,7 +69,7 @@ namespace GASS
 		void ReloadGeometry();
 	protected:
 		void SaveDensityMap();
-		void OnRoadMessage(RoadMessagePtr message);
+		void OnRoadMessage(RoadRequestPtr message);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);
 		float GetPageSize() const;

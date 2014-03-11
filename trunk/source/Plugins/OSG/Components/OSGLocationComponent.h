@@ -62,17 +62,17 @@ namespace GASS
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 		bool GetAttachToParent() const;
 	protected:
-		void OnPositionMessage(PositionMessagePtr message);
-		void OnRotationMessage(RotationMessagePtr  message);
-		void OnScaleMessage(ScaleMessagePtr message);
-		void OnWorldPositionMessage(WorldPositionMessagePtr message);
-		void OnWorldRotationMessage(WorldRotationMessagePtr message);
-		void OnParentChangedMessage(ParentChangedMessagePtr message);
-		void OnAttachToParent(AttachToParentMessagePtr message);
+		void OnPositionMessage(PositionRequestPtr message);
+		void OnRotationMessage(RotationRequestPtr  message);
+		void OnScaleMessage(ScaleRequestPtr message);
+		void OnWorldPositionRequest(WorldPositionRequestPtr message);
+		void OnWorldRotationMessage(WorldRotationRequestPtr message);
+		void OnParentChangedMessage(ParentChangedEventPtr message);
+		void OnAttachToParent(AttachToParentRequestPtr message);
 		void SetAttachToParent(bool value);
 		//helper
 		OSGLocationComponentPtr GetParentLocation();
-		void OnVisibilityMessage(VisibilityMessagePtr message);
+		void OnVisibilityMessage(VisibilityRequestPtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
 	

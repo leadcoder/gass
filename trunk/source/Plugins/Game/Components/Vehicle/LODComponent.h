@@ -45,8 +45,8 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnCameraMoved(TransformationNotifyMessagePtr message);
-		void OnObjectMoved(TransformationNotifyMessagePtr message);
+		void OnCameraMoved(TransformationChangedEventPtr message);
+		void OnObjectMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 
 		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}

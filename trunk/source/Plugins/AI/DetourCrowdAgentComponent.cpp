@@ -40,8 +40,8 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
 	}
@@ -159,7 +159,7 @@ namespace GASS
 		}
 	}
 
-	void DetourCrowdAgentComponent::OnLoad(LocationLoadedMessagePtr message)
+	void DetourCrowdAgentComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		//SimEngine::Get().GetRuntimeController()->Register(this);
 		UpdateGeometry();
@@ -284,7 +284,7 @@ namespace GASS
 			{
 				const float* pos = m_Agent->npos;
 				int id = (int) this;
-				MessagePtr pos_msg(new WorldPositionMessage(Vec3(pos[0],pos[1],pos[2]),id));
+				MessagePtr pos_msg(new WorldPositionRequest(Vec3(pos[0],pos[1],pos[2]),id));
 				GetSceneObject()->PostMessage(pos_msg);
 
 				//generate rotation from accumulated velocity
@@ -312,7 +312,7 @@ namespace GASS
 					}
 				}
 				Quaternion rot = Quaternion::Slerp2(m_AccTime/m_Delay,m_CurrentRot,m_DesiredRot);
-				MessagePtr rot_msg(new WorldRotationMessage(rot,id));
+				MessagePtr rot_msg(new WorldRotationRequest(rot,id));
 				GetSceneObject()->PostMessage(rot_msg);*/
 
 				
@@ -330,7 +330,7 @@ namespace GASS
 					rot.FromRotationMatrix(rot_mat);
 					m_DesiredRot = rot;
 
-					MessagePtr rot_msg(new WorldRotationMessage(rot,id));
+					MessagePtr rot_msg(new WorldRotationRequest(rot,id));
 					GetSceneObject()->PostMessage(rot_msg);
 				}
 				MessagePtr vel_msg(new VelocityNotifyMessage(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
@@ -340,7 +340,7 @@ namespace GASS
 
 	}
 
-	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionMessagePtr message)
+	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionRequestPtr message)
 	{
 		int id = (int) this;
 		if(id != message->GetSenderID())
@@ -432,7 +432,7 @@ namespace GASS
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
 
-		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
+		MessagePtr mesh_message(new ManualMeshDataRequest(m_MeshData));
 		GetSceneObject()->PostMessage(mesh_message);
 	}
 }

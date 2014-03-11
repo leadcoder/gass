@@ -32,7 +32,7 @@ namespace GASS
 		{
 			if(m_StartNode.GetRefObject() != node.GetRefObject())
 			{
-				m_StartNode->UnregisterForMessage(UNREG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage));
+				m_StartNode->UnregisterForMessage(UNREG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationChangedEvent));
 				RoadIntersectionComponentPtr old_intersection = m_StartNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 
 				RoadSegmentComponentPtr this_ptr = DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this());
@@ -48,7 +48,7 @@ namespace GASS
 			RoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<RoadIntersectionComponent>();
 			RoadSegmentComponentPtr this_ptr = DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this());
 			new_intersection->AddRoad(this_ptr);
-			m_StartNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			m_StartNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		}
 
 		if(m_StartNode.IsValid() && m_EndNode.IsValid())
@@ -68,7 +68,7 @@ namespace GASS
 		{
 			if(m_EndNode.GetRefObject() != node.GetRefObject())
 			{
-				m_EndNode->UnregisterForMessage(UNREG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage));
+				m_EndNode->UnregisterForMessage(UNREG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationChangedEvent));
 				RoadIntersectionComponentPtr old_intersection = m_EndNode->GetFirstComponentByClass<RoadIntersectionComponent>();
 
 				RoadSegmentComponentPtr this_ptr = DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this());
@@ -84,7 +84,7 @@ namespace GASS
 			RoadIntersectionComponentPtr new_intersection = node->GetFirstComponentByClass<RoadIntersectionComponent>();
 			RoadSegmentComponentPtr this_ptr = DYNAMIC_PTR_CAST<RoadSegmentComponent>(shared_from_this());
 			new_intersection->AddRoad(this_ptr);
-			m_EndNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			m_EndNode->RegisterForMessage(REG_TMESS(RoadSegmentComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		}
 
 		if(m_StartNode.IsValid() && m_EndNode.IsValid())
@@ -103,7 +103,7 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void RoadSegmentComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void RoadSegmentComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		UpdateLanes();
 		UpdateMesh();
@@ -286,7 +286,7 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(color);
 			}
 
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+			MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 			GetSceneObject()->PostMessage(mesh_message);
 		}
 	}

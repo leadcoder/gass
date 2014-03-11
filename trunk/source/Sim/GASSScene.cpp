@@ -369,8 +369,8 @@ namespace GASS
 			Vec3 vel = message->GetVelocity();
 			int sender_id = (int) this;
 
-			so->SendImmediateRequest(PositionMessagePtr(new PositionMessage(pos,sender_id)));
-			so->SendImmediateRequest(RotationMessagePtr(new RotationMessage(rot,sender_id)));
+			so->SendImmediateRequest(PositionRequestPtr(new PositionRequest(pos,sender_id)));
+			so->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot,sender_id)));
 			so->SendImmediateRequest(PhysicsBodyVelocityRequestPtr(new PhysicsBodyVelocityRequest(vel,sender_id)));
 		}
 	}

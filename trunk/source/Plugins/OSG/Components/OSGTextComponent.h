@@ -44,8 +44,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
 	protected:
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnTextCaptionMessage(GASS::TextCaptionMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnTextCaptionMessage(GASS::TextCaptionRequestPtr message);
 		void SetFont(const ResourceHandle &font);
 		ResourceHandle GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;

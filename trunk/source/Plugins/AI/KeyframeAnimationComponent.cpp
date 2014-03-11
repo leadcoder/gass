@@ -23,19 +23,19 @@ namespace GASS
 
 	void KeyframeAnimationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnLoad,LocationLoadedEvent,1)); //load after agent
+		GetSceneObject()->RegisterForMessage(REG_TMESS(KeyframeAnimationComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 	}
 
-	void KeyframeAnimationComponent::OnLoad(LocationLoadedMessagePtr message)
+	void KeyframeAnimationComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		m_Initialized = true;
 		UpdateAnimation();
 	}
-	void KeyframeAnimationComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void KeyframeAnimationComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_Rotation = message->GetRotation();
 		m_Position = message->GetPosition();
@@ -49,7 +49,7 @@ namespace GASS
 			m_CurrentTime = 0;
 		Key key = m_Animation.GetInterpolatedKeyFrame(m_CurrentTime);
 		Vec3 pos = key.m_Pos;
-		GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos )));
+		GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new WorldPositionRequest(pos )));
 	}
 
 	void KeyframeAnimationComponent::UpdateAnimation()

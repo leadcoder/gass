@@ -33,15 +33,15 @@ namespace GASS
 		GizmoEditMode GetMode() const {return m_Mode;}
 	private:
 		void OnChangeGridRequest(ChangeGridRequestPtr message);
-		void OnCameraParameter(CameraParameterMessagePtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnCameraParameter(CameraParameterRequestPtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnCameraMoved(TransformationNotifyMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
-		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
-		void OnWorldPosition(WorldPositionMessagePtr message);
+		void OnSelectedTransformation(TransformationChangedEventPtr message);
+		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnEditMode(EditModeChangedEventPtr message);
 
 		void SetSelection(SceneObjectPtr  object);

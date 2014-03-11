@@ -81,16 +81,16 @@ namespace GASS
 
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
-		void OnScaleMessage(ScaleMessagePtr message);
-		void PositionMessage(PositionMessagePtr message);
-		void RotationMessage(RotationMessagePtr message);
-		void VisibilityMessage(VisibilityMessagePtr message);
-		void ParentChangedMessage(ParentChangedMessagePtr message);
-		void WorldPositionMessage(WorldPositionMessagePtr message);
-		void WorldRotationMessage(WorldRotationMessagePtr message);
-		void BoundingInfoMessage(BoundingInfoMessagePtr message);
-		void OnUpdateEulerAngles(UpdateEulerAnglesMessagePtr message);
-		void OnAttachToParent(AttachToParentMessagePtr message);
+		void OnScaleMessage(ScaleRequestPtr message);
+		void PositionRequest(PositionRequestPtr message);
+		void RotationRequest(RotationRequestPtr message);
+		void VisibilityRequest(VisibilityRequestPtr message);
+		void ParentChangedEvent(ParentChangedEventPtr message);
+		void WorldPositionRequest(WorldPositionRequestPtr message);
+		void WorldRotationRequest(WorldRotationRequestPtr message);
+		void BoundingInfoRequest(BoundingInfoRequestPtr message);
+		void OnUpdateEulerAngles(UpdateEulerAnglesRequestPtr message);
+		void OnAttachToParent(AttachToParentRequestPtr message);
 	
 		
 	

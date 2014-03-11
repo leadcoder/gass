@@ -55,7 +55,7 @@ namespace GASS
 	void LookAtComponent::OnInitialize()
 	{
 		InitializeSceneObjectRef();
-		m_LookAt->RegisterForMessage(REG_TMESS(LookAtComponent::OnTransformation,TransformationNotifyMessage,0));
+		m_LookAt->RegisterForMessage(REG_TMESS(LookAtComponent::OnTransformation,TransformationChangedEvent,0));
 		CoreSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>();
 		scene_manager->Register(shared_from_this());
 
@@ -82,10 +82,10 @@ namespace GASS
 		Vec3 x = Math::Cross(look_dir,z);
 		z.Normalize();
 		q.FromAxes(x,look_dir,z);
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(q)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(q)));
 	}
 
-	void LookAtComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void LookAtComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		m_LookAtPos = message->GetPosition();
 		m_LookAtRot = message->GetRotation();

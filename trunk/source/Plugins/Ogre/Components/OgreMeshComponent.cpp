@@ -97,16 +97,16 @@ namespace GASS
 
 	void OgreMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,GeometryVisibilityMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnTexCoordMessage,TextureCoordinateRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationRequest,0));
 	}
 
-	void OgreMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -154,7 +154,7 @@ namespace GASS
 			SetCastShadow(m_CastShadow);
 			SetRenderQueue(m_RenderQueue);
 			OgreMaterialCache::Add(m_MeshResource.Name(),m_OgreEntity);
-			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			
 			//auto build edge list
 			//if(!m_OgreEntity->getMesh()->getEdgeList())
@@ -162,7 +162,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)
+	void OgreMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
 	{
 		if(m_OgreEntity)
 		{
@@ -488,19 +488,19 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
+	void OgreMeshComponent::OnMeshFileNameMessage(MeshFileRequestPtr message)
 	{
 		ResourceHandle resource(message->GetFileName());
 		SetMeshResource(resource);
 	}
 
-	void OgreMeshComponent::OnTexCoordMessage(TextureCoordinateMessagePtr message)
+	void OgreMeshComponent::OnTexCoordMessage(TextureCoordinateRequestPtr message)
 	{
 		Vec2 uv = message->GetTextureCoordinates();
 		SetTexCoordSpeed(uv);
 	}
 
-	void OgreMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
+	void OgreMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
 	{
 		if(!m_OgreEntity)
 			return;
@@ -512,7 +512,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
+	void OgreMeshComponent::OnResetMaterial(ResetMaterialRequestPtr message)
 	{
 		if(m_OgreEntity)
 			OgreMaterialCache::Restore(m_MeshResource.Name(),m_OgreEntity);
@@ -535,7 +535,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationMessagePtr message)
+	void OgreMeshComponent::OnBoneTransformationMessage(BoneTransformationRequestPtr message)
 	{
 		Ogre::Bone* bone;
 

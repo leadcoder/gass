@@ -40,8 +40,8 @@ namespace GASS
 
 	void PedestrianBehaviorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnLoad,LocationLoadedEvent,1)); //load after agent
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerExit,TriggerExitMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnTriggerEnter,TriggerEnterMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PedestrianBehaviorComponent::OnHealthChanged,HealthChangedMessage,0));
@@ -104,7 +104,7 @@ namespace GASS
 		return m_Health;
 	}
 
-	void PedestrianBehaviorComponent::OnLoad(LocationLoadedMessagePtr message)
+	void PedestrianBehaviorComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		GoToRandomTarget(1.0); //send intial target!
 		
@@ -273,15 +273,15 @@ namespace GASS
 			m_DebugState = "No CurrentTarget";
 			//Try to find random target?
 		}
-		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(m_State)));
+		//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionRequest(m_State)));
 		std::stringstream ss;
 		ss  <<  GetSceneObject()->GetName();
 		ss  <<  "\nHealth:" << (int) (m_Health*100) << "%";
 		ss  <<  "\nState:" << m_State;
-		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionRequest(ss.str())));
 	}
 	
-	void PedestrianBehaviorComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void PedestrianBehaviorComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_Position = message->GetPosition();
 	}
@@ -296,7 +296,7 @@ namespace GASS
 			{
 				Vec3 spawn_location =  GetRandomLocation(so);
 				//Send position message?
-				MessagePtr pos_msg(new WorldPositionMessage(spawn_location,(int) this,delay));
+				MessagePtr pos_msg(new WorldPositionRequest(spawn_location,(int) this,delay));
 				GetSceneObject()->PostMessage(pos_msg);
 				GoToRandomTarget(delay);
 			}

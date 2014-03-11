@@ -87,10 +87,10 @@ namespace GASS
 	void PhysXWheelComponent::OnInitialize()
 	{
 		//set priority to 1, convex geometry has 0 and will be cooked when we are called
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXWheelComponent::OnGeometryChanged,GeometryChangedMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXWheelComponent::OnGeometryChanged,GeometryChangedEvent,1));
 	}
 
-	void PhysXWheelComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void PhysXWheelComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		m_WheelData.mMass = m_Mass;
 		m_WheelData.mMaxBrakeTorque = m_MaxBrakeTorque;

@@ -43,7 +43,7 @@ namespace GASS
 	void OpenALSoundComponent::OnInitialize()
 	{
 		
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
 
@@ -63,7 +63,7 @@ namespace GASS
 			alDeleteSources(1, &m_Source);
 	}
 
-	void OpenALSoundComponent::OnPositionChanged(TransformationNotifyMessagePtr message)
+	void OpenALSoundComponent::OnPositionChanged(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);

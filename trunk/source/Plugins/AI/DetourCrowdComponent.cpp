@@ -77,7 +77,7 @@ namespace GASS
 
 	void DetourCrowdComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnMoved,PositionMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnMoved,PositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdComponent::OnGoToPosisiton,GotoPositionMessage,0));
 
@@ -286,7 +286,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(message);
 	}
 
-	void DetourCrowdComponent::OnMoved(PositionMessagePtr message)
+	void DetourCrowdComponent::OnMoved(PositionRequestPtr message)
 	{
 
 	}
@@ -467,7 +467,7 @@ namespace GASS
 					SceneObjectPtr vehicle = GetSceneObject()->GetScene()->LoadObjectFromTemplate(vehicle_name,GetSceneObject());
 					if(vehicle)
 					{
-						vehicle->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
+						vehicle->PostMessage(MessagePtr(new WorldPositionRequest(pos)));
 						vehicle_counter++;
 					}
 				}
@@ -518,7 +518,7 @@ namespace GASS
 				SceneObjectPtr vehicle = GetSceneObject()->GetScene()->LoadObjectFromTemplate(vehicle_name,GetSceneObject());
 				if(vehicle)
 				{
-					vehicle->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
+					vehicle->PostMessage(MessagePtr(new WorldPositionRequest(pos)));
 					vehicle_counter++;
 				}
 				

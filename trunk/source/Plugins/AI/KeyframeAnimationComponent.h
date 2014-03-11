@@ -38,8 +38,8 @@ namespace GASS
 		virtual void SceneManagerTick(double delta_time);
 		void UpdateAnimation();
 	protected:
-		void OnLoad(LocationLoadedMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnLoad(LocationLoadedEventPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		bool m_Initialized;
 		KeyframeAnimation m_Animation;
 		double m_CurrentTime;

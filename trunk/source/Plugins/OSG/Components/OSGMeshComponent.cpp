@@ -186,15 +186,15 @@ namespace GASS
 
 	void OSGMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
 
 
-	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
+	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
 	{
 		/*Vec4 diffuse = message->GetDiffuse();
 		Vec3 ambient = message->GetAmbient();
@@ -226,7 +226,7 @@ namespace GASS
 	}
 
 
-	void OSGMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		LoadMesh(m_MeshResource);
 		m_Initlized = true;
@@ -244,7 +244,7 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnVisibilityMessage(VisibilityMessagePtr message)
+	void OSGMeshComponent::OnVisibilityMessage(VisibilityRequestPtr message)
 	{
 		bool visibility = message->GetValue();
 		if(visibility)
@@ -346,7 +346,7 @@ namespace GASS
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 
 		//expand children
 		if(m_Expand)
@@ -553,7 +553,7 @@ namespace GASS
 		CalulateBoundingbox(mesh.get());
 	}
 
-	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileMessagePtr message)
+	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileRequestPtr message)
 	{
 		ResourceHandle res(message->GetFileName());
 		SetMeshResource(res);

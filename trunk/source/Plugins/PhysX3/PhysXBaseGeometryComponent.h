@@ -78,7 +78,7 @@ namespace GASS
 		ADD_PROPERTY(bool,SimulationCollision);
 		//messages functions
 		void OnLoad(MessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		
 		virtual physx::PxShape* CreateShape() = 0;

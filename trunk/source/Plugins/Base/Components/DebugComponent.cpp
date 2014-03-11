@@ -51,12 +51,12 @@ namespace GASS
 	void DebugComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(typeid(SceneObjectNameMessage),MESSAGE_FUNC(DebugComponent::OnChangeName),0);
-		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsMessage),MESSAGE_FUNC(DebugComponent::OnSettings),0);
+		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsRequest),MESSAGE_FUNC(DebugComponent::OnSettings),0);
 
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
+			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
 		}
 	}
 
@@ -73,12 +73,12 @@ namespace GASS
 			if(m_ShowNodeName)
 			{
 				std::string name = GetSceneObject()->GetName();
-				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
 			}
 			else
 			{
 				std::string name = "";
-				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
 			}
 		}
 	}
@@ -91,14 +91,14 @@ namespace GASS
 			if(name_mess)
 			{
 				std::string name = name_mess->GetName();
-				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
 			}
 		}
 	}
 
 	void DebugComponent::OnSettings(GASS::MessagePtr message)
 	{
-		DebugComponentSettingsMessagePtr settings_mess = DYNAMIC_PTR_CAST<DebugComponentSettingsMessage>(message);
+		DebugComponentSettingsRequestPtr settings_mess = DYNAMIC_PTR_CAST<DebugComponentSettingsRequest>(message);
 		if(settings_mess)
 		{
 			SetShowNodeName(settings_mess->GetShowObjectName());

@@ -92,15 +92,15 @@ namespace GASS
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 		
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
-		void OnMeshFileNameMessage(MeshFileMessagePtr message);
-		void OnTexCoordMessage(TextureCoordinateMessagePtr message);
-		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
-		void OnResetMaterial(ResetMaterialMessagePtr message);
+		void OnMeshFileNameMessage(MeshFileRequestPtr message);
+		void OnTexCoordMessage(TextureCoordinateRequestPtr message);
+		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
+		void OnResetMaterial(ResetMaterialRequestPtr message);
 
-		void OnVisibilityMessage(GeometryVisibilityMessagePtr message);
-		void OnBoneTransformationMessage(BoneTransformationMessagePtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
+		void OnBoneTransformationMessage(BoneTransformationRequestPtr message);
 		void SetTexCoordSpeed(const Vec2 &speed);
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;

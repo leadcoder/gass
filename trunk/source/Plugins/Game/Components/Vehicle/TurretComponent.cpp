@@ -77,8 +77,8 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
-		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationChangedEvent,0));
+		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
 	
 		
@@ -96,13 +96,13 @@ namespace GASS
 
 	}
 
-	void TurretComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void TurretComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		m_Transformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 
 	}
 
-	void TurretComponent::OnParentTransformation(TransformationNotifyMessagePtr message)
+	void TurretComponent::OnParentTransformation(TransformationChangedEventPtr message)
 	{
 		m_ParentTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}

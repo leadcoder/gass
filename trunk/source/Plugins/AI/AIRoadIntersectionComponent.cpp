@@ -156,7 +156,7 @@ namespace GASS
 				sub_mesh_data->PositionVector.push_back(pos);
 				sub_mesh_data->ColorVector.push_back(color);
 			}
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+			MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 			GetConnectionDebugObject()->PostMessage(mesh_message);
 		}
 	}

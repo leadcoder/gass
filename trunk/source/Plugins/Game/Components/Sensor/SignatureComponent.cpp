@@ -39,12 +39,12 @@ namespace GASS
 
 	void SignatureComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnTransChanged,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnTransChanged,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnVelocity,VelocityNotifyMessage,0));
 		m_Initialized = true;
 	}
 
-	void SignatureComponent::OnTransChanged(TransformationNotifyMessagePtr message)
+	void SignatureComponent::OnTransChanged(TransformationChangedEventPtr message)
 	{
 		m_Pos = message->GetPosition();
 		m_Rotation = message->GetRotation();

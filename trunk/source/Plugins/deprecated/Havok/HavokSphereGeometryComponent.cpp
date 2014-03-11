@@ -160,10 +160,10 @@ namespace GASS
 
 
 		SceneObjectPtr scene_object = GetDebugObject();
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 		scene_object->PostMessage(mesh_message);
 		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
+		scene_object->PostMessage(MessagePtr(new PositionRequest(offset)));
 	}
 
 	void HavokSphereGeometryComponent::UpdateDebug()

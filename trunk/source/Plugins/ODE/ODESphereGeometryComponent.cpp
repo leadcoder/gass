@@ -160,8 +160,8 @@ namespace GASS
 		}
 	
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
-		scene_object->PostRequest(PositionMessagePtr(new PositionMessage(offset)));
+		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		scene_object->PostRequest(PositionRequestPtr(new PositionRequest(offset)));
 	}
 
 	void ODESphereGeometryComponent::UpdateDebug()

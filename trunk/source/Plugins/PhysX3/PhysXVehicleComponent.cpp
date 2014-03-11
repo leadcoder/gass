@@ -119,11 +119,11 @@ namespace GASS
 
 	void PhysXVehicleComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnRotationChanged,RotationMessage,0 ));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldRotationChanged,WorldRotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPositionChanged,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldPositionChanged,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnRotationChanged,RotationRequest,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldRotationChanged,WorldRotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
@@ -472,7 +472,7 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void PhysXVehicleComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXVehicleComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -482,7 +482,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void PhysXVehicleComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -492,7 +492,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::OnRotationChanged(RotationMessagePtr message)
+	void PhysXVehicleComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -502,7 +502,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::OnWorldRotationChanged(WorldRotationMessagePtr message)
+	void PhysXVehicleComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -512,7 +512,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void PhysXVehicleComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
@@ -577,8 +577,8 @@ namespace GASS
 		Vec3 current_pos  = GetPosition();
 		
 		
-		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos ,from_id)));
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
 
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
@@ -592,9 +592,9 @@ namespace GASS
 				if(wheel)
 				{
 					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
-					wheel->PostRequest(PositionMessagePtr(new PositionMessage(pos,from_id)));
+					wheel->PostRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
 					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
-					wheel->PostRequest(RotationMessagePtr(new RotationMessage(rot,from_id)));
+					wheel->PostRequest(RotationRequestPtr(new RotationRequest(rot,from_id)));
 				}
 			}
 		}
@@ -746,7 +746,7 @@ namespace GASS
 			ss  <<  "\nSpeed:" << forwardSpeed;
 			
 
-		GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(ss.str())));
+		GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";

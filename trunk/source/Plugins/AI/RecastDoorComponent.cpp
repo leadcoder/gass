@@ -59,12 +59,12 @@ namespace GASS
 
 	void RecastDoorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastDoorComponent::OnLoad,LocationLoadedMessage,3));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastDoorComponent::OnTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastDoorComponent::OnLoad,LocationLoadedEvent,3));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastDoorComponent::OnTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastDoorComponent::OnDoorMessage,DoorMessage,0));
 	}
 
-	void RecastDoorComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void RecastDoorComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		m_Pos = message->GetPosition();
 		m_PolyRefCount = 0;
@@ -75,7 +75,7 @@ namespace GASS
 		//SetOpen(message->GetOpen());
 	}
 
-	void RecastDoorComponent::OnLoad(LocationLoadedMessagePtr message)
+	void RecastDoorComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		//assume only onw nav mesh
 		m_NavMeshComp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<RecastNavigationMeshComponent>(true);

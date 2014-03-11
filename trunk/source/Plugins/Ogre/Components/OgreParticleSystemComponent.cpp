@@ -68,11 +68,11 @@ namespace GASS
 
 	void OgreParticleSystemComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterRequest,0));
 	}
 
-	void OgreParticleSystemComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreParticleSystemComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
@@ -99,19 +99,19 @@ namespace GASS
 		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}
 
-	void OgreParticleSystemComponent::OnParameterMessage(ParticleSystemParameterMessagePtr message)
+	void OgreParticleSystemComponent::OnParameterMessage(ParticleSystemParameterRequestPtr message)
 	{
-		ParticleSystemParameterMessage::ParticleSystemParameterType type = message->GetParameter();
+		ParticleSystemParameterRequest::ParticleSystemParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case ParticleSystemParameterMessage::EMISSION_RATE:
+		case ParticleSystemParameterRequest::EMISSION_RATE:
 			{
 			int emitter = message->GetEmitter();
 			float rate = message->GetValue();
 			m_ParticleSystem->getEmitter(emitter)->setEmissionRate(rate);
 			}
 			break;
-		case ParticleSystemParameterMessage::PARTICLE_LIFE_TIME:
+		case ParticleSystemParameterRequest::PARTICLE_LIFE_TIME:
 			{
 			int emitter = message->GetEmitter();
 			float duration = message->GetValue();

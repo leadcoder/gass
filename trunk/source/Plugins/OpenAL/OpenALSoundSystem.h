@@ -64,7 +64,7 @@ namespace GASS
 		void OnInit(MessagePtr message);
 		void OnSceneLoaded(PreSceneCreateEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnCameraMoved(TransformationNotifyMessagePtr message);
+		void OnCameraMoved(TransformationChangedEventPtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
 
 		ALCdevice *m_Device;

@@ -70,13 +70,13 @@ namespace GASS
 	void PhysXBodyComponent::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS, TYPED_MESSAGE_FUNC( PhysXBodyComponent::OnLoad ,LoadPhysicsComponentsMessage),1);
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION,				TYPED_MESSAGE_FUNC( PhysXBodyComponent::OnPositionChanged,PositionMessage));
-		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION,				TYPED_MESSAGE_FUNC( PhysXBodyComponent::OnRotationChanged,RotationMessage ));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_POSITION,				TYPED_MESSAGE_FUNC( PhysXBodyComponent::OnPositionChanged,PositionRequest));
+		GetSceneObject()->RegisterForMessage(OBJECT_RM_ROTATION,				TYPED_MESSAGE_FUNC( PhysXBodyComponent::OnRotationChanged,RotationRequest ));
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_PHYSICS_BODY_PARAMETER,  TYPED_MESSAGE_FUNC(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage));
 		REGISTER_OBJECT_MESSAGE_CLASS(PhysXBodyComponent::OnMassMessage,PhysicsMassMessage,0);
 	}
 
-	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXBodyComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -86,7 +86,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::OnRotationChanged(RotationMessagePtr message)
+	void PhysXBodyComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -149,10 +149,10 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 
-		MessagePtr pos_msg(new PositionMessage(GetPosition(),from_id));
+		MessagePtr pos_msg(new PositionRequest(GetPosition(),from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new RotationMessage(GetRotation(),from_id));
+		MessagePtr rot_msg(new RotationRequest(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 		
 		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));

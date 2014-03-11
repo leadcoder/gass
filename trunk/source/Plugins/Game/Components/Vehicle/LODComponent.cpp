@@ -61,7 +61,7 @@ namespace GASS
 
 	void LODComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(LODComponent::OnCameraChanged,CameraChangedEvent,0));
 		//get active camera
 		
@@ -74,7 +74,7 @@ namespace GASS
 		
 		if(camera)
 		{
-			camera->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage,0));
+			camera->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationChangedEvent,0));
 		}
 	}
 
@@ -85,7 +85,7 @@ namespace GASS
 		SceneObjectPtr cam(m_ActiveCameraObject,NO_THROW);
 		if(cam)
 		{
-			cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage));
+			cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationChangedEvent));
 		}
 	}
 	
@@ -98,20 +98,20 @@ namespace GASS
 		SceneObjectPtr prev_cam(m_ActiveCameraObject,NO_THROW);
 		if(prev_cam)
 		{
-			prev_cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage));
+			prev_cam->UnregisterForMessage(UNREG_TMESS( LODComponent::OnCameraMoved,TransformationChangedEvent));
 		}
-		cam_obj->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationNotifyMessage,0));
+		cam_obj->RegisterForMessage(REG_TMESS( LODComponent::OnCameraMoved,TransformationChangedEvent,0));
 		m_ActiveCameraObject = cam_obj;
 	}
 
-	void LODComponent::OnCameraMoved(TransformationNotifyMessagePtr message)
+	void LODComponent::OnCameraMoved(TransformationChangedEventPtr message)
 	{
 		m_CameraPosition = message->GetPosition();
 		UpdateLOD();
 	}
 
 
-	void LODComponent::OnObjectMoved(TransformationNotifyMessagePtr message)
+	void LODComponent::OnObjectMoved(TransformationChangedEventPtr message)
 	{
 		m_ObjectPosition = message->GetPosition();
 		UpdateLOD();

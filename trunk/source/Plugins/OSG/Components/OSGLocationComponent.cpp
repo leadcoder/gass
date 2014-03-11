@@ -96,14 +96,14 @@ namespace GASS
 
 	void OSGLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionMessage,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage,WorldRotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent,GASS::AttachToParentMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionRequest,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage,WorldRotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent,GASS::AttachToParentRequest,0));
 
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		//assert(m_GFXSceneManager);
@@ -134,29 +134,29 @@ namespace GASS
 			m_TransformNode->setName(name);
 		}
 		LocationComponentPtr location = DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
-		GetSceneObject()->PostEvent(LocationLoadedMessagePtr(new LocationLoadedMessage(location)));
+		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
 
-		PositionMessagePtr pos_msg(new PositionMessage(m_Pos));
-		RotationMessagePtr rot_msg;//(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
+		RotationRequestPtr rot_msg;//(new RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
 
 		if(m_Rot != Vec3(0,0,0))
-			rot_msg =RotationMessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+			rot_msg =RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
 		else //use 
-			rot_msg = RotationMessagePtr(new GASS::RotationMessage(m_QRot));
+			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
 		GetSceneObject()->PostRequest(pos_msg);
 		GetSceneObject()->PostRequest(rot_msg);
-		GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(m_Scale)));
+		GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(m_Scale)));
 	}
 
 
-	void OSGLocationComponent::OnAttachToParent(AttachToParentMessagePtr message)
+	void OSGLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
 	{
 		SetAttachToParent(message->GetAttachToParent());
 	}
 
 	
-	void OSGLocationComponent::OnPositionMessage(PositionMessagePtr message)
+	void OSGLocationComponent::OnPositionMessage(PositionRequestPtr message)
 	{
 		Vec3 value = message->GetPosition();
 		m_Pos = value;
@@ -167,13 +167,13 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::OnWorldPositionMessage(WorldPositionMessagePtr message)
+	void OSGLocationComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
 	{
 		Vec3 value = message->GetPosition();
 		SetWorldPosition(value);
 	}
 	
-	void OSGLocationComponent::OnRotationMessage(RotationMessagePtr message)
+	void OSGLocationComponent::OnRotationMessage(RotationRequestPtr message)
 	{
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
@@ -184,7 +184,7 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::OnWorldRotationMessage(WorldRotationMessagePtr message)
+	void OSGLocationComponent::OnWorldRotationMessage(WorldRotationRequestPtr message)
 	{
 		Quaternion value = message->GetRotation();
 		if(m_TransformNode.valid())
@@ -215,12 +215,12 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(value)));
+			GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(value)));
 		}
 	}
 
 	
-	void OSGLocationComponent::OnScaleMessage(ScaleMessagePtr message)
+	void OSGLocationComponent::OnScaleMessage(ScaleRequestPtr message)
 	{
 		m_Scale = message->GetScale();
 		if(m_TransformNode.valid())
@@ -241,7 +241,7 @@ namespace GASS
 		Vec3 scale = GetScale();
 		Quaternion rot = GetWorldRotation();
 		
-		GetSceneObject()->PostEvent(TransformationNotifyMessagePtr(new TransformationNotifyMessage(pos,rot,scale)));
+		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos,rot,scale)));
 		//send for all child tranforms also?
 		GASS::IComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
@@ -310,7 +310,7 @@ namespace GASS
 		m_QRot = value;
 		if(m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(Quaternion(value))));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(Quaternion(value))));
 		}
 	}
 
@@ -320,7 +320,7 @@ namespace GASS
 		if(m_TransformNode.valid())
 		{
 			Vec3 rot = Math::Deg2Rad(value);
-			GetSceneObject()->PostRequest(RotationMessagePtr(new GASS::RotationMessage(Quaternion(rot))));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(rot))));
 		}
 	}
 
@@ -402,7 +402,7 @@ namespace GASS
           //std::cout<<"update callback - post traverse"<<node<<std::endl; 
       } 
 
-	void OSGLocationComponent::OnVisibilityMessage(VisibilityMessagePtr message)
+	void OSGLocationComponent::OnVisibilityMessage(VisibilityRequestPtr message)
 	{
 		bool visibility = message->GetValue();
 		if(visibility)
@@ -447,7 +447,7 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::OnParentChangedMessage(ParentChangedMessagePtr message)
+	void OSGLocationComponent::OnParentChangedMessage(ParentChangedEventPtr message)
 	{
 		SetAttachToParent(GetAttachToParent());
 	}

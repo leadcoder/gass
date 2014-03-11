@@ -42,7 +42,7 @@ namespace GASS
 				HeightmapTerrainComponentPtr terrain = selected->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 				if(terrain)
 				{
-					selected->GetParentSceneObject()->PostRequest(TerrainHeightModifyMessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
+					selected->GetParentSceneObject()->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
 				}
 			}
 
@@ -52,7 +52,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			gizmo->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(info.m_3DPos,from_id)));
+			gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 		}
 	}
 
@@ -109,7 +109,7 @@ namespace GASS
 		{
 			int from_id = (int) this;
 			SendMessageRec(gizmo,CollisionSettingsMessagePtr(new CollisionSettingsMessage(value,from_id)));
-			SendMessageRec(gizmo,VisibilityMessagePtr(new VisibilityMessage(value,from_id)));
+			SendMessageRec(gizmo,VisibilityRequestPtr(new VisibilityRequest(value,from_id)));
 		}
 	}
 

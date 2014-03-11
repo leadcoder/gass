@@ -47,9 +47,9 @@ namespace GASS
 
 	void AITrainComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnLoad,LocationLoadedMessage,1)); //load after agent
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnLoad,LocationLoadedEvent,1)); //load after agent
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnSpeedMessage,DesiredSpeedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AITrainComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
@@ -57,7 +57,7 @@ namespace GASS
 		BaseSceneComponent::OnInitialize();
 	}
 
-	void AITrainComponent::OnLoad(LocationLoadedMessagePtr message)
+	void AITrainComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		m_Initialized = true;
 
@@ -74,7 +74,7 @@ namespace GASS
 	
 	
 
-	void AITrainComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void AITrainComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_Pos = message->GetPosition();
 		m_Rot = message->GetRotation();
@@ -186,11 +186,11 @@ namespace GASS
 			SceneObjectPtr train(m_Train);
 			if(train)
 			{
-				train->PostMessage(MessagePtr(new WorldPositionMessage(new_pos)));
+				train->PostMessage(MessagePtr(new WorldPositionRequest(new_pos)));
 				Quaternion rot;
 				transformation.SetTranslation(0,0,0);
 				rot.FromRotationMatrix(transformation);
-				train->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+				train->PostMessage(MessagePtr(new WorldRotationRequest(rot)));
 			}
 		}
 	}

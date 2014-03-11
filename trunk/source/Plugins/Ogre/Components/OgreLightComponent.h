@@ -63,7 +63,7 @@ namespace GASS
 	
 	protected:
 		
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
 		Ogre::Light* m_OgreLight;
 		LightTypeBinder m_LightType;

@@ -159,7 +159,7 @@ namespace GASS
 				BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
 				if(bsc->GetSceneObject())
 				{
-					bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadMessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+					bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 				}
 			}
 
@@ -171,7 +171,7 @@ namespace GASS
 			{
 				BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				if(last_obj != bsc->GetSceneObject())
-					bsc->GetSceneObject()->PostRequest(RoadMessagePtr(new RoadMessage(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+					bsc->GetSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
 				last_obj = bsc->GetSceneObject();
 			}
 		}
@@ -202,7 +202,7 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadMessagePtr(new RoadMessage(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
+				bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
 			}
 		}
 	}
@@ -553,6 +553,6 @@ namespace GASS
 				
 			} 
 		} */
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 }

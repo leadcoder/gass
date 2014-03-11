@@ -99,11 +99,11 @@ namespace GASS
 		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
-			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage,0));
+			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent,0));
 		}
 		if(raknet->IsServer())
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationChangedEvent,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,VelocityNotifyMessage,0));
 			//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
@@ -148,14 +148,14 @@ namespace GASS
 	}
 
 
-	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationNotifyMessagePtr message)
+	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_ParentPos = message->GetPosition();
 		m_ParentRot = message->GetRotation();
 		//std::cout << "pos" << m_ParentPos << std::endl;
 	}
 
-	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		Quaternion rot = message->GetRotation();
@@ -192,7 +192,7 @@ namespace GASS
 		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
-			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationNotifyMessage));
+			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent));
 		}
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
@@ -318,16 +318,16 @@ namespace GASS
 			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || m_ClientLocationMode == UNCHANGED)
 			{
 				if(m_UpdatePosition)
-					GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(new_pos)));
+					GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(new_pos)));
 				if(m_UpdateRotation)
-					GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(new_rot)));
+					GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(new_rot)));
 			}
 			else if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
 			{
 				if(m_UpdatePosition)
-					GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_pos)));
+					GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_pos)));
 				if(m_UpdateRotation)
-					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot)));
+					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot)));
 			}
 
 			GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(m_Velocity, m_AngularVelocity)));

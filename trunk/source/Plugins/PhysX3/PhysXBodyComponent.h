@@ -55,10 +55,10 @@ namespace GASS
 		ADD_PROPERTY(int,VelocityIterCount)
 		ADD_PROPERTY(bool,ForceReport)
 		
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnPositionChanged(PositionRequestPtr message);
+		void OnWorldPositionChanged(WorldPositionRequestPtr message);
+		void OnRotationChanged(RotationRequestPtr message);
 		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
 		void OnAddForce(PhysicsBodyAddForceRequestPtr message);

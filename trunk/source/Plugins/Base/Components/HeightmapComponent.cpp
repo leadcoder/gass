@@ -71,7 +71,7 @@ namespace GASS
 		{
 			m_HM = new Heightmap();
 			m_HM->Load(full_path.GetFullPath());
-			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 		//try to load present file
 	}
@@ -143,7 +143,7 @@ namespace GASS
 			}	
 		}
 		m_HM->Save(_GetFilePath().GetFullPath());
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 

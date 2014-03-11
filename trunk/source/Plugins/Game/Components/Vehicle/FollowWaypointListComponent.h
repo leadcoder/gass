@@ -65,7 +65,7 @@ namespace GASS
 		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
-		void OnTransMessage(TransformationNotifyMessagePtr message);
+		void OnTransMessage(TransformationChangedEventPtr message);
 		ADD_PROPERTY(Float,WaypointRadius);
 		ADD_PROPERTY(SceneObjectRef,NavigationObject);
 		void SetInvertDirection(bool value);

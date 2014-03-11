@@ -85,9 +85,9 @@ namespace GASS
 		
 		
 
-		void OnTerrainHeightModify(TerrainHeightModifyMessagePtr message);
-		void OnTerrainLayerPaint(TerrainPaintMessagePtr message);
-		void OnRoadMessage(RoadMessagePtr message);
+		void OnTerrainHeightModify(TerrainHeightModifyRequestPtr message);
+		void OnTerrainLayerPaint(TerrainPaintRequestPtr message);
+		void OnRoadMessage(RoadRequestPtr message);
 	
 		void DeformTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real timeElapsed, float brush_size_terrain_space, float brush_inner_radius, float noise);
 		void GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height);

@@ -90,8 +90,8 @@ namespace GASS
 
 	void FreeCamControlComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationRequest,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
 		//ScenePtr scene = GetSceneObject()->GetScene();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnCameraChanged,CameraChangedEvent, 0));
@@ -119,7 +119,7 @@ namespace GASS
 	{
 		if(message->GetSenderID() != (int) this)
 		{
-			PositionMessagePtr pos_mess = STATIC_PTR_CAST<PositionMessage>(message);
+			PositionRequestPtr pos_mess = STATIC_PTR_CAST<PositionRequest>(message);
 			m_Pos = pos_mess->GetPosition();
 		}
 	}
@@ -128,7 +128,7 @@ namespace GASS
 	{
 		if(message->GetSenderID() != (int) this)
 		{
-			RotationMessagePtr pos_mess = STATIC_PTR_CAST<RotationMessage>(message);
+			RotationRequestPtr pos_mess = STATIC_PTR_CAST<RotationRequest>(message);
 
 			Mat4 rot_mat;
 			pos_mess->GetRotation().ToRotationMatrix(rot_mat);
@@ -330,7 +330,7 @@ namespace GASS
 		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 		int from_id = (int)this;
-		GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,from_id)));
+		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
 		Quaternion rot_to_send(m_Rot);
 		if(up.z == 1)
@@ -341,7 +341,7 @@ namespace GASS
 			//we have to rotate 90 deg if z is up
 			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
 		}
-		GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(rot_to_send,from_id)));
+		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(rot_to_send,from_id)));
 	
 		m_HeadingInput = 0;
 		m_PitchInput = 0;

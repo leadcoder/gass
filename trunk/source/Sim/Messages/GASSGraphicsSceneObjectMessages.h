@@ -70,11 +70,11 @@ namespace GASS
 	probably also want to catch location information.
 	*/
 
-	class PositionMessage : public SceneObjectRequestMessage
+	class PositionRequest : public SceneObjectRequestMessage
 	{
 	public:
 
-		PositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
+		PositionRequest(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Position(pos)
 		  {
 
@@ -83,7 +83,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef SPTR<PositionMessage> PositionMessagePtr;
+	typedef SPTR<PositionRequest> PositionRequestPtr;
 
 
 	/**
@@ -99,10 +99,10 @@ namespace GASS
 	not attached to a scene node.
 	*/
 
-	class RotationMessage : public SceneObjectRequestMessage
+	class RotationRequest : public SceneObjectRequestMessage
 	{
 	public:
-		RotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
+		RotationRequest(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
@@ -111,7 +111,7 @@ namespace GASS
 	private:
 		Quaternion m_Rotation;
 	};
-	typedef SPTR<RotationMessage> RotationMessagePtr;
+	typedef SPTR<RotationRequest> RotationRequestPtr;
 
 
 
@@ -125,7 +125,7 @@ namespace GASS
 	that respond to position messages, for instance a sound source
 	probably also want to catch location information.
 
-	Note: In contrast to the PositionMessage this is a request for a
+	Note: In contrast to the PositionRequest this is a request for a
 	absolute position change, if the location component that
 	respond to this messages has a scene graph node that is
 	attached to a parent node this position change will
@@ -134,10 +134,10 @@ namespace GASS
 	*/
 
 
-	class WorldPositionMessage : public SceneObjectRequestMessage
+	class WorldPositionRequest : public SceneObjectRequestMessage
 	{
 	public:
-		WorldPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
+		WorldPositionRequest(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay), m_Position(pos)
 		  {
 
@@ -146,7 +146,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef SPTR<WorldPositionMessage> WorldPositionMessagePtr;
+	typedef SPTR<WorldPositionRequest> WorldPositionRequestPtr;
 
 
 
@@ -162,7 +162,7 @@ namespace GASS
 	probably also want to catch rotation information if its
 	not attached to a scene node.
 
-	Note: In contrast to the RotationMessage this is a request for a
+	Note: In contrast to the RotationRequest this is a request for a
 	absolute rotation change, if the location component that
 	respond to this messages has a scene graph node that is
 	attached to a parent node this rotation change will
@@ -170,10 +170,10 @@ namespace GASS
 	a new relative rotation also have to be calculated.
 	*/
 
-	class WorldRotationMessage : public SceneObjectRequestMessage
+	class WorldRotationRequest : public SceneObjectRequestMessage
 	{
 	public:
-		WorldRotationMessage(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
+		WorldRotationRequest(const Quaternion &rot, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Rotation(rot)
 		  {
 
@@ -182,7 +182,7 @@ namespace GASS
 	private:
 		Quaternion m_Rotation;
 	};
-	typedef SPTR<WorldRotationMessage> WorldRotationMessagePtr;
+	typedef SPTR<WorldRotationRequest> WorldRotationRequestPtr;
 
 	/**
 	Scale (relative to parent) change requested.
@@ -196,11 +196,11 @@ namespace GASS
 	hand and as a result the lightning will not look correct.
 	Instead try to prescale your meshes before loading.
 	*/
-	class ScaleMessage : public SceneObjectRequestMessage
+	class ScaleRequest : public SceneObjectRequestMessage
 	{
 	public:
 
-		ScaleMessage (const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
+		ScaleRequest (const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Scale(scale)
 		  {
 
@@ -209,7 +209,7 @@ namespace GASS
 	private:
 		Vec3 m_Scale;
 	};
-	typedef SPTR<ScaleMessage> ScaleMessagePtr;
+	typedef SPTR<ScaleRequest> ScaleRequestPtr;
 
 
 	
@@ -227,10 +227,10 @@ namespace GASS
 	CollisionSettingsMessage.
 	*/
 
-	class VisibilityMessage : public SceneObjectRequestMessage
+	class VisibilityRequest : public SceneObjectRequestMessage
 	{
 	public:
-		VisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
+		VisibilityRequest(bool visible, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Visible(visible)
 		  {
 
@@ -240,13 +240,13 @@ namespace GASS
 		bool m_Visible;
 	};
 
-	typedef SPTR<VisibilityMessage> VisibilityMessagePtr;
+	typedef SPTR<VisibilityRequest> VisibilityRequestPtr;
 
 
-	class GeometryVisibilityMessage : public SceneObjectRequestMessage
+	class GeometryVisibilityRequest : public SceneObjectRequestMessage
 	{
 	public:
-		GeometryVisibilityMessage(bool visible, SenderID sender_id = -1, double delay= 0) :
+		GeometryVisibilityRequest(bool visible, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Visible(visible)
 		  {
 
@@ -256,7 +256,7 @@ namespace GASS
 		bool m_Visible;
 	};
 
-	typedef SPTR<GeometryVisibilityMessage> GeometryVisibilityMessagePtr;
+	typedef SPTR<GeometryVisibilityRequest> GeometryVisibilityRequestPtr;
 
 
 
@@ -264,10 +264,10 @@ namespace GASS
 	Message use to alternate whether or not a gfx-scene node should be attached 
 	to the first parent gfx-node
 	*/
-	class AttachToParentMessage : public SceneObjectRequestMessage
+	class AttachToParentRequest : public SceneObjectRequestMessage
 	{
 	public:
-		AttachToParentMessage(bool value,SenderID sender_id = -1, double delay= 0) :
+		AttachToParentRequest(bool value,SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay), m_AttachToParent(value)
 		  {
 
@@ -276,14 +276,14 @@ namespace GASS
 	private:
 		bool m_AttachToParent;
 	};
-	typedef SPTR<AttachToParentMessage> AttachToParentMessagePtr;
+	typedef SPTR<AttachToParentRequest> AttachToParentRequestPtr;
 
 
 	
 	/**
 		Message used to modify camera settings
 	*/
-	class CameraParameterMessage : public SceneObjectRequestMessage
+	class CameraParameterRequest : public SceneObjectRequestMessage
 	{
 	public:
 		enum CameraParameterType
@@ -293,7 +293,7 @@ namespace GASS
 			CAMERA_ORTHO_WIN_SIZE,
 		};
 	public:
-		CameraParameterMessage(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) :
+		CameraParameterRequest(CameraParameterType paramter, float value1, float value2 = 0, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Value1(value1),m_Value2(value2), m_Parameter(paramter){}
 		  float GetValue1()const {return m_Value1;}
 		  float GetValue2()const {return m_Value2;}
@@ -303,7 +303,7 @@ namespace GASS
 		float m_Value2;
 		CameraParameterType m_Parameter;
 	};
-	typedef SPTR<CameraParameterMessage> CameraParameterMessagePtr;
+	typedef SPTR<CameraParameterRequest> CameraParameterRequestPtr;
 
 
 	/**
@@ -321,10 +321,10 @@ namespace GASS
 	typedef SPTR<CameraTrackObjectRequest> CameraTrackObjectRequestPtr;
 
 
-	class BoundingInfoMessage : public SceneObjectRequestMessage
+	class BoundingInfoRequest : public SceneObjectRequestMessage
 	{
 	public:
-		BoundingInfoMessage(bool bb_visible, SenderID sender_id = -1, double delay= 0) :
+		BoundingInfoRequest(bool bb_visible, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay), m_BBVisible(bb_visible)
 		  {
 
@@ -334,23 +334,23 @@ namespace GASS
 		bool m_BBVisible;
 	};
 
-	typedef SPTR<BoundingInfoMessage> BoundingInfoMessagePtr;
+	typedef SPTR<BoundingInfoRequest> BoundingInfoRequestPtr;
 
 
 	/**
 	Request update of Euler angles from quaternion, by performance reasons this 
 	is usually not done by default in the location component
 	*/
-	class UpdateEulerAnglesMessage : public SceneObjectRequestMessage
+	class UpdateEulerAnglesRequest : public SceneObjectRequestMessage
 	{
 	public:
-		UpdateEulerAnglesMessage(SenderID sender_id = -1, double delay= 0) :
+		UpdateEulerAnglesRequest(SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay)
 		  {
 		  }
 	};
 
-	typedef SPTR<UpdateEulerAnglesMessage> UpdateEulerAnglesMessagePtr;
+	typedef SPTR<UpdateEulerAnglesRequest> UpdateEulerAnglesRequestPtr;
 
 
 	
@@ -358,10 +358,10 @@ namespace GASS
 	Message used to load mesh files, mesh components will listen to this message
 	*/
 
-	class MeshFileMessage : public SceneObjectRequestMessage
+	class MeshFileRequest : public SceneObjectRequestMessage
 	{
 	public:
-		MeshFileMessage(const std::string &mesh_file, SenderID sender_id = -1, double delay= 0) :
+		MeshFileRequest(const std::string &mesh_file, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_FileName(mesh_file)
 		  {
 
@@ -370,32 +370,32 @@ namespace GASS
 	private:
 		std::string m_FileName;
 	};
-	typedef SPTR<MeshFileMessage> MeshFileMessagePtr;
+	typedef SPTR<MeshFileRequest> MeshFileRequestPtr;
 
 	/**
 	Modify mesh texture coordinates,  mesh components will listen to this message
 	*/
 
-	class TextureCoordinateMessage : public SceneObjectRequestMessage
+	class TextureCoordinateRequest : public SceneObjectRequestMessage
 	{
 	public:
-		TextureCoordinateMessage(const Vec2 &st, SenderID sender_id = -1, double delay= 0) :
+		TextureCoordinateRequest(const Vec2 &st, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_TexCoords(st){}
 		  Vec2 GetTextureCoordinates()const {return m_TexCoords;}
 	private:
 		Vec2 m_TexCoords;
 	};
-	typedef SPTR<TextureCoordinateMessage> TextureCoordinateMessagePtr;
+	typedef SPTR<TextureCoordinateRequest> TextureCoordinateRequestPtr;
 
 	/**
 	Replace material for sub mesh.
 	@param material_name New material name
 	@param sub_mesh_id Select which sub mesh id to replace/mod. If sub_mesh_id is -1 all sub_meshes are effected
 	*/
-	class ReplaceMaterialMessage : public SceneObjectRequestMessage
+	class ReplaceMaterialRequest : public SceneObjectRequestMessage
 	{
 	public:
-		ReplaceMaterialMessage(const std::string &material_name, int sub_mesh_id = -1, SenderID sender_id = -1, double delay= 0) :
+		ReplaceMaterialRequest(const std::string &material_name, int sub_mesh_id = -1, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_MaterialName(material_name),m_SubMeshID(sub_mesh_id)
 		  {
 
@@ -406,61 +406,61 @@ namespace GASS
 		std::string m_MaterialName;
 		int m_SubMeshID;
 	};
-	typedef SPTR<ReplaceMaterialMessage> ReplaceMaterialMessagePtr;
+	typedef SPTR<ReplaceMaterialRequest> ReplaceMaterialRequestPtr;
 
 
 	/**
 		Reset material to original state. After sending MaterialMessage request this message can
 		be used to reset material back to it's start state
 	*/
-	class ResetMaterialMessage : public SceneObjectRequestMessage
+	class ResetMaterialRequest : public SceneObjectRequestMessage
 	{
 	public:
-		ResetMaterialMessage(SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay){}
+		ResetMaterialRequest(SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay){}
 	private:
 	};
-	typedef SPTR<ResetMaterialMessage> ResetMaterialMessagePtr;
+	typedef SPTR<ResetMaterialRequest> ResetMaterialRequestPtr;
 
 
 	/**
 		Message used to change billboard color
 	*/
 	
-	class BillboardColorMessage  : public SceneObjectRequestMessage
+	class BillboardColorRequest  : public SceneObjectRequestMessage
 	{
 	public:
-		BillboardColorMessage(const ColorRGBA &color, SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay) , m_Color(color){}
+		BillboardColorRequest(const ColorRGBA &color, SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay) , m_Color(color){}
 		ColorRGBA GetColor() const {return m_Color;}
 	private:
 		ColorRGBA m_Color;
 	};
-	typedef SPTR<BillboardColorMessage> BillboardColorMessagePtr;
+	typedef SPTR<BillboardColorRequest> BillboardColorRequestPtr;
 
 
 	/**
 	Message used to change texture of manual mesh object
 	param 
 	*/
-	class TextureMessage : public SceneObjectRequestMessage
+	class TextureRequest : public SceneObjectRequestMessage
 	{
 	public:
-		TextureMessage(const std::string &texture ,SenderID sender_id = -1, double delay= 0) :
+		TextureRequest(const std::string &texture ,SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Texture(texture){}
 		  std::string GetTexture()const {return m_Texture;}
 		  void SetTexture(const std::string &texture) {m_Texture=texture;}
 	private:
 		std::string m_Texture;
 	};
-	typedef SPTR<TextureMessage> TextureMessagePtr;
+	typedef SPTR<TextureRequest> TextureRequestPtr;
 
 
 	/**
 		Message used to modify bone transformation	
 	*/
-	class BoneTransformationMessage : public SceneObjectRequestMessage
+	class BoneTransformationRequest : public SceneObjectRequestMessage
 	{
 	public:
-		BoneTransformationMessage(const std::string &name, const Vec3  &pos, const Quaternion &rot,SenderID sender_id = -1, double delay= 0) :
+		BoneTransformationRequest(const std::string &name, const Vec3  &pos, const Quaternion &rot,SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Name(name),m_Position(pos), m_Rotation(rot){}
 		  std::string GetName() const {return m_Name;}
 		  Vec3 GetPosition() const {return m_Position;}
@@ -470,36 +470,36 @@ namespace GASS
 		Vec3 m_Position;
 		Quaternion m_Rotation;
 	};
-	typedef SPTR<BoneTransformationMessage> BoneTransformationMessagePtr;
+	typedef SPTR<BoneTransformationRequest> BoneTransformationRequestPtr;
 
 
 	/**
 		Message used to send new mesh data to manual mesh components
 	*/
-	class ManualMeshDataMessage : public SceneObjectRequestMessage
+	class ManualMeshDataRequest : public SceneObjectRequestMessage
 	{
 	public:
-		ManualMeshDataMessage(GraphicsMeshPtr data, SenderID sender_id = -1, double delay= 0) :
+		ManualMeshDataRequest(GraphicsMeshPtr data, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Data(data){}
 		  GraphicsMeshPtr GetData()const {return m_Data;}
 	private:
 		GraphicsMeshPtr m_Data;
 
 	};
-	typedef SPTR<ManualMeshDataMessage> ManualMeshDataMessagePtr;
+	typedef SPTR<ManualMeshDataRequest> ManualMeshDataRequestPtr;
 
 	
 	/**
 		Message used to clear manual mesh components
 	*/
-	class ClearManualMeshMessage : public SceneObjectRequestMessage
+	class ClearManualMeshRequest : public SceneObjectRequestMessage
 	{
 	public:
-		ClearManualMeshMessage (SenderID sender_id = -1, double delay= 0) :
+		ClearManualMeshRequest (SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay){}
 	private:
 	};
-	typedef SPTR<ClearManualMeshMessage> ClearManualMeshMessagePtr;
+	typedef SPTR<ClearManualMeshRequest> ClearManualMeshRequestPtr;
 
 	
 	/**
@@ -507,11 +507,11 @@ namespace GASS
 		Note that only a few geometry components support this.
 	*/
 
-	class GeometryScaleMessage : public SceneObjectRequestMessage
+	class GeometryScaleRequest : public SceneObjectRequestMessage
 	{
 	public:
 
-		GeometryScaleMessage(const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
+		GeometryScaleRequest(const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Scale(scale)
 		  {
 
@@ -520,13 +520,13 @@ namespace GASS
 	private:
 		Vec3 m_Scale;
 	};
-	typedef SPTR<GeometryScaleMessage> GeometryScaleMessagePtr;
+	typedef SPTR<GeometryScaleRequest> GeometryScaleRequestPtr;
 
 	/**
 	  Change particle system parameter
 	*/
 
-	class ParticleSystemParameterMessage : public SceneObjectRequestMessage
+	class ParticleSystemParameterRequest : public SceneObjectRequestMessage
 	{
 	public:
 		enum ParticleSystemParameterType
@@ -537,7 +537,7 @@ namespace GASS
 			PARTICLE_LIFE_TIME,
 		};
 	public:
-		ParticleSystemParameterMessage(ParticleSystemParameterType paramter, int emitter, float value, SenderID sender_id = -1, double delay= 0) :
+		ParticleSystemParameterRequest(ParticleSystemParameterType paramter, int emitter, float value, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Emitter(emitter), m_Value(value), m_Parameter(paramter){}
 		  float GetValue()const {return m_Value;}
 		  int GetEmitter()const {return m_Emitter;}
@@ -547,20 +547,20 @@ namespace GASS
 		int m_Emitter;
 		ParticleSystemParameterType m_Parameter;
 	};
-	typedef SPTR<ParticleSystemParameterMessage> ParticleSystemParameterMessagePtr;
+	typedef SPTR<ParticleSystemParameterRequest> ParticleSystemParameterRequestPtr;
 
-	class TextCaptionMessage : public SceneObjectRequestMessage
+	class TextCaptionRequest : public SceneObjectRequestMessage
 	{
 	public:
-		TextCaptionMessage(const std::string  &caption, SenderID sender_id = -1, double delay= 0) :
+		TextCaptionRequest(const std::string  &caption, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Caption(caption){}
 		  std::string GetCaption()const {return m_Caption;}
 	private:
 		std::string m_Caption;
 	};
-	typedef SPTR<TextCaptionMessage> TextCaptionMessagePtr;
+	typedef SPTR<TextCaptionRequest> TextCaptionRequestPtr;
 
-	class TerrainHeightModifyMessage : public SceneObjectRequestMessage
+	class TerrainHeightModifyRequest : public SceneObjectRequestMessage
 	{
 	public:
 		enum ModifyType
@@ -569,7 +569,7 @@ namespace GASS
 			MT_FLATTEN,
 			MT_SMOOTH
 		};
-		TerrainHeightModifyMessage(ModifyType type, const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  
+		TerrainHeightModifyRequest(ModifyType type, const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  
 			SceneObjectRequestMessage(sender_id , delay), 
 			m_Type(type),
 			m_Position(pos), 
@@ -594,7 +594,7 @@ namespace GASS
 		float m_Intensity;
 		float m_Noise;
 	};
-	typedef SPTR<TerrainHeightModifyMessage> TerrainHeightModifyMessagePtr;
+	typedef SPTR<TerrainHeightModifyRequest> TerrainHeightModifyRequestPtr;
 
 	
 	enum TerrainLayer
@@ -609,10 +609,10 @@ namespace GASS
 
 	
 
-	class TerrainPaintMessage : public SceneObjectRequestMessage
+	class TerrainPaintRequest : public SceneObjectRequestMessage
 	{
 	public:
-		TerrainPaintMessage(const Vec3 &pos, float brush_size, float brush_inner_size, TerrainLayer layer, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  
+		TerrainPaintRequest(const Vec3 &pos, float brush_size, float brush_inner_size, TerrainLayer layer, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  
 		  SceneObjectRequestMessage(sender_id , delay), 
 			m_Position(pos), 
 			m_BrushSize(brush_size),
@@ -637,13 +637,13 @@ namespace GASS
 		float m_Intensity;
 		float m_Noise;
 	};
-	typedef SPTR<TerrainPaintMessage> TerrainPaintMessagePtr;
+	typedef SPTR<TerrainPaintRequest> TerrainPaintRequestPtr;
 
-	class TerrainLayerMessage : public SceneObjectRequestMessage
+	class TerrainLayerRequest : public SceneObjectRequestMessage
 	{
 	public:
 
-		TerrainLayerMessage(TerrainLayer layer, const std::string &texture, float tiling, SenderID sender_id = -1, double delay= 0) :  
+		TerrainLayerRequest(TerrainLayer layer, const std::string &texture, float tiling, SenderID sender_id = -1, double delay= 0) :  
 		  SceneObjectRequestMessage(sender_id , delay), 
 			m_Layer(layer),
 			m_Texture(texture), 
@@ -659,12 +659,12 @@ namespace GASS
 		ResourceHandle m_Texture;
 		float m_Tiling;
 	};
-	typedef SPTR<TerrainLayerMessage> TerrainLayerMessagePtr;
+	typedef SPTR<TerrainLayerRequest> TerrainLayerRequestPtr;
 
-	class RoadMessage : public SceneObjectRequestMessage
+	class RoadRequest : public SceneObjectRequestMessage
 	{
 	public:
-		RoadMessage(const std::vector<Vec3> &road, float flatten_width, float paint_width, float paint_intensity, TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  
+		RoadRequest(const std::vector<Vec3> &road, float flatten_width, float paint_width, float paint_intensity, TerrainLayer layer, SenderID sender_id = -1, double delay= 0) :  
 		  SceneObjectRequestMessage(sender_id , delay), 
 			m_RoadWaypoints(road),
 			m_Layer(layer),
@@ -686,28 +686,28 @@ namespace GASS
 		float m_FlattenWidth;
 		float m_PaintIntensity;
 	};
-	typedef SPTR<RoadMessage> RoadMessagePtr;
+	typedef SPTR<RoadRequest> RoadRequestPtr;
 
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 	
-	class LocationLoadedMessage : public SceneObjectEventMessage
+	class LocationLoadedEvent : public SceneObjectEventMessage
 	{
 	public:
-		LocationLoadedMessage(LocationComponentPtr location,SenderID sender_id = -1, double delay= 0) :
+		LocationLoadedEvent(LocationComponentPtr location,SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage(sender_id , delay), m_Location(location){}
 		  LocationComponentPtr GetLocation() const {return m_Location;}
 	private:
 		LocationComponentPtr m_Location;
 	};
-	typedef SPTR<LocationLoadedMessage> LocationLoadedMessagePtr;
+	typedef SPTR<LocationLoadedEvent> LocationLoadedEventPtr;
 
 
 	/** Message sent by scene node when scene node is moved
 	*/
 
-	class TransformationNotifyMessage : public SceneObjectEventMessage
+	class TransformationChangedEvent : public SceneObjectEventMessage
 	{
 	public:
 		/**
@@ -716,7 +716,7 @@ namespace GASS
 			@param rot	Rotation in world coordiante space
 			@param scale Scale in world coordiante space
 		*/
-		TransformationNotifyMessage(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
+		TransformationChangedEvent(const Vec3  &pos, const Quaternion &rot, const Vec3  &scale,SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage(sender_id , delay), m_Position(pos), m_Rotation(rot), m_Scale(scale){}
 		  Vec3 GetPosition() const {return m_Position;}
 		  Quaternion  GetRotation() const {return m_Rotation;}
@@ -726,21 +726,21 @@ namespace GASS
 		Quaternion m_Rotation;
 		Vec3 m_Scale;
 	};
-	typedef SPTR<TransformationNotifyMessage> TransformationNotifyMessagePtr;
+	typedef SPTR<TransformationChangedEvent> TransformationChangedEventPtr;
 
 	/**
-		Messages sent by geomtery components when its geometry is changed. 
+		Messages sent by geometry components when its geometry is changed. 
 	*/
-	class GeometryChangedMessage : public SceneObjectEventMessage
+	class GeometryChangedEvent : public SceneObjectEventMessage
 	{
 	public:
-		GeometryChangedMessage(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
+		GeometryChangedEvent(GeometryComponentPtr geom, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage(sender_id , delay), m_Geometry(geom){}
 		  GeometryComponentPtr  GetGeometry() const {return m_Geometry;}
 	private:
 		GeometryComponentPtr m_Geometry;
 	};
-	typedef SPTR<GeometryChangedMessage> GeometryChangedMessagePtr;
+	typedef SPTR<GeometryChangedEvent> GeometryChangedEventPtr;
 
 
 	

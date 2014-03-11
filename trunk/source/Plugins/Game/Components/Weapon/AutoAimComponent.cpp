@@ -108,16 +108,16 @@ namespace GASS
 		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 		if(m_TurretObject->GetParentSceneObject())
-			m_TurretObject->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+			m_TurretObject->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBaseTransformation,TransformationChangedEvent,0));
 
-		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationNotifyMessage,0));
+		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationChangedEvent,0));
 		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretHingeUpdate,HingeJointNotifyMessage,0));
 	
 		m_TurretObject->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		m_TurretObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 
 		
-		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationNotifyMessage,0));
+		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationChangedEvent,0));
 		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelHingeUpdate,HingeJointNotifyMessage,0));
 		m_BarrelObject->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		m_BarrelObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
@@ -169,17 +169,17 @@ namespace GASS
 		}
 	}
 
-	void AutoAimComponent::OnTurretTransformation(TransformationNotifyMessagePtr message)
+	void AutoAimComponent::OnTurretTransformation(TransformationChangedEventPtr message)
 	{
 		m_TurretTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
 
-	void AutoAimComponent::OnBarrelTransformation(TransformationNotifyMessagePtr message)
+	void AutoAimComponent::OnBarrelTransformation(TransformationChangedEventPtr message)
 	{
 		m_BarrelTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
 
-	void AutoAimComponent::OnBaseTransformation(TransformationNotifyMessagePtr message)
+	void AutoAimComponent::OnBaseTransformation(TransformationChangedEventPtr message)
 	{
 		m_BaseTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 		

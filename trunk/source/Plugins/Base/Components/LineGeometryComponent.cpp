@@ -318,6 +318,6 @@ namespace GASS
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 }

@@ -64,7 +64,7 @@ namespace GASS
 					}
 				}
 				new_position = new_position - m_Offset;
-				gizmo->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_position,from_id)));
+				gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_position,from_id)));
 			}
 			else if(m_GroundSnapMove)
 			{
@@ -111,7 +111,7 @@ namespace GASS
 						new_position.y = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.y);
 						new_position.z = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.z);
 
-						selected->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_position,from_id)));
+						selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_position,from_id)));
 					}
 				}
 
@@ -308,7 +308,7 @@ namespace GASS
 			int from_id = (int) this;
 			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(value,from_id));
 			SendMessageRec(gizmo,col_msg);
-			VisibilityMessagePtr vis_msg(new VisibilityMessage(value,from_id));
+			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}

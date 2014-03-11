@@ -74,9 +74,9 @@ namespace GASS
 
 	void OSGCameraComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationNotifyMessage,10));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationChangedEvent,10));
 		
 		//Get osg camera from view
 		//OSGGraphicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
@@ -119,18 +119,18 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraComponent::OnParameter(CameraParameterMessagePtr message)
+	void OSGCameraComponent::OnParameter(CameraParameterRequestPtr message)
 	{
-		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		CameraParameterRequest::CameraParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case CameraParameterMessage::CAMERA_FOV:
+		case CameraParameterRequest::CAMERA_FOV:
 			{
 				float value = message->GetValue1();
 				SetFov(value);
 			}
 			break;
-		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 			{
 				m_OrthoWindowHeight = message->GetValue1();
 				UpdateProjection();
@@ -138,7 +138,7 @@ namespace GASS
 				//m_Camera->setOrthoWindowHeight(value);
 			}
 			break;
-		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+		case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
 			{
 				SetFarClipDistance(message->GetValue1());
 				SetNearClipDistance(message->GetValue2());
@@ -147,7 +147,7 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void OSGCameraComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		if(m_UpdateCameraFromLocation)
 			UpdateFromLocation();
@@ -180,7 +180,7 @@ namespace GASS
 		}
 	}
 
-	/*void OSGCameraComponent::OnRotationChanged(RotationMessagePtr message)
+	/*void OSGCameraComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		UpdateFromLocation();
 	}*/
@@ -289,7 +289,7 @@ namespace GASS
 			return false;
 	}
 
-	void OSGCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGCameraComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OSGCameraManipulatorPtr camera_man = GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
 		if(camera_man)

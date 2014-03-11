@@ -65,10 +65,10 @@ namespace GASS
 		static void CreateGASSRotationMatrix(const dReal *ode_mat, Mat4 &m);
 
 		//Message functions
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnGeometryScale(GeometryScaleMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+		void OnGeometryScale(GeometryScaleRequestPtr message);
 
 
 		//Get set section

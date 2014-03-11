@@ -65,7 +65,7 @@ namespace GASS
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void SetOffset(const Vec3 &value){m_Offset = value;}

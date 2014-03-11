@@ -47,8 +47,8 @@ namespace GASS
 		virtual void SceneManagerTick(double delta);
 		virtual void OnDelete();
 	private:
-		void OnPositionMessage(PositionMessagePtr message);
-		void OnRotationMessage(RotationMessagePtr message);
+		void OnPositionMessage(PositionRequestPtr message);
+		void OnRotationMessage(RotationRequestPtr message);
 		void OnVelocityRequest(PhysicsBodyVelocityRequestPtr message);
 		void StepPhysics(double time);
 		void SpawnEffect(const std::string &effect);

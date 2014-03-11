@@ -63,7 +63,7 @@ namespace GASS
 	void DensityMapComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnPaint,GrassPaintMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnRoadMessage,RoadMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DensityMapComponent::OnRoadMessage,RoadRequest,0));
 
 		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetSceneFolder().GetFullPath();
@@ -212,7 +212,7 @@ namespace GASS
 	}
 
 
-	void DensityMapComponent::OnRoadMessage(RoadMessagePtr message)
+	void DensityMapComponent::OnRoadMessage(RoadRequestPtr message)
 	{
 
 		IComponentContainer::ComponentVector components;

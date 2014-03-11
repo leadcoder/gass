@@ -73,9 +73,9 @@ namespace GASS
 
 	void TopCamControlComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::PositionChange, PositionRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::RotationChange,RotationRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterRequest,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnCameraChanged, CameraChangedEvent, 0 ));
 	
@@ -104,7 +104,7 @@ namespace GASS
 	{
 		if(message->GetSenderID() != (int) this)
 		{
-			PositionMessagePtr pos_mess = STATIC_PTR_CAST<PositionMessage>(message);
+			PositionRequestPtr pos_mess = STATIC_PTR_CAST<PositionRequest>(message);
 			m_Pos = pos_mess->GetPosition();
 		}
 	}
@@ -222,35 +222,35 @@ namespace GASS
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;
 
 		int from_id = (int)this;
-		GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,from_id)));
+		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
-		GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(m_Rot,from_id)));
+		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(m_Rot,from_id)));
 
-		CameraParameterMessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
+		CameraParameterRequestPtr cam_msg(new CameraParameterRequest(CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostRequest(cam_msg);
 		m_ZoomInput *= 0.9; 
 	}
 
 
-	void TopCamControlComponent::OnCameraParameter(CameraParameterMessagePtr message)
+	void TopCamControlComponent::OnCameraParameter(CameraParameterRequestPtr message)
 	{
-		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		CameraParameterRequest::CameraParameterType type = message->GetParameter();
 		int this_id = (int)this;
 		if(message->GetSenderID() != this_id)
 		{
 			switch(type)
 			{
-			case CameraParameterMessage::CAMERA_FOV:
+			case CameraParameterRequest::CAMERA_FOV:
 				{
 				}
 				break;
-			case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+			case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 				{
 					m_CurrentWindowSize = message->GetValue1();
 
 				}
 				break;
-			case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+			case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
 				{
 				}
 				break;

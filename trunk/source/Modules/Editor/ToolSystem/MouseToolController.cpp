@@ -373,7 +373,7 @@ namespace GASS
 			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
 			
-			scene_object->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+			scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 		return pointer;
 	}
@@ -425,7 +425,7 @@ namespace GASS
 		if(obj_under_cursor)
 		{
 			//SceneObjectPtr pointer = GetPointerObject();
-			//pointer->PostMessage(MessagePtr(new WorldPositionMessage(info.m_3DPos)));
+			//pointer->PostMessage(MessagePtr(new WorldPositionRequest(info.m_3DPos)));
 		}
 		return true;
 	}
@@ -560,8 +560,8 @@ namespace GASS
 
 				int from_id = (int) this;
 
-				so->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(pos,from_id)));
-				so->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot,from_id)));
+				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
+				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,from_id)));
 			}
 			else
 			{

@@ -132,7 +132,7 @@ namespace GASS
 		void ExportDetailMask(const FilePath &mask);
 		FilePath GetExportDetailMask() const {return FilePath("");}
 
-		void OnTerrainLayerMessage(TerrainLayerMessagePtr message);
+		void OnTerrainLayerMessage(TerrainLayerRequestPtr message);
 
 		RenderQueueBinder GetRenderQueue() const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);

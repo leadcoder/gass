@@ -60,18 +60,18 @@ namespace GASS
 
 	void OSGNodeProxyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGNodeProxyComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGNodeProxyComponent::OnGeomChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGNodeProxyComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGNodeProxyComponent::OnGeomChanged,GeometryChangedEvent,0));
 
 		UpdateDescriptionFromNode();
 	}
 
-	void OSGNodeProxyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGNodeProxyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		UpdateDescriptionFromNode();
 	}
 
-	void OSGNodeProxyComponent::OnGeomChanged(GeometryChangedMessagePtr message)
+	void OSGNodeProxyComponent::OnGeomChanged(GeometryChangedEventPtr message)
 	{
 		UpdateDescriptionFromNode();
 	}

@@ -180,13 +180,13 @@ namespace GASS
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
-					child_obj->PostRequest(VisibilityMessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+					child_obj->PostRequest(VisibilityRequestPtr(new VisibilityRequest(m_ShowWaypoints)));
 					child_obj->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
 
 					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
 					if(tangent)
 					{
-						tangent->PostRequest(VisibilityMessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+						tangent->PostRequest(VisibilityRequestPtr(new VisibilityRequest(m_ShowWaypoints)));
 						tangent->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
 					}
 				}
@@ -222,7 +222,7 @@ namespace GASS
 
 			if(sub_mesh_data->PositionVector.size() > 0)
 			{
-				GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+				GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 			}
 		}
 		//SetShowWaypoints(m_ShowWaypoints);

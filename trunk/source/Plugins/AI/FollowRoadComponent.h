@@ -58,7 +58,7 @@ namespace GASS
 		void GoToIntersection(RoadIntersectionComponentPtr inter);
 		Vec3 GetClosestPointOnPath(const Vec3& source_pos , Float look_ahead, const std::vector<Vec3> &wps);
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
-		void OnTransMessage(TransformationNotifyMessagePtr message);
+		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		ADD_PROPERTY(Float,WaypointRadius);
 		void SetInvertDirection(bool value);

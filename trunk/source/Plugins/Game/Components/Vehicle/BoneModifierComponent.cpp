@@ -60,7 +60,7 @@ namespace GASS
 
 	void BoneModifierComponent::OnDelete()
 	{
-		GetSceneObject()->UnregisterForMessage(UNREG_TMESS(BoneModifierComponent::OnTransformation,TransformationNotifyMessage));
+		GetSceneObject()->UnregisterForMessage(UNREG_TMESS(BoneModifierComponent::OnTransformation,TransformationChangedEvent));
 	}
 
 	void BoneModifierComponent::OnLODChange(LODMessagePtr message)
@@ -77,7 +77,7 @@ namespace GASS
 
 	
 
-	void BoneModifierComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void BoneModifierComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		//if(!m_Active)
 		//	return;
@@ -85,7 +85,7 @@ namespace GASS
 		//SceneObjectPtr so = ;
 		if(m_SourceObject.IsValid())
 		{
-				//GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName, message->GetPosition(),message->GetRotation())));
+				//GetSceneObject()->GetParentSceneObject()->PostMessage(MessagePtr(new BoneTransformationRequest(m_BoneName, message->GetPosition(),message->GetRotation())));
 				LocationComponentPtr location1 = m_SourceObject->GetFirstComponentByClass<ILocationComponent>();
 				LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				//LocationComponentPtr location2 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
@@ -108,8 +108,8 @@ namespace GASS
 				Mat4 mat_rel = trans1*trans2;
 				Vec3 offset(0,0,0);
 				offset = mat_rel*offset;
-				GetSceneObject()->PostRequest(BoneTransformationMessagePtr(new BoneTransformationMessage(m_BoneName,offset,Quaternion::IDENTITY)));
-				//objects.front()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName,pos1,Quaternion::IDENTITY)));
+				GetSceneObject()->PostRequest(BoneTransformationRequestPtr(new BoneTransformationRequest(m_BoneName,offset,Quaternion::IDENTITY)));
+				//objects.front()->PostMessage(MessagePtr(new BoneTransformationRequest(m_BoneName,pos1,Quaternion::IDENTITY)));
 				//std::cout << "send bone" << std::endl;
 			
 		}

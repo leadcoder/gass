@@ -41,8 +41,8 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
@@ -59,7 +59,7 @@ namespace GASS
 		SetMaxSpeed(message->GetSpeed());
 	}
 
-	void DetourCrowdAgentComponent::OnLoad(LocationLoadedMessagePtr message)
+	void DetourCrowdAgentComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		UpdateGeometry();
 		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("DETOUR_CROWD");
@@ -271,7 +271,7 @@ namespace GASS
 				int id = (int) this;
 				Vec3 current_pos(pos[0],pos[1],pos[2]);
 				
-				GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos,id)));
+				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos,id)));
 
 				Vec3 target_dir = current_pos - m_TargetPos;
 				Float dist = target_dir.Length();
@@ -359,7 +359,7 @@ namespace GASS
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
 					
-					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot,id)));
+					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
 				}
 				GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(c_velocity,Vec3(0,0,0),id)));
 			}
@@ -367,7 +367,7 @@ namespace GASS
 
 	}
 
-	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionMessagePtr message)
+	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionRequestPtr message)
 	{
 		int id = (int) this;
 		if(id != message->GetSenderID())
@@ -456,7 +456,7 @@ namespace GASS
 
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr (new ManualMeshDataMessage(m_MeshData)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr (new ManualMeshDataRequest(m_MeshData)));
 	}
 }
 

@@ -36,7 +36,7 @@ namespace GASS
 
 	void AITargetComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnTransChanged,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnTransChanged,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AITargetComponent::OnActivate,DoorMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
@@ -102,7 +102,7 @@ namespace GASS
 		return m_RandomVelocity.x + norm_rand*(m_RandomVelocity.y - m_RandomVelocity.x);
 	}
 
-	void AITargetComponent::OnTransChanged(TransformationNotifyMessagePtr message)
+	void AITargetComponent::OnTransChanged(TransformationChangedEventPtr message)
 	{
 		m_Position = message->GetPosition();
 	}

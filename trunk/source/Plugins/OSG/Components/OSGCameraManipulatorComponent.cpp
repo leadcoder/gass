@@ -79,8 +79,8 @@ namespace GASS
 			osg::Quat rotation;
 			osg::Quat so;
 			vm.decompose(translation,rotation, scale, so );
-			GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(OSGConvert::Get().ToGASS(translation))));
-			//GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(OSGConvert::Get().ToGASS(translation))));
+			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::Get().ToGASS(translation))));
+			//GetSceneObject()->PostMessage(MessagePtr(new WorldPositionRequest(OSGConvert::Get().ToGASS(translation))));
 		}
 	}
 }

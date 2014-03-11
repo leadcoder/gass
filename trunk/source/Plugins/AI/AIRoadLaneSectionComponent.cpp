@@ -67,7 +67,7 @@ namespace GASS
 		if(road_wps.size() >0)
 		{
 			Vec3 pos = Math::GetPointOnPath(m_Distance, road_wps, false, index);
-			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(pos)));
+			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionRequest(pos)));
 		}
 	}
 

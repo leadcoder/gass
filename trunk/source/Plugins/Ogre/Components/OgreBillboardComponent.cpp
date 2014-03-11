@@ -88,10 +88,10 @@ namespace GASS
 
 	void OgreBillboardComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnSetColorMessage,BillboardColorMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnVisibilityMessage,GeometryVisibilityMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
 	}
 
 	float OgreBillboardComponent::GetWidth() const 
@@ -119,7 +119,7 @@ namespace GASS
 			m_Billboard->setDimensions(m_Width,m_Height);
 	}
 
-	void OgreBillboardComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreBillboardComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Billboard", OF_VISIBLE)));
@@ -169,7 +169,7 @@ namespace GASS
 		bbsize *=  0.5f;
 		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 	
 	AABox OgreBillboardComponent::GetBoundingBox() const
@@ -195,14 +195,14 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnSetColorMessage(BillboardColorMessagePtr message)
+	void OgreBillboardComponent::OnSetColorMessage(BillboardColorRequestPtr message)
 	{
 		const ColorRGBA color = message->GetColor();
 		if(m_Billboard)
 			m_Billboard->setColour(Ogre::ColourValue(color.r,color.g,color.b,color.a));
 	}
 	
-	void OgreBillboardComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	void OgreBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
 	{
 		const Vec3 scale = message->GetScale();
 		if(m_Billboard)
@@ -223,7 +223,7 @@ namespace GASS
 	}
 
 
-	void OgreBillboardComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)
+	void OgreBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
 	{
 		if(m_BillboardSet)
 		{

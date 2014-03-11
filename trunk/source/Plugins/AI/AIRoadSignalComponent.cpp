@@ -70,7 +70,7 @@ namespace GASS
 				0,
 				true));*/
 
-			MessagePtr mat_mess(new ReplaceMaterialMessage("GreenLight"));
+			MessagePtr mat_mess(new ReplaceMaterialRequest("GreenLight"));
 			m_GreenLight->PostMessage(mat_mess);
 		}
 
@@ -82,7 +82,7 @@ namespace GASS
 				Vec3(yellow_color.x,yellow_color.y,yellow_color.z),
 				0,
 				true));*/
-			MessagePtr mat_mess(new ReplaceMaterialMessage("YellowLight"));
+			MessagePtr mat_mess(new ReplaceMaterialRequest("YellowLight"));
 			m_YellowLight->PostMessage(mat_mess);
 		}
 
@@ -94,7 +94,7 @@ namespace GASS
 				Vec3(red_color.x,red_color.y,red_color.z),
 				0,
 				true));*/
-			MessagePtr mat_mess(new ReplaceMaterialMessage("RedLight"));
+			MessagePtr mat_mess(new ReplaceMaterialRequest("RedLight"));
 			m_RedLight->PostMessage(mat_mess);
 		}
 	}

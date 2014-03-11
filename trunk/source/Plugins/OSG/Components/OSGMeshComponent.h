@@ -77,11 +77,11 @@ namespace GASS
 		void SetReceiveShadow(bool value);
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
 		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnVisibilityMessage(VisibilityMessagePtr message);
-		void OnMeshFileNameMessage(MeshFileMessagePtr message);
+		void OnVisibilityMessage(VisibilityRequestPtr message);
+		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const ResourceHandle &filename);
 		void LoadMesh(const std::string &file_name);

@@ -74,10 +74,10 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedEvent ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleRequest ,0));
 		m_CollisionSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODECollisionSceneManager>();
 	}
 
@@ -118,7 +118,7 @@ namespace GASS
 			
 	}
 	
-	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		CreateGeometry();
 	}
@@ -129,7 +129,7 @@ namespace GASS
 		Reset();
 	}
 
-	void ODECollisionGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void ODECollisionGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		if(m_Type == CGT_TERRAIN)
 			return;
@@ -348,7 +348,7 @@ namespace GASS
 		return geom_id; 
 	}
 
-	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleMessagePtr message)
+	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
 	{
 		//update scale
 		SetScale(message->GetScale());

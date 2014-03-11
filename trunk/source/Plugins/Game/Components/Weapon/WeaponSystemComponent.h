@@ -53,7 +53,7 @@ namespace GASS
 		void OnReadyToFire(ReadyToFireMessagePtr message);
 		void OnLODChange(LODMessagePtr message);
 
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void SpawnProjectile(const Vec3 &projectile_start_pos,const Quaternion &projectile_rot);
 

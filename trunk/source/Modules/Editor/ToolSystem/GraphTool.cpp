@@ -96,7 +96,7 @@ namespace GASS
 					GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
 
 					int from_id = (int) this;
-					current_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(info.m_3DPos,from_id)));
+					current_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 					GraphNodeComponentPtr current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 					GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
 
@@ -135,7 +135,7 @@ namespace GASS
 						GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
 
 						int from_id = (int) this;
-						current_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(info.m_3DPos,from_id)));
+						current_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 						current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
 						//auto insert?

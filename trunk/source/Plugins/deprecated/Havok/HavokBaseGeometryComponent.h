@@ -57,8 +57,8 @@ namespace GASS
 		//Message functions
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		
 		//virtual functions that derived geometry have to implement
 		virtual void SetSizeFromMesh(bool value) {};
@@ -89,7 +89,7 @@ namespace GASS
 		//debug fucntions
 		virtual void UpdateDebug() {};
 		virtual void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		virtual void OnDebugTransformation(TransformationNotifyMessagePtr message);
+		virtual void OnDebugTransformation(TransformationChangedEventPtr message);
 		virtual void SetDebug(bool value);
 		virtual bool GetDebug() const;
 		virtual SceneObjectPtr GetDebugObject();

@@ -70,9 +70,9 @@ namespace GASS
 		Float GetRegionSize() const {return m_RegionSize;}
 		void SetGlobalScale(const Vec3 &scale) {m_GlobalScale = scale;}
 		Vec3 GetGlobalScale() const {return m_GlobalScale;}
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
-		void OnMeshFileNameMessage(MeshFileMessagePtr message);
+		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void setupInstancedMaterialToEntity(Ogre::Entity*ent);
 		Ogre::String buildInstancedMaterial(const Ogre::String &originalMaterialName);
 	

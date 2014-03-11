@@ -43,10 +43,10 @@ namespace GASS
 		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		bool GetCastShadow() const {return m_CastShadow;}
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnDataMessage(ManualMeshDataMessagePtr message);
-		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnMaterialMessage(ReplaceMaterialMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnDataMessage(ManualMeshDataRequestPtr message);
+		void OnClearMessage(ClearManualMeshRequestPtr message);
+		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();

@@ -58,8 +58,8 @@ namespace GASS
 		void SetVelocityTargetID(const SceneObjectID &id);
 		SceneObjectID GetVelocityTargetID() const;
 		void OnSpeedMessage(DesiredSpeedMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnLoad(LocationLoadedEventPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void RecPost(MessagePtr message,SceneObjectPtr obj);
 		bool m_Initialized;
 		double m_CurrentTime;

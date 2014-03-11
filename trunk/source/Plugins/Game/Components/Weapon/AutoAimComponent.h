@@ -72,9 +72,9 @@ namespace GASS
 
 		void OnTurretHingeUpdate(HingeJointNotifyMessagePtr message);	
 		void OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message);
-		void OnTurretTransformation(TransformationNotifyMessagePtr message);
-		void OnBarrelTransformation(TransformationNotifyMessagePtr message);
-		void OnBaseTransformation(TransformationNotifyMessagePtr message);
+		void OnTurretTransformation(TransformationChangedEventPtr message);
+		void OnBarrelTransformation(TransformationChangedEventPtr message);
+		void OnBaseTransformation(TransformationChangedEventPtr message);
 		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnAimAtPosition( AimAtPositionMessagePtr message);
 		void OnActivateAutoAim(ActivateAutoAimMessagePtr message);

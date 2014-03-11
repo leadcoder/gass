@@ -45,7 +45,7 @@ namespace GASS
 		PhysXConvexMesh GetConvexMesh() const {return m_ConvexMesh;}
 	protected:
 		ADD_PROPERTY(bool,SimulationCollision);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 	protected:
 		physx::PxShape *m_Shape;
 		PhysXConvexMesh m_ConvexMesh;

@@ -23,7 +23,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	protected:
-		void OnTransChanged(TransformationNotifyMessagePtr);
+		void OnTransChanged(TransformationChangedEventPtr);
 		Float GetDetectionDistance(PlatformType signature, Float radar_cross_section);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 		bool IsNewTarget(SignatureComponentWeakPtr sig) const;

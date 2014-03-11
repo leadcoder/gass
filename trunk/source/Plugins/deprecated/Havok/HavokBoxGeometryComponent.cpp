@@ -143,12 +143,12 @@ namespace GASS
 		}
 
 		SceneObjectPtr scene_object = GetDebugObject();
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 		scene_object->PostMessage(mesh_message);
 
 		//Vec3 pos  = m_Offset + offset;
 		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset,-1,0.3)));
+		scene_object->PostMessage(MessagePtr(new PositionRequest(offset,-1,0.3)));
 	}
 
 	void HavokBoxGeometryComponent::UpdateDebug()

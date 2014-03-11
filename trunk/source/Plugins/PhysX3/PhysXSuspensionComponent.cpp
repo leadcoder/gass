@@ -214,7 +214,7 @@ namespace GASS
 		UpdateMotor();
 	}
 
-	void PhysXSuspensionComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXSuspensionComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -223,7 +223,7 @@ namespace GASS
 			SetPosition(pos);
 		}
 	}
-	void PhysXSuspensionComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void PhysXSuspensionComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class

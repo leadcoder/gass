@@ -102,14 +102,14 @@ namespace GASS
 					GraphicsMeshPtr mesh_data(new GraphicsMesh());
 					mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(0,1,0,1), "WhiteTransparentNoLighting",false));
 					
-					debug->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+					debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 				}
 			}
 			else
 			{
 				if(debug)
 				{
-					debug->PostRequest(ClearManualMeshMessagePtr(new ClearManualMeshMessage()));
+					debug->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
 				}
 			}
 		}
@@ -145,7 +145,7 @@ namespace GASS
 				SceneObjectPtr debug = GetSceneObject()->GetChildByID("EDIT_EDGES");
 				if(debug)
 				{
-					debug->PostRequest(ClearManualMeshMessagePtr(new ClearManualMeshMessage()));
+					debug->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
 				}
 				SetShowGraph(m_ShowGraph);
 			}
@@ -160,7 +160,7 @@ namespace GASS
 		{
 			SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
 			GASSAssert(node_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
-			node_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(m_Network.m_Nodes[i]->Position)));
+			node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(m_Network.m_Nodes[i]->Position)));
 			mapping[m_Network.m_Nodes[i]] = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 		}
 
@@ -182,7 +182,7 @@ namespace GASS
 					{
 						SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
 						GASSAssert(node_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
-						node_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(m_Network.m_Edges[i]->Waypoints[j])));
+						node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(m_Network.m_Edges[i]->Waypoints[j])));
 						GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						edge_comp->SetEndNode(node_comp);
 						node_comp->AddEdge(edge_comp);
@@ -259,7 +259,7 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",false));
 			
-			debug->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}
 
@@ -389,7 +389,7 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteTransparentNoLighting",true));
 			
-			debug->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}
 

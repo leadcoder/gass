@@ -55,8 +55,8 @@ namespace GASS
 		void UpdateAgentParams();
 		void OnGoToPosition(GotoPositionMessagePtr message);
 		void UpdateGeometry();
-		void OnWorldPosition(WorldPositionMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
+		void OnWorldPosition(WorldPositionRequestPtr message);
+		void OnLoad(LocationLoadedEventPtr message);
 		
 		void OnChangeName(GASS::MessagePtr message);
 		

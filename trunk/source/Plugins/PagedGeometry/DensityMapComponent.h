@@ -63,7 +63,7 @@ namespace GASS
 		void SetImport(const FilePath &dm);
 		FilePath GetImport() const {return FilePath("");}
 		void OnPaint(GrassPaintMessagePtr message);
-		void OnRoadMessage(RoadMessagePtr message);
+		void OnRoadMessage(RoadRequestPtr message);
 		std::string GetDensityMap() const
 		{
 			return m_DensityMapFilename;

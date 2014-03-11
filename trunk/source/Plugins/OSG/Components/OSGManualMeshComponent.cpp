@@ -67,10 +67,10 @@ namespace GASS
 	void OSGManualMeshComponent::OnInitialize()
 	{
 		m_GFXSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 
 		m_GeoNode = new osg::Geode();
@@ -131,7 +131,7 @@ namespace GASS
 		}
 	}
 
-	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if(!lc)
@@ -141,13 +141,13 @@ namespace GASS
 
 	}
 
-	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
+	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
 	{
 		GraphicsMeshPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
-	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshMessagePtr message)
+	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
 	{
 		Clear();
 	}
@@ -285,7 +285,7 @@ namespace GASS
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
 		}
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	AABox OSGManualMeshComponent::GetBoundingBox() const
@@ -362,7 +362,7 @@ namespace GASS
 	}
 
 
-	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialMessagePtr message)
+	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
 	{
 
 		std::string mat_name = message->GetMaterialName();

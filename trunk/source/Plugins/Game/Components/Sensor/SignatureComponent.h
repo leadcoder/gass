@@ -29,7 +29,7 @@ namespace GASS
 		void SetPlatformType(PlatformType pt) {m_PlatformType = pt;}
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
-		void OnTransChanged(TransformationNotifyMessagePtr);
+		void OnTransChanged(TransformationChangedEventPtr);
 		void OnVelocity(VelocityNotifyMessagePtr message);
 	private:
 		void Update();

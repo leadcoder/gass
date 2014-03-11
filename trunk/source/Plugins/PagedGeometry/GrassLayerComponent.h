@@ -75,7 +75,7 @@ namespace GASS
 		void OnLoad(GrassLoaderComponentLoadedPtr message);
 		void OnDelete();
 		void OnPaint(GrassPaintMessagePtr message);
-		void OnRoadMessage(RoadMessagePtr message);
+		void OnRoadMessage(RoadRequestPtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 		std::string GetDensityMap() const;
 		void SetDensityMap(const std::string &dm);

@@ -18,12 +18,12 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnSelectedTransformation(TransformationNotifyMessagePtr message);
-		void OnWorldPosition(WorldPositionMessagePtr message);
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnCameraMoved(TransformationNotifyMessagePtr message);
+		void OnSelectedTransformation(TransformationChangedEventPtr message);
+		void OnWorldPosition(WorldPositionRequestPtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnCameraParameter(CameraParameterMessagePtr message);
+		void OnCameraParameter(CameraParameterRequestPtr message);
 
 		float GetMaxDistance() const{return m_MaxDistance;}
 		void SetMaxDistance(float value){m_MaxDistance =value;}

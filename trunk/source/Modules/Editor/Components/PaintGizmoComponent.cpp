@@ -45,7 +45,7 @@ namespace GASS
 
 	void PaintGizmoComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PaintGizmoComponent::OnTransformation,TransformationChangedEvent,0));
 		BuildMesh();
 	}
 
@@ -54,7 +54,7 @@ namespace GASS
 
 	}
 
-	void PaintGizmoComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void PaintGizmoComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		//rebulid if moved
 		if(m_Pos != message->GetPosition())
@@ -115,6 +115,6 @@ namespace GASS
 		sub_mesh_data->ColorVector.push_back(m_Color);
 		
 		
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(m_MeshData)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_MeshData)));
 	}
 }

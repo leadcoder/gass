@@ -68,7 +68,7 @@ namespace GASS
 	void ODETerrainGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
@@ -81,7 +81,7 @@ namespace GASS
 		Reset();
 	}
 
-	void ODETerrainGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void ODETerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		Reset();
 		m_GeomID = CreateTerrain();

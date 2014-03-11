@@ -37,8 +37,8 @@ namespace GASS
 		virtual void OnInitialize();
 		ADD_PROPERTY(LandCoverTypeBinder,LandCoverType)
 	protected:
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnLoad(LocationLoadedEventPtr message);
 		bool m_Initialized;
 	};
 	typedef SPTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;

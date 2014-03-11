@@ -166,7 +166,7 @@ namespace GASS
 	void OgreTerrainPageComponent::OnInitialize()
 	{
 		//LogManager::getSingleton().stream() << "Start "<<  " OgreTerrainPageComponent::OnInitialize";
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerRequest,0));
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetOgreSceneManager();
@@ -353,7 +353,7 @@ namespace GASS
 		m_HeightMapFile = res;
 	}
 
-	void OgreTerrainPageComponent::OnTerrainLayerMessage(TerrainLayerMessagePtr message)
+	void OgreTerrainPageComponent::OnTerrainLayerMessage(TerrainLayerRequestPtr message)
 	{
 		switch(	message->GetLayer())
 		{
@@ -417,7 +417,7 @@ namespace GASS
 				Ogre::Rect drect(0, 0, m_Terrain->getSize(), m_Terrain->getSize());
 				m_Terrain->dirtyRect(drect);
 				m_Terrain->update(true);
-				GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+				GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			}
 		}
 	}
@@ -980,7 +980,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 		{
-			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 

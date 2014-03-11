@@ -64,15 +64,15 @@ namespace GASS
 	void HavokBodyComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnLoad,LoadComponentsMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnRotationChanged,RotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldRotationChanged,WorldRotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnPositionChanged,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnRotationChanged,RotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBodyComponent::OnMassMessage,PhysicsMassMessage,0));
 	}
 
-	void HavokBodyComponent::OnPositionChanged(PositionMessagePtr message)
+	void HavokBodyComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -83,7 +83,7 @@ namespace GASS
 	}
 
 
-	void HavokBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void HavokBodyComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -93,7 +93,7 @@ namespace GASS
 		}
 	}
 
-	void HavokBodyComponent::OnWorldRotationChanged(WorldRotationMessagePtr message)
+	void HavokBodyComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -103,7 +103,7 @@ namespace GASS
 		}
 	}
 
-	void HavokBodyComponent::OnRotationChanged(RotationMessagePtr message)
+	void HavokBodyComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -275,10 +275,10 @@ namespace GASS
 	{
 		int from_id =(int) this;
 		Vec3 pos = GetPosition();
-		MessagePtr pos_msg(new WorldPositionMessage(pos,from_id));
+		MessagePtr pos_msg(new WorldPositionRequest(pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
+		MessagePtr rot_msg(new WorldRotationRequest(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
 		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
@@ -294,10 +294,10 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 		Vec3 pos = GetPosition();
-		MessagePtr pos_msg(new WorldPositionMessage(pos,from_id));
+		MessagePtr pos_msg(new WorldPositionRequest(pos,from_id));
 		GetSceneObject()->PostMessage(pos_msg);
 
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
+		MessagePtr rot_msg(new WorldRotationRequest(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 
 		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));

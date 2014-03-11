@@ -53,7 +53,7 @@ namespace GASS
 		int GetLightId()const {return m_LightId;}
 		
 	protected:
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		LightTypeBinder m_LightType;
 
 		Vec3 m_Diffuse;

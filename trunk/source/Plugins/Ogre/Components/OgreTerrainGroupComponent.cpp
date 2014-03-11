@@ -111,9 +111,9 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnRoadMessage,RoadMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainHeightModify,TerrainHeightModifyRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnTerrainLayerPaint,TerrainPaintRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainGroupComponent::OnRoadMessage,RoadRequest,0));
 
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -475,7 +475,7 @@ namespace GASS
 		return data;
 	}
 
-	void OgreTerrainGroupComponent::OnTerrainLayerPaint(TerrainPaintMessagePtr message)
+	void OgreTerrainGroupComponent::OnTerrainLayerPaint(TerrainPaintRequestPtr message)
 	{
 		// figure out which terrains this affects
 		Ogre::TerrainGroup::TerrainList terrainList;
@@ -495,7 +495,7 @@ namespace GASS
 
 	}
 
-	void OgreTerrainGroupComponent::OnTerrainHeightModify(TerrainHeightModifyMessagePtr message)
+	void OgreTerrainGroupComponent::OnTerrainHeightModify(TerrainHeightModifyRequestPtr message)
 	{
 
 		// figure out which terrains this affects
@@ -509,17 +509,17 @@ namespace GASS
 		Ogre::Sphere sphere(position, brush_size);
 		m_TerrainGroup->sphereIntersects(sphere, &terrainList);
 
-		if(message->GetModifyType() == TerrainHeightModifyMessage::MT_DEFORM)
+		if(message->GetModifyType() == TerrainHeightModifyRequest::MT_DEFORM)
 		{
 			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
 				DeformTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), message->GetNoise());
 		}
-		else if(message->GetModifyType() == TerrainHeightModifyMessage::MT_FLATTEN)
+		else if(message->GetModifyType() == TerrainHeightModifyRequest::MT_FLATTEN)
 		{
 			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
 				FlattenTerrain(*ti, position,intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize());
 		}
-		else if(message->GetModifyType() == TerrainHeightModifyMessage::MT_SMOOTH)
+		else if(message->GetModifyType() == TerrainHeightModifyRequest::MT_SMOOTH)
 		{
 			Ogre::Real avg_height = 0;
 			for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
@@ -531,7 +531,7 @@ namespace GASS
 		m_TerrainGroup->update();
 	}
 
-	void OgreTerrainGroupComponent::OnRoadMessage(RoadMessagePtr message)
+	void OgreTerrainGroupComponent::OnRoadMessage(RoadRequestPtr message)
 	{
 		// figure out which terrains this affects
 		Ogre::Real brush_size = (std::max)(message->GetFlattenWidth(),message->GetPaintWidth());

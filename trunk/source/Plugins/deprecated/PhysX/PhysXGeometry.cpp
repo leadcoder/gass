@@ -75,11 +75,11 @@ namespace GASS
 	void PhysXGeometry::OnCreate()
 	{
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_LOAD_PHYSICS_COMPONENTS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnLoad, LoadPhysicsComponentsMessage),0);
-		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnTransformationChanged, TransformationNotifyMessage));
+		GetSceneObject()->RegisterForMessage(OBJECT_NM_TRANSFORMATION_CHANGED,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnTransformationChanged, TransformationChangedEvent));
 		GetSceneObject()->RegisterForMessage(OBJECT_RM_COLLISION_SETTINGS,  TYPED_MESSAGE_FUNC(PhysXGeometry::OnCollisionSettings,CollisionSettingsMessage ));
 	}
 
-	void PhysXGeometry::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void PhysXGeometry::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);

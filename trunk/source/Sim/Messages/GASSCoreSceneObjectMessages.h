@@ -101,10 +101,10 @@ namespace GASS
 		Message that can be used to show debug information about a object
 		TODO: move this object to other place?
 	*/
-	class DebugComponentSettingsMessage : public SceneObjectRequestMessage
+	class DebugComponentSettingsRequest : public SceneObjectRequestMessage
 	{
 	public:
-		DebugComponentSettingsMessage(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
+		DebugComponentSettingsRequest(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay),
 			  m_ShowObjectName(show_object_name)
 		  {
@@ -113,7 +113,7 @@ namespace GASS
 	private:
 		bool m_ShowObjectName;
 	};
-	typedef SPTR<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
+	typedef SPTR<DebugComponentSettingsRequest> DebugComponentSettingsRequestPtr;
 
 
 	/**
@@ -122,10 +122,10 @@ namespace GASS
 	in the graphics engine.
 	*/
 
-	class ParentChangedMessage : public SceneObjectEventMessage
+	class ParentChangedEvent : public SceneObjectEventMessage
 	{
 	public:
-		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
+		ParentChangedEvent(SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage( sender_id , delay)
 		  {
 
@@ -133,6 +133,6 @@ namespace GASS
 	private:
 
 	};
-	typedef SPTR<ParentChangedMessage> ParentChangedMessagePtr;
+	typedef SPTR<ParentChangedEvent> ParentChangedEventPtr;
 	
 }

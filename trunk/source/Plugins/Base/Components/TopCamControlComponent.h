@@ -55,7 +55,7 @@ namespace GASS
 	protected:
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(ControllSettingsMessagePtr message);
-		void OnCameraParameter(CameraParameterMessagePtr message);
+		void OnCameraParameter(CameraParameterRequestPtr message);
 		float GetMaxWindowSize() const {return m_MaxWindowSize;}
 		void SetMaxWindowSize(float value) {m_MaxWindowSize = value;}
 		float GetMinWindowSize() const {return m_MinWindowSize;}

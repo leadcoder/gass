@@ -79,7 +79,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -102,7 +102,7 @@ namespace GASS
 		m_DesiredSpeed = message->GetSpeed();
 	}
 
-	void TankAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
+	void TankAutopilotComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_LastPos = m_CurrentPos;
 		m_CurrentPos = message->GetPosition();

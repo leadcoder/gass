@@ -31,14 +31,14 @@ namespace GASS
 
 	void AIMovingPlatformComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnLocationLoaded,LocationLoadedMessage,1)); //load after agent
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnLocationLoaded,LocationLoadedEvent,1)); //load after agent
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIMovingPlatformComponent::OnSpeedMessage,DesiredSpeedMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
 	}
 
 
-	void AIMovingPlatformComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void AIMovingPlatformComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		m_Initialized = true;
 		SetWaypointList(m_WaypointListName);
@@ -86,11 +86,11 @@ namespace GASS
 		{
 			Mat4 transformation = m_SplineAnimation.GetTransformation(m_TotDist,Vec3(0,1,0));
 			new_pos = transformation.GetTranslation();
-			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(new_pos)));
+			GetSceneObject()->PostMessage(MessagePtr(new WorldPositionRequest(new_pos)));
 			Quaternion rot;
 			transformation.SetTranslation(0,0,0);
 			rot.FromRotationMatrix(transformation);
-			GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+			GetSceneObject()->PostMessage(MessagePtr(new WorldRotationRequest(rot)));
 		}
 	}
 

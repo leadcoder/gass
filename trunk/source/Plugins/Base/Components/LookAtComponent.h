@@ -44,7 +44,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta);
 	protected:
-		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
 		ADD_PROPERTY(SceneObjectRef,LookAt);
 	private:
 		Vec3 m_LookAtPos;

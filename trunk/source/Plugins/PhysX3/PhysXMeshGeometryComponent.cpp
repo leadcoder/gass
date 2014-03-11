@@ -63,8 +63,8 @@ namespace GASS
 
 	void PhysXMeshGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnTransformationChanged,TransformationNotifyMessage, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXMeshGeometryComponent::OnTransformationChanged,TransformationChangedEvent, 0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 	}
 
@@ -73,7 +73,7 @@ namespace GASS
 
 	}
 
-	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(geom,"PhysXMeshGeometryComponent::OnGeometryChanged");
@@ -117,7 +117,7 @@ namespace GASS
 	}
 
 
-	void PhysXMeshGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void PhysXMeshGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);

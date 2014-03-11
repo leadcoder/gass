@@ -97,10 +97,10 @@ namespace GASS
 
 		void BodyMoved();
 		void OnLoad(LoadComponentsMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
-		void OnWorldRotationChanged(WorldRotationMessagePtr message);
+		void OnPositionChanged(PositionRequestPtr message);
+		void OnWorldPositionChanged(WorldPositionRequestPtr message);
+		void OnRotationChanged(RotationRequestPtr message);
+		void OnWorldRotationChanged(WorldRotationRequestPtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsMassMessagePtr message);
 		int GetCollisionGroup();

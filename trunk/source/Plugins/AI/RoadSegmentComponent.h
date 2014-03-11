@@ -61,7 +61,7 @@ namespace GASS
 	private:
 		void UpdateLanes();
 		std::vector<Vec3> GenerateLane(std::vector<Vec3> wps, bool upstream);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;

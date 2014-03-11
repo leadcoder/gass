@@ -474,7 +474,7 @@ namespace GASS
 	{
 
 		float emission = GetNormRPM()*30;
-		GetSceneObject()->PostRequest(ParticleSystemParameterMessagePtr(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission)));
+		GetSceneObject()->PostRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
 	}
 
 	void VehicleEngineComponent::UpdateInstruments(double delta)

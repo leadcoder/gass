@@ -73,10 +73,10 @@ namespace GASS
 
 	void PhysXCharacterComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationMessage,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPositionChanged,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldPositionChanged,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationRequest,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
@@ -89,7 +89,7 @@ namespace GASS
 
 	}
 
-	void PhysXCharacterComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXCharacterComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -99,7 +99,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXCharacterComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void PhysXCharacterComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -109,7 +109,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXCharacterComponent::OnRotationChanged(RotationMessagePtr message)
+	void PhysXCharacterComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -119,7 +119,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXCharacterComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void PhysXCharacterComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
@@ -189,13 +189,13 @@ namespace GASS
 
 		const Vec3 current_pos  = GetPosition();
 		
-		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos ,from_id)));
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
 
 		//const Quaternion rot = GetRotation();
 		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
 		
 		Quaternion new_rot(Vec3(m_Yaw,0,0));
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot,from_id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
 		
 		Mat4 rot_mat;
 		rot_mat.Identity();

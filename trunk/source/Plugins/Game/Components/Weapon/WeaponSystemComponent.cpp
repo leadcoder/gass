@@ -95,7 +95,7 @@ namespace GASS
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
 		BaseSceneComponent::OnInitialize();
 	
@@ -137,7 +137,7 @@ namespace GASS
 			pos =conrners[i];
 			sub_mesh_data->PositionVector.push_back(pos);
 		}
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
+		MessagePtr mesh_message(new ManualMeshDataRequest(mesh_data));
 		GetSceneObject()->PostMessage(mesh_message);*/
 	}
 
@@ -210,7 +210,7 @@ namespace GASS
 
 
 
-	void WeaponSystemComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void WeaponSystemComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_ProjectileStartPos = message->GetPosition();
 		m_ProjectileStartRot = message->GetRotation();
@@ -259,9 +259,9 @@ namespace GASS
 		}
 
 
-		ParticleSystemParameterMessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,m_RoundOfFire));
+		ParticleSystemParameterRequestPtr particle_msg(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,m_RoundOfFire));
 		GetSceneObject()->PostRequest(particle_msg);
-		ParticleSystemParameterMessagePtr particle_msg2(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,0));
+		ParticleSystemParameterRequestPtr particle_msg2(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,0));
 		particle_msg2->SetDeliverDelay(0.5);
 		GetSceneObject()->PostRequest(particle_msg2);
 

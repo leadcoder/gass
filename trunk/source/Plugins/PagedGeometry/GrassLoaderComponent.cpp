@@ -90,7 +90,7 @@ namespace GASS
 	void GrassLoaderComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnPaint,GrassPaintMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLoaderComponent::OnRoadMessage,RoadRequest,0));
 	
 		m_SceneMan = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOgreSceneManagerProxy>()->GetOgreSceneManager();
 		Ogre::Camera* ocam = NULL;
@@ -377,7 +377,7 @@ namespace GASS
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
-	void GrassLoaderComponent::OnRoadMessage(RoadMessagePtr message)
+	void GrassLoaderComponent::OnRoadMessage(RoadRequestPtr message)
 	{
 		Ogre::Real brush_size = message->GetPaintWidth();
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();

@@ -74,7 +74,7 @@ namespace GASS
 
 	void OgreInstancedMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLocationLoaded,LocationLoadedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLocationLoaded,LocationLoadedEvent,0));
 	}
 
 	void OgreInstancedMeshComponent::LoadXML(TiXmlElement *elem)
@@ -129,7 +129,7 @@ namespace GASS
 		}
 	}
 
-	void OgreInstancedMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreInstancedMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		m_OgreSceneManager = ogsm;
@@ -244,7 +244,7 @@ namespace GASS
 			iter++;*/
 		}
 		//m_StaticGeometry->build();
-		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	void OgreInstancedMeshComponent::setupInstancedMaterialToEntity(Entity*ent)

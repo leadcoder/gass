@@ -88,14 +88,14 @@ namespace GASS
 			{
 				SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate("RoadWP",GetSceneObject());
 
-				node_obj->RegisterForMessage(REG_TMESS(RNRoadEdgeComponent::OnTransformation,TransformationNotifyMessage,0));
+				node_obj->RegisterForMessage(REG_TMESS(RNRoadEdgeComponent::OnTransformation,TransformationChangedEvent,0));
 				GASSAssert(node_obj,"Failed to create scene object in void RNRoadEdgeComponent::SetWaypoints");
-				node_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(wps[i])));
+				node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(wps[i])));
 			}
 		}
 	}
 
-	void RNRoadEdgeComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void RNRoadEdgeComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();

@@ -307,7 +307,7 @@ namespace GASS
 		}
 	}
 
-	void GrassLayerComponent::OnRoadMessage(RoadMessagePtr message)
+	void GrassLayerComponent::OnRoadMessage(RoadRequestPtr message)
 	{
 		Ogre::Real brush_size = message->GetPaintWidth();
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();

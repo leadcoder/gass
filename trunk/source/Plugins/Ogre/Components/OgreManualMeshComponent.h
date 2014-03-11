@@ -57,13 +57,13 @@ namespace GASS
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
 
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnDataMessage(ManualMeshDataMessagePtr message);
-		void OnClearMessage(ClearManualMeshMessagePtr message);
-		void OnReplaceMaterial(ReplaceMaterialMessagePtr message);
-		void OnTextureMessage(TextureMessagePtr message);
-		void OnResetMaterial(ResetMaterialMessagePtr message);
-		void OnVisibilityMessage(GeometryVisibilityMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnDataMessage(ManualMeshDataRequestPtr message);
+		void OnClearMessage(ClearManualMeshRequestPtr message);
+		void OnReplaceMaterial(ReplaceMaterialRequestPtr message);
+		void OnTextureMessage(TextureRequestPtr message);
+		void OnResetMaterial(ResetMaterialRequestPtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 		

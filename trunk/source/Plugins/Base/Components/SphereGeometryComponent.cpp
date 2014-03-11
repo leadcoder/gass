@@ -94,7 +94,7 @@ namespace GASS
 			sub_mesh_data = GraphicsSubMesh::GenerateWireframeEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 	
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const

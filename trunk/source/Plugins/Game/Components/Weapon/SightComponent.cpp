@@ -128,13 +128,13 @@ namespace GASS
 		{
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnBarrelTransformation,BarrelTransformationMessage,0));
 			m_AutoAimObject->RegisterForMessage(REG_TMESS(SightComponent::OnAimAtPosition,AimAtPositionMessage,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationNotifyMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnBaseTransformation,TransformationChangedEvent,0));
 		}
 
 		//set start zoom
 		if(m_ZoomValues.size() > 0)
 		{
-			GetSceneObject()->PostRequest(CameraParameterMessagePtr(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0)));
+			GetSceneObject()->PostRequest(CameraParameterRequestPtr(new CameraParameterRequest(CameraParameterRequest::CAMERA_FOV,m_ZoomValues[0],0)));
 		}
 		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
@@ -152,7 +152,7 @@ namespace GASS
 	}
 
 
-	void SightComponent::OnBaseTransformation(TransformationNotifyMessagePtr message)
+	void SightComponent::OnBaseTransformation(TransformationChangedEventPtr message)
 	{
 		m_BaseTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
@@ -212,7 +212,7 @@ namespace GASS
 
 				Quaternion rot;
 				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
-				GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
+				GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot)));
 				m_StartRotation = m_BarrelTransformation;
 			}
 			else
@@ -243,7 +243,7 @@ namespace GASS
 		
 		Quaternion rot;
 		rot.FromRotationMatrix(m_AimRotation.GetRotation());
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot)));
 
 
 		//Send message to auto aim system to control weapon system
@@ -343,7 +343,7 @@ namespace GASS
 			{
 				Quaternion rot;
 				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
-				GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
+				GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot)));
 
 				m_YawValue = 0;
 				m_PitchValue = 0;
@@ -359,7 +359,7 @@ namespace GASS
 				{
 					m_CurrentZoom++;
 					m_CurrentZoom = m_CurrentZoom % m_ZoomValues.size();
-					GetSceneObject()->PostRequest(CameraParameterMessagePtr(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[m_CurrentZoom],0)));
+					GetSceneObject()->PostRequest(CameraParameterRequestPtr(new CameraParameterRequest(CameraParameterRequest::CAMERA_FOV,m_ZoomValues[m_CurrentZoom],0)));
 				}
 			}
 		}
@@ -413,7 +413,7 @@ namespace GASS
 			SceneObjectPtr so(m_TargetObject,NO_THROW);
 			if(so)
 			{
-				so->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(result.CollPosition)));
+				so->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(result.CollPosition)));
 			}
 		}
 		else

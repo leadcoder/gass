@@ -89,7 +89,7 @@ namespace GASS
 
 	void FollowRoadComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnTransMessage,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowRoadComponent::OnSpawnOnRoad,SpawnOnRoadMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -103,7 +103,7 @@ namespace GASS
 		
 	}
 
-	void FollowRoadComponent::OnTransMessage(TransformationNotifyMessagePtr message)
+	void FollowRoadComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentPos = message->GetPosition();
 
@@ -152,16 +152,16 @@ namespace GASS
 			{
 				//Clear messages
 				GetSceneObject()->ClearMessages();
-				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionRequest(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationRequest(rot)));
 				//std::cout << "Spawn Position:" << m_CurrentPos  << "\n";
 				m_DebugReset = 1;
 				//GetSceneObject()->PostMessage(MessagePtr(new VehicleStateMessage(CS_RUN,1)));
 			}
 			else
 			{
-				GetSceneObject()->SendImmediate(MessagePtr(new PositionMessage(pos)));
-				GetSceneObject()->SendImmediate(MessagePtr(new RotationMessage(rot)));
+				GetSceneObject()->SendImmediate(MessagePtr(new PositionRequest(pos)));
+				GetSceneObject()->SendImmediate(MessagePtr(new RotationRequest(rot)));
 			}
 		}
 		else
@@ -370,7 +370,7 @@ namespace GASS
 			//Get aim point on path
 			//if(Math::GetClosestPointOnPath(m_CurrentPos,wps3,index,point))
 			{
-				GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionMessage(target_point)));
+				GetSceneObject()->GetChildByID("AIM_POINT")->PostMessage(MessagePtr(new WorldPositionRequest(target_point)));
 				GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
 				//check if index is in next road!
 				
@@ -383,7 +383,7 @@ namespace GASS
 			ss  <<  "\nSpeed:" << desired_speed;
 			ss  <<  "\nDist along Path:" << now_distance;
 			ss  <<  "\nDist to Path:" << path_dist;
-			//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+			//GetSceneObject()->PostMessage(MessagePtr(new TextCaptionRequest(ss.str())));
 		}
 	}
 

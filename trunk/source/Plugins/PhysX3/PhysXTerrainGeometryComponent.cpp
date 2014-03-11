@@ -61,7 +61,7 @@ namespace GASS
 	void PhysXTerrainGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
@@ -74,7 +74,7 @@ namespace GASS
 		Reset();
 	}
 
-	void PhysXTerrainGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void PhysXTerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		Reset();
 		m_Shape = CreateTerrain();

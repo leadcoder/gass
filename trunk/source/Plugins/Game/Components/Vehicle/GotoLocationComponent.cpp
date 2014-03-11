@@ -89,13 +89,13 @@ namespace GASS
 
 	void GoToLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(GoToLocationComponent::OnTransformationMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GoToLocationComponent::OnTransformationMessage,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GoToLocationComponent::OnPathfindToLocation,PathfindToPositionMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 	}
 
-	void GoToLocationComponent::OnTransformationMessage(TransformationNotifyMessagePtr message)
+	void GoToLocationComponent::OnTransformationMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentLocation = message->GetPosition();
 	}

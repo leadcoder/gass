@@ -66,11 +66,11 @@ namespace GASS
 
 	void ODEBodyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
 	}
 
-	void ODEBodyComponent::OnPositionChanged(PositionMessagePtr message)
+	void ODEBodyComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -89,7 +89,7 @@ namespace GASS
 	}
 
 
-	void ODEBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void ODEBodyComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -99,7 +99,7 @@ namespace GASS
 		}
 	}
 
-	void ODEBodyComponent::OnWorldRotationChanged(WorldRotationMessagePtr message)
+	void ODEBodyComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -109,7 +109,7 @@ namespace GASS
 		}
 	}
 
-	void ODEBodyComponent::OnRotationChanged(RotationMessagePtr message)
+	void ODEBodyComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -192,7 +192,7 @@ namespace GASS
 		SetMass(message->GetMass());
 	}
 
-	void ODEBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void ODEBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -268,8 +268,8 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 		Vec3 pos = GetPosition();
 		
-		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(pos,from_id)));
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
 		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id)));
 	}
 
@@ -544,7 +544,7 @@ namespace GASS
 						//send position message in case of paused physics
 						int from_id = (int) this;
 						
-						child_body->GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(pos,from_id)));
+						child_body->GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
 					}
 					/*const dReal *p = dBodyGetPosition(b2);
 					Vec3 pos(p[0],p[1],p[2]);
@@ -599,7 +599,7 @@ namespace GASS
 
 							//send position message in case of paused physics
 							int from_id = (int) this;
-							MessagePtr pos_msg(new RotationMessage(q,from_id));
+							MessagePtr pos_msg(new RotationRequest(q,from_id));
 							child_body->GetSceneObject()->PostMessage(pos_msg);
 					}
 				}

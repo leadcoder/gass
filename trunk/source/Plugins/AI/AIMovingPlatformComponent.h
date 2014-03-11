@@ -41,7 +41,7 @@ namespace GASS
 		virtual void SceneManagerTick(double delta_time);
 	protected:
 		void OnSpeedMessage(DesiredSpeedMessagePtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 
 		ADD_PROPERTY(Float,Acceleration);
 		std::string GetWaypointList() const;

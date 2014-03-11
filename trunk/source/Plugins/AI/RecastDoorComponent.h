@@ -36,8 +36,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnTransformation(TransformationNotifyMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnLoad(LocationLoadedEventPtr message);
 		void OnDoorMessage(DoorMessagePtr message);
 		void UpdatePolyState(bool value);
 		void SetOpen(bool value);

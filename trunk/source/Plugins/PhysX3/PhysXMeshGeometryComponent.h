@@ -43,8 +43,8 @@ namespace GASS
 		virtual void OnDelete();
 	protected:
 		//Message section
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);

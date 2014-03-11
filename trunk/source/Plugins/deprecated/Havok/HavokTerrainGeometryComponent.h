@@ -58,7 +58,7 @@ namespace GASS
 	protected:
 		void OnLoad(LoadComponentsMessagePtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}

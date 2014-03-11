@@ -37,8 +37,8 @@ namespace GASS
 		ADD_PROPERTY(std::string,Mode)
 		float GetRadius() const;
 	protected:
-		void OnStartNodeTransformation(TransformationNotifyMessagePtr message);
-		void OnEndNodeTransformation(TransformationNotifyMessagePtr message);
+		void OnStartNodeTransformation(TransformationChangedEventPtr message);
+		void OnEndNodeTransformation(TransformationChangedEventPtr message);
 		void UpdateConnectionLine();
 		void SetVisible(bool value);
 		bool GetVisible() const;

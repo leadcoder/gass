@@ -67,7 +67,7 @@ namespace GASS
 
 	void OSGLightComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLocationLoaded,LocationLoadedMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLightComponent::OnLocationLoaded,LocationLoadedEvent,1));
 	}
 
 	void OSGLightComponent::SetLightType(LightTypeBinder lt)
@@ -124,7 +124,7 @@ namespace GASS
 			m_OSGLight->setLightNum(m_LightId);
 	}
 
-	void OSGLightComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGLightComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		m_OSGLight = new osg::Light;
 		m_OSGLightSource = new osg::LightSource;

@@ -88,8 +88,8 @@ namespace GASS
 
 		
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
+		void OnPositionChanged(PositionRequestPtr message);
+		void OnRotationChanged(RotationRequestPtr message);
 		void OnParameterMessage(PhysicsBodyMessagePtr message);
 		
 	protected:

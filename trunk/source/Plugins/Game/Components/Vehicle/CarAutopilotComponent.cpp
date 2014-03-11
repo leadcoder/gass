@@ -105,7 +105,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
 			
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -143,7 +143,7 @@ namespace GASS
 		m_DesiredSpeed = message->GetSpeed();
 	}
 
-	void CarAutopilotComponent::OnTransMessage(TransformationNotifyMessagePtr message)
+	void CarAutopilotComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentPos = message->GetPosition();
 		Quaternion  rot = message->GetRotation();

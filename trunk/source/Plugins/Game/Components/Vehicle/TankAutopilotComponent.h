@@ -63,7 +63,7 @@ namespace GASS
 		void DriveTo(const Vec3 &pos,const Vec3 &last_pos, float desired_speed, float time);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
 		void OnInput(InputRelayEventPtr message);
-		void OnTransMessage(TransformationNotifyMessagePtr message);
+		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnGotoPosition(GotoPositionMessagePtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		

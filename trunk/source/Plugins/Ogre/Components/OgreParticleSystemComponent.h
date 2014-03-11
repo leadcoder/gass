@@ -50,8 +50,8 @@ namespace GASS
 		void SetTimeToLive(float value) {m_TimeToLive = value;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnParameterMessage(ParticleSystemParameterMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnParameterMessage(ParticleSystemParameterRequestPtr message);
 
 		std::string m_RenderQueue;
 		std::string m_ParticleTemplate;

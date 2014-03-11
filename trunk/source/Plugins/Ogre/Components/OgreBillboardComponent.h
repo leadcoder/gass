@@ -51,8 +51,8 @@ namespace GASS
 	protected:
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-		void OnGeometryScale(GeometryScaleMessagePtr message);
-		void OnVisibilityMessage(GeometryVisibilityMessagePtr message);
+		void OnGeometryScale(GeometryScaleRequestPtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 
 		float GetWidth() const;
 		void SetWidth(float width);
@@ -64,8 +64,8 @@ namespace GASS
 		OgreMaterial GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnSetColorMessage(BillboardColorMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnSetColorMessage(BillboardColorRequestPtr message);
 		
 		std::string m_RenderQueue;
 		OgreMaterial m_Material;

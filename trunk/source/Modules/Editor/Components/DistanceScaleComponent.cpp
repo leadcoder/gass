@@ -45,8 +45,8 @@ namespace GASS
 
 	void DistanceScaleComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationChangedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionRequest,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraChanged,CameraChangedEvent,1));
 
 		EditorSceneManagerPtr esm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
@@ -54,8 +54,8 @@ namespace GASS
 		SceneObjectPtr cam_obj(m_ActiveCameraObject,NO_THROW);
 		if(cam_obj)
 		{
-			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
-			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage,1));
+			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent,1));
+			cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterRequest,1));
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace GASS
 		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
-			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage));
+			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent));
 		}
 	}
 
@@ -76,44 +76,44 @@ namespace GASS
 		if(SceneObjectPtr(m_ActiveCameraObject,NO_THROW))
 		{
 			SceneObjectPtr prev_camera = SceneObjectPtr(m_ActiveCameraObject,NO_THROW);
-			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage));
-			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage));
+			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent));
+			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterRequest));
 		}
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
 		SceneObjectPtr cam_obj = DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
-		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationNotifyMessage,1));
-		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterMessage,1));
+		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent,1));
+		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterRequest,1));
 	}
 
-	void DistanceScaleComponent::OnCameraParameter(CameraParameterMessagePtr message)
+	void DistanceScaleComponent::OnCameraParameter(CameraParameterRequestPtr message)
 	{
-		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		CameraParameterRequest::CameraParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case CameraParameterMessage::CAMERA_FOV:
+		case CameraParameterRequest::CAMERA_FOV:
 			{
 				float value = message->GetValue1();
 			}
 			break;
-		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 			{
 				float value = message->GetValue1();
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
 
 				if(m_ScaleLocation)
-					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
 				else
 				{
-					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(Vec3(1,1,1))));
-					GetSceneObject()->PostRequest(GeometryScaleMessagePtr(new GeometryScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(Vec3(1,1,1))));
+					GetSceneObject()->PostRequest(GeometryScaleRequestPtr(new GeometryScaleRequest(scale)));
 				}
 
 			}
 			break;
-		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+		case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
 			{
 				
 			}
@@ -121,17 +121,17 @@ namespace GASS
 		}
 	}
 
-	void DistanceScaleComponent::OnTransformation(TransformationNotifyMessagePtr message)
+	void DistanceScaleComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		UpdateScale();
 	}
 
-	void DistanceScaleComponent::OnWorldPosition(WorldPositionMessagePtr message)
+	void DistanceScaleComponent::OnWorldPosition(WorldPositionRequestPtr message)
 	{
 		
 	}
 
-	void DistanceScaleComponent::OnCameraMoved(TransformationNotifyMessagePtr message)
+	void DistanceScaleComponent::OnCameraMoved(TransformationChangedEventPtr message)
 	{
 		UpdateScale();
 	}
@@ -161,9 +161,9 @@ namespace GASS
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
 				if(m_ScaleLocation)
-					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
 				else
-					GetSceneObject()->PostRequest(GeometryScaleMessagePtr(new GeometryScaleMessage(scale)));
+					GetSceneObject()->PostRequest(GeometryScaleRequestPtr(new GeometryScaleRequest(scale)));
 			}
 		}
 	}

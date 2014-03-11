@@ -31,7 +31,7 @@ namespace GASS
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
-		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
 		Float GetHeight() const;
 		GraphicsMeshPtr m_MeshData;	
 		ColorRGBA m_Color;

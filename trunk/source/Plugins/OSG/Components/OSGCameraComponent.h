@@ -37,9 +37,9 @@ namespace GASS
 		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
 		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}
 	protected:
-		void OnParameter(CameraParameterMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnParameter(CameraParameterRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnChangeCamera(ChangeCameraRequestPtr message);
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);

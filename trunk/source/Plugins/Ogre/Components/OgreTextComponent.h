@@ -47,15 +47,15 @@ namespace GASS
 	protected:
 		ADD_PROPERTY(bool,ScaleByDistance)
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		void OnGeomChanged(GeometryChangedMessagePtr message);
-		void OnCaptionMessage(TextCaptionMessagePtr message);
+		void OnGeomChanged(GeometryChangedEventPtr message);
+		void OnCaptionMessage(TextCaptionRequestPtr message);
 		std::string GetText() const;
 		void SetText(const std::string  &text);
 		float GetOffset() const;
 		void SetOffset(float offset);
 		float GetCharacterSize() const;
 		void SetCharacterSize(float size);
-		void OnVisibilityMessage(VisibilityMessagePtr message);
+		void OnVisibilityMessage(VisibilityRequestPtr message);
 	
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;

@@ -56,7 +56,7 @@ namespace GASS
 	void HUDComponent::OnInitialize()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HUDComponent::OnCameraChanged,CameraChangedEvent,1));
-		GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(false)));
+		GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
 		UpdateHUD();
 		m_Initialized = true;
 	}
@@ -73,11 +73,11 @@ namespace GASS
 		if(cam_obj == 	GetSceneObject()->GetParentSceneObject())
 		{
 			//show hud
-			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(true)));
+			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(true)));
 		}
 		else //hide
 		{
-			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(false)));
+			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
 		}
 	}
 
@@ -135,7 +135,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(0);
 		sub_mesh_data->IndexVector.push_back(2);
 		sub_mesh_data->IndexVector.push_back(3);
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 }
 

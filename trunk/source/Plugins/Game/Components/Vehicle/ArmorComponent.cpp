@@ -64,10 +64,10 @@ namespace GASS
 
 	void ArmorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LocationLoadedMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ArmorComponent::OnLoad,LocationLoadedEvent,1));
 	}
 
-	void ArmorComponent::OnLoad(LocationLoadedMessagePtr message)
+	void ArmorComponent::OnLoad(LocationLoadedEventPtr message)
 	{
 		NetworkComponentPtr nc = GetSceneObject()->GetFirstComponentByClass<INetworkComponent>();
 		if(nc && !nc->IsRemote())
@@ -114,7 +114,7 @@ namespace GASS
 		//load damage mesh
 		if(m_DamageMesh != "")
 		{
-			GetSceneObject()->PostRequest(MeshFileMessagePtr(new MeshFileMessage(m_DamageMesh)));
+			GetSceneObject()->PostRequest(MeshFileRequestPtr(new MeshFileRequest(m_DamageMesh)));
 		}
 		//std::cout<< "Dead!!!\n";
 				

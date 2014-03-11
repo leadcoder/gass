@@ -63,18 +63,18 @@ namespace GASS
 
 	void OSGTextComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnLocationLoaded,LocationLoadedMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionRequest,0));
 	}
 
-	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionMessagePtr message)
+	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionRequestPtr message)
 	{
 		std::string caption = message->GetCaption();
 		if(m_OSGText)
 			m_OSGText->setText(caption.c_str());
 	}
 
-	void OSGTextComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OSGTextComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		m_OSGText = new osgText::Text;
 

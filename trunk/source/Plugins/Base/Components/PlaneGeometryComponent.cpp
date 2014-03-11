@@ -150,7 +150,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(2);
 		sub_mesh_data->IndexVector.push_back(0);
 
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 	
 	
@@ -160,7 +160,7 @@ namespace GASS
 		m_Texture = texture_name;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(TextureMessagePtr(new TextureMessage(texture_name)));
+			GetSceneObject()->PostRequest(TextureRequestPtr(new TextureRequest(texture_name)));
 		}
 	}
 

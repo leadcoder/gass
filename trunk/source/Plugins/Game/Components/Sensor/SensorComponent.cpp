@@ -43,7 +43,7 @@ namespace GASS
 
 	void SensorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
 	
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -67,12 +67,12 @@ namespace GASS
 		SignatureComponentPtr signature = message->GetSceneObject()->GetFirstComponentByClass<SignatureComponent>();
 		if(signature)
 		{
-			//signature->GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationNotifyMessage,0));
+			//signature->GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationChangedEvent,0));
 			m_AllObjects.push_back(signature);
 		}
 	}
 	
-	void SensorComponent::OnTransChanged(TransformationNotifyMessagePtr message)
+	void SensorComponent::OnTransChanged(TransformationChangedEventPtr message)
 	{
 		m_Position = message->GetPosition();
 	}

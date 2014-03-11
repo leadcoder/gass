@@ -61,7 +61,7 @@ namespace GASS
 		void SetVelocity(const Vec3 &vel);
 
 		//Message functions
-		void OnPositionChanged(TransformationNotifyMessagePtr message);
+		void OnPositionChanged(TransformationChangedEventPtr message);
 		void OnPhysicsUpdate(VelocityNotifyMessagePtr message);
 		void OnParameterMessage(SoundParameterMessagePtr message);
 		

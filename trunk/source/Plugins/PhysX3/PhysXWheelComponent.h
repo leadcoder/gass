@@ -40,7 +40,7 @@ namespace GASS
 		physx::PxVehicleTireData  GetTireData () const {return m_TireData;}
 		bool IsInitialized() const{return m_Initialized;}
 	protected:
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void ComputeWheelDim(physx::PxConvexMesh* wheel_convex_mesh, physx::PxF32 &wheel_width, physx::PxF32 &wheel_rad);
 		ADD_PROPERTY(float,Mass)
 		ADD_PROPERTY(float,MaxBrakeTorque)

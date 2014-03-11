@@ -64,9 +64,9 @@ namespace GASS
 	void WaypointComponent::OnInitialize()
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnChangeName,SceneObjectNameMessage,0));
 	}
 
@@ -79,8 +79,8 @@ namespace GASS
 		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 		if(tangent)
 		{
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionMessage,1));
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionMessage,1));
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionRequest,1));
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionRequest,1));
 		}
 		else
 			std::cout << "Failed to find tangent in waypoint compoenent\n";
@@ -91,13 +91,13 @@ namespace GASS
 		if(list)
 		{
 			bool show = list->GetShowWaypoints();
-			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(show)));
+			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(show)));
 			GetSceneObject()->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(show)));
 
 			SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 			if(tangent)
 			{
-				tangent->PostRequest(VisibilityMessagePtr(new VisibilityMessage(show)));
+				tangent->PostRequest(VisibilityRequestPtr(new VisibilityRequest(show)));
 				tangent->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(show)));
 			}
 		}
@@ -142,10 +142,10 @@ namespace GASS
 	void WaypointComponent::Rotate(const Quaternion &rot)
 	{
 		int id = (int) this;
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot,id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
 	}
 
-	void WaypointComponent::OnRotate(WorldRotationMessagePtr message)
+	void WaypointComponent::OnRotate(WorldRotationRequestPtr message)
 	{
 		//use custom tangent?
 		int id = (int) this;
@@ -208,7 +208,7 @@ namespace GASS
 			Quaternion rot;
 			rot.FromRotationMatrix(rot_mat);
 			int id = (int) this;
-			//GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(rot,id)));
+			//GetSceneObject()->PostMessage(MessagePtr(new RotationRequest(rot,id)));
 
 			
 			//GetSceneObject()->GetFirstChildByClass<ILocationComponent>();
@@ -216,7 +216,7 @@ namespace GASS
 			Vec3 t_pos = tangent;
 			SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 			if(tangent)
-				tangent->PostRequest(PositionMessagePtr(new PositionMessage(t_pos*0.1,id)));
+				tangent->PostRequest(PositionRequestPtr(new PositionRequest(t_pos*0.1,id)));
 			else
 				std::cout << "Failed to find tangent in waypoint compoenent\n";
 			
@@ -261,6 +261,6 @@ namespace GASS
 
 		pos = t_pos;
 		sub_mesh_data->PositionVector.push_back(pos);
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 }

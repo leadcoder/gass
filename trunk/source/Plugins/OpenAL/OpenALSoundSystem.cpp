@@ -138,13 +138,13 @@ namespace GASS
 		SceneObjectPtr current_cam_obj(m_CurrentCamera,NO_THROW);
 		if(current_cam_obj)
 		{
-			current_cam_obj->UnregisterForMessage(typeid(TransformationNotifyMessage), TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage));
+			current_cam_obj->UnregisterForMessage(typeid(TransformationChangedEvent), TYPED_MESSAGE_FUNC(OpenALSoundSystem::OnCameraMoved,TransformationChangedEvent));
 		}
-		cam_obj->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraMoved,TransformationNotifyMessage,0));
+		cam_obj->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraMoved,TransformationChangedEvent,0));
 		m_CurrentCamera = cam_obj;
 	}
 
-	void OpenALSoundSystem::OnCameraMoved(TransformationNotifyMessagePtr message)
+	void OpenALSoundSystem::OnCameraMoved(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		Quaternion rot = message->GetRotation();

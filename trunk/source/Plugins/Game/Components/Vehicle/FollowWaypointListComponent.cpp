@@ -146,7 +146,7 @@ namespace GASS
 
 	void FollowWaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationChangedEvent,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 		//update
@@ -158,7 +158,7 @@ namespace GASS
 
 	}
 
-	void FollowWaypointListComponent::OnTransMessage(TransformationNotifyMessagePtr message)
+	void FollowWaypointListComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentPos = message->GetPosition();
 	}

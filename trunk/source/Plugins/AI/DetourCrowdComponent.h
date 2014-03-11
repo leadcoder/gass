@@ -78,7 +78,7 @@ namespace GASS
 		void UpdateDebugData();
 		
 		void OnChangeName(GASS::MessagePtr message);
-		void OnMoved(PositionMessagePtr message);
+		void OnMoved(PositionRequestPtr message);
 		bool GetCircularScattering() const;
 		void SetCircularScattering(bool value);
 		bool GetNavMeshScattering() const;

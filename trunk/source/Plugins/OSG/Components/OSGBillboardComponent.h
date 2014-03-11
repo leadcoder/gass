@@ -56,8 +56,8 @@ namespace GASS
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnGeometryScale(GeometryScaleMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnGeometryScale(GeometryScaleRequestPtr message);
 		void UpdateSize(float width,float height);
 		
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);

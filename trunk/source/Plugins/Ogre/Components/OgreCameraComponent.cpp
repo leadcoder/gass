@@ -92,8 +92,8 @@ namespace GASS
 
 	void OgreCameraComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreCameraComponent::OnParameter,CameraParameterRequest,0));
 	}
 
 	void OgreCameraComponent::SetMaterialScheme(const std::string &value) 
@@ -103,7 +103,7 @@ namespace GASS
 			m_Camera->getViewport()->setMaterialScheme(m_MaterialScheme);
 	}
 
-	void OgreCameraComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreCameraComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -155,25 +155,25 @@ namespace GASS
 		}
 	}
 	
-	void OgreCameraComponent::OnParameter(CameraParameterMessagePtr message)
+	void OgreCameraComponent::OnParameter(CameraParameterRequestPtr message)
 	{
-		CameraParameterMessage::CameraParameterType type = message->GetParameter();
+		CameraParameterRequest::CameraParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case CameraParameterMessage::CAMERA_FOV:
+		case CameraParameterRequest::CAMERA_FOV:
 			{
 				float value = message->GetValue1();
 				SetFov(value);
 			}
 			break;
-		case CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE:
+		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 			{
 				float value = message->GetValue1();
 				if(m_Camera)
 					m_Camera->setOrthoWindowHeight(value);
 			}
 			break;
-		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
+		case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
 			{
 				float farc = message->GetValue1();
 				SetFarClipDistance(farc);

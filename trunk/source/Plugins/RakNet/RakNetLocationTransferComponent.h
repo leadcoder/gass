@@ -134,8 +134,8 @@ namespace GASS
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnParentTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+		void OnParentTransformationChanged(TransformationChangedEventPtr message);
 		void OnVelocityNotify(VelocityNotifyMessagePtr message);
 		void OnDeserialize(NetworkDeserializeMessagePtr message);
 

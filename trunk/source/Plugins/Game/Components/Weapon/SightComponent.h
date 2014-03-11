@@ -48,7 +48,7 @@ namespace GASS
 		virtual void OnDelete();
 	private:
 		void OnInput(InputRelayEventPtr message);
-		void OnBaseTransformation(TransformationNotifyMessagePtr message);
+		void OnBaseTransformation(TransformationChangedEventPtr message);
 		void OnBarrelTransformation(BarrelTransformationMessagePtr message);
 		void OnAimAtPosition(AimAtPositionMessagePtr message);
 

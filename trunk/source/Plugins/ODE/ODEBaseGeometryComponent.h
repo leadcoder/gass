@@ -61,10 +61,10 @@ namespace GASS
 
 		//Message functions
 		void OnBodyLoaded(BodyLoadedMessagePtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		
 		//virtual functions that derived geometry have to implement
 		virtual dGeomID CreateODEGeom() {return 0;}
@@ -95,7 +95,7 @@ namespace GASS
 		//debug fucntions
 		virtual void UpdateDebug() {};
 		virtual void OnPhysicsDebug(PhysicsDebugMessagePtr message);
-		virtual void OnDebugTransformation(TransformationNotifyMessagePtr message);
+		virtual void OnDebugTransformation(TransformationChangedEventPtr message);
 		virtual void SetDebug(bool value);
 		virtual bool GetDebug() const;
 		virtual SceneObjectPtr GetDebugObject();

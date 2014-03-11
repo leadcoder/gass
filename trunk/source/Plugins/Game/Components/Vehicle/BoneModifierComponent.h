@@ -48,7 +48,7 @@ namespace GASS
 		virtual void OnDelete();
 	private:
 		void OnLODChange(LODMessagePtr message);
-		void OnTransformation(TransformationNotifyMessagePtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
 		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
 		
 		std::string GetBoneName() const;

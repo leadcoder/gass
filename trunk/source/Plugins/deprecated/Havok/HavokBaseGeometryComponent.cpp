@@ -62,9 +62,9 @@ namespace GASS
 	void HavokBaseGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadComponentsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
@@ -96,7 +96,7 @@ namespace GASS
 			SetDebug(true);
 	}
 
-	void HavokBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void HavokBaseGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		if(m_Body == 0) //only update position for static geometry 
 		{
@@ -177,7 +177,7 @@ namespace GASS
 		return geom;
 	}
 
-	void HavokBaseGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void HavokBaseGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		if(m_SizeFromMesh)
 		{
@@ -230,7 +230,7 @@ namespace GASS
 			else
 			{
 				SceneObjectPtr obj = GetDebugObject();
-				obj->UnregisterForMessage(UNREG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage));
+				obj->UnregisterForMessage(UNREG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationChangedEvent));
 				GetSceneObject()->GetScene()->PostMessage(MessagePtr(new RemoveSceneObjectMessage(obj)));
 			}
 		}
@@ -281,14 +281,14 @@ namespace GASS
 				scene_object = boost::shared_static_cast<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate("DebugPhysics"));
 			}
 			scene_object->SetName(GetName() + scene_object->GetName());
-			scene_object->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationNotifyMessage,0));
+			scene_object->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnDebugTransformation,TransformationChangedEvent,0));
 			GetSceneObject()->AddChild(scene_object);
 		}
 		return scene_object;
 	}
 
 
-	void HavokBaseGeometryComponent::OnDebugTransformation(TransformationNotifyMessagePtr message)
+	void HavokBaseGeometryComponent::OnDebugTransformation(TransformationChangedEventPtr message)
 	{
 		SceneObjectPtr obj = GetDebugObject();
 		Vec3 pos  =obj->GetFirstComponentByClass<ILocationComponent>()->GetPosition();

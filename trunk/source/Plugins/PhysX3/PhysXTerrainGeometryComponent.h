@@ -46,7 +46,7 @@ namespace GASS
 	protected:
 		
 		void OnCollisionSettings(CollisionSettingsMessagePtr message);
-		void OnGeometryChanged(GeometryChangedMessagePtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
 		void Disable();
 		void Enable();

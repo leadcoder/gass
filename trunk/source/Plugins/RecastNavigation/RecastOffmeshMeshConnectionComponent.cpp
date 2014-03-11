@@ -56,11 +56,11 @@ namespace GASS
 
 	void RecastOffmeshMeshConnectionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation,TransformationChangedEvent,0));
 		SceneObjectPtr end_node = GetSceneObject()->GetChildByID("AI_OFF_MESH_CHILD_OBJECT");
 		if(!end_node)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get child by ID, no child with AI_OFF_MESH_CHILD_OBJECT found", "RecastOffmeshMeshConnectionComponent::OnInitialize");
-		end_node->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnEndNodeTransformation,TransformationNotifyMessage,0));
+		end_node->RegisterForMessage(REG_TMESS(RecastOffmeshMeshConnectionComponent::OnEndNodeTransformation,TransformationChangedEvent,0));
 		m_EndNode = end_node;
 
 		//initlize visibility
@@ -69,13 +69,13 @@ namespace GASS
 
 	}
 
-	void RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation(TransformationNotifyMessagePtr message)
+	void RecastOffmeshMeshConnectionComponent::OnStartNodeTransformation(TransformationChangedEventPtr message)
 	{
 		m_StartPos = message->GetPosition();
 		UpdateConnectionLine();
 	}
 
-	void RecastOffmeshMeshConnectionComponent::OnEndNodeTransformation(TransformationNotifyMessagePtr message)
+	void RecastOffmeshMeshConnectionComponent::OnEndNodeTransformation(TransformationChangedEventPtr message)
 	{
 		m_EndPos = message->GetPosition();
 		UpdateConnectionLine();
@@ -103,7 +103,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(value)));
+			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(value)));
 			if(m_Visible)
 				UpdateConnectionLine();
 		}
@@ -156,7 +156,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(m_ConnectionLine)));
+		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_ConnectionLine)));
 		
 	}
 }

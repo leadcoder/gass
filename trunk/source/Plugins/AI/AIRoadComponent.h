@@ -54,7 +54,7 @@ namespace GASS
 		void UpdateLanes();
 		void AutoConnectToRoads();
 		void AutoConnectToIntersection();
-		void OnTransformationChanged(TransformationNotifyMessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnWaypointsChanged(UpdateWaypointListMessagePtr message);
 		SceneObjectRef m_StartNode;
 		SceneObjectRef m_EndNode;

@@ -93,7 +93,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnGeometryChanged,GeometryChangedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
 	}
 
@@ -104,7 +104,7 @@ namespace GASS
 		m_SceneManager = scene_manager;
 	}
 
-	void HavokTerrainGeometryComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
+	void HavokTerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		TerrainComponentPtr terrain = GetTerrainComponent();
 		GeometryComponentPtr geom = boost::shared_dynamic_cast<IGeometryComponent>(terrain);

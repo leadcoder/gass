@@ -57,10 +57,10 @@ namespace GASS
 
 	void PhysXBodyComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationMessage,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationRequest,0 ));
 		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
@@ -68,7 +68,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 	}
 
-	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
@@ -109,7 +109,7 @@ namespace GASS
 		return m_Kinematic;
 	}
 
-	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionMessagePtr message)
+	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -119,7 +119,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::OnPositionChanged(PositionMessagePtr message)
+	void PhysXBodyComponent::OnPositionChanged(PositionRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -129,7 +129,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXBodyComponent::OnRotationChanged(RotationMessagePtr message)
+	void PhysXBodyComponent::OnRotationChanged(RotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
@@ -240,8 +240,8 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 		
-		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(GetPosition(),from_id)));
-		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(GetPosition(),from_id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec)

@@ -48,11 +48,11 @@ namespace GASS
 		Float GetMaxSpeed() const;
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnPositionChanged(PositionMessagePtr message);
-		void OnWorldPositionChanged(WorldPositionMessagePtr message);
-		void OnRotationChanged(RotationMessagePtr message);
-		void OnWorldRotationChanged(WorldRotationMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnPositionChanged(PositionRequestPtr message);
+		void OnWorldPositionChanged(WorldPositionRequestPtr message);
+		void OnRotationChanged(RotationRequestPtr message);
+		void OnWorldRotationChanged(WorldRotationRequestPtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputRelayEventPtr message);
 		

@@ -51,8 +51,8 @@ namespace GASS
 		std::string GetMaterialScheme() const {return m_MaterialScheme;}
 		void SetMaterialScheme(const std::string &value);
 	protected:
-		void OnLocationLoaded(LocationLoadedMessagePtr message);
-		void OnParameter(CameraParameterMessagePtr message);
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void OnParameter(CameraParameterRequestPtr message);
 		float GetFarClipDistance() const;
 		void SetFarClipDistance(float value);
 		float GetNearClipDistance() const;

@@ -106,9 +106,9 @@ namespace GASS
 	void OgreTextComponent::OnInitialize()
 	{
 		//this one should load after mesh entities
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnGeomChanged,GeometryChangedMessage,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnGeomChanged,GeometryChangedEvent,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityRequest ,0));
 	
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\r", "\r");
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\n", "\n");
@@ -142,7 +142,7 @@ namespace GASS
 		m_Attribs = new MovableTextOverlayAttributes("Attrs1",ocam,"BlueHighway",m_Size,color,"RedTransparent");
 	}
 
-	void OgreTextComponent::OnGeomChanged(GeometryChangedMessagePtr message)
+	void OgreTextComponent::OnGeomChanged(GeometryChangedEventPtr message)
 	{
 		//Ogre::String test = Ogre::String(new_text);
 		
@@ -236,7 +236,7 @@ namespace GASS
 //			m_TextObject->setCharacterHeight(size);
 	}
 
-	void OgreTextComponent::OnCaptionMessage(TextCaptionMessagePtr message)
+	void OgreTextComponent::OnCaptionMessage(TextCaptionRequestPtr message)
 	{
 		std::string caption = message->GetCaption();
 		SetText(caption);
@@ -290,7 +290,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreTextComponent::OnVisibilityMessage(VisibilityMessagePtr message)
+	void OgreTextComponent::OnVisibilityMessage(VisibilityRequestPtr message)
 	{
 		m_Visible = message->GetValue();
 	}

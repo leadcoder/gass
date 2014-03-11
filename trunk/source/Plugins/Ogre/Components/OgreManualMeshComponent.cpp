@@ -86,11 +86,11 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		
 	}
 
-	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedMessagePtr message)
+	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -110,12 +110,12 @@ namespace GASS
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureMessage,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
 	}
 
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
@@ -126,13 +126,13 @@ namespace GASS
 	}
 
 
-	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataMessagePtr message)
+	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
 	{
 		GraphicsMeshPtr data = message->GetData();
 		CreateMesh(data);
 	}
 
-	void OgreManualMeshComponent::OnClearMessage(ClearManualMeshMessagePtr message)
+	void OgreManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
 	{
 		Clear();
 	}
@@ -202,17 +202,17 @@ namespace GASS
 				for( itShadow=m_MeshObject->getEdgeList()->edgeGroups.begin(), itEndShadow=m_MeshObject->getEdgeList()->edgeGroups.end(); itShadow!=itEndShadow; itShadow++ )
 					const_cast<Ogre::VertexData*>((*itShadow).vertexData)->prepareForShadowVolume();
 			OgreMaterialCache::Add(m_MeshObject);
-			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 		
 	}
 
-	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialMessagePtr message)
+	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialRequestPtr message)
 	{
 		OgreMaterialCache::Restore(m_MeshObject);
 	}
 
-	void OgreManualMeshComponent::OnTextureMessage(TextureMessagePtr message)
+	void OgreManualMeshComponent::OnTextureMessage(TextureRequestPtr message)
 	{
 		/*if(message->GetTexture() == "")
 			return;
@@ -243,7 +243,7 @@ namespace GASS
 		}*/
 	}
 
-	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialMessagePtr message)
+	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialRequestPtr message)
 	{
 		if(m_MeshObject == NULL)
 			return;
@@ -303,7 +303,7 @@ namespace GASS
 		m_GeometryFlagsBinder.SetValue(flags);
 	}
 
-	void OgreManualMeshComponent::OnVisibilityMessage(GeometryVisibilityMessagePtr message)
+	void OgreManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
 	{
 		if(m_MeshObject == NULL)
 			return;

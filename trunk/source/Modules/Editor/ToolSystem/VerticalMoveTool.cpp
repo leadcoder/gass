@@ -46,7 +46,7 @@ namespace GASS
 
 				int from_id = (int) this;
 				
-				selected->SendImmediateRequest(PositionMessagePtr(new PositionMessage(new_position,from_id)));
+				selected->SendImmediateRequest(PositionRequestPtr(new PositionRequest(new_position,from_id)));
 
 				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);

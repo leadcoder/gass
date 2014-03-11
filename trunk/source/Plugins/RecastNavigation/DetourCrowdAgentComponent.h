@@ -113,8 +113,8 @@ namespace GASS
 		void OnGoToPosition(GotoPositionMessagePtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void UpdateGeometry();
-		void OnWorldPosition(WorldPositionMessagePtr message);
-		void OnLoad(LocationLoadedMessagePtr message);
+		void OnWorldPosition(WorldPositionRequestPtr message);
+		void OnLoad(LocationLoadedEventPtr message);
 		void OnChangeName(GASS::MessagePtr message);
 		void SetMaxAcceleration(Float radius);
 		Float GetMaxAcceleration() const;

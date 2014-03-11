@@ -75,20 +75,20 @@ namespace GASS
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
 		
-		GetSceneObject()->SendImmediateRequest(TextureCoordinateMessagePtr(new TextureCoordinateMessage(m_AnimationValue)));
+		GetSceneObject()->SendImmediateRequest(TextureCoordinateRequestPtr(new TextureCoordinateRequest(m_AnimationValue)));
 
 		float emission = fabs(ang_vel.x)*m_ParticleEmissionFactor;
 
 		if(emission >50)
 			emission =50;
-		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterMessagePtr(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission)));
+		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
 
 		float duration = fabs(ang_vel.x)*0.05;
 
 		if(duration > 1.6)  
 			duration = 1.6;
 
-		//MessagePtr particle_duration_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::PARTICLE_LIFE_TIME,0,duration));
+		//MessagePtr particle_duration_msg(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::PARTICLE_LIFE_TIME,0,duration));
 		//GetSceneObject()->PostMessage(particle_duration_msg);
 		
 		//std::cout << "speed:" << speed.x << std::endl;

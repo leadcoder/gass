@@ -61,24 +61,24 @@ namespace GASS
 		{
 			if(m_SizeFromMesh)
 				
-				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
+				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
 				GetSceneObject()->RegisterForMessage(typeid(BodyLoadedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 		}
 		else
 		{
 			if(m_SizeFromMesh && geom)
-				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
+				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
 			{
 				if(location)
-					GetSceneObject()->RegisterForMessage(typeid(LocationLoadedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
+					GetSceneObject()->RegisterForMessage(typeid(LocationLoadedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 				//else
 				//	GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
 			}
 		}
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationNotifyMessage, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
 	}
 
@@ -136,7 +136,7 @@ namespace GASS
 	}
 
 	
-	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationNotifyMessagePtr message)
+	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		SetPosition(pos);
