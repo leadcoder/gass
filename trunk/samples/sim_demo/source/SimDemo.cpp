@@ -20,6 +20,7 @@
 
 
 #include "Sim/GASS.h"
+#include "Core/PluginSystem/GASSPluginManager.h"
 #include "Plugins/Game/GameMessages.h"
 #include "SimApplication.h"
 
@@ -50,7 +51,7 @@ int _getch( ) {
 	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
 	ch = getchar();
 	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-	return ch;
+	return ch;	
 
 }
 #endif
@@ -59,6 +60,21 @@ typedef boost::shared_ptr<SimApplication> SimApplicationPtr;
 
 int main(int argc, char* argv[])
 {
+
+	/*GASS::SimEngine* engine = new GASS::SimEngine();
+	//Addplugins
+	
+	engine->GetPluginManager()->LoadPlugin("GASSPluginBase");
+	engine->GetPluginManager()->LoadPlugin("GASSPluginOgre");
+	
+	//add where to search for resources!
+	GASS::ResourceGroupPtr res_group(new GASS::ResourceGroup("MY_RESOURCE_GROUP"));
+	engine->GetResourceManager()->AddResourceGroup(res_group);
+	res_group->AddResourceLocation(GASS::FilePath("./"),GASS::RLT_FILESYSTEM,true);
+
+	engine->Init(GASS::FilePath(""));
+	*/
+
 	/*std::string config = "../Configuration/app_config.xml";
 	int index = 1;
 	while(index < argc)

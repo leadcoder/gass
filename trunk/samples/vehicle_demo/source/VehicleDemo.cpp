@@ -23,7 +23,7 @@
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
-
+#include "Core/Utils/GASSHeightmap.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -55,6 +55,27 @@ int _getch( ) {
 
 int run(int argc, char* argv[])
 {
+	/*int hm_size = 10000;
+	GASS::Heightmap* hm = new GASS::Heightmap(GASS::Vec3(0,0,0),GASS::Vec3(200,0,200),hm_size,hm_size);
+	for(unsigned int i = 0; i < hm_size; i++)
+	{
+		for(unsigned int j = 0; j < hm_size; j++)
+			hm->SetHeight(i,j, i*0.1);
+	}
+	//hm->ImportRAWFile("c:/temp/TerrainHeightmap.raw", 10, 200);
+	float height = hm->GetInterpolatedHeight(100, 100);
+
+	hm->Save("c:/temp/dump.bin");
+	hm->Load("c:/temp/dump.bin");
+	
+	height = hm->GetInterpolatedHeight(100, 100);
+
+	for(int i = 0; i < 5000; i++)
+	{
+		float height = hm->GetInterpolatedHeight(100, i* 200.0/5000.0);
+		std::cout << height <<  "  ";
+	}*/
+
 	bool is_server = false;
 	std::string config = "../Configuration/app_config.xml";
 	int index = 1;
@@ -97,6 +118,7 @@ int run(int argc, char* argv[])
 		light_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr light_comp = light_template->AddBaseSceneComponent("LightComponent");
 		light_comp->SetPropertyByString("DiffuseColor","0.5 0.5 0.5");
+		light_comp->SetPropertyByString("AmbientColor","0.5 0.5 0.5");
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(light_template);
 	}
 	
@@ -127,22 +149,56 @@ int run(int argc, char* argv[])
 
 	GASS::SceneObjectPtr terrain_obj = scene->LoadObjectFromTemplate("PlaneObject",scene->GetRootSceneObject());
 	GASS::SceneObjectPtr light_obj = scene->LoadObjectFromTemplate("LightObject",scene->GetRootSceneObject());
-	light_obj->SendImmediate(GASS::MessagePtr(new GASS::RotationMessage(GASS::Vec3(40,32,0))));
+	light_obj->SendImmediateRequest(GASS::RotationMessagePtr(new GASS::RotationMessage(GASS::Vec3(40,32,0))));
 	
 	//GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("ToyotaLandcruiser",scene->GetRootSceneObject());
 	//tlc->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,4,-13))));
 	
-	GASS::Vec3 tp(0,4,-13);
-	GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("Excavator",scene->GetRootSceneObject());
-	tlc->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(tp)));
+	GASS::SceneObjectPtr tlc = scene->LoadObjectFromTemplate("Liebherr",scene->GetRootSceneObject());
+	tlc->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(GASS::Vec3(0,4,-13))));
+	
+	
+	/*GASS::SceneObjectPtr group = scene->LoadObjectFromTemplate("AIVehicleGroup",scene->GetRootSceneObject());
+	
+	GASS::SceneObjectPtr wp = scene->LoadObjectFromTemplate("BehaviorWaypoint",group->GetChildByID("BEHAVIOR_WPL"));
+	wp->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,0,-100))));
+	wp = scene->LoadObjectFromTemplate("BehaviorWaypoint",group->GetChildByID("BEHAVIOR_WPL"));
+	wp->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(40,0,-100))));
+	wp = scene->LoadObjectFromTemplate("BehaviorWaypoint",group->GetChildByID("BEHAVIOR_WPL"));
+	wp->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(40,0,-1000))));
+
+	GASS::SceneObjectPtr trigger = scene->LoadObjectFromTemplate("VehicleTrigger",scene->GetRootSceneObject());
+	trigger->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,0,-80))));
+	GASS::BaseSceneComponentPtr wp_comp = wp->GetBaseSceneComponent("VehicleBehaviorComponent");
+	GASS::SceneObjectRef t_ref(trigger->GetGUID());
+	std::vector<GASS::SceneObjectRef> t_vec;
+	t_vec.push_back(t_ref);
+	wp_comp->SetPropertyByType("Triggers",t_vec);
+	
 
 
+	GASS::SceneObjectPtr patria = scene->LoadObjectFromTemplate("AIVehicle",group);
+	patria = scene->LoadObjectFromTemplate("AIVehicle",group);
+	patria->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,0,10))));
+
+	patria = scene->LoadObjectFromTemplate("AIVehicle",group);
+	patria->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(GASS::Vec3(0,0,20))));
+
+	
+	GASS::BaseSceneComponentPtr trigger_comp = trigger->GetBaseSceneComponent("VehicleTriggerComponent");
+	GASS::SceneObjectRef c_ref(patria->GetGUID());
+	std::vector<GASS::SceneObjectRef> c_vec;
+	c_vec.push_back(c_ref);
+	trigger_comp->SetPropertyByType("ActivationControllers",c_vec);
+	*/
+
+	
 	//create free camera and set start pos
 	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-	GASS::MessagePtr pos_msg(new GASS::PositionMessage(GASS::Vec3(0,2,0)));
+	GASS::PositionMessagePtr pos_msg(new GASS::PositionMessage(GASS::Vec3(0,2,0)));
 	if(free_obj)
 	{
-		free_obj->SendImmediate(pos_msg);
+		free_obj->SendImmediateRequest(pos_msg);
 		GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
 		m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 	}
@@ -178,10 +234,10 @@ int run(int argc, char* argv[])
 				GASS::Vec3 torq(0,0,2000);
 				torq = rot_mat * torq;
 				GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
-				box_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionMessage(pos)));
-				box_obj->SendImmediate(GASS::MessagePtr(new GASS::RotationMessage(rot)));
-				box_obj->SendImmediate(GASS::MessagePtr(new GASS::PhysicsBodyAddForceRequest(vel)));
-				box_obj->SendImmediate(GASS::MessagePtr(new GASS::PhysicsBodyAddTorqueRequest(torq)));
+				box_obj->SendImmediateRequest(GASS::PositionMessagePtr(new GASS::PositionMessage(pos)));
+				box_obj->SendImmediateRequest(GASS::RotationMessagePtr(new GASS::RotationMessage(rot)));
+				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddForceRequestPtr(new GASS::PhysicsBodyAddForceRequest(vel)));
+				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddTorqueRequestPtr(new GASS::PhysicsBodyAddTorqueRequest(torq)));
 			}
 		}
 		else if(GetAsyncKeyState(VK_DELETE))
@@ -191,9 +247,10 @@ int run(int argc, char* argv[])
 		{
 			if(!key_down)
 			{
+				GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemRequestMessagePtr(new GASS::ScenarioStateRequest(GASS::SS_PLAY)));
 				key_down = true;
-				tp.x += 1;
-				tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
+				//tp.x += 1;
+				//tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
 //				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("wheel.3ds")));
 			}
 		}
@@ -201,9 +258,10 @@ int run(int argc, char* argv[])
 		{
 			if(!key_down)
 			{
-
-				tp.y += 0.2;
-				tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
+				GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemRequestMessagePtr(new GASS::ScenarioStateRequest(GASS::SS_STOP)));
+				
+				//tp.y += 0.2;
+//				tlc->PostMessage(GASS::MessagePtr(new GASS::PositionMessage(tp)));
 
 				key_down = true;
 	//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileMessage("car.3ds")));
@@ -254,7 +312,6 @@ int run(int argc, char* argv[])
 	return 0;
 }
 
-
 int main(int argc, char* argv[])
 {
 	int ret =0;
@@ -269,5 +326,3 @@ int main(int argc, char* argv[])
 	}
 	return ret;
 }
-
-
