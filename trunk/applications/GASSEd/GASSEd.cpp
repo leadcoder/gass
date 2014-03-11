@@ -356,7 +356,7 @@ void GASSEd::OnPaste()
 		cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
 		obj->AddChild(cut_obj);
 		int id = (int) this;
-		cut_obj->PostEvent(GASS::ParentChangedMessagePtr(new GASS::ParentChangedMessage(id)));
+		cut_obj->PostEvent(GASS::ParentChangedEventPtr(new GASS::ParentChangedEvent(id)));
 		cut_obj.reset();
 		m_PasteAct->setEnabled(false);
 	}
