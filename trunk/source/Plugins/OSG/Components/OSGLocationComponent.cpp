@@ -134,19 +134,19 @@ namespace GASS
 			m_TransformNode->setName(name);
 		}
 		LocationComponentPtr location = DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
-		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
+		GetSceneObject()->PostEvent(LocationLoadedMessagePtr(new LocationLoadedMessage(location)));
 
-		MessagePtr pos_msg(new PositionMessage(m_Pos));
-		MessagePtr rot_msg;//(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+		PositionMessagePtr pos_msg(new PositionMessage(m_Pos));
+		RotationMessagePtr rot_msg;//(new RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 
 		if(m_Rot != Vec3(0,0,0))
-			rot_msg =MessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+			rot_msg =RotationMessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 		else //use 
-			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
+			rot_msg = RotationMessagePtr(new GASS::RotationMessage(m_QRot));
 
-		GetSceneObject()->PostMessage(pos_msg);
-		GetSceneObject()->PostMessage(rot_msg);
-		GetSceneObject()->PostMessage(MessagePtr (new ScaleMessage(m_Scale)));
+		GetSceneObject()->PostRequest(pos_msg);
+		GetSceneObject()->PostRequest(rot_msg);
+		GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(m_Scale)));
 	}
 
 
@@ -215,8 +215,7 @@ namespace GASS
 		m_Pos = value;
 		if(m_TransformNode.valid())
 		{
-			MessagePtr pos_msg(new PositionMessage(value));
-			GetSceneObject()->PostMessage(pos_msg);
+			GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(value)));
 		}
 	}
 
@@ -241,8 +240,8 @@ namespace GASS
 		Vec3 pos = GetWorldPosition();
 		Vec3 scale = GetScale();
 		Quaternion rot = GetWorldRotation();
-		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
-		GetSceneObject()->PostMessage(trans_msg);
+		
+		GetSceneObject()->PostEvent(TransformationNotifyMessagePtr(new TransformationNotifyMessage(pos,rot,scale)));
 		//send for all child tranforms also?
 		GASS::IComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
@@ -311,8 +310,7 @@ namespace GASS
 		m_QRot = value;
 		if(m_TransformNode.valid())
 		{
-			MessagePtr rot_msg(new RotationMessage(Quaternion(value)));
-			GetSceneObject()->PostMessage(rot_msg);
+			GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(Quaternion(value))));
 		}
 	}
 
@@ -322,8 +320,7 @@ namespace GASS
 		if(m_TransformNode.valid())
 		{
 			Vec3 rot = Math::Deg2Rad(value);
-			MessagePtr rot_msg(new GASS::RotationMessage(Quaternion(rot)));
-			GetSceneObject()->PostMessage(rot_msg);
+			GetSceneObject()->PostRequest(RotationMessagePtr(new GASS::RotationMessage(Quaternion(rot))));
 		}
 	}
 

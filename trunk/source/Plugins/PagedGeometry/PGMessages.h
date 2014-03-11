@@ -22,27 +22,27 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
 {
-	class GrassLoaderComponentLoaded : public BaseMessage
+	class GrassLoaderComponentLoaded : public SceneObjectEventMessage
 	{
 		public:
-		GrassLoaderComponentLoaded (SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay)
+		GrassLoaderComponentLoaded (SenderID sender_id = -1, double delay= 0) :  SceneObjectEventMessage(sender_id , delay)
 		{
 		}
 	};
 	typedef SPTR<GrassLoaderComponentLoaded> GrassLoaderComponentLoadedPtr;
 
 	
-	class GrassPaintMessage : public BaseMessage
+	class GrassPaintMessage : public SceneObjectRequestMessage
 	{
 	public:
-		GrassPaintMessage (const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  BaseMessage(sender_id , delay), 
+		GrassPaintMessage (const Vec3 &pos, float brush_size, float brush_inner_size, float intensity = 1, float noise = 0, SenderID sender_id = -1, double delay= 0) :  SceneObjectRequestMessage(sender_id , delay), 
 			m_Position(pos), 
 			m_BrushSize(brush_size),
 			m_BrushInnerSize(brush_inner_size),

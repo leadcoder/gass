@@ -130,7 +130,7 @@ namespace GASS
 			bool cyclic = false;
 			Float new_distance = now_distance + look_ahead;
 			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Path, cyclic, wp_index);
-			GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+			GetSceneObject()->PostRequest(GotoPositionMessagePtr(new GotoPositionMessage(target_point)));
 		}
 	}
 }

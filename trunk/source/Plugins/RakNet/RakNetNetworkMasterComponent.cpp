@@ -178,7 +178,7 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete data_to_read ;
-				GetSceneObject()->PostMessage(MessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
+				GetSceneObject()->PostRequest(NetworkDeserializeMessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 
 			}
 			//NetworkPackagePtr package;

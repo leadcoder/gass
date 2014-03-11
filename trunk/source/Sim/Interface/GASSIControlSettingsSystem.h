@@ -22,6 +22,7 @@
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include <map>
 #include <string>
 
@@ -56,11 +57,11 @@ namespace GASS
 	};
 	typedef SPTR<ControllSettingsMessage> ControllSettingsMessagePtr;
 
-	class InputControllerMessage : public BaseMessage
+	class InputControllerMessage : public SceneObjectEventMessage
 	{
 	public:
 		InputControllerMessage(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Controller(controller), 
+		  SceneObjectEventMessage(sender_id , delay), m_Controller(controller), 
 			  m_Value(value),
 			  m_ControllerType(ct),
 			  m_Settings(settings)

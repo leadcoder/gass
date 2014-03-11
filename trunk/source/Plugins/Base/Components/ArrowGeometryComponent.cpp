@@ -192,8 +192,8 @@ namespace GASS
 		sub_mesh_data->MaterialName = "GizmoArrowMat";
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 
 		/*MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),
@@ -214,8 +214,7 @@ namespace GASS
 		m_Texture = texture_name;
 		if(GetSceneObject())
 		{
-			MessagePtr texture_message(new TextureMessage(texture_name.Name()));
-			GetSceneObject()->PostMessage(texture_message);
+			GetSceneObject()->PostRequest(TextureMessagePtr(new TextureMessage(texture_name.Name())));
 		}
 	}
 

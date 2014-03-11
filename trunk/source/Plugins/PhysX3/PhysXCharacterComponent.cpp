@@ -188,15 +188,14 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 
 		const Vec3 current_pos  = GetPosition();
-		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
-		GetSceneObject()->PostMessage(pos_msg);
+		
+		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos ,from_id)));
 
 		//const Quaternion rot = GetRotation();
 		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
 		
 		Quaternion new_rot(Vec3(m_Yaw,0,0));
-		MessagePtr rot_msg(new WorldRotationMessage(new_rot,from_id));
-		GetSceneObject()->PostMessage(rot_msg);
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot,from_id)));
 		
 		Mat4 rot_mat;
 		rot_mat.Identity();
@@ -253,8 +252,7 @@ namespace GASS
 		PxU32 flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, delta, PxControllerFilters(0));
 
 		//LogManager::getSingleton().stream() << m_CurrentVel << "\n";
-		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id));
-		GetSceneObject()->PostMessage(physics_msg);
+		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
 
 	}
 

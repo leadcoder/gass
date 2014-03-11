@@ -202,7 +202,7 @@ namespace GASS
 				for( itShadow=m_MeshObject->getEdgeList()->edgeGroups.begin(), itEndShadow=m_MeshObject->getEdgeList()->edgeGroups.end(); itShadow!=itEndShadow; itShadow++ )
 					const_cast<Ogre::VertexData*>((*itShadow).vertexData)->prepareForShadowVolume();
 			OgreMaterialCache::Add(m_MeshObject);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 		
 	}

@@ -116,7 +116,7 @@ namespace GASS
 		//call this to ensure that scene object pointers get initlized
 		BaseSceneComponent::OnInitialize();
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SightComponent::OnInput,InputRelayEvent,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 
@@ -134,16 +134,10 @@ namespace GASS
 		//set start zoom
 		if(m_ZoomValues.size() > 0)
 		{
-			MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0));
-			GetSceneObject()->PostMessage(cam_msg);
+			GetSceneObject()->PostRequest(CameraParameterMessagePtr(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[0],0)));
 		}
-
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
-
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 
 		if(m_TargetObjectTemplate != "")
 		{
@@ -218,7 +212,7 @@ namespace GASS
 
 				Quaternion rot;
 				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
-				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+				GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
 				m_StartRotation = m_BarrelTransformation;
 			}
 			else
@@ -249,7 +243,7 @@ namespace GASS
 		
 		Quaternion rot;
 		rot.FromRotationMatrix(m_AimRotation.GetRotation());
-		GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
 
 
 		//Send message to auto aim system to control weapon system
@@ -266,7 +260,7 @@ namespace GASS
 		if(m_AimAtPos)
 		{
 			int id = (int) this; 
-			m_AutoAimObject->PostMessage(MessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
+			m_AutoAimObject->PostRequest(AimAtPositionMessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
 			
 			//DEBUG_PRINT("Aim at pos");
 		}
@@ -308,7 +302,7 @@ namespace GASS
 
 	
 
-	void SightComponent::OnInput(InputControllerMessagePtr message)
+	void SightComponent::OnInput(InputRelayEventPtr message)
 	{
 		int id = (int) this; 
 		std::string name = message->GetController();
@@ -322,8 +316,7 @@ namespace GASS
 
 			else
 			{
-				MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-				GetSceneObject()->PostMessage(volume_msg);
+				GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 
 				m_Active = false;
 				 
@@ -341,7 +334,7 @@ namespace GASS
 			else
 				m_AimAtPos = false;
 
-			m_AutoAimObject->PostMessage(MessagePtr(new ActivateAutoAimMessage(m_AimAtPos,m_AutoAimPriority,id)));
+			m_AutoAimObject->PostRequest(ActivateAutoAimMessagePtr(new ActivateAutoAimMessage(m_AimAtPos,m_AutoAimPriority,id)));
 		}
 
 		if (!m_RemoteSim && name == m_ResetToBarrelController)
@@ -350,7 +343,7 @@ namespace GASS
 			{
 				Quaternion rot;
 				rot.FromRotationMatrix(m_BarrelTransformation.GetRotation());
-				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(rot)));
+				GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot)));
 
 				m_YawValue = 0;
 				m_PitchValue = 0;
@@ -366,8 +359,7 @@ namespace GASS
 				{
 					m_CurrentZoom++;
 					m_CurrentZoom = m_CurrentZoom % m_ZoomValues.size();
-					MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[m_CurrentZoom],0));
-					GetSceneObject()->PostMessage(cam_msg);
+					GetSceneObject()->PostRequest(CameraParameterMessagePtr(new CameraParameterMessage(CameraParameterMessage::CAMERA_FOV,m_ZoomValues[m_CurrentZoom],0)));
 				}
 			}
 		}
@@ -385,8 +377,7 @@ namespace GASS
 		if (m_Active && name == m_YawController)
 		{
 			//update sound
-			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_PitchInput)));
-			GetSceneObject()->PostMessage(volume_msg);
+			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_PitchInput))));
 			//if(!m_RemoteSim)
 			m_YawInput = pow(abs(value),m_TurnInputExp);
 
@@ -396,10 +387,8 @@ namespace GASS
 
 		if (m_Active && name == m_PitchController)
 		{
-			//udate sound
-			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_YawInput)));
-			GetSceneObject()->PostMessage(volume_msg);
-			//if(!m_RemoteSim)
+			//update sound
+			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_YawInput))));
 			m_PitchInput = pow(abs(value),m_TurnInputExp);
 			if(value < 0)
 				m_PitchInput = -m_PitchInput;
@@ -424,7 +413,7 @@ namespace GASS
 			SceneObjectPtr so(m_TargetObject,NO_THROW);
 			if(so)
 			{
-				so->PostMessage(MessagePtr(new WorldPositionMessage(result.CollPosition)));
+				so->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(result.CollPosition)));
 			}
 		}
 		else

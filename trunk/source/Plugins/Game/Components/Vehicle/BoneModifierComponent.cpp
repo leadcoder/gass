@@ -108,8 +108,7 @@ namespace GASS
 				Mat4 mat_rel = trans1*trans2;
 				Vec3 offset(0,0,0);
 				offset = mat_rel*offset;
-				
-				GetSceneObject()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName,offset,Quaternion::IDENTITY)));
+				GetSceneObject()->PostRequest(BoneTransformationMessagePtr(new BoneTransformationMessage(m_BoneName,offset,Quaternion::IDENTITY)));
 				//objects.front()->PostMessage(MessagePtr(new BoneTransformationMessage(m_BoneName,pos1,Quaternion::IDENTITY)));
 				//std::cout << "send bone" << std::endl;
 			

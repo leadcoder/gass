@@ -48,7 +48,7 @@ namespace GASS
 	private:
 		ADD_PROPERTY(std::string,InputMapping);
 		ADD_PROPERTY(Float,MaxVelocity);
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 	};
 }
 #endif

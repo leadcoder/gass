@@ -150,7 +150,7 @@ namespace GASS
 		SetGeometryFlags(m_GeomFlags);
 		//m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
 		//m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const

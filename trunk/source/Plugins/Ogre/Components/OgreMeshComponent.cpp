@@ -154,7 +154,7 @@ namespace GASS
 			SetCastShadow(m_CastShadow);
 			SetRenderQueue(m_RenderQueue);
 			OgreMaterialCache::Add(m_MeshResource.Name(),m_OgreEntity);
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			
 			//auto build edge list
 			//if(!m_OgreEntity->getMesh()->getEdgeList())

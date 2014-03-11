@@ -90,7 +90,7 @@ namespace GASS
 
 				node_obj->RegisterForMessage(REG_TMESS(RNRoadEdgeComponent::OnTransformation,TransformationNotifyMessage,0));
 				GASSAssert(node_obj,"Failed to create scene object in void RNRoadEdgeComponent::SetWaypoints");
-				node_obj->SendImmediate(MessagePtr(new GASS::WorldPositionMessage(wps[i])));
+				node_obj->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(wps[i])));
 			}
 		}
 	}

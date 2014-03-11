@@ -46,9 +46,8 @@ namespace GASS
 				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = (int) this;
-				GASS::MessagePtr rot_msg(new GASS::WorldRotationMessage(new_rot,from_id));
-				//gizmo->PostMessage(rot_msg);
-				selected->PostMessage(rot_msg);
+				
+				selected->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot,from_id)));
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesMessage(from_id)));
 
@@ -110,7 +109,7 @@ namespace GASS
 					selected = new_obj;
 				}
 
-				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
+				CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(false,from_id));
 				SendMessageRec(selected,col_msg);
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
@@ -136,7 +135,7 @@ namespace GASS
 		if(selected && CheckIfEditable(selected))
 		{
 			int from_id = (int) this;
-			MessagePtr col_msg(new GASS::CollisionSettingsMessage(true,from_id));
+			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(true,from_id));
 			//selected->SendImmediate(col_msg);
 			SendMessageRec(selected,col_msg);
 
@@ -172,9 +171,9 @@ namespace GASS
 
 
 
-	void RotateTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
+	void RotateTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
-		obj->PostMessage(msg);
+		obj->PostRequest(msg);
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
@@ -253,9 +252,9 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = (int) this;
-			MessagePtr col_msg(new GASS::CollisionSettingsMessage(value,from_id));
+			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(value,from_id));
 			SendMessageRec(gizmo,col_msg);
-			MessagePtr vis_msg(new GASS::VisibilityMessage(value,from_id));
+			VisibilityMessagePtr vis_msg(new VisibilityMessage(value,from_id));
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}

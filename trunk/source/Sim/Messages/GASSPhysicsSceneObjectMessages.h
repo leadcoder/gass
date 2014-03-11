@@ -34,22 +34,18 @@ namespace GASS
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
-	//*********************************************************
-	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
-	//*********************************************************
-
 	/**
-	Message used to change collisiion settings,
+	Message used to change collision settings,
 	Typically the physics system has
 	components that respond to this message
 	by disable/enable collision models.
-
 	*/
-	class CollisionSettingsMessage : public BaseMessage
+
+	class CollisionSettingsMessage : public SceneObjectRequestMessage
 	{
 	public:
 		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Enable(enable)
+		  SceneObjectRequestMessage(sender_id , delay), m_Enable(enable)
 		  {
 
 		  }
@@ -63,11 +59,11 @@ namespace GASS
 	Message used to enable/disable physics debugging
 	*/
 
-	class PhysicsDebugMessage : public BaseMessage
+	class PhysicsDebugMessage : public SceneObjectRequestMessage
 	{
 	public:
 		PhysicsDebugMessage(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
+		  SceneObjectRequestMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
 		  {
 
 		  }
@@ -79,14 +75,305 @@ namespace GASS
 	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
 
 
+	
+	/**
+	Set desired linear velocity for prismatic joint. 
+	*/
+	class PhysicsPrismaticJointVelocityRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsPrismaticJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsPrismaticJointVelocityRequest> PhysicsPrismaticJointVelocityRequestPtr;
+
+	/**
+	Set desired position for prismatic joint. 
+	*/
+	class PhysicsPrismaticJointPositionRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsPrismaticJointPositionRequest(Float position, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Position(position)
+		  {
+
+		  }
+		  Float GetPosition()const {return m_Position;}
+	private:
+		Float m_Position;
+	};
+	typedef SPTR<PhysicsPrismaticJointPositionRequest> PhysicsPrismaticJointPositionRequestPtr;
+
+
+	/**
+	Set max force used by a prismatic joint to get to it's desired velocity 
+	*/
+
+	class PhysicsPrismaticJointMaxForceRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsPrismaticJointMaxForceRequest(Float max_force, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_MaxForce(max_force)
+		  {
+
+		  }
+		  Float GetMaxForce()const {return m_MaxForce;}
+	private:
+		Float m_MaxForce;
+	};
+	typedef SPTR<PhysicsPrismaticJointMaxForceRequest> PhysicsPrismaticJointMaxForceRequestPtr;
+
+	/**
+	Set desired angular velocity for hinge joint. 
+	*/
+	class PhysicsHingeJointVelocityRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsHingeJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsHingeJointVelocityRequest> PhysicsHingeJointVelocityRequestPtr;
+
+	/**
+	Set max torque used by a hinge joint to get to it's desired velocity 
+	*/
+
+	class PhysicsHingeJointMaxTorqueRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsHingeJointMaxTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_MaxTorque(max_torque)
+		  {
+
+		  }
+		  Float GetMaxTorque()const {return m_MaxTorque;}
+	private:
+		Float m_MaxTorque;
+	};
+	typedef SPTR<PhysicsHingeJointMaxTorqueRequest> PhysicsHingeJointMaxTorqueRequestPtr;
+
+	/**
+	Set desired angular velocity of the suspension joints drive axis
+	*/
+	class PhysicsSuspensionJointDriveVelocityRequest: public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsSuspensionJointDriveVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsSuspensionJointDriveVelocityRequest> PhysicsSuspensionJointDriveVelocityRequestPtr;
+
+
+	/**
+	Set max torque used by the suspension joints drive axis to get to it's desired velocity 
+	*/
+	class PhysicsSuspensionJointMaxDriveTorqueRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsSuspensionJointMaxDriveTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_MaxTorque(max_torque)
+		  {
+
+		  }
+		  Float GetMaxTorque()const {return m_MaxTorque;}
+	private:
+		Float m_MaxTorque;
+	};
+	typedef SPTR<PhysicsSuspensionJointMaxDriveTorqueRequest> PhysicsSuspensionJointMaxDriveTorqueRequestPtr;
+	
+	/**
+	Set max torque used by the suspension joints steer axis to get to it's desired velocity 
+	*/
+	class PhysicsSuspensionJointMaxSteerTorqueRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsSuspensionJointMaxSteerTorqueRequest(Float torque, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_MaxTorque(torque)
+		  {
+
+		  }
+		  Float GetMaxTorque()const {return m_MaxTorque;}
+	private:
+		Float m_MaxTorque;
+	};
+	typedef SPTR<PhysicsSuspensionJointMaxSteerTorqueRequest> PhysicsSuspensionJointMaxSteerTorqueRequestPtr;
+
+	/**
+	Set desired angular velocity of the suspension joints steer axis
+	*/
+	
+	class PhysicsSuspensionJointSteerVelocityRequest: public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsSuspensionJointSteerVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
+		  {
+
+		  }
+		  Float GetVelocity()const {return m_Velocity;}
+	private:
+		Float m_Velocity;
+	};
+	typedef SPTR<PhysicsSuspensionJointSteerVelocityRequest> PhysicsSuspensionJointSteerVelocityRequestPtr;
+
+
+
+	/**
+	Request to change the state of a physics bodies.
+	*/
+	class PhysicsBodyStateRequest : public SceneObjectRequestMessage
+	{
+
+	public:
+		enum PhysicsBodyState
+		{
+			ENABLE,
+			DISABLE
+		};
+
+		PhysicsBodyStateRequest(PhysicsBodyState state, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(state)
+		  {
+
+		  }
+		  PhysicsBodyState GetState()const {return m_Value;}
+	private:
+		PhysicsBodyState m_Value;
+	};
+	typedef SPTR<PhysicsBodyStateRequest> PhysicsBodyStateRequestPtr;
+
+
+
+	/**
+	Request to change the velocity of physics bodies.
+	*/
+
+	class PhysicsBodyVelocityRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsBodyVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetVelocity()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsBodyVelocityRequest> PhysicsBodyVelocityRequestPtr;
+	
+
+	/**
+	Request to change the angular velocity of physics bodies.
+	*/
+
+	class PhysicsBodyAngularVelocityRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsBodyAngularVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetAngularVelocity()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsBodyAngularVelocityRequest> PhysicsBodyAngularVelocityRequestPtr;
+
+	/**
+	Request to add force to physics bodies.
+	*/
+
+	class PhysicsBodyAddForceRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsBodyAddForceRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetForce()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsBodyAddForceRequest> PhysicsBodyAddForceRequestPtr;
+
+
+
+	/**
+	Request to add torque to physics bodies.
+	*/
+
+	class PhysicsBodyAddTorqueRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsBodyAddTorqueRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(value)
+		  {
+
+		  }
+		  Vec3 GetTorque()const {return m_Value;}
+	private:
+		Vec3 m_Value;
+	};
+	typedef SPTR<PhysicsBodyAddTorqueRequest> PhysicsBodyAddTorqueRequestPtr;
+
+	/**
+	Message used to change mass of physics bodies.
+	*/
+	class PhysicsBodyMassRequest : public SceneObjectRequestMessage
+	{
+	public:
+		PhysicsBodyMassRequest(Float mass, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(mass)
+		  {
+
+		  }
+		  Float GetMass()const {return m_Value;}
+	private:
+		Float m_Value;
+	};
+	typedef SPTR<PhysicsBodyMassRequest> PhysicsBodyMassRequestPtr;
+
+	///////////Event section///////////
+	
+	class BodyLoadedMessage : public SceneObjectEventMessage
+	{
+	public:
+		BodyLoadedMessage(SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectEventMessage( sender_id , delay){}
+	private:
+	};
+	typedef SPTR<BodyLoadedMessage> BodyLoadedMessagePtr;
+
+
 	/**
 	Event casted by hinge joints to inform about applied forces and velocities.
 	*/
-	class PhysicsHingeJointReportEvent : public BaseMessage
+	class PhysicsHingeJointReportEvent : public SceneObjectEventMessage
 	{
 	public:
 		PhysicsHingeJointReportEvent(Float target_velocity, const Vec3 &force, const Vec3 &torq, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_TargetVelocity(target_velocity), m_Force(force), m_Torque(torq)
+		  SceneObjectEventMessage(sender_id , delay), m_TargetVelocity(target_velocity), m_Force(force), m_Torque(torq)
 		  {
 
 		  }
@@ -104,11 +391,12 @@ namespace GASS
 	/**
 	Event casted by joints to inform about local velocities.
 	*/
-	class PhysicsJointVelocityEvent : public BaseMessage
+
+	class PhysicsJointVelocityEvent : public SceneObjectEventMessage
 	{
 	public:
 		PhysicsJointVelocityEvent(const Vec3 &linear, const Vec3 &angular, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Linear(linear), m_Angular(angular)
+		  SceneObjectEventMessage(sender_id , delay), m_Linear(linear), m_Angular(angular)
 		  {
 
 		  }
@@ -120,336 +408,14 @@ namespace GASS
 	};
 	typedef SPTR<PhysicsJointVelocityEvent> PhysicsJointVelocityEventPtr;
 	
-	/**
-	Set desired linear velocity for prismatic joint. 
-	*/
-	class PhysicsPrismaticJointVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsPrismaticJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef SPTR<PhysicsPrismaticJointVelocityRequest> PhysicsPrismaticJointVelocityRequestPtr;
-
-	/**
-	Set desired position for prismatic joint. 
-	*/
-	class PhysicsPrismaticJointPositionRequest : public BaseMessage
-	{
-	public:
-		PhysicsPrismaticJointPositionRequest(Float position, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Position(position)
-		  {
-
-		  }
-		  Float GetPosition()const {return m_Position;}
-	private:
-		Float m_Position;
-	};
-	typedef SPTR<PhysicsPrismaticJointPositionRequest> PhysicsPrismaticJointPositionRequestPtr;
-
-
-	/**
-	Set max force used by a prismatic joint to get to it's desired velocity 
-	*/
-
-	class PhysicsPrismaticJointMaxForceRequest : public BaseMessage
-	{
-	public:
-		PhysicsPrismaticJointMaxForceRequest(Float max_force, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_MaxForce(max_force)
-		  {
-
-		  }
-		  Float GetMaxForce()const {return m_MaxForce;}
-	private:
-		Float m_MaxForce;
-	};
-	typedef SPTR<PhysicsPrismaticJointMaxForceRequest> PhysicsPrismaticJointMaxForceRequestPtr;
-
-	/**
-	Set desired angular velocity for hinge joint. 
-	*/
-	class PhysicsHingeJointVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsHingeJointVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef SPTR<PhysicsHingeJointVelocityRequest> PhysicsHingeJointVelocityRequestPtr;
-
-	/**
-	Set max torque used by a hinge joint to get to it's desired velocity 
-	*/
-
-	class PhysicsHingeJointMaxTorqueRequest : public BaseMessage
-	{
-	public:
-		PhysicsHingeJointMaxTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_MaxTorque(max_torque)
-		  {
-
-		  }
-		  Float GetMaxTorque()const {return m_MaxTorque;}
-	private:
-		Float m_MaxTorque;
-	};
-	typedef SPTR<PhysicsHingeJointMaxTorqueRequest> PhysicsHingeJointMaxTorqueRequestPtr;
-
-	/**
-	Set desired angular velocity of the suspension joints drive axis
-	*/
-	class PhysicsSuspensionJointDriveVelocityRequest: public BaseMessage
-	{
-	public:
-		PhysicsSuspensionJointDriveVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef SPTR<PhysicsSuspensionJointDriveVelocityRequest> PhysicsSuspensionJointDriveVelocityRequestPtr;
-
-
-	/**
-	Set max torque used by the suspension joints drive axis to get to i'ts desired velocity 
-	*/
-	class PhysicsSuspensionJointMaxDriveTorqueRequest : public BaseMessage
-	{
-	public:
-		PhysicsSuspensionJointMaxDriveTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_MaxTorque(max_torque)
-		  {
-
-		  }
-		  Float GetMaxTorque()const {return m_MaxTorque;}
-	private:
-		Float m_MaxTorque;
-	};
-	typedef SPTR<PhysicsSuspensionJointMaxDriveTorqueRequest> PhysicsSuspensionJointMaxDriveTorqueRequestPtr;
-	
-	/**
-	Set max torque used by the suspension joints steer axis to get to i'ts desired velocity 
-	*/
-	class PhysicsSuspensionJointMaxSteerTorqueRequest : public BaseMessage
-	{
-	public:
-		PhysicsSuspensionJointMaxSteerTorqueRequest(Float torque, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_MaxTorque(torque)
-		  {
-
-		  }
-		  Float GetMaxTorque()const {return m_MaxTorque;}
-	private:
-		Float m_MaxTorque;
-	};
-	typedef SPTR<PhysicsSuspensionJointMaxSteerTorqueRequest> PhysicsSuspensionJointMaxSteerTorqueRequestPtr;
-
-	/**
-	Set desired angular velocity of the suspension joints steer axis
-	*/
-	
-	class PhysicsSuspensionJointSteerVelocityRequest: public BaseMessage
-	{
-	public:
-		PhysicsSuspensionJointSteerVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef SPTR<PhysicsSuspensionJointSteerVelocityRequest> PhysicsSuspensionJointSteerVelocityRequestPtr;
 
 
 
-	/**
-	Request to change the state of a physics bodies.
-	*/
-	class PhysicsBodyStateRequest : public BaseMessage
-	{
-
-	public:
-		enum PhysicsBodyState
-		{
-			ENABLE,
-			DISABLE
-		};
-
-		PhysicsBodyStateRequest(PhysicsBodyState state, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(state)
-		  {
-
-		  }
-		  PhysicsBodyState GetState()const {return m_Value;}
-	private:
-		PhysicsBodyState m_Value;
-	};
-	typedef SPTR<PhysicsBodyStateRequest> PhysicsBodyStateRequestPtr;
-
-
-
-	/**
-	Request to change the velocity of physics bodies.
-	*/
-
-	class PhysicsBodyVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsBodyVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value)
-		  {
-
-		  }
-		  Vec3 GetVelocity()const {return m_Value;}
-	private:
-		Vec3 m_Value;
-	};
-	typedef SPTR<PhysicsBodyVelocityRequest> PhysicsBodyVelocityRequestPtr;
-	
-
-	/**
-	Request to change the angular velocity of physics bodies.
-	*/
-
-	class PhysicsBodyAngularVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsBodyAngularVelocityRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value)
-		  {
-
-		  }
-		  Vec3 GetAngularVelocity()const {return m_Value;}
-	private:
-		Vec3 m_Value;
-	};
-	typedef SPTR<PhysicsBodyAngularVelocityRequest> PhysicsBodyAngularVelocityRequestPtr;
-
-	/**
-	Request to add force to physics bodies.
-	*/
-
-	class PhysicsBodyAddForceRequest : public BaseMessage
-	{
-	public:
-		PhysicsBodyAddForceRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value)
-		  {
-
-		  }
-		  Vec3 GetForce()const {return m_Value;}
-	private:
-		Vec3 m_Value;
-	};
-	typedef SPTR<PhysicsBodyAddForceRequest> PhysicsBodyAddForceRequestPtr;
-
-
-
-	/**
-	Request to add torque to physics bodies.
-	*/
-
-	class PhysicsBodyAddTorqueRequest : public BaseMessage
-	{
-	public:
-		PhysicsBodyAddTorqueRequest(Vec3 value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value)
-		  {
-
-		  }
-		  Vec3 GetTorque()const {return m_Value;}
-	private:
-		Vec3 m_Value;
-	};
-	typedef SPTR<PhysicsBodyAddTorqueRequest> PhysicsBodyAddTorqueRequestPtr;
-
-	/**
-	Message used to change mass of physics bodies.
-	*/
-	class PhysicsBodyMassRequest : public BaseMessage
-	{
-	public:
-		PhysicsBodyMassRequest(Float mass, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(mass)
-		  {
-
-		  }
-		  Float GetMass()const {return m_Value;}
-	private:
-		Float m_Value;
-	};
-
-	typedef SPTR<PhysicsBodyMassRequest> PhysicsBodyMassRequestPtr;
-
-	/*class PhysicsSuspensionWheelVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsSuspensionWheelVelocityRequest(float target_velocity, float max_force = -1, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_TargetVel(target_velocity), m_MaxForce(max_force)
-		  {
-
-		  }
-		  float GetTargetVelocity()const {return m_TargetVel;}
-		  float GetMaxForce()const {return m_MaxForce;}
-	private:
-		float m_TargetVel;
-		float m_MaxForce;
-	};
-	typedef SPTR<PhysicsSuspensionWheelVelocityRequest> PhysicsSuspensionWheelVelocityRequestPtr;
-	
-	class PhysicsSuspensionSteerVelocityRequest : public BaseMessage
-	{
-	public:
-		PhysicsSuspensionSteerVelocityRequest(float target_velocity, float max_force = -1, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_TargetVel(target_velocity), m_MaxForce(max_force)
-		  {
-
-		  }
-		  float GetTargetVelocity()const {return m_TargetVel;}
-		  float GetMaxForce()const {return m_MaxForce;}
-	private:
-		float m_TargetVel;
-		float m_MaxForce;
-	};
-	typedef SPTR<PhysicsSuspensionSteerVelocityRequest> PhysicsSuspensionSteerVelocityRequestPtr;*/
-
-	//*********************************************************
-	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
-	//*********************************************************
-
-	class BodyLoadedMessage : public BaseMessage
-	{
-	public:
-		BodyLoadedMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay){}
-	private:
-	};
-	typedef SPTR<BodyLoadedMessage> BodyLoadedMessagePtr;
-
-
-	class VelocityNotifyMessage : public BaseMessage
+	class VelocityNotifyMessage : public SceneObjectEventMessage
 	{
 	public:
 		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
+		  SceneObjectEventMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
 		  Vec3 GetLinearVelocity() const {return m_LinearVel;}
 		  Vec3 GetAngularVelocity() const {return m_AngularVel;}
 	private:
@@ -458,11 +424,11 @@ namespace GASS
 	};
 	typedef SPTR<VelocityNotifyMessage> VelocityNotifyMessagePtr;
 
-	class HingeJointNotifyMessage : public BaseMessage
+	class HingeJointNotifyMessage : public SceneObjectEventMessage
 	{
 	public:
 		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
+		  SceneObjectEventMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
 		  float GetAngle() const {return m_Angle;}
 		  float GetAngleRate() const {return m_AngleRate;}
 	private:
@@ -470,6 +436,4 @@ namespace GASS
 		float m_AngleRate;
 	};
 	typedef SPTR<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
-
-	
 }

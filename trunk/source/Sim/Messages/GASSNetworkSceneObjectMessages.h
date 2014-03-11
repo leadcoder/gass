@@ -44,11 +44,11 @@ namespace GASS
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 
-	class LoadNetworkComponentsMessage : public BaseMessage
+	class LoadNetworkComponentsMessage : public SceneObjectRequestMessage
 	{
 	public:
 		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
+		  SceneObjectRequestMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
 		  SceneManagerPtr GetNetworkSceneManager() const {return m_NetworkSceneManager;}
 	private:
 		SceneManagerPtr m_NetworkSceneManager;
@@ -82,12 +82,12 @@ namespace GASS
 		unsigned int m_Port;
 	};
 
-	class NetworkSerializeMessage : public BaseMessage
+	class NetworkSerializeMessage : public SceneObjectRequestMessage
 	{
 
 	public:
 		NetworkSerializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
+		  SceneObjectRequestMessage( sender_id , delay),
 			  m_Package(package),
 			  m_TimeStamp(time_stamp),
 			  m_Address(address)
@@ -106,11 +106,11 @@ namespace GASS
 
 
 
-	class NetworkDeserializeMessage : public BaseMessage
+	class NetworkDeserializeMessage : public SceneObjectRequestMessage
 	{
 	public:
 		NetworkDeserializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
+		  SceneObjectRequestMessage( sender_id , delay),
 			  m_Package(package),
 			  m_TimeStamp(time_stamp),
 			  m_Address(address)

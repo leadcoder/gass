@@ -372,8 +372,8 @@ namespace GASS
 
 			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
-			MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-			scene_object->PostMessage(mesh_message);
+			
+			scene_object->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 		}
 		return pointer;
 	}
@@ -560,11 +560,8 @@ namespace GASS
 
 				int from_id = (int) this;
 
-				MessagePtr pos_msg(new GASS::WorldPositionMessage(pos,from_id));
-				so->SendImmediate(pos_msg);
-
-				MessagePtr rot_msg(new GASS::WorldRotationMessage(rot,from_id));
-				so->SendImmediate(rot_msg);
+				so->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(pos,from_id)));
+				so->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot,from_id)));
 			}
 			else
 			{

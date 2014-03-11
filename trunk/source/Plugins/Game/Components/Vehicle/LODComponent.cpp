@@ -132,7 +132,7 @@ namespace GASS
 		}
 		if(m_CurrentLevel != level)
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new LODMessage(level)));
+			GetSceneObject()->PostEvent(LODMessagePtr(new LODMessage(level)));
 			m_CurrentLevel = level;
 		}
 	}

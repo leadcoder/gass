@@ -330,8 +330,7 @@ namespace GASS
 		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 		int from_id = (int)this;
-		MessagePtr pos_msg(new PositionMessage(m_Pos,from_id));
-		GetSceneObject()->PostMessage(pos_msg);
+		GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,from_id)));
 
 		Quaternion rot_to_send(m_Rot);
 		if(up.z == 1)
@@ -342,8 +341,7 @@ namespace GASS
 			//we have to rotate 90 deg if z is up
 			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
 		}
-		MessagePtr rot_msg(new RotationMessage(rot_to_send,from_id));
-		GetSceneObject()->PostMessage(rot_msg);
+		GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(rot_to_send,from_id)));
 	
 		m_HeadingInput = 0;
 		m_PitchInput = 0;

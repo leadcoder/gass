@@ -197,7 +197,7 @@ namespace GASS
 				m_DensityTexture->loadImage(m_DensityImage);
 			}
 		}
-		GetSceneObject()->PostMessage(MessagePtr(new GrassLoaderComponentLoaded()));
+		GetSceneObject()->PostEvent(GrassLoaderComponentLoadedPtr(new GrassLoaderComponentLoaded()));
 	}
 
 	void GrassLoaderComponent::OnDelete()

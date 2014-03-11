@@ -143,21 +143,18 @@ namespace GASS
 		m_OgreNode->setListener(this);
 		m_OgreNode->setUserAny(Ogre::Any(this));
 
-		MessagePtr pos_msg(new GASS::PositionMessage(m_Pos));
-		MessagePtr rot_msg;
+		PositionMessagePtr pos_msg(new GASS::PositionMessage(m_Pos));
+		RotationMessagePtr rot_msg;
 		if(m_Rot != Vec3(0,0,0))
-			rot_msg =MessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
+			rot_msg =RotationMessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(m_Rot))));
 		else //use 
-			rot_msg = MessagePtr(new GASS::RotationMessage(m_QRot));
+			rot_msg = RotationMessagePtr(new GASS::RotationMessage(m_QRot));
 
 		LocationComponentPtr location = DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
-		GetSceneObject()->PostMessage(MessagePtr(new LocationLoadedMessage(location)));
+		GetSceneObject()->PostEvent(LocationLoadedMessagePtr(new LocationLoadedMessage(location)));
 		
-		
-		GetSceneObject()->PostMessage(pos_msg);
-		GetSceneObject()->PostMessage(rot_msg);
-
-		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
+		GetSceneObject()->PostRequest(pos_msg);
+		GetSceneObject()->PostRequest(rot_msg);
 	}
 
 	void OgreLocationComponent::OnDelete()
@@ -288,9 +285,7 @@ namespace GASS
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
 		if(m_OgreNode) //initialzed?
 		{
-		
-			MessagePtr pos_msg(new GASS::PositionMessage(value));
-			GetSceneObject()->PostMessage(pos_msg);
+			GetSceneObject()->PostRequest(PositionMessagePtr(new GASS::PositionMessage(value)));
 		}
 		m_Pos = value;
 	}
@@ -316,8 +311,7 @@ namespace GASS
 		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
 		if(m_OgreNode) //initialzed?
 		{
-			MessagePtr rot_msg(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(value))));
-			GetSceneObject()->PostMessage(rot_msg);
+			GetSceneObject()->PostRequest(RotationMessagePtr(new GASS::RotationMessage(Quaternion(Math::Deg2Rad(value)))));
 		}
 		m_Rot = value;
 	}
@@ -421,8 +415,7 @@ namespace GASS
 		Vec3 scale = OgreConvert::ToGASS(m_OgreNode->_getDerivedScale());
 		Quaternion rot = OgreConvert::ToGASS(m_OgreNode->_getDerivedOrientation());
 
-		MessagePtr trans_msg(new TransformationNotifyMessage(pos,rot,scale));
-		GetSceneObject()->PostMessage(trans_msg);
+		GetSceneObject()->PostEvent(TransformationNotifyMessagePtr(new TransformationNotifyMessage(pos,rot,scale)));
 
 	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,from_id));
 		debug_msg->SetData("Text",GetSceneObject()->GetName());

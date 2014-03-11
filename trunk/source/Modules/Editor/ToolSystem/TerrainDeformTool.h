@@ -52,11 +52,11 @@ namespace GASS
 		TerrainEditMode GetModMode() const {return m_TEM;}
 		void SetActiveLayer(TerrainLayer layer) {m_ActiveLayer = layer;}
 	private:
-		GASS::SceneObjectPtr GetOrCreateGizmo();
+		SceneObjectPtr GetOrCreateGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
-		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
-		void OnInput(GASS::ControllSettingsMessagePtr message);
+		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
+		void OnInput(ControllSettingsMessagePtr message);
 	
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_SelectedObject;

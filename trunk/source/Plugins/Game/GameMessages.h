@@ -26,19 +26,19 @@
 #include "Plugins/Game/PlatformType.h"
 #include "Plugins/Game/DetectionData.h"
 #include "Core/Math/GASSVector.h"
-
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
 {
 	class GameSceneManager;
 	typedef SPTR<GameSceneManager> GameSceneManagerPtr;
 	
-
-	class EnterVehicleMessage : public BaseMessage
+	class EnterVehicleMessage : public SceneObjectRequestMessage
 	{
 	public:
 		EnterVehicleMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
@@ -47,11 +47,11 @@ namespace GASS
 	typedef SPTR<EnterVehicleMessage> EnterVehicleMessagePtr;
 
 
-	class ExitVehicleMessage : public BaseMessage
+	class ExitVehicleMessage : public SceneObjectRequestMessage
 	{
 	public:
 		ExitVehicleMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
@@ -59,11 +59,11 @@ namespace GASS
 	};
 	typedef SPTR<ExitVehicleMessage> ExitVehicleMessagePtr;
 
-	class GotoPositionMessage : public BaseMessage
+	class GotoPositionMessage : public SceneObjectRequestMessage
 	{
 	public:
 		GotoPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Position(pos)
+		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos)
 		  {
 
 		  }
@@ -73,11 +73,11 @@ namespace GASS
 	};
 	typedef SPTR<GotoPositionMessage> GotoPositionMessagePtr;
 
-	class FaceDirectionRequest : public BaseMessage
+	class FaceDirectionRequest : public SceneObjectRequestMessage
 	{
 	public:
 		FaceDirectionRequest(const Vec3 &direction, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Dir(direction)
+		  SceneObjectRequestMessage(sender_id , delay),m_Dir(direction)
 		  {
 
 		  }
@@ -89,11 +89,11 @@ namespace GASS
 
 
 
-	class PathfindToPositionMessage : public BaseMessage
+	class PathfindToPositionMessage : public SceneObjectRequestMessage
 	{
 	public:
 		PathfindToPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Position(pos)
+		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos)
 		  {
 
 		  }
@@ -104,11 +104,11 @@ namespace GASS
 	typedef SPTR<PathfindToPositionMessage> PathfindToPositionMessagePtr;
 
 
-	class DesiredSpeedMessage : public BaseMessage
+	class DesiredSpeedMessage : public SceneObjectRequestMessage
 	{
 	public:
 		DesiredSpeedMessage(float speed, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Speed(speed)
+		  SceneObjectRequestMessage(sender_id , delay),m_Speed(speed)
 		  {
 
 		  }
@@ -118,14 +118,11 @@ namespace GASS
 	};
 	typedef SPTR<DesiredSpeedMessage> DesiredSpeedMessagePtr;
 
-
-	
-
-	class AimAtPositionMessage : public BaseMessage
+	class AimAtPositionMessage : public SceneObjectRequestMessage
 	{
 	public:
 		AimAtPositionMessage(const Vec3 &pos, int priority = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Position(pos), m_Priority(priority)
+		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos), m_Priority(priority)
 		  {
 
 		  }
@@ -137,11 +134,11 @@ namespace GASS
 	};
 	typedef SPTR<AimAtPositionMessage> AimAtPositionMessagePtr;
 
-	class ActivateAutoAimMessage : public BaseMessage
+	class ActivateAutoAimMessage : public SceneObjectRequestMessage
 	{
 	public:
 		ActivateAutoAimMessage(bool value, int priority = 0, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Active(value), m_Priority(priority)
+		  SceneObjectRequestMessage(sender_id , delay),m_Active(value), m_Priority(priority)
 		  {
 
 		  }
@@ -154,11 +151,11 @@ namespace GASS
 	typedef SPTR<ActivateAutoAimMessage> ActivateAutoAimMessagePtr;
 
 
-	class BarrelTransformationMessage : public BaseMessage
+	class BarrelTransformationMessage : public SceneObjectEventMessage
 	{
 	public:
 		BarrelTransformationMessage(const Mat4 &value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Trans(value)
+		  SceneObjectEventMessage(sender_id , delay),m_Trans(value)
 		  {
 
 		  }
@@ -171,11 +168,11 @@ namespace GASS
 	typedef SPTR<BarrelTransformationMessage> BarrelTransformationMessagePtr;
 
 
-	class ReloadMessage : public BaseMessage
+	class ReloadMessage : public SceneObjectRequestMessage
 	{
 	public:
 		ReloadMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
@@ -184,11 +181,11 @@ namespace GASS
 	typedef SPTR<ReloadMessage> ReloadMessagePtr;
 
 
-	class FireMessage : public BaseMessage
+	class FireMessage : public SceneObjectRequestMessage
 	{
 	public:
 		FireMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
@@ -197,11 +194,11 @@ namespace GASS
 	typedef SPTR<FireMessage> FireMessagePtr;
 
 
-	class ReadyToFireMessage : public BaseMessage
+	class ReadyToFireMessage : public SceneObjectEventMessage
 	{
 	public:
 		ReadyToFireMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectEventMessage(sender_id , delay)
 		  {
 
 		  }
@@ -210,11 +207,11 @@ namespace GASS
 	typedef SPTR<ReadyToFireMessage> ReadyToFireMessagePtr;
 
 
-	class HitMessage : public BaseMessage
+	class HitMessage : public SceneObjectEventMessage
 	{
 	public:
 		HitMessage(float damage, const Vec3 &hit_position, const Vec3 &hit_direction, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Damage(damage), m_HitDirection (hit_direction),m_HitPosition(hit_position)
+		  SceneObjectEventMessage(sender_id , delay) , m_Damage(damage), m_HitDirection (hit_direction),m_HitPosition(hit_position)
 		  {
 
 		  }
@@ -229,11 +226,11 @@ namespace GASS
 	typedef SPTR<HitMessage> HitMessagePtr;
 
 
-	class OutOfArmorMessage : public BaseMessage
+	class OutOfArmorMessage : public SceneObjectEventMessage
 	{
 	public:
 		OutOfArmorMessage(SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay)
+		  SceneObjectEventMessage(sender_id , delay)
 		  {
 
 		  }
@@ -266,7 +263,7 @@ namespace GASS
 	/**
 		Message sent by the LOD component to inform other components lod level for the object
 	*/
-	class LODMessage : public BaseMessage
+	class LODMessage : public SceneObjectEventMessage
 	{
 		
 	public:
@@ -278,7 +275,7 @@ namespace GASS
 		};
 
 		LODMessage(LODLevel level, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) , m_Level(level){}
+		  SceneObjectEventMessage(sender_id , delay) , m_Level(level){}
 		LODLevel GetLevel() const {return m_Level;}
 	private:
 		LODLevel m_Level;
@@ -286,10 +283,10 @@ namespace GASS
 	typedef SPTR<LODMessage> LODMessagePtr;
 
 
-	class VehicleEngineStatusMessage : public BaseMessage
+	class VehicleEngineStatusMessage : public SceneObjectEventMessage
 	{
 	public:
-		VehicleEngineStatusMessage(float rpm, float speed,int gear, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+		VehicleEngineStatusMessage(float rpm, float speed,int gear, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
 			m_RPM(rpm),
 			m_Speed(speed),
 			m_Gear(gear){}
@@ -303,10 +300,10 @@ namespace GASS
 	};
 	typedef SPTR<VehicleEngineStatusMessage> VehicleEngineStatusMessagePtr;
 
-	class SensorMessage : public BaseMessage
+	class SensorMessage : public SceneObjectEventMessage
 	{
 	public:
-		SensorMessage(const DetectionVector &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+		SensorMessage(const DetectionVector &detection_data, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
 			m_DetectionData(detection_data){}
 		DetectionVector GetDetectionVector() const {return m_DetectionData;}
 	private:
@@ -315,10 +312,10 @@ namespace GASS
 	typedef SPTR<SensorMessage> SensorMessagePtr;
 
 
-	class SensorGotTargetMessage : public BaseMessage
+	class SensorGotTargetMessage : public SceneObjectEventMessage
 	{
 	public:
-		SensorGotTargetMessage (const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+		SensorGotTargetMessage (const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
 			m_DetectionData(detection_data){}
 		DetectionData GetDetectionData() const {return m_DetectionData;}
 	private:
@@ -327,10 +324,10 @@ namespace GASS
 	typedef SPTR<SensorGotTargetMessage> SensorGotTargetMessagePtr;
 
 
-	class SensorLostTargetMessage : public BaseMessage
+	class SensorLostTargetMessage : public SceneObjectEventMessage
 	{
 	public:
-		SensorLostTargetMessage(const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay) , 
+		SensorLostTargetMessage(const DetectionData &detection_data, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
 			m_DetectionData(detection_data){}
 		DetectionData GetDetectionData() const {return m_DetectionData;}
 	private:
@@ -369,6 +366,30 @@ namespace GASS
 		float m_Value;
 	};
 	typedef SPTR<CharacterInputRequest> CharacterInputRequestPtr;
+
+	class InputRelayEvent : public SceneObjectEventMessage
+	{
+	public:
+		InputRelayEvent(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectEventMessage(sender_id , delay), m_Controller(controller), 
+			  m_Value(value),
+			  m_ControllerType(ct),
+			  m_Settings(settings)
+		  {
+
+		  }
+		  std::string GetSettings()const {return m_Settings;}
+		  std::string GetController()const {return m_Controller;}
+		  float GetValue() const {return m_Value;} 
+		  ControllerType GetControllerType() const {return m_ControllerType;}
+	private:
+		std::string m_Settings;
+		std::string m_Controller;
+		float m_Value;
+		ControllerType m_ControllerType;
+	};
+	typedef SPTR<InputRelayEvent> InputRelayEventPtr;
+
 
 }
 #endif

@@ -31,22 +31,20 @@ namespace GASS
 	private:
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
-		GASS::SceneObjectPtr GetMasterGizmo();
+		SceneObjectPtr GetMasterGizmo();
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
-		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
+		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
-
-		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
-		GASS::SceneObjectWeakPtr m_CurrentGizmo;
+		SceneObjectWeakPtr m_MasterGizmoObject;
+		SceneObjectWeakPtr m_CurrentGizmo;
 
 		bool m_UseGizmo;
 		GASS::Vec2 m_MouseDownPos;
 		bool m_RotateY;
 		bool  m_Active;
-
 	};
 }
 

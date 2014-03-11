@@ -417,7 +417,7 @@ namespace GASS
 				Ogre::Rect drect(0, 0, m_Terrain->getSize(), m_Terrain->getSize());
 				m_Terrain->dirtyRect(drect);
 				m_Terrain->update(true);
-				GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+				GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			}
 		}
 	}
@@ -980,7 +980,7 @@ namespace GASS
 	{
 		if(m_Terrain)
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
 	}
 
@@ -990,7 +990,6 @@ namespace GASS
 		if(m_Terrain)
 		{
 			m_Terrain->setPosition(OgreConvert::ToOgre(pos));
-			//GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(shared_from_this())));
 		}
 	}
 

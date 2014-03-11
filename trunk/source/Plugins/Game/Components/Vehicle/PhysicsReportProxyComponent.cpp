@@ -63,6 +63,6 @@ namespace GASS
 	void PhysicsReportProxyComponent::OnHingeJointReport(PhysicsHingeJointReportEventPtr message)
 	{
 		if(m_TargetObject.IsValid())
-			m_TargetObject->SendImmediate(message);
+			m_TargetObject->SendImmediateEvent(message);
 	}
 }

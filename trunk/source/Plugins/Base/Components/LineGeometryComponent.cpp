@@ -317,11 +317,7 @@ namespace GASS
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+4]]) = tangent;
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
-
-
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 	}
 }

@@ -45,14 +45,13 @@ namespace GASS
 			//Send message
 			int from_id = (int) this;
 			//MessagePtr goto_msg(new GotoPositionMessage(info.m_3DPos,from_id));
-			MessagePtr goto_msg(new PathfindToPositionMessage(info.m_3DPos,from_id));
-
+			
 			Vec3 dir(1,0,1);
 			dir.Normalize();
-			MessagePtr fd_msg(new FaceDirectionRequest(dir,from_id));
+			FaceDirectionRequestPtr fd_msg(new FaceDirectionRequest(dir,from_id));
 			
-			selected->PostMessage(goto_msg);
-			selected->PostMessage(fd_msg);
+			selected->PostRequest(PathfindToPositionMessagePtr(new PathfindToPositionMessage(info.m_3DPos,from_id)));
+			selected->PostRequest(fd_msg);
 		}
 	}
 

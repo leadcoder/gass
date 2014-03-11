@@ -254,7 +254,7 @@ namespace GASS
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);
-		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
@@ -267,14 +267,10 @@ namespace GASS
 	{
 		int from_id = (int)this; //use address as id
 		Vec3 pos = GetPosition();
-		MessagePtr pos_msg(new WorldPositionMessage(pos,from_id));
-		GetSceneObject()->PostMessage(pos_msg);
-
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
-		GetSceneObject()->PostMessage(rot_msg);
-
-		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
-		GetSceneObject()->PostMessage(physics_msg);
+		
+		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(pos,from_id)));
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
+		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id)));
 	}
 
 
@@ -547,8 +543,8 @@ namespace GASS
 
 						//send position message in case of paused physics
 						int from_id = (int) this;
-						MessagePtr pos_msg(new PositionMessage(pos,from_id));
-						child_body->GetSceneObject()->PostMessage(pos_msg);
+						
+						child_body->GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(pos,from_id)));
 					}
 					/*const dReal *p = dBodyGetPosition(b2);
 					Vec3 pos(p[0],p[1],p[2]);

@@ -49,27 +49,51 @@ namespace GASS
 	typedef SPTR<CoreSceneManager> CoreSceneManagerPtr; 
 	
 	
+	class SceneObjectMessage : public BaseMessage
+	{
+	protected:
+		SceneObjectMessage(SenderID sender_id = -1, double delay= 0) : 
+		  BaseMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef SPTR<SceneObjectMessage> SceneObjectMessagePtr;
 
-	//*********************************************************
-	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
-	//*********************************************************
+	class SceneObjectEventMessage : public SceneObjectMessage
+	{
+	protected:
+		SceneObjectEventMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef SPTR<SceneObjectEventMessage> SceneObjectEventMessagePtr;
+
+	class SceneObjectRequestMessage : public SceneObjectMessage
+	{
+	protected:
+		SceneObjectRequestMessage(SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectMessage(sender_id , delay)
+		  {
+		  }
+	};
+	typedef SPTR<SceneObjectRequestMessage> SceneObjectRequestMessagePtr;
 
 	/**
 	Change name of scene object
 	*/
-	class SceneObjectNameMessage : public BaseMessage
+
+	class SceneObjectNameMessage : public SceneObjectRequestMessage
 	{
 	public:
 		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Name(name)
+		  SceneObjectRequestMessage(sender_id , delay), m_Name(name)
 		  {
 
 		  }
 		  std::string GetName()const {return m_Name;}
 	private:
 		std::string m_Name;
-
-
 	};
 	typedef SPTR<SceneObjectNameMessage> SceneObjectNameMessagePtr;
 
@@ -77,11 +101,11 @@ namespace GASS
 		Message that can be used to show debug information about a object
 		TODO: move this object to other place?
 	*/
-	class DebugComponentSettingsMessage : public BaseMessage
+	class DebugComponentSettingsMessage : public SceneObjectRequestMessage
 	{
 	public:
 		DebugComponentSettingsMessage(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage( sender_id , delay),
+		  SceneObjectRequestMessage( sender_id , delay),
 			  m_ShowObjectName(show_object_name)
 		  {
 		  }
@@ -91,33 +115,24 @@ namespace GASS
 	};
 	typedef SPTR<DebugComponentSettingsMessage> DebugComponentSettingsMessagePtr;
 
-	
-	//*********************************************************
-	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
-	//*********************************************************
-	
+
 	/**
-	Messaged sent by SceneObjectManager to inform component that the scene object unloaded
+	This request indicate that a the scene node structure has changed.  This should 
+	could be caught by the LocationComponent to reflect scene graph structure 
+	in the graphics engine.
 	*/
-	/*class UnloadComponentsMessage : public BaseMessage
+
+	class ParentChangedMessage : public SceneObjectEventMessage
 	{
 	public:
-		UnloadComponentsMessage(SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay)
+		ParentChangedMessage(SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectEventMessage( sender_id , delay)
 		  {
 
 		  }
 	private:
-	};
-	typedef SPTR<UnloadComponentsMessage> UnloadComponentsMessagePtr;
 
-	class LoadComponentsMessage : public BaseMessage
-	{
-	public:
-		LoadComponentsMessage(SenderID sender_id = -1, double delay= 0) : 
-		 BaseMessage(sender_id , delay){}
-	private:
 	};
-	typedef SPTR<LoadComponentsMessage> LoadComponentsMessagePtr;*/
+	typedef SPTR<ParentChangedMessage> ParentChangedMessagePtr;
 	
 }

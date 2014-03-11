@@ -98,8 +98,6 @@ namespace GASS
 		m_Transparency = value;
 		if(GetSceneObject()) //initlized
 		{
-			//MessagePtr material_message(new MaterialMessage(Vec4(1,1,1,value),Vec3(1,1,1)));
-			//GetSceneObject()->PostMessage(material_message);
 			GenerateMesh();
 			SetTexture(m_Texture);
 		}
@@ -152,10 +150,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(2);
 		sub_mesh_data->IndexVector.push_back(0);
 
-		
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
-
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 	}
 	
 	
@@ -165,8 +160,7 @@ namespace GASS
 		m_Texture = texture_name;
 		if(GetSceneObject())
 		{
-			MessagePtr texture_message(new TextureMessage(texture_name));
-			GetSceneObject()->PostMessage(texture_message);
+			GetSceneObject()->PostRequest(TextureMessagePtr(new TextureMessage(texture_name)));
 		}
 	}
 

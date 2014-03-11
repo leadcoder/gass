@@ -75,17 +75,17 @@ namespace GASS
 
 	void TurretComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
 	
 		
-		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
-		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
-		GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+		GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -189,9 +189,9 @@ namespace GASS
 			//m_DesiredDir = turret_dir;
 			m_RotValue = 0;
 			m_RelTrans = m_ParentTransformation;
-			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-			GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
-			GetSceneObject()->PostMessage(MessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+			GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+			GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
+			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 			return;
 		}
 
@@ -406,13 +406,12 @@ namespace GASS
 		//GetSceneObject()->PostMessage(force_msg);
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(0)));
+		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(0)));
 		
 
 		if(m_Controller == "Pitch")
 		{
-			MessagePtr body_force_msg(new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0)));
-			GetSceneObject()->PostMessage(body_force_msg);
+			GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr (new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0))));
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir <<"\n";;
 			//std::cout << "THeading:" << t_heading << " AHeading:" << a_heading << "\n";
@@ -420,8 +419,8 @@ namespace GASS
 		}
 		else if (m_Controller == "Yaw")
 		{
-			MessagePtr body_force_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0)));
-			GetSceneObject()->PostMessage(body_force_msg);
+			
+			GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0))));
 			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 		}
 
@@ -434,7 +433,7 @@ namespace GASS
 
 
 
-	void TurretComponent::OnInput(InputControllerMessagePtr message)
+	void TurretComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();

@@ -114,7 +114,7 @@ namespace GASS
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(m_Color);
 		
-		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
-		GetSceneObject()->PostMessage(mesh_message);
+		
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(m_MeshData)));
 	}
 }

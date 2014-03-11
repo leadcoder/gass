@@ -45,8 +45,8 @@ namespace GASS
 		{
 			//Send message
 			int from_id = (int) this;
-			MessagePtr goto_msg(new EditPositionMessage(info.m_3DPos,from_id));
-			selected->PostMessage(goto_msg);
+			
+			selected->PostRequest(EditPositionMessagePtr(new EditPositionMessage(info.m_3DPos,from_id)));
 		}
 	}
 

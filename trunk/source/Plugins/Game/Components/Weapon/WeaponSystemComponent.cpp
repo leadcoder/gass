@@ -93,7 +93,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnReadyToFire,ReadyToFireMessage,0));
 
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationNotifyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
@@ -180,21 +180,21 @@ namespace GASS
 				m_CurrentMagSize--;
 
 				float time_until_fire = 1.0f/m_RoundOfFire;
-				MessagePtr ready_msg(new ReadyToFireMessage());
+				ReadyToFireMessagePtr ready_msg(new ReadyToFireMessage());
 				ready_msg->SetDeliverDelay(time_until_fire);
-				GetSceneObject()->PostMessage(ready_msg);
+				GetSceneObject()->PostEvent(ready_msg);
 				m_ReadyToFire = false;
 			}
 			else if(m_AutoReload)
 			{
-				MessagePtr reload_msg(new ReloadMessage());
+				ReloadMessagePtr reload_msg(new ReloadMessage());
 				reload_msg->SetDeliverDelay(m_ReloadTime);
-				GetSceneObject()->PostMessage(reload_msg);
+				GetSceneObject()->PostRequest(reload_msg);
 				m_Reloading = true;
 
-				MessagePtr ready_msg(new ReadyToFireMessage());
+				ReadyToFireMessagePtr ready_msg(new ReadyToFireMessage());
 				ready_msg->SetDeliverDelay(m_ReloadTime);
-				GetSceneObject()->PostMessage(ready_msg);
+				GetSceneObject()->PostEvent(ready_msg);
 			}
 
 			/*if(m_Automatic)
@@ -227,14 +227,13 @@ namespace GASS
 		//Play fire sound
 		if(m_FireSoundObject1P.IsValid() && m_1FP)
 		{
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-			m_FireSoundObject1P->PostMessage(sound_msg);
+			m_FireSoundObject1P->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 			//std::cout << "fire fP1" << std::endl;
 		}
 		else if(m_FireSoundObject3P.IsValid())
 		{
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-			m_FireSoundObject3P->PostMessage(sound_msg);
+			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+			m_FireSoundObject3P->PostRequest(sound_msg);
 			//std::cout << "fire fP3" << std::endl;
 		}
 
@@ -248,8 +247,8 @@ namespace GASS
 		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 
 		//recoil
-		MessagePtr force_msg(new PhysicsBodyAddForceRequest(m_RecoilForce));
-		GetSceneObject()->PostMessage(force_msg);
+		
+		GetSceneObject()->PostRequest(PhysicsBodyAddForceRequestPtr(new PhysicsBodyAddForceRequest(m_RecoilForce)));
 
 		//effect
 		if(m_FireEffectTemplate != "")
@@ -260,12 +259,11 @@ namespace GASS
 		}
 
 
-		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,m_RoundOfFire));
-		GetSceneObject()->PostMessage(particle_msg);
-		MessagePtr particle_msg2(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,0));
+		ParticleSystemParameterMessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,m_RoundOfFire));
+		GetSceneObject()->PostRequest(particle_msg);
+		ParticleSystemParameterMessagePtr particle_msg2(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,0));
 		particle_msg2->SetDeliverDelay(0.5);
-		GetSceneObject()->PostMessage(particle_msg2);
-
+		GetSceneObject()->PostRequest(particle_msg2);
 
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
@@ -299,7 +297,7 @@ namespace GASS
 		}*/
 	}
 
-	void WeaponSystemComponent::OnInput(InputControllerMessagePtr message)
+	void WeaponSystemComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
@@ -310,9 +308,9 @@ namespace GASS
 			if(value > 0)
 			{
 				m_FireRequest = true;
-				MessagePtr fire_request_msg(new FireMessage());
+				FireMessagePtr fire_request_msg(new FireMessage());
 				fire_request_msg->SetDeliverDelay(m_FireDelay);
-				GetSceneObject()->PostMessage(fire_request_msg);
+				GetSceneObject()->PostRequest(fire_request_msg);
 			}
 			else
 			{
@@ -324,9 +322,9 @@ namespace GASS
 			if(!m_Reloading)
 			{
 				m_Reloading = true;
-				MessagePtr reload_msg(new ReloadMessage());
+				ReloadMessagePtr reload_msg(new ReloadMessage());
 				reload_msg->SetDeliverDelay(m_ReloadTime);
-				GetSceneObject()->PostMessage(reload_msg);
+				GetSceneObject()->PostRequest(reload_msg);
 			}
 		}
 	}
@@ -337,22 +335,22 @@ namespace GASS
 
 		if(m_FireSoundObject1P.IsValid())
 		{
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
-			m_FireSoundObject1P->PostMessage(sound_msg);
+			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			m_FireSoundObject1P->PostRequest(sound_msg);
 		}
 
 		if(m_FireSoundObject3P.IsValid())
 		{
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
-			m_FireSoundObject3P->PostMessage(sound_msg);
+			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			m_FireSoundObject3P->PostRequest(sound_msg);
 		}
 
 		if(m_Automatic && m_FireRequest)
 		{
 		    //std::cout << "send new fire" << std::endl;
-            MessagePtr fire_request_msg(new FireMessage());
+            FireMessagePtr fire_request_msg(new FireMessage());
             fire_request_msg->SetDeliverDelay(m_FireDelay);
-            GetSceneObject()->PostMessage(fire_request_msg);
+            GetSceneObject()->PostRequest(fire_request_msg);
 		}
 	}
 

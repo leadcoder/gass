@@ -54,9 +54,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
-	}void InputHandlerComponent::OnDelete()
-
+	}
 	
+	void InputHandlerComponent::OnDelete()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
@@ -107,13 +107,12 @@ namespace GASS
 		//check if exit input
 		if(name == "ExitVehicle" && value > 0)
 		{
-			MessagePtr exit_message(new ExitVehicleMessage());
-			GetSceneObject()->PostMessage(exit_message);
+			
+			GetSceneObject()->PostRequest(ExitVehicleMessagePtr(new ExitVehicleMessage()));
 		}
 		else
 		{
-			MessagePtr input_message(new InputControllerMessage(message->GetSettings(),name,value,message->GetControllerType()));
-			GetSceneObject()->SendImmediate(input_message);
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent(message->GetSettings(),name,value,message->GetControllerType())));
 		}
 	}
 

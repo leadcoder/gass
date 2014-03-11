@@ -180,14 +180,14 @@ namespace GASS
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
-					child_obj->PostMessage(MessagePtr(new VisibilityMessage(m_ShowWaypoints)));
-					child_obj->PostMessage(MessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+					child_obj->PostRequest(VisibilityMessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+					child_obj->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
 
 					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
 					if(tangent)
 					{
-						tangent->PostMessage(MessagePtr(new VisibilityMessage(m_ShowWaypoints)));
-						tangent->PostMessage(MessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+						tangent->PostRequest(VisibilityMessagePtr(new VisibilityMessage(m_ShowWaypoints)));
+						tangent->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
 					}
 				}
 			}
@@ -222,8 +222,7 @@ namespace GASS
 
 			if(sub_mesh_data->PositionVector.size() > 0)
 			{
-				MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-				GetSceneObject()->PostMessage(mesh_message);
+				GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 			}
 		}
 		//SetShowWaypoints(m_ShowWaypoints);
@@ -234,7 +233,7 @@ namespace GASS
 		{
 			wps[i] += world_pos;
 		}
-		GetSceneObject()->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wps)));
+		GetSceneObject()->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wps)));
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints(bool relative_position) const

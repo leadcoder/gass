@@ -57,8 +57,8 @@ namespace GASS
 			if(scene_object)
 			{
 				int from_id = (int) this;
-				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(info.m_3DPos,from_id));
-				scene_object->SendImmediate(pos_msg);
+				
+				scene_object->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(info.m_3DPos,from_id)));
 			}
 			else
 			{

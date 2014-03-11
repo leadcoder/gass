@@ -273,8 +273,8 @@ namespace GASS
 			
 		}
 		
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 	}
 
 	bool BoxGeometryComponent::IsPointInside(const Vec3 &point) const

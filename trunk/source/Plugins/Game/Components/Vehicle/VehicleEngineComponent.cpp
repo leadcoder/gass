@@ -176,7 +176,7 @@ namespace GASS
 	void VehicleEngineComponent::OnInitialize()
 	{
 		BaseSceneComponent::OnInitialize();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -188,8 +188,7 @@ namespace GASS
 		SetWheels(m_WheelObjects);
 
 		//Play engine sound
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(sound_msg);
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 	}
 
 
@@ -391,7 +390,7 @@ namespace GASS
 		m_VehicleSpeed = velocity.FastLength();
 	}
 
-	void VehicleEngineComponent::OnInput(InputControllerMessagePtr message)
+	void VehicleEngineComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
@@ -468,23 +467,19 @@ namespace GASS
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0;
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-		GetSceneObject()->PostMessage(sound_msg);
-
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch)));
 	}
 
 	void VehicleEngineComponent::UpdateExhaustFumes(double delta)
 	{
 
 		float emission = GetNormRPM()*30;
-		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
-		GetSceneObject()->PostMessage(particle_msg);
+		GetSceneObject()->PostRequest(ParticleSystemParameterMessagePtr(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission)));
 	}
 
 	void VehicleEngineComponent::UpdateInstruments(double delta)
 	{
-		MessagePtr particle_msg(new VehicleEngineStatusMessage(m_RPM,m_VehicleSpeed,m_Gear));
-		GetSceneObject()->PostMessage(particle_msg);
+		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(m_RPM,m_VehicleSpeed,m_Gear)));
 	}
 
 	float VehicleEngineComponent::GetNormRPM()
@@ -511,8 +506,7 @@ namespace GASS
 		//if(fabs(m_DesiredSteer) < 0.1)
 		//	m_DesiredSteer = m_DesiredSteer*0.9;
 
-		MessagePtr force_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_torque,0)));
-		GetSceneObject()->PostMessage(force_msg);
+		GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_torque,0))));
 
 
 		/*std::stringstream ss;
@@ -645,9 +639,9 @@ namespace GASS
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
 		
-		MessagePtr force_msg(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
-		MessagePtr vel_msg(new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
-
+		PhysicsSuspensionJointMaxDriveTorqueRequestPtr force_request = PhysicsSuspensionJointMaxDriveTorqueRequestPtr(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
+		PhysicsSuspensionJointDriveVelocityRequestPtr vel_request = PhysicsSuspensionJointDriveVelocityRequestPtr (new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
+	
 
 		m_WheelRPM = 0;
 		for(int i = 0; i < m_VehicleWheels.size(); i++)
@@ -657,8 +651,8 @@ namespace GASS
 
 			if(wheel_obj)
 			{
-				wheel_obj->PostMessage(force_msg);
-				wheel_obj->PostMessage(vel_msg);
+				wheel_obj->PostRequest(force_request);
+				wheel_obj->PostRequest(vel_request);
 
 				m_WheelRPM += AngleVel2RPM(wheel->m_AngularVelocity);
 				num_wheels++;

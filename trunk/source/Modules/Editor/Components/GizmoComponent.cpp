@@ -130,12 +130,12 @@ namespace GASS
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
 				if (selected_lc)
-					GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
+					GetSceneObject()->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
 			}
 		}
 		else if(m_Mode == GM_WORLD)
 		{
-			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
 		}
 	}
 
@@ -179,7 +179,7 @@ namespace GASS
 				float value = message->GetValue1();
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
-				GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+				GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
 			}
 			break;
 		case CameraParameterMessage::CAMERA_CLIP_DISTANCE:
@@ -213,16 +213,16 @@ namespace GASS
 			if(lc)
 			{
 				//move to selecetd location
-				GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(lc->GetWorldPosition(),GIZMO_SENDER)));
+				GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(lc->GetWorldPosition(),GIZMO_SENDER)));
 
 				//rotate to selecetd rotation
 				if(m_Mode == GM_LOCAL)
 				{
-					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_BaseRot*lc->GetWorldRotation(),GIZMO_SENDER)));
+					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(m_BaseRot*lc->GetWorldRotation(),GIZMO_SENDER)));
 				}
 				else
 				{
-					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
+					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(m_BaseRot,GIZMO_SENDER)));
 				}
 			}
 			object->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
@@ -244,12 +244,12 @@ namespace GASS
 		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
 		{
 			//move to selecetd location
-			GetSceneObject()->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
 		}
 
 		if(m_Mode == GM_LOCAL)
 		{
-			GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(m_BaseRot*message->GetRotation(),GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(m_BaseRot*message->GetRotation(),GIZMO_SENDER)));
 		}
 	}
 
@@ -271,7 +271,7 @@ namespace GASS
 				//LocationComponentPtr gizmo_lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				if(selected_lc && ((message->GetPosition() - selected_lc->GetWorldPosition()).Length()) > MOVMENT_EPSILON)
 				{
-					selected->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
+					selected->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(message->GetPosition(),GIZMO_SENDER)));
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace GASS
 
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
-				GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+				GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
 			}
 		}
 	}
@@ -554,8 +554,8 @@ namespace GASS
 			}
 			
 		}
-		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
-		GetSceneObject()->PostMessage(mesh_message);
+		
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(m_MeshData)));
 	}
 
 	void GizmoComponent::OnNewCursorInfo(CursorMovedOverSceneEventPtr message)
@@ -571,8 +571,7 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				MessagePtr mat_mess(new ReplaceMaterialMessage(m_HighlightMat));
-				GetSceneObject()->PostMessage(mat_mess);
+				GetSceneObject()->PostRequest(ReplaceMaterialMessagePtr(new ReplaceMaterialMessage(m_HighlightMat)));
 			}
 			m_Highlight = true;
 		}
@@ -580,8 +579,7 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				MessagePtr mat_mess(new ReplaceMaterialMessage(m_RegularMat));
-				GetSceneObject()->PostMessage(mat_mess);
+				GetSceneObject()->PostRequest(ReplaceMaterialMessagePtr(new ReplaceMaterialMessage(m_RegularMat)));
 			}
 			m_Highlight = false;
 		}

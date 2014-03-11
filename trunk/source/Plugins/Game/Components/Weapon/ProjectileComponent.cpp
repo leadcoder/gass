@@ -121,9 +121,7 @@ namespace GASS
 				}
 				else
 				{
-					SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
-					GetSceneObject()->GetScene()->PostMessage(remove_msg);
-
+					GetSceneObject()->GetScene()->PostMessage(RemoveSceneObjectRequestPtr(new RemoveSceneObjectRequest(GetSceneObject())));
 					return;
 				}
 			}
@@ -182,10 +180,10 @@ namespace GASS
 			}
 				//send position and rotaion update
 			int id = (int) this;
-			MessagePtr pos_msg(new PositionMessage(m_Pos,id));
-			MessagePtr rot_msg(new RotationMessage(m_Rot,id));
-			GetSceneObject()->PostMessage(pos_msg);
-			GetSceneObject()->PostMessage(rot_msg);
+			
+			
+			GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,id)));
+			GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(m_Rot,id)));
 		
 
 			if(impact)
@@ -202,13 +200,11 @@ namespace GASS
 					float angle_falloff = fabs(Math::Dot(proj_dir,result.CollNormal));
 					float damage_value = angle_falloff*m_MaxDamage;
 
-					MessagePtr hit_msg(new HitMessage(damage_value,m_Pos,proj_dir));
-					SceneObjectPtr(result.CollSceneObject)->PostMessage(hit_msg);
+					SceneObjectPtr(result.CollSceneObject)->PostEvent(HitMessagePtr(new HitMessage(damage_value,m_Pos,proj_dir)));
 
 					//Send force message to indicate hit
 					Vec3 force = proj_dir*m_ImpactForce;
-					MessagePtr force_msg(new PhysicsBodyAddForceRequest(force));
-					SceneObjectPtr(result.CollSceneObject)->PostMessage(force_msg);
+					SceneObjectPtr(result.CollSceneObject)->PostRequest(PhysicsBodyAddForceRequestPtr(new PhysicsBodyAddForceRequest(force)));
 				}
 				SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(GetSceneObject()));
 				GetSceneObject()->GetScene()->PostMessage(remove_msg);
@@ -288,8 +284,7 @@ namespace GASS
 	void ProjectileComponent::SpawnEffect(const std::string &effect)
 	{
 		Vec3 vel(0,0,0);
-		SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(effect,m_Pos,m_Rot,vel));
-		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
+		GetSceneObject()->GetScene()->PostMessage(SpawnObjectFromTemplateRequestPtr(new SpawnObjectFromTemplateRequest(effect,m_Pos,m_Rot,vel)));
 	}
 
 	void ProjectileComponent::SetEndEffectTemplateName(const std::string &effect)

@@ -29,11 +29,10 @@ namespace GASS
 		virtual void Stop();
 		virtual void Start();
 	private:
-		GASS::SceneObjectPtr GetMasterGizmo();
+		SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
-		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
-	
+		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
 		GASS::SceneObjectWeakPtr m_SelectedObject;

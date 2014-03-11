@@ -55,17 +55,17 @@ namespace GASS
 	{
 		//Init pointers
 		BaseSceneComponent::OnInitialize();
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputControllerMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputRelayEvent,0));
 	}
 
 	void InputProxyComponent::OnDelete()
 	{
-		m_InputHandlerObject->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputControllerMessage));
+		m_InputHandlerObject->UnregisterForMessage(UNREG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputRelayEvent));
 	}
 
-	void InputProxyComponent::OnPlayerInput(InputControllerMessagePtr message)
+	void InputProxyComponent::OnPlayerInput(InputRelayEventPtr message)
 	{
-		GetSceneObject()->SendImmediate(message);
+		GetSceneObject()->PostEvent(message);
 	}
 
 }

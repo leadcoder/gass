@@ -158,14 +158,10 @@ namespace GASS
 			if(i > 0 && i < samples)
 				sub_mesh_data->PositionVector.push_back(pos);
 		}
-		//sub_mesh_data->PositionVector.push_back(pos);
-
-
+	
 		SceneObjectPtr scene_object = GetDebugObject();
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		scene_object->PostMessage(mesh_message);
-		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
-		scene_object->PostMessage(MessagePtr(new PositionMessage(offset)));
+		scene_object->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
+		scene_object->PostRequest(PositionMessagePtr(new PositionMessage(offset)));
 	}
 
 	void ODESphereGeometryComponent::UpdateDebug()

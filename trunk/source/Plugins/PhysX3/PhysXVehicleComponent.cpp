@@ -132,8 +132,8 @@ namespace GASS
 
 
 		//Play engine sound
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(sound_msg);
+		SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		GetSceneObject()->PostRequest(sound_msg);
 	}
 
 	Vec3 PhysXVehicleComponent::GetSize() const
@@ -468,7 +468,7 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
-		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
 		m_Initialized = true;
 	}
 
@@ -576,10 +576,9 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 		Vec3 current_pos  = GetPosition();
 		
-		MessagePtr pos_msg(new WorldPositionMessage(current_pos ,from_id));
-		GetSceneObject()->PostMessage(pos_msg);
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
-		GetSceneObject()->PostMessage(rot_msg);
+		
+		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos ,from_id)));
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
 
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
@@ -593,12 +592,9 @@ namespace GASS
 				if(wheel)
 				{
 					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
-					MessagePtr pos_msg(new PositionMessage(pos,from_id));
-					wheel->PostMessage(pos_msg);
-
+					wheel->PostRequest(PositionMessagePtr(new PositionMessage(pos,from_id)));
 					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
-					MessagePtr rot_msg(new RotationMessage(rot,from_id));
-					wheel->PostMessage(rot_msg);
+					wheel->PostRequest(RotationMessagePtr(new RotationMessage(rot,from_id)));
 				}
 			}
 		}
@@ -716,8 +712,8 @@ namespace GASS
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
-		MessagePtr physics_msg(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
-		GetSceneObject()->PostMessage(physics_msg);
+		
+		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
 
 
 		//pitch engine sound
@@ -735,11 +731,11 @@ namespace GASS
 		volume += norm_engine_rot_speed;
 		volume = sqrt(volume)*1.05;
 
-		MessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-		GetSceneObject()->PostMessage(pitch_msg);
+		SoundParameterMessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+		GetSceneObject()->PostRequest(pitch_msg);
 
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
-		GetSceneObject()->PostMessage(volume_msg);
+		SoundParameterMessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+		GetSceneObject()->PostRequest(volume_msg);
 
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 
@@ -750,7 +746,7 @@ namespace GASS
 			ss  <<  "\nSpeed:" << forwardSpeed;
 			
 
-		GetSceneObject()->PostMessage(MessagePtr(new TextCaptionMessage(ss.str())));
+		GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(ss.str())));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";

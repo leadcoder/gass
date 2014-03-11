@@ -45,8 +45,8 @@ namespace GASS
 				new_position = new_position + up;
 
 				int from_id = (int) this;
-				MessagePtr pos_msg(new GASS::PositionMessage(new_position,from_id));
-				selected->SendImmediate(pos_msg);
+				
+				selected->SendImmediateRequest(PositionMessagePtr(new PositionMessage(new_position,from_id)));
 
 				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
@@ -67,10 +67,9 @@ namespace GASS
 			{
 				int from_id = (int) this;
 				m_SelectedObject = obj_under_cursor;
-				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
 				//bool value = false;
 				//col_msg->SetData("Enable",value);
-				obj_under_cursor->SendImmediate(col_msg);
+				obj_under_cursor->SendImmediateRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(false,from_id)));
 
 			}
 		}
@@ -83,8 +82,7 @@ namespace GASS
 		if(selected)
 		{
 			int from_id = (int) this;
-			MessagePtr col_msg(new GASS::CollisionSettingsMessage(true,from_id));
-			selected->SendImmediate(col_msg);
+			selected->SendImmediateRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(true,from_id)));
 
 		}
 		m_SelectedObject.reset();;

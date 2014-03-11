@@ -324,14 +324,14 @@ namespace GASS
 
 	void ODESuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
 	{
-		MessagePtr joint_message;
+		HingeJointNotifyMessagePtr joint_message;
 		if(m_ODEJoint)
 		{
 			float angle = dJointGetHinge2Angle1(m_ODEJoint);
 			float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
 			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
 			if(joint_message)
-				GetSceneObject()->SendImmediate(joint_message);
+				GetSceneObject()->SendImmediateEvent(joint_message);
 		}
 	}
 

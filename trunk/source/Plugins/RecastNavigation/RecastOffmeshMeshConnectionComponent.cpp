@@ -103,7 +103,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(value)));
+			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(value)));
 			if(m_Visible)
 				UpdateConnectionLine();
 		}
@@ -156,7 +156,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		MessagePtr mesh_message(new ManualMeshDataMessage(m_ConnectionLine));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(m_ConnectionLine)));
+		
 	}
 }

@@ -56,18 +56,17 @@ namespace GASS
 
 	void HingeInteractionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HingeInteractionComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HingeInteractionComponent::OnInput,InputRelayEvent,0));
 	}
 
-	void HingeInteractionComponent::OnInput(InputControllerMessagePtr message)
+	void HingeInteractionComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
 		if (name == m_InputMapping)
 		{
 			float angular_vel = value * Math::Deg2Rad(m_MaxAngularVelocity);
-			MessagePtr vel_msg(new PhysicsHingeJointVelocityRequest(angular_vel));
-			GetSceneObject()->PostMessage(vel_msg);
+			GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(angular_vel)));
 		}
 	}
 }

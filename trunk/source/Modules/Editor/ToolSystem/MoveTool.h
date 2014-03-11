@@ -36,7 +36,7 @@ namespace GASS
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
 		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
-		void SendMessageRec(GASS::SceneObjectPtr obj,GASS::MessagePtr msg);
+		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 		bool m_MouseIsDown;
 		SceneObjectWeakPtr m_SelectedObject;
 		Vec3 m_Offset;

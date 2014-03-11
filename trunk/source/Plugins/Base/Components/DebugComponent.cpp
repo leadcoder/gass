@@ -56,8 +56,7 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			MessagePtr text_mess(new TextCaptionMessage(name));
-			GetSceneObject()->PostMessage(text_mess);
+			GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
 		}
 	}
 
@@ -74,14 +73,12 @@ namespace GASS
 			if(m_ShowNodeName)
 			{
 				std::string name = GetSceneObject()->GetName();
-				MessagePtr text_mess(new TextCaptionMessage(name));
-				GetSceneObject()->PostMessage(text_mess);
+				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
 			}
 			else
 			{
 				std::string name = "";
-				MessagePtr text_mess(new TextCaptionMessage(name));
-				GetSceneObject()->PostMessage(text_mess);
+				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
 			}
 		}
 	}
@@ -94,8 +91,7 @@ namespace GASS
 			if(name_mess)
 			{
 				std::string name = name_mess->GetName();
-				MessagePtr text_mess(new TextCaptionMessage(name));
-				GetSceneObject()->PostMessage(text_mess);
+				GetSceneObject()->PostRequest(TextCaptionMessagePtr(new TextCaptionMessage(name)));
 			}
 		}
 	}

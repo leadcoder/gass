@@ -139,8 +139,8 @@ namespace GASS
 				SPTR<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
 				
 				
-				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
-				GetSceneObject()->SendImmediate(serialize_message);
+				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
+				GetSceneObject()->SendImmediateRequest(serialize_message);
 			}
 			else if(message->GetControllerType() == CT_TRIGGER)
 			{
@@ -179,8 +179,8 @@ namespace GASS
 		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		std::string c_name = css->GetNameFromIndex(m_ControlSettingName,controller);
 		//std::string c_name = m_ControlSetting->m_IndexToName[controller];
-		MessagePtr message(new InputControllerMessage(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
-		GetSceneObject()->PostMessage(message);
+		InputControllerMessagePtr message(new InputControllerMessage(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
+		GetSceneObject()->PostEvent(message);
 	}
 
 	void RakNetInputTransferComponent::OnDeserialize(NetworkDeserializeMessagePtr message)
@@ -200,8 +200,8 @@ namespace GASS
 			ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 			//std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
 			std::string controller = css->GetNameFromIndex(m_ControlSettingName,input_package->Index);
-			MessagePtr ctrl_message(new InputControllerMessage(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));
-			GetSceneObject()->PostMessage(ctrl_message);
+			InputControllerMessagePtr ctrl_message(new InputControllerMessage(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));
+			GetSceneObject()->PostEvent(ctrl_message);
 
 			/*if(controller == "Fire")
 			{
@@ -215,8 +215,8 @@ namespace GASS
 			if(raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
 				NetworkAddress address  = message->GetAddress();
-				MessagePtr serialize_message(new NetworkSerializeMessage(address ,0,package));
-				GetSceneObject()->PostMessage(serialize_message);
+				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(address ,0,package));
+				GetSceneObject()->PostRequest(serialize_message);
 			}
 			//std::cout << "got input from client" << std::endl;
 		}

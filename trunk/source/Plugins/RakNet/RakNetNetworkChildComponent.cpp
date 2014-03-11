@@ -117,7 +117,7 @@ namespace GASS
 			{
 				m_Replica = replica;
 				m_Replica->SetOwner(GetSceneObject());
-				GetSceneObject()->PostMessage(MessagePtr(new ComponentGotReplicaEvent(m_Replica)));
+				GetSceneObject()->PostEvent(ComponentGotReplicaEventPtr(new ComponentGotReplicaEvent(m_Replica)));
 				//this is not allowed, post to finalize object
 				//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent));
 			}
@@ -202,7 +202,7 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete data_to_read ;
-				GetSceneObject()->PostMessage(MessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
+				GetSceneObject()->PostRequest(NetworkDeserializeMessagePtr(new NetworkDeserializeMessage(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 			}
 		}
 		if(m_Replica && m_Attributes.size() > 0)

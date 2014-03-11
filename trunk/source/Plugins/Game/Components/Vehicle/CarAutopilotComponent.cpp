@@ -99,7 +99,7 @@ namespace GASS
 
 	void CarAutopilotComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
@@ -159,7 +159,7 @@ namespace GASS
 		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void CarAutopilotComponent::OnInput(InputControllerMessagePtr message)
+	void CarAutopilotComponent::OnInput(InputRelayEventPtr message)
 	{
 
 		std::string name = message->GetController();
@@ -306,23 +306,13 @@ namespace GASS
 				if(m_PlatformType == PT_HUMAN)
 					throttle = 0;
 			}
-
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
-
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));
 		}
 		else
 		{
-			//std::cout << "Dist 0\n";
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,0,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,0,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
-
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,0,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,0,CT_AXIS)));
 		}
 	}
 }

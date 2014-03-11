@@ -220,7 +220,7 @@ namespace GASS
 						//Check distance to last wp
 						if((last_wp - m_CurrentPos).FastLength() < m_WaypointRadius)
 						{
-							GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+							GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
 						}
 					}
 					break;
@@ -240,7 +240,7 @@ namespace GASS
 				}
 				Float new_distance = now_distance + look_ahead;
 				Vec3 target_point = Math::GetPointOnPath(new_distance, m_Waypoints, cyclic, wp_index);
-				GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(target_point)));
+				GetSceneObject()->PostRequest(GotoPositionMessagePtr(new GotoPositionMessage(target_point)));
 			}
 			else
 			{
@@ -271,13 +271,12 @@ namespace GASS
 							if(m_Direction > 0 && m_CurrentWaypoint >= num_waypoints)
 							{
 								m_CurrentWaypoint = num_waypoints-1;
-								GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
-
+								GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
 							}
 							if(m_Direction < 0 && m_CurrentWaypoint < 0)
 							{
 								m_CurrentWaypoint = 0;
-								GetSceneObject()->PostMessage(MessagePtr(new DesiredSpeedMessage(0)));
+								GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
 							}
 
 							if(m_CurrentWaypoint >= num_waypoints)
@@ -309,7 +308,7 @@ namespace GASS
 				}
 
 				pos = m_Waypoints[m_CurrentWaypoint];
-				GetSceneObject()->PostMessage(MessagePtr(new GotoPositionMessage(pos)));
+				GetSceneObject()->PostRequest(GotoPositionMessagePtr(new GotoPositionMessage(pos)));
 			}
 			//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 		}
@@ -365,7 +364,7 @@ namespace GASS
 				
 				//force update				
 				WaypointListComponentPtr wpl = waypointlist->GetFirstComponentByClass<IWaypointListComponent>();
-				waypointlist->PostMessage(MessagePtr(new WaypointListUpdatedMessage(wpl->GetWaypoints())));
+				waypointlist->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wpl->GetWaypoints())));
 			}
 		}
 		m_WaypointList = waypointlist; 

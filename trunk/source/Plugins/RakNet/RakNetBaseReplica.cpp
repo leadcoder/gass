@@ -146,13 +146,13 @@ namespace GASS
 					
 					if(std::string(message) == "EnterVehicle")
 					{
-						MessagePtr enter_msg(new EnterVehicleMessage());
-						m_Owner->PostMessage(enter_msg);
+						EnterVehicleMessagePtr enter_msg(new EnterVehicleMessage());
+						m_Owner->PostRequest(enter_msg);
 					}
 					else if(std::string(message) == "ExitVehicle")
 					{
-						MessagePtr exit_msg(new ExitVehicleMessage());
-						m_Owner->PostMessage(exit_msg);
+						ExitVehicleMessagePtr exit_msg(new ExitVehicleMessage());
+						m_Owner->PostRequest(exit_msg);
 					}
 				}
 				//std::cout << "EnterObject called from client, target address:" << std::string(str) << " client address:" <<  std::string(raknet->GetRakPeer()->GetInternalID().ToString()) <<std::endl;

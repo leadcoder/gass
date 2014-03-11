@@ -64,11 +64,11 @@ namespace GASS
 	};
 	typedef SPTR<ChildReplicaCreatedEvent > ChildReplicaCreatedEventPtr;
 
-	class ComponentGotReplicaEvent : public SystemEventMessage
+	class ComponentGotReplicaEvent : public SceneObjectEventMessage
 	{
 	public:
 		ComponentGotReplicaEvent(RakNetChildReplica* replica, SenderID sender_id = -1, double delay= 0) : 
-		  SystemEventMessage(sender_id , delay), m_Replica(replica){}
+		  SceneObjectEventMessage(sender_id , delay), m_Replica(replica){}
 		  RakNetChildReplica* GetReplica() const {return m_Replica;}
 	private:
 		RakNetChildReplica* m_Replica;

@@ -72,10 +72,10 @@ namespace GASS
 			}
 			if(lc && show_bb)
 			{
-				//move to selecetd location
-				GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(lc->GetWorldPosition(),SELECTION_COMP_SENDER)));
-				GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(lc->GetWorldRotation(),SELECTION_COMP_SENDER)));
-				GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(lc->GetScale(),SELECTION_COMP_SENDER)));
+				//move to selected location
+				GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(lc->GetWorldPosition(),SELECTION_COMP_SENDER)));
+				GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(lc->GetWorldRotation(),SELECTION_COMP_SENDER)));
+				GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(lc->GetScale(),SELECTION_COMP_SENDER)));
 
 				new_selected->RegisterForMessage(REG_TMESS(SelectionComponent::OnSelectedTransformation,TransformationNotifyMessage,1));
 				new_selected->RegisterForMessage(REG_TMESS(SelectionComponent::OnGeometryChanged,GeometryChangedMessage ,0));
@@ -86,19 +86,19 @@ namespace GASS
 				{
 					m_BBox = gc->GetBoundingBox();
 					BuildMesh();
-					GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(true)));
+					GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(true)));
 				}
 				else
-					GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
+					GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(false)));
 			}
 			else
-				GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
+				GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(false)));
 
 		}
 		else
 		{
 			m_SelectedObject.reset();
-			GetSceneObject()->PostMessage(MessagePtr(new VisibilityMessage(false)));
+			GetSceneObject()->PostRequest(VisibilityMessagePtr(new VisibilityMessage(false)));
 		}
 	}
 
@@ -109,10 +109,10 @@ namespace GASS
 		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
 		{
 			//move to selecetd location
-			GetSceneObject()->SendImmediate(MessagePtr(new WorldPositionMessage(message->GetPosition(),SELECTION_COMP_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldPositionMessagePtr(new WorldPositionMessage(message->GetPosition(),SELECTION_COMP_SENDER)));
 		}
-		GetSceneObject()->SendImmediate(MessagePtr(new WorldRotationMessage(message->GetRotation(),SELECTION_COMP_SENDER)));
-		GetSceneObject()->SendImmediate(MessagePtr(new ScaleMessage(message->GetScale(),SELECTION_COMP_SENDER)));
+		GetSceneObject()->SendImmediateRequest(WorldRotationMessagePtr(new WorldRotationMessage(message->GetRotation(),SELECTION_COMP_SENDER)));
+		GetSceneObject()->SendImmediateRequest(ScaleMessagePtr(new ScaleMessage(message->GetScale(),SELECTION_COMP_SENDER)));
 	}
 
 	void SelectionComponent::OnGeometryChanged(GeometryChangedMessagePtr message)
@@ -173,7 +173,6 @@ namespace GASS
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(m_Color);
 		}
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data)));
 	}
 }

@@ -82,8 +82,7 @@ namespace GASS
 		Vec3 x = Math::Cross(look_dir,z);
 		z.Normalize();
 		q.FromAxes(x,look_dir,z);
-		GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(q)));
-
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(q)));
 	}
 
 	void LookAtComponent::OnTransformation(TransformationNotifyMessagePtr message)

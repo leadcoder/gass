@@ -118,8 +118,8 @@ namespace GASS
 		std::cout << "called " << message << " data:" << data << "\n";
 		if(std::string(message) == "OutOfArmorMessage")
 		{
-			MessagePtr message(new OutOfArmorMessage());
-			GetSceneObject()->PostMessage(message);
+			OutOfArmorMessagePtr message(new OutOfArmorMessage());
+			GetSceneObject()->PostEvent(message);
 		}
 	}
 

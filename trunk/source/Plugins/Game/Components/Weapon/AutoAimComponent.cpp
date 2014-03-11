@@ -105,33 +105,22 @@ namespace GASS
 		
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
-
-		//GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnParentTransformation,TransformationNotifyMessage,0));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 		if(m_TurretObject->GetParentSceneObject())
 			m_TurretObject->GetParentSceneObject()->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBaseTransformation,TransformationNotifyMessage,0));
 
-
-	
-	
-
-		
 		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretTransformation,TransformationNotifyMessage,0));
 		m_TurretObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnTurretHingeUpdate,HingeJointNotifyMessage,0));
 	
-		m_TurretObject->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-		m_TurretObject->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
+		m_TurretObject->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+		m_TurretObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 
 		
 		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelTransformation,TransformationNotifyMessage,0));
 		m_BarrelObject->RegisterForMessage(REG_TMESS(AutoAimComponent::OnBarrelHingeUpdate,HingeJointNotifyMessage,0));
-		m_BarrelObject->PostMessage(MessagePtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-		m_BarrelObject->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
+		m_BarrelObject->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+		m_BarrelObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 		
 	}
 
@@ -221,23 +210,19 @@ namespace GASS
 	{
 		//send information about current barrel information, 
 		//can be used by sight component to redirect sight to barrel
-		GetSceneObject()->PostMessage(MessagePtr(new BarrelTransformationMessage(m_BarrelTransformation)));
+		GetSceneObject()->PostEvent(BarrelTransformationMessagePtr(new BarrelTransformationMessage(m_BarrelTransformation)));
 
 		if(!m_Active)
 		{
 			//reset
 			m_CurrentAimPriority = 0; 
 			//GetSceneObject()->PostMessage(MessagePtr(new PhysicsHingeJointVelocityRequest(0)));
-			MessagePtr force_msg(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce));
-			m_TurretObject->PostMessage(force_msg);
-			m_BarrelObject->PostMessage(force_msg);
+			PhysicsHingeJointMaxTorqueRequestPtr force_msg(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce));
+			m_TurretObject->PostRequest(force_msg);
+			m_BarrelObject->PostRequest(force_msg);
 			//m_BarrelObject->PostMessage(force_msg);
-			
-			MessagePtr yaw_vel_msg(new PhysicsHingeJointVelocityRequest(0));
-			m_TurretObject->PostMessage(yaw_vel_msg);
-
-			MessagePtr pitch_vel_msg(new PhysicsHingeJointVelocityRequest(0));
-			m_BarrelObject->PostMessage(pitch_vel_msg);
+			m_TurretObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
+			m_BarrelObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 
 			return;
 		}
@@ -336,12 +321,8 @@ namespace GASS
 		//MessagePtr yaw_torque_msg(new PhysicsBodyAddTorqueRequest(Vec3(0,yaw_torque,0)));
 		
 		//m_TurretObject->PostMessage(yaw_torque_msg);
-		MessagePtr yaw_vel_msg(new PhysicsHingeJointVelocityRequest(-yaw_torque));
-		m_TurretObject->PostMessage(yaw_vel_msg);
-		
-
-		MessagePtr pitch_vel_msg(new PhysicsHingeJointVelocityRequest(-pitch_torque));
-		m_BarrelObject->PostMessage(pitch_vel_msg);
+		m_TurretObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(-yaw_torque)));
+		m_BarrelObject->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(-pitch_torque)));
 		
 	}
 

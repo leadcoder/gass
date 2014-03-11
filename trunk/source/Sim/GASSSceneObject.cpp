@@ -593,12 +593,22 @@ namespace GASS
 		m_MessageManager->UnregisterForMessage(type, callback);
 	}
 
-	void SceneObject::PostMessage( MessagePtr message )
+	void SceneObject::PostEvent(SceneObjectEventMessagePtr message)
 	{
 		m_MessageManager->PostMessage(message);
 	}
 
-	void SceneObject::SendImmediate( MessagePtr message )
+	void SceneObject::SendImmediateEvent(SceneObjectEventMessagePtr message )
+	{
+		m_MessageManager->SendImmediate(message);
+	}
+
+	void SceneObject::PostRequest(SceneObjectRequestMessagePtr message)
+	{
+		m_MessageManager->PostMessage(message);
+	}
+
+	void SceneObject::SendImmediateRequest(SceneObjectRequestMessagePtr message )
 	{
 		m_MessageManager->SendImmediate(message);
 	}

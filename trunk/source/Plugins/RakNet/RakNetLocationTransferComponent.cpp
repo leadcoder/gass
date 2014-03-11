@@ -111,15 +111,15 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
 
-			MessagePtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::PhysicsBodyState::DISABLE));
-			GetSceneObject()->PostMessage(disable_msg);
+			PhysicsBodyStateRequestPtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::PhysicsBodyState::DISABLE));
+			GetSceneObject()->PostRequest(disable_msg);
 
 			IComponentContainerTemplate::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
 			for(int i = 0;  i< components.size(); i++)
 			{
 				BaseSceneComponentPtr comp = DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-				comp->GetSceneObject()->PostMessage(disable_msg);
+				comp->GetSceneObject()->PostRequest(disable_msg);
 			}
 
 			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || 
@@ -228,8 +228,8 @@ namespace GASS
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				SPTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
-				MessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
-				GetSceneObject()->SendImmediate(serialize_message);
+				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
+				GetSceneObject()->SendImmediateRequest(serialize_message);
 			}
 		}
 		else //client
@@ -318,19 +318,19 @@ namespace GASS
 			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || m_ClientLocationMode == UNCHANGED)
 			{
 				if(m_UpdatePosition)
-					GetSceneObject()->PostMessage(MessagePtr(new PositionMessage(new_pos)));
+					GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(new_pos)));
 				if(m_UpdateRotation)
-					GetSceneObject()->PostMessage(MessagePtr(new RotationMessage(new_rot)));
+					GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(new_rot)));
 			}
 			else if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
 			{
 				if(m_UpdatePosition)
-					GetSceneObject()->PostMessage(MessagePtr(new WorldPositionMessage(new_pos)));
+					GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_pos)));
 				if(m_UpdateRotation)
-					GetSceneObject()->PostMessage(MessagePtr(new WorldRotationMessage(new_rot)));
+					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(new_rot)));
 			}
 
-			GetSceneObject()->PostMessage(MessagePtr(new VelocityNotifyMessage(m_Velocity, m_AngularVelocity)));
+			GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(m_Velocity, m_AngularVelocity)));
 
 			
 

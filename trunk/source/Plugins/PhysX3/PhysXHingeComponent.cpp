@@ -227,7 +227,7 @@ namespace GASS
 			//force = a1->getGlobalPose().rotateInv(force);
 
 			PhysicsHingeJointReportEventPtr report_message(new PhysicsHingeJointReportEvent(m_DriveTargetVelocity,PxConvert::ToGASS(force), PxConvert::ToGASS(torque)));
-			GetSceneObject()->PostMessage(report_message);
+			GetSceneObject()->PostEvent(report_message);
 			//std::cout << " Torque:" << PxConvert::ToGASS(torque) << " Force: " << PxConvert::ToGASS(force) << std::endl;
 			/*physx::PxVec3 vel = a2->is<physx::PxRigidDynamic>()->getAngularVelocity();
 			vel = a1->getGlobalPose().rotateInv(vel);

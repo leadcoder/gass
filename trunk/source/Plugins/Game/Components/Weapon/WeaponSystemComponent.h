@@ -47,7 +47,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 		void OnExecuteFire(FireMessagePtr message);
 		void OnReload(ReloadMessagePtr message);
 		void OnReadyToFire(ReadyToFireMessagePtr message);

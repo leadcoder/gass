@@ -243,8 +243,6 @@ namespace GASS
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 		
-		void PostMessage(MessagePtr message);
-		void SendImmediate(MessagePtr message);
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
 		void SetID(const SceneObjectID &id){m_ID = id;}
@@ -280,7 +278,15 @@ namespace GASS
 		SceneObject* GetSceneObjectByID(const std::string &id) const;
 		//void LoadFromFile(const std::string &filename);
 		static SceneObjectPtr LoadFromXML(const std::string &filename);
-	protected:
+
+		void PostRequest(SceneObjectRequestMessagePtr message);
+		void SendImmediateRequest(SceneObjectRequestMessagePtr message);
+
+		void PostEvent(SceneObjectEventMessagePtr message);
+		void SendImmediateEvent(SceneObjectEventMessagePtr message);
+
+protected:
+	
 		void InitializePointers();
 		void Initialize(ScenePtr scene);
 		void OnDelete();

@@ -169,7 +169,7 @@ namespace GASS
 		bbsize *=  0.5f;
 		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 	
 	AABox OgreBillboardComponent::GetBoundingBox() const

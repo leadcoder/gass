@@ -108,10 +108,10 @@ namespace GASS
 			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
 		}
 
-		MessagePtr pos_msg(new PositionMessage(scene->GetStartPos()));
+		
 		if(free_obj)
 		{
-			free_obj->SendImmediate(pos_msg);
+			free_obj->SendImmediateRequest(PositionMessagePtr(new PositionMessage(scene->GetStartPos())));
 			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
 		}
@@ -285,9 +285,9 @@ namespace GASS
 				//Vec3 pos = lc->GetWorldPosition();
 				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 				object_pos.y = cam_pos.y;
-				cam_obj->PostMessage(MessagePtr(new PositionMessage(object_pos)));
-				MessagePtr zoom_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,object_size));
-				cam_obj->PostMessage(zoom_msg);
+				cam_obj->PostRequest(PositionMessagePtr(new PositionMessage(object_pos)));
+				CameraParameterMessagePtr zoom_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,object_size));
+				cam_obj->PostRequest(zoom_msg);
 			}
 			else
 			{
@@ -312,8 +312,8 @@ namespace GASS
 				rot_mat.SetUpVector(up);
 				cam_rot.FromRotationMatrix(rot_mat);
 
-				cam_obj->PostMessage(MessagePtr(new RotationMessage(cam_rot)));
-				cam_obj->PostMessage(MessagePtr(new PositionMessage(object_pos)));
+				cam_obj->PostRequest(RotationMessagePtr(new RotationMessage(cam_rot)));
+				cam_obj->PostRequest(PositionMessagePtr(new PositionMessage(object_pos)));
 			}
 		}
 	}

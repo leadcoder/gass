@@ -46,7 +46,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void OnPlayerInput(InputControllerMessagePtr  message);
+		void OnPlayerInput(InputRelayEventPtr message);
 	private:
 		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
 	};

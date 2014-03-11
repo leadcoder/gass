@@ -62,7 +62,7 @@ namespace GASS
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
 		void OnTransformation(TransformationNotifyMessagePtr message);
 		void OnParentTransformation(TransformationNotifyMessagePtr message);

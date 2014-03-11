@@ -71,8 +71,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 
 		//Play engine sound
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(sound_msg);
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
 	}
 
 	void VelocityToSoundComponent::SceneManagerTick(double delta_time)
@@ -103,13 +102,8 @@ namespace GASS
 			*/
 		m_Volume = std::max<Float>(m_Volume,m_MinMaxVolume.x);
 		m_Volume = std::min<Float>(m_Volume,m_MinMaxVolume.y);
-	
-		MessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch));
-		GetSceneObject()->PostMessage(pitch_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,m_Volume));
-		GetSceneObject()->PostMessage(volume_msg);
-
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,m_Volume)));
 		//reset!
 		m_MaxVelRequest = 0;
 	}

@@ -84,7 +84,7 @@ namespace GASS
 		while(cc_iter1.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<GASS::SceneObject>(cc_iter1.getNext());
-			child->PostMessage(message);
+			child->PostEvent(message);
 		}
 		//std::cout<< "armor=" << m_CurrentArmor << std::endl;
 		//std::cout<< "armor=" << m_Armor << std::endl;
@@ -97,15 +97,12 @@ namespace GASS
 			if(m_CurrentArmor <= 0)
 			{
 				//Send armor message
-				MessagePtr armor_msg(new OutOfArmorMessage());
-				GetSceneObject()->PostMessage(armor_msg);
-
+				GetSceneObject()->PostEvent(OutOfArmorMessagePtr(new OutOfArmorMessage()));
 
 				if(m_OutOfArmorForce > 0)
 				{
 					Vec3 force = Vec3(0,1,0)*m_OutOfArmorForce;
-					MessagePtr force_msg(new PhysicsBodyAddForceRequest(force));
-					GetSceneObject()->PostMessage(force_msg);
+					GetSceneObject()->PostRequest(PhysicsBodyAddForceRequestPtr(new PhysicsBodyAddForceRequest(force)));
 				}
 			}
 		}
@@ -117,8 +114,7 @@ namespace GASS
 		//load damage mesh
 		if(m_DamageMesh != "")
 		{
-			MessagePtr mesh_msg(new MeshFileMessage(m_DamageMesh));
-			GetSceneObject()->PostMessage(mesh_msg);
+			GetSceneObject()->PostRequest(MeshFileMessagePtr(new MeshFileMessage(m_DamageMesh)));
 		}
 		//std::cout<< "Dead!!!\n";
 				
@@ -130,8 +126,8 @@ namespace GASS
 			Vec3 vel(0,0,0);
 			Quaternion rot = Quaternion::IDENTITY;
 			Vec3 pos = location->GetWorldPosition();
-			SceneMessagePtr spawn_msg(new SpawnObjectFromTemplateRequest(m_DamageEffect1,pos,rot,vel));
-			GetSceneObject()->GetScene()->PostMessage(spawn_msg);
+			
+			GetSceneObject()->GetScene()->PostMessage(SpawnObjectFromTemplateRequestPtr(new SpawnObjectFromTemplateRequest(m_DamageEffect1,pos,rot,vel)));
 		}
 	}
 

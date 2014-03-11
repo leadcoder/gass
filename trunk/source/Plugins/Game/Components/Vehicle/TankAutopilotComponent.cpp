@@ -75,7 +75,7 @@ namespace GASS
 
 	void TankAutopilotComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
@@ -119,7 +119,7 @@ namespace GASS
 		m_VehicleSpeed  = message->GetLinearVelocity();
 	}
 
-	void TankAutopilotComponent::OnInput(InputControllerMessagePtr message)
+	void TankAutopilotComponent::OnInput(InputRelayEventPtr message)
 	{
 
 		std::string name = message->GetController();
@@ -246,11 +246,9 @@ namespace GASS
 
 			//Send input message
 
-			MessagePtr throttle_message(new InputControllerMessage("",m_ThrottleInput,throttle,CT_AXIS));
-			GetSceneObject()->SendImmediate(throttle_message);
-
-			MessagePtr steering_message(new InputControllerMessage("",m_SteerInput,-turn,CT_AXIS));
-			GetSceneObject()->SendImmediate(steering_message);
+			
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));
 
 		}
 	}

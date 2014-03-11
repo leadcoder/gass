@@ -82,8 +82,7 @@ namespace GASS
 		//debug?
 		if(m_Debug)
 		{
-			SceneMessagePtr message(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false));
-			GetSceneObject()->PostMessage(message);
+			//GetSceneObject()->PostRequest(DrawCircleRequestPtr(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false)););
 		}
 
 		//update sensor data at x hz 
@@ -115,7 +114,7 @@ namespace GASS
 						if(IsNewTarget(signature))
 						{
 							//send new message that target is found
-							GetSceneObject()->PostMessage(MessagePtr(new SensorGotTargetMessage(data)));
+							GetSceneObject()->PostEvent(SensorGotTargetMessagePtr(new SensorGotTargetMessage(data)));
 						}
 						m_DetectedObjects[signature] = data;
 					}
@@ -142,7 +141,7 @@ namespace GASS
 				detection_iter++;
 			}
 			//Send detection message
-			GetSceneObject()->PostMessage(MessagePtr(new SensorMessage(all_targets)));
+			GetSceneObject()->PostEvent(SensorMessagePtr(new SensorMessage(all_targets)));
 
 			
 		}
@@ -160,7 +159,7 @@ namespace GASS
 		iter = m_DetectedObjects.find(sig);
 		if(iter != m_DetectedObjects.end())
 		{
-			GetSceneObject()->PostMessage(MessagePtr(new SensorLostTargetMessage(iter->second)));
+			GetSceneObject()->PostEvent(SensorLostTargetMessagePtr(new SensorLostTargetMessage(iter->second)));
 			m_DetectedObjects.erase(iter);
 			
 			//send Message that target is lost

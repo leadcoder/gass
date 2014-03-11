@@ -55,8 +55,8 @@ namespace GASS
 		//Start client or server?
 		if(StringUtils::ToLower(m_Mode) == "server")
 		{
-			SystemMessagePtr server_mess(new StartServerRequest(m_ServerName, m_ServerPort));
-			se->GetSimSystemManager()->PostMessage(server_mess);
+			
+			se->GetSimSystemManager()->PostMessage(SystemMessagePtr(new StartServerRequest(m_ServerName, m_ServerPort)));
 		}
 		else if (StringUtils::ToLower(m_Mode) == "client")
 		{

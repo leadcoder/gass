@@ -57,12 +57,8 @@ namespace GASS
 	void TrackComponent::OnInitialize()
 	{
 		BaseSceneComponent::OnInitialize();
-		
-		MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
-		GetSceneObject()->PostMessage(play_msg);
-
-		MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,0));
-		GetSceneObject()->PostMessage(volume_msg);
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
 		
 		if(m_DriveWheel.IsValid())
 			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
@@ -78,15 +74,14 @@ namespace GASS
 		m_AnimationValue.x += (ang_vel.x*m_AnimationSpeedFactor.x);
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
-		MessagePtr mesh_msg(new TextureCoordinateMessage(m_AnimationValue));
-		GetSceneObject()->SendImmediate(mesh_msg);
+		
+		GetSceneObject()->SendImmediateRequest(TextureCoordinateMessagePtr(new TextureCoordinateMessage(m_AnimationValue)));
 
 		float emission = fabs(ang_vel.x)*m_ParticleEmissionFactor;
 
 		if(emission >50)
 			emission =50;
-		MessagePtr particle_msg(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission));
-		GetSceneObject()->SendImmediate(particle_msg);
+		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterMessagePtr(new ParticleSystemParameterMessage(ParticleSystemParameterMessage::EMISSION_RATE,0,emission)));
 
 		float duration = fabs(ang_vel.x)*0.05;
 
@@ -107,8 +102,7 @@ namespace GASS
 			//Play engine sound
 			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
-		MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
-		GetSceneObject()->SendImmediate(sound_msg);
+		GetSceneObject()->SendImmediateRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume)));
 
 		if(speed > 0)
 		{
@@ -117,9 +111,7 @@ namespace GASS
 			if(pitch > 1.7)
 				pitch = 1.7;
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
-			
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
-			GetSceneObject()->SendImmediate(sound_msg);
+			GetSceneObject()->SendImmediateRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch)));
 		}
 	}
 }

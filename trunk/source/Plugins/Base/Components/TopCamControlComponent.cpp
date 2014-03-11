@@ -222,14 +222,12 @@ namespace GASS
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;
 
 		int from_id = (int)this;
-		MessagePtr pos_msg(new PositionMessage(m_Pos,from_id));
-		GetSceneObject()->PostMessage(pos_msg);
+		GetSceneObject()->PostRequest(PositionMessagePtr(new PositionMessage(m_Pos,from_id)));
 
-		MessagePtr rot_msg(new RotationMessage(m_Rot,from_id));
-		GetSceneObject()->PostMessage(rot_msg);
+		GetSceneObject()->PostRequest(RotationMessagePtr(new RotationMessage(m_Rot,from_id)));
 
-		MessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
-		GetSceneObject()->PostMessage(cam_msg);
+		CameraParameterMessagePtr cam_msg(new CameraParameterMessage(CameraParameterMessage::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
+		GetSceneObject()->PostRequest(cam_msg);
 		m_ZoomInput *= 0.9; 
 	}
 

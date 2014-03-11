@@ -244,7 +244,7 @@ namespace GASS
 			iter++;*/
 		}
 		//m_StaticGeometry->build();
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	void OgreInstancedMeshComponent::setupInstancedMaterialToEntity(Entity*ent)

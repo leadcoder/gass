@@ -330,11 +330,11 @@ namespace GASS
 	typedef SPTR<TemplateSelectedMessage> TemplateSelectedMessagePtr;
 
 
-	class EditPositionMessage : public BaseMessage
+	class EditPositionMessage : public SceneObjectRequestMessage
 	{
 	public:
 		EditPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_Position(pos)
+		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos)
 		  {
 
 		  }

@@ -36,11 +36,11 @@ namespace GASS
 	};
 	typedef SPTR<UpdateWaypointListMessage> UpdateWaypointListMessagePtr;*/
 
-	class WaypointListUpdatedMessage : public BaseMessage
+	class WaypointListUpdatedMessage : public SceneObjectEventMessage
 	{
 	public:
 		WaypointListUpdatedMessage(const std::vector<Vec3> &wps, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Waypoints(wps){}
+		  SceneObjectEventMessage(sender_id , delay) , m_Waypoints(wps){}
 		  std::vector<Vec3> m_Waypoints;
 	private:
 		
@@ -48,11 +48,11 @@ namespace GASS
 	typedef SPTR<WaypointListUpdatedMessage> WaypointListUpdatedMessagePtr;
 
 
-	class TriggerEnterMessage : public BaseMessage
+	class TriggerEnterMessage : public SceneObjectEventMessage
 	{
 	public:
 		TriggerEnterMessage(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
+		  SceneObjectEventMessage(sender_id , delay) , m_Trigger(obj){}
 		  SceneObjectPtr GetTrigger() {return m_Trigger;}
 	private:
 		SceneObjectPtr  m_Trigger;
@@ -60,11 +60,11 @@ namespace GASS
 	typedef SPTR<TriggerEnterMessage> TriggerEnterMessagePtr;
 
 
-	class TriggerExitMessage : public BaseMessage
+	class TriggerExitMessage : public SceneObjectEventMessage
 	{
 	public:
 		TriggerExitMessage (SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Trigger(obj){}
+		  SceneObjectEventMessage(sender_id , delay) , m_Trigger(obj){}
 		  SceneObjectPtr GetTrigger() {return m_Trigger;}
 	private:
 		SceneObjectPtr  m_Trigger;

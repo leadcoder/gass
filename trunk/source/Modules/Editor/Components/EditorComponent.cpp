@@ -117,8 +117,8 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Visible = message->GetVisible();
-			GetSceneObject()->PostMessage(MessagePtr(new GeometryVisibilityMessage(m_Visible)));
-			GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(m_Visible)));
+			GetSceneObject()->PostRequest(GeometryVisibilityMessagePtr(new GeometryVisibilityMessage(m_Visible)));
+			GetSceneObject()->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_Visible)));
 			
 			/*if(m_Visible)
 			{
@@ -126,17 +126,17 @@ namespace GASS
 				//if(m_ChangeMaterialWhenSelected)
 				{
 					if(m_Selected && m_ChangeMaterialWhenSelected)
-						GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(m_SelectedColor,Vec3(-1,-1,-1))));
+						GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(m_SelectedColor,Vec3(-1,-1,-1))));
 					else
-						GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(-1,-1,-1))));
+						GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(-1,-1,-1))));
 				}
 
-				GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(true)));
+				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsMessage(true)));
 			}
 			else
 			{
-				GetSceneObject()->PostMessage(MessagePtr(new MaterialMessage(Vec4(1,1,1,m_VisibilityTransparency),Vec3(-1,-1,-1))));
-				GetSceneObject()->PostMessage(MessagePtr(new CollisionSettingsMessage(false)));
+				GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,m_VisibilityTransparency),Vec3(-1,-1,-1))));
+				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsMessage(false)));
 			}*/
 		}
 	}
@@ -150,12 +150,12 @@ namespace GASS
 		{
 			m_Selected = true;
 			//if(m_Visible)
-			GetSceneObject()->PostMessage(MessagePtr(new BillboardColorMessage(m_SelectedColor)));
+			GetSceneObject()->PostRequest(BillboardColorMessagePtr(new BillboardColorMessage(m_SelectedColor)));
 		}
 		else if(m_Selected)
 		{
 			//if(m_Visible)
-			GetSceneObject()->PostMessage(MessagePtr(new BillboardColorMessage(ColorRGBA(1,1,1,1))));
+			GetSceneObject()->PostRequest(BillboardColorMessagePtr(new BillboardColorMessage(ColorRGBA(1,1,1,1))));
 			m_Selected = false;
 		}
 	}

@@ -64,9 +64,7 @@ namespace GASS
 					}
 				}
 				new_position = new_position - m_Offset;
-				
-				GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
-				gizmo->PostMessage(pos_msg);
+				gizmo->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_position,from_id)));
 			}
 			else if(m_GroundSnapMove)
 			{
@@ -113,10 +111,7 @@ namespace GASS
 						new_position.y = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.y);
 						new_position.z = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.z);
 
-
-						GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(new_position,from_id));
-						selected->PostMessage(pos_msg);
-
+						selected->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(new_position,from_id)));
 					}
 				}
 
@@ -184,19 +179,19 @@ namespace GASS
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
 					selected = new_obj;
 				}
-				MessagePtr col_msg(new GASS::CollisionSettingsMessage(false,from_id));
-				SendMessageRec(selected,col_msg);
+				CollisionSettingsMessagePtr col_request(new CollisionSettingsMessage(false,from_id));
+				SendMessageRec(selected, col_request);
 				SceneObjectPtr gizmo = GetOrCreateGizmo();
 				if(gizmo)
-					SendMessageRec(gizmo,col_msg);
+					SendMessageRec(gizmo,col_request);
 			}
 			m_MoveUpdateCount = 0;
 		}
 	}
 
-	void MoveTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
+	void MoveTool::SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg)
 	{
-		obj->PostMessage(msg);
+		obj->PostRequest(msg);
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
@@ -234,8 +229,7 @@ namespace GASS
 		if(selected && CheckIfEditable(selected))
 		{
 			int from_id = (int) this;
-			MessagePtr col_msg(new GASS::CollisionSettingsMessage(true,from_id));
-			//selected->SendImmediate(col_msg);
+			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(true,from_id));
 			SendMessageRec(selected,col_msg);
 
 			SceneObjectPtr gizmo = GetOrCreateGizmo();
@@ -292,7 +286,7 @@ namespace GASS
 				SceneObjectPtr current (m_SelectedObject,NO_THROW);
 				if(current)
 				{
-					//gizmo->PostMessage();
+					//gizmo->PostRequest();
 					//m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
 				}
 			}*/
@@ -312,9 +306,9 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = (int) this;
-			MessagePtr col_msg(new GASS::CollisionSettingsMessage(value,from_id));
+			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(value,from_id));
 			SendMessageRec(gizmo,col_msg);
-			MessagePtr vis_msg(new GASS::VisibilityMessage(value,from_id));
+			VisibilityMessagePtr vis_msg(new VisibilityMessage(value,from_id));
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}

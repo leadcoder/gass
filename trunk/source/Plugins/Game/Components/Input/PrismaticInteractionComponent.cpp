@@ -56,10 +56,10 @@ namespace GASS
 
 	void PrismaticInteractionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PrismaticInteractionComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PrismaticInteractionComponent::OnInput,InputRelayEvent,0));
 	}
 
-	void PrismaticInteractionComponent::OnInput(InputControllerMessagePtr message)
+	void PrismaticInteractionComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();
@@ -74,9 +74,7 @@ namespace GASS
 
 			//MessagePtr message(new PhysicsPrismaticJointPositionRequest(pos));
 			//GetSceneObject()->PostMessage(message);
-
-			MessagePtr vel_msg2(new PhysicsPrismaticJointVelocityRequest(linear_vel));
-			GetSceneObject()->PostMessage(vel_msg2);
+			GetSceneObject()->PostRequest(PhysicsPrismaticJointVelocityRequestPtr(new PhysicsPrismaticJointVelocityRequest(linear_vel)));
 		}
 	}
 }

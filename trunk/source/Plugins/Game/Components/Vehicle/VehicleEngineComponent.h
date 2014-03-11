@@ -83,7 +83,7 @@ namespace GASS
 
 		
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 
 
 		//set/get attributes

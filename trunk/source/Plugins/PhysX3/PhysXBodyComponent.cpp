@@ -88,7 +88,7 @@ namespace GASS
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
-		GetSceneObject()->SendImmediate(MessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		sm->Register(listener);
@@ -239,12 +239,9 @@ namespace GASS
 	void PhysXBodyComponent::SceneManagerTick(double delta_time)
 	{
 		int from_id = (int)this; //use address as id
-		MessagePtr pos_msg(new WorldPositionMessage(GetPosition(),from_id));
-		GetSceneObject()->PostMessage(pos_msg);
-
-		MessagePtr rot_msg(new WorldRotationMessage(GetRotation(),from_id));
-		GetSceneObject()->PostMessage(rot_msg);
 		
+		GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(GetPosition(),from_id)));
+		GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(GetRotation(),from_id)));
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec)

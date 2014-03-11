@@ -57,16 +57,16 @@ namespace GASS
 				switch(m_TEM)
 				{
 				case TEM_DEFORM:
-					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					terrain_group->PostRequest(TerrainHeightModifyMessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					break;
 				case TEM_FLATTEN:
-					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					terrain_group->PostRequest(TerrainHeightModifyMessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					break;
 				case TEM_SMOOTH:
-					terrain_group->PostMessage(MessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					terrain_group->PostRequest(TerrainHeightModifyMessagePtr(new TerrainHeightModifyMessage(TerrainHeightModifyMessage::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 					break;
 				case TEM_LAYER_PAINT:
-					terrain_group->PostMessage(MessagePtr(new TerrainPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
+					terrain_group->PostRequest(TerrainPaintMessagePtr(new TerrainPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
 					break;
 				}
 			}
@@ -74,7 +74,7 @@ namespace GASS
 			{
 				SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 				if(selected)
-					selected->PostMessage(MessagePtr(new GrassPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					selected->PostRequest(GrassPaintMessagePtr(new GrassPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
 			}
 		}
 	}
@@ -86,8 +86,7 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = (int) this;
-			GASS::MessagePtr pos_msg(new GASS::WorldPositionMessage(info.m_3DPos,from_id));
-			gizmo->PostMessage(pos_msg);
+			gizmo->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(info.m_3DPos,from_id)));
 		}
 	}
 
@@ -138,8 +137,7 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = (int) this;
-			MessagePtr vis_msg(new GASS::VisibilityMessage(value,from_id));
-			SendMessageRec(gizmo,vis_msg);
+			SendMessageRec(gizmo,VisibilityMessagePtr(new VisibilityMessage(value,from_id)));
 		}
 	}
 
@@ -148,9 +146,9 @@ namespace GASS
 		m_SelectedObject = message->GetSceneObject();
 	}
 
-	void TerrainDeformTool::SendMessageRec(SceneObjectPtr obj,MessagePtr msg)
+	void TerrainDeformTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
-		obj->PostMessage(msg);
+		obj->PostRequest(msg);
 		GASS::IComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
@@ -203,7 +201,7 @@ namespace GASS
 			TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
 			if(terrain)
 			{
-				selected->PostMessage(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
+				selected->PostRequest(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
 			}
 		}*/
 
@@ -211,7 +209,7 @@ namespace GASS
 		if(terrain)
 		{
 			BaseSceneComponentPtr bsc = boost::dynamic_pointer_cast<BaseSceneComponent>(terrain);
-			bsc->GetSceneObject()->PostMessage(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
+			bsc->GetSceneObject()->PostRequest(MessagePtr(new TerrainLayerMessage(m_ActiveLayer,texture,tiling)));
 		}
 	}*/
 

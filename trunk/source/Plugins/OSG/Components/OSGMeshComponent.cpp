@@ -346,7 +346,7 @@ namespace GASS
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 
-		GetSceneObject()->PostMessage(MessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(GeometryChangedMessagePtr(new GeometryChangedMessage(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 
 		//expand children
 		if(m_Expand)

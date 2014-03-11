@@ -34,12 +34,7 @@ namespace GASS
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
-
-	//*********************************************************
-	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
-	//*********************************************************
-
-	class SoundParameterMessage : public BaseMessage
+	class SoundParameterMessage : public SceneObjectRequestMessage
 	{
 	public:
 		enum SoundParameterType
@@ -53,7 +48,7 @@ namespace GASS
 		};
 	public:
 		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
+		  SceneObjectRequestMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
 		  }

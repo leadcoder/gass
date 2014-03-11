@@ -62,10 +62,10 @@ namespace GASS
 		
 		//get input from parent?
 		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
-		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputControllerMessage,0));
+		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputRelayEvent,0));
 	}
 
-	void SteerComponent::OnInput(InputControllerMessagePtr message)
+	void SteerComponent::OnInput(InputRelayEventPtr message)
 	{
 
 		std::string name = message->GetController();
@@ -97,14 +97,8 @@ namespace GASS
 		if(angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
 		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
 		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
-
-		MessagePtr force_msg(new PhysicsSuspensionJointMaxSteerTorqueRequest(m_SteerForce));
-		MessagePtr vel_msg(new PhysicsSuspensionJointSteerVelocityRequest(angular_vel));
-
-		GetSceneObject()->PostMessage(force_msg);
-		GetSceneObject()->PostMessage(vel_msg);
-
-
+		GetSceneObject()->PostRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr(new PhysicsSuspensionJointMaxSteerTorqueRequest(m_SteerForce)));
+		GetSceneObject()->PostRequest(PhysicsSuspensionJointSteerVelocityRequestPtr(new PhysicsSuspensionJointSteerVelocityRequest(angular_vel)));
 
 		/*float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")

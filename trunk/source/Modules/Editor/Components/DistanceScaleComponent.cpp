@@ -104,11 +104,11 @@ namespace GASS
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
 
 				if(m_ScaleLocation)
-					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
 				else
 				{
-					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(Vec3(1,1,1))));
-					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(Vec3(1,1,1))));
+					GetSceneObject()->PostRequest(GeometryScaleMessagePtr(new GeometryScaleMessage(scale)));
 				}
 
 			}
@@ -161,9 +161,9 @@ namespace GASS
 				float scale_factor = 0.06;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
 				if(m_ScaleLocation)
-					GetSceneObject()->PostMessage(MessagePtr(new ScaleMessage(scale)));
+					GetSceneObject()->PostRequest(ScaleMessagePtr(new ScaleMessage(scale)));
 				else
-					GetSceneObject()->PostMessage(MessagePtr(new GeometryScaleMessage(scale)));
+					GetSceneObject()->PostRequest(GeometryScaleMessagePtr(new GeometryScaleMessage(scale)));
 			}
 		}
 	}

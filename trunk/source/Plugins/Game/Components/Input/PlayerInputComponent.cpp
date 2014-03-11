@@ -93,8 +93,7 @@ namespace GASS
 					if(dist < 5)
 					{
 						//enter and return
-						MessagePtr enter_msg(new EnterVehicleMessage());
-						ihc->GetSceneObject()->PostMessage(enter_msg);
+						ihc->GetSceneObject()->PostRequest(EnterVehicleMessagePtr(new EnterVehicleMessage()));
 						m_CurrentVehicle = ihc->GetSceneObject();
 						m_CurrentSeat = ihc->GetSceneObject();
 						seat = 0;
@@ -140,14 +139,11 @@ namespace GASS
 				{
 					if(m_CurrentSeat)
 					{
-						MessagePtr exit_msg(new ExitVehicleMessage());
-						m_CurrentSeat->PostMessage(exit_msg);
+						m_CurrentSeat->PostRequest(ExitVehicleMessagePtr (new ExitVehicleMessage()));
 					}
 					InputHandlerComponentPtr ih = DYNAMIC_PTR_CAST<InputHandlerComponent>(components[seat]);
-					MessagePtr enter_msg(new EnterVehicleMessage());
 					m_CurrentSeat = ih->GetSceneObject();
-					m_CurrentSeat->PostMessage(enter_msg);
-
+					m_CurrentSeat->PostRequest(EnterVehicleMessagePtr(new EnterVehicleMessage()));
 					seat++;
 				}
 			}

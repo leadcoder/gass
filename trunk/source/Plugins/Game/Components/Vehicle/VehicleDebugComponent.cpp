@@ -100,7 +100,6 @@ namespace GASS
 	void VehicleDebugComponent::OnGotoPosition(GotoPositionMessagePtr message)
 	{
 		Vec3 pos = message->GetPosition();
-		MessagePtr pos_msg(new PositionMessage(pos));
-		m_WaypointObj->PostMessage(pos_msg);
+		m_WaypointObj->PostRequest(PositionMessagePtr(new PositionMessage(pos)));
 	}
 }

@@ -47,7 +47,7 @@ namespace GASS
 		virtual void OnInitialize();
 	private:
 		void OnJointUpdate(HingeJointNotifyMessagePtr message);
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}

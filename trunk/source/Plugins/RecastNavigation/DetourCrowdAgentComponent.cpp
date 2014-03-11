@@ -270,8 +270,8 @@ namespace GASS
 				const float* pos = m_Agent->npos;
 				int id = (int) this;
 				Vec3 current_pos(pos[0],pos[1],pos[2]);
-				MessagePtr pos_msg(new WorldPositionMessage(current_pos,id));
-				GetSceneObject()->PostMessage(pos_msg);
+				
+				GetSceneObject()->PostRequest(WorldPositionMessagePtr(new WorldPositionMessage(current_pos,id)));
 
 				Vec3 target_dir = current_pos - m_TargetPos;
 				Float dist = target_dir.Length();
@@ -359,13 +359,9 @@ namespace GASS
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
 					
-					MessagePtr rot_msg(new WorldRotationMessage(rot,id));
-					GetSceneObject()->PostMessage(rot_msg);
+					GetSceneObject()->PostRequest(WorldRotationMessagePtr(new WorldRotationMessage(rot,id)));
 				}
-				//MessagePtr vel_msg(new VelocityNotifyMessage(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
-				MessagePtr vel_msg(new VelocityNotifyMessage(c_velocity,Vec3(0,0,0),id));
-				
-				GetSceneObject()->PostMessage(vel_msg);
+				GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(c_velocity,Vec3(0,0,0),id)));
 			}
 		}
 
@@ -460,9 +456,7 @@ namespace GASS
 
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
-
-		MessagePtr mesh_message(new ManualMeshDataMessage(m_MeshData));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr (new ManualMeshDataMessage(m_MeshData)));
 	}
 }
 

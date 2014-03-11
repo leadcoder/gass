@@ -107,8 +107,7 @@ namespace GASS
 		
 		}
 		int id = -1;
-		MessagePtr mesh_message(new ManualMeshDataMessage(mesh_data,id, 0.1));
-		GetSceneObject()->PostMessage(mesh_message);
+		GetSceneObject()->PostRequest(ManualMeshDataMessagePtr(new ManualMeshDataMessage(mesh_data,id, 0.1)));
 	}
 
 	bool CircleGeometryComponent::IsPointInside(const Vec3 &point) const
