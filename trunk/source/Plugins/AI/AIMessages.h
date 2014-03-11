@@ -24,11 +24,11 @@
 
 namespace GASS
 {
-	class DoorMessage : public BaseMessage
+	class DoorMessage : public SceneObjectRequestMessage
 	{
 	public:
 		DoorMessage(bool open, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Open(open)
+		  SceneObjectRequestMessage(sender_id , delay) , m_Open(open)
 		  {
 
 		  }
@@ -39,11 +39,11 @@ namespace GASS
 	typedef SPTR<DoorMessage> DoorMessagePtr;
 
 
-	class HealthChangedMessage : public BaseMessage
+	class HealthChangedEvent : public SceneObjectEventMessage
 	{
 	public:
-		HealthChangedMessage(double value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Health(value)
+		HealthChangedEvent(double value, SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectEventMessage(sender_id , delay) , m_Health(value)
 		  {
 
 		  }
@@ -51,13 +51,13 @@ namespace GASS
 	private:
 		double m_Health;
 	};
-	typedef SPTR<HealthChangedMessage> HealthChangedMessagePtr;
+	typedef SPTR<HealthChangedEvent> HealthChangedEventPtr;
 
-	class StanceChangedMessage : public BaseMessage
+	class StanceChangedMessage : public SceneObjectEventMessage
 	{
 	public:
 		StanceChangedMessage(int stance, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Stance(stance)
+		  SceneObjectEventMessage(sender_id , delay) , m_Stance(stance)
 		  {
 
 		  }
@@ -68,64 +68,7 @@ namespace GASS
 	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;
 
 
-	enum TrafficLightMode
-	{
-		TLM_TOGGLE,
-		TLM_PAUSE,
-		TLM_ENABLE,
-		TLM_DISABLE,
-	};
 
-	class ToggleTrafficLightMessage : public BaseMessage
-	{
-	public:
-		ToggleTrafficLightMessage(TrafficLightMode mode, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_Mode(mode)
-		  {
-
-		  }
-		  TrafficLightMode  GetMode() const {return m_Mode;}
-	private:
-		TrafficLightMode  m_Mode;
-	};
-	typedef SPTR<ToggleTrafficLightMessage> ToggleTrafficLightMessagePtr;
-
-
-	
-	enum LightState
-	{
-		LS_GREEN,
-		LS_YELLOW,
-		LS_RED
-	};
-
-	class TrafficLightStateMessage : public BaseMessage
-	{
-	public:
-		TrafficLightStateMessage(LightState state, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_State(state)
-		  {
-
-		  }
-		  LightState  GetState() const {return m_State;}
-	private:
-		LightState  m_State;
-	};
-	typedef SPTR<TrafficLightStateMessage> TrafficLightStateMessagePtr;
-
-
-	class SpawnOnRoadMessage : public BaseMessage
-	{
-	public:
-		SpawnOnRoadMessage(SceneObjectPtr road_object, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay) , m_RoadObject(road_object)
-		  {
-
-		  }
-		  SceneObjectPtr m_RoadObject;
-	private:
-	};
-	typedef SPTR<SpawnOnRoadMessage> SpawnOnRoadMessagePtr;
 
 }
 #endif

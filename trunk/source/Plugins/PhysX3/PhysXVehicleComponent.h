@@ -23,6 +23,7 @@
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
+#include "Plugins/Game/GameMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "IPhysXRigidDynamic.h"
 
@@ -53,7 +54,7 @@ namespace GASS
 		void OnRotationChanged(RotationMessagePtr message);
 		void OnWorldRotationChanged(WorldRotationMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 		
 		//reflection functions
 		void SetPosition(const Vec3 &value);

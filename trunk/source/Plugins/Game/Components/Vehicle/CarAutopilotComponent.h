@@ -60,7 +60,6 @@ namespace GASS
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
 		void _UpdateDrive(double  delta_time);
 		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
-		void OnInput(InputRelayEventPtr message);
 		void OnTransMessage(TransformationNotifyMessagePtr message);
 		void OnGotoPosition(GotoPositionMessagePtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);

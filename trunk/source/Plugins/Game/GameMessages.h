@@ -336,11 +336,11 @@ namespace GASS
 	typedef SPTR<SensorLostTargetMessage> SensorLostTargetMessagePtr;
 
 
-	class CharacterAnimationRequest : public BaseMessage
+	class CharacterAnimationRequest : public SceneObjectRequestMessage
 	{
 	public:
 		CharacterAnimationRequest(const std::string &animation_name, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_AnimationName(animation_name)
+		  SceneObjectRequestMessage(sender_id , delay),m_AnimationName(animation_name)
 		  {
 
 		  }
@@ -350,11 +350,11 @@ namespace GASS
 	};
 	typedef SPTR<CharacterAnimationRequest> CharacterAnimationRequestPtr;
 
-	class CharacterInputRequest : public BaseMessage
+	class CharacterInputRequest : public SceneObjectRequestMessage
 	{
 	public:
 		CharacterInputRequest(const std::string &input_name,float value, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay),m_InputName(input_name),
+		  SceneObjectRequestMessage(sender_id , delay),m_InputName(input_name),
 			  m_Value(value)
 		  {
 

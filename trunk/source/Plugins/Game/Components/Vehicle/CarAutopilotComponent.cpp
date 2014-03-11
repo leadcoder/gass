@@ -99,7 +99,7 @@ namespace GASS
 
 	void CarAutopilotComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnInput,InputRelayEvent,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
@@ -157,13 +157,6 @@ namespace GASS
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;
 		m_VehicleSpeed  = message->GetLinearVelocity();
-	}
-
-	void CarAutopilotComponent::OnInput(InputRelayEventPtr message)
-	{
-
-		std::string name = message->GetController();
-		float value = message->GetValue();
 	}
 
 	void CarAutopilotComponent::SceneManagerTick(double delta)

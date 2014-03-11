@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldPositionChanged,WorldPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationMessage,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputControllerMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->Register(shared_from_this());
@@ -301,7 +301,7 @@ namespace GASS
 		return q;
 	}
 
-	void PhysXCharacterComponent::OnInput(InputControllerMessagePtr message)
+	void PhysXCharacterComponent::OnInput(InputRelayEventPtr message)
 	{
 		std::string name = message->GetController();
 		float value = message->GetValue();

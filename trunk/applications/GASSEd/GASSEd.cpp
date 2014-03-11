@@ -356,7 +356,7 @@ void GASSEd::OnPaste()
 		cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
 		obj->AddChild(cut_obj);
 		int id = (int) this;
-		cut_obj->PostMessage(GASS::MessagePtr(new GASS::ParentChangedMessage(id)));
+		cut_obj->PostEvent(GASS::ParentChangedMessagePtr(new GASS::ParentChangedMessage(id)));
 		cut_obj.reset();
 		m_PasteAct->setEnabled(false);
 	}
@@ -382,6 +382,9 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 
 	m_InsertGraphNodeAct->setEnabled(false);
 	m_InsertGraphNodeAct->setVisible(false);
+
+	m_ExportAct->setEnabled(false);
+	m_ExportAct->setVisible(false);
 
 	GASS::SceneObjectPtr obj(m_SelectedObject, NO_THROW);
 	if(obj)
@@ -452,6 +455,9 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 			m_AddWaypointsAct->setEnabled(true);
 			m_AddWaypointsAct->setVisible(true);
 		}
+
+		m_ExportAct->setEnabled(true);
+		m_ExportAct->setVisible(true);
 	}
 }
 
@@ -559,6 +565,19 @@ void GASSEd::OnExport()
 	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
 	if(obj)
 	{
-		///obj->GetParentSceneObject()->PostMessage(Export);
+		QString file_name = QFileDialog::getSaveFileName(this, tr("Export mesh"));
+		if (file_name.isEmpty())
+			return;
+
+		const std::string export_all_lable = "Export All Geometry In Scene, (otherwise only selected object)";
+		bool export_all = false;
+		if(export_all)
+		{
+			obj->GetScene()->PostMessage(GASS::SceneMessagePtr(new GASS::ExportMeshRequest(file_name.toStdString(),obj->GetScene()->GetRootSceneObject())));
+		}
+		else
+		{
+			obj->GetScene()->PostMessage(GASS::SceneMessagePtr(new GASS::ExportMeshRequest(file_name.toStdString(),obj)));
+		}
 	}
 }
