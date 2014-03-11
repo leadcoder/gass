@@ -79,7 +79,6 @@ namespace GASS
 	
 	}
 
-	
 
 	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)
 	{
