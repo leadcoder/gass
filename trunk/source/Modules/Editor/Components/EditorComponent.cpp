@@ -118,7 +118,7 @@ namespace GASS
 		{
 			m_Visible = message->GetVisible();
 			GetSceneObject()->PostRequest(GeometryVisibilityRequestPtr(new GeometryVisibilityRequest(m_Visible)));
-			GetSceneObject()->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_Visible)));
+			GetSceneObject()->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_Visible)));
 			
 			/*if(m_Visible)
 			{
@@ -131,12 +131,12 @@ namespace GASS
 						GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(-1,-1,-1))));
 				}
 
-				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsMessage(true)));
+				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsRequest(true)));
 			}
 			else
 			{
 				GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,m_VisibilityTransparency),Vec3(-1,-1,-1))));
-				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsMessage(false)));
+				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsRequest(false)));
 			}*/
 		}
 	}

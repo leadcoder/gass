@@ -60,9 +60,9 @@ namespace GASS
 
 	void PhysXTerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		assert(scene_manager);
@@ -185,7 +185,7 @@ namespace GASS
 
 	
 	
-	void PhysXTerrainGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void PhysXTerrainGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)
@@ -207,7 +207,7 @@ namespace GASS
 	{
 	}
 
-	void PhysXTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	void PhysXTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
 	{
 		//SetDebug(message->DebugGeometry());
 	}

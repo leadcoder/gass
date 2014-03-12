@@ -75,7 +75,7 @@ namespace GASS
 
 	void ODESuspensionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,BodyLoadedMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,PhysicsBodyLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
@@ -119,14 +119,14 @@ namespace GASS
 		}
 	}
 	
-	void ODESuspensionComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	void ODESuspensionComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 
 		CreateJoint();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 	}
 
 	void ODESuspensionComponent::CreateJoint()
@@ -147,7 +147,7 @@ namespace GASS
 				dJointDestroy(m_ODEJoint);
 
 			m_ODEJoint = dJointCreateHinge2(world, 0);
-			//GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,VelocityNotifyMessage,0));
+			//GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,PhysicsVelocityEvent,0));
 
 			dJointAttach(m_ODEJoint, b1,b2);
 			UpdateAnchor();
@@ -322,20 +322,20 @@ namespace GASS
 	}
 
 
-	void ODESuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
+	void ODESuspensionComponent::SendJointUpdate(PhysicsVelocityEventPtr message)
 	{
-		HingeJointNotifyMessagePtr joint_message;
+		ODEPhysicsHingeJointEventPtr joint_message;
 		if(m_ODEJoint)
 		{
 			float angle = dJointGetHinge2Angle1(m_ODEJoint);
 			float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
-			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+			joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,angle_rate));
 			if(joint_message)
 				GetSceneObject()->SendImmediateEvent(joint_message);
 		}
 	}
 
-	/*void ODESuspensionComponent::UpdateSwayBars(VelocityNotifyMessagePtr message)
+	/*void ODESuspensionComponent::UpdateSwayBars(PhysicsVelocityEventPtr message)
 	{
 		//Hack to keep vehicles from flipping upside down
 		if(m_SwayForce > 0)

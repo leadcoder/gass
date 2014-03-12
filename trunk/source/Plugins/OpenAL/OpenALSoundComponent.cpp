@@ -44,8 +44,8 @@ namespace GASS
 	{
 		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,VelocityNotifyMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,PhysicsVelocityEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterRequest,0));
 
 		LoadWaveSound(m_SoundResource.GetResource()->Path().GetFullPath());//, 0);
 		//sound loaded, update sound settings
@@ -69,37 +69,37 @@ namespace GASS
 		SetPosition(pos);
 	}
 
-	void OpenALSoundComponent::OnPhysicsUpdate(VelocityNotifyMessagePtr message)
+	void OpenALSoundComponent::OnPhysicsUpdate(PhysicsVelocityEventPtr message)
 	{
 		Vec3 vel = message->GetLinearVelocity();
 		SetVelocity(vel);
 	}
 
-	void OpenALSoundComponent::OnParameterMessage(SoundParameterMessagePtr message)
+	void OpenALSoundComponent::OnParameterMessage(SoundParameterRequestPtr message)
 	{
 		//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::OnParameterMessage");
-		SoundParameterMessage::SoundParameterType type = message->GetParameter();
+		SoundParameterRequest::SoundParameterType type = message->GetParameter();
 		switch(type)
 		{
-		case SoundParameterMessage::PLAY:
+		case SoundParameterRequest::PLAY:
 			{
 				//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::Play() - play!");
 				Play();
 			}
 			break;
-		case SoundParameterMessage::STOP:
+		case SoundParameterRequest::STOP:
 			{
 				Stop();
 			}
 			break;
-		case SoundParameterMessage::PITCH:
+		case SoundParameterRequest::PITCH:
 			{
 				float value = message->GetValue();
 				//float pitch = GetPitch();
 				SetPitch(value);
 			}
 			break;
-		case SoundParameterMessage::VOLUME:
+		case SoundParameterRequest::VOLUME:
 			{
 				float value = message->GetValue();
 				//float pitch = GetPitch();

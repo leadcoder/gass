@@ -254,7 +254,7 @@ namespace GASS
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);
-		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
@@ -270,7 +270,7 @@ namespace GASS
 		
 		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
-		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id)));
+		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id)));
 	}
 
 

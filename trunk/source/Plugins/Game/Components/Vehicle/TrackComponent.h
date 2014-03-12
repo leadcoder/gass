@@ -46,7 +46,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnDriveWheelPhysicsMessage(PhysicsVelocityEventPtr message);
 
 		Vec2 GetAnimationSpeedFactor()const {return m_AnimationSpeedFactor;}
 		float GetParticleEmissionFactor() const{return m_ParticleEmissionFactor;}

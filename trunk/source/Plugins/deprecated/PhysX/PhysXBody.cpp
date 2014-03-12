@@ -151,7 +151,7 @@ namespace GASS
 		MessagePtr rot_msg(new RotationRequest(GetRotation(),from_id));
 		GetSceneObject()->PostMessage(rot_msg);
 		
-		MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
+		MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		GetSceneObject()->PostMessage(physics_msg);
 	}
 

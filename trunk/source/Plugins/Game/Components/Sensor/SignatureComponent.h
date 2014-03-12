@@ -30,7 +30,7 @@ namespace GASS
 		void OnLoad(MessagePtr message);
 		void OnUnload(MessagePtr message);
 		void OnTransChanged(TransformationChangedEventPtr);
-		void OnVelocity(VelocityNotifyMessagePtr message);
+		void OnVelocity(PhysicsVelocityEventPtr message);
 	private:
 		void Update();
 		bool m_Initialized;

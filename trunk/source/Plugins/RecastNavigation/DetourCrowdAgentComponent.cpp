@@ -361,7 +361,7 @@ namespace GASS
 					
 					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
 				}
-				GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(c_velocity,Vec3(0,0,0),id)));
+				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(c_velocity,Vec3(0,0,0),id)));
 			}
 		}
 

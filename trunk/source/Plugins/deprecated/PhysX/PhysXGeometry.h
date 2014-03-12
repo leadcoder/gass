@@ -72,7 +72,7 @@ namespace GASS
 
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnLoad(LoadPhysicsComponentsMessagePtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void SetOffset(const Vec3 &value){m_Offset = value;}
 		Vec3 GetOffset() const {return m_Offset;}
 		void SetGeometryType(const std::string &geom_type);

@@ -219,7 +219,7 @@ namespace GASS
 		//case SUSPENSION_JOINT:
 			//m_PhysXJoint = dJointCreateHinge2(world, 0);
 			//Update suspension
-			//GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(PhysXJoint::UpdateSwayBars,VelocityNotifyMessage));
+			//GetSceneObject()->RegisterForMessage(OBJECT_NM_PHYSICS_VELOCITY, TYPED_MESSAGE_FUNC(PhysXJoint::UpdateSwayBars,PhysicsVelocityEvent));
 		//	break;
 		}
 		UpdateAnchor();

@@ -63,7 +63,7 @@ namespace GASS
 				
 				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
-				GetSceneObject()->RegisterForMessage(typeid(BodyLoadedMessage), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
+				GetSceneObject()->RegisterForMessage(typeid(PhysicsBodyLoadedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 		}
 		else
 		{
@@ -79,7 +79,7 @@ namespace GASS
 		}
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 	}
 
 
@@ -144,7 +144,7 @@ namespace GASS
 		SetRotation(rot);
 	}
 
-	void PhysXBaseGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void PhysXBaseGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)

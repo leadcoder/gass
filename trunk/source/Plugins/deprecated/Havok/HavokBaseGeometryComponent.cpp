@@ -63,9 +63,9 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnLoad,LoadComponentsMessage ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	}
 
 	void HavokBaseGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -120,7 +120,7 @@ namespace GASS
 		UpdateBodyMass();
 	}*/
 	
-	void HavokBaseGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void HavokBaseGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)
@@ -206,7 +206,7 @@ namespace GASS
 	
 	}
 
-	void HavokBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	void HavokBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
 	{
 		SetDebug(message->DebugGeometry());
 	}

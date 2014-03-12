@@ -90,7 +90,7 @@ namespace GASS
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
 		void ReceivedInput(int controller, float value);
 	private:
-		void OnDeserialize(NetworkDeserializeMessagePtr message);
+		void OnDeserialize(NetworkDeserializeRequestPtr message);
 		void OnInput(InputControllerMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
 		std::string GetControlSetting() const {return m_ControlSettingName;}

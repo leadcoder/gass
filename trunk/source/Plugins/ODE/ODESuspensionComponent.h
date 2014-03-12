@@ -46,7 +46,7 @@ namespace GASS
 		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
 		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
 		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
-		void OnBodyLoaded(BodyLoadedMessagePtr message);
+		void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
 
 		void SetAngularSteerVelocity(float velocity);
 		void SetDriveVelocity(float value);
@@ -86,8 +86,8 @@ namespace GASS
 		void SetLowStop(float value);
 	private:
 		void JointCorrectHinge2();
-		//void UpdateSwayBars(VelocityNotifyMessagePtr message);
-		void SendJointUpdate(VelocityNotifyMessagePtr message);
+		//void UpdateSwayBars(PhysicsVelocityEventPtr message);
+		void SendJointUpdate(PhysicsVelocityEventPtr message);
 		dJointID m_ODEJoint;
 		
 		ODEBodyComponent* m_Body1;

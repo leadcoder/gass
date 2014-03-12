@@ -136,8 +136,8 @@ namespace GASS
 		float GetSendFrequency() const {return m_SendFreq;}
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnParentTransformationChanged(TransformationChangedEventPtr message);
-		void OnVelocityNotify(VelocityNotifyMessagePtr message);
-		void OnDeserialize(NetworkDeserializeMessagePtr message);
+		void OnVelocityNotify(PhysicsVelocityEventPtr message);
+		void OnDeserialize(NetworkDeserializeRequestPtr message);
 
 		bool GetUpdatePosition() const {return m_UpdatePosition;}
 		void SetUpdatePosition(bool value) {m_UpdatePosition=value;}

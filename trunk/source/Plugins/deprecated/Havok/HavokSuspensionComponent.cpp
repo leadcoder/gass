@@ -114,7 +114,7 @@ namespace GASS
 		m_SceneManager = scene_manager;
 
 		CreateJoint();
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokSuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokSuspensionComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 	}
 
 	void HavokSuspensionComponent::CreateJoint()
@@ -328,7 +328,7 @@ namespace GASS
 	}
 
 
-	void HavokSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
+	void HavokSuspensionComponent::SendJointUpdate(PhysicsVelocityEventPtr message)
 	{
 		MessagePtr joint_message;
 		if(m_WheelBody)
@@ -338,7 +338,7 @@ namespace GASS
 			//float angle_rate = dJointGetHinge2Angle1Rate (m_WheelConstraintData);
 			float angle = 0;
 			float angle_rate = 0;
-			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+			joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,angle_rate));
 		//	if(joint_message)
 		//		GetSceneObject()->PostMessage(joint_message);
 		}

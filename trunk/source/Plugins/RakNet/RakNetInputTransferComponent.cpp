@@ -88,11 +88,11 @@ namespace GASS
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
 
 			//test input chain
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientRemoteMessage,ClientRemoteMessage,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
 		}
@@ -139,7 +139,7 @@ namespace GASS
 				SPTR<InputPackage> package(new InputPackage(INPUT_DATA,time_stamp,address.binaryAddress,controller_index,value));
 				
 				
-				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
+				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediateRequest(serialize_message);
 			}
 			else if(message->GetControllerType() == CT_TRIGGER)
@@ -183,7 +183,7 @@ namespace GASS
 		GetSceneObject()->PostEvent(message);
 	}
 
-	void RakNetInputTransferComponent::OnDeserialize(NetworkDeserializeMessagePtr message)
+	void RakNetInputTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
 	{
 		if(message->GetPackage()->Id == INPUT_DATA)
 		{
@@ -215,7 +215,7 @@ namespace GASS
 			if(raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
 				NetworkAddress address  = message->GetAddress();
-				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(address ,0,package));
+				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(address ,0,package));
 				GetSceneObject()->PostRequest(serialize_message);
 			}
 			//std::cout << "got input from client" << std::endl;

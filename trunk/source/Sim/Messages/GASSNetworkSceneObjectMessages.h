@@ -44,7 +44,7 @@ namespace GASS
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 
-	class LoadNetworkComponentsMessage : public SceneObjectRequestMessage
+	/*class LoadNetworkComponentsMessage : public SceneObjectRequestMessage
 	{
 	public:
 		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) :
@@ -54,7 +54,7 @@ namespace GASS
 		SceneManagerPtr m_NetworkSceneManager;
 	};
 	typedef SPTR<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
-
+	*/
 	
 	
 
@@ -82,11 +82,11 @@ namespace GASS
 		unsigned int m_Port;
 	};
 
-	class NetworkSerializeMessage : public SceneObjectRequestMessage
+	class NetworkSerializeRequest : public SceneObjectRequestMessage
 	{
 
 	public:
-		NetworkSerializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		NetworkSerializeRequest(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay),
 			  m_Package(package),
 			  m_TimeStamp(time_stamp),
@@ -102,14 +102,14 @@ namespace GASS
 		NetworkAddress m_Address;
 
 	};
-	typedef SPTR<NetworkSerializeMessage> NetworkSerializeMessagePtr;
+	typedef SPTR<NetworkSerializeRequest> NetworkSerializeRequestPtr;
 
 
 
-	class NetworkDeserializeMessage : public SceneObjectRequestMessage
+	class NetworkDeserializeRequest : public SceneObjectRequestMessage
 	{
 	public:
-		NetworkDeserializeMessage(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+		NetworkDeserializeRequest(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage( sender_id , delay),
 			  m_Package(package),
 			  m_TimeStamp(time_stamp),
@@ -125,7 +125,7 @@ namespace GASS
 		NetworkAddress m_Address;
 
 	};
-	typedef SPTR<NetworkDeserializeMessage> NetworkDeserializeMessagePtr;
+	typedef SPTR<NetworkDeserializeRequest> NetworkDeserializeRequestPtr;
 
 
 

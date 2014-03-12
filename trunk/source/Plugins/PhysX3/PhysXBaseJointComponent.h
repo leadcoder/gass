@@ -43,8 +43,8 @@ namespace GASS
 		virtual physx::PxJoint* GetJoint() const  = 0;
 		//virtual void SceneManagerTick(double delta_time);
 	protected:
-		void OnBody1Loaded(BodyLoadedMessagePtr message);
-		void OnBody2Loaded(BodyLoadedMessagePtr message);
+		void OnBody1Loaded(PhysicsBodyLoadedEventPtr message);
+		void OnBody2Loaded(PhysicsBodyLoadedEventPtr message);
 		ADD_PROPERTY(bool,Report)
 
 		//get set section

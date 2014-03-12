@@ -66,7 +66,7 @@ namespace GASS
 
 		//Message functions
 		void OnGeometryChanged(GeometryChangedEventPtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnGeometryScale(GeometryScaleRequestPtr message);
 

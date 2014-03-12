@@ -78,7 +78,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
 	}
 
 
@@ -296,7 +296,7 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void OSGBillboardComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		if(m_OSGBillboard.valid())
 		{

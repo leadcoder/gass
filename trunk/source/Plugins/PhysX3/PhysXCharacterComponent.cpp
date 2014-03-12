@@ -252,7 +252,7 @@ namespace GASS
 		PxU32 flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, delta, PxControllerFilters(0));
 
 		//LogManager::getSingleton().stream() << m_CurrentVel << "\n";
-		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
+		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
 
 	}
 

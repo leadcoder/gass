@@ -42,11 +42,11 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnBody1Loaded(BodyLoadedMessagePtr message);
-		void OnBody2Loaded(BodyLoadedMessagePtr message);
+		void OnBody1Loaded(PhysicsBodyLoadedEventPtr message);
+		void OnBody2Loaded(PhysicsBodyLoadedEventPtr message);
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
 		void OnMaxTorqueRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
-		//void OnBodyLoaded(BodyLoadedMessagePtr message);
+		//void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
 		void SetAxisVel(float velocity);
 		float GetMaxTorque()const {return m_MaxTorque;}
 		void SetMaxTorque(float value);
@@ -78,7 +78,7 @@ namespace GASS
 
 
 	private:
-		void SendJointUpdate(VelocityNotifyMessagePtr message);
+		void SendJointUpdate(PhysicsVelocityEventPtr message);
 		dJointID m_ODEJoint;
 
 

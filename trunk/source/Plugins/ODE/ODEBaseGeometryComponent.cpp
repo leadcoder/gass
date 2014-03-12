@@ -87,7 +87,7 @@ namespace GASS
 			if(m_SizeFromMesh)
 				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 			else
-				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnBodyLoaded,BodyLoadedMessage,1));
+				GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnBodyLoaded,PhysicsBodyLoadedEvent,1));
 		}
 		else
 		{
@@ -109,8 +109,8 @@ namespace GASS
 			}
 		}
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	}
 
 	void ODEBaseGeometryComponent::OnDelete()
@@ -119,7 +119,7 @@ namespace GASS
 	}
 
 
-	void ODEBaseGeometryComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	void ODEBaseGeometryComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -196,7 +196,7 @@ namespace GASS
 		SetOffset(m_Offset);
 	}
 	
-	void ODEBaseGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void ODEBaseGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)
@@ -326,7 +326,7 @@ namespace GASS
 		}
 	}
 
-	void ODEBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	void ODEBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
 	{
 		SetDebug(message->DebugGeometry());
 	}

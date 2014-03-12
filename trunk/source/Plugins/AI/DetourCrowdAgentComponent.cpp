@@ -333,7 +333,7 @@ namespace GASS
 					MessagePtr rot_msg(new WorldRotationRequest(rot,id));
 					GetSceneObject()->PostMessage(rot_msg);
 				}
-				MessagePtr vel_msg(new VelocityNotifyMessage(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
+				MessagePtr vel_msg(new PhysicsVelocityEvent(Vec3(vel[0],vel[1],vel[2]),Vec3(0,0,0),id));
 				GetSceneObject()->PostMessage(vel_msg);
 			}
 		}

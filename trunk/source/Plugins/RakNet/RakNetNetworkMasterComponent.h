@@ -62,7 +62,7 @@ namespace GASS
 
 	private:
 		void GeneratePartID(SceneObjectPtr obj, int &id);
-		void OnSerialize(NetworkSerializeMessagePtr message);
+		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNetworkPostUpdate(NetworkPostUpdateEventPtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		RakNetMasterReplica* m_Replica;

@@ -104,12 +104,12 @@ namespace GASS
 		if(raknet->IsServer())
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationChangedEvent,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,VelocityNotifyMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,PhysicsVelocityEvent,0));
 			//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
 
 			PhysicsBodyStateRequestPtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::PhysicsBodyState::DISABLE));
 			GetSceneObject()->PostRequest(disable_msg);
@@ -134,7 +134,7 @@ namespace GASS
 		
 	}
 
-	void RakNetLocationTransferComponent::OnVelocityNotify(VelocityNotifyMessagePtr message)
+	void RakNetLocationTransferComponent::OnVelocityNotify(PhysicsVelocityEventPtr message)
 	{
 		/*Mat4 trans;
 		trans.Identity();
@@ -228,7 +228,7 @@ namespace GASS
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				SPTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
-				NetworkSerializeMessagePtr serialize_message(new NetworkSerializeMessage(NetworkAddress(address.binaryAddress,address.port),0,package));
+				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(NetworkAddress(address.binaryAddress,address.port),0,package));
 				GetSceneObject()->SendImmediateRequest(serialize_message);
 			}
 		}
@@ -330,7 +330,7 @@ namespace GASS
 					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot)));
 			}
 
-			GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(m_Velocity, m_AngularVelocity)));
+			GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(m_Velocity, m_AngularVelocity)));
 
 			
 
@@ -343,7 +343,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeMessagePtr message)
+	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
 	{
 		//std::cout << "RakNetLocationTransferComponent::OnDeserialize" << std::endl;
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)

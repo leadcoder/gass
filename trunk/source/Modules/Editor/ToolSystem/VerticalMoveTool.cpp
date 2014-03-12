@@ -69,7 +69,7 @@ namespace GASS
 				m_SelectedObject = obj_under_cursor;
 				//bool value = false;
 				//col_msg->SetData("Enable",value);
-				obj_under_cursor->SendImmediateRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(false,from_id)));
+				obj_under_cursor->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(false,from_id)));
 
 			}
 		}
@@ -82,7 +82,7 @@ namespace GASS
 		if(selected)
 		{
 			int from_id = (int) this;
-			selected->SendImmediateRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(true,from_id)));
+			selected->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(true,from_id)));
 
 		}
 		m_SelectedObject.reset();;

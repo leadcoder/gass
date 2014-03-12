@@ -46,7 +46,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnJointUpdate(HingeJointNotifyMessagePtr message);
+		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}

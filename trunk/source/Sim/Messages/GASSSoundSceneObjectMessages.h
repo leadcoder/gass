@@ -34,7 +34,7 @@ namespace GASS
 	typedef SPTR<ISceneManager> SceneManagerPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 
-	class SoundParameterMessage : public SceneObjectRequestMessage
+	class SoundParameterRequest : public SceneObjectRequestMessage
 	{
 	public:
 		enum SoundParameterType
@@ -47,7 +47,7 @@ namespace GASS
 			VOLUME,
 		};
 	public:
-		SoundParameterMessage(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
+		SoundParameterRequest(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
 		  {
 
@@ -58,5 +58,5 @@ namespace GASS
 		SoundParameterType m_Parameter;
 		float m_Value;
 	};
-	typedef SPTR<SoundParameterMessage> SoundParameterMessagePtr;
+	typedef SPTR<SoundParameterRequest> SoundParameterRequestPtr;
 }

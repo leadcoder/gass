@@ -47,7 +47,7 @@ namespace GASS
 		VehicleWheel(SceneObjectPtr  wheel);
 		virtual ~VehicleWheel();
 		void Init();
-		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 
 		//private: //public for fast access
 		SceneObjectWeakPtr m_WheelObject;
@@ -82,7 +82,7 @@ namespace GASS
 		void SetWheels(const std::vector<SceneObjectRef> &wheels);
 
 		
-		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 
 

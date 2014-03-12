@@ -52,7 +52,7 @@ namespace GASS
 		SceneObjectPtr wheel_obj(m_WheelObject,NO_THROW);
 		if(wheel_obj)
 		{
-			wheel_obj->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage,0));
+			wheel_obj->RegisterForMessage(REG_TMESS(VehicleWheel::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		}
 	}
 
@@ -60,10 +60,10 @@ namespace GASS
 	{
 		//SceneObjectPtr wheel_obj(m_WheelObject,NO_THROW);
 		//if(wheel_obj)
-		//	wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,VelocityNotifyMessage));
+		//	wheel_obj->UnregisterForMessage(UNREG_TMESS(VehicleWheel::OnPhysicsMessage,PhysicsVelocityEvent));
 	}
 
-	void VehicleWheel::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void VehicleWheel::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		//fetch wheel rpm
 		Vec3 vel  = message->GetLinearVelocity();
@@ -177,7 +177,7 @@ namespace GASS
 	{
 		BaseSceneComponent::OnInitialize();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,InputRelayEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -188,7 +188,7 @@ namespace GASS
 		SetWheels(m_WheelObjects);
 
 		//Play engine sound
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
 	}
 
 
@@ -382,7 +382,7 @@ namespace GASS
 
 	
 
-	void VehicleEngineComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void VehicleEngineComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;
@@ -467,7 +467,7 @@ namespace GASS
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0;
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
 	}
 
 	void VehicleEngineComponent::UpdateExhaustFumes(double delta)

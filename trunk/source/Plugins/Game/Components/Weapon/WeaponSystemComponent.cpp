@@ -94,7 +94,7 @@ namespace GASS
 
 		//SceneObjectPtr parent = boost::dynamic_pointer_cast<SceneObject>(GetSceneObject()->GetParent());
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnInput,InputRelayEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
 		BaseSceneComponent::OnInitialize();
@@ -156,7 +156,7 @@ namespace GASS
 
 	
 
-	void WeaponSystemComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void WeaponSystemComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		m_CurrentVelocity = message->GetLinearVelocity();
 	}
@@ -227,12 +227,12 @@ namespace GASS
 		//Play fire sound
 		if(m_FireSoundObject1P.IsValid() && m_1FP)
 		{
-			m_FireSoundObject1P->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+			m_FireSoundObject1P->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
 			//std::cout << "fire fP1" << std::endl;
 		}
 		else if(m_FireSoundObject3P.IsValid())
 		{
-			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+			SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));
 			m_FireSoundObject3P->PostRequest(sound_msg);
 			//std::cout << "fire fP3" << std::endl;
 		}
@@ -335,13 +335,13 @@ namespace GASS
 
 		if(m_FireSoundObject1P.IsValid())
 		{
-			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::STOP,0));
 			m_FireSoundObject1P->PostRequest(sound_msg);
 		}
 
 		if(m_FireSoundObject3P.IsValid())
 		{
-			SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::STOP,0));
 			m_FireSoundObject3P->PostRequest(sound_msg);
 		}
 

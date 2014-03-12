@@ -224,7 +224,7 @@ namespace GASS
 	of a object, sound, physics or any other components
 	should not respond to this message. For instance, to disable
 	the physics collision component instead use the
-	CollisionSettingsMessage.
+	CollisionSettingsRequest.
 	*/
 
 	class VisibilityRequest : public SceneObjectRequestMessage

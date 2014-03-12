@@ -188,7 +188,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
@@ -689,7 +689,7 @@ namespace GASS
 		}*/
 	}
 
-	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		if(m_MeshNode.valid())
 		{

@@ -136,8 +136,8 @@ namespace GASS
 		{
 			GetSceneObject()->PostRequest(CameraParameterRequestPtr(new CameraParameterRequest(CameraParameterRequest::CAMERA_FOV,m_ZoomValues[0],0)));
 		}
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 
 		if(m_TargetObjectTemplate != "")
 		{
@@ -316,7 +316,7 @@ namespace GASS
 
 			else
 			{
-				GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+				GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 
 				m_Active = false;
 				 
@@ -377,7 +377,7 @@ namespace GASS
 		if (m_Active && name == m_YawController)
 		{
 			//update sound
-			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_PitchInput))));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(value+m_PitchInput))));
 			//if(!m_RemoteSim)
 			m_YawInput = pow(abs(value),m_TurnInputExp);
 
@@ -388,7 +388,7 @@ namespace GASS
 		if (m_Active && name == m_PitchController)
 		{
 			//update sound
-			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value+m_YawInput))));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(value+m_YawInput))));
 			m_PitchInput = pow(abs(value),m_TurnInputExp);
 			if(value < 0)
 				m_PitchInput = -m_PitchInput;

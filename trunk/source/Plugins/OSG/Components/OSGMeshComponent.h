@@ -79,7 +79,7 @@ namespace GASS
 		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnVisibilityMessage(VisibilityRequestPtr message);
 		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());

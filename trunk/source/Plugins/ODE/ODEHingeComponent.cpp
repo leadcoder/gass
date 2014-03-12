@@ -68,7 +68,7 @@ namespace GASS
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		m_SceneManager = scene_manager;
 		
-//		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,BodyLoadedMessage,0));
+//		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBodyLoaded,PhysicsBodyLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnMaxTorqueRequest,PhysicsHingeJointMaxTorqueRequest,0));
 
@@ -121,14 +121,14 @@ namespace GASS
 			m_Body2Loaded = false;
 	}
 
-	void ODEHingeComponent::OnBody1Loaded(BodyLoadedMessagePtr message)
+	void ODEHingeComponent::OnBody1Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body1Loaded = true;
 		if(m_Body2Loaded)
 			CreateJoint();
 	}
 
-	void ODEHingeComponent::OnBody2Loaded(BodyLoadedMessagePtr message)
+	void ODEHingeComponent::OnBody2Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body2Loaded = true;
 		if(m_Body1Loaded)
@@ -153,7 +153,7 @@ namespace GASS
 		}
 	}
 
-	/*void ODEHingeComponent::OnBodyLoaded(BodyLoadedMessagePtr message)
+	/*void ODEHingeComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		m_SceneManager = scene_manager;
@@ -175,7 +175,7 @@ namespace GASS
 				dJointDestroy(m_ODEJoint);
 
 			m_ODEJoint = dJointCreateHinge(world,0);
-			GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,VelocityNotifyMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 			dJointAttach(m_ODEJoint, m_ODEBody1,m_ODEBody2);
 
 			dJointSetHingeParam(m_ODEJoint,dParamFudgeFactor,0.5);
@@ -281,14 +281,14 @@ namespace GASS
 		}
 	}
 
-	void ODEHingeComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
+	void ODEHingeComponent::SendJointUpdate(PhysicsVelocityEventPtr message)
 	{
-		HingeJointNotifyMessagePtr joint_message;
+		ODEPhysicsHingeJointEventPtr joint_message;
 		if(m_ODEJoint)
 		{
 			float angle = dJointGetHingeAngle(m_ODEJoint);
 			float angle_rate = dJointGetHingeAngleRate(m_ODEJoint);
-			joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,angle_rate));
+			joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,angle_rate));
 			if(joint_message)
 				GetSceneObject()->SendImmediateEvent(joint_message);
 		}

@@ -104,7 +104,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
 			
-		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -152,7 +152,7 @@ namespace GASS
 		m_Transformation.SetTranslation(m_CurrentPos.x,m_CurrentPos.y,m_CurrentPos.z);
 	}
 
-	void CarAutopilotComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void CarAutopilotComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;

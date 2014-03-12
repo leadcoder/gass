@@ -49,7 +49,7 @@ namespace GASS
 	private:
 		void OnLODChange(LODMessagePtr message);
 		void OnTransformation(TransformationChangedEventPtr message);
-		void OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnDriveWheelPhysicsMessage(PhysicsVelocityEventPtr message);
 		
 		std::string GetBoneName() const;
 		void SetBoneName(const std::string &name);

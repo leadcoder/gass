@@ -70,12 +70,12 @@ namespace GASS
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 
-		void OnTurretHingeUpdate(HingeJointNotifyMessagePtr message);	
-		void OnBarrelHingeUpdate(HingeJointNotifyMessagePtr message);
+		void OnTurretHingeUpdate(ODEPhysicsHingeJointEventPtr message);	
+		void OnBarrelHingeUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnTurretTransformation(TransformationChangedEventPtr message);
 		void OnBarrelTransformation(TransformationChangedEventPtr message);
 		void OnBaseTransformation(TransformationChangedEventPtr message);
-		//void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		//void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnAimAtPosition( AimAtPositionMessagePtr message);
 		void OnActivateAutoAim(ActivateAutoAimMessagePtr message);
 		void SceneManagerTick(double delta_time);

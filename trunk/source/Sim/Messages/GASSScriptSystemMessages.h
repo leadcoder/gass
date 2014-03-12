@@ -44,17 +44,17 @@ namespace GASS
 	/**
 	Lua script state is distributed through this message
 	*/
-	class LuaScriptStateMessage : public BaseMessage
+	class LuaScriptStateRequest : public SceneObjectRequestMessage
 	{
 	public:
-		LuaScriptStateMessage(void *state, SenderID sender_id = -1, double delay= 0) :
-		  BaseMessage(sender_id , delay) ,
+		LuaScriptStateRequest(void *state, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay) ,
 			  m_State(state){}
 		 void* GetState() const {return m_State;}
 	private:
 		void *m_State;
 	};
-	typedef SPTR<LuaScriptStateMessage> LuaScriptStateMessagePtr;
+	typedef SPTR<LuaScriptStateRequest> LuaScriptStateRequestPtr;
 
 	/**
 	Load a gui script file	

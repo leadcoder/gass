@@ -92,9 +92,9 @@ namespace GASS
 	void HavokTerrainGeometryComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnLoad,LoadComponentsMessage ,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(HavokTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	}
 
 	void HavokTerrainGeometryComponent::OnLoad(LoadComponentsMessagePtr message)
@@ -191,7 +191,7 @@ namespace GASS
 
 	}
 
-	void HavokTerrainGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void HavokTerrainGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)
@@ -221,7 +221,7 @@ namespace GASS
 
 	}
 
-	void HavokTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	void HavokTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
 	{
 		//SetDebug(message->DebugGeometry());
 	}

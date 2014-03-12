@@ -47,7 +47,7 @@ namespace GASS
 		void OnDataMessage(ManualMeshDataRequestPtr message);
 		void OnClearMessage(ClearManualMeshRequestPtr message);
 		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 		

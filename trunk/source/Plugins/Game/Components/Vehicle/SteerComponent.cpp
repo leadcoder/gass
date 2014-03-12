@@ -58,7 +58,7 @@ namespace GASS
 
 	void SteerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,ODEPhysicsHingeJointEvent,0));
 		
 		//get input from parent?
 		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
@@ -89,7 +89,7 @@ namespace GASS
 		}*/
 	}
 
-	void SteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
+	void SteerComponent::OnJointUpdate(ODEPhysicsHingeJointEventPtr message)
 	{
 		m_CurrentAngle = message->GetAngle();
 		float angular_vel = (m_DesiredAngle-m_CurrentAngle)*m_Speed;

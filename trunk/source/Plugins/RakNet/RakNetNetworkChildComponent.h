@@ -72,7 +72,7 @@ namespace GASS
 		void SceneManagerTick(double delta);
 
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
-		void OnSerialize(NetworkSerializeMessagePtr message);
+		void OnSerialize(NetworkSerializeRequestPtr message);
 		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
 		RakNetChildReplica* m_Replica;

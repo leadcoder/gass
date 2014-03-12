@@ -63,10 +63,10 @@ namespace GASS
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
 
 		void OnInput(InputRelayEventPtr message);
-		void OnJointUpdate(HingeJointNotifyMessagePtr message);
+		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnParentTransformation(TransformationChangedEventPtr message);
-		void OnPhysicsMessage(VelocityNotifyMessagePtr message);
+		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		
 		std::string m_Controller;
 		float m_MaxSteerVelocity;

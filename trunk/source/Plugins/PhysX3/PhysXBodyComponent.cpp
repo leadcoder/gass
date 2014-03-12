@@ -88,7 +88,7 @@ namespace GASS
 		//m_Actor->setAngularDamping(0.75);
 		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
-		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		sm->Register(listener);

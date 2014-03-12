@@ -42,8 +42,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	private:
-		void OnVelocityNotifyMessage(VelocityNotifyMessagePtr message);
-		void OnHingeUpdated(HingeJointNotifyMessagePtr message);
+		void OnVelocityNotifyMessage(PhysicsVelocityEventPtr message);
+		void OnHingeUpdated(ODEPhysicsHingeJointEventPtr message);
 
 		ADD_PROPERTY(Float,MaxVolumeAtSpeed)
 

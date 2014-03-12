@@ -56,12 +56,12 @@ namespace GASS
 
 	void SoundVolumeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,VelocityNotifyMessage,0));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,PhysicsVelocityEvent,0));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 	}
 
-	void SoundVolumeComponent::OnHingeUpdated(HingeJointNotifyMessagePtr message)
+	void SoundVolumeComponent::OnHingeUpdated(ODEPhysicsHingeJointEventPtr message)
 	{
 		Float new_angle = message->GetAngle();
 		Float speed =  fabs(m_HingeAngle - new_angle);
@@ -70,7 +70,7 @@ namespace GASS
 		{
 			//turret sound
 			const float volume = (speed/m_MaxVolumeAtSpeed);
-			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume)));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
 
 			/*std::stringstream ss;
 			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
@@ -82,7 +82,7 @@ namespace GASS
 		}
 	}
 
-	void SoundVolumeComponent::OnVelocityNotifyMessage(VelocityNotifyMessagePtr message)
+	void SoundVolumeComponent::OnVelocityNotifyMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		const float speed = fabs(ang_vel.y + ang_vel.x);
@@ -92,7 +92,7 @@ namespace GASS
 			//turret sound
 			const float volume = (speed/m_MaxVolumeAtSpeed);
 			
-			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume*0.5)));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5)));
 
 			/*std::stringstream ss;
 			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
@@ -105,7 +105,7 @@ namespace GASS
 		/*if(speed > 0)
 		{
 			float pitch = 0.8 + speed*0.01;
-			MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+			MessagePtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch));
 			GetSceneObject()->PostMessage(sound_msg);
 		}*/
 	}

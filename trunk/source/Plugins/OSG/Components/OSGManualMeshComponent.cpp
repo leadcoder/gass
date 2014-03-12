@@ -71,7 +71,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 
 		m_GeoNode = new osg::Geode();
 
@@ -120,7 +120,7 @@ namespace GASS
 		return m_GeometryFlagsBinder.GetValue();
 	}
 
-	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		if(m_GeoNode)
 		{

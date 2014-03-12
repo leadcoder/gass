@@ -73,8 +73,8 @@ namespace GASS
 		
 	private:
 		void JointCorrectHinge2();
-		void UpdateSwayBars(VelocityNotifyMessagePtr message);
-		void SendJointUpdate(VelocityNotifyMessagePtr message);
+		void UpdateSwayBars(PhysicsVelocityEventPtr message);
+		void SendJointUpdate(PhysicsVelocityEventPtr message);
 		hkpHingeConstraintData *m_HingeConstraintData ;
 		hkpMotorAction* m_MotorAction;
 

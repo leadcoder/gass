@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
 
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -112,7 +112,7 @@ namespace GASS
 		m_Transformation.SetTranslation(m_CurrentPos.x,m_CurrentPos.y,m_CurrentPos.z);
 	}
 
-	void TankAutopilotComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void TankAutopilotComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;

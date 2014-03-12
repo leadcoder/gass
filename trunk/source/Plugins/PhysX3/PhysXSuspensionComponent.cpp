@@ -71,12 +71,12 @@ namespace GASS
 
 	void PhysXSuspensionComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,BodyLoadedMessage,2));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,PhysicsBodyLoadedEvent,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxSteerTorqueRequest,PhysicsSuspensionJointMaxSteerTorqueRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 	}
 
 	void PhysXSuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
@@ -111,7 +111,7 @@ namespace GASS
 		m_MaxSteerTorque = value;
 	}
 
-	void PhysXSuspensionComponent::OnLoad(BodyLoadedMessagePtr message)
+	void PhysXSuspensionComponent::OnLoad(PhysicsBodyLoadedEventPtr message)
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		CreateJoint();
@@ -233,7 +233,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXSuspensionComponent::SendJointUpdate(VelocityNotifyMessagePtr message)
+	void PhysXSuspensionComponent::SendJointUpdate(PhysicsVelocityEventPtr message)
 	{
 		MessagePtr joint_message;
 	/*	if(m_Joint)
@@ -251,7 +251,7 @@ namespace GASS
 		//std::cout << "diff:" << angle2 << " Rad:" << angle << " Axis:" << axis.x << " " << axis.y << " " << axis.z << "\n";
 		//	float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
 
-		joint_message = HingeJointNotifyMessagePtr(new HingeJointNotifyMessage(angle,0));
+		joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,0));
 		if	(joint_message)
 		GetSceneObject()->SendImmediate(joint_message);
 		}*/

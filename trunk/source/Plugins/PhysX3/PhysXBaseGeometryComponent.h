@@ -79,7 +79,7 @@ namespace GASS
 		//messages functions
 		void OnLoad(MessagePtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		
 		virtual physx::PxShape* CreateShape() = 0;
 		void SetPosition(const Vec3 &pos);

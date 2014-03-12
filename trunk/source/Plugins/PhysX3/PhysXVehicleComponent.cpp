@@ -132,7 +132,7 @@ namespace GASS
 
 
 		//Play engine sound
-		SoundParameterMessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+		SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));
 		GetSceneObject()->PostRequest(sound_msg);
 	}
 
@@ -468,7 +468,7 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
-		GetSceneObject()->SendImmediateEvent(BodyLoadedMessagePtr(new BodyLoadedMessage()));
+		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 		m_Initialized = true;
 	}
 
@@ -713,7 +713,7 @@ namespace GASS
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
 		
-		GetSceneObject()->PostEvent(VelocityNotifyMessagePtr(new VelocityNotifyMessage(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
+		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
 
 
 		//pitch engine sound
@@ -731,10 +731,10 @@ namespace GASS
 		volume += norm_engine_rot_speed;
 		volume = sqrt(volume)*1.05;
 
-		SoundParameterMessagePtr pitch_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+		SoundParameterRequestPtr pitch_msg(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch));
 		GetSceneObject()->PostRequest(pitch_msg);
 
-		SoundParameterMessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+		SoundParameterRequestPtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
 		GetSceneObject()->PostRequest(volume_msg);
 
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
@@ -753,7 +753,7 @@ namespace GASS
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
 		//std::cout << "Steer:" << m_SteerInput << "\n";
 
-		//	MessagePtr physics_msg(new VelocityNotifyMessage(GetVelocity(true),GetAngularVelocity(true),from_id));
+		//	MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
 	}
 

@@ -70,7 +70,7 @@ namespace GASS
 
 		//Play engine sound
 		
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
 	}
 
 	void ForceToSoundComponent::SceneManagerTick(double delta_time)
@@ -92,7 +92,7 @@ namespace GASS
 			m_Pitch += delta_time*0.5;
 		else
 			m_Pitch -= delta_time*0.5;
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,m_Pitch)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,m_Pitch)));
 		//reset!
 		m_MaxVelRequest = 0;
 		m_MaxForce = 0;

@@ -65,15 +65,15 @@ namespace GASS
 	void AdaptiveSteerComponent::OnInitialize()
 	{
 		
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnJointUpdate,HingeJointNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnJointUpdate,ODEPhysicsHingeJointEvent,0));
 	
 		//get input from parent?
 		SceneObjectPtr parent = DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		parent->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnInput,InputRelayEvent,0));
-		parent->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnVelocityMessage,VelocityNotifyMessage,0));
+		parent->RegisterForMessage(REG_TMESS(AdaptiveSteerComponent::OnVelocityMessage,PhysicsVelocityEvent,0));
 	}
 
-	void AdaptiveSteerComponent::OnVelocityMessage(VelocityNotifyMessagePtr message)
+	void AdaptiveSteerComponent::OnVelocityMessage(PhysicsVelocityEventPtr message)
 	{
 		m_VehicleSpeed = message->GetLinearVelocity().FastLength();
 	}
@@ -114,7 +114,7 @@ namespace GASS
 		}
 	}
 
-	void AdaptiveSteerComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
+	void AdaptiveSteerComponent::OnJointUpdate(ODEPhysicsHingeJointEventPtr message)
 	{
 		m_CurrentAngle = message->GetAngle();
 		float angular_vel = (m_DesiredAngle-m_CurrentAngle)*m_Speed;

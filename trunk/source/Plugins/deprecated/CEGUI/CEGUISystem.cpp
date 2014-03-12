@@ -83,7 +83,7 @@ namespace GASS
         // tell CEGUI to use this scripting module
         CEGUI::System::getSingleton().setScriptingModule(&scriptmod);
 
-		MessagePtr state_message(new LuaScriptStateMessage((void*)scriptmod.getLuaState()));
+		MessagePtr state_message(new LuaScriptStateRequest((void*)scriptmod.getLuaState()));
 		GetSimSystemManager()->SendImmediate(state_message);
 		 //luaopen_GASS(scriptmod.getLuaState());
 

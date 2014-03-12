@@ -76,16 +76,16 @@ namespace GASS
 	void TurretComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnInput,InputRelayEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,HingeJointNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnJointUpdate,ODEPhysicsHingeJointEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, PhysicsVelocityEvent,0));
 	
 		
 		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -107,7 +107,7 @@ namespace GASS
 		m_ParentTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
 	}
 
-	void TurretComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void TurretComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		
 		m_AngularVelocity = message->GetAngularVelocity().y;
@@ -191,7 +191,7 @@ namespace GASS
 			m_RelTrans = m_ParentTransformation;
 			GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 			GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-			GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 			return;
 		}
 
@@ -426,7 +426,7 @@ namespace GASS
 
 		
 		
-		//MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(turn )));
+		//MessagePtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(turn )));
 		//GetSceneObject()->PostMessage(volume_msg);
 
 	}
@@ -467,30 +467,30 @@ namespace GASS
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
 
-			MessagePtr volume_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,fabs(value)));
+			MessagePtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(value)));
 			GetSceneObject()->PostMessage(volume_msg);
 			}*/
 
 			/*if(fabs(value) > 0)
 			{
-			MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::PLAY,0));
+			MessagePtr play_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));
 			GetSceneObject()->PostMessage(play_msg);
 			}
 			else
 			{
-			MessagePtr play_msg(new SoundParameterMessage(SoundParameterMessage::STOP,0));
+			MessagePtr play_msg(new SoundParameterRequest(SoundParameterRequest::STOP,0));
 			GetSceneObject()->PostMessage(play_msg);
 			}*/
 		}
 	}
 
-	void TurretComponent::OnJointUpdate(HingeJointNotifyMessagePtr message)
+	void TurretComponent::OnJointUpdate(ODEPhysicsHingeJointEventPtr message)
 	{
 		m_CurrentAngle = message->GetAngle();
 		//Send turret information message
 	}
 
-	/*void TurretComponent::OnRotation(VelocityNotifyMessagePtr message)
+	/*void TurretComponent::OnRotation(PhysicsVelocityEventPtr message)
 	{
 	Vec3 ang_vel  = message->GetAngularVelocity();
 	const float speed = fabs(ang_vel.y);
@@ -500,13 +500,13 @@ namespace GASS
 	//std::cout << speed << std::endl;
 	//Play engine sound
 	const float volume = (speed/max_volume_at_speed);
-	MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume));
+	MessagePtr sound_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
 	GetSceneObject()->PostMessage(sound_msg);
 	}
 	if(speed > 0)
 	{
 	float pitch = 0.8 + speed*0.01;
-	MessagePtr sound_msg(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch));
+	MessagePtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch));
 	GetSceneObject()->PostMessage(sound_msg);
 	}
 	}*/

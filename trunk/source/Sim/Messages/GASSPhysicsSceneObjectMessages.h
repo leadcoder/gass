@@ -41,10 +41,10 @@ namespace GASS
 	by disable/enable collision models.
 	*/
 
-	class CollisionSettingsMessage : public SceneObjectRequestMessage
+	class CollisionSettingsRequest : public SceneObjectRequestMessage
 	{
 	public:
-		CollisionSettingsMessage(bool enable, SenderID sender_id = -1, double delay= 0) :
+		CollisionSettingsRequest(bool enable, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Enable(enable)
 		  {
 
@@ -53,16 +53,16 @@ namespace GASS
 	private:
 		bool m_Enable;
 	};
-	typedef SPTR<CollisionSettingsMessage> CollisionSettingsMessagePtr;
+	typedef SPTR<CollisionSettingsRequest> CollisionSettingsRequestPtr;
 
 	/**
-	Message used to enable/disable physics debugging
+	Message used to request debugging info
 	*/
 
-	class PhysicsDebugMessage : public SceneObjectRequestMessage
+	class PhysicsDebugRequest : public SceneObjectRequestMessage
 	{
 	public:
-		PhysicsDebugMessage(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
+		PhysicsDebugRequest(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
 		  {
 
@@ -71,8 +71,7 @@ namespace GASS
 	private:
 		bool m_DebugGeometry;
 	};
-
-	typedef SPTR<PhysicsDebugMessage> PhysicsDebugMessagePtr;
+	typedef SPTR<PhysicsDebugRequest> PhysicsDebugRequestPtr;
 
 
 	
@@ -356,14 +355,18 @@ namespace GASS
 
 	///////////Event section///////////
 	
-	class BodyLoadedMessage : public SceneObjectEventMessage
+	/**
+	Event casted by body components to inform that body is created and loaded.
+	*/
+
+	class PhysicsBodyLoadedEvent : public SceneObjectEventMessage
 	{
 	public:
-		BodyLoadedMessage(SenderID sender_id = -1, double delay= 0) :
+		PhysicsBodyLoadedEvent(SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage( sender_id , delay){}
 	private:
 	};
-	typedef SPTR<BodyLoadedMessage> BodyLoadedMessagePtr;
+	typedef SPTR<PhysicsBodyLoadedEvent> PhysicsBodyLoadedEventPtr;
 
 
 	/**
@@ -407,14 +410,14 @@ namespace GASS
 		Vec3 m_Angular;
 	};
 	typedef SPTR<PhysicsJointVelocityEvent> PhysicsJointVelocityEventPtr;
-	
 
-
-
-	class VelocityNotifyMessage : public SceneObjectEventMessage
+	/**
+		Event holding body linear and rotation velocity
+	*/
+	class PhysicsVelocityEvent : public SceneObjectEventMessage
 	{
 	public:
-		VelocityNotifyMessage(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) :
+		PhysicsVelocityEvent(const Vec3  &linear_velocity, const Vec3  &angular_velocity, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage(sender_id , delay), m_LinearVel(linear_velocity), m_AngularVel(angular_velocity){}
 		  Vec3 GetLinearVelocity() const {return m_LinearVel;}
 		  Vec3 GetAngularVelocity() const {return m_AngularVel;}
@@ -422,12 +425,17 @@ namespace GASS
 		Vec3 m_LinearVel;
 		Vec3 m_AngularVel;
 	};
-	typedef SPTR<VelocityNotifyMessage> VelocityNotifyMessagePtr;
+	typedef SPTR<PhysicsVelocityEvent> PhysicsVelocityEventPtr;
 
-	class HingeJointNotifyMessage : public SceneObjectEventMessage
+
+	/**
+		Deprecated event casted only by ode joint
+	*/
+
+	class ODEPhysicsHingeJointEvent : public SceneObjectEventMessage
 	{
 	public:
-		HingeJointNotifyMessage(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) :
+		ODEPhysicsHingeJointEvent(float angle,float angle_rate, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage(sender_id , delay), m_Angle(angle), m_AngleRate(angle_rate){}
 		  float GetAngle() const {return m_Angle;}
 		  float GetAngleRate() const {return m_AngleRate;}
@@ -435,5 +443,5 @@ namespace GASS
 		float m_Angle;
 		float m_AngleRate;
 	};
-	typedef SPTR<HingeJointNotifyMessage> HingeJointNotifyMessagePtr;
+	typedef SPTR<ODEPhysicsHingeJointEvent> ODEPhysicsHingeJointEventPtr;
 }

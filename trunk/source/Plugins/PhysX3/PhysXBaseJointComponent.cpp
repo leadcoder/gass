@@ -76,12 +76,12 @@ namespace GASS
 		if(b1->GetPxRigidDynamic())
 			m_Body1Loaded = true;
 		else //wait for body to be loaded
-			m_Body1->RegisterForMessage(REG_TMESS(PhysXBaseJointComponent::OnBody1Loaded,BodyLoadedMessage,0));
+			m_Body1->RegisterForMessage(REG_TMESS(PhysXBaseJointComponent::OnBody1Loaded,PhysicsBodyLoadedEvent,0));
 
 		if(b2->GetPxRigidDynamic())
 			m_Body2Loaded = true;
 		else //wait for body to be loaded
-			m_Body2->RegisterForMessage(REG_TMESS(PhysXBaseJointComponent::OnBody2Loaded,BodyLoadedMessage,0));
+			m_Body2->RegisterForMessage(REG_TMESS(PhysXBaseJointComponent::OnBody2Loaded,PhysicsBodyLoadedEvent,0));
 
 		//both bodies are loaded -> create joint
 		if(m_Body1Loaded && m_Body2Loaded)
@@ -151,14 +151,14 @@ namespace GASS
 			m_Body2Loaded = false;
 	}
 
-	void PhysXBaseJointComponent::OnBody1Loaded(BodyLoadedMessagePtr message)
+	void PhysXBaseJointComponent::OnBody1Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body1Loaded = true;
 		if(m_Body2Loaded)
 			CreateJoint();
 	}
 
-	void PhysXBaseJointComponent::OnBody2Loaded(BodyLoadedMessagePtr message)
+	void PhysXBaseJointComponent::OnBody2Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body2Loaded = true;
 		if(m_Body1Loaded)

@@ -62,8 +62,8 @@ namespace GASS
 
 		//Message functions
 		void OnPositionChanged(TransformationChangedEventPtr message);
-		void OnPhysicsUpdate(VelocityNotifyMessagePtr message);
-		void OnParameterMessage(SoundParameterMessagePtr message);
+		void OnPhysicsUpdate(PhysicsVelocityEventPtr message);
+		void OnParameterMessage(SoundParameterRequestPtr message);
 		
 		ALuint m_Buffer;
 		ALuint m_Source; // Source for current sound, allocated when sample is to be played, 0 otherwise

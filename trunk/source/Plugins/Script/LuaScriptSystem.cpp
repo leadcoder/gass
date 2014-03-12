@@ -71,7 +71,7 @@ namespace GASS
 
 	}*/
 
-	/*void LuaScriptSystem::OnLuaStateMessage(LuaScriptStateMessagePtr message)
+	/*void LuaScriptSystem::OnLuaStateMessage(LuaScriptStateRequestPtr message)
 	{
 		lua_State *state =  static_cast<lua_State*>(message->GetState());
 		LuaScriptManager::Get().SetState(state);

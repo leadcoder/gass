@@ -57,9 +57,9 @@ namespace GASS
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
 		void OnLoad(LoadComponentsMessagePtr message);
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
-		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
+		void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
 		long int GetCollisionBits() const;

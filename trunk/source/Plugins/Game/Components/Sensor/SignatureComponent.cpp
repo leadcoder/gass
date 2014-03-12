@@ -40,7 +40,7 @@ namespace GASS
 	void SignatureComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnTransChanged,TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnVelocity,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(SignatureComponent::OnVelocity,PhysicsVelocityEvent,0));
 		m_Initialized = true;
 	}
 
@@ -50,7 +50,7 @@ namespace GASS
 		m_Rotation = message->GetRotation();
 	}
 
-	void SignatureComponent::OnVelocity(VelocityNotifyMessagePtr message)
+	void SignatureComponent::OnVelocity(PhysicsVelocityEventPtr message)
 	{
 		m_Velocity = message->GetLinearVelocity();
 	}

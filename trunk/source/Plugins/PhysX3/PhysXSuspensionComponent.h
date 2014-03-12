@@ -47,7 +47,7 @@ namespace GASS
 		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
 		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
 
-		void OnLoad(BodyLoadedMessagePtr message);
+		void OnLoad(PhysicsBodyLoadedEventPtr message);
 
 		float GetRollAngle();
 		float GetRollAngleRate();
@@ -69,7 +69,7 @@ namespace GASS
 		void SetStrength(float value){m_Strength =value;}
 		float GetSteerLimit()const {return m_SteerLimit;}
 		void SetSteerLimit(float value);
-		void SendJointUpdate(VelocityNotifyMessagePtr message);
+		void SendJointUpdate(PhysicsVelocityEventPtr message);
 	private:
 		float m_DriveMaxTorque;
 		float m_WheelJointDamping;

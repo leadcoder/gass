@@ -97,7 +97,7 @@ namespace GASS
 	void AIFollowRoadComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnTransMessage,TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnPhysicsMessage,VelocityNotifyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AIFollowRoadComponent::OnSpawnOnRoad,SpawnOnRoadMessage,0));
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<AISceneManager>()->Register(listener);
@@ -379,7 +379,7 @@ namespace GASS
 	}
 
 
-	void AIFollowRoadComponent::OnPhysicsMessage(VelocityNotifyMessagePtr message)
+	void AIFollowRoadComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		m_AngularVelocity  = message->GetAngularVelocity();
 		m_VehicleSpeed  = message->GetLinearVelocity();

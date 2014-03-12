@@ -109,7 +109,7 @@ namespace GASS
 					selected = new_obj;
 				}
 
-				CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(false,from_id));
+				CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(false,from_id));
 				SendMessageRec(selected,col_msg);
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
@@ -135,7 +135,7 @@ namespace GASS
 		if(selected && CheckIfEditable(selected))
 		{
 			int from_id = (int) this;
-			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(true,from_id));
+			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(true,from_id));
 			//selected->SendImmediate(col_msg);
 			SendMessageRec(selected,col_msg);
 
@@ -252,7 +252,7 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = (int) this;
-			CollisionSettingsMessagePtr col_msg(new CollisionSettingsMessage(value,from_id));
+			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
 			SendMessageRec(gizmo,col_msg);
 			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));
 			SendMessageRec(gizmo,vis_msg);

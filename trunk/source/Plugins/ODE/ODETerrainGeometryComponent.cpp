@@ -67,9 +67,9 @@ namespace GASS
 
 	void ODETerrainGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsMessage ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -192,7 +192,7 @@ namespace GASS
 		}
 	}
 
-	void ODETerrainGeometryComponent::OnCollisionSettings(CollisionSettingsMessagePtr message)
+	void ODETerrainGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
 		if(value)
@@ -240,7 +240,7 @@ namespace GASS
 		return m_SpaceID;
 	}
 
-	void ODETerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugMessagePtr message)
+	void ODETerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
 	{
 		//SetDebug(message->DebugGeometry());
 	}

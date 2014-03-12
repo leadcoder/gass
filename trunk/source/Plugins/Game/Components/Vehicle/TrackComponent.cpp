@@ -57,17 +57,17 @@ namespace GASS
 	void TrackComponent::OnInitialize()
 	{
 		BaseSceneComponent::OnInitialize();
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 		
 		if(m_DriveWheel.IsValid())
-			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,VelocityNotifyMessage,0));
+			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,PhysicsVelocityEvent,0));
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find drive wheel","TrackComponent::OnLoad");
 		m_Initialized = true;
 	}
 
-	void TrackComponent::OnDriveWheelPhysicsMessage(VelocityNotifyMessagePtr message)
+	void TrackComponent::OnDriveWheelPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		//Vec2 speed(ang_vel.x,0);
@@ -102,7 +102,7 @@ namespace GASS
 			//Play engine sound
 			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
-		GetSceneObject()->SendImmediateRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::VOLUME,volume)));
+		GetSceneObject()->SendImmediateRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
 
 		if(speed > 0)
 		{
@@ -111,7 +111,7 @@ namespace GASS
 			if(pitch > 1.7)
 				pitch = 1.7;
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
-			GetSceneObject()->SendImmediateRequest(SoundParameterMessagePtr(new SoundParameterMessage(SoundParameterMessage::PITCH,pitch)));
+			GetSceneObject()->SendImmediateRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
 		}
 	}
 }

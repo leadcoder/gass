@@ -181,13 +181,13 @@ namespace GASS
 				if(comp)
 				{
 					child_obj->PostRequest(VisibilityRequestPtr(new VisibilityRequest(m_ShowWaypoints)));
-					child_obj->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+					child_obj->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
 
 					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
 					if(tangent)
 					{
 						tangent->PostRequest(VisibilityRequestPtr(new VisibilityRequest(m_ShowWaypoints)));
-						tangent->PostRequest(CollisionSettingsMessagePtr(new CollisionSettingsMessage(m_ShowWaypoints)));
+						tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
 					}
 				}
 			}

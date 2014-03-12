@@ -45,9 +45,9 @@ namespace GASS
 		virtual void OnDelete();
 	protected:
 		
-		void OnCollisionSettings(CollisionSettingsMessagePtr message);
+		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
-		void OnPhysicsDebug(PhysicsDebugMessagePtr message);
+		void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		void Disable();
 		void Enable();
 		void Reset();
