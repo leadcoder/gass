@@ -76,6 +76,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryFlagsChanged,GeometryFlagsChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleRequest ,0));
 		m_CollisionSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODECollisionSceneManager>();
@@ -184,7 +185,11 @@ namespace GASS
 		{
 			SetFlags(geom->GetGeometryFlags());
 		}
-		
+	}
+
+	void ODECollisionGeometryComponent::OnGeometryFlagsChanged(GeometryFlagsChangedEventPtr message)
+	{
+		SetFlags(message->GetGeometryFlags());
 	}
 	
 	void ODECollisionGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)

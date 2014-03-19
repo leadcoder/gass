@@ -67,7 +67,7 @@ namespace GASS
 		void CreateCamera();
 		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,NO_THROW);}
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,NO_THROW);}
-
+		const std::set<GASS::SceneObjectWeakPtr>&  GetInvisibleObjects() const {return m_InvisibleObjects;}
 	protected:
 		void OnPostSceneLoaded(PostSceneLoadEventPtr message);
 		void AddStaticObject(SceneObjectPtr obj, bool rec);

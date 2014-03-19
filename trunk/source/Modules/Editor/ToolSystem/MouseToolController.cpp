@@ -263,7 +263,6 @@ namespace GASS
 			{
 				info.m_3DPos = gizmo_result.CollPosition;
 				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
-				
 			}
 		}
 		else

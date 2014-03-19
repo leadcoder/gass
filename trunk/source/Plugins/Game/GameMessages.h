@@ -350,6 +350,37 @@ namespace GASS
 	};
 	typedef SPTR<CharacterAnimationRequest> CharacterAnimationRequestPtr;
 
+	class CharacterBehaviorRequest : public SceneObjectRequestMessage
+	{
+	public:
+		CharacterBehaviorRequest(const std::string &b_class, const std::string &state ,SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectRequestMessage(sender_id , delay),m_BehaviorClass(b_class),m_BehaviorState(state)
+		  {
+
+		  }
+		  std::string GetClass() const {return m_BehaviorClass;}
+		  std::string GetState() const {return m_BehaviorState;}
+	private:
+		std::string m_BehaviorClass;
+		std::string m_BehaviorState;
+	};
+	typedef SPTR<CharacterBehaviorRequest> CharacterBehaviorRequestPtr;
+
+	class CharacterEventRequest : public SceneObjectRequestMessage
+	{
+	public:
+		CharacterEventRequest(const std::string &event, SenderID sender_id = -1, double delay= 0) : 
+		  SceneObjectRequestMessage(sender_id , delay),m_Event(event)
+		  {
+
+		  }
+		  std::string GetEvent() const {return m_Event;}
+	private:
+		std::string m_Event;
+	};
+	typedef SPTR<CharacterEventRequest> CharacterEventRequestPtr;
+
+
 	class CharacterInputRequest : public SceneObjectRequestMessage
 	{
 	public:

@@ -583,6 +583,8 @@ namespace GASS
 	void OgreMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+		if(GetSceneObject()) 
+			GetSceneObject()->PostEvent(GeometryFlagsChangedEventPtr(new GeometryFlagsChangedEvent(flags)));
 	}
 
 	void OgreMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

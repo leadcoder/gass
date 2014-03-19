@@ -48,9 +48,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
-
-
-
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
@@ -301,6 +299,8 @@ namespace GASS
 	void OgreManualMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeometryFlagsBinder.SetValue(flags);
+		if(GetSceneObject()) 
+			GetSceneObject()->PostEvent(GeometryFlagsChangedEventPtr(new GeometryFlagsChangedEvent(flags)));
 	}
 
 	void OgreManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)

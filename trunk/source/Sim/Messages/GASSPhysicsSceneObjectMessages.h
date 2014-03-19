@@ -26,6 +26,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 
+
 namespace GASS
 {
 	class SimSceneManager;

@@ -36,9 +36,9 @@ namespace GASS
 	class IGeometryComponent;
 	class IHeightmapTerrainComponent;
 	class ODECollisionSceneManager;
-	typedef boost::shared_ptr<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
-	typedef boost::shared_ptr<IGeometryComponent> GeometryComponentPtr;
-	typedef boost::shared_ptr<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	typedef SPTR<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
+	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
+	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 
 	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>
 	{
@@ -69,7 +69,7 @@ namespace GASS
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnGeometryScale(GeometryScaleRequestPtr message);
-
+		void OnGeometryFlagsChanged(GeometryFlagsChangedEventPtr message);
 
 		//Get set section
 		

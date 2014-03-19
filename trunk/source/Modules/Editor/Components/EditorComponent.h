@@ -30,9 +30,9 @@ namespace GASS
 		void SetVisible(bool value);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
+		ADD_PROPERTY(bool,EditName)
 	private:
 		ADD_PROPERTY(ColorRGBA,SelectedColor)
-		
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
 		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}

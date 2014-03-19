@@ -29,7 +29,8 @@ namespace GASS
 		m_ShowBBWhenSelected(true),
 		m_ShowInTree(false),
 		m_AllowRemove(false),
-		m_AllowDragAndDrop(false)
+		m_AllowDragAndDrop(false),
+		m_EditName(true)
 	{
 		
 	}
@@ -52,6 +53,7 @@ namespace GASS
 		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
 		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
 		RegisterProperty<ColorRGBA>("SelectedColor",&EditorComponent::GetSelectedColor, &EditorComponent::SetSelectedColor);
+		RegisterProperty<bool>("EditName",&EditorComponent::GetEditName, &EditorComponent::SetEditName);
 	}
 
 	void EditorComponent::OnInitialize()
