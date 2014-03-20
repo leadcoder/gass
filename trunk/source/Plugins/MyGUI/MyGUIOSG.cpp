@@ -1,8 +1,11 @@
 #include "MyGUIOSG.h"
+#include "MainMenu.h"
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
+#include "StatisticInfo.h"
+#include "MyGUISystem.h"
 
-bool MYGUIHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa )
+bool MYGUIOSGEventHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa )
 {
     int width = ea.getWindowWidth(), height = ea.getWindowHeight();
     switch ( ea.getEventType() )
@@ -25,27 +28,27 @@ bool MYGUIHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAda
     return false;
 }
 
-MYGUIManager::MYGUIManager()
-:   _gui(0), _platform(0),
-    _resourcePathFile("resources.xml"), _resourceCoreFile("MyGUI_Core.xml"),
-    _activeContextID(0), _initialized(false)
+MYGUIOSGDrawable::MYGUIOSGDrawable(GASS::MyGUISystem *system)
+:   m_OpenGLPlatform(0),
+    m_ActiveContextID(0), 
+	m_Initialized(false),
+	m_GUISystem(system)
 {
     setSupportsDisplayList( false );
     getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     getOrCreateStateSet()->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
 }
 
-MYGUIManager::MYGUIManager( const MYGUIManager& copy,const osg::CopyOp& copyop )
-:   osg::Drawable(copy, copyop), _eventsToHandle(copy._eventsToHandle),
-    _gui(copy._gui), _platform(copy._platform),
-    _resourcePathFile(copy._resourcePathFile),
-    _resourceCoreFile(copy._resourceCoreFile),
-    _rootMedia(copy._rootMedia),
-    _activeContextID(copy._activeContextID),
-    _initialized(copy._initialized)
+MYGUIOSGDrawable::MYGUIOSGDrawable( const MYGUIOSGDrawable& copy,const osg::CopyOp& copyop )
+:   osg::Drawable(copy, copyop), 
+	m_EventsToHandle(copy.m_EventsToHandle),
+    m_OpenGLPlatform(copy.m_OpenGLPlatform),
+    m_ActiveContextID(copy.m_ActiveContextID),
+    m_Initialized(copy.m_Initialized),
+	m_GUISystem(copy.m_GUISystem)
 {}
 
-void* MYGUIManager::loadImage( int& width, int& height, MyGUI::PixelFormat& format, const std::string& filename )
+void* MYGUIOSGDrawable::loadImage( int& width, int& height, MyGUI::PixelFormat& format, const std::string& filename )
 {
     std::string fullname = MyGUI::OpenGLDataManager::getInstance().getDataPath( filename );
     osg::ref_ptr<osg::Image> image = osgDB::readImageFile( fullname );
@@ -94,7 +97,7 @@ void* MYGUIManager::loadImage( int& width, int& height, MyGUI::PixelFormat& form
     return result;
 }
 
-void MYGUIManager::saveImage( int width, int height, MyGUI::PixelFormat format, void* texture, const std::string& filename )
+void MYGUIOSGDrawable::saveImage( int width, int height, MyGUI::PixelFormat format, void* texture, const std::string& filename )
 {
     GLenum pixelFormat = 0;
     unsigned int internalFormat = 0;
@@ -118,24 +121,17 @@ void MYGUIManager::saveImage( int width, int height, MyGUI::PixelFormat format, 
     osgDB::writeImageFile( *image, filename );
 }
 
-void MYGUIManager::drawImplementation( osg::RenderInfo& renderInfo ) const
+void MYGUIOSGDrawable::drawImplementation( osg::RenderInfo& renderInfo ) const
 {
     unsigned int contextID = renderInfo.getContextID();
-    if ( !_initialized )
+    if ( !m_Initialized )
     {
-        MYGUIManager* constMe = const_cast<MYGUIManager*>(this);
-        constMe->_platform = new MyGUI::OpenGLPlatform;
-        constMe->_platform->initialise( constMe );
-        constMe->setupResources();
-        
-        constMe->_gui = new MyGUI::Gui;
-        constMe->_gui->initialise( _resourceCoreFile );
-        constMe->initializeControls();
-        
-        constMe->_activeContextID = contextID;
-        constMe->_initialized = true;
+		MYGUIOSGDrawable* constMe = const_cast<MYGUIOSGDrawable*>(this);
+		constMe->m_ActiveContextID = contextID;
+		constMe->m_OpenGLPlatform = m_GUISystem->InitializeOpenGLPlatform();
+	    constMe->m_Initialized = true;
     }
-    else if ( contextID==_activeContextID )
+    else if ( contextID==m_ActiveContextID )
     {
         osg::State* state = renderInfo.getState();
         state->disableAllVertexArrays();
@@ -143,47 +139,45 @@ void MYGUIManager::drawImplementation( osg::RenderInfo& renderInfo ) const
         
         glPushMatrix();
         glPushAttrib( GL_ALL_ATTRIB_BITS );
-		if ( _platform )
+		if ( m_OpenGLPlatform )
 		{
 		    updateEvents();
-		    _platform->getRenderManagerPtr()->drawOneFrame();
+		    m_OpenGLPlatform->getRenderManagerPtr()->drawOneFrame();
         }
         glPopAttrib();
         glPopMatrix();
     }
 }
 
-void MYGUIManager::releaseGLObjects( osg::State* state ) const
+void MYGUIOSGDrawable::releaseGLObjects( osg::State* state ) const
 {
     if ( state && state->getGraphicsContext() )
     {
         osg::GraphicsContext* gc = state->getGraphicsContext();
         if ( gc->makeCurrent() )
         {
-            MYGUIManager* constMe = const_cast<MYGUIManager*>(this);
-            if ( constMe->_gui )
+            MYGUIOSGDrawable* constMe = const_cast<MYGUIOSGDrawable*>(this);
+            if ( m_GUISystem)
             {
-                constMe->_gui->shutdown();
-                delete constMe->_gui;
-                constMe->_gui = nullptr;
+                m_GUISystem->ShutdownOSG();
             }
-            if ( constMe->_platform )
+            if (constMe->m_OpenGLPlatform )
             {
-                constMe->_platform->shutdown();
-                delete constMe->_platform;
-                constMe->_platform = nullptr;
+                constMe->m_OpenGLPlatform->shutdown();
+                delete constMe->m_OpenGLPlatform;
+                constMe->m_OpenGLPlatform = nullptr;
             }
             gc->releaseContext();
         }
     }
 }
 
-void MYGUIManager::updateEvents() const
+void MYGUIOSGDrawable::updateEvents() const
 {
-    unsigned int size = _eventsToHandle.size();
+    unsigned int size = m_EventsToHandle.size();
     for ( unsigned int i=0; i<size; ++i )
     {
-        const osgGA::GUIEventAdapter& ea = *(_eventsToHandle.front());
+        const osgGA::GUIEventAdapter& ea = *(m_EventsToHandle.front());
         int x = ea.getX(), y = ea.getY(), key = ea.getKey();
         if ( ea.getMouseYOrientation()==osgGA::GUIEventAdapter::Y_INCREASING_UPWARDS )
             y = ea.getWindowHeight() - y;
@@ -210,41 +204,16 @@ void MYGUIManager::updateEvents() const
             MyGUI::InputManager::getInstance().injectKeyRelease( convertKeyCode(key) );
             break;
         case osgGA::GUIEventAdapter::RESIZE:
-            _platform->getRenderManagerPtr()->setViewSize( ea.getWindowWidth(), ea.getWindowHeight() );
+            m_OpenGLPlatform->getRenderManagerPtr()->setViewSize( ea.getWindowWidth(), ea.getWindowHeight() );
             break;
         default:
             break;
         }
-        const_cast<MYGUIManager*>(this)->_eventsToHandle.pop();
+        const_cast<MYGUIOSGDrawable*>(this)->m_EventsToHandle.pop();
     }
 }
 
-void MYGUIManager::setupResources()
-{
-    MyGUI::xml::Document doc;
-    if ( !_platform || !doc.open(_resourcePathFile) ) doc.getLastError();
-    
-    MyGUI::xml::ElementPtr root = doc.getRoot();
-    if ( root==nullptr || root->getName()!="Paths" ) return;
-    
-    MyGUI::xml::ElementEnumerator node = root->getElementEnumerator();
-    while ( node.next() )
-    {
-        if ( node->getName()=="Path" )
-        {
-            bool root = false;
-            if ( node->findAttribute("root")!="" )
-            {
-                root = MyGUI::utility::parseBool( node->findAttribute("root") );
-                if ( root ) _rootMedia = node->getContent();
-            }
-            _platform->getDataManagerPtr()->addResourceLocation( node->getContent(), false );
-        }
-    }
-    _platform->getDataManagerPtr()->addResourceLocation( _rootMedia + "/Common/Base", false );
-}
-
-MyGUI::MouseButton MYGUIManager::convertMouseButton( int button ) const
+MyGUI::MouseButton MYGUIOSGDrawable::convertMouseButton( int button ) const
 {
     switch ( button )
     {
@@ -259,7 +228,7 @@ MyGUI::MouseButton MYGUIManager::convertMouseButton( int button ) const
     return MyGUI::MouseButton::None;
 }
 
-MyGUI::KeyCode MYGUIManager::convertKeyCode( int key ) const
+MyGUI::KeyCode MYGUIOSGDrawable::convertKeyCode( int key ) const
 {
     static std::map<int, MyGUI::KeyCode> s_keyCodeMap;
     if ( !s_keyCodeMap.size() )

@@ -21,16 +21,34 @@
 #include <stdio.h>
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include "MyGUISystem.h"
+#include "MyGUIOSG.h"
 #include <MyGUI.h>
 #include "MyGUI_LastHeader.h"
 #include <MyGUI_OgrePlatform.h>
 #include "StatisticInfo.h"
 #include "MainMenu.h"
 
+#include <osg/Texture2D>
+#include <osg/Geometry>
+#include <osg/MatrixTransform>
+#include <osgDB/ReadFile>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/TrackballManipulator>
+#include <osgViewer/ViewerEventHandlers>
+#include <osgViewer/Viewer>
+#include <osgViewer/View>
+#include <osgViewer/CompositeViewer>
+
+#include "Plugins/OSG/IOSGGraphicsSceneManager.h"
+#include "Plugins/OSG/IOSGGraphicsSystem.h"
+#include "Plugins/OSG/IOSGCamera.h"
+#include "Sim/Interface/GASSIViewport.h"
+
 namespace GASS
 {
 	MyGUISystem::MyGUISystem() : mGUI(NULL)
 	{
+		m_OSGManager = new MYGUIOSGDrawable(this);
 	}
 
 	MyGUISystem::~MyGUISystem()
@@ -48,16 +66,110 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnInputSystemLoaded,InputSystemLoadedEvent,0));
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-	
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS( MyGUISystem::OnCameraChanged,CameraChangedEvent, 0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnPostSceneCreate,PostSceneCreateEvent,0));
 	}
 
+	MyGUI::OpenGLPlatform* MyGUISystem::InitializeOpenGLPlatform()
+	{
+		MyGUI::OpenGLPlatform* gl_platform = new MyGUI::OpenGLPlatform;
+		gl_platform->initialise( m_OSGManager.get() );
+		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/Demos", true);
+		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/base", true);
+		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/Themes", true);
+		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/MyGUI_Media", true);
+		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/GASS", true);
+		_InitlizeGUI();
+		return gl_platform;
+	}
+
+	void MyGUISystem::_InitlizeGUI()
+	{
+		mGUI = new MyGUI::Gui();
+		mGUI->initialise("MyGUI_Core.xml");
+		MyGUI::ResourceManager::getInstance().load("MyGUI_BlackOrangeTheme.xml");
+	//	mInfo = new diagnostic::StatisticInfo();
+	//	mInfo->setVisible(true);
+		MainMenu* menu = new MainMenu(NULL);
+		menu->Init();
+	}
+
+	void MyGUISystem::_SetupOSG()
+	{
+		m_HUDCamera = new osg::Camera;
+		osg::ref_ptr<osg::Geode> geode = new osg::Geode;
+		geode->setCullingActive( false );
+		geode->addDrawable( m_OSGManager.get() );
+		geode->getOrCreateStateSet()->setMode( GL_BLEND, osg::StateAttribute::ON );
+		geode->getOrCreateStateSet()->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+		
+		m_HUDCamera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+		m_HUDCamera->setRenderOrder( osg::Camera::POST_RENDER );
+		m_HUDCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
+		m_HUDCamera->setAllowEventFocus( false );
+		m_HUDCamera->setProjectionMatrix( osg::Matrix::ortho2D(0.0, 1.0, 0.0, 1.0) );
+		m_HUDCamera->addChild( geode.get() );
+		
+		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+		osgViewer::CompositeViewer* viewer = osg_sys->GetViewer();
+		osgViewer::Viewer::Windows windows;
+		viewer->getWindows(windows);
+
+		if (windows.empty()) 
+			return;
+		// set up cameras to render on the first window available.
+		m_HUDCamera->setGraphicsContext(windows[0]);
+		m_HUDCamera->setViewport(0,0, windows[0]->getTraits()->width, windows[0]->getTraits()->height);
+		osgViewer::View* hudView = new osgViewer::View;
+		hudView->setCamera(m_HUDCamera);
+		viewer->addView(hudView);
+	}
+
+	
+	//osg::ref_ptr<osg::Camera> m_HUDCamera = new osg::Camera;
+	//osg::ref_ptr<osg::Geode> geode;
+	//osg::ref_ptr<MYGUIManager>  mm;
 	diagnostic::StatisticInfo* mInfo =NULL;
+
 	void MyGUISystem::OnInputSystemLoaded(InputSystemLoadedEventPtr message)
 	{
+		_SetupOSG();
+		//mm = new MYGUIManager();
+	/*	geode = new osg::Geode;
+		geode->setCullingActive( false );
+		geode->addDrawable( m_OSGManager.get() );
+		geode->getOrCreateStateSet()->setMode( GL_BLEND, osg::StateAttribute::ON );
+		geode->getOrCreateStateSet()->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+		camera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+		camera->setRenderOrder( osg::Camera::POST_RENDER );
+		camera->setClearMask(GL_DEPTH_BUFFER_BIT);
+		camera->setAllowEventFocus( false );
+		camera->setProjectionMatrix( osg::Matrix::ortho2D(0.0, 1.0, 0.0, 1.0) );
+		camera->addChild( geode.get() );
+		
+		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+
+		//IOSGGraphicsSceneManagerPtr osg_sm = message->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+		//osg_sm->GetOSGRootNode()->addChild(camera);
+		osgViewer::CompositeViewer* viewer = osg_sys->GetViewer();
+		osgViewer::Viewer::Windows windows;
+		viewer->getWindows(windows);
+
+		if (windows.empty()) return ;
+
+		// set up cameras to render on the first window available.
+		camera->setGraphicsContext(windows[0]);
+		camera->setViewport(0,0,windows[0]->getTraits()->width, windows[0]->getTraits()->height);
+		osgViewer::View* hudView = new osgViewer::View;
+		hudView->setCamera(camera);
+		viewer->addView(hudView);
+		*/
+		return;
+
 		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddKeyListener(this);
 		input_system->AddMouseListener(this);
-
 
 		MyGUI::OgrePlatform* mPlatform = new MyGUI::OgrePlatform();
 		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
@@ -67,8 +179,8 @@ namespace GASS
 			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
 		mPlatform->initialise((Ogre::RenderWindow*)target, sm,"MyGUI");
 		mGUI = new MyGUI::Gui();
-		mGUI->initialise("MyGUI_Core.xml");
 
+		mGUI->initialise("MyGUI_Core.xml");
 		MyGUI::ResourceManager::getInstance().load("MyGUI_BlackOrangeTheme.xml");
 
 		mInfo = new diagnostic::StatisticInfo();
@@ -76,7 +188,22 @@ namespace GASS
 
 		MainMenu* menu = new MainMenu(NULL);
 		menu->Init();
-	
+	}
+
+	void MyGUISystem::OnCameraChanged(CameraChangedEventPtr message)
+	{
+		if(m_HUDCamera.valid())
+		{
+			CameraComponentPtr camera_comp = message->GetViewport()->GetCamera();
+			OSGCameraPtr osg_cam = DYNAMIC_PTR_CAST<IOSGCamera>(camera_comp);
+			osgViewer::View* view = dynamic_cast<osgViewer::View*>(osg_cam->GetOSGCamera()->getView());
+			view->addEventHandler(new MYGUIOSGEventHandler(m_HUDCamera.get(), m_OSGManager.get()) );
+		}
+	}
+
+	void MyGUISystem::OnPostSceneCreate(PostSceneCreateEventPtr message)
+	{
+		//view->addEventHandler( new MYGUIHandler(camera.get(), mygui.get()) );
 	}
 
 
@@ -121,6 +248,8 @@ namespace GASS
 
 		menu->setVisible(true);*/
 	}
+
+
 
 
 	void MyGUISystem::Update(double delta_time)
