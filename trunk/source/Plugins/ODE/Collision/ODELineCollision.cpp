@@ -59,36 +59,44 @@ namespace GASS
 			dir.y = 0;
 			Float l = dir.Length();
 			const int segments = l / m_SegmentLength;
-			Float ray_segment = m_RayLength / (Float)segments;
-			double last_ray_length =  m_RayLength - segments * ray_segment;
 			
-			dGeomID ray = dCreateRay (0, ray_segment);
+			dGeomID ray = dCreateRay (0, m_RayLength);
 			dGeomSetCollideBits (ray,m_CollisionBits);
 			dGeomSetCategoryBits(ray,0);
-			m_Result->Coll = false;
-			m_Result->CollDist = 0;
-
-			for(int i=0 ; i < segments; i++)
+			double last_ray_length = m_RayLength;
+			Float ray_segment = 0;
+			if(segments > 0)
 			{
+				ray_segment = m_RayLength / (Float)segments;
+				last_ray_length =  m_RayLength - segments * ray_segment;
+				dGeomRaySetLength(ray,ray_segment);	
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
-				const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*ray_segment);
-				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
-				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
-				
-				if(m_Result->Coll == true)
+
+				for(int i=0 ; i < segments; i++)
 				{
-					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
-					m_Result->CollDist = m_Result->CollDist+i*ray_segment;
-					dGeomDestroy(ray);
-					return;
+					m_Result->Coll = false;
+					m_Result->CollDist = 0;
+					const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*ray_segment);
+					dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+					dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
+
+					if(m_Result->Coll == true)
+					{
+						m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+						m_Result->CollDist = m_Result->CollDist+i*ray_segment;
+						dGeomDestroy(ray);
+						return;
+					}
 				}
 			}
+
 			if(last_ray_length > 0)
 			{
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
 				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment);
+				
 				dGeomRaySetLength(ray,last_ray_length);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);

@@ -191,9 +191,6 @@ namespace GASS
 					m_MeshObject->index(sub_mesh->IndexVector[j]);
 				}
 				m_MeshObject->end();
-
-				
-
 			}
 			Ogre::EdgeData::EdgeGroupList::iterator itShadow, itEndShadow;
 			if(m_MeshObject->getEdgeList())
