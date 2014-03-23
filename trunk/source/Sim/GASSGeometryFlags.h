@@ -30,7 +30,7 @@ namespace GASS
 	/**
 		Enumeration of geometry types. 
 		This can be used by a collision system to find certain
-		geomtries or a physics engine to separate dynamic and static objects
+		geometries or a physics engine to separate dynamic and static objects
 	*/
 	/*enum GeometryType
 	{

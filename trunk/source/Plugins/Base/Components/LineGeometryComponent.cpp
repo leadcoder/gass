@@ -145,6 +145,11 @@ namespace GASS
 
 		if(!wpl)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Couldn't find waypoint list", "LineComponent::UpdateMesh");
+
+		std::vector<Vec3> points = wpl->GetWaypoints();
+
+		if(points.size() < 2)
+			return;
 	
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
@@ -156,7 +161,7 @@ namespace GASS
 		sub_mesh_data->MaterialName = m_Material;
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
-		std::vector<Vec3> points = wpl->GetWaypoints();
+		
 
 		// for keeping track of the sides 
 		Vec3 lr_vector; 

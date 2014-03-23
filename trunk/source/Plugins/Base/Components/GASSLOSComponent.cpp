@@ -54,15 +54,13 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Float>("Transparency", &GASS::LOSComponent::GetTransparency, &GASS::LOSComponent::SetTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		
+
 	}
 
 	void LOSComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LOSComponent::OnTransChanged,TransformationChangedEvent,0));
-		//GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( LOSComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
 		SceneManagerListenerPtr listener = shared_from_this();
-		//GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
 		m_Initialized = true;
 	}
 
@@ -74,7 +72,7 @@ namespace GASS
 		ScenePtr scene = GetSceneObject()->GetScene();
 		Vec3 east(1,0,0);
 		Vec3 north(0,0,1);
-		
+
 		CollisionSceneManagerPtr col_sm = scene->GetFirstSceneManagerByClass<GASS::ICollisionSceneManager>();
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
@@ -82,12 +80,12 @@ namespace GASS
 
 		sub_mesh_data->MaterialName = "NodeMaterialNoTexture";
 		//sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
-		
+
 		sub_mesh_data->Type = POINT_LIST;
 		//sub_mesh_data->Type = LINE_LIST;
-		
+
 		int calc_samples = m_Radius/m_SampleDist;
-		
+
 		for(int i = -calc_samples; i < calc_samples; i++)
 		{
 			for(int j = -calc_samples; j < calc_samples; j++)
@@ -99,26 +97,23 @@ namespace GASS
 					Float angle = Math::Rad2Deg(acos(Math::Dot(dir,m_ViewDir)));
 					if(fabs(angle) < m_FOV  || m_FOV == 0)
 					{
-					Vec3 end_pos = m_Position + east*(i*m_SampleDist) + north*(j*-m_SampleDist);
-					//only do radial
-					if(i == 0 && j==0)
-						end_pos = m_Position + east*(i*m_SampleDist) + north*-m_SampleDist;
+						Vec3 end_pos = m_Position + east*(i*m_SampleDist) + north*(j*-m_SampleDist);
+						//only do radial
+						if(i == 0 && j==0)
+							end_pos = m_Position + east*(i*m_SampleDist) + north*-m_SampleDist;
 
-					end_pos.y = _GetHeight(end_pos,col_sm) + m_TargetOffset;
+						end_pos.y = _GetHeight(end_pos,col_sm) + m_TargetOffset;
 
-					bool los = _CheckLOS(m_Position, end_pos, col_sm);
-					//sub_mesh_data->PositionVector.push_back(m_Position);
-					sub_mesh_data->PositionVector.push_back(end_pos);
-					if(los)
-					{
-						sub_mesh_data->ColorVector.push_back(ColorRGBA(0,1,0,m_Transparency));
-						//sub_mesh_data->ColorVector.push_back(ColorRGBA(0,1,0,1));
-					}
-					else
-					{
-						sub_mesh_data->ColorVector.push_back(ColorRGBA(1,0,0,m_Transparency));
-						//sub_mesh_data->ColorVector.push_back(ColorRGBA(1,0,0,1));
-					}
+						bool los = _CheckLOS(m_Position, end_pos, col_sm);
+						sub_mesh_data->PositionVector.push_back(end_pos);
+						if(los)
+						{
+							sub_mesh_data->ColorVector.push_back(ColorRGBA(0,1,0,m_Transparency));
+						}
+						else
+						{
+							sub_mesh_data->ColorVector.push_back(ColorRGBA(1,0,0,m_Transparency));
+						}
 					}
 				}
 			}
@@ -131,20 +126,21 @@ namespace GASS
 	{
 		Vec3 ray_direction = end_pos - start_pos;
 		CollisionResult result;
-		col_sm->Raycast(start_pos,ray_direction,(GASS::GeometryFlags)((int) GEOMETRY_FLAG_GROUND | (int) GEOMETRY_FLAG_STATIC_OBJECT ),result);
+		//col_sm->Raycast(start_pos,ray_direction,(GASS::GeometryFlags)((int) GEOMETRY_FLAG_GROUND | (int) GEOMETRY_FLAG_STATIC_OBJECT ),result);
+		col_sm->Raycast(start_pos,ray_direction,GEOMETRY_FLAG_SCENE_OBJECTS,result);
+
 		return !result.Coll;
 	}
 
 	Float LOSComponent::_GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const
 	{
-		//ScenePtr scene = ScenePtr(m_Scene);
 		if(col_sm)
 		{
-			//GASS::CollisionSceneManagerPtr col_sys = scene->GetFirstSceneManagerByClass<GASS::ICollisionSceneManager>();
 			Vec3 ray_start(pos.x  , 10000.0, pos.z);
 			Vec3 ray_direction(0.0 ,-20000.0 , 0.0);
 			CollisionResult result;
-			col_sm->Raycast(ray_start,ray_direction, (GASS::GeometryFlags)((int) GEOMETRY_FLAG_GROUND | (int) GEOMETRY_FLAG_STATIC_OBJECT ),result);
+			//col_sm->Raycast(ray_start,ray_direction, (GASS::GeometryFlags)((int) GEOMETRY_FLAG_GROUND | (int) GEOMETRY_FLAG_STATIC_OBJECT ),result);
+			col_sm->Raycast(ray_start,ray_direction, GEOMETRY_FLAG_SCENE_OBJECTS ,result);
 			if(result.Coll)
 			{
 				return result.CollPosition.y;
