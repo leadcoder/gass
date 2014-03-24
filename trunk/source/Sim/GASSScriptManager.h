@@ -22,8 +22,10 @@
 
 
 #include "Sim/GASSCommon.h"
+#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 class TiXmlElement;
 class asIScriptEngine;
 class asIScriptModule;
@@ -60,18 +62,19 @@ namespace GASS
 	/**
 		ScriptManager
 	*/
-	class GASSExport ScriptManager
+	class GASSExport ScriptManager : public SHARE_CLASS<ScriptManager>, public IMessageListener
 	{
 	public:
 		ScriptManager();
 		virtual ~ScriptManager();
 		void Init();
-		ScriptControllerPtr LoadScript(const std::string &script);
+		ScriptControllerPtr LoadScript(const std::string &script, const std::string &init_func_arg);
 		asIScriptEngine *GetEngine() const {return m_Engine;}
 		void ReturnContextToPool(asIScriptContext *ctx);
 		asIScriptContext *PrepareContextFromPool(asIScriptFunction *func);
 		int ExecuteCall(asIScriptContext *ctx);
 	private:
+		void OnScriptEvent(ScriptEventPtr message);
 		asIScriptEngine *m_Engine;
 		std::map<std::string,ScriptControllerPtr> m_ScriptControllers;
 

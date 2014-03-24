@@ -44,7 +44,7 @@ namespace GASS
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<BaseSceneManager>()->Register(listener);
 		
-		m_Controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as");
+		m_Controller = SimEngine::Get().GetScriptManager()->LoadScript("c:\\temp\\test.as", "SceneObject @");
 		//asIScriptFunction *init_func = controller->GetModule()->GetFunctionByDecl("void onInit(SceneObject @)");
 
 		if(m_Controller->m_FactoryFunction)

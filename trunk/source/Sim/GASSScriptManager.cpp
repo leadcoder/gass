@@ -43,13 +43,18 @@ namespace GASS
 			type = "WARN";
 		else if( msg->type == asMSGTYPE_INFORMATION ) 
 			type = "INFO";
-		printf("%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type, msg->message);
+		//printf("%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type, msg->message);
+		//LogManager::Get().stream() << msg->section << "(" << msg->row << ", " << msg->col << ") : " << type << " : " << msg->message;
+		std::stringstream ss;
+		ss << msg->section << "(" << msg->row << ", " << msg->col << ") : " << type << " : " << msg->message;
+		SimEngine::Get().GetSimSystemManager()->PostMessage(ScriptEventPtr(new ScriptEvent(ss.str())));
 	}
 
 	// Function implementation with native calling convention
 	void PrintString(std::string &str)
 	{
-		std::cout << str;
+		SimEngine::Get().GetSimSystemManager()->PostMessage(ScriptEventPtr(new ScriptEvent(str)));
+		//std::cout << str;
 	}
 
 	ScriptManager::ScriptManager(void) 
@@ -120,8 +125,14 @@ namespace GASS
 	}
 
 
+	void ScriptManager::OnScriptEvent(ScriptEventPtr message)
+	{
+		LogManager::Get().stream() << message->GetMessage();
+	}
+
 	void ScriptManager::Init()
 	{
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ScriptManager::OnScriptEvent,ScriptEvent,0));
 		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
 		RegisterStdString(m_Engine);
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
@@ -224,7 +235,7 @@ namespace GASS
 	}
 
 
-	ScriptControllerPtr ScriptManager::LoadScript(const std::string &script)
+	ScriptControllerPtr ScriptManager::LoadScript(const std::string &script,const std::string &init_func_arg)
 	{
 		int r;
 		// Find the cached controller
@@ -315,7 +326,9 @@ namespace GASS
 
 			// Find the optional event handlers
 			ctrl->m_UpdateFunction     = type->GetMethodByDecl("void OnUpdate(double)");
-			ctrl->m_InitFunction     = type->GetMethodByDecl("void OnInit(SceneObject @)");
+			//ctrl->m_InitFunction     = type->GetMethodByDecl("void OnInit(SceneObject @)");
+			std::string final_init_func = "void OnInit(" + init_func_arg + ")";
+			ctrl->m_InitFunction     = type->GetMethodByDecl(final_init_func.c_str());
 		}
 		return ctrl;
 	}

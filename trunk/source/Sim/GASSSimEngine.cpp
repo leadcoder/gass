@@ -30,35 +30,6 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
-//include to ensure interface export
-/*#include "Sim/Interface/GASSIGraphicsSceneManager.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/Interface/GASSILightComponent.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSITerrainComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSIShape.h"
-#include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Interface/GASSIWaypointListComponent.h"
-#include "Sim/Interface/GASSIPhysicsSystem.h"
-#include "Sim/Interface/GASSICollisionSystem.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Sim/Interface/GASSIInputSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIResourceComponent.h"
-#include "Sim/Interface/GASSIRenderWindow.h"
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Interface/GASSIWorldLocationComponent.h"	
-#include "Sim/Interface/GASSIProjectionSceneManager.h"
-#include "Sim/Interface/GASSITemplateSourceComponent.h"
-#include "Sim/Interface/GASSIGroupComponent.h"
-#include "Sim/Interface/GASSIGraphComponent.h"
-#include "Sim/Interface/GASSIGraphNodeComponent.h"
-#include "Sim/Interface/GASSIGraphEdgeComponent.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"*/
-
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSceneObject.h"
@@ -151,9 +122,12 @@ namespace GASS
 		//Load templates
 		ReloadTemplates();
 
-		//intilize profiler
+		//intialize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
+
+		//Catch script events
+		
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}

@@ -293,5 +293,19 @@ namespace GASS
 		ResourceLocationPtr m_Location;
 	};
 	typedef SPTR<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
+
+	class ScriptEvent : public SystemEventMessage
+	{
+	public:
+		ScriptEvent(const std::string &message, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
+			  m_Message(message)  { }
+		  std::string GetMessage()const {return m_Message;}
+	private:
+		std::string m_Message;
+	};
+	typedef SPTR<ScriptEvent> ScriptEventPtr;
+
+
 }
 #endif
