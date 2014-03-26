@@ -79,7 +79,7 @@ namespace GASS
 		OSGGraphicsSceneManagerPtr sm = cam_comp->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		m_OSGView->setSceneData(sm->GetOSGRootNode());
 
-		//view attched to scene node!
+		//view attached to scene node!
 		ViewportPtr viewport = shared_from_this();
 		SystemMessagePtr cam_message(new CameraChangedEvent(viewport));
 		SimEngine::Get().GetSimSystemManager()->PostMessage(cam_message);

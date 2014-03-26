@@ -239,7 +239,6 @@ namespace GASS
 	{
 		int r;
 		// Find the cached controller
-
 		std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
 		if( iter != m_ScriptControllers.end())
 		{

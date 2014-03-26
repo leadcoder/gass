@@ -17,86 +17,55 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
-#include "MyGUISystem.h"
+#include "MyGUIOgreSystem.h"
 #include <stdio.h>
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include <MyGUI.h>
 #include "MyGUI_LastHeader.h"
+#include <MyGUI_OgrePlatform.h>
 #include "StatisticInfo.h"
 #include "MainMenu.h"
 
 namespace GASS
 {
-	MyGUISystem::MyGUISystem() : mGUI(NULL)
+	MyGUIOgreSystem::MyGUIOgreSystem() 
 	{
 
 	}
 
-	MyGUISystem::~MyGUISystem()
+	MyGUIOgreSystem::~MyGUIOgreSystem()
 	{
 
 	}
 
-	void MyGUISystem::RegisterReflection()
+	void MyGUIOgreSystem::RegisterReflection()
 	{
-
+		SystemFactory::GetPtr()->Register("MyGUIOgreSystem",new GASS::Creator<MyGUIOgreSystem, ISystem>);
 	}
 
-	void MyGUISystem::Init()
+	void MyGUIOgreSystem::Init()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-	}
-
-	void MyGUISystem::InitGUI()
-	{
-		mGUI = new MyGUI::Gui();
-		mGUI->initialise("MyGUI_Core.xml");
-		MyGUI::ResourceManager::getInstance().load("MyGUI_BlackOrangeTheme.xml");
-	//	mInfo = new diagnostic::StatisticInfo();
-	//	mInfo->setVisible(true);
-		MainMenu* menu = new MainMenu(NULL);
-		menu->Init();
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUIOgreSystem::OnInputSystemLoaded,InputSystemLoadedEvent,0));
+		MyGUISystem::Init();
 	}
 	
-	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)
+	void MyGUIOgreSystem::OnInputSystemLoaded(InputSystemLoadedEventPtr message)
 	{
-		//load main menu from layout
+		InputSystemPtr input_system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
+		input_system->AddKeyListener(this);
+		input_system->AddMouseListener(this);
 
-		/*MyGUI::MenuCtrlPtr menu = mGUI->createWidget<MyGUI::MenuCtrl>("PopupMenu", MyGUI::IntCoord(200, 20, 150, 100), MyGUI::Align::Default, "Overlapped");
-
-		MyGUI::MenuItemPtr item1 = menu->addItem("line1", MyGUI::MenuItemType::Popup);
-		MyGUI::MenuItemPtr item2 = menu->addItem("line2", MyGUI::MenuItemType::Normal);
-		MyGUI::MenuItemPtr item3 = menu->addItem("line3", MyGUI::MenuItemType::Popup);
-
-		MyGUI::MenuCtrlPtr submenu1 = item1->createItemChild();
-		MyGUI::MenuItemPtr subitem1 = submenu1->addItem("subline1", MyGUI::MenuItemType::Normal);
-		MyGUI::MenuItemPtr subitem2 = submenu1->addItem("subline2", MyGUI::MenuItemType::Popup);
-
-		MyGUI::MenuCtrlPtr submenu2 = item3->createItemChild();
-		MyGUI::MenuItemPtr subitem21 = submenu2->addItem("subline21", MyGUI::MenuItemType::Normal);
-		MyGUI::MenuItemPtr subitem22 = submenu2->addItem("subline22", MyGUI::MenuItemType::Normal);
-
-		MyGUI::MenuCtrlPtr submenu21 = subitem2->createItemChild();
-		MyGUI::MenuItemPtr subitem31 = submenu21->addItem("subline31", MyGUI::MenuItemType::Normal);
-
-		menu->setVisible(true);*/
+		MyGUI::OgrePlatform* m_Platform = new MyGUI::OgrePlatform();
+		Ogre::SceneManager* sm = Ogre::Root::getSingleton().getSceneManagerIterator().getNext();
+		//Ogre::Camera* ocam = sm->getCameraIterator().getNext();
+		Ogre::RenderTarget *target = NULL;
+		if (Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().hasMoreElements())
+			target = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator().getNext();
+		m_Platform->initialise((Ogre::RenderWindow*)target, sm,"MyGUI");
+		InitGUI();
 	}
 
-	void MyGUISystem::Update(double delta_time)
-	{
-		/*if(mInfo )
-		{
-			mInfo->change("FPS", 10);
-			mInfo->change("triangle", 10);
-			mInfo->change("batch", 10);
-			mInfo->change("batch gui", 10);
-			mInfo->update();
-		}*/
-	}
-
-	bool MyGUISystem::MouseMoved(const MouseData &data)
+	/*bool MyGUIOgreSystem::MouseMoved(const MouseData &data)
 	{
 		if(mGUI)
 		{
@@ -104,8 +73,7 @@ namespace GASS
 		}
 		return true;
 	}
-
-	bool MyGUISystem::MousePressed(const MouseData &data,MouseButtonId id )
+	bool MyGUIOgreSystem::MousePressed(const MouseData &data,MouseButtonId id )
 	{
 		if(mGUI)
 		{
@@ -115,8 +83,7 @@ namespace GASS
 		//CEGUI::System::getSingleton().injectMouseButtonDown(ConvertOISButtonToCegui(id));
 		return true;
 	}
-
-	bool MyGUISystem::MouseReleased(const MouseData &data,MouseButtonId id )
+	bool MyGUIOgreSystem::MouseReleased(const MouseData &data,MouseButtonId id )
 	{
 		if(mGUI)
 		{
@@ -128,7 +95,7 @@ namespace GASS
 
 	}
 
-	bool MyGUISystem::KeyPressed(int key, unsigned int text)
+	bool MyGUIOgreSystem::KeyPressed(int key, unsigned int text)
 	{
 
 		// do event injection
@@ -142,10 +109,10 @@ namespace GASS
 		return true;
 	}
 
-	bool MyGUISystem::KeyReleased( int key, unsigned int text)
+	bool MyGUIOgreSystem::KeyReleased( int key, unsigned int text)
 	{
 		//CEGUI::System::getSingleton().injectKeyUp(key);
 		return true;
-	}
+	}*/
 
 }

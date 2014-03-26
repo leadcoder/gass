@@ -79,6 +79,13 @@ namespace GASS
 		*/
 		bool HasResourceGroup(const std::string &name);
 
+		
+		/**
+			Get first resource group by name
+			@name Name of the resource group
+		*/
+		ResourceGroupPtr GetFirstResourceGroupByName(const std::string &name);
+		
 		/**
 			Check if extension is associated with resource type
 			@extension File extension to check

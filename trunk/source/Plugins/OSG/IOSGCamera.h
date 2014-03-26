@@ -20,52 +20,20 @@
 
 #pragma once
 #include "Sim/GASS.h"
-#include "../IOSGCamera.h"
 #include <osg/Camera>
+#include <osg/ref_ptr>
 
 namespace GASS
 {
-	class OSGCameraComponent : public Reflection<OSGCameraComponent,BaseSceneComponent>, public ICameraComponent, public IOSGCamera
+	class IOSGCamera
 	{
 	public:
-		OSGCameraComponent();
-		virtual ~OSGCameraComponent();
-		static void RegisterReflection();
-		virtual void OnInitialize();
-		//ICameraComponent interface
-		virtual bool GetCameraToViewportRay(float screenx, float screeny, Vec3 &ray_start, Vec3 &ray_dir) const;
-		osg::ref_ptr<osg::Camera> GetOSGCamera() const {return m_OSGCamera;}
-		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
-		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}
+		virtual ~IOSGCamera(){};
+		virtual osg::ref_ptr<osg::Camera> GetOSGCamera() const = 0;
 	protected:
-		void OnParameter(CameraParameterRequestPtr message);
-		void OnTransformationChanged(TransformationChangedEventPtr message);
-		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		float GetFarClipDistance() const;
-		void SetFarClipDistance(float value);
-		float GetNearClipDistance() const;
-		void SetNearClipDistance(float value);
-		float GetFov() const;
-		void SetFov(float value);
-		bool GetOrtho() const;
-		void SetOrtho(bool value);
-		void UpdateFromLocation();
-		void UpdateProjection();
-	
-		osg::ref_ptr<osg::Camera> m_OSGCamera;
-		//cameras to reflect
-		//std::map<std::string,osg::ref_ptr<osg::Camera> > m_OSGCameras;
-
-		float m_NearClip;
-		float m_FarClip;
-		float m_Fov;
-		bool m_Ortho;
-		float m_OrthoWindowHeight;
-		bool m_UpdateCameraFromLocation;
 	};
 
-	typedef SPTR<OSGCameraComponent> OSGCameraComponentPtr;
-	typedef WPTR<OSGCameraComponent> OSGCameraComponentWeakPtr;
+	typedef SPTR<IOSGCamera> OSGCameraPtr;
+	typedef WPTR<IOSGCamera> OSGCameraWeakPtr;
 }
 

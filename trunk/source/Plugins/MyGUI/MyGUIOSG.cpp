@@ -1,9 +1,9 @@
+#include "MyGUIOSGSystem.h"
 #include "MyGUIOSG.h"
 #include "MainMenu.h"
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
 #include "StatisticInfo.h"
-#include "MyGUISystem.h"
 
 bool MYGUIOSGEventHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa )
 {
@@ -28,7 +28,7 @@ bool MYGUIOSGEventHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIA
     return false;
 }
 
-MYGUIOSGDrawable::MYGUIOSGDrawable(GASS::MyGUISystem *system)
+MYGUIOSGPlatformProxy::MYGUIOSGPlatformProxy(GASS::MyGUIOSGSystem *system)
 :   m_OpenGLPlatform(0),
     m_ActiveContextID(0), 
 	m_Initialized(false),
@@ -39,7 +39,7 @@ MYGUIOSGDrawable::MYGUIOSGDrawable(GASS::MyGUISystem *system)
     getOrCreateStateSet()->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
 }
 
-MYGUIOSGDrawable::MYGUIOSGDrawable( const MYGUIOSGDrawable& copy,const osg::CopyOp& copyop )
+MYGUIOSGPlatformProxy::MYGUIOSGPlatformProxy( const MYGUIOSGPlatformProxy& copy,const osg::CopyOp& copyop )
 :   osg::Drawable(copy, copyop), 
 	m_EventsToHandle(copy.m_EventsToHandle),
     m_OpenGLPlatform(copy.m_OpenGLPlatform),
@@ -48,7 +48,7 @@ MYGUIOSGDrawable::MYGUIOSGDrawable( const MYGUIOSGDrawable& copy,const osg::Copy
 	m_GUISystem(copy.m_GUISystem)
 {}
 
-void* MYGUIOSGDrawable::loadImage( int& width, int& height, MyGUI::PixelFormat& format, const std::string& filename )
+void* MYGUIOSGPlatformProxy::loadImage( int& width, int& height, MyGUI::PixelFormat& format, const std::string& filename )
 {
     std::string fullname = MyGUI::OpenGLDataManager::getInstance().getDataPath( filename );
     osg::ref_ptr<osg::Image> image = osgDB::readImageFile( fullname );
@@ -97,7 +97,7 @@ void* MYGUIOSGDrawable::loadImage( int& width, int& height, MyGUI::PixelFormat& 
     return result;
 }
 
-void MYGUIOSGDrawable::saveImage( int width, int height, MyGUI::PixelFormat format, void* texture, const std::string& filename )
+void MYGUIOSGPlatformProxy::saveImage( int width, int height, MyGUI::PixelFormat format, void* texture, const std::string& filename )
 {
     GLenum pixelFormat = 0;
     unsigned int internalFormat = 0;
@@ -121,12 +121,12 @@ void MYGUIOSGDrawable::saveImage( int width, int height, MyGUI::PixelFormat form
     osgDB::writeImageFile( *image, filename );
 }
 
-void MYGUIOSGDrawable::drawImplementation( osg::RenderInfo& renderInfo ) const
+void MYGUIOSGPlatformProxy::drawImplementation( osg::RenderInfo& renderInfo ) const
 {
     unsigned int contextID = renderInfo.getContextID();
     if ( !m_Initialized )
     {
-		MYGUIOSGDrawable* constMe = const_cast<MYGUIOSGDrawable*>(this);
+		MYGUIOSGPlatformProxy* constMe = const_cast<MYGUIOSGPlatformProxy*>(this);
 		constMe->m_ActiveContextID = contextID;
 		constMe->m_OpenGLPlatform = m_GUISystem->InitializeOpenGLPlatform();
 	    constMe->m_Initialized = true;
@@ -149,14 +149,14 @@ void MYGUIOSGDrawable::drawImplementation( osg::RenderInfo& renderInfo ) const
     }
 }
 
-void MYGUIOSGDrawable::releaseGLObjects( osg::State* state ) const
+void MYGUIOSGPlatformProxy::releaseGLObjects( osg::State* state ) const
 {
     if ( state && state->getGraphicsContext() )
     {
         osg::GraphicsContext* gc = state->getGraphicsContext();
         if ( gc->makeCurrent() )
         {
-            MYGUIOSGDrawable* constMe = const_cast<MYGUIOSGDrawable*>(this);
+            MYGUIOSGPlatformProxy* constMe = const_cast<MYGUIOSGPlatformProxy*>(this);
             if ( m_GUISystem)
             {
                 m_GUISystem->ShutdownOSG();
@@ -172,7 +172,7 @@ void MYGUIOSGDrawable::releaseGLObjects( osg::State* state ) const
     }
 }
 
-void MYGUIOSGDrawable::updateEvents() const
+void MYGUIOSGPlatformProxy::updateEvents() const
 {
     unsigned int size = m_EventsToHandle.size();
     for ( unsigned int i=0; i<size; ++i )
@@ -209,11 +209,11 @@ void MYGUIOSGDrawable::updateEvents() const
         default:
             break;
         }
-        const_cast<MYGUIOSGDrawable*>(this)->m_EventsToHandle.pop();
+        const_cast<MYGUIOSGPlatformProxy*>(this)->m_EventsToHandle.pop();
     }
 }
 
-MyGUI::MouseButton MYGUIOSGDrawable::convertMouseButton( int button ) const
+MyGUI::MouseButton MYGUIOSGPlatformProxy::convertMouseButton( int button ) const
 {
     switch ( button )
     {
@@ -228,7 +228,7 @@ MyGUI::MouseButton MYGUIOSGDrawable::convertMouseButton( int button ) const
     return MyGUI::MouseButton::None;
 }
 
-MyGUI::KeyCode MYGUIOSGDrawable::convertKeyCode( int key ) const
+MyGUI::KeyCode MYGUIOSGPlatformProxy::convertKeyCode( int key ) const
 {
     static std::map<int, MyGUI::KeyCode> s_keyCodeMap;
     if ( !s_keyCodeMap.size() )

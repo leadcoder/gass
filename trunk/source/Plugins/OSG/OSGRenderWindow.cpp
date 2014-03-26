@@ -96,7 +96,7 @@ namespace GASS
 		view->getDatabasePager()->setDoPreCompile( true );
 		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
 		
-		// add some OSG handlers, maybee only in first view?
+		// add some OSG handlers, maybe only in first view?
 		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 		stats->setKeyEventTogglesOnScreenStats('y');
 		stats->setKeyEventPrintsOutStats('¤');

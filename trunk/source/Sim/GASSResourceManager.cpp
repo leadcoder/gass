@@ -94,6 +94,20 @@ namespace GASS
 		return false;
 	}
 
+	ResourceGroupPtr ResourceManager::GetFirstResourceGroupByName(const std::string &name)
+	{
+		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		while(iter != m_ResourceGroups.end())
+		{
+			if(name == (*iter)->GetName())
+			{
+				return (*iter);
+			}
+			++iter;
+		}
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"resource group not found:" + name, "ResourceManager::GetFirstResourceGroupByName");
+	}
+
 	void ResourceManager::AddResourceGroup(ResourceGroupPtr group)
 	{
 		m_ResourceGroups.push_back(group);

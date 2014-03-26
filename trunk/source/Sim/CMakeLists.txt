@@ -19,6 +19,8 @@ add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} GASSCore ${GASS_COMMON_LINK_LIBRARIES})
 
+set_target_properties (${LIB_NAME} PROPERTIES LINK_FLAGS_RELEASE "/LTCG" )
+
 #install section
 gass_install_target()
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
