@@ -7,6 +7,17 @@ include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/s
 set(CPP_FILES "source/PhysicsDemo.cpp")
 set(H_FILES "")
 
+set(PHYSX_DIR $ENV{PHYSX_HOME}  CACHE PATH "PhysX folder")
+
+#msvc only, need other check if gcc
+if(${CMAKE_CL_64})
+	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win64")
+	set(DLL_SUFFIX "_x64")
+else()
+	set(PHYSX_BIN_DIR "${PHYSX_DIR}/lib/win32")
+	set(DLL_SUFFIX "_x86")
+endif()
+
 #Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
 
@@ -71,6 +82,12 @@ endif()
 	${OSG_DIR}/bin/osg80-osgWidget.dll
 	${OSG_DIR}/bin/osg80-osgParticle.dll
 	${OSG_DIR}/bin/osg80-osgShadow.dll
+	
+	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
 	)
 	set(DEP_DLL_FILES_DEBUG 
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
@@ -108,6 +125,11 @@ endif()
 	${OSG_DIR}/bin/osg80-osgWidgetd.dll
 	${OSG_DIR}/bin/ot12-OpenThreadsd.dll
 	${OSG_DIR}/bin/zlib1d.dll
+	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3CharacterKinematicCHECKED${DLL_SUFFIX}.dll
+	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
 	)
 	
 	

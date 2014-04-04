@@ -108,7 +108,7 @@ int run(int argc, char* argv[])
 		plane_template->AddBaseSceneComponent("LocationComponent");
 		plane_template->AddBaseSceneComponent("ManualMeshComponent");
 		plane_template->AddBaseSceneComponent("PhysicsPlaneGeometryComponent");
-		GASS::BaseComponentPtr plane_comp  = plane_template->AddBaseSceneComponent("PlaneGeometryComponent");
+		GASS::ComponentPtr plane_comp  = plane_template->AddBaseSceneComponent("PlaneGeometryComponent");
 		plane_comp->SetPropertyByType("Size",GASS::Vec2(100,100));
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(plane_template);
 	}

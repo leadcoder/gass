@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
 		plane_template->AddBaseSceneComponent("LocationComponent");
 		plane_template->AddBaseSceneComponent("ManualMeshComponent");
 		plane_template->AddBaseSceneComponent("PhysicsPlaneGeometryComponent");
-		GASS::BaseComponentPtr plane_comp  = plane_template->AddBaseSceneComponent("PlaneGeometryComponent");
+		GASS::ComponentPtr plane_comp  = plane_template->AddBaseSceneComponent("PlaneGeometryComponent");
 		plane_comp->SetPropertyByType("Size",GASS::Vec2(100,100));
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(plane_template);
 	}
@@ -117,9 +117,9 @@ int main(int argc, char* argv[])
 			GASS::BaseSceneComponentPtr mmc  = vehicle_template->AddBaseSceneComponent("ManualMeshComponent");
 			mmc->SetPropertyByType("CastShadow",true);
 
-			GASS::BaseComponentPtr body_comp = vehicle_template->AddBaseSceneComponent("PhysicsBodyComponent");
+			GASS::ComponentPtr body_comp = vehicle_template->AddBaseSceneComponent("PhysicsBodyComponent");
 			body_comp->SetPropertyByType("Mass",1.0f);
-			GASS::BaseComponentPtr geom_comp = vehicle_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
+			GASS::ComponentPtr geom_comp = vehicle_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
 			geom_comp->SetPropertyByType("Offset",GASS::Vec3(0,-0.9,0));
 			GASS::BaseSceneComponentPtr box_comp  = vehicle_template->AddBaseSceneComponent("BoxGeometryComponent");
 			box_comp->SetPropertyByType("Size",GASS::Vec3(2,1,4));
