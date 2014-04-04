@@ -26,7 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -53,7 +53,7 @@ namespace GASS
 
 	void VehicleDebugComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VehicleDebugComponent",new Creator<VehicleDebugComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("VehicleDebugComponent",new Creator<VehicleDebugComponent, Component>);
 //		RegisterProperty<bool>("ShowWaypoint", &VehicleDebugComponent::GetShowWaypoint, &VehicleDebugComponent::SetShowWaypoint);
 	}
 
@@ -70,11 +70,11 @@ namespace GASS
 			debug_template->SetName("VehicleDebugWaypointTemplate");
 			ComponentPtr location_comp (ComponentFactory::Get().Create("LocationComponent"));
 			location_comp->SetName("LocationComp");
-			BaseComponentPtr text_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("TextComponent"));
+			ComponentPtr text_comp = ComponentFactory::Get().Create("TextComponent");
 			text_comp->SetName("TextComp");
 			text_comp->SetPropertyByType("Text",std::string("Next waypoint"));
 
-			BaseComponentPtr bb_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("BillboardComponent"));
+			ComponentPtr bb_comp = ComponentFactory::Get().Create("BillboardComponent");
 			bb_comp->SetName("BBComp");
 			
 			bb_comp->SetPropertyByType("Material",std::string("node.dds"));

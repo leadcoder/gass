@@ -38,7 +38,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/System/GASSISystem.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"

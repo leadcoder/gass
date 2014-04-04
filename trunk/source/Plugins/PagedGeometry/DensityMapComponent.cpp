@@ -38,7 +38,7 @@
 
 //#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "TreeGeometryComponent.h"
@@ -52,7 +52,7 @@ namespace GASS
 		ext.push_back("png");
 		ext.push_back("tga");
 		
-		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("DensityMapComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -124,7 +124,7 @@ namespace GASS
 			return;	
 		}
 
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
@@ -215,7 +215,7 @@ namespace GASS
 	void DensityMapComponent::OnRoadMessage(RoadRequestPtr message)
 	{
 
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
 
 		Ogre::Real brush_size = message->GetPaintWidth();

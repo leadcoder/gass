@@ -56,7 +56,7 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("NetworkMasterComponent",new Creator<RakNetNetworkMasterComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("NetworkMasterComponent",new Creator<RakNetNetworkMasterComponent, Component>);
 		RegisterVectorProperty<std::string>("Attributes", &RakNetNetworkMasterComponent::GetAttributes, &RakNetNetworkMasterComponent::SetAttributes);
 	}
 
@@ -96,7 +96,7 @@ namespace GASS
 		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
-		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
+		ComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());

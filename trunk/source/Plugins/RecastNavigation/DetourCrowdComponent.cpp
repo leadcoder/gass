@@ -51,7 +51,7 @@ namespace GASS
 
 	void DetourCrowdComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("DetourCrowdComponent",new Creator<DetourCrowdComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("DetourCrowdComponent",new Creator<DetourCrowdComponent, Component>);
 		RegisterProperty<bool>("AnticipateTurns", &GetAnticipateTurns, &SetAnticipateTurns);
 		RegisterProperty<bool>("OptimizeVis", &GetOptimizeVis, &SetOptimizeVis);
 		RegisterProperty<bool>("OptimizeTopo", &GetOptimizeTopo, &SetOptimizeTopo);

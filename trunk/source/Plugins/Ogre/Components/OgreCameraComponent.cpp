@@ -29,7 +29,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -64,7 +64,7 @@ namespace GASS
 
 	void OgreCameraComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, Component>);
 		ADD_DEPENDENCY("OgreLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 

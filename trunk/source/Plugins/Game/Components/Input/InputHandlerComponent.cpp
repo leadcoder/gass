@@ -45,7 +45,7 @@ namespace GASS
 
 	void InputHandlerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, Component>);
 		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
 		//RegisterVectorProperty<std::string>("CameraList", &InputHandlerComponent::GetCameraMapping, &InputHandlerComponent::SetCameraMapping);
 	}
@@ -67,7 +67,7 @@ namespace GASS
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage,0));
 
-		/*IComponentContainerTemplate::ComponentVector components;
+		/*ComponentContainerTemplate::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
 		
 		//configure all cameras

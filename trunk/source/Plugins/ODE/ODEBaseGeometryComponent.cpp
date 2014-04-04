@@ -24,7 +24,7 @@
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
@@ -358,7 +358,7 @@ namespace GASS
 	SceneObjectPtr ODEBaseGeometryComponent::GetDebugObject()
 	{
 		SceneObjectPtr scene_object;
-		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -378,12 +378,12 @@ namespace GASS
 				SceneObjectTemplatePtr debug_template (new SceneObjectTemplate);
 				debug_template->SetName("DebugPhysics");
 
-				BaseComponentPtr location_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("LocationComponent"));
+				ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
 				location_comp->SetName("LocationComp");
 				location_comp->SetPropertyByType("AttachToParent",true);
 
 
-				BaseComponentPtr mesh_comp = DYNAMIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create("ManualMeshComponent"));
+				ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
 				mesh_comp->SetName("MeshComp");
 				mesh_comp->SetPropertyByType("CastShadows",false);
 

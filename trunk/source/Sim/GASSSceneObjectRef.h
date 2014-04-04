@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"

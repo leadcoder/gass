@@ -1,7 +1,7 @@
 #include "GASSLOSComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
@@ -36,7 +36,7 @@ namespace GASS
 
 	void LOSComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LOSComponent",new Creator<LOSComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LOSComponent",new Creator<LOSComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LOSComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::LOSComponent::GetRadius, &GASS::LOSComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

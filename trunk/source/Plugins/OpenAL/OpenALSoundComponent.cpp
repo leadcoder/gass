@@ -31,7 +31,7 @@ namespace GASS
 
 	void OpenALSoundComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OpenALSoundComponent",new Creator<OpenALSoundComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("OpenALSoundComponent",new Creator<OpenALSoundComponent, Component>);
 		RegisterProperty<float>("MinDistance", &OpenALSoundComponent::GetMinDistance, &OpenALSoundComponent::SetMinDistance);
 		RegisterProperty<float>("MaxDistance", &OpenALSoundComponent::GetMaxDistance, &OpenALSoundComponent::SetMaxDistance);
 		RegisterProperty<float>("RolloffFactor", &OpenALSoundComponent::GetRolloff, &OpenALSoundComponent::SetRolloff);

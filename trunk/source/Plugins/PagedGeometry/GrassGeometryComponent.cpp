@@ -34,7 +34,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 
@@ -70,7 +70,7 @@ namespace GASS
 
 	void GrassGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("GrassGeometryComponent",new Creator<GrassGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("GrassGeometryComponent",new Creator<GrassGeometryComponent, Component>);
 		RegisterProperty<std::string>("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		RegisterProperty<float>("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor,
@@ -538,7 +538,7 @@ namespace GASS
 		if(terrain)
 			return terrain;
 
-		IComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
+		ComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());

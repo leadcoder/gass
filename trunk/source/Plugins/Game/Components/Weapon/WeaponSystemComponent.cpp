@@ -68,7 +68,7 @@ namespace GASS
 
 	void WeaponSystemComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("WeaponSystemComponent",new Creator<WeaponSystemComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("WeaponSystemComponent",new Creator<WeaponSystemComponent, Component>);
 		RegisterProperty<std::string>("ProjectileTemplate", &WeaponSystemComponent::GetProjectileTemplate, &WeaponSystemComponent::SetProjectileTemplate);
 		RegisterProperty<float>("ProjectileStartOffset", &WeaponSystemComponent::GetProjectileStartOffset, &WeaponSystemComponent::SetProjectileStartOffset);
 		RegisterProperty<float>("ProjectileStartVelocity", &WeaponSystemComponent::GetProjectileStartVelocity, &WeaponSystemComponent::SetProjectileStartVelocity);

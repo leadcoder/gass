@@ -50,7 +50,7 @@ namespace GASS
 
 	void ArrowGeometryComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("ArrowGeometryComponent",new GASS::Creator<ArrowGeometryComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("ArrowGeometryComponent",new GASS::Creator<ArrowGeometryComponent, Component>);
 		ADD_DEPENDENCY("LocationComponent")
 		ADD_DEPENDENCY("ManualMeshComponent")
 		RegisterProperty<Vec2>("Size", &GASS::ArrowGeometryComponent::GetSize, &GASS::ArrowGeometryComponent::SetSize);

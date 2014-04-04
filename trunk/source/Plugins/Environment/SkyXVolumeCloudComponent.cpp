@@ -23,7 +23,7 @@
 
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
@@ -57,7 +57,7 @@ namespace GASS
 
 	void SkyXVolumeCloudComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SkyXVolumeCloudComponent",new Creator<SkyXVolumeCloudComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SkyXVolumeCloudComponent",new Creator<SkyXVolumeCloudComponent, Component>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXVolumeCloudComponent", OF_VISIBLE )));
 

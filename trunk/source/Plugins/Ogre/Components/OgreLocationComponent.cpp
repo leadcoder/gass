@@ -60,7 +60,7 @@ namespace GASS
 
 	void OgreLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 		
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,
@@ -81,7 +81,7 @@ namespace GASS
 		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent,OgreLocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OgreLocationComponent,BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
-		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OgreLocationComponent, SetAttachToParent), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OgreLocationComponent, GetAttachToParent), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHOD(OgreLocationComponent, GetPosition), asCALL_THISCALL);assert(r >= 0);

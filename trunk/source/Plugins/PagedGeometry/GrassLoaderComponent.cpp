@@ -36,7 +36,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
@@ -71,7 +71,7 @@ namespace GASS
 		ext.push_back("png");
 		ext.push_back("tga");
 
-		ComponentFactory::GetPtr()->Register("GrassLoaderComponent",new Creator<GrassLoaderComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("GrassLoaderComponent",new Creator<GrassLoaderComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLoaderComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Can only be specified in template",PF_VISIBLE)));
@@ -256,7 +256,7 @@ namespace GASS
 		const std::string denmapname = "density_map_" + GetName() + ".tga";
 		m_DensityTexture->loadImage(m_DensityImage);
 		//reload all terrain grass
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
@@ -408,7 +408,7 @@ namespace GASS
 
 		int denmap_width = 0;
 		std::vector<Ogre::uchar*> layer_data;
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{

@@ -49,7 +49,7 @@ namespace GASS
 
 	void OSGLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OSGLocationComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OSGLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition,
@@ -82,7 +82,7 @@ namespace GASS
 		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent,OSGLocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGLocationComponent,BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
-		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGLocationComponent, SetAttachToParent), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OSGLocationComponent, GetAttachToParent), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHODPR(OSGLocationComponent, GetPosition,() const, Vec3), asCALL_THISCALL);assert(r >= 0);
@@ -243,7 +243,7 @@ namespace GASS
 		
 		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos,rot,scale)));
 		//send for all child tranforms also?
-		GASS::IComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
+		GASS::ComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr obj = STATIC_PTR_CAST<SceneObject>(iter.getNext());

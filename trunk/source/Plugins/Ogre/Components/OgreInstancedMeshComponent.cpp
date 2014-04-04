@@ -64,7 +64,7 @@ namespace GASS
 
 	void OgreInstancedMeshComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("InstancedMeshComponent",new GASS::Creator<OgreInstancedMeshComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("InstancedMeshComponent",new GASS::Creator<OgreInstancedMeshComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreInstancedMeshComponent::GetRenderQueue, &GASS::OgreInstancedMeshComponent::SetRenderQueue);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreInstancedMeshComponent::GetCastShadow, &GASS::OgreInstancedMeshComponent::SetCastShadow);

@@ -25,6 +25,7 @@
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
@@ -78,7 +79,7 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, Component>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);	
 		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
 		RegisterProperty<ClientLocationMode>("ClientLocationMode", &RakNetLocationTransferComponent::GetClientLocationMode, &RakNetLocationTransferComponent::SetClientLocationMode);
@@ -114,7 +115,7 @@ namespace GASS
 			PhysicsBodyStateRequestPtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::PhysicsBodyState::DISABLE));
 			GetSceneObject()->PostRequest(disable_msg);
 
-			IComponentContainerTemplate::ComponentVector components;
+			ComponentContainerTemplate::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
 			for(int i = 0;  i< components.size(); i++)
 			{

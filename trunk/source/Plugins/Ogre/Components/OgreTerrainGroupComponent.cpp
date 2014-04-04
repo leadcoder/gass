@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSScene.h"
@@ -73,7 +73,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OgreTerrainGroupComponent",new Creator<OgreTerrainGroupComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("OgreTerrainGroupComponent",new Creator<OgreTerrainGroupComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OgreTerrainGroupComponent", OF_VISIBLE)));
 		RegisterProperty<float>("ImportScale", &GASS::OgreTerrainGroupComponent::GetImportScale, &GASS::OgreTerrainGroupComponent::SetImportScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -148,7 +148,7 @@ namespace GASS
 			m_TerrainGroup->setOrigin(OgreConvert::ToOgre(pos));
 
 			//update page positions
-			BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+			ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -223,7 +223,7 @@ namespace GASS
 			m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
 
 			//Get all components
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
@@ -393,7 +393,7 @@ namespace GASS
 	void OgreTerrainGroupComponent::RemoveAllPages()
 	{
 		//remove all children
-		BaseComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -428,7 +428,7 @@ namespace GASS
 		if(m_TerrainGroup)
 		{
 			//Get all components
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
@@ -451,7 +451,7 @@ namespace GASS
 		if(m_TerrainGroup)
 		{
 			//Get all components
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)

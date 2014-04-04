@@ -33,7 +33,7 @@ namespace GASS
 	FDECL(ResourceManager)
 	FDECL(SimSystemManager)
 	FDECL(RunTimeController)
-	FDECL(BaseComponentContainerTemplateManager)
+	FDECL(ComponentContainerTemplateManager)
 	FDECL(SceneObject)
 	FDECL(Scene)
 	FDECL(ScriptManager)
@@ -110,10 +110,10 @@ namespace GASS
 		
 		/**
 		Get the object template manager. 
-		The oject template manager holds templates for sim objects that can be created.
-		See BaseComponentContainerTemplateManager inside the component system from more info.
+		The object template manager holds templates for sim objects that can be created.
+		See ComponentContainerTemplateManager inside the component system from more info.
 		*/
-		BaseComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
+		ComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
 
 		/**
 			Get the runtime control manager. See RuntimeController class for more information
@@ -153,7 +153,7 @@ namespace GASS
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
-		BaseComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
+		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		RunTimeControllerPtr m_RTC;
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;

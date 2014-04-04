@@ -53,7 +53,7 @@ namespace GASS
 
 	void AdaptiveSteerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("AdaptiveSteerComponent",new Creator<AdaptiveSteerComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("AdaptiveSteerComponent",new Creator<AdaptiveSteerComponent, Component>);
 		RegisterProperty<float>("SteerForce", &AdaptiveSteerComponent::GetSteerForce, &AdaptiveSteerComponent::SetSteerForce);
 		RegisterProperty<Vec2>("MaxSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMaxSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMaxSteerAngleAtSpeed);
 		RegisterProperty<Vec2>("MinSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMinSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMinSteerAngleAtSpeed);

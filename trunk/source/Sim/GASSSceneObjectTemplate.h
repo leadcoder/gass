@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplate.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 
@@ -36,7 +36,7 @@ namespace GASS
 	typedef WPTR<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
 	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
-	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate , BaseComponentContainerTemplate>
+	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate , ComponentContainerTemplate>
 	{
 	public:
 		SceneObjectTemplate();
@@ -47,13 +47,13 @@ namespace GASS
 		void SetInstantiable(bool value) {m_Instantiable = value;}
 		bool GetInstantiable() const {return m_Instantiable;}
 		/**
-		Convinces function for BaseSceneComponent's that call AddComponent on BaseComponentContainerTemplate
+		Convinces function for BaseSceneComponent's that call AddComponent on ComponentContainerTemplate
 		*/
 		BaseSceneComponentPtr AddBaseSceneComponent(const std::string &comp_name);
 
 
 		/**
-		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainerTemplate
+		Convinces function for BaseSceneComponent's that call GetComponent on ComponentContainerTemplate
 		*/
 		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
 	protected:

@@ -23,7 +23,7 @@
 
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
@@ -45,7 +45,7 @@ namespace GASS
 
 	void SkyXCloudLayerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SkyXCloudLayerComponent",new Creator<SkyXCloudLayerComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SkyXCloudLayerComponent",new Creator<SkyXCloudLayerComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXCloudLayerComponent", OF_VISIBLE )));
 		RegisterProperty<Float>("Scale", &SkyXCloudLayerComponent::GetScale, &SkyXCloudLayerComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

@@ -24,7 +24,7 @@
 #include "Plugins/Ogre/IOgreCameraProxy.h"
 #include "Plugins/Ogre/IOgreSceneManagerProxy.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSFileUtils.h"
@@ -73,7 +73,7 @@ namespace GASS
 
 	void HydraxWaterComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("HydraxWaterComponent",new Creator<HydraxWaterComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("HydraxWaterComponent",new Creator<HydraxWaterComponent, Component>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HydraxWaterComponent", OF_VISIBLE )));
 

@@ -73,7 +73,7 @@ namespace GASS
 
 	void OSGMeshComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 
 		RegisterProperty<ResourceHandle>("Filename", &GetMeshResource, &SetMeshResource,

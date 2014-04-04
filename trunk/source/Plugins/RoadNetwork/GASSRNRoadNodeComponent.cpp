@@ -19,7 +19,7 @@ namespace GASS
 
 	void RNRoadNodeComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RNRoadNodeComponent",new Creator<RNRoadNodeComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("RNRoadNodeComponent",new Creator<RNRoadNodeComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadNodeComponent", OF_VISIBLE)));
 	}
 

@@ -22,7 +22,7 @@
 #include "EntityTypeComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -56,7 +56,7 @@ namespace GASS
 
 	void EntityTypeComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("EntityTypeComponent",new Creator<EntityTypeComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("EntityTypeComponent",new Creator<EntityTypeComponent, Component>);
 		REG_PROPERTY(int,EntityKind,EntityTypeComponent)
 		REG_PROPERTY(int,Domain,EntityTypeComponent)
 		REG_PROPERTY(int,CountryCode,EntityTypeComponent)

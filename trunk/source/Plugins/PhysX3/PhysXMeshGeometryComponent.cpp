@@ -24,7 +24,7 @@
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
@@ -58,7 +58,7 @@ namespace GASS
 
 	void PhysXMeshGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<PhysXMeshGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<PhysXMeshGeometryComponent, Component>);
 	}
 
 	void PhysXMeshGeometryComponent::OnInitialize()

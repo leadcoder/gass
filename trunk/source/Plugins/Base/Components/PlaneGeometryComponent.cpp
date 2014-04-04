@@ -49,7 +49,7 @@ namespace GASS
 
 	void PlaneGeometryComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("PlaneGeometryComponent",new GASS::Creator<PlaneGeometryComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("PlaneGeometryComponent",new GASS::Creator<PlaneGeometryComponent, Component>);
 		RegisterProperty<Vec2>("Size", &GASS::PlaneGeometryComponent::GetSize, &GASS::PlaneGeometryComponent::SetSize);
 		RegisterProperty<float>("Transparency", &GASS::PlaneGeometryComponent::GetTransparency, &GASS::PlaneGeometryComponent::SetTransparency);
 		RegisterProperty<std::string>("Texture", &GASS::PlaneGeometryComponent::GetTexture, &GASS::PlaneGeometryComponent::SetTexture);

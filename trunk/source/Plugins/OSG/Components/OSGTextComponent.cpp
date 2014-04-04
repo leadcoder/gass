@@ -52,7 +52,7 @@ namespace GASS
 
 	void OSGTextComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, Component>);
 		RegisterProperty<ResourceHandle>("Font", &GetFont, &SetFont);
 		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
 		RegisterProperty<bool>("ScaleByDistance", &OSGTextComponent::GetScaleByDistance, &OSGTextComponent::SetScaleByDistance);

@@ -38,7 +38,7 @@ namespace GASS
 
 	void PhysXPlaneGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<PhysXPlaneGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<PhysXPlaneGeometryComponent, Component>);
 		RegisterProperty<std::string>("Material", &GASS::PhysXPlaneGeometryComponent::GetMaterial, &GASS::PhysXPlaneGeometryComponent::SetMaterial);
 	}
 

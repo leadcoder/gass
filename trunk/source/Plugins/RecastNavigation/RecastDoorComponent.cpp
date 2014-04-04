@@ -41,7 +41,7 @@ namespace GASS
 
 	void RecastDoorComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RecastDoorComponent",new Creator<RecastDoorComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("RecastDoorComponent",new Creator<RecastDoorComponent, Component>);
 		RegisterProperty<bool>("Open", &RecastDoorComponent::GetOpen, &RecastDoorComponent::SetOpen);
 	}
 

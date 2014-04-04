@@ -42,7 +42,7 @@ namespace GASS
 
 	void EditorComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("EditorComponent",new Creator<EditorComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("EditorComponent",new Creator<EditorComponent, Component>);
 		RegisterProperty<bool>("Lock",&EditorComponent::GetLock, &EditorComponent::SetLock);
 		RegisterProperty<bool>("Visible",&EditorComponent::GetVisible, &EditorComponent::SetVisible);
 		RegisterProperty<bool>("ChangeMaterialWhenSelected",&EditorComponent::GetChangeMaterialWhenSelected, &EditorComponent::SetChangeMaterialWhenSelected);

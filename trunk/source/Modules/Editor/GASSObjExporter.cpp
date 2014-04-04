@@ -18,7 +18,7 @@ namespace GASS
 
 	void ObjExporter::ExportFiles(const std::string &out_dir, SceneObjectPtr root_obj)
 	{
-		IComponentContainer::ComponentVector comps;
+		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,true);
 		std::map<std::string, SceneObjectPtr > meshmap;
 		for(int i = 0;  i <  comps.size(); i++)
@@ -45,7 +45,7 @@ namespace GASS
 
 	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive)
 	{
-		IComponentContainer::ComponentVector comps;
+		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,recursive);
 
 		LocationComponentPtr root_lc = root_obj->GetFirstComponentByClass<ILocationComponent>();

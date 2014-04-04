@@ -69,7 +69,7 @@ namespace GASS
 
 	void AutoAimComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("AutoAimComponent",new Creator<AutoAimComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("AutoAimComponent",new Creator<AutoAimComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("AutoAimComponent", OF_VISIBLE)));
 		RegisterProperty<float>("SteerForce", &AutoAimComponent::GetSteerForce, &AutoAimComponent::SetSteerForce,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

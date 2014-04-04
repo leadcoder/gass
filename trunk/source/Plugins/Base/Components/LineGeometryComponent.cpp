@@ -24,12 +24,12 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponent.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -67,7 +67,7 @@ namespace GASS
 
 	void LineGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LineGeometryComponent",new Creator<LineGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LineGeometryComponent",new Creator<LineGeometryComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LineGeometryComponent", OF_VISIBLE)));
 			
 		RegisterProperty<float>("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,

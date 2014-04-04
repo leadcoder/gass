@@ -54,7 +54,7 @@ namespace GASS
 
 	void OSGNodeProxyComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("OSGNodeProxyComponent",new GASS::Creator<OSGNodeProxyComponent, IComponent>);
+		GASS::ComponentFactory::GetPtr()->Register("OSGNodeProxyComponent",new GASS::Creator<OSGNodeProxyComponent, Component>);
 		RegisterVectorProperty< std::string >("DescriptionList", &OSGNodeProxyComponent::GetDescriptionList, &OSGNodeProxyComponent::SetDescriptionList);
 	}
 

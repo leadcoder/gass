@@ -82,7 +82,7 @@ namespace GASS
 
 	void OgreMeshExporter::Export(const std::string &out_file, SceneObjectPtr root_obj)
 	{
-		IComponentContainer::ComponentVector comps;
+		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,true);
 
 		if(comps.size()>0)

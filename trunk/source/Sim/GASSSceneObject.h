@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -49,8 +49,8 @@ namespace GASS
 	typedef std::vector<SceneObjectPtr> SceneObjectVector;
 
 	/**
-	This class is derived from the BaseComponentContainer class and extend
-	the BaseComponentContainer with message functionality.
+	This class is derived from the ComponentContainer class and extend
+	the ComponentContainer with message functionality.
 	To communicate with components owned by the SceneObject a message manager is used.
 	Some basic object messages is found in SceneObjectNameMessage.h
 
@@ -60,7 +60,7 @@ namespace GASS
 	By design the SceneObject class is not intended to be derived from,
 	Instead new functionality should be added through components
 	*/
-	class GASSExport SceneObject : public Reflection<SceneObject, BaseComponentContainer> 
+	class GASSExport SceneObject : public Reflection<SceneObject, ComponentContainer> 
 	{
 		friend class Scene;
 	public:
@@ -122,7 +122,7 @@ namespace GASS
 
 			if(recursive)
 			{
-				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+				ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -147,7 +147,7 @@ namespace GASS
 
 			if(recursive)
 			{
-				IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+				ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 				while(cc_iter.hasMoreElements())
 				{
 					SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -266,7 +266,7 @@ namespace GASS
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
 	
 		/**
-		Convinces function for BaseSceneComponent's that call GetComponent on BaseComponentContainer
+		Convinces function for BaseSceneComponent's that call GetComponent on ComponentContainer
 		*/
 		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name) const;
 

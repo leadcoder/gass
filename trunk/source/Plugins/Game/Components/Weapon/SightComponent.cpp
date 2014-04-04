@@ -26,7 +26,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 
 #include "Sim/Interface/GASSINetworkComponent.h"
@@ -90,7 +90,7 @@ namespace GASS
 
 	void SightComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SightComponent",new Creator<SightComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SightComponent",new Creator<SightComponent, Component>);
 		RegisterProperty<std::string>("ActivateController", &SightComponent::GetActivateController, &SightComponent::SetActivateController);
 		RegisterProperty<std::string>("YawController", &SightComponent::GetYawController, &SightComponent::SetYawController);
 		RegisterProperty<std::string>("PitchController", &SightComponent::GetPitchController, &SightComponent::SetPitchController);

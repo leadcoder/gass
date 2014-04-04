@@ -60,7 +60,7 @@ namespace GASS
 
 	void TankAutopilotComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("TankAutopilotComponent",new Creator<TankAutopilotComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("TankAutopilotComponent",new Creator<TankAutopilotComponent, Component>);
 		RegisterProperty<std::string>("SteerInput", &TankAutopilotComponent::GetSteerInput, &TankAutopilotComponent::SetSteerInput);
 		RegisterProperty<std::string>("ThrottleInput", &TankAutopilotComponent::GetThrottleInput, &TankAutopilotComponent::SetThrottleInput);
 		RegisterProperty<float>("DesiredSpeed", &TankAutopilotComponent::GetDesiredSpeed, &TankAutopilotComponent::SetDesiredSpeed);

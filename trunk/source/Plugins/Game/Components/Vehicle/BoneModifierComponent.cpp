@@ -46,7 +46,7 @@ namespace GASS
 
 	void BoneModifierComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("BoneModifierComponent",new Creator<BoneModifierComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("BoneModifierComponent",new Creator<BoneModifierComponent, Component>);
 		RegisterProperty<std::string>("BoneName", &BoneModifierComponent::GetBoneName, &BoneModifierComponent::SetBoneName);
 		RegisterProperty<SceneObjectRef>("SourceObject", &BoneModifierComponent::GetSourceObject, &BoneModifierComponent::SetSourceObject);
 		//RegisterProperty<std::string>("MeshObject", &BoneModifierComponent::GetMeshObject, &BoneModifierComponent::SetMeshObject);

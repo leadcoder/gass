@@ -81,7 +81,7 @@ namespace GASS
 
 	void PhysXVehicleComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
 		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
 		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
 		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)

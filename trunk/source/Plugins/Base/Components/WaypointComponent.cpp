@@ -23,7 +23,7 @@
 #include "WaypointListComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -56,7 +56,7 @@ namespace GASS
 
 	void WaypointComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("WaypointComponent",new Creator<WaypointComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("WaypointComponent",new Creator<WaypointComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("TangentWeight", &WaypointComponent::GetTangentWeight, &WaypointComponent::SetTangentWeight);
 	}

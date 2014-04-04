@@ -80,7 +80,7 @@ namespace GASS
 		Bind("FOG_NONE",Ogre::FOG_NONE);
 	END_ENUM_BINDER(Ogre::FogMode,FogModeBinder)
 
-	class IComponent;
+	class Component;
 	class OgreGraphicsSystem;
 	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy, public IGraphicsSceneManager, Ogre::FrameListener
 	{

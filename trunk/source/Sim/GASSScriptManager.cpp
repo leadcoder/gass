@@ -26,7 +26,7 @@
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include <tinyxml.h>
 #include <angelscript.h>
 //addons
@@ -166,14 +166,14 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
 		
 		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(BaseComponent, GetName), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);
 
-		//m_Engine->RegisterObjectType("BaseComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		//m_Engine->RegisterObjectMethod("BaseComponentContainer", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
+		//m_Engine->RegisterObjectType("ComponentContainer", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
+		//m_Engine->RegisterObjectMethod("ComponentContainer", "string GetName() const", asMETHOD(ComponentContainer, GetName), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		//r = m_Engine->RegisterObjectBehaviour("BaseComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<BaseComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "BaseComponentContainer@ f()", asFUNCTION((refCast<SceneObject,BaseComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(BaseComponentContainer, GetName), asCALL_THISCALL);
+		//r = m_Engine->RegisterObjectBehaviour("ComponentContainer", asBEHAVE_REF_CAST, "SceneObject@ f()", asFUNCTION((refCast<ComponentContainer,SceneObject>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		//r = m_Engine->RegisterObjectBehaviour("SceneObject", asBEHAVE_IMPLICIT_REF_CAST, "ComponentContainer@ f()", asFUNCTION((refCast<SceneObject,ComponentContainer>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(ComponentContainer, GetName), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL);
 
 

@@ -23,6 +23,7 @@
 #include "GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
@@ -50,7 +51,7 @@ namespace GASS
 
 	void PlayerInputComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PlayerInputComponent", OF_VISIBLE)));
 		
 		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
@@ -81,8 +82,8 @@ namespace GASS
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
-			//IComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
-			IComponentContainer::ComponentVector comps;
+			//ComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
+			ComponentContainer::ComponentVector comps;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>(comps);
 			for(int i = 0 ; i < comps.size();i++)
 			{
@@ -129,7 +130,7 @@ namespace GASS
 		else if(name == "CycleVehicle" && value > 0)
 		{
 
-			IComponentContainerTemplate::ComponentVector components;
+			ComponentContainerTemplate::ComponentVector components;
 			if(m_CurrentVehicle)
 			{
 				m_CurrentVehicle->GetComponentsByClass(components,"InputHandlerComponent");

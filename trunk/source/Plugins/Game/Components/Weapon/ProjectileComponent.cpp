@@ -58,7 +58,7 @@ namespace GASS
 
 	void ProjectileComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ProjectileComponent",new Creator<ProjectileComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("ProjectileComponent",new Creator<ProjectileComponent, Component>);
 		RegisterProperty<std::string>("EndEffectTemplate", &ProjectileComponent::GetEndEffectTemplateName, &ProjectileComponent::SetEndEffectTemplateName);
 		RegisterProperty<Vec3>("ImpactForce", &ProjectileComponent::GetImpactForce, &ProjectileComponent::SetImpactForce);
 		RegisterProperty<float>("MaxDamage", &ProjectileComponent::GetMaxDamage, &ProjectileComponent::SetMaxDamage);

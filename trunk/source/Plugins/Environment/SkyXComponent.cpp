@@ -26,7 +26,7 @@
 #include "Plugins/Ogre/OgreConvert.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
@@ -60,7 +60,7 @@ namespace GASS
 
 	void SkyXComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SkyXComponent",new Creator<SkyXComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SkyXComponent",new Creator<SkyXComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXComponent", OF_VISIBLE )));
 		RegisterProperty<double>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -146,7 +146,7 @@ namespace GASS
 		//ocam->setFarClipDistance(save_clip);
 
 		//create clouds
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{

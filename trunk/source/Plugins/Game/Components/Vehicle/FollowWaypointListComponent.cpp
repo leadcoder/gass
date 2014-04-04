@@ -65,7 +65,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if(so)
 		{
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<IWaypointListComponent>(comps);
 			for(int i = 0 ; i < comps.size();i++)
 			{
@@ -97,7 +97,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if(so)
 		{
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
 			for(int i = 0 ; i < comps.size();i++)
 			{
@@ -118,7 +118,7 @@ namespace GASS
 
 	void FollowWaypointListComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("FollowWaypointListComponent",new Creator<FollowWaypointListComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("FollowWaypointListComponent",new Creator<FollowWaypointListComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration)));

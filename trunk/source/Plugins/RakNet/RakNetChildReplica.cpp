@@ -22,7 +22,7 @@
 #include <RakPeerInterface.h>
 #include <ReplicaManager.h>
 
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 
 #include "Sim/GASSSceneObject.h"
@@ -159,7 +159,7 @@ namespace GASS
 	bool RakNetChildReplica::GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property)
 	{
 		m_Owner->GetComponents();
-		IComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
+		ComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
 
 		while(comp_iter.hasMoreElements())
 		{

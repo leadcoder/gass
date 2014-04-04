@@ -26,7 +26,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/System/GASSISystemManager.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
@@ -55,7 +55,7 @@ namespace GASS
 		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
-		m_SceneObjectTemplateManager(new BaseComponentContainerTemplateManager()),
+		m_SceneObjectTemplateManager(new ComponentContainerTemplateManager()),
 		m_RTC(new RunTimeController()),
 		m_LogFolder(log_folder)
 	{

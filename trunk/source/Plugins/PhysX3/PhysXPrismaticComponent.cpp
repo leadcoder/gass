@@ -51,7 +51,7 @@ namespace GASS
 
 	void PhysXPrismaticComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsPrismaticComponent",new Creator<PhysXPrismaticComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsPrismaticComponent",new Creator<PhysXPrismaticComponent, Component>);
 		RegisterProperty<SceneObjectRef>("Body1", &GASS::PhysXPrismaticComponent::GetBody1, &GASS::PhysXPrismaticComponent::SetBody1);
 		RegisterProperty<SceneObjectRef>("Body2", &GASS::PhysXPrismaticComponent::GetBody2, &GASS::PhysXPrismaticComponent::SetBody2);
 		RegisterProperty<Vec3>("RotationAxis", &GASS::PhysXPrismaticComponent::GetRotationAxis, &GASS::PhysXPrismaticComponent::SetRotationAxis);

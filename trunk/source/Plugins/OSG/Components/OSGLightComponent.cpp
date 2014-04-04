@@ -44,7 +44,7 @@ namespace GASS
 
 	void OSGLightComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used for lights", OF_VISIBLE)));
 
 		RegisterProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType,

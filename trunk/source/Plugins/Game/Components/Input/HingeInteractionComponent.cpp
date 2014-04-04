@@ -49,7 +49,7 @@ namespace GASS
 
 	void HingeInteractionComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("HingeInteractionComponent",new Creator<HingeInteractionComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("HingeInteractionComponent",new Creator<HingeInteractionComponent, Component>);
 		RegisterProperty<std::string>("InputMapping", &HingeInteractionComponent::GetInputMapping, &HingeInteractionComponent::SetInputMapping);
 		RegisterProperty<Float>("MaxAngularVelocity", &HingeInteractionComponent::GetMaxAngularVelocity, &HingeInteractionComponent::SetMaxAngularVelocity);
 	}

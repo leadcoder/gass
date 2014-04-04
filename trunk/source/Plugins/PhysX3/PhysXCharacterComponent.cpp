@@ -61,7 +61,7 @@ namespace GASS
 
 	void PhysXCharacterComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXCharacterComponent",new Creator<PhysXCharacterComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysXCharacterComponent",new Creator<PhysXCharacterComponent, Component>);
 		RegisterProperty<float>("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
 		RegisterProperty<Float>("Radius", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
 		RegisterProperty<Float>("StandingSize", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);

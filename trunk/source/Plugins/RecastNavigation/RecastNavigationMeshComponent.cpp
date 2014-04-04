@@ -85,7 +85,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, Component>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
 		RegisterProperty<bool>("AutoCollectMeshes", &GetAutoCollectMeshes, &SetAutoCollectMeshes,
@@ -265,7 +265,7 @@ namespace GASS
 		{
 			m_Geom->deleteConvexVolume(static_cast<int>(i));
 		}
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastConvexVolumeComponent>(components,true);
 
 		for(size_t i = 0; i < components.size(); i++)
@@ -340,7 +340,7 @@ namespace GASS
 		const unsigned short flags = SAMPLE_POLYFLAGS_JUMP; 
 		float p1[3];
 		float p2[3];
-		IComponentContainer::ComponentVector components;
+		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastOffmeshMeshConnectionComponent>(components,true);
 		for(int i = 0; i < components.size(); i++)
 		{
@@ -1000,14 +1000,14 @@ namespace GASS
 			std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
 			SaveAllTiles(filename.c_str(),m_NavMesh);
 		}
-		BaseComponent::SaveXML(obj_elem);
+		Component::SaveXML(obj_elem);
 	}
 
 	void RecastNavigationMeshComponent::LoadXML(TiXmlElement *obj_elem)
 	{
 		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
-		BaseComponent::LoadXML(obj_elem);
+		Component::LoadXML(obj_elem);
 	}
 
 
@@ -1086,7 +1086,7 @@ namespace GASS
 		std::vector<SceneObjectPtr> objs;
 		if(GetSceneObject())
 		{
-			IComponentContainer::ComponentVector components;
+			ComponentContainer::ComponentVector components;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 			for(size_t i = 0; i < components.size() ; i++)
 			{
@@ -1139,7 +1139,7 @@ namespace GASS
 			m_MeshBounding = AABox();
 			if(GetSceneObject())
 			{
-				IComponentContainer::ComponentVector components;
+				ComponentContainer::ComponentVector components;
 				GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 				for(size_t i = 0; i < components.size() ; i++)
 				{

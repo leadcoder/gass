@@ -125,7 +125,7 @@ namespace GASS
 
 	void VehicleEngineComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleEngineComponent", OF_VISIBLE)));
 		
 		RegisterVectorProperty<SceneObjectRef>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);

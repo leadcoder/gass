@@ -1,7 +1,7 @@
 #include "SensorComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
@@ -34,7 +34,7 @@ namespace GASS
 
 	void SensorComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SensorComponent",new Creator<SensorComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SensorComponent",new Creator<SensorComponent, Component>);
 		REG_PROPERTY(Float,DefaultMaxDetectionDistance,SensorComponent)
 		REG_PROPERTY(Float,UpdateFrequency,SensorComponent)
 		REG_PROPERTY(bool,Debug,SensorComponent)
@@ -52,7 +52,7 @@ namespace GASS
 		m_Initialized = true;
 
 		// get all signature objects and add them
-		IComponentContainer::ComponentVector comps;
+		ComponentContainer::ComponentVector comps;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<SignatureComponent>(comps,true);
 		for(size_t i = 0; i < comps.size(); i++)
 		{

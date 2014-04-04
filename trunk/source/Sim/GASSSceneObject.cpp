@@ -26,11 +26,11 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
@@ -53,7 +53,7 @@ namespace GASS
 
 	void SceneObject::RegisterReflection()
 	{
-		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, IComponentContainer>);
+		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, ComponentContainer>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Container for all components", OF_VISIBLE)));
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Local IDentifier string",PF_VISIBLE)));
@@ -76,20 +76,19 @@ namespace GASS
 		CopyPropertiesTo(new_obj);
 
 		//copy components
-		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
+		ComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			ComponentPtr comp = STATIC_PTR_CAST<IComponent>(comp_iter.getNext());
-			ComponentTemplatePtr temp_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
-			if(temp_comp)
+			ComponentPtr comp = comp_iter.getNext();
+			if(comp)
 			{
-				ComponentPtr template_comp = temp_comp->CreateCopy();
+				ComponentPtr template_comp = comp->CreateCopy();
 				new_obj->AddComponent(template_comp);
 			}
 		}
 
 		//copy children
-		IComponentContainer::ConstComponentContainerIterator children = GetChildren();
+		ComponentContainer::ConstComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
@@ -118,7 +117,7 @@ namespace GASS
 
 		if(recursively)
 		{
-			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			ComponentContainer::ComponentContainerIterator children = GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
@@ -130,7 +129,7 @@ namespace GASS
 	void SceneObject::RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
 	{
 		//remap references
-		IComponentContainer::ComponentIterator comp_iter = GetComponents();
+		ComponentContainer::ComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
 			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -139,7 +138,7 @@ namespace GASS
 				comp->RemapReferences(ref_map);
 			}
 		}
-		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
@@ -153,7 +152,7 @@ namespace GASS
 	{
 		child->InitializePointers(); //initialize SceneObjectLink:s
 
-		BaseComponentContainer::AddChild(child);
+		ComponentContainer::AddChild(child);
 
 		if(load && GetScene()) //if we have scene Initialize?
 			child->Initialize(GetScene());
@@ -168,7 +167,7 @@ namespace GASS
 			bsc->ResolveTemplateReferences(template_root);
 			++iter;
 		}
-		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -182,7 +181,7 @@ namespace GASS
 			m_GUID = boost::uuids::random_generator()();
 		if(recursive)
 		{
-			IComponentContainer::ComponentContainerIterator children = GetChildren();
+			ComponentContainer::ComponentContainerIterator children = GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -200,7 +199,7 @@ namespace GASS
 			bsc->InitializePointers();
 			++iter;
 		}
-		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -214,12 +213,12 @@ namespace GASS
 	{
 		//notify that this objects and its children will be removed
 		child->OnDelete();
-		BaseComponentContainer::RemoveChild(child);
+		ComponentContainer::RemoveChild(child);
 	}
 
 	void SceneObject::OnDelete()
 	{
-		BaseComponentContainer::ComponentContainerIterator children = GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -272,7 +271,7 @@ namespace GASS
 		//to take control of initialization order
 		SyncMessages(0,false);
 
-		IComponentContainer::ComponentContainerIterator children = GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -301,7 +300,7 @@ namespace GASS
 
 	struct MessageSyncExecutor
 	{
-		MessageSyncExecutor(const BaseComponentContainer::ComponentContainerVector& cc_vector, double delta_time)
+		MessageSyncExecutor(const ComponentContainer::ComponentContainerVector& cc_vector, double delta_time)
 			:m_CCVector(cc_vector),m_DeltaTime(delta_time)
 		{}
 		MessageSyncExecutor(MessageSyncExecutor& e,tbb::split)
@@ -315,7 +314,7 @@ namespace GASS
 				obj->SyncMessages(m_DeltaTime);
 			}
 		}
-		const BaseComponentContainer::ComponentContainerVector& m_CCVector;
+		const ComponentContainer::ComponentContainerVector& m_CCVector;
 		double m_DeltaTime;
 	};
 
@@ -326,7 +325,7 @@ namespace GASS
 		{
 
 
-			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+			ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -334,8 +333,8 @@ namespace GASS
 			}
 
 			//Create copy before update
-			/*IComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
-			IComponentContainer::ComponentContainerVector::const_iterator go_iter;
+			/*ComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
+			ComponentContainer::ComponentContainerVector::const_iterator go_iter;
 			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); ++go_iter)
 			{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>( *go_iter);
@@ -354,7 +353,7 @@ namespace GASS
 	{
 		size_t num = m_MessageManager->GetQueuedMessages();
 
-		IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+		ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -371,7 +370,7 @@ namespace GASS
 	void SceneObject::GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive) const
 	{
 		//Check all components
-		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
+		ComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
 			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -383,7 +382,7 @@ namespace GASS
 
 		if(recursive)
 		{
-			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+			ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -395,7 +394,7 @@ namespace GASS
 	ComponentPtr SceneObject::GetFirstComponentByClass(const std::string &class_name, bool recursive) const 
 	{
 		//Check all components
-		IComponentContainer::ConstComponentIterator comp_iter = GetComponents();
+		ComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
 			BaseSceneComponentPtr comp = STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -406,7 +405,7 @@ namespace GASS
 		}
 		if(recursive)
 		{
-			IComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
+			ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -422,7 +421,7 @@ namespace GASS
 	{
 		if(!visitor->Visit(DYNAMIC_PTR_CAST<SceneObject>(shared_from_this())))
 			return false;
-		IComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
+		ComponentContainer::ComponentContainerIterator cc_iter = GetChildren();
 		while(cc_iter.hasMoreElements())
 		{
 			SceneObjectPtr child = STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
@@ -667,7 +666,7 @@ namespace GASS
 			std::string template_name = so_elem->Attribute("from_template");
 			so = STATIC_PTR_CAST<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 
-			IComponentContainer::ComponentContainerIterator children = so->GetChildren();
+			ComponentContainer::ComponentContainerIterator children = so->GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -741,9 +740,9 @@ namespace GASS
 		if(cc_elem->Attribute("from_template"))
 		{
 			std::string template_name = cc_elem->Attribute("from_template");
-			cc = STATIC_PTR_CAST<IComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+			cc = STATIC_PTR_CAST<ComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 			//remove all children, they should be created by template, or?
-			IComponentContainer::ComponentContainerIterator children = cc->GetChildren();
+			ComponentContainer::ComponentContainerIterator children = cc->GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -753,7 +752,7 @@ namespace GASS
 		else
 		{
 			const std::string cc_name = cc_elem->Value();
-			cc = STATIC_PTR_CAST<IComponentContainer>(ComponentContainerFactory::Get().Create(cc_name));
+			cc = ComponentContainerFactory::Get().Create(cc_name);
 		}
 		return cc;
 	}

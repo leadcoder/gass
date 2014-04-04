@@ -51,7 +51,7 @@ namespace GASS
 	
 	void ODECollisionSystem::Init()
 	{
-		ComponentFactory::GetPtr()->Register("ODECollisionGeometryComponent",new Creator<ODECollisionGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("ODECollisionGeometryComponent",new Creator<ODECollisionGeometryComponent, Component>);
 		SceneManagerFactory::GetPtr()->Register("ODECollisionSceneManager",new GASS::Creator<ODECollisionSceneManager, ISceneManager>);
 
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneUnloaded,SceneUnloadedEvent,0));

@@ -51,7 +51,7 @@ namespace GASS
 
 	void PhysXWheelComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, Component>);
 		REG_PROPERTY(float,Mass,PhysXWheelComponent)
 		REG_PROPERTY(float,MaxBrakeTorque,PhysXWheelComponent)
 		REG_PROPERTY(float,MaxHandBrakeTorque,PhysXWheelComponent)

@@ -54,7 +54,7 @@ namespace GASS
 
 	void ArmorComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ArmorComponent",new Creator<ArmorComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("ArmorComponent",new Creator<ArmorComponent, Component>);
 		RegisterProperty<float>("Armor", &ArmorComponent::GetArmor, &ArmorComponent::SetArmor);
 		RegisterProperty<std::string>("DamageMesh", &ArmorComponent::GetDamageMesh, &ArmorComponent::SetDamageMesh);
 		RegisterProperty<std::string>("DamageEffect1", &ArmorComponent::GetDamageEffect1, &ArmorComponent::SetDamageEffect1);
@@ -80,7 +80,7 @@ namespace GASS
 	void ArmorComponent::OnHit(HitMessagePtr message)
 	{
 		//notify all children also
-		IComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
+		ComponentContainer::ComponentContainerIterator cc_iter1 = GetSceneObject()->GetChildren();
 		while(cc_iter1.hasMoreElements())
 		{
 			SceneObjectPtr child = DYNAMIC_PTR_CAST<GASS::SceneObject>(cc_iter1.getNext());

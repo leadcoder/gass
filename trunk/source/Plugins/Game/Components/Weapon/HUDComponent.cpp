@@ -49,7 +49,7 @@ namespace GASS
 
 	void HUDComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("HUDComponent",new Creator<HUDComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("HUDComponent",new Creator<HUDComponent, Component>);
 		RegisterProperty<std::string>("Material", &HUDComponent::GetMaterial, &HUDComponent::SetMaterial);
 	}
 

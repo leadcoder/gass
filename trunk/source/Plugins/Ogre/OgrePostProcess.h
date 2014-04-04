@@ -158,7 +158,7 @@ namespace GASS
 	};
 	//---------------------------------------------------------------------------
 
-	class IComponent;
+	class Component;
 	class OgreGraphicsSystem;
 	class OgrePostProcess
 	{

@@ -23,7 +23,7 @@
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
 
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 
 #include "Sim/GASSSceneObject.h"

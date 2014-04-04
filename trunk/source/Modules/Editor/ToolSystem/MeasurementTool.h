@@ -9,10 +9,10 @@ namespace GASS
 {
 	class MouseToolController;
 	class SceneObject;
-	class IComponent;
+	class Component;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 	typedef SPTR<SceneObject> SceneObjectPtr;
-	typedef WPTR<IComponent> ComponentWeakPtr;
+	typedef WPTR<Component> ComponentWeakPtr;
 
 
 	class EditorModuleExport MeasurementTool : public IMouseTool

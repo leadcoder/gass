@@ -22,7 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 
@@ -39,7 +39,7 @@ namespace GASS
 
 	void SceneObjectTemplate::RegisterReflection()
 	{
-		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, IComponentContainerTemplate>);
+		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, ComponentContainerTemplate>);
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
 		RegisterProperty<bool>("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
 	}

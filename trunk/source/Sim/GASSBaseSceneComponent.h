@@ -25,7 +25,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/GASSTaskNode.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 namespace GASS
 {
@@ -34,7 +34,7 @@ namespace GASS
 	Base class for all sim gass components
 	*/
 
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, BaseComponent> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
+	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, Component> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
 	{
 		friend class SceneObject;
 	public:

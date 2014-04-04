@@ -26,7 +26,7 @@
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/ComponentSystem/GASSIComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 

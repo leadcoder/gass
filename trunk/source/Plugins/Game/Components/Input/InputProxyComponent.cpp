@@ -47,7 +47,7 @@ namespace GASS
 
 	void InputProxyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, Component>);
 		RegisterProperty<SceneObjectRef>("InputHandlerObject", &InputProxyComponent::GetInputHandlerObject, &InputProxyComponent::SetInputHandlerObject);
 	}
 

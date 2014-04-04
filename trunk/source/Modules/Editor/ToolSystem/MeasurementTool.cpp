@@ -5,7 +5,7 @@
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"

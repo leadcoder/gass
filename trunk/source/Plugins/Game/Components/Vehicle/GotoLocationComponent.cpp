@@ -61,7 +61,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if(so)
 		{
-			IComponentContainer::ComponentVector comps;
+			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
 			for(int i = 0 ; i < comps.size();i++)
 			{
@@ -81,7 +81,7 @@ namespace GASS
 
 	void GoToLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("GoToLocationComponent",new Creator<GoToLocationComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("GoToLocationComponent",new Creator<GoToLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("NavigationObject", &GoToLocationComponent::GetNavigationObject, &GoToLocationComponent::SetNavigationObject,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,GoToLocationComponentNavigationEnumeration)));

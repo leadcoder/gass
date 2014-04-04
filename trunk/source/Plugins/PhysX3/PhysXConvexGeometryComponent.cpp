@@ -23,7 +23,7 @@
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
@@ -58,7 +58,7 @@ namespace GASS
 
 	void PhysXConvexGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsConvexGeometryComponent",new Creator<PhysXConvexGeometryComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("PhysicsConvexGeometryComponent",new Creator<PhysXConvexGeometryComponent, Component>);
 		RegisterProperty<bool>("SimulationCollision", &GASS::PhysXConvexGeometryComponent::GetSimulationCollision, &GASS::PhysXConvexGeometryComponent::SetSimulationCollision);
 
 	}

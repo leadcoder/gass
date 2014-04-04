@@ -5,7 +5,7 @@
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSBaseSceneComponent.h"
@@ -63,7 +63,7 @@ namespace GASS
 				/*Float min_dist  = 1;
 				int index = -1;
 				//get closest edge and check if it's within threshold!
-				IComponentContainer::ComponentVector comps;
+				ComponentContainer::ComponentVector comps;
 				parent_obj->GetComponentsByClass<IGraphEdgeComponent>(comps,true);
 				for(size_t i =  0; i < comps.size(); i++)
 				{
@@ -210,7 +210,7 @@ namespace GASS
 		int index = -1;
 		Float min_dist = treshhold_dist;
 		//get closest edge and check if it's within threshold!
-		IComponentContainer::ComponentVector comps;
+		ComponentContainer::ComponentVector comps;
 		graph_obj->GetComponentsByClass<IGraphEdgeComponent>(comps,true);
 		for(size_t i =  0; i < comps.size(); i++)
 		{

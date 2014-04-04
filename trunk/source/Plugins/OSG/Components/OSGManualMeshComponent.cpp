@@ -56,7 +56,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, Component>);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		

@@ -23,12 +23,12 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponent.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -75,7 +75,7 @@ namespace GASS
 		std::vector<std::string> ext;
 		ext.push_back("txt");
 
-		ComponentFactory::GetPtr()->Register("WaypointListComponent",new Creator<WaypointListComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("WaypointListComponent",new Creator<WaypointListComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointListComponent", OF_VISIBLE)));
 		RegisterProperty<float>("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -173,7 +173,7 @@ namespace GASS
 		if(m_Initialized)
 		{
 			std::vector<WaypointComponentPtr> wp_vec;
-			IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+			ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());
@@ -250,7 +250,7 @@ namespace GASS
 		std::vector<Vec3> pos_vec;
 		std::vector<WaypointComponentPtr> wp_vec;
 		std::vector<SceneObjectPtr> obj_vec;
-		IComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child_obj =  STATIC_PTR_CAST<SceneObject>(children.getNext());

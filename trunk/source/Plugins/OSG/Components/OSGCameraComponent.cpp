@@ -58,7 +58,7 @@ namespace GASS
 
 	void OSGCameraComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OSGCameraComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OSGCameraComponent, Component>);
 		
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 

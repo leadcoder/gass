@@ -1,7 +1,7 @@
 #include "SignatureComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
@@ -31,7 +31,7 @@ namespace GASS
 
 	void SignatureComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SignatureComponent",new Creator<SignatureComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("SignatureComponent",new Creator<SignatureComponent, Component>);
 		REG_PROPERTY(float,RadarCrossSection,SignatureComponent)
 		REG_PROPERTY(PlatformTypeReflection,PlatformType,SignatureComponent)
 		REG_PROPERTY(PlatformTeamReflection,PlatformTeam,SignatureComponent)

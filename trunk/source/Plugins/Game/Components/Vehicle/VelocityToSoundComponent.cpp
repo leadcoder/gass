@@ -57,7 +57,7 @@ namespace GASS
 
 	void VelocityToSoundComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VelocityToSoundComponent",new Creator<VelocityToSoundComponent, IComponent>);
+		ComponentFactory::GetPtr()->Register("VelocityToSoundComponent",new Creator<VelocityToSoundComponent, Component>);
 		RegisterProperty<Vec2>("MinMaxPitch", &VelocityToSoundComponent::GetMinMaxPitch, &VelocityToSoundComponent::SetMinMaxPitch);
 		RegisterProperty<Vec2>("MinMaxVolume", &VelocityToSoundComponent::GetMinMaxVolume, &VelocityToSoundComponent::SetMinMaxVolume);
 		REG_PROPERTY(Float ,VelocityLimit,VelocityToSoundComponent);
