@@ -19,10 +19,12 @@
 *****************************************************************************/
 
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSBaseComponentContainerTemplateManager.h"
-#include "Core/ComponentSystem/GASSIComponentContainerTemplate.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
+#include "Core/Reflection/GASSBaseReflectionObject.h"
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
@@ -35,21 +37,21 @@
 namespace GASS
 {
 
-	BaseComponentContainerTemplateManager::BaseComponentContainerTemplateManager() : m_AddObjectIDToName(true), m_ObjectIDPrefix("_")
+	ComponentContainerTemplateManager::ComponentContainerTemplateManager() : m_AddObjectIDToName(true), m_ObjectIDPrefix("_")
 	{
 		
 	}
 
-	BaseComponentContainerTemplateManager::~BaseComponentContainerTemplateManager()
+	ComponentContainerTemplateManager::~ComponentContainerTemplateManager()
 	{
 
 	}
 
-	void BaseComponentContainerTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
+	void ComponentContainerTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
 	{
 		m_TemplateMap[obj->GetName()] = obj;
 		
-		IComponentContainerTemplate::ComponentContainerTemplateIterator children = obj->GetChildren();
+		ComponentContainerTemplate::ComponentContainerTemplateIterator children = obj->GetChildren();
 
 		while(children.hasMoreElements())
 		{
@@ -58,7 +60,7 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr BaseComponentContainerTemplateManager::CreateFromTemplate(const std::string &name) const
+	ComponentContainerPtr ComponentContainerTemplateManager::CreateFromTemplate(const std::string &name) const
 	{
 		ComponentContainerPtr new_cc;
 		ComponentContainerTemplatePtr temp =  GetTemplate(name);
@@ -71,12 +73,97 @@ namespace GASS
 		else
 		{
 			LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer:" << name;
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create ComponentContainer:" + name, "BaseComponentContainerTemplateManager::CreateFromTemplate");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create ComponentContainer:" + name, "ComponentContainerTemplateManager::CreateFromTemplate");
 		}
 		return new_cc;
 	}
 
-	ComponentContainerTemplatePtr BaseComponentContainerTemplateManager::GetTemplate(const std::string &name) const
+	ComponentContainerPtr ComponentContainerTemplateManager::_CreateComponentContainer(int &part_id, ComponentContainerTemplatePtr cc_temp) const
+	{
+		ComponentContainerPtr new_object;
+		if(cc_temp->GetInheritance() != "")
+		{
+			ComponentContainerTemplatePtr inheritance = GetTemplate(cc_temp->GetInheritance());
+			if(inheritance)
+			{
+				new_object =  _CreateComponentContainer(part_id,inheritance);
+				BaseReflectionObjectPtr ref_obj = DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
+				//copy container attributes to new object
+				if(ref_obj)
+					cc_temp->CopyPropertiesTo(ref_obj);
+		
+				if(GetAddObjectIDToName())
+					new_object->SetName(_CreateUniqueName(cc_temp));
+				else 
+					new_object->SetName(cc_temp->GetName());
+				//set template name
+				new_object->SetTemplateName(cc_temp->GetName());
+				//if(m_ContainerData)
+				//	m_ContainerData->Assign(new_object);
+				//check if components already exist,
+				//if so replace components 
+				cc_temp->InheritComponentData(new_object);
+			}
+		}
+		else
+		{
+			new_object = cc_temp->CreateComponentContainer();
+			if(new_object)
+			{
+				/*if(m_NameCheck)
+				{
+				BaseComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
+				while(obj)
+				{
+				sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
+				object_counter++;
+				obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
+				}
+				}*/
+				if(GetAddObjectIDToName())
+					new_object->SetName(_CreateUniqueName(cc_temp));
+				else 
+					new_object->SetName(cc_temp->GetName());
+
+				new_object->SetTemplateName(cc_temp->GetName());
+				//new_object->SetPartId(part_id);
+				part_id++;
+			}
+			else
+			{
+				//failed to create comp container
+			}
+		}
+		//recursive add children
+		ComponentContainerTemplate::ComponentContainerTemplateIterator iter = cc_temp->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			ComponentContainerTemplatePtr child = iter.getNext();
+			if(child)
+			{
+				ComponentContainerPtr new_cc_child (_CreateComponentContainer(part_id,child));
+				if(new_cc_child)
+				{
+					//Add new child
+					new_object->AddChild(new_cc_child);
+				}
+			}
+		}
+		return new_object;
+	}
+
+	std::string ComponentContainerTemplateManager::_CreateUniqueName(ComponentContainerTemplatePtr cc_temp) const
+	{
+		static int object_counter = 0;
+		std::stringstream ss;
+		ss << cc_temp->GetName() << GetObjectIDPrefix() << object_counter << GetObjectIDSuffix();
+		std::string u_name;
+		ss >> u_name;
+		object_counter++;
+		return u_name ;
+	}
+
+	ComponentContainerTemplatePtr ComponentContainerTemplateManager::GetTemplate(const std::string &name) const
 	{
 		TemplateMap::const_iterator pos;
 		//find the template
@@ -90,7 +177,7 @@ namespace GASS
 		return temp;
 	}
 
-	std::vector<std::string> BaseComponentContainerTemplateManager::GetTemplateNames() const
+	std::vector<std::string> ComponentContainerTemplateManager::GetTemplateNames() const
 	{
 		std::vector<std::string> templates;
 		TemplateMap::const_iterator iter = m_TemplateMap.begin();
@@ -103,22 +190,22 @@ namespace GASS
 	}
 
 
-	void BaseComponentContainerTemplateManager::Clear()
+	void ComponentContainerTemplateManager::Clear()
 	{
 		m_TemplateMap.clear();
 	}
 
 
-	void BaseComponentContainerTemplateManager::Load(const std::string &filename)
+	void ComponentContainerTemplateManager::Load(const std::string &filename)
 	{
 		if(filename =="")
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "BaseComponentContainerTemplateManager::Load");
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ComponentContainerTemplateManager::Load");
 
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
 		if (!xmlDoc->LoadFile())
 		{
 			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"BaseComponentContainerTemplateManager::Load()");
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"ComponentContainerTemplateManager::Load()");
 		}
 		TiXmlElement *templates = xmlDoc->FirstChildElement("Templates");
 
@@ -149,7 +236,7 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-	void BaseComponentContainerTemplateManager::LoadFromPath(const std::string &path, bool recursive)
+	void ComponentContainerTemplateManager::LoadFromPath(const std::string &path, bool recursive)
 	{
 		std::vector<std::string> files;
 		FileUtils::GetFilesFromPath(files, path, recursive, true);

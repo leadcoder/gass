@@ -18,20 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH
-#define BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH
+#ifndef BASE_COMPONENTCONTAINERTEMPLATEMANAGER_HH
+#define BASE_COMPONENTCONTAINERTEMPLATEMANAGER_HH
 
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSIComponentContainerTemplateManager.h"
 
 namespace GASS
 {
-	class IComponentContainer;
-	class IComponentContainerTemplate;
-	class BaseObjectTemplate;
+	FDECL(ComponentContainer);
+	FDECL(ComponentContainerTemplate);
 	
-	typedef SPTR<IComponentContainer> ComponentContainerPtr;
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -40,25 +38,20 @@ namespace GASS
 	*/
 
 	/**
-		  Implementaion of the IComponentContainerTemplateManager interface
-		  This implementaion extened the IComponentContainerTemplateManager
-		  interface with a Load function that assume that component containers
-		  that should be loaded from file has the IXML serialization
-		  interface implemented, like the BaseObject implementaion.
-		  The name BaseComponentContainerTemplateManager is therefore used to
-		  indicate that BaseObject component container implementaion
-		  will work with this implementation.
+	A component container template manager is responsible for holding component container templates
+	and creating component containers.
+	For more information on container templates see the ComponentContainerTemplate class
 	*/
 
-	class GASSCoreExport BaseComponentContainerTemplateManager: public SHARE_CLASS<BaseComponentContainerTemplateManager> , public IComponentContainerTemplateManager
+	class GASSCoreExport ComponentContainerTemplateManager: public SHARE_CLASS<ComponentContainerTemplateManager>
 	{
-		friend class IComponentContainerTemplate;
+		friend class ComponentContainerTemplate;
 	public:
 		/** Map holding templates*/
 		typedef std::map<std::string,ComponentContainerTemplatePtr> TemplateMap;
 	public:
-		BaseComponentContainerTemplateManager();
-		virtual ~BaseComponentContainerTemplateManager();
+		ComponentContainerTemplateManager();
+		virtual ~ComponentContainerTemplateManager();
 		/**
 			Create a new object from the template archive.
 		@remarks
@@ -66,8 +59,19 @@ namespace GASS
 		@param name Template name
 		*/
 		ComponentContainerPtr CreateFromTemplate(const std::string &name) const;
-//		void SetNameCheck(bool value){m_NameCheck = value;}
+
+		/**
+			Add a template the template archive.
+		@remarks
+		@param obj
+		*/
 		void AddTemplate(ComponentContainerTemplatePtr obj);
+
+		/**
+			Get a template from template archive.
+		@remarks
+		@param name Name of the template
+		*/
 		ComponentContainerTemplatePtr GetTemplate(const std::string &name) const;
 
 		/**
@@ -94,7 +98,6 @@ namespace GASS
 			unique name or not.
 		*/
 		void SetAddObjectIDToName(bool value) {m_AddObjectIDToName = value;}
-
 
 		/**
 			Get unique name prefix, default is "_"
@@ -125,13 +128,16 @@ namespace GASS
 		*/
 		void Clear();
 	protected:
+		ComponentContainerPtr _CreateComponentContainer(int &part_id, ComponentContainerTemplatePtr cc_temp) const;
+		std::string _CreateUniqueName(ComponentContainerTemplatePtr cc_temp) const;
+
 		bool m_AddObjectIDToName;
 		std::string m_ObjectIDPrefix;
 		std::string m_ObjectIDSuffix;
 		TemplateMap m_TemplateMap;
 	};
-	typedef SPTR<BaseComponentContainerTemplateManager> BaseComponentContainerTemplateManagerPtr;
-	typedef SPTR<BaseComponentContainerTemplateManager const> BaseComponentContainerTemplateManagerConstPtr;
+	typedef SPTR<ComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;
+	typedef SPTR<ComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
 }
 
-#endif // #ifndef BASECOMPONENTCONTAINERTEMPLATEMANAGER_HH
+#endif // #ifndef ComponentContainerTemplateManager_HH

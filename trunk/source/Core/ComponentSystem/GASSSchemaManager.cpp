@@ -20,7 +20,7 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSSchemaManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"

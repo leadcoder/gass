@@ -18,21 +18,25 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BASECOMPONENTCONTAINERTEMPLATE_HH
-#define BASECOMPONENTCONTAINERTEMPLATE_HH
+#ifndef ComponentContainerTemplate_HH
+#define ComponentContainerTemplate_HH
 
 #include <boost/enable_shared_from_this.hpp>
 #include "Core/Reflection/GASSReflection.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
-#include "Core/ComponentSystem/GASSIComponentContainer.h"
-#include "Core/ComponentSystem/GASSIComponentContainerTemplate.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Serialize/GASSISerialize.h"
+#include "Core/Utils/GASSIterators.h"
 
 namespace GASS
 {
 	class MessageManager;
+	FDECL(ComponentContainerTemplate);
+	FDECL(Component);
+	FDECL(ComponentContainer);
+	FDECL(ComponentContainerTemplateManager);
+	typedef SPTR<ComponentContainerTemplateManager const> ComponentContainerTemplateManagerConstPtr;
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -42,38 +46,91 @@ namespace GASS
 	*/
 
 	/**
-			The BaseComponentContainerTemplate is a convinience class that implements
-			the	IComponentContainerTemplate it also inherite from the reflection template
-			class which enables attribute reflection in a easy way. The inheritance from
+			The class has the ability to instance 
+			new component containers of the exact same configuration. 
+			Templates/archetypes of objects can be created trough configuration files 
+			(xml files with extension .template) or in code.
+			
+			The ComponentContainerTemplate inherit from the reflection template
+			class which enables attribute reflection. The inheritance from
 			SHARE_CLASS is used to get hold of ourself (this) as
 			a shared pointer with the shared_from_this() function.
-			To get more information what you get by inherit from this
-			class see the documentation for each interface
-
 	*/
-	class GASSCoreExport BaseComponentContainerTemplate : public Reflection<BaseComponentContainerTemplate, BaseReflectionObject> ,public SHARE_CLASS<BaseComponentContainerTemplate>, public IComponentContainerTemplate , public IXMLSerialize, public ISerialize
+	
+	class GASSCoreExport ComponentContainerTemplate : public Reflection<ComponentContainerTemplate, BaseReflectionObject> ,public SHARE_CLASS<ComponentContainerTemplate>, public IXMLSerialize, public ISerialize
 	{
+		friend class ComponentContainerTemplateManager;
 	public:
-		//typedef std::vector<IComponent*> ComponentVector;
-		//typedef std::vector<IComponentContainer*> ComponentContainerVector;
-	public:
-		BaseComponentContainerTemplate();
-		virtual ~BaseComponentContainerTemplate();
+		typedef std::vector<ComponentPtr> ComponentVector;
+		typedef VectorIterator<ComponentVector>  ComponentIterator;
+		typedef std::vector<ComponentContainerTemplatePtr> ComponentContainerTemplateVector;
+		typedef VectorIterator<ComponentContainerTemplateVector> ComponentContainerTemplateIterator;
+		typedef ConstVectorIterator<ComponentContainerTemplateVector> ConstComponentContainerTemplateIterator;
 
+		ComponentContainerTemplate();
+		virtual ~ComponentContainerTemplate();
+		/**
+		Static reflection function called on start up
+		*/
 		static	void RegisterReflection();
-
-		//IComponentContainerTemplate interface
+		
+		/**
+		Get component container template name
+		*/
 		virtual std::string GetName() const {return m_Name;}
+		
+		/**
+		Set component container template name
+		*/
 		virtual void SetName(const std::string &name) {m_Name = name;}
+		
+		/**
+			Add a child component container template.
+		*/
 		virtual void AddChild(ComponentContainerTemplatePtr child);
+		
+		/**
+			Remove child component container template.
+		*/
 		virtual void RemoveChild(ComponentContainerTemplatePtr child);
+		/**
+			Get child component containers templates,
+			this will only return the ones owned by this container i.e.
+			no grandchildren will be returned
+		*/
 		virtual ComponentContainerTemplateIterator GetChildren();
+
+		/**
+			Get possible parent component container template
+		*/
 		virtual ComponentContainerTemplatePtr GetParent() const {return ComponentContainerTemplatePtr(m_Parent,NO_THROW);}//allow null pointer}
+		
+		/**
+			Set parent component container template
+		*/
 		virtual void SetParent(ComponentContainerTemplateWeakPtr parent){m_Parent = parent;}
 		virtual void AddComponent(ComponentPtr comp);
+
+		/**
+			Get component by name,
+			only search this containers components and first one is returned
+		*/
 		virtual ComponentPtr GetComponent(const std::string &name) const;
+
+		/**
+			Get all components owned by this container
+		*/
 		virtual ComponentIterator GetComponents();
+
+		/**
+			Return a component container created from this template.
+		*/
 		virtual ComponentContainerPtr CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const;
+		
+		
+		/**
+			Rebuild this template component container from existing ComponentContainer.
+		*/
 		virtual void CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance);
 
 		//xml serialize interface
@@ -87,16 +144,15 @@ namespace GASS
 		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}
 		std::string GetInheritance()  const {return m_Inheritance;}
 
-
 		//print object
 		void DebugPrint(int tc = 0);
 
 
-		/**Set whether this container should be serialized or not, by defaulit
+		/**Set whether this container should be serialized or not, by default
 		all containers are serialized*/
 		void SetSerialize(bool value);
 
-		/**Get whether this container should be serialized or not, by defaulit
+		/**Get whether this container should be serialized or not, by default
 		all containers are serialized*/
 		bool GetSerialize()  const;
 
@@ -105,10 +161,10 @@ namespace GASS
 			@param comp_type Component type to add
 			@return The new component 
 		*/
-		BaseComponentPtr AddComponent(const std::string &comp_type);
+		ComponentPtr AddComponent(const std::string &comp_type);
 	protected:
 
-		//Its possible to override this function if custom creation proccess is needed.
+		//It's possible to override this function if custom creation process is needed.
 		//By default the container factory name used is the same as the template
 		//with the Template part removed, however if thats not the case you have to
 		//override this function and supply your own instance. 
@@ -132,7 +188,7 @@ namespace GASS
 		bool m_Serialize;
 		ComponentContainerTemplateWeakPtr m_Parent;
 	};
-	typedef SPTR<BaseComponentContainerTemplate> BaseComponentContainerTemplatePtr;
+	
 
 }
-#endif // #ifndef BASECOMPONENTCONTAINERTEMPLATE_HH
+#endif // #ifndef ComponentContainerTemplate_HH

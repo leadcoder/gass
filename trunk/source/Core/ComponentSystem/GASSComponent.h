@@ -18,49 +18,63 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef BASECOMPONENT_HH
-#define BASECOMPONENT_HH
+#ifndef GASS_COMPONENT_H
+#define GASS_COMPONENT_H
 
 #include <Core/Common.h>
-
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Serialize/GASSISerialize.h"
 
-#include "Core/ComponentSystem/GASSIComponent.h"
-#include "Core/ComponentSystem/GASSIComponentTemplate.h"
-
 namespace GASS
 {
-	IFDECL(ComponentContainer)
-	
+	FDECL(ComponentContainer)
+	FDECL(Component);
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
 	/** \addtogroup Component
 	*  @{
-	*/
 
+	*/
 	/**
-			The BaseComponent is a convinience class that implements the
-			IComponent interface it also inherite from the reflection template class
-			which enables attribute reflection in a easy way.
-			To get more information what you get by inherit from this
-			class see the documentation for each interface.
-			If you intened to make new components this is a good 
-			class to inherit from or use as starting point for your own
-			IComponent implementation
+		Class that every new component should be derived from.
+		A component is the core building block in the component system,
+		here we find actual functionality like vehicle models,
+		graphics, network capability etc. All components that should work together is
+		owned by a ComponentContainer. A ComponentContainer is the owner of 
+		the components and has it's functionality in it's components.
+		The Component class is derived from the reflection template class
+		which enables attribute reflection in a easy way.
+
+		@remarks 
+		Components are also stored by component container templates.
+		The obvious choice would be to have a ComponentTemplate 
+		class used by the ComnponentContainerTemplate class, 
+		however in this component system Components are used in both  
+		ComnponentContainer's and ComnponentContainerTemplate.
+		This choice was made to make new component 
+		implementations as convenient as possible. 
+		To be more precise: the downside of separating 
+		is that all new components will have two almost 
+		identical implementations, one for instances 
+		and one for templates.
 	*/
 
-	class GASSCoreExport BaseComponent : public Reflection<BaseComponent, BaseReflectionObject>, public IComponent , public IXMLSerialize, public ISerialize, public IComponentTemplate
+	class GASSCoreExport Component : public Reflection<Component, BaseReflectionObject>, public IXMLSerialize, public ISerialize
 	{
 	public:
-		BaseComponent();
-		virtual ~BaseComponent();
+		Component();
+		virtual ~Component();
 		static void RegisterReflection();
-		//component interface
-		//virtual void OnCreate();
+		/**
+			Return the name of the component
+		*/
 		virtual std::string GetName() const;
+		/**
+			Set the name of the component
+		*/
 		virtual void SetName(const std::string &name);
 		/**
 		Get the component container that owns this component
@@ -124,7 +138,6 @@ namespace GASS
 		*/
 		virtual void SaveXML(TiXmlElement *obj_elem);
 
-		//template interface
 		/**
 			This function will allocate a new component
 			of the same type and copy all attributes 
@@ -132,7 +145,7 @@ namespace GASS
 		*/
 		virtual ComponentPtr CreateCopy();
 		/**
-			This function will copy all matching 
+			This function will copy all matching
 			attributes (attributes with same name) from 
 			this component to destination component.
 			@dest_comp Destination component
@@ -140,7 +153,8 @@ namespace GASS
 		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
 
 		/**
-			Get all dependencies
+			Get component dependencies. 
+			@return names of other components that this component require
 		*/
 		std::vector<std::string> GetDependencies();
 	protected:
@@ -149,7 +163,7 @@ namespace GASS
 		std::string m_Name;
 		ComponentContainerWeakPtr m_Owner;
 	};
-	PDECL(BaseComponent);
-
+	//Declare shared pointers
+	PDECL(Component);
 }
-#endif // #ifndef BASECOMPONENT_HH
+#endif // #ifndef Component_HH

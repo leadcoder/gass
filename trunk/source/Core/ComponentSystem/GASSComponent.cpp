@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSBaseComponent.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "tinyxml.h"
@@ -26,43 +26,43 @@
 namespace GASS
 {
 
-	std::map<RTTI* ,std::vector<std::string> >  BaseComponent::m_Dependencies;
+	std::map<RTTI* ,std::vector<std::string> >  Component::m_Dependencies;
 
-	BaseComponent::BaseComponent(void) : m_Owner(ComponentContainerWeakPtr())
+	Component::Component(void) : m_Owner(ComponentContainerWeakPtr())
 	{
 	
 	}
 
-	BaseComponent::~BaseComponent(void)
+	Component::~Component(void)
 	{
 	
 	}
 
-	void BaseComponent::RegisterReflection()
+	void Component::RegisterReflection()
 	{
-		RegisterProperty<std::string>( "Name", &BaseComponent::GetName, &BaseComponent::SetName);
+		RegisterProperty<std::string>( "Name", &Component::GetName, &Component::SetName);
 	}
 
-	std::string BaseComponent::GetName() const 
+	std::string Component::GetName() const 
 	{
 		return m_Name;
 	}
-	void BaseComponent::SetName(const std::string &name) 
+	void Component::SetName(const std::string &name) 
 	{
 		m_Name = name;
 	}
 	
-	ComponentContainerPtr BaseComponent::GetOwner() const 
+	ComponentContainerPtr Component::GetOwner() const 
 	{
 		return ComponentContainerPtr(m_Owner,NO_THROW);
 	}
 
-	void BaseComponent::SetOwner(ComponentContainerPtr owner)
+	void Component::SetOwner(ComponentContainerPtr owner)
 	{
 		m_Owner = owner;
 	}
 	
-	bool BaseComponent::Serialize(ISerializer* serializer)
+	bool Component::Serialize(ISerializer* serializer)
 	{
 		if(serializer->Loading())
 		{
@@ -81,12 +81,12 @@ namespace GASS
 	}
 
 
-	void BaseComponent::LoadXML(TiXmlElement *obj_elem)
+	void Component::LoadXML(TiXmlElement *obj_elem)
 	{
 		BaseReflectionObject::LoadProperties(obj_elem);
 	}
 
-	void BaseComponent::SaveXML(TiXmlElement *xml_elem)
+	void Component::SaveXML(TiXmlElement *xml_elem)
 	{
 		TiXmlElement * this_elem;
 		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
@@ -95,26 +95,26 @@ namespace GASS
 		SaveProperties(this_elem);
 	}
 
-	ComponentPtr BaseComponent::CreateCopy()
+	ComponentPtr Component::CreateCopy()
 	{
 		const std::string factory_class_name = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		BaseComponentPtr new_comp = STATIC_PTR_CAST<BaseComponent>(ComponentFactory::Get().Create(factory_class_name));
+		ComponentPtr new_comp = STATIC_PTR_CAST<Component>(ComponentFactory::Get().Create(factory_class_name));
 		if(!new_comp)
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"BaseComponent::CreateCopy");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"Component::CreateCopy");
 		}
-		//BaseComponentPtr new_comp = STATIC_PTR_CAST<BaseComponent>(CreateInstance());
+		//ComponentPtr new_comp = STATIC_PTR_CAST<Component>(CreateInstance());
 		BaseReflectionObject::CopyPropertiesTo(new_comp);
 		return new_comp;
 	}
 
-	void BaseComponent::CopyPropertiesTo(ComponentPtr dest_comp)
+	void Component::CopyPropertiesTo(ComponentPtr dest_comp)
 	{
-		BaseComponentPtr  dest_base_comp = STATIC_PTR_CAST<BaseComponent>(dest_comp);
+		ComponentPtr  dest_base_comp = STATIC_PTR_CAST<Component>(dest_comp);
 		BaseReflectionObject::CopyPropertiesTo(dest_base_comp);
 	}
 
-	std::vector<std::string> BaseComponent::GetDependencies()
+	std::vector<std::string> Component::GetDependencies()
 	{
 		return m_Dependencies[GetRTTI()];
 	}

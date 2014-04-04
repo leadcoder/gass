@@ -22,7 +22,7 @@
 #define COMPONENTCONTAINERFACTORY_HH
 
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSIComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Core/Utils/GASSFactory.h"
 
 namespace GASS
@@ -45,7 +45,7 @@ namespace GASS
 		See Factory class for more information on how to
 		do the actual registration.
 	*/
-	class GASSCoreExport ComponentContainerFactory : public Factory<IComponentContainer,std::string>
+	class GASSCoreExport ComponentContainerFactory : public Factory<ComponentContainer,std::string>
 	{
 	public:
 		ComponentContainerFactory();

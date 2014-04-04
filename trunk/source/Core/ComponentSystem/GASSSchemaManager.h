@@ -25,8 +25,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Serialize/GASSISerialize.h"
-#include "Core/ComponentSystem/GASSIComponent.h"
-#include "Core/ComponentSystem/GASSIComponentTemplate.h"
+#include "Core/ComponentSystem/GASSComponent.h"
 
 class TiXmlDocument;
 
