@@ -54,7 +54,7 @@ namespace GASS
 	@param OwnerType class that has the getter and setter functions
 	@param T Property type
 	*/
-	
+
 	template <class OwnerType, class T>
 	class VectorProperty : public TypedProperty<std::vector<T> > , public IVectorProperty
 	{
@@ -103,7 +103,7 @@ namespace GASS
 			return &typeid(T);
 		}
 
-	
+
 		void Serialize(BaseReflectionObject* object,ISerializer* serializer)
 		{
 			if(serializer->Loading())
@@ -161,7 +161,7 @@ namespace GASS
 					str >> out_value;
 					res.push_back(out_value);
 				}
-	
+
 				/*while(str >> out_value)
 				{
 					res.push_back(out_value);
@@ -171,7 +171,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"VectorProperty::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + IProperty::m_Name + " With value:" + value,"VectorProperty::SetValueByString");
 			}
 		}
 

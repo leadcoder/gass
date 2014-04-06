@@ -47,8 +47,13 @@ namespace GASS
 			assert(!m_Instance);
 			//use a cunning trick to get the singleton pointing to the start of the whole, rather than
 			//the start of the Singleton part of the object
-			int offset = (int)(T*)1 - (int)(Singleton <T>*)(T*)1;
-			m_Instance = (T*)((int)this + offset);
+
+			#if defined( _MSC_VER ) && _MSC_VER < 1200
+                int offset = (int)(T*)1 - (int)(Singleton <T>*)(T*)1;
+                m_Instance = (T*)((int)this + offset);
+            #else
+                m_Instance = static_cast< T* >( this );
+            #endif
 		}
 		~Singleton()
 		{

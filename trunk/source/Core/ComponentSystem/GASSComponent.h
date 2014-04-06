@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	FDECL(ComponentContainer)
+ 	FDECL(ComponentContainer)
 	FDECL(Component);
 
 	/** \addtogroup GASSCore
@@ -43,22 +43,22 @@ namespace GASS
 		A component is the core building block in the component system,
 		here we find actual functionality like vehicle models,
 		graphics, network capability etc. All components that should work together is
-		owned by a ComponentContainer. A ComponentContainer is the owner of 
+		owned by a ComponentContainer. A ComponentContainer is the owner of
 		the components and has it's functionality in it's components.
 		The Component class is derived from the reflection template class
 		which enables attribute reflection in a easy way.
 
-		@remarks 
+		@remarks
 		Components are also stored by component container templates.
-		The obvious choice would be to have a ComponentTemplate 
-		class used by the ComnponentContainerTemplate class, 
-		however in this component system Components are used in both  
+		The obvious choice would be to have a ComponentTemplate
+		class used by the ComnponentContainerTemplate class,
+		however in this component system Components are used in both
 		ComnponentContainer's and ComnponentContainerTemplate.
-		This choice was made to make new component 
-		implementations as convenient as possible. 
-		To be more precise: the downside of separating 
-		is that all new components will have two almost 
-		identical implementations, one for instances 
+		This choice was made to make new component
+		implementations as convenient as possible.
+		To be more precise: the downside of separating
+		is that all new components will have two almost
+		identical implementations, one for instances
 		and one for templates.
 	*/
 
@@ -91,11 +91,11 @@ namespace GASS
 		//xml-serialize interface
 		/**
 			Function to load component attributes from xml-tag.
-			Each data field is assumed to be on the following 
-			format: <AttributName value="data"/> where 
+			Each data field is assumed to be on the following
+			format: <AttributName value="data"/> where
 			AttributeName is the name of the registred attribute
 			and "data" is the actual value to be loaded into that
-			attribute. 
+			attribute.
 			Example of component xml-tag:
 			<MyLocation type="LocationComponent">
 				<Position value="0 0 0"/>
@@ -103,14 +103,14 @@ namespace GASS
 				<Visible value="1"/>
 			</MyLocation>
 
-			Notice that the actual component, a LocationComponent 
-			in the example above ,is created before this function 
-			is called and the TiXmlElement argument is the actual 
+			Notice that the actual component, a LocationComponent
+			in the example above ,is created before this function
+			is called and the TiXmlElement argument is the actual
 			component xml-tag (MyLocation in the example)
 
 			The user is however free to override this function for a
-			specific component implementation and create it's own 
-			loading procedure, this will of cause also require a custom 
+			specific component implementation and create it's own
+			loading procedure, this will of cause also require a custom
 			save implementation.
 		*/
 		virtual void LoadXML(TiXmlElement *obj_elem);
@@ -128,11 +128,11 @@ namespace GASS
 				<Visible value="1"/>
 			</MyLocation>
 
-			In the above example a LocationComponent with 
-			three attributes is saved to a xml-tag. 
+			In the above example a LocationComponent with
+			three attributes is saved to a xml-tag.
 			The user is however free to override this function for a
-			specific component implementation and create it's own 
-			saving procedure, this will of cause also require a custom 
+			specific component implementation and create it's own
+			saving procedure, this will of cause also require a custom
 			load implementation.
 
 		*/
@@ -140,20 +140,20 @@ namespace GASS
 
 		/**
 			This function will allocate a new component
-			of the same type and copy all attributes 
+			of the same type and copy all attributes
 			to this new component.
 		*/
 		virtual ComponentPtr CreateCopy();
 		/**
 			This function will copy all matching
-			attributes (attributes with same name) from 
+			attributes (attributes with same name) from
 			this component to destination component.
 			@dest_comp Destination component
 		*/
 		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
 
 		/**
-			Get component dependencies. 
+			Get component dependencies.
 			@return names of other components that this component require
 		*/
 		std::vector<std::string> GetDependencies();
@@ -164,6 +164,6 @@ namespace GASS
 		ComponentContainerWeakPtr m_Owner;
 	};
 	//Declare shared pointers
-	PDECL(Component);
+	PDECL(Component)
 }
 #endif // #ifndef Component_HH

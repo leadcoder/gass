@@ -23,6 +23,9 @@
 #include "GASSStringUtils.h"
 #include "GASSLogManager.h"
 #include "GASSException.h"
+#ifndef WIN32
+    #include <cxxabi.h>
+#endif
 
 namespace GASS
 {
@@ -51,7 +54,7 @@ namespace GASS
 		return ret;
 	}
 
-	
+
 	std::string StringUtils::ToUpper(const std::string&str)
 	{
 		std::string new_str = str;
@@ -75,7 +78,7 @@ namespace GASS
 		return new_str;
 	}
 
-	
+
 	std::string StringUtils::Demangle(const std::string &name)
 	{
 #ifdef WIN32

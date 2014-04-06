@@ -131,7 +131,7 @@ namespace GASS
 	#define NOMINMAX
 #endif
 #include <algorithm>
-#include <xutility>
+//#include <xutility>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -153,11 +153,11 @@ namespace GASS
 
 #define SPTR boost::shared_ptr
 #define WPTR boost::weak_ptr
-#define FDECL(CLASS) class CLASS; typedef SPTR<CLASS> ##CLASS##Ptr; typedef WPTR<CLASS> ##CLASS##WeakPtr;
-#define PDECL(CLASS) typedef SPTR<CLASS> ##CLASS##Ptr; typedef WPTR<CLASS> ##CLASS##WeakPtr;
+#define FDECL(CLASS) class CLASS; typedef SPTR<CLASS> CLASS##Ptr; typedef WPTR<CLASS> CLASS##WeakPtr;
+#define PDECL(CLASS) typedef SPTR<CLASS> CLASS##Ptr; typedef WPTR<CLASS> CLASS##WeakPtr;
 
-#define IFDECL(CLASS) class I##CLASS##; typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
-#define IPDECL(CLASS) typedef SPTR<I##CLASS##> ##CLASS##Ptr; typedef WPTR<I##CLASS##> ##CLASS##WeakPtr;
+#define IFDECL(CLASS) class I##CLASS; typedef SPTR<I##CLASS> CLASS##Ptr; typedef WPTR<I##CLASS> CLASS##WeakPtr;
+#define IPDECL(CLASS) typedef SPTR<I##CLASS> CLASS##Ptr; typedef WPTR<I##CLASS> CLASS##WeakPtr;
 
 #define DYNAMIC_PTR_CAST boost::dynamic_pointer_cast
 #define STATIC_PTR_CAST boost::static_pointer_cast

@@ -64,7 +64,7 @@ namespace GASS
 		std::stringstream sstream;
 		sstream.unsetf(std::ios::skipws);
 		sstream.setf(std::ios::boolalpha);
-		sstream.setf(0,std::ios::floatfield);
+		sstream.unsetf ( std::ios::floatfield );
 		sstream.precision(10);
 
 		sstream << val;
@@ -95,9 +95,9 @@ namespace GASS
 		typedef T (OwnerType::*GetterType)() const; // Getter function
 		typedef void (OwnerType::*SetterType)( T Value); // Setter function
 		typedef void (OwnerType::*SetterTypeConst)( const T &Value ); // Const setter function
-		Property( const std::string &name, 
-			GetterType getter, 
-			SetterType setter, 
+		Property( const std::string &name,
+			GetterType getter,
+			SetterType setter,
 			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_Setter(setter),
@@ -107,9 +107,9 @@ namespace GASS
 
 		}
 
-		Property( const std::string &name, 
-			GetterType getter, 
-			SetterTypeConst setter, 
+		Property( const std::string &name,
+			GetterType getter,
+			SetterTypeConst setter,
 			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_SetterConst(setter),
@@ -178,11 +178,11 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + IProperty::m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 
-		std::string GetValueAsString(const BaseReflectionObject* object) const 
+		std::string GetValueAsString(const BaseReflectionObject* object) const
 		{
 			T val = GetValue(object);
 			std::string res;
@@ -196,7 +196,7 @@ namespace GASS
 		}
 		void SetValue(BaseReflectionObject* object, boost::any &value)
 		{
-			
+
 			T res;
 			try
 			{
@@ -204,13 +204,13 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value","Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + IProperty::m_Name + " Property type may differ from provided any value","Property::SetValue");
 			}
 
 			SetValue(object,res);
 		}
 
-		void GetValue(const BaseReflectionObject* object, boost::any &value) const 
+		void GetValue(const BaseReflectionObject* object, boost::any &value) const
 		{
 			T res = GetValue(object);
 			value = res;

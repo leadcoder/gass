@@ -48,7 +48,7 @@ namespace GASS
     bool GetValueFromString<float>(float &res,const std::string &s)
 	{
 		std::stringstream str;
-		str.setf(0,std::ios::floatfield);
+		str.unsetf ( std::ios::floatfield );
 		str.precision(6);
 		str << s;
         str >> res;
@@ -61,14 +61,15 @@ namespace GASS
         std::stringstream sstream;
         sstream.unsetf(std::ios::skipws);
 		sstream.setf(std::ios::boolalpha);
-		sstream.setf(0,std::ios::floatfield);
+		//sstream.setf(0,std::ios::floatfield);
+		sstream.unsetf ( std::ios::floatfield );
 		sstream.precision(6);
-		
+
         sstream << val;
         res = sstream.str();
         return true;
     }
 
-   
+
 
 }

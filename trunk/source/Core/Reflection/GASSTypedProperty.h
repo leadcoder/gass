@@ -22,7 +22,7 @@
 #define GASS_TYPED_PROPERTY_H
 
 #include "Core/Reflection/GASSIProperty.h"
-
+#include "Core/Utils/GASSStringUtils.h"
 namespace GASS
 {
 	class BaseReflectionObject;
@@ -34,7 +34,7 @@ namespace GASS
 	*  @{
 	*/
 
-	/** TypedProperty This intermediate class defines a property that is typed, 
+	/** TypedProperty This intermediate class defines a property that is typed,
 	but not bound as a member of a particular class.
 	*/
 	template <class T>
@@ -53,14 +53,14 @@ namespace GASS
 		 Returns the type of this property.
 		 */
 		virtual const std::type_info* GetTypeID() const;
-		
-		
+
+
 		/**
 		 Returns the name of this property.
 		 */
 		virtual std::string GetTypeName() const;
 
-		
+
 		/**
 		Get the value of this property.
 		@param object BaseReflectionObject that is owner of this property
@@ -93,6 +93,6 @@ namespace GASS
 		return StringUtils::Demangle(std::string(typeid(T).name()));
 	}
 
-	
+
 }
 #endif

@@ -1,6 +1,7 @@
 #include "GASSHeightmap.h"
 #include "GASSRawFile.h"
 #include <math.h>
+#include <fstream>
 
 namespace GASS
 {
@@ -10,7 +11,7 @@ namespace GASS
 	{
 
 	}
-	
+
 	Heightmap::Heightmap(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width, unsigned int height, float *data) : m_Data(NULL),
 		m_Min(min_bound),
 		m_Max(max_bound),
@@ -48,7 +49,7 @@ namespace GASS
 		//round?
 		unsigned int xindex = fxindex;
 		unsigned int zindex = fzindex;
-		
+
 		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
 			return 0.0f;
 
@@ -56,7 +57,7 @@ namespace GASS
 		//Find the 4 corner points of the quad that the cam is directly above
 		//Find the cam's distance from these 4 points
 		//Lerp or Bilerp the height value at camera point from above values
-	
+
 		//the x and y coords are all either int(x) or int(x)+1
 		//use all 4 combos
 		//x0 <= x <= x1
@@ -73,7 +74,7 @@ namespace GASS
 
 		if( x1 >= m_Width || z1 >= m_Height )
 			return 0.0;
-		
+
 		float h00, h01, h10, h11;
 		h00 = m_Data[z0*m_Height+x0];
 		h01 = m_Data[z0*m_Height+x1];
@@ -112,7 +113,7 @@ namespace GASS
 	void Heightmap::ImportRAWFile(const std::string &filename, float max_height, float min_height)
 	{
 		RawFile file;
-		if(!file.Load(filename.c_str(), 16)) 
+		if(!file.Load(filename.c_str(), 16))
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to load heightmap:" + filename,"Heightmap::ImportRAWFile");
 		m_Width = file.m_Width;
 		m_Height = file.m_Height;
@@ -142,7 +143,7 @@ namespace GASS
 
 	void Heightmap::Save(const std::string &filename) const
 	{
-		std::ofstream ofs(filename, std::ios::binary);
+		std::ofstream ofs(filename.c_str(), std::ios::binary);
 		ofs.write((char *) &m_Min, sizeof(Vec3));
 		ofs.write((char *) &m_Max, sizeof(Vec3));
 		ofs.write((char *) &m_Width, sizeof(int));
@@ -168,5 +169,5 @@ namespace GASS
 	{
 		return AABox(m_Min,m_Max);
 	}
-	
+
 }
