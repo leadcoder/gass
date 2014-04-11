@@ -35,7 +35,7 @@ namespace GASS
 	bool GetValueFromString(type &res,const std::string &s)
 	{
 		std::stringstream str;
-		str.setf(0,std::ios::floatfield);
+		//str.setf(0,std::ios::floatfield);
 		str.precision(10);
 
 		//str.setf(std::ios::boolalpha);
@@ -222,7 +222,7 @@ namespace GASS
 		PropertyMetaDataPtr m_MetaData;
 	};
 
-#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );
+#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME );
 #define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );
 #define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \

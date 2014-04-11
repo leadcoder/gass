@@ -35,7 +35,7 @@ namespace GASS
 	*/
 
 	/**
-	Helper class enable enums to be 
+	Helper class enable enums to be
 	used in reflection attribute registration
 	*/
 
@@ -55,19 +55,19 @@ namespace GASS
 			CLASS::Register();
 		}
 
-		MultiEnumBinder() 
+		MultiEnumBinder()
 		{
 			CLASS::Register();
 		}
 
 		virtual ~MultiEnumBinder(){}
 
-		void SetValue(ENUM value) 
+		void SetValue(ENUM value)
 		{
 			m_Value = value;
 		}
 
-		ENUM GetValue() const 
+		ENUM GetValue() const
 		{
 			return m_Value;
 		}
@@ -77,10 +77,11 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		static std::vector<std::string> GetStringEnumeration() 
+		static std::vector<std::string> GetStringEnumeration()
 		{
 			std::vector<std::string> types;
-			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+
+			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
 			while(iter != m_NameToEnumMap.end())
 			{
 				types.push_back(iter->first);
@@ -89,7 +90,7 @@ namespace GASS
 			return types;
 		}
 	protected:
-		void SetValueFromNames(const std::vector<std::string> &names) 
+		void SetValueFromNames(const std::vector<std::string> &names)
 		{
 			m_Value = static_cast<ENUM>(0);
 			for(size_t i=0; i< names.size() ; i++)
@@ -107,7 +108,7 @@ namespace GASS
 		std::vector<std::string> GetNamesFromValue() const
 		{
 			std::vector<std::string> types;
-			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
 			while(iter != m_NameToEnumMap.end())
 			{
 				if(iter->second & m_Value)
@@ -150,8 +151,10 @@ namespace GASS
 		}
 
 		ENUM m_Value;
-		static std::map<std::string ,ENUM> m_NameToEnumMap;
-		static std::map<ENUM,std::string > m_EnumToNameMap;
+		typedef typename std::map<std::string ,ENUM > NameEnumMap;
+		typedef typename std::map<ENUM ,std::string > EnumNameMap;
+		static NameEnumMap m_NameToEnumMap;
+		static EnumNameMap m_EnumToNameMap;
 	};
 
 
@@ -164,19 +167,19 @@ namespace GASS
 			CLASS::Register();
 		}
 
-		SingleEnumBinder() 
+		SingleEnumBinder()
 		{
 			CLASS::Register();
 		}
 
 		virtual ~SingleEnumBinder(){}
 
-		void SetValue(ENUM value) 
+		void SetValue(ENUM value)
 		{
 			m_Value = value;
 		}
 
-		ENUM GetValue() const 
+		ENUM GetValue() const
 		{
 			return m_Value;
 		}
@@ -186,12 +189,12 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
-		
 
-		static std::vector<CLASS> GetEnumeration() 
+
+		static std::vector<CLASS> GetEnumeration()
 		{
 			std::vector<CLASS> types;
-			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
 			while(iter != m_NameToEnumMap.end())
 			{
 				types.push_back(iter->second);
@@ -200,10 +203,10 @@ namespace GASS
 			return types;
 		}
 
-		static std::vector<std::string> GetStringEnumeration() 
+		static std::vector<std::string> GetStringEnumeration()
 		{
 			std::vector<std::string> types;
-			std::map<std::string ,ENUM>::iterator iter =  m_NameToEnumMap.begin();
+			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
 			while(iter != m_NameToEnumMap.end())
 			{
 				types.push_back(iter->first);
@@ -213,7 +216,7 @@ namespace GASS
 		}
 
 	protected:
-		void SetValueFromName(const std::string &name) 
+		void SetValueFromName(const std::string &name)
 		{
 			if(name != "" && m_NameToEnumMap.find(name) != m_NameToEnumMap.end())
 				m_Value = m_NameToEnumMap[name];
@@ -256,8 +259,10 @@ namespace GASS
 		}
 
 		ENUM m_Value;
-		static std::map<std::string ,ENUM> m_NameToEnumMap;
-		static std::map<ENUM,std::string > m_EnumToNameMap;
+		typedef typename std::map<std::string ,ENUM > NameEnumMap;
+		typedef typename std::map<ENUM ,std::string > EnumNameMap;
+		static NameEnumMap m_NameToEnumMap;
+		static EnumNameMap m_EnumToNameMap;
 	};
 
 }

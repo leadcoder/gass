@@ -45,7 +45,7 @@ namespace GASS
 
 	void BaseSceneComponent::OnInitialize()
 	{
-		
+
 	}
 
 	void BaseSceneComponent::InitializePointers()
@@ -74,7 +74,7 @@ namespace GASS
 							{
 								if(!links[i].Initlize(GetSceneObject()))
 								{
-									GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+									GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
 										"BaseSceneComponent::InitializePointers()");
 								}
@@ -82,7 +82,8 @@ namespace GASS
 							else
 								LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() <<  " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 						}
-						prop->SetValue(this,boost::any(links));
+						boost::any any_links(links);
+						prop->SetValue(this, any_links);
 					}
 					else
 					{
@@ -94,16 +95,17 @@ namespace GASS
 
 							if(!link.Initlize(GetSceneObject()))
 							{
-								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
 										"BaseSceneComponent::InitializePointers()");
 
 							}
-							prop->SetValue(this,boost::any(link));
+							boost::any any_link(link);
+							prop->SetValue(this,any_link);
 						}
 						else
 						{
-							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, 
+							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
 										"BaseSceneComponent::InitializePointers()");
 
@@ -138,7 +140,8 @@ namespace GASS
 							SceneObjectRef new_ref( links[i].GetRefGUID());
 							links[i] = new_ref;
 						}
-						prop->SetValue(this,boost::any(links));
+						boost::any any_links(links);
+						prop->SetValue(this,any_links);
 					}
 					else
 					{
@@ -146,7 +149,8 @@ namespace GASS
 						prop->GetValue(this,any_link);
 						SceneObjectRef old_ref = boost::any_cast<SceneObjectRef>(any_link);
 						SceneObjectRef new_ref( old_ref.GetRefGUID());
-						prop->SetValue(this,boost::any(new_ref));
+						boost::any any_ref(new_ref);
+						prop->SetValue(this,any_ref);
 					}
 				}
 				++iter;
@@ -179,7 +183,8 @@ namespace GASS
 							new_ref.ResolveTemplateReferences(template_root);
 							links[i] = new_ref;
 						}
-						prop->SetValue(this,boost::any(links));
+						boost::any any_links(links);
+						prop->SetValue(this,any_links);
 					}
 					else
 					{
@@ -187,7 +192,8 @@ namespace GASS
 						prop->GetValue(this,any_link);
 						SceneObjectRef so_ref = boost::any_cast<SceneObjectRef>(any_link);
 						so_ref.ResolveTemplateReferences(template_root);
-						prop->SetValue(this,boost::any(so_ref));
+						boost::any any_so(so_ref);
+						prop->SetValue(this,any_so);
 					}
 				}
 				++iter;
@@ -226,7 +232,8 @@ namespace GASS
 								links[i] = new_ref;
 							}
 						}
-						prop->SetValue(this,boost::any(links));
+						boost::any any_links(links);
+						prop->SetValue(this,any_links);
 					}
 					else
 					{
@@ -237,7 +244,8 @@ namespace GASS
 						if(guid_iter != ref_map.end())
 						{
 							SceneObjectRef new_ref(  guid_iter->second);
-							prop->SetValue(this,boost::any(new_ref));
+							boost::any any_ref(new_ref);
+							prop->SetValue(this,any_ref);
 						}
 					}
 				}

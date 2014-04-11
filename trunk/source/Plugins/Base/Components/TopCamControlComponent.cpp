@@ -78,7 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnCameraParameter,CameraParameterRequest,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TopCamControlComponent::OnInput,ControllSettingsMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnCameraChanged, CameraChangedEvent, 0 ));
-	
+
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
@@ -102,7 +102,7 @@ namespace GASS
 
 	void TopCamControlComponent::PositionChange(MessagePtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 		{
 			PositionRequestPtr pos_mess = STATIC_PTR_CAST<PositionRequest>(message);
 			m_Pos = pos_mess->GetPosition();
@@ -111,19 +111,19 @@ namespace GASS
 
 	void TopCamControlComponent::RotationChange(MessagePtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 		{
-		
+
 		}
 	}
 
 	void TopCamControlComponent::OnInput(ControllSettingsMessagePtr message)
 	{
-		if(!m_Active) 
+		if(!m_Active)
 			return;
 		if(message->GetSettings() != m_ControlSettingName) // only hog our settings
 			return;
-		
+
 		std::string name = message->GetController();
 		float value = message->GetValue();
 
@@ -131,21 +131,21 @@ namespace GASS
 		{
 			if(value > 0)
 				m_ScrollBoostInput = true;
-			else 
+			else
 				m_ScrollBoostInput = false;
 		}
 		/*else if(name == "FreeCameraEnableRot")
 		{
 			if(value > 0)
 				m_EnableZoomInput = true;
-			else 
+			else
 				m_EnableZoomInput = false;
 		}*/
 		else if(name == "2dCameraEnablePan")
 		{
 			if(value > 0)
 				m_EnablePanInput = true;
-			else 
+			else
 				m_EnablePanInput = false;
 		}
 		else if(name == "2dCameraPanV")
@@ -165,7 +165,7 @@ namespace GASS
 		else if(name == "FreeCameraZoom")
 		{
 			//m_ZoomInput = value;
-		
+
 		}
 	}
 
@@ -195,8 +195,8 @@ namespace GASS
 		if(m_ScrollBoostInput)
 			speed_factor *= 2;
 
-		
-		
+
+
 		Vec3 filter;
 		filter.x = abs(north.x) + abs(east.x);
 		filter.y = abs(north.y) + abs(east.y);
@@ -206,36 +206,36 @@ namespace GASS
 		m_Pos = (m_Pos*filter) + up;
 
 
-		
+
 		Vec3 move_north = north*delta*speed_factor * m_ScrollUpInput;
 		Vec3 move_east = east*delta*speed_factor * m_ScrollDownInput;
-		
-		if(m_EnablePanInput) 
+
+		if(m_EnablePanInput)
 			m_Pos = ((m_Pos + move_north) + move_east);
-		
-		
+
+
 		//
-		//if(m_EnableZoomInput) 
+		//if(m_EnableZoomInput)
 		m_CurrentWindowSize += speed_factor*m_ZoomSpeed*m_ZoomInput*delta;
 		//m_Fov -= time_step*m_FovChangeSpeed*m_ControlSetting->Get("TopCamControlComponentZoom");
 		if(m_CurrentWindowSize < m_MinWindowSize) m_CurrentWindowSize = m_MinWindowSize;
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;
 
-		int from_id = (int)this;
+		int from_id = PTR_TO_INT(this);
 		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
 		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(m_Rot,from_id)));
 
 		CameraParameterRequestPtr cam_msg(new CameraParameterRequest(CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostRequest(cam_msg);
-		m_ZoomInput *= 0.9; 
+		m_ZoomInput *= 0.9;
 	}
 
 
 	void TopCamControlComponent::OnCameraParameter(CameraParameterRequestPtr message)
 	{
 		CameraParameterRequest::CameraParameterType type = message->GetParameter();
-		int this_id = (int)this;
+		int this_id = PTR_TO_INT(this);
 		if(message->GetSenderID() != this_id)
 		{
 			switch(type)

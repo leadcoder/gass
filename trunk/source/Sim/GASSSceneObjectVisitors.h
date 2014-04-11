@@ -23,6 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/ComponentSystem/GASSComponentContainer.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -69,15 +70,17 @@ namespace GASS
 	public:
 		TypedClassComponentsVisitor() {}
 		virtual ~TypedClassComponentsVisitor() {}
-		virtual bool Visit(SceneObjectPtr sceneobject)
+		virtual bool Visit(SceneObjectPtr scene_object)
 		{
-			ComponentContainerTemplate::ComponentContainerTemplateIterator children = obj->GetChildren();
-			while(children.hasMoreElements())
+			ComponentContainer::ComponentIterator comp_iter = scene_object->GetComponents();
+			while(comp_iter.hasMoreElements())
 			{
-				ComponentContainerTemplatePtr child = children.getNext();
-				SPTR<T> ret = DYNAMIC_PTR_CAST<T>(child);
+			    ComponentPtr comp = comp_iter.getNext();
+				SPTR<T> ret = DYNAMIC_PTR_CAST<T>(comp);
 				if(ret)
-					m_Components.push_back(m_ComponentVector[i]);
+				{
+					m_Components.push_back(comp);
+				}
 			}
 			return true;
 		}

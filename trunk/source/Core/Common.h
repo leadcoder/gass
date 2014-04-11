@@ -163,5 +163,5 @@ namespace GASS
 #define STATIC_PTR_CAST boost::static_pointer_cast
 #define SHARE_CLASS boost::enable_shared_from_this
 #define NO_THROW boost::detail::sp_nothrow_tag()
-
+#define PTR_TO_INT(ptr) static_cast<int>(reinterpret_cast<long>(ptr))
 #endif // #ifndef COMMON_HH

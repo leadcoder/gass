@@ -117,7 +117,7 @@ namespace GASS
 
 	void FreeCamControlComponent::PositionChange(MessagePtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 		{
 			PositionRequestPtr pos_mess = STATIC_PTR_CAST<PositionRequest>(message);
 			m_Pos = pos_mess->GetPosition();
@@ -126,7 +126,7 @@ namespace GASS
 
 	void FreeCamControlComponent::RotationChange(MessagePtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 		{
 			RotationRequestPtr pos_mess = STATIC_PTR_CAST<RotationRequest>(message);
 
@@ -140,12 +140,12 @@ namespace GASS
 
 	void FreeCamControlComponent::OnInput(ControllSettingsMessagePtr message)
 	{
-		if(!m_Active) 
+		if(!m_Active)
 			return;
-		if(message->GetSettings() != m_ControlSettingName && 
+		if(message->GetSettings() != m_ControlSettingName &&
 		   message->GetSettings() != m_AltControlSettingName) // only hog our settings
 			return;
-		
+
 		std::string name = message->GetController();
 		float value = message->GetValue();
 
@@ -153,14 +153,14 @@ namespace GASS
 		{
 			if(value > 0)
 				m_SpeedBoostInput = true;
-			else 
+			else
 				m_SpeedBoostInput = false;
 		}
 		else if(name == "FreeCameraEnableRot")
 		{
 			if(value > 0)
 				m_EnableRotInput = true;
-			else 
+			else
 				m_EnableRotInput = false;
 		}
 		else if(name == "FreeCameraThrottle")
@@ -219,14 +219,14 @@ namespace GASS
 			speed_factor *= 0.9;
 		}
 
-		if(m_SpeedBoostInput) 
+		if(m_SpeedBoostInput)
 		{
 			if(speed_factor > m_RunSpeed)
 			{
 				speed_factor = m_RunSpeed;
 			}
 		}
-		else 
+		else
 		{
 			if(speed_factor > m_WalkSpeed)
 				speed_factor = m_WalkSpeed;
@@ -259,8 +259,8 @@ namespace GASS
 			Vec3 cam_up = up*sin(beta);
 			Vec3 cam_north = north* cos(beta)*cos(teta);
 
-			forward_vel = cam_east + cam_up; 
-			forward_vel = forward_vel + cam_north; 
+			forward_vel = cam_east + cam_up;
+			forward_vel = forward_vel + cam_north;
 
 			Vec3 temp = north*forward_vel;
 			Float east_strafe_vel = temp.x + temp.y +temp.z;
@@ -279,7 +279,7 @@ namespace GASS
 		{
 			Vec3 cam_east = east * -sin(teta);
 			Vec3 cam_north = north* cos(teta);
-			forward_vel = cam_east + cam_north; 
+			forward_vel = cam_east + cam_north;
 
 			Vec3 temp = north*forward_vel;
 
@@ -329,7 +329,7 @@ namespace GASS
 		m_Pos = m_Pos + tot_vel;
 		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
-		int from_id = (int)this;
+		int from_id = PTR_TO_INT(this);
 		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
 		Quaternion rot_to_send(m_Rot);
@@ -342,11 +342,11 @@ namespace GASS
 			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
 		}
 		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(rot_to_send,from_id)));
-	
+
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
 		//m_UpDownInput = m_UpDownInput*0.9;
-	
+
 		if(m_Debug)
 		{
 			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_Rot << std::endl;

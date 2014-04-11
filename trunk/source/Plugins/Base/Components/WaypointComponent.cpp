@@ -40,11 +40,11 @@
 namespace GASS
 {
 
-	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0), 
-		m_Initialized(false),  
-		m_Tangent(0,0,0), 
+	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0),
+		m_Initialized(false),
+		m_Tangent(0,0,0),
 		m_CustomTangent(false)
-		
+
 	{
 
 	}
@@ -114,7 +114,7 @@ namespace GASS
 	void WaypointComponent::OnMoved(MessagePtr message)
 	{
 		//notify parent
-		int id = (int) this;
+		int id = PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
 			NotifyUpdate();
@@ -125,7 +125,7 @@ namespace GASS
 	void WaypointComponent::OnTangentMoved(MessagePtr message)
 	{
 		//notify parent
-		int id = (int) this;
+		int id = PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
 			NotifyUpdate();
@@ -141,14 +141,14 @@ namespace GASS
 
 	void WaypointComponent::Rotate(const Quaternion &rot)
 	{
-		int id = (int) this;
+		int id = PTR_TO_INT(this);
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
 	}
 
 	void WaypointComponent::OnRotate(WorldRotationRequestPtr message)
 	{
 		//use custom tangent?
-		int id = (int) this;
+		int id = PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
 			NotifyUpdate();
@@ -164,7 +164,7 @@ namespace GASS
 				list->UpdatePath();
 		}
 	}
-	
+
 	Float WaypointComponent::GetTangentWeight()const
 	{
 		return m_TangentWeight;
@@ -192,10 +192,10 @@ namespace GASS
 			rot_mat.Identity();
 
 			Vec3 up(0,1,0);
-			
+
 			Float l = tangent.Length();
 			Vec3 dir = tangent*(1.0/l);
-			
+
 			Vec3 left = Math::Cross(dir,up);
 			left.Normalize();
 			up = Math::Cross(left,dir);
@@ -207,10 +207,10 @@ namespace GASS
 
 			Quaternion rot;
 			rot.FromRotationMatrix(rot_mat);
-			int id = (int) this;
+			int id = PTR_TO_INT(this);
 			//GetSceneObject()->PostMessage(MessagePtr(new RotationRequest(rot,id)));
 
-			
+
 			//GetSceneObject()->GetFirstChildByClass<ILocationComponent>();
 			//LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 t_pos = tangent;
@@ -219,7 +219,7 @@ namespace GASS
 				tangent->PostRequest(PositionRequestPtr(new PositionRequest(t_pos*0.1,id)));
 			else
 				std::cout << "Failed to find tangent in waypoint compoenent\n";
-			
+
 		}
 	}
 

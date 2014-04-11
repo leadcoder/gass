@@ -20,7 +20,7 @@
 
 #include "ProjectileComponent.h"
 #include "Plugins/Game/GameSceneManager.h"
-#include "GameMessages.h"
+#include "Plugins/Game/GameMessages.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -79,7 +79,7 @@ namespace GASS
 
 	void ProjectileComponent::OnDelete()
 	{
-		
+
 	}
 
 	void ProjectileComponent::OnVelocityRequest(PhysicsBodyVelocityRequestPtr message)
@@ -90,13 +90,13 @@ namespace GASS
 
 	void ProjectileComponent::OnPositionMessage(PositionRequestPtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 			m_Pos = message->GetPosition();
 	}
 
 	void ProjectileComponent::OnRotationMessage(RotationRequestPtr message)
 	{
-		if(message->GetSenderID() != (int) this)
+		if(message->GetSenderID() != PTR_TO_INT(this))
 			m_Rot = message->GetRotation();
 	}
 
@@ -105,8 +105,8 @@ namespace GASS
 		Vec3 gravity;
 		gravity.Set(0,-9.82,0);
 
-		Vec3 ray_start; 
-		Vec3 ray_end; 
+		Vec3 ray_start;
+		Vec3 ray_end;
 		Vec3 ray_dir;
 		Vec3 right,up;
 
@@ -149,12 +149,12 @@ namespace GASS
 			up.Normalize();
 
 
-			
+
 			rot_mat.Identity();
 			rot_mat.SetViewDirVector(-dir);
 			rot_mat.SetRightVector(-right);
 			rot_mat.SetUpVector(up);
-			
+
 			//air drag ~ v^2*k
 			drag = drag* m_Velocity.SquaredLength()*time;
 
@@ -162,29 +162,29 @@ namespace GASS
 			Vec3 new_pos = m_Pos + m_Velocity*time;
 
 			//Send collision request
-			ray_start = m_Pos; 
-			ray_end = new_pos; 
+			ray_start = m_Pos;
+			ray_end = new_pos;
 			ray_dir = ray_end - ray_start;
 			GASS::CollisionResult result;
 			m_ColSM->Raycast(ray_start,ray_dir,GEOMETRY_FLAG_SCENE_OBJECTS,result);
 			m_Pos = new_pos;
 			m_Rot.FromRotationMatrix(rot_mat);
-		
+
 
 			if(result.Coll)
 			{
-				if(m_DieAfterColl)	
+				if(m_DieAfterColl)
 					impact = true;
 					//correct postition
 				m_Pos = result.CollPosition;
 			}
 				//send position and rotaion update
-			int id = (int) this;
-			
-			
+			int id = PTR_TO_INT(this);
+
+
 			GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,id)));
 			GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(m_Rot,id)));
-		
+
 
 			if(impact)
 			{
@@ -192,7 +192,7 @@ namespace GASS
 				{
 
 				}
-				else 
+				else
 				{
 					Vec3 proj_dir = m_Velocity;
 					proj_dir.FastNormalize();
@@ -218,26 +218,26 @@ namespace GASS
 	void ProjectileComponent::SceneManagerTick(double time)
 	{
 		//std::cout << "Update proj:" << GetSceneObject()->GetName() << std::endl;
-		
+
 		m_TimeLeft -= time;
 		m_PhysicsDeltaTime += time;
 		StepPhysics(time);
 
-		
-		
+
+
 		/*if(m_HasColHandle)
 		{
 			if(m_ColSM->Check(m_ColHandle,result))
 			{
 				if(result.Coll)
 				{
-					if(m_DieAfterColl)	
+					if(m_DieAfterColl)
 						impact = true;
 					//correct postition
 					m_Pos = result.CollPosition;
 				}
 				//send position and rotaion update
-				int id = (int) this;
+				int id = PTR_TO_INT(this);
 				MessagePtr pos_msg(new PositionRequest(m_Pos,id));
 				MessagePtr rot_msg(new RotationRequest(m_Rot,id));
 				GetSceneObject()->PostMessage(pos_msg);
@@ -254,7 +254,7 @@ namespace GASS
 			{
 
 			}
-			else 
+			else
 			{
 				Vec3 proj_dir = m_Velocity;
 				proj_dir.FastNormalize();
@@ -292,7 +292,7 @@ namespace GASS
 		m_EndEffectTemplateName = effect;
 	}
 
-	std::string ProjectileComponent::GetEndEffectTemplateName() const 
+	std::string ProjectileComponent::GetEndEffectTemplateName() const
 	{
 		return m_EndEffectTemplateName;
 	}

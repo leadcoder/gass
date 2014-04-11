@@ -23,7 +23,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSSceneOBjectRef.h"
+#include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -32,7 +32,7 @@ namespace GASS
 {
 
 	/**
-		Component that roatate scene object to target object 
+		Component that roatate scene object to target object
 	*/
 
 	class LookAtComponent : public Reflection<LookAtComponent,BaseSceneComponent>

@@ -31,7 +31,7 @@
 #include <angelscript.h>
 //addons
 #include "Sim/Utils/Script/scriptstdstring.h"
-#include "Sim/Utils/Script/ScriptBuilder.h"
+#include "Sim/Utils/Script/scriptbuilder.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 namespace GASS
 {
@@ -39,9 +39,9 @@ namespace GASS
 	void MessageCallback(const asSMessageInfo *msg, void *param)
 	{
 		const char *type = "ERR ";
-		if( msg->type == asMSGTYPE_WARNING ) 
+		if( msg->type == asMSGTYPE_WARNING )
 			type = "WARN";
-		else if( msg->type == asMSGTYPE_INFORMATION ) 
+		else if( msg->type == asMSGTYPE_INFORMATION )
 			type = "INFO";
 		//printf("%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type, msg->message);
 		//LogManager::Get().stream() << msg->section << "(" << msg->row << ", " << msg->col << ") : " << type << " : " << msg->message;
@@ -57,7 +57,7 @@ namespace GASS
 		//std::cout << str;
 	}
 
-	ScriptManager::ScriptManager(void) 
+	ScriptManager::ScriptManager(void)
 	{
 		m_Engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
 		if( m_Engine == 0 )
@@ -152,7 +152,7 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Vec3, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
 		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(double) const", asMETHODPR(Vec3, operator*, (Float) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
 		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opNeg() const", asMETHODPR(Vec3, operator-, () const, Vec3), asCALL_THISCALL); assert(r >= 0);
-		
+
 		r = m_Engine->RegisterObjectType("Quaternion", sizeof(Quaternion), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
 		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(QuaternionDefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f(double, double, double, double)",	asFUNCTION(QuaternionConstructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
@@ -164,7 +164,7 @@ namespace GASS
 		r = m_Engine->RegisterObjectProperty("Quaternion", "double w", offsetof(Quaternion, w)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
-		
+
 		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);
 
@@ -250,29 +250,29 @@ namespace GASS
 		if( mod )
 		{
 			// We've already attempted loading the script before, but there is no controller
-			return 0;
+			return ScriptControllerPtr ();
 		}
 
 		// Compile the script into the module
 		CScriptBuilder builder;
 		r = builder.StartNewModule(m_Engine, script.c_str());
 		if( r < 0 )
-			return 0;
+			return ScriptControllerPtr ();
 
 		// If the script file doesn't exist, then there is no script controller for this type
 		FILE *f;
 		if( (f = fopen((script).c_str(), "r")) == 0 )
-			return 0;
+			return ScriptControllerPtr ();
 		fclose(f);
 
 		// Let the builder load the script, and do the necessary pre-processing (include files, etc)
 		r = builder.AddSectionFromFile((script).c_str());
 		if( r < 0 )
-			return 0;
+			return ScriptControllerPtr ();
 
 		r = builder.BuildModule();
 		if( r < 0 )
-			return 0;
+			return ScriptControllerPtr ();
 
 
 		// Cache the functions and methods that will be used
@@ -319,7 +319,7 @@ namespace GASS
 			return 0;
 			}*/
 
-			
+
 			// Get the factory function from the object type
 			ctrl->m_FactoryFunction = type->GetFactoryByDecl("ScriptController @ScriptController()");
 

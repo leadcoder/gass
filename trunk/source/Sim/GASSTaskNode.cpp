@@ -21,7 +21,7 @@
 
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSRuntimeController.h"
+#include "Sim/GASSRunTimeController.h"
 
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
@@ -120,7 +120,7 @@ namespace GASS
 
 	}
 
-	TaskNode* TaskNode::GetNodeByName(const std::string &name) 
+	TaskNode* TaskNode::GetNodeByName(const std::string &name)
 	{
 		if(m_Name == name)
 			return this;
@@ -248,7 +248,7 @@ namespace GASS
 	class GASSExport Dummy : public tbb::task
 	{
 	public:
-		Dummy() 
+		Dummy()
 		{
 
 		}
@@ -266,7 +266,7 @@ namespace GASS
 		tbb::task::spawn_root_and_wait(*parent);
 	}*/
 
-	void TaskNode::Update(double delta_time,tbb::task *parent) 
+	void TaskNode::Update(double delta_time,tbb::task *parent)
 	{
 
 		//update on request
@@ -285,7 +285,7 @@ namespace GASS
 					int num_steps = (int) (m_TimeToProcess / update_interval);
 					int clamp_num_steps = num_steps;
 					//Take max 10 simulation step each frame
-					if(num_steps > 10) 
+					if(num_steps > 10)
 						clamp_num_steps = 10;
 
 					for (int i = 0; i < clamp_num_steps; ++i)
@@ -304,10 +304,10 @@ namespace GASS
 				}
 			}
 		}
-		else 
+		else
 		{
 			//only check if we should reflect paused flag and if so if we the simulation is paused.
-			if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused())) 
+			if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused()))
 			{
 				UpdateListeners(delta_time,parent);
 				UpdateChildren(delta_time,parent);
@@ -315,7 +315,7 @@ namespace GASS
 		}
 	}
 
-	void TaskNode::UpdateListeners(double delta_time,tbb::task *parent) 
+	void TaskNode::UpdateListeners(double delta_time,tbb::task *parent)
 	{
 		TaskNode::Listeners::iterator iter = m_Listeners.begin();
 		switch(m_NodeMode)
@@ -330,18 +330,18 @@ namespace GASS
 					listener->Update(delta_time);
 					iter++;
 				}
-				else 
+				else
 					iter = m_Listeners.erase(iter);
 			}
 			break;
 		case PARALLEL:
 			TaskNodeListenerExecutor exec(m_Listeners,delta_time);
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
-			
+
 			/*while(iter != m_Listeners.end())
 			{
 				tbb::task_list task_list;
-			
+
 				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
@@ -349,7 +349,7 @@ namespace GASS
 					parent->increment_ref_count();
 					iter++;
 				}
-				else 
+				else
 					iter = m_Listeners.erase(iter);
 				parent->spawn(task_list);
 			}
@@ -367,7 +367,7 @@ namespace GASS
 				//parent->wait_for_all();
 				m_Children[i]->Update(delta_time,parent);
 				//parent->increment_ref_count();
-				
+
 			}
 			break;
 		case PARALLEL:
@@ -377,7 +377,7 @@ namespace GASS
 			Dummy& c = *new( parent->allocate_continuation() ) Dummy();
 			for(size_t i=0; i < m_Children.size();i++)
 			{
-				
+
 				task_list.push_back(*new(parent->allocate_child()) UpdateTaskNode(delta_time,m_Children[i].get()));
 				parent->increment_ref_count();
 			}
@@ -416,7 +416,7 @@ namespace GASS
 								listener->Update(delta_time);
 								iter++;
 							}
-							else 
+							else
 								iter = m_Listeners.erase(iter);
 						}
 						break;
@@ -431,7 +431,7 @@ namespace GASS
 								task_list.push_back(*new(parent->allocate_child()) UpdateListenerTask(delta_time,listener));
 								iter++;
 							}
-							else 
+							else
 								iter = m_Listeners.erase(iter);
 
 							parent->spawn(task_list);

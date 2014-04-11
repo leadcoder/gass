@@ -53,12 +53,12 @@ namespace GASS
 		m_SceneMessageManager(new MessageManager()),
 		m_Initlized(false)
 	{
-		
+
 	}
 
 	Scene::~Scene()
 	{
-	
+
 	}
 
 	void Scene::RegisterReflection()
@@ -82,16 +82,16 @@ namespace GASS
 
 		m_SceneMessageManager->RegisterForMessage(typeid(RemoveSceneObjectRequest), TYPED_MESSAGE_FUNC(Scene::OnRemoveSceneObject,RemoveSceneObjectRequest),0);
 		m_SceneMessageManager->RegisterForMessage(typeid(SpawnObjectFromTemplateRequest),TYPED_MESSAGE_FUNC(Scene::OnSpawnSceneObjectFromTemplate,SpawnObjectFromTemplateRequest),0);
-	
+
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		
+
 		ResourceGroupPtr scene_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup  = scene_group;
 		rm->AddResourceGroup(scene_group);
-		
-		
+
+
 		//Add all registered scene manangers to the scene
-	
+
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
 		for(size_t i = 0; i < managers.size();i++)
 		{
@@ -101,7 +101,7 @@ namespace GASS
 			sm->OnCreate();
 			m_SceneManagers.push_back(sm);
 		}
-		
+
 		for(int i = 0; i < m_SceneManagers.size() ; i++)
 		{
 			m_SceneManagers[i]->OnInit();
@@ -128,7 +128,7 @@ namespace GASS
 		{
 			m_SceneManagers[i]->OnShutdown();
 		}
-			
+
 		SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(unload_msg);
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
@@ -152,7 +152,7 @@ namespace GASS
 				"You must provide a scene name",
 				"Scene::Load");
 		}
-		
+
 		//if(!m_CreateCalled)
 		{
 		//	Create();
@@ -180,7 +180,7 @@ namespace GASS
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 		const std::string template_file_name = scene_path.GetFullPath() + "/templates.xml";
-		if(boost::filesystem::exists(boost::filesystem::path(template_file_name)))  
+		if(boost::filesystem::exists(boost::filesystem::path(template_file_name)))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
 		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
@@ -200,7 +200,7 @@ namespace GASS
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
-		
+
 		//load scene terrain instances
 
 		//Create new scenery node
@@ -210,14 +210,14 @@ namespace GASS
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
 		m_TerrainObjects = scenery;
-		
+
 		m_Root->AddChildSceneObject(scenery,true);
 
 		//scene loaded!
 		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 	}
-	
+
 	FilePath Scene::GetSceneFolder() const
 	{
 		if(m_FolderName != "")
@@ -227,11 +227,11 @@ namespace GASS
 
 	void Scene::Save(const std::string &name)
 	{
-		
-		
+
+
 		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
-		boost::filesystem::path boost_path(scene_path.GetFullPath()); 
-		if(!boost::filesystem::exists(boost_path))  
+		boost::filesystem::path boost_path(scene_path.GetFullPath());
+		if(!boost::filesystem::exists(boost_path))
 		{
 			//try
 			boost::filesystem::create_directory(boost_path);
@@ -250,25 +250,25 @@ namespace GASS
 		m_FolderName = name;
 		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 
-		TiXmlDocument doc;  
-		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
-		doc.LinkEndChild( decl ); 
+		TiXmlDocument doc;
+		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
+		doc.LinkEndChild( decl );
 
-		TiXmlElement * scene_elem = new TiXmlElement("Scene");  
-		doc.LinkEndChild( scene_elem); 
+		TiXmlElement * scene_elem = new TiXmlElement("Scene");
+		doc.LinkEndChild( scene_elem);
 		SaveXML(scene_elem);
 
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/Scene.xml");
 		doc.SaveFile(filename.GetFullPath().c_str());
-		
+
 		if(SceneObjectPtr(m_TerrainObjects))
 			SceneObjectPtr(m_TerrainObjects)->SaveToFile(scene_path.GetFullPath() + "/instances.xml");
-		
-		TiXmlDocument template_doc;  
-		TiXmlDeclaration* template_decl = new TiXmlDeclaration( "1.0", "", "" );  
-		template_doc.LinkEndChild( template_decl); 
-		TiXmlElement * template_elem = new TiXmlElement("Templates");  
-		template_doc.LinkEndChild( template_elem); 
+
+		TiXmlDocument template_doc;
+		TiXmlDeclaration* template_decl = new TiXmlDeclaration( "1.0", "", "" );
+		template_doc.LinkEndChild( template_decl);
+		TiXmlElement * template_elem = new TiXmlElement("Templates");
+		template_doc.LinkEndChild( template_elem);
 		const FilePath template_filename = FilePath(scene_path.GetFullPath() + "/Templates.xml");
 		template_doc.SaveFile(template_filename.GetFullPath().c_str());
 	}
@@ -367,7 +367,8 @@ namespace GASS
 			Vec3 pos = message->GetPosition();
 			Quaternion rot = message->GetRotation();
 			Vec3 vel = message->GetVelocity();
-			int sender_id = (int) this;
+			int sender_id = PTR_TO_INT (this);
+			//int sender_id = reinterpret_cast<int>(this);
 
 			so->SendImmediateRequest(PositionRequestPtr(new PositionRequest(pos,sender_id)));
 			so->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot,sender_id)));
@@ -428,19 +429,19 @@ namespace GASS
 		num += m_Root->GetQueuedMessages();
 		return num;
 	}
-	
+
 	std::vector<std::string> Scene::GetScenes(const FilePath &path)
 	{
-		boost::filesystem::path boost_path(path.GetFullPath()); 
+		boost::filesystem::path boost_path(path.GetFullPath());
 
 		std::vector<std::string> scene_names;
-		if(boost::filesystem::exists(boost_path))  
+		if(boost::filesystem::exists(boost_path))
 		{
-			boost::filesystem::directory_iterator end ;    
-			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			boost::filesystem::directory_iterator end ;
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )
 			{
-				if (boost::filesystem::is_directory( *iter ) )      
-				{   
+				if (boost::filesystem::is_directory( *iter ) )
+				{
 					if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
 					{
 						std::string scene_name = iter->path().filename().generic_string();

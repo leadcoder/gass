@@ -49,8 +49,8 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine(const FilePath &log_folder) : m_CurrentTime(0), 
-		m_MaxUpdateFreq(0), 
+	SimEngine::SimEngine(const FilePath &log_folder) : m_CurrentTime(0),
+		m_MaxUpdateFreq(0),
 		m_PluginManager(new PluginManager()),
 		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
@@ -103,7 +103,7 @@ namespace GASS
 		//m_ScriptManager->Init();
 		if(configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
-		
+
 		if(configuration.GetFullPath() != "")
 			LoadSettings(configuration);
 		//Initialize systems
@@ -127,7 +127,7 @@ namespace GASS
 		ProfileSample::ResetAll();
 
 		//Catch script events
-		
+
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}
@@ -172,7 +172,7 @@ namespace GASS
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		}
-		
+
 		TiXmlElement *xml_settings = xmlDoc->FirstChildElement("GASS");
 		if (!xml_settings)
 		{
@@ -187,7 +187,15 @@ namespace GASS
 			if(boost::filesystem::exists(boost::filesystem::path(env_data_path)))
 			{
 				env_data_path = "GASS_DATA_HOME=" + env_data_path;
-				_putenv(env_data_path.c_str()); 
+#ifdef WIN32
+				_putenv(env_data_path.c_str());
+#else
+                char * writable = new char[env_data_path.size() + 1];
+                std::copy(env_data_path.begin(), env_data_path.end(), writable);
+                writable[env_data_path.size()] = '\0'; // don't forget the terminating 0
+                putenv(writable);
+                delete[] writable;
+#endif
 			}
 		}
 		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
@@ -202,7 +210,7 @@ namespace GASS
 			m_ResourceManager->LoadXML(xml_res_man);
 
 		m_SystemManager->Load(configuration_file.GetFullPath());
-	
+
 		//read SceneObjectTemplateManager settings
 		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
 		if(xml_sotm)
@@ -212,7 +220,7 @@ namespace GASS
 
 			std::string prefix = XMLUtils::ReadString(xml_sotm,"ObjectIDPrefix");
 			GetSceneObjectTemplateManager()->SetObjectIDPrefix(prefix);
-			
+
 			std::string sufix = XMLUtils::ReadString(xml_sotm,"ObjectIDSufix");
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 		}
@@ -244,9 +252,9 @@ namespace GASS
 		double delta_time = current_time - prev_time;
 
 		//clamp delta time
-		delta_time = std::max<double>(delta_time,0.00001); 
-		delta_time = std::min<double>(delta_time,10.0); 
-	
+		delta_time = std::max<double>(delta_time,0.00001);
+		delta_time = std::min<double>(delta_time,10.0);
+
 		if(m_MaxUpdateFreq > 0)
 		{
 			const double target_update_time = 1.0/m_MaxUpdateFreq;
@@ -260,7 +268,7 @@ namespace GASS
 			}
 			else
 			{
-				//return and give application more idle time 
+				//return and give application more idle time
 			}
 		}
 		else
@@ -277,9 +285,9 @@ namespace GASS
 		{
 		PROFILE("SimEngine::Update")
 		//update systems
-		
+
 		m_RTC->Update(delta_time);
-	
+
 		m_CurrentTime += delta_time;
 		}
 #ifdef PROFILER
@@ -316,16 +324,16 @@ namespace GASS
 
 	std::vector<std::string> SimEngine::GetSavedScenes() const
 	{
-		boost::filesystem::path boost_path(m_ScenePath.GetFullPath()); 
+		boost::filesystem::path boost_path(m_ScenePath.GetFullPath());
 
 		std::vector<std::string> scene_names;
-		if(boost::filesystem::exists(boost_path))  
+		if(boost::filesystem::exists(boost_path))
 		{
-			boost::filesystem::directory_iterator end ;    
-			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			boost::filesystem::directory_iterator end ;
+			for( boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )
 			{
-				if (boost::filesystem::is_directory( *iter ) )      
-				{   
+				if (boost::filesystem::is_directory( *iter ) )
+				{
 					if(boost::filesystem::exists(boost::filesystem::path(iter->path().string() + "/scene.xml")))
 					{
 						std::string scene_name = iter->path().filename().generic_string();
