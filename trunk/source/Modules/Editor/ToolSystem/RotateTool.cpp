@@ -45,15 +45,15 @@ namespace GASS
 				Float rotation_rad_step = data.XRel*0.2;
 				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
-				int from_id = (int) this;
-				
+				int from_id = PTR_TO_INT(this);
+
 				selected->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
 
 				const double time = SimEngine::Get().GetTime();
 				static double last_time = 0;
-				const double send_freq = 20; 
+				const double send_freq = 20;
 				if(time - last_time > 1.0/send_freq)
 				{
 					last_time = time;
@@ -98,7 +98,7 @@ namespace GASS
 			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,NO_THROW))
 			{
 				m_RotateY = true;
-				int from_id = (int) this;
+				int from_id = PTR_TO_INT(this);
 
 				SceneObjectPtr selected = SceneObjectPtr(m_SelectedObject,NO_THROW);
 				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
@@ -134,7 +134,7 @@ namespace GASS
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected && CheckIfEditable(selected))
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(true,from_id));
 			//selected->SendImmediate(col_msg);
 			SendMessageRec(selected,col_msg);
@@ -164,7 +164,7 @@ namespace GASS
 			}
 		}
 
-		int from_id = (int) this;
+		int from_id = PTR_TO_INT(this);
 		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
@@ -195,7 +195,7 @@ namespace GASS
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "GizmoRotateObject";
-			
+
 			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
@@ -213,7 +213,7 @@ namespace GASS
 		return gizmo;
 	}
 
-	void RotateTool::Start() 
+	void RotateTool::Start()
 	{
 		SetGizmoVisiblity(true);
 		m_Active = true;
@@ -251,7 +251,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
 			SendMessageRec(gizmo,col_msg);
 			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));

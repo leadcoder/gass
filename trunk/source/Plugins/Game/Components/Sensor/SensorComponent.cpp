@@ -24,8 +24,8 @@ namespace GASS
 		m_Debug(false),
 		m_Position(0,0,0)
 	{
-		
-	}	
+
+	}
 
 	SensorComponent::~SensorComponent(void)
 	{
@@ -38,17 +38,17 @@ namespace GASS
 		REG_PROPERTY(Float,DefaultMaxDetectionDistance,SensorComponent)
 		REG_PROPERTY(Float,UpdateFrequency,SensorComponent)
 		REG_PROPERTY(bool,Debug,SensorComponent)
-		
+
 	}
 
 	void SensorComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( SensorComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
-	
+
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
-		
+
 		m_Initialized = true;
 
 		// get all signature objects and add them
@@ -71,7 +71,7 @@ namespace GASS
 			m_AllObjects.push_back(signature);
 		}
 	}
-	
+
 	void SensorComponent::OnTransChanged(TransformationChangedEventPtr message)
 	{
 		m_Position = message->GetPosition();
@@ -85,21 +85,21 @@ namespace GASS
 			//GetSceneObject()->PostRequest(DrawCircleRequestPtr(new DrawCircleRequest(m_Position,m_DefaultMaxDetectionDistance,Vec4(1,0,0,1),20,false)););
 		}
 
-		//update sensor data at x hz 
+		//update sensor data at x hz
 		m_CurrentTime += delta_time;
 		if(m_CurrentTime > 1.0/m_UpdateFrequency)
 		{
 			//reset
 			m_CurrentTime = 0;
 
-			std::vector<SignatureComponentWeakPtr>::const_iterator iter = m_AllObjects.begin();
+			std::vector<SignatureComponentWeakPtr>::iterator iter = m_AllObjects.begin();
 			while(iter != m_AllObjects.end())
 			{
 				SignatureComponentPtr signature(*iter,NO_THROW);
 				if(signature)
 				{
 					const Vec3 pos = signature->GetPosition();
-					
+
 					const Float dist = (m_Position - pos).Length();
 					const Float detection_distance = GetDetectionDistance(signature->GetPlatformType().GetValue(), signature->GetRadarCrossSection());
 					if(dist < detection_distance)
@@ -143,7 +143,7 @@ namespace GASS
 			//Send detection message
 			GetSceneObject()->PostEvent(SensorMessagePtr(new SensorMessage(all_targets)));
 
-			
+
 		}
 	}
 	bool SensorComponent::IsNewTarget(SignatureComponentWeakPtr sig) const
@@ -161,7 +161,7 @@ namespace GASS
 		{
 			GetSceneObject()->PostEvent(SensorLostTargetMessagePtr(new SensorLostTargetMessage(iter->second)));
 			m_DetectedObjects.erase(iter);
-			
+
 			//send Message that target is lost
 			return true;
 		}

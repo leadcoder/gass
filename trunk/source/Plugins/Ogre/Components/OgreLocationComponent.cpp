@@ -62,7 +62,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
-		
+
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation,
@@ -73,11 +73,11 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("If true this node is attached to first ancestor SceneObject that has a location component",PF_VISIBLE | PF_EDITABLE)));
-	
+
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
 		int r;
 		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		
+
 		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent,OgreLocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OgreLocationComponent,BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 
@@ -92,14 +92,14 @@ namespace GASS
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetRotation), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "Quaternion GetWorldRotation() const", asMETHOD(OgreLocationComponent, GetWorldRotation), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetWorldRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetWorldRotation), asCALL_THISCALL);assert(r >= 0);
-		
+
 	}
 
 	void OgreLocationComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::PositionRequest,GASS::PositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnScaleMessage,GASS::ScaleRequest,0));
-		
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::RotationRequest,GASS::RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldPositionRequest,GASS::WorldPositionRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldRotationRequest,GASS::WorldRotationRequest ,0));
@@ -109,7 +109,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoRequest, GASS::BoundingInfoRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentRequest,0));
-	
+
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetOgreSceneManager();
@@ -141,18 +141,19 @@ namespace GASS
 		SetScale(m_Scale);
 
 		m_OgreNode->setListener(this);
-		m_OgreNode->setUserAny(Ogre::Any(this));
+		Ogre::Any any_this(this);
+		m_OgreNode->setUserAny(any_this);
 
 		PositionRequestPtr pos_msg(new GASS::PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
 		if(m_Rot != Vec3(0,0,0))
 			rot_msg =RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
-		else //use 
+		else //use
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
 		LocationComponentPtr location = DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
 		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
-		
+
 		GetSceneObject()->PostRequest(pos_msg);
 		GetSceneObject()->PostRequest(rot_msg);
 	}
@@ -207,7 +208,7 @@ namespace GASS
 	{
 		SetScale(message->GetScale());
 	}
-	
+
 	void OgreLocationComponent::WorldPositionRequest(WorldPositionRequestPtr message)
 	{
 		Vec3 pos = message->GetPosition();

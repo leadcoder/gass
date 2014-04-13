@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "GoToLocationComponent.h"
+#include "GotoLocationComponent.h"
 #include "GameMessages.h"
 #include "Plugins/Game/GameSceneManager.h"
 
@@ -38,7 +38,7 @@
 
 namespace GASS
 {
-	GoToLocationComponent::GoToLocationComponent() 
+	GoToLocationComponent::GoToLocationComponent()
 	{
 
 	}
@@ -103,7 +103,7 @@ namespace GASS
 	void GoToLocationComponent::OnPathfindToLocation(PathfindToPositionMessagePtr message)
 	{
 		m_DestinationLocation = message->GetPosition();
-		
+
 		if(m_NavigationObject.IsValid())
 		{
 			//std::vector<Vec3> final_path;

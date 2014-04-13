@@ -44,14 +44,14 @@ namespace GASS
 
 	RecastOffmeshMeshConnectionComponent::~RecastOffmeshMeshConnectionComponent()
 	{
-		
+
 	}
 
 	void RecastOffmeshMeshConnectionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("RecastOffmeshMeshConnectionComponent",new Creator<RecastOffmeshMeshConnectionComponent, Component>);
-		RegisterProperty<float>("Radius", &GetRadius, &SetRadius);
-		RegisterProperty<std::string>("Mode", &GetMode, &SetMode);
+		REG_PROPERTY(float,Radius,RecastOffmeshMeshConnectionComponent);
+		REG_PROPERTY(std::string,Mode,RecastOffmeshMeshConnectionComponent);
 	}
 
 	void RecastOffmeshMeshConnectionComponent::OnInitialize()
@@ -98,7 +98,7 @@ namespace GASS
 		return m_Visible;
 	}
 
-	void RecastOffmeshMeshConnectionComponent::SetVisible(bool value) 
+	void RecastOffmeshMeshConnectionComponent::SetVisible(bool value)
 	{
 		m_Visible = value;
 		if(GetSceneObject())
@@ -117,9 +117,9 @@ namespace GASS
 		m_ConnectionLine->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
-	
+
 		ColorRGBA color(0.2,0.2,1,1);
-		
+
 		//draw circles
 		const float samples = 24;
 		const float rad = 2*MY_PI/samples;
@@ -157,6 +157,6 @@ namespace GASS
 		}
 
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_ConnectionLine)));
-		
+
 	}
 }

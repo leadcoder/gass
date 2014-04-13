@@ -44,8 +44,8 @@ namespace GASS
 				//up = up*(-info.m_Delta.y);
 				new_position = new_position + up;
 
-				int from_id = (int) this;
-				
+				int from_id = PTR_TO_INT(this);
+
 				selected->SendImmediateRequest(PositionRequestPtr(new PositionRequest(new_position,from_id)));
 
 				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
@@ -65,7 +65,7 @@ namespace GASS
 
 			if(!m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
 			{
-				int from_id = (int) this;
+				int from_id = PTR_TO_INT(this);
 				m_SelectedObject = obj_under_cursor;
 				//bool value = false;
 				//col_msg->SetData("Enable",value);
@@ -81,7 +81,7 @@ namespace GASS
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			selected->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(true,from_id)));
 
 		}

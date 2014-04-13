@@ -109,8 +109,8 @@ namespace GASS
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 		ADD_PROPERTY(bool,AutoCollectMeshes)
-		float GetCellSize() const; 
-		float GetCellHeight() const; 
+		float GetCellSize() const;
+		float GetCellHeight() const;
 		float GetAgentHeight() const;
 		float GetAgentRadius() const;
 		float GetAgentMaxClimb() const;
@@ -137,9 +137,9 @@ namespace GASS
 		void SetVertsPerPoly(const float value);
 		void SetDetailSampleDist(const float value);
 		void SetDetailSampleMaxError(const float value);
-		void SetSelectedMeshes(const std::vector<SceneObjectRef>  &value);
+		void SetMeshSelection(const std::vector<SceneObjectRef>  &value);
 		void SetTileSize(const int size);
-		std::vector<SceneObjectRef>  GetSelectedMeshes() const {return m_SelectedMeshes;}
+		std::vector<SceneObjectRef>  GetMeshSelection() const {return m_SelectedMeshes;}
 		bool GetBuild() const;
 		void SetBuild(const bool value);
 		void SetShowMeshLines(bool value);
@@ -206,7 +206,7 @@ namespace GASS
 		rcContext* m_Ctx;
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
-		
+
 	};
 	typedef SPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
 	typedef WPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;

@@ -26,9 +26,9 @@ namespace GASS
 		m_CursorPos(0,0,0),
 		m_Controller(controller),
 		m_BrushSize(116),
-		m_BrushInnerSize(90), 
+		m_BrushInnerSize(90),
 		m_Intensity(1),
-		m_Noise(0), 
+		m_Noise(0),
 		m_TEM(TEM_DEFORM),
 		m_InvertBrush(1),
 		m_ActiveLayer(TL_1),
@@ -85,7 +85,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 		}
 	}
@@ -106,7 +106,7 @@ namespace GASS
 		m_Active = false;
 	}
 
-	void TerrainDeformTool::Start() 
+	void TerrainDeformTool::Start()
 	{
 		SetGizmoVisiblity(true);
 		m_Active = true;
@@ -136,7 +136,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			SendMessageRec(gizmo,VisibilityRequestPtr(new VisibilityRequest(value,from_id)));
 		}
 	}
@@ -219,7 +219,7 @@ namespace GASS
 		//Check settings
 		if("EditorInputSettings" != message->GetSettings())
 			return;
-	
+
 		if(m_Active)
 		{
 			std::string name = message->GetController();
@@ -227,16 +227,16 @@ namespace GASS
 			if(name == "ChangeBrushSize" && fabs(value)  > 0.5)
 			{
 				//std::cout << value << "\n";
-				if(value > 0.5) 
+				if(value > 0.5)
 					m_BrushSize += m_BrushSize*0.3;
-				else if(value < -0.5) 
+				else if(value < -0.5)
 					m_BrushSize -= m_BrushSize*0.3;
 				SetBrushSize(m_BrushSize);
 
 			}
 			if(name == "InvertBrush")
 			{
-				if(value > 0.5) 
+				if(value > 0.5)
 					m_InvertBrush = -1;
 				else
 					m_InvertBrush = 1;

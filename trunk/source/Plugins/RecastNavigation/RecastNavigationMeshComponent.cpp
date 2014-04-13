@@ -28,12 +28,13 @@
 #include "DetourNavMeshQuery.h"
 #include "DetourCommon.h"
 #include "DetourTileCache.h"
-#include "RecastOffmeshMeshConnectionComponent.h" 
+#include "RecastOffmeshMeshConnectionComponent.h"
 #include "RecastConvexVolumeComponent.h"
 #include "InputGeom.h"
 #include "tinyxml.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSPhysicsMesh.h"
+#include <cfloat>
 
 namespace GASS
 {
@@ -88,59 +89,33 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, Component>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
-		RegisterProperty<bool>("AutoCollectMeshes", &GetAutoCollectMeshes, &SetAutoCollectMeshes,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Build", &GetBuild, &SetBuild,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("CellSize", &GetCellSize, &SetCellSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("CellHeight", &GetCellHeight, &SetCellHeight,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("AgentHeight", &GetAgentHeight, &SetAgentHeight,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("AgentRadius", &GetAgentRadius, &SetAgentRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("AgentMaxClimb", &GetAgentMaxClimb, &SetAgentMaxClimb,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("AgentMaxSlope", &GetAgentMaxSlope, &SetAgentMaxSlope,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("RegionMinSize", &GetRegionMinSize, &SetRegionMinSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("RegionMergeSize", &GetRegionMergeSize, &SetRegionMergeSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("EdgeMaxLen", &GetEdgeMaxLen, &SetEdgeMaxLen,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("EdgeMaxError", &GetEdgeMaxError, &SetEdgeMaxError,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("VertsPerPoly", &GetVertsPerPoly, &SetVertsPerPoly,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("DetailSampleDist", &GetDetailSampleDist, &SetDetailSampleDist,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("DetailSampleMaxError", &GetDetailSampleMaxError, &SetDetailSampleMaxError,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		
-		RegisterProperty<bool>("Visible", &GetVisible, &SetVisible,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ShowMeshLines", &GetShowMeshLines, &SetShowMeshLines,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ShowMeshSolid", &GetShowMeshSolid, &SetShowMeshSolid,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("MeshBoundingMin", &GetMeshBoundingMin, &SetMeshBoundingMin,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("MeshBoundingMax", &GetMeshBoundingMax, &SetMeshBoundingMax,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("TileSize", &GetTileSize, &SetTileSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("Transparency", &GetTransparency, &SetTransparency,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterVectorProperty<SceneObjectRef>("MeshSelection", &GetSelectedMeshes, &SetSelectedMeshes,
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration)));
-		RegisterProperty<std::string>("BoundingBoxFromShape", &GetBoundingBoxFromShape, &SetBoundingBoxFromShape,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<FilePath>("ImportMesh", &GetImportMesh, &SetImportMesh,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<FilePath>("ExportMesh", &GetExportMesh, &SetExportMesh,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(bool,AutoCollectMeshes, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(bool, Build, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,CellSize, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,CellHeight, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,AgentHeight, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,AgentRadius, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,AgentMaxClimb, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,AgentMaxSlope, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,RegionMinSize,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,RegionMergeSize, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,EdgeMaxLen,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,EdgeMaxError,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,VertsPerPoly, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,DetailSampleDist,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(float,DetailSampleMaxError,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		REG_PROPERTY2(bool,Visible, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(bool,ShowMeshLines, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(bool,ShowMeshSolid, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(Vec3,MeshBoundingMin,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(Vec3,MeshBoundingMax, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(int,TileSize,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(int,Transparency,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_VECTOR_PROPERTY2(SceneObjectRef, MeshSelection, RecastNavigationMeshComponent,SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration)));
+		REG_PROPERTY2(std::string,BoundingBoxFromShape, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(FilePath,ImportMesh, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(FilePath,ExportMesh, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void RecastNavigationMeshComponent::OnInitialize()
@@ -213,7 +188,7 @@ namespace GASS
 
 	// Returns true if 'c' is left of line 'a'-'b'.
 	inline bool left(const float* a, const float* b, const float* c)
-	{ 
+	{
 		const float u1 = b[0] - a[0];
 		const float v1 = b[2] - a[2];
 		const float u2 = c[0] - a[0];
@@ -337,7 +312,7 @@ namespace GASS
 		}
 
 		const unsigned char area = LAND_COVER_JUMP;
-		const unsigned short flags = SAMPLE_POLYFLAGS_JUMP; 
+		const unsigned short flags = SAMPLE_POLYFLAGS_JUMP;
 		float p1[3];
 		float p2[3];
 		ComponentContainer::ComponentVector components;
@@ -465,7 +440,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::BuildAllTiles()
 	{
-		if (!m_NavMesh) 
+		if (!m_NavMesh)
 			return;
 
 		const float* bmin = m_Geom->getMeshBoundsMin();
@@ -509,7 +484,7 @@ namespace GASS
 				}
 			}
 		}
-		// Start the build process.	
+		// Start the build process.
 		m_Ctx->stopTimer(RC_TIMER_TEMP);
 		float totalBuildTimeMs = m_Ctx->getAccumulatedTime(RC_TIMER_TEMP)/1000.0f;
 	}
@@ -820,7 +795,7 @@ namespace GASS
 			{
 				m_Ctx->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
 				return 0;
-			}		
+			}
 		}
 		int tileMemUsage = navDataSize/1024.0f;
 
@@ -850,7 +825,7 @@ namespace GASS
 		return m_Visible;
 	}
 
-	void RecastNavigationMeshComponent::SetVisible(bool value) 
+	void RecastNavigationMeshComponent::SetVisible(bool value)
 	{
 		m_Visible = value;
 		if(GetSceneObject())
@@ -888,79 +863,79 @@ namespace GASS
 		m_MeshBounding.m_Max = max;
 	}
 
-	float RecastNavigationMeshComponent::GetCellSize() const 
+	float RecastNavigationMeshComponent::GetCellSize() const
 	{
 		return m_CellSize;
 
 	}
 
-	float RecastNavigationMeshComponent::GetCellHeight() const 
+	float RecastNavigationMeshComponent::GetCellHeight() const
 	{
 		return m_CellHeight;
 	}
 
-	float RecastNavigationMeshComponent::GetAgentHeight() const 
+	float RecastNavigationMeshComponent::GetAgentHeight() const
 	{
 		return m_AgentHeight;
 	}
 
-	float RecastNavigationMeshComponent::GetAgentRadius() const 
+	float RecastNavigationMeshComponent::GetAgentRadius() const
 	{
 		return m_AgentRadius;
 	}
 
-	float RecastNavigationMeshComponent::GetAgentMaxClimb() const 
+	float RecastNavigationMeshComponent::GetAgentMaxClimb() const
 	{
 		return m_AgentMaxClimb;
 	}
 
-	float RecastNavigationMeshComponent::GetAgentMaxSlope() const 
+	float RecastNavigationMeshComponent::GetAgentMaxSlope() const
 	{
 		return m_AgentMaxSlope;
 	}
 
-	float RecastNavigationMeshComponent::GetRegionMinSize() const 
+	float RecastNavigationMeshComponent::GetRegionMinSize() const
 	{
 		return m_RegionMinSize;
 	}
 
-	float RecastNavigationMeshComponent::GetRegionMergeSize() const 
+	float RecastNavigationMeshComponent::GetRegionMergeSize() const
 	{
 		return m_RegionMergeSize;
 	}
 
-	float RecastNavigationMeshComponent::GetEdgeMaxLen() const 
+	float RecastNavigationMeshComponent::GetEdgeMaxLen() const
 	{
 		return m_EdgeMaxLen;
 	}
 
-	float RecastNavigationMeshComponent::GetEdgeMaxError() const 
+	float RecastNavigationMeshComponent::GetEdgeMaxError() const
 	{
 		return m_EdgeMaxError;
 	}
 
-	float RecastNavigationMeshComponent::GetVertsPerPoly() const 
+	float RecastNavigationMeshComponent::GetVertsPerPoly() const
 	{
 		return m_VertsPerPoly;
 	}
 
-	float RecastNavigationMeshComponent::GetDetailSampleDist() const 
+	float RecastNavigationMeshComponent::GetDetailSampleDist() const
 	{
 		return m_DetailSampleDist;
 	}
 
-	float RecastNavigationMeshComponent::GetDetailSampleMaxError() const 
+	float RecastNavigationMeshComponent::GetDetailSampleMaxError() const
 	{
 		return m_DetailSampleMaxError;
 	}
 
-	bool RecastNavigationMeshComponent::GetBuild() const 
+	bool RecastNavigationMeshComponent::GetBuild() const
 	{
 
 		return false;
 	}
 
-	int RecastNavigationMeshComponent::GetTileSize() const 
+	int RecastNavigationMeshComponent::GetTileSize() const
 	{
 		return m_TileSize;
 	}
@@ -1098,7 +1073,7 @@ namespace GASS
 	}
 
 
-	void RecastNavigationMeshComponent::SetSelectedMeshes(const std::vector<SceneObjectRef> &value)
+	void RecastNavigationMeshComponent::SetMeshSelection(const std::vector<SceneObjectRef> &value)
 	{
 		m_SelectedMeshes = value;
 		//update bounds from mesh selection
@@ -1148,19 +1123,19 @@ namespace GASS
 				}
 			}
 		}
-	
+
 		if(m_SelectedMeshes.size()>0)
 		{
 			std::vector<PhysicsMeshPtr> mesh_data_vec;
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
-				
+
 					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 					if(obj)
 					{
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-						
+
 						//if(geom && geom->GetGeometryFlags() & GEOMETRY_FLAG_SCENE_OBJECTS)
 						if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
 						{
@@ -1188,7 +1163,7 @@ namespace GASS
 								m_MeshBounding.Union(box);
 							mesh_data_vec.push_back(physics_mesh);
 						}
-					
+
 				}
 			}
 			unsigned int tot_verts = 0;
@@ -1344,7 +1319,7 @@ namespace GASS
 			{
 				if(m_ShowMeshLines)
 				{
-					
+
 					obj->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_NavVisLineMesh,-1,0.1)));
 					//MessagePtr material_message(new MaterialMessage(Vec4(1,0,0,1),Vec3(1,1,1)));
 					//obj->PostMessage(material_message);
@@ -1552,7 +1527,7 @@ namespace GASS
 		float ext[3];
 		dtPolyRef start_ref;
 		float c_pos[3];
-		
+
 		ext[0] = 1;
 		ext[1] = 1;
 		ext[2] = 1;
@@ -1725,7 +1700,7 @@ namespace GASS
 						return true;
 				}
 			}
-		}	
+		}
 		return false;
 	}
 }

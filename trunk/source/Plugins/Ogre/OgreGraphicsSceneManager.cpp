@@ -88,7 +88,7 @@ namespace GASS
 	{
 
 		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
-		
+
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
 
 		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
@@ -134,7 +134,7 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnCreate()
 	{
-		int address = (int) this;
+		int address = PTR_TO_INT(this);
 		OgreGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OgreGraphicsSystem>();
 		m_GFXSystem = system;
 		//register on system to get updates
@@ -168,7 +168,7 @@ namespace GASS
 		Ogre::Root::getSingletonPtr()->addFrameListener(this);
 
 		m_SceneMgr->addRenderQueueListener(system->GetOverlaySystem());
-		
+
 	}
 
 
@@ -183,7 +183,7 @@ namespace GASS
 		Vec4 color = message->GetColor();
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(OgreConvert::ToOgre(message->GetStart()),OgreConvert::ToOgre(message->GetEnd()),ogre_color);		
+			m_DebugDrawer->drawLine(OgreConvert::ToOgre(message->GetStart()),OgreConvert::ToOgre(message->GetEnd()),ogre_color);
 	}
 
 	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)
@@ -192,7 +192,7 @@ namespace GASS
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
 		{
-			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());		
+			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());
 		}
 	}
 
@@ -200,7 +200,7 @@ namespace GASS
 	{
 		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
 		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start),OgreConvert::ToOgre(end),ogre_color);		
+			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start),OgreConvert::ToOgre(end),ogre_color);
 	}
 
 	void OgreGraphicsSceneManager::OnInit()
@@ -223,7 +223,7 @@ namespace GASS
 	}
 
 
-	
+
 	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &evt)
 	{
 		m_DebugDrawer->build();
@@ -266,7 +266,7 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
 	{
-		if(m_SceneMgr == NULL) 
+		if(m_SceneMgr == NULL)
 			return;
 		bool isOpenGL = false;
 		if(Root::getSingleton().getRenderSystem()->getName().find("GL") != Ogre::String::npos)
@@ -284,7 +284,7 @@ namespace GASS
 			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_NONE);
 			break;
 		case STENCIL_SHADOWS_ADDITIVE:
-			
+
 			break;
 		case STENCIL_SHADOWS_MODULATIVE:
 			m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
@@ -315,7 +315,7 @@ namespace GASS
 				m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
 			}
 			break;
-		case TEXTURE_SHADOWS_MODULATIVE: 
+		case TEXTURE_SHADOWS_MODULATIVE:
 			{
 				tex_shadow = true;
 				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
@@ -331,7 +331,7 @@ namespace GASS
 		{
 			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
-		
+
 			//shared pointer!
 			ShadowCameraSetupPtr new_shadow_camera_setup;
 
@@ -364,9 +364,9 @@ namespace GASS
 		}
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
-		
+
 		//m_SceneMgr->setShadowTextureSelfShadow(true);
-		
+
 		/*m_SceneMgr->setShowDebugShadows(true);
 		if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))
 		{
@@ -400,7 +400,7 @@ namespace GASS
 
 		//END OF SET DEBUG OVERLAY WITH SHADOW_MAP
 
-		
+
 		/*debugMat = MaterialManager::getSingleton().getByName("Ogre/DebugShadowMap1");
 		shadowTex = mSceneMgr->getShadowTexture(1);
 		debugMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(shadowTex->getName());*/

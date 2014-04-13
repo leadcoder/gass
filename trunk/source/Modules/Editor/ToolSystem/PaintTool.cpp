@@ -33,7 +33,7 @@ namespace GASS
 
 	void PaintTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
-		int from_id = (int) this;
+		int from_id = PTR_TO_INT(this);
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(m_MouseIsDown)// && selected)
 		{
@@ -72,7 +72,7 @@ namespace GASS
 		m_Active = false;
 	}
 
-	void PaintTool::Start() 
+	void PaintTool::Start()
 	{
 		SetGizmoVisiblity(true);
 		m_Active = true;
@@ -107,7 +107,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			SendMessageRec(gizmo,CollisionSettingsRequestPtr(new CollisionSettingsRequest(value,from_id)));
 			SendMessageRec(gizmo,VisibilityRequestPtr(new VisibilityRequest(value,from_id)));
 		}

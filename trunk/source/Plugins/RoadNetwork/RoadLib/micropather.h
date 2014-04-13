@@ -2,23 +2,23 @@
 Copyright (c) 2000-2009 Lee Thomason (www.grinninglizard.com)
 Grinning Lizard Utilities.
 
-This software is provided 'as-is', without any express or implied 
-warranty. In no event will the authors be held liable for any 
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any
 damages arising from the use of this software.
 
-Permission is granted to anyone to use this software for any 
-purpose, including commercial applications, and to alter it and 
+Permission is granted to anyone to use this software for any
+purpose, including commercial applications, and to alter it and
 redistribute it freely, subject to the following restrictions:
 
-1. The origin of this software must not be misrepresented; you must 
-not claim that you wrote the original software. If you use this 
-software in a product, an acknowledgment in the product documentation 
+1. The origin of this software must not be misrepresented; you must
+not claim that you wrote the original software. If you use this
+software in a product, an acknowledgment in the product documentation
 would be appreciated but is not required.
 
-2. Altered source versions must be plainly marked as such, and 
+2. Altered source versions must be plainly marked as such, and
 must not be misrepresented as being the original software.
 
-3. This notice may not be removed or altered from any source 
+3. This notice may not be removed or altered from any source
 distribution.
 */
 
@@ -28,10 +28,10 @@ distribution.
 
 
 /** @mainpage MicroPather
-	
-	MicroPather is a path finder and A* solver (astar or a-star) written in platform independent 
-	C++ that can be easily integrated into existing code. MicroPather focuses on being a path 
-	finding engine for video games but is a generic A* solver. MicroPather is open source, with 
+
+	MicroPather is a path finder and A* solver (astar or a-star) written in platform independent
+	C++ that can be easily integrated into existing code. MicroPather focuses on being a path
+	finding engine for video games but is a generic A* solver. MicroPather is open source, with
 	a license suitable for open source or commercial use.
 
 	An overview of using MicroPather is in the <A HREF="../readme.htm">readme</A> or
@@ -65,7 +65,9 @@ distribution.
 	typedef uintptr_t		MP_UPTR;
 #elif defined (__GNUC__) && (__GNUC__ >= 3 )
 	#include <stdlib.h>
-	typedef uintptr_t		MP_UPTR;
+	#include <stdint.h>
+    typedef uintptr_t		MP_UPTR;
+    //typedef unsigned MP_UPTR;
 #else
 	// Assume not 64 bit pointers. Get a new compiler.
 	typedef unsigned MP_UPTR;
@@ -89,8 +91,8 @@ namespace micropather
 
 
 	/**
-		A pure abstract class used to define a set of callbacks. 
-		The client application inherits from 
+		A pure abstract class used to define a set of callbacks.
+		The client application inherits from
 		this class, and the methods will be called when MicroPather::Solve() is invoked.
 
 		The notion of a "state" is very important. It must have the following properties:
@@ -106,26 +108,26 @@ namespace micropather
 	{
 	  public:
 		virtual ~Graph() {}
-	  
+
 		/**
-			Return the least possible cost between 2 states. For example, if your pathfinding 
-			is based on distance, this is simply the straight distance between 2 points on the 
-			map. If you pathfinding is based on minimum time, it is the minimal travel time 
+			Return the least possible cost between 2 states. For example, if your pathfinding
+			is based on distance, this is simply the straight distance between 2 points on the
+			map. If you pathfinding is based on minimum time, it is the minimal travel time
 			between 2 points given the best possible terrain.
 		*/
 		virtual float LeastCostEstimate( void* stateStart, void* stateEnd ) = 0;
 
-		/** 
+		/**
 			Return the exact cost from the given state to all its neighboring states. This
 			may be called multiple times, or cached by the solver. It *must* return the same
 			exact values for every call to MicroPather::Solve(). It should generally be a simple,
 			fast function with no callbacks into the pather.
-		*/	
+		*/
 		virtual void AdjacentCost( void* state, std::vector< micropather::StateCost > *adjacent ) = 0;
 
 		/**
-			This function is only used in DEBUG mode - it dumps output to stdout. Since void* 
-			aren't really human readable, normally you print out some concise info (like "(1,2)") 
+			This function is only used in DEBUG mode - it dumps output to stdout. Since void*
+			aren't really human readable, normally you print out some concise info (like "(1,2)")
 			without an ending newline.
 		*/
 		virtual void  PrintStateInfo( void* state ) = 0;
@@ -150,8 +152,8 @@ namespace micropather
 	  public:
 		void Init(	unsigned _frame,
 					void* _state,
-					float _costFromStart, 
-					float _estToGoal, 
+					float _costFromStart,
+					float _estToGoal,
 					PathNode* _parent );
 
 		void Clear() {
@@ -163,7 +165,7 @@ namespace micropather
 			Clear();
 			Init( 0, 0, FLT_MAX, FLT_MAX, 0 );
 			prev = next = this;
-		}	
+		}
 
 		void *state;			// the client state
 		float costFromStart;	// exact
@@ -233,7 +235,7 @@ namespace micropather
 		//		pNode = New();
 		//
 		// Get the PathNode associated with this state. If the PathNode already
-		// exists (allocated and is on the current frame), it will be returned. 
+		// exists (allocated and is on the current frame), it will be returned.
 		// Else a new PathNode is allocated and returned. The returned object
 		// is always fully initialized.
 		//
@@ -241,8 +243,8 @@ namespace micropather
 		//       parameters are ignored.
 		PathNode* GetPathNode(		unsigned frame,
 									void* _state,
-									float _costFromStart, 
-									float _estToGoal, 
+									float _costFromStart,
+									float _estToGoal,
 									PathNode* _parent );
 
 		// Store stuff in cache
@@ -288,7 +290,7 @@ namespace micropather
 		unsigned	nAllocated;				// number of pathnodes allocated (from Alloc())
 		unsigned	nAvailable;				// number available for allocation
 
-		unsigned	hashShift;	
+		unsigned	hashShift;
 		unsigned	totalCollide;
 	};
 
@@ -319,10 +321,10 @@ namespace micropather
 								MicroPather will use.
 								- If you have a small map (a few thousand states?) it may make sense
 								  to pass in the maximum value. This will cache everything, and MicroPather
-								  will only need one main memory allocation. For a chess board, allocate 
+								  will only need one main memory allocation. For a chess board, allocate
 								  would be set to 8x8 (64)
 								- If your map is large, something like 1/4 the number of possible
-								  states is good. For example, Lilith3D normally has about 16,000 
+								  states is good. For example, Lilith3D normally has about 16,000
 								  states, so 'allocate' should be about 4000.
 							    - If your state space is huge, use a multiple (5-10x) of the normal
 								  path. "Occasionally" call Reset() to free unused memory.
@@ -366,13 +368,13 @@ namespace micropather
 		*/
 		MP_UPTR Checksum()	{ return checksum; }
 
-		// Debugging function to return all states that were used by the last "solve" 
+		// Debugging function to return all states that were used by the last "solve"
 		void StatesInPool( std::vector< void* >* stateVec );
 
 	  private:
 		MicroPather( const MicroPather& );	// undefined and unsupported
 		void operator=( const MicroPather ); // undefined and unsupported
-		
+
 		void GoalReached( PathNode* node, void* start, void* end, std::vector< void* > *path );
 
 		void GetNodeNeighbors(	PathNode* node, std::vector< NodeCost >* neighborNode );
@@ -388,7 +390,7 @@ namespace micropather
 		Graph* graph;
 		unsigned frame;						// incremented with every solve, used to determine if cached data needs to be refreshed
 		MP_UPTR checksum;						// the checksum of the last successful "Solve".
-		
+
 	};
 };	// namespace grinliz
 

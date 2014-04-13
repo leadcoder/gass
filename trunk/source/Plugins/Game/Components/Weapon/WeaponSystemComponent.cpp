@@ -80,7 +80,7 @@ namespace GASS
 		RegisterProperty<int>("CurrentMagazineSize", &WeaponSystemComponent::GetCurrentMagazineSize, &WeaponSystemComponent::SetCurrentMagazineSize);
 		RegisterProperty<SceneObjectRef>("FireSoundObject1P", &WeaponSystemComponent::GetFireSoundObject1P, &WeaponSystemComponent::SetFireSoundObject1P);
 		RegisterProperty<SceneObjectRef>("FireSoundObject3P", &WeaponSystemComponent::GetFireSoundObject3P, &WeaponSystemComponent::SetFireSoundObject3P);
-		
+
 		RegisterProperty<std::string>("FireEffectTemplate", &WeaponSystemComponent::GetFireEffectTemplate, &WeaponSystemComponent::SetFireEffectTemplate);
 		RegisterProperty<std::string>("FireController", &WeaponSystemComponent::GetFireController, &WeaponSystemComponent::SetFireController);
 		RegisterProperty<std::string>("ReloadController", &WeaponSystemComponent::GetReloadController, &WeaponSystemComponent::SetReloadController);
@@ -98,10 +98,10 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnTransformationChanged,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WeaponSystemComponent::OnLODChange,LODMessage,0));
 		BaseSceneComponent::OnInitialize();
-	
+
 		/*m_FireSoundObject1F = GetSceneObject()->GetFirstChildByName("FireSound1P",false);
 		m_FireSoundObject3F = GetSceneObject()->GetFirstChildByName("FireSound3P",false);
-		
+
 		if(!m_FireSound1Fp)
 		{
 			m_FireSound1Fp = GetSceneObject()->GetFirstChildByName("FireSound",false);
@@ -129,7 +129,7 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x,size.y, 0));
 		conrners.push_back(Vec3(-size.x,size.y,0));
 		conrners.push_back(Vec3( size.x,size.y,0));
-		
+
 		for(int i = 0; i < 4; i++)
 		{
 			Vec3 pos =conrners[i];
@@ -150,11 +150,11 @@ namespace GASS
 		}
 		else
 		{
-			m_1FP = false; 
+			m_1FP = false;
 		}
 	}
 
-	
+
 
 	void WeaponSystemComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
@@ -247,7 +247,7 @@ namespace GASS
 		GetSceneObject()->GetScene()->PostMessage(spawn_msg);
 
 		//recoil
-		
+
 		GetSceneObject()->PostRequest(PhysicsBodyAddForceRequestPtr(new PhysicsBodyAddForceRequest(m_RecoilForce)));
 
 		//effect
@@ -268,7 +268,7 @@ namespace GASS
 	/*	SceneObjectPtr projectile = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_ProjectileTemplateName);
 		if(projectile)
 		{
-			int id = (int) this;
+			int id = PTR_TO_INT(this);
 			MessagePtr pos_msg(new Message(SceneObject::OBJECT_RM_POSITION,id));
 			pos_msg->SetData("Position",projectile_start_pos);
 			MessagePtr rot_msg(new Message(SceneObject::OBJECT_RM_ROTATION,id));
@@ -432,7 +432,7 @@ namespace GASS
 	{
 		m_FireEffectTemplate = value;
 	}
-	
+
     void WeaponSystemComponent::SetRoundOfFire(float value)
 	{
 		m_RoundOfFire = value;

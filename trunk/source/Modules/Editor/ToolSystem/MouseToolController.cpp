@@ -141,13 +141,13 @@ namespace GASS
 			if(name == "ChangeTool")
 			{
 				//std::cout << value << "\n";
-				if(value > 0.5) 
+				if(value > 0.5)
 					NextTool();
-				else if(value < -0.5) 
+				else if(value < -0.5)
 					PrevTool();
 			}
 			//temp solution, implement this in custom tool selection class
-			else if(name == TID_MOVE || 
+			else if(name == TID_MOVE ||
 					name == TID_VERTICAL_MOVE ||
 					name == TID_ROTATE ||
 					name == TID_PAINT ||
@@ -194,7 +194,7 @@ namespace GASS
 					int new_tool = i+1;
 					if(new_tool > m_Tools.size()-1)
 						new_tool = 0;
-					int id = (int) this;
+					int id = PTR_TO_INT(this);
 					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
 					SimEngine::Get().GetSimSystemManager()->PostMessage(tool_msg);
 					return;
@@ -215,7 +215,7 @@ namespace GASS
 					if(new_tool < 0)
 						new_tool = static_cast<int>(m_Tools.size()-1);
 
-					int id = (int) this;
+					int id = PTR_TO_INT(this);
 					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));
 					SimEngine::Get().GetSimSystemManager()->PostMessage(tool_msg);
 
@@ -254,7 +254,7 @@ namespace GASS
 
 		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
 
-		int from_id = int(this);
+		int from_id = PTR_TO_INT(this);
 
 		if(gizmo_result.Coll)
 		{
@@ -323,11 +323,11 @@ namespace GASS
 			new_value = int(new_value);
 			return new_value*rad_angle;
 		}
-		else 
+		else
 			return value;
 	}
 
-	
+
 
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
@@ -342,12 +342,12 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-	
 
-			
+
+
 			float box_volume = 1;
 
-			
+
 			Vec3 pos = Vec3(0,0,-1);
 			sub_mesh_data->PositionVector.push_back(pos);
 			pos = Vec3(0,0,1);
@@ -371,7 +371,7 @@ namespace GASS
 
 			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
-			
+
 			scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 		return pointer;
@@ -387,7 +387,7 @@ namespace GASS
 		const std::string message = ss.str();
 		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));*/
 
-		
+
 		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)
 		{
@@ -398,7 +398,7 @@ namespace GASS
 		}*/
 	}
 
-	void MouseToolController::SetEnableGizmo(int value) 
+	void MouseToolController::SetEnableGizmo(int value)
 	{
 		m_EnableGizmo=value;
 		if(m_ActiveTool)
@@ -414,8 +414,8 @@ namespace GASS
 		//inform tools
 		if(m_ActiveTool)
 			m_ActiveTool->MouseMoved(data,info);
-		
-		int mess_id = (int) this;
+
+		int mess_id = PTR_TO_INT(this);
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, SceneObjectPtr(info.m_ObjectUnderCursor,NO_THROW),mess_id));
 		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 
@@ -443,7 +443,7 @@ namespace GASS
 			}
 			else if(button == MBID_RIGHT)
 			{
-				m_MBRScreenPos = Vec2(data.XAbsNorm,data.YAbsNorm);	
+				m_MBRScreenPos = Vec2(data.XAbsNorm,data.YAbsNorm);
 			}
 		}
 		return false;
@@ -462,9 +462,9 @@ namespace GASS
 
 		else if(button == MBID_RIGHT)
 		{
-			Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);	
+			Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
 			SceneCursorInfo info = GetSceneCursorInfo(mouse_pos,m_RayPickDistance);
-			
+
 			//check if cursor at rest
 			Vec2 delta;
 			delta.x	= m_MBRScreenPos.x - mouse_pos.x;
@@ -500,7 +500,7 @@ namespace GASS
 				SetEditMode(GM_WORLD);
 			else
 				SetEditMode(GM_LOCAL);
-			
+
 		}
 
 		if(key == KEY_F5 && m_CtrlDown)
@@ -557,7 +557,7 @@ namespace GASS
 			{
 				site->AddChildSceneObject(so, true);
 
-				int from_id = (int) this;
+				int from_id = PTR_TO_INT(this);
 
 				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
 				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,from_id)));
@@ -568,6 +568,6 @@ namespace GASS
 			}
 		}
 	}
-	
-}				
+
+}
 

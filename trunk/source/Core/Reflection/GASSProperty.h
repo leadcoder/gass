@@ -222,8 +222,10 @@ namespace GASS
 		PropertyMetaDataPtr m_MetaData;
 	};
 
-#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME );
-#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & ## CLASS ## ::Get ## NAME , & ## CLASS ## ::Set ## NAME );
+#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
+#define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
+#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME);
+#define REG_VECTOR_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME, META_DATA);
 #define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \
 	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}

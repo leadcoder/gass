@@ -21,7 +21,7 @@ namespace GASS
 		m_Controller(controller),
 		m_FirstMoveUpdate(true)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedEvent,0));	
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(CreateTool::OnToolChanged,ToolChangedEvent,0));
 	}
 
 	CreateTool::~CreateTool()
@@ -56,8 +56,8 @@ namespace GASS
 			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
-				int from_id = (int) this;
-				
+				int from_id = PTR_TO_INT(this);
+
 				scene_object->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 			}
 			else

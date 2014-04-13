@@ -17,9 +17,10 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
+#include <OgrePrerequisites.h>
 
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
+
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
@@ -34,8 +35,10 @@
 #include <OgreSceneManager.h>
 #include <OgreTextureUnitState.h>
 #include <OgreSkeletonInstance.h>
+#include <OgreMesh.h>
 #include <OgreSubMesh.h>
 #include <OgreMaterialManager.h>
+#include <OgreTechnique.h>
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -91,7 +94,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
@@ -128,7 +131,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::SetMeshResource(const ResourceHandle &res) 
+	void OgreMeshComponent::SetMeshResource(const ResourceHandle &res)
 	{
 		m_MeshResource = res;
 
@@ -155,7 +158,7 @@ namespace GASS
 			SetRenderQueue(m_RenderQueue);
 			OgreMaterialCache::Add(m_MeshResource.Name(),m_OgreEntity);
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-			
+
 			//auto build edge list
 			//if(!m_OgreEntity->getMesh()->getEdgeList())
 			//	m_OgreEntity->getMesh()->buildEdgeList();
@@ -252,11 +255,11 @@ namespace GASS
 			SubMesh *sub_mesh = mesh->getSubMesh(i);
 			sub_mesh_data->Type = OgreConvert::ToGASS(sub_mesh->operationType);
 			sub_mesh_data->MaterialName = sub_mesh->getMaterialName();
-			
+
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
 			OgreGraphicsSystem::SetGASSMaterial(mat,sub_mesh_data->Material);
-			
-			/*if (!mat.isNull()) 
+
+			/*if (!mat.isNull())
 			{
 				Ogre::Technique* tech = mat->getBestTechnique();
 				//Get last pass and save materials
@@ -298,7 +301,7 @@ namespace GASS
 		}
 	}
 
-	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,GraphicsSubMeshPtr mesh) 
+	void OgreMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,GraphicsSubMeshPtr mesh)
 	{
 		if (!vertex_data)
 			return;
@@ -328,7 +331,7 @@ namespace GASS
 			{
 				posElem->baseVertexPointerToElement(pos_ptr, &pReal);
 				pos_ptr += vSize;
-				
+
 				pos.x = (*pReal++);
 				pos.y = (*pReal++);
 				pos.z= (*pReal++);
@@ -367,7 +370,7 @@ namespace GASS
 
 		if(textureElem)
 		{
-			//TODO: support more channels 
+			//TODO: support more channels
 			Ogre::HardwareVertexBufferSharedPtr tbuf = vertex_data->vertexBufferBinding->getBuffer(textureElem->getSource());
 			const unsigned int tSize = (unsigned int)tbuf->getVertexSize();
 			unsigned char* texture_ptr = static_cast<unsigned char*>(tbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
@@ -382,7 +385,7 @@ namespace GASS
 				mesh->TexCoordsVector.push_back(empty_tex_coord_vec);
 				tex_coord_vec = &mesh->TexCoordsVector[0];
 			}
-			
+
 			const unsigned int textureCount = (unsigned int)vertex_data->vertexCount;
 			for(unsigned int j = 0; j < textureCount; ++j)
 			{
@@ -398,13 +401,13 @@ namespace GASS
 				//*curVertices = _transform * (*curVertices);
 				//curTexture++;
 			}
-			
+
 			tbuf->unlock();
 		}
 	}
 
 
-	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh) 
+	void OgreMeshComponent::AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh)
 	{
 		if(index_data->indexCount > 0)
 		{
@@ -504,7 +507,7 @@ namespace GASS
 	{
 		if(!m_OgreEntity)
 			return;
-	
+
 		for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 		{
 			Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
@@ -518,7 +521,7 @@ namespace GASS
 			OgreMaterialCache::Restore(m_MeshResource.Name(),m_OgreEntity);
 	}
 
-	void OgreMeshComponent::SetCastShadow(bool castShadow) 
+	void OgreMeshComponent::SetCastShadow(bool castShadow)
 	{
 		m_CastShadow = castShadow;
 		if(m_OgreEntity)
@@ -526,7 +529,7 @@ namespace GASS
 	}
 
 
-	void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq) 
+	void OgreMeshComponent::SetRenderQueue(const RenderQueueBinder &rq)
 	{
 		m_RenderQueue = rq;
 		if(m_OgreEntity)
@@ -583,7 +586,7 @@ namespace GASS
 	void OgreMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
-		if(GetSceneObject()) 
+		if(GetSceneObject())
 			GetSceneObject()->PostEvent(GeometryFlagsChangedEventPtr(new GeometryFlagsChangedEvent(flags)));
 	}
 

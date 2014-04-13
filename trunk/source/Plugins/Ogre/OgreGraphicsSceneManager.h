@@ -32,6 +32,7 @@
 #include "OgreMaterial.h"
 #include <string>
 #include <OgreSceneManager.h>
+#include <OgreFrameListener.h>
 
 namespace Ogre
 {
@@ -45,7 +46,7 @@ namespace GASS
 	{
 		SHADOWS_DISABLED,
 		TEXTURE_SHADOWS_ADDITIVE_INTEGRATED,
-		TEXTURE_SHADOWS_ADDITIVE, 
+		TEXTURE_SHADOWS_ADDITIVE,
 		TEXTURE_SHADOWS_MODULATIVE,
 		STENCIL_SHADOWS_ADDITIVE,
 		STENCIL_SHADOWS_MODULATIVE
@@ -109,7 +110,7 @@ namespace GASS
 
 		//IGraphicsSceneManager
 		void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color);
-		
+
 		//IOgreSceneManagerProxy
 		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}
 	protected:
@@ -122,7 +123,7 @@ namespace GASS
 		void UpdateSkySettings();
 		void UpdateShadowSettings();
 
-		//Keep private for now, 
+		//Keep private for now,
 		void SetAmbientColor(const ColorRGB value) {m_AmbientColor = value; UpdateLightSettings();}
 		ColorRGB GetAmbientColor() const {return m_AmbientColor;}
 
@@ -162,7 +163,7 @@ namespace GASS
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
 		void OnExportMesh(ExportMeshRequestPtr message);
-	private:	
+	private:
 		//fog
 		float m_FogDensity;
 		int m_UseFog;
@@ -173,7 +174,7 @@ namespace GASS
 
 		//light attributes
 		ColorRGB m_AmbientColor;
-		
+
 		//Type of scene mangaer
 		std::string m_SceneManagerType;
 

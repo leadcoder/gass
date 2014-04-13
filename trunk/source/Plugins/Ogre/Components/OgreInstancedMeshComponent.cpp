@@ -30,6 +30,9 @@
 #include <OgreMaterialManager.h>
 #include <OgreBone.h>
 #include <OgreStaticGeometry.h>
+#include <OgreInstancedGeometry.h>
+#include <OgreTechnique.h>
+
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -144,7 +147,7 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-		//Use this name to generate unique filename, used by geometry interface. 
+		//Use this name to generate unique filename, used by geometry interface.
 		//m_Filename = name;
 
 		/*m_InstancedGeometry = new InstancedGeometry(mSceneMgr,m_Filename);
@@ -193,7 +196,7 @@ namespace GASS
 			instancedGeometry->setOrigin(Vector3::ZERO);
 			instancedGeometry->build();
 
-			const int num_batches = static_cast<int>(iter->second.size() / maxObjectsPerBatch); 
+			const int num_batches = static_cast<int>(iter->second.size() / maxObjectsPerBatch);
 
 			for (size_t k = 0; k < num_batches; k++)
 			{
@@ -352,7 +355,7 @@ namespace GASS
 	{
 		GraphicsMesh data;
 		return data;
-		
+
 		/*	StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
 		while (regIt.hasMoreElements())
 		{
@@ -363,7 +366,7 @@ namespace GASS
 
 		float sqdist = 1e24;
 		Ogre::StaticGeometry::LODBucket *theBucket = 0;
-		while (lodIt.hasMoreElements()) 
+		while (lodIt.hasMoreElements())
 		{
 
 		Ogre::StaticGeometry::LODBucket *b = lodIt.getNext();
@@ -393,7 +396,7 @@ namespace GASS
 		}
 		}
 		}
-		}	
+		}
 		mesh_data->NumFaces = mesh_data->NumFaces/3.0;*/
 	}
 

@@ -15,7 +15,7 @@ namespace GASS
 	RoadNetwork::RoadNetwork(void)
 	{
 
-	}	
+	}
 
 	RoadNetwork::~RoadNetwork(void)
 	{
@@ -81,8 +81,8 @@ namespace GASS
 
 			}
 
-			
-		
+
+
 			for(size_t j = 0; j < edge_path.size(); j++)
 			{
 				path.push_back(edge_path[j]);
@@ -90,7 +90,7 @@ namespace GASS
 			path.push_back(end_point);
 			//add edge offset
 			path = Math::GenerateOffset(path,from_edge->LaneWidth*0.5);
-			
+
 		}
 		else if(from_edge && to_edge)
 		{
@@ -151,7 +151,7 @@ namespace GASS
 							Vec3 p2 = path[path.size()-1];
 
 
-							//extend p2 
+							//extend p2
 							Vec3 dir = p2 - p1;
 							dir.Normalize();
 							p2 = p2 + dir*20;
@@ -159,7 +159,7 @@ namespace GASS
 							Vec3 p3 = edge_path[0];
 							Vec3 p4 = edge_path[1];
 
-							//extend p4 
+							//extend p4
 							dir = p4 - p3;
 							dir.Normalize();
 							p3 = p3 - dir*20;
@@ -167,7 +167,7 @@ namespace GASS
 							Vec2 isect;
 							if(Math::GetLineIntersection(Vec2(p1.x,p1.z),Vec2(p2.x,p2.z), Vec2(p3.x ,p3.z), Vec2(p4.x, p4.z), isect))
 							{
-								Vec3 new_p(isect.x,p3.y,isect.y);							
+								Vec3 new_p(isect.x,p3.y,isect.y);
 								path[path.size()-1]  = new_p;
 								edge_path[0] = new_p;
 							}
@@ -177,7 +177,7 @@ namespace GASS
 						{
 							path.push_back(edge_path[j]);
 						}
-					}	
+					}
 				}
 			}
 
@@ -188,11 +188,11 @@ namespace GASS
 			to_edge->Enabled = true;
 		}
 		path.push_back(to_point);
-		//trim 
+		//trim
 		std::vector<Vec3> final_path;
 		for(size_t i = 0; i < path.size(); i++)
 		{
-			if(i > 0 && (path[i-1] - path[i]).Length() > 0.01) 
+			if(i > 0 && (path[i-1] - path[i]).Length() > 0.01)
 				final_path.push_back(path[i]);
 		}
 		//final_path = Math::GenerateOffset(final_path,2);
@@ -288,7 +288,7 @@ namespace GASS
 		std::vector<RoadNode*> nodes = m_Nodes;
 		for(size_t i = 0; i < nodes.size();i++)
 		{
-			if(nodes[i]->Edges.size() == 2 && 
+			if(nodes[i]->Edges.size() == 2 &&
 				nodes[i]->Edges[0]->LaneWidth == nodes[i]->Edges[1]->LaneWidth &&
 				nodes[i]->Edges[0]->LeftLanes == nodes[i]->Edges[1]->LeftLanes &&
 				nodes[i]->Edges[0]->RightLanes == nodes[i]->Edges[1]->RightLanes)
@@ -384,37 +384,37 @@ namespace GASS
 
 	void RoadNetwork::SaveXML(TiXmlElement * elem)
 	{
-		TiXmlElement * net_elem = new TiXmlElement("RoadNetwork");  
+		TiXmlElement * net_elem = new TiXmlElement("RoadNetwork");
 		elem->LinkEndChild( net_elem);
 
-		TiXmlElement * nodes_elem = new TiXmlElement("Nodes");  
-		net_elem->LinkEndChild( nodes_elem);  
+		TiXmlElement * nodes_elem = new TiXmlElement("Nodes");
+		net_elem->LinkEndChild( nodes_elem);
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{
-			int id = (int) (m_Nodes[i]);
+			int id = PTR_TO_INT(m_Nodes[i]);
 			TiXmlElement *node_prop_elem = new TiXmlElement( "Node");
-			nodes_elem->LinkEndChild( node_prop_elem);  
+			nodes_elem->LinkEndChild( node_prop_elem);
 			node_prop_elem->SetAttribute("ID", id);
 			std::string pos = m_Nodes[i]->Position.ToString(" ");
 			node_prop_elem->SetAttribute("Position",pos.c_str());
 		}
 		TiXmlElement *edges_elem = new TiXmlElement( "Edges");
-		net_elem->LinkEndChild( edges_elem);  
+		net_elem->LinkEndChild( edges_elem);
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
 			TiXmlElement *edge_prop_elem = new TiXmlElement( "Edge");
-			edges_elem->LinkEndChild( edge_prop_elem);  
+			edges_elem->LinkEndChild( edge_prop_elem);
 			edge_prop_elem ->SetAttribute("Dir",(int) m_Edges[i]->Dir);
-			edge_prop_elem ->SetAttribute("StartNode",(int) m_Edges[i]->StartNode);
-			edge_prop_elem ->SetAttribute("EndNode",(int) m_Edges[i]->EndNode);
+			edge_prop_elem ->SetAttribute("StartNode",PTR_TO_INT(m_Edges[i]->StartNode));
+			edge_prop_elem ->SetAttribute("EndNode",PTR_TO_INT(m_Edges[i]->EndNode));
 			edge_prop_elem ->SetAttribute("Distance",m_Edges[i]->Distance);
 			edge_prop_elem ->SetAttribute("LaneWidth",m_Edges[i]->LaneWidth);
 			TiXmlElement *wps_elem = new TiXmlElement( "Waypoints");
-			edge_prop_elem->LinkEndChild( wps_elem);  
+			edge_prop_elem->LinkEndChild( wps_elem);
 			for(size_t j = 0; j < m_Edges[i]->Waypoints.size(); j++)
 			{
 				TiXmlElement *wp_prop_elem = new TiXmlElement( "WP");
-				wps_elem->LinkEndChild( wp_prop_elem);  
+				wps_elem->LinkEndChild( wp_prop_elem);
 				std::string pos = m_Edges[i]->Waypoints[j].ToString(" ");
 				wp_prop_elem->SetAttribute("Position",pos.c_str());
 			}
@@ -456,7 +456,7 @@ namespace GASS
 					edge_elem->QueryIntAttribute("EndNode",&en_id);
 					edge_elem->QueryDoubleAttribute("LaneWidth",&edge->LaneWidth);
 					edge_elem->QueryDoubleAttribute("Distance",&edge->Distance);
-					
+
 					edge->StartNode = mapping[sn_id];
 					edge->EndNode = mapping[en_id];
 					edge->StartNode->Edges.push_back(edge);

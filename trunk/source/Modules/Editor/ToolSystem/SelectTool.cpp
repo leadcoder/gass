@@ -42,7 +42,7 @@ namespace GASS
 			if(m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
 			{
 				m_SelectedObject = obj_under_cursor;
-				obj_under_cursor->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(false,(int) this)));
+				obj_under_cursor->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(false,PTR_TO_INT(this) )));
 			}
 		}
 	}
@@ -53,7 +53,7 @@ namespace GASS
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(selected)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			selected->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(true,from_id)));
 		}
 		m_SelectedObject.reset();

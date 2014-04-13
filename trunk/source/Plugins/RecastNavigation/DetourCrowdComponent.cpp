@@ -28,7 +28,7 @@ namespace GASS
 {
 	static const int MAX_AGENTS = 1024;
 
-	DetourCrowdComponent::DetourCrowdComponent() :	
+	DetourCrowdComponent::DetourCrowdComponent() :
 		m_ShowDebug(false),
 		m_Initialized(false),
 		m_Crowd(NULL),
@@ -52,19 +52,19 @@ namespace GASS
 	void DetourCrowdComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("DetourCrowdComponent",new Creator<DetourCrowdComponent, Component>);
-		RegisterProperty<bool>("AnticipateTurns", &GetAnticipateTurns, &SetAnticipateTurns);
-		RegisterProperty<bool>("OptimizeVis", &GetOptimizeVis, &SetOptimizeVis);
-		RegisterProperty<bool>("OptimizeTopo", &GetOptimizeTopo, &SetOptimizeTopo);
-		RegisterProperty<bool>("Separation", &GetSeparation, &SetSeparation);
-		RegisterProperty<bool>("ObstacleAvoidance", &GetObstacleAvoidance, &SetObstacleAvoidance);
-		RegisterProperty<float>("DefaultAgentRadius", &GetDefaultAgentRadius, &SetDefaultAgentRadius);
+		RegisterProperty<bool>("AnticipateTurns", &DetourCrowdComponent::GetAnticipateTurns, &DetourCrowdComponent::SetAnticipateTurns);
+		RegisterProperty<bool>("OptimizeVis", &DetourCrowdComponent::GetOptimizeVis, &DetourCrowdComponent::SetOptimizeVis);
+		RegisterProperty<bool>("OptimizeTopo", &DetourCrowdComponent::GetOptimizeTopo, &DetourCrowdComponent::SetOptimizeTopo);
+		RegisterProperty<bool>("Separation", &DetourCrowdComponent::GetSeparation, &DetourCrowdComponent::SetSeparation);
+		RegisterProperty<bool>("ObstacleAvoidance", &DetourCrowdComponent::GetObstacleAvoidance, &DetourCrowdComponent::SetObstacleAvoidance);
+		RegisterProperty<float>("DefaultAgentRadius", &DetourCrowdComponent::GetDefaultAgentRadius, &DetourCrowdComponent::SetDefaultAgentRadius);
 	}
 
 	void DetourCrowdComponent::OnInitialize()
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
-		
+
 		//Get nav mesh by name?
 		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("AI_NAVIGATION_MESH");
 		if(obj)
@@ -131,7 +131,7 @@ namespace GASS
 
 			// Medium (22)
 			params.velBias = 0.5f;
-			params.adaptiveDivs = 5; 
+			params.adaptiveDivs = 5;
 			params.adaptiveRings = 2;
 			params.adaptiveDepth = 2;
 			crowd->setObstacleAvoidanceParams(1, &params);
@@ -186,7 +186,7 @@ namespace GASS
 	{
 		m_DefaultAgentRadius = value;
 	}
-	
+
 	float DetourCrowdComponent::GetDefaultAgentRadius() const
 	{
 		return m_DefaultAgentRadius;

@@ -27,7 +27,7 @@
 #include <OgreBillboardSet.h>
 #include <OgreBillboard.h>
 #include <OgreMaterialManager.h>
-
+#include <OgreTechnique.h>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -66,14 +66,14 @@ namespace GASS
 	void OgreBillboardComponent::RegisterReflection()
 	{
 		ADD_DEPENDENCY("OgreLocationComponent")
-		
+
 		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, Component>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
 		RegisterProperty<OgreMaterial>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &GetGeometryFlagsBinder, &SetGeometryFlagsBinder,
+		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreBillboardComponent::GetGeometryFlagsBinder, &OgreBillboardComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 
@@ -94,7 +94,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
 	}
 
-	float OgreBillboardComponent::GetWidth() const 
+	float OgreBillboardComponent::GetWidth() const
 	{
 		return m_Width;
 	}
@@ -102,7 +102,7 @@ namespace GASS
 	void OgreBillboardComponent::SetWidth(float width)
 	{
 		m_Width = width;
-		if(m_Billboard) 
+		if(m_Billboard)
 			m_Billboard->setDimensions(m_Width,m_Height);
 	}
 
@@ -115,7 +115,7 @@ namespace GASS
 	{
 
 		m_Height = height;
-		if(m_Billboard) 
+		if(m_Billboard)
 			m_Billboard->setDimensions(m_Width,m_Height);
 	}
 
@@ -123,7 +123,7 @@ namespace GASS
 	{
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Billboard", OF_VISIBLE)));
-		
+
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 
 		static unsigned int obj_id = 0;
@@ -164,14 +164,14 @@ namespace GASS
 		billboard->setTexcoordRect(0, 0,1, 1);
 		m_Billboard = billboard;
 		float bbsize = m_Height;
-		if(m_Width > m_Height) 
+		if(m_Width > m_Height)
 			bbsize = m_Width;
 		bbsize *=  0.5f;
 		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
-	
+
 	AABox OgreBillboardComponent::GetBoundingBox() const
 	{
 		Float max_size = Math::Max(m_Width,m_Height);
@@ -201,7 +201,7 @@ namespace GASS
 		if(m_Billboard)
 			m_Billboard->setColour(Ogre::ColourValue(color.r,color.g,color.b,color.a));
 	}
-	
+
 	void OgreBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
 	{
 		const Vec3 scale = message->GetScale();

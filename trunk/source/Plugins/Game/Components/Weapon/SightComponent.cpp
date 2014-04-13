@@ -72,7 +72,7 @@ namespace GASS
 		m_TurnInputExp(1),
 		m_AimAtPos(false)
 	{
-		
+
 		m_BaseTransformation.Identity();
 		m_StartRotation.Identity();
 		m_BarrelTransformation.Identity();
@@ -148,7 +148,7 @@ namespace GASS
 
 	void SightComponent::OnDelete()
 	{
-		
+
 	}
 
 
@@ -190,9 +190,9 @@ namespace GASS
 		pitch_rot_mat.Identity();
 		pitch_rot_mat.RotateX(m_PitchValue);
 
-		//Important to get correct rotation order here! First start with yaw angle in world space, 
-		//then add start rotation (yaw and then pitch) , last add pitch rotation. 
-		//If we begin with start rotation we get tilted yaw-rotation-plane, 
+		//Important to get correct rotation order here! First start with yaw angle in world space,
+		//then add start rotation (yaw and then pitch) , last add pitch rotation.
+		//If we begin with start rotation we get tilted yaw-rotation-plane,
 		//ie the camera will roll and change pitch value during yaw movment.
 		//If we add start rotation last, the same problem will arise. ie the pitch matrix
 		//will tilt the way rotation part of the start rotation matrix.
@@ -223,24 +223,24 @@ namespace GASS
 		}
 		//damp input values every frame if we use mouse input
 		m_YawInput = m_YawInput* 0.9;
-		m_PitchInput = m_PitchInput *0.9; 
+		m_PitchInput = m_PitchInput *0.9;
 
-		
+
 		std::stringstream ss;
 		//ss << "TargetDistance:" << m_TargetDistance << "\n";/*<< " Target:" << m_TargetName << "\n";*/
 		ss << "yaw input:" << m_YawInput << "\n";
 		ss << "pitch input:" << m_PitchInput << "\n";
-		
+
 		DEBUG_PRINT(ss.str());
-		
+
 		if(m_RemoteSim)
 			return;
 
 		UpdateAimTransformation(delta_time);
-		
 
-		
-		
+
+
+
 		Quaternion rot;
 		rot.FromRotationMatrix(m_AimRotation.GetRotation());
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot)));
@@ -249,25 +249,25 @@ namespace GASS
 		//Send message to auto aim system to control weapon system
 
 		//Create point in terrain to aim at, here we can take lead and distance into consideration
-		//but for now we just extrude the aim direction 
+		//but for now we just extrude the aim direction
 
-		
-		
+
+
 
 		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*m_TargetDistance;
 
 
 		if(m_AimAtPos)
 		{
-			int id = (int) this; 
+			int id = PTR_TO_INT(this);
 			m_AutoAimObject->PostRequest(AimAtPositionMessagePtr(new AimAtPositionMessage(aim_point,m_AutoAimPriority,id)));
-			
+
 			//DEBUG_PRINT("Aim at pos");
 		}
 
 		if(m_Debug)
 			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(), aim_point, Vec4(0,1,1,1) );
-		
+
 		/*Vec3 desired_aim_direction = -m_AimRotation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();
 		Vec3 end = start + desired_aim_direction*4;
@@ -277,22 +277,22 @@ namespace GASS
 		end = start + m_AimRotation.GetUpVector()*4;
 		DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1));*/
 
-		
+
 		//update current angle
 		m_CurrentYawAngle = m_AimRotation.GetEulerHeading();
 		m_CurrentPitchAngle = m_AimRotation.GetEulerPitch();
 
 		/*std::stringstream ss;
 		ss << "Yaw:" << Math::Rad2Deg(m_CurrentYawAngle) << " MaxMin"  << m_PitchMaxAngle << m_PitchMinAngle << "\n"
-		<< "Pitch:" << Math::Rad2Deg(m_CurrentPitchAngle) << "\n"; 
+		<< "Pitch:" << Math::Rad2Deg(m_CurrentPitchAngle) << "\n";
 		DEBUG_PRINT(ss.str());*/
 	}
 
-	
+
 
 	void SightComponent::OnAimAtPosition(AimAtPositionMessagePtr message)
 	{
-		int id = (int) this; 
+		int id = PTR_TO_INT(this);
 		//disable this sight if message not sent by us and has higher priority
 		if(id != message->GetSenderID() && message->GetPriority() > m_AutoAimPriority)
 		{
@@ -300,17 +300,17 @@ namespace GASS
 		}
 	}
 
-	
+
 
 	void SightComponent::OnInput(InputRelayEventPtr message)
 	{
-		int id = (int) this; 
+		int id = PTR_TO_INT(this);
 		std::string name = message->GetController();
 		float value = message->GetValue();
 		if (name == m_ActivateController)
 		{
 			if(value > 0)
-			{	
+			{
 				m_Active = true;
 			}
 
@@ -319,12 +319,12 @@ namespace GASS
 				GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 
 				m_Active = false;
-				 
+
 				m_YawInput = 0;
 				m_PitchInput = 0;
 				//std::cout << "deactivate\n";
 			}
-			
+
 		}
 		if (!m_RemoteSim && name == m_SendDesiredPointController)
 		{
@@ -371,7 +371,7 @@ namespace GASS
 			{
 				UpdateTargetDistance();
 			}
-			//Move target object 
+			//Move target object
 		}
 
 		if (m_Active && name == m_YawController)
@@ -418,6 +418,6 @@ namespace GASS
 		}
 		else
 			m_TargetDistance = 5000;
-		
+
 	}
 }

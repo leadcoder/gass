@@ -26,7 +26,7 @@ namespace GASS
 		m_FirstMoveUpdate(true),
 		m_Mode(GTM_ADD)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GraphTool::OnToolChanged,ToolChangedEvent,0));	
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GraphTool::OnToolChanged,ToolChangedEvent,0));
 	}
 
 	GraphTool::~GraphTool()
@@ -84,10 +84,10 @@ namespace GASS
 					}
 				}
 				*/
-				GraphEdgeComponentPtr edge =  _GetClosestEdge(parent_obj,info.m_3DPos , 1.0); 
+				GraphEdgeComponentPtr edge =  _GetClosestEdge(parent_obj,info.m_3DPos , 1.0);
 				if(edge)
 				{
-					
+
 					GraphNodeComponentPtr start_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
 					GraphNodeComponentPtr end_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetEndNode());
 
@@ -95,7 +95,7 @@ namespace GASS
 					SceneObjectPtr current_obj = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_NodeObjectName,parent_obj);
 					GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
 
-					int from_id = (int) this;
+					int from_id = PTR_TO_INT(this);
 					current_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 					GraphNodeComponentPtr current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 					GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
@@ -134,7 +134,7 @@ namespace GASS
 						current_obj = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_NodeObjectName,parent_obj);
 						GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
 
-						int from_id = (int) this;
+						int from_id = PTR_TO_INT(this);
 						current_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
 						current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
@@ -145,7 +145,7 @@ namespace GASS
 					{
 						current_obj = obj_under_cursor;
 					}
-					
+
 					if(prev_obj)
 					{
 						GraphNodeComponentPtr prev_node = prev_obj->GetFirstComponentByClass<IGraphNodeComponent>();
@@ -183,7 +183,7 @@ namespace GASS
 		{
 			GraphNodeComponentPtr start_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
 			GraphNodeComponentPtr end_node = DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetEndNode());
-		
+
 			GraphNodeComponentPtr current_node = new_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 			GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::_Insert");
 
@@ -204,7 +204,7 @@ namespace GASS
 	}
 
 
-	GraphEdgeComponentPtr GraphTool::_GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const 
+	GraphEdgeComponentPtr GraphTool::_GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const
 	{
 		GraphEdgeComponentPtr edge;
 		int index = -1;
@@ -223,7 +223,7 @@ namespace GASS
 				Vec3 end_pos  = end_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				Vec3 cpos = Math::ClosestPointOnLine(start_pos, end_pos, pos);
 				Float dist = (cpos - pos).Length();
-				if(dist < min_dist) 
+				if(dist < min_dist)
 				{
 					min_dist = dist;
 					index = i;

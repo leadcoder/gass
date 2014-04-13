@@ -39,17 +39,17 @@ namespace GASS
 		m_MouseIsDown = true;
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		SceneObjectPtr object_under_c(info.m_ObjectUnderCursor,NO_THROW);
-		
+
 		if(selected && object_under_c)
 		{
 			//Send message
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			//MessagePtr goto_msg(new GotoPositionMessage(info.m_3DPos,from_id));
-			
+
 			Vec3 dir(1,0,1);
 			dir.Normalize();
 			FaceDirectionRequestPtr fd_msg(new FaceDirectionRequest(dir,from_id));
-			
+
 			selected->PostRequest(PathfindToPositionMessagePtr(new PathfindToPositionMessage(info.m_3DPos,from_id)));
 			selected->PostRequest(fd_msg);
 		}
@@ -66,6 +66,6 @@ namespace GASS
 	{
 		m_SelectedObject = message->GetSceneObject();
 	}
-	
+
 }
 

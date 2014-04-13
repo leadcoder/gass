@@ -25,7 +25,7 @@ namespace GASS
 		virtual ~GizmoComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();		
+		virtual void OnDelete();
 		Vec3 GetPosition(const Vec3 &ray_start, const Vec3 &ray_dir);
 		Quaternion GetRotation(float detla);
 		void SetActive(bool active)  {m_Active =active;}
@@ -54,10 +54,10 @@ namespace GASS
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void UpdateScale();
 		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
-		Float GizmoComponent::SnapValue(Float value, Float snap);
-	
+		Float SnapValue(Float value, Float snap);
+
 		Quaternion m_BaseRot;
-		GraphicsMeshPtr m_MeshData;	
+		GraphicsMeshPtr m_MeshData;
 		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;

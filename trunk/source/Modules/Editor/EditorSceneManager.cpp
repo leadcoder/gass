@@ -53,7 +53,7 @@ namespace GASS
 		SetObjectSite(scene->GetRootSceneObject());
 
 		//Load some objects, why???
-		
+
 		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject",scene->GetRootSceneObject());
 	}
 
@@ -85,7 +85,7 @@ namespace GASS
 		Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
 		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		
+
 		if(!free_obj) //If no FreeCameraObject template found, create one
 		{
 			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
@@ -108,7 +108,7 @@ namespace GASS
 			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
 		}
 
-		
+
 		if(free_obj)
 		{
 			free_obj->SendImmediateRequest(PositionRequestPtr(new PositionRequest(scene->GetStartPos())));
@@ -120,7 +120,7 @@ namespace GASS
 		//if(top_obj)
 		//	top_obj->SendImmediate(pos_msg);
 	}
-	
+
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
@@ -155,7 +155,7 @@ namespace GASS
 		{
 			m_SelectedObject = obj;
 			//notify listeners
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			SceneMessagePtr selection_msg(new ObjectSelectionChangedEvent(obj,from_id));
 			GetScene()->PostMessage(selection_msg);
 		}
@@ -239,7 +239,7 @@ namespace GASS
 		return SceneObjectPtr(m_CurrentSite,NO_THROW);
 	}
 
-	void EditorSceneManager::MoveCameraToObject(SceneObjectPtr obj)	
+	void EditorSceneManager::MoveCameraToObject(SceneObjectPtr obj)
 	{
 		SceneObjectPtr cam_obj (m_ActiveCameraObject,NO_THROW);
 		CameraComponentPtr cam(m_ActiveCamera,NO_THROW);
@@ -251,7 +251,7 @@ namespace GASS
 			float object_size = 10;
 			Vec3 object_pos(0,0,0);
 			GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>(true);
-			
+
 			if(gc)
 			{
 				object_size = gc->GetBoundingSphere().m_Radius*4;
@@ -260,8 +260,8 @@ namespace GASS
 				if(lc)
 					object_pos = lc->GetWorldPosition();
 
-				//LogManager::getSingleton().stream() << "zoom box min" << gc->GetBoundingBox().m_Min;	
-				//LogManager::getSingleton().stream() << "zoom box max" << gc->GetBoundingBox().m_Max;	
+				//LogManager::getSingleton().stream() << "zoom box min" << gc->GetBoundingBox().m_Min;
+				//LogManager::getSingleton().stream() << "zoom box max" << gc->GetBoundingBox().m_Max;
 
 			}
 			else
@@ -269,7 +269,7 @@ namespace GASS
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if(lc)
 					object_pos = lc->GetWorldPosition();
-				else 
+				else
 					return;
 			}
 
@@ -291,11 +291,11 @@ namespace GASS
 			}
 			else
 			{
-				
+
 				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 				Quaternion cam_rot;
 				Vec3 dir = object_pos - cam_pos;
-				dir.Normalize(); 
+				dir.Normalize();
 				dir.y = -0.7;
 				dir.Normalize();
 

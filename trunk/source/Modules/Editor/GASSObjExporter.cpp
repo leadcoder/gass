@@ -1,5 +1,6 @@
 #include "GASSObjExporter.h"
 #include "Sim/GASS.h"
+#include <fstream>
 
 namespace GASS
 {
@@ -49,7 +50,7 @@ namespace GASS
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,recursive);
 
 		LocationComponentPtr root_lc = root_obj->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 offset(0,0,0); 
+		Vec3 offset(0,0,0);
 		if(root_lc)
 		{
 			offset = -root_lc->GetWorldPosition();
@@ -77,7 +78,7 @@ namespace GASS
 					trans_mat.SetTransformation(world_pos,world_rot,scale);
 					mesh_data.Transform(trans_mat);
 				}
-				mesh_data_vec.push_back(mesh_data);  
+				mesh_data_vec.push_back(mesh_data);
 			}
 
 			//ManualMeshData final_mesh_data;
@@ -101,7 +102,7 @@ namespace GASS
 
 						if(sub_mesh->MaterialName != "")
 							Materials[sub_mesh->MaterialName] = sub_mesh->Material;
-						else 
+						else
 						{
 							sub_mesh->MaterialName = "DefaultMat";
 							sub_mesh->Material = def_mat;
@@ -139,7 +140,7 @@ namespace GASS
 						if(sub_mesh->Material.Textures.size() > 0)
 						{
 							std::string ext = StringUtils::ToLower(FileUtils::GetExtension(sub_mesh->Material.Textures[0]));
-							if(ext == "dds") 
+							if(ext == "dds")
 								dds_tex = true;
 						}
 
@@ -168,8 +169,8 @@ namespace GASS
 			}
 
 			//std::stringstream ss;
-			std::ofstream file_ptr;   
-			file_ptr.open(out_file + ".obj");      
+			std::ofstream file_ptr;
+			file_ptr.open((out_file + ".obj").c_str());
 
 			//std::string mat_file = out_file
 
@@ -195,7 +196,7 @@ namespace GASS
 			{
 				for(size_t h = 0; h < mesh_data_vec[i].SubMeshVector.size() ; h++)
 				{
-					
+
 						GraphicsSubMeshPtr sub_mesh =   mesh_data_vec[i].SubMeshVector[h];
 						if(sub_mesh->Type == TRIANGLE_LIST)
 						{
@@ -225,18 +226,18 @@ namespace GASS
 			file_ptr << "\n";
 			try
 			{
-				//file_ptr << ss.str().c_str();     
-				file_ptr.close(); 
+				//file_ptr << ss.str().c_str();
+				file_ptr.close();
 			}
 			catch (std::exception &e)
 			{
 				LogManager::getSingleton().stream() << "Failed to write obj data to file:" << e.what();
 			}
-			
+
 			{
-				
-				std::ofstream file_ptr;   
-				file_ptr.open(out_file + ".mtl");
+
+				std::ofstream file_ptr;
+				file_ptr.open((out_file + ".mtl").c_str());
 
 				std::map<std::string,GraphicsMaterial>::iterator iter = Materials.begin();
 				while(iter != Materials.end())
@@ -252,7 +253,7 @@ namespace GASS
 					file_ptr << "\n";
 					iter++;
 				}
-				file_ptr.close(); 
+				file_ptr.close();
 
 				//copy textures
 				if(m_CopyTextures)
@@ -283,7 +284,7 @@ namespace GASS
 								try
 								{
 									boost::filesystem::copy_file(boost::filesystem::path(full_path),boost::filesystem::path(out_path),boost::filesystem::copy_option::overwrite_if_exists);
-								} 
+								}
 								catch (const boost::filesystem::filesystem_error& e)
 								{
 									//std::cerr << "Error: " << e.what() << std::endl;

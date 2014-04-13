@@ -35,7 +35,7 @@ namespace GASS
 
 	void MoveTool::MouseMoved(const MouseData &data, const SceneCursorInfo &info)
 	{
-		int from_id = (int) this;
+		int from_id = PTR_TO_INT(this);
 
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		if(m_MouseIsDown && selected && CheckIfEditable(selected))
@@ -45,7 +45,7 @@ namespace GASS
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				Vec3 new_position = gc->GetPosition(info.m_RayStart,info.m_RayDir);
-				
+
 				if(m_MoveUpdateCount == 0)
 				{
 					//calc offset
@@ -69,7 +69,7 @@ namespace GASS
 			else if(m_GroundSnapMove)
 			{
 				//wait 3 frames to be sure that mesh is hidden
-				//m_MoveUpdateCount 
+				//m_MoveUpdateCount
 
 				if(m_MoveUpdateCount > 3)
 				{
@@ -105,7 +105,7 @@ namespace GASS
 							m_Offset.Set(0,0,0);
 
 						Vec3 new_position = info.m_3DPos - m_Offset;
-						
+
 
 						new_position.x = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.x);
 						new_position.y = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.y);
@@ -118,7 +118,7 @@ namespace GASS
 			}
 			const double time = SimEngine::Get().GetTime();
 			static double last_time = 0;
-			const double send_freq = 20; 
+			const double send_freq = 20;
 			if(time - last_time > 1.0/send_freq)
 			{
 				last_time = time;
@@ -166,7 +166,7 @@ namespace GASS
 			else if(obj_under_cursor == SceneObjectPtr(m_SelectedObject,NO_THROW))
 			{
 				m_GroundSnapMove = true;
-				int from_id = (int) this;
+				int from_id = PTR_TO_INT(this);
 
 				//Disable object collision
 
@@ -205,7 +205,7 @@ namespace GASS
 		m_MouseIsDown = false;
 		bool slection_mode = false;
 
-		
+
 
 		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + abs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
 		{
@@ -228,7 +228,7 @@ namespace GASS
 
 		if(selected && CheckIfEditable(selected))
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(true,from_id));
 			SendMessageRec(selected,col_msg);
 
@@ -253,7 +253,7 @@ namespace GASS
 				}
 			}
 		}
-		int from_id = (int) this;
+		int from_id = PTR_TO_INT(this);
 		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
@@ -294,7 +294,7 @@ namespace GASS
 		return gizmo;
 	}
 
-	void MoveTool::Start() 
+	void MoveTool::Start()
 	{
 		SetGizmoVisiblity(m_Controller->GetEnableGizmo());
 		m_Active = true;
@@ -305,7 +305,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = (int) this;
+			int from_id = PTR_TO_INT(this);
 			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
 			SendMessageRec(gizmo,col_msg);
 			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));

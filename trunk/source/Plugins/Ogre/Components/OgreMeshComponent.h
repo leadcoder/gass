@@ -52,7 +52,7 @@ namespace GASS
 	typedef SPTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
 
 
-	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent 
+	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent
 	{
 	public:
 		typedef	std::map<std::string, std::vector<std::string> > MeshMaterialCache;
@@ -91,7 +91,7 @@ namespace GASS
 		void SetCastShadow(bool castShadow);
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-		
+
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
 		void OnMeshFileNameMessage(MeshFileRequestPtr message);

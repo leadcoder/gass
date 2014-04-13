@@ -50,7 +50,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 
-		
+
 		virtual ResourceHandle GetTerrainResource() const;
 		//IMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
@@ -60,7 +60,7 @@ namespace GASS
 		virtual Float GetHeightAtPoint(int x, int y) const;
 		virtual unsigned int GetSamples() const;
 		virtual float* GetHeightData() const;
-		
+
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
@@ -78,9 +78,9 @@ namespace GASS
 		int GetIndexY() const;
 		void SetIndexY(int index);
 		void SetPosition(const Vec3 &pos);
-		Vec3 GetPosition() const; 
+		Vec3 GetPosition() const;
 		void SetColorMap(const ResourceHandle &colormap);
-		ResourceHandle GetColorMap() const; 
+		ResourceHandle GetColorMap() const;
 		void SetDiffuseLayer0(const ResourceHandle &diffuse);
 		ResourceHandle GetDiffuseLayer0() const;
 		void SetNormalLayer0(const ResourceHandle &diffuse);
@@ -113,19 +113,19 @@ namespace GASS
 		float GetTilingLayer4() const;
 		void SetMask(const ResourceHandle &mask);
 		ResourceHandle GetMask() const;
-		
+
 		//void SetMaskLayer1(const std::string &mask);
 		//std::string GetMaskLayer1() const;
 		//void SetMaskLayer2(const std::string &mask);
 		//std::string GetMaskLayer2() const;
 
-		//import functions that take full path to data, functions will only import data, 
+		//import functions that take full path to data, functions will only import data,
 		//file path is not saved, ues SetHeightMap etc instead if you want to ,
 		//reimport data every load
 		void ImportHeightMap(const FilePath &filename);
-		FilePath GetImportHeightMap() const {return "";}
+		FilePath GetImportHeightMap() const {return FilePath("");}
 		void ImportColorMap(const FilePath &filename);
-		FilePath GetImportColorMap() const {return "";}
+		FilePath GetImportColorMap() const {return FilePath("");}
 		void ImportDetailMask(const FilePath &mask);
 		FilePath GetImportDetailMask() const {return FilePath("");}
 
@@ -141,7 +141,7 @@ namespace GASS
 		bool GetDumpTextues() const  {return false;}
 
 		RenderQueueBinder m_RenderQueue;
-		
+
 		bool m_CreateCollisionMesh;
 		ResourceHandle m_HeightMapFile;
 		ResourceHandle m_ColorMap;
@@ -168,7 +168,7 @@ namespace GASS
 		float m_TilingLayer2;
 		float m_TilingLayer3;
 		float m_TilingLayer4;
-		GeometryFlags m_GeomFlags;	
+		GeometryFlags m_GeomFlags;
 		Vec3 m_Pos;
 	};
 

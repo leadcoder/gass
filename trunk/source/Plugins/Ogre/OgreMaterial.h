@@ -22,7 +22,7 @@
 
 #include <string>
 #include <OgreMaterialManager.h>
-
+#include <OgreMaterial.h>
 namespace GASS
 {
 	class OgreMaterial
@@ -35,7 +35,7 @@ namespace GASS
 		void SetName(const std::string &name) {m_Name =name;}
 		friend std::ostream& operator << (std::ostream& os, const OgreMaterial& mat)
 		{
-			os << mat.GetName(); 
+			os << mat.GetName();
 			return os;
 		}
 		friend std::istream& operator >> (std::istream& is, OgreMaterial& mat)
@@ -60,7 +60,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const 
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
 		{
 			std::vector<std::string> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();

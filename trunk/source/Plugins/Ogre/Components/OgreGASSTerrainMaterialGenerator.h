@@ -22,6 +22,7 @@
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include <tinyxml.h>
+#include <OgreTechnique.h>
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
@@ -34,7 +35,7 @@
 
 namespace GASS
 {
-	
+
     class GASSTerrainMaterialGenerator : public Ogre::TerrainMaterialGenerator
    {
    public:
@@ -81,7 +82,7 @@ namespace GASS
 
          Ogre::MaterialPtr generateForCompositeMap(const Ogre::Terrain* terrain)
          {
-           
+
 			Ogre::MaterialPtr mat = terrain->_getCompositeMapMaterial();
 			if (mat.isNull())
 			{
@@ -137,7 +138,7 @@ namespace GASS
 	  protected:
 		  Ogre::String m_Material;
       };
-	  
+
    };
 
 

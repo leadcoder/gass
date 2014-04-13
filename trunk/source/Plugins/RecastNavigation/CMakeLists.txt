@@ -2,11 +2,11 @@
 set(LIB_NAME "GASSPluginRecastNavigation")
 
 #Set include directories
-include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Detour/include"
-		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/DetourCrowd/include"
-		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/DetourTileCache/include"
-		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Recast/include"
-		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Utils/include"
+include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Detour/Include"
+		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/DetourCrowd/Include"
+		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/DetourTileCache/Include"
+		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Recast/Include"
+		"${PROJECT_SOURCE_DIR}/source/Plugins/RecastNavigation/API/Utils/Include"
 		)
 
 #add all source files from current directory (recursively)

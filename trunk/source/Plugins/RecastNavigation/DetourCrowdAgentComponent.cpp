@@ -7,7 +7,7 @@
 
 namespace GASS
 {
-	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new GraphicsMesh()), 
+	DetourCrowdAgentComponent::DetourCrowdAgentComponent(void) : m_MeshData(new GraphicsMesh()),
 		m_Radius(0.5),
 		m_Agent(NULL),
 		m_Index(-1),
@@ -21,7 +21,7 @@ namespace GASS
 		m_LastPos(0,0,0)
 	{
 
-	}	
+	}
 
 	DetourCrowdAgentComponent::~DetourCrowdAgentComponent(void)
 	{
@@ -169,7 +169,7 @@ namespace GASS
 
 			ap.collisionQueryRange = 12.0f;
 			ap.pathOptimizationRange = 30.0f;
-			ap.updateFlags = 0; 
+			ap.updateFlags = 0;
 
 			if (crowd_comp->GetAnticipateTurns())
 				ap.updateFlags |= DT_CROWD_ANTICIPATE_TURNS;
@@ -268,9 +268,9 @@ namespace GASS
 			if(m_Agent->active)
 			{
 				const float* pos = m_Agent->npos;
-				int id = (int) this;
+				int id = PTR_TO_INT(this);
 				Vec3 current_pos(pos[0],pos[1],pos[2]);
-				
+
 				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos,id)));
 
 				Vec3 target_dir = current_pos - m_TargetPos;
@@ -282,7 +282,7 @@ namespace GASS
 				Float speed = view_dir.Length();
 				Float dist_to_stop = 0.5;
 				Float dist_to_slow_down = speed + dist_to_stop;
-				
+
 				if(dist < dist_to_stop)
 				{
 					//we have arrived!
@@ -299,7 +299,7 @@ namespace GASS
 					damp_vel[0] = ratio*m_Agent->vel[0];
 					damp_vel[1] = ratio*m_Agent->vel[1];
 					damp_vel[2] = ratio*m_Agent->vel[2];
-					
+
 					crowd_comp->GetCrowd()->requestMoveVelocity(m_Index, damp_vel);*/
 					dtCrowdAgentParams ap = GetAgentParams();
 					ap.maxSpeed = m_MaxSpeed*ratio;
@@ -346,7 +346,7 @@ namespace GASS
 						final_dir = view_dir;
 					else if(speed <= min_speed)
 						final_dir = m_CurrentDir;
-				
+
 					Vec3 up(0,1,0);
 					Vec3 right = final_dir;
 					right.x = final_dir.z;
@@ -358,7 +358,7 @@ namespace GASS
 					rot_mat.SetUpVector(up);
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
-					
+
 					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
 				}
 				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(c_velocity,Vec3(0,0,0),id)));
@@ -369,7 +369,7 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionRequestPtr message)
 	{
-		int id = (int) this;
+		int id = PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
 			Vec3 pos = message->GetPosition();

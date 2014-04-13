@@ -29,6 +29,7 @@ THE SOFTWARE.
 #ifndef __Ogre_TerrainMaterialGeneratorB_H__
 #define __Ogre_TerrainMaterialGeneratorB_H__
 
+#include <OgreString.h>
 #include "OgreTerrainPrerequisites.h"
 #include "OgreTerrainMaterialGenerator.h"
 #include "OgreGpuProgramParams.h"
@@ -47,7 +48,7 @@ namespace Ogre
 
 
 	/** A TerrainMaterialGenerator which can cope with normal mapped, specular mapped
-		terrain. 
+		terrain.
 		@note Requires the Cg plugin to render correctly
 	*/
 	class  TerrainMaterialGeneratorB : public TerrainMaterialGenerator
@@ -56,7 +57,7 @@ namespace Ogre
 		TerrainMaterialGeneratorB();
 		~TerrainMaterialGeneratorB();
 
-		/** Shader model 2 profile target. 
+		/** Shader model 2 profile target.
 		*/
 		class  SM2Profile : public TerrainMaterialGenerator::Profile
 		{
@@ -70,98 +71,98 @@ namespace Ogre
 			void updateParamsForCompositeMap(const MaterialPtr& mat, const Terrain* terrain);
 			void requestOptions(Terrain* terrain);
 
-			/** Whether to support normal mapping per layer in the shader (default true). 
+			/** Whether to support normal mapping per layer in the shader (default true).
 			*/
 			bool isLayerNormalMappingEnabled() const  { return mLayerNormalMappingEnabled; }
-			/** Whether to support normal mapping per layer in the shader (default true). 
+			/** Whether to support normal mapping per layer in the shader (default true).
 			*/
 			void setLayerNormalMappingEnabled(bool enabled);
-			/** Whether to support parallax mapping per layer in the shader (default true). 
+			/** Whether to support parallax mapping per layer in the shader (default true).
 			*/
 			bool isLayerParallaxMappingEnabled() const  { return mLayerParallaxMappingEnabled; }
-			/** Whether to support parallax mapping per layer in the shader (default true). 
+			/** Whether to support parallax mapping per layer in the shader (default true).
 			*/
 			void setLayerParallaxMappingEnabled(bool enabled);
-			/** Whether to support specular mapping per layer in the shader (default true). 
+			/** Whether to support specular mapping per layer in the shader (default true).
 			*/
 			bool isLayerSpecularMappingEnabled() const  { return mLayerSpecularMappingEnabled; }
-			/** Whether to support specular mapping per layer in the shader (default true). 
+			/** Whether to support specular mapping per layer in the shader (default true).
 			*/
 			void setLayerSpecularMappingEnabled(bool enabled);
 			/** Whether to support a global colour map over the terrain in the shader,
-				if it's present (default true). 
+				if it's present (default true).
 			*/
 			bool isGlobalColourMapEnabled() const  { return mGlobalColourMapEnabled; }
 			/** Whether to support a global colour map over the terrain in the shader,
-			if it's present (default true). 
+			if it's present (default true).
 			*/
 			void setGlobalColourMapEnabled(bool enabled);
 			/** Whether to support a light map over the terrain in the shader,
-			if it's present (default true). 
+			if it's present (default true).
 			*/
 			bool isLightmapEnabled() const  { return mLightmapEnabled; }
 			/** Whether to support a light map over the terrain in the shader,
-			if it's present (default true). 
+			if it's present (default true).
 			*/
 			void setLightmapEnabled(bool enabled);
 			/** Whether to use the composite map to provide a lower LOD technique
-				in the distance (default true). 
+				in the distance (default true).
 			*/
 			bool isCompositeMapEnabled() const  { return mCompositeMapEnabled; }
 			/** Whether to use the composite map to provide a lower LOD technique
-			in the distance (default true). 
+			in the distance (default true).
 			*/
 			void setCompositeMapEnabled(bool enabled);
-			/** Whether to support dynamic texture shadows received from other 
-				objects, on the terrain (default true). 
+			/** Whether to support dynamic texture shadows received from other
+				objects, on the terrain (default true).
 			*/
 			bool getReceiveDynamicShadowsEnabled() const  { return mReceiveDynamicShadows; }
-			/** Whether to support dynamic texture shadows received from other 
-			objects, on the terrain (default true). 
+			/** Whether to support dynamic texture shadows received from other
+			objects, on the terrain (default true).
 			*/
 			void setReceiveDynamicShadowsEnabled(bool enabled);
 
-			/** Whether to use PSSM support dynamic texture shadows, and if so the 
-				settings to use (default 0). 
+			/** Whether to use PSSM support dynamic texture shadows, and if so the
+				settings to use (default 0).
 			*/
 			void setReceiveDynamicShadowsPSSM(PSSMShadowCameraSetup* pssmSettings);
-			/** Whether to use PSSM support dynamic texture shadows, and if so the 
-			settings to use (default 0). 
+			/** Whether to use PSSM support dynamic texture shadows, and if so the
+			settings to use (default 0).
 			*/
 			PSSMShadowCameraSetup* getReceiveDynamicShadowsPSSM() const { return mPSSM; }
-			/** Whether to use depth shadows (default false). 
+			/** Whether to use depth shadows (default false).
 			*/
 			void setReceiveDynamicShadowsDepth(bool enabled);
-			/** Whether to use depth shadows (default false). 
+			/** Whether to use depth shadows (default false).
 			*/
 			bool getReceiveDynamicShadowsDepth() const { return mDepthShadows; }
-			/** Whether to use shadows on low LOD material rendering (when using composite map) (default false). 
+			/** Whether to use shadows on low LOD material rendering (when using composite map) (default false).
 			*/
 			void setReceiveDynamicShadowsLowLod(bool enabled);
-			/** Whether to use shadows on low LOD material rendering (when using composite map) (default false). 
+			/** Whether to use shadows on low LOD material rendering (when using composite map) (default false).
 			*/
 			bool getReceiveDynamicShadowsLowLod() const { return mLowLodShadows; }
 
-			
+
 			bool GetFadeDetail() const {return m_FadeDetail;}
 			Ogre::Real GetDetailFadeDist() const {return m_DetailFadeDist;}
 			bool GetFadeOutColor() const {return m_FadeOutColor;}
 			Ogre::Real GetNearColorWeight() const {return m_NearColorWeight;}
-			
+
 			void SetFadeDetail(bool value) {m_FadeDetail = value;}
 			void SetDetailFadeDist(Ogre::Real value) {m_DetailFadeDist = value;}
 			void SetFadeOutColor(bool  value) {m_FadeOutColor= value;}
 			void SetNearColorWeight(Ogre::Real value) {m_NearColorWeight= value;}
 			/// Internal
 			bool _isSM3Available() const { return mSM3Available; }
-		
+
 			bool isVertexCompressionSupported() const {return false;}
 		protected:
 
 			enum TechniqueType
 			{
-				HIGH_LOD, 
-				LOW_LOD, 
+				HIGH_LOD,
+				LOW_LOD,
 				RENDER_COMPOSITE_MAP
 			};
 			void addTechnique(const MaterialPtr& mat, const Terrain* terrain, TechniqueType tt);

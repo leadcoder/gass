@@ -6,8 +6,8 @@
 #include "OgreMaterialManager.h"
 #include "OgreEntity.h"
 #include "OgreSubEntity.h"
-#include "OgreBillBoardChain.h"
-#include "OgreBillBoardSet.h"
+#include "OgreBillboardChain.h"
+#include "OgreBillboardSet.h"
 #include <Overlay/OgreOverlayManager.h>
 #include <Overlay/OgreOverlayContainer.h>
 #include <Overlay/OgreOverlayElement.h>
@@ -38,29 +38,29 @@ void ResourceGroupHelper::MyMatVisitor::visit(
 		// unfortunately, the renderable gives access only to a const MaterialPtr.
 		// and there is no 'setMaterial' or 'setMaterialName' method on renderables.
 		// so I have to try to down cast with known classes...
-		{   
+		{
 			Ogre::SubEntity* lRend = dynamic_cast<Ogre::SubEntity*>(rend);
-			if(lRend){lRend->setMaterialName(newMatName);return;} 
+			if(lRend){lRend->setMaterialName(newMatName);return;}
 		}
 		{
 			Ogre::SimpleRenderable* lRend = dynamic_cast<Ogre::SimpleRenderable*>(rend);
-			if(lRend){lRend->setMaterial(newMatName);return;} 
+			if(lRend){lRend->setMaterial(newMatName);return;}
 		}
 		{
 			Ogre::ShadowRenderable* lRend = dynamic_cast<Ogre::ShadowRenderable*>(rend);
-			if(lRend){lRend->setMaterial(newMat);return;} 
+			if(lRend){lRend->setMaterial(newMat);return;}
 		}
-		{   
+		{
 			Ogre::BillboardChain* lRend = dynamic_cast<Ogre::BillboardChain*>(rend);
-			if(lRend){lRend->setMaterialName(newMatName);return;} 
+			if(lRend){lRend->setMaterialName(newMatName);return;}
 		}
-		{   
+		{
 			Ogre::BillboardSet* lRend = dynamic_cast<Ogre::BillboardSet*>(rend);
-			if(lRend){lRend->setMaterialName(newMatName);return;} 
+			if(lRend){lRend->setMaterialName(newMatName);return;}
 		}
-		{   
+		{
 			Ogre::OverlayElement* lRend = dynamic_cast<Ogre::OverlayElement*>(rend);
-			if(lRend){lRend->setMaterialName(newMatName);return;} 
+			if(lRend){lRend->setMaterialName(newMatName);return;}
 		}
 	}else{
 		// was there for debug...
@@ -148,7 +148,7 @@ mRessourceGroupModificationTimes()
 	}
 	mRessourceGroupModificationTimes[Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME] = veryBig;
 	mRessourceGroupModificationTimes["GASS_STATIC"] = veryBig;
-	
+
 }
 
 ResourceGroupHelper::~ResourceGroupHelper(void)
@@ -251,7 +251,7 @@ void ResourceGroupHelper::updateOnEveryRenderable()
 {
 
 	//1/ get all the available object type (entity, light, user defined types ...)
-	std::vector<std::string> allAvailableTypes; 
+	std::vector<std::string> allAvailableTypes;
 	Ogre::Root::MovableObjectFactoryIterator iterFactory = Ogre::Root::getSingleton().getMovableObjectFactoryIterator();
 	for(;iterFactory.hasMoreElements();)
 	{

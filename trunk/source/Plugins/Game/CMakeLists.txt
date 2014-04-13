@@ -2,7 +2,7 @@
 set(LIB_NAME "GASSPluginGame")
 
 #Set include directories
-include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Source/Plugins/Game")
+include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/source/Plugins/Game")
 
 #add all source files from current directory (recursively)
 add_source_from_current_dir()

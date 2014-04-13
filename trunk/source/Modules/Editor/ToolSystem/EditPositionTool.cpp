@@ -21,7 +21,7 @@ namespace GASS
 	EditPositionTool::EditPositionTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller)
 	{
-		
+
 		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 	}
 
@@ -40,12 +40,12 @@ namespace GASS
 		m_MouseIsDown = true;
 		SceneObjectPtr selected(m_SelectedObject,NO_THROW);
 		SceneObjectPtr object_under_c(info.m_ObjectUnderCursor,NO_THROW);
-		
+
 		if(selected && object_under_c)
 		{
 			//Send message
-			int from_id = (int) this;
-			
+			int from_id = PTR_TO_INT(this);
+
 			selected->PostRequest(EditPositionMessagePtr(new EditPositionMessage(info.m_3DPos,from_id)));
 		}
 	}
@@ -60,6 +60,6 @@ namespace GASS
 	{
 		m_SelectedObject = message->GetSceneObject();
 	}
-	
+
 }
 
