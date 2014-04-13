@@ -18,16 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include <OgrePrerequisites.h>
-
-#include "Plugins/Ogre/Components/OgreMeshComponent.h"
-
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/Components/OgreLocationComponent.h"
-#include "Plugins/Ogre/OgreConvert.h"
-#include "Plugins/Ogre/OgreMaterialCache.h"
-#include "Plugins/Ogre/OgreGraphicsSystem.h"
-
-
 #include <OgreBone.h>
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
@@ -39,6 +29,14 @@
 #include <OgreSubMesh.h>
 #include <OgreMaterialManager.h>
 #include <OgreTechnique.h>
+
+#include "Plugins/Ogre/Components/OgreMeshComponent.h"
+#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/OgreMaterialCache.h"
+#include "Plugins/Ogre/OgreGraphicsSystem.h"
+
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"

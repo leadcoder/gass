@@ -3,10 +3,11 @@
 
 #include <OgreSingleton.h>
 #include <map>
-#include <inttypes.h>
- #include<stdint.h>
- typedef long long __int64;
-
+#ifndef WIN32
+	#include <inttypes.h>
+	#include<stdint.h>
+	typedef long long __int64;
+#endif
 typedef std::pair<Ogre::Vector3, Ogre::ColourValue> VertexPair;
 
 #define DEFAULT_ICOSPHERE_RECURSION_LEVEL	1
