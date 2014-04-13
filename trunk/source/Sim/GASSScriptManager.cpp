@@ -23,6 +23,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
@@ -32,7 +34,7 @@
 //addons
 #include "Sim/Utils/Script/scriptstdstring.h"
 #include "Sim/Utils/Script/scriptbuilder.h"
-#include "Sim/Interface/GASSILocationComponent.h"
+
 namespace GASS
 {
 
@@ -133,6 +135,13 @@ namespace GASS
 	void ScriptManager::Init()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ScriptManager::OnScriptEvent,ScriptEvent,0));
+
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		ResourceType script_type;
+		script_type.Name = "SCRIPT";
+		script_type.Extensions.push_back("as");
+		rm->RegisterResourceType(script_type);
+
 		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
 		RegisterStdString(m_Engine);
 		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
