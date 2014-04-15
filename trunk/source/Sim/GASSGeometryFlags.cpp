@@ -24,6 +24,9 @@
 
 namespace GASS
 {
+    template<> std::map<std::string ,GeometryFlags> MultiEnumBinder<GeometryFlags,GeometryFlagsBinder>::m_NameToEnumMap;
+	template<> std::map<GeometryFlags, std::string> MultiEnumBinder<GeometryFlags,GeometryFlagsBinder>::m_EnumToNameMap;
+
 	std::map<GeometryFlags, GeometryFlags> GeometryFlagManager::m_CollisionMaskMap;
 
 	GeometryFlags GeometryFlagManager::GetMask(GeometryFlags geom_flag)
@@ -35,12 +38,12 @@ namespace GASS
 		}
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find collision mask", "GeometryFlagManager::GetMask");
-		
+
 	}
 
 	void GeometryFlagManager::LoadGeometryFlagsFile(const std::string &file)
 	{
-		
+
 		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
 		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
 		if (!xmlDoc->LoadFile())
@@ -66,7 +69,7 @@ namespace GASS
 				GeometryFlagsBinder gf;
 				std::stringstream ss_gf(geom_name);
 				ss_gf >> gf;
-				
+
 				std::string value = xml_geom->Attribute("CollisionMask");
 				//parse mask
 				GeometryFlagsBinder gf_mask;
@@ -76,12 +79,12 @@ namespace GASS
 				m_CollisionMaskMap[gf.GetValue()] = gf_mask.GetValue();
 
 				int mask = static_cast<int> (gf_mask.GetValue());
-				
+
 				xml_geom = xml_geom->NextSiblingElement("Geometry");
-				
+
 			}
 		}
 		delete xmlDoc;
 	}
-	
+
 }

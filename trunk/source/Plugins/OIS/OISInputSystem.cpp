@@ -130,7 +130,7 @@ namespace GASS
 			if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
 				LogManager::getSingleton().stream() << "OISInputSystem:" <<m_InputManager->getNumberOfDevices(OIS::OISJoyStick) <<  "joysticks available";
 				try {
-					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) 
+					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++)
 					{
 						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, bufferedJoy ));
 						joy->setEventCallback(this);
@@ -167,7 +167,7 @@ namespace GASS
 					LogManager::getSingleton().stream() <<  "OISInputSystem: No joystick";
 				}
 			} else {
-				FileLog::Print("OISInputSystem: No joystick");
+				LogManager::getSingleton().stream() <<  "OISInputSystem: No joystick";
 			}
 #endif
 
@@ -228,13 +228,13 @@ namespace GASS
 		if(m_Window == 0)
 			return;
 
-		if(m_KeyActive) 
+		if(m_KeyActive)
 		{
 			m_Keyboard->capture();
 			memcpy(m_OldKeyBuffer,m_KeyBuffer,256);
 			m_Keyboard->copyKeyStates(m_KeyBuffer);
 		}
-		if(m_MouseActive) 
+		if(m_MouseActive)
 		{
 			m_Mouse->capture();
 
@@ -242,9 +242,9 @@ namespace GASS
 			m_MouseState = m_Mouse->getMouseState();
 		}
 
-		if(m_JoyActive) 
+		if(m_JoyActive)
 		{
-			for (int i = 0; i < m_Joys.size(); i++) 
+			for (int i = 0; i < m_Joys.size(); i++)
 			{
 				m_Joys[i]->capture();
 				//m_OldJoyState[i] = m_JoyState[i];

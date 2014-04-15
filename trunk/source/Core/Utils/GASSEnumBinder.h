@@ -156,6 +156,8 @@ namespace GASS
 		static NameEnumMap m_NameToEnumMap;
 		static EnumNameMap m_EnumToNameMap;
 	};
+    template< class ENUM,class CLASS> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,CLASS>::m_NameToEnumMap;
+	template< class ENUM,class CLASS> std::map<ENUM,std::string> MultiEnumBinder<ENUM,CLASS>::m_EnumToNameMap;
 
 
 	template< class ENUM,class CLASS>
@@ -265,6 +267,10 @@ namespace GASS
 		static EnumNameMap m_EnumToNameMap;
 	};
 
+	template<class ENUM ,class CLASS> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,CLASS>::m_NameToEnumMap;\
+	template<class ENUM ,class CLASS> std::map<ENUM,std::string> SingleEnumBinder<ENUM,CLASS>::m_EnumToNameMap;\
+
+
 }
 
 #define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
@@ -283,8 +289,10 @@ namespace GASS
 #define END_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	}							\
 	};								\
-	template<> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
-	template<> std::map<ENUM,std::string> MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
+	//template<> NameEnumMap MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
+	//template<> EnumNameMap MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
+	//template<> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
+	//template<> std::map<ENUM,std::string> MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
 
 
 
@@ -305,6 +313,6 @@ namespace GASS
 #define END_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	}							\
 	};								\
-	template<> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
-	template<> std::map<ENUM,std::string> SingleEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
+	//template<> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
+	//template<> std::map<ENUM,std::string> SingleEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
 
