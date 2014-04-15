@@ -167,7 +167,12 @@ namespace GASS
 		/**
 			Project vector on plane
 		*/
-		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);		
+		static Vec3 ProjectVectorOnPlane(const Vec3 plane_normal,const Vec3 &v);
+
+		/**
+			Get random value                                                                     
+		*/
+		static Float RandomValue(Float start, Float end);
 		
 #define MY_PI 3.14159265358
 

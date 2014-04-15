@@ -174,6 +174,20 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
 
+
+		r = m_Engine->RegisterObjectType("Mat4", sizeof(Mat4), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
+		r = m_Engine->RegisterObjectMethod("Mat4", "void Identity()", asMETHOD(Mat4, Identity), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateX(double)", asMETHODPR(Mat4, RotateX, (Float),void), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateY(double)", asMETHODPR(Mat4, RotateY, (Float),void), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateZ(double)", asMETHODPR(Mat4, RotateZ, (Float),void), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetViewDirVector() const", asMETHODPR(Mat4, GetViewDirVector, () const ,Vec3), asCALL_THISCALL);
+
+		r = m_Engine->RegisterGlobalFunction("double MathDeg2Rad(double)",  asFUNCTIONPR(Math::Deg2Rad, (Float), Float), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterGlobalFunction("double MathRad2Deg(double)",  asFUNCTIONPR(Math::Rad2Deg, (Float), Float), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterGlobalFunction("Vec3 MathDeg2Rad(const Vec3 &in)",  asFUNCTIONPR(Math::Deg2Rad, (const Vec3&), Vec3), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)",  asFUNCTIONPR(Math::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)",  asFUNCTIONPR(Math::RandomValue, (double,double), double), asCALL_CDECL); assert( r >= 0 );
+		
 		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);
 
@@ -243,6 +257,28 @@ namespace GASS
 		return r;
 	}
 
+	void ScriptManager::UnloadScript(const std::string &script)
+	{
+		std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
+		if( iter != m_ScriptControllers.end())
+		{
+			m_ScriptControllers.erase(iter);
+		}
+
+		if(m_Engine->GetModule(script.c_str(), asGM_ONLY_IF_EXISTS))
+			m_Engine->DiscardModule(script.c_str());
+		/*std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.begin();
+		while(iter != m_ScriptControllers.end())
+		{
+			if(iter->second == sc)
+			{
+				iter = m_ScriptControllers.erase(iter);
+			}
+			else
+				iter++;
+		}*/
+	}
+
 
 	ScriptControllerPtr ScriptManager::LoadScript(const std::string &script,const std::string &init_func_arg)
 	{
@@ -261,7 +297,7 @@ namespace GASS
 			// We've already attempted loading the script before, but there is no controller
 			return ScriptControllerPtr ();
 		}
-
+	
 		// Compile the script into the module
 		CScriptBuilder builder;
 		r = builder.StartNewModule(m_Engine, script.c_str());

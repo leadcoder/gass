@@ -47,10 +47,6 @@ namespace GASS
 		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}
-		//void SetUpdateFunction(asIScriptFunction * update_f) {m_UpdateFunction= update_f;}
-		//void SetInitFunction(asIScriptFunction * init_f) {m_InitFunction= init_f;}
-		//asIScriptFunction* GetUpdateFunction() const {return m_UpdateFunction;}
-		//asIScriptFunction* GetInitFunction() const {return m_InitFunction;}
 		asIScriptFunction *m_UpdateFunction;
 		asIScriptFunction *m_InitFunction;
 		asIScriptFunction *m_FactoryFunction;
@@ -69,6 +65,7 @@ namespace GASS
 		virtual ~ScriptManager();
 		void Init();
 		ScriptControllerPtr LoadScript(const std::string &script, const std::string &init_func_arg);
+		void UnloadScript(const std::string &script);
 		asIScriptEngine *GetEngine() const {return m_Engine;}
 		void ReturnContextToPool(asIScriptContext *ctx);
 		asIScriptContext *PrepareContextFromPool(asIScriptFunction *func);

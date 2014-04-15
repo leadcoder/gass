@@ -875,6 +875,14 @@ namespace GASS
 		return true;
 	}
 
+	Float Math::RandomValue(Float start, Float end)
+	{
+		Float span = end - start;
+		Float norm_rand = (Float)rand()/(Float)RAND_MAX;
+		Float ret_value = start + norm_rand * span;
+		return ret_value;
+	}
+
 }
 
 
