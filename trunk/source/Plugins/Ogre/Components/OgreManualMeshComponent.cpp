@@ -58,7 +58,6 @@
 namespace GASS
 {
 	OgreManualMeshComponent::OgreManualMeshComponent(): m_MeshObject (NULL),
-		//m_GeomFlags(GEOMETRY_FLAG_UNKOWN),
 		m_GeometryFlagsBinder(GEOMETRY_FLAG_DYNAMIC_OBJECT),
 		m_CastShadows(false)
 	{

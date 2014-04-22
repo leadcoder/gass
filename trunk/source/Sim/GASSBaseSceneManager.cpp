@@ -121,7 +121,7 @@ namespace GASS
 
 	void BaseSceneManager::LoadXML(TiXmlElement *xml_elem)
 	{
-		LoadProperties(xml_elem);
+		_LoadProperties(xml_elem);
 	}
 
 
@@ -130,7 +130,7 @@ namespace GASS
 		TiXmlElement * this_elem;
 		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
-		SaveProperties(this_elem);
+		_SaveProperties(this_elem);
 	}
 	
 }

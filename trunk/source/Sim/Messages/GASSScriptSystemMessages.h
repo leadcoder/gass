@@ -72,5 +72,18 @@ namespace GASS
 		std::string m_Name;
 	};
 	typedef SPTR<GUIScriptRequest> GUIScriptRequestPtr;
+
+	class GUILoadedEvent : public SystemEventMessage
+	{
+	public:
+		GUILoadedEvent(void *data, SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay) ,
+			  m_Data(data){}
+
+		  void* GetData() const {return m_Data;}
+	private:
+		void *m_Data;
+	};
+	typedef SPTR<GUILoadedEvent> GUILoadedEventPtr;
 }
 #endif

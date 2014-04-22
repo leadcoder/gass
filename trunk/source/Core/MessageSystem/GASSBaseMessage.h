@@ -51,10 +51,10 @@ namespace GASS
 
 		SenderID GetSenderID() const;
 		MessageType GetType() const;
-		
-		private:
-			double m_Delay;
-			SenderID m_SenderID;
+
+	private:
+		double m_Delay;
+		SenderID m_SenderID;
 	};
 	typedef SPTR<BaseMessage> BaseMessagePtr;
 }

@@ -286,7 +286,7 @@ namespace GASS
 	{
 		TiXmlElement *prop = scene->FirstChildElement("Properties");
 		if(prop)
-			BaseReflectionObject::LoadProperties(prop);
+			BaseReflectionObject::_LoadProperties(prop);
 		else // fallback for old scenes
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scene::LoadXML");
 		TiXmlElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
@@ -310,7 +310,7 @@ namespace GASS
 		TiXmlElement *prop = new TiXmlElement("Properties");
 		parent->LinkEndChild(prop);
 
-		BaseReflectionObject::SaveProperties(prop);
+		BaseReflectionObject::_SaveProperties(prop);
 
 		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);

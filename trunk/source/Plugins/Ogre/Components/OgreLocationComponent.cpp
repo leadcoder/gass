@@ -396,7 +396,7 @@ namespace GASS
 			else
 				m_OgreNode->getCreator()->getRootSceneNode()->addChild(m_OgreNode );
 
-			//should we preserve old world position and orientenation???
+			//should we preserve old world position and orientation???
 			SetWorldPosition(world_pos);
 			SetWorldRotation(world_rot);
 			m_OgreNode->needUpdate();
@@ -415,12 +415,6 @@ namespace GASS
 		Vec3 pos = OgreConvert::ToGASS(m_OgreNode->_getDerivedPosition());
 		Vec3 scale = OgreConvert::ToGASS(m_OgreNode->_getDerivedScale());
 		Quaternion rot = OgreConvert::ToGASS(m_OgreNode->_getDerivedOrientation());
-
 		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos,rot,scale)));
-
-	/*	MessagePtr debug_msg(new Message(SimSystemManager::SYSTEM_RM_DEBUG_PRINT,from_id));
-		debug_msg->SetData("Text",GetSceneObject()->GetName());
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);*/
-
 	}
 }

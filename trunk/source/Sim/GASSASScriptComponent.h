@@ -37,7 +37,6 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	private:
-
 		void SetScriptFile(const std::string &script_file);
 		std::string GetScriptFile() const;
 		std::string m_Script;

@@ -35,7 +35,7 @@ namespace GASS
 	}
 
 
-	void BaseReflectionObject::LoadProperties(TiXmlElement *elem)
+	void BaseReflectionObject::_LoadProperties(TiXmlElement *elem)
 	{
 		TiXmlElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
@@ -48,7 +48,6 @@ namespace GASS
 				if(attrib_name == "value") 
 				{
 					const std::string prop_val = prop_elem->FirstAttribute()->Value();
-
 					try
 					{
 						SetPropertyByString(prop_name,prop_val);
@@ -56,29 +55,22 @@ namespace GASS
 					catch(...)
 					{
 						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + prop_name +" With attribute:"+ prop_val+  " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadXML");
-						//GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed xml parsing in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
-
-						//LogManager::getSingleton().stream() << "WARNING:BaseComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
-						//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" <<  prop_elem->GetDocument()->Value() << "\t property not found: "<< prop_name;
 					}
-						
 				}
 				else
 				{
-					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
-					//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename: " << prop_elem->GetDocument()->Value() << "\t unkown property syntax for " << prop_name << "\"value\" expected, found " << attrib_name;
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::_LoadProperties");
 				}
 			}
 			else
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No attribute found for property for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadProperties");
-				//LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::LoadProperties() - Filename:" << prop_elem->GetDocument()->Value() <<" \t No attribute found for property " <<prop_name;
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No attribute found for property for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::_LoadProperties");
 			}
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
 
-	void BaseReflectionObject::SaveProperties(TiXmlElement *parent)
+	void BaseReflectionObject::_SaveProperties(TiXmlElement *parent)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -97,7 +89,7 @@ namespace GASS
 		}
 	}
 
-	bool BaseReflectionObject::SerializeProperties(ISerializer* serializer)
+	bool BaseReflectionObject::_SerializeProperties(ISerializer* serializer)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)

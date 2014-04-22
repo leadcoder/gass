@@ -97,7 +97,7 @@ namespace GASS
 		{
 			ComponentContainerPtr container (ComponentContainerFactory::Get().Create(names[i]));
 			BaseReflectionObjectPtr bro = DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
-			Save(outpath,names[i],bro);
+			_Save(outpath,names[i],bro);
 		}
 
 		names = ComponentFactory::GetPtr()->GetFactoryNames();
@@ -107,11 +107,11 @@ namespace GASS
 			BaseReflectionObjectPtr bro = DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
 			std::string class_name = bro->GetRTTI()->GetClassName();
 			if(bro)
-				Save(outpath,class_name,bro);
+				_Save(outpath,class_name,bro);
 		}
 	}
 
-	void SchemaManager::Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr object)
+	void SchemaManager::_Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr object)
 	{
 		//Create xml file
 		TiXmlDocument doc;  
@@ -153,14 +153,14 @@ namespace GASS
 		for(size_t i = 0;  i < props.size(); i++)
 		{
 			const std::string prop_name = props[i]->GetName();
-			SaveProp(sequence_elem, props[i]);
+			_SaveProp(sequence_elem, props[i]);
 		}
 		std::string filename = outpath + classname;
 		filename += ".xsd";
 		doc.SaveFile(filename.c_str());
 	}
 
-	void SchemaManager::SaveProp(TiXmlElement* parent, IProperty* prop) const 
+	void SchemaManager::_SaveProp(TiXmlElement* parent, IProperty* prop) const 
 	{
 		TiXmlElement * prop_elem = new TiXmlElement("xs:element");  
 		parent->LinkEndChild(prop_elem);
@@ -182,12 +182,12 @@ namespace GASS
 		complex_elem->LinkEndChild(attrib_elem);
 
 		attrib_elem->SetAttribute("name","value");
-		std::string p_type = GetPropType(prop);
+		std::string p_type = _GetPropType(prop);
 		attrib_elem->SetAttribute("type",p_type.c_str());
 		attrib_elem->SetAttribute("use","required");
 	}
 
-	std::string SchemaManager::GetPropType(IProperty* prop) const
+	std::string SchemaManager::_GetPropType(IProperty* prop) const
 	{
 		std::string type_id;
 

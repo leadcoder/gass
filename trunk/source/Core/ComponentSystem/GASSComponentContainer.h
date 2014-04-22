@@ -185,16 +185,14 @@ namespace GASS
 		by default all containers are serialized*/
 		bool GetSerialize()  const;
 	protected:
-		void CheckComponentDependencies() const;
-	
-		//Help functions for template creation
-		std::string CreateUniqueName();
-		void InheritComponentData(ComponentContainerPtr cc);
-		//Allow custom parsing for object creation
-		virtual ComponentContainerPtr CreateComponentContainer(TiXmlElement *cc_elem) const;
-		void Copy(ComponentContainerPtr object_to_copy);
-	
-		ComponentPtr LoadComponent(TiXmlElement *comp_template);
+		void _CheckComponentDependencies() const;
+		void _InheritComponentData(ComponentContainerPtr cc);
+		
+		//virtual to allow custom parsing for object creation
+		virtual ComponentContainerPtr CreateComponentContainerXML(TiXmlElement *cc_elem) const;
+		ComponentPtr _LoadComponentXML(TiXmlElement *comp_template);
+		void _Copy(ComponentContainerPtr object_to_copy);
+		
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;
 		std::string m_Name;

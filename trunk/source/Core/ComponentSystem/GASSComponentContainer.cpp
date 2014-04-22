@@ -90,7 +90,7 @@ namespace GASS
 	{
 		if(!m_Serialize)
 			return true;
-		if(!BaseReflectionObject::SerializeProperties(serializer))
+		if(!BaseReflectionObject::_SerializeProperties(serializer))
 			return false;
 
 		if(serializer->Loading())
@@ -205,7 +205,7 @@ namespace GASS
 		TiXmlElement* this_elem = new TiXmlElement( factory_name.c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
-		SaveProperties(this_elem);
+		_SaveProperties(this_elem);
 
 		TiXmlElement* comp_elem = new TiXmlElement("Components");
 		this_elem->LinkEndChild(comp_elem);
@@ -263,7 +263,7 @@ namespace GASS
 
 					if(target_comp) //component already exist, replace attributes component
 					{
-						ComponentPtr comp = LoadComponent(comp_elem);
+						ComponentPtr comp = _LoadComponentXML(comp_elem);
 						//ComponentTemplatePtr template_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if(comp)
 						{
@@ -272,7 +272,7 @@ namespace GASS
 					}
 					else
 					{
-						ComponentPtr comp = LoadComponent(comp_elem);
+						ComponentPtr comp = _LoadComponentXML(comp_elem);
 						if(comp)
 							AddComponent(comp);
 					}
@@ -285,7 +285,7 @@ namespace GASS
 				while(cc_elem )
 				{
 					//allow over loading
-					ComponentContainerPtr container = CreateComponentContainer(cc_elem);
+					ComponentContainerPtr container = CreateComponentContainerXML(cc_elem);
 					AddChild(container);
 					XMLSerializePtr s_container = DYNAMIC_PTR_CAST<IXMLSerialize> (container);
 					if(s_container)
@@ -309,14 +309,14 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr ComponentContainer::CreateComponentContainer(TiXmlElement *cc_elem) const
+	ComponentContainerPtr ComponentContainer::CreateComponentContainerXML(TiXmlElement *cc_elem) const
 	{
 		const std::string type = cc_elem->Value();
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 		return container;
 	}
 
-	ComponentPtr ComponentContainer::LoadComponent(TiXmlElement *comp_template)
+	ComponentPtr ComponentContainer::_LoadComponentXML(TiXmlElement *comp_template)
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -367,7 +367,7 @@ namespace GASS
 	}
 
 
-	void ComponentContainer::CheckComponentDependencies() const
+	void ComponentContainer::_CheckComponentDependencies() const
 	{
 		//get all names
 		std::set<std::string> names;

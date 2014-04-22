@@ -63,9 +63,10 @@ namespace GASS
 		void Load(const std::string filename);
 		const SchemaObject* GetSchemaObject(const std::string &name) const;
 	protected:
-		void Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr container);
-		void SaveProp(TiXmlElement* parent, IProperty* prop) const;
-		std::string GetPropType(IProperty* prop) const;
+		void _Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr container);
+		void _SaveProp(TiXmlElement* parent, IProperty* prop) const;
+		std::string _GetPropType(IProperty* prop) const;
+
 		std::map<std::string,SchemaObject> m_Objects;
 	};
 	typedef SPTR<SchemaManager> SchemaManagerPtr;

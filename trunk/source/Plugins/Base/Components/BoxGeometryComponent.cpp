@@ -90,7 +90,7 @@ namespace GASS
 
 	void BoxGeometryComponent::UpdateMesh()
 	{
-		Vec3 size= m_Size*0.5;
+		const Vec3 size= m_Size*0.5;
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);

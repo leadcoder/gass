@@ -58,6 +58,16 @@ namespace GASS
 	//	mInfo->setVisible(true);
 		MainMenu* menu = new MainMenu(NULL);
 		menu->Init();
+
+		GetSimSystemManager()->SendImmediate(GUILoadedEventPtr(new GUILoadedEvent(mGUI)));
+
+
+
+	/*	const MyGUI::IntSize& view = MyGUI::RenderManager::getInstance().getViewSize();
+		const MyGUI::IntSize size(450, 450);
+		MyGUI::Window* window = MyGUI::Gui::getInstance().createWidget<MyGUI::Window>("WindowCS", MyGUI::IntCoord((800 - size.width) / 2, (600 - size.height) / 2, size.width, size.height), MyGUI::Align::Default, "Main");
+		window->setMinSize(150, 150);
+		window->setCaption("ScrollView demo");*/
 	}
 	
 	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)

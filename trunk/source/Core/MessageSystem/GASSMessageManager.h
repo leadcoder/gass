@@ -98,11 +98,17 @@ namespace GASS
 		*/
 		void Update(float dt);
 
-
+		/*
+			Clear the message queue
+		*/
 		void Clear();
+
+		/*
+			Get number of messages in queue
+		*/
 		size_t GetQueuedMessages() const {return m_MessageQueue.size();}
 	private:
-		void AddMessageToSystem(const MessageType &type);
+		void _AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;
 		tbb::spin_mutex *m_Mutex;

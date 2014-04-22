@@ -67,8 +67,9 @@ namespace GASS
 		int part_id = 0;
 		if(temp)
 		{
-			ComponentContainerTemplateManagerConstPtr manager = shared_from_this();
-			new_cc = temp->CreateComponentContainer(part_id,manager);
+			//ComponentContainerTemplateManagerConstPtr manager = shared_from_this();
+			//new_cc = temp->CreateComponentContainer(part_id,manager);
+			new_cc = _CreateComponentContainer(part_id,temp);
 		}
 		else
 		{
@@ -102,7 +103,7 @@ namespace GASS
 				//	m_ContainerData->Assign(new_object);
 				//check if components already exist,
 				//if so replace components 
-				cc_temp->InheritComponentData(new_object);
+				cc_temp->_InheritComponentData(new_object);
 			}
 		}
 		else
@@ -246,4 +247,5 @@ namespace GASS
 				Load(files[i]);
 		}
 	}
+	
 }

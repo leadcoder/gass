@@ -97,7 +97,7 @@ namespace GASS
 
 	bool ComponentContainerTemplate::Serialize(ISerializer* serializer)
 	{
-		if(!BaseReflectionObject::SerializeProperties(serializer))
+		if(!BaseReflectionObject::_SerializeProperties(serializer))
 			return false;
 
 		if(serializer->Loading())
@@ -219,7 +219,7 @@ namespace GASS
 		TiXmlElement* this_elem = new TiXmlElement(factory_name.c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
-		SaveProperties(this_elem);
+		_SaveProperties(this_elem);
 
 		TiXmlElement* comp_elem = new TiXmlElement("Components");
 		this_elem->LinkEndChild(comp_elem);
@@ -264,7 +264,7 @@ namespace GASS
 					ComponentPtr target_comp (GetComponent(comp_name));
 					if(target_comp) //over loading component
 					{
-						ComponentPtr comp = LoadComponent(comp_elem);
+						ComponentPtr comp = _LoadComponentXML(comp_elem);
 						//ComponentTemplatePtr template_comp = DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if(comp)
 						{
@@ -273,7 +273,7 @@ namespace GASS
 					}
 					else
 					{
-						ComponentPtr comp = LoadComponent(comp_elem);
+						ComponentPtr comp = _LoadComponentXML(comp_elem);
 						if(comp)
 							AddComponent(comp);
 					}
@@ -328,7 +328,7 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr ComponentContainerTemplate::LoadComponent(TiXmlElement *comp_template)
+	ComponentPtr ComponentContainerTemplate::_LoadComponentXML(TiXmlElement *comp_template)
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -347,7 +347,7 @@ namespace GASS
 		return comp;
 	}
 
-	std::string ComponentContainerTemplate::CreateUniqueName(ComponentContainerTemplateManagerConstPtr manager) const
+	/*std::string ComponentContainerTemplate::CreateUniqueName(ComponentContainerTemplateManagerConstPtr manager) const
 	{
 		static int object_counter = 0;
 		std::stringstream ss;
@@ -356,9 +356,9 @@ namespace GASS
 		ss >> u_name;
 		object_counter++;
 		return u_name ;
-	}
+	}*/
 
-	void ComponentContainerTemplate::InheritComponentData(ComponentContainerPtr cc) const
+	void ComponentContainerTemplate::_InheritComponentData(ComponentContainerPtr cc) const
 	{
 		ComponentVector::const_iterator iter; 
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
@@ -384,7 +384,7 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr ComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const
+	/*ComponentContainerPtr ComponentContainerTemplate::CreateComponentContainer(int &part_id, ComponentContainerTemplateManagerConstPtr manager) const
 	{
 		ComponentContainerPtr new_object;
 		if(m_Inheritance != "")
@@ -417,16 +417,16 @@ namespace GASS
 			new_object = CreateComponentContainer();
 			if(new_object)
 			{
-				/*if(m_NameCheck)
-				{
-				ComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				while(obj)
-				{
-				sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
-				object_counter++;
-				obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				}
-				}*/
+				//if(m_NameCheck)
+				//{
+				//ComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
+				//while(obj)
+				//{
+				//sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
+				//object_counter++;
+				//obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
+				//}
+				//}
 				if(manager->GetAddObjectIDToName())
 					new_object->SetName(CreateUniqueName(manager));
 				else 
@@ -458,7 +458,7 @@ namespace GASS
 		}
 		return new_object;
 	}
-
+	*/
 
 	ComponentContainerPtr ComponentContainerTemplate::CreateComponentContainer() const
 	{

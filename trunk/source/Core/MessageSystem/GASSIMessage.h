@@ -92,14 +92,10 @@ namespace GASS
 		*/
 		virtual void Fire(MessagePtr message) = 0;
 
-
-
-
 		/*
 		This operator is used by the message manager to identify message functions
 		*/
 		virtual bool operator== (const IMessageFunc &func) const = 0;
-
 
 		/*
 		This function should return a pointer to the object the class callback belongs to
@@ -117,7 +113,7 @@ namespace GASS
 	/**
 	Template based implementation of the message function interface.
 	This template class is used to create message function objects for
-	specific message types. The template paramerer  MESSAGE_TYPE,
+	specific message types. The template parameter  MESSAGE_TYPE,
 	specify what kind of message the callback takes as argument.
 	*/
 	template <class MESSAGE_TYPE>

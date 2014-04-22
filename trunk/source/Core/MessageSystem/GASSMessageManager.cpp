@@ -50,7 +50,7 @@ namespace GASS
 		}*/
 	}
 
-	void MessageManager::AddMessageToSystem(const MessageType &type)
+	void MessageManager::_AddMessageToSystem(const MessageType &type)
 	{
 		MessageTypeListenerMap::iterator message_type;
 
@@ -128,7 +128,7 @@ namespace GASS
 		if(message_type == m_MessageTypes.end())
 		{
 			//return 1;//Register error;
-			AddMessageToSystem(type);
+			_AddMessageToSystem(type);
 			message_type = m_MessageTypes.find(type);
 		}
 
@@ -224,7 +224,7 @@ namespace GASS
 				//if message type not found, add this type to the message type list
 				if(message_type == m_MessageTypes.end())
 				{
-					AddMessageToSystem((*iter)->GetType());
+					_AddMessageToSystem((*iter)->GetType());
 					message_type = m_MessageTypes.find((*iter)->GetType());
 					//iter++;
 					//continue;

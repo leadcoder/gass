@@ -257,35 +257,6 @@ namespace GASS
 			Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingletonPtr()->getByName(sub_mesh->getMaterialName());
 			OgreGraphicsSystem::SetGASSMaterial(mat,sub_mesh_data->Material);
 
-			/*if (!mat.isNull())
-			{
-				Ogre::Technique* tech = mat->getBestTechnique();
-				//Get last pass and save materials
-				if(tech && tech->getNumPasses() > 0)
-				{
-					Ogre::Pass*  pass = tech->getPass(tech->getNumPasses()-1);
-
-					Ogre::ColourValue ambient =  pass->getAmbient();
-					const Ogre::ColourValue diffuse = pass->getDiffuse();
-					const Ogre::ColourValue specular = pass->getSpecular();
-					const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
-					const Ogre::ColourValue emissive = pass->getEmissive();
-					GraphicsMaterial gfx_mat(sub_mesh->getMaterialName(),ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a),
-						ColorRGB(ambient.r,ambient.g,ambient.b),
-						ColorRGB(specular.r,specular.g,specular.b));
-
-					sub_mesh_data->Material = gfx_mat;
-
-					for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
-					{
-						Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
-						std::string texture_name = textureUnit->getTextureName();
-						if(texture_name != "")
-							sub_mesh_data->Material.Textures.push_back(texture_name);
-					}
-				}
-			}*/
-
 			if (!sub_mesh->useSharedVertices)
 			{
 				AddIndexData(sub_mesh->indexData,0,sub_mesh_data);

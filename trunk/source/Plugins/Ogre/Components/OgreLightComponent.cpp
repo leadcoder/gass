@@ -200,8 +200,4 @@ namespace GASS
 			m_OgreLight->setCastShadows(m_CastShadow);
 	}
 
-
-
-
-
 }

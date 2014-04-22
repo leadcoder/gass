@@ -66,7 +66,7 @@ namespace GASS
 	{
 		if(serializer->Loading())
 		{
-			if(!BaseReflectionObject::SerializeProperties(serializer))
+			if(!BaseReflectionObject::_SerializeProperties(serializer))
 				return false;
 		}
 		else
@@ -74,7 +74,7 @@ namespace GASS
 			SerialSaver* saver = (SerialSaver*) serializer;
 			std::string comp_type = GetRTTI()->GetClassName();
 			saver->IO<std::string>(comp_type);
-			if(!BaseReflectionObject::SerializeProperties(serializer))
+			if(!BaseReflectionObject::_SerializeProperties(serializer))
 				return false;
 		}
 		return true;
@@ -83,7 +83,7 @@ namespace GASS
 
 	void Component::LoadXML(TiXmlElement *obj_elem)
 	{
-		BaseReflectionObject::LoadProperties(obj_elem);
+		BaseReflectionObject::_LoadProperties(obj_elem);
 	}
 
 	void Component::SaveXML(TiXmlElement *xml_elem)
@@ -92,7 +92,7 @@ namespace GASS
 		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		this_elem = new TiXmlElement( factoryname.c_str() );  
 		xml_elem->LinkEndChild( this_elem );  
-		SaveProperties(this_elem);
+		_SaveProperties(this_elem);
 	}
 
 	ComponentPtr Component::CreateCopy()
@@ -110,8 +110,7 @@ namespace GASS
 
 	void Component::CopyPropertiesTo(ComponentPtr dest_comp)
 	{
-		ComponentPtr  dest_base_comp = STATIC_PTR_CAST<Component>(dest_comp);
-		BaseReflectionObject::CopyPropertiesTo(dest_base_comp);
+		BaseReflectionObject::CopyPropertiesTo(dest_comp);
 	}
 
 	std::vector<std::string> Component::GetDependencies()

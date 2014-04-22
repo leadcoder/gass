@@ -234,9 +234,6 @@ namespace GASS
 			++iter;
 		}
 
-		//MessagePtr msg(new UnloadComponentsMessage());
-		//SendImmediate(msg);
-
 		SceneObjectPtr this_obj = STATIC_PTR_CAST<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
@@ -245,7 +242,7 @@ namespace GASS
 	void SceneObject::Initialize(ScenePtr scene)
 	{
 		//check dependencies
-		CheckComponentDependencies();
+		_CheckComponentDependencies();
 
 		if(m_GUID.is_nil())
 			m_GUID = boost::uuids::random_generator()();
@@ -734,7 +731,7 @@ namespace GASS
 		return so.get();
 	}
 
-	ComponentContainerPtr SceneObject::CreateComponentContainer(TiXmlElement *cc_elem) const
+	ComponentContainerPtr SceneObject::CreateComponentContainerXML(TiXmlElement *cc_elem) const
 	{
 		ComponentContainerPtr cc;
 		if(cc_elem->Attribute("from_template"))

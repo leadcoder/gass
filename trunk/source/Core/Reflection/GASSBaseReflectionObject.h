@@ -102,13 +102,16 @@ namespace GASS
 			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
 		*/
 		ClassMetaDataPtr GetMetaData() const;
+		
+		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
 
 		//internal stuff
-		void LoadProperties(TiXmlElement *elem);
-		void SaveProperties(TiXmlElement *parent);
+	protected:
+		void _LoadProperties(TiXmlElement *elem);
+		void _SaveProperties(TiXmlElement *parent);
 
-		bool SerializeProperties(ISerializer* serializer);
-		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
+		bool _SerializeProperties(ISerializer* serializer);
+		
 	private:
 	};
 
