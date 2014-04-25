@@ -639,28 +639,28 @@ namespace GASS
 		return result;
 	}
 
-	Vec3 Mat4::GetRightVector() const
+	Vec3 Mat4::GetXAxis() const
 	{
 		return Vec3(m_Data2[0] ,m_Data2[1] ,m_Data2[2]);
 	}
-	Vec3 Mat4::GetUpVector() const
+	Vec3 Mat4::GetYAxis() const
 	{
 		return Vec3(m_Data2[4] ,m_Data2[5] ,m_Data2[6]);
 	}
-	Vec3 Mat4::GetViewDirVector() const
+	Vec3 Mat4::GetZAxis() const
 	{
 		return Vec3(m_Data2[8] ,m_Data2[9] ,m_Data2[10]);
 	}
 
-	void Mat4::SetRightVector( const Vec3 &dir)
+	void Mat4::SetXAxis( const Vec3 &dir)
 	{
 		m_Data2[0] = dir.x; m_Data2[1] =dir.y; m_Data2[2] = dir.z;
 	}
-	void Mat4::SetUpVector(const Vec3 &dir)
+	void Mat4::SetYAxis(const Vec3 &dir)
 	{
 		m_Data2[4] = dir.x; m_Data2[5] =dir.y; m_Data2[6] = dir.z;
 	}
-	void Mat4::SetViewDirVector(const Vec3 &dir)
+	void Mat4::SetZAxis(const Vec3 &dir)
 	{
 		m_Data2[8] = dir.x; m_Data2[9] =dir.y; m_Data2[10] = dir.z;
 	}

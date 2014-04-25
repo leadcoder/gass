@@ -111,12 +111,35 @@ namespace GASS
 		Float GetEulerHeading() const;
 		Float GetEulerPitch() const;
 		Float GetEulerRoll() const;
-		Vec3 GetRightVector() const;
-		Vec3 GetUpVector() const;
-		Vec3 GetViewDirVector() const;
-		void SetRightVector( const Vec3 &dir);
-		void SetUpVector(const Vec3 &dir);
-		void SetViewDirVector(const Vec3 &dir);
+		
+		/**
+			Get X axis in the rotation part of the matrix
+		*/
+		Vec3 GetXAxis() const;
+		/**
+			Get Y axis in the rotation part of the matrix
+		*/
+		Vec3 GetYAxis() const;
+
+		/**
+			Get Z axis in the rotation part of the matrix
+		*/
+		Vec3 GetZAxis() const;
+
+		/**
+			Set X axis in the rotation part of the matrix
+		*/
+		void SetXAxis(const Vec3 &dir);
+
+		/**
+			Set Y axis in the rotation part of the matrix
+		*/
+		void SetYAxis(const Vec3 &dir);
+		/**
+			Set Z axis in the rotation part of the matrix
+		*/
+		void SetZAxis(const Vec3 &dir);
+
 	};
 }
 

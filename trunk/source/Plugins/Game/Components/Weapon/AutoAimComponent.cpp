@@ -235,9 +235,9 @@ namespace GASS
 
 		//pitch calculation
 
-		Vec3 barrel_plane_normal = m_TurretTransformation.GetRightVector();
+		Vec3 barrel_plane_normal = m_TurretTransformation.GetXAxis();
 		barrel_plane_normal.Normalize();
-		Vec3 barrel_dir = -m_BarrelTransformation.GetViewDirVector();
+		Vec3 barrel_dir = -m_BarrelTransformation.GetZAxis();
 		barrel_dir.Normalize();
 		
 		
@@ -269,12 +269,12 @@ namespace GASS
 	
 		//Yaw calculation
 
-		const Vec3 base_plane_normal = m_BaseTransformation.GetUpVector();
+		const Vec3 base_plane_normal = m_BaseTransformation.GetYAxis();
 		Vec3 projected_aim = Math::ProjectVectorOnPlane(base_plane_normal,desired_aim_direction);
 		
 		projected_aim.Normalize();
-		const Vec3 turret_dir = -m_TurretTransformation.GetViewDirVector();
-		Float yaw_angle_to_aim_dir = GetAngleOnPlane(m_TurretTransformation.GetUpVector(),turret_dir, projected_aim);
+		const Vec3 turret_dir = -m_TurretTransformation.GetZAxis();
+		Float yaw_angle_to_aim_dir = GetAngleOnPlane(m_TurretTransformation.GetYAxis(),turret_dir, projected_aim);
 
 		/*start = m_TurretTransformation.GetTranslation();
 		end = start + turret_dir*4;

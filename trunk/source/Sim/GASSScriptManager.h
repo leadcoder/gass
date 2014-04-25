@@ -47,8 +47,9 @@ namespace GASS
 		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}
-		asIScriptFunction *m_UpdateFunction;
 		asIScriptFunction *m_InitFunction;
+		asIScriptFunction *m_UpdateFunction;
+		asIScriptFunction *m_ShutdownFunction;
 		asIScriptFunction *m_FactoryFunction;
 	private:
 		asIScriptModule *m_Module;

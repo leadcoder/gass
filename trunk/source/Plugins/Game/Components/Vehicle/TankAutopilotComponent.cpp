@@ -185,7 +185,7 @@ namespace GASS
 			drive_dir.y = 0;
 			drive_dir.Normalize();
 			Mat4 trans = m_Transformation;
-			Vec3 hull_dir = -trans.GetViewDirVector();
+			Vec3 hull_dir = -trans.GetZAxis();
 			hull_dir.y = 0;
 			hull_dir.Normalize();
 			

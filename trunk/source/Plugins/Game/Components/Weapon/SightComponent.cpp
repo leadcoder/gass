@@ -254,7 +254,7 @@ namespace GASS
 
 
 
-		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetViewDirVector()*m_TargetDistance;
+		const Vec3 aim_point =  m_BaseTransformation.GetTranslation() - m_AimRotation.GetZAxis()*m_TargetDistance;
 
 
 		if(m_AimAtPos)
@@ -399,9 +399,9 @@ namespace GASS
 	{
 		CollisionSceneManagerPtr col_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
 		CollisionResult result;
-		Vec3 ray_start = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetViewDirVector()*10;
+		Vec3 ray_start = m_BaseTransformation.GetTranslation() - m_BaseTransformation.GetZAxis()*10;
 		//max distance is 20000m
-		Vec3 ray_dir = -m_BaseTransformation.GetViewDirVector()*20000;
+		Vec3 ray_dir = -m_BaseTransformation.GetZAxis()*20000;
 		col_sm->Raycast(ray_start,ray_dir,GEOMETRY_FLAG_SCENE_OBJECTS,result);
 		if(result.Coll)
 		{

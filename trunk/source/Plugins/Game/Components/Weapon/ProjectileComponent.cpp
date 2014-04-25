@@ -151,9 +151,9 @@ namespace GASS
 
 
 			rot_mat.Identity();
-			rot_mat.SetViewDirVector(-dir);
-			rot_mat.SetRightVector(-right);
-			rot_mat.SetUpVector(up);
+			rot_mat.SetZAxis(-dir);
+			rot_mat.SetXAxis(-right);
+			rot_mat.SetYAxis(up);
 
 			//air drag ~ v^2*k
 			drag = drag* m_Velocity.SquaredLength()*time;

@@ -303,13 +303,13 @@ namespace GASS
 				dir = -dir;
 				Mat4 rot_mat;
 				rot_mat.Identity();
-				rot_mat.SetViewDirVector(dir);
+				rot_mat.SetZAxis(dir);
 				Vec3 rvec = Vec3(dir.z,0,-dir.x);
 				rvec.Normalize();
-				rot_mat.SetRightVector(rvec);
+				rot_mat.SetXAxis(rvec);
 				Vec3 up = Math::Cross(dir,rvec);
 				up.Normalize();
-				rot_mat.SetUpVector(up);
+				rot_mat.SetYAxis(up);
 				cam_rot.FromRotationMatrix(rot_mat);
 
 				cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(cam_rot)));

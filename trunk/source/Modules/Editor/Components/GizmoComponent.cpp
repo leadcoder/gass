@@ -79,7 +79,7 @@ namespace GASS
 		regmat.Diffuse.Set(0,0,0,1);
 		regmat.Ambient.Set(0,0,0);
 		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
-		regmat.DepthTest = false;
+		regmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
 		regmat.DepthWrite = true;
 		
 		
@@ -88,7 +88,7 @@ namespace GASS
 		hlmat.Diffuse.Set(0,0,0,1);
 		hlmat.Ambient.Set(0,0,0);
 		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
-		hlmat.DepthTest = false;
+		hlmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
 		hlmat.DepthWrite = true;
 		
 		
@@ -593,10 +593,10 @@ namespace GASS
 		rot.ToRotationMatrix(rot_mat);
 
 		Vec3 c_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-		Vec3 r_vec = rot_mat.GetRightVector();
+		Vec3 r_vec = rot_mat.GetXAxis();
 
-		Vec3 v_vec = rot_mat.GetViewDirVector();
-		Vec3 up_vec = rot_mat.GetUpVector();
+		Vec3 v_vec = rot_mat.GetZAxis();
+		Vec3 up_vec = rot_mat.GetYAxis();
 
 
 		//select projection plane
@@ -653,9 +653,9 @@ namespace GASS
 				rot_mat.Identity();
 				rot.ToRotationMatrix(rot_mat);
 
-				Vec3 r_vec = rot_mat.GetRightVector();
-				Vec3 v_vec = rot_mat.GetViewDirVector();
-				Vec3 up_vec = rot_mat.GetUpVector();
+				Vec3 r_vec = rot_mat.GetXAxis();
+				Vec3 v_vec = rot_mat.GetZAxis();
+				Vec3 up_vec = rot_mat.GetYAxis();
 
 				r_vec.Normalize();
 				//v_vec = v_vec* delta;

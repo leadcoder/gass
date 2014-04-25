@@ -239,7 +239,7 @@ namespace GASS
 
 		Mat4 rotmat;
 		projectile_rot.ToRotationMatrix(rotmat);
-		Vec3 projectile_dir = -rotmat.GetViewDirVector();
+		Vec3 projectile_dir = -rotmat.GetZAxis();
 		Vec3 vel = projectile_dir*m_ProjectileStartVelocity;
 		Vec3 final_pos = projectile_start_pos +  projectile_dir*m_ProjectileStartOffset;
 

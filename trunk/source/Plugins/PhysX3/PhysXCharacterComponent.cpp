@@ -200,7 +200,7 @@ namespace GASS
 		Mat4 rot_mat;
 		rot_mat.Identity();
 		new_rot.ToRotationMatrix(rot_mat);
-		Vec3 forward = rot_mat.GetViewDirVector();
+		Vec3 forward = rot_mat.GetZAxis();
 
 		Vec3 target_displacement(0,0,0);
 		forward.y = 0;

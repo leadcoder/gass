@@ -37,7 +37,7 @@ namespace GASS
 
 	/**
 	* Class holding quaternion information used for 
-	   rotatation representation.
+	   rotation representation.
 	*/
 
 	class GASSCoreExport Quaternion
@@ -59,14 +59,34 @@ namespace GASS
 			return rot_mat;
 		}
 		void ToRotationMatrix (Mat4& kRot) const;
+
 		void FromAngleAxis (const Float& rfAngle, const Vec3& rkAxis);
 		void ToAngleAxis (Float& rfAngle, Vec3& rkAxis) const;
 		void FromAxes (const Vec3* akAxis);
+		
+		/** Constructs the quaternion using 3 axes, the axes are assumed to be orthonormal
+			@see ToAxes
+		*/
+		void FromAxes(const Vec3& xAxis, const Vec3& yAxis, const Vec3& zAxis);
 
-		//fix this, don't work as expected. Not used for the moment so could be removed
-		void FromAxes (const Vec3& xAxis, const Vec3& yAxis, const Vec3& zAxis);
-		void ToAxes (Vec3* akAxis) const;
-		void ToAxes (Vec3& xAxis, Vec3& yAxis, Vec3& zAxis);
+		/** Gets the 3 orthonormal axes defining the quaternion. @see FromAxes */
+		void ToAxes(Vec3* akAxis) const;
+		void ToAxes(Vec3& xAxis, Vec3& yAxis, Vec3& zAxis);
+
+		/** Returns the X orthonormal axis defining the quaternion. Same as doing
+			xAxis = Vector3::UNIT_X * this. Also called the local X-axis
+		*/
+		Vec3 GetXAxis(void) const;
+
+		/** Returns the Y orthonormal axis defining the quaternion. Same as doing
+			yAxis = Vector3::UNIT_Y * this. Also called the local Y-axis
+		*/
+		Vec3 GetYAxis(void) const;
+
+		/** Returns the Z orthonormal axis defining the quaternion. Same as doing
+			zAxis = Vector3::UNIT_Z * this. Also called the local Z-axis
+		*/
+		Vec3 GetZAxis(void) const;
 
 		Quaternion& operator= (const Quaternion& rkQ);
 		Quaternion operator+ (const Quaternion& rkQ) const;

@@ -49,7 +49,7 @@ namespace GASS
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
-		m_RayPickDistance(3000),
+		m_RayPickDistance(10000),
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
 		m_ControlSettingName("EditorInputSettings"),

@@ -152,7 +152,7 @@ namespace GASS
 	void LOSComponent::OnTransChanged(TransformationChangedEventPtr message)
 	{
 		m_Position = message->GetPosition();
-		m_ViewDir = message->GetRotation().GetRotationMatrix().GetViewDirVector();
+		m_ViewDir = message->GetRotation().GetRotationMatrix().GetZAxis();
 		//Calculate(true);
 		m_Position.y += m_SourceOffset;
 		if(m_AutUpdateOnTransform)

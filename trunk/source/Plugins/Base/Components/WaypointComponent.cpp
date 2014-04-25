@@ -201,9 +201,9 @@ namespace GASS
 			up = Math::Cross(left,dir);
 			up.Normalize();
 
-			rot_mat.SetRightVector(-left);
-			rot_mat.SetUpVector(up);
-			rot_mat.SetViewDirVector(dir);
+			rot_mat.SetXAxis(-left);
+			rot_mat.SetYAxis(up);
+			rot_mat.SetZAxis(dir);
 
 			Quaternion rot;
 			rot.FromRotationMatrix(rot_mat);
@@ -234,7 +234,7 @@ namespace GASS
 		rot_mat.Identity();
 		Quaternion rot = wp_location->GetRotation();
 		rot.ToRotationMatrix(rot_mat);
-		Vec3 tangent = rot_mat.GetViewDirVector();
+		Vec3 tangent = rot_mat.GetZAxis();
 
 		return tangent;
 	}

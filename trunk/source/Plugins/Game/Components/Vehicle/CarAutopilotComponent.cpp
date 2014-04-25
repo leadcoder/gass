@@ -172,7 +172,7 @@ namespace GASS
 		Vec3 target_pos  = m_DesiredPos;
 		target_pos.y = m_CurrentPos.y;
 		Float desired_speed	= m_DesiredSpeed;
-		Vec3 current_dir = -m_Transformation.GetViewDirVector();
+		Vec3 current_dir = -m_Transformation.GetZAxis();
 		float current_speed = -m_VehicleSpeed.z; 
 		Vec3 current_pos = m_CurrentPos;
 		

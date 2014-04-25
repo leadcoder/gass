@@ -294,9 +294,9 @@ namespace GASS
 				left.Normalize();
 				Vec3 up = Math::Cross(left,dir);
 				up.Normalize();
-				rot.SetViewDirVector(dir);
-				rot.SetUpVector(up);
-				rot.SetRightVector(-left);
+				rot.SetZAxis(dir);
+				rot.SetYAxis(up);
+				rot.SetXAxis(-left);
 				Quaternion q;
 				q.FromRotationMatrix(rot);
 				wp_vec[i]->Rotate(q);

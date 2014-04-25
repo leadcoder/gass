@@ -151,7 +151,7 @@ namespace GASS
 		//parent_rot.SetTranslation(0,0,0);
 		m_AimTrans = rot_mat*m_RelTrans;
 
-		return -m_AimTrans.GetViewDirVector();
+		return -m_AimTrans.GetZAxis();
 	}
 
 
@@ -183,7 +183,7 @@ namespace GASS
 	void TurretComponent::SceneManagerTick(double delta_time)
 	{
 
-		Vec3 turret_dir = -m_Transformation.GetViewDirVector();
+		Vec3 turret_dir = -m_Transformation.GetZAxis();
 		if(!m_Active)
 		{
 			//m_DesiredDir = turret_dir;
@@ -201,7 +201,7 @@ namespace GASS
 		Float angle_to_aim_dir = 0;
 		if(m_Controller == "Pitch")
 		{
-			const Vec3 plane_normal = m_ParentTransformation.GetRightVector();
+			const Vec3 plane_normal = m_ParentTransformation.GetXAxis();
 			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
@@ -214,7 +214,7 @@ namespace GASS
 		}
 		else
 		{
-			const Vec3 plane_normal = m_ParentTransformation.GetUpVector();
+			const Vec3 plane_normal = m_ParentTransformation.GetYAxis();
 			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);

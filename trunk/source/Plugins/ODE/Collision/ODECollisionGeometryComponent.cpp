@@ -292,7 +292,7 @@ namespace GASS
 		rot_mat.Identity();
 		location->GetWorldRotation().ToRotationMatrix(rot_mat);
 		Vec3 pos = location->GetWorldPosition();
-		Vec3 normal = rot_mat.GetUpVector();
+		Vec3 normal = rot_mat.GetYAxis();
 
 		GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 

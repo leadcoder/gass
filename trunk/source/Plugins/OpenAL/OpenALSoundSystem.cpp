@@ -173,8 +173,8 @@ namespace GASS
 		Mat4 rot_mat;
 		rot_mat.Identity();
 		rot.ToRotationMatrix(rot_mat);
-		Vec3 dir = -rot_mat.GetViewDirVector();
-		Vec3 up = rot_mat.GetUpVector();
+		Vec3 dir = -rot_mat.GetZAxis();
+		Vec3 up = rot_mat.GetYAxis();
 
 		ALfloat ListenerOri[] = { dir.x, dir.y, dir.z,  up.x, up.y, up.z};
 
