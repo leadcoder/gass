@@ -69,12 +69,12 @@ public:
 		  }
 		 
 
-		  /*		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
+		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
 		  GASS::Vec3 pos = scene->GetStartPos();
-		  GASS::MessagePtr pos_msg2(new GASS::WorldPositionRequest(pos));
+		  
 		  if(object)
-		  object->SendImmediate(pos_msg2);*/
-
+				object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
+				
 		  /*for(int i = 0; i <  m_Objects.size();i++)
 		  {
 		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate(m_Objects[i],scene->GetRootSceneObject());

@@ -359,7 +359,7 @@ int main(int argc, char* argv[])
 				GASS::Mat4 rot_mat;
 				rot_mat.Identity();
 				rot.ToRotationMatrix(rot_mat);
-				GASS::Vec3 vel = rot_mat.GetViewDirVector()*-2500;
+				GASS::Vec3 vel = rot_mat.GetZAxis()*-2500;
 				GASS::Vec3 torq(0,0,2000);
 				torq = rot_mat * torq;
 				GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
