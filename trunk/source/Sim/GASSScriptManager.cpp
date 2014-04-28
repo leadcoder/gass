@@ -182,22 +182,18 @@ namespace GASS
 		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(QuaternionDefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f(double, double, double, double)",	asFUNCTION(QuaternionConstructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(QuaternionDestruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Quaternion", "double x", offsetof(Quaternion, x)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Quaternion", "double y", offsetof(Quaternion, y)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Quaternion", "double z", offsetof(Quaternion, z)); assert( r >= 0 );
 		r = m_Engine->RegisterObjectProperty("Quaternion", "double w", offsetof(Quaternion, w)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Quaternion, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetXAxis() const", asMETHOD(Quaternion, GetXAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetYAxis() const", asMETHOD(Quaternion, GetYAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetZAxis() const", asMETHOD(Quaternion, GetZAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "void ToRotationMatrix(Mat4&in) const", asMETHOD(Quaternion, ToRotationMatrix), asCALL_THISCALL);
-
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Quaternion, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		
-		
 	
 
 		r = m_Engine->RegisterGlobalFunction("double MathDeg2Rad(double)",  asFUNCTIONPR(Math::Deg2Rad,(Float),Float), asCALL_CDECL); assert( r >= 0 );
