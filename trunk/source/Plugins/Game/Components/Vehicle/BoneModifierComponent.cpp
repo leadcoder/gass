@@ -103,7 +103,7 @@ namespace GASS
 				rot2.ToRotationMatrix(trans2);
 				Vec3 pos2 = location2->GetWorldPosition();
 				trans2.SetTranslation(pos2.x,pos2.y,pos2.z);
-				trans2 = trans2.Invert2();
+				trans2 = trans2.Invert();
 				
 				Mat4 mat_rel = trans1*trans2;
 				Vec3 offset(0,0,0);

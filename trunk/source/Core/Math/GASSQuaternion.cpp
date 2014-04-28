@@ -56,13 +56,14 @@ namespace GASS
 		Quaternion qp;
 		Quaternion qr;
 
-		qh.FromAngleAxis( -rot.x, Vec3(0,1,0));
-		qp.FromAngleAxis( -rot.y, Vec3(1,0,0));
-		qr.FromAngleAxis( -rot.z, Vec3(0,0,1));
+		qh.FromAngleAxis( rot.x, Vec3(0,1,0));
+		qp.FromAngleAxis( rot.y, Vec3(1,0,0));
+		qr.FromAngleAxis( rot.z, Vec3(0,0,1));
 
-		*this = qp * qh;
-		*this = qr * (*this);
+		*this = qh * qp;
+		*this = (*this) * qr;
 	}
+
 	//-----------------------------------------------------------------------
 	void Quaternion::FromRotationMatrix (const Mat4& kRot)
 	{
@@ -138,7 +139,7 @@ namespace GASS
 		kRot.m_Data[kX][kX] = 1.0 - (yy + zz);
 		kRot.m_Data[kY][kX] = xy + wz;
 		kRot.m_Data[kZ][kX] = xz - wy;
-
+		
 		//y axis
 		kRot.m_Data[kX][kY] = xy - wz;
 		kRot.m_Data[kY][kY] = 1.0 - (xx + zz);
@@ -219,15 +220,15 @@ namespace GASS
 		Mat4 kRot;
 		kRot.Identity();
 		kRot.m_Data[0][0] = xAxis.x;
-		kRot.m_Data[0][1] = xAxis.y;
-		kRot.m_Data[0][2] = xAxis.z;
+		kRot.m_Data[1][0] = xAxis.y;
+		kRot.m_Data[2][0] = xAxis.z;
 
-		kRot.m_Data[1][0] = yAxis.x;
+		kRot.m_Data[0][1] = yAxis.x;
 		kRot.m_Data[1][1] = yAxis.y;
-		kRot.m_Data[1][2] = yAxis.z;
+		kRot.m_Data[2][1] = yAxis.z;
 
-		kRot.m_Data[2][0] = zAxis.x;
-		kRot.m_Data[2][1] = zAxis.y;
+		kRot.m_Data[0][2] = zAxis.x;
+		kRot.m_Data[1][2] = zAxis.y;
 		kRot.m_Data[2][2] = zAxis.z;
 		FromRotationMatrix(kRot);
 	}
@@ -275,8 +276,8 @@ namespace GASS
 		Float fTxz = fTz*x;
 		Float fTyy = fTy*y;
 		Float fTzz = fTz*z;
-		return Vec3(1.0f-(fTyy+fTzz), fTxy-fTwz, fTxz+fTwy);
-		//return Vec3(1.0f-(fTyy+fTzz), fTxy+fTwz, fTxz-fTwy);
+		//return Vec3(1.0f-(fTyy+fTzz), fTxy-fTwz, fTxz+fTwy);
+		return Vec3(1.0f-(fTyy+fTzz), fTxy+fTwz, fTxz-fTwy);
 	}
 	
 	Vec3 Quaternion::GetYAxis(void) const
@@ -290,8 +291,8 @@ namespace GASS
 		Float fTxy = fTy*x;
 		Float fTyz = fTz*y;
 		Float fTzz = fTz*z;
-		return Vec3(fTxy+fTwz, 1.0f-(fTxx+fTzz), fTyz-fTwx);
-		//return Vec3(fTxy-fTwz, 1.0f-(fTxx+fTzz), fTyz+fTwx);
+		//return Vec3(fTxy+fTwz, 1.0f-(fTxx+fTzz), fTyz-fTwx);
+		return Vec3(fTxy-fTwz, 1.0f-(fTxx+fTzz), fTyz+fTwx);
 	}
 	
 	Vec3 Quaternion::GetZAxis(void) const
@@ -305,8 +306,8 @@ namespace GASS
 		Float fTxz = fTz*x;
 		Float fTyy = fTy*y;
 		Float fTyz = fTz*y;
-		return Vec3(fTxz-fTwy, fTyz+fTwx, 1.0f-(fTxx+fTyy));
-		//return Vec3(fTxz+fTwy, fTyz-fTwx, 1.0f-(fTxx+fTyy));
+		//return Vec3(fTxz-fTwy, fTyz+fTwx, 1.0f-(fTxx+fTyy));
+		return Vec3(fTxz+fTwy, fTyz-fTwx, 1.0f-(fTxx+fTyy));
 	}
 
 	//-----------------------------------------------------------------------
@@ -341,6 +342,7 @@ namespace GASS
 			w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
 			w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x
 			);
+		
 	}
 	//-----------------------------------------------------------------------
 	Quaternion Quaternion::operator* (Float fScalar) const

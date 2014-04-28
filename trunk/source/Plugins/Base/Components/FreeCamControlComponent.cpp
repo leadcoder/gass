@@ -333,14 +333,14 @@ namespace GASS
 		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
 		Quaternion rot_to_send(m_Rot);
-		if(up.z == 1)
+		/*if(up.z == 1)
 		{
 			//fix rotation if we want z as up axis in gass scene
 			rot_to_send = Quaternion(Vec3(0,0,m_Rot.x));
 			rot_to_send = Quaternion(Vec3(0,m_Rot.y,0))*rot_to_send;
 			//we have to rotate 90 deg if z is up
 			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
-		}
+		}*/
 		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(rot_to_send,from_id)));
 
 		m_HeadingInput = 0;

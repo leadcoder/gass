@@ -286,8 +286,7 @@ namespace GASS
 	void ODEPhysicsSceneManager::CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat)
 	{
 		//Make ODE rotation matrix
-
-		ode_mat[0] = m.m_Data2[0];
+		/*ode_mat[0] = m.m_Data2[0];
 		ode_mat[1] = m.m_Data2[4];
 		ode_mat[2] = m.m_Data2[8];
 		ode_mat[3] = 0;
@@ -299,20 +298,34 @@ namespace GASS
 		ode_mat[9] = m.m_Data2[6];
 		ode_mat[10]= m.m_Data2[10];
 		ode_mat[11] = 0;
+		*/
+
+		ode_mat[0] = m.m_Data2[0];
+		ode_mat[1] = m.m_Data2[1];
+		ode_mat[2] = m.m_Data2[2];
+		ode_mat[3] = 0;
+		ode_mat[4] = m.m_Data2[4];
+		ode_mat[5] = m.m_Data2[5];
+		ode_mat[6] = m.m_Data2[6];
+		ode_mat[7] = 0;
+		ode_mat[8] = m.m_Data2[8];
+		ode_mat[9] = m.m_Data2[9];
+		ode_mat[10]= m.m_Data2[10];
+		ode_mat[11] = 0;
 	}
 
 	void ODEPhysicsSceneManager::CreateGASSRotationMatrix(const dReal *R, Mat4 &m)
 	{
-		m.m_Data2[0] = R[0];
-		m.m_Data2[1] = R[4];
-		m.m_Data2[2] = R[8];
-		m.m_Data2[3] = 0;
-		m.m_Data2[4] = R[1];
-		m.m_Data2[5] = R[5];
-		m.m_Data2[6]= R[9];
-		m.m_Data2[7]= 0;
-		m.m_Data2[8] = R[2];
-		m.m_Data2[9] = R[6];
+		m.m_Data2[0]  = R[0];
+		m.m_Data2[1]  = R[1];
+		m.m_Data2[2]  = R[2];
+		m.m_Data2[3]  = 0;
+		m.m_Data2[4]  = R[4];
+		m.m_Data2[5]  = R[5];
+		m.m_Data2[6]  = R[6];
+		m.m_Data2[7]  = 0;
+		m.m_Data2[8]  = R[8];
+		m.m_Data2[9]  = R[9];
 		m.m_Data2[10] = R[10];
 		m.m_Data2[11] = 0;
 		m.m_Data2[12] = 0;

@@ -166,13 +166,13 @@ namespace GASS
 			Mat4 transform;
 			m_ParentRot.ToRotationMatrix(transform);
 			transform.SetTranslation(m_ParentPos.x,m_ParentPos.y,m_ParentPos.z);
-			transform = transform.Invert2();
+			transform = transform.Invert();
 			pos = transform * pos;
 			Mat4 rot_mat;
 			rot_mat.Identity();
 			rot.ToRotationMatrix(rot_mat);
 			transform.SetTranslation(0,0,0);
-			transform.Invert2();
+			transform.Invert();
 			rot_mat = transform*rot_mat;
 			rot.FromRotationMatrix(rot_mat);
 			//pos = pos - m_ParentPos;
@@ -283,7 +283,7 @@ namespace GASS
 				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 #endif
 				Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
-				new_rot = Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z))*m_LocationHistory[0].Rotation;
+				new_rot = m_LocationHistory[0].Rotation * Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z));
 
 			}
 			else 

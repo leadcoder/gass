@@ -61,6 +61,15 @@ namespace GASS
 			Float m_Data[4][4];
 			Float m_Data2[16];
 		};
+
+		Mat4( );
+
+		Mat4(
+			Float m00, Float m01, Float m02, Float m03,
+			Float m10, Float m11, Float m12, Float m13,
+			Float m20, Float m21, Float m22, Float m23,
+			Float m30, Float m31, Float m32, Float m33 );
+
 	
 		inline Float* operator [] ( unsigned iRow )
 		{
@@ -102,10 +111,11 @@ namespace GASS
 		Vec3 GetTranslation() const;
 		void SetTransformation(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale);
 		void SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
-		Float Determinant();
+		Float Determinant() const;
 		Float _Determinant(int row, int col);
-		Mat4 Invert();
+		Mat4 Invert() const;
 		Mat4 Invert2();
+		//Mat4 Inverse(void) const;
 		Mat4 GetRotation() const;
 		Vec3 GetRotationRadians() const;
 		Float GetEulerHeading() const;

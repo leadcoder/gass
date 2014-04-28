@@ -24,14 +24,40 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 
-
-
-
 namespace GASS
 {
 
 	const Float Mat4::EPSILON = 0.0001;
-	
+
+	Mat4::Mat4()
+	{
+
+	}
+
+	Mat4::Mat4(
+		Float m00, Float m01, Float m02, Float m03,
+		Float m10, Float m11, Float m12, Float m13,
+		Float m20, Float m21, Float m22, Float m23,
+		Float m30, Float m31, Float m32, Float m33 )
+	{
+		m_Data[0][0] = m00;
+		m_Data[0][1] = m01;
+		m_Data[0][2] = m02;
+		m_Data[0][3] = m03;
+		m_Data[1][0] = m10;
+		m_Data[1][1] = m11;
+		m_Data[1][2] = m12;
+		m_Data[1][3] = m13;
+		m_Data[2][0] = m20;
+		m_Data[2][1] = m21;
+		m_Data[2][2] = m22;
+		m_Data[2][3] = m23;
+		m_Data[3][0] = m30;
+		m_Data[3][1] = m31;
+		m_Data[3][2] = m32;
+		m_Data[3][3] = m33;
+	}
+
 	Mat4 Mat4::operator* (const Mat4 &mat) const
 	{
 		Mat4 ret;
@@ -105,9 +131,9 @@ namespace GASS
 	void Mat4::Translate(Float x,Float y,Float z)
 	{
 		Identity();
-		m_Data[3][0] = x;
-		m_Data[3][1] = y;
-		m_Data[3][2] = z;
+		m_Data[0][3] = x;
+		m_Data[1][3] = y;
+		m_Data[2][3] = z;
 	}
 
 	void Mat4::Scale(Float sx,Float sy,Float sz)
@@ -151,17 +177,18 @@ namespace GASS
 	{
 		Identity();
 
-		m_Data[3][0] = pos.x;
-		m_Data[3][1] = pos.y;
-		m_Data[3][2] = pos.z;
+		m_Data[0][3] = pos.x;
+		m_Data[1][3] = pos.y;
+		m_Data[2][3] = pos.z;
 
 		Rotate(rot.x,rot.y,rot.z);
 
-		m_Data[0][3] = 0;
-		m_Data[1][3] = 0;
-		m_Data[2][3] = 0;
+		m_Data[3][0] = 0;
+		m_Data[3][1] = 0;
+		m_Data[3][2] = 0;
 
-		//Scale
+		//Scale, 
+		//we should only scale diagonal!
 		m_Data[0][0] *= scale.x;
 		m_Data[0][1] *= scale.x;
 		m_Data[0][2] *= scale.x;
@@ -184,13 +211,13 @@ namespace GASS
 		Identity();
 		rot.ToRotationMatrix(*this);
 
-		m_Data[3][0] = pos.x;
-		m_Data[3][1] = pos.y;
-		m_Data[3][2] = pos.z;
+		m_Data[0][3] = pos.x;
+		m_Data[1][3] = pos.y;
+		m_Data[2][3] = pos.z;
 
-		m_Data[0][3] = 0;
-		m_Data[1][3] = 0;
-		m_Data[2][3] = 0;
+		m_Data[3][0] = 0;
+		m_Data[3][1] = 0;
+		m_Data[3][2] = 0;
 
 		//Scale
 		m_Data[0][0] *= scale.x;
@@ -216,49 +243,52 @@ namespace GASS
 		Float sh = (Float)sin( amount);
 
 		m_Data[0][0] = ch;
-		m_Data[1][0] = 0;
-		m_Data[2][0] = sh;
-		m_Data[3][0] = 0;
-
 		m_Data[0][1] = 0;
-		m_Data[1][1] = 1;
-		m_Data[2][1] = 0;
-		m_Data[3][1] = 0;
-
-		m_Data[0][2] = -sh;
-		m_Data[1][2] = 0;
-		m_Data[2][2] = ch;
-		m_Data[3][2] = 0;
-
+		m_Data[0][2] = sh;
 		m_Data[0][3] = 0;
+
+		m_Data[1][0] = 0;
+		m_Data[1][1] = 1;
+		m_Data[1][2] = 0;
 		m_Data[1][3] = 0;
+
+		m_Data[2][0] = -sh;
+		m_Data[2][1] = 0;
+		m_Data[2][2] = ch;
 		m_Data[2][3] = 0;
+
+		m_Data[3][0] = 0;
+		m_Data[3][1] = 0;
+		m_Data[3][2] = 0;
 		m_Data[3][3] = 1;
+
+
+
 	}
 
 	void Mat4::RotateX(Float amount)
 	{
 		Float cp = (Float)cos( amount);
 		Float sp = (Float)sin( amount);
-
+		
 		m_Data[0][0] = 1;
-		m_Data[1][0] = 0;
-		m_Data[2][0] = 0;
-		m_Data[3][0] = 0;
-
 		m_Data[0][1] = 0;
-		m_Data[1][1] = cp;
-		m_Data[2][1] = -sp;
-		m_Data[3][1] = 0;
-
 		m_Data[0][2] = 0;
-		m_Data[1][2] = sp;
-		m_Data[2][2] = cp;
-		m_Data[3][2] = 0;
-
 		m_Data[0][3] = 0;
+
+		m_Data[1][0] = 0;
+		m_Data[1][1] = cp;
+		m_Data[1][2] = -sp;
 		m_Data[1][3] = 0;
+
+		m_Data[2][0] = 0;
+		m_Data[2][1] = sp;
+		m_Data[2][2] = cp;
 		m_Data[2][3] = 0;
+
+		m_Data[3][0] = 0;
+		m_Data[3][1] = 0;
+		m_Data[3][2] = 0;
 		m_Data[3][3] = 1;
 	}
 
@@ -268,23 +298,23 @@ namespace GASS
 		Float sr = (Float)sin( amount);
 
 		m_Data[0][0] = cr;
-		m_Data[1][0] = -sr;
-		m_Data[2][0] = 0;
-		m_Data[3][0] = 0;
-
-		m_Data[0][1] = sr;
-		m_Data[1][1] = cr;
-		m_Data[2][1] = 0;
-		m_Data[3][1] = 0;
-
+		m_Data[0][1] = -sr;
 		m_Data[0][2] = 0;
-		m_Data[1][2] = 0;
-		m_Data[2][2] = 1;
-		m_Data[3][2] = 0;
-
 		m_Data[0][3] = 0;
+
+		m_Data[1][0] = sr;
+		m_Data[1][1] = cr;
+		m_Data[1][2] = 0;
 		m_Data[1][3] = 0;
+
+		m_Data[2][0] = 0;
+		m_Data[2][1] = 0;
+		m_Data[2][2] = 1;
 		m_Data[2][3] = 0;
+
+		m_Data[3][0] = 0;
+		m_Data[3][1] = 0;
+		m_Data[3][2] = 0;
 		m_Data[3][3] = 1;
 	}
 
@@ -309,23 +339,23 @@ namespace GASS
 		Vec3 res;
 		Float d;
 		res.x = m_Data[0][0] * vec.x + 
-			m_Data[1][0] * vec.y + 
-			m_Data[2][0] * vec.z + 
-			m_Data[3][0];
+			m_Data[0][1] * vec.y + 
+			m_Data[0][2] * vec.z + 
+			m_Data[0][3];
 
-		res.y = m_Data[0][1] * vec.x + 
+		res.y = m_Data[1][0] * vec.x + 
 			m_Data[1][1] * vec.y + 
-			m_Data[2][1] * vec.z + 
-			m_Data[3][1];
+			m_Data[1][2] * vec.z + 
+			m_Data[1][3];
 
-		res.z = m_Data[0][2] * vec.x + 
-			m_Data[1][2] * vec.y + 
+		res.z = m_Data[2][0] * vec.x + 
+			m_Data[2][1] * vec.y + 
 			m_Data[2][2] * vec.z + 
-			m_Data[3][2];
+			m_Data[2][3];
 
-		d = m_Data[0][3] * vec.x + 
-			m_Data[1][3] * vec.y + 
-			m_Data[2][3] * vec.z + 
+		d = m_Data[3][0] * vec.x + 
+			m_Data[3][1] * vec.y + 
+			m_Data[3][2] * vec.z + 
 			m_Data[3][3];
 
 		res.x /= d;
@@ -340,23 +370,23 @@ namespace GASS
 		Vec4 res;
 		//	Float d;
 		res.x = m_Data[0][0] * vec.x + 
-			m_Data[1][0] * vec.y + 
-			m_Data[2][0] * vec.z + 
-			m_Data[3][0] * vec.w;
+			m_Data[0][1] * vec.y + 
+			m_Data[0][2] * vec.z + 
+			m_Data[0][3] * vec.w;
 
-		res.y = m_Data[0][1] * vec.x + 
+		res.y = m_Data[1][0] * vec.x + 
 			m_Data[1][1] * vec.y + 
-			m_Data[2][1] * vec.z + 
-			m_Data[3][1] * vec.w;
+			m_Data[1][2] * vec.z + 
+			m_Data[1][3] * vec.w;
 
-		res.z = m_Data[0][2] * vec.x + 
-			m_Data[1][2] * vec.y + 
+		res.z = m_Data[2][0] * vec.x + 
+			m_Data[2][1] * vec.y + 
 			m_Data[2][2] * vec.z + 
-			m_Data[3][2] * vec.w;
+			m_Data[2][3] * vec.w;
 
-		res.w = m_Data[0][3] * vec.x + 
-			m_Data[1][3] * vec.y + 
-			m_Data[2][3] * vec.z + 
+		res.w = m_Data[3][0] * vec.x + 
+			m_Data[3][1] * vec.y + 
+			m_Data[3][2] * vec.z + 
 			m_Data[3][3] * vec.w;
 
 		/*d = m_Data[0][3] * vec.x + 
@@ -372,14 +402,13 @@ namespace GASS
 		return res;
 	}
 
-	void Mat4::InverseRotateVect( Vec3 &vec) 
+	/*void Mat4::InverseRotateVect( Vec3 &vec) 
 	{
 		Vec3 temp;
 
 		temp.x = vec.x*m_Data2[0]+vec.y*m_Data2[1]+vec.z*m_Data2[2];
 		temp.y = vec.x*m_Data2[4]+vec.y*m_Data2[5]+vec.z*m_Data2[6];
 		temp.z = vec.x*m_Data2[8]+vec.y*m_Data2[9]+vec.z*m_Data2[10];
-
 		vec = temp;
 	}
 
@@ -388,14 +417,14 @@ namespace GASS
 		vec.x = vec.x -m_Data2[12];
 		vec.y = vec.y -m_Data2[13];
 		vec.z = vec.z -m_Data2[14];
-	}
+	}*/
 
 	Vec3 Mat4::GetTranslation()  const
 	{
 		Vec3 ret;
-		ret.x = m_Data[3][0];
-		ret.y = m_Data[3][1];
-		ret.z = m_Data[3][2];
+		ret.x = m_Data[0][3];
+		ret.y = m_Data[1][3];
+		ret.z = m_Data[2][3];
 		return ret;
 	}
 
@@ -404,25 +433,46 @@ namespace GASS
 
 		Mat4 ret;
 		ret = *this;
-		ret.m_Data[3][0] = 0;
-		ret.m_Data[3][1] = 0;
-		ret.m_Data[3][2] = 0;
+		ret.m_Data[0][3] = 0;
+		ret.m_Data[1][3] = 0;
+		ret.m_Data[2][3] = 0;
 		return ret;
 	}
 
-	Float Mat4::Determinant()
+	Float Mat4::Determinant() const
+	{
+		Float fCofactor00 = m_Data[1][1]*m_Data[2][2] -
+			m_Data[1][2]*m_Data[2][1];
+		Float fCofactor10 = m_Data[1][2]*m_Data[2][0] -
+			m_Data[1][0]*m_Data[2][2];
+		Float fCofactor20 = m_Data[1][0]*m_Data[2][1] -
+			m_Data[1][1]*m_Data[2][0];
+
+		Float fDet =
+			m_Data[0][0]*fCofactor00 +
+			m_Data[0][1]*fCofactor10 +
+			m_Data[0][2]*fCofactor20;
+
+		return fDet;
+	}
+
+
+	/*Float Mat4::Determinant()
 	{
 		Float det = 0.0f;
 
-		for (int col = 0; col < 4; col++) {
+		for (int col = 0; col < 4; col++) 
+		{
 			const Float sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
 			det += sign * m_Data[0][col] * _Determinant(0, col);
 		}
 		return det;
 	}
 
+	
 
-	Float Mat4::_Determinant(int row, int col) 
+
+	/*Float Mat4::_Determinant(int row, int col) 
 	{
 		assert(row >= 0 && row < 4 && col >= 0 && col < 4);
 
@@ -450,21 +500,19 @@ namespace GASS
 		d2 d5 d8
 		*/
 
-		return
+		/*return
 			data[0] * (data[4] * data[8] - data[7] * data[5]) -
 			data[1] * (data[3] * data[8] - data[6] * data[5]) +
 			data[2] * (data[3] * data[7] - data[6] * data[4]);
-	}
+	}*/
 
 
-	Mat4 Mat4::Invert()
+	/*Mat4 Mat4::Invert()
 	{
 		Float det = Determinant();
 		//assert(fabs(det) > EPSILON);
 		if(fabs(det) < EPSILON) det = EPSILON;
-
 		Mat4 result;
-
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 4; col++) {
 				const Float sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
@@ -472,6 +520,48 @@ namespace GASS
 			}
 		}
 		return result;
+	}*/
+
+	Mat4 Mat4::Invert(void) const
+	{
+		Float m10 = m_Data[1][0], m11 = m_Data[1][1], m12 = m_Data[1][2];
+		Float m20 = m_Data[2][0], m21 = m_Data[2][1], m22 = m_Data[2][2];
+
+		Float t00 = m22 * m11 - m21 * m12;
+		Float t10 = m20 * m12 - m22 * m10;
+		Float t20 = m21 * m10 - m20 * m11;
+
+		Float m00 = m_Data[0][0], m01 = m_Data[0][1], m02 = m_Data[0][2];
+
+		Float invDet = 1 / (m00 * t00 + m01 * t10 + m02 * t20);
+
+		t00 *= invDet; t10 *= invDet; t20 *= invDet;
+
+		m00 *= invDet; m01 *= invDet; m02 *= invDet;
+
+		Float r00 = t00;
+		Float r01 = m02 * m21 - m01 * m22;
+		Float r02 = m01 * m12 - m02 * m11;
+
+		Float r10 = t10;
+		Float r11 = m00 * m22 - m02 * m20;
+		Float r12 = m02 * m10 - m00 * m12;
+
+		Float r20 = t20;
+		Float r21 = m01 * m20 - m00 * m21;
+		Float r22 = m00 * m11 - m01 * m10;
+
+		Float m03 = m_Data[0][3], m13 = m_Data[1][3], m23 = m_Data[2][3];
+
+		Float r03 = - (r00 * m03 + r01 * m13 + r02 * m23);
+		Float r13 = - (r10 * m03 + r11 * m13 + r12 * m23);
+		Float r23 = - (r20 * m03 + r21 * m13 + r22 * m23);
+
+		return Mat4(
+			r00, r01, r02, r03,
+			r10, r11, r12, r13,
+			r20, r21, r22, r23,
+			0,   0,   0,   1);
 	}
 
 
@@ -489,17 +579,17 @@ namespace GASS
 		if (fabs(Y)>0.0005f) 
 		{ 
 			rotx = mat[2][2] / C; 
-			roty = mat[2][1]  / C; 
+			roty = mat[1][2]  / C; 
 			X = atan2( roty, rotx ); 
 			rotx =  mat[0][0] / C; 
-			roty = mat[1][0] / C; 
+			roty = mat[0][1] / C; 
 			Z = atan2( roty, rotx ); 
 		} 
 		else 
 		{
 			X  = 0.0f; 
 			rotx = -mat[1][1]; 
-			roty = mat[1][0]; 
+			roty = mat[0][1]; 
 			Z  = atan2( roty, rotx ); 
 		} 
 
@@ -514,8 +604,8 @@ namespace GASS
 
 	Float Mat4::GetEulerHeading() const
 	{
-		Vec3 dir;
-		dir.Set(m_Data2[8],0,m_Data2[10]);
+		Vec3 dir = GetZAxis();
+		dir.Set(dir.x, 0, dir.z);
 		dir.Normalize();
 		Vec3 north_dir(0,0,1);
 		Float cos_h = Math::Dot(north_dir,dir);
@@ -539,8 +629,9 @@ namespace GASS
 	Float Mat4::GetEulerPitch() const
 	{
 		Vec3 dir;
-		dir.Set(m_Data2[8],m_Data2[9],m_Data2[10]);
-		Vec3 xz_dir(m_Data2[8],0,m_Data2[10]);
+		
+		dir = GetZAxis();
+		Vec3 xz_dir(dir.x,0,dir.z);
 		xz_dir.Normalize();
 		Float cos_p = Math::Dot(xz_dir,dir);
 		Vec3 cross = Math::Cross(xz_dir,dir);
@@ -563,8 +654,8 @@ namespace GASS
 	Float Mat4::GetEulerRoll() const
 	{
 		Vec3 left_dir;
-		left_dir.Set(m_Data2[0],m_Data2[1],m_Data2[2]);
-		Vec3 xz_dir(m_Data2[0],0,m_Data2[2]);
+		left_dir = GetXAxis();
+		Vec3 xz_dir(left_dir.x,0,left_dir.z);
 		xz_dir.Normalize();
 		Float cos_r = Math::Dot(xz_dir,left_dir);
 		Vec3 cross = Math::Cross(xz_dir,left_dir);
@@ -641,27 +732,33 @@ namespace GASS
 
 	Vec3 Mat4::GetXAxis() const
 	{
-		return Vec3(m_Data2[0] ,m_Data2[1] ,m_Data2[2]);
+		//return Vec3(m_Data2[0] ,m_Data2[1] ,m_Data2[2]);
+		return Vec3(m_Data2[0] ,m_Data2[4] ,m_Data2[8]);
 	}
 	Vec3 Mat4::GetYAxis() const
 	{
-		return Vec3(m_Data2[4] ,m_Data2[5] ,m_Data2[6]);
+		//return Vec3(m_Data2[4] ,m_Data2[5] ,m_Data2[6]);
+		return Vec3(m_Data2[1] ,m_Data2[5] ,m_Data2[9]);
 	}
 	Vec3 Mat4::GetZAxis() const
 	{
-		return Vec3(m_Data2[8] ,m_Data2[9] ,m_Data2[10]);
+		//return Vec3(m_Data2[8] ,m_Data2[9] ,m_Data2[10]);
+		return Vec3(m_Data2[2] ,m_Data2[6] ,m_Data2[10]);
 	}
 
 	void Mat4::SetXAxis( const Vec3 &dir)
 	{
-		m_Data2[0] = dir.x; m_Data2[1] =dir.y; m_Data2[2] = dir.z;
+		//m_Data2[0] = dir.x; m_Data2[1] =dir.y; m_Data2[2] = dir.z;
+		m_Data2[0] = dir.x; m_Data2[4] =dir.y; m_Data2[8] = dir.z;
 	}
 	void Mat4::SetYAxis(const Vec3 &dir)
 	{
-		m_Data2[4] = dir.x; m_Data2[5] =dir.y; m_Data2[6] = dir.z;
+		//m_Data2[4] = dir.x; m_Data2[5] =dir.y; m_Data2[6] = dir.z;
+		m_Data2[1] = dir.x; m_Data2[5] =dir.y; m_Data2[9] = dir.z;
 	}
 	void Mat4::SetZAxis(const Vec3 &dir)
 	{
-		m_Data2[8] = dir.x; m_Data2[9] =dir.y; m_Data2[10] = dir.z;
+		//m_Data2[8] = dir.x; m_Data2[9] =dir.y; m_Data2[10] = dir.z;
+		m_Data2[2] = dir.x; m_Data2[6] =dir.y; m_Data2[10] = dir.z;
 	}
 }

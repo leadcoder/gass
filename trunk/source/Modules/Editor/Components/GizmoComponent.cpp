@@ -130,7 +130,7 @@ namespace GASS
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
 				if (selected_lc)
-					GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(m_BaseRot*selected_lc->GetWorldRotation(),GIZMO_SENDER)));
+					GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(selected_lc->GetWorldRotation()*m_BaseRot,GIZMO_SENDER)));
 			}
 		}
 		else if(m_Mode == GM_WORLD)
@@ -218,7 +218,7 @@ namespace GASS
 				//rotate to selecetd rotation
 				if(m_Mode == GM_LOCAL)
 				{
-					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(m_BaseRot*lc->GetWorldRotation(),GIZMO_SENDER)));
+					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(lc->GetWorldRotation()*m_BaseRot,GIZMO_SENDER)));
 				}
 				else
 				{
@@ -249,7 +249,7 @@ namespace GASS
 
 		if(m_Mode == GM_LOCAL)
 		{
-			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(m_BaseRot*message->GetRotation(),GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(message->GetRotation()*m_BaseRot,GIZMO_SENDER)));
 		}
 	}
 
@@ -262,7 +262,7 @@ namespace GASS
 
 	void GizmoComponent::OnWorldPosition(WorldPositionRequestPtr message)
 	{
-		if(GIZMO_SENDER!= message->GetSenderID())
+		if(GIZMO_SENDER != message->GetSenderID())
 		{
 			SceneObjectPtr  selected(m_SelectedObject,NO_THROW);
 			if(selected)
@@ -594,7 +594,6 @@ namespace GASS
 
 		Vec3 c_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 r_vec = rot_mat.GetXAxis();
-
 		Vec3 v_vec = rot_mat.GetZAxis();
 		Vec3 up_vec = rot_mat.GetYAxis();
 

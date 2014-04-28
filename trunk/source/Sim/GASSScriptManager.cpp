@@ -193,8 +193,7 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetXAxis() const", asMETHOD(Quaternion, GetXAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetYAxis() const", asMETHOD(Quaternion, GetYAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetZAxis() const", asMETHOD(Quaternion, GetZAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "void ToRotationMatrix(Mat4&in) const", asMETHOD(Quaternion, ToRotationMatrix), asCALL_THISCALL);
-	
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void ToRotationMatrix(Mat4&out) const", asMETHOD(Quaternion, ToRotationMatrix), asCALL_THISCALL);
 
 		r = m_Engine->RegisterGlobalFunction("double MathDeg2Rad(double)",  asFUNCTIONPR(Math::Deg2Rad,(Float),Float), asCALL_CDECL); assert( r >= 0 );
 		r = m_Engine->RegisterGlobalFunction("double MathRad2Deg(double)",  asFUNCTIONPR(Math::Rad2Deg,(Float),Float), asCALL_CDECL); assert( r >= 0 );
