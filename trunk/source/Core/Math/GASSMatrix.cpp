@@ -58,7 +58,7 @@ namespace GASS
 		m_Data[3][3] = m33;
 	}
 
-	Mat4 Mat4::operator* (const Mat4 &mat) const
+	/*Mat4 Mat4::operator* (const Mat4 &mat) const
 	{
 		Mat4 ret;
 		for (int iRow = 0; iRow < 4; iRow++)
@@ -73,8 +73,9 @@ namespace GASS
 			}
 		}
 		return ret;
-	}
+	}*/
 
+	 
 	void Mat4::Zero()
 	{
 		m_Data[0][0] = 0;
@@ -221,19 +222,17 @@ namespace GASS
 
 		//Scale
 		m_Data[0][0] *= scale.x;
-		m_Data[0][1] *= scale.x;
-		m_Data[0][2] *= scale.x;
-		m_Data[0][3] *= scale.x;
-
-		m_Data[1][0] *= scale.y;
+		m_Data[1][0] *= scale.x;
+		m_Data[2][0] *= scale.x;
+		
+		m_Data[0][1] *= scale.y;
 		m_Data[1][1] *= scale.y;
-		m_Data[1][2] *= scale.y;
-		m_Data[1][3] *= scale.y;
-
-		m_Data[2][0] *= scale.z;
-		m_Data[2][1] *= scale.z;
+		m_Data[2][1] *= scale.y;
+	
+		m_Data[0][2] *= scale.z;
+		m_Data[1][2] *= scale.z;
 		m_Data[2][2] *= scale.z;
-		m_Data[2][3] *= scale.z;
+		
 	}
 
 
@@ -321,17 +320,16 @@ namespace GASS
 	void Mat4::RelScale(Vec3 scale)
 	{
 		m_Data[0][0] *= scale.x;
-		m_Data[0][1] *= scale.x;
+		m_Data[0][1] *= scale.y;
 		m_Data[0][2] *= scale.x;
-		m_Data[0][3] *= scale.x;
-		m_Data[1][0] *= scale.y;
+		
+		m_Data[1][0] *= scale.x;
 		m_Data[1][1] *= scale.y;
-		m_Data[1][2] *= scale.y;
-		m_Data[1][3] *= scale.y;
-		m_Data[2][0] *= scale.z;
-		m_Data[2][1] *= scale.z;
+		m_Data[1][2] *= scale.z;
+		
+		m_Data[2][0] *= scale.x;
+		m_Data[2][1] *= scale.y;
 		m_Data[2][2] *= scale.z;
-		m_Data[2][3] *= scale.z;
 	}
 
 	Vec3 Mat4::operator * ( const Vec3 &vec) const

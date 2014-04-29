@@ -68,12 +68,12 @@ namespace GASS
 
 	Quaternion OSGConvert::ToGASS(const osg::Quat &value) const
 	{
-		return Quaternion(value.w(),-value.x(),-value.z(),value.y());
+		return Quaternion(-value.w(),-value.x(),-value.z(),value.y());
 	}
 
 	osg::Quat OSGConvert::ToOSG(const Quaternion &value) const
 	{
-		return  osg::Quat(-value.x,value.z,-value.y,value.w);
+		return  osg::Quat(-value.x,value.z,-value.y,-value.w);
 	}
 
 	int OSGConvert::ToOSGNodeMask(GeometryFlags flag) const

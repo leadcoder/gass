@@ -52,7 +52,7 @@ namespace GASS
 	public:
 
 		static const Float EPSILON; 
-		
+
 		/**
 		* Contains the data of the matrix.
 		*/
@@ -70,7 +70,7 @@ namespace GASS
 			Float m20, Float m21, Float m22, Float m23,
 			Float m30, Float m31, Float m32, Float m33 );
 
-	
+
 		inline Float* operator [] ( unsigned iRow )
 		{
 			assert( iRow < 4 );
@@ -82,7 +82,42 @@ namespace GASS
 			return m_Data[iRow];
 		}
 
-		Mat4 operator* (const Mat4 &mat) const;
+		inline Mat4 Concatenate(const Mat4  &m2) const
+		{
+			Mat4 r;
+			r.m_Data[0][0] = m_Data[0][0] * m2.m_Data[0][0] + m_Data[0][1] * m2.m_Data[1][0] + m_Data[0][2] * m2.m_Data[2][0] + m_Data[0][3] * m2.m_Data[3][0];
+			r.m_Data[0][1] = m_Data[0][0] * m2.m_Data[0][1] + m_Data[0][1] * m2.m_Data[1][1] + m_Data[0][2] * m2.m_Data[2][1] + m_Data[0][3] * m2.m_Data[3][1];
+			r.m_Data[0][2] = m_Data[0][0] * m2.m_Data[0][2] + m_Data[0][1] * m2.m_Data[1][2] + m_Data[0][2] * m2.m_Data[2][2] + m_Data[0][3] * m2.m_Data[3][2];
+			r.m_Data[0][3] = m_Data[0][0] * m2.m_Data[0][3] + m_Data[0][1] * m2.m_Data[1][3] + m_Data[0][2] * m2.m_Data[2][3] + m_Data[0][3] * m2.m_Data[3][3];
+
+			r.m_Data[1][0] = m_Data[1][0] * m2.m_Data[0][0] + m_Data[1][1] * m2.m_Data[1][0] + m_Data[1][2] * m2.m_Data[2][0] + m_Data[1][3] * m2.m_Data[3][0];
+			r.m_Data[1][1] = m_Data[1][0] * m2.m_Data[0][1] + m_Data[1][1] * m2.m_Data[1][1] + m_Data[1][2] * m2.m_Data[2][1] + m_Data[1][3] * m2.m_Data[3][1];
+			r.m_Data[1][2] = m_Data[1][0] * m2.m_Data[0][2] + m_Data[1][1] * m2.m_Data[1][2] + m_Data[1][2] * m2.m_Data[2][2] + m_Data[1][3] * m2.m_Data[3][2];
+			r.m_Data[1][3] = m_Data[1][0] * m2.m_Data[0][3] + m_Data[1][1] * m2.m_Data[1][3] + m_Data[1][2] * m2.m_Data[2][3] + m_Data[1][3] * m2.m_Data[3][3];
+
+			r.m_Data[2][0] = m_Data[2][0] * m2.m_Data[0][0] + m_Data[2][1] * m2.m_Data[1][0] + m_Data[2][2] * m2.m_Data[2][0] + m_Data[2][3] * m2.m_Data[3][0];
+			r.m_Data[2][1] = m_Data[2][0] * m2.m_Data[0][1] + m_Data[2][1] * m2.m_Data[1][1] + m_Data[2][2] * m2.m_Data[2][1] + m_Data[2][3] * m2.m_Data[3][1];
+			r.m_Data[2][2] = m_Data[2][0] * m2.m_Data[0][2] + m_Data[2][1] * m2.m_Data[1][2] + m_Data[2][2] * m2.m_Data[2][2] + m_Data[2][3] * m2.m_Data[3][2];
+			r.m_Data[2][3] = m_Data[2][0] * m2.m_Data[0][3] + m_Data[2][1] * m2.m_Data[1][3] + m_Data[2][2] * m2.m_Data[2][3] + m_Data[2][3] * m2.m_Data[3][3];
+
+			r.m_Data[3][0] = m_Data[3][0] * m2.m_Data[0][0] + m_Data[3][1] * m2.m_Data[1][0] + m_Data[3][2] * m2.m_Data[2][0] + m_Data[3][3] * m2.m_Data[3][0];
+			r.m_Data[3][1] = m_Data[3][0] * m2.m_Data[0][1] + m_Data[3][1] * m2.m_Data[1][1] + m_Data[3][2] * m2.m_Data[2][1] + m_Data[3][3] * m2.m_Data[3][1];
+			r.m_Data[3][2] = m_Data[3][0] * m2.m_Data[0][2] + m_Data[3][1] * m2.m_Data[1][2] + m_Data[3][2] * m2.m_Data[2][2] + m_Data[3][3] * m2.m_Data[3][2];
+			r.m_Data[3][3] = m_Data[3][0] * m2.m_Data[0][3] + m_Data[3][1] * m2.m_Data[1][3] + m_Data[3][2] * m2.m_Data[2][3] + m_Data[3][3] * m2.m_Data[3][3];
+
+			return r;
+		}
+
+		/** Matrix concatenation using '*'.
+		*/
+		inline Mat4 operator * ( const Mat4 &m2 ) const
+		{
+			return Concatenate( m2 );
+		}
+
+
+
+		//Mat4 operator* (const Mat4 &mat) const;
 		Vec3 operator* ( const Vec3 &vec) const;
 		Vec4 operator* ( const Vec4 &vec) const;
 
@@ -90,9 +125,9 @@ namespace GASS
 		* Set all matrix elements to zero.
 		*/
 		void Zero();
-		
+
 		void Rotate(Float h,Float p,Float r);
-		
+
 		/**
 		* Set the rotation matrix for heading, pitch, roll.
 		*/
@@ -104,8 +139,8 @@ namespace GASS
 		void Identity();
 		Mat4 Transpose();
 		void Translate(Float x,Float y,Float z);
-		inline void RelTranslate(Float x,Float y,Float z){m_Data[3][0] += x;	m_Data[3][1] += y;m_Data[3][2] += z;};
-		inline void SetTranslation(Float x,Float y,Float z){m_Data[3][0] = x; m_Data[3][1] = y; m_Data[3][2] = z;};
+		inline void RelTranslate(Float x,Float y,Float z){m_Data[0][3] += x;	m_Data[1][3] += y;m_Data[2][3] += z;};
+		inline void SetTranslation(Float x,Float y,Float z){m_Data[0][3] = x; m_Data[1][3] = y; m_Data[2][3] = z;};
 		void InverseRotateVect( Vec3 &vec);
 		void InverseTranslateVect( Vec3 &vec);
 		Vec3 GetTranslation() const;
@@ -121,32 +156,32 @@ namespace GASS
 		Float GetEulerHeading() const;
 		Float GetEulerPitch() const;
 		Float GetEulerRoll() const;
-		
+
 		/**
-			Get X axis in the rotation part of the matrix
+		Get X axis in the rotation part of the matrix
 		*/
 		Vec3 GetXAxis() const;
 		/**
-			Get Y axis in the rotation part of the matrix
+		Get Y axis in the rotation part of the matrix
 		*/
 		Vec3 GetYAxis() const;
 
 		/**
-			Get Z axis in the rotation part of the matrix
+		Get Z axis in the rotation part of the matrix
 		*/
 		Vec3 GetZAxis() const;
 
 		/**
-			Set X axis in the rotation part of the matrix
+		Set X axis in the rotation part of the matrix
 		*/
 		void SetXAxis(const Vec3 &dir);
 
 		/**
-			Set Y axis in the rotation part of the matrix
+		Set Y axis in the rotation part of the matrix
 		*/
 		void SetYAxis(const Vec3 &dir);
 		/**
-			Set Z axis in the rotation part of the matrix
+		Set Z axis in the rotation part of the matrix
 		*/
 		void SetZAxis(const Vec3 &dir);
 

@@ -672,7 +672,7 @@ namespace GASS
 				}
 
 				final_rot.FromAngleAxis(angle,r_vec);
-				return selected_rot*final_rot;	
+				return final_rot*selected_rot;	
 			}
 		}
 		return Quaternion::IDENTITY;
