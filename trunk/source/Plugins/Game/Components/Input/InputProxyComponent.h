@@ -38,6 +38,10 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
+	/**
+		Delegate input from user specified SceneObject to owner for this component 
+	*/
+
 	class InputProxyComponent : public Reflection<InputProxyComponent,BaseSceneComponent>
 	{
 	public:

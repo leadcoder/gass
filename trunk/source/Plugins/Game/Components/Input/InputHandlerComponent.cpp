@@ -47,7 +47,6 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, Component>);
 		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
-		//RegisterVectorProperty<std::string>("CameraList", &InputHandlerComponent::GetCameraMapping, &InputHandlerComponent::SetCameraMapping);
 	}
 
 	void InputHandlerComponent::OnInitialize()
@@ -61,12 +60,13 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
 
-
-
 	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage,0));
-
+		if(m_Empty)
+		{
+			SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage,0));
+			m_Empty = false;
+		}
 		/*ComponentContainerTemplate::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
 		
@@ -83,43 +83,33 @@ namespace GASS
 		}*/
 
 		//try find camera, move this to vehicle camera class
-
 	}
 
-	
 	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 		m_Empty = true;
 	}
-
-	
-
 	
 	void InputHandlerComponent::OnInput(ControllSettingsMessagePtr message)
 	{
+		const std::string name = message->GetController();
+		const float value = message->GetValue();
+
+		if(name == "ExitVehicle" && value > 0) //check if exit input
+		{
+			GetSceneObject()->PostRequest(ExitVehicleMessagePtr(new ExitVehicleMessage()));
+		}
+
 		if(m_ControlSetting != message->GetSettings())
 			return;
 		//relay message
-		std::string name = message->GetController();
-		float value = message->GetValue();
-
-		//check if exit input
-		if(name == "ExitVehicle" && value > 0)
-		{
-			
-			GetSceneObject()->PostRequest(ExitVehicleMessagePtr(new ExitVehicleMessage()));
-		}
-		else
-		{
-			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent(message->GetSettings(),name,value,message->GetControllerType())));
-		}
+		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent(message->GetSettings(),name,value,message->GetControllerType())));
 	}
 
 	void InputHandlerComponent::SetControlSetting(const std::string &controlsetting)
 	{
 		m_ControlSetting = controlsetting;
-		//TODO: unregister previous, and register new one?
 	}
 
 	std::string InputHandlerComponent::GetControlSetting() const

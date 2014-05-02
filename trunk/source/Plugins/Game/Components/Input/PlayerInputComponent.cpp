@@ -47,6 +47,7 @@ namespace GASS
 
 	PlayerInputComponent::~PlayerInputComponent()
 	{
+
 	}
 
 	void PlayerInputComponent::RegisterReflection()
@@ -90,17 +91,16 @@ namespace GASS
 				InputHandlerComponentPtr ihc = DYNAMIC_PTR_CAST<InputHandlerComponent>(comps[i]);
 				LocationComponentPtr location = ihc->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				Vec3 obj_pos = location->GetWorldPosition();
-					Float dist = (my_pos-obj_pos).FastLength();
-					if(dist < 5)
-					{
-						//enter and return
-						ihc->GetSceneObject()->PostRequest(EnterVehicleMessagePtr(new EnterVehicleMessage()));
-						m_CurrentVehicle = ihc->GetSceneObject();
-						m_CurrentSeat = ihc->GetSceneObject();
-						seat = 0;
-						return;
-					}	
-				
+				Float dist = (my_pos-obj_pos).Length();
+				if(dist < 5)
+				{
+					//enter and return
+					ihc->GetSceneObject()->PostRequest(EnterVehicleMessagePtr(new EnterVehicleMessage()));
+					m_CurrentVehicle = ihc->GetSceneObject();
+					m_CurrentSeat = ihc->GetSceneObject();
+					seat = 0;
+					return;
+				}	
 			}
 
 			/*while(objects.hasMoreElements())
@@ -124,7 +124,6 @@ namespace GASS
 						return;
 					}
 				}
-			
 			}*/
 		}
 		else if(name == "CycleVehicle" && value > 0)
@@ -133,7 +132,7 @@ namespace GASS
 			ComponentContainerTemplate::ComponentVector components;
 			if(m_CurrentVehicle)
 			{
-				m_CurrentVehicle->GetComponentsByClass(components,"InputHandlerComponent");
+				m_CurrentVehicle->GetComponentsByClass<InputHandlerComponent>(components);//,"InputHandlerComponent");
 				seat = seat % components.size();
 				//std::cout << "seat:" << seat << std::endl;
 				if(components.size() > 0)
@@ -152,7 +151,7 @@ namespace GASS
 
 		else if(name == "ExitVehicle" && value > 0)
 		{
-			//Take camera control
+			//restore camera 
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{
@@ -167,7 +166,6 @@ namespace GASS
 	void PlayerInputComponent::SetControlSetting(const std::string &controlsetting)
 	{
 		m_ControlSetting = controlsetting;
-		//TODO: unregister previous, and register new one?
 	}
 
 	std::string PlayerInputComponent::GetControlSetting() const

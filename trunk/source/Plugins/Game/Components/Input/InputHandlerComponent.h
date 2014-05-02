@@ -38,6 +38,11 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
+
+	/*
+		Component used to delegate input from input system to vehicle
+	*/
+
 	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
 	{
 	public:

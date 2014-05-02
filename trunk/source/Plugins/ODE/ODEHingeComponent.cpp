@@ -83,6 +83,18 @@ namespace GASS
 				m_ODEBody2  = bc2->GetODEBodyComponent();
 				m_Body1 = SceneObjectRef(bc1->GetSceneObject());
 				m_Body2 = SceneObjectRef(bc2->GetSceneObject());
+
+				if(!m_ODEBody1)
+					m_Body1->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBody1Loaded,PhysicsBodyLoadedEvent,0));
+				else
+					m_Body1Loaded = true;
+				if(!m_ODEBody2) 
+					m_Body2->RegisterForMessage(REG_TMESS(ODEHingeComponent::OnBody2Loaded,PhysicsBodyLoadedEvent,0));
+				else
+					m_Body2Loaded = true;
+
+				if(m_Body2Loaded && m_Body2Loaded)
+					CreateJoint();
 			}
 		}
 	}
@@ -124,6 +136,7 @@ namespace GASS
 	void ODEHingeComponent::OnBody1Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body1Loaded = true;
+		m_ODEBody1  = m_Body1->GetFirstComponentByClass<ODEBodyComponent>()->GetODEBodyComponent();
 		if(m_Body2Loaded)
 			CreateJoint();
 	}
@@ -131,6 +144,7 @@ namespace GASS
 	void ODEHingeComponent::OnBody2Loaded(PhysicsBodyLoadedEventPtr message)
 	{
 		m_Body2Loaded = true;
+		m_ODEBody2  = m_Body2->GetFirstComponentByClass<ODEBodyComponent>()->GetODEBodyComponent();
 		if(m_Body1Loaded)
 			CreateJoint();
 	}
@@ -153,23 +167,12 @@ namespace GASS
 		}
 	}
 
-	/*void ODEHingeComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
-	{
-		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
-		m_SceneManager = scene_manager;
-		assert(scene_manager);
-		CreateJoint();
-	}*/
-
 	void ODEHingeComponent::CreateJoint()
 	{
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
-		//m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
-
+	
 		if(m_ODEBody1 && m_ODEBody2)
 		{
-			//m_Body2 = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
-
 			
 			if(m_ODEJoint)
 				dJointDestroy(m_ODEJoint);
@@ -213,8 +216,11 @@ namespace GASS
 
 		if (m_Axis.Length() != 0)
 			dJointSetHingeAxis(m_ODEJoint,m_Axis.x,m_Axis.y,m_Axis.z);
-			else
-				dJointSetHingeAxis(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
+		else
+		{
+			//const Vec3 axis = rot_mat.GetYAxis();
+			dJointSetHingeAxis(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
+		}
 	}
 
 	void ODEHingeComponent::SetAnchor(const Vec3 &value)
