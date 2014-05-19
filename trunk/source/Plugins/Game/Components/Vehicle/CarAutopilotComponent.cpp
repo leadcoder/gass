@@ -100,7 +100,7 @@ namespace GASS
 	void CarAutopilotComponent::OnInitialize()
 	{
 		
-		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
 			
@@ -122,7 +122,7 @@ namespace GASS
 
 	}
 
-	void CarAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)
+	void CarAutopilotComponent::OnGotoPosition(GotoPositionRequestPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,pos.y,pos.z);

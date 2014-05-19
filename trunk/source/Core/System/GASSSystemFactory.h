@@ -39,7 +39,7 @@ namespace GASS
 		The factory where all systems should be registred in
 	*/
 
-	class GASSCoreExport SystemFactory : public Factory<ISystem,std::string>
+	class GASSCoreExport SystemFactory : public Factory<ISystem,std::string,void>
 	{
 	public:
 		SystemFactory();

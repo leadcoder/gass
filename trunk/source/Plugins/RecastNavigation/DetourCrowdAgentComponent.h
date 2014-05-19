@@ -110,7 +110,7 @@ namespace GASS
 		DetourCrowdComponentPtr GetCrowdComp() const {return DetourCrowdComponentPtr(m_CrowdComp,NO_THROW);}
 		dtCrowdAgentParams GetAgentParams() const;
 		void UpdateAgentParams();
-		void OnGoToPosition(GotoPositionMessagePtr message);
+		void OnGoToPosition(GotoPositionRequestPtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void UpdateGeometry();
 		void OnWorldPosition(WorldPositionRequestPtr message);

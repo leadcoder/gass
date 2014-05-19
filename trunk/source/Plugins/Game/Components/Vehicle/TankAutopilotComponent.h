@@ -64,7 +64,7 @@ namespace GASS
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
-		void OnGotoPosition(GotoPositionMessagePtr message);
+		void OnGotoPosition(GotoPositionRequestPtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		
 		Vec3 m_AngularVelocity;

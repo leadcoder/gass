@@ -44,7 +44,7 @@ namespace GASS
 		{
 			//Send message
 			int from_id = PTR_TO_INT(this);
-			//MessagePtr goto_msg(new GotoPositionMessage(info.m_3DPos,from_id));
+			//MessagePtr goto_msg(new GotoPositionRequest(info.m_3DPos,from_id));
 
 			Vec3 dir(1,0,1);
 			dir.Normalize();

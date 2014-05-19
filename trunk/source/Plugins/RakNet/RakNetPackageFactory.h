@@ -33,11 +33,11 @@ namespace GASS
 		This is a singleton implementation of the EnumFactory template.
 		By using the singleton pattern each new package type can
 		register it	self in a easy way.
-		A package have to reigister it self to this
+		A package have to register it self to this
 		factory	if it want any type of serialization behavior.
 	*/
 
-	class PackageFactory : public Factory<NetworkPackage,int>
+	class PackageFactory : public Factory<NetworkPackage,int,void>
 	{
 	public:
 		PackageFactory();

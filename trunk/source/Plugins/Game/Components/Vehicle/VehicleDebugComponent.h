@@ -43,7 +43,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnGotoPosition(GotoPositionMessagePtr message);
+		void OnGotoPosition(GotoPositionRequestPtr message);
 		bool m_ShowWaypoint;
 		SceneObjectPtr m_WaypointObj;
 	};

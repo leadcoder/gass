@@ -34,35 +34,35 @@ namespace GASS
 	class GameSceneManager;
 	typedef SPTR<GameSceneManager> GameSceneManagerPtr;
 	
-	class EnterVehicleMessage : public SceneObjectRequestMessage
+	class EnterVehicleRequest : public SceneObjectRequestMessage
 	{
 	public:
-		EnterVehicleMessage(SenderID sender_id = -1, double delay= 0) : 
+		EnterVehicleRequest(SenderID sender_id = -1, double delay= 0) : 
 		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
 	private:
 	};
-	typedef SPTR<EnterVehicleMessage> EnterVehicleMessagePtr;
+	typedef SPTR<EnterVehicleRequest> EnterVehicleRequestPtr;
 
 
-	class ExitVehicleMessage : public SceneObjectRequestMessage
+	class ExitVehicleRequest : public SceneObjectRequestMessage
 	{
 	public:
-		ExitVehicleMessage(SenderID sender_id = -1, double delay= 0) : 
+		ExitVehicleRequest(SenderID sender_id = -1, double delay= 0) : 
 		  SceneObjectRequestMessage(sender_id , delay)
 		  {
 
 		  }
 	private:
 	};
-	typedef SPTR<ExitVehicleMessage> ExitVehicleMessagePtr;
+	typedef SPTR<ExitVehicleRequest> ExitVehicleRequestPtr;
 
-	class GotoPositionMessage : public SceneObjectRequestMessage
+	class GotoPositionRequest : public SceneObjectRequestMessage
 	{
 	public:
-		GotoPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
+		GotoPositionRequest(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
 		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos)
 		  {
 
@@ -71,7 +71,7 @@ namespace GASS
 	private:
 		Vec3 m_Position;
 	};
-	typedef SPTR<GotoPositionMessage> GotoPositionMessagePtr;
+	typedef SPTR<GotoPositionRequest> GotoPositionRequestPtr;
 
 	class FaceDirectionRequest : public SceneObjectRequestMessage
 	{

@@ -44,7 +44,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 	}
 
@@ -215,7 +215,7 @@ namespace GASS
 		}
 	}
 
-	void DetourCrowdAgentComponent::OnGoToPosition(GotoPositionMessagePtr message)
+	void DetourCrowdAgentComponent::OnGoToPosition(GotoPositionRequestPtr message)
 	{
 		m_TargetPos = message->GetPosition();
 		DetourCrowdComponentPtr crowd_comp = GetCrowdComp();

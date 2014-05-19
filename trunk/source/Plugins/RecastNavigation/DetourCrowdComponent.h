@@ -61,7 +61,7 @@ namespace GASS
 
 		//void SetUpdateHealth(Float value);
 		//Float GetUpdateHealth() const;
-		void OnGoToPosisiton(GotoPositionMessagePtr message);
+		void OnGoToPosisiton(GotoPositionRequestPtr message);
 		RecastNavigationMeshComponentPtr  GetRecastNavigationMeshComponent() const {return RecastNavigationMeshComponentPtr(m_Mesh,NO_THROW);}
 		void InitCrowd(dtCrowd* crowd, dtNavMesh* nav);
 		RecastNavigationMeshComponentPtr FindNavMesh(const std::string &name) const;

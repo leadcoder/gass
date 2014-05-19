@@ -59,7 +59,7 @@ namespace GASS
 
 	void VehicleDebugComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnGotoPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleDebugComponent::OnGotoPosition,GotoPositionRequest,0));
 		
 		//create waypoint text object
 		SceneObjectPtr scene_object = GetSceneObject()->GetScene()->LoadObjectFromTemplate("VehicleDebugWaypointTemplate",GetSceneObject()->GetScene()->GetRootSceneObject());
@@ -97,7 +97,7 @@ namespace GASS
 		//GetSceneObject()->GetScene()->DeleteObject(m_WaypointObj);
 	}
 
-	void VehicleDebugComponent::OnGotoPosition(GotoPositionMessagePtr message)
+	void VehicleDebugComponent::OnGotoPosition(GotoPositionRequestPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		m_WaypointObj->PostRequest(PositionRequestPtr(new PositionRequest(pos)));

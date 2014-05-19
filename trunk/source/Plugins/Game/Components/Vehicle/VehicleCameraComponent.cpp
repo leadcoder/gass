@@ -73,8 +73,8 @@ namespace GASS
 		if(!m_InputHandlerObject.IsValid())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " VehicleCameraComponent::OnInitialize");
 
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage,0));
-		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleRequest,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleRequest,0));
 		//GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 	}
 
@@ -83,8 +83,8 @@ namespace GASS
 		InputHandlerComponentPtr vehicle = GetSceneObject()->GetFirstParentComponentByClass<InputHandlerComponent>();
 		if(vehicle)
 		{
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleMessage));
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleMessage));
+			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleRequest));
+			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleRequest));
 		}
 	}
 
@@ -98,14 +98,14 @@ namespace GASS
 		return m_PreferredViewport;
 	}
 
-	void VehicleCameraComponent::OnEnter(EnterVehicleMessagePtr message)
+	void VehicleCameraComponent::OnEnter(EnterVehicleRequestPtr message)
 	{
 		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 		SystemRequestMessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
 	}
 
-	void VehicleCameraComponent::OnExit(ExitVehicleMessagePtr message)
+	void VehicleCameraComponent::OnExit(ExitVehicleRequestPtr message)
 	{
 
 	}

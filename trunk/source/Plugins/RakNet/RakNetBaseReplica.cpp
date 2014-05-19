@@ -146,12 +146,12 @@ namespace GASS
 					
 					if(std::string(message) == "EnterVehicle")
 					{
-						EnterVehicleMessagePtr enter_msg(new EnterVehicleMessage());
+						EnterVehicleRequestPtr enter_msg(new EnterVehicleRequest());
 						m_Owner->PostRequest(enter_msg);
 					}
 					else if(std::string(message) == "ExitVehicle")
 					{
-						ExitVehicleMessagePtr exit_msg(new ExitVehicleMessage());
+						ExitVehicleRequestPtr exit_msg(new ExitVehicleRequest());
 						m_Owner->PostRequest(exit_msg);
 					}
 				}

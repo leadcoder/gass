@@ -61,7 +61,7 @@ namespace GASS
 		void _UpdateDrive(double  delta_time);
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
-		void OnGotoPosition(GotoPositionMessagePtr message);
+		void OnGotoPosition(GotoPositionRequestPtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void OnFaceDirectionRequest(FaceDirectionRequestPtr message);
 		

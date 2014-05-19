@@ -52,8 +52,8 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
+		void OnEnter(EnterVehicleRequestPtr message);
+		void OnExit(ExitVehicleRequestPtr message);
 		void OnInput(ControllSettingsMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;

@@ -76,7 +76,7 @@ namespace GASS
 	void TankAutopilotComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnInput,InputRelayEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnGotoPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TankAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
@@ -90,7 +90,7 @@ namespace GASS
 
 	}
 
-	void TankAutopilotComponent::OnGotoPosition(GotoPositionMessagePtr message)
+	void TankAutopilotComponent::OnGotoPosition(GotoPositionRequestPtr message)
 	{
 		Vec3 pos = message->GetPosition();
 		m_DesiredPos.Set(pos.x,0,pos.z);

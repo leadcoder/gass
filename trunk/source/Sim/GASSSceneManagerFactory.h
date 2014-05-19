@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class GASSExport SceneManagerFactory : public Factory<ISceneManager,std::string>
+	class GASSExport SceneManagerFactory : public Factory<ISceneManager,std::string,void>
 	{
 	public:
 		SceneManagerFactory();

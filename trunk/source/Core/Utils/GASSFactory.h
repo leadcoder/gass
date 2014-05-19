@@ -39,21 +39,19 @@ namespace GASS
 
     
 
-	template<class Base>
+	template<class Base, class ConstructorParams>
 	class CreatorBase
 	{
 	public:
 		typedef SPTR<Base> BasePtr;
 		virtual ~CreatorBase() {}
-		virtual BasePtr Create() const = 0;
+		virtual BasePtr Create(ConstructorParams* params = NULL) const = 0;
 		virtual std::string GetClassName() const = 0;
 	};
 
 	template<class Product, class  Base>
-	class Creator : public CreatorBase<Base>
+	class Creator : public CreatorBase<Base,void>
 	{
-
-
 	public:
 		typedef SPTR<Base> BasePtr;
 		typedef SPTR<Product> ProductPtr;
@@ -62,9 +60,30 @@ namespace GASS
 			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
-		virtual BasePtr Create() const
+		virtual BasePtr Create(void* params = NULL) const
 		{
 			ProductPtr obj(new Product);
+			return STATIC_PTR_CAST<Base>(obj);
+		}
+		virtual std::string GetClassName() const {return m_ClassName;}
+		std::string m_ClassName;
+	};
+
+
+	template<class Product, class  Base, class ConstructorParams>
+	class ArgumentCreator : public CreatorBase<Base,ConstructorParams>
+	{
+	public:
+		typedef SPTR<Base> BasePtr;
+		typedef SPTR<Product> ProductPtr;
+		ArgumentCreator()
+		{
+			m_ClassName = StringUtils::Demangle(typeid(Product).name());
+
+		}
+		virtual BasePtr Create(ConstructorParams* params = NULL) const
+		{
+			ProductPtr obj(new Product(params));
 			return STATIC_PTR_CAST<Base>(obj);
 		}
 		virtual std::string GetClassName() const {return m_ClassName;}
@@ -77,25 +96,25 @@ namespace GASS
 		Template class that implement the factory pattern
     */
 
-	template<class Base, class ObjectType>
+	template<class Base, class ObjectType, class ConstructorParams>
 	class Factory
 	{
 	public:
 		typedef SPTR<Base> BasePtr;
-		BasePtr Create(ObjectType type);
-		bool Register(ObjectType type, CreatorBase<Base> * pCreator);
+		BasePtr Create(ObjectType type, ConstructorParams* params= NULL);
+		bool Register(ObjectType type, CreatorBase<Base,ConstructorParams> * pCreator);
 		bool Remove(ObjectType type);
 		std::string GetClassName(const std::string &factory_name);
 		std::string GetFactoryName(const std::string &class_name);
 		std::vector<std::string> GetFactoryNames();
 	private:
-		typedef std::map<ObjectType, CreatorBase<Base> *> CreatorMap;
+		typedef std::map<ObjectType, CreatorBase<Base, ConstructorParams> *> CreatorMap;
 		CreatorMap m_creatorMap;
 	};
 
 
-	template<class Base, class ObjectType>
-	bool Factory<Base,ObjectType>::Register(ObjectType type, CreatorBase<Base> * pCreator)
+	template<class Base, class ObjectType, class ConstructorParams>
+	bool Factory<Base,ObjectType,ConstructorParams>::Register(ObjectType type, CreatorBase<Base, ConstructorParams> * pCreator)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it != m_creatorMap.end())
@@ -108,8 +127,8 @@ namespace GASS
 		return true;
 	}
 
-	template<class Base, class ObjectType>
-	bool Factory<Base,ObjectType>::Remove(ObjectType type)
+	template<class Base, class ObjectType, class ConstructorParams>
+	bool Factory<Base,ObjectType,ConstructorParams>::Remove(ObjectType type)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it != m_creatorMap.end())
@@ -122,8 +141,8 @@ namespace GASS
 	}
 	
 
-	template<class Base, class ObjectType>
-	std::string Factory<Base,ObjectType>::GetFactoryName(const std::string &class_name)
+	template<class Base, class ObjectType, class ConstructorParams>
+	std::string Factory<Base,ObjectType,ConstructorParams>::GetFactoryName(const std::string &class_name)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.begin();
 		while(it != m_creatorMap.end())
@@ -138,8 +157,8 @@ namespace GASS
 	}
 
 
-	template<class Base, class ObjectType>
-	std::string Factory<Base,ObjectType>::GetClassName(const std::string &factory_name)
+	template<class Base, class ObjectType, class ConstructorParams>
+	std::string Factory<Base,ObjectType,ConstructorParams>::GetClassName(const std::string &factory_name)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(factory_name);
 		if (it != m_creatorMap.end())
@@ -149,8 +168,8 @@ namespace GASS
 		return std::string("");
 	}
 
-	template<class Base, class ObjectType>
-	std::vector<std::string> Factory<Base,ObjectType>::GetFactoryNames()
+	template<class Base, class ObjectType, class ConstructorParams>
+	std::vector<std::string> Factory<Base,ObjectType,ConstructorParams>::GetFactoryNames()
 	{
 		std::vector<std::string> names;
 		typename CreatorMap::iterator it = m_creatorMap.begin();
@@ -163,8 +182,8 @@ namespace GASS
 		return names;
 	}
 
-	template<class Base, class ObjectType>
-	SPTR<Base> Factory<Base,ObjectType>::Create(ObjectType type)
+	template<class Base, class ObjectType, class ConstructorParams>
+	SPTR<Base> Factory<Base,ObjectType,ConstructorParams>::Create(ObjectType type, ConstructorParams* params= NULL)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end())
@@ -173,8 +192,8 @@ namespace GASS
 			return ret;
 		}
 
-		CreatorBase<Base> * pCreator = (*it).second;
-		return pCreator->Create();
+		CreatorBase<Base,ConstructorParams> * pCreator = (*it).second;
+		return pCreator->Create(params);
 	}
 }
 #endif // #ifndef FACTORY_HH

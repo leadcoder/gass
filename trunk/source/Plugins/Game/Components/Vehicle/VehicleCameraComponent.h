@@ -49,8 +49,8 @@ namespace GASS
 		void SetPreferredViewport(const std::string &viewport);
 		std::string GetPreferredViewport() const;
 	private:
-		void OnEnter(EnterVehicleMessagePtr message);
-		void OnExit(ExitVehicleMessagePtr message);
+		void OnEnter(EnterVehicleRequestPtr message);
+		void OnExit(ExitVehicleRequestPtr message);
 
 		std::string m_PreferredViewport;
 		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);

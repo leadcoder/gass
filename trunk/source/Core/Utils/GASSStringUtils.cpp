@@ -69,7 +69,7 @@ namespace GASS
 		std::string::size_type  look_here = 0;
 		std::string new_str = str;
 
-		//if(find.find(replacement)) // what we are going to replace already exist replecement string -> infinite while
+		//if(find.find(replacement)) // what we are going to replace already exist replacement string -> infinite while
 		while ((pos = new_str.find(find,look_here)) != std::string::npos)
 		{
 			new_str.replace(pos, find.size(), replacement);

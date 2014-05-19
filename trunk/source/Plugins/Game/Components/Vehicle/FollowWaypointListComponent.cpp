@@ -240,7 +240,7 @@ namespace GASS
 				}
 				Float new_distance = now_distance + look_ahead;
 				Vec3 target_point = Math::GetPointOnPath(new_distance, m_Waypoints, cyclic, wp_index);
-				GetSceneObject()->PostRequest(GotoPositionMessagePtr(new GotoPositionMessage(target_point)));
+				GetSceneObject()->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(target_point)));
 			}
 			else
 			{
@@ -308,7 +308,7 @@ namespace GASS
 				}
 
 				pos = m_Waypoints[m_CurrentWaypoint];
-				GetSceneObject()->PostRequest(GotoPositionMessagePtr(new GotoPositionMessage(pos)));
+				GetSceneObject()->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(pos)));
 			}
 			//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 		}

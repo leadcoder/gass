@@ -51,8 +51,8 @@ namespace GASS
 
 	void InputHandlerComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleMessage,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnEnter,EnterVehicleRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnExit,ExitVehicleRequest,0));
 	}
 	
 	void InputHandlerComponent::OnDelete()
@@ -60,7 +60,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
 
-	void InputHandlerComponent::OnEnter(EnterVehicleMessagePtr message)
+	void InputHandlerComponent::OnEnter(EnterVehicleRequestPtr message)
 	{
 		if(m_Empty)
 		{
@@ -85,7 +85,7 @@ namespace GASS
 		//try find camera, move this to vehicle camera class
 	}
 
-	void InputHandlerComponent::OnExit(ExitVehicleMessagePtr message)
+	void InputHandlerComponent::OnExit(ExitVehicleRequestPtr message)
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 		m_Empty = true;
@@ -98,7 +98,7 @@ namespace GASS
 
 		if(name == "ExitVehicle" && value > 0) //check if exit input
 		{
-			GetSceneObject()->PostRequest(ExitVehicleMessagePtr(new ExitVehicleMessage()));
+			GetSceneObject()->PostRequest(ExitVehicleRequestPtr(new ExitVehicleRequest()));
 		}
 
 		if(m_ControlSetting != message->GetSettings())
