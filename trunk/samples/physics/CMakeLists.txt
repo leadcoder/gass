@@ -14,7 +14,7 @@ if(${CMAKE_CL_64})
 	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win64")
 	set(DLL_SUFFIX "_x64")
 else()
-	set(PHYSX_BIN_DIR "${PHYSX_DIR}/lib/win32")
+	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win32")
 	set(DLL_SUFFIX "_x86")
 endif()
 
