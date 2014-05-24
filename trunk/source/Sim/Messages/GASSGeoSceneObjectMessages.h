@@ -23,6 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
 {
@@ -30,10 +31,10 @@ namespace GASS
 	/**
 		Message used to set object position by latitude and longitude
 	*/
-	class GeoLocationRequest : public BaseMessage
+	class GeoLocationRequest : public SceneObjectRequestMessage
 	{
 	public:
-		GeoLocationRequest(double lat, double lon, SenderID sender_id = -1, double delay= 0) : BaseMessage(sender_id , delay), 
+		GeoLocationRequest(double lat, double lon, SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay), 
 			m_Latitude(lat),
 			m_Longitude(lon)
 		{

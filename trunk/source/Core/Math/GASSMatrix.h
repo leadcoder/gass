@@ -141,8 +141,8 @@ namespace GASS
 		void Translate(Float x,Float y,Float z);
 		inline void RelTranslate(Float x,Float y,Float z){m_Data[0][3] += x;	m_Data[1][3] += y;m_Data[2][3] += z;};
 		inline void SetTranslation(Float x,Float y,Float z){m_Data[0][3] = x; m_Data[1][3] = y; m_Data[2][3] = z;};
-		void InverseRotateVect( Vec3 &vec);
-		void InverseTranslateVect( Vec3 &vec);
+		//void InverseRotateVect( Vec3 &vec);
+		//void InverseTranslateVect( Vec3 &vec);
 		Vec3 GetTranslation() const;
 		void SetTransformation(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale);
 		void SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
