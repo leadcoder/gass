@@ -89,8 +89,12 @@ namespace GASS
 
 		/**
 			Load all plugins from directory
+			@param directory Folder to serach for plugins in
+			@param extention_filter Only files with this extention are loaded, if not provided 
+									plugins are supposed to have dll extention on windows and so in linux.
+
 		*/
-		void LoadPluginsFromDirectory(const std::string &directory);
+		void LoadPluginsFromDirectory(const std::string &directory,const std::string &extention_filter = "");
 	protected:
 		std::vector<DynamicModule*> m_Plugins;
 	};

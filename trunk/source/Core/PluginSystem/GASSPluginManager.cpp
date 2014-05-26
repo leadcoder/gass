@@ -112,28 +112,35 @@ namespace GASS
 	void PluginManager::LoadPlugin(const std::string &name)
 	{
 		std::string file_name = name;
+		if(std::string::npos == file_name.find("."))
+		{
 #ifdef DEBUG
-		file_name += "_d";
+			file_name += "_d";
 #endif
 
 #ifndef WIN32
-		file_name += ".so";
+			file_name += ".so";
 #else
-		file_name += ".dll";
+			file_name += ".dll";
 #endif
+		}
 		DynamicModule* module = new DynamicModule(file_name);
 		module->Load();
 		LogManager::getSingleton().stream() << file_name << " loaded";
 		m_Plugins.push_back(module);
 	}
 
-	void PluginManager::LoadPluginsFromDirectory(const std::string &directory)
+	void PluginManager::LoadPluginsFromDirectory(const std::string &directory, const std::string &extention_filter)
 	{
+		std::string ext = extention_filter;
+		if(ext == "")
+		{
 #ifndef WIN32
-		const std::string ext = ".so";
+			ext = ".so";
 #else
-		const std::string ext = ".dll";
+			ext = ".dll";
 #endif
+		}
 		boost::filesystem::path path(directory); 
 
 		std::vector<std::string> plugins;
@@ -148,6 +155,15 @@ namespace GASS
 					std::string extension = iter->path().extension().generic_string();
 					std::string filename = iter->path().filename().generic_string();
 
+					//filer debug plugins
+					#ifdef DEBUG
+						if(filename.find("_d") != std::string::npos)
+							break;
+					#else
+						if(filename.find("_d") == std::string::npos)
+						 break;
+					#endif
+				
 					if(extension == ext)
 					{
 						plugins.push_back(filename );
