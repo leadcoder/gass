@@ -34,16 +34,22 @@ namespace GASS
 	class GeoLocationRequest : public SceneObjectRequestMessage
 	{
 	public:
-		GeoLocationRequest(double lat, double lon, SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay), 
+		GeoLocationRequest(double lat, double lon, double alt = 0, bool ground_clamp = false, SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay), 
 			m_Latitude(lat),
-			m_Longitude(lon)
+			m_Longitude(lon),
+			m_Altitude(alt),
+			m_GroundClamp(ground_clamp)
 		{
 		}
 		double GetLatitude() const {return m_Latitude;}
 		double GetLongitude() const {return m_Longitude;}
+		double GetAltitude() const {return m_Altitude;}
+		bool GetGroundClamp() const {return m_GroundClamp;}
 	private:
 		double m_Latitude;
 		double m_Longitude;
+		bool m_GroundClamp;
+		double m_Altitude;
 	};
 	typedef SPTR<GeoLocationRequest> GeoLocationRequestPtr;
 	

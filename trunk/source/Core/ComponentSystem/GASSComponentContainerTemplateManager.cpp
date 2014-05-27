@@ -178,6 +178,13 @@ namespace GASS
 		return temp;
 	}
 
+
+	bool ComponentContainerTemplateManager::HasTemplate(const std::string &name) const
+	{
+		TemplateMap::const_iterator pos = m_TemplateMap.find(name);
+		return (pos != m_TemplateMap.end()) ;
+	}
+
 	std::vector<std::string> ComponentContainerTemplateManager::GetTemplateNames() const
 	{
 		std::vector<std::string> templates;

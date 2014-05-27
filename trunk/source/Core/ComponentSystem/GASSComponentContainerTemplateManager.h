@@ -75,6 +75,14 @@ namespace GASS
 		ComponentContainerTemplatePtr GetTemplate(const std::string &name) const;
 
 		/**
+			Check if template exist template archive.
+		@remarks
+		@param name Name of the template
+		*/
+		bool HasTemplate(const std::string &name) const;
+
+
+		/**
 			Load templates from xml-file
 		*/
 		void Load(const std::string &filename);
