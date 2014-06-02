@@ -23,12 +23,14 @@
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include <MyGUI.h>
 #include "MyGUI_LastHeader.h"
+#include "MyGUI_RTTLayer.h"
 #include "StatisticInfo.h"
 #include "MainMenu.h"
 
 namespace GASS
 {
-	MyGUISystem::MyGUISystem() : mGUI(NULL)
+	MyGUISystem::MyGUISystem() : mGUI(NULL),
+		m_Initialized(false)
 	{
 
 	}
@@ -46,28 +48,25 @@ namespace GASS
 	void MyGUISystem::Init()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyGUISystem::OnLoadGUIScript,GUIScriptRequest,0));
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
 	void MyGUISystem::InitGUI()
 	{
 		mGUI = new MyGUI::Gui();
+
 		mGUI->initialise("MyGUI_Core.xml");
+		
+		MyGUI::FactoryManager::getInstance().registerFactory<MyGUI::RTTLayer>("Layer");
+		MyGUI::ResourceManager::getInstance().load("RTTResources.xml");
+
 		MyGUI::ResourceManager::getInstance().load("MyGUI_BlackOrangeTheme.xml");
 	//	mInfo = new diagnostic::StatisticInfo();
 	//	mInfo->setVisible(true);
 		MainMenu* menu = new MainMenu(NULL);
 		menu->Init();
-
 		GetSimSystemManager()->SendImmediate(GUILoadedEventPtr(new GUILoadedEvent(mGUI)));
-
-
-
-	/*	const MyGUI::IntSize& view = MyGUI::RenderManager::getInstance().getViewSize();
-		const MyGUI::IntSize size(450, 450);
-		MyGUI::Window* window = MyGUI::Gui::getInstance().createWidget<MyGUI::Window>("WindowCS", MyGUI::IntCoord((800 - size.width) / 2, (600 - size.height) / 2, size.width, size.height), MyGUI::Align::Default, "Main");
-		window->setMinSize(150, 150);
-		window->setCaption("ScrollView demo");*/
+		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		m_Initialized = true;
 	}
 	
 	void MyGUISystem::OnLoadGUIScript(GUIScriptRequestPtr message)
@@ -122,7 +121,6 @@ namespace GASS
 			MyGUI::MouseButton button((MyGUI::MouseButton::Enum) id);
 			MyGUI::InputManager::getInstance().injectMousePress(data.XAbs,data.YAbs,button);
 		}
-		//CEGUI::System::getSingleton().injectMouseButtonDown(ConvertOISButtonToCegui(id));
 		return true;
 	}
 
@@ -133,7 +131,6 @@ namespace GASS
 			MyGUI::MouseButton button((MyGUI::MouseButton::Enum) id);
 			MyGUI::InputManager::getInstance().injectMouseRelease(data.XAbs,data.YAbs,button);
 		}
-		//CEGUI::System::getSingleton().injectMouseButtonUp(ConvertOISButtonToCegui(id));
 		return true;
 
 	}

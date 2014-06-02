@@ -26,6 +26,7 @@
 #include "MyGUI_LastHeader.h"
 
 #include <osg/Texture2D>
+#include <osg/Texture>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
 #include <osgDB/ReadFile>
@@ -35,14 +36,203 @@
 #include <osgViewer/Viewer>
 #include <osgViewer/View>
 #include <osgViewer/CompositeViewer>
+#include <osg/GraphicsContext>
 
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
 #include "Plugins/OSG/IOSGCamera.h"
 #include "Sim/Interface/GASSIViewport.h"
 
+#include "MyGUI_RTTLayer.h"
+#include "MonitorPanel.h"
+#include "MyGUI_OpenGLTexture.h"
+
 namespace GASS
 {
+	class GUITexture : public osg::Texture2D
+	{
+	public:
+		GUITexture(unsigned int id): m_ID(id)
+		{
+
+		}
+		virtual ~GUITexture()
+		{
+
+		}
+		virtual void apply(osg::State& state) const
+		{
+			glBindTexture(GL_TEXTURE_2D, m_ID);
+		}
+		unsigned int m_ID;
+	};
+	osg::Image* mimage = NULL;
+	osgViewer::View* mview;
+	GUITexture* my_texture = NULL;
+	unsigned int my_tex_id = 0;
+
+	osg::Node* createFilterWall(osg::BoundingBox& bb,const std::string& filename, unsigned int tex_id)
+	{
+		osg::Group* group = new osg::Group;
+
+		// left hand side of bounding box.
+		osg::Vec3 top_left(bb.xMin(),bb.yMin(),bb.zMax());
+		osg::Vec3 bottom_left(bb.xMin(),bb.yMin(),bb.zMin());
+		osg::Vec3 bottom_right(bb.xMin(),bb.yMax(),bb.zMin());
+		osg::Vec3 top_right(bb.xMin(),bb.yMax(),bb.zMax());
+		osg::Vec3 center(bb.xMin(),(bb.yMin()+bb.yMax())*0.5f,(bb.zMin()+bb.zMax())*0.5f);
+		float height = bb.zMax()-bb.zMin();
+
+		// create the geometry for the wall.
+		osg::Geometry* geom = new osg::Geometry;
+
+		osg::Vec3Array* vertices = new osg::Vec3Array(4);
+		(*vertices)[0] = top_left;
+		(*vertices)[1] = bottom_left;
+		(*vertices)[2] = bottom_right;
+		(*vertices)[3] = top_right;
+		geom->setVertexArray(vertices);
+
+		osg::Vec2Array* texcoords = new osg::Vec2Array(4);
+		(*texcoords)[0].set(0.0f,1.0f);
+		(*texcoords)[1].set(0.0f,0.0f);
+		(*texcoords)[2].set(1.0f,0.0f);
+		(*texcoords)[3].set(1.0f,1.0f);
+		geom->setTexCoordArray(0,texcoords);
+
+		osg::Vec3Array* normals = new osg::Vec3Array(1);
+		(*normals)[0].set(1.0f,0.0f,0.0f);
+		geom->setNormalArray(normals);//, osg::Geometry::BIND_OVERALL);
+		geom->setNormalBinding( osg::Geometry::BIND_OVERALL );
+
+		osg::Vec4Array* colors = new osg::Vec4Array(1);
+		(*colors)[0].set(1.0f,1.0f,1.0f,1.0f);
+		geom->setColorArray(colors);
+		geom->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+		geom->addPrimitiveSet(new osg::DrawArrays(GL_QUADS,0,4));
+
+		osg::Geode* geom_geode = new osg::Geode;
+		geom_geode->addDrawable(geom);
+		group->addChild(geom_geode);
+
+
+		// set up the texture state.
+		my_texture  = new GUITexture(tex_id);
+		my_texture->setDataVariance(osg::Object::DYNAMIC); // protect from being optimized away as static state.
+
+		//glBindTexture(GL_TEXTURE_2D, tex_id); 
+		mimage = osgDB::readImageFile(filename);
+		//mimage->readImageFromCurrentTexture(tex_id,true);
+		my_texture->setImage(mimage);
+		//my_texture->setImage(osgDB::readImageFile(filename));
+
+		osg::StateSet* stateset = geom->getOrCreateStateSet();
+		stateset->setTextureAttributeAndModes(0,my_texture,osg::StateAttribute::ON);
+		
+		// create the text label.
+
+		/*osgText::Text* text = new osgText::Text;
+		text->setDataVariance(osg::Object::DYNAMIC);
+
+		text->setFont("fonts/arial.ttf");
+		text->setPosition(center);
+		text->setCharacterSize(height*0.03f);
+		text->setAlignment(osgText::Text::CENTER_CENTER);
+		text->setAxisAlignment(osgText::Text::YZ_PLANE);
+
+		osg::Geode* text_geode = new osg::Geode;
+		text_geode->addDrawable(text);
+
+		osg::StateSet* text_stateset = text_geode->getOrCreateStateSet();
+		text_stateset->setAttributeAndModes(new osg::PolygonOffset(-1.0f,-1.0f),osg::StateAttribute::ON);
+
+		group->addChild(text_geode);
+
+		// set the update callback to cycle through the various min and mag filter modes.
+		group->setUpdateCallback(new FilterCallback(texture,text));*/
+
+		return group;
+
+	}
+
+
+	osg::Node* createBase(const osg::Vec3& center,float radius)
+	{
+
+
+
+		int numTilesX = 10;
+		int numTilesY = 10;
+
+		float width = 2*radius;
+		float height = 2*radius;
+
+		osg::Vec3 v000(center - osg::Vec3(width*0.5f,height*0.5f,0.0f));
+		osg::Vec3 dx(osg::Vec3(width/((float)numTilesX),0.0,0.0f));
+		osg::Vec3 dy(osg::Vec3(0.0f,height/((float)numTilesY),0.0f));
+
+		// fill in vertices for grid, note numTilesX+1 * numTilesY+1...
+		osg::Vec3Array* coords = new osg::Vec3Array;
+		int iy;
+		for(iy=0;iy<=numTilesY;++iy)
+		{
+			for(int ix=0;ix<=numTilesX;++ix)
+			{
+				coords->push_back(v000+dx*(float)ix+dy*(float)iy);
+			}
+		}
+
+		//Just two colours - black and white.
+		osg::Vec4Array* colors = new osg::Vec4Array;
+		colors->push_back(osg::Vec4(1.0f,1.0f,1.0f,1.0f)); // white
+		colors->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f)); // black
+		int numColors=colors->size();
+
+
+		int numIndicesPerRow=numTilesX+1;
+		osg::UByteArray* coordIndices = new osg::UByteArray; // assumes we are using less than 256 points...
+		osg::UByteArray* colorIndices = new osg::UByteArray;
+		for(iy=0;iy<numTilesY;++iy)
+		{
+			for(int ix=0;ix<numTilesX;++ix)
+			{
+				// four vertices per quad.
+				coordIndices->push_back(ix    +(iy+1)*numIndicesPerRow);
+				coordIndices->push_back(ix    +iy*numIndicesPerRow);
+				coordIndices->push_back((ix+1)+iy*numIndicesPerRow);
+				coordIndices->push_back((ix+1)+(iy+1)*numIndicesPerRow);
+
+				// one color per quad
+				colorIndices->push_back((ix+iy)%numColors);
+			}
+		}
+
+
+		// set up a single normal
+		osg::Vec3Array* normals = new osg::Vec3Array;
+		normals->push_back(osg::Vec3(0.0f,0.0f,1.0f));
+
+
+		osg::Geometry* geom = new osg::Geometry;
+		geom->setVertexArray(coords);
+		geom->setVertexIndices(coordIndices);
+
+		geom->setColorArray(colors);
+		geom->setColorIndices(colorIndices);
+		geom->setColorBinding(osg::Geometry::BIND_PER_PRIMITIVE);
+
+		geom->setNormalArray(normals);
+		geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+
+		geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,coordIndices->size()));
+
+		osg::Geode* geode = new osg::Geode;
+		geode->addDrawable(geom);
+
+		return geode;
+	}
+
 	MyGUIOSGSystem::MyGUIOSGSystem() 
 	{
 		m_OSGManager = new MYGUIOSGPlatformProxy(this);
@@ -86,7 +276,32 @@ namespace GASS
 		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/MyGUI_Media", true);
 		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/GASS", true);
 		*/
+
+		
 		InitGUI();
+
+
+		/*MyGUI::FactoryManager::getInstance().registerFactory<MyGUI::RTTLayer>("Layer");
+		MyGUI::ResourceManager::getInstance().load("RTTResources.xml");
+		demo::MonitorPanel* mMonitorPanel = new demo::MonitorPanel();
+		MyGUI::ILayer* layer = MyGUI::LayerManager::getInstance().getByName("RTT_Monitor", false);
+		if (layer != nullptr)
+		{
+			MyGUI::RTTLayer* rttLayer = layer->castType<MyGUI::RTTLayer>();
+			MyGUI::OpenGLTexture* tex = dynamic_cast<MyGUI::OpenGLTexture*>(rttLayer->GetTexture());
+			unsigned int id = tex->getTextureID();
+
+			osg::Vec3 center(0.0f,0.0f,40.0f);
+			float radius = 100.0f;
+			//osg::Group* root = new osg::Group;
+			float baseHeight = center.z()-radius*0.5;
+			//view->getSceneData()->asGroup()->addChild(baseModel);
+			osg::BoundingBox bb(0.0f,0.0f,0.0f,10.0f,10.0f,10.0f);
+			mview->getSceneData()->asGroup()->addChild(createFilterWall(bb,"C:/dev/foi/MSI-projects/GASSData/trunk/scenarios/osg/demo_scenario/gfx/textures/skybox/blue_sb_north.jpg",id));
+			//mimage->dirty();
+			my_tex_id = id;
+		}*/
+
 		return gl_platform;
 	}
 
@@ -128,6 +343,9 @@ namespace GASS
 			view->getEventQueue()->windowResize( x, y, w, h );
 		}
 		
+
+		
+
 	}
 
 	void MyGUIOSGSystem::OnGraphicsSystemLoaded(GraphicsSystemLoadedEventPtr message)
@@ -145,7 +363,28 @@ namespace GASS
 		{
 			_SetupOSG(view);
 		}
-		
-		
+		mview = view; 
+		//Add render to texture plane
+	}
+
+	void MyGUIOSGSystem::Update(double delta_time)
+	{
+		if(mimage)
+		{
+			//glBindTexture(GL_TEXTURE_2D, my_tex_id);
+			//mimage->readImageFromCurrentTexture(my_tex_id,true);
+			//mimage->dirty();
+			//my_texture->setImage(mimage);
+			osg::GraphicsContext * gc = mview->getCamera()->getGraphicsContext();
+			unsigned int contextID = gc->getState()->getContextID();
+			osg::Texture::TextureObject* to = my_texture->getTextureObject(contextID);
+			
+			unsigned int id;
+			if(to)
+				id = to->id();
+			int hej;
+			hej=0;
+
+		}
 	}
 }

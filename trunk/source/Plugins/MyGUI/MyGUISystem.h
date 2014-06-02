@@ -19,6 +19,7 @@ namespace GASS
 		virtual void Init();
 		virtual void InitGUI();
 		void Update(double delta_time);
+		bool IsInitialized() const {return m_Initialized;}
 	protected:
 		void OnLoadGUIScript(GUIScriptRequestPtr message);
 		
@@ -28,6 +29,7 @@ namespace GASS
 		bool KeyPressed(int key, unsigned int text);
 		bool KeyReleased( int key, unsigned int text);
 		MyGUI::Gui* mGUI;
+		bool m_Initialized;
 	};
 	typedef SPTR<MyGUISystem> MyGUISystemPtr;
 }

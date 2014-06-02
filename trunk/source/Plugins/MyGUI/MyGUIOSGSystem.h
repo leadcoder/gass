@@ -30,6 +30,7 @@ namespace GASS
 		virtual ~MyGUIOSGSystem();
 		static void RegisterReflection();
 		virtual void Init();
+		virtual void Update(double);
 		virtual std::string GetSystemName() const {return "MyGUISystem";}
 		MyGUI::OpenGLPlatform* InitializeOpenGLPlatform();
 		void ShutdownOSG(){};
