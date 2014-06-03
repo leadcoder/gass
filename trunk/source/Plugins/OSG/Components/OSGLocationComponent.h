@@ -57,7 +57,7 @@ namespace GASS
 		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
 
 		//move this to private
-		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() {return m_TransformNode;}
+		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 		bool GetAttachToParent() const;

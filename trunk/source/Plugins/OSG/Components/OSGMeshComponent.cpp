@@ -332,8 +332,9 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + file_name,"OSGMeshComponent::SetFilename");
 		}
 
+		
 		osgUtil::Optimizer optimizer;
-		optimizer.optimize(m_MeshNode.get());
+		optimizer.optimize(m_MeshNode.get(), osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS & ~osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS);
 
 		OSGNodeData* data = new OSGNodeData(shared_from_this());
 		m_MeshNode->setUserData(data);

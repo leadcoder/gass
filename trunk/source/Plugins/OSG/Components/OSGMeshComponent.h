@@ -21,6 +21,7 @@
 #   pragma warning (disable : 4541)
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/IOSGMesh.h"
 
 namespace osg
 {
@@ -37,7 +38,7 @@ namespace GASS
 	};
 	typedef SPTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
 
-	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent 
+	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
 	{
 	public:
 		OSGMeshComponent (void);
@@ -59,8 +60,7 @@ namespace GASS
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
-		osg::ref_ptr<osg::Node> GetMeshNode() const {return m_MeshNode ;}
-
+		osg::ref_ptr<osg::Node> GetNode() const {return m_MeshNode ;}
 		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
 		ADD_PROPERTY(std::string,EnumerationResourceGroup)

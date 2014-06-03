@@ -91,9 +91,9 @@ namespace GASS
 		}
 
 		OSGMeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<OSGMeshComponent>();
-		if(mesh && mesh->GetMeshNode())
+		if(mesh && mesh->GetNode())
 		{
-			osg::Node::DescriptionList des_list = mesh->GetMeshNode()->getDescriptions();
+			osg::Node::DescriptionList des_list = mesh->GetNode()->getDescriptions();
 			for(size_t i =0 ; i < des_list.size(); i++)
 			{
 				std::string description = des_list[i];
