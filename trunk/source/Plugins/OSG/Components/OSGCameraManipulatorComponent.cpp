@@ -21,6 +21,8 @@
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgGA/NodeTrackerManipulator>
+#include <osgGA/TerrainManipulator>
+
 #include <osgGA/TrackballManipulator>
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
@@ -39,7 +41,7 @@
 
 namespace GASS
 {
-	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() 
+	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_ManName("Terrain")
 	{
 
 	}
@@ -57,16 +59,35 @@ namespace GASS
 
 	void OSGCameraManipulatorComponent::OnInitialize()
 	{
-	
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnWorldPositionRequest,WorldPositionRequest,0));
+
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>()->Register(shared_from_this());
 
 		//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
-		m_Manipulator = new osgGA::MyTrackballManipulator();
+		if(m_ManName == "Trackball")
+			m_Manipulator = new osgGA::MyTrackballManipulator();
+		else 
+			m_Manipulator = new osgGA::TerrainManipulator();
 		
 		//osgViewer::View* view = (osgViewer::View*) osg_camera->getView();
 		//view->setCameraManipulator(Tman1);
 
 		//m_OSGCamera = new osg::Camera(*views[vp_id]->getCamera());
+	}
+
+	void OSGCameraManipulatorComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
+	{
+		int id = PTR_TO_INT(this);
+		if(message->GetSenderID() != id)
+		{
+			osg::Matrixd vm = m_Manipulator->getMatrix();
+			osg::Vec3d translation,scale;
+			osg::Quat rotation;
+			osg::Quat so;
+			vm.decompose(translation,rotation, scale, so );
+			vm.setTrans(OSGConvert::Get().ToOSG(message->GetPosition()));
+			m_Manipulator->setByMatrix(vm);
+		}
 	}
 
 	void OSGCameraManipulatorComponent::SceneManagerTick(double delta)
@@ -78,8 +99,9 @@ namespace GASS
 			osg::Vec3d translation,scale;
 			osg::Quat rotation;
 			osg::Quat so;
+			int id = PTR_TO_INT(this);
 			vm.decompose(translation,rotation, scale, so );
-			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::Get().ToGASS(translation))));
+			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::Get().ToGASS(translation),id)));
 			//GetSceneObject()->PostMessage(MessagePtr(new WorldPositionRequest(OSGConvert::Get().ToGASS(translation))));
 		}
 	}

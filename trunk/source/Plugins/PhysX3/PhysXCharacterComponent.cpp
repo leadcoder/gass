@@ -77,6 +77,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPositionChanged,PositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationRequest,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldRotationChanged,WorldRotationRequest,0 ));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
@@ -86,6 +88,13 @@ namespace GASS
 
 	void PhysXCharacterComponent::Reset()
 	{
+		m_Yaw = 0;
+
+		Mat4 rot_mat;
+		rot_mat.Identity();
+		GetRotation().ToRotationMatrix(rot_mat);
+		
+		m_Yaw = rot_mat.GetEulerHeading();
 
 	}
 
@@ -110,6 +119,16 @@ namespace GASS
 	}
 
 	void PhysXCharacterComponent::OnRotationChanged(RotationRequestPtr message)
+	{
+		int this_id = (int)this; //we used address as id
+		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		{
+			Quaternion rot = message->GetRotation();
+			SetRotation(rot);
+		}
+	}
+
+	void PhysXCharacterComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
 	{
 		int this_id = (int)this; //we used address as id
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
