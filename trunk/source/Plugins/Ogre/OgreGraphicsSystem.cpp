@@ -51,7 +51,7 @@ ResourceGroupHelper resourceGrouphelper;
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true), 
+	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true),
 		m_SceneMgr(NULL),
 		m_UpdateMessagePump(true),
 		m_DebugTextBox (new OgreDebugTextOutput()),
@@ -105,7 +105,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationAdded,ResourceLocationAddedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnReloadMaterial,ReloadMaterial,0));
-		
+
 		const std::string log_folder = SimEngine::Get().GetLogFolder().GetFullPath();
 		const std::string ogre_log = log_folder + "ogre.log";
 		const std::string ogre_cfg = log_folder + "ogre.cfg";
@@ -136,8 +136,8 @@ namespace GASS
 		m_Root->initialise(false);
 
 		m_SceneMgr = m_Root->createSceneManager(Ogre::ST_GENERIC);
-	
-		m_ResourceManager->Init(); 
+
+		m_ResourceManager->Init();
 
 
 		//TODO: Add attributes for this settings
@@ -145,7 +145,7 @@ namespace GASS
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
 
 		LogManager::getSingleton().stream() << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
-      
+
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -158,7 +158,7 @@ namespace GASS
 	void OgreGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
 		std::map<std::string, OgreRenderWindowPtr>::iterator iter = m_Windows.begin();
-		//resize all 
+		//resize all
 		while(iter != m_Windows.end())
 		{
 			iter->second->GetOgreWindow()->windowMovedOrResized();
@@ -182,7 +182,7 @@ namespace GASS
 		//if(m_DebugDrawer)
 		//	m_DebugDrawer->build();
 
-	
+
 
 		m_Root->renderOneFrame();
 
@@ -194,8 +194,8 @@ namespace GASS
 
 		if(m_Windows.size() > 0 && m_ShowStats)
 		{
-			float a_fps = m_Windows.begin()->second->GetOgreWindow()->getAverageFPS(); 
-			size_t tri_count = m_Windows.begin()->second->GetOgreWindow()->getTriangleCount(); 
+			float a_fps = m_Windows.begin()->second->GetOgreWindow()->getAverageFPS();
+			size_t tri_count = m_Windows.begin()->second->GetOgreWindow()->getTriangleCount();
 			size_t batch_count = m_Windows.begin()->second->GetOgreWindow()->getBatchCount();
 
 			std::stringstream sstream;
@@ -224,7 +224,6 @@ namespace GASS
 		Ogre::RenderWindow *window = NULL;
 		if(m_Windows.find(name) != m_Windows.end())
 			GASS_EXCEPT(Exception::ERR_DUPLICATE_ITEM,"Render window already exist:" + name, "OgreGraphicsSystem::CreateRenderWindow");
-
 		if(external_window_handle)
 		{
 			Ogre::NameValuePairList miscParams;
@@ -233,10 +232,10 @@ namespace GASS
 		}
 		else
 		{
-			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+		 	window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
 			window->setDeactivateOnFocusChange(false);
 		}
-		
+
 		OgreRenderWindowPtr win(new OgreRenderWindow(this,window));
 		m_Windows[name] = win;
 		void* window_hnd = 0;
@@ -249,10 +248,10 @@ namespace GASS
 			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
 
 
-			
+
 			const std::string file = "gass_shader_cache.bin";
 			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(m_UseShaderCache);
-			
+
 			if(m_UseShaderCache)
 			{
 				std::ifstream test(file.c_str());
@@ -304,7 +303,7 @@ namespace GASS
 		TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
 	}
 
-	
+
 	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
 	{
 		m_ResourceManager->AddResourceGroup(message->GetGroup(),true);
@@ -420,7 +419,7 @@ namespace GASS
 		mat->setShininess(material.Shininess);
 		mat->setDepthCheckEnabled(material.DepthTest);
 		mat->setDepthWriteEnabled(material.DepthWrite);
-		
+
 		/*if(diffuse.w < 1.0)
 		{
 			mat->setDepthWriteEnabled(false);
@@ -436,7 +435,7 @@ namespace GASS
 	void OgreGraphicsSystem::SetGASSMaterial(Ogre::MaterialPtr mat , GraphicsMaterial &material)
 	{
 		//pick first tech and last pass
-		if (!mat.isNull()) 
+		if (!mat.isNull())
 		{
 			material.Name = mat->getName();
 			Ogre::Technique* tech = mat->getBestTechnique();
@@ -450,11 +449,11 @@ namespace GASS
 				const Ogre::ColourValue specular = pass->getSpecular();
 				const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
 				const Ogre::ColourValue emissive = pass->getEmissive();
-			
+
 				material.Ambient = ColorRGB(ambient.r,ambient.g,ambient.b);
 				material.Diffuse = ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a);
 				material.Specular = ColorRGB(specular.r,specular.g,specular.b);
-			
+
 				for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
 				{
 					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);

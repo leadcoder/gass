@@ -29,7 +29,7 @@ namespace GASS
 
 	ResourceGroup::ResourceGroup(const std::string &name) : m_Name(name)
 	{
-		
+
 	}
 
 	ResourceGroup::~ResourceGroup()
@@ -53,21 +53,21 @@ namespace GASS
 
 	void ResourceGroup::AddResourceLocationRecursive(ResourceLocationPtr rl)
 	{
-		boost::filesystem::path boost_path(rl->GetPath().GetFullPath()); 
-		if( boost::filesystem::exists(boost_path))  
+		boost::filesystem::path boost_path(rl->GetPath().GetFullPath());
+		if( boost::filesystem::exists(boost_path))
 		{
 			rl->ParseLocation();
 			m_ResourceLocations.push_back(rl);
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
-			boost::filesystem::directory_iterator end ;    
-			for(boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			boost::filesystem::directory_iterator end ;
+			for(boost::filesystem::directory_iterator iter(boost_path) ; iter != end ; ++iter )
 			{
-				if (boost::filesystem::is_directory( *iter ) )      
-				{   
+				if (boost::filesystem::is_directory( *iter ) && iter->path().string().find(".svn") == std::string::npos) //ignore svn folders!
+				{
 					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(),iter->path().string(),rl->GetType()));
-					
+
 					AddResourceLocationRecursive(rec_rl);
-				}     
+				}
 			}
 		}
 	}
@@ -81,7 +81,7 @@ namespace GASS
 			{
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
 				iter = m_ResourceLocations.erase(iter);
-				
+
 			}
 			else
 				++iter;

@@ -37,7 +37,7 @@ namespace GASS
 	*  @{
 	*/
 
-    
+
 
 	template<class Base, class ConstructorParams>
 	class CreatorBase
@@ -139,7 +139,7 @@ namespace GASS
 		}
 		return false;
 	}
-	
+
 
 	template<class Base, class ObjectType, class ConstructorParams>
 	std::string Factory<Base,ObjectType,ConstructorParams>::GetFactoryName(const std::string &class_name)
@@ -183,7 +183,7 @@ namespace GASS
 	}
 
 	template<class Base, class ObjectType, class ConstructorParams>
-	SPTR<Base> Factory<Base,ObjectType,ConstructorParams>::Create(ObjectType type, ConstructorParams* params= NULL)
+	SPTR<Base> Factory<Base,ObjectType,ConstructorParams>::Create(ObjectType type, ConstructorParams* params)
 	{
 		typename CreatorMap::iterator it = m_creatorMap.find(type);
 		if (it == m_creatorMap.end())
