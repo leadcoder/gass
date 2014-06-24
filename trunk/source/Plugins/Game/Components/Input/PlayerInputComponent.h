@@ -45,9 +45,9 @@ namespace GASS
 		virtual ~PlayerInputComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		void OnInput(ControllSettingsMessagePtr message);
 		void OnDelete();
 	private:
+		void OnInput(ControllSettingsMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;
 		std::string m_ControlSetting;

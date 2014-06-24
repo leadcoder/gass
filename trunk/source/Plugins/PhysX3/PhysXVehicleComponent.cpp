@@ -737,6 +737,8 @@ namespace GASS
 		SoundParameterRequestPtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
 		GetSceneObject()->PostRequest(volume_msg);
 
+		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
+
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 
 		std::stringstream ss;

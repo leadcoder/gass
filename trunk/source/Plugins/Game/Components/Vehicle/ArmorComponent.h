@@ -34,6 +34,12 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
+	/**
+		Simple armor model used to keep track of the objects current armor state
+		By listing to hit messages (sent by ProjectileComponent) armor is decreased on hit.
+		When no armor left a OutOfArmor messages is sent and optional damage model will displayed
+	*/
+
 	class ArmorComponent :  public Reflection<ArmorComponent,BaseSceneComponent>
 	{
 	public:

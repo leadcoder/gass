@@ -59,7 +59,6 @@ namespace GASS
 		RegisterProperty<std::string>("DamageMesh", &ArmorComponent::GetDamageMesh, &ArmorComponent::SetDamageMesh);
 		RegisterProperty<std::string>("DamageEffect1", &ArmorComponent::GetDamageEffect1, &ArmorComponent::SetDamageEffect1);
 		RegisterProperty<float>("OutOfArmorForce", &ArmorComponent::GetOutOfArmorForce, &ArmorComponent::SetOutOfArmorForce);
-		
 	}
 
 	void ArmorComponent::OnInitialize()
@@ -141,7 +140,6 @@ namespace GASS
 		m_Armor = value;
 		m_CurrentArmor = value;
 	}
-
 	
 	std::string ArmorComponent::GetDamageMesh() const
 	{

@@ -36,6 +36,10 @@
 
 namespace GASS
 {
+	/**
+		Manager used to control weather effects like fog, sun light colors(ambient and diffuse), water colors.
+		The manager hold color gradients that is mapped to current light direction from SkyX.
+	*/
 	class EnvironmentManagerComponent : public Reflection<EnvironmentManagerComponent,BaseSceneComponent>, public Ogre::FrameListener
 	{
 	public:

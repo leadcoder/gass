@@ -38,9 +38,10 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
-
-	/*
-		Component used to delegate input from input system to vehicle
+	/**
+		Component used to delegate input from input system to this scene object.
+		By listening to enter/exit messages input will only be delegated if user is "inside" object.
+		Enter and exit messages are sent by the PlayerInputComponent that should be attached to the player object.
 	*/
 
 	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>

@@ -11,6 +11,9 @@
 
 namespace GASS
 {
+	/*
+		Component that should be attached if the scene object should be discoverd by the SensorComponent
+	*/
 	class SignatureComponent :  public Reflection<SignatureComponent,BaseSceneComponent>
 	{
 	public:

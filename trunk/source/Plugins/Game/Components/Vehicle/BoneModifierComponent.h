@@ -38,6 +38,12 @@ namespace GASS
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
+	/**
+		Track position change for the owner scene object delegate this location to specified animation bone.
+		This component is primary use is to move bones in skinned vehicle tracks by mapping physic simulated wheels position
+		to corresponding bone in the skinned track model but can of course for other purpose
+	*/
+
 	class BoneModifierComponent :  public Reflection<BoneModifierComponent,BaseSceneComponent>
 	{
 	public:

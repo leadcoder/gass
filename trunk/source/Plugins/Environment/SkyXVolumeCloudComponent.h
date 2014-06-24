@@ -34,6 +34,11 @@
 
 namespace GASS
 {
+
+	/**
+		GASS Wrapper for volume cloud layer used by the  SkyXcomponent
+	*/
+
 	class SkyXVolumeCloudComponent : public Reflection<SkyXVolumeCloudComponent,BaseSceneComponent>
 	{
 	public:
