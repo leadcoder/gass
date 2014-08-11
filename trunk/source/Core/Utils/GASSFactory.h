@@ -45,7 +45,7 @@ namespace GASS
 	public:
 		typedef SPTR<Base> BasePtr;
 		virtual ~CreatorBase() {}
-		virtual BasePtr Create(ConstructorParams* params = NULL) const = 0;
+		virtual BasePtr Create(const ConstructorParams* params = NULL) const = 0;
 		virtual std::string GetClassName() const = 0;
 	};
 
@@ -60,7 +60,7 @@ namespace GASS
 			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
-		virtual BasePtr Create(void* params = NULL) const
+		virtual BasePtr Create(const void* params = NULL) const
 		{
 			ProductPtr obj(new Product);
 			return STATIC_PTR_CAST<Base>(obj);
@@ -81,7 +81,7 @@ namespace GASS
 			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
-		virtual BasePtr Create(ConstructorParams* params = NULL) const
+		virtual BasePtr Create(const ConstructorParams* params = NULL) const
 		{
 			ProductPtr obj(new Product(params));
 			return STATIC_PTR_CAST<Base>(obj);

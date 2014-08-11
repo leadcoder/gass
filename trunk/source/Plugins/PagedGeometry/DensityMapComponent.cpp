@@ -141,7 +141,7 @@ namespace GASS
 	void DensityMapComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
 	{
 		Ogre::uchar *data = static_cast<Ogre::uchar*>(m_DensityImage.getData());
-		int wsize = m_DensityImage.getWidth()-1;
+		int wsize = static_cast<int>(m_DensityImage.getWidth())-1;
 
 		const Ogre::Real height = m_MapBounds.height();
 		const Ogre::Real width = m_MapBounds.width();

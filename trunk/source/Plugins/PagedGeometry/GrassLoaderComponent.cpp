@@ -425,7 +425,7 @@ namespace GASS
 		}
 
 		Ogre::uchar *data = m_DensityImage.getData();
-		int wsize = m_DensityImage.getWidth()-1;
+		int wsize = static_cast<int>(m_DensityImage.getWidth())-1;
 
 		const Ogre::Real height = m_MapBounds.height();
 		const Ogre::Real width = m_MapBounds.width();

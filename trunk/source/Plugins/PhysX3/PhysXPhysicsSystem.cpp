@@ -118,7 +118,7 @@ namespace GASS
 		
 
 
-			//Initialise the sdk.
+			//Initialize the SDK.
 		PxInitVehicleSDK(*m_PhysicsSDK);
 
 		//Set the basis vectors.
@@ -138,7 +138,7 @@ namespace GASS
 		{
 			//Create a new material.
 			PhysicsMaterial mat_data = mat_system->GetMaterial(m_DrivableMaterialNames[i]);
-			//TODO: load alla materials from start
+			//TODO: load all materials from start
 			m_DrivableMaterials.push_back(GetPxSDK()->createMaterial(mat_data.StaticFriction, mat_data.DynamicFriction, mat_data.Restitution));
 			//Set up the drivable surface type that will be used for the new material.
 			physx::PxVehicleDrivableSurfaceType vdst;

@@ -9,7 +9,7 @@ endif()
 
 #Set include directories
 set (DEP_INCLUDE_DIRS "${OGRE_DIR}/include/OGRE"
-		"${GASS_DEPENDENCIES_DIR}/Hydrax-v0.5.1/src"
+		"${GASS_DEPENDENCIES_DIR}/Hydrax-v0.5.1/include"
 		"${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/include/SKYX")
 		
 include_directories(${GASS_COMMON_INCLUDE_DIRS} ${DEP_INCLUDE_DIRS})
@@ -21,7 +21,7 @@ add_source_from_current_dir()
 add_definitions( -DGASS_PLUGIN_EXPORTS )
 
 #Add some folders where to search for dependency libraries
-link_directories(${GASS_COMMON_LIB_DIRS} "${OGRE_DIR}/lib" "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/lib")
+link_directories(${GASS_COMMON_LIB_DIRS} "${OGRE_DIR}/lib" "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/lib" "${GASS_DEPENDENCIES_DIR}/Hydrax-v0.5.1/lib")
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 #Add project dependency libs

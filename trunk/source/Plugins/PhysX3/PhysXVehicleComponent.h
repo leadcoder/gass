@@ -45,7 +45,7 @@ namespace GASS
 		
 		PlatformType GetType() const {return PT_CAR;}
 		Vec3 GetSize() const;
-		Float GetMaxSpeed() const;
+		ADD_PROPERTY(Float,MaxSpeed);
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
@@ -70,6 +70,7 @@ namespace GASS
 					const physx::PxVehicleDrive4WRawInputData& carRawInputs,
 		bool& toggleAutoReverse, 
 		bool& newIsMovingForwardSlowly) const;
+		
 	protected:
 		ADD_PROPERTY(SceneObjectRef,FrontLeftWheel);
 		ADD_PROPERTY(SceneObjectRef,FrontRightWheel);

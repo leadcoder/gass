@@ -44,7 +44,8 @@ namespace GASS
 		m_EngineMaxRotationSpeed(200),
 		m_ClutchStrength(10),
 		m_GearSwitchTime(0.5),
-		m_ChassisDim(0,0,0)
+		m_ChassisDim(0,0,0),
+		m_MaxSpeed(20)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -96,6 +97,7 @@ namespace GASS
 		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
 		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
 		REG_VECTOR_PROPERTY(SceneObjectRef,ExtraWheels,PhysXVehicleComponent)
+		REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)
@@ -139,11 +141,6 @@ namespace GASS
 	Vec3 PhysXVehicleComponent::GetSize() const
 	{
 		return m_ChassisDim;
-	}
-
-	Float PhysXVehicleComponent::GetMaxSpeed() const
-	{
-		return 0;
 	}
 
 	void PhysXVehicleComponent::Reset()

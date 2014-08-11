@@ -215,6 +215,7 @@ namespace GASS
 	{
 		if(!m_Paused)
 		{
+			//Lock to 60 hz
 			if(delta_time > 1.0/60.0)
 				delta_time = 1.0/60.0;
 
