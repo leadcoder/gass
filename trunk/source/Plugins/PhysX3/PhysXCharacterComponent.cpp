@@ -210,7 +210,6 @@ namespace GASS
 		
 		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
 
-		//const Quaternion rot = GetRotation();
 		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
 		
 		Quaternion new_rot(Vec3(m_Yaw,0,0));
@@ -285,8 +284,8 @@ namespace GASS
 		if(m_Controller)
 		{
 			Reset();
-			m_Controller->setFootPosition(PxExtendedVec3(value.x, value.y, value.z));
-			//m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
+			Vec3 final_pos = value + PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			m_Controller->setFootPosition(PxExtendedVec3(final_pos.x, final_pos.y, final_pos.z));
 		}
 	}
 
@@ -297,6 +296,7 @@ namespace GASS
 		{
 			PxExtendedVec3 foot_pos = m_Controller->getFootPosition();
 			pos.Set(foot_pos.x,foot_pos.y,foot_pos.z);
+			pos = pos - PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
 		}
 		return pos;
 	}

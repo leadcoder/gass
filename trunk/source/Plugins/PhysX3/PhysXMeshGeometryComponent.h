@@ -52,6 +52,7 @@ namespace GASS
 		PhysXTriangleMesh m_TriangleMesh;
 		physx::PxRigidStatic* m_Actor;
 		physx::PxShape* m_Shape;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 	typedef SPTR<PhysXMeshGeometryComponent> PhysXMeshGeometryComponentPtr;
 }

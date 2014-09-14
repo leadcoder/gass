@@ -23,6 +23,7 @@
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 
 using namespace physx;
@@ -395,8 +396,8 @@ namespace GASS
 		//We need a rigid body actor for the vehicle.
 		//Don't forget to add the actor the scene after setting up the associated vehicle.
 		m_Actor = system->GetPxSDK()->createRigidDynamic(PxTransform::createIdentity());
-
-
+		
+		
 		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
 		PxFilterData wheelCollFilterData;
 		wheelCollFilterData.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
@@ -453,7 +454,9 @@ namespace GASS
 		//Set the transform and the instantiated car and set it be to be at rest.
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
-		PxTransform startTransform(PxVec3(pos.x,pos.y,pos.z), PxQuat(0, 0, 0, 1));
+		//PxTransform startTransform(PxVec3(pos.x,pos.y,pos.z), PxQuat(0, 0, 0, 1));
+		Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+		m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos+ offset), m_Actor->getGlobalPose().q));
 
 		Reset();
 
@@ -465,6 +468,8 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
+
+		
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 		m_Initialized = true;
 	}
@@ -573,7 +578,6 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 		Vec3 current_pos  = GetPosition();
 		
-		
 		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
 
@@ -583,12 +587,14 @@ namespace GASS
 
 		if(m_AllWheels.size() == numShapes-1)
 		{
+			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+
 			for(int i = 0; i < numShapes-1; i++)
 			{
 				SceneObjectPtr wheel(m_AllWheels[i]);
 				if(wheel)
 				{
-					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p);
+					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p) - offset;
 					wheel->PostRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
 					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
 					wheel->PostRequest(RotationRequestPtr(new RotationRequest(rot,from_id)));
@@ -863,7 +869,26 @@ namespace GASS
 		if(m_Actor)
 		{
 			Reset();
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
+			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			Vec3 org_pos = GetPosition();
+			Vec3 trans_vec = value - org_pos;
+
+			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
+
+			ComponentContainer::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
+
+			for(int i = 0 ; i < components.size(); i++)
+			{
+				PhysXBodyComponentPtr body = STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
+				//if(body.get() != this)
+				{
+					LocationComponentPtr location = body->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+					Vec3 offset_to_child = body->GetPosition() - org_pos;
+					Vec3 new_pos = offset_to_child + trans_vec;
+					body->SetPosition(new_pos);
+				}
+			}
 			
 		}
 	}
@@ -874,6 +899,8 @@ namespace GASS
 		if(m_Actor)
 		{
 			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
+			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			pos = pos - offset;
 		}
 		return pos;
 	}

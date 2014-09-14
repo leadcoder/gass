@@ -49,6 +49,7 @@ namespace GASS
 	protected:
 		physx::PxShape *m_Shape;
 		PhysXConvexMesh m_ConvexMesh;
+		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 	typedef SPTR<PhysXConvexGeometryComponent> PhysXConvexGeometryComponentPtr;
 }

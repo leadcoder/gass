@@ -44,6 +44,12 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 		
+		void SetPosition(const Vec3 &value);
+		Vec3 GetPosition() const;
+		void SetRotation(const Quaternion &rot);
+		Quaternion GetRotation();
+
+
 		//IPhysXBody
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		float GetMass() const {return m_Mass;}
@@ -65,10 +71,6 @@ namespace GASS
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
 		//void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		void SetPosition(const Vec3 &value);
-		Vec3 GetPosition() const;
-		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation();
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false);
 		void SetVelocity(const Vec3 &vel);

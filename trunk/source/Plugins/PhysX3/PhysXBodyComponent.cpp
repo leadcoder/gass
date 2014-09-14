@@ -30,7 +30,7 @@ namespace GASS
 		m_Actor(NULL),
 		m_Kinematic(false),
 		m_DisableGravity(false),
-		m_EffectJoints(true),
+		m_EffectJoints(false),
 		m_PositionIterCount(4),
 		m_VelocityIterCount(4),
 		m_ForceReport(false)
@@ -52,7 +52,6 @@ namespace GASS
 		REG_PROPERTY(bool,DisableGravity,PhysXBodyComponent);
 		REG_PROPERTY(int,PositionIterCount,PhysXBodyComponent)
 		REG_PROPERTY(int,VelocityIterCount,PhysXBodyComponent)
-		//RegisterProperty<bool>("EffectJoints",&PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
 	}
 
 	void PhysXBodyComponent::OnInitialize()
@@ -61,7 +60,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationRequest,0 ));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
@@ -77,23 +75,19 @@ namespace GASS
 		
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
-		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
-		//physx::PxTransform transform(PxConvert::ToPx(pos), physx::PxQuat(0,physx::PxVec3(0,1,0)));
+		physx::PxTransform transform(PxConvert::ToPx(pos + sm->GetOffset()), PxConvert::ToPx(rot));
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
 		m_Actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, m_DisableGravity);
 		//transfer loaded attributes to actor
 		SetKinematic(m_Kinematic);
 		m_Actor->setSolverIterationCounts(m_PositionIterCount,m_VelocityIterCount);
 		
-		//m_Actor->setAngularDamping(0.75);
-		//m_Actor->setLinearVelocity(physx::PxVec3(0,0,0)); 
 		sm->GetPxScene()->addActor(*m_Actor);
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		sm->Register(listener);
 	}
-
 
 	void PhysXBodyComponent::SetKinematic(bool value)
 	{
@@ -169,7 +163,8 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
+			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p) - offset;
 		}
 		return pos;
 	}
@@ -179,7 +174,9 @@ namespace GASS
 		if(m_Actor)
 		{
 			Vec3 trans_vec = value - GetPosition();
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value), m_Actor->getGlobalPose().q));
+			//get scene offset used to support double precision
+			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
 
 			if(m_EffectJoints)
 			{
@@ -335,12 +332,8 @@ namespace GASS
 		Vec3 vel(0,0,0);
 		if (m_Actor) 
 		{
-			//if (rel) 
-			//	vel = PxConvert::ToGASS(physx::PxRigidBodyExt::getLocalVelocityAtLocalPos(*m_Actor,physx::PxVec3(0,0,0)));
-			//else
 			vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
 		}
 		return vel;
 	}
-	
 }

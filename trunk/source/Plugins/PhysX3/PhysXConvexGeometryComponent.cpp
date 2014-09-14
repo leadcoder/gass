@@ -80,6 +80,7 @@ namespace GASS
 		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(geom,"PhysXConvexGeometryComponent::OnGeometryChanged");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		m_SceneManager = scene_manager;
 		GASSAssert(scene_manager,"PhysXConvexGeometryComponent::OnGeometryChanged");
 
 		std::string col_mesh_id = GetSceneObject()->GetName();

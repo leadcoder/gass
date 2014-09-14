@@ -78,6 +78,7 @@ namespace GASS
 		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(geom,"PhysXMeshGeometryComponent::OnGeometryChanged");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		m_SceneManager = scene_manager;
 		GASSAssert(scene_manager,"PhysXMeshGeometryComponent::OnGeometryChanged");
 
 		std::string col_mesh_id = GetSceneObject()->GetName();
@@ -89,8 +90,9 @@ namespace GASS
 		m_TriangleMesh = scene_manager->CreateTriangleMesh(col_mesh_id,geom);
 
 		Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		position = position + scene_manager->GetOffset();
 		physx::PxTransform pose = physx::PxTransform::createIdentity();
-		pose.p = physx::PxVec3(position.x,position.y,position.z);
+		pose.p = PxConvert::ToPx(position);
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
@@ -130,7 +132,9 @@ namespace GASS
 	{
 		if(m_Actor)
 		{
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos), m_Actor->getGlobalPose().q));
+			//Get offset
+			PhysXPhysicsSceneManagerPtr scene_manager(m_SceneManager);
+			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos + scene_manager->GetOffset()), m_Actor->getGlobalPose().q));
 		}
 	}
 

@@ -93,6 +93,8 @@ namespace GASS
 
 	physx::PxShape* PhysXTerrainGeometryComponent::CreateTerrain()
 	{
+		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		HeightmapTerrainComponentPtr terrain = GetTerrainComponent();
 		//GeometryComponentPtr geom = DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
@@ -146,18 +148,14 @@ namespace GASS
 			//hfDesc.flags = 0;
 
 			physx::PxHeightField* heightField = system->GetPxSDK()->createHeightField(hfDesc);
-
 			physx::PxTransform pose = physx::PxTransform::createIdentity();
 
 			Vec3 position;
 			position.x = m_TerrainBounds.m_Min.x;
 			position.z = m_TerrainBounds.m_Min.z;
-		//	center_position.x = m_TerrainBounds.m_Min.x + (m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x)*0.5;
-		//	center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
-			
 			position.y = 0;
 
-			pose.p = physx::PxVec3(position.x,position.y,position.z);
+			pose.p = PxConvert::ToPx(position + scene_manager->GetOffset());
 
 			physx::PxRigidStatic* hfActor = system->GetPxSDK()->createRigidStatic(pose);
 

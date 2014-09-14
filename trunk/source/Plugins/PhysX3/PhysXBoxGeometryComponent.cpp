@@ -69,8 +69,7 @@ namespace GASS
 		}
 		Vec3 size = GetSize();
 		physx::PxTransform offset = physx::PxTransform::createIdentity();
-		//offset.p = PxConvert::ToPx(GetOffset());
-
+	
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		

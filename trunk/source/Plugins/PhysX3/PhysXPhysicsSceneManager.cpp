@@ -80,8 +80,8 @@ namespace GASS
 		m_Gravity(-9.81f),
 		m_CpuDispatcher(NULL),
 		m_VehicleSceneQueryData(NULL),
-		m_WheelRaycastBatchQuery(NULL)
-
+		m_WheelRaycastBatchQuery(NULL),
+		m_Offset(0,0,0)
 	{
 
 	}
@@ -94,7 +94,7 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
 		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
-
+		REG_PROPERTY(Vec3,Offset,PhysXPhysicsSceneManager);
 	}
 
 	void PhysXPhysicsSceneManager::SetGravity(float gravity)
