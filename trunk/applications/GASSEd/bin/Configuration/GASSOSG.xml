@@ -10,6 +10,7 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginRoadNetwork"/>
 	</Plugins>
 	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
 	<ScenePath value="%GASS_DATA_HOME%/sceneries/osg"/>

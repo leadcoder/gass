@@ -54,9 +54,9 @@ set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
 set(GASS_CORE_INCLUDE_DIRS "${BOOST_DIR}"  
 	"${PROJECT_SOURCE_DIR}/source" 	
-	"${GASS_DEPENDENCIES_DIR}/tinyxml"	
+	"${GASS_DEPENDENCIES_DIR}/tinyxml/include"	
 	"${GASS_DEPENDENCIES_DIR}/tbb/include")
-set(GASS_CORE_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/")
+set(GASS_CORE_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/tinyxml/lib")
 set(GASS_CORE_LINK_LIBRARIES 
 	optimized tinyxml
 	debug tinyxml_d

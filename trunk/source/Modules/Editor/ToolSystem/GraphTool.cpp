@@ -226,7 +226,7 @@ namespace GASS
 				if(dist < min_dist)
 				{
 					min_dist = dist;
-					index = i;
+					index = static_cast<int>(i);
 				}
 			}
 		}

@@ -118,10 +118,10 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 				m_Root->addSubProperty(grid_prop);
 		}
 
-		GASS::IComponentContainer::ComponentIterator comp_iter = object->GetComponents();
+		GASS::ComponentContainer::ComponentIterator comp_iter = object->GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			GASS::BaseComponentPtr comp = STATIC_PTR_CAST<GASS::BaseComponent>(comp_iter.getNext());
+			GASS::ComponentPtr comp = STATIC_PTR_CAST<GASS::Component>(comp_iter.getNext());
 			std::string class_name = comp->GetRTTI()->GetClassName();
 			if(comp->HasMetaData() &&  comp->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
 			{
