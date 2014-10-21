@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/new.png</file>
+        <file>images/open.png</file>
+        <file>images/save.png</file>
+        <file>images/select.png</file>
+        <file>images/move.png</file>
+        <file>images/rotate.png</file>
+        <file>images/qt.png</file>
+        <file>images/deform.png</file>
+        <file>images/paint.png</file>
+        <file>images/smooth.png</file>
+    </qresource>
+</RCC>

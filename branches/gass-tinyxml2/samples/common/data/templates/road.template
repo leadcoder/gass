@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="TestInter"/>
+		<ID value="INTERSECTION"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<SphereGeometryComponent>
+				<Radius value="1"/>
+			</SphereGeometryComponent>
+			<RoadIntersectionComponent>
+			</RoadIntersectionComponent>
+		</Components>
+		<ComponentContainers>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="TestRoad"/>
+		<ID value="ROAD_SEG"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<RoadSegmentComponent>
+			</RoadSegmentComponent>
+		</Components>
+		<ComponentContainers>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

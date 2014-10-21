@@ -1,0 +1,94 @@
+fragment_program PGGrassFP unified
+{
+	delegate PGGrassFP_HLAS
+	delegate PGGrassFP_Cg
+}
+
+fragment_program PGGrassFP_HLAS hlsl 
+{ 
+   source pg_grass.shader
+   entry_point pg_grass_fp 
+   target ps_2_b   
+   preprocessor_defines INTEGRATED_SHADOWS
+}
+
+fragment_program PGGrassFP_Cg cg
+{ 
+   source pg_grass.shader
+   entry_point pg_grass_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 
+}
+
+fragment_program PGGrassFP_Cg cg
+{ 
+   source pg_grass.shader
+   entry_point pg_grass_fp
+   profiles ps_2_x arbfp1
+   compile_arguments -DINTEGRATED_SHADOWS=1 
+}
+
+material PGGrassTemplate
+{ 
+	set	$AmbientColor "1 1 1 1"
+	set $DiffuseColor "1 1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+	//set $AlphaRejection "always_pass"
+	set $AlphaRejection "greater 128"
+	set $DepthWrite "on"
+	set $SceneBlend "one zero"
+	
+	technique HIGH_DETAIL_2_LIGHT
+	{ 
+		pass SINGLE_PASS_2_LIGHT
+		{ 
+			ambient $AmbientColor
+			diffuse $DiffuseColor
+			specular $SpecularColor $Shininess
+			alpha_rejection $AlphaRejection
+			depth_write $DepthWrite
+			scene_blend $SceneBlend		
+
+			cull_hardware none
+			cull_software none			
+			
+			//vertex program is assigned by paged geometry
+			
+			//Fragment program 
+			fragment_program_ref PGGrassFP
+			{ 
+				param_named_auto ambient derived_ambient_light_colour 
+				
+				param_named_auto lightPosition light_position_object_space 0
+				param_named_auto lightDiffuse derived_light_diffuse_colour 0
+				param_named_auto lightAtten light_attenuation 0
+				param_named_auto spotDir light_direction_object_space 0
+				param_named_auto spotParams spotlight_params 0
+				
+				param_named_auto lightPosition1 light_position_object_space 1
+				param_named_auto lightDiffuse1 derived_light_diffuse_colour 1
+				param_named_auto lightAtten1 light_attenuation 1
+				param_named_auto spotDir1 light_direction_object_space 1
+				param_named_auto spotParams1 spotlight_params 1
+			} 
+
+			texture_unit base_map
+			{
+				texture default.dds
+				texture_alias BaseTexture
+			}
+			
+			texture_unit shadow_map
+			{
+				content_type shadow
+				tex_address_mode border
+				tex_border_colour 1 1 1 1
+				filtering none 
+			}
+		}
+	}
+} 
+
+
+

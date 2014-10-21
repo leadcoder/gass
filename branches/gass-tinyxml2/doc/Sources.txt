@@ -1,0 +1,15 @@
+Reflection System
+The reflection system in GASS is inspired by:
+Game Programming Gems 5 article "Using Templates for Reflection in C++" by Dominic Filion. 
+and is also using
+Loki Library found in "Modern C++ Design: Generic Programming and Design 
+Patterns Applied", Andrei Alexandrescu 
+
+Component System
+The component system in GASS is based on several articles:
+
+Math
+The vector utility class in GASS is a modfied version of the vector classes in Ogre3D (www.ogre3d.org)
+
+
+

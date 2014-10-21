@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="Liebherr"/>
+		<ID value="UNDERCARRIAGE"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="ExUndercarriage.ive"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysXVehicleComponent>
+				<Mass value="1405"/>
+				<ScaleMass value="0.03"/>
+				<EnginePeakTorque value ="200"/>
+				<EngineMaxRotationSpeed value="300"/>
+				<ClutchStrength value = "10"/>
+				<GearRatios value="-16;0;16;11;6"/>
+				<!--<GearRatios value="-4;0;4;2;1.5;1.1;1.0"/>-->
+				<GearSwitchTime value = "0.5"/>
+				<UseAutoReverse value="true"/>
+				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
+				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
+				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
+				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
+			</PhysXVehicleComponent>
+			<OpenALSoundComponent>
+				<Name value="EngineSound1"/>
+				<SoundFile value="hydraulic_engine.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="EngineSound2"/>
+				<SoundFile value="diesel_engine.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="LiebherrInputSettings"/>
+			</InputHandlerComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrFrontWheelBase"/> 
+				<ID value="FRONT_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 0.54 -1.2"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExLWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrFrontWheelBase"/> 
+				<ID value="FRONT_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 0.54 -1.2"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExRWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrRearWheelBase"/> 
+				<ID value="REAR_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1 0.54 1.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExLWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LiebherrWheel"/>
+				<Inheritance value="LiebherrRearWheelBase"/> 
+				<ID value="REAR_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1 0.54 1.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="ExRWheel.ive"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrHouse"/>
+				<Inheritance value="LibherrHouse"/>  <!-- house is defined in other file-->
+				<ID value="HOUSE"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 1.2 0"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrBlade"/>
+				<Inheritance value="LibherrBlade"/>  <!-- blade is defined in other file-->
+				<ID value="BLADE"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0.35 -1.9"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LibherrBladeHydraulicsCylinder"/>
+				<ID value="BLADE_HYDRAULIC_CYLINDER"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0.75 -1.95"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSmallCylinder.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="BLADE_HYDRAULIC_PISTON"/>
+					</LookAtComponent>
+				</Components>
+			</SceneObjectTemplate>
+			
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrSupportLegRight"/>
+				<Inheritance value="LibherrSupportLegRight"/>  <!-- blade is defined in other file-->
+				<ID value="SUPPORT_LEG_RIGHT"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.96 0.37 2.186"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			
+			<SceneObjectTemplate>
+				<Name value="WheeledLibherrSupportLegLeft"/>
+				<Inheritance value="LibherrSupportLegLeft"/>  <!-- blade is defined in other file-->
+				<ID value="SUPPORT_LEG_LEFT"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.96 0.37 2.186"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="LiebherrFrontWheelBase"/>
+		<Components>
+			<PhysXWheelComponent>
+				<Mass value="20"/>
+				<MaxHandBrakeTorque value="4000.0f"/>
+				<MaxSteer value= "60.0f"/>
+				<DampingRate value="0.25f"/>
+				<SuspensionMaxCompression value="0.3f"/>
+				<SuspensionMaxDroop value="0.1f"/>
+				<SuspensionSpringStrength value="65000.0f"/>
+				<SuspensionSpringDamperRate value="7500.0f"/>
+				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+			</PhysXWheelComponent>
+			<PhysicsConvexGeometryComponent/>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="LiebherrRearWheelBase"/>
+		<Components>
+			<PhysXWheelComponent>
+				<Mass value="20"/>
+				<MaxHandBrakeTorque value="4000.0f"/>
+				<MaxSteer value= "0.0f"/>
+				<DampingRate value="0.25f"/>
+				<SuspensionMaxCompression value="0.3f"/>
+				<SuspensionMaxDroop value="0.1f"/>
+				<SuspensionSpringStrength value="65000.0f"/>
+				<SuspensionSpringDamperRate value="7500.0f"/>
+				<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+			</PhysXWheelComponent>
+			<PhysicsConvexGeometryComponent/>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

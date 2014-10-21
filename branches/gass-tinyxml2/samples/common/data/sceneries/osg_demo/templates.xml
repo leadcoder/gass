@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+  <SceneObjectTemplate>
+    <Name value ="TerrainObject"/>
+    <Components>
+      <!--<MeshComponent>
+        <Filename value="Models/terrain.3ds"/>
+        <CastShadow value="0"/>
+        <ReceiveShadow value="1"/>
+		<GeometryCategory value="GT_TERRAIN"/>
+      </MeshComponent>-->
+      <MeshComponent>
+        <Filename value="terrain.3DS"/>
+        <CastShadow value="1"/>
+        <ReceiveShadow value="1"/>
+		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
+      </MeshComponent>
+      
+	  <LocationComponent/>
+      <PhysicsPlaneGeometryComponent>
+       <!-- <CollisionBits value="5"/>
+        <CollisionCategory value="5"/>-->
+       </PhysicsPlaneGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value ="MeshObject"/>
+    <Components>
+      <MeshComponent>
+        <Filename value="MESHTEST.3DS"/>
+        <CastShadow value="1"/>
+        <ReceiveShadow value="1"/>
+		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
+      </MeshComponent>
+      <LocationComponent/>
+      <PhysicsMeshGeometryComponent>
+      </PhysicsMeshGeometryComponent>
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value ="SkyObject"/>
+    <Components>
+      <LocationComponent>
+        <Position value = "0.0 0.0 0"/>
+        <Rotation value = "45.000000 45.000000 0.000000"/>
+      </LocationComponent>
+      <LightComponent>
+        <!-- Directional -->
+        <LightType value="LT_DIRECTIONAL"/>
+        <DiffuseColor value="1 1 1"/>
+        <SpecularColor value="1 1 1"/>
+        <AmbientColor value="0.7 0.7 0.7"/>
+      </LightComponent>
+     <!-- <SkyboxComponent>
+        <Material value="gfx/textures/skybox/blue_sb_.jpg"/>
+      </SkyboxComponent>-->
+    </Components>
+  </SceneObjectTemplate>
+  <SceneObjectTemplate>
+    <Name value ="TankObject"/>
+    <Components>
+      <MeshComponent>
+        <Filename value="Models/t72-tank/t72-tank_des.flt"/>
+        <CastShadow value="1"/>
+        <ReceiveShadow value="0"/>
+      </MeshComponent>
+      <LocationComponent/>
+      <PhysicsBoxGeometryComponent>
+      </PhysicsBoxGeometryComponent>
+      <PhysicsBodyComponent>
+        
+      </PhysicsBodyComponent>
+    </Components>
+  </SceneObjectTemplate>
+</Templates>

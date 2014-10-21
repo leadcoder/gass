@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="FenceObject"/>
+		<Instantiable value="true"/>
+		<Components>
+			<WaypointListComponent>
+				<Radius value ="0"/>
+				<WaypointTemplate value="FenceWaypoint"/>
+			</WaypointListComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<RoadComponent>
+				<Material value ="RoadFence"/>
+				<RoadWidth value="0"/>
+				<RoadOffset value="2.5"/>
+				<DitchWidth value="0"/>
+				<TileScale value="1 4"/>
+				<CustomDitchTexturePercent value="0.25"/>
+				<CAP value="false"/>
+				<ClampToTerrain value="false"/>
+			</RoadComponent>
+		</Components>
+	</SceneObjectTemplate>
+
+	<SceneObjectTemplate>
+		<Name value="FenceWaypoint"/>
+		<Components>
+			<WaypointComponent>
+			</WaypointComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+				<AttachToParent value="1"/>
+			</LocationComponent>
+			<!--<BoxGeometryComponent>
+		<Size value="0.2 0.2 0.2"/>
+	  </BoxGeometryComponent>-->
+			<BillboardComponent>
+				<Name value="NodeGeom"/>
+				<Material value="node.dds"/>
+				<Width value="0.4"/>
+				<Height value="0.4"/>
+			</BillboardComponent>
+			<ManualMeshComponent>
+				<Name value="TangentGeom"/>
+			</ManualMeshComponent>
+			<PhysicsBoxGeometryComponent/>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="Tangent"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 0 2"/>
+						<Rotation value="0 0 0"/>
+						<AttachToParent value="1"/>
+					</LocationComponent>
+					<BoxGeometryComponent>
+						<Size value="0.1 0.1 0.1"/>
+					</BoxGeometryComponent>
+					<ManualMeshComponent>
+					</ManualMeshComponent>
+					<PhysicsBoxGeometryComponent/>
+				</Components>
+				<ComponentContainers>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PaintGizmo"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<PaintGizmoComponent>
+				<Type value="test"/>
+				<Color value="1 1 1 1"/>
+				<Size value ="6"/>
+			</PaintGizmoComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

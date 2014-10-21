@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+<SceneObjectTemplate>
+		<Name value="SkyXVolumeClouds"/>
+		<Components>
+			<SkyXComponent>
+			</SkyXComponent>
+			<SkyXVolumeCloudComponent>
+				<Name value="VolumeClouds"/>
+			</SkyXVolumeCloudComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="SkyXLayerClouds"/>
+		<Components>
+			<SkyXComponent>
+			</SkyXComponent>
+			<SkyXCloudLayerComponent>
+				<Name value="Layer1"/>
+			</SkyXCloudLayerComponent>
+			<SkyXCloudLayerComponent>
+				<Name value="Layer2"/>
+			</SkyXCloudLayerComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="SkyXVolumeAndLayerClouds"/>
+		<Components>
+			<SkyXComponent>
+			</SkyXComponent>
+			<SkyXVolumeCloudComponent>
+				<Name value="VolumeClouds"/>
+			</SkyXVolumeCloudComponent>
+			<SkyXCloudLayerComponent>
+				<Name value="Layer1"/>
+			</SkyXCloudLayerComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="EnvironmentObject"/>
+		<Components>
+			<HydraxWaterComponent>
+				<ResourceLocation value="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax"/>
+			</HydraxWaterComponent>
+			<SkyXComponent>
+			</SkyXComponent>
+			<SkyXVolumeCloudComponent>
+				<Name value="VolumeClouds"/>
+			</SkyXVolumeCloudComponent>
+			<SkyXCloudLayerComponent>
+				<Name value="Layer1"/>
+			</SkyXCloudLayerComponent>
+			<EnvironmentManagerComponent>
+				<Name value="EnvironmentManagerComponent"/>
+			</EnvironmentManagerComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="SkyObject"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<SkyXComponent>
+			</SkyXComponent>
+			<!--<SkyXVolumeCloudComponent>
+        <Name value="VolumeClouds"/>
+      </SkyXVolumeCloudComponent>-->
+			<SkyXCloudLayerComponent>
+				<Name value="Layer1"/>
+			</SkyXCloudLayerComponent>
+			<EnvironmentManagerComponent>
+				<Name value="EnvironmentManagerComponent"/>
+			</EnvironmentManagerComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="LightObject"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<LightComponent>
+				<LightType value="LT_DIRECTIONAL"/>
+				<CastShadow value="1"/>
+			</LightComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="45 45 0"/>
+			</LocationComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

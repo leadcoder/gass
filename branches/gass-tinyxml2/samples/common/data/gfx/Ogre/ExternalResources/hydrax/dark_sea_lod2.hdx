@@ -1,0 +1,62 @@
+#Hydrax cfg file.
+
+#Hydrax version field
+HydraxVersion=0.5.1
+
+#Main options field
+<vector3>Position=0x0x0
+<float>PlanesError=0.1
+#Shader mode: 0=HLSL, 1=CG, 2=GLSL
+<int>ShaderMode=0
+<float>FullReflectionDistance=1e+006
+<float>GlobalTransparency=0.1
+<float>NormalDistortion=0.03
+<vector3>WaterColor=0.157x0.157x0.192
+
+#Components field
+Components=Sun|Foam|Depth|Underwater|UnderwaterReflections
+
+#Sun parameters
+<vector3>SunPosition=4239.25x122.845x1816.33
+<float>SunStrength=0.15
+<float>SunArea=15
+<vector3>SunColor=1.136x1.065x0.781
+
+#Foam parameters
+<float>FoamMaxDistance=7.5e+007
+<float>FoamScale=0.075
+<float>FoamStart=0
+<float>FoamTransparency=1
+
+#Depth parameters
+<float>DepthLimit=0.5
+
+#Rtt quality field(0x0 = Auto)
+<size>Rtt_Quality_Reflection=0x0
+<size>Rtt_Quality_Refraction=0x0
+<size>Rtt_Quality_Depth=0x0
+<size>Rtt_Quality_URDepth=0x0
+<size>Rtt_Quality_GPUNormalMap=0x0
+
+#Module options
+Module=ProjectedGridVertex
+
+<float>PG_ChoopyStrength=1
+<bool>PG_ChoppyWaves=true
+<int>PG_Complexity=50
+<float>PG_Elevation=2
+<bool>PG_ForceRecalculateGeometry=true
+<bool>PG_Smooth=false
+<float>PG_Strength=1
+
+#Noise options
+Noise=Perlin
+
+<int>Perlin_Octaves=8
+<float>Perlin_Scale=1.85
+<float>Perlin_Falloff=0.49
+<float>Perlin_Animspeed=1.4
+<float>Perlin_Timemulti=1.27
+<float>Perlin_GPU_Strength=2
+<vector3>Perlin_GPU_LODParameters=0.5x50x150000
+
