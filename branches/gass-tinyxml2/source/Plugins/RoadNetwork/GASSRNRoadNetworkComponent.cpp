@@ -7,7 +7,7 @@
 #include "Plugins/Base/CoreMessages.h"
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -399,7 +399,7 @@ namespace GASS
 		return true;
 	}
 
-	void RNRoadNetworkComponent::SaveXML(TiXmlElement * elem)
+	void RNRoadNetworkComponent::SaveXML(tinyxml2::XMLElement * elem)
 	{
 		if(m_Edit)
 			_RebuildNetwork();
@@ -407,16 +407,16 @@ namespace GASS
 		m_ShowGraph = false;
 		BaseSceneComponent::SaveXML(elem);
 
-		TiXmlElement *  net_elem = elem->FirstChildElement("RNRoadNetworkComponent");
+		tinyxml2::XMLElement *  net_elem = elem->FirstChildElement("RNRoadNetworkComponent");
 		m_Network.SaveXML(net_elem);
 	
 	}
 
 
-	void RNRoadNetworkComponent::LoadXML(TiXmlElement * elem)
+	void RNRoadNetworkComponent::LoadXML(tinyxml2::XMLElement * elem)
 	{
 		m_Network.LoadXML(elem);
-		TiXmlElement *prop_elem = elem->FirstChildElement();
+		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			std::string prop_name = prop_elem->Value();

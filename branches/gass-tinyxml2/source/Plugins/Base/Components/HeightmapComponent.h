@@ -41,7 +41,7 @@ namespace GASS
 		~HeightmapComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		//IHeightmapTerrainComponent
 		virtual Float GetHeightAtPoint(int x, int z) const;

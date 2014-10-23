@@ -7,7 +7,11 @@
 #include "Core/Math/GASSVector.h"
 #include "micropather.h"
 #include <set>
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace GASS
 {
@@ -24,8 +28,8 @@ namespace GASS
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point) const;
 		void Load(const std::string &filename);
 		void Save(const std::string &filename);
-		void SaveXML(TiXmlElement * elem);
-		void LoadXML(TiXmlElement * elem);
+		void SaveXML(tinyxml2::XMLElement * elem);
+		void LoadXML(tinyxml2::XMLElement * elem);
 
 		void RemoveNode(RoadNode* node);
 		void RemoveEdge(RoadEdge* node);

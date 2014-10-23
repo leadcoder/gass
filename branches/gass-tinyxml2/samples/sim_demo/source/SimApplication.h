@@ -7,7 +7,7 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/Game/GameMessages.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 
 #include <stdio.h>
@@ -94,14 +94,14 @@ public:
 	  /*virtual bool LoadConfig(const std::string filename)
 	  {
 	  if(filename =="") return false;
-	  TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-	  if (!xmlDoc->LoadFile())
+	  tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+	  if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 	  {
 	  // Fatal error, cannot load
 	  GASS::LogManager::getSingleton().stream() << "WARNING: SimApplication::LoadConfig() - Couldn't load xmlfile: " << filename;
 	  return 0;
 	  }
-	  TiXmlElement *app_settings = xmlDoc->FirstChildElement("SimApplication");
+	  tinyxml2::XMLElement *app_settings = xmlDoc->FirstChildElement("SimApplication");
 
 	  if(app_settings)
 	  {
@@ -109,7 +109,7 @@ public:
 	  m_SceneName = app_settings->Attribute("Scene");
 	  GASS::FilePath full_path(m_SceneName);
 	  m_SceneName = full_path.GetFullPath();
-	  TiXmlElement *object_elem = app_settings->FirstChildElement("Objects");
+	  tinyxml2::XMLElement *object_elem = app_settings->FirstChildElement("Objects");
 	  if(object_elem)
 	  {
 	  object_elem = object_elem->FirstChildElement("Object");
@@ -122,7 +122,7 @@ public:
 	  }
 	  }
 	  return true;
-	  //TiXmlElement *sys_config =  app_settings->FirstChildElement("SystemConfig();
+	  //tinyxml2::XMLElement *sys_config =  app_settings->FirstChildElement("SystemConfig();
 	  }*/
 
 	  virtual bool Update()

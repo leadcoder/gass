@@ -30,7 +30,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSFileUtils.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 #include <iostream>
 
@@ -209,13 +209,13 @@ namespace GASS
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ComponentContainerTemplateManager::Load");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"ComponentContainerTemplateManager::Load()");
 		}
-		TiXmlElement *templates = xmlDoc->FirstChildElement("Templates");
+		tinyxml2::XMLElement *templates = xmlDoc->FirstChildElement("Templates");
 
 		if(templates)
 		{

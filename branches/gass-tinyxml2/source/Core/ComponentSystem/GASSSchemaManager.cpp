@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 namespace GASS
 {
 
@@ -39,9 +39,9 @@ namespace GASS
 	}
 
 
-	TiXmlElement* SchemaObject::GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const
+	tinyxml2::XMLElement* SchemaObject::GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const
 	{
-		TiXmlElement *elem =  m_Object->FirstChildElement("xs:complexType");
+		tinyxml2::XMLElement *elem =  m_Object->FirstChildElement("xs:complexType");
 		if(!elem)
 			return NULL;
 		elem =  elem->FirstChildElement("xs:sequence");
@@ -55,10 +55,10 @@ namespace GASS
 				const std::string pname = elem->Attribute("name");
 				if(pname == prop_name)
 				{
-					TiXmlElement *anno_elem =  elem->FirstChildElement("xs:annotation");
+					tinyxml2::XMLElement *anno_elem =  elem->FirstChildElement("xs:annotation");
 					if(!anno_elem)
 						return NULL;
-					TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
+					tinyxml2::XMLElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
 					return user_elem;
 				}
 			}
@@ -68,13 +68,13 @@ namespace GASS
 
 	}
 
-	TiXmlElement* SchemaObject::GetObjectAnnotation(const std::string &annotation_tag_name) const
+	tinyxml2::XMLElement* SchemaObject::GetObjectAnnotation(const std::string &annotation_tag_name) const
 	{
-		TiXmlElement *anno_elem =  m_Object->FirstChildElement("xs:annotation");
+		tinyxml2::XMLElement *anno_elem =  m_Object->FirstChildElement("xs:annotation");
 		if(!anno_elem)
 			return NULL;
 
-		TiXmlElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
+		tinyxml2::XMLElement *user_elem =  anno_elem->FirstChildElement(annotation_tag_name.c_str());
 		return user_elem;
 
 
@@ -114,11 +114,11 @@ namespace GASS
 	void SchemaManager::_Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr object)
 	{
 		//Create xml file
-		TiXmlDocument doc;  
-		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+		tinyxml2::XMLDocument doc;  
+		tinyxml2::XMLDeclaration* decl = doc.NewDeclaration();  
 		doc.LinkEndChild( decl ); 
 
-		TiXmlElement * xsd_elem = new TiXmlElement("xs:schema");  
+		tinyxml2::XMLElement * xsd_elem = doc.NewElement("xs:schema");  
 		doc.LinkEndChild( xsd_elem);
 
 		xsd_elem->SetAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
@@ -128,25 +128,25 @@ namespace GASS
 		xsd_elem->SetAttribute("xmlns","GASS");
 		xsd_elem->SetAttribute("xmlns:GASS","GASS");
 
-		TiXmlElement * obj_elem = new TiXmlElement("xs:element");  
+		tinyxml2::XMLElement * obj_elem = doc.NewElement("xs:element");  
 		xsd_elem->LinkEndChild( obj_elem); 
 		obj_elem->SetAttribute("name",classname.c_str());
 
-		TiXmlElement * ano_elem = new TiXmlElement("xs:annotation");  
+		tinyxml2::XMLElement * ano_elem = doc.NewElement("xs:annotation");  
 		obj_elem->LinkEndChild( ano_elem);
 
-		TiXmlElement * doc_elem = new TiXmlElement("xs:documentation");  
+		tinyxml2::XMLElement * doc_elem = doc.NewElement("xs:documentation");  
 		ano_elem->LinkEndChild( doc_elem); 
 
 		doc_elem->SetAttribute("xml:lang","en");
-		TiXmlText * text = new TiXmlText( "Documentation goes here!" );
+		tinyxml2::XMLText * text = doc.NewText( "Documentation goes here!" );
 		doc_elem->LinkEndChild( text );
 
 
-		TiXmlElement * complex_elem = new TiXmlElement("xs:complexType");  
+		tinyxml2::XMLElement * complex_elem = doc.NewElement("xs:complexType");  
 		obj_elem->LinkEndChild( complex_elem);
 
-		TiXmlElement * sequence_elem = new TiXmlElement("xs:sequence");  
+		tinyxml2::XMLElement * sequence_elem = doc.NewElement("xs:sequence");  
 		complex_elem->LinkEndChild( sequence_elem);
 
 		GASS::PropertyVector props = object->GetProperties();
@@ -160,25 +160,26 @@ namespace GASS
 		doc.SaveFile(filename.c_str());
 	}
 
-	void SchemaManager::_SaveProp(TiXmlElement* parent, IProperty* prop) const 
+	void SchemaManager::_SaveProp(tinyxml2::XMLElement* parent, IProperty* prop) const 
 	{
-		TiXmlElement * prop_elem = new TiXmlElement("xs:element");  
+		tinyxml2::XMLDocument *rootXMLDoc = parent->GetDocument();
+		tinyxml2::XMLElement * prop_elem = rootXMLDoc->NewElement("xs:element");  
 		parent->LinkEndChild(prop_elem);
 		prop_elem->SetAttribute("name",prop->GetName().c_str());
 
-		TiXmlElement * ano_elem = new TiXmlElement("xs:annotation");  
+		tinyxml2::XMLElement * ano_elem = rootXMLDoc->NewElement("xs:annotation");  
 		prop_elem->LinkEndChild( ano_elem);
-		TiXmlElement * doc_elem = new TiXmlElement("xs:documentation");  
+		tinyxml2::XMLElement * doc_elem = rootXMLDoc->NewElement("xs:documentation");  
 		ano_elem->LinkEndChild( doc_elem); 
 		doc_elem->SetAttribute("xml:lang","en");
 
-		TiXmlText * text = new TiXmlText( "Documentation goes here!" );
+		tinyxml2::XMLText * text = rootXMLDoc->NewText( "Documentation goes here!" );
 		doc_elem->LinkEndChild( text );
 
-		TiXmlElement * complex_elem = new TiXmlElement("xs:complexType");  
+		tinyxml2::XMLElement * complex_elem = rootXMLDoc->NewElement("xs:complexType");  
 		prop_elem->LinkEndChild(complex_elem);
 
-		TiXmlElement * attrib_elem = new TiXmlElement("xs:attribute");  
+		tinyxml2::XMLElement * attrib_elem = rootXMLDoc->NewElement("xs:attribute");  
 		complex_elem->LinkEndChild(attrib_elem);
 
 		attrib_elem->SetAttribute("name","value");
@@ -213,19 +214,19 @@ namespace GASS
 
 	void SchemaManager::Load(const std::string filename)
 	{
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if(!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "SchemaManager::Load");
 		}
 
-		TiXmlElement *schema = xmlDoc->FirstChildElement("xs:schema");
+		tinyxml2::XMLElement *schema = xmlDoc->FirstChildElement("xs:schema");
 		if(schema == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get xs:schema tag", "SchemaManager::Load");
 
 
-		TiXmlElement *obj_elem = schema->FirstChildElement("xs:element");
+		tinyxml2::XMLElement *obj_elem = schema->FirstChildElement("xs:element");
 		if(obj_elem == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get xs:element tag", "SchemaManager::Load");
 

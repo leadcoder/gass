@@ -22,7 +22,7 @@
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 #include <assert.h>
 
 
@@ -44,15 +44,15 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
 
 		LogManager::getSingleton().stream() << "Start loading plugins from " << filename;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
 		}
 
 
-		TiXmlElement *plugins = xmlDoc->FirstChildElement("GASS");
+		tinyxml2::XMLElement *plugins = xmlDoc->FirstChildElement("GASS");
 		if (!plugins)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Couldn't find GASS tag in:" + filename, "PluginManager::LoadFromFile");
 

@@ -31,7 +31,7 @@
 #include <OgreRenderWindow.h>
 #include <OgreMaterialManager.h>
 #include <OgreMeshManager.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <boost/filesystem.hpp>
 
 using namespace Ogre;

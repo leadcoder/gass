@@ -28,8 +28,10 @@
 #include "Core/Serialize/GASSISerialize.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 
-
-class TiXmlDocument;
+namespace tinyxml2
+{
+	class XMLDocument;
+}
 
 namespace GASS
 {
@@ -91,8 +93,8 @@ namespace GASS
 		void UpdateMetaDataForAllObjects();
 	protected:
 		void UpdateObjectMetaData(const std::string &classname, BaseReflectionObjectPtr object);
-		PropertySettings LoadProperty(TiXmlElement* elem);
-		bool LoadBoolAttribute(TiXmlElement* elem, const std::string &name);
+		PropertySettings LoadProperty(tinyxml2::XMLElement* elem);
+		bool LoadBoolAttribute(tinyxml2::XMLElement* elem, const std::string &name);
 		std::map<std::string, ObjectSettings> m_Settings;
 	};
 	typedef SPTR<GUISchemaLoader> GUISchemaLoaderPtr;

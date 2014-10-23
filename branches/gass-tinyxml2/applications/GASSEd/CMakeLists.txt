@@ -47,17 +47,17 @@ set(GASSED_INSTALL_BIN_DIR_RELEASE "bin/release")
 
 
 
-set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${GASS_DIR}/include" 	"${GASS_DEPENDENCIES_DIR}/tinyxml/include"	"${GASS_DEPENDENCIES_DIR}/tbb/include" "${GASS_DEPENDENCIES_DIR}/angelscript/include")
-set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/tinyxml/lib" "${GASS_DEPENDENCIES_DIR}/angelscript/lib" "${GASS_DIR}/lib/")
+set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${GASS_DIR}/include" 	"${GASS_DEPENDENCIES_DIR}/tinyxml2/include"	"${GASS_DEPENDENCIES_DIR}/tbb/include" "${GASS_DEPENDENCIES_DIR}/angelscript/include")
+set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/tinyxml2/lib/$(Configuration)" "${GASS_DEPENDENCIES_DIR}/angelscript/lib" "${GASS_DIR}/lib/")
 set(GASS_COMMON_LINK_LIBRARIES
 	optimized GASSCore
 	optimized GASSSim
 	optimized GASSEditorModule
-	optimized tinyxml
+	optimized tinyxml2
 	debug GASSCore_d
 	debug GASSSim_d
 	debug GASSEditorModule_d
-	debug tinyxml_d 
+	debug tinyxml2_d 
 	)
 	
 	

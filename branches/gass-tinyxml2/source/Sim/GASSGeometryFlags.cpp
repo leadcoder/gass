@@ -20,7 +20,7 @@
 #include "GASSGeometryFlags.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSLogManager.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -45,17 +45,17 @@ namespace GASS
 	{
 
 		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "GeometryFlagManager::LoadMaterialFile");
 		}
 
-		TiXmlElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		tinyxml2::XMLElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
 		if(xml_geom_list)
 		{
-			TiXmlElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
+			tinyxml2::XMLElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
 			while(xml_geom)
 			{
 				std::string geom_name;

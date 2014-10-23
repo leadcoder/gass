@@ -317,7 +317,7 @@ namespace GASS
 
 	
 
-	void GrassLoaderComponent::SaveXML(TiXmlElement *obj_elem)
+	void GrassLoaderComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 		SaveDensityMap();

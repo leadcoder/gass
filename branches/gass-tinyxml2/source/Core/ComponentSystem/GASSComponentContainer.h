@@ -162,8 +162,8 @@ namespace GASS
 		virtual ComponentContainerPtr GetChild(size_t index) const;
 
 		//xml serialize interface
-		virtual void LoadXML(TiXmlElement *obj_elem);
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
@@ -189,8 +189,8 @@ namespace GASS
 		void _InheritComponentData(ComponentContainerPtr cc);
 		
 		//virtual to allow custom parsing for object creation
-		virtual ComponentContainerPtr CreateComponentContainerXML(TiXmlElement *cc_elem) const;
-		ComponentPtr _LoadComponentXML(TiXmlElement *comp_template);
+		virtual ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const;
+		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement *comp_template);
 		void _Copy(ComponentContainerPtr object_to_copy);
 		
 		ComponentVector m_ComponentVector;

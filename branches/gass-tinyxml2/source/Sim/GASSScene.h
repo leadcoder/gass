@@ -27,7 +27,10 @@
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSException.h"
 
-class TiXmlElement;
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace GASS
 {
@@ -203,21 +206,21 @@ protected:
 		this method is called by the scene LoadXML method in the scene class
 		scene_elem is the should point to the SceneScene tag
 		*/
-		void LoadXML(TiXmlElement *scene_elem);
+		void LoadXML(tinyxml2::XMLElement *scene_elem);
 
 		/**
 		Save scene  from xml,
 		this method is called by the scene SaveXML method in the scene class
 		scene_elem is the should point to the SceneScene tag
 		*/
-		void SaveXML(TiXmlElement *scene_elem);
+		void SaveXML(tinyxml2::XMLElement *scene_elem);
 
-		SceneObjectPtr LoadSceneObjectXML(TiXmlElement *so_elem);
+		SceneObjectPtr LoadSceneObjectXML(tinyxml2::XMLElement *so_elem);
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectRequestPtr message);
 
 		//Helper function to LoadXML
-		SceneManagerPtr LoadSceneManager(TiXmlElement *sm_elem);
+		SceneManagerPtr LoadSceneManager(tinyxml2::XMLElement *sm_elem);
 
 		Vec3 m_StartPos;
 		Vec3 m_StartRot;

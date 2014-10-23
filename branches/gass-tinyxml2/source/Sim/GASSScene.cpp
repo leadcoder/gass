@@ -43,7 +43,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Utils/GASSFilePath.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {
@@ -183,14 +183,14 @@ namespace GASS
 		if(boost::filesystem::exists(boost::filesystem::path(template_file_name)))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.GetFullPath().c_str());
-		if(!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if(xmlDoc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
-		TiXmlElement *scene = xmlDoc->FirstChildElement("Scene");
+		tinyxml2::XMLElement *scene = xmlDoc->FirstChildElement("Scene");
 		if(scene == NULL)
 		{
 			delete xmlDoc;
@@ -250,11 +250,11 @@ namespace GASS
 		m_FolderName = name;
 		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
 
-		TiXmlDocument doc;
-		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
+		tinyxml2::XMLDocument doc;
+		tinyxml2::XMLDeclaration* decl = doc.NewDeclaration();
 		doc.LinkEndChild( decl );
 
-		TiXmlElement * scene_elem = new TiXmlElement("Scene");
+		tinyxml2::XMLElement * scene_elem = doc.NewElement("Scene");
 		doc.LinkEndChild( scene_elem);
 		SaveXML(scene_elem);
 
@@ -264,10 +264,10 @@ namespace GASS
 		if(SceneObjectPtr(m_TerrainObjects))
 			SceneObjectPtr(m_TerrainObjects)->SaveToFile(scene_path.GetFullPath() + "/instances.xml");
 
-		TiXmlDocument template_doc;
-		TiXmlDeclaration* template_decl = new TiXmlDeclaration( "1.0", "", "" );
+		tinyxml2::XMLDocument template_doc;
+		tinyxml2::XMLDeclaration* template_decl = template_doc.NewDeclaration();
 		template_doc.LinkEndChild( template_decl);
-		TiXmlElement * template_elem = new TiXmlElement("Templates");
+		tinyxml2::XMLElement * template_elem = template_doc.NewElement("Templates");
 		template_doc.LinkEndChild( template_elem);
 		const FilePath template_filename = FilePath(scene_path.GetFullPath() + "/Templates.xml");
 		template_doc.SaveFile(template_filename.GetFullPath().c_str());
@@ -282,14 +282,14 @@ namespace GASS
 		}
 	}
 
-	void Scene::LoadXML(TiXmlElement *scene)
+	void Scene::LoadXML(tinyxml2::XMLElement *scene)
 	{
-		TiXmlElement *prop = scene->FirstChildElement("Properties");
+		tinyxml2::XMLElement *prop = scene->FirstChildElement("Properties");
 		if(prop)
 			BaseReflectionObject::_LoadProperties(prop);
 		else // fallback for old scenes
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scene::LoadXML");
-		TiXmlElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
+		tinyxml2::XMLElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
 		if(scene_manager)
 		{
 			scene_manager = scene_manager->FirstChildElement();
@@ -304,15 +304,16 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scene::LoadXML");
 	}
 
-	void Scene::SaveXML(TiXmlElement *parent)
+	void Scene::SaveXML(tinyxml2::XMLElement *parent)
 	{
+		tinyxml2::XMLDocument *rootXMLDoc = parent->GetDocument();
 		//Create
-		TiXmlElement *prop = new TiXmlElement("Properties");
+		tinyxml2::XMLElement *prop = rootXMLDoc->NewElement("Properties");
 		parent->LinkEndChild(prop);
 
 		BaseReflectionObject::_SaveProperties(prop);
 
-		TiXmlElement *sms_elem = new TiXmlElement("SceneManagerSettings");
+		tinyxml2::XMLElement *sms_elem = rootXMLDoc->NewElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);
 
 		for(int i  = 0 ; i < m_SceneManagers.size();i++)
@@ -329,7 +330,7 @@ namespace GASS
 		}
 	}
 
-	SceneManagerPtr Scene::LoadSceneManager(TiXmlElement *sm_elem)
+	SceneManagerPtr Scene::LoadSceneManager(tinyxml2::XMLElement *sm_elem)
 	{
 		SceneManagerPtr sm;
 		std::string sm_name = sm_elem->Value();

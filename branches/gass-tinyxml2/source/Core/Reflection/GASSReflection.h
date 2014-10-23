@@ -28,7 +28,12 @@
 #include "Core/Reflection/GASSVectorProperty.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSStringUtils.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
 
 namespace GASS
 {

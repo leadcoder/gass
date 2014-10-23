@@ -86,7 +86,7 @@ namespace GASS
 	}
 
 
-	void HeightmapComponent::SaveXML(TiXmlElement *obj_elem)
+	void HeightmapComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 		if(m_HM)

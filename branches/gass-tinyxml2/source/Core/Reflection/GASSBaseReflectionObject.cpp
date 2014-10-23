@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {
@@ -35,9 +35,9 @@ namespace GASS
 	}
 
 
-	void BaseReflectionObject::_LoadProperties(TiXmlElement *elem)
+	void BaseReflectionObject::_LoadProperties(tinyxml2::XMLElement *elem)
 	{
-		TiXmlElement *prop_elem = elem->FirstChildElement();
+		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			const std::string prop_name = prop_elem->Value();
@@ -70,7 +70,7 @@ namespace GASS
 		}
 	}
 
-	void BaseReflectionObject::_SaveProperties(TiXmlElement *parent)
+	void BaseReflectionObject::_SaveProperties(tinyxml2::XMLElement *parent)
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -80,7 +80,7 @@ namespace GASS
 			{
 				IProperty * prop = (*iter);
 				
-				TiXmlElement *prop_elem = new TiXmlElement( prop->GetName().c_str());
+				tinyxml2::XMLElement *prop_elem = parent->GetDocument()->NewElement(prop->GetName().c_str());
 				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
 				parent->LinkEndChild( prop_elem);
 				++iter;

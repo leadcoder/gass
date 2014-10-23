@@ -22,7 +22,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSGeometryFlags.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 
 namespace GASS
@@ -60,14 +60,14 @@ namespace GASS
 	void MaterialSystem::LoadMaterialFile(const std::string &file)
 	{
 		LogManager::getSingleton().stream() << "Start loading material file " << file;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
 		
-		TiXmlElement *xml_ml = xmlDoc->FirstChildElement("MaterialList");
+		tinyxml2::XMLElement *xml_ml = xmlDoc->FirstChildElement("MaterialList");
 		if(xml_ml)
 		{
-			TiXmlElement *xml_mat = xml_ml->FirstChildElement("Material");
+			tinyxml2::XMLElement *xml_mat = xml_ml->FirstChildElement("Material");
 			while(xml_mat)
 			{
 				PhysicsMaterial material;
@@ -93,14 +93,14 @@ namespace GASS
 	{
 		std::map<GeometryFlags, GeometryFlags> m_CollisionMaskMap;
 		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
 		
-		TiXmlElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		tinyxml2::XMLElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
 		if(xml_geom_list)
 		{
-			TiXmlElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
+			tinyxml2::XMLElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
 			while(xml_geom)
 			{
 				std::string geom_name;

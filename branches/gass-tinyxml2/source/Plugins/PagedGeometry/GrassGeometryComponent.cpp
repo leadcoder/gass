@@ -264,7 +264,7 @@ namespace GASS
 			m_GrassLayer->setDensityMap(m_DensityMapFilename);
 	}
 
-	void GrassGeometryComponent::SaveXML(TiXmlElement *obj_elem)
+	void GrassGeometryComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 

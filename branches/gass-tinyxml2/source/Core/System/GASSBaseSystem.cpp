@@ -19,7 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Core/System/GASSBaseSystem.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {
@@ -37,15 +37,15 @@ namespace GASS
 	{
 	}
 
-	void BaseSystem::LoadXML(TiXmlElement *xml_elem)
+	void BaseSystem::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
 		_LoadProperties(xml_elem);
 	}
 
-	void BaseSystem::SaveXML(TiXmlElement *xml_elem)
+	void BaseSystem::SaveXML(tinyxml2::XMLElement *xml_elem)
 	{
-		TiXmlElement * this_elem;
-		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
+		tinyxml2::XMLElement * this_elem;
+		this_elem = xml_elem->GetDocument()->NewElement(GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
 		_SaveProperties(this_elem);
 	}

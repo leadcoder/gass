@@ -132,8 +132,8 @@ namespace GASS
 		virtual void CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance);
 
 		//xml serialize interface
-		virtual void LoadXML(TiXmlElement *obj_elem);
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		//serialize interface
 		virtual bool Serialize(ISerializer* serializer);
@@ -194,7 +194,7 @@ namespace GASS
 		//Help functions during template creation
 		//std::string CreateUniqueName(ComponentContainerTemplateManagerConstPtr manager) const;
 		void _InheritComponentData(ComponentContainerPtr cc) const;
-		ComponentPtr _LoadComponentXML(TiXmlElement *comp_template);
+		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement *comp_template);
 
 		ComponentVector m_ComponentVector;
 		ComponentContainerTemplateVector m_ComponentContainerVector;

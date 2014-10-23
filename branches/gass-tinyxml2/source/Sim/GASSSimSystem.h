@@ -66,8 +66,8 @@ namespace GASS
 		void SetTaskNode(const std::string name) {m_TaskNodeName = name;}
 	
 		//IXMLSerialize interface
-		virtual void LoadXML(TiXmlElement *xml_elem);
-		virtual void SaveXML(TiXmlElement *xml_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
 
 		/**
 		Convenience function to get SimSystemManager without casting from ISystemManager

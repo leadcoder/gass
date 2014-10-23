@@ -25,7 +25,7 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSResourceHandle.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"

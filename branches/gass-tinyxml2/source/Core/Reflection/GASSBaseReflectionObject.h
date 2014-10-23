@@ -27,7 +27,11 @@
 #include "Core/Reflection/GASSReflection.h"
 #include "Core/Reflection/GASSNullClass.h"
 
-class TiXmlElement;
+namespace tinyxml2
+{
+	class XMLElement;
+};
+
 namespace GASS
 {
 	class BaseReflectionObject;
@@ -107,8 +111,8 @@ namespace GASS
 
 		//internal stuff
 	protected:
-		void _LoadProperties(TiXmlElement *elem);
-		void _SaveProperties(TiXmlElement *parent);
+		void _LoadProperties(tinyxml2::XMLElement *elem);
+		void _SaveProperties(tinyxml2::XMLElement *parent);
 
 		bool _SerializeProperties(ISerializer* serializer);
 		

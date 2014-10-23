@@ -29,7 +29,7 @@
 #include "DetourCommon.h"
 #include "DetourTileCache.h"
 #include "InputGeom.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {

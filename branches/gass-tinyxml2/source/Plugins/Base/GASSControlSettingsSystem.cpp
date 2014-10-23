@@ -30,7 +30,7 @@
 #include "Core/Utils/GASSEnumLookup.h"
 #include "Core/Utils/GASSException.h"
 
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 
 namespace GASS
@@ -303,13 +303,14 @@ namespace GASS
 	{
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ControlSettingsSystem::Load");
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			// Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "ControlSettingsSystem::Load");
 		}
-		TiXmlElement *control_settings = xmlDoc->FirstChildElement("ControlSettings");	
+		tinyxml2::XMLElement *control_settings = xmlDoc->FirstChildElement("ControlSettings");	
 		int nInputCount = 0;
 		control_settings = control_settings->FirstChildElement();
 	
@@ -326,7 +327,7 @@ namespace GASS
 			const std::string name = control_settings->Value();
 			ControlSetting* cs = new ControlSetting(name,this,input_system.get());
 			Add(name,cs);
-			TiXmlElement *control_map = control_settings->FirstChildElement();
+			tinyxml2::XMLElement *control_map = control_settings->FirstChildElement();
 			while(control_map)
 			{
 				if(!control_map->Attribute("Controller")) 

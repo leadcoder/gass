@@ -32,7 +32,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 #include <tbb/parallel_for_each.h>
 
 
@@ -121,14 +121,14 @@ namespace GASS
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "SimSystemManager::Load");
 		
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SimSystemManager::Load");
 		}
 		
-		TiXmlElement *systems = xmlDoc->FirstChildElement("GASS");
+		tinyxml2::XMLElement *systems = xmlDoc->FirstChildElement("GASS");
 		systems = systems->FirstChildElement("Systems");
 
 		if(systems)
@@ -154,7 +154,7 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-	SystemPtr SimSystemManager::LoadSystem(TiXmlElement *system_elem)
+	SystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
 	{
 		const std::string system_type = system_elem->Value();
 		SystemPtr system = SystemFactory::Get().Create(system_type);

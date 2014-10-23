@@ -31,7 +31,7 @@
 #include "RecastOffmeshMeshConnectionComponent.h"
 #include "RecastConvexVolumeComponent.h"
 #include "InputGeom.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSPhysicsMesh.h"
 #include <cfloat>
@@ -966,7 +966,7 @@ namespace GASS
 		}
 	}
 
-	void RecastNavigationMeshComponent::SaveXML(TiXmlElement *obj_elem)
+	void RecastNavigationMeshComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
@@ -978,7 +978,7 @@ namespace GASS
 		Component::SaveXML(obj_elem);
 	}
 
-	void RecastNavigationMeshComponent::LoadXML(TiXmlElement *obj_elem)
+	void RecastNavigationMeshComponent::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
 		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);

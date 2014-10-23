@@ -26,7 +26,12 @@
 #include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
 class asIScriptEngine;
 class asIScriptModule;
 class asIScriptContext;

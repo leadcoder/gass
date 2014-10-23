@@ -60,8 +60,8 @@ namespace GASS
 		//ISystemListener
 		virtual void SystemTick(double delta_time);
 		//IXMLSerialize
-		virtual void LoadXML(TiXmlElement *xml_elem);
-		virtual void SaveXML(TiXmlElement *xml_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
 	protected:
 		std::string m_Name;
 		SceneWeakPtr m_Scene;

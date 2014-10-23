@@ -37,7 +37,7 @@
 #include <iomanip>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -620,14 +620,14 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if(!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
-		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
+		tinyxml2::XMLElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
 
 		if(!so_elem)
 		{
@@ -648,14 +648,14 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if(!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
-		TiXmlElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
+		tinyxml2::XMLElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
 		
 		SceneObjectPtr so;
 		if(so_elem->Attribute("from_template"))
@@ -694,13 +694,13 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::SaveToFile");
 
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		tinyxml2::XMLDeclaration* decl = xmlDoc->NewDeclaration();
 		xmlDoc->LinkEndChild( decl ); 
 
-		//TiXmlElement * so_elem = new TiXmlElement("SceneObject");  
+		//tinyxml2::XMLElement * so_elem = xmlDoc.NewElement("SceneObject");  
 		//doc.LinkEndChild( so_elem); 
-		SaveXML((TiXmlElement*) (xmlDoc));
+		SaveXML((tinyxml2::XMLElement*) (xmlDoc));
 		xmlDoc->SaveFile(filename.c_str());
 		delete xmlDoc;
 	}
@@ -731,7 +731,7 @@ namespace GASS
 		return so.get();
 	}
 
-	ComponentContainerPtr SceneObject::CreateComponentContainerXML(TiXmlElement *cc_elem) const
+	ComponentContainerPtr SceneObject::CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const
 	{
 		ComponentContainerPtr cc;
 		if(cc_elem->Attribute("from_template"))

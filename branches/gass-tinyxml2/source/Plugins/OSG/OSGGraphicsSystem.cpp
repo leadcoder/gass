@@ -73,7 +73,7 @@ typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #include "Sim/GASS.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include <osgDB/ReadFile> 
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 
 namespace GASS
@@ -132,9 +132,9 @@ namespace GASS
 
 	}
 
-	void OSGGraphicsSystem::LoadXML(TiXmlElement *elem)
+	void OSGGraphicsSystem::LoadXML(tinyxml2::XMLElement *elem)
 	{
-		TiXmlElement *prop_elem = elem->FirstChildElement();
+		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			std::string prop_name = prop_elem->Value();
@@ -177,16 +177,16 @@ namespace GASS
 		//Load shadow settings
 		if(m_ShadowSettingsFile != "")
 		{
-			TiXmlDocument *xmlDoc = new TiXmlDocument(m_ShadowSettingsFile.c_str());
-			if (!xmlDoc->LoadFile())
+			tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+			if (xmlDoc->LoadFile(m_ShadowSettingsFile.c_str()) != tinyxml2::XML_NO_ERROR)
 			{
 				//Fatal error, cannot load
 				LogManager::getSingleton().stream() << "WARNING: OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " <<  m_ShadowSettingsFile;
 			}
 			else
 			{
-				//TiXmlElement *ss= xmlDoc->FirstChildElement("ShadowSettings");
-				TiXmlElement *ss= xmlDoc->FirstChildElement("Systems");
+				//tinyxml2::XMLElement *ss= xmlDoc->FirstChildElement("ShadowSettings");
+				tinyxml2::XMLElement *ss= xmlDoc->FirstChildElement("Systems");
 				if(ss)
 				{
 					ss = ss->FirstChildElement("OSGGraphicsSystem");
@@ -386,10 +386,10 @@ namespace GASS
 		text_box->setColor(osg::Vec4(color.x,color.y,color.z,color.w));
 	}
 
-	void OSGGraphicsSystem::LoadShadowSettings(TiXmlElement *shadow_elem)
+	void OSGGraphicsSystem::LoadShadowSettings(tinyxml2::XMLElement *shadow_elem)
 	{
 		//Load shadow settings
-		//TiXmlElement *shadow_elem= elem->FirstChildElement("ShadowSettings");
+		//tinyxml2::XMLElement *shadow_elem= elem->FirstChildElement("ShadowSettings");
 
 		if(shadow_elem)
 		{

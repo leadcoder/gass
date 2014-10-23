@@ -29,7 +29,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -196,18 +196,19 @@ namespace GASS
 		}
 	}
 
-	void ComponentContainer::SaveXML(TiXmlElement *obj_elem)
+	void ComponentContainer::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		if(!m_Serialize)
 			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-
-		TiXmlElement* this_elem = new TiXmlElement( factory_name.c_str() );  
+		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
+		
+		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str());
 		obj_elem->LinkEndChild( this_elem );  
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
-		TiXmlElement* comp_elem = new TiXmlElement("Components");
+		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
 		ComponentVector::iterator iter; 
@@ -219,7 +220,7 @@ namespace GASS
 				s_comp->SaveXML(comp_elem);
 		}
 
-		TiXmlElement* cc_elem = new TiXmlElement("ComponentContainers");
+		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("ComponentContainers");
 		this_elem->LinkEndChild(cc_elem);
 	
 		ComponentContainer::ComponentContainerVector::iterator cc_iter;
@@ -233,23 +234,23 @@ namespace GASS
 		}
 	}
 
-	void ComponentContainer::LoadXML(TiXmlElement *obj_elem)
+	void ComponentContainer::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
 		if(!m_Serialize)
 			return;
-		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
+		tinyxml2::XMLElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
 			const std::string data_name = class_attribute->Value();
 			if(data_name == "Components")
 			{
-				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
+				tinyxml2::XMLElement *comp_elem = class_attribute->FirstChildElement();
 				while(comp_elem)
 				{
 					ComponentPtr target_comp;
 
 					//Try to get component by name first, if not found assume only one component of same type
-					TiXmlElement *name_elem =comp_elem->FirstChildElement("Name");
+					tinyxml2::XMLElement *name_elem =comp_elem->FirstChildElement("Name");
 					if(name_elem)
 					{
 						const std::string comp_name = name_elem->Attribute("value");
@@ -281,7 +282,7 @@ namespace GASS
 			}
 			else if(data_name == "ComponentContainers")
 			{
-				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
+				tinyxml2::XMLElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
 					//allow over loading
@@ -309,14 +310,14 @@ namespace GASS
 		}
 	}
 
-	ComponentContainerPtr ComponentContainer::CreateComponentContainerXML(TiXmlElement *cc_elem) const
+	ComponentContainerPtr ComponentContainer::CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const
 	{
 		const std::string type = cc_elem->Value();
 		ComponentContainerPtr container (ComponentContainerFactory::Get().Create(type));
 		return container;
 	}
 
-	ComponentPtr ComponentContainer::_LoadComponentXML(TiXmlElement *comp_template)
+	ComponentPtr ComponentContainer::_LoadComponentXML(tinyxml2::XMLElement *comp_template)
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");

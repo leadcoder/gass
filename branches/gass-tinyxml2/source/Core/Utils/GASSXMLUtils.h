@@ -23,7 +23,12 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
 namespace GASS
 {
 	/** \addtogroup GASSCore
@@ -42,11 +47,11 @@ namespace GASS
 	public:
 		XMLUtils();
 		virtual ~XMLUtils();
-		static std::string ReadString(TiXmlElement *xml_elem, const std::string &tag);
-		static bool ReadBool(TiXmlElement *xml_elem, const std::string &tag);
-		static Float ReadFloat(TiXmlElement *xml_elem, const std::string &tag);
-		static int ReadInt(TiXmlElement *xml_elem, const std::string &tag);
-		static std::string ReadStringAttribute(TiXmlElement *xml_elem, const std::string &attrib);
+		static std::string ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static bool ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static Float ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static int ReadInt(tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static std::string ReadStringAttribute(tinyxml2::XMLElement *xml_elem, const std::string &attrib);
 	};
 }
 
