@@ -53,7 +53,7 @@ namespace GASS
 	};
 	typedef SPTR<HealthChangedEvent> HealthChangedEventPtr;
 
-	class StanceChangedMessage : public SceneObjectEventMessage
+	/*class StanceChangedMessage : public SceneObjectEventMessage
 	{
 	public:
 		StanceChangedMessage(int stance, SenderID sender_id = -1, double delay= 0) : 
@@ -65,7 +65,7 @@ namespace GASS
 	private:
 		int m_Stance;
 	};
-	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;
+	typedef SPTR<StanceChangedMessage> StanceChangedMessagePtr;*/
 
 
 
