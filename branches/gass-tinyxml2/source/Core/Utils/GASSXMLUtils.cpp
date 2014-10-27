@@ -62,7 +62,7 @@ namespace GASS
 		}
 		else
 		{
-			const std::string document_name = xml_elem->GetDocument()->Value();
+			const std::string document_name = xml_elem->GetDocument()->GetFileName();
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find attribute:" + attrib +" In file:" +document_name, "XMLUtils::ReadStringAttribute");
 		}
 		return ret;

@@ -303,7 +303,7 @@ namespace GASS
 				}
 				catch(...)
 				{
-					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->Value()),"ComponentContainer::LoadXML");
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->GetFileName()),"ComponentContainer::LoadXML");
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();

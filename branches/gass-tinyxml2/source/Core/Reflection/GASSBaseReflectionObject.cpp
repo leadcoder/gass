@@ -54,17 +54,17 @@ namespace GASS
 					}
 					catch(...)
 					{
-						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + prop_name +" With attribute:"+ prop_val+  " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::LoadXML");
+						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + prop_name +" With attribute:"+ prop_val+  " in:" + std::string(elem->GetDocument()->GetFileName()),"BaseReflectionObject::LoadXML");
 					}
 				}
 				else
 				{
-					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::_LoadProperties");
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->GetFileName()),"BaseReflectionObject::_LoadProperties");
 				}
 			}
 			else
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No attribute found for property for:" + prop_name + " in:" + std::string(elem->GetDocument()->Value()),"BaseReflectionObject::_LoadProperties");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No attribute found for property for:" + prop_name + " in:" + std::string(elem->GetDocument()->GetFileName()),"BaseReflectionObject::_LoadProperties");
 			}
 			prop_elem  = prop_elem->NextSiblingElement();
 		}

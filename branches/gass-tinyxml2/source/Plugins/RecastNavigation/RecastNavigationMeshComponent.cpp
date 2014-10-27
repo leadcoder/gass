@@ -968,7 +968,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
-		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
+		m_NavMeshFilePath = obj_elem->GetDocument()->GetFileName();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		if(m_NavMesh)
 		{
@@ -980,7 +980,8 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
-		m_NavMeshFilePath = obj_elem->GetDocument()->Value();
+		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
+		m_NavMeshFilePath = rootXMLDoc->GetFileName();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		Component::LoadXML(obj_elem);
 	}
