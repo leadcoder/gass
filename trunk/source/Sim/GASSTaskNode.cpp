@@ -25,7 +25,7 @@
 
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 
@@ -45,7 +45,7 @@ namespace GASS
 
 	}
 
-	void TaskNode::LoadXML(TiXmlElement *xml_elem)
+	void TaskNode::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
 		if(xml_elem->Attribute("name"))
 		{
@@ -100,7 +100,7 @@ namespace GASS
 			m_UpdateFrequency = value;
 		}
 
-		TiXmlElement *xml_child_elem = xml_elem->FirstChildElement("TaskNode");
+		tinyxml2::XMLElement *xml_child_elem = xml_elem->FirstChildElement("TaskNode");
 		while(xml_child_elem)
 		{
 			TaskNodePtr task_node(new TaskNode());

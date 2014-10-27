@@ -24,7 +24,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Utils/GASSException.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {
@@ -51,18 +51,18 @@ namespace GASS
 
 	void GUISchemaLoader::Load(const std::string filename)
 	{
-		TiXmlDocument *xmlDoc = new TiXmlDocument(filename.c_str());
-		if(!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename, "GUISchemaLoader::Load");
 		}
 
-		TiXmlElement *schema = xmlDoc->FirstChildElement("xs:schema");
+		tinyxml2::XMLElement *schema = xmlDoc->FirstChildElement("xs:schema");
 		if(schema == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get xs:schema tag", "GUISchemaLoader::Load");
 
 
-		TiXmlElement *obj_elem = schema->FirstChildElement("xs:element");
+		tinyxml2::XMLElement *obj_elem = schema->FirstChildElement("xs:element");
 		if(obj_elem == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get xs:element tag", "GUISchemaLoader::Load");
 
@@ -75,23 +75,23 @@ namespace GASS
 		os.Name = name;
 		os.DisplayName = name;
 
-		TiXmlElement *anno_elem =  obj_elem->FirstChildElement("xs:annotation");
+		tinyxml2::XMLElement *anno_elem =  obj_elem->FirstChildElement("xs:annotation");
 		if(anno_elem)
 		{
-			TiXmlElement *gui_elem =  anno_elem->FirstChildElement("xs:guiSettings");
+			tinyxml2::XMLElement *gui_elem =  anno_elem->FirstChildElement("xs:guiSettings");
 			if(gui_elem)
 			{
 				os.Visible  = LoadBoolAttribute(gui_elem,"visible");
 			}
 
-			TiXmlElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
+			tinyxml2::XMLElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
 			if(doc_elem)
 			{
 				os.Documentation = doc_elem->GetText();
 			}
 		}
 
-		TiXmlElement *elem =  obj_elem->FirstChildElement("xs:complexType");
+		tinyxml2::XMLElement *elem =  obj_elem->FirstChildElement("xs:complexType");
 		if(elem)
 		{
 			elem =  elem->FirstChildElement("xs:sequence");
@@ -109,7 +109,7 @@ namespace GASS
 		m_Settings[os.Name] = os;
 	}
 
-	PropertySettings GUISchemaLoader::LoadProperty(TiXmlElement* elem)
+	PropertySettings GUISchemaLoader::LoadProperty(tinyxml2::XMLElement* elem)
 	{
 		PropertySettings ps;
 		if(elem->Attribute("name"))
@@ -118,10 +118,10 @@ namespace GASS
 			ps.DisplayName = ps.Name;
 		}
 
-		TiXmlElement *anno_elem =  elem->FirstChildElement("xs:annotation");
+		tinyxml2::XMLElement *anno_elem =  elem->FirstChildElement("xs:annotation");
 		if(anno_elem)
 		{
-			TiXmlElement *gui_elem =  anno_elem->FirstChildElement("xs:guiSettings");
+			tinyxml2::XMLElement *gui_elem =  anno_elem->FirstChildElement("xs:guiSettings");
 			if(gui_elem)
 			{
 				ps.Visible = LoadBoolAttribute(gui_elem,"visible");
@@ -193,11 +193,11 @@ namespace GASS
 				if(gui_elem->Attribute("restrictionProxyProperty"))
 					ps.RestrictionProxyProperty = gui_elem->Attribute("restrictionProxyProperty");
 
-				TiXmlElement *restriction_elem =  gui_elem->FirstChildElement("xs:restriction");
+				tinyxml2::XMLElement *restriction_elem =  gui_elem->FirstChildElement("xs:restriction");
 				if(restriction_elem)
 				{
 					
-					TiXmlElement *enumeration_elem =  restriction_elem->FirstChildElement("xs:enumeration");
+					tinyxml2::XMLElement *enumeration_elem =  restriction_elem->FirstChildElement("xs:enumeration");
 					while(enumeration_elem)
 					{
 						if(enumeration_elem->Attribute("value"))
@@ -210,7 +210,7 @@ namespace GASS
 					}
 				}
 			}
-			TiXmlElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
+			tinyxml2::XMLElement *doc_elem =  anno_elem->FirstChildElement("xs:documentation");
 			if(doc_elem)
 			{
 				if(doc_elem->GetText())
@@ -221,7 +221,7 @@ namespace GASS
 		return ps;
 	}
 
-	bool GUISchemaLoader::LoadBoolAttribute(TiXmlElement* elem, const std::string &name)
+	bool GUISchemaLoader::LoadBoolAttribute(tinyxml2::XMLElement* elem, const std::string &name)
 	{
 		bool ret  = false;
 		if(elem && elem->Attribute(name.c_str()))

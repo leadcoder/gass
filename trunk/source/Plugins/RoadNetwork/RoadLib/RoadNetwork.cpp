@@ -7,7 +7,7 @@
 #include "RoadBuilder.h"
 
 #include <algorithm>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <sstream>
 
 namespace GASS
@@ -382,38 +382,39 @@ namespace GASS
 		return best_node;
 	}
 
-	void RoadNetwork::SaveXML(TiXmlElement * elem)
+	void RoadNetwork::SaveXML(tinyxml2::XMLElement * elem)
 	{
-		TiXmlElement * net_elem = new TiXmlElement("RoadNetwork");
+		tinyxml2::XMLDocument *rootXMLDoc = elem->GetDocument();
+		tinyxml2::XMLElement * net_elem = rootXMLDoc->NewElement("RoadNetwork");
 		elem->LinkEndChild( net_elem);
 
-		TiXmlElement * nodes_elem = new TiXmlElement("Nodes");
+		tinyxml2::XMLElement * nodes_elem = rootXMLDoc->NewElement("Nodes");
 		net_elem->LinkEndChild( nodes_elem);
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{
 			int id = PTR_TO_INT(m_Nodes[i]);
-			TiXmlElement *node_prop_elem = new TiXmlElement( "Node");
+			tinyxml2::XMLElement *node_prop_elem = rootXMLDoc->NewElement( "Node");
 			nodes_elem->LinkEndChild( node_prop_elem);
 			node_prop_elem->SetAttribute("ID", id);
 			std::string pos = m_Nodes[i]->Position.ToString(" ");
 			node_prop_elem->SetAttribute("Position",pos.c_str());
 		}
-		TiXmlElement *edges_elem = new TiXmlElement( "Edges");
+		tinyxml2::XMLElement *edges_elem = rootXMLDoc->NewElement( "Edges");
 		net_elem->LinkEndChild( edges_elem);
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
-			TiXmlElement *edge_prop_elem = new TiXmlElement( "Edge");
+			tinyxml2::XMLElement *edge_prop_elem = rootXMLDoc->NewElement( "Edge");
 			edges_elem->LinkEndChild( edge_prop_elem);
 			edge_prop_elem ->SetAttribute("Dir",(int) m_Edges[i]->Dir);
 			edge_prop_elem ->SetAttribute("StartNode",PTR_TO_INT(m_Edges[i]->StartNode));
 			edge_prop_elem ->SetAttribute("EndNode",PTR_TO_INT(m_Edges[i]->EndNode));
 			edge_prop_elem ->SetAttribute("Distance",m_Edges[i]->Distance);
 			edge_prop_elem ->SetAttribute("LaneWidth",m_Edges[i]->LaneWidth);
-			TiXmlElement *wps_elem = new TiXmlElement( "Waypoints");
+			tinyxml2::XMLElement *wps_elem = rootXMLDoc->NewElement( "Waypoints");
 			edge_prop_elem->LinkEndChild( wps_elem);
 			for(size_t j = 0; j < m_Edges[i]->Waypoints.size(); j++)
 			{
-				TiXmlElement *wp_prop_elem = new TiXmlElement( "WP");
+				tinyxml2::XMLElement *wp_prop_elem = rootXMLDoc->NewElement( "WP");
 				wps_elem->LinkEndChild( wp_prop_elem);
 				std::string pos = m_Edges[i]->Waypoints[j].ToString(" ");
 				wp_prop_elem->SetAttribute("Position",pos.c_str());
@@ -421,16 +422,16 @@ namespace GASS
 		}
 	}
 
-	void RoadNetwork::LoadXML(TiXmlElement * elem)
+	void RoadNetwork::LoadXML(tinyxml2::XMLElement * elem)
 	{
 		std::map<int,RoadNode*> mapping;
-		TiXmlElement *net_elem = elem->FirstChildElement("RoadNetwork");
+		tinyxml2::XMLElement *net_elem = elem->FirstChildElement("RoadNetwork");
 		if(net_elem)
 		{
-			TiXmlElement *nodes_elem = net_elem->FirstChildElement("Nodes");
+			tinyxml2::XMLElement *nodes_elem = net_elem->FirstChildElement("Nodes");
 			if(nodes_elem)
 			{
-				TiXmlElement *node_elem = nodes_elem->FirstChildElement("Node");
+				tinyxml2::XMLElement *node_elem = nodes_elem->FirstChildElement("Node");
 				while(node_elem)
 				{
 					int id;
@@ -444,10 +445,10 @@ namespace GASS
 					mapping[id] = node;
 				}
 			}
-			TiXmlElement *edges_elem = net_elem->FirstChildElement("Edges");
+			tinyxml2::XMLElement *edges_elem = net_elem->FirstChildElement("Edges");
 			if(edges_elem)
 			{
-				TiXmlElement *edge_elem = edges_elem->FirstChildElement("Edge");
+				tinyxml2::XMLElement *edge_elem = edges_elem->FirstChildElement("Edge");
 				while(edge_elem)
 				{
 					RoadEdge* edge = new RoadEdge();
@@ -462,7 +463,7 @@ namespace GASS
 					edge->StartNode->Edges.push_back(edge);
 					edge->EndNode->Edges.push_back(edge);
 
-					TiXmlElement *wps_elem = edge_elem->FirstChildElement("Waypoints");
+					tinyxml2::XMLElement *wps_elem = edge_elem->FirstChildElement("Waypoints");
 					wps_elem = wps_elem->FirstChildElement("WP");
 					while(wps_elem)
 					{

@@ -24,7 +24,10 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSMatrix.h"
 
-class TiXmlElement;
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace GASS
 {
@@ -43,8 +46,8 @@ namespace GASS
 	{
 	public:
 		virtual ~IXMLSerialize(){}
-		virtual void LoadXML(TiXmlElement *xml_elem) = 0;
-		virtual void SaveXML(TiXmlElement *xml_elem) = 0;
+		virtual void LoadXML(tinyxml2::XMLElement *obj_elem) = 0;
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem) = 0;
 	};
 
 	typedef SPTR<IXMLSerialize> XMLSerializePtr;

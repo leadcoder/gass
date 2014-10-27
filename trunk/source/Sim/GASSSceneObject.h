@@ -295,7 +295,7 @@ protected:
 		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
 
-		ComponentContainerPtr CreateComponentContainerXML(TiXmlElement *cc_elem) const;
+		ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const;
 		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;

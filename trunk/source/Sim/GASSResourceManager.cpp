@@ -24,7 +24,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -38,15 +38,15 @@ namespace GASS
 	
 	}
 	
-	void ResourceManager::LoadXML(TiXmlElement *elem)
+	void ResourceManager::LoadXML(tinyxml2::XMLElement *elem)
 	{
-		TiXmlElement *prop_elem = elem->FirstChildElement();
+		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			const std::string elem_name = prop_elem->Value();
 			if(elem_name == "ResourceGroup")
 			{
-				TiXmlElement *group_elem = prop_elem->FirstChildElement();
+				tinyxml2::XMLElement *group_elem = prop_elem->FirstChildElement();
 				const std::string group_name = XMLUtils::ReadStringAttribute(prop_elem,"name");
 				ResourceGroupPtr group(new ResourceGroup(group_name));
 				while(group_elem)

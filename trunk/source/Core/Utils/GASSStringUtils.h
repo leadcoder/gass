@@ -23,7 +23,11 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 /*#define READ_ULONG *(unsigned long*)ptr;	ptr += 4
 #define READ_LONG *(long*)ptr;	ptr += 4
 #define READ_FLOAT *(float*)ptr;	ptr += 4

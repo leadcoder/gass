@@ -9,7 +9,11 @@
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
 #include "RoadNetwork.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace GASS
 {
@@ -42,8 +46,8 @@ namespace GASS
 		void SetShowGraph(bool value);
 		void Rebuild();
 		bool DebugSearchGraph();
-		void SaveXML(TiXmlElement * elem);
-		void LoadXML(TiXmlElement * elem);
+		void SaveXML(tinyxml2::XMLElement * elem);
+		void LoadXML(tinyxml2::XMLElement * elem);
 		bool m_Edit;
 		bool m_ShowGraph;
 		RoadNetwork m_Network;

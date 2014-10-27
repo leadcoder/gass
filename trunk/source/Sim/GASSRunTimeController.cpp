@@ -103,7 +103,7 @@ namespace GASS
 
 	}
 
-	void RunTimeController::LoadXML(TiXmlElement *xml_elem)
+	void RunTimeController::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
 		m_SimulationTaskNode->LoadXML(xml_elem);
 	}

@@ -23,7 +23,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
@@ -57,7 +57,7 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		
 		//IXMLSerialize interface overload, we need a way to trigger terrain save!
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;

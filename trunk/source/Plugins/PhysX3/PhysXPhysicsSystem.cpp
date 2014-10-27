@@ -20,7 +20,7 @@
 
 #include "PhysXPhysicsSystem.h"
 #include "Sim/Interface/GASSIMaterialSystem.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 using namespace physx;
 namespace GASS
@@ -190,17 +190,17 @@ namespace GASS
 	void PhysXPhysicsSystem::LoadTires(const std::string &file)
 	{
 		LogManager::getSingleton().stream() << "Start loading tire settings file " << file;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(file.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
 
-		TiXmlElement *xml_vs = xmlDoc->FirstChildElement("VehicleSettings");
+		tinyxml2::XMLElement *xml_vs = xmlDoc->FirstChildElement("VehicleSettings");
 		if(xml_vs)
 		{
-			TiXmlElement *xml_sl = xml_vs->FirstChildElement("SurfaceList");
+			tinyxml2::XMLElement *xml_sl = xml_vs->FirstChildElement("SurfaceList");
 			if(xml_sl )
 			{
-				TiXmlElement *xml_ds = xml_sl->FirstChildElement("DriveableSurface");
+				tinyxml2::XMLElement *xml_ds = xml_sl->FirstChildElement("DriveableSurface");
 				while(xml_ds)
 				{
 					if(xml_ds->Attribute("MaterialName"))
@@ -210,10 +210,10 @@ namespace GASS
 					xml_ds = xml_ds->NextSiblingElement("DriveableSurface");
 				}
 			}
-			TiXmlElement *xml_ml = xml_vs->FirstChildElement("TireList");
+			tinyxml2::XMLElement *xml_ml = xml_vs->FirstChildElement("TireList");
 			if(xml_ml)
 			{
-				TiXmlElement *xml_td = xml_ml->FirstChildElement("Tire");
+				tinyxml2::XMLElement *xml_td = xml_ml->FirstChildElement("Tire");
 				while(xml_td)
 				{
 					TireData data;
@@ -222,7 +222,7 @@ namespace GASS
 					else
 						GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
 
-					TiXmlElement *xml_fm = xml_td->FirstChildElement("FrictionMultiplier");
+					tinyxml2::XMLElement *xml_fm = xml_td->FirstChildElement("FrictionMultiplier");
 					while(xml_fm)
 					{
 						std::string mat_name;

@@ -126,7 +126,7 @@ namespace GASS
 		delete m_TerrainGroup;
 	}
 
-	void OgreTerrainGroupComponent::SaveXML(TiXmlElement *obj_elem)
+	void OgreTerrainGroupComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 		

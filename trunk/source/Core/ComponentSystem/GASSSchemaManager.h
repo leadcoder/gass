@@ -27,12 +27,15 @@
 #include "Core/Serialize/GASSISerialize.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 
-class TiXmlDocument;
+namespace tinyxml2
+{
+	class XMLDocument;
+}
 
 namespace GASS
 {
 	/**
-		Class holding meta data (as TiXmlElement) for a specific class
+		Class holding meta data (as tinyxml2::XMLElement) for a specific class
 		Class name is stored in m_Name
 	*/
 	class GASSCoreExport SchemaObject
@@ -40,10 +43,10 @@ namespace GASS
 	public:
 		SchemaObject();
 		virtual ~SchemaObject();
-		TiXmlElement* GetObjectAnnotation(const std::string &annotation_tag_name) const;
-		TiXmlElement* GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const;
-		TiXmlDocument* m_Document;
-		TiXmlElement* m_Object;
+		tinyxml2::XMLElement* GetObjectAnnotation(const std::string &annotation_tag_name) const;
+		tinyxml2::XMLElement* GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const;
+		tinyxml2::XMLDocument* m_Document;
+		tinyxml2::XMLElement* m_Object;
 		std::string m_Name;
 	};
 	/**
@@ -64,7 +67,7 @@ namespace GASS
 		const SchemaObject* GetSchemaObject(const std::string &name) const;
 	protected:
 		void _Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr container);
-		void _SaveProp(TiXmlElement* parent, IProperty* prop) const;
+		void _SaveProp(tinyxml2::XMLElement* parent, IProperty* prop) const;
 		std::string _GetPropType(IProperty* prop) const;
 
 		std::map<std::string,SchemaObject> m_Objects;

@@ -25,7 +25,11 @@
 #include "Core/System/GASSISystem.h"
 #include "Core/System/GASSISystemManager.h"
 
-class TiXmlElement;
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
 namespace GASS
 {
 
@@ -61,7 +65,7 @@ namespace GASS
 			A system is specified by a name tag and att type attribute that 
 			specify the class implementing the system.
 		*/
-		void Load(TiXmlElement *systems_elem);
+		void Load(tinyxml2::XMLElement *systems_elem);
 
 		//ISystemInterface
 
@@ -87,7 +91,7 @@ namespace GASS
 			return sys;
 		}
 	private:
-		SystemPtr LoadSystem(TiXmlElement *system_elem);
+		SystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
 	protected:
 		typedef std::vector<SystemPtr> SystemVector;
 		SystemVector m_Systems;

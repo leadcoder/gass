@@ -14,7 +14,7 @@
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 
 
-#include "tinyxml.h"
+#include "tinyxml2.h"
 #include <boost/filesystem.hpp>
 
 namespace GASS
@@ -83,17 +83,17 @@ namespace GASS
 
 	bool  EditorApplication::LoadSettings(const std::string &filename)
 	{
-		TiXmlDocument     *xmlDoc = new TiXmlDocument(filename.c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument     *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			//Fatal error, cannot load
 			return false;
 		}
-		TiXmlElement *xSettings = 0;
+		tinyxml2::XMLElement *xSettings = 0;
 		xSettings = xmlDoc->FirstChildElement("EditorApplication");
-		TiXmlElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
-		TiXmlElement *xnetwork = xSettings->FirstChildElement("Network");
-		TiXmlElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
+		tinyxml2::XMLElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
+		tinyxml2::XMLElement *xnetwork = xSettings->FirstChildElement("Network");
+		tinyxml2::XMLElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
 
 		
 		if(xupdate_freq)

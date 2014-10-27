@@ -29,7 +29,7 @@
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -212,16 +212,17 @@ namespace GASS
 		return ComponentContainerTemplate::ComponentContainerTemplateIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
 
-	void ComponentContainerTemplate::SaveXML(TiXmlElement *obj_elem)
+	void ComponentContainerTemplate::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		const std::string factory_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-
-		TiXmlElement* this_elem = new TiXmlElement(factory_name.c_str() );  
+		
+		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
+		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str() );  
 		obj_elem->LinkEndChild( this_elem );  
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
-		TiXmlElement* comp_elem = new TiXmlElement("Components");
+		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
 		ComponentVector::iterator iter; 
@@ -234,7 +235,7 @@ namespace GASS
 		}
 
 
-		TiXmlElement* cc_elem = new TiXmlElement("ComponentContainers");
+		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("ComponentContainers");
 		this_elem->LinkEndChild(cc_elem);
 
 		ComponentContainerTemplate::ComponentContainerTemplateVector::iterator cc_iter;
@@ -248,16 +249,16 @@ namespace GASS
 		}
 	}
 
-	void ComponentContainerTemplate::LoadXML(TiXmlElement *obj_elem)
+	void ComponentContainerTemplate::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
 		//m_Name = obj_elem->Value();
-		TiXmlElement *class_attribute = obj_elem->FirstChildElement();
+		tinyxml2::XMLElement *class_attribute = obj_elem->FirstChildElement();
 		while(class_attribute)
 		{
 			const std::string data_name = class_attribute->Value();
 			if(data_name == "Components")
 			{
-				TiXmlElement *comp_elem = class_attribute->FirstChildElement();
+				tinyxml2::XMLElement *comp_elem = class_attribute->FirstChildElement();
 				while(comp_elem)
 				{
 					const std::string comp_name = comp_elem->Value();
@@ -282,7 +283,7 @@ namespace GASS
 			}
 			else if(data_name == "ComponentContainers")
 			{
-				TiXmlElement *cc_elem = class_attribute->FirstChildElement();
+				tinyxml2::XMLElement *cc_elem = class_attribute->FirstChildElement();
 				while(cc_elem )
 				{
 					const std::string type = cc_elem->Value(); //Attribute("type");
@@ -314,21 +315,21 @@ namespace GASS
 					catch(...)
 					{
 					
-						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->Value()),"ComponentContainerTemplate::LoadXML");
-						//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t property not found: " << data_name;
+						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->GetFileName()),"ComponentContainerTemplate::LoadXML");
+						//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->GetFileName() << "\t property not found: " << data_name;
 					}
 				}
 				else
 				{
-					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No value attribute found for xml tag: " + data_name + " In:" + std::string(obj_elem->GetDocument()->Value()), "ComponentContainerTemplate::LoadXML");
-					//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->Value() << "\t no value attribute found for xml tag: " << data_name;
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No value attribute found for xml tag: " + data_name + " In:" + std::string(obj_elem->GetDocument()->GetFileName()), "ComponentContainerTemplate::LoadXML");
+					//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->GetFileName() << "\t no value attribute found for xml tag: " << data_name;
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
 		}
 	}
 
-	ComponentPtr ComponentContainerTemplate::_LoadComponentXML(TiXmlElement *comp_template)
+	ComponentPtr ComponentContainerTemplate::_LoadComponentXML(tinyxml2::XMLElement *comp_template)
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -342,7 +343,7 @@ namespace GASS
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING: Failed to create component "<< comp_type << " in " << comp_template->GetDocument()->Value();
+			LogManager::getSingleton().stream() << "WARNING: Failed to create component "<< comp_type;
 		}
 		return comp;
 	}

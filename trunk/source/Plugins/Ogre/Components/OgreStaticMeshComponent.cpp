@@ -40,7 +40,7 @@
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 
-#include <tinyxml.h>
+#include <tinyxml2.h>
 using namespace Ogre;
 
 namespace GASS
@@ -131,9 +131,9 @@ namespace GASS
 	}
 
 
-	void OgreStaticMeshComponent::LoadXML(TiXmlElement *elem)
+	void OgreStaticMeshComponent::LoadXML(tinyxml2::XMLElement *elem)
 	{
-		TiXmlElement *prop_elem = elem->FirstChildElement();
+		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
 		{
 			std::string prop_name = prop_elem->Value();
@@ -143,18 +143,18 @@ namespace GASS
 				instance.m_Position = Vec3(0,0,0);
 				instance.m_Rotation = Quaternion();
 				instance.m_Scale = Vec3(1,1,1);
-				TiXmlElement *file_elem = prop_elem->FirstChildElement("Filename");
+				tinyxml2::XMLElement *file_elem = prop_elem->FirstChildElement("Filename");
 				const std::string mesh_name = file_elem->Attribute("value");
 				instance.m_Filename = mesh_name;
 				//sort by mesh name
-				TiXmlElement *pos_elem = prop_elem->FirstChildElement("Position");
+				tinyxml2::XMLElement *pos_elem = prop_elem->FirstChildElement("Position");
 				if(pos_elem)
 				{
 					const std::string pos_str = pos_elem->Attribute("value");
 					std::stringstream ss(pos_str);
 					ss >> instance.m_Position;
 				}
-				TiXmlElement *rot_elem = prop_elem->FirstChildElement("Quaternion");
+				tinyxml2::XMLElement *rot_elem = prop_elem->FirstChildElement("Quaternion");
 				if(rot_elem)
 				{
 					const std::string rot_str = rot_elem->Attribute("value");
@@ -163,7 +163,7 @@ namespace GASS
 
 				}
 
-				TiXmlElement *scale_elem = prop_elem->FirstChildElement("Scale");
+				tinyxml2::XMLElement *scale_elem = prop_elem->FirstChildElement("Scale");
 				if(scale_elem)
 				{
 					const std::string scale_str = scale_elem->Attribute("value");

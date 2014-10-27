@@ -60,7 +60,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 	protected:
 		void OnPaint(GrassPaintMessagePtr message);
 		std::string GetDensityMap() const;

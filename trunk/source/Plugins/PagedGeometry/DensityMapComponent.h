@@ -55,7 +55,7 @@ namespace GASS
 		~DensityMapComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 		float GetDensityAt(float x, float z);
 		void SetMapBounds(TBounds bounds) {m_MapBounds = bounds;}
 	protected:

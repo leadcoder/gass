@@ -29,7 +29,7 @@
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSComponent.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <angelscript.h>
 //addons
 #include "Sim/Utils/Script/scriptstdstring.h"

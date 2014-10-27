@@ -25,12 +25,17 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <vector>
 
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
-class TiXmlElement;
+
 namespace tbb
 {
 	class task_scheduler_init;
 }
+
 namespace GASS
 {
 	class ITaskNodeListener;
@@ -52,7 +57,7 @@ namespace GASS
 		void Register(TaskNodeListenerPtr listener, const std::string task_node_name);
 		void Unregister(TaskNodeListenerPtr listener, const std::string task_node_name);
 		void Log();
-		void LoadXML(TiXmlElement *xml_elem);
+		void LoadXML(tinyxml2::XMLElement *xml_elem);
 		TaskNodePtr  GetTaskNode() const {return m_SimulationTaskNode;}
 		bool HasUpdateRequest() const{return m_StepSimulationRequest;}
 		double GetUpdateRequestTimeStep() const {return m_RequestDeltaTime;}

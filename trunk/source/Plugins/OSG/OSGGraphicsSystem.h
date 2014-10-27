@@ -64,13 +64,13 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
 	protected:
 		ADD_PROPERTY(bool,FlipDDS);
-		void LoadXML(TiXmlElement *elem);
+		void LoadXML(tinyxml2::XMLElement *elem);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		
 		//void SetActiveData(osg::Group* root);
-		void LoadShadowSettings(TiXmlElement *shadow_elem);
+		void LoadShadowSettings(tinyxml2::XMLElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
 		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}

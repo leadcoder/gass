@@ -61,7 +61,7 @@ namespace GASS
 		virtual void OnDelete();
 
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 		GrassLoader* GetGrassLoader() const {return m_GrassLoader;}
 		TBounds GetMapBounds() const {return m_MapBounds;}
 		Ogre::TexturePtr GetDensityTexture() const {return  m_DensityTexture;}

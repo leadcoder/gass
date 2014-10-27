@@ -21,7 +21,7 @@
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 namespace GASS
 {
@@ -81,16 +81,16 @@ namespace GASS
 	}
 
 
-	void Component::LoadXML(TiXmlElement *obj_elem)
+	void Component::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseReflectionObject::_LoadProperties(obj_elem);
 	}
 
-	void Component::SaveXML(TiXmlElement *xml_elem)
+	void Component::SaveXML(tinyxml2::XMLElement *xml_elem)
 	{
-		TiXmlElement * this_elem;
+		tinyxml2::XMLElement * this_elem;
 		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		this_elem = new TiXmlElement( factoryname.c_str() );  
+		this_elem = xml_elem->GetDocument()->NewElement(factoryname.c_str() );  
 		xml_elem->LinkEndChild( this_elem );  
 		_SaveProperties(this_elem);
 	}

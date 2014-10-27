@@ -24,7 +24,11 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace GASS
 {
@@ -52,7 +56,7 @@ namespace GASS
 			@resource_group The resources group
 		*/
 
-		void LoadXML(TiXmlElement *elem);
+		void LoadXML(tinyxml2::XMLElement *elem);
 		/**
 			Add resource group
 			@resource_group The resources group

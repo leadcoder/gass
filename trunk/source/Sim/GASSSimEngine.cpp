@@ -44,7 +44,7 @@
 #include "Sim/GASSGeometryFlags.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 
 namespace GASS
@@ -166,24 +166,24 @@ namespace GASS
 	void SimEngine::LoadSettings(const FilePath &configuration_file)
 	{
 		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
-		TiXmlDocument *xmlDoc = new TiXmlDocument(configuration_file.GetFullPath().c_str());
-		if (!xmlDoc->LoadFile())
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		}
 
-		TiXmlElement *xml_settings = xmlDoc->FirstChildElement("GASS");
+		tinyxml2::XMLElement *xml_settings = xmlDoc->FirstChildElement("GASS");
 		if (!xml_settings)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		}
 
-		TiXmlElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
+		tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if(xml_data_path)
 		{
-			std::string env_data_path = XMLUtils::ReadString((TiXmlElement *)xml_settings,"SetDataPath");
+			std::string env_data_path = XMLUtils::ReadString((tinyxml2::XMLElement *)xml_settings,"SetDataPath");
 			if(boost::filesystem::exists(boost::filesystem::path(env_data_path)))
 			{
 				env_data_path = "GASS_DATA_HOME=" + env_data_path;
@@ -200,19 +200,19 @@ namespace GASS
 		}
 		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 
-		TiXmlElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
+		tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if(xml_scene_path)
-			m_ScenePath.SetPath(XMLUtils::ReadString((TiXmlElement *)xml_settings,"ScenePath"));
+			m_ScenePath.SetPath(XMLUtils::ReadString((tinyxml2::XMLElement *)xml_settings,"ScenePath"));
 
 
-		TiXmlElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
+		tinyxml2::XMLElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
 		if(xml_res_man)
 			m_ResourceManager->LoadXML(xml_res_man);
 
 		m_SystemManager->Load(configuration_file.GetFullPath());
 
 		//read SceneObjectTemplateManager settings
-		TiXmlElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
+		tinyxml2::XMLElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
 		if(xml_sotm)
 		{
 			bool add_object_id = XMLUtils::ReadBool(xml_sotm,"AddObjectIDToName");
@@ -225,7 +225,7 @@ namespace GASS
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 		}
 
-		TiXmlElement *xml_rtc = xml_settings->FirstChildElement("RTC");
+		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
 		if(xml_rtc)
 		{
 			int num_threads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
@@ -235,7 +235,7 @@ namespace GASS
 			//bool external_update = XMLUtils::ReadBool(xml_rtc,"ExternalSimulationUpdate");
 			//GetSimSystemManager()->SetPauseSimulation(external_update);
 
-			TiXmlElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
+			tinyxml2::XMLElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
 			if(xml_tn)
 			{
 				m_RTC->LoadXML(xml_tn);

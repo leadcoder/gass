@@ -133,7 +133,7 @@ namespace GASS
 		//Move this to private
 		void SyncMessages(double delta_time);
 	private:
-		SystemPtr LoadSystem(TiXmlElement *system_elem);
+		SystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
 		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SystemPtr> SystemVector;

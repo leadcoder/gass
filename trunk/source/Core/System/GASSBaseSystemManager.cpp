@@ -24,7 +24,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 
 
 namespace GASS
@@ -38,11 +38,11 @@ namespace GASS
 
 	}
 
-	void BaseSystemManager::Load(TiXmlElement *systems_elem)
+	void BaseSystemManager::Load(tinyxml2::XMLElement *systems_elem)
 	{
 		if(systems_elem)
 		{
-			TiXmlElement *sys_elm = systems_elem->FirstChildElement();
+			tinyxml2::XMLElement *sys_elm = systems_elem->FirstChildElement();
 			//Loop through each template
 			while(sys_elm)
 			{
@@ -59,7 +59,7 @@ namespace GASS
 	}
 
 
-	SystemPtr BaseSystemManager::LoadSystem(TiXmlElement *system_elem)
+	SystemPtr BaseSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
 	{
 		const std::string system_type = system_elem->Value();
 		SystemPtr system = SystemFactory::Get().Create(system_type);

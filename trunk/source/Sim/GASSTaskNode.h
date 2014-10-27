@@ -20,7 +20,11 @@
 #ifndef TASK_NODE_H
 #define TASK_NODE_H
 #include "Sim/GASSCommon.h"
-class TiXmlElement;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 namespace tbb
 {
@@ -52,7 +56,7 @@ namespace GASS
 		TaskNode();
 		void LoadXML();
 		virtual ~TaskNode();
-		void LoadXML(TiXmlElement *xml_elem);
+		void LoadXML(tinyxml2::XMLElement *xml_elem);
 		TaskNode* GetNodeByName(const std::string &name); 
 		void Update(double delta_time,tbb::task *parent);
 		

@@ -105,7 +105,7 @@ namespace GASS
 
 			Notice that the actual component, a LocationComponent
 			in the example above ,is created before this function
-			is called and the TiXmlElement argument is the actual
+			is called and the tinyxml2::XMLElement argument is the actual
 			component xml-tag (MyLocation in the example)
 
 			The user is however free to override this function for a
@@ -113,7 +113,7 @@ namespace GASS
 			loading procedure, this will of cause also require a custom
 			save implementation.
 		*/
-		virtual void LoadXML(TiXmlElement *obj_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
 
 		/**
 			Function to save component attributes to xml-tag.
@@ -136,7 +136,7 @@ namespace GASS
 			load implementation.
 
 		*/
-		virtual void SaveXML(TiXmlElement *obj_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		/**
 			This function will allocate a new component

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include <OgreTechnique.h>
 
 #include "Sim/GASSBaseSceneComponent.h"

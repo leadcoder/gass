@@ -152,8 +152,8 @@ namespace GASS
 		void SetMeshBoundingMax(const Vec3 &max);
 		int GetTransparency() const;
 		void SetTransparency(int value);
-		void SaveXML(TiXmlElement *obj_elem);
-		void LoadXML(TiXmlElement *obj_elem);
+		void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void LoadXML(tinyxml2::XMLElement *obj_elem);
 		void OnEditPosition(EditPositionMessagePtr message);
 
 		void SaveAllTiles(const char* path, const dtNavMesh* mesh);

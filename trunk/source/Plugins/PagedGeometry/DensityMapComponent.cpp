@@ -245,7 +245,7 @@ namespace GASS
 	}
 
 
-	void DensityMapComponent::SaveXML(TiXmlElement *obj_elem)
+	void DensityMapComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
 

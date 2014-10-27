@@ -24,7 +24,7 @@
 #include "GASSStringUtils.h"
 #include "GASSLogManager.h"
 #include "GASSException.h"
-#include <tinyxml.h>
+#include <tinyxml2.h>
 
 namespace GASS
 {
@@ -38,10 +38,10 @@ namespace GASS
 
 	}
 
-	std::string XMLUtils::ReadString(TiXmlElement *xml_elem, const std::string &tag)
+	std::string XMLUtils::ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		std::string ret;
-		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value)
 		{
 			 ret = xml_value->Attribute("value");
@@ -53,7 +53,7 @@ namespace GASS
 		return ret;
 	}
 
-	std::string XMLUtils::ReadStringAttribute(TiXmlElement *xml_elem, const std::string &attrib)
+	std::string XMLUtils::ReadStringAttribute(tinyxml2::XMLElement *xml_elem, const std::string &attrib)
 	{
 		std::string ret;
 		if(xml_elem->Attribute(attrib.c_str()))
@@ -62,16 +62,16 @@ namespace GASS
 		}
 		else
 		{
-			const std::string document_name = xml_elem->GetDocument()->Value();
+			const std::string document_name = xml_elem->GetDocument()->GetFileName();
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find attribute:" + attrib +" In file:" +document_name, "XMLUtils::ReadStringAttribute");
 		}
 		return ret;
 	}
 
-	bool XMLUtils::ReadBool(TiXmlElement *xml_elem, const std::string &tag)
+	bool XMLUtils::ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		bool ret;
-		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{
 			 std::string value = xml_value->Attribute("value");
@@ -91,10 +91,10 @@ namespace GASS
 		return ret;
 	}
 
-	int XMLUtils::ReadInt(TiXmlElement *xml_elem, const std::string &tag)
+	int XMLUtils::ReadInt(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		int ret;
-		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{
 			 std::string value = xml_value->Attribute("value");
@@ -107,10 +107,10 @@ namespace GASS
 		return ret;
 	}
 
-	Float XMLUtils::ReadFloat(TiXmlElement *xml_elem, const std::string &tag)
+	Float XMLUtils::ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		Float ret = 0;
-		TiXmlElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value)
 		{
 			 xml_value->QueryDoubleAttribute("value",&ret);

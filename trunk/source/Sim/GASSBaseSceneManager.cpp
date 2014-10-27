@@ -25,7 +25,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "tinyxml.h"
+#include "tinyxml2.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 
@@ -119,16 +119,16 @@ namespace GASS
 		}
 	}
 
-	void BaseSceneManager::LoadXML(TiXmlElement *xml_elem)
+	void BaseSceneManager::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
 		_LoadProperties(xml_elem);
 	}
 
 
-	void BaseSceneManager::SaveXML(TiXmlElement *xml_elem)
+	void BaseSceneManager::SaveXML(tinyxml2::XMLElement *xml_elem)
 	{
-		TiXmlElement * this_elem;
-		this_elem = new TiXmlElement( GetRTTI()->GetClassName().c_str());  
+		tinyxml2::XMLElement * this_elem;
+		this_elem = xml_elem->GetDocument()->NewElement(GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
 		_SaveProperties(this_elem);
 	}

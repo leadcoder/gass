@@ -65,8 +65,8 @@ namespace GASS
 		SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		
 		//IXMLSerialize interface
-		virtual void LoadXML(TiXmlElement *xml_elem);
-		virtual void SaveXML(TiXmlElement *xml_elem);
+		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
+		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
 	protected:
 		SystemManagerWeakPtr m_Owner;
 	};
