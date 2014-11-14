@@ -73,14 +73,13 @@ namespace GASS
 		return GeometryFlagsBinder(GetGeometryFlags());
 	}
 
-
 	void OSGBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
 	}
-
 
 	float OSGBillboardComponent::GetWidth() const 
 	{
@@ -131,16 +130,20 @@ namespace GASS
 
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
-		m_OSGBillboard->addDrawable(
-			CreateSquare(osg::Vec3(corner.x,corner.y,corner.z),
-			osg::Vec3(east.x,east.y,east.z),
-			osg::Vec3(up.x,up.y,up.z),
-			osgDB::readImageFile(full_path,options)).get(),
-			osg::Vec3(0.0f,0.0f,0.0f));
+
+
+		osg::ref_ptr<osg::Geometry> geom = CreateSquare(osg::Vec3(corner.x,corner.y,corner.z),
+														osg::Vec3(east.x,east.y,east.z),
+														osg::Vec3(up.x,up.y,up.z),
+														osgDB::readImageFile(full_path,options));
+														
+		m_OSGBillboard->addDrawable(geom);
+		m_Geom = geom.get();
+			
 
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_OSGBillboard->setUserData(node_data);
-
+	
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
@@ -148,19 +151,25 @@ namespace GASS
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
-		//m_OSGBillboard->setNodeMask(~(NM_REGULAR_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_OSGBillboard->getNodeMask());
-		//m_OSGBillboard->setNodeMask(NM_REGULAR_GEOMETRY | m_OSGBillboard->getNodeMask());
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
 	{
-		Float max_size = Math::Max(m_Width,m_Height);
-		Float offset = m_Height/2.0;
-		max_size *= 0.5f;
-		AABox box(Vec3(-max_size,-max_size+offset,-max_size),Vec3(max_size,max_size+offset,max_size));
-		return box;
+		if(m_Geom)
+		{
+			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			osg::Vec3 p_min = (*coords)[0];
+			osg::Vec3 p_max = (*coords)[2];
+			osg::Vec3 bb_size = p_max - p_min;
+			Float max_size = Math::Max(bb_size.x() ,bb_size.z() )*0.5f;
+			Float offset = bb_size.z() * 0.5f;
+			AABox box(Vec3(-max_size,-max_size + offset,-max_size),Vec3(max_size,max_size+offset,max_size));
+			return box;
+		}
+		return AABox();
 	}
+
 	Sphere OSGBillboardComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
@@ -281,8 +290,7 @@ namespace GASS
 	{
 		if(m_OSGBillboard.valid())
 		{
-			osg::Geometry *geom = static_cast<osg::Geometry*>(m_OSGBillboard->getDrawable(0));
-			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (geom->getVertexArray());
+			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 
 			osg::Vec3 height(0,0,height);
 			osg::Vec3 width(width,0,0);
@@ -292,7 +300,35 @@ namespace GASS
 			(*coords)[1] = corner+width;
 			(*coords)[2] = corner+width+height;
 			(*coords)[3] = corner+height;
-			geom->setVertexArray(coords);
+			m_Geom->setVertexArray(coords);
+		}
+	}
+
+
+	void OSGBillboardComponent::OnSetColorMessage(BillboardColorRequestPtr message)
+	{
+		/*if(m_OSGBillboard.valid())
+		{
+		
+		osg::ref_ptr<osg::Material> mat (new osg::Material);
+		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(color.r,color.g,color.b,color.a));
+		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(color.r,color.g,color.b,color.a));
+		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
+		nodess->setAttribute(mat.get());
+		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		}*/
+
+		if(m_Geom)
+		{
+			const ColorRGBA color = message->GetColor();
+			osg::Vec4Array* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
+			//osg::Vec4Array* colors = dynamic_cast<osg::Vec4Array*>(m_Geom->getColorArray());
+			(*colors)[0].set(color.r,color.g,color.b,color.a);
+			(*colors)[1].set(color.r,color.g,color.b,color.a);
+			(*colors)[2].set(color.r,color.g,color.b,color.a);
+			(*colors)[3].set(color.r,color.g,color.b,color.a);
+			m_Geom->setColorArray(colors);
+			
 		}
 	}
 

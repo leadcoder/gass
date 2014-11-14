@@ -155,13 +155,13 @@ namespace GASS
 					std::string extension = iter->path().extension().generic_string();
 					std::string filename = iter->path().filename().generic_string();
 
-					//filer debug plugins
+					//filter debug plugins
 					#ifdef DEBUG
-						if(filename.find("_d") != std::string::npos)
-							break;
-					#else
 						if(filename.find("_d") == std::string::npos)
-						 break;
+							continue;
+					#else
+						if(filename.find("_d") != std::string::npos)
+							continue;
 					#endif
 				
 					if(extension == ext)

@@ -47,7 +47,7 @@ namespace GASS
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		//void OnMaterialMessage(MaterialMessagePtr message);
+		void OnSetColorMessage(BillboardColorRequestPtr message);
 		float GetWidth() const;
 		void SetWidth(float width);
 		float GetHeight() const;
@@ -66,6 +66,7 @@ namespace GASS
 		float m_Width;
 		float m_Height;
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
+		osg::Geometry* m_Geom;
 		GeometryFlags m_GeomFlags;
 	};
 }

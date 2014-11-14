@@ -64,7 +64,7 @@ namespace GASS
 		void SetObjectSite(SceneObjectPtr obj);
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
-		void CreateCamera();
+		void CreateCamera(const std::string &template_name = "");
 		CameraComponentPtr GetActiveCamera() const {return CameraComponentPtr(m_ActiveCamera,NO_THROW);}
 		SceneObjectPtr GetActiveCameraObject() const {return SceneObjectPtr(m_ActiveCameraObject,NO_THROW);}
 		const std::set<GASS::SceneObjectWeakPtr>&  GetInvisibleObjects() const {return m_InvisibleObjects;}

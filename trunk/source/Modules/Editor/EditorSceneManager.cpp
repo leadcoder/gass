@@ -77,16 +77,24 @@ namespace GASS
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
-	void EditorSceneManager::CreateCamera()
+	void EditorSceneManager::CreateCamera(const std::string &template_name)
 	{
+		std::string ctn = template_name;
 		ScenePtr scene = GetScene();
 		//load top camera
 		Vec3 vel(0,0,0);
 		Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
-		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-
-		if(!free_obj) //If no FreeCameraObject template found, create one
+		EditorSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
+		if(ctn == "")
+			ctn = system->GetDefaultCameraTemplate();
+		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate(ctn,scene->GetRootSceneObject());
+		if(!free_obj) 
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find camera template named:" + ctn,"EditorSceneManager::CreateCamera");
+		}
+		
+		/*if(!free_obj) //If no FreeCameraObject template found, create one
 		{
 			SceneObjectTemplatePtr fre_cam_template (new SceneObjectTemplate);
 			fre_cam_template->SetName("FreeCameraObject");
@@ -106,12 +114,13 @@ namespace GASS
 			SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(fre_cam_template);
 
 			free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		}
+		}*/
 
 
 		if(free_obj)
 		{
 			free_obj->SendImmediateRequest(PositionRequestPtr(new PositionRequest(scene->GetStartPos())));
+			free_obj->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot)));
 			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
 		}

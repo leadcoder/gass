@@ -23,6 +23,12 @@
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include <osg/Camera>
 
+namespace osgGA
+{
+	class CustomTerrainManipulator;
+};
+
+
 namespace GASS
 {
 	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,BaseSceneComponent> , public IOSGCameraManipulator
@@ -36,12 +42,22 @@ namespace GASS
 		//IOSGCameraManipulator
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
 	protected:
+		void SetRotation(const Quaternion& rot);
+		void SetPosition(const Vec3& pos);
 		void OnWorldPositionRequest(WorldPositionRequestPtr message);
+		void OnWorldRotationRequest(WorldRotationRequestPtr message);
+		void OnPositionRequest(PositionRequestPtr message);
+		void OnRotationRequest(RotationRequestPtr message);
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
-
-		std::string m_ManName;// m_OrthoWindowHeight;
+	private:
+		std::string m_ManName;
 		osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
+		osgGA::CustomTerrainManipulator* m_TerrainMan;
+		Vec3 m_InitPos;
+		Quaternion m_InitRot;
+		bool m_ReadyToRun;
+
 	};
 	typedef SPTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
 	typedef WPTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;

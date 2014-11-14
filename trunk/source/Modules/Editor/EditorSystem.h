@@ -37,8 +37,10 @@ namespace GASS
 		virtual std::string GetSystemName() const {return "EditorSystem";}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 		ADD_PROPERTY(bool,LockTerrainObjects)
+		ADD_PROPERTY(std::string,DefaultCameraTemplate)
 	protected:
 		GUISchemaLoader* m_GUISettings;
+
 		
 	};
 	typedef SPTR<EditorSystem> EditorSystemPtr;

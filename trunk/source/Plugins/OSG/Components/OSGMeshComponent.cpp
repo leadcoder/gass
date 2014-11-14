@@ -325,8 +325,8 @@ namespace GASS
 			options->setOptionString("dds_flip");
 		}
 
-		//osgDB::Registry::instance()->setBuildKdTreesHint(osgDB::ReaderWriter::Options::BUILD_KDTREES);
-
+		options->setBuildKdTreesHint(osgDB::ReaderWriter::Options::BUILD_KDTREES);
+	
 		m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name,options);
 
 		if( ! m_MeshNode)
@@ -359,7 +359,6 @@ namespace GASS
 		//update mask!
 		SetGeometryFlags(m_GeomFlags);
 	}
-
 
 	bool OSGMeshComponent::GetExpand() const
 	{
