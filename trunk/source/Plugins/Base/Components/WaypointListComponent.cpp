@@ -102,17 +102,33 @@ namespace GASS
 
 	void WaypointListComponent::OnInitialize()
 	{
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnUpdate,UpdateWaypointListMessage,1));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
-		//m_Initialized = true;
-		//UpdatePath();
-		//SetShowWaypoints(m_ShowWaypoints);
 	}
+
+	static const std::string MAT_NAME = "WaypointListLine";
 
 	void WaypointListComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
+
+		//create material for waypoint binding line
+		
+	
+		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		if(!gfx_sys->HasMaterial(MAT_NAME))
+		{
+			GraphicsMaterial line_mat;
+			line_mat.Name = MAT_NAME;
+			line_mat.Diffuse.Set(0,0,0,1.0);
+			line_mat.Ambient.Set(0,0,0);
+			line_mat.SelfIllumination.Set(0.7,1,1);
+			line_mat.DepthTest = false;
+			line_mat.DepthWrite = false;
+			gfx_sys->AddMaterial(line_mat);
+		}
+		
+
 
 		m_Initialized = true;
 		UpdatePath();
@@ -157,7 +173,6 @@ namespace GASS
 		m_EnableSpline = value;
 		if(m_Initialized)
 			UpdatePath();
-		//UpdatePath();
 	}
 
 	bool WaypointListComponent::GetShowWaypoints() const
@@ -222,10 +237,12 @@ namespace GASS
 
 			if(sub_mesh_data->PositionVector.size() > 0)
 			{
+
 				GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+				//update material
+				GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
 			}
 		}
-		//SetShowWaypoints(m_ShowWaypoints);
 		//create absolute positions
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 world_pos = location->GetWorldPosition();

@@ -68,6 +68,7 @@ namespace GASS
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
 		osg::Geometry* m_Geom;
 		GeometryFlags m_GeomFlags;
+		double m_GroundOffset;
 	};
 }
 

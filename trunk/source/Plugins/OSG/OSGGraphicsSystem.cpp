@@ -346,7 +346,7 @@ namespace GASS
 	void OSGGraphicsSystem::Update(double delta_time)
 	{
 		static int tick = 0;
-
+		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
 		if(m_Viewer->done())
 		{
 			return;
@@ -356,6 +356,7 @@ namespace GASS
 		m_DebugTextBox->setText("");
 		//update listeners
 		SimSystem::Update(delta_time);
+		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 
 
@@ -559,7 +560,7 @@ namespace GASS
 					ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
 					while(iter != resources.end())
 					{
-						//remove extenstion?
+						//remove extension?
 						std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
 						content.push_back(mat_name);
 						iter++;
@@ -607,7 +608,6 @@ namespace GASS
 		material.Diffuse.Set(diffuse.x(),diffuse.y(),diffuse.z(),diffuse.w());
 		material.Specular.Set(specular.x(),specular.y(),specular.z());
 		material.SelfIllumination.Set(si.x(),si.y(),si.z());
-
 		//copy textures!
 	}
 
@@ -630,27 +630,28 @@ namespace GASS
 		mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
 		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
 		state_set->setAttribute(mat.get());
+
+		
 		if(material.DepthTest)
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		else
 		{
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
-			//render late!
-			//state_set->setRenderBinDetails( 11, "DepthSortedBin");
-			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-			//new osgUtil::RenderBin(osgUtil::RenderBin::SORT_BACK_TO_FRONT);
-			//after transparent bin
-			//state_set->setRenderBinDetails( 11, "RenderBin");
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
+			//also change render order, to get this geometry first
+			state_set->setRenderBinDetails(INT_MAX, "RenderBin"); 
 		}
 
-		osg::ref_ptr<osg::Depth> depth (new osg::Depth);
-		depth->setWriteMask( material.DepthWrite );
-		state_set->setAttributeAndModes( depth, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		//disabling depth write will effect GL_DEPTH_TEST some how, 
+		//osg::ref_ptr<osg::Depth> depth (new osg::Depth(Depth::LEQUAL,0.0,1.0,material.DepthWrite));
+		/*	osg::ref_ptr<osg::Depth> depth (new osg::Depth());
+			depth->setWriteMask( material.DepthWrite );
+			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		*/
 		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-		
 		// Turn on blending
-		if(diffuse.a < 1.0) //TODO: provide blending mode in material!
+		if(diffuse.a < 1.0) //special handling if we have transparent a material,
 		{
+			//TODO: provide blending mode in material!
 			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
 			state_set->setAttributeAndModes(bf);
 
@@ -667,10 +668,6 @@ namespace GASS
 			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
 			depth->setWriteMask( false );
 			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
-		}
-		else //restore blending?
-		{
-
 		}
 	}
 

@@ -90,7 +90,7 @@ namespace GASS
 		rm->AddResourceGroup(scene_group);
 
 
-		//Add all registered scene manangers to the scene
+		//Add all registered scene managers to the scene
 
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
 		for(size_t i = 0; i < managers.size();i++)
@@ -153,21 +153,6 @@ namespace GASS
 				"Scene::Load");
 		}
 
-		//if(!m_CreateCalled)
-		{
-		//	Create();
-			/*GASS_EXCEPT(Exception::ERR_INVALID_STATE,
-				"You must call Create before using the scene class",
-				"Scene::Load");*/
-		}
-
-		/*if(m_SceneLoaded)
-		{
-			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
-				"Scene already loaded, you must onload before load",
-				"Scene::Load");
-		}*/
-		//m_Name = name;
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		rm->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
 		ResourceGroupPtr res_group(new ResourceGroup(GetResourceGroupName()));
@@ -201,11 +186,8 @@ namespace GASS
 		//Delete our allocated document
 		delete xmlDoc;
 
-		//load scene terrain instances
-
 		//Create new scenery node
 		m_Root->RemoveChildSceneObject(SceneObjectPtr(m_TerrainObjects));
-		//SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
 		SceneObjectPtr  scenery =  SceneObject::LoadFromXML(GetSceneFolder().GetFullPath() + "/instances.xml");
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
@@ -227,8 +209,6 @@ namespace GASS
 
 	void Scene::Save(const std::string &name)
 	{
-
-
 		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
 		boost::filesystem::path boost_path(scene_path.GetFullPath());
 		if(!boost::filesystem::exists(boost_path))

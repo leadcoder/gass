@@ -176,13 +176,13 @@ namespace GASS
 
 	void OgreGraphicsSystem::Update(double delta_time)
 	{
+		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
+
 		if(m_UpdateMessagePump) //take care of window events?
 			Ogre::WindowEventUtilities::messagePump();
 
 		//if(m_DebugDrawer)
 		//	m_DebugDrawer->build();
-
-
 
 		m_Root->renderOneFrame();
 
@@ -207,6 +207,8 @@ namespace GASS
 		}
 		//update listeners
 		SimSystem::Update(delta_time);
+
+		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 
 	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
@@ -378,6 +380,10 @@ namespace GASS
 		if(base_mat_name != "")
 		{
 			Ogre::MaterialPtr base_mat = Ogre::MaterialManager::getSingleton().getByName( base_mat_name);
+			if(base_mat.isNull())
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Base material not found:" + base_mat_name, "OgreGraphicsSystem::AddMaterial");
+			}
 			ogre_mat = base_mat->clone(mat_name);
 		}
 		else

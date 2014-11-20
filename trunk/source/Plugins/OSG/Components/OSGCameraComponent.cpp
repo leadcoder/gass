@@ -180,11 +180,6 @@ namespace GASS
 		}
 	}
 
-	/*void OSGCameraComponent::OnRotationChanged(RotationRequestPtr message)
-	{
-		UpdateFromLocation();
-	}*/
-
 	void OSGCameraComponent::UpdateFromLocation()
 	{
 		if(!m_OSGCamera.valid())
@@ -261,10 +256,38 @@ namespace GASS
 			}
 			else*/
 			{
-				//use same method as ogre3d
-				osg::Matrixd inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
+
+				// mouse pointer intersect viewport so we can proceed to set up a line segment
+				
+			/*	osg::Matrix MVPW = m_OSGCamera->getProjectionMatrix() * m_OSGCamera->getViewport()->computeWindowMatrix();
+				osg::Matrixd inverseMVPW;
+				inverseMVPW.invert(MVPW);
+
 				double nx = screenx * 2.0f - 1.0f;
 				double ny = (1.0f-screeny) * 2.0f - 1.0f;
+
+				osg::Vec3 nearPoint = osg::Vec3(nx,ny,0.0f) * inverseMVPW;
+				osg::Vec3 farPoint = osg::Vec3(nx,ny,1.0f) * inverseMVPW;
+
+				osg::Vec3d rayDirection = farPoint - nearPoint;
+				rayDirection.normalize();
+
+				ray_start = OSGConvert::Get().ToGASS(nearPoint);
+				ray_dir = OSGConvert::Get().ToGASS(rayDirection);*/
+
+
+				//ray_start.Set(rayOrigin.x(),rayOrigin.y(),rayOrigin.z());
+				//ray_dir.Set(rayDirection.x(),rayDirection.y(),rayDirection.z());
+				//ray_start = OSGConvert::Get().ToGASS(rayOrigin);
+				//ray_dir = OSGConvert::Get().ToGASS(rayDirection);
+
+
+				//use same method as ogre3d
+				osg::Matrixd inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
+				
+				double nx = screenx * 2.0f - 1.0f;
+				double ny = (1.0f-screeny) * 2.0f - 1.0f;
+
 				osg::Vec3d nearPoint(nx, ny, 0.0f);
 				// Use midPoint rather than far point to avoid issues with infinite projection
 				osg::Vec3d midPoint (nx, ny,  1.0f);

@@ -76,10 +76,10 @@ namespace GASS
 			return 0.0;
 
 		float h00, h01, h10, h11;
-		h00 = m_Data[z0*m_Height+x0];
-		h01 = m_Data[z0*m_Height+x1];
-		h10 = m_Data[z1*m_Height+x0];
-		h11 = m_Data[z1*m_Height+x1];
+		h00 = m_Data[x0 + z0*m_Width];
+		h01 = m_Data[x1 + z0*m_Width];
+		h10 = m_Data[x0 + z1*m_Width];
+		h11 = m_Data[x1 + z1*m_Width];
 
 		float tx, ty;
 		tx = fxindex - x0;
@@ -97,17 +97,17 @@ namespace GASS
 		unsigned int zindex = m_Height * (z - m_Min.z) / bounds_height;
 		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
 			return;
-		m_Data[xindex + zindex*m_Height] = height;
+		m_Data[xindex + zindex*m_Width] = height;
 	}
 
 	void Heightmap::SetHeight(unsigned int x, unsigned int z, float height)
 	{
-		m_Data[x + z*m_Height] = height;
+		m_Data[x + z * m_Width] = height;
 	}
 
 	float Heightmap::GetHeight(unsigned int x, unsigned int z) const
 	{
-		return m_Data[x + z*m_Height];
+		return m_Data[x + z * m_Width];
 	}
 
 	void Heightmap::ImportRAWFile(const std::string &filename, float max_height, float min_height)

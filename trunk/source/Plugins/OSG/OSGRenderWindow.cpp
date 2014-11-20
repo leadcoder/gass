@@ -71,7 +71,7 @@ namespace GASS
 
 	ViewportPtr OSGRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
 	{
-		//convert dimensions noramlized to pixel
+		//convert dimensions normalized to pixel
 		float win_width = m_Window->getTraits()->width;
 		float win_height = m_Window->getTraits()->height;
 
@@ -85,6 +85,7 @@ namespace GASS
 	    camera->setGraphicsContext(m_Window.get());
 		camera->setViewport(osg_vp);
 		camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+		camera->getOrCreateStateSet()->setGlobalDefaults();
 
 		osgViewer::View* view = new osgViewer::View;
 		view->setName(name);

@@ -105,14 +105,12 @@ namespace GASS
 		if(terrain)
 		{
 			//m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetSamples();
-			int samples_z = terrain->GetSamples();
+			int samples_x = terrain->GetWidth();
+			int samples_z = terrain->GetHeight();
 			m_TerrainBounds = terrain->GetBoundingBox();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
-			//m_SampleWidth = size_x/(samples_x-1);
-			//m_SampleHeight = size_z/(samples_z-1);
-
+			
 			Float scale_x = size_x/((Float) samples_x-1);
 			Float scale_z = size_z/((Float) samples_z-1);
 			//physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) system->GetAllocator()->allocate(sizeof(physx::PxHeightFieldSample)*samples_x*samples_z,0,__FILE__, __LINE__);
@@ -129,18 +127,18 @@ namespace GASS
 					//Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 					//Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 					Float height = m_TerrainGeom->GetHeightAtPoint((int)x,(int)z);
-					samples[z+x*samples_x].height = (physx::PxI16)(height/heightScale);
+					samples[z+x*samples_z].height = (physx::PxI16)(height/heightScale);
 					//samples[x+z*samples_x].setTessFlag();
-					samples[z+x*samples_x].materialIndex0=0;
-					samples[z+x*samples_x].materialIndex1=0;
+					samples[z+x*samples_z].materialIndex0=0;
+					samples[z+x*samples_z].materialIndex1=0;
 				}
 			}
 
 			physx::PxHeightFieldDesc hfDesc;
 
 			hfDesc.format             = physx::PxHeightFieldFormat::eS16_TM;
-			hfDesc.nbColumns          = samples_x;
-			hfDesc.nbRows             = samples_z;
+			hfDesc.nbColumns          = samples_z;
+			hfDesc.nbRows             = samples_x;
 			hfDesc.samples.data       = samples;
 			hfDesc.samples.stride     = sizeof(physx::PxHeightFieldSample);
 			//hfDesc.thickness = 0.1;

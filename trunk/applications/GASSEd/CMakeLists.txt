@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 set(APP_NAME "GASSEd")
 project(${APP_NAME})
 
+set(CMAKE_MODULE_PATH
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../CMake"
+  )
+
+include(OSGDepModule)
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 
 set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
@@ -13,19 +18,18 @@ else()
 	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
 endif()
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/OpenSceneGraph-v3.0.1")
-	set(OSG_DIR  "${GASS_DEPENDENCIES_DIR}/OpenSceneGraph-v3.0.1" CACHE PATH "OSG folder")
-else()
-	set(OSG_DIR $ENV{OGRE_HOME} CACHE PATH "OSG folder")
-endif()
-
 if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
 	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
 else()
 	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
 endif()
 
-set(PHYSX_DIR $ENV{PHYSX_HOME}  CACHE PATH "PhysX folder")
+if(EXISTS "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4")
+	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
+else()
+	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
+endif()
+
 #msvc only, need other check if gcc
 if(${CMAKE_CL_64})
 	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win64")
@@ -44,9 +48,6 @@ set(GASSED_INSTALL_BIN_DIR  "bin")
 set(GASSED_INSTALL_BIN_DIR_DEBUG "bin/debug")
 set(GASSED_INSTALL_BIN_DIR_RELEASE "bin/release")
 
-
-
-
 set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${GASS_DIR}/include" 	"${GASS_DEPENDENCIES_DIR}/tinyxml2/include"	"${GASS_DEPENDENCIES_DIR}/tbb/include" "${GASS_DEPENDENCIES_DIR}/angelscript/include")
 set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/tinyxml2/lib/$(Configuration)" "${GASS_DEPENDENCIES_DIR}/angelscript/lib" "${GASS_DIR}/lib/")
 set(GASS_COMMON_LINK_LIBRARIES
@@ -59,8 +60,6 @@ set(GASS_COMMON_LINK_LIBRARIES
 	debug GASSEditorModule_d
 	debug tinyxml2_d 
 	)
-	
-	
 	
 find_package(Qt4 REQUIRED)
 set(GASSED_H 
@@ -102,6 +101,8 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Configuration ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Configuration
 			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../../samples/common/data ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/data
+			COMMAND ${CMAKE_COMMAND} -E copy_directory ${OSG_PLUGINS_DIR} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug
+			COMMAND ${CMAKE_COMMAND} -E copy_directory ${OSG_PLUGINS_DIR} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release
 			)
 			
 			
@@ -122,34 +123,11 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
 	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
 	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/zlib1.dll
-	${OSG_DIR}/bin/libpng13.dll
-	${OSG_DIR}/bin/glut32.dll
-	${OSG_DIR}/bin/ot12-OpenThreads.dll
-	${OSG_DIR}/bin/osg80-osg.dll
-	${OSG_DIR}/bin/osg80-osgUtil.dll
-	${OSG_DIR}/bin/osg80-osgDB.dll
-	${OSG_DIR}/bin/osg80-osgGA.dll
-	${OSG_DIR}/bin/osg80-osgText.dll
-	${OSG_DIR}/bin/osg80-osgViewer.dll
-	${OSG_DIR}/bin/osg80-osgTerrain.dll
-	${OSG_DIR}/bin/osg80-osgFX.dll
-	${OSG_DIR}/bin/osg80-osgManipulator.dll
-	${OSG_DIR}/bin/osg80-osgVolume.dll
-	${OSG_DIR}/bin/osg80-osgPresentation.dll
-	${OSG_DIR}/bin/osg80-osgSim.dll
-	${OSG_DIR}/bin/osg80-osgAnimation.dll
-	${OSG_DIR}/bin/osg80-osgWidget.dll
-	${OSG_DIR}/bin/osg80-osgParticle.dll
-	${OSG_DIR}/bin/osg80-osgShadow.dll
-	
 	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
-	
-	
 	${GASS_DIR}/bin/release/GASSCore.dll
 	${GASS_DIR}/bin/release/GASSSim.dll 
 	${GASS_DIR}/bin/release/GASSPluginOgre.dll
@@ -168,6 +146,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/release/GASSEditorModule.dll
 	${QT_DIR}/bin/QtCore4.dll
 	${QT_DIR}/bin/QtGui4.dll
+	${OSG_BIN_FILES_RELEASE}
 	)
 	set(DEP_DLL_FILES_DEBUG 
 	${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5d.dll
@@ -187,26 +166,6 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
 	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
 	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/glut32D.dll
-	${OSG_DIR}/bin/libpng13d.dll
-	${OSG_DIR}/bin/osg80-osgAnimationd.dll
-	${OSG_DIR}/bin/osg80-osgd.dll
-	${OSG_DIR}/bin/osg80-osgDBd.dll
-	${OSG_DIR}/bin/osg80-osgFXd.dll
-	${OSG_DIR}/bin/osg80-osgGAd.dll
-	${OSG_DIR}/bin/osg80-osgManipulatord.dll
-	${OSG_DIR}/bin/osg80-osgParticled.dll
-	${OSG_DIR}/bin/osg80-osgPresentationd.dll
-	${OSG_DIR}/bin/osg80-osgShadowd.dll
-	${OSG_DIR}/bin/osg80-osgSimd.dll
-	${OSG_DIR}/bin/osg80-osgTerraind.dll
-	${OSG_DIR}/bin/osg80-osgTextd.dll
-	${OSG_DIR}/bin/osg80-osgUtild.dll
-	${OSG_DIR}/bin/osg80-osgViewerd.dll
-	${OSG_DIR}/bin/osg80-osgVolumed.dll
-	${OSG_DIR}/bin/osg80-osgWidgetd.dll
-	${OSG_DIR}/bin/ot12-OpenThreadsd.dll
-	${OSG_DIR}/bin/zlib1d.dll
 	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
@@ -230,7 +189,10 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/debug/GASSEditorModule_d.dll
 	${QT_DIR}/bin/QtCored4.dll
 	${QT_DIR}/bin/QtGuid4.dll
+	${OSG_BIN_FILES_DEBUG}
 	)
+	
+	FILE(COPY ${OSG_PLUGINS}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
 
 #add dll files to out dir to enable debugging from IDE without install step
 foreach(DLL_FILE ${DEP_DLL_FILES_DEBUG})
@@ -249,5 +211,4 @@ install(TARGETS ${APP_NAME} RUNTIME DESTINATION ${GASSED_INSTALL_BIN_DIR} CONFIG
 install(FILES  ${DEP_DLL_FILES_RELEASE} DESTINATION ${GASSED_INSTALL_BIN_DIR} CONFIGURATIONS Release)
 FILE(GLOB GASSED_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/Configuration/*.xml")
 install(FILES ${GASSED_CONFIG} DESTINATION ${GASSED_INSTALL_BIN_DIR}/../Configuration)
-FILE(GLOB OSG_PLUGINS "${OSG_DIR}/bin/osgPlugins-3.0.1/*.dll")
-install(FILES ${OSG_PLUGINS} DESTINATION ${GASSED_INSTALL_BIN_DIR}/osgPlugins-3.0.1)
+install(FILES ${OSG_PLUGINS} DESTINATION ${GASSED_INSTALL_BIN_DIR}/${OSG_PLUGINS_DIR_NAME})

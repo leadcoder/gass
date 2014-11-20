@@ -90,7 +90,7 @@ namespace GASS
 			m_OSGView->setCameraManipulator(man->GetManipulator());
 			
 			// this should be moved to manipulator?
-			m_OSGView->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+			//m_OSGView->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 			 // configure the near/far so we don't clip things that are up close
 			m_OSGView->getCamera()->setNearFarRatio(0.00002);
 		}

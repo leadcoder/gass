@@ -41,6 +41,7 @@ namespace GASS
 		m_OSGBillboard (NULL),
 		m_Width(1.0f),
 		m_Height(1.0f),
+		m_GroundOffset(0.5),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
 	{
 
@@ -61,7 +62,6 @@ namespace GASS
 
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
-
 	}
 
 	void OSGBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
@@ -139,8 +139,8 @@ namespace GASS
 														
 		m_OSGBillboard->addDrawable(geom);
 		m_Geom = geom.get();
-			
 
+		m_OSGBillboard->setPosition(0,osg::Vec3(0,0,m_GroundOffset));
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_OSGBillboard->setUserData(node_data);
 	
@@ -165,6 +165,8 @@ namespace GASS
 			Float max_size = Math::Max(bb_size.x() ,bb_size.z() )*0.5f;
 			Float offset = bb_size.z() * 0.5f;
 			AABox box(Vec3(-max_size,-max_size + offset,-max_size),Vec3(max_size,max_size+offset,max_size));
+			box.m_Min.y += m_GroundOffset;
+			box.m_Max.y += m_GroundOffset;
 			return box;
 		}
 		return AABox();
@@ -172,49 +174,26 @@ namespace GASS
 
 	Sphere OSGBillboardComponent::GetBoundingSphere() const
 	{
-		Sphere sphere;
-		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = Math::Max(m_Width,m_Height)/2.0;
-		return sphere;
+		if(m_Geom)
+		{
+			return GetBoundingBox().GetBoundingSphere();
+			/*osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			osg::Vec3 p_min = (*coords)[0];
+			osg::Vec3 p_max = (*coords)[2];
+			osg::Vec3 bb_size = p_max - p_min;
+			Float max_size = Math::Max(bb_size.x() ,bb_size.z() )*0.5f;
+			Sphere sphere;
+			sphere.m_Pos = Vec3(0,m_GroundOffset,0);
+			sphere.m_Radius = max_size;
+			return sphere;*/
+		}
+		return Sphere();
 	}
 
 	void OSGBillboardComponent::GetMeshData(GraphicsMeshPtr mesh_data)
 	{
 
 	}
-
-	/*void OSGBillboardComponent::OnMaterialMessage(MaterialMessagePtr message)
-	{
-		Vec4 diffuse = message->GetDiffuse();
-		Vec3 ambient = message->GetAmbient();
-		Vec3 specular = message->GetSpecular();
-		Vec3 si = message->GetSelfIllumination();
-
-		osg::ref_ptr<osg::Material> mat (new osg::Material);
-		//Specifying the yellow colour of the object
-		if( diffuse.x >= 0)
-			mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.x,diffuse.y,diffuse.z,diffuse.w));
-		if( ambient.x >= 0)
-			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.x,ambient.y,ambient.z,1));
-		if( specular.x >= 0)
-			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.x,specular.y,specular.z,1));
-		if( message->GetShininess() >= 0)
-			mat->setShininess(osg::Material::FRONT_AND_BACK,message->GetShininess());
-		if( si.x >= 0)
-			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.x,si.y,si.z,1));
-
-		//mat->setAmbient(osg::Material::FRONT,osg::Vec4(color.x,color.y,color.z,color.w));
-		//Attaching the newly defined state set object to the node state set
-		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
-		nodess->setAttribute(mat.get());
-		nodess->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-        // Turn on blending
-		if(diffuse.w < 1.0)
-		{
-			osg::ref_ptr<osg::BlendFunc> bf (new   osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
-			nodess->setAttributeAndModes(bf);
-		}
-	}*/
 
 	//From OSG billboard example
 	osg::ref_ptr<osg::Geometry> OSGBillboardComponent::CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image)
@@ -295,6 +274,7 @@ namespace GASS
 			osg::Vec3 height(0,0,height);
 			osg::Vec3 width(width,0,0);
 			osg::Vec3 corner = -width*0.5;
+			
 
 			(*coords)[0] = corner;
 			(*coords)[1] = corner+width;

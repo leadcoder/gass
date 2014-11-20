@@ -22,13 +22,11 @@
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSRunTimeController.h"
-
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include <tinyxml2.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
-
 
 namespace GASS
 {
@@ -175,96 +173,6 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	/*class GASSExport UpdateListenersTask : public tbb::task
-	{
-	public:
-		UpdateListenersTask(double delta_time, TaskNode* node) : m_DeltaTime(delta_time),m_TaskNode(node)
-		{
-
-		}
-		tbb::task*  execute()
-		{
-			m_TaskNode->UpdateListeners(m_DeltaTime,this);
-			return NULL;
-		}
-	private:
-		TaskNode* m_TaskNode;
-		double m_DeltaTime;
-	};
-
-	class GASSExport UpdateChildrenTask : public tbb::task
-	{
-	public:
-		UpdateChildrenTask (double delta_time, TaskNode* node) : m_DeltaTime(delta_time),m_TaskNode(node)
-		{
-
-		}
-		tbb::task*  execute()
-		{
-			m_TaskNode->UpdateChildren(m_DeltaTime,this);
-			return NULL;
-		}
-	private:
-		TaskNode* m_TaskNode;
-		double m_DeltaTime;
-	};*/
-
-/*	class GASSExport UpdateTaskNode : public tbb::task
-	{
-	public:
-		UpdateTaskNode (double delta_time, TaskNode* node) : m_DeltaTime(delta_time),m_TaskNode(node)
-		{
-
-		}
-		tbb::task*  execute()
-		{
-			m_TaskNode->Update(m_DeltaTime,this);
-			return NULL;
-		}
-	private:
-		TaskNode* m_TaskNode;
-		double m_DeltaTime;
-	};
-
-
-	class GASSExport UpdateListenerTask : public tbb::task
-	{
-	public:
-		UpdateListenerTask(double delta_time, TaskNodeListenerPtr listener) : m_DeltaTime(delta_time),m_Listener(listener)
-		{
-
-		}
-		tbb::task*  execute()
-		{
-			m_Listener->Update(m_DeltaTime);
-			return NULL;
-		}
-	private:
-		TaskNodeListenerPtr m_Listener;
-		double m_DeltaTime;
-	};
-
-
-	class GASSExport Dummy : public tbb::task
-	{
-	public:
-		Dummy()
-		{
-
-		}
-		tbb::task*  execute()
-		{
-			return NULL;
-		}
-	private:
-	};
-
-
-	void TaskNode::Invoke(double delta_time, TaskNode* node)
-	{
-		UpdateTaskNode * parent = new( tbb::task::allocate_root() ) UpdateTaskNode(delta_time,node);
-		tbb::task::spawn_root_and_wait(*parent);
-	}*/
 
 	void TaskNode::Update(double delta_time,tbb::task *parent)
 	{
@@ -389,69 +297,5 @@ namespace GASS
 		}
 	}
 
-
-	/*class GASSExport UpdateTaskNodes : public tbb::task
-	{
-	public:
-		UpdateTaskNodes(double delta_time, TaskNode* node) : m_DeltaTime(delta_time),m_TaskNode(node)
-		{
-
-		}
-
-		tbb::task*  execute()
-		{
-			switch(m_TaskNode->m_NodeMode)
-			{
-			case TaskNode::SEQUENCE:
-					TaskNode::Listeners::iterator iter = m_TaskNode->m_Listeners.begin();
-					switch(m_TaskNode->m_ListenerMode)
-					{
-					case TaskNode::SEQUENCE:
-
-						while(iter != m_TaskNode->m_Listeners.end())
-						{
-							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
-							if(listener)
-							{
-								listener->Update(delta_time);
-								iter++;
-							}
-							else
-								iter = m_Listeners.erase(iter);
-						}
-						break;
-					case TaskNode::PARALLEL:
-						while(iter != m_TaskNode->m_Listeners.end())
-						{
-							tbb::task_list task_list;
-
-							TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
-							if(listener)
-							{
-								task_list.push_back(*new(parent->allocate_child()) UpdateListenerTask(delta_time,listener));
-								iter++;
-							}
-							else
-								iter = m_Listeners.erase(iter);
-
-							parent->spawn(task_list);
-						}
-						break;
-					}
-				}
-				break;
-			case TaskNode::PARALLEL:
-				tbb::task_list task_list;
-				task_list.push_back(*new(parent->allocate_child()) UpdateTaskNodes(delta_time,m_TaskNode));
-				task_list.push_back(*new(parent->allocate_child()) UpdateTaskNodes(delta_time,m_TaskNode));
-				spawn(task_list);
-				break;
-			}
-			return NULL;
-		}
-	private:
-		TaskNode* m_TaskNode;
-		double m_DeltaTime;
-	};*/
 }
 

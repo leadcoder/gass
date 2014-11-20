@@ -435,8 +435,8 @@ namespace GASS
 			m_TerrainData = new TerrainData;
 			m_TerrainData->m_TerrainGeom = terrain.get();
 			m_TerrainData->m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetSamples();
-			int samples_z = terrain->GetSamples();
+			int samples_x = terrain->GetWidth();
+			int samples_z = terrain->GetHeight();
 			m_TerrainData->m_Samples = samples_x;
 			
 			Float size_x = m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x;

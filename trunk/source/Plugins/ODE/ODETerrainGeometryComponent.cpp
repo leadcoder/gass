@@ -114,9 +114,9 @@ namespace GASS
 		if(terrain)
 		{
 			m_TerrainBounds = geom->GetBoundingBox();
-			m_Samples = terrain->GetSamples();
-			int samples_x = terrain->GetSamples();
-			int samples_z = terrain->GetSamples();
+			//m_Samples = terrain->GetWidth();
+			int samples_x = terrain->GetWidth();
+			int samples_z = terrain->GetHeight();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
 			m_SampleWidth = size_x/(samples_x-1);

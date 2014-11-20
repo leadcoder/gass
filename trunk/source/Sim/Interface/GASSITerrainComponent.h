@@ -49,9 +49,15 @@ namespace GASS
 		//virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
 
 		/**
-		Get terrain samples
+		Get terrain width samples
 		*/
-		virtual unsigned int GetSamples() const =0;
+		virtual unsigned int GetWidth() const =0;
+
+		/**
+		Get terrain height samples
+		*/
+		virtual unsigned int GetHeight() const =0;
+
 		/**
 		Get pointer to terrain data height field, if not available return NULL
 		*/

@@ -76,7 +76,7 @@ namespace GASS
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
 		Float m_SampleWidth;
-		int m_Samples;
+		//int m_Samples;
 		Float m_SampleHeight;
 		AABox m_TerrainBounds;
 		IHeightmapTerrainComponent* m_TerrainGeom;

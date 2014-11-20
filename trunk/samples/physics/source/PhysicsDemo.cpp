@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	}
 
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
-	m_Engine->Init(GASS::FilePath("GASSODEPhysicsOSGDemo.xml"));
+	m_Engine->Init(GASS::FilePath("GASSPhysicsOSGDemo.xml"));
 
 	//load keyboard config!
 /*	GASS::ControlSettingsSystemPtr css = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IControlSettingsSystem>();

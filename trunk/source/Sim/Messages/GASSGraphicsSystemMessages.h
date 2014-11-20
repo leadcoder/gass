@@ -71,9 +71,34 @@ namespace GASS
 	typedef SPTR<GraphicsSceneManagerLoadedEvent> GraphicsSceneManagerLoadedEventPtr;
 
 
+	class PreGraphicsSystemUpdateEvent : public SystemEventMessage
+	{
+	public:
+		PreGraphicsSystemUpdateEvent(double dt,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
+			  m_DeltaTime(dt){ }
+		  double GetDeltaTime()const {return m_DeltaTime;}
+	private:
+		double m_DeltaTime;
+	};
+	typedef SPTR<PreGraphicsSystemUpdateEvent> PreGraphicsSystemUpdateEventPtr;
+
+	class PostGraphicsSystemUpdateEvent : public SystemEventMessage
+	{
+	public:
+		PostGraphicsSystemUpdateEvent(double dt,SenderID sender_id = -1, double delay= 0) :
+		  SystemEventMessage(sender_id , delay),
+			  m_DeltaTime(dt){ }
+		  double GetDeltaTime()const {return m_DeltaTime;}
+	private:
+		double m_DeltaTime;
+	};
+	typedef SPTR<PostGraphicsSystemUpdateEvent> PostGraphicsSystemUpdateEventPtr;
+
+
 	/**
 	Message posted by the graphic system to notify that a new render window has been created.
-	Suscribe to this message if you need to get hold of the render window handle,
+	Subscribe to this message if you need to get hold of the render window handle,
 	*/
 
 	class RenderWindowCreatedEvent : public SystemEventMessage
@@ -203,6 +228,8 @@ namespace GASS
 		std::string m_MaterialName;
 	};
 	typedef SPTR<ReloadMaterial> ReloadMaterialPtr;
+
+
 
 
 	

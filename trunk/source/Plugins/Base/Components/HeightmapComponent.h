@@ -46,7 +46,8 @@ namespace GASS
 		//IHeightmapTerrainComponent
 		virtual Float GetHeightAtPoint(int x, int z) const;
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
-		virtual unsigned int GetSamples() const;
+		virtual unsigned int GetWidth() const;
+		virtual unsigned int GetHeight() const;
 		virtual float* GetHeightData() const;
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
@@ -55,14 +56,19 @@ namespace GASS
 	protected:
 		void SetUpdate(bool value);
 		bool  GetUpdate() const;
+		bool GetAutoBBoxGeneration() const;
+		void SetAutoBBoxGeneration(bool value);
+
 		ADD_PROPERTY(Vec2,Size)
 		ADD_PROPERTY(Float,Resolution)
 
 		//internal
 		void _UpdateData();
 		FilePath _GetFilePath() const;
+		AABox _GetTerrainBoundingBox() const;
 	private:
 		Heightmap* m_HM;
+		bool m_AutoBBoxGeneration;
 	};
 }
 #endif

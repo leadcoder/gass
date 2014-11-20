@@ -66,6 +66,7 @@ namespace GASS
 			mat.Diffuse.Set(1,1,1,1);
 			mat.Ambient.Set(1,1,1);
 			mat.DepthTest = true;
+			mat.DepthWrite = true;
 			gfx_sys->AddMaterial(mat);
 		}
 		GenerateMesh();

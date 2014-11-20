@@ -3,6 +3,7 @@ set(LIB_NAME "PhysicsDemo")
 
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
+include(OSGDepModule)
 
 set(CPP_FILES "source/PhysicsDemo.cpp")
 set(H_FILES "")
@@ -31,6 +32,7 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSSim 
 		GASSPluginODE 
 		GASSPluginOgre
+		GASSPluginOSG
 		GASSPluginOIS
 		GASSPluginODE
 		GASSPluginPagedGeometry
@@ -62,32 +64,13 @@ endif()
 	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
 	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
 	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/zlib1.dll
-	${OSG_DIR}/bin/libpng13.dll
-	${OSG_DIR}/bin/glut32.dll
-	${OSG_DIR}/bin/ot12-OpenThreads.dll
-	${OSG_DIR}/bin/osg80-osg.dll
-	${OSG_DIR}/bin/osg80-osgUtil.dll
-	${OSG_DIR}/bin/osg80-osgDB.dll
-	${OSG_DIR}/bin/osg80-osgGA.dll
-	${OSG_DIR}/bin/osg80-osgText.dll
-	${OSG_DIR}/bin/osg80-osgViewer.dll
-	${OSG_DIR}/bin/osg80-osgTerrain.dll
-	${OSG_DIR}/bin/osg80-osgFX.dll
-	${OSG_DIR}/bin/osg80-osgManipulator.dll
-	${OSG_DIR}/bin/osg80-osgVolume.dll
-	${OSG_DIR}/bin/osg80-osgPresentation.dll
-	${OSG_DIR}/bin/osg80-osgSim.dll
-	${OSG_DIR}/bin/osg80-osgAnimation.dll
-	${OSG_DIR}/bin/osg80-osgWidget.dll
-	${OSG_DIR}/bin/osg80-osgParticle.dll
-	${OSG_DIR}/bin/osg80-osgShadow.dll
 	
 	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+	${OSG_BIN_FILES_RELEASE}
 	)
 	set(DEP_DLL_FILES_DEBUG 
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
@@ -105,31 +88,12 @@ endif()
 	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
 	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
 	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/glut32D.dll
-	${OSG_DIR}/bin/libpng13d.dll
-	${OSG_DIR}/bin/osg80-osgAnimationd.dll
-	${OSG_DIR}/bin/osg80-osgd.dll
-	${OSG_DIR}/bin/osg80-osgDBd.dll
-	${OSG_DIR}/bin/osg80-osgFXd.dll
-	${OSG_DIR}/bin/osg80-osgGAd.dll
-	${OSG_DIR}/bin/osg80-osgManipulatord.dll
-	${OSG_DIR}/bin/osg80-osgParticled.dll
-	${OSG_DIR}/bin/osg80-osgPresentationd.dll
-	${OSG_DIR}/bin/osg80-osgShadowd.dll
-	${OSG_DIR}/bin/osg80-osgSimd.dll
-	${OSG_DIR}/bin/osg80-osgTerraind.dll
-	${OSG_DIR}/bin/osg80-osgTextd.dll
-	${OSG_DIR}/bin/osg80-osgUtild.dll
-	${OSG_DIR}/bin/osg80-osgViewerd.dll
-	${OSG_DIR}/bin/osg80-osgVolumed.dll
-	${OSG_DIR}/bin/osg80-osgWidgetd.dll
-	${OSG_DIR}/bin/ot12-OpenThreadsd.dll
-	${OSG_DIR}/bin/zlib1d.dll
 	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3CharacterKinematicCHECKED${DLL_SUFFIX}.dll
 	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+	${OSG_BIN_FILES_DEBUG}
 	)
 	
 	

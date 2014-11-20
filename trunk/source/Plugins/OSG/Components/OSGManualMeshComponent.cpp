@@ -165,26 +165,6 @@ namespace GASS
 	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::_CreateSubMesh(GraphicsSubMeshPtr sm)
 	{
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
-		
-		/*if(data->Material != m_CurrentMaterial) //try loading material
-		{
-		m_CurrentMaterial = data->Material;
-
-		const std::string osg_mat = data->Material + ".osg";
-		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		if(rm->HasResource(osg_mat))
-		{
-		ResourceHandle res(osg_mat);
-		osg::ref_ptr<osg::Group> material = (osg::Group*) osgDB::readNodeFile(res.GetResource()->Path().GetFullPath());
-		osg::ref_ptr<osg::Node> node = material->getChild(0);
-		osg::ref_ptr<osg::Drawable> drawable = node->asGeode()->getDrawable(0);
-		osg::ref_ptr<osg::StateSet> state_set = drawable->getStateSet();
-		m_OSGGeometry->setStateSet(state_set);
-		//mat->setColorMode(osg::Material::ColorMode::DIFFUSE)
-		}
-		//osg::StateSet* state_copy =  static_cast<osg::StateSet*> (state_set->clone(osg::CopyOp::DEEP_COPY_STATESETS));
-		//m_OSGGeometry->setStateSet(state_copy);
-		}*/
 
 		if(sm->MaterialName != "" && m_GFXSystem->HasMaterial(sm->MaterialName))
 		{
@@ -280,7 +260,6 @@ namespace GASS
 		for(size_t i = 0; i < data->SubMeshVector.size(); i++)
 		{
 			GraphicsSubMeshPtr sm = data->SubMeshVector[i];
-			//osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
@@ -317,7 +296,6 @@ namespace GASS
 	Sphere OSGManualMeshComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
-		//assert(m_MeshObject);
 		sphere.m_Pos = Vec3(0,0,0);
 		sphere.m_Radius = 0;
 		for(size_t i = 0; i < m_OSGGeometries.size(); i++)

@@ -1136,8 +1136,7 @@ namespace GASS
 					{
 						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
 						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-
-						//if(geom && geom->GetGeometryFlags() & GEOMETRY_FLAG_SCENE_OBJECTS)
+						
 						if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
 						{
 							AABox box = geom->GetBoundingBox();

@@ -26,10 +26,7 @@
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 
-
-#include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
-
 #include <osgSim/LineOfSight>
 #include <osgSim/HeightAboveTerrain>
 #include <osgSim/ElevationSlice>
@@ -40,67 +37,10 @@
 
 namespace GASS
 {
-	class CustomIntersectionVisitor : public osgUtil::IntersectionVisitor
-	{
-	public:
-
-		CustomIntersectionVisitor(osgUtil::Intersector* intersector, osgUtil::IntersectionVisitor::ReadCallback* readCallback) : IntersectionVisitor(intersector, readCallback)
-		{
-		}
-
-		virtual ~CustomIntersectionVisitor()
-		{
-
-		}
-		void apply(osg::Billboard& billboard)
-		{
-			if (!enter(billboard)) return;
-
-#if 1
-			// IntersectVisitor doesn't have getEyeLocal(), can we use NodeVisitor::getEyePoint()?
-			osg::Vec3 eye_local = getEyePoint();
-
-			for(unsigned int i = 0; i < billboard.getNumDrawables(); i++ )
-			{
-				const osg::Vec3& pos = billboard.getPosition(i);
-				osg::ref_ptr<osg::RefMatrix> billboard_matrix = new osg::RefMatrix;
-				if (getViewMatrix())
-				{
-					if (getModelMatrix()) billboard_matrix->mult( *getModelMatrix(), *getViewMatrix() );
-					else billboard_matrix->set( *getViewMatrix() );
-				}
-				else if (getModelMatrix()) billboard_matrix->set( *getModelMatrix() );
-
-				billboard.computeMatrix(*billboard_matrix,eye_local,pos);
-
-				if (getViewMatrix()) billboard_matrix->postMult( osg::Matrix::inverse(*getViewMatrix()) );
-				pushModelMatrix(billboard_matrix.get());
-
-				// now push an new intersector clone transform to the new local coordinates
-				push_clone();
-
-				intersect( billboard.getDrawable(i) );
-
-				// now push an new intersector clone transform to the new local coordinates
-				pop_clone();
-
-				popModelMatrix();
-
-			}
-#else
-
-			for(unsigned int i=0; i<billboard.getNumDrawables(); ++i)
-			{
-				intersect( billboard.getDrawable(i) );
-			}
-#endif
-
-			leave();
-		}
-	};
 
 	OSGCollisionSceneManager::OSGCollisionSceneManager()
 	{
+
 	}
 
 	OSGCollisionSceneManager::~OSGCollisionSceneManager()
@@ -124,6 +64,12 @@ namespace GASS
 		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->Register(listener);
+
+		m_IntersectVisitor = new CustomIntersectionVisitor();
+	
+		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
+		m_DatabaseCache  = new osgSim::DatabaseCacheReadCallback();
+		//m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 	}
 
 	void OSGCollisionSceneManager::OnShutdown()
@@ -151,44 +97,8 @@ namespace GASS
 			}
 		}
 	}
+
 	
-	/*Float OSGCollisionSceneManager::GetHeight(const Vec3 &pos, bool absolute) const
-	{
-		CollisionRequest request;
-		CollisionResult result;
-
-		Vec3 up = Vec3(0,1,0);
-
-		Vec3 ray_start = pos;
-		Vec3 ray_direction = -up;
-		//max raycast 2000000 units down
-		ray_direction = ray_direction*2000000;
-
-		request.LineStart = ray_start;
-		request.LineEnd = ray_start + ray_direction;
-		request.Type = COL_LINE;
-		request.ReturnFirstCollisionPoint = false;
-		request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
-
-		OSGGraphicsSceneManagerPtr gfx_sm = GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
-		if(gfx_sm)
-		{
-			ProcessRaycast(&request,&result,gfx_sm->GetOSGRootNode());
-		}
-
-		if(result.Coll)
-		{
-			Vec3 col_pos;
-			if(absolute)
-				col_pos  = result.CollPosition;
-			else
-				col_pos = pos - result.CollPosition;
-
-			col_pos = col_pos *up;
-			return col_pos.Length();
-		}
-		return 0;
-	}*/
 
 	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const
 	{
@@ -196,16 +106,22 @@ namespace GASS
 		osg::Vec3d end = OSGConvert::Get().ToOSG(ray_start + ray_dir);
 
 		result->Coll = false;
+		
+		
+		m_IntersectVisitor->reset();
+		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
+		if(flags & GEOMETRY_FLAG_PAGED_LOD)
+			m_IntersectVisitor->setReadCallback(m_DatabaseCache);
+		else
+			m_IntersectVisitor->setReadCallback(NULL);
 
 		osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector = new osgUtil::LineSegmentIntersector(osgUtil::Intersector::MODEL, start, end);
-		//osgUtil::IntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
-		CustomIntersectionVisitor intersectVisitor( intersector.get(), NULL);//new MyReadCallback );
+		m_IntersectVisitor->setIntersector(intersector.get());
 
 		int mask = OSGConvert::Get().ToOSGNodeMask(flags);
-		intersectVisitor.setTraversalMask(mask);
+		m_IntersectVisitor->setTraversalMask(mask);
 
-		node->accept(intersectVisitor);
-
+		node->accept(*m_IntersectVisitor);
 
 		if ( intersector->containsIntersections() )
 		{

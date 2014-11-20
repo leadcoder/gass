@@ -881,7 +881,12 @@ namespace GASS
 		return sphere;
 	}
 
-	unsigned int OgreTerrainPageComponent::GetSamples() const
+	unsigned int OgreTerrainPageComponent::GetHeight() const
+	{
+		return GetWidth();
+	}
+
+	unsigned int OgreTerrainPageComponent::GetWidth() const
 	{
 		OgreTerrainGroupComponentPtr terrain_man = GetSceneObject()->GetFirstComponentByClass<OgreTerrainGroupComponent>();
 		if(!terrain_man) //try parent

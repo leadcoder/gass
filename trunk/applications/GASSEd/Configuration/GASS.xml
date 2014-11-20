@@ -15,8 +15,9 @@
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 	</Plugins>
-	<SetDataPath value="../data/"/>
-	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
+	<!--<SetDataPath value="../data/"/>
+	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>-->
+	<ScenePath value="%GASS_DATA_HOME%/sceneries/ogre"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
@@ -37,6 +38,8 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/base" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/sounds" type="FileSystem" recursive="true"/>
@@ -63,8 +66,9 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/templates/characters/physx" type="FileSystem" recursive="false"/>
+			<!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/characters/physx" type="FileSystem" recursive="false"/>-->
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/AI" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>
@@ -76,6 +80,7 @@
 		<MaterialSystem/>
 		<EditorSystem>
 			<TaskNode value="PRE_SIM"/> 
+			<LockTerrainObjects value="false"/> 
 		</EditorSystem>
 		<OISInputSystem>
 			<TaskNode value="PRE_SIM"/> 
