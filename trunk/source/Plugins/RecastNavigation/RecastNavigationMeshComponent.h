@@ -109,6 +109,7 @@ namespace GASS
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 		ADD_PROPERTY(bool,AutoCollectMeshes)
+		ADD_PROPERTY(bool,UseBoudingBox)
 		float GetCellSize() const;
 		float GetCellHeight() const;
 		float GetAgentHeight() const;
@@ -173,7 +174,7 @@ namespace GASS
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
 		void OnChangeName(SceneObjectNameMessagePtr message);
-
+		FilePath _GetFilePath() const;
 		GraphicsMeshPtr m_NavVisTriMesh;
 		GraphicsMeshPtr m_NavVisLineMesh;
 		std::vector<SceneObjectRef> m_SelectedMeshes;

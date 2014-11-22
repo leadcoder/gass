@@ -72,6 +72,7 @@ namespace GASS
 		m_NavQuery ( dtAllocNavMeshQuery()),
 		m_Geom ( new InputGeom()),
 		m_Ctx( new rcContext(true)),
+		m_UseBoudingBox(true),
 		m_MonotonePartitioning ( false)
 	{
 		m_MeshBounding = AABox();
@@ -108,6 +109,7 @@ namespace GASS
 		REG_PROPERTY2(bool,Visible, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool,ShowMeshLines, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool,ShowMeshSolid, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(bool,UseBoudingBox, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(Vec3,MeshBoundingMin,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(Vec3,MeshBoundingMax, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(int,TileSize,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -966,14 +968,25 @@ namespace GASS
 		}
 	}
 
+	FilePath RecastNavigationMeshComponent::_GetFilePath() const
+	{
+		ScenePtr  scene = GetSceneObject()->GetScene();
+		std::string scene_path = scene->GetSceneFolder().GetFullPath();
+		std::string filename = GetSceneObject()->GetName() + ".bin";
+		FilePath full_path(scene_path + "/" + filename);
+		return full_path;
+	}
+	
 	void RecastNavigationMeshComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
-		m_NavMeshFilePath = obj_elem->GetDocument()->GetFileName();
-		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
+		//temp fix because obj_elem->GetDocument()->GetFileName() dont work for save after port to tinyxml2
+		//m_NavMeshFilePath = obj_elem->GetDocument()->GetFileName();
+		//m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		if(m_NavMesh)
 		{
-			std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
-			SaveAllTiles(filename.c_str(),m_NavMesh);
+			//std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
+			//SaveAllTiles(filename.c_str(),m_NavMesh);
+			SaveAllTiles(_GetFilePath().GetFullPath().c_str(),m_NavMesh);
 		}
 		Component::SaveXML(obj_elem);
 	}
@@ -992,7 +1005,7 @@ namespace GASS
 	{
 		m_BBShape = value;
 
-		if(GetSceneObject()) //initlized?
+		if(GetSceneObject()) //initialized?
 		{
 			std::vector<SceneObjectPtr> objs;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildrenByName(objs,value);
@@ -1078,9 +1091,9 @@ namespace GASS
 	{
 		m_SelectedMeshes = value;
 		//update bounds from mesh selection
-		if(GetSceneObject())
+		/*if(GetSceneObject())
 		{
-			m_MeshBounding = AABox();
+			//m_MeshBounding = AABox();
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
 				SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
@@ -1100,19 +1113,21 @@ namespace GASS
 						trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
 						box.Transform(trans_mat);
 					}
-					m_MeshBounding.Union(box);
+					//m_MeshBounding.Union(box);
 				}
 			}
-		}
+		}*/
 	}
 
 	bool RecastNavigationMeshComponent::GetRawMeshData(RawNavMeshData &rnm_data)
 	{
+		AABox bbox; 
+
 		if(m_AutoCollectMeshes)
 		{
 			std::vector<SceneObjectPtr> objs;
 			m_SelectedMeshes.clear();
-			m_MeshBounding = AABox();
+			//m_MeshBounding = AABox();
 			if(GetSceneObject())
 			{
 				ComponentContainer::ComponentVector components;
@@ -1130,42 +1145,52 @@ namespace GASS
 			std::vector<PhysicsMeshPtr> mesh_data_vec;
 			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
+				SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
+				if(obj)
+				{
+					MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
+					GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
 
-					SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
-					if(obj)
+					if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
 					{
-						MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
-						GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-						
-						if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
+						//AABox box = geom->GetBoundingBox();
+						GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
+						PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
+						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+						if(lc)
 						{
-							AABox box = geom->GetBoundingBox();
-							GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
-							PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-							LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-							if(lc)
+							Vec3 world_pos = lc->GetWorldPosition();
+							Vec3 scale = lc->GetScale();
+							Quaternion world_rot = lc->GetWorldRotation();
+							Mat4 trans_mat;
+							trans_mat.Identity();
+							//world_rot.ToRotationMatrix(trans_mat);
+							//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+							trans_mat.SetTransformation(world_pos,world_rot,scale);
+							//box.Transform(trans_mat);
+							for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
 							{
-								Vec3 world_pos = lc->GetWorldPosition();
-								Vec3 scale = lc->GetScale();
-								Quaternion world_rot = lc->GetWorldRotation();
-								Mat4 trans_mat;
-								trans_mat.Identity();
-								//world_rot.ToRotationMatrix(trans_mat);
-								//trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
-								trans_mat.SetTransformation(world_pos,world_rot,scale);
-								box.Transform(trans_mat);
-								for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
-								{
-									physics_mesh->PositionVector[j] = trans_mat*physics_mesh->PositionVector[j];
-								}
+								Vec3 pos = trans_mat*physics_mesh->PositionVector[j];
+								physics_mesh->PositionVector[j] = pos;
+								bbox.Union(pos);
 							}
-							if(m_AutoCollectMeshes)
-								m_MeshBounding.Union(box);
-							mesh_data_vec.push_back(physics_mesh);
 						}
+						mesh_data_vec.push_back(physics_mesh);
+					}
 
 				}
 			}
+
+			if(m_UseBoudingBox)
+			{
+				bbox = m_MeshBounding;
+			}
+
+			/*if(m_AutoCollectMeshes)
+			{
+				m_MeshBounding = bbox;
+			}*/
+
 			unsigned int tot_verts = 0;
 			unsigned int tot_faces = 0;
 			for(unsigned int i = 0; i < mesh_data_vec.size() ; i++)
@@ -1216,18 +1241,15 @@ namespace GASS
 						trinorms[norm_index++]=norm.y;
 						trinorms[norm_index++]=norm.z;
 					}
-					//delete[] mesh_data_vec[i]->FaceVector;
-					//delete[] mesh_data_vec[i]->VertexVector;
-					//delete mesh_data_vec[i];
-					//mesh_data_vec[i] = NULL;
+					
 				}
-				bmin[0] = m_MeshBounding.m_Min.x;
-				bmin[1] = m_MeshBounding.m_Min.y;
-				bmin[2] = m_MeshBounding.m_Min.z;
+				bmin[0] = bbox.m_Min.x;
+				bmin[1] = bbox.m_Min.y;
+				bmin[2] = bbox.m_Min.z;
 
-				bmax[0] = m_MeshBounding.m_Max.x;
-				bmax[1] = m_MeshBounding.m_Max.y;
-				bmax[2] = m_MeshBounding.m_Max.z;
+				bmax[0] = bbox.m_Max.x;
+				bmax[1] = bbox.m_Max.y;
+				bmax[2] = bbox.m_Max.z;
 
 				rnm_data.Verts =  verts;
 				rnm_data.NumVerts =  tot_verts;

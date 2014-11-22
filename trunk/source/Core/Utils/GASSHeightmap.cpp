@@ -149,6 +149,7 @@ namespace GASS
 		ofs.write((char *) &m_Width, sizeof(int));
 		ofs.write((char *) &m_Height, sizeof(int));
 		ofs.write((char *) &m_Data[0], sizeof(float)*m_Height*m_Width);
+		ofs.close();
 	}
 
 	void Heightmap::Load(const std::string &filename)
@@ -163,6 +164,7 @@ namespace GASS
 		fin.read((char *) &m_Height, sizeof(int));
 		m_Data = new float[m_Width*m_Height];
 		fin.read((char *) &m_Data[0], sizeof(float)*m_Width*m_Height);
+		fin.close();
 	}
 
 	AABox Heightmap::GetBoundingBox() const
