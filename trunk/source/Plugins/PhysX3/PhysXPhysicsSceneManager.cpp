@@ -92,7 +92,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("PhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("PhysXPhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
 		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
 		REG_PROPERTY(Vec3,Offset,PhysXPhysicsSceneManager);
 	}
@@ -120,6 +120,9 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnInit()
 	{
+		//set offset to Scene center
+		//m_Offset = -GetScene()->GetStartPos();
+
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");

@@ -40,8 +40,8 @@ namespace GASS
 		//INavigationComponent
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
 	private:
-		void _ExpandFromNetwork();
-		void _RebuildNetwork();
+		void _CreateEditableFromNetwork();
+		void _CreateNetworkFromEditable();
 		bool GetShowGraph() const;
 		void SetShowGraph(bool value);
 		void Rebuild();

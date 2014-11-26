@@ -61,6 +61,7 @@ namespace GASS
 			SceneObjectPtr debug = GetSceneObject()->GetChildByID("SEARCH_GRAPH");
 			if(value)
 			{
+				Vec3 offset  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 				std::vector<Vec3> pos_vec;
 				
 				for(size_t i = 0; i < m_Network.m_Edges.size();i++)
@@ -69,8 +70,8 @@ namespace GASS
 					{
 						for(size_t k = 1; k < m_Network.m_Edges[i]->LLWaypoints[j].size();k++)
 						{
-							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k-1));
-							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k));
+							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k-1) - offset);
+							pos_vec.push_back(m_Network.m_Edges[i]->LLWaypoints[j].at(k)   - offset);
 						}
 					}
 
@@ -78,8 +79,8 @@ namespace GASS
 					{
 						for(size_t k = 1; k < m_Network.m_Edges[i]->RLWaypoints[j].size();k++)
 						{
-							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k-1));
-							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k));
+							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k-1)  - offset);
+							pos_vec.push_back(m_Network.m_Edges[i]->RLWaypoints[j].at(k)    - offset);
 						}
 					}
 					
@@ -127,11 +128,13 @@ namespace GASS
 		{
 			if(value)
 			{
-				_ExpandFromNetwork();
+				_CreateEditableFromNetwork();
+				RebuildGraph();
 			}
 			else
 			{
-				_RebuildNetwork();
+				_CreateNetworkFromEditable();
+
 				//remove all nodes and edges
 				ComponentContainer::ComponentVector components;
 				GetSceneObject()->GetComponentsByClass<RNRoadNodeComponent>(components);
@@ -152,7 +155,7 @@ namespace GASS
 		}
 	}
 
-	void RNRoadNetworkComponent::_ExpandFromNetwork()
+	void RNRoadNetworkComponent::_CreateEditableFromNetwork()
 	{
 		//create all nodes and  edges!
 		std::map<RoadNode*,GraphNodeComponentPtr> mapping;
@@ -180,14 +183,14 @@ namespace GASS
 					mapping[m_Network.m_Edges[i]->StartNode]->AddEdge(edge_comp);
 					for(size_t j = 1 ; j < m_Network.m_Edges[i]->Waypoints.size()-1; j++)
 					{
-						SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
+						SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate, GetSceneObject());
 						GASSAssert(node_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
 						node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(m_Network.m_Edges[i]->Waypoints[j])));
 						GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						edge_comp->SetEndNode(node_comp);
 						node_comp->AddEdge(edge_comp);
 
-						edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate,GetSceneObject());
+						edge_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_EdgeTemplate, GetSceneObject());
 						GASSAssert(edge_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
 						edge_comp = edge_obj->GetFirstComponentByClass<RNRoadEdgeComponent>();
 						GASSAssert(edge_comp,"Failed to find IGraphEdgeComponent in RNRoadNetworkComponent::SetEdit");
@@ -229,18 +232,18 @@ namespace GASS
 			RNRoadNodeComponentPtr node_comp = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(components[i]);
 		}
 
+		Vec3 offset  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		std::vector<Vec3> pos_vec;
 		components.clear();
 		GetSceneObject()->GetComponentsByClass<RNRoadEdgeComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
-
 			RNRoadEdgeComponentPtr edge_comp = DYNAMIC_PTR_CAST<RNRoadEdgeComponent>(components[i]);
 			std::vector<Vec3> wps = edge_comp->GetWaypoints();
 			for(size_t i = 1 ; i < wps.size(); i++) 
 			{
-				pos_vec.push_back(wps[i-1]);
-				pos_vec.push_back(wps[i]);
+				pos_vec.push_back(wps[i-1] - offset);
+				pos_vec.push_back(wps[i] - offset);
 			}
 			/*RNRoadNodeComponentPtr start_node = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(edge_comp->GetStartNode());
 			RNRoadNodeComponentPtr end_node = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(edge_comp->GetEndNode());
@@ -258,12 +261,11 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",false));
-			
 			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}
 
-	void RNRoadNetworkComponent::_RebuildNetwork()
+	void RNRoadNetworkComponent::_CreateNetworkFromEditable()
 	{
 		m_Network.Clear();
 		std::map<RNRoadNodeComponentPtr,RoadNode*> node_mapping;
@@ -272,12 +274,11 @@ namespace GASS
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
 			RNRoadNodeComponentPtr node_comp = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(components[i]);
-			Vec3 node_pos  = node_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+			Vec3 node_pos  = node_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			RoadNode* road_node = new RoadNode();
 			road_node->Position = node_pos;
 			node_mapping[node_comp] = road_node; 
 			m_Network.m_Nodes.push_back(road_node);
-			node_comp->GetEdges();
 		}
 
 		components.clear();
@@ -378,6 +379,7 @@ namespace GASS
 		}
 	}*/
 
+	//TEST SERACH
 	void RNRoadNetworkComponent::OnPathfindToLocation(PathfindToPositionMessagePtr message)
 	{
 		Vec3 from = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
@@ -402,14 +404,13 @@ namespace GASS
 	void RNRoadNetworkComponent::SaveXML(tinyxml2::XMLElement * elem)
 	{
 		if(m_Edit)
-			_RebuildNetwork();
+			_CreateNetworkFromEditable();
 		m_Edit = false;
 		m_ShowGraph = false;
 		BaseSceneComponent::SaveXML(elem);
 
 		tinyxml2::XMLElement *  net_elem = elem->FirstChildElement("RNRoadNetworkComponent");
 		m_Network.SaveXML(net_elem);
-	
 	}
 
 

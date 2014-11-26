@@ -25,16 +25,26 @@ namespace GASS
 
 	void RNRoadNodeComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RNRoadNodeComponent::OnTransformation,TransformationChangedEvent,0));
+		//GetSceneObject()->RegisterForMessage(REG_TMESS(RNRoadNodeComponent::OnTransformation,TransformationChangedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RNRoadNodeComponent::OnTransformation,PositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RNRoadNodeComponent::OnTransformation,WorldPositionRequest,0));
 	}
 
-	void RNRoadNodeComponent::OnTransformation(TransformationChangedEventPtr message)
+	void RNRoadNodeComponent::OnTransformation(MessagePtr message)
 	{
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
 		GASSAssert(graph,"Failed to find IGraphComponent in RNRoadNodeComponent::OnTransformation");
 		graph->RebuildGraph();
 	}
+
+	/*void RNRoadNodeComponent::OnTransformation(TransformationChangedEventPtr message)
+	{
+		//update graph
+		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
+		GASSAssert(graph,"Failed to find IGraphComponent in RNRoadNodeComponent::OnTransformation");
+		graph->RebuildGraph();
+	}*/
 
 	void RNRoadNodeComponent::OnDelete()
 	{

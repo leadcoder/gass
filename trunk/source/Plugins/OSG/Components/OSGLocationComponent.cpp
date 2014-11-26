@@ -40,12 +40,18 @@ namespace GASS
 	OSGLocationComponent::~OSGLocationComponent()
 	{
 		
-		if(m_TransformNode.valid() && m_TransformNode->getParent(0))
+		
+	}
+
+	void OSGLocationComponent::OnDelete()
+	{
+		if(m_TransformNode.valid() && m_TransformNode->getNumParents() > 0)
 		{
 			osg::Group* parent = m_TransformNode->getParent(0);
 			parent->removeChild(m_TransformNode.get());
 		}
 	}
+
 
 	void OSGLocationComponent::RegisterReflection()
 	{
@@ -263,18 +269,21 @@ namespace GASS
 		if(m_TransformNode.valid())
 		{
 			osg::Vec3d new_pos =  OSGConvert::Get().ToOSG(value);
-			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
-			if(parent) 
+			if(m_TransformNode->getNumParents() > 0)
 			{
-				osg::MatrixList mat_list = parent->getWorldMatrices();
-				osg::Matrix world_trans;
-				world_trans.identity();
-				if(mat_list.size() > 0)
+				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				if(parent) 
 				{
-					world_trans = mat_list[0];
+					osg::MatrixList mat_list = parent->getWorldMatrices();
+					osg::Matrix world_trans;
+					world_trans.identity();
+					if(mat_list.size() > 0)
+					{
+						world_trans = mat_list[0];
+					}
+					osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
+					new_pos = new_pos*inv_world_trans;
 				}
-				osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
-				new_pos = new_pos*inv_world_trans;
 			}
 			m_TransformNode->setPosition(new_pos);
 			m_Pos = OSGConvert::Get().ToGASS(new_pos);
@@ -285,24 +294,28 @@ namespace GASS
 	
 	Vec3 OSGLocationComponent::GetWorldPosition() const 
 	{
+		Vec3 world_pos = m_Pos;
 		if(m_TransformNode.valid())
 		{
-			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
-			if(parent) 
+			world_pos = OSGConvert::Get().ToGASS(m_TransformNode->getPosition());
+			if(m_TransformNode->getNumParents() > 0)
 			{
-				osg::MatrixList mat_list = parent->getWorldMatrices();
-				osg::Matrix world_trans;
-				world_trans.identity();
-				if(mat_list.size() > 0)
+				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				if(parent) 
 				{
-					world_trans = mat_list[0];
+					osg::MatrixList mat_list = parent->getWorldMatrices();
+					osg::Matrix world_trans;
+					world_trans.identity();
+					if(mat_list.size() > 0)
+					{
+						world_trans = mat_list[0];
+					}
+					osg::Vec3d osg_world_pos = m_TransformNode->getPosition()*world_trans;
+					world_pos = OSGConvert::Get().ToGASS(osg_world_pos);
 				}
-				osg::Vec3d osg_world_pos = m_TransformNode->getPosition()*world_trans;
-				Vec3 world_pos = OSGConvert::Get().ToGASS(osg_world_pos);
-				return world_pos;
 			}
 		}
-		return m_Pos;
+		return world_pos;
 	}
 
 	void OSGLocationComponent::SetRotation(const Quaternion &value)
@@ -345,21 +358,24 @@ namespace GASS
 		{
 			osg::Quat final = OSGConvert::Get().ToOSG(value);
 
-			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
-			if(parent) 
+			if(m_TransformNode->getNumParents() > 0)
 			{
-				osg::MatrixList mat_list = parent->getWorldMatrices();
-				osg::Matrix world_trans;
-				world_trans.identity();
-				if(mat_list.size() > 0)
+				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				if(parent) 
 				{
-					world_trans = mat_list[0];
-				}
-				osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
+					osg::MatrixList mat_list = parent->getWorldMatrices();
+					osg::Matrix world_trans;
+					world_trans.identity();
+					if(mat_list.size() > 0)
+					{
+						world_trans = mat_list[0];
+					}
+					osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
 
-				osg::Quat inv_rot;
-				inv_world_trans.get(inv_rot);
-				final = final*inv_rot;
+					osg::Quat inv_rot;
+					inv_world_trans.get(inv_rot);
+					final = final*inv_rot;
+				}
 			}
 			m_TransformNode->setAttitude(final);
 			SendTransMessage();
@@ -373,21 +389,23 @@ namespace GASS
 		if(m_TransformNode.valid())
 		{
 			osg::Quat rot = m_TransformNode->getAttitude();
-			
-			osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
-			if(parent) 
+			if(m_TransformNode->getNumParents() > 0)
 			{
-				osg::MatrixList mat_list = parent->getWorldMatrices();
-				osg::Matrix world_trans;
-				world_trans.identity();
-				if(mat_list.size() > 0)
+				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				if(parent) 
 				{
-					world_trans = mat_list[0];
+					osg::MatrixList mat_list = parent->getWorldMatrices();
+					osg::Matrix world_trans;
+					world_trans.identity();
+					if(mat_list.size() > 0)
+					{
+						world_trans = mat_list[0];
+					}
+					//osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
+					osg::Quat parent_rot;
+					world_trans.get(parent_rot);
+					rot = rot*parent_rot;
 				}
-				//osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
-				osg::Quat parent_rot;
-				world_trans.get(parent_rot);
-				rot = rot*parent_rot;
 			}
 			q = OSGConvert::Get().ToGASS(rot);
 		}

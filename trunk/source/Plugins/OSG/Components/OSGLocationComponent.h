@@ -38,7 +38,8 @@ namespace GASS
 		virtual ~OSGLocationComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-	
+		virtual void OnDelete();
+
 		virtual void SetScale(const Vec3 &value);
 		virtual void SetPosition(const Vec3 &value);
 		virtual Vec3 GetPosition() const;
@@ -52,6 +53,7 @@ namespace GASS
 		virtual void SetWorldRotation(const Quaternion &value);
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale() const {return m_Scale;}
+		
 		
 		//IOSGNode interface
 		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
@@ -70,6 +72,7 @@ namespace GASS
 		void OnParentChangedMessage(ParentChangedEventPtr message);
 		void OnAttachToParent(AttachToParentRequestPtr message);
 		void SetAttachToParent(bool value);
+		
 		//helper
 		OSGLocationComponentPtr GetParentLocation();
 		void OnVisibilityMessage(VisibilityRequestPtr message);

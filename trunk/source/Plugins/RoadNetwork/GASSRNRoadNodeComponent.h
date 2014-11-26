@@ -21,7 +21,8 @@ namespace GASS
 		virtual void RemoveEdge(GraphEdgeComponentPtr edge);
 		std::vector<GraphEdgeComponentWeakPtr> GetEdges() {return m_Edges;}
 	private:
-		void OnTransformation(TransformationChangedEventPtr message);
+		//void OnTransformation(TransformationChangedEventPtr message);
+		void OnTransformation(MessagePtr message);
 		std::vector<GraphEdgeComponentWeakPtr> m_Edges;
 	};
 	typedef SPTR<RNRoadNodeComponent> RNRoadNodeComponentPtr;

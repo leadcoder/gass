@@ -700,6 +700,9 @@ namespace GASS
 
 		//tinyxml2::XMLElement * so_elem = xmlDoc.NewElement("SceneObject");  
 		//doc.LinkEndChild( so_elem); 
+
+		//first save to store filename
+		xmlDoc->SaveFile(filename.c_str());
 		SaveXML((tinyxml2::XMLElement*) (xmlDoc));
 		xmlDoc->SaveFile(filename.c_str());
 		delete xmlDoc;

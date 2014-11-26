@@ -456,7 +456,7 @@ namespace GASS
 		Vec3 pos = location->GetPosition();
 		//PxTransform startTransform(PxVec3(pos.x,pos.y,pos.z), PxQuat(0, 0, 0, 1));
 		Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-		m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos+ offset), m_Actor->getGlobalPose().q));
+		m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos + offset), m_Actor->getGlobalPose().q));
 
 		Reset();
 

@@ -53,7 +53,7 @@ namespace GASS
 		if(GetStartNode())
 		{
 			RNRoadNodeComponentPtr start_rn = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(GetStartNode());
-			Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+			Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			road_wps.push_back(start_pos);
 		}
 		std::vector<SceneObjectPtr> objects;
@@ -62,13 +62,13 @@ namespace GASS
 		for(size_t i = 0; i < objects.size(); i++)
 		{
 			LocationComponentPtr wp_location = objects[i]->GetFirstComponentByClass<ILocationComponent>();
-			road_wps.push_back(wp_location->GetPosition());
+			road_wps.push_back(wp_location->GetWorldPosition());
 		}
 		
 		if(GetEndNode())
 		{
 			RNRoadNodeComponentPtr end_rn = DYNAMIC_PTR_CAST<RNRoadNodeComponent>(GetEndNode());
-			Vec3 end_pos  = end_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+			Vec3 end_pos  = end_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			road_wps.push_back(end_pos);
 		}
 		return road_wps;
@@ -100,6 +100,6 @@ namespace GASS
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
 		GASSAssert(graph,"Failed to find IGraphComponent in RNRoadEdgeComponent::OnTransformation");
-		graph->RebuildGraph();
+		//graph->RebuildGraph();
 	}
 }

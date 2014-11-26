@@ -104,12 +104,14 @@ namespace GASS
 		std::vector<SceneObjectPtr> GetMeshSelectionEnum();
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
-		static void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos);
-		static void RecastToGASS(float* in_pos,GASS::Vec3 &out_pos);
+		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
+		void RecastToGASS(float* in_pos,GASS::Vec3 &out_pos) const;
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 		ADD_PROPERTY(bool,AutoCollectMeshes)
 		ADD_PROPERTY(bool,UseBoudingBox)
+		ADD_PROPERTY(Vec3,LocalOrigin)
+		
 		float GetCellSize() const;
 		float GetCellHeight() const;
 		float GetAgentHeight() const;
@@ -155,8 +157,6 @@ namespace GASS
 		void SetTransparency(int value);
 		void SaveXML(tinyxml2::XMLElement *obj_elem);
 		void LoadXML(tinyxml2::XMLElement *obj_elem);
-		void OnEditPosition(EditPositionMessagePtr message);
-
 		void SaveAllTiles(const char* path, const dtNavMesh* mesh);
 		dtNavMesh* LoadAll(const char* path);
 		std::vector<Vec3> GetVisualNavMesh();
@@ -175,6 +175,10 @@ namespace GASS
 		std::string GetBoundingBoxFromShape() const;
 		void OnChangeName(SceneObjectNameMessagePtr message);
 		FilePath _GetFilePath() const;
+
+		void OnEditPosition(EditPositionMessagePtr message);
+		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
+
 		GraphicsMeshPtr m_NavVisTriMesh;
 		GraphicsMeshPtr m_NavVisLineMesh;
 		std::vector<SceneObjectRef> m_SelectedMeshes;
@@ -207,7 +211,6 @@ namespace GASS
 		rcContext* m_Ctx;
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
-
 	};
 	typedef SPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
 	typedef WPTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;
