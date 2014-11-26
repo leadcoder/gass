@@ -60,7 +60,8 @@ Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 	m_InsertGraphNodeAct(NULL),
 	m_ChangeSiteAct(NULL),
 	m_ExportAct(NULL),
-	m_AddTemplateMenu(NULL)
+	m_AddTemplateMenu(NULL),
+	m_Initialized(false)
 {
 	setObjectName("GASSEd");
 	setWindowTitle("GASSEd");
@@ -70,9 +71,9 @@ Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 	setCentralWidget(center);*/
 
 	m_GASSApp = new GASS::EditorApplication(GASS::FilePath(""));
-	GASSRenderWidget* main_widget = new GASSRenderWidget();
-	main_widget->m_GASSEd = this;
-	setCentralWidget(main_widget);
+	m_RenderWidget = new GASSRenderWidget(this);
+	//main_widget->m_GASSEd = this;
+	setCentralWidget(m_RenderWidget);
 
 	SetupToolBar();
 	SetupMenuBar();
@@ -93,21 +94,32 @@ Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 	prop_dock->setWidget(new GASSPropertyWidget(this));
 	prop_dock->setAllowedAreas(Qt::AllDockWidgetAreas);
 	splitDockWidget(tree_dock,prop_dock,Qt::Vertical);
-
 }
 
-void GASSEd::Initialize(void* render_win_handle)
+/*void GASSEd::Initialize(void* render_win_handle)
 {
 	GASS::FilePath working_folder("./");
 	void* main_win_handle = winId();
 	m_GASSApp->Init(working_folder, m_Config, main_win_handle, render_win_handle);
+	//send initial resize message
+	m_RenderWidget->onSizeUpdated();
 	OnNew();
-}
-
-/*void GASSEd::actionTriggered(QAction *action)
-{
-qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }*/
+
+void GASSEd::Initialize()
+{
+	if(m_Initialized)
+		return;
+	GASS::FilePath working_folder("./");
+	void* main_win_handle = winId();
+	void* render_win_handle = m_RenderWidget->winId();
+	m_GASSApp->Init(working_folder, m_Config, main_win_handle, render_win_handle);
+	m_Initialized = true;
+	//send initial resize message
+	m_RenderWidget->sendDelayedResize();
+	OnNew();
+
+}
 
 void GASSEd::SetupToolBar()
 {

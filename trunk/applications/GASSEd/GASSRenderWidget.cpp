@@ -9,8 +9,7 @@
 #include "Sim/GASS.h" 
 
 GASSRenderWidget::GASSRenderWidget( GASSEd *parent): QWidget(parent),
-	m_GASSEd(parent),
-	m_Initialized(false)
+	m_GASSEd(parent)
 {
 	setAttribute(Qt::WA_PaintOnScreen);
 	setFocusPolicy(Qt::ClickFocus);
@@ -66,7 +65,7 @@ QPaintEngine* GASSRenderWidget::paintEngine() const
 
 void GASSRenderWidget::paintEvent(QPaintEvent *e)
 {
-	if(m_Initialized)
+	if(m_GASSEd->IsInitialized())
 	{
 		m_GASSEd->m_GASSApp->Update(); 
 	}
@@ -76,12 +75,12 @@ void GASSRenderWidget::paintEvent(QPaintEvent *e)
 
 void GASSRenderWidget::showEvent(QShowEvent *e)
 {
-	if(!m_Initialized)
-	{
-		m_GASSEd->Initialize(this->winId());
-		m_Initialized = true;
-	}
 	QWidget::showEvent(e);
+	/*if(!m_Initialized)
+	{
+		//m_GASSEd->Initialize(this->winId());
+		m_Initialized = true;
+	}*/
 }
 
 void GASSRenderWidget::resizeEvent(QResizeEvent *e)
@@ -91,41 +90,68 @@ void GASSRenderWidget::resizeEvent(QResizeEvent *e)
 	{
 		const QSize &newSize = e->size();
 		m_Size = newSize;
-		if(m_GASSEd->m_GASSApp)
-		{
-			GASS::SystemMessagePtr resize_message(new GASS::ViewportMovedOrResizedEvent("RenderWindow",0,0,newSize.width(), newSize.height()));
-			GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();
-			ssm->SendImmediate(resize_message);
-		}
+		onSizeUpdated();
 	}
 }
 
+void GASSRenderWidget::onSizeUpdated()
+{
+	if(m_GASSEd->IsInitialized())
+	{
+		GASS::SystemMessagePtr resize_message(new GASS::ViewportMovedOrResizedEvent("RenderWindow",0,0,m_Size.width(), m_Size.height()));
+		GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();
+		ssm->SendImmediate(resize_message);
+	}
+}
+
+void GASSRenderWidget::sendDelayedResize()
+{
+	//updateGeometry();
+	//this->resize(this->geometry().width(), this->geometry().height());
+	/*if(m_GASSEd->IsInitialized())
+	{
+		GASS::SystemMessagePtr resize_message(new GASS::ViewportMovedOrResizedEvent("RenderWindow",0,0,m_Size.width(), m_Size.height(),-1,4));
+		GASS::SimSystemManagerPtr ssm = GASS::SimEngine::Get().GetSimSystemManager();
+		ssm->PostMessage(resize_message);
+	}*/
+}
+
+
 void GASSRenderWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-	GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
-	if(is)
-		is->InjectMouseReleased(GetMouseData(e),GetMouseButton(e));
+	if(m_GASSEd->IsInitialized())
+	{
+		GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
+		if(is)
+			is->InjectMouseReleased(GetMouseData(e),GetMouseButton(e));
+	}
 	QWidget::mouseReleaseEvent(e);
 }
 
 void GASSRenderWidget::mousePressEvent(QMouseEvent *e)
 {
-	GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
-	if(is)
+	if(m_GASSEd->IsInitialized())
 	{
-		is->InjectMousePressed(GetMouseData(e),GetMouseButton(e));
+		GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
+		if(is)
+		{
+			is->InjectMousePressed(GetMouseData(e),GetMouseButton(e));
+		}
 	}
 	QWidget::mousePressEvent(e);
 }
 
 void GASSRenderWidget::mouseMoveEvent(QMouseEvent *e)
 {
-	GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
-	if(is)
+	if(m_GASSEd->IsInitialized())
 	{
-		GASS::MouseData  md = GetMouseData(e);
-		is->InjectMouseMoved(md);
-		m_LastData = md;
+		GASS::ProxyInputSystemPtr is = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IProxyInputSystem>();
+		if(is)
+		{
+			GASS::MouseData  md = GetMouseData(e);
+			is->InjectMouseMoved(md);
+			m_LastData = md;
+		}
 	}
 	QWidget::mouseMoveEvent(e);
 }

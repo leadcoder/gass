@@ -21,9 +21,10 @@ public:
 	virtual void dragMoveEvent (QDragMoveEvent* event );
 	void showEvent(QShowEvent *e);
 	void initialize();
-
-	GASSEd* m_GASSEd;
+	void onSizeUpdated();
+	void sendDelayedResize();
 protected:
+	GASSEd* m_GASSEd;
 	GASS::MouseData GetMouseData(QMouseEvent *e) const;
 	GASS::MouseButtonId GetMouseButton(QMouseEvent *e) const;
 	QSize m_Size;

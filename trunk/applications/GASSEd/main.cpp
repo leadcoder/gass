@@ -18,6 +18,8 @@ int main(int argc, char **argv)
     try
 	{
 		gass_win.show();
+		gass_win.Initialize();
+
 		return app.exec();
 	}
 	catch(std::exception& e)
