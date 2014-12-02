@@ -1,18 +1,15 @@
 #set lib name here!
 set(LIB_NAME "SimDemo")
+#include some files to get shared libraries
+include(OgreDepModule)
+include(SkyXDepModule)
+include(OpenALDepModule)
 
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
 
 set(CPP_FILES "source/SimDemo.cpp")
 set(H_FILES "source/Client.h" "source/Server.h" "source/SimApplication.h")
-
-#change output folder to local project folder
-
-
-
-#set(GASS_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/samples_output/${LIB_NAME}) #dlls and exe
 
 #Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
@@ -34,51 +31,23 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSPluginOpenAL
 		GASSPluginGame
 		GASSPluginBase
-		GASSPluginRakNet)
-
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
-else()
-	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
-endif()
+		GASSPluginRakNet
+		GASSPluginMyGUI)
 
 	set(DEP_DLL_FILES_RELEASE 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
+	${OPENAL_BIN_FILES_RELEASE}
+	${SKYX_BIN_FILES_RELEASE}
+	${OGRE_BIN_FILES_RELEASE}
+	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll
 	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Release/SkyX.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/release/MyGUIEngine.dll
-	${OGRE_DIR}/bin/release/OgreMain.dll
-	${OGRE_DIR}/bin/release/OgreTerrain.dll
-	${OGRE_DIR}/bin/release/OgrePaging.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
-	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
-	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
-	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	)
-	set(DEP_DLL_FILES_DEBUG 
+	${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/release/MyGUIEngine.dll)
+	set(DEP_DLL_FILES_DEBUG	
+	${OPENAL_BIN_FILES_DEBUG}
+	${SKYX_BIN_FILES_DEBUG}
+	${OGRE_BIN_FILES_DEBUG}
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll	
 	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Debug/SkyX_d.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
-	${OGRE_DIR}/bin/debug/OgreMain_d.dll
-	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
-	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	)
-	
+	${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll)
 	
 	set(GASS_RELEASE_DLL_FILES 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
@@ -91,7 +60,8 @@ endif()
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll)
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginMyGUI.dll)
 	set(GASS_DEBUG_DLL_FILES 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
@@ -103,7 +73,8 @@ endif()
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll)
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll
+	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginMyGUI_d.dll)
 
 
 #set(ALL_DLL_FILES 
@@ -125,18 +96,7 @@ foreach(DLL_FILE ${DEP_DLL_FILES_RELEASE})
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
 endforeach()
 
-
-#add_custom_command(TARGET ${LIB_NAME}
-#            POST_BUILD
-#            COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_gass_dlls.bat $<CONFIGURATION> ${GASS_RUNTIME_OUTPUT_DIRECTORY} $<TARGET_FILE_DIR:${LIB_NAME}>)
-			
-#add_custom_command(TARGET ${LIB_NAME}
-#            POST_BUILD
-#            COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_ogre_dlls.bat $<CONFIGURATION> ${OGRE_DIR}/bin $<TARGET_FILE_DIR:${LIB_NAME}>)
-
-#add_custom_command(TARGET ${LIB_NAME}
-#            POST_BUILD
-#            COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_dep_dlls.bat $<CONFIGURATION> ${GASS_DEPENDENCIES_DIR}/lib/ $<TARGET_FILE_DIR:${LIB_NAME}>)
+   #COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_dep_dlls.bat $<CONFIGURATION> ${GASS_DEPENDENCIES_DIR}/lib/ $<TARGET_FILE_DIR:${LIB_NAME}>)
 			
 	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
 			POST_BUILD
@@ -161,10 +121,3 @@ install(DIRECTORY ../common/data DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/../ FIL
 #install dlls
 install (FILES  ${DEP_DLL_FILES_DEBUG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 install (FILES  ${DEP_DLL_FILES_RELEASE} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
-
-#install (FILES  ${GASS_DEBUG_DLL_FILES} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin CONFIGURATIONS Debug)
-#install (FILES  ${GASS_RELEASE_DLL_FILES} DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin CONFIGURATIONS Release)
-
-#install (CODE  "cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_gass_dlls.bat $<CONFIGURATION> ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}  ${GASS_INSTALL_SAMPLES_DIR}/${LIB_NAME}/bin")
-
-

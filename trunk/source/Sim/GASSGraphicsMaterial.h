@@ -30,6 +30,9 @@
 
 namespace GASS
 {
+	/**
+		Class holding material data used by graphic system
+	*/
 	class GraphicsMaterial
 	{
 	public:
@@ -65,6 +68,10 @@ namespace GASS
 	typedef SPTR<GraphicsMaterial> GraphicsMaterialPtr;
 
 
+	/**
+		Property meta data used for material property binding.
+		
+	*/
 	class GraphicsMaterialPropertyMetaData : public EnumerationPropertyMetaData
 	{
 	public:

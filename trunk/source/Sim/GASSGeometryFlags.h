@@ -93,6 +93,9 @@ namespace GASS
 	public:
 		GeometryFlagManager() {}
 		virtual ~GeometryFlagManager() {}
+		/**
+			Load geometry flags form xml-files
+		*/
 		static void LoadGeometryFlagsFile(const std::string &file);
 		static GeometryFlags GetMask(GeometryFlags geom_flag);
 	private:
