@@ -1,0 +1,25 @@
+set(TBB_DIR "${GASS_DEPENDENCIES_DIR}/tbb" CACHE PATH "TBB folder")
+
+set(TBB_INC_DIR "${TBB_DIR}/include")
+if(${CMAKE_CL_64})
+	if(${MSVC10})
+		set(TBB_LIB_DIR "${TBB_DIR}/lib/intel64/vc10")
+		set(TBB_BIN_DIR "${TBB_DIR}/bin/intel64/vc10")
+	elseif(${MSVC11})
+		set(TBB_LIB_DIR "${TBB_DIR}/lib/intel64/vc11")
+		set(TBB_BIN_DIR "${TBB_DIR}/bin/intel64/vc11")
+	endif()
+else()
+	if(${MSVC10})
+		set(TBB_LIB_DIR "${TBB_DIR}/lib/ia32/vc10")
+		set(TBB_BIN_DIR "${TBB_DIR}/bin/ia32/vc10")
+	elseif(${MSVC11})
+		set(TBB_LIB_DIR "${TBB_DIR}/lib/ia32/vc11")
+		set(TBB_BIN_DIR "${TBB_DIR}/bin/ia32/vc11")
+	endif()
+endif()
+
+set(TBB_BIN_FILES_DEBUG ${TBB_BIN_DIR}/tbb_debug.dll)
+
+set(TBB_BIN_FILES_RELEASE ${TBB_BIN_DIR}/tbb.dll)
+

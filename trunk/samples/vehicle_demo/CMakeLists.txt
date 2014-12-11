@@ -1,6 +1,13 @@
 #set lib name here!
 set(LIB_NAME "VehicleDemo")
 
+include(OgreDepModule)
+include(OISDepModule)
+include(TBBDepModule)
+include(OpenALDepModule)
+include(MyGUIDepModule)
+include(OSGDepModule)
+
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/samples/vehicle_demo/source")
 
@@ -29,85 +36,23 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSPluginBase
 		GASSPluginRakNet)
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
-else()
-	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
-endif()
 
-	set(DEP_DLL_FILES_RELEASE 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/release/MyGUIEngine.dll
-	${OGRE_DIR}/bin/release/OgreMain.dll
-	${OGRE_DIR}/bin/release/OgreTerrain.dll
-	${OGRE_DIR}/bin/release/OgrePaging.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
-	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
-	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
-	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/zlib1.dll
-	${OSG_DIR}/bin/libpng13.dll
-	${OSG_DIR}/bin/glut32.dll
-	${OSG_DIR}/bin/ot12-OpenThreads.dll
-	${OSG_DIR}/bin/osg80-osg.dll
-	${OSG_DIR}/bin/osg80-osgUtil.dll
-	${OSG_DIR}/bin/osg80-osgDB.dll
-	${OSG_DIR}/bin/osg80-osgGA.dll
-	${OSG_DIR}/bin/osg80-osgText.dll
-	${OSG_DIR}/bin/osg80-osgViewer.dll
-	${OSG_DIR}/bin/osg80-osgTerrain.dll
-	${OSG_DIR}/bin/osg80-osgFX.dll
-	${OSG_DIR}/bin/osg80-osgManipulator.dll
-	${OSG_DIR}/bin/osg80-osgVolume.dll
-	${OSG_DIR}/bin/osg80-osgPresentation.dll
-	${OSG_DIR}/bin/osg80-osgSim.dll
-	${OSG_DIR}/bin/osg80-osgAnimation.dll
-	${OSG_DIR}/bin/osg80-osgWidget.dll
-	${OSG_DIR}/bin/osg80-osgParticle.dll
-	${OSG_DIR}/bin/osg80-osgShadow.dll
+set(DEP_DLL_FILES_RELEASE 
+	${TBB_BIN_FILES_RELEASE}
+	${OPENAL_BIN_FILES_RELEASE}
+	${OIS_BIN_FILES_RELEASE}
+	${MYGUI_BIN_FILES_RELEASE}
+	${OGRE_BIN_FILES_RELEASE}
+	${OSG_BIN_FILES_RELEASE}
 	)
+	
 	set(DEP_DLL_FILES_DEBUG 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll	
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
-	${OGRE_DIR}/bin/debug/OgreMain_d.dll
-	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
-	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${OSG_DIR}/bin/glut32D.dll
-	${OSG_DIR}/bin/libpng13d.dll
-	${OSG_DIR}/bin/osg80-osgAnimationd.dll
-	${OSG_DIR}/bin/osg80-osgd.dll
-	${OSG_DIR}/bin/osg80-osgDBd.dll
-	${OSG_DIR}/bin/osg80-osgFXd.dll
-	${OSG_DIR}/bin/osg80-osgGAd.dll
-	${OSG_DIR}/bin/osg80-osgManipulatord.dll
-	${OSG_DIR}/bin/osg80-osgParticled.dll
-	${OSG_DIR}/bin/osg80-osgPresentationd.dll
-	${OSG_DIR}/bin/osg80-osgShadowd.dll
-	${OSG_DIR}/bin/osg80-osgSimd.dll
-	${OSG_DIR}/bin/osg80-osgTerraind.dll
-	${OSG_DIR}/bin/osg80-osgTextd.dll
-	${OSG_DIR}/bin/osg80-osgUtild.dll
-	${OSG_DIR}/bin/osg80-osgViewerd.dll
-	${OSG_DIR}/bin/osg80-osgVolumed.dll
-	${OSG_DIR}/bin/osg80-osgWidgetd.dll
-	${OSG_DIR}/bin/ot12-OpenThreadsd.dll
-	${OSG_DIR}/bin/zlib1d.dll
+	${TBB_BIN_FILES_DEBUG}
+	${OPENAL_BIN_FILES_DEBUG}
+	${OIS_BIN_FILES_DEBUG}
+	${MYGUI_BIN_FILES_DEBUG}
+	${OGRE_BIN_FILES_DEBUG}
+	${OSG_BIN_FILES_DEBUG}
 	)
 	
 	

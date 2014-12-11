@@ -4,31 +4,20 @@ project(${APP_NAME})
 
 set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/../../CMake"
-  )
+)
 
 include(OSGDepModule)
+include(TinyXML2DepModule)
+include(BoostDepModule)
+include(AngelScriptDepModule)
+include(TBBDepModule)
+include(PhysXDepModule)
+
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 
 set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/boost-v1.54")
-	set(BOOST_DIR  "${GASS_DEPENDENCIES_DIR}/boost-v1.54" CACHE PATH "BOOST folder")
-else()
-	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
-endif()
-
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
-else()
-	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
-endif()
-
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4")
-	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
-else()
-	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
-endif()
 
 #msvc only, need other check if gcc
 if(${CMAKE_CL_64})
@@ -48,17 +37,17 @@ set(GASSED_INSTALL_BIN_DIR  "bin")
 set(GASSED_INSTALL_BIN_DIR_DEBUG "bin/debug")
 set(GASSED_INSTALL_BIN_DIR_RELEASE "bin/release")
 
-set(GASS_COMMON_INCLUDE_DIRS "${BOOST_DIR}"  "${GASS_DIR}/include" 	"${GASS_DEPENDENCIES_DIR}/tinyxml2/include"	"${GASS_DEPENDENCIES_DIR}/tbb/include" "${GASS_DEPENDENCIES_DIR}/angelscript/include")
-set(GASS_COMMON_LIB_DIRS "${BOOST_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/lib/" "${GASS_DEPENDENCIES_DIR}/tinyxml2/lib/$(Configuration)" "${GASS_DEPENDENCIES_DIR}/angelscript/lib" "${GASS_DIR}/lib/")
+set(GASS_COMMON_INCLUDE_DIRS ${BOOST_INC_DIR}  "${GASS_DIR}/include" ${TINYXML2_INC_DIR} ${TBB_INC_DIR} ${ANGELSCRIPT_INC_DIR})
+set(GASS_COMMON_LIB_DIRS ${BOOST_LIB_DIR} "${GASS_DEPENDENCIES_DIR}/lib/" ${TINYXML2_LIB_DIR} ${ANGELSCRIPT_LIB_DIR} "${GASS_DIR}/lib/")
+
 set(GASS_COMMON_LINK_LIBRARIES
 	optimized GASSCore
 	optimized GASSSim
 	optimized GASSEditorModule
-	optimized tinyxml2
 	debug GASSCore_d
 	debug GASSSim_d
 	debug GASSEditorModule_d
-	debug tinyxml2_d 
+	${TINYXML2_LINK_LIBRARIES}
 	)
 	
 find_package(Qt4 REQUIRED)
@@ -109,7 +98,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			set(DEP_DLL_FILES_RELEASE 
 			${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5.dll
 	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
+	${OPENAL_BIN_DIR}
 	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
 	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Release/SkyX.dll
 	${OGRE_DIR}/bin/release/OgreMain.dll
@@ -151,7 +140,7 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	set(DEP_DLL_FILES_DEBUG 
 	${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5d.dll
 	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll	
+	${OPENAL_BIN_DIR}
 	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
 	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Debug/SkyX_d.dll
 	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll

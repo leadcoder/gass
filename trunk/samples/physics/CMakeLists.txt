@@ -1,23 +1,20 @@
 #set lib name here!
 set(LIB_NAME "PhysicsDemo")
 
+include(TBBDepModule)
+include(OpenALDepModule)
+include(OISDepModule)
+include(OSGDepModule)
+include(PhysXDepModule)
+include(OgreDepModule)
+include(MyGUIDepModule)
+
+
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
-include(OSGDepModule)
 
 set(CPP_FILES "source/PhysicsDemo.cpp")
 set(H_FILES "")
-
-set(PHYSX_DIR $ENV{PHYSX_HOME}  CACHE PATH "PhysX folder")
-
-#msvc only, need other check if gcc
-if(${CMAKE_CL_64})
-	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win64")
-	set(DLL_SUFFIX "_x64")
-else()
-	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win32")
-	set(DLL_SUFFIX "_x86")
-endif()
 
 #Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
@@ -42,85 +39,25 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSPluginBase
 		GASSPluginRakNet)
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
-else()
-	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
-endif()
-
-	set(DEP_DLL_FILES_RELEASE 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/release/MyGUIEngine.dll
-	${OGRE_DIR}/bin/release/OgreMain.dll
-	${OGRE_DIR}/bin/release/OgreTerrain.dll
-	${OGRE_DIR}/bin/release/OgrePaging.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
-	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
-	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
-	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	
-	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+set(DEP_DLL_FILES_RELEASE 
+	${TBB_BIN_FILES_RELEASE}
+	${OPENAL_BIN_FILES_RELEASE}
+	${OIS_BIN_FILES_RELEASE}
+	${MYGUI_BIN_FILES_RELEASE}
+	${OGRE_BIN_FILES_RELEASE}
+	${PHYSX_BIN_FILES_RELEASE}
 	${OSG_BIN_FILES_RELEASE}
-	)
-	set(DEP_DLL_FILES_DEBUG 
-	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OpenAL32.dll	
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
-	${OGRE_DIR}/bin/debug/OgreMain_d.dll
-	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
-	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematicCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+)
+set(DEP_DLL_FILES_DEBUG 
+	${TBB_BIN_FILES_DEBUG}
+	${OPENAL_BIN_FILES_DEBUG}
+	${OIS_BIN_FILES_DEBUG}
+	${MYGUI_BIN_FILES_DEBUG}
+	${OGRE_BIN_FILES_DEBUG}
+	${PHYSX_BIN_FILES_DEBUG}
 	${OSG_BIN_FILES_DEBUG}
-	)
+)
 	
-	
-	set(GASS_RELEASE_DLL_FILES 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll)
-	set(GASS_DEBUG_DLL_FILES 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll)
 
 #add dll files to out dir to enable debugging from IDE without install step
 foreach(DLL_FILE ${DEP_DLL_FILES_DEBUG})

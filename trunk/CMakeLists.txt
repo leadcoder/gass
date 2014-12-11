@@ -8,19 +8,17 @@ set (GASS_VERSION_MINOR 0)
 set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
   )
-include(CMakeDependentOption)
-include(Common)
-include(TinyXML2DepModule)
-
 
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
 
+include(CMakeDependentOption)
+include(Common)
+include(TinyXML2DepModule)
+include(BoostDepModule)
+include(AngelScriptDepModule)
+include(TBBDepModule)
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/boost-v1.54")
-	set(BOOST_DIR  "${GASS_DEPENDENCIES_DIR}/boost-v1.54" CACHE PATH "BOOST folder")
-else()
-	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
-endif()
+
 
 message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 
@@ -53,20 +51,18 @@ set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
 
-set(GASS_CORE_INCLUDE_DIRS "${BOOST_DIR}"  
+set(GASS_CORE_INCLUDE_DIRS ${BOOST_INC_DIR}
 	${PROJECT_SOURCE_DIR}/source 	
 	${TINYXML2_INC_DIR}	
-	"${GASS_DEPENDENCIES_DIR}/tbb/include")
-set(GASS_CORE_LIB_DIRS "${BOOST_DIR}/lib/" ${GASS_DEPENDENCIES_DIR}/lib ${TINYXML2_LIB_DIR})
+	${TBB_INC_DIR})
+	
+set(GASS_CORE_LIB_DIRS ${BOOST_LIB_DIR} ${GASS_DEPENDENCIES_DIR}/lib ${TINYXML2_LIB_DIR} ${TBB_LIB_DIR})
 set(GASS_CORE_LINK_LIBRARIES ${TINYXML2_LINK_LIBRARIES})
 
-set(GASS_COMMON_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} "${GASS_DEPENDENCIES_DIR}/angelscript/include")
-set(GASS_COMMON_LIB_DIRS ${GASS_CORE_LIB_DIRS} "${GASS_DEPENDENCIES_DIR}/angelscript/lib")
-set(GASS_COMMON_LINK_LIBRARIES ${GASS_CORE_LINK_LIBRARIES}
-	optimized angelscript	
-	debug angelscriptd
-	)
-#set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
+set(GASS_COMMON_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INC_DIR})
+set(GASS_COMMON_LIB_DIRS ${GASS_CORE_LIB_DIRS} ${ANGELSCRIPT_LIB_DIR})
+set(GASS_COMMON_LINK_LIBRARIES ${GASS_CORE_LINK_LIBRARIES} ${ANGELSCRIPT_LINK_LIBRARIES})
+
 
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
 CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_OGRE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
@@ -105,3 +101,6 @@ if(GASS_BUILD_DOCUMENTATION)
   # then leave out the 'ALL' keyword from the above command.
   install(DIRECTORY ${CMAKE_BINARY_DIR}/Documentation/html/ DESTINATION doc)
 endif()
+
+# Install CMake files in order to re-use them in other projects
+install( DIRECTORY CMake/ DESTINATION CMake/ )

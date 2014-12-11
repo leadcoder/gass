@@ -4,6 +4,9 @@ set(LIB_NAME "SimDemo")
 include(OgreDepModule)
 include(SkyXDepModule)
 include(OpenALDepModule)
+include(OISDepModule)
+include(TBBDepModule)
+include(MyGUIDepModule)
 
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
@@ -34,22 +37,23 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSPluginRakNet
 		GASSPluginMyGUI)
 
-	set(DEP_DLL_FILES_RELEASE 
+set(DEP_DLL_FILES_RELEASE 
 	${OPENAL_BIN_FILES_RELEASE}
 	${SKYX_BIN_FILES_RELEASE}
 	${OGRE_BIN_FILES_RELEASE}
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/release/MyGUIEngine.dll)
-	set(DEP_DLL_FILES_DEBUG	
+	${TBB_BIN_FILES_RELEASE}
+	${OIS_BIN_FILES_RELEASE}
+	${MYGUI_BIN_FILES_RELEASE})
+	
+set(DEP_DLL_FILES_DEBUG	
 	${OPENAL_BIN_FILES_DEBUG}
 	${SKYX_BIN_FILES_DEBUG}
 	${OGRE_BIN_FILES_DEBUG}
-	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll)
+	${TBB_BIN_FILES_DEBUG}
+	${OIS_BIN_FILES_DEBUG}
+	${MYGUI_BIN_FILES_DEBUG})
 	
-	set(GASS_RELEASE_DLL_FILES 
+set(GASS_RELEASE_DLL_FILES 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
@@ -62,7 +66,8 @@ add_dependencies(${LIB_NAME} GASSCore
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginMyGUI.dll)
-	set(GASS_DEBUG_DLL_FILES 
+
+set(GASS_DEBUG_DLL_FILES 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
 	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
