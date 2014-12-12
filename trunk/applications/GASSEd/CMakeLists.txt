@@ -11,6 +11,7 @@ include(TinyXML2DepModule)
 include(BoostDepModule)
 include(AngelScriptDepModule)
 include(TBBDepModule)
+include(SkyXDepModule)
 include(PhysXDepModule)
 
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
@@ -95,28 +96,17 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			)
 			
 			
-			set(DEP_DLL_FILES_RELEASE 
-			${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5.dll
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${OPENAL_BIN_DIR}
-	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Release/SkyX.dll
-	${OGRE_DIR}/bin/release/OgreMain.dll
-	${OGRE_DIR}/bin/release/OgreTerrain.dll
-	${OGRE_DIR}/bin/release/OgrePaging.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
-	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
-	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
-	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+set(DEP_DLL_FILES_RELEASE 
+	${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5.dll
+	${TBB_BIN_FILES_RELEASE}
+	${OPENAL_BIN_FILES_RELEASE}
+	${OIS_BIN_FILES_RELEASE}
+	${MYGUI_BIN_FILES_RELEASE}
+	${OGRE_BIN_FILES_RELEASE}
+	${OSG_BIN_FILES_RELEASE}
+	${SKYX_BIN_FILES_RELEASE}
+	${PHYSX_BIN_FILES_RELEASE}
+	${OSG_BIN_FILES_RELEASE}
 	${GASS_DIR}/bin/release/GASSCore.dll
 	${GASS_DIR}/bin/release/GASSSim.dll 
 	${GASS_DIR}/bin/release/GASSPluginOgre.dll
@@ -135,31 +125,18 @@ ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 	${GASS_DIR}/bin/release/GASSEditorModule.dll
 	${QT_DIR}/bin/QtCore4.dll
 	${QT_DIR}/bin/QtGui4.dll
-	${OSG_BIN_FILES_RELEASE}
+	
 	)
 	set(DEP_DLL_FILES_DEBUG 
 	${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5d.dll
-	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${OPENAL_BIN_DIR}
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Debug/SkyX_d.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
-	${OGRE_DIR}/bin/debug/OgreMain_d.dll
-	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
-	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematicCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
+	${TBB_BIN_FILES_DEBUG}
+	${OPENAL_BIN_FILES_DEBUG}
+	${OIS_BIN_FILES_DEBUG}
+	${MYGUI_BIN_FILES_DEBUG}
+	${OGRE_BIN_FILES_DEBUG}
+	${SKYX_BIN_FILES_DEBUG}
+	${PHYSX_BIN_FILES_DEBUG}
+	
 	${GASS_DIR}/bin/debug/GASSCore_d.dll
 	${GASS_DIR}/bin/debug/GASSSim_d.dll 
 	${GASS_DIR}/bin/debug/GASSPluginOgre_d.dll
