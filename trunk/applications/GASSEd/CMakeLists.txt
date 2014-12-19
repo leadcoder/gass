@@ -6,6 +6,9 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/../../CMake"
 )
 
+set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
+set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
+
 include(OSGDepModule)
 include(TinyXML2DepModule)
 include(BoostDepModule)
@@ -16,8 +19,7 @@ include(PhysXDepModule)
 
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 
-set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
-set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
+
 
 
 #msvc only, need other check if gcc
