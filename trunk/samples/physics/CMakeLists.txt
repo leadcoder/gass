@@ -12,6 +12,9 @@ include(MyGUIDepModule)
 
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
+include(OgreDepModule)
+include(SkyXDepModule)
+include(OpenALDepModule)
 
 set(CPP_FILES "source/PhysicsDemo.cpp")
 set(H_FILES "")
@@ -39,6 +42,7 @@ add_dependencies(${LIB_NAME} GASSCore
 		GASSPluginBase
 		GASSPluginRakNet)
 
+
 set(DEP_DLL_FILES_RELEASE 
 	${TBB_BIN_FILES_RELEASE}
 	${OPENAL_BIN_FILES_RELEASE}
@@ -46,8 +50,8 @@ set(DEP_DLL_FILES_RELEASE
 	${MYGUI_BIN_FILES_RELEASE}
 	${OGRE_BIN_FILES_RELEASE}
 	${PHYSX_BIN_FILES_RELEASE}
-	${OSG_BIN_FILES_RELEASE}
-)
+	${OSG_BIN_FILES_RELEASE})
+
 set(DEP_DLL_FILES_DEBUG 
 	${TBB_BIN_FILES_DEBUG}
 	${OPENAL_BIN_FILES_DEBUG}
@@ -55,8 +59,7 @@ set(DEP_DLL_FILES_DEBUG
 	${MYGUI_BIN_FILES_DEBUG}
 	${OGRE_BIN_FILES_DEBUG}
 	${PHYSX_BIN_FILES_DEBUG}
-	${OSG_BIN_FILES_DEBUG}
-)
+	${OSG_BIN_FILES_DEBUG})
 	
 
 #add dll files to out dir to enable debugging from IDE without install step
