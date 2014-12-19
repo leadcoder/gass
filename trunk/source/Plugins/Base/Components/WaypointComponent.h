@@ -59,7 +59,7 @@ namespace GASS
 	protected:
 		void SetTangentWeight(Float value);
 		void NotifyUpdate();
-		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
+		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		void OnChangeName(GASS::SceneObjectNameMessagePtr message);
 		void OnMoved(MessagePtr message);
 		void OnTangentMoved(MessagePtr message);

@@ -102,19 +102,15 @@ namespace GASS
 
 	void WaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostInitializedEvent,PostInitializedEvent,0));
+		m_ConnectionLines = GetSceneObject()->GetChildByID("WP_CONNECTION_LINES");
 	}
 
 	static const std::string MAT_NAME = "WaypointListLine";
 
-	void WaypointListComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
+	void WaypointListComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
 	{
-		if(message->GetSceneObject() != GetSceneObject())
-			return;
-
 		//create material for waypoint binding line
-		
-	
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if(!gfx_sys->HasMaterial(MAT_NAME))
 		{
@@ -127,10 +123,11 @@ namespace GASS
 			line_mat.DepthWrite = false;
 			gfx_sys->AddMaterial(line_mat);
 		}
-		
 
-
+		//No need to be attached to parent any more
+		GetSceneObject()->PostRequest(AttachToParentRequestPtr(new AttachToParentRequest(false)));
 		m_Initialized = true;
+
 		UpdatePath();
 		SetShowWaypoints(m_ShowWaypoints);
 	}
@@ -183,8 +180,6 @@ namespace GASS
 	void WaypointListComponent::SetShowWaypoints(bool value)
 	{
 		m_ShowWaypoints = value;
-		
-
 		if(m_Initialized)
 		{
 			std::vector<WaypointComponentPtr> wp_vec;
@@ -234,13 +229,22 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(m_LineColor);
 			}
 
-
 			if(sub_mesh_data->PositionVector.size() > 0)
 			{
-
-				GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-				//update material
-				GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
+				/*SceneObjectPtr line_obj = _GetConnectionLines();
+				if(line_obj)
+				{
+					line->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+					//update material
+					line->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
+				}
+				else //remove this*/
+				{
+					
+					GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+					//update material
+					GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
+				}
 			}
 		}
 		//create absolute positions

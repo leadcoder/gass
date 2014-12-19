@@ -63,18 +63,17 @@ namespace GASS
 
 	void WaypointComponent::OnInitialize()
 	{
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(WaypointComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnPostInitializedEvent,PostInitializedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnChangeName,SceneObjectNameMessage,0));
+		m_Initialized = true;
 	}
 
-	void WaypointComponent::OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message)
+	void WaypointComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
 	{
-		if(message->GetSceneObject() != GetSceneObject())
-			return;
-
+	
 		//notify parent
 		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 		if(tangent)
@@ -83,10 +82,8 @@ namespace GASS
 			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionRequest,1));
 		}
 		else
-			std::cout << "Failed to find tangent in waypoint compoenent\n";
-
-
-		//GetSceneObject()->GetParentSceneObject()->SendImmediate(MessagePtr(new UpdateWaypointListMessage()));
+			std::cout << "Failed to find tangent in waypoint component\n";
+		
 		SPTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 		if(list)
 		{
@@ -101,7 +98,6 @@ namespace GASS
 				tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
 			}
 		}
-		m_Initialized = true;
 	}
 
 	void WaypointComponent::OnDelete()

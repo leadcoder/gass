@@ -134,5 +134,21 @@ namespace GASS
 
 	};
 	typedef SPTR<ParentChangedEvent> ParentChangedEventPtr;
+
+	/**
+		Message sent after SceneObject is initialized (children included)
+	*/
+	class PostInitializedEvent : public SceneObjectEventMessage
+	{
+	public:
+		PostInitializedEvent(SenderID sender_id = -1, double delay= 0) :   
+		  SceneObjectEventMessage(sender_id , delay)
+		  {
+
+		  }
+	};
+	typedef SPTR<PostInitializedEvent> PostInitializedEventPtr;
+
+
 	
 }

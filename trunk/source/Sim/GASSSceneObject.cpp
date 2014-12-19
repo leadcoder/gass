@@ -277,6 +277,7 @@ namespace GASS
 
 		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
+		m_MessageManager->PostMessage(PostInitializedEventPtr(new PostInitializedEvent()));
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot() 

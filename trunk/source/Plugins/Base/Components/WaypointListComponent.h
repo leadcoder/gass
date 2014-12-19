@@ -32,6 +32,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
+
 namespace GASS
 {
 	class SplineAnimation;
@@ -52,7 +53,7 @@ namespace GASS
 		virtual std::string GetWaypointTemplate() const;
 		float GetRadius()const;
 	protected:
-		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
+		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		ADD_PROPERTY(bool,ShowPathLine);
 		ADD_PROPERTY(bool,Closed);
 		ADD_PROPERTY(bool,AutoRotateWaypoints);
@@ -74,6 +75,8 @@ namespace GASS
 		//Helpers
 		void UpdatePath();
 
+		SceneObjectPtr _GetConnectionLines() const {return SceneObjectPtr(m_ConnectionLines,NO_THROW);}
+
 		float m_Radius;
 		int m_SplineSteps;
 		bool m_EnableSpline;
@@ -82,7 +85,7 @@ namespace GASS
 		bool m_ShowWaypoints;
 		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
-		
+		SceneObjectWeakPtr m_ConnectionLines;
 	};
 
 	//typedef SPTR<WaypointListComponent> WaypointListComponentPtr;
