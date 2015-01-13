@@ -34,7 +34,6 @@
 #include <OgreSubEntity.h>
 #include <OgreManualObject.h>
 
-
 namespace GASS
 {
 	class GASSPluginExport OgreMaterialCache 
@@ -58,4 +57,3 @@ namespace GASS
 		static MaterialCacheMap m_MaterialCacheMap;
 	};
 }
-

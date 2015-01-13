@@ -76,8 +76,6 @@ namespace GASS
 		float m_Height;
 		GeometryFlags m_GeomFlags;
 	};
-
 	typedef SPTR<OgreBillboardComponent> OgreBillboardComponentPtr;
-
 }
 

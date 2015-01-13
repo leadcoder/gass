@@ -17,10 +17,7 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef OGRE_TEXT_COMPONENT_H
-#define OGRE_TEXT_COMPONENT_H
-
-
+#pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
@@ -34,7 +31,6 @@ class MovableTextOverlayAttributes;
 
 namespace GASS
 {
-	
 	class OgreTextComponent : public Reflection<OgreTextComponent,BaseSceneComponent> ,  public Ogre::RenderTargetListener
 	{
 	public:
@@ -67,4 +63,3 @@ namespace GASS
 	private:
 	};
 }
-#endif

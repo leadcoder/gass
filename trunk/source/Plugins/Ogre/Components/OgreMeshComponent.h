@@ -33,15 +33,14 @@
 
 namespace Ogre
 {
-    class Entity;
-    class Bone;
-    class IndexData;
-    class VertexData;
+	class Entity;
+	class Bone;
+	class IndexData;
+	class VertexData;
 }
 
 namespace GASS
 {
-
 	class OgreMeshEnumerationMetaData : public EnumerationPropertyMetaData
 	{
 	public:
@@ -50,7 +49,6 @@ namespace GASS
 	private:
 	};
 	typedef SPTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
-
 
 	class GASSPluginExport OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent
 	{
@@ -83,7 +81,7 @@ namespace GASS
 
 	protected:
 		ADD_PROPERTY(std::string,EnumerationResourceGroup)
-		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
+			RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
 		void SetMeshResource(const ResourceHandle &res);
@@ -115,7 +113,5 @@ namespace GASS
 		bool m_UniqueMaterialCreated;
 		GeometryFlags m_GeomFlags;
 	};
-
 	typedef SPTR<OgreMeshComponent> OgreMeshComponentPtr;
 }
-

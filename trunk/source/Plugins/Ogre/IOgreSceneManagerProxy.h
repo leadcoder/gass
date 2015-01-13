@@ -27,7 +27,6 @@ namespace GASS
 	class IOgreSceneManagerProxy
 	{
 	public:
-
 		virtual ~IOgreSceneManagerProxy(){}
 		virtual Ogre::SceneManager* GetOgreSceneManager() const = 0;
 	};

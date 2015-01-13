@@ -52,7 +52,7 @@ namespace GASS
 			m_PostProcess.reset();
 		}
 		m_PostProcess = OgrePostProcessPtr(new OgrePostProcess(m_OgreViewport));
-		
+
 	}
 
 	void OgreViewport::OnChangeCamera(ChangeCameraRequestPtr message)
@@ -79,8 +79,6 @@ namespace GASS
 		{
 			m_OgreViewport->setMaterialScheme(cam_comp->GetMaterialScheme());
 		}
-
-		
 		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 		m_PostProcess->SetActiveCompositors(cam_comp->GetPostFilters());
 		m_PostProcess->Update(cam_comp);
@@ -90,8 +88,3 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->PostMessage(cam_message);
 	}
 }
-
-
-
-
-

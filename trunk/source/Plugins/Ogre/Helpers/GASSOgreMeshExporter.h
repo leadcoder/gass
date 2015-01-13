@@ -1,8 +1,8 @@
-#ifndef GASS_OGRE_MESH_EXPORTER_H
-#define GASS_OGRE_MESH_EXPORTER_H
+#pragma once
 
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGraphicsMesh.h"
+
 namespace Ogre
 {
 	class ManualObject;
@@ -30,9 +30,3 @@ namespace GASS
 		bool m_FlipDDSTexCoords;
 	};
 }
-#endif
-
-
-
-
-

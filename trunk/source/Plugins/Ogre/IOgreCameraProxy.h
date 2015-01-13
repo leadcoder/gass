@@ -27,7 +27,6 @@ namespace GASS
 	class IOgreCameraProxy
 	{
 	public:
-
 		virtual ~IOgreCameraProxy(){}
 		virtual Ogre::Camera* GetOgreCamera() const = 0;
 	};

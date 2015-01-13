@@ -37,11 +37,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/OgreTerrainPageComponent.h"
 #include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
-
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-//#include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
-
 
 namespace GASS
 {
@@ -155,7 +152,6 @@ namespace GASS
 			m_Terrain->_dumpTextures(prefix,sufix);
 	}
 
-
 	void OgreTerrainPageComponent::SetRenderQueue(const RenderQueueBinder &rq)
 	{
 		m_RenderQueue = rq;
@@ -165,10 +161,8 @@ namespace GASS
 		}
 	}
 
-
 	void OgreTerrainPageComponent::OnInitialize()
 	{
-		//LogManager::getSingleton().stream() << "Start "<<  " OgreTerrainPageComponent::OnInitialize";
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerRequest,0));
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -182,31 +176,21 @@ namespace GASS
 			m_TerrainGroup = terrain_man->GetTerrainGroup();
 			if(m_TerrainGroup)
 			{
-				//LogManager::getSingleton().stream() << "Before  generateFilename"<<  " OgreTerrainPageComponent::OnInitialize";
 				Ogre::String filename = m_TerrainGroup->generateFilename(m_IndexX, m_IndexY);
 				if (Ogre::ResourceGroupManager::getSingleton().resourceExists(m_TerrainGroup->getResourceGroup(), filename))
 				{
-					//LogManager::getSingleton().stream() << "defineTerrain1"<<  " OgreTerrainPageComponent::OnInitialize";
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY);
 				}
 				else
 				{
-					//LogManager::getSingleton().stream() << "defineTerrain2"<<  " OgreTerrainPageComponent::OnInitialize";
 					m_TerrainGroup->defineTerrain(m_IndexX, m_IndexY, 0.0f);
-
 				}
-
-				//LogManager::getSingleton().stream() << "loadTerrain"<<  " OgreTerrainPageComponent::OnInitialize";
 				m_TerrainGroup->loadTerrain(m_IndexX, m_IndexY,true);
-				//LogManager::getSingleton().stream() << "getTerrain"<<  " OgreTerrainPageComponent::OnInitialize";
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 
 				if(m_HeightMapFile.Valid()) //import height map
 					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
 
-
-
-				//LogManager::getSingleton().stream() << "SetRenderQueue"<<  " OgreTerrainPageComponent::OnInitialize";
 				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
 				//m_TerrainGroup->convertTerrainSlotToWorldPosition(m_IndexX, m_IndexY, &newpos);
@@ -278,7 +262,6 @@ namespace GASS
 				if(m_TilingLayer4)
 					SetTilingLayer4(m_TilingLayer4);
 
-
 				//LogManager::getSingleton().stream() << "DONE!"<<  " OgreTerrainPageComponent::OnInitialize";
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
@@ -286,7 +269,6 @@ namespace GASS
 				//Ogre::MaterialPtr ptr = m_Terrain->getMaterial();
 				//std::string name = ptr->getName();
 				//Terrain page created
-
 			}
 		}
 	}
@@ -307,15 +289,15 @@ namespace GASS
 		bool bAllTerrainsLoaded;
 		do
 		{
-			bAllTerrainsLoaded = true;
-			Ogre::TerrainGroup::TerrainIterator ti = m_TerrainGroup->getTerrainIterator();
-			while(ti.hasMoreElements())
-			{
-				Ogre::Terrain* t = ti.getNext()->instance;
-				bAllTerrainsLoaded &= t->isLoaded() & !t->isModified() & !t->isDerivedDataUpdateInProgress();
-			}
-			OGRE_THREAD_SLEEP(50);
-			Ogre::Root::getSingleton().getWorkQueue()->processResponses();
+		bAllTerrainsLoaded = true;
+		Ogre::TerrainGroup::TerrainIterator ti = m_TerrainGroup->getTerrainIterator();
+		while(ti.hasMoreElements())
+		{
+		Ogre::Terrain* t = ti.getNext()->instance;
+		bAllTerrainsLoaded &= t->isLoaded() & !t->isModified() & !t->isDerivedDataUpdateInProgress();
+		}
+		OGRE_THREAD_SLEEP(50);
+		Ogre::Root::getSingleton().getWorkQueue()->processResponses();
 		} while(!bAllTerrainsLoaded);*/
 
 	}
@@ -328,7 +310,6 @@ namespace GASS
 		}
 	}
 
-
 	int OgreTerrainPageComponent::GetIndexX() const
 	{
 		return m_IndexX;
@@ -338,7 +319,6 @@ namespace GASS
 	{
 		m_IndexX=index;
 	}
-
 
 	int OgreTerrainPageComponent::GetIndexY() const
 	{
@@ -451,26 +431,15 @@ namespace GASS
 	{
 		if(m_Terrain && filename.GetFullPath() != "")
 		{
-
-			//std::cout << "try to load" << colormap << "\n";
 			std::fstream fstr(filename.GetFullPath().c_str(), std::ios::in|std::ios::binary);
 			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
 
 			Ogre::Image colourMap;
 			colourMap.load(stream);
 			m_Terrain->setGlobalColourMapEnabled(true);
-			//colourMap.load(m_ColorMap, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_Terrain->getGlobalColourMap()->unload();
 			m_Terrain->getGlobalColourMap()->loadImage(colourMap);
 			m_Terrain->setGlobalColourMapEnabled(true);
-			/*m_Terrain->getGlobalColourMap()->unload();
-			Ogre::TexturePtr colourMap  = m_Terrain->getGlobalColourMap();
-			Ogre::Image colourMapImage;
-			colourMapImage.load(m_ColorMap,m_Terrain->getResourceGroup());
-			m_Terrain->getGlobalColourMap()->setUsage(Ogre::TU_STATIC | Ogre::TU_AUTOMIPMAP);
-			m_Terrain->getGlobalColourMap()->setNumMipmaps(10);
-			m_Terrain->getGlobalColourMap()->loadImage(colourMapImage);*/
-
 		}
 	}
 
@@ -481,7 +450,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer0(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer0 = diffuse;//FileUtils::GetFilename(diffuse);
+		m_DiffuseLayer0 = diffuse;
 		if(m_Terrain && m_DiffuseLayer0.Valid())
 		{
 			m_Terrain->setLayerTextureName(0,0,m_DiffuseLayer0.Name());
@@ -495,7 +464,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer0(const ResourceHandle &normal)
 	{
-		m_NormalLayer0 = normal;//FileUtils::GetFilename(diffuse);
+		m_NormalLayer0 = normal;
 		if(m_Terrain && m_NormalLayer0.Valid())
 		{
 			m_Terrain->setLayerTextureName(0,1,m_NormalLayer0.Name());
@@ -509,7 +478,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer1(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer1 = diffuse;//FileUtils::GetFilename(diffuse);
+		m_DiffuseLayer1 = diffuse;
 		if(m_Terrain && m_DiffuseLayer1.Valid())
 		{
 			m_Terrain->setLayerTextureName(1,0,m_DiffuseLayer1.Name());
@@ -523,7 +492,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer1(const ResourceHandle &normal)
 	{
-		m_NormalLayer1 = normal;//FileUtils::GetFilename(diffuse);
+		m_NormalLayer1 = normal;
 		if(m_Terrain && m_NormalLayer1.Valid())
 		{
 			m_Terrain->setLayerTextureName(1,1,m_NormalLayer1.Name());
@@ -537,7 +506,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetDiffuseLayer2(const ResourceHandle &diffuse)
 	{
-		m_DiffuseLayer2 = diffuse;//FileUtils::GetFilename(diffuse);
+		m_DiffuseLayer2 = diffuse;
 		if(m_Terrain && m_DiffuseLayer2.Valid())
 		{
 			m_Terrain->setLayerTextureName(2,0,m_DiffuseLayer2.Name());
@@ -551,7 +520,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer2(const ResourceHandle &normal)
 	{
-		m_NormalLayer2 = normal;//FileUtils::GetFilename(diffuse);
+		m_NormalLayer2 = normal;
 		if(m_Terrain && m_NormalLayer2.Valid())
 		{
 			m_Terrain->setLayerTextureName(2,1,m_NormalLayer2.Name());
@@ -562,7 +531,6 @@ namespace GASS
 	{
 		return m_NormalLayer2;
 	}
-
 
 	void OgreTerrainPageComponent::SetDiffuseLayer3(const ResourceHandle &diffuse)
 	{
@@ -580,7 +548,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer3(const ResourceHandle &normal)
 	{
-		m_NormalLayer3 = normal;//FileUtils::GetFilename(diffuse);
+		m_NormalLayer3 = normal;
 		if(m_Terrain && m_NormalLayer3.Valid())
 		{
 			m_Terrain->setLayerTextureName(3,1,m_NormalLayer3.Name());
@@ -608,7 +576,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::SetNormalLayer4(const ResourceHandle &normal)
 	{
-		m_NormalLayer4 = normal;//FileUtils::GetFilename(diffuse);
+		m_NormalLayer4 = normal;
 		if(m_Terrain && m_NormalLayer4.Valid())
 		{
 			m_Terrain->setLayerTextureName(4,1,m_NormalLayer4.Name());
@@ -624,7 +592,6 @@ namespace GASS
 	{
 		m_Mask = mask;
 	}
-
 
 	void OgreTerrainPageComponent::ImportDetailMask(const FilePath &mask)
 	{
@@ -667,7 +634,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreTerrainPageComponent::ExportDetailMask(const FilePath &mask)
 	{
 		if(m_Terrain && mask.GetFullPath() != "")
@@ -701,86 +667,10 @@ namespace GASS
 		}
 	}
 
-
 	ResourceHandle OgreTerrainPageComponent::GetMask() const
 	{
 		return m_Mask;
 	}
-
-	/*void OgreTerrainPageComponent::SetMaskLayer1(const FilePath &mask)
-	{
-		m_MaskLayer1 = FileUtils::GetFilename(mask);
-		if(m_Terrain && m_MaskLayer1 != "")
-		{
-			std::fstream fstr(mask.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-
-			Ogre::Image img;
-			img.load(stream);
-			img.resize(m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-
-			Ogre::ColourValue cval;
-
-			//mBlendMap = m_Terrain->getLayerBlendMap(layerID);
-			float *blend_data = m_Terrain->getLayerBlendMap(1)->getBlendPointer();
-
-			for(int y = 0;y < m_Terrain->getLayerBlendMapSize();y++)
-			{
-				for(int x = 0;x < m_Terrain->getLayerBlendMapSize();x++)
-				{
-					cval = img.getColourAt(x, y, 0);
-					*blend_data  = cval.r;
-					++blend_data ;
-				}
-			}
-			Ogre::Rect drect(0, 0, m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-			m_Terrain->getLayerBlendMap(1)->dirtyRect(drect);
-			m_Terrain->getLayerBlendMap(1)->update();
-		}
-	}
-
-	std::string OgreTerrainPageComponent::GetMaskLayer1() const
-	{
-		return m_MaskLayer1;
-	}
-
-	void OgreTerrainPageComponent::SetMaskLayer2(const std::string &mask)
-	{
-		m_MaskLayer2 = FileUtils::GetFilename(mask);
-		if(m_Terrain && m_MaskLayer2 != "")
-		{
-			//m_Terrain->getLayerBlendMap(1)->loadImage(m_MaskLayer1,Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-			std::fstream fstr(mask.c_str(), std::ios::in|std::ios::binary);
-			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
-
-			Ogre::Image img;
-			img.load(stream);
-			img.resize(m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-
-			Ogre::ColourValue cval;
-
-			//mBlendMap = m_Terrain->getLayerBlendMap(layerID);
-			float *blend_data = m_Terrain->getLayerBlendMap(2)->getBlendPointer();
-
-			for(int y = 0;y < m_Terrain->getLayerBlendMapSize();y++)
-			{
-				for(int x = 0;x < m_Terrain->getLayerBlendMapSize();x++)
-				{
-					cval = img.getColourAt(x, y, 0);
-					*blend_data  = cval.r;
-					++blend_data ;
-				}
-			}
-			Ogre::Rect drect(0, 0, m_Terrain->getLayerBlendMapSize(), m_Terrain->getLayerBlendMapSize());
-			m_Terrain->getLayerBlendMap(2)->dirtyRect(drect);
-			m_Terrain->getLayerBlendMap(2)->update();
-		}
-	}
-
-	std::string OgreTerrainPageComponent::GetMaskLayer2() const
-	{
-		return m_MaskLayer2;
-	}*/
 
 	void OgreTerrainPageComponent::SetTilingLayer0(float value)
 	{
@@ -795,7 +685,6 @@ namespace GASS
 	{
 		return m_TilingLayer0;
 	}
-
 
 	void OgreTerrainPageComponent::SetTilingLayer1(float value)
 	{
@@ -839,7 +728,6 @@ namespace GASS
 		return m_TilingLayer3;
 	}
 
-
 	void OgreTerrainPageComponent::SetTilingLayer4(float value)
 	{
 		m_TilingLayer4 = value;
@@ -853,7 +741,6 @@ namespace GASS
 	{
 		return m_TilingLayer4;
 	}
-
 
 	AABox OgreTerrainPageComponent::GetBoundingBox() const
 	{
@@ -899,7 +786,6 @@ namespace GASS
 
 	GraphicsMesh OgreTerrainPageComponent::GetMeshData() const
 	{
-
 		GraphicsMesh mesh_data;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data.SubMeshVector.push_back(sub_mesh_data);
@@ -911,10 +797,8 @@ namespace GASS
 
 		//Create indices
 		unsigned int index_size = (tWidth - 1) * (tHeight - 1) * 6;
-		//mesh_data->FaceVector = new unsigned int[index_size];
 		sub_mesh_data->IndexVector.resize(index_size);
 		sub_mesh_data->Type = TRIANGLE_LIST;
-		//mesh_data->NumFaces = static_cast<unsigned int>(index_size/3);
 		for( unsigned int x = 0; x < tWidth - 1; x++)
 		{
 			for( unsigned int y=0; y < tHeight - 1; y++)
@@ -932,7 +816,6 @@ namespace GASS
 
 		// Create vertices
 		unsigned int vertex_size = tWidth * tHeight;
-		//mesh_data->VertexVector = new Vec3[vertex_size];
 		sub_mesh_data->PositionVector.resize(vertex_size);
 		size_t index = 0;
 		Vec3 center = OgreConvert::ToGASS(m_Terrain->getPosition());
@@ -943,15 +826,6 @@ namespace GASS
 		{
 			for(unsigned int z = 0; z < tHeight; z++)
 			{
-				/*Ogre::Real wx, wy, wz;
-				wx = Ogre::Real(x)/(m_Terrain->getSize()-1);
-				wy = 0;
-				wz = Ogre::Real(z)/(m_Terrain->getSize()-1);
-				Ogre::Vector3 outWSpos;
-				m_Terrain->getPositionAlign(wx,wz,wy, Ogre::Terrain::ALIGN_X_Z, &outWSpos);*/
-				//Ogre::Vector3 terrain_space_pos;
-				//void getPosition(Real x, Real y, Real z, &terrain_space_pos);
-				//Ogre::Vector3 pos = Ogre::Vector3(x*m_Scale.x,m_HeightData[z*m_HMDim+x],z*m_Scale.z)+offset;
 				Float fx = x;
 				Float fz = z;
 				sub_mesh_data->PositionVector[index] = Vec3(fx*scale, m_Terrain->getHeightAtPoint(x,z),-fz * scale) + offset;
@@ -960,7 +834,6 @@ namespace GASS
 		}
 		return mesh_data;
 	}
-
 
 	Float OgreTerrainPageComponent::GetHeightAtPoint(int x, int y) const
 	{
@@ -983,7 +856,6 @@ namespace GASS
 		return NULL;
 	}
 
-
 	void OgreTerrainPageComponent::UpdatePosition()
 	{
 		if(m_Terrain)
@@ -1004,10 +876,6 @@ namespace GASS
 	Vec3 OgreTerrainPageComponent::GetPosition() const
 	{
 		return m_Pos;
-		/*Vec3 pos(0,0,0);
-		if(m_TerrainGroup)
-			pos= OgreConvert::ToGASS(m_TerrainGroup->getOrigin());
-		return pos;*/
 	}
 
 	GeometryFlags OgreTerrainPageComponent::GetGeometryFlags() const
@@ -1019,5 +887,4 @@ namespace GASS
 	{
 		m_GeomFlags = flags;
 	}
-
 }

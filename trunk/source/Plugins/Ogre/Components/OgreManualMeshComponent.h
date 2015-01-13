@@ -18,8 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-
-
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
@@ -36,7 +34,6 @@ namespace Ogre
 
 namespace GASS
 {
-	
 	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IMeshComponent, public IGeometryComponent
 	{
 	public:
@@ -49,11 +46,10 @@ namespace GASS
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
-
 		//IMeshComponent
 		virtual GraphicsMesh GetMeshData() const;
 	protected:
-		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
+		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder);
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
 
@@ -66,10 +62,9 @@ namespace GASS
 		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
-		
+
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadows;
 	};
 }
-

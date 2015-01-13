@@ -45,7 +45,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-
 	OgreStaticMeshComponent::OgreStaticMeshComponent() : m_StaticGeometry(NULL),
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
@@ -66,14 +65,12 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("StaticMeshComponent",new GASS::Creator<OgreStaticMeshComponent, Component>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreStaticMeshComponent::GetRenderQueue, &GASS::OgreStaticMeshComponent::SetRenderQueue);
-		//RegisterProperty<std::string>("Filename", &GASS::OgreStaticMeshComponent::GetFilename, &GASS::OgreStaticMeshComponent::SetFilename);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreStaticMeshComponent::GetCastShadow, &GASS::OgreStaticMeshComponent::SetCastShadow);
 		RegisterProperty<Float>("RegionSize", &GASS::OgreStaticMeshComponent::GetRegionSize, &GASS::OgreStaticMeshComponent::SetRegionSize);
 	}
 
 	void OgreStaticMeshComponent::OnInitialize()
 	{
-
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		m_OgreSceneManager = ogsm;
 		assert(ogsm);
@@ -85,9 +82,6 @@ namespace GASS
 		std::string name;
 		ss << GetName() << obj_id;
 		ss >> name;
-
-		//Use this name to generate unique filename, used by geometry interface. 
-		//m_Filename = name;
 
 		m_StaticGeometry  = ogsm->GetOgreSceneManager()->createStaticGeometry(name);
 		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
@@ -118,7 +112,6 @@ namespace GASS
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
-
 	void OgreStaticMeshComponent::OnDelete()
 	{
 
@@ -129,7 +122,6 @@ namespace GASS
 				ogsm->GetOgreSceneManager()->destroyStaticGeometry(m_StaticGeometry);
 		}
 	}
-
 
 	void OgreStaticMeshComponent::LoadXML(tinyxml2::XMLElement *elem)
 	{
@@ -183,8 +175,6 @@ namespace GASS
 		}
 	}
 
-
-
 	AABox OgreStaticMeshComponent::GetBoundingBox() const
 	{
 		assert(m_StaticGeometry);
@@ -201,12 +191,9 @@ namespace GASS
 		return final_box;
 	}
 
-
 	Sphere OgreStaticMeshComponent::GetBoundingSphere() const
 	{
 		Sphere final_sphere;
-
-
 		bool first_loop = true;
 
 		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
@@ -232,7 +219,6 @@ namespace GASS
 	GraphicsMesh  OgreStaticMeshComponent::GetMeshData() const
 	{
 		GraphicsMesh mesh_data;
-
 		StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
 		while (regIt.hasMoreElements())
 		{
@@ -255,7 +241,6 @@ namespace GASS
 
 			//while (lodIt.hasMoreElements())
 			{
-
 				//StaticGeometry::LODBucket* bucket = lodIt.getNext();
 
 				StaticGeometry::LODBucket::MaterialIterator matIt = theBucket->getMaterialIterator();
@@ -270,13 +255,8 @@ namespace GASS
 					while (geomIt.hasMoreElements())
 					{
 						StaticGeometry::GeometryBucket* geom = geomIt.getNext();
-
 						OgreMeshComponent::AddIndexData(geom->getIndexData(), static_cast<unsigned int>(sub_mesh_data->PositionVector.size()), sub_mesh_data);
 						OgreMeshComponent::AddVertexData(geom->getVertexData(), sub_mesh_data);
-
-						//AddIndexData(geom->getIndexData(),mesh_data->NumVertex,mesh_data);
-						//AddVertexData(geom->getVertexData(),mesh_data, center);
-
 					}
 				}
 			}
@@ -284,94 +264,6 @@ namespace GASS
 		return mesh_data;
 	}
 
-	/*
-	void OgreStaticMeshComponent::AddVertexData(const Ogre::VertexData *vertex_data,MeshDataPtr mesh, const Ogre::Vector3 &offset) const
-	{
-	if (!vertex_data)
-	return;
-
-	const VertexData *data = vertex_data;
-
-	const unsigned int prev_size = mesh->NumVertex;
-	mesh->NumVertex += (unsigned int)data->vertexCount;
-
-	Vec3* tmp_vert = new Vec3[mesh->NumVertex];
-	if (mesh->VertexVector)
-	{
-	memcpy(tmp_vert,mesh->VertexVector,sizeof(Vec3) * prev_size);
-	delete[] mesh->VertexVector;
-	}
-	mesh->VertexVector = tmp_vert;
-
-	// Get the positional buffer element
-	{
-	const Ogre::VertexElement* posElem = data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
-	Ogre::HardwareVertexBufferSharedPtr vbuf = data->vertexBufferBinding->getBuffer(posElem->getSource());
-	const unsigned int vSize = (unsigned int)vbuf->getVertexSize();
-
-	unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-	float* pReal;
-	Vec3 * curVertices = &mesh->VertexVector[prev_size];
-	const unsigned int vertexCount = (unsigned int)data->vertexCount;
-	for(unsigned int j = 0; j < vertexCount; ++j)
-	{
-	posElem->baseVertexPointerToElement(vertex, &pReal);
-	vertex += vSize;
-
-	curVertices->x = (*pReal++) + offset.x;
-	curVertices->y = (*pReal++) + offset.y;
-	curVertices->z = (*pReal++) + offset.z;
-
-	//*curVertices = _transform * (*curVertices);
-
-	curVertices++;
-	}
-	vbuf->unlock();
-	}
-	}
-
-	void OgreStaticMeshComponent::AddIndexData(const Ogre::IndexData *data, const unsigned int offset,MeshDataPtr mesh) const
-	{
-	const unsigned int prev_size = mesh->NumFaces;
-	mesh->NumFaces += (unsigned int)data->indexCount;
-
-	unsigned int* tmp_ind = new unsigned int[mesh->NumFaces];
-	if (mesh->FaceVector)
-	{
-	memcpy (tmp_ind, mesh->FaceVector, sizeof(unsigned int) * prev_size);
-	delete[] mesh->FaceVector;
-	}
-	mesh->FaceVector = tmp_ind;
-
-	const unsigned int numTris = (unsigned int) data->indexCount / 3;
-	HardwareIndexBufferSharedPtr ibuf = data->indexBuffer;
-	const bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
-	unsigned int index_offset = prev_size;
-
-	if (use32bitindexes)
-	{
-	const unsigned int* pInt = static_cast<unsigned int*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-	for(unsigned int k = 0; k < numTris; ++k)
-	{
-	mesh->FaceVector[index_offset ++] = offset + *pInt++;
-	mesh->FaceVector[index_offset ++] = offset + *pInt++;
-	mesh->FaceVector[index_offset ++] = offset + *pInt++;
-	}
-	ibuf->unlock();
-	}
-	else
-	{
-	const unsigned short* pShort = static_cast<unsigned short*>(ibuf->lock(HardwareBuffer::HBL_READ_ONLY));
-	for(unsigned int k = 0; k < numTris; ++k)
-	{
-	mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-	mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-	mesh->FaceVector[index_offset ++] = offset + static_cast<unsigned int> (*pShort++);
-	}
-	ibuf->unlock();
-	}
-	}
-	*/
 	GeometryFlags OgreStaticMeshComponent::GetGeometryFlags() const
 	{
 		return m_GeomFlags;

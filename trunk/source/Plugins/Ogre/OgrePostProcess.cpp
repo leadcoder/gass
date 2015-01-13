@@ -61,7 +61,6 @@ namespace GASS
 
 	}
 
-
 	/*void SSAOListener::notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
 	{
 

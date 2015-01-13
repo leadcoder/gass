@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #pragma once
+
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include <OgreCommon.h>
@@ -45,6 +46,3 @@ namespace GASS
 		Bind("RENDER_QUEUE_MAX",Ogre::RENDER_QUEUE_MAX);
 	END_ENUM_BINDER(Ogre::RenderQueueGroupID,RenderQueueBinder);
 }
-	
-
-

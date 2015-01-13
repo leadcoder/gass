@@ -27,7 +27,6 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
-
 namespace Ogre
 {
 	class Light;
@@ -35,8 +34,6 @@ namespace Ogre
 
 namespace GASS
 {
-
-	
 	class OgreLightComponent : public Reflection<OgreLightComponent,BaseSceneComponent>, public ILightComponent
 	{
 	public:
@@ -60,9 +57,8 @@ namespace GASS
 
 		void SetDir(const Vec3 &dir);
 		Vec3 GetDir() const;
-	
+
 	protected:
-		
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
 		Ogre::Light* m_OgreLight;
@@ -74,8 +70,4 @@ namespace GASS
 		bool m_CastShadow;
 		Vec3 m_SpotParams;
 	};
-
-
-	
 }
-

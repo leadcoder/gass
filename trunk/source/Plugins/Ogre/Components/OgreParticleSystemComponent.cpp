@@ -41,9 +41,7 @@ using namespace Ogre;
 
 namespace GASS
 {
-
-	OgreParticleSystemComponent::OgreParticleSystemComponent() :
-		m_CastShadow(true),
+	OgreParticleSystemComponent::OgreParticleSystemComponent() : m_CastShadow(true),
 		m_ParticleSystem(NULL),
 		m_TimeToLive(-1),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
@@ -61,7 +59,7 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("ParticleSystemComponent",new GASS::Creator<OgreParticleSystemComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ParticleSystemComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
-		RegisterProperty<std::string>("ParticleTemplate", &GASS::OgreParticleSystemComponent::GetParticleTemplate, &GASS::OgreParticleSystemComponent::SetParticleTemplate);
+			RegisterProperty<std::string>("ParticleTemplate", &GASS::OgreParticleSystemComponent::GetParticleTemplate, &GASS::OgreParticleSystemComponent::SetParticleTemplate);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreParticleSystemComponent::GetCastShadow, &GASS::OgreParticleSystemComponent::SetCastShadow);
 		RegisterProperty<float>("TimeToLive", &GASS::OgreParticleSystemComponent::GetTimeToLive, &GASS::OgreParticleSystemComponent::SetTimeToLive);
 	}
@@ -74,7 +72,7 @@ namespace GASS
 
 	void OgreParticleSystemComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
-		
+
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
@@ -96,7 +94,6 @@ namespace GASS
 			remove_msg->SetDeliverDelay(m_TimeToLive);
 			GetSceneObject()->GetScene()->PostMessage(remove_msg);
 		}
-		//m_ParticleSystem->getEmitter(0)->setEmissionRate();
 	}
 
 	void OgreParticleSystemComponent::OnParameterMessage(ParticleSystemParameterRequestPtr message)
@@ -106,16 +103,16 @@ namespace GASS
 		{
 		case ParticleSystemParameterRequest::EMISSION_RATE:
 			{
-			int emitter = message->GetEmitter();
-			float rate = message->GetValue();
-			m_ParticleSystem->getEmitter(emitter)->setEmissionRate(rate);
+				int emitter = message->GetEmitter();
+				float rate = message->GetValue();
+				m_ParticleSystem->getEmitter(emitter)->setEmissionRate(rate);
 			}
 			break;
 		case ParticleSystemParameterRequest::PARTICLE_LIFE_TIME:
 			{
-			int emitter = message->GetEmitter();
-			float duration = message->GetValue();
-			m_ParticleSystem->getEmitter(emitter)->setTimeToLive(duration);
+				int emitter = message->GetEmitter();
+				float duration = message->GetValue();
+				m_ParticleSystem->getEmitter(emitter)->setTimeToLive(duration);
 			}
 			break;
 		}
@@ -135,7 +132,6 @@ namespace GASS
 		sphere.m_Radius = m_ParticleSystem->getBoundingRadius();
 		return sphere;
 	}
-
 
 	GeometryFlags OgreParticleSystemComponent::GetGeometryFlags() const
 	{

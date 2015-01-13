@@ -41,7 +41,6 @@ namespace Ogre
 
 namespace GASS
 {
-	
 	class OgreRenderWindow;
 	typedef SPTR<OgreRenderWindow> OgreRenderWindowPtr;
 	class OgreResourceManager;
@@ -79,10 +78,10 @@ namespace GASS
 		OgrePostProcessPtr GetPostProcess() const {return m_PostProcess;}
 		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
-		
+
 		static void SetOgreMaterial(const GraphicsMaterial &material, Ogre::MaterialPtr mat);
 		static void SetGASSMaterial(Ogre::MaterialPtr mat , GraphicsMaterial &material);
-	
+
 	protected:
 		ADD_PROPERTY(bool,UpdateMessagePump);
 		ADD_PROPERTY(bool,UseShaderCache);
@@ -96,7 +95,7 @@ namespace GASS
 		void OnResourceLocationAdded(ResourceLocationAddedEventPtr message);
 		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
-		
+
 		//void SetActiveSceneManger(Ogre::SceneManager *sm);
 		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
@@ -108,7 +107,7 @@ namespace GASS
 		void SetPostFilters(const std::vector<std::string> &filters);
 		void ReloadMaterials();
 		void ReloadResources();
-		
+
 		std::string m_RenderSystem;
 		Ogre::Root* m_Root;
 		std::map<std::string, OgreRenderWindowPtr>	m_Windows;
@@ -123,7 +122,4 @@ namespace GASS
 		Ogre::OverlaySystem* m_OverlaySystem;
 	};
 	typedef SPTR<OgreGraphicsSystem> OgreGraphicsSystemPtr;
-	
-	
-	
 }

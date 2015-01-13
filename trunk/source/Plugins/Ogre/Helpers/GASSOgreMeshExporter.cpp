@@ -12,13 +12,11 @@
 
 namespace GASS
 {
-
 	OgreMeshExporter::OgreMeshExporter() : m_CopyTextures(true),
 		m_FlipDDSTexCoords(true)
 	{
-
-
 	}
+
 	OgreMeshExporter::~OgreMeshExporter()
 	{
 
@@ -105,7 +103,7 @@ namespace GASS
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //ignore root transformation?
 				{
-					
+
 					Vec3 world_pos = lc->GetWorldPosition() + offset;
 					Vec3 scale = lc->GetScale();
 					Quaternion world_rot = lc->GetWorldRotation();
@@ -121,7 +119,7 @@ namespace GASS
 					if(mesh_data.SubMeshVector[j]->Type == TRIANGLE_LIST && 
 						mesh_data.SubMeshVector[j]->IndexVector.size() > 0 &&
 						mesh_data.SubMeshVector[j]->PositionVector.size() > 0)
-					mesh_data_map[mesh_data.SubMeshVector[j]->MaterialName].push_back(mesh_data.SubMeshVector[j]);
+						mesh_data_map[mesh_data.SubMeshVector[j]->MaterialName].push_back(mesh_data.SubMeshVector[j]);
 				}
 			}
 
@@ -138,7 +136,7 @@ namespace GASS
 				bool has_normal = true;
 				bool has_tangent = true;
 				bool has_tex_coords = true;
-				
+
 				for(size_t i = 0; i < iter->second.size(); i++)
 				{
 					GraphicsSubMeshPtr sm = iter->second.at(i);
@@ -152,7 +150,7 @@ namespace GASS
 						has_tex_coords = false;
 				}
 
-				
+
 
 				for(size_t i = 0; i < iter->second.size(); i++)
 				{
@@ -217,52 +215,52 @@ namespace GASS
 			OgreGraphicsSceneManagerPtr ogsm =  root_obj->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 			assert(ogsm);
 			Ogre::SceneManager* sm = ogsm->GetOgreSceneManager();
-			
+
 			Ogre::ManualObject* mo = sm->createManualObject("TempManObj");
 			Add(mo, new_mesh);
 			SaveToMesh(mo,out_file);
 			sm->destroyManualObject(mo);
-			
+
 			//copy textures and generate materials
 			/*if(m_CopyTextures)
 			{
-				iter = Materials.begin();
-				while(iter != Materials.end())
-				{
-					GraphicsMaterial mat = iter->second;
-					if(mat.Textures.size() > 0)
-					{
-						std::string texture_name =  mat.Textures[0];
-							GASS::ResourceHandle res(texture_name);
-							GASS::FileResourcePtr file_res;
-							try
-							{
-								file_res = res.GetResource();
-							}
-							catch(...)
-							{
-								LogManager::getSingleton().stream() << "WARNING: Failed to find texture:" << texture_name;
-							}
-							if(file_res)
-							{
-								std::string full_path = StringUtils::Replace(file_res->Path().GetFullPath(),"\\","/");
-								std::string out_path = FileUtils::RemoveFilename(out_file);
-								out_path = out_path + texture_name;
+			iter = Materials.begin();
+			while(iter != Materials.end())
+			{
+			GraphicsMaterial mat = iter->second;
+			if(mat.Textures.size() > 0)
+			{
+			std::string texture_name =  mat.Textures[0];
+			GASS::ResourceHandle res(texture_name);
+			GASS::FileResourcePtr file_res;
+			try
+			{
+			file_res = res.GetResource();
+			}
+			catch(...)
+			{
+			LogManager::getSingleton().stream() << "WARNING: Failed to find texture:" << texture_name;
+			}
+			if(file_res)
+			{
+			std::string full_path = StringUtils::Replace(file_res->Path().GetFullPath(),"\\","/");
+			std::string out_path = FileUtils::RemoveFilename(out_file);
+			out_path = out_path + texture_name;
 
-								try
-								{
-									boost::filesystem::copy_file(boost::filesystem::path(full_path),boost::filesystem::path(out_path),boost::filesystem::copy_option::overwrite_if_exists);
-								} 
-								catch (const boost::filesystem::filesystem_error& e)
-								{
-									//std::cerr << "Error: " << e.what() << std::endl;
-									LogManager::getSingleton().stream() << "WARNING: Failed copy texture during export:" << e.what();
-								}
-							}
-						}
-						iter++;
-					}
-				}
+			try
+			{
+			boost::filesystem::copy_file(boost::filesystem::path(full_path),boost::filesystem::path(out_path),boost::filesystem::copy_option::overwrite_if_exists);
+			} 
+			catch (const boost::filesystem::filesystem_error& e)
+			{
+			//std::cerr << "Error: " << e.what() << std::endl;
+			LogManager::getSingleton().stream() << "WARNING: Failed copy texture during export:" << e.what();
+			}
+			}
+			}
+			iter++;
+			}
+			}
 			}*/
 		}
 	}

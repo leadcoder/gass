@@ -139,13 +139,10 @@ namespace GASS
 
 		m_ResourceManager->Init();
 
-
 		//TODO: Add attributes for this settings
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
-
 		LogManager::getSingleton().stream() << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
-
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -234,7 +231,7 @@ namespace GASS
 		}
 		else
 		{
-		 	window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
+			window = Ogre::Root::getSingleton().createRenderWindow(name,width, height, false);
 			window->setDeactivateOnFocusChange(false);
 		}
 
@@ -248,8 +245,6 @@ namespace GASS
 		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initialized
 		{
 			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
-
-
 
 			const std::string file = "gass_shader_cache.bin";
 			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(m_UseShaderCache);
@@ -316,7 +311,6 @@ namespace GASS
 		m_ResourceManager->RemoveResourceGroup(message->GetGroup()->GetName());
 	}
 
-
 	void OgreGraphicsSystem::OnResourceLocationAdded(ResourceLocationAddedEventPtr message)
 	{
 		m_ResourceManager->AddResourceLocation(message->GetLocation());
@@ -326,7 +320,6 @@ namespace GASS
 	{
 		m_ResourceManager->RemoveResourceLocation(message->GetLocation());
 	}
-
 
 	std::vector<std::string> OgreGraphicsSystem::GetMaterialNames(std::string resource_group) const
 	{
@@ -425,17 +418,6 @@ namespace GASS
 		mat->setShininess(material.Shininess);
 		mat->setDepthCheckEnabled(material.DepthTest);
 		mat->setDepthWriteEnabled(material.DepthWrite);
-
-		/*if(diffuse.w < 1.0)
-		{
-			mat->setDepthWriteEnabled(false);
-			mat->setSceneBlending(SBT_TRANSPARENT_ALPHA);
-		}
-		else
-		{
-			mat->setDepthWriteEnabled(true);
-			mat->setSceneBlending(SBT_REPLACE);
-		}*/
 	}
 
 	void OgreGraphicsSystem::SetGASSMaterial(Ogre::MaterialPtr mat , GraphicsMaterial &material)
@@ -471,8 +453,3 @@ namespace GASS
 		}
 	}
 }
-
-
-
-
-

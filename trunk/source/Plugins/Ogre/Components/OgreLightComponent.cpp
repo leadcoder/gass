@@ -41,8 +41,7 @@
 namespace GASS
 {
 
-	OgreLightComponent::OgreLightComponent():
-		m_OgreLight (NULL),
+	OgreLightComponent::OgreLightComponent(): m_OgreLight (NULL),
 		m_LightType (LT_DIRECTIONAL),
 		m_Diffuse(1,1,1),
 		m_Specular(0,0,0),
@@ -63,12 +62,12 @@ namespace GASS
 
 		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OgreLightComponent, Component>);
 		ADD_DEPENDENCY("OgreLocationComponent")
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
+			GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 		RegisterProperty<LightTypeBinder>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
 
 		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams,
-						BasePropertyMetaDataPtr(new BasePropertyMetaData("Attenuation Parameters: Distance, Constant, Linear, Quad",PF_VISIBLE | PF_EDITABLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Attenuation Parameters: Distance, Constant, Linear, Quad",PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Spotlight Parameters: Inner cone, Outer cone, falloff",PF_VISIBLE | PF_EDITABLE)));
@@ -101,7 +100,7 @@ namespace GASS
 		Ogre::SceneManager* sm = ogsm->GetOgreSceneManager();
 
 		OgreLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>();
-		
+
 		static unsigned int obj_id = 0;
 		obj_id++;
 		std::stringstream ss;
@@ -110,8 +109,7 @@ namespace GASS
 		ss >> name;
 
 		m_OgreLight = sm->createLight(name);
-		
-		
+
 		SetLightType(m_LightType);
 		SetAttenuationParams(m_AttenuationParams);
 		SetCastShadow(m_CastShadow);
@@ -124,7 +122,6 @@ namespace GASS
 		m_OgreLight->setShadowNearClipDistance( 1 );
 		m_OgreLight->setShadowFarClipDistance( 3000 );
 		//m_OgreLight->setDirection(0,0,-1);
-
 		lc->GetOgreNode()->attachObject(m_OgreLight);
 	}
 
@@ -175,7 +172,6 @@ namespace GASS
 		if(m_OgreLight && m_LightType == LT_SPOT)
 		{
 			m_OgreLight->setSpotlightRange(Ogre::Radian(Math::Deg2Rad(params.x)), Ogre::Radian(Math::Deg2Rad(params.y)), params.z);
-			//setSpotlightRange
 		}
 	}
 
@@ -199,5 +195,4 @@ namespace GASS
 		if(m_OgreLight)
 			m_OgreLight->setCastShadows(m_CastShadow);
 	}
-
 }

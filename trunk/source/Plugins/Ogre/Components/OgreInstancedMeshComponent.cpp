@@ -48,7 +48,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-
 	OgreInstancedMeshComponent::OgreInstancedMeshComponent() : m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
 		m_UniqueMaterialCreated(false),
@@ -138,8 +137,6 @@ namespace GASS
 		m_OgreSceneManager = ogsm;
 		assert(ogsm);
 
-
-
 		static unsigned int obj_id = 0;
 		obj_id++;
 		std::stringstream ss;
@@ -147,23 +144,6 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
-		//Use this name to generate unique filename, used by geometry interface.
-		//m_Filename = name;
-
-		/*m_InstancedGeometry = new InstancedGeometry(mSceneMgr,m_Filename);
-
-		m_InstancedGeometry->setBatchInstanceDimensions (Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
-		m_InstancedGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
-
-
-		if(m_RenderQueue == "SkiesLate")
-		{
-		m_InstancedGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE);
-		}
-		else if(m_RenderQueue == "SkiesEarly")
-		{
-		m_InstancedGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
-		}*/
 		const int  maxObjectsPerBatch = 80;
 		MeshMap::iterator iter = m_MeshInstances.begin();
 		while(iter != m_MeshInstances.end())
@@ -180,8 +160,6 @@ namespace GASS
 				instancedGeometry->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_EARLY);
 			}
 
-			//m_InstancedGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
-			//instancedGeometry->setBatchInstanceDimensions (Vector3(300, 300, 300));
 			Ogre::Entity* entity = ogsm->GetOgreSceneManager()->createEntity(iter->first,iter->first);
 			setupInstancedMaterialToEntity(entity);
 
@@ -284,20 +262,14 @@ namespace GASS
 				Pass * const p = pIt.getNext();
 				p->setVertexProgram("Instancing", false);
 				//p->setShadowCasterVertexProgram("InstancingShadowCaster");
-
-
 			}
 		}
 		instancedMaterial->load();
 		return instancedMaterialName;
-
-
 	}
-
 
 	void OgreInstancedMeshComponent::OnDelete()
 	{
-
 		OgreGraphicsSceneManagerPtr ogsm(m_OgreSceneManager );
 		if(ogsm)
 		{
@@ -308,12 +280,10 @@ namespace GASS
 		}
 	}
 
-
 	AABox OgreInstancedMeshComponent::GetBoundingBox() const
 	{
 		//assert(m_InstancedGeometry);
 		AABox final_box;
-
 		/*	StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
 		while (regIt.hasMoreElements())
 		{
@@ -399,7 +369,6 @@ namespace GASS
 		}
 		mesh_data->NumFaces = mesh_data->NumFaces/3.0;*/
 	}
-
 
 	GeometryFlags OgreInstancedMeshComponent::GetGeometryFlags() const
 	{

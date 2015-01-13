@@ -20,7 +20,6 @@
 
 #pragma once
 
-
 #include <string>
 #include <list>
 #include "Core/Math/GASSVector.h"
@@ -34,7 +33,6 @@ namespace Ogre
 
 namespace GASS
 {
-
 	class DebugString
 	{
 	public:
@@ -72,4 +70,3 @@ namespace GASS
 		int m_CharHeight;
 	};
 }
-

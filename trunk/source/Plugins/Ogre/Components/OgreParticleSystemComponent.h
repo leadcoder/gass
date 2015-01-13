@@ -25,8 +25,6 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
-
 class Ogre::ParticleSystem;
 
 namespace GASS
@@ -42,7 +40,6 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-	//	virtual void GetMeshData(MeshDataPtr mesh_data);
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
 		std::string GetParticleTemplate()const {return m_ParticleTemplate;}
@@ -60,7 +57,5 @@ namespace GASS
 		Ogre::ParticleSystem* m_ParticleSystem;
 		GeometryFlags m_GeomFlags;
 	};
-
 	typedef SPTR<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;
 }
-

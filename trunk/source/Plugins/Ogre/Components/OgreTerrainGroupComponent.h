@@ -82,9 +82,7 @@ namespace GASS
 		void CreatePages(const Vec2i  &size);
 		void SetOrigin(const Vec3 &pos);
 		Vec3 GetOrigin() const;
-		
-		
-
+	
 		void OnTerrainHeightModify(TerrainHeightModifyRequestPtr message);
 		void OnTerrainLayerPaint(TerrainPaintRequestPtr message);
 		void OnRoadMessage(RoadRequestPtr message);
@@ -105,7 +103,6 @@ namespace GASS
 		void SetDetailFadeDist(float value) ;
 		void SetFadeOutColor(bool  value) ;
 		void SetNearColorWeight(float value) ;
-
 
 		bool GetEnableLayerNormal() const {return m_EnableLayerNormal;}
 		void SetEnableLayerNormal(bool value) {m_EnableLayerNormal = value;}
@@ -155,4 +152,3 @@ namespace GASS
 	};
 	typedef SPTR<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 }
-

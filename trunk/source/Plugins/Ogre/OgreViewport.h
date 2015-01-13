@@ -33,9 +33,6 @@ namespace Ogre
 
 namespace GASS
 {
-	//class ICameraComponent;
-	//typedef SPTR<ICameraComponent> CameraComponentWeakPtr;
-
 	class OgreViewport : public IViewport, public SHARE_CLASS<OgreViewport>, public IMessageListener
 	{
 		friend class OgreRenderWindow;

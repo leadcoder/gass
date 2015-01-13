@@ -13,9 +13,7 @@
 #include <Overlay/OgreOverlayElement.h>
 #include "Overlay/OgreOverlay.h"
 
-
-ResourceGroupHelper::MyMatVisitor::MyMatVisitor():
-Ogre::Renderable::Visitor()
+ResourceGroupHelper::MyMatVisitor::MyMatVisitor(): Ogre::Renderable::Visitor()
 {
 }
 

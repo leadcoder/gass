@@ -51,15 +51,15 @@ namespace GASS
 	void OgreDebugTextOutput::Print(const char *string, ...)
 	{
 		if(!m_Active) return;
-		char		text[1024];									// Holds Our String
-		va_list		ap;								// Pointer To List Of Arguments
+		char		text[1024]; // Holds Our String
+		va_list		ap; // Pointer To List Of Arguments
 
 		if(m_NumDebugStrings > m_MaxDebugStrings) return;
 
-		if (string == NULL)										// If There's No Text
-			return;												// Do Nothing
-		va_start(ap, string);										// Parses The String For Variables
-		vsprintf(text, string, ap);							// And Converts Symbols To Actual Numbers
+		if (string == NULL) // If There's No Text
+			return; // Do Nothing
+		va_start(ap, string); // Parses The String For Variables
+		vsprintf(text, string, ap); // And Converts Symbols To Actual Numbers
 		va_end(ap);
 
 		DebugString ds;

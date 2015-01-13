@@ -49,8 +49,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-
-
 		virtual ResourceHandle GetTerrainResource() const;
 		//IMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
@@ -115,11 +113,6 @@ namespace GASS
 		void SetMask(const ResourceHandle &mask);
 		ResourceHandle GetMask() const;
 
-		//void SetMaskLayer1(const std::string &mask);
-		//std::string GetMaskLayer1() const;
-		//void SetMaskLayer2(const std::string &mask);
-		//std::string GetMaskLayer2() const;
-
 		//import functions that take full path to data, functions will only import data,
 		//file path is not saved, ues SetHeightMap etc instead if you want to ,
 		//reimport data every load
@@ -147,8 +140,6 @@ namespace GASS
 		ResourceHandle m_HeightMapFile;
 		ResourceHandle m_ColorMap;
 		ResourceHandle m_Mask;
-		//Resource m_MaskLayer1;
-		//Resource m_MaskLayer2;
 		ResourceHandle m_DiffuseLayer0;
 		ResourceHandle m_NormalLayer0;
 		ResourceHandle m_DiffuseLayer1;
@@ -172,7 +163,5 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 		Vec3 m_Pos;
 	};
-
 	typedef SPTR<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;
 }
-

@@ -38,6 +38,7 @@ namespace Ogre
 {
 	class LiSPSMShadowCameraSetup;
 }
+
 class DebugDrawer;
 
 namespace GASS
@@ -159,7 +160,6 @@ namespace GASS
 		void SetUseAggressiveFocusRegion(bool value) {m_UseAggressiveFocusRegion = value ;UpdateShadowSettings();}
 		void SetShadowDirectionalLightExtrusionDistance(float value) {m_ShadowDirectionalLightExtrusionDistance = value;UpdateShadowSettings();}
 
-
 		void OnDrawLine(DrawLineRequestPtr message);
 		void OnDrawCircle(DrawCircleRequestPtr message);
 		void OnExportMesh(ExportMeshRequestPtr message);
@@ -175,7 +175,7 @@ namespace GASS
 		//light attributes
 		ColorRGB m_AmbientColor;
 
-		//Type of scene mangaer
+		//Type of scene manager
 		std::string m_SceneManagerType;
 
 		//Sky
@@ -193,7 +193,6 @@ namespace GASS
 		float m_OptimalAdjustFactor;
 		float m_FarShadowDistance;
 		float m_ShadowDirectionalLightExtrusionDistance;
-		//Ogre::LiSPSMShadowCameraSetup* m_LiSPSMSetup;
 		Ogre::SceneManager* m_SceneMgr;
 		WPTR<OgreGraphicsSystem> m_GFXSystem;
 		DebugDrawer* m_DebugDrawer;

@@ -31,12 +31,12 @@ namespace GASS
 {
 	unsigned int OgreRenderWindow::GetWidth() const {return m_Window->getWidth();}
 	unsigned int OgreRenderWindow::GetHeight() const {return m_Window->getHeight();}
-		
+
 	void* OgreRenderWindow::GetHWND() const
 	{
-			void* window_hnd = 0;
-			m_Window->getCustomAttribute("WINDOW", &window_hnd);
-			return window_hnd; 
+		void* window_hnd = 0;
+		m_Window->getCustomAttribute("WINDOW", &window_hnd);
+		return window_hnd; 
 	}
 
 	ViewportPtr OgreRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
@@ -70,13 +70,5 @@ namespace GASS
 		vp_wrapper->Init();
 		m_Viewports.push_back(vp_wrapper);
 		return vp_wrapper;
-
-		
 	}
-
 }
-
-
-
-
-

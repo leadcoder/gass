@@ -30,10 +30,10 @@
 
 namespace Ogre
 {
-    class Entity;
-    class Bone;
-    class IndexData;
-    class VertexData;
+	class Entity;
+	class Bone;
+	class IndexData;
+	class VertexData;
 }
 
 namespace GASS
@@ -76,7 +76,7 @@ namespace GASS
 		Float GetRegionSize() const {return m_RegionSize;}
 		void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsMeshPtr mesh, const Ogre::Vector3 &offset) const;
 		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,GraphicsMeshPtr mesh) const;
-	
+
 		std::string m_RenderQueue;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
@@ -90,7 +90,5 @@ namespace GASS
 		Float m_RegionSize;
 		GeometryFlags m_GeomFlags;
 	};
-
 	typedef SPTR<OgreStaticMeshComponent> OgreStaticMeshComponentPtr;
 }
-

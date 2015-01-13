@@ -66,7 +66,6 @@ namespace GASS
 		PolygonModeWrapper GetPolygonMode() const {return m_PolygonMode;}
 		void SetPolygonMode(PolygonModeWrapper value);
 		
-		
 		Ogre::Camera* m_Camera;
 		float m_NearClip;
 		float m_FarClip;
@@ -76,13 +75,6 @@ namespace GASS
 		std::vector<std::string> m_PostFilters;
 		std::string m_MaterialScheme;
 		PolygonModeWrapper m_PolygonMode;
-
 	};
-
 	typedef SPTR<OgreCameraComponent> OgreCameraComponentPtr;
-
-
-
-	
 }
-

@@ -40,9 +40,7 @@
 
 namespace GASS
 {
-
-	OgreLocationComponent::OgreLocationComponent() :
-		m_AttachToParent(false),
+	OgreLocationComponent::OgreLocationComponent() : m_AttachToParent(false),
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
 		m_LastRot(0,0,0),
@@ -92,7 +90,6 @@ namespace GASS
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetRotation), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "Quaternion GetWorldRotation() const", asMETHOD(OgreLocationComponent, GetWorldRotation), asCALL_THISCALL);assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetWorldRotation(const Quaternion &in)", asMETHOD(OgreLocationComponent, SetWorldRotation), asCALL_THISCALL);assert(r >= 0);
-
 	}
 
 	void OgreLocationComponent::OnInitialize()
@@ -130,7 +127,6 @@ namespace GASS
 			}
 			else
 				m_OgreNode = sm->getRootSceneNode()->createChildSceneNode(name);
-
 		}
 		else
 		{
@@ -283,8 +279,7 @@ namespace GASS
 
 	void OgreLocationComponent::SetPosition(const Vec3 &value)
 	{
-		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
-		if(m_OgreNode) //initialzed?
+		if(m_OgreNode) //initialized?
 		{
 			GetSceneObject()->PostRequest(PositionRequestPtr(new GASS::PositionRequest(value)));
 		}
@@ -309,8 +304,7 @@ namespace GASS
 
 	void OgreLocationComponent::SetEulerRotation(const Vec3 &value)
 	{
-		//std::cout << "Pos:" << value.x << " " << value.y << " " << value.z << std::endl;
-		if(m_OgreNode) //initialzed?
+		if(m_OgreNode) //initialized?
 		{
 			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(value)))));
 		}
@@ -334,12 +328,6 @@ namespace GASS
 	Quaternion OgreLocationComponent::GetRotation() const
 	{
 		return m_QRot;
-		/*Quaternion q;
-		if(m_OgreNode)
-		{
-			q = OgreConvert::ToGASS(m_OgreNode->getOrientation());
-		}
-		return q;*/
 	}
 
 	Quaternion OgreLocationComponent::GetWorldRotation() const

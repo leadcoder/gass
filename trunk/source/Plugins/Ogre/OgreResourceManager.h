@@ -26,7 +26,6 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Core/Utils/GASSFilePath.h"
-
 #include "Core/MessageSystem/GASSMessageType.h"
 #include <string>
 
@@ -44,7 +43,6 @@ namespace GASS
 
 		void AddResourceLocation(ResourceLocationPtr location);
 		void RemoveResourceLocation(ResourceLocationPtr location);
-
 	protected:
 		bool m_Initialized;
 	};

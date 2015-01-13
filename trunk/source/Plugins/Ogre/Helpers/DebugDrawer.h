@@ -1,5 +1,4 @@
-#ifndef DEBUGDRAWER_H_INCLUDED
-#define DEBUGDRAWER_H_INCLUDED
+#pragma once
 
 #include <OgreSingleton.h>
 #include <map>
@@ -67,9 +66,6 @@ public:
 	DebugDrawer(Ogre::SceneManager *_sceneManager, float _fillAlpha);
 	~DebugDrawer();
 
-	//static DebugDrawer& getSingleton(void);
-	//static DebugDrawer* getSingletonPtr(void);
-
 	void build();
 
 	void setIcoSphereRecursionLevel(int recursionLevel);
@@ -129,5 +125,3 @@ private:
 
 	void addQuadIndices(int index1, int index2, int index3, int index4);
 };
-
-#endif

@@ -30,10 +30,10 @@
 
 namespace Ogre
 {
-    class Entity;
-    class Bone;
-    class IndexData;
-    class VertexData;
+	class Entity;
+	class Bone;
+	class IndexData;
+	class VertexData;
 	class InstancedGeometry;
 }
 
@@ -75,8 +75,7 @@ namespace GASS
 		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void setupInstancedMaterialToEntity(Ogre::Entity*ent);
 		Ogre::String buildInstancedMaterial(const Ogre::String &originalMaterialName);
-	
-		
+
 		std::string m_RenderQueue;
 		bool m_CastShadow;
 		bool m_ReadyToLoadMesh;
@@ -92,7 +91,5 @@ namespace GASS
 		Vec3 m_GlobalScale;
 		GeometryFlags m_GeomFlags;
 	};
-
 	typedef SPTR<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;
 }
-

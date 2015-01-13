@@ -154,7 +154,6 @@ namespace GASS
 		ss << GetName() << scene_man_id;
 		ss >> name;
 		scene_man_id++;
-		//m_SceneMgr = Root::getSingleton().createSceneManager(m_GFXSystem->GetSceneManagerType(), name);
 		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, name);
 		if(m_SceneMgr == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"SceneManager " + m_SceneManagerType +" not found","OgreGraphicsSceneManager::OnLoad");
@@ -205,7 +204,7 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnInit()
 	{
-		//Give hook to 3dparty plugins to attach, maybee send other info
+		//Give hook to 3dparty plugins to attach, maybe send more info?
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = OgreGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
@@ -238,7 +237,6 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnWeatherRequest(WeatherRequestPtr message)
 	{
-		//float fog_end = 100 + (1.0-(message->GetFog()))*2000;
 		SetFogEnd(message->GetFogDistance());
 		SetFogDensity(message->GetFogDensity());
 	}
@@ -295,14 +293,11 @@ namespace GASS
 				if(isOpenGL)
 					m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
 				else m_SceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT32_RGBA);
-				//sm->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_RGBA);
 				m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
 				m_SceneMgr->setShadowTextureCasterMaterial(m_ShadowCasterMaterial.GetName());
-				//sm->setShadowCasterRenderBackFaces(true);
+				//m_SceneMgr->setShadowCasterRenderBackFaces(true);
 				m_SceneMgr->setShadowTextureSelfShadow(m_SelfShadowing);
-				//sm->setShadowCasterRenderBackFaces(false);
-				//sm->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
+				//m_SceneMgr->setShadowTextureReceiverMaterial("Ogre/DepthShadowmap/Receiver/Float");
 			}
 			break;
 		case TEXTURE_SHADOWS_ADDITIVE:
@@ -365,8 +360,6 @@ namespace GASS
 		m_SceneMgr->setShadowFarDistance(m_FarShadowDistance);
 		m_SceneMgr->setShadowDirectionalLightExtrusionDistance(m_ShadowDirectionalLightExtrusionDistance);
 
-		//m_SceneMgr->setShadowTextureSelfShadow(true);
-
 		/*m_SceneMgr->setShowDebugShadows(true);
 		if(OverlayManager::getSingleton().hasOverlayElement("Ogre/DebugShadowPanel0"))
 		{
@@ -396,11 +389,6 @@ namespace GASS
 			debugOverlay->add2D(debugPanel);
 			debugOverlay->show();
 		}*/
-
-
-		//END OF SET DEBUG OVERLAY WITH SHADOW_MAP
-
-
 		/*debugMat = MaterialManager::getSingleton().getByName("Ogre/DebugShadowMap1");
 		shadowTex = mSceneMgr->getShadowTexture(1);
 		debugMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(shadowTex->getName());*/

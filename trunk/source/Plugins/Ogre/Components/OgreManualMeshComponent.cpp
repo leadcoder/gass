@@ -74,7 +74,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
-		RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
+			RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreManualMeshComponent::GetGeometryFlagsBinder, &OgreManualMeshComponent::SetGeometryFlagsBinder,
@@ -84,7 +84,7 @@ namespace GASS
 	void OgreManualMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		
+
 	}
 
 	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -103,7 +103,7 @@ namespace GASS
 		m_MeshObject = sm->createManualObject(name);
 		m_MeshObject->setDynamic(true);
 		m_MeshObject->setCastShadows(m_CastShadows);
-		
+
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 
@@ -121,7 +121,6 @@ namespace GASS
 		if(m_MeshObject)
 			m_MeshObject->setCastShadows(m_CastShadows);
 	}
-
 
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
 	{
@@ -151,7 +150,7 @@ namespace GASS
 				size_t num_pos = sub_mesh->PositionVector.size();
 				if(num_pos == 0)
 					continue;
-				
+
 				Ogre::RenderOperation::OperationType op = OgreConvert::ToOgre(sub_mesh->Type);
 				//use material name or create new material?
 				m_MeshObject->begin(sub_mesh->MaterialName, op);
@@ -198,7 +197,7 @@ namespace GASS
 			OgreMaterialCache::Add(m_MeshObject);
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
-		
+
 	}
 
 	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialRequestPtr message)
@@ -209,31 +208,31 @@ namespace GASS
 	void OgreManualMeshComponent::OnTextureMessage(TextureRequestPtr message)
 	{
 		/*if(message->GetTexture() == "")
-			return;
+		return;
 		if(m_UserMaterials[0]->getNumTechniques() > 0)
 		{
-			Ogre::Technique * technique = m_UserMaterials[0]->getTechnique(0);
-			if(technique->getNumPasses() > 0)
-			{
-				Ogre::Pass* pass = technique->getPass(0);
-				if(pass->getNumTextureUnitStates() == 0)
-				{
-					pass->createTextureUnitState();
-				}
+		Ogre::Technique * technique = m_UserMaterials[0]->getTechnique(0);
+		if(technique->getNumPasses() > 0)
+		{
+		Ogre::Pass* pass = technique->getPass(0);
+		if(pass->getNumTextureUnitStates() == 0)
+		{
+		pass->createTextureUnitState();
+		}
 
-				if(pass->getNumTextureUnitStates() > 0)
-				{
-					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
-					std::string texture_name = message->GetTexture();
-					//Check in resource manager
+		if(pass->getNumTextureUnitStates() > 0)
+		{
+		Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
+		std::string texture_name = message->GetTexture();
+		//Check in resource manager
 
-					if(texture_name != "")
-					{
-						const std::string stripped_name = FileUtils::GetFilename(texture_name);
-						textureUnit->setTextureName(stripped_name);
-					}
-				}
-			}
+		if(texture_name != "")
+		{
+		const std::string stripped_name = FileUtils::GetFilename(texture_name);
+		textureUnit->setTextureName(stripped_name);
+		}
+		}
+		}
 		}*/
 	}
 
@@ -243,7 +242,7 @@ namespace GASS
 			return;
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
-	
+
 		if(message->GetSubMeshID() >= 0)
 		{
 			m_MeshObject->getSection(message->GetSubMeshID())->setMaterialName(message->GetMaterialName());

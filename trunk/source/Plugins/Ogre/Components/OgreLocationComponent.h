@@ -29,7 +29,6 @@
 #include "OgreSceneNodeSource.h"
 #include <OgreNode.h>
 
-
 namespace Ogre
 {
 	class SceneNode;
@@ -60,12 +59,11 @@ namespace GASS
 		virtual Quaternion GetWorldRotation() const;
 
 		/** Set if position should be relative to first LocationComponent that is 
-		  * found in component hierarchy (true) or absolut position (false) */
+		* found in component hierarchy (true) or absolut position (false) */
 		virtual void SetAttachToParent(bool value);
 		/** Get value indicating if position is relative to first LocationComponent that is found in component hierarchy */
 		virtual bool GetAttachToParent() const;
-		
-		
+
 		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
 		void SetVisibility(bool visibility);
 
@@ -77,8 +75,8 @@ namespace GASS
 		virtual void nodeAttached(const Ogre::Node* node) {}
 		/** Node has been detached from a parent */
 		virtual void nodeDetached(const Ogre::Node* node) {}
-	protected:
 
+	protected:
 		void SetWorldRotation(const Quaternion &rot);
 		void SetWorldPosition(const Vec3 &pos);
 		void OnScaleMessage(ScaleRequestPtr message);
@@ -91,10 +89,6 @@ namespace GASS
 		void BoundingInfoRequest(BoundingInfoRequestPtr message);
 		void OnUpdateEulerAngles(UpdateEulerAnglesRequestPtr message);
 		void OnAttachToParent(AttachToParentRequestPtr message);
-	
-		
-	
-	
 
 		//helper function to get first parent with location component
 		OgreLocationComponentPtr GetParentLocation();
@@ -113,7 +107,5 @@ namespace GASS
 
 		// Should this location node be relative to parent's location? First with a LocationComponent
 		bool m_AttachToParent;
-
 	};
 }
-

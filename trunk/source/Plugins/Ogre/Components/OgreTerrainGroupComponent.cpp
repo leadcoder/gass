@@ -49,21 +49,20 @@ namespace GASS
 		m_TerrainGroup(NULL),
 		m_TerrainWorldSize(5000),
 		m_TerrainSize(513),
-		m_Origin(0,0,0)
-		,m_FadeDetail(true)
-		,m_DetailFadeDist(20.0f)
-		,m_FadeOutColor(true)
-		,m_NearColorWeight(0.2f)
-		,m_TerrainProfile(NULL)
-		,m_EnableLayerParallax(true)
-		,m_EnableLayerSpecular(true)
-		,m_EnableLayerNormal(true)
-		,m_TerrainScale(10)
-		,m_EnableLightmap(false)
-		,m_GeomFlags(GEOMETRY_FLAG_GROUND)
+		m_Origin(0,0,0),
+		m_FadeDetail(true),
+		m_DetailFadeDist(20.0f),
+		m_FadeOutColor(true),
+		m_NearColorWeight(0.2f),
+		m_TerrainProfile(NULL),
+		m_EnableLayerParallax(true),
+		m_EnableLayerSpecular(true),
+		m_EnableLayerNormal(true),
+		m_TerrainScale(10),
+		m_EnableLightmap(false),
+		m_GeomFlags(GEOMETRY_FLAG_GROUND)
 	{
 		m_TerrainResource.SetName("OgrePagedTerrain");
-
 	}
 
 	OgreTerrainGroupComponent::~OgreTerrainGroupComponent()
@@ -106,7 +105,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("EnableLightmap", &GASS::OgreTerrainGroupComponent::GetEnableLightmap, &GASS::OgreTerrainGroupComponent::SetEnableLightmap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		
+
 	}
 
 	void OgreTerrainGroupComponent::OnInitialize()
@@ -129,7 +128,7 @@ namespace GASS
 	void OgreTerrainGroupComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		BaseSceneComponent::SaveXML(obj_elem);
-		
+
 		if(m_TerrainGroup)
 		{
 			//reset resource group!!
@@ -193,7 +192,7 @@ namespace GASS
 						comp->SetIndexY(y);
 						comp->SetPosition(Vec3(m_TerrainWorldSize*x,0,m_TerrainWorldSize*y));
 						GetSceneObject()->AddChildSceneObject(so,true);
-						
+
 					}
 				}
 			}
@@ -234,7 +233,6 @@ namespace GASS
 					page->LoadFromFile();
 				}
 			}
-			//m_TerrainGroup->defineTerrain(x, y);
 		}
 	}
 
@@ -243,7 +241,6 @@ namespace GASS
 		// Configure global
 		//
 		delete m_TerrainGroup;
-		//delete m_TerrainGlobals;
 
 		m_TerrainGlobals = Ogre::TerrainGlobalOptions::getSingletonPtr();
 
@@ -251,7 +248,6 @@ namespace GASS
 			m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
 		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
 		SetOrigin(m_Origin);
-		//m_TerrainGroup->setResourceGroup("TerrainResourceLocation");
 		m_TerrainGroup->setResourceGroup(GetSceneObject()->GetScene()->GetResourceGroupName());
 
 		if(m_CustomMaterial != "")
@@ -265,14 +261,13 @@ namespace GASS
 		{
 			//m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorB()));
 			//m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorB::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
-			
+
 			m_TerrainGlobals->setDefaultMaterialGenerator(Ogre::SharedPtr<Ogre::TerrainMaterialGenerator>( OGRE_NEW Ogre::TerrainMaterialGeneratorC()));
 			m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorC::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
 			//m_TerrainProfile =	static_cast<Ogre::TerrainMaterialGeneratorA::SM2Profile*>(m_TerrainGlobals->getDefaultMaterialGenerator()->getActiveProfile());
-			
+
 			//we don't support composite maps, recursion bug in when doing synchronized load -> stack overflow.  
 			m_TerrainProfile->setCompositeMapEnabled(false);
-
 			m_TerrainProfile->setLightmapEnabled(m_EnableLightmap);
 
 			m_TerrainProfile->setReceiveDynamicShadowsEnabled(true);
@@ -293,7 +288,7 @@ namespace GASS
 		m_TerrainGlobals->setMaxPixelError(8);
 		// testing composite map
 		m_TerrainGlobals->setCompositeMapDistance(20000);
-		
+
 
 		//mTerrainGlobals->setUseRayBoxDistanceCalculation(true);
 		//mTerrainGlobals->getDefaultMaterialGenerator()->setDebugLevel(1);
@@ -333,9 +328,6 @@ namespace GASS
 		defaultimp.layerList[4].textureNames.push_back("detail_default.dds");
 
 		m_TerrainGroup->setFilenameConvention(m_TerrainResource.Name(), "dat");
-
-
-
 	}
 
 	float OgreTerrainGroupComponent::GetImportScale() const
@@ -365,7 +357,7 @@ namespace GASS
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
 			defaultimp.terrainSize = value;
-			
+
 			RemoveAllPages();
 			ConfigureTerrainDefaults();
 		}
@@ -388,7 +380,6 @@ namespace GASS
 			ConfigureTerrainDefaults();
 		}
 	}
-
 
 	void OgreTerrainGroupComponent::RemoveAllPages()
 	{
@@ -468,7 +459,6 @@ namespace GASS
 		return sphere;
 	}
 
-	
 	GraphicsMesh OgreTerrainGroupComponent::GetMeshData() const
 	{
 		GraphicsMesh data;
@@ -492,12 +482,10 @@ namespace GASS
 			PaintTerrain(*ti, position, intensity,brush_size/m_TerrainGroup->getTerrainWorldSize(),inner_radius/m_TerrainGroup->getTerrainWorldSize(), (int)message->GetLayer(),message->GetNoise());
 
 		m_TerrainGroup->update();
-
 	}
 
 	void OgreTerrainGroupComponent::OnTerrainHeightModify(TerrainHeightModifyRequestPtr message)
 	{
-
 		// figure out which terrains this affects
 		Ogre::TerrainGroup::TerrainList terrainList;
 		Ogre::Real brush_size = message->GetBrushSize();
@@ -575,12 +563,6 @@ namespace GASS
 		long start_y = ts_start.y  * terrainSize;
 		long end_x = ts_end.x * terrainSize;
 		long end_y= ts_end.y * terrainSize;
-		/*startx = (std::max)(startx, 0L);
-		starty = (std::max)(starty, 0L);
-		endx = (std::min)(endx, (long)terrainSize);
-		endy = (std::min)(endy, (long)terrainSize);
-		*/
-
 
 		float x_dist = end_x - start_x;
 		float y_dist = end_y - start_y;
@@ -757,7 +739,6 @@ namespace GASS
 		}
 	}
 
-
 	void OgreTerrainGroupComponent::GetAverageHeight(Ogre::Terrain* terrain, const Ogre::Vector3& centrepos, const Ogre::Real  brush_size_terrain_space,Ogre::Real &avg_height)
 	{
 		Ogre::Vector3 tsPos;
@@ -785,10 +766,7 @@ namespace GASS
 			}
 		}
 		avg_height = avg_height/Ogre::Real(count);
-
-
 	}
-
 
 	void OgreTerrainGroupComponent::SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height)
 	{
@@ -822,7 +800,6 @@ namespace GASS
 				terrain->setHeightAtPoint(x, y, height + newheight);
 			}
 		}
-
 	}
 
 	void OgreTerrainGroupComponent::PaintTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, int layer_index, float noise)
@@ -855,8 +832,6 @@ namespace GASS
 				if( weight < 0) 
 					weight = 0;
 
-
-
 				weight = 1.0 - (weight * weight);
 
 				float rand_w = Ogre::Math::RangeRandom(0, 1);
@@ -865,7 +840,6 @@ namespace GASS
 				if( weight < 0) 
 					weight = 0;
 
-
 				float paint = weight * intensity;
 				size_t imgY = imgSize - y;
 				float val;
@@ -873,7 +847,6 @@ namespace GASS
 				val = Ogre::Math::Clamp(val, 0.0f, 1.0f);
 				layer->setBlendValue(x, imgY, val);
 				layer->update();
-
 			}
 		}
 	}
@@ -894,6 +867,7 @@ namespace GASS
 		if(m_TerrainProfile)
 			m_TerrainProfile->SetFadeDetail(GetFadeDetail());
 	}
+
 	void OgreTerrainGroupComponent::SetDetailFadeDist(float value) 
 	{
 		m_DetailFadeDist = value;
@@ -906,7 +880,6 @@ namespace GASS
 		m_FadeOutColor= value;
 		if(m_TerrainProfile)
 			m_TerrainProfile->SetFadeOutColor(GetFadeOutColor());
-
 	}
 
 	void OgreTerrainGroupComponent::SetNearColorWeight(float value) 

@@ -35,112 +35,105 @@
 
 namespace GASS
 {
+	class GASSTerrainMaterialGenerator : public Ogre::TerrainMaterialGenerator
+	{
+	public:
+		GASSTerrainMaterialGenerator(const Ogre::String &material) : Ogre::TerrainMaterialGenerator()
+		{
+			mProfiles.push_back(OGRE_NEW CustomMaterialProfile(this, "CustomMaterialProfile", "Profile used custom materials",material));
+			setActiveProfile("CustomMaterialProfile");
+		}
 
-    class GASSTerrainMaterialGenerator : public Ogre::TerrainMaterialGenerator
-   {
-   public:
+		class CustomMaterialProfile : public Ogre::TerrainMaterialGenerator::Profile
+		{
+		public:
+			CustomMaterialProfile(Ogre::TerrainMaterialGenerator* parent, const Ogre::String& name, const Ogre::String& desc, const Ogre::String& material) :
+			  Ogre::TerrainMaterialGenerator::Profile(parent,name,desc), m_Material(material)
+			  {
+			  }
 
-	   GASSTerrainMaterialGenerator(const Ogre::String &material) :
-         Ogre::TerrainMaterialGenerator()
-      {
-         mProfiles.push_back(OGRE_NEW CustomMaterialProfile(this, "CustomMaterialProfile", "Profile used custom materials",material));
-         setActiveProfile("CustomMaterialProfile");
-      }
+			  virtual ~CustomMaterialProfile() {}
+			  Ogre::MaterialPtr generate(const Ogre::Terrain* terrain)
+			  {
+				  Ogre::MaterialPtr mat = terrain->_getMaterial();
+				  if (mat.isNull())
+				  {
+					  Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
+					  Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
+					  mat = temp_mat->clone("TerrainPageMaterial");
+					  for(int  i = 0 ;i < mat->getNumTechniques(); i++)
+					  {
+						  for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
+						  {
+							  Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
+							  if(tu)
+							  {
+								  tu->setTextureName(terrain->getTerrainNormalMap()->getName());
+								  tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+							  }
+						  }
+					  }
+				  }
+				  return mat;
+			  }
 
-      class CustomMaterialProfile : public Ogre::TerrainMaterialGenerator::Profile
-      {
-      public:
-         CustomMaterialProfile(Ogre::TerrainMaterialGenerator* parent, const Ogre::String& name, const Ogre::String& desc, const Ogre::String& material) :
-            Ogre::TerrainMaterialGenerator::Profile(parent,name,desc), m_Material(material)
-         {
-         }
+			  Ogre::MaterialPtr generateForCompositeMap(const Ogre::Terrain* terrain)
+			  {
+				  Ogre::MaterialPtr mat = terrain->_getCompositeMapMaterial();
+				  if (mat.isNull())
+				  {
+					  Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
+					  Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
+					  mat = temp_mat->clone("TerrainPageCompositeMaterial");
+					  for(int  i = 0 ;i < mat->getNumTechniques(); i++)
+					  {
+						  for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
+						  {
+							  Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
+							  if(tu)
+							  {
+								  tu->setTextureName(terrain->getTerrainNormalMap()->getName());
+								  tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+							  }
+						  }
+					  }
+				  }
+				  return mat;
+			  }
 
-         virtual ~CustomMaterialProfile() {}
-         Ogre::MaterialPtr generate(const Ogre::Terrain* terrain)
-         {
-			Ogre::MaterialPtr mat = terrain->_getMaterial();
-			if (mat.isNull())
-			{
-				Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
-				Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
-				mat = temp_mat->clone("TerrainPageMaterial");
-				for(int  i = 0 ;i < mat->getNumTechniques(); i++)
-				{
-					for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
-					{
-						Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
-						if(tu)
-						{
-							tu->setTextureName(terrain->getTerrainNormalMap()->getName());
-							tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-						}
-					}
-				}
-			}
-			return mat;
-         }
+			  Ogre::uint8 getMaxLayers(const Ogre::Terrain* terrain) const
+			  {
+				  return 1;
+			  }
 
-         Ogre::MaterialPtr generateForCompositeMap(const Ogre::Terrain* terrain)
-         {
+			  void updateParams(const Ogre::MaterialPtr& mat, const Ogre::Terrain* terrain) {}
 
-			Ogre::MaterialPtr mat = terrain->_getCompositeMapMaterial();
-			if (mat.isNull())
-			{
-				Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
-				Ogre::MaterialPtr temp_mat = matMgr.getByName(m_Material);
-				mat = temp_mat->clone("TerrainPageCompositeMaterial");
-				for(int  i = 0 ;i < mat->getNumTechniques(); i++)
-				{
-					for(int  j = 0 ;j < mat->getTechnique(i)->getNumPasses(); j++)
-					{
-						Ogre::TextureUnitState* tu = mat->getTechnique(i)->getPass(j)->getTextureUnitState("normal_map");
-						if(tu)
-						{
-							tu->setTextureName(terrain->getTerrainNormalMap()->getName());
-							tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-						}
-					}
-				}
-			}
-			return mat;
-         }
+			  void updateParamsForCompositeMap(const Ogre::MaterialPtr& mat, const Ogre::Terrain* terrain) {}
 
-         Ogre::uint8 getMaxLayers(const Ogre::Terrain* terrain) const
-         {
-            return 1;
-         }
+			  void requestOptions(Ogre::Terrain* terrain)
+			  {
+				  //terrain->_setMorphRequired(true);
+				  terrain->_setNormalMapRequired(true);
+				  terrain->_setLightMapRequired(false, false);
+				  terrain->_setCompositeMapRequired(false);
+			  }
 
-         void updateParams(const Ogre::MaterialPtr& mat, const Ogre::Terrain* terrain) {}
-
-         void updateParamsForCompositeMap(const Ogre::MaterialPtr& mat, const Ogre::Terrain* terrain) {}
-
-         void requestOptions(Ogre::Terrain* terrain)
-		 {
-			 //terrain->_setMorphRequired(true);
-			 terrain->_setNormalMapRequired(true);
-			 terrain->_setLightMapRequired(false, false);
-			 terrain->_setCompositeMapRequired(false);
-		 }
-
-         bool isLayerNormalMappingEnabled() const  { return false; }
-         void setLayerNormalMappingEnabled(bool enabled) {}
-         bool isLayerParallaxMappingEnabled() const  { return false; }
-         void setLayerParallaxMappingEnabled(bool enabled) {}
-         bool isLayerSpecularMappingEnabled() const  { return false; }
-         void setLayerSpecularMappingEnabled(bool enabled) {}
-         bool isGlobalColourMapEnabled() const  { return false; }
-         void setGlobalColourMapEnabled(bool enabled) {}
-         bool isLightmapEnabled() const  { return false; }
-         void setLightmapEnabled(bool enabled) {}
-         bool isCompositeMapEnabled() const  { return false; }
-         void setCompositeMapEnabled(bool enabled) {}
-		 bool isVertexCompressionSupported() const {return false;}
-	  protected:
-		  Ogre::String m_Material;
-      };
-
-   };
-
-
+			  bool isLayerNormalMappingEnabled() const  { return false; }
+			  void setLayerNormalMappingEnabled(bool enabled) {}
+			  bool isLayerParallaxMappingEnabled() const  { return false; }
+			  void setLayerParallaxMappingEnabled(bool enabled) {}
+			  bool isLayerSpecularMappingEnabled() const  { return false; }
+			  void setLayerSpecularMappingEnabled(bool enabled) {}
+			  bool isGlobalColourMapEnabled() const  { return false; }
+			  void setGlobalColourMapEnabled(bool enabled) {}
+			  bool isLightmapEnabled() const  { return false; }
+			  void setLightmapEnabled(bool enabled) {}
+			  bool isCompositeMapEnabled() const  { return false; }
+			  void setCompositeMapEnabled(bool enabled) {}
+			  bool isVertexCompressionSupported() const {return false;}
+		protected:
+			Ogre::String m_Material;
+		};
+	};
 }
 

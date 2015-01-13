@@ -32,7 +32,6 @@
 #include "OgreTextComponent.h"
 #include "Plugins/Ogre/Helpers/MovableTextOverlay.h"
 #include "Plugins/Ogre/Helpers/RectLayoutManager.h"
-//#include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
@@ -45,7 +44,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-
 
 namespace GASS
 {
@@ -76,8 +74,6 @@ namespace GASS
 			delete m_Attribs;
 	}
 
-
-
 	void OgreTextComponent::RegisterReflection()
 	{
 		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OgreTextComponent, Component>);
@@ -87,7 +83,6 @@ namespace GASS
 		RegisterProperty<float>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
 		RegisterProperty<bool>("ScaleByDistance", &OgreTextComponent::GetScaleByDistance, &OgreTextComponent::SetScaleByDistance);
 	}
-	
 
 	Ogre::UTFString ConvertToUTF(Ogre::String String) 
 	{ 
@@ -109,21 +104,18 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnGeomChanged,GeometryChangedEvent,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityRequest ,0));
-	
+
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\r", "\r");
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\n", "\n");
-
-		
-		
 
 		Ogre::RenderSystem::RenderTargetIterator iter = Ogre::Root::getSingleton().getRenderSystem()->getRenderTargetIterator();
 		while (iter.hasMoreElements())
 		{
 			Ogre::RenderWindow* target = dynamic_cast<Ogre::RenderWindow*>(iter.getNext());
 			if(target)
-					target->addListener(this);
+				target->addListener(this);
 		}
-		
+
 		Ogre::ColourValue color;
 		color.r = m_Color.x;
 		color.g = m_Color.y;
@@ -144,19 +136,12 @@ namespace GASS
 
 	void OgreTextComponent::OnGeomChanged(GeometryChangedEventPtr message)
 	{
-		//Ogre::String test = Ogre::String(new_text);
-		
-
-		//ocam->getViewport()->getTarget()->addListener(this);
-		//m_TextObject = new MovableText(m_Name + "Text", ConvertToUTF(m_TextToDisplay), "BlueHighway",m_Size,color);
-
 		Ogre::MovableObject* mobj = NULL;
 		OgreMeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<OgreMeshComponent>();
-		
+
 		if(mesh)
 		{
 			mobj = mesh->GetOgreEntity();
-
 		}
 		else
 		{
@@ -189,7 +174,6 @@ namespace GASS
 		}
 	}
 
-
 	std::string OgreTextComponent::GetText() const
 	{
 		return m_TextToDisplay;
@@ -219,8 +203,6 @@ namespace GASS
 	void OgreTextComponent::SetOffset(float offset)
 	{
 		m_Offset = offset;
-		//if(m_TextObject)
-		//	m_TextObject->setAdditionalHeight(offset);
 	}
 
 
@@ -231,9 +213,7 @@ namespace GASS
 
 	void OgreTextComponent::SetCharacterSize(float size)
 	{
-		m_Size= size;
-//		if(m_TextObject)
-//			m_TextObject->setCharacterHeight(size);
+		m_Size = size;
 	}
 
 	void OgreTextComponent::OnCaptionMessage(TextCaptionRequestPtr message)
@@ -247,17 +227,14 @@ namespace GASS
 		Ogre::Viewport *vp = evt.source;
 		if(vp && m_TextObject)
 		{
-			
 			m_Attribs->mpCam = vp->getCamera();
 			RectLayoutManager m(0,0,vp->getActualWidth(),
-			vp->getActualHeight());
+				vp->getActualHeight());
 			m.setDepth(0);
 
 			m_TextObject->update(0.1);
 			if (m_TextObject->isOnScreen() && m_TextToDisplay != "" && m_Visible)
 			{
-				//visible++;
-
 				RectLayoutManager::Rect r(	m_TextObject->getPixelsLeft(),
 					m_TextObject->getPixelsTop(),
 					m_TextObject->getPixelsRight(),
@@ -274,7 +251,6 @@ namespace GASS
 			}
 			else
 				m_TextObject->enable(false);
-
 		}
 	}
 
