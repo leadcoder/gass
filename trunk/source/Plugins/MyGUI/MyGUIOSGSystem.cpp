@@ -157,7 +157,7 @@ namespace GASS
 	}
 
 
-	osg::Node* createBase(const osg::Vec3& center,float radius)
+	/*osg::Node* createBase(const osg::Vec3& center,float radius)
 	{
 
 
@@ -231,7 +231,7 @@ namespace GASS
 		geode->addDrawable(geom);
 
 		return geode;
-	}
+	}*/
 
 	MyGUIOSGSystem::MyGUIOSGSystem() 
 	{

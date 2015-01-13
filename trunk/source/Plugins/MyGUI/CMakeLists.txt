@@ -14,7 +14,7 @@ add_source_from_current_dir()
 add_definitions( -DGASS_PLUGIN_EXPORTS )
 
 #Add some folders where to search for dependency libraries
-link_directories(${GASS_COMMON_LIB_DIRS} ${MYGUI_LIB_DIRS})
+link_directories(${GASS_COMMON_LIB_DIRS} ${MYGUI_LIB_DIR})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 
