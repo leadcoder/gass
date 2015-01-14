@@ -1,11 +1,12 @@
+set(MYGUI_DIR "${DEPENDENCIES_DIR}/MyGUI_3.2.0" CACHE PATH "MyGUI folder")
 
 #Set OIS include directories
-set (MYGUI_INC_DIR "${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/include/MYGUI"
+set (MYGUI_INC_DIR "${MYGUI_DIR}/include/MYGUI"
 	${OGRE_INC_DIR}
 	${OSG_INC_DIR}
 	)
 
-set (MYGUI_LIB_DIR "${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/lib"
+set (MYGUI_LIB_DIR "${MYGUI_DIR}/lib"
 					${OGRE_LIB_DIR}
 					${OSG_LIB_DIR})
 

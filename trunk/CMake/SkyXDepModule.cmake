@@ -1,6 +1,8 @@
-set(SKYX_BIN_DIR ${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin)
-set(SKYX_INC_DIR ${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/include/SKYX)
-set(SKYX_LIB_DIR ${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/lib)
+set(SKYX_DIR  "${DEPENDENCIES_DIR}/SkyX-v0.4" CACHE PATH "SkyX folder")
+
+set(SKYX_BIN_DIR ${SKYX_DIR}/bin)
+set(SKYX_INC_DIR ${SKYX_DIR}/include/SKYX)
+set(SKYX_LIB_DIR ${SKYX_DIR}/lib)
 
 set(SKYX_LINK_LIBRARIES debug SkyX_d
 			optimized SkyX)

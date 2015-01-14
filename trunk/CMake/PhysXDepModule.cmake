@@ -1,10 +1,19 @@
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4")
-	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
+if(EXISTS "${DEPENDENCIES_DIR}/PhysX-v3.2.4")
+	set(PHYSX_DIR  "${DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
 else()
 	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
 endif()
 
-set(PHYSX_INC_DIR ${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4/Include)
+set(PHYSX_BIN_DIR ${PHYSX_DIR}/bin)
+set(PHYSX_INC_DIR ${PHYSX_DIR}/include/PHYSX)
+set(PHYSX_LIB_DIR ${PHYSX_DIR}/lib)
+
+#set(PHYSX_LINK_LIBRARIES debug SkyX_d
+#			optimized SkyX)
+#
+#set(PHYSX_BIN_FILES_DEBUG ${PHYSX_BIN_DIR}/debug/skyx_d.dll)
+#set(PHYSX_BIN_FILES_RELEASE ${PHYSX_BIN_DIR}/release/skyx.dll)
+
 if(${CMAKE_CL_64})
 	set(PHYSX_LIB_DIR "${PHYSX_DIR}/Lib/win64")
 	set(PHYSX_BIN_DIR "${PHYSX_DIR}/Bin/win64")

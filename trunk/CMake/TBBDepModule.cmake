@@ -1,4 +1,8 @@
-set(TBB_DIR "${GASS_DEPENDENCIES_DIR}/tbb" CACHE PATH "TBB folder")
+if(EXISTS "${DEPENDENCIES_DIR}/tbb")
+	set(TBB_DIR "${DEPENDENCIES_DIR}/tbb" CACHE PATH "TBB folder")
+else()
+	set(BOOST_DIR $ENV{TBB_HOME} CACHE PATH "TBB folder")
+endif()
 
 set(TBB_INC_DIR "${TBB_DIR}/include")
 if(${CMAKE_CL_64})

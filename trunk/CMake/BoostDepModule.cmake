@@ -4,8 +4,8 @@
 #	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
 #endif()
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/boost_1_57_0")
-	set(BOOST_DIR  "${GASS_DEPENDENCIES_DIR}/boost_1_57_0" CACHE PATH "BOOST folder")
+if(EXISTS "${DEPENDENCIES_DIR}/boost_1_57_0")
+	set(BOOST_DIR  "${DEPENDENCIES_DIR}/boost_1_57_0" CACHE PATH "BOOST folder")
 else()
 	set(BOOST_DIR $ENV{BOOST_HOME} CACHE PATH "BOOST folder")
 endif()

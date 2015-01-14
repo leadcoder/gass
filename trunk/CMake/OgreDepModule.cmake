@@ -1,6 +1,6 @@
 
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/ogre-v1-9")
-	set(OGRE_DIR  "${GASS_DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
+if(EXISTS "${DEPENDENCIES_DIR}/ogre-v1-9")
+	set(OGRE_DIR  "${DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")
 else()
 	set(OGRE_DIR $ENV{OGRE_HOME} CACHE PATH "Ogre 3D folder")
 endif()
@@ -8,7 +8,9 @@ endif()
 set (OGRE_INC_DIR "${OGRE_DIR}/include/OGRE"
 		"${OGRE_DIR}/include/OGRE/Plugins/OctreeSceneManager"
 		"${OGRE_DIR}/include/OGRE/Terrain"
-		"${OGRE_DIR}/include/OGRE/Paging")
+		"${OGRE_DIR}/include/OGRE/Paging"
+)
+		
 set(OGRE_BIN_DIR ${OGRE_DIR}/bin)
 set(OGRE_LIB_DIR ${OGRE_DIR}/lib)
 
