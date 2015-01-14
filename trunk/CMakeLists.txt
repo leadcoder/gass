@@ -9,8 +9,8 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
   )
 
-set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
-  
+set(DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
+ 
 include(CMakeDependentOption)
 include(Common)
 include(TinyXML2DepModule)
@@ -103,4 +103,4 @@ if(GASS_BUILD_DOCUMENTATION)
 endif()
 
 # Install CMake files in order to re-use them in other projects
-install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
+install( DIRECTORY CMake/ DESTINATION ${DEPENDENCIES_DIR}/CMake/ PATTERN *.cmake)
