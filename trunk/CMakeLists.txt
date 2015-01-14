@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH
   )
 
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
-
+  
 include(CMakeDependentOption)
 include(Common)
 include(TinyXML2DepModule)
@@ -75,7 +75,7 @@ CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_OPENAL "Build Plugin." ON "GASS_BUILD_S
 CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_RAKNET "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_PHYSX "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_MYGUI "Build Plugin." OFF "GASS_BUILD_SIM" OFF)
-CMAKE_DEPENDENT_OPTION(GASS_BUILD_SAMPLES "Build Samples" ON "GASS_BUILD_SIM" OFF)
+CMAKE_DEPENDENT_OPTION(GASS_BUILD_SAMPLES "Build Samples" OFF "GASS_BUILD_SIM" OFF)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 
 add_subdirectory( source )
@@ -95,7 +95,7 @@ if(GASS_BUILD_DOCUMENTATION)
                  ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
   #-- Add a custom target to run Doxygen when ever the project is built
   add_custom_target (Docs ALL 
-  										COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+	COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
   										SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
   # IF you do NOT want the documentation to be generated EVERY time you build the project
   # then leave out the 'ALL' keyword from the above command.
@@ -103,4 +103,4 @@ if(GASS_BUILD_DOCUMENTATION)
 endif()
 
 # Install CMake files in order to re-use them in other projects
-install( DIRECTORY CMake/ DESTINATION CMake/ )
+install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
