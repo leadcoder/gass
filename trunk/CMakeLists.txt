@@ -18,6 +18,7 @@ include(BoostDepModule)
 include(AngelScriptDepModule)
 include(TBBDepModule)
 
+set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
 
 
 message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
