@@ -44,7 +44,7 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_bspd.dll
 	${OSG_PLUGINS_DIR}/osgdb_bvhd.dll
 	${OSG_PLUGINS_DIR}/osgdb_cfgd.dll
-	${OSG_PLUGINS_DIR}/osgdb_daed.dll
+	
 	${OSG_PLUGINS_DIR}/osgdb_ddsd.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osgd.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osganimationd.dll
@@ -60,14 +60,9 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_dotd.dll
 	${OSG_PLUGINS_DIR}/osgdb_dwd.dll
 	${OSG_PLUGINS_DIR}/osgdb_dxfd.dll
-	${OSG_PLUGINS_DIR}/osgdb_freetyped.dll
-	${OSG_PLUGINS_DIR}/osgdb_gdald.dll
-	${OSG_PLUGINS_DIR}/osgdb_gifd.dll
 	${OSG_PLUGINS_DIR}/osgdb_glsld.dll
-	${OSG_PLUGINS_DIR}/osgdb_gzd.dll
 	${OSG_PLUGINS_DIR}/osgdb_hdrd.dll
 	${OSG_PLUGINS_DIR}/osgdb_ived.dll
-	${OSG_PLUGINS_DIR}/osgdb_jpegd.dll
 	${OSG_PLUGINS_DIR}/osgdb_ktxd.dll
 	${OSG_PLUGINS_DIR}/osgdb_logod.dll
 	${OSG_PLUGINS_DIR}/osgdb_lwod.dll
@@ -75,9 +70,7 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_md2d.dll
 	${OSG_PLUGINS_DIR}/osgdb_mdld.dll
 	${OSG_PLUGINS_DIR}/osgdb_normalsd.dll
-	${OSG_PLUGINS_DIR}/osgdb_nvttd.dll
 	${OSG_PLUGINS_DIR}/osgdb_objd.dll
-	${OSG_PLUGINS_DIR}/osgdb_ogrd.dll
 	${OSG_PLUGINS_DIR}/osgdb_openflightd.dll
 	${OSG_PLUGINS_DIR}/osgdb_oscd.dll
 	${OSG_PLUGINS_DIR}/osgdb_osgd.dll
@@ -89,11 +82,9 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_p3dd.dll
 	${OSG_PLUGINS_DIR}/osgdb_picd.dll
 	${OSG_PLUGINS_DIR}/osgdb_plyd.dll
-	${OSG_PLUGINS_DIR}/osgdb_pngd.dll
 	${OSG_PLUGINS_DIR}/osgdb_pnmd.dll
 	${OSG_PLUGINS_DIR}/osgdb_povd.dll
 	${OSG_PLUGINS_DIR}/osgdb_pvrd.dll
-	${OSG_PLUGINS_DIR}/osgdb_qfontd.dll
 	${OSG_PLUGINS_DIR}/osgdb_revisionsd.dll
 	${OSG_PLUGINS_DIR}/osgdb_rgbd.dll
 	${OSG_PLUGINS_DIR}/osgdb_rotd.dll
@@ -114,14 +105,12 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_stld.dll
 	${OSG_PLUGINS_DIR}/osgdb_tgad.dll
 	${OSG_PLUGINS_DIR}/osgdb_tgzd.dll
-	${OSG_PLUGINS_DIR}/osgdb_tiffd.dll
 	${OSG_PLUGINS_DIR}/osgdb_transd.dll
 	${OSG_PLUGINS_DIR}/osgdb_trkd.dll
 	${OSG_PLUGINS_DIR}/osgdb_txfd.dll
 	${OSG_PLUGINS_DIR}/osgdb_txpd.dll
 	${OSG_PLUGINS_DIR}/osgdb_vtfd.dll
 	${OSG_PLUGINS_DIR}/osgdb_xd.dll
-	${OSG_PLUGINS_DIR}/osgdb_zipd.dll
 )
 
 set(OSG_PLUGINS_FILES_RELEASE 
@@ -132,7 +121,6 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_bsp.dll
 	${OSG_PLUGINS_DIR}/osgdb_bvh.dll
 	${OSG_PLUGINS_DIR}/osgdb_cfg.dll
-	${OSG_PLUGINS_DIR}/osgdb_dae.dll
 	${OSG_PLUGINS_DIR}/osgdb_dds.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osg.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osganimation.dll
@@ -148,14 +136,9 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_dot.dll
 	${OSG_PLUGINS_DIR}/osgdb_dw.dll
 	${OSG_PLUGINS_DIR}/osgdb_dxf.dll
-	${OSG_PLUGINS_DIR}/osgdb_freetype.dll
-	${OSG_PLUGINS_DIR}/osgdb_gdal.dll
-	${OSG_PLUGINS_DIR}/osgdb_gif.dll
 	${OSG_PLUGINS_DIR}/osgdb_glsl.dll
-	${OSG_PLUGINS_DIR}/osgdb_gz.dll
 	${OSG_PLUGINS_DIR}/osgdb_hdr.dll
 	${OSG_PLUGINS_DIR}/osgdb_ive.dll
-	${OSG_PLUGINS_DIR}/osgdb_jpeg.dll
 	${OSG_PLUGINS_DIR}/osgdb_ktx.dll
 	${OSG_PLUGINS_DIR}/osgdb_logo.dll
 	${OSG_PLUGINS_DIR}/osgdb_lwo.dll
@@ -163,9 +146,7 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_md2.dll
 	${OSG_PLUGINS_DIR}/osgdb_mdl.dll
 	${OSG_PLUGINS_DIR}/osgdb_normals.dll
-	${OSG_PLUGINS_DIR}/osgdb_nvtt.dll
 	${OSG_PLUGINS_DIR}/osgdb_obj.dll
-	${OSG_PLUGINS_DIR}/osgdb_ogr.dll
 	${OSG_PLUGINS_DIR}/osgdb_openflight.dll
 	${OSG_PLUGINS_DIR}/osgdb_osc.dll
 	${OSG_PLUGINS_DIR}/osgdb_osg.dll
@@ -177,11 +158,9 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_p3d.dll
 	${OSG_PLUGINS_DIR}/osgdb_pic.dll
 	${OSG_PLUGINS_DIR}/osgdb_ply.dll
-	${OSG_PLUGINS_DIR}/osgdb_png.dll
 	${OSG_PLUGINS_DIR}/osgdb_pnm.dll
 	${OSG_PLUGINS_DIR}/osgdb_pov.dll
 	${OSG_PLUGINS_DIR}/osgdb_pvr.dll
-	${OSG_PLUGINS_DIR}/osgdb_qfont.dll
 	${OSG_PLUGINS_DIR}/osgdb_revisions.dll
 	${OSG_PLUGINS_DIR}/osgdb_rgb.dll
 	${OSG_PLUGINS_DIR}/osgdb_rot.dll
@@ -202,14 +181,12 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_stl.dll
 	${OSG_PLUGINS_DIR}/osgdb_tga.dll
 	${OSG_PLUGINS_DIR}/osgdb_tgz.dll
-	${OSG_PLUGINS_DIR}/osgdb_tiff.dll
 	${OSG_PLUGINS_DIR}/osgdb_trans.dll
 	${OSG_PLUGINS_DIR}/osgdb_trk.dll
 	${OSG_PLUGINS_DIR}/osgdb_txf.dll
 	${OSG_PLUGINS_DIR}/osgdb_txp.dll
 	${OSG_PLUGINS_DIR}/osgdb_vtf.dll
 	${OSG_PLUGINS_DIR}/osgdb_x.dll
-	${OSG_PLUGINS_DIR}/osgdb_zip.dll
 )
 
 
