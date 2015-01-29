@@ -1,6 +1,5 @@
 set(MYGUI_DIR "${DEPENDENCIES_DIR}/MyGUI_3.2.0" CACHE PATH "MyGUI folder")
 
-#Set OIS include directories
 set (MYGUI_INC_DIR "${MYGUI_DIR}/include/MYGUI"
 	${OGRE_INC_DIR}
 	${OSG_INC_DIR}
