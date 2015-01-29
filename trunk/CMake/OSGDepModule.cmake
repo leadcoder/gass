@@ -44,7 +44,6 @@ set(OSG_PLUGINS_FILES_DEBUG
 	${OSG_PLUGINS_DIR}/osgdb_bspd.dll
 	${OSG_PLUGINS_DIR}/osgdb_bvhd.dll
 	${OSG_PLUGINS_DIR}/osgdb_cfgd.dll
-	${OSG_PLUGINS_DIR}/osgdb_curld.dll
 	${OSG_PLUGINS_DIR}/osgdb_daed.dll
 	${OSG_PLUGINS_DIR}/osgdb_ddsd.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osgd.dll
@@ -133,7 +132,6 @@ set(OSG_PLUGINS_FILES_RELEASE
 	${OSG_PLUGINS_DIR}/osgdb_bsp.dll
 	${OSG_PLUGINS_DIR}/osgdb_bvh.dll
 	${OSG_PLUGINS_DIR}/osgdb_cfg.dll
-	${OSG_PLUGINS_DIR}/osgdb_curl.dll
 	${OSG_PLUGINS_DIR}/osgdb_dae.dll
 	${OSG_PLUGINS_DIR}/osgdb_dds.dll
 	${OSG_PLUGINS_DIR}/osgdb_deprecated_osg.dll
