@@ -13,6 +13,7 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginEnvironment"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginRoadNetwork"/>
 	</Plugins>
 	<SetDataPath value="../../../../samples/common/data/"/>
 	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
@@ -62,7 +63,7 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/" type="FileSystem" recursive="true"/>
+			<!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/" type="FileSystem" recursive="true"/>-->
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>

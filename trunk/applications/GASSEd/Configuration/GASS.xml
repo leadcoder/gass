@@ -123,8 +123,8 @@
 			<UpdateMessagePump value="false"/>
 			<!--<Plugin value="RenderSystem_GL"/>-->
 			<Plugin value="RenderSystem_Direct3D9"/>
-			<!--<Plugin value="Plugin_CgProgramManager"/>
-			<Plugin value="Plugin_BSPSceneManager"/>-->
+			<!--<Plugin value="Plugin_CgProgramManager"/>-->
+			<!--<Plugin value="Plugin_BSPSceneManager"/>-->
 			<Plugin value="Plugin_OctreeSceneManager"/>
 			<Plugin value="Plugin_ParticleFX"/>
 			<PostFilters value="HDR"/>
