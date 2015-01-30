@@ -9,16 +9,18 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
   )
 
- 
+set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
+#set(DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
+
 include(CMakeDependentOption)
 include(Common)
-include(3rdPartySetup)
-#include(TinyXML2DepModule)
-#include(BoostDepModule)
-#include(AngelScriptDepModule)
-#include(TBBDepModule)
+#include(3rdPartySetup)
 
-set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
+#include GASSCore and GASSSim dependencies
+include(TinyXML2DepModule)
+include(BoostDepModule)
+include(AngelScriptDepModule)
+include(TBBDepModule)
 
 
 message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
