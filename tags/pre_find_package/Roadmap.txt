@@ -1,0 +1,45 @@
+FEATRURES
+
+TODO: 	Redesign RTC system, it should be possible to have background threads and to force task groups to execute in parallel
+
+TODO:	Add more test cases using boost unit test framework.
+
+TODO:	Make sequence diagrams for initialize- ,update- and shutdown-phase.
+
+TODO:	Make new network plugin using ENET
+
+70%:	Add component dependecies strategi, probably in RegisterReflection VIP. This can later be used by editor! Almost done, only have to add macro to all components 
+
+90%?	Replace iterator with const_iterator where appropriate and then make functions const where possible
+
+90%:	Add simple GUI example (MyGUI)
+
+50%:    Add more boost file system functionality, can be used to parse folder structures for dll- or xml-files
+
+20%:	Complete Havok plugin
+
+
+
+
+REFACTORING
+
+TODO:   Rename corescenemanager to basescenemanager and add new scenemanagers to other plugins
+
+TODO:	Replace ReknetNetworkMasterComponent and ReknetNetworkChildComponent with new unified component?
+
+TODO:	Move scene-tree serach functions from SceneObject to vistors? 
+
+TODO:	Use REG_PROPERTY macro in all componets
+
+TODO:	CollisionSettingsRequest should be splitted into "CollisionSystemSettingsRequest" and "PhysicsCollisionSettingsRequest"
+
+
+
+
+
+
+
+
+	
+
+

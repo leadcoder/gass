@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<Scene>
+    <Properties>
+        <StartPosition value="-557.1054077 7.137255192 606.3955688" />
+        <StartRotation value="0 0 0" />
+    </Properties>
+    <SceneManagerSettings>
+        <OgreGraphicsSceneManager>
+            <FogMode value="FOG_LINEAR" />
+            <FogStart value="200" />
+            <FogEnd value="2000" />
+            <FogDensity value="0.01" />
+            <FogColor value="1 1 1" />
+            <AmbientColor value="0.6156862745 0.6156862745 0.6156862745" />
+            <SceneManagerType value="OctreeSceneManager" />
+            <UseSkybox value="false" />
+            <SkyboxMaterial value="" />
+            <SelfShadowing value="false" />
+            <UseAggressiveFocusRegion value="true" />
+            <FarShadowDistance value="100" />
+            <ShadowDirectionalLightExtrusionDistance value="1000" />
+            <OptimalAdjustFactor value="1" />
+            <NumShadowTextures value="4" />
+            <TextureShadowSize value="1024" />
+            <TextureShadowProjection value="LISPSM" />
+            <ShadowMode value="TEXTURE_SHADOWS_ADDITIVE_INTEGRATED" />
+            <ShadowCasterMaterial value="DepthShadowmap_Caster_Float" />
+            <Name value="OgreGraphicsSceneManager" />
+        </OgreGraphicsSceneManager>
+    </SceneManagerSettings>
+</Scene>

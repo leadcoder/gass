@@ -1,0 +1,85 @@
+material DemolishedHull
+{
+	technique light
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 
+			diffuse 0.588235 0.588235 0.588235 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit diffuse_map
+			{
+				texture JIM_TANK_demolished_hull.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_TANK_hatches_demo
+{
+	technique light
+	{
+		pass
+		{
+			ambient 0.694118 0.662745 0.564706 
+			diffuse 0.694118 0.662745 0.564706 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit diffuse_map
+			{
+				texture JIM_TANK_hatches_demolished.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_TANK_turret_demo
+{
+	technique light
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 
+			diffuse 0.588235 0.588235 0.588235 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit diffuse_map
+			{
+				texture JIM_TANK_turret_demolished.jpg
+			}
+		}
+	}
+}
+
+
+material JIM_gattling_demo
+{
+	technique light
+	{
+		pass 
+		{
+			ambient 0.588235 0.588235 0.588235 
+			diffuse 0.588235 0.588235 0.588235 
+			specular 0 0 0 10
+			emissive 0 0 0 
+
+			texture_unit diffuse_map
+			{
+				texture JIM_gattling_demo.jpg
+			}
+		}
+	}
+}
+
+
+
+
+
+
+

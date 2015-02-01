@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="LibherrMainBoom"/>
+		<ID value="MAIN_BOOM"/>
+		<Components>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<AttachToParent value="false"/>
+			</LocationComponent>
+			<MeshComponent>
+				<CastShadow value="true"/>
+				<Filename value="ExMainBoom.ive"/>
+			</MeshComponent>
+			<PhysicsBodyComponent>
+				<Mass value="1.0"/>
+				<DisableGravity value="true"/>
+				<PositionIterCount value="50"/>
+				<VelocityIterCount value="50"/>
+			</PhysicsBodyComponent>
+			<PhysicsHingeComponent>
+				<Body1 value="HOUSE"/>
+				<Body2 value="MAIN_BOOM"/>
+				<Offset value="0 0 0"/>
+				<RotationAxis value="1 0 0"/>
+				<Damping value="200000.0"/>
+				<Spring value="100000000.0"/>
+				<Report value="true"/>
+				<HighStop value="0.6"/>
+				<LowStop value="-0.9"/>
+				<EnableLimits value ="true"/>
+			</PhysicsHingeComponent>
+			<HingeInteractionComponent>
+				<InputMapping value="Boom1"/>
+				<MaxAngularVelocity value = "13"/>
+
+			</HingeInteractionComponent>
+			<InputProxyComponent>
+				<InputHandlerObject value="UNDERCARRIAGE"/>
+			</InputProxyComponent>
+			<PhysicsConvexGeometryComponent>
+				<SimulationCollision value="true"/>
+			</PhysicsConvexGeometryComponent>
+			<PhysicsReportProxyComponent>
+				<TargetObject value="HOUSE"/>
+			</PhysicsReportProxyComponent>
+			<VelocityToSoundComponent>
+				<MinMaxVolume value="0 0.13"/>
+				<MinMaxPitch value="0.93 1.0"/>
+				<VelocityLimit value = "0.2"/>
+			</VelocityToSoundComponent>
+			<OpenALSoundComponent>
+				<Name value="HydraulicSound"/>
+				<SoundFile value="piston.wav"/>
+				<Loop value="1"/>
+				<MinDistance value="5"/>
+				<RolloffFactor value="1"/>
+			</OpenALSoundComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="LibherrMainBoomHydralicsPiston"/>
+				<ID value="MAIN_BOOM_HYDRALIC_PISTON"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.0 1.48 -1.34"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExMainHydralicsPiston.obj"/>
+					</MeshComponent>
+					<LookAtComponent>
+						<LookAt value="MAIN_BOOM_HYDRALIC_CYLINDER"/>
+					</LookAtComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LibherrSecondBoom"/>
+				<ID value="SECOND_BOOM"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.23 3.8 -1.4"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<CastShadow value="true"/>
+						<Filename value="ExSecondBoom.ive"/>
+					</MeshComponent>
+					<PhysicsBodyComponent>
+						<Mass value="1.0"/>
+						<DisableGravity value="true"/>
+						<PositionIterCount value="50"/>
+						<VelocityIterCount value="50"/>
+					</PhysicsBodyComponent>
+					<PhysicsHingeComponent>
+						<Body1 value="MAIN_BOOM"/>
+						<Body2 value="SECOND_BOOM"/>
+						<Offset value="0 0 0"/>
+						<RotationAxis value="1 0 0"/>
+						<Damping value="100000.0"/>
+						<Spring value="50000000.0"/>
+						<Report value="true"/>
+						<HighStop value="0.6"/>
+						<LowStop value="-0.6"/>
+						<EnableLimits value ="true"/>
+					</PhysicsHingeComponent>
+					<HingeInteractionComponent>
+						<InputMapping value="Boom2"/>
+						<MaxAngularVelocity value = "20"/>
+					</HingeInteractionComponent>
+					<InputProxyComponent>
+						<InputHandlerObject value="UNDERCARRIAGE"/>
+					</InputProxyComponent>
+					<PhysicsConvexGeometryComponent>
+						<SimulationCollision value="false"/>
+					</PhysicsConvexGeometryComponent>
+					<PhysicsReportProxyComponent>
+						<TargetObject value="HOUSE"/>
+					</PhysicsReportProxyComponent>
+					<VelocityToSoundComponent>
+						<MinMaxVolume value="0 0.13"/>
+						<MinMaxPitch value="0.93 1.0"/>
+						<VelocityLimit value = "0.2"/>
+					</VelocityToSoundComponent>
+					<OpenALSoundComponent>
+						<Name value="HydraulicSound"/>
+						<SoundFile value="piston.wav"/>
+						<Loop value="1"/>
+						<MinDistance value="5"/>
+						<RolloffFactor value="1"/>
+					</OpenALSoundComponent>
+				</Components>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="LibherrSecondBoomHydralicsPiston"/>
+						<ID value="SECOND_BOOM_HYDRALIC_PISTON"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0.0 -0.23 -0.61"/>
+								<AttachToParent value="true"/>
+							</LocationComponent>
+							<MeshComponent>
+								<CastShadow value="true"/>
+								<Filename value="ExSecondHydralicsPiston.obj"/>
+							</MeshComponent>
+							<LookAtComponent>
+								<LookAt value="SECOND_BOOM_HYDRALIC_CYLINDER"/>
+							</LookAtComponent>
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="LibherrThirdBoomHydralicsCylinder"/>
+						<ID value="THIRD_BOOM_HYDRALIC_CYLINDER"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0.0 0.42 -1.40"/>
+								<AttachToParent value="true"/>
+							</LocationComponent>
+							<MeshComponent>
+								<CastShadow value="true"/>
+								<Filename value="ExSecondHydralicsCylinder.obj"/>
+							</MeshComponent>
+							<LookAtComponent>
+								<LookAt value="THIRD_BOOM_HYDRALIC_PISTON"/>
+							</LookAtComponent>
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="LibherrThirdBoom"/>
+						<ID value="THIRD_BOOM"/>
+						<Components>
+							<LocationComponent>
+								<Position value="0.23 4.2 -4.8"/>
+								<AttachToParent value="false"/>
+							</LocationComponent>
+							<MeshComponent>
+								<CastShadow value="true"/>
+								<Filename value="ExThirdBoom.ive"/>
+							</MeshComponent>
+							<PhysicsBodyComponent>
+								<Mass value="1.0"/>
+								<DisableGravity value="true"/>
+								<PositionIterCount value="50"/>
+								<VelocityIterCount value="50"/>
+							</PhysicsBodyComponent>
+							<PhysicsHingeComponent>
+								<Body1 value="SECOND_BOOM"/>
+								<Body2 value="THIRD_BOOM"/>
+								<Offset value="0 0 0"/>
+								<RotationAxis value="1 0 0"/>
+								<Damping value="100000.0"/>
+								<Spring value="50000000.0"/>
+								<Report value="true"/>
+								<HighStop value="0.8"/>
+								<LowStop value="-1.0"/>
+								<EnableLimits value ="true"/>
+							</PhysicsHingeComponent>
+							<HingeInteractionComponent>
+								<InputMapping value="Boom3"/>
+								<MaxAngularVelocity value = "25"/>
+							</HingeInteractionComponent>
+							<InputProxyComponent>
+								<InputHandlerObject value="UNDERCARRIAGE"/>
+							</InputProxyComponent>
+							<PhysicsConvexGeometryComponent>
+								<SimulationCollision value="false"/>
+							</PhysicsConvexGeometryComponent>
+							<PhysicsReportProxyComponent>
+								<TargetObject value="HOUSE"/>
+							</PhysicsReportProxyComponent>
+							<VelocityToSoundComponent>
+								<MinMaxVolume value="0 0.13"/>
+								<MinMaxPitch value="0.93 1.0"/>
+								<VelocityLimit value = "0.2"/>
+							</VelocityToSoundComponent>
+							<OpenALSoundComponent>
+								<Name value="HydraulicSound"/>
+								<SoundFile value="piston.wav"/>
+								<Loop value="1"/>
+								<MinDistance value="5"/>
+								<RolloffFactor value="1"/>
+							</OpenALSoundComponent>
+						</Components>
+						<ComponentContainers>
+							<SceneObjectTemplate>
+								<Name value="LibherrThirdBoomHydralicsPiston"/>
+								<ID value="THIRD_BOOM_HYDRALIC_PISTON"/>
+								<Components>
+									<LocationComponent>
+										<Position value="0.015 0.6 0.12"/>
+										<AttachToParent value="true"/>
+									</LocationComponent>
+									<MeshComponent>
+										<CastShadow value="true"/>
+										<Filename value="ExSecondHydralicsPiston.obj"/>
+									</MeshComponent>
+									<LookAtComponent>
+										<LookAt value="THIRD_BOOM_HYDRALIC_CYLINDER"/>
+									</LookAtComponent>
+								</Components>
+							</SceneObjectTemplate>
+							<SceneObjectTemplate>
+								<Name value="LibherrBucketHydralicsCylinder"/>
+								<ID value="BUCKET_HYDRALIC_CYLINDER"/>
+								<Components>
+									<LocationComponent>
+										<Position value="0.0 0.05 -0.45"/>
+										<AttachToParent value="true"/>
+									</LocationComponent>
+									<MeshComponent>
+										<CastShadow value="true"/>
+										<Filename value="ExSecondHydralicsCylinder.obj"/>
+									</MeshComponent>
+									<LookAtComponent>
+										<LookAt value="BUCKET_HYDRALIC_PISTON"/>
+									</LookAtComponent>
+								</Components>
+							</SceneObjectTemplate>
+							<SceneObjectTemplate>
+								<Name value="LibherrBucketLink1"/>
+								<ID value="BUCKET_LINK1"/>
+								<Components>
+									<LocationComponent>
+										<Position value="0.0 -1.7 -1.3"/>
+										<AttachToParent value="true"/>
+									</LocationComponent>
+									<MeshComponent>
+										<CastShadow value="true"/>
+										<Filename value="ExBucketLink1.obj"/>
+									</MeshComponent>
+									<LookAtComponent>
+										<LookAt value="BUCKET_LINK2"/>
+									</LookAtComponent>
+								</Components>
+								<ComponentContainers>
+									<SceneObjectTemplate>
+										<Name value="LibherrBucketHydralicsPiston"/>
+										<ID value="BUCKET_HYDRALIC_PISTON"/>
+										<Components>
+											<LocationComponent>
+												<Position value="0.0 0.35 -0.5"/>
+												<AttachToParent value="true"/>
+											</LocationComponent>
+											<MeshComponent>
+												<CastShadow value="true"/>
+												<Filename value="ExSecondHydralicsPiston.obj"/>
+											</MeshComponent>
+											<LookAtComponent>
+												<LookAt value="BUCKET_HYDRALIC_CYLINDER"/>
+											</LookAtComponent>
+										</Components>
+									</SceneObjectTemplate>
+								</ComponentContainers>
+							</SceneObjectTemplate>
+							<SceneObjectTemplate>
+								<Name value="LibherrBucket"/>
+								<ID value="BUCKET"/>
+								<Components>
+									<LocationComponent>
+										<Position value="0.23 2.3 -6.3"/>
+										<AttachToParent value="false"/>
+									</LocationComponent>
+									<MeshComponent>
+										<CastShadow value="true"/>
+										<Filename value="ExBucket.ive"/>
+									</MeshComponent>
+									<PhysicsBodyComponent>
+										<Mass value="1.0"/>
+										<DisableGravity value="true"/>
+										<PositionIterCount value="50"/>
+										<VelocityIterCount value="50"/>					
+									</PhysicsBodyComponent>
+									<PhysicsHingeComponent>
+										<Body1 value="THIRD_BOOM"/>
+										<Body2 value="BUCKET"/>
+										<Offset value="0 0 0"/>
+										<RotationAxis value="1 0 0"/>
+										<Damping value="100000.0"/>
+										<Spring value="50000000.0"/>
+										<Report value="true"/>
+										<HighStop value="2.6"/>
+										<LowStop value="-0.5"/>
+										<EnableLimits value ="true"/>
+									</PhysicsHingeComponent>
+									<HingeInteractionComponent>
+										<InputMapping value="Bucket"/>
+										<MaxAngularVelocity value = "30"/>
+									</HingeInteractionComponent>
+									<InputProxyComponent>
+										<InputHandlerObject value="UNDERCARRIAGE"/>
+									</InputProxyComponent>
+									<PhysicsConvexGeometryComponent>
+										<SimulationCollision value="true"/>
+									</PhysicsConvexGeometryComponent>
+									<PhysicsReportProxyComponent>
+										<TargetObject value="HOUSE"/>
+									</PhysicsReportProxyComponent>
+									<VelocityToSoundComponent>
+										<MinMaxVolume value="0 0.13"/>
+										<MinMaxPitch value="0.93 1.0"/>
+										<VelocityLimit value = "0.2"/>
+									</VelocityToSoundComponent>
+									<OpenALSoundComponent>
+										<Name value="HydraulicSound"/>
+										<SoundFile value="piston.wav"/>
+										<Loop value="1"/>
+										<MinDistance value="5"/>
+										<RolloffFactor value="1"/>
+									</OpenALSoundComponent>
+								</Components>
+								<ComponentContainers>
+									<SceneObjectTemplate>
+										<Name value="LibherrBucketLink2"/>
+										<ID value="BUCKET_LINK2"/>
+										<Components>
+											<LocationComponent>
+												<Position value="0.0 -0.4 0.0"/>
+												<AttachToParent value="true"/>
+											</LocationComponent>
+											<MeshComponent>
+												<CastShadow value="true"/>
+												<Filename value="ExBucketLink2.obj"/>
+											</MeshComponent>
+											<LookAtComponent>
+												<LookAt value="BUCKET_HYDRALIC_PISTON"/>
+											</LookAtComponent>
+										</Components>
+
+									</SceneObjectTemplate>
+								</ComponentContainers>
+							</SceneObjectTemplate>
+						</ComponentContainers>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+</Templates>

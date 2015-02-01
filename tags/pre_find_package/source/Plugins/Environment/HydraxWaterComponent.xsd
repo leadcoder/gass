@@ -1,0 +1,300 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified" targetNamespace="GASS" xmlns="GASS" xmlns:GASS="GASS">
+    <xs:element name="HydraxWaterComponent">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ConfigurationFile">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ActiveModule">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ActiveNoise">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Position">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				 <xs:element name="Rotation">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				 <xs:element name="GlobalTransparency">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				 <xs:element name="Weather">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				 <xs:element name="FullReflectionDistance">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="WaterColor">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				 <xs:element name="FullReflectionDistance">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				 <xs:element name="SunPosition">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				 <xs:element name="FullReflectionDistance">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				 <xs:element name="SunStrength">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="SunColor">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="FoamMaxDistance">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="FoamScale">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="FoamStart">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="FoamTransparency">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="DepthLimit">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="SmoothPower">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="CausticsScale">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="CausticsPower">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 
+				<xs:element name="CausticsEnd">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element> 				
+				<xs:element name="GodRaysExposure">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:vec3" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="GodRaysIntensity">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="UnderwaterCameraSwitchDelta">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="PerlinScale">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="PerlinSpeed">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="FFTScale">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="FFTSpeed">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Strength">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Elevation">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="SaveConfiguration">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="PlanesError">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="ResourceLocation">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:float" use="required" />
+                    </xs:complexType>
+                </xs:element>
+	            <xs:element name="Name">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Documentation goes here!</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
