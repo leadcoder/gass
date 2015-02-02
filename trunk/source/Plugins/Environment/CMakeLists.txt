@@ -7,8 +7,8 @@ include(HydraxDepModule)
 
 #Set include directories
 set (DEP_INCLUDE_DIRS ${OGRE_INC_DIR}
-		${SKYX_INC_DIR}
-		${HYDRAX_INC_DIR}
+		${SKYX_INCLUDE_DIRS}
+		${HYDRAX_INCLUDE_DIRS}
 		)
 		
 include_directories(${GASS_COMMON_INCLUDE_DIRS} ${DEP_INCLUDE_DIRS})
@@ -21,16 +21,13 @@ add_definitions( -DGASS_PLUGIN_EXPORTS )
 
 #Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS} 
-	${OGRE_LIB_DIR}
-	${SKYX_LIB_DIR}
-	${HYDRAX_LIB_DIR}
-	)
+	${OGRE_LIB_DIR})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 #Add project dependency libs
 set(PROJ_LINK_LIBRARIES ${OGRE_LINK_LIBRARIES} 
-	${SKYX_LINK_LIBRARIES}
-	${HYDRAX_LINK_LIBRARIES}
+	${SKYX_LIBRARIES}
+	${HYDRAX_LIBRARIES}
 	)
 
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})

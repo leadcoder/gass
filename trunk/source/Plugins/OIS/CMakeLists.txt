@@ -2,7 +2,10 @@
 set(LIB_NAME "GASSPluginOIS")
 
 #Set OIS include directories
-set (OIS_INCLUDE_DIRS "${GASS_DEPENDENCIES_DIR}/ois/includes")
+set (OIS_LIBRARY_SEARCH_DIRS "${GASS_DEPENDENCIES_DIR}/ois/lib")
+set (OIS_INCLUDE_SEARCH_DIRS "${GASS_DEPENDENCIES_DIR}/ois/includes")
+
+find_package(OIS)
 		
 include_directories(${GASS_COMMON_INCLUDE_DIRS} ${OIS_INCLUDE_DIRS})
 
@@ -16,11 +19,7 @@ add_definitions( -DGASS_PLUGIN_EXPORTS )
 link_directories(${GASS_COMMON_LIB_DIRS})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
-#Add project dependency libs
-set(PROJ_LINK_LIBRARIES optimized OIS debug OIS_d)
-
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
-target_link_libraries(${LIB_NAME} ${PROJ_LINK_LIBRARIES})
+target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES} ${OIS_LIBRARIES})
 
 gass_install_plugin_target()
 
