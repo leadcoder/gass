@@ -6,6 +6,10 @@
 #  ODE_LIBRARIES - the ODE library
 #  ODE_DEFINITIONS - additional definitions necessary to use ODE (usually the precision flag)
 
+if (NOT "$ENV{ODE_HOME}" STREQUAL "")
+	set (ODE_HOME $ENV{ODE_HOME})
+endif()
+
 if (ODE_INCLUDE_DIRS AND ODE_LIBRARIES)
     # ODE has already been found and the necessary variables are cached
     set(ODE_FOUND TRUE)
@@ -21,18 +25,20 @@ else (ODE_INCLUDE_DIRS AND ODE_LIBRARIES)
     # Find include dir
     find_path(ODE_INCLUDE_DIRS ode/ode.h
         HINTS ${PC_ODE_INCLUDEDIR}
-        PATHS $ENV{ODE_HOME}/include 
+        PATHS ${ODE_HOME}/include 
     )
     find_library(ODE_LIBRARIES_RELEASE ode
         NAMES ode ${PC_ODE_LIBRARIES}
         HINTS ${PC_ODE_LIBDIR}
-        PATHS $ENV{ODE_HOME}/lib/release
+        PATHS ${ODE_HOME}/lib/release 
+			  ${ODE_HOME}/lib
     )
 	
 	find_library(ODE_LIBRARIES_DEBUG ode_d
         NAMES ode ${PC_ODE_LIBRARIES}
         HINTS ${PC_ODE_LIBDIR}
-        PATHS $ENV{ODE_HOME}/lib/debug
+        PATHS ${ODE_HOME}/lib/debug
+			  ${ODE_HOME}/lib
     )
 	
 	set(ODE_LIBRARIES optimized ${ODE_LIBRARIES_RELEASE}

@@ -1,8 +1,7 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginODE")
 
-#set (ODE_HOME "${GASS_DEPENDENCIES_DIR}/ode")
-
+set (ODE_HOME "${GASS_DEPENDENCIES_DIR}/ode")
 find_package(ODE)
 
 include_directories(${GASS_COMMON_INCLUDE_DIRS} ${ODE_INCLUDE_DIRS})
