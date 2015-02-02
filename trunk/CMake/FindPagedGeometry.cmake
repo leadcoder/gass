@@ -1,0 +1,13 @@
+set(PG_INCLUDE_DIRS ${PG_DIR}/include CACHE PATH "Paged Geometry include directory" FORCE)
+set(PG_LIBRARY_DIRS ${PG_DIR}/lib)
+
+find_library(PG_LIBRARY_RELEASE PagedGeometry HINTS ${PG_LIBRARY_DIRS} ${PG_LIBRARY_DIRS}/release
+        PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
+
+find_library(PG_LIBRARY_DEBUG PagedGeometry_d HINTS ${PG_LIBRARY_DIRS} ${PG_LIBRARY_DIRS}/debug
+        PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
+		
+mark_as_advanced(PG_LIBRARY_RELEASE PG_LIBRARY_DEBUG)
+
+set(PG_LIBRARIES optimized ${PG_LIBRARY_RELEASE}
+	 debug ${PG_LIBRARY_DEBUG})
