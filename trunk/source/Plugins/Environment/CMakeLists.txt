@@ -1,17 +1,18 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginEnvironment")
 
-include(OgreDepModule)
-include(SkyXDepModule)
-include(HydraxDepModule)
+#FindOgre.cmake use environment var OGRE_HOME
+find_package(Ogre)
 
-#Set include directories
-set (DEP_INCLUDE_DIRS ${OGRE_INCLUDE_DIR}
+set(SKYX_DIR  "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4" CACHE PATH "SkyX folder")
+find_package(SkyX)
+
+set(HYDRAX_DIR "${GASS_DEPENDENCIES_DIR}/Hydrax-v0.5.1" CACHE PATH "Hydrax folder")
+find_package(Hydrax)
+
+include_directories(${GASS_COMMON_INCLUDE_DIRS} ${OGRE_INCLUDE_DIR}
 		${SKYX_INCLUDE_DIRS}
-		${HYDRAX_INCLUDE_DIRS}
-		)
-		
-include_directories(${GASS_COMMON_INCLUDE_DIRS} ${DEP_INCLUDE_DIRS})
+		${HYDRAX_INCLUDE_DIRS})
 
 #add all source files from current directory (recursively)
 add_source_from_current_dir()
@@ -23,14 +24,12 @@ add_definitions( -DGASS_PLUGIN_EXPORTS )
 link_directories(${GASS_COMMON_LIB_DIRS})
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
-#Add project dependency libs
-set(PROJ_LINK_LIBRARIES ${OGRE_LIBRARIES} 
-	${SKYX_LIBRARIES}
-	${HYDRAX_LIBRARIES}
-	)
+target_link_libraries(${LIB_NAME} GASSSim 
+						GASSCore 
+						${GASS_COMMON_LINK_LIBRARIES}
+						${OGRE_LIBRARIES}
+						${SKYX_LIBRARIES}
+						${HYDRAX_LIBRARIES})
 
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
-target_link_libraries(${LIB_NAME} ${PROJ_LINK_LIBRARIES})
-
-gass_install_plugin_target()		
+gass_install_plugin_target()
 

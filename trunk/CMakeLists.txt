@@ -9,24 +9,36 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
   )
 
+#folder holding precompiled dependencies
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
-#set(DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
 
 include(CMakeDependentOption)
 include(Common)
-#include(3rdPartySetup)
 
-#include GASSCore and GASSSim dependencies
-include(TinyXML2DepModule)
-include(BoostDepModule)
-include(AngelScriptDepModule)
-include(TBBDepModule)
+#tinyxml2, specific version used in gass, ie avoid system wide search 
+set(TINYXML2_DIR "${GASS_DEPENDENCIES_DIR}/tinyxml2" CACHE PATH "tinyxml2 folder")
+find_package(TinyXML2 REQUIRED)
 
+#boost
+set (Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.57.0 REQUIRED filesystem system)
+
+#angle script, assume that GASS_DEPENDENCIES_DIR hold this lib
+set(ANGELSCRIPT_DIR  "${GASS_DEPENDENCIES_DIR}/angelscript" CACHE PATH "Angel Script folder")
+find_package(AngelScript REQUIRED)
+
+#TBB
+find_package(TBB REQUIRED)
+#post-process results 
+set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
+	 optimized ${TBB_MALLOC_LIBRARY}
+	 debug ${TBB_LIBRARY_DEBUG}
+	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
 
 message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #static libs
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #dynnamic libs
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #dynamic libs
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #dlls and exe
 
 set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")

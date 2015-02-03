@@ -1,7 +1,8 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginPhysX3")
 
-include(PhysXDepModule)
+set(PHYSX3_INSTALL_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
+find_package(PhysX3 REQUIRED) 
 
 include_directories(${GASS_COMMON_INCLUDE_DIRS} ${PHYSX3_INCLUDE_DIR})
 
@@ -13,7 +14,7 @@ add_definitions( -DGASS_PLUGIN_EXPORTS )
 
 #Add some folders where to search for dependency libraries
 link_directories(${GASS_COMMON_LIB_DIRS})
-add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
+add_library(${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_COMMON_LINK_LIBRARIES})
 target_link_libraries(${LIB_NAME} ${PHYSX3_LIBRARIES})

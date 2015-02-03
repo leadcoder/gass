@@ -15,6 +15,6 @@
 #	debug OIS_d
 #	optimized OIS)
 
-set(OIS_BIN_FILES_DEBUG ${OIS_BIN_DIR}/OIS_d.dll)
-set(OIS_BIN_FILES_RELEASE ${OIS_BIN_DIR}/OIS.dll)
+#set(OIS_BIN_FILES_DEBUG ${OIS_BIN_DIR}/OIS_d.dll)
+#set(OIS_BIN_FILES_RELEASE ${OIS_BIN_DIR}/OIS.dll)
 

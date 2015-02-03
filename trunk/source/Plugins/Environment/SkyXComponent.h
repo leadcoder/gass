@@ -31,8 +31,6 @@
 #include <OgreRenderTargetListener.h>
 #include "SkyX.h"
 
-
-
 namespace GASS
 {
 	class SkyXComponent : public Reflection<SkyXComponent,BaseSceneComponent>// , public Ogre::FrameListener
