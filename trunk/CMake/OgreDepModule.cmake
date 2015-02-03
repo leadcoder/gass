@@ -1,5 +1,5 @@
 
-find_package(Ogre)
+#find_package(Ogre)
 
 # if(EXISTS "${DEPENDENCIES_DIR}/ogre-v1-9")
 	# set(OGRE_DIR  "${DEPENDENCIES_DIR}/ogre-v1-9" CACHE PATH "Ogre 3D folder")

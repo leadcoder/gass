@@ -77,14 +77,14 @@ ENDIF()
 # Look for the libraries.
 FOREACH( PHYSX3_LIB ${PHYSX3_LIBS})
   STRING(TOUPPER ${PHYSX3_LIB} _upper_lib_name)
-  SET( LIB_NAME PHYSX3_${_upper_lib_name}_LIBRARY )
+  SET( PX_LIB_NAME PHYSX3_${_upper_lib_name}_LIBRARY )
   SET( LIB_DEBUG_NAME PHYSX3_${_upper_lib_name}_DEBUG_LIBRARY )
   # unset libraries so that they are always looked for. This is because we want it to automatically
   # update if the PHYSX3_LIB_TYPE is changed.
-  UNSET( ${LIB_NAME} CACHE)
+  UNSET( ${PX_LIB_NAME} CACHE)
 
   # FIND RELEASE LIBS
-  FIND_LIBRARY( ${LIB_NAME}
+  FIND_LIBRARY( ${PX_LIB_NAME}
                 NAMES ${PHYSX3_LIB}${PHYSX3_LIB_TYPE_SUFFIX}_${ARCH} ${PHYSX3_LIB}${PHYSX3_LIB_TYPE_SUFFIX}
                 PATHS ${PHYSX3_INSTALL_DIR}/Lib/win${LIB}
                       ${PHYSX3_INSTALL_DIR}/Lib/vc10win${LIB}
@@ -94,14 +94,14 @@ FOREACH( PHYSX3_LIB ${PHYSX3_LIBS})
                       ../../External/lib${LIB}
                       ${module_file_path}/../../External/lib${LIB}
                       ${module_file_path}/../../../External/lib${LIB} )
-  MARK_AS_ADVANCED(${LIB_NAME})
+  MARK_AS_ADVANCED(${PX_LIB_NAME})
                       
-  IF( ${LIB_NAME} )
+  IF( ${PX_LIB_NAME} )
     IF ( UNIX )
       # To avoid undefined symbols at runtime we need to include the entire static library in our shared library
       SET ( PHYSX3_${_upper_lib_name}_LIBRARY -Wl,-whole-archive ${PHYSX3_${_upper_lib_name}_LIBRARY} -Wl,-no-whole-archive )
     ENDIF()
-    SET( PHYSX3_LIBS_PATHS ${PHYSX3_LIBS_PATHS} optimized ${${LIB_NAME}} )
+    SET( PHYSX3_LIBS_PATHS ${PHYSX3_LIBS_PATHS} optimized ${${PX_LIB_NAME}} )
   ELSE()
     SET( PHYSX3_LIBS_FOUND 0 )
     SET( PHYSX3_LIBS_NOTFOUND ${PHYSX3_LIBS_NOTFOUND} ${PHYSX3_LIB} ) 

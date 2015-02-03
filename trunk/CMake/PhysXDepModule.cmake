@@ -4,8 +4,8 @@
 #	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
 #endif()
 
-set(PHYSX3_INSTALL_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
-find_package(PhysX3 REQUIRED) 
+#set(PHYSX3_INSTALL_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
+#find_package(PhysX3 REQUIRED) 
 
 # set(PHYSX_BIN_DIR ${PHYSX_DIR}/bin)
 # set(PHYSX_INC_DIR ${PHYSX_DIR}/include/PHYSX)

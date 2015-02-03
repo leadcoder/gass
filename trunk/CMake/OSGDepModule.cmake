@@ -1,4 +1,4 @@
-FIND_PACKAGE(OpenSceneGraph 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
+#FIND_PACKAGE(OpenSceneGraph 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
 
 # if(EXISTS "${DEPENDENCIES_DIR}/OpenSceneGraph-v3.2.1")
 	# set(OSG_DIR  "${DEPENDENCIES_DIR}/OpenSceneGraph-v3.2.1" CACHE PATH "OSG folder")

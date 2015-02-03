@@ -15,7 +15,7 @@
 	# debug OpenAL32 
 	# optimized OpenAL32)
 	
-find_package(OpenAL)
+#find_package(OpenAL)
 
 set(OPENAL_BIN_FILES_DEBUG ${OPENAL_BIN_DIR}/OpenAL32.dll)
 set(OPENAL_BIN_FILES_RELEASE ${OPENAL_BIN_DIR}/OpenAL32.dll)
