@@ -1,12 +1,12 @@
 #set lib name here!
 set(LIB_NAME "SimDemo")
 #include some files to get shared libraries
-include(OgreDepModule)
-include(SkyXDepModule)
-include(OpenALDepModule)
-include(OISDepModule)
-include(TBBDepModule)
-include(MyGUIDepModule)
+#include(OgreDepModule)
+#include(SkyXDepModule)
+#include(OpenALDepModule)
+#include(OISDepModule)
+#include(TBBDepModule)
+#include(MyGUIDepModule)
 
 #Set include directories
 include_directories(${GASS_COMMON_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
@@ -18,6 +18,7 @@ set(H_FILES "source/Client.h" "source/Server.h" "source/SimApplication.h")
 link_directories(${GASS_COMMON_LIB_DIRS})
 
 add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
+
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 
 #Add project dependency libs
@@ -53,33 +54,33 @@ set(DEP_DLL_FILES_DEBUG
 	${OIS_BIN_FILES_DEBUG}
 	${MYGUI_BIN_FILES_DEBUG})
 	
-set(GASS_RELEASE_DLL_FILES 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginMyGUI.dll)
+# set(GASS_RELEASE_DLL_FILES 
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSCore.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSSim.dll 
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOgre.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOIS.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginODE.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginPagedGeometry.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginEnvironment.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginOpenAL.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginGame.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginBase.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginRakNet.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/release/GASSPluginMyGUI.dll)
 
-set(GASS_DEBUG_DLL_FILES 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll
-	${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginMyGUI_d.dll)
+# set(GASS_DEBUG_DLL_FILES 
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSCore_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSSim_d.dll 
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOgre_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOIS_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginODE_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginPagedGeometry_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginEnvironment_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginOpenAL_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginGame_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginBase_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginRakNet_d.dll
+	# ${GASS_RUNTIME_OUTPUT_DIRECTORY}/debug/GASSPluginMyGUI_d.dll)
 
 
 #set(ALL_DLL_FILES 
@@ -88,27 +89,26 @@ set(GASS_DEBUG_DLL_FILES
 #	)
 
 #add dll files to out dir to enable debugging from IDE without install step
-foreach(DLL_FILE ${DEP_DLL_FILES_DEBUG})
-	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
-endforeach()
+
+# foreach(DLL_FILE ${DEP_DLL_FILES_DEBUG})
+	# ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
+			# POST_BUILD
+			# COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
+# endforeach()
 
 
-foreach(DLL_FILE ${DEP_DLL_FILES_RELEASE})
-	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
-endforeach()
+# foreach(DLL_FILE ${DEP_DLL_FILES_RELEASE})
+	# ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
+			# POST_BUILD
+			# COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLL_FILE} $<TARGET_FILE_DIR:${LIB_NAME}>)
+# endforeach()
 
-   #COMMAND cmd /C ${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy_dep_dlls.bat $<CONFIGURATION> ${GASS_DEPENDENCIES_DIR}/lib/ $<TARGET_FILE_DIR:${LIB_NAME}>)
 			
-	ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
-			POST_BUILD
-			#COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configuration
-			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/bin/configuration $<TARGET_FILE_DIR:${LIB_NAME}>
-			COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data
-			COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../common/data ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data)
+	# ADD_CUSTOM_COMMAND(TARGET ${LIB_NAME}
+			# POST_BUILD
+			# COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/bin/configuration $<TARGET_FILE_DIR:${LIB_NAME}>
+			# COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data
+			# COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../common/data ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data)
 
 #install exe			
 
