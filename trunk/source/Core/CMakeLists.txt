@@ -18,9 +18,9 @@ add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
 #Add project dependency libs
 if(WIN32)
-   set(GASS_CORE_LINK_LIBRARIES Winmm ${GASS_CORE_LINK_LIBRARIES})
+   set(GASS_CORE_LIBRARIES Winmm ${GASS_CORE_LIBRARIES})
 endif()
-target_link_libraries(${LIB_NAME} ${GASS_CORE_LINK_LIBRARIES})
+target_link_libraries(${LIB_NAME} ${GASS_CORE_LIBRARIES})
 
 #Install section
 gass_install_target()

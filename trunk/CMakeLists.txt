@@ -15,44 +15,7 @@ set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependen
 include(CMakeDependentOption)
 include(Common)
 
-#tinyxml2, specific version used in gass, ie avoid system wide search 
-set(TINYXML2_DIR "${GASS_DEPENDENCIES_DIR}/tinyxml2" CACHE PATH "tinyxml2 folder")
-find_package(TinyXML2 REQUIRED)
-
-#boost
-set (Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.57.0 REQUIRED filesystem system)
-
-#angle script, assume that GASS_DEPENDENCIES_DIR hold this lib
-set(ANGELSCRIPT_DIR  "${GASS_DEPENDENCIES_DIR}/angelscript" CACHE PATH "Angel Script folder")
-find_package(AngelScript REQUIRED)
-
-#TBB
-find_package(TBB REQUIRED)
-#post-process results 
-set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
-	 optimized ${TBB_MALLOC_LIBRARY}
-	 debug ${TBB_LIBRARY_DEBUG}
-	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
-
-
-set(GASS_CORE_INCLUDE_DIRS ${Boost_INCLUDE_DIR} 
-	${TINYXML2_INCLUDE_DIRS}
-	${TBB_INCLUDE_DIRS}
-	${PROJECT_SOURCE_DIR}/source)
-
-#TODO: remove this and move libraries to dedicated foldres	
-set(GASS_CORE_LIB_DIRS ${GASS_DEPENDENCIES_DIR}/lib)
-set(GASS_CORE_LINK_LIBRARIES ${Boost_LIBRARIES} ${TINYXML2_LIBRARIES} ${TBB_LIBRARIES})
-
-set(GASS_COMMON_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
-set(GASS_COMMON_LIB_DIRS ${GASS_CORE_LIB_DIRS})
-set(GASS_COMMON_LINK_LIBRARIES ${GASS_CORE_LINK_LIBRARIES} ${ANGELSCRIPT_LIBRARIES})
-	 
-	 
 #message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
-
-
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #static libs
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #dynamic libs
@@ -90,7 +53,27 @@ CMAKE_DEPENDENT_OPTION(GASSPLUGINS_BUILD_MYGUI "Build Plugin." OFF "GASS_BUILD_S
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_SAMPLES "Build Samples" OFF "GASS_BUILD_SIM" OFF)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 
-add_subdirectory( source )
+#setup GASSCore third-party dependencies, if this is declared in GASSCore's CMakeLists 
+#we have need to redefine this stuff for every GASSCore dependent library
+find_package(GASSCoreThirdParty)
+set(GASS_CORE_INCLUDE_DIRS ${Boost_INCLUDE_DIR} 
+	${TINYXML2_INCLUDE_DIRS}
+	${TBB_INCLUDE_DIRS}
+	${PROJECT_SOURCE_DIR}/source)
+
+set(GASS_CORE_LIB_DIRS "")
+set(GASS_CORE_LIBRARIES ${Boost_LIBRARIES} ${TINYXML2_LIBRARIES} ${TBB_LIBRARIES})
+
+if(GASS_BUILD_SIM)
+	#setup GASSSim third-party dependencies, if this is declared in GASSSim's CMakeLists 
+	#we have need to redefine this stuff for every GASSSim dependent application (ie. samples)
+	find_package(GASSSimThirdParty)
+	set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
+	set(GASS_SIM_LIB_DIRS ${GASS_CORE_LIB_DIRS})
+	set(GASS_SIM_LIBRARIES ${GASS_CORE_LIBRARIES} ${ANGELSCRIPT_LIBRARIES})
+endif()
+	
+add_subdirectory(source)
 if(GASS_BUILD_SAMPLES)
 	add_subdirectory( Samples )
 endif()

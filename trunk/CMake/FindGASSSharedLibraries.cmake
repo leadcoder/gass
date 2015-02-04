@@ -34,6 +34,11 @@ if(WIN32)
 	set(OIS_BIN_FILES_DEBUG ${OIS_BIN_DIR}/OIS_d.dll)
 	set(OIS_BIN_FILES_RELEASE ${OIS_BIN_DIR}/OIS.dll)
 	
+	#SKYX
+	set(SKYX_BIN_DIR  "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin" CACHE PATH "SkyX bin folder")
+	set(SKYX_BIN_FILES_RELEASE ${SKYX_BIN_DIR}/Release/SkyX.dll)
+	set(SKYX_BIN_FILES_DEBUG ${SKYX_BIN_DIR}/Debug/SkyX_d.dll)
+	
 	#Ogre
 	find_package(Ogre)
 	set(OGRE_BIN_FILES_RELEASE 
@@ -48,7 +53,7 @@ if(WIN32)
 		${OGRE_RenderSystem_GL_REL}
 		${OGRE_PLUGIN_DIR_REL}/cg.dll)
 		
-		set(OGRE_BIN_FILES_RELEASE 
+		set(OGRE_BIN_FILES_DEBUG 
 		${OGRE_BINARY_DBG}
 		${OGRE_Overlay_BINARY_DBG}
 		${OGRE_Paging_BINARY_DBG}
