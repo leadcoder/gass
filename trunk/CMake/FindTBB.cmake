@@ -197,6 +197,10 @@ if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
          ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
          ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/lib
         )
+	set (_TBB_BINARY_DIR 
+         ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM}
+         ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/bin
+        )
 endif (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
 # Jiri: This block isn't mutually exclusive with the previous one
 #       (hence no else), instead I test if the user really specified
@@ -226,6 +230,15 @@ find_library(TBB_LIBRARY ${_TBB_LIB_NAME} HINTS ${_TBB_LIBRARY_DIR}
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
 find_library(TBB_MALLOC_LIBRARY ${_TBB_LIB_MALLOC_NAME} HINTS ${_TBB_LIBRARY_DIR}
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
+		
+if (WIN32)
+	  find_file(TBB_BINARY_REL NAMES "tbb.dll" HINTS ${_TBB_BINARY_DIR})
+	  find_file(TBB_MALLOC_BINARY_REL NAMES "tbbmalloc.dll" HINTS ${_TBB_BINARY_DIR})
+	  find_file(TBB_BINARY_DBG NAMES "tbb_debug.dll" HINTS ${_TBB_BINARY_DIR})
+	  find_file(TBB_MALLOC_BINARY_DBG NAMES "tbbmalloc_debug.dll" HINTS ${_TBB_BINARY_DIR})
+	  set(TBB_BINARIES_REL ${TBB_BINARY_REL} ${TBB_MALLOC_BINARY_REL})
+	  set(TBB_BINARIES_DBG ${TBB_BINARY_DBG} ${TBB_MALLOC_BINARY_DBG})
+endif()
 
 #Extract path from TBB_LIBRARY name
 get_filename_component(TBB_LIBRARY_DIR ${TBB_LIBRARY} PATH)

@@ -1,9 +1,8 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginOIS")
 
-#Set OIS include directories
-set (OIS_LIBRARY_SEARCH_DIRS "${GASS_DEPENDENCIES_DIR}/ois/lib")
-set (OIS_INCLUDE_SEARCH_DIRS "${GASS_DEPENDENCIES_DIR}/ois/includes")
+#Set OIS directory
+set (OIS_DIR "${GASS_DEPENDENCIES_DIR}/ois")
 
 find_package(OIS)
 		

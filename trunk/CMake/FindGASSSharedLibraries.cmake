@@ -1,23 +1,7 @@
 #Used to gather all dlls needed for samples to run
 if(WIN32)
 	#TBB
-	set(TBB_DIR "${GASS_DEPENDENCIES_DIR}/tbb")
-	if(${CMAKE_CL_64})
-	if(${MSVC10})
-		set(TBB_BIN_DIR "${TBB_DIR}/bin/intel64/vc10" CACHE PATH "TBB bin folder")
-	elseif(${MSVC11})
-		set(TBB_BIN_DIR "${TBB_DIR}/bin/intel64/vc11" CACHE PATH "TBB bin folder")
-	endif()
-	else()
-	if(${MSVC10})
-		set(TBB_BIN_DIR "${TBB_DIR}/bin/ia32/vc10" CACHE PATH "TBB bin folder")
-	elseif(${MSVC11})
-		set(TBB_BIN_DIR "${TBB_DIR}/bin/ia32/vc11" CACHE PATH "TBB bin folder")
-	endif()
-	endif()
-	
-	set(TBB_BIN_FILES_DEBUG ${TBB_BIN_DIR}/tbb_debug.dll)
-	set(TBB_BIN_FILES_RELEASE ${TBB_BIN_DIR}/tbb.dll)
+	find_package(TBB)
 	
 	#MY GUI
 	set(MYGUI_BIN_DIR "${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/" CACHE PATH "MyGUI bin folder")
@@ -26,18 +10,13 @@ if(WIN32)
 	
 	#OpenAL
 	set(OPENAL_BIN_DIR  "${GASS_DEPENDENCIES_DIR}/OpenAL1.1/bin" CACHE PATH "OpenAL bin folder")
-	set(OPENAL_BIN_FILES_DEBUG ${OPENAL_BIN_DIR}/OpenAL32.dll)
-	set(OPENAL_BIN_FILES_RELEASE ${OPENAL_BIN_DIR}/OpenAL32.dll)
+	find_package(OpenALExt)
 	
 	#OIS
-	set(OIS_BIN_DIR  "${GASS_DEPENDENCIES_DIR}/OIS/bin" CACHE PATH "OIS bin folder")
-	set(OIS_BIN_FILES_DEBUG ${OIS_BIN_DIR}/OIS_d.dll)
-	set(OIS_BIN_FILES_RELEASE ${OIS_BIN_DIR}/OIS.dll)
+	find_package(OIS)
 	
 	#SKYX
-	set(SKYX_BIN_DIR  "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin" CACHE PATH "SkyX bin folder")
-	set(SKYX_BIN_FILES_RELEASE ${SKYX_BIN_DIR}/Release/SkyX.dll)
-	set(SKYX_BIN_FILES_DEBUG ${SKYX_BIN_DIR}/Debug/SkyX_d.dll)
+	find_package(SkyX)
 	
 	#Ogre
 	find_package(Ogre)
@@ -65,25 +44,22 @@ if(WIN32)
 		${OGRE_RenderSystem_GL_DBG}
 		${OGRE_PLUGIN_DIR_DBG}/cg.dll)
 		
-	
 	set(ALL_BIN_FILES_RELEASE 
 		${OPENAL_BIN_FILES_RELEASE}
-		${SKYX_BIN_FILES_RELEASE}
+		${SKYX_BINARY_REL}
 		${OGRE_BIN_FILES_RELEASE}
-		${TBB_BIN_FILES_RELEASE}
-		${OIS_BIN_FILES_RELEASE}
+		${TBB_BINARIES_REL}
+		${OIS_BINARY_REL}
 		#${MYGUI_BIN_FILES_RELEASE}
 		)
-	
 	set(ALL_BIN_FILES_DEBUG	
 		${OPENAL_BIN_FILES_DEBUG}
-		${SKYX_BIN_FILES_DEBUG}
+		${SKYX_BINARY_DBG}
 		${OGRE_BIN_FILES_DEBUG}
-		${TBB_BIN_FILES_DEBUG}
-		${OIS_BIN_FILES_DEBUG}
+		${TBB_BINARY_DBG}
+		${OIS_BINARY_DBG}
 		#${MYGUI_BIN_FILES_DEBUG}
 		)
-			
 endif()
 
 

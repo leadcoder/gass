@@ -106,6 +106,8 @@ FOREACH( PHYSX3_LIB ${PHYSX3_LIBS})
     SET( PHYSX3_LIBS_FOUND 0 )
     SET( PHYSX3_LIBS_NOTFOUND ${PHYSX3_LIBS_NOTFOUND} ${PHYSX3_LIB} ) 
   ENDIF()
+  
+  
 
   #FIND DEBUG LIBS
   FIND_LIBRARY( ${LIB_DEBUG_NAME}
@@ -130,6 +132,21 @@ FOREACH( PHYSX3_LIB ${PHYSX3_LIBS})
     SET( PHYSX3_DEBUG_LIBS_FOUND 0 )
     SET( PHYSX3_DEBUG_LIBS_NOTFOUND ${PHYSX3_DEBUG_LIBS_NOTFOUND} ${PHYSX3_LIB} ) 
   ENDIF()
+  
+  #ADDED BY JH: find dlls
+  IF(WIN32)
+  FIND_FILE( ${PX_LIB_NAME}_BIN
+                NAMES ${PHYSX3_LIB}${PHYSX3_LIB_TYPE_SUFFIX}_${ARCH}.dll ${PHYSX3_LIB}${PHYSX3_LIB_TYPE_SUFFIX}.dll
+                PATHS ${PHYSX3_INSTALL_DIR}/bin/win${LIB}
+                      ${PHYSX3_INSTALL_DIR}/bin/vc10win${LIB}
+                      ${PHYSX3_INSTALL_DIR}/bin${LIB}
+                      ../External/bin${LIB}
+                      ../../External/bin${LIB}
+                      ${module_file_path}/../../External/bin${LIB}
+                      ${module_file_path}/../../../External/bin${LIB} )
+  ENDIF()
+  
+  
 ENDFOREACH()
                       
 MARK_AS_ADVANCED(PHYSX3_LIBS)

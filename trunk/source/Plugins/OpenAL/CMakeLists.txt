@@ -1,6 +1,6 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginOpenAL")
-find_package(OpenAL)
+find_package(OpenALExt)
 		
 include_directories(${GASS_SIM_INCLUDE_DIRS} ${OPENAL_INCLUDE_DIR})
 
