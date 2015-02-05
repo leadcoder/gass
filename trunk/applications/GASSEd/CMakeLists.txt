@@ -8,27 +8,14 @@ set(CMAKE_MODULE_PATH
 
 set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
-find_package(GASSSim)
+
+find_package(GASSSim COMPONENTS OgrePlugin)
+find_package(Qt4 REQUIRED)
+#find_package(GASSSim)
 
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 
-
-if(EXISTS "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4")
-	set(PHYSX_DIR  "${GASS_DEPENDENCIES_DIR}/PhysX-v3.2.4" CACHE PATH "PhysX folder")
-else()
-	set(PHYSX_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
-endif()
-
-#msvc only, need other check if gcc
-if(${CMAKE_CL_64})
-	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win64")
-	set(DLL_SUFFIX "_x64")
-else()
-	set(PHYSX_BIN_DIR "${PHYSX_DIR}/bin/win32")
-	set(DLL_SUFFIX "_x86")
-endif()
-
-message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
+# message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #dlls and exe
 set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
@@ -49,7 +36,7 @@ set(GASSED_INSTALL_BIN_DIR_RELEASE "bin/release")
 #	${TINYXML2_LINK_LIBRARIES}
 #	)
 	
-find_package(Qt4 REQUIRED)
+
 set(GASSED_H 
 	GASSEd.h
 	GASSBrushSettingsWidget.h
@@ -90,6 +77,9 @@ target_link_libraries(${APP_NAME} ${QT_LIBRARIES}
 					${GASS_EDITOR_LIBRARIES}
 					debug QtSolutions_PropertyBrowser-2.5d 
 					optimized QtSolutions_PropertyBrowser-2.5)
+					
+FILE(COPY ${GASS_SIM_BINAIES_REL}  DESTINATION  ${CMAKE_BINARY_DIR}/out/release)
+FILE(COPY ${GASS_SIM_BINAIES_DBG}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
 
 # ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			# POST_BUILD
@@ -99,92 +89,103 @@ target_link_libraries(${APP_NAME} ${QT_LIBRARIES}
 			# COMMAND ${CMAKE_COMMAND} -E copy_directory ${OSG_PLUGINS_DIR} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release
 			# )
 			
-			
-			set(DEP_DLL_FILES_RELEASE 
-			${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5.dll
-	${GASS_DEPENDENCIES_DIR}/lib/tbb.dll 
-	${OPENAL_BIN_DIR}
-	${GASS_DEPENDENCIES_DIR}/lib/OIS.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Release/SkyX.dll
-	${OGRE_DIR}/bin/release/OgreMain.dll
-	${OGRE_DIR}/bin/release/OgreTerrain.dll
-	${OGRE_DIR}/bin/release/OgrePaging.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_CgProgramManager.dll
-	${OGRE_DIR}/bin/release/OgreOverlay.dll
-	${OGRE_DIR}/bin/release/Plugin_OctreeSceneManager.dll
-	${OGRE_DIR}/bin/release/Plugin_ParticleFX.dll
-	${OGRE_DIR}/bin/release/RenderSystem_Direct3D9.dll
-	${OGRE_DIR}/bin/release/RenderSystem_GL.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${PHYSX_BIN_DIR}/PhysX3Common${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Cooking${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematic${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
-	${GASS_DIR}/bin/release/GASSCore.dll
-	${GASS_DIR}/bin/release/GASSSim.dll 
-	${GASS_DIR}/bin/release/GASSPluginOgre.dll
-	${GASS_DIR}/bin/release/GASSPluginOSG.dll
-	${GASS_DIR}/bin/release/GASSPluginPhysX3.dll
-	${GASS_DIR}/bin/release/GASSPluginOIS.dll
-	${GASS_DIR}/bin/release/GASSPluginODE.dll
-	${GASS_DIR}/bin/release/GASSPluginPagedGeometry.dll
-	${GASS_DIR}/bin/release/GASSPluginEnvironment.dll
-	${GASS_DIR}/bin/release/GASSPluginOpenAL.dll
-	${GASS_DIR}/bin/release/GASSPluginGame.dll
-	${GASS_DIR}/bin/release/GASSPluginRoadNetwork.dll
-	${GASS_DIR}/bin/release/GASSPluginBase.dll
-	${GASS_DIR}/bin/release/GASSPluginRakNet.dll
-	${GASS_DIR}/bin/release/GASSPluginRecastNavigation.dll
-	${GASS_DIR}/bin/release/GASSEditorModule.dll
-	${QT_DIR}/bin/QtCore4.dll
-	${QT_DIR}/bin/QtGui4.dll
-	${OSG_BIN_FILES_RELEASE}
-	)
-	set(DEP_DLL_FILES_DEBUG 
-	${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5d.dll
-	${GASS_DEPENDENCIES_DIR}/lib/tbb_debug.dll
-	${OPENAL_BIN_DIR}
-	${GASS_DEPENDENCIES_DIR}/lib/OIS_d.dll
-	${GASS_DEPENDENCIES_DIR}/SkyX-v0.4/bin/Debug/SkyX_d.dll
-	#${GASS_DEPENDENCIES_DIR}/MyGUI_3.2.0/bin/debug/MyGUIEngine_d.dll
-	${OGRE_DIR}/bin/debug/OgreMain_d.dll
-	${OGRE_DIR}/bin/debug/OgreTerrain_d.dll
-	${OGRE_DIR}/bin/debug/OgrePaging_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_CgProgramManager_d.dll
-	${OGRE_DIR}/bin/debug/OgreOverlay_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_OctreeSceneManager_d.dll
-	${OGRE_DIR}/bin/debug/Plugin_ParticleFX_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_Direct3D9_d.dll
-	${OGRE_DIR}/bin/debug/RenderSystem_GL_d.dll
-	${OGRE_DIR}/bin/release/cg.dll
-	${PHYSX_BIN_DIR}/PhysX3CommonCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CookingCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3CharacterKinematicCHECKED${DLL_SUFFIX}.dll
-	${PHYSX_BIN_DIR}/PhysX3Profile${DLL_SUFFIX}.dll
-	${GASS_DIR}/bin/debug/GASSCore_d.dll
-	${GASS_DIR}/bin/debug/GASSSim_d.dll 
-	${GASS_DIR}/bin/debug/GASSPluginOgre_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginOSG_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginOIS_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginODE_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginPhysx3_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginPagedGeometry_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginEnvironment_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginOpenAL_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginGame_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginRoadNetwork_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginBase_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginRakNet_d.dll
-	${GASS_DIR}/bin/debug/GASSPluginRecastNavigation_d.dll
-	${GASS_DIR}/bin/debug/GASSEditorModule_d.dll
-	${QT_DIR}/bin/QtCored4.dll
-	${QT_DIR}/bin/QtGuid4.dll
-	${OSG_BIN_FILES_DEBUG}
-	)
+
+#gather all dlls needed for GASSED to run
+if(WIN32)
+	# find_package(TBB)
+	
+	# set(OPENAL_BIN_DIR  "${GASS_DEPENDENCIES_DIR}/OpenAL1.1/bin" CACHE PATH "OpenAL bin folder")
+	# find_package(OpenALExt)
+	
+	# set (OIS_DIR "${GASS_DEPENDENCIES_DIR}/ois")
+	# find_package(OIS)
+	
+	# set(SKYX_DIR  "${GASS_DEPENDENCIES_DIR}/SkyX-v0.4" CACHE PATH "SkyX folder")
+	# find_package(SkyX)
+	
+	# find_package(Ogre)
+	# set(OGRE_BIN_FILES_RELEASE 
+		# ${OGRE_BINARY_REL}
+		# ${OGRE_Overlay_BINARY_REL}
+		# ${OGRE_Paging_BINARY_REL}
+		# ${OGRE_Terrain_BINARY_REL}
+		# ${OGRE_Plugin_CgProgramManager_REL}
+		# ${OGRE_Plugin_OctreeSceneManager_REL}
+		# ${OGRE_Plugin_ParticleFX_REL}
+		# ${OGRE_RenderSystem_Direct3D9_REL}
+		# ${OGRE_RenderSystem_GL_REL}
+		# ${OGRE_PLUGIN_DIR_REL}/cg.dll)
+		
+		# set(OGRE_BIN_FILES_DEBUG 
+		# ${OGRE_BINARY_DBG}
+		# ${OGRE_Overlay_BINARY_DBG}
+		# ${OGRE_Paging_BINARY_DBG}
+		# ${OGRE_Terrain_BINARY_DBG}
+		# ${OGRE_Plugin_CgProgramManager_DBG}
+		# ${OGRE_Plugin_OctreeSceneManager_DBG}
+		# ${OGRE_Plugin_ParticleFX_DBG}
+		# ${OGRE_RenderSystem_Direct3D9_DBG}
+		# ${OGRE_RenderSystem_GL_DBG}
+		# ${OGRE_PLUGIN_DIR_DBG}/cg.dll)
+		
+	# set(ALL_BIN_FILES_RELEASE 
+		# ${OPENAL_BIN_FILES_RELEASE}
+		# ${SKYX_BINARY_REL}
+		# ${OGRE_BIN_FILES_RELEASE}
+		# ${TBB_BINARIES_REL}
+		# ${OIS_BINARY_REL}
+		# ${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5.dll
+		# ${GASS_DIR}/bin/release/GASSCore.dll
+	# ${GASS_DIR}/bin/release/GASSSim.dll 
+	# ${GASS_DIR}/bin/release/GASSPluginOgre.dll
+	# ${GASS_DIR}/bin/release/GASSPluginOSG.dll
+	# ${GASS_DIR}/bin/release/GASSPluginPhysX3.dll
+	# ${GASS_DIR}/bin/release/GASSPluginOIS.dll
+	# ${GASS_DIR}/bin/release/GASSPluginODE.dll
+	# ${GASS_DIR}/bin/release/GASSPluginPagedGeometry.dll
+	# ${GASS_DIR}/bin/release/GASSPluginEnvironment.dll
+	# ${GASS_DIR}/bin/release/GASSPluginOpenAL.dll
+	# ${GASS_DIR}/bin/release/GASSPluginGame.dll
+	# ${GASS_DIR}/bin/release/GASSPluginRoadNetwork.dll
+	# ${GASS_DIR}/bin/release/GASSPluginBase.dll
+	# ${GASS_DIR}/bin/release/GASSPluginRakNet.dll
+	# ${GASS_DIR}/bin/release/GASSPluginRecastNavigation.dll
+	# ${GASS_DIR}/bin/release/GASSEditorModule.dll
+	# ${QT_DOC_DIR}/../bin/QtCore4.dll
+	# ${QT_DOC_DIR}/../bin/QtGui4.dll
+	
+	
+		# )
+	# set(ALL_BIN_FILES_DEBUG	
+		# ${OPENAL_BIN_FILES_DEBUG}
+		# ${SKYX_BINARY_DBG}
+		# ${OGRE_BIN_FILES_DEBUG}
+		# ${TBB_BINARY_DBG}
+		# ${OIS_BINARY_DBG}
+		# ${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib/QtSolutions_PropertyBrowser-2.5d.dll
+		# ${GASS_DIR}/bin/debug/GASSCore_d.dll
+	# ${GASS_DIR}/bin/debug/GASSSim_d.dll 
+	# ${GASS_DIR}/bin/debug/GASSPluginOgre_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginOSG_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginOIS_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginODE_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginPhysx3_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginPagedGeometry_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginEnvironment_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginOpenAL_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginGame_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginRoadNetwork_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginBase_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginRakNet_d.dll
+	# ${GASS_DIR}/bin/debug/GASSPluginRecastNavigation_d.dll
+	# ${GASS_DIR}/bin/debug/GASSEditorModule_d.dll
+	# ${QT_DOC_DIR}/../bin/QtCored4.dll
+	# ${QT_DOC_DIR}/../bin/QtGuid4.dll
+		# )
+	# FILE(COPY ${ALL_BIN_FILES_RELEASE}  DESTINATION  ${CMAKE_BINARY_DIR}/out/release)
+	# FILE(COPY ${ALL_BIN_FILES_DEBUG}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
+endif()
+
 	
 	# FILE(COPY ${OSG_PLUGINS}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
 
