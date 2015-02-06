@@ -1,6 +1,4 @@
 
-#folder holding precompiled dependencies
-set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
 
 #tinyxml2, specific version used in gass, ie avoid system wide search 
 set(TINYXML2_DIR "${GASS_DEPENDENCIES_DIR}/tinyxml2" CACHE PATH "tinyxml2 folder")

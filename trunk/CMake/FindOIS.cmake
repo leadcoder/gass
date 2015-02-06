@@ -12,6 +12,7 @@ ELSEIF (NOT OIS_FIND_QUIETLY)
 ENDIF ()
 
 SET(OIS_INCLUDE_SEARCH_DIRS
+	${OIS_DIR}/includes
 	${OIS_DIR}/include
 	${CMAKE_LIBRARY_PATH}
 	/usr/include

@@ -78,8 +78,8 @@ target_link_libraries(${APP_NAME} ${QT_LIBRARIES}
 					debug QtSolutions_PropertyBrowser-2.5d 
 					optimized QtSolutions_PropertyBrowser-2.5)
 					
-FILE(COPY ${GASS_SIM_BINAIES_REL}  DESTINATION  ${CMAKE_BINARY_DIR}/out/release)
-FILE(COPY ${GASS_SIM_BINAIES_DBG}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
+FILE(COPY ${GASS_SIM_BINARIES_REL}  DESTINATION  ${CMAKE_BINARY_DIR}/out/release)
+FILE(COPY ${GASS_SIM_BINARIES_DBG}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
 
 # ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			# POST_BUILD
