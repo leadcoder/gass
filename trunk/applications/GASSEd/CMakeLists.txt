@@ -8,12 +8,10 @@ set(CMAKE_MODULE_PATH
 
 set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
-
-find_package(GASSSim COMPONENTS OgrePlugin)
-find_package(Qt4 REQUIRED)
-#find_package(GASSSim)
-
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
+
+find_package(GASSSim COMPONENTS EditorModule OgrePlugin PhysX3Plugin)
+find_package(Qt4 REQUIRED)
 
 # message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 
@@ -74,7 +72,6 @@ include_directories(${GASS_SIM_INCLUDE_DIRS} ${GASS_DEPENDENCIES_DIR}/qtproperty
 add_executable(${APP_NAME} ${GASSED_CPP} ${GASSED_MOC_H} ${GASSED_RESOURCES_RCC})
 target_link_libraries(${APP_NAME} ${QT_LIBRARIES} 
 					${GASS_SIM_LIBRARIES} 
-					${GASS_EDITOR_LIBRARIES}
 					debug QtSolutions_PropertyBrowser-2.5d 
 					optimized QtSolutions_PropertyBrowser-2.5)
 					
