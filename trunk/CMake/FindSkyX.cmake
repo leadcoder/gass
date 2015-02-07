@@ -1,4 +1,5 @@
-set(SKYX_INCLUDE_DIRS ${SKYX_DIR}/include/SKYX CACHE PATH "SKYX include directory" FORCE)
+
+find_path(SKYX_INCLUDE_DIRS SkyX.h PATHS ${SKYX_DIR}/include/SKYX)
 set(SKYX_LIBRARY_DIRS ${SKYX_DIR}/lib)
 
 find_library(SKYX_LIBRARY_RELEASE SkyX HINTS ${SKYX_LIBRARY_DIRS} ${SKYX_LIBRARY_DIRS}/release)

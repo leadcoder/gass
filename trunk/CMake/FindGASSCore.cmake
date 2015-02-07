@@ -8,7 +8,9 @@ set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependen
 
 find_package(GASSCoreThirdParty)
 
-set(GASS_CORE_INCLUDE_DIRS ${GASS_DIR}/include ${GASS_DIR}/source ${Boost_INCLUDE_DIRS}  ${TINYXML2_INCLUDE_DIRS} ${TBB_INCLUDE_DIRS})
+find_path(GASS_CORE_INCLUDE_DIRS Core/Prerequisits.h PATHS ${GASS_DIR}/include ${GASS_DIR}/source)
+
+set(GASS_CORE_INCLUDE_DIRS  ${GASS_CORE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}  ${TINYXML2_INCLUDE_DIRS} ${TBB_INCLUDE_DIRS})
 set(GASS_LIBRARY_DIRS ${GASS_DIR}/lib ${GASS_DIR}/lib/debug ${GASS_DIR}/lib/release)
 set(GASS_BINARY_DIRS ${GASS_DIR}/bin ${GASS_DIR}/bin/debug ${GASS_DIR}/bin/release)
 

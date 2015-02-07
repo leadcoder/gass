@@ -1,12 +1,19 @@
+#This file will export:
+#GASS_SIM_INCLUDE_DIRS = holding all include dirs are needed for compiling a project using gass sim
+#GASS_SIM_LIBRARIES = holding all libraraies that are needed for linking gass sim
+#GASS_SIM_BINARIES_REL = holding all shared libraries needed to run debug application using gass sim
+#GASS_SIM_BINARIES_DBG = holding all shared libraries needed to run release application using gass sim
 
 find_package(GASSCore)
 find_package(GASSSimThirdParty)
 
-set(GASS_SIM_INCLUDE_DIRS ${GASS_SIM_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
+#just append angelscript to core includes 
+set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
 
 find_library(GASS_SIM_LIBRARY_RELEASE GASSSim HINTS ${GASS_LIBRARY_DIRS})
 find_library(GASS_SIM_LIBRARY_DEBUG GASSSim_d HINTS ${GASS_LIBRARY_DIRS})
 
+#generate out varible for libraries by appending sim and angelscript to core libs
 set(GASS_SIM_LIBRARIES optimized ${GASS_SIM_LIBRARY_RELEASE}
 	 debug ${GASS_SIM_LIBRARY_DEBUG}
 	 ${GASS_CORE_LIBRARIES})

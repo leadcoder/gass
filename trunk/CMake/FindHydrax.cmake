@@ -2,7 +2,7 @@ if (NOT "$ENV{HYDRAX_DIR}" STREQUAL "")
 	set (HYDRAX_DIR $ENV{HYDRAX_DIR})
 endif()
 
-set(HYDRAX_INCLUDE_DIRS ${HYDRAX_DIR}/include CACHE PATH "Hydrax include directory" FORCE)
+find_path(HYDRAX_INCLUDE_DIRS Hydrax/Hydrax.h PATHS ${HYDRAX_DIR}/include)
 set(HYDRAX_LIBRARY_DIRS ${HYDRAX_DIR}/lib)
 
 find_library(HYDRAX_LIBRARY_RELEASE Hydrax HINTS ${HYDRAX_LIBRARY_DIRS} ${HYDRAX_LIBRARY_DIRS}/release)
