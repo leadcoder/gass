@@ -103,3 +103,4 @@ install(TARGETS ${LIB_NAME}
   )	
 	
 endmacro(gass_install_plugin_target) 
+

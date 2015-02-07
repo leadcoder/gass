@@ -3,6 +3,12 @@ if (NOT "$ENV{GASS_HOME}" STREQUAL "")
 	set (GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS home")
 endif()
 
+if (WIN32)
+	set(_SHARED_LIB_EXT .dll)
+else() #assume linux
+	set(_SHARED_LIB_EXT .so)
+endif()
+
 #folder holding pre-compiled dependencies
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
 
@@ -23,11 +29,11 @@ set(GASS_CORE_LIBRARIES optimized ${GASS_CORE_LIBRARY_RELEASE}
 	 ${TINYXML2_LIBRARIES}
 	 ${TBB_LIBRARIES})
 
-if (WIN32) #find dlls 
-	  find_file(GASS_CORE_BINARY_RELEASE NAMES GASSCore.dll HINTS ${GASS_BINARY_DIRS})
-	  find_file(GASS_CORE_BINARY_DEBUG NAMES GASSCore_d.dll HINTS ${GASS_BINARY_DIRS})
-	  
-	   #TBB
+find_file(GASS_CORE_BINARY_RELEASE NAMES GASSCore${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
+find_file(GASS_CORE_BINARY_DEBUG NAMES GASSCore_d${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
+ 
+if (WIN32) #find third party shared binaries	 
+	 #TBB
 	   find_package(TBB)
 	   
 	   #Set GASSSim out binaries

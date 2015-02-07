@@ -10,12 +10,24 @@ set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 
-find_package(GASSSim COMPONENTS EditorModule OgrePlugin PhysX3Plugin)
+set(QTPROPERTYBROWSER_DIR ${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1)
+ 
+find_package(GASSSim COMPONENTS GASSEditorModule 
+								GASSPluginOgre 
+								GASSPluginOIS 
+								GASSPluginPhysX3 
+								GASSPluginODE 
+								GASSPluginPagedGeometry
+								GASSPluginOpenAL
+								GASSPluginGame
+								GASSPluginBase
+								GASSPluginEnvironment
+								GASSPluginRecastNavigation
+								GASSPluginRoadNetwork)
 find_package(Qt4 REQUIRED)
+find_package(QTPropertyBrowser)
 
-# message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #dlls and exe
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #build dlls and exe here
 set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
 
 set(GASSED_INSTALL_BIN_DIR  "bin")
@@ -65,18 +77,40 @@ add_definitions( -D_SCL_SECURE_NO_WARNINGS -DQT_QTPROPERTYBROWSER_IMPORT)
 
 link_directories(${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/lib)
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
+
 include(${QT_USE_FILE})
 
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1/src)
+include_directories(${GASS_SIM_INCLUDE_DIRS} 
+					${QTPROPERTYBROWSER_DIR_INCLUDE_DIRS})
 
 add_executable(${APP_NAME} ${GASSED_CPP} ${GASSED_MOC_H} ${GASSED_RESOURCES_RCC})
 target_link_libraries(${APP_NAME} ${QT_LIBRARIES} 
-					${GASS_SIM_LIBRARIES} 
-					debug QtSolutions_PropertyBrowser-2.5d 
-					optimized QtSolutions_PropertyBrowser-2.5)
-					
-FILE(COPY ${GASS_SIM_BINARIES_REL}  DESTINATION  ${CMAKE_BINARY_DIR}/out/release)
-FILE(COPY ${GASS_SIM_BINARIES_DBG}  DESTINATION  ${CMAKE_BINARY_DIR}/out/debug)
+					${GASS_SIM_LIBRARIES}
+					${QTPROPERTYBROWSER_LIBRARIES}					
+					)
+
+FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Configuration DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#FILE(GLOB GASSED_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/Configuration/*.xml")					
+#FILE(COPY ${GASSED_CONFIG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+#FILE(COPY ${GASSED_CONFIG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+
+if(WIN32)
+	#HACK to get qt-binaries, findqt dont return binaries nor root/install path, 
+	#we use the QT_DOC_DIR for now as to get root level..
+
+	set(QT_BINARIES_REL ${QT_DOC_DIR}/../bin/QtCore4.dll
+	${QT_DOC_DIR}/../bin/QtGui4.dll
+	${QTPROPERTYBROWSER_BINARY_REL})
+	
+	set(QT_BINARIES_DBG ${QT_DOC_DIR}/../bin/QtCored4.dll
+	${QT_DOC_DIR}/../bin/QtGuid4.dll
+	${QTPROPERTYBROWSER_BINARY_DBG})
+		
+	set(GASSED_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${GASS_PLUGIN_BINARIES_REL} ${QT_BINARIES_REL})
+	set(GASSED_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${GASS_PLUGIN_BINARIES_REL} ${QT_BINARIES_DBG})
+	FILE(COPY ${GASSED_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	FILE(COPY ${GASSED_BINARIES_DBG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+endif()
 
 # ADD_CUSTOM_COMMAND(TARGET ${APP_NAME}
 			# POST_BUILD
@@ -201,6 +235,6 @@ endif()
 
 install(TARGETS ${APP_NAME} RUNTIME DESTINATION ${GASSED_INSTALL_BIN_DIR} CONFIGURATIONS Release)
 #install(FILES  ${DEP_DLL_FILES_RELEASE} DESTINATION ${GASSED_INSTALL_BIN_DIR} CONFIGURATIONS Release)
-FILE(GLOB GASSED_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/Configuration/*.xml")
+
 install(FILES ${GASSED_CONFIG} DESTINATION ${GASSED_INSTALL_BIN_DIR}/../Configuration)
 #install(FILES ${OSG_PLUGINS} DESTINATION ${GASSED_INSTALL_BIN_DIR}/${OSG_PLUGINS_DIR_NAME})
