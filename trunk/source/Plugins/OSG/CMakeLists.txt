@@ -1,8 +1,9 @@
 #set lib name here!
 set(LIB_NAME "GASSPluginOSG")
 
-find_package(OpenSceneGraph 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
-		
+#find_package(OpenSceneGraph 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
+find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
+
 include_directories(${GASS_SIM_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})
 
 #add all source files from current directory (recursively)

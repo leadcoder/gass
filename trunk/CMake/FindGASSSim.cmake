@@ -49,7 +49,7 @@ set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARY_DEBUG} ${GASS_CORE_BINARIES_DBG})
 	
 #get shared libraries for components
 
-FOREACH (_COMP_NAME ${GASSSim_FIND_COMPONENTS})
+foreach (_COMP_NAME ${GASSSim_FIND_COMPONENTS})
     set(_COMP_NAME_REL GASS_${_COMP_NAME}_REL)
 	set(_COMP_NAME_DBG GASS_${_COMP_NAME}_DBG)
 	
@@ -62,7 +62,7 @@ FOREACH (_COMP_NAME ${GASSSim_FIND_COMPONENTS})
 	 set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${${_COMP_NAME_REL}})
 	 set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${${_COMP_NAME_DBG}})
 	endif()
-ENDFOREACH()
+endforeach()
 
 if (WIN32) #find third party shared libraries, TODO: support *nix?
 	#check requested components
