@@ -106,7 +106,7 @@ if(GASS_BUILD_DOCUMENTATION)
 endif()
 
 # Install CMake files in order to re-use them in other projects
-install( DIRECTORY CMake/ DESTINATION ${DEPENDENCIES_DIR}/CMake/ PATTERN *.cmake)
+install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
 # Install xsd files in order to re-use them in other projects
 file( GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/source/ "*.xsd")
 install( FILES ${files} DESTINATION schema)
