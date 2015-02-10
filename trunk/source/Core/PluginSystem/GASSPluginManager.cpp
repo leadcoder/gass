@@ -24,6 +24,8 @@
 #include "Core/Utils/GASSException.h"
 #include "tinyxml2.h"
 #include <assert.h>
+#include <boost/filesystem.hpp>
+
 
 
 namespace GASS

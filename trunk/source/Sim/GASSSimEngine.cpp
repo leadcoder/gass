@@ -45,6 +45,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <tinyxml2.h>
+#include <boost/filesystem.hpp>
+
 
 
 namespace GASS

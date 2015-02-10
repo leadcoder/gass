@@ -23,6 +23,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceManager.h"
+#include <boost/filesystem.hpp>
+
 
 namespace GASS
 {

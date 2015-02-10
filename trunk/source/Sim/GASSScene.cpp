@@ -44,6 +44,8 @@
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "tinyxml2.h"
+#include <boost/filesystem.hpp>
+
 
 namespace GASS
 {

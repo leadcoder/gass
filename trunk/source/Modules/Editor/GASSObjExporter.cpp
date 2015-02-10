@@ -1,6 +1,7 @@
 #include "GASSObjExporter.h"
 #include "Sim/GASS.h"
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 namespace GASS
 {
