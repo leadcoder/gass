@@ -131,4 +131,10 @@ if (WIN32) #find third party shared libraries, TODO: support *nix?
 	  set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${SKYX_BINARY_REL})
 	  set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${SKYX_BINARY_DBG})
 	 endif()
+	 
+	 if(USE_OSG_PLUGIN)
+	  find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
+	  set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${OSG_BINARIES_REL})
+	  set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${OSG_BINARIES_DBG})
+	 endif()
 endif()
