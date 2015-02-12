@@ -12,11 +12,13 @@ endif()
 #folder holding pre-compiled dependencies
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "3rd-party dependency folder")
 
-find_package(GASSCoreThirdParty)
+#find_package(GASSCoreThirdParty) we only need boost for target application
+set (Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.57.0 REQUIRED filesystem system)
 
 find_path(GASS_CORE_INCLUDE_DIRS Core/Prerequisits.h PATHS ${GASS_DIR}/include ${GASS_DIR}/source)
 
-set(GASS_CORE_INCLUDE_DIRS  ${GASS_CORE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}  ${TINYXML2_INCLUDE_DIRS} ${TBB_INCLUDE_DIRS})
+set(GASS_CORE_INCLUDE_DIRS  ${GASS_CORE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 set(GASS_LIBRARY_DIRS ${GASS_DIR}/lib ${GASS_DIR}/lib/debug ${GASS_DIR}/lib/release)
 set(GASS_BINARY_DIRS ${GASS_DIR}/bin ${GASS_DIR}/bin/debug ${GASS_DIR}/bin/release)
 
@@ -24,16 +26,13 @@ find_library(GASS_CORE_LIBRARY_RELEASE GASSCore HINTS ${GASS_LIBRARY_DIRS})
 find_library(GASS_CORE_LIBRARY_DEBUG GASSCore_d HINTS ${GASS_LIBRARY_DIRS})
 
 set(GASS_CORE_LIBRARIES optimized ${GASS_CORE_LIBRARY_RELEASE}
-	 debug ${GASS_CORE_LIBRARY_DEBUG}
-	 ${Boost_LIBRARIES}
-	 ${TINYXML2_LIBRARIES}
-	 ${TBB_LIBRARIES})
+	 debug ${GASS_CORE_LIBRARY_DEBUG})
 
 find_file(GASS_CORE_BINARY_RELEASE NAMES GASSCore${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
 find_file(GASS_CORE_BINARY_DEBUG NAMES GASSCore_d${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
  
 if (WIN32) #find third party shared binaries	 
-	 #TBB
+	   #TBB
 	   find_package(TBB)
 	   
 	   #Set GASSSim out binaries
