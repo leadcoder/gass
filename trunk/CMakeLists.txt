@@ -1,13 +1,14 @@
 cmake_minimum_required (VERSION 2.8)
 project(GASS)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    # Override to an "Install" directory in the current build-dir
-    message( STATUS "    Install-prefix was at default -> forcing it to the build-dir" )
-    message( STATUS "        'set( CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/install )'" )
-	set(GASS_INTALL_DIR  ${CMAKE_CURRENT_BINARY_DIR}/install CACHE PATH "SDK install folder (CMAKE_INSTALL_PREFIX replacement)")
-    set( CMAKE_INSTALL_PREFIX ${GASS_INTALL_DIR} CACHE INTERNAL "prefix override")
-endif ( )
+# if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+#    Override to an "Install" directory in the current build-dir
+    # message( STATUS "Install-prefix was at default -> forcing it to the build-dir" )
+    # message( STATUS "'set( CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/install )'" )
+	# set(GASS_INTALL_DIR  ${CMAKE_CURRENT_BINARY_DIR}/install CACHE PATH "SDK install folder (CMAKE_INSTALL_PREFIX replacement)")
+    # set( CMAKE_INSTALL_PREFIX ${GASS_INTALL_DIR} CACHE INTERNAL "prefix override")
+# endif ( )
+	
 
 # The version number.
 set (GASS_VERSION_MAJOR 1)
