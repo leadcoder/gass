@@ -15,9 +15,8 @@ link_directories(${GASS_CORE_LIB_DIRS})
 
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 
-
-#Add project dependency libs
 if(WIN32)
+   #Add dependency for timer
    set(GASS_CORE_LIBRARIES Winmm ${GASS_CORE_LIBRARIES})
 endif()
 target_link_libraries(${LIB_NAME} ${GASS_CORE_LIBRARIES})
