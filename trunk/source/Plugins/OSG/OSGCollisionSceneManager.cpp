@@ -102,6 +102,8 @@ namespace GASS
 
 	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const
 	{
+		GASS_MUTEX_LOCK(m_Mutex)
+
 		osg::Vec3d start = OSGConvert::Get().ToOSG(ray_start);
 		osg::Vec3d end = OSGConvert::Get().ToOSG(ray_start + ray_dir);
 
