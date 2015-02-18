@@ -133,7 +133,20 @@ if (WIN32) #find third party shared libraries, TODO: support *nix?
 	 endif()
 	 
 	 if(USE_OSG_PLUGIN)
-	  find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgVolume osgFX osgText osgShadow osgViewer osgSim osgTerrain)
+	  find_package(OSGExt 3.2.1 REQUIRED osgUtil
+										 osgAnimation
+										 osgDB
+										 osgGA
+										 osgVolume
+										 osgFX
+										 osgText
+										 osgShadow
+										 osgViewer
+										 osgSim
+										 osgTerrain
+										 osgManipulator
+										 osgParticle
+										 osgWidget)
 	  set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${OSG_BINARIES_REL})
 	  set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${OSG_BINARIES_DBG})
 	 endif()

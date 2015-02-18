@@ -11,9 +11,9 @@
 %GASS_DEPENDENCIES%\OpenAL1.1 ^
 %GASS_DEPENDENCIES%\PagedGeometry-1.1.1 ^
 %GASS_DEPENDENCIES%\SkyX-v0.4 ^
-%GASS_DEPENDENCIES%\RakNet ^
-%GASS_DEPENDENCIES%\qtpropertybrowser-2.5_1 ^
-%GASS_DEPENDENCIES%\PhysX-v3.2.4 ^
+%GASS_DEPENDENCIES%\qtpropertybrowser-2.5_1
+rem %GASS_DEPENDENCIES%\PhysX-v3.2.4 ^
+rem %GASS_DEPENDENCIES%\RakNet ^
 
 
 pause

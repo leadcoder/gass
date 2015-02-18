@@ -65,6 +65,7 @@ if (WIN32)
 	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_COMP_NAME_DBG}})
 	endforeach()
 	
+	#this plug-in list works with 3.2.1
 	set(OSG_PLUGINS 3dc
 					3ds
 					ac
@@ -129,6 +130,17 @@ if (WIN32)
 					serializers_osgtext
 					serializers_osgviewer
 					serializers_osgvolume
+					deprecated_osg
+					deprecated_osganimation
+					deprecated_osgfx
+					deprecated_osgparticle
+					deprecated_osgshadow
+					deprecated_osgsim
+					deprecated_osgterrain
+					deprecated_osgtext
+					deprecated_osgviewer
+					deprecated_osgvolume
+					deprecated_osgwidget
 					shp
 					stl
 					tga
