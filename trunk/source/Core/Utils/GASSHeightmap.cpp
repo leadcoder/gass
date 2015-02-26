@@ -141,6 +141,36 @@ namespace GASS
 		}
 	}
 
+	bool Heightmap::CheckLineOfSight(const Vec3& p1, const Vec3& p2)
+	{   
+		Vec3 ray = p2 - p1;
+		double length = ray.Length();
+		
+		//Use pixel spacing for los step
+		double los_spacing = GetBoundingBox().GetSize().x()/((double) GetWidth()); 
+
+		if( length < los_spacing)
+		{
+			return true;
+		}
+
+		double stepsize = los_spacing / length;
+		double s = 0.0;
+
+		while( s < 1.0 )
+		{
+			Vec3 p = p1 + ray*s;
+			float h = GetInterpolatedHeight(p.x, p.z );
+			
+			if(h > = p.y)
+			{
+				return false;
+			}
+			s += stepsize;
+		}
+		return true;
+	}
+
 	void Heightmap::Save(const std::string &filename) const
 	{
 		std::ofstream ofs(filename.c_str(), std::ios::binary);

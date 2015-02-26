@@ -34,6 +34,7 @@ namespace GASS
 		unsigned int GetWidth() const {return m_Width;}
 		float* GetData() const {return m_Data;}
 		AABox GetBoundingBox() const;
+		bool CheckLineOfSight(const Vec3& p1, const Vec3& p2);
 	private:
 		void SetDimensions(const Vec3 &min,const Vec3 &max);
 		float *m_Data;
