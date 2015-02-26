@@ -3,8 +3,10 @@
 #include <math.h>
 #include <fstream>
 
+
 namespace GASS
 {
+	
 	Heightmap::Heightmap() : m_Data(NULL),
 		m_Height(0),
 		m_Width(0)
@@ -12,14 +14,14 @@ namespace GASS
 
 	}
 
-	Heightmap::Heightmap(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width, unsigned int height, float *data) : m_Data(NULL),
+	Heightmap::Heightmap(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width, unsigned int height, HeightType *data) : m_Data(NULL),
 		m_Min(min_bound),
 		m_Max(max_bound),
 		m_Width(width),
 		m_Height(height)
 	{
 		if(data == NULL) // allocate?
-			m_Data = new float[width*height];
+			m_Data = new HeightType[width*height];
 		else
 			m_Data = data;
 	}
@@ -76,10 +78,10 @@ namespace GASS
 			return 0.0;
 
 		float h00, h01, h10, h11;
-		h00 = m_Data[x0 + z0*m_Width];
-		h01 = m_Data[x1 + z0*m_Width];
-		h10 = m_Data[x0 + z1*m_Width];
-		h11 = m_Data[x1 + z1*m_Width];
+		h00 = READ_HEIGHT(x0 + z0*m_Width);
+		h01 = READ_HEIGHT(x1 + z0*m_Width);
+		h10 = READ_HEIGHT(x0 + z1*m_Width);
+		h11 = READ_HEIGHT(x1 + z1*m_Width);
 
 		float tx, ty;
 		tx = fxindex - x0;
@@ -97,17 +99,17 @@ namespace GASS
 		unsigned int zindex = m_Height * (z - m_Min.z) / bounds_height;
 		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
 			return;
-		m_Data[xindex + zindex*m_Width] = height;
+		WRITE_HEIGHT(height, xindex + zindex*m_Width);
 	}
 
 	void Heightmap::SetHeight(unsigned int x, unsigned int z, float height)
 	{
-		m_Data[x + z * m_Width] = height;
+		WRITE_HEIGHT(height, x + z * m_Width);
 	}
 
 	float Heightmap::GetHeight(unsigned int x, unsigned int z) const
 	{
-		return m_Data[x + z * m_Width];
+		return READ_HEIGHT(x + z * m_Width);
 	}
 
 	void Heightmap::ImportRAWFile(const std::string &filename, float max_height, float min_height)
@@ -118,7 +120,7 @@ namespace GASS
 		m_Width = file.m_Width;
 		m_Height = file.m_Height;
 		delete[] m_Data;
-		m_Data = new float[file.m_Height*file.m_Width];
+		m_Data = new HeightType[file.m_Height*file.m_Width];
 
 		for(unsigned int i = 0 ; i < file.m_Height; i++)
 		{
@@ -136,7 +138,8 @@ namespace GASS
 					unsigned char hm_value_8bit = *(unsigned char*) (&file.m_Data[hm_index]);
 					height = (float)hm_value_8bit/256.0;
 				}
-				m_Data[i*file.m_Width+j] = min_height + height*(max_height - min_height); //m_Min.y + (m_Max.y-m_Min.y)*z;
+				float h = min_height + height*(max_height - min_height);
+				WRITE_HEIGHT(h, i*file.m_Width+j)
 			}
 		}
 	}
@@ -147,7 +150,7 @@ namespace GASS
 		double length = ray.Length();
 		
 		//Use pixel spacing for los step
-		double los_spacing = GetBoundingBox().GetSize().x()/((double) GetWidth()); 
+		double los_spacing = GetBoundingBox().GetSize().x/((double) GetWidth()); 
 
 		if( length < los_spacing)
 		{
@@ -162,7 +165,7 @@ namespace GASS
 			Vec3 p = p1 + ray*s;
 			float h = GetInterpolatedHeight(p.x, p.z );
 			
-			if(h > = p.y)
+			if(h >= p.y)
 			{
 				return false;
 			}
@@ -178,7 +181,7 @@ namespace GASS
 		ofs.write((char *) &m_Max, sizeof(Vec3));
 		ofs.write((char *) &m_Width, sizeof(int));
 		ofs.write((char *) &m_Height, sizeof(int));
-		ofs.write((char *) &m_Data[0], sizeof(float)*m_Height*m_Width);
+		ofs.write((char *) &m_Data[0], sizeof(HeightType)*m_Height*m_Width);
 		ofs.close();
 	}
 
@@ -192,8 +195,8 @@ namespace GASS
 		fin.read((char *) &m_Max, sizeof(Vec3));
 		fin.read((char *) &m_Width, sizeof(int));
 		fin.read((char *) &m_Height, sizeof(int));
-		m_Data = new float[m_Width*m_Height];
-		fin.read((char *) &m_Data[0], sizeof(float)*m_Width*m_Height);
+		m_Data = new HeightType[m_Width*m_Height];
+		fin.read((char *) &m_Data[0], sizeof(HeightType)*m_Width*m_Height);
 		fin.close();
 	}
 
