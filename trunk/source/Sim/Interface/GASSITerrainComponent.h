@@ -61,7 +61,7 @@ namespace GASS
 		/**
 		Get pointer to terrain data height field, if not available return NULL
 		*/
-		virtual float* GetHeightData() const = 0;
+		//virtual float* GetHeightData() const = 0;
 
 
 		/**
