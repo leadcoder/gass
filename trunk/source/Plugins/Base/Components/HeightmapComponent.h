@@ -48,7 +48,7 @@ namespace GASS
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
 		virtual unsigned int GetWidth() const;
 		virtual unsigned int GetHeight() const;
-		virtual float* GetHeightData() const;
+		//virtual float* GetHeightData() const;
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;

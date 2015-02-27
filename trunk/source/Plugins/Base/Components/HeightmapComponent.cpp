@@ -226,12 +226,12 @@ namespace GASS
 		return 0;
 	}
 
-	float* HeightmapComponent::GetHeightData() const
+	/*float* HeightmapComponent::GetHeightData() const
 	{
 		if(m_HM)
 			return m_HM->GetData();
 		return NULL;
-	}
+	}*/
 
 	AABox HeightmapComponent::GetBoundingBox() const
 	{

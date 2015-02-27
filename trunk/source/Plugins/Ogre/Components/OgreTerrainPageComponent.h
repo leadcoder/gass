@@ -58,7 +58,7 @@ namespace GASS
 		virtual Float GetHeightAtPoint(int x, int y) const;
 		virtual unsigned int GetHeight() const;
 		virtual unsigned int GetWidth() const;
-		virtual float* GetHeightData() const;
+		//virtual float* GetHeightData() const;
 
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;

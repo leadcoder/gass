@@ -20,7 +20,6 @@
 
 #include "Plugins/OSG/OSGCollisionSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
-//#include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"

@@ -849,12 +849,12 @@ namespace GASS
 		return 0;
 	}
 
-	float* OgreTerrainPageComponent::GetHeightData() const
+	/*float* OgreTerrainPageComponent::GetHeightData() const
 	{
 		if(m_Terrain)
 			return m_Terrain->getHeightData();
 		return NULL;
-	}
+	}*/
 
 	void OgreTerrainPageComponent::UpdatePosition()
 	{
