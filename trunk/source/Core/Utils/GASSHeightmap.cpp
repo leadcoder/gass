@@ -107,6 +107,16 @@ namespace GASS
 		WRITE_HEIGHT(height, x + z * m_Width);
 	}
 
+	void Heightmap::SetHeight(unsigned int index, float height)
+	{
+		WRITE_HEIGHT(height,index);
+	}
+
+	float Heightmap::GetHeight(unsigned int index) const
+	{
+		return READ_HEIGHT(index);
+	}
+
 	float Heightmap::GetHeight(unsigned int x, unsigned int z) const
 	{
 		return READ_HEIGHT(x + z * m_Width);
@@ -144,29 +154,38 @@ namespace GASS
 		}
 	}
 
-	bool Heightmap::CheckLineOfSight(const Vec3& p1, const Vec3& p2)
+	bool Heightmap::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos)
 	{   
 		Vec3 ray = p2 - p1;
+		Vec3 ray_2d = ray;
+		ray_2d.y = 0;
+
 		double length = ray.Length();
+		double length_2d = ray_2d.Length();
 		
-		//Use pixel spacing for los step
+		//Use pixel spacing for LOS step, assume square pixels
 		double los_spacing = GetBoundingBox().GetSize().x/((double) GetWidth()); 
 
-		if( length < los_spacing)
-		{
-			return true;
-		}
+		double stepsize = 1.0;
 
-		double stepsize = los_spacing / length;
+		if(length_2d < los_spacing) //check if we are ray cast in same tile
+		{
+			stepsize = 0.25;
+		}
+		else
+			stepsize = los_spacing / length_2d;
+		
 		double s = 0.0;
 
 		while( s < 1.0 )
 		{
 			Vec3 p = p1 + ray*s;
-			float h = GetInterpolatedHeight(p.x, p.z );
+			float h = GetInterpolatedHeight(p.x, p.z);
 			
 			if(h >= p.y)
 			{
+				isec_pos = p;
+				isec_pos.y = h;
 				return false;
 			}
 			s += stepsize;
@@ -195,6 +214,18 @@ namespace GASS
 		fin.read((char *) &m_Max, sizeof(Vec3));
 		fin.read((char *) &m_Width, sizeof(int));
 		fin.read((char *) &m_Height, sizeof(int));
+
+		//convert from float to 16bit
+		/*
+		m_Data = new HeightType[m_Width*m_Height];
+		float* data = new float[m_Width*m_Height];
+		fin.read((char *) &data[0], sizeof(float)*m_Width*m_Height);
+		for(unsigned int i = 0; i < m_Width*m_Height; i++)
+		{
+			WRITE_HEIGHT(data[i],i);
+		}
+		delete[] data;*/
+
 		m_Data = new HeightType[m_Width*m_Height];
 		fin.read((char *) &m_Data[0], sizeof(HeightType)*m_Width*m_Height);
 		fin.close();
@@ -202,7 +233,7 @@ namespace GASS
 
 	AABox Heightmap::GetBoundingBox() const
 	{
-		return AABox(m_Min,m_Max);
+		return AABox(m_Min, m_Max);
 	}
 
 }
