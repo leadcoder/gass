@@ -21,31 +21,6 @@
 
 namespace GASS
 {
-	struct FloatArray16
-	{
-		FloatArray16() : Data(NULL), MinValue(-1000), MaxValue(6000){}
-		~FloatArray16() {delete[] Data;}
-		unsigned short* Data;
-		float MinValue;
-		float MaxValue;
-		void Allocate(int size) {delete[] Data; Data  = new unsigned short(size);}
-		float ReadValue(int elem ) {return MinValue + ((float)Data[elem]/65536.0f)*(MaxValue - MinValue);}
-		void WriteValue(int elem ,float value) {Data[elem] = (unsigned short) ((value - MinValue)/(MaxValue - MinValue)*65536.0f);}
-	};
-	
-	struct FloatArray32
-	{
-		FloatArray32() : Data(NULL){}
-		~FloatArray32() {delete[] Data;}
-		void Allocate(int size) {delete[] Data; Data  = new float(size);}
-		float* Data;
-		float MinValue;
-		float MaxValue;
-		float ReadValue(int elem ) {return Data[elem];}
-		void  WriteValue(int elem ,float value) {Data[elem] = value;}
-	};
-
-	//template<class HM_DATA_TYPE>
 	class GASSCoreExport Heightmap
 	{
 	public:
