@@ -41,22 +41,27 @@ namespace GASS
 	public:
 		virtual ~IHeightmapTerrainComponent(){}
 
+		
+		/**
+		Get terrain height at sample point x,z
+		*/
+		virtual Float GetHeightAtSample(int x, int z) const = 0;
+
 		/**
 		Get terrain height at world position x,z (assume y up direction)
 		*/
-		virtual Float GetHeightAtPoint(int x, int z) const = 0;
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const = 0;
 		//virtual void GetHeightAndNormal(Float x, Float z, Float &height,Vec3 &normal) const = 0;
 
 		/**
 		Get terrain width samples
 		*/
-		virtual unsigned int GetWidth() const =0;
+		virtual unsigned int GetNumSamplesW() const =0;
 
 		/**
 		Get terrain height samples
 		*/
-		virtual unsigned int GetHeight() const =0;
+		virtual unsigned int GetNumSamplesH() const =0;
 
 		/**
 		Get pointer to terrain data height field, if not available return NULL

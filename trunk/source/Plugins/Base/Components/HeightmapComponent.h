@@ -33,7 +33,7 @@ namespace GASS
 		Component that impl. IHeightmapTerrainComponent interface used for terrain interaction
 	*/
 
-	class Heightmap;
+	class HeightField;
 	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent> , public IHeightmapTerrainComponent, public IGeometryComponent
 	{
 	public:
@@ -44,10 +44,10 @@ namespace GASS
 		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
 
 		//IHeightmapTerrainComponent
-		virtual Float GetHeightAtPoint(int x, int z) const;
+		virtual Float GetHeightAtSample(int x, int z) const;
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
-		virtual unsigned int GetWidth() const;
-		virtual unsigned int GetHeight() const;
+		virtual unsigned int GetNumSamplesW() const;
+		virtual unsigned int GetNumSamplesH() const;
 		//virtual float* GetHeightData() const;
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
@@ -67,7 +67,7 @@ namespace GASS
 		FilePath _GetFilePath() const;
 		AABox _GetTerrainBoundingBox() const;
 	private:
-		Heightmap* m_HM;
+		HeightField* m_HM;
 		bool m_AutoBBoxGeneration;
 	};
 }

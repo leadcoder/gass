@@ -15,13 +15,13 @@ namespace GASS
 		Float bounds_width = m_Max.x - m_Min.x;
 		Float bounds_height = m_Max.z - m_Min.z;
 
-		Float fxindex = m_Width * (x - m_Min.x) / bounds_width;
-		Float fzindex = m_Height * (z - m_Min.z) / bounds_height;
+		Float fxindex = m_NumSamplesW * (x - m_Min.x) / bounds_width;
+		Float fzindex = m_NumSamplesH * (z - m_Min.z) / bounds_height;
 		//round?
 		unsigned int xindex = fxindex;
 		unsigned int zindex = fzindex;
 
-		if (xindex < 0 || zindex < 0 || xindex >= m_Width || zindex >= m_Height)
+		if (xindex < 0 || zindex < 0 || xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
 			return 0.0f;
 
 		//algo:
@@ -43,19 +43,106 @@ namespace GASS
 		if( x0 < 0.0 || z0 < 0.0 )
 			return 0.0;
 
-		if( x1 >= m_Width || z1 >= m_Height )
+		if( x1 >= m_NumSamplesW || z1 >= m_NumSamplesH )
 			return 0.0;
 
 		float h00, h01, h10, h11;
-		h00 = m_Data.ReadValue(x0 + z0*m_Width);
-		h01 = m_Data.ReadValue(x1 + z0*m_Width);
-		h10 = m_Data.ReadValue(x0 + z1*m_Width);
-		h11 = m_Data.ReadValue(x1 + z1*m_Width);
+		h00 = m_Data.ReadValue(x0 + z0*m_NumSamplesW);
+		h01 = m_Data.ReadValue(x1 + z0*m_NumSamplesW);
+		h10 = m_Data.ReadValue(x0 + z1*m_NumSamplesW);
+		h11 = m_Data.ReadValue(x1 + z1*m_NumSamplesW);
 
 		float tx, ty;
 		tx = fxindex - x0;
 		ty = fzindex - z0;
 		float height = HM_LERP(HM_LERP(h00, h01, tx), HM_LERP(h10, h11, tx), ty);
 		return height;
+	}
+
+	void HeightField::Save(const std::string &filename) const
+	{
+		std::ofstream ofs(filename.c_str(), std::ios::binary);
+		Save(ofs);
+		ofs.close();
+	}
+
+	void HeightField::Save(std::ofstream& ofs) const
+	{
+		ofs.write((char *) &m_Min, sizeof(Vec3));
+		ofs.write((char *) &m_Max, sizeof(Vec3));
+		ofs.write((char *) &m_NumSamplesW, sizeof(int));
+		ofs.write((char *) &m_NumSamplesH, sizeof(int));
+		ofs.write((char *) &m_Data.Data[0], sizeof(unsigned short)*m_NumSamplesH*m_NumSamplesW);
+	}
+
+	void HeightField::Load(const std::string &filename)
+	{
+		m_NumSamplesW = 0;
+		m_NumSamplesH = 0;
+		std::ifstream fin(filename.c_str(), std::ios::binary);
+		Load(fin);
+		fin.close();
+	}
+
+	void HeightField::Load(std::ifstream &fin)
+	{
+		fin.read((char *) &m_Min, sizeof(Vec3));
+		fin.read((char *) &m_Max, sizeof(Vec3));
+		fin.read((char *) &m_NumSamplesW, sizeof(int));
+		fin.read((char *) &m_NumSamplesH, sizeof(int));
+
+		//convert from float to 16bit
+		/*
+		m_Data = new HeightType[m_Width*m_Height];
+		float* data = new float[m_Width*m_Height];
+		fin.read((char *) &data[0], sizeof(float)*m_Width*m_Height);
+		for(unsigned int i = 0; i < m_Width*m_Height; i++)
+		{
+			WRITE_HEIGHT(data[i],i);
+		}
+		delete[] data;*/
+
+		m_Data.Allocate(m_NumSamplesW*m_NumSamplesH);
+		fin.read((char *) &(m_Data.Data[0]), sizeof(unsigned short)*m_NumSamplesW*m_NumSamplesH);
+	}
+
+	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos)
+	{   
+		Vec3 ray = p2 - p1;
+		Vec3 ray_2d = ray;
+		ray_2d.y = 0;
+
+		double length = ray.Length();
+		double length_2d = ray_2d.Length();
+
+		//get pixel spacing, assume square pixels
+		double px_spacing = GetBoundingBox().GetSize().x/((double) GetNumSamplesW()); 
+
+		double stepsize = 1.0;
+
+		if(length_2d < px_spacing) //check if we are ray cast in same pixel
+		{
+			//HACK; lock step size to 0.25 percent of image spacing
+			stepsize = px_spacing*0.25;
+		}
+		else //use step sized based on px_spacing and ray length, 
+			stepsize = px_spacing/ length_2d;
+
+		double s = 0.0;
+
+		while( s < 1.0 )
+		{
+			Vec3 p = p1 + ray*s;
+			float h = GetInterpolatedHeight(p.x, p.z);
+
+			if(h >= p.y)
+			{
+				isec_pos = p;
+				isec_pos.y = h;
+				return false;
+			}
+			s += stepsize;
+		}
+		return true;
 	}
 }

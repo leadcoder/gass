@@ -105,8 +105,8 @@ namespace GASS
 		if(terrain)
 		{
 			//m_TerrainBounds = geom->GetBoundingBox();
-			int samples_x = terrain->GetWidth();
-			int samples_z = terrain->GetHeight();
+			int samples_x = terrain->GetNumSamplesW();
+			int samples_z = terrain->GetNumSamplesH();
 			m_TerrainBounds = terrain->GetBoundingBox();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
@@ -126,7 +126,7 @@ namespace GASS
 					//Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 					//Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 					//Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
-					Float height = m_TerrainGeom->GetHeightAtPoint((int)x,(int)z);
+					Float height = m_TerrainGeom->GetHeightAtSample((int)x,(int)z);
 					samples[z+x*samples_z].height = (physx::PxI16)(height/heightScale);
 					//samples[x+z*samples_x].setTessFlag();
 					samples[z+x*samples_z].materialIndex0=0;

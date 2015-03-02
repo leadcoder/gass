@@ -24,7 +24,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSHeightmap.h"
+#include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -74,7 +74,7 @@ namespace GASS
 		FilePath full_path = _GetFilePath();
 		if(full_path.Exist()) //Check if file exist
 		{
-			m_HM = new Heightmap();
+			m_HM = new HeightField();
 			m_HM->Load(full_path.GetFullPath());
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
@@ -182,7 +182,7 @@ namespace GASS
 
 		//delete previous hm
 		delete m_HM;
-		m_HM = new Heightmap(bbox.m_Min, bbox.m_Max, px_width, pz_height);
+		m_HM = new HeightField(bbox.m_Min, bbox.m_Max, px_width, pz_height);
 
 		LogManager::Get().stream() << "START building heightmap\n";
 		for(unsigned int i = 0; i <  px_width; i++)
@@ -192,17 +192,17 @@ namespace GASS
 			{
 				Vec3 pos(bbox.m_Min.x + i*inv_sample_ratio, 0, bbox.m_Min.z + j*inv_sample_ratio); 
 				Float h = CollisionHelper::GetHeightAtPosition(scene, pos, flags, true);
-				m_HM->SetHeight(i,j,h);
+				m_HM->SetHeightAtSample(i,j,h);
 			}	
 		}
 		m_HM->Save(_GetFilePath().GetFullPath());
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
-	Float HeightmapComponent::GetHeightAtPoint(int x, int z) const
+	Float HeightmapComponent::GetHeightAtSample(int x, int z) const
 	{
 		if(m_HM)
-			return m_HM->GetHeight(x,z);
+			return m_HM->GetHeightAtSample(x,z);
 		return 0;
 	}
 	Float HeightmapComponent::GetHeightAtWorldLocation(Float x, Float z) const
@@ -212,17 +212,17 @@ namespace GASS
 		return 0;
 	}
 
-	unsigned int HeightmapComponent::GetWidth() const
+	unsigned int HeightmapComponent::GetNumSamplesW() const
 	{
 		if(m_HM)
-			return m_HM->GetWidth();
+			return m_HM->GetNumSamplesW();
 		return 0;
 	}
 
-	unsigned int HeightmapComponent::GetHeight() const
+	unsigned int HeightmapComponent::GetNumSamplesH() const
 	{
 		if(m_HM)
-			return m_HM->GetHeight();
+			return m_HM->GetNumSamplesH();
 		return 0;
 	}
 

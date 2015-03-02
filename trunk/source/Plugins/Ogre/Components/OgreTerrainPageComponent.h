@@ -55,9 +55,9 @@ namespace GASS
 
 		//IHeightmapTerrainComponent
 		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
-		virtual Float GetHeightAtPoint(int x, int y) const;
-		virtual unsigned int GetHeight() const;
-		virtual unsigned int GetWidth() const;
+		virtual Float GetHeightAtSample(int x, int y) const;
+		virtual unsigned int GetNumSamplesH() const;
+		virtual unsigned int GetNumSamplesW() const;
 		//virtual float* GetHeightData() const;
 
 		//IGeometryComponent

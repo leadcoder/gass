@@ -115,8 +115,8 @@ namespace GASS
 		{
 			m_TerrainBounds = geom->GetBoundingBox();
 			//m_Samples = terrain->GetWidth();
-			int samples_x = terrain->GetWidth();
-			int samples_z = terrain->GetHeight();
+			int samples_x = terrain->GetNumSamplesW();
+			int samples_z = terrain->GetNumSamplesH();
 			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
 			m_SampleWidth = size_x/(samples_x-1);
@@ -171,7 +171,7 @@ namespace GASS
 	Float ODETerrainGeometryComponent::GetTerrainHeight(unsigned int x,unsigned int z)
 	{
 		//return m_TerrainGeom->GetHeightAtPoint(x,m_Samples-1-z);
-		return m_TerrainGeom->GetHeightAtPoint(x,z);
+		return m_TerrainGeom->GetHeightAtSample(x,z);
 		/*Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
 		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
 		Float h = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);

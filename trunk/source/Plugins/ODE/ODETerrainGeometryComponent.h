@@ -43,7 +43,7 @@ namespace GASS
 	typedef WPTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 	typedef SPTR<IGeometryComponent> GeometryComponentPtr;
 	typedef SPTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
-	
+
 
 	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
