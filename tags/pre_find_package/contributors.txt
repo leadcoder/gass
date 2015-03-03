@@ -1,6 +1,0 @@
-Developers:
-Johan Hedstrom
-Bjorn Lindahl
-Martin Insulander
-Artists:
-Jimmy Berggren

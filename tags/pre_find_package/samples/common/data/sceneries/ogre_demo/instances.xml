@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SceneObject>
-  <Name value="Terrain"/>
-  <Components/>
-  <ComponentContainers>
-	<SceneObject from_template="TerrainObject"/>
-	<SceneObject from_template="SunObject"/>
-  </ComponentContainers>
-</SceneObject>
