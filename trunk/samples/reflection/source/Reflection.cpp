@@ -32,10 +32,10 @@
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
-int _getch( ) {
-	struct termios oldt,
-		newt;
-	int            ch;
+
+int getch( ) {
+	struct termios oldt,newt;
+	int ch;
 	tcgetattr( STDIN_FILENO, &oldt );
 	newt = oldt;
 	newt.c_lflag &= ~( ICANON | ECHO );
@@ -124,7 +124,7 @@ struct MyWheel
 };
 
 
-//baseclass for all car, dervied from the GASS::BaseReflectionObject to enable property reflection
+//Base class for all cars, dervied from the GASS::BaseReflectionObject to enable property reflection
 class MyCar : public GASS::Reflection<MyCar, GASS::BaseReflectionObject>
 {
 public:
@@ -195,14 +195,11 @@ START_ENUM_BINDER(EngineType, EngineTypeBinder)
 END_ENUM_BINDER(EngineType, EngineTypeBinder)
 
 class MyDerivedCar;
-//Use custom meta data for color info
-
-
 
 class MyDerivedCar : public GASS::Reflection<MyDerivedCar, MyCar>
 {
 public:
-	//Custom meta data example
+	//Use custom meta data for color info
 	class MyColorPropertyMetaData : public GASS::EnumerationPropertyMetaData
 	{
 	public:
@@ -212,11 +209,11 @@ public:
 		}
 		virtual std::vector<std::string> GetEnumeration(GASS::BaseReflectionObjectPtr object) const 
 		{
-			std::vector<std::string> content;// = gfx_system->GetMaterialNames(m_ResourceGroup);
+			std::vector<std::string> content;
 			boost::shared_ptr<MyDerivedCar> car = DYNAMIC_PTR_CAST<MyDerivedCar>(object);
 			if(car) //get enumeration from unique instance 
 				content = car->GetColorEnumeration();
-			else //if some one else use this class we just add some static colors
+			else //if some other class use this metadata we just add some static colors
 			{
 				content.push_back("Blue");
 				content.push_back("Red");
@@ -247,27 +244,28 @@ public:
 		GASS::BasePropertyMetaDataPtr ep_meta_data(new GASS::FloatMaxMinPropertyMetaData(
 			"Engine power [HP]",//annotation
 			GASS::PF_VISIBLE | GASS::PF_EDITABLE, //editor flags
-			100, //min value
-			200)); //min value
+			100, //min engine power value
+			200)); //max engine power value
 
 		//register our attributes to the RTTI system
 		RegisterProperty<float>("EnginePower", &MyDerivedCar::GetEnginePower, &MyDerivedCar::SetEnginePower,ep_meta_data);
 
-		//Create some meta data for the EngineType property , 
+		//Create some meta data for the EngineType property  
 		GASS::BasePropertyMetaDataPtr et_meta_data(new GASS::EnumerationProxyPropertyMetaData(
 			"Engine type",//annotation
 			GASS::PF_VISIBLE, //editor flags
-			&EngineTypeBinder::GetStringEnumeration)); //all enumeration values
+			&EngineTypeBinder::GetStringEnumeration)); //delegate enumeration function here
 
 		RegisterProperty<EngineTypeBinder>("EngineType", &MyDerivedCar::GetEngineType, &MyDerivedCar::SetEngineType,et_meta_data);
 
-		//Create some meta data for the Color property that give us possiblity to have instance based enumeration, 
+		//Create some meta data for the Color property that give us possibility to have instance based enumeration, 
 		GASS::BasePropertyMetaDataPtr color_meta_data(new MyColorPropertyMetaData(
 			"Color name",//annotation
 			GASS::PF_VISIBLE)); 
 		RegisterProperty<std::string>("Color", &MyDerivedCar::GetColor, &MyDerivedCar::SetColor,color_meta_data);
-
 	}
+
+	//get/set section
 	float GetEnginePower()const {return m_EnginePower;}
 	void SetEnginePower(const float value){m_EnginePower = value;}
 	EngineTypeBinder GetEngineType()const {return m_EngineType;}
@@ -275,26 +273,25 @@ public:
 	std::string GetColor() const {return m_Color;}
 	void SetColor(const std::string &value) {m_Color = value;}
 
-	//used for instance based color enumeration 
-	std::vector<std::string> GetColorEnumeration() const 
-	{
-		return m_ColorEnums;
-	}
+	//used for instance based color enumeration, 
+	//note that this could be a property by it self enabling 
+	//instance based enumeration.
+	std::vector<std::string> GetColorEnumeration() const {return m_ColorEnums;}
 	void SetColorEnumeration(std::vector<std::string> value) {m_ColorEnums = value;}
 private:
 	float m_EnginePower;
 	EngineTypeBinder m_EngineType;
 	std::vector<std::string> m_ColorEnums;
 	std::string m_Color;
-
 };
+
 
 //print property name and value for all RTTI-listed properties of object derived from GASS::BaseReflectionObject
 void PrintProperties(GASS::BaseReflectionObjectPtr bro)
 {
 	//Use RTTI functionality to get properties for MyCar
 	GASS::PropertyVector props = bro->GetProperties();
-	std::cout << "List all properties for BaseReflectionObject derived object with classname: " << bro->GetRTTI()->GetClassName() << std::endl;
+	std::cout << "List all properties for BaseReflectionObject derived object with class name: " << bro->GetRTTI()->GetClassName() << std::endl;
 	for(size_t i = 0;  i < props.size(); i++)
 	{
 		const std::string prop_name = props[i]->GetName();
@@ -314,9 +311,11 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 	{
 		const std::string prop_name = props[i]->GetName();
 		boost::any any_value;
-		//my_car.GetPropertyByType("Size",any_value);
+		
+		//Do type checking by typeid
 		if(*props[i]->GetTypeID() == typeid(GASS::Vec3))
 		{
+			//get property value by using boost any
 			props[i]->GetValue(bro.get(), any_value);
 			GASS::Vec3 vec3_value = boost::any_cast<GASS::Vec3>(any_value);
 			std::cout << "Property " << prop_name << " is Vec3 and has value:" << vec3_value << "\n";
@@ -350,6 +349,11 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 			{
 				std::cout << "\t" << wheels[i].Name << " Radius:" << wheels[i].Radius << " Slip:" << wheels[i].Slip << "\n";
 			}
+		}
+		else
+		{
+			const std::string prop_value = props[i]->GetValueAsString(bro.get());
+			std::cout << "Property " << prop_name << " type is unknown and value is:" << prop_value << "\n";
 		}
 	}
 }
@@ -418,7 +422,7 @@ int main(int argc, char* argv[])
 	my_car->SetPropertyByString("GearBox","10 1");
 	PrintPropertyTypes(my_car);
 
-	//test vector data write
+	//test vector data write (by string)
 	//my_car->SetPropertyByString("Wheels","LFront 1.0 0.5 RFront 1.0 0.7");
 	//PrintProperties(my_car);
 
