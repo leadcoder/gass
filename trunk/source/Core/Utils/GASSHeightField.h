@@ -4,44 +4,31 @@
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
+#include "Core/Utils/GASSFloatArray16.h"
 
 namespace GASS
 {
-	struct FloatArray16
-	{
-		FloatArray16() : Data(NULL), MinValue(-1000), MaxValue(6000){}
-		~FloatArray16() {delete[] Data;}
-		unsigned short* Data;
-		float MinValue;
-		float MaxValue;
-		void Allocate(int size) {delete[] Data; Data  = new unsigned short[size];}
-		float ReadValue(int elem ) const {return MinValue + ((float)Data[elem]/65536.0f)*(MaxValue - MinValue);} 
-		void WriteValue(int elem ,float value) {Data[elem] = (unsigned short) ((value - MinValue)/(MaxValue - MinValue)*65536.0f);}
-	};
-
-	#define MIN_HEIGHT -1000.0f
-	#define MAX_HEIGHT 6000.0f
+	/**
+		HeightField using 16-bit storage
+	*/
 
 	class GASSCoreExport HeightField
 	{
 	public:
-		HeightField() : m_NumSamplesH(0),
-			m_NumSamplesW(0)
-		{
-			m_Data.MaxValue = MAX_HEIGHT;
-			m_Data.MinValue = MIN_HEIGHT;
-		}
 
-		HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width, unsigned int height) : m_Min(min_bound),
-			m_Max(max_bound),
-			m_NumSamplesW(width),
-			m_NumSamplesH(height)
-		{
-			m_Data.MaxValue = MAX_HEIGHT;
-			m_Data.MinValue = MIN_HEIGHT;
-			m_Data.Allocate(width*height);
-		}
-		virtual ~HeightField(){};
+		HeightField();
+
+		/**
+			Constructor that allocate height data and define max/min values for the field. 
+			Note that min_bound.y should hold the lowest elevation value that can be store in the height field,
+			and max_bound.y hold the highest elevation value to be stored.  
+			Note that 16-bit limitation have a max range of 65536.0f meters/units. Try to use as tight 
+			height range as possible to get best precision.
+			If you don't know the range at allocation time you have to use some approximation because you can not change the 
+			range after construction. This is a performance reason, we don't want to do min/max check for each SetHeight call
+		*/
+		HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples);
+		virtual ~HeightField();
 
 		/**
 			Get interpolated height at absolute location
@@ -76,7 +63,7 @@ namespace GASS
 		/**
 			Set height at world location
 		*/
-		void SetHeightAtSample(Float x, Float z, float height)
+		void SetHeightAtLocation(Float x, Float z, float height)
 		{
 			Float bounds_width = m_Max.x - m_Min.x;
 			Float bounds_height = m_Max.z - m_Min.z;

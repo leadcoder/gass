@@ -160,8 +160,8 @@ namespace GASS
 			Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			Float half_width = m_Size.x*0.5;
 			Float half_height = m_Size.y*0.5;
-			box.m_Min.Set(pos.x - half_width, 0, pos.z - half_height);
-			box.m_Max.Set(pos.x + half_width,0, pos.z + half_height);
+			box.m_Min.Set(pos.x - half_width, -500, pos.z - half_height);
+			box.m_Max.Set(pos.x + half_width, 500, pos.z + half_height);
 		}
 		return box;
 	}
@@ -182,6 +182,9 @@ namespace GASS
 
 		//delete previous hm
 		delete m_HM;
+		//add some padding to support runtime height change
+		bbox.m_Min.y -= 100;
+		bbox.m_Max.y += 100;
 		m_HM = new HeightField(bbox.m_Min, bbox.m_Max, px_width, pz_height);
 
 		LogManager::Get().stream() << "START building heightmap\n";
@@ -225,13 +228,6 @@ namespace GASS
 			return m_HM->GetNumSamplesH();
 		return 0;
 	}
-
-	/*float* HeightmapComponent::GetHeightData() const
-	{
-		if(m_HM)
-			return m_HM->GetData();
-		return NULL;
-	}*/
 
 	AABox HeightmapComponent::GetBoundingBox() const
 	{

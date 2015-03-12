@@ -43,7 +43,14 @@ namespace GASS
 
 	AABox::~AABox()
 	{
+		
+	}
 
+	bool AABox::IsValid() const
+	{
+		return (m_Max.x >  m_Min.x &&
+			    m_Max.y >  m_Min.y &&
+			    m_Max.z >  m_Min.z);
 	}
 
 	void AABox::Union(Float x,Float y,Float z)

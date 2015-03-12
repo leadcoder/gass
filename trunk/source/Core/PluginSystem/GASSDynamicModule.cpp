@@ -25,11 +25,15 @@
 
 namespace GASS
 {
+	
+
 	DynamicModule::DynamicModule(const std::string &module_name)
 	{
 		m_ModuleName = module_name;
 	}
 
+	
+	
 	void DynamicModule::Load()
 	{
 		
@@ -57,6 +61,18 @@ namespace GASS
 		//if(onLoadModule == NULL ) FileLog::Error("Unable to find onLoadModule function, in %s",module_name.c_str());
 		//m_EnginePlugin = (EnginePlugin*) (onLoadModule());
 		//assert(m_EnginePlugin);
+		//do test call
+	
+	}
+
+	typedef int (__stdcall *FuncArg1)(void *);
+	void DynamicModule::CallFunction(const std::string &func_name, void* arg1)
+	{
+		FuncArg1 onLoadModule = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
+		if(onLoadModule)
+		{
+			(onLoadModule(arg1));
+		}
 	}
 
 	void DynamicModule::Unload()

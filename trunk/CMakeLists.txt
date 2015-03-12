@@ -48,6 +48,7 @@ set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
 set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
+option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON)
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_OGRE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_PAGED_GEOMETRY "Build Plugin." ON "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OGRE" OFF)
@@ -59,8 +60,10 @@ CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_OPENAL "Build Plugin." ON "GASS_BUILD_S
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_RAKNET "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_PHYSX "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_MYGUI "Build Plugin." OFF "GASS_BUILD_SIM" OFF)
-CMAKE_DEPENDENT_OPTION(GASS_BUILD_SAMPLES "Build Samples" OFF "GASS_BUILD_SIM" OFF)
+CMAKE_DEPENDENT_OPTION(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
+
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
+
 
 #setup GASSCore third-party dependencies, if this is declared in GASSCore's CMakeLists 
 #we have need to redefine this stuff for every GASSCore dependent library
@@ -83,9 +86,8 @@ if(GASS_BUILD_SIM)
 endif()
 	
 add_subdirectory(source)
-if(GASS_BUILD_SAMPLES)
-	add_subdirectory( Samples )
-endif()
+add_subdirectory( Samples )
+
 
 #-- Add an Option to toggle the generation of the API documentation
 if(GASS_BUILD_DOCUMENTATION)

@@ -6,6 +6,27 @@
 
 namespace GASS
 {
+	HeightField::HeightField() : m_NumSamplesH(0),
+		m_NumSamplesW(0)
+	{
+
+	}
+
+	HeightField::HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples) : m_Min(min_bound),
+		m_Max(max_bound),
+		m_NumSamplesW(width_samples),
+		m_NumSamplesH(height_samples)
+	{
+		//add some padding to min max to support new runtime height values
+		m_Data = FloatArray16(min_bound.y, max_bound.y);
+		m_Data.Allocate(width_samples*height_samples);
+	}
+
+	HeightField::~HeightField()
+	{
+
+	}
+
 	#ifndef HM_LERP
 		#define HM_LERP(a, b, t) (a + (b - a) * t)
 	#endif
@@ -72,6 +93,11 @@ namespace GASS
 		ofs.write((char *) &m_Max, sizeof(Vec3));
 		ofs.write((char *) &m_NumSamplesW, sizeof(int));
 		ofs.write((char *) &m_NumSamplesH, sizeof(int));
+
+		float min_range = m_Data.GetMinRange();
+		float max_range = m_Data.GetMaxRange();
+		ofs.write((char *) &min_range, sizeof(float));
+		ofs.write((char *) &max_range, sizeof(float));
 		ofs.write((char *) &m_Data.Data[0], sizeof(unsigned short)*m_NumSamplesH*m_NumSamplesW);
 	}
 
@@ -101,8 +127,14 @@ namespace GASS
 			WRITE_HEIGHT(data[i],i);
 		}
 		delete[] data;*/
+		
+		float min_range;
+		float max_range; 
 
-		m_Data.Allocate(m_NumSamplesW*m_NumSamplesH);
+		fin.read((char *) &min_range, sizeof(float));
+		fin.read((char *) &max_range, sizeof(float));
+		m_Data = FloatArray16(min_range,max_range);
+		m_Data.Allocate(m_NumSamplesW * m_NumSamplesH);
 		fin.read((char *) &(m_Data.Data[0]), sizeof(unsigned short)*m_NumSamplesW*m_NumSamplesH);
 	}
 

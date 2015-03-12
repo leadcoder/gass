@@ -94,6 +94,12 @@ namespace GASS
 		*/
 		Vec3 GetSize() const;
 
+
+		/**
+			Check that m_Max is greater then m_Min
+		*/
+		bool IsValid() const;
+
 		/**
 			Get bounding box from polygons
 		*/

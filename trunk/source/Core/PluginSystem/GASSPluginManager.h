@@ -95,9 +95,18 @@ namespace GASS
 
 		*/
 		void LoadPluginsFromDirectory(const std::string &directory,const std::string &extention_filter = "");
+
+		/**
+			Call same function for all plugins with one argument
+		*/
+		void CallFunction(const std::string &func_name, void* arg1);
+
+		const std::vector<DynamicModule*>& GetPlugins() const {return m_Plugins;}
+		std::vector<DynamicModule*>& GetPlugins() {return m_Plugins;}
 	protected:
 		std::vector<DynamicModule*> m_Plugins;
 	};
+	typedef SPTR<PluginManager> PluginManagerPtr;
 }
 
 #endif // #ifndef PLUGINMANAGER_HH

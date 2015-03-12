@@ -29,6 +29,9 @@
 #include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
 
+
+
+#include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/System/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -47,6 +50,18 @@
 #include <Overlay/OgreOverlaySystem.h>
 
 ResourceGroupHelper resourceGrouphelper;
+
+
+//entry point for dLL
+extern "C" {
+int __declspec(dllexport) onLoadModule(void *arg1) 
+{
+	// ...
+	//
+	GASS::DynamicModule* module = (GASS::DynamicModule*)(arg1);
+	return 10;
+}
+}
 
 
 namespace GASS

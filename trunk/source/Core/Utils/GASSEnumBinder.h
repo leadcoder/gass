@@ -274,11 +274,11 @@ namespace GASS
 }
 
 #define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
-	class ENUM_BINDER : public MultiEnumBinder<ENUM,ENUM_BINDER>  \
+	class ENUM_BINDER : public GASS::MultiEnumBinder<ENUM,ENUM_BINDER>  \
 	{								\
 	public:							\
-	ENUM_BINDER():MultiEnumBinder(){};			\
-	ENUM_BINDER(ENUM value):MultiEnumBinder(value){};			\
+	ENUM_BINDER(): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(){};			\
+	ENUM_BINDER(ENUM value): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(value){};			\
 	virtual ~ENUM_BINDER(){};	\
 	static void Register()		\
 	{							\
@@ -298,11 +298,11 @@ namespace GASS
 
 
 #define START_ENUM_BINDER(ENUM,ENUM_BINDER) \
-	class ENUM_BINDER : public SingleEnumBinder<ENUM,ENUM_BINDER>  \
+	class ENUM_BINDER : public GASS::SingleEnumBinder<ENUM, ENUM_BINDER>  \
 	{								\
 	public:							\
-	ENUM_BINDER():SingleEnumBinder(){};			\
-	ENUM_BINDER(ENUM value):SingleEnumBinder(value){};			\
+	ENUM_BINDER(): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(){};			\
+	ENUM_BINDER(ENUM value): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(value){};			\
 	virtual ~ENUM_BINDER(){};	\
 	static void Register()		\
 	{							\

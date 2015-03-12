@@ -111,6 +111,14 @@ namespace GASS
 		}
 	}
 
+	void PluginManager::CallFunction(const std::string &func_name, void* arg1)
+	{
+		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		{
+			m_Plugins[i]->CallFunction(func_name,arg1);
+		}
+	}
+
 	void PluginManager::LoadPlugin(const std::string &name)
 	{
 		std::string file_name = name;

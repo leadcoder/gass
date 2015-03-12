@@ -47,6 +47,7 @@ namespace GASS
 		virtual ~DynamicModule();
 		void Load();
 		void Unload();
+		void CallFunction(const std::string &func_name, void* arg1);
 		inline const std::string &GetModuleName(){return m_ModuleName;}
 	protected:
 		std::string m_ModuleName;
