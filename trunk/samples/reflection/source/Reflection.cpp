@@ -46,6 +46,8 @@ int _getch( ) {
 }
 #endif
 
+
+//user defined struct that can be registered as property 
 struct MyGearBox
 {
 	int Gears;
@@ -67,7 +69,7 @@ struct MyGearBox
 	}
 };
 
-
+//vector derived from std::vector to enable vector attributes
 template<typename T>
 struct MyVector : std::vector<T>
 {
@@ -93,6 +95,7 @@ struct MyVector : std::vector<T>
 		return is;
 	}
 };
+
 
 struct MyWheel
 {
@@ -120,6 +123,8 @@ struct MyWheel
 	}
 };
 
+
+//baseclass for all car, dervied from the GASS::BaseReflectionObject to enable property reflection
 class MyCar : public GASS::Reflection<MyCar, GASS::BaseReflectionObject>
 {
 public:
@@ -147,21 +152,24 @@ public:
 		RegisterProperty<std::string>("Description", &MyCar::GetDescription, &MyCar::SetDescription);
 		RegisterProperty<MyGearBox>("GearBox", &MyCar::GetGearBox, &MyCar::SetGearBox);
 		RegisterProperty<MyVector<MyWheel> >("Wheels", &MyCar::GetWheels, &MyCar::SetWheels);
-
 	}
 
+	//get/set section
 	GASS::Vec3 GetPosition()const {return m_Pos;}
 	void SetPosition(const GASS::Vec3 &pos){m_Pos = pos;}
 	GASS::Quaternion GetRotation()const {return m_Rot;}
 	void SetRotation(const GASS::Quaternion &pos){m_Rot = pos;}
 	void SetDescription(const std::string &desc) {m_Description = desc;}
 	std::string GetDescription() const {return m_Description;}
-
 	void SetGearBox(const MyGearBox &gb) {m_GearBox = gb;}
 	MyGearBox GetGearBox() const {return m_GearBox;}
-
 	MyVector<MyWheel> GetWheels() const {return m_Wheels;}
 	void SetWheels(const MyVector<MyWheel> &value)  {m_Wheels = value;}
+
+	//If you just want regular get set you can use the 
+	//convenience macro, ADD_PROPERTY, that will implement simple get/set. 
+	//ei. ADD_PROPERTY(std::string,Description)
+
 private:
 	GASS::Vec3 m_Pos;
 	GASS::Quaternion m_Rot;
@@ -170,6 +178,8 @@ private:
 	MyVector<MyWheel> m_Wheels;
 };
 
+
+//user defined enum
 enum EngineType
 {
 	ET_V12,
@@ -177,12 +187,12 @@ enum EngineType
 	ET_V6
 };
 
-using namespace GASS;
+
 START_ENUM_BINDER(EngineType, EngineTypeBinder)
 	BIND(ET_V12)
 	BIND(ET_V8)
 	BIND(ET_V6)
-	END_ENUM_BINDER(EngineType, EngineTypeBinder)
+END_ENUM_BINDER(EngineType, EngineTypeBinder)
 
 class MyDerivedCar;
 //Use custom meta data for color info
@@ -196,11 +206,11 @@ public:
 	class MyColorPropertyMetaData : public GASS::EnumerationPropertyMetaData
 	{
 	public:
-		MyColorPropertyMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false)
+		MyColorPropertyMetaData(const std::string &annotation, GASS::PropertyFlags flags): GASS::EnumerationPropertyMetaData(annotation,flags,false)
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const 
+		virtual std::vector<std::string> GetEnumeration(GASS::BaseReflectionObjectPtr object) const 
 		{
 			std::vector<std::string> content;// = gfx_system->GetMaterialNames(m_ResourceGroup);
 			boost::shared_ptr<MyDerivedCar> car = DYNAMIC_PTR_CAST<MyDerivedCar>(object);
@@ -279,6 +289,7 @@ private:
 
 };
 
+//print property name and value for all RTTI-listed properties of object derived from GASS::BaseReflectionObject
 void PrintProperties(GASS::BaseReflectionObjectPtr bro)
 {
 	//Use RTTI functionality to get properties for MyCar
@@ -294,42 +305,7 @@ void PrintProperties(GASS::BaseReflectionObjectPtr bro)
 	}
 }
 
-void PrintPropertyMetaData(GASS::BaseReflectionObjectPtr bro)
-{
-	//Use RTTI functionality to get properties for MyCar
-	GASS::PropertyVector props = bro->GetProperties();
-	std::cout << "List all properties that has metadata" << std::endl;
-	for(size_t i = 0;  i < props.size(); i++)
-	{
-		const std::string prop_name = props[i]->GetName();
-		const std::string prop_value = props[i]->GetValueAsString(bro.get());
-
-		if(props[i]->HasMetaData())
-		{
-			GASS::BasePropertyMetaDataPtr meta_data = DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(props[i]->GetMetaData());
-			std::cout << "Property:" << prop_name  << "  Annotation:\"" << meta_data->GetAnnotation() << "\"";
-			GASS::FloatMaxMinPropertyMetaDataPtr float_meta_data = DYNAMIC_PTR_CAST<GASS::FloatMaxMinPropertyMetaData>(meta_data);
-			if(float_meta_data)
-			{
-				std::cout << "  Min:" << float_meta_data->GetMin() << " Max:" << float_meta_data->GetMax() << "\n";
-			}
-			GASS::EnumerationPropertyMetaDataPtr enum_meta_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
-			if(enum_meta_data)
-			{
-				std::cout << "  Possible enumeration values:"; 
-
-				std::vector<std::string> values = enum_meta_data->GetEnumeration(bro);
-				for(size_t i = 0; i < values.size();i++)
-				{
-					std::cout << " " << values[i];
-				}
-				std::cout << std::endl;
-			}
-		}
-	}
-}
-
-
+//print property type and access value by type
 void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 {
 	GASS::PropertyVector props = bro->GetProperties();
@@ -378,6 +354,44 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 	}
 }
 
+
+//print property meta-data for object derived from GASS::BaseReflectionObject
+void PrintPropertyMetaData(GASS::BaseReflectionObjectPtr bro)
+{
+	//Use RTTI functionality to get properties for MyCar
+	GASS::PropertyVector props = bro->GetProperties();
+	std::cout << "List all properties that has metadata" << std::endl;
+	for(size_t i = 0;  i < props.size(); i++)
+	{
+		const std::string prop_name = props[i]->GetName();
+		const std::string prop_value = props[i]->GetValueAsString(bro.get());
+
+		if(props[i]->HasMetaData())
+		{
+			GASS::BasePropertyMetaDataPtr meta_data = DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(props[i]->GetMetaData());
+			std::cout << "Property:" << prop_name  << "  Annotation:\"" << meta_data->GetAnnotation() << "\"";
+			GASS::FloatMaxMinPropertyMetaDataPtr float_meta_data = DYNAMIC_PTR_CAST<GASS::FloatMaxMinPropertyMetaData>(meta_data);
+			if(float_meta_data)
+			{
+				std::cout << "  Min:" << float_meta_data->GetMin() << " Max:" << float_meta_data->GetMax() << "\n";
+			}
+			GASS::EnumerationPropertyMetaDataPtr enum_meta_data = DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
+			if(enum_meta_data)
+			{
+				std::cout << "  Possible enumeration values:"; 
+				std::vector<std::string> values = enum_meta_data->GetEnumeration(bro);
+				for(size_t i = 0; i < values.size();i++)
+				{
+					std::cout << "," << values[i];
+				}
+				std::cout << std::endl;
+			}
+		}
+	}
+}
+
+
+
 int main(int argc, char* argv[])
 {
 	boost::shared_ptr<MyCar> my_car(new MyCar());
@@ -423,7 +437,6 @@ int main(int argc, char* argv[])
 
 	std::cout << "\nShow that we include base class properties...\n";
 	PrintProperties(my_derived_car);
-
 
 	getch();
 	return 0;
