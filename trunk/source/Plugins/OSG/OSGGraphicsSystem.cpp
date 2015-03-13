@@ -573,7 +573,6 @@ namespace GASS
 
 	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name)
 	{
-
 		osg::ref_ptr<osg::StateSet> state_set = new osg::StateSet();
 		SetOSGStateSet(material, state_set);
 		m_Materials[material.Name] = state_set;
@@ -623,13 +622,19 @@ namespace GASS
 		ColorRGB specular = material.Specular;
 		ColorRGB si = material.SelfIllumination;
 
-		osg::ref_ptr<osg::Material> mat (new osg::Material);
-		mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.r,diffuse.g,diffuse.b,diffuse.a));
-		mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.r,ambient.g,ambient.b,1));
-		mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.r,specular.g,specular.b,1));
-		mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
-		mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
-		state_set->setAttribute(mat.get());
+		if(!material.TrackVertexColor)
+		{
+			osg::ref_ptr<osg::Material> mat (new osg::Material);
+			mat->setDiffuse(osg::Material::FRONT_AND_BACK,osg::Vec4(diffuse.r,diffuse.g,diffuse.b,diffuse.a));
+			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(ambient.r,ambient.g,ambient.b,1));
+			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(specular.r,specular.g,specular.b,1));
+			mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
+			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(si.r,si.g,si.b,1));
+
+			state_set->setAttribute(mat.get());
+			state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		}
+		//mat->setColorMode(osg::Material::ColorMode::DIFFUSE); //Track vertex color
 
 		
 		if(material.DepthTest)
@@ -647,7 +652,7 @@ namespace GASS
 			depth->setWriteMask( material.DepthWrite );
 			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		*/
-		state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+		
 		// Turn on blending
 		if(diffuse.a < 1.0) //special handling if we have transparent a material,
 		{
