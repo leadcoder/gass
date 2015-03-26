@@ -39,8 +39,6 @@ namespace GASS
 
 		float GetMinRange() const {return RangeMin;}
 		float GetMaxRange() const {return RangeMax;}
-
-		//float SetRange(float min_value, float max_value) { RangeMin = min_value; RangeMax = max_value;}
 	private:
 		/** Hold min value supported by this array, used for range compression*/
 		float RangeMin; 
