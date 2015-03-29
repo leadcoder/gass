@@ -27,7 +27,7 @@ namespace GASS
 	is present, this class fake that with the null_deleter
 	*/
 
-	class GASSCoreExport StaticMessageListener : public GASS::IMessageListener
+	class StaticMessageListener : public GASS::IMessageListener
 	{
 	public:
 		StaticMessageListener()

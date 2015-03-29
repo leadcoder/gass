@@ -121,6 +121,7 @@ namespace GASS
 		m_OgreLight->setPosition(Ogre::Vector3::ZERO);
 		m_OgreLight->setShadowNearClipDistance( 1 );
 		m_OgreLight->setShadowFarClipDistance( 3000 );
+		
 		//m_OgreLight->setDirection(0,0,-1);
 		lc->GetOgreNode()->attachObject(m_OgreLight);
 	}

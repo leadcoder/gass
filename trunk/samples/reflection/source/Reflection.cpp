@@ -69,7 +69,7 @@ struct MyGearBox
 	}
 };
 
-//vector derived from std::vector to enable vector attributes
+//vector derived from std::vector to enable std::vector based attributes
 template<typename T>
 struct MyVector : std::vector<T>
 {
@@ -166,7 +166,7 @@ public:
 	MyVector<MyWheel> GetWheels() const {return m_Wheels;}
 	void SetWheels(const MyVector<MyWheel> &value)  {m_Wheels = value;}
 
-	//If you just want regular get set you can use the 
+	//If you just want regular get/set you can use the 
 	//convenience macro, ADD_PROPERTY, that will implement simple get/set. 
 	//ei. ADD_PROPERTY(std::string,Description)
 
