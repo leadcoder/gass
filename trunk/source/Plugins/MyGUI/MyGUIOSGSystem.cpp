@@ -44,7 +44,6 @@
 #include "Sim/Interface/GASSIViewport.h"
 
 #include "MyGUI_RTTLayer.h"
-#include "MonitorPanel.h"
 #include "MyGUI_OpenGLTexture.h"
 
 namespace GASS
@@ -85,6 +84,83 @@ namespace GASS
 
 		// create the geometry for the wall.
 		osg::Geometry* geom = new osg::Geometry;
+
+	/*osg::Node* createBase(const osg::Vec3& center,float radius)
+	{
+
+
+
+		int numTilesX = 10;
+		int numTilesY = 10;
+
+		float width = 2*radius;
+		float height = 2*radius;
+
+		osg::Vec3 v000(center - osg::Vec3(width*0.5f,height*0.5f,0.0f));
+		osg::Vec3 dx(osg::Vec3(width/((float)numTilesX),0.0,0.0f));
+		osg::Vec3 dy(osg::Vec3(0.0f,height/((float)numTilesY),0.0f));
+
+		// fill in vertices for grid, note numTilesX+1 * numTilesY+1...
+		osg::Vec3Array* coords = new osg::Vec3Array;
+		int iy;
+		for(iy=0;iy<=numTilesY;++iy)
+		{
+			for(int ix=0;ix<=numTilesX;++ix)
+			{
+				coords->push_back(v000+dx*(float)ix+dy*(float)iy);
+			}
+		}
+
+		//Just two colours - black and white.
+		osg::Vec4Array* colors = new osg::Vec4Array;
+		colors->push_back(osg::Vec4(1.0f,1.0f,1.0f,1.0f)); // white
+		colors->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f)); // black
+		int numColors=colors->size();
+
+
+		int numIndicesPerRow=numTilesX+1;
+		osg::UByteArray* coordIndices = new osg::UByteArray; // assumes we are using less than 256 points...
+		osg::UByteArray* colorIndices = new osg::UByteArray;
+		for(iy=0;iy<numTilesY;++iy)
+		{
+			for(int ix=0;ix<numTilesX;++ix)
+			{
+				// four vertices per quad.
+				coordIndices->push_back(ix    +(iy+1)*numIndicesPerRow);
+				coordIndices->push_back(ix    +iy*numIndicesPerRow);
+				coordIndices->push_back((ix+1)+iy*numIndicesPerRow);
+				coordIndices->push_back((ix+1)+(iy+1)*numIndicesPerRow);
+
+				// one color per quad
+				colorIndices->push_back((ix+iy)%numColors);
+			}
+		}
+
+
+		// set up a single normal
+		osg::Vec3Array* normals = new osg::Vec3Array;
+		normals->push_back(osg::Vec3(0.0f,0.0f,1.0f));
+
+
+		osg::Geometry* geom = new osg::Geometry;
+		geom->setVertexArray(coords);
+		geom->setVertexIndices(coordIndices);
+
+		geom->setColorArray(colors);
+		geom->setColorIndices(colorIndices);
+		geom->setColorBinding(osg::Geometry::BIND_PER_PRIMITIVE);
+
+		geom->setNormalArray(normals);
+		geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
+
+		geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,coordIndices->size()));
+
+		osg::Geode* geode = new osg::Geode;
+		geode->addDrawable(geom);
+
+		return geode;
+	}*/
+
 
 		osg::Vec3Array* vertices = new osg::Vec3Array(4);
 		(*vertices)[0] = top_left;
@@ -155,9 +231,9 @@ namespace GASS
 		return group;
 
 	}
+/*
 
-
-	/*osg::Node* createBase(const osg::Vec3& center,float radius)
+	osg::Node* createBase(const osg::Vec3& center,float radius)
 	{
 
 
@@ -313,6 +389,8 @@ namespace GASS
 		geode->addDrawable( m_OSGManager.get() );
 		geode->getOrCreateStateSet()->setMode( GL_BLEND, osg::StateAttribute::ON );
 		geode->getOrCreateStateSet()->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+		//geode->getOrCreateStateSet()->setAttribute(new osg::Program, osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE); 
+		//geode->setNodeMask(0x00000001);
 		
 		m_HUDCamera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
 		m_HUDCamera->setRenderOrder( osg::Camera::POST_RENDER );
@@ -342,10 +420,6 @@ namespace GASS
 			int x, y, w, h; gw->getWindowRectangle( x, y, w, h );
 			view->getEventQueue()->windowResize( x, y, w, h );
 		}
-		
-
-		
-
 	}
 
 	void MyGUIOSGSystem::OnGraphicsSystemLoaded(GraphicsSystemLoadedEventPtr message)

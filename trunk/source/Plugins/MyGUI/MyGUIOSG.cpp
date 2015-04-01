@@ -136,6 +136,9 @@ void MYGUIOSGPlatformProxy::drawImplementation( osg::RenderInfo& renderInfo ) co
         osg::State* state = renderInfo.getState();
         state->disableAllVertexArrays();
         state->disableTexCoordPointer( 0 );
+		state->setActiveTextureUnit(0); 
+		state->setClientActiveTextureUnit(0); 
+
         
         glPushMatrix();
         glPushAttrib( GL_ALL_ATTRIB_BITS );

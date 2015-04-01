@@ -25,8 +25,14 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include "MyGUIMessages.h"
+#include "Plugins/Game/GameMessages.h"
+
 #include <osg/ref_ptr>
 
+namespace MyGUI
+{
+	class RotatingSkin;
+}
 
 namespace GASS
 {
@@ -39,6 +45,9 @@ namespace GASS
 		virtual void OnInitialize();
 	protected:
 		void OnLayoutLoaded(LayoutLoadedEventPtr message);
+		void OnEngineStatus(VehicleEngineStatusMessagePtr message);
+		MyGUI::RotatingSkin* m_SpeedNeedle;
+		MyGUI::RotatingSkin* m_RPMNeedle;
 		};
 	typedef SPTR<MyGUIVehicleInstrumentsComponent> MyGUIVehicleInstrumentsComponentPtr;
 }

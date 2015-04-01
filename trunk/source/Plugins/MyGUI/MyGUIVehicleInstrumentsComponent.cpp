@@ -28,7 +28,6 @@
 #include <osg/Geode>
 #include <osg/Image>
 #include "MyGUI_RTTLayer.h"
-#include "MonitorPanel.h"
 #include "MyGUI_OpenGLTexture.h"
 
 #include "MyGUIOSGSystem.h"
@@ -47,7 +46,8 @@
 
 namespace GASS
 {
-	MyGUIVehicleInstrumentsComponent::MyGUIVehicleInstrumentsComponent(void) 
+	MyGUIVehicleInstrumentsComponent::MyGUIVehicleInstrumentsComponent(void) : m_SpeedNeedle(NULL),
+		m_RPMNeedle(NULL)
 	{
 
 	}
@@ -68,12 +68,32 @@ namespace GASS
 		//wait for mesh data to load!
 		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MyGUIVehicleInstrumentsComponent::OnLayoutLoaded,LayoutLoadedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(MyGUIVehicleInstrumentsComponent::OnEngineStatus,VehicleEngineStatusMessage,0));
 	}
 
 	void MyGUIVehicleInstrumentsComponent::OnLayoutLoaded(LayoutLoadedEventPtr message)
 	{
+		MyGUI::ImageBox* image = message->m_Widgets.at(0)->findWidget("SpeedNeedle")->castType<MyGUI::ImageBox>();
+		MyGUI::ISubWidget* main = image->getSubWidgetMain();
+		m_SpeedNeedle = main->castType<MyGUI::RotatingSkin>();
+		if(m_SpeedNeedle)
+			m_SpeedNeedle->setCenter(MyGUI::IntPoint(m_SpeedNeedle->getWidth()*0.5,m_SpeedNeedle->getHeight()*0.5));
 		//SceneManagerListenerPtr listener = shared_from_this();
 		//GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<BaseSceneManager>()->Register(listener);
+	}
+
+	void MyGUIVehicleInstrumentsComponent::OnEngineStatus(VehicleEngineStatusMessagePtr message)
+	{
+		if(m_SpeedNeedle)
+		{
+			double speed = message->GetSpeed();
+			m_SpeedNeedle->setCenter(MyGUI::IntPoint(m_SpeedNeedle->getWidth()*0.5,m_SpeedNeedle->getHeight()*0.5));
+			const float start_angle = -Math::Deg2Rad(141);
+			const float end_angle = Math::Deg2Rad(141);
+			const float end_speed = 120;
+			const float norm_speed = speed*3.6/end_speed;
+			m_SpeedNeedle->setAngle(start_angle + norm_speed*(end_angle - start_angle));
+		}
 	}
 	
 	/*void MyGUIVehicleInstrumentsComponent::SceneManagerTick(double delta_time)

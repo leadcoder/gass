@@ -165,7 +165,7 @@ namespace GASS
 	{
 		m_Layout = MyGUI::LayoutManager::getInstance().loadLayout(m_LayoutFile.c_str());
 		MyGUI::ILayer* layer = MyGUI::LayerManager::getInstance().getByName("RTT_Panel", false);
-		if (layer != nullptr)
+		/*if (layer != nullptr)
 		{
 			MyGUI::RTTLayer* rttLayer = layer->castType<MyGUI::RTTLayer>();
 			MyGUI::OpenGLTexture* tex = dynamic_cast<MyGUI::OpenGLTexture*>(rttLayer->GetTexture());
@@ -177,10 +177,8 @@ namespace GASS
 				GeodeFinder finder(m_TextureName,m_OSGRTTTexture);
 				node->GetNode()->accept (finder);
 			}
-		}
+		}*/
 		GetSceneObject()->PostEvent(LayoutLoadedEventPtr(new LayoutLoadedEvent(m_Layout)));
-		//SceneManagerListenerPtr listener = shared_from_this();
-		//GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<BaseSceneManager>()->Register(listener);
 	}
 
 	std::string MyGUILayoutComponent::GetTextureName() const

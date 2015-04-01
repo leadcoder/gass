@@ -25,6 +25,7 @@ namespace GASS
 
 	MainMenu::~MainMenu()
 	{
+
 	}
 
 	void MainMenu::notifyFileMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item)
@@ -44,7 +45,10 @@ namespace GASS
 		{
 			exit(0);
 		}
-
+		else if(item_id == "Command_Load")
+		{
+			//Show scene selection dialog
+		}
 		else if(item_id == "Command_ReloadAllResources")
 		{
 			SystemMessagePtr message(new ReloadMaterial());
