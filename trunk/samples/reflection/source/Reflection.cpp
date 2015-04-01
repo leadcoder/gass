@@ -152,6 +152,9 @@ public:
 		RegisterProperty<std::string>("Description", &MyCar::GetDescription, &MyCar::SetDescription);
 		RegisterProperty<MyGearBox>("GearBox", &MyCar::GetGearBox, &MyCar::SetGearBox);
 		RegisterProperty<MyVector<MyWheel> >("Wheels", &MyCar::GetWheels, &MyCar::SetWheels);
+
+		
+		
 	}
 
 	//get/set section
@@ -415,6 +418,9 @@ int main(int argc, char* argv[])
 	MyGearBox gb_value = boost::any_cast<MyGearBox>(any_value);
 	gb_value.Gears++;
 	my_car->SetPropertyByType("GearBox",gb_value);
+
+	
+
 	PrintPropertyTypes(my_car);
 
 	//Change gearbox settings by string, first argument is gears, second automatic bool (0 or 1)

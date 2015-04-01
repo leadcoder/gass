@@ -43,6 +43,8 @@ namespace GASS
 		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		bool GetCastShadow() const {return m_CastShadow;}
+		bool GetReceiveShadow()const {return m_ReceiveShadow;}
+		void SetReceiveShadow(bool value);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDataMessage(ManualMeshDataRequestPtr message);
 		void OnClearMessage(ClearManualMeshRequestPtr message);
@@ -55,6 +57,7 @@ namespace GASS
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadow;
+		bool m_ReceiveShadow;
 		OSGGraphicsSystemPtr m_GFXSystem;
 	};
 }

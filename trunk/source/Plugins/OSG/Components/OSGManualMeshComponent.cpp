@@ -44,7 +44,8 @@
 namespace GASS
 {
 	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN),
-		m_CastShadow(false)
+		m_CastShadow(false),
+		m_ReceiveShadow(false)
 	{
 
 	}
@@ -59,6 +60,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, Component>);
 		RegisterProperty<bool>("CastShadow", &GetCastShadow, &SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<bool>("ReceiveShadow", &GetReceiveShadow, &SetReceiveShadow,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh receive shadows or not",PF_VISIBLE | PF_EDITABLE)));
 		
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlagsBinder, &OSGManualMeshComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
@@ -84,8 +88,11 @@ namespace GASS
 		osg::ref_ptr<osg::Point> point (new osg::Point( 8.0f ));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON); 
 
-		m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
-		m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
+		//m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
+		//m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
+
+		SetCastShadow(m_CastShadow);
+		SetReceiveShadow(m_ReceiveShadow);
 
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
@@ -103,6 +110,19 @@ namespace GASS
 		else if(m_GeoNode.valid())
 		{
 			m_GeoNode->setNodeMask(~NM_CAST_SHADOWS & m_GeoNode->getNodeMask());
+		}
+	}
+
+	void OSGManualMeshComponent::SetReceiveShadow(bool value)
+	{
+		m_ReceiveShadow = value;
+		if(m_GeoNode.valid())
+		{
+			if(m_ReceiveShadow)
+				m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
+			else 
+				m_GeoNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_GeoNode->getNodeMask());
+
 		}
 	}
 

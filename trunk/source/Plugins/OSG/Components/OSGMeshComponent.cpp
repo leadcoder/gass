@@ -60,7 +60,7 @@ namespace GASS
 		m_Lighting(true),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_Expand(false),
-		m_FlipDDS(true)
+		m_FlipDDS(false)
 		
 	{
 

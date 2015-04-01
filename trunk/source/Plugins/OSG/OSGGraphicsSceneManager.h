@@ -52,7 +52,6 @@ namespace GASS
 		virtual void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color) {};
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
-		
 	private:
 		//Fog
 		std::string GetFogMode() const {return m_FogMode;}
@@ -60,15 +59,12 @@ namespace GASS
 		float GetFogEnd() const {return m_FogEnd;}
 		float GetFogDensity() const {return m_FogDensity;}
 		Vec3 GetFogColor() const {return m_FogColor;}
-
-
 		void SetFogMode(const std::string &mode) {m_FogMode = mode; UpdateFogSettings();}
 		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
 		void SetFogColor(const Vec3 &value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 		void UpdateFogSettings();
-
 		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
 	private:	

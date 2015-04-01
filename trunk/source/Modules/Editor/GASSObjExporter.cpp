@@ -8,7 +8,8 @@ namespace GASS
 
 	ObjExporter::ObjExporter() :
 		m_CopyTextures(true),
-		m_FlipDDSTexCoords(true)
+		m_FlipDDSTexCoords(true),
+		m_WrapTexCoords(true)
 	{
 
 
@@ -154,6 +155,12 @@ namespace GASS
 								if(m_FlipDDSTexCoords && dds_tex)
 								{
 									tc.y = -tc.y;
+								}
+
+								if(m_WrapTexCoords)
+								{
+									//tc.x = fmod(tc.x, 1.0);
+									//tc.y = fmod(tc.y, 1.0);
 								}
 								TexCoordVector.push_back(tc);
 							}

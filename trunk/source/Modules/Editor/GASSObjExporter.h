@@ -21,9 +21,12 @@ namespace GASS
 		bool GetFlipDDSTexCoords() const {return m_FlipDDSTexCoords;}
 		void SetCopyTextures(bool value) {m_CopyTextures = value;}
 		bool GetCopyTextures() const {return m_CopyTextures;}
+		void SetWrapTexCoords(bool value) {m_WrapTexCoords = value;}
+		bool GetWrapTexCoords() const {return m_WrapTexCoords;}
 	private:
 		bool m_CopyTextures;
 		bool m_FlipDDSTexCoords;
+		bool m_WrapTexCoords;
 	};
 }
 #endif

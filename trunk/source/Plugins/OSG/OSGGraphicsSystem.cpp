@@ -38,6 +38,7 @@
 #include <osgShadow/SoftShadowMap>
 #include <osgShadow/ParallelSplitShadowMap>
 #include <osgShadow/LightSpacePerspectiveShadowMap>
+#include <osgShadow/ViewDependentShadowMap>
 #include <osgShadow/StandardShadowMap>
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
@@ -456,6 +457,11 @@ namespace GASS
 
 				m_ShadowTechnique = pssm;
 			}
+			else if(type == "ViewDependentShadowMap")
+			{
+				osg::ref_ptr<osgShadow::ViewDependentShadowMap> vdsm = new osgShadow::ViewDependentShadowMap;
+				m_ShadowTechnique = vdsm;
+			}
 			else if(type == "LightSpacePerspectiveShadowMap")
 			{
 				osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
@@ -474,8 +480,6 @@ namespace GASS
 
 				if( sm.valid() ) 
 				{
-
-
 					float minLightMargin = 20.f;
 					float maxFarPlane = 500;
 					int texSize = 1024;
