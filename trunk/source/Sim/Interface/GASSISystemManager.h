@@ -20,48 +20,26 @@
 
 #pragma once
 
-#include "Sim/GASSCommon.h"
+#include "Core/Common.h"
+#include "Sim/Interface/GASSISystem.h"
 
 namespace GASS
 {
-	class Scene;
-	typedef SPTR<Scene> ScenePtr;
-	typedef WPTR<Scene> SceneWeakPtr;
 
-	class GASSExport ISceneManagerListener
-	{
-	public:
-		virtual void SceneManagerTick(double delta) = 0;
-	};
-
-	typedef WPTR<ISceneManagerListener> SceneManagerListenerWeakPtr;
-	typedef SPTR<ISceneManagerListener> SceneManagerListenerPtr;
-
-	/**
-		Interface that all scene managers must implement.
-		A scene manager in GASS is responsible for handling 
-		a certain part of a scene, for example graphics, 
-		physics or sound. Therefore a scene manager is owned
-		by a scene.
+	/** \addtogroup GASSSim
+	*  @{
 	*/
-
-	class ISceneManager
+	
+	/**
+		Interface for sim system manager
+	*/
+	class ISystemManager
 	{
 	public:
-		virtual ~ISceneManager(){}
-		virtual void OnCreate() = 0;
-		virtual void OnInit() = 0;
-		virtual void OnShutdown() = 0;
-		virtual std::string GetName() const = 0;
-		virtual void SetName(const std::string &name) = 0;
-		virtual ScenePtr GetScene() const = 0;
-		virtual void SetScene(ScenePtr owner) = 0;
-		virtual void Register(SceneManagerListenerPtr listener) = 0;
-		virtual void Unregister(SceneManagerListenerPtr listener) = 0;
-		virtual bool GetSerialize() const =0;
+		virtual ~ISystemManager(){}
+		virtual void Init() = 0;
+	private:
 	};
-
-	typedef SPTR<ISceneManager> SceneManagerPtr;
-
-	
+	typedef SPTR<ISystemManager> SystemManagerPtr;
+	typedef WPTR<ISystemManager> SystemManagerWeakPtr;
 }

@@ -21,11 +21,12 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/System/GASSISystem.h"
+#include "Sim/Interface/GASSISystem.h"
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSRunTimeController.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Reflection/GASSBaseReflectionObject.h"
 #include <string>
 
 namespace GASS

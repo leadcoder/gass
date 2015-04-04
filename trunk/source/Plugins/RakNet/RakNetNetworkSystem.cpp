@@ -36,7 +36,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"

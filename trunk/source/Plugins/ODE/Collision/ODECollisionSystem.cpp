@@ -23,7 +23,7 @@
 #include "Plugins/ODE/Collision/ODECollisionGeometryComponent.h"
 #include "Plugins/ODE/Collision/ODELineCollision.h"
 
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSIMessage.h"

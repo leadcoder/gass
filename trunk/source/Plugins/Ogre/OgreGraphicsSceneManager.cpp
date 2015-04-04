@@ -37,7 +37,7 @@
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"

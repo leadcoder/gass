@@ -21,7 +21,7 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"

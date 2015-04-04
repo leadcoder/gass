@@ -19,49 +19,43 @@
 *****************************************************************************/
 
 #pragma once
-
-#include "Sim/GASSCommon.h"
+#include <string>
+#include "Core/Common.h"
 
 namespace GASS
 {
-	class Scene;
-	typedef SPTR<Scene> ScenePtr;
-	typedef WPTR<Scene> SceneWeakPtr;
-
-	class GASSExport ISceneManagerListener
+	class ISystemManager;
+	typedef SPTR<ISystemManager> SystemManagerPtr;
+	typedef std::string SystemType;
+	
+	class ISystemListener
 	{
+
 	public:
-		virtual void SceneManagerTick(double delta) = 0;
+		virtual void SystemTick(double delta_time) = 0;
 	};
+	typedef SPTR<ISystemListener> SystemListenerPtr;
+	typedef WPTR<ISystemListener> SystemListenerWeakPtr;
 
-	typedef WPTR<ISceneManagerListener> SceneManagerListenerWeakPtr;
-	typedef SPTR<ISceneManagerListener> SceneManagerListenerPtr;
 
-	/**
-		Interface that all scene managers must implement.
-		A scene manager in GASS is responsible for handling 
-		a certain part of a scene, for example graphics, 
-		physics or sound. Therefore a scene manager is owned
-		by a scene.
+	/** \addtogroup GASSSim
+	*  @{
 	*/
 
-	class ISceneManager
+	/**
+		Interface for all sim systems. 
+	*/
+
+	class ISystem
 	{
 	public:
-		virtual ~ISceneManager(){}
-		virtual void OnCreate() = 0;
-		virtual void OnInit() = 0;
-		virtual void OnShutdown() = 0;
-		virtual std::string GetName() const = 0;
-		virtual void SetName(const std::string &name) = 0;
-		virtual ScenePtr GetScene() const = 0;
-		virtual void SetScene(ScenePtr owner) = 0;
-		virtual void Register(SceneManagerListenerPtr listener) = 0;
-		virtual void Unregister(SceneManagerListenerPtr listener) = 0;
-		virtual bool GetSerialize() const =0;
+		virtual ~ISystem(){}
+		virtual std::string GetSystemName() const = 0;
+		virtual void OnCreate(SystemManagerPtr owner)= 0;
+		virtual void Init() = 0;
+		virtual void Register(SystemListenerPtr listener) = 0;
+		virtual void Unregister(SystemListenerPtr listener)= 0;
 	};
-
-	typedef SPTR<ISceneManager> SceneManagerPtr;
-
-	
+	typedef SPTR<ISystem> SystemPtr;
+	typedef WPTR<ISystem> SystemWeakPtr;
 }

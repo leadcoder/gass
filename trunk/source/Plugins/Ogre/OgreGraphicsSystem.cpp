@@ -33,7 +33,7 @@
 
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSIInputSystem.h"

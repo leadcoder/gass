@@ -25,8 +25,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/System/GASSISystem.h"
-
+#include "Sim/Interface/GASSISystem.h"
 
 namespace GASS
 {

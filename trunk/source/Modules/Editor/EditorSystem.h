@@ -4,7 +4,7 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"

@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/System/GASSISystem.h"
 #include "Core/Math/GASSSphere.h"
 #include "Sim/GASSGeometryFlags.h"
 #include <string>

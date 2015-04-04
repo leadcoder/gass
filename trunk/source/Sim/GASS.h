@@ -41,7 +41,7 @@
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/Reflection/GASSIProperty.h"
 #include "Core/Reflection/GASSProperty.h"
 

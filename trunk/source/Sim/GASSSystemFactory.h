@@ -18,50 +18,37 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
+#ifndef SYSTEMFACTORY_HH
+#define SYSTEMFACTORY_HH
 
 #include "Sim/GASSCommon.h"
+#include "Sim/Interface/GASSISystem.h"
+#include "Core/Utils/GASSFactory.h"
 
 namespace GASS
 {
-	class Scene;
-	typedef SPTR<Scene> ScenePtr;
-	typedef WPTR<Scene> SceneWeakPtr;
 
-	class GASSExport ISceneManagerListener
-	{
-	public:
-		virtual void SceneManagerTick(double delta) = 0;
-	};
-
-	typedef WPTR<ISceneManagerListener> SceneManagerListenerWeakPtr;
-	typedef SPTR<ISceneManagerListener> SceneManagerListenerPtr;
-
-	/**
-		Interface that all scene managers must implement.
-		A scene manager in GASS is responsible for handling 
-		a certain part of a scene, for example graphics, 
-		physics or sound. Therefore a scene manager is owned
-		by a scene.
+	/** \addtogroup GASSSim
+	*  @{
+	*/
+	/** \addtogroup System
+	*  @{
 	*/
 
-	class ISceneManager
+	/**	
+		The factory where all systems should be registred in
+	*/
+
+	class GASSExport SystemFactory : public Factory<ISystem,std::string,void>
 	{
 	public:
-		virtual ~ISceneManager(){}
-		virtual void OnCreate() = 0;
-		virtual void OnInit() = 0;
-		virtual void OnShutdown() = 0;
-		virtual std::string GetName() const = 0;
-		virtual void SetName(const std::string &name) = 0;
-		virtual ScenePtr GetScene() const = 0;
-		virtual void SetScene(ScenePtr owner) = 0;
-		virtual void Register(SceneManagerListenerPtr listener) = 0;
-		virtual void Unregister(SceneManagerListenerPtr listener) = 0;
-		virtual bool GetSerialize() const =0;
+		SystemFactory();
+		virtual ~SystemFactory();
+		static SystemFactory* GetPtr();
+		static SystemFactory& Get();
+	protected:
+		static SystemFactory* m_Instance;
+	protected:
 	};
-
-	typedef SPTR<ISceneManager> SceneManagerPtr;
-
-	
 }
+#endif // #ifndef SYSTEMFACTORY_HH

@@ -24,7 +24,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceHandle.h"
-#include "Core/System/GASSSystemFactory.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSEnumLookup.h"

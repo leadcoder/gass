@@ -146,10 +146,13 @@ namespace GASS
 			m_VehicleDrivableSurfaceTypes.push_back(vdst);
 		}
 		
+		LogManager::getSingleton().stream() << "Create  PxVehicleDrivableSurfaceToTireFrictionPairs...";
 		m_SurfaceTirePairs=PxVehicleDrivableSurfaceToTireFrictionPairs::allocate((int)m_Tires.size(),(int)m_DrivableMaterials.size());
 		m_SurfaceTirePairs->setup((int)m_Tires.size(),(int)m_DrivableMaterials.size(),(const PxMaterial**)&m_DrivableMaterials[0],&m_VehicleDrivableSurfaceTypes[0]);
 	
 		//m_SurfaceTirePairs = PxVehicleDrivableSurfaceToTireFrictionPairs::create((int)m_Tires.size(),(int)m_DrivableMaterials.size(),(const PxMaterial**)&m_DrivableMaterials[0],&m_VehicleDrivableSurfaceTypes[0]);
+		LogManager::getSingleton().stream() << "setup tire friction...";
+
 		for(PxU32 i=0; i < m_DrivableMaterials.size(); i++)
 		{
 			for(PxU32 j=0;j<m_Tires.size();j++)
@@ -163,6 +166,7 @@ namespace GASS
 				}
 			}
 		}
+		LogManager::getSingleton().stream() << "Create  PxCreateControllerManager...";
 
 		m_ControllerManager = PxCreateControllerManager(*m_Foundation);
 
