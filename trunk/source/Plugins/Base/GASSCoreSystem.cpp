@@ -34,7 +34,6 @@ namespace GASS
 	{
 	
 	}
-	
 
 	void CoreSystem::RegisterReflection()
 	{
@@ -46,8 +45,6 @@ namespace GASS
 		//Register at rtc
 		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
-
-	
 }
 
 

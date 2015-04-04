@@ -79,15 +79,7 @@ namespace GASS
 		Clear all unproccessed messages
 		*/
 		void ClearMessages();
-
-		//bool GetSimulationPasued() const {return m_SimulationPaused;}
-		//void SetPauseSimulation(bool value) {m_SimulationPaused = value;}
-		//void SetSimulationUpdateInterval(bool value) {m_SimulationUpdateInterval = value;}
-		//void SetSimulateRealTime(bool value) {m_SimulateRealTime = value;}
-
-		//can be called by user it simulation is paused
-		//void UpdateSimulation(double delta_time);
-
+	
 		SimSystemPtr GetSystemByName(const std::string &system_name) const;
 		
 		/**

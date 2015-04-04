@@ -59,7 +59,6 @@ namespace GASS
 		virtual void Init() = 0;
 		virtual void Update(double delta);
 		virtual std::string GetName() const {return m_Name;}
-		//virtual SystemManagerPtr GetOwner() const {return SystemManagerPtr(m_Owner);}
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
 		
