@@ -59,7 +59,7 @@ namespace GASS
 
 	void OISInputSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OISInputSystem",new GASS::Creator<OISInputSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("OISInputSystem",new GASS::Creator<OISInputSystem, SimSystem>);
 		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
 		//RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
 		RegisterProperty<float>("GameControllerAxisMinValue", &GASS::OISInputSystem::GetGameControllerAxisMinValue, &GASS::OISInputSystem::SetGameControllerAxisMinValue);
@@ -70,7 +70,7 @@ namespace GASS
 
 	}
 
-	void OISInputSystem::OnCreate(SystemManagerPtr owner)
+	void OISInputSystem::OnCreate(SimSystemManagerPtr owner)
 	{
 		SimSystem::OnCreate(owner);
 		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,RenderWindowCreatedEvent,1));

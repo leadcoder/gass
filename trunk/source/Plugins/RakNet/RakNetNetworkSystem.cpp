@@ -86,7 +86,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, SimSystem>);
 		
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);

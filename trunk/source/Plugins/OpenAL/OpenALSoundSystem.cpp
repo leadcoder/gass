@@ -42,7 +42,7 @@ namespace GASS
 
 	void OpenALSoundSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OpenALSoundSystem",new GASS::Creator<OpenALSoundSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("OpenALSoundSystem",new GASS::Creator<OpenALSoundSystem, SimSystem>);
 	}
 
 	void OpenALSoundSystem::Init()

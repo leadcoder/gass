@@ -37,7 +37,7 @@ namespace GASS
 
 	void CoreSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("CoreSystem",new GASS::Creator<CoreSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("CoreSystem",new GASS::Creator<CoreSystem, SimSystem>);
 	}
 
 	void CoreSystem::Init()

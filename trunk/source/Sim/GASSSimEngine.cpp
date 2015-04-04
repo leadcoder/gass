@@ -25,7 +25,7 @@
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Interface/GASSISystemManager.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"

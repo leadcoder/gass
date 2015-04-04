@@ -321,7 +321,7 @@ namespace GASS
 
 	void MyGUIOSGSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("MyGUIOSGSystem",new GASS::Creator<MyGUIOSGSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("MyGUIOSGSystem",new GASS::Creator<MyGUIOSGSystem, SimSystem>);
 	}
 
 	void MyGUIOSGSystem::Init()

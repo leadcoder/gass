@@ -40,7 +40,7 @@ namespace GASS
 
 	void MyGUIOgreSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("MyGUIOgreSystem",new GASS::Creator<MyGUIOgreSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("MyGUIOgreSystem",new GASS::Creator<MyGUIOgreSystem, SimSystem>);
 	}
 
 	void MyGUIOgreSystem::Init()

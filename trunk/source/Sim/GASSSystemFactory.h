@@ -22,7 +22,7 @@
 #define SYSTEMFACTORY_HH
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSISystem.h"
+#include "Sim/GASSSimSystem.h"
 #include "Core/Utils/GASSFactory.h"
 
 namespace GASS
@@ -39,7 +39,7 @@ namespace GASS
 		The factory where all systems should be registred in
 	*/
 
-	class GASSExport SystemFactory : public Factory<ISystem,std::string,void>
+	class GASSExport SystemFactory : public Factory<SimSystem,std::string,void>
 	{
 	public:
 		SystemFactory();

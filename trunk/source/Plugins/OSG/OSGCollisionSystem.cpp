@@ -43,7 +43,7 @@ namespace GASS
 
 	void OSGCollisionSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, SimSystem>);
 		
 	}
 

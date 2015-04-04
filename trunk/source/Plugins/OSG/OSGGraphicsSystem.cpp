@@ -103,7 +103,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, SimSystem>);
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterProperty<bool>("FlipDDS", &GASS::OSGGraphicsSystem::GetFlipDDS, &GASS::OSGGraphicsSystem::SetFlipDDS);
 

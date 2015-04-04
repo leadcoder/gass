@@ -40,7 +40,7 @@ namespace GASS
 
 	void GameSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("GameSystem",new GASS::Creator<GameSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("GameSystem",new GASS::Creator<GameSystem, SimSystem>);
 	}
 
 	void GameSystem::Init()

@@ -42,13 +42,13 @@ namespace GASS
 
 	void ProxyInputSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ProxyInputSystem",new GASS::Creator<ProxyInputSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("ProxyInputSystem",new GASS::Creator<ProxyInputSystem, SimSystem>);
 		RegisterProperty<bool>("EnableKey", &GASS::ProxyInputSystem::GetEnableKey, &GASS::ProxyInputSystem::SetEnableKey);
 		RegisterProperty<bool>("EnableMouse", &GASS::ProxyInputSystem::GetEnableMouse, &GASS::ProxyInputSystem::SetEnableMouse);
 		RegisterProperty<bool>("EnableJoystick", &GASS::ProxyInputSystem::GetEnableJoystick, &GASS::ProxyInputSystem::SetEnableJoystick);
 	}
 
-	void ProxyInputSystem::OnCreate(SystemManagerPtr owner)
+	void ProxyInputSystem::OnCreate(SimSystemManagerPtr owner)
 	{
 		SimSystem::OnCreate(owner);
 	}

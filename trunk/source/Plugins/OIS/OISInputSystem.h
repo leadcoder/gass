@@ -44,7 +44,7 @@ namespace GASS
 		OISInputSystem();
 		virtual ~OISInputSystem();
 		static void RegisterReflection();
-		virtual void OnCreate(SystemManagerPtr owner);
+		virtual void OnCreate(SimSystemManagerPtr owner);
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "OISInputSystem";}
 		virtual void Update(double delta_time);

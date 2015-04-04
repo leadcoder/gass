@@ -269,7 +269,7 @@ namespace GASS
 
 	void ControlSettingsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ControlSettingsSystem",new GASS::Creator<ControlSettingsSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("ControlSettingsSystem",new GASS::Creator<ControlSettingsSystem, SimSystem>);
 	}
 
 	void ControlSettingsSystem::Init() 

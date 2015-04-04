@@ -39,7 +39,7 @@ namespace GASS
 
 	void MaterialSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("MaterialSystem",new GASS::Creator<MaterialSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("MaterialSystem",new GASS::Creator<MaterialSystem, SimSystem>);
 	}
 
 	void MaterialSystem::Init()

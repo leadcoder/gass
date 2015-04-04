@@ -49,7 +49,7 @@ namespace GASS
 
 	void OSGCollisionSceneManager::RegisterReflection()
 	{
-		//SystemFactory::GetPtr()->Register("OSGCollisionSceneManager",new GASS::Creator<OSGCollisionSceneManager, ISystem>);
+		//SystemFactory::GetPtr()->Register("OSGCollisionSceneManager",new GASS::Creator<OSGCollisionSceneManager, SimSystem>);
 	}
 
 	void OSGCollisionSceneManager::OnCreate()

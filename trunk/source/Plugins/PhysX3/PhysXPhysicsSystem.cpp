@@ -79,7 +79,7 @@ namespace GASS
 
 	void PhysXPhysicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, SimSystem>);
 		REG_PROPERTY(int,MaxNumThreads,PhysXPhysicsSystem);
 	}
 

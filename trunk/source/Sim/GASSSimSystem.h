@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSISystem.h"
 #include "Sim/GASSTaskNode.h"
 #include "Sim/GASSRunTimeController.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
@@ -31,11 +30,19 @@
 
 namespace GASS
 {
-	class ISystemManager;
-	typedef WPTR<ISystemManager> SystemManagerWeakPtr;
 
+	class ISystemListener
+	{
+
+	public:
+		virtual void SystemTick(double delta_time) = 0;
+	};
+	typedef SPTR<ISystemListener> SystemListenerPtr;
+	typedef WPTR<ISystemListener> SystemListenerWeakPtr;
+	
 	class SimSystemManager;
 	typedef SPTR<SimSystemManager> SimSystemManagerPtr;
+	typedef WPTR<SimSystemManager> SimSystemManagerWeakPtr;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -47,16 +54,16 @@ namespace GASS
 	/**
 		Base class that GASSSim systems should be derived from 
 	*/
-	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public ISystem, public SHARE_CLASS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
+	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public SHARE_CLASS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
 	{
 	public:
 		SimSystem();
 		virtual ~SimSystem();
 		static void RegisterReflection();
 		
-		//ISystem interface
-		virtual void OnCreate(SystemManagerPtr owner) {m_Owner=owner;}
+		virtual void OnCreate(SimSystemManagerPtr owner) {m_Owner=owner;}
 		virtual void Init() = 0;
+		virtual std::string  GetSystemName() const = 0;
 		virtual void Update(double delta);
 		virtual std::string GetName() const {return m_Name;}
 		virtual void Register(SystemListenerPtr listener);
@@ -68,16 +75,12 @@ namespace GASS
 		//IXMLSerialize interface
 		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
 		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
-
-		/**
-		Convenience function to get SimSystemManager without casting from ISystemManager
-		*/
 		SimSystemManagerPtr GetSimSystemManager() const;
 		
 	protected:
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
-		SystemManagerWeakPtr m_Owner;
+		SimSystemManagerWeakPtr m_Owner;
 		std::string m_TaskNodeName;
 	};
 	typedef SPTR<SimSystem> SimSystemPtr;

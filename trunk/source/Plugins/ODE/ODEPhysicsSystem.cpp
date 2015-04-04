@@ -59,7 +59,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ODEPhysicsSystem",new GASS::Creator<ODEPhysicsSystem, ISystem>);
+		SystemFactory::GetPtr()->Register("ODEPhysicsSystem",new GASS::Creator<ODEPhysicsSystem, SimSystem>);
 		
 	}
 

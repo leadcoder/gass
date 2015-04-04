@@ -24,7 +24,6 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Sim/Interface/GASSISystemManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimSystem.h"
 
@@ -33,7 +32,10 @@
 
 namespace GASS
 {
-	//forward decalare
+	typedef std::string SystemType;
+
+
+	//forward declare
 	class SimpleProfileData;
 	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
 
@@ -46,7 +48,7 @@ namespace GASS
 	To handle the messages the SimSystemManager use the 
 	MessageManager class
 	*/
-	class GASSExport SimSystemManager : public ISystemManager, public SHARE_CLASS<SimSystemManager>,  public IMessageListener
+	class GASSExport SimSystemManager : public SHARE_CLASS<SimSystemManager>,  public IMessageListener
 	{
 	public:
 		SimSystemManager();
@@ -125,10 +127,10 @@ namespace GASS
 		//Move this to private
 		void SyncMessages(double delta_time);
 	private:
-		SystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
+		SimSystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
 		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
-		typedef std::vector<SystemPtr> SystemVector;
+		typedef std::vector<SimSystemPtr> SystemVector;
 		SystemVector m_Systems;
 	};
 }

@@ -136,7 +136,7 @@ namespace GASS
 			//Loop through each template
 			while(systems)
 			{
-				SystemPtr system = LoadSystem(systems);
+				SimSystemPtr system = LoadSystem(systems);
 				if(system)
 				{
 					system->OnCreate(shared_from_this());
@@ -153,10 +153,10 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-	SystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
+	SimSystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
 	{
 		const std::string system_type = system_elem->Value();
-		SystemPtr system = SystemFactory::Get().Create(system_type);
+		SimSystemPtr system = SystemFactory::Get().Create(system_type);
 		if(system)
 		{
 			XMLSerializePtr  serialize = DYNAMIC_PTR_CAST<IXMLSerialize> (system);
