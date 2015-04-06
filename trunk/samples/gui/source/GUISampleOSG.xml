@@ -29,8 +29,11 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
   </ResourceGroup>
   <ResourceGroup name="GASS">
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts"  type="FileSystem" recursive="true"/>
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/OSG"  type="FileSystem" recursive="true"/>
+   <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/particle" type="FileSystem" recursive="false"/>
+    
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
@@ -107,11 +110,15 @@
   <ODECollisionSystem>
 	<TaskNode value="POST_SIM"/>
   </ODECollisionSystem>
-  <OSGGraphicsSystem>
+   <OgreGraphicsSystem>
+    <Plugin value="RenderSystem_GL"/>
+    <Plugin value="RenderSystem_Direct3D9"/>
+    <Plugin value="Plugin_CgProgramManager"/>
+    <Plugin value="Plugin_OctreeSceneManager"/>
+    <Plugin value="Plugin_ParticleFX"/>
+    <PostFilters value="HDR"/>
     <TaskNode value="POST_SIM"/>
-	<!--<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="200" TextureSize="1024" BaseTextureUnit="0" ShadowTextureUnit="5"/>-->
-	<ShadowSettings type="ParallelSplitShadowMap" MaxFarDistance="100" TextureSize="1024" NumCount="5" MinNearDistanceForSplits="5" MoveVCamBehindRCamFactor="1" PolyOffsetFactor="2.1"/>
-  </OSGGraphicsSystem>
+  </OgreGraphicsSystem>
   <MyGUIOSGSystem>
     <TaskNode value="PRE_SIM"/>
   </MyGUIOSGSystem>
