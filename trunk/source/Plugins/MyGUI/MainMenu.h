@@ -6,7 +6,7 @@
 
 namespace GASS
 {
-
+	class LoadSceneDialog;
 	ATTRIBUTE_CLASS_LAYOUT(MainMenu, "GASSMainMenu.layout");
 	
 	class MainMenu :
@@ -19,8 +19,13 @@ namespace GASS
 		void notifyMenuCtrlAccept(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
 		void notifyFileMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
 		void notifyResourceMenu(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item);
+		
+		//test
+		void eventMouseButtonClick(MyGUI::Widget* _sender);
+
 	private:
 		MyGUI::MenuBar* m_MenuBar;
+		LoadSceneDialog *m_LoadSceneDialog;
 		
 	};
 } 

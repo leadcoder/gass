@@ -345,15 +345,6 @@ namespace GASS
 			const std::string path = locations[i]->GetPath().GetFullPath();
 			gl_platform->getDataManagerPtr()->addResourceLocation(path, true);
 		}
-
-		/*gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/Demos", true);
-		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/base", true);
-		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/Common/Themes", true);
-		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/MyGUI_Media", true);
-		gl_platform->getDataManagerPtr()->addResourceLocation("C:/dev/construction-sim/trunk/data/gfx/GUI/MyGUI/GASS", true);
-		*/
-
-		
 		InitGUI();
 
 

@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "LoadSceneDialog.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -21,6 +22,8 @@ namespace GASS
 
 		m_MenuBar->eventMenuCtrlAccept += MyGUI::newDelegate(this, &MainMenu::notifyMenuCtrlAccept);
 		m_MenuBar->setVisible(true);
+		m_LoadSceneDialog = new LoadSceneDialog(NULL);
+		m_LoadSceneDialog->setVisible(false);
 	}
 
 	MainMenu::~MainMenu()
@@ -38,6 +41,15 @@ namespace GASS
 		//MyGUI::Widget* widget = *_item->getItemData<MyGUI::Widget*>();
 	}
 
+	void MainMenu::eventMouseButtonClick(MyGUI::Widget* _sender)
+	{
+		std::string name = _sender->getName();
+		if (_sender->getName() == "Load")
+		{
+
+		}
+	}
+
 	void MainMenu::notifyMenuCtrlAccept(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item)
 	{
 		const std::string& item_id = _item->getItemId();
@@ -45,9 +57,9 @@ namespace GASS
 		{
 			exit(0);
 		}
-		else if(item_id == "Command_Load")
+		else if(item_id == "Command_FileLoad")
 		{
-			//Show scene selection dialog
+			m_LoadSceneDialog->setVisible(true);
 		}
 		else if(item_id == "Command_ReloadAllResources")
 		{
