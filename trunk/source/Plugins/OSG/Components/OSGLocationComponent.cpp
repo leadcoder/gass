@@ -248,7 +248,7 @@ namespace GASS
 		Quaternion rot = GetWorldRotation();
 		
 		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos,rot,scale)));
-		//send for all child tranforms also?
+		//send for all child transforms also?
 		GASS::ComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
 		while(iter.hasMoreElements())
 		{
