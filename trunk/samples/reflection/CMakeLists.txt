@@ -1,10 +1,10 @@
 #set lib name here!
-set(LIB_NAME "RefelctionDemo")
+set(LIB_NAME "SampleRefelction")
 
 #Set include directories
 include_directories(${GASS_SIM_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/reflection/source")
 
-set(CPP_FILES "source/reflection.cpp")
+set(CPP_FILES "source/SampleReflection.cpp")
 set(H_FILES)
 
 #Add some folders where to search for dependency libraries
