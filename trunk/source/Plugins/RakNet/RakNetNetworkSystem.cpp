@@ -308,6 +308,8 @@ namespace GASS
 		else 
 			UpdateClient(delta);
 
+		//update listeners
+		SimSystem::Update(delta);
 		//
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new NetworkPostUpdateEvent()));
 	}
