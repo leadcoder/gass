@@ -129,7 +129,7 @@ namespace GASS
 		Mat4 rot_mat;
 		if(!((m_CurrentAngle < m_MinAngle && m_TurnInput > 0) ||
 				(m_CurrentAngle > m_MaxAngle && m_TurnInput < 0)))
-				//ouside envelope
+				//outside envelope
 		{
 			m_RotValue = m_RotValue + m_TurnInput*m_MaxSteerVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
@@ -145,7 +145,7 @@ namespace GASS
 		else
 			rot_mat.RotateY(m_RotValue);
 
-		//add relative tranformation, we start rotation from this transformation 
+		//add relative transformation, we start rotation from this transformation 
 		m_RelTrans.SetTranslation(0,0,0);
 		//Mat4 parent_rot = m_RelTrans;
 		//parent_rot.SetTranslation(0,0,0);

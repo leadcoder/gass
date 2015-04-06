@@ -169,14 +169,14 @@ namespace GASS
 	{
 		if(!((m_CurrentYawAngle < Math::Deg2Rad(m_YawMinAngle) && m_YawInput < 0) ||
 			(m_CurrentYawAngle > Math::Deg2Rad(m_YawMaxAngle) && m_YawInput > 0)))
-			//ouside envelope
+			//outside envelope
 		{
 			m_YawValue = m_YawValue + m_YawInput*m_MaxYawVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
 		}
 		if(!((m_CurrentPitchAngle < Math::Deg2Rad(m_PitchMinAngle) && m_PitchInput < 0) ||
 			(m_CurrentPitchAngle > Math::Deg2Rad(m_PitchMaxAngle) && m_PitchInput  > 0)))
-			//ouside envelope
+			//outside envelope
 		{
 			m_PitchValue  = m_PitchValue  + m_PitchInput *m_MaxPitchVelocity*delta_time;
 			//m_RotValue = m_TurnInput*m_MaxSteerVelocity*delta_time;
@@ -193,7 +193,7 @@ namespace GASS
 		//Important to get correct rotation order here! First start with yaw angle in world space,
 		//then add start rotation (yaw and then pitch) , last add pitch rotation.
 		//If we begin with start rotation we get tilted yaw-rotation-plane,
-		//ie the camera will roll and change pitch value during yaw movment.
+		//ie the camera will roll and change pitch value during yaw movement.
 		//If we add start rotation last, the same problem will arise. ie the pitch matrix
 		//will tilt the way rotation part of the start rotation matrix.
 		m_AimRotation = pitch_rot_mat*m_StartRotation*yaw_rot_mat;
