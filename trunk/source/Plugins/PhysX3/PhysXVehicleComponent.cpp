@@ -753,6 +753,8 @@ namespace GASS
 
 		GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
 
+		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
+
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
 		//std::cout << "Throttle:" << m_ThrottleInput << "\n";
