@@ -71,7 +71,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnParameterMessage,PhysicsBodyMessage,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnStateRequest,PhysicsBodyStateRequest,0));
+		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
@@ -123,6 +124,24 @@ namespace GASS
 	{
 		if(GetActive())
 			SetActive(true);
+	}
+
+
+	void ODEBodyComponent::OnStateRequest(PhysicsBodyStateRequestPtr message)
+	{
+		switch(message->GetState())
+		{
+		case PhysicsBodyStateRequest::ENABLE:
+			{
+				SetActive(true);
+				break;
+			}
+		case PhysicsBodyStateRequest::DISABLE:
+			{
+				SetActive(false);
+				break;
+			}
+		}
 	}
 
 	/*void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
