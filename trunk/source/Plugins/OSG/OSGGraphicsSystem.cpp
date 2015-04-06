@@ -522,9 +522,15 @@ namespace GASS
 						//"  const float LOG2E = 1.442692;	// = 1/log(2)                        \n"
 						//"  float fog = exp2(-gl_Fog.density * abs(gl_FogFragCoord) * LOG2E);     \n"
 						//"  fog = clamp(fog, 0.0, 1.0);                                            \n"
-						"  float fog = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
-						"  color.rgb = mix( gl_Fog.color.rgb, color.rgb, fog );                  \n"
-						"  gl_FragColor = color;                                                 \n"
+						
+						//"  float fog = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+						
+						
+						"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n" 
+						"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n" 
+						"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n" 
+						"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+						"    gl_FragColor = color;                                                 \n"
 						"} \n" );  
 
 					sm->setMainFragmentShader(mainFragmentShader);

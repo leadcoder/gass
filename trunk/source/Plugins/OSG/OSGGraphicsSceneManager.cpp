@@ -64,7 +64,8 @@ namespace GASS
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
-
+		if(m_ShadowedScene.valid())
+			m_ShadowedScene->setShadowTechnique(0);
 	}
 
 	void OSGGraphicsSceneManager::RegisterReflection()
@@ -163,7 +164,7 @@ namespace GASS
 			
 			//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
 
-			unsigned int unit=1;
+			unsigned int unit=6;
 			settings->setBaseShadowTextureUnit(unit);
 
 			double n=0.8;
