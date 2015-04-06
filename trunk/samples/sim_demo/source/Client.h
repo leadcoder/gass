@@ -3,7 +3,7 @@
 class SimClient : public SimApplication
 {
 public:
-	SimClient(const std::string &config) : SimApplication(config), m_IsConnected(false)
+	SimClient() : SimApplication(), m_IsConnected(false)
 	{
 
 	}
@@ -21,18 +21,23 @@ public:
 
 	void OnLoadScene(GASS::MessagePtr message)
 	{
+		
 		GASS::StartSceanrioRequestPtr mess = DYNAMIC_PTR_CAST<GASS::StartSceanrioRequest>(message);
 		printf("Client got scene request message:%s\n",mess->GetSceneName().c_str());
-		//m_Scene->Load("../../../common/data/scenes/" + mess->GetSceneName());
+		//_LoadScene(mess->GetSceneName());
 
-		m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
+		m_Scene = GASS::SimEngine::Get().CreateScene(mess->GetSceneName());
 		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
+		//scene->Load(scene_name);
 
+		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
+
+		//create free camera and set start pos
 		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		GASS::MessagePtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
+		GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		if(free_obj)
 		{
-			free_obj->SendImmediate(pos_msg);
+			free_obj->SendImmediateRequest(pos_msg);
 			GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
 			m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 		}
@@ -40,26 +45,18 @@ public:
 
 	bool Init()
 	{
-		m_Engine = new GASS::SimEngine();
-		m_Engine->Init(GASS::FilePath("../Configuration/GASS.xml"));
+		_CreateMainWindow();
 
-		GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
-		
-		GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
-		win->CreateViewport("MainViewport", 0, 0, 1, 1);
-		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
-		input_system->SetMainWindowHandle(win->GetHWND());
-
-		for(int i = 0; i <  m_Templates.size();i++)
-		{
-			m_Engine->GetSceneObjectTemplateManager()->Load(m_Templates[i]);
-		}
-
+		//listen for server response
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnServerResponse,GASS::ServerResponseEvent,0));
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequest,0));
-		m_Engine->GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::StartClientRequest("SimDemoClient",2006,2005)));
 
-		printf("\n\nWaiting for server");
+
+		//listen when server change scenary
+		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimClient::OnLoadScene,GASS::StartSceanrioRequest,0));
+		
+		//Start client
+		m_Engine->GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::StartClientRequest("SimDemoClient",2006,2005)));
+		printf("\n\nWaiting for server to start");
 		float update_time = 0;
 		while(!IsConnected())
 		{

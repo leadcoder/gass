@@ -23,9 +23,8 @@
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Plugins/Game/GameMessages.h"
 #include "SimApplication.h"
-
-//#include "Client.h"
-//#include "Server.h"
+#include "Client.h"
+#include "Server.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -86,31 +85,24 @@ int main(int argc, char* argv[])
 		}
 		index += 2;
 	}*/
-	/*
-	std::cout << "Server, client or standalone? Press [S] ,[C] or [A]:";
+
+	SimApplicationPtr app;
+
+	std::cout << "Server, client or Press [S] ,[C]";
 	char key = _getch();
 	int app_mode = 2;
 	if(key == 'c' || key == 'C')
-		app_mode = 0;
+		app = SimApplicationPtr(new SimClient());
 	else if(key == 's' || key == 'S')
-		app_mode = 1;
-	else if(key == 'a' || key == 'A')
-		app_mode = 2;
-
-	if(app_mode == 0)
-		app = SimApplicationPtr(new SimClient(config));
-	else if(app_mode == 1)
-		app = SimApplicationPtr(new SimServer(config));
-	else if(app_mode == 2)
-		app = SimApplicationPtr(new SimApplication(config));*/
-
-	SimApplicationPtr app;
-	app = SimApplicationPtr(new SimApplication());
-	app->Init();
-	while(app->Update())
+		app = SimApplicationPtr(new SimServer());
+	else
 	{
-		
+		std::cout << "Please select server or client....exiting"; return 0;
 	}
+	app->Init();
+
+	while(app->Update()){}
+
 	return 0;
 }
 
