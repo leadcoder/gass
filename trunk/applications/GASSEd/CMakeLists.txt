@@ -11,8 +11,11 @@ set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
 set(GASS_DEPENDENCIES_DIR $ENV{GASS_DEPENDENCIES} CACHE PATH "GASS 3rd-party dependency folder")
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT4 folder")
 set(QTPROPERTYBROWSER_DIR ${GASS_DEPENDENCIES_DIR}/qtpropertybrowser-2.5_1)
+
+option(GASSED_USE_OSG "Add OSG render system" OFF ) 
+#add osg plugin if requested
  
-find_package(GASSSim COMPONENTS GASSEditorModule 
+set(GASS_COMPONENTS  GASSEditorModule 
 								GASSPluginOgre 
 								GASSPluginOIS 
 								GASSPluginPhysX3 
@@ -24,6 +27,15 @@ find_package(GASSSim COMPONENTS GASSEditorModule
 								GASSPluginEnvironment
 								GASSPluginRecastNavigation
 								GASSPluginRoadNetwork)
+
+if(GASSED_USE_OSG)
+	set(GASS_COMPONENTS  ${GASS_COMPONENTS} GASSPluginOSG)
+endif()
+
+
+find_package(GASSSim COMPONENTS ${GASS_COMPONENTS})
+
+								
 find_package(Qt4 REQUIRED)
 find_package(QTPropertyBrowser)
 
@@ -93,8 +105,16 @@ if(WIN32)
 		
 	set(GASSED_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${GASS_PLUGIN_BINARIES_REL} ${QT_BINARIES_REL})
 	set(GASSED_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${GASS_PLUGIN_BINARIES_DBG} ${QT_BINARIES_DBG})
+	
 	file(COPY ${GASSED_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${GASSED_BINARIES_DBG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	
+	if(GASSED_USE_OSG) 
+		#put osg plugins in own dir (must be named osgPlugins-<version> to) avoid cluttering
+		file(COPY ${OSGPLUGIN_BINARIES_REL} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/osgPlugins-${OSG_VERSION})
+		file(COPY ${OSGPLUGIN_BINARIES_DBG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/osgPlugins-${OSG_VERSION})
+	endif()
+
 	install(FILES ${GASSED_BINARIES_REL} DESTINATION ${GASSED_INSTALL_BIN_DIR})
 endif()
 
