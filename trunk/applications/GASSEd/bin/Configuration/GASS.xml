@@ -5,18 +5,18 @@
 		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOgre"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOIS"/>
-		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX"/>-->
+		<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX3"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginPagedGeometry"/>
-		<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
+		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginEnvironment"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginRoadNetwork"/>
 	</Plugins>
-	<SetDataPath value="../../../../samples/common/data/"/>
-	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
+	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
+	<ScenePath value="%GASS_DATA_HOME%/sceneries/Ogre"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
@@ -29,12 +29,13 @@
 		</ResourceGroup>
 		<ResourceGroup name="PagedGeometry">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
-		</ResourceGroup>
-		<ResourceGroup name="GASS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="AAA_GASS_STATIC">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/particle" type="FileSystem" recursive="false"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_COMMON">
+			<!--<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>-->
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
@@ -44,6 +45,10 @@
 		<ResourceGroup name="GASS_VEGETATION_MATERIALS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/vegetation" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_PARTICLES">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/particle" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
 		</ResourceGroup>
 		<ResourceGroup name="GASS_ROAD_MATERIALS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/road" type="FileSystem" recursive="false"/>
@@ -72,6 +77,9 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
+		<MaterialSystem>
+			<TaskNode value="SIM"/> 
+		</MaterialSystem>
 		<EditorSystem>
 			<TaskNode value="PRE_SIM"/> 
 		</EditorSystem>
@@ -110,10 +118,12 @@
 		<ODECollisionSystem>
 			<TaskNode value="PRE_SIM"/>
 		</ODECollisionSystem>
-		
-		<ODEPhysicsSystem>
+		<PhysXPhysicsSystem>
 			<TaskNode value="SIM"/>
-		</ODEPhysicsSystem>
+		</PhysXPhysicsSystem>
+		<!--<ODEPhysicsSystem>
+			<TaskNode value="SIM"/>
+		</ODEPhysicsSystem>-->
 
 		<AISystem>
 			<TaskNode value="SIM"/>
@@ -123,10 +133,10 @@
 		<OgreGraphicsSystem>
 			<CreateMainWindowOnInit value="0"/>
 			<UpdateMessagePump value="false"/>
-			<Plugin value="RenderSystem_GL"/>
+			<!--<Plugin value="RenderSystem_GL"/>-->
 			<Plugin value="RenderSystem_Direct3D9"/>
-			<Plugin value="Plugin_CgProgramManager"/>
-			<Plugin value="Plugin_BSPSceneManager"/>
+			<!--<Plugin value="Plugin_CgProgramManager"/>-->
+			<!--<Plugin value="Plugin_BSPSceneManager"/>-->
 			<Plugin value="Plugin_OctreeSceneManager"/>
 			<Plugin value="Plugin_ParticleFX"/>
 			<PostFilters value="HDR"/>

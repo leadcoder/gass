@@ -6,7 +6,7 @@
 		<Plugin PluginFile = "GASSPlugins/GASSPluginOIS"/>
 		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX3"/>
-		<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>
+		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>-->
 		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
