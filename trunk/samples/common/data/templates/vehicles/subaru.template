@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="subaru"/>
+		<ID value="CHASSIS"/>
+		<Components>
+		    <GroupComponent>
+			</GroupComponent>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="scooby_body.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysicsBoxGeometryComponent>
+				<!--<BaseScale value="1 0.35 1"/>-->
+				<Offset value="0 0 0"/>
+			</PhysicsBoxGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.3"/>
+			</PhysicsBodyComponent>
+			<InputHandlerComponent>
+				<ControlSetting value="TankInputSettings" />
+			</InputHandlerComponent>
+			<VehicleEngineComponent>
+				<Wheels value="WHEEL_R2;WHEEL_L2"/>
+				<EngineType value="car"/>
+				<Power value="0.1"/>
+				<InvertDrivetrainOutput value="0"/>
+				<Automatic  value="1"/>
+				<BrakeTorque  value="1"/>
+				<DeclutchTimeChangeGear value="0.3"/>
+				<ClutchTimeChangeGear value="0.3"/>
+				<MaxRPM value="4000"/>
+				<MinRPM value="500"/>
+				<RPMGearChangeUp value="3000"/>
+				<RPMGearChangeDown value="1000"/>
+				<!--<GearRatio value="-13.42 -16.42 0 16.42 12.15 11.52 11.17"/>-->
+				<GearRatio value="-14.42;-13.42;0;16.42;13.15;10.52;7.17"/>
+				<SmoothRPMOutput value="false"/>
+				<!--<TurnForce value="100"/>-->
+			</VehicleEngineComponent>
+			<NetworkMasterComponent>
+			</NetworkMasterComponent>
+			<LocationTransferComponent>
+			</LocationTransferComponent>
+			<InputTransferComponent>
+				<ControlSetting value="TankInputSettings" />
+			</InputTransferComponent>
+			
+			<!-- <Debug type="VehicleDebugComponent"/>-->
+		</Components>
+		<ComponentContainers>
+			
+			<SceneObjectTemplate>
+				<Name value="HummerWheelL1"/>
+				<Inheritance value ="HummerFrontWheel"/>
+				<ID value="WHEEL_L1"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.83 -2.421509 -1.62451"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+
+					<MeshComponent>
+						<Filename value="scooby_wheell.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="HummerWheelL2"/>
+				<Inheritance value ="HummerRearWheel"/>
+				<ID value="WHEEL_L2"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.83 -2.421509 1.37109"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="scooby_wheell.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="HummerWheelR1"/>
+				<Inheritance value ="HummerFrontWheel"/>
+				<ID value="WHEEL_R1"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.83 -2.421509 -1.62451"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="scooby_wheelr.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="HummerWheelR2"/>
+				<Inheritance value ="HummerRearWheel"/>
+				<ID value="WHEEL_R2"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.83 -2.421509 1.37109"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="scooby_wheelr.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="HummerFrontWheel"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<PhysicsSphereGeometryComponent>
+				<Friction value="1.0"/>
+			</PhysicsSphereGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.1"/>
+			</PhysicsBodyComponent>
+			<PhysicsSuspensionComponent>
+				<Strength value="0.5"/>
+				<Damping value="1"/>
+				<SwayForce value="10"/>
+				<HighStop value="1"/>
+				<LowStop value="-1"/>
+			</PhysicsSuspensionComponent>
+			<AdaptiveSteerComponent>
+				<SteerForce value="20"/>
+				<MaxSteerAngleAtSpeed value="35 2"/>
+				<MinSteerAngleAtSpeed value="10 20"/>
+				<SpeedMultiplier value="10"/>
+				<DynamicInputPower value="1.2"/>
+			</AdaptiveSteerComponent>
+			<NetworkChildComponent>
+			</NetworkChildComponent>
+			<LocationTransferComponent>
+			</LocationTransferComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="HummerRearWheel"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<PhysicsSphereGeometryComponent>
+				<Friction value="1.0"/>
+			</PhysicsSphereGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.1"/>
+			</PhysicsBodyComponent>
+			<PhysicsSuspensionComponent>
+				<Strength value="0.5"/>
+				<Damping value="1"/>
+				<SwayForce value="10"/>
+			</PhysicsSuspensionComponent>
+			<NetworkChildComponent>
+			</NetworkChildComponent>
+			<LocationTransferComponent>
+			</LocationTransferComponent>
+		</Components>
+	</SceneObjectTemplate>
+	
+</Templates>
