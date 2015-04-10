@@ -1,0 +1,264 @@
+material Badge
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.784314 0.784314 0.784314 1
+			diffuse 0.784314 0.784314 0.784314 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Badge.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Badge0
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.784314 0.784314 0.784314 1
+			diffuse 0.784314 0.784314 0.784314 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture License.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material BlackP
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0666667 0.0666667 0.0666667 1
+			diffuse 0.0666667 0.0666667 0.0666667 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture window.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Body
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.788235 0.596078 0 1
+			diffuse 0.788235 0.596078 0 1
+			specular 0 0 0 1 8
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture body.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Chrome
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0941177 0.0980392 0.0980392 1
+			diffuse 0.0941177 0.0980392 0.0980392 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+		}
+
+	}
+
+}
+
+
+
+material FrontL
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.752941 0.752941 0.752941 1
+			diffuse 0.752941 0.752941 0.752941 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Headlight.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Glass
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0235294 0.0235294 0.0235294 1
+			diffuse 0.0235294 0.0235294 0.0235294 1
+			specular 0 0 0 1 8
+			scene_blend add
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture window.bmp
+			}
+
+			texture_unit
+			{
+				colour_op_ex blend_manual src_manual src_current 0.7 1 1 1
+				colour_op_multipass_fallback dest_colour zero
+				alpha_op_ex source1 src_manual src_current 0.7
+			}
+		}
+
+	}
+
+}
+
+
+
+material Grille
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.215686 0.215686 0.215686 1
+			diffuse 0.215686 0.215686 0.215686 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Grille.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Interior
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.2 0.2 0.2 1
+			diffuse 0.2 0.2 0.2 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Interior.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material RearLi
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.796079 0.0862745 0.156863 1
+			diffuse 0.796079 0.0862745 0.156863 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture RearLight.bmp
+			}
+		}
+
+	}
+
+}
+
+
+
+material Unders
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.129412 0.105882 0.105882 1
+			diffuse 0.129412 0.105882 0.105882 1
+			specular 0 0 0 1 1
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Underside.bmp
+			}
+		}
+
+	}
+
+}
