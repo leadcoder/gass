@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Templates>
 	<SceneObjectTemplate>
-		<Name value="subaru"/>
+		<Name value="gta"/>
 		<ID value="CHASSIS"/>
 		<Components>
 		    <GroupComponent>
@@ -10,7 +10,7 @@
 				<AttachToParent value="0"/>
 			</LocationComponent>
 			<MeshComponent>
-				<Filename value="scooby_body.mesh"/>
+				<Filename value="gta_chassis.mesh"/>
 				<CastShadow value="1"/>
 			</MeshComponent>
 			<PhysicsBoxGeometryComponent>
@@ -59,12 +59,12 @@
 				<ID value="WHEEL_L1"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-0.83 -2.421509 -1.62451"/>
+						<Position value="-0.83 -0.221509 -1.62451"/>
 						<AttachToParent value="0"/>
 					</LocationComponent>
 
 					<MeshComponent>
-						<Filename value="scooby_wheell.mesh"/>
+						<Filename value="gta_lwheel.mesh"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 				</Components>
@@ -75,11 +75,11 @@
 				<ID value="WHEEL_L2"/>
 				<Components>
 					<LocationComponent>
-						<Position value="-0.83 -2.421509 1.37109"/>
+						<Position value="-0.83 -0.221509 1.37109"/>
 						<AttachToParent value="0"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="scooby_wheell.mesh"/>
+						<Filename value="gta_lwheel.mesh"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 				</Components>
@@ -90,11 +90,11 @@
 				<ID value="WHEEL_R1"/>
 				<Components>
 					<LocationComponent>
-						<Position value="0.83 -2.421509 -1.62451"/>
+						<Position value="0.83 -0.221509 -1.62451"/>
 						<AttachToParent value="0"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="scooby_wheelr.mesh"/>
+						<Filename value="gta_rwheel.mesh"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 				</Components>
@@ -105,11 +105,11 @@
 				<ID value="WHEEL_R2"/>
 				<Components>
 					<LocationComponent>
-						<Position value="0.83 -2.421509 1.37109"/>
+						<Position value="0.83 -0.221509 1.37109"/>
 						<AttachToParent value="0"/>
 					</LocationComponent>
 					<MeshComponent>
-						<Filename value="scooby_wheelr.mesh"/>
+						<Filename value="gta_rwheel.mesh"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
 				</Components>
