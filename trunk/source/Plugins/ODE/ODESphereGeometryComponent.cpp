@@ -72,9 +72,11 @@ namespace GASS
 				Sphere sphere = geom->GetBoundingSphere();
 				if(sphere.m_Radius > 0)
 				{
-					SetRadius(sphere.m_Radius);
+					//use box instead, bounding sphere has padding
 					AABox box = geom->GetBoundingBox();
-					SetOffset((box.m_Max + box.m_Min)*0.5);
+					sphere = box.GetBoundingSphere();
+					SetRadius(sphere.m_Radius);
+					//SetOffset((box.m_Max + box.m_Min)*0.5);
 				}
 			}
 		}

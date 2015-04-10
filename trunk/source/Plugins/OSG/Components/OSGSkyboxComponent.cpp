@@ -86,7 +86,8 @@ namespace GASS
 		full_path += extension;
 		
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
-		full_path = rm->GetFirstResourceByName(full_path)->Path().GetFullPath();
+		if(rm->HasResource(full_path))
+			full_path = rm->GetFirstResourceByName(full_path)->Path().GetFullPath();
 		return full_path;
 	}
 
@@ -98,11 +99,29 @@ namespace GASS
 
 		
 		osg::Image* imagePosX = osgDB::readImageFile(GetTexturePath("east"),options);
+		if(!imagePosX)
+			imagePosX = osgDB::readImageFile(GetTexturePath("rt"),options);
+		
 		osg::Image* imageNegX = osgDB::readImageFile(GetTexturePath("west"),options);
-		osg::Image* imagePosY = osgDB::readImageFile(GetTexturePath("up"),options);
-		osg::Image* imageNegY = osgDB::readImageFile(GetTexturePath("down"),options);
+		if(!imageNegX)
+			imageNegX = osgDB::readImageFile(GetTexturePath("lf"),options);
+		
+		osg::Image* imageNegY = osgDB::readImageFile(GetTexturePath("up"),options);
+		if(!imageNegY)
+			imageNegY = osgDB::readImageFile(GetTexturePath("up"),options);
+
+		osg::Image* imagePosY = osgDB::readImageFile(GetTexturePath("down"),options);
+		if(!imagePosY)
+			imagePosY = osgDB::readImageFile(GetTexturePath("dn"),options);
+
 		osg::Image* imagePosZ = osgDB::readImageFile(GetTexturePath("north"),options);
+		if(!imagePosZ)
+			imagePosZ = osgDB::readImageFile(GetTexturePath("fr"),options);
+
 		osg::Image* imageNegZ = osgDB::readImageFile(GetTexturePath("south"),options);
+		if(!imageNegZ)
+			imageNegZ= osgDB::readImageFile(GetTexturePath("bk"),options);
+
 
 		if (imagePosX && imageNegX && imagePosY && imageNegY && imagePosZ && imageNegZ)
 		{

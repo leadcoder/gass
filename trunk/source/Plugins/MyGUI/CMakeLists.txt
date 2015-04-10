@@ -3,7 +3,10 @@ set(LIB_NAME "GASSPluginMyGUI")
 
 find_package(MyGUI)
 		
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${MYGUI_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS} ${OGRE_INCLUDE_DIR})
+set(MY_INC_DIRS ${GASS_SIM_INCLUDE_DIRS} ${MYGUI_INCLUDE_DIRS})
+
+
+
 
 set(CPP_FILES LoadSceneDialog.cpp
 		MainMenu.cpp
@@ -13,11 +16,10 @@ set(CPP_FILES LoadSceneDialog.cpp
 		MyGUIVehicleInstrumentsComponent.cpp
 		MyGUI_RTTLayer.cpp)
 
-set(CPP_FILES LoadSceneDialog.h
+set(H_FILES LoadSceneDialog.h
  MainMenu.h
  MyGUILayoutComponent.h
  MyGUIMessages.h
- .h
  MyGUISystem.h
  MyGUIVehicleInstrumentsComponent.h
  MyGUI_RTTLayer.h
@@ -37,7 +39,10 @@ if(GASS_BUILD_PLUGIN_OSG)
 		${OPENGL_gl_LIBRARY} 
 		${OPENGL_glu_LIBRARY} 
 		${OPENSCENEGRAPH_LIBRARIES})
+	set(MY_INC_DIRS ${MY_INC_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})	
 endif()
+
+include_directories(${GASS_SIM_INCLUDE_DIRS} ${MYGUI_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS} ${OGRE_INCLUDE_DIR})
 
 if(GASS_BUILD_PLUGIN_OGRE)
 	find_package(Ogre)
@@ -46,13 +51,15 @@ if(GASS_BUILD_PLUGIN_OGRE)
 	set(H_FILES ${H_FILES}
 		MyGUIOgreSystem.h)
 	set(MYGUI_LIBRARIES	${MYGUI_LIBRARIES} ${OGRE_LIBRARIES})
+	set(MY_INC_DIRS ${MY_INC_DIRS} ${OGRE_INCLUDE_DIR})
  endif()
  
 #Enable class export 
 add_definitions( -DGASS_PLUGIN_EXPORTS )
 
 #Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
+link_directories(${MY_INC_DIRS})
+
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
 target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_SIM_LIBRARIES} ${MYGUI_LIBRARIES})
 
