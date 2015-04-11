@@ -125,29 +125,28 @@ namespace GASS
 	void ChaseCameraComponent::SceneManagerTick(double delta_time)
 	{
 		//Get parent location
-		LocationComponentPtr p_loc  =  GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 target_pos = p_loc->GetWorldPosition();
-		Quaternion target_rot = p_loc->GetWorldRotation();
+		LocationComponentPtr target_location  =  GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 target_pos = target_location->GetWorldPosition();
+		Quaternion target_rot = target_location->GetWorldRotation();
 
-		LocationComponentPtr loc  =  GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 current_pos = loc->GetWorldPosition();
-
+		LocationComponentPtr camera_location  =  GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		Vec3 eye_pos = camera_location->GetWorldPosition();
 
 		Vec3 dir = target_rot.GetRotationMatrix().GetZAxis();
 		dir.y = 0;
 		dir.Normalize();
 		Vec3 ideal_position = target_pos + dir * m_OffsetDistance;
 		ideal_position.y += m_OffsetHeight;
-		Vec3 displacement = current_pos - ideal_position;
+		Vec3 displacement = eye_pos - ideal_position;
 		Vec3 spring_acceleration = (-m_SpringConstant * displacement) - 
 			(m_DampingConstant * m_Velocity);
 
 		m_Velocity += spring_acceleration * delta_time;
-		current_pos += m_Velocity * delta_time;
+		eye_pos += m_Velocity * delta_time;
 		
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos)));
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(eye_pos)));
 		
-		Vec3 camera_dir = current_pos - target_pos;
+		Vec3 camera_dir = eye_pos - target_pos;
 		
 		camera_dir.Normalize();
 		Vec3 left = Math::Cross(Vec3(0,1,0),camera_dir);
