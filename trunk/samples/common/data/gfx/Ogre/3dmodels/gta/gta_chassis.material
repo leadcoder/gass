@@ -1,143 +1,67 @@
-material Badge
+import * from "base.material"
+material Badge : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.784314 0.784314 0.784314 1
-			diffuse 0.784314 0.784314 0.784314 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
+	set_texture_alias BaseTexture Badge.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
 
-			texture_unit
-			{
-				texture Badge.bmp
-			}
-		}
+material Badge0 : GASS_BaseMap
+{
+	set_texture_alias BaseTexture License.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
+}
 
-	}
-
+material BlackP : GASS_BaseMap
+{
+    set_texture_alias BaseTexture window.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material Badge0
+material Body : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.784314 0.784314 0.784314 1
-			diffuse 0.784314 0.784314 0.784314 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture License.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture body.bmp
+    set	$AmbientColor "0.588235 0.396078 0"
+	set $DiffuseColor "0.588235 0.396078 0"
+    set $SpecularColor "0 0 0"
+    set $Shininess "128"
 }
 
 
 
-material BlackP
+material Chrome : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.0666667 0.0666667 0.0666667 1
-			diffuse 0.0666667 0.0666667 0.0666667 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture window.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture Badge.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material Body
+material FrontL : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.788235 0.596078 0 1
-			diffuse 0.788235 0.596078 0 1
-			specular 0 0 0 1 8
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture body.bmp
-			}
-		}
-
-	}
-
+set_texture_alias BaseTexture Headlight.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material Chrome
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.0941177 0.0980392 0.0980392 1
-			diffuse 0.0941177 0.0980392 0.0980392 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-		}
-
-	}
-
-}
-
-
-
-material FrontL
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.752941 0.752941 0.752941 1
-			diffuse 0.752941 0.752941 0.752941 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture Headlight.bmp
-			}
-		}
-
-	}
-
-}
-
-
-
-material Glass
+material Glass 
 {
 	technique
 	{
@@ -169,96 +93,44 @@ material Glass
 
 
 
-material Grille
+material Grille : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.215686 0.215686 0.215686 1
-			diffuse 0.215686 0.215686 0.215686 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture Grille.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture Grille.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material Interior
+material Interior : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.2 0.2 0.2 1
-			diffuse 0.2 0.2 0.2 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture Interior.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture Interior.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material RearLi
+material RearLi : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.796079 0.0862745 0.156863 1
-			diffuse 0.796079 0.0862745 0.156863 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture RearLight.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture RearLight.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
 
 
 
-material Unders
+material Unders : GASS_BaseMap
 {
-	technique
-	{
-		pass
-		{
-			ambient 0.129412 0.105882 0.105882 1
-			diffuse 0.129412 0.105882 0.105882 1
-			specular 0 0 0 1 1
-			cull_hardware none
-			cull_software none
-
-			texture_unit
-			{
-				texture Underside.bmp
-			}
-		}
-
-	}
-
+	set_texture_alias BaseTexture Underside.bmp
+    set	$AmbientColor "1 1 1"
+	set $DiffuseColor "1 1 1"
+    set $SpecularColor "1 1 1"
+    set $Shininess "128"
 }
