@@ -99,6 +99,7 @@
   </GameSystem>
   <RakNetNetworkSystem>
     <TaskNode value="SIM"/>
+	<InterpolationLag value="200"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
     <TaskNode value="PRE_SIM"/>

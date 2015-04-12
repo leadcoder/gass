@@ -22,14 +22,16 @@ protected:
 	GASS::SceneWeakPtr m_Scene;
 	GASS::Timer* m_Timer;
 	double m_UpdateFreq;
+	int m_ServerPort;
+	int m_ClientPort;
 public:
 	SimApplication() :
 	  m_SceneName("new_terrain"),
 		  m_Timer(new GASS::Timer()),
-		  m_UpdateFreq(60)
-
+		  m_UpdateFreq(60),
+		  m_ServerPort(2005),
+		  m_ClientPort(2006)
 	  {
-
 
 	  }
 	  virtual ~SimApplication()
@@ -106,7 +108,6 @@ public:
 		  m_Engine->Update();
 		  return true;
 	  }
-
 };
 #endif
 

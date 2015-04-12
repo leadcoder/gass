@@ -59,33 +59,6 @@ typedef boost::shared_ptr<SimApplication> SimApplicationPtr;
 
 int main(int argc, char* argv[])
 {
-
-	/*GASS::SimEngine* engine = new GASS::SimEngine();
-	//Addplugins
-	
-	engine->GetPluginManager()->LoadPlugin("GASSPluginBase");
-	engine->GetPluginManager()->LoadPlugin("GASSPluginOgre");
-	
-	//add where to search for resources!
-	GASS::ResourceGroupPtr res_group(new GASS::ResourceGroup("MY_RESOURCE_GROUP"));
-	engine->GetResourceManager()->AddResourceGroup(res_group);
-	res_group->AddResourceLocation(GASS::FilePath("./"),GASS::RLT_FILESYSTEM,true);
-
-	engine->Init(GASS::FilePath(""));
-	*/
-
-	/*std::string config = "../Configuration/app_config.xml";
-	int index = 1;
-	while(index < argc)
-	{
-		char* arg = argv[index];
-		if(strcmp(arg, "--Config") == 0)
-		{
-			config = argv[index+1];
-		}
-		index += 2;
-	}*/
-
 	SimApplicationPtr app;
 
 	std::cout << "Server, client or Press [S] ,[C]";

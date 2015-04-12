@@ -1,6 +1,7 @@
 // CoreTest.cpp : Defines the entry point for the console application.
 //
 #include "SimApplication.h"
+#include "Plugins/Game/GameMessages.h"
 
 
 class SimServer : public SimApplication
@@ -14,10 +15,22 @@ public:
 
 	}
 
-	void OnClientConnected(GASS::MessagePtr message)
+	void OnClientConnected(GASS::ClientConnectedEventPtr message)
 	{
-		GASS::ClientConnectedEventPtr mess = DYNAMIC_PTR_CAST<GASS::ClientConnectedEvent>(message);
-		printf("Client connected to server:%s",mess->GetClientName().c_str());
+		printf("Client connected to server:%s",message->GetClientName().c_str());
+
+		//create new vehicle and send enter request
+		GASS::ScenePtr scene(m_Scene);
+		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("gta",scene->GetRootSceneObject());
+		GASS::Vec3 pos = scene->GetStartPos();
+		static int clients_connected =0;
+		clients_connected++;
+		pos.x += clients_connected*5;
+		if(object)
+		{
+			object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
+			object->PostRequest(GASS::ClientRemoteMessagePtr(new GASS::ClientRemoteMessage(message->GetClientName(),"EnterVehicle","")));
+		}
 	}
 
 	bool Init()
@@ -28,8 +41,9 @@ public:
 		//server stuff
 
 		//Add callback for client connections
-		GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),shared_from_this()));
-		m_Engine->GetSimSystemManager()->RegisterForMessage(typeid(GASS::ClientConnectedEvent),callback,0);
+		//GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),shared_from_this()));
+		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimServer::OnClientConnected,GASS::ClientConnectedEvent,0));
+		
 
 		//request server start
 		GASS::LogManager::getSingleton().stream() << "ServerApplication::Init -- Start Loading Scene:" <<  m_SceneName;
@@ -39,21 +53,12 @@ public:
 	
 		//create server objects
 		GASS::ScenePtr scene(m_Scene);
-		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
+		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("gta",scene->GetRootSceneObject());
 		GASS::Vec3 pos = scene->GetStartPos();
 
 		if(object)
 			object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
-
-		/*for(int i = 0; i <  m_ServerObjects.size();i++)
-		{
-			GASS::SceneObjectPtr object = scene->LoadObjectFromTemplate(m_ServerObjects[i],scene->GetRootSceneObject());
-			GASS::Vec3 pos = scene->GetStartPos();
-			pos.x += 10*i;
-			GASS::MessagePtr pos_msg(new GASS::PositionRequest(pos));
-			if(object)
-				object->SendImmediate(pos_msg);
-		}*/
+		
 		return true;
 	}
 };
