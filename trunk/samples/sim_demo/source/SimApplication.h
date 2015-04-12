@@ -30,7 +30,7 @@ public:
 		  m_Timer(new GASS::Timer()),
 		  m_UpdateFreq(60),
 		  m_ServerPort(2005),
-		  m_ClientPort(2005)
+		  m_ClientPort(2006)
 	  {
 
 	  }
