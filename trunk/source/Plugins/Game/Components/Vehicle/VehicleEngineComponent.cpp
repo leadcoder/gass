@@ -719,7 +719,7 @@ namespace GASS
 						m_AutoShiftStart = time;
 						m_FutureGear = m_Gear + 1;
 					}
-					else if(rpm < m_RPMGearChangeDown)
+					else if(rpm < m_RPMGearChangeDown && throttle < 0.01)
 					{
 						m_AutoShiftStart = time;
 						m_FutureGear = m_Gear - 1;

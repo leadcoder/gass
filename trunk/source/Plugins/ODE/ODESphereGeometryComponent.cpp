@@ -168,7 +168,6 @@ namespace GASS
 
 	void ODESphereGeometryComponent::UpdateDebug()
 	{
-
 		if(m_Debug)
 		{
 			if(m_GeomID)

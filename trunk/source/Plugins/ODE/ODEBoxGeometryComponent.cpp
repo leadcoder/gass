@@ -74,7 +74,11 @@ namespace GASS
 			{
 				AABox box = geom->GetBoundingBox();
 				SetSize((box.m_Max - box.m_Min));
-				SetOffset(((box.m_Max + box.m_Min)*0.5));
+				//only override offset if not set
+				if(m_Offset == Vec3(0,0,0))
+					SetOffset(((box.m_Max + box.m_Min)*0.5));
+				else
+					SetOffset(m_Offset);
 			}
 		}
 	}
@@ -111,6 +115,8 @@ namespace GASS
 		{
 			dMass ode_mass;
 			dMassSetBoxTotal(&ode_mass, m_Body->GetMass(), m_Size.x, m_Size.y, m_Size.z);
+			//Vec3 mass_offset = m_Body->GetCGPosition();
+			//dMassTranslate(&ode_mass, mass_offset.x, mass_offset.y, mass_offset.z);
 			m_Body->SetODEMass(ode_mass);
 		}
 	}

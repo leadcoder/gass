@@ -85,7 +85,7 @@ namespace GASS
 
 		if(!raknet->IsServer())
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputRelayEvent,0));
 
 			//test input chain
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
@@ -94,11 +94,11 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientRemoteMessage,ClientRemoteMessage,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputControllerMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput,InputRelayEvent,0));
 		}
 	}
 
-	void RakNetInputTransferComponent::OnInput(InputControllerMessagePtr message)
+	void RakNetInputTransferComponent::OnInput(InputRelayEventPtr message)
 	{
 		if(message->GetSenderID() == 8888)
 			return;
@@ -179,7 +179,7 @@ namespace GASS
 		ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 		std::string c_name = css->GetNameFromIndex(m_ControlSettingName,controller);
 		//std::string c_name = m_ControlSetting->m_IndexToName[controller];
-		InputControllerMessagePtr message(new InputControllerMessage(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
+		InputRelayEventPtr message(new InputRelayEvent(m_ControlSettingName,c_name,value,CT_TRIGGER,id));
 		GetSceneObject()->PostEvent(message);
 	}
 
@@ -200,7 +200,7 @@ namespace GASS
 			ControlSettingsSystemPtr css = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IControlSettingsSystem>();
 			//std::string controller = m_ControlSetting->m_IndexToName[input_package->Index];
 			std::string controller = css->GetNameFromIndex(m_ControlSettingName,input_package->Index);
-			InputControllerMessagePtr ctrl_message(new InputControllerMessage(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));
+			InputRelayEventPtr ctrl_message(new InputRelayEvent(m_ControlSettingName,controller,input_package->Value,CT_AXIS,id));
 			GetSceneObject()->PostEvent(ctrl_message);
 
 			/*if(controller == "Fire")
@@ -239,4 +239,3 @@ namespace GASS
 		}
 	}
 }
-

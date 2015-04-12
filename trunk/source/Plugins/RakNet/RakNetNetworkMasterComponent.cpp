@@ -210,6 +210,10 @@ namespace GASS
 	{
 		//everything is sent!
 		m_SerializePackages.clear();
+
+		if(m_Replica)
+			m_Replica->ProcessMessages();
+
 	}
 }
 

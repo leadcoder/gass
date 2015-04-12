@@ -45,6 +45,9 @@ namespace GASS
 	public:
 		RakNetBaseReplica();
 		virtual ~RakNetBaseReplica();
+
+		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
+
 		//Remote calls
 		//int AUTO_RPC_CALLSPEC EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
 		//int AUTO_RPC_CALLSPEC ExitVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
@@ -52,9 +55,11 @@ namespace GASS
 		int AUTO_RPC_CALLSPEC RemoteMessageWithData(const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteInput(SystemAddress input_source, int controller, float value, RakNet::AutoRPC* networkCaller); 
 		
-	
+		void ProcessMessages();
 	protected:
+		
 		SceneObjectPtr m_Owner;
+		std::vector<std::string> m_MessageBuffer;
 	};
 }
 

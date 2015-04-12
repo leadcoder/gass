@@ -86,7 +86,7 @@ namespace GASS
 		void SetLowStop(float value);
 	private:
 		void JointCorrectHinge2();
-		//void UpdateSwayBars(PhysicsVelocityEventPtr message);
+		void UpdateSwayBars(PhysicsVelocityEventPtr message);
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
 		dJointID m_ODEJoint;
 		

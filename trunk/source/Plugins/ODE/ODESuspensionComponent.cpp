@@ -22,7 +22,7 @@
 #include "Plugins/ODE/ODESuspensionComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-//#include "Plugins/ODE/Collision/ODECollisionSystem.h"
+#include "Sim/Utils/GASSCollisionHelper.h"
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -147,7 +147,7 @@ namespace GASS
 				dJointDestroy(m_ODEJoint);
 
 			m_ODEJoint = dJointCreateHinge2(world, 0);
-			//GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,PhysicsVelocityEvent,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::UpdateSwayBars,PhysicsVelocityEvent,0));
 
 			dJointAttach(m_ODEJoint, b1,b2);
 			UpdateAnchor();
@@ -335,7 +335,7 @@ namespace GASS
 		}
 	}
 
-	/*void ODESuspensionComponent::UpdateSwayBars(PhysicsVelocityEventPtr message)
+	void ODESuspensionComponent::UpdateSwayBars(PhysicsVelocityEventPtr message)
 	{
 		//Hack to keep vehicles from flipping upside down
 		if(m_SwayForce > 0)
@@ -365,8 +365,11 @@ namespace GASS
 				radius = sphere->GetRadius();
 			}
 
-			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ODECollisionSystem>();
-			Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetScene(),hingePoint,false);
+//			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ODECollisionSystem>();
+			GeometryFlags flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
+			ScenePtr scene = GetSceneObject()->GetScene();
+			Float height_above_ground = hingePoint.y - CollisionHelper::GetHeightAtPosition(scene, hingePoint, flags, true);
+			//Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetScene(),hingePoint,false);
 			//std::cout << "height" <<  height_above_ground << "\n";
 
 			//get terrain height
@@ -386,7 +389,7 @@ namespace GASS
 				dBodyAddForceAtPos( b1, -axis2.x*amt, -axis2.y*amt, -axis2.z*amt, wp[0], wp[1], wp[2] );
 			}
 		}
-	}*/
+	}
 
 	void ODESuspensionComponent::JointCorrectHinge2()
 	{

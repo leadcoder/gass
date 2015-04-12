@@ -49,7 +49,7 @@ namespace GASS
 		virtual bool IsRemote() const;
 	private:
 		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputControllerMessagePtr message);
+		void OnInput(InputRelayEventPtr message);
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		void Call(const std::string &message, const std::string &data);

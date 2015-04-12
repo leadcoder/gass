@@ -57,6 +57,7 @@ namespace GASS
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void SetODEMass(dMass mass);
+		Vec3 GetCGPosition() const {return m_CGPosition;}
 	protected:
 		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
@@ -77,7 +78,7 @@ namespace GASS
 		Vec3 GetForce(bool rel = false);
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
 		//reflection functions
-		Vec3 GetCGPosition() const {return m_CGPosition;}
+		
 		void SetCGPosition(const Vec3 &value) {m_CGPosition = value;}
 		Vec3 GetSymmetricInertia() const {return m_SymmetricInertia;}
 		void SetSymmetricInertia(const Vec3 &value) {m_SymmetricInertia = value;}

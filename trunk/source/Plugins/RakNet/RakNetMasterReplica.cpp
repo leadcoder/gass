@@ -55,7 +55,7 @@ namespace GASS
 
 	void RakNetMasterReplica::LocalInit(SceneObjectPtr object)
 	{
-		m_Owner = object;
+		SetOwner(object);
 		m_TemplateName = object->GetTemplateName();
 		
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();

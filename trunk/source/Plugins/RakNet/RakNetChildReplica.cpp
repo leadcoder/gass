@@ -58,7 +58,7 @@ namespace GASS
 
 	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
 	{
-		m_Owner = object;
+		SetOwner(object);
 
 //		m_TemplateName = object->GetTemplateName();
 

@@ -60,6 +60,8 @@ namespace GASS
 		m_UpdateRotation(true),
 		m_SendFreq(0), // 20fps
 		m_NumHistoryFrames(6),
+		m_ExtrapolatePosition(true),
+		m_ExtrapolateRotation(true),
 		m_ClientLocationMode(UNCHANGED)
 	{
 		
@@ -85,6 +87,9 @@ namespace GASS
 		RegisterProperty<ClientLocationMode>("ClientLocationMode", &RakNetLocationTransferComponent::GetClientLocationMode, &RakNetLocationTransferComponent::SetClientLocationMode);
 		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
+		RegisterProperty<bool>("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
+		RegisterProperty<bool>("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
+
 	}
 
 	void RakNetLocationTransferComponent::OnInitialize()
@@ -239,9 +244,8 @@ namespace GASS
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-			RakNetTime  step_back = raknet->GetInterpolationLag();
+			static RakNetTime  step_back = raknet->GetInterpolationLag();
 #ifdef _DEBUG_LTC_
-
 			if(GetAsyncKeyState(VK_F2))
 				step_back--;
 			if(GetAsyncKeyState(VK_F3))
@@ -258,34 +262,57 @@ namespace GASS
 			//Font::DebugPrint("inte time: %d",(m_UpdateTimeStamp[0] -m_UpdateTimeStamp[1]));
 			time = time - step_back;
 
+
+			/*char debug_text[256];
+			sprintf(debug_text,"Time: %d  %d %d",(time - m_LocationHistory[0].Time),m_LocationHistory[0].Time, time);
+
+			DebugPrintRequestPtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
+			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
+			*/
+
 #ifdef _DEBUG_LTC_
 			char debug_text[256];
 #endif
 			if(time > m_LocationHistory[0].Time)  
 			{
-				//we have no new data ,extrapolate?
 				m_DeadReckoning = (float(time - m_LocationHistory[0].Time))/1000.0f;
-				Mat4 trans;
-				trans.Identity();
-				m_LocationHistory[0].Rotation.ToRotationMatrix(trans);
-				Vec3 local_velocity = trans*m_Velocity;
-				Vec3 local_angular_velocity = trans*m_AngularVelocity;
-				Float length = local_velocity.Length();
-				if(length > 0.0000001)
-				{
-					Vec3 delta_dir = local_velocity;
-					delta_dir.Normalize();
-					delta_dir = delta_dir*(length*m_DeadReckoning);
-					new_pos = m_LocationHistory[0].Position + delta_dir;
-				}
-				else 
-					new_pos = m_LocationHistory[0].Position;
 
+				new_pos = m_LocationHistory[0].Position;
+				new_rot = m_LocationHistory[0].Rotation;
+
+				//we have no new data ,extrapolate?
+				if(m_ExtrapolatePosition || m_ExtrapolateRotation)
+				{
+					Mat4 trans;
+					trans.Identity();
+					m_LocationHistory[0].Rotation.ToRotationMatrix(trans);
+					Vec3 local_velocity = trans*m_Velocity;
+					Vec3 local_angular_velocity = trans*m_AngularVelocity;
+					Float length = local_velocity.Length();
+					if(m_ExtrapolatePosition && length > 0.0000001)
+					{
+						Vec3 delta_dir = local_velocity;
+						delta_dir.Normalize();
+						delta_dir = delta_dir*(length*m_DeadReckoning);
+						new_pos = m_LocationHistory[0].Position + delta_dir;
+					}
+					if(m_ExtrapolateRotation)
+					{
+						Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
+						new_rot = m_LocationHistory[0].Rotation * Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z));
+					}
 #ifdef _DEBUG_LTC_
-				sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
+					sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
 #endif
-				Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
-				new_rot = m_LocationHistory[0].Rotation * Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z));
+				}
+				else
+				{
+					#ifdef _DEBUG_LTC_
+					sprintf(debug_text,"extrapolation disabled Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);
+					#endif
+				}
+				
+
 
 			}
 			else 
@@ -339,8 +366,9 @@ namespace GASS
 
 			//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 #ifdef _DEBUG_LTC_
-			MessagePtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
+			DebugPrintRequestPtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
+
 #endif
 
 		}

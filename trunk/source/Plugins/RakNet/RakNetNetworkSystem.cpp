@@ -301,16 +301,16 @@ namespace GASS
 
 	void RakNetNetworkSystem::Update(double delta)
 	{
+		//update listeners
+		SimSystem::Update(delta);
+
 		if(IsServer())
 		{
 			UpdateServer(delta);
 		}
 		else 
 			UpdateClient(delta);
-
-		//update listeners
-		SimSystem::Update(delta);
-		//
+		
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new NetworkPostUpdateEvent()));
 	}
 
@@ -399,7 +399,7 @@ namespace GASS
 					}*/
 				}
 
-				std::string name = p->systemAddress.ToString();
+				std::string name = p->systemAddress.ToString();//GetRakPeer()->GetExternalID(p->systemAddress).ToString();
 				int port = p->systemAddress.port;
 				ClientDataMap::iterator pos;
 				pos = m_ClientMap.find(name);
@@ -420,7 +420,7 @@ namespace GASS
 
 
 				ClientData data;
-				std::string name = p->systemAddress.ToString();
+				std::string name = p->systemAddress.ToString();//GetRakPeer()->GetExternalID(p->systemAddress).ToString();
 				int port = p->systemAddress.port;
 				data.IP = name;
 				m_ClientMap[name] = data;
@@ -560,7 +560,7 @@ namespace GASS
 				ServerData data;
 				RakNet::BitStream server_data(p->data+1,p->length-1,false);
 				DeserializeServerData(&server_data,&data);
-				SystemMessagePtr message(new StartSceanrioRequest(data.MapName));
+				SystemMessagePtr message(new LoadSceneRequest(data.MapName));
 				GetSimSystemManager()->PostMessage(message);
 				
 				std::cout << "ID_START_SCENE" << std::endl;

@@ -218,10 +218,10 @@ namespace GASS
 	/**
 	Server inform client about scene
 	*/
-	class StartSceanrioRequest : public SystemRequestMessage
+	class LoadSceneRequest : public SystemRequestMessage
 	{
 	public:
-		StartSceanrioRequest(const std::string &scene_name, SenderID sender_id = -1, double delay= 0) :
+		LoadSceneRequest(const std::string &scene_name, SenderID sender_id = -1, double delay= 0) :
 		  SystemRequestMessage(sender_id , delay) ,
 			  m_Name(scene_name){}
 
@@ -229,7 +229,7 @@ namespace GASS
 	private:
 		std::string m_Name;
 	};
-	typedef SPTR<StartSceanrioRequest> StartSceanrioRequestPtr;
+	typedef SPTR<LoadSceneRequest> LoadSceneRequestPtr;
 
 	class ShutdownSceanrioRequestMessage : public BaseMessage
 	{

@@ -67,7 +67,7 @@ namespace GASS
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
+		
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {m_PartId;}
 		NetworkID GetPartOfId(){return m_PartOfId;}

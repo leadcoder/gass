@@ -144,7 +144,12 @@ namespace GASS
 		bool GetUpdateRotation() const {return m_UpdateRotation;}
 		void SetUpdateRotation(bool value) {m_UpdateRotation=value;}
 
-		
+		bool GetExtrapolatePosition() const {return m_ExtrapolatePosition;}
+		void SetExtrapolatePosition(bool value) {m_ExtrapolatePosition=value;}
+
+		bool GetExtrapolateRotation() const {return m_ExtrapolateRotation;}
+		void SetExtrapolateRotation(bool value) {m_ExtrapolateRotation=value;}
+
 		
 
 		Vec3 m_Velocity;
@@ -158,6 +163,8 @@ namespace GASS
 		//int m_RelativeToParent;
 		bool m_UpdatePosition;
 		bool m_UpdateRotation;
+		bool m_ExtrapolatePosition;
+		bool m_ExtrapolateRotation;
 		Vec3 m_ParentPos;
 		int m_NumHistoryFrames;
 		Quaternion m_ParentRot;

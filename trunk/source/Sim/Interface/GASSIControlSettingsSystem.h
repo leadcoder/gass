@@ -57,7 +57,7 @@ namespace GASS
 	};
 	typedef SPTR<ControllSettingsMessage> ControllSettingsMessagePtr;
 
-	class InputControllerMessage : public SceneObjectEventMessage
+	/*class InputControllerMessage : public SceneObjectEventMessage
 	{
 	public:
 		InputControllerMessage(const std::string &settings, const std::string &controller, float value, ControllerType ct, SenderID sender_id = -1, double delay= 0) : 
@@ -78,7 +78,7 @@ namespace GASS
 		float m_Value;
 		ControllerType m_ControllerType;
 	};
-	typedef SPTR<InputControllerMessage> InputControllerMessagePtr;
+	typedef SPTR<InputControllerMessage> InputControllerMessagePtr;*/
 
 	class IControlSettingsSystem 
 	{
