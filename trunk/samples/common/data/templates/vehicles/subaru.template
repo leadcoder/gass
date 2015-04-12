@@ -165,6 +165,10 @@
 			<NetworkChildComponent>
 			</NetworkChildComponent>
 			<LocationTransferComponent>
+			    <UpdatePosition value="1"/>
+				<ClientLocationMode value="1"/>
+				<ExtrapolatePosition value="false"/>
+				<ExtrapolateRotation value="false"/>
 			</LocationTransferComponent>
 		</Components>
 	</SceneObjectTemplate>
@@ -190,6 +194,10 @@
 			<NetworkChildComponent>
 			</NetworkChildComponent>
 			<LocationTransferComponent>
+			    <UpdatePosition value="1"/>
+				<ClientLocationMode value="1"/>
+				<ExtrapolatePosition value="false"/>
+				<ExtrapolateRotation value="false"/>
 			</LocationTransferComponent>
 		</Components>
 	</SceneObjectTemplate>
