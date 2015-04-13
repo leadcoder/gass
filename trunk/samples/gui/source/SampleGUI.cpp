@@ -55,7 +55,7 @@ int _getch( ) {
 int run(int argc, char* argv[])
 {
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
-	m_Engine->Init(GASS::FilePath("SampleGUIOSG.xml"));
+	m_Engine->Init(GASS::FilePath("SampleGUI.xml"));
 
 	//load additional plugins
 	//m_Engine->GetPluginManager()->LoadPlugin("GASSPluginOSG");
