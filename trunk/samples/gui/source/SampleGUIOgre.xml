@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GASS>
 <Plugins>
-  <Plugin PluginFile = "GASSPluginOSG"/>
+  <!--<Plugin PluginFile = "GASSPluginOgre"/>-->
   <Plugin PluginFile = "GASSPluginOIS"/>
   <!--<Plugin PluginFile = "GASSPluginPhysX3"/>-->
   <Plugin PluginFile = "GASSPluginODE"/>
