@@ -120,7 +120,7 @@
 <RTC>
   <NumberOfThreads value="-1"/>
   <!-- -1 == auto-->
-  <MaxUpdateFreqency value="60"/>
+  <MaxUpdateFreqency value="160"/>
   <!-- -1 == not max update freq-->
   <ExternalSimulationUpdate value="false"/>
   <!-- let application trigger simulation updates PARALLEL-->

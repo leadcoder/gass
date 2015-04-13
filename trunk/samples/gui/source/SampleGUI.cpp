@@ -23,6 +23,7 @@
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
+#include "Core/PluginSystem/GASSPluginManager.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -54,7 +55,40 @@ int _getch( ) {
 int run(int argc, char* argv[])
 {
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
-	m_Engine->Init(GASS::FilePath("GUISample.xml"));
+	m_Engine->Init(GASS::FilePath("SampleGUIOSG.xml"));
+
+	//load additional plugins
+	//m_Engine->GetPluginManager()->LoadPlugin("GASSPluginOSG");
+	m_Engine->GetPluginManager()->LoadPlugin("GASSPluginOgre");
+	//Create additional systems
+	//std::string gfx_system_name = "OSGGraphicsSystem";
+	//std::string gui_gfx_system_name = "MyGUIOSGSystem"
+	std::string gfx_system_name = "OgreGraphicsSystem";
+	std::string gui_gfx_system_name = "MyGUIOgreSystem";
+
+	GASS::SimSystemPtr gfx_system = GASS::SystemFactory::Get().Create(gfx_system_name);
+	gfx_system->OnCreate(m_Engine->GetSimSystemManager());
+	gfx_system->SetTaskNode("POST_SIM");
+	if(gfx_system_name == "OgreGraphicsSystem")
+	{
+		gfx_system->SetPropertyByString("Plugin","RenderSystem_Direct3D9");
+		gfx_system->SetPropertyByString("Plugin","Plugin_OctreeSceneManager");
+		gfx_system->SetPropertyByString("Plugin","Plugin_ParticleFX");
+	}
+
+	GASS::SimSystemPtr gui_system = GASS::SystemFactory::Get().Create(gui_gfx_system_name);
+	gui_system->OnCreate(m_Engine->GetSimSystemManager());
+	gui_system->SetTaskNode("PRE_SIM");
+	gui_system->Init();
+	m_Engine->GetSimSystemManager()->AddSystem(gui_system);
+	
+	gfx_system->Init();
+	m_Engine->GetSimSystemManager()->AddSystem(gfx_system);
+
+
+	//reload templates
+	m_Engine->ReloadTemplates();
+
 	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
 	win->CreateViewport("MainViewport", 0, 0, 1, 1);

@@ -16,7 +16,7 @@ set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 #Add project link libs
 target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_SIM_LIBRARIES})
 
-set(GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/source/SampleGUIOgre.xml")
+set(GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/source/SampleGUIOSG.xml")
 
 #copy configurations to enable execution from build folder 
 FILE(COPY ${GASS_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
