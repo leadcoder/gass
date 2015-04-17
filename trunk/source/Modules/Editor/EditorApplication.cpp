@@ -76,9 +76,9 @@ namespace GASS
 		m_Initilized  = true;
 	}
 
-	void EditorApplication::Update()
+	bool EditorApplication::Update()
 	{
-		SimEngine::Get().Update();
+		return SimEngine::Get().Update();
 	}
 
 	bool  EditorApplication::LoadSettings(const std::string &filename)

@@ -246,7 +246,7 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-	void SimEngine::Update()
+	bool SimEngine::Update()
 	{
 		static GASS::Timer  timer;
 		static double prev_time = 0;
@@ -266,11 +266,13 @@ namespace GASS
 				{
 					prev_time = current_time;
 					Tick(delta_time);
+					return true;
 				}
 			}
 			else
 			{
 				//return and give application more idle time
+				return false;
 			}
 		}
 		else
@@ -278,6 +280,7 @@ namespace GASS
 			//just tick engine with delta time
 			Tick(delta_time);
 			prev_time = current_time;
+			return true;
 		}
 	}
 

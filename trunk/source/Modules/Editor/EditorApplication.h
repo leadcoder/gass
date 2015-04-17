@@ -11,7 +11,7 @@ namespace GASS
 		EditorApplication(const FilePath &log_folder);
 		~EditorApplication();
 		void Init(const FilePath &working_folder, const std::string &gass_configuration, void* main_win_handle,void*  render_win_handle);
-		void Update();
+		bool Update();
 	protected:
 		void OnRequestSimulatiornStep(TimeStepRequestPtr message);
 		void  UnloadScene();

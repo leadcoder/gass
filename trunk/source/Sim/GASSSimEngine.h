@@ -84,9 +84,11 @@ namespace GASS
 		@remarks
 			The application is responsible for calling this function each frame
 			SimEngine will take care of delta time calulations if you use this function
+			return true if simulation was updated else false
 		@ note This cunction will call void Tick(double delta_time) 
+
 		*/
-		void Update();
+		bool Update();
 
 		/**
 		The application can call this function instead of Update() to feed custom delta_time
