@@ -111,7 +111,7 @@ namespace GASS
 		//Initialize systems
 		m_SystemManager->Init();
 
-		//load collision masks
+		//load collision masks...move this else where
 		ResourceHandle res("collision_settings.xml");
 		try
 		{
@@ -124,12 +124,9 @@ namespace GASS
 		//Load templates
 		ReloadTemplates();
 
-		//intialize profiler
+		//initialize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
-
-		//Catch script events
-
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}

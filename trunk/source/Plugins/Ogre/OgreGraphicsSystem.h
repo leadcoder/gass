@@ -27,6 +27,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Core/Utils/GASSSTDVector.h"
 #include <OgreRenderWindow.h>
 #include <string>
 
@@ -51,9 +52,11 @@ namespace GASS
 	class OgreCameraComponent;
 	typedef SPTR<OgrePostProcess> OgrePostProcessPtr;
 	typedef SPTR<OgreCameraComponent> OgreCameraComponentPtr;
-
+	typedef std::vector< std::string > PostFilterVector;
+	typedef std::vector< std::string > PluginVector;
 	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
 	{
+		
 		friend class OgreGraphicsSceneManager;
 	public:
 		OgreGraphicsSystem();
@@ -96,15 +99,14 @@ namespace GASS
 		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 
-		//void SetActiveSceneManger(Ogre::SceneManager *sm);
-		void AddPlugin(const std::string &plugin){m_Plugins.push_back(plugin);}
+		PluginVector GetPlugins() const {return m_Plugins;}
+		void SetPlugins(const PluginVector &plugins){m_Plugins = plugins;}
 		bool GetCreateMainWindowOnInit() const {return m_CreateMainWindowOnInit;}
 		void SetCreateMainWindowOnInit(bool value){m_CreateMainWindowOnInit = value;}
 		bool GetShowStats() const {return m_ShowStats;}
 		void SetShowStats(bool value){m_ShowStats = value;}
-		std::vector<std::string> GetPostFilters() const;
-
-		void SetPostFilters(const std::vector<std::string> &filters);
+		PostFilterVector GetPostFilters() const;
+		void SetPostFilters(const PostFilterVector &filters);
 		void ReloadMaterials();
 		void ReloadResources();
 
@@ -112,8 +114,10 @@ namespace GASS
 		Ogre::Root* m_Root;
 		std::map<std::string, OgreRenderWindowPtr>	m_Windows;
 		Ogre::SceneManager* m_SceneMgr;
-		std::vector<std::string> m_Plugins;
-		std::vector<std::string> m_PostFilters;
+		PluginVector m_Plugins;
+
+		
+		PostFilterVector m_PostFilters;
 		OgreDebugTextOutput* m_DebugTextBox;
 		bool m_CreateMainWindowOnInit;
 		bool m_ShowStats;

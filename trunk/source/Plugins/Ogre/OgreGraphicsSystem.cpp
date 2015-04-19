@@ -29,8 +29,6 @@
 #include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
 
-
-
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSystemFactory.h"
@@ -54,13 +52,13 @@ ResourceGroupHelper resourceGrouphelper;
 
 //entry point for dLL
 extern "C" {
-int __declspec(dllexport) onLoadModule(void *arg1) 
-{
-	// ...
-	//
-	GASS::DynamicModule* module = (GASS::DynamicModule*)(arg1);
-	return 10;
-}
+	int __declspec(dllexport) onLoadModule(void *arg1) 
+	{
+		// ...
+		//
+		GASS::DynamicModule* module = (GASS::DynamicModule*)(arg1);
+		return 10;
+	}
 }
 
 
@@ -74,6 +72,9 @@ namespace GASS
 		m_ShowStats(true),
 		m_UseShaderCache(false)
 	{
+		m_Plugins.push_back("RenderSystem_Direct3D9");
+		m_Plugins.push_back("Plugin_OctreeSceneManager");
+		m_Plugins.push_back("Plugin_ParticleFX");
 	}
 
 	OgreGraphicsSystem::~OgreGraphicsSystem(void)
@@ -84,8 +85,8 @@ namespace GASS
 	void OgreGraphicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("OgreGraphicsSystem",new GASS::Creator<OgreGraphicsSystem, SimSystem>);
-		RegisterProperty<std::string>( "Plugin", NULL, &GASS::OgreGraphicsSystem::AddPlugin);
-		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
+		RegisterProperty<PluginVector>("Plugins", &GASS::OgreGraphicsSystem::GetPlugins, &GASS::OgreGraphicsSystem::SetPlugins);
+		RegisterProperty<PostFilterVector>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
 		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
@@ -223,12 +224,12 @@ namespace GASS
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 
-	std::vector<std::string> OgreGraphicsSystem::GetPostFilters() const
+	PostFilterVector OgreGraphicsSystem::GetPostFilters() const
 	{
 		return m_PostFilters;
 	}
 
-	void OgreGraphicsSystem::SetPostFilters(const std::vector<std::string> &filters)
+	void OgreGraphicsSystem::SetPostFilters(const PostFilterVector &filters)
 	{
 		m_PostFilters = filters;
 	}

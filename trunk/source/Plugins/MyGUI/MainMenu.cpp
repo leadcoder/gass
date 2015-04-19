@@ -41,15 +41,6 @@ namespace GASS
 		//MyGUI::Widget* widget = *_item->getItemData<MyGUI::Widget*>();
 	}
 
-	void MainMenu::eventMouseButtonClick(MyGUI::Widget* _sender)
-	{
-		std::string name = _sender->getName();
-		if (_sender->getName() == "Load")
-		{
-
-		}
-	}
-
 	void MainMenu::notifyMenuCtrlAccept(MyGUI::MenuControl* _sender, MyGUI::MenuItem* _item)
 	{
 		const std::string& item_id = _item->getItemId();

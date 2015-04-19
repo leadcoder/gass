@@ -137,21 +137,12 @@ namespace GASS
 
 	bool MyGUISystem::KeyPressed(int key, unsigned int text)
 	{
-
-		// do event injection
-		//CEGUI::System& cegui = CEGUI::System::getSingleton();
-
-		// key down
-		//cegui.injectKeyDown(key);
-
-		// now character
-		//cegui.injectChar(text);
+		//TODO inject input?
 		return true;
 	}
 
 	bool MyGUISystem::KeyReleased( int key, unsigned int text)
 	{
-		//CEGUI::System::getSingleton().injectKeyUp(key);
 		return true;
 	}
 
