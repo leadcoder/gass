@@ -86,19 +86,19 @@ namespace GASS
 				{
 					m_BBox = gc->GetBoundingBox();
 					BuildMesh();
-					GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(true)));
+					GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(true)));
 				}
 				else
-					GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
+					GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(false)));
 			}
 			else
-				GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
+				GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(false)));
 
 		}
 		else
 		{
 			m_SelectedObject.reset();
-			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
+			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(false)));
 		}
 	}
 

@@ -229,10 +229,10 @@ namespace GASS
 	CollisionSettingsRequest.
 	*/
 
-	class VisibilityRequest : public SceneObjectRequestMessage
+	class LocationVisibilityRequest : public SceneObjectRequestMessage
 	{
 	public:
-		VisibilityRequest(bool visible, SenderID sender_id = -1, double delay= 0) :
+		LocationVisibilityRequest(bool visible, SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay), m_Visible(visible)
 		  {
 
@@ -242,7 +242,7 @@ namespace GASS
 		bool m_Visible;
 	};
 
-	typedef SPTR<VisibilityRequest> VisibilityRequestPtr;
+	typedef SPTR<LocationVisibilityRequest> LocationVisibilityRequestPtr;
 
 
 	class GeometryVisibilityRequest : public SceneObjectRequestMessage

@@ -50,6 +50,7 @@ namespace GASS
 		void OnClearMessage(ClearManualMeshRequestPtr message);
 		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 		

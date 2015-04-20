@@ -106,7 +106,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage,RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionRequest,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage,WorldRotationRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,VisibilityRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage,LocationVisibilityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage,ScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage,GASS::ParentChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent,GASS::AttachToParentRequest,0));
@@ -420,7 +420,7 @@ namespace GASS
           //std::cout<<"update callback - post traverse"<<node<<std::endl; 
       } 
 
-	void OSGLocationComponent::OnVisibilityMessage(VisibilityRequestPtr message)
+	void OSGLocationComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
 	{
 		bool visibility = message->GetValue();
 		if(visibility)

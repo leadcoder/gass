@@ -842,7 +842,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(value)));
+			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(value)));
 		}
 	}
 

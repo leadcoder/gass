@@ -78,6 +78,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
 	}
 
@@ -314,7 +315,7 @@ namespace GASS
 
 	void OSGBillboardComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
-		if(m_OSGBillboard.valid())
+		if(m_OSGBillboard.valid() && m_OSGBillboard->getNodeMask())
 		{
 			if(message->EnableCollision())
 			{
@@ -323,6 +324,25 @@ namespace GASS
 			else
 			{
 				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT, m_OSGBillboard);
+			}
+		}
+	}
+
+
+	void OSGBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	{
+		bool visibility = message->GetValue();
+
+		if(m_OSGBillboard)
+		{
+			if(visibility)
+			{
+				SetGeometryFlags(m_GeomFlags);
+				SetCastShadow(m_CastShadow);
+			}
+			else
+			{
+				m_OSGBillboard->setNodeMask(0);
 			}
 		}
 	}

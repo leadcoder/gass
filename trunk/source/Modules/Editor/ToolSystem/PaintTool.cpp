@@ -109,7 +109,7 @@ namespace GASS
 		{
 			int from_id = PTR_TO_INT(this);
 			SendMessageRec(gizmo,CollisionSettingsRequestPtr(new CollisionSettingsRequest(value,from_id)));
-			SendMessageRec(gizmo,VisibilityRequestPtr(new VisibilityRequest(value,from_id)));
+			SendMessageRec(gizmo,LocationVisibilityRequestPtr(new LocationVisibilityRequest(value,from_id)));
 		}
 	}
 

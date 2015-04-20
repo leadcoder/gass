@@ -31,6 +31,7 @@
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Sim/GASSResourceManager.h"
 #include <osgDB/ReadFile> 
+#include <osgDB/WriteFile> 
 #include <osgUtil/Optimizer>
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
@@ -102,6 +103,15 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
 	}
 
+
+	void OSGMeshComponent::OnInitialize()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
+	}
 
 	std::vector<std::string> OSGMeshComponent::GetAvailableMeshFiles() const
 	{
@@ -184,14 +194,7 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnInitialize()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,VisibilityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
-	}
+	
 
 
 	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
@@ -244,7 +247,7 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnVisibilityMessage(VisibilityRequestPtr message)
+	void OSGMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
 	{
 		bool visibility = message->GetValue();
 		if(visibility)
@@ -334,10 +337,9 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to load mesh: " + file_name,"OSGMeshComponent::SetFilename");
 		}
 
-		
 		osgUtil::Optimizer optimizer;
 		optimizer.optimize(m_MeshNode.get(), osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS & ~osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS);
-
+		
 		OSGNodeData* data = new OSGNodeData(shared_from_this());
 		m_MeshNode->setUserData(data);
 
@@ -434,7 +436,7 @@ namespace GASS
 			}
 			
 			parent->AddChildSceneObject(so,load);
-			//epxand recursive
+			//expand recursive
 			if(node->asGroup())
 			{
 				for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
@@ -693,12 +695,15 @@ namespace GASS
 
 	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
-		if(m_MeshNode.valid())
+		if(m_MeshNode.valid() && m_MeshNode->getNodeMask())
 		{
 			if(message->EnableCollision())
 				OSGConvert::Get().SetOSGNodeMask(m_GeomFlags,m_MeshNode.get());
 			else
+			{
+				//if(m_MeshNode->getNodeMask())
 				OSGConvert::Get().SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_MeshNode.get());
+			}
 		}
 	}
 }

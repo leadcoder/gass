@@ -47,6 +47,7 @@ namespace GASS
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 		void OnSetColorMessage(BillboardColorRequestPtr message);
 		float GetWidth() const;
 		void SetWidth(float width);

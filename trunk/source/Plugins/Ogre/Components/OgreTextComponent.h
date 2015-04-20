@@ -51,7 +51,7 @@ namespace GASS
 		void SetOffset(float offset);
 		float GetCharacterSize() const;
 		void SetCharacterSize(float size);
-		void OnVisibilityMessage(VisibilityRequestPtr message);
+		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 	
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;

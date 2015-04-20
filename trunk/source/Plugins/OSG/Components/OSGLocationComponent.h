@@ -75,7 +75,7 @@ namespace GASS
 		
 		//helper
 		OSGLocationComponentPtr GetParentLocation();
-		void OnVisibilityMessage(VisibilityRequestPtr message);
+		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 		void SendTransMessage();
 		Vec3 m_Pos;
 	

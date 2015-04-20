@@ -56,7 +56,7 @@ namespace GASS
 	void HUDComponent::OnInitialize()
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(HUDComponent::OnCameraChanged,CameraChangedEvent,1));
-		GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
+		GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(false)));
 		UpdateHUD();
 		m_Initialized = true;
 	}
@@ -73,11 +73,11 @@ namespace GASS
 		if(cam_obj == 	GetSceneObject()->GetParentSceneObject())
 		{
 			//show hud
-			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(true)));
+			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(true)));
 		}
 		else //hide
 		{
-			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(false)));
+			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(false)));
 		}
 	}
 

@@ -102,7 +102,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::WorldRotationRequest,GASS::WorldRotationRequest ,0));
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::ParentChangedEvent,GASS::ParentChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::VisibilityRequest,GASS::VisibilityRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::VisibilityRequest,GASS::LocationVisibilityRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::BoundingInfoRequest, GASS::BoundingInfoRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnUpdateEulerAngles, GASS::UpdateEulerAnglesRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreLocationComponent::OnAttachToParent,GASS::AttachToParentRequest,0));
@@ -261,7 +261,7 @@ namespace GASS
 		SetRotation(message->GetRotation());
 	}
 
-	void OgreLocationComponent::VisibilityRequest(VisibilityRequestPtr message)
+	void OgreLocationComponent::VisibilityRequest(LocationVisibilityRequestPtr message)
 	{
 		SetVisibility(message->GetValue());
 	}

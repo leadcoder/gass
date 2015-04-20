@@ -254,7 +254,7 @@ namespace GASS
 			int from_id = PTR_TO_INT(this);
 			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
 			SendMessageRec(gizmo,col_msg);
-			VisibilityRequestPtr vis_msg(new VisibilityRequest(value,from_id));
+			LocationVisibilityRequestPtr vis_msg(new LocationVisibilityRequest(value,from_id));
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}

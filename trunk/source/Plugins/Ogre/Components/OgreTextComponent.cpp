@@ -103,7 +103,7 @@ namespace GASS
 		//this one should load after mesh entities
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnGeomChanged,GeometryChangedEvent,2));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnCaptionMessage,TextCaptionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,VisibilityRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTextComponent::OnVisibilityMessage,LocationVisibilityRequest ,0));
 
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\r", "\r");
 		m_TextToDisplay = StringUtils::Replace(m_TextToDisplay, "\\n", "\n");
@@ -266,7 +266,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OgreTextComponent::OnVisibilityMessage(VisibilityRequestPtr message)
+	void OgreTextComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
 	{
 		m_Visible = message->GetValue();
 	}

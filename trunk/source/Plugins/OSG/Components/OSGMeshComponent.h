@@ -80,7 +80,7 @@ namespace GASS
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(VisibilityRequestPtr message);
+		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
 		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const ResourceHandle &filename);

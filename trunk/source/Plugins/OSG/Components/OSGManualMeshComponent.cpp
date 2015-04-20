@@ -76,6 +76,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
 
 		m_GeoNode = new osg::Geode();
 
@@ -97,9 +98,25 @@ namespace GASS
 		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(GetGeometryFlags());
-		BaseSceneComponent::OnInitialize();
-		
 
+		BaseSceneComponent::OnInitialize();
+	}
+
+	void OSGManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	{
+		bool visibility = message->GetValue();
+		if(visibility)
+		{
+			//restore flags
+			SetCastShadow(m_CastShadow);
+			SetReceiveShadow(m_ReceiveShadow);
+			SetGeometryFlags(m_GeometryFlagsBinder.GetValue());
+		}
+		else
+		{
+
+			m_GeoNode->setNodeMask(0);
+		}
 	}
 
 	void OSGManualMeshComponent::SetCastShadow(bool value)
@@ -142,7 +159,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
-		if(m_GeoNode)
+		if(m_GeoNode && m_GeoNode->getNodeMask())
 		{
 			if(message->EnableCollision())
 				OSGConvert::Get().SetOSGNodeMask(GetGeometryFlags(),m_GeoNode.get());
@@ -158,7 +175,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find location component: " + GetSceneObject()->GetName(),"OSGManualMeshComponent::OnLoad");
 
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
-
 	}
 
 	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)

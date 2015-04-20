@@ -88,13 +88,13 @@ namespace GASS
 		if(list)
 		{
 			bool show = list->GetShowWaypoints();
-			GetSceneObject()->PostRequest(VisibilityRequestPtr(new VisibilityRequest(show)));
+			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
 			GetSceneObject()->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
 
 			SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 			if(tangent)
 			{
-				tangent->PostRequest(VisibilityRequestPtr(new VisibilityRequest(show)));
+				tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
 				tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
 			}
 		}

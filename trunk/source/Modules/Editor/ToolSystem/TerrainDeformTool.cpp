@@ -137,7 +137,7 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = PTR_TO_INT(this);
-			SendMessageRec(gizmo,VisibilityRequestPtr(new VisibilityRequest(value,from_id)));
+			SendMessageRec(gizmo,LocationVisibilityRequestPtr(new LocationVisibilityRequest(value,from_id)));
 		}
 	}
 

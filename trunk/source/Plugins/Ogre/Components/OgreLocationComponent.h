@@ -82,7 +82,7 @@ namespace GASS
 		void OnScaleMessage(ScaleRequestPtr message);
 		void PositionRequest(PositionRequestPtr message);
 		void RotationRequest(RotationRequestPtr message);
-		void VisibilityRequest(VisibilityRequestPtr message);
+		void VisibilityRequest(LocationVisibilityRequestPtr message);
 		void ParentChangedEvent(ParentChangedEventPtr message);
 		void WorldPositionRequest(WorldPositionRequestPtr message);
 		void WorldRotationRequest(WorldRotationRequestPtr message);

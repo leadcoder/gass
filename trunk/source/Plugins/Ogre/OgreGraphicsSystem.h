@@ -27,7 +27,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
-#include "Core/Utils/GASSSTDVector.h"
+#include "Core/Serialize/GASSSTDSerialize.h"
 #include <OgreRenderWindow.h>
 #include <string>
 
