@@ -120,11 +120,7 @@
 	<TaskNode value="POST_SIM"/>
   </ODECollisionSystem>
   <OgreGraphicsSystem>
-    <Plugin value="RenderSystem_GL"/>
-    <Plugin value="RenderSystem_Direct3D9"/>
-    <Plugin value="Plugin_CgProgramManager"/>
-    <Plugin value="Plugin_OctreeSceneManager"/>
-    <Plugin value="Plugin_ParticleFX"/>
+    <Plugins value="RenderSystem_GL RenderSystem_Direct3D9 Plugin_CgProgramManager Plugin_OctreeSceneManager Plugin_ParticleFX"/>
     <PostFilters value="HDR"/>
     <TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
