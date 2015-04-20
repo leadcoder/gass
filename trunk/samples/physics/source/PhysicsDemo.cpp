@@ -73,14 +73,8 @@ int main(int argc, char* argv[])
 	}
 
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
-	m_Engine->Init(GASS::FilePath("GASSPhysicsOSGDemo.xml"));
+	m_Engine->Init(GASS::FilePath("SamplePhysics.xml"));
 
-	//load keyboard config!
-/*	GASS::ControlSettingsSystemPtr css = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IControlSettingsSystem>();
-	if(css)
-	{
-		css->Load("../Configuration/control_settings.xml");
-	}*/
 	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
@@ -105,7 +99,8 @@ int main(int argc, char* argv[])
 		GASS::SceneObjectTemplatePtr light_template (new GASS::SceneObjectTemplate);
 		light_template->SetName("LightObject");
 		light_template->AddBaseSceneComponent("LocationComponent");
-		light_template->AddBaseSceneComponent("LightComponent");
+		GASS::BaseSceneComponentPtr light_comp = light_template->AddBaseSceneComponent("LightComponent");
+		light_comp->SetPropertyByString("DiffuseColor","0.5 0.5 0.5");
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(light_template);
 	}
 	{
@@ -214,7 +209,7 @@ int main(int argc, char* argv[])
 		box_comp->SetPropertyByType("Lines",false);
 
 		//test
-		GASS::BaseSceneComponentPtr script_comp  = bridge_seg_template->AddBaseSceneComponent("ASScriptComponent");
+		//GASS::BaseSceneComponentPtr script_comp  = bridge_seg_template->AddBaseSceneComponent("ASScriptComponent");
 		//std::string script ="c:/temp/test.lua";
 		//script_comp->SetPropertyByType("Script",script);
 	
@@ -297,10 +292,6 @@ int main(int argc, char* argv[])
 	}*/
 
 
-	/*GASS::SceneObjectPtr mesh_obj = scene->LoadObjectFromTemplate("MeshObject",scene->GetRootSceneObject());
-	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("car.3ds")));
-	mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,5,1))));
-	*/
 	//GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 	//scene->Load(m_SceneName);
 
@@ -314,8 +305,9 @@ int main(int argc, char* argv[])
 	box_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,0.6,20))));
 
 	
-	//GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
-	//vehicle_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,5))));
+	GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
+	vehicle_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0,3,5))));
+
 	
 	//GASS::SceneObjectPtr car_obj = scene->LoadObjectFromTemplate("PxCar",scene->GetRootSceneObject());
 	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,0))));
@@ -337,12 +329,12 @@ int main(int argc, char* argv[])
 	GASS::BaseSceneManagerPtr ogre_sm = DYNAMIC_PTR_CAST<GASS::BaseSceneManager>(scene->GetSceneManagerByName("OgreGraphicsSceneManager"));
 	if(ogre_sm)
 	{
-		
-		ogre_sm->SetPropertyByString("ShadowCasterMaterial","");
+		/*ogre_sm->SetPropertyByString("ShadowMode","SHADOWS_DISABLED");
 		ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_MODULATIVE");
+
+		//ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_ADDITIVE");
 		ogre_sm->SetPropertyByString("TextureShadowProjection","UNIFORM_FOCUSED");
-		ogre_sm->SetPropertyByType("SelfShadowing",false);
-		ogre_sm->SetPropertyByType("UseAggressiveFocusRegion",false);
+		ogre_sm->SetPropertyByType("SelfShadowing",false);*/
 	}
 
 	while(true)
@@ -356,12 +348,15 @@ int main(int argc, char* argv[])
 				key_down = true;
 				GASS::Vec3 pos = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
 				GASS::Quaternion rot = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
+				GASS::Vec3 vel = rot.GetZAxis()*-2500;
+/*
 				GASS::Mat4 rot_mat;
 				rot_mat.Identity();
 				rot.ToRotationMatrix(rot_mat);
 				GASS::Vec3 vel = rot_mat.GetZAxis()*-2500;
+*/
 				GASS::Vec3 torq(0,0,2000);
-				torq = rot_mat * torq;
+				torq = rot * torq;
 				GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
 				box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(pos)));
 				box_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(rot)));
@@ -409,6 +404,27 @@ int main(int argc, char* argv[])
 				bdrige_seg_obj2->PostRequest(GASS::ResetMaterialRequestPtr(new GASS::ResetMaterialRequest()));
 			}
 		}
+
+		/*else if(GetAsyncKeyState(VK_F5))
+		{
+			if(!key_down)
+			{
+				key_down = true;
+				GASS::CameraComponentPtr camera = free_obj->GetFirstComponentByClass<GASS::ICameraComponent>();
+				GASS::BaseSceneComponentPtr cam = DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(camera);
+				cam->SetPropertyByString("MaterialScheme","FFP_STD");
+
+				ogre_sm->SetPropertyByString("ShadowMode","SHADOWS_DISABLED");
+				ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_MODULATIVE");
+
+				//ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_ADDITIVE");
+				ogre_sm->SetPropertyByString("TextureShadowProjection","UNIFORM_FOCUSED");
+				ogre_sm->SetPropertyByType("SelfShadowing",false);
+
+			}
+		}*/
+
+		
 		
 
 		else if(GetAsyncKeyState(VK_DOWN))
@@ -441,20 +457,19 @@ int main(int argc, char* argv[])
 
 		if(wheel_vel > 200)
 			wheel_vel = 200;
-	/*	GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
-		rr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
+		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
+		rr_wheel->PostRequest(GASS::PhysicsSuspensionJointDriveVelocityRequestPtr(new GASS::PhysicsSuspensionJointDriveVelocityRequest(wheel_vel)));
 			
+				
 		GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
-		rl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionWheelVelocityRequest(wheel_vel)));
+		rl_wheel->PostRequest(GASS::PhysicsSuspensionJointDriveVelocityRequestPtr(new GASS::PhysicsSuspensionJointDriveVelocityRequest(wheel_vel)));
 
 		GASS::SceneObjectPtr fr_wheel = vehicle_obj->GetChildByID("FR_WHEEL");
-		fr_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionSteerVelocityRequest(steer_vel)));
+		fr_wheel->PostRequest(GASS::PhysicsSuspensionJointSteerVelocityRequestPtr(new GASS::PhysicsSuspensionJointSteerVelocityRequest(steer_vel)));
 			
 		GASS::SceneObjectPtr fl_wheel = vehicle_obj->GetChildByID("FL_WHEEL");
-		fl_wheel->PostMessage(GASS::MessagePtr(new GASS::PhysicsSuspensionSteerVelocityRequest(steer_vel)));
-		*/
+		fl_wheel->PostRequest(GASS::PhysicsSuspensionJointSteerVelocityRequestPtr(new GASS::PhysicsSuspensionJointSteerVelocityRequest(steer_vel)));
+		
 	}
 	return 0;
 }
-
-
