@@ -120,9 +120,6 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnInit()
 	{
-		//set offset to Scene center
-		//m_Offset = -GetScene()->GetStartPos();
-
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
@@ -329,9 +326,19 @@ namespace GASS
 	{
 		Float ray_length = ray_dir.Length();
 		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);
-		PxRaycastHit rayHit;	
-		m_PxScene->raycastSingle(PxConvert::ToPx(ray_start), PxConvert::ToPx(norm_ray_dir), ray_length, PxSceneQueryFlag::eIMPACT, rayHit);
-		//rayHit.impact 
+		PxRaycastHit ray_hit;	
+		result.Coll = m_PxScene->raycastSingle(PxConvert::ToPx(ray_start), 
+			PxConvert::ToPx(norm_ray_dir), 
+			ray_length, 
+			PxSceneQueryFlag::eIMPACT | PxSceneQueryFlag::eNORMAL, 
+			ray_hit,
+			PxSceneQueryFilterData());
+		if(result.Coll)
+		{
+			result.CollPosition = PxConvert::ToGASS(ray_hit.impact);
+			result.CollNormal = PxConvert::ToGASS(ray_hit.normal);
+			ray_hit.shape->getActor();
+		}
 	}
 
 	PhysXTriangleMesh PhysXPhysicsSceneManager::CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh)
