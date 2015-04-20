@@ -337,7 +337,8 @@ namespace GASS
 		{
 			result.CollPosition = PxConvert::ToGASS(ray_hit.impact);
 			result.CollNormal = PxConvert::ToGASS(ray_hit.normal);
-			ray_hit.shape->getActor();
+			if(ray_hit.shape)
+				result.CollSceneObject = ((PhysXBaseGeometryComponent*) ray_hit.shape)->GetSceneObject();
 		}
 	}
 

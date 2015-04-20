@@ -88,7 +88,7 @@ namespace GASS
 		if(m_Shape)
 			m_Shape->release();
 		m_Shape = CreateShape();
-
+		m_Shape->userData = this;//GetSceneObject().get();
 		if(m_Shape == NULL)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create shape","PhysXBaseGeometryComponent::OnLoad");
@@ -108,7 +108,10 @@ namespace GASS
 		{
 
 		}
-		m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,m_SimulationCollision);
+
+		if(!(geom->GetGeometryFlags() & GEOMETRY_FLAG_TRANSPARENT_OBJECT))
+			m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,m_SimulationCollision);
+
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
