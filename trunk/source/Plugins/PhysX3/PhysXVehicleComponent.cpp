@@ -423,6 +423,7 @@ namespace GASS
 		const PxMaterial& chassisMaterial= *system->GetDefaultMaterial();
 		PxShape* chassisShape = m_Actor->createShape(chassisConvexGeom,chassisMaterial);
 		chassisShape->setQueryFilterData(vehQryFilterData);
+		chassisShape->userData = this;
 
 		PxFilterData chassisCollFilterData;
 		chassisCollFilterData.word0=GEOMETRY_FLAG_VEHICLE_CHASSIS;
@@ -577,9 +578,10 @@ namespace GASS
 
 		int from_id = (int)this; //use address as id
 		Vec3 current_pos  = GetPosition();
+		Quaternion current_rot = GetRotation();
 		
 		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(current_rot,from_id)));
 
 		PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
@@ -762,6 +764,8 @@ namespace GASS
 
 		//	MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
+
+		CheckCollisions(current_pos,current_rot);
 	}
 
 
@@ -955,5 +959,32 @@ namespace GASS
 		{
 			m_SteerInput = value;
 		}
+	}
+
+	void PhysXVehicleComponent::CheckCollisions(const Vec3 &pos, const Quaternion &rot)
+	{
+		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+
+		//generate rays
+		Vec3 dir = -rot.GetZAxis();
+		Vec3 ray_start = pos + dir*m_ChassisDim.z;
+		ray_start.y += 0.5;
+		CollisionResult result;
+		scene_manager->Raycast(ray_start,dir*30,GEOMETRY_FLAG_SCENE_OBJECTS,result,false);
+
+		Vec3 end_pos = ray_start + dir*30;
+		SceneObjectPtr col_obj = SceneObjectPtr(result.CollSceneObject,NO_THROW);
+		if(result.Coll && col_obj)
+		{
+			end_pos = result.CollPosition;
+			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true,result.CollPosition,col_obj)));
+		}
+		else
+		{
+			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),SceneObjectPtr())));
+		}
+		
+		Vec4 color(1,1,1,1);
+		GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(ray_start,end_pos,color)));
 	}
 }

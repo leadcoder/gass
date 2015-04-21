@@ -54,10 +54,13 @@ namespace GASS
 		m_FaceDirection(0,0,0),
 		m_HasDir(false),
 		m_MaxReverseDistance(5),
-		m_PlatformType(PT_CAR)
+		m_PlatformType(PT_CAR),
+		m_HasCollision(false),
+		m_CollisionPoint(0,0,0)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
+
 	}
 
 	CarAutopilotComponent::~CarAutopilotComponent()
@@ -106,6 +109,8 @@ namespace GASS
 			
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnRadarEvent,VehicleRadarEvent,0));
+		
 
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<GameSceneManager>()->Register(listener);
@@ -129,6 +134,12 @@ namespace GASS
 		m_WPReached = false;
 		m_HasDir = false;
 		m_Enable = true; 
+	}
+
+	void CarAutopilotComponent::OnRadarEvent(VehicleRadarEventPtr message)
+	{
+		m_HasCollision = message->m_HasIsect;
+		m_CollisionPoint = message->m_IsectPos;
 	}
 
 	void CarAutopilotComponent::OnFaceDirectionRequest(FaceDirectionRequestPtr message)
@@ -268,6 +279,26 @@ namespace GASS
 				m_WPReached = true;
 			}
 
+			//do collision check
+			if(m_HasCollision)
+			{
+				//Check dist
+				Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
+
+				Float dist_to_col = col_vec.Length();
+
+				if(dist_to_col < 20) //slow down
+				{
+					Float speed_interp = dist_to_col/20;
+					desired_speed = desired_speed*speed_interp;
+				}
+				if(dist_to_col < 10) //go back?
+				{
+					desired_speed = 0;
+				}
+			}
+
+
 		
 			m_TrottlePID.set(desired_speed);
 			float throttle = m_TrottlePID.update(current_speed,delta_time);
@@ -299,6 +330,9 @@ namespace GASS
 				if(m_PlatformType == PT_HUMAN)
 					throttle = 0;
 			}
+
+		
+
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));
 		}

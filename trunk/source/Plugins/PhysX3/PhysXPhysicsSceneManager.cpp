@@ -189,7 +189,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
 	{
-		
+
 	}
 
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
@@ -238,7 +238,7 @@ namespace GASS
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 
-		
+
 	}
 
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
@@ -327,7 +327,7 @@ namespace GASS
 		Float ray_length = ray_dir.Length();
 		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);
 		PxRaycastHit ray_hit;	
-		result.Coll = m_PxScene->raycastSingle(PxConvert::ToPx(ray_start), 
+		result.Coll = m_PxScene->raycastSingle(PxConvert::ToPx(ray_start + GetOffset()), 
 			PxConvert::ToPx(norm_ray_dir), 
 			ray_length, 
 			PxSceneQueryFlag::eIMPACT | PxSceneQueryFlag::eNORMAL, 
@@ -335,10 +335,10 @@ namespace GASS
 			PxSceneQueryFilterData());
 		if(result.Coll)
 		{
-			result.CollPosition = PxConvert::ToGASS(ray_hit.impact);
+			result.CollPosition = PxConvert::ToGASS(ray_hit.impact) - GetOffset();
 			result.CollNormal = PxConvert::ToGASS(ray_hit.normal);
-			if(ray_hit.shape)
-				result.CollSceneObject = ((PhysXBaseGeometryComponent*) ray_hit.shape)->GetSceneObject();
+			if(ray_hit.shape && ray_hit.shape->userData)
+				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.shape->userData)->GetSceneObject();
 		}
 	}
 

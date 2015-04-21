@@ -30,6 +30,7 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+
 #include "Plugins/Game/GameMessages.h"
 #include "Utils/PIDControl.h"
 
@@ -64,7 +65,7 @@ namespace GASS
 		void OnGotoPosition(GotoPositionRequestPtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void OnFaceDirectionRequest(FaceDirectionRequestPtr message);
-		
+		void OnRadarEvent(VehicleRadarEventPtr message);
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
@@ -79,6 +80,8 @@ namespace GASS
 
 		Vec3 m_FaceDirection;
 		bool m_HasDir;
+		bool m_HasCollision;
+		Vec3 m_CollisionPoint;
 	};
 }
 #endif
