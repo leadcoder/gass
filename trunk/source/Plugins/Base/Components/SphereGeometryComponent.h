@@ -17,13 +17,12 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef SPHERE_GEOMETRY_COMPONENT_H
-#define SPHERE_GEOMETRY_COMPONENT_H
+#pragma once
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
-#include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -56,4 +55,4 @@ namespace GASS
 		ColorRGBA m_Color;
 	};
 }
-#endif
+

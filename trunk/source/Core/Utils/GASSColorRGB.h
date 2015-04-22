@@ -36,7 +36,7 @@ namespace GASS
 	/**
 	* Class that holds RGB color values.
 	*/
-	class GASSCoreExport ColorRGB
+	class ColorRGB
 	{
 	public:
 		Float r,g,b;

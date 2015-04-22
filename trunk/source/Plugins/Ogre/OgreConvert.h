@@ -37,6 +37,7 @@
 #include "Core/Math/GASSSphere.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/GASSGraphicsMesh.h"
 
 namespace GASS

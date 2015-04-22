@@ -24,7 +24,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"

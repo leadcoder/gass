@@ -30,7 +30,7 @@ namespace GASS
 	* Class that holds RGBA color values.
 	*/
 
-	class GASSCoreExport ColorRGBA
+	class ColorRGBA
 	{
 	public:
 		Float r,g,b,a;

@@ -102,49 +102,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnInitialize");
 		}
 
-		/*osgViewer::View* view = new osgViewer::View;
-		m_View = view;
-		view->setName(GetName());
-
-		OSGGraphicsSystemPtr sys(m_GFXSystem);
-		RenderWindowPtr temp = RenderWindowPtr(sys->GetMainRenderWindow());
-		OSGRenderWindowPtr win = DYNAMIC_PTR_CAST<OSGRenderWindow>(temp );
-		osg::ref_ptr<osg::GraphicsContext> gc = win->GetOSGWindow();
-
-		OSGViewportPtr vp = *win->GetViewports().begin();
-		view->setCamera(vp->GetOSGCamera());
-		
-		//osg::ref_ptr<osg::Camera> cam = view->getCamera();
-		//cam->setGraphicsContext(gc.get());
-		//cam->setViewport(0, 0, 200, 200);
-		OSGGraphicsSystemPtr(m_GFXSystem)->GetViewer()->addView(view);
-
-		view->setLightingMode(osg::View::SKY_LIGHT); 
-		view->getDatabasePager()->setDoPreCompile( true );
-		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
-		// add some OSG handlers:
-
-		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
-		stats->setKeyEventTogglesOnScreenStats('y');
-		stats->setKeyEventPrintsOutStats(0);
-
-		view->addEventHandler(stats);
-
-		view->addEventHandler(new osgViewer::WindowSizeHandler());
-		view->addEventHandler(new osgViewer::ThreadingHandler());
-		view->addEventHandler(new osgViewer::LODScaleHandler());
-
-		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
-		ssm->setKeyEventCyclePolygonMode('p');
-		ssm->setKeyEventToggleTexturing('o');
-		view->addEventHandler(ssm);
-		//view->addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
-		view->getCamera()->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-		//view->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-		
-		//view->getCamera()->setViewport(new osg::Viewport(0, 0, 100,100));
-		//view->getCamera()->setGraphicsContext(m_Windows[render_window]);*/
-
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
 
@@ -194,12 +151,7 @@ namespace GASS
 
 		//add debug node
 		m_DebugDraw = new OSGDebugDraw();
-		
-
-		//add and enable fog
-		/*short attr = osg::StateAttribute::ON;
-		state->setMode(GL_FOG, attr);
-		GetOSGShadowRootNode()->setStateSet(state);*/
+		m_RootNode->addChild(m_DebugDraw->GetNode());
 	}
 
 	void OSGGraphicsSceneManager::OnInit()
@@ -224,14 +176,6 @@ namespace GASS
 	{
 
 	}
-
-/*	void OSGGraphicsSceneManager::OnChangeCamera(ChangeCameraRequestPtr message)
-	{
-		SceneObjectPtr cam_obj = message->GetCamera();
-		OSGCameraComponentPtr cam_comp = cam_obj->GetFirstComponentByClass<OSGCameraComponent>();
-		OSGGraphicsSystemPtr(m_GFXSystem)->ChangeCamera(message->GetViewport(), cam_comp);
-		GetScene()->PostMessage(SceneMessagePtr(new CameraChangedEvent(cam_obj,cam_comp->GetOSGCamera())));
-	}*/
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{
@@ -272,9 +216,14 @@ namespace GASS
 			
 	}
 
+	void OSGGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
+	{
+		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
+	}
 	void OSGGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
 	{
-		m_DebugDraw->DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
+		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
+
 		//Vec4 color = message->GetColor();
 	/*	osg::Vec3 sp = OSGConvert::Get().ToOSG(message->GetStart()); 
 		osg::Vec3 ep = OSGConvert::Get().ToOSG(message->GetEnd()); 

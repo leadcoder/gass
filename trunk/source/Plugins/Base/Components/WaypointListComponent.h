@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
