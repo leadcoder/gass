@@ -170,7 +170,6 @@ namespace GASS
 
 	}
 
-
 	void OgreGraphicsSceneManager::OnExportMesh(ExportMeshRequestPtr message)
 	{
 		OgreMeshExporter exporter;
@@ -179,27 +178,25 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
 	{
-		Vec4 color = message->GetColor();
-		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
-		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(OgreConvert::ToOgre(message->GetStart()),OgreConvert::ToOgre(message->GetEnd()),ogre_color);
+		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
 	}
 
 	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)
 	{
-		Vec4 color = message->GetColor();
-		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		ColorRGBA color = message->GetColor();
+		Ogre::ColourValue ogre_color(color.r,color.g,color.b,color.a);
 		if(m_DebugDrawer)
 		{
 			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());
 		}
 	}
 
-	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color)
+	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
 	{
-		Ogre::ColourValue ogre_color(color.x,color.y,color.z,color.w);
+		
+		Ogre::ColourValue ogre_color(start_color.r,start_color.g,start_color.b,start_color.a);
 		if(m_DebugDrawer)
-			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start),OgreConvert::ToOgre(end),ogre_color);
+			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start_point),OgreConvert::ToOgre(end_point),ogre_color);
 	}
 
 	void OgreGraphicsSceneManager::OnInit()

@@ -27,6 +27,7 @@
 #include <string>
 #include <osgViewer/View>
 #include "IOSGGraphicsSceneManager.h"
+#include "OSGDebugDraw.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 
 namespace osgShadow
@@ -67,6 +68,9 @@ namespace GASS
 		void UpdateFogSettings();
 		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
+		void SystemTick(double delta_time);
+
+		void OnDrawLine(DrawLineRequestPtr message);
 	private:	
 		//fog
 		float m_FogDensity;
@@ -83,6 +87,7 @@ namespace GASS
 		std::string m_ShadowProjType;
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		osg::ref_ptr<osg::Group> m_RootNode;
+		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};

@@ -162,7 +162,7 @@ namespace GASS
 		m_BarrelTransformation = message->GetTransformation();
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)))
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)))
 #define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new DebugPrintRequest(text)))
 
 	void SightComponent::UpdateAimTransformation(double delta_time)
@@ -266,16 +266,16 @@ namespace GASS
 		}
 
 		if(m_Debug)
-			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(), aim_point, Vec4(0,1,1,1) );
+			DEBUG_DRAW_LINE(m_BaseTransformation.GetTranslation(), aim_point, ColorRGBA(0,1,1,1),ColorRGBA(0,1,1,1) );
 
 		/*Vec3 desired_aim_direction = -m_AimRotation.GetViewDirVector();
 		Vec3 start = m_BaseTransformation.GetTranslation();
 		Vec3 end = start + desired_aim_direction*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,1,1,1));
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,1,1));
 		end = start + m_AimRotation.GetRightVector()*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(1,0,1,1));
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(1,0,1,1));
 		end = start + m_AimRotation.GetUpVector()*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1));*/
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1));*/
 
 
 		//update current angle

@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/ColorRGB.h"
 #include "Sim/Interface/GASSIRenderWindow.h"
 #include <string>
 
@@ -33,7 +34,11 @@ namespace GASS
 	{
 	public:
 		virtual ~IGraphicsSceneManager(){}
-		virtual void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color) = 0;
+
+		/**
+			Draw 3d-line for debugging
+		*/
+		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color) = 0;
 	protected:
 	};
 	typedef boost::shared_ptr<IGraphicsSceneManager> GraphicsSceneManagerPtr;

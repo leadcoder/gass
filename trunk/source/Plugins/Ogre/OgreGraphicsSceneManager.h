@@ -110,7 +110,7 @@ namespace GASS
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 
 		//IGraphicsSceneManager
-		void DrawLine(const Vec3 &start, const Vec3 &end, const Vec4 &color);
+		void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
 
 		//IOgreSceneManagerProxy
 		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}

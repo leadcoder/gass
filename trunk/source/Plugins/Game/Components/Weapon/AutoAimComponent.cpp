@@ -191,7 +191,7 @@ namespace GASS
 		//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}*/
 
-#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)))
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)))
 #define DEBUG_PRINT(text) SimEngine::Get().GetSimSystemManager()->PostMessage(SystemRequestMessagePtr(new DebugPrintRequest(text)))
 
 	Float AutoAimComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
@@ -231,7 +231,7 @@ namespace GASS
 
 		/*Vec3 start = m_BarrelTransformation.GetTranslation();
 		Vec3 end = start + desired_aim_direction*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(1,0,0,1));*/
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(1,0,0,1));*/
 
 		//pitch calculation
 
@@ -262,9 +262,9 @@ namespace GASS
 
 		/*Vec3 start = m_BarrelTransformation.GetTranslation();
 		Vec3 end = start + barrel_dir*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(1,0,0,1));
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(1,0,0,1));
 		end = start + projected_barrel_aim*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,1,1,1));*/
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,1,1));*/
 
 	
 		//Yaw calculation
@@ -278,9 +278,9 @@ namespace GASS
 
 		/*start = m_TurretTransformation.GetTranslation();
 		end = start + turret_dir*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1));
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1));
 		end = start + projected_aim*4;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1));*/
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1));*/
 
 		m_YawPID.setOutputLimit(m_MaxYawVelocity);
 		//set desired yaw angle difference to 0 degrees

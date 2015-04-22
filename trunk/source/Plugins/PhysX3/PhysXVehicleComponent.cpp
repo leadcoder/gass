@@ -965,26 +965,51 @@ namespace GASS
 	{
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 
-		//generate rays
+		//do ray at chassis center and each bounding box corner
 		Vec3 dir = -rot.GetZAxis();
+		Vec3 x_offset = rot.GetXAxis()*m_ChassisDim.x;
+		Vec3 y_offset = rot.GetYAxis()*m_ChassisDim.y;
 		Vec3 ray_start = pos + dir*m_ChassisDim.z;
 		ray_start.y += 0.5;
-		CollisionResult result;
-		scene_manager->Raycast(ray_start,dir*30,GEOMETRY_FLAG_SCENE_OBJECTS,result,false);
+		CollisionResult final_res;
+		final_res.Coll = false;
 
-		Vec3 end_pos = ray_start + dir*30;
-		SceneObjectPtr col_obj = SceneObjectPtr(result.CollSceneObject,NO_THROW);
-		if(result.Coll && col_obj)
+		std::vector<Vec3> start_point_vec;
+		start_point_vec.push_back(ray_start);
+		start_point_vec.push_back(ray_start - x_offset + y_offset);
+		start_point_vec.push_back(ray_start + x_offset + y_offset);
+
+		start_point_vec.push_back(ray_start - x_offset - y_offset);
+		start_point_vec.push_back(ray_start + x_offset - y_offset);
+
+		const Float check_range = 30;
+
+		for(size_t i =0; start_point_vec.size(); i++)
 		{
-			end_pos = result.CollPosition;
-			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true,result.CollPosition,col_obj)));
+			CollisionResult temp_res;
+			scene_manager->Raycast(start_point_vec[i],dir*check_range, GEOMETRY_FLAG_SCENE_OBJECTS, temp_res, false);
+			if(temp_res.Coll && temp_res.CollDist < final_res.CollDist)
+			{
+				final_res = temp_res;
+			}
+			
+			//debug line
+			ColorRGBA color(1,1,1,1);
+			Vec3 end_pos = start_point_vec[i] + dir*check_range;
+			if(temp_res.Coll)
+				end_pos = temp_res.CollPosition;
+			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
+		}
+
+		SceneObjectPtr col_obj = SceneObjectPtr(final_res.CollSceneObject,NO_THROW);
+		if(final_res.Coll && col_obj)
+		{
+			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true,final_res.CollPosition,col_obj)));
 		}
 		else
 		{
 			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),SceneObjectPtr())));
 		}
 		
-		Vec4 color(1,1,1,1);
-		GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(ray_start,end_pos,color)));
 	}
 }

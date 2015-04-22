@@ -24,6 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSColorRGB.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 
@@ -114,19 +115,22 @@ namespace GASS
 	class DrawLineRequest : public SceneRequestMessage
 	{
 	public:
-		DrawLineRequest(const Vec3 &start, const Vec3 &end, const Vec4 &color,SenderID sender_id = -1, double delay= 0) : SceneRequestMessage(sender_id , delay) ,
+		DrawLineRequest(const Vec3 &start, const Vec3 &end, const ColorRGBA &color_start, const ColorRGBA &color_end, SenderID sender_id = -1, double delay= 0) : SceneRequestMessage(sender_id , delay) ,
 			m_Start(start),
 			m_End(end),
-			m_Color(color)
+			m_ColorStart(color_start),
+			m_ColorEnd(color_end)
 		{
+
 		}
 
 		Vec3 GetStart()const {return m_Start;}
 		Vec3 GetEnd()const {return m_End;}
-		Vec4 GetColor()const {return m_Color;}
+		ColorRGBA GetColorStart()const {return m_ColorEnd;}
+		ColorRGBA GetColorEnd()const {return m_ColorEnd;}
 	private:
 		Vec3 m_Start,m_End;
-		Vec4 m_Color;
+		ColorRGBA m_ColorStart,m_ColorEnd;
 	};
 	typedef SPTR<DrawLineRequest> DrawLineRequestPtr;
 
@@ -134,7 +138,7 @@ namespace GASS
 	class DrawCircleRequest : public SceneRequestMessage
 	{
 	public:
-		DrawCircleRequest(const Vec3 &center, Float radius, const Vec4 &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
+		DrawCircleRequest(const Vec3 &center, Float radius, const ColorRGBA &color,int segments, bool filled, SenderID sender_id = -1, double delay= 0) :
 		  m_Center(center),
 			  m_Radius(radius),
 			  m_Color(color),
@@ -146,13 +150,13 @@ namespace GASS
 		  }
 		  Vec3 GetCenter()const {return m_Center;}
 		  Float GetRadius() const {return m_Radius;}
-		  Vec4 GetColor()const {return m_Color;}
+		  ColorRGBA GetColor()const {return m_Color;}
 		  int  GetSegments() const {return m_Segments;}
 		  bool GetFilled() const {return m_Filled;}
 	private:
 		Vec3 m_Center;
 		Float m_Radius;
-		Vec4 m_Color;
+		ColorRGBA m_Color;
 		int m_Segments;
 		bool m_Filled;
 	};

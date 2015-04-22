@@ -114,7 +114,7 @@ namespace GASS
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color)));
+#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
 
 
 /*	Float pitch TurretComponent::GetPitch(Mat4 &transform, Vec3 &dir)
@@ -208,9 +208,9 @@ namespace GASS
 
 			Vec3 start = m_Transformation.GetTranslation();
 			Vec3 end = start + turret_dir;
-			DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1))
+			DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
 			end = start + projected_aim;
-			DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1))
+			DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 		}
 		else
 		{
@@ -245,9 +245,9 @@ namespace GASS
 
 		Vec3 start = m_Transformation.GetTranslation();
 		Vec3 end = start + turrent_direction;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1))
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
 		end = start + desired_aim_direction;
-		DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1))
+		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
 				
 		Vec3 cross = Math::Cross(turrent_direction,desired_aim_direction);
@@ -288,9 +288,9 @@ namespace GASS
 
 				Vec3 start = m_Transformation.GetTranslation();
 				Vec3 end = start + t_dir;
-				DEBUG_DRAW_LINE(start,end,Vec4(0,1,0,1))
+				DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
 				end = start + desiredDir;
-				DEBUG_DRAW_LINE(start,end,Vec4(0,0,1,1))
+				DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
 				
 				Vec3 cross = Math::Cross(t_dir,desiredDir);
