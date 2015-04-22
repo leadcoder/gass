@@ -30,6 +30,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 
 
 

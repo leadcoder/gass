@@ -18,13 +18,13 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GRAPHICS_SCENE_MESSAGES_H
-#define GRAPHICS_SCENE_MESSAGES_H
+#pragma once
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 
@@ -204,5 +204,3 @@ namespace GASS
 	typedef SPTR<ExportMeshRequest> ExportMeshRequestPtr;
 
 }
-
-#endif
