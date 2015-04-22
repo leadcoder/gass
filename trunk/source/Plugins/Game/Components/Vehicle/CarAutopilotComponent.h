@@ -82,6 +82,7 @@ namespace GASS
 		bool m_HasDir;
 		bool m_HasCollision;
 		Vec3 m_CollisionPoint;
+		Float m_CollisionDist;
 	};
 }
 #endif

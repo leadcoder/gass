@@ -33,10 +33,11 @@ namespace GASS
 			,m_Geometry(new osg::Geometry())
 			,m_Lines(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, 0))
 			,m_Points(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, 0))
+			,m_OffsetTrans(new osg::PositionAttitudeTransform())
 			,m_Offset(0,0,0)
 		{
 			m_Geode->setName("Debug Lines");
-			
+
 			osg::StateSet* ss = m_Geode->getOrCreateStateSet();
 			osg::LineWidth* linewidth = new osg::LineWidth(); 
 			linewidth->setWidth(2); 
@@ -49,17 +50,22 @@ namespace GASS
 
 			m_Geometry->setVertexArray(new osg::Vec3Array());
 			m_Geometry->setUseDisplayList(false);
-			
+
 			m_Geode->addDrawable(m_Geometry.get());
 			m_Geometry->addPrimitiveSet(m_Points.get());
 			m_Geometry->addPrimitiveSet(m_Lines.get());
+			m_OffsetTrans->addChild(m_Geode);
 		}
 		virtual ~OSGDebugDraw(){}
 
 		void DrawLine(const Vec3 &start_pos,const Vec3 &end_pos, const ColorRGBA &start_color, const ColorRGBA &end_color)
 		{
-			osg::Vec3 start = OSGConvert::Get().ToOSG(start_pos); 
-			osg::Vec3 end = OSGConvert::Get().ToOSG(end_pos); 
+			//create new anchor if offset dist is to large
+			if((m_Offset  - start_pos).Length() > 60000.0) 
+				SetOffset(start_pos);
+
+			osg::Vec3 start = OSGConvert::Get().ToOSG(start_pos - m_Offset); 
+			osg::Vec3 end = OSGConvert::Get().ToOSG(end_pos - m_Offset); 
 
 			osg::Vec3Array* arr = static_cast<osg::Vec3Array*>(m_Geometry->getVertexArray());
 			arr->push_back(start);
@@ -79,14 +85,13 @@ namespace GASS
 			{
 				colors = static_cast<osg::Vec4Array*>(m_Geometry->getColorArray());
 			}
-			
+
 			colors->push_back(osg::Vec4(start_color.r, start_color.g, start_color.b, start_color.a));
 			colors->push_back(osg::Vec4(end_color.r, end_color.g, end_color.b, end_color.a));
 
 			m_Lines->setCount(m_Lines->getCount() + 2);
 			m_Geometry->dirtyBound();
 		}
-
 
 		void Clear()
 		{
@@ -118,12 +123,20 @@ namespace GASS
 				}
 			}
 		}
-		osg::ref_ptr<osg::Node> GetNode() const {return m_Geode;}
+		osg::ref_ptr<osg::Node> GetNode() const {return m_OffsetTrans;}
+
+		void SetOffset(const Vec3 &offset)
+		{
+			m_Offset = offset;
+			osg::Vec3 osg_offset = OSGConvert::Get().ToOSG(offset);
+			m_OffsetTrans->setPosition(osg_offset);
+		}
 	private:
 		osg::ref_ptr<osg::Geode> m_Geode;
 		osg::ref_ptr<osg::Geometry> m_Geometry;
 		osg::ref_ptr<osg::DrawArrays> m_Lines;
 		osg::ref_ptr<osg::DrawArrays> m_Points;
+		osg::ref_ptr<osg::PositionAttitudeTransform> m_OffsetTrans;
 		Vec3 m_Offset;
 	};
 }

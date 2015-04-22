@@ -339,15 +339,17 @@ namespace GASS
 	class VehicleRadarEvent : public SceneObjectEventMessage
 	{
 	public:
-		VehicleRadarEvent(bool has_isect,const Vec3 &isect_pos, SceneObjectPtr isect_obj, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
+		VehicleRadarEvent(bool has_isect,const Vec3 &isect_pos, Float dist, SceneObjectPtr isect_obj, SenderID sender_id = -1, double delay= 0) : SceneObjectEventMessage(sender_id , delay) , 
 			m_HasIsect(has_isect),
 			m_IsectPos(isect_pos),
-			m_IsectObject(isect_obj)
+			m_IsectObject(isect_obj),
+			m_IsectDist(dist)
 		{}
 
 		bool m_HasIsect;
 		Vec3 m_IsectPos;
 		SceneObjectPtr m_IsectObject;
+		Float m_IsectDist;
 	private:
 	};
 	typedef SPTR<VehicleRadarEvent> VehicleRadarEventPtr;

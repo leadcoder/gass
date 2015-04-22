@@ -179,11 +179,15 @@ namespace GASS
 			col_mesh_id = res->GetResource().Name();
 		}
 
-		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
-		GASSAssert(geom,"PhysXVehicleComponent::OnInitialize");
+		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
+		GASSAssert(mesh,"PhysXVehicleComponent::OnInitialize");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		GASSAssert(scene_manager,"PhysXVehicleComponent::OnInitialize");
-		PhysXConvexMesh chassisMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
+		PhysXConvexMesh chassisMesh = scene_manager->CreateConvexMesh(col_mesh_id,mesh);
+
+		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+		GASSAssert(geom,"PhysXVehicleComponent::OnInitialize");
+		m_MeshBounds = geom->GetBoundingBox();
 
 		std::vector<PxConvexMesh*> wheelConvexMeshes;
 		std::vector<PxVec3 > wheelCentreOffsets;
@@ -746,14 +750,13 @@ namespace GASS
 
 		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
 
-		std::stringstream ss;
+		/*std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
 			
-
-		GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+		GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));*/
 
 		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
 
@@ -765,7 +768,7 @@ namespace GASS
 		//	MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
 
-		CheckCollisions(current_pos,current_rot);
+		CheckCollisions(current_pos,current_rot,forwardSpeed);
 	}
 
 
@@ -961,41 +964,65 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::CheckCollisions(const Vec3 &pos, const Quaternion &rot)
+	void PhysXVehicleComponent::CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const
 	{
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 
+		Vec3 mesh_offset = (m_MeshBounds.m_Min +  m_MeshBounds.m_Max)*0.5;
+		Vec3 mesh_size = m_MeshBounds.GetSize();
+		
 		//do ray at chassis center and each bounding box corner
 		Vec3 dir = -rot.GetZAxis();
-		Vec3 x_offset = rot.GetXAxis()*m_ChassisDim.x;
-		Vec3 y_offset = rot.GetYAxis()*m_ChassisDim.y;
-		Vec3 ray_start = pos + dir*m_ChassisDim.z;
-		ray_start.y += 0.5;
-		CollisionResult final_res;
-		final_res.Coll = false;
+	
+		if(speed < 0)
+		{
+		//	dir = -dir;
+		}
 
+		const Float z_nudge_offset = 1.4;
+		Vec3 ray_start = pos + dir*(-mesh_offset.z + (mesh_size.z + z_nudge_offset)*0.5);
+		ray_start = ray_start + rot.GetYAxis()*mesh_offset.y;
+	
+		const Vec3 x_offset = rot.GetXAxis()*mesh_size.x*0.5;
+		const Vec3 y_offset = rot.GetYAxis()*(mesh_size.y*0.2);
+		
+		
 		std::vector<Vec3> start_point_vec;
-		start_point_vec.push_back(ray_start);
+		start_point_vec.push_back(ray_start + y_offset);
 		start_point_vec.push_back(ray_start - x_offset + y_offset);
 		start_point_vec.push_back(ray_start + x_offset + y_offset);
 
-		start_point_vec.push_back(ray_start - x_offset - y_offset);
-		start_point_vec.push_back(ray_start + x_offset - y_offset);
+		start_point_vec.push_back(ray_start - x_offset);
+		start_point_vec.push_back(ray_start + x_offset);
+
+		std::vector<Vec3> dir_vec;
+
+		dir_vec.push_back(dir);
+		dir_vec.push_back(dir - rot.GetXAxis()*0.2);
+		dir_vec.push_back(dir + rot.GetXAxis()*0.2);
+
+		dir_vec.push_back(dir - rot.GetXAxis()*0.2);
+		dir_vec.push_back(dir + rot.GetXAxis()*0.2);
+
 
 		const Float check_range = 30;
 
-		for(size_t i =0; start_point_vec.size(); i++)
+		CollisionResult final_res;
+		final_res.Coll = false;
+		final_res.CollDist = FLT_MAX;
+
+		for(size_t i =0; i < start_point_vec.size(); i++)
 		{
 			CollisionResult temp_res;
-			scene_manager->Raycast(start_point_vec[i],dir*check_range, GEOMETRY_FLAG_SCENE_OBJECTS, temp_res, false);
+			scene_manager->Raycast(start_point_vec[i],dir_vec[i]*check_range, GEOMETRY_FLAG_SCENE_OBJECTS, temp_res, false);
 			if(temp_res.Coll && temp_res.CollDist < final_res.CollDist)
 			{
 				final_res = temp_res;
 			}
 			
 			//debug line
-			ColorRGBA color(1,1,1,1);
-			Vec3 end_pos = start_point_vec[i] + dir*check_range;
+			const ColorRGBA color(1,1,1,1);
+			Vec3 end_pos = start_point_vec[i] + dir_vec[i]*check_range;
 			if(temp_res.Coll)
 				end_pos = temp_res.CollPosition;
 			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
@@ -1004,11 +1031,11 @@ namespace GASS
 		SceneObjectPtr col_obj = SceneObjectPtr(final_res.CollSceneObject,NO_THROW);
 		if(final_res.Coll && col_obj)
 		{
-			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true,final_res.CollPosition,col_obj)));
+			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true, final_res.CollPosition, final_res.CollDist, col_obj)));
 		}
 		else
 		{
-			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),SceneObjectPtr())));
+			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),0,SceneObjectPtr())));
 		}
 		
 	}

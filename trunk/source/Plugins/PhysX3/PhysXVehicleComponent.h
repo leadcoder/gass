@@ -70,9 +70,7 @@ namespace GASS
 					const physx::PxVehicleDrive4WRawInputData& carRawInputs,
 		bool& toggleAutoReverse, 
 		bool& newIsMovingForwardSlowly) const;
-
-		void CheckCollisions(const Vec3 &pos, const Quaternion &rot);
-		
+		void CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
 		ADD_PROPERTY(SceneObjectRef,FrontLeftWheel);
 		ADD_PROPERTY(SceneObjectRef,FrontRightWheel);
@@ -100,7 +98,7 @@ namespace GASS
 		bool m_IsMovingForwardSlowly;
 		bool m_InReverseMode;
 		bool m_UseDigitalInputs;
-
+		AABox m_MeshBounds;
 		Vec3 m_ChassisDim;
 	};
 	typedef SPTR<PhysXVehicleComponent> PhysXVehicleComponentPtr;

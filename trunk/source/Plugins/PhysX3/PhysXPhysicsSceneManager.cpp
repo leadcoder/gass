@@ -337,6 +337,7 @@ namespace GASS
 		{
 			result.CollPosition = PxConvert::ToGASS(ray_hit.impact) - GetOffset();
 			result.CollNormal = PxConvert::ToGASS(ray_hit.normal);
+			result.CollDist = (ray_start - result.CollPosition).Length();
 			if(ray_hit.shape && ray_hit.shape->userData)
 				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.shape->userData)->GetSceneObject();
 		}
@@ -373,5 +374,4 @@ namespace GASS
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
-
 }

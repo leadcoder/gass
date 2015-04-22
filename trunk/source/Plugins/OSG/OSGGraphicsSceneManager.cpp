@@ -223,49 +223,12 @@ namespace GASS
 	void OSGGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
 	{
 		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
-
-		//Vec4 color = message->GetColor();
-	/*	osg::Vec3 sp = OSGConvert::Get().ToOSG(message->GetStart()); 
-		osg::Vec3 ep = OSGConvert::Get().ToOSG(message->GetEnd()); 
-		osg::ref_ptr<osg::Geometry> beam( new osg::Geometry); 
-		osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array; 
-		points->push_back(sp); 
-		points->push_back(ep);
-		osg::ref_ptr<osg::Vec4Array> color = new osg::Vec4Array; 
-		color->push_back(osg::Vec4(1.0,0.0,0.0,1.0)); 
-		color->push_back(osg::Vec4(1.0,0.0,0.0,1.0)); 
-		beam->setVertexArray(points.get()); 
-		beam->setColorArray(color.get()); 
-		beam->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
-		beam->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES,0,2));
-		osg::ref_ptr<osg::Geode> geode( new osg::Geode); 
-	
-		// line widths and point sizes are currently hard coded
-		osg::StateSet* ss = geode->getOrCreateStateSet();
-		osg::LineWidth* linewidth = new osg::LineWidth(); 
-		linewidth->setWidth(2); 
-		ss->setAttributeAndModes(linewidth, osg::StateAttribute::ON); 
-		ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);    
-		ss->setAttribute(new osg::Point(10.0f), osg::StateAttribute::ON);
-		ss->setRenderingHint(osg::StateSet::DEFAULT_BIN);
-		ss->setMode(GL_BLEND,osg::StateAttribute::OVERRIDE | osg::StateAttribute::PROTECTED | osg::StateAttribute::OFF);
-
-		beam->dirtyBound();
-		geode->addDrawable(beam);
-		m_DebugNode->addChild(geode);*/
 	}
 
 	void OSGGraphicsSceneManager::SystemTick(double delta_time)
 	{
 		m_DebugDraw->Clear();
 		//update tick subscribers
-
-		/*if(m_DebugDraw->getNumChildren() > 0)
-		{
-			m_RootNode->removeChild(m_DebugNode);
-			m_DebugNode = new osg::Group();
-			m_RootNode->addChild(m_DebugNode);
-		}*/
 		BaseSceneManager::SystemTick(delta_time);
 	}
 

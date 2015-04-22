@@ -56,7 +56,8 @@ namespace GASS
 		m_MaxReverseDistance(5),
 		m_PlatformType(PT_CAR),
 		m_HasCollision(false),
-		m_CollisionPoint(0,0,0)
+		m_CollisionPoint(0,0,0),
+		m_CollisionDist(0)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -140,6 +141,7 @@ namespace GASS
 	{
 		m_HasCollision = message->m_HasIsect;
 		m_CollisionPoint = message->m_IsectPos;
+		m_CollisionDist = message->m_IsectDist;
 	}
 
 	void CarAutopilotComponent::OnFaceDirectionRequest(FaceDirectionRequestPtr message)
@@ -283,20 +285,48 @@ namespace GASS
 			if(m_HasCollision)
 			{
 				//Check dist
-				Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
+				//Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
 
-				Float dist_to_col = col_vec.Length();
+				//Float dist_to_col = col_vec.Length();
 
-				if(dist_to_col < 20) //slow down
+				if(m_CollisionDist < 20) //slow down
 				{
-					Float speed_interp = dist_to_col/20;
+					Float speed_interp = m_CollisionDist/20;
 					desired_speed = desired_speed*speed_interp;
+					//desired_speed = -1;
+					//turn = 0.0;//speed_interp; 
 				}
-				if(dist_to_col < 10) //go back?
+				if(m_CollisionDist < 5) //go back?
 				{
-					desired_speed = 0;
+					desired_speed = -2.6;
+					if(current_speed < 0)
+						turn = -1; 
+					else
+						turn = 0.2; 
+
 				}
+
+				/*if(m_CollisionDist < 0.5) //go back?
+				{
+					desired_speed = -2.3;
+					turn = -0.2;
+				}*/
+
+				std::stringstream ss;
+				ss  <<  GetSceneObject()->GetName();
+				ss  <<  "m_CollisionDist" << m_CollisionDist;
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+
 			}
+			else
+			{
+
+				std::stringstream ss;
+				ss  <<  GetSceneObject()->GetName();
+				ss  <<  "NO COL";
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+			}
+			
 
 
 		
