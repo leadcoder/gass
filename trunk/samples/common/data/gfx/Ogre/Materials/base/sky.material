@@ -2,9 +2,9 @@
 
 material SkyTemplate
 { 
-	technique light
+	technique T1
 	{
-		pass
+		pass P1
 		{
 			lighting off
 			depth_write off
@@ -13,23 +13,5 @@ material SkyTemplate
 			}
 		}
 	}
-
-
-	technique geom
-	{
-	   scheme geom
-
-	    pass
-	    {
-	      vertex_program_ref depthmap_max_vs
-	      {
-	      }
-
-	      fragment_program_ref depthmap_max_ps
-	      {
-	      }
-	    }
-	}
-
 }
 
