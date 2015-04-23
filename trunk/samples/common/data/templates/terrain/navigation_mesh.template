@@ -157,7 +157,7 @@
       <LocationComponent />
       <ManualMeshComponent />
       <DetourCrowdAgentComponent>
-		<MaxAcceleration value="4"/>
+		<MaxAcceleration value="2"/>
 	  </DetourCrowdAgentComponent>
     </Components>
     <ComponentContainers>

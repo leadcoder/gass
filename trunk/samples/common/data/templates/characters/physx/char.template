@@ -28,7 +28,7 @@
 				<Enable value="true"/>
 				<TurnPID value="0.0251 0 0"/>
 				<TrottlePID value="0.251 0 0"/>
-				<BrakeDistanceFactor value="2"/>
+				<BrakeDistanceFactor value="0.6"/>
 				<Support3PointTurn value="false"/>
 				<InvertBackWardSteering value="false"/>
 			</CarAutopilotComponent>
