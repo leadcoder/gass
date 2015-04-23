@@ -3,6 +3,7 @@
 	<SceneObjectTemplate>
 		<Name value="PatriaXA203"/>
 		<ID value="CHASSIS"/>
+		<Instantiable value="true"/>
 		<Components>
 			<LocationComponent>
 				<AttachToParent value="0"/>
@@ -29,15 +30,31 @@
 			<InputHandlerComponent>
 				<ControlSetting value ="TankInputSettings"/>
 			</InputHandlerComponent>
-			<!--<CarAutopilotComponent>
+			<CarAutopilotComponent>
 				<DesiredPosRadius value="0.1"/>
 				<DesiredSpeed value="6.0"/>
-				<Enable value="true"/>
+				<Enable value="false"/>
 				<TurnPID value="0.0251 0 0"/>
 				<TrottlePID value="0.251 0 0"/>
-			</CarAutopilotComponent>-->
+			</CarAutopilotComponent>
 		</Components>
 		<ComponentContainers>
+			<!--<SceneObjectTemplate>
+				<Name value="PatriaScriptTest"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0 5 0"/>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="PatriaWheelR.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<ASScriptComponent>
+						<Script value="hejsan.as"/>
+					</ASScriptComponent>
+				</Components>
+			</SceneObjectTemplate>-->
 			<SceneObjectTemplate>
 				<Name value="PatriaWheel"/>
 				<ID value="FRONT_LEFT_WHEEL"/>
@@ -149,7 +166,7 @@
 						<Filename value="PatriaWheelR.mesh"/>
 						<CastShadow value="1"/>
 					</MeshComponent>
-					
+
 					<!--<ManualMeshComponent>
 						<CastShadow value="true"/>
 					</ManualMeshComponent>
