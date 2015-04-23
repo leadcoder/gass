@@ -69,7 +69,7 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI_Media" type="FileSystem" recursive="true"/>
   </ResourceGroup>
   <ResourceGroup name="GASS_TEMPLATES">
-    <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/ode" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
   </ResourceGroup>
