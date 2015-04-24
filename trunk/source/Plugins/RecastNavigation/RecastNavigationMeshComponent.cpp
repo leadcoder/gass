@@ -115,7 +115,7 @@ namespace GASS
 		REG_PROPERTY2(Vec3,MeshBoundingMax, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(int,TileSize,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(int,Transparency,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_VECTOR_PROPERTY2(SceneObjectRef, MeshSelection, RecastNavigationMeshComponent,SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration)));
+		REG_PROPERTY2(std::vector<SceneObjectRef>, MeshSelection, RecastNavigationMeshComponent,SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration)));
 		REG_PROPERTY2(std::string,BoundingBoxFromShape, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(FilePath,ImportMesh, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(FilePath,ExportMesh, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

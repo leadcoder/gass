@@ -390,7 +390,6 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteTransparentNoLighting",true));
-			
 			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}

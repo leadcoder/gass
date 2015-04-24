@@ -46,7 +46,8 @@ namespace GASS
 		m_ClutchStrength(10),
 		m_GearSwitchTime(0.5),
 		m_ChassisDim(0,0,0),
-		m_MaxSpeed(20)
+		m_MaxSpeed(20),
+		m_Debug(false)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -72,9 +73,14 @@ namespace GASS
 			scene_manager->UnregisterVehicle(m_Vehicle);
 			m_Vehicle->free();
 			m_Vehicle = NULL;
+			if(m_Actor)
+			{
+				scene_manager->GetPxScene()->removeActor(*m_Actor);
+				m_Actor->release();
+				m_Actor = NULL;
+			}
 		}
 	}
-
 
 	void PhysXVehicleComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
@@ -84,12 +90,14 @@ namespace GASS
 	void PhysXVehicleComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
+		
 		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
 		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
 		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
 		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
 		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
-		REG_VECTOR_PROPERTY(float,GearRatios,PhysXVehicleComponent)
+		REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
 		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
 		REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
 		REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
@@ -97,8 +105,9 @@ namespace GASS
 		REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
 		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
 		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-		REG_VECTOR_PROPERTY(SceneObjectRef,ExtraWheels,PhysXVehicleComponent)
+		REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
 		REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
+		REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)
@@ -473,7 +482,6 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
-
 		
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 		m_Initialized = true;
@@ -712,18 +720,14 @@ namespace GASS
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(VehiclePadSmoothingData,VehicleSteerVsForwardSpeedTable,rawInputData,delta,*m_Vehicle);
 		}
 
-
-
 		const PxF32 forwardSpeed = m_Vehicle->computeForwardSpeed();
 		const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);
 		const PxF32 sidewaysSpeedAbs = PxAbs(m_Vehicle->computeSidewaysSpeed());
 
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
-
 		
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
-
 
 		//pitch engine sound
 		float pitch = 1.0;
@@ -773,8 +777,8 @@ namespace GASS
 
 
 	#define THRESHOLD_FORWARD_SPEED (0.1f) 
-#define THRESHOLD_SIDEWAYS_SPEED (0.2f)
-#define THRESHOLD_ROLLING_BACKWARDS_SPEED (0.1f)
+	#define THRESHOLD_SIDEWAYS_SPEED (0.2f)
+	#define THRESHOLD_ROLLING_BACKWARDS_SPEED (0.1f)
 
 
 	void PhysXVehicleComponent::ProcessAutoReverse(const physx::PxVehicleWheels& focusVehicle, 
@@ -974,30 +978,49 @@ namespace GASS
 		//do ray at chassis center and each bounding box corner
 		Vec3 dir = -rot.GetZAxis();
 	
-		if(speed < 0)
+		/*if(speed < 0)
 		{
-		//	dir = -dir;
-		}
+			dir = -dir;
+		}*/
 
 		const Float z_nudge_offset = 1.4;
 		Vec3 ray_start = pos + dir*(-mesh_offset.z + (mesh_size.z + z_nudge_offset)*0.5);
 		ray_start = ray_start + rot.GetYAxis()*mesh_offset.y;
 	
 		const Vec3 x_offset = rot.GetXAxis()*mesh_size.x*0.5;
-		const Vec3 y_offset = rot.GetYAxis()*(mesh_size.y*0.2);
+		const Vec3 y_offset = rot.GetYAxis()*(mesh_size.y*0.4);
 		
 		
 		std::vector<Vec3> start_point_vec;
+		start_point_vec.push_back(ray_start);
+		
 		start_point_vec.push_back(ray_start + y_offset);
+		start_point_vec.push_back(ray_start - y_offset);
+
 		start_point_vec.push_back(ray_start - x_offset + y_offset);
 		start_point_vec.push_back(ray_start + x_offset + y_offset);
 
-		start_point_vec.push_back(ray_start - x_offset);
-		start_point_vec.push_back(ray_start + x_offset);
+		start_point_vec.push_back(ray_start - x_offset - y_offset);
+		start_point_vec.push_back(ray_start + x_offset - y_offset);
+
+		start_point_vec.push_back(ray_start - x_offset + y_offset);
+		start_point_vec.push_back(ray_start + x_offset + y_offset);
+
+		start_point_vec.push_back(ray_start - x_offset - y_offset);
+		start_point_vec.push_back(ray_start + x_offset - y_offset);
 
 		std::vector<Vec3> dir_vec;
 
 		dir_vec.push_back(dir);
+		dir_vec.push_back(dir);
+		dir_vec.push_back(dir);
+
+		dir_vec.push_back(dir);
+		dir_vec.push_back(dir);
+		dir_vec.push_back(dir);
+		dir_vec.push_back(dir);
+
+		
 		dir_vec.push_back(dir - rot.GetXAxis()*0.2);
 		dir_vec.push_back(dir + rot.GetXAxis()*0.2);
 
@@ -1020,12 +1043,15 @@ namespace GASS
 				final_res = temp_res;
 			}
 			
-			//debug line
-			const ColorRGBA color(1,1,1,1);
-			Vec3 end_pos = start_point_vec[i] + dir_vec[i]*check_range;
-			if(temp_res.Coll)
-				end_pos = temp_res.CollPosition;
-			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
+			//debug line?
+			if(m_Debug)
+			{
+				const ColorRGBA color(1,1,1,1);
+				Vec3 end_pos = start_point_vec[i] + dir_vec[i]*check_range;
+				if(temp_res.Coll)
+					end_pos = temp_res.CollPosition;
+				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
+			}
 		}
 
 		SceneObjectPtr col_obj = SceneObjectPtr(final_res.CollSceneObject,NO_THROW);

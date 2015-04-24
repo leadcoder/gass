@@ -128,7 +128,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("VehicleEngineComponent",new Creator<VehicleEngineComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleEngineComponent", OF_VISIBLE)));
 		
-		RegisterVectorProperty<SceneObjectRef>("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
+		RegisterProperty< std::vector<SceneObjectRef> >("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 
 		RegisterProperty<std::string>("EngineType", &VehicleEngineComponent::GetEngineType, &VehicleEngineComponent::SetEngineType,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Engine type (tank or car?)",PF_VISIBLE)));
@@ -159,7 +159,7 @@ namespace GASS
 		
 		RegisterProperty<PIDControl>("SteerPID", &VehicleEngineComponent::GetSteerPID, &VehicleEngineComponent::SetSteerPID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterVectorProperty<float>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio,
+		RegisterProperty<std::vector<float>>("GearRatio", &VehicleEngineComponent::GetGearRatio, &VehicleEngineComponent::SetGearRatio,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("SmoothRPMOutput", &VehicleEngineComponent::GetSmoothRPMOutput, &VehicleEngineComponent::SetSmoothRPMOutput,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -378,8 +378,6 @@ namespace GASS
 			}
 		}
 	}
-
-
 	
 
 	void VehicleEngineComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)

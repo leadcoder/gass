@@ -57,12 +57,12 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				//const std::string prop_name = prop->GetTypeName();
-				//if(std::string::npos != prop_name.find("SceneObjectLink"))
-				if(*prop->GetTypeID() == typeid(SceneObjectLink))
+
+				bool is_sol = *prop->GetTypeID() == typeid(SceneObjectLink);
+				bool is_sol_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectLink>);
+				if(is_sol || is_sol_vec)
 				{
-					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
-					if(vector_prop)
+					if(is_sol_vec)
 					{
 
 						boost::any any_link;
@@ -127,10 +127,12 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				if(*prop->GetTypeID() == typeid(SceneObjectRef))
+				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if(is_sor || is_sor_vec)
 				{
-					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
-					if(vector_prop)
+					if(is_sor_vec)
 					{
 						boost::any any_link;
 						prop->GetValue(this,any_link);
@@ -169,10 +171,13 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				if(*prop->GetTypeID() == typeid(SceneObjectRef))
+				
+				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if(is_sor || is_sor_vec)
 				{
-					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
-					if(vector_prop)
+					if(is_sor_vec)
 					{
 						boost::any any_link;
 						prop->GetValue(this,any_link);
@@ -213,12 +218,13 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				//const std::string prop_name = prop->GetTypeName();
-				//if(std::string::npos != prop_name.find("SceneObjectRef"))
-				if(*prop->GetTypeID() == typeid(SceneObjectRef))
+				
+				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if(is_sor || is_sor_vec)
 				{
-					IVectorProperty* vector_prop =  dynamic_cast<IVectorProperty*>(prop);
-					if(vector_prop)
+					if(is_sor_vec)
 					{
 						boost::any any_link;
 						prop->GetValue(this,any_link);

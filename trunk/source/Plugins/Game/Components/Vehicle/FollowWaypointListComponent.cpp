@@ -339,7 +339,6 @@ namespace GASS
 				m_Waypoints = final_path;
 			}
 
-
 			m_HasWaypoints = true;
 			if(m_CurrentWaypoint == 0) //only select new start waypoint if current is first wp
 				m_CurrentWaypoint = GetCloesetWaypoint();

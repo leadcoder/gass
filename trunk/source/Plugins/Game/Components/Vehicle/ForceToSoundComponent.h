@@ -47,8 +47,6 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 	private:
-		//ADD_PROPERTY(std::string,InputMapping);
-		//ADD_PROPERTY(Float,MaxAngularVelocity);
 		ADD_PROPERTY(std::vector<Vec2>,ForceToPitch)
 		ADD_PROPERTY(Float,ForceLimit)
 		

@@ -21,9 +21,9 @@
 #ifndef GASS_PROPERTY_H
 #define GASS_PROPERTY_H
 
-
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
+#include "Core/Serialize/GASSSTDSerialize.h"
 #include "Core/Reflection/GASSTypedProperty.h"
 #include <assert.h>
 #include <sstream>
@@ -224,8 +224,8 @@ namespace GASS
 
 #define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
 #define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
-#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME);
-#define REG_VECTOR_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME, META_DATA);
+//#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME);
+//#define REG_VECTOR_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME, META_DATA);
 #define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
 TYPE Get ## NAME () const {return m_ ## NAME ;} \
 	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}

@@ -190,6 +190,8 @@ namespace GASS
 		path.push_back(to_point);
 		//trim
 		std::vector<Vec3> final_path;
+
+		final_path.push_back(path[0]);
 		for(size_t i = 0; i < path.size(); i++)
 		{
 			if(i > 0 && (path[i-1] - path[i]).Length() > 0.01)

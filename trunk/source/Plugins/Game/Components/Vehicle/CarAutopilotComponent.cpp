@@ -148,7 +148,6 @@ namespace GASS
 	{
 		m_FaceDirection = message->GetDirection();
 		m_HasDir = true;
-
 	}
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
@@ -302,8 +301,7 @@ namespace GASS
 					if(current_speed < 0)
 						turn = -1; 
 					else
-						turn = 0.2; 
-
+						turn = 1; 
 				}
 
 				/*if(m_CollisionDist < 0.5) //go back?
@@ -359,9 +357,13 @@ namespace GASS
 				}
 				if(m_PlatformType == PT_HUMAN)
 					throttle = 0;
-			}
 
-		
+				if(m_PlatformType != PT_HUMAN)
+				{
+					throttle = 0;
+					turn = 0;
+				}
+			}
 
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));

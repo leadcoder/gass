@@ -80,7 +80,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Let far clip plane be locked to end fog distance",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode,	
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode for this camera",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
-		RegisterVectorProperty<std::string>("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
+		RegisterProperty< std::vector<std::string> >("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
 
 		std::vector<std::string> scheme_enumeration;
 		//hard code for now

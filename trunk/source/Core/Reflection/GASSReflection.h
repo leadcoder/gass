@@ -19,13 +19,11 @@
 *****************************************************************************/
 
 
-#ifndef GASS_REFLECTION_H
-#define GASS_REFLECTION_H
+#pragma once
 
 #include <typeinfo>
 #include "Core/Reflection/GASSRTTI.h"
 #include "Core/Reflection/GASSProperty.h"
-#include "Core/Reflection/GASSVectorProperty.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 
@@ -104,7 +102,7 @@ namespace GASS
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		template <class PropertyType>
+		/*template <class PropertyType>
 		static void RegisterVectorProperty(const std::string &name, 
 			typename VectorProperty<T, PropertyType>::GetterType getter,
 			typename VectorProperty<T, PropertyType>::SetterType setter,
@@ -122,7 +120,7 @@ namespace GASS
 		{
 			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
-		}
+		}*/
 
 		static inline RTTI* GetClassRTTI()
 		{
@@ -141,4 +139,3 @@ namespace GASS
 		(GASS::StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
 		(RegisterReflectionFunc)T::RegisterReflection );
 }
-#endif

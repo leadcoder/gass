@@ -85,6 +85,7 @@ namespace GASS
 		ADD_PROPERTY(float,Mass)
 		ADD_PROPERTY(float,GearSwitchTime)
 		ADD_PROPERTY(std::vector<float>,GearRatios)
+		ADD_PROPERTY(bool,Debug)
 
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
