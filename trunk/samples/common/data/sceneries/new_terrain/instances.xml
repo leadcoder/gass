@@ -215,14 +215,34 @@
                     <Name value="Layer1"/>
                 </SkyXCloudLayerComponent>
                 <EnvironmentManagerComponent>
-                    <WaterGradient value="0.0232836 0.214329 0.311642;0.0174627 0.160747 0.233732;0.0145522 0.133956 0.169776;0.0116418 0.107164 0.135821;0.0058209 0.0535822 0.0679105;0.0058209 0.0535822 0.0169776"/>
-                    <WaterGradientWeights value="1;0.8;0.6;0.5;0.45;0"/>
-                    <SunGradient value="0.8 0.75 0.55;0.8 0.75 0.55;0.8 0.75 0.55;0.6 0.5 0.2;0.6 0.5 0.2;0.6 0.5 0.2"/>
-                    <SunGradientWeights value="1;0.75;0.5625;0.5;0.45;0"/>
-                    <AmbientGradient value="1 1 1;1 1 1;0.6 0.6 0.6;0.3 0.3 0.3;0.1 0.1 0.1;0.05 0.05 0.05"/>
-                    <AmbientGradientWeights value="1;0.6;0.5;0.45;0.35;0"/>
-                    <FogGradient value="0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753;0.49 0.62 0.753"/>
-                    <FogGradientWeights value="1;0.6;0.5;0.45;0.35;0"/>
+                    <WaterGradient value="0.0232836 0.214329 0.311642
+										  0.0174627 0.160747 0.233732
+										  0.0145522 0.133956 0.169776
+										  0.0116418 0.107164 0.135821
+										  0.0058209 0.0535822 0.0679105
+										  0.0058209 0.0535822 0.0169776"/>
+                    <WaterGradientWeights value="1 0.8 0.6 0.5 0.45 0"/>
+                    <SunGradient value="0.8 0.75 0.55
+										0.8 0.75 0.55
+										0.8 0.75 0.55
+										0.6 0.5 0.2
+										0.6 0.5 0.2
+										0.6 0.5 0.2"/>
+                    <SunGradientWeights value="1 0.75 0.5625 0.5 0.45 0"/>
+                    <AmbientGradient value="1 1 1
+											1 1 1
+											0.6 0.6 0.6
+											0.3 0.3 0.3
+											0.1 0.1 0.1
+											0.05 0.05 0.05"/>
+                    <AmbientGradientWeights value="1 0.6 0.5 0.45 0.35 0"/>
+                    <FogGradient value="0.49 0.62 0.753
+										0.49 0.62 0.753 
+										0.49 0.62 0.753
+										0.49 0.62 0.753
+										0.49 0.62 0.753
+										0.49 0.62 0.753"/>
+                    <FogGradientWeights value="1 0.6 0.5 0.45 0.35 0"/>
                     <SpecularWeight value="0"/>
                     <Name value="EnvironmentManagerComponent"/>
                 </EnvironmentManagerComponent>

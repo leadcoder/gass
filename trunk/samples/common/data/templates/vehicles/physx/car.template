@@ -24,7 +24,7 @@
 				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
 				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
 				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
-				<ExtraWheels value="REAR_RIGHT_EXTRA_WHEEL;REAR_LEFT_EXTRA_WHEEL"/>
+				<ExtraWheels value="REAR_RIGHT_EXTRA_WHEEL REAR_LEFT_EXTRA_WHEEL"/>
 			</PhysXVehicleComponent>
 			<InputHandlerComponent>
 				<ControlSetting value ="TankInputSettings"/>

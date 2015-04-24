@@ -19,7 +19,7 @@
 				<EngineMaxRotationSpeed value="300"/>
 				<ClutchStrength value = "10"/>
 				<MaxSpeed value= "20"/>
-				<GearRatios value="-4;0;4;2;1.5;1.1;1.0"/>
+				<GearRatios value="-4 0 4 2 1.5 1.1 1.0"/>
 				<UseAutoReverse value="true"/>
 				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
 				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>

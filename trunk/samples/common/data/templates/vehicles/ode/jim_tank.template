@@ -33,7 +33,7 @@
 				<ParticleTemplate value="ExhaustFumes"/>
 			</ParticleSystemComponent>
 			<VehicleEngineComponent>
-				<Wheels value="WHEEL_R1;WHEEL_R2;WHEEL_R3;WHEEL_R4;WHEEL_R5;WHEEL_R6;WHEEL_L1;WHEEL_L2;WHEEL_L3;WHEEL_L4;WHEEL_L5;WHEEL_L6"/>
+				<Wheels value="WHEEL_R1 WHEEL_R2 WHEEL_R3 WHEEL_R4 WHEEL_R5 WHEEL_R6 WHEEL_L1 WHEEL_L2 WHEEL_L3 WHEEL_L4 WHEEL_L5 WHEEL_L6"/>
 				<EngineType value="tank"/>
 				<Power value="0.03"/>
 				<Automatic  value="1"/>
@@ -45,7 +45,7 @@
 				<RPMGearChangeUp value="3000"/>
 				<RPMGearChangeDown value="1500"/>
 				<!--<GearRatio value="-13.42 -16.42 0 16.42 12.15 11.52 11.17"/>-->
-				<GearRatio value="-13.42;-16.42;0;16.42;13.15;10.52;7.17"/>
+				<GearRatio value="-13.42 -16.42 0 16.42 13.15 10.52 7.17"/>
 				<!--<TurnForce value="100"/>-->
 				<TurnRPMAmount value="0.1"/>
 			</VehicleEngineComponent>

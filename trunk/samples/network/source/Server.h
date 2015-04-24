@@ -38,10 +38,9 @@ public:
 		//same for client and server
 		_CreateMainWindow();
 
-		//server stuff
+		//do server stuff...
 
 		//Add callback for client connections
-		//GASS::MessageFuncPtr callback(new GASS::MessageFunc<GASS::IMessage>(boost::bind( &SimServer::OnClientConnected, this, _1 ),shared_from_this()));
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimServer::OnClientConnected,GASS::ClientConnectedEvent,0));
 		
 
@@ -53,7 +52,7 @@ public:
 	
 		//create server objects
 		GASS::ScenePtr scene(m_Scene);
-		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("gta",scene->GetRootSceneObject());
+		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("GTO",scene->GetRootSceneObject());
 		GASS::Vec3 pos = scene->GetStartPos();
 
 		if(object)

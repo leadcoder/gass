@@ -152,6 +152,7 @@ public:
 		RegisterProperty<std::string>("Description", &MyCar::GetDescription, &MyCar::SetDescription);
 		RegisterProperty<MyGearBox>("GearBox", &MyCar::GetGearBox, &MyCar::SetGearBox);
 		RegisterProperty<MyVector<MyWheel> >("Wheels", &MyCar::GetWheels, &MyCar::SetWheels);
+		RegisterProperty<std::vector<GASS::Vec3> >("TagPoints", &MyCar::GetTagPoints, &MyCar::SetTagPoints);
 
 		
 		
@@ -168,6 +169,10 @@ public:
 	MyGearBox GetGearBox() const {return m_GearBox;}
 	MyVector<MyWheel> GetWheels() const {return m_Wheels;}
 	void SetWheels(const MyVector<MyWheel> &value)  {m_Wheels = value;}
+	std::vector<GASS::Vec3> GetTagPoints() const {return m_TagPoints;}
+	void SetTagPoints(const std::vector<GASS::Vec3>  &value)  {m_TagPoints = value;}
+
+	
 
 	//If you just want regular get/set you can use the 
 	//convenience macro, ADD_PROPERTY, that will implement simple get/set. 
@@ -179,6 +184,7 @@ private:
 	std::string m_Description;
 	MyGearBox m_GearBox;
 	MyVector<MyWheel> m_Wheels;
+	std::vector<GASS::Vec3>  m_TagPoints;
 };
 
 
@@ -427,6 +433,12 @@ int main(int argc, char* argv[])
 	std::cout << std::endl << "Change gearbox by string..." << std::endl;
 	my_car->SetPropertyByString("GearBox","10 1");
 	PrintPropertyTypes(my_car);
+
+
+	//my_car->SetPropertyByString("TagPoints","1 1 1 2 2 2 3 3 3");
+	//std::string test;
+	///my_car->GetPropertyByString("TagPoints",test);
+	
 
 	//test vector data write (by string)
 	//my_car->SetPropertyByString("Wheels","LFront 1.0 0.5 RFront 1.0 0.7");
