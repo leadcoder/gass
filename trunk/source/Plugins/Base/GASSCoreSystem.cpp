@@ -25,9 +25,9 @@
 
 namespace GASS
 {
-	CoreSystem::CoreSystem(void)
+	CoreSystem::CoreSystem(void) 
 	{
-	
+	  m_TaskNodeName = "PRE_SIM";
 	}
 
 	CoreSystem::~CoreSystem(void)

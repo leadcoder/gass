@@ -72,6 +72,7 @@ namespace GASS
 		m_ShowStats(true),
 		m_UseShaderCache(false)
 	{
+		m_TaskNodeName = "POST_SIM";
 		m_Plugins.push_back("RenderSystem_Direct3D9");
 		m_Plugins.push_back("Plugin_OctreeSceneManager");
 		m_Plugins.push_back("Plugin_ParticleFX");

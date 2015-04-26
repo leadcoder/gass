@@ -49,7 +49,7 @@ namespace GASS
 
 	ODEPhysicsSystem::ODEPhysicsSystem() 
 	{
-
+		m_TaskNodeName = "SIM";
 	}
 
 	ODEPhysicsSystem::~ODEPhysicsSystem()

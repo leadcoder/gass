@@ -37,6 +37,7 @@ namespace GASS
 {
 	ControlSettingsSystem::ControlSettingsSystem()
 	{
+		m_TaskNodeName = "PRE_SIM";
 		m_InputStringTable = new EnumLookup();
 		//Input
 		m_InputStringTable->Add("DEVICE_KEYBOARD",DEVICE_KEYBOARD);

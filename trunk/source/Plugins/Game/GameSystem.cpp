@@ -30,7 +30,7 @@ namespace GASS
 {
 	GameSystem::GameSystem(void) : m_Update(true)
 	{
-	
+		m_TaskNodeName = "SIM";
 	}
 
 	GameSystem::~GameSystem(void)

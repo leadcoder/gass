@@ -44,6 +44,7 @@ namespace GASS
 		m_MouseWinOffsetY(0),
 		m_InputManager(NULL)
 	{
+		m_TaskNodeName = "PRE_SIM";
 		m_KeyBuffer =  new char[256];
 		m_OldKeyBuffer =  new char[256];
 		memset(m_KeyBuffer,0,256);

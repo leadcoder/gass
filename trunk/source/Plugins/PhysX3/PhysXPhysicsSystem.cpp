@@ -68,7 +68,7 @@ namespace GASS
 		m_PhysicsSDK(NULL),
 		m_Foundation(NULL)
 	{
-
+		m_TaskNodeName = "SIM";
 	}
 
 	PhysXPhysicsSystem::~PhysXPhysicsSystem()

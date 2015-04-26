@@ -85,7 +85,7 @@ namespace GASS
 		m_Viewer(NULL),
 		m_FlipDDS(false)
 	{
-
+		m_TaskNodeName = "POST_SIM";
 	}
 
 	OSGGraphicsSystem::~OSGGraphicsSystem(void)

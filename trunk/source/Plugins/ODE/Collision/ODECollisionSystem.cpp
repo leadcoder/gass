@@ -41,7 +41,7 @@ namespace GASS
 {
 	ODECollisionSystem::ODECollisionSystem() 
 	{
-		
+		m_TaskNodeName = "POST_SIM";
 	}
 
 	ODECollisionSystem::~ODECollisionSystem()
