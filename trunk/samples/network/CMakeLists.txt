@@ -2,7 +2,7 @@
 set(LIB_NAME "SampleNetwork")
 
 #Set include directories
-include_directories(${GASS_SIM_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
+include_directories(${GASS_SIM_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/network/source")
 
 set(CPP_FILES "source/SampleNetwork.cpp")
 set(H_FILES "source/Client.h" "source/Server.h" "source/SimApplication.h")

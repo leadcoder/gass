@@ -15,7 +15,7 @@
 <SetDataPath value="../../data/"/>
 <ScenePath value="../../data/sceneries"/>
 <ResourceManager>
-  <ResourceGroup name="Bootstrap">
+  <!--<ResourceGroup name="Bootstrap">
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
   </ResourceGroup>
   <ResourceGroup name="SkyX">
@@ -63,10 +63,8 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx/GUI/MyGUI_Media" type="FileSystem" recursive="true"/>
   </ResourceGroup>
   <ResourceGroup name="GASS_TEMPLATES">
-    <!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles" type="FileSystem" recursive="true"/>-->
-	<!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>-->
-	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
-  </ResourceGroup>
+    <ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
+  </ResourceGroup>-->
 </ResourceManager>
 <SceneObjectTemplateManager>
   <AddObjectIDToName value ="true"/>
@@ -92,15 +90,6 @@
   <GameSystem>
     <TaskNode value="SIM"/>
   </GameSystem>
-  <RakNetNetworkSystem>
-    <TaskNode value="SIM"/>
-  </RakNetNetworkSystem>
-  <OpenALSoundSystem>
-    <TaskNode value="PRE_SIM"/>
-  </OpenALSoundSystem>
-  <LuaScriptSystem>
-    <TaskNode value="PRE_SIM"/>
-  </LuaScriptSystem>
   <PhysXPhysicsSystem>
     <TaskNode value="SIM"/>
   </PhysXPhysicsSystem>

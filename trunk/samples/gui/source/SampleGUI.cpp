@@ -24,6 +24,7 @@
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
+#include "SampleDialog.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -52,29 +53,65 @@ int _getch( ) {
 }
 #endif
 
+
+class MyMenu  : public GASS::IMessageListener, public boost::enable_shared_from_this<MyMenu> 
+{
+	public:
+
+	MyMenu()
+	{
+
+	}
+	
+	~MyMenu()
+	{
+
+	}
+	
+	void Init()
+	{
+		GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MyMenu::OnGUILoaded, GASS::GUILoadedEvent ,0));
+	}
+
+	void OnGUILoaded(GASS::GUILoadedEventPtr message)
+	{
+		GASS::SampleDialog* dialog = new GASS::SampleDialog(NULL);
+		
+		dialog->setVisible(true);
+	}
+};
+
 int run(int argc, char* argv[])
 {
+
+	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
+	char key = _getch();
+	std::string gfx_system_name = "OgreGraphicsSystem";
+	std::string gui_gfx_system_name = "MyGUIOgreSystem";
+	std::string gfx_plugin = "GASSPluginOgre";
+	
+	if(key == '1')
+	{
+		gfx_system_name = "OgreGraphicsSystem";
+		gui_gfx_system_name = "MyGUIOgreSystem";
+		gfx_plugin = "GASSPluginOgre";
+	}
+	else if(key == '2')
+	{
+		gfx_system_name = "OSGGraphicsSystem";
+		gui_gfx_system_name = "MyGUIOSGSystem";
+		gfx_plugin = "GASSPluginOSG";
+	}
+
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
 	m_Engine->Init(GASS::FilePath("SampleGUI.xml"));
 
-	//load additional plugins
-	//m_Engine->GetPluginManager()->LoadPlugin("GASSPluginOSG");
-	m_Engine->GetPluginManager()->LoadPlugin("GASSPluginOgre");
-	//Create additional systems
-	//std::string gfx_system_name = "OSGGraphicsSystem";
-	//std::string gui_gfx_system_name = "MyGUIOSGSystem"
-	std::string gfx_system_name = "OgreGraphicsSystem";
-	std::string gui_gfx_system_name = "MyGUIOgreSystem";
-
+	//load gfx plugin
+	m_Engine->GetPluginManager()->LoadPlugin(gfx_plugin);
+	//Create systems
 	GASS::SimSystemPtr gfx_system = GASS::SystemFactory::Get().Create(gfx_system_name);
 	gfx_system->OnCreate(m_Engine->GetSimSystemManager());
 	gfx_system->SetTaskNode("POST_SIM");
-	if(gfx_system_name == "OgreGraphicsSystem")
-	{
-		gfx_system->SetPropertyByString("Plugin","RenderSystem_Direct3D9");
-		gfx_system->SetPropertyByString("Plugin","Plugin_OctreeSceneManager");
-		gfx_system->SetPropertyByString("Plugin","Plugin_ParticleFX");
-	}
 
 	GASS::SimSystemPtr gui_system = GASS::SystemFactory::Get().Create(gui_gfx_system_name);
 	gui_system->OnCreate(m_Engine->GetSimSystemManager());
@@ -86,6 +123,10 @@ int run(int argc, char* argv[])
 	m_Engine->GetSimSystemManager()->AddSystem(gfx_system);
 
 
+	boost::shared_ptr<MyMenu> menu (new MyMenu());
+	menu->Init();
+
+
 	//reload templates
 	m_Engine->ReloadTemplates();
 
@@ -95,7 +136,7 @@ int run(int argc, char* argv[])
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 	input_system->SetMainWindowHandle(win->GetHWND());
 	GASS::ScenePtr scene(m_Engine->CreateScene("NewScene"));
-{
+	{
 		GASS::SceneObjectTemplatePtr plane_template (new GASS::SceneObjectTemplate);
 		plane_template->SetName("PlaneObject");
 		plane_template->AddBaseSceneComponent("LocationComponent");
@@ -129,6 +170,7 @@ int run(int argc, char* argv[])
 		m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
 	}
 
+	
 	while(true)
 	{
 		m_Engine->Update();

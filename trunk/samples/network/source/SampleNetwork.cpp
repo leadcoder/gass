@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 {
 	SimApplicationPtr app;
 
-	std::cout << "Server, client or Press [S] ,[C]";
+	std::cout << "Server or client?, Press [S] or [C]";
 	char key = _getch();
 	int app_mode = 2;
 	if(key == 'c' || key == 'C')

@@ -1,22 +1,24 @@
 #set lib name here!
 set(LIB_NAME "SampleGUI")
 
+
+find_package(MyGUI)
 #Set include directories
-include_directories(${GASS_SIM_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/sim_demo/source")
+include_directories(${GASS_SIM_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/Samples/gui/source" ${MYGUI_INCLUDE_DIRS})
 
-set(CPP_FILES "source/SampleGUI.cpp")
-#set(XML_FILES "source/GUISample.xml")
+set(CPP_FILES "source/SampleGUI.cpp" 
+			  "source/SampleDialog.cpp")
+set(H_FILES  "source/SampleDialog.h")
 
-#Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
-
-add_executable (${LIB_NAME} ${CPP_FILES})
+			  #set(XML_FILES "source/GUISample.xml")
+#link_directories(${GASS_SIM_LIB_DIRS})
+add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 
 #Add project link libs
-target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_SIM_LIBRARIES})
+target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_SIM_LIBRARIES} ${MYGUI_LIBRARIES})
 
-set(GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/source/SampleGUIOSG.xml")
+set(GASS_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/source/SampleGUI.xml")
 
 #copy configurations to enable execution from build folder 
 FILE(COPY ${GASS_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)

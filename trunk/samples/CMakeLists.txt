@@ -12,7 +12,8 @@ if(GASS_BUILD_SIM_SAMPLES)
 
 	ADD_SUBDIRECTORY(network)
 	ADD_SUBDIRECTORY(gui)
-	#ADD_SUBDIRECTORY( physics)
+	ADD_SUBDIRECTORY( physics)
+	ADD_SUBDIRECTORY( rtc)
 	#ADD_SUBDIRECTORY( vehicle_demo)
 
 	#install eventual binary files
@@ -21,6 +22,8 @@ if(GASS_BUILD_SIM_SAMPLES)
 
 	#install data
 	INSTALL(DIRECTORY common/data DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/../ FILES_MATCHING PATTERN "*.*" PATTERN ".svn" EXCLUDE)
+	
+
 endif()
 
 

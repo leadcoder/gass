@@ -23,6 +23,7 @@
 #include "Plugins/Game/GameMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
+#include "Core/PluginSystem/GASSPluginManager.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -55,25 +56,79 @@ int _getch( ) {
 
 int main(int argc, char* argv[])
 {
-	bool is_server = false;
-	std::string config = "../Configuration/app_config.xml";
-	int index = 1;
-	while(index < argc)
+	//Load plugins
+
+	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
+	char key = _getch();
+	std::string gfx_plugin = "GASSPluginOgre";
+	std::string gfx_system_name = "OgreGraphicsSystem";
+
+	if(key == '1')
 	{
-		char* arg = argv[index];
-		if(strcmp(arg, "--IsServer") == 0)
-		{
-			is_server = atoi(argv[index+1]);
-		}
-		else if(strcmp(arg, "--Config") == 0)
-		{
-			config = argv[index+1];
-		}
-		index += 2;
+		gfx_system_name = "OgreGraphicsSystem";
+		gfx_plugin = "GASSPluginOgre";
+	}
+	else if(key == '2')
+	{
+		gfx_system_name = "OSGGraphicsSystem";
+		gfx_plugin = "GASSPluginOSG";
 	}
 
+	std::vector<std::string> plugins;
+	plugins.push_back(gfx_plugin);
+	plugins.push_back("GASSPluginOIS");
+	plugins.push_back("GASSPluginODE");
+	plugins.push_back("GASSPluginOpenAL");
+	plugins.push_back("GASSPluginGame");
+	plugins.push_back("GASSPluginBase");
+	plugins.push_back("GASSPluginPhysX3");
+
+	std::vector<std::string> systems;
+	systems.push_back(gfx_system_name);
+	systems.push_back("MaterialSystem");
+	systems.push_back("OISInputSystem");
+	systems.push_back("ControlSettingsSystem");
+	systems.push_back("CoreSystem");
+	systems.push_back("GameSystem");
+	systems.push_back("PhysXPhysicsSystem");
+	systems.push_back("ODECollisionSystem");
+	
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
+
+	GASS::ResourceGroupPtr gfx_group(new GASS::ResourceGroup("GASS_GFX"));
+	gfx_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/gfx"),GASS::RLT_FILESYSTEM,true);
+	m_Engine->GetResourceManager()->AddResourceGroup(gfx_group);
+
+	GASS::ResourceGroupPtr physics_group(new GASS::ResourceGroup("GASS_PHYSICS"));
+	physics_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/physics"),GASS::RLT_FILESYSTEM,true);
+	m_Engine->GetResourceManager()->AddResourceGroup(physics_group);
+
+	GASS::ResourceGroupPtr input_group(new GASS::ResourceGroup("GASS_INPUT"));
+	input_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/input"),GASS::RLT_FILESYSTEM,true);
+	m_Engine->GetResourceManager()->AddResourceGroup(input_group);
+
+	GASS::ResourceGroupPtr temp_group(new GASS::ResourceGroup("GASS_TEMPLATES"));
+	temp_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/templates/camera"),GASS::RLT_FILESYSTEM,true);
+	m_Engine->GetResourceManager()->AddResourceGroup(temp_group);
+	
 	m_Engine->Init(GASS::FilePath("SamplePhysics.xml"));
+
+	//Create systems
+	for(size_t i = 0 ; i < plugins.size();i++)
+	{
+		m_Engine->GetPluginManager()->LoadPlugin(plugins[i]);
+	}
+
+	for(size_t i = 0 ; i < systems.size();i++)
+	{
+		GASS::SimSystemPtr system = GASS::SystemFactory::Get().Create(systems[i]);
+		system->OnCreate(m_Engine->GetSimSystemManager());
+		system->Init();
+		m_Engine->GetSimSystemManager()->AddSystem(system);
+	}
+	
+	//reload templates
+	m_Engine->ReloadTemplates();
 
 	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 
@@ -308,10 +363,8 @@ int main(int argc, char* argv[])
 	GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject",scene->GetRootSceneObject());
 	vehicle_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0,3,5))));
 
-	
 	//GASS::SceneObjectPtr car_obj = scene->LoadObjectFromTemplate("PxCar",scene->GetRootSceneObject());
 	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,0))));
-	
 
 	//create free camera and set start pos
 	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
