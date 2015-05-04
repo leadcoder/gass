@@ -81,48 +81,30 @@
 </SceneObjectTemplateManager>
 <Systems>
   <OISInputSystem>
-    <TaskNode value="PRE_SIM"/>
-    <!-- PRE BUCKET UPDATE-->
     <ExclusiveMode value="false"/>
   </OISInputSystem>
   <ControlSettingsSystem>
-    <TaskNode value="PRE_SIM"/>
   </ControlSettingsSystem>
   <CoreSystem>
-    <TaskNode value="PRE_SIM"/>
   </CoreSystem>
   <MyGUISystem>
-    <TaskNode value="PRE_SIM"/>
   </MyGUISystem>
   <GameSystem>
-    <TaskNode value="SIM"/>
   </GameSystem>
   <RakNetNetworkSystem>
-    <TaskNode value="SIM"/>
-	<InterpolationLag value="200"/>
+  <InterpolationLag value="200"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
-    <TaskNode value="PRE_SIM"/>
   </OpenALSoundSystem>
-  <CEGUISystem>
-    <TaskNode value="PRE_SIM"/>
-  </CEGUISystem>
-  <LuaScriptSystem>
-    <TaskNode value="PRE_SIM"/>
-  </LuaScriptSystem>
   <PhysXPhysicsSystem>
-    <TaskNode value="SIM"/>
   </PhysXPhysicsSystem>
   <ODEPhysicsSystem>
-    <TaskNode value="SIM"/>
   </ODEPhysicsSystem>
   <ODECollisionSystem>
-	<TaskNode value="POST_SIM"/>
-  </ODECollisionSystem>
+ </ODECollisionSystem>
   <OgreGraphicsSystem>
     <Plugins value="RenderSystem_GL RenderSystem_Direct3D9 Plugin_CgProgramManager Plugin_OctreeSceneManager Plugin_ParticleFX"/>
     <PostFilters value="HDR"/>
-    <TaskNode value="POST_SIM"/>
   </OgreGraphicsSystem>
 </Systems>
 <RTC>
