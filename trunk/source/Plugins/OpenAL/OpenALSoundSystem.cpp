@@ -50,6 +50,7 @@ namespace GASS
 		if ( m_IsInitialised)
 			return;
 
+
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,PreSceneCreateEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));
@@ -118,11 +119,8 @@ namespace GASS
 		ALFWInit();
 		// Ok
 		m_IsInitialised = true;
-
 		LogManager::getSingleton().stream() << "GASSSoundOpenOpenAL initialised";
 	}
-
-
 
 	void OpenALSoundSystem::OnSceneLoaded(PreSceneCreateEventPtr message)
 	{

@@ -169,13 +169,6 @@ namespace GASS
 		BaseSceneManager::SystemTick(delta_time);
 	}
 
-
-
-	
-
-
-	
-
 #define MAX_CONTACTS 25		// maximum number of contact points per body
 	void ODEPhysicsSceneManager::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	{

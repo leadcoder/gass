@@ -65,17 +65,11 @@ namespace GASS
 							group->AddResourceLocation(path,RLT_FILESYSTEM,recursive);
 						else if(StringUtils::ToLower(type) == "zip")
 							group->AddResourceLocation(path,RLT_ZIP,recursive);
-						//CreateResourceLocation();
 					}
 					group_elem  = group_elem->NextSiblingElement();
 				}
 				AddResourceGroup(group);
 			}
-			/*else
-			{
-				const std::string attrib_val = prop_elem->FirstAttribute()->Value();
-				SetPropertyByString(elem_name,attrib_val);
-			}*/
 			prop_elem  = prop_elem->NextSiblingElement();
 		}
 	}
