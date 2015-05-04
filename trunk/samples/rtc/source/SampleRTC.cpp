@@ -172,21 +172,24 @@ int main(int argc, char* argv[])
 	
 	//update in parallel, all children will be updated in parallel
 	rtc->Init(-1);
-	rtc->GetRootNode()->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-	rtc->GetRootNode()->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
+
+	GASS::TaskNode2Ptr root_node(new GASS::TaskNode2(0));
+	root_node->SetUpdateFrequency(60.0);
+	root_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+	root_node->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
 	
-	GASS::TaskNode2Ptr physics_node(new GASS::TaskNode2(rtc,PHYSICS_SYSTEM));
+	GASS::TaskNode2Ptr physics_node(new GASS::TaskNode2(PHYSICS_SYSTEM));
 	physics_node->SetUpdateFrequency(60.0);
 	physics_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-	rtc->GetRootNode()->AddChildNode(physics_node);
+	root_node->AddChildNode(physics_node);
 	//boost::shared_ptr<PhysicsSystem> ps(new PhysicsSystem());
 	//ps->Init(physics_node);
 	//physics_node->Register(ps);
 
-	GASS::TaskNode2Ptr gfx_node(new GASS::TaskNode2(rtc,GFX_SYSTEM));
+	GASS::TaskNode2Ptr gfx_node(new GASS::TaskNode2(GFX_SYSTEM));
 	gfx_node->SetUpdateFrequency(60.0);
 	gfx_node->SetListenerUpdateMode(GASS::TaskNode2::PARALLEL);
-	rtc->GetRootNode()->AddChildNode(gfx_node);
+	root_node->AddChildNode(gfx_node);
 	//boost::shared_ptr<GFXSystem> gs(new GFXSystem());
 	//physics_node->Register(gs);
 	std::vector<boost::shared_ptr<GameObject>> go_vec;
@@ -208,7 +211,7 @@ int main(int argc, char* argv[])
 
 		if(key == 32) //check if space is pressed
 		{
-			rtc->Update(1.0/120.0);
+			root_node->Update(1.0/120.0,NULL);
 			std::cout << "stepping...\n";
 		}
 		else if(key == 'q')
@@ -233,7 +236,7 @@ int main(int argc, char* argv[])
 		}
 		else if(key == 's') //run for 1 sec
 		{
-			rtc->Update(1.0);
+			root_node->Update(1.0,NULL);
 		}
 	}
 	

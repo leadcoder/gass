@@ -21,7 +21,7 @@ public:
 
 		//create new vehicle and send enter request
 		GASS::ScenePtr scene(m_Scene);
-		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("gta",scene->GetRootSceneObject());
+		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("PXGTO",scene->GetRootSceneObject());
 		GASS::Vec3 pos = scene->GetStartPos();
 		static int clients_connected =0;
 		clients_connected++;
@@ -52,6 +52,7 @@ public:
 	
 		//create server objects
 		GASS::ScenePtr scene(m_Scene);
+//		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("PXGTO",scene->GetRootSceneObject());
 		GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("GTO",scene->GetRootSceneObject());
 		GASS::Vec3 pos = scene->GetStartPos();
 
