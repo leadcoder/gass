@@ -111,11 +111,11 @@ int run(int argc, char* argv[])
 	//Create systems
 	GASS::SimSystemPtr gfx_system = GASS::SystemFactory::Get().Create(gfx_system_name);
 	gfx_system->OnCreate(m_Engine->GetSimSystemManager());
-	gfx_system->SetTaskNode("POST_SIM");
+	//gfx_system->SetTaskNode("POST_SIM");
 
 	GASS::SimSystemPtr gui_system = GASS::SystemFactory::Get().Create(gui_gfx_system_name);
 	gui_system->OnCreate(m_Engine->GetSimSystemManager());
-	gui_system->SetTaskNode("PRE_SIM");
+	//gui_system->SetTaskNode("PRE_SIM");
 	gui_system->Init();
 	m_Engine->GetSimSystemManager()->AddSystem(gui_system);
 	
