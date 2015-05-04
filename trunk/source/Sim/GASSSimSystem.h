@@ -21,8 +21,9 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSTaskNode.h"
+#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSRunTimeController.h"
+#include "Core/RTC/GASSTaskNode2.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
@@ -54,7 +55,7 @@ namespace GASS
 	/**
 		Base class that GASSSim systems should be derived from 
 	*/
-	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public SHARE_CLASS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
+	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public SHARE_CLASS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNode2Listener
 	{
 	public:
 		SimSystem();
@@ -64,24 +65,20 @@ namespace GASS
 		virtual void OnCreate(SimSystemManagerPtr owner) {m_Owner=owner;}
 		virtual void Init() = 0;
 		virtual std::string  GetSystemName() const = 0;
-		virtual void Update(double delta);
+		virtual void Update(double delta_time, TaskNode2* caller);
 		virtual std::string GetName() const {return m_Name;}
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
-		
-		std::string GetTaskNode() const {return m_TaskNodeName;}
-		void SetTaskNode(const std::string name) {m_TaskNodeName = name;}
 	
 		//IXMLSerialize interface
 		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
 		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
 		SimSystemManagerPtr GetSimSystemManager() const;
-		
+		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)
 	protected:
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SimSystemManagerWeakPtr m_Owner;
-		std::string m_TaskNodeName;
 	};
 	typedef SPTR<SimSystem> SimSystemPtr;
 }

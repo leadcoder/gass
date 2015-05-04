@@ -72,7 +72,7 @@ namespace GASS
 		m_ShowStats(true),
 		m_UseShaderCache(false)
 	{
-		m_TaskNodeName = "POST_SIM";
+		m_UpdateGroup = UGID_POST_SIM;
 		m_Plugins.push_back("RenderSystem_Direct3D9");
 		m_Plugins.push_back("Plugin_OctreeSceneManager");
 		m_Plugins.push_back("Plugin_ParticleFX");
@@ -113,7 +113,6 @@ namespace GASS
 
 	void OgreGraphicsSystem::Init()
 	{
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
@@ -188,7 +187,7 @@ namespace GASS
 		return main_win;
 	}
 
-	void OgreGraphicsSystem::Update(double delta_time)
+	void OgreGraphicsSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
 
@@ -220,7 +219,7 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr( new DebugPrintRequest(stats_text)));
 		}
 		//update listeners
-		SimSystem::Update(delta_time);
+		SimSystem::Update(delta_time,caller);
 
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}

@@ -44,7 +44,7 @@ namespace GASS
 		m_MouseWinOffsetY(0),
 		m_InputManager(NULL)
 	{
-		m_TaskNodeName = "PRE_SIM";
+		m_UpdateGroup=UGID_PRE_SIM;
 		m_KeyBuffer =  new char[256];
 		m_OldKeyBuffer =  new char[256];
 		memset(m_KeyBuffer,0,256);
@@ -81,7 +81,7 @@ namespace GASS
 	{
 		if(m_OnlyProxy)
 		{
-			SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+			//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 			SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 		}
 	}
@@ -94,7 +94,7 @@ namespace GASS
 		}
 		if(!m_OnlyProxy)
 		{
-			SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+			//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 			m_Window = main_win_handle;
 			OIS::ParamList pl;
 			size_t windowHnd = (size_t) m_Window;
@@ -224,7 +224,7 @@ namespace GASS
 		m_MouseWinHeight = bottom-top;
 	}
 
-	void OISInputSystem::Update(double delta_time)
+	void OISInputSystem::Update(double delta_time,TaskNode2* caller)
 	{
 		if(m_Window == 0)
 			return;

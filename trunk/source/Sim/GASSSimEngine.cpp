@@ -19,13 +19,15 @@
 *****************************************************************************/
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSRunTimeController.h"
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimSystemManager.h"
+#include "Core/RTC/GASSRunTimeController2.h"
+#include "Core/RTC/GASSTaskNode2.h"
+
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
@@ -58,7 +60,7 @@ namespace GASS
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
 		m_SceneObjectTemplateManager(new ComponentContainerTemplateManager()),
-		m_RTC(new RunTimeController()),
+		m_RTC(new RunTimeController2()),
 		m_LogFolder(log_folder)
 	{
 		// Create log manager
@@ -92,22 +94,46 @@ namespace GASS
 	void SimEngine::Init(const FilePath &configuration)
 	{
 		LogManager::getSingleton().stream() << "SimEngine Initialization Started";
-		/*m_LogFolder = log_folder;
-		// Create log manager
-		if(LogManager::getSingletonPtr() == 0)
-		{
-			LogManager* log_man = new LogManager();
+		
+		
+		if(configuration.GetFullPath() != "")
+			LoadSettings(configuration);
 
-			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
-			log_man->createLog(log_file, true, true);
-		}
-	    LogManager::getSingleton().stream() << "SimEngine Initialization Started";*/
-		//m_ScriptManager->Init();
+		m_RTC->Init();
+
+		//Create default RTC task groups
+
+		m_RootNode = TaskNode2Ptr(new GASS::TaskNode2(0));
+		m_RootNode->SetUpdateFrequency(0.0);
+		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+
+		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_RootNode->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
+
+		GASS::TaskNode2Ptr pre_sim_node(new GASS::TaskNode2(UGID_PRE_SIM));
+		pre_sim_node->SetUpdateFrequency(0.0);
+		pre_sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_RootNode->AddChildNode(pre_sim_node);
+		//pre_sim_node->AddPostUpdate(this);
+
+		GASS::TaskNode2Ptr sim_node(new GASS::TaskNode2(UGID_SIM));
+		sim_node->SetUpdateFrequency(0.0);
+		sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_RootNode->AddChildNode(sim_node);
+
+		GASS::TaskNode2Ptr post_sim_node(new GASS::TaskNode2(UGID_POST_SIM));
+		post_sim_node->SetUpdateFrequency(0.0);
+		post_sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_RootNode->AddChildNode(post_sim_node);
+		
 		if(configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
 
 		if(configuration.GetFullPath() != "")
-			LoadSettings(configuration);
+			LoadResources(configuration);
+
+		if(configuration.GetFullPath() != "") //Load systems
+			m_SystemManager->Load(configuration.GetFullPath());
 		//Initialize systems
 		m_SystemManager->Init();
 
@@ -189,11 +215,11 @@ namespace GASS
 #ifdef WIN32
 				_putenv(env_data_path.c_str());
 #else
-                char * writable = new char[env_data_path.size() + 1];
-                std::copy(env_data_path.begin(), env_data_path.end(), writable);
-                writable[env_data_path.size()] = '\0'; // don't forget the terminating 0
-                putenv(writable);
-                delete[] writable;
+				char * writable = new char[env_data_path.size() + 1];
+				std::copy(env_data_path.begin(), env_data_path.end(), writable);
+				writable[env_data_path.size()] = '\0'; // don't forget the terminating 0
+				putenv(writable);
+				delete[] writable;
 #endif
 			}
 		}
@@ -203,12 +229,21 @@ namespace GASS
 		if(xml_scene_path)
 			m_ScenePath.SetPath(XMLUtils::ReadString((tinyxml2::XMLElement *)xml_settings,"ScenePath"));
 
-
-		tinyxml2::XMLElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
-		if(xml_res_man)
-			m_ResourceManager->LoadXML(xml_res_man);
-
-		m_SystemManager->Load(configuration_file.GetFullPath());
+		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
+		if(xml_rtc)
+		{
+			int num_threads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
+			//m_RTC->Init(num_threads);
+			int update_freq = XMLUtils::ReadInt(xml_rtc,"MaxUpdateFreqency");
+			m_MaxUpdateFreq = static_cast<double>(update_freq);
+			//bool external_update = XMLUtils::ReadBool(xml_rtc,"ExternalSimulationUpdate");
+			//GetSimSystemManager()->SetPauseSimulation(external_update);
+			/*tinyxml2::XMLElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
+			if(xml_tn)
+			{
+				m_RTC->LoadXML(xml_tn);
+			}*/
+		}
 
 		//read SceneObjectTemplateManager settings
 		tinyxml2::XMLElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
@@ -224,22 +259,32 @@ namespace GASS
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 		}
 
-		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
-		if(xml_rtc)
-		{
-			int num_threads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
-			m_RTC->Init(num_threads);
-			int update_freq = XMLUtils::ReadInt(xml_rtc,"MaxUpdateFreqency");
-			m_MaxUpdateFreq = static_cast<double>(update_freq);
-			//bool external_update = XMLUtils::ReadBool(xml_rtc,"ExternalSimulationUpdate");
-			//GetSimSystemManager()->SetPauseSimulation(external_update);
 
-			tinyxml2::XMLElement *xml_tn = xml_rtc->FirstChildElement("TaskNode");
-			if(xml_tn)
-			{
-				m_RTC->LoadXML(xml_tn);
-			}
+		delete xmlDoc;
+
+	}
+
+	void SimEngine::LoadResources(const FilePath &configuration_file)
+	{
+		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
+		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
+		{
+			delete xmlDoc;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		}
+
+		tinyxml2::XMLElement *xml_settings = xmlDoc->FirstChildElement("GASS");
+		if (!xml_settings)
+		{
+			delete xmlDoc;
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
+		}
+		
+		tinyxml2::XMLElement *xml_res_man= xml_settings->FirstChildElement("ResourceManager");
+		if(xml_res_man)
+			m_ResourceManager->LoadXML(xml_res_man);
+
 		delete xmlDoc;
 	}
 
@@ -286,9 +331,16 @@ namespace GASS
 		//ProfileSample::ResetAll();
 		{
 		PROFILE("SimEngine::Update")
-		//update systems
+		
+		//Manual update nodes
+		m_RootNode->GetChildByID(UGID_PRE_SIM)->Update(delta_time,NULL);
+		SyncMessages(delta_time);
+		
+		m_RootNode->GetChildByID(UGID_SIM)->Update(delta_time,NULL);
+		SyncMessages(delta_time);
 
-		m_RTC->Update(delta_time);
+		m_RootNode->GetChildByID(UGID_POST_SIM)->Update(delta_time,NULL);
+		SyncMessages(delta_time);
 
 		m_CurrentTime += delta_time;
 		}

@@ -92,12 +92,7 @@ namespace GASS
 
 	void ChaseCameraComponent::OnDelete()
 	{
-		InputHandlerComponentPtr vehicle = GetSceneObject()->GetFirstParentComponentByClass<InputHandlerComponent>();
-		if(vehicle)
-		{
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(ChaseCameraComponent::OnEnter,EnterVehicleRequest));
-			vehicle->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(ChaseCameraComponent::OnExit,ExitVehicleRequest));
-		}
+		
 	}
 
 	void ChaseCameraComponent::SetPreferredViewport(const std::string &viewport)

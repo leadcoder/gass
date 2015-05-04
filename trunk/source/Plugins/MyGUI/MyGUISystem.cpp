@@ -65,7 +65,7 @@ namespace GASS
 		MainMenu* menu = new MainMenu(NULL);
 		menu->Init();
 		GetSimSystemManager()->SendImmediate(GUILoadedEventPtr(new GUILoadedEvent(mGUI)));
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		m_Initialized = true;
 	}
 	
@@ -93,7 +93,7 @@ namespace GASS
 		menu->setVisible(true);*/
 	}
 
-	void MyGUISystem::Update(double delta_time)
+	void MyGUISystem::Update(double delta_time,TaskNode2* caller)
 	{
 		/*if(mInfo )
 		{

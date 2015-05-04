@@ -47,9 +47,9 @@
 namespace GASS
 {
 
-	ODEPhysicsSystem::ODEPhysicsSystem() 
+	ODEPhysicsSystem::ODEPhysicsSystem()  
 	{
-		m_TaskNodeName = "SIM";
+		m_UpdateGroup=UGID_SIM;
 	}
 
 	ODEPhysicsSystem::~ODEPhysicsSystem()
@@ -65,7 +65,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::Init()
 	{
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		dInitODE2(0);
 		dAllocateODEDataForThread(dAllocateMaskAll);
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);

@@ -25,9 +25,9 @@
 #include <tbb/parallel_for.h>
 namespace GASS
 {
-	SimSystem::SimSystem(void) 
+	SimSystem::SimSystem(void)  
 	{
-	
+		//m_UpdateGroup = UGID_SIM;
 	}
 
 	SimSystem::~SimSystem(void) 
@@ -37,7 +37,8 @@ namespace GASS
 
 	void SimSystem::RegisterReflection()
 	{
-		RegisterProperty<std::string>("TaskNode", &GASS::SimSystem::GetTaskNode, &GASS::SimSystem::SetTaskNode);
+		RegisterProperty<UpdateGroupIDBinder>("UpdateGroup", &GASS::SimSystem::GetUpdateGroup, &GASS::SimSystem::SetUpdateGroup);
+		//RegisterProperty<std::string>("TaskNode", &GASS::SimSystem::GetTaskNode, &GASS::SimSystem::SetTaskNode);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const
@@ -83,7 +84,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	void SimSystem::Update(double delta)
+	void SimSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners
@@ -101,11 +102,11 @@ namespace GASS
 		if(m_Listeners.size() == 1)
 		{
 			SystemListenerPtr listener(*m_Listeners.begin(),NO_THROW);
-			listener->SystemTick(delta);
+			listener->SystemTick(delta_time);
 		}
 		else
 		{
-			SystemListenerExecutor exec(m_Listeners,delta);
+			SystemListenerExecutor exec(m_Listeners,delta_time);
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 		}
 	}

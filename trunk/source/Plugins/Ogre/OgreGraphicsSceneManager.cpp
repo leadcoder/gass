@@ -215,7 +215,7 @@ namespace GASS
 		Ogre::Root::getSingletonPtr()->removeFrameListener(this);
 		Root::getSingleton().destroySceneManager(m_SceneMgr);
 		m_SceneMgr = NULL;
-		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0); //why?
+		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0,NULL); //why?
 	}
 
 

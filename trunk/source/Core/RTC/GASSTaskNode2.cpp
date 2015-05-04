@@ -20,7 +20,6 @@
 
 
 #include "Core/RTC/GASSTaskNode2.h"
-#include "Core/RTC/GASSRunTimeController2.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include <tinyxml2.h>
@@ -30,11 +29,10 @@
 
 namespace GASS
 {
-	TaskNode2::TaskNode2(RunTimeController2* rtc, int id) : m_ListenerMode(SEQUENCE),
+	TaskNode2::TaskNode2(int id) : m_ListenerMode(SEQUENCE),
 		m_ChildrenMode(SEQUENCE),
 		m_TimeToProcess(0),
 		m_UpdateFrequency(0),
-		m_RTC(rtc),
 		m_Paused(false),
 		m_ID(id),
 		m_MaxSimulationSteps(-1),
@@ -69,21 +67,19 @@ namespace GASS
 	}
 	*/
 
-	void TaskNode2::Register(TaskNodeListener2Ptr listener)
+	void TaskNode2::Register(TaskNode2ListenerPtr listener)
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
-
 		m_Listeners.push_back(listener);
-		//std::sort(m_Listeners.begin(), m_Listeners.end(), TaskNodeListenerSortPredicate);
 	}
 
-	void TaskNode2::Unregister(TaskNodeListener2Ptr listener)
+	void TaskNode2::Unregister(TaskNode2ListenerPtr listener)
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		m_RequestUnregListeners.push_back(listener);
 	}
 
-	void TaskNode2::_DoUnreg(TaskNodeListener2Ptr listener)
+	void TaskNode2::_DoUnreg(TaskNode2ListenerPtr listener)
 	{
 		TaskNode2::Listeners::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
@@ -139,6 +135,27 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
+
+	void TaskNode2::RegisterPostUpdate(TaskNode2ListenerPtr listener)
+	{
+		m_PostListeners.push_back(listener);
+	}
+
+	void TaskNode2::UnregisterPostUpdate(TaskNode2ListenerPtr listener)
+	{
+		TaskNode2::Listeners::iterator iter = m_PostListeners.begin();
+		while(iter != m_PostListeners.end())
+		{
+			TaskNode2ListenerPtr list_iter = TaskNode2ListenerPtr(*iter,NO_THROW);
+			if(list_iter == listener)
+			{
+				iter = m_PostListeners.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
+
 	void TaskNode2::Update(double delta_time,tbb::task *parent)
 	{
 		//first remove listeners that want to unregister
@@ -161,10 +178,12 @@ namespace GASS
 				if(m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)
 					clamp_num_steps = m_MaxSimulationSteps;
 
+				std::cout << "steps:" << clamp_num_steps << "\n";
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
 					UpdateListeners(update_interval,parent);
 					UpdateChildren(update_interval,parent);
+					UpdatePostListeners(update_interval,parent);
 				}
 				m_TimeToProcess -= update_interval * num_steps;
 			}
@@ -172,6 +191,7 @@ namespace GASS
 			{
 				UpdateListeners(delta_time,parent);
 				UpdateChildren(delta_time,parent);
+				UpdatePostListeners(delta_time,parent);
 			}
 		}
 	}
@@ -209,6 +229,34 @@ namespace GASS
 					iter = m_Listeners.erase(iter);
 			}
 		}
+	}
+
+	void TaskNode2::UpdatePostListeners(double delta_time,tbb::task *parent)
+	{
+		TaskNode2::Listeners::iterator iter = m_PostListeners.begin();
+			while(iter != m_PostListeners.end())
+			{
+				TaskNode2ListenerPtr listener = TaskNode2ListenerPtr(*iter,NO_THROW);
+				if(listener)
+				{
+					listener->Update(delta_time,this);
+					iter++;
+				}
+				else
+					iter = m_PostListeners.erase(iter);
+			}
+			
+	}
+
+	TaskNode2*  TaskNode2::GetChildByID(int id) const
+	{
+		for(size_t i=0; i < m_Children.size();i++)
+		{
+			if(m_Children[i]->GetID() == id)
+				return m_Children[i].get();
+		}
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get TaskNode by id" , "TaskNode2::GetChildByID");
+		return NULL;
 	}
 
 	void TaskNode2::UpdateChildren(double delta_time,tbb::task *parent)

@@ -25,7 +25,6 @@
 #include "Plugins/RakNet/RakNetInputTransferComponent.h"
 #include "Plugins/RakNet/RaknetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetMessages.h"
-
 #include "RakNetworkFactory.h"
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
@@ -36,23 +35,17 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSSystemFactory.h"
 #include "Core/Utils/GASSException.h"
+#include "Sim/GASSSystemFactory.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
-
 #include "Sim/GASSSimEngine.h"
-
 #include "Sim/Interface/GASSIMeshComponent.h"
-
-
-
 
 namespace GASS
 {
-
 	RakNetNetworkSystem::RakNetNetworkSystem() : m_IsServer(0),
 		m_ReplicaManager (new ReplicaManager()),
 		m_NetworkIDManager(new NetworkIDManager()),
@@ -72,7 +65,7 @@ namespace GASS
 		m_RelayInputOnServer(false),
 		m_Debug(false)
 	{
-
+		m_UpdateGroup = UGID_SIM;
 	}
 
 	RakNetNetworkSystem::~RakNetNetworkSystem()
@@ -97,7 +90,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::Init()
 	{
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
@@ -299,10 +292,10 @@ namespace GASS
 		m_Active = true;
 	}
 
-	void RakNetNetworkSystem::Update(double delta)
+	void RakNetNetworkSystem::Update(double delta, TaskNode2* caller)
 	{
 		//update listeners
-		SimSystem::Update(delta);
+		SimSystem::Update(delta, caller);
 
 		if(IsServer())
 		{

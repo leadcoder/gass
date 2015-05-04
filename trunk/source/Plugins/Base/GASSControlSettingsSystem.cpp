@@ -37,7 +37,7 @@ namespace GASS
 {
 	ControlSettingsSystem::ControlSettingsSystem()
 	{
-		m_TaskNodeName = "PRE_SIM";
+		m_UpdateGroup = UGID_PRE_SIM;
 		m_InputStringTable = new EnumLookup();
 		//Input
 		m_InputStringTable->Add("DEVICE_KEYBOARD",DEVICE_KEYBOARD);
@@ -276,7 +276,7 @@ namespace GASS
 	void ControlSettingsSystem::Init() 
 	{
 		//Register at rtc
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
 		//load default settings
 		ResourceHandle res("default_control_settings.xml");

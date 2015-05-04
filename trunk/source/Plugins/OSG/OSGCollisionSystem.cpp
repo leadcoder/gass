@@ -32,8 +32,9 @@
 
 namespace GASS
 {
-	OSGCollisionSystem::OSGCollisionSystem()
+	OSGCollisionSystem::OSGCollisionSystem() 
 	{
+		m_UpdateGroup = UGID_PRE_SIM;
 	}
 
 	OSGCollisionSystem::~OSGCollisionSystem()
@@ -50,6 +51,6 @@ namespace GASS
 	void OSGCollisionSystem::Init()
 	{
 		SceneManagerFactory::GetPtr()->Register("OSGCollisionSceneManager",new GASS::Creator<OSGCollisionSceneManager, ISceneManager>);
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 }

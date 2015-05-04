@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
+#include "Core/RTC/GASSRuntimeController2.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -60,6 +61,10 @@ namespace GASS
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Init();
+			//auto register for updates
+			TaskNode2* node = SimEngine::Get().GetRootTaskNode()->GetChildByID(m_Systems[i]->GetUpdateGroup().GetValue());
+			node->Register(m_Systems[i]);
+			//m_Systems[i]->Init();
 		}
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	

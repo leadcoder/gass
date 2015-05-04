@@ -89,7 +89,6 @@ namespace GASS
 		}
 	}
 	
-	
 	void LODComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
@@ -136,5 +135,4 @@ namespace GASS
 			m_CurrentLevel = level;
 		}
 	}
-
 }

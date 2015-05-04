@@ -18,8 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RUN_TIME_CONTROLLER_HH
-#define RUN_TIME_CONTROLLER_HH
+#pragma once
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
@@ -40,7 +39,7 @@ namespace GASS
 {
 	class ITaskNode2Listener;
 	class TaskNode2;
-	typedef SPTR<ITaskNode2Listener> TaskNodeListener2Ptr;
+	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
 	typedef SPTR<TaskNode2> TaskNode2Ptr;
 
 	class GASSCoreExport RunTimeController2 : public SHARE_CLASS<RunTimeController2>
@@ -53,28 +52,8 @@ namespace GASS
 			match number of threads with number of machine kernels
 		*/
 		void Init(int num_threads = -1);
-		void Update(double delta_time);
-		//void Register(TaskNodeListener2Ptr listener, const std::string task_node_name);
-		//void Unregister(TaskNodeListener2Ptr listener, const std::string task_node_name);
-		void Log();
-		//void LoadXML(tinyxml2::XMLElement *xml_elem);
-		TaskNode2Ptr  GetRootNode() const {return m_RootNode;}
-		bool HasUpdateRequest() const{return m_StepSimulationRequest;}
-		double GetUpdateRequestTimeStep() const {return m_RequestDeltaTime;}
-		bool GetSimulationPaused() const {return m_SimulationPaused;}
-		void SetSimulationPaused(bool value) {m_SimulationPaused = value;}
 	private:
-		//void OnSimulationStepRequest(TimeStepRequestPtr message);
-		//tbb::spin_mutex m_Mutex;
 		tbb::task_scheduler_init* m_Scheduler;
-		TaskNode2Ptr m_RootNode;
-
-		bool m_SimulationPaused;
-		bool m_SimulateRealTime;
-		bool m_StepSimulationRequest;
-		double m_RequestDeltaTime;
 	};
 	typedef SPTR<RunTimeController2> RunTimeController2Ptr;
 }
-
-#endif

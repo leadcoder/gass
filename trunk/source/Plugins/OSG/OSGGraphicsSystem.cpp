@@ -85,7 +85,7 @@ namespace GASS
 		m_Viewer(NULL),
 		m_FlipDDS(false)
 	{
-		m_TaskNodeName = "POST_SIM";
+		m_UpdateGroup=UGID_POST_SIM;
 	}
 
 	OSGGraphicsSystem::~OSGGraphicsSystem(void)
@@ -156,7 +156,7 @@ namespace GASS
 	
 	void OSGGraphicsSystem::Init()
 	{
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
@@ -344,7 +344,7 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::Update(double delta_time)
+	void OSGGraphicsSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		static int tick = 0;
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
@@ -356,7 +356,7 @@ namespace GASS
 		m_Viewer->frame(delta_time);
 		m_DebugTextBox->setText("");
 		//update listeners
-		SimSystem::Update(delta_time);
+		SimSystem::Update(delta_time,caller);
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 

@@ -31,12 +31,6 @@ namespace tbb
 
 namespace GASS
 {
-	enum TaskPritority
-	{
-		PRE_SIM = 1,
-		SIM = 2,
-		POST_SIM =3  
-	};
 	class RunTimeController2;
 	class TaskNode2;
 	typedef SPTR<TaskNode2> TaskNode2Ptr;
@@ -75,15 +69,16 @@ namespace GASS
 			PARALLEL,
 			SEQUENCE
 		};
-		TaskNode2(RunTimeController2* rtc,int id);
+		TaskNode2(int id);
 		virtual ~TaskNode2();
 		void Update(double delta_time,tbb::task *parent);
 		
 		void Register(TaskNode2ListenerPtr listener);
 		void Unregister(TaskNode2ListenerPtr listener);
+		void RegisterPostUpdate(TaskNode2ListenerPtr listener);
+		void UnregisterPostUpdate(TaskNode2ListenerPtr listener);
 		void SetPaused(bool value) { m_Paused= value;}
 		bool GetPaused() const {return m_Paused;}
-		RunTimeController2* GetRuntimeController() const { return m_RTC ; }
 		void AddChildNode(TaskNode2Ptr child);
 		void SetUpdateFrequency(double value) {m_UpdateFrequency = value;}
 		double GetUpdateFrequency() const {return m_UpdateFrequency;}
@@ -94,10 +89,12 @@ namespace GASS
 		int GetID() const {return m_ID;}
 		void SetMaxSimulationSteps(int value) {m_MaxSimulationSteps = value;}
 		int GetMaxSimulationSteps(int value) const {return m_MaxSimulationSteps;}
+		TaskNode2* GetChildByID(int id) const;
 	private:
 		//public for now, don't call!
 		void UpdateChildren(double delta_time,tbb::task *parent);
 		void UpdateListeners(double delta_time,tbb::task *parent);
+		void UpdatePostListeners(double delta_time,tbb::task *parent);
 		void _DoUnreg(TaskNode2ListenerPtr listener);
 
 		TaskNode2Vector m_Children;
@@ -106,13 +103,13 @@ namespace GASS
 		UpdateMode m_ChildrenMode;
 		UpdateMode m_ListenerMode;
 		Listeners m_Listeners;
+		Listeners m_PostListeners;
 		Listeners m_RequestUnregListeners;
 
 		CallbackVector m_CallbackVector;
 		
 		bool m_Paused;
 		double m_UpdateFrequency;
-		RunTimeController2 *m_RTC;
 		tbb::spin_mutex *m_Mutex;
 		int m_MaxSimulationSteps;
 

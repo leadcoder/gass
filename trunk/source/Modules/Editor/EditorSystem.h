@@ -40,8 +40,6 @@ namespace GASS
 		ADD_PROPERTY(std::string,DefaultCameraTemplate)
 	protected:
 		GUISchemaLoader* m_GUISettings;
-
-		
 	};
 	typedef SPTR<EditorSystem> EditorSystemPtr;
 }

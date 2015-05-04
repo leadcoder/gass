@@ -25,7 +25,7 @@ namespace GASS
 		m_Device(NULL),
 		m_IsInitialised(false)
 	{
-
+		m_UpdateGroup = UGID_SIM;
 	}
 
 	OpenALSoundSystem::~OpenALSoundSystem()
@@ -50,7 +50,6 @@ namespace GASS
 		if ( m_IsInitialised)
 			return;
 
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		//catch camera change messages to update openal listener
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnSceneLoaded,PreSceneCreateEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));

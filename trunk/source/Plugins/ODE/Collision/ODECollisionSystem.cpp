@@ -39,9 +39,9 @@
 
 namespace GASS
 {
-	ODECollisionSystem::ODECollisionSystem() 
+	ODECollisionSystem::ODECollisionSystem()  
 	{
-		m_TaskNodeName = "POST_SIM";
+		 m_UpdateGroup=UGID_PRE_SIM;
 	}
 
 	ODECollisionSystem::~ODECollisionSystem()
@@ -56,7 +56,7 @@ namespace GASS
 
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnSceneUnloaded,SceneUnloadedEvent,0));
 		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ODECollisionSystem::OnPreSceneCreate,PreSceneCreateEvent,0));
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		SimSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
 		if(!(system)) //check if ode physics system present, if not initialize ode
 		{

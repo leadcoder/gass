@@ -68,7 +68,8 @@ namespace GASS
 		m_PhysicsSDK(NULL),
 		m_Foundation(NULL)
 	{
-		m_TaskNodeName = "SIM";
+		m_UpdateGroup = UGID_SIM;
+		
 	}
 
 	PhysXPhysicsSystem::~PhysXPhysicsSystem()
@@ -86,7 +87,7 @@ namespace GASS
 	PxGASSErrorCallback myErrorCallback;
 	void PhysXPhysicsSystem::Init()
 	{
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 
 		bool recordMemoryAllocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
@@ -115,10 +116,7 @@ namespace GASS
 			m_Materials[iter->first] = GetPxSDK()->createMaterial(mat_data.StaticFriction, mat_data.DynamicFriction, mat_data.Restitution);
 			iter++;
 		}
-		
-
-
-			//Initialize the SDK.
+		//Initialize the SDK.
 		PxInitVehicleSDK(*m_PhysicsSDK);
 
 		//Set the basis vectors.
@@ -196,7 +194,7 @@ namespace GASS
 		LogManager::getSingleton().stream() << "Start loading tire settings file " << file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "PhysXPhysicsSystem::LoadTires");
 
 		tinyxml2::XMLElement *xml_vs = xmlDoc->FirstChildElement("VehicleSettings");
 		if(xml_vs)

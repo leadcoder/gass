@@ -432,7 +432,7 @@ namespace GASS
 		//Add render to texture plane
 	}
 
-	void MyGUIOSGSystem::Update(double delta_time)
+	void MyGUIOSGSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		if(mimage)
 		{

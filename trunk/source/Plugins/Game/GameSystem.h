@@ -38,7 +38,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual std::string GetSystemName() const {return "GameSystem";}
 		virtual void Init();
-		virtual void Update(double delta);
+		virtual void Update(double delta, TaskNode2* caller);
 	protected:
 		void OnScenarioEvent(ScenarioStateRequestPtr message);
 		bool m_Update;

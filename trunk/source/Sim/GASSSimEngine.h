@@ -24,7 +24,7 @@
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
-//#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Core/Utils/GASSEnumBinder.h"
 #include <boost/shared_ptr.hpp>
 
 namespace GASS
@@ -32,12 +32,32 @@ namespace GASS
 	FDECL(PluginManager)
 	FDECL(ResourceManager)
 	FDECL(SimSystemManager)
-	FDECL(RunTimeController)
+	FDECL(TaskNode2)
+	FDECL(RunTimeController2)
 	FDECL(ComponentContainerTemplateManager)
 	FDECL(SceneObject)
 	FDECL(Scene)
 	FDECL(ScriptManager)
 	class TaskNode;
+
+	enum UpdateGroupID
+	{
+		UGID_0,
+		UGID_1,
+		UGID_PRE_SIM,
+		UGID_SIM,
+		UGID_POST_SIM,
+		UGID_2,
+		UGID_3,
+		UGID_LAST
+	};
+
+	START_ENUM_BINDER(UpdateGroupID,UpdateGroupIDBinder)
+		BIND(UGID_PRE_SIM)
+		BIND(UGID_SIM)
+		BIND(UGID_POST_SIM)
+	END_ENUM_BINDER(UpdateGroupID,UpdateGroupIDBinder)
+
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -53,17 +73,16 @@ namespace GASS
 		class each frame, this will ensure that all system get updated through the RTC scheduling
 		class. 
 		NOTE: This class has no knowledge of scenes, 
-		all scene information is capsulated by the Scene class and should 
-		be created by the application after SimEngine has been intialized. 
+		all scene information is encapsulated by the Scene class and should 
+		be created by the application after SimEngine has been initialized. 
 	*/
 
-	class GASSExport SimEngine  : public Singleton<SimEngine>
+	class GASSExport SimEngine : public Singleton<SimEngine>
 	{
 	public:
 		typedef std::vector<ScenePtr> SceneVector;
 		typedef VectorIterator<SceneVector> SceneIterator;
 		typedef ConstVectorIterator<SceneVector> ConstSceneIterator;
-
 	public:
 		SimEngine(const FilePath &log_folder = FilePath("./"));
 		virtual ~SimEngine();
@@ -83,9 +102,9 @@ namespace GASS
 		Main update for GASS.
 		@remarks
 			The application is responsible for calling this function each frame
-			SimEngine will take care of delta time calulations if you use this function
+			SimEngine will take care of delta time calculations if you use this function
 			return true if simulation was updated else false
-		@ note This cunction will call void Tick(double delta_time) 
+		@ note This function will call void Tick(double delta_time) 
 
 		*/
 		bool Update();
@@ -102,7 +121,7 @@ namespace GASS
 		bool Shutdown();
 
 		/**
-		Get the sim system mananger. 
+		Get the sim system manager. 
 		This is the first step to get hold of a sim system,
 		see SystemManager for more details of how to find a 
 		certain system.
@@ -118,9 +137,9 @@ namespace GASS
 		ComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
 
 		/**
-			Get the runtime control manager. See RuntimeController class for more information
+			Get root task node
 		*/
-		RunTimeControllerPtr GetRuntimeController() const {return m_RTC;}
+		TaskNode2Ptr GetRootTaskNode() const {return m_RootNode;}
 
 		/**
 		Return elapsed time
@@ -128,7 +147,7 @@ namespace GASS
 		double GetTime() const {return m_CurrentTime;}
 		
 		/**
-			Convience function to create new objects from templates
+			Convince function to create new objects from templates
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 
@@ -152,11 +171,13 @@ namespace GASS
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
 	private:
 		void LoadSettings(const FilePath &configuration_file);
+		void LoadResources(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
 		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		RunTimeControllerPtr m_RTC;
+		RunTimeController2Ptr m_RTC;
+		TaskNode2Ptr m_RootNode;
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;

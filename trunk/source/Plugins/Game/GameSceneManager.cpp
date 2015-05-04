@@ -50,6 +50,7 @@ namespace GASS
 
 	void GameSceneManager::OnCreate()
 	{
+
 	}
 	
 	void GameSceneManager::OnInit()

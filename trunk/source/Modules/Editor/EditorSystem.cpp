@@ -37,7 +37,7 @@ namespace GASS
 	void EditorSystem::Init()
 	{
 		//Register at rtc
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 	}
 
 }

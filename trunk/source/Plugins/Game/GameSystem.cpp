@@ -30,7 +30,7 @@ namespace GASS
 {
 	GameSystem::GameSystem(void) : m_Update(true)
 	{
-		m_TaskNodeName = "SIM";
+		m_UpdateGroup = UGID_SIM;
 	}
 
 	GameSystem::~GameSystem(void)
@@ -46,7 +46,7 @@ namespace GASS
 	void GameSystem::Init()
 	{
 		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
-		SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GameSystem::OnScenarioEvent,ScenarioStateRequest,0));
 	}
 
@@ -62,10 +62,10 @@ namespace GASS
 		}
 	}
 
-	void GameSystem::Update(double delta)
+	void GameSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		if(m_Update)
-			SimSystem::Update(delta);
+			SimSystem::Update(delta_time,caller);
 	}
 }
 

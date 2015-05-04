@@ -29,10 +29,7 @@
 
 namespace GASS
 {
-	RunTimeController2::RunTimeController2() : m_SimulationPaused(false),
-		m_SimulateRealTime(false),
-		m_StepSimulationRequest(false),
-		m_RequestDeltaTime(0)
+	RunTimeController2::RunTimeController2() 
 	{
 
 	}
@@ -50,66 +47,5 @@ namespace GASS
 			num_threads = default_num_t;
 		
 		m_Scheduler = new tbb::task_scheduler_init(num_threads);
-		//m_TasksRoot = new( tbb::task::allocate_root() ) tbb::empty_task;
-		//LogManager::getSingleton().stream() << "RunTimeController2 initialized with "  << num_threads  << " threads";
-
-		m_RootNode = TaskNode2Ptr(new TaskNode2(this,0));
-
-		//Hack to support asynchronous time stepping
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController2::OnSimulationStepRequest,TimeStepRequest,0));
-		
 	}
-
-	/*void RunTimeController2::Register(TaskNodeListener2Ptr listener, const std::string task_node_name)
-	{
-		{
-			//tbb::spin_mutex::scoped_lock lock(m_Mutex);
-			TaskNode2* node = m_RootNode->GetNodeByName(task_node_name);
-			if(node)
-				node->Register(listener);
-			else
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get TaskNode:" +task_node_name , " RunTimeController2::Register");
-		}
-	}
-
-	void RunTimeController2::Unregister(TaskNodeListener2Ptr listener, const std::string task_node_name)
-	{
-		{
-			//tbb::spin_mutex::scoped_lock lock(m_Mutex);
-			TaskNode2* node = m_RootNode->GetNodeByName(task_node_name);
-			if(node)
-				node->Unregister(listener);
-			else
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get TaskNode:" +task_node_name , " RunTimeController2::Register");
-		}
-	}*/
-
-	void RunTimeController2::Update(double delta_time)
-	{
-		m_RootNode->Update(delta_time,NULL);
-
-		if(m_StepSimulationRequest) 
-		{
-			m_StepSimulationRequest = false;
-			//send message that we are done
-			//SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
-		}
-		//SimEngine::Get().SyncMessages(delta_time);
-	}
-
-	void RunTimeController2::Log()
-	{
-
-	}
-
-/*	void RunTimeController2::LoadXML(tinyxml2::XMLElement *xml_elem)
-	{
-		m_RootNode->LoadXML(xml_elem);
-	}
-*/
-	/*void RunTimeController2::OnSimulationStepRequest(TimeStepRequestPtr message)
-	{
-		m_StepSimulationRequest = true;
-		m_RequestDeltaTime = message->GetTimeStep();
-	}*/
 }

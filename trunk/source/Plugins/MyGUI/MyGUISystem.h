@@ -18,7 +18,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init();
 		virtual void InitGUI();
-		void Update(double delta_time);
+		void Update(double delta_time,TaskNode2* caller);
 		bool IsInitialized() const {return m_Initialized;}
 	protected:
 		void OnLoadGUIScript(GUIScriptRequestPtr message);
