@@ -31,6 +31,7 @@
 namespace GASS
 {
 	RunTimeController::RunTimeController(SimEngine* engine) : m_StepSimulationRequest(false),
+		m_UpdateSimOnRequest(false),
 		m_RequestDeltaTime(0),
 		m_Engine(engine)
 	{
@@ -44,10 +45,13 @@ namespace GASS
 
 	void RunTimeController::Init(int num_threads)
 	{
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest,TimeStepRequest,0));
+		//int nthread = tbb::task_scheduler_init::automatic;
+		int  default_num_t = tbb::task_scheduler_init::default_num_threads();
+		if(num_threads == -1)
+			num_threads = default_num_t;
 
+		m_Scheduler = new tbb::task_scheduler_init(num_threads);
 		//Create task groups
-
 		m_RootNode = TaskNode2Ptr(new GASS::TaskNode2(0));
 		m_RootNode->SetUpdateFrequency(0.0);
 		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
