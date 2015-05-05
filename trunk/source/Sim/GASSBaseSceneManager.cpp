@@ -66,8 +66,6 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-
-
 	void BaseSceneManager::SystemTick(double delta_time) 
 	{
 		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();

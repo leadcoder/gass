@@ -178,7 +178,7 @@ namespace GASS
 	{
 
 		//update on request
-		if(m_OnlyUpdateOnRequest)
+		/*if(m_OnlyUpdateOnRequest)
 		{
 			//Check if we should update this frame?
 			if(SimEngine::Get().GetRuntimeController()->HasUpdateRequest())
@@ -212,10 +212,10 @@ namespace GASS
 				}
 			}
 		}
-		else
+		else*/
 		{
 			//only check if we should reflect paused flag and if so if we the simulation is paused.
-			if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused()))
+			//if(!(m_RespondToPause && SimEngine::Get().GetRuntimeController()->GetSimulationPaused()))
 			{
 				UpdateListeners(delta_time,parent);
 				UpdateChildren(delta_time,parent);

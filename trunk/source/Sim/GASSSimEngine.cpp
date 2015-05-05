@@ -19,15 +19,16 @@
 *****************************************************************************/
 
 #include "Sim/GASSSimEngine.h"
+#include "Sim/GASSRunTimeController.h"
+
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Core/RTC/GASSRunTimeController2.h"
+//#include "Core/RTC/GASSRunTimeController2.h"
 #include "Core/RTC/GASSTaskNode2.h"
-
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
@@ -60,9 +61,13 @@ namespace GASS
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
 		m_SceneObjectTemplateManager(new ComponentContainerTemplateManager()),
-		m_RTC(new RunTimeController2()),
-		m_LogFolder(log_folder)
+		m_LogFolder(log_folder),
+		//m_UpdateSimOnRequest(false),
+		//m_StepSimulationRequest(false),
+		//m_RequestDeltaTime(0),
+		m_NumThreads(-1)
 	{
+		m_RTC = RunTimeControllerPtr(new RunTimeController(this));
 		// Create log manager
 		if(LogManager::getSingletonPtr() == 0)
 		{
@@ -99,32 +104,7 @@ namespace GASS
 		if(configuration.GetFullPath() != "")
 			LoadSettings(configuration);
 
-		m_RTC->Init();
-
-		//Create default RTC task groups
-
-		m_RootNode = TaskNode2Ptr(new GASS::TaskNode2(0));
-		m_RootNode->SetUpdateFrequency(0.0);
-		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-
-		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
-
-		GASS::TaskNode2Ptr pre_sim_node(new GASS::TaskNode2(UGID_PRE_SIM));
-		pre_sim_node->SetUpdateFrequency(0.0);
-		pre_sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->AddChildNode(pre_sim_node);
-		//pre_sim_node->AddPostUpdate(this);
-
-		GASS::TaskNode2Ptr sim_node(new GASS::TaskNode2(UGID_SIM));
-		sim_node->SetUpdateFrequency(0.0);
-		sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->AddChildNode(sim_node);
-
-		GASS::TaskNode2Ptr post_sim_node(new GASS::TaskNode2(UGID_POST_SIM));
-		post_sim_node->SetUpdateFrequency(0.0);
-		post_sim_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->AddChildNode(post_sim_node);
+		m_RTC->Init(m_NumThreads);
 		
 		if(configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
@@ -134,6 +114,7 @@ namespace GASS
 
 		if(configuration.GetFullPath() != "") //Load systems
 			m_SystemManager->Load(configuration.GetFullPath());
+		
 		//Initialize systems
 		m_SystemManager->Init();
 
@@ -156,7 +137,6 @@ namespace GASS
 
 		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
 	}
-
 
 	void SimEngine::ReloadTemplates()
 	{
@@ -232,7 +212,7 @@ namespace GASS
 		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
 		if(xml_rtc)
 		{
-			int num_threads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
+			m_NumThreads = XMLUtils::ReadInt(xml_rtc,"NumberOfThreads");
 			//m_RTC->Init(num_threads);
 			int update_freq = XMLUtils::ReadInt(xml_rtc,"MaxUpdateFreqency");
 			m_MaxUpdateFreq = static_cast<double>(update_freq);
@@ -299,7 +279,7 @@ namespace GASS
 		delta_time = std::max<double>(delta_time,0.00001);
 		delta_time = std::min<double>(delta_time,10.0);
 
-		if(m_MaxUpdateFreq > 0)
+		/*if(m_MaxUpdateFreq > 0)
 		{
 			const double target_update_time = 1.0/m_MaxUpdateFreq;
 			if(delta_time > target_update_time)
@@ -317,13 +297,21 @@ namespace GASS
 				return false;
 			}
 		}
-		else
+		else*/
 		{
 			//just tick engine with delta time
 			Tick(delta_time);
 			prev_time = current_time;
 			return true;
 		}
+	}
+
+	/**
+			Get root task node
+		*/
+	TaskNode2Ptr SimEngine::GetRootTaskNode() const 
+	{
+		return m_RTC->GetRootNode();
 	}
 
 	void SimEngine::Tick(double delta_time)
@@ -333,15 +321,28 @@ namespace GASS
 		PROFILE("SimEngine::Update")
 		
 		//Manual update nodes
-		m_RootNode->GetChildByID(UGID_PRE_SIM)->Update(delta_time,NULL);
+	/*	m_RootNode->GetChildByID(UGID_PRE_SIM)->Update(delta_time,NULL);
 		SyncMessages(delta_time);
 		
-		m_RootNode->GetChildByID(UGID_SIM)->Update(delta_time,NULL);
-		SyncMessages(delta_time);
+		if(m_UpdateSimOnRequest)
+		{
+			if(m_StepSimulationRequest)
+			{
+				m_RootNode->GetChildByID(UGID_SIM)->Update(m_RequestDeltaTime,NULL);
+				GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
+				SyncMessages(m_RequestDeltaTime);
+			}
+		}
+		else
+		{
+			m_RootNode->GetChildByID(UGID_SIM)->Update(delta_time,NULL);
+			SyncMessages(delta_time);
+		}
 
 		m_RootNode->GetChildByID(UGID_POST_SIM)->Update(delta_time,NULL);
 		SyncMessages(delta_time);
-
+		*/
+		m_RTC->Tick(delta_time);
 		m_CurrentTime += delta_time;
 		}
 #ifdef PROFILER
@@ -349,6 +350,16 @@ namespace GASS
 #endif
 	}
 
+	void SimEngine::SetUpdateSimOnRequest(bool value) 
+	{
+		m_RTC->SetUpdateSimOnRequest(value);
+	}
+
+	bool SimEngine::GetUpdateSimOnRequest() const
+	{
+		return m_RTC->GetUpdateSimOnRequest();
+	}
+	
 	void SimEngine::DestroyScene(SceneWeakPtr scene)
 	{
 		ScenePtr the_scene = ScenePtr(scene,NO_THROW);

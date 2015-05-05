@@ -475,7 +475,6 @@ namespace GASS
 		return m_AttachToParent;
 	}
 
-
 	OSGLocationComponentPtr OSGLocationComponent::GetParentLocation()
 	{
 		OSGLocationComponentPtr parent_location;

@@ -26,6 +26,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
+#include <sstream>
 
 namespace GASS
 {
@@ -178,7 +179,7 @@ namespace GASS
 				if(m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)
 					clamp_num_steps = m_MaxSimulationSteps;
 
-				std::cout << "steps:" << clamp_num_steps << "\n";
+				//std::cout << "steps:" << clamp_num_steps << "\n";
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
 					UpdateListeners(update_interval,parent);
@@ -255,7 +256,9 @@ namespace GASS
 			if(m_Children[i]->GetID() == id)
 				return m_Children[i].get();
 		}
-		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get TaskNode by id" , "TaskNode2::GetChildByID");
+		std::stringstream ss;
+		ss << "Failed to get TaskNode by id:" << id;
+		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,ss.str(), "TaskNode2::GetChildByID");
 		return NULL;
 	}
 

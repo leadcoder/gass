@@ -29,7 +29,7 @@ namespace GASS
 {
 	MaterialSystem::MaterialSystem()
 	{
-
+		m_UpdateGroup = UGID_PRE_SIM;
 	}
 
 	MaterialSystem::~MaterialSystem()

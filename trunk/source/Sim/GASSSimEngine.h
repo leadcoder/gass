@@ -21,10 +21,13 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSEnumBinder.h"
+#include "Core/MessageSystem/GASSStaticMessageListener.h"
+
 #include <boost/shared_ptr.hpp>
 
 namespace GASS
@@ -33,7 +36,7 @@ namespace GASS
 	FDECL(ResourceManager)
 	FDECL(SimSystemManager)
 	FDECL(TaskNode2)
-	FDECL(RunTimeController2)
+	FDECL(RunTimeController)
 	FDECL(ComponentContainerTemplateManager)
 	FDECL(SceneObject)
 	FDECL(Scene)
@@ -42,17 +45,15 @@ namespace GASS
 
 	enum UpdateGroupID
 	{
-		UGID_0,
-		UGID_1,
+		UGID_NO_UPDATE,
 		UGID_PRE_SIM,
 		UGID_SIM,
 		UGID_POST_SIM,
-		UGID_2,
-		UGID_3,
 		UGID_LAST
 	};
 
 	START_ENUM_BINDER(UpdateGroupID,UpdateGroupIDBinder)
+		BIND(UGID_NO_UPDATE)
 		BIND(UGID_PRE_SIM)
 		BIND(UGID_SIM)
 		BIND(UGID_POST_SIM)
@@ -77,7 +78,7 @@ namespace GASS
 		be created by the application after SimEngine has been initialized. 
 	*/
 
-	class GASSExport SimEngine : public Singleton<SimEngine>
+	class GASSExport SimEngine : public Singleton<SimEngine> , StaticMessageListener
 	{
 	public:
 		typedef std::vector<ScenePtr> SceneVector;
@@ -139,7 +140,7 @@ namespace GASS
 		/**
 			Get root task node
 		*/
-		TaskNode2Ptr GetRootTaskNode() const {return m_RootNode;}
+		TaskNode2Ptr GetRootTaskNode() const;
 
 		/**
 		Return elapsed time
@@ -156,34 +157,87 @@ namespace GASS
 		*/
 		void ReloadTemplates();
 
+		/**
+			Remove scene 
+		*/
 		void DestroyScene(SceneWeakPtr scene);
+
+		/**
+			Create new scene 
+			@param Unique name for this scene (will be used if the scene is saved)
+		*/
 		SceneWeakPtr CreateScene(const std::string &name);
+
+		/**
+			Get const iterator to all active scenes
+		*/
 		ConstSceneIterator GetScenes() const;
+
+		/**
+			Get iterator to all active scenes
+		*/
 		SceneIterator GetScenes();
+
+		/**
+			Get folder for log files
+		*/
 		FilePath GetLogFolder() const {return m_LogFolder;}
+
+		/**
+			Set folder for log files
+		*/
 		void SetLogFolder(const FilePath &path) {m_LogFolder = path;}
+
+		/**
+			Get file path where scene are stored
+		*/
 		FilePath GetScenePath() const {return m_ScenePath;}
+
+		/**
+			Set file path where scene are stored
+		*/
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
+
+		/**
+			Get all saved scene from ScenePath
+		*/
 		std::vector<std::string> GetSavedScenes() const;
+
+		/*
+			Sync messages for all systems, scenes and sceneobjects
+		*/
 		void SyncMessages(double delta_time);
+
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
+
+		/**
+			Enable/disable external updates
+		*/
+		void SetUpdateSimOnRequest(bool value);
+		bool GetUpdateSimOnRequest() const;
+		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
 	private:
+		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
 		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		RunTimeController2Ptr m_RTC;
-		TaskNode2Ptr m_RootNode;
+		RunTimeControllerPtr m_RTC;
+		
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
+		
+		int m_NumThreads;
+
+		
 	};
 }
 

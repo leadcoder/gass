@@ -238,9 +238,6 @@ namespace GASS
 
 		UpdateAimTransformation(delta_time);
 
-
-
-
 		Quaternion rot;
 		rot.FromRotationMatrix(m_AimRotation.GetRotation());
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot)));

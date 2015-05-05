@@ -19,6 +19,7 @@ namespace GASS
 		m_LockTerrainObjects(true),
 		m_DefaultCameraTemplate("FreeCameraObject")
 	{
+		m_UpdateGroup = UGID_PRE_SIM;
 	}
 
 	EditorSystem::~EditorSystem(void)

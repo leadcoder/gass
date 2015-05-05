@@ -18,18 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RUN_TIME_CONTROLLER_HH
-#define RUN_TIME_CONTROLLER_HH
+#pragma once
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <vector>
-
-namespace tinyxml2
-{
-	class XMLElement;
-}
-
 
 namespace tbb
 {
@@ -38,44 +31,47 @@ namespace tbb
 
 namespace GASS
 {
-	class ITaskNodeListener;
-	class TaskNode;
-	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
-	typedef SPTR<TaskNode> TaskNodePtr;
+	class TaskNode2;
+	class ITaskNode2Listener;
+	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
+	typedef SPTR<TaskNode2> TaskNode2Ptr;
 
 	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener
 	{
 	public:
-		RunTimeController();
+		RunTimeController(SimEngine* engine);
 		virtual ~RunTimeController();
 		/**
-			Initialize the rtc controller, if number of threads is -1, TBB will
-			match number of threads with number of machine kernerls
+			Initialize the RTC, if number of threads is -1, TBB will
+			match number of threads with number of machine kernels
 		*/
 		void Init(int num_threads = -1);
-		void Update(double delta_time);
-		void Register(TaskNodeListenerPtr listener, const std::string task_node_name);
-		void Unregister(TaskNodeListenerPtr listener, const std::string task_node_name);
-		void Log();
-		void LoadXML(tinyxml2::XMLElement *xml_elem);
-		TaskNodePtr  GetTaskNode() const {return m_SimulationTaskNode;}
-		bool HasUpdateRequest() const{return m_StepSimulationRequest;}
-		double GetUpdateRequestTimeStep() const {return m_RequestDeltaTime;}
-		bool GetSimulationPaused() const {return m_SimulationPaused;}
-		void SetSimulationPaused(bool value) {m_SimulationPaused = value;}
+
+		/**
+		Step rtc
+		*/
+		void Tick(double delta_time);
+
+		TaskNode2Ptr  GetRootNode() const {return m_RootNode;}
+		void SetUpdateSimOnRequest(bool value);
+		bool GetUpdateSimOnRequest() const{return m_UpdateSimOnRequest;}
+		
 	private:
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
-		//tbb::spin_mutex m_Mutex;
+		void Update(double delta_time, TaskNode2* caller);
 		tbb::task_scheduler_init* m_Scheduler;
-		TaskNodePtr m_SimulationTaskNode;
+		SimEngine* m_Engine;
 
-		bool m_SimulationPaused;
-		bool m_SimulateRealTime;
+		TaskNode2Ptr m_RootNode;
+		TaskNode2Ptr m_PreSimNode;
+		TaskNode2Ptr m_SimNode;
+		TaskNode2Ptr m_PostSimNode;
+
+		bool m_UpdateSimOnRequest;
+		
+		//indicate that we want to step simulation next frame
 		bool m_StepSimulationRequest;
 		double m_RequestDeltaTime;
-
 	};
 	typedef SPTR<RunTimeController> RunTimeControllerPtr;
 }
-
-#endif

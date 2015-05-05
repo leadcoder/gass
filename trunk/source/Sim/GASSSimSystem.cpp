@@ -25,9 +25,9 @@
 #include <tbb/parallel_for.h>
 namespace GASS
 {
-	SimSystem::SimSystem(void)  
+	SimSystem::SimSystem(void) : m_UpdateGroup(UGID_NO_UPDATE)
 	{
-		//m_UpdateGroup = UGID_SIM;
+		
 	}
 
 	SimSystem::~SimSystem(void) 

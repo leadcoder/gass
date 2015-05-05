@@ -56,8 +56,9 @@ namespace GASS
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<SignatureComponent>(comps,true);
 		for(size_t i = 0; i < comps.size(); i++)
 		{
-			SignatureComponentPtr sig = DYNAMIC_PTR_CAST<SignatureComponent>(comps[i]);
-			m_AllObjects.push_back(sig);
+			SignatureComponentPtr signature = DYNAMIC_PTR_CAST<SignatureComponent>(comps[i]);
+			if(signature->GetSceneObject() != GetSceneObject())
+				m_AllObjects.push_back(signature);
 		}
 	}
 
@@ -68,7 +69,8 @@ namespace GASS
 		if(signature)
 		{
 			//signature->GetSceneObject()->RegisterForMessage(REG_TMESS(SensorComponent::OnTransChanged,TransformationChangedEvent,0));
-			m_AllObjects.push_back(signature);
+			if(signature->GetSceneObject() != GetSceneObject())
+				m_AllObjects.push_back(signature);
 		}
 	}
 

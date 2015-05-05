@@ -53,7 +53,7 @@ namespace GASS
 	{
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
 
-		//support asyncron request
+		//support asynchron request
 		//SPTR<SimSystemManager> shared_this = shared_from_this();
 		//MessageFuncPtr func_ptr(new GASS::MessageFunc<TimeStepRequest>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
 		//RegisterForMessage(typeid(TimeStepRequest),func_ptr,0);
@@ -62,9 +62,13 @@ namespace GASS
 		{
 			m_Systems[i]->Init();
 			//auto register for updates
-			TaskNode2* node = SimEngine::Get().GetRootTaskNode()->GetChildByID(m_Systems[i]->GetUpdateGroup().GetValue());
-			node->Register(m_Systems[i]);
-			//m_Systems[i]->Init();
+
+			UpdateGroupID ugid = m_Systems[i]->GetUpdateGroup().GetValue();
+			if(ugid != UGID_NO_UPDATE)
+			{
+				TaskNode2* node = SimEngine::Get().GetRootTaskNode()->GetChildByID(ugid);
+				node->Register(m_Systems[i]);
+			}
 		}
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	

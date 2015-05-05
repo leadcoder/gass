@@ -133,8 +133,8 @@ namespace GASS
 			fclose(fp);
 			m_NavMesh = LoadAll(filename.c_str());
 			m_NavQuery->init(m_NavMesh, 2048);
-			
 		}
+
 		std::vector<SceneObjectRef>::iterator iter = m_SelectedMeshes.begin();
 		//remove invalid pointers!
 		while(iter!=  m_SelectedMeshes.end())
@@ -149,9 +149,12 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message)
 	{
+		if(message->GetSceneObject() != GetSceneObject())
+			return;
+
 		if(m_NavMesh)
 			UpdateNavMeshVis();
-		//initlize visibility
+		//initialize visibility
 		SetVisible(m_Visible);
 	}
 
@@ -1511,6 +1514,7 @@ namespace GASS
 
 	bool RecastNavigationMeshComponent::IsPointInside(const Vec3 &point) const
 	{
+		tbb::spin_mutex::scoped_lock lock(m_Mutex);
 		bool ret = false;
 		if(m_NavMesh)
 		{
@@ -1542,6 +1546,7 @@ namespace GASS
 
 	Vec3 RecastNavigationMeshComponent::GetRandomPoint() const
 	{
+		tbb::spin_mutex::scoped_lock lock(m_Mutex);
 		Vec3 ret(0,0,0);
 		if(m_NavMesh)
 		{
@@ -1675,6 +1680,7 @@ namespace GASS
 
 	bool RecastNavigationMeshComponent::GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const
 	{
+		tbb::spin_mutex::scoped_lock lock(m_Mutex);
 		if(!m_NavMesh)
 			GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "m_NavMesh not initialized","RecastNavigationMeshComponent::GetShortestPath");
 

@@ -29,6 +29,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -111,6 +112,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnTransMessage,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnRadarEvent,VehicleRadarEvent,0));
+
+		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSensorEvent,SensorMessage,0));
 		
 
 		SceneManagerListenerPtr listener = shared_from_this();
@@ -142,6 +145,12 @@ namespace GASS
 		m_HasCollision = message->m_HasIsect;
 		m_CollisionPoint = message->m_IsectPos;
 		m_CollisionDist = message->m_IsectDist;
+	}
+
+	void CarAutopilotComponent::OnSensorEvent(SensorMessagePtr message)
+	{
+		//only save closest entity?
+		m_ProximityData = message->GetDetectionVector();
 	}
 
 	void CarAutopilotComponent::OnFaceDirectionRequest(FaceDirectionRequestPtr message)
@@ -187,34 +196,167 @@ namespace GASS
 		Vec3 current_dir = -m_Transformation.GetZAxis();
 		float current_speed = -m_VehicleSpeed.z; 
 		Vec3 current_pos = m_CurrentPos;
-		
-		Vec3 drive_dir = target_pos - current_pos;
-		const Float drive_dist = drive_dir.Length();
-		std::cout << drive_dist << std::endl; 
-		if(drive_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
+		Vec3 target_dir = target_pos - current_pos;
+		Float target_dist = target_dir.Length();
+		//Vec3 drive_dir_n = drive_dir;
+		//drive_dir_n.Normalize();
+
+
+		if(m_ProximityData.size() > 0)
 		{
-			drive_dir.y = 0;
-			drive_dir.Normalize();
+			Float min_dist = FLT_MAX; 
+			DetectionData dd = m_ProximityData[0];
+			for(size_t  i = 0; i < m_ProximityData.size();i++)
+			{
+				Float dist = (m_CurrentPos - m_ProximityData[i].Pos).Length();
+				if(dist < min_dist)
+				{
+					min_dist = dist;
+					dd = m_ProximityData[i];
+				}
+			}
+
+			const Float col_radie1 = 3;
+			const Float col_radie2 = 3;
+			const Float col_radie = col_radie1 + col_radie2;
+
+			Vec3 target_to_col_dir = target_pos - dd.Pos;
+			Float target_to_col_dist = target_to_col_dir.Length();
+			if(target_to_col_dist < col_radie) //inside collision sphere
+			{
+				//always turn to right side of sphere
+				
+				Vec3 per_pend_target_dir = target_dir;
+				per_pend_target_dir.x = -target_dir.z;
+				per_pend_target_dir.z = target_dir.x;
+				per_pend_target_dir.Normalize();
+
+				//check if behind
+				Vec3 col_dir =  dd.Pos - m_CurrentPos;
+				col_dir.Normalize();
+				Vec3 drive_dir = -m_Transformation.GetZAxis();
+				const Float cos_angle = Math::Dot(drive_dir,col_dir);
+				if(cos_angle > -0.1)
+				{
+					target_pos = target_pos + per_pend_target_dir*col_radie;
+					target_dir = target_pos - current_pos;
+					target_dist = target_pos.Length();
+				}
+			}
+		}
+		
+
+		/*if(m_HasCollision && target_dist > 0)
+		{
+			const Float col_radie1 = 3;
+			const Float col_radie2 = 3;
+			const Float col_radie = col_radie1 + col_radie2;
+
+			Vec3 target_to_col_dir = target_pos - m_CollisionPoint;
+			Float target_to_col_dist = target_to_col_dir.Length();
+			if(target_to_col_dist < col_radie) //inside collision sphere
+			{
+				//always turn to right side of sphere
+				//Vec3 drive_dir = -m_Transformation.GetZAxis();
+				//Vec3 per_pend_drive_dir = drive_dir;
+				//per_pend_drive_dir.x = -drive_dir.z;
+				//per_pend_drive_dir.z = drive_dir.x;
+
+				Vec3 per_pend_target_dir = target_dir;
+				per_pend_target_dir.x = -target_dir.z;
+				per_pend_target_dir.z = target_dir.x;
+				per_pend_target_dir.Normalize();
+
+				//check if behind
+				Vec3 col_dir =  m_CollisionPoint - m_CurrentPos;
+				col_dir.Normalize();
+				Vec3 drive_dir = -m_Transformation.GetZAxis();
+				const Float cos_angle = Math::Dot(drive_dir,col_dir);
+				if(cos_angle > 0)
+				{
+					target_pos = target_pos + per_pend_target_dir*col_radie;
+					target_dir = target_pos - current_pos;
+					target_dist = target_pos.Length();
+				}
+			}
+		}*/
+
+	/*	if(m_HasCollision && target_dist > 0)
+		{
+			Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
+			Vec3 col_vec_n = col_vec;
+			col_vec_n.Normalize();
+			const Float col_vec_l = col_vec.Length();
+
+			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CurrentPos, m_CurrentPos + col_vec, ColorRGBA(1,0,0,1), ColorRGBA(1,0,0,1))));
+
+			Float drive_dist = 30;
+			Vec3 drive_dir = -m_Transformation.GetZAxis()*drive_dist;
+			Vec3 drive_dir_n = drive_dir;
+			drive_dir_n.Normalize();
+			
+
+			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CurrentPos, m_CurrentPos + drive_dir, ColorRGBA(1,1,1,1), ColorRGBA(1,1,1,1))));
+
+			const Float cos_angle = Math::Dot(drive_dir_n,col_vec_n);
+			//const Vec3 cross_vec = Math::Cross(drive_dir_n,col_vec_n);
+			const Float proj_dist_forward = cos_angle*col_vec_l;
+			const Float proj_dist_side = fabs(sin(acos(cos_angle))*col_vec_l);
+
+			const Float col_radie1 = 3;
+			const Float col_radie2 = 3;
+			const Float col_radie = col_radie1 + col_radie2;
+			//if(proj_dist_side < col_radie1 && 
+			//	proj_dist_forward > 0
+			//	&& proj_dist_forward < drive_dist )
+			if(proj_dist_forward > 0)
+			{
+				//generate new target pos
+				Vec3 offset_vec = drive_dir_n*proj_dist_forward;
+				offset_vec = col_vec - offset_vec;
+				offset_vec.Normalize();
+
+				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CollisionPoint, m_CollisionPoint + offset_vec * col_radie, ColorRGBA(0,0,0,1), ColorRGBA(1,0,0,1))));
+				
+				//if(cross_vec.y > 0)
+				//	offset_vec = -offset_vec;
+				
+				target_pos = m_CollisionPoint - offset_vec*col_radie;
+
+				target_dir = target_pos - current_pos;
+				target_dist = drive_dir.Length();
+			}
+		}*/
+
+		GetSceneObject()->GetParentSceneObject()->GetChildByID("TARGET")->PostRequest(PositionRequestPtr(new PositionRequest(target_pos)));
+		
+
+		if(target_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
+		{
+			target_dir.y = 0;
+			target_dir.Normalize();
 			
 			current_dir.y = 0;
 			current_dir.Normalize();
 			
-			Vec3 cross = Math::Cross(current_dir,drive_dir);
-			float cos_angle = Math::Dot(current_dir,drive_dir);
+			Vec3 cross = Math::Cross(current_dir,target_dir);
+			float cos_angle = Math::Dot(current_dir,target_dir);
 
 			if(cos_angle > 1) 
 				cos_angle = 1;
 			if(cos_angle < -1) 
 				cos_angle = -1;
-			float angle_to_drive_dir = Math::Rad2Deg(acos(cos_angle));
+			float angle_to_target_dir = Math::Rad2Deg(acos(cos_angle));
 			if(cross.y < 0) 
-				angle_to_drive_dir *= -1;
+				angle_to_target_dir *= -1;
+			
+
 			
 			m_TurnPID.set(0);
-			float turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
+			float turn = m_TurnPID.update(angle_to_target_dir, delta_time);
 	
 			// damp speed if we have to turn sharp
-			if(m_Support3PointTurn && fabs(angle_to_drive_dir) > 90 && drive_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
+			if(m_Support3PointTurn && fabs(angle_to_target_dir) > 90 && target_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
 			{
 				desired_speed *= -1;
 				if(m_InvertBackWardSteering && current_speed < 0)  //check that not rolling forward
@@ -223,12 +365,12 @@ namespace GASS
 				//	turn = 0;
 
 			}
-			else if(fabs(angle_to_drive_dir) > 80 && drive_dist < m_MaxReverseDistance)// do three point turn or just reverse?
+			else if(fabs(angle_to_target_dir) > 80 && target_dist < m_MaxReverseDistance)// do three point turn or just reverse?
 			{
 				desired_speed *= -1;
 				if(m_Support3PointTurn && m_InvertBackWardSteering)
 				{
-					if(current_speed < 0 && fabs(angle_to_drive_dir) < 120) //if less than 110 deg do three point turn
+					if(current_speed < 0 && fabs(angle_to_target_dir) < 120) //if less than 110 deg do three point turn
 						turn *=-1;
 					else //damp turn, we try to reverse!
 						turn *= 0.03;
@@ -238,7 +380,7 @@ namespace GASS
 				else if(!m_InvertBackWardSteering)
 				{
 					m_TurnPID.set(180);
-					turn = m_TurnPID.update(angle_to_drive_dir, delta_time);
+					turn = m_TurnPID.update(angle_to_target_dir, delta_time);
 				}
 					
 			}
@@ -268,12 +410,12 @@ namespace GASS
 			//after 1m if traveling at 1 m/s. This formula should probably be expanded to support
 			//more non linear behavior 
 			Float radius = fabs(desired_speed)*m_BrakeDistanceFactor;
-			if(drive_dist > 0 && drive_dist < radius)
+			if(target_dist > 0 && target_dist < radius)
 			{
-				 desired_speed = desired_speed * (drive_dist/radius);
+				 desired_speed = desired_speed * (target_dist/radius);
 			}
 		
-			if(m_DesiredPosRadius > 0  && drive_dist < m_DesiredPosRadius)
+			if(m_DesiredPosRadius > 0  && target_dist < m_DesiredPosRadius)
 			{
 				desired_speed = 0;
 				turn = 0;
@@ -281,7 +423,7 @@ namespace GASS
 			}
 
 			//do collision check
-			if(m_HasCollision)
+			if(false) //m_HasCollision)
 			{
 				//Check dist
 				//Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
@@ -304,29 +446,24 @@ namespace GASS
 						turn = 1; 
 				}
 
-				/*if(m_CollisionDist < 0.5) //go back?
+				/*if(m_CollisionDist < 0.5) //reverse?
 				{
 					desired_speed = -2.3;
 					turn = -0.2;
 				}*/
-
-				std::stringstream ss;
+				/*std::stringstream ss;
 				ss  <<  GetSceneObject()->GetName();
 				ss  <<  "m_CollisionDist" << m_CollisionDist;
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));*/
 
 			}
 			else
 			{
-
-				std::stringstream ss;
+				/*std::stringstream ss;
 				ss  <<  GetSceneObject()->GetName();
 				ss  <<  "NO COL";
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));*/
 			}
-			
-
-
 		
 			m_TrottlePID.set(desired_speed);
 			float throttle = m_TrottlePID.update(current_speed,delta_time);

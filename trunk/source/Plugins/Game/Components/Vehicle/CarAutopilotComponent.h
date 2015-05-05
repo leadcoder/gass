@@ -66,6 +66,7 @@ namespace GASS
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void OnFaceDirectionRequest(FaceDirectionRequestPtr message);
 		void OnRadarEvent(VehicleRadarEventPtr message);
+		void OnSensorEvent(SensorMessagePtr message);
 		
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
@@ -83,6 +84,8 @@ namespace GASS
 		bool m_HasCollision;
 		Vec3 m_CollisionPoint;
 		Float m_CollisionDist;
+
+		DetectionVector m_ProximityData;
 	};
 }
 #endif
