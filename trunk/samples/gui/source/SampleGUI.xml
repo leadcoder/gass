@@ -76,52 +76,30 @@
 <Systems>
   <MaterialSystem/>
   <OISInputSystem>
-    <TaskNode value="PRE_SIM"/>
     <!-- PRE BUCKET UPDATE-->
     <ExclusiveMode value="false"/>
   </OISInputSystem>
   <ControlSettingsSystem>
-    <TaskNode value="PRE_SIM"/>
   </ControlSettingsSystem>
   <CoreSystem>
-    <TaskNode value="PRE_SIM"/>
   </CoreSystem>
   <MyGUISystem>
-    <TaskNode value="PRE_SIM"/>
   </MyGUISystem>
   <GameSystem>
-    <TaskNode value="SIM"/>
   </GameSystem>
   <RakNetNetworkSystem>
-    <TaskNode value="SIM"/>
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
-    <TaskNode value="PRE_SIM"/>
   </OpenALSoundSystem>
-  <LuaScriptSystem>
-    <TaskNode value="PRE_SIM"/>
-  </LuaScriptSystem>
   <PhysXPhysicsSystem>
-    <TaskNode value="SIM"/>
   </PhysXPhysicsSystem>
   <ODECollisionSystem>
-	<TaskNode value="POST_SIM"/>
   </ODECollisionSystem>
-  <!--<MyGUIOSGSystem>
-    <TaskNode value="PRE_SIM"/>
-  </MyGUIOSGSystem>-->
 </Systems>
 <RTC>
   <NumberOfThreads value="-1"/>
   <!-- -1 == auto-->
   <MaxUpdateFreqency value="60"/>
   <!-- -1 == not max update freq-->
-  <ExternalSimulationUpdate value="false"/>
-  <!-- let application trigger simulation updates PARALLEL-->
-  <TaskNode name="ROOT_NODE" mode="SEQUENCE">
-    <TaskNode name="PRE_SIM" mode="SEQUENCE"/>
-    <TaskNode name="SIM" mode="SEQUENCE"/>
-    <TaskNode name="POST_SIM" mode="SEQUENCE"/>
-  </TaskNode>
 </RTC>
 </GASS>

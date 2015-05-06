@@ -51,6 +51,16 @@ namespace GASS
 		m_Listeners.push_back(listener);
 	}
 
+	void SimSystem::RegisterForUpdate()
+	{
+		UpdateGroupID ugid = GetUpdateGroup().GetValue();
+		if(ugid != UGID_NO_UPDATE)
+		{
+			TaskNode2* node = SimEngine::Get().GetRootTaskNode()->GetChildByID(ugid);
+			node->Register(shared_from_this());
+		}
+	}
+
 	void SimSystem::Unregister(SystemListenerPtr listener)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();

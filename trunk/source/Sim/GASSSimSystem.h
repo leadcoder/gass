@@ -76,6 +76,7 @@ namespace GASS
 		SimSystemManagerPtr GetSimSystemManager() const;
 		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)
 	protected:
+		void RegisterForUpdate();
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SimSystemManagerWeakPtr m_Owner;
