@@ -276,20 +276,19 @@ namespace GASS
 		double delta_time = current_time - prev_time;
 
 		//clamp delta time
-		delta_time = std::max<double>(delta_time,0.00001);
+		delta_time = std::max<double>(delta_time,0);
 		delta_time = std::min<double>(delta_time,10.0);
 
-		/*if(m_MaxUpdateFreq > 0)
+		/*double update_freq = m_MaxUpdateFreq*4;
+
+		if(update_freq > 0)
 		{
-			const double target_update_time = 1.0/m_MaxUpdateFreq;
+			const double target_update_time = 1.0/update_freq;
 			if(delta_time > target_update_time)
 			{
-				//if(delta_time > 1.0/600.0)
-				{
-					prev_time = current_time;
-					Tick(delta_time);
-					return true;
-				}
+				prev_time = current_time;
+				Tick(delta_time);
+				return true;
 			}
 			else
 			{
@@ -344,6 +343,10 @@ namespace GASS
 		*/
 		m_RTC->Tick(delta_time);
 		m_CurrentTime += delta_time;
+
+		//std::stringstream ss;
+		//ss << " TICK:" << delta_time << " Time:" << m_CurrentTime << "\n";
+		//GetSimSystemManager()->PostMessage(SystemRequestMessagePtr( new DebugPrintRequest(ss.str())));
 		}
 #ifdef PROFILER
 		ProfileSample::Output();

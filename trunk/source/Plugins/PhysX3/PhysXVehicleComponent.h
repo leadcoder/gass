@@ -70,8 +70,9 @@ namespace GASS
 					const physx::PxVehicleDrive4WRawInputData& carRawInputs,
 		bool& toggleAutoReverse, 
 		bool& newIsMovingForwardSlowly) const;
-		void CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
+		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
+
 		ADD_PROPERTY(SceneObjectRef,FrontLeftWheel);
 		ADD_PROPERTY(SceneObjectRef,FrontRightWheel);
 		ADD_PROPERTY(SceneObjectRef,RearLeftWheel);

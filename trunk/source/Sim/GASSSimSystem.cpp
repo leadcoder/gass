@@ -38,7 +38,6 @@ namespace GASS
 	void SimSystem::RegisterReflection()
 	{
 		RegisterProperty<UpdateGroupIDBinder>("UpdateGroup", &GASS::SimSystem::GetUpdateGroup, &GASS::SimSystem::SetUpdateGroup);
-		//RegisterProperty<std::string>("TaskNode", &GASS::SimSystem::GetTaskNode, &GASS::SimSystem::SetTaskNode);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const

@@ -55,7 +55,6 @@ namespace GASS
 		m_RootNode = TaskNode2Ptr(new GASS::TaskNode2(0));
 		m_RootNode->SetUpdateFrequency(0.0);
 		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-
 		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
 		m_RootNode->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
 
@@ -63,22 +62,30 @@ namespace GASS
 
 		double update_freq = m_Engine->GetMaxUpdateFreq();
 
+		LogManager::getSingleton().stream() << "MaxUpdateFreq: " << update_freq;
+
 		m_PreSimNode->SetUpdateFrequency(update_freq);
 		m_PreSimNode->SetMaxSimulationSteps(1);
 		m_PreSimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		//we need to sync messages after each update
+		m_PreSimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_PreSimNode);
-		//pre_sim_node->RegisterPostUpdate(this);
+		
 
 		m_SimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_SIM));
 		m_SimNode->SetUpdateFrequency(update_freq);
 		m_SimNode->SetMaxSimulationSteps(1);
 		m_SimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		//we need to sync messages after each update
+		m_SimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_SimNode);
 
 		m_PostSimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_POST_SIM));
 		m_PostSimNode->SetUpdateFrequency(update_freq);
 		m_PostSimNode->SetMaxSimulationSteps(1);
 		m_PostSimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		//we need to sync messages after each update
+		m_PostSimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_PostSimNode);
 
 		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(RunTimeController::OnSimulationStepRequest, TimeStepRequest,0));
@@ -86,27 +93,22 @@ namespace GASS
 	
 	void RunTimeController::Tick(double delta_time)
 	{
-		//Manual update nodes
-		m_PreSimNode->Update(delta_time,NULL);
-		m_Engine->SyncMessages(delta_time);
-
-		if(m_UpdateSimOnRequest)
+		if(m_UpdateSimOnRequest) //simulation is updated on request?
 		{
+			m_PreSimNode->Update(delta_time,NULL);
 			if(m_StepSimulationRequest)
 			{
 				m_SimNode->Update(m_RequestDeltaTime,NULL);
 				m_Engine->GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
-				m_Engine->SyncMessages(m_RequestDeltaTime);
+				m_StepSimulationRequest = false;
 			}
+			m_PostSimNode->Update(delta_time,NULL);
 		}
 		else
 		{
-			m_SimNode->Update(delta_time,NULL);
-			m_Engine->SyncMessages(delta_time);
+			//Just update root node
+			m_RootNode->Update(delta_time,NULL);
 		}
-
-		m_PostSimNode->Update(delta_time,NULL);
-		m_Engine->SyncMessages(delta_time);
 	}
 
 	void RunTimeController::OnSimulationStepRequest(TimeStepRequestPtr message)
@@ -115,16 +117,15 @@ namespace GASS
 		m_RequestDeltaTime = message->GetTimeStep();
 	}
 
-
 	void RunTimeController::SetUpdateSimOnRequest(bool value) 
 	{
 		m_UpdateSimOnRequest = value;
 		if(value)
 		{
-			//if manual stepping we should look to 600 step
+			//if manual stepping we can accept more simulation steps
 			m_SimNode->SetMaxSimulationSteps(800);
 		}
-		else //if realtime, don't substep
+		else //if real time, don't substep
 		{
 			m_SimNode->SetMaxSimulationSteps(1);
 		}
@@ -132,6 +133,18 @@ namespace GASS
 
 	void RunTimeController::Update(double delta_time, TaskNode2* caller)
 	{
+		if(m_PreSimNode.get() == caller)
+		{
 
+		}
+		else if(m_SimNode.get() == caller)
+		{
+
+		}
+		else if(m_PostSimNode.get() == caller)
+		{
+
+		}
+		m_Engine->SyncMessages(delta_time);
 	}
 }

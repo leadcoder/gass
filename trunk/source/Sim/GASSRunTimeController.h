@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/RTC/GASSTaskNode2.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <vector>
 
@@ -36,7 +37,7 @@ namespace GASS
 	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
 	typedef SPTR<TaskNode2> TaskNode2Ptr;
 
-	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener
+	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener, public ITaskNode2Listener
 	{
 	public:
 		RunTimeController(SimEngine* engine);

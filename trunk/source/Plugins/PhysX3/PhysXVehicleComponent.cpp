@@ -91,23 +91,23 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
-		
+
 		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
-		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
-		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
-		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
-		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
-		REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
-		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
-		REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
-		REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
-		REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+			REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
+			REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
+			REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
+			REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
+			REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
+			REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
+			REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
+			REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
+			REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
+			REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
+			REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+			REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+			REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
+			REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
+			REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)
@@ -177,7 +177,7 @@ namespace GASS
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
 		physx::PxVehicleChassisData chassisData;
-		
+
 		chassisData.mMass = m_Mass*m_ScaleMass;
 
 		//Get chassis mesh
@@ -211,7 +211,7 @@ namespace GASS
 		{
 			wheel_objects.push_back(m_ExtraWheels[i].GetRefObject());
 		}
-	
+
 		size_t num_wheels = wheel_objects.size();
 		//Get data from wheels
 		std::vector<PxVehicleWheelData> wheels;
@@ -244,7 +244,7 @@ namespace GASS
 			susps[i]  = wheel_comp->GetSuspensionData();
 			tires[i]  = wheel_comp->GetTireData();
 		}
-		
+
 		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(static_cast<physx::PxU32>(num_wheels));
 		PxVehicleDriveSimData4W driveSimData;
 
@@ -252,7 +252,7 @@ namespace GASS
 		const PxVec3 chassisDims=ComputeDim(chassisMesh.m_ConvexMesh);
 
 		m_ChassisDim = PxConvert::ToGASS(chassisDims);
-		
+
 
 		//The origin is at the center of the chassis mesh.
 		//Set the center of mass to be below this point and a little towards the front.
@@ -319,7 +319,7 @@ namespace GASS
 			susps[i].mSpringDamperRate *= m_ScaleMass;
 			tires[i].mLongitudinalStiffnessPerUnitGravity *= m_ScaleMass;
 		}
-	
+
 		//We need to set up geometry data for the suspension, wheels, and tires.
 		//We already know the wheel centers described as offsets from the rigid body centre of mass.
 		//From here we can approximate application points for the tire and suspension forces.
@@ -333,7 +333,7 @@ namespace GASS
 		wheelCentreCMOffsets.resize(num_wheels);
 		suspForceAppCMOffsets.resize(num_wheels);
 		tireForceAppCMOffsets.resize(num_wheels);
-		
+
 		for(PxU32 i=0;i<num_wheels;i++)
 		{
 			suspTravelDirections[i]= PxVec3(0,-1,0);
@@ -363,7 +363,7 @@ namespace GASS
 
 		//Engine
 		PxVehicleEngineData engine;
-		
+
 		engine.mPeakTorque=m_EnginePeakTorque;
 		engine.mMaxOmega=m_EngineMaxRotationSpeed;//approx 6000 rpm
 		/*engine.mDampingRateFullThrottle *= m_ScaleMass;
@@ -374,7 +374,7 @@ namespace GASS
 
 		//Gears
 		PxVehicleGearsData gears;
-		
+
 		if(m_GearRatios.size() >= PxVehicleGearsData::eMAX_NUM_GEAR_RATIOS)
 		{
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "To many gear in vehicle","PhysXVehicleComponent::OnPostSceneObjectInitializedEvent");
@@ -409,14 +409,14 @@ namespace GASS
 		//We need a rigid body actor for the vehicle.
 		//Don't forget to add the actor the scene after setting up the associated vehicle.
 		m_Actor = system->GetPxSDK()->createRigidDynamic(PxTransform::createIdentity());
-		
-		
+
+
 		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
 		PxFilterData wheelCollFilterData;
 		wheelCollFilterData.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
 		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_RAY_CAST_WHEEL);
 		wheelCollFilterData.word1=against;
-		
+
 		//Create a query filter data for the car to ensure that cars
 		//do not attempt to drive on themselves.
 		PxFilterData vehQryFilterData;
@@ -453,12 +453,12 @@ namespace GASS
 
 		m_Vehicle = PxVehicleDrive4W::allocate(static_cast<physx::PxU32>(num_wheels));
 		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-static_cast<physx::PxU32>(num_wheels));
-		
+
 		for(size_t i = 0; i < num_wheels; i++)
 		{
 			m_Vehicle->setWheelShapeMapping(static_cast<physx::PxI32>(i),static_cast<physx::PxU32>(i));
 		}
-		
+
 		//Free the sim data because we don't need that any more.
 		wheelsSimData->free();
 
@@ -482,7 +482,7 @@ namespace GASS
 		{
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
-		
+
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 		m_Initialized = true;
 	}
@@ -591,7 +591,7 @@ namespace GASS
 		int from_id = (int)this; //use address as id
 		Vec3 current_pos  = GetPosition();
 		Quaternion current_rot = GetRotation();
-		
+
 		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(current_rot,from_id)));
 
@@ -619,7 +619,7 @@ namespace GASS
 		{
 			GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
 		}
-	
+
 		PxVehicleDrive4WRawInputData rawInputData;
 
 		if(m_UseDigitalInputs)
@@ -632,7 +632,7 @@ namespace GASS
 				rawInputData.setDigitalSteerLeft(fabs(m_SteerInput));
 				rawInputData.setDigitalSteerRight(0);
 				rawInputData.setDigitalSteerLeft(fabs(m_SteerInput));
-			
+
 			}
 			else
 			{
@@ -662,7 +662,7 @@ namespace GASS
 
 		//Work out if the car is to flip from reverse to forward gear or from forward gear to reverse.
 		//Store if the car is moving slowly to help decide if the car is to toggle from reverse to forward in the next update.
-		
+
 		if(m_UseAutoReverse)
 		{
 			bool toggleAutoReverse = false;
@@ -726,7 +726,7 @@ namespace GASS
 
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
-		
+
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
 
 		//pitch engine sound
@@ -739,7 +739,7 @@ namespace GASS
 
 		if(norm_engine_rot_speed > 1.0)
 			norm_engine_rot_speed = 1.0;
-		
+
 		pitch += norm_engine_rot_speed;
 		volume += norm_engine_rot_speed;
 		volume = sqrt(volume)*1.05;
@@ -752,15 +752,15 @@ namespace GASS
 
 		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
 
-		//std::cout << "Gear:" << currentGear << " RPS:" << engine_rot_speed << "\n";
-
-		/*std::stringstream ss;
+		if(m_Debug)
+		{
+			std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
-			
-		GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));*/
+			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+		}
 
 		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
 
@@ -772,13 +772,24 @@ namespace GASS
 		//	MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
 
-		CheckCollisions(current_pos,current_rot,forwardSpeed);
+		bool col = CheckCollisions(current_pos,current_rot,forwardSpeed);
+
+		if(m_Debug)
+		{
+			std::stringstream ss;
+			ss  <<  GetSceneObject()->GetName();
+			ss  <<  "\nGear::" << currentGear;
+			ss  <<  "\nTarget:" << targetGear;
+			ss  <<  "\nSpeed:" << forwardSpeed;
+			ss  <<  "\nCollision:" << col;
+			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+		}
 	}
 
 
-	#define THRESHOLD_FORWARD_SPEED (0.1f) 
-	#define THRESHOLD_SIDEWAYS_SPEED (0.2f)
-	#define THRESHOLD_ROLLING_BACKWARDS_SPEED (0.1f)
+#define THRESHOLD_FORWARD_SPEED (0.1f) 
+#define THRESHOLD_SIDEWAYS_SPEED (0.2f)
+#define THRESHOLD_ROLLING_BACKWARDS_SPEED (0.1f)
 
 
 	void PhysXVehicleComponent::ProcessAutoReverse(const physx::PxVehicleWheels& focusVehicle, 
@@ -792,10 +803,10 @@ namespace GASS
 
 		if(driveDynData.getUseAutoGears())
 		{
-			//If the car is travelling very slowly in forward gear without player input and the player subsequently presses the brake then we want the car to go into reverse gear
-			//If the car is travelling very slowly in reverse gear without player input and the player subsequently presses the accel then we want the car to go into forward gear
-			//If the car is in forward gear and is travelling backwards then we want to automatically put the car into reverse gear.
-			//If the car is in reverse gear and is travelling forwards then we want to automatically put the car into forward gear.
+			//If the car is traveling very slowly in forward gear without player input and the player subsequently presses the brake then we want the car to go into reverse gear
+			//If the car is traveling very slowly in reverse gear without player input and the player subsequently presses the accel then we want the car to go into forward gear
+			//If the car is in forward gear and is traveling backwards then we want to automatically put the car into reverse gear.
+			//If the car is in reverse gear and is traveling forwards then we want to automatically put the car into forward gear.
 			//(If the player brings the car to rest with the brake the player needs to release the brake then reapply it 
 			//to indicate they want to toggle between forward and reverse.)
 
@@ -870,7 +881,7 @@ namespace GASS
 				//to indicate that the gears should toggle between reverse and forward.
 				/*if(isMovingForwardSlowly && !brakeRaw && !accelRaw && !handbrakeRaw)
 				{
-					newIsMovingForwardSlowly = true;
+				newIsMovingForwardSlowly = true;
 				}*/
 				newIsMovingForwardSlowly = isMovingForwardSlowly;
 			}
@@ -902,7 +913,7 @@ namespace GASS
 					body->SetPosition(new_pos);
 				}
 			}
-			
+
 		}
 	}
 
@@ -968,32 +979,28 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const
+	bool PhysXVehicleComponent::CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const
 	{
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		/*PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 
 		Vec3 mesh_offset = (m_MeshBounds.m_Min +  m_MeshBounds.m_Max)*0.5;
 		Vec3 mesh_size = m_MeshBounds.GetSize();
-		
+
 		//do ray at chassis center and each bounding box corner
 		Vec3 dir = -rot.GetZAxis();
-	
-		/*if(speed < 0)
-		{
-			dir = -dir;
-		}*/
+
 
 		const Float z_nudge_offset = 1.4;
 		Vec3 ray_start = pos + dir*(-mesh_offset.z + (mesh_size.z + z_nudge_offset)*0.5);
 		ray_start = ray_start + rot.GetYAxis()*mesh_offset.y;
-	
+
 		const Vec3 x_offset = rot.GetXAxis()*mesh_size.x*0.5;
 		const Vec3 y_offset = rot.GetYAxis()*(mesh_size.y*0.4);
-		
-		
+
+
 		std::vector<Vec3> start_point_vec;
 		start_point_vec.push_back(ray_start);
-		
+
 		start_point_vec.push_back(ray_start + y_offset);
 		start_point_vec.push_back(ray_start - y_offset);
 
@@ -1020,7 +1027,7 @@ namespace GASS
 		dir_vec.push_back(dir);
 		dir_vec.push_back(dir);
 
-		
+
 		dir_vec.push_back(dir - rot.GetXAxis()*0.2);
 		dir_vec.push_back(dir + rot.GetXAxis()*0.2);
 
@@ -1036,33 +1043,71 @@ namespace GASS
 
 		for(size_t i =0; i < start_point_vec.size(); i++)
 		{
-			CollisionResult temp_res;
-			scene_manager->Raycast(start_point_vec[i],dir_vec[i]*check_range, GEOMETRY_FLAG_SCENE_OBJECTS, temp_res, false);
-			if(temp_res.Coll && temp_res.CollDist < final_res.CollDist)
-			{
-				final_res = temp_res;
-			}
-			
-			//debug line?
-			if(m_Debug)
-			{
-				const ColorRGBA color(1,1,1,1);
-				Vec3 end_pos = start_point_vec[i] + dir_vec[i]*check_range;
-				if(temp_res.Coll)
-					end_pos = temp_res.CollPosition;
-				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
-			}
+		CollisionResult temp_res;
+		scene_manager->Raycast(start_point_vec[i],dir_vec[i]*check_range, GEOMETRY_FLAG_SCENE_OBJECTS, temp_res, false);
+		if(temp_res.Coll && temp_res.CollDist < final_res.CollDist)
+		{
+		final_res = temp_res;
+		}
+
+		//debug rays?
+		if(m_Debug)
+		{
+		const ColorRGBA color(1,1,1,1);
+		Vec3 end_pos = start_point_vec[i] + dir_vec[i]*check_range;
+		if(temp_res.Coll)
+		end_pos = temp_res.CollPosition;
+		GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start_point_vec[i], end_pos, color,color)));
+		}
 		}
 
 		SceneObjectPtr col_obj = SceneObjectPtr(final_res.CollSceneObject,NO_THROW);
 		if(final_res.Coll && col_obj)
 		{
-			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true, final_res.CollPosition, final_res.CollDist, col_obj)));
+		Vec3 center_pos = col_obj->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+		GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(true, center_pos, final_res.CollDist, col_obj)));
+		return true;
 		}
 		else
 		{
-			GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),0,SceneObjectPtr())));
-		}
+		GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(false,Vec3(0,0,0),0,SceneObjectPtr())));
+		}*/
+
+		//hack to get all vehicles
+
+		/*const Float check_range = 30;
+		bool col = false;
+		Float col_dist = FLT_MAX;
+		SceneObjectPtr col_obj;
+		Vec3 col_point(0,0,0);
+		Vec3 col_velocity(0,0,0);
+		Vec3 col_size(0,0,0);
 		
+
+
+		ComponentContainerTemplate::ComponentVector components;
+		GetSceneObject()->GetParentSceneObject()->GetParentSceneObject()->GetParentSceneObject()->GetComponentsByClass<PhysXVehicleComponent>(components);
+
+		for(int i = 0;  i < components.size(); i++)
+		{
+			PhysXVehicleComponentPtr comp = DYNAMIC_PTR_CAST<PhysXVehicleComponent>(components[i]);
+			if(comp.get() != this)
+			{
+				
+				Vec3 obj_pos =  comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+				Float dist = (obj_pos - pos).Length();
+				if(dist < check_range && 
+					dist < col_dist)
+				{
+					col = true;
+					col_dist = dist;
+					col_obj = comp->GetSceneObject();
+					col_point = obj_pos;
+				}
+			}
+		}
+
+		GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(col, col_point, col_dist, col_obj)));*/
+		return false;
 	}
 }
