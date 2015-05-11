@@ -22,7 +22,9 @@ namespace GASS
 	private:
 		MyGUI::MenuBar* m_MenuBar;
 		LoadSceneDialog *m_LoadSceneDialog;
-		
+
+		MyGUI::MenuItemPtr m_ItemStartStopSim;
+		MyGUI::MenuItemPtr m_ItemPauseSim;
 	};
 } 
 

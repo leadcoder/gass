@@ -163,6 +163,11 @@ namespace GASS
 		delete xmlDoc;
 	}
 
+	void SimSystemManager::AddSystem(SimSystemPtr system)
+	{
+		m_Systems.push_back(system);
+	}
+
 	SimSystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
 	{
 		const std::string system_type = system_elem->Value();

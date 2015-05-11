@@ -125,7 +125,7 @@ namespace GASS
 		void Load(const std::string &filename);
 
 		
-		void AddSystem(SimSystemPtr system) {m_Systems.push_back(system);}
+		void AddSystem(SimSystemPtr system);
 
 		//Move this to private
 		void SyncMessages(double delta_time);

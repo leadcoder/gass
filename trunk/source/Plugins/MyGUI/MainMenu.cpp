@@ -17,6 +17,33 @@ namespace GASS
 		MyGUI::MenuItem* file = m_MenuBar->findItemById("File");
 		file->getItemChild()->eventMenuCtrlAccept += MyGUI::newDelegate(this, &MainMenu::notifyFileMenu);
 
+		MyGUI::MenuItemPtr mi = m_MenuBar->createWidget<MyGUI::MenuItem>("MenuBarButton", 0, 0, 60, 20,  MyGUI::Align::Default);
+		//MyGUI::MenuItemPtr mi = m_MenuBar->createWidget<MyGUI::MenuItem>("MenuBarButton");
+		MyGUI::PopupMenuPtr p = mi->createWidget<MyGUI::PopupMenu>(MyGUI::WidgetStyle::Popup, "PopupMenu",MyGUI::IntCoord(0,0,88,68),MyGUI::Align::Default, "Popup");
+		mi->setItemType(MyGUI::MenuItemType::Popup);
+		mi->setCaption(("Simulation"));
+		p->setPopupAccept(true);
+		//mi->setPopupAccept(true);
+
+		//MyGUI::IntSize s = mi->getTextSize();
+		//int menuHeight = s.height + 6;
+		//mainmenu->setCoord(0, 0, menuWidth, menuHeight);
+		m_ItemStartStopSim = p->addItem("StartSim", MyGUI::MenuItemType::Normal,"Command_StartStopSim");
+		m_ItemPauseSim = p->addItem("PauseSim", MyGUI::MenuItemType::Normal,"Command_PauseSim");
+		//p->addItem(("get new Vehicl2e"), MyGUI::MenuItemType::Normal);
+
+/*		MyGUI::MenuItem* item = m_MenuBar->addItem("Simulation");
+		MyGUI::MenuControl* control = item->createItemChild();
+		control->addItem("sIMmENU", MyGUI::MenuItemType::Popup);
+		control->setPopupAccept(true);
+//		control->eventMenuCtrlAccept += MyGUI::newDelegate(this, &MainMenuControl::notifyWidgetsSelect);
+		MyGUI::MenuControl* child = control->createItemChildAt(control->getItemCount() - 1);
+		//child->eventMenuCtrlAccept += MyGUI::newDelegate(this, &MainMenuControl::notifyWidgetsSelect);
+		child->setPopupAccept(true);
+		child->addItem("Pause", MyGUI::MenuItemType::Normal);
+	*/	//control->setItemName("Pause");
+
+
 		MyGUI::MenuItem* res = m_MenuBar->findItemById("Resources");
 		res->getItemChild()->eventMenuCtrlAccept += MyGUI::newDelegate(this, &MainMenu::notifyResourceMenu);
 
@@ -48,6 +75,7 @@ namespace GASS
 		{
 			exit(0);
 		}
+
 		else if(item_id == "Command_FileLoad")
 		{
 			m_LoadSceneDialog->setVisible(true);
@@ -56,6 +84,21 @@ namespace GASS
 		{
 			SystemMessagePtr message(new ReloadMaterial());
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+		}
+		else if(item_id == "Command_StartSim")
+		{
+			SimulationState sim_state = SimEngine::Get().GetRunTimeController()->GetSimulationState();
+			//m_ItemStartSim->setStateCheck(true);
+			if(sim_state == SS_RUNNING)
+			{
+				SimEngine::Get().GetRunTimeController()->StopSimulation();
+				m_ItemStartStopSim->setItemName("StartSim");
+			}
+			else if(sim_state == SS_STOPPED)
+			{
+				SimEngine::Get().GetRunTimeController()->StartSimulation();
+				m_ItemStartStopSim->setItemName("StopSim");
+			}
 		}
 		/*MyGUI::UString* data = _item->getItemData<MyGUI::UString>(false);
 		if (data != nullptr)
