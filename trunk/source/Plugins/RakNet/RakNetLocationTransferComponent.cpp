@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -186,7 +186,7 @@ namespace GASS
 			//std::cout << "pos" << pos << std::endl;
 		}
 
-		double current_time = SimEngine::Get().GetTime();
+		double current_time = SimEngine::Get().GetRunTimeController()->GetTime();
 		double delta = current_time - m_LocationHistory[0].Time;
 
 		m_LocationHistory[0].Position = pos;
@@ -220,7 +220,7 @@ namespace GASS
 		
 		if(raknet->IsServer())
 		{
-			double current_time = SimEngine::Get().GetTime();
+			double current_time = SimEngine::Get().GetRunTimeController()->GetTime();
 			double delta = current_time - m_LastSerialize;
 			double send_intervall = 1.0/raknet->GetLocationSendFrequency();
 

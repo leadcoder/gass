@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -37,7 +37,8 @@ namespace GASS
 		m_Paused(false),
 		m_ID(id),
 		m_MaxSimulationSteps(-1),
-		m_Mutex(new tbb::spin_mutex)
+		m_Mutex(new tbb::spin_mutex),
+		m_CurrentTime(0)
 	{
 
 	}
@@ -185,6 +186,7 @@ namespace GASS
 					UpdateListeners(update_interval,parent);
 					UpdateChildren(update_interval,parent);
 					UpdatePostListeners(update_interval,parent);
+					m_CurrentTime += update_interval;
 				}
 				m_TimeToProcess -= update_interval * num_steps;
 			}
@@ -193,6 +195,7 @@ namespace GASS
 				UpdateListeners(delta_time,parent);
 				UpdateChildren(delta_time,parent);
 				UpdatePostListeners(delta_time,parent);
+				m_CurrentTime += delta_time;
 			}
 		}
 	}

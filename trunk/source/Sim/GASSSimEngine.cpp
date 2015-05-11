@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -305,13 +305,6 @@ namespace GASS
 		}
 	}
 
-	/**
-			Get root task node
-		*/
-	TaskNode2Ptr SimEngine::GetRootTaskNode() const 
-	{
-		return m_RTC->GetRootNode();
-	}
 
 	void SimEngine::Tick(double delta_time)
 	{

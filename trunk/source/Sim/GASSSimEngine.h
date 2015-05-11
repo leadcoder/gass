@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -140,12 +140,12 @@ namespace GASS
 		/**
 			Get root task node
 		*/
-		TaskNode2Ptr GetRootTaskNode() const;
+		//TaskNode2Ptr GetRootTaskNode() const;
 
 		/**
 		Return elapsed time
 		*/
-		double GetTime() const {return m_CurrentTime;}
+		//double GetTime() const {return m_CurrentTime;}
 		
 		/**
 			Convince function to create new objects from templates
@@ -211,6 +211,7 @@ namespace GASS
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
+		RunTimeControllerPtr GetRunTimeController() const {return m_RTC;}
 
 		/**
 			Enable/disable external updates

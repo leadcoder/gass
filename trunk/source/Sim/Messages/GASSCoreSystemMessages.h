@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -102,25 +102,15 @@ namespace GASS
 	typedef SPTR<TimeStepRequest> TimeStepRequestPtr;
 
 
-	enum ScenarioState
+	enum SimEventType
 	{
-		SS_PAUSED,
-		SS_PLAY,
-		SS_STOP
+		SET_PAUSE,
+		SET_RESUME,
+		SET_START,
+		SET_STOP
 	};
 
-	class ScenarioStateRequest : public SystemRequestMessage
-	{
-	public:
-		ScenarioStateRequest  (ScenarioState state, SenderID sender_id = -1, double delay= 0) : SystemRequestMessage(sender_id , delay), m_State(state)
-		{
-
-		}
-		ScenarioState GetState()const {return m_State;}
-	private:
-		ScenarioState m_State;
-	};
-	typedef SPTR<ScenarioStateRequest> ScenarioStateRequestPtr;
+	
 
 
 	//////////////////////////
@@ -136,6 +126,24 @@ namespace GASS
 		  }
 	};
 	typedef SPTR<SystemEventMessage> SystemEventMessagePtr;
+
+
+	/**
+		This message is posted by SimEngine when simulation state is changed.
+	*/
+
+	class SimEvent : public SystemEventMessage
+	{
+	public:
+		SimEvent  (SimEventType event_type, SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay), m_EventType(event_type)
+		{
+
+		}
+		SimEventType GetEventType()const {return m_EventType;}
+	private:
+		SimEventType m_EventType;
+	};
+	typedef SPTR<SimEvent> SimEventPtr;
 
 
 	/**

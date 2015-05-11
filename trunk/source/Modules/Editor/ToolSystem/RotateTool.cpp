@@ -51,7 +51,7 @@ namespace GASS
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
 
-				const double time = SimEngine::Get().GetTime();
+				const double time = SimEngine::Get().GetRunTimeController()->GetTime();
 				static double last_time = 0;
 				const double send_freq = 20;
 				if(time - last_time > 1.0/send_freq)

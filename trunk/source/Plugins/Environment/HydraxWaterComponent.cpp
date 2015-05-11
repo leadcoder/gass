@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://sourceforge.net/projects/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -912,7 +912,7 @@ namespace GASS
 
 	bool  HydraxWaterComponent::frameStarted(const Ogre::FrameEvent& evt)
 	{
-		double c_time = SimEngine::Get().GetTime();
+		double c_time = SimEngine::Get().GetRunTimeController()->GetSimulationTime();
 		static double prev_time = 0;
 		if(prev_time == 0)
 			m_Hydrax->update(0.1);

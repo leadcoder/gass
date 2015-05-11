@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -38,10 +38,10 @@ namespace GASS
 		static void RegisterReflection();
 		virtual std::string GetSystemName() const {return "GameSystem";}
 		virtual void Init();
-		virtual void Update(double delta, TaskNode2* caller);
+		//virtual void Update(double delta, TaskNode2* caller);
 	protected:
-		void OnScenarioEvent(ScenarioStateRequestPtr message);
-		bool m_Update;
+		//void OnScenarioEvent(SimEventPtr message);
+		//bool m_Update;
 	};
 	typedef SPTR<GameSystem> GameSystemPtr;
 }

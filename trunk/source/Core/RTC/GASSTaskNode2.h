@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -79,6 +79,8 @@ namespace GASS
 		void UnregisterPostUpdate(TaskNode2ListenerPtr listener);
 		void SetPaused(bool value) { m_Paused= value;}
 		bool GetPaused() const {return m_Paused;}
+		void ResetTime() { m_CurrentTime = 0;}
+		double GetTime() const { return m_CurrentTime;}
 		void AddChildNode(TaskNode2Ptr child);
 		void SetUpdateFrequency(double value) {m_UpdateFrequency = value;}
 		double GetUpdateFrequency() const {return m_UpdateFrequency;}
@@ -112,6 +114,7 @@ namespace GASS
 		double m_UpdateFrequency;
 		tbb::spin_mutex *m_Mutex;
 		int m_MaxSimulationSteps;
+		double m_CurrentTime;
 
 		//helper
 		double m_TimeToProcess;

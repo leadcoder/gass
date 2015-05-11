@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -33,7 +33,8 @@ namespace GASS
 	RunTimeController::RunTimeController(SimEngine* engine) : m_StepSimulationRequest(false),
 		m_UpdateSimOnRequest(false),
 		m_RequestDeltaTime(0),
-		m_Engine(engine)
+		m_Engine(engine),
+		m_CurrentState(SS_STOPPED)
 	{
 
 	}
@@ -129,6 +130,51 @@ namespace GASS
 		{
 			m_SimNode->SetMaxSimulationSteps(1);
 		}
+	}
+
+
+	void RunTimeController::SetSimulationPaused(bool value)
+	{
+		if(value && m_CurrentState == SS_RUNNING)
+		{
+			m_CurrentState = SS_PAUSED;
+			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_PAUSE)));
+			m_SimNode->SetPaused(true);
+		}
+		else if(!value && m_CurrentState == SS_PAUSED)
+		{
+			m_CurrentState = SS_RUNNING;
+			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_RESUME)));
+			m_SimNode->SetPaused(false);
+		}
+	}
+
+	void RunTimeController::StopSimulation()
+	{
+		m_CurrentState = SS_STOPPED;
+		m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_STOP)));
+		m_SimNode->SetPaused(true);
+		m_SimNode->ResetTime();
+	}
+
+	void RunTimeController::StartSimulation()
+	{
+		if(m_CurrentState == SS_STOPPED)
+		{
+			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_START)));
+			m_SimNode->SetPaused(false);
+			m_CurrentState = SS_RUNNING;
+		}
+	}
+
+	double RunTimeController::GetTime() const
+	{
+		return m_PreSimNode->GetTime();
+	}
+
+	double RunTimeController::GetSimulationTime() const
+	{
+		return m_SimNode->GetTime();
 	}
 
 	void RunTimeController::Update(double delta_time, TaskNode2* caller)

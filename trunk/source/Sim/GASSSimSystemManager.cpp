@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -62,13 +62,14 @@ namespace GASS
 		{
 			m_Systems[i]->Init();
 			//auto register for updates
+			m_Systems[i]->RegisterForUpdate();
 
-			UpdateGroupID ugid = m_Systems[i]->GetUpdateGroup().GetValue();
+			/*UpdateGroupID ugid = m_Systems[i]->GetUpdateGroup().GetValue();
 			if(ugid != UGID_NO_UPDATE)
 			{
-				TaskNode2* node = SimEngine::Get().GetRootTaskNode()->GetChildByID(ugid);
+				TaskNode2* node = SimEngine::Get().GetRunTimeController()->GetRootNode()->GetChildByID(ugid);
 				node->Register(m_Systems[i]);
-			}
+			}*/
 		}
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	

@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -18,17 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include "GameSystem.h"
 #include "Core/Common.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "GameSceneManager.h"
-#include "GameSystem.h"
+
 
 namespace GASS
 {
-	GameSystem::GameSystem(void) : m_Update(true)
+	GameSystem::GameSystem(void) //: m_Update(true)
 	{
 		m_UpdateGroup = UGID_SIM;
 	}
@@ -47,26 +48,26 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register("GameSceneManager",new GASS::Creator<GameSceneManager, ISceneManager>);
 		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GameSystem::OnScenarioEvent,ScenarioStateRequest,0));
+		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GameSystem::OnScenarioEvent,SimEvent,0));
 	}
 
-	void GameSystem::OnScenarioEvent(ScenarioStateRequestPtr message)
+	/*void GameSystem::OnScenarioEvent(SimEventPtr message)
 	{
-		if(message->GetState() == SS_PLAY)
+		if(message->GetEventType() == SET_PLAY)
 		{
 			m_Update = true;
 		}
-		else if(message->GetState() == SS_STOP)
+		else if(message->GetEventType() == SET_STOP)
 		{
 			m_Update = false;
 		}
-	}
+	}*/
 
-	void GameSystem::Update(double delta_time, TaskNode2* caller)
+	/*void GameSystem::Update(double delta_time, TaskNode2* caller)
 	{
 		if(m_Update)
 			SimSystem::Update(delta_time,caller);
-	}
+	}*/
 }
 
 

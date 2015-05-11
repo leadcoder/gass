@@ -1,8 +1,8 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
-* See http://code.google.com/p/gass/                                 *
+* See http://code.google.com/p/gass/                                        *
 *                                                                           *
-* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+* Copyright (c) 2008-2015 GASS team. See Contributors.txt for details.      *
 *                                                                           *
 * GASS is free software: you can redistribute it and/or modify              *
 * it under the terms of the GNU Lesser General Public License as published  *
@@ -93,21 +93,21 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
 
 		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
-			REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
-			REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
-			REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
-			REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
-			REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
-			REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
-			REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
-			REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
-			REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
-			REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
-			REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-			REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-			REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
-			REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
-			REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
+		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
+		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
+		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
+		REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
+		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
+		REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
+		REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
+		REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
+		REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)
@@ -142,7 +142,6 @@ namespace GASS
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->Register(shared_from_this());
 
-
 		//Play engine sound
 		SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));
 		GetSceneObject()->PostRequest(sound_msg);
@@ -166,6 +165,7 @@ namespace GASS
 		m_ThrottleInput = 0;
 		m_SteerInput = 0;
 		m_InReverseMode = false;
+
 		for(size_t i = 0; i < m_Vehicle->mWheelsSimData.getNumWheels(); i++)
 		{
 			m_Vehicle->setWheelShapeMapping(static_cast<physx::PxI32>(i),static_cast<physx::PxU32>(i));
@@ -914,6 +914,34 @@ namespace GASS
 				}
 			}
 
+			if(m_Vehicle)
+			{
+				PxShape* carShapes[PX_MAX_NUM_WHEELS+1];
+				const PxU32 numShapes= m_Vehicle->getRigidDynamicActor()->getNbShapes();
+				m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
+
+				if(m_AllWheels.size() == numShapes-1)
+				{
+					Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+
+					for(int i = 0; i < numShapes-1; i++)
+					{
+						SceneObjectPtr wheel(m_AllWheels[i]);
+						if(wheel)
+						{
+							int from_id = (int)(this);
+							Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).p) - offset;
+							wheel->SendImmediateRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
+							Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i]).q);
+							wheel->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot,from_id)));
+						}
+					}
+				}
+				else
+				{
+					GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
+				}
+			}
 		}
 	}
 
@@ -1082,7 +1110,7 @@ namespace GASS
 		Vec3 col_point(0,0,0);
 		Vec3 col_velocity(0,0,0);
 		Vec3 col_size(0,0,0);
-		
+
 
 
 		ComponentContainerTemplate::ComponentVector components;
@@ -1090,21 +1118,21 @@ namespace GASS
 
 		for(int i = 0;  i < components.size(); i++)
 		{
-			PhysXVehicleComponentPtr comp = DYNAMIC_PTR_CAST<PhysXVehicleComponent>(components[i]);
-			if(comp.get() != this)
-			{
-				
-				Vec3 obj_pos =  comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-				Float dist = (obj_pos - pos).Length();
-				if(dist < check_range && 
-					dist < col_dist)
-				{
-					col = true;
-					col_dist = dist;
-					col_obj = comp->GetSceneObject();
-					col_point = obj_pos;
-				}
-			}
+		PhysXVehicleComponentPtr comp = DYNAMIC_PTR_CAST<PhysXVehicleComponent>(components[i]);
+		if(comp.get() != this)
+		{
+
+		Vec3 obj_pos =  comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
+		Float dist = (obj_pos - pos).Length();
+		if(dist < check_range && 
+		dist < col_dist)
+		{
+		col = true;
+		col_dist = dist;
+		col_obj = comp->GetSceneObject();
+		col_point = obj_pos;
+		}
+		}
 		}
 
 		GetSceneObject()->PostEvent(SceneObjectEventMessagePtr(new VehicleRadarEvent(col, col_point, col_dist, col_obj)));*/
