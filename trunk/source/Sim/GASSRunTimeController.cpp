@@ -34,7 +34,8 @@ namespace GASS
 		m_UpdateSimOnRequest(false),
 		m_RequestDeltaTime(0),
 		m_Engine(engine),
-		m_CurrentState(SS_STOPPED)
+		m_CurrentState(SS_STOPPED),
+		m_SimTimeScale(1.0)
 	{
 
 	}
@@ -107,8 +108,9 @@ namespace GASS
 		}
 		else
 		{
-			//Just update root node
-			m_RootNode->Update(delta_time,NULL);
+			m_PreSimNode->Update(delta_time,NULL);
+			m_SimNode->Update(delta_time * m_SimTimeScale,NULL);
+			m_PostSimNode->Update(delta_time,NULL);
 		}
 	}
 

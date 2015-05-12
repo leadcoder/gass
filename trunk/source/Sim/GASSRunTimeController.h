@@ -101,6 +101,16 @@ namespace GASS
 			Get simulation time
 		*/
 		double GetSimulationTime() const;
+
+		/**
+			Get simulation time multiplier, default x1
+		*/
+		double GetSimulationTimeScale() const {return m_SimTimeScale;}
+
+		/**
+			Set simulation time multiplier, default x1
+		*/
+		void SetSimulationTimeScale(double value) {m_SimTimeScale = value;}
 	private:
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		void Update(double delta_time, TaskNode2* caller);
@@ -117,6 +127,7 @@ namespace GASS
 		//indicate that we want to step simulation next frame
 		bool m_StepSimulationRequest;
 		double m_RequestDeltaTime;
+		double m_SimTimeScale;
 
 		SimulationState m_CurrentState;
 	};
