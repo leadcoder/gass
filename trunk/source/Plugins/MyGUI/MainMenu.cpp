@@ -23,12 +23,8 @@ namespace GASS
 		mi->setItemType(MyGUI::MenuItemType::Popup);
 		mi->setCaption(("Simulation"));
 		p->setPopupAccept(true);
-		//mi->setPopupAccept(true);
-
-		//MyGUI::IntSize s = mi->getTextSize();
-		//int menuHeight = s.height + 6;
-		//mainmenu->setCoord(0, 0, menuWidth, menuHeight);
-		m_ItemStartStopSim = p->addItem("StartSim", MyGUI::MenuItemType::Normal,"Command_StartStopSim");
+		
+		//m_ItemStartStopSim = p->addItem("StartSim", MyGUI::MenuItemType::Normal,"Command_StartStopSim");
 		m_ItemPauseSim = p->addItem("PauseSim", MyGUI::MenuItemType::Normal,"Command_PauseSim");
 		//p->addItem(("get new Vehicl2e"), MyGUI::MenuItemType::Normal);
 
@@ -98,6 +94,20 @@ namespace GASS
 			{
 				SimEngine::Get().GetRunTimeController()->StartSimulation();
 				m_ItemStartStopSim->setItemName("StopSim");
+			}
+		}
+		else if(item_id == "Command_PauseSim")
+		{
+			SimulationState sim_state = SimEngine::Get().GetRunTimeController()->GetSimulationState();
+			if(sim_state == SS_RUNNING)
+			{
+				SimEngine::Get().GetRunTimeController()->SetSimulationPaused(true);
+				m_ItemPauseSim->setItemName("ResumeSim");
+			}
+			else if(sim_state == SS_PAUSED)
+			{
+				SimEngine::Get().GetRunTimeController()->SetSimulationPaused(true);
+				m_ItemPauseSim->setItemName("PauseSim");
 			}
 		}
 		/*MyGUI::UString* data = _item->getItemData<MyGUI::UString>(false);

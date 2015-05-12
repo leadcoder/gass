@@ -61,11 +61,6 @@ namespace GASS
 
 	}
 
-	/*void SSAOListener::notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
-	{
-
-	}*/
-
 	void SSAOListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
 	{
 		if (pass_id != 42) // not SSAO, return

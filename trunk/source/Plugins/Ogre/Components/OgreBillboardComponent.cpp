@@ -66,7 +66,7 @@ namespace GASS
 	{
 		ADD_DEPENDENCY("OgreLocationComponent")
 
-			GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, Component>);
+		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OgreBillboardComponent, Component>);
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
 		RegisterProperty<OgreMaterial>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
@@ -185,6 +185,7 @@ namespace GASS
 		AABox box(Vec3(-max_size,-max_size+offset,-max_size),Vec3(max_size,max_size+offset,max_size));
 		return box;
 	}
+
 	Sphere OgreBillboardComponent::GetBoundingSphere() const
 	{
 		Sphere sphere;
@@ -192,7 +193,6 @@ namespace GASS
 		sphere.m_Radius = Math::Max(m_Width,m_Height)/2.0;
 		return sphere;
 	}
-
 
 	void OgreBillboardComponent::OnSetColorMessage(BillboardColorRequestPtr message)
 	{

@@ -159,10 +159,6 @@ namespace GASS
 	void PlaneGeometryComponent::SetTexture(const std::string &texture_name)
 	{
 		m_Texture = texture_name;
-		if(GetSceneObject())
-		{
-			GetSceneObject()->PostRequest(TextureRequestPtr(new TextureRequest(texture_name)));
-		}
 	}
 
 	std::string PlaneGeometryComponent::GetTexture() const

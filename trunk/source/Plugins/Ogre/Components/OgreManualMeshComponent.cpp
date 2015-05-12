@@ -110,7 +110,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnTextureMessage,TextureRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
 	}
@@ -203,37 +202,6 @@ namespace GASS
 	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialRequestPtr message)
 	{
 		OgreMaterialCache::Restore(m_MeshObject);
-	}
-
-	void OgreManualMeshComponent::OnTextureMessage(TextureRequestPtr message)
-	{
-		/*if(message->GetTexture() == "")
-		return;
-		if(m_UserMaterials[0]->getNumTechniques() > 0)
-		{
-		Ogre::Technique * technique = m_UserMaterials[0]->getTechnique(0);
-		if(technique->getNumPasses() > 0)
-		{
-		Ogre::Pass* pass = technique->getPass(0);
-		if(pass->getNumTextureUnitStates() == 0)
-		{
-		pass->createTextureUnitState();
-		}
-
-		if(pass->getNumTextureUnitStates() > 0)
-		{
-		Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
-		std::string texture_name = message->GetTexture();
-		//Check in resource manager
-
-		if(texture_name != "")
-		{
-		const std::string stripped_name = FileUtils::GetFilename(texture_name);
-		textureUnit->setTextureName(stripped_name);
-		}
-		}
-		}
-		}*/
 	}
 
 	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialRequestPtr message)

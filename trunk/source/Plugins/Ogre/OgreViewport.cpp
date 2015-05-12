@@ -34,7 +34,6 @@ namespace GASS
 		m_OgreViewport(vp), 
 		m_Window(window)
 	{
-		//vp->setMaterialScheme("PPLHigh");
 	}
 
 	OgreViewport::~OgreViewport()
@@ -79,7 +78,6 @@ namespace GASS
 		{
 			m_OgreViewport->setMaterialScheme(cam_comp->GetMaterialScheme());
 		}
-		//OgreGraphicsSystemPtr(m_GFXSystem)->GetPostProcess()->Update(cam_comp);
 		m_PostProcess->SetActiveCompositors(cam_comp->GetPostFilters());
 		m_PostProcess->Update(cam_comp);
 

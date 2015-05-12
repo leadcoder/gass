@@ -212,10 +212,6 @@ namespace GASS
 	void ArrowGeometryComponent::SetTexture(const ResourceHandle &texture_name)
 	{
 		m_Texture = texture_name;
-		if(GetSceneObject())
-		{
-			GetSceneObject()->PostRequest(TextureRequestPtr(new TextureRequest(texture_name.Name())));
-		}
 	}
 
 	ResourceHandle ArrowGeometryComponent::GetTexture() const

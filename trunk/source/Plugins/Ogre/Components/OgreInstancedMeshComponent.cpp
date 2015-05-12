@@ -215,16 +215,7 @@ namespace GASS
 			ogsm->GetOgreSceneManager()->destroyEntity (entity);
 			m_InstancedGeometries.push_back(instancedGeometry);
 			++iter;
-			/*for(size_t i = 0;  i < iter->second.size(); i++)
-			{
-			Ogre::Vector3  pos = OgreConvert::ToOgre(iter->second.at(i).m_Position);
-			Ogre::Quaternion orientation = OgreConvert::ToOgre(iter->second.at(i).m_Rotation);
-			Ogre::Vector3  scale = OgreConvert::ToOgre(iter->second.at(i).m_Scale);
-			//m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
-			}
-			iter++;*/
 		}
-		//m_StaticGeometry->build();
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
@@ -282,6 +273,7 @@ namespace GASS
 
 	AABox OgreInstancedMeshComponent::GetBoundingBox() const
 	{
+		//TODO: Fix THIS
 		//assert(m_InstancedGeometry);
 		AABox final_box;
 		/*	StaticGeometry::RegionIterator regIt = m_StaticGeometry->getRegionIterator();
@@ -293,6 +285,7 @@ namespace GASS
 		final_box.Union(box);
 		}*/
 		return final_box;
+
 	}
 
 
