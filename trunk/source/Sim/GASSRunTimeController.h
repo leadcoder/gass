@@ -111,6 +111,19 @@ namespace GASS
 			Set simulation time multiplier, default x1
 		*/
 		void SetSimulationTimeScale(double value) {m_SimTimeScale = value;}
+
+
+		/**
+			Get max simulation sub steps each frame, when target frame rate can't be reached (to large delta time) 
+			this value clamp number of simulation iteration that has to be executed to reached target delta_time
+		*/
+		int GetMaxSimulationSteps() const {return m_MaxSimulationSteps;}
+
+		/**
+			Set max simulation sub steps each frame
+
+		*/
+		void SetMaxSimulationSteps(int value) {m_MaxSimulationSteps = value;}
 	private:
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		void Update(double delta_time, TaskNode2* caller);
@@ -128,7 +141,7 @@ namespace GASS
 		bool m_StepSimulationRequest;
 		double m_RequestDeltaTime;
 		double m_SimTimeScale;
-
+		int m_MaxSimulationSteps;
 		SimulationState m_CurrentState;
 	};
 	typedef SPTR<RunTimeController> RunTimeControllerPtr;

@@ -35,7 +35,8 @@ namespace GASS
 		m_RequestDeltaTime(0),
 		m_Engine(engine),
 		m_CurrentState(SS_STOPPED),
-		m_SimTimeScale(1.0)
+		m_SimTimeScale(1.0),
+		m_MaxSimulationSteps(20)
 	{
 
 	}
@@ -76,7 +77,7 @@ namespace GASS
 
 		m_SimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_SIM));
 		m_SimNode->SetUpdateFrequency(update_freq);
-		m_SimNode->SetMaxSimulationSteps(1);
+		m_SimNode->SetMaxSimulationSteps(m_MaxSimulationSteps);
 		m_SimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
 		//we need to sync messages after each update
 		m_SimNode->RegisterPostUpdate(shared_from_this());
@@ -128,9 +129,9 @@ namespace GASS
 			//if manual stepping we can accept more simulation steps
 			m_SimNode->SetMaxSimulationSteps(800);
 		}
-		else //if real time, don't substep
+		else //if real time, don't sub-step
 		{
-			m_SimNode->SetMaxSimulationSteps(1);
+			m_SimNode->SetMaxSimulationSteps(m_MaxSimulationSteps);
 		}
 	}
 

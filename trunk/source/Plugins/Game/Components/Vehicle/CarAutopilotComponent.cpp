@@ -328,7 +328,7 @@ namespace GASS
 			}
 		}*/
 
-		GetSceneObject()->GetParentSceneObject()->GetChildByID("TARGET")->PostRequest(PositionRequestPtr(new PositionRequest(target_pos)));
+		//GetSceneObject()->GetParentSceneObject()->GetChildByID("TARGET")->PostRequest(PositionRequestPtr(new PositionRequest(target_pos)));
 		
 
 		if(target_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
