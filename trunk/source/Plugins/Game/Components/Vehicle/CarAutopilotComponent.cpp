@@ -194,7 +194,7 @@ namespace GASS
 		target_pos.y = m_CurrentPos.y;
 		Float desired_speed	= m_DesiredSpeed;
 		Vec3 current_dir = -m_Transformation.GetZAxis();
-		float current_speed = -m_VehicleSpeed.z; 
+		Float current_speed = -m_VehicleSpeed.z; 
 		Vec3 current_pos = m_CurrentPos;
 		Vec3 target_dir = target_pos - current_pos;
 		Float target_dist = target_dir.Length();
@@ -206,6 +206,8 @@ namespace GASS
 		{
 			Float min_dist = FLT_MAX; 
 			DetectionData dd = m_ProximityData[0];
+
+			//pick closest collision point
 			for(size_t  i = 0; i < m_ProximityData.size();i++)
 			{
 				Float dist = (m_CurrentPos - m_ProximityData[i].Pos).Length();
@@ -216,11 +218,19 @@ namespace GASS
 				}
 			}
 
+			//Get future positions
+			const Float future_time = 1.0; //1s
+			const Vec3 this_future_position = m_CurrentPos + current_dir*(current_speed*future_time);
+			const Vec3 other_future_position = dd.Pos + (-dd.Rotation.GetZAxis())*(-dd.Velocity.z*future_time);
+
+			//GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(this_future_position, other_future_position, ColorRGBA(1,0,0,1), ColorRGBA(1,0,0,1))));
+
 			const Float col_radie1 = 3;
 			const Float col_radie2 = 3;
 			const Float col_radie = col_radie1 + col_radie2;
 
-			Vec3 target_to_col_dir = target_pos - dd.Pos;
+			//Vec3 target_to_col_dir = target_pos - dd.Pos;
+			Vec3 target_to_col_dir = this_future_position - other_future_position;
 			Float target_to_col_dist = target_to_col_dir.Length();
 			if(target_to_col_dist < col_radie) //inside collision sphere
 			{
@@ -232,12 +242,20 @@ namespace GASS
 				per_pend_target_dir.Normalize();
 
 				//check if behind
-				Vec3 col_dir =  dd.Pos - m_CurrentPos;
+				Vec3 col_dir =  other_future_position - this_future_position;
+				
 				col_dir.Normalize();
 				Vec3 drive_dir = -m_Transformation.GetZAxis();
 				const Float cos_angle = Math::Dot(drive_dir,col_dir);
+				
+				const Vec3 cross_prod = Math::Cross(drive_dir,col_dir);
+
+				if(cross_prod.y < 0)
+					per_pend_target_dir = -per_pend_target_dir;
+
 				if(cos_angle > -0.1)
 				{
+					//check if right or left side
 					target_pos = target_pos + per_pend_target_dir*col_radie;
 					target_dir = target_pos - current_pos;
 					target_dist = target_pos.Length();
