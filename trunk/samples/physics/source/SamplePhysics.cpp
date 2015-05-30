@@ -20,7 +20,7 @@
 
 
 #include "Sim/GASS.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	systems.push_back("OISInputSystem");
 	systems.push_back("ControlSettingsSystem");
 	systems.push_back("CoreSystem");
-	systems.push_back("GameSystem");
+	systems.push_back("SimulationSystem");
 	systems.push_back("PhysXPhysicsSystem");
 	systems.push_back("ODECollisionSystem");
 	

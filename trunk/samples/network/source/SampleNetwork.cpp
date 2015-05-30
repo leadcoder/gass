@@ -21,7 +21,7 @@
 
 #include "Sim/GASS.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "SimApplication.h"
 #include "Client.h"
 #include "Server.h"

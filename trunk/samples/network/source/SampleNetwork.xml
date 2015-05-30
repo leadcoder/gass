@@ -11,7 +11,8 @@
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>
   <Plugin PluginFile = "GASSPluginEnvironment"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
-  <Plugin PluginFile = "GASSPluginGame"/>
+  <Plugin PluginFile = "GASSPluginVehicle"/>
+  <Plugin PluginFile = "GASSPluginInput"/>
   <Plugin PluginFile = "GASSPluginBase"/>
   <Plugin PluginFile = "GASSPluginRakNet"/>
   <!--<Plugin PluginFile = "GASSPluginMyGUI"/>-->

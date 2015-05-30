@@ -1,7 +1,7 @@
 // CoreTest.cpp : Defines the entry point for the console application.
 //
 #include "SimApplication.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 
 class SimServer : public SimApplication

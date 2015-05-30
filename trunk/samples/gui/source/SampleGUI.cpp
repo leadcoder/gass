@@ -20,7 +20,7 @@
 
 
 #include "Sim/GASS.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
@@ -115,14 +115,17 @@ int run(int argc, char* argv[])
 	GASS::SimSystemPtr gui_system = GASS::SystemFactory::Get().Create(gui_gfx_system_name);
 	gui_system->OnCreate(m_Engine->GetSimSystemManager());
 	gui_system->Init();
+	gui_system->RegisterForUpdate();
 	m_Engine->GetSimSystemManager()->AddSystem(gui_system);
 	//GASS::TaskNode2* node = m_Engine->GetRootTaskNode()->GetChildByID(gui_system->GetUpdateGroup().GetValue());
 	//node->Register(gui_system);
 	
 	gfx_system->Init();
+	gfx_system->RegisterForUpdate();
+
 	m_Engine->GetSimSystemManager()->AddSystem(gfx_system);
-	GASS::TaskNode2* node = m_Engine->GetRootTaskNode()->GetChildByID(gfx_system->GetUpdateGroup().GetValue());
-	node->Register(gfx_system);
+	//GASS::TaskNode2* node = m_Engine->GetRootTaskNode()->GetChildByID(gfx_system->GetUpdateGroup().GetValue());
+	//node->Register(gfx_system);
 
 
 	boost::shared_ptr<MyMenu> menu (new MyMenu());
