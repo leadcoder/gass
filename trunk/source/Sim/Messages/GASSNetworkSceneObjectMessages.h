@@ -127,7 +127,20 @@ namespace GASS
 	};
 	typedef SPTR<NetworkDeserializeRequest> NetworkDeserializeRequestPtr;
 
-
+	class ClientRemoteMessage : public SceneObjectRequestMessage
+	{
+	public:
+		ClientRemoteMessage(const std::string &client, const std::string message, const std::string data, SenderID sender_id = -1, double delay= 0) :
+		  SceneObjectRequestMessage(sender_id , delay) , m_Client(client),m_Message(message){}
+		  std::string GetClient() const {return m_Client;}
+		  std::string GetMessage() const {return m_Message;}
+		  std::string GetData() const {return m_Data;}
+	private:
+		std::string m_Client;
+		std::string m_Message;
+		std::string m_Data;
+	};
+	typedef SPTR<ClientRemoteMessage> ClientRemoteMessagePtr;
 
 	
 }

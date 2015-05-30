@@ -441,23 +441,6 @@ namespace GASS
 
 
 	/**
-	Message used to change texture of manual mesh object
-	param 
-	*/
-	class TextureRequest : public SceneObjectRequestMessage
-	{
-	public:
-		TextureRequest(const std::string &texture ,SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Texture(texture){}
-		  std::string GetTexture()const {return m_Texture;}
-		  void SetTexture(const std::string &texture) {m_Texture=texture;}
-	private:
-		std::string m_Texture;
-	};
-	typedef SPTR<TextureRequest> TextureRequestPtr;
-
-
-	/**
 		Message used to modify bone transformation	
 	*/
 	class BoneTransformationRequest : public SceneObjectRequestMessage
