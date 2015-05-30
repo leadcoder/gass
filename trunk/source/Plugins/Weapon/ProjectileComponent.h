@@ -18,43 +18,66 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef PROJECTILE_COMPONENT_H
+#define PROJECTILE_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSWeaponMessages.h"
-#include "Sim/Messages/GASSInputMessages.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	class ProjectileComponent :  public Reflection<ProjectileComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		ProjectileComponent();
+		virtual ~ProjectileComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void SceneManagerTick(double delta);
 		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnPositionMessage(PositionRequestPtr message);
+		void OnRotationMessage(RotationRequestPtr message);
+		void OnVelocityRequest(PhysicsBodyVelocityRequestPtr message);
+		void StepPhysics(double time);
+		void SpawnEffect(const std::string &effect);
+		void SetEndEffectTemplateName(const std::string &effect);
+		std::string GetEndEffectTemplateName() const;
+        Vec3 GetImpactForce() const; 
+		void SetImpactForce(const Vec3 &value);
+		float GetMaxDamage() const; 
+		void SetMaxDamage(float value);
+		
+		Vec3 m_Velocity;
+		float m_TimeToLive;
+		float m_TimeLeft;
+		std::string m_StartEffectTemplateName;
+		std::string m_EndEffectTemplateName;
+		int m_DamageType;
+		int m_HasCollisionEffect;
+		int m_DieAfterColl;
+		bool m_HasColHandle;
+		float m_TotSquaredDist;
+		float m_DamgeRadius;
+		float m_ExplodeNearEnemyDistance;
+		double m_PhysicsDeltaTime;
+		CollisionSceneManagerPtr m_ColSM;
+		Vec3 m_Pos;
+		Quaternion m_Rot;
+		float m_MaxDamage;
+		Vec3 m_ImpactForce;
+
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

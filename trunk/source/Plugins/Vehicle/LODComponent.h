@@ -18,43 +18,49 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef LOD_COMPONENT_H
+#define LOD_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
-#include "Sim/Messages/GASSInputMessages.h"
+
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	class LODComponent :  public Reflection<LODComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		LODComponent();
+		virtual ~LODComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnCameraMoved(TransformationChangedEventPtr message);
+		void OnObjectMoved(TransformationChangedEventPtr message);
+		void OnCameraChanged(CameraChangedEventPtr message);
+
+		void SetMediumLODDistance(float value) {m_MediumLODDistance = value;}
+		void SetLowLODDistance(float value) {m_LowLODDistance = value;}
+		float GetMediumLODDistance() const {return m_MediumLODDistance;}
+		float GetLowLODDistance() const {return m_LowLODDistance;}
+		void UpdateLOD();
+		
+		float m_MediumLODDistance;
+		float m_LowLODDistance;
+		SceneObjectWeakPtr m_ActiveCameraObject;
+		Vec3 m_ObjectPosition;
+		Vec3 m_CameraPosition;
+		LODMessage::LODLevel m_CurrentLevel;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

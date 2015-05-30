@@ -18,43 +18,40 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#ifndef PLAYER_INPUT_COMPONENT_H
+#define PLAYER_INPUT_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSInputMessages.h"
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	class PlayerInputComponent : public Reflection<PlayerInputComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		PlayerInputComponent();
+		virtual ~PlayerInputComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
+		void OnDelete();
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnInput(ControllSettingsMessagePtr message);
+		void SetControlSetting(const std::string &controlsetting);
+		std::string GetControlSetting() const;
+		std::string m_ControlSetting;
+		SceneObjectPtr m_CurrentVehicle;
+		SceneObjectPtr m_CurrentSeat;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

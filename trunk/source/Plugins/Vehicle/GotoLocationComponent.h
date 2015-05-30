@@ -18,43 +18,41 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef GO_TO_LOCATION_COMPONENT_H
+#define GO_TO_LOCATION_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
+
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
-#include "Sim/Messages/GASSInputMessages.h"
+#include "Plugins/Base/CoreMessages.h"
+
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class GoToLocationComponent :  public Reflection<GoToLocationComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		GoToLocationComponent();
+		virtual ~GoToLocationComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
+		void SceneManagerTick(double delta);
+		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnTransformationMessage(TransformationChangedEventPtr message);
+		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
+		ADD_PROPERTY(SceneObjectRef,NavigationObject);
+		Vec3 m_CurrentLocation;
+		Vec3 m_DestinationLocation;
+		std::vector<Vec3> m_Path;
+		
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

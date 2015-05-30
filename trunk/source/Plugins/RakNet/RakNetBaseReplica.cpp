@@ -36,7 +36,7 @@
 #include "RakNetNetworkSystem.h"
 #include "RakNetInputTransferComponent.h"
 #include "RakNetMessageTransferComponent.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 
 namespace GASS

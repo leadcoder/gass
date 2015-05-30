@@ -5,7 +5,7 @@
 #include "Sim/GASS.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
 #include "RoadNetwork.h"

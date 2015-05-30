@@ -18,89 +18,76 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_INPUT_TRANSFER_COMPONENT_H
-#define RAK_NET_INPUT_TRANSFER_COMPONENT_H
+#ifndef TURRET_COMPONENT_H
+#define TURRET_COMPONENT_H
+
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-
-#include "Sim/Interface/GASSINetworkComponent.h"
-
-#include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
-
+#include "Sim/Messages/GASSInputMessages.h"
+#include "Core/Utils/GASSPIDControl.h"
 
 namespace GASS
 {
-	enum
-	{
-		INPUT_DATA = 0
-	};
-
-	class InputPackage : public NetworkPackage
-	{
-	public:
-		InputPackage() 
-		{
-			
-		}
-		InputPackage(int id ) : NetworkPackage(id) 
-		{
-		
-		}
-		InputPackage(int id, int generated_by, unsigned int time_stamp,int index, float value) : NetworkPackage(id), 
-			TimeStamp(time_stamp),
-			Index(index),
-			Value(value),
-			Generator(generated_by)
-			{}
-		virtual ~InputPackage(){}
-		int GetSize() {return sizeof(InputPackage);}
-		void Assign(char* data)
-		{
-			*this = *(InputPackage*)data;
-		}
-		int Index;
-		float Value;
-		unsigned int Generator;
-		unsigned int TimeStamp;
-	};
-
-	typedef SPTR<InputPackage> InputPackagePtr;
 
 	class SceneObject;
-	
 	typedef SPTR<SceneObject> SceneObjectPtr;
 	typedef WPTR<SceneObject> SceneObjectWeakPtr;
 
-	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>
+	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetInputTransferComponent();
-		virtual ~RakNetInputTransferComponent();
+		TurretComponent();
+		virtual ~TurretComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
-		void ReceivedInput(int controller, float value);
+		void SceneManagerTick(double delta_time);
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
+		Vec3 GetDesiredAimDirection(double delta_time);
+		std::string GetController() const {return m_Controller;}
+		void SetController(const std::string &value) {m_Controller = value;}
+		void SetMaxSteerVelocity(float value) {m_MaxSteerVelocity = value;}
+		float GetMaxSteerVelocity() const {return m_MaxSteerVelocity;}
+		void SetMaxSteerAngle(float value) {m_MaxSteerAngle = value;}
+		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
+		void SetSteerForce(float value) {m_SteerForce = value;}
+		float GetSteerForce() const {return m_SteerForce;}
+		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = value.x;m_MinAngle = value.y;}
+		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
+		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
+		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
+
 		void OnInput(InputRelayEventPtr message);
-		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
-		std::string GetControlSetting() const {return m_ControlSettingName;}
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
+		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
+		void OnTransformation(TransformationChangedEventPtr message);
+		void OnParentTransformation(TransformationChangedEventPtr message);
+		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		
-		std::string m_ControlSettingName;
-		//ControlSetting* m_ControlSetting;
-		typedef std::map<int,float> InputHistoryMap;
-		InputHistoryMap m_InputHistory;
+		std::string m_Controller;
+		float m_MaxSteerVelocity;
+		float m_MaxSteerAngle;
+		float m_SteerForce;
+		float m_CurrentAngle;
+		float m_MinAngle;
+		float m_MaxAngle;
+		Mat4 m_Transformation;
+		Mat4 m_ParentTransformation;
+		Mat4 m_RelTrans;
+		Mat4 m_AimTrans;
+		Vec3 m_DesiredDir;
+		PIDControl m_TurnPID;
+		bool m_Active;
+		float m_TurnInput;
+		Float m_AngularVelocity;
+		Float m_RotValue;
 	};
-	typedef SPTR<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
+	typedef SPTR<TurretComponent> TurretComponentPtr;
 }
 #endif

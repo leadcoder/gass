@@ -19,7 +19,7 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "DetourCrowd.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
 struct dtCrowdAgent;

@@ -35,7 +35,7 @@
 
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 //#include "RakNetReplicaMember.h"
 
 

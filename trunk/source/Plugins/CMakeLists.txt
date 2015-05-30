@@ -1,7 +1,11 @@
 #always build depdency free plugins 
 ADD_SUBDIRECTORY(Base)
 ADD_SUBDIRECTORY(RecastNavigation)
-ADD_SUBDIRECTORY(Game)
+#ADD_SUBDIRECTORY(Game)
+ADD_SUBDIRECTORY(Vehicle)
+ADD_SUBDIRECTORY(Input)
+ADD_SUBDIRECTORY(Sensor)
+ADD_SUBDIRECTORY(Weapon)
 ADD_SUBDIRECTORY(RoadNetwork)
 
 #All plugins that have depdencies should be optional

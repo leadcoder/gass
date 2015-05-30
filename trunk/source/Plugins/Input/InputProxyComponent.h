@@ -18,43 +18,43 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#ifndef INPUT_PROXY_COMPONENT_H
+#define INPUT_PROXY_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSInputMessages.h"
+
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	/**
+		Delegate input from user specified SceneObject to owner for this component 
+	*/
+
+	class InputProxyComponent : public Reflection<InputProxyComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		InputProxyComponent();
+		virtual ~InputProxyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
+		void OnPlayerInput(InputRelayEventPtr message);
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
+
+	typedef SPTR<InputProxyComponent> InputProxyComponentPtr;
 }
 #endif

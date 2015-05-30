@@ -1,7 +1,7 @@
 #include <limits>
 #include "GASSRNRoadNodeComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 

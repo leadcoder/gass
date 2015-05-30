@@ -18,43 +18,54 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef ARMOR_COMPONENT_H
+#define ARMOR_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
+#include "Sim/Messages/GASSWeaponMessages.h"
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	/**
+		Simple armor model used to keep track of the objects current armor state
+		By listing to hit messages (sent by ProjectileComponent) armor is decreased on hit.
+		When no armor left a OutOfArmor messages is sent and optional damage model will displayed
+	*/
+
+	class ArmorComponent :  public Reflection<ArmorComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		ArmorComponent();
+		virtual ~ArmorComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
+		void OnLoad(LocationLoadedEventPtr message);
+		void OnHit(HitMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		float GetArmor() const; 
+		void SetArmor(float value);
+		std::string GetDamageMesh() const;
+		void SetDamageMesh(const std::string &value);
+		std::string GetDamageEffect1() const;
+		void SetDamageEffect1(const std::string &name);
+		
+
+		ADD_PROPERTY(float,OutOfArmorForce);
+		float m_Armor;
+		float m_CurrentArmor;
+		std::string m_DamageMesh;
+		std::string m_DamageEffect1;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

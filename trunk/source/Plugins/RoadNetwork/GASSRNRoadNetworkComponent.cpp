@@ -5,7 +5,7 @@
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include <tinyxml2.h>
 

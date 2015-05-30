@@ -18,43 +18,50 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#ifndef INPUT_HANDLER_COMPONENT_H
+#define INPUT_HANDLER_COMPONENT_H
 
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSInputMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	/**
+		Component used to delegate input from input system to this scene object.
+		By listening to enter/exit messages input will only be delegated if user is "inside" object.
+		Enter and exit messages are sent by the PlayerInputComponent that should be attached to the player object.
+	*/
+
+	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		InputHandlerComponent();
+		virtual ~InputHandlerComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnEnter(EnterVehicleRequestPtr message);
+		void OnExit(ExitVehicleRequestPtr message);
+		void OnInput(ControllSettingsMessagePtr message);
+		void SetControlSetting(const std::string &controlsetting);
+		std::string GetControlSetting() const;
+		std::string m_ControlSetting;
+		bool m_Empty;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
+
+	typedef SPTR<InputHandlerComponent> InputHandlerComponentPtr;
 }
 #endif

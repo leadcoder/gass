@@ -18,43 +18,57 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef ADAPTIVE_STEER_COMPONENT_H
+#define ADAPTIVE_STEER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+
+	class SceneObject;
+	typedef SPTR<SceneObject> SceneObjectPtr;
+	typedef WPTR<SceneObject> SceneObjectWeakPtr;
+
+	class AdaptiveSteerComponent :  public Reflection<AdaptiveSteerComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		AdaptiveSteerComponent();
+		virtual ~AdaptiveSteerComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
+		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnVelocityMessage(PhysicsVelocityEventPtr message);
+		void SetSteerForce(float value) {m_SteerForce = value;}
+		float GetSteerForce() const {return m_SteerForce;}
+		void SetMaxSteerAngleAtSpeed(Vec2 value) {m_MaxSteerAngleAtSpeed = value;}
+		Vec2 GetMaxSteerAngleAtSpeed() const {return m_MaxSteerAngleAtSpeed;}
+		void SetMinSteerAngleAtSpeed(Vec2 value) {m_MinSteerAngleAtSpeed = value;}
+		Vec2 GetMinSteerAngleAtSpeed() const {return m_MinSteerAngleAtSpeed;}
+		void SetSpeedMultiplier(float value) {m_Speed = value;}
+		float GetSpeedMultiplier() const {return m_Speed;}
+		int GetDynamicInputPower() const {return m_DynamicInputPower;}
+		void SetDynamicInputPower(int value) {m_DynamicInputPower =value;}
+
+		float m_Speed;
+		float m_SteerForce;
+		Vec2 m_MaxSteerAngleAtSpeed; 
+		Vec2 m_MinSteerAngleAtSpeed; 
+		
+		float m_MaxSteerVelocity;
+		float m_CurrentAngle;
+		float m_DesiredAngle;
+		float m_VehicleSpeed;
+		int m_DynamicInputPower;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

@@ -18,43 +18,73 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-#define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
+#ifndef FOLLOW_WAYPOINT_LIST_H
+#define FOLLOW_WAYPOINT_LIST_H
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
+#include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/GASSSceneObjectRef.h"
+
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSWeaponMessages.h"
-#include "Sim/Messages/GASSInputMessages.h"
+#include "Plugins/Base/CoreMessages.h"
+
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+
+	enum PathFollowMode
+	{
+		PFM_STOP_AT_END,
+		PFM_LOOP_TO_START,
+		PFM_REVERSE_LOOP
+	};
+
+
+	START_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
+		BIND(PFM_STOP_AT_END)
+		BIND(PFM_LOOP_TO_START)
+		BIND(PFM_REVERSE_LOOP)
+	END_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
+
+
+	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>
 	{
 	public:
-		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		FollowWaypointListComponent();
+		virtual ~FollowWaypointListComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
+		void SceneManagerTick(double delta);
+		std::vector<SceneObjectPtr>  GetWaypointListEnumeration() const;
+		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
-		void OnInput(InputRelayEventPtr message);
-		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
-		void OnOutOfArmor(OutOfArmorMessagePtr message);
-		void Call(const std::string &message, const std::string &data);
+		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
+		void OnTransMessage(TransformationChangedEventPtr message);
+		ADD_PROPERTY(Float,WaypointRadius);
+		ADD_PROPERTY(SceneObjectRef,NavigationObject);
+		void SetInvertDirection(bool value);
+		bool GetInvertDirection() const;
+		void SetWaypointList(SceneObjectRef waypointlist);
+		SceneObjectRef GetWaypointList() const;
+		PathFollowModeBinder GetMode() const;
+		void SetMode(const PathFollowModeBinder &mode);
+		int GetCloesetWaypoint();
+		
+		
+		Vec3  m_CurrentPos;
+		std::vector<Vec3> m_Waypoints;
+		SceneObjectRef m_WaypointList;
+		float m_Direction;
+		bool m_InvertDirection;
+		bool m_HasWaypoints;
+		int m_CurrentWaypoint;
+		PathFollowModeBinder m_Mode;
 	};
-	typedef SPTR<RakNetMessageTransferComponent> RakNetMessageTransferComponentPtr;
 }
 #endif

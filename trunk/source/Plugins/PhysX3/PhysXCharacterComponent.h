@@ -24,7 +24,8 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "Plugins/Game/GameMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Messages/GASSInputMessages.h"
 #include "PxSimulationEventCallback.h"
 #include "characterkinematic/PxControllerBehavior.h"
 
