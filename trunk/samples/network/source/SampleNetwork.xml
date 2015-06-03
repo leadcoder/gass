@@ -90,8 +90,8 @@
   </CoreSystem>
   <MyGUISystem>
   </MyGUISystem>
-  <GameSystem>
-  </GameSystem>
+  <SimulationSystem>
+  </SimulationSystem>
   <RakNetNetworkSystem>
   <InterpolationLag value="200"/>
   </RakNetNetworkSystem>
