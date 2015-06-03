@@ -96,9 +96,9 @@
   <MyGUISystem>
     <TaskNode value="PRE_SIM"/>
   </MyGUISystem>
-  <GameSystem>
+  <SimulationSystem>
     <TaskNode value="SIM"/>
-  </GameSystem>
+  </SimulationSystem>
   <RakNetNetworkSystem>
     <TaskNode value="SIM"/>
 	<InterpolationLag value="200"/>
