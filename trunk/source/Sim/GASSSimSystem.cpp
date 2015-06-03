@@ -55,7 +55,7 @@ namespace GASS
 		UpdateGroupID ugid = GetUpdateGroup().GetValue();
 		if(ugid != UGID_NO_UPDATE)
 		{
-			TaskNode2* node = SimEngine::Get().GetRunTimeController()->GetRootNode()->GetChildByID(ugid);
+			TaskNode* node = SimEngine::Get().GetRunTimeController()->GetRootNode()->GetChildByID(ugid);
 			node->Register(shared_from_this());
 		}
 	}
@@ -93,7 +93,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	void SimSystem::Update(double delta_time, TaskNode2* caller)
+	void SimSystem::Update(double delta_time, TaskNode* caller)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners

@@ -17,70 +17,43 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#ifndef TASK_NODE_H
-#define TASK_NODE_H
+
+#pragma once
+
 #include "Sim/GASSCommon.h"
+#include "Sim/Messages/GASSCoreSystemMessages.h"
+#include <vector>
 
 namespace tinyxml2
 {
 	class XMLElement;
 }
 
+
 namespace tbb
 {
-	class task;
+	class task_scheduler_init;
 }
+
 namespace GASS
 {
+	class ITaskNodeListener;
 	class TaskNode;
-	typedef SPTR<TaskNode> TaskNodePtr;
-	class ITaskNodeListener
-	{
-	public:
-		virtual ~ITaskNodeListener(){}
-		virtual void Update(double delta_time) = 0;
-	};
-
-	typedef WPTR<ITaskNodeListener> TaskNodeListenerWeakPtr;
 	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
-	class GASSExport TaskNode
+	typedef SPTR<TaskNode> TaskNode2Ptr;
+
+	class GASSCoreExport TBBManager : public SHARE_CLASS<TBBManager>
 	{
 	public:
-		typedef std::vector<TaskNodeListenerWeakPtr> Listeners;
-		typedef std::vector<TaskNodePtr> TaskNodeVector;
-		enum UpdateMode
-		{
-			PARALLEL,
-			SEQUENCE
-		};
-		TaskNode();
-		void LoadXML();
-		virtual ~TaskNode();
-		void LoadXML(tinyxml2::XMLElement *xml_elem);
-		TaskNode* GetNodeByName(const std::string &name); 
-		void Update(double delta_time,tbb::task *parent);
-		
-		//public for now, dont call!
-		void UpdateChildren(double delta_time,tbb::task *parent);
-		void UpdateListeners(double delta_time,tbb::task *parent);
-		
-		void Register(TaskNodeListenerPtr listener);
-		void Unregister(TaskNodeListenerPtr listener);
-		void SetOnlyUpdateOnRequest(bool value) { m_OnlyUpdateOnRequest = value;}
-		bool GetOnlyUpdateOnRequest() const {return m_OnlyUpdateOnRequest;}
+		TBBManager();
+		virtual ~TBBManager();
+		/**
+			Initialize TBB, if number of threads is -1, TBB will
+			match number of threads with number of machine kernels
+		*/
+		void Init(int num_threads = -1);
 	private:
-		TaskNodeVector m_Children;
-		std::string m_Name;
-		UpdateMode m_NodeMode;
-		Listeners m_Listeners;
-		bool m_OnlyUpdateOnRequest;
-		bool m_RespondToPause;
-		int m_UpdateFrequency;
-
-		//helper
-		double m_TimeToProcess;
+		tbb::task_scheduler_init* m_Scheduler;
 	};
+	typedef SPTR<TBBManager> TBBManagerPtr;
 }
-
-
-#endif

@@ -18,42 +18,34 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
-
-#include "Sim/GASSCommon.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
-#include <vector>
-
-namespace tinyxml2
-{
-	class XMLElement;
-}
 
 
-namespace tbb
-{
-	class task_scheduler_init;
-}
+#include "Core/RTC/GASSTBBManager.h"
+#include "Core/RTC/GASSTaskNode.h"
+#include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
+#include <tbb/task_scheduler_init.h>
+#include <tbb/spin_mutex.h>
 
 namespace GASS
 {
-	class ITaskNode2Listener;
-	class TaskNode2;
-	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
-	typedef SPTR<TaskNode2> TaskNode2Ptr;
-
-	class GASSCoreExport RunTimeController2 : public SHARE_CLASS<RunTimeController2>
+	TBBManager::TBBManager() 
 	{
-	public:
-		RunTimeController2();
-		virtual ~RunTimeController2();
-		/**
-			Initialize the rtc controller, if number of threads is -1, TBB will
-			match number of threads with number of machine kernels
-		*/
-		void Init(int num_threads = -1);
-	private:
-		tbb::task_scheduler_init* m_Scheduler;
-	};
-	typedef SPTR<RunTimeController2> RunTimeController2Ptr;
+
+	}
+
+	TBBManager::~TBBManager()
+	{	
+
+	}
+
+	void TBBManager::Init(int num_threads)
+	{
+		//int nthread = tbb::task_scheduler_init::automatic;
+		int  default_num_t = tbb::task_scheduler_init::default_num_threads();
+		if(num_threads == -1)
+			num_threads = default_num_t;
+		
+		m_Scheduler = new tbb::task_scheduler_init(num_threads);
+	}
 }

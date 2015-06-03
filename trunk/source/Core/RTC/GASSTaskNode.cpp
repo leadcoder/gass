@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 
-#include "Core/RTC/GASSTaskNode2.h"
+#include "Core/RTC/GASSTaskNode.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include <tinyxml2.h>
@@ -30,7 +30,7 @@
 
 namespace GASS
 {
-	TaskNode2::TaskNode2(int id) : m_ListenerMode(SEQUENCE),
+	TaskNode::TaskNode(int id) : m_ListenerMode(SEQUENCE),
 		m_ChildrenMode(SEQUENCE),
 		m_TimeToProcess(0),
 		m_UpdateFrequency(0),
@@ -43,7 +43,7 @@ namespace GASS
 
 	}
 
-	TaskNode2::~TaskNode2()
+	TaskNode::~TaskNode()
 	{
 		delete m_Mutex;
 	}
@@ -54,7 +54,7 @@ namespace GASS
 		return lhs->GetID() < rhs->GetID();
 	}
 
-	void TaskNode2::AddChildNode(TaskNode2Ptr child) 
+	void TaskNode::AddChildNode(TaskNode2Ptr child) 
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		m_Children.push_back(child);
@@ -69,24 +69,24 @@ namespace GASS
 	}
 	*/
 
-	void TaskNode2::Register(TaskNode2ListenerPtr listener)
+	void TaskNode::Register(TaskNodeListenerPtr listener)
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		m_Listeners.push_back(listener);
 	}
 
-	void TaskNode2::Unregister(TaskNode2ListenerPtr listener)
+	void TaskNode::Unregister(TaskNodeListenerPtr listener)
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		m_RequestUnregListeners.push_back(listener);
 	}
 
-	void TaskNode2::_DoUnreg(TaskNode2ListenerPtr listener)
+	void TaskNode::_DoUnreg(TaskNodeListenerPtr listener)
 	{
-		TaskNode2::Listeners::iterator iter = m_Listeners.begin();
+		TaskNode::Listeners::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
-			TaskNode2ListenerPtr list_iter = TaskNode2ListenerPtr(*iter,NO_THROW);
+			TaskNodeListenerPtr list_iter = TaskNodeListenerPtr(*iter,NO_THROW);
 			if(list_iter == listener)
 			{
 				iter = m_Listeners.erase(iter);
@@ -98,7 +98,7 @@ namespace GASS
 	
 	struct TaskNode2ListenerExecutor
 	{
-		TaskNode2ListenerExecutor(TaskNode2* caller,const TaskNode2::Listeners& listeners, double delta_time)
+		TaskNode2ListenerExecutor(TaskNode* caller,const TaskNode::Listeners& listeners, double delta_time)
 			:m_Caller(caller),m_Listeners(listeners),m_DeltaTime(delta_time)
 		{}
 		TaskNode2ListenerExecutor(TaskNode2ListenerExecutor& e,tbb::split)
@@ -108,19 +108,19 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				TaskNode2ListenerPtr listener = TaskNode2ListenerPtr(m_Listeners[i],NO_THROW);
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(m_Listeners[i],NO_THROW);
 				if(listener)
 					listener->Update(m_DeltaTime,m_Caller);
 			}
 		}
-		const TaskNode2::Listeners& m_Listeners;
-		TaskNode2 *m_Caller;
+		const TaskNode::Listeners& m_Listeners;
+		TaskNode *m_Caller;
 		double m_DeltaTime;
 	};
 
 	struct TaskNode2ChildrenExecutor
 	{
-		TaskNode2ChildrenExecutor(const TaskNode2::TaskNode2Vector& children, double delta_time)
+		TaskNode2ChildrenExecutor(const TaskNode::TaskNode2Vector& children, double delta_time)
 			:m_Children(children),m_DeltaTime(delta_time)
 		{}
 		TaskNode2ChildrenExecutor(TaskNode2ChildrenExecutor& e,tbb::split)
@@ -133,22 +133,22 @@ namespace GASS
 				m_Children[i]->Update(m_DeltaTime,NULL);
 			}
 		}
-		const TaskNode2::TaskNode2Vector& m_Children;
+		const TaskNode::TaskNode2Vector& m_Children;
 		double m_DeltaTime;
 	};
 
 
-	void TaskNode2::RegisterPostUpdate(TaskNode2ListenerPtr listener)
+	void TaskNode::RegisterPostUpdate(TaskNodeListenerPtr listener)
 	{
 		m_PostListeners.push_back(listener);
 	}
 
-	void TaskNode2::UnregisterPostUpdate(TaskNode2ListenerPtr listener)
+	void TaskNode::UnregisterPostUpdate(TaskNodeListenerPtr listener)
 	{
-		TaskNode2::Listeners::iterator iter = m_PostListeners.begin();
+		TaskNode::Listeners::iterator iter = m_PostListeners.begin();
 		while(iter != m_PostListeners.end())
 		{
-			TaskNode2ListenerPtr list_iter = TaskNode2ListenerPtr(*iter,NO_THROW);
+			TaskNodeListenerPtr list_iter = TaskNodeListenerPtr(*iter,NO_THROW);
 			if(list_iter == listener)
 			{
 				iter = m_PostListeners.erase(iter);
@@ -158,12 +158,12 @@ namespace GASS
 		}
 	}
 
-	void TaskNode2::Update(double delta_time,tbb::task *parent)
+	void TaskNode::Update(double delta_time,tbb::task *parent)
 	{
 		//first remove listeners that want to unregister
 		for(size_t i = 0; i < m_RequestUnregListeners.size(); i++)
 		{
-			_DoUnreg(TaskNode2ListenerPtr(m_RequestUnregListeners[i],NO_THROW));
+			_DoUnreg(TaskNodeListenerPtr(m_RequestUnregListeners[i],NO_THROW));
 		}
 		m_RequestUnregListeners.clear();
 
@@ -200,16 +200,16 @@ namespace GASS
 		}
 	}
 
-	void TaskNode2::UpdateListeners(double delta_time,tbb::task *parent)
+	void TaskNode::UpdateListeners(double delta_time,tbb::task *parent)
 	{
-		TaskNode2::Listeners::iterator iter = m_Listeners.begin();
+		TaskNode::Listeners::iterator iter = m_Listeners.begin();
 		switch(m_ListenerMode)
 		{
 		case SEQUENCE:
 			//make copy of listeners to support unregister operation?
 			while(iter != m_Listeners.end())
 			{
-				TaskNode2ListenerPtr listener = TaskNode2ListenerPtr(*iter,NO_THROW);
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
 					listener->Update(delta_time,this);
@@ -224,7 +224,7 @@ namespace GASS
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 			while(iter != m_Listeners.end())
 			{
-				TaskNode2ListenerPtr listener = TaskNode2ListenerPtr(*iter,NO_THROW);
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
 					iter++;
@@ -235,12 +235,12 @@ namespace GASS
 		}
 	}
 
-	void TaskNode2::UpdatePostListeners(double delta_time,tbb::task *parent)
+	void TaskNode::UpdatePostListeners(double delta_time,tbb::task *parent)
 	{
-		TaskNode2::Listeners::iterator iter = m_PostListeners.begin();
+		TaskNode::Listeners::iterator iter = m_PostListeners.begin();
 			while(iter != m_PostListeners.end())
 			{
-				TaskNode2ListenerPtr listener = TaskNode2ListenerPtr(*iter,NO_THROW);
+				TaskNodeListenerPtr listener = TaskNodeListenerPtr(*iter,NO_THROW);
 				if(listener)
 				{
 					listener->Update(delta_time,this);
@@ -252,7 +252,7 @@ namespace GASS
 			
 	}
 
-	TaskNode2*  TaskNode2::GetChildByID(int id) const
+	TaskNode*  TaskNode::GetChildByID(int id) const
 	{
 		for(size_t i=0; i < m_Children.size();i++)
 		{
@@ -265,7 +265,7 @@ namespace GASS
 		return NULL;
 	}
 
-	void TaskNode2::UpdateChildren(double delta_time,tbb::task *parent)
+	void TaskNode::UpdateChildren(double delta_time,tbb::task *parent)
 	{
 		switch(m_ChildrenMode)
 		{

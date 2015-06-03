@@ -26,7 +26,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Core/RTC/GASSRuntimeController2.h"
+#include "Core/RTC/GASSTBBManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -52,24 +52,11 @@ namespace GASS
 	void SimSystemManager::Init()
 	{
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
-
-		//support asynchron request
-		//SPTR<SimSystemManager> shared_this = shared_from_this();
-		//MessageFuncPtr func_ptr(new GASS::MessageFunc<TimeStepRequest>(boost::bind( &SimSystemManager::OnSimulationStepRequest, this, _1 ),shared_this));
-		//RegisterForMessage(typeid(TimeStepRequest),func_ptr,0);
-
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Init();
 			//auto register for updates
 			m_Systems[i]->RegisterForUpdate();
-
-			/*UpdateGroupID ugid = m_Systems[i]->GetUpdateGroup().GetValue();
-			if(ugid != UGID_NO_UPDATE)
-			{
-				TaskNode2* node = SimEngine::Get().GetRunTimeController()->GetRootNode()->GetChildByID(ugid);
-				node->Register(m_Systems[i]);
-			}*/
 		}
 		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
 	}	
@@ -143,7 +130,7 @@ namespace GASS
 		if(systems)
 		{
 			systems= systems->FirstChildElement();
-			//Loop through each template
+			//Load all systems tags
 			while(systems)
 			{
 				SimSystemPtr system = LoadSystem(systems);
@@ -159,7 +146,7 @@ namespace GASS
 			}
 		}
 		xmlDoc->Clear();
-		// Delete our allocated document and return success ;)
+		// Delete our allocated document and return success
 		delete xmlDoc;
 	}
 

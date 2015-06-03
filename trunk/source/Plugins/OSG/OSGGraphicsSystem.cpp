@@ -344,7 +344,7 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::Update(double delta_time, TaskNode2* caller)
+	void OSGGraphicsSystem::Update(double delta_time, TaskNode* caller)
 	{
 		static int tick = 0;
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));

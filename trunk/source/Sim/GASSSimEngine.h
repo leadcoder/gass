@@ -35,13 +35,13 @@ namespace GASS
 	FDECL(PluginManager)
 	FDECL(ResourceManager)
 	FDECL(SimSystemManager)
-	FDECL(TaskNode2)
+	FDECL(TaskNode)
 	FDECL(RunTimeController)
 	FDECL(ComponentContainerTemplateManager)
 	FDECL(SceneObject)
 	FDECL(Scene)
 	FDECL(ScriptManager)
-	class TaskNode;
+	class OldTaskNode;
 
 	enum UpdateGroupID
 	{

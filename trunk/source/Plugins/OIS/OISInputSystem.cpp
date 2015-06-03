@@ -224,7 +224,7 @@ namespace GASS
 		m_MouseWinHeight = bottom-top;
 	}
 
-	void OISInputSystem::Update(double delta_time,TaskNode2* caller)
+	void OISInputSystem::Update(double delta_time,TaskNode* caller)
 	{
 		if(m_Window == 0)
 			return;

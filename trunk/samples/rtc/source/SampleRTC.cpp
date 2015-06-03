@@ -22,8 +22,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "Core/RTC/GASSRunTimeController2.h"
-#include "Core/RTC/GASSTaskNode2.h"
+#include "Core/RTC/GASSTBBManager.h"
+#include "Core/RTC/GASSTaskNode.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #ifdef WIN32
@@ -114,12 +114,12 @@ public:
 	}
 };*/
 
-class GameObject : public GASS::ITaskNode2Listener, public boost::enable_shared_from_this<GameObject>
+class GameObject : public GASS::ITaskNodeListener, public boost::enable_shared_from_this<GameObject>
 {
 public:
 	GameObject() : m_UpdateCount(0){}
 
-	void Update(double delta_time, GASS::TaskNode2* caller)
+	void Update(double delta_time, GASS::TaskNode* caller)
 	{
 		if(caller->GetID() == PHYSICS_SYSTEM)
 		{
@@ -168,27 +168,27 @@ public:
 
 int main(int argc, char* argv[])
 {
-	GASS::RunTimeController2 *rtc = new GASS::RunTimeController2();
+	GASS::TBBManager *rtc = new GASS::TBBManager();
 	
 	//update in parallel, all children will be updated in parallel
 	rtc->Init(-1);
 
-	GASS::TaskNode2Ptr root_node(new GASS::TaskNode2(0));
+	GASS::TaskNode2Ptr root_node(new GASS::TaskNode(0));
 	root_node->SetUpdateFrequency(60.0);
-	root_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-	root_node->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
+	root_node->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
+	root_node->SetChildrenUpdateMode(GASS::TaskNode::SEQUENCE);
 	
-	GASS::TaskNode2Ptr physics_node(new GASS::TaskNode2(PHYSICS_SYSTEM));
+	GASS::TaskNode2Ptr physics_node(new GASS::TaskNode(PHYSICS_SYSTEM));
 	physics_node->SetUpdateFrequency(60.0);
-	physics_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+	physics_node->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 	root_node->AddChildNode(physics_node);
 	//boost::shared_ptr<PhysicsSystem> ps(new PhysicsSystem());
 	//ps->Init(physics_node);
 	//physics_node->Register(ps);
 
-	GASS::TaskNode2Ptr gfx_node(new GASS::TaskNode2(GFX_SYSTEM));
+	GASS::TaskNode2Ptr gfx_node(new GASS::TaskNode(GFX_SYSTEM));
 	gfx_node->SetUpdateFrequency(60.0);
-	gfx_node->SetListenerUpdateMode(GASS::TaskNode2::PARALLEL);
+	gfx_node->SetListenerUpdateMode(GASS::TaskNode::PARALLEL);
 	root_node->AddChildNode(gfx_node);
 	//boost::shared_ptr<GFXSystem> gs(new GFXSystem());
 	//physics_node->Register(gs);
@@ -223,15 +223,15 @@ int main(int argc, char* argv[])
 		else if(key == 't')
 		{
 			//ps->m_Objects.clear();
-			if(physics_node->GetListenerUpdateMode() == GASS::TaskNode2::SEQUENCE)
+			if(physics_node->GetListenerUpdateMode() == GASS::TaskNode::SEQUENCE)
 			{
 				std::cout << "PARALLEL\n";
-				physics_node->SetListenerUpdateMode(GASS::TaskNode2::PARALLEL);
+				physics_node->SetListenerUpdateMode(GASS::TaskNode::PARALLEL);
 			}
 			else
 			{
 				std::cout << "SEQUENCE\n";
-				physics_node->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+				physics_node->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 			}
 		}
 		else if(key == 's') //run for 1 sec

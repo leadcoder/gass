@@ -292,7 +292,7 @@ namespace GASS
 		m_Active = true;
 	}
 
-	void RakNetNetworkSystem::Update(double delta, TaskNode2* caller)
+	void RakNetNetworkSystem::Update(double delta, TaskNode* caller)
 	{
 		//update listeners
 		SimSystem::Update(delta, caller);

@@ -22,7 +22,6 @@
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSRunTimeController.h"
-#include "Sim/GASSTaskNode.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
 #include <tbb/task_scheduler_init.h>
@@ -55,13 +54,13 @@ namespace GASS
 
 		m_Scheduler = new tbb::task_scheduler_init(num_threads);
 		//Create task groups
-		m_RootNode = TaskNode2Ptr(new GASS::TaskNode2(0));
+		m_RootNode = TaskNode2Ptr(new GASS::TaskNode(0));
 		m_RootNode->SetUpdateFrequency(0.0);
-		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
-		m_RootNode->SetChildrenUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_RootNode->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
+		m_RootNode->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
+		m_RootNode->SetChildrenUpdateMode(GASS::TaskNode::SEQUENCE);
 
-		m_PreSimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_PRE_SIM));
+		m_PreSimNode = GASS::TaskNode2Ptr(new GASS::TaskNode(UGID_PRE_SIM));
 
 		double update_freq = m_Engine->GetMaxUpdateFreq();
 
@@ -69,24 +68,24 @@ namespace GASS
 
 		m_PreSimNode->SetUpdateFrequency(update_freq);
 		m_PreSimNode->SetMaxSimulationSteps(1);
-		m_PreSimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_PreSimNode->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 		//we need to sync messages after each update
 		m_PreSimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_PreSimNode);
 		
 
-		m_SimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_SIM));
+		m_SimNode = GASS::TaskNode2Ptr(new GASS::TaskNode(UGID_SIM));
 		m_SimNode->SetUpdateFrequency(update_freq);
 		m_SimNode->SetMaxSimulationSteps(m_MaxSimulationSteps);
-		m_SimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_SimNode->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 		//we need to sync messages after each update
 		m_SimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_SimNode);
 
-		m_PostSimNode = GASS::TaskNode2Ptr(new GASS::TaskNode2(UGID_POST_SIM));
+		m_PostSimNode = GASS::TaskNode2Ptr(new GASS::TaskNode(UGID_POST_SIM));
 		m_PostSimNode->SetUpdateFrequency(update_freq);
 		m_PostSimNode->SetMaxSimulationSteps(1);
-		m_PostSimNode->SetListenerUpdateMode(GASS::TaskNode2::SEQUENCE);
+		m_PostSimNode->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 		//we need to sync messages after each update
 		m_PostSimNode->RegisterPostUpdate(shared_from_this());
 		m_RootNode->AddChildNode(m_PostSimNode);
@@ -180,7 +179,7 @@ namespace GASS
 		return m_SimNode->GetTime();
 	}
 
-	void RunTimeController::Update(double delta_time, TaskNode2* caller)
+	void RunTimeController::Update(double delta_time, TaskNode* caller)
 	{
 		if(m_PreSimNode.get() == caller)
 		{

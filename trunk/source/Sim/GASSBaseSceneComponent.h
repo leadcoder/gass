@@ -24,14 +24,14 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSISceneManager.h"
-#include "Sim/GASSTaskNode.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/RTC/GASSTaskNode.h"
 namespace GASS
 {
 	
 	/**
-	Base class for all sim gass components
+	Base class for all sim components
 	*/
 
 	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, Component> , public SHARE_CLASS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
@@ -51,8 +51,8 @@ namespace GASS
 		virtual void OnInitialize();
 
 		/**
-			Called by SceneObject when dito deleted.
-			default implementation to minize concreate components implementation
+			Called by SceneObject when ditto deleted.
+			default implementation to minimize concrete components implementation
 		*/
 		virtual void OnDelete(){};
 
@@ -60,15 +60,15 @@ namespace GASS
 		//ISceneManagerListener
 		/**
 			Implements the ISceneManagerListener interface
-			Called by reponsible SceneManager if components is registerred as listener.
+			Called by responsible SceneManager if components is registered as listener.
 		*/
 		virtual void SceneManagerTick(double delta) {(void)delta;}
-		virtual void Update(double delta) {(void)delta;};
+		virtual void Update(double delta, TaskNode* caller) {(void)delta;};
 	protected:
 		void RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void InitializePointers();
 		void InitializeSceneObjectRef();
-		//called by sceneobject to resolve SceneObjectRef 
+		//called by scene object to resolve SceneObjectRef 
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
 	};
 	typedef SPTR<BaseSceneComponent> BaseSceneComponentPtr;

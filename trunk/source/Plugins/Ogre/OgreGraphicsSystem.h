@@ -64,7 +64,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
-		virtual void Update(double time, TaskNode2* caller);
+		virtual void Update(double time, TaskNode* caller);
 		//IGraphicsSystem
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;

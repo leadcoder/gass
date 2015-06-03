@@ -93,7 +93,7 @@ namespace GASS
 		menu->setVisible(true);*/
 	}
 
-	void MyGUISystem::Update(double delta_time,TaskNode2* caller)
+	void MyGUISystem::Update(double delta_time,TaskNode* caller)
 	{
 		/*if(mInfo )
 		{

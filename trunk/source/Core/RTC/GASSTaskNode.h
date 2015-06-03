@@ -31,37 +31,37 @@ namespace tbb
 
 namespace GASS
 {
-	class RunTimeController2;
-	class TaskNode2;
-	typedef SPTR<TaskNode2> TaskNode2Ptr;
-	class ITaskNode2Listener
+	class TBBManager;
+	class TaskNode;
+	typedef SPTR<TaskNode> TaskNode2Ptr;
+	class ITaskNodeListener
 	{
 	public:
-		virtual ~ITaskNode2Listener(){}
-		virtual void Update(double delta_time, TaskNode2* caller) = 0;
+		virtual ~ITaskNodeListener(){}
+		virtual void Update(double delta_time, TaskNode* caller) = 0;
 
 	};
 
-	typedef WPTR<ITaskNode2Listener> TaskNode2ListenerWeakPtr;
-	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
+	typedef WPTR<ITaskNodeListener> TaskNodeListenerWeakPtr;
+	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
 
-	class TaskNode2UpdateCallback
+	class TaskNodeUpdateCallback
 	{
 	public:
-		TaskNode2UpdateCallback(boost::function<void (double)> func, TaskNode2ListenerPtr object)
+		TaskNodeUpdateCallback(boost::function<void (double)> func, TaskNodeListenerPtr object)
 		{
 			m_Callback = func;
 			m_Object = object;
 		}
 		boost::function<void (double)> m_Callback;
-		TaskNode2ListenerWeakPtr m_Object;
+		TaskNodeListenerWeakPtr m_Object;
 	};
 
-	class GASSCoreExport TaskNode2
+	class GASSCoreExport TaskNode
 	{
 	public:
-		typedef std::vector<TaskNode2ListenerWeakPtr> Listeners;
-		typedef std::vector<TaskNode2UpdateCallback> CallbackVector;
+		typedef std::vector<TaskNodeListenerWeakPtr> Listeners;
+		typedef std::vector<TaskNodeUpdateCallback> CallbackVector;
 
 		typedef std::vector<TaskNode2Ptr> TaskNode2Vector;
 		enum UpdateMode
@@ -69,14 +69,14 @@ namespace GASS
 			PARALLEL,
 			SEQUENCE
 		};
-		TaskNode2(int id);
-		virtual ~TaskNode2();
+		TaskNode(int id);
+		virtual ~TaskNode();
 		void Update(double delta_time,tbb::task *parent);
 		
-		void Register(TaskNode2ListenerPtr listener);
-		void Unregister(TaskNode2ListenerPtr listener);
-		void RegisterPostUpdate(TaskNode2ListenerPtr listener);
-		void UnregisterPostUpdate(TaskNode2ListenerPtr listener);
+		void Register(TaskNodeListenerPtr listener);
+		void Unregister(TaskNodeListenerPtr listener);
+		void RegisterPostUpdate(TaskNodeListenerPtr listener);
+		void UnregisterPostUpdate(TaskNodeListenerPtr listener);
 		void SetPaused(bool value) { m_Paused= value;}
 		bool GetPaused() const {return m_Paused;}
 		void ResetTime() { m_CurrentTime = 0;}
@@ -91,13 +91,13 @@ namespace GASS
 		int GetID() const {return m_ID;}
 		void SetMaxSimulationSteps(int value) {m_MaxSimulationSteps = value;}
 		int GetMaxSimulationSteps(int value) const {return m_MaxSimulationSteps;}
-		TaskNode2* GetChildByID(int id) const;
+		TaskNode* GetChildByID(int id) const;
 	private:
 		//public for now, don't call!
 		void UpdateChildren(double delta_time,tbb::task *parent);
 		void UpdateListeners(double delta_time,tbb::task *parent);
 		void UpdatePostListeners(double delta_time,tbb::task *parent);
-		void _DoUnreg(TaskNode2ListenerPtr listener);
+		void _DoUnreg(TaskNodeListenerPtr listener);
 
 		TaskNode2Vector m_Children;
 		

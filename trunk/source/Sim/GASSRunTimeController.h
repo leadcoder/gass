@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/RTC/GASSTaskNode2.h"
+#include "Core/RTC/GASSTaskNode.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 
 #include <vector>
@@ -33,10 +33,10 @@ namespace tbb
 
 namespace GASS
 {
-	class TaskNode2;
-	class ITaskNode2Listener;
-	typedef SPTR<ITaskNode2Listener> TaskNode2ListenerPtr;
-	typedef SPTR<TaskNode2> TaskNode2Ptr;
+	class TaskNode;
+	class ITaskNodeListener;
+	typedef SPTR<ITaskNodeListener> TaskNodeListenerPtr;
+	typedef SPTR<TaskNode> TaskNode2Ptr;
 
 
 	enum SimulationState
@@ -47,7 +47,7 @@ namespace GASS
 		SS_EXTERNAL,
 	};
 
-	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener, public ITaskNode2Listener
+	class GASSExport RunTimeController : public SHARE_CLASS<RunTimeController>,  public IMessageListener, public ITaskNodeListener
 	{
 	public:
 		RunTimeController(SimEngine* engine);
@@ -126,7 +126,7 @@ namespace GASS
 		void SetMaxSimulationSteps(int value) {m_MaxSimulationSteps = value;}
 	private:
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
-		void Update(double delta_time, TaskNode2* caller);
+		void Update(double delta_time, TaskNode* caller);
 		tbb::task_scheduler_init* m_Scheduler;
 		SimEngine* m_Engine;
 

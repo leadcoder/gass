@@ -1,10 +1,11 @@
 // -*-c++-*- 
 // $Id: PIDControl,v 1.1 2007-01-15 16:33:44 main Exp $
 
-#pragma once
+#ifndef GASS_PIDControl_H
+#define GASS_PIDControl_H
 
-#include <iostream>
 #include "Core/Common.h"
+#include <iostream>
 
 namespace GASS 
 {
@@ -49,3 +50,5 @@ namespace GASS
 	};
 
 }
+
+#endif

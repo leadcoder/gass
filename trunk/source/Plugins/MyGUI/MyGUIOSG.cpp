@@ -84,10 +84,19 @@ void* MYGUIOSGPlatformProxy::loadImage( int& width, int& height, MyGUI::PixelFor
             unsigned char* src = image->data();
             for ( unsigned int i=0; i<size; i+=step )
             {
+
+				
+
                 dest[i+0] = src[i+2];
                 dest[i+1] = src[i+1];
                 dest[i+2] = src[i+0];
                 if ( step==4 ) dest[i+3] = src[i+3];
+
+				//if(src[i+2] > 10 && src[i+2] < 240)
+				//if(i < width * 4 * 10)
+				//	std::cout << "Row:" << (i/4) / width << " " << int (dest[i+0]) << " " <<  int (dest[i+1]) << " "  << int (dest[i+2]) << " "  << int (dest[i+3]) << "\n";
+				//if((i/4) % width == 0)
+				//	std::cout << "Row:" << (i/4) / width << "\n";
             }
         }
         else
@@ -101,7 +110,7 @@ void MYGUIOSGPlatformProxy::saveImage( int width, int height, MyGUI::PixelFormat
 {
     GLenum pixelFormat = 0;
     unsigned int internalFormat = 0;
-    switch ( format.getvalue() )
+    switch ( format.value)
     {
     case MyGUI::PixelFormat::L8: pixelFormat = GL_ALPHA; internalFormat = 1; break;
     case MyGUI::PixelFormat::L8A8: pixelFormat = GL_LUMINANCE_ALPHA; internalFormat = 2; break;
