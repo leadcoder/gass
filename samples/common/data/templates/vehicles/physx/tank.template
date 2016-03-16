@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="PXTank"/>
+		<ID value="CHASSIS"/>
+		<Serialize value="false"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="JIM_TANK_hull.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysXTankComponent>
+				<Mass value="1500"/>
+				<MassOffset value="0 -1.0 0"/>
+				<ScaleMass value="1.0"/>
+				<EnginePeakTorque value ="500"/>
+				<EngineMaxRotationSpeed value="600"/>
+				<ClutchStrength value = "10"/>
+				<MaxSpeed value= "20"/>
+				<GearRatios value="-4 0 4 2"/>
+				<UseAutoReverse value="true"/>
+				<SteerLimit value="0.9"/>
+				<Wheels value="LEFT_WHEEL1 RIGHT_WHEEL1 
+				LEFT_WHEEL2 RIGHT_WHEEL2 
+				LEFT_WHEEL3 RIGHT_WHEEL3
+				LEFT_WHEEL4 RIGHT_WHEEL4
+				LEFT_WHEEL5 RIGHT_WHEEL5
+				LEFT_WHEEL6 RIGHT_WHEEL6"/>
+			</PhysXTankComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="TankInputSettings"/>
+			</InputHandlerComponent>
+			<CarAutopilotComponent>
+				<TurnPID value="0.0251 0 0"/>
+				<TrottlePID value="0.251 0.01 0"/>
+				<Enable value="false"/>
+				<DesiredSpeed value="0"/>
+				<DesiredPosRadius value="1"/>
+			</CarAutopilotComponent>
+			<TextComponent>
+				<ScaleByDistance value="true"/>
+				<CharacterSize value="1"/>
+				<Offset value="0 5 0"/>
+			</TextComponent>
+		</Components>
+		<ComponentContainers>
+			<SceneObjectTemplate>
+				<Name value="TankTrackL"/>
+				<Components>
+					<TrackComponent>
+						<DriveWheel value="LEFT_WHEEL1"/>
+						<AnimationSpeedFactor value="0.01 0"/>
+					</TrackComponent>
+					<LocationComponent>
+						<Position value="1.2 0.0 0.0"/>
+						<AttachToParent value="1"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="JIM_TANK_band.mesh"/>
+						<CastShadow value="true"/>
+					</MeshComponent>
+					<ParticleSystemComponent>
+						<ParticleTemplate value="TrackDust"/>
+					</ParticleSystemComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TankTrackR"/>
+				<Components>
+					<TrackComponent>
+						<DriveWheel value="RIGHT_WHEEL1"/>
+						<AnimationSpeedFactor value="0.01 0"/>
+					</TrackComponent>
+					<LocationComponent>
+						<Position value="-1.2 0.0 0.0"/>
+						<AttachToParent value="1"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="JIM_TANK_band.mesh"/>
+						<CastShadow value="true"/>
+					</MeshComponent>
+					<ParticleSystemComponent>
+						<ParticleTemplate value="TrackDust"/>
+					</ParticleSystemComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL1"/>
+				<ID value="LEFT_WHEEL1"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 -1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL1"/>
+				<ID value="RIGHT_WHEEL1"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 -1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL2"/>
+				<ID value="LEFT_WHEEL2"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 -1.0"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL2"/>
+				<ID value="RIGHT_WHEEL2"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 -1.0"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL3"/>
+				<ID value="LEFT_WHEEL3"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 -0.35"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL3"/>
+				<ID value="RIGHT_WHEEL3"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 -0.35"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL4"/>
+				<ID value="LEFT_WHEEL4"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 0.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL4"/>
+				<ID value="RIGHT_WHEEL4"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 0.3"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL5"/>
+				<ID value="LEFT_WHEEL5"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 0.95"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL5"/>
+				<ID value="RIGHT_WHEEL5"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 0.95"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LEFT_WHEEL6"/>
+				<ID value="LEFT_WHEEL6"/>
+				<Inheritance value ="PxTankWheelL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-1.2 -0.6111 1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="RIGHT_WHEEL6"/>
+				<ID value="RIGHT_WHEEL6"/>
+				<Inheritance value ="PxTankWheelR"/>
+				<Components>
+					<LocationComponent>
+						<Position value="1.2 -0.6111 1.6"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+
+			<SceneObjectTemplate>
+				<Name value="TankCameraObject"/>
+				<Components>
+					<CameraComponent>
+					</CameraComponent>
+					<ChaseCameraComponent>
+						<!--<PreferredViewport value="ALL"/>-->
+						<InputHandlerObject value="CHASSIS"/>
+						<OffsetHeight value="2"/>
+						<OffsetDistance value="6"/>
+					</ChaseCameraComponent>
+					<LocationComponent>
+						<AttachToParent value ="1"/>
+						<Position value="0 0.0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="JimTankTurret"/>
+				<ID value="TURRET"/>
+				<Components>
+					<LocationComponent>
+						<AttachToParent value="0"/>
+						<Position value="0.0 0.45 0.7"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="turret.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysicsBodyComponent>
+						<Mass value="2"/>
+						<DisableGravity value="true"/>
+						<!--<PositionIterCount value="50"/>
+						<VelocityIterCount value="50"/>-->
+					</PhysicsBodyComponent>		
+					<PhysicsHingeComponent>
+						<Body1 value="CHASSIS"/>
+						<Body2 value="TURRET"/>
+						<Offset value="0 0 0"/>
+						<RotationAxis value="0 1 0"/>
+						<Damping value="200000.0"/>
+						<Spring value="100000000.0"/>
+					</PhysicsHingeComponent>
+					<HingeInteractionComponent>
+						<InputMapping value="Yaw"/>
+						<MaxAngularVelocity value = "30"/>
+					</HingeInteractionComponent>
+					<PhysicsConvexGeometryComponent>
+						<SimulationCollision value="true"/>
+					</PhysicsConvexGeometryComponent>
+					<InputProxyComponent>
+						<InputHandlerObject value="CHASSIS"/>
+					</InputProxyComponent>
+					<ArmorComponent>
+						<Armor value="50"/>
+						<DamageMesh value="turret_demolished.mesh"/>
+					</ArmorComponent>
+					<NetworkChildComponent>
+					</NetworkChildComponent>
+					<LocationTransferComponent>
+						<ClientLocationMode value="1"/>
+						<UpdatePosition value="0"/>
+					</LocationTransferComponent>
+				</Components>
+				<ComponentContainers>
+					<SceneObjectTemplate>
+						<Name value="FireSound"/>
+						<ID value="FIRE_SOUND"/>
+						<Components>
+							<LocationComponent>
+								<AttachToParent value="1"/>
+								<Position value="-0.05 0.4 -0.45"/>
+							</LocationComponent>
+							<OpenALSoundComponent>
+								<SoundFile value="cannon.wav"/>
+								<Loop value="0"/>
+								<MinDistance value="5"/>
+								<RolloffFactor value="1"/>
+							</OpenALSoundComponent>
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="JimTankTurretSightObject"/>
+						<ID value="MAIN_SIGHT"/>
+						<Inheritance value =""/>
+						<Components>
+							<LocationComponent>
+								<AttachToParent value ="true"/>
+								<Position value="0.0 1 -3.0"/>
+								<Rotation value="0 0 0"/>
+							</LocationComponent>
+							<!--<SightComponent>
+								<ActivateController value="ActivateTurret"/>
+								<YawController value="Yaw"/>
+								<PitchController value="Pitch"/>
+								<SendDesiredPointController value="ActivateTurret"/>
+								<ResetToBarrelController value="ResetSight"/>
+								<ZoomValues value="40 60" />
+								<MaxYawVelocity value="0.6" />
+								<MaxPitchVelocity value="0.3" />
+								<YawMaxMinAngle value="1000 -1000" />
+								<PitchMaxMinAngle value="20 -20" />
+								<AutoAimObject value="BARREL" />
+								<AutoAimPriority value="1" />
+								<ResetToBarrelWhileInactive value="false"/>
+								<TurnInputExp value="2"/>
+								<Debug value="true"/>
+							</SightComponent>-->
+							<InputProxyComponent>
+								<InputHandlerObject value="CHASSIS"/>
+							</InputProxyComponent>
+
+							<!--<CameraComponent>
+								<ClipToFog value="0"/>
+								<Fov value="45"/>
+							</CameraComponent>
+							<VehicleCameraComponent>
+								<InputHandlerObject value="CHASSIS"/>
+							</VehicleCameraComponent>-->
+
+						</Components>
+					</SceneObjectTemplate>
+					<SceneObjectTemplate>
+						<Name value="JimTankBarel"/>
+						<ID value="BARREL"/>
+						<Components>
+							<LocationComponent>
+								<AttachToParent value="0"/>
+								<Position value="0.0 0.75 -0.15"/>
+								<Rotation value="0.0 0.0 0.0"/>
+							</LocationComponent>
+							<MeshComponent>
+								<Filename value="canon_bas.mesh"/>
+								<CastShadow value="1"/>
+							</MeshComponent>
+							<ArmorComponent>
+								<Armor value="50"/>
+								<DamageMesh value="canon_bas_demolished.mesh"/>
+							</ArmorComponent>
+							<PhysicsBodyComponent>
+								<Mass value="1.0"/>
+								<DisableGravity value="true"/>
+								<PositionIterCount value="50"/>
+								<VelocityIterCount value="50"/>
+							</PhysicsBodyComponent>
+							<PhysicsHingeComponent>
+								<Body1 value="TURRET"/>
+								<Body2 value="BARREL"/>
+								<Offset value="0 0 0"/>
+								<RotationAxis value="1 0 0"/>
+								<Damping value="200000.0"/>
+								<Spring value="100000000.0"/>
+								<Report value="true"/>
+								<HighStop value="0.6"/>
+								<LowStop value="-0.1"/>
+								<EnableLimits value ="true"/>
+							</PhysicsHingeComponent>
+							<PhysicsConvexGeometryComponent>
+								<SimulationCollision value="true"/>
+							</PhysicsConvexGeometryComponent>
+							<HingeInteractionComponent>
+								<InputMapping value="Pitch"/>		
+								<MaxAngularVelocity value = "13"/>
+							</HingeInteractionComponent>
+							<InputProxyComponent>
+								<InputHandlerObject value="CHASSIS"/>
+							</InputProxyComponent>
+							<WeaponSystemComponent>
+								<ProjectileTemplate value="JimTankMainGunProjectileObject"/>
+								<ProjectileStartOffset value="4.5"/>
+								<ProjectileStartVelocity value="500"/>
+								<NumberOfMagazines value="90"/>
+								<MagazineSize value="5"/>
+								<RecoilForce value="0 0 100"/>
+								<ReloadTime value="3"/>
+								<FireEffectTemplate value="JimTankMainGunFireEffect"/>
+								<FireSoundObject1P value="FIRE_SOUND"/>
+								<FireSoundObject3P value="FIRE_SOUND"/>
+							</WeaponSystemComponent>
+							<!--<AutoAimComponent>
+								<BarrelObject value="BARREL"/>
+								<TurretObject value="TURRET"/>
+								<SteerForce value ="100"/>
+								<YawPID value="0.2 0 0"/>
+								<PitchPID value="0.025 0 0"/>
+								<MaxYawVelocity value="1"/>
+								<MaxPitchVelocity value="1"/>
+							</AutoAimComponent>-->
+							<!--<CameraComponent>
+								<ClipToFog value="0"/>
+
+								<Fov value="45"/>
+							</CameraComponent>
+							<VehicleCameraComponent>
+								<InputHandlerObject value="CHASSIS"/>
+							</VehicleCameraComponent>-->
+						</Components>
+						<ComponentContainers>
+
+						</ComponentContainers>
+					</SceneObjectTemplate>
+				</ComponentContainers>
+			</SceneObjectTemplate>
+		</ComponentContainers>
+	</SceneObjectTemplate>
+	<!-- base templates for wheels on left side-->
+	<SceneObjectTemplate>
+		<Name value="PxTankWheelL"/>
+		<Inheritance value ="PxTankWheel"/>
+		<Components>
+			<MeshComponent>
+				<Filename value="wheel_l.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<!-- base templates for wheels on right side-->
+	<SceneObjectTemplate>
+		<Name value="PxTankWheelR"/>
+		<Inheritance value ="PxTankWheel"/>
+		<Components>
+			<MeshComponent>
+				<Filename value="wheel_r.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<!-- base templates for all wheels-->
+	<SceneObjectTemplate>
+		<Name value="PxTankWheel"/>
+		<Components>
+			<PhysXWheelComponent>
+				<Mass value="20"/>
+				<MaxHandBrakeTorque value="0.0"/>
+				<MaxBrakeTorque value="350"/>
+				<MaxSteer value= "0.0f"/>
+				<DampingRate value="2.0"/>
+				<SuspensionMaxCompression value="0.3"/>
+				<SuspensionMaxDroop value="0.1"/>
+				<SuspensionSpringStrength value="20000.0"/>
+				<SuspensionSpringDamperRate value="1500.0"/>
+				<TireLongitudinalStiffnessPerUnitGravity value="1000.0"/>
+				<TireType value="TANK"/>
+			</PhysXWheelComponent>
+			<PhysicsConvexGeometryComponent/>
+			<LocationComponent/>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

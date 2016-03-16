@@ -1,0 +1,17 @@
+
+
+material SkyTemplate
+{ 
+	technique T1
+	{
+		pass P1
+		{
+			lighting off
+			depth_write off
+			texture_unit SkyboxTex
+			{
+			}
+		}
+	}
+}
+

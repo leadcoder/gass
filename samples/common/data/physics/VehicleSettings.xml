@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VehicleSettings>
+	<SurfaceList>
+		<DriveableSurface MaterialName="DEFAULT"/>
+		<DriveableSurface MaterialName="GRASS"/>
+		<DriveableSurface MaterialName="TARMAC"/>
+	</SurfaceList>
+	<TireList>
+		<Tire Name ="SLICKS">
+		    <FrictionMultiplier MaterialName="DEFAULT" Friction="1.0"/>
+			<FrictionMultiplier MaterialName="GRASS" Friction="0.0001"/>
+			<FrictionMultiplier MaterialName="TARMAC" Friction="0.0001"/>
+		</Tire>
+		<Tire Name ="TANK">
+		    <FrictionMultiplier MaterialName="DEFAULT" Friction="3.0"/>
+			<FrictionMultiplier MaterialName="GRASS" Friction="0.0001"/>
+			<FrictionMultiplier MaterialName="TARMAC" Friction="0.0001"/>
+		</Tire>
+	</TireList>
+</VehicleSettings>

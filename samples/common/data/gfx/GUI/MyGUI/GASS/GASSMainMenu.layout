@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="PanelEmpty" position="0 0 300 26" align="Stretch" layer="Overlapped" name="_Main">
+        <Widget type="MenuBar" skin="MenuBar" position="0 0 300 26" align="Left Top" name="MainMenu">
+            <Property key="Enabled" value="true"/>
+            <Widget type="MenuItem" skin="" position="0 0 39 19" name="File">
+                <Property key="Caption" value="File"/>
+				<Property key="MenuItemType" value="Popup"/>
+				<Property key="MenuItemId" value="File"/>
+			    <Widget type="PopupMenu" skin="PopupMenu" position="0 0 91 44" style="Popup" layer="Popup">
+                    <Widget type="MenuItem" skin="PopupMenuNormal" position="0 0 83 17">
+                        <Property key="Caption" value="Load"/>
+                        <Property key="MenuItemId" value="Command_FileLoad"/>
+                    </Widget>
+                    <Widget type="MenuItem" skin="PopupMenuNormal" position="0 17 83 17">
+                        <Property key="Caption" value="Quit"/>
+                        <Property key="MenuItemId" value="Command_Quit"/>
+                    </Widget>
+                </Widget>
+            </Widget>
+			<Widget type="MenuItem" skin="" position="0 0 39 19" name="Resources">
+                <Property key="Caption" value="Resources"/>
+				<Property key="MenuItemType" value="Popup"/>
+				<Property key="MenuItemId" value="Resources"/>
+			    <Widget type="PopupMenu" skin="PopupMenu" position="0 0 91 44" style="Popup" layer="Popup">
+                    <Widget type="MenuItem" skin="PopupMenuNormal" position="0 0 83 17">
+                        <Property key="Caption" value="ReloadResources"/>
+                        <Property key="MenuItemId" value="Command_ReloadAllResources"/>
+                    </Widget>
+                </Widget>
+            </Widget>
+        </Widget>
+    </Widget>
+</MyGUI>

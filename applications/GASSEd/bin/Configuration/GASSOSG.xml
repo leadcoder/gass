@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GASS>
+	<Plugins>
+		<!-- load all from path-->
+		<Plugin PluginFile = "GASSPlugins/GASSPluginOSG"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginOIS"/>
+		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginODE"/>-->
+		<Plugin PluginFile = "GASSPlugins/GASSPluginPhysX3"/>
+		<!--<Plugin PluginFile = "GASSPlugins/GASSPluginOpenAL"/>-->
+		<Plugin PluginFile = "GASSPlugins/GASSPluginGame"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginBase"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginAI"/>
+		<Plugin PluginFile = "GASSPlugins/GASSPluginRoadNetwork"/>
+	</Plugins>
+	<!--<SetDataPath value="../../../../samples/common/data/"/>-->
+	<ScenePath value="%GASS_DATA_HOME%/sceneries/osg"/>
+	<ResourceManager>
+		<ResourceGroup name="GASS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/base" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/OSG/Materials" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/OSG/3dmodels" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_TEMPLATES">
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+	</ResourceManager>
+	<SceneObjectTemplateManager>
+		<AddObjectIDToName value ="true"/>
+		<ObjectIDPrefix value="["/>
+		<ObjectIDSufix value="]"/>
+	</SceneObjectTemplateManager>
+	<Systems>
+		<MaterialSystem>
+			<TaskNode value="SIM"/> 
+		</MaterialSystem>
+		<EditorSystem>
+			<TaskNode value="PRE_SIM"/> 
+		</EditorSystem>
+		<OISInputSystem>
+			<TaskNode value="PRE_SIM"/> 
+			<ExclusiveMode value ="0"/>
+			<EnableMouse value="false"/>
+		</OISInputSystem>
+		<ControlSettingsSystem>
+			<TaskNode value="PRE_SIM"/>
+		</ControlSettingsSystem>
+		<CoreSystem>
+			<TaskNode value="PRE_SIM"/>
+		</CoreSystem>
+		<GameSystem>
+			<TaskNode value="SIM"/>
+		</GameSystem>
+		<RakNetNetworkSystem>
+			<TaskNode value="SIM"/>
+		</RakNetNetworkSystem>
+		<OpenALSoundSystem>
+			<TaskNode value="PRE_SIM"/>
+		</OpenALSoundSystem>
+		<CEGUISystem>
+			<TaskNode value="PRE_SIM"/>
+		</CEGUISystem>
+		<LuaScriptSystem>
+			<TaskNode value="PRE_SIM"/>
+		</LuaScriptSystem>
+		<PhysXPhysicsSystem>
+			<TaskNode value="SIM"/>
+		</PhysXPhysicsSystem>
+		<AISystem>
+			<TaskNode value="SIM"/>
+		</AISystem>
+		<OSGCollisionSystem>
+			<TaskNode value="PRE_SIM"/>
+		</OSGCollisionSystem>
+		<OSGGraphicsSystem>
+			<TaskNode value="POST_SIM"/>
+			<FlipDDS value="false"/>
+		</OSGGraphicsSystem>
+	</Systems>
+	<RTC>
+		<NumberOfThreads value="-1"/> <!-- -1 == auto-->
+		<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
+		<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
+		<TaskNode name="ROOT_NODE" mode="SEQUENCE">
+			<TaskNode name="PRE_SIM" mode="SEQUENCE"/>
+			<TaskNode name="SIM" mode="SEQUENCE"/>
+			<TaskNode name="POST_SIM" mode="SEQUENCE"/>
+		</TaskNode>
+	</RTC>
+</GASS>

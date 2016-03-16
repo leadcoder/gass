@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ControlSettings>
+  <TruckInputSettings>
+    <!--<MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="true"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_0" Invert="false"/>-->
+    <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
+	<MapControllerToInput Controller="CraneSteer1"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_Z" NegKey="INPUT_X"/>
+    <MapControllerToInput Controller="CraneSteer2"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_C" NegKey="INPUT_V"/>
+	<MapControllerToInput Controller="CraneSteer3"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_B" NegKey="INPUT_N"/>
+	<MapControllerToInput Controller="CraneSteer4"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_LEFT" NegKey="INPUT_RIGHT"/>
+	<MapControllerToInput Controller="CraneSteer5"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_UP" NegKey="INPUT_DOWN"/>
+  </TruckInputSettings>
+  
+  <LiebherrInputSettings>
+    <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_H" NegKey="INPUT_K"/>
+	<MapControllerToInput Controller="House"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_3" Invert="false"/>
+    <MapControllerToInput Controller="Boom1"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_0" Invert="false"/>
+    <MapControllerToInput Controller="Boom2"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_LEFT" NegKey="INPUT_RIGHT"/>
+	<MapControllerToInput Controller="Boom3"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_1" Invert="false"/>
+	<MapControllerToInput Controller="Bucket"  InputDevice="DEVICE_GAME_CONTROLLER_0" Axis="INPUT_AXIS_2" Invert="false"/>
+	<MapControllerToInput Controller="Blade"   InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_UP" NegKey="INPUT_DOWN" Invert="false"/>
+	<MapControllerToInput Controller="Legs"   InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_C" NegKey="INPUT_V" Invert="false"/>
+  </LiebherrInputSettings>
+  
+  <TankInputSettings>
+    <MapControllerToInput Controller="Throttle"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_U" NegKey="INPUT_J"/>
+    <MapControllerToInput Controller="Steer"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_K" NegKey="INPUT_H"/>
+    <MapControllerToInput Controller="Yaw" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_0"/>
+    <MapControllerToInput Controller="Pitch" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_1"/>
+    <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_MOUSE"  Button="INPUT_BUTTON_0" Repeat="false"/>
+    <MapControllerToInput Controller="ActivateTurret"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_X" Repeat="false"/>
+  </TankInputSettings>
+  <TurretInputSettings>
+    <!--<MapControllerToInput Controller="Yaw"  InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_T" NegKey="INPUT_Y"/>-->
+    <MapControllerToInput Controller="Yaw" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_0"/>
+    <MapControllerToInput Controller="ActivateTurret"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_V" Repeat="false"/>
+    <MapControllerToInput Controller="Fire"  InputDevice="DEVICE_MOUSE"  Button="INPUT_BUTTON_1" Repeat="false"/>
+  </TurretInputSettings>
+  <FreeCameraInputSettings>
+    <MapControllerToInput Controller="EnterVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_E" Repeat="false"/>
+    <MapControllerToInput Controller="ExitVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_R" Repeat="false"/>
+    <MapControllerToInput Controller="CycleVehicle"  InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>
+    <MapControllerToInput Controller="ToggleFreeCameraCollision" InputDevice="DEVICE_KEYBOARD" Key="INPUT_C" Repeat="false"/>
+    <MapControllerToInput Controller="ToggleFreeCameraFly" InputDevice="DEVICE_KEYBOARD" Key="INPUT_F" Repeat="false"/>
+    <MapControllerToInput Controller="FreeCameraSpeedBoost" InputDevice="DEVICE_KEYBOARD" Key="INPUT_LSHIFT" Repeat="true"/>
+    <MapControllerToInput Controller="FreeCameraThrottle" InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_W" NegKey="INPUT_S"/>
+    <MapControllerToInput Controller="FreeCameraStrafe" InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_D" NegKey="INPUT_A"/>
+    <MapControllerToInput Controller="FreeCameraUpdown" InputDevice="DEVICE_KEYBOARD" PosKey="INPUT_PGUP" NegKey="INPUT_PGDN"/>
+    <MapControllerToInput Controller="FreeCameraPitch" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_0"/>
+    <MapControllerToInput Controller="FreeCameraHeading" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_1"/>
+    <MapControllerToInput Controller="FreeCameraZoom" InputDevice="DEVICE_MOUSE" Axis="INPUT_AXIS_2"/>
+    <MapControllerToInput Controller="FreeCameraEnableRot" InputDevice="DEVICE_MOUSE" Button="INPUT_BUTTON_1" Repeat="true"/>
+  </FreeCameraInputSettings>
+</ControlSettings>
+

@@ -1,0 +1,59 @@
+
+material EngineSmoke
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture smoke.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material Dust
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture dust.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+
+material WhiteDust
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture white_dust.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+

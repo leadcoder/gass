@@ -1,0 +1,114 @@
+/****************************************************************************
+* This file is part of GASS.                                                *
+* See https://github.com/leadcoder/gass                                     *
+*                                                                           *
+* Copyright (c) 2008-2016 GASS team. See Contributors.txt for details.      *
+*                                                                           *
+* GASS is free software: you can redistribute it and/or modify              *
+* it under the terms of the GNU Lesser General Public License as published  *
+* by the Free Software Foundation, either version 3 of the License, or      *
+* (at your option) any later version.                                       *
+*                                                                           *
+* GASS is distributed in the hope that it will be useful,                   *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+* GNU Lesser General Public License for more details.                       *
+*                                                                           *
+* You should have received a copy of the GNU Lesser General Public License  *
+* along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
+*****************************************************************************/
+
+#include "VehicleCameraComponent.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Core/Math/GASSQuaternion.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Utils/GASSLogManager.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+
+#include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
+
+
+
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
+
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIInputComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+
+
+
+
+
+namespace GASS
+{
+	VehicleCameraComponent::VehicleCameraComponent() : m_PreferredViewport("")
+	{
+
+	}
+
+	VehicleCameraComponent::~VehicleCameraComponent()
+	{
+
+	}
+
+	void VehicleCameraComponent::RegisterReflection()
+	{
+		ComponentFactory::GetPtr()->Register("VehicleCameraComponent",new Creator<VehicleCameraComponent, Component>);
+		RegisterProperty<std::string>("PreferredViewport", &VehicleCameraComponent::GetPreferredViewport, &VehicleCameraComponent::SetPreferredViewport);
+		RegisterProperty<SceneObjectRef>("InputHandlerObject", &VehicleCameraComponent::GetInputHandlerObject, &VehicleCameraComponent::SetInputHandlerObject);
+	}
+
+	void VehicleCameraComponent::OnInitialize()
+	{
+		BaseSceneComponent::InitializeSceneObjectRef();
+		BaseSceneComponent::OnInitialize();
+
+		if(!m_InputHandlerObject.IsValid())
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " VehicleCameraComponent::OnInitialize");
+
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleRequest,0));
+		m_InputHandlerObject->RegisterForMessage(REG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleRequest,0));
+		//GraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+	}
+
+	void VehicleCameraComponent::OnDelete()
+	{
+		BaseSceneComponentPtr input = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(GetSceneObject()->GetFirstParentComponentByClass<IInputComponent>());
+		if(input)
+		{
+			input->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleRequest));
+			input->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnExit,ExitVehicleRequest));
+		}
+	}
+
+	void VehicleCameraComponent::SetPreferredViewport(const std::string &viewport)
+	{
+		m_PreferredViewport = viewport;
+	}
+
+	std::string VehicleCameraComponent::GetPreferredViewport() const
+	{
+		return m_PreferredViewport;
+	}
+
+	void VehicleCameraComponent::OnEnter(EnterVehicleRequestPtr message)
+	{
+		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
+		SystemRequestMessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
+	}
+
+	void VehicleCameraComponent::OnExit(ExitVehicleRequestPtr message)
+	{
+
+	}
+
+}

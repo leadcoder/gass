@@ -1,0 +1,24 @@
+GASS_DEP_ROOT=/home/johan/dev_zone/GASS/master/gass-dep-install
+
+export TINYXML2_HOME=$GASS_DEP_ROOT/tinyxml2
+printenv TINYXML2_HOME
+export PAGEDGEOMETRY_HOME=$GASS_DEP_ROOT/PagedGeometry-1.1.1
+export ODE_HOME=$GASS_DEP_ROOT/ODE
+export HYDRAX_HOME=$GASS_DEP_ROOT/Hydrax-v0.5.1
+export SKYX_HOME=$GASS_DEP_ROOT/SkyX-v0.4
+export ANGELSCRIPT_HOME=$GASS_DEP_ROOT/angelscript
+
+#cmake-gui
+
+export INSTALL_ROOT=`pwd`/gass-install
+export SOURCE_ROOT=`pwd`/
+
+mkdir build
+cd build
+
+cmake -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed" -DCMAKE_BUILD_TYPE=Release  -DGASS_BUILD_CORE_SAMPLES=ON -DGASS_BUILD_SIM=ON -DGASS_BUILD_PLUGIN_OPENAL=OFF -DGASS_BUILD_PLUGIN_RAKNET=OFF -DGASS_BUILD_PLUGIN_PHYSX=OFF -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/ $SOURCE_ROOT
+
+make install
+
+
+

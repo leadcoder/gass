@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<Scene>
+  <Properties>
+    <StartPosition value="0 4 30" />
+    <StartRotation value="0 0 0" />
+  </Properties>
+  <SceneManagerSettings>
+    <CoreSceneManager>
+    </CoreSceneManager>
+    <GameSceneManager>
+    </GameSceneManager>
+	<OSGEarthSceneManager>
+		<UseOcean value="false"/>
+		<EarthFile value="openstreetmap.earth"/>
+	</OSGEarthSceneManager>
+    <OSGGraphicsSceneManager>
+          <AmbientColor value= "0.5 0.5 0.5"/>
+          <FogColor value= "0.69 0.698 0.7294"/>
+          <FogDensity value  = "0.1"/>
+          <FogStart value = "0"/>
+          <FogEnd value = "4000"/>
+		  <FogMode value = "FM_LINEAR"/>
+        </OSGGraphicsSceneManager>
+  </SceneManagerSettings>
+</Scene>
