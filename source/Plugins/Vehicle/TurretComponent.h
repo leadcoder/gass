@@ -59,7 +59,7 @@ namespace GASS
 		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
 		void SetSteerForce(float value) {m_SteerForce = value;}
 		float GetSteerForce() const {return m_SteerForce;}
-		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = value.x;m_MinAngle = value.y;}
+		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = static_cast<float>(value.x); m_MinAngle = static_cast<float>(value.y);}
 		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
 		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
 		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);

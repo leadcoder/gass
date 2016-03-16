@@ -102,8 +102,8 @@ namespace GASS
 			*/
 		m_Volume = std::max<Float>(m_Volume,m_MinMaxVolume.x);
 		m_Volume = std::min<Float>(m_Volume,m_MinMaxVolume.y);
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,m_Pitch)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,m_Volume)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch))));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME, static_cast<float>(m_Volume))));
 		//reset!
 		m_MaxVelRequest = 0;
 	}

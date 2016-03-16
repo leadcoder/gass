@@ -36,7 +36,7 @@
 
 namespace GASS
 {
-	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6),m_SoundVolumeFactor(1.0f)
+	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6f), m_SoundVolumeFactor(1.0f)
 	{
 	}
 
@@ -77,23 +77,23 @@ namespace GASS
 		
 		GetSceneObject()->SendImmediateRequest(TextureCoordinateRequestPtr(new TextureCoordinateRequest(m_AnimationValue)));
 
-		float emission = fabs(ang_vel.x)*m_ParticleEmissionFactor;
+		float emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
 
 		if(emission >50)
 			emission =50;
 		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
 
-		float duration = fabs(ang_vel.x)*0.05;
+		float duration = fabs(static_cast<float>(ang_vel.x))*0.05f;
 
-		if(duration > 1.6)  
-			duration = 1.6;
+		if(duration > 1.6f)  
+			duration = 1.6f;
 
 		//MessagePtr particle_duration_msg(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::PARTICLE_LIFE_TIME,0,duration));
 		//GetSceneObject()->PostMessage(particle_duration_msg);
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 
-		const float speed = fabs(ang_vel.x);
+		const float speed = static_cast<float>(fabs(ang_vel.x));
 		const float max_volume_at_speed = 10;
 		float volume = m_SoundVolumeFactor;
 		if(speed < max_volume_at_speed)
@@ -106,10 +106,10 @@ namespace GASS
 
 		if(speed > 0)
 		{
-			float pitch = 0.8 + speed*0.015;
+			float pitch = 0.8f + speed*0.015f;
 
-			if(pitch > 1.7)
-				pitch = 1.7;
+			if(pitch > 1.7f)
+				pitch = 1.7f;
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
 			GetSceneObject()->SendImmediateRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
 		}

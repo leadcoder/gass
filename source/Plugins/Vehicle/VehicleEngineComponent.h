@@ -182,7 +182,7 @@ namespace GASS
 		float m_DeclutchTimeChangeGear;
 		float m_RPMGearChangeUp;
 		float m_RPMGearChangeDown;
-		int m_Automatic;
+		bool m_Automatic;
 		float m_Clutch;
 
 		//Auto gear shift helpers

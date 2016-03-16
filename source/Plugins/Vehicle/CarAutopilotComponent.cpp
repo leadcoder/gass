@@ -197,7 +197,7 @@ namespace GASS
 		target_pos.y = m_CurrentPos.y;
 		Float desired_speed	= m_DesiredSpeed;
 		Vec3 current_dir = -m_Transformation.GetZAxis();
-		float current_speed = -m_VehicleSpeed.z;
+		float current_speed = static_cast<float>(-m_VehicleSpeed.z);
 		Vec3 current_pos = m_CurrentPos;
 		Vec3 target_dir = target_pos - current_pos;
 		Float target_dist = target_dir.Length();
@@ -343,20 +343,20 @@ namespace GASS
 			current_dir.Normalize();
 
 			Vec3 cross = Math::Cross(current_dir,target_dir);
-			float cos_angle = Math::Dot(current_dir,target_dir);
+			float cos_angle = static_cast<float>(Math::Dot(current_dir,target_dir));
 
 			if(cos_angle > 1)
 				cos_angle = 1;
 			if(cos_angle < -1)
 				cos_angle = -1;
-			float angle_to_target_dir = Math::Rad2Deg(acos(cos_angle));
+			float angle_to_target_dir = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 			if(cross.y < 0)
 				angle_to_target_dir *= -1;
 
 
 
 			m_TurnPID.set(0);
-			float turn = m_TurnPID.update(angle_to_target_dir, delta_time);
+			float turn = static_cast<float>(m_TurnPID.update(angle_to_target_dir, delta_time));
 
 			// damp speed if we have to turn sharp
 			if(m_Support3PointTurn && fabs(angle_to_target_dir) > 90 && target_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
@@ -376,14 +376,14 @@ namespace GASS
 					if(current_speed < 0 && fabs(angle_to_target_dir) < 120) //if less than 110 deg do three point turn
 						turn *=-1;
 					else //damp turn, we try to reverse!
-						turn *= 0.03;
+						turn *= 0.03f;
 				}
 				//else if(!m_InvertBackWardSteering)
 				//	turn *=-1;
 				else if(!m_InvertBackWardSteering)
 				{
 					m_TurnPID.set(180);
-					turn = m_TurnPID.update(angle_to_target_dir, delta_time);
+					turn = static_cast<float>(m_TurnPID.update(angle_to_target_dir, delta_time));
 				}
 
 			}
@@ -471,7 +471,7 @@ namespace GASS
 #endif
 
 			m_TrottlePID.set(desired_speed);
-			float throttle = m_TrottlePID.update(current_speed,delta_time);
+			float throttle = static_cast<float>(m_TrottlePID.update(current_speed,delta_time));
 
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
@@ -484,17 +484,17 @@ namespace GASS
 				if(m_HasDir)
 				{
 					Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
-					float cos_angle = Math::Dot(current_dir,m_FaceDirection);
+					float cos_angle = static_cast<float>(Math::Dot(current_dir,m_FaceDirection));
 
 					if(cos_angle > 1)
 						cos_angle = 1;
 					if(cos_angle < -1)
 						cos_angle = -1;
-					float angle_to_face = Math::Rad2Deg(acos(cos_angle));
+					float angle_to_face = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 					if(cross.y < 0)
 						angle_to_face *= -1;
 					m_TurnPID.set(0);
-					turn = m_TurnPID.update(angle_to_face, delta_time);
+					turn = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
 					throttle = 0;
 				}
 				if(m_PlatformType == PT_HUMAN)

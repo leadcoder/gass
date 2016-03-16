@@ -69,7 +69,7 @@ namespace GASS
 		if(speed < m_MaxVolumeAtSpeed)
 		{
 			//turret sound
-			const float volume = (speed/m_MaxVolumeAtSpeed);
+			const float volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
 			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
 
 			/*std::stringstream ss;
@@ -85,14 +85,14 @@ namespace GASS
 	void SoundVolumeComponent::OnVelocityNotifyMessage(PhysicsVelocityEventPtr message)
 	{
 		Vec3 ang_vel  = message->GetAngularVelocity();
-		const float speed = fabs(ang_vel.y + ang_vel.x);
+		const float speed = fabs(static_cast<float>(ang_vel.y + ang_vel.x));
 		if(speed < m_MaxVolumeAtSpeed)
 		{
 			
 			//turret sound
-			const float volume = (speed/m_MaxVolumeAtSpeed);
+			const float volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
 			
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5)));
+			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5f)));
 
 			/*std::stringstream ss;
 			ss << "Speed:"<< speed << " Volume:" << volume << "\n";

@@ -92,7 +92,7 @@ namespace GASS
 			m_Pitch += delta_time*0.5;
 		else
 			m_Pitch -= delta_time*0.5;
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,m_Pitch)));
+		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch))));
 		//reset!
 		m_MaxVelRequest = 0;
 		m_MaxForce = 0;

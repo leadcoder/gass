@@ -67,9 +67,9 @@ namespace GASS
 	{
 		//fetch wheel rpm
 		Vec3 vel  = message->GetLinearVelocity();
-		m_Velocity = vel.x;
+		m_Velocity = static_cast<float>(vel.x);
 		Vec3 ang_vel  = message->GetAngularVelocity();
-		m_AngularVelocity = ang_vel.x;
+		m_AngularVelocity = static_cast<float>(ang_vel.x);
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
@@ -94,27 +94,27 @@ namespace GASS
 		m_MaxBrakeTorque (1000),
 		m_MinRPM (500),
 		m_MaxRPM (4000),
-		m_DeclutchTimeChangeGear (0.5),
-		m_ClutchTimeChangeGear (0.5),
+		m_DeclutchTimeChangeGear (0.5f),
+		m_ClutchTimeChangeGear (0.5f),
 		m_AutoClutchStart (0),
 		m_CurrentTime (0),
 		m_DesiredThrottle (0),
 		m_DesiredSteer (0),
 		m_VehicleEngineRPM (0),
-		m_Power (0.2),
+		m_Power (0.2f),
 		m_AngularVelocity(0,0,0),
 		m_EngineType(ET_TANK),
-		m_TurnRPMAmount(1.0),
-		m_MaxTurnVel(1.0)
+		m_TurnRPMAmount(1.0f),
+		m_MaxTurnVel(1.0f)
 	{
 		m_SteerCtrl = PIDControl(100,1,1);
 		m_GearBoxRatio.resize(6);
-		m_GearBoxRatio[0] = -16.42;
+		m_GearBoxRatio[0] = -16.42f;
 		m_GearBoxRatio[1] = 0;
-		m_GearBoxRatio[2] = 16.42;
-		m_GearBoxRatio[3] = 12.15;
-		m_GearBoxRatio[4] = 11.52;
-		m_GearBoxRatio[5] = 11.17;
+		m_GearBoxRatio[2] = 16.42f;
+		m_GearBoxRatio[3] = 12.15f;
+		m_GearBoxRatio[4] = 11.52f;
+		m_GearBoxRatio[5] = 11.17f;
 		//m_GearBoxRatio[6] = 0.71;
 	}
 
@@ -385,7 +385,7 @@ namespace GASS
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;
 		Vec3 velocity  = message->GetLinearVelocity();
-		m_VehicleSpeed = velocity.FastLength();
+		m_VehicleSpeed = static_cast<float>(velocity.FastLength());
 	}
 
 	void VehicleEngineComponent::OnInput(InputRelayEventPtr message)
@@ -417,7 +417,7 @@ namespace GASS
 
 		//fade out in case we don't get any input from joystick
 		if(fabs(m_DesiredThrottle) < 0.1)
-			m_DesiredThrottle = m_DesiredThrottle*0.9;
+			m_DesiredThrottle = m_DesiredThrottle*0.9f;
 
 		//Direct mapping, use the above function to damp input
 		float throttle = m_DesiredThrottle;
@@ -464,7 +464,7 @@ namespace GASS
 	void VehicleEngineComponent::UpdateSound(double /*delta*/)
 	{
 		//Play engine sound
-		float pitch = GetNormRPM() + 1.0;
+		float pitch = GetNormRPM() + 1.0f;
 		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
 	}
 
@@ -497,7 +497,7 @@ namespace GASS
 		m_SteerCtrl.set(-m_DesiredSteer*m_MaxTurnVel);
 		//limit pid to max turn force
 		m_SteerCtrl.setOutputLimit(m_MaxTurnForce*norm_rpm);
-		float turn_torque = m_SteerCtrl.update(m_AngularVelocity.y,delta);
+		float turn_torque = static_cast<float>(m_SteerCtrl.update(m_AngularVelocity.y, delta));
 
 		//damp
 		//if(fabs(m_DesiredSteer) < 0.1)
@@ -609,7 +609,7 @@ namespace GASS
 		float current_gear_ratio =  m_GearBoxRatio[m_Gear];
 
 		//max power at half of max_rpm
-		float angle= (m_VehicleEngineRPM / m_MaxRPM)*GASS_PI;
+		float angle= (m_VehicleEngineRPM / m_MaxRPM)*static_cast<float>(GASS_PI);
 		float current_engine_power = sin(angle)*m_Power;
 
 		float wheel_torque;
@@ -668,7 +668,7 @@ namespace GASS
 		//m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1-m_Clutch)*m_MaxRPM*fabs(throttle);
 
 		//give feedback to engine, when clutch down engine rmp is decreased by 1000rpm each second...throttle is released during shifting
-		m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0-m_Clutch)*(m_VehicleEngineRPM-1000*delta);
+		m_VehicleEngineRPM = fabs(m_WheelRPM*current_gear_ratio*m_Clutch) + (1.0f - m_Clutch) * (m_VehicleEngineRPM-1000 * static_cast<float>(delta));
 
 
 		/*sprintf(dtxt,"Wheel vel: %f",m_WheelRPM);
@@ -699,12 +699,12 @@ namespace GASS
 				{
 					if(throttle > 0.03 && m_Gear+1 < number_of_gears)
 					{
-						m_AutoShiftStart = time-m_ClutchTimeChangeGear;
+						m_AutoShiftStart = static_cast<float>(time) - m_ClutchTimeChangeGear;
 						m_FutureGear = m_Gear+1;
 					}
 					else if(throttle < -0.03 && m_Gear-1 >= 0)
 					{
-						m_AutoShiftStart = time-m_ClutchTimeChangeGear;
+						m_AutoShiftStart = static_cast<float>(time) - m_ClutchTimeChangeGear;
 						m_FutureGear = m_Gear-1;
 					}
 				}
@@ -713,12 +713,12 @@ namespace GASS
 				{
 					if(rpm > m_RPMGearChangeUp && m_Gear+1 < number_of_gears)
 					{
-						m_AutoShiftStart = time;
+						m_AutoShiftStart = static_cast<float>(time);
 						m_FutureGear = m_Gear + 1;
 					}
 					else if(rpm < m_RPMGearChangeDown && throttle < 0.01)
 					{
-						m_AutoShiftStart = time;
+						m_AutoShiftStart = static_cast<float>(time);
 						m_FutureGear = m_Gear - 1;
 					}
 				}
@@ -726,12 +726,12 @@ namespace GASS
 				{
 					if(rpm > m_RPMGearChangeUp && m_Gear-1 >= 0)
 					{
-						m_AutoShiftStart = time;
+						m_AutoShiftStart = static_cast<float>(time);
 						m_FutureGear = m_Gear - 1;
 					}
 					else if(rpm < m_RPMGearChangeDown)
 					{
-						m_AutoShiftStart = time;
+						m_AutoShiftStart = static_cast<float>(time);
 						m_FutureGear = m_Gear + 1;
 					}
 				}
@@ -740,12 +740,12 @@ namespace GASS
 			{
 				if(m_ShiftUp && m_Gear < number_of_gears-1)
 				{
-					m_AutoShiftStart = time;
+					m_AutoShiftStart = static_cast<float>(time);
 					m_FutureGear = m_Gear + 1;
 				}
 				else if(m_ShiftDown && m_Gear > 1)
 				{
-					m_AutoShiftStart = time;
+					m_AutoShiftStart = static_cast<float>(time);
 					m_FutureGear = m_Gear - 1;
 				}
 			}
@@ -754,7 +754,7 @@ namespace GASS
 		float desired_clutch = 0;
 		if(m_AutoShiftStart)
 		{
-			float t = time-m_AutoShiftStart;
+			float t = static_cast<float>(time) - m_AutoShiftStart;
 			// We are in a shifting operation
 			if(m_Gear != m_FutureGear)
 			{
@@ -806,13 +806,13 @@ namespace GASS
 	float VehicleEngineComponent::RPM2AngleVel(float rpm)
 	{
 		// Convert to radians and seconds
-		return rpm*2*GASS_PI/60.0f;
+		return rpm*2* static_cast<float>(GASS_PI)/60.0f;
 	}
 
 	float VehicleEngineComponent::AngleVel2RPM(float rps)
 	{
 		//Convert to radians and minutes
-		return rps*60.0f/(2*GASS_PI);
+		return rps*60.0f/(2* static_cast<float>(GASS_PI));
 	}
 
 

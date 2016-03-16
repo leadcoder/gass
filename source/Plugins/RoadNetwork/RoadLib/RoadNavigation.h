@@ -25,7 +25,7 @@ namespace GASS
 			delete pather;
 		}
 
-		unsigned Checksum() { return pather->Checksum(); }
+		unsigned int Checksum() { return static_cast<unsigned int>( pather->Checksum()); }
 
 		int GetPath( RoadNode *from_node, RoadNode* to_node, std::vector<RoadNode*>  &path ) 
 		{
