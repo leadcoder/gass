@@ -178,7 +178,7 @@ namespace GASS
 			Vec3 pos = message->GetPosition();
 			GASSToRecast(pos,point);
 			//point[0] =pos.x; point[1] =pos.y; point[2] =pos.z;
-			ext[0] = 0.1; ext[1] = 0.1; ext[2] = 0.1;
+			ext[0] = 0.1f; ext[1] = 0.1f; ext[2] = 0.1f;
 			float tgt[3];
 			dtPolyRef ref;
 			m_NavQuery->findNearestPoly(point, ext, &filter, &ref, tgt);
@@ -1665,6 +1665,9 @@ namespace GASS
 		
 
 		dtQueryFilter filter;
+		for(int i = 0; i < DT_MAX_AREAS; i++)
+			filter.setAreaCost(i,1.0f);
+
 	
 		dtPolyRef start_ref = 0;
 		dtPolyRef end_ref  = 0;
