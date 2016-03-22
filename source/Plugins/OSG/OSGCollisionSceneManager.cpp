@@ -127,7 +127,7 @@ namespace GASS
 				//reverse
 				if(intersection.nodePath.size() > 0)
 				{
-					for(size_t i = intersection.nodePath.size()-1; i >= 0  ;i--)
+					for(int i = intersection.nodePath.size()-1; i >= 0  ;i--)
 					{
 						if(intersection.nodePath[i]->getUserData())
 						{
