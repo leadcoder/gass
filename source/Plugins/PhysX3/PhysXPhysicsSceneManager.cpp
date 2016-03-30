@@ -339,7 +339,7 @@ namespace GASS
 			m_ConvexMeshMap[col_mesh_id].m_ConvexMesh = CreateConvexMesh(&verts[0], static_cast<physx::PxU32>(physics_mesh->PositionVector.size()), *system->GetPxSDK(), *system->GetPxCooking());
 			return m_ConvexMeshMap[col_mesh_id];
 		}
-		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
+		//GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 
 	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
@@ -392,6 +392,6 @@ namespace GASS
 				static_cast<physx::PxU32>(physics_mesh->IndexVector.size()/3));
 			return m_TriangleMeshMap[col_mesh_id];
 		}
-		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
+//		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 }

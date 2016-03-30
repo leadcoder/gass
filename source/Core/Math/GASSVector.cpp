@@ -60,7 +60,11 @@ namespace GASS
 	std::string Vec3::ToString(const std::string &separator)
 	{
 		char ret[128];
+#ifdef WIN32
+		sprintf_s(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
+#else
 		sprintf(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
+#endif
 		return ret;
 	}
 }
