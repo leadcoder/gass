@@ -408,10 +408,10 @@ namespace GASS
 		ColorRGB ambient = material.Ambient;
 		ColorRGB specular = material.Specular;
 		ColorRGB si = material.SelfIllumination;
-		mat->setDiffuse(diffuse.r,diffuse.g,diffuse.b,diffuse.a);
-		mat->setAmbient(ambient.r,ambient.g,ambient.b);
-		mat->setSpecular(specular.r,specular.g,specular.b,1);
-		mat->setSelfIllumination(si.r,si.g,si.b);
+		mat->setDiffuse(OgreConvert::ToOgre(diffuse));
+		mat->setAmbient(OgreConvert::ToOgre(ambient));
+		mat->setSpecular(OgreConvert::ToOgre(specular));
+		mat->setSelfIllumination(OgreConvert::ToOgre(si));
 		mat->setShininess(material.Shininess);
 		mat->setDepthCheckEnabled(material.DepthTest);
 		mat->setDepthWriteEnabled(material.DepthWrite);
@@ -441,7 +441,7 @@ namespace GASS
 
 				for(unsigned int j = 0 ; j < pass->getNumTextureUnitStates(); j++)
 				{
-					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(j);
+					Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(static_cast<unsigned short>(j));
 					std::string texture_name = textureUnit->getTextureName();
 					if(texture_name != "")
 						material.Textures.push_back(texture_name);

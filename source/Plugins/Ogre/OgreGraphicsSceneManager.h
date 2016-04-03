@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/GASSBaseSceneManager.h"
@@ -31,9 +33,7 @@
 #include "Core/Utils/GASSEnumBinder.h"
 #include "IOgreSceneManagerProxy.h"
 #include "OgreMaterial.h"
-#include <string>
-#include <OgreSceneManager.h>
-#include <OgreFrameListener.h>
+
 
 namespace Ogre
 {
@@ -85,7 +85,7 @@ namespace GASS
 	*/
 	class Component;
 	class OgreGraphicsSystem;
-	class GASSPluginExport OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy, public IGraphicsSceneManager, Ogre::FrameListener
+	class OgreGraphicsSceneManager : public Reflection<OgreGraphicsSceneManager, BaseSceneManager>, public IOgreSceneManagerProxy, public IGraphicsSceneManager, Ogre::FrameListener
 	{
 	private:
 		void UpdateFogSettings();

@@ -30,8 +30,6 @@
 #include <OgreCommon.h>
 #include <OgreUTFString.h>
 
-#include "Plugins/Ogre/Helpers/MovableTextOverlay.h"
-#include "Plugins/Ogre/Helpers/RectLayoutManager.h"
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/OgreManualMeshComponent.h"
@@ -45,10 +43,13 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 
+#include "Plugins/Ogre/Helpers/RectLayoutManager.h"
+
+
 namespace GASS
 {
 	OgreTextComponent::OgreTextComponent(void) : m_Size (16),
-		m_Offset (0.2),
+		m_Offset (0.2f),
 		m_Color(1,1,1,1),
 		m_TextObject(NULL),
 		m_Attribs(NULL),
@@ -80,7 +81,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TextComponent")));
 		RegisterProperty<std::string>("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
 		RegisterProperty<float>("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
-		RegisterProperty<float>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
+		RegisterProperty<int>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
 		RegisterProperty<bool>("ScaleByDistance", &OgreTextComponent::GetScaleByDistance, &OgreTextComponent::SetScaleByDistance);
 	}
 
@@ -117,10 +118,10 @@ namespace GASS
 		}
 
 		Ogre::ColourValue color;
-		color.r = m_Color.x;
-		color.g = m_Color.y;
-		color.b = m_Color.z;
-		color.a = m_Color.w;
+		color.r = static_cast<float>(m_Color.x);
+		color.g = static_cast<float>(m_Color.y);
+		color.b = static_cast<float>(m_Color.z);
+		color.a = static_cast<float>(m_Color.w);
 
 		//create dummy camera
 
@@ -170,7 +171,7 @@ namespace GASS
 			delete m_TextObject;
 			m_TextObject = new MovableTextOverlay(name,ConvertToUTF(m_TextToDisplay), mobj, m_Attribs);
 			m_TextObject->enable(true); 
-			m_TextObject->setUpdateFrequency(0.01);// set update frequency to 0.01 seconds
+			m_TextObject->setUpdateFrequency(0.01f);// set update frequency to 0.01 seconds
 		}
 	}
 
@@ -206,12 +207,12 @@ namespace GASS
 	}
 
 
-	float OgreTextComponent::GetCharacterSize() const
+	int OgreTextComponent::GetCharacterSize() const
 	{
 		return m_Size;
 	}
 
-	void OgreTextComponent::SetCharacterSize(float size)
+	void OgreTextComponent::SetCharacterSize(int size)
 	{
 		m_Size = size;
 	}
@@ -228,17 +229,17 @@ namespace GASS
 		if(vp && m_TextObject)
 		{
 			m_Attribs->mpCam = vp->getCamera();
-			RectLayoutManager m(0,0,vp->getActualWidth(),
-				vp->getActualHeight());
+			RectLayoutManager m(0,0,static_cast<unsigned short>(vp->getActualWidth()),
+				static_cast<unsigned short>(vp->getActualHeight()));
 			m.setDepth(0);
 
-			m_TextObject->update(0.1);
+			m_TextObject->update(0.1f);
 			if (m_TextObject->isOnScreen() && m_TextToDisplay != "" && m_Visible)
 			{
-				RectLayoutManager::Rect r(	m_TextObject->getPixelsLeft(),
-					m_TextObject->getPixelsTop(),
-					m_TextObject->getPixelsRight(),
-					m_TextObject->getPixelsBottom());
+				RectLayoutManager::Rect r(static_cast<short>(m_TextObject->getPixelsLeft()),
+					static_cast<short>(m_TextObject->getPixelsTop()),
+					static_cast<short>(m_TextObject->getPixelsRight()),
+					static_cast<short>(m_TextObject->getPixelsBottom()));
 
 				RectLayoutManager::RectList::iterator it = m.addData(r);
 				if (it != m.getListEnd())

@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Common.h"
-#include <OgreSingleton.h>
+#include "Plugins/Ogre/OgreCommon.h"
+
 #include <map>
 #ifndef WIN32
 	#include <inttypes.h>

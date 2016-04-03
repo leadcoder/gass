@@ -20,6 +20,9 @@
 
 #pragma once
 
+#include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/OgreTerrainIncludes.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
@@ -28,13 +31,7 @@
 #include <tinyxml2.h>
 
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/OgreRenderQueueBinder.h"
-#include <OgreTerrain.h>
-#include <OgreTerrainGroup.h>
-#include <OgreTerrainQuadTreeNode.h>
-#include <OgreTerrainMaterialGeneratorA.h>
-#include <OgreTerrainPaging.h>
 
 namespace GASS
 {

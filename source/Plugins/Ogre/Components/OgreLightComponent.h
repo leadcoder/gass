@@ -20,6 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Utils/GASSColorRGBA.h"

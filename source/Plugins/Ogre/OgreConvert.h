@@ -21,14 +21,8 @@
 #pragma once
 
 
-#include <OgreVector2.h>
-#include <OgreVector3.h>
-#include <OgreVector4.h>
-#include <OgreMatrix4.h>
-#include <OgreQuaternion.h>
-#include <OgreSphere.h>
-#include <OgreAxisAlignedBox.h>
-#include <OgreRenderOperation.h>
+#include "Plugins/Ogre/OgreCommon.h"
+
 #include <iostream>
 
 #include "Core/Math/GASSMatrix.h"
@@ -45,14 +39,41 @@ namespace GASS
 	class OgreConvert
 	{
 	public:
-		static inline Ogre::Vector2				ToOgre(const Vec2 &v) {return Ogre::Vector2(v.x,v.y);}
-		static inline Ogre::Vector3				ToOgre(const Vec3 &v) {return Ogre::Vector3(v.x,v.y,v.z);}
-		static inline Ogre::Vector4				ToOgre(const Vec4 &v) {return Ogre::Vector4(v.x,v.y,v.z,v.w);}
-		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat){Ogre::Matrix4(mat[0][0],mat[0][1],mat[0][2],mat[0][3],	mat[1][0],mat[1][1],mat[1][2],mat[1][3],	mat[2][0],mat[2][1],mat[2][2],mat[2][3],	mat[3][0],mat[3][1],mat[3][2],mat[3][3]);}
+#ifndef OGRE_DOUBLE
+		static inline Ogre::Vector2				ToOgre(const Vec2 &v) {return Ogre::Vector2(static_cast<float>(v.x), static_cast<float>(v.y) );}
+		static inline Ogre::Vector3				ToOgre(const Vec3 &v) {return Ogre::Vector3(static_cast<float>(v.x), static_cast<float>(v.y), static_cast<float>(v.z));}
+		static inline Ogre::Vector4				ToOgre(const Vec4 &v) {return Ogre::Vector4(static_cast<float>(v.x), static_cast<float>(v.y), static_cast<float>(v.z), static_cast<float>(v.w));}
+		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat){Ogre::Matrix4(static_cast<float>(mat[0][0]),
+																					static_cast<float>(mat[0][1]),
+																					static_cast<float>(mat[0][2]),
+																					static_cast<float>(mat[0][3]),
+																					static_cast<float>(mat[1][0]),
+																					static_cast<float>(mat[1][1]),
+																					static_cast<float>(mat[1][2]),
+																					static_cast<float>(mat[1][3]),
+																					static_cast<float>(mat[2][0]),
+																					static_cast<float>(mat[2][1]),
+																					static_cast<float>(mat[2][2]),
+																					static_cast<float>(mat[2][3]),
+																					static_cast<float>(mat[3][0]), 
+																					static_cast<float>(mat[3][1]),
+																					static_cast<float>(mat[3][2]),
+																					static_cast<float>(mat[3][3]));}
 		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.m_Min),ToOgre(b.m_Max));}
-		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(q.w,q.x,q.y,q.z);}
+		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y), static_cast<float>(q.z));}
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
-		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(color.r, color.g, color.b, color.a);}
+		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a));}
+		static inline Ogre::ColourValue			ToOgre(const ColorRGB &color) { return Ogre::ColourValue(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), 1.0); }
+#else
+		static inline Ogre::Vector2				ToOgre(const Vec2 &v) { return Ogre::Vector2(v.x, v.y); }
+		static inline Ogre::Vector3				ToOgre(const Vec3 &v) { return Ogre::Vector3(v.x, v.y, v.z); }
+		static inline Ogre::Vector4				ToOgre(const Vec4 &v) { return Ogre::Vector4(v.x, v.y, v.z, v.w); }
+		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat) { Ogre::Matrix4(mat[0][0], mat[0][1], mat[0][2], mat[0][3], mat[1][0], mat[1][1], mat[1][2], mat[1][3], mat[2][0], mat[2][1], mat[2][2], mat[2][3], mat[3][0], mat[3][1], mat[3][2], mat[3][3]); }
+		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) { return Ogre::AxisAlignedBox(ToOgre(b.m_Min), ToOgre(b.m_Max)); }
+		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) { return Ogre::Quaternion(q.w, q.x, q.y, q.z); }
+		static inline Ogre::Sphere				ToOgre(const Sphere &s) { return Ogre::Sphere(ToOgre(s.m_Pos), s.m_Radius); }
+		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) { return Ogre::ColourValue(color.r, color.g, color.b, color.a); }
+#endif
 		static inline Ogre::RenderOperation::OperationType ToOgre(GraphicsSubMeshType mt)
 		{
 			Ogre::RenderOperation::OperationType op;

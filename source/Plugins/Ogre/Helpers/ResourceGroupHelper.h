@@ -5,9 +5,8 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include <OgreRenderable.h>
-#include <OgreLog.h>
-#include <Overlay/OgreOverlayContainer.h>
+#include "Plugins/Ogre/OgreCommon.h"
+
 ///\brief a fake class with different useful methods for manipulating Resourcegroups.
 /// please note that it was not tested with background loading.
 

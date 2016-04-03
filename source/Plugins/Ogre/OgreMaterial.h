@@ -21,8 +21,9 @@
 #pragma once
 
 #include <string>
-#include <OgreMaterialManager.h>
-#include <OgreMaterial.h>
+#include "Plugins/Ogre/OgreCommon.h"
+#include "Core/Reflection/GASSPropertyMetaData.h"
+
 namespace GASS
 {
 	class OgreMaterial

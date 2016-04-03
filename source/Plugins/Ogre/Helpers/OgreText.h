@@ -1,7 +1,6 @@
 #include "Sim/GASSCommon.h"
-#include <Ogre.h>
-#include <OgreSingleton.h>
-#include <Overlay/OgreOverlay.h>
+#include "Plugins/Ogre/OgreCommon.h"
+
 
 class TextRenderer : public Ogre::Singleton<TextRenderer>
 {

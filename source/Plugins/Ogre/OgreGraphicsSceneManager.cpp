@@ -60,7 +60,7 @@ namespace GASS
 		m_FogEnd(40000),
 		m_UseFog(1),
 		m_FogMode(FM_LINEAR),
-		m_FogDensity(0.01),
+		m_FogDensity(0.01f),
 		m_FogColor(1,1,1),
 		m_AmbientColor(0.5,0.5,0.5),
 		//Shadows
@@ -185,17 +185,17 @@ namespace GASS
 	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)
 	{
 		const ColorRGBA color = message->GetColor();
-		const Ogre::ColourValue ogre_color(color.r,color.g,color.b,color.a);
+		const Ogre::ColourValue ogre_color = OgreConvert::ToOgre(color);
 		if(m_DebugDrawer)
 		{
-			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()),message->GetRadius(),message->GetSegments(),ogre_color,message->GetFilled());
+			m_DebugDrawer->drawCircle(OgreConvert::ToOgre(message->GetCenter()), static_cast<float>(message->GetRadius()),message->GetSegments(),ogre_color,message->GetFilled());
 		}
 	}
 
 	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
 	{
 		
-		const Ogre::ColourValue ogre_color(start_color.r,start_color.g,start_color.b,start_color.a);
+		const Ogre::ColourValue ogre_color = OgreConvert::ToOgre(start_color);
 		if(m_DebugDrawer)
 			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start_point),OgreConvert::ToOgre(end_point),ogre_color);
 	}
@@ -219,13 +219,13 @@ namespace GASS
 		OgreGraphicsSystemPtr(m_GFXSystem)->Update(0,NULL); //why?
 	}
 
-	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &evt)
+	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &/*evt*/)
 	{
 		m_DebugDrawer->build();
 		return true;
 	}
 
-	bool OgreGraphicsSceneManager::frameEnded (const Ogre::FrameEvent &evt)
+	bool OgreGraphicsSceneManager::frameEnded (const Ogre::FrameEvent &/*evt*/)
 	{
 		m_DebugDrawer->clear();
 		return true;
@@ -241,7 +241,7 @@ namespace GASS
 	{
 		if(m_SceneMgr == NULL) return;
 
-		const ColourValue fogColour(m_FogColor.r, m_FogColor.g, m_FogColor.b);
+		const ColourValue fogColour = OgreConvert::ToOgre(m_FogColor);
 
 		Ogre::FogMode ogre_fm =Ogre::FOG_NONE;
 		switch(m_FogMode.GetValue())
@@ -273,7 +273,7 @@ namespace GASS
 	void OgreGraphicsSceneManager::UpdateLightSettings()
 	{
 		if(m_SceneMgr == NULL) return;
-		m_SceneMgr->setAmbientLight(ColourValue(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b));
+		m_SceneMgr->setAmbientLight(OgreConvert::ToOgre(m_AmbientColor));
 	}
 
 	void OgreGraphicsSceneManager::UpdateShadowSettings()
@@ -338,7 +338,7 @@ namespace GASS
 
 		if(tex_shadow)
 		{
-			m_SceneMgr->setShadowTextureSize(m_TextureShadowSize);
+			m_SceneMgr->setShadowTextureSize(static_cast<unsigned short>(m_TextureShadowSize));
 			m_SceneMgr->setShadowTextureCount(m_NumShadowTextures);
 
 			//shared pointer!

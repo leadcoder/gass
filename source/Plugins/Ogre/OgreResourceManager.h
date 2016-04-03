@@ -27,7 +27,6 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/MessageSystem/GASSMessageType.h"
-#include <string>
 
 namespace GASS
 {

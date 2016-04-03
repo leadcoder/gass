@@ -19,13 +19,13 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSGeometryFlags.h"
-#include <OgreManualObject.h>
 
 namespace Ogre
 {

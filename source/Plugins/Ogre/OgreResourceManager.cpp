@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Plugins/Ogre/OgreResourceManager.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -26,13 +27,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-
-#include <OgreRoot.h>
-#include <OgreRenderWindow.h>
-#include <OgreMaterialManager.h>
-#include <OgreMeshManager.h>
 #include <tinyxml2.h>
-//#include <boost/filesystem.hpp>
 
 using namespace Ogre;
 

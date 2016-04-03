@@ -20,14 +20,14 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
+#include "OgreSceneNodeSource.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "OgreSceneNodeSource.h"
-#include <OgreNode.h>
 
 namespace Ogre
 {
@@ -70,11 +70,11 @@ namespace GASS
 		//Ogre node listener interface
 		virtual void nodeUpdated(const Ogre::Node* node);
 		/** Node is being destroyed */
-		virtual void nodeDestroyed(const Ogre::Node* node) {}
+		virtual void nodeDestroyed(const Ogre::Node* /*node*/) {}
 		/** Node has been attached to a parent */
-		virtual void nodeAttached(const Ogre::Node* node) {}
+		virtual void nodeAttached(const Ogre::Node* /*node*/) {}
 		/** Node has been detached from a parent */
-		virtual void nodeDetached(const Ogre::Node* node) {}
+		virtual void nodeDetached(const Ogre::Node* /*node*/) {}
 
 	protected:
 		void SetWorldRotation(const Quaternion &rot);

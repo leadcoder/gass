@@ -19,10 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/OgreParticleSystemComponent.h"
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-#include <OgreParticleSystem.h>
-#include <OgreParticleEmitter.h>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -103,14 +99,14 @@ namespace GASS
 		{
 		case ParticleSystemParameterRequest::EMISSION_RATE:
 			{
-				int emitter = message->GetEmitter();
+				unsigned short emitter = static_cast<unsigned short>(message->GetEmitter());
 				float rate = message->GetValue();
 				m_ParticleSystem->getEmitter(emitter)->setEmissionRate(rate);
 			}
 			break;
 		case ParticleSystemParameterRequest::PARTICLE_LIFE_TIME:
 			{
-				int emitter = message->GetEmitter();
+				unsigned short emitter = static_cast<unsigned short>(message->GetEmitter());
 				float duration = message->GetValue();
 				m_ParticleSystem->getEmitter(emitter)->setTimeToLive(duration);
 			}

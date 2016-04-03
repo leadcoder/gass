@@ -19,12 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/OgreTerrainPageComponent.h"
-#include <OgrePrerequisites.h>
-#include <OgreString.h>
-#include <OgreSceneNode.h>
-#include <OgreConfigFile.h>
-#include <OgreRoot.h>
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -34,7 +28,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
-
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
@@ -144,7 +137,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
-	void OgreTerrainPageComponent::SetDumpTextues(bool value)
+	void OgreTerrainPageComponent::SetDumpTextues(bool /*value*/)
 	{
 		std::string prefix = "OGRE_TERRAIN";
 		std::string sufix = ".tga";
@@ -157,7 +150,7 @@ namespace GASS
 		m_RenderQueue = rq;
 		if(m_Terrain)
 		{
-			m_Terrain->setRenderQueueGroup(m_RenderQueue.GetValue());
+			m_Terrain->setRenderQueueGroup(static_cast<Ogre::uint8>(m_RenderQueue.GetValue()));
 		}
 	}
 
@@ -381,12 +374,12 @@ namespace GASS
 				}
 				else
 				{
-					unsigned int hm_size = m_Terrain->getSize();
-					image.resize(hm_size, hm_size);
+					int hm_size = m_Terrain->getSize();
+					image.resize(static_cast<Ogre::ushort>(hm_size), static_cast<Ogre::ushort>(hm_size));
 					float *height_data = m_Terrain->getHeightData();
-					for(int y = 0;y < hm_size ;y++)
+					for(int y = 0; y < hm_size ;y++)
 					{
-						for(int x = 0;x < hm_size ;x++)
+						for(int x = 0; x < hm_size ;x++)
 						{
 							Ogre::ColourValue color = image.getColourAt(x, y, 0);
 							const Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
@@ -845,7 +838,7 @@ namespace GASS
 	Float OgreTerrainPageComponent::GetHeightAtWorldLocation(Float x, Float z) const
 	{
 		if(m_Terrain)
-			return m_Terrain->getHeightAtWorldPosition(x,10000,z);
+			return m_Terrain->getHeightAtWorldPosition(static_cast<Ogre::Real>(x), 10000.0f, static_cast<Ogre::Real>(z));
 		return 0;
 	}
 

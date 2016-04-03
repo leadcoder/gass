@@ -20,26 +20,12 @@
 
 
 #include "Plugins/Ogre/Components/OgreInstancedMeshComponent.h"
-#include <OgreSceneNode.h>
-#include <OgreEntity.h>
-#include <OgreSubEntity.h>
-#include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
-#include <OgreSubMesh.h>
-#include <OgreMaterialManager.h>
-#include <OgreBone.h>
-#include <OgreStaticGeometry.h>
-#include <OgreInstancedGeometry.h>
-#include <OgreTechnique.h>
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 
@@ -149,7 +135,8 @@ namespace GASS
 		while(iter != m_MeshInstances.end())
 		{
 			Ogre::InstancedGeometry* instancedGeometry = new InstancedGeometry(ogsm->GetOgreSceneManager(),iter->first + "Inst" );
-			instancedGeometry->setBatchInstanceDimensions (Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
+			float rs = static_cast<float>(m_RegionSize);
+			instancedGeometry->setBatchInstanceDimensions (Ogre::Vector3(rs, rs, rs));
 
 			if(m_RenderQueue == "SkiesLate")
 			{
@@ -197,9 +184,9 @@ namespace GASS
 						Ogre::Vector3  pos = OgreConvert::ToOgre(iter->second.at(index).m_Position);
 						//Ogre::Quaternion orientation = OgreConvert::ToOgre(iter->second.at(index).m_Rotation);
 						Ogre::Vector3  scale = OgreConvert::ToOgre(iter->second.at(index).m_Scale);
-						scale.x *= m_GlobalScale.x;
-						scale.y *= m_GlobalScale.y;//0.07;
-						scale.z *= m_GlobalScale.z;//0.2;
+						scale.x *= static_cast<float>(m_GlobalScale.x);
+						scale.y *= static_cast<float>(m_GlobalScale.y);
+						scale.z *= static_cast<float>(m_GlobalScale.z);
 						obj->setPosition(pos);
 						obj->setScale(scale);
 						//obj->setOrientation(orientation);

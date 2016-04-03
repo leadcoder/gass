@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <string>
 #include <list>
 #include "Core/Math/GASSVector.h"
 

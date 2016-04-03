@@ -146,14 +146,14 @@ namespace GASS
 		m_AttenuationParams = params;
 		if(m_OgreLight)
 		{
-			m_OgreLight->setAttenuation(params.x, params.y, params.z, params.w);
+			m_OgreLight->setAttenuation(static_cast<Ogre::Real>(params.x), static_cast<Ogre::Real>(params.y), static_cast<Ogre::Real>(params.z), static_cast<Ogre::Real>(params.w));
 		}
 	}
 
 	void OgreLightComponent::SetDir(const Vec3 &dir)
 	{
 		if(m_OgreLight)
-			m_OgreLight->setDirection(dir.x,dir.y,dir.z);
+			m_OgreLight->setDirection(OgreConvert::ToOgre(dir));
 	}
 	Vec3 OgreLightComponent::GetDir() const
 	{
@@ -172,7 +172,8 @@ namespace GASS
 
 		if(m_OgreLight && m_LightType == LT_SPOT)
 		{
-			m_OgreLight->setSpotlightRange(Ogre::Radian(Math::Deg2Rad(params.x)), Ogre::Radian(Math::Deg2Rad(params.y)), params.z);
+			m_OgreLight->setSpotlightRange(Ogre::Radian(static_cast<Ogre::Real>(Math::Deg2Rad(params.x))), 
+										   Ogre::Radian(static_cast<Ogre::Real>(Math::Deg2Rad(params.y))), static_cast<Ogre::Real>(params.z));
 		}
 	}
 
@@ -180,14 +181,14 @@ namespace GASS
 	{
 		m_Diffuse = diffuse;
 		if(m_OgreLight)
-			m_OgreLight->setDiffuseColour(m_Diffuse.r,m_Diffuse.g,m_Diffuse.b);
+			m_OgreLight->setDiffuseColour(OgreConvert::ToOgre(m_Diffuse));
 
 	}
 	void OgreLightComponent::SetSpecular(const ColorRGB &specular)
 	{
 		m_Specular = specular;
 		if(m_OgreLight)
-			m_OgreLight->setSpecularColour(m_Specular.r,m_Specular.g,m_Specular.b);
+			m_OgreLight->setSpecularColour(OgreConvert::ToOgre(m_Specular));
 
 	}
 	void OgreLightComponent::SetCastShadow(bool value)

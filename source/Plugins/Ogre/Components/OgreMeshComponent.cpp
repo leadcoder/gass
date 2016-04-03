@@ -20,25 +20,11 @@
 
 
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"
-#include <OgrePrerequisites.h>
-#include <OgreBone.h>
-#include <OgreSceneNode.h>
-#include <OgreEntity.h>
-#include <OgreSubEntity.h>
-#include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
-#include <OgreMesh.h>
-#include <OgreSubMesh.h>
-#include <OgreMaterialManager.h>
-#include <OgreTechnique.h>
-
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/OgreMaterialCache.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
-
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -194,7 +180,7 @@ namespace GASS
 				//Vec3 bone_pos = OgreConvert::ToGASS(bone_cand->getWorldPosition());
 				Vec3 bone_pos = OgreConvert::ToGASS(bone_cand->getPosition());
 				//add node pos?
-				float  dist = (pos - bone_pos).SquaredLength();
+				float  dist = static_cast<float>((pos - bone_pos).SquaredLength());
 				if(dist < min_dist || bone == NULL)
 				{
 					min_dist = dist;
@@ -248,7 +234,7 @@ namespace GASS
 
 	void OgreMeshComponent::CopyMeshToMeshData(Ogre::MeshPtr mesh, GraphicsMesh &mesh_data)
 	{
-		for(unsigned int i = 0;i < mesh->getNumSubMeshes();++i)
+		for(unsigned short i = 0;i < mesh->getNumSubMeshes();++i)
 		{
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data.SubMeshVector.push_back(sub_mesh_data);
@@ -454,7 +440,7 @@ namespace GASS
 						if(pass->getNumTextureUnitStates() > 0)
 						{
 							Ogre::TextureUnitState * textureUnit = pass->getTextureUnitState(0);
-							textureUnit->setTextureScroll(speed.x,speed.y);
+							textureUnit->setTextureScroll(static_cast<Ogre::Real>(speed.x), static_cast<Ogre::Real>(speed.y));
 						}
 					}
 				}
@@ -505,7 +491,7 @@ namespace GASS
 		m_RenderQueue = rq;
 		if(m_OgreEntity)
 		{
-			m_OgreEntity->setRenderQueueGroup(m_RenderQueue.GetValue());
+			m_OgreEntity->setRenderQueueGroup(static_cast<Ogre::uint8>(m_RenderQueue.GetValue()));
 		}
 	}
 
@@ -532,7 +518,7 @@ namespace GASS
 			{
 				bone->setManuallyControlled(true);
 			}
-			bone->setPosition(pos.x,pos.y,pos.z);
+			bone->setPosition(OgreConvert::ToOgre(pos));
 
 			/*Ogre::Vector3 worldPos(pos.x, pos.y, pos.z); // desired position in world coords
 			Ogre::SceneNode* parent = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get()->GetOgreNode();
