@@ -42,7 +42,7 @@ namespace GASS
 		unsigned int xindex = static_cast<unsigned int>(fxindex);
 		unsigned int zindex = static_cast<unsigned int>(fzindex);
 
-		if (xindex < 0 || zindex < 0 || xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
+		if (xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
 			return 0.0f;
 
 		//algo:
@@ -127,9 +127,9 @@ namespace GASS
 			WRITE_HEIGHT(data[i],i);
 		}
 		delete[] data;*/
-		
+
 		float min_range;
-		float max_range; 
+		float max_range;
 
 		fin.read((char *) &min_range, sizeof(float));
 		fin.read((char *) &max_range, sizeof(float));
@@ -139,15 +139,15 @@ namespace GASS
 	}
 
 	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos)
-	{   
+	{
 		Vec3 ray = p2 - p1;
 		Vec3 ray_2d = ray;
 		ray_2d.y = 0;
-		
+
 		double length_2d = ray_2d.Length();
 
 		//get pixel spacing, assume square pixels
-		double px_spacing = GetBoundingBox().GetSize().x/((double) GetNumSamplesW()); 
+		double px_spacing = GetBoundingBox().GetSize().x/((double) GetNumSamplesW());
 
 		double stepsize = 1.0;
 
@@ -156,7 +156,7 @@ namespace GASS
 			//HACK; lock step size to 0.25 percent of image spacing
 			stepsize = px_spacing*0.25;
 		}
-		else //use step sized based on px_spacing and ray length, 
+		else //use step sized based on px_spacing and ray length,
 			stepsize = px_spacing/ length_2d;
 
 		double s = 0.0;

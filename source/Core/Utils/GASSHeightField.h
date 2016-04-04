@@ -19,12 +19,12 @@ namespace GASS
 		HeightField();
 
 		/**
-			Constructor that allocate height data and define max/min values for the field. 
+			Constructor that allocate height data and define max/min values for the field.
 			Note that min_bound.y should hold the lowest elevation value that can be store in the height field,
-			and max_bound.y hold the highest elevation value to be stored.  
-			Note that 16-bit limitation have a max range of 65536.0f meters/units. Try to use as tight 
+			and max_bound.y hold the highest elevation value to be stored.
+			Note that 16-bit limitation have a max range of 65536.0f meters/units. Try to use as tight
 			height range as possible to get best precision.
-			If you don't know the range at allocation time you have to use some approximation because you can not change the 
+			If you don't know the range at allocation time you have to use some approximation because you can not change the
 			range after construction. This is a performance reason, we don't want to do min/max check for each SetHeight call
 		*/
 		HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples);
@@ -35,7 +35,7 @@ namespace GASS
 		*/
 		float GetInterpolatedHeight(Float x, Float z) const;
 
-		
+
 		/**
 			Get height at "pixel" index
 		*/
@@ -69,7 +69,7 @@ namespace GASS
 			Float bounds_height = m_Max.z - m_Min.z;
 			unsigned int xindex = static_cast<unsigned int>(m_NumSamplesW * (x - m_Min.x) / bounds_width);
 			unsigned int zindex = static_cast<unsigned int>(m_NumSamplesH * (z - m_Min.z) / bounds_height);
-			if (xindex < 0 || zindex < 0 || xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
+			if (xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
 				return;
 			m_Data.WriteValue(xindex + zindex*m_NumSamplesW, height);
 		}
@@ -106,12 +106,12 @@ namespace GASS
 		/**
 			Get raw data
 		*/
-		FloatArray16& GetFloatArray() {return m_Data;} 
+		FloatArray16& GetFloatArray() {return m_Data;}
 
 		/**
 			Get const raw data
 		*/
-		const FloatArray16& GetFloatArray() const {return m_Data;} 
+		const FloatArray16& GetFloatArray() const {return m_Data;}
 	private:
 		void SetDimensions(const Vec3 &min,const Vec3 &max)
 		{
@@ -126,4 +126,4 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<HeightField> HeightFieldPtr;
 }
-#endif 
+#endif

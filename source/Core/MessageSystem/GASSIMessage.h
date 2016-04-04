@@ -182,10 +182,11 @@ namespace GASS
 		size_t m_FunctionHash;
 	};
 }
-#include <boost/functional/hash.hpp>
-//static std::hash<std::string> GASSMessageHasher;
-static boost::hash<std::string> GASSMessageHasher;
 
+
+//static std::hash<std::string> GASSMessageHasher;
+#include <boost/functional/hash.hpp>
+static boost::hash<std::string> GASSMessageHasher __attribute__((unused));
 #define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(GASS_BIND( &FUNCTION, this, _1 ), GASSMessageHasher(#FUNCTION), shared_from_this()))
 #define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(GASS_BIND( &FUNCTION, this, _1 ), GASSMessageHasher(#FUNCTION) , shared_from_this()))
 

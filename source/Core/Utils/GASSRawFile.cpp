@@ -2,8 +2,11 @@
 #include <math.h>
 #include <cstdio>
 // disable: "conversion from 'double' to 'int', possible loss of data
-#pragma warning(push)
-#   pragma warning (disable : 4244)
+
+#ifdef WIN32
+    #pragma warning(push)
+    #pragma warning (disable : 4244)
+#endif
 
 
 namespace GASS
@@ -77,4 +80,6 @@ namespace GASS
 		return true;
 	}
 }
-#pragma warning(pop)
+#ifdef WIN32
+    #pragma warning(pop)
+#endif

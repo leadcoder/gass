@@ -49,11 +49,10 @@ void KeyframeAnimation::AutoCalulateRotation()
 
 	if(m_KeyVector[m_KeyVector.size()-1].m_Pos == m_KeyVector[0].m_Pos) closed = true;
 
-	for(int  i = 0; i < (int) m_KeyVector.size(); i++)
+	for(int  i = 0; i < static_cast<int>(m_KeyVector.size()); i++)
 	{
-		
 		Quaternion q;
-		if(!closed && i == m_KeyVector.size()-1 && i > 0)
+		if( !closed && i == static_cast<int>(m_KeyVector.size())-1 && i > 0)
 		{
 			vPoint =  m_PositionSpline.Interpolate(i-1, 0.99);
 			dir = vPoint - m_KeyVector[i].m_Pos;
@@ -90,7 +89,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 		return 0;
 	}
 
-	// Wrap time 
+	// Wrap time
 	//if(m_Loop)
 	{
 		while (timePos > m_Length)
@@ -129,7 +128,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 
 	// Parametric time
 	// t1 = time of previous keyframe
-	// t2 = time of next keyframe 
+	// t2 = time of next keyframe
 	Float t1, t2;
 
 	// Find first keyframe after the time
@@ -213,7 +212,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	else
 	{
 		// Interpolate by t
-		
+
 		Vec3 base;
 		switch(m_InterpolateMode)
 		{
@@ -261,16 +260,16 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 				up.Normalize();
 				kret.m_Rot.FromAxes(left,up,dir);
 			}
-			else 
+			else
 			{
 				//kret.m_Rot = k2->m_Rot;
 				//kret.m_Rot = Quaternion::Slerp(t, k1->m_Rot, k2->m_Rot);
 				kret.m_Rot = Quaternion::Slerp2(t,k1->m_Rot, k2->m_Rot);
 				//kret.m_Rot = m_RotationSpline.Interpolate(firstKeyIndex, t);
 			}
-		
 
-			
+
+
 
 			break;
 		}
@@ -281,7 +280,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 }
 
 
- void KeyframeAnimation::BuildInterpolationSplines(void) 
+ void KeyframeAnimation::BuildInterpolationSplines(void)
     {
         // Don't calc automatically, do it on request at the end
         //mPositionSpline.setAutoCalculate(false);
@@ -292,7 +291,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
         m_RotationSpline.Clear();
         m_ScaleSpline.Clear();
 
-	
+
         for (size_t i = 0; i < m_KeyVector.size(); i++)
         {
 			Key* key = &m_KeyVector[i];

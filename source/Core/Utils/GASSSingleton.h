@@ -25,8 +25,10 @@
 // disable: "no suitable definition provided for explicit template
 // instantiation request" Occurs in VC7 for no justifiable reason on all
 // #includes of Singleton
+#ifdef WIN32
 #   pragma warning( disable: 4661)
 #   pragma warning( disable: 4530)
+#endif
 
 namespace GASS
 {

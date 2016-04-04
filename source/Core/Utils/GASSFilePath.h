@@ -56,14 +56,14 @@ namespace GASS
 		bool Exist() const;
 		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
 		{
-			//os.unsetf(std::ios::skipws);
+			os.unsetf(std::ios::skipws);
 			os << path.GetRawPath();
 			return os;
 		}
 
 		friend std::istream& operator >> (std::istream& is, FilePath& path)
 		{
-			//is.unsetf(std::ios::skipws);
+			is.unsetf(std::ios::skipws);
 			std::string line;
 			std::getline (is,line);
 			path.SetPath(line);

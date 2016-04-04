@@ -68,14 +68,14 @@ namespace GASS
 				ret.m_Data[iRow][iCol] =
 					m_Data[iRow][0] * mat.m_Data[0][iCol] +
 					m_Data[iRow][1] * mat.m_Data[1][iCol] +
-					m_Data[iRow][2] * mat.m_Data[2][iCol] + 
+					m_Data[iRow][2] * mat.m_Data[2][iCol] +
 					m_Data[iRow][3] * mat.m_Data[3][iCol];
 			}
 		}
 		return ret;
 	}*/
 
-	 
+
 	void Mat4::Zero()
 	{
 		m_Data[0][0] = 0;
@@ -118,7 +118,7 @@ namespace GASS
 
 	Mat4 Mat4::Transpose()
 	{
-		Mat4 ret; 
+		Mat4 ret;
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -155,7 +155,7 @@ namespace GASS
 		Float cr = (Float)cos(r);
 		Float sr = (Float)sin(r);
 
-	
+
 		m_Data[0][0] = ( Float )( cr*ch+sr*sp*sh );
 		m_Data[0][1] = ( Float )( sr*cp );
 		m_Data[0][2] = ( Float )( -cr*sh+sr*sp*ch );
@@ -184,7 +184,7 @@ namespace GASS
 		m_Data[3][1] = 0;
 		m_Data[3][2] = 0;
 
-		//Scale, 
+		//Scale,
 		//we should only scale diagonal!
 		m_Data[0][0] *= scale.x;
 		m_Data[0][1] *= scale.x;
@@ -200,7 +200,7 @@ namespace GASS
 		m_Data[2][1] *= scale.z;
 		m_Data[2][2] *= scale.z;
 		m_Data[2][3] *= scale.z;
-		
+
 	}
 
 	void Mat4::SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale)
@@ -220,15 +220,15 @@ namespace GASS
 		m_Data[0][0] *= scale.x;
 		m_Data[1][0] *= scale.x;
 		m_Data[2][0] *= scale.x;
-		
+
 		m_Data[0][1] *= scale.y;
 		m_Data[1][1] *= scale.y;
 		m_Data[2][1] *= scale.y;
-	
+
 		m_Data[0][2] *= scale.z;
 		m_Data[1][2] *= scale.z;
 		m_Data[2][2] *= scale.z;
-		
+
 	}
 
 
@@ -265,7 +265,7 @@ namespace GASS
 	{
 		Float cp = (Float)cos( amount);
 		Float sp = (Float)sin( amount);
-		
+
 		m_Data[0][0] = 1;
 		m_Data[0][1] = 0;
 		m_Data[0][2] = 0;
@@ -318,11 +318,11 @@ namespace GASS
 		m_Data[0][0] *= scale.x;
 		m_Data[0][1] *= scale.y;
 		m_Data[0][2] *= scale.x;
-		
+
 		m_Data[1][0] *= scale.x;
 		m_Data[1][1] *= scale.y;
 		m_Data[1][2] *= scale.z;
-		
+
 		m_Data[2][0] *= scale.x;
 		m_Data[2][1] *= scale.y;
 		m_Data[2][2] *= scale.z;
@@ -332,24 +332,24 @@ namespace GASS
 	{
 		Vec3 res;
 		Float d;
-		res.x = m_Data[0][0] * vec.x + 
-			m_Data[0][1] * vec.y + 
-			m_Data[0][2] * vec.z + 
+		res.x = m_Data[0][0] * vec.x +
+			m_Data[0][1] * vec.y +
+			m_Data[0][2] * vec.z +
 			m_Data[0][3];
 
-		res.y = m_Data[1][0] * vec.x + 
-			m_Data[1][1] * vec.y + 
-			m_Data[1][2] * vec.z + 
+		res.y = m_Data[1][0] * vec.x +
+			m_Data[1][1] * vec.y +
+			m_Data[1][2] * vec.z +
 			m_Data[1][3];
 
-		res.z = m_Data[2][0] * vec.x + 
-			m_Data[2][1] * vec.y + 
-			m_Data[2][2] * vec.z + 
+		res.z = m_Data[2][0] * vec.x +
+			m_Data[2][1] * vec.y +
+			m_Data[2][2] * vec.z +
 			m_Data[2][3];
 
-		d = m_Data[3][0] * vec.x + 
-			m_Data[3][1] * vec.y + 
-			m_Data[3][2] * vec.z + 
+		d = m_Data[3][0] * vec.x +
+			m_Data[3][1] * vec.y +
+			m_Data[3][2] * vec.z +
 			m_Data[3][3];
 
 		res.x /= d;
@@ -363,29 +363,29 @@ namespace GASS
 	{
 		Vec4 res;
 		//	Float d;
-		res.x = m_Data[0][0] * vec.x + 
-			m_Data[0][1] * vec.y + 
-			m_Data[0][2] * vec.z + 
+		res.x = m_Data[0][0] * vec.x +
+			m_Data[0][1] * vec.y +
+			m_Data[0][2] * vec.z +
 			m_Data[0][3] * vec.w;
 
-		res.y = m_Data[1][0] * vec.x + 
-			m_Data[1][1] * vec.y + 
-			m_Data[1][2] * vec.z + 
+		res.y = m_Data[1][0] * vec.x +
+			m_Data[1][1] * vec.y +
+			m_Data[1][2] * vec.z +
 			m_Data[1][3] * vec.w;
 
-		res.z = m_Data[2][0] * vec.x + 
-			m_Data[2][1] * vec.y + 
-			m_Data[2][2] * vec.z + 
+		res.z = m_Data[2][0] * vec.x +
+			m_Data[2][1] * vec.y +
+			m_Data[2][2] * vec.z +
 			m_Data[2][3] * vec.w;
 
-		res.w = m_Data[3][0] * vec.x + 
-			m_Data[3][1] * vec.y + 
-			m_Data[3][2] * vec.z + 
+		res.w = m_Data[3][0] * vec.x +
+			m_Data[3][1] * vec.y +
+			m_Data[3][2] * vec.z +
 			m_Data[3][3] * vec.w;
 
-		/*d = m_Data[0][3] * vec.x + 
-		m_Data[1][3] * vec.y + 
-		m_Data[2][3] * vec.z + 
+		/*d = m_Data[0][3] * vec.x +
+		m_Data[1][3] * vec.y +
+		m_Data[2][3] * vec.z +
 		m_Data[3][3] * vec.w;
 
 		res.x /= d;
@@ -396,7 +396,7 @@ namespace GASS
 		return res;
 	}
 
-	/*void Mat4::InverseRotateVect( Vec3 &vec) 
+	/*void Mat4::InverseRotateVect( Vec3 &vec)
 	{
 		Vec3 temp;
 
@@ -406,7 +406,7 @@ namespace GASS
 		vec = temp;
 	}
 
-	void Mat4::InverseTranslateVect( Vec3 &vec) 
+	void Mat4::InverseTranslateVect( Vec3 &vec)
 	{
 		vec.x = vec.x -m_Data2[12];
 		vec.y = vec.y -m_Data2[13];
@@ -455,7 +455,7 @@ namespace GASS
 	{
 		Float det = 0.0f;
 
-		for (int col = 0; col < 4; col++) 
+		for (int col = 0; col < 4; col++)
 		{
 			const Float sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
 			det += sign * m_Data[0][col] * _Determinant(0, col);
@@ -463,45 +463,45 @@ namespace GASS
 		return det;
 	}
 
-	
 
 
-	/*Float Mat4::_Determinant(int row, int col) 
+
+	Float Mat4::_Determinant(int row, int col)
 	{
 		assert(row >= 0 && row < 4 && col >= 0 && col < 4);
 
 		Float data[9];
 		int current = 0;
 
-		for (int index = 0; index < 16; index++) 
+		for (int index = 0; index < 16; index++)
 		{
-			if ((index / 4) == col || (index % 4) == row) 
+			if ((index / 4) == col || (index % 4) == row)
 			{
 				continue;
-			} 
-			else 
+			}
+			else
 			{
 				data[current++] = m_Data2[index];
 			}
 		}
 
-		/* 
-		The newly created 3x3 matrix is also in column-major
-		form:
 
-		d0 d3 d6
-		d1 d4 d7
-		d2 d5 d8
-		*/
+		//The newly created 3x3 matrix is also in column-major
+		//form:
 
-		/*return
+		//d0 d3 d6
+		//d1 d4 d7
+		//d2 d5 d8
+
+
+		return
 			data[0] * (data[4] * data[8] - data[7] * data[5]) -
 			data[1] * (data[3] * data[8] - data[6] * data[5]) +
 			data[2] * (data[3] * data[7] - data[6] * data[4]);
-	}*/
+	}
 
 
-	/*Mat4 Mat4::Invert()
+	Mat4 Mat4::Invert()
 	{
 		Float det = Determinant();
 		//assert(fabs(det) > EPSILON);
@@ -563,38 +563,38 @@ namespace GASS
 	{
 		const Mat4 &mat = *this;
 
-		Float Y = -asin(mat[2][0]); 
+		Float Y = -asin(mat[2][0]);
 		//Float D = Y;
-		Float C = cos(Y); 
-		//Y *= 180.000f/MY_PI; 
+		Float C = cos(Y);
+		//Y *= 180.000f/MY_PI;
 
 		Float rotx, roty, X, Z;
 
-		if (fabs(Y)>0.0005f) 
-		{ 
-			rotx = mat[2][2] / C; 
-			roty = mat[1][2]  / C; 
-			X = atan2( roty, rotx ); 
-			rotx =  mat[0][0] / C; 
-			roty = mat[0][1] / C; 
-			Z = atan2( roty, rotx ); 
-		} 
-		else 
+		if (fabs(Y)>0.0005f)
 		{
-			X  = 0.0f; 
-			rotx = -mat[1][1]; 
-			roty = mat[0][1]; 
-			Z  = atan2( roty, rotx ); 
-		} 
+			rotx = mat[2][2] / C;
+			roty = mat[1][2]  / C;
+			X = atan2( roty, rotx );
+			rotx =  mat[0][0] / C;
+			roty = mat[0][1] / C;
+			Z = atan2( roty, rotx );
+		}
+		else
+		{
+			X  = 0.0f;
+			rotx = -mat[1][1];
+			roty = mat[0][1];
+			Z  = atan2( roty, rotx );
+		}
 
-		if (fabs(X)>=2*GASS_PI) X=0.00f; 
-		if (fabs(Y)>=2*GASS_PI) Y=0.00f; 
-		if (fabs(Z)>=2*GASS_PI) Z=0.00f; 
+		if (fabs(X)>=2*GASS_PI) X=0.00f;
+		if (fabs(Y)>=2*GASS_PI) Y=0.00f;
+		if (fabs(Z)>=2*GASS_PI) Z=0.00f;
 
 		Vec3 rot;
-		rot.Set(X,Y,Z); 
-		return rot; 
-	}	
+		rot.Set(X,Y,Z);
+		return rot;
+	}
 
 	Float Mat4::GetEulerHeading() const
 	{
@@ -623,7 +623,7 @@ namespace GASS
 	Float Mat4::GetEulerPitch() const
 	{
 		Vec3 dir;
-		
+
 		dir = GetZAxis();
 		Vec3 xz_dir(dir.x,0,dir.z);
 		xz_dir.Normalize();

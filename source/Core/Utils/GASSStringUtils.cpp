@@ -87,7 +87,7 @@ namespace GASS
 #endif
 		//remove namespace
 		size_t pos = ret.find("::");
-		if(pos != -1)
+		if(pos != std::string::npos)
 		{
 			ret =  ret.substr(pos+2);
 		}
