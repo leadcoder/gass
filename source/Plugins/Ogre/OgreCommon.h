@@ -37,10 +37,8 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
 #include <OgreBillboardSet.h>
 #include <OgreBillboard.h>
-
 #include <OgreCompositorInstance.h>
 #include <OgreCompositorLogic.h>
 #include <OgreCompositorChain.h>
@@ -52,7 +50,6 @@
 #include <OgreRenderWindow.h>
 #include <OgreViewport.h>
 #include <OgreCamera.h>
-
 #include <OgreRay.h>
 #include <OgreString.h>
 #include <OgreConfigFile.h>
@@ -61,11 +58,8 @@
 #include <OgreMesh.h>
 #include <OgreSubMesh.h>
 #include <OgreMeshManager.h>
-
 #include <OgreMaterialManager.h>
 #include <OgreTechnique.h>
-
-#include <OgreTextureUnitState.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreBone.h>
 #include <OgreStaticGeometry.h>
@@ -76,20 +70,14 @@
 #include <OgreSingleton.h>
 #include <OgreRenderable.h>
 #include <OgreLog.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
 #include <OgreParticleSystem.h>
 #include <OgreParticleEmitter.h>
 #include <OgreFrameListener.h>
-#include <OgreRenderOperation.h>
 #include <Overlay/OgreFont.h>
 #include <Overlay/OgreFontManager.h>
 #include <Overlay/OgreOverlayManager.h>
 #include <Overlay/OgreOverlayContainer.h>
 #include <Overlay/OgreOverlay.h>
 #include <Overlay/OgreOverlayElement.h>
-
-
 #include "Plugins/Ogre/Helpers/MovableTextOverlay.h"
-
 #pragma warning(pop)
