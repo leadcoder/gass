@@ -105,7 +105,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 
 	// Find last keyframe before or on current time
 	i = 0;
-	while (i < (int) m_KeyVector.size() && m_KeyVector[i].m_Time <= timePos)
+	while (i < static_cast<int>( m_KeyVector.size()) && m_KeyVector[i].m_Time <= timePos)
 	{
 		key1 = &m_KeyVector[i];
 		++i;
@@ -136,7 +136,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 
 	//if(m_Loop)
 	{
-		if (i == m_KeyVector.size())
+		if (i == static_cast<int>(m_KeyVector.size()))
 		{
 			key2 = &m_KeyVector[0];
 			t2 = m_Length;

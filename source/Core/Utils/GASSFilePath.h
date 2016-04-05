@@ -24,6 +24,7 @@
 #include "Core/Common.h"
 #include "stdio.h"
 #include <string>
+#include <fstream>
 
 namespace GASS
 {
@@ -60,7 +61,6 @@ namespace GASS
 			os << path.GetRawPath();
 			return os;
 		}
-
 		friend std::istream& operator >> (std::istream& is, FilePath& path)
 		{
 			is.unsetf(std::ios::skipws);
