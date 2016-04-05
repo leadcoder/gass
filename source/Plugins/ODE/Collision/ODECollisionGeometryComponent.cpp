@@ -41,7 +41,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSPhysicsMesh.h"
-#ifdef WIN32
+#ifdef _MSC_VER
 #define NOMINMAX
 #include <algorithm>
 #endif

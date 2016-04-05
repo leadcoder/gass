@@ -22,13 +22,18 @@
 
 #include "Sim/GASSCommon.h"
 
+#ifdef _MSC_VER
+#   pragma warning(push)
 #   pragma warning( disable: 4100)
 #   pragma warning( disable: 4512)
-#ifdef WIN32
-#include <OIS.h>
-#else
-#include <OIS.h>
 #endif
+
+#include <OIS.h>
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageType.h"

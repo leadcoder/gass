@@ -21,7 +21,7 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
-#ifdef WIN32
+#ifdef _MSC_VER
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #	define _CRT_SECURE_NO_WARNINGS
@@ -70,11 +70,11 @@
 
 
 
-#else /* WIN32 */
+#else
 #pragma GCC diagnostic ignored "-Wreorder"
 #endif
 
-#if defined ( WIN32 )
+#if defined ( _MSC_VER )
 #   	if defined( GASS_CORE_EXPORTS )
 #       	define GASSCoreExport __declspec( dllexport )
 #   	else
@@ -129,7 +129,7 @@ namespace GASS
 #include <list>
 #include <set>
 
-#ifdef WIN32
+#ifdef _MSC_VER
 	#define NOMINMAX
 #endif
 #include <algorithm>

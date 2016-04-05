@@ -1,4 +1,4 @@
-#ifdef  WIN32
+#ifdef  _MSC_VER
 #	if defined( EDITOR_MODULE_EXPORTS )
 #  		define EditorModuleExport __declspec( dllexport )
 #	else

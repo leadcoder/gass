@@ -185,7 +185,7 @@ namespace GASS
 
 #ifdef GASS_USE_BOOST 
 	#include <boost/functional/hash.hpp>
-	#ifdef WIN32 
+	#ifdef _MSC_VER
 		static boost::hash<std::string> GASSMessageHasher;
 	#else //to avoid gcc build warnings: "__attribute__((unused))", TODO: investigate this further...
 		static boost::hash<std::string> GASSMessageHasher __attribute__((unused));

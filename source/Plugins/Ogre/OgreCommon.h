@@ -19,9 +19,11 @@
 *****************************************************************************/
 
 #pragma once
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4100)
+#endif
 #include <OgrePrerequisites.h>
 #include <OgreRoot.h>
 //#include <Ogre.h>
@@ -80,4 +82,7 @@
 #include <Overlay/OgreOverlay.h>
 #include <Overlay/OgreOverlayElement.h>
 #include "Plugins/Ogre/Helpers/MovableTextOverlay.h"
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
+

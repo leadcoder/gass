@@ -29,16 +29,10 @@
 #include <assert.h>
 #include <math.h>
 
-#ifdef WIN32
-//# pragma warning (disable : 4244)
-#endif /* WIN32 */
-
-
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 
 namespace GASS
 {
-
 	/** \addtogroup GASSCore
 	*  @{
 	*/
