@@ -102,7 +102,7 @@ namespace GASS
 				if(geom)
 				{
 					GASS_ANY any_size;
-					ComponentPtr comp = GetSceneObject()->GetFirstComponentByClass("BoxGeometryComponent",false);
+					ComponentPtr comp = GetSceneObject()->GetFirstComponentByClassName("BoxGeometryComponent",false);
 					BaseReflectionObjectPtr bro = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
 					bro->GetPropertyByType("Size",any_size);
 					Vec3 size = GASS_ANY_CAST<Vec3>(any_size);

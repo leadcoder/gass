@@ -124,7 +124,7 @@ namespace GASS
 		}
 
 		ComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "TreeGeometryComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
 			TreeGeometryComponentPtr trees = GASS_DYNAMIC_PTR_CAST<TreeGeometryComponent>(components[i]);
@@ -215,7 +215,7 @@ namespace GASS
 	{
 
 		ComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "TreeGeometryComponent", true);
 
 		//Ogre::Real brush_size = message->GetPaintWidth();
 		std::vector<Vec3> rwps = message->GetRoadWaypoints();

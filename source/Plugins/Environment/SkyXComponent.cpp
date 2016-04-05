@@ -147,7 +147,7 @@ namespace GASS
 
 		//create clouds
 		ComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "SkyXCloudLayerComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "SkyXCloudLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
 			SkyXCloudLayerComponentPtr layer = GASS_DYNAMIC_PTR_CAST<SkyXCloudLayerComponent>(components[i]);
@@ -155,7 +155,7 @@ namespace GASS
 		}
 
 		components.clear();
-		GetSceneObject()->GetComponentsByClass(components, "SkyXVolumeCloudComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "SkyXVolumeCloudComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
 			SkyXVolumeCloudComponentPtr volume = GASS_DYNAMIC_PTR_CAST<SkyXVolumeCloudComponent>(components[i]);
