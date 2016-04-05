@@ -289,11 +289,6 @@ namespace GASS
 #define END_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	}							\
 	};								\
-	//template<> NameEnumMap MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
-	//template<> EnumNameMap MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
-	//template<> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
-	//template<> std::map<ENUM,std::string> MultiEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
-
 
 
 
@@ -313,6 +308,4 @@ namespace GASS
 #define END_ENUM_BINDER(ENUM,ENUM_BINDER) \
 	}							\
 	};								\
-	//template<> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,ENUM_BINDER>::m_NameToEnumMap;\
-	//template<> std::map<ENUM,std::string> SingleEnumBinder<ENUM,ENUM_BINDER>::m_EnumToNameMap;\
 

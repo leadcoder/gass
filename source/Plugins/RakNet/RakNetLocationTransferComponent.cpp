@@ -124,7 +124,7 @@ namespace GASS
 			GetSceneObject()->PostRequest(disable_msg);
 
 			ComponentContainerTemplate::ComponentVector components;
-			GetSceneObject()->GetComponentsByClass(components,"ODEBodyComponent");
+			GetSceneObject()->GetComponentsByClassName(components,"ODEBodyComponent");
 			for(int i = 0;  i< components.size(); i++)
 			{
 				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);

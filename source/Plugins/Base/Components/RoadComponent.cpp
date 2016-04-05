@@ -166,8 +166,8 @@ namespace GASS
 
 			SceneObjectPtr last_obj;
 			ComponentContainer::ComponentVector components;
-			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
-			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass(components, "TreeGeometryComponent", true);
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "GrassLayerComponent", true);
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "TreeGeometryComponent", true);
 			for(int i = 0 ;  i < components.size(); i++)
 			{
 				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);

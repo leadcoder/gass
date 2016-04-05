@@ -92,23 +92,23 @@ namespace GASS
 		bool Accept(SceneObjectVisitorPtr visitor);
 
 		/**Get all components of certain class. This function allow you to pass the class name as a string
-			@components Return componnets that are found
+			@components Return components that are found
 			@class_name Name of the component class to search for, note that this is the c++ class name 
-						and not the one you have registred to the object factory
+						and not the one you have registered to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true) const;
+		void GetComponentsByClassName(ComponentVector &components, const std::string &class_name, bool recursive = true) const;
 
 		/**Get first component of certain class. This function allow you to pass the class name as a string
 			@class_name Name of the component class to search for, note that this is the c++ class name 
-						and not the one you have registred to the object factory
+						and not the one you have registered to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true) const;
+		ComponentPtr GetFirstComponentByClassName(const std::string &class_name, bool recursive = true) const;
 
 
 		/**Get all components of certain class. This function allow you to pass the class as a template argument
-			@components Return componnets that are found
+			@components Return components that are found
 			@recursive Indicates if we should search for components in child scene objects
 		*/
 		template <class T>

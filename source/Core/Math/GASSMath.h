@@ -22,6 +22,8 @@
 
 #include "Core/Common.h"
 
+#include <math.h>
+
 #define GASS_PLANE_FRONT 0
 #define GASS_PLANE_BACK 1
 #define GASS_ON_PLANE 2
@@ -93,7 +95,7 @@ namespace GASS
 		static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
 
 		/**
-		@brief Calculate the distance (along the ray) where a infinite 
+		@brief Calculate the distance (along the ray) where a infinite
 			ray intersect a infinite plane.
 		@param ray Ray to check.
 		@param plane Plane to check against.
@@ -108,7 +110,7 @@ namespace GASS
 		@param isect_point Possible intersection point, as a Vec3.
 		@return True if line intersect triangle.
 		*/
-		static bool LineIsectTriangle(const LineSegment &line_segment, 
+		static bool LineIsectTriangle(const LineSegment &line_segment,
 			const Triangle &tri,
 			Vec3 &isect_point);
 
@@ -163,12 +165,16 @@ namespace GASS
 		*/
 		static inline float InvSqrt(float x)
 		{
+#ifdef GASS_USE_FAST_INV
 			float xhalf = 0.5f*x;
 			int i = *(int*)&x;
 			i = 0x5f3759df - (i >> 1); // This line hides a LOT of math!
 			x = *(float*)&i;
 			x = x*(1.5f - xhalf*x*x); // repeat this statement for a better approximation
 			return x;
+#else
+            return 1.0f/sqrt(x);
+#endif
 		}
 
 		/**
@@ -177,7 +183,7 @@ namespace GASS
 		@param v Vector to project
 		@return Projected vector
 		*/
-		//TODO: change name or input args, 
+		//TODO: change name or input args,
 		static Vec3 ProjectVectorOnPlane(const Vec3 &plane_normal,const Vec3 &v);
 
 		/**
@@ -197,7 +203,7 @@ namespace GASS
 		@param  isect Potential intersection point
 		@return true if intersection exist
 		*/
-		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect); 
+		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
 
 
 		// path utilities, to be moved to path class?
@@ -219,7 +225,7 @@ namespace GASS
 			@param line_seg Line segment to check with
 			@param box Box to check with
 			@param tinter Potential intersection distance along line segment
-			@return true if intersection exist 
+			@return true if intersection exist
 		*/
 		static bool LineSegmentAABBoxIntersect(const LineSegment& line_seg, const AABox& box, Float& tinter);
 	private:

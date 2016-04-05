@@ -62,15 +62,17 @@
 // disable: "signed/unsigned mismatch"
 //#   pragma warning( disable: 4018)
 
-// disable: unreferenced formal parameter 
+// disable: unreferenced formal parameter
 //#   pragma warning( disable: 4100)
 
 // disable:  assignment operator could not be generated
 //#   pragma warning( disable: 4512)
- 
 
 
-#endif /* WIN32 */
+
+#else /* WIN32 */
+#pragma GCC diagnostic ignored "-Wreorder"
+#endif
 
 #if defined ( WIN32 )
 #   	if defined( GASS_CORE_EXPORTS )

@@ -961,7 +961,7 @@ namespace GASS
 			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
 
 			ComponentContainer::ComponentVector components;
-			GetSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
+			GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
 
 			for(int i = 0 ; i < components.size(); i++)
 			{

@@ -223,7 +223,7 @@ namespace GASS
 
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
@@ -420,7 +420,7 @@ namespace GASS
 		{
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
@@ -443,7 +443,7 @@ namespace GASS
 		{
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
