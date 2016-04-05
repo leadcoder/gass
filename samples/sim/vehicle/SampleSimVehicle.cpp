@@ -28,31 +28,31 @@
 #include <fstream>
 
 #ifdef WIN32
-#include <conio.h>
+	#include <conio.h>
 #endif
 
 
 #ifndef WIN32
-#include <stdio.h>
-#include <termios.h>
-#include <unistd.h>
-
-int _getch( ) {
-	struct termios oldt,
-		newt;
-	int            ch;
-	tcgetattr( STDIN_FILENO, &oldt );
-	newt = oldt;
-	newt.c_lflag &= ~( ICANON | ECHO );
-	tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-	ch = getchar();
-	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-	return ch;	
-}
+	#include <stdio.h>
+	#include <termios.h>
+	#include <unistd.h>
+	int _getch( ) {
+		struct termios oldt, newt;
+		int ch;
+		tcgetattr( STDIN_FILENO, &oldt );
+		newt = oldt;
+		newt.c_lflag &= ~( ICANON | ECHO );
+		tcsetattr( STDIN_FILENO, TCSANOW, &newt );
+		ch = getchar();
+		tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+		return ch;	
+	}
 #endif
 
-int run(int argc, char* argv[])
+int start(int argc, char* argv[])
 {
+	(void) argc;
+	(void) argv;
 	//Create engine instance and initialize with config file
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(GASS::FilePath("SampleSimVehicle.xml"));
@@ -108,12 +108,12 @@ int main(int argc, char* argv[])
 	int ret =0;
 	try
 	{
-		ret = run(argc,argv);
+		ret = start(argc, argv);
 	}
 	catch(std::exception& e) 
 	{
 		std::cout << "Exception:" << e.what() << std::endl;
-		getch();
+		_getch();
 	}
 	return ret;
 }
