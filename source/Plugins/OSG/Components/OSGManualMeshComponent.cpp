@@ -294,11 +294,16 @@ namespace GASS
 		AABox comp_box;
 		for(size_t i = 0; i < m_OSGGeometries.size(); i++)
 		{
-//#if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
-//			osg::BoundingBox osg_box = m_OSGGeometries[i]->getBoundingBox();
-//#else
-			osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
-//#endif
+
+#ifdef OSG_VERSION_GREATER_OR_EQUAL
+#if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBoundingBox();
+#else
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
+#endif
+#else
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
+#endif
 			Vec3 p1 = OSGConvert::ToGASS(osg_box._min);
 			Vec3 p2 = OSGConvert::ToGASS(osg_box._max);
 			comp_box.Union(p1);
