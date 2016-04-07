@@ -22,7 +22,7 @@
 
 namespace GASS
 {
-	GraphicsMesh::GraphicsMesh() 
+	GraphicsMesh::GraphicsMesh()
 	{
 
 	}
@@ -139,7 +139,7 @@ namespace GASS
 
 		Vec3 pos(0,0,0);
 		Float x,z;
-	
+
 		for(float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*radius.x;
@@ -180,10 +180,10 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		//Vertex
 		for(i = 0;i <= nSlice;i++)
-		{   
+		{
 			phi = 2.0 * GASS_PI * (double)i / (double)nSlice;
 			for(j = 0;j <= nStack;j++)
-			{   
+			{
 				theta = GASS_PI * (double)j / (double)nStack;
 				p[i][j][0] = (radius.x * sin(theta) * cos(phi));//x
 				p[i][j][1] = (radius.y * sin(theta) * sin(phi));//y
@@ -196,7 +196,7 @@ namespace GASS
 		for(i = 0;i < nSlice; i++)
 		{
 			p1 = p[i][0];     p2 = p[i][1];
-			p3 = p[i+1][1]; 
+			p3 = p[i+1][1];
 
 			pos.Set(p1[0],p1[1],p1[2]);
 			normal = pos;
@@ -224,7 +224,7 @@ namespace GASS
 		for(i = 0;i < nSlice; i++)
 		{
 			p1 = p[i][j];     p2 = p[i][j+1];
-			p3 = p[i+1][j]; 
+			p3 = p[i+1][j];
 
 			pos.Set(p1[0],p1[1],p1[2]);
 			normal = pos;
@@ -324,8 +324,8 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x ,0 , size.y));
 		conrners.push_back(Vec3(-size.x ,0 ,-size.y));
 		conrners.push_back(Vec3( size.x ,0 ,-size.y));
-		
-		
+
+
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -347,7 +347,7 @@ namespace GASS
 
 	GraphicsSubMeshPtr GraphicsSubMesh::GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
 	{
-		Vec3 size = box_size*0.5;
+		//Vec3 size = box_size*0.5;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		sub_mesh_data->MaterialName = material;
 		sub_mesh_data->Type = LINE_LIST;
@@ -368,7 +368,7 @@ namespace GASS
 		conrners.push_back(Vec3(-size.x ,-size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
 		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
-		
+
 
 		for(int i = 0; i < 4; i++)
 		{
@@ -398,7 +398,7 @@ namespace GASS
 
 	GraphicsSubMeshPtr GraphicsSubMesh::GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material)
 	{
-		Vec3 size= box_size*0.5;
+		//Vec3 size= box_size*0.5;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		sub_mesh_data->MaterialName = material;
 		sub_mesh_data->Type = TRIANGLE_LIST;
@@ -548,8 +548,8 @@ namespace GASS
 			ColorVector.push_back(vertex_color);
 		}
 	}
-	
-	
+
+
 
 
 	GraphicsSubMeshPtr GraphicsSubMesh::GenerateArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color, const std::string &material)

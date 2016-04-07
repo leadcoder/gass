@@ -35,9 +35,11 @@
 #include "Sim/Utils/Script/scriptstdstring.h"
 #include "Sim/Utils/Script/scriptbuilder.h"
 
+#ifdef _MSC_VER
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4189)
 #pragma warning(disable: 4505)
+#endif
 
 
 namespace GASS
@@ -45,7 +47,7 @@ namespace GASS
 
 	void MessageCallback(const asSMessageInfo *msg, void* /*param*/)
 	{
-		
+
 		const char *type = "ERR ";
 		if( msg->type == asMSGTYPE_WARNING )
 			type = "WARN";
@@ -206,7 +208,7 @@ namespace GASS
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathDeg2Rad(const Vec3 &in)",  asFUNCTIONPR(Math::Deg2Rad, (const Vec3&),Vec3), asCALL_CDECL); assert( r >= 0 );
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)",  asFUNCTIONPR(Math::Rad2Deg, (const Vec3&),Vec3), asCALL_CDECL); assert( r >= 0 );
 		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)",  asFUNCTION(Math::RandomValue), asCALL_CDECL); assert( r >= 0 );
-		
+
 		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);
 
@@ -281,7 +283,7 @@ namespace GASS
 			// We've already attempted loading the script before, but there is no controller
 			return ScriptControllerPtr ();
 		}
-	
+
 		// Compile the script into the module
 		CScriptBuilder builder;
 		r = builder.StartNewModule(m_Engine, script.c_str());
@@ -372,9 +374,9 @@ namespace GASS
 		else
 			ctx = m_Engine->CreateContext();
 
-		int r = ctx->Prepare(func); 
+		int r = ctx->Prepare(func);
 		assert( r >= 0 );
-		
+
 		return ctx;
 	}
 

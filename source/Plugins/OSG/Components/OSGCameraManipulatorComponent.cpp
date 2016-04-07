@@ -54,9 +54,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnWorldRotationRequest,WorldRotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnPositionRequest,PositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnRotationRequest,RotationRequest,0));
-		
+
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>()->Register(shared_from_this());
-		
+
 		if(m_ManName == "Trackball")
 		{
 			//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
@@ -67,7 +67,7 @@ namespace GASS
 			m_TerrainMan = new osgGA::CustomTerrainManipulator();
 			m_TerrainMan->setAllowThrow(false);
 			m_Manipulator = m_TerrainMan;
-			
+
 		}
 		//if(m_Manipulator)
 		//	m_Manipulator->setAutoComputeHomePosition(false);
@@ -190,8 +190,8 @@ namespace GASS
 			const int id = GASS_PTR_TO_INT(this);
 			if(m_TerrainMan)
 			{
-				osg::Quat offset_rot = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
-				osg::Quat rotation; 
+				//osg::Quat offset_rot = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
+				osg::Quat rotation;
 				osg::Vec3d eye;
 				m_TerrainMan->getTransformation(eye, rotation);
 				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(eye),id)));
@@ -201,7 +201,7 @@ namespace GASS
 				osg::Vec3d translation,scale;
 				osg::Quat rotation;
 				osg::Quat so;
-				
+
 				vm.decompose(translation,rotation, scale, so );
 				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(translation),id)));
 			}

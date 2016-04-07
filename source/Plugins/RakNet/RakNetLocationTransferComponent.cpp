@@ -125,7 +125,7 @@ namespace GASS
 
 			ComponentContainerTemplate::ComponentVector components;
 			GetSceneObject()->GetComponentsByClassName(components,"ODEBodyComponent");
-			for(int i = 0;  i< components.size(); i++)
+			for(size_t i = 0;  i< components.size(); i++)
 			{
 				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				comp->GetSceneObject()->PostRequest(disable_msg);
@@ -325,7 +325,7 @@ namespace GASS
 #ifdef _DEBUG_LTC_
 				sprintf(debug_text,"Too much behinde, no history available, time: %d",(m_LocationHistory[m_LocationHistory.size()-1].Time - time));
 #endif
-				for(int i = 1; i < m_LocationHistory.size(); i++)
+				for(size_t i = 1; i < m_LocationHistory.size(); i++)
 				{
 					if(time >= m_LocationHistory[i].Time)
 					{

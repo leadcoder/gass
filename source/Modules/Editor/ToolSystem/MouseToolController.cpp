@@ -109,7 +109,7 @@ namespace GASS
 
 	IMouseTool* MouseToolController::GetTool(const std::string &tool_name)
 	{
-		for(int i = 0; i < m_Tools.size(); i++)
+		for(size_t i = 0; i < m_Tools.size(); i++)
 		{
 			if(tool_name == m_Tools[i]->GetName())
 			{
@@ -168,7 +168,7 @@ namespace GASS
 
 	bool MouseToolController::SelectTool(const std::string &tool_name)
 	{
-		for(int i = 0; i < m_Tools.size(); i++)
+		for(size_t i = 0; i < m_Tools.size(); i++)
 		{
 			if(tool_name == m_Tools[i]->GetName())
 			{
@@ -187,11 +187,11 @@ namespace GASS
 	{
 		if(m_ActiveTool)
 		{
-			for(int i = 0; i < m_Tools.size(); i++)
+			for(size_t i = 0; i < m_Tools.size(); i++)
 			{
 				if(m_ActiveTool == m_Tools[i])
 				{
-					int new_tool = i+1;
+					size_t new_tool = i+1;
 					if(new_tool > m_Tools.size()-1)
 						new_tool = 0;
 					int id = GASS_PTR_TO_INT(this);
@@ -207,13 +207,17 @@ namespace GASS
 	{
 		if(m_ActiveTool)
 		{
-			for(int i = 0; i < m_Tools.size(); i++)
+			for(size_t i = 0; i < m_Tools.size(); i++)
 			{
 				if(m_ActiveTool == m_Tools[i])
 				{
-					int new_tool = i-1;
-					if(new_tool < 0)
+				    size_t new_tool = i;
+				    if(new_tool == 0)
 						new_tool = static_cast<int>(m_Tools.size()-1);
+                    else
+                        new_tool = i-1;
+
+
 
 					int id = GASS_PTR_TO_INT(this);
 					SystemMessagePtr tool_msg(new ToolChangedEvent(m_Tools[new_tool]->GetName(),id));

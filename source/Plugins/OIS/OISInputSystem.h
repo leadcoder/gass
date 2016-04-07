@@ -116,7 +116,7 @@ namespace GASS
 		int OldButton(int index);
 		int inline OldJoystickButton(int device, int index)
 		{
-			if (device >= m_Joys.size())
+			if (device >= static_cast<int>(m_Joys.size()))
 				return 0;
 			return m_OldJoyState[device].mButtons[index];
 		}

@@ -32,7 +32,7 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "RakNetBaseReplica.h"
 class ReplicaManager;
-	
+
 namespace GASS
 {
 	class SceneObject;
@@ -47,7 +47,7 @@ namespace GASS
 		virtual ~RakNetChildReplica();
 		void RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId);
 		void LocalInit(SceneObjectPtr object);
-		
+
 		//Replica member functions
 		virtual ReplicaReturnResult SendConstruction( RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags, RakNet::BitStream *outBitStream, bool *includeTimestamp );
 		virtual ReplicaReturnResult SendDestruction(RakNet::BitStream *outBitStream, SystemAddress systemAddress, bool *includeTimestamp);
@@ -56,8 +56,8 @@ namespace GASS
 		virtual ReplicaReturnResult ReceiveScopeChange(RakNet::BitStream *inBitStream, SystemAddress systemAddress, RakNetTime timestamp);
 		virtual ReplicaReturnResult Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		virtual ReplicaReturnResult Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
-		
-		virtual int GetSortPriority(void) const 
+
+		virtual int GetSortPriority(void) const
 		{
 			return 0;
 		}
@@ -67,9 +67,9 @@ namespace GASS
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-		
+
 		void SetPartId(int id) {m_PartId = id;}
-		int GetPartId()const {m_PartId;}
+		int GetPartId() const {return m_PartId;}
 		NetworkID GetPartOfId(){return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
 		void SerializeProperties(RakNet::BitStream *bit_stream);
@@ -77,7 +77,7 @@ namespace GASS
 		bool HasPropertiesChanged();
 	protected:
 		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property);
-		
+
 		bool m_AllowRemoteOwner;
 	private:
 		SystemAddress m_OwnerSystemAddress;

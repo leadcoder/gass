@@ -43,7 +43,7 @@ namespace GASS
 
 	ODELineCollision::~ODELineCollision()
 	{
-		
+
 	}
 
 	void ODELineCollision::Process()
@@ -54,12 +54,12 @@ namespace GASS
 		//HACK: split ray into segments to support terrain heightmaps!
 		if(m_SegmentLength > 0)
 		{
-			//calculate segments based on projected ray distance 
+			//calculate segments based on projected ray distance
 			Vec3 dir = m_RayDir * m_RayLength;
 			dir.y = 0;
 			Float l = dir.Length();
 			const int segments = static_cast<int>(l / m_SegmentLength);
-			
+
 			dGeomID ray = dCreateRay (0, m_RayLength);
 			dGeomSetCollideBits (ray,m_CollisionBits);
 			dGeomSetCategoryBits(ray,0);
@@ -69,7 +69,7 @@ namespace GASS
 			{
 				ray_segment = m_RayLength / (Float)segments;
 				last_ray_length =  m_RayLength - segments * ray_segment;
-				dGeomRaySetLength(ray,ray_segment);	
+				dGeomRaySetLength(ray,ray_segment);
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
 
@@ -96,7 +96,7 @@ namespace GASS
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
 				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment);
-				
+
 				dGeomRaySetLength(ray,last_ray_length);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
@@ -124,7 +124,7 @@ namespace GASS
 				const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*m_SegmentLength);
 				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
-				
+
 				if(m_Result->Coll == true)
 				{
 					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
@@ -183,7 +183,7 @@ namespace GASS
 			long int cat2 = dGeomGetCategoryBits (o2);
 			long int col1 = dGeomGetCollideBits (o1);
 			long int col2 = dGeomGetCollideBits (o2);
-			if ((cat1 & col2) || (cat2 & col1)) 
+			if ((cat1 & col2) || (cat2 & col1))
 			{
 				ODELineCollision* rs = (ODELineCollision*) data;
 				rs->ProcessCallback(o1,o2);
@@ -196,12 +196,12 @@ namespace GASS
 		dGeomID ray_geom =0;
 		dGeomID other_geom =0;
 
-		if(dGeomGetClass(o1) == dRayClass) 
+		if(dGeomGetClass(o1) == dRayClass)
 		{
 			ray_geom = o1;
 			other_geom = o2;
 		}
-		else if(dGeomGetClass(o2) == dRayClass) 
+		else if(dGeomGetClass(o2) == dRayClass)
 		{
 			ray_geom = o2;
 			other_geom = o1;
@@ -220,18 +220,18 @@ namespace GASS
 			num_contact_points = 1;
 		}
 
-		dGeomID tri_mesh_geom = 0;
-		if(dGeomGetClass(other_geom) == dTriMeshClass) 
-			tri_mesh_geom = other_geom;
+		//dGeomID tri_mesh_geom = 0;
+		//if(dGeomGetClass(other_geom) == dTriMeshClass)
+		//	tri_mesh_geom = other_geom;
 
-		/*if(tri_mesh_geom && m_Request->ReturnTriangles) 
+		/*if(tri_mesh_geom && m_Request->ReturnTriangles)
 		{
 		dGeomTriMeshSetRayCallback(tri_mesh_geom, (dTriRayCallback*) TriangleCallback);
 		}*/
 		int num_contact = dCollide(ray_geom,other_geom,num_contact_points,&contact[0].geom, sizeof(dContact));
 		//if(tri_mesh_geom && m_Request->ReturnTriangles) dGeomTriMeshSetRayCallback(tri_mesh_geom, 0);
 		//double isect_dist = 0;
-		
+
 		for(int i = 0 ; i < num_contact; i++)
 		{
 			//pos - This is the point at which the ray intersects the surface of the other geom, regardless of whether the ray starts from inside or outside the geom.
@@ -241,7 +241,7 @@ namespace GASS
 				m_Result->CollDist = contact[i].geom.depth;
 				m_Result->Coll = true;
 				//m_Result->CollPosition = m_RayStart + m_RayDir*isect_dist;
-				m_Result->CollSceneObject = scene_object;	
+				m_Result->CollSceneObject = scene_object;
 				m_Result->CollNormal = Vec3(contact[i].geom.normal[i],contact[i].geom.normal[1],contact[i].geom.normal[2]);
 			}
 		}

@@ -51,7 +51,7 @@ namespace GASS
 
 	RakNetNetworkMasterComponent::~RakNetNetworkMasterComponent()
 	{
-		
+
 	}
 
 	void RakNetNetworkMasterComponent::RegisterReflection()
@@ -63,7 +63,7 @@ namespace GASS
 	void RakNetNetworkMasterComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeRequest,0));
-	
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -71,7 +71,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnNetworkPostUpdate,NetworkPostUpdateEvent,0));
 		int id = 0;
 		GeneratePartID(GetSceneObject(), id);
-		
+
 		if(raknet->IsServer())
 		{
 			m_Replica = new RakNetMasterReplica(raknet->GetReplicaManager());
@@ -117,14 +117,14 @@ namespace GASS
 	void RakNetNetworkMasterComponent::OnSerialize(NetworkSerializeRequestPtr message)
 	{
 		bool found = false;
-		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)
 		{
 			if(m_SerializePackages[i]->Id == message->GetPackage()->Id)
 			{
 				m_SerializePackages[i] = message->GetPackage();
 				found = true;
 				break;
-			}	
+			}
 		}
 		if(!found)
 			m_SerializePackages.push_back(message->GetPackage());
@@ -132,7 +132,7 @@ namespace GASS
 		SystemAddress address;
 		address.binaryAddress = message->GetAddress().m_Address;
 		address.port  = message->GetAddress().m_Port;
-		
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		//Signal serialize
 		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
@@ -142,7 +142,7 @@ namespace GASS
 	{
 		int num_packs = static_cast<int>(m_SerializePackages.size());
 		outBitStream->Write(num_packs);
-		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)
 		{
 			*sendTimestamp = true; //always include time stamp!
 
@@ -151,10 +151,10 @@ namespace GASS
 			int size = m_SerializePackages[i]->GetSize();
 			outBitStream->Write((char*)m_SerializePackages[i].get(),size);
 		}
-		
+
 		if(m_Replica && m_Attributes.size() > 0)
 			m_Replica->SerializeProperties(outBitStream);
-		
+
 	}
 
 	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
@@ -164,7 +164,7 @@ namespace GASS
 		//std::cout << "RakNetNetworkMasterComponent::Deserialize packages:"<<  num_packs << std::endl;
 		for(int i = 0 ; i < num_packs; i++)
 		{
-			
+
 			//NetworkSerializeMessage::NetworkPackage package;
 			//inBitStream->Read(package.Id);
 			int id;
@@ -196,10 +196,10 @@ namespace GASS
 				GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(tp)));
 				delete data_to_read;
 			}*/
-			
-			//int size =package->GetSize(); 
+
+			//int size =package->GetSize();
 			//inBitStream->Read((char*)package.get(),size);
-			
+
 			//Post messages
 			//GetSceneObject()->PostMessage(MessagePtr(new NetworkSerializeMessage(package)));
 		}

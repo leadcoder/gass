@@ -59,7 +59,7 @@ namespace GASS
 		dir.Normalize();
 		dir = dir * Edge->LaneWidth*4;
 		Center.p1 = Center.p1-dir;
-		//Edge = network.m_Nodes[i]->Edges[j]; 
+		//Edge = network.m_Nodes[i]->Edges[j];
 		Angle = atan2(dir.z,dir.x);
 		LeftClip = _LineOffset(Edge->LeftLanes*Edge->LaneWidth, Center);
 		//Node = network.m_Nodes[i];
@@ -133,7 +133,7 @@ namespace GASS
 			Vec2 isect;
 			if(Math::GetLineIntersection(p1, p2, p3, p4, isect))
 			{
-				out.push_back(Vec3(isect.x,path[i].y,isect.y));	
+				out.push_back(Vec3(isect.x,path[i].y,isect.y));
 				break;
 			}
 			else
@@ -163,7 +163,7 @@ namespace GASS
 			{
 				RoadEdge* e = network.m_Edges[i];
 				e->LLWaypoints.clear();
-				for(size_t j = 0; j < e->LeftLanes; j++)
+				for(int j = 0; j < e->LeftLanes; j++)
 				{
 					e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth*(j+1))));
 					//extend end points to support better clipping
@@ -171,7 +171,7 @@ namespace GASS
 				}
 
 				e->RLWaypoints.clear();
-				for(size_t j = 0; j < e->RightLanes; j++)
+				for(int j = 0; j < e->RightLanes; j++)
 				{
 					e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth*(j+1))));
 					//Extend(e->RLWaypoints[j],e->LaneWidth*e->RightLanes*4);

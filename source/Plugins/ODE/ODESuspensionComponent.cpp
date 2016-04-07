@@ -105,7 +105,7 @@ namespace GASS
 		if(m_Body1)
 		{
 			m_Body1->Wake();
-			
+
 			SetAngularSteerVelocity(static_cast<float>(message->GetVelocity()));
 		}
 	}
@@ -118,7 +118,7 @@ namespace GASS
 			SetMaxSteerTorque(static_cast<float>(message->GetMaxTorque()));
 		}
 	}
-	
+
 	void ODESuspensionComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
@@ -133,7 +133,7 @@ namespace GASS
 	{
 		dWorldID world = ODEPhysicsSceneManagerPtr(m_SceneManager)->GetWorld();
 
-		
+
 		m_Body1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
 		if(m_Body1)
 		{
@@ -202,18 +202,18 @@ namespace GASS
 
 	void ODESuspensionComponent::UpdateAnchor()
 	{
-		LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		//LocationComponentPtr location1 = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		LocationComponentPtr location2 = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 
-		Vec3 pos_b1 = location1->GetPosition();
+		//Vec3 pos_b1 = location1->GetPosition();
 		Vec3 pos_b2 = location2->GetPosition();
 
 		Vec3  world_anchor;
 
-	
+
 		world_anchor = m_Anchor + pos_b2;
 		dJointSetHinge2Anchor(m_ODEJoint,world_anchor.x,world_anchor.y,world_anchor.z);
-			
+
 	}
 
 	void ODESuspensionComponent::SetLowStop(float value)
@@ -283,7 +283,7 @@ namespace GASS
 	}
 
 
-	float ODESuspensionComponent::GetMaxSteerTorque() const 
+	float ODESuspensionComponent::GetMaxSteerTorque() const
 	{
 		if(m_ODEJoint)
 		{
@@ -360,7 +360,7 @@ namespace GASS
 
 			ODESphereGeometryComponentPtr sphere = GetSceneObject()->GetFirstComponentByClass<ODESphereGeometryComponent>();
 			Float radius = 0;
-			if(sphere) 
+			if(sphere)
 			{
 				radius = sphere->GetRadius();
 			}
@@ -374,7 +374,7 @@ namespace GASS
 
 			//get terrain height
 
-			if( displacement > 0 && height_above_ground < radius*2) 
+			if( displacement > 0 && height_above_ground < radius*2)
 			{
 				if( amt > 15 )
 				{

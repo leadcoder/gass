@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2006, Creative Labs Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
  * that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice, this list of conditions and
  * 	     the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
  * 	     and the following disclaimer in the documentation and/or other materials provided with the distribution.
  *     * Neither the name of Creative Labs Inc. nor the names of its contributors may be used to endorse or
  * 	     promote products derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
@@ -23,7 +23,10 @@
  */
 
 // Win32 version of the Creative Labs OpenAL 1.1 Framework for samples
+
+#ifdef WIN32
 #include<windows.h>
+#endif
 #include<stdio.h>
 
 #include "Framework.h"
@@ -112,9 +115,9 @@ void ALFWShutdown()
 	if ((pDeviceList) && (pDeviceList->GetNumDevices()))
 	{
 		ALFWprintf("\nSelect OpenAL Device:\n");
-		for (i = 0; i < pDeviceList->GetNumDevices(); i++) 
+		for (i = 0; i < pDeviceList->GetNumDevices(); i++)
 			ALFWprintf("%d. %s%s\n", i + 1, pDeviceList->GetDeviceName(i), i == pDeviceList->GetDefaultDevice() ? "(DEFAULT)" : "");
-	
+
 		do {
 			ALchar ch = _getch();
 			i = atoi(&ch);
@@ -149,7 +152,7 @@ ALboolean ALFWShutdownOpenAL()
 
 	pContext = alcGetCurrentContext();
 	pDevice = alcGetContextsDevice(pContext);
-	
+
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(pContext);
 	alcCloseDevice(pDevice);
@@ -196,7 +199,7 @@ void ALFWprintf( const char* x, ... )
 {
     va_list args;
     va_start( args, x );
-    vprintf( x, args ); 
+    vprintf( x, args );
     va_end( args );
 }
 
@@ -217,7 +220,7 @@ ALint ALFWKeyPress(void)
 ALboolean ALFWIsXRAMSupported()
 {
 	ALboolean bXRAM = AL_FALSE;
-	
+
 	if (alIsExtensionPresent("EAX-RAM") == AL_TRUE)
 	{
 		// Get X-RAM Function pointers

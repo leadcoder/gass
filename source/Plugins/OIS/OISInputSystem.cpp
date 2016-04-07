@@ -193,7 +193,7 @@ namespace GASS
 		{
 			m_InputManager->destroyInputObject(m_Keyboard);
 			m_InputManager->destroyInputObject(m_Mouse);
-			for (int i = 0; i < m_Joys.size(); i++)
+			for (size_t i = 0; i < m_Joys.size(); i++)
 				m_InputManager->destroyInputObject(m_Joys[i]);
 			m_Joys.erase(m_Joys.begin(),m_Joys.end());
 			m_InputManager->destroyInputSystem(m_InputManager);
@@ -245,7 +245,7 @@ namespace GASS
 
 		if(m_JoyActive)
 		{
-			for (int i = 0; i < m_Joys.size(); i++)
+			for (size_t i = 0; i < m_Joys.size(); i++)
 			{
 				m_Joys[i]->capture();
 				//m_OldJoyState[i] = m_JoyState[i];

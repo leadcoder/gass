@@ -151,7 +151,7 @@ namespace GASS
 			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			const Vec3 origo = location->GetWorldPosition();
 			//create absolute positions
-			for(int i = 0 ; i < points.size(); i++)
+			for(size_t i = 0 ; i < points.size(); i++)
 				points[i] = points[i] + origo;
 
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
@@ -168,7 +168,7 @@ namespace GASS
 			ComponentContainer::ComponentVector components;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "GrassLayerComponent", true);
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "TreeGeometryComponent", true);
-			for(int i = 0 ;  i < components.size(); i++)
+			for(size_t i = 0 ;  i < components.size(); i++)
 			{
 				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				if(last_obj != bsc->GetSceneObject())
@@ -196,7 +196,7 @@ namespace GASS
 			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			const Vec3 origo = location->GetWorldPosition();
 			//create absolute positions
-			for(int i = 0 ; i < points.size(); i++)
+			for(size_t i = 0 ; i < points.size(); i++)
 				points[i] = points[i] + origo;
 
 			HeightmapTerrainComponentPtr terrain = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
@@ -276,7 +276,7 @@ namespace GASS
 		// for some reason the first section may only have 1 segment... in this case we need to have last_pos defined
 		last_pos = points[0];
 
-		for(int i = 0 ;  i < points.size() ;i++)
+		for(size_t i = 0 ;  i < points.size() ;i++)
 		{
 			uv_new_pos = points[i];
 			v_coord += (uv_new_pos - uv_old_pos).Length()/m_TileScale.y;
@@ -374,14 +374,14 @@ namespace GASS
 
 		}
 
-		for (int n = 0; n < points.size()-1; n++)
+		for (int n = 0; n < static_cast<int>(points.size()) -1 ; n++)
 		{
 			int num_horizontal_vertex = num_horizontal_pts*2-2;
 			// create four: 0,1,4 0,4,3 1,2,5 1,5,4 (0->6 + offset)
-			for (vertex_offset = n*num_horizontal_vertex; vertex_offset < (n+1)*num_horizontal_vertex-1; vertex_offset += 2) // vertex_offset
+			for (vertex_offset = n*num_horizontal_vertex; vertex_offset < (n + 1)*num_horizontal_vertex-1; vertex_offset += 2) // vertex_offset
 			{
-				unsigned short face[3*2] = {static_cast<unsigned short>(vertex_offset + 0), 
-					static_cast<unsigned short>(vertex_offset + num_horizontal_vertex+1) , 
+				unsigned short face[3*2] = {static_cast<unsigned short>(vertex_offset + 0),
+					static_cast<unsigned short>(vertex_offset + num_horizontal_vertex+1) ,
 					static_cast<unsigned short>(vertex_offset + 1),
 					static_cast<unsigned short>(vertex_offset + 0),
 					static_cast<unsigned short>(vertex_offset + num_horizontal_vertex),
@@ -428,7 +428,7 @@ namespace GASS
 		{
 			//CAP under
 			int num_horizontal_vertex = num_horizontal_pts*2-2;
-			for (int n = 0; n < points.size()-1; n++)
+			for (int n = 0; n < static_cast<int>(points.size())-1; n++)
 			{
 				vertex_offset = n*num_horizontal_vertex;
 				sub_mesh_data->IndexVector.push_back(vertex_offset + num_horizontal_vertex - 1 );

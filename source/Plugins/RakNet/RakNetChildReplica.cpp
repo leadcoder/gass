@@ -53,7 +53,7 @@ namespace GASS
 	{
 		m_Manager->Destruct(this, UNASSIGNED_SYSTEM_ADDRESS, true); // Forward the destruct message to all other systems but the sender
 		m_Manager->DereferencePointer(this);
-		
+
 	}
 
 	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
@@ -69,13 +69,13 @@ namespace GASS
 			if(root_net_obj)
 				m_PartOfId = root_net_obj->GetReplica()->GetNetworkID();
 		}
-		
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		
+
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
-		
+
 		SetOwnerSystemAddress(raknet->GetRakPeer()->GetInternalID());
-		
+
 
 		// For security, as a server disable these interfaces
 		if (raknet->IsServer())
@@ -83,7 +83,7 @@ namespace GASS
 			m_Manager->Construct(this, false, UNASSIGNED_SYSTEM_ADDRESS, true);
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
 			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
-			
+
 			m_Manager->DisableReplicaInterfaces(this, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
 		}
 		else
@@ -97,7 +97,7 @@ namespace GASS
 	void RakNetChildReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		
+
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		// We must set the network ID of all remote objects
 		SetNetworkID(networkID);
@@ -149,7 +149,7 @@ namespace GASS
 		outBitStream->Write(m_PartId);
 		outBitStream->Write(m_PartOfId);
 		assert(m_Owner);
-		
+
 		//std::string name = m_Owner->GetName();
 		//std::string template_name = m_Owner->GetTemplateName();
 		//RakNetNetworkManager::WriteString(name,outBitStream);
@@ -165,7 +165,7 @@ namespace GASS
 		{
 			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
 			if(comp)
-			{				
+			{
 				RTTI* pRTTI = comp->GetRTTI();
 				while(pRTTI)
 				{
@@ -188,7 +188,7 @@ namespace GASS
 		return false;
 	}
 
-	
+
 	void RakNetChildReplica::DeserializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkChildComponent>();
@@ -202,7 +202,7 @@ namespace GASS
 			bit_stream->Read(data_to_read,size);
 			SerialLoader sl((unsigned char* )data_to_read,size);
 
-			for(int i = 0 ;  i < attributes.size(); i++)
+			for(size_t i = 0 ;  i < attributes.size(); i++)
 			{
 				IProperty * prop;
 				BaseReflectionObject* component;
@@ -214,7 +214,7 @@ namespace GASS
 					std::cout << attributes[i] << " before:" << before << " after:" << after << "\n";
 				}
 
-				
+
 			}
 		}
 	}
@@ -229,14 +229,14 @@ namespace GASS
 			m_SavedValues.resize(attributes.size());
 		}
 
-		for(int i = 0 ;  i < attributes.size(); i++)
+		for(size_t i = 0 ;  i < attributes.size(); i++)
 		{
 			IProperty * prop;
 			BaseReflectionObject* component;
 			if(GetProperty(attributes[i],component,prop))
 			{
 				std::string value = prop->GetValueAsString(component);
-				
+
 				if(value != m_SavedValues[i])
 					return true;
 			}
@@ -249,7 +249,7 @@ namespace GASS
 		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
 		SerialSaver ss(NULL,0);
-		for(int i = 0 ;  i < attributes.size(); i++)
+		for(size_t i = 0 ;  i < attributes.size(); i++)
 		{
 			IProperty * prop;
 			BaseReflectionObject* component;
@@ -266,13 +266,13 @@ namespace GASS
 			m_SavedValues.resize(attributes.size());
 
 		}
-		for(int i = 0 ;  i < attributes.size(); i++)
+		for(size_t i = 0 ;  i < attributes.size(); i++)
 		{
 			IProperty * prop;
 			BaseReflectionObject* component;
 			if(GetProperty(attributes[i],component,prop))
 			{
-				 
+
 				prop->Serialize(component,&sv);
 				std::string value = prop->GetValueAsString(component);
 				m_SavedValues[i] = value;

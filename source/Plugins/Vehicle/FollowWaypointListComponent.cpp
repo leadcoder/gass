@@ -66,7 +66,7 @@ namespace GASS
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<IWaypointListComponent>(comps);
-			for(int i = 0 ; i < comps.size();i++)
+			for(size_t i = 0 ; i < comps.size();i++)
 			{
 				if(comps[i]->GetOwner() != so)
 				{
@@ -98,7 +98,7 @@ namespace GASS
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
-			for(int i = 0 ; i < comps.size();i++)
+			for(size_t i = 0 ; i < comps.size();i++)
 			{
 				if(comps[i]->GetOwner() != so)
 				{
@@ -170,7 +170,7 @@ namespace GASS
 		double shortest_dist = 0;
 		if(m_Waypoints.size() > 0)
 		{
-			for(int i = 0; i < m_Waypoints.size(); i++)
+			for(size_t i = 0; i < m_Waypoints.size(); i++)
 			{
 				Vec3 wp_pos = m_Waypoints[i];
 				wp_pos.y = 0;
@@ -361,12 +361,12 @@ void FollowWaypointListComponent::SetWaypointList(SceneObjectRef waypointlist)
 			m_CurrentWaypoint = 0;
 			waypointlist->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnWaypointListUpdated,WaypointListUpdatedMessage,0));
 
-			//force update				
+			//force update
 			WaypointListComponentPtr wpl = waypointlist->GetFirstComponentByClass<IWaypointListComponent>();
 			waypointlist->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wpl->GetWaypoints())));
 		}
 	}
-	m_WaypointList = waypointlist; 
+	m_WaypointList = waypointlist;
 }
 
 
@@ -382,7 +382,7 @@ void FollowWaypointListComponent::SetMode(const PathFollowModeBinder &mode)
 
 PathFollowModeBinder FollowWaypointListComponent::GetMode() const
 {
-	return m_Mode; 
+	return m_Mode;
 }
 
 }

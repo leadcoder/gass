@@ -81,16 +81,16 @@ namespace GASS
 	{
 		std::string ctn = template_name;
 		ScenePtr scene = GetScene();
-		
+
 		Vec3 vel(0, 0, 0);
-		Vec3 pos = scene->GetStartPos();
+		//Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();
-		
+
 		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate(ctn, scene->GetRootSceneObject());
-		
+
 		if (!free_obj)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find camera template named:" + ctn, "EditorSceneManager::CreateCamera");

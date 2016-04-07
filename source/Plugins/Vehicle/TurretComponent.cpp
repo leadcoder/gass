@@ -80,8 +80,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, PhysicsVelocityEvent,0));
-	
-		
+
+
 		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
@@ -109,7 +109,7 @@ namespace GASS
 
 	void TurretComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
-		
+
 		m_AngularVelocity = message->GetAngularVelocity().y;
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
@@ -145,7 +145,7 @@ namespace GASS
 		else
 			rot_mat.RotateY(m_RotValue);
 
-		//add relative transformation, we start rotation from this transformation 
+		//add relative transformation, we start rotation from this transformation
 		m_RelTrans.SetTranslation(0,0,0);
 		//Mat4 parent_rot = m_RelTrans;
 		//parent_rot.SetTranslation(0,0,0);
@@ -162,20 +162,20 @@ namespace GASS
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
-		if(Math::Dot(plane_normal,cross) > 0) 
+		if(Math::Dot(plane_normal,cross) > 0)
 			angle *= -1;
 		return angle;
 	}
 
-	
+
 	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2)
 	{
-		Vec3 cross = Math::Cross(v1,v2);
+		//Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
-		if(v1.y < v2.y) 
+		if(v1.y < v2.y)
 			angle *= -1;
 		return angle;
 	}
@@ -197,7 +197,7 @@ namespace GASS
 
 		Vec3 desired_aim_direction = GetDesiredAimDirection(delta_time);
 
-		
+
 		Float angle_to_aim_dir = 0;
 		if(m_Controller == "Pitch")
 		{
@@ -219,11 +219,11 @@ namespace GASS
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
-			
+
 		}
 
 
-		
+
 		/*Float angle1 = GetAngle(-m_ParentTransformation.GetViewDirVector(), desired_aim_direction);
 		Float angle2 = GetAngle(-m_ParentTransformation.GetViewDirVector(), -m_Transformation.GetViewDirVector());
 
@@ -234,7 +234,7 @@ namespace GASS
 		while(angle_to_aim_dir < -180)
 			angle_to_aim_dir = angle_to_aim_dir + 180;*/
 
-		
+
 
 		/*Vec3 turrent_direction(0,0,-1);
 
@@ -249,19 +249,19 @@ namespace GASS
 		end = start + desired_aim_direction;
 		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
-				
+
 		Vec3 cross = Math::Cross(turrent_direction,desired_aim_direction);
 		float cos_angle = Math::Dot(turrent_direction,desired_aim_direction);
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
-		if(cross.y > 0) 
+		if(cross.y > 0)
 			angle_to_aim_dir *= -1;*/
 
 		//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 
 
-		
+
 	/*	if(m_Controller == "Pitch")
 		{
 			Mat4 rot_mat;
@@ -271,7 +271,7 @@ namespace GASS
 			{
 
 			}
-			else 
+			else
 			{
 				m_RotValue += m_TurnInput*m_MaxSteerVelocity*delta_time;
 				rot_mat.RotateX(m_RotValue);
@@ -292,7 +292,7 @@ namespace GASS
 				end = start + desiredDir;
 				DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
-				
+
 				Vec3 cross = Math::Cross(t_dir,desiredDir);
 				float cos_angle = Math::Dot(t_dir,desiredDir);
 				if(cos_angle > 1) cos_angle = 1;
@@ -308,8 +308,8 @@ namespace GASS
 				//m_DesiredDir.z = sqrt(turret_dir.z*turret_dir.z+turret_dir.x*turret_dir.x);
 				//if(turret_dir.z < 0)
 				//	m_DesiredDir.z = -m_DesiredDir.z;
-				
-			
+
+
 			}
 		}
 		else if(m_Controller == "Yaw")
@@ -328,26 +328,26 @@ namespace GASS
 			}
 			//std::cout << "value:" << m_TurnInput << " dir:" << m_DesiredDir << "\n";
 		}
-		
 
-		
 
-		
+
+
+
 
 		Vec3 aim_dir = m_DesiredDir;
-		
+
 		if(m_Controller == "Pitch")
 		{
 
-			
+
 			//turret_dir.z = sqrt(turret_dir.z*turret_dir.z+turret_dir.x*turret_dir.x);
-			//turret_dir.x 
+			//turret_dir.x
 			//	if(turret_dir.z < 0)
 			//		m_DesiredDir.z = -m_DesiredDir.z;
 			//turret_dir.z = -sqrt(turret_dir.z*turret_dir.z + turret_dir.x*turret_dir.x);
 			//turret_dir.x = 0;
 			//turret_dir.Normalize();
-			
+
 		}
 		else if(m_Controller == "Yaw")
 		{
@@ -359,24 +359,24 @@ namespace GASS
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
-		
+
 		if(m_Controller == "Pitch")
 		{
-			if(turret_dir.y > aim_dir.y) 
+			if(turret_dir.y > aim_dir.y)
 			angle_to_aim_dir *= -1;
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";
 		}
 		else if (m_Controller == "Yaw")
 		{
-			if(cross.y < 0) 
+			if(cross.y < 0)
 			angle_to_aim_dir *= -1;
 			//std::cout << "CurrentAngle:" << m_CurrentAngle << "\n";
 		}*/
 
 		//std::cout << "angle diff:" << angle_to_aim_dir << "\n";
-		
 
-		
+
+
 	/*	if(angle_to_aim_dir > 4)
 			angle_to_aim_dir = 4;
 
@@ -388,8 +388,8 @@ namespace GASS
 		//angle_to_aim_dir = angle_to_aim_dir*fabs(angle_to_aim_dir)*fabs(angle_to_aim_dir);
 
 
-		
-		
+
+
 
 
 		//float turn_velocity = -angle_to_aim_dir*m_MaxSteerVelocity*4;
@@ -399,7 +399,7 @@ namespace GASS
 		float turn_velocity = static_cast<float>(m_TurnPID.update(angle_to_aim_dir,delta_time));
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
 
-		
+
 
 		//MessagePtr force_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_FORCE,0));//m_SteerForce));
 		//MessagePtr vel_msg(new PhysicsJointMessage(PhysicsJointMessage::AXIS1_VELOCITY,turn_velocity));
@@ -407,7 +407,7 @@ namespace GASS
 		//GetSceneObject()->PostMessage(vel_msg);
 
 		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(0)));
-		
+
 
 		if(m_Controller == "Pitch")
 		{
@@ -419,13 +419,13 @@ namespace GASS
 		}
 		else if (m_Controller == "Yaw")
 		{
-			
+
 			GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0))));
 			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 		}
 
-		
-		
+
+
 		//MessagePtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(turn )));
 		//GetSceneObject()->PostMessage(volume_msg);
 
@@ -440,7 +440,7 @@ namespace GASS
 		if (name == "ActivateTurret")
 		{
 			if(value > 0)
-			{	
+			{
 				m_Active = true;
 				std::cout << "activate\n";
 			}
@@ -455,7 +455,7 @@ namespace GASS
 		else if (m_Active && name == m_Controller)
 		{
 			m_TurnInput = value;
-			
+
 
 			//send rotaion message to physics engine
 

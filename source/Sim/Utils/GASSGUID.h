@@ -23,12 +23,16 @@
 #include "Core/Common.h"
 
 #ifdef GASS_USE_BOOST
-	#pragma warning( push )
-	# pragma warning( disable: 4996)
+    #ifdef _MSC_VER
+        #pragma warning( push )
+        #pragma warning( disable: 4996)
+	#endif
 	#include <boost/uuid/uuid.hpp>
 	#include <boost/uuid/uuid_generators.hpp>
 	#include <boost/uuid/uuid_io.hpp>
-	#pragma warning( pop )
+	#ifdef _MSC_VER
+        #pragma warning( pop )
+	#endif
 	#define GASS_GUID boost::uuids::uuid
 	#define GASS_GUID_NULL boost::uuids::nil_uuid()
 	#define GASS_GUID_GENERATE boost::uuids::random_generator()()

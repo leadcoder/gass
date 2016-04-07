@@ -564,13 +564,13 @@ namespace GASS
 				// Traverse drawables
 				for (unsigned int i = 0; i < geode->getNumDrawables(); i++)
 				{
-					
-#if OSG_VERSION_GREATER_OR_EQUAL(3,3,2)
-					osg::BoundingBox bbox = geode->getDrawable(i)->getBoundingBox();
-#else
-					osg::BoundingBox bbox = geode->getDrawable(i)->getBound();						
-#endif
-					
+
+//#if OSG_VERSION_GREATER_OR_EQUAL(3,3,2)
+//					osg::BoundingBox bbox = geode->getDrawable(i)->getBoundingBox();
+//#else
+					osg::BoundingBox bbox = geode->getDrawable(i)->getBound();
+//#endif
+
 					AABox box;
 
 					osg::Vec3d p1 = bbox._max*M;

@@ -379,8 +379,8 @@ namespace GASS
 			{
 				//printf("Connection lost to %s:%i\n", rakPeer->PlayerIDToDottedIP(p->systemAddress), p->systemAddress.port);
 				// Delete the object owned by this player
-				for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
-				{
+				//for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
+				//{
 
 					/*RakNetReplicaMember *rm = (RakNetReplicaMember*) m_ReplicaManager->GetReplicaAtIndex(index);
 					RakNetBase *base = (RakNetBase*) rm->GetParent();
@@ -390,7 +390,7 @@ namespace GASS
 					delete base;
 					break;
 					}*/
-				}
+				//}
 
 				std::string name = p->systemAddress.ToString();//GetRakPeer()->GetExternalID(p->systemAddress).ToString();
 				int port = p->systemAddress.port;
@@ -525,10 +525,10 @@ namespace GASS
 			unsigned char packetIdentifier = ( unsigned char ) p->data[ 0 ];
 			if (p->data[0]==ID_PONG)
 			{
-				RakNetTime time, dataLength;
+				RakNetTime time;//, dataLength;
 				RakNet::BitStream pong( p->data+1, sizeof(RakNetTime), false);
 				pong.Read(time);
-				dataLength = p->length - sizeof(unsigned char) - sizeof(RakNetTime);
+				//dataLength = p->length - sizeof(unsigned char) - sizeof(RakNetTime);
 				ServerPingReponse response;
 				//response.IP = m_RakPeer->PlayerIDToDottedIP(p->systemAddress);
 				response.IP = p->systemAddress.ToString();//binaryAddress;
@@ -727,7 +727,7 @@ namespace GASS
 	RakNetChildReplica* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id)
 	{
 		//Find replica object
-		for (int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
+		for (unsigned int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
 		{
 			RakNetChildReplica *rep = (RakNetChildReplica*) dynamic_cast<RakNetChildReplica*>(m_ReplicaManager->GetReplicaAtIndex(index));
 			if(rep)
