@@ -4,7 +4,7 @@ else()
   find_package(PkgConfig)
   if(PKGCONFIG_FOUND)
     pkg_check_modules(PK_TINYXML2 REQUIRED tinyxml2)
-    pkg_check_modules(PK_TINYXML2_DEBUG REQUIRED tinyxml2-debug)
+#    pkg_check_modules(PK_TINYXML2_DEBUG REQUIRED tinyxml2-debug)
   endif()
 endif()
 
