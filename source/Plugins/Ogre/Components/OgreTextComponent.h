@@ -54,7 +54,7 @@ namespace GASS
 		int GetCharacterSize() const;
 		void SetCharacterSize(int size);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
-	
+		void OnDelete();
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;
 		std::string m_TextToDisplay;
