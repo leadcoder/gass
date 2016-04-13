@@ -69,7 +69,7 @@ namespace GASS
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(m_Type == GT_AXIS || m_Type == GT_PLANE)
 			gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
-		else
+		else if(m_Type != GT_FIXED_GRID) //avoid override...can be used as ground plane with collision
 			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
 
 		// create materials
