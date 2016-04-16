@@ -1,9 +1,9 @@
-#include <limits>
 #include "GASSRNRoadNodeComponent.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
+#include <limits>
 
 namespace GASS
 {
@@ -57,8 +57,8 @@ namespace GASS
 			{
 				//Delete edge object
 				BaseSceneComponentPtr bso = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge);
-				//GetSceneObject()->GetParentSceneObject()->RemoveChildSceneObject(bso->GetSceneObject());
-				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new RemoveSceneObjectRequest(bso->GetSceneObject())));
+				bso->GetSceneObject()->SendRemoveRequest(0);
+				//GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new RemoveSceneObjectRequest(bso->GetSceneObject())));
 			}
 		}
 		//update graph

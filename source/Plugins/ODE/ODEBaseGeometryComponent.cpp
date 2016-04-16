@@ -344,7 +344,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = GetDebugObject();
 				obj->UnregisterForMessage(UNREG_TMESS(ODEBaseGeometryComponent::OnDebugTransformation,TransformationChangedEvent));
-				GetSceneObject()->GetScene()->PostMessage(RemoveSceneObjectRequestPtr(new RemoveSceneObjectRequest(obj)));
+				obj->SendRemoveRequest(0);
 			}
 		}
 	}

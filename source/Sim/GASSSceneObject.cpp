@@ -213,6 +213,14 @@ namespace GASS
 		child->OnDelete();
 		ComponentContainer::RemoveChild(child);
 	}
+	
+	void SceneObject::SendRemoveRequest(float delay)
+	{
+		SceneObjectPtr obj = GASS_STATIC_PTR_CAST<SceneObject>(shared_from_this());
+		SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(obj));
+		remove_msg->SetDeliverDelay(delay);
+		GetScene()->PostMessage(remove_msg);		
+	}
 
 	void SceneObject::OnDelete()
 	{

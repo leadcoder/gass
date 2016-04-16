@@ -73,6 +73,9 @@ namespace GASS
 		ScenePtr GetScene() const {return m_Scene.lock();}
 
 		void RemoveChildSceneObject(SceneObjectPtr child);
+		
+		void SendRemoveRequest(float delay);
+
 		void AddChildSceneObject(SceneObjectPtr child , bool load);
 
 		/**
