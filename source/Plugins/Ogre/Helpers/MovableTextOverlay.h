@@ -3,12 +3,10 @@
 
 
 //TODO: Find  correct license
-
-#include <Ogre.h>
-#include <Overlay/OgreFont.h>
-#include <Overlay/OgreFontManager.h>
-#include <Overlay/OgreOverlayManager.h>
-#include <Overlay/OgreOverlayContainer.h>
+#include "Plugins/Ogre/OgreCommon.h"
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
 
 using namespace Ogre;
 
@@ -112,4 +110,5 @@ protected:
 	// the Font/Material/Color text attributes
 	MovableTextOverlayAttributes *mAttrs;
 };
+#pragma warning(pop)
 #endif /* __MovableTextOverlay_H__ */

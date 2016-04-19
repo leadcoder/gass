@@ -256,7 +256,7 @@ namespace GASS
 		m_DensityTexture->loadImage(m_DensityImage);
 		//reload all terrain grass
 		ComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
 			GrassLayerComponentPtr layer = GASS_DYNAMIC_PTR_CAST<GrassLayerComponent>(components[i]);
@@ -408,7 +408,7 @@ namespace GASS
 		int denmap_width = 0;
 		std::vector<Ogre::uchar*> layer_data;
 		ComponentContainer::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass(components, "GrassLayerComponent", true);
+		GetSceneObject()->GetComponentsByClassName(components, "GrassLayerComponent", true);
 		for(int i = 0 ;  i < components.size(); i++)
 		{
 			GrassLayerComponentPtr layer = GASS_DYNAMIC_PTR_CAST<GrassLayerComponent>(components[i]);

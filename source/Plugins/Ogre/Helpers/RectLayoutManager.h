@@ -4,6 +4,11 @@
 #include <list>
 #include <algorithm>
 
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
+#pragma warning (disable : 4244)
+
 using namespace std;
 
 // It moves the rectangles on the Y axis so they won't overlap.
@@ -376,4 +381,7 @@ RectLayoutManager::RectList::iterator RectLayoutManager::addDataAbove(RectLayout
 
 	return mList.end();
 }
+
+#pragma warning(pop)
+
 #endif /* __RectLayoutManager_H__ */

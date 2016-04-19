@@ -22,6 +22,7 @@
 
 
 #include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"

@@ -59,7 +59,7 @@ namespace GASS
 				if(has_tex_coords)
 				{
 					Vec4 tex_coord = sub_mesh->TexCoordsVector[0].at(j);
-					manual_object->textureCoord(tex_coord.x,tex_coord.y);
+					manual_object->textureCoord(static_cast<Ogre::Real>(tex_coord.x), static_cast<Ogre::Real>(tex_coord.y));
 				}
 			}
 			for(size_t j = 0; j < sub_mesh->IndexVector.size();j++)

@@ -46,6 +46,15 @@ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC  -DCMAKE_INSTALL_PREFIX
 make install
 cd ..
 
+#RakNet
+mkdir RakNet 
+cd RakNet
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/RakNet/ $SOURCE_ROOT/RakNet
+make install
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC  -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/RakNet/ $SOURCE_ROOT/RakNet
+make install
+cd ..
+
 #skyx
 mkdir skyx
 cd skyx
@@ -70,5 +79,14 @@ cd PagedGeometry
 cmake -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/PagedGeometry-1.1.1/  $SOURCE_ROOT/PagedGeometry-1.1.1/
 make install
 cmake -DBoost_USE_STATIC_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/PagedGeometry-1.1.1/  $SOURCE_ROOT/PagedGeometry-1.1.1/
+make install
+cd ..
+
+#RAKNET
+mkdir RakNet
+cd RakNet
+cmake  -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/RakNet/  $SOURCE_ROOT/RakNet/
+make install
+cmake  -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/RakNet/  $SOURCE_ROOT/RakNet/
 make install
 cd ..

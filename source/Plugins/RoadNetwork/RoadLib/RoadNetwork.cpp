@@ -313,12 +313,12 @@ namespace GASS
 		edge1->Waypoints.push_back(target_point);
 		edge2->Waypoints.push_back(target_point);
 
-		for(size_t i = 0;  i < seg_index+1; i++)
+		for(int i = 0;  i < seg_index+1; i++)
 		{
 			edge1->Waypoints.push_back(edge->Waypoints[seg_index - i]);
 		}
 
-		for(size_t i = seg_index+1;  i < edge->Waypoints.size(); i++)
+		for(int i = seg_index+1;  i < edge->Waypoints.size(); i++)
 		{
 			edge2->Waypoints.push_back(edge->Waypoints[i]);
 		}

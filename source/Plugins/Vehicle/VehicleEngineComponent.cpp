@@ -332,7 +332,7 @@ namespace GASS
 		m_GearBoxRatio = gear_data;
 
 		//find neutral
-		for(int i = 0; i < m_GearBoxRatio.size(); i++)
+		for(size_t i = 0; i < m_GearBoxRatio.size(); i++)
 		{
 			if(m_GearBoxRatio[i] == 0.0)
 			{
@@ -370,7 +370,7 @@ namespace GASS
 		if(m_Initialized)
 		{
 			m_VehicleWheels.clear();
-			for(int i = 0; i < m_WheelObjects.size(); i++)
+			for(size_t i = 0; i < m_WheelObjects.size(); i++)
 			{
 				VehicleWheelPtr wheel(new VehicleWheel(m_WheelObjects[i].GetRefObject()));
 				wheel->Init();
@@ -641,7 +641,7 @@ namespace GASS
 
 
 		m_WheelRPM = 0;
-		for(int i = 0; i < m_VehicleWheels.size(); i++)
+		for(size_t i = 0; i < m_VehicleWheels.size(); i++)
 		{
 			VehicleWheelPtr wheel = m_VehicleWheels[i];
 			SceneObjectPtr wheel_obj = wheel->m_WheelObject.lock();

@@ -3,18 +3,19 @@
 
 // Get some classic includes
 #ifdef WIN32
-#include<Windows.h>
-#include<io.h>
-#include<conio.h>
-#include"xram.h"
+    #include <Windows.h>
+    #include <io.h>
+    #include <conio.h>
+    #include "xram.h"
 #endif
-#include<stdio.h>
-#include<fcntl.h>
 
-#include"al.h"
-#include"alc.h"
-#include"efx.h"
-#include"efx-creative.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+#include "al.h"
+#include "alc.h"
+#include "efx.h"
+#include "efx-creative.h"
 
 
 // Initialization and shutdown
@@ -80,7 +81,7 @@ extern LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
 extern LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
 
 // XRAM Extension function pointer variables and enum values
-
+#ifdef WIN32
 typedef ALboolean (__cdecl *LPEAXSETBUFFERMODE)(ALsizei n, ALuint *buffers, ALint value);
 typedef ALenum    (__cdecl *LPEAXGETBUFFERMODE)(ALuint buffer, ALint *value);
 
@@ -90,5 +91,6 @@ extern LPEAXGETBUFFERMODE eaxGetBufferMode;
 // X-RAM Enum values
 extern ALenum eXRAMSize, eXRAMFree;
 extern ALenum eXRAMAuto, eXRAMHardware, eXRAMAccessible;
+#endif
 
 #endif _FRAMEWORK_H_

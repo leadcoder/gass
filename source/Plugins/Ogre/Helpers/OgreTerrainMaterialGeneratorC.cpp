@@ -26,16 +26,22 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 #include "OgreTerrainMaterialGeneratorC.h"
-#include "OgreTerrain.h"
-#include "OgreMaterialManager.h"
-#include "OgreTechnique.h"
-#include "OgrePass.h"
-#include "OgreTextureUnitState.h"
-#include "OgreGpuProgramManager.h"
-#include "OgreHighLevelGpuProgramManager.h"
-#include "OgreHardwarePixelBuffer.h"
-#include "OgreShadowCameraSetupPSSM.h"
-#   pragma warning (disable : 4244)
+
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
+#pragma warning (disable : 4244)
+
+#include <OgreTerrain.h>
+#include <OgreMaterialManager.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+#include <OgreTextureUnitState.h>
+#include <OgreGpuProgramManager.h>
+#include <OgreHighLevelGpuProgramManager.h>
+#include <OgreHardwarePixelBuffer.h>
+#include <OgreShadowCameraSetupPSSM.h>
+
 
 
 namespace Ogre
@@ -1834,3 +1840,4 @@ namespace Ogre
 
 
 }
+#pragma warning(pop)

@@ -35,7 +35,7 @@ namespace GASS
 	*/
 
 	/**
-	Message implementation that can be used to send messages without any data 
+	Message implementation that can be used to send messages without any data
 	besides the default data needed to support the IMessage interface.
 	This class can also serve as a convenience class that custom message implementations
 	can inherit from
@@ -53,9 +53,9 @@ namespace GASS
 		MessageType GetType() const;
 
 	private:
-		double m_Delay;
 		SenderID m_SenderID;
+		double m_Delay;
 	};
 	typedef GASS_SHARED_PTR<BaseMessage> BaseMessagePtr;
 }
-#endif 
+#endif

@@ -53,7 +53,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PlayerInputComponent", OF_VISIBLE)));
-		
+
 		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 
@@ -85,7 +85,7 @@ namespace GASS
 			//ComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
 			ComponentContainer::ComponentVector comps;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>(comps);
-			for(int i = 0 ; i < comps.size();i++)
+			for(size_t i = 0 ; i < comps.size();i++)
 			{
 				InputHandlerComponentPtr ihc = GASS_DYNAMIC_PTR_CAST<InputHandlerComponent>(comps[i]);
 				LocationComponentPtr location = ihc->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
@@ -99,7 +99,7 @@ namespace GASS
 					m_CurrentSeat = ihc->GetSceneObject();
 					seat = 0;
 					return;
-				}	
+				}
 			}
 
 			/*while(objects.hasMoreElements())
@@ -149,7 +149,7 @@ namespace GASS
 
 		else if(name == "ExitVehicle" && value > 0)
 		{
-			//restore camera 
+			//restore camera
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{

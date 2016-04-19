@@ -41,7 +41,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSPhysicsMesh.h"
-#ifdef WIN32
+#ifdef _MSC_VER
 #define NOMINMAX
 #include <algorithm>
 #endif
@@ -115,9 +115,9 @@ namespace GASS
 			m_Type = CGT_NONE;
 		else
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unkown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
-			
+
 	}
-	
+
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		CreateGeometry();
@@ -125,7 +125,7 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnDelete()
 	{
-	 
+
 		Reset();
 	}
 
@@ -156,7 +156,7 @@ namespace GASS
 	void ODECollisionGeometryComponent::CreateGeometry()
 	{
 		Reset();
-		
+
 		switch(m_Type)
 		{
 		case CGT_MESH:
@@ -190,7 +190,7 @@ namespace GASS
 	{
 		SetFlags(message->GetGeometryFlags());
 	}
-	
+
 	void ODECollisionGeometryComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
 		bool value = message->EnableCollision();
@@ -258,16 +258,16 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateBoxGeometry()
 	{
-		
+
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(!geom)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found while collision shape type is CST_BOX", "ODECollisionGeometryComponent::CreateBoxGeometry");
 		}
-		
+
 		AABox box = geom->GetBoundingBox();
 		Vec3 size = box.m_Max - box.m_Min;
-		
+
 		m_OffsetGeomID = dCreateBox(0, size.x, size.y, size.z);
 
 		Vec3 offset = (box.m_Max + box.m_Min)*0.5;
@@ -281,7 +281,7 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry()
 	{
-		
+
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(!location)
 		{
@@ -302,7 +302,7 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
 	{
-		
+
 		dGeomID geom_id = 0;
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
@@ -310,8 +310,8 @@ namespace GASS
 			//first check cache!
 			ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
 			ODECollisionMeshInfo col_mesh;
-			bool has_col_mesh = false;
-			std::string col_mesh_id; 
+			//bool has_col_mesh = false;
+			std::string col_mesh_id;
 			if(res)
 			{
 				std::string col_mesh_id = res->GetResource().Name();
@@ -320,7 +320,7 @@ namespace GASS
 				if(GetCollisionSceneManager()->HasCollisionMesh(col_mesh_id)) //check cache
 				{
 					col_mesh = GetCollisionSceneManager()->GetCollisionMesh(col_mesh_id);
-					has_col_mesh = true;
+					//has_col_mesh = true;
 				}
 				else
 				{
@@ -349,7 +349,7 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No MeshComponent found while collision shape type is CST_MESH", "ODECollisionGeometryComponent::CreateMeshGeometry");
 		}
-		return geom_id; 
+		return geom_id;
 	}
 
 	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
@@ -357,14 +357,14 @@ namespace GASS
 		//update scale
 		SetScale(message->GetScale());
 	}
-	
+
 	void ODECollisionGeometryComponent::SetScale(const Vec3 &scale)
 	{
 		if(m_GeomID)
 		{
 			if(m_Type == CGT_BOX) //can only handle boxes right now
 			{
-				
+
 				GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 				if(!geom)
 				{
@@ -392,7 +392,7 @@ namespace GASS
 		return (m_GeomID == 0) ? false:true;
 	}
 
-	unsigned long  ODECollisionGeometryComponent::GetFlags() const 
+	unsigned long  ODECollisionGeometryComponent::GetFlags() const
 	{
 		if(m_GeomID)
 		{
@@ -414,18 +414,18 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateTerrainGeometry()
 	{
-		
+
 		HeightmapTerrainComponentPtr terrain= GetSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>();
 
 		if(!terrain)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No TerrainComponent found while collision shape type is CST_TERRAIN", "ODECollisionGeometryComponent::CreateTerrainGeometry");
 		}
-		
+
 		GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 
 		//save raw point for fast height access, not thread safe!!
-	
+
 
 		dGeomID geom_id = 0;
 
@@ -437,7 +437,7 @@ namespace GASS
 			int samples_x = terrain->GetNumSamplesW();
 			int samples_z = terrain->GetNumSamplesH();
 			m_TerrainData->m_Samples = samples_x;
-			
+
 			Float size_x = m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x;
 			Float size_z = m_TerrainData->m_TerrainBounds.m_Max.z - m_TerrainData->m_TerrainBounds.m_Min.z;
 			m_TerrainData->m_SampleWidth = size_x/(samples_x-1);
@@ -445,7 +445,7 @@ namespace GASS
 
 			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
 			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
-			
+
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
@@ -480,7 +480,7 @@ namespace GASS
 		}
 		return geom_id;
 	}
-	
+
 	dReal ODECollisionGeometryComponent::TerrainHeightCallback(void* data,int x,int z)
 	{
 		ODECollisionGeometryComponent* ode_terrain = (ODECollisionGeometryComponent*)data;

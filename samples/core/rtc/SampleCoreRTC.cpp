@@ -166,7 +166,7 @@ public:
 	int m_UpdateCount;
 };
 
-int main(int /*argc*/, char* /*argv[]*/)
+int main(int /*argc*/, char** /*argv[]*/)
 {
 	GASS::TBBManager *rtc = new GASS::TBBManager();
 

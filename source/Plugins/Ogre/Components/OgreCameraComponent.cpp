@@ -19,13 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-#include <OgreRay.h>
-
-//SSAO
-#include <OgreCompositorManager.h>
-
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
@@ -234,7 +227,7 @@ namespace GASS
 		m_Fov = value;
 		if(m_Camera && !GetOrtho())
 		{
-			m_Camera->setFOVy(Ogre::Radian(Math::Deg2Rad(value)));
+			m_Camera->setFOVy(Ogre::Radian(static_cast<float>(Math::Deg2Rad(value))));
 		}
 	}
 

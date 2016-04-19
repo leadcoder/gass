@@ -19,15 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/OgreBillboardComponent.h"
-
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
-#include <OgreBillboardSet.h>
-#include <OgreBillboard.h>
-#include <OgreMaterialManager.h>
-#include <OgreTechnique.h>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -39,7 +30,6 @@
 #include "Sim/GASSResourceManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
-
 #include "Plugins/Ogre/OgreConvert.h"
 
 
@@ -147,7 +137,7 @@ namespace GASS
 			material->setDepthWriteEnabled(true);
 			material->setCullingMode(Ogre::CULL_NONE);
 			std::string fullpath;
-			Ogre::TextureUnitState * textureUnit = pass->createTextureUnitState(m_Material.GetName(),0);
+			/*Ogre::TextureUnitState * textureUnit = */pass->createTextureUnitState(m_Material.GetName(),0);
 			pass->setAlphaRejectSettings(Ogre::CMPF_GREATER_EQUAL, 128);
 		}
 
@@ -166,7 +156,7 @@ namespace GASS
 		if(m_Width > m_Height)
 			bbsize = m_Width;
 		bbsize *=  0.5f;
-		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + pos.y,-bbsize),Ogre::Vector3(bbsize,bbsize+ pos.y,bbsize)),bbsize*2);
+		m_BillboardSet->setBounds(Ogre::AxisAlignedBox(Ogre::Vector3(-bbsize,-bbsize + static_cast<float>(pos.y),-bbsize),Ogre::Vector3(bbsize,bbsize + static_cast<float>(pos.y), bbsize)),bbsize*2);
 		lc->GetOgreNode()->attachObject((Ogre::MovableObject*) m_BillboardSet);
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
@@ -190,7 +180,7 @@ namespace GASS
 	{
 		Sphere sphere;
 		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = Math::Max(m_Width,m_Height)/2.0;
+		sphere.m_Radius = static_cast<float>(Math::Max(m_Width,m_Height)/2.0);
 		return sphere;
 	}
 
@@ -198,7 +188,7 @@ namespace GASS
 	{
 		const ColorRGBA color = message->GetColor();
 		if(m_Billboard)
-			m_Billboard->setColour(Ogre::ColourValue(color.r,color.g,color.b,color.a));
+			m_Billboard->setColour(OgreConvert::ToOgre(color));
 	}
 
 	void OgreBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
@@ -206,8 +196,8 @@ namespace GASS
 		const Vec3 scale = message->GetScale();
 		if(m_Billboard)
 		{
-			m_Billboard->setPosition(Ogre::Vector3(0,scale.y*m_Height/2.0,0));
-			m_Billboard->setDimensions(m_Width*scale.x,m_Height*scale.y);
+			m_Billboard->setPosition(Ogre::Vector3(0, static_cast<float>(scale.y)*m_Height/2.0f,0));
+			m_Billboard->setDimensions(m_Width * static_cast<float>(scale.x), m_Height * static_cast<float>(scale.y));
 		}
 	}
 

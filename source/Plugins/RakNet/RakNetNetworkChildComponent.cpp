@@ -142,7 +142,7 @@ namespace GASS
 	void RakNetNetworkChildComponent::OnSerialize(NetworkSerializeRequestPtr message)
 	{
 		bool found = false;
-		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)
 		{
 			if(m_SerializePackages[i]->Id == message->GetPackage()->Id)
 			{
@@ -170,7 +170,7 @@ namespace GASS
 	{
 		int num_packs = static_cast<int>(m_SerializePackages.size());
 		outBitStream->Write(num_packs);
-		for(int i = 0 ; i < m_SerializePackages.size(); i++)
+		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)
 		{
 			*sendTimestamp = true; //always include time stamp!
 			outBitStream->Write(m_SerializePackages[i]->Id);

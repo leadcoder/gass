@@ -31,7 +31,7 @@ namespace GASS
 		m_Size(5),
 		m_Type(GT_AXIS),
 		m_Highlight(true),
-		m_LastDist(0), 
+		m_LastDist(0),
 		m_Mode(GM_WORLD),
 		m_GridDist(1.0),
 		m_Active(false)
@@ -75,7 +75,7 @@ namespace GASS
 		// create materials
 		m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
 		m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
-		
+
 		GraphicsMaterial regmat;
 		regmat.Name = m_RegularMat;
 		regmat.Diffuse.Set(0,0,0,1);
@@ -83,8 +83,8 @@ namespace GASS
 		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
 		regmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
 		regmat.DepthWrite = true;
-		
-		
+
+
 		GraphicsMaterial hlmat;
 		hlmat.Name = m_HighlightMat;
 		hlmat.Diffuse.Set(0,0,0,1);
@@ -92,8 +92,8 @@ namespace GASS
 		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
 		hlmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
 		hlmat.DepthWrite = true;
-		
-		
+
+
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if(!gfx_sys->HasMaterial(m_RegularMat))
 			gfx_sys->AddMaterial(regmat,"GizmoArrowMat");
@@ -114,7 +114,7 @@ namespace GASS
 			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationChangedEvent));
 		}
 
-		
+
 		if(SceneObjectPtr  selected = m_SelectedObject.lock())
 		{
 			selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationChangedEvent));
@@ -446,14 +446,14 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(11);
 			sub_mesh_data->IndexVector.push_back(12);
 			sub_mesh_data->IndexVector.push_back(8);
-			
+
 		}
 		else if(m_Type == GT_PLANE)
 		{
 			sub_mesh_data->Type = TRIANGLE_LIST;
 
 			Float thickness = 0.01;
-			
+
 			Vec3 pos = Vec3(0,-thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
 			pos = Vec3(m_Size,-thickness,0);
@@ -515,11 +515,11 @@ namespace GASS
 		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
 		{
 
-			
+
 			sub_mesh_data->Type = LINE_LIST;
 
 			Vec3 pos(0,0,0);
-			
+
 			Float grid_size = 0;
 			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
@@ -551,9 +551,9 @@ namespace GASS
 				sub_mesh_data->IndexVector.push_back(index++);
 				sub_mesh_data->IndexVector.push_back(index++);
 			}
-			
+
 		}
-		
+
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_MeshData)));
 	}
 
@@ -562,9 +562,9 @@ namespace GASS
 		if(m_Type == GT_FIXED_GRID)
 			return;
 
-		bool grid = false;
-		if(m_Type == GT_GRID)
-			grid = true;
+		//bool grid = false;
+		//if(m_Type == GT_GRID)
+		//	grid = true;
 		SceneObjectPtr obj_under_cursor = message->GetSceneObjectUnderCursor();
 		if(m_Active || obj_under_cursor == GetSceneObject())
 		{
@@ -605,11 +605,11 @@ namespace GASS
 			Float value;
 			if(v1 > v2)
 				value = Math::IsectRayPlane(ray,Plane(c_pos,up_vec));
-			else 
+			else
 				value  = Math::IsectRayPlane(ray,Plane(c_pos,v_vec));
 
 			if(value > 0)
-			{	
+			{
 				Vec3 isect_pos = ray.m_Origin + ray.m_Dir*value;
 
 				Vec3 ret = ProjectPointOnAxis(c_pos, r_vec, isect_pos);
@@ -631,7 +631,7 @@ namespace GASS
 
 				return ret;
 			}
-		
+
 		}
 		return c_pos;
 	}
@@ -651,11 +651,11 @@ namespace GASS
 				rot.ToRotationMatrix(rot_mat);
 
 				Vec3 r_vec = rot_mat.GetXAxis();
-				Vec3 v_vec = rot_mat.GetZAxis();
-				Vec3 up_vec = rot_mat.GetYAxis();
+				//Vec3 v_vec = rot_mat.GetZAxis();
+				//Vec3 up_vec = rot_mat.GetYAxis();
 
 				r_vec.Normalize();
-				
+
 				//TODO:Check this!
 				static Float rest_angle = 0;
 				Quaternion final_rot;
@@ -671,7 +671,7 @@ namespace GASS
 				}
 
 				final_rot.FromAngleAxis(angle,r_vec);
-				return final_rot*selected_rot;	
+				return final_rot*selected_rot;
 			}
 		}
 		return Quaternion::IDENTITY;
@@ -686,7 +686,7 @@ namespace GASS
 		{
 			t = m_EditorSceneManager->GetMouseToolController()->SnapPosition(t);
 		}
-	
+
 		Vec3 point_on_axis = axis_dir*t;
 
 		Vec3 res = (axis_origin + point_on_axis);

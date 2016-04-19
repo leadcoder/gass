@@ -23,7 +23,7 @@
 #include "Core/Utils/GASSException.h"
 #include <assert.h>
 
-#ifdef WIN32
+#ifdef _MSC_VER
 #define __STDCALL __stdcall
 #else
 #define __STDCALL
@@ -45,13 +45,13 @@ namespace GASS
 		// dlopen() does not add .so to the filename, like windows does for .dll
 		//if (m_ModuleName.substr(m_ModuleName.length() - 3, 3) != ".so")
 		//	m_ModuleName += ".so";
-#ifdef WIN32
+#ifdef _MSC_VER
 	SetErrorMode(0);
 #endif
 
 		m_ModuleHandle = (DYNLIB_HANDLE)DYNLIB_LOAD(m_ModuleName.c_str());
 
-#ifndef WIN32
+#ifndef _MSC_VER
 		char *errstr = dlerror();
 		if (errstr != NULL)
 			LogManager::getSingleton().stream() << "WARNING:A dynamic linking error occurred:"  << errstr;

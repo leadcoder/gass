@@ -51,7 +51,7 @@ namespace GASS
 	{
 	public:
 
-		static const Float EPSILON; 
+		static const Float EPSILON;
 
 		/**
 		* Contains the data of the matrix.
@@ -76,7 +76,8 @@ namespace GASS
 			assert( iRow < 4 );
 			return m_Data[iRow];
 		}
-		inline const Float *const operator [] ( unsigned iRow ) const
+
+		inline const Float * operator [] ( unsigned iRow ) const
 		{
 			assert( iRow < 4 );
 			return m_Data[iRow];

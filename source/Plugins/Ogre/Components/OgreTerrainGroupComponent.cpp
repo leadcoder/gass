@@ -17,10 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include <OgreSceneNode.h>
-#include <OgreConfigFile.h>
-#include <OgreTerrainMaterialGeneratorA.h>
 
+#include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -32,14 +30,16 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
-
 #include "Sim/GASSSimEngine.h"
-#include "Plugins/Ogre/Components/OgreTerrainGroupComponent.h"
 #include "Plugins/Ogre/Components/OgreTerrainPageComponent.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/Components/OgreGASSTerrainMaterialGenerator.h"
 #include "Plugins/Ogre/OgreConvert.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4244)
+
 
 namespace GASS
 {
@@ -223,7 +223,7 @@ namespace GASS
 
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
@@ -246,7 +246,7 @@ namespace GASS
 
 		if(!m_TerrainGlobals)
 			m_TerrainGlobals = new  Ogre::TerrainGlobalOptions();
-		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, m_TerrainSize, m_TerrainWorldSize);
+		m_TerrainGroup = new Ogre::TerrainGroup(m_OgreSceneManager, Ogre::Terrain::ALIGN_X_Z, static_cast<Ogre::uint16>(m_TerrainSize), static_cast<Ogre::Real>(m_TerrainWorldSize));
 		SetOrigin(m_Origin);
 		m_TerrainGroup->setResourceGroup(GetSceneObject()->GetScene()->GetResourceGroupName());
 
@@ -305,8 +305,8 @@ namespace GASS
 
 		// Configure default import settings for if we use imported image
 		Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-		defaultimp.terrainSize = m_TerrainSize;
-		defaultimp.worldSize = m_TerrainWorldSize;
+		defaultimp.terrainSize = static_cast<Ogre::uint16>(m_TerrainSize);
+		defaultimp.worldSize = static_cast<Ogre::Real>(m_TerrainWorldSize);
 		defaultimp.inputScale = m_TerrainScale;
 		defaultimp.minBatchSize = 33;
 		defaultimp.maxBatchSize = 65;
@@ -356,7 +356,7 @@ namespace GASS
 		if(m_TerrainGroup)
 		{
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-			defaultimp.terrainSize = value;
+			defaultimp.terrainSize = static_cast<Ogre::uint16>(value);
 
 			RemoveAllPages();
 			ConfigureTerrainDefaults();
@@ -370,12 +370,12 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::SetImportTerrainWorldSize(const Float &value)
 	{
-		m_TerrainWorldSize = value;
+		m_TerrainWorldSize = static_cast<float>(value);
 		if(m_TerrainGroup)
 		{
 
 			Ogre::Terrain::ImportData& defaultimp = m_TerrainGroup->getDefaultImportSettings();
-			defaultimp.worldSize = value;
+			defaultimp.worldSize = static_cast<Ogre::Real>(value);
 			RemoveAllPages();
 			ConfigureTerrainDefaults();
 		}
@@ -420,7 +420,7 @@ namespace GASS
 		{
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
@@ -443,7 +443,7 @@ namespace GASS
 		{
 			//Get all components
 			ComponentContainer::ComponentVector comps;
-			GetSceneObject()->GetComponentsByClass(comps, "OgreTerrainPageComponent");
+			GetSceneObject()->GetComponentsByClassName(comps, "OgreTerrainPageComponent");
 
 			for(int i = 0 ;  i < comps.size(); i++)
 			{
@@ -470,9 +470,9 @@ namespace GASS
 		// figure out which terrains this affects
 		Ogre::TerrainGroup::TerrainList terrainList;
 		Ogre::Real brush_size = message->GetBrushSize();
-		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5;
-		if(inner_radius > brush_size*0.5)
-			inner_radius = brush_size*0.5;
+		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5f;
+		if(inner_radius > brush_size*0.5f)
+			inner_radius = brush_size*0.5f;
 		Ogre::Vector3 position = OgreConvert::ToOgre(message->GetPosition());
 		float intensity = message->GetIntensity();
 		Ogre::Sphere sphere(position, brush_size);
@@ -489,9 +489,9 @@ namespace GASS
 		// figure out which terrains this affects
 		Ogre::TerrainGroup::TerrainList terrainList;
 		Ogre::Real brush_size = message->GetBrushSize();
-		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5;
-		if(inner_radius > brush_size*0.5)
-			inner_radius = brush_size*0.5;
+		Ogre::Real inner_radius = message->GetBrushInnerSize()*0.5f;
+		if(inner_radius > brush_size*0.5f)
+			inner_radius = brush_size*0.5f;
 		Ogre::Vector3 position = OgreConvert::ToOgre(message->GetPosition());
 		float intensity = message->GetIntensity();
 		Ogre::Sphere sphere(position, brush_size);
@@ -543,29 +543,29 @@ namespace GASS
 				for (Ogre::TerrainGroup::TerrainList::iterator ti = terrainList.begin();ti != terrainList.end(); ++ti)
 				{
 					if(message->GetFlattenWidth() > 0)
-						FlattenTerrain(*ti, position,1.0,message->GetFlattenWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetFlattenWidth()*0.5/m_TerrainGroup->getTerrainWorldSize());
+						FlattenTerrain(*ti, position,1.0f, message->GetFlattenWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetFlattenWidth()*0.5f/m_TerrainGroup->getTerrainWorldSize());
 					if(message->GetPaintWidth())
-						PaintTerrain(*ti,position, message->GetPaintIntensity(), message->GetPaintWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetPaintWidth()*0.5*0.5/m_TerrainGroup->getTerrainWorldSize(), message->GetLayer(), 0);
+						PaintTerrain(*ti,position, message->GetPaintIntensity(), message->GetPaintWidth()/m_TerrainGroup->getTerrainWorldSize(),message->GetPaintWidth()*0.5f * 0.5f/m_TerrainGroup->getTerrainWorldSize(), message->GetLayer(), 0);
 				}
 			}
 		}
 		m_TerrainGroup->update();
 	}
 
-	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& start, Ogre::Vector3& end, float width, float fade)
+	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& start, Ogre::Vector3& end)
 	{
 		Ogre::Vector3 ts_start;
 		Ogre::Vector3 ts_end;
 		terrain->getTerrainPosition(start, &ts_start);
 		terrain->getTerrainPosition(end, &ts_end);
-		Ogre::Real terrainSize = (terrain->getSize() - 1);
-		long start_x = ts_start.x  * terrainSize;
-		long start_y = ts_start.y  * terrainSize;
-		long end_x = ts_end.x * terrainSize;
-		long end_y= ts_end.y * terrainSize;
+		Ogre::Real terrainSize = static_cast<Ogre::Real>(terrain->getSize() - 1);
+		long start_x = static_cast<long>(ts_start.x  * terrainSize);
+		long start_y = static_cast<long>(ts_start.y  * terrainSize);
+		long end_x = static_cast<long>(ts_end.x * terrainSize);
+		long end_y= static_cast<long>(ts_end.y * terrainSize);
 
-		float x_dist = end_x - start_x;
-		float y_dist = end_y - start_y;
+		float x_dist = static_cast<float>(end_x - start_x);
+		float y_dist = static_cast<float>(end_y - start_y);
 
 		if(abs(x_dist) > abs(y_dist))
 		{
@@ -592,15 +592,15 @@ namespace GASS
 
 			//Ogre::Real dist = dir.normalise();
 
-			x_dist = end_x - start_x;
-			y_dist = end_y - start_y;
+			x_dist = static_cast<float>(end_x - start_x);
+			y_dist = static_cast<float>(end_y - start_y);
 
 			float step = y_dist/x_dist;
 
 			int count = 0;
 			for (long x = start_x; x <= end_x; ++x)
 			{
-				long y = start_y + step*count;
+				long y = start_y + static_cast<long>(step*count);
 
 				//Ogre::Real tsXdist = (x / terrainSize);
 				//Ogre::Real tsYdist = (y / terrainSize);
@@ -890,3 +890,5 @@ namespace GASS
 
 	}
 }
+
+#pragma warning(pop)

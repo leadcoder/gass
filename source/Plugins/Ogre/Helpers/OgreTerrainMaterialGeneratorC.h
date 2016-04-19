@@ -30,9 +30,13 @@ THE SOFTWARE.
 #define __Ogre_TerrainMaterialGeneratorC_H__
 
 #include "Core/Common.h"
-#include "OgreTerrainPrerequisites.h"
-#include "OgreTerrainMaterialGenerator.h"
-#include "OgreGpuProgramParams.h"
+#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/OgreTerrainIncludes.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
+#pragma warning (disable : 4244)
 
 namespace Ogre
 {
@@ -273,6 +277,6 @@ namespace Ogre
 
 
 }
-
+#pragma warning(pop)
 #endif
 

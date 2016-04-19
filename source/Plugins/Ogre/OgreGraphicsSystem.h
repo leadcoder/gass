@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystem.h"
 #include "Sim/GASSGraphicsMaterial.h"
@@ -28,7 +29,6 @@
 #include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Core/Serialize/GASSSTDSerialize.h"
-#include <OgreRenderWindow.h>
 #include <string>
 
 namespace Ogre

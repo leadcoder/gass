@@ -20,9 +20,11 @@
 
 #pragma once
 
+#ifdef _MSC_VER
 #pragma warning (push)
 #pragma warning (disable : 4100)
 #pragma warning (disable : 4541)
+#endif
 
 #include <osg/Camera>
 #include <osg/ref_ptr>
@@ -118,6 +120,8 @@ typedef Window WindowHandle;
 typedef osgViewer::GraphicsWindowX11::WindowData WindowData;
 #endif
 
+#ifdef _MSC_VER
 #pragma warning (pop)
+#endif
 
 

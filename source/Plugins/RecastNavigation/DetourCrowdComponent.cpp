@@ -176,7 +176,7 @@ namespace GASS
 			m_Crowd->update(delta_time, NULL);//&agentDebug);
 
 		//update location for all agents
-		for(int i = 0; i < m_Agents.size(); i++)
+		for(size_t i = 0; i < m_Agents.size(); i++)
 		{
 			m_Agents[i]->UpdateLocation(delta_time);
 		}

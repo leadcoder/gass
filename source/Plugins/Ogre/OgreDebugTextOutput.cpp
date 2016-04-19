@@ -19,15 +19,17 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
-#include <Ogre.h>
-#include <Overlay/OgreOverlayElement.h>
-#include <Overlay/OgreOverlayManager.h>
-#include <Overlay/OgreOverlayContainer.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
+#pragma warning (disable : 4244)
+#pragma warning (disable : 4996)
 namespace GASS
 {
 	OgreDebugTextOutput::OgreDebugTextOutput()
@@ -123,3 +125,5 @@ namespace GASS
 	}
 
 }
+
+#pragma warning(pop)

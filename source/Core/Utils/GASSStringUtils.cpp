@@ -23,7 +23,7 @@
 #include "GASSStringUtils.h"
 #include "GASSLogManager.h"
 #include "GASSException.h"
-#ifndef WIN32
+#ifndef _MSC_VER
     #include <cxxabi.h>
 #endif
 
@@ -77,7 +77,7 @@ namespace GASS
 
 	std::string StringUtils::Demangle(const std::string &name)
 	{
-#ifdef WIN32
+#ifdef _MSC_VER
 		if(std::string::npos == name.find("class"))
 			return name;
 		std::string ret = name.substr(6);
@@ -87,7 +87,7 @@ namespace GASS
 #endif
 		//remove namespace
 		size_t pos = ret.find("::");
-		if(pos != -1)
+		if(pos != std::string::npos)
 		{
 			ret =  ret.substr(pos+2);
 		}

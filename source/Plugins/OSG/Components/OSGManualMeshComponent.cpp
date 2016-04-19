@@ -221,7 +221,7 @@ namespace GASS
 
 		if(sm->IndexVector.size() > 0)
 		{
-			for(int i = 0; i < sm->IndexVector.size(); i++)
+			for(size_t i = 0; i < sm->IndexVector.size(); i++)
 			{
 				de->push_back(sm->IndexVector[i]);
 			}
@@ -294,10 +294,15 @@ namespace GASS
 		AABox comp_box;
 		for(size_t i = 0; i < m_OSGGeometries.size(); i++)
 		{
-#if OSG_VERSION_GREATER_OR_EQUAL(3,3,2)
-			osg::BoundingBox osg_box = m_OSGGeometries[i]->getBoundingBox();
+
+#ifdef OSG_VERSION_GREATER_OR_EQUAL
+#if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBoundingBox();
 #else
-			osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
+#endif
+#else
+		osg::BoundingBox osg_box = m_OSGGeometries[i]->getBound();
 #endif
 			Vec3 p1 = OSGConvert::ToGASS(osg_box._min);
 			Vec3 p2 = OSGConvert::ToGASS(osg_box._max);
@@ -371,7 +376,7 @@ namespace GASS
 
 			if(geom_index > 0)
 			{
-				if(geom_index  < m_OSGGeometries.size())
+				if(geom_index  < static_cast<int>(m_OSGGeometries.size()))
 					m_OSGGeometries[geom_index]->setStateSet(state_set);
 			}
 			else

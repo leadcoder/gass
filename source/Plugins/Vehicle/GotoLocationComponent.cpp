@@ -63,7 +63,7 @@ namespace GASS
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
-			for(int i = 0 ; i < comps.size();i++)
+			for(size_t i = 0 ; i < comps.size();i++)
 			{
 				if(comps[i]->GetOwner() != so)
 				{

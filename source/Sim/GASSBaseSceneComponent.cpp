@@ -68,7 +68,7 @@ namespace GASS
 						GASS_ANY any_link;
 						prop->GetValue(this,any_link);
 						std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
-						for(int i = 0 ; i < links.size(); i++)
+						for(size_t i = 0 ; i < links.size(); i++)
 						{
 							if(links[i].GetLinkObjectID() != UNKOWN_LINK_ID)
 							{
@@ -137,7 +137,7 @@ namespace GASS
 						GASS_ANY any_link;
 						prop->GetValue(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
-						for(int i = 0 ; i < links.size(); i++)
+						for(size_t i = 0 ; i < links.size(); i++)
 						{
 							SceneObjectRef new_ref( links[i].GetRefGUID());
 							links[i] = new_ref;
@@ -171,7 +171,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				
+
 				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
 				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
 
@@ -182,7 +182,7 @@ namespace GASS
 						GASS_ANY any_link;
 						prop->GetValue(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
-						for(int i = 0 ; i < links.size(); i++)
+						for(size_t i = 0 ; i < links.size(); i++)
 						{
 							SceneObjectRef new_ref = links[i];
 							new_ref.ResolveTemplateReferences(template_root);
@@ -218,7 +218,7 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				
+
 				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
 				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
 
@@ -229,7 +229,7 @@ namespace GASS
 						GASS_ANY any_link;
 						prop->GetValue(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
-						for(int i = 0 ; i < links.size(); i++)
+						for(size_t i = 0 ; i < links.size(); i++)
 						{
 							std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
 							if(guid_iter != ref_map.end())

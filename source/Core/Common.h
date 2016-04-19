@@ -21,7 +21,7 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
-#ifdef WIN32
+#ifdef _MSC_VER
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #	define _CRT_SECURE_NO_WARNINGS
@@ -62,17 +62,19 @@
 // disable: "signed/unsigned mismatch"
 //#   pragma warning( disable: 4018)
 
-// disable: unreferenced formal parameter 
+// disable: unreferenced formal parameter
 //#   pragma warning( disable: 4100)
 
 // disable:  assignment operator could not be generated
 //#   pragma warning( disable: 4512)
- 
 
 
-#endif /* WIN32 */
 
-#if defined ( WIN32 )
+#else
+#pragma GCC diagnostic ignored "-Wreorder"
+#endif
+
+#if defined ( _MSC_VER )
 #   	if defined( GASS_CORE_EXPORTS )
 #       	define GASSCoreExport __declspec( dllexport )
 #   	else
@@ -127,7 +129,7 @@ namespace GASS
 #include <list>
 #include <set>
 
-#ifdef WIN32
+#ifdef _MSC_VER
 	#define NOMINMAX
 #endif
 #include <algorithm>

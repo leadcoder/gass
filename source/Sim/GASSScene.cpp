@@ -103,7 +103,7 @@ namespace GASS
 			m_SceneManagers.push_back(sm);
 		}
 
-		for(int i = 0; i < m_SceneManagers.size() ; i++)
+		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
 			m_SceneManagers[i]->OnInit();
 		}
@@ -125,7 +125,7 @@ namespace GASS
 	{
 		m_Root->OnDelete();
 		m_Root.reset();
-		for(int i = 0; i < m_SceneManagers.size() ; i++)
+		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
 			m_SceneManagers[i]->OnShutdown();
 		}
@@ -297,7 +297,7 @@ namespace GASS
 		tinyxml2::XMLElement *sms_elem = rootXMLDoc->NewElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);
 
-		for(int i  = 0 ; i < m_SceneManagers.size();i++)
+		for(size_t i  = 0 ; i < m_SceneManagers.size();i++)
 		{
 			SceneManagerPtr sm = m_SceneManagers[i];
 			if(sm->GetSerialize()) //should we save this scene manager settings to scene?
@@ -315,7 +315,7 @@ namespace GASS
 	{
 		SceneManagerPtr sm;
 		std::string sm_name = sm_elem->Value();
-		for(int i = 0; i < m_SceneManagers.size() ; i++)
+		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
 			if(m_SceneManagers[i]->GetName() == sm_name)
 			{
@@ -331,7 +331,7 @@ namespace GASS
 
 	SceneManagerPtr Scene::GetSceneManagerByName(const std::string &name) const
 	{
-		for(int i = 0; i < m_SceneManagers.size(); i++)
+		for(size_t i = 0; i < m_SceneManagers.size(); i++)
 		{
 			if(m_SceneManagers[i]->GetName() == name)
 				return m_SceneManagers[i];

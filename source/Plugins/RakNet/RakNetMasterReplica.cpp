@@ -57,13 +57,13 @@ namespace GASS
 	{
 		SetOwner(object);
 		m_TemplateName = object->GetTemplateName();
-		
+
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		
+
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
-		
+
 		SetOwnerSystemAddress(raknet->GetRakPeer()->GetInternalID());
-		
+
 
 		// For security, as a server disable these interfaces
 		if (raknet->IsServer())
@@ -72,7 +72,7 @@ namespace GASS
 			m_Manager->Construct(this, false, UNASSIGNED_SYSTEM_ADDRESS, true);
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
 			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
-			
+
 			m_Manager->DisableReplicaInterfaces(this, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
 		}
 		else
@@ -87,7 +87,7 @@ namespace GASS
 	void RakNetMasterReplica::RemoteInit(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, SystemAddress senderId)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		
+
 		SetNetworkIDManager(raknet->GetNetworkIDManager());
 		// We must set the network ID of all remote objects
 		SetNetworkID(networkID);
@@ -139,7 +139,7 @@ namespace GASS
 	{
 		outBitStream->Write(m_OwnerSystemAddress);
 		assert(m_Owner);
-		
+
 		//std::string name = m_Owner->GetName();
 		std::string template_name = m_Owner->GetTemplateName();
 		//RakNetNetworkManager::WriteString(name,outBitStream);
@@ -155,7 +155,7 @@ namespace GASS
 		{
 			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
 			if(comp)
-			{				
+			{
 				RTTI* pRTTI = comp->GetRTTI();
 				while(pRTTI)
 				{
@@ -181,20 +181,20 @@ namespace GASS
 		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
 		SerialSaver ss(NULL,0);
-		for(int i = 0 ;  i < attributes.size(); i++)
-		{
+		//for(size_t i = 0 ;  i < attributes.size(); i++)
+		//{
 			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&ss);
-		}
+		//}
 		unsigned long size=ss.getLength();
 		unsigned char *buffer=new unsigned char[size];
 		SerialSaver sv(buffer,size);
 
-		for(int i = 0 ;  i < attributes.size(); i++)
-		{
+		//for(int i = 0 ;  i < attributes.size(); i++)
+		//{
 			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&sv);
-		}
+		//}
 
 		bit_stream->Write(size);
 		if	(size > 0)
@@ -220,11 +220,11 @@ namespace GASS
 	{
 		//printf("Remote object owned by %s:%i destroyed\n", rakPeer->PlayerIDToDottedIP(owner), owner.port);
 		SceneObjectPtr obj(m_Owner);
-		if(obj) //remove object	
+		if(obj) //remove object
 		{
 			SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(obj));
 			obj->GetScene()->PostMessage(remove_msg);
-			
+
 		}
 
 		delete this;
@@ -275,7 +275,7 @@ namespace GASS
 		return REPLICA_PROCESSING_DONE;
 	}
 	//handle RPC
-	/*int RakNetMasterReplica::EnterObject(const char *str, RakNet::AutoRPC* networkCaller) 
+	/*int RakNetMasterReplica::EnterObject(const char *str, RakNet::AutoRPC* networkCaller)
 	{
 		if(m_Owner)
 		{

@@ -26,14 +26,6 @@
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 
-#include <string>
-#include <OgreCompositorInstance.h>
-#include <OgrePrerequisites.h>
-#include <OgreCompositorLogic.h>
-#include <OgreGpuProgram.h>
-#include <OgreViewport.h>
-#include <OgreCamera.h>
-
 namespace GASS
 {
 	//The simple types of compositor logics will all do the same thing -

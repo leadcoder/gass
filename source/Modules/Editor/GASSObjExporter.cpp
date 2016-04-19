@@ -24,7 +24,7 @@ namespace GASS
 		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,true);
 		std::map<std::string, SceneObjectPtr > meshmap;
-		for(int i = 0;  i <  comps.size(); i++)
+		for(size_t i = 0;  i <  comps.size(); i++)
 		{
 			SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
 			MeshComponentPtr mesh =  GASS_DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
@@ -61,7 +61,7 @@ namespace GASS
 		if(comps.size()>0)
 		{
 			std::vector<GraphicsMesh> mesh_data_vec;
-			for(int i = 0;  i <  comps.size(); i++)
+			for(size_t i = 0;  i <  comps.size(); i++)
 			{
 				SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
 				MeshComponentPtr mesh =  GASS_DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
@@ -109,7 +109,7 @@ namespace GASS
 							sub_mesh->MaterialName = "DefaultMat";
 							sub_mesh->Material = def_mat;
 						}
-						for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
+						for(size_t j = 0 ; j < sub_mesh->PositionVector.size(); j++)
 						{
 							PositionVector.push_back(sub_mesh->PositionVector[j]);
 						}
@@ -118,7 +118,7 @@ namespace GASS
 						if(sub_mesh->NormalVector.size() == 0)
 						{
 							sub_mesh->NormalVector.resize(sub_mesh->PositionVector.size());
-							for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
+							for(size_t j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
 							{
 								Vec3 p1 = sub_mesh->PositionVector[sub_mesh->IndexVector[j]];
 								Vec3 p2 = sub_mesh->PositionVector[sub_mesh->IndexVector[j+1]];
@@ -133,7 +133,7 @@ namespace GASS
 							}
 						}
 
-						for(int j = 0 ; j < sub_mesh->NormalVector.size(); j++)
+						for(size_t j = 0 ; j < sub_mesh->NormalVector.size(); j++)
 						{
 							NormalVector.push_back(sub_mesh->NormalVector[j]);
 						}
@@ -148,7 +148,7 @@ namespace GASS
 
 						if(sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
 						{
-							for(int j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
+							for(size_t j = 0 ; j < sub_mesh->TexCoordsVector[0].size(); j++)
 							{
 								Vec4 tc = sub_mesh->TexCoordsVector[0].at(j);
 								tc.y = -tc.y;
@@ -167,7 +167,7 @@ namespace GASS
 						}
 						else
 						{
-							for(int j = 0 ; j < sub_mesh->PositionVector.size(); j++)
+							for(size_t j = 0 ; j < sub_mesh->PositionVector.size(); j++)
 							{
 								TexCoordVector.push_back(Vec4(1,0,0,0));
 							}
@@ -217,7 +217,7 @@ namespace GASS
 						file_ptr << "#num faces" << (sub_mesh->IndexVector.size()/3) << "\n";
 
 
-						for(int j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
+						for(size_t j = 0 ; j < sub_mesh->IndexVector.size(); j += 3)
 						{
 							unsigned int v_index_1 = sub_mesh->IndexVector[j] + base_index;
 							unsigned int v_index_2 = sub_mesh->IndexVector[j+1] + base_index;

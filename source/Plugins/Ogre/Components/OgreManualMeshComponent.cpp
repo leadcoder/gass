@@ -180,7 +180,7 @@ namespace GASS
 					if(has_tex_coords)
 					{
 						Vec4 tex_coord = sub_mesh->TexCoordsVector[0].at(j);
-						m_MeshObject->textureCoord(tex_coord.x,tex_coord.y);
+						m_MeshObject->textureCoord(static_cast<Ogre::Real>(tex_coord.x), static_cast<Ogre::Real>(tex_coord.y));
 					}
 				}
 				for(size_t j = 0; j < sub_mesh->IndexVector.size();j++)
@@ -249,7 +249,7 @@ namespace GASS
 		if(m_MeshObject->getParentSceneNode())
 		{
 			Vec3 scale = OgreConvert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
-			sphere.m_Radius = sphere.m_Radius*Math::Max(scale.x,scale.y,scale.z);
+			sphere.m_Radius = sphere.m_Radius * static_cast<float>(Math::Max(scale.x,scale.y,scale.z));
 		}
 		return sphere;
 	}

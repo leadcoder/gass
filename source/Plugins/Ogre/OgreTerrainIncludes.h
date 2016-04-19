@@ -19,28 +19,18 @@
 *****************************************************************************/
 
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
 
-#include "Core/Common.h"
+#include <Terrain/OgreTerrain.h>
+#include <Terrain/OgreTerrainGroup.h>
+#include <Terrain/OgreTerrainQuadTreeNode.h>
+#include <Terrain/OgreTerrainMaterialGeneratorA.h>
+#include <Terrain/OgreTerrainPaging.h>
+#include <Terrain/OgreTerrainPrerequisites.h>
+#include <Terrain/OgreTerrainMaterialGenerator.h>
+#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
+#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorC.h"
 
-#ifdef GASS_USE_BOOST
-    #ifdef _MSC_VER
-        #pragma warning( push )
-        #pragma warning( disable: 4996)
-	#endif
-	#include <boost/uuid/uuid.hpp>
-	#include <boost/uuid/uuid_generators.hpp>
-	#include <boost/uuid/uuid_io.hpp>
-	#ifdef _MSC_VER
-        #pragma warning( pop )
-	#endif
-	#define GASS_GUID boost::uuids::uuid
-	#define GASS_GUID_NULL boost::uuids::nil_uuid()
-	#define GASS_GUID_GENERATE boost::uuids::random_generator()()
-#else
-	#include "Sim/Utils/guid.h"
-	#define GASS_GUID Guid
-	#define GASS_GUID_NULL Guid()
-	#define GASS_GUID_GENERATE GuidGenerator::newGuid()
-#endif
-
-
+#pragma warning(pop)

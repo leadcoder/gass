@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
+#include "Plugins/Ogre/OgreCommon.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
@@ -36,17 +37,12 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 
-#include <OgreRoot.h>
-#include <OgreRenderSystem.h>
-#include <OgreCompositorChain.h>
-#include <OgreRenderWindow.h>
-#include <OgreCompositionTechnique.h>
-#include <OgreCompositorManager.h>
-
-
-
 using namespace Ogre;
 
+#pragma warning(push)
+#pragma warning(disable : 4512)
+#pragma warning(disable : 4100)
+#pragma warning (disable : 4244)
 namespace GASS
 {
 
@@ -120,7 +116,7 @@ namespace GASS
 		}
 	}
 	//---------------------------------------------------------------------------
-	void HeatVisionListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
+	void HeatVisionListener::notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &/*mat*/)
 	{
 		if(pass_id == 0xDEADBABE)
 		{
@@ -131,7 +127,7 @@ namespace GASS
 			float inc = ((float)timer->getMilliseconds())/1000.0f;
 			if ( (fabs(curr-end) <= 0.001) ) {
 				// take a new value to reach
-				end = Ogre::Math::RangeRandom(0.95, 1.0);
+				end = Ogre::Math::RangeRandom(0.95f, 1.0f);
 				start = curr;
 			} else {
 				if (curr > end) curr -= inc;
@@ -144,7 +140,7 @@ namespace GASS
 	}
 
 
-	Ogre::CompositorInstance::Listener* HeatVisionLogic::createListener(Ogre::CompositorInstance* instance)
+	Ogre::CompositorInstance::Listener* HeatVisionLogic::createListener(Ogre::CompositorInstance* /*instance*/)
 	{
 		return new HeatVisionListener;
 	}
@@ -486,6 +482,6 @@ namespace GASS
 	}
 }
 
-
+#pragma warning(pop)
 
 

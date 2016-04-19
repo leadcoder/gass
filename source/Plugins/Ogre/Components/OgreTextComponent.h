@@ -19,12 +19,14 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
+
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #include "Core/MessageSystem/GASSIMessage.h"
-#include <OgreRenderTargetListener.h>
+
 
 class MovableTextOverlay;
 class MovableTextOverlayAttributes;
@@ -49,15 +51,15 @@ namespace GASS
 		void SetText(const std::string  &text);
 		float GetOffset() const;
 		void SetOffset(float offset);
-		float GetCharacterSize() const;
-		void SetCharacterSize(float size);
+		int GetCharacterSize() const;
+		void SetCharacterSize(int size);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 	
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;
 		std::string m_TextToDisplay;
 		float m_Offset;
-		float m_Size;
+		int m_Size;
 		Vec4 m_Color;
 		bool m_Visible;
 	private:

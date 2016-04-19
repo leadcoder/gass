@@ -19,7 +19,8 @@
 *****************************************************************************/
 
 #pragma once
-#include <OgreCamera.h>
+
+#include "Plugins/Ogre/OgreCommon.h"
 
 namespace GASS
 {

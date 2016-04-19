@@ -81,9 +81,10 @@ namespace GASS
 		ss << GetName() << obj_id;
 		ss >> name;
 
+		Ogre::Real rs = static_cast<Ogre::Real>(m_RegionSize);
 		m_StaticGeometry  = ogsm->GetOgreSceneManager()->createStaticGeometry(name);
-		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(m_RegionSize, m_RegionSize, m_RegionSize));
-		m_StaticGeometry->setOrigin(Ogre::Vector3(-m_RegionSize/2, 0, -m_RegionSize/2));
+		m_StaticGeometry->setRegionDimensions(Ogre::Vector3(rs, rs, rs));
+		m_StaticGeometry->setOrigin(Ogre::Vector3(-rs/2.0f, 0, -rs/2.0f));
 
 		if(m_RenderQueue == "SkiesLate")
 		{
@@ -225,7 +226,7 @@ namespace GASS
 
 			StaticGeometry::Region::LODIterator lodIt = region->getLODIterator();
 
-			float sqdist = 1e24;
+			float sqdist = 1e24f;
 			Ogre::StaticGeometry::LODBucket *theBucket = 0;
 			while (lodIt.hasMoreElements()) 
 			{

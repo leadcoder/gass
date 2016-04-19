@@ -20,20 +20,15 @@
 
 #pragma once
 
+#include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/OgreTerrainIncludes.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include <tinyxml2.h>
 
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSCommon.h"
-#include "OgreTerrain.h"
-#include "OgreTerrainGroup.h"
-#include "OgreTerrainQuadTreeNode.h"
-#include "OgreTerrainMaterialGeneratorA.h"
-#include "OgreTerrainPaging.h"
-#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorB.h"
-#include "Plugins/Ogre/Helpers/OgreTerrainMaterialGeneratorC.h"
 namespace GASS
 {
 	class CustomTerrainPageListener;
@@ -92,7 +87,7 @@ namespace GASS
 		void SmoothTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, const Ogre::Real average_height);
 		void PaintTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, const Ogre::Real intensity, const Ogre::Real brush_size_terrain_space, const Ogre::Real brush_inner_radius, int layer_index, float noise);
 		void FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius);
-		void FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& start, Ogre::Vector3& end, float width, float fade);
+		void FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& start, Ogre::Vector3& end);
 	
 		bool GetFadeDetail() const {return m_FadeDetail;}
 		Ogre::Real GetDetailFadeDist() const {return m_DetailFadeDist;}

@@ -63,7 +63,7 @@ namespace GASS
 		return m_Serialize;
 	}
 
-	void ComponentContainerTemplate::SetSerialize(bool value) 
+	void ComponentContainerTemplate::SetSerialize(bool value)
 	{
 		m_Serialize = value;
 	}
@@ -127,7 +127,7 @@ namespace GASS
 				}
 			}
 
-			int num_children;
+			int num_children = 0;
 			loader->IO<int>(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
@@ -155,7 +155,7 @@ namespace GASS
 			int num_comp = static_cast<int>(m_ComponentVector.size());
 			SerialSaver* saver = (SerialSaver*) serializer;
 			saver->IO<int>(num_comp);
-			
+
 			ComponentVector::iterator iter = m_ComponentVector.begin();
 			while (iter != m_ComponentVector.end())
 			{
@@ -215,17 +215,17 @@ namespace GASS
 	void ComponentContainerTemplate::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		const std::string factory_name = ComponentContainerTemplateFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		
+
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
-		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str() );  
-		obj_elem->LinkEndChild( this_elem );  
+		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str() );
+		obj_elem->LinkEndChild( this_elem );
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
 		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
-		ComponentVector::iterator iter; 
+		ComponentVector::iterator iter;
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
@@ -314,7 +314,7 @@ namespace GASS
 					}
 					catch(...)
 					{
-					
+
 						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->GetFileName()),"ComponentContainerTemplate::LoadXML");
 						//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->GetFileName() << "\t property not found: " << data_name;
 					}
@@ -361,7 +361,7 @@ namespace GASS
 
 	void ComponentContainerTemplate::_InheritComponentData(ComponentContainerPtr cc) const
 	{
-		ComponentVector::const_iterator iter; 
+		ComponentVector::const_iterator iter;
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
@@ -394,22 +394,22 @@ namespace GASS
 			if(inheritance)
 			{
 				new_object =  inheritance->CreateComponentContainer(part_id,manager);
-				
+
 				BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
 				//copy container attributes to new object
 				if(ref_obj)
 					BaseReflectionObject::CopyPropertiesTo(ref_obj);
-		
+
 				if(manager->GetAddObjectIDToName())
 					new_object->SetName(CreateUniqueName(manager));
-				else 
+				else
 					new_object->SetName(GetName());
 				//set template name
 				new_object->SetTemplateName(GetName());
 				//if(m_ContainerData)
 				//	m_ContainerData->Assign(new_object);
 				//check if components already exist,
-				//if so replace components 
+				//if so replace components
 				InheritComponentData(new_object);
 			}
 		}
@@ -430,7 +430,7 @@ namespace GASS
 				//}
 				if(manager->GetAddObjectIDToName())
 					new_object->SetName(CreateUniqueName(manager));
-				else 
+				else
 					new_object->SetName(GetName());
 
 				new_object->SetTemplateName(GetName());
@@ -477,7 +477,7 @@ namespace GASS
 		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
 		BaseReflectionObject::CopyPropertiesTo(ref_obj);
 
-		ComponentVector::const_iterator iter; 
+		ComponentVector::const_iterator iter;
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);

@@ -18,7 +18,7 @@ ResourceGroupHelper::MyMatVisitor::MyMatVisitor(): Ogre::Renderable::Visitor()
 }
 
 void ResourceGroupHelper::MyMatVisitor::visit(
-	Ogre::Renderable *rend, Ogre::ushort lodIndex, bool isDebug, Ogre::Any *pAny)
+	Ogre::Renderable *rend, Ogre::ushort /*lodIndex*/, bool /*isDebug*/, Ogre::Any* /*pAny*/)
 {
 	const Ogre::MaterialPtr mat = rend->getMaterial();
 	if(!mat.isNull())
@@ -117,7 +117,7 @@ void ResourceGroupHelper::ResourceGroupHelperLogListener::clearKeptMessages()
 }
 
 void ResourceGroupHelper::ResourceGroupHelperLogListener::messageLogged
-	(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName, bool &skipThisMessage )
+	(const Ogre::String &message, Ogre::LogMessageLevel /*lml*/, bool /*maskDebug*/, const Ogre::String &/*logName*/, bool &/*skipThisMessage*/ )
 {
 	Ogre::String copy = message;
 	Ogre::StringUtil::toLowerCase(copy);

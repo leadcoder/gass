@@ -149,7 +149,7 @@ namespace GASS
 				LoadShadowSettings(ss);
 			}
 		}
-	
+
 		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions();
 		if (opt == NULL)
 		{
@@ -261,7 +261,7 @@ namespace GASS
 		osgViewer::ViewerBase::Views views;
 		GetViewer()->getViews(views);
 
-		for(int i = 0; i < views.size(); i++)
+		for(size_t i = 0; i < views.size(); i++)
 		{
 			if(views[i]->getName() == viewport || viewport == "ALL")
 			{
@@ -283,7 +283,7 @@ namespace GASS
 
 		m_Viewer->getViews(views);
 		//set same size in all viewports for the moment
-		for(int i = 0; i < views.size(); i++)
+		for(size_t i = 0; i < views.size(); i++)
 		{
 			if(views[i]->getName() == message->GetViewportName())
 			{
@@ -294,7 +294,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::Update(double delta_time, TaskNode* caller)
 	{
-		static int tick = 0;
+		//static int tick = 0;
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
 		if(m_Viewer->done())
 		{

@@ -1,6 +1,7 @@
 #include "DynamicRenderable.h"
-#include <OgreCamera.h>
-#include <OgreHardwareBufferManager.h>
+#include "Plugins/Ogre/OgreCommon.h"
+//#include <OgreCamera.h>
+//#include <OgreHardwareBufferManager.h>
 
 using namespace Ogre;
 
@@ -121,7 +122,7 @@ namespace GASS
 
 	Real DynamicRenderable::getBoundingRadius(void) const
 	{
-		return Math::Sqrt(std::max(mBox.getMaximum().squaredLength(), mBox.getMinimum().squaredLength()));
+		return Ogre::Math::Sqrt(std::max(mBox.getMaximum().squaredLength(), mBox.getMinimum().squaredLength()));
 	}
 
 	Real DynamicRenderable::getSquaredViewDepth(const Camera* cam) const

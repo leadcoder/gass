@@ -99,9 +99,9 @@ namespace GASS
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
 				object->AddComponent(comp);
 			}
-			else if(object->GetFirstComponentByClass("OgreBillboardComponent",false) || 
-				object->GetFirstComponentByClass("OSGBillboardComponent",false) || 
-				object->GetFirstComponentByClass("GizmoComponent",false))
+			else if(object->GetFirstComponentByClassName("OgreBillboardComponent",false) || 
+				object->GetFirstComponentByClassName("OSGBillboardComponent",false) || 
+				object->GetFirstComponentByClassName("GizmoComponent",false))
 			{
 				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
 				comp->SetType(ODECollisionGeometryComponent::CGT_BOX);

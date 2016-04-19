@@ -41,7 +41,7 @@ namespace GASS
 
 	typedef GASS_SHARED_PTR<Scene> ScenePtr;
 	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
-	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr; 
+	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr;
 
 	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
@@ -61,7 +61,7 @@ namespace GASS
 	By design the SceneObject class is not intended to be derived from,
 	Instead new functionality should be added through components
 	*/
-	class GASSExport SceneObject : public Reflection<SceneObject, ComponentContainer> 
+	class GASSExport SceneObject : public Reflection<SceneObject, ComponentContainer>
 	{
 		friend class Scene;
 	public:
@@ -92,29 +92,29 @@ namespace GASS
 		bool Accept(SceneObjectVisitorPtr visitor);
 
 		/**Get all components of certain class. This function allow you to pass the class name as a string
-			@components Return componnets that are found
-			@class_name Name of the component class to search for, note that this is the c++ class name 
-						and not the one you have registred to the object factory
+			@components Return components that are found
+			@class_name Name of the component class to search for, note that this is the c++ class name
+						and not the one you have registered to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		void GetComponentsByClass(ComponentVector &components, const std::string &class_name, bool recursive = true) const;
+		void GetComponentsByClassName(ComponentVector &components, const std::string &class_name, bool recursive = true) const;
 
 		/**Get first component of certain class. This function allow you to pass the class name as a string
-			@class_name Name of the component class to search for, note that this is the c++ class name 
-						and not the one you have registred to the object factory
+			@class_name Name of the component class to search for, note that this is the c++ class name
+						and not the one you have registered to the object factory
 			@recursive Indicates if we should search for components in child scene objects
 		*/
-		ComponentPtr GetFirstComponentByClass(const std::string &class_name, bool recursive = true) const;
+		ComponentPtr GetFirstComponentByClassName(const std::string &class_name, bool recursive = true) const;
 
 
 		/**Get all components of certain class. This function allow you to pass the class as a template argument
-			@components Return componnets that are found
+			@components Return components that are found
 			@recursive Indicates if we should search for components in child scene objects
 		*/
 		template <class T>
 		void GetComponentsByClass(ComponentVector &components, bool recursive = true) const
 		{
-			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
 			{
 				GASS_SHARED_PTR<T> ret = GASS_DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
@@ -139,7 +139,7 @@ namespace GASS
 		GASS_SHARED_PTR<T> GetFirstComponentByClass(bool recursive = false) const
 		{
 			GASS_SHARED_PTR<T> ret;
-			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
 			{
 				ret = GASS_DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
@@ -161,14 +161,14 @@ namespace GASS
 		}
 
 
-		/**Get first component of certain class from parent scene node. 
+		/**Get first component of certain class from parent scene node.
 			This function allow you to pass the class as a template argument
 		*/
 		template <class T>
 		GASS_SHARED_PTR<T> GetFirstParentComponentByClass() const
 		{
 			GASS_SHARED_PTR<T> ret;
-			for(int i = 0 ; i < m_ComponentVector.size(); i++)
+			for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
 			{
 				ret = GASS_DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
 				if(ret)
@@ -204,23 +204,23 @@ namespace GASS
 			return ret;
 		}
 
-		/** Get children scene objects that match name. 
+		/** Get children scene objects that match name.
 			@objects Return scene objects that match name
 			@name The object name to search for
-			@exact_math Should the name be a exact match or should we allow 
+			@exact_math Should the name be a exact match or should we allow
 				that the name argument is found in the scene object name string.
 		*/
 		void GetChildrenByName(SceneObjectVector &objects, const std::string &name,bool exact_math = true, bool recursive = true) const;
 
-		/** Get first child scene objects that match name. 
+		/** Get first child scene objects that match name.
 			@name The object name to search for
-			@exact_math Should the name be a exact match or should we allow 
+			@exact_math Should the name be a exact match or should we allow
 				that the name argument is found in the scene object name string.
 		*/
 		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true) const;
 
-		
-		/** Get child scene objects that match GUID. 
+
+		/** Get child scene objects that match GUID.
 			@name The object GUID to search for
 		*/
 		SceneObjectPtr GetChildByGUID(const SceneObjectGUID &guid) const;
@@ -232,31 +232,31 @@ namespace GASS
 		SceneObjectPtr GetChildByID(const SceneObjectID &id) const;
 
 
-		/** Get children scene objects that match ID. 
+		/** Get children scene objects that match ID.
 			@objects Return scene objects that match ID
 			@name The object ID to search for
-			@exact_math Should the ID be a exact match or should we allow 
+			@exact_math Should the ID be a exact match or should we allow
 				that the name argument is found in the scene object name string.
 		*/
 		void GetChildrenByID(SceneObjectVector &objects, const SceneObjectID &id,bool exact_math = true, bool recursive = true) const;
 
-	
+
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
-		
+
 		void OnChangeName(SceneObjectNameMessagePtr message);
 
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
-		
+
 		void SaveToFile(const std::string &filename);
 		size_t GetQueuedMessages() const;
 		void ClearMessages() const;
 
-		/**Create a copy of this scene object include all components and optional ascendants. 
-			The copy will not be initialized or added to the scene, its up to the user to add 
+		/**Create a copy of this scene object include all components and optional ascendants.
+			The copy will not be initialized or added to the scene, its up to the user to add
 			this copy new host SceneObject. The copy will only reflect registred properties.
-		   
+
 		   @copy_children Indicates if child SceneObjects also should be copied
 		*/
 		SceneObjectPtr CreateCopy(bool copy_children_recursively = true) const;
@@ -265,7 +265,7 @@ namespace GASS
 		void GenerateNewGUID(bool recursively);
 		void GenerateGUID(bool recursive);
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
-	
+
 		/**
 		Convinces function for BaseSceneComponent's that call GetComponent on ComponentContainer
 		*/
@@ -287,7 +287,7 @@ namespace GASS
 		void SendImmediateEvent(SceneObjectEventMessagePtr message);
 
 protected:
-	
+
 		void InitializePointers();
 		void Initialize(ScenePtr scene);
 		void OnDelete();
@@ -317,7 +317,7 @@ protected:
 	class SceneObjectEnumerationProxyPropertyMetaData : public BasePropertyMetaData, public ISceneObjectEnumerationPropertyMetaData
 	{
 	public:
-		SceneObjectEnumerationProxyPropertyMetaData(const std::string &annotation, PropertyFlags flags,SceneObjectEnumerationFunc *enumeration_func ,bool /*multi_select*/): BasePropertyMetaData(annotation,flags), 
+		SceneObjectEnumerationProxyPropertyMetaData(const std::string &annotation, PropertyFlags flags,SceneObjectEnumerationFunc *enumeration_func ,bool /*multi_select*/): BasePropertyMetaData(annotation,flags),
 			m_EnumFunc(enumeration_func)
 		{
 

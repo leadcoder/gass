@@ -1,8 +1,7 @@
 #ifndef DYNAMIC_RENDERABLE_H
 #define DYNAMIC_RENDERABLE_H
 
-#include <OgreSimpleRenderable.h>
-
+#include "Plugins/Ogre/OgreCommon.h"
 
 namespace GASS
 {

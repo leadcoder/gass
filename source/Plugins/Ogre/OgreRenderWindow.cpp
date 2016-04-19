@@ -24,8 +24,6 @@
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Core/Utils/GASSException.h"
-#include <OgreRenderWindow.h>
-#include <OgreSceneManager.h>
 
 namespace GASS
 {

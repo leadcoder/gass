@@ -19,10 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -34,7 +30,6 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
-
 #include "Sim/GASSScriptManager.h"
 #include <angelscript.h>
 
@@ -397,7 +392,7 @@ namespace GASS
 		return m_AttachToParent;
 	}
 
-	void OgreLocationComponent::nodeUpdated(const Ogre::Node* node)
+	void OgreLocationComponent::nodeUpdated(const Ogre::Node* /*node*/)
 	{
 		//send transformation message
 		Vec3 pos = OgreConvert::ToGASS(m_OgreNode->_getDerivedPosition());

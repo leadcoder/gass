@@ -4,8 +4,9 @@
 
 #ifndef _CWAVES_H_
 #define _CWAVES_H_
-
-#include <windows.h>
+#ifdef WIN32
+    #include <windows.h>
+#endif
 #include <stdio.h>
 
 #define MAX_NUM_WAVEID			1024
@@ -80,7 +81,7 @@ typedef struct
 typedef int (__cdecl *PFNALGETENUMVALUE)( const char *szEnumName );
 typedef int	WAVEID;
 
-class CWaves  
+class CWaves
 {
 public:
 	CWaves();
@@ -106,7 +107,7 @@ public:
 private:
 	WAVERESULT ParseFile(const char *szFilename, LPWAVEFILEINFO pWaveInfo);
 	WAVEID InsertWaveID(LPWAVEFILEINFO pWaveFileInfo);
-	
+
 	LPWAVEFILEINFO	m_WaveIDs[MAX_NUM_WAVEID];
 };
 

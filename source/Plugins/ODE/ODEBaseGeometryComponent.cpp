@@ -38,7 +38,7 @@
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#ifdef WIN32
+#ifdef _MSC_VER
 #define NOMINMAX
 #include <algorithm>
 #endif

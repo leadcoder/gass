@@ -40,18 +40,18 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObject)
 	GASS_FORWARD_DECL(SceneObjectManager)
 	GASS_IFORWARD_DECL(SceneManager)
-	
+
 	typedef std::vector<SceneManagerPtr> SceneManagerVector;
 	typedef VectorIterator<SceneManagerVector> SceneManagerIterator;
-	
+
 	/**
-	A Scene in gass can be loaded from disc or created in runtime.  
-	The scene class will create instances of all registered scene managers and also create 
+	A Scene in gass can be loaded from disc or created in runtime.
+	The scene class will create instances of all registered scene managers and also create
 	a scene object manager used as a container for scene objects
 	*/
 
-	class GASSExport Scene : public Reflection<Scene, BaseReflectionObject>, 
-		public GASS_ENABLE_SHARED_FROM_THIS<Scene> , 
+	class GASSExport Scene : public Reflection<Scene, BaseReflectionObject>,
+		public GASS_ENABLE_SHARED_FROM_THIS<Scene> ,
 		public IMessageListener
 	{
 		friend class SceneObject;
@@ -61,7 +61,7 @@ namespace GASS
 		virtual ~Scene();
 		static void RegisterReflection();
 
-		
+
 
 		/**
 		Get the start position for this scene,
@@ -141,20 +141,20 @@ namespace GASS
 		*/
 		SceneManagerIterator GetSceneManagers();
 
-		
+
 		FilePath GetSceneFolder() const;
 
 		void SyncMessages(double delta_time) const;
 
 		SceneManagerPtr GetSceneManagerByName(const std::string &name) const;
-		
-		/**Get first SceneManager of certain class. This function allow you to pass the class as a template 
+
+		/**Get first SceneManager of certain class. This function allow you to pass the class as a template
 		*/
 		template <class T>
 		GASS_SHARED_PTR<T> GetFirstSceneManagerByClass(bool no_throw=false) const
 		{
 			GASS_SHARED_PTR<T> ret;
-			for(int i = 0 ; i < m_SceneManagers.size(); i++)
+			for(size_t i = 0 ; i < m_SceneManagers.size(); i++)
 			{
 				ret = GASS_DYNAMIC_PTR_CAST<T>(m_SceneManagers[i]);
 				if(ret)
@@ -172,9 +172,9 @@ namespace GASS
 		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
 		SceneObjectPtr GetSceneryRoot() const {return SceneObjectPtr(m_TerrainObjects);}
-		
+
 		/**
-		Get all scenes from path. This function recursively search for scene.xml 
+		Get all scenes from path. This function recursively search for scene.xml
 		files and push that path to the return vector
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);

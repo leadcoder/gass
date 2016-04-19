@@ -49,10 +49,10 @@
 
 namespace GASS
 {
-	WaypointListComponent::WaypointListComponent() : m_Radius(0), 
-		m_EnableSpline(false), 
-		m_Initialized(false), 
-		m_AutoUpdateTangents(true), 
+	WaypointListComponent::WaypointListComponent() : m_Radius(0),
+		m_EnableSpline(false),
+		m_Initialized(false),
+		m_AutoUpdateTangents(true),
 		m_SplineSteps(10),
 		m_ShowWaypoints(true),
 		m_ShowPathLine(false),
@@ -97,7 +97,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		RegisterProperty<bool>("AutoRotateWaypoints", &WaypointListComponent::GetAutoRotateWaypoints, &WaypointListComponent::SetAutoRotateWaypoints,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		
+
 	}
 
 	void WaypointListComponent::OnInitialize()
@@ -134,7 +134,7 @@ namespace GASS
 
 	std::string WaypointListComponent::GetWaypointTemplate() const {return m_WaypointTemplate;}
 	void WaypointListComponent::SetWaypointTemplate(const std::string &name) {m_WaypointTemplate=name;}
-	
+
 	int WaypointListComponent::GetSplineSteps()const
 	{
 		return m_SplineSteps;
@@ -210,7 +210,7 @@ namespace GASS
 			return;
 
 		std::vector<Vec3> wps = WaypointListComponent::GetWaypoints();
-		
+
 		//collect all children and update path
 		//const double line_steps = 115;
 
@@ -221,7 +221,7 @@ namespace GASS
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
 			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 			sub_mesh_data->Type = LINE_STRIP;
-			
+
 			for(size_t i = 0; i < wps.size(); i++)
 			{
 				Vec3 pos =wps[i];
@@ -240,7 +240,7 @@ namespace GASS
 				}
 				else //remove this*/
 				{
-					
+
 					GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 					//update material
 					GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
@@ -325,7 +325,7 @@ namespace GASS
 		}
 
 		const double steps = m_SplineSteps;
-		
+
 		if(m_EnableSpline)
 		{
 			for(size_t i = 0; i < pos_vec.size(); i++)
@@ -351,7 +351,7 @@ namespace GASS
 
 					if(m_Radius > 0) //used fixed radius
 					{
-						
+
 						Vec3 norm_tangent = tangent*(1.0/weight);
 						spline.GetTangents()[i] = norm_tangent*m_Radius;
 					}
@@ -367,7 +367,7 @@ namespace GASS
 
 			Vec3 last_point(0,0,0);
 
-			for(int  i = 0; i < spline.GetPoints().size(); i++)
+			for(size_t  i = 0; i < spline.GetPoints().size(); i++)
 			{
 				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{
@@ -387,7 +387,7 @@ namespace GASS
 		Float dist = dir.Length();
 		if(dist > min_dist)
 		{
-			Vec3 new_pos = (line_start + line_end)*0.5; 
+			Vec3 new_pos = (line_start + line_end)*0.5;
 			RecursiveIncreaseResolution(line_start,  new_pos, spline, min_dist);
 			spline.AddNode(new_pos);
 			RecursiveIncreaseResolution(new_pos,line_end, spline, min_dist);
@@ -416,17 +416,17 @@ namespace GASS
 		{
 			LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 world_pos = location->GetWorldPosition();
-		
+
 			std::stringstream ss;
-			std::ofstream file_ptr;   
-			file_ptr.open(filename.GetFullPath().c_str());      
+			std::ofstream file_ptr;
+			file_ptr.open(filename.GetFullPath().c_str());
 
 			for(size_t i = 0; i < wps.size(); i++)
 			{
 				ss << (wps[i] + world_pos) << "\n";
 			}
-			file_ptr << ss.str().c_str();     
-			file_ptr.close(); 
+			file_ptr << ss.str().c_str();
+			file_ptr.close();
 		}
 	}
 

@@ -90,6 +90,14 @@ namespace GASS
 		}
 	}
 
+	void ResourceGroup::Reload() const
+	{
+		for (std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin(); iter != m_ResourceLocations.end(); ++iter)
+		{
+			(*iter)->ParseLocation();
+		}
+	}
+
 	void ResourceGroup::GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const
 	{
 		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();

@@ -178,7 +178,7 @@ namespace GASS
 			Vec3 pos = message->GetPosition();
 			GASSToRecast(pos,point);
 			//point[0] =pos.x; point[1] =pos.y; point[2] =pos.z;
-			ext[0] = 0.1; ext[1] = 0.1; ext[2] = 0.1;
+			ext[0] = 0.1f; ext[1] = 0.1f; ext[2] = 0.1f;
 			float tgt[3];
 			dtPolyRef ref;
 			m_NavQuery->findNearestPoly(point, ext, &filter, &ref, tgt);
@@ -248,9 +248,9 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::UpdateConvexVolumes()
 	{
-		for(size_t i = 0; i < m_Geom->getConvexVolumeCount();i++)
+		for(int i = 0; i < m_Geom->getConvexVolumeCount();i++)
 		{
-			m_Geom->deleteConvexVolume(static_cast<int>(i));
+			m_Geom->deleteConvexVolume(i);
 		}
 		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastConvexVolumeComponent>(components,true);
@@ -320,9 +320,9 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::UpdateOffmeshConnections()
 	{
-		for(size_t i = 0; i < m_Geom->getOffMeshConnectionCount();i++)
+		for(int i = 0; i < m_Geom->getOffMeshConnectionCount();i++)
 		{
-			m_Geom->deleteOffMeshConnection(static_cast<int>(i));
+			m_Geom->deleteOffMeshConnection(i);
 		}
 
 		const unsigned char area = LAND_COVER_JUMP;
@@ -331,7 +331,7 @@ namespace GASS
 		float p2[3];
 		ComponentContainer::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastOffmeshMeshConnectionComponent>(components,true);
-		for(int i = 0; i < components.size(); i++)
+		for(size_t i = 0; i < components.size(); i++)
 		{
 			RecastOffmeshMeshConnectionComponentPtr comp = GASS_DYNAMIC_PTR_CAST<RecastOffmeshMeshConnectionComponent>(components[i]);
 			Vec3 pos1 = comp->GetStartPos();
@@ -981,7 +981,7 @@ namespace GASS
 		FilePath full_path(scene_path + "/" + filename);
 		return full_path;
 	}
-	
+
 	void RecastNavigationMeshComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		//temp fix because obj_elem->GetDocument()->GetFileName() dont work for save after port to tinyxml2
@@ -1121,11 +1121,11 @@ namespace GASS
 		}*/
 	}
 
-	
+
 
 	bool RecastNavigationMeshComponent::GetRawMeshData(RawNavMeshData &rnm_data)
 	{
-		AABox bbox; 
+		AABox bbox;
 
 		if(m_AutoCollectMeshes)
 		{
@@ -1147,7 +1147,7 @@ namespace GASS
 		if(m_SelectedMeshes.size()>0)
 		{
 			std::vector<PhysicsMeshPtr> mesh_data_vec;
-			for(int i = 0;  i <  m_SelectedMeshes.size(); i++)
+			for(size_t i = 0;  i <  m_SelectedMeshes.size(); i++)
 			{
 				SceneObjectPtr obj = m_SelectedMeshes[i].GetRefObject();
 				if(obj)
@@ -1169,7 +1169,7 @@ namespace GASS
 							Mat4 trans_mat;
 							trans_mat.Identity();
 							trans_mat.SetTransformation(world_pos,world_rot,scale);
-							for(int j = 0 ; j < physics_mesh->PositionVector.size(); j++)
+							for(size_t j = 0 ; j < physics_mesh->PositionVector.size(); j++)
 							{
 								Vec3 pos = trans_mat*physics_mesh->PositionVector[j];
 								physics_mesh->PositionVector[j] = pos;
@@ -1196,14 +1196,14 @@ namespace GASS
 
 			m_LocalOrigin.Set(0,0,0);
 			double mult = 1.0 / static_cast<double>(tot_verts);
-			for(int i = 0; i < mesh_data_vec.size() ; i++)
+			for(size_t i = 0; i < mesh_data_vec.size() ; i++)
 			{
-				for(int j = 0 ; j < mesh_data_vec[i]->PositionVector.size(); j++)
+				for(size_t j = 0 ; j < mesh_data_vec[i]->PositionVector.size(); j++)
 				{
 					m_LocalOrigin += (mesh_data_vec[i]->PositionVector[j]*mult);
 				}
 			}
-		
+
 			if(tot_verts > 0 && tot_faces > 0 && sizeof(Float) == 8) //double precision
 			{
 				//copy data to float
@@ -1218,21 +1218,21 @@ namespace GASS
 				int vert_index = 0;
 				int norm_index  = 0;
 
-				for(int i = 0; i < mesh_data_vec.size() ; i++)
+				for(size_t i = 0; i < mesh_data_vec.size() ; i++)
 				{
 					int base_index = vert_index/3;
-					for(int j = 0 ; j < mesh_data_vec[i]->PositionVector.size(); j++)
+					for(size_t j = 0 ; j < mesh_data_vec[i]->PositionVector.size(); j++)
 					{
 						GASSToRecast(mesh_data_vec[i]->PositionVector[j],&verts[vert_index]);
 						vert_index += 3;
 					}
 
-					for(int j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j++)
+					for(size_t j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j++)
 					{
 						tris[face_index++] = mesh_data_vec[i]->IndexVector[j]+base_index;
 					}
 
-					for(int j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j += 3)
+					for(size_t j = 0 ; j < mesh_data_vec[i]->IndexVector.size(); j += 3)
 					{
 						Vec3 p1 = mesh_data_vec[i]->PositionVector[mesh_data_vec[i]->IndexVector[j]];
 						Vec3 p2 = mesh_data_vec[i]->PositionVector[mesh_data_vec[i]->IndexVector[j+1]];
@@ -1246,11 +1246,11 @@ namespace GASS
 						trinorms[norm_index++]=norm.y;
 						trinorms[norm_index++]=norm.z;
 					}
-					
+
 				}
 				GASSToRecast(bbox.m_Min,bmin);
 				GASSToRecast(bbox.m_Max,bmax);
-		
+
 				rnm_data.Verts =  verts;
 				rnm_data.NumVerts =  tot_verts;
 				rnm_data.TriNorm= trinorms;
@@ -1260,7 +1260,7 @@ namespace GASS
 				rnm_data.BMax = bmax;
 
 				rnm_data.Area = new int[rnm_data.NumTris];
-				for(size_t i = 0; i< rnm_data.NumTris; i++)
+				for(int i = 0; i< rnm_data.NumTris; i++)
 				{
 					rnm_data.Area[i] = 0;
 				}
@@ -1284,7 +1284,7 @@ namespace GASS
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 		ColorRGBA color(0.4,0.4,1,float(m_Transparency)/100.0f);
 
-		for(int i = 0; i < nav_tris.size(); i += 3)
+		for(size_t i = 0; i < nav_tris.size(); i += 3)
 		{
 			Vec3 v1 = nav_tris[i];
 			Vec3 v2 = nav_tris[i+1];
@@ -1314,13 +1314,13 @@ namespace GASS
 		sub_mesh_data->Type = TRIANGLE_LIST;
 		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 
-		for(int i = 0; i < nav_tris.size(); i++)
+		for(size_t i = 0; i < nav_tris.size(); i++)
 		{
 			sub_mesh_data->PositionVector.push_back(nav_tris[i]);
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		for(int i = 0; i < nav_tris.size(); i++)
+		for(size_t i = 0; i < nav_tris.size(); i++)
 		{
 			sub_mesh_data->IndexVector.push_back(i);
 		}
@@ -1492,7 +1492,7 @@ namespace GASS
 		bool ret = false;
 		if(m_NavMesh)
 		{
-			
+
 			float p1[3];
 			float p2[3];
 			float ext[3];
@@ -1549,7 +1549,7 @@ namespace GASS
 		ext[2] = 1;
 
 		GASSToRecast(circle_center,c_pos);
-	
+
 		float q_pos[3];
 		dtQueryFilter filter;
 
@@ -1662,10 +1662,13 @@ namespace GASS
 		GASSToRecast(to,rescast_to_pos);
 		float polyPickExt[3];
 		polyPickExt[0] = 4; polyPickExt[1] = 4; polyPickExt[2] = 4;
-		
+
 
 		dtQueryFilter filter;
-	
+		for(int i = 0; i < DT_MAX_AREAS; i++)
+			filter.setAreaCost(i,1.0f);
+
+
 		dtPolyRef start_ref = 0;
 		dtPolyRef end_ref  = 0;
 		dtStatus ret  =0;

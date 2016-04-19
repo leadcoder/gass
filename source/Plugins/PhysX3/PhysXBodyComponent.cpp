@@ -187,7 +187,7 @@ namespace GASS
 			if(m_EffectJoints)
 			{
 				ComponentContainer::ComponentVector components;
-				GetSceneObject()->GetComponentsByClass(components,"PhysXBodyComponent");
+				GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
 				
 				for(int i = 0 ; i < components.size(); i++)
 				{
@@ -203,7 +203,7 @@ namespace GASS
 			
 
 				components.clear();
-				GetSceneObject()->GetComponentsByClass(components,"PhysXSuspensionComponent");
+				GetSceneObject()->GetComponentsByClassName(components,"PhysXSuspensionComponent");
 				
 				for(int i = 0 ; i < components.size(); i++)
 				{

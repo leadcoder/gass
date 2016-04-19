@@ -35,7 +35,7 @@ namespace GASS
 {
 	ComponentContainer::ComponentContainer() : m_Serialize(true)
 	{
-		
+
 	}
 
 
@@ -95,9 +95,9 @@ namespace GASS
 
 		if(serializer->Loading())
 		{
-			int num_comp;
+			int num_comp = 0;
 			SerialLoader* loader = (SerialLoader*) serializer;
-			
+
 			loader->IO<int>(num_comp);
 			for(int i  = 0 ; i < num_comp; i++)
 			{
@@ -120,7 +120,7 @@ namespace GASS
 				}
 			}
 
-			int num_children;
+			int num_children = 0;
 			loader->IO<int>(num_children);
 			for(int i  = 0 ; i < num_children; i++)
 			{
@@ -150,7 +150,7 @@ namespace GASS
 		{
 			int num_comp = static_cast<int>(m_ComponentVector.size());
 			SerialSaver* saver = (SerialSaver*) serializer;
-			
+
 			saver->IO<int>(num_comp);
 			ComponentVector::iterator iter = m_ComponentVector.begin();
 			while (iter != m_ComponentVector.end())
@@ -161,7 +161,7 @@ namespace GASS
 				{
 					if(!s_comp->Serialize(serializer))
 						return false;
-					
+
 				}
 				++iter;
 			}
@@ -202,16 +202,16 @@ namespace GASS
 			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
-		
+
 		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str());
-		obj_elem->LinkEndChild( this_elem );  
+		obj_elem->LinkEndChild( this_elem );
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
 		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
-		ComponentVector::iterator iter; 
+		ComponentVector::iterator iter;
 		for(iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
 		{
 			ComponentPtr comp = (*iter);
@@ -222,7 +222,7 @@ namespace GASS
 
 		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("ComponentContainers");
 		this_elem->LinkEndChild(cc_elem);
-	
+
 		ComponentContainer::ComponentContainerVector::iterator cc_iter;
 		for(cc_iter = m_ComponentContainerVector.begin(); cc_iter != m_ComponentContainerVector.end(); ++cc_iter)
 		{
@@ -260,7 +260,7 @@ namespace GASS
 					{
 						const std::string comp_name = comp_elem->Value();
 						target_comp = GetComponent(comp_name);
-					}					
+					}
 
 					if(target_comp) //component already exist, replace attributes component
 					{
@@ -346,23 +346,23 @@ namespace GASS
 	{
 		return ComponentContainer::ConstComponentContainerIterator(m_ComponentContainerVector.begin(),m_ComponentContainerVector.end());
 	}
-	
-	void ComponentContainer::SetTemplateName(const std::string &name) 
+
+	void ComponentContainer::SetTemplateName(const std::string &name)
 	{
 		m_TemplateName = name;
 	}
 
-	std::string ComponentContainer::GetTemplateName()  const 
+	std::string ComponentContainer::GetTemplateName()  const
 	{
 		return m_TemplateName;
 	}
 
-	void ComponentContainer::SetSerialize(bool value) 
+	void ComponentContainer::SetSerialize(bool value)
 	{
 		m_Serialize = value;
 	}
 
-	bool ComponentContainer::GetSerialize()  const 
+	bool ComponentContainer::GetSerialize()  const
 	{
 		return m_Serialize;
 	}
@@ -381,7 +381,7 @@ namespace GASS
 		}
 
 		comp_iter = m_ComponentVector.begin();
-		
+
 		while (comp_iter != m_ComponentVector.end())
 		{
 			ComponentPtr comp = (*comp_iter);
@@ -447,7 +447,7 @@ namespace GASS
 	}
 
 
-	
+
 }
 
 

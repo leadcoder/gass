@@ -37,6 +37,9 @@ namespace GASS
 		~ResourceGroup();
 		ResourceLocationPtr AddResourceLocation(const FilePath &path, ResourceLocationType type, bool recursive);
 		void RemoveResourceLocation(ResourceLocationPtr location);
+		
+		// Reload all ResourceLocations and parse all folders
+		void Reload() const;
 		ResourceLocationVector GetResourceLocations() const {return m_ResourceLocations;}
 		std::string GetName() const{return m_Name;}
 		bool HasResource(const std::string &resource_name) const;
