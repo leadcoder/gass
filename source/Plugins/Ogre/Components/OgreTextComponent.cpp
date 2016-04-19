@@ -60,6 +60,11 @@ namespace GASS
 
 	OgreTextComponent::~OgreTextComponent(void)
 	{
+		
+	}
+
+	void OgreTextComponent::OnDelete()
+	{
 		if(m_TextObject)
 		{
 			delete m_TextObject;
