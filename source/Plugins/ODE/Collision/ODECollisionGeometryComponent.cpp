@@ -125,7 +125,6 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::OnDelete()
 	{
-
 		Reset();
 	}
 
@@ -136,10 +135,11 @@ namespace GASS
 
 		if(m_Type == CGT_PLANE)
 		{
-			if(m_GeomID == NULL)
+			if(m_GeomID == NULL) //Hack to use plane without geometry component
 			{
 				CreateGeometry();
-				SetFlags(GEOMETRY_FLAG_UNKNOWN);
+				if(m_GeomID == NULL) //Maybe geometry is found but not loaded?, ie OnGeometryChanged not called, assume plane is ground?
+					SetFlags(GEOMETRY_FLAG_GROUND);
 			}
 			return;
 		}
@@ -281,7 +281,6 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry()
 	{
-
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(!location)
 		{

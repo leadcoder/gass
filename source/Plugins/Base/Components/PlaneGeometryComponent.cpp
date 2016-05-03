@@ -82,7 +82,7 @@ namespace GASS
 	void PlaneGeometryComponent::SetSize(const Vec2 &value)
 	{
 		m_Size = value;
-		if(GetSceneObject()) //initlized
+		if(GetSceneObject()) //initialized
 		{
 			GenerateMesh();
 			SetTexture(m_Texture);
