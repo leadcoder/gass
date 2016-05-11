@@ -215,7 +215,8 @@ namespace GASS
 	void EditorSceneManager::SetObjectSite(SceneObjectPtr obj)
 	{
 		m_CurrentSite = obj;
-		GetScene()->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
+		if(GetScene())
+			GetScene()->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
 	}
 
 	SceneObjectPtr EditorSceneManager::GetObjectSite() const
