@@ -38,6 +38,7 @@ namespace GASS
 		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
 		if(obj_under_cursor && !m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
 		{
+			//m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
 			m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 			if(m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
 			{

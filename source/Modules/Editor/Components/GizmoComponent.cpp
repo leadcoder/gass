@@ -332,11 +332,10 @@ namespace GASS
 		}
 		LocationComponentPtr lc = message->GetLocation();
 		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
-		SetSelection(m_EditorSceneManager->GetSelectedObject());
+		std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
+		if(selected_vec.size() > 0)
+		SetSelection(selected_vec[0].lock());
 	}
-
-
-
 
 	void GizmoComponent::BuildMesh()
 	{

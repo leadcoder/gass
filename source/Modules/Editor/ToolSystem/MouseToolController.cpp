@@ -424,7 +424,8 @@ namespace GASS
 
 		int mess_id = GASS_PTR_TO_INT(this);
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, info.m_ObjectUnderCursor.lock(),mess_id));
-		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
+		if(m_EditorSceneManager->GetScene())
+			m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 
 
 		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
@@ -478,12 +479,12 @@ namespace GASS
 			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
 			if(abs(delta.x) + abs(delta.y) < 0.001)
 			{
-				SceneObjectPtr selected = m_EditorSceneManager->GetSelectedObject();
-				if(info.m_ObjectUnderCursor.lock() == selected)
+				std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
+				if(selected_vec.size() > 0 && info.m_ObjectUnderCursor.lock() == selected_vec[0].lock())
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
-					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
+					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected_vec[0].lock(),Vec2(data.XAbs,data.YAbs)));
 					m_EditorSceneManager->GetScene()->SendImmediate(message);
 				}
 			}

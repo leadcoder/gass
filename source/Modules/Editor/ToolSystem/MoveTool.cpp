@@ -161,7 +161,6 @@ namespace GASS
 					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
 				}
-
 			}
 			else if(obj_under_cursor == m_SelectedObject.lock())
 			{
@@ -248,6 +247,7 @@ namespace GASS
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
+						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
 						m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 					}
 				}

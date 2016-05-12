@@ -81,16 +81,16 @@ namespace GASS
 	{
 		std::string ctn = template_name;
 		ScenePtr scene = GetScene();
-
+		
 		Vec3 vel(0, 0, 0);
-		//Vec3 pos = scene->GetStartPos();
+		Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();
-
+		
 		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate(ctn, scene->GetRootSceneObject());
-
+		
 		if (!free_obj)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find camera template named:" + ctn, "EditorSceneManager::CreateCamera");
@@ -128,20 +128,67 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr EditorSceneManager::GetSelectedObject() const
+	std::vector<SceneObjectWeakPtr> EditorSceneManager::GetSelectedObjects() const
 	{
-		return m_SelectedObject.lock();
+		return m_SelectedObjects;
+	}
+
+	SceneObjectPtr EditorSceneManager::GetFirstSelectedObject() const
+	{
+		if(m_SelectedObjects.size() > 0)
+			return m_SelectedObjects[0].lock();
+		else
+			return SceneObjectPtr();
+	}
+
+	
+	bool EditorSceneManager::IsSelected(SceneObjectPtr obj)
+	{
+		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		while(iter != m_SelectedObjects.end())
+		{
+			SceneObjectPtr so = (*iter).lock();
+			if(so == obj)
+			{
+				return true;
+			}
+			else
+				iter++;
+		}
+		return false;
+	}
+
+	void EditorSceneManager::UnselectSceneObject(SceneObjectPtr obj)
+	{
+		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		while(iter != m_SelectedObjects.end())
+		{
+			SceneObjectPtr so = (*iter).lock();
+			if(so == obj)
+			{
+				iter = 	m_SelectedObjects.erase(iter);
+				GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
+			}
+			else
+				iter++;
+		}
+		
+	}
+
+	void EditorSceneManager::UnselectAllSceneObjects()
+	{
+		m_SelectedObjects.clear();
+		GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
 	}
 
 	void EditorSceneManager::SelectSceneObject(SceneObjectPtr obj)
 	{
-		if (obj != GetSelectedObject())
+		if (!IsSelected(obj))
 		{
-			m_SelectedObject = obj;
+			m_SelectedObjects.push_back(obj);
 			//notify listeners
-			int from_id = GASS_PTR_TO_INT(this);
-			SceneMessagePtr selection_msg(new ObjectSelectionChangedEvent(obj, from_id));
-			GetScene()->PostMessage(selection_msg);
+			GetScene()->PostMessage(SceneMessagePtr(new ObjectSelectionChangedEvent(obj, GASS_PTR_TO_INT(this))));
+			GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
 		}
 	}
 
@@ -215,8 +262,7 @@ namespace GASS
 	void EditorSceneManager::SetObjectSite(SceneObjectPtr obj)
 	{
 		m_CurrentSite = obj;
-		if(GetScene())
-			GetScene()->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
+		GetScene()->PostMessage(SceneMessagePtr(new ObjectSiteChangedEvent(obj)));
 	}
 
 	SceneObjectPtr EditorSceneManager::GetObjectSite() const

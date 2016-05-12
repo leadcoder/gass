@@ -37,6 +37,8 @@ namespace GASS
 	class EditorModuleExport EditorSceneManager :  public Reflection<EditorSceneManager, BaseSceneManager>
 	{
 	public:
+		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
+
 		EditorSceneManager();
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();
@@ -47,8 +49,14 @@ namespace GASS
 		void SystemTick(double delta_time);
 
 		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
-		SceneObjectPtr GetSelectedObject() const;
+		SelectionVector GetSelectedObjects() const;
+		SceneObjectPtr GetFirstSelectedObject() const;
+
 		void SelectSceneObject(SceneObjectPtr obj);
+		void UnselectSceneObject(SceneObjectPtr obj);
+		void UnselectAllSceneObjects();
+		bool IsSelected(SceneObjectPtr obj);
+
 		bool IsObjectLocked(SceneObjectWeakPtr obj);
 		void UnlockObject(SceneObjectWeakPtr obj);
 		void LockObject(SceneObjectWeakPtr obj);
@@ -57,10 +65,7 @@ namespace GASS
 		void UnhideObject(SceneObjectWeakPtr obj);
 		void HideObject(SceneObjectWeakPtr obj);
 		bool IsObjectStatic(SceneObjectWeakPtr obj);
-	
-		//void SetSceneObjectsSelectable(bool value) {m_LockTerrainObjects = value;}
-		//bool GetSceneObjectsSelectable() const {return m_LockTerrainObjects;}
-
+		
 		void SetObjectSite(SceneObjectPtr obj);
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
@@ -79,7 +84,7 @@ namespace GASS
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;
-		SceneObjectWeakPtr m_SelectedObject;
+		SelectionVector m_SelectedObjects;
 #ifndef GASS_USE_BOOST_PTR
 		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
 #else

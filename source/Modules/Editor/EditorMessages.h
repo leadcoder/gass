@@ -20,6 +20,15 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
 
+	class EditorSelectionChangedEvent : public SceneEventMessage
+	{
+	public:
+		EditorSelectionChangedEvent(std::vector<SceneObjectWeakPtr> selection, SenderID sender_id = -1, double delay= 0) : 
+		  SceneEventMessage(sender_id , delay), m_Selection(selection){}
+		  std::vector<SceneObjectWeakPtr> m_Selection;
+	};
+	typedef GASS_SHARED_PTR<EditorSelectionChangedEvent> EditorSelectionChangedEventPtr;
+
 	class SceneSelectionChangedEvent : public SceneEventMessage
 	{
 	public:
