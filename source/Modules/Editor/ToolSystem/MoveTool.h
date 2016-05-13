@@ -35,10 +35,11 @@ namespace GASS
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		//void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 		bool m_MouseIsDown;
-		SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selected;
 		Vec3 m_Offset;
 		MouseToolController* m_Controller;
 		int m_MoveUpdateCount;
@@ -51,6 +52,5 @@ namespace GASS
 		bool m_GroundSnapMove;
 		bool  m_Active;
 		bool m_SnapToMouse;
-
 	};
 }

@@ -224,7 +224,7 @@ namespace GASS
 		m_MouseWinHeight = bottom-top;
 	}
 
-	void OISInputSystem::Update(double delta_time,TaskNode* caller)
+	void OISInputSystem::Update(double /*delta_time*/,TaskNode* /*caller*/)
 	{
 		if(m_Window == 0)
 			return;
@@ -252,6 +252,15 @@ namespace GASS
 				//m_JoyState[i] = m_Joys[i]->getJoyStickState();
 			}
 		}
+
+		//update window data
+		GraphicsSystemPtr gs = GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		RenderWindowPtr window = gs->GetMainRenderWindow();
+		const OIS::MouseState &ms = m_Mouse->getMouseState();
+		ms.width = window->GetWidth();
+		ms.height = window->GetHeight();
+		m_MouseWinWidth = ms.width;
+		m_MouseWinHeight = ms.height;
 	}
 
 	void OISInputSystem::AddKeyListener(IKeyListener* key_listener)
@@ -259,6 +268,7 @@ namespace GASS
 		m_KeyListeners.push_back(key_listener);
 
 	}
+
 	void OISInputSystem::RemoveKeyListener(IKeyListener* key_listener)
 	{
 		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
@@ -357,7 +367,7 @@ namespace GASS
 	{
 		MouseData data = ToGASS(arg);
 
-		//dont send if mouse outside window
+		//don't send if mouse outside window
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
@@ -412,7 +422,7 @@ namespace GASS
 	{
 		MouseData data = ToGASS(arg);
 
-		//dont send if mouse outside window
+		//don't send if mouse outside window
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
@@ -426,13 +436,11 @@ namespace GASS
 		return true;
 	}
 
-
-
 	bool OISInputSystem::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 	{
 
 		MouseData data = ToGASS(arg);
-		//dont send if mouse outside window
+		//don't send if mouse outside window
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
@@ -458,7 +466,6 @@ namespace GASS
 		return ret;
 	}
 
-
 	bool OISInputSystem::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	{
 		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
@@ -470,6 +477,7 @@ namespace GASS
 		}
 		return true;
 	}
+
 	bool OISInputSystem::buttonReleased( const OIS::JoyStickEvent &arg, int button )
 	{
 		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
@@ -503,12 +511,12 @@ namespace GASS
 		return true;
 	}
 
-	//Joystick Event, amd sliderID
+	//Joystick Event, and sliderID
 	bool OISInputSystem::sliderMoved( const OIS::JoyStickEvent &, int )
 	{
 		return true;
 	}
-	//Joystick Event, amd povID
+	//Joystick Event, and povID
 	bool OISInputSystem::povMoved( const OIS::JoyStickEvent &, int )
 	{
 		return true;

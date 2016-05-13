@@ -39,12 +39,12 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		//editor selection changed
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationChangedEventPtr message);
 		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnEditMode(EditModeChangedEventPtr message);
-
-		void SetSelection(SceneObjectPtr  object);
+		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 		void BuildMesh();
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
@@ -56,6 +56,8 @@ namespace GASS
 		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
 		Float SnapValue(Float value, Float snap);
 
+		SceneObjectPtr GetFirstSelected();
+
 		Quaternion m_BaseRot;
 		GraphicsMeshPtr m_MeshData;
 		ColorRGBA m_Color;
@@ -66,14 +68,13 @@ namespace GASS
 		Float m_LastDist;
 		bool m_Highlight;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selection;
 		GizmoEditMode m_Mode;
 		Float m_GridDist;
 		bool m_Active;
 		EditorSceneManagerPtr m_EditorSceneManager;
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
-
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;

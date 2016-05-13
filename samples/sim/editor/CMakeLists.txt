@@ -14,7 +14,7 @@ add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 
 #Add project link libs
-target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_SIM_LIBRARIES})
+target_link_libraries(${LIB_NAME} GASSCore GASSSim GASSEditorModule  ${GASS_SIM_LIBRARIES})
 
 set(GASS_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME}.xml)
 

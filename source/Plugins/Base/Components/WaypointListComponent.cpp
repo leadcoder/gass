@@ -367,7 +367,7 @@ namespace GASS
 
 			Vec3 last_point(0,0,0);
 
-			for(size_t  i = 0; i < spline.GetPoints().size(); i++)
+			for(unsigned int  i = 0; i < static_cast<unsigned int>(spline.GetPoints().size()); i++)
 			{
 				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{

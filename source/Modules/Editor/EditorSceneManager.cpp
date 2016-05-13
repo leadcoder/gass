@@ -252,6 +252,8 @@ namespace GASS
 
 	bool EditorSceneManager::IsObjectStatic(SceneObjectWeakPtr obj)
 	{
+		return false;
+
 		if (m_StaticObjects.end() != m_StaticObjects.find(obj))
 		{
 			return true;

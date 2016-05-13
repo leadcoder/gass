@@ -331,7 +331,6 @@ namespace GASS
 	}
 
 
-
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
 		ScenePtr scene = m_EditorSceneManager->GetScene();;
@@ -345,11 +344,6 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-
-
-
-			//float box_volume = 1;
-
 
 			Vec3 pos = Vec3(0,0,-1);
 			sub_mesh_data->PositionVector.push_back(pos);
@@ -417,13 +411,13 @@ namespace GASS
 
 	bool MouseToolController::MouseMoved(const MouseData &data)
 	{
-		SceneCursorInfo info = GetSceneCursorInfo(Vec2(data.XAbsNorm,data.YAbsNorm),m_RayPickDistance);
+		SceneCursorInfo info = GetSceneCursorInfo(Vec2(data.XAbsNorm,data.YAbsNorm), m_RayPickDistance);
 		//inform tools
 		if(m_ActiveTool)
 			m_ActiveTool->MouseMoved(data,info);
 
 		int mess_id = GASS_PTR_TO_INT(this);
-		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, info.m_ObjectUnderCursor.lock(),mess_id));
+		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm, data.YAbsNorm), info.m_3DPos, info.m_ObjectUnderCursor.lock(), mess_id));
 		if(m_EditorSceneManager->GetScene())
 			m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 
