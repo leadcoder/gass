@@ -75,6 +75,7 @@ namespace GASS
 		EditorSceneManagerPtr m_EditorSceneManager;
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
+		GASS::Vec3 m_PreviousPos;
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;

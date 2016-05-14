@@ -145,7 +145,7 @@ namespace GASS
 		m_GroundSnapMove = false;
 
 		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
-
+		
 		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
 		{
 			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
@@ -156,13 +156,11 @@ namespace GASS
 					gc->SetActive(true);
 
 				//create copy if shift is pressed
-
-
-				
 				if(m_Controller->IsShiftDown())
 				{
-					//unselect all
 					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+
+					//unselect all
 					for(size_t i = 0; i < m_Selected.size(); i++)
 					{
 						SceneObjectPtr selected = m_Selected[i].lock();
@@ -260,7 +258,8 @@ namespace GASS
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
-						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+						if (!m_Controller->IsCtrlDown())
+							m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
 						m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
 					}
 				}
@@ -360,42 +359,29 @@ namespace GASS
 
 	void MoveTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
+		m_Selected.clear();
+		for (size_t i = 0; i< message->m_Selection.size(); i++)
+		{
+			SceneObjectPtr obj = message->m_Selection[i].lock();
+			if (obj && CheckIfEditable(obj) && obj->GetFirstComponentByClass<ILocationComponent>())
+			{
+				m_Selected.push_back(message->m_Selection[i]);
+			}
+		}
+
 		if(m_Active)
 		{
 			//hide gizmo
-			/*if(message->GetSceneObject())
+			if(m_Selected.size() > 0)
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(lc) //only support gizmo for objects with location component
-				{
 					if(m_Controller->GetEnableGizmo())
 						SetGizmoVisiblity(true);
 					else
 						SetGizmoVisiblity(false);
-				}
-				else
-				{
-					SetGizmoVisiblity(false);
-				}
 			}
 			else
 			{
 				SetGizmoVisiblity(false);
-			}*/
-
-			if(m_Controller->GetEnableGizmo())
-				SetGizmoVisiblity(true);
-			else
-				SetGizmoVisiblity(false);
-		}
-
-		m_Selected.clear();
-		for(size_t i = 0 ; i< message->m_Selection.size(); i++)
-		{
-			SceneObjectPtr obj = message->m_Selection[i].lock();
-			if(obj && CheckIfEditable(obj) && obj->GetFirstComponentByClass<ILocationComponent>())
-			{
-				m_Selected.push_back(message->m_Selection[i]);
 			}
 		}
 	}

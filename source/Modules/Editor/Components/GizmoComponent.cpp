@@ -194,6 +194,7 @@ namespace GASS
 		if(m_Type == GT_FIXED_GRID)
 			return;
 
+		//m_StartPos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		//Unregister form previous
 		if(m_Selection.size() > 0)
 		{
@@ -277,27 +278,24 @@ namespace GASS
 	{
 		if(GIZMO_SENDER != message->GetSenderID())
 		{
+			GASS::Vec3 current_pos = message->GetPosition();
+			GASS::Vec3 offset = current_pos - m_PreviousPos;
 			for(size_t i = 0; i < m_Selection.size() ; i++)
 			{
 				SceneObjectPtr selected = m_Selection[i].lock();
 				if(selected)
 				{
 					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-					//LocationComponentPtr gizmo_lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-
-					if(selected_lc && ((message->GetPosition() - selected_lc->GetWorldPosition()).Length()) > MOVMENT_EPSILON)
+					
+					//if(selected_lc && ((message->GetPosition() - selected_lc->GetWorldPosition()).Length()) > MOVMENT_EPSILON)
 					{
-						dasdslkdj
-						if(i == 0)
-							selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(message->GetPosition(),GIZMO_SENDER)));
-						else
-						{
-							selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(message->GetPosition() - selected_lc->GetWorldPosition(),GIZMO_SENDER)));
-						}
+						selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(offset + selected_lc->GetWorldPosition(), GIZMO_SENDER)));
 					}
 				}
 			}
+			
 		}
+		m_PreviousPos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 	}
 
 	void GizmoComponent::OnCameraMoved(TransformationChangedEventPtr message)

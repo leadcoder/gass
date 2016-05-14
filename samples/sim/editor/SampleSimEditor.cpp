@@ -109,6 +109,18 @@ int start(int argc, char* argv[])
 	bool done = false;
 	while(!done)
 	{
+		if (GetAsyncKeyState(VK_F1))
+		{
+			esm->GetMouseToolController()->SelectTool("SelectTool");
+		}
+		else if (GetAsyncKeyState(VK_F2))
+		{
+			esm->GetMouseToolController()->SelectTool("RotateTool");
+		}
+		else if (GetAsyncKeyState(VK_F3))
+		{
+			esm->GetMouseToolController()->SelectTool("MoveTool");
+		}
 		engine->Update();
 	}
 	return 0;

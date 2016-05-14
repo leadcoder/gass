@@ -77,6 +77,7 @@ namespace GASS
 	
 	
 		bool IsShiftDown() const {return m_ShiftDown;}
+		bool IsCtrlDown() const { return m_CtrlDown; }
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
