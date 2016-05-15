@@ -57,6 +57,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldRotation, WorldRotationRequest, 0));
+
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent, 1000));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectionChanged,EditorSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeChangedEvent,0));
@@ -296,6 +298,28 @@ namespace GASS
 			
 		}
 		m_PreviousPos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+	}
+
+	void GizmoComponent::OnWorldRotation(WorldRotationRequestPtr message)
+	{
+		if (GIZMO_SENDER != message->GetSenderID())
+		{
+			GASS::Mat4 current_pos = message->GetRotation().GetRotationMatrix();
+			GASS::Mat4 offset = current_pos * m_PreviousRot.GetRotationMatrix().Invert();
+			for (size_t i = 0; i < m_Selection.size(); i++)
+			{
+				SceneObjectPtr selected = m_Selection[i].lock();
+				if (selected)
+				{
+					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
+					Mat4 new_rot = selected_lc->GetWorldRotation().GetRotationMatrix() * offset;
+					Quaternion new_q;
+					new_q.FromRotationMatrix(new_rot);
+					selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_q, GIZMO_SENDER)));
+				}
+			}
+		}
+		m_PreviousRot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
 	}
 
 	void GizmoComponent::OnCameraMoved(TransformationChangedEventPtr message)
@@ -654,7 +678,7 @@ namespace GASS
 
 	Quaternion GizmoComponent::GetRotation(Float delta)
 	{
-		/*SceneObjectPtr selected = m_SelectedObject.lock();
+		SceneObjectPtr selected = GetFirstSelected();
 		if(selected)
 		{
 			LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
@@ -686,7 +710,7 @@ namespace GASS
 				final_rot.FromAngleAxis(angle,r_vec);
 				return final_rot*selected_rot;
 			}
-		}*/
+		}
 		return Quaternion::IDENTITY;
 	}
 

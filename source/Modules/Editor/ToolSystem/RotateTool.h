@@ -32,11 +32,11 @@ namespace GASS
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetMasterGizmo();
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
-		SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selected;
 		MouseToolController* m_Controller;
 		SceneObjectWeakPtr m_MasterGizmoObject;
 		SceneObjectWeakPtr m_CurrentGizmo;

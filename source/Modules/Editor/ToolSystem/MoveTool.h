@@ -35,7 +35,6 @@ namespace GASS
 		bool CheckIfEditable(SceneObjectPtr obj);
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
-		//void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 		bool m_MouseIsDown;
@@ -43,10 +42,8 @@ namespace GASS
 		Vec3 m_Offset;
 		MouseToolController* m_Controller;
 		int m_MoveUpdateCount;
-
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
-
 		bool m_UseGizmo;
 		Vec2 m_MouseDownPos;
 		bool m_GroundSnapMove;

@@ -43,6 +43,8 @@ namespace GASS
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationChangedEventPtr message);
 		void OnWorldPosition(WorldPositionRequestPtr message);
+		void OnWorldRotation(WorldRotationRequestPtr message);
+
 		void OnEditMode(EditModeChangedEventPtr message);
 		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 		void BuildMesh();
@@ -76,6 +78,7 @@ namespace GASS
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
 		GASS::Vec3 m_PreviousPos;
+		Quaternion m_PreviousRot;
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;
