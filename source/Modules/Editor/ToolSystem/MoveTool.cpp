@@ -22,8 +22,7 @@ namespace GASS
 		m_Controller(controller),
 		m_MoveUpdateCount(0),
 		m_UseGizmo(true),
-		m_Active(false),
-		m_SnapToMouse(true)
+		m_Active(false)
 	{
 		m_Controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(MoveTool::OnSelectionChanged,EditorSelectionChangedEvent,0));
 	}
@@ -36,7 +35,6 @@ namespace GASS
 	void MoveTool::MouseMoved(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		int from_id = GASS_PTR_TO_INT(this);
-		//if(m_MouseIsDown && selected && CheckIfEditable(selected))
 		if(m_MouseIsDown &&  m_Selected.size() > 0)
 		{
 			SceneObjectPtr gizmo = m_CurrentGizmo.lock();
@@ -45,80 +43,33 @@ namespace GASS
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
 				Vec3 new_position = gc->GetPosition(info.m_Ray);
-
-				if(m_MoveUpdateCount == 0) //first update with mouse button down
+				if (m_MoveUpdateCount > 0)
 				{
-					//calculate offset
-					if(gizmo_lc)
-					{
-						m_Offset = gizmo_lc->GetWorldPosition();
-						if(gc->GetMode() == GM_WORLD)
-						{
-							m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
-							m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
-							m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
-						}
-						m_Offset = new_position - m_Offset;
-					}
+					Vec3 delta_move = new_position - m_PreviousPos;
+					gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(gizmo_lc->GetWorldPosition() + delta_move, from_id)));
 				}
-				new_position = new_position - m_Offset;
-				gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_position,from_id)));
+				m_PreviousPos = new_position;
 			}
-			/*else if(m_GroundSnapMove)
+			else if(m_GroundSnapMove)
 			{
+				
 				//wait 3 frames to be sure that collision is disabled, we want to snap to object bellow and not just terrain height
 				if(m_MoveUpdateCount > 3)
 				{
-					if(m_MoveUpdateCount == 4)
-					{
-						//calculate offset
-						SceneObjectPtr selected = m_Selected[0].lock();
-						//only support move for first selected object for now...fix this later
-						if(selected)
+						Vec3 delta_move = info.m_3DPos - m_PreviousPos;
+						for (size_t i = 0; i < m_Selected.size(); i++)
 						{
-							LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
-							if(comp)
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
 							{
-								m_Offset = comp->GetWorldPosition();
-								m_Offset = info.m_3DPos - m_Offset;
-
-								SceneObjectPtr gizmo = m_CurrentGizmo.lock();
-								if(gizmo)
-								{
-									GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-									if(gc->GetMode() == GM_WORLD)
-									{
-										m_Offset.x = m_Controller->SnapPosition(m_Offset.x);
-										m_Offset.y = m_Controller->SnapPosition(m_Offset.y);
-										m_Offset.z = m_Controller->SnapPosition(m_Offset.z);
-									}
-								}
+								Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+								selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
 							}
 						}
-					}
-					else
-					{
-						//move selected objects
-						if(m_SnapToMouse)
-							m_Offset.Set(0,0,0);
-
-						Vec3 new_position = info.m_3DPos - m_Offset;
-
-						//disable snapping?
-						new_position.x = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.x);
-						new_position.y = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.y);
-						new_position.z = m_Controller->GetEditorSceneManager()->GetMouseToolController()->SnapPosition(new_position.z);
-
-						//calculate offset
-						SceneObjectPtr selected = m_Selected[0].lock();
-						//only support move for first selected object for now...fix this later
-						if(selected)
-						{
-							selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_position,from_id)));
-						}
-					}
 				}
-			}*/
+				m_PreviousPos = info.m_3DPos;
+			}
+			
 
 			/*const double time = SimEngine::Get().GetRunTimeController()->GetTime();
 			static double last_time = 0;
@@ -158,9 +109,8 @@ namespace GASS
 				//create copy if shift is pressed
 				if(m_Controller->IsShiftDown())
 				{
-					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
-
 					//unselect all
+					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
 					for(size_t i = 0; i < m_Selected.size(); i++)
 					{
 						SceneObjectPtr selected = m_Selected[i].lock();
@@ -173,30 +123,51 @@ namespace GASS
 					}
 				}
 			}
-			/*else if(m_Selected.size() > 0)
+			else
 			{
-				SceneObjectPtr selected = m_Selected[0].lock();
-				if(obj_under_cursor == selected)
+				bool selected_clicked = false;
+				for (size_t i = 0; i < m_Selected.size(); i++)
 				{
-					m_GroundSnapMove = true;
+					SceneObjectPtr selected = m_Selected[i].lock();
+					if (obj_under_cursor == selected)
+						selected_clicked = true;
+				}
+				if (selected_clicked)
+				{
 					int from_id = GASS_PTR_TO_INT(this);
-					//create copy if shift is pressed
-					if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
+					m_GroundSnapMove = true;
+					//unselect all
+					if (m_Controller->IsShiftDown())
 					{
-						SceneObjectPtr new_obj = selected->CreateCopy();
-						selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
-						m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
-						selected = new_obj;
+						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected && selected->GetParentSceneObject())
+							{
+								SceneObjectPtr new_obj = selected->CreateCopy();
+								selected->GetParentSceneObject()->AddChildSceneObject(new_obj, true);
+								m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+								SendMessageRec(new_obj, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							}
+						}
 					}
-					CollisionSettingsRequestPtr col_request(new CollisionSettingsRequest(false,from_id));
-					SendMessageRec(selected, col_request);
+					else
+					{
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
+							{
+								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							}
+						}
+					}
 					SceneObjectPtr gizmo = GetOrCreateGizmo();
 					if(gizmo)
-						SendMessageRec(gizmo,col_request);
+						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 				}
-				
-			}*/
-			
+			}
 		}
 		m_MoveUpdateCount = 0;
 	}
@@ -245,7 +216,6 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo && m_Controller->GetEnableGizmo())
 			SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
-
 
 		if(selection_mode) //selection mode
 		{
@@ -327,35 +297,6 @@ namespace GASS
 			SendMessageRec(gizmo,vis_msg);
 		}
 	}
-
-	/*void MoveTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
-	{
-		//Move gizmo to new object
-		if(m_Active)
-		{
-			//hide gizmo
-			if(message->GetSceneObject())
-			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(lc) //only support gizmo for objects with location component
-				{
-					if(m_Controller->GetEnableGizmo())
-						SetGizmoVisiblity(true);
-					else
-						SetGizmoVisiblity(false);
-				}
-				else
-				{
-					SetGizmoVisiblity(false);
-				}
-			}
-			else
-			{
-				SetGizmoVisiblity(false);
-			}
-		}
-		m_SelectedObject = message->GetSceneObject();
-	}*/
 
 	void MoveTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
