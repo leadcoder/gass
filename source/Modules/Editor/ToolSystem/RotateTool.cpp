@@ -47,8 +47,7 @@ namespace GASS
 				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
 				int from_id = GASS_PTR_TO_INT(this);
-
-				gizmo->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
+				gizmo->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot, from_id)));
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
 

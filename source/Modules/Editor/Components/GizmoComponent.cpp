@@ -132,7 +132,7 @@ namespace GASS
 		}
 		else if(m_Mode == GM_WORLD)
 		{
-			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(m_BaseRot,GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(m_BaseRot, GIZMO_SENDER)));
 		}
 	}
 
@@ -238,7 +238,6 @@ namespace GASS
 				}
 			}
 		}
-		
 	}
 
 	void GizmoComponent::OnSelectedTransformation(TransformationChangedEventPtr message)
@@ -255,7 +254,7 @@ namespace GASS
 
 		if(m_Mode == GM_LOCAL)
 		{
-			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(message->GetRotation()*m_BaseRot,GIZMO_SENDER)));
+			GetSceneObject()->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(message->GetRotation() * m_BaseRot, GIZMO_SENDER)));
 		}
 	}
 
@@ -302,20 +301,29 @@ namespace GASS
 
 	void GizmoComponent::OnWorldRotation(WorldRotationRequestPtr message)
 	{
+		
 		if (GIZMO_SENDER != message->GetSenderID())
 		{
-			GASS::Mat4 current_pos = message->GetRotation().GetRotationMatrix();
-			GASS::Mat4 offset = current_pos * m_PreviousRot.GetRotationMatrix().Invert();
+			//GASS::Mat4 rot_mat = message->GetRotation().GetRotationMatrix();
+			//Quaternion offset = (message->GetRotation()*base_inverse) * m_PreviousRot.Inverse();
 			for (size_t i = 0; i < m_Selection.size(); i++)
 			{
 				SceneObjectPtr selected = m_Selection[i].lock();
 				if (selected)
 				{
 					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-					Mat4 new_rot = selected_lc->GetWorldRotation().GetRotationMatrix() * offset;
-					Quaternion new_q;
-					new_q.FromRotationMatrix(new_rot);
-					selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_q, GIZMO_SENDER)));
+					//selected_lc->GetWorldRotation()*offset;
+					//Mat4 new_rot = selected_lc->GetWorldRotation().GetRotationMatrix() * offset;
+					//Quaternion new_q;
+					//new_q.FromRotationMatrix(new_rot);
+					//selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_q, GIZMO_SENDER)));
+					//Quaternion base_inverse = m_BaseRot.Inverse();
+					//offset = offset * base_inverse;
+
+					//remove base rotation from gizmo rot
+					Quaternion base_inverse = m_BaseRot.Inverse();
+					Quaternion selected_rot = message->GetRotation() * base_inverse;
+					selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(selected_rot, GIZMO_SENDER)));
 				}
 			}
 		}
@@ -684,12 +692,11 @@ namespace GASS
 			LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
 			if(location)
 			{
-				Quaternion selected_rot = location->GetWorldRotation();
+				//Quaternion selected_rot = location->GetWorldRotation();
 				Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
 				Mat4 rot_mat;
 				rot_mat.Identity();
 				rot.ToRotationMatrix(rot_mat);
-
 				Vec3 r_vec = rot_mat.GetXAxis();
 				r_vec.Normalize();
 
@@ -706,14 +713,12 @@ namespace GASS
 				{
 					rest_angle= 0;
 				}
-
-				final_rot.FromAngleAxis(angle,r_vec);
-				return final_rot*selected_rot;
+				final_rot.FromAngleAxis(angle, r_vec);
+				return final_rot*rot;
 			}
 		}
 		return Quaternion::IDENTITY;
 	}
-
 
 	Vec3 GizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p)
 	{

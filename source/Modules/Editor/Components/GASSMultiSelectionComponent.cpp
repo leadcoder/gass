@@ -65,6 +65,8 @@ namespace GASS
 		{
 			m_BBox = AABox();
 			SceneObjectPtr so = m_Selection[i].lock();
+			if(!so)
+				continue;
 			LocationComponentPtr lc = so->GetFirstComponentByClass<ILocationComponent>();
 			EditorComponentPtr ec = so->GetFirstComponentByClass<EditorComponent>();
 			GeometryComponentPtr gc = so->GetFirstComponentByClass<IGeometryComponent>();
@@ -152,6 +154,8 @@ namespace GASS
 		for(size_t i = 0; i < message->m_Selection.size(); i++)
 		{
 			SceneObjectPtr obj = message->m_Selection[i].lock();
+			if(!obj)
+				continue;
 			//move gizmo to position
 			LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 			EditorComponentPtr ec = obj->GetFirstComponentByClass<EditorComponent>();
