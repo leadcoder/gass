@@ -41,7 +41,6 @@ namespace GASS
 			//m_ObjectName = message->GetCreateObjectName();
 			//m_ParentObject = message->GetCreateParentObject();
 		}
-
 	}
 
 	void CreateTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
@@ -53,7 +52,6 @@ namespace GASS
 		if(obj_under_cursor && parent_obj)
 		{
 			SceneObjectPtr scene_object = SimEngine::Get().CreateObjectFromTemplate(m_ObjectName);
-			//GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				parent_obj->AddChildSceneObject(scene_object,true);
@@ -72,5 +70,4 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 	}
-
 }

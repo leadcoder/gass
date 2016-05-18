@@ -34,7 +34,7 @@ namespace GASS
 		m_ActiveLayer(TL_1),
 		m_Active(false)
 	{
-		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnSelectionChanged,EditorSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(TerrainDeformTool::OnInput,ControllSettingsMessage,0));
 	}
 
@@ -47,7 +47,9 @@ namespace GASS
 	{
 		if(m_MouseIsDown)
 		{
-			float intensity = m_Intensity*m_InvertBrush* static_cast<float>(delta);
+			float intensity = m_Intensity * m_InvertBrush* static_cast<float>(delta);
+
+			//get the one and only terrain
 			HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
@@ -70,11 +72,15 @@ namespace GASS
 					break;
 				}
 			}
+
 			if(m_TEM == TEM_VEGETATION_PAINT)
 			{
-				SceneObjectPtr selected = m_SelectedObject.lock();
-				if(selected)
-					selected->PostRequest(GrassPaintMessagePtr(new GrassPaintMessage(m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+				for(size_t i = 0; i< m_Selection.size(); i++)
+				{
+					SceneObjectPtr selected = m_Selection[i].lock();
+					if(selected)
+						selected->PostRequest(GrassPaintMessagePtr(new GrassPaintMessage(m_CursorPos, m_BrushSize, m_BrushInnerSize, intensity, m_Noise)));
+				}
 			}
 		}
 	}
@@ -119,7 +125,7 @@ namespace GASS
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			gizmo = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
+			gizmo = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name, m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = gizmo;
 			PaintGizmoComponentPtr comp = gizmo->GetFirstComponentByClass<PaintGizmoComponent>();
 			if(!comp)
@@ -141,9 +147,9 @@ namespace GASS
 		}
 	}
 
-	void TerrainDeformTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
+	void TerrainDeformTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
-		m_SelectedObject = message->GetSceneObject();
+		m_Selection = message->m_Selection;
 	}
 
 	void TerrainDeformTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
@@ -160,7 +166,6 @@ namespace GASS
 	void TerrainDeformTool::SetBrushSize(float value)
 	{
 		m_BrushSize = value;
-
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
@@ -186,7 +191,6 @@ namespace GASS
 	{
 		m_Intensity = value;
 	}
-
 
 	void TerrainDeformTool::SetNoise(float value)
 	{

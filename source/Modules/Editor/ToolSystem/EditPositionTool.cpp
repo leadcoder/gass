@@ -22,7 +22,7 @@ namespace GASS
 		m_Controller(controller)
 	{
 
-		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(EditPositionTool::OnSelectionChanged, EditorSelectionChangedEvent, 0));
 	}
 
 	EditPositionTool::~EditPositionTool()
@@ -37,28 +37,27 @@ namespace GASS
 	void EditPositionTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr selected = m_SelectedObject.lock();
-		SceneObjectPtr object_under_c = info.m_ObjectUnderCursor.lock();
-
-		if(selected && object_under_c)
+		SceneObjectPtr object_under_cursor = info.m_ObjectUnderCursor.lock();
+		int from_id = GASS_PTR_TO_INT(this);
+		if(object_under_cursor)
 		{
-			//Send message
-			int from_id = GASS_PTR_TO_INT(this);
-
-			selected->PostRequest(EditPositionMessagePtr(new EditPositionMessage(info.m_3DPos,from_id)));
+			for (size_t i = 0; i< m_Selection.size(); i++)
+			{
+				SceneObjectPtr obj = m_Selection[i].lock();
+				if(obj)
+					obj->PostRequest(EditPositionMessagePtr(new EditPositionMessage(info.m_3DPos, from_id)));
+			}
 		}
 	}
-
 
 	void EditPositionTool::MouseUp(const MouseData &/*data*/, const SceneCursorInfo &/*info*/)
 	{
 		m_MouseIsDown = false;
 	}
 
-	void EditPositionTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
+	void EditPositionTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
-		m_SelectedObject = message->GetSceneObject();
+		m_Selection = message->m_Selection;
 	}
-
 }
 

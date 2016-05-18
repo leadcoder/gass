@@ -26,7 +26,7 @@ namespace GASS
 		virtual void Start() {};
 	private:
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
 
 	};

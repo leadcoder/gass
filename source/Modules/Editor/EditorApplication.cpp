@@ -12,10 +12,8 @@
 #include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
-
-
 #include "tinyxml2.h"
-//#include <boost/filesystem.hpp>
+
 
 namespace GASS
 {

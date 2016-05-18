@@ -91,7 +91,7 @@ namespace GASS
 				const Vec3 size = m_BBox.GetSize() * 0.5;
 				const Vec3 offset = (m_BBox.m_Max + m_BBox.m_Min)*0.5;
 				
-				Vec3 pos(0,0,0);
+				//Vec3 local_pos(0,0,0);
 
 				sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 				sub_mesh_data->Type = LINE_LIST;
@@ -109,22 +109,22 @@ namespace GASS
 
 				for(int i = 0; i < 4; i++)
 				{
-					pos = world_mat*conrners[i];
-					sub_mesh_data->PositionVector.push_back(pos);
+					world_pos = world_mat*conrners[i];
+					sub_mesh_data->PositionVector.push_back(world_pos);
 					sub_mesh_data->ColorVector.push_back(m_Color);
-					pos = world_mat*conrners[(i+1)%4];
-					sub_mesh_data->PositionVector.push_back(pos);
+					world_pos = world_mat*conrners[(i+1)%4];
+					sub_mesh_data->PositionVector.push_back(world_pos);
 					sub_mesh_data->ColorVector.push_back(m_Color);
 
-					pos = world_mat*conrners[i];
-					sub_mesh_data->PositionVector.push_back(pos);
+					world_pos = world_mat*conrners[i];
+					sub_mesh_data->PositionVector.push_back(world_pos);
 					sub_mesh_data->ColorVector.push_back(m_Color);
-					pos = world_mat*conrners[i+4];
-					sub_mesh_data->PositionVector.push_back(pos);
+					world_pos = world_mat*conrners[i+4];
+					sub_mesh_data->PositionVector.push_back(world_pos);
 					sub_mesh_data->ColorVector.push_back(m_Color);
 				}
 
-				for(int i = 0; i < 4; i++)
+				/*for(int i = 0; i < 4; i++)
 				{
 					pos = conrners[4 + i];
 					sub_mesh_data->PositionVector.push_back(pos);
@@ -132,7 +132,7 @@ namespace GASS
 					pos = conrners[4 + ((i+1)%4)];
 					sub_mesh_data->PositionVector.push_back(pos);
 					sub_mesh_data->ColorVector.push_back(m_Color);
-				}
+				}*/
 			}
 		}
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));

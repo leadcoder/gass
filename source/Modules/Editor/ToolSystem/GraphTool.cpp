@@ -84,7 +84,6 @@ namespace GASS
 				GraphEdgeComponentPtr edge =  _GetClosestEdge(parent_obj,info.m_3DPos , 1.0);
 				if(edge)
 				{
-
 					GraphNodeComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
 					GraphNodeComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetEndNode());
 
@@ -245,5 +244,4 @@ namespace GASS
 		}
 		return edge;
 	}
-
 }

@@ -26,9 +26,9 @@ namespace GASS
 		virtual void Stop() {};
 		virtual void Start() {};
 	private:
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selection;
 		MouseToolController* m_Controller;
 	};
 }

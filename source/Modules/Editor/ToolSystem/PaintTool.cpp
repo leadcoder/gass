@@ -22,8 +22,7 @@ namespace GASS
 	PaintTool::PaintTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),m_Active(false)
 	{
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(PaintTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(PaintTool::OnSelectionChanged,EditorSelectionChangedEvent,0));
 	}
 
 	PaintTool::~PaintTool()
@@ -35,18 +34,13 @@ namespace GASS
 	{
 		int from_id = GASS_PTR_TO_INT(this);
 		SceneObjectPtr selected = m_SelectedObject.lock();
-		if(m_MouseIsDown)// && selected)
+		if(m_MouseIsDown)
 		{
 			if(selected)
 			{
-				HeightmapTerrainComponentPtr terrain = selected->GetFirstComponentByClass<IHeightmapTerrainComponent>();
-				if(terrain)
-				{
-					selected->GetParentSceneObject()->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
-				}
+				selected->GetParentSceneObject()->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
 			}
-
-			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos,selected,from_id));
+			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos, selected, from_id));
 			m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(paint_msg);
 		}
 		SceneObjectPtr gizmo = GetMasterGizmo();
@@ -63,7 +57,6 @@ namespace GASS
 
 	void PaintTool::MouseUp(const MouseData &/*data*/, const SceneCursorInfo &/*info*/)
 	{
-
 		m_MouseIsDown = false;
 	}
 
@@ -114,31 +107,18 @@ namespace GASS
 		}
 	}
 
-	void PaintTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
+	void PaintTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
-		/*if(m_Active)
+		m_SelectedObject.reset();
+		for (size_t i = 0; i< message->m_Selection.size(); i++)
 		{
-			//hide gizmo
-			if(message->GetSceneObject())
+			SceneObjectPtr obj = message->m_Selection[i].lock();
+			if(obj && obj->GetFirstComponentByClass<IHeightmapTerrainComponent>())
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(lc) //only support gizmo for objects with location component
-				{
-					SetGizmoVisiblity(true);
-				}
-				else
-				{
-					SetGizmoVisiblity(false);
-				}
+				m_SelectedObject = obj;
 			}
-			else
-			{
-				SetGizmoVisiblity(false);
-			}
-		}*/
-		m_SelectedObject = message->GetSceneObject();
+		}
 	}
-
 
 	void PaintTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{

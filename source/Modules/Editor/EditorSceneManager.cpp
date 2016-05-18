@@ -172,7 +172,6 @@ namespace GASS
 			else
 				iter++;
 		}
-		
 	}
 
 	void EditorSceneManager::UnselectAllSceneObjects()
@@ -252,7 +251,7 @@ namespace GASS
 
 	bool EditorSceneManager::IsObjectStatic(SceneObjectWeakPtr obj)
 	{
-		return false;
+		//return false;
 
 		if (m_StaticObjects.end() != m_StaticObjects.find(obj))
 		{

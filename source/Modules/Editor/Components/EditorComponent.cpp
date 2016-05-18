@@ -58,9 +58,10 @@ namespace GASS
 
 	void EditorComponent::OnInitialize()
 	{
+		
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent,0));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(EditorComponent::OnSelectionChanged,EditorSelectionChangedEvent,0));
 		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 
 		SetLock(m_Lock); 
@@ -71,7 +72,7 @@ namespace GASS
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectLock,ObjectLockChangedEvent));
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnObjectVisible,ObjectVisibilityChangedEvent));
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
+		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(EditorComponent::OnSelectionChanged,EditorSelectionChangedEvent));
 	}
 
 	void EditorComponent::SetLock(bool value) 
@@ -143,20 +144,17 @@ namespace GASS
 		}
 	}
 
-	void EditorComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
+	void EditorComponent::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
 		if(!m_ChangeMaterialWhenSelected)
 			return;
-		SceneObjectPtr new_selection = message->GetSceneObject();
-		if(GetSceneObject() == new_selection)
+		if(message->IsSelected(GetSceneObject()))
 		{
 			m_Selected = true;
-			//if(m_Visible)
 			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(m_SelectedColor)));
 		}
 		else if(m_Selected)
 		{
-			//if(m_Visible)
 			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(ColorRGBA(1,1,1,1))));
 			m_Selected = false;
 		}

@@ -25,6 +25,17 @@ namespace GASS
 	public:
 		EditorSelectionChangedEvent(std::vector<SceneObjectWeakPtr> selection, SenderID sender_id = -1, double delay= 0) : 
 		  SceneEventMessage(sender_id , delay), m_Selection(selection){}
+		  bool IsSelected(SceneObjectPtr obj)
+		  {
+			  for(size_t i = 0 ; i< m_Selection.size() ;i++)
+			  {
+				  SceneObjectPtr sel = m_Selection[i].lock();
+				  if(sel && sel == obj)
+					  return true;
+			  }
+			  return false;
+		  }
+
 		  std::vector<SceneObjectWeakPtr> m_Selection;
 	};
 	typedef GASS_SHARED_PTR<EditorSelectionChangedEvent> EditorSelectionChangedEventPtr;

@@ -38,7 +38,7 @@ namespace GASS
 		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
 		void SetShowBBWhenSelected(bool value) {m_ShowBBWhenSelected = value;}

@@ -17,7 +17,6 @@
 
 namespace GASS
 {
-
 	MoveTool::MoveTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),
 		m_MoveUpdateCount(0),
@@ -30,6 +29,91 @@ namespace GASS
 	MoveTool::~MoveTool()
 	{
 
+	}
+
+	void MoveTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
+	{
+		m_MouseIsDown = true;
+		m_MouseDownPos.Set(data.XAbsNorm,data.YAbsNorm);
+		m_GroundSnapMove = false;
+
+		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
+
+		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
+		{
+			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
+			if(gc) //gizmo under cursor
+			{
+				m_CurrentGizmo = obj_under_cursor;
+				if(gc)
+					gc->SetActive(true);
+
+				//create copy if shift is pressed
+				if(m_Controller->IsShiftDown())
+				{
+					//unselect all, we don't want to move current selection
+					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+					for(size_t i = 0; i < m_Selected.size(); i++)
+					{
+						SceneObjectPtr selected = m_Selected[i].lock();
+						if(selected && selected->GetParentSceneObject())
+						{
+							SceneObjectPtr new_obj = selected->CreateCopy();
+							selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
+							m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+						}
+					}
+				}
+			}
+			else // editable object clicked and it's not gizmo based
+			{
+				//check if object under cursor is selected
+				bool selected_clicked = false; 
+				for (size_t i = 0; i < m_Selected.size(); i++)
+				{
+					SceneObjectPtr selected = m_Selected[i].lock();
+					if (obj_under_cursor == selected)
+						selected_clicked = true;
+				}
+				//..also check that ctrl not pressed...deselection mode
+				if (selected_clicked && !m_Controller->IsCtrlDown()) //selected clicked? if so we are in "GroundSnapMove-mode"
+				{
+					m_GroundSnapMove = true; //we want to drag object to cursor, or object "behind" cursor
+					int from_id = GASS_PTR_TO_INT(this);
+					if (m_Controller->IsShiftDown())
+					{
+						//create selection copy
+						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected && selected->GetParentSceneObject())
+							{
+								SceneObjectPtr new_obj = selected->CreateCopy();
+								selected->GetParentSceneObject()->AddChildSceneObject(new_obj, true);
+								m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+								SendMessageRec(new_obj, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							}
+						}
+					}
+					else //just disable collision for selection
+					{
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
+							{
+								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							}
+						}
+					}
+					SceneObjectPtr gizmo = GetOrCreateGizmo();
+					if(gizmo)
+						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+				}
+			}
+		}
+		m_MoveUpdateCount = 0;
 	}
 
 	void MoveTool::MouseMoved(const MouseData &/*data*/, const SceneCursorInfo &info)
@@ -52,134 +136,38 @@ namespace GASS
 			}
 			else if(m_GroundSnapMove)
 			{
-				
 				//wait 3 frames to be sure that collision is disabled, we want to snap to object bellow and not just terrain height
 				if(m_MoveUpdateCount > 3)
 				{
-						Vec3 delta_move = info.m_3DPos - m_PreviousPos;
-						for (size_t i = 0; i < m_Selected.size(); i++)
+					Vec3 delta_move = info.m_3DPos - m_PreviousPos;
+					for (size_t i = 0; i < m_Selected.size(); i++)
+					{
+						SceneObjectPtr selected = m_Selected[i].lock();
+						if (selected)
 						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected)
-							{
-								Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-								selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
-							}
+							Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+							selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
 						}
+					}
 				}
 				m_PreviousPos = info.m_3DPos;
 			}
-			
 
 			/*const double time = SimEngine::Get().GetRunTimeController()->GetTime();
 			static double last_time = 0;
 			const double send_freq = 20;
 			if(time - last_time > 1.0/send_freq)
 			{
-				last_time = time;
-				std::vector<std::string> attribs;
-				attribs.push_back("Position");
-				attribs.push_back("Latitude");
-				attribs.push_back("Longitude");
-				attribs.push_back("Projected");
-				GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-				m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
+			last_time = time;
+			std::vector<std::string> attribs;
+			attribs.push_back("Position");
+			attribs.push_back("Latitude");
+			attribs.push_back("Longitude");
+			attribs.push_back("Projected");
+			GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
+			m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
 			}*/
 			m_MoveUpdateCount++;
-		}
-	}
-
-	void MoveTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
-	{
-		m_MouseIsDown = true;
-		m_MouseDownPos.Set(data.XAbsNorm,data.YAbsNorm);
-		m_GroundSnapMove = false;
-
-		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
-		
-		if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
-		{
-			GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
-			if(gc)
-			{
-				m_CurrentGizmo = obj_under_cursor;
-				if(gc)
-					gc->SetActive(true);
-
-				//create copy if shift is pressed
-				if(m_Controller->IsShiftDown())
-				{
-					//unselect all
-					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
-					for(size_t i = 0; i < m_Selected.size(); i++)
-					{
-						SceneObjectPtr selected = m_Selected[i].lock();
-						if(selected && selected->GetParentSceneObject())
-						{
-							SceneObjectPtr new_obj = selected->CreateCopy();
-							selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
-							m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
-						}
-					}
-				}
-			}
-			else
-			{
-				bool selected_clicked = false;
-				for (size_t i = 0; i < m_Selected.size(); i++)
-				{
-					SceneObjectPtr selected = m_Selected[i].lock();
-					if (obj_under_cursor == selected)
-						selected_clicked = true;
-				}
-				if (selected_clicked)
-				{
-					int from_id = GASS_PTR_TO_INT(this);
-					m_GroundSnapMove = true;
-					//unselect all
-					if (m_Controller->IsShiftDown())
-					{
-						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
-						for (size_t i = 0; i < m_Selected.size(); i++)
-						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected && selected->GetParentSceneObject())
-							{
-								SceneObjectPtr new_obj = selected->CreateCopy();
-								selected->GetParentSceneObject()->AddChildSceneObject(new_obj, true);
-								m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
-								SendMessageRec(new_obj, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-							}
-						}
-					}
-					else
-					{
-						for (size_t i = 0; i < m_Selected.size(); i++)
-						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected)
-							{
-								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-							}
-						}
-					}
-					SceneObjectPtr gizmo = GetOrCreateGizmo();
-					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-				}
-			}
-		}
-		m_MoveUpdateCount = 0;
-	}
-
-	void MoveTool::SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg)
-	{
-		obj->PostRequest(msg);
-		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
-		while(iter.hasMoreElements())
-		{
-			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
-			SendMessageRec(child,msg);
 		}
 	}
 
@@ -187,12 +175,13 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		bool selection_mode = false;
-
+		//Check if mouse is static (or just moved  slightly), if so we are in selection mode
 		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + abs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
 		{
 			selection_mode = true;
 		}
-
+	
+		//why?
 		SceneObjectPtr g_obj = m_CurrentGizmo.lock();
 		if(g_obj)
 		{
@@ -202,8 +191,8 @@ namespace GASS
 				gc->SetActive(false);
 			}
 		}
-	
 		m_CurrentGizmo.reset();
+
 		for(size_t i = 0; i < m_Selected.size(); i++)
 		{
 			SceneObjectPtr selected = m_Selected[i].lock();
@@ -228,22 +217,33 @@ namespace GASS
 					//Send selection message
 					if(!gc) //don't select gizmo objects
 					{
-						if (!m_Controller->IsCtrlDown())
-							m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
-						m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
+						m_Controller->SelectHelper(obj_under_cursor);
 					}
 				}
 			}
 		}
-		
+
 		int from_id = GASS_PTR_TO_INT(this);
 		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
+	void MoveTool::SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg)
+	{
+		obj->PostRequest(msg);
+		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		while(iter.hasMoreElements())
+		{
+			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+			SendMessageRec(child,msg);
+		}
+	}
+
 	bool MoveTool::CheckIfEditable(SceneObjectPtr obj)
 	{
-		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && !m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
+		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && 
+				!m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && 
+				m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
 	}
 
 	void MoveTool::Stop()
@@ -265,12 +265,12 @@ namespace GASS
 			//Send selection message to inform gizmo about current object
 			/*if(gizmo)
 			{
-				SceneObjectPtr current = m_SelectedObject.lock();
-				if(current)
-				{
-					//gizmo->PostRequest();
-					//m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
-				}
+			SceneObjectPtr current = m_SelectedObject.lock();
+			if(current)
+			{
+			//gizmo->PostRequest();
+			//m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
+			}
 			}*/
 		}
 		return gizmo;
@@ -315,10 +315,10 @@ namespace GASS
 			//hide gizmo
 			if(m_Selected.size() > 0)
 			{
-					if(m_Controller->GetEnableGizmo())
-						SetGizmoVisiblity(true);
-					else
-						SetGizmoVisiblity(false);
+				if(m_Controller->GetEnableGizmo())
+					SetGizmoVisiblity(true);
+				else
+					SetGizmoVisiblity(false);
 			}
 			else
 			{

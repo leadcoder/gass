@@ -31,8 +31,6 @@ namespace GASS
 	typedef GASS_SHARED_PTR<ICameraComponent> CameraComponentPtr;
 	class EditorSystem; 
 
-	
-
 	class EditorModuleExport MouseToolController : public GASS_ENABLE_SHARED_FROM_THIS<MouseToolController>, public IMessageListener, public IMouseListener , public IKeyListener
 	{
 		friend class IMouseTool;
@@ -65,6 +63,7 @@ namespace GASS
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		float GetRayPickDistance() const {return m_RayPickDistance;}
 		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
+		void SelectHelper(SceneObjectPtr obj) const;
 
 		//IMouseListener
 		bool MouseMoved(const MouseData &data);
@@ -109,7 +108,6 @@ namespace GASS
 		bool m_ShiftDown;
 		bool m_CtrlDown;
 		GizmoEditMode m_EditMode;
-		//double m_Delta;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;
 		EditorSceneManager* m_EditorSceneManager;

@@ -31,7 +31,7 @@ namespace GASS
 	private:
 		SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;

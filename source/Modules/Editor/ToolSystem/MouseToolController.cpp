@@ -547,6 +547,21 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new EditModeChangedEvent(m_EditMode)));
 	}
 
+	void MouseToolController::SelectHelper(SceneObjectPtr obj) const
+	{
+		if (IsCtrlDown())
+		{
+			if(GetEditorSceneManager()->IsSelected(obj))
+				GetEditorSceneManager()->UnselectSceneObject(obj);
+			else
+				GetEditorSceneManager()->SelectSceneObject(obj);
+		}
+		else
+		{
+			GetEditorSceneManager()->UnselectAllSceneObjects();
+			GetEditorSceneManager()->SelectSceneObject(obj);
+		}
+	}
 
 	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{
