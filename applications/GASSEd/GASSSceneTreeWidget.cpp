@@ -191,7 +191,7 @@ void GASSSceneTreeWidget::showContextMenu(const QPoint& pos)
     // for QAbstractScrollArea and derived classes you would use:
     // QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); 
 	
-	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetSelectedObject();
+	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetFirstSelectedObject();
 
 	QList<QTreeWidgetItem*> items = selectedItems();
 	if(!internal_select && items.size() > 0)

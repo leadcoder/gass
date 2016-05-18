@@ -462,7 +462,7 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 			}
 		}
 
-		GASS::ComponentPtr terrain_comp = obj->GetFirstComponentByClass("OgreTerrainPageComponent");
+		GASS::ComponentPtr terrain_comp = obj->GetFirstComponentByClassName("OgreTerrainPageComponent");
 		if(terrain_comp)
 		{
 			m_AddWaypointsAct->setEnabled(true);

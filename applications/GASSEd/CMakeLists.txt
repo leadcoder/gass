@@ -22,8 +22,7 @@ set(GASS_COMPONENTS  GASSEditorModule
 								GASSPluginODE 
 								GASSPluginPagedGeometry
 								GASSPluginOpenAL
-								GASSPluginSensor
-								GASSPluginWeapon
+								GASSPluginVehicle
 								GASSPluginBase
 								GASSPluginEnvironment
 								GASSPluginRecastNavigation

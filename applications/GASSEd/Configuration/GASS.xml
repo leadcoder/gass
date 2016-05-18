@@ -5,12 +5,12 @@
 		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPluginOgre"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPluginPhysX3"/>
+		<!--<Plugin PluginFile = "GASSPluginPhysX3"/>-->
 		<Plugin PluginFile = "GASSPluginODE"/>
 		<Plugin PluginFile = "GASSPluginPagedGeometry"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
-		<Plugin PluginFile = "GASSPluginSensor"/>
-		<Plugin PluginFile = "GASSPluginWeapon"/>
+		<Plugin PluginFile = "GASSPluginVehicle"/>
+		
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPluginEnvironment"/>
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
