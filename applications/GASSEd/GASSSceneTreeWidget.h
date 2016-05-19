@@ -16,11 +16,15 @@ public:
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
 	void OnLoadSceneObject(GASS::PostComponentsInitializedEventPtr message);
 	void OnUnloadSceneObject(GASS::SceneObjectRemovedEventPtr message);
-	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
+	void OnSceneObjectSelectionChanged(GASS::EditorSelectionChangedEventPtr message);
+	
 	QTreeWidgetItem *GetTreeItem(GASS::SceneObjectPtr obj) const;
 	GASS::SceneObjectPtr GetSceneObject(QTreeWidgetItem*  item) const;
 	void OnParentChanged(GASS::SceneObjectChangedParentEventPtr message);
 protected:
+	void CheckTreeSelection(QTreeWidgetItem *item);
+	void CheckSceneSelection(QTreeWidgetItem *item);
+
 	GASS::SceneWeakPtr m_Scene;
 	QTreeWidgetItem *m_ObjectRootItem;
 	QTreeWidgetItem *m_SceneItem;

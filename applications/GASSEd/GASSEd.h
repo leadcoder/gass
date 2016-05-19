@@ -40,8 +40,9 @@ private:
 	QMenu *m_AddTemplateMenu;
     std::string m_Config;
 	GASS::SceneWeakPtr m_Scene;
-	GASS::SceneObjectWeakPtr m_SceneObjectCopyBuffer;
-	GASS::SceneObjectWeakPtr m_SceneObjectCutBuffer;
+	std::vector<GASS::SceneObjectWeakPtr> m_SelectionCopyBuffer;
+	std::vector<GASS::SceneObjectWeakPtr> m_SelectionCutBuffer;
+	std::vector<GASS::SceneObjectWeakPtr> m_Selection;
 	GASS::SceneObjectWeakPtr m_SelectedObject;
 	bool m_Initialized;
 public:
@@ -50,7 +51,7 @@ public:
 	void Initialize();
 	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
 	GASS::ScenePtr GetScene() const {return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
-	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
+	void OnSceneObjectSelection(GASS::EditorSelectionChangedEventPtr message);
 	void SetConfigFile(const std::string &name) {m_Config = name;}
 	bool IsInitialized()const {return m_Initialized;}
 public slots:
