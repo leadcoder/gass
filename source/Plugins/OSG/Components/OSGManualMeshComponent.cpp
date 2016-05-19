@@ -30,7 +30,8 @@ namespace GASS
 {
 	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN),
 		m_CastShadow(false),
-		m_ReceiveShadow(false)
+		m_ReceiveShadow(false),
+		m_Collision(true)
 	{
 
 	}
@@ -132,6 +133,8 @@ namespace GASS
 		if(m_GeoNode.valid())
 		{
 			OSGConvert::SetOSGNodeMask(value,m_GeoNode.get());
+			//if(value & GEOMETRY_FLAG_TRANSPARENT_OBJECT)
+			//	m_Collision = false;
 		}
 	}
 
@@ -142,13 +145,24 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
+		SetCollision(message->EnableCollision());
+	}
+
+	void OSGManualMeshComponent::SetCollision(bool value)
+	{
 		if(m_GeoNode && m_GeoNode->getNodeMask())
 		{
-			if(message->EnableCollision())
+			if(value)
 				OSGConvert::SetOSGNodeMask(GetGeometryFlags(),m_GeoNode.get());
 			else
 				OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_GeoNode.get());
 		}
+		m_Collision = value;
+	}
+
+	bool OSGManualMeshComponent::GetCollision() const
+	{
+		return m_Collision;
 	}
 
 	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)

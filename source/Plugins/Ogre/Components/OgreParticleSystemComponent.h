@@ -22,6 +22,7 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
@@ -42,10 +43,14 @@ namespace GASS
 		~OgreParticleSystemComponent (void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IGeometryComponent
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
 		std::string GetParticleTemplate()const {return m_ParticleTemplate;}
@@ -62,6 +67,7 @@ namespace GASS
 		float m_TimeToLive;
 		Ogre::ParticleSystem* m_ParticleSystem;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 	};
 	typedef GASS_SHARED_PTR<OgreParticleSystemComponent> OgreParticleSystemComponentPtr;
 }

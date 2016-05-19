@@ -118,6 +118,8 @@ namespace GASS
 		assert(ogsm);
 		m_OgreSceneManager = ogsm->GetOgreSceneManager();
 		ConfigureTerrainDefaults();
+
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreTerrainGroupComponent::OnDelete()
@@ -887,7 +889,19 @@ namespace GASS
 		m_NearColorWeight= value;
 		if(m_TerrainProfile)
 			m_TerrainProfile->SetNearColorWeight(GetNearColorWeight());
+	}
 
+	bool OgreTerrainGroupComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreTerrainGroupComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }
 

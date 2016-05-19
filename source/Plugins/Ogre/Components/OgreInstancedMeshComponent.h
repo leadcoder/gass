@@ -23,6 +23,7 @@
 #include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
@@ -56,12 +57,20 @@ namespace GASS
 		~OgreInstancedMeshComponent (void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IGeometryComponent
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+		
+		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
 		virtual GraphicsMesh GetMeshData() const;
+
+		//override from Component
 		virtual void LoadXML(tinyxml2::XMLElement *elem);
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
@@ -92,6 +101,7 @@ namespace GASS
 		Float m_RegionSize;
 		Vec3 m_GlobalScale;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 	};
 	typedef GASS_SHARED_PTR<OgreInstancedMeshComponent> OgreInstancedMeshComponentPtr;
 }

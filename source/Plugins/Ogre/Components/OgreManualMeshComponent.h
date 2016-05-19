@@ -21,6 +21,7 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
@@ -41,13 +42,19 @@ namespace GASS
 		~OgreManualMeshComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
-		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+		
 		//IMeshComponent
 		virtual GraphicsMesh GetMeshData() const;
+
+		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
 		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder);
 		void SetCastShadow(bool castShadow);
@@ -65,5 +72,6 @@ namespace GASS
 		Ogre::ManualObject* m_MeshObject;
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadows;
+		CollisionComponentPtr m_Collision;
 	};
 }

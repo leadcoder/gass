@@ -31,11 +31,8 @@ namespace GASS
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
-		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
-		void OnTransformation(TransformationChangedEventPtr message);
-		//void OnGeometryChanged(GeometryChangedEventPtr message);
-		//void OnSelectedTransformation(TransformationChangedEventPtr message);
-
+		//void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
+	
 		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;

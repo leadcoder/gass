@@ -21,7 +21,8 @@ namespace GASS
 		m_Controller(controller),
 		m_MoveUpdateCount(0),
 		m_UseGizmo(true),
-		m_Active(false)
+		m_Active(false),
+		m_MouseMoveTime(0)
 	{
 		m_Controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(MoveTool::OnSelectionChanged,EditorSelectionChangedEvent,0));
 	}
@@ -82,8 +83,22 @@ namespace GASS
 					int from_id = GASS_PTR_TO_INT(this);
 					if (m_Controller->IsShiftDown())
 					{
-						//create selection copy
+						//save selection to be able to restore collision data when mouse is released
+						m_SelectionCopy = m_Selected;
+
+						//disable collision, need if we want correct delta movement 
+						for (size_t i = 0; i < m_SelectionCopy.size(); i++)
+						{
+							SceneObjectPtr selected = m_SelectionCopy[i].lock();
+							if (selected)
+							{
+								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							}
+						}
+
+						//unselect all scene objects if copy is created
 						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+
 						for (size_t i = 0; i < m_Selected.size(); i++)
 						{
 							SceneObjectPtr selected = m_Selected[i].lock();
@@ -92,21 +107,10 @@ namespace GASS
 								SceneObjectPtr new_obj = selected->CreateCopy();
 								selected->GetParentSceneObject()->AddChildSceneObject(new_obj, true);
 								m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
-								SendMessageRec(new_obj, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 							}
 						}
 					}
-					else //just disable collision for selection
-					{
-						for (size_t i = 0; i < m_Selected.size(); i++)
-						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected)
-							{
-								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-							}
-						}
-					}
+					
 					SceneObjectPtr gizmo = GetOrCreateGizmo();
 					if(gizmo)
 						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
@@ -136,37 +140,124 @@ namespace GASS
 			}
 			else if(m_GroundSnapMove)
 			{
-				//wait 3 frames to be sure that collision is disabled, we want to snap to object bellow and not just terrain height
-				if(m_MoveUpdateCount > 3)
+#ifdef DELTA_MOVE
+				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
 				{
-					Vec3 delta_move = info.m_3DPos - m_PreviousPos;
 					for (size_t i = 0; i < m_Selected.size(); i++)
 					{
 						SceneObjectPtr selected = m_Selected[i].lock();
 						if (selected)
 						{
-							Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-							selected->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
+							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 						}
 					}
+
+					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
+					SceneObjectPtr gizmo = GetOrCreateGizmo();
+					if(gizmo)
+						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 				}
-				m_PreviousPos = info.m_3DPos;
+				else
+				{
+					if(m_MoveUpdateCount > 2) //we need to wait 2 frames to get correct delta move
+					{
+						Vec3 delta_move = info.m_3DPos - m_PreviousPos;
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
+							{
+								Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
+							}
+						}
+					}
+					m_PreviousPos = info.m_3DPos;
+				}
+#else
+				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
+				{
+					for (size_t i = 0; i < m_Selected.size(); i++)
+					{
+						SceneObjectPtr selected = m_Selected[i].lock();
+						if (selected)
+						{
+							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+						}
+						
+
+					}
+					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
+					SceneObjectPtr gizmo = GetOrCreateGizmo();
+					if(gizmo)
+						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+				}
+				else
+				{
+					if(m_MoveUpdateCount == 1)
+					{
+						//store positions
+						m_SelectedLocations.clear();
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
+							{
+								Vec3 pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+								m_SelectedLocations[m_Selected[i]] = pos - info.m_3DPos;
+							}
+						}
+					}
+					else if(m_MoveUpdateCount > 1) //we need to wait 2 frames to get correct delta move
+					{
+						bool first_pos = true;
+						Vec3 origo_pos;
+						Vec3 offset(0,0,0);
+						for (size_t i = 0; i < m_Selected.size(); i++)
+						{
+							SceneObjectPtr selected = m_Selected[i].lock();
+							if (selected)
+							{
+								/*if(first_pos)
+								{
+									first_pos = false; 
+									origo_pos =  m_SelectedLocations[m_Selected[i]];
+								}
+								else
+									offset = m_SelectedLocations[m_Selected[i]] - origo_pos;*/
+
+								offset = m_SelectedLocations[m_Selected[i]];
+								//Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+
+								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos + offset, from_id)));
+							}
+						}
+					}
+					m_PreviousPos = info.m_3DPos;
+				}
+#endif
 			}
 
-			/*const double time = SimEngine::Get().GetRunTimeController()->GetTime();
-			static double last_time = 0;
+			const double time = SimEngine::Get().GetRunTimeController()->GetTime();
 			const double send_freq = 20;
-			if(time - last_time > 1.0/send_freq)
+			if(time - m_MouseMoveTime > 1.0 / send_freq)
 			{
-			last_time = time;
-			std::vector<std::string> attribs;
-			attribs.push_back("Position");
-			attribs.push_back("Latitude");
-			attribs.push_back("Longitude");
-			attribs.push_back("Projected");
-			GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-			m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
-			}*/
+				m_MouseMoveTime = time;
+				std::vector<std::string> attribs;
+				attribs.push_back("Position");
+				attribs.push_back("Latitude");
+				attribs.push_back("Longitude");
+				attribs.push_back("Projected");
+				for (size_t i = 0; i < m_Selected.size(); i++)
+				{
+					SceneObjectPtr selected = m_Selected[i].lock();
+					if (selected)
+					{
+						GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id));
+						m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
+					}
+				}
+			}
 			m_MoveUpdateCount++;
 		}
 	}
@@ -202,6 +293,15 @@ namespace GASS
 			}
 		}
 
+		for(size_t i = 0; i < m_SelectionCopy.size(); i++)
+		{
+			SceneObjectPtr selected = m_SelectionCopy[i].lock();
+			if(selected && CheckIfEditable(selected))
+			{
+				SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+			}
+		}
+
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo && m_Controller->GetEnableGizmo())
 			SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
@@ -230,7 +330,7 @@ namespace GASS
 
 	void MoveTool::SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg)
 	{
-		obj->PostRequest(msg);
+		obj->SendImmediateRequest(msg);
 		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{

@@ -233,6 +233,23 @@ namespace GASS
 		}
 	}
 
+	void ODECollisionGeometryComponent::SetActive(bool value)
+	{
+		if(value)
+			Enable();
+		else
+			Disable();
+	}
+
+	bool ODECollisionGeometryComponent::GetActive() const
+	{
+		if(m_GeomID)
+		{
+			return dGeomIsEnabled(m_GeomID) > 0;
+		}
+		return false;
+	}
+
 	void ODECollisionGeometryComponent::Disable()
 	{
 		if(m_GeomID)
@@ -301,7 +318,6 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
 	{
-
 		dGeomID geom_id = 0;
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
@@ -528,6 +544,5 @@ namespace GASS
 		m.m_Data2[13] = 0;
 		m.m_Data2[14] = 0;
 		m.m_Data2[15] = 1;
-
 	}
 }

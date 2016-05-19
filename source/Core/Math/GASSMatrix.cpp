@@ -29,11 +29,6 @@ namespace GASS
 
 	const Float Mat4::EPSILON = 0.0001;
 
-	Mat4::Mat4()
-	{
-
-	}
-
 	Mat4::Mat4(
 		Float m00, Float m01, Float m02, Float m03,
 		Float m10, Float m11, Float m12, Float m13,
@@ -57,24 +52,6 @@ namespace GASS
 		m_Data[3][2] = m32;
 		m_Data[3][3] = m33;
 	}
-
-	/*Mat4 Mat4::operator* (const Mat4 &mat) const
-	{
-		Mat4 ret;
-		for (int iRow = 0; iRow < 4; iRow++)
-		{
-			for (int iCol = 0; iCol < 4; iCol++)
-			{
-				ret.m_Data[iRow][iCol] =
-					m_Data[iRow][0] * mat.m_Data[0][iCol] +
-					m_Data[iRow][1] * mat.m_Data[1][iCol] +
-					m_Data[iRow][2] * mat.m_Data[2][iCol] +
-					m_Data[iRow][3] * mat.m_Data[3][iCol];
-			}
-		}
-		return ret;
-	}*/
-
 
 	void Mat4::Zero()
 	{

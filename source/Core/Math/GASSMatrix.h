@@ -62,7 +62,24 @@ namespace GASS
 			Float m_Data2[16];
 		};
 
-		Mat4( );
+		Mat4( ) {}
+
+		/**
+			Setup transformation matrix by pos,rot and scale
+		*/
+		Mat4(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale)
+		{
+			SetTransformation(pos,rot,scale);
+		}
+
+		/**
+			Setup transformation matrix by pos,rot (Euler angles) and scale
+		*/
+
+		Mat4(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale)
+		{
+			SetTransformation(pos,rot,scale);
+		}
 
 		Mat4(
 			Float m00, Float m01, Float m02, Float m03,
@@ -116,9 +133,6 @@ namespace GASS
 			return Concatenate( m2 );
 		}
 
-
-
-		//Mat4 operator* (const Mat4 &mat) const;
 		Vec3 operator* ( const Vec3 &vec) const;
 		Vec4 operator* ( const Vec4 &vec) const;
 
@@ -142,16 +156,15 @@ namespace GASS
 		void Translate(Float x,Float y,Float z);
 		inline void RelTranslate(Float x,Float y,Float z){m_Data[0][3] += x;	m_Data[1][3] += y;m_Data[2][3] += z;};
 		inline void SetTranslation(Float x,Float y,Float z){m_Data[0][3] = x; m_Data[1][3] = y; m_Data[2][3] = z;};
-		//void InverseRotateVect( Vec3 &vec);
-		//void InverseTranslateVect( Vec3 &vec);
 		Vec3 GetTranslation() const;
 		void SetTransformation(const Vec3 &pos,const Vec3 &rot,const Vec3 &scale);
 		void SetTransformation(const Vec3 &pos,const Quaternion &rot,const Vec3 &scale);
 		Float Determinant() const;
-		//Float _Determinant(int row, int col);
+
+		//TODO: document diff and select one method
 		Mat4 Invert() const;
-		Mat4 Invert2();
-		//Mat4 Inverse(void) const;
+		Mat4 Invert2(); 
+
 		Mat4 GetRotation() const;
 		Vec3 GetRotationRadians() const;
 		Float GetEulerHeading() const;

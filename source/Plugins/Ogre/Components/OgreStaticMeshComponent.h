@@ -22,6 +22,7 @@
 
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
@@ -62,6 +63,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 
 		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
@@ -91,6 +94,7 @@ namespace GASS
 		ResourceHandle m_MeshResource;
 		Float m_RegionSize;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 	};
 	typedef GASS_SHARED_PTR<OgreStaticMeshComponent> OgreStaticMeshComponentPtr;
 }

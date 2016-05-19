@@ -24,6 +24,7 @@
 #include "Plugins/Ogre/OgreCommon.h"
 #include "Plugins/Ogre/OgreTerrainIncludes.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSBaseSceneComponent.h"
@@ -50,6 +51,9 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags);
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+
 		
 		//IXMLSerialize interface overload, we need a way to trigger terrain save!
 		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
@@ -144,6 +148,7 @@ namespace GASS
 		Ogre::TerrainMaterialGeneratorC::SM2Profile* m_TerrainProfile;
 		//Ogre::TerrainMaterialGeneratorA::SM2Profile* m_TerrainProfile;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 	};
 	typedef GASS_SHARED_PTR<OgreTerrainGroupComponent> OgreTerrainGroupComponentPtr;
 }

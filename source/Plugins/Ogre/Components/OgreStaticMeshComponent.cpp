@@ -109,6 +109,7 @@ namespace GASS
 		}
 		m_StaticGeometry->build();
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreStaticMeshComponent::OnDelete()
@@ -271,5 +272,18 @@ namespace GASS
 	void OgreStaticMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+	bool OgreStaticMeshComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreStaticMeshComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }

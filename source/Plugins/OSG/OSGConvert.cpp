@@ -75,7 +75,7 @@ namespace GASS
 		int all_mask = ToOSGNodeMask(GEOMETRY_FLAG_ALL);
 		//set geom bits to zero
 		node->setNodeMask(~all_mask & node->getNodeMask());
-		//set geom bitss
+		//set geom bits
 		node->setNodeMask(mask | node->getNodeMask());
 	}
 }

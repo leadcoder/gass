@@ -25,6 +25,7 @@
 #include "Plugins/Ogre/OgreTerrainIncludes.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSResourceHandle.h"
@@ -55,13 +56,15 @@ namespace GASS
 		virtual Float GetHeightAtSample(int x, int y) const;
 		virtual unsigned int GetNumSamplesH() const;
 		virtual unsigned int GetNumSamplesW() const;
-		//virtual float* GetHeightData() const;
-
+	
 		//IGeometryComponent
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+
 	protected:
 		void WaitWhileLoading();
 		void LoadFromFile();
@@ -158,6 +161,7 @@ namespace GASS
 		float m_TilingLayer3;
 		float m_TilingLayer4;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 		Vec3 m_Pos;
 	};
 	typedef GASS_SHARED_PTR<OgreTerrainPageComponent> OgreTerrainPageComponentPtr;

@@ -307,8 +307,7 @@ namespace GASS
 		location.y = (2*rand2-1) * m_Size.y*0.5;
 		location.z = (2*rand3-1) * m_Size.z*0.5;
 
-		Mat4 trans;
-		trans.SetTransformation(pos,rot,Vec3(1,1,1));
+		Mat4 trans(pos,rot,Vec3(1,1,1));
 		location = trans*location;
 
 		return location;

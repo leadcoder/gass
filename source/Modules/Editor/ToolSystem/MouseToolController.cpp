@@ -420,14 +420,6 @@ namespace GASS
 		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm, data.YAbsNorm), info.m_3DPos, info.m_ObjectUnderCursor.lock(), mess_id));
 		if(m_EditorSceneManager->GetScene())
 			m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
-
-
-		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
-		if(obj_under_cursor)
-		{
-			//SceneObjectPtr pointer = GetPointerObject();
-			//pointer->PostMessage(MessagePtr(new WorldPositionRequest(info.m_3DPos)));
-		}
 		return true;
 	}
 

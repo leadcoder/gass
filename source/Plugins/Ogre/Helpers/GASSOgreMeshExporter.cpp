@@ -103,13 +103,7 @@ namespace GASS
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if(lc) //ignore root transformation?
 				{
-
-					Vec3 world_pos = lc->GetWorldPosition() + offset;
-					Vec3 scale = lc->GetScale();
-					Quaternion world_rot = lc->GetWorldRotation();
-					Mat4 trans_mat;
-					trans_mat.Identity();
-					trans_mat.SetTransformation(world_pos,world_rot,scale);
+					Mat4 trans_mat(lc->GetWorldPosition() + offset, lc->GetWorldRotation(), lc->GetScale());
 					mesh_data.Transform(trans_mat);
 				}
 

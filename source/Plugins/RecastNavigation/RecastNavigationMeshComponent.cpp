@@ -268,8 +268,7 @@ namespace GASS
 
 				LocationComponentPtr loc_comp = comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				assert(loc_comp);
-				Mat4 trans;
-				trans.SetTransformation(loc_comp->GetWorldPosition(),loc_comp->GetWorldRotation(),Vec3(1,1,1));
+				Mat4 trans(loc_comp->GetWorldPosition(), loc_comp->GetWorldRotation(), Vec3(1,1,1));
 
 				std::vector<float> points;
 
@@ -1163,12 +1162,8 @@ namespace GASS
 						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 						if(lc)
 						{
-							Vec3 world_pos = lc->GetWorldPosition();
-							Vec3 scale = lc->GetScale();
-							Quaternion world_rot = lc->GetWorldRotation();
-							Mat4 trans_mat;
-							trans_mat.Identity();
-							trans_mat.SetTransformation(world_pos,world_rot,scale);
+							Mat4 trans_mat(lc->GetWorldPosition(),lc->GetWorldRotation(),lc->GetScale());
+
 							for(size_t j = 0 ; j < physics_mesh->PositionVector.size(); j++)
 							{
 								Vec3 pos = trans_mat*physics_mesh->PositionVector[j];

@@ -52,6 +52,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 
 		//IResourceComponent
 		ResourceHandle GetResource() const {return m_MeshResource;}
@@ -100,6 +102,7 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 		bool m_Lighting;
 		bool m_Expand;
+		bool m_Collision;
 	};
 
 	typedef GASS_SHARED_PTR<OSGMeshComponent> OSGMeshComponentPtr;

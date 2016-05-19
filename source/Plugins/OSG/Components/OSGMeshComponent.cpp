@@ -31,7 +31,6 @@
 
 namespace GASS
 {
-
 	std::vector<std::string> OSGMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
 	{
 		std::vector<std::string> content;
@@ -49,7 +48,8 @@ namespace GASS
 		m_Lighting(true),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_Expand(false),
-		m_FlipDDS(false)
+		m_FlipDDS(false),
+		m_Collision(true)
 	{
 
 	}
@@ -91,7 +91,6 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
 	}
 
-
 	void OSGMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
@@ -122,7 +121,6 @@ namespace GASS
 		}
 		return content;
 	}
-
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
 	{
@@ -614,14 +612,26 @@ namespace GASS
 
 	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
+		SetCollision(message->EnableCollision());
+	}
+
+	void OSGMeshComponent::SetCollision(bool value)
+	{
 		if(m_MeshNode.valid() && m_MeshNode->getNodeMask())
 		{
-			if(message->EnableCollision())
+			if(value)
 				OSGConvert::SetOSGNodeMask(m_GeomFlags,m_MeshNode.get());
 			else
 			{
 				OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_MeshNode.get());
 			}
 		}
+		m_Collision = value;
 	}
+
+	bool OSGMeshComponent::GetCollision() const
+	{
+		return m_Collision;
+	}
+
 }

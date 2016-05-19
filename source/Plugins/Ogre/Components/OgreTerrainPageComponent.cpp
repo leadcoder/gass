@@ -156,6 +156,8 @@ namespace GASS
 
 	void OgreTerrainPageComponent::OnInitialize()
 	{
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
+
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreTerrainPageComponent::OnTerrainLayerMessage,TerrainLayerRequest,0));
 		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
@@ -879,5 +881,18 @@ namespace GASS
 	void OgreTerrainPageComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+	bool OgreTerrainPageComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreTerrainPageComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }

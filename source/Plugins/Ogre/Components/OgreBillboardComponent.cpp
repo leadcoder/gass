@@ -81,6 +81,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	float OgreBillboardComponent::GetWidth() const
@@ -102,7 +103,6 @@ namespace GASS
 
 	void OgreBillboardComponent::SetHeight(float height)
 	{
-
 		m_Height = height;
 		if(m_Billboard)
 			m_Billboard->setDimensions(m_Width,m_Height);
@@ -209,6 +209,19 @@ namespace GASS
 	void OgreBillboardComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+	bool OgreBillboardComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreBillboardComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 
 	void OgreBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)

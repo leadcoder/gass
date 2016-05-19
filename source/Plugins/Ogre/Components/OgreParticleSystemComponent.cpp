@@ -64,6 +64,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreParticleSystemComponent::OnParameterMessage,ParticleSystemParameterRequest,0));
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreParticleSystemComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -137,5 +138,19 @@ namespace GASS
 	void OgreParticleSystemComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+
+	bool OgreParticleSystemComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreParticleSystemComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }

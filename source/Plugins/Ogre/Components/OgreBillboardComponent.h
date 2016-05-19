@@ -21,6 +21,7 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/OgreCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Core/Math/GASSVector.h"
@@ -48,6 +49,9 @@ namespace GASS
 		virtual Sphere GetBoundingSphere()const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
@@ -76,6 +80,7 @@ namespace GASS
 		float m_Width;
 		float m_Height;
 		GeometryFlags m_GeomFlags;
+		CollisionComponentPtr m_Collision;
 	};
 	typedef GASS_SHARED_PTR<OgreBillboardComponent> OgreBillboardComponentPtr;
 }

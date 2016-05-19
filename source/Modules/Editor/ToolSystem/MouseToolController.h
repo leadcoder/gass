@@ -77,12 +77,12 @@ namespace GASS
 	
 		bool IsShiftDown() const {return m_ShiftDown;}
 		bool IsCtrlDown() const { return m_CtrlDown; }
+
+		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-		
-		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
 
 		//helper

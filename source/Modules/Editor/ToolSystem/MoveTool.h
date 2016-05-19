@@ -39,14 +39,17 @@ namespace GASS
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 		bool m_MouseIsDown;
 		std::vector<SceneObjectWeakPtr> m_Selected;
+		std::vector<SceneObjectWeakPtr> m_SelectionCopy;
 		MouseToolController* m_Controller;
 		int m_MoveUpdateCount;
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
+		std::map<GASS::SceneObjectWeakPtr,Vec3> m_SelectedLocations;
 		bool m_UseGizmo;
 		Vec2 m_MouseDownPos;
 		bool m_GroundSnapMove;
 		bool  m_Active;
 		Vec3 m_PreviousPos;
+		double m_MouseMoveTime;
 	};
 }

@@ -112,6 +112,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnReplaceMaterial,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnResetMaterial,ResetMaterialRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
+
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
@@ -287,4 +289,18 @@ namespace GASS
 		Ogre::MeshManager::getSingleton().remove("ConvertedTempMesh");
 		return mesh_data;
 	}
+
+	bool OgreManualMeshComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreManualMeshComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
+	}
+
 }

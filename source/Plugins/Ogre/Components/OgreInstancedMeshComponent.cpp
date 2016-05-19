@@ -63,6 +63,7 @@ namespace GASS
 	void OgreInstancedMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreInstancedMeshComponent::OnLocationLoaded,LocationLoadedEvent,0));
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreInstancedMeshComponent::LoadXML(tinyxml2::XMLElement *elem)
@@ -217,7 +218,6 @@ namespace GASS
 	}
 	String OgreInstancedMeshComponent::buildInstancedMaterial(const String &originalMaterialName)
 	{
-
 		// already instanced ?
 		if (StringUtil::endsWith (originalMaterialName, "/instanced"))
 			return originalMaterialName;
@@ -272,9 +272,7 @@ namespace GASS
 		final_box.Union(box);
 		}*/
 		return final_box;
-
 	}
-
 
 	Sphere OgreInstancedMeshComponent::GetBoundingSphere() const
 	{
@@ -358,5 +356,18 @@ namespace GASS
 	void OgreInstancedMeshComponent::SetGeometryFlags(GeometryFlags flags)
 	{
 		m_GeomFlags = flags;
+	}
+
+	bool OgreInstancedMeshComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreInstancedMeshComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }

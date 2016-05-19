@@ -93,6 +93,8 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnResetMaterial,ResetMaterialRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreMeshComponent::OnBoneTransformationMessage,BoneTransformationRequest,0));
+
+		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
 	}
 
 	void OgreMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -107,7 +109,7 @@ namespace GASS
 	{
 		if(m_OgreEntity && m_UniqueMaterialCreated)
 		{
-			//relase material
+			//release material
 			for(unsigned int i = 0 ; i < m_OgreEntity->getNumSubEntities(); i++)
 			{
 				Ogre::SubEntity* se = m_OgreEntity->getSubEntity(i);
@@ -578,5 +580,18 @@ namespace GASS
 			}
 		}
 		return content;
+	}
+
+	bool OgreMeshComponent::GetCollision() const
+	{
+		if(m_Collision)
+			return m_Collision->GetActive();
+		return false;
+	}
+
+	void OgreMeshComponent::SetCollision(bool value)
+	{
+		if(m_Collision)
+			m_Collision->SetActive(value);
 	}
 }
