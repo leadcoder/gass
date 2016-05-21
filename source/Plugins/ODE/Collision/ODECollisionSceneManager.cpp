@@ -163,7 +163,6 @@ namespace GASS
 		// This should equal above code, but without Opcode dependency and no duplicating data
 		dTriMeshDataID id = dGeomTriMeshDataCreate();
 
-		
 		int float_size = sizeof(Float);
 		if(float_size == 8) //double precision
 		{
