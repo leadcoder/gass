@@ -12,11 +12,8 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
-
-
 namespace GASS
 {
-
 	CreateTool::CreateTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),
 		m_FirstMoveUpdate(true)

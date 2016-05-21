@@ -20,7 +20,9 @@ namespace GASS
 		virtual void OnDelete();
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
+		void SceneManagerTick(double delta_time);
 	private:
+		void UpdateSelection();
 		void BuildMesh();
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
@@ -28,22 +30,15 @@ namespace GASS
 		void SetSize(float value){m_Size =value;}
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
-		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
-		void OnSelectedTransformation(TransformationChangedEventPtr message);
-		void OnGeometryChanged(GeometryChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
+	
 		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;
-
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		std::vector<GASS::SceneObjectWeakPtr> m_Selection;
 		std::string m_Mode;
-		
 		bool m_Active;
 		AABox m_BBox;
 	};
-
 	typedef GASS_SHARED_PTR<SelectionComponent> SelectionComponentPtr;
 }
-
-

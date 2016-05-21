@@ -14,7 +14,6 @@ namespace GASS
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
 	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
 
-
 	class EditorModuleExport PaintTool : public IMouseTool
 	{
 	public:
@@ -39,6 +38,5 @@ namespace GASS
 		MouseToolController* m_Controller;
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		bool m_Active;
-
 	};
 }

@@ -184,8 +184,6 @@ namespace GASS
 						{
 							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 						}
-						
-
 					}
 					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
 					SceneObjectPtr gizmo = GetOrCreateGizmo();
@@ -204,7 +202,7 @@ namespace GASS
 							if (selected)
 							{
 								Vec3 pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-								m_SelectedLocations[m_Selected[i]] = pos - info.m_3DPos;
+								m_SelectedLocations[m_Selected[i]] = pos;
 							}
 						}
 					}
@@ -218,17 +216,13 @@ namespace GASS
 							SceneObjectPtr selected = m_Selected[i].lock();
 							if (selected)
 							{
-								/*if(first_pos)
+								if(first_pos)
 								{
 									first_pos = false; 
 									origo_pos =  m_SelectedLocations[m_Selected[i]];
 								}
 								else
-									offset = m_SelectedLocations[m_Selected[i]] - origo_pos;*/
-
-								offset = m_SelectedLocations[m_Selected[i]];
-								//Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-
+									offset = m_SelectedLocations[m_Selected[i]] - origo_pos;
 								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos + offset, from_id)));
 							}
 						}

@@ -36,9 +36,6 @@
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
 
-
-
-
 namespace GASS
 {
 	MouseToolController::MouseToolController(EditorSceneManager* sm): m_ActiveTool(NULL),
@@ -74,8 +71,6 @@ namespace GASS
 	void MouseToolController::Init()
 	{
 		SetEditMode(GM_LOCAL);
-
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
 		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddMouseListener(this);
@@ -118,15 +113,6 @@ namespace GASS
 		}
 		return NULL;
 	}
-
-	/*void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
-	{
-		std::string window = message->GetWindow();
-		if(window == "RenderWindow")
-		{
-			m_Active = message->GetFocus();
-		}
-	}*/
 
 	void MouseToolController::OnInput(ControllSettingsMessagePtr message)
 	{
@@ -229,7 +215,6 @@ namespace GASS
 		}
 	}
 
-
 	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
 	{
 		CollisionResult result;
@@ -256,8 +241,6 @@ namespace GASS
 			cam->GetCameraToViewportRay(static_cast<float>(cursor_pos.x), static_cast<float>(cursor_pos.y), info.m_Ray);
 
 		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
-
-		//int from_id = GASS_PTR_TO_INT(this);
 
 		if(gizmo_result.Coll)
 		{
@@ -330,7 +313,6 @@ namespace GASS
 			return value;
 	}
 
-
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
 		ScenePtr scene = m_EditorSceneManager->GetScene();;
@@ -378,6 +360,7 @@ namespace GASS
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->Update(delta);
+		
 		//debug message
 		/*std::stringstream ss;
 		ss << " Cursor pos:" << m_LastScreenPos << "\n";
@@ -519,7 +502,6 @@ namespace GASS
 				m_CtrlDown = false;
 		return true;
 	}
-
 
 	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
 	{

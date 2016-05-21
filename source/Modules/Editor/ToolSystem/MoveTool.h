@@ -15,7 +15,6 @@ namespace GASS
 	class IMessage;
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
 	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-	
 
 	class EditorModuleExport MoveTool : public IMouseTool 
 	{

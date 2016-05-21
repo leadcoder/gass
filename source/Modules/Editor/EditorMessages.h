@@ -36,6 +36,15 @@ namespace GASS
 			  return false;
 		  }
 
+		  SceneObjectWeakPtr GetFirstSelected()
+		  {
+			  SceneObjectWeakPtr ret;
+			  if(m_Selection.size() > 0)
+			  {
+				  ret = m_Selection[0];
+			  }
+			  return ret;
+		  }
 		  std::vector<SceneObjectWeakPtr> m_Selection;
 	};
 	typedef GASS_SHARED_PTR<EditorSelectionChangedEvent> EditorSelectionChangedEventPtr;
