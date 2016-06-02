@@ -77,23 +77,23 @@ option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API docume
 
 #setup GASSCore third-party dependencies, if this is declared in GASSCore's CMakeLists 
 #we have need to redefine this stuff for every GASSCore dependent library
-find_package(GASSCoreThirdParty)
-set(GASS_CORE_INCLUDE_DIRS ${Boost_INCLUDE_DIR} 
-	${TINYXML2_INCLUDE_DIRS}
-	${TBB_INCLUDE_DIRS}
-	${PROJECT_SOURCE_DIR}/source)
+#find_package(GASSCoreThirdParty)
+#set(GASS_CORE_INCLUDE_DIRS ${Boost_INCLUDE_DIR} 
+#	${TINYXML2_INCLUDE_DIRS}
+#	${TBB_INCLUDE_DIRS}
+#	${PROJECT_SOURCE_DIR}/source)
 
-set(GASS_CORE_LIB_DIRS "")
-set(GASS_CORE_LIBRARIES ${Boost_LIBRARIES} ${TINYXML2_LIBRARIES} ${TBB_LIBRARIES})
+#set(GASS_CORE_LIB_DIRS "")
+#set(GASS_CORE_LIBRARIES ${Boost_LIBRARIES} ${TINYXML2_LIBRARIES} ${TBB_LIBRARIES})
 
-if(GASS_BUILD_SIM)
+#if(GASS_BUILD_SIM)
 	#setup GASSSim third-party dependencies, if this is declared in GASSSim's CMakeLists 
 	#we have need to redefine this stuff for every GASSSim dependent application (ie. samples)
-	find_package(GASSSimThirdParty)
-	set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
-	set(GASS_SIM_LIB_DIRS ${GASS_CORE_LIB_DIRS})
-	set(GASS_SIM_LIBRARIES ${GASS_CORE_LIBRARIES} ${ANGELSCRIPT_LIBRARIES})
-endif()
+	#find_package(GASSSimThirdParty)
+	#set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
+	#set(GASS_SIM_LIB_DIRS ${GASS_CORE_LIB_DIRS})
+	#set(GASS_SIM_LIBRARIES ${GASS_CORE_LIBRARIES} ${ANGELSCRIPT_LIBRARIES})
+#endif()
 	
 add_subdirectory(source)
 add_subdirectory(samples)
