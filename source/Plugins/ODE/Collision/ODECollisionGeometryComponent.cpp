@@ -115,7 +115,6 @@ namespace GASS
 			m_Type = CGT_NONE;
 		else
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unkown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
-
 	}
 
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
@@ -149,7 +148,7 @@ namespace GASS
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
 
-		if(m_Type ==CGT_BOX)
+		if(m_Type == CGT_BOX)
 			SetScale(message->GetScale());
 	}
 
@@ -335,13 +334,23 @@ namespace GASS
 				if(GetCollisionSceneManager()->HasCollisionMesh(col_mesh_id)) //check cache
 				{
 					col_mesh = GetCollisionSceneManager()->GetCollisionMesh(col_mesh_id);
-					//has_col_mesh = true;
 				}
 				else
 				{
 					GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 					PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
+
+					LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+					if(lc) //we only support base scale for mesh collision
+					{
+						Vec3 scale = lc->GetScale();
+						for(size_t i = 0; i < physics_mesh->PositionVector.size(); i++)
+						{
+							physics_mesh->PositionVector[i] = physics_mesh->PositionVector[i]*scale;
+						}
+					}
+
+					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id, physics_mesh);
 				}
 				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
 			}
