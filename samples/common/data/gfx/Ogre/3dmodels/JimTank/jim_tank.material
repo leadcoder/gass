@@ -42,7 +42,7 @@ material JIM_gattling   : GASS_BaseMap
 
 material Material#41   : GASS_BaseMap
 {
-	set_texture_alias BaseTexture T72_wheels.jpg
+	set_texture_alias BaseTexture jim_wheels.jpg
     set	$AmbientColor "1 1 1"
 	set $DiffuseColor "1 1 1"
     set $SpecularColor "1 1 1"
