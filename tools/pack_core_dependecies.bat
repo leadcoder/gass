@@ -1,4 +1,5 @@
-7za.exe a dependencies.zip %GASS_DEPENDENCIES%\boost_1_57_0 ^
-%GASS_DEPENDENCIES%\tbb ^
-%GASS_DEPENDENCIES%\tinyxml2 ^
+7za.exe a gass-core-dependencies.7z %BOOST_ROOT% ^
+%TBB_INSTALL_DIR% ^
+%TINYXML2_HOME% ^
+prepare-cmake-environment.bat
 pause

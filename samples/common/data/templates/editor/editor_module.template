@@ -10,10 +10,10 @@
 				<Position value="0 0 0"/>
 				<Rotation value="0 0 0"/>
 			</LocationComponent>
-			<MultiSelectionComponent>
+			<SelectionComponent>
 				<Type value="solid"/>
 				<Color value="0.8 0.8 0.8 0.8"/>
-			</MultiSelectionComponent>
+			</SelectionComponent>
 			<EditorComponent>
 				<Visible value="true" />
 				<Lock value="0"/>
@@ -150,7 +150,7 @@
 					</LocationComponent>
 					<GizmoComponent>
 						<Type value="GT_PLANE"/>
-						<Color value="0 1 0 0.5"/>
+						<Color value="0 1 0 1"/>
 						<Size value ="0.5"/>
 					</GizmoComponent>
 					<EditorComponent>
@@ -170,6 +170,7 @@
 				<Serialize value="false"/>
 				<Components>
 					<ManualMeshComponent>
+						<GeometryFlags value="GEOMETRY_FLAG_GIZMO"/>
 					</ManualMeshComponent>
 					<LocationComponent>
 						<Position value="0 0 0"/>
@@ -177,7 +178,7 @@
 					</LocationComponent>
 					<GizmoComponent>
 						<Type value="GT_PLANE"/>
-						<Color value="0 0 1 0.5"/>
+						<Color value="0 0 1 1"/>
 						<Size value ="0.5"/>
 					</GizmoComponent>
 					<EditorComponent>
@@ -197,6 +198,7 @@
 				<Serialize value="false"/>
 				<Components>
 					<ManualMeshComponent>
+						<GeometryFlags value="GEOMETRY_FLAG_GIZMO"/>
 					</ManualMeshComponent>
 					<LocationComponent>
 						<Position value="0 0 0"/>
@@ -204,7 +206,7 @@
 					</LocationComponent>
 					<GizmoComponent>
 						<Type value="GT_PLANE"/>
-						<Color value="1 0 0 0.5"/>
+						<Color value="1 0 0 1"/>
 						<Size value ="0.5"/>
 					</GizmoComponent>
 					<EditorComponent>
