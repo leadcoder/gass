@@ -14,7 +14,7 @@ add_source_from_current_dir()
 add_definitions( -DGASS_EXPORTS )
 
 #Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
+#link_directories(${GASS_SIM_LIB_DIRS})
 
 #only support shared lib for now
 add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
@@ -27,7 +27,7 @@ target_include_directories(${LIB_NAME}
 
 #Add project dependency libs
 target_link_libraries(${LIB_NAME} PUBLIC GASSCore  PRIVATE ${ANGELSCRIPT_LIBRARIES})
-
+		
 if(WIN32) #If we are going to use this globally we need to move this into macro
 	set_target_properties (${LIB_NAME} PROPERTIES LINK_FLAGS_RELEASE "/LTCG" )
 endif()
