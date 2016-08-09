@@ -17,9 +17,16 @@ C++ Game Engine
  git clone https://github.com/leadcoder/gass master
  cd master
 ```
-
+You can now either:
 - Edit build-msvc.bat and set GASS_DEP_ROOT to your dep folder
 - Run build-msvc.bat
+
+Or if you have done the optional step above (prepare-cmake-environment.bat) you can:
+  - Start CMake GUI, configure GASS to your requirements and generate the solution.
+  - Open solution in MSVC and build
+
+
+ 
   
   
   
