@@ -1,8 +1,8 @@
 rem git clone https://github.com/leadcoder/gass master
 rem cd master
 
-rem Setup dependencies
-set GASS_DEP_ROOT=F:/dev_zone/FOI-dep/MSVC2010_x64
+rem setup dependencies
+set GASS_DEP_ROOT=<Path to dependencies goes here>
 
 rem GASS Core deps
 SET BOOST_ROOT=%GASS_DEP_ROOT%/boost_1_57_0
@@ -38,7 +38,6 @@ set CMAKE_PROFILE="Visual Studio 10 Win64"
 
 rem setup vs2010 devenv
 call "%VS100COMNTOOLS%vsvars32.bat"
-
 mkdir %BUILD_NAME%
 cd %BUILD_NAME%
 
