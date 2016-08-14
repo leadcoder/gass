@@ -56,6 +56,7 @@ set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
 set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
+option(GASS_BUILDTYPE_STATIC "Static Build" OFF)
 option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON)
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_OGRE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
@@ -71,30 +72,25 @@ CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_MYGUI "Build Plugin." OFF "GASS_BUILD_S
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OSG" OFF)
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 
-
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 
+#boost settings
+if(WIN32)
+  set (Boost_USE_STATIC_LIBS ON)
+else()
+  set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
+endif()
 
-#setup GASSCore third-party dependencies, if this is declared in GASSCore's CMakeLists 
-#we have need to redefine this stuff for every GASSCore dependent library
-#find_package(GASSCoreThirdParty)
-#set(GASS_CORE_INCLUDE_DIRS ${Boost_INCLUDE_DIR} 
-#	${TINYXML2_INCLUDE_DIRS}
-#	${TBB_INCLUDE_DIRS}
-#	${PROJECT_SOURCE_DIR}/source)
+if(CMAKE_VERSION VERSION_GREATER "2.8.11") #suppress warnings
+  CMAKE_POLICY(SET CMP0022 OLD)
+endif()
 
-#set(GASS_CORE_LIB_DIRS "")
-#set(GASS_CORE_LIBRARIES ${Boost_LIBRARIES} ${TINYXML2_LIBRARIES} ${TBB_LIBRARIES})
+set(GASS_BUILDTYPE SHARED)
+if(GASS_BUILDTYPE_STATIC)
+	set(GASS_BUILDTYPE STATIC)
+	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
+endif()
 
-#if(GASS_BUILD_SIM)
-	#setup GASSSim third-party dependencies, if this is declared in GASSSim's CMakeLists 
-	#we have need to redefine this stuff for every GASSSim dependent application (ie. samples)
-	#find_package(GASSSimThirdParty)
-	#set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
-	#set(GASS_SIM_LIB_DIRS ${GASS_CORE_LIB_DIRS})
-	#set(GASS_SIM_LIBRARIES ${GASS_CORE_LIBRARIES} ${ANGELSCRIPT_LIBRARIES})
-#endif()
-	
 add_subdirectory(source)
 add_subdirectory(samples)
 
@@ -122,3 +118,4 @@ install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
 # Install xsd files in order to re-use them in other projects
 #file( GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/source/ "*.xsd")
 #install( FILES ${files} DESTINATION schema)
+mkcmakeconfig(GASS 1.5.1)

@@ -1,8 +1,18 @@
 #set lib name here!
 set(LIB_NAME "GASSCore")
 
-find_package(GASSCoreThirdParty)
+find_package(TinyXML2 REQUIRED)
+find_package(Boost 1.46.1 REQUIRED filesystem system)
 
+#TBB
+find_package(TBB REQUIRED)
+#post-process results 
+set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
+	 optimized ${TBB_MALLOC_LIBRARY}
+	 debug ${TBB_LIBRARY_DEBUG}
+	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
+
+	 
 #add all source files from current directory (recursively)
 set(CPP_FILES
 	ComponentSystem/GASSComponent.cpp
@@ -129,25 +139,28 @@ set(H_FILES
 )
 
 #Enable class export
-add_definitions( -DGASS_CORE_EXPORTS )
-add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
+#add_definitions( -DGASS_CORE_EXPORTS)
+#add_definitions( ${GASS_COMMON_DEFINITIONS})
+add_library (${LIB_NAME} ${GASS_BUILDTYPE} ${CPP_FILES} ${H_FILES})
 
 target_include_directories(${LIB_NAME}
 	PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
 	PUBLIC  $<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>
-	PRIVATE  $<BUILD_INTERFACE:${TINYXML2_INCLUDE_DIRS}>
-	PRIVATE  $<BUILD_INTERFACE:${TBB_INCLUDE_DIRS}>
-	#PUBLIC   $<INSTALL_INTERFACE:include>
-	PUBLIC   $<INSTALL_INTERFACE:${Boost_INCLUDE_DIR}>	
-)
+	PUBLIC  $<BUILD_INTERFACE:${TINYXML2_INCLUDE_DIRS}>
+	PUBLIC  $<BUILD_INTERFACE:${TBB_INCLUDE_DIRS}>)
 
-target_link_libraries(${LIB_NAME} 
+target_link_libraries(${LIB_NAME}
 		PRIVATE ${TINYXML2_LIBRARIES}
-		PRIVATE ${TBB_LIBRARIES})
+		PUBLIC ${TBB_LIBRARIES}
+		PUBLIC ${Boost_LIBRARIES})
+		
 if(WIN32)
    #Add dependency for timer
    target_link_libraries(${LIB_NAME} PRIVATE Winmm)
 endif()
+
+target_compile_definitions(${LIB_NAME} PRIVATE GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+
 
 #Install section
 #gass_install_target()
