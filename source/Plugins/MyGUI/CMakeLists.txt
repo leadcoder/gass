@@ -3,10 +3,6 @@ set(LIB_NAME "GASSPluginMyGUI")
 
 find_package(MyGUI)
 		
-set(MY_INC_DIRS ${GASS_SIM_INCLUDE_DIRS} ${MYGUI_INCLUDE_DIRS})
-
-
-
 
 set(CPP_FILES LoadSceneDialog.cpp
 		MainMenu.cpp
@@ -42,8 +38,6 @@ if(GASS_BUILD_PLUGIN_OSG)
 	set(MY_INC_DIRS ${MY_INC_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})	
 endif()
 
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${MYGUI_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS} ${OGRE_INCLUDE_DIR})
-
 if(GASS_BUILD_PLUGIN_OGRE)
 	find_package(Ogre)
 	set(CPP_FILES ${CPP_FILES}
@@ -53,14 +47,16 @@ if(GASS_BUILD_PLUGIN_OGRE)
 	set(MYGUI_LIBRARIES	${MYGUI_LIBRARIES} ${OGRE_LIBRARIES})
 	set(MY_INC_DIRS ${MY_INC_DIRS} ${OGRE_INCLUDE_DIR})
  endif()
+
+target_include_directories(${LIB_NAME}
+	PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+	PUBLIC  $<BUILD_INTERFACE:${MYGUI_INCLUDE_DIRS}>
+    PUBLIC  $<BUILD_INTERFACE:${OPENSCENEGRAPH_INCLUDE_DIRS}>
+	PUBLIC  $<BUILD_INTERFACE:${OGRE_INCLUDE_DIR}>	
+)
  
-#Enable class export 
-add_definitions( -DGASS_PLUGIN_EXPORTS )
+add_library (${LIB_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
 
-#Add some folders where to search for dependency libraries
-link_directories(${MY_INC_DIRS})
-
-add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_SIM_LIBRARIES} ${MYGUI_LIBRARIES})
-
+target_link_libraries(${LIB_NAME} GASSSim ${MYGUI_LIBRARIES})
+target_compile_definitions(${LIB_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 gass_install_plugin_target()
