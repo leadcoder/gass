@@ -32,7 +32,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/IOgreSceneManagerProxy.h"

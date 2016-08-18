@@ -29,7 +29,7 @@
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 
 namespace Ogre
 {

@@ -49,8 +49,8 @@
 #include <OgreGpuProgramManager.h>
 #include <OgreGpuProgram.h>
 #include <OgreRenderSystem.h>
-#include <OgreRenderWindow.h>
-#include <OgreViewport.h>
+#include <GASSOgreRenderWindow.h>
+#include <GASSOgreViewport.h>
 #include <OgreCamera.h>
 #include <OgreRay.h>
 #include <OgreString.h>

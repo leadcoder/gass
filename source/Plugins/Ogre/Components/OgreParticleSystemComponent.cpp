@@ -29,7 +29,7 @@
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceManager.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreConvert.h"
 

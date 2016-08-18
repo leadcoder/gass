@@ -1,7 +1,7 @@
 #include "GASSOgreMeshExporter.h"
 #include "Sim/GASS.h"
 #include "Plugins/Ogre/OgreConvert.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include <OgreMeshManager.h>
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>

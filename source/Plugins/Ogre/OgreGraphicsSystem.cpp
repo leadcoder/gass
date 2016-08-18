@@ -19,8 +19,8 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
-#include "Plugins/Ogre/OgreRenderWindow.h"
-#include "Plugins/Ogre/OgreViewport.h"
+#include "Plugins/Ogre/GASSOgreRenderWindow.h"
+#include "Plugins/Ogre/GASSOgreViewport.h"
 #include "Plugins/Ogre/OgreDebugTextOutput.h"
 #include "Plugins/Ogre/OgrePostProcess.h"
 #include "Plugins/Ogre/OgreResourceManager.h"

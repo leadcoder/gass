@@ -23,11 +23,12 @@
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Core/MessageSystem/GASSMessageType.h"
-#include "Plugins/Ogre/OgrePostProcess.h"
-#include "Plugins/Ogre/Components/OgreCameraComponent.h"
+//#include "Plugins/Ogre/Components/OgreCameraComponent.h"
 
 namespace GASS
 {
+	class OgreCameraComponent;
+	typedef GASS_SHARED_PTR<OgreCameraComponent> OgreCameraComponentPtr;
 	//The simple types of compositor logics will all do the same thing -
 	//Attach a listener to the created compositor
 	class ListenerFactoryLogic : public Ogre::CompositorLogic

@@ -50,7 +50,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
 #include "Plugins/Ogre/OgreMaterialCache.h"

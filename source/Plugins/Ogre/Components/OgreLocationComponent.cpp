@@ -28,7 +28,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreConvert.h"
 #include "Sim/GASSScriptManager.h"
 #include <angelscript.h>

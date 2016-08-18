@@ -23,11 +23,13 @@
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
 #include <OgreSceneManager.h>
+#include <OgreRenderWindow.h>
 #include <OgreTextureUnitState.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreMaterialManager.h>
 #include <OgreManualObject.h>
-#include <OgreCommon.h>
+#include <GASSOgreRenderWindow.h>
+//#include <OgreCommon.h>
 #include <OgreUTFString.h>
 
 #include "Plugins/Ogre/Components/OgreMeshComponent.h"

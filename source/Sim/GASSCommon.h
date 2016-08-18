@@ -73,11 +73,15 @@
 #   else
 #		define GASSPluginExport __declspec( dllimport )
 #   endif
-#  	if defined( GASS_EXPORTS)
-#      	define GASSExport __declspec( dllexport )
-#  	else
-#  		define GASSExport __declspec( dllimport )
-#  	endif
+#   if defined( GASS_STATIC_BUILD )
+#		define GASSExport
+#	else
+#	   	if defined( GASS_EXPORTS )
+#	    	define GASSExport __declspec( dllexport )
+#   	else
+#			define GASSExport __declspec( dllimport )
+#		endif
+#   endif
 #else
 #   define GASSPluginExport
 #   define GASSExport

@@ -27,7 +27,7 @@
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/OgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/OgreCameraComponent.h"
 #include "Plugins/Ogre/Components/OgreLocationComponent.h"
