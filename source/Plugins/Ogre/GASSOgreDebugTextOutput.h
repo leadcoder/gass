@@ -20,36 +20,52 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
+#include <list>
+#include "Core/Math/GASSVector.h"
 
 namespace Ogre
 {
-	class Viewport;
+	class OverlayManager;
+	class Overlay;
+	class OverlayContainer;
 }
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	class DebugString
 	{
-		friend class OgreRenderWindow;
 	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
+		int m_PosX;
+		int m_PosY;
+		std::string m_Text;
 	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
+
+	class OgreDebugTextOutput
+	{
+	public:
+		OgreDebugTextOutput();
+		virtual ~OgreDebugTextOutput();
+		inline void SetActive(bool active){m_Active = active;}
+		inline bool GetActive()const {return m_Active;}
+		void UpdateTextBox();
+		void Print(const char *string, ...);
+	private:
+		void AddTextBox(
+		const std::string& ID,
+		const std::string& text,
+		float x, float y,
+		float  width, float  height);
+		inline void SetCharHeight(int charHeight) { m_CharHeight = charHeight; }
+		inline int GetCharHeight() { return m_CharHeight; }
+
+		std::list<DebugString> m_DebugStringList;
+		int m_NumDebugStrings;
+		int m_MaxDebugStrings;
+		bool m_Active;
+
+		Ogre::OverlayManager*    m_OverlayMgr;
+		Ogre::Overlay*           m_Overlay;
+		Ogre::OverlayContainer*  m_Panel;
+		int m_CharHeight;
+	};
 }

@@ -19,12 +19,13 @@
 *****************************************************************************/
 
 #include "Core/Common.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/Ogre/GASSOgreViewport.h"
-#include "Plugins/Ogre/OgreGraphicsSystem.h"
-#include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
+#include "Plugins/Ogre/GASSOgrePostProcess.h"
+#include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS

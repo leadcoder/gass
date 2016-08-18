@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/Interface/GASSIRenderWindow.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 
 
 namespace Ogre

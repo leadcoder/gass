@@ -17,39 +17,51 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
 #pragma once
+#include "Sim/GASSCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
-namespace Ogre
-{
-	class Viewport;
-}
+#include "Core/MessageSystem/GASSIMessage.h"
+
+
+class MovableTextOverlay;
+class MovableTextOverlayAttributes;
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	class OgreTextComponent : public Reflection<OgreTextComponent,BaseSceneComponent> ,  public Ogre::RenderTargetListener
 	{
-		friend class OgreRenderWindow;
 	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
+		OgreTextComponent(void);
+		~OgreTextComponent(void);
+		static void RegisterReflection();
+		virtual void OnInitialize();
+		virtual AABox GetBoundingBox()const;
+		virtual Sphere GetBoundingSphere() const;
+	protected:
+		ADD_PROPERTY(bool,ScaleByDistance)
+		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
+		void OnGeomChanged(GeometryChangedEventPtr message);
+		void OnCaptionMessage(TextCaptionRequestPtr message);
+		std::string GetText() const;
+		void SetText(const std::string  &text);
+		float GetOffset() const;
+		void SetOffset(float offset);
+		int GetCharacterSize() const;
+		void SetCharacterSize(int size);
+		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
+		void OnDelete();
+		MovableTextOverlay* m_TextObject;
+		MovableTextOverlayAttributes* m_Attribs;
+		std::string m_TextToDisplay;
+		float m_Offset;
+		int m_Size;
+		Vec4 m_Color;
+		bool m_Visible;
 	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
 	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
 }

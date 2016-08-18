@@ -20,36 +20,22 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
 
-namespace Ogre
-{
-	class Viewport;
-}
+#include "Sim/GASSCommon.h"
+#include "Core/Utils/GASSEnumBinder.h"
+#include <OgrePrerequisites.h>
+#include <GASSOgreCommon.h>
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	class PolygonModeWrapper : public SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>
 	{
-		friend class OgreRenderWindow;
 	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
+		PolygonModeWrapper();
+		PolygonModeWrapper(Ogre::PolygonMode type);
+		virtual ~PolygonModeWrapper();
+		static void Register();
 	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
+	typedef GASS_SHARED_PTR<PolygonModeWrapper> PolygonModeWrapperPtr;
 }
+

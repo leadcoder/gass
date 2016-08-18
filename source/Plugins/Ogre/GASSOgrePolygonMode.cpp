@@ -18,38 +18,36 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#pragma once
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
+#include "Plugins/Ogre/GASSOgrePolygonMode.h"
 
-namespace Ogre
-{
-	class Viewport;
-}
+
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	
+	template<> std::map<std::string ,Ogre::PolygonMode> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_NameToEnumMap;
+	template<> std::map<Ogre::PolygonMode,std::string> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_EnumToNameMap;
+
+	PolygonModeWrapper::PolygonModeWrapper() : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>()
 	{
-		friend class OgreRenderWindow;
-	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
-	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
+
+	}
+
+	PolygonModeWrapper::PolygonModeWrapper(Ogre::PolygonMode type) : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>(type)
+	{
+
+	}
+
+	PolygonModeWrapper::~PolygonModeWrapper()
+	{
+
+	}
+
+	void PolygonModeWrapper::Register()
+	{
+		Bind("PM_POINTS", Ogre::PM_POINTS);
+		Bind("PM_WIREFRAME", Ogre::PM_WIREFRAME);
+		Bind("PM_SOLID", Ogre::PM_SOLID);
+	}
 }

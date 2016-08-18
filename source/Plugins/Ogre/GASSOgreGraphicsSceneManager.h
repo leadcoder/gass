@@ -21,9 +21,10 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
+#include "GASSIOgreSceneManagerProxy.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
@@ -31,8 +32,8 @@
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Utils/GASSEnumBinder.h"
-#include "IOgreSceneManagerProxy.h"
-#include "OgreMaterial.h"
+#include "GASSIOgreCameraProxy.h"
+#include "GASSOgreMaterial.h"
 
 
 namespace Ogre

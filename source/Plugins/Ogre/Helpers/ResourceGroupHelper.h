@@ -5,7 +5,7 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 
 ///\brief a fake class with different useful methods for manipulating Resourcegroups.
 /// please note that it was not tested with background loading.

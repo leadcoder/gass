@@ -19,11 +19,11 @@
 *****************************************************************************/
 
 #include "Core/Common.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreRenderWindow.h"
 #include "Plugins/Ogre/GASSOgreViewport.h"
-#include "Plugins/Ogre/OgreGraphicsSystem.h"
-#include "Plugins/Ogre/OgrePostProcess.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
+#include "Plugins/Ogre/GASSOgrePostProcess.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS

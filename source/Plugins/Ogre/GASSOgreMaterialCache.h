@@ -17,39 +17,43 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-
 #pragma once
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIResourceComponent.h"
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
-
-namespace Ogre
-{
-	class Viewport;
-}
+#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSResource.h"
+#include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSSphere.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Plugins/Ogre/GASSOgreRenderQueueBinder.h"
+#include <OgreEntity.h>
+#include <OgreSubEntity.h>
+#include <OgreManualObject.h>
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	class GASSPluginExport OgreMaterialCache 
 	{
-		friend class OgreRenderWindow;
 	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
+		OgreMaterialCache()
+		{
+
+		}
+		~OgreMaterialCache()
+		{
+
+		}
+		static void Add(const std::string &name,Ogre::Entity* entity);
+		static void Restore(const std::string &name, Ogre::Entity* entity);
+		static void Add(Ogre::ManualObject* mo);
+		static void Restore(Ogre::ManualObject* mo );
+	private:		
+		//material cache
+		typedef	std::map<std::string, std::vector<std::string> > MaterialCacheMap;
+		static MaterialCacheMap m_MaterialCacheMap;
 	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
 }

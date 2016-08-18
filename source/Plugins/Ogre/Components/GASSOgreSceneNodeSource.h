@@ -19,37 +19,19 @@
 *****************************************************************************/
 
 #pragma once
-
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
+#include "Sim/GASSCommon.h"
 
 namespace Ogre
 {
-	class Viewport;
+	class SceneNode;
 }
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
+	class GASSPluginExport OgreSceneNodeSource
 	{
-		friend class OgreRenderWindow;
 	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
+		virtual ~OgreSceneNodeSource() {};
+		virtual Ogre::SceneNode* GetOgreNode() = 0;
 	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
 }

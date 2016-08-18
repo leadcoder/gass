@@ -30,8 +30,8 @@ THE SOFTWARE.
 #define __Ogre_TerrainMaterialGeneratorB_H__
 
 #include "Core/Common.h"
-#include "Plugins/Ogre/OgreCommon.h"
-#include "Plugins/Ogre/OgreTerrainIncludes.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
+#include "Plugins/Ogre/GASSOgreTerrainIncludes.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4512)

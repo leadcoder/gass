@@ -20,36 +20,29 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Plugins/Ogre/GASSOgreRenderWindow.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include <string>
-
-namespace Ogre
-{
-	class Viewport;
-}
+#include "Sim/GASSCommon.h"
+#include "Core/Utils/GASSEnumBinder.h"
+#include <GASSOgreCommon.h>
+#include <OgreRenderQueue.h>
 
 namespace GASS
 {
-	class OgreViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OgreViewport>, public IMessageListener
-	{
-		friend class OgreRenderWindow;
-	public:
-		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
-	private:
-		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
-		Ogre::Viewport* m_OgreViewport;
-		std::string m_Name;
-		OgreRenderWindow* m_Window;
-		CameraComponentWeakPtr m_Camera;
-		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
-	};
-	typedef GASS_SHARED_PTR<OgreViewport> OgreViewportPtr;
+	START_ENUM_BINDER(Ogre::RenderQueueGroupID,RenderQueueBinder)
+		Bind("RENDER_QUEUE_BACKGROUND",Ogre::RENDER_QUEUE_BACKGROUND);
+		Bind("RENDER_QUEUE_SKIES_EARLY",Ogre::RENDER_QUEUE_SKIES_EARLY);
+		Bind("RENDER_QUEUE_1",Ogre::RENDER_QUEUE_1);
+		Bind("RENDER_QUEUE_2",Ogre::RENDER_QUEUE_2);
+		Bind("RENDER_QUEUE_WORLD_GEOMETRY_1",Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
+		Bind("RENDER_QUEUE_3",Ogre::RENDER_QUEUE_3);
+		Bind("RENDER_QUEUE_4",Ogre::RENDER_QUEUE_4);
+		Bind("RENDER_QUEUE_MAIN",Ogre::RENDER_QUEUE_MAIN);
+		Bind("RENDER_QUEUE_6",Ogre::RENDER_QUEUE_6);
+		Bind("RENDER_QUEUE_7",Ogre::RENDER_QUEUE_7);
+		Bind("RENDER_QUEUE_WORLD_GEOMETRY_2",Ogre::RENDER_QUEUE_WORLD_GEOMETRY_2);
+		Bind("RENDER_QUEUE_8",Ogre::RENDER_QUEUE_8);
+		Bind("RENDER_QUEUE_9",Ogre::RENDER_QUEUE_9);
+		Bind("RENDER_QUEUE_SKIES_LATE",Ogre::RENDER_QUEUE_SKIES_LATE);
+		Bind("RENDER_QUEUE_OVERLAY",Ogre::RENDER_QUEUE_OVERLAY);
+		Bind("RENDER_QUEUE_MAX",Ogre::RENDER_QUEUE_MAX);
+	END_ENUM_BINDER(Ogre::RenderQueueGroupID,RenderQueueBinder);
 }

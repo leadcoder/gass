@@ -36,12 +36,12 @@
 
 #include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Plugins/Ogre/Helpers/GASSOgreMeshExporter.h"
-#include "Plugins/Ogre/OgrePostProcess.h"
-#include "Plugins/Ogre/OgreGraphicsSystem.h"
-#include "Plugins/Ogre/Components/OgreCameraComponent.h"
-#include "Plugins/Ogre/Components/OgreLocationComponent.h"
+#include "Plugins/Ogre/GASSOgrePostProcess.h"
+#include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
+#include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
+#include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
-#include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/GASSOgreConvert.h"
 
 //warning C4512
 
