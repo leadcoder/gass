@@ -27,12 +27,9 @@
 #include "GASSIOgreSceneManagerProxy.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Utils/GASSEnumBinder.h"
-#include "GASSIOgreCameraProxy.h"
 #include "GASSOgreMaterial.h"
 
 

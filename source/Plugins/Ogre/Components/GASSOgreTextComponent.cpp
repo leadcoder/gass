@@ -20,24 +20,12 @@
 
 #include "GASSOgreTextComponent.h"
 #include "GASSIOgreSceneManagerProxy.h"
-#include <OgreSceneNode.h>
-#include <OgreEntity.h>
-#include <OgreSubEntity.h>
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
-#include <OgreMaterialManager.h>
-#include <OgreManualObject.h>
-#include <GASSOgreRenderWindow.h>
-//#include <OgreCommon.h>
 #include <OgreUTFString.h>
-
 #include "Plugins/Ogre/Components/GASSOgreMeshComponent.h"
 #include "Plugins/Ogre/Components/GASSOgreBillboardComponent.h"
 #include "Plugins/Ogre/Components/GASSOgreManualMeshComponent.h"
-#include "Plugins/Ogre/GASSIOgreCameraProxy.h"
-
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -45,7 +33,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-
 #include "Plugins/Ogre/Helpers/RectLayoutManager.h"
 
 

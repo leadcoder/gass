@@ -18,20 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-#include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIResourceComponent.h"
-
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSResource.h"
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSSphere.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Ogre/GASSOgreRenderQueueBinder.h"
 #include <OgreEntity.h>
-#include <OgreSubEntity.h>
 #include <OgreManualObject.h>
 
 namespace GASS

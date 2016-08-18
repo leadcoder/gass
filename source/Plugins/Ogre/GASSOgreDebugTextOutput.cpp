@@ -21,7 +21,6 @@
 #include "Plugins/Ogre/GASSOgreDebugTextOutput.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Sim/GASSCommon.h"
-#include "Core/Utils/GASSLogManager.h"
 #include <stdlib.h>
 #include <stdio.h>
 

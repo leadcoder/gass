@@ -21,9 +21,7 @@
 #pragma once
 
 
-#include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSEnumBinder.h"
-#include <OgrePrerequisites.h>
 #include <GASSOgreCommon.h>
 
 namespace GASS

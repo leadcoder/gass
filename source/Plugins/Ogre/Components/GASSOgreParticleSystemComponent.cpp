@@ -19,16 +19,13 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/GASSOgreParticleSystemComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSResourceManager.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"

@@ -23,11 +23,9 @@
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGB.h"
-#include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/Interface/GASSILightComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace Ogre
 {

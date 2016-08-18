@@ -26,7 +26,6 @@
 #include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
 #include "Plugins/Ogre/GASSOgrePostProcess.h"
 #include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
-#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {

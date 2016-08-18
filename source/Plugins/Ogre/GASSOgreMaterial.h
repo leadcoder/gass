@@ -21,7 +21,6 @@
 #pragma once
 
 #include <string>
-#include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Core/Reflection/GASSPropertyMetaData.h"
 
 namespace GASS

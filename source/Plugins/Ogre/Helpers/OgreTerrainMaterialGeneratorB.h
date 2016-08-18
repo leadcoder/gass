@@ -29,7 +29,6 @@ THE SOFTWARE.
 #ifndef __Ogre_TerrainMaterialGeneratorB_H__
 #define __Ogre_TerrainMaterialGeneratorB_H__
 
-#include "Core/Common.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreTerrainIncludes.h"
 

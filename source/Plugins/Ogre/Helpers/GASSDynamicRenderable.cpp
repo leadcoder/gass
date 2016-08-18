@@ -1,7 +1,5 @@
 #include "GASSDynamicRenderable.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
-//#include <OgreCamera.h>
-//#include <OgreHardwareBufferManager.h>
 
 using namespace Ogre;
 

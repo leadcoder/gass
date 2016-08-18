@@ -2,11 +2,7 @@
 #include "Sim/GASS.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
-#include <OgreMeshManager.h>
-#include <OgreEntity.h>
 #include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreMaterialManager.h>
 #include <OgreManualObject.h>
 #include <OgreMeshSerializer.h>
 

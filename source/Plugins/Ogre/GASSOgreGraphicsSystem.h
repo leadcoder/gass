@@ -26,10 +26,7 @@
 #include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Core/MessageSystem/GASSMessageType.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
-#include "Core/Serialize/GASSSTDSerialize.h"
-#include <string>
 
 namespace Ogre
 {

@@ -20,14 +20,10 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreResourceManager.h"
-#include "Sim/GASSSystemFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-#include <tinyxml2.h>
+#include "Sim/GASSResourceManager.h"
 
 using namespace Ogre;
 

@@ -18,27 +18,17 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Plugins/Ogre/Components/GASSOgreMeshComponent.h"
-#include <OgreSceneNode.h>
 #include <OgreEntity.h>
-#include <OgreSubEntity.h>
 #include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreSkeletonInstance.h>
-#include <OgreSubMesh.h>
-#include <OgreMaterialManager.h>
-#include <OgreBone.h>
 #include <OgreStaticGeometry.h>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Plugins/Ogre/Components/GASSOgreStaticMeshComponent.h"
-#include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
-
 #include <tinyxml2.h>
+
 using namespace Ogre;
 
 namespace GASS

@@ -20,17 +20,9 @@
 
 #pragma once
 
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include <tinyxml2.h>
 #include <OgreTechnique.h>
-
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSCommon.h"
 #include "OgreTerrain.h"
-#include "OgreTerrainGroup.h"
-#include "OgreTerrainQuadTreeNode.h"
-#include "OgreTerrainMaterialGeneratorA.h"
-#include "OgreTerrainPaging.h"
 #include "OgreMaterialManager.h"
 
 namespace GASS

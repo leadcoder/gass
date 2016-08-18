@@ -1,7 +1,7 @@
 #include "GASSDynamicLines.h"
 #include <Ogre.h>
 #include <cassert>
-#include <cmath>
+
 
 using namespace Ogre;
 

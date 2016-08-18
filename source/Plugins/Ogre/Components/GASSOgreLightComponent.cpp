@@ -23,10 +23,6 @@
 #include <OgreSceneManager.h>
 #include <OgreLight.h>
 #include <OgreRoot.h>
-
-
-#include "Core/Math/GASSQuaternion.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -35,8 +31,6 @@
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
-#include "Plugins/Ogre/GASSIOgreCameraProxy.h"
-
 
 namespace GASS
 {

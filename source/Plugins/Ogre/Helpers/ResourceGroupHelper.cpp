@@ -4,7 +4,6 @@
 #include "OgreRoot.h"
 #include "OgreMovableObject.h"
 #include "OgreMaterialManager.h"
-#include "OgreEntity.h"
 #include "OgreSubEntity.h"
 #include "OgreBillboardChain.h"
 #include "OgreBillboardSet.h"

@@ -22,9 +22,6 @@
 
 
 #include "Plugins/Ogre/GASSOgreCommon.h"
-
-#include <iostream>
-
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"

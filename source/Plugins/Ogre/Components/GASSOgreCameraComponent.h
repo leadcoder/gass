@@ -21,13 +21,10 @@
 #pragma once
 
 
-#include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
-#include "Core/Math/GASSVector.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Core/Utils/GASSEnumBinder.h"
 #include "Plugins/Ogre/GASSIOgreCameraProxy.h"
 #include "Plugins/Ogre/GASSOgrePolygonMode.h"
 

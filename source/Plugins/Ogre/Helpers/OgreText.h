@@ -1,4 +1,3 @@
-#include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 
 

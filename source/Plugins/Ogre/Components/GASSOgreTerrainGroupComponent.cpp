@@ -19,21 +19,15 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/GASSOgreTerrainGroupComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSResourceManager.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/GASSOgreTerrainPageComponent.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/Components/GASSOgreGASSTerrainMaterialGenerator.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 

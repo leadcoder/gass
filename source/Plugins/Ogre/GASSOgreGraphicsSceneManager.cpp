@@ -19,11 +19,8 @@
 *****************************************************************************/
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 
 #include "Sim/GASSSceneManagerFactory.h"
@@ -38,7 +35,6 @@
 #include "Plugins/Ogre/Helpers/GASSOgreMeshExporter.h"
 #include "Plugins/Ogre/GASSOgrePostProcess.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
-#include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
@@ -47,7 +43,6 @@
 
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
-#include <GASSOgreRenderWindow.h>
 #include <Overlay/OgreOverlaySystem.h>
 #include <OgreShadowCameraSetupLiSPSM.h>
 #include <OgreShadowCameraSetupPlaneOptimal.h>

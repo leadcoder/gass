@@ -27,7 +27,6 @@
 #include "Sim/Interface/GASSIResourceComponent.h"
 #include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSResource.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"

@@ -23,16 +23,14 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreTerrainIncludes.h"
+#include "Plugins/Ogre/GASSOgreRenderQueueBinder.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSResourceHandle.h"
-#include <tinyxml2.h>
-
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Plugins/Ogre/GASSOgreRenderQueueBinder.h"
 
 namespace GASS
 {
@@ -70,7 +68,6 @@ namespace GASS
 		void LoadFromFile();
 		ResourceHandle GetHeightMap()const {return m_HeightMapFile;}
 		void SetHeightMap(const ResourceHandle &filename);
-		std::string GetFromResourceSystem(const std::string &filename);
 		void UpdatePosition();
 		int GetIndexX() const;
 		void SetIndexX(int index);

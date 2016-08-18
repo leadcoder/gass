@@ -3,7 +3,6 @@
 
 #include "Core/Common.h"
 #include <utility>
-#include <string>
 #include <vector>
 #include "Plugins/Ogre/GASSOgreCommon.h"
 

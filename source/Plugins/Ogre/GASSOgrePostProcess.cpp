@@ -20,22 +20,10 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgrePostProcess.h"
-#include "Sim/GASSSceneManagerFactory.h"
-#include "Sim/GASSScene.h"
-
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
-#include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
 #include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
-#include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
-
-#include "Sim/GASSSystemFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 
 using namespace Ogre;
 

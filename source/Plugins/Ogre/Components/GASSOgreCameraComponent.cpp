@@ -19,8 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Utils/GASSException.h"
@@ -28,11 +26,9 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
-
 
 namespace GASS
 {

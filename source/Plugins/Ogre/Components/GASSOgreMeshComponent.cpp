@@ -25,8 +25,6 @@
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/GASSOgreMaterialCache.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSystem.h"
-
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"

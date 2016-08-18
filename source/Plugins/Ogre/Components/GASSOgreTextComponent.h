@@ -20,13 +20,9 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
-
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
-#include "Core/MessageSystem/GASSIMessage.h"
-
 
 class MovableTextOverlay;
 class MovableTextOverlayAttributes;

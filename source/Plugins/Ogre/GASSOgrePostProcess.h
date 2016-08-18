@@ -21,9 +21,6 @@
 #pragma once
 
 #include "Sim/Interface/GASSIGraphicsSystem.h"
-#include "Sim/GASSBaseSceneManager.h"
-#include "Core/MessageSystem/GASSMessageType.h"
-//#include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
 
 namespace GASS
 {

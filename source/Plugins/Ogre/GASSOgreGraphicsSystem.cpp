@@ -38,14 +38,14 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
-
+#include "Sim/GASSResourceManager.h"
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
 #include <OgreRenderSystem.h>
 #include <OgreWindowEventUtilities.h>
 #include <OgreStringConverter.h>
-#include <OgreLogManager.h>
 #include <Overlay/OgreOverlaySystem.h>
+
 
 ResourceGroupHelper resourceGrouphelper;
 

@@ -24,10 +24,8 @@
 #include "Sim/Interface/GASSICollisionComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSSphere.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Plugins/Ogre/GASSOgreMaterial.h"
 
 namespace Ogre

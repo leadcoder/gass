@@ -20,36 +20,22 @@
 
 #include "GASSOgreManualMeshComponent.h"
 #include "GASSOgreMeshComponent.h"
-
 #include <OgreSceneNode.h>
 #include <OgreMeshManager.h>
-
-#include <OgreEntity.h>
 #include <OgreSceneManager.h>
-#include <OgreTextureUnitState.h>
-#include <OgreMaterialManager.h>
 #include <OgreManualObject.h>
 #include <GASSOgreCommon.h>
 #include <OgreEdgeListBuilder.h>
-
-
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
-#include "Core/Utils/GASSFileUtils.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
-
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
