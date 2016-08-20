@@ -56,7 +56,7 @@ public:
 	{
 		for (size_t i = 0; i < m_Objects.size(); i++)
 		{
-			GASS::BaseReflectionObjectPtr object = m_Object[i].lock();
+			GASS::BaseReflectionObjectPtr object = m_Objects[i].lock();
 			if (object)
 			{
 				m_Prop->SetValueByString(object.get(), value);
@@ -66,11 +66,16 @@ public:
 
 	void UpdateValue(boost::any  &value)
 	{
-		GASS::BaseReflectionObjectPtr object(m_Object, boost::detail::sp_nothrow_tag());
-		if (object)
+		for (size_t i = 0; i < m_Objects.size(); i++)
 		{
-			m_Prop->SetValue(object.get(), value);
+			GASS::BaseReflectionObjectPtr object = m_Objects[i].lock();
+			if (object)
+			{
+				m_Prop->SetValue(object.get(), value);
+				
+			}
 		}
+
 	}
 
 	std::vector<GASS::BaseReflectionObjectWeakPtr> m_Objects;
