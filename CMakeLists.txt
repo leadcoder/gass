@@ -57,6 +57,13 @@ set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
 option(GASS_BUILDTYPE_STATIC "Static Build" OFF)
+
+if(MSVC)
+	option(GASS_INSTALL_DEP_BINARIES "Install dependency binaries (and copy to build folder) " ON)
+elseif()
+	set(GASS_INSTALL_DEP_BINARIES 0)
+endif()
+
 option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON)
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
 CMAKE_DEPENDENT_OPTION(GASS_BUILD_PLUGIN_OGRE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
@@ -90,8 +97,6 @@ if(GASS_BUILDTYPE_STATIC)
 	set(GASS_BUILDTYPE STATIC)
 	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
 endif()
-
-set(GASS_INSTALL_DEP_BINARIES 1)
 
 add_subdirectory(source)
 add_subdirectory(samples)
