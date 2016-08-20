@@ -138,9 +138,7 @@ macro(gass_setup_plugin PLUGIN_NAME)
     list(LENGTH extra_macro_args num_extra_args)
     if (${num_extra_args} GREATER 0)
         list(GET extra_macro_args 0 optional_arg)
-        message ("Got an optional arg: ${optional_arg}")
 		set(_DEPS ${ARGN})
-		message(${_DEPS})
     endif ()
 
 	
@@ -167,57 +165,84 @@ macro(gass_create_dep_target DEP_NAME DEP_INCLUDE_DIRS DEP_LIBRARIES)
 	set(_DEP_INCLUDE_DIRS ${DEP_INCLUDE_DIRS})
 	set(_DEP_LIBRARIES ${DEP_LIBRARIES})
 	add_library(${DEP_NAME} INTERFACE IMPORTED)
-	#add_library(foo UNKNOWN IMPORTED)
 	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${_DEP_INCLUDE_DIRS})
-	#set_property(TARGET ODE SHARED IMPORTED) PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${ODE_INCLUDE_DIRS})
-	#set_property(TARGET ODE PROPERTY IMPORTED_LOCATION ${ODE_LIBRARIES})
 	FILTER_LIST("${_DEP_LIBRARIES}" _RELEASE_LIBS optimized debug)
 	FILTER_LIST("${_DEP_LIBRARIES}" _DEBUG_LIBS debug optimized)
-	message( ${_RELEASE_LIBS} )
 	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_LINK_LIBRARIES $<$<CONFIG:Debug>:${_DEBUG_LIBS}> $<$<NOT:$<CONFIG:Debug>>:${_RELEASE_LIBS}>)
 endmacro()
 
 
+macro(gass_setup_sim_sample SAMPLE_NAME)
+	set (extra_macro_args ${ARGN})
+	# Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 optional_arg)
+		set(_DEPS ${ARGN})
+    endif ()
 
-function(mkcmakeconfig packagename packageversion)
+	add_source_from_current_dir()
+	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
+	HEADER_DIRECTORIES(SUBDIRS)
+	foreach(INC_DIR ${SUBDIRS})
+		target_include_directories(${SAMPLE_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
+	endforeach()
+	target_link_libraries(${SAMPLE_NAME} GASSSim ${_DEPS})
+	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
+	
+	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
-  VERSION ${packageversion}
-  COMPATIBILITY AnyNewerVersion
-)
+	#copy configurations to enable execution from build folder 
+	FILE(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	FILE(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 
-export(EXPORT LibraryTargets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Targets.cmake"
-  NAMESPACE ${packagename}::
-)
-configure_file(cmake/${packagename}Config.cmake
-  "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Config.cmake"
-  COPYONLY
-)
+	#install executable
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 
-if(WIN32)
-  set(ConfigPackageLocation cmake)
-else()
-  set(ConfigPackageLocation lib/cmake/${packagename})
-endif()
-install(EXPORT LibraryTargets
-  FILE
-    ${packagename}Targets.cmake
-  NAMESPACE
-    ${packagename}::
-  DESTINATION
-    ${ConfigPackageLocation}
-)
-install(
-  FILES
-    cmake/${packagename}Config.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
-  DESTINATION
-    ${ConfigPackageLocation}
-  COMPONENT
-    Devel
-)
-endfunction()
+	#install configuration files
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+endmacro()
+
+#function(mkcmakeconfig packagename packageversion)
+# include(CMakePackageConfigHelpers)
+# write_basic_package_version_file(
+  # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
+  # VERSION ${packageversion}
+  # COMPATIBILITY AnyNewerVersion
+# )
+
+# export(EXPORT LibraryTargets
+  # FILE "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Targets.cmake"
+  # NAMESPACE ${packagename}::
+# )
+# configure_file(cmake/${packagename}Config.cmake
+  # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Config.cmake"
+  # COPYONLY
+# )
+
+# if(WIN32)
+  # set(ConfigPackageLocation cmake)
+# else()
+  # set(ConfigPackageLocation lib/cmake/${packagename})
+# endif()
+# install(EXPORT LibraryTargets
+  # FILE
+    # ${packagename}Targets.cmake
+  # NAMESPACE
+    # ${packagename}::
+  # DESTINATION
+    # ${ConfigPackageLocation}
+# )
+# install(
+  # FILES
+    # cmake/${packagename}Config.cmake
+    # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
+  # DESTINATION
+    # ${ConfigPackageLocation}
+  # COMPONENT
+    # Devel
+# )
+# endfunction()
 

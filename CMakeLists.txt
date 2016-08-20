@@ -91,6 +91,8 @@ if(GASS_BUILDTYPE_STATIC)
 	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
 endif()
 
+set(GASS_INSTALL_DEP_BINARIES 1)
+
 add_subdirectory(source)
 add_subdirectory(samples)
 
@@ -118,4 +120,5 @@ install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
 # Install xsd files in order to re-use them in other projects
 #file( GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/source/ "*.xsd")
 #install( FILES ${files} DESTINATION schema)
-mkcmakeconfig(GASS 1.5.1)
+
+#mkcmakeconfig(GASS 1.5.1)

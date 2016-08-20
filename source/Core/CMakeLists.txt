@@ -138,9 +138,6 @@ set(H_FILES
 	Utils/GASSXMLUtils.h
 )
 
-#Enable class export
-#add_definitions( -DGASS_CORE_EXPORTS)
-#add_definitions( ${GASS_COMMON_DEFINITIONS})
 add_library (${LIB_NAME} ${GASS_BUILDTYPE} ${CPP_FILES} ${H_FILES})
 
 target_include_directories(${LIB_NAME}
@@ -161,15 +158,23 @@ endif()
 
 target_compile_definitions(${LIB_NAME} PRIVATE GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 
-
 #Install section
-#gass_install_target()
-install(TARGETS ${LIB_NAME} EXPORT LibraryTargets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
-)
+gass_install_target()
+
+if(GASS_INSTALL_DEP_BINARIES)
+		install(FILES ${TBB_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+		install(FILES ${TBB_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+
+		FILE(COPY ${TBB_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		FILE(COPY ${TBB_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+endif()
+
+# install(TARGETS ${LIB_NAME} EXPORT LibraryTargets
+  # LIBRARY DESTINATION lib
+  # ARCHIVE DESTINATION lib
+  # RUNTIME DESTINATION bin
+  # INCLUDES DESTINATION include
+# )
 
 #install(
 #  FILES
@@ -179,7 +184,6 @@ install(TARGETS ${LIB_NAME} EXPORT LibraryTargets
 #  COMPONENT
 #    Devel
 #)
-	
 
 foreach ( h_file ${H_FILES} )
     get_filename_component( dir ${h_file} DIRECTORY )
