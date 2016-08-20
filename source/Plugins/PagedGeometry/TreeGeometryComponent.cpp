@@ -32,7 +32,7 @@
 #include "GrassLoader.h"
 #include "DensityMapComponent.h"
 
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"

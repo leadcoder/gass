@@ -34,7 +34,7 @@
 
 #include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
-#include "Plugins/Ogre/OgreMaterial.h"
+#include "Plugins/Ogre/GASSOgreMaterial.h"
 #include "PGMessages.h"
 
 namespace Forests

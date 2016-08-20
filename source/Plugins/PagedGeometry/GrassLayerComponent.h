@@ -34,7 +34,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Plugins/Ogre/OgreMaterial.h"
+#include "Plugins/Ogre/GASSOgreMaterial.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "GrassMaterial.h"
 #include "PGMessages.h"

@@ -13,14 +13,14 @@ set(CPP_FILES LoadSceneDialog.cpp
 		MyGUI_RTTLayer.cpp)
 
 set(H_FILES LoadSceneDialog.h
- MainMenu.h
- MyGUILayoutComponent.h
- MyGUIMessages.h
- MyGUISystem.h
- MyGUIVehicleInstrumentsComponent.h
- MyGUI_RTTLayer.h
- StatisticInfo.h)
- 
+		 MainMenu.h
+		 MyGUILayoutComponent.h
+		 MyGUIMessages.h
+		 MyGUISystem.h
+		 MyGUIVehicleInstrumentsComponent.h
+		 MyGUI_RTTLayer.h
+		 StatisticInfo.h)
+		 
 #add osg and ogre stuff
 if(GASS_BUILD_PLUGIN_OSG)
 	find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
@@ -46,7 +46,9 @@ if(GASS_BUILD_PLUGIN_OGRE)
 		MyGUIOgreSystem.h)
 	set(MYGUI_LIBRARIES	${MYGUI_LIBRARIES} ${OGRE_LIBRARIES})
 	set(MY_INC_DIRS ${MY_INC_DIRS} ${OGRE_INCLUDE_DIR})
- endif()
+endif()
+ 
+add_library (${LIB_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
 
 target_include_directories(${LIB_NAME}
 	PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -54,8 +56,6 @@ target_include_directories(${LIB_NAME}
     PUBLIC  $<BUILD_INTERFACE:${OPENSCENEGRAPH_INCLUDE_DIRS}>
 	PUBLIC  $<BUILD_INTERFACE:${OGRE_INCLUDE_DIR}>	
 )
- 
-add_library (${LIB_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
 
 target_link_libraries(${LIB_NAME} GASSSim ${MYGUI_LIBRARIES})
 target_compile_definitions(${LIB_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})

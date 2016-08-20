@@ -24,7 +24,6 @@
 #include "Core/RTC/GASSTaskNode.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 
-#include <vector>
 
 namespace tbb
 {

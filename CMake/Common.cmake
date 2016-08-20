@@ -104,6 +104,81 @@ install(TARGETS ${LIB_NAME}
 	
 endmacro(gass_install_plugin_target) 
 
+
+macro(FILTER_LIST INPUT OUTPUT GOOD BAD)
+  set(LST ${INPUT})   # can we avoid this?
+  set(PICKME YES)
+  foreach(ELEMENT IN LISTS LST)
+    if(${ELEMENT} STREQUAL general OR ${ELEMENT} STREQUAL ${GOOD})
+      set(PICKME YES)
+    elseif(${ELEMENT} STREQUAL ${BAD})
+      set(PICKME NO)
+    elseif(PICKME)
+      list(APPEND ${OUTPUT} ${ELEMENT})
+    endif()
+  endforeach()
+endmacro(FILTER_LIST)
+
+
+MACRO(HEADER_DIRECTORIES return_list)
+    FILE(GLOB_RECURSE new_list ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+    SET(dir_list "")
+    FOREACH(file_path ${new_list})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dir_list ${dir_list} ${dir_path})
+    ENDFOREACH()
+    LIST(REMOVE_DUPLICATES dir_list)
+    SET(${return_list} ${dir_list})
+ENDMACRO()
+
+	
+macro(gass_setup_plugin PLUGIN_NAME)
+	set (extra_macro_args ${ARGN})
+	# Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 optional_arg)
+        message ("Got an optional arg: ${optional_arg}")
+		set(_DEPS ${ARGN})
+		message(${_DEPS})
+    endif ()
+
+	
+	add_source_from_current_dir()
+	add_library (${PLUGIN_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
+	HEADER_DIRECTORIES(SUBDIRS)
+	foreach(INC_DIR ${SUBDIRS})
+		target_include_directories(${PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
+	endforeach()
+	target_link_libraries(${PLUGIN_NAME} GASSSim ${_DEPS})
+	target_compile_definitions(${PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
+	install(TARGETS ${PLUGIN_NAME}
+		RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug	
+		LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
+		ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug)
+
+	install(TARGETS ${PLUGIN_NAME}
+	  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
+	  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
+	  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)
+endmacro()
+
+macro(gass_create_dep_target DEP_NAME DEP_INCLUDE_DIRS DEP_LIBRARIES)
+	set(_DEP_INCLUDE_DIRS ${DEP_INCLUDE_DIRS})
+	set(_DEP_LIBRARIES ${DEP_LIBRARIES})
+	add_library(${DEP_NAME} INTERFACE IMPORTED)
+	#add_library(foo UNKNOWN IMPORTED)
+	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${_DEP_INCLUDE_DIRS})
+	#set_property(TARGET ODE SHARED IMPORTED) PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${ODE_INCLUDE_DIRS})
+	#set_property(TARGET ODE PROPERTY IMPORTED_LOCATION ${ODE_LIBRARIES})
+	FILTER_LIST("${_DEP_LIBRARIES}" _RELEASE_LIBS optimized debug)
+	FILTER_LIST("${_DEP_LIBRARIES}" _DEBUG_LIBS debug optimized)
+	message( ${_RELEASE_LIBS} )
+	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_LINK_LIBRARIES $<$<CONFIG:Debug>:${_DEBUG_LIBS}> $<$<NOT:$<CONFIG:Debug>>:${_RELEASE_LIBS}>)
+endmacro()
+
+
+
 function(mkcmakeconfig packagename packageversion)
 
 include(CMakePackageConfigHelpers)

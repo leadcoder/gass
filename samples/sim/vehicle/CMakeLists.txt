@@ -2,19 +2,16 @@
 set(LIB_NAME "SampleSimVehicle")
 
 #Set include directories
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
+#include_directories(${GASS_SIM_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CPP_FILES ${LIB_NAME}.cpp)
-
-#Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
 
 add_executable (${LIB_NAME} ${CPP_FILES} ${H_FILES})
 
 set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 
-#Add project link libs
-target_link_libraries(${LIB_NAME} GASSCore GASSSim  ${GASS_SIM_LIBRARIES})
+target_link_libraries(${LIB_NAME} GASSSim)
+#target_include_directories(${LIB_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
 
 set(GASS_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME}.xml)
 
