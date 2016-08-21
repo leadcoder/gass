@@ -138,7 +138,7 @@ namespace GASS
 		fin.read((char *) &(m_Data.Data[0]), sizeof(unsigned short)*m_NumSamplesW*m_NumSamplesH);
 	}
 
-	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos)
+	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos) const
 	{
 		Vec3 ray = p2 - p1;
 		Vec3 ray_2d = ray;

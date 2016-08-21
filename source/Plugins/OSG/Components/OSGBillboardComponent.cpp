@@ -20,11 +20,12 @@
 
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Core/Math/GASSMath.h"
+
 
 namespace GASS
 {

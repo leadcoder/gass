@@ -20,21 +20,16 @@
 
 
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
-#include "Plugins/Base/CoreMessages.h"
+#include "Core/Math/GASSMath.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
-
-#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSCommon.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/GASSSimEngine.h"
-
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"

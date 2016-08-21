@@ -22,7 +22,6 @@
 #define GASS_I_XMLSERIALIZE_H
 
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSMatrix.h"
 
 namespace tinyxml2
 {

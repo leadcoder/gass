@@ -113,7 +113,7 @@ namespace GASS
 		BaseReflectionObject::CopyPropertiesTo(dest_comp);
 	}
 
-	std::vector<std::string> Component::GetDependencies()
+	std::vector<std::string> Component::GetDependencies() const
 	{
 		return m_Dependencies[GetRTTI()];
 	}

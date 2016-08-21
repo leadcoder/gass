@@ -43,9 +43,6 @@ set(CPP_FILES
 	Reflection/GASSBaseReflectionObject.cpp
 	Reflection/GASSIProperty.cpp
 	Reflection/GASSProperty.cpp
-	Reflection/GASSReflection.cpp
-	Reflection/GASSRTTI.cpp
-	Reflection/GASSTypedProperty.cpp
 	RTC/GASSTaskNode.cpp
 	RTC/GASSTBBManager.cpp
 	Serialize/GASSISerialize.cpp

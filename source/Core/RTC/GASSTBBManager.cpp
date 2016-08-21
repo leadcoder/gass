@@ -25,11 +25,10 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSLogManager.h"
 #include <tbb/task_scheduler_init.h>
-#include <tbb/spin_mutex.h>
 
 namespace GASS
 {
-	TBBManager::TBBManager() 
+	TBBManager::TBBManager() : m_Scheduler(NULL)
 	{
 
 	}

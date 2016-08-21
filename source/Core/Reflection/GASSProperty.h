@@ -27,7 +27,6 @@
 #include "Core/Reflection/GASSTypedProperty.h"
 #include <assert.h>
 #include <sstream>
-#include <vector>
 
 namespace GASS
 {

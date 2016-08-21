@@ -38,7 +38,6 @@ THE SOFTWARE.
 #include "GASSLog.h"
 #include "GASSSingleton.h"
 #include <map>
-#include <string>
 
 namespace GASS
 {

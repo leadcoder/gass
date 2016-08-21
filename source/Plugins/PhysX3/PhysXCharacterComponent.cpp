@@ -21,6 +21,7 @@
 #include "Plugins/PhysX3/PhysXCharacterComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Core/Math/GASSMath.h"
 using namespace physx;
 namespace GASS
 {

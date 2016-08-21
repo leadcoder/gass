@@ -115,8 +115,6 @@ namespace GASS
 		void _SaveProperties(tinyxml2::XMLElement *parent);
 
 		bool _SerializeProperties(ISerializer* serializer);
-		
-	private:
 	};
 
 }

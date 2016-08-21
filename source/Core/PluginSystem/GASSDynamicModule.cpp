@@ -33,9 +33,9 @@ namespace GASS
 {
 
 
-	DynamicModule::DynamicModule(const std::string &module_name)
+	DynamicModule::DynamicModule(const std::string &module_name) : m_ModuleName(module_name), m_ModuleHandle(0)
 	{
-		m_ModuleName = module_name;
+		
 	}
 
 

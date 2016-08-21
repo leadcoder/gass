@@ -1,5 +1,4 @@
 #include "DistanceScaleComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -7,12 +6,9 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
-
 
 #define MOVMENT_EPSILON 0.0000001
 #define DISTANCE_SENDER 997

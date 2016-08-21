@@ -22,7 +22,6 @@
 #include "Core/Common.h"
 #include "GASSFileUtils.h"
 #include "GASSLogManager.h"
-#include "GASSException.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
 

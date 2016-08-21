@@ -23,9 +23,6 @@
 
 #include <Core/Common.h>
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/Serialize/GASSIXMLSerialize.h"
-#include "Core/Serialize/GASSISerialize.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 
 namespace tinyxml2
 {

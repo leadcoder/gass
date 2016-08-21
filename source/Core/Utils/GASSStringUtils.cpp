@@ -22,7 +22,6 @@
 #include "Core/Common.h"
 #include "GASSStringUtils.h"
 #include "GASSLogManager.h"
-#include "GASSException.h"
 #ifndef _MSC_VER
     #include <cxxabi.h>
 #endif

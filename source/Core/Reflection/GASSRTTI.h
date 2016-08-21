@@ -105,7 +105,7 @@ namespace GASS
 		/**
 		Gets base RTTI class.
 		*/
-		RTTI* GetAncestorRTTI()
+		RTTI* GetAncestorRTTI() const
 		{
 			return m_BaseRTTI;
 		}

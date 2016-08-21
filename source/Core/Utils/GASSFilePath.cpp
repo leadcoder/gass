@@ -39,7 +39,7 @@ namespace GASS
 			m_ExpandedPath = m_RawPath;
 	}
 
-	void FilePath::_FixPath(std::string &path)
+	void FilePath::_FixPath(std::string &path) const
 	{
 		//check if path start with \\\\, windows network path
 		std::string::size_type  pos = path.find("\\\\");

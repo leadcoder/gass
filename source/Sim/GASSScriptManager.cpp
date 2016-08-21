@@ -19,13 +19,12 @@
 *****************************************************************************/
 
 #include "Sim/GASSScriptManager.h"
-#include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Core/Utils/GASSStringUtils.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSComponent.h"

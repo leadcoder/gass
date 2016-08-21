@@ -151,8 +151,8 @@ namespace GASS
 		}
 
 		ENUM m_Value;
-		typedef typename std::map<std::string ,ENUM > NameEnumMap;
-		typedef typename std::map<ENUM ,std::string > EnumNameMap;
+		typedef std::map<std::string ,ENUM > NameEnumMap;
+		typedef std::map<ENUM ,std::string > EnumNameMap;
 		static NameEnumMap m_NameToEnumMap;
 		static EnumNameMap m_EnumToNameMap;
 	};

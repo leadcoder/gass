@@ -28,6 +28,7 @@
 #include <OgreEdgeListBuilder.h>
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"

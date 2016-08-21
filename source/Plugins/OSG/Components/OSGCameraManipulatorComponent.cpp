@@ -21,11 +21,10 @@
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/Utils/MyTrackballManipulator.h"
 #include "Plugins/OSG/Utils/CustomTerrainManipulator.h"
-#include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGConvert.h"
-#include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Core/Math/GASSMath.h"
+
 
 namespace GASS
 {

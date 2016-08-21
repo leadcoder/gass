@@ -24,13 +24,12 @@
 #include <sys/time.h>
 #endif
 #include "GASSTimer.h"
-#include <iostream>
 namespace GASS
 {
-	Timer::Timer()
+	Timer::Timer() : m_PerfTimerStart(0), m_StartTime(0)
 	{
 #ifdef WIN32
-		m_PerfTimerStart = 0;
+		
 		// Check To See If A Performance Counter Is Available
 		// If One Is Available The Timer Frequency Will Be Updated
 		if (!QueryPerformanceFrequency((LARGE_INTEGER *) &m_Frequency))

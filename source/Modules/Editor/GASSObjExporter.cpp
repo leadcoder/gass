@@ -1,5 +1,6 @@
 #include "GASSObjExporter.h"
 #include "Sim/GASS.h"
+#include "Core/Math/GASSMath.h"
 #include <fstream>
 #include "Core/Utils/GASSFilesystem.h"
 

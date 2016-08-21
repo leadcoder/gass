@@ -22,7 +22,6 @@
 #define DYNAMICMODULE_HH
 
 #include "Core/Common.h"
-#include <string>
 
 namespace GASS
 {

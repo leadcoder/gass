@@ -22,7 +22,6 @@
 #define GASS_VECTOR_H
 
 #include "Core/Common.h"
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
@@ -352,7 +351,7 @@ namespace GASS
 		Float FastLength() const;
 		Float FastInvLength() const;
 		bool InSphere(Vec3 &v, Float radius) const;
-		std::string ToString(const std::string &separator);
+		std::string ToString(const std::string &separator) const;
 	};
 
 	

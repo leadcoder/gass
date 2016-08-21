@@ -22,7 +22,6 @@
 #define ENUMLOOKUP_HH
 
 #include "Core/Common.h"
-#include <string>
 #include <map>
 
 namespace GASS

@@ -22,9 +22,7 @@
 #define GASS_SERIALIZE_H
 
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSFilePath.h"
-#include <cstring>
 
 // This is a modified version of serialization code from
 // the Enginuity article series (gamedev.net), Part V

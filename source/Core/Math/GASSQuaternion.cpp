@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	const Float Quaternion::ms_fEpsilon = (Float) 1e-03;
+	const Float Quaternion::ms_fEpsilon = static_cast<Float>(1e-03);
 	const Quaternion Quaternion::ZERO(0.0,0.0,0.0,0.0);
 	const Quaternion Quaternion::IDENTITY(1.0,0.0,0.0,0.0);
 
