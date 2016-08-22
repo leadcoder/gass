@@ -93,9 +93,9 @@ namespace GASS
 
 		bool Loading(){return false;}
 
-		bool hasOverflowed() { return bHasOverflowed; }
-		long getFlow() { return length-bytesUsed; } //should be equal to 0 when we're done
-		unsigned long getLength() { return length; }
+		bool hasOverflowed() const { return bHasOverflowed; }
+		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
+		unsigned long getLength() const { return length; }
 	};
 
     //Use specialized template to catch std::string
@@ -142,8 +142,8 @@ namespace GASS
 
 		bool Loading(){return true;}
 
-		bool hasOverflowed() { return bHasOverflowed; }
-		long getFlow() { return length-bytesUsed; } //should be equal to 0 when we're done
+		bool hasOverflowed() const { return bHasOverflowed; }
+		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
 
 	};
 

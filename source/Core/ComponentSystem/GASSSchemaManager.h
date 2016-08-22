@@ -58,12 +58,12 @@ namespace GASS
 	public:
 		SchemaManager();
 		virtual ~SchemaManager();
-		void Generate(const std::string& outpath);
+		void Generate(const std::string& outpath) const;
 		void LoadAllFromPath(const std::string filepath);
 		void Load(const std::string filename);
 		const SchemaObject* GetSchemaObject(const std::string &name) const;
 	protected:
-		void _Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr container);
+		void _Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr container) const;
 		void _SaveProp(tinyxml2::XMLElement* parent, IProperty* prop) const;
 		std::string _GetPropType(IProperty* prop) const;
 

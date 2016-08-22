@@ -41,12 +41,9 @@ set(CPP_FILES
 	PluginSystem/GASSDynamicModule.cpp
 	PluginSystem/GASSPluginManager.cpp
 	Reflection/GASSBaseReflectionObject.cpp
-	Reflection/GASSIProperty.cpp
 	Reflection/GASSProperty.cpp
 	RTC/GASSTaskNode.cpp
 	RTC/GASSTBBManager.cpp
-	Serialize/GASSISerialize.cpp
-	Serialize/GASSIXMLSerialize.cpp
 	Serialize/GASSSerialize.cpp
 	Utils/GASSEnumLookup.cpp
 	Utils/GASSException.cpp

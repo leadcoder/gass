@@ -71,7 +71,7 @@ namespace GASS
 
 		/** Gets the 3 orthonormal axes defining the quaternion. @see FromAxes */
 		void ToAxes(Vec3* akAxis) const;
-		void ToAxes(Vec3& xAxis, Vec3& yAxis, Vec3& zAxis);
+		void ToAxes(Vec3& xAxis, Vec3& yAxis, Vec3& zAxis) const;
 
 		/** Returns the X orthonormal axis defining the quaternion. Same as doing
 			xAxis = Vector3::UNIT_X * this. Also called the local X-axis

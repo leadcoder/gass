@@ -247,7 +247,7 @@ namespace GASS
 		}
 	}
 	//-----------------------------------------------------------------------
-	void Quaternion::ToAxes (Vec3& xAxis, Vec3& yAxis, Vec3& zAxis)
+	void Quaternion::ToAxes (Vec3& xAxis, Vec3& yAxis, Vec3& zAxis) const
 	{
 		Mat4 kRot;
 

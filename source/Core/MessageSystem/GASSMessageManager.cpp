@@ -25,9 +25,7 @@
 #include "Core/Utils/GASSException.h"
 
 #include <tbb/spin_mutex.h>
-#include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 namespace GASS
 {

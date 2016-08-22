@@ -92,7 +92,7 @@ namespace GASS
 				iter = m_Listeners.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 	
@@ -102,7 +102,7 @@ namespace GASS
 			:m_Caller(caller),m_Listeners(listeners),m_DeltaTime(delta_time)
 		{}
 		TaskNode2ListenerExecutor(TaskNode2ListenerExecutor& e,tbb::split)
-			:m_Listeners(e.m_Listeners)
+			:m_Caller(e.m_Caller), m_DeltaTime(e.m_DeltaTime), m_Listeners(e.m_Listeners)
 		{}
 	    TaskNode2ListenerExecutor & operator=( const TaskNode2ListenerExecutor & ) { return *this; }
 	
@@ -125,7 +125,7 @@ namespace GASS
 			:m_Children(children),m_DeltaTime(delta_time)
 		{}
 		TaskNode2ChildrenExecutor(TaskNode2ChildrenExecutor& e,tbb::split)
-			:m_Children(e.m_Children)
+			:m_Children(e.m_Children) , m_DeltaTime(e.m_DeltaTime)
 		{}
 		TaskNode2ChildrenExecutor & operator=( const TaskNode2ChildrenExecutor & ) { return *this; }
 
@@ -156,7 +156,7 @@ namespace GASS
 				iter = m_PostListeners.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -176,7 +176,7 @@ namespace GASS
 				double update_interval = 1.0/m_UpdateFrequency;
 				//do some time slicing
 				m_TimeToProcess += delta_time;
-				long long num_steps = (long long) (m_TimeToProcess / update_interval);
+				long long num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
 				long long clamp_num_steps = num_steps;
 				//Take max 10 simulation step each frame
 				if(m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)
@@ -215,7 +215,7 @@ namespace GASS
 				if(listener)
 				{
 					listener->Update(delta_time,this);
-					iter++;
+					++iter;
 				}
 				else
 					iter = m_Listeners.erase(iter);
@@ -229,7 +229,7 @@ namespace GASS
 				TaskNodeListenerPtr listener = (*iter).lock();
 				if(listener)
 				{
-					iter++;
+					++iter;
 				}
 				else // remove dead listener
 					iter = m_Listeners.erase(iter);
@@ -246,7 +246,7 @@ namespace GASS
 				if(listener)
 				{
 					listener->Update(delta_time,this);
-					iter++;
+					++iter;
 				}
 				else
 					iter = m_PostListeners.erase(iter);

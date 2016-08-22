@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <math.h>
 #include <stdio.h>
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSMath.h"

@@ -49,7 +49,7 @@ namespace GASS
 		/**
 			Get time in seconds
 		*/
-		double GetTime();
+		double GetTime() const;
 		/**
 			Reset time to 0
 		*/

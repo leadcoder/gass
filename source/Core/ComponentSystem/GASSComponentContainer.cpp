@@ -321,7 +321,7 @@ namespace GASS
 		return container;
 	}
 
-	ComponentPtr ComponentContainer::_LoadComponentXML(tinyxml2::XMLElement *comp_template)
+	ComponentPtr ComponentContainer::_LoadComponentXML(tinyxml2::XMLElement *comp_template) const
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -396,7 +396,7 @@ namespace GASS
 				const std::string comp_name = *dep_iter;
 				if(names.find(comp_name) == names.end())
 					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find dependent component:" + comp_name + " in component:" + GetName(),"ComponentContainer::CheckComponentDependencies");
-				dep_iter++;
+				++dep_iter;
 			}
 			++comp_iter;
 		}

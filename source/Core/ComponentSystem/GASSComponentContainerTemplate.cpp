@@ -335,7 +335,7 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr ComponentContainerTemplate::_LoadComponentXML(tinyxml2::XMLElement *comp_template)
+	ComponentPtr ComponentContainerTemplate::_LoadComponentXML(tinyxml2::XMLElement *comp_template) const
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");

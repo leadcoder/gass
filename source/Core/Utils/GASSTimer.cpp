@@ -74,7 +74,7 @@ namespace GASS
 	}
 
 	// Get Time In Seconds
-	double Timer::GetTime()
+	double Timer::GetTime() const
 	{
 #ifdef WIN32
 

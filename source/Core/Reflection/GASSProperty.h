@@ -23,7 +23,7 @@
 
 #include "Core/Common.h"
 #include "Core/Serialize/GASSSerialize.h"
-#include "Core/Serialize/GASSSTDSerialize.h"
+#include "Core/Serialize/GASSSTDSerialize.h" //move content to this file
 #include "Core/Reflection/GASSTypedProperty.h"
 #include <assert.h>
 #include <sstream>
@@ -181,7 +181,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + TypedProperty<T>::m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 
@@ -207,7 +207,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + IProperty::m_Name + " Property type may differ from provided any value","Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + TypedProperty<T>::m_Name + " Property type may differ from provided any value","Property::SetValue");
 			}
 
 			SetValue(object,res);

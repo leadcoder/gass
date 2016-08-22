@@ -1,6 +1,5 @@
 #include "GASSHeightField.h"
 #include "GASSRawFile.h"
-#include <math.h>
 #include <fstream>
 
 
@@ -147,7 +146,7 @@ namespace GASS
 		double length_2d = ray_2d.Length();
 
 		//get pixel spacing, assume square pixels
-		double px_spacing = GetBoundingBox().GetSize().x/((double) GetNumSamplesW());
+		double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
 
 		double stepsize = 1.0;
 

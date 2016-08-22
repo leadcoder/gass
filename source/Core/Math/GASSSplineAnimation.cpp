@@ -113,7 +113,7 @@ namespace GASS
 	}
 
 
-	Vec3 SplineAnimation::GetVectorMask(const Vec3 &up_dir)
+	Vec3 SplineAnimation::GetVectorMask(const Vec3 &up_dir) const
 	{
 		Vec3 abs_up_dir(fabs(up_dir.x),fabs(up_dir.y),fabs(up_dir.z));
 		Vec3 ret(1,1,1);

@@ -48,7 +48,7 @@ namespace GASS
 		void BuildInterpolationSplines(void);
 		void AddNode(const Vec3 &pos);
 		Mat4 GetTransformation(Float desired_distance, const Vec3 &up_dir);
-		Vec3 GetVectorMask(const Vec3 &up_dir);
+		Vec3 GetVectorMask(const Vec3 &up_dir) const;
 		Mat4 GetTransformation(Float desired_distance, const Vec3 &up_dir, Float pitch_weight);
 		Mat4 GetSkewTransformation(Float desired_distance, const Vec3 &up_dir, Float skew_weight);
 	

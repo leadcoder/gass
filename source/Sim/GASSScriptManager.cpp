@@ -25,8 +25,8 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Core/Math/GASSMath.h"
-#include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include <tinyxml2.h>
 #include <angelscript.h>

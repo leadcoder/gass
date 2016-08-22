@@ -20,12 +20,12 @@ namespace GASS
 		double update(double input, double dt);
 
 		void setOutputLimit(double limit);
-		double getOutputLimit() { return outlimit; }
-		double getKp() { return Kp; }
-		double getKi() { return Ki; }
-		double getKd() { return Kd; }
+		double getOutputLimit() const { return outlimit; }
+		double getKp() const { return Kp; }
+		double getKi() const { return Ki; }
+		double getKd() const { return Kd; }
 		void setIntCap(double limit);
-		double getIntCap() { return intcap; }
+		double getIntCap() const { return intcap; }
 
 		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
 		{

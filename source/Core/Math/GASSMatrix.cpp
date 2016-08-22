@@ -694,7 +694,7 @@ namespace GASS
 		B[3][3] *= det;
 	}
 
-	Mat4 Mat4::Invert2()
+	Mat4 Mat4::Invert2() const
 	{
 		Mat4 result;
 		FastInvert(m_Data,result.m_Data);

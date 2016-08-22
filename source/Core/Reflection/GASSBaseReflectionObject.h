@@ -76,7 +76,6 @@ namespace GASS
             @return true if property found and set
 		*/
 		void SetPropertyByType(const std::string &property_name, GASS_ANY value);
-
 		/**Check if property exist
 		    @param property_name Name of the property to get
             @return true if property found
@@ -89,7 +88,7 @@ namespace GASS
             @param value The returned value provided as GASS_ANY argument
             @return true if property found
 		*/
-		bool GetPropertyByType(const std::string &property_name, GASS_ANY &value);
+		bool GetPropertyByType(const std::string &property_name, GASS_ANY &value) const;
 
 		/**
 		Get all properties from this object
@@ -112,7 +111,7 @@ namespace GASS
 		//internal stuff
 	protected:
 		void _LoadProperties(tinyxml2::XMLElement *elem);
-		void _SaveProperties(tinyxml2::XMLElement *parent);
+		void _SaveProperties(tinyxml2::XMLElement *parent) const;
 
 		bool _SerializeProperties(ISerializer* serializer);
 	};
