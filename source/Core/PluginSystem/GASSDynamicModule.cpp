@@ -49,7 +49,7 @@ namespace GASS
 	SetErrorMode(0);
 #endif
 
-		m_ModuleHandle = (DYNLIB_HANDLE)DYNLIB_LOAD(m_ModuleName.c_str());
+		m_ModuleHandle = static_cast<DYNLIB_HANDLE>(DYNLIB_LOAD(m_ModuleName.c_str()));
 
 #ifndef _MSC_VER
 		char *errstr = dlerror();

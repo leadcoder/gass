@@ -155,15 +155,19 @@ namespace GASS
 			if (serializer->Loading())
 			{
 				T val;
-				SerialLoader* loader = (SerialLoader*) serializer;
-				loader->IO<T>(val);
-				SetValue(object,val);
+				SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+				if (loader)
+				{
+					loader->IO<T>(val);
+					SetValue(object, val);
+				}
 			}
 			else
 			{
 				T val = GetValue(object);
-				SerialSaver* saver = (SerialSaver*) serializer;
-				saver->IO<T>(val);
+				SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+				if(saver)
+					saver->IO<T>(val);
 			}
 		}
 
@@ -177,7 +181,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + IProperty::m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 

@@ -103,85 +103,91 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = (SerialLoader*) serializer;
-			loader->IO<int>(num_comp);
-
-			for(int i  = 0 ; i < num_comp; i++)
+			SerialLoader* loader = dynamic_cast<SerialLoader*>( serializer);
+			if (loader)
 			{
-				std::string comp_type;
-				loader->IO<std::string>(comp_type);
-				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
-				if(comp)
-				{
-					SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
-					if(s_comp)
-					{
-						if(!s_comp->Serialize(serializer))
-							return false;
-					}
-					AddComponent(comp);
-				}
-				else
-				{
-					LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
-				}
-			}
+				loader->IO<int>(num_comp);
 
-			int num_children = 0;
-			loader->IO<int>(num_children);
-			for(int i  = 0 ; i < num_children; i++)
-			{
-				const std::string class_name = GetRTTI()->GetClassName();
-				ComponentContainerTemplatePtr child = ComponentContainerTemplateFactory::Get().Create(class_name);
-				if(!child)
+				for (int i = 0; i < num_comp; i++)
 				{
-					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + class_name,"ComponentContainerTemplate::Serialize");
-				}
-				//ComponentContainerTemplatePtr child  = GASS_DYNAMIC_PTR_CAST<IComponentContainerTemplate> (CreateInstance());
-				if(child)
-				{
-					SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
-					if(s_child)
+					std::string comp_type;
+					loader->IO<std::string>(comp_type);
+					ComponentPtr comp(ComponentFactory::Get().Create(comp_type));
+					if (comp)
 					{
-						if(!s_child->Serialize(serializer))
-							return false;
+						SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
+						if (s_comp)
+						{
+							if (!s_comp->Serialize(serializer))
+								return false;
+						}
+						AddComponent(comp);
 					}
-					AddChild(child);
+					else
+					{
+						LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+					}
+				}
+
+				int num_children = 0;
+				loader->IO<int>(num_children);
+				for (int i = 0; i < num_children; i++)
+				{
+					const std::string class_name = GetRTTI()->GetClassName();
+					ComponentContainerTemplatePtr child = ComponentContainerTemplateFactory::Get().Create(class_name);
+					if (!child)
+					{
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create ComponentContainerTemplate instance " + class_name, "ComponentContainerTemplate::Serialize");
+					}
+					//ComponentContainerTemplatePtr child  = GASS_DYNAMIC_PTR_CAST<IComponentContainerTemplate> (CreateInstance());
+					if (child)
+					{
+						SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
+						if (s_child)
+						{
+							if (!s_child->Serialize(serializer))
+								return false;
+						}
+						AddChild(child);
+					}
 				}
 			}
 		}
 		else
 		{
 			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = (SerialSaver*) serializer;
-			saver->IO<int>(num_comp);
-
-			ComponentVector::iterator iter = m_ComponentVector.begin();
-			while (iter != m_ComponentVector.end())
+			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			if (saver)
 			{
-				ComponentPtr comp = (*iter);
-				SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
-				if(s_comp)
-				{
-					if(!s_comp->Serialize(serializer))
-						return false;
+				saver->IO<int>(num_comp);
 
+				ComponentVector::iterator iter = m_ComponentVector.begin();
+				while (iter != m_ComponentVector.end())
+				{
+					ComponentPtr comp = (*iter);
+					SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
+					if (s_comp)
+					{
+						if (!s_comp->Serialize(serializer))
+							return false;
+
+					}
+					++iter;
 				}
-				++iter;
-			}
 
-			int num_children = static_cast<int>( m_ComponentContainerVector.size());
-			saver->IO<int>(num_children);
+				int num_children = static_cast<int>(m_ComponentContainerVector.size());
+				saver->IO<int>(num_children);
 
-			ComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
-			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
-			{
-				ComponentContainerTemplatePtr child = *go_iter;
-				SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
-				if(s_child)
+				ComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
+				for (go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 				{
-					if(!s_child->Serialize(serializer))
-						return false;
+					ComponentContainerTemplatePtr child = *go_iter;
+					SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
+					if (s_child)
+					{
+						if (!s_child->Serialize(serializer))
+							return false;
+					}
 				}
 			}
 		}

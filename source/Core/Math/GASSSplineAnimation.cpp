@@ -60,7 +60,7 @@ namespace GASS
 		Float seg_dist = 0;
 		Float tot_dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
-		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
+		for(int  i = 0; i < static_cast<int>(m_NodeVector.size()); i++)
 		{
 			for(Float t = 0; t <= (1 + step_size); t += step_size)
 			{
@@ -215,7 +215,7 @@ namespace GASS
 		Float dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
 		
-		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
+		for(int  i = 0; i < static_cast<int>(m_NodeVector.size()); i++)
 		{
 			if(desired_distance <= m_NodeVector[i].m_SegmentDistance + dist)
 			{

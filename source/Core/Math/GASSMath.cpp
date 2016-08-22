@@ -230,9 +230,9 @@ namespace GASS
 		const Float theta2 = atan2(y2,x2);
 		Float dtheta = theta2 - theta1;
 		while (dtheta > GASS_PI)
-			dtheta -= 2.0f*(Float)GASS_PI;
-		while (dtheta < -(Float)GASS_PI)
-			dtheta += 2.0f*(Float)GASS_PI;
+			dtheta -= 2.0f*GASS_PI;
+		while (dtheta < -GASS_PI)
+			dtheta += 2.0f*GASS_PI;
 
 		return dtheta;
 	}
@@ -497,7 +497,7 @@ namespace GASS
 				{
 					point = closest_point_on_line;
 					shortest_dist = dist;
-					segment_index = (int)i;
+					segment_index =  static_cast<int>(i);
 				}
 			}
 		}
@@ -522,7 +522,7 @@ namespace GASS
 		Float remaining = pathDistance;
 		if (cyclic)
 		{
-			remaining = (Float) fmod(pathDistance, totalPathLength);
+			remaining = fmod(pathDistance, totalPathLength);
 		}
 		else
 		{
@@ -533,8 +533,11 @@ namespace GASS
 			}
 			if (pathDistance >= totalPathLength)
 			{
-				index = (int) wps.size()-1;
-				return wps[wps.size()-1];
+				if(wps.size() > 1)
+				{
+					index = static_cast<int>(wps.size() - 1);
+					return wps[wps.size() - 1];
+				}
 			}
 		}
 
@@ -836,7 +839,7 @@ namespace GASS
 	Float Math::RandomValue(Float start, Float end)
 	{
 		const Float span = end - start;
-		const Float norm_rand = (Float)rand()/(Float)RAND_MAX;
+		const Float norm_rand = static_cast<Float>(rand())/ static_cast<Float>(RAND_MAX);
 		const Float ret_value = start + norm_rand * span;
 		return ret_value;
 	}

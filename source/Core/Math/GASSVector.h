@@ -310,7 +310,7 @@ namespace GASS
 
 		inline Float Length() const
 		{
-			return (Float) sqrt(x*x+y*y+z*z);
+			return sqrt(x*x+y*y+z*z);
 		}
 
 		inline void Normalize()
