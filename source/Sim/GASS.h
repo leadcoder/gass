@@ -21,6 +21,7 @@
 //common Core includes
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Serialize/GASSSerialize.h"

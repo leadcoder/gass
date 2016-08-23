@@ -22,9 +22,9 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGBA.h"
-#include "Sim/Interface/GASSIRenderWindow.h"
 #include "Core/Utils/GASSEnumBinder.h"
-#include <string>
+#include "Core/Math/GASSVector.h"
+#include "Sim/Interface/GASSIRenderWindow.h"
 
 namespace GASS
 {
