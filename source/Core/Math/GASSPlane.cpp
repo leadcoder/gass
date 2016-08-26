@@ -18,8 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <math.h>
-
 #include "Core/Math/GASSPlane.h"
 #include "Core/Math/GASSTriangle.h"
 

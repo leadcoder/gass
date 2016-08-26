@@ -22,7 +22,6 @@
 #include "Core/Common.h"
 #include "GASSXMLUtils.h"
 #include "GASSStringUtils.h"
-#include "GASSLogManager.h"
 #include "GASSException.h"
 #include <tinyxml2.h>
 

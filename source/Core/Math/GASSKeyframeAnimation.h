@@ -46,6 +46,7 @@ namespace GASS
 			m_UsePos = false;
 			m_UseRot = false;
 			m_Time = 0;
+			m_UseTime = false;
 		}
 
 		friend std::ostream& operator << (std::ostream& os, const Key& key)

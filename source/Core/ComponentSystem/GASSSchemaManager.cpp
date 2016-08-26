@@ -90,7 +90,7 @@ namespace GASS
 
 	}
 
-	void SchemaManager::Generate(const std::string& outpath)
+	void SchemaManager::Generate(const std::string& outpath) const
 	{
 		std::vector<std::string> names = ComponentContainerFactory::GetPtr()->GetFactoryNames();
 		for (size_t i = 0; i < names.size(); i++)
@@ -111,7 +111,7 @@ namespace GASS
 		}
 	}
 
-	void SchemaManager::_Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr object)
+	void SchemaManager::_Save(const std::string& outpath, const std::string &classname, BaseReflectionObjectPtr object) const
 	{
 		//Create xml file
 		tinyxml2::XMLDocument doc;

@@ -24,6 +24,7 @@
 #include "Sim/GASSRunTimeController.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
 #include <tbb/task_scheduler_init.h>
 #include <tbb/spin_mutex.h>
 

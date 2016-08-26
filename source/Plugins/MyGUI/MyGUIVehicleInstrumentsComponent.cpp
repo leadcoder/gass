@@ -20,26 +20,13 @@
 
 
 #include "MyGUIVehicleInstrumentsComponent.h"
-
-#include <osg/NodeVisitor>
-#include <osg/Geometry>
-#include <osg/Texture2D>
-#include <osg/Texture>
-#include <osg/Geode>
-#include <osg/Image>
 #include "MyGUI_RTTLayer.h"
-#include "MyGUI_OpenGLTexture.h"
-
 #include "MyGUIOSGSystem.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/GASSSimEngine.h"
 #include "Plugins/OSG/IOSGMesh.h"
 
 

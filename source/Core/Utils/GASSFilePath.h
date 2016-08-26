@@ -22,7 +22,6 @@
 #define FILEPATH_HH
 
 #include "Core/Common.h"
-#include "stdio.h"
 #include <string>
 #include <fstream>
 
@@ -70,7 +69,7 @@ namespace GASS
 			return is;
 		}
 	private:
-		void _FixPath(std::string &path);
+		void _FixPath(std::string &path) const;
 		std::string _ExpandEnvVariables(const std::string &inStr);
 		std::string m_ExpandedPath;
 		std::string m_RawPath;

@@ -25,6 +25,8 @@
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Plugins/OSG/OSGGeometryRecorder.h"
+#include "Core/Math/GASSMath.h"
+
 
 namespace GASS
 {

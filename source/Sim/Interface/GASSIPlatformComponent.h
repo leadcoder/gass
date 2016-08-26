@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
 
 namespace GASS
 {

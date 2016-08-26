@@ -21,10 +21,10 @@
 
 #pragma once
 
+#include "Core/Common.h"
 #include <typeinfo>
 #include "Core/Reflection/GASSRTTI.h"
 #include "Core/Reflection/GASSProperty.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 
 namespace tinyxml2

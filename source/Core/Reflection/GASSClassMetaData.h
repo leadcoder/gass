@@ -22,9 +22,6 @@
 #define GASS_OBJECT_META_DATA_H
 
 #include "Core/Common.h"
-#include <assert.h>
-#include <sstream>
-#include <vector>
 
 namespace GASS
 {

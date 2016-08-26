@@ -29,13 +29,13 @@ namespace GASS
 			Read 16-bit value and return uncompressed float value
 			Note: No allocation check present, performance reason
 		*/
-		float ReadValue(int elem ) const {return RangeMin + ((float)Data[elem]/65536.0f)*(RangeMax - RangeMin);} 
+		float ReadValue(int elem ) const {return RangeMin + (static_cast<float>(Data[elem])/65536.0f)*(RangeMax - RangeMin);} 
 
 		/**
 			Write float value by converting to 16-bit using value range,
 			Note: No allocation check present, performance reason  
 		*/
-		void WriteValue(int elem , float value) {Data[elem] = (unsigned short) ((value - RangeMin)/(RangeMax - RangeMin)*65536.0f);}
+		void WriteValue(int elem , float value) {Data[elem] = static_cast<unsigned short>((value - RangeMin)/(RangeMax - RangeMin)*65536.0f);}
 
 		float GetMinRange() const {return RangeMin;}
 		float GetMaxRange() const {return RangeMax;}

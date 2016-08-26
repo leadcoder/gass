@@ -22,7 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-#include <vector>
 
 namespace tinyxml2
 {

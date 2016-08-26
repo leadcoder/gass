@@ -71,7 +71,7 @@ namespace GASS
 		}
 		else
 		{
-			SerialSaver* saver = (SerialSaver*) serializer;
+			SerialSaver* saver = static_cast<SerialSaver*>(serializer);
 			std::string comp_type = GetRTTI()->GetClassName();
 			saver->IO<std::string>(comp_type);
 			if(!BaseReflectionObject::_SerializeProperties(serializer))
@@ -113,7 +113,7 @@ namespace GASS
 		BaseReflectionObject::CopyPropertiesTo(dest_comp);
 	}
 
-	std::vector<std::string> Component::GetDependencies()
+	std::vector<std::string> Component::GetDependencies() const
 	{
 		return m_Dependencies[GetRTTI()];
 	}

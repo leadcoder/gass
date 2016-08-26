@@ -163,7 +163,7 @@ namespace GASS
 
 		//TODO: document diff and select one method
 		Mat4 Invert() const;
-		Mat4 Invert2(); 
+		Mat4 Invert2() const; 
 
 		Mat4 GetRotation() const;
 		Vec3 GetRotationRadians() const;

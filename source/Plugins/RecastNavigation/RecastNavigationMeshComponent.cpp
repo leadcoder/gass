@@ -20,21 +20,18 @@
 
 #include "RecastNavigationMeshComponent.h"
 #include "Recast.h"
-#include "RecastAlloc.h"
-#include "RecastAssert.h"
-#include "DetourAssert.h"
 #include "DetourNavMesh.h"
 #include "DetourNavMeshBuilder.h"
 #include "DetourNavMeshQuery.h"
 #include "DetourCommon.h"
-#include "DetourTileCache.h"
 #include "RecastOffmeshMeshConnectionComponent.h"
 #include "RecastConvexVolumeComponent.h"
 #include "InputGeom.h"
 #include "tinyxml2.h"
 #include "Core/Utils/GASSFileUtils.h"
+#include "Core/Math/GASSMath.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSPhysicsMesh.h"
-#include <cfloat>
 
 namespace GASS
 {

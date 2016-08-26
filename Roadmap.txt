@@ -16,9 +16,6 @@ TODO:	Make new network plugin using ENET
 
 50%:    Add more boost file system functionality, can be used to parse folder structures for dll- or xml-files
 
-20%:	Complete Havok plugin
-
-
 
 
 REFACTORING
@@ -33,6 +30,13 @@ TODO:	Use REG_PROPERTY macro in all componets
 
 TODO:	CollisionSettingsRequest should be splitted into "CollisionSystemSettingsRequest" and "PhysicsCollisionSettingsRequest"
 
+TODO:	Rename export macro for GASSSim from GASS_EXPORTS to GASSSIM_EXPORTS
+
+TODO:	Move GASSSTDSerialize.h into GASSProperty.h	
+
+TODO:	Select Invert2 or Invert in Mat4
+
+TODO:	Use reinterpret_cast in heightfield etc.
 
 
 

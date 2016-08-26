@@ -22,8 +22,6 @@
 #define FILE_UTILS_HH
 
 #include "Core/Common.h"
-#include "Core/Math/GASSVector.h"
-
 
 namespace GASS
 {

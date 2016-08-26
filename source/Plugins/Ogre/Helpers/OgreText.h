@@ -1,5 +1,4 @@
-#include "Sim/GASSCommon.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 
 
 class TextRenderer : public Ogre::Singleton<TextRenderer>

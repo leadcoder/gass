@@ -25,6 +25,8 @@
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
+
 
 namespace GASS
 {

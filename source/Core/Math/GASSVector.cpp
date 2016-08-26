@@ -18,10 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <math.h>
 #include <stdio.h>
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSMath.h"
 
 namespace GASS
@@ -57,7 +55,7 @@ namespace GASS
 		return Math::InvSqrt(static_cast<float>(x*x+y*y+z*z));
 	}
 
-	std::string Vec3::ToString(const std::string &separator)
+	std::string Vec3::ToString(const std::string &separator) const
 	{
 		char ret[128];
 #ifdef _MSC_VER

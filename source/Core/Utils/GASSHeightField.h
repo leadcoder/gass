@@ -101,7 +101,7 @@ namespace GASS
 		/**
 		Simple LOS check, just step along ray with image spacing distances and check if point is above ground
 		*/
-		bool CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos);
+		bool CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos) const;
 
 		/**
 			Get raw data

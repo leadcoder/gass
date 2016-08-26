@@ -13,7 +13,8 @@ namespace GASS
 {
 	RawFile::RawFile() : m_Data(NULL),
 		m_Height(0),
-		m_Width(0)
+		m_Width(0),
+		m_BPP(8)
 	{
 
 	}
@@ -30,7 +31,7 @@ namespace GASS
 		return Load(filename,m_Width, m_Height, bpp);
 	}
 
-	int RawFile::GetSize(const std::string filename, int bpp)
+	int RawFile::GetSize(const std::string filename, int bpp) const
 	{
 		FILE *fp=fopen(filename.c_str(),"rb");
 		if(!fp)return false;

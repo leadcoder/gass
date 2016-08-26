@@ -21,9 +21,9 @@
 #include "SkyXComponent.h"
 #include "SkyXVolumeCloudComponent.h"
 #include "SkyXCloudLayerComponent.h"
-#include "Plugins/Ogre/IOgreCameraProxy.h"
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
-#include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/GASSIOgreCameraProxy.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSOgreConvert.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"

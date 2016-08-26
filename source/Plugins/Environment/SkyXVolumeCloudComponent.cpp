@@ -21,7 +21,7 @@
 #include "SkyXVolumeCloudComponent.h"
 #include "SkyXComponent.h"
 
-#include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"

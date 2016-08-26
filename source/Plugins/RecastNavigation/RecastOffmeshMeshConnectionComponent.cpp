@@ -19,16 +19,7 @@
 *****************************************************************************/
 
 #include "RecastOffmeshMeshConnectionComponent.h"
-#include "Recast.h"
-#include "RecastAlloc.h"
-#include "RecastAssert.h"
-#include "DetourAssert.h"
-#include "DetourNavMesh.h"
-#include "DetourNavMeshBuilder.h"
-#include "DetourNavMeshQuery.h"
-#include "DetourCommon.h"
-#include "DetourTileCache.h"
-#include "InputGeom.h"
+#include "Core/Math/GASSMath.h"
 #include "tinyxml2.h"
 
 namespace GASS

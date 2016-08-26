@@ -39,7 +39,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
 
 namespace GASS
 {

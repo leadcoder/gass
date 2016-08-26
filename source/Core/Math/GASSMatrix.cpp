@@ -125,25 +125,25 @@ namespace GASS
 	void Mat4::Rotate(Float h,Float p,Float r)
 	{
 
-		Float cp = (Float)cos(p);
-		Float sp = (Float)sin(p);
-		Float ch = (Float)cos(h);
-		Float sh = (Float)sin(h);
-		Float cr = (Float)cos(r);
-		Float sr = (Float)sin(r);
+		Float cp = cos(p);
+		Float sp = sin(p);
+		Float ch = cos(h);
+		Float sh = sin(h);
+		Float cr = cos(r);
+		Float sr = sin(r);
 
 
-		m_Data[0][0] = ( Float )( cr*ch+sr*sp*sh );
-		m_Data[0][1] = ( Float )( sr*cp );
-		m_Data[0][2] = ( Float )( -cr*sh+sr*sp*ch );
+		m_Data[0][0] = ( cr*ch+sr*sp*sh );
+		m_Data[0][1] = ( sr*cp );
+		m_Data[0][2] = ( -cr*sh+sr*sp*ch );
 
-		m_Data[1][0] = ( Float )( -sr*ch+cr*sp*sh );
-		m_Data[1][1] = ( Float )( cr*cp );
-		m_Data[1][2] = ( Float )( sr*sh+cr*sp*ch);
+		m_Data[1][0] = ( -sr*ch+cr*sp*sh );
+		m_Data[1][1] = ( cr*cp );
+		m_Data[1][2] = ( sr*sh+cr*sp*ch);
 
-		m_Data[2][0] = ( Float )( cp*sh );
-		m_Data[2][1] = ( Float )( -sp );
-		m_Data[2][2] = ( Float )( cp*ch );
+		m_Data[2][0] = ( cp*sh );
+		m_Data[2][1] = ( -sp );
+		m_Data[2][2] = ( cp*ch );
 
 	}
 
@@ -211,8 +211,8 @@ namespace GASS
 
 	void Mat4::RotateY(Float amount)
 	{
-		Float ch = (Float)cos( amount);
-		Float sh = (Float)sin( amount);
+		Float ch = cos( amount);
+		Float sh = sin( amount);
 
 		m_Data[0][0] = ch;
 		m_Data[0][1] = 0;
@@ -240,8 +240,8 @@ namespace GASS
 
 	void Mat4::RotateX(Float amount)
 	{
-		Float cp = (Float)cos( amount);
-		Float sp = (Float)sin( amount);
+		Float cp = cos( amount);
+		Float sp = sin( amount);
 
 		m_Data[0][0] = 1;
 		m_Data[0][1] = 0;
@@ -266,8 +266,8 @@ namespace GASS
 
 	void Mat4::RotateZ(Float amount)
 	{
-		Float cr = (Float)cos( amount);
-		Float sr = (Float)sin( amount);
+		Float cr = cos( amount);
+		Float sr = sin( amount);
 
 		m_Data[0][0] = cr;
 		m_Data[0][1] = -sr;
@@ -694,7 +694,7 @@ namespace GASS
 		B[3][3] *= det;
 	}
 
-	Mat4 Mat4::Invert2()
+	Mat4 Mat4::Invert2() const
 	{
 		Mat4 result;
 		FastInvert(m_Data,result.m_Data);

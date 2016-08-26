@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Sim/GASSGraphicsMesh.h"
-
+#include "Core/Math/GASSMath.h"
 namespace GASS
 {
 	GraphicsMesh::GraphicsMesh()

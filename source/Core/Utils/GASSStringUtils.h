@@ -70,7 +70,6 @@ namespace GASS
 			return new_str;
 		}
 		static std::string ToUpper(const std::string&str);
-		static void GetVector(const char* str,Vec3 &vec);
 		static int CompareNoCase(const std::string &str1, const std::string &str2)
 		{
 			return StringUtils::ToLower(str1).compare(ToLower(str2));
