@@ -19,21 +19,10 @@
 *****************************************************************************/
 
 #include "TemplateSourceComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSResourceManager.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
-
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
 
 namespace GASS
 {

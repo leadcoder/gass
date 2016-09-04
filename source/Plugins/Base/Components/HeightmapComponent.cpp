@@ -19,10 +19,7 @@
 *****************************************************************************/
 
 #include "HeightmapComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"

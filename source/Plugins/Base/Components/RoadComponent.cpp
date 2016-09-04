@@ -253,7 +253,8 @@ namespace GASS
 		Float v_coord = 0;
 		Vec3 uv_old_pos = points[0];
 		Vec3 uv_new_pos;
-		Vec3 pos, front;
+		Vec3 front;
+		//Vec3 pos;
 
 		float tot_width = m_RoadWidth + 2*m_DitchWidth;
 

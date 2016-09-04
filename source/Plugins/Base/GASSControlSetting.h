@@ -22,8 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include <map>
-#include <string>
 
 namespace GASS
 {
@@ -36,7 +34,7 @@ namespace GASS
 	{
 	public:
 		ControlSetting(const std::string &name, ControlSettingsSystem* owner, IInputSystem* input);
-		~ControlSetting(void);
+		virtual ~ControlSetting(void);
 		void AddController(Controller *controller, const std::string &name,int action);
 		virtual Controller* GetController(const std::string &input) const;
 		IInputSystem* GetInputSystem() const {return m_Input;}

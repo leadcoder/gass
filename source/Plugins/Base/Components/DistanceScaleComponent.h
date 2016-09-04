@@ -2,10 +2,9 @@
 #include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 namespace GASS
 {
@@ -18,7 +17,6 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnSelectedTransformation(TransformationChangedEventPtr message);
 		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);

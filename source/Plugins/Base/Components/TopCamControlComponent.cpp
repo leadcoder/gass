@@ -22,8 +22,8 @@
 #include "Plugins/Base/Components/TopCamControlComponent.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Core/Math/GASSMath.h"
-#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICAmeraComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -47,7 +47,8 @@ namespace GASS
 		m_ScrollDownInput(0),
 		m_Active(false),
 		m_CurrentWindowSize(45),
-		m_ControlSettingName("FreeCameraInputSettings")
+		m_ControlSettingName("FreeCameraInputSettings"),
+		m_FixedHeight(0)
 	{
 
 	}

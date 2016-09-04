@@ -20,20 +20,13 @@
 
 
 #include "EntityTypeComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneManagerFactory.h"
-
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
-
 
 namespace GASS
 {

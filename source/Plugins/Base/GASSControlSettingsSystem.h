@@ -21,11 +21,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-
-#include <map>
-#include <string>
 
 namespace GASS
 {
@@ -48,7 +44,6 @@ namespace GASS
 		void Free();
 		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
-		int GetDevice(std::string device) const;
 		void Add(const std::string &name,ControlSetting* cs);
 		typedef std::map<std::string,ControlSetting*> ControlSettingMap;
 		ControlSettingMap m_ControlSettingMap;

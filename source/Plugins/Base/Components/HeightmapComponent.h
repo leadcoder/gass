@@ -24,7 +24,6 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {

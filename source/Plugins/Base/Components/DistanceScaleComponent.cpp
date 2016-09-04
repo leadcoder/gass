@@ -4,7 +4,9 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
@@ -18,7 +20,8 @@ namespace GASS
 	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000.0f), 
 		m_MinDistance(0.1f),
 		m_FOV(45.0f),
-		m_ScaleLocation(false)
+		m_ScaleLocation(false),
+		m_LastDist(0)
 	{
 
 	}

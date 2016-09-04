@@ -21,9 +21,8 @@
 #include "GASSControlSetting.h"
 #include "GASSControlSettingsSystem.h"
 #include "GASSController.h"
-
 #include "Sim/Interface/GASSIInputSystem.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
+
 namespace GASS
 {
 

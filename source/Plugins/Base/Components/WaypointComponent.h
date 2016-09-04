@@ -22,15 +22,10 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSSceneObject.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
 
 namespace GASS
 {
@@ -63,7 +58,6 @@ namespace GASS
 		void OnChangeName(GASS::SceneObjectNameMessagePtr message);
 		void OnMoved(MessagePtr message);
 		void OnTangentMoved(MessagePtr message);
-		void OnPosition(PositionRequestPtr message);
 		void OnRotate(WorldRotationRequestPtr message);
 		void UpdateTangentLine();
 		

@@ -50,7 +50,8 @@ namespace GASS
 		m_FadeStart(false),
 		m_FadeEnd(false),
 		m_Color(1,1,1,1),
-		m_RotateTexture(false)
+		m_RotateTexture(false),
+		m_CustomDitchTexturePercent(0)
 	{
 
 	}
@@ -170,8 +171,8 @@ namespace GASS
 		Float v_coord = 0;
 		Vec3 uv_old_pos = points[0];
 		Vec3 uv_new_pos;
-		Vec3 pos, front;
-
+		Vec3 front;
+		//Vec3 pos
 		Float u_coord[3] = {0,0.5,1};
 		Float lr_vector_multiplier[3] = {m_Width*0.5, 0, -m_Width*0.5};
 
