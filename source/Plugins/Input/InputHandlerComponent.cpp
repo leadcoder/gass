@@ -19,16 +19,13 @@
 *****************************************************************************/
 
 #include "InputHandlerComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Messages/GASSInputMessages.h"
 
 namespace GASS
 {
