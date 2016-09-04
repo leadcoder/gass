@@ -24,11 +24,7 @@
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
-
 #pragma warning(disable: 4512)
 #include <Ogre.h>
 

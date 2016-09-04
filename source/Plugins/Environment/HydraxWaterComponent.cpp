@@ -19,7 +19,6 @@
 *****************************************************************************/
 
 #include "HydraxWaterComponent.h"
-#include "HydraxRTTListener.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/GASSIOgreCameraProxy.h"
 #include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"

@@ -23,10 +23,6 @@
 #include "Core/Common.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include <OgreRenderTargetListener.h>
 #include "SkyX.h"
 
 namespace GASS
