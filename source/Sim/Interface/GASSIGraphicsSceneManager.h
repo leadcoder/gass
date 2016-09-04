@@ -22,9 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGBA.h"
-#include "Sim/Interface/GASSIRenderWindow.h"
 #include "Core/Utils/GASSEnumBinder.h"
-#include <string>
 
 namespace GASS
 {
@@ -56,7 +54,6 @@ namespace GASS
 			Draw 3d-line for debugging
 		*/
 		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color) = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IGraphicsSceneManager> GraphicsSceneManagerPtr;
 }

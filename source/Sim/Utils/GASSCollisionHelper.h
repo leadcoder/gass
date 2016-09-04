@@ -34,7 +34,6 @@ namespace GASS
 		CollisionHelper();
 		~CollisionHelper();
 		static Float GetHeightAtPosition(ScenePtr scene, const Vec3 &pos, GeometryFlags flags, bool absolute = true);
-	protected:
 	};
 }
 

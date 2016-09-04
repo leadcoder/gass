@@ -25,12 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "Sim/GASSCommon.h"
-
-#include <iostream>
 #include <vector>
-#include <sstream>
-#include <string>
-#include <iomanip>
 
 #ifdef GUID_ANDROID
 #include <jni.h>
@@ -68,7 +63,7 @@ class GASSExport Guid
 	
 	bool operator < (const Guid &guid) const
 	{ return _bytes < guid._bytes; }
-	bool is_nil() { return *this == Guid(); }
+	bool is_nil() const { return *this == Guid(); }
   private:
 
     // actual data

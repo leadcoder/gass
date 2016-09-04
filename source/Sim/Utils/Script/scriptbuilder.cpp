@@ -55,7 +55,7 @@ asIScriptModule *CScriptBuilder::GetModule()
 
 unsigned int CScriptBuilder::GetSectionCount() const
 {
-	return (unsigned int)(includedScripts.size());
+	return static_cast<unsigned int>(includedScripts.size());
 }
 
 string CScriptBuilder::GetSectionName(unsigned int idx) const

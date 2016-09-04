@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"

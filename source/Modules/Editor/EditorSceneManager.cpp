@@ -80,8 +80,7 @@ namespace GASS
 		std::string ctn = template_name;
 		ScenePtr scene = GetScene();
 		
-		Vec3 vel(0, 0, 0);
-		Vec3 pos = scene->GetStartPos();
+		//Vec3 pos = scene->GetStartPos();
 		Quaternion rot(scene->GetStartRot());
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
@@ -151,7 +150,7 @@ namespace GASS
 				return true;
 			}
 			else
-				iter++;
+				++iter;
 		}
 		return false;
 	}
@@ -168,7 +167,7 @@ namespace GASS
 				GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 

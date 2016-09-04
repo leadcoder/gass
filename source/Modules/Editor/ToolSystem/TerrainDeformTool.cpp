@@ -1,17 +1,14 @@
 #include "TerrainDeformTool.h"
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/Components/PaintGizmoComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -69,6 +66,8 @@ namespace GASS
 					break;
 				case TEM_LAYER_PAINT:
 					terrain_group->PostRequest(TerrainPaintRequestPtr(new TerrainPaintRequest(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
+					break;
+				case TEM_VEGETATION_PAINT:
 					break;
 				}
 			}

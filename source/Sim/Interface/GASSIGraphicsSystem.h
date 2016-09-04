@@ -72,7 +72,6 @@ namespace GASS
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const = 0;
 		virtual void AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name ="") = 0;
 		virtual bool HasMaterial(const std::string &mat_name) const = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IGraphicsSystem> GraphicsSystemPtr;
 }

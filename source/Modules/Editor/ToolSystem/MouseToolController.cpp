@@ -2,7 +2,6 @@
 
 
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "IMouseTool.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -209,7 +208,7 @@ namespace GASS
 		}
 	}
 
-	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
+	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const
 	{
 		CollisionResult result;
 		result.Coll = false;

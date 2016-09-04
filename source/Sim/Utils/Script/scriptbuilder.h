@@ -31,7 +31,6 @@
 #pragma warning (disable:4786)
 #endif
 
-#include <string>
 #include <map>
 #include <set>
 #include <vector>

@@ -33,7 +33,7 @@ namespace GASS
 		virtual void Stop() = 0;
 		virtual void Start() = 0;
 
-		GASS_SHARED_PTR<IMouseTool> shared_from_this()
+		GASS_SHARED_PTR<IMouseTool> shared_from_this() const
 		{
 			return m_SharedFromThis;
 		}

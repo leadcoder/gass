@@ -22,7 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Core/MessageSystem/GASSMessageType.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimSystem.h"

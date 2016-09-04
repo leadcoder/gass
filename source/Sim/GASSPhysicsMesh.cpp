@@ -22,6 +22,10 @@
 
 namespace GASS
 {
+	PhysicsMesh::PhysicsMesh()
+	{
+	}
+
 	PhysicsMesh::PhysicsMesh(const GraphicsMesh &mesh)
 	{
 		AddMesh(mesh);

@@ -4,7 +4,6 @@
 #include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
@@ -333,7 +332,7 @@ namespace GASS
 		}
 	}
 
-	bool MoveTool::CheckIfEditable(SceneObjectPtr obj)
+	bool MoveTool::CheckIfEditable(SceneObjectPtr obj) const
 	{
 		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && 
 				!m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && 

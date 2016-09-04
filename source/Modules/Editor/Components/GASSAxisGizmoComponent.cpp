@@ -9,9 +9,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSRay.h"
 #include "Core/Math/GASSPlane.h"
@@ -572,9 +570,9 @@ namespace GASS
 		if(m_Type == GT_FIXED_GRID)
 			return;
 
-		bool grid = false;
-		if(m_Type == GT_GRID)
-			grid = true;
+		//bool grid = false;
+		//if(m_Type == GT_GRID)
+		//	grid = true;
 		SceneObjectPtr obj_under_cursor = message->GetSceneObjectUnderCursor();
 		if(m_Active || obj_under_cursor == GetSceneObject())
 		{
@@ -646,7 +644,7 @@ namespace GASS
 		return c_pos;
 	}
 
-	Quaternion  AxisGizmoComponent::GetRotation(float delta)
+	Quaternion  AxisGizmoComponent::GetRotation(float delta) const
 	{
 
 		SceneObjectPtr selected = m_SelectedObject.lock();
@@ -662,8 +660,8 @@ namespace GASS
 				rot.ToRotationMatrix(rot_mat);
 
 				Vec3 r_vec = rot_mat.GetXAxis();
-				Vec3 v_vec = rot_mat.GetZAxis();
-				Vec3 up_vec = rot_mat.GetYAxis();
+				//Vec3 v_vec = rot_mat.GetZAxis();
+				//Vec3 up_vec = rot_mat.GetYAxis();
 
 				r_vec.Normalize();
 				//v_vec = v_vec* delta;
@@ -688,7 +686,7 @@ namespace GASS
 	}
 
 
-	Vec3 AxisGizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p)
+	Vec3 AxisGizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const
 	{
 		Vec3 c = p-axis_origin;
 		Float t = Math::Dot(axis_dir,c);

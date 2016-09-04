@@ -27,15 +27,15 @@
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include <string>
 
 namespace GASS
 {
 
 	class ISystemListener
 	{
-
+		
 	public:
+		virtual ~ISystemListener(){}
 		virtual void SystemTick(double delta_time) = 0;
 	};
 	typedef GASS_SHARED_PTR<ISystemListener> SystemListenerPtr;

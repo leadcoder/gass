@@ -21,11 +21,8 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
-
 
 namespace GASS
 {
@@ -365,7 +362,6 @@ namespace GASS
 	public:
 		PhysicsBodyLoadedEvent(SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectEventMessage( sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<PhysicsBodyLoadedEvent> PhysicsBodyLoadedEventPtr;
 

@@ -20,10 +20,8 @@
 
 
 #include "Sim/GASSResourceHandle.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceManager.h"
-#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {

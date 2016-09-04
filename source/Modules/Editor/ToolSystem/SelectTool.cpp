@@ -1,17 +1,7 @@
 #include "SelectTool.h"
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Sim/GASSScene.h"
-#include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-
 
 namespace GASS
 {

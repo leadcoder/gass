@@ -20,11 +20,8 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSPlatformType.h"
 #include "Sim/GASSPlatformDetectionData.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
@@ -80,7 +77,6 @@ namespace GASS
 		Vec3 m_IsectPos;
 		SceneObjectPtr m_IsectObject;
 		Float m_IsectDist;
-	private:
 	};
 	typedef GASS_SHARED_PTR<VehicleRadarEvent> VehicleRadarEventPtr;
 }

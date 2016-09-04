@@ -1,9 +1,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Core/Utils/GASSColorRGB.h"
-
-#include "Plugins/Base/CoreMessages.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/EditorSceneManager.h"

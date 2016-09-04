@@ -8,8 +8,6 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 
-
-
 //#define GIZMO_SENDER 999
 
 namespace GASS

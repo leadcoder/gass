@@ -35,7 +35,6 @@ namespace GASS
 		virtual double GetLatitude() const = 0;
 		virtual void SetLongitude(double value) = 0;
 		virtual double GetLongitude() const = 0;
-	protected:
 	};
 
 	typedef GASS_WEAK_PTR<IWorldLocationComponent> WorldLocationComponentWeakPtr;

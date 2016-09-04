@@ -129,7 +129,7 @@ namespace GASS
 					if(!current_node && prev_obj != obj_under_cursor)
 					{
 						//current_obj = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_NodeObjectName,parent_obj);
-						SceneObjectPtr current_obj = SimEngine::Get().CreateObjectFromTemplate(m_NodeObjectName);
+						current_obj = SimEngine::Get().CreateObjectFromTemplate(m_NodeObjectName);
 						parent_obj->AddChildSceneObject(current_obj,true);
 
 						GASSAssert(current_obj,"Failed to create scene object in GraphTool::MouseDown");
@@ -211,7 +211,7 @@ namespace GASS
 
 	GraphEdgeComponentPtr GraphTool::_GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const
 	{
-		GraphEdgeComponentPtr edge;
+		
 		int index = -1;
 		Float min_dist = treshhold_dist;
 		//get closest edge and check if it's within threshold!
@@ -236,6 +236,7 @@ namespace GASS
 			}
 		}
 
+		GraphEdgeComponentPtr edge;
 		if(index > -1)
 		{
 			edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[index]);

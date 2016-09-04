@@ -1,22 +1,14 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Sim/GASSGeometryFlags.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIInputSystem.h"
-#include "Sim/GASSGeometryFlags.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
-#include <string>
 #include <vector>
-#include <set>
-
-
 
 namespace GASS
 {
@@ -83,7 +75,7 @@ namespace GASS
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
+		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
 
 		//helper
 		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);

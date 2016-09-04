@@ -31,6 +31,7 @@ namespace GASS
 	class GASSExport ISceneManagerListener
 	{
 	public:
+		virtual ~ISceneManagerListener() {}
 		virtual void SceneManagerTick(double delta) = 0;
 	};
 

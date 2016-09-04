@@ -21,10 +21,9 @@
 #ifndef GASS_FILE_RESOURCE_H
 #define GASS_FILE_RESOURCE_H
 
-#include "Core/Common.h"
+#include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Reflection/GASSPropertyMetaData.h"
-#include "Sim/GASSCommon.h"
 #include "Sim/GASSResourceLocation.h"
 
 namespace GASS
@@ -42,7 +41,7 @@ namespace GASS
 		std::string Name() const { return m_ResourcePath.GetFilename();}
 		ResourceLocationPtr Location() const { return m_Location;}
 		std::string Type() const { return m_ResourceType;}
-		FilePath Path() { return m_ResourcePath;}
+		FilePath Path() const { return m_ResourcePath;}
 	private:
 		FilePath m_ResourcePath;
 		ResourceLocationPtr m_Location;

@@ -28,7 +28,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IInputComponent(){}
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IInputComponent> InputComponentPtr;

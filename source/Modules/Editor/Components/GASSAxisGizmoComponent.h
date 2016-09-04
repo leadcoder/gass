@@ -1,13 +1,8 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
-#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -27,7 +22,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		Vec3 GetPosition(const Ray &ray);
-		Quaternion GetRotation(float detla);
+		Quaternion GetRotation(float detla) const;
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		GizmoEditMode GetMode() const {return m_Mode;}
@@ -53,7 +48,7 @@ namespace GASS
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void UpdateScale();
-		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
+		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
 		Float SnapValue(Float value, Float snap);
 
 		Quaternion m_BaseRot;

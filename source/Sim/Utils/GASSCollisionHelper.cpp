@@ -1,5 +1,4 @@
 #include "GASSCollisionHelper.h"
-#include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 
 namespace GASS

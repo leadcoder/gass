@@ -21,7 +21,6 @@
 #ifndef GASS_I_VIEWPORT_H
 #define GASS_I_VIEWPORT_H
 
-#include "Core/Common.h"
 #include "Sim/GASSCommon.h"
 
 namespace GASS

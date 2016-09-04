@@ -181,10 +181,10 @@ namespace GASS
 		//Vertex
 		for(i = 0;i <= nSlice;i++)
 		{
-			phi = 2.0 * GASS_PI * (double)i / (double)nSlice;
+			phi = 2.0 * GASS_PI * static_cast<double>(i) / static_cast<double>(nSlice);
 			for(j = 0;j <= nStack;j++)
 			{
-				theta = GASS_PI * (double)j / (double)nStack;
+				theta = GASS_PI * static_cast<double>(j) / static_cast<double>(nStack);
 				p[i][j][0] = (radius.x * sin(theta) * cos(phi));//x
 				p[i][j][1] = (radius.y * sin(theta) * sin(phi));//y
 				p[i][j][2] = (radius.z * cos(theta));           //z

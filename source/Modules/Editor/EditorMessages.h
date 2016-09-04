@@ -1,7 +1,6 @@
 #ifndef EDITOR_MESSAGES
 #define EDITOR_MESSAGES
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/GASSSceneObjectTemplate.h"
@@ -177,7 +176,6 @@ namespace GASS
 	public:
 		SceneChangedEvent(SenderID sender_id = -1, double delay= 0) : 
 		  SystemEventMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<SceneChangedEvent> SceneChangedEventPtr;
 		
@@ -213,7 +211,6 @@ namespace GASS
 	public:
 		LayoutLoadedMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<LayoutLoadedMessage> LayoutLoadedMessagePtr;
 

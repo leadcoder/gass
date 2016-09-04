@@ -5,14 +5,10 @@
 #include "EditorComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSSimEngine.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/Utils/GASSLogManager.h"
 
 namespace GASS
 {
@@ -86,19 +82,19 @@ namespace GASS
 			conrners.push_back(Vec3(-size.x ,-size.y ,-size.z)+offset);
 			conrners.push_back(Vec3( size.x ,-size.y ,-size.z)+offset);
 
-			for(int i = 0; i < 4; i++)
+			for(int j = 0; j< 4; j++)
 			{
-				Vec3 world_pos = world_mat*conrners[i];
+				Vec3 world_pos = world_mat*conrners[j];
 				sub_mesh_data->PositionVector.push_back(world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
-				world_pos = world_mat*conrners[(i+1)%4];
+				world_pos = world_mat*conrners[(j +1)%4];
 				sub_mesh_data->PositionVector.push_back(world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				world_pos = world_mat*conrners[i];
+				world_pos = world_mat*conrners[j];
 				sub_mesh_data->PositionVector.push_back(world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
-				world_pos = world_mat*conrners[i+4];
+				world_pos = world_mat*conrners[j +4];
 				sub_mesh_data->PositionVector.push_back(world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 			}

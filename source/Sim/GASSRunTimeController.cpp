@@ -36,7 +36,8 @@ namespace GASS
 		m_Engine(engine),
 		m_CurrentState(SS_STOPPED),
 		m_SimTimeScale(1.0),
-		m_MaxSimulationSteps(20)
+		m_MaxSimulationSteps(20),
+		m_Scheduler(NULL)
 	{
 
 	}

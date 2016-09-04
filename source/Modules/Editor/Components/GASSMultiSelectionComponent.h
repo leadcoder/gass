@@ -3,9 +3,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSAABox.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
@@ -23,7 +21,6 @@ namespace GASS
 		void SceneManagerTick(double delta_time);
 	private:
 		void UpdateSelection();
-		void BuildMesh();
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
 		float GetSize() const{return m_Size;}
@@ -31,7 +28,6 @@ namespace GASS
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
-		//void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 	
 		ColorRGBA m_Color;
 		float m_Size;

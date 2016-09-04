@@ -21,7 +21,6 @@
 #ifndef GASS_I_RENDER_WINDOW_H
 #define GASS_I_RENDER_WINDOW_H
 
-#include "Core/Common.h"
 #include "Sim/GASSCommon.h"
 
 namespace GASS

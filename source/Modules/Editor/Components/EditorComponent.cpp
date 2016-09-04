@@ -1,23 +1,14 @@
 //#include <stdafx.h>
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "EditorComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIGraphicsSystem.h"
-
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Utils/GASSException.h"
 
-	
 namespace GASS
 {
 	EditorComponent::EditorComponent() : m_Lock (false), 

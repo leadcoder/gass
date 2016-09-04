@@ -42,12 +42,12 @@ namespace GASS
 		while(iter != meshmap.end())
 		{
 			Export(iter->first, iter->second,false);
-			iter++;
+			++iter;
 		}
 
 	}
 
-	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive)
+	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive) const
 	{
 		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,recursive);
@@ -255,7 +255,7 @@ namespace GASS
 					if(mat.Textures.size() > 0 && mat.Textures[0] !="")
 						file_ptr << "map_Kd " << mat.Textures[0] << "\n";
 					file_ptr << "\n";
-					iter++;
+					++iter;
 				}
 				file_ptr.close();
 
@@ -296,7 +296,7 @@ namespace GASS
 								}
 							}
 						}
-						iter++;
+						++iter;
 					}
 				}
 			}

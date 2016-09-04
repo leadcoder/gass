@@ -23,7 +23,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSResourceLocation.h"
 #include "Sim/GASSResource.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 
@@ -48,7 +47,8 @@ namespace GASS
 		ScriptController(asIScriptModule *mod) : m_Module(mod),
 		m_UpdateFunction(NULL),
 		m_InitFunction(NULL),
-		m_FactoryFunction(NULL)
+		m_FactoryFunction(NULL),
+		m_ShutdownFunction(NULL)
 		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}

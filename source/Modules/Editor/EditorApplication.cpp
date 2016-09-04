@@ -2,18 +2,7 @@
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASS.h"
-#include "Modules/Editor/ToolSystem/MoveTool.h"
-#include "Modules/Editor/ToolSystem/SelectTool.h"
-#include "Modules/Editor/ToolSystem/PaintTool.h"
-#include "Modules/Editor/ToolSystem/VerticalMoveTool.h"
-#include "Modules/Editor/ToolSystem/RotateTool.h"
-#include "Modules/Editor/ToolSystem/CreateTool.h"
-#include "Modules/Editor/ToolSystem/MeasurementTool.h"
-#include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
-#include "Modules/Editor/ToolSystem/GoToPositionTool.h"
-#include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "tinyxml2.h"
-
 
 namespace GASS
 {
@@ -22,7 +11,8 @@ namespace GASS
 		m_ServerName("GASS_SERVER"),
 		m_ClientName("GASS_CLIENT"),
 		m_ServerPort(2001),
-		m_ClientPort(2002)
+		m_ClientPort(2002),
+		m_UpdateFreq(20)
 	{
 		new SimEngine(log_folder);
 		//LogManager* log_man = new LogManager();

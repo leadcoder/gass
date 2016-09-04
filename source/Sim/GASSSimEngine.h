@@ -218,7 +218,6 @@ namespace GASS
 		bool GetUpdateSimOnRequest() const;
 		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
 	private:
-		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;

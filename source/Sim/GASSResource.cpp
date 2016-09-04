@@ -25,7 +25,6 @@
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSResourceLocation.h"
-#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {

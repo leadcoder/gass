@@ -21,10 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSGeometryFlags.h"
-#include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSSphere.h"
-
 
 namespace GASS
 {
@@ -34,7 +30,6 @@ namespace GASS
 		virtual ~IShape(){}
 		virtual bool IsPointInside(const Vec3 &point) const = 0;
 		virtual Vec3 GetRandomPoint() const = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IShape> ShapePtr;
 }

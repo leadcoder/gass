@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
@@ -31,7 +29,7 @@ namespace GASS
 		virtual void Stop();
 		virtual void Start();
 	private:
-		bool CheckIfEditable(SceneObjectPtr obj);
+		bool CheckIfEditable(SceneObjectPtr obj) const;
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);

@@ -32,7 +32,6 @@ namespace GASS
 		virtual Vec3 GetRandomPoint() const = 0;
 		virtual bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point)  const = 0;
 		virtual bool IsPointInside(const Vec3 &point) const = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<INavigationMeshComponent> NavigationMeshComponentPtr;
 	typedef GASS_WEAK_PTR<INavigationMeshComponent> NavigationMeshComponentWeakPtr;
