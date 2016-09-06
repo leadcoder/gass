@@ -23,12 +23,10 @@
 #include "Sim/GASSCommon.h"
 #include "PagedGeometry.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "PGMessages.h"
 #include <OgreRenderTargetListener.h>
+
 namespace Ogre
 {
     class PixelBox;
