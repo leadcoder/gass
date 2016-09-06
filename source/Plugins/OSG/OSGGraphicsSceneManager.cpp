@@ -20,10 +20,7 @@
 
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-#include "Plugins/OSG/Components/OSGCameraComponent.h"
-#include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
-#include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGDebugDraw.h"
 

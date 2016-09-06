@@ -35,7 +35,6 @@ namespace GASS
 	public:
 		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
 		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
-	private:
 	};
 	typedef GASS_SHARED_PTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
 

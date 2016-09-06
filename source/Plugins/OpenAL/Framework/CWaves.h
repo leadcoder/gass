@@ -106,7 +106,7 @@ public:
 
 private:
 	WAVERESULT ParseFile(const char *szFilename, LPWAVEFILEINFO pWaveInfo);
-	WAVEID InsertWaveID(LPWAVEFILEINFO pWaveFileInfo);
+	//WAVEID InsertWaveID(LPWAVEFILEINFO pWaveFileInfo);
 
 	LPWAVEFILEINFO	m_WaveIDs[MAX_NUM_WAVEID];
 };

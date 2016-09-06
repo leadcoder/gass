@@ -40,7 +40,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init();
 		std::string GetSystemName() const {return "OSGCollisionSystem";}
-	private:
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSystem> OSGCollisionSystemPtr;
 }

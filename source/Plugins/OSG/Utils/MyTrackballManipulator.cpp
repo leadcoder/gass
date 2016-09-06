@@ -1,8 +1,6 @@
 #include "MyTrackballManipulator.h"
 #include <osg/Quat>
-#include <osg/Notify>
 #include <osg/BoundsChecking>
-#include <iostream>
 
 using namespace osg;
 using namespace osgGA;
@@ -188,7 +186,7 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 
 				// notify(DEBUG_INFO) << "Pushing forward"<<std::endl;
 				// push the camera forward.
-				float scale = -fd;
+				scale = -fd;
 
 				osg::Matrix rotation_matrix(_rotation);
 

@@ -22,14 +22,14 @@
 
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 
 namespace GASS
 {
 
-	OSGCollisionSceneManager::OSGCollisionSceneManager()
+	OSGCollisionSceneManager::OSGCollisionSceneManager() : m_IntersectVisitor(NULL),
+		m_DatabaseCache(NULL)
 	{
 
 	}

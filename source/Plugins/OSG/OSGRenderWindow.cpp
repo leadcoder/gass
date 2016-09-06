@@ -22,15 +22,10 @@
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-#include "Core/Utils/GASSException.h"
-
-
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgViewer/ViewerEventHandlers>
-
 #include <osgGA/StateSetManipulator>
-#include <osgGA/GUIEventHandler>
 
 #if defined(WIN32) && !defined(__CYGWIN__) 
 	#include <osgViewer/api/Win32/GraphicsWindowWin32>

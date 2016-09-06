@@ -26,7 +26,7 @@
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/Utils/TextBox.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
-#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
+//#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/OSGConvert.h"
 
@@ -513,7 +513,7 @@ namespace GASS
 						//remove extension?
 						std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
 						content.push_back(mat_name);
-						iter++;
+						++iter;
 					}
 				}
 			}

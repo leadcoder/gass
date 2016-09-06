@@ -34,7 +34,6 @@ namespace GASS
 	public:
 		virtual ~IOSGGraphicsSystem(){};
 		virtual osgViewer::CompositeViewer*  GetViewer() const = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IOSGGraphicsSystem> IOSGGraphicsSystemPtr;
 	typedef GASS_WEAK_PTR<IOSGGraphicsSystem> IOSGGraphicsSystemWeakPtr;
