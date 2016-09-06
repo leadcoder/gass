@@ -25,6 +25,7 @@
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 using namespace physx;
 namespace GASS
@@ -602,7 +603,7 @@ namespace GASS
 		float left_break = 0;
 		float right_break = 0;
 		float accel = 0;
-		const PxF32 forward_speed = m_Vehicle->computeForwardSpeed();
+		//const PxF32 forward_speed = m_Vehicle->computeForwardSpeed();
 
 		if(!m_InReverseMode && m_ThrottleInput < 0.0)
 		{
@@ -626,11 +627,11 @@ namespace GASS
 			accel = fabs(m_ThrottleInput);
 
 		//damp steering at high speed to avoid drifting
-		const float max_speed = 72.0f;
-		float inter = (max_speed - forward_speed)/max_speed;
+		//const float max_speed = 72.0f;
+		//float inter = (max_speed - forward_speed)/max_speed;
 		
 		//clamp 0..1
-		if(inter < 0.0f ) inter=0;
+		//if(inter < 0.0f ) inter=0;
 		//const float min_limit = m_SteerLimit*0.6;
 		//const float limit = min_limit + inter*(m_SteerLimit-min_limit);
 		//const float limit = m_SteerLimit;
@@ -1028,7 +1029,7 @@ namespace GASS
 		}
 	}
 
-	Quaternion PhysXTankComponent::GetRotation()
+	Quaternion PhysXTankComponent::GetRotation() const
 	{
 		Quaternion q;
 

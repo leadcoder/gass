@@ -20,7 +20,6 @@
 
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 
 namespace GASS

@@ -20,13 +20,10 @@
 
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Plugins/PhysX3/PhysXVehicleWheelQueryResults.h"
-
 #include "Plugins/PhysX3/PhysXStream.h"
 #include <PxPhysicsAPI.h>
-
 
 namespace GASS
 {
@@ -222,7 +219,7 @@ namespace GASS
 				m_Vehicles.erase(iter);
 				return;
 			}
-			iter++;
+			++iter;
 		}
 	}
 
