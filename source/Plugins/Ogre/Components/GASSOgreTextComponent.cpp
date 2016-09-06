@@ -32,9 +32,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Helpers/RectLayoutManager.h"
-
 
 namespace GASS
 {
@@ -43,7 +41,8 @@ namespace GASS
 		m_Color(1,1,1,1),
 		m_TextObject(NULL),
 		m_Attribs(NULL),
-		m_Visible(true)
+		m_Visible(true),
+		m_ScaleByDistance(false)
 	{
 
 	}

@@ -21,7 +21,6 @@
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgrePostProcess.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
 

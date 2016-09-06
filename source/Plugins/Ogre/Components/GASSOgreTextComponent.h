@@ -58,6 +58,5 @@ namespace GASS
 		int m_Size;
 		Vec4 m_Color;
 		bool m_Visible;
-	private:
 	};
 }

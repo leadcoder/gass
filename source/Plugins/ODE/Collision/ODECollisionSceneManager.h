@@ -54,7 +54,6 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const;
 	protected:
-		void Process();
 		//used by collision geometry
 		ODECollisionMeshInfo CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr mesh);
 		dSpaceID GetSpace() const;
@@ -63,7 +62,7 @@ namespace GASS
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		GASS_MUTEX& GetMutex() const {return m_Mutex;}
 	private:
-		ODECollisionMeshInfo _CreateCollisionMesh(PhysicsMeshPtr mesh);
+		ODECollisionMeshInfo _CreateCollisionMesh(PhysicsMeshPtr mesh) const;
 
 		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
 		mutable GASS_MUTEX m_Mutex;

@@ -71,7 +71,7 @@ namespace GASS
 		virtual GraphicsMesh  GetMeshData() const;
 		virtual void LoadXML(tinyxml2::XMLElement *elem);
 	protected:
-		void OnMeshFileNameMessage(MeshFileRequestPtr message);
+		//void OnMeshFileNameMessage(MeshFileRequestPtr message);
 
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
@@ -79,8 +79,8 @@ namespace GASS
 		void SetCastShadow(bool castShadow) {m_CastShadow = castShadow;}
 		void SetRegionSize(Float size) {m_RegionSize = size;}
 		Float GetRegionSize() const {return m_RegionSize;}
-		void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsMeshPtr mesh, const Ogre::Vector3 &offset) const;
-		void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,GraphicsMeshPtr mesh) const;
+		//void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsMeshPtr mesh, const Ogre::Vector3 &offset) const;
+		//void AddIndexData(const Ogre::IndexData *data, const unsigned int offset,GraphicsMeshPtr mesh) const;
 
 		std::string m_RenderQueue;
 		bool m_CastShadow;

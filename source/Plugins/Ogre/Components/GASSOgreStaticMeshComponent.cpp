@@ -91,7 +91,7 @@ namespace GASS
 			for(size_t i = 0;  i < iter->second.size(); i++)
 			{
 				Ogre::Vector3  pos = OgreConvert::ToOgre(iter->second.at(i).m_Position);
-				Ogre::Quaternion orientation = OgreConvert::ToOgre(iter->second.at(i).m_Rotation);
+				//Ogre::Quaternion orientation = OgreConvert::ToOgre(iter->second.at(i).m_Rotation);
 				Ogre::Vector3  scale = OgreConvert::ToOgre(iter->second.at(i).m_Scale);
 				m_StaticGeometry->addEntity(entity, pos, Ogre::Quaternion::IDENTITY,scale);
 			}
@@ -174,7 +174,7 @@ namespace GASS
 		while (regIt.hasMoreElements())
 		{
 			StaticGeometry::Region* region = regIt.getNext();
-			Vec3 center = OgreConvert::ToGASS(region->getCentre());
+			//Vec3 center = OgreConvert::ToGASS(region->getCentre());
 			AABox box = OgreConvert::ToGASS(region->getBoundingBox());
 			final_box.Union(box);
 		}
@@ -213,7 +213,7 @@ namespace GASS
 		while (regIt.hasMoreElements())
 		{
 			StaticGeometry::Region* region = regIt.getNext();
-			Ogre::Vector3 center = region->getCentre();
+			//Ogre::Vector3 center = region->getCentre();
 
 			StaticGeometry::Region::LODIterator lodIt = region->getLODIterator();
 

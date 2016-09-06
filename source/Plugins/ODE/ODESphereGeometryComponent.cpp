@@ -18,9 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
-#include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Math/GASSAABox.h"

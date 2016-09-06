@@ -19,7 +19,6 @@
 *****************************************************************************/
 #include "MyGUIOgreSystem.h"
 #include <stdio.h>
-#include "Sim/Messages/GASSScriptSystemMessages.h"
 
 //avoid warning spam from MYGUI
 #   pragma warning (disable : 4100)
@@ -29,10 +28,7 @@
 #   pragma warning (disable : 4702)
 
 #include <MyGUI.h>
-#include "MyGUI_LastHeader.h"
 #include <MyGUI_OgrePlatform.h>
-#include "StatisticInfo.h"
-#include "MainMenu.h"
 
 namespace GASS
 {

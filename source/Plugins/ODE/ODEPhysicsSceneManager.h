@@ -21,15 +21,9 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneMessages.h"
-
 
 namespace GASS
 {
@@ -62,8 +56,8 @@ namespace GASS
 		void SystemTick(double delta);
 		bool IsActive()const {return !m_Paused;}
 
-		dSpaceID GetPhysicsSpace(){return m_Space;}
-		dSpaceID GetCollisionSpace(){return m_CollisionSpace;}
+		dSpaceID GetPhysicsSpace() const {return m_Space;}
+		dSpaceID GetCollisionSpace() const {return m_CollisionSpace;}
 		ODEPhysicsCollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
 		bool HasCollisionMesh(const std::string &name);
 		void OnActivateMessage(ActivatePhysicsRequestPtr message);

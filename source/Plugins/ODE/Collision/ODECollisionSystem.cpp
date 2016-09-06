@@ -21,21 +21,12 @@
 #include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/Collision/ODECollisionSceneManager.h"
 #include "Plugins/ODE/Collision/ODECollisionGeometryComponent.h"
-#include "Plugins/ODE/Collision/ODELineCollision.h"
-
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSException.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
-
 
 namespace GASS
 {

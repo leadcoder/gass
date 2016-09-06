@@ -24,7 +24,6 @@
 #include <osg/NodeVisitor>
 #include <osg/Geometry>
 #include <osg/Texture2D>
-#include <osg/Texture>
 #include <osg/Geode>
 #include <osg/Image>
 //avoid warning spam from MYGUI
@@ -35,15 +34,10 @@
 #   pragma warning (disable : 4702)
 
 #include <MyGUI.h>
-#include "MyGUI_RTTLayer.h"
-#include "MyGUI_OpenGLTexture.h"
 #include "MyGUIOSGSystem.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSimEngine.h"
@@ -81,8 +75,8 @@ namespace GASS
 		{
 			if (! strcmp (searchNode.className(), "Geode")) 
 			{
-				osg::Geode* geode = (osg::Geode*) &searchNode;
-				m_FoundGeodes.push_back ((osg::Geode*) &searchNode);
+				osg::Geode* geode = dynamic_cast<osg::Geode*>(&searchNode);
+				m_FoundGeodes.push_back (geode);
 				
 				for(int i = 0; i < geode->getNumDrawables(); i++)
 				{
@@ -90,7 +84,7 @@ namespace GASS
 					if(drawable)
 					{
 						osg::StateSet* stateset = drawable->getOrCreateStateSet();
-						osg::Texture2D* tex = (osg::Texture2D*) stateset->getTextureAttribute(0,osg::StateAttribute::TEXTURE); 
+						osg::Texture2D* tex = dynamic_cast<osg::Texture2D*>(stateset->getTextureAttribute(0,osg::StateAttribute::TEXTURE));
 						if(tex)
 						{
 							osg::Image* image = tex->getImage();
@@ -171,7 +165,7 @@ namespace GASS
 	void MyGUILayoutComponent::_SetupLayout()
 	{
 		m_Layout = MyGUI::LayoutManager::getInstance().loadLayout(m_LayoutFile.c_str());
-		MyGUI::ILayer* layer = MyGUI::LayerManager::getInstance().getByName("RTT_Panel", false);
+		//MyGUI::ILayer* layer = MyGUI::LayerManager::getInstance().getByName("RTT_Panel", false);
 		/*if (layer != nullptr)
 		{
 			MyGUI::RTTLayer* rttLayer = layer->castType<MyGUI::RTTLayer>();

@@ -21,7 +21,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include <osg/ref_ptr>

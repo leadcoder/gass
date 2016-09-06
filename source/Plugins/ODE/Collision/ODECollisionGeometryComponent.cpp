@@ -24,10 +24,8 @@
 #include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/Collision/ODECollisionSceneManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -37,13 +35,11 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSPhysicsMesh.h"
 #ifdef _MSC_VER
 #define NOMINMAX
-#include <algorithm>
+//#include <algorithm>
 #endif
 
 namespace GASS
@@ -169,6 +165,9 @@ namespace GASS
 			break;
 		case CGT_PLANE:
 			m_GeomID = CreatePlaneGeometry();
+			break;
+		case CGT_NONE:
+			break;
 		}
 
 		if(m_GeomID)
@@ -274,7 +273,6 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateBoxGeometry()
 	{
-
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(!geom)
 		{
@@ -295,7 +293,7 @@ namespace GASS
 		return gid;
 	}
 
-	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry()
+	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry() const
 	{
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(!location)
@@ -325,7 +323,7 @@ namespace GASS
 			ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
 			ODECollisionMeshInfo col_mesh;
 			//bool has_col_mesh = false;
-			std::string col_mesh_id;
+			//std::string col_mesh_id;
 			if(res)
 			{
 				std::string col_mesh_id = res->GetResource().Name();

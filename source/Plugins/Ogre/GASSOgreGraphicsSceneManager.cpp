@@ -71,7 +71,8 @@ namespace GASS
 		m_ShadowDirectionalLightExtrusionDistance(1000),
 		m_SceneManagerType("OctreeSceneManager"),
 		m_SceneMgr (NULL),
-		m_UseSkybox(false)
+		m_UseSkybox(false),
+		m_DebugDrawer(NULL)
 	{
 
 	}

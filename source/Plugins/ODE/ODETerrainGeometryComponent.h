@@ -26,11 +26,8 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
-#include "ODEBaseGeometryComponent.h"
 #include "IODEGeometryComponent.h"
 
 
@@ -65,7 +62,6 @@ namespace GASS
 		void SetCollisionBits(unsigned long value);
 		unsigned long GetCollisionCategory() const;
 		void SetCollisionCategory(unsigned long value);
-		dGeomID CreateODEGeom();
 		void Disable();
 		void Enable();
 		void Reset();

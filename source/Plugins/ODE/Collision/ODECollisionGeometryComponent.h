@@ -28,7 +28,6 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "ODECollisionInfo.h"
@@ -93,8 +92,7 @@ namespace GASS
 		dGeomID CreateMeshGeometry();
 		dGeomID CreateTerrainGeometry();
 		dGeomID CreateBoxGeometry();
-		dGeomID CreatePlaneGeometry();
-
+		dGeomID CreatePlaneGeometry() const;
 		void Reset();
 		void Disable();
 		void Enable();
@@ -106,7 +104,6 @@ namespace GASS
 		CollisionGeomType GetType() const {return m_Type;}
 
 		//Height map based Terrain helpers
-		HeightmapTerrainComponentPtr  GetTerrainComponent() const;
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:

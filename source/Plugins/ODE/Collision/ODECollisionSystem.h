@@ -21,20 +21,9 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include <ode/ode.h>
-#include <map>
 #include "Sim/Interface/GASSICollisionSystem.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-#include "Sim/GASSThreading.h"
-
-
 
 namespace GASS
 {
@@ -47,8 +36,6 @@ namespace GASS
 		virtual void Init();
 		//virtual void Update(double delta_time);
 		virtual std::string GetSystemName() const {return "ODECollisionSystem";}
-	private:
-
 	};
 	typedef GASS_SHARED_PTR<ODECollisionSystem> ODECollisionSystemPtr;
 }

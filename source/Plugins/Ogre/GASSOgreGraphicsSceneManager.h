@@ -22,7 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
-#include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "GASSIOgreSceneManagerProxy.h"
 #include "Sim/GASSBaseSceneManager.h"

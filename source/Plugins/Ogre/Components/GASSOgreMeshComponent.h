@@ -47,7 +47,6 @@ namespace GASS
 	public:
 		OgreMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
 		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
-	private:
 	};
 	typedef GASS_SHARED_PTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
 
@@ -105,8 +104,8 @@ namespace GASS
 		void SetTexCoordSpeed(const Vec2 &speed);
 		Ogre::Bone* GetClosestBone(const Vec3 &pos);
 		bool HasSkeleton() const;
-		void RebuildMaterialCache();
-		void RestoreMaterialsFromCache();
+		//void RebuildMaterialCache();
+		//void RestoreMaterialsFromCache();
 
 		Ogre::Entity* m_OgreEntity;
 		RenderQueueBinder m_RenderQueue;

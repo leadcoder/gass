@@ -22,7 +22,6 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -31,13 +30,9 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-//#include "Plugins/ODE/ODECollisionSystem.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
-#include "Sim/Interface/GASSIPhysicsGeometryComponent.h"
 #include "Sim/Interface/GASSIGroupComponent.h"
 #include "Plugins/ODE/IODEGeometryComponent.h"
-
-
 
 namespace GASS
 {
@@ -53,7 +48,8 @@ namespace GASS
 											  //behavior of simulation is effected and values for
 											  //bodies and joints must be re-trimmed
 		m_TimeToProcess(0),
-		m_MaxSimSteps(4)
+		m_MaxSimSteps(4),
+		m_Init(false)
 	{
 
 	}

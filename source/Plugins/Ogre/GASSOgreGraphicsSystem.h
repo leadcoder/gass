@@ -76,7 +76,7 @@ namespace GASS
 	public: //ogre specific
 		Ogre::SceneManager* GetBootSceneManager() const {return m_SceneMgr;}
 		OgrePostProcesGASS_SHARED_PTR GetPostProcess() const {return m_PostProcess;}
-		void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
+		//void ChangeCamera(Ogre::Camera* camera, const std::string &vp_name);
 		Ogre::OverlaySystem* GetOverlaySystem() const {return m_OverlaySystem;}
 
 		static void SetOgreMaterial(const GraphicsMaterial &material, Ogre::MaterialPtr mat);
@@ -104,7 +104,7 @@ namespace GASS
 		void SetShowStats(bool value){m_ShowStats = value;}
 		PostFilterVector GetPostFilters() const;
 		void SetPostFilters(const PostFilterVector &filters);
-		void ReloadMaterials();
+		//void ReloadMaterials();
 		void ReloadResources();
 
 		std::string m_RenderSystem;

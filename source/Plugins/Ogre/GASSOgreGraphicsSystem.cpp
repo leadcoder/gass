@@ -22,19 +22,14 @@
 #include "Plugins/Ogre/GASSOgreRenderWindow.h"
 #include "Plugins/Ogre/GASSOgreViewport.h"
 #include "Plugins/Ogre/GASSOgreDebugTextOutput.h"
-#include "Plugins/Ogre/GASSOgrePostProcess.h"
 #include "Plugins/Ogre/GASSOgreResourceManager.h"
 #include "Plugins/Ogre/Helpers/DebugDrawer.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
-#include "Plugins/Ogre/Helpers/OgreText.h"
 #include "Plugins/Ogre/Helpers/ResourceGroupHelper.h"
-
-#include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
@@ -46,7 +41,6 @@
 #include <OgreStringConverter.h>
 #include <Overlay/OgreOverlaySystem.h>
 
-
 ResourceGroupHelper resourceGrouphelper;
 
 namespace GASS
@@ -57,7 +51,8 @@ namespace GASS
 		m_DebugTextBox (new OgreDebugTextOutput()),
 		m_ResourceManager(OgreResourceManagerPtr(new OgreResourceManager)),
 		m_ShowStats(true),
-		m_UseShaderCache(false)
+		m_UseShaderCache(false),
+		m_Root(NULL)
 	{
 		m_UpdateGroup = UGID_POST_SIM;
 		m_Plugins.push_back("RenderSystem_Direct3D9");
@@ -432,8 +427,8 @@ namespace GASS
 				Ogre::ColourValue ambient =  pass->getAmbient();
 				const Ogre::ColourValue diffuse = pass->getDiffuse();
 				const Ogre::ColourValue specular = pass->getSpecular();
-				const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
-				const Ogre::ColourValue emissive = pass->getEmissive();
+				//const Ogre::ColourValue selfIllumination = pass->getSelfIllumination();
+				//const Ogre::ColourValue emissive = pass->getEmissive();
 
 				material.Ambient = ColorRGB(ambient.r,ambient.g,ambient.b);
 				material.Diffuse = ColorRGBA(diffuse.r,diffuse.g,diffuse.b,diffuse.a);
