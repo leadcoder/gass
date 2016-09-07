@@ -26,13 +26,9 @@
 #include "Sim/GASSCommon.h"
 #include "PagedGeometry.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-
-#include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
 #include "PGMessages.h"
 
@@ -83,9 +79,7 @@ namespace GASS
 		std::string GetImportDensityMap() const;
 protected:
 		float GetCollisionSystemHeight(float x, float z);
-		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
-		void UpdateSway();
 		void OnPaint(GrassPaintMessagePtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 		

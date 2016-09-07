@@ -36,10 +36,8 @@
 
 
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/GASSMessageType.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 namespace GASS
@@ -99,21 +97,19 @@ namespace GASS
 		ADD_PROPERTY(float,GameControllerAxisMinValue);
 		ADD_PROPERTY(bool,OnlyProxy);
 
-		int	 GetJoystickIndex() { return m_JoystickDeviceCount; }
+		int	 GetJoystickIndex() const{ return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }
 
 		void Shutdown();
-		OIS::Mouse*    GetMouse(){return m_Mouse;}
-		OIS::Keyboard* GetKeyboard(){return m_Keyboard;}
+		OIS::Mouse*    GetMouse() const  {return m_Mouse;}
+		OIS::Keyboard* GetKeyboard() const  {return m_Keyboard;}
 		float NormalizeMouseDelta(float value);
 		MouseButtonId ToGASS(OIS::MouseButtonID ois_id) const;
 		MouseData ToGASS(const OIS::MouseEvent &arg);
-		void OnInit(MainWindowCreatedEventPtr message);
 		void OnViewportMovedOrResized(RenderWindowResizedEventPtr message);
 		bool GetExclusiveMode() const {return m_ExclusiveMode;}
 		void SetExclusiveMode(bool value) {m_ExclusiveMode = value;}
-		int inline OldKey(int index) { return (m_OldKeyBuffer[index]); }
-		int OldButton(int index);
+		int inline OldKey(int index) const { return (m_OldKeyBuffer[index]); }
 		int inline OldJoystickButton(int device, int index)
 		{
 			if (device >= static_cast<int>(m_Joys.size()))

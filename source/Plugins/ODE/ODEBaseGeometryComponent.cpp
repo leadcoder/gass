@@ -27,20 +27,16 @@
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/Math/GASSAABox.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #ifdef _MSC_VER
 #define NOMINMAX
-#include <algorithm>
+//#include <algorithm>
 #endif
 
 namespace GASS
@@ -412,8 +408,8 @@ namespace GASS
 				dGeomSetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
 
 				//also reset position, know why but offset change is not reflected otherwise
-				const dReal* pos = dGeomGetPosition(m_TransformGeomID);
-				dGeomSetPosition(m_TransformGeomID, pos[0], pos[1], pos[2]);
+				const dReal* ode_pos = dGeomGetPosition(m_TransformGeomID);
+				dGeomSetPosition(m_TransformGeomID, ode_pos[0], ode_pos[1], ode_pos[2]);
 
 			}
 		}

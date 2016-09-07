@@ -19,29 +19,17 @@
 *****************************************************************************/
 
 #include "DensityMapComponent.h"
-#include <OgreEntity.h>
 #include <Ogre.h>
-#include <OgreSceneManager.h>
 #include <OgreHardwarePixelBuffer.h>
-#include "PagedGeometry.h"
-#include "ImpostorPage.h"
-#include "BatchPage.h"
-#include "TreeLoader2D.h"
-#include "TreeLoader3D.h"
 #include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
-
-
-
-//#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "TreeGeometryComponent.h"
-
 
 namespace GASS
 {
@@ -233,9 +221,9 @@ namespace GASS
 				if(message->GetPaintWidth())
 				{
 					Paint(pos, message->GetPaintWidth(),message->GetPaintWidth(), -10);
-					for(int i = 0 ;  i < components.size(); i++)
+					for(int j = 0 ;  j < components.size(); j++)
 					{
-						TreeGeometryComponentPtr trees = GASS_DYNAMIC_PTR_CAST<TreeGeometryComponent>(components[i]);
+						TreeGeometryComponentPtr trees = GASS_DYNAMIC_PTR_CAST<TreeGeometryComponent>(components[j]);
 						trees->Paint(pos, message->GetPaintWidth(),message->GetPaintWidth(), -10);
 					}
 				}

@@ -20,12 +20,8 @@
 
 #include "Plugins/OSG/Components/OSGNodeProxyComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
-#include "Plugins/OSG/OSGConvert.h"
-#include "Plugins/OSG/OSGNodeMasks.h"
-#include "Plugins/OSG/OSGNodeData.h"
 
 namespace GASS
 {

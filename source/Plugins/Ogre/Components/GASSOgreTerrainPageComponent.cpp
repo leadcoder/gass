@@ -19,7 +19,6 @@
 *****************************************************************************/
 
 #include "Plugins/Ogre/Components/GASSOgreTerrainPageComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -27,7 +26,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/GASSOgreTerrainGroupComponent.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
@@ -335,6 +333,8 @@ namespace GASS
 	{
 		switch(	message->GetLayer())
 		{
+		case TL_0:
+			break;
 		case TL_1:
 			SetDiffuseLayer1(message->GetTexture());
 			SetTilingLayer1(message->GetTiling());

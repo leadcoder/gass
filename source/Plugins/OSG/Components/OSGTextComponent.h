@@ -58,8 +58,8 @@ namespace GASS
 		bool GetDropShadow() const {return m_DropShadow;}
 
 		ResourceHandle m_Font;
-		float m_Width;
-		float m_Height;
+		//float m_Width;
+		//float m_Height;
 		osg::ref_ptr<osgText::Text> m_OSGText;
 		osg::ref_ptr<osg::Geode> m_OSGGeode;
 		float m_CharSize;

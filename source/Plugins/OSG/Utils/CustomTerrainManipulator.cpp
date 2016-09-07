@@ -1,8 +1,4 @@
 #include "CustomTerrainManipulator.h"
-#include <osg/Quat>
-#include <osg/Notify>
-#include <osg/BoundsChecking>
-#include <iostream>
 
 using namespace osg;
 using namespace osgGA;

@@ -21,16 +21,14 @@
 
 #include "Plugins/OIS/ProxyInputSystem.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSystemFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
-	ProxyInputSystem::ProxyInputSystem() :	m_KeyActive(true),	m_JoyActive(true),	m_MouseActive(true)
+	ProxyInputSystem::ProxyInputSystem() :	m_KeyActive(true),	
+		m_JoyActive(true),	
+		m_MouseActive(true)
 	{
 
 	}

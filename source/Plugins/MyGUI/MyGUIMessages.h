@@ -22,8 +22,6 @@
 #define MY_GUI_MESSAGES_H
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Core/Math/GASSVector.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include <MyGUI.h>
 
@@ -38,8 +36,6 @@ namespace GASS
 
 		  }
 		  MyGUI::VectorWidgetPtr m_Widgets;
-	private:
-		
 	};
 	typedef GASS_SHARED_PTR<LayoutLoadedEvent> LayoutLoadedEventPtr;
 }

@@ -29,7 +29,7 @@ namespace GASS
 	public:
 		OgreResourceManager();
 		virtual ~OgreResourceManager();
-		static void RegisterReflection();
+		//static void RegisterReflection();
 		void Init();
 		void RemoveResourceGroup(const std::string &resource_group);
 		void AddResourceGroup(ResourceGroupPtr group, bool load);

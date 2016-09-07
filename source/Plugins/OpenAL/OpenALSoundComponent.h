@@ -3,19 +3,15 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSILightComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #ifdef WIN32
 	#include "al.h"
-	#include "alc.h"
+	//#include "alc.h"
 #else 
 	#include "AL/al.h"
 	#include "AL/alc.h"
@@ -69,7 +65,7 @@ namespace GASS
 		ALuint m_Source; // Source for current sound, allocated when sample is to be played, 0 otherwise
 		ResourceHandle m_SoundResource;
 		float m_Pitch;
-		int m_Frequency;
+		//int m_Frequency;
 		float m_MinDistance;
 		float m_MaxDistance;
 		float m_Rolloff;

@@ -83,7 +83,7 @@ namespace GASS
 		Vec3 GetGlobalScale() const {return m_GlobalScale;}
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
-		void OnMeshFileNameMessage(MeshFileRequestPtr message);
+		//void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void setupInstancedMaterialToEntity(Ogre::Entity*ent);
 		Ogre::String buildInstancedMaterial(const Ogre::String &originalMaterialName);
 

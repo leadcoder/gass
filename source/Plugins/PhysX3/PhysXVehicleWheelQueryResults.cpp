@@ -28,13 +28,10 @@
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
 #include "PhysXVehicleWheelQueryResults.h"
-#include "vehicle/PxVehicleSDK.h"
-
+//#include "vehicle/PxVehicleSDK.h"
 #include <new>
 //#include "PsFoundation.h"
 //#include "PsUtilities.h"
-
-
 //#define CHECK_MSG(exp, msg) (!!(exp) || (physx::shdfnd::getFoundation().error(physx::PxErrorCode::eINVALID_PARAMETER, __FILE__, __LINE__, msg), 0) )
 
 namespace GASS
@@ -47,7 +44,7 @@ VehicleWheelQueryResults* VehicleWheelQueryResults::allocate(const PxU32 maxNumW
 	PxU8* ptr = (PxU8*) resData;
 	ptr += sizeof(VehicleWheelQueryResults);
 	resData->mWheelQueryResults = (PxWheelQueryResult*)ptr;
-	ptr +=  sizeof(PxWheelQueryResult)*maxNumWheels;
+	//ptr +=  sizeof(PxWheelQueryResult)*maxNumWheels;
 	resData->mMaxNumWheels=maxNumWheels;
 	for(PxU32 i=0;i<maxNumWheels;i++)
 	{

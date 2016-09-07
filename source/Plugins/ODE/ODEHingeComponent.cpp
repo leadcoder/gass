@@ -27,10 +27,7 @@
 #include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-
 
 namespace GASS
 {
@@ -44,6 +41,9 @@ namespace GASS
 		m_Body2Loaded(0),
 		m_ODEBody1(0),
 		m_ODEBody2(0)
+		//m_SwayForce(0),
+		//m_Strength(0),
+		//m_Damping(0)
 	{
 	}
 

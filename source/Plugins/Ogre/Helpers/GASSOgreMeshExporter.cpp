@@ -18,7 +18,7 @@ namespace GASS
 
 	}
 
-	void OgreMeshExporter::Add(Ogre::ManualObject* manual_object, GraphicsMeshPtr mesh)
+	void OgreMeshExporter::Add(Ogre::ManualObject* manual_object, GraphicsMeshPtr mesh) const
 	{
 		for(size_t i = 0; i < mesh->SubMeshVector.size() ; i++)
 		{

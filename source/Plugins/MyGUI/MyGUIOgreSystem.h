@@ -3,7 +3,7 @@
 
 #include "Sim/GASS.h"
 #include "MyGuiSystem.h"
-#include <osg/ref_ptr>
+//#include <osg/ref_ptr>
 
 namespace GASS
 {

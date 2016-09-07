@@ -24,19 +24,13 @@
 #define GRASS_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include <PagedGeometry.h>
 #include <GrassLoader.h>
 #include <OgreRenderTargetListener.h>
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Plugins/Ogre/GASSOgreMaterial.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "GrassMaterial.h"
 #include "PGMessages.h"
 
 namespace Forests
@@ -77,11 +71,8 @@ namespace GASS
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadRequestPtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
-		std::string GetDensityMap() const;
-		void SetDensityMap(const std::string &dm);
 		float GetDensityFactor() const;
 		void SetDensityFactor(float factor);
-		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
 		OgreMaterial GetMaterial() const;
 		void SetMaterial(const OgreMaterial &name);
@@ -103,15 +94,8 @@ namespace GASS
 		void SetEnableSway(bool value);
 		float GetSwayDistribution() const;
 		void SetSwayDistribution(float distribution);
-		float GetViewDistance() const;
-		void SetViewDistance(float distance);
 protected:
-		
-		float GetCollisionSystemHeight(float x, float z);
-		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
-		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();
-		void update();
 		std::string m_ColorMapFilename;
 		std::string m_DensityMapFilename;
 		
@@ -130,7 +114,7 @@ protected:
 		GrassLayer *m_GrassLayer;
 		float m_DensityFactor;
 		
-		float m_ImposterAlphaRejectionValue;
+		//float m_ImposterAlphaRejectionValue;
 		static IHeightmapTerrainComponent *m_Terrain;
 	};
 

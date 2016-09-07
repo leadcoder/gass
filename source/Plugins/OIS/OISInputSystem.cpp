@@ -25,7 +25,6 @@
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSystemFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
 
@@ -42,7 +41,12 @@ namespace GASS
 		m_GameControllerAxisMinValue(0),
 		m_MouseWinOffsetX(0),
 		m_MouseWinOffsetY(0),
-		m_InputManager(NULL)
+		m_InputManager(NULL),
+		m_Keyboard(NULL),
+		m_Mouse(NULL),
+		m_JoystickDeviceCount(0),
+		m_MouseWinHeight(0),
+		m_MouseWinWidth(0)
 	{
 		m_UpdateGroup=UGID_PRE_SIM;
 		m_KeyBuffer =  new char[256];

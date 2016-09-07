@@ -33,7 +33,8 @@ namespace GASS
 		m_LODScale(1.0),
 		m_Ortho(false),
 		m_OSGCamera(NULL),
-		m_UpdateCameraFromLocation(true)
+		m_UpdateCameraFromLocation(true),
+		m_OrthoWindowHeight(0)
 	{
 
 	}

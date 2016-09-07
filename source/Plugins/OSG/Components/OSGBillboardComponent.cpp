@@ -35,7 +35,8 @@ namespace GASS
 		m_Height(1.0f),
 		m_GroundOffset(0.5),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
-		m_Collision(true)
+		m_Collision(true),
+		m_Geom(NULL)
 	{
 
 	}

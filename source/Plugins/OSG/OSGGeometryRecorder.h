@@ -57,7 +57,7 @@ namespace GASS
 				osg::LOD::RangeList::const_iterator rit;
 				for( rit = rl.begin();
 					rit != rl.end();
-					rit++ )
+					++rit)
 				{
 					if( plod.getRangeMode() == osg::LOD::DISTANCE_FROM_EYE_POINT )
 					{
@@ -76,7 +76,7 @@ namespace GASS
 				unsigned int childIndex;
 				for( rit = rl.begin(), childIndex = 0;
 					rit != rl.end();
-					rit++, childIndex++ )
+					++rit, childIndex++ )
 				{
 					if( rit->first != targetRangeValue )
 						// This is not one of the highest res children

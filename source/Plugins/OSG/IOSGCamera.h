@@ -29,7 +29,6 @@ namespace GASS
 	public:
 		virtual ~IOSGCamera(){};
 		virtual osg::ref_ptr<osg::Camera> GetOSGCamera() const = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IOSGCamera> OSGCameraPtr;

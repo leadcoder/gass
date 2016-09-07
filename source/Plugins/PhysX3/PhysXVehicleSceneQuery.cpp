@@ -41,7 +41,7 @@ namespace GASS
 		sqData->mNbSqResults = maxNumWheels;
 		ptr += size1;
 		sqData->mSqHitBuffer = (PxRaycastHit*)ptr;
-		ptr += size2;
+		//ptr += size2;
 		sqData->mNumQueries = maxNumWheels;
 		return sqData;
 	}

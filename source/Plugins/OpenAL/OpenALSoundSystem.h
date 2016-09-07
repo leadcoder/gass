@@ -2,12 +2,8 @@
 #define OPENAL_SOUND_SYSTEM_H
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #ifdef WIN32
@@ -17,7 +13,6 @@
 	#include "AL/al.h"
 	#include "AL/alc.h"
 #endif
-#include <string>
 
 // Be very careful with these two parameters
 // It is very dependant on the audio hardware your
@@ -60,8 +55,6 @@ namespace GASS
 		std::string GetSystemName() const {return "OpenALSoundSystem";}
 	protected:
 		std::string ListAvailableDevices( void );
-		
-		void OnInit(MessagePtr message);
 		void OnSceneLoaded(PreSceneCreateEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);

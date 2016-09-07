@@ -24,7 +24,6 @@
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 
 #include "Sim/GASS.h"
-#include <PxActor.h>
 #include <PxScene.h>
 
 namespace GASS
@@ -141,7 +140,7 @@ namespace GASS
 
 		//Calculate positions relative to parent for suspension joint
 		physx::PxVec3 susp_pos = PxConvert::ToPx(wheel_pos - chassis_pos);
-		physx::PxQuat susp_rot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
+		//physx::PxQuat susp_rot(-physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
 
 		m_SuspensionJoint = PxD6JointCreate(*system->GetPxSDK(),
 			chassis_actor,physx::PxTransform(susp_pos,no_rot), //parent

@@ -72,12 +72,10 @@ namespace GASS
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
 		//void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		void SetTorque(const Vec3 &torque);
-		Vec3 GetTorque(bool rel = false);
 		void SetVelocity(const Vec3 &vel);
-		Vec3 GetVelocity();
+		Vec3 GetVelocity() const;
 		void SetAngularVelocity(const Vec3 &vel);
-		Vec3 GetAngularVelocity();
+		Vec3 GetAngularVelocity() const;
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void AddTorque(const Vec3 &torque_vec);
@@ -94,8 +92,7 @@ namespace GASS
 		void SetAssymetricInertia(const Vec3 value) {m_AssymetricInertia = value;}
 		bool GetEffectJoints() const {return m_EffectJoints;}
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
-		void SetMassProperties(float mass, Vec3 &CGPosition, Vec3 &symmetricInertia, Vec3 &assymetricInertia);
-		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
+		MassRepresentationType GetMassRepresentation() const { return m_MassRepresentation; }
 	protected:
 		float m_Mass;
 		float m_Density;

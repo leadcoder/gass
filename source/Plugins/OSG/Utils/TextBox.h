@@ -15,7 +15,6 @@ using std::string;
 #include <osg/Geode>
 #include <osg/Projection>
 #include <osg/MatrixTransform>
-#include <osg/Transform>
 
 // ####################################################################
 

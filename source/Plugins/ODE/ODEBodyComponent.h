@@ -23,9 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
-
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Core/Math/GASSVector.h"
@@ -51,9 +49,9 @@ namespace GASS
 		virtual ~ODEBodyComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
-		dBodyID GetODEBodyComponent(){return m_ODEBodyID;}
+		dBodyID GetODEBodyComponent() const {return m_ODEBodyID;}
 		dSpaceID GetSpace();
-		MassRepresentationType GetMassRepresentation() { return m_MassRepresentation; }
+		MassRepresentationType GetMassRepresentation() const { return m_MassRepresentation; }
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
 		void SetODEMass(dMass mass);
@@ -65,17 +63,17 @@ namespace GASS
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
 
 		void SetTorque(const Vec3 &torque);
-		Vec3 GetTorque(bool rel = false);
+		Vec3 GetTorque(bool rel = false) const;
 		void SetVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetVelocity(bool rel = false);
+		Vec3 GetVelocity(bool rel = false) const;
 		void SetAngularVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetAngularVelocity(bool rel = false);
+		Vec3 GetAngularVelocity(bool rel = false) const;
 		void SetActive(bool value);
 		bool GetActive() const;
 		void AddForce(const Vec3 &force_vec, bool rel = false);
 		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void SetForce(const Vec3 &force);
-		Vec3 GetForce(bool rel = false);
+		Vec3 GetForce(bool rel = false) const;
 		void AddTorque(const Vec3 &torque_vec, bool rel = false);
 		//reflection functions
 		
@@ -90,7 +88,7 @@ namespace GASS
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation();
+		Quaternion GetRotation() const;
 		void BodyMoved();
 		void static BodyMovedCallback(dBodyID id);
 		void OnLocationLoaded(LocationLoadedEventPtr message);

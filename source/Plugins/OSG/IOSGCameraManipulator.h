@@ -29,7 +29,6 @@ namespace GASS
 	public:
 		virtual ~IOSGCameraManipulator(){};
 		virtual osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IOSGCameraManipulator> OSGCameraManipulatorPtr;
