@@ -22,28 +22,19 @@
 #include "RakNetLocationTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
-
+#include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/Interface/GASSILocationComponent.h"
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
 #include "GetTime.h"
-
 
 //#define _DEBUG_LTC_
 

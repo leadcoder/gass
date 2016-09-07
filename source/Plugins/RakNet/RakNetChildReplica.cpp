@@ -43,7 +43,7 @@
 
 namespace GASS
 {
-	RakNetChildReplica::RakNetChildReplica(ReplicaManager* manager): m_Manager(manager)
+	RakNetChildReplica::RakNetChildReplica(ReplicaManager* manager): m_Manager(manager),m_PartId(0)
 	{
 		m_OwnerSystemAddress = UNASSIGNED_SYSTEM_ADDRESS;
 		m_AllowRemoteOwner = false;
@@ -156,7 +156,7 @@ namespace GASS
 		//RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
-	bool RakNetChildReplica::GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property)
+	bool RakNetChildReplica::GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property) const
 	{
 		m_Owner->GetComponents();
 		ComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
