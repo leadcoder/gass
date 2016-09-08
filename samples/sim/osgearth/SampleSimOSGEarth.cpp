@@ -50,7 +50,7 @@ int _getch( ) {
 }
 #endif
 
-int run(int argc, char* argv[])
+int run(int /*argc*/, char** /*argv[]*/)
 {
 	//Create engine instance and initialize with config file
 	GASS::SimEngine* engine = new GASS::SimEngine();
@@ -97,7 +97,7 @@ int run(int argc, char* argv[])
 	bool done = false;
 	while(!done)
 	{
-		engine->Update();
+		done = engine->Update();
 	}
 	return 0;
 }

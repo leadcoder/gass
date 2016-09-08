@@ -53,12 +53,11 @@ int _getch( ) {
 #endif
 
 
-int main(int argc, char* argv[])
+int main(int/*argc*/, char* /*argv[]*/)
 {
 	//Load plugins
-
 	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
-	char key = _getch();
+	char key = static_cast<char>(_getch());
 	std::string gfx_plugin = "GASSPluginOgre";
 	std::string gfx_system_name = "OgreGraphicsSystem";
 
@@ -511,7 +510,7 @@ int main(int argc, char* argv[])
 			key_down = false;
 		}
 
-		wheel_vel *= 0.9;
+		wheel_vel *= 0.9f;
 
 		if(wheel_vel > 200)
 			wheel_vel = 200;
