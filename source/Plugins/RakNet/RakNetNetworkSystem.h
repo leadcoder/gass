@@ -21,8 +21,6 @@
 #ifndef RAKNET_NETWORK_SYSTEM_H
 #define RAKNET_NETWORK_SYSTEM_H
 
-
-
 #include "Sim/GASSCommon.h"
 
 //Raknet includes
@@ -43,10 +41,6 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSNetworkSystemMessages.h"
-
-
-
-
 
 class ReplicaManager;
 class RakPeerInterface;
@@ -99,8 +93,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init();
 
-		bool IsServer() {return  m_IsServer;}
-		bool IsActive() {return  m_Active;}
+		bool IsServer() const {return  m_IsServer;}
+		bool IsActive() const {return  m_Active;}
 
 		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
 		RakPeerInterface* GetRakPeer() const {return m_RakPeer;}
@@ -108,8 +102,8 @@ namespace GASS
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
-		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id);
-		ScenePtr GetScene() {return ScenePtr(m_Scene);}
+		RakNetChildReplica* FindReplica(const NetworkID &part_of_network_id,int part_id) const;
+		ScenePtr GetScene() const  {return ScenePtr(m_Scene);}
 		RakNet::AutoRPC* GetRPC() {return  &m_AutoRPC;}
 
 		// get time to step back when values need to be interpolated
@@ -122,7 +116,7 @@ namespace GASS
 		ADD_PROPERTY(bool,Debug);
 		ADD_PROPERTY(bool,RelayInputOnServer);
 	private:
-		void OnInit(MessagePtr message);
+		//void OnInit(MessagePtr message);
 		void OnShutdown(MessagePtr message);
 		void OnStartServer(StartServerRequestPtr message);
 		void OnStartClient(StartClientRequestPtr message);

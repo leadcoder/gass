@@ -23,17 +23,10 @@
 #include "PacketPriority.h"
 #include "Replica.h"
 #include "AutoRPC.h"
-#include "StringTable.h"
 #include "BitStream.h"
-#include "GetTime.h"
-//#include "Network/INetworkObject.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
-//#include "RakNetNetworkComponent.h"
-//#include "RakNetReplicaMember.h"
 #include "RakNetBaseReplica.h"
-
 
 class ReplicaManager;
 	
@@ -65,15 +58,15 @@ namespace GASS
 		}
 		virtual void ReceiveConstruction(RakNet::BitStream *inBitStream);
 		void SendConstruction(RakNet::BitStream *outBitStream);
-		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
+		SystemAddress  const GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
-		std::string GetTemplateName() {return m_TemplateName;}
+		std::string GetTemplateName() const {return m_TemplateName;}
 		
 		void SerializeProperties(RakNet::BitStream *bit_stream);
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *str, RakNet::AutoRPC* networkCaller);
 	protected:
-		IProperty* GetProperty(const std::string &prop_name);
+		IProperty* GetProperty(const std::string &prop_name) const;
 		std::string m_TemplateName;
 		bool m_AllowRemoteOwner;
 	private:

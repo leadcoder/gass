@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
 {
