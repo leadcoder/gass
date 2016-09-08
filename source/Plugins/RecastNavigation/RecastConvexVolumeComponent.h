@@ -20,10 +20,7 @@
 
 #pragma once
 #include "Sim/GASS.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "RecastNavigationMeshComponent.h"
-#include "RecastNavigationMessages.h"
-#include "DetourNavMesh.h"
 
 namespace GASS
 {
@@ -37,8 +34,6 @@ namespace GASS
 		virtual void OnInitialize();
 		ADD_PROPERTY(LandCoverTypeBinder,LandCoverType)
 	protected:
-		void OnTransformation(TransformationChangedEventPtr message);
-		void OnLoad(LocationLoadedEventPtr message);
 		bool m_Initialized;
 	};
 	typedef GASS_SHARED_PTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;

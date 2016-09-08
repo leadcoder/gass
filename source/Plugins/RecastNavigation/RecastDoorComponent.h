@@ -20,7 +20,6 @@
 
 #pragma once
 #include "Sim/GASS.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "RecastNavigationMeshComponent.h"
 #include "RecastNavigationMessages.h"
 #include "DetourNavMesh.h"
