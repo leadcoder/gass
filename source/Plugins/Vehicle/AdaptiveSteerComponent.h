@@ -24,10 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 
 namespace GASS

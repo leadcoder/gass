@@ -28,9 +28,11 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Messages/GASSInputMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include <float.h>
+
 
 namespace GASS
 {
