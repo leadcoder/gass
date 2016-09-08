@@ -25,7 +25,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 #include <conio.h>
@@ -113,7 +112,7 @@ int main(int argc, char* argv[])
 	catch(std::exception& e) 
 	{
 		std::cout << "Exception:" << e.what() << std::endl;
-		getch();
+		_getch();
 	}
 	return ret;
 }

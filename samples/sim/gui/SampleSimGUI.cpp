@@ -85,7 +85,7 @@ int run(int argc, char* argv[])
 {
 
 	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
-	char key = _getch();
+	char key = static_cast<char>(_getch());
 	std::string gfx_system_name = "OgreGraphicsSystem";
 	std::string gui_gfx_system_name = "MyGUIOgreSystem";
 	std::string gfx_plugin = "GASSPluginOgre";
@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
 	catch(std::exception& e) 
 	{
 		std::cout << "Exception:" << e.what() << std::endl;
-		getch();
+		_getch();
 	}
 	return ret;
 }

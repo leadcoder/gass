@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 #include <conio.h>
@@ -416,7 +415,7 @@ int main(int argc, char* argv[])
 */
 				GASS::Vec3 torq(0,0,2000);
 				torq = rot * torq;
-				GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
+				box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
 				box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(pos)));
 				box_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(rot)));
 				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddForceRequestPtr(new GASS::PhysicsBodyAddForceRequest(vel)));

@@ -28,12 +28,10 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 #include <conio.h>
 #endif
-
 
 #ifndef WIN32
 #include <stdio.h>

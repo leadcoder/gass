@@ -230,7 +230,6 @@ public:
 			}
 			return content;
 		}
-	private:
 	};
 	typedef GASS_SHARED_PTR<MyColorPropertyMetaData> MyCustomPropertyMetaDataPtr;
 
@@ -354,9 +353,9 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 			props[i]->GetValue(bro.get(), any_value);
 			MyVector<MyWheel> wheels = GASS_ANY_CAST<MyVector<MyWheel> >(any_value);
 			std::cout << "Property " << prop_name << " is Wheel vector holding:" << wheels.size() << " wheels\n";
-			for(size_t i = 0; i< wheels.size();i++)
+			for(size_t j = 0; j< wheels.size(); j++)
 			{
-				std::cout << "\t" << wheels[i].Name << " Radius:" << wheels[i].Radius << " Slip:" << wheels[i].Slip << "\n";
+				std::cout << "\t" << wheels[j].Name << " Radius:" << wheels[j].Radius << " Slip:" << wheels[j].Slip << "\n";
 			}
 		}
 		else
@@ -393,9 +392,9 @@ void PrintPropertyMetaData(GASS::BaseReflectionObjectPtr bro)
 			{
 				std::cout << "  Possible enumeration values:";
 				std::vector<std::string> values = enum_meta_data->GetEnumeration(bro);
-				for(size_t i = 0; i < values.size();i++)
+				for(size_t j = 0; j< values.size(); j++)
 				{
-					std::cout << "," << values[i];
+					std::cout << "," << values[j];
 				}
 				std::cout << std::endl;
 			}
@@ -459,8 +458,7 @@ int main(int /*argc*/, char** /* argv[] */)
 
 	std::cout << "\nShow that we include base class properties...\n";
 	PrintProperties(my_derived_car);
-
-	getch();
+	_getch();
 	return 0;
 }
 
