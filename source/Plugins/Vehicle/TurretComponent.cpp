@@ -27,7 +27,6 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 
@@ -146,7 +145,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
+	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
 		Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
@@ -159,7 +158,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2)
+	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
 		//Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));

@@ -2,8 +2,6 @@
 #ifndef ROAD_BUILDER
 #define ROAD_BUILDER
 
-#include "Core/Utils/GASSFilePath.h"
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSVector.h"
 
 namespace GASS
@@ -47,7 +45,7 @@ namespace GASS
 			void SetRightPath(const std::vector<Vec3> &path, size_t i);
 			std::vector<Vec3> _Clip(std::vector<Vec3> path,EdgeLine line);
 		};
-		static bool EdgeSort(const EdgeConnection &edge1, const EdgeConnection &edge2);
+		//static bool EdgeSort(const EdgeConnection &edge1, const EdgeConnection &edge2);
 		void Extend(std::vector<Vec3> &waypoints, Float dist);
 		void CreateLanes(const RoadNetwork &network);
 	};

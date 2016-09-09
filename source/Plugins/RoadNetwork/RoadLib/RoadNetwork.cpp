@@ -5,8 +5,7 @@
 #include "RoadEdge.h"
 #include "RoadNavigation.h"
 #include "RoadBuilder.h"
-
-#include <algorithm>
+#include "Core/Math/GASSMath.h"
 #include <tinyxml2.h>
 #include <sstream>
 
@@ -220,7 +219,7 @@ namespace GASS
 			if(*iter == edge)
 				iter = m_Edges.erase(iter);
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -232,7 +231,7 @@ namespace GASS
 			if(*iter == node)
 				iter = m_Nodes.erase(iter);
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -350,7 +349,7 @@ namespace GASS
 		int seg_index;
 		RoadEdge* best_edge = NULL;
 		Vec3 target_point;
-		Vec3 best_target_point;
+		//Vec3 best_target_point;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
@@ -360,7 +359,7 @@ namespace GASS
 				if(dist < min_dist )
 				{
 					min_dist = dist;
-					best_target_point = target_point;
+					//best_target_point = target_point;
 					best_edge = m_Edges[i];
 				}
 			}

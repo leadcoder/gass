@@ -26,10 +26,6 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-
 
 namespace GASS
 {
@@ -53,10 +49,8 @@ namespace GASS
 		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
 		Float m_Volume;
 		Float m_Pitch;
-		Float m_TargetVolume;
 		Float m_TargetPitch;
 		Float m_MaxVelRequest;
-		//Float m_MaxForce;
 	};
 }
 #endif

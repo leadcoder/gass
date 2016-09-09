@@ -19,23 +19,14 @@
 *****************************************************************************/
 
 #include "VelocityToSoundComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
 
 namespace GASS
 {
@@ -45,7 +36,8 @@ namespace GASS
 		m_Volume(1.0),
 		m_MinMaxVolume(0,1),
 		m_MinMaxPitch(1,1),
-		m_VelocityLimit(16)
+		m_VelocityLimit(16),
+		m_MaxVelRequest(0)
 	{
 
 	}
@@ -91,10 +83,9 @@ namespace GASS
 		m_Pitch = std::max<Float>(m_Pitch,m_MinMaxPitch.x);
 		m_Pitch = std::min<Float>(m_Pitch,m_MinMaxPitch.y);
 
-		m_TargetVolume = 0.0;
 		
-		m_TargetVolume = m_MinMaxVolume.x + normalized_vel* (m_MinMaxVolume.y-m_MinMaxVolume.x);
-		m_Volume = m_TargetVolume; 
+		Float  target_volume = m_MinMaxVolume.x + normalized_vel* (m_MinMaxVolume.y-m_MinMaxVolume.x);
+		m_Volume = target_volume;
 		/*if(m_TargetVolume > m_Volume) 
 			m_Volume += delta_time*2.1;
 		else

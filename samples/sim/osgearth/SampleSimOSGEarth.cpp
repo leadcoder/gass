@@ -25,7 +25,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 #include <conio.h>
@@ -51,7 +50,7 @@ int _getch( ) {
 }
 #endif
 
-int run(int argc, char* argv[])
+int run(int /*argc*/, char** /*argv[]*/)
 {
 	//Create engine instance and initialize with config file
 	GASS::SimEngine* engine = new GASS::SimEngine();
@@ -98,7 +97,7 @@ int run(int argc, char* argv[])
 	bool done = false;
 	while(!done)
 	{
-		engine->Update();
+		done = engine->Update();
 	}
 	return 0;
 }
@@ -113,7 +112,7 @@ int main(int argc, char* argv[])
 	catch(std::exception& e) 
 	{
 		std::cout << "Exception:" << e.what() << std::endl;
-		getch();
+		_getch();
 	}
 	return ret;
 }

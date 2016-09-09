@@ -19,23 +19,10 @@
 *****************************************************************************/
 
 #include "PhysicsReportProxyComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"
-
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
 
 namespace GASS
 {

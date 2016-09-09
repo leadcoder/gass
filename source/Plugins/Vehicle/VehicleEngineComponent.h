@@ -22,15 +22,11 @@
 #define VEHICLE_ENGINE_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Core/Utils/GASSPIDControl.h"
 
@@ -72,10 +68,9 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		void SceneManagerTick(double delta);
-		float GetTorque(float throttle);
-		float GetRPM(){return m_RPM;}
-		int GetGear(){return m_Gear;}
-		float GetNormRPM();
+		float GetRPM() const {return m_RPM;}
+		int GetGear() const {return m_Gear;}
+		float GetNormRPM() const;
 	private:
 
 		ADD_PROPERTY(float,TurnRPMAmount)

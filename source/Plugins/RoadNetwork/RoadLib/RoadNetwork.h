@@ -2,11 +2,8 @@
 #ifndef ROAD_NETWORK
 #define ROAD_NETWORK
 
-#include "Core/Utils/GASSFilePath.h"
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSVector.h"
 #include "micropather.h"
-#include <set>
 
 namespace tinyxml2
 {
@@ -26,8 +23,8 @@ namespace GASS
 		void GenerateLanes();
 		void ConvertNodesToWaypoint();
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point) const;
-		void Load(const std::string &filename);
-		void Save(const std::string &filename);
+		//void Load(const std::string &filename);
+		//void Save(const std::string &filename);
 		void SaveXML(tinyxml2::XMLElement * elem);
 		void LoadXML(tinyxml2::XMLElement * elem);
 

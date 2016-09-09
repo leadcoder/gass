@@ -121,7 +121,7 @@ namespace GASS
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			Vec3 pos(x,0,y);
+			pos.Set(x,0,y);
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(color);
 		}

@@ -3,7 +3,6 @@
 #define GASS_RN_ROAD_EDGE_COMPONENT
 
 #include "Sim/GASS.h"
-#include "Core/Utils/GASSFilePath.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"

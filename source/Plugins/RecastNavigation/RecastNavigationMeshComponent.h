@@ -164,7 +164,6 @@ namespace GASS
 		bool GenerateTiles();
 		void BuildAllTiles();
 		unsigned char* BuildTileMesh(const int tx, const int ty, const float* bmin, const float* bmax, int& dataSize);
-		void Cleanup();
 		void SetVisible(bool value);
 		bool GetVisible() const;
 		void SetExportMesh(const FilePath &value);
@@ -173,7 +172,6 @@ namespace GASS
 		FilePath GetImportMesh() const;
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
-		void OnChangeName(SceneObjectNameMessagePtr message);
 		FilePath _GetFilePath() const;
 
 		void OnEditPosition(EditPositionMessagePtr message);
@@ -190,7 +188,7 @@ namespace GASS
 		std::string m_BBShape;
 		std::string m_NavMeshFilePath;
 		dtNavMesh* m_NavMesh;
-		dtTileCache* m_TileCache;
+		//dtTileCache* m_TileCache;
 		//settings
 		float m_CellSize;
 		float m_CellHeight;

@@ -4,9 +4,7 @@
 #include "GASSRNRoadEdgeComponent.h"
 #include "RoadEdge.h"
 #include "RoadNode.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include <tinyxml2.h>
 
 namespace GASS
@@ -240,10 +238,10 @@ namespace GASS
 		{
 			RNRoadEdgeComponentPtr edge_comp = GASS_DYNAMIC_PTR_CAST<RNRoadEdgeComponent>(components[i]);
 			std::vector<Vec3> wps = edge_comp->GetWaypoints();
-			for(size_t i = 1 ; i < wps.size(); i++) 
+			for(size_t j = 1 ; j < wps.size(); j++)
 			{
-				pos_vec.push_back(wps[i-1] - offset);
-				pos_vec.push_back(wps[i] - offset);
+				pos_vec.push_back(wps[j -1] - offset);
+				pos_vec.push_back(wps[j] - offset);
 			}
 			/*RNRoadNodeComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(edge_comp->GetStartNode());
 			RNRoadNodeComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(edge_comp->GetEndNode());

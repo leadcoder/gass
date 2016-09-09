@@ -1,4 +1,5 @@
 #include "RoadBuilder.h"
+#include "Core/Math/GASSMath.h"
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "RoadNetwork.h"

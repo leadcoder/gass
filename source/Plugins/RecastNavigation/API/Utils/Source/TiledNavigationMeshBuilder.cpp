@@ -141,7 +141,7 @@ dtNavMesh* TiledNavigationMeshBuilder::Build(InputGeom* geom)
 				// Remove any previous data (navmesh owns and deletes the data).
 				nav_mesh->removeTile(nav_mesh->getTileRefAt(x,y,0),0,0);
 				// Let the navmesh own the data.
-				dtStatus status = nav_mesh->addTile(data,dataSize,DT_TILE_FREE_DATA,0,0);
+				status = nav_mesh->addTile(data,dataSize,DT_TILE_FREE_DATA,0,0);
 				if (dtStatusFailed(status))
 					dtFree(data);
 			}
