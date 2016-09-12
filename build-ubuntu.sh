@@ -1,4 +1,4 @@
-GASS_DEP_ROOT=/home/johan/dev_zone/GASS/master/gass-dep-install
+GASS_DEP_ROOT=/home/johan/dev_zone/GASS/master/gass_dep/gass-dep-install
 
 export TINYXML2_HOME=$GASS_DEP_ROOT/tinyxml2
 printenv TINYXML2_HOME
@@ -18,7 +18,7 @@ cd build
 
 cmake -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed" -DCMAKE_BUILD_TYPE=Release  -DGASS_BUILD_CORE_SAMPLES=ON -DGASS_BUILD_SIM=ON -DGASS_BUILD_PLUGIN_OPENAL=OFF -DGASS_BUILD_PLUGIN_RAKNET=OFF -DGASS_BUILD_PLUGIN_PHYSX=OFF -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_ROOT/ $SOURCE_ROOT
 
-make install
+#make install
 
 
 

@@ -1,6 +1,4 @@
 #include "scriptbuilder.h"
-#include <vector>
-#include <string>
 using namespace std;
 
 #include <stdio.h>
