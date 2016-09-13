@@ -19,7 +19,13 @@ target_include_directories(${LIB_NAME}
 )
 
 #Add project dependency libs
-target_link_libraries(${LIB_NAME} PUBLIC GASSCore  PRIVATE ${ANGELSCRIPT_LIBRARIES})
+target_link_libraries(${LIB_NAME} PUBLIC GASSCore  PRIVATE ${ANGELSCRIPT_LIBRARIES} uuid)
+
+if(NOT WIN32)
+   #Add dependency guid
+   target_link_libraries(${LIB_NAME} PRIVATE uuid)
+endif()
+
 target_compile_definitions(${LIB_NAME} PRIVATE GASS_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 		
 if(WIN32) #If we are going to use this globally we need to move this into macro

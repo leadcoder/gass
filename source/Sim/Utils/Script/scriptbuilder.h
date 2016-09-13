@@ -34,6 +34,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <string>
 
 BEGIN_AS_NAMESPACE
 

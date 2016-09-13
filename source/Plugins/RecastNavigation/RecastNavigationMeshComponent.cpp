@@ -32,6 +32,7 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSPhysicsMesh.h"
+#include <cfloat> //FLT_MIN/MAX
 
 namespace GASS
 {
