@@ -17,12 +17,14 @@ include_directories(${GASS_SIM_INCLUDE_DIRS} ${OSGEARTH_INCLUDE_DIRS} ${OPENSCEN
 SET(CPP_FILES 
 	OSGEarthCameraManipulatorComponent.cpp
 	OSGEarthLocationComponent.cpp
+	OSGEarthMapComponent.cpp
 	OSGEarthSceneManager.cpp
 	OSGEarthSkyComponent.cpp)
 
 SET(H_FILES  
 	OSGEarthCameraManipulatorComponent.h
 	OSGEarthLocationComponent.h
+	OSGEarthMapComponent.h
 	OSGEarthMessages.h
 	OSGEarthSceneManager.h
 	OSGEarthSkyComponent.h)
