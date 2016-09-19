@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-//#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSException.h"
 
 namespace GASS

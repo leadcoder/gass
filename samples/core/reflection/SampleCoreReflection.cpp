@@ -33,7 +33,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-int getch( ) {
+int _getch( ) {
 	struct termios oldt,newt;
 	int ch;
 	tcgetattr( STDIN_FILENO, &oldt );

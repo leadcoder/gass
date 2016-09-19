@@ -26,6 +26,10 @@ THE SOFTWARE.
 
 #include "Sim/GASSCommon.h"
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <iomanip>
 
 #ifdef GUID_ANDROID
 #include <jni.h>
