@@ -2,5 +2,13 @@
 <SceneObject>
 <Components/>
   <ComponentContainers>
+  <SceneObject>
+   <Name value ="TerrainObject"/>
+    <Components>
+	  <OSGEarthMapComponent>
+	     <EarthFile value="openstreetmap_buildings.earth"/>
+	  </OSGEarthMapComponent>
+     </Components>
+  </SceneObject>
   </ComponentContainers >
 </SceneObject>
