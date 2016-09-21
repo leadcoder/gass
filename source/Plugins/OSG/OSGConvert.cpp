@@ -24,60 +24,7 @@
 namespace GASS
 {
 	
-	OSGConvert::OSGConvert()
-	{
-		
-	}
 
-	OSGConvert::~OSGConvert()
-	{
-
-	}
-
-	osg::Vec3d OSGConvert::ToOSG(const Vec3 &v)
-	{
-		return osg::Vec3d(v.x,-v.z,v.y);
-	}
-
-	osg::Vec4 OSGConvert::ToOSG(const ColorRGBA &color)
-	{
-		return osg::Vec4(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a));
-	}
-
-	Vec3 OSGConvert::ToGASS(const osg::Vec3 &v)
-	{
-		return Vec3(v.x(),v.z(),-v.y());
-	}
-
-	Vec3 OSGConvert::ToGASS(const osg::Vec3d &v)
-	{
-		return Vec3(v.x(),v.z(),-v.y());
-	}
-
-	Quaternion OSGConvert::ToGASS(const osg::Quat &value)
-	{
-		return Quaternion(-value.w(),-value.x(),-value.z(),value.y());
-	}
-
-	osg::Quat OSGConvert::ToOSG(const Quaternion &value)
-	{
-		return  osg::Quat(-value.x,value.z,-value.y,-value.w);
-	}
-
-	int OSGConvert::ToOSGNodeMask(GeometryFlags flag)
-	{
-		return flag << NM_USER_OFFSET;
-	}
-
-	void OSGConvert::SetOSGNodeMask(GeometryFlags flags, osg::Node* node)
-	{
-		int mask = ToOSGNodeMask(flags);
-		int all_mask = ToOSGNodeMask(GEOMETRY_FLAG_ALL);
-		//set geom bits to zero
-		node->setNodeMask(~all_mask & node->getNodeMask());
-		//set geom bits
-		node->setNodeMask(mask | node->getNodeMask());
-	}
 }
 
 

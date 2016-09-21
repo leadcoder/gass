@@ -40,6 +40,7 @@
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
 #include "OSGEarthSceneManager.h"
+#include "Plugins/OSG/OSGNodeData.h"
 
 namespace GASS
 {
@@ -103,8 +104,29 @@ namespace GASS
 	void OSGEarthSceneManager::OnInit()
 	{
 		m_Initlized = true;
-		SetEarthFile(m_EarthFile);
+
+		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+
+		osgViewer::ViewerBase::Views views;
+		osg_sys->GetViewer()->getViews(views);
+
+		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
+		views[0]->setCameraManipulator(m_EarthManipulator);
+		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(views[0]);
+
+		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
+		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8));
+		mainContainer->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
+		mainContainer->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
+		
+		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
+		root->addChild(canvas);
+
+		//SetEarthFile(m_EarthFile);
 	}
+
+	static SceneObjectPtr dummy;
 
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)
 	{
@@ -118,24 +140,23 @@ namespace GASS
 			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 			ResourceHandle rh(earth_file);
 			std::string full_path = rh.GetResource()->Path().GetFullPath();
-			osg::Node* node = osgDB::readNodeFile(full_path);
-			m_MapNode = osgEarth::MapNode::findMapNode(node);
-			root->addChild(m_MapNode);
-			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			//osg::Node* node = osgDB::readNodeFile(full_path);
+			//m_MapNode = osgEarth::MapNode::findMapNode(node);
+			//root->addChild(m_MapNode);
 
-			osgViewer::ViewerBase::Views views;
-			osg_sys->GetViewer()->getViews(views);
+			//Add dummy component for collisison
 
-			m_EarthManipulator = new osgEarth::Util::EarthManipulator();
-			views[0]->setCameraManipulator(m_EarthManipulator );
-			osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(views[0]);
+			/*BaseSceneComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(ComponentFactory::Get().Create("ManualMeshComponent")));
+			OSGNodeData* data = new OSGNodeData(geom_comp);
+			m_MapNode->setUserData(data);
+			GeometryFlagsBinder flags;
+			flags.SetValue(GEOMETRY_FLAG_GROUND);
+			geom_comp->SetPropertyByType("GeometryFlags", flags);
+			dummy = SceneObjectPtr(new SceneObject);
+			dummy->AddComponent(geom_comp);*/
+			
 
-			osgEarth::Util::Controls::Container* mainContainer = canvas->addControl( new osgEarth::Util::Controls::VBox() );
-			mainContainer->setBackColor( osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8) );
-			mainContainer->setHorizAlign( osgEarth::Util::Controls::Control::ALIGN_LEFT );
-			mainContainer->setVertAlign( osgEarth::Util::Controls::Control::ALIGN_BOTTOM );
-
-			const osgEarth::Config& externals = m_MapNode->externalConfig();
+			/*const osgEarth::Config& external = m_MapNode->externalConfig();
 			const osgEarth::Config& skyConf         = externals.child("sky");
 			const osgEarth::Config& oceanConf       = externals.child("ocean");
 			const osgEarth::Config& annoConf        = externals.child("annotations");
@@ -148,7 +169,7 @@ namespace GASS
 			for( osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i )
 				viewpointsConf.add( *i );
 
-
+				*/
 			// Loading a viewpoint list from the earth file:
 			/*if ( !viewpointsConf.empty() )
 			{
@@ -171,7 +192,7 @@ namespace GASS
 				}
 			}*/
 
-			if(m_UseSky)
+			/*if(m_UseSky)
 			{
 				osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create( m_MapNode);
 				//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
@@ -180,15 +201,15 @@ namespace GASS
 				root->addChild( sky );
 				if(m_ShowSkyControl)
 				{
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky, views[0]);
+					osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
 					if ( c )
 						mainContainer->addControl( c );
 				}
-			}
+			}*/
 
 			if (m_UseOcean)
 			{
-				osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
+			/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
 				if ( ocean )
 				{
 					// if there's a sky, we want to ocean under it
@@ -200,7 +221,7 @@ namespace GASS
 					if ( c )
 						mainContainer->addControl(c);
 				}
-
+				*/
 
 				/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
 				if ( ocean )
@@ -215,7 +236,7 @@ namespace GASS
 				}*/
 			}
 			//m_MapNode->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode) );
-			root->addChild( canvas );
+			
 		}
 	}
 

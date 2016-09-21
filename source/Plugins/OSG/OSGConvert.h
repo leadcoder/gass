@@ -22,21 +22,67 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGCommon.h"
+#include "OSGNodeMasks.h"
+#include "Sim/GASSGeometryFlags.h"
 
 namespace GASS
 {
 	class OSGConvert
 	{
 	public:
-		OSGConvert();
-		virtual ~OSGConvert();
-		static osg::Vec3d ToOSG(const Vec3 &v); 
-		static Vec3 ToGASS(const osg::Vec3 &v); 
-		static Vec3 ToGASS(const osg::Vec3d &v); 
-		static osg::Vec4 ToOSG(const ColorRGBA &color);
-		static osg::Quat ToOSG(const Quaternion &value);
-		static Quaternion ToGASS(const osg::Quat &value);
-		static int ToOSGNodeMask(GeometryFlags flag);
-		static void SetOSGNodeMask(GeometryFlags flags, osg::Node* node);
+		OSGConvert()
+		{
+
+		}
+
+		virtual ~OSGConvert()
+		{
+
+		}
+
+		static osg::Vec3d ToOSG(const Vec3 &v)
+		{
+			return osg::Vec3d(v.x, -v.z, v.y);
+		}
+
+		static osg::Vec4 ToOSG(const ColorRGBA &color)
+		{
+			return osg::Vec4(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a));
+		}
+
+		static Vec3 ToGASS(const osg::Vec3 &v)
+		{
+			return Vec3(v.x(), v.z(), -v.y());
+		}
+
+		static Vec3 ToGASS(const osg::Vec3d &v)
+		{
+			return Vec3(v.x(), v.z(), -v.y());
+		}
+
+		static Quaternion ToGASS(const osg::Quat &value)
+		{
+			return Quaternion(-value.w(), -value.x(), -value.z(), value.y());
+		}
+
+		static osg::Quat ToOSG(const Quaternion &value)
+		{
+			return  osg::Quat(-value.x, value.z, -value.y, -value.w);
+		}
+
+		static int ToOSGNodeMask(GeometryFlags flag)
+		{
+			return flag << NM_USER_OFFSET;
+		}
+
+		static void SetOSGNodeMask(GeometryFlags flags, osg::Node* node)
+		{
+			int mask = ToOSGNodeMask(flags);
+			int all_mask = ToOSGNodeMask(GEOMETRY_FLAG_ALL);
+			//set geom bits to zero
+			node->setNodeMask(~all_mask & node->getNodeMask());
+			//set geom bits
+			node->setNodeMask(mask | node->getNodeMask());
+		}
 	};
 }
