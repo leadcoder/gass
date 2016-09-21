@@ -3,8 +3,8 @@
 
 1. Dependencies 
 
-	Download dependencies from: https://drive.google.com/folderview?id=0B6lF1bdMT2d2YnUxSThXM3M1Szg&usp=sharing&tid=0B6lF1bdMT2d2U2FjTXZwZ1RuUUE
-	To build from source see below 
+	Download dependencies from: https://www.dropbox.com/sh/ccvd9nfr3ef203g/AACfPrh5gLeGyMDkESLpG3E8a?dl=0
+	To build from source see below
 	run prepare_build_environment.bat in the new dep folder, this will setup some environment variables used by cmake to find all dependencies
 
 2. GASS
@@ -36,6 +36,7 @@ current version used in GASS is 1.59, cmake requirement is 1.46.1
 #--TBB--
 Both source and prebuilds are found here:
 https://www.threadingbuildingblocks.org/
+Note that TBB also is build from forked deps to get a static version of the libs.
 
 #--OGRE---
 GASS use v1.9 of OGRE build with OGRE_CONFIG_THREADS=0 (Warning: using background loading in 1.9 will cause ogre terrain component to crash)
