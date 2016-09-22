@@ -21,8 +21,6 @@
 #pragma once
 
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
-#include <extensions/PxRevoluteJoint.h>
-#include <extensions/PxPrismaticJoint.h>
 #include "PhysXCommon.h"
 #include "Sim/GASS.h"
 #include "Sim/GASSSceneObjectRef.h"

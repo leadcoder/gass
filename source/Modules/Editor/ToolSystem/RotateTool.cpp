@@ -1,11 +1,8 @@
 #include "RotateTool.h"
 #include "../Components/GizmoComponent.h"
-
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -18,60 +15,16 @@
 
 namespace GASS
 {
-
 	RotateTool::RotateTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),
 		m_Active(false)
 	{
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
-		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(RotateTool::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
+		controller->GetEditorSceneManager()->GetScene()->RegisterForMessage(REG_TMESS(RotateTool::OnSelectionChanged, EditorSelectionChangedEvent,0));
 	}
 
 	RotateTool::~RotateTool()
 	{
 
-	}
-
-
-	void RotateTool::MouseMoved(const MouseData &data, const SceneCursorInfo &/*info*/)
-	{
-		
-		SceneObjectPtr selected = m_SelectedObject.lock();
-		if(m_MouseIsDown && selected && CheckIfEditable(selected))
-		{
-			SceneObjectPtr gizmo = m_CurrentGizmo.lock();
-			if(gizmo)
-			{
-				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				Float rotation_rad_step = data.XRel*0.2;
-				rotation_rad_step = rotation_rad_step;
-				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
-				int from_id = GASS_PTR_TO_INT(this);
-
-				selected->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
-
-				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
-
-				const double time = SimEngine::Get().GetRunTimeController()->GetTime();
-				static double last_time = 0;
-				const double send_freq = 20;
-				if(time - last_time > 1.0/send_freq)
-				{
-					last_time = time;
-					std::vector<std::string> attribs;
-					attribs.push_back("Rotation");
-					attribs.push_back("Quaternion");
-					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-					m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(attrib_change_msg);
-				}
-
-			}
-		}
-	}
-
-	bool RotateTool::CheckIfEditable(SceneObjectPtr obj)
-	{
-		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && !m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
 	}
 
 	void RotateTool::MouseDown(const MouseData &data, const SceneCursorInfo &info)
@@ -87,16 +40,16 @@ namespace GASS
 			{
 				m_CurrentGizmo = obj_under_cursor;
 
-				SceneObjectPtr selected = m_SelectedObject.lock();
+				/*SceneObjectPtr selected = m_SelectedObject.lock();
 				if(m_Controller->IsShiftDown() && selected && selected->GetParentSceneObject())
 				{
 					SceneObjectPtr new_obj = selected->CreateCopy();
 					selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
-				}
+				}*/
 
 			}
-			else if(obj_under_cursor == m_SelectedObject.lock())
+		/*	else if(obj_under_cursor == m_SelectedObject.lock())
 			{
 				m_RotateY = true;
 				int from_id = GASS_PTR_TO_INT(this);
@@ -115,24 +68,53 @@ namespace GASS
 				SceneObjectPtr gizmo = GetMasterGizmo();
 				if(gizmo)
 					SendMessageRec(gizmo,col_msg);
+			}*/
+		}
+	}
+
+	void RotateTool::MouseMoved(const MouseData &data, const SceneCursorInfo &/*info*/)
+	{
+		if(m_MouseIsDown && m_Selected.size() > 0)
+		{
+			SceneObjectPtr gizmo = m_CurrentGizmo.lock();
+			if(gizmo)
+			{
+				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
+				Float rotation_rad_step = data.XRel*0.2;
+				rotation_rad_step = rotation_rad_step;
+				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
+				int from_id = GASS_PTR_TO_INT(this);
+				gizmo->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot, from_id)));
+
+				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
+
+				/*const double time = SimEngine::Get().GetRunTimeController()->GetTime();
+				static double last_time = 0;
+				const double send_freq = 20;
+				if(time - last_time > 1.0/send_freq)
+				{
+					last_time = time;
+					std::vector<std::string> attribs;
+					attribs.push_back("Rotation");
+					attribs.push_back("Quaternion");
+					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
+					m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(attrib_change_msg);
+				}*/
 			}
 		}
 	}
 
-
 	void RotateTool::MouseUp(const MouseData &data, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = false;
-		bool slection_mode = false;
-
-		if(Vec2(data.XAbsNorm,data.YAbsNorm) == m_MouseDownPos)
+		bool selection_mode = false;
+		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + abs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
 		{
-			slection_mode = true;
+			selection_mode = true;
 		}
 		m_CurrentGizmo.reset();
 
-
-		SceneObjectPtr selected = m_SelectedObject.lock();
+		/*SceneObjectPtr selected = m_SelectedObject.lock();
 		if(selected && CheckIfEditable(selected))
 		{
 			int from_id = GASS_PTR_TO_INT(this);
@@ -143,23 +125,20 @@ namespace GASS
 			SceneObjectPtr gizmo = GetMasterGizmo();
 			if(gizmo)
 				SendMessageRec(gizmo,col_msg);
-		}
+		}*/
 
-		if(slection_mode) //selection mode
+		if (selection_mode) //selection mode
 		{
-			SceneObjectPtr obj_under_cursor  = info.m_ObjectUnderCursor.lock();
-			if(obj_under_cursor && CheckIfEditable(obj_under_cursor))
+			SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
+			if (obj_under_cursor)
 			{
-				if(!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj_under_cursor))
+				if (CheckIfEditable(obj_under_cursor))
 				{
-					if(!m_Controller->GetEditorSceneManager()->IsObjectLocked(obj_under_cursor))
+					GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
+					//Send selection message
+					if (!gc) //don't select gizmo objects
 					{
-						GizmoComponentPtr gc = obj_under_cursor->GetFirstComponentByClass<GizmoComponent>();
-						//Send selection message
-						if(!gc) //don't select gizmo objects
-						{
-							m_Controller->GetEditorSceneManager()->SelectSceneObject(obj_under_cursor);
-						}
+						m_Controller->SelectHelper(obj_under_cursor);
 					}
 				}
 			}
@@ -170,8 +149,6 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 	}
 
-
-
 	void RotateTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
 		obj->PostRequest(msg);
@@ -181,6 +158,11 @@ namespace GASS
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
 			SendMessageRec(child,msg);
 		}
+	}
+
+	bool RotateTool::CheckIfEditable(SceneObjectPtr obj) const
+	{
+		return (!m_Controller->GetEditorSceneManager()->IsObjectStatic(obj) && !m_Controller->GetEditorSceneManager()->IsObjectLocked(obj) && m_Controller->GetEditorSceneManager()->IsObjectVisible(obj));
 	}
 
 	void RotateTool::Stop()
@@ -201,15 +183,14 @@ namespace GASS
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 			//Send selection message to inform gizmo about current object
-
-			if(gizmo)
+			/*if(gizmo)
 			{
 				SceneObjectPtr current = m_SelectedObject.lock();
 				if(current)
 				{
 					m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
 				}
-			}
+			}*/
 		}
 		return gizmo;
 	}
@@ -220,32 +201,34 @@ namespace GASS
 		m_Active = true;
 	}
 
-
-	void RotateTool::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
+	void RotateTool::OnSelectionChanged(EditorSelectionChangedEventPtr message)
 	{
-		if(m_Active)
+		m_Selected.clear();
+		for (size_t i = 0; i< message->m_Selection.size(); i++)
+		{
+			SceneObjectPtr obj = message->m_Selection[i].lock();
+			if (obj && CheckIfEditable(obj) && obj->GetFirstComponentByClass<ILocationComponent>())
+			{
+				m_Selected.push_back(message->m_Selection[i]);
+			}
+		}
+
+		if (m_Active)
 		{
 			//hide gizmo
-			if(message->GetSceneObject())
+			if (m_Selected.size() > 0)
 			{
-				LocationComponentPtr lc = message->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				if(lc) //only support gizmo for objects with location component
-				{
+				if (m_Controller->GetEnableGizmo())
 					SetGizmoVisiblity(true);
-				}
 				else
-				{
 					SetGizmoVisiblity(false);
-				}
 			}
 			else
 			{
 				SetGizmoVisiblity(false);
 			}
 		}
-		m_SelectedObject = message->GetSceneObject();
 	}
-
 
 	void RotateTool::SetGizmoVisiblity(bool value)
 	{

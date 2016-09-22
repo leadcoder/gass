@@ -1,7 +1,5 @@
 #include "GASSRNRoadNodeComponent.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include <limits>
 
@@ -78,7 +76,7 @@ namespace GASS
 				iter = m_Edges.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}
 }

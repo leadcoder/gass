@@ -20,16 +20,10 @@
 
 #pragma once 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"
-//#include "ODEGeometry.h"
 #include "ODEBaseGeometryComponent.h"
 
 namespace GASS
@@ -58,7 +52,7 @@ namespace GASS
 		void UpdateBodyMass();
 		void SetSizeFromMesh(bool value);
 		//debug functions
-		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
+		//void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		void UpdateDebug();
 	protected:
 		Float m_Radius; 

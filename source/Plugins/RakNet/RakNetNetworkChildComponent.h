@@ -24,19 +24,12 @@
 
 #include "PacketPriority.h"
 #include "Replica.h"
-#include "StringTable.h"
 #include "BitStream.h"
-#include "GetTime.h"
-
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
-
-
 
 namespace GASS
 {

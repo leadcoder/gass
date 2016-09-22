@@ -29,8 +29,6 @@ namespace GASS
 	public:
 		virtual ~INavigationComponent(){}
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
-
-	protected:
 	};
 	typedef GASS_SHARED_PTR<INavigationComponent> NavigationComponentPtr;
 	typedef GASS_WEAK_PTR<INavigationComponent> NavigationComponentWeakPtr;

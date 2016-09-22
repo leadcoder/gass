@@ -44,10 +44,6 @@ namespace GASS
 		physx::PxShape* CreateShape();
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
-
-		//debug functions
-		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
-		void UpdateDebug();
 	protected:
 		
 		Vec3 m_Size; 

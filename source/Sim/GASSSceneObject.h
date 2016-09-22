@@ -310,8 +310,8 @@ protected:
 	class ISceneObjectEnumerationPropertyMetaData
 	{
 	public:
+		virtual ~ISceneObjectEnumerationPropertyMetaData() {}
 		virtual std::vector<SceneObjectPtr> GetEnumeration(BaseReflectionObjectPtr object) const = 0;
-	private:
 	};
 	typedef GASS_SHARED_PTR<ISceneObjectEnumerationPropertyMetaData> SceneObjectEnumerationPropertyMetaDataPtr;
 

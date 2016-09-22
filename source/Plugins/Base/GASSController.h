@@ -23,11 +23,8 @@
 #include "Sim/GASSCommon.h"
 #include "GASSControlSetting.h"
 #include "GASSControlSettingsSystem.h"
-#include <map>
-#include <string>
 #include "Sim/Interface/GASSIInputSystem.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim//GASSSimSystemManager.h"
 
 namespace GASS
 {
@@ -38,7 +35,8 @@ namespace GASS
 	public:
 		Controller(const std::string &name,ControlSetting* owner) :
 			m_Name(name),
-			m_Owner(owner)
+			m_Owner(owner),
+			m_Device(0)
 		{
 
 		}
@@ -339,7 +337,7 @@ namespace GASS
 	class ButtonAxisController : public AxisController
 	{
 	public:
-		ButtonAxisController(const std::string &name,ControlSetting* owner) : AxisController(name,owner)
+		ButtonAxisController(const std::string &name,ControlSetting* owner) : AxisController(name,owner), m_PosKey(0), m_NegKey(0)
 		{
 
 		}

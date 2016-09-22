@@ -22,10 +22,15 @@
 #include "Sim/GASS.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Modules/Editor/EditorSceneManager.h"
+#include "Modules/Editor/EditorSystem.h"
+#include "Modules/Editor/ToolSystem/CreateTool.h"
+#include "Modules/Editor/ToolSystem/GraphTool.h"
+#include "Modules/Editor/ToolSystem/MouseToolController.h"
+
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 #include <conio.h>
@@ -51,7 +56,7 @@ int _getch( ) {
 }
 #endif
 
-int run(int argc, char* argv[])
+int run(int /*argc*/, char** /*argv[]*/)
 {
 	//Create engine instance and initialize with config file
 	GASS::SimEngine* engine = new GASS::SimEngine();
@@ -86,6 +91,11 @@ int run(int argc, char* argv[])
 	GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
 	engine->GetSimSystemManager()->PostMessage(camera_msg);
 
+	GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
+	GASS::EditorSceneManagerPtr esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
+	esm->GetMouseToolController()->SelectTool("MoveTool");
+	esm->GetMouseToolController()->SetEnableGizmo(true);
+
 	//Create vehicle and add it to the root node of the scene
 	//GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
 	//scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);
@@ -95,10 +105,10 @@ int run(int argc, char* argv[])
 	//vehicle_obj->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
 
 	//Update the engine forever
-	bool done = false;
-	while(!done)
+	bool running = true;
+	while(running)
 	{
-		engine->Update();
+		running = engine->Update();
 	}
 	return 0;
 }
@@ -113,7 +123,7 @@ int main(int argc, char* argv[])
 	catch(std::exception& e) 
 	{
 		std::cout << "Exception:" << e.what() << std::endl;
-		getch();
+		_getch();
 	}
 	return ret;
 }

@@ -38,7 +38,6 @@ THE SOFTWARE.
 #include "GASSLog.h"
 #include "GASSSingleton.h"
 #include <map>
-#include <string>
 
 namespace GASS
 {
@@ -107,7 +106,7 @@ namespace GASS
 
         /** Returns a pointer to the default log.
         */
-        Log* getDefaultLog();
+        Log* getDefaultLog() const;
 
 		/** Closes and removes a named log. */
 		void destroyLog(const std::string& name);
@@ -122,35 +121,36 @@ namespace GASS
         /** Log a message to the default log.
         */
         void logMessage( const std::string& message, LogMessageLevel lml = LML_NORMAL, 
-            bool maskDebug = false);
+            bool maskDebug = false) const;
 
         /** Log a message to the default log (signature for backward compatibility).
         */
         void logMessage( LogMessageLevel lml, const std::string& message,  
-			bool maskDebug = false) { logMessage(message, lml, maskDebug); }
+			bool maskDebug = false) const { logMessage(message, lml, maskDebug); }
 
 		/** Get a stream on the default log. */
 		Log::Stream stream(LogMessageLevel lml = LML_NORMAL, 
-			bool maskDebug = false);
+			bool maskDebug = false) const;
 
 		/** Sets the level of detail of the default log.
         */
         void setLogDetail(LoggingLevel ll);
-        /** Override standard Singleton retrieval.
-        @remarks
-        Why do we do this? Well, it's because the Singleton
-        implementation is in a .h file, which means it gets compiled
-        into anybody who includes it. This is needed for the
-        Singleton template to work, but we actually only want it
-        compiled into the implementation of the class based on the
-        Singleton, not all of them. If we don't change this, we get
-        link errors when trying to use the Singleton-based class from
-        an outside dll.
-        @par
-        This method just delegates to the template version anyway,
-        but the implementation stays in this single compilation unit,
-        preventing link errors.
-        */
+	   
+	    /** Override standard Singleton retrieval.
+	            @remarks
+	            Why do we do this? Well, it's because the Singleton
+	            implementation is in a .h file, which means it gets compiled
+	            into anybody who includes it. This is needed for the
+	            Singleton template to work, but we actually only want it
+	            compiled into the implementation of the class based on the
+	            Singleton, not all of them. If we don't change this, we get
+	            link errors when trying to use the Singleton-based class from
+	            an outside dll.
+	            @par
+	            This method just delegates to the template version anyway,
+	            but the implementation stays in this single compilation unit,
+	            preventing link errors.
+	            */
         static LogManager& getSingleton(void);
         /** Override standard Singleton retrieval.
         @remarks

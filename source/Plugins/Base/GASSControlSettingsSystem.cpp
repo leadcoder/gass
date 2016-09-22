@@ -455,9 +455,9 @@ namespace GASS
 			ControlSetting::ControllerMap::iterator iter;
 			for(iter = local->m_ControllerMap.begin(); iter != local->m_ControllerMap.end(); ++iter)
 			{
-				const std::string name = (std::string) iter->first;
+				const std::string mapname = (std::string) iter->first;
 				Controller* remote_controller  = new RemoteController("remotecontroller",local);
-				remote->m_ControllerMap[name] = remote_controller;
+				remote->m_ControllerMap[mapname] = remote_controller;
 				Controller* controller = (Controller*) iter->second;
 				*remote_controller  = *controller;
 			}

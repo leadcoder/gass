@@ -46,6 +46,44 @@ public:
 	std::vector<std::string > m_Options;
 };
 
+class GASSVariantProperty2
+{
+public:
+	GASSVariantProperty2(GASS::IProperty* prop) {};
+	virtual ~GASSVariantProperty2() {};
+	void AddObject(GASS::BaseReflectionObjectPtr obj) { m_Objects.push_back(obj); }
+	void UpdateValueByString(const std::string &value)
+	{
+		for (size_t i = 0; i < m_Objects.size(); i++)
+		{
+			GASS::BaseReflectionObjectPtr object = m_Objects[i].lock();
+			if (object)
+			{
+				m_Prop->SetValueByString(object.get(), value);
+			}
+		}
+	}
+
+	void UpdateValue(boost::any  &value)
+	{
+		for (size_t i = 0; i < m_Objects.size(); i++)
+		{
+			GASS::BaseReflectionObjectPtr object = m_Objects[i].lock();
+			if (object)
+			{
+				m_Prop->SetValue(object.get(), value);
+				
+			}
+		}
+
+	}
+
+	std::vector<GASS::BaseReflectionObjectWeakPtr> m_Objects;
+	GASS::IProperty* m_Prop;
+
+	std::vector<std::string > m_Options;
+};
+
 class GASSPropertyWidget : public QtTreePropertyBrowser, public GASS::StaticMessageListener
 {
 	Q_OBJECT

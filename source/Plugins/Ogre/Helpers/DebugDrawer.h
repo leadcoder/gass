@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Common.h"
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 
 #include <map>
 

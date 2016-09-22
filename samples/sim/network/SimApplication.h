@@ -11,8 +11,7 @@
 
 
 #include <stdio.h>
-#include <iostream>
-#include <fstream>
+
 
 class SimApplication : public GASS::IMessageListener, public GASS_ENABLE_SHARED_FROM_THIS<SimApplication>
 {
@@ -30,7 +29,8 @@ public:
 		  m_Timer(new GASS::Timer()),
 		  m_UpdateFreq(60),
 		  m_ServerPort(2005),
-		  m_ClientPort(2006)
+		  m_ClientPort(2006),
+		  m_Engine(NULL)
 	  {
 
 	  }

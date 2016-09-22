@@ -1,6 +1,5 @@
 #include "GASSHeightField.h"
 #include "GASSRawFile.h"
-#include <math.h>
 #include <fstream>
 
 
@@ -138,7 +137,7 @@ namespace GASS
 		fin.read((char *) &(m_Data.Data[0]), sizeof(unsigned short)*m_NumSamplesW*m_NumSamplesH);
 	}
 
-	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos)
+	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos) const
 	{
 		Vec3 ray = p2 - p1;
 		Vec3 ray_2d = ray;
@@ -147,7 +146,7 @@ namespace GASS
 		double length_2d = ray_2d.Length();
 
 		//get pixel spacing, assume square pixels
-		double px_spacing = GetBoundingBox().GetSize().x/((double) GetNumSamplesW());
+		double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
 
 		double stepsize = 1.0;
 

@@ -24,8 +24,6 @@
 
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSSpline.h"
-#include "Core/Math/GASSRotationSpline.h"
-#include "Core/Math/GASSQuaternion.h"
 #include <vector>
 
 namespace GASS
@@ -48,10 +46,9 @@ namespace GASS
 		SplineAnimation(void);
 		~SplineAnimation(void);
 		void BuildInterpolationSplines(void);
-		void AutoCalulateRotation();
 		void AddNode(const Vec3 &pos);
 		Mat4 GetTransformation(Float desired_distance, const Vec3 &up_dir);
-		Vec3 GetVectorMask(const Vec3 &up_dir);
+		Vec3 GetVectorMask(const Vec3 &up_dir) const;
 		Mat4 GetTransformation(Float desired_distance, const Vec3 &up_dir, Float pitch_weight);
 		Mat4 GetSkewTransformation(Float desired_distance, const Vec3 &up_dir, Float skew_weight);
 	

@@ -19,10 +19,7 @@
 *****************************************************************************/
 
 #include "RecastDoorComponent.h"
-
-#include "Recast.h"
 #include "DetourNavMeshQuery.h"
-#include "InputGeom.h"
 #include "tinyxml2.h"
 
 namespace GASS

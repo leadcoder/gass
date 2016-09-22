@@ -19,22 +19,15 @@
 *****************************************************************************/
 
 #include "GotoLocationComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"
-
-#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIWaypointListComponent.h"
-
 
 namespace GASS
 {
@@ -70,8 +63,8 @@ namespace GASS
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
 					if(wpl)
 					{
-						SceneObjectPtr so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
-						ret.push_back(so);
+						SceneObjectPtr new_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						ret.push_back(new_so);
 					}
 				}
 			}
@@ -119,7 +112,7 @@ namespace GASS
 		{
 			//int num_waypoints = (int) m_Path.size();
 			int wp_index;
-			Vec3 point_on_path;
+			//Vec3 point_on_path;
 			Float ditance_to_path_dist;
 			Float now_distance = Math::GetPathDistance(m_CurrentLocation,m_Path,wp_index,ditance_to_path_dist);
 			double look_ahead = 10;

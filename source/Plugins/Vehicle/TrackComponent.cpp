@@ -19,20 +19,12 @@
 *****************************************************************************/
 
 #include "TrackComponent.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
-
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-
 
 namespace GASS
 {
@@ -83,10 +75,10 @@ namespace GASS
 			emission =50;
 		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
 
-		float duration = fabs(static_cast<float>(ang_vel.x))*0.05f;
+		//float duration = fabs(static_cast<float>(ang_vel.x))*0.05f;
 
-		if(duration > 1.6f)  
-			duration = 1.6f;
+		//if(duration > 1.6f)  
+		//	duration = 1.6f;
 
 		//MessagePtr particle_duration_msg(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::PARTICLE_LIFE_TIME,0,duration));
 		//GetSceneObject()->PostMessage(particle_duration_msg);

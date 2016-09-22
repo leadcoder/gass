@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 

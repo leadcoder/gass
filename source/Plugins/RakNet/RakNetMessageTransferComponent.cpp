@@ -26,22 +26,14 @@
 #include "RakNetNetworkChildComponent.h"
 #include "RakNetMasterReplica.h"
 #include "RakNetChildReplica.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
-#include "GetTime.h"
 #include "RakPeerInterface.h"
-
 
 namespace GASS
 {
@@ -104,10 +96,10 @@ namespace GASS
 		}
 		else
 		{
-			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
-			if(comp)
+			RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
+			if(child_comp)
 			{
-				comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),0);
+				child_comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),0);
 			}
 		}
 
@@ -118,8 +110,8 @@ namespace GASS
 		std::cout << "called " << message << " data:" << data << "\n";
 		if(std::string(message) == "OutOfArmorMessage")
 		{
-			OutOfArmorMessagePtr message(new OutOfArmorMessage());
-			GetSceneObject()->PostEvent(message);
+			OutOfArmorMessagePtr armor_message(new OutOfArmorMessage());
+			GetSceneObject()->PostEvent(armor_message);
 		}
 	}
 

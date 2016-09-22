@@ -20,7 +20,6 @@
 
 #include "MyGUIOSGSystem.h"
 #include <stdio.h>
-#include "Sim/Messages/GASSScriptSystemMessages.h"
 #include "MyGUIOSG.h"//avoid warning spam from MYGUI
 
 #   pragma warning (disable : 4100)
@@ -29,18 +28,12 @@
 #   pragma warning (disable : 4267)
 #   pragma warning (disable : 4702)
 
-
-
-#include <MyGUI.h>
-#include "MyGUI_LastHeader.h"
-
 #include <osg/Texture2D>
 #include <osg/Texture>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
 #include <osgDB/ReadFile>
 #include <osgGA/StateSetManipulator>
-#include <osgGA/TrackballManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
 #include <osgViewer/View>
@@ -51,10 +44,6 @@
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
 #include "Plugins/OSG/IOSGCamera.h"
 #include "Sim/Interface/GASSIViewport.h"
-
-#include "MyGUI_RTTLayer.h"
-#include "MyGUI_OpenGLTexture.h"
-
 namespace GASS
 {
 	class GUITexture : public osg::Texture2D
@@ -88,7 +77,7 @@ namespace GASS
 		osg::Vec3 bottom_left(bb.xMin(),bb.yMin(),bb.zMin());
 		osg::Vec3 bottom_right(bb.xMin(),bb.yMax(),bb.zMin());
 		osg::Vec3 top_right(bb.xMin(),bb.yMax(),bb.zMax());
-		osg::Vec3 center(bb.xMin(),(bb.yMin()+bb.yMax())*0.5f,(bb.zMin()+bb.zMax())*0.5f);
+		//osg::Vec3 center(bb.xMin(),(bb.yMin()+bb.yMax())*0.5f,(bb.zMin()+bb.zMax())*0.5f);
 		//float height = bb.zMax()-bb.zMin();
 
 		// create the geometry for the wall.

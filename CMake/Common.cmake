@@ -104,3 +104,145 @@ install(TARGETS ${LIB_NAME}
 	
 endmacro(gass_install_plugin_target) 
 
+
+macro(FILTER_LIST INPUT OUTPUT GOOD BAD)
+  set(LST ${INPUT})   # can we avoid this?
+  set(PICKME YES)
+  foreach(ELEMENT IN LISTS LST)
+    if(${ELEMENT} STREQUAL general OR ${ELEMENT} STREQUAL ${GOOD})
+      set(PICKME YES)
+    elseif(${ELEMENT} STREQUAL ${BAD})
+      set(PICKME NO)
+    elseif(PICKME)
+      list(APPEND ${OUTPUT} ${ELEMENT})
+    endif()
+  endforeach()
+endmacro(FILTER_LIST)
+
+
+MACRO(HEADER_DIRECTORIES return_list)
+    FILE(GLOB_RECURSE new_list ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+    SET(dir_list "")
+    FOREACH(file_path ${new_list})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dir_list ${dir_list} ${dir_path})
+    ENDFOREACH()
+    LIST(REMOVE_DUPLICATES dir_list)
+    SET(${return_list} ${dir_list})
+ENDMACRO()
+
+	
+macro(gass_setup_plugin PLUGIN_NAME)
+	set (extra_macro_args ${ARGN})
+	# Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 optional_arg)
+		set(_DEPS ${ARGN})
+    endif ()
+
+	
+	add_source_from_current_dir()
+	add_library (${PLUGIN_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
+	HEADER_DIRECTORIES(SUBDIRS)
+	foreach(INC_DIR ${SUBDIRS})
+		target_include_directories(${PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
+	endforeach()
+	target_link_libraries(${PLUGIN_NAME} GASSSim ${_DEPS})
+	target_compile_definitions(${PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
+	install(TARGETS ${PLUGIN_NAME}
+		RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug	
+		LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
+		ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug)
+
+	install(TARGETS ${PLUGIN_NAME}
+	  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
+	  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
+	  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)
+endmacro()
+
+macro(gass_create_dep_target DEP_NAME DEP_INCLUDE_DIRS DEP_LIBRARIES)
+	set(_DEP_INCLUDE_DIRS ${DEP_INCLUDE_DIRS})
+	set(_DEP_LIBRARIES ${DEP_LIBRARIES})
+	add_library(${DEP_NAME} INTERFACE IMPORTED)
+	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${_DEP_INCLUDE_DIRS})
+	FILTER_LIST("${_DEP_LIBRARIES}" _RELEASE_LIBS optimized debug)
+	FILTER_LIST("${_DEP_LIBRARIES}" _DEBUG_LIBS debug optimized)
+	set_property(TARGET ${DEP_NAME} PROPERTY INTERFACE_LINK_LIBRARIES $<$<CONFIG:Debug>:${_DEBUG_LIBS}> $<$<NOT:$<CONFIG:Debug>>:${_RELEASE_LIBS}>)
+endmacro()
+
+
+macro(gass_setup_sim_sample SAMPLE_NAME)
+	set (extra_macro_args ${ARGN})
+	# Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 optional_arg)
+		set(_DEPS ${ARGN})
+    endif ()
+
+	add_source_from_current_dir()
+	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
+	HEADER_DIRECTORIES(SUBDIRS)
+	foreach(INC_DIR ${SUBDIRS})
+		target_include_directories(${SAMPLE_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
+	endforeach()
+	target_link_libraries(${SAMPLE_NAME} GASSSim ${_DEPS})
+	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
+	
+	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
+
+	#copy configurations to enable execution from build folder 
+	FILE(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	FILE(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+
+	#install executable
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+
+	#install configuration files
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+endmacro()
+
+#function(mkcmakeconfig packagename packageversion)
+# include(CMakePackageConfigHelpers)
+# write_basic_package_version_file(
+  # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
+  # VERSION ${packageversion}
+  # COMPATIBILITY AnyNewerVersion
+# )
+
+# export(EXPORT LibraryTargets
+  # FILE "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Targets.cmake"
+  # NAMESPACE ${packagename}::
+# )
+# configure_file(cmake/${packagename}Config.cmake
+  # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}Config.cmake"
+  # COPYONLY
+# )
+
+# if(WIN32)
+  # set(ConfigPackageLocation cmake)
+# else()
+  # set(ConfigPackageLocation lib/cmake/${packagename})
+# endif()
+# install(EXPORT LibraryTargets
+  # FILE
+    # ${packagename}Targets.cmake
+  # NAMESPACE
+    # ${packagename}::
+  # DESTINATION
+    # ${ConfigPackageLocation}
+# )
+# install(
+  # FILES
+    # cmake/${packagename}Config.cmake
+    # "${CMAKE_CURRENT_BINARY_DIR}/${packagename}ConfigVersion.cmake"
+  # DESTINATION
+    # ${ConfigPackageLocation}
+  # COMPONENT
+    # Devel
+# )
+# endfunction()
+

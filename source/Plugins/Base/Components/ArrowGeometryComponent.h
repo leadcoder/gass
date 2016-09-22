@@ -42,7 +42,6 @@ namespace GASS
 	protected:
 		void GenerateMesh();
 		void OnLoad(MessagePtr message);
-		void OnChangeName(MessagePtr message);
 		Vec2 GetSize() const;
 		void SetSize(const Vec2 &value);
 		Vec4 GetColor() const{return m_Color;}

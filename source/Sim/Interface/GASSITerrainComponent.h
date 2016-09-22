@@ -20,9 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSGraphicsMesh.h"
 #include "Core/Math//GASSAABox.h"
-
 
 namespace GASS
 {
@@ -73,8 +71,6 @@ namespace GASS
 		Get terrain bounds in world coordinates
 		*/
 		virtual AABox GetBoundingBox() const = 0;
-
-	private:
 	};
 	typedef GASS_SHARED_PTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 }

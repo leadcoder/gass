@@ -272,7 +272,7 @@ namespace GASS
 	}
 
 
-	Vec3 PhysXBodyComponent::GetAngularVelocity()
+	Vec3 PhysXBodyComponent::GetAngularVelocity() const
 	{
 		Vec3 vel(0,0,0);
 		if(m_Actor)
@@ -333,7 +333,7 @@ namespace GASS
 		}
 	}
 
-	Vec3 PhysXBodyComponent::GetVelocity()
+	Vec3 PhysXBodyComponent::GetVelocity() const
 	{
 		Vec3 vel(0,0,0);
 		if (m_Actor) 

@@ -22,8 +22,6 @@
 #define PLUGINMANAGER_HH
 
 #include "Core/Common.h"
-#include <string>
-#include <vector>
 
 namespace GASS
 {

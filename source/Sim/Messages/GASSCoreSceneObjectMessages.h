@@ -23,8 +23,6 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
 
 /**
 This file hold messages that should be posted to
@@ -130,8 +128,6 @@ namespace GASS
 		  {
 
 		  }
-	private:
-
 	};
 	typedef GASS_SHARED_PTR<ParentChangedEvent> ParentChangedEventPtr;
 

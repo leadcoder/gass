@@ -96,27 +96,29 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = (SerialLoader*) serializer;
-
-			loader->IO<int>(num_comp);
-			for(int i  = 0 ; i < num_comp; i++)
+			SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+			if (loader)
 			{
-				std::string comp_type;
-				loader->IO<std::string>(comp_type);
-				ComponentPtr comp (ComponentFactory::Get().Create(comp_type));
-				if(comp)
+				loader->IO<int>(num_comp);
+				for (int i = 0; i < num_comp; i++)
 				{
-					SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
-					if(s_comp)
+					std::string comp_type;
+					loader->IO<std::string>(comp_type);
+					ComponentPtr comp(ComponentFactory::Get().Create(comp_type));
+					if (comp)
 					{
-						if(!s_comp->Serialize(serializer))
-							return false;
+						SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
+						if (s_comp)
+						{
+							if (!s_comp->Serialize(serializer))
+								return false;
+						}
+						AddComponent(comp);
 					}
-					AddComponent(comp);
-				}
-				else
-				{
-					LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+					else
+					{
+						LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+					}
 				}
 			}
 
@@ -149,34 +151,36 @@ namespace GASS
 		else
 		{
 			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = (SerialSaver*) serializer;
-
-			saver->IO<int>(num_comp);
-			ComponentVector::iterator iter = m_ComponentVector.begin();
-			while (iter != m_ComponentVector.end())
+			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			if (saver)
 			{
-				ComponentPtr comp = (*iter);
-				SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
-				if(s_comp)
+				saver->IO<int>(num_comp);
+				ComponentVector::iterator iter = m_ComponentVector.begin();
+				while (iter != m_ComponentVector.end())
 				{
-					if(!s_comp->Serialize(serializer))
-						return false;
+					ComponentPtr comp = (*iter);
+					SerializePtr s_comp = GASS_DYNAMIC_PTR_CAST<ISerialize>(comp);
+					if (s_comp)
+					{
+						if (!s_comp->Serialize(serializer))
+							return false;
 
+					}
+					++iter;
 				}
-				++iter;
-			}
 
-			int num_children = static_cast<int>(m_ComponentContainerVector.size());
-			saver->IO<int>(num_children);
-			ComponentContainer::ComponentContainerVector::iterator go_iter;
-			for(go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
-			{
-				ComponentContainerPtr child = *go_iter;
-				SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
-				if(s_child)
+				int num_children = static_cast<int>(m_ComponentContainerVector.size());
+				saver->IO<int>(num_children);
+				ComponentContainer::ComponentContainerVector::iterator go_iter;
+				for (go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
 				{
-					if(!s_child->Serialize(serializer))
-						return false;
+					ComponentContainerPtr child = *go_iter;
+					SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
+					if (s_child)
+					{
+						if (!s_child->Serialize(serializer))
+							return false;
+					}
 				}
 			}
 		}
@@ -317,7 +321,7 @@ namespace GASS
 		return container;
 	}
 
-	ComponentPtr ComponentContainer::_LoadComponentXML(tinyxml2::XMLElement *comp_template)
+	ComponentPtr ComponentContainer::_LoadComponentXML(tinyxml2::XMLElement *comp_template) const
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -392,7 +396,7 @@ namespace GASS
 				const std::string comp_name = *dep_iter;
 				if(names.find(comp_name) == names.end())
 					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find dependent component:" + comp_name + " in component:" + GetName(),"ComponentContainer::CheckComponentDependencies");
-				dep_iter++;
+				++dep_iter;
 			}
 			++comp_iter;
 		}

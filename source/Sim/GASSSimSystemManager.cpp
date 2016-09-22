@@ -23,18 +23,11 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/RTC/GASSTBBManager.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSScene.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "tinyxml2.h"
-#include <tbb/parallel_for_each.h>
-
 
 namespace GASS
 {
@@ -70,8 +63,7 @@ namespace GASS
 
 	size_t SimSystemManager::GetQueuedMessages() const
 	{
-		int num = (int) m_SystemMessageManager->GetQueuedMessages();
-		return (size_t) num;
+		return m_SystemMessageManager->GetQueuedMessages();
 	}
 
 	int SimSystemManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)

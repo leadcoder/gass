@@ -1,9 +1,7 @@
 #include <new>
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <stdio.h> // sprintf
-
 #include "scriptarray.h"
 
 using namespace std;
@@ -267,6 +265,7 @@ static void RegisterScriptArray_Native(asIScriptEngine *engine)
 	// Same as removeAt
 	r = engine->RegisterObjectMethod("array<T>", "void erase(uint)", asMETHOD(CScriptArray, RemoveAt), asCALL_THISCALL); assert( r >= 0 );
 #endif
+
 }
 
 CScriptArray &CScriptArray::operator=(const CScriptArray &other)

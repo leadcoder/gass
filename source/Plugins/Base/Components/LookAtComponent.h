@@ -21,11 +21,9 @@
 #define LOOK_AT_COMPONENT_H
 
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSColorRGB.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS

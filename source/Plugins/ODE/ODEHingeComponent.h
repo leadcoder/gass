@@ -22,11 +22,9 @@
 #include "Sim/GASSCommon.h"
 #include <ode/ode.h>
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -58,9 +56,6 @@ namespace GASS
 		void UpdateJointAxis();
 
 		//get set section
-		std::string GetType()const;
-		void SetType(const std::string &type);
-		
 		Vec3 GetAxis()const {return m_Axis;}
 		void SetAxis(const Vec3 &value);
 		Vec3 GetAnchor()const {return m_Anchor;}
@@ -90,9 +85,9 @@ namespace GASS
 		dBodyID m_ODEBody2;
 		
 		float m_MaxTorque;
-		float m_SwayForce;
-		float m_Strength;
-		float m_Damping;
+		//float m_SwayForce;
+		//float m_Strength;
+		//float m_Damping;
 
 		float m_HighStop;
 		float m_LowStop;

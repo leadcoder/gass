@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	const Float Quaternion::ms_fEpsilon = (Float) 1e-03;
+	const Float Quaternion::ms_fEpsilon = static_cast<Float>(1e-03);
 	const Quaternion Quaternion::ZERO(0.0,0.0,0.0,0.0);
 	const Quaternion Quaternion::IDENTITY(1.0,0.0,0.0,0.0);
 
@@ -76,7 +76,7 @@ namespace GASS
 		if ( fTrace > 0.0 )
 		{
 			// |w| > 1/2, may as well choose w > 1/2
-			froot = (Float) sqrt(fTrace + 1.0);  // 2w
+			froot = sqrt(fTrace + 1.0);  // 2w
 			w = 0.5f *froot;
 			froot = 0.5f/froot;  // 1/(4w)
 			x = (kRot.m_Data[2][1]-kRot.m_Data[1][2])*froot;
@@ -247,7 +247,7 @@ namespace GASS
 		}
 	}
 	//-----------------------------------------------------------------------
-	void Quaternion::ToAxes (Vec3& xAxis, Vec3& yAxis, Vec3& zAxis)
+	void Quaternion::ToAxes (Vec3& xAxis, Vec3& yAxis, Vec3& zAxis) const
 	{
 		Mat4 kRot;
 
@@ -575,12 +575,12 @@ namespace GASS
 		if(1 - result > 0.1f)
 		{
 			// Get the angle between the 2 quaternions, and then store the sin() of that angle
-			const Float theta = (Float)acos(result);
-			const Float sinTheta = (Float)sin(theta);
+			const Float theta = acos(result);
+			const Float sinTheta = sin(theta);
 
 			// Calculate the scale for q1 and q2, according to the angle and it's sine value
-			scale0 = (Float)sin( ( 1 - t ) * theta) / sinTheta;
-			scale1 = (Float)sin( ( t * theta) ) / sinTheta;
+			scale0 = sin( ( 1 - t ) * theta) / sinTheta;
+			scale1 = sin( ( t * theta) ) / sinTheta;
 		}	
 
 		// Calculate the x, y, z and w values for the quaternion by using a special

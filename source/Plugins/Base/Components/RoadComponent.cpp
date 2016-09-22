@@ -21,25 +21,19 @@
 
 #include "RoadComponent.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSTriangle.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
@@ -259,7 +253,8 @@ namespace GASS
 		Float v_coord = 0;
 		Vec3 uv_old_pos = points[0];
 		Vec3 uv_new_pos;
-		Vec3 pos, front;
+		Vec3 front;
+		//Vec3 pos;
 
 		float tot_width = m_RoadWidth + 2*m_DitchWidth;
 

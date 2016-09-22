@@ -75,10 +75,14 @@
 #endif
 
 #if defined ( _MSC_VER )
-#   	if defined( GASS_CORE_EXPORTS )
-#       	define GASSCoreExport __declspec( dllexport )
-#   	else
-#      		define GASSCoreExport __declspec( dllimport )
+#   	if defined( GASS_STATIC_BUILD )
+#			define GASSCoreExport
+#		else
+#		   	if defined( GASS_CORE_EXPORTS )
+#		    	define GASSCoreExport __declspec( dllexport )
+#   		else
+#      			define GASSCoreExport __declspec( dllimport )
+#   		endif
 #   	endif
 #else
 #   define GASSCoreExport

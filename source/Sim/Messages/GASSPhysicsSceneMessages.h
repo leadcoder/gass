@@ -22,9 +22,6 @@
 #define PHYSICS_SCENE_MESSAGES_H
 
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 
 namespace GASS
 {

@@ -20,11 +20,7 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSPlatformType.h"
-#include "Sim/GASSPlatformDetectionData.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
@@ -37,7 +33,6 @@ namespace GASS
 		  {
 
 		  }
-	private:
 	};
 	typedef GASS_SHARED_PTR<EnterVehicleRequest> EnterVehicleRequestPtr;
 
@@ -49,7 +44,6 @@ namespace GASS
 		  {
 
 		  }
-	private:
 	};
 	typedef GASS_SHARED_PTR<ExitVehicleRequest> ExitVehicleRequestPtr;
 

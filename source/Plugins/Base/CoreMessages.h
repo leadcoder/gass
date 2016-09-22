@@ -20,10 +20,9 @@
 
 #ifndef CORE_MESSAGES_H
 #define CORE_MESSAGES_H
-#include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSSceneObject.h"
 
+#include "Sim/GASSCommon.h"
+#include "Sim/GASSSceneObject.h"
 
 namespace GASS
 {

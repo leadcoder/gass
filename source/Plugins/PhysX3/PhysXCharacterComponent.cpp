@@ -21,6 +21,7 @@
 #include "Plugins/PhysX3/PhysXCharacterComponent.h"
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Core/Math/GASSMath.h"
 using namespace physx;
 namespace GASS
 {
@@ -146,7 +147,7 @@ namespace GASS
 
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
-		Quaternion rot = location->GetRotation();
+		//Quaternion rot = location->GetRotation();
 
 		PxExtendedVec3 px_vec(pos.x,pos.y+20,pos.z);
 
@@ -225,7 +226,7 @@ namespace GASS
 		forward.y = 0;
 		forward.Normalize();
 		Vec3 up(0,1,0);
-		Vec3 right = Math::Cross(forward,up);
+		//Vec3 right = Math::Cross(forward,up);
 		m_CurrentVel += m_Acceleration*m_ThrottleInput*delta;
 		if(m_CurrentVel > m_MaxSpeed)
 			m_CurrentVel = m_MaxSpeed;

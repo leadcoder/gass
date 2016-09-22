@@ -16,8 +16,6 @@
 #include <angelscript.h>
 #endif
 
-#include <string>
-
 //---------------------------
 // Compilation settings
 //

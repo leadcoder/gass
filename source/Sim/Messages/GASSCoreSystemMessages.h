@@ -24,8 +24,6 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
 
 namespace GASS
 {
@@ -219,7 +217,6 @@ namespace GASS
 		TimeStepDoneEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
 		{
 		}
-	private:
 	};
 	typedef GASS_SHARED_PTR<TimeStepDoneEvent > TimeStepDoneEventPtr;
 
@@ -229,7 +226,6 @@ namespace GASS
 		InputSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
 		{
 		}
-	private:
 	};
 	typedef GASS_SHARED_PTR<InputSystemLoadedEvent> InputSystemLoadedEventPtr;
 
@@ -240,7 +236,6 @@ namespace GASS
 		GraphicsSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
 		{
 		}
-	private:
 	};
 	typedef GASS_SHARED_PTR<GraphicsSystemLoadedEvent> GraphicsSystemLoadedEventPtr;
 	
@@ -250,7 +245,6 @@ namespace GASS
 		PhysicsSystemLoadedEvent(SenderID sender_id = -1, double delay= 0) : SystemEventMessage(sender_id , delay)
 		{
 		}
-	private:
 	};
 	typedef GASS_SHARED_PTR<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
 

@@ -19,16 +19,7 @@
 *****************************************************************************/
 
 #include "RecastOffmeshMeshConnectionComponent.h"
-#include "Recast.h"
-#include "RecastAlloc.h"
-#include "RecastAssert.h"
-#include "DetourAssert.h"
-#include "DetourNavMesh.h"
-#include "DetourNavMeshBuilder.h"
-#include "DetourNavMeshQuery.h"
-#include "DetourCommon.h"
-#include "DetourTileCache.h"
-#include "InputGeom.h"
+#include "Core/Math/GASSMath.h"
 #include "tinyxml2.h"
 
 namespace GASS
@@ -130,7 +121,7 @@ namespace GASS
 		{
 			x = sin(rad*i)*m_Radius;
 			y = cos(rad*i)*m_Radius;
-			Vec3 pos(x,0,y);
+			pos.Set(x,0,y);
 			sub_mesh_data->PositionVector.push_back(pos);
 			sub_mesh_data->ColorVector.push_back(color);
 		}

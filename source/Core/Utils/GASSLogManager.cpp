@@ -27,7 +27,6 @@ THE SOFTWARE.
 */
 #include "GASSLogManager.h"
 #include "GASSException.h"
-#include <algorithm>
 namespace GASS {
 
     //-----------------------------------------------------------------------
@@ -72,7 +71,7 @@ namespace GASS {
         return newLog;
     }
     //-----------------------------------------------------------------------
-    Log* LogManager::getDefaultLog()
+    Log* LogManager::getDefaultLog() const
     {
 		return mDefaultLog;
     }
@@ -120,7 +119,7 @@ namespace GASS {
 		destroyLog(log->getName());
 	}
     //-----------------------------------------------------------------------
-    void LogManager::logMessage( const std::string& message, LogMessageLevel lml, bool maskDebug)
+    void LogManager::logMessage( const std::string& message, LogMessageLevel lml, bool maskDebug) const
     {
 		if (mDefaultLog)
 		{
@@ -128,7 +127,7 @@ namespace GASS {
 		}
     }
     //-----------------------------------------------------------------------
-    void LogManager::setLogDetail(LoggingLevel ll)
+    void LogManager::setLogDetail(LoggingLevel ll) 
     {
 		if (mDefaultLog)
 		{
@@ -136,7 +135,7 @@ namespace GASS {
 		}
     }
 	//---------------------------------------------------------------------
-	Log::Stream LogManager::stream(LogMessageLevel lml, bool maskDebug)
+	Log::Stream LogManager::stream(LogMessageLevel lml, bool maskDebug) const
 	{
 		if (mDefaultLog)
 			return mDefaultLog->stream(lml, maskDebug);

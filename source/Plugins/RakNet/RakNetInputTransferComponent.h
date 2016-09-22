@@ -22,19 +22,10 @@
 #define RAK_NET_INPUT_TRANSFER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
-#include "Sim/Interface/GASSINetworkComponent.h"
-
-#include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Sim/Messages/GASSInputMessages.h"
-
 
 namespace GASS
 {
@@ -46,11 +37,19 @@ namespace GASS
 	class InputPackage : public NetworkPackage
 	{
 	public:
-		InputPackage() 
+		InputPackage() : NetworkPackage(0),
+			TimeStamp(0),
+			Index(0),
+			Value(0),
+			Generator(0)
 		{
 			
 		}
-		InputPackage(int id ) : NetworkPackage(id) 
+		InputPackage(int id ) : NetworkPackage(id),
+			TimeStamp(0),
+			Index(0),
+			Value(0),
+			Generator(0)
 		{
 		
 		}

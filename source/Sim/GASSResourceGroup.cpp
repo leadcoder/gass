@@ -112,7 +112,7 @@ namespace GASS
 				{
 					resources.push_back(c_iter->second);
 				}
-				c_iter++;
+				++c_iter;
 			}
 			++iter;
 		}

@@ -22,11 +22,12 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSICollisionComponent.h"
+
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "ODECollisionInfo.h"
@@ -40,7 +41,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
 	typedef GASS_SHARED_PTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
 
-	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>
+	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>, ICollisionComponent
 	{
 		friend class ODECollisionSceneManager;
 	public:
@@ -59,6 +60,10 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
+
+		//ICollisionComponent
+		virtual void SetActive(bool value);
+		virtual bool GetActive() const;
 	protected:
 
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);
@@ -87,8 +92,7 @@ namespace GASS
 		dGeomID CreateMeshGeometry();
 		dGeomID CreateTerrainGeometry();
 		dGeomID CreateBoxGeometry();
-		dGeomID CreatePlaneGeometry();
-
+		dGeomID CreatePlaneGeometry() const;
 		void Reset();
 		void Disable();
 		void Enable();
@@ -100,7 +104,6 @@ namespace GASS
 		CollisionGeomType GetType() const {return m_Type;}
 
 		//Height map based Terrain helpers
-		HeightmapTerrainComponentPtr  GetTerrainComponent() const;
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
@@ -108,7 +111,7 @@ namespace GASS
 		dGeomID m_OffsetGeomID;
 		CollisionGeomType m_Type;
 		Vec3 m_Offset;
-		//Static Terrrain data, only support one terrain loaded at the same time
+		//Static Terrain data, only support one terrain loaded at the same time
 		struct TerrainData
 		{
 			Float m_SampleWidth;
@@ -120,8 +123,6 @@ namespace GASS
 		TerrainData* m_TerrainData;
 		ODECollisionSceneManagerPtr m_CollisionSceneManager;
 		ODECollisionMeshInfo m_ColMeshInfo;
-		
 	};
-
 	typedef GASS_SHARED_PTR<ODECollisionGeometryComponent> ODECollisionGeometryComponentPtr;
 }

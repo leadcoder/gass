@@ -31,7 +31,6 @@ namespace GASS
 		virtual std::string GetNodeTemplate() const = 0;
 		virtual std::string GetEdgeTemplate() const = 0;
 		virtual void RebuildGraph() = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IGraphComponent> GraphComponentPtr;
 	typedef GASS_WEAK_PTR<IGraphComponent> GraphComponentWeakPtr;

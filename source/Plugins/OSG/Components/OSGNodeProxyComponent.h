@@ -18,9 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
-//# pragma warning (disable : 4541)
+
 #include "Sim/GASS.h"
-#include "Plugins/OSG/OSGCommon.h"
 
 namespace osg
 {

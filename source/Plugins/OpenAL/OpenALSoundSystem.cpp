@@ -5,19 +5,13 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
-
-#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
-
-#include "Sim/GASSScene.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSBaseSceneComponent.h"
-
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Framework/Framework.h"
-
 
 namespace GASS
 {

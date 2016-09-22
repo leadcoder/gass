@@ -21,8 +21,6 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
-#include "Sim/GASSSystemFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "tinyxml2.h"
@@ -52,7 +50,7 @@ namespace GASS
 			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
 		{}
 		SceneListenerExecutor(SceneListenerExecutor& e,tbb::split)
-			:m_SLVector(e.m_SLVector)
+			:m_SLVector(e.m_SLVector), m_DeltaTime(e.m_DeltaTime)
 		{}
 		SceneListenerExecutor & operator=( const SceneListenerExecutor & ) { return *this; }
 
@@ -88,7 +86,7 @@ namespace GASS
 			SceneManagerListenerPtr listener = (*iter).lock();
 			if(listener)
 			{
-				iter++;
+				++iter;
 			}
 			else 
 				iter = m_Listeners.erase(iter);
@@ -114,7 +112,7 @@ namespace GASS
 			if((*iter).lock() == listener)
 				iter = m_Listeners.erase(iter);
 			else
-				iter++;
+				++iter;
 		}
 	}
 

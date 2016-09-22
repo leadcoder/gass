@@ -19,22 +19,18 @@
 *****************************************************************************/
 
 #include "Sim/GASSCommon.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/Math/GASSMath.h"
+#include "Core/ComponentSystem/GASSComponentContainer.h"
+#include "Sim/Utils/GASSCollisionHelper.h"
+#include "Plugins/ODE/ODESphereGeometryComponent.h"
+#include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
-#include "Sim/Utils/GASSCollisionHelper.h"
-#include "Plugins/ODE/ODESphereGeometryComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/ComponentSystem/GASSComponentContainer.h"
-#include "Sim/GASSScene.h"
-#include "Sim/GASSSceneObject.h"
-
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 
 
 namespace GASS

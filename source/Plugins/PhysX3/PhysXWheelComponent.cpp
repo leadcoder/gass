@@ -23,6 +23,7 @@
 #include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX3/PhysXPhysicsSystem.h"
 #include "Plugins/PhysX3/PhysXConvexGeometryComponent.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASS.h"
 using namespace physx;
 namespace GASS

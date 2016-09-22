@@ -2,21 +2,14 @@
 #include "CreateTool.h"
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
-#include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
-
 
 namespace GASS
 {
-
 	CreateTool::CreateTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),
 		m_FirstMoveUpdate(true)
@@ -41,7 +34,6 @@ namespace GASS
 			//m_ObjectName = message->GetCreateObjectName();
 			//m_ParentObject = message->GetCreateParentObject();
 		}
-
 	}
 
 	void CreateTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
@@ -53,7 +45,6 @@ namespace GASS
 		if(obj_under_cursor && parent_obj)
 		{
 			SceneObjectPtr scene_object = SimEngine::Get().CreateObjectFromTemplate(m_ObjectName);
-			//GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(m_ObjectName,parent_obj);
 			if(scene_object)
 			{
 				parent_obj->AddChildSceneObject(scene_object,true);
@@ -72,5 +63,4 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 	}
-
 }

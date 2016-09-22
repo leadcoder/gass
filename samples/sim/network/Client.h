@@ -1,4 +1,7 @@
 #include "SimApplication.h"
+#ifndef WIN32
+	#include <unistd.h>
+#endif
 
 class SimClient : public SimApplication
 {
@@ -60,7 +63,11 @@ public:
 			m_Engine->Update();
 			//send ping request
 			m_Engine->GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::PingRequest(m_ServerPort)));
-			Sleep(500);
+#ifdef WIN32
+			Sleep(1000);
+#else
+			sleep(1);
+#endif
 			std::cout << ".";
 		}
 		return true;

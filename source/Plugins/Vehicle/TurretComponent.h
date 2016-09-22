@@ -26,10 +26,6 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Messages/GASSInputMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Core/Utils/GASSPIDControl.h"
 
@@ -61,8 +57,8 @@ namespace GASS
 		float GetSteerForce() const {return m_SteerForce;}
 		void SetMaxMinAngle(const Vec2 &value) {m_MaxAngle = static_cast<float>(value.x); m_MinAngle = static_cast<float>(value.y);}
 		Vec2 GetMaxMinAngle() const {return Vec2(m_MaxAngle,m_MinAngle);}
-		Float GetPitchAngle(const Vec3 v1,const Vec3 v2);
-		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2);
+		Float GetPitchAngle(const Vec3 v1,const Vec3 v2) const;
+		Float GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const;
 
 		void OnInput(InputRelayEventPtr message);
 		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);

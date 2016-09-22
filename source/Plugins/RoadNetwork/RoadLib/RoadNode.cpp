@@ -24,7 +24,7 @@ namespace GASS
 				(*iter)->StartNode = NULL;
 			if((*iter)->EndNode == this)
 				(*iter)->EndNode = NULL;
-			iter++;
+			++iter;
 		}
 
 	}
@@ -39,7 +39,7 @@ namespace GASS
 				iter = Edges.erase(iter);
 			}
 			else
-				iter++;
+				++iter;
 		}
 	}	
 }

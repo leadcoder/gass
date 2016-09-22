@@ -21,23 +21,14 @@
 #include "RakNetMasterReplica.h"
 #include "RakPeerInterface.h"
 #include "ReplicaManager.h"
-
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
-#include "Sim/GASSScene.h"
-
-
-
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-//#include "RakNetReplicaMember.h"
-
 
 namespace GASS
 {
@@ -146,7 +137,7 @@ namespace GASS
 		RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
-	IProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name)
+	IProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name) const
 	{
 		m_Owner->GetComponents();
 		ComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();

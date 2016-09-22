@@ -24,6 +24,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
+#include "Sim/Interface/GASSISceneManager.h"
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSException.h"
 
@@ -169,7 +170,7 @@ namespace GASS
 		}
 
 		//remove this!
-		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent);
+		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent) const;
 		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
 		SceneObjectPtr GetSceneryRoot() const {return SceneObjectPtr(m_TerrainObjects);}
 
@@ -208,7 +209,6 @@ protected:
 		*/
 		void SaveXML(tinyxml2::XMLElement *scene_elem);
 
-		SceneObjectPtr LoadSceneObjectXML(tinyxml2::XMLElement *so_elem);
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectRequestPtr message);
 

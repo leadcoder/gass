@@ -25,6 +25,7 @@
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 using namespace physx;
 namespace GASS
@@ -970,7 +971,7 @@ namespace GASS
 		}
 	}
 
-	Quaternion PhysXVehicleComponent::GetRotation()
+	Quaternion PhysXVehicleComponent::GetRotation() const
 	{
 		Quaternion q;
 

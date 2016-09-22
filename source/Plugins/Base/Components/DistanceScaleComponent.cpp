@@ -1,18 +1,16 @@
 #include "DistanceScaleComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
-
 
 #define MOVMENT_EPSILON 0.0000001
 #define DISTANCE_SENDER 997
@@ -22,7 +20,8 @@ namespace GASS
 	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000.0f), 
 		m_MinDistance(0.1f),
 		m_FOV(45.0f),
-		m_ScaleLocation(false)
+		m_ScaleLocation(false),
+		m_LastDist(0)
 	{
 
 	}

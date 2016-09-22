@@ -19,14 +19,11 @@
 *****************************************************************************/
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-
 #include "GASSCoreSceneManager.h"
 #include "GASSCoreSystem.h"
 

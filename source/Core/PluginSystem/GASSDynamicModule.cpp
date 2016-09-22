@@ -33,9 +33,9 @@ namespace GASS
 {
 
 
-	DynamicModule::DynamicModule(const std::string &module_name)
+	DynamicModule::DynamicModule(const std::string &module_name) : m_ModuleName(module_name), m_ModuleHandle(0)
 	{
-		m_ModuleName = module_name;
+		
 	}
 
 
@@ -49,7 +49,7 @@ namespace GASS
 	SetErrorMode(0);
 #endif
 
-		m_ModuleHandle = (DYNLIB_HANDLE)DYNLIB_LOAD(m_ModuleName.c_str());
+		m_ModuleHandle = static_cast<DYNLIB_HANDLE>(DYNLIB_LOAD(m_ModuleName.c_str()));
 
 #ifndef _MSC_VER
 		char *errstr = dlerror();
@@ -70,7 +70,7 @@ namespace GASS
 	}
 
 	typedef int (__STDCALL *FuncArg1)(void *);
-	void DynamicModule::CallFunction(const std::string &func_name, void* arg1)
+	void DynamicModule::CallFunction(const std::string &func_name, void* arg1) const
 	{
 		FuncArg1 onLoadModule = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
 		if(onLoadModule)
@@ -79,7 +79,7 @@ namespace GASS
 		}
 	}
 
-	void DynamicModule::Unload()
+	void DynamicModule::Unload() const
 	{
 		DYNLIB_UNLOAD(m_ModuleHandle);
 	}

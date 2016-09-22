@@ -23,14 +23,10 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 
 namespace GASS
 {
-
 	class RaknetNetworkSceneManager  : public Reflection<RaknetNetworkSceneManager, BaseSceneManager> 
 	{
 		public:
@@ -43,17 +39,14 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 	protected:
 		void OnNewMasterReplica(MasterReplicaCreatedEventPtr message);
-		void GeneratePartID(SceneObjectPtr obj, int &id);
+		void GeneratePartID(SceneObjectPtr obj, int &id) const;
 	private:
 		bool m_Paused;
-		bool m_Init;
 		double m_SimulationUpdateInterval;
 		double m_TimeToProcess;
 		int m_MaxSimSteps;
 	};
 	typedef GASS_SHARED_PTR<RaknetNetworkSceneManager> RaknetNetworkSceneManagerPtr;
 	typedef GASS_WEAK_PTR<RaknetNetworkSceneManager> RaknetNetworkSceneManagerWeakPtr;
-	
-	
 }
 

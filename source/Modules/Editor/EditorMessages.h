@@ -1,7 +1,6 @@
 #ifndef EDITOR_MESSAGES
 #define EDITOR_MESSAGES
 #include "Core/MessageSystem/GASSBaseMessage.h"
-#include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/GASSSceneObjectTemplate.h"
@@ -19,6 +18,35 @@ namespace GASS
 		SceneObjectPtr m_Object;
 	};
 	typedef GASS_SHARED_PTR<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
+
+	class EditorSelectionChangedEvent : public SceneEventMessage
+	{
+	public:
+		EditorSelectionChangedEvent(std::vector<SceneObjectWeakPtr> selection, SenderID sender_id = -1, double delay= 0) : 
+		  SceneEventMessage(sender_id , delay), m_Selection(selection){}
+		  bool IsSelected(SceneObjectPtr obj)
+		  {
+			  for(size_t i = 0 ; i< m_Selection.size() ;i++)
+			  {
+				  SceneObjectPtr sel = m_Selection[i].lock();
+				  if(sel && sel == obj)
+					  return true;
+			  }
+			  return false;
+		  }
+
+		  SceneObjectWeakPtr GetFirstSelected()
+		  {
+			  SceneObjectWeakPtr ret;
+			  if(m_Selection.size() > 0)
+			  {
+				  ret = m_Selection[0];
+			  }
+			  return ret;
+		  }
+		  std::vector<SceneObjectWeakPtr> m_Selection;
+	};
+	typedef GASS_SHARED_PTR<EditorSelectionChangedEvent> EditorSelectionChangedEventPtr;
 
 	class SceneSelectionChangedEvent : public SceneEventMessage
 	{
@@ -148,7 +176,6 @@ namespace GASS
 	public:
 		SceneChangedEvent(SenderID sender_id = -1, double delay= 0) : 
 		  SystemEventMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<SceneChangedEvent> SceneChangedEventPtr;
 		
@@ -184,7 +211,6 @@ namespace GASS
 	public:
 		LayoutLoadedMessage(SenderID sender_id = -1, double delay= 0) : 
 		  BaseMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<LayoutLoadedMessage> LayoutLoadedMessagePtr;
 

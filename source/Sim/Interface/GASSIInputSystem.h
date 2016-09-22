@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/Utils/GASSLogManager.h"
 
 namespace GASS
 {

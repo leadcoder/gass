@@ -21,25 +21,21 @@
 /* FIXME Fading doesn't work with multiple grass layers */
 
 #include "GrassLoaderComponent.h"
-#include <OgreEntity.h>
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
 #include "GrassLayerComponent.h"
-#include "PagedGeometry.h"
 #include "ImpostorPage.h"
-#include "BatchPage.h"
 #include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
 
 namespace GASS
 {

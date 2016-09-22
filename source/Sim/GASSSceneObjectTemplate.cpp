@@ -21,9 +21,6 @@
 #include "Sim/GASSBaseSceneComponent.h"
 
 #include "Core/Common.h"
-#include "Core/Serialize/GASSSerialize.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 
 namespace GASS
@@ -50,7 +47,7 @@ namespace GASS
 		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(AddComponent(comp_name));
 	}
 
-	BaseSceneComponentPtr SceneObjectTemplate::GetBaseSceneComponent(const std::string &comp_name)
+	BaseSceneComponentPtr SceneObjectTemplate::GetBaseSceneComponent(const std::string &comp_name) const
 	{
 		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
 	}

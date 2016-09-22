@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -54,12 +52,12 @@ namespace GASS
 	private:
 		SceneObjectPtr GetOrCreateGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 		void OnInput(ControllSettingsMessagePtr message);
 	
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selection;
 		MouseToolController* m_Controller;
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		bool m_Active;
@@ -71,6 +69,5 @@ namespace GASS
 		TerrainEditMode m_TEM;
 		TerrainLayer m_ActiveLayer;
 		Vec3 m_CursorPos;
-
 	};
 }

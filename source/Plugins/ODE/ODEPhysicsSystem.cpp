@@ -22,15 +22,12 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Plugins/ODE/ODEPhysicsSystem.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
@@ -43,11 +40,10 @@
 #include "Plugins/ODE/ODETerrainGeometryComponent.h"
 #include "Plugins/ODE/ODEMeshGeometryComponent.h"
 
-
 namespace GASS
 {
 
-	ODEPhysicsSystem::ODEPhysicsSystem()  
+	ODEPhysicsSystem::ODEPhysicsSystem()  : m_Init(false)
 	{
 		m_UpdateGroup=UGID_SIM;
 	}

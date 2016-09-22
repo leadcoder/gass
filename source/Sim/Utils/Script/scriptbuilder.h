@@ -31,10 +31,10 @@
 #pragma warning (disable:4786)
 #endif
 
-#include <string>
 #include <map>
 #include <set>
 #include <vector>
+#include <string>
 
 BEGIN_AS_NAMESPACE
 

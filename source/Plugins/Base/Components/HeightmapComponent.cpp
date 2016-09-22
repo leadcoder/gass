@@ -19,10 +19,7 @@
 *****************************************************************************/
 
 #include "HeightmapComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"
@@ -138,11 +135,7 @@ namespace GASS
 						if(lc)
 						{
 							Vec3 world_pos = lc->GetWorldPosition();
-							Vec3 scale = lc->GetScale();
-							Quaternion world_rot = lc->GetWorldRotation();
-							Mat4 trans_mat;
-							trans_mat.Identity();
-							trans_mat.SetTransformation(world_pos,world_rot,scale);
+							Mat4 trans_mat(world_pos,lc->GetWorldRotation(),lc->GetScale());
 							mesh_box.Transform(trans_mat);
 						}
 
@@ -257,5 +250,15 @@ namespace GASS
 	void HeightmapComponent::SetAutoBBoxGeneration(bool value)
 	{
 		m_AutoBBoxGeneration = value;
+	}
+
+	bool HeightmapComponent::GetCollision() const
+	{
+		return true;
+	}
+
+	void HeightmapComponent::SetCollision(bool /*value*/)
+	{
+
 	}
 }

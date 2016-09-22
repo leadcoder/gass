@@ -1,11 +1,8 @@
 #include "VerticalMoveTool.h"
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
@@ -16,7 +13,6 @@
 
 namespace GASS
 {
-
 	VerticalMoveTool::VerticalMoveTool(MouseToolController* controller):m_MouseIsDown(false),
 		m_Controller(controller)
 	{
@@ -40,7 +36,7 @@ namespace GASS
 				Vec3 up(0,1,0);
 				Vec3 new_position = comp->GetPosition();
 
-				//move seleced object
+				//move selected object
 				//up = up*(-info.m_Delta.y);
 				new_position = new_position + up;
 
@@ -67,10 +63,7 @@ namespace GASS
 			{
 				int from_id = GASS_PTR_TO_INT(this);
 				m_SelectedObject = obj_under_cursor;
-				//bool value = false;
-				//col_msg->SetData("Enable",value);
 				obj_under_cursor->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(false,from_id)));
-
 			}
 		}
 	}

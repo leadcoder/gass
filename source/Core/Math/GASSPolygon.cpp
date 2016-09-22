@@ -18,9 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <math.h>
 #include "Core/Math/GASSPolygon.h"
-#include "Core/Math/GASSMath.h"
 
 namespace GASS
 {

@@ -23,7 +23,6 @@
 
 
 #include "Core/Common.h"
-#include <assert.h>
 #include <sstream>
 #include <vector>
 

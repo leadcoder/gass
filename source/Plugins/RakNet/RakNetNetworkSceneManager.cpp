@@ -24,27 +24,19 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-#include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 
-
-
-
 namespace GASS
 {
 
-	RaknetNetworkSceneManager::RaknetNetworkSceneManager() :
-		m_Paused(false),
+	RaknetNetworkSceneManager::RaknetNetworkSceneManager() : m_Paused(false),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
 		m_MaxSimSteps(4)
@@ -82,7 +74,7 @@ namespace GASS
 
 
 
-	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id)
+	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id) const
 	{
 		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)

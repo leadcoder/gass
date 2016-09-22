@@ -21,9 +21,7 @@
 #ifndef RAK_NET_PACKAGE_FACTORY_H
 #define RAK_NET_PACKAGE_FACTORY_H
 #include "Core/Common.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Utils/GASSFactory.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 
 namespace GASS

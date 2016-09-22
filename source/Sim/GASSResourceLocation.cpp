@@ -62,6 +62,7 @@ namespace GASS
 		if(iter != m_Resources.end())
 		{
 			res = iter->second;
+			return res;
 		}
 		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get file resource:" + name,"ResourceLocation::GetResourceByName");
 	}

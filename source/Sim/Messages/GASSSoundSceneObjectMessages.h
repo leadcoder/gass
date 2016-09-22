@@ -21,10 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
 
 namespace GASS
 {

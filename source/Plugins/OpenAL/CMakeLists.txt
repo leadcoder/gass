@@ -1,19 +1,11 @@
-#set lib name here!
-set(LIB_NAME "GASSPluginOpenAL")
 find_package(OpenALExt)
-		
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${OPENAL_INCLUDE_DIR})
+gass_create_dep_target(OpenAL "${OPENAL_INCLUDE_DIR}" "${OPENAL_LIBRARY}")
+gass_setup_plugin(GASSPluginOpenAL OpenAL)
 
-#add all source files from current directory (recursively)
-add_source_from_current_dir()
+if(GASS_INSTALL_DEP_BINARIES)
+		install(FILES ${OPENAL_BIN_FILES_RELEASE} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+		install(FILES ${OPENAL_BIN_FILES_RELEASE} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 
-#Enable class export 
-add_definitions( -DGASS_PLUGIN_EXPORTS )
-
-#Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
-add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
-
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_SIM_LIBRARIES} ${OPENAL_LIBRARY})
-gass_install_plugin_target()
-
+		FILE(COPY ${OPENAL_BIN_FILES_RELEASE} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		FILE(COPY ${OPENAL_BIN_FILES_RELEASE} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+endif()

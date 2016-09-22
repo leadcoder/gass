@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSIRenderWindow.h"
 #include <string>
 
 namespace GASS
@@ -39,7 +38,6 @@ namespace GASS
 		virtual void SceneToWGS84(double x,double y, double &lat,double &lon) = 0;
 		virtual std::string GetProjection() const = 0;
 		virtual void SetProjection(const std::string &projection) = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IProjectionSceneManager> ProjectionSceneManagerPtr;
 }

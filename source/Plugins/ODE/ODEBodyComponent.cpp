@@ -21,14 +21,10 @@
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSScene.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSceneObject.h"
-
 
 namespace GASS
 {
@@ -44,7 +40,8 @@ namespace GASS
 		m_SymmetricInertia(0,0,0),
 		m_AssymetricInertia(0,0,0),
 		m_EffectJoints(true),
-		m_Active(true)
+		m_Active(true),
+		m_Debug(false)
 	{
 	}
 
@@ -217,7 +214,7 @@ namespace GASS
 		assert(scene_manager);
 		m_SceneManager = scene_manager;
 
-		Vec3 abs_pos;
+		//Vec3 abs_pos;
 		m_ODEBodyID = dBodyCreate(scene_manager->GetWorld());
 		//From car world
 		//Set the auto-disable flag of a body. If the do_auto_disable is nonzero the body will be automatically disabled when it has been idle for long enough.
@@ -261,6 +258,9 @@ namespace GASS
 					break;
 				case MR_SPHERE:
 					dMassSetSphereTotal(&ode_mass, m_Mass, 1);
+					break;
+				case MR_GEOMETRY:
+				case MR_USER:
 					break;
 				}
 				SetODEMass(ode_mass);
@@ -314,7 +314,7 @@ namespace GASS
 		dBodySetMass(m_ODEBodyID, &m_ODEMass);
 	}
 
-	Vec3 ODEBodyComponent::GetForce(bool rel)
+	Vec3 ODEBodyComponent::GetForce(bool rel) const
 	{
 		Vec3 force(0,0,0);
 		if (m_ODEBodyID) {
@@ -383,7 +383,7 @@ namespace GASS
 	}
 
 
-	Vec3 ODEBodyComponent::GetAngularVelocity(bool rel)
+	Vec3 ODEBodyComponent::GetAngularVelocity(bool rel) const
 	{
 		Vec3 vel(0,0,0);
 		if(m_ODEBodyID)
@@ -415,7 +415,7 @@ namespace GASS
 		return m_Active;
 	}
 
-	Vec3 ODEBodyComponent::GetTorque(bool rel)
+	Vec3 ODEBodyComponent::GetTorque(bool rel) const
 	{
 		Vec3 torque(0,0,0);
 		if (m_ODEBodyID) {
@@ -523,7 +523,7 @@ namespace GASS
 
 	}
 
-	Vec3 ODEBodyComponent::GetVelocity(bool rel)
+	Vec3 ODEBodyComponent::GetVelocity(bool rel) const
 	{
 		Vec3 vel(0,0,0);
 		if (m_ODEBodyID) {
@@ -626,7 +626,7 @@ namespace GASS
 		}
 	}
 
-	Quaternion ODEBodyComponent::GetRotation()
+	Quaternion ODEBodyComponent::GetRotation() const
 	{
 		Quaternion q;
 

@@ -70,7 +70,7 @@ namespace GASS
 		/**
 		Check if same RTTI, return true if same
 		*/
-		bool IsTypeOf( RTTI *rtti)
+		bool IsTypeOf( RTTI *rtti) const
 		{
 			return this == rtti;
 		}
@@ -78,7 +78,7 @@ namespace GASS
 		/**
 		Check class name of this RTTI class, return true if same
 		*/
-		bool IsTypeOf( const std::string &class_name)
+		bool IsTypeOf( const std::string &class_name) const
 		{
 			return class_name == GetClassName();
 		}
@@ -93,7 +93,7 @@ namespace GASS
 			return false;
 		}
 
-		bool IsDerivedFrom( const std::string &class_name)
+		bool IsDerivedFrom( const std::string &class_name) const
 		{
 			if ( class_name == GetClassName())
 				return true;
@@ -105,7 +105,7 @@ namespace GASS
 		/**
 		Gets base RTTI class.
 		*/
-		RTTI* GetAncestorRTTI()
+		RTTI* GetAncestorRTTI() const
 		{
 			return m_BaseRTTI;
 		}
@@ -113,7 +113,7 @@ namespace GASS
 		/**
 		Gets class name for this RTTI instance.
 		*/
-		std::string GetClassName()
+		std::string GetClassName() const
 		{
 			return m_ClassName;
 		}

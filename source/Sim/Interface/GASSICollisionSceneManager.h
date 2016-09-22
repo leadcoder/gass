@@ -23,7 +23,6 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSSphere.h"
 #include "Sim/GASSGeometryFlags.h"
-#include <string>
 
 namespace GASS
 {
@@ -95,7 +94,6 @@ namespace GASS
 			Racast check
 		*/
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<ICollisionSceneManager> CollisionSceneManagerPtr;

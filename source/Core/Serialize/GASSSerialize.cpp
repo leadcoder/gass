@@ -27,7 +27,7 @@ namespace GASS
 	{
 		if(buffer)
 		{
-			unsigned long l = (unsigned long) value.length();
+			unsigned long l = static_cast<unsigned long>(value.length());
 			IO<unsigned long>(l);
 			if(bHasOverflowed)return;
 			if(bytesUsed+l>length){bHasOverflowed=true; return; }

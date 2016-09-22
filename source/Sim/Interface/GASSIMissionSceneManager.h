@@ -30,7 +30,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IMissionSceneManager(){}
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IMissionSceneManager> MissionSceneManagerPtr;
 }

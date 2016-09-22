@@ -21,7 +21,6 @@
 
 
 #include "Sim/GASSScene.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
@@ -32,10 +31,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -44,8 +40,6 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSFilesystem.h"
 #include "tinyxml2.h"
-
-
 
 namespace GASS
 {
@@ -358,7 +352,7 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr Scene::LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent)
+	SceneObjectPtr Scene::LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent) const
 	{
 		SceneObjectPtr so = SimEngine::Get().CreateObjectFromTemplate(template_name);
 		if(so)

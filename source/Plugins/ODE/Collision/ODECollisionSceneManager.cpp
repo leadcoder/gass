@@ -34,9 +34,7 @@
 #include "Sim/GASSPhysicsMesh.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
-
 
 namespace GASS
 {
@@ -54,7 +52,7 @@ namespace GASS
 		{
 			if(iter->second.ID)
 				dGeomTriMeshDataDestroy(iter->second.ID);
-			iter++;
+			++iter;
 		}
 	}
 
@@ -89,8 +87,8 @@ namespace GASS
 	{
 		//auto create collision component
 		SceneObjectPtr object = message->GetSceneObject();
-		ODECollisionGeometryComponentPtr comp = object->GetFirstComponentByClass<ODECollisionGeometryComponent>();
-		if(!comp) //only add if not already present
+		ODECollisionGeometryComponentPtr test_comp = object->GetFirstComponentByClass<ODECollisionGeometryComponent>();
+		if(!test_comp) //only add if not already present
 		{
 			//don't auto add height fields?
 			if(object->GetFirstComponentByClass<IHeightmapTerrainComponent>())
@@ -154,7 +152,7 @@ namespace GASS
 		return id;
 	}
 
-	ODECollisionMeshInfo ODECollisionSceneManager::_CreateCollisionMesh(PhysicsMeshPtr physics_mesh)
+	ODECollisionMeshInfo ODECollisionSceneManager::_CreateCollisionMesh(PhysicsMeshPtr physics_mesh) const 
 	{
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{
@@ -163,7 +161,6 @@ namespace GASS
 		// This should equal above code, but without Opcode dependency and no duplicating data
 		dTriMeshDataID id = dGeomTriMeshDataCreate();
 
-		
 		int float_size = sizeof(Float);
 		if(float_size == 8) //double precision
 		{

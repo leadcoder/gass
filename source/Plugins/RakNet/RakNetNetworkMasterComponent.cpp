@@ -22,8 +22,7 @@
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
-#include "Plugins/RakNet/RakNetLocationTransferComponent.h"
-
+#include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -31,16 +30,8 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
 
 namespace GASS
 {
@@ -177,7 +168,7 @@ namespace GASS
 				char* data_to_read = new char[size];
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
-				delete data_to_read ;
+				delete[] data_to_read ;
 				GetSceneObject()->PostRequest(NetworkDeserializeRequestPtr(new NetworkDeserializeRequest(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 
 			}

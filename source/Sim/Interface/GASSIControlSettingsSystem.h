@@ -19,11 +19,9 @@
 *****************************************************************************/
 
 #pragma once
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include <map>
 #include <string>
 
 namespace GASS
@@ -87,7 +85,6 @@ namespace GASS
 		virtual void Load(const std::string &filename) = 0;
 		virtual std::string GetNameFromIndex(const std::string &settings, int index) = 0;
 		virtual int GetIndexFromName(const std::string &settings, const std::string &name) = 0;
-	private:
 	};
 	typedef GASS_SHARED_PTR<IControlSettingsSystem> ControlSettingsSystemPtr;
 }

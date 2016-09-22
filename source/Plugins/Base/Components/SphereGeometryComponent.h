@@ -45,7 +45,6 @@ namespace GASS
 		Float GetRadius() const;
 	protected:
 		ADD_PROPERTY(bool, Wireframe);
-		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();
 		void SetColor(const ColorRGBA  &value);

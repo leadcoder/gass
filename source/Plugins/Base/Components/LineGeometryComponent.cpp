@@ -21,25 +21,19 @@
 
 #include "LineGeometryComponent.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/Math/GASSTriangle.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
@@ -56,7 +50,8 @@ namespace GASS
 		m_FadeStart(false),
 		m_FadeEnd(false),
 		m_Color(1,1,1,1),
-		m_RotateTexture(false)
+		m_RotateTexture(false),
+		m_CustomDitchTexturePercent(0)
 	{
 
 	}
@@ -176,8 +171,8 @@ namespace GASS
 		Float v_coord = 0;
 		Vec3 uv_old_pos = points[0];
 		Vec3 uv_new_pos;
-		Vec3 pos, front;
-
+		Vec3 front;
+		//Vec3 pos
 		Float u_coord[3] = {0,0.5,1};
 		Float lr_vector_multiplier[3] = {m_Width*0.5, 0, -m_Width*0.5};
 

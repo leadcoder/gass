@@ -53,6 +53,5 @@ namespace GASS
 	{
 	public:
 		virtual ~ILightComponent(){}
-	protected:
 	};
 }

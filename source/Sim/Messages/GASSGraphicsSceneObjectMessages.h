@@ -25,11 +25,9 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGeometryFlags.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Core/Utils/GASSColorRGB.h"
 #include "Core/Utils/GASSColorRGBA.h"
 
 
@@ -420,7 +418,6 @@ namespace GASS
 	{
 	public:
 		ResetMaterialRequest(SenderID sender_id = -1, double delay= 0) : SceneObjectRequestMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<ResetMaterialRequest> ResetMaterialRequestPtr;
 
@@ -483,7 +480,6 @@ namespace GASS
 	public:
 		ClearManualMeshRequest (SenderID sender_id = -1, double delay= 0) :
 		  SceneObjectRequestMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<ClearManualMeshRequest> ClearManualMeshRequestPtr;
 

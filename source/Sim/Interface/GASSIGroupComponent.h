@@ -33,7 +33,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IGroupComponent(){}
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IGroupComponent> GroupComponentPtr;
 }

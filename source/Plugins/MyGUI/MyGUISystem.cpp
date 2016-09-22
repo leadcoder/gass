@@ -22,9 +22,7 @@
 #include <stdio.h>
 #include "Sim/Messages/GASSScriptSystemMessages.h"
 #include <MyGUI.h>
-#include "MyGUI_LastHeader.h"
 #include "MyGUI_RTTLayer.h"
-#include "StatisticInfo.h"
 #include "MainMenu.h"
 
 namespace GASS

@@ -21,8 +21,8 @@
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
-#include "Plugins/OSG/OSGNodeMasks.h"
 #include "Sim/GASSScriptManager.h"
+#include "Core/Math/GASSMath.h"
 #include <angelscript.h>
 
 namespace GASS

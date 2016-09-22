@@ -13,8 +13,8 @@ namespace GASS
 		void Init(const FilePath &working_folder, const std::string &gass_configuration, void* main_win_handle,void*  render_win_handle);
 		bool Update();
 	protected:
-		void OnRequestSimulatiornStep(TimeStepRequestPtr message);
-		void  UnloadScene();
+		//void OnRequestSimulatiornStep(TimeStepRequestPtr message);
+		//void  UnloadScene();
 
 		std::string m_StartScene;
 		bool m_Initilized;

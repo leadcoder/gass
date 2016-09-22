@@ -20,10 +20,6 @@
 
 #pragma once
 
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSMatrix.h"
-#include "Core/Utils/GASSFilePath.h"
-#include <cstring>
 
 namespace GASS
 {

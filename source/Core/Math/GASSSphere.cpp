@@ -41,7 +41,7 @@ namespace GASS
 
 	}
 
-	AABox Sphere::GetAABox()
+	AABox Sphere::GetAABox() const
 	{
 		AABox aabox;
 		aabox.m_Max.x = m_Pos.x + m_Radius;
@@ -55,7 +55,7 @@ namespace GASS
 		return aabox;
 	}
 
-	bool Sphere::AABoxInside(const AABox &box)
+	bool Sphere::AABoxInside(const AABox &box) const
 	{
 		AABox temp;
 		temp.m_Max = box.m_Max;
@@ -70,7 +70,7 @@ namespace GASS
 		return temp.PointInside(m_Pos);
 	}
 
-	bool Sphere::SphereInside(const Sphere &sphere)
+	bool Sphere::SphereInside(const Sphere &sphere) const
 	{
 		Float dist = (sphere.m_Pos -  m_Pos).SquaredLength();
 		Float tot_rad = sphere.m_Radius + m_Radius;

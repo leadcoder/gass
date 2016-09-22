@@ -21,15 +21,7 @@
 #define HYDRAX_RTT_LISTENER_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include <OgreRenderTargetListener.h>
-#include <OgreRenderTargetListener.h>
 #include "Hydrax/Hydrax.h"
-#include "Hydrax/Noise/Perlin/Perlin.h"
-#include "Hydrax/Modules/ProjectedGrid/ProjectedGrid.h"
 #include "SkyX.h"
 
 namespace GASS
@@ -59,10 +51,6 @@ namespace GASS
 				}
 				break;
 
-			case Hydrax::RttManager::RTT_REFRACTION:
-				{
-				}
-				break;
 
 			case Hydrax::RttManager::RTT_DEPTH: case Hydrax::RttManager::RTT_DEPTH_REFLECTION:
 				{
@@ -71,6 +59,10 @@ namespace GASS
 					mSkyX->getMoonManager()->getMoonBillboard()->setVisible(false);
 				}
 				break;
+			case Hydrax::RttManager::RTT_REFRACTION:
+			case Hydrax::RttManager::RTT_DEPTH_AIP:
+			case Hydrax::RttManager::RTT_GPU_NORMAL_MAP:
+			break;
 			}
 		}
 
@@ -96,6 +88,8 @@ namespace GASS
 					mSkyX->getMeshManager()->getEntity()->setVisible(true);
 					mSkyX->getMoonManager()->getMoonBillboard()->setVisible(true);
 				}
+				break;
+			case Hydrax::RttManager::RTT_GPU_NORMAL_MAP:
 				break;
 			}
 		}

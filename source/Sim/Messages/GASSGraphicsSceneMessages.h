@@ -23,10 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Utils/GASSColorRGB.h"
 #include "Core/Utils/GASSColorRGBA.h"
-#include "Core/Math/GASSQuaternion.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 
 namespace GASS
 {

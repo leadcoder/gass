@@ -24,6 +24,7 @@
 #include "Sim/GASSRunTimeController.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
 #include <tbb/task_scheduler_init.h>
 #include <tbb/spin_mutex.h>
 
@@ -35,7 +36,8 @@ namespace GASS
 		m_Engine(engine),
 		m_CurrentState(SS_STOPPED),
 		m_SimTimeScale(1.0),
-		m_MaxSimulationSteps(20)
+		m_MaxSimulationSteps(20),
+		m_Scheduler(NULL)
 	{
 
 	}

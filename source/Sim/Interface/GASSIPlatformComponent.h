@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVector.h"
 
 namespace GASS
 {
@@ -46,7 +47,6 @@ namespace GASS
 		virtual PlatformType GetType() const = 0;
 		virtual Vec3 GetSize() const = 0;
 		virtual Float GetMaxSpeed() const = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IPlatformComponent> PlatformComponentPtr;

@@ -1,22 +1,14 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Sim/GASSGeometryFlags.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIInputSystem.h"
-#include "Sim/GASSGeometryFlags.h"
 #include "CursorInfo.h"
 #include "IMouseTool.h"
-#include <string>
 #include <vector>
-#include <set>
-
-
 
 namespace GASS
 {
@@ -30,8 +22,6 @@ namespace GASS
 	typedef GASS_WEAK_PTR<ICameraComponent> CameraComponentWeakPtr;
 	typedef GASS_SHARED_PTR<ICameraComponent> CameraComponentPtr;
 	class EditorSystem; 
-
-	
 
 	class EditorModuleExport MouseToolController : public GASS_ENABLE_SHARED_FROM_THIS<MouseToolController>, public IMessageListener, public IMouseListener , public IKeyListener
 	{
@@ -65,6 +55,7 @@ namespace GASS
 		void SetRayPickDistance(float value) {m_RayPickDistance = value;}
 		float GetRayPickDistance() const {return m_RayPickDistance;}
 		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
+		void SelectHelper(SceneObjectPtr obj) const;
 
 		//IMouseListener
 		bool MouseMoved(const MouseData &data);
@@ -77,13 +68,14 @@ namespace GASS
 	
 	
 		bool IsShiftDown() const {return m_ShiftDown;}
+		bool IsCtrlDown() const { return m_CtrlDown; }
+
+		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-		
-		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
-		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits);
+		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
 
 		//helper
 		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
@@ -108,7 +100,6 @@ namespace GASS
 		bool m_ShiftDown;
 		bool m_CtrlDown;
 		GizmoEditMode m_EditMode;
-		//double m_Delta;
 		Vec2 m_MBRScreenPos;
 		GASS::SceneObjectWeakPtr m_PointerObject;
 		EditorSceneManager* m_EditorSceneManager;

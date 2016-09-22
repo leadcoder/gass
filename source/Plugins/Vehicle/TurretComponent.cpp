@@ -19,26 +19,16 @@
 *****************************************************************************/
 
 #include "TurretComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-
 
 namespace GASS
 {
@@ -155,7 +145,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
+	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
 		Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
@@ -168,7 +158,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2)
+	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
 		//Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));

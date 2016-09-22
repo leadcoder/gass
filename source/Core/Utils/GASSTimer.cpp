@@ -24,13 +24,15 @@
 #include <sys/time.h>
 #endif
 #include "GASSTimer.h"
-#include <iostream>
 namespace GASS
 {
-	Timer::Timer()
+	Timer::Timer() : m_StartTime(0)
+#ifdef WIN32
+		, m_PerfTimerStart(0)
+#endif
 	{
 #ifdef WIN32
-		m_PerfTimerStart = 0;
+		
 		// Check To See If A Performance Counter Is Available
 		// If One Is Available The Timer Frequency Will Be Updated
 		if (!QueryPerformanceFrequency((LARGE_INTEGER *) &m_Frequency))
@@ -49,7 +51,7 @@ namespace GASS
 			QueryPerformanceCounter((LARGE_INTEGER *) &m_PerfTimerStart);
 			m_PerfTimer		= true;				// Set Performance Timer To TRUE
 			// Calculate The Timer Resolution Using The Timer Frequency
-			m_Resolution		= (float) (((double)1.0f)/((double)m_Frequency));
+			m_Resolution		= static_cast<float>(1.0/static_cast<double>(m_Frequency));
 			// Set The Elapsed Time To The Current Time
 			m_PerfTimerElapsed	= m_PerfTimerStart;
 		}
@@ -75,7 +77,7 @@ namespace GASS
 	}
 
 	// Get Time In Seconds
-	double Timer::GetTime()
+	double Timer::GetTime() const
 	{
 #ifdef WIN32
 
@@ -85,12 +87,12 @@ namespace GASS
 		{
 			QueryPerformanceCounter((LARGE_INTEGER *) &time);		// Grab The Current Performance Time
 			// Return The Current Time Minus The Start Time Multiplied By The Resolution
-			return ( (double) ( time - m_PerfTimerStart) * m_Resolution);
+			return static_cast<double>( time - m_PerfTimerStart) * m_Resolution;
 		}
 		else
 		{
 			// Return The Current Time Minus The Start Time Multiplied By The Resolution
-			return( (double) ( timeGetTime() - m_MMTimerStart) * m_Resolution);
+			return static_cast<double>( timeGetTime() - m_MMTimerStart) * m_Resolution;
 		}
 
 #else

@@ -21,11 +21,9 @@
 #include "GASSSimulationSystem.h"
 #include "Core/Common.h"
 #include "Sim/GASSSystemFactory.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "GASSSimulationSceneManager.h"
-
 
 namespace GASS
 {

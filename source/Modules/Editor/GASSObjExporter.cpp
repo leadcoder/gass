@@ -1,5 +1,6 @@
 #include "GASSObjExporter.h"
 #include "Sim/GASS.h"
+#include "Core/Math/GASSMath.h"
 #include <fstream>
 #include "Core/Utils/GASSFilesystem.h"
 
@@ -41,12 +42,12 @@ namespace GASS
 		while(iter != meshmap.end())
 		{
 			Export(iter->first, iter->second,false);
-			iter++;
+			++iter;
 		}
 
 	}
 
-	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive)
+	void ObjExporter::Export(const std::string &out_file, SceneObjectPtr root_obj,bool recursive) const
 	{
 		ComponentContainer::ComponentVector comps;
 		root_obj->GetComponentsByClass<IMeshComponent>(comps,recursive);
@@ -72,12 +73,7 @@ namespace GASS
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if(lc && lc != root_lc)
 				{
-					Vec3 world_pos = lc->GetWorldPosition() + offset;
-					Vec3 scale = lc->GetScale();
-					Quaternion world_rot = lc->GetWorldRotation();
-					Mat4 trans_mat;
-					trans_mat.Identity();
-					trans_mat.SetTransformation(world_pos,world_rot,scale);
+					Mat4 trans_mat(lc->GetWorldPosition() + offset, lc->GetWorldRotation(), lc->GetScale());
 					mesh_data.Transform(trans_mat);
 				}
 				mesh_data_vec.push_back(mesh_data);
@@ -259,7 +255,7 @@ namespace GASS
 					if(mat.Textures.size() > 0 && mat.Textures[0] !="")
 						file_ptr << "map_Kd " << mat.Textures[0] << "\n";
 					file_ptr << "\n";
-					iter++;
+					++iter;
 				}
 				file_ptr.close();
 
@@ -300,7 +296,7 @@ namespace GASS
 								}
 							}
 						}
-						iter++;
+						++iter;
 					}
 				}
 			}

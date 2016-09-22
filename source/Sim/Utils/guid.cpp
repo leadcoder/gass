@@ -23,6 +23,7 @@ THE SOFTWARE.
 */
 
 #include "guid.h"
+#include <iomanip>
 
 #ifdef WIN32
 	#define GUID_WINDOWS
@@ -52,26 +53,26 @@ using namespace std;
 ostream &operator<<(ostream &s, const Guid &guid)
 {
   return s << hex << setfill('0')
-    << setw(2) << (int)guid._bytes[0]
-    << setw(2) << (int)guid._bytes[1]
-    << setw(2) << (int)guid._bytes[2]
-    << setw(2) << (int)guid._bytes[3]
+    << setw(2) << static_cast<int>(guid._bytes[0])
+    << setw(2) << static_cast<int>(guid._bytes[1])
+    << setw(2) << static_cast<int>(guid._bytes[2])
+    << setw(2) << static_cast<int>(guid._bytes[3])
     << "-"
-    << setw(2) << (int)guid._bytes[4]
-    << setw(2) << (int)guid._bytes[5]
+    << setw(2) << static_cast<int>(guid._bytes[4])
+    << setw(2) << static_cast<int>(guid._bytes[5])
     << "-"
-    << setw(2) << (int)guid._bytes[6]
-    << setw(2) << (int)guid._bytes[7]
+    << setw(2) << static_cast<int>(guid._bytes[6])
+    << setw(2) << static_cast<int>(guid._bytes[7])
     << "-"
-    << setw(2) << (int)guid._bytes[8]
-    << setw(2) << (int)guid._bytes[9]
+    << setw(2) << static_cast<int>(guid._bytes[8])
+    << setw(2) << static_cast<int>(guid._bytes[9])
     << "-"
-    << setw(2) << (int)guid._bytes[10]
-    << setw(2) << (int)guid._bytes[11]
-    << setw(2) << (int)guid._bytes[12]
-    << setw(2) << (int)guid._bytes[13]
-    << setw(2) << (int)guid._bytes[14]
-    << setw(2) << (int)guid._bytes[15];
+    << setw(2) << static_cast<int>(guid._bytes[10])
+    << setw(2) << static_cast<int>(guid._bytes[11])
+    << setw(2) << static_cast<int>(guid._bytes[12])
+    << setw(2) << static_cast<int>(guid._bytes[13])
+    << setw(2) << static_cast<int>(guid._bytes[14])
+    << setw(2) << static_cast<int>(guid._bytes[15]);
 }
 
 istream& operator >> (istream& is, Guid& guid)

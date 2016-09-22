@@ -22,6 +22,8 @@
 
 
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSMath.h"
+#include "Core/Math/GASSTriangle.h"
 namespace GASS
 {
 	/**

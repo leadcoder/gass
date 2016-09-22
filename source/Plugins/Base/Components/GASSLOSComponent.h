@@ -23,7 +23,6 @@ namespace GASS
 		bool GetCalculate() const {return false;}
 		bool _CheckLOS(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const;
 		Float _GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const;
-		void _BuildMesh();
 		ADD_PROPERTY(bool,Debug)
 		ADD_PROPERTY(bool,AutUpdateOnTransform)
 
@@ -44,7 +43,6 @@ namespace GASS
 		Float GetTransparency() const {return m_Transparency;}
 		
 		
-		void Update();
 		bool m_Initialized;
 		Vec3 m_Position;
 		Vec3 m_ViewDir;

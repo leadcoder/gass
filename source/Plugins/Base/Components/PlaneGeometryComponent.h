@@ -22,7 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -41,8 +40,6 @@ namespace GASS
 		std::string GetTexture() const;
 	protected:
 		void GenerateMesh();
-		void OnLoad(MessagePtr message);
-		void OnChangeName(MessagePtr message);
 		Vec2 GetSize() const;
 		void SetSize(const Vec2 &value);
 		float GetTransparency() const;

@@ -3,7 +3,7 @@
 
 
 //TODO: Find  correct license
-#include "Plugins/Ogre/OgreCommon.h"
+#include "Plugins/Ogre/GASSOgreCommon.h"
 #pragma warning(push)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4100)

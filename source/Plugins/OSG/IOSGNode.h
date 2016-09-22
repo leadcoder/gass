@@ -30,7 +30,6 @@ namespace GASS
 	public:
 		virtual ~IOSGNode(){};
 		virtual osg::ref_ptr<osg::Node> GetNode() = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IOSGNode> OSGNodePtr;

@@ -21,9 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSSphere.h"
-#include "Sim/GASSGeometryFlags.h"
-#include <string>
+
 
 namespace GASS
 {
@@ -35,7 +33,6 @@ namespace GASS
 	{
 	public:
 		virtual ~ICollisionSystem(){}
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<ICollisionSystem> CollisionSystemPtr;

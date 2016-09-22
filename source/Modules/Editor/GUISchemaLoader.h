@@ -20,13 +20,9 @@
 
 #ifndef GUI_SCEHMA_LOADER_H
 #define GUI_SCEHMA_LOADER_H
-#include "Sim/GASSCommon.h"
 #include "EditorCommon.h"
 #include <Core/Common.h>
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/Serialize/GASSIXMLSerialize.h"
-#include "Core/Serialize/GASSISerialize.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 
 namespace tinyxml2
 {

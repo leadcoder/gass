@@ -4,20 +4,15 @@ set(LIB_NAME "GASSPluginPhysX3")
 set(PHYSX3_INSTALL_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
 find_package(PhysX3 REQUIRED) 
 
-include_directories(${GASS_SIM_INCLUDE_DIRS} ${PHYSX3_INCLUDE_DIR})
+gass_create_dep_target(PhysX "${PHYSX3_INCLUDE_DIR}" "${PHYSX3_LIBRARIES}")
+gass_setup_plugin(GASSPluginPhysX3 PhysX)
 
-#add all source files from current directory (recursively)
-add_source_from_current_dir()
+if(GASS_INSTALL_DEP_BINARIES)
 
-#Enable class export 
-add_definitions( -DGASS_PLUGIN_EXPORTS )
-
-#Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
-add_library(${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
-
-target_link_libraries(${LIB_NAME} GASSSim GASSCore ${GASS_SIM_LIBRARIES})
-target_link_libraries(${LIB_NAME} ${PHYSX3_LIBRARIES})
-
-gass_install_plugin_target()
+		FILE(COPY ${PX_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		FILE(COPY ${PX_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		
+		install(FILES ${PX_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+		install(FILES ${PX_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+endif()
 

@@ -24,7 +24,6 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -53,6 +52,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags){(void) flags;}
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 	protected:
 		void SetUpdate(bool value);
 		bool  GetUpdate() const;

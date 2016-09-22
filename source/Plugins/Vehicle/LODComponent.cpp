@@ -20,29 +20,24 @@
 
 #include "LODComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Core/Math/GASSQuaternion.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
 
 namespace GASS
 {
 	LODComponent::LODComponent() : m_LowLODDistance(20) , 
 		m_MediumLODDistance(10),
 		m_CameraPosition(0,0,0),
-		m_ObjectPosition(0,0,0)
+		m_ObjectPosition(0,0,0),
+		m_CurrentLevel(LODMessage::LOD_HIGH)
 	{
 
 	}

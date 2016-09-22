@@ -23,7 +23,6 @@
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "IPhysXRigidDynamic.h"
@@ -60,7 +59,7 @@ namespace GASS
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation();
+		Quaternion GetRotation() const;
 		
 		//helpers
 		void Reset();

@@ -25,7 +25,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <fstream>
 
 #ifdef WIN32
 	#include <conio.h>

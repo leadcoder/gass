@@ -22,18 +22,12 @@
 
 
 #include "GrassLayerComponent.h"
-#include <OgreEntity.h>
-#include <OgreSceneManager.h>
 #include "GrassLoaderComponent.h"
-#include "PagedGeometry.h"
 #include "ImpostorPage.h"
-#include "BatchPage.h"
 #include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -95,12 +89,10 @@ namespace GASS
 	void GrassLayerComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GrassLayerComponent::OnLoad,GrassLoaderComponentLoaded,0));
-	
 	}
 
 	void GrassLayerComponent::OnDelete()
 	{
-
 	}
 
 	void GrassLayerComponent::OnLoad(GrassLoaderComponentLoadedPtr message)
