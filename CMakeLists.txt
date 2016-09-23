@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.0)
 project(GASS)
 
 # if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -33,6 +33,11 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # turn on -Wall and -Wextra, but skip  long-long and unused-parameter warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-long-long -Wno-unused-parameter")
 endif()
+
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
+set(GASS_MAJOR_VERSION 1)
+  
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #static libs
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #dynamic libs
@@ -97,6 +102,8 @@ if(GASS_BUILDTYPE_STATIC)
 	set(GASS_BUILDTYPE STATIC)
 	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
 endif()
+
+include(DepTargets)
 
 add_subdirectory(source)
 add_subdirectory(samples)

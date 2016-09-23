@@ -11,6 +11,14 @@ set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
 	 optimized ${TBB_MALLOC_LIBRARY}
 	 debug ${TBB_LIBRARY_DEBUG}
 	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
+	 
+#if(GASS_EMBED_GIT_SHA)
+	configure_file(
+		"${CMAKE_CURRENT_SOURCE_DIR}/GASSVersion.h.in"
+		"${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h" 
+		@ONLY)
+ 	set(VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
+#endif()
 
 	 
 #add all source files from current directory (recursively)

@@ -1,1 +1,1 @@
-gass_setup_sim_sample(SampleSimOSGEarth)
+gass_setup_sim_sample(SampleSimOSGEarth GASSEditorModule)

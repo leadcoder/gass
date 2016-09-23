@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class GASSPluginExport OgreMaterialCache 
+	class OgreMaterialCache 
 	{
 	public:
 		OgreMaterialCache()

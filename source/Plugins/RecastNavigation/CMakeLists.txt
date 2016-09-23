@@ -1,1 +1,1 @@
-gass_setup_plugin("GASSPluginRecastNavigation")
+gass_setup_plugin(GASSPluginRecastNavigation)

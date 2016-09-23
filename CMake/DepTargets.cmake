@@ -1,0 +1,134 @@
+#This file hold "proxy" build targets for dependencies that can be 
+#used by any GASS lib by just refering to dependencies like 
+#internal targets
+
+include(Common)
+
+find_package(TBB REQUIRED)
+gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
+
+if(GASS_BUILD_PLUGIN_OGRE)
+	#FindOgre.cmake use environment var OGRE_HOME
+	find_package(OGRE REQUIRED)
+
+	set(OGRE_INCLUDE_DIRS
+		${OGRE_INCLUDE_DIR}
+		${OGRE_Paging_INCLUDE_DIR}
+		${OGRE_Terrain_INCLUDE_DIR}
+		${OGRE_Overlay_INCLUDE_DIR})
+	set(OGRE_LIBRARY_LIST ${OGRE_LIBRARIES}
+		 ${OGRE_Terrain_LIBRARIES}
+		 ${OGRE_Paging_LIBRARIES}
+		 ${OGRE_Overlay_LIBRARIES})
+		 
+	set(OGRE_BIN_FILES_RELEASE 
+		${OGRE_BINARY_REL}
+		${OGRE_Overlay_BINARY_REL}
+		${OGRE_Paging_BINARY_REL}
+		${OGRE_Terrain_BINARY_REL}
+		${OGRE_Plugin_CgProgramManager_REL}
+		${OGRE_Plugin_OctreeSceneManager_REL}
+		${OGRE_Plugin_ParticleFX_REL}
+		${OGRE_RenderSystem_Direct3D9_REL}
+		${OGRE_RenderSystem_GL_REL}
+		${OGRE_PLUGIN_DIR_REL}/cg.dll)
+		
+	set(OGRE_BIN_FILES_DEBUG 
+		${OGRE_BINARY_DBG}
+		${OGRE_Overlay_BINARY_DBG}
+		${OGRE_Paging_BINARY_DBG}
+		${OGRE_Terrain_BINARY_DBG}
+		${OGRE_Plugin_CgProgramManager_DBG}
+		${OGRE_Plugin_OctreeSceneManager_DBG}
+		${OGRE_Plugin_ParticleFX_DBG}
+		${OGRE_RenderSystem_Direct3D9_DBG}
+		${OGRE_RenderSystem_GL_DBG}
+		${OGRE_PLUGIN_DIR_DBG}/cg.dll)
+	
+	gass_create_dep_target(Ogre 
+		INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} 
+		LIBRARIES ${OGRE_LIBRARY_LIST}
+		BINARIES_REL ${OGRE_BIN_FILES_RELEASE}
+		BINARIES_DBG ${OGRE_BIN_FILES_DEBUG})
+
+endif()
+
+if(GASS_BUILD_PLUGIN_ENVIRONMENT)
+	#set(SKYX_DIR   $ENV{SKYX_HOME} CACHE PATH "SkyX folder")
+	find_package(SkyX REQUIRED)
+	gass_create_dep_target(SkyX 
+					INCLUDE_DIRS ${SKYX_INCLUDE_DIRS} 
+					LIBRARIES ${SKYX_LIBRARIES}
+					BINARIES_REL ${SKYX_BINARY_REL}
+					BINARIES_DBG ${SKYX_BINARY_DBG})
+	
+	#set(HYDRAX_DIR $ENV{HYDRAX_HOME} CACHE PATH "Hydrax folder")
+	find_package(Hydrax REQUIRED)
+	gass_create_dep_target(Hydrax INCLUDE_DIRS ${HYDRAX_INCLUDE_DIRS} LIBRARIES ${HYDRAX_LIBRARIES})
+endif()
+
+
+if(GASS_BUILD_PLUGIN_OIS)
+	#set (OIS_DIR $ENV{OIS_HOME})
+	find_package(OIS REQUIRED)
+	gass_create_dep_target(OIS 
+				INCLUDE_DIRS ${OIS_INCLUDE_DIRS} 
+				LIBRARIES ${OIS_LIBRARIES}
+				BINARIES_REL ${OIS_BINARY_REL}
+				BINARIES_DBG ${OIS_BINARY_DBG})
+endif()
+
+if(GASS_BUILD_PLUGIN_ODE)
+	find_package(ODE REQUIRED)
+	gass_create_dep_target(ODE INCLUDE_DIRS ${ODE_INCLUDE_DIRS} LIBRARIES ${ODE_LIBRARIES} DEFINITIONS dDOUBLE)
+endif()
+
+if(GASS_BUILD_PLUGIN_MYGUI)
+	find_package(MyGUI REQUIRED)
+	gass_create_dep_target(MyGUI INCLUDE_DIRS ${MYGUI_INCLUDE_DIRS}  LIBRARIES ${MYGUI_LIBRARIES})
+endif()
+
+if(GASS_BUILD_PLUGIN_OPENAL)
+	find_package(OpenALExt REQUIRED)
+	gass_create_dep_target(OpenAL 
+		INCLUDE_DIRS ${OPENAL_INCLUDE_DIR}  
+		LIBRARIES ${OPENAL_LIBRARY}
+		BINARIES_REL ${OPENAL_BIN_FILES_RELEASE}
+		BINARIES_DBG ${OPENAL_BIN_FILES_RELEASE})
+endif()
+
+if(GASS_BUILD_PLUGIN_PAGED_GEOMETRY)
+	find_package(PagedGeometry)
+	gass_create_dep_target(PagedGeometry 
+		INCLUDE_DIRS ${PAGEDGEOMETRY_INCLUDE_DIRS}  
+		LIBRARIES ${PAGEDGEOMETRY_LIBRARIES})
+endif()
+
+#OSG
+if(GASS_BUILD_PLUGIN_OSG)
+	find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain)
+	gass_create_dep_target(OSG INCLUDE_DIRS ${OPENSCENEGRAPH_INCLUDE_DIRS} LIBRARIES ${OPENSCENEGRAPH_LIBRARIES} BINARIES_REL ${OSG_BINARIES_REL} BINARIES_DBG ${OSG_BINARIES_DBG})
+	
+	if(GASS_INSTALL_DEP_BINARIES AND WIN32) #install osg plugins to subfolder
+		install(FILES ${OSGPLUGIN_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE}/osgPlugins-${OSG_VERSION} CONFIGURATIONS Release)
+		install(FILES ${OSGPLUGIN_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG}/osgPlugins-${OSG_VERSION} CONFIGURATIONS Debug)
+		
+		file(COPY ${OSGPLUGIN_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		file(COPY ${OSGPLUGIN_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+endif()
+
+if(GASS_BUILD_PLUGIN_OSG)
+	set(CMAKE_MODULE_PATH
+		${CMAKE_MODULE_PATH}
+		$ENV{OSGEARTHDIR}/CMakeModules)
+	find_package(OSGEarth)
+	gass_create_dep_target(OSGEarth 
+					INCLUDE_DIRS ${OSGEARTH_INCLUDE_DIRS} 
+					LIBRARIES ${OSGEARTH_LIBRARY}
+					${OSGEARTHFEATURES_LIBRARY}
+					${OSGEARTHUTIL_LIBRARY}
+					${OSGEARTHSYMBOLOGY_LIBRARY}
+					${OSGEARTHANNOTATION_LIBRARY} 
+					${OPENSCENEGRAPH_LIBRARIES})
+endif()
