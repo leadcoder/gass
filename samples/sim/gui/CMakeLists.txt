@@ -1,1 +1,1 @@
-gass_setup_sim_sample(SampleSimGUI MyGUI)
+gass_setup_sim_sample(SampleSimGUI  DEPS MyGUI)

@@ -59,7 +59,7 @@ function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
         ENDFOREACH(currentSourceFile ${ARGN})
 endfunction(create_source_group)
 
-macro(add_source_from_current_dir)
+macro(deprecated_add_source_from_current_dir)
 	#Grab cpp and h  files from path recursively
 	file(GLOB_RECURSE CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 	file(GLOB_RECURSE H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
@@ -71,44 +71,13 @@ macro(add_source_from_current_dir)
 	#Create ide source groups that repilicates folder structure 
 	create_source_group("Source Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_CPP_FILES})
 	create_source_group("Header Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_H_FILES})	
-	
 endmacro()
 
-macro(get_source_from_current_dir _SOURCE_FILES _HEADER_FILES)
+macro(gass_get_source_from_current_dir _SOURCE_FILES _HEADER_FILES)
 	#Grab cpp and h  files from path recursively
 	file(GLOB_RECURSE ${_SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 	file(GLOB_RECURSE ${_HEADER_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 endmacro()
-
-macro(gass_install_target)
-	install(TARGETS ${LIB_NAME}
-  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug
-  LIBRARY DESTINATION ${GASS_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-  ARCHIVE DESTINATION ${GASS_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-  )
-
-install(TARGETS ${LIB_NAME}
-  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
-  LIBRARY DESTINATION ${GASS_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
-  ARCHIVE DESTINATION ${GASS_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)	
-	
-endmacro(gass_install_target) 
-
-macro(gass_install_plugin_target)
-	install(TARGETS ${LIB_NAME}
-  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug
-  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-  )
-
-install(TARGETS ${LIB_NAME}
-  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
-  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
-  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
-  )	
-	
-endmacro(gass_install_plugin_target) 
-
 
 macro(gass_filter_list INPUT OUTPUT GOOD BAD)
   set(LST ${INPUT})   # can we avoid this?
@@ -124,18 +93,6 @@ macro(gass_filter_list INPUT OUTPUT GOOD BAD)
   endforeach()
 endmacro()
 
-
-MACRO(HEADER_DIRECTORIES return_list)
-    FILE(GLOB_RECURSE new_list ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-    SET(dir_list "")
-    FOREACH(file_path ${new_list})
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
-        SET(dir_list ${dir_list} ${dir_path})
-    ENDFOREACH()
-    LIST(REMOVE_DUPLICATES dir_list)
-    SET(${return_list} ${dir_list})
-ENDMACRO()
-
 macro(gass_get_header_directories _RETURN_DIRS)
     file(GLOB_RECURSE NEW_LIST ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
     set(DIR_LIST "")
@@ -146,38 +103,9 @@ macro(gass_get_header_directories _RETURN_DIRS)
     list(REMOVE_DUPLICATES DIR_LIST)
     set(${_RETURN_DIRS} ${DIR_LIST})
 endmacro()
-	
-macro(gass_setup_plugin_old PLUGIN_NAME)
-	set (extra_macro_args ${ARGN})
-	# Did we get any optional args?
-    list(LENGTH extra_macro_args num_extra_args)
-    if (${num_extra_args} GREATER 0)
-        list(GET extra_macro_args 0 optional_arg)
-		set(_DEPS ${ARGN})
-    endif ()
-
-	
-	add_source_from_current_dir()
-	add_library (${PLUGIN_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
-	HEADER_DIRECTORIES(SUBDIRS)
-	foreach(INC_DIR ${SUBDIRS})
-		target_include_directories(${PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
-	endforeach()
-	target_link_libraries(${PLUGIN_NAME} GASSSim ${_DEPS})
-	target_compile_definitions(${PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
-	install(TARGETS ${PLUGIN_NAME}
-		RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug	
-		LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-		ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug)
-
-	install(TARGETS ${PLUGIN_NAME}
-	  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
-	  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
-	  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)
-endmacro()
 
 macro(gass_setup_plugin _PLUGIN_NAME)
-	get_source_from_current_dir(SOURCE_FILES HEADER_FILES)
+	gass_get_source_from_current_dir(SOURCE_FILES HEADER_FILES)
 	gass_setup_lib(${_PLUGIN_NAME} 
 					${ARGN} 
 					BUILDTYPE ${GASS_BUILDTYPE}
@@ -192,17 +120,6 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	target_link_libraries(${_PLUGIN_NAME} PRIVATE GASSSim)
 	
 	target_compile_definitions(${_PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
-	
-	install(TARGETS ${_PLUGIN_NAME}
-		RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug	
-		LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
-		ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug)
-
-	install(TARGETS ${_PLUGIN_NAME}
-	  RUNTIME DESTINATION ${GASS_PLUGIN_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
-	  LIBRARY DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
-	  ARCHIVE DESTINATION ${GASS_PLUGIN_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)
-
 	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .galp)
 endmacro()
 
@@ -243,8 +160,20 @@ macro(gass_setup_lib _LIB_NAME)
 	set_target_properties(${_LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	
 	if(NOT PARSED_ARGS_SKIP_HEADER_INSTALL)
-		INSTALL(FILES ${PARSED_ARGS_HEADER_FILES} DESTINATION include)
+		#INSTALL(FILES ${PARSED_ARGS_HEADER_FILES} DESTINATION include)
+		install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h")
 	endif()
+	
+	install(TARGETS ${_LIB_NAME}
+		RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug	
+		LIBRARY DESTINATION ${GASS_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug
+		ARCHIVE DESTINATION ${GASS_INSTALL_LIB_DIR_DEBUG} CONFIGURATIONS Debug)
+
+	install(TARGETS ${_LIB_NAME}
+	  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release
+	  LIBRARY DESTINATION ${GASS_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release
+	  ARCHIVE DESTINATION ${GASS_INSTALL_LIB_DIR_RELEASE} CONFIGURATIONS Release)
+
 endmacro()
 
 macro(gass_create_dep_target DEP_NAME)
@@ -281,22 +210,31 @@ macro(gass_create_dep_target DEP_NAME)
 endmacro()
 
 macro(gass_setup_sim_sample SAMPLE_NAME)
-	set (extra_macro_args ${ARGN})
-	# Did we get any optional args?
-    list(LENGTH extra_macro_args num_extra_args)
-    if (${num_extra_args} GREATER 0)
-        list(GET extra_macro_args 0 optional_arg)
-		set(_DEPS ${ARGN})
-    endif ()
-
-	add_source_from_current_dir()
+	cmake_parse_arguments(
+        PARSED_ARGS # prefix of output variables
+        "" # list of names of the boolean arguments (only defined ones will be true)
+        "" # list of names of mono-valued arguments
+        "DEPS" # list of names of multi-valued arguments (output variables are lists)
+        ${ARGN} # arguments of the function to parse, here we take the all original ones
+    )
+	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
-	HEADER_DIRECTORIES(SUBDIRS)
-	foreach(INC_DIR ${SUBDIRS})
+	
+	gass_get_header_directories(HEADER_SUBDIRS)
+	
+	foreach(INC_DIR ${HEADER_SUBDIRS})
 		target_include_directories(${SAMPLE_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
 	endforeach()
-	target_link_libraries(${SAMPLE_NAME} GASSSim ${_DEPS})
+	
+	foreach(CUR_DEP ${PARSED_ARGS_DEPS})
+		target_link_libraries(${SAMPLE_NAME} ${CUR_DEP})
+		#message("${_LIB_NAME} PUBLIC ${CUR_DEP}")
+	endforeach()
+	
+	target_link_libraries(${SAMPLE_NAME} GASSSim)
+	
 	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
+	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	
 	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
@@ -312,4 +250,22 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 endmacro()
+
+macro(gass_setup_core_sample SAMPLE_NAME)
+	
+	gass_get_source_from_current_dir(CPP_FILES H_FILES)
+	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
+	target_link_libraries(${SAMPLE_NAME} GASSCore)
+	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
+	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
+
+	#install executable
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+
+	#install configuration files
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+endmacro()
+
 

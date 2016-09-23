@@ -4,8 +4,27 @@
 
 include(Common)
 
+#TBB
 find_package(TBB REQUIRED)
+#post-process results 
+set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
+	 optimized ${TBB_MALLOC_LIBRARY}
+	 debug ${TBB_LIBRARY_DEBUG}
+	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
+
 gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
+
+#TinyXML2
+find_package(TinyXML2 REQUIRED)
+gass_create_dep_target(TinyXML2 INCLUDE_DIRS ${TINYXML2_INCLUDE_DIRS} LIBRARIES ${TINYXML2_LIBRARIES})
+
+#Boost
+find_package(Boost REQUIRED filesystem system)
+
+if(GASS_BUILD_SIM)
+	find_package(AngelScript REQUIRED)
+	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
+endif()
 
 if(GASS_BUILD_PLUGIN_OGRE)
 	#FindOgre.cmake use environment var OGRE_HOME
@@ -69,7 +88,6 @@ endif()
 
 
 if(GASS_BUILD_PLUGIN_OIS)
-	#set (OIS_DIR $ENV{OIS_HOME})
 	find_package(OIS REQUIRED)
 	gass_create_dep_target(OIS 
 				INCLUDE_DIRS ${OIS_INCLUDE_DIRS} 
@@ -102,6 +120,16 @@ if(GASS_BUILD_PLUGIN_PAGED_GEOMETRY)
 	gass_create_dep_target(PagedGeometry 
 		INCLUDE_DIRS ${PAGEDGEOMETRY_INCLUDE_DIRS}  
 		LIBRARIES ${PAGEDGEOMETRY_LIBRARIES})
+endif()
+
+#RakNet
+if(GASS_BUILD_PLUGIN_RAKNET)
+	#set(RAKNET_DIR  $ENV{RAKNET_HOME} CACHE PATH "RakNet folder")
+	find_package(RakNet)
+	if(WIN32)
+		set(RAKNET_LIBRARIES ${RAKNET_LIBRARIES} debug ws2_32 optimized ws2_32)
+	endif()
+	gass_create_dep_target(RakNet INCLUDE_DIRS ${RAKNET_INCLUDE_DIRS}  LIBRARIES ${RAKNET_LIBRARIES})
 endif()
 
 #OSG

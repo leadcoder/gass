@@ -1,25 +1,11 @@
-#set lib name here!
-set(LIB_NAME "GASSCore")
 
-find_package(TinyXML2 REQUIRED)
-find_package(Boost 1.46.1 REQUIRED filesystem system)
-
-#TBB
-find_package(TBB REQUIRED)
-#post-process results 
-set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
-	 optimized ${TBB_MALLOC_LIBRARY}
-	 debug ${TBB_LIBRARY_DEBUG}
-	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
-	 
-#if(GASS_EMBED_GIT_SHA)
+if(GASS_EMBED_GIT_SHA)
 	configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSVersion.h.in"
 		"${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h" 
 		@ONLY)
  	set(VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
-#endif()
-
+endif()
 	 
 #add all source files from current directory (recursively)
 set(CPP_FILES
@@ -139,39 +125,48 @@ set(H_FILES
 	Utils/GASSTimer.h
 	Utils/GASSXMLUtils.h
 )
-
-add_library (${LIB_NAME} ${GASS_BUILDTYPE} ${CPP_FILES} ${H_FILES})
-
-target_include_directories(${LIB_NAME}
-	PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
-	PUBLIC  $<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>
-	PUBLIC  $<BUILD_INTERFACE:${TINYXML2_INCLUDE_DIRS}>
-	PUBLIC  $<BUILD_INTERFACE:${TBB_INCLUDE_DIRS}>)
-
-target_link_libraries(${LIB_NAME}
-		PRIVATE ${TINYXML2_LIBRARIES}
-		PUBLIC ${TBB_LIBRARIES}
-		PUBLIC ${Boost_LIBRARIES})
-		
+set(PLATFORM_DEPS "")
 if(WIN32)
    #Add dependency for timer
-   target_link_libraries(${LIB_NAME} PRIVATE Winmm)
+   set(PLATFORM_DEPS Winmm)
 endif()
 
-target_compile_definitions(${LIB_NAME} PRIVATE GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+gass_setup_lib(GASSCore
+					BUILDTYPE ${GASS_BUILDTYPE}
+					SOURCE_FILES ${CPP_FILES} 
+					HEADER_FILES ${H_FILES}
+					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
+					PUBLIC_DEPS TBB Boost::filesystem TinyXML2
+					PRIVATE_DEPS ${PLATFORM_DEPS}
+					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+					
+# add_library (${LIB_NAME} ${GASS_BUILDTYPE} ${CPP_FILES} ${H_FILES})
+# target_include_directories(${LIB_NAME}
+	# PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
+	# PUBLIC  $<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>
+	# PUBLIC  $<BUILD_INTERFACE:${TINYXML2_INCLUDE_DIRS}>
+	# PUBLIC  $<BUILD_INTERFACE:${TBB_INCLUDE_DIRS}>)
 
-#Install section
-gass_install_target()
+# target_link_libraries(${LIB_NAME}
+		# PRIVATE ${TINYXML2_LIBRARIES}
+		# PUBLIC ${TBB_LIBRARIES}
+		# PUBLIC ${Boost_LIBRARIES})
+		
 
-if(GASS_INSTALL_DEP_BINARIES)
-		if(TBB_BINARIES_REL)
-			install(FILES ${TBB_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
-			install(FILES ${TBB_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 
-			FILE(COPY ${TBB_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-			FILE(COPY ${TBB_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-		endif()
-endif()
+# target_compile_definitions(${LIB_NAME} PRIVATE GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+
+# gass_install_target()
+
+# if(GASS_INSTALL_DEP_BINARIES)
+		# if(TBB_BINARIES_REL)
+			# install(FILES ${TBB_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+			# install(FILES ${TBB_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+
+			# FILE(COPY ${TBB_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+			# FILE(COPY ${TBB_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		# endif()
+# endif()
 
 # install(TARGETS ${LIB_NAME} EXPORT LibraryTargets
   # LIBRARY DESTINATION lib
@@ -189,10 +184,10 @@ endif()
 #    Devel
 #)
 
-foreach ( h_file ${H_FILES} )
-    get_filename_component( dir ${h_file} DIRECTORY )
-    install( FILES ${h_file} DESTINATION include/Core/${dir} )
-endforeach()
+# foreach ( h_file ${H_FILES} )
+    # get_filename_component( dir ${h_file} DIRECTORY )
+    # install( FILES ${h_file} DESTINATION include/Core/${dir} )
+# endforeach()
 
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
 

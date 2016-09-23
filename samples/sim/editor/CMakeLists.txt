@@ -1,3 +1,3 @@
-gass_setup_sim_sample(SampleSimEditor GASSEditorModule)
+gass_setup_sim_sample(SampleSimEditor DEPS GASSEditorModule)
 
 
