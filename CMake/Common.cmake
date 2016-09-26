@@ -121,6 +121,7 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	
 	target_compile_definitions(${_PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
 	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .galp)
+	set_target_properties(${_PLUGIN_NAME} PROPERTIES FOLDER "Plugins")
 endmacro()
 
 include(CMakeParseArguments)
@@ -235,6 +236,7 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
+	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "CoreSamples")
 	
 	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
@@ -258,7 +260,7 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
 	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
-
+	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
 	#install executable
 	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
