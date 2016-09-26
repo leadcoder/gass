@@ -236,7 +236,7 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
-	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "CoreSamples")
+	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
 	
 	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
@@ -254,13 +254,14 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 endmacro()
 
 macro(gass_setup_core_sample SAMPLE_NAME)
-	
+
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
 	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
-	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
+	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "CoreSamples")
+	
 	#install executable
 	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(TARGETS ${SAMPLE_NAME}  RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
