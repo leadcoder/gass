@@ -23,6 +23,6 @@ addons:
       name: "leadcoder/GASS"
       description: "GASS"
     notification_email: leadcoder@gmail.com.com
-    build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release
+    build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release -DGASS_BUILD_CORE_SAMPLES=OFF  -DGASS_BUILD_SIM=OFF
     build_command: make -j3
    
