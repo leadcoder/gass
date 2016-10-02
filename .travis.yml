@@ -11,6 +11,7 @@ before_install:
 - sudo apt-get install -y cmake
 #- sudo apt-get install -y tbb
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
+- chmod a+x travis-build.sh
 install:
 - cmake --version
 
