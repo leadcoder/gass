@@ -13,10 +13,9 @@ before_install:
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
 install:
 - cmake --version
-- ./travis-build.sh
 
 script:
-
+- ./travis-build.sh
 notifications:
   email:
     recipients:
