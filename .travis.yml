@@ -10,7 +10,7 @@ before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -y cmake
 - sudo apt-get install -y libtbb-dev
-- sudo-apt-get install -y boost-dev
+- sudo-apt-get install -y libboost-dev
 #- sudo apt-get install -y libopenscenegraph-dev
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
 - chmod a+x travis-build.sh
