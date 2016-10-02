@@ -9,8 +9,12 @@ compiler:
 before_install:
 #- sudo apt-get update -qq
 - sudo apt-get install -y cmake
-- sudo apt-get install -y tbb
+#- sudo apt-get install -y tbb
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
+install:
+- cmake --version
+- ./build-travis.sh
+
 script:
 
 notifications:
@@ -23,6 +27,6 @@ addons:
       name: "leadcoder/GASS"
       description: "GASS"
     notification_email: leadcoder@gmail.com.com
-    build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release -DGASS_BUILD_CORE_SAMPLES=OFF  -DGASS_BUILD_SIM=OFF
+    #build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release -DGASS_BUILD_CORE_SAMPLES=OFF  -DGASS_BUILD_SIM=OFF
     build_command: make -j3
    
