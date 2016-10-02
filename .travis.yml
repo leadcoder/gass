@@ -7,7 +7,7 @@ language: cpp
 compiler:
 - gcc
 before_install:
-#- sudo apt-get update -qq
+- sudo apt-get update -qq
 - sudo apt-get install -y cmake
 #- sudo apt-get install -y tbb
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
