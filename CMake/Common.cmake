@@ -255,6 +255,7 @@ endmacro()
 
 macro(gass_setup_core_sample SAMPLE_NAME)
 
+	set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
