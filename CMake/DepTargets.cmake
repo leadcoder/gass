@@ -7,10 +7,13 @@ include(Common)
 #TBB
 find_package(TBB REQUIRED)
 #post-process results 
-set(TBB_LIBRARIES optimized ${TBB_LIBRARY}
+set(TBB_LIBRARIES optimized ${TBB_LIBRARY} debug ${TBB_LIBRARY_DEBUG})
+
+if(WIN32)
+	set(TBB_LIBRARIES ${TBB_LIBRARIES}
 	 optimized ${TBB_MALLOC_LIBRARY}
-	 debug ${TBB_LIBRARY_DEBUG}
 	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
+endif()	 
 
 gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
 
