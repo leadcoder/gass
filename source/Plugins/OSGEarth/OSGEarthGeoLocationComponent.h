@@ -24,6 +24,9 @@
 #include "Plugins/OSG/OSGCommon.h"
 #include "Plugins/OSG/IOSGNode.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
+#include <osgEarth/GeoTransform>
+#include <osgEarth/MapNode>
+
 
 namespace GASS
 {
@@ -87,8 +90,10 @@ namespace GASS
 		Vec3 m_Scale;
 		bool m_AttachToParent;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
+		osg::ref_ptr<osgEarth::GeoTransform> m_GeoTransform;
 		IOSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 		int m_NodeMask;
+		osg::ref_ptr<osgEarth::MapNode> m_Map;
 	};
 
 	typedef GASS_WEAK_PTR<OSGEarthGeoLocationComponent> OSGEarthGeoLocationComponentWeakPtr;
