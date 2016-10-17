@@ -8,12 +8,30 @@
 #OSGPLUGIN_BINARIES_REL
 
 set(OSG_MODULES ${OSGExt_FIND_COMPONENTS})
-find_package(OpenSceneGraph ${OSG_VERSION} REQUIRED ${OSG_MODULES})
-set(OSG_VERSION ${OPENSCENEGRAPH_VERSION})
+set(OSG_VERSION ${OSGExt_FIND_VERSION})
 
-#TODO: get this version somehow
-#set(OSG_SHARED_PREFIX osg141-)
-set(OSG_SHARED_PREFIX osg100-)
+macro(extract_version var str)
+STRING(REGEX REPLACE ".*VERSION\ *([0-9]+)" "\\1" ${var} ${str})
+endmacro(extract_version)
+
+find_path(OSG_DIR "include/osg/Version" HINTS $ENV{OSG_DIR} $ENV{OSG_ROOT} $ENV{OSG_HOME} DOC "OpenSceneGraph install path")
+
+if(${OSG_DIR} STREQUAL "OSG_DIR-NOTFOUND")
+	message("Please set OSG_DIR")
+else() 
+	file(STRINGS "${OSG_DIR}/include/osg/Version" OSG_MAJOR REGEX "#define OPENSCENEGRAPH_MAJOR_VERSION")
+	file(STRINGS "${OSG_DIR}/include/osg/Version" OSG_MINOR REGEX "#define OPENSCENEGRAPH_MINOR_VERSION")
+	file(STRINGS "${OSG_DIR}/include/osg/Version" OSG_PATCH REGEX "#define OPENSCENEGRAPH_PATCH_VERSION")
+	file(STRINGS "${OSG_DIR}/include/osg/Version" OSG_SOVERSION REGEX "#define OPENSCENEGRAPH_SOVERSION")
+	extract_version(OSG_MAJOR ${OSG_MAJOR})
+	extract_version(OSG_MINOR ${OSG_MINOR})
+	extract_version(OSG_PATCH ${OSG_PATCH})
+	extract_version(OSG_SOVERSION ${OSG_SOVERSION})
+	set(OSG_VERSION "${OSG_MAJOR}.${OSG_MINOR}.${OSG_PATCH}" CACHE STRING "OpenSceneGraph Version")
+	set(OSG_SHARED_PREFIX "osg${OSG_SOVERSION}-" CACHE STRING "OpenSceneGraph so-version")
+endif()
+
+find_package(OpenSceneGraph ${OSG_VERSION} REQUIRED ${OSG_MODULES})
 
 if (WIN32)
 	set(_SHARED_LIB_EXT .dll)
@@ -22,15 +40,7 @@ else() #assume linux
 endif()
 
 if (WIN32)
-
-	
-	find_path(OSG_BINARY_DIR osgviewer.exe	
-		$ENV{OSG_ROOT}/bin
-		$ENV{OSG_DIR}/bin
-		$ENV{OSGDIR}/bin
-		${OSG_DIR}/bin		
-		NO_DEFAULT_PATH	
-		)
+	find_path(OSG_BINARY_DIR osgviewer.exe	${OSG_DIR}/bin)
 
 	find_file(OSG_BINARY_REL NAMES ${OSG_SHARED_PREFIX}osg${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	find_file(OSG_BINARY_DBG NAMES ${OSG_SHARED_PREFIX}osgd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
