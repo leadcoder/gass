@@ -77,9 +77,13 @@ namespace GASS
 	void OSGEarthLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OSGEarthLocationComponent",new Creator<OSGEarthLocationComponent, Component>);
-		RegisterProperty<double>("Latitude", &OSGEarthLocationComponent::GetLatitude, &OSGEarthLocationComponent::SetLatitude);
-		RegisterProperty<double>("Longitude", &OSGEarthLocationComponent::GetLongitude, &OSGEarthLocationComponent::SetLongitude);
-		RegisterProperty<double>("Offset", &OSGEarthLocationComponent::GetOffset, &OSGEarthLocationComponent::SetOffset);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation", OF_VISIBLE)));
+		RegisterProperty<double>("Latitude", &OSGEarthLocationComponent::GetLatitude, &OSGEarthLocationComponent::SetLatitude,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<double>("Longitude", &OSGEarthLocationComponent::GetLongitude, &OSGEarthLocationComponent::SetLongitude,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<double>("Offset", &OSGEarthLocationComponent::GetOffset, &OSGEarthLocationComponent::SetOffset,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 	}
 	
 	void OSGEarthLocationComponent::OnDelete()
@@ -97,18 +101,21 @@ namespace GASS
 		{
 			m_MapNode = mapNode;
 			const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
-			osgEarth::Style labelStyle;
+			/*osgEarth::Style labelStyle;
 			labelStyle.getOrCreate<osgEarth::TextSymbol>()->alignment() = osgEarth::TextSymbol::ALIGN_CENTER_CENTER;
 			labelStyle.getOrCreate<osgEarth::TextSymbol>()->fill()->color() = osgEarth::Color::Yellow;
 			m_DebugNode = new osgEarth::Annotation::PlaceNode(mapNode, osgEarth::GeoPoint(geoSRS, -80.28, 25.82), "Miami", labelStyle);
 			m_DebugNode->setDynamic(true);
 			root->addChild(m_DebugNode);
+			*/
+			//Get lat lon from location
 			UpdateNode();
 			//HACK: send a request with delay to give osgearth some time to load better height data:(
-			GetSceneObject()->PostRequest(GeoLocationRequestPtr(new GeoLocationRequest(m_Latitude,m_Longitude,-1,10)));
+			//GetSceneObject()->PostRequest(GeoLocationRequestPtr(new GeoLocationRequest(m_Latitude,m_Longitude,-1,10)));
 		}
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnGeoLocationRequest,GeoLocationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnTransformation, TransformationChangedEvent, 0));
 		
 		if(m_DebugNode)
 		{
@@ -146,9 +153,21 @@ namespace GASS
 		UpdateNode();
 	}
 
+	void OSGEarthLocationComponent::OnTransformation(TransformationChangedEventPtr message)
+	{
+		const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+
+		osg::Vec3d pos = OSGConvert::ToOSG(message->GetPosition());
+		osgEarth::GeoPoint mapPos;
+		mapPos.fromWorld(geoSRS,pos);
+		m_Latitude = mapPos.y();
+		m_Longitude = mapPos.x();
+	}
+
 	void OSGEarthLocationComponent::UpdateNode()
 	{
-		if(m_DebugNode)
+		if(m_MapNode)
 		{
 			 const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
 			 const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
@@ -169,10 +188,14 @@ namespace GASS
 			 osg::Quat osg_rot = out_local2world.getRotate();
 			 osg::Vec3d osg_pos = out_local2world.getTrans();
 
-			 GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(osg_pos.x(),osg_pos.z(),-osg_pos.y()))));
-			 GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
+			 
+			 //GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(osg_pos.x(),osg_pos.z(),-osg_pos.y()))));
+			 //GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
+			 GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(osg_pos))));
+			 GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(OSGConvert::ToGASS(osg_rot))));
 
-			 m_DebugNode->setPosition(mapPoint);
+			 if (m_DebugNode)
+				 m_DebugNode->setPosition(mapPoint);
 		}
 	}
 

@@ -122,11 +122,9 @@ namespace GASS
 		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 		root->addChild(canvas);
-
+		m_GUI = mainContainer;
 		//SetEarthFile(m_EarthFile);
 	}
-
-	static SceneObjectPtr dummy;
 
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)
 	{

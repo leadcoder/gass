@@ -90,6 +90,7 @@ namespace GASS
 			{
 				//disable GLSL
 				IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+				OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
 				osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 				ResourceHandle rh(earth_file);
 				std::string full_path = rh.GetResource()->Path().GetFullPath();
@@ -99,18 +100,6 @@ namespace GASS
 
 				OSGNodeData* data = new OSGNodeData(shared_from_this());
 				m_MapNode->setUserData(data);
-
-
-				//Add dummy component for collisison
-
-				/*BaseSceneComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(ComponentFactory::Get().Create("ManualMeshComponent")));
-				OSGNodeData* data = new OSGNodeData(geom_comp);
-				m_MapNode->setUserData(data);
-				GeometryFlagsBinder flags;
-				flags.SetValue(GEOMETRY_FLAG_GROUND);
-				geom_comp->SetPropertyByType("GeometryFlags", flags);
-				dummy = SceneObjectPtr(new SceneObject);
-				dummy->AddComponent(geom_comp);*/
 				IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
 
 				osgViewer::ViewerBase::Views views;
@@ -153,6 +142,7 @@ namespace GASS
 
 				//if (m_UseSky)
 				{
+					
 					osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
 					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
 					sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
@@ -160,11 +150,30 @@ namespace GASS
 					root->addChild(sky);
 					//if (m_ShowSkyControl)
 					{
-						//osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
-						//if (c)
-						//	mainContainer->addControl(c);
+						osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
+						if (c)
+							osgearth_sm->GetGUI()->addControl(c);
 					}
 				}
+
+				// Hook up the extensions!
+				for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
+				eiter != m_MapNode->getExtensions().end();
+					++eiter)
+				{
+					osgEarth::Extension* e = eiter->get();
+
+					// Check for a View interface:
+					osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
+					if (viewIF)
+						viewIF->connect(views[0]);
+
+					// Check for a Control interface:
+					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
+					if (controlIF)
+						controlIF->connect(osgearth_sm->GetGUI());
+				}
+
 
 				//if (m_UseOcean)
 				{

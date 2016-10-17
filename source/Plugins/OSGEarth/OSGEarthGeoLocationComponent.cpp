@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "OSGEarthGeoLocationComponent.h"
-
+#include "OSGEarthMapComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Sim/GASSScriptManager.h"
 #include "Core/Math/GASSMath.h"
@@ -52,7 +52,7 @@ namespace GASS
 
 	void OSGEarthGeoLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationComponent", new Creator<OSGEarthGeoLocationComponent, Component>);
+		ComponentFactory::GetPtr()->Register("GeoLocationComponent", new Creator<OSGEarthGeoLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition,
@@ -97,26 +97,32 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnAttachToParent, GASS::AttachToParentRequest, 0));
 
 		IOSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+		OSGEarthMapComponentPtr map_comp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<OSGEarthMapComponent>(true);
 		//assert(scene_man);
 		if (!m_TransformNode.valid())
 		{
+			//m_SRS = map_comp->GetMap()->getMapSRS();
+			m_GeoTransform = new osgEarth::GeoTransform();
+			m_GeoTransform->setTerrain(map_comp->GetMap()->getTerrain());
+			m_Map = map_comp->GetMap();
 			m_TransformNode = new osg::PositionAttitudeTransform();
+			m_GeoTransform->addChild(m_GeoTransform);
 			osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 			m_GFXSceneManager = scene_man;
-
+			
 			if (m_AttachToParent)
 			{
 				OSGEarthGeoLocationComponentPtr parent = _GetParentLocation();
 				if (parent)
 				{
-					parent->GetOSGNode()->addChild(m_TransformNode.get());
+					parent->GetOSGNode()->addChild(m_GeoTransform.get());
 				}
 				else
-					root_node->addChild(m_TransformNode.get());
+					root_node->addChild(m_GeoTransform.get());
 			}
 			else
 			{
-				root_node->addChild(m_TransformNode.get());
+				root_node->addChild(m_GeoTransform.get());
 			}
 		}
 		else
@@ -150,7 +156,10 @@ namespace GASS
 		m_Pos = message->GetPosition();
 		if (m_TransformNode.valid())
 		{
-			m_TransformNode->setPosition(OSGConvert::ToOSG(m_Pos));
+			osgEarth::GeoPoint geo_pos;
+			geo_pos.fromWorld(m_Map->getMapSRS(),OSGConvert::ToOSG(m_Pos));
+			m_GeoTransform->setPosition(geo_pos);
+			//m_TransformNode->setPosition(OSGConvert::ToOSG(m_Pos));
 			_SendTransMessage();
 		}
 	}
@@ -260,7 +269,11 @@ namespace GASS
 					new_pos = new_pos*inv_world_trans;
 				}
 			}
-			m_TransformNode->setPosition(new_pos);
+			
+			osgEarth::GeoPoint geo_pos;
+			geo_pos.fromWorld(m_Map->getMapSRS(), new_pos);
+			m_GeoTransform->setPosition(geo_pos);
+			//m_TransformNode->setPosition(new_pos);
 			m_Pos = OSGConvert::ToGASS(new_pos);
 			_SendTransMessage();
 		}
@@ -271,7 +284,10 @@ namespace GASS
 		Vec3 world_pos = m_Pos;
 		if (m_TransformNode.valid())
 		{
-			world_pos = OSGConvert::ToGASS(m_TransformNode->getPosition());
+			osgEarth::GeoPoint geo_pos = m_GeoTransform->getPosition();
+			osg::Vec3d wpos;
+			geo_pos.toWorld(wpos);
+			world_pos = OSGConvert::ToGASS(wpos);
 			if (m_TransformNode->getNumParents() > 0)
 			{
 				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));

@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent,BaseSceneComponent>, public IGeometryComponent
+	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, BaseSceneComponent>, public IGeometryComponent
 	{
 	public:
 		OSGEarthMapComponent();
@@ -39,6 +39,7 @@ namespace GASS
 		virtual void SetGeometryFlags(GeometryFlags flags) { };
 		virtual bool GetCollision() const { return true; }
 		virtual void SetCollision(bool value) {  }
+		osg::ref_ptr<osgEarth::MapNode> GetMap() {return m_MapNode;}
 	protected:
 		void SetEarthFile(const std::string &earth_file);
 		std::string GetEarthFile() const { return m_EarthFile; }
@@ -46,5 +47,6 @@ namespace GASS
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		std::string m_EarthFile;
 	};
+	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }
 
