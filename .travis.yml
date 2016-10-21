@@ -12,7 +12,8 @@ before_install:
 - sudo apt-get install -y libtbb-dev
 - sudo apt-get install -y libboost-system-dev libboost-filesystem-dev
 - sudo apt-get install -y uuid-dev
-#- sudo apt-get install -y libopenscenegraph-dev
+- sudo apt-get install -y libois-dev
+- sudo apt-get install -y libopenscenegraph-dev
 #- sudo apt-get install -y --force-yes openscenegraph=3.4.0
 - chmod a+x travis-build.sh
 install:
