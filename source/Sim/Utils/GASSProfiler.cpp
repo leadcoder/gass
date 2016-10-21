@@ -74,7 +74,8 @@ namespace GASS
 		m_SampleIndex=storeIndex;
 		m_ParentIndex=m_LastOpenedSample;
 		m_LastOpenedSample=storeIndex;
-		m_Samples[i].m_ParentCount=m_OpenSampleCount;
+		//m_Samples[i].m_ParentCount=m_OpenSampleCount;
+		m_Samples[storeIndex].m_ParentCount = m_OpenSampleCount;
 		m_OpenSampleCount++;
 		m_Samples[storeIndex].m_IsOpen=true;
 		m_Samples[storeIndex].m_CallCount=1;
