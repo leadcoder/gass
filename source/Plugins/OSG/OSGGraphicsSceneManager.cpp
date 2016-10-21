@@ -23,6 +23,7 @@
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGDebugDraw.h"
+#include "Plugins/OSG/Utils/TextBox.h"
 
 namespace GASS
 {
@@ -118,6 +119,9 @@ namespace GASS
 		//add debug node
 		m_DebugDraw = new OSGDebugDraw();
 		m_RootNode->addChild(m_DebugDraw->GetNode());
+
+		m_RootNode->addChild(&gfx_sys->GetDebugText()->getGroup());
+		
 	}
 
 	void OSGGraphicsSceneManager::OnInit()

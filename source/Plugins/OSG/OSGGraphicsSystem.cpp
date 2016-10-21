@@ -115,6 +115,9 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
+
+		osg::DisplaySettings::instance()->setNumMultiSamples(4);
+
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
@@ -123,9 +126,9 @@ namespace GASS
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		FileResourcePtr font_res = rm->GetFirstResourceByName("arial.ttf");
-		m_DebugTextBox->setPosition(osg::Vec3d(0, 5, 0));
+		m_DebugTextBox->setPosition(osg::Vec3d(0, 100, 0));
 		m_DebugTextBox->setFont(font_res->Path().GetFullPath());
-		m_DebugTextBox->setTextSize(12);
+		m_DebugTextBox->setTextSize(10);
 
 
 		//Load shadow settings
@@ -180,7 +183,9 @@ namespace GASS
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
 		std::string debug_text = message->GetText();
-		m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
+		//m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
+		m_DebugVec.push_back(debug_text);
+
 	}
 
 
@@ -204,6 +209,7 @@ namespace GASS
 	    }
 
 		osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
+		
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(ds);
 
 		traits->readDISPLAY();
@@ -214,6 +220,7 @@ namespace GASS
 		traits->height = height;
 		traits->doubleBuffer = true;
 		traits->sharedContext = 0;
+		
 		if(m_Windows.size() > 0)
 		{
 			traits->sharedContext = m_Windows[0]->GetOSGWindow();
@@ -301,8 +308,15 @@ namespace GASS
 			return;
 		}
 		//m_Viewer->setRunMaxFrameRate(100);
+		std::string text;
+		for (size_t i = 0; i < m_DebugVec.size(); i++)
+		{
+			text = text + m_DebugVec[i]+ "\n";
+		}
+		m_DebugTextBox->setText(text);
 		m_Viewer->frame(delta_time);
-		m_DebugTextBox->setText("");
+		m_DebugVec.clear();
+		//m_DebugTextBox->setText("");
 		//update listeners
 		SimSystem::Update(delta_time,caller);
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
@@ -440,7 +454,8 @@ namespace GASS
 					sm->setShadowTextureUnit( shadowTexUnit );
 					sm->setBaseTextureCoordIndex( baseTexUnit );
 					sm->setBaseTextureUnit( baseTexUnit );
-
+					//sm->setShadowReceivingCoarseBoundAccuracy(osgShadow::MinimalShadowMap::EMPTY_BOX);
+				
 					sm->setMainVertexShader( NULL );
 					sm->setShadowVertexShader(NULL);
 
