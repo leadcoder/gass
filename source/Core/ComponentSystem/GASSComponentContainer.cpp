@@ -206,9 +206,18 @@ namespace GASS
 			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
+		tinyxml2::XMLElement* this_elem = NULL;
+		if (obj_elem->Parent() == rootXMLDoc) //top element!
+		{
+			this_elem = obj_elem;
+		}
+		else
+		{
+			this_elem = rootXMLDoc->NewElement(factory_name.c_str());
+			obj_elem->LinkEndChild(this_elem);
+		}
 
-		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement(factory_name.c_str());
-		obj_elem->LinkEndChild( this_elem );
+		
 		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
