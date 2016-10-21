@@ -33,6 +33,7 @@ namespace GASS
 	PhysXTankComponent::PhysXTankComponent(): m_Actor(NULL),
 		m_ThrottleInput(0),
 		m_SteerInput(0),
+		m_BreakInput(0),
 		m_Vehicle(NULL),
 		m_DigAccelInput(false),
 		m_DigBrakeInput(false),
@@ -639,9 +640,16 @@ namespace GASS
 		//if(inter < 0.3f ) 
 		//	inter=0.3;
 		
-		/*GASS_PRINT("m_SteerInput" << m_SteerInput);
-		GASS_PRINT("m_ThrottleInput" << m_ThrottleInput);
-		GASS_PRINT("forward_speed" << forward_speed);*/
+		//GASS_PRINT("m_SteerInput" << m_SteerInput);
+		//GASS_PRINT("m_ThrottleInput" << m_ThrottleInput);
+		//GASS_PRINT("m_BreakInput" << m_BreakInput);
+		/*std::stringstream ss;
+		ss << "m_BreakInput" << m_BreakInput << "\n";
+		ss << "m_ThrottleInput" << m_ThrottleInput << "\n";
+		ss << "m_BreakInput" << m_BreakInput << "\n";
+
+		LogManager::getSingleton().logMessage(ss.str(), LML_NORMAL);*/
+		//GASS_PRINT("forward_speed" << forward_speed);
 		
 		//left_throttle = 1.0;
 		//right_throttle = 1.0;
@@ -668,8 +676,6 @@ namespace GASS
 
 			right_throttle = (1.0f - fabs(static_cast<float>(m_SteerInput)))*right_throttle;
 			left_throttle = fabs(m_SteerInput)*left_throttle;
-			
-
 		}
 
 		if(rawInputData.getDriveModel() == PxVehicleDriveTankControlModel::eSTANDARD)
@@ -679,6 +685,14 @@ namespace GASS
 			if (right_throttle < 0)
 				right_throttle = -right_throttle;
 		}
+
+		left_break = left_break + m_BreakInput;
+		right_break = right_break + m_BreakInput;
+
+		if (left_break > 1.0)
+			left_break = 1.0;
+		if (right_break > 1.0)
+			right_break = 1.0;
 
 		if(m_UseDigitalInputs)
 		{
@@ -700,10 +714,12 @@ namespace GASS
 			rawInputData.setAnalogRightThrust(right_throttle);
 			rawInputData.setAnalogLeftBrake(left_break);
 			rawInputData.setAnalogRightBrake(right_break);
+			
 		}
 
 		rawInputData.setGearDown(false);
 		rawInputData.setGearUp(false);
+		
 
 		PxVehicleDriveDynData& driveDynData=m_Vehicle->mDriveDynData;
 
@@ -1068,6 +1084,11 @@ namespace GASS
 		{
 			m_SteerInput = value;
 		}
+		else if (name == "Break")
+		{
+			m_BreakInput = value;
+		}
+		
 	}
 
 	bool PhysXTankComponent::CheckCollisions(const Vec3 &/*pos*/, const Quaternion &/*rot*/, Float /*speed*/) const

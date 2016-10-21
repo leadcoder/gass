@@ -21,6 +21,7 @@
 #include "CarAutopilotComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -33,9 +34,14 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include <float.h>
 
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
+
 
 namespace GASS
 {
+	#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
+
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
 		m_DesiredPosRadius(0),
@@ -157,7 +163,12 @@ namespace GASS
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
+		//std::stringstream ss;
+		//ss << "SPeed" << message->GetSpeed();
+		//LogManager::getSingleton().logMessage(ss.str(), LML_NORMAL);
 		m_DesiredSpeed = message->GetSpeed();
+		m_TrottlePID.setIntCap(200);
+		m_TrottlePID.setIntSum(0);
 	}
 
 	void CarAutopilotComponent::OnTransMessage(TransformationChangedEventPtr message)
@@ -347,9 +358,13 @@ namespace GASS
 				angle_to_target_dir *= -1;
 
 
-
+			m_TurnPID.setIntCap(60.0);
 			m_TurnPID.set(0);
 			float turn = static_cast<float>(m_TurnPID.update(angle_to_target_dir, delta_time));
+
+			/*GASS_PRINT("angle_to_target_dir:" << angle_to_target_dir);
+			GASS_PRINT("turn:" << turn);
+			GASS_PRINT("intsum:" << m_TurnPID.getIntSum());*/
 
 			// damp speed if we have to turn sharp
 			if(m_Support3PointTurn && fabs(angle_to_target_dir) > 90 && target_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
@@ -464,14 +479,20 @@ namespace GASS
 #endif
 
 			m_TrottlePID.set(desired_speed);
-			float throttle = static_cast<float>(m_TrottlePID.update(current_speed,delta_time));
-
+			float throttle = static_cast<float>(m_TrottlePID.update(current_speed, delta_time));
+			
+		/*	GASS_PRINT("throttle:" << throttle);
+			GASS_PRINT("desired_speed:" << desired_speed);
+			GASS_PRINT("speed:" << current_speed);
+			GASS_PRINT("intsum:" << m_TrottlePID.getIntSum());*/
+			
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
 
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 
+			float break_value = 0.0;
 			if(m_WPReached) //apply desired end rotation if we have reached end location
 			{
 				if(m_HasDir)
@@ -489,6 +510,9 @@ namespace GASS
 					m_TurnPID.set(0);
 					turn = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
 					throttle = 0;
+
+					
+
 				}
 				if(m_PlatformType == PT_HUMAN)
 					throttle = 0;
@@ -498,15 +522,20 @@ namespace GASS
 					throttle = 0;
 					turn = 0;
 				}
+
+				break_value = 1.0f;
+				
 			}
 
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", break_value, CT_AXIS)));
 		}
 		else
 		{
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,0,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,0,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", 1.0f, CT_AXIS)));
 		}
 	}
 }
