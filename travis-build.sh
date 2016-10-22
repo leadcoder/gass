@@ -45,6 +45,8 @@ cd ..
 #RakNet
 mkdir RakNet 
 cd RakNet
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_INSTALL_PREFIX:PATH=$GASS_DEP_ROOT/RakNet/ $SOURCE_ROOT/RakNet
+make install
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-fPIC  -DCMAKE_INSTALL_PREFIX:PATH=$GASS_DEP_ROOT/RakNet/ $SOURCE_ROOT/RakNet
 make install
 cd ..
