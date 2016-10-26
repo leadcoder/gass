@@ -60,7 +60,8 @@ namespace GASS
 		m_PlatformType(PT_CAR),
 		m_HasCollision(false),
 		m_CollisionPoint(0,0,0),
-		m_CollisionDist(0)
+		m_CollisionDist(0),
+		m_CollisionAvoidance(false)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -102,6 +103,9 @@ namespace GASS
 
 		RegisterProperty<bool>("InvertBackWardSteering", &CarAutopilotComponent::GetInvertBackWardSteering, &CarAutopilotComponent::SetInvertBackWardSteering,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE  | PF_EDITABLE)));
+
+		RegisterProperty<bool>("CollisionAvoidance", &CarAutopilotComponent::GetCollisionAvoidance, &CarAutopilotComponent::SetCollisionAvoidance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Try to avoid collision with other entities", PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void CarAutopilotComponent::OnInitialize()
@@ -209,7 +213,7 @@ namespace GASS
 		//drive_dir_n.Normalize();
 
 
-		if(m_ProximityData.size() > 0)
+		if (m_CollisionAvoidance && m_ProximityData.size() > 0)
 		{
 			Float min_dist = FLT_MAX;
 			DetectionData dd = m_ProximityData[0];
