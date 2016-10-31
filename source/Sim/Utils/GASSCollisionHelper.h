@@ -34,6 +34,8 @@ namespace GASS
 		CollisionHelper();
 		~CollisionHelper();
 		static Float GetHeightAtPosition(ScenePtr scene, const Vec3 &pos, GeometryFlags flags, bool absolute = true);
+		//Try to get ground position and normal at location by first casting ray down (vertical_ray_dist) and if no hit up-wards
+		static bool GetGroundData(ScenePtr scene, const Vec3 &pos, Float vertical_ray_dist, GeometryFlags flags, Vec3 &ground_pos, Vec3 &normal);
 	};
 }
 
