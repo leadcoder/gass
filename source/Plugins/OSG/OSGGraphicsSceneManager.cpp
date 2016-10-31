@@ -188,6 +188,7 @@ namespace GASS
 	{
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
 	}
+
 	void OSGGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
 	{
 		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
@@ -199,7 +200,6 @@ namespace GASS
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 	}
-
 
 	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
 	{

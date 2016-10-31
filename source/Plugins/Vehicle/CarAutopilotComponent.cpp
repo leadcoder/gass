@@ -514,9 +514,6 @@ namespace GASS
 					m_TurnPID.set(0);
 					turn = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
 					throttle = 0;
-
-					
-
 				}
 				if(m_PlatformType == PT_HUMAN)
 					throttle = 0;

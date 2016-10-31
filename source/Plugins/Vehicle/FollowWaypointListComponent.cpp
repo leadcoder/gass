@@ -309,7 +309,6 @@ namespace GASS
 		}*/
 		//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 	}
-
 }
 
 void FollowWaypointListComponent::OnWaypointListUpdated(WaypointListUpdatedMessagePtr message)
