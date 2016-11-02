@@ -47,7 +47,12 @@ namespace GASS
 		virtual bool GetSerialize() const {return true;}
 		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
-		osg::ref_ptr<osg::Group> GetOSGShadowRootNode(); 
+		osg::ref_ptr<osg::Group> GetOSGShadowRootNode()
+		{
+				if (m_ShadowedScene.valid())
+					return m_ShadowedScene;
+				return m_RootNode;
+		}
 	private:
 		//Fog
 		FogModeBinder GetFogMode() const {return m_FogMode;}

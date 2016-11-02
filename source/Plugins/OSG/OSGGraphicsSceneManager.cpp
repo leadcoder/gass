@@ -197,11 +197,11 @@ namespace GASS
 	}
 
 
-	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
+/*	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
 	{
 		if(m_ShadowedScene.valid())
 			return m_ShadowedScene;
 		return m_RootNode;
-	}
+	}*/
 }
 
