@@ -94,6 +94,7 @@ namespace GASS
 		physx::PxVehicleDrive4W* m_Vehicle;
 		float m_ThrottleInput;
 		float m_SteerInput;
+		float m_BreakInput;
 		bool m_DigBrakeInput;
 		bool m_DigAccelInput;
 		bool m_IsMovingForwardSlowly;

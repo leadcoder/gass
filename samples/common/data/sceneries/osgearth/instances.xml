@@ -6,7 +6,7 @@
    <Name value ="TerrainObject"/>
     <Components>
 	  <OSGEarthMapComponent>
-	     <EarthFile value="openstreetmap_buildings.earth"/>
+	     <EarthFile value="openstreetmap.earth"/>
 	  </OSGEarthMapComponent>
      </Components>
   </SceneObject>

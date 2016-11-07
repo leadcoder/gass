@@ -17,6 +17,13 @@ http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
         <terrain>
             <min_tile_range_factor>8</min_tile_range_factor>
         </terrain>
+		<cache type="filesystem">
+           <path>c:/OSGEarthCache/osm</path>
+        </cache>
+		<!--<cache_policy usage="no_cache"/>-->
+		<!--<cache_policy usage="cache_only"/>-->
+		<cache_policy usage="read_write"/>
     </options>
+	<xi:include href="viewpoints.xml"/>
     
 </map>

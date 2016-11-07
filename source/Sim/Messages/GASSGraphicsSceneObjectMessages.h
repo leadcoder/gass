@@ -185,6 +185,21 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<WorldRotationRequest> WorldRotationRequestPtr;
 
+	class BaseRotationRequest : public SceneObjectRequestMessage
+	{
+	public:
+		BaseRotationRequest(const Quaternion &rot, SenderID sender_id = -1, double delay = 0) :
+			SceneObjectRequestMessage(sender_id, delay), m_Rotation(rot)
+		{
+
+		}
+		Quaternion GetRotation() const { return m_Rotation; }
+	private:
+		Quaternion m_Rotation;
+	};
+	typedef GASS_SHARED_PTR<BaseRotationRequest > BaseRotationRequestPtr;
+
+
 	/**
 	Scale (relative to parent) change requested.
 	Typically the location component respond to this message

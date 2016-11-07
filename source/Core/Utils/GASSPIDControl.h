@@ -26,6 +26,8 @@ namespace GASS
 		double getKd() const { return Kd; }
 		void setIntCap(double limit);
 		double getIntCap() const { return intcap; }
+		void setIntSum(double value) { intsum = value; }
+		double getIntSum() const { return intsum; }
 
 		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
 		{

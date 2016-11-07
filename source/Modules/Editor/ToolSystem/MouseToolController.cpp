@@ -505,6 +505,30 @@ namespace GASS
 		drop_pos.z = SnapPosition(drop_pos.z);
 		//create rotation?
 		GASS::Quaternion rot;
+
+		GASS::Vec3 normal = drop_pos;
+		normal.Normalize();
+
+		Vec3 north_axis(0, 1, 0);
+		Vec3 x_axis = -Math::Cross(normal, north_axis);
+		x_axis.Normalize();
+		Vec3 z_axis = -Math::Cross(normal, x_axis);
+		Mat4 rot_mat;
+
+		rot_mat.SetXAxis(x_axis);
+		rot_mat.SetYAxis(normal);
+		rot_mat.SetZAxis(z_axis);
+
+		/*Mat4 rot_mat;
+		rot_mat.Identity();
+		rot_mat.SetZAxis(normal);
+		Vec3 rvec = Vec3(normal.z, 0, -normal.x);
+		rvec.Normalize();
+		rot_mat.SetXAxis(rvec);
+		Vec3 up = Math::Cross(normal, rvec);
+		up.Normalize();
+		rot_mat.SetYAxis(up);*/
+		rot.FromRotationMatrix(rot_mat);
 		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
 	}
 
@@ -544,7 +568,7 @@ namespace GASS
 				int from_id = GASS_PTR_TO_INT(this);
 
 				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
-				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,from_id)));
+				so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
 			}
 			else
 			{

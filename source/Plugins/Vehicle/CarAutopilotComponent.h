@@ -52,6 +52,8 @@ namespace GASS
 		ADD_PROPERTY(bool,InvertBackWardSteering);
 		ADD_PROPERTY(bool,Support3PointTurn);
 		ADD_PROPERTY(Float,MaxReverseDistance);
+		ADD_PROPERTY(bool, CollisionAvoidance);
+		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
@@ -81,7 +83,7 @@ namespace GASS
 		bool m_HasCollision;
 		Vec3 m_CollisionPoint;
 		Float m_CollisionDist;
-
+		
 		DetectionVector m_ProximityData;
 	};
 }

@@ -43,7 +43,7 @@ namespace GASS
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		void SceneManagerTick(double delta);
 		
-		PlatformType GetType() const {return PT_CAR;}
+		PlatformType GetType() const {return PT_TANK;}
 		Vec3 GetSize() const;
 		ADD_PROPERTY(Float,MaxSpeed);
 	protected:
@@ -92,6 +92,7 @@ namespace GASS
 		physx::PxVehicleDriveTank* m_Vehicle;
 		float m_ThrottleInput;
 		float m_SteerInput;
+		float m_BreakInput;
 		bool m_DigBrakeInput;
 		bool m_DigAccelInput;
 		bool m_IsMovingForwardSlowly;

@@ -121,6 +121,10 @@ int start(int argc, char* argv[])
 		{
 			esm->GetMouseToolController()->SelectTool("MoveTool");
 		}
+		else if (GetAsyncKeyState(VK_F5))
+		{
+			esm->GetMouseToolController()->SelectTool("CreateTool");
+		}
 		engine->Update();
 	}
 	return 0;

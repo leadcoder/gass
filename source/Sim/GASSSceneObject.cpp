@@ -703,12 +703,16 @@ namespace GASS
 		tinyxml2::XMLDeclaration* decl = xmlDoc->NewDeclaration();
 		xmlDoc->LinkEndChild( decl ); 
 
-		//tinyxml2::XMLElement * so_elem = xmlDoc.NewElement("SceneObject");  
-		//doc.LinkEndChild( so_elem); 
-
 		//first save to store filename
 		xmlDoc->SaveFile(filename.c_str());
-		SaveXML(dynamic_cast<tinyxml2::XMLElement*>(xmlDoc));
+
+		//This is very wrong but works...need to fix this!!!!
+		//SaveXML((tinyxml2::XMLElement*)xmlDoc);
+
+		//SaveXML(dynamic_cast<tinyxml2::XMLElement*>(xmlDoc));
+		tinyxml2::XMLElement * so_elem = xmlDoc->NewElement("SceneObject");
+		xmlDoc->LinkEndChild(so_elem);
+		SaveXML(so_elem);
 		xmlDoc->SaveFile(filename.c_str());
 		delete xmlDoc;
 	}

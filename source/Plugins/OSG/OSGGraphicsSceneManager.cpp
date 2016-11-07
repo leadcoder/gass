@@ -23,6 +23,7 @@
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGDebugDraw.h"
+#include "Plugins/OSG/Utils/TextBox.h"
 
 namespace GASS
 {
@@ -118,6 +119,9 @@ namespace GASS
 		//add debug node
 		m_DebugDraw = new OSGDebugDraw();
 		m_RootNode->addChild(m_DebugDraw->GetNode());
+
+		m_RootNode->addChild(&gfx_sys->GetDebugText()->getGroup());
+		
 	}
 
 	void OSGGraphicsSceneManager::OnInit()
@@ -184,6 +188,7 @@ namespace GASS
 	{
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
 	}
+
 	void OSGGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
 	{
 		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
@@ -195,7 +200,6 @@ namespace GASS
 		//update tick subscribers
 		BaseSceneManager::SystemTick(delta_time);
 	}
-
 
 /*	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
 	{

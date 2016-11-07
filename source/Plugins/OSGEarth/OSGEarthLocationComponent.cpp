@@ -192,7 +192,7 @@ namespace GASS
 			 //GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(osg_pos.x(),osg_pos.z(),-osg_pos.y()))));
 			 //GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
 			 GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(osg_pos))));
-			 GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(OSGConvert::ToGASS(osg_rot))));
+			 GetSceneObject()->PostRequest(BaseRotationRequestPtr(new BaseRotationRequest(OSGConvert::ToGASS(osg_rot))));
 
 			 if (m_DebugNode)
 				 m_DebugNode->setPosition(mapPoint);

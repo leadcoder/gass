@@ -96,6 +96,9 @@ int run(int /*argc*/, char** /*argv[]*/)
 	esm->GetMouseToolController()->SelectTool("MoveTool");
 	esm->GetMouseToolController()->SetEnableGizmo(true);
 
+	GASS::CreateTool* ct = (GASS::CreateTool*) esm->GetMouseToolController()->GetTool("CreateTool");
+	ct->SetTemplateName("CustomMeshObject");
+	ct->SetParentObject(scene->GetRootSceneObject());
 	//Create vehicle and add it to the root node of the scene
 	//GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
 	//scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);
@@ -108,6 +111,24 @@ int run(int /*argc*/, char** /*argv[]*/)
 	bool running = true;
 	while(running)
 	{
+
+		if (GetAsyncKeyState(VK_F1))
+		{
+			esm->GetMouseToolController()->SelectTool("SelectTool");
+		}
+		else if (GetAsyncKeyState(VK_F2))
+		{
+			esm->GetMouseToolController()->SelectTool("RotateTool");
+		}
+		else if (GetAsyncKeyState(VK_F3))
+		{
+			esm->GetMouseToolController()->SelectTool("MoveTool");
+		}
+		else if (GetAsyncKeyState(VK_F5))
+		{
+			esm->GetMouseToolController()->SelectTool("CreateTool");
+		}
+
 		running = engine->Update();
 	}
 	return 0;
