@@ -121,6 +121,7 @@ namespace GASS
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
+		m_Viewer->setReleaseContextAtEndOfFrameHint(false);
 
 		std::string full_path;
 
@@ -251,6 +252,8 @@ namespace GASS
 
 			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
 			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
+			
+			
 
 		}
 		else
@@ -287,7 +290,6 @@ namespace GASS
 	{
 
 		osgViewer::ViewerBase::Views views;
-
 		m_Viewer->getViews(views);
 		//set same size in all viewports for the moment
 		for(size_t i = 0; i < views.size(); i++)
