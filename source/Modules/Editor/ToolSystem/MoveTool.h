@@ -41,7 +41,13 @@ namespace GASS
 		int m_MoveUpdateCount;
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
-		std::map<GASS::SceneObjectWeakPtr,Vec3> m_SelectedLocations;
+#ifndef GASS_USE_BOOST_PTR
+		typedef std::map<GASS::SceneObjectWeakPtr, Vec3, std::owner_less<GASS::SceneObjectWeakPtr>> SelectionMap;
+#else
+		typedef std::map<GASS::SceneObjectWeakPtr, Vec3> SelectionMap;
+#endif
+		SelectionMap m_SelectedLocations;
+		
 		bool m_UseGizmo;
 		Vec2 m_MouseDownPos;
 		bool m_GroundSnapMove;
