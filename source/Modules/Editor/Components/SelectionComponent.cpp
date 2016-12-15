@@ -52,16 +52,23 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		bool visible = false;
+		Vec3 world_pos(0, 0, 0);
 		for(size_t i = 0 ;i < m_Selection.size(); i++) 
 		{
 			SceneObjectPtr so = m_Selection[i].lock();
 			if(!so)
 				continue;
 
-			visible = true;
 			LocationComponentPtr lc = so->GetFirstComponentByClass<ILocationComponent>();
 			GeometryComponentPtr gc = so->GetFirstComponentByClass<IGeometryComponent>();
-			Mat4 world_mat(lc->GetWorldPosition(), lc->GetWorldRotation(), lc->GetScale());
+
+			Vec3 object_pos = lc->GetWorldPosition();
+			
+			if (!visible) //first 
+				world_pos = object_pos;
+			visible = true;
+
+			Mat4 world_mat(object_pos - world_pos, lc->GetWorldRotation(), lc->GetScale());
 
 			AABox bb = gc->GetBoundingBox();
 
@@ -101,6 +108,9 @@ namespace GASS
 		}
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(visible)));
+
+		if (visible) //move to location
+			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(world_pos)));
 	}
 
 	void SelectionComponent::OnSelectionChanged(EditorSelectionChangedEventPtr message)
