@@ -38,7 +38,8 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Utils/GASSFilePath.h"
-#include "Core/Utils/GASSFilesystem.h"
+#include "Core/Utils/GASSFileUtils.h"
+#include "Core/Utils/GASSFileSystem.h"
 #include "tinyxml2.h"
 
 namespace GASS
@@ -160,7 +161,7 @@ namespace GASS
 		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 		const std::string template_file_name = scene_path.GetFullPath() + "/templates.xml";
-		if(GASS_FILESYSTEM::exists(GASS_FILESYSTEM::path(template_file_name)))
+		if(FileUtils::FileExist(template_file_name))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();

@@ -38,6 +38,17 @@ namespace GASS
 
 	}
 
+	void FileUtils::SetCurrentDir(const std::string &path)
+	{
+		GASS_FILESYSTEM::path fs_path(path);
+		GASS_CURRENT_PATH(fs_path);
+	}
+
+	std::string FileUtils::GetCurrentDir()
+	{
+		GASS_FILESYSTEM::path dir = GASS_CURRENT_PATH();
+		return dir.string();
+	}
 
 	std::string FileUtils::GetExtension(const std::string &file_name)
 	{
@@ -101,11 +112,11 @@ namespace GASS
 
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
-		GASS_FILESYSTEM::path boost_path(path); 
-		if( GASS_FILESYSTEM::exists(boost_path))  
+		GASS_FILESYSTEM::path fs_path(path); 
+		if( GASS_FILESYSTEM::exists(fs_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end ;    
-			for( GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			for( GASS_FILESYSTEM::directory_iterator iter(fs_path) ; iter != end ; ++iter )
 			{
 				if (GASS_IS_DIRECTORY( *iter )  && recursive)      
 				{   

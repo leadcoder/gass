@@ -55,7 +55,25 @@ namespace GASS
 
 	void ResourceGroup::AddResourceLocationRecursive(ResourceLocationPtr rl)
 	{
-		GASS_FILESYSTEM::path boost_path(rl->GetPath().GetFullPath());
+		if (rl->GetPath().Exist())
+		{
+			rl->ParseLocation();
+			m_ResourceLocations.push_back(rl);
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
+			std::vector<FilePath> folders;
+			FilePath::GetFoldersFromPath(folders, rl->GetPath(), false);
+			
+			for (size_t i = 0; i < folders.size() ; ++i)
+			{
+				if (folders[i].GetFullPath().find(".svn") == std::string::npos) //ignore svn folders!
+				{
+					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(), folders[i], rl->GetType()));
+					AddResourceLocationRecursive(rec_rl);
+				}
+			}
+		}
+		
+		/*GASS_FILESYSTEM::path boost_path(rl->GetPath().GetFullPath());
 		if( GASS_FILESYSTEM::exists(boost_path))
 		{
 			rl->ParseLocation();
@@ -71,7 +89,7 @@ namespace GASS
 					AddResourceLocationRecursive(rec_rl);
 				}
 			}
-		}
+		}*/
 	}
 
 	void ResourceGroup::RemoveResourceLocation(ResourceLocationPtr location)

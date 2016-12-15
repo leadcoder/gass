@@ -51,6 +51,7 @@ namespace GASS
 		std::string GetPathNoFile() const;
 		std::string GetExtension() const;
 		std::string GetFilename() const;
+		std::string GetLastFolder() const;
 		static void GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive = false, const std::vector<std::string> extenstion_filters = std::vector<std::string>());
 		static void GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive = false);
 		bool Exist() const;

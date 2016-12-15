@@ -30,7 +30,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
-#include "Core/Utils/GASSFilesystem.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
@@ -180,7 +180,8 @@ namespace GASS
 		if(xml_data_path)
 		{
 			std::string env_data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings),"SetDataPath");
-			if(GASS_FILESYSTEM::exists(GASS_FILESYSTEM::path(env_data_path)))
+			FilePath data_path(env_data_path);
+			if(data_path.Exist())
 			{
 				env_data_path = "GASS_DATA_HOME=" + env_data_path;
 #ifdef WIN32
@@ -367,9 +368,24 @@ namespace GASS
 
 	std::vector<std::string> SimEngine::GetSavedScenes() const
 	{
-		GASS_FILESYSTEM::path boost_path(m_ScenePath.GetFullPath());
-
 		std::vector<std::string> scene_names;
+		if (m_ScenePath.Exist())
+		{
+			std::vector<FilePath> folders;
+			FilePath::GetFoldersFromPath(folders, m_ScenePath, false);
+			for (size_t i = 0; i <  folders.size(); ++i)
+			{
+					if (FileUtils::FileExist(folders[i].GetFullPath() + "scene.xml"))
+					{
+						std::cout << folders[i] << "\n";
+						std::string scene_name = folders[i].GetLastFolder();
+						scene_names.push_back(scene_name);
+					}
+				}
+			}
+
+		/*GASS_FILESYSTEM::path boost_path(m_ScenePath.GetFullPath());
+		
 		if(GASS_FILESYSTEM::exists(boost_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end ;
@@ -384,7 +400,7 @@ namespace GASS
 					}
 				}
 			}
-		}
+		}*/
 		return scene_names;
 	}
 

@@ -181,6 +181,18 @@ namespace GASS
 		return GASS_TO_GENERIC_STRING(boost_path.filename());
 	}
 
+	std::string FilePath::GetLastFolder() const
+	{
+		std::string ret = m_ExpandedPath;
+		std::string::size_type  pos = ret.find_last_of("/", ret.size());
+		if (pos != std::string::npos)
+		{
+			ret = ret.substr(0, pos);
+		}
+
+		GASS_FILESYSTEM::path boost_path(ret);
+		return GASS_TO_GENERIC_STRING(boost_path.filename()); 
+	}
 
 	std::string FilePath::GetPathNoFile() const
 	{
