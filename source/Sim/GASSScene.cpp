@@ -39,7 +39,7 @@
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSFileUtils.h"
-#include "Core/Utils/GASSFileSystem.h"
+#include "Core/Utils/GASSFilesystem.h"
 #include "tinyxml2.h"
 
 namespace GASS
