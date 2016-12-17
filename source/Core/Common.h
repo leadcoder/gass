@@ -21,6 +21,8 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
+#include "GASSConfig.h"
+
 #ifdef _MSC_VER
 
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -138,8 +140,10 @@ namespace GASS
 #endif
 #include <algorithm>
 
-
-#define GASS_USE_BOOST
+//Force to use boost?
+//#if defined( _MSC_VER ) && _MSC_VER < 1700
+//	#define GASS_USE_BOOST
+//#endif
 
 #ifdef GASS_USE_BOOST
 	#define GASS_USE_BOOST_FUNC_BIND

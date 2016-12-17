@@ -206,7 +206,17 @@ namespace GASS
 	void Scene::Save(const std::string &name)
 	{
 		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
-		GASS_FILESYSTEM::path boost_path(scene_path.GetFullPath());
+		
+		if (!scene_path.Exist())
+		{
+			FileUtils::CreateDir(scene_path.GetFullPath());
+			//GASS_FILESYSTEM::create_directory(boost_path);
+		}
+		else if (!scene_path.IsDir())
+		{
+			return;
+		}
+		/*GASS_FILESYSTEM::path boost_path(scene_path.GetFullPath());
 		if(!GASS_FILESYSTEM::exists(boost_path))
 		{
 			//try
@@ -215,7 +225,7 @@ namespace GASS
 		else if (!GASS_IS_DIRECTORY( boost_path) )
 		{
 			return;
-		}
+		}*/
 
 
 
@@ -409,7 +419,23 @@ namespace GASS
 
 	std::vector<std::string> Scene::GetScenes(const FilePath &path)
 	{
-		GASS_FILESYSTEM::path boost_path(path.GetFullPath());
+
+		std::vector<std::string> scene_names;
+		if (path.Exist())
+		{
+			std::vector<FilePath> folders;
+			FilePath::GetFoldersFromPath(folders, path, false);
+			for (size_t i = 0; i < folders.size(); ++i)
+			{
+				if (FileUtils::FileExist(folders[i].GetFullPath() + "scene.xml"))
+				{
+					std::cout << folders[i] << "\n";
+					std::string scene_name = folders[i].GetLastFolder();
+					scene_names.push_back(scene_name);
+				}
+			}
+		}
+		/*GASS_FILESYSTEM::path boost_path(path.GetFullPath());
 
 		std::vector<std::string> scene_names;
 		if(GASS_FILESYSTEM::exists(boost_path))
@@ -426,7 +452,7 @@ namespace GASS
 					}
 				}
 			}
-		}
+		}*/
 		return scene_names;
 	}
 }

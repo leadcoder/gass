@@ -284,8 +284,8 @@ namespace GASS
 								std::string full_path = StringUtils::Replace(file_res->Path().GetFullPath(),"\\","/");
 								std::string out_path = FileUtils::RemoveFilename(out_file);
 								out_path = out_path + texture_name;
-
-								try
+								FileUtils::CopyFile(full_path, out_path);
+								/*try
 								{
 									GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(full_path),GASS_FILESYSTEM::path(out_path),GASS_FILESYSTEM::copy_option::overwrite_if_exists);
 								}
@@ -293,7 +293,7 @@ namespace GASS
 								{
 									//std::cerr << "Error: " << e.what() << std::endl;
 									LogManager::getSingleton().stream() << "WARNING: Failed copy texture during export:" << e.what();
-								}
+								}*/
 							}
 						}
 						++iter;

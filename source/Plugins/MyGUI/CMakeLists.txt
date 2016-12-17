@@ -3,7 +3,6 @@ set(LIB_NAME GASSPluginMyGUI)
 set(CPP_FILES LoadSceneDialog.cpp
 		MainMenu.cpp
 		MyGUILayoutComponent.cpp
-		MyGUIOgreSystem.cpp
 		MyGUISystem.cpp
 		MyGUIVehicleInstrumentsComponent.cpp
 		MyGUI_RTTLayer.cpp)

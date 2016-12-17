@@ -109,6 +109,24 @@ namespace GASS
 		return GASS_FILESYSTEM::exists(boost_path);
 	}
 
+	void FileUtils::CreateDir(const std::string &dir)
+	{
+		GASS_FILESYSTEM::path fs_path(dir);
+		GASS_FILESYSTEM::create_directory(fs_path);
+	}
+
+	void FileUtils::CopyFile(const std::string &in_dir, const std::string &out_dir)
+	{
+		try
+		{
+			GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(in_dir), GASS_FILESYSTEM::path(out_dir), GASS_FILESYSTEM::copy_option::overwrite_if_exists);
+		}
+		catch (const GASS_FILESYSTEM::filesystem_error& e)
+		{
+			LogManager::getSingleton().stream() << "WARNING: Failed copy file:" << e.what();
+		}
+	}
+
 
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
