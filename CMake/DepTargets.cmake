@@ -22,14 +22,16 @@ find_package(TinyXML2 REQUIRED)
 gass_create_dep_target(TinyXML2 INCLUDE_DIRS ${TINYXML2_INCLUDE_DIRS} LIBRARIES ${TINYXML2_LIBRARIES})
 
 #Boost
-find_package(Boost REQUIRED filesystem system)
-if("${CMAKE_VERSION}" VERSION_LESS 3.5.0)
-	gass_create_dep_target(Boost INCLUDE_DIRS ${Boost_INCLUDE_DIR})
-	set(BOOST_FILE_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
-		 optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
-		 debug ${Boost_FILESYSTEM_LIBRARY_DEBUG}
-		 debug ${Boost_SYSTEM_LIBRARY_DEBUG})
-	gass_create_dep_target(Boost::filesystem INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_FILE_LIBRARIES})
+if(GASS_USE_BOOST)
+	find_package(Boost REQUIRED filesystem system)
+	if("${CMAKE_VERSION}" VERSION_LESS 3.5.0)
+		gass_create_dep_target(Boost INCLUDE_DIRS ${Boost_INCLUDE_DIR})
+		set(BOOST_FILE_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
+			 optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
+			 debug ${Boost_FILESYSTEM_LIBRARY_DEBUG}
+			 debug ${Boost_SYSTEM_LIBRARY_DEBUG})
+		gass_create_dep_target(Boost::filesystem INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_FILE_LIBRARIES})
+	endif()
 endif()
 
 if(GASS_BUILD_SIM)
