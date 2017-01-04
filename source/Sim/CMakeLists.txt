@@ -1,30 +1,40 @@
-#set lib name here!
-set(LIB_NAME "GASSSim")
 
-
-#Set include directories
-include_directories(${GASS_SIM_INCLUDE_DIRS})
-
-#add all source files from current directory (recursively)
-add_source_from_current_dir()
-
-#Enable class export 
-add_definitions( -DGASS_EXPORTS )
-
-#Add some folders where to search for dependency libraries
-link_directories(${GASS_SIM_LIB_DIRS})
-
-#only support shared lib for now
-add_library (${LIB_NAME} SHARED  ${CPP_FILES} ${H_FILES})
-
-#Add project dependency libs
-target_link_libraries(${LIB_NAME} GASSCore ${GASS_SIM_LIBRARIES})
-
-if(WIN32) #If we are going to use this globally we need to move this into macro
-	set_target_properties (${LIB_NAME} PROPERTIES LINK_FLAGS_RELEASE "/LTCG" )
+set(PLATFORM_DEPS "")
+if(NOT WIN32)
+   #Add dependency guid
+   set(PLATFORM_DEPS uuid)
 endif()
 
-#install section
-gass_install_target()
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
+gass_get_source_from_current_dir(CPP_FILES H_FILES)
+gass_setup_lib(GASSSim
+					BUILDTYPE ${GASS_BUILDTYPE}
+					SOURCE_FILES ${CPP_FILES} 
+					HEADER_FILES ${H_FILES}
+					PUBLIC_DEPS GASSCore AngelScript
+					PRIVATE_DEPS ${PLATFORM_DEPS}
+					PRIVATE_DEFINITIONS GASS_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+					
+# add_library (${LIB_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
+
+# target_include_directories(${LIB_NAME}
+	# PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
+	# PUBLIC  $<BUILD_INTERFACE:${ANGELSCRIPT_INCLUDE_DIRS}> 
+# )
+
+#Add project dependency libs
+#target_link_libraries(${LIB_NAME} PUBLIC GASSCore  PRIVATE ${ANGELSCRIPT_LIBRARIES} uuid)
+
+# if(NOT WIN32)
+   #Add dependency guid
+   # target_link_libraries(${LIB_NAME} PRIVATE uuid)
+# endif()
+
+# target_compile_definitions(${LIB_NAME} PRIVATE GASS_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+		
+# if(WIN32) #If we are going to use this globally we need to move this into macro
+	# set_target_properties (${LIB_NAME} PROPERTIES LINK_FLAGS_RELEASE "/LTCG" )
+# endif()
+
+# gass_install_target()
+# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
 

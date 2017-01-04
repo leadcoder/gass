@@ -156,7 +156,7 @@ namespace GASS
 			Get component dependencies.
 			@return names of other components that this component require
 		*/
-		std::vector<std::string> GetDependencies();
+		std::vector<std::string> GetDependencies() const;
 	protected:
 		static std::map<RTTI*,std::vector<std::string> > m_Dependencies;
 	protected:

@@ -18,24 +18,15 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
-#include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
 
 namespace GASS
 {

@@ -35,5 +35,8 @@ namespace GASS
 		//public for fast access
 		Vec3 m_Start;
 		Vec3 m_End;
+
+		Vec3 GetPoint(Float dist) const {return m_Start + (m_End - m_Start)*dist;}
+		Float GetLength() const {return (m_End - m_Start).Length();}
 	};
 }

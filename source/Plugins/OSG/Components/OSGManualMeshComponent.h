@@ -33,10 +33,16 @@ namespace GASS
 		~OSGManualMeshComponent(void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IGeometryComponent interface
 		virtual AABox GetBoundingBox() const;
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
+
+		//IMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
 	protected:
 		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
@@ -60,5 +66,6 @@ namespace GASS
 		bool m_CastShadow;
 		bool m_ReceiveShadow;
 		OSGGraphicsSystemPtr m_GFXSystem;
+		bool m_Collision;
 	};
 }

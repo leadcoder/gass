@@ -19,24 +19,17 @@
 *****************************************************************************/
 
 #include "VehicleEngineComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"
-
-#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 namespace GASS
 {
@@ -105,7 +98,11 @@ namespace GASS
 		m_AngularVelocity(0,0,0),
 		m_EngineType(ET_TANK),
 		m_TurnRPMAmount(1.0f),
-		m_MaxTurnVel(1.0f)
+		m_MaxTurnVel(1.0f),
+		m_WheelRPM(0),
+		m_ShiftDown(0),
+		m_ShiftUp(0),
+		m_FutureGear(0)
 	{
 		m_SteerCtrl = PIDControl(100,1,1);
 		m_GearBoxRatio.resize(6);
@@ -336,7 +333,7 @@ namespace GASS
 		{
 			if(m_GearBoxRatio[i] == 0.0)
 			{
-				m_NeutralGear = i;
+				m_NeutralGear = static_cast<int>(i);
 			}
 		}
 		m_Gear = m_NeutralGear;
@@ -479,7 +476,7 @@ namespace GASS
 		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(m_RPM,m_VehicleSpeed,m_Gear)));
 	}
 
-	float VehicleEngineComponent::GetNormRPM()
+	float VehicleEngineComponent::GetNormRPM() const
 	{
 
 		float ret = (m_RPM-m_MinRPM)/(m_MaxRPM-m_MinRPM);

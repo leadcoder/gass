@@ -22,8 +22,6 @@
 #define FILE_UTILS_HH
 
 #include "Core/Common.h"
-#include "Core/Math/GASSVector.h"
-
 
 namespace GASS
 {
@@ -47,6 +45,11 @@ namespace GASS
 		static std::string GetFilename(const std::string &path);
 		static std::string RemoveFilename(const std::string &path);
 		static std::string RemoveExtension(const std::string &path);
+		static void SetCurrentDir(const std::string &path);
+		static std::string GetCurrentDir();
+		static void CreateDir(const std::string &dir);
+		static void CopyFile(const std::string &in_dir, const std::string &out_dir);
+
 		static bool FileExist(const std::string &file_name);
 		static void GetFilesFromPath(std::vector<std::string> &files, const std::string &path,  bool recursive = false, bool full_path = false);
 	};

@@ -32,7 +32,8 @@ namespace GASS
 	public:
 		SimpleProfileData() : Count(0),
 			Time(0),
-			AccTime(0) 
+			AccTime(0),
+			AvgTime(0)
 		{
 
 		}

@@ -22,7 +22,6 @@
 #define FILEPATH_HH
 
 #include "Core/Common.h"
-#include "stdio.h"
 #include <string>
 #include <fstream>
 
@@ -52,9 +51,12 @@ namespace GASS
 		std::string GetPathNoFile() const;
 		std::string GetExtension() const;
 		std::string GetFilename() const;
+		std::string GetLastFolder() const;
+		
 		static void GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive = false, const std::vector<std::string> extenstion_filters = std::vector<std::string>());
 		static void GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive = false);
 		bool Exist() const;
+		bool IsDir() const;
 		friend std::ostream& operator << (std::ostream& os, const FilePath& path)
 		{
 			os.unsetf(std::ios::skipws);
@@ -70,7 +72,7 @@ namespace GASS
 			return is;
 		}
 	private:
-		void _FixPath(std::string &path);
+		void _FixPath(std::string &path) const;
 		std::string _ExpandEnvVariables(const std::string &inStr);
 		std::string m_ExpandedPath;
 		std::string m_RawPath;

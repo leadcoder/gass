@@ -21,14 +21,12 @@
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainer.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "tinyxml2.h"
 

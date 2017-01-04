@@ -2,7 +2,6 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
-#include "Sim/GASSSimSystemManager.h"
 
 namespace GASS
 {
@@ -49,7 +48,7 @@ namespace GASS
 			{
 				const std::string scene_name = m_SceneList->getItemNameAt(index);
 				//Assume first scene is main scene
-				ScenePtr scene = SimEngine::Get().GetScenes().getNext();
+				//ScenePtr scene = SimEngine::Get().GetScenes().getNext();
 				SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
 				if(iter.hasMoreElements())
 				{

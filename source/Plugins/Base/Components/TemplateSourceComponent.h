@@ -23,7 +23,6 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -43,9 +42,7 @@ namespace GASS
 		std::vector<std::string>  GetTemplates() const {return m_Templates;}
 		Vec3 GetOffset() const {return Vec3(0,0,0);}
 	protected:
-		void OnLoad(MessagePtr message);
 		std::vector<std::string> m_Templates;
-	private:
 	};
 	//typedef GASS_SHARED_PTR<ITemplateSourceComponent> TemplateSourceComponentPtr; 
 }

@@ -186,12 +186,10 @@ namespace GASS
 		bool GetSerialize()  const;
 	protected:
 		void _CheckComponentDependencies() const;
-		void _InheritComponentData(ComponentContainerPtr cc);
 		
 		//virtual to allow custom parsing for object creation
 		virtual ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement *comp_template);
-		void _Copy(ComponentContainerPtr object_to_copy);
+		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement * comp_template) const;
 		
 		ComponentVector m_ComponentVector;
 		ComponentContainerVector m_ComponentContainerVector;

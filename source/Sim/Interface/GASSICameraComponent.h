@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSRay.h"
 
 namespace GASS
@@ -40,7 +39,6 @@ namespace GASS
 	public:
 		virtual ~ICameraComponent(){}
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const = 0;
-	protected:
 	};
 
 	typedef GASS_WEAK_PTR<ICameraComponent> CameraComponentWeakPtr;

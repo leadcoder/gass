@@ -2,13 +2,10 @@
 
 
 #include "MouseToolController.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "IMouseTool.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/Utils/GASSException.h"
-#include "Sim/GASSScene.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGeometryFlags.h"
@@ -20,14 +17,10 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #include "Modules/Editor/ToolSystem/MoveTool.h"
 #include "Modules/Editor/ToolSystem/SelectTool.h"
 #include "Modules/Editor/ToolSystem/PaintTool.h"
-#include "Modules/Editor/ToolSystem/VerticalMoveTool.h"
 #include "Modules/Editor/ToolSystem/RotateTool.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "Modules/Editor/ToolSystem/MeasurementTool.h"
@@ -35,9 +28,6 @@
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
-
-
-
 
 namespace GASS
 {
@@ -74,8 +64,6 @@ namespace GASS
 	void MouseToolController::Init()
 	{
 		SetEditMode(GM_LOCAL);
-
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnFocusChanged,WindowFocusChangedMessage,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(MouseToolController::OnInput,ControllSettingsMessage,0));
 		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->AddMouseListener(this);
@@ -118,15 +106,6 @@ namespace GASS
 		}
 		return NULL;
 	}
-
-	/*void MouseToolController::OnFocusChanged(WindowFocusChangedMessagePtr message)
-	{
-		std::string window = message->GetWindow();
-		if(window == "RenderWindow")
-		{
-			m_Active = message->GetFocus();
-		}
-	}*/
 
 	void MouseToolController::OnInput(ControllSettingsMessagePtr message)
 	{
@@ -229,8 +208,7 @@ namespace GASS
 		}
 	}
 
-
-	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits)
+	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const
 	{
 		CollisionResult result;
 		result.Coll = false;
@@ -256,8 +234,6 @@ namespace GASS
 			cam->GetCameraToViewportRay(static_cast<float>(cursor_pos.x), static_cast<float>(cursor_pos.y), info.m_Ray);
 
 		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
-
-		//int from_id = GASS_PTR_TO_INT(this);
 
 		if(gizmo_result.Coll)
 		{
@@ -330,8 +306,6 @@ namespace GASS
 			return value;
 	}
 
-
-
 	SceneObjectPtr MouseToolController::GetPointerObject()
 	{
 		ScenePtr scene = m_EditorSceneManager->GetScene();;
@@ -345,11 +319,6 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-
-
-
-			//float box_volume = 1;
-
 
 			Vec3 pos = Vec3(0,0,-1);
 			sub_mesh_data->PositionVector.push_back(pos);
@@ -384,6 +353,7 @@ namespace GASS
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->Update(delta);
+		
 		//debug message
 		/*std::stringstream ss;
 		ss << " Cursor pos:" << m_LastScreenPos << "\n";
@@ -417,22 +387,15 @@ namespace GASS
 
 	bool MouseToolController::MouseMoved(const MouseData &data)
 	{
-		SceneCursorInfo info = GetSceneCursorInfo(Vec2(data.XAbsNorm,data.YAbsNorm),m_RayPickDistance);
+		SceneCursorInfo info = GetSceneCursorInfo(Vec2(data.XAbsNorm,data.YAbsNorm), m_RayPickDistance);
 		//inform tools
 		if(m_ActiveTool)
 			m_ActiveTool->MouseMoved(data,info);
 
 		int mess_id = GASS_PTR_TO_INT(this);
-		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm,data.YAbsNorm),info.m_3DPos, info.m_ObjectUnderCursor.lock(),mess_id));
-		m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
-
-
-		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
-		if(obj_under_cursor)
-		{
-			//SceneObjectPtr pointer = GetPointerObject();
-			//pointer->PostMessage(MessagePtr(new WorldPositionRequest(info.m_3DPos)));
-		}
+		SceneMessagePtr cursor_msg(new CursorMovedOverSceneEvent(Vec2(data.XAbsNorm, data.YAbsNorm), info.m_3DPos, info.m_ObjectUnderCursor.lock(), mess_id));
+		if(m_EditorSceneManager->GetScene())
+			m_EditorSceneManager->GetScene()->PostMessage(cursor_msg);
 		return true;
 	}
 
@@ -478,12 +441,12 @@ namespace GASS
 			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
 			if(abs(delta.x) + abs(delta.y) < 0.001)
 			{
-				SceneObjectPtr selected = m_EditorSceneManager->GetSelectedObject();
-				if(info.m_ObjectUnderCursor.lock() == selected)
+				std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
+				if(selected_vec.size() > 0 && info.m_ObjectUnderCursor.lock() == selected_vec[0].lock())
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
-					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected,Vec2(data.XAbs,data.YAbs)));
+					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected_vec[0].lock(),Vec2(data.XAbs,data.YAbs)));
 					m_EditorSceneManager->GetScene()->SendImmediate(message);
 				}
 			}
@@ -533,7 +496,6 @@ namespace GASS
 		return true;
 	}
 
-
 	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
 	{
 		SceneCursorInfo cursorInfo = GetSceneCursorInfo(mouse_pos, 1000000);
@@ -543,6 +505,30 @@ namespace GASS
 		drop_pos.z = SnapPosition(drop_pos.z);
 		//create rotation?
 		GASS::Quaternion rot;
+
+		GASS::Vec3 normal = drop_pos;
+		normal.Normalize();
+
+		Vec3 north_axis(0, 1, 0);
+		Vec3 x_axis = -Math::Cross(normal, north_axis);
+		x_axis.Normalize();
+		Vec3 z_axis = -Math::Cross(normal, x_axis);
+		Mat4 rot_mat;
+
+		rot_mat.SetXAxis(x_axis);
+		rot_mat.SetYAxis(normal);
+		rot_mat.SetZAxis(z_axis);
+
+		/*Mat4 rot_mat;
+		rot_mat.Identity();
+		rot_mat.SetZAxis(normal);
+		Vec3 rvec = Vec3(normal.z, 0, -normal.x);
+		rvec.Normalize();
+		rot_mat.SetXAxis(rvec);
+		Vec3 up = Math::Cross(normal, rvec);
+		up.Normalize();
+		rot_mat.SetYAxis(up);*/
+		rot.FromRotationMatrix(rot_mat);
 		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
 	}
 
@@ -552,6 +538,21 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new EditModeChangedEvent(m_EditMode)));
 	}
 
+	void MouseToolController::SelectHelper(SceneObjectPtr obj) const
+	{
+		if (IsCtrlDown())
+		{
+			if(GetEditorSceneManager()->IsSelected(obj))
+				GetEditorSceneManager()->UnselectSceneObject(obj);
+			else
+				GetEditorSceneManager()->SelectSceneObject(obj);
+		}
+		else
+		{
+			GetEditorSceneManager()->UnselectAllSceneObjects();
+			GetEditorSceneManager()->SelectSceneObject(obj);
+		}
+	}
 
 	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{
@@ -567,7 +568,7 @@ namespace GASS
 				int from_id = GASS_PTR_TO_INT(this);
 
 				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
-				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,from_id)));
+				so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
 			}
 			else
 			{

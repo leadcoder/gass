@@ -21,6 +21,8 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
+#include "GASSConfig.h"
+
 #ifdef _MSC_VER
 
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -75,10 +77,14 @@
 #endif
 
 #if defined ( _MSC_VER )
-#   	if defined( GASS_CORE_EXPORTS )
-#       	define GASSCoreExport __declspec( dllexport )
-#   	else
-#      		define GASSCoreExport __declspec( dllimport )
+#   	if defined( GASS_STATIC_BUILD )
+#			define GASSCoreExport
+#		else
+#		   	if defined( GASS_CORE_EXPORTS )
+#		    	define GASSCoreExport __declspec( dllexport )
+#   		else
+#      			define GASSCoreExport __declspec( dllimport )
+#   		endif
 #   	endif
 #else
 #   define GASSCoreExport
@@ -134,8 +140,10 @@ namespace GASS
 #endif
 #include <algorithm>
 
-
-#define GASS_USE_BOOST
+//Force to use boost?
+//#if defined( _MSC_VER ) && _MSC_VER < 1700
+//	#define GASS_USE_BOOST
+//#endif
 
 #ifdef GASS_USE_BOOST
 	#define GASS_USE_BOOST_FUNC_BIND

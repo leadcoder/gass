@@ -26,15 +26,11 @@
 #include "Sim/GASSCommon.h"
 #include "PagedGeometry.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-
-#include "Core/MessageSystem/GASSIMessage.h"
 #include <OgreRenderTargetListener.h>
-#include "Plugins/Ogre/OgreMaterial.h"
+#include "Plugins/Ogre/GASSOgreMaterial.h"
 #include "PGMessages.h"
 
 namespace Forests
@@ -128,7 +124,6 @@ namespace GASS
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;
 		GeometryPageManager* m_LOD0;
-		void update();
 	};
 }
 

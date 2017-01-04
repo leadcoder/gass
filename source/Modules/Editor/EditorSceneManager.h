@@ -1,24 +1,13 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSSingleton.h"
-#include "Core/Utils/GASSFilePath.h"
-#include "Core/MessageSystem/GASSStaticMessageListener.h"
-#include "Sim/GASSSystemFactory.h"
-
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Sim/GASSSimSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneManager.h"
-
-#include "EditorCommon.h"
 #include "GUISchemaLoader.h"
-#include <list>
-#include <vector>
-#include <set>
 
 namespace GASS
 {
@@ -37,6 +26,8 @@ namespace GASS
 	class EditorModuleExport EditorSceneManager :  public Reflection<EditorSceneManager, BaseSceneManager>
 	{
 	public:
+		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
+
 		EditorSceneManager();
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();
@@ -46,9 +37,15 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 		void SystemTick(double delta_time);
 
-		MouseToolControllerPtr GetMouseToolController() {return m_MouseTools;}
-		SceneObjectPtr GetSelectedObject() const;
+		MouseToolControllerPtr GetMouseToolController() const {return m_MouseTools;}
+		SelectionVector GetSelectedObjects() const;
+		SceneObjectPtr GetFirstSelectedObject() const;
+
 		void SelectSceneObject(SceneObjectPtr obj);
+		void UnselectSceneObject(SceneObjectPtr obj);
+		void UnselectAllSceneObjects();
+		bool IsSelected(SceneObjectPtr obj);
+
 		bool IsObjectLocked(SceneObjectWeakPtr obj);
 		void UnlockObject(SceneObjectWeakPtr obj);
 		void LockObject(SceneObjectWeakPtr obj);
@@ -57,10 +54,7 @@ namespace GASS
 		void UnhideObject(SceneObjectWeakPtr obj);
 		void HideObject(SceneObjectWeakPtr obj);
 		bool IsObjectStatic(SceneObjectWeakPtr obj);
-	
-		//void SetSceneObjectsSelectable(bool value) {m_LockTerrainObjects = value;}
-		//bool GetSceneObjectsSelectable() const {return m_LockTerrainObjects;}
-
+		
 		void SetObjectSite(SceneObjectPtr obj);
 		SceneObjectPtr GetObjectSite() const;
 		void MoveCameraToObject(SceneObjectPtr obj);
@@ -79,7 +73,7 @@ namespace GASS
 		CameraComponentWeakPtr m_ActiveCamera;
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;
-		SceneObjectWeakPtr m_SelectedObject;
+		SelectionVector m_SelectedObjects;
 #ifndef GASS_USE_BOOST_PTR
 		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
 #else

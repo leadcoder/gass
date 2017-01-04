@@ -24,7 +24,6 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -43,8 +42,6 @@ namespace GASS
 		Vec3 GetRandomPoint() const;
 	protected:
 		ADD_PROPERTY(bool,Lines);
-		void OnLoad(MessagePtr message);
-		void OnChangeName(MessagePtr message);
 		void UpdateMesh();
 		Vec3 GetSize() const;
 		void SetSize(const Vec3 &value);

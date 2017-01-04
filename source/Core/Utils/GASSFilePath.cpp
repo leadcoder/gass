@@ -39,7 +39,7 @@ namespace GASS
 			m_ExpandedPath = m_RawPath;
 	}
 
-	void FilePath::_FixPath(std::string &path)
+	void FilePath::_FixPath(std::string &path) const
 	{
 		//check if path start with \\\\, windows network path
 		std::string::size_type  pos = path.find("\\\\");
@@ -181,6 +181,18 @@ namespace GASS
 		return GASS_TO_GENERIC_STRING(boost_path.filename());
 	}
 
+	std::string FilePath::GetLastFolder() const
+	{
+		std::string ret = m_ExpandedPath;
+		std::string::size_type  pos = ret.find_last_of("/", ret.size());
+		if (pos != std::string::npos)
+		{
+			ret = ret.substr(0, pos);
+		}
+
+		GASS_FILESYSTEM::path boost_path(ret);
+		return GASS_TO_GENERIC_STRING(boost_path.filename()); 
+	}
 
 	std::string FilePath::GetPathNoFile() const
 	{
@@ -216,6 +228,12 @@ namespace GASS
 	{
 		GASS_FILESYSTEM::path boost_path(GetFullPath());
 		return GASS_FILESYSTEM::exists(boost_path);
+	}
+
+	bool FilePath::IsDir() const
+	{
+		GASS_FILESYSTEM::path path(GetFullPath());
+		return GASS_FILESYSTEM::exists(path);
 	}
 
 	void FilePath::GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive, const std::vector<std::string> extenstion_filters)

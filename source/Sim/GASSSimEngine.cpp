@@ -25,17 +25,13 @@
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/RTC/GASSTaskNode.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
-#include "Core/Utils/GASSFilesystem.h"
-#include "Sim/GASSSimSystemManager.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSRunTimeController.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSResourceLocation.h"
@@ -47,9 +43,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <tinyxml2.h>
-
-
-
 
 namespace GASS
 {
@@ -160,7 +153,7 @@ namespace GASS
 						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
 						GetSceneObjectTemplateManager()->Load(file_path.GetFullPath());
 					}
-					iter++;
+					++iter;
 				}
 			}
 		}
@@ -186,8 +179,9 @@ namespace GASS
 		tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if(xml_data_path)
 		{
-			std::string env_data_path = XMLUtils::ReadString((tinyxml2::XMLElement *)xml_settings,"SetDataPath");
-			if(GASS_FILESYSTEM::exists(GASS_FILESYSTEM::path(env_data_path)))
+			std::string env_data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings),"SetDataPath");
+			FilePath data_path(env_data_path);
+			if(data_path.Exist())
 			{
 				env_data_path = "GASS_DATA_HOME=" + env_data_path;
 #ifdef WIN32
@@ -207,7 +201,7 @@ namespace GASS
 
 		tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if(xml_scene_path)
-			m_ScenePath.SetPath(XMLUtils::ReadString((tinyxml2::XMLElement *)xml_settings,"ScenePath"));
+			m_ScenePath.SetPath(XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings),"ScenePath"));
 
 		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
 		if(xml_rtc)
@@ -359,7 +353,7 @@ namespace GASS
 				m_Scenes.erase(iter);
 				return;
 			}
-			iter++;
+			++iter;
 		}
 		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed find scene", "SimEngine::DestroyScene");
 	}
@@ -374,9 +368,24 @@ namespace GASS
 
 	std::vector<std::string> SimEngine::GetSavedScenes() const
 	{
-		GASS_FILESYSTEM::path boost_path(m_ScenePath.GetFullPath());
-
 		std::vector<std::string> scene_names;
+		if (m_ScenePath.Exist())
+		{
+			std::vector<FilePath> folders;
+			FilePath::GetFoldersFromPath(folders, m_ScenePath, false);
+			for (size_t i = 0; i <  folders.size(); ++i)
+			{
+					if (FileUtils::FileExist(folders[i].GetFullPath() + "scene.xml"))
+					{
+						std::cout << folders[i] << "\n";
+						std::string scene_name = folders[i].GetLastFolder();
+						scene_names.push_back(scene_name);
+					}
+				}
+			}
+
+		/*GASS_FILESYSTEM::path boost_path(m_ScenePath.GetFullPath());
+		
 		if(GASS_FILESYSTEM::exists(boost_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end ;
@@ -391,7 +400,7 @@ namespace GASS
 					}
 				}
 			}
-		}
+		}*/
 		return scene_names;
 	}
 

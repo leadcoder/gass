@@ -22,7 +22,6 @@
 #define GASS_VECTOR_H
 
 #include "Core/Common.h"
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
@@ -90,28 +89,28 @@ namespace GASS
 		{
 			x = _x;y = _y;
 		}
-		Vec2i operator+ (const Vec2i &v)
+		Vec2i operator+ (const Vec2i &v) const
 		{
 			Vec2i ret;
 			ret.x = x + v.x;
 			ret.y = y + v.y;
 			return ret;
 		}
-		Vec2i operator- (const Vec2i &v)
+		Vec2i operator- (const Vec2i &v) const
 		{
 			Vec2i ret;
 			ret.x = x - v.x;
 			ret.y = y - v.y;
 			return ret;
 		}
-		Vec2i operator- ()
+		Vec2i operator- () const
 		{
 			Vec2i ret;
 			ret.x = -x;
 			ret.y = -y;
 			return ret;
 		}
-		Vec2i operator* (Float scalar)
+		Vec2i operator* (Float scalar) const
 		{
 			Vec2i ret;
 			ret.x = static_cast<int>(x*scalar);
@@ -311,7 +310,7 @@ namespace GASS
 
 		inline Float Length() const
 		{
-			return (Float) sqrt(x*x+y*y+z*z);
+			return sqrt(x*x+y*y+z*z);
 		}
 
 		inline void Normalize()
@@ -352,7 +351,7 @@ namespace GASS
 		Float FastLength() const;
 		Float FastInvLength() const;
 		bool InSphere(Vec3 &v, Float radius) const;
-		std::string ToString(const std::string &separator);
+		std::string ToString(const std::string &separator) const;
 	};
 
 	
@@ -468,7 +467,7 @@ namespace GASS
 		{
 			x = _x;y=_y; z=_z; w=_w;
 		}
-		inline bool operator == (const Vec4 &v)
+		inline bool operator == (const Vec4 &v) const
 		{
 			if(x == v.x && y == v.y && z == v.z && w == v.w) return true;
 			else return false;

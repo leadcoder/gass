@@ -1,3 +1,4 @@
+#include "Sim/GASSCommon.h"
 #include "scriptstdstring.h"
 #include <assert.h> // assert()
 #include <sstream>  // std::stringstream
@@ -6,6 +7,7 @@
 #include <stdlib.h> // strtod()
 #include <locale.h> // setlocale()
 #include <map>      // std::map
+#include <Core/Utils/GASSException.h>
 
 using namespace std;
 
@@ -983,7 +985,8 @@ void RegisterStdString_Generic(asIScriptEngine *engine)
 #endif
 
 	// Register the object operator overloads
-	r = engine->RegisterObjectBehaviour("string", asBEHAVE_CONSTRUCT,  "void f()",                    asFUNCTION(ConstructStringGeneric), asCALL_GENERIC); assert( r >= 0 );
+	r = engine->RegisterObjectBehaviour("string", asBEHAVE_CONSTRUCT,  "void f()",                    asFUNCTION(ConstructStringGeneric), asCALL_GENERIC); 
+	GASSAssert(r >= 0, "RegisterStdString_Generic Failed to register type");
 	r = engine->RegisterObjectBehaviour("string", asBEHAVE_CONSTRUCT,  "void f(const string &in)",    asFUNCTION(CopyConstructStringGeneric), asCALL_GENERIC); assert( r >= 0 );
 	r = engine->RegisterObjectBehaviour("string", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(DestructStringGeneric),  asCALL_GENERIC); assert( r >= 0 );
 	r = engine->RegisterObjectMethod("string", "string &opAssign(const string &in)", asFUNCTION(AssignStringGeneric),    asCALL_GENERIC); assert( r >= 0 );

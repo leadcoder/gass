@@ -22,8 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
-#include <assert.h>
-#include <math.h>
+
 namespace GASS
 {
 	/**

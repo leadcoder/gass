@@ -91,7 +91,7 @@ namespace GASS
 		unsigned int i, num_Points;
 		bool isClosed;
 
-		num_Points = (unsigned int)m_Points.size();
+		num_Points = static_cast<unsigned int>(m_Points.size());
 
 		if (num_Points < 2)
 		{

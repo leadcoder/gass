@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 #include "../EditorMessages.h"
-#include "Sim/GASSSceneObject.h"
 
 namespace GASS
 {

@@ -19,25 +19,16 @@
 *****************************************************************************/
 
 #include "SoundVolumeComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-
 
 namespace GASS
 {
-	SoundVolumeComponent::SoundVolumeComponent() : m_MaxVolumeAtSpeed(0.3)
+	SoundVolumeComponent::SoundVolumeComponent() : m_MaxVolumeAtSpeed(0.3), 
+		m_HingeAngle(0)
 	{
 
 	}

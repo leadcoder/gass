@@ -1,0 +1,36 @@
+env:
+  global:
+os: linux
+dist: trusty
+sudo: required
+language: cpp
+compiler:
+- gcc
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -y cmake
+- sudo apt-get install -y libtbb-dev
+- sudo apt-get install -y libboost-system-dev libboost-filesystem-dev
+- sudo apt-get install -y uuid-dev
+- sudo apt-get install -y libois-dev
+- sudo apt-get install -y libopenscenegraph-dev
+#- sudo apt-get install -y --force-yes openscenegraph=3.4.0
+- chmod a+x travis-build.sh
+install:
+- cmake --version
+
+script:
+- ./travis-build.sh
+notifications:
+  email:
+    recipients:
+    - leadcoder@gmail.com
+addons:
+  coverity_scan:
+    project:
+      name: "leadcoder/GASS"
+      description: "GASS"
+    notification_email: leadcoder@gmail.com.com
+    #build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release -DGASS_BUILD_CORE_SAMPLES=OFF  -DGASS_BUILD_SIM=OFF
+    build_command: make -j3
+   

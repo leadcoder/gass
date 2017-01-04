@@ -3,6 +3,7 @@
 #include "scriptarray.h"
 #include <stdio.h>
 #include <string.h>
+#include <string>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ static CScriptArray *StringSplit(const string &delim, const string &str)
 
     // Find the existence of the delimiter in the input string
     int pos = 0, prev = 0, count = 0;
-    while( (pos = (int)str.find(delim, prev)) != (int)string::npos )
+    while( (pos = static_cast<int>(str.find(delim, prev))) != static_cast<int>(string::npos))
     {
         // Add the part to the array
         array->Resize(array->GetSize()+1);
@@ -43,7 +44,7 @@ static CScriptArray *StringSplit(const string &delim, const string &str)
 
         // Find the next part
         count++;
-        prev = pos + (int)delim.length();
+        prev = pos + static_cast<int>(delim.length());
     }
 
     // Add the remaining part

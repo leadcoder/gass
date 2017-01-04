@@ -59,6 +59,7 @@ namespace GASS
 		static void SetOSGStateSet(const GraphicsMaterial &material,osg::ref_ptr<osg::StateSet> state);
 		static void SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set,GraphicsMaterial &material);
 		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
+		TextBox* GetDebugText() const { return m_DebugTextBox; }
 	protected:
 		ADD_PROPERTY(bool,FlipDDS);
 		void LoadXML(tinyxml2::XMLElement *elem);
@@ -81,6 +82,7 @@ namespace GASS
 		std::map<std::string,TextBox*>  m_TextBoxes;
 		typedef std::map<std::string, osg::ref_ptr<osg::StateSet> > MaterialMap;
 		MaterialMap m_Materials;
+		std::vector<std::string> m_DebugVec;
 	};
 	typedef GASS_SHARED_PTR<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef GASS_WEAK_PTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

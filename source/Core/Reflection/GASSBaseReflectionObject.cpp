@@ -70,7 +70,7 @@ namespace GASS
 		}
 	}
 
-	void BaseReflectionObject::_SaveProperties(tinyxml2::XMLElement *parent)
+	void BaseReflectionObject::_SaveProperties(tinyxml2::XMLElement *parent) const
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
@@ -173,7 +173,7 @@ namespace GASS
 		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name,"BaseReflectionObject::SetPropertyByType");
 	}
 
-	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, GASS_ANY &value)
+	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, GASS_ANY &value) const
 	{
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)

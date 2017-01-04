@@ -21,10 +21,8 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
+#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
 namespace GASS
 {
@@ -62,7 +60,7 @@ namespace GASS
 	class NetworkPackage
 	{
 	public:
-		NetworkPackage()
+		NetworkPackage() : Id(0)
 		{}
 		NetworkPackage(int id) : Id(id)
 		{}

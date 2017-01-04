@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSSimSystem.h"
 #include "Sim/GASSPhysicsMaterial.h"
 
 namespace GASS
@@ -37,7 +36,6 @@ namespace GASS
 		virtual bool HasMaterial(const std::string material_name) const = 0;
 		virtual PhysicsMaterial GetMaterial(const std::string material_name) const = 0;
 		virtual MaterialMap& GetMaterials() = 0;
-	private:
 	};
 	typedef GASS_SHARED_PTR<IMaterialSystem> MaterialSystemPtr;
 }

@@ -21,12 +21,8 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/MessageSystem/GASSMessageType.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
-
 
 namespace GASS
 {
@@ -70,11 +66,11 @@ namespace GASS
 		std::vector<IMouseListener*> m_MouseListeners;
 		std::vector<IGameControllerListener*> m_GameControllerListeners;
 
-		bool m_Inverted;
+		//bool m_Inverted;
 		bool m_KeyActive;
 		bool m_JoyActive;
 		bool m_MouseActive;
-		float m_MouseSpeed;
-		bool m_ExclusiveMode;
+		//float m_MouseSpeed;
+		//bool m_ExclusiveMode;
 	};
 }

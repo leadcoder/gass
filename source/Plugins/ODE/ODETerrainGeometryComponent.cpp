@@ -23,21 +23,13 @@
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
-#include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
-
 
 namespace GASS
 {
@@ -47,7 +39,11 @@ namespace GASS
 		m_CollisionCategory(1),
 		m_CollisionBits(1),
 		m_GeomID(0),
-		m_Debug(false)
+		m_Debug(false),
+		m_SampleWidth(0),
+		m_SampleHeight(0),
+		m_TerrainGeom(NULL)
+
 	{
 
 	}

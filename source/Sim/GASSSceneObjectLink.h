@@ -23,10 +23,10 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/ComponentSystem/GASSComponentContainer.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSBaseSceneComponent.h"
+
 namespace GASS
 {
 	static const SceneObjectID UNKOWN_LINK_ID = "";	
@@ -45,7 +45,7 @@ namespace GASS
 		SceneObjectID GetLinkObjectID() const {return m_LinkObjectID;}
 		SceneObjectPtr GetObjectPtr() const {return m_Link.lock();}
 	protected:
-		SceneObjectPtr GetRoot(SceneObjectPtr obj);
+		SceneObjectPtr GetRoot(SceneObjectPtr obj) const;
 		friend std::ostream& operator << (std::ostream& os, const SceneObjectLink& sol)
 		{
 			os << sol.m_LinkObjectID;

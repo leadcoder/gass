@@ -23,8 +23,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIGraphicsSceneManager.h"
-
 
 namespace GASS
 {

@@ -20,11 +20,12 @@
 
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Core/Math/GASSMath.h"
+
 
 namespace GASS
 {
@@ -33,7 +34,9 @@ namespace GASS
 		m_Width(1.0f),
 		m_Height(1.0f),
 		m_GroundOffset(0.5),
-		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN)
+		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
+		m_Collision(true),
+		m_Geom(NULL)
 	{
 
 	}
@@ -107,6 +110,8 @@ namespace GASS
 		if(m_OSGBillboard)
 			OSGConvert::SetOSGNodeMask(flags, m_OSGBillboard);
 	}
+
+
 
 	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
@@ -298,17 +303,28 @@ namespace GASS
 
 	void OSGBillboardComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
+		SetCollision(message->EnableCollision());
+	}
+
+	void OSGBillboardComponent::SetCollision(bool value)
+	{
 		if(m_OSGBillboard.valid() && m_OSGBillboard->getNodeMask())
 		{
-			if(message->EnableCollision())
+			if(value)
 			{
- 				OSGConvert::SetOSGNodeMask(m_GeomFlags, m_OSGBillboard);
+				OSGConvert::SetOSGNodeMask(m_GeomFlags, m_OSGBillboard);
 			}
 			else
 			{
 				OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT, m_OSGBillboard);
 			}
 		}
+		m_Collision = value;
+	}
+
+	bool OSGBillboardComponent::GetCollision() const
+	{
+		return m_Collision;
 	}
 
 	void OSGBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)

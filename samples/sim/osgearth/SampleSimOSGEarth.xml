@@ -12,6 +12,7 @@
   <Plugin PluginFile = "GASSPluginInput"/>
   <Plugin PluginFile = "GASSPluginBase"/>
   <Plugin PluginFile = "GASSPluginRakNet"/>
+  <Plugin PluginFile = "GASSEditorModule"/>
   </Plugins>
 <SetDataPath value="../../data/"/>
 <ScenePath value="../../data/sceneries"/>
@@ -28,7 +29,9 @@
     <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
-  </ResourceGroup>
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="false"/>
+	<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="false"/>
+   </ResourceGroup>
 </ResourceManager>
 <SceneObjectTemplateManager>
   <AddObjectIDToName value ="true"/>
@@ -37,6 +40,10 @@
 </SceneObjectTemplateManager>
 <Systems>
 <MaterialSystem/>
+<EditorSystem>
+			<LockTerrainObjects value="false"/> 
+		</EditorSystem>
+		
    <OISInputSystem>
     <!-- PRE BUCKET UPDATE-->
     <ExclusiveMode value="false"/>

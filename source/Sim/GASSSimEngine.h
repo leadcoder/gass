@@ -28,6 +28,10 @@
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
 
+//debug stuff
+#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
+#define GASS_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
+
 namespace GASS
 {
 	GASS_FORWARD_DECL(PluginManager)
@@ -218,7 +222,6 @@ namespace GASS
 		bool GetUpdateSimOnRequest() const;
 		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
 	private:
-		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);
 		PluginManagerPtr m_PluginManager;

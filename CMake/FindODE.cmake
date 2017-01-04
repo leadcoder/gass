@@ -17,10 +17,10 @@ else (ODE_INCLUDE_DIRS AND ODE_LIBRARIES)
     # Find ODE
 
     # Use PkgConfig if possible
-    if (NOT WIN32)
-        find_package(PkgConfig)
-        pkg_check_modules(PC_ODE ode)
-    endif (NOT WIN32)
+    #if (NOT WIN32)
+    #    find_package(PkgConfig)
+    #    pkg_check_modules(PC_ODE ode)
+    #endif (NOT WIN32)
 
     # Find include dir
     find_path(ODE_INCLUDE_DIRS ode/ode.h

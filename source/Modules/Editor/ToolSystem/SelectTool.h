@@ -1,7 +1,4 @@
 #pragma once
-#include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
@@ -26,8 +23,7 @@ namespace GASS
 		virtual void Start() {};
 	private:
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		//GASS::SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
-
 	};
 }

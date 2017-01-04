@@ -23,7 +23,6 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSIShape.h"
-#include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
 {
@@ -45,7 +44,6 @@ namespace GASS
 	protected:
 		ADD_PROPERTY(Vec3,Color)
 		ADD_PROPERTY(bool,Dashed)
-		void OnChangeName(MessagePtr message);
 		void SetRadius(Float value);
 		void UpdateMesh();
 	private:

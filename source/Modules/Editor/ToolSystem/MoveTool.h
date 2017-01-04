@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
@@ -15,7 +13,6 @@ namespace GASS
 	class IMessage;
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
 	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-	
 
 	class EditorModuleExport MoveTool : public IMouseTool 
 	{
@@ -32,25 +29,30 @@ namespace GASS
 		virtual void Stop();
 		virtual void Start();
 	private:
-		bool CheckIfEditable(SceneObjectPtr obj);
+		bool CheckIfEditable(SceneObjectPtr obj) const;
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetOrCreateGizmo();
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 		bool m_MouseIsDown;
-		SceneObjectWeakPtr m_SelectedObject;
-		Vec3 m_Offset;
+		std::vector<SceneObjectWeakPtr> m_Selected;
+		std::vector<SceneObjectWeakPtr> m_SelectionCopy;
 		MouseToolController* m_Controller;
 		int m_MoveUpdateCount;
-
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
-
+#ifndef GASS_USE_BOOST_PTR
+		typedef std::map<GASS::SceneObjectWeakPtr, Vec3, std::owner_less<GASS::SceneObjectWeakPtr>> SelectionMap;
+#else
+		typedef std::map<GASS::SceneObjectWeakPtr, Vec3> SelectionMap;
+#endif
+		SelectionMap m_SelectedLocations;
+		
 		bool m_UseGizmo;
 		Vec2 m_MouseDownPos;
 		bool m_GroundSnapMove;
 		bool  m_Active;
-		bool m_SnapToMouse;
-
+		Vec3 m_PreviousPos;
+		double m_MouseMoveTime;
 	};
 }

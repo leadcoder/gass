@@ -1,9 +1,8 @@
-
-
 #include "DetourCommon.h"
-
 #include "DetourCrowdAgentComponent.h"
 #include "DetourCrowdComponent.h"
+#include "Core/Math/GASSMath.h"
+
 
 namespace GASS
 {

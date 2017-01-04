@@ -22,31 +22,21 @@
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetChildReplica.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
+#include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Plugins/RakNet/RakNetNetworkMasterComponent.h"
-#include "Plugins/RakNet/RakNetLocationTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
-
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
-
 namespace GASS
 {
-	RakNetNetworkChildComponent::RakNetNetworkChildComponent() : m_Replica(NULL)
+	RakNetNetworkChildComponent::RakNetNetworkChildComponent() : m_Replica(NULL), m_PartId(0)
 	{
 
 	}
@@ -195,13 +185,13 @@ namespace GASS
 			inBitStream->Read(id);
 
 			NetworkPackagePtr package = PackageFactory::Get().Create(id);
-			if(package)
+			if (package)
 			{
 				int size = package->GetSize();
 				char* data_to_read = new char[size];
-				inBitStream->Read(data_to_read,size);
+				inBitStream->Read(data_to_read, size);
 				package->Assign(data_to_read);
-				delete data_to_read ;
+				delete[] data_to_read;
 				GetSceneObject()->PostRequest(NetworkDeserializeRequestPtr(new NetworkDeserializeRequest(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
 			}
 		}

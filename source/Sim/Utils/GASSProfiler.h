@@ -52,11 +52,15 @@ namespace GASS
 
 		static struct ProfileSampleData
 		{
-			ProfileSampleData()
+			ProfileSampleData() : m_IsOpen(false),
+				m_IsValid(false),
+				m_DataCount(0),
+				m_AveragePc(-1),
+				m_MinPc(-1),
+				m_MaxPc(-1),
+				m_CallCount(0)
 			{
-				m_IsValid=false; 
-				m_DataCount=0;
-				m_AveragePc=m_MinPc=m_MaxPc=-1;
+				
 			}
 
 			bool m_IsValid;		//whether or not this sample is valid (for use with fixed-size arrays)
@@ -85,6 +89,7 @@ namespace GASS
 	class GASSExport IProfilerOutputHandler
 	{
 	public:
+		virtual ~IProfilerOutputHandler(){}
 		virtual void BeginOutput(double tTotal)=0;
 		virtual void Sample(double fCur,double fMin, double fAvg, double fMax, double tAvg, int callCount, std::string name, int parentCount)=0;
 		virtual void EndOutput()=0;

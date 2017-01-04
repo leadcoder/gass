@@ -5,7 +5,7 @@
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
-		<Plugin PluginFile = "GASSPluginGame"/>
+		<Plugin PluginFile = "GASSPluginVehicle"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>

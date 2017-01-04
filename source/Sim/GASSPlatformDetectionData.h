@@ -6,6 +6,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 
 namespace GASS
 {

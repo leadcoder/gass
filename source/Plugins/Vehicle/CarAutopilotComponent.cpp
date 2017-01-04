@@ -19,30 +19,29 @@
 *****************************************************************************/
 
 #include "CarAutopilotComponent.h"
-
-
-#include "Sim/Messages/GASSPlatformMessages.h"
-#include "Sim/Interface/GASSIMissionSceneManager.h"
-
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Messages/GASSInputMessages.h"
+#include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include <float.h>
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include <float.h>
-
 
 namespace GASS
 {
+	#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
+
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
 		m_DesiredPosRadius(0),
@@ -61,7 +60,8 @@ namespace GASS
 		m_PlatformType(PT_CAR),
 		m_HasCollision(false),
 		m_CollisionPoint(0,0,0),
-		m_CollisionDist(0)
+		m_CollisionDist(0),
+		m_CollisionAvoidance(false)
 	{
 		m_TurnPID.setGain(2.0,0.02,0.01);
 		m_TrottlePID.setGain(1.0,0,0);
@@ -103,6 +103,9 @@ namespace GASS
 
 		RegisterProperty<bool>("InvertBackWardSteering", &CarAutopilotComponent::GetInvertBackWardSteering, &CarAutopilotComponent::SetInvertBackWardSteering,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE  | PF_EDITABLE)));
+
+		RegisterProperty<bool>("CollisionAvoidance", &CarAutopilotComponent::GetCollisionAvoidance, &CarAutopilotComponent::SetCollisionAvoidance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Try to avoid collision with other entities", PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void CarAutopilotComponent::OnInitialize()
@@ -164,7 +167,12 @@ namespace GASS
 
 	void CarAutopilotComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
+		//std::stringstream ss;
+		//ss << "SPeed" << message->GetSpeed();
+		//LogManager::getSingleton().logMessage(ss.str(), LML_NORMAL);
 		m_DesiredSpeed = message->GetSpeed();
+		m_TrottlePID.setIntCap(200);
+		m_TrottlePID.setIntSum(0);
 	}
 
 	void CarAutopilotComponent::OnTransMessage(TransformationChangedEventPtr message)
@@ -205,7 +213,7 @@ namespace GASS
 		//drive_dir_n.Normalize();
 
 
-		if(m_ProximityData.size() > 0)
+		if (m_CollisionAvoidance && m_ProximityData.size() > 0)
 		{
 			Float min_dist = FLT_MAX;
 			DetectionData dd = m_ProximityData[0];
@@ -354,9 +362,13 @@ namespace GASS
 				angle_to_target_dir *= -1;
 
 
-
+			m_TurnPID.setIntCap(60.0);
 			m_TurnPID.set(0);
 			float turn = static_cast<float>(m_TurnPID.update(angle_to_target_dir, delta_time));
+
+			/*GASS_PRINT("angle_to_target_dir:" << angle_to_target_dir);
+			GASS_PRINT("turn:" << turn);
+			GASS_PRINT("intsum:" << m_TurnPID.getIntSum());*/
 
 			// damp speed if we have to turn sharp
 			if(m_Support3PointTurn && fabs(angle_to_target_dir) > 90 && target_dist > m_MaxReverseDistance)// do three point turn if more than 20 meters turn on point
@@ -471,14 +483,20 @@ namespace GASS
 #endif
 
 			m_TrottlePID.set(desired_speed);
-			float throttle = static_cast<float>(m_TrottlePID.update(current_speed,delta_time));
-
+			float throttle = static_cast<float>(m_TrottlePID.update(current_speed, delta_time));
+			
+		/*	GASS_PRINT("throttle:" << throttle);
+			GASS_PRINT("desired_speed:" << desired_speed);
+			GASS_PRINT("speed:" << current_speed);
+			GASS_PRINT("intsum:" << m_TrottlePID.getIntSum());*/
+			
 			if(throttle > 1) throttle = 1;
 			if(throttle < -1) throttle = -1;
 
 			if(turn > 1) turn  = 1;
 			if(turn < -1) turn  = -1;
 
+			float break_value = 0.0;
 			if(m_WPReached) //apply desired end rotation if we have reached end location
 			{
 				if(m_HasDir)
@@ -505,15 +523,20 @@ namespace GASS
 					throttle = 0;
 					turn = 0;
 				}
+
+				break_value = 1.0f;
+				
 			}
 
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,throttle,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,-turn,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", break_value, CT_AXIS)));
 		}
 		else
 		{
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,0,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,0,CT_AXIS)));
+			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", 1.0f, CT_AXIS)));
 		}
 	}
 }

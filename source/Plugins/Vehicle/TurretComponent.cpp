@@ -19,26 +19,17 @@
 *****************************************************************************/
 
 #include "TurretComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
-
+#include "Sim/GASSSimEngine.h"
 
 namespace GASS
 {
@@ -114,7 +105,7 @@ namespace GASS
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
-#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
+//#define DEBUG_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
 
 
 /*	Float pitch TurretComponent::GetPitch(Mat4 &transform, Vec3 &dir)
@@ -155,7 +146,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2)
+	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
 		Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
@@ -168,7 +159,7 @@ namespace GASS
 	}
 
 
-	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2)
+	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
 		//Vec3 cross = Math::Cross(v1,v2);
 		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
@@ -208,9 +199,9 @@ namespace GASS
 
 			Vec3 start = m_Transformation.GetTranslation();
 			Vec3 end = start + turret_dir;
-			DEBUG_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
+			GASS_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
 			end = start + projected_aim;
-			DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
+			GASS_DRAW_LINE(start, end, ColorRGBA(0, 0, 1, 1))
 		}
 		else
 		{

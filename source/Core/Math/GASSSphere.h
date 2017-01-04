@@ -46,10 +46,9 @@ namespace GASS
 		Sphere();
 		Sphere(const Vec3& center,float radius);
 		virtual ~Sphere();
-		void Draw();
-		AABox GetAABox();
-		bool AABoxInside(const AABox &box);
-		bool SphereInside(const Sphere &sphere);
+		AABox GetAABox() const;
+		bool AABoxInside(const AABox &box) const;
+		bool SphereInside(const Sphere &sphere) const;
 		void Union(const Sphere &sphere);
 
 		//public for fast access

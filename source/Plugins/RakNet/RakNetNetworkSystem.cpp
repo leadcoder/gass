@@ -18,7 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 #include "Plugins/RakNet/RakNetChildReplica.h"
@@ -42,7 +41,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
 
 namespace GASS
 {
@@ -724,7 +722,7 @@ namespace GASS
 	}*/
 
 
-	RakNetChildReplica* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id)
+	RakNetChildReplica* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id) const
 	{
 		//Find replica object
 		for (unsigned int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)

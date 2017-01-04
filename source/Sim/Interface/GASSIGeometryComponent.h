@@ -62,7 +62,16 @@ namespace GASS
 			Set object geometry flags
 		*/
 		virtual void SetGeometryFlags(GeometryFlags flags) = 0;
-	protected:
+
+		/**
+			Enable/disable collision 
+		*/
+		virtual void SetCollision(bool value) = 0;
+
+		/**
+			Get collision status
+		*/
+		virtual bool GetCollision() const = 0;
 	};
 	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
 }

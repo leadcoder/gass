@@ -34,7 +34,6 @@ THE SOFTWARE.
 #ifndef GASS_LOG_H
 #define GASS_LOG_H
 #include "Core/Common.h"
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <vector>

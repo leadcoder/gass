@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/Math/GASSVector.h"
 
 namespace GASS
 {
@@ -40,7 +39,6 @@ namespace GASS
 		virtual ~INetworkComponent(){}
 		//indicates if this object is remote or local
 		virtual bool IsRemote() const = 0;
-	protected:
 	};
 
 	typedef GASS_WEAK_PTR<INetworkComponent> NetworkComponentWeakPtr;

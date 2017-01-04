@@ -39,7 +39,6 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnLoad(MessagePtr message);
 		void OnChangeName(MessagePtr message);
 		void OnSettings(GASS::MessagePtr message);
 		bool m_ShowNodeName;

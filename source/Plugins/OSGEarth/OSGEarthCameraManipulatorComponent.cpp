@@ -61,12 +61,20 @@ namespace GASS
 	{
 		SceneManagerListenerPtr listener = shared_from_this();
 		GASS_SHARED_PTR<BaseSceneManager> osg_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IGraphicsSceneManager>());
+		
+		if(!osg_sm)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find IGraphicsSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
+		
 		osg_sm->Register(listener);
 
 		GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
+		if (!earth_sm)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find OSGEarthSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
 
 		osgEarth::Util::EarthManipulator* manip = earth_sm->GetManipulator().get();
-		GASSAssert(manip,"Failed get osgEarth::Util::EarthManipulator from OSGEarthSceneManager in OSGEarthCameraManipulatorComponent::OnInitialize");
+
+		if (!manip)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed get osgEarth::Util::EarthManipulator from OSGEarthSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
 		
 		m_Manipulator = manip;
 
@@ -77,8 +85,8 @@ namespace GASS
 
 		settings->bindKey( osgEarth::Util::EarthManipulator::ACTION_HOME, osgGA::GUIEventAdapter::KEY_Space );
 
-		//settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON);
-		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON);
+		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON);
+		//settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON);
 
 		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_ROTATE, osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON );
 
@@ -100,7 +108,7 @@ namespace GASS
 		// double click the left button to zoom in on a point:
 		options.clear();
 		options.add( osgEarth::Util::EarthManipulator::OPTION_GOTO_RANGE_FACTOR, 0.4 );
-		settings->bindMouseDoubleClick( osgEarth::Util::EarthManipulator::ACTION_GOTO, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON, 0L, options );
+		//settings->bindMouseDoubleClick( osgEarth::Util::EarthManipulator::ACTION_GOTO, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON, 0L, options );
 
 		// double click the right button (or CTRL-left button) to zoom out to a point
 		options.clear();

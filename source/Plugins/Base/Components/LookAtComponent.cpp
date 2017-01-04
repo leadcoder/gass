@@ -19,16 +19,13 @@
 *****************************************************************************/
 
 #include "LookAtComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Plugins/Base/GASSCoreSceneManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"

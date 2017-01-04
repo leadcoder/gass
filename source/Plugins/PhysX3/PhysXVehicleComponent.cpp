@@ -25,6 +25,7 @@
 #include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
 #include "Plugins/PhysX3/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 using namespace physx;
 namespace GASS
@@ -47,7 +48,8 @@ namespace GASS
 		m_GearSwitchTime(0.5),
 		m_ChassisDim(0,0,0),
 		m_MaxSpeed(20),
-		m_Debug(false)
+		m_Debug(false),
+		m_BreakInput(0)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -163,6 +165,7 @@ namespace GASS
 		m_IsMovingForwardSlowly = false;
 		m_ThrottleInput = 0;
 		m_SteerInput = 0;
+		m_BreakInput = 0;
 		m_InReverseMode = false;
 
 		for(size_t i = 0; i < m_Vehicle->mWheelsSimData.getNbWheels(); i++)
@@ -644,17 +647,27 @@ namespace GASS
 		}
 		else
 		{
-			if(m_ThrottleInput < 0)
+			if (fabs(m_ThrottleInput) > 0)
 			{
-				rawInputData.setAnalogBrake(fabs(m_ThrottleInput));
-				rawInputData.setAnalogAccel(0);
+				if (m_ThrottleInput < 0)
+				{
+					rawInputData.setAnalogBrake(fabs(m_ThrottleInput) + m_BreakInput);
+					rawInputData.setAnalogAccel(0);
+				}
+				else
+				{
+					rawInputData.setAnalogAccel(fabs(m_ThrottleInput));
+					rawInputData.setAnalogBrake(m_BreakInput);
+				}
 			}
 			else
 			{
-				rawInputData.setAnalogAccel(fabs(m_ThrottleInput));
-				rawInputData.setAnalogBrake(0);
+				rawInputData.setAnalogAccel(0);
+				rawInputData.setAnalogBrake(m_BreakInput);
 			}
-			rawInputData.setAnalogHandbrake(0);
+
+			
+			rawInputData.setAnalogHandbrake(m_BreakInput);
 			rawInputData.setAnalogSteer(m_SteerInput);
 		}
 		rawInputData.setGearDown(false);
@@ -970,7 +983,7 @@ namespace GASS
 		}
 	}
 
-	Quaternion PhysXVehicleComponent::GetRotation()
+	Quaternion PhysXVehicleComponent::GetRotation() const
 	{
 		Quaternion q;
 
@@ -1008,6 +1021,10 @@ namespace GASS
 		else if (name == "Steer")
 		{
 			m_SteerInput = value;
+		}
+		else if (name == "Break")
+		{
+			m_BreakInput = value;
 		}
 	}
 

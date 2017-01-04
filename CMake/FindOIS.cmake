@@ -5,6 +5,10 @@
 #  OIS_LIBRARIES, the libraries to link against to use OIS.
 #  OIS_FOUND, If false, do not try to use OIS
 
+if (NOT "$ENV{OIS_HOME}" STREQUAL "")
+	set (OIS_DIR $ENV{OIS_HOME})
+endif()
+
 IF (OIS_DIR)
 	SET(OIS_FIND_QUIETLY TRUE) # Already in cache, be silent
 ELSEIF (NOT OIS_FIND_QUIETLY)

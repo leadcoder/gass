@@ -107,7 +107,7 @@ if (WIN32) #find third party shared libraries, TODO: support *nix?
 	  find_package(PhysX3)
 	  
 	  set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${PX_BINARIES_REL})
-	  set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${PX_BINARIES_REL})
+	  set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${PX_BINARIES_DBG})
 	endif()
 
 	if(USE_OIS_PLUGIN)

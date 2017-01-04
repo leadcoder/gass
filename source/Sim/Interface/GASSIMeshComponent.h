@@ -21,7 +21,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/GASSResource.h"
 
 namespace GASS
 {

@@ -62,7 +62,7 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr SceneObjectLink::GetRoot(SceneObjectPtr obj)
+	SceneObjectPtr SceneObjectLink::GetRoot(SceneObjectPtr obj) const
 	{
 		ComponentContainerPtr container = obj;
 

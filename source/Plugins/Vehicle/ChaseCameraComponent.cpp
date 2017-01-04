@@ -19,29 +19,20 @@
 *****************************************************************************/
 
 #include "ChaseCameraComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIGraphicsSystem.h"
-
-
-
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 
 namespace GASS
 {

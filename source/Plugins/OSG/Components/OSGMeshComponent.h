@@ -35,7 +35,6 @@ namespace GASS
 	public:
 		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
 		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
-	private:
 	};
 	typedef GASS_SHARED_PTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
 
@@ -52,6 +51,8 @@ namespace GASS
 		virtual Sphere GetBoundingSphere() const;
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 
 		//IResourceComponent
 		ResourceHandle GetResource() const {return m_MeshResource;}
@@ -100,6 +101,7 @@ namespace GASS
 		GeometryFlags m_GeomFlags;
 		bool m_Lighting;
 		bool m_Expand;
+		bool m_Collision;
 	};
 
 	typedef GASS_SHARED_PTR<OSGMeshComponent> OSGMeshComponentPtr;

@@ -23,7 +23,6 @@
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
-#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "IPhysXRigidDynamic.h"
@@ -44,7 +43,7 @@ namespace GASS
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
 		void SceneManagerTick(double delta);
 		
-		PlatformType GetType() const {return PT_CAR;}
+		PlatformType GetType() const {return PT_TANK;}
 		Vec3 GetSize() const;
 		ADD_PROPERTY(Float,MaxSpeed);
 	protected:
@@ -61,7 +60,7 @@ namespace GASS
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation();
+		Quaternion GetRotation() const;
 		
 		//helpers
 		void Reset();
@@ -93,6 +92,7 @@ namespace GASS
 		physx::PxVehicleDriveTank* m_Vehicle;
 		float m_ThrottleInput;
 		float m_SteerInput;
+		float m_BreakInput;
 		bool m_DigBrakeInput;
 		bool m_DigAccelInput;
 		bool m_IsMovingForwardSlowly;

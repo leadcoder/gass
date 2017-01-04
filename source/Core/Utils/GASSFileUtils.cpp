@@ -22,7 +22,6 @@
 #include "Core/Common.h"
 #include "GASSFileUtils.h"
 #include "GASSLogManager.h"
-#include "GASSException.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
 
@@ -39,6 +38,17 @@ namespace GASS
 
 	}
 
+	void FileUtils::SetCurrentDir(const std::string &path)
+	{
+		GASS_FILESYSTEM::path fs_path(path);
+		GASS_CURRENT_PATH(fs_path);
+	}
+
+	std::string FileUtils::GetCurrentDir()
+	{
+		GASS_FILESYSTEM::path dir = GASS_CURRENT_PATH();
+		return dir.string();
+	}
 
 	std::string FileUtils::GetExtension(const std::string &file_name)
 	{
@@ -99,14 +109,32 @@ namespace GASS
 		return GASS_FILESYSTEM::exists(boost_path);
 	}
 
+	void FileUtils::CreateDir(const std::string &dir)
+	{
+		GASS_FILESYSTEM::path fs_path(dir);
+		GASS_FILESYSTEM::create_directory(fs_path);
+	}
+
+	void FileUtils::CopyFile(const std::string &in_dir, const std::string &out_dir)
+	{
+		try
+		{
+			GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(in_dir), GASS_FILESYSTEM::path(out_dir), GASS_FILESYSTEM::copy_option::overwrite_if_exists);
+		}
+		catch (const GASS_FILESYSTEM::filesystem_error& e)
+		{
+			LogManager::getSingleton().stream() << "WARNING: Failed copy file:" << e.what();
+		}
+	}
+
 
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{
-		GASS_FILESYSTEM::path boost_path(path); 
-		if( GASS_FILESYSTEM::exists(boost_path))  
+		GASS_FILESYSTEM::path fs_path(path); 
+		if( GASS_FILESYSTEM::exists(fs_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end ;    
-			for( GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )      
+			for( GASS_FILESYSTEM::directory_iterator iter(fs_path) ; iter != end ; ++iter )
 			{
 				if (GASS_IS_DIRECTORY( *iter )  && recursive)      
 				{   

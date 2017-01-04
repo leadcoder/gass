@@ -19,32 +19,23 @@
 *****************************************************************************/
 
 #include "TreeGeometryComponent.h"
-#include <OgreEntity.h>
 #include <Ogre.h>
 #include <OgreSceneManager.h>
-#include <OgreHardwarePixelBuffer.h>
-#include "PagedGeometry.h"
 #include "ImpostorPage.h"
 #include "BatchPage.h"
 #include "TreeLoader2D.h"
 #include "TreeLoader3D.h"
-#include "StaticBillboardSet.h"
 #include "GrassLoader.h"
 #include "DensityMapComponent.h"
-
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
-
-
-
-//#include "Plugins/Ogre/OgreGraphicsSceneManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-
 
 namespace GASS
 {
@@ -282,11 +273,11 @@ namespace GASS
 		int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
 		int maxPageZ = Ogre::Math::Ceil(((world_pos.z+radius) - m_MapBounds.top) / m_PageSize);
 	
-		Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
+		/*Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
 									m_MapBounds.top + minPageZ*m_PageSize, 
 									m_MapBounds.left + maxPageX*m_PageSize,
 									m_MapBounds.top + maxPageZ*m_PageSize);
-
+									*/
 		//update page by page
 		for(int i = minPageX ; i < maxPageX; i++)
 		{

@@ -19,20 +19,13 @@
 *****************************************************************************/
 
 #include "BoxGeometryComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-
 
 namespace GASS
 {
@@ -307,8 +300,7 @@ namespace GASS
 		location.y = (2*rand2-1) * m_Size.y*0.5;
 		location.z = (2*rand3-1) * m_Size.z*0.5;
 
-		Mat4 trans;
-		trans.SetTransformation(pos,rot,Vec3(1,1,1));
+		Mat4 trans(pos,rot,Vec3(1,1,1));
 		location = trans*location;
 
 		return location;

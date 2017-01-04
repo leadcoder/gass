@@ -23,15 +23,10 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGBA.h"
-#include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Plugins/Base/CoreMessages.h"
-
 
 namespace GASS
 {
@@ -70,8 +65,6 @@ namespace GASS
 		void SetExport(const FilePath &filename);
 		FilePath GetExport() const;
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
-		void OnMoved(TransformationChangedEventPtr message);
-		//void OnUpdate(UpdateWaypointListMessagePtr message);
 		//Helpers
 		void UpdatePath();
 

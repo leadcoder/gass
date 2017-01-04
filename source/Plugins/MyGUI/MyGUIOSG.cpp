@@ -3,7 +3,6 @@
 #include "MainMenu.h"
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
-#include "StatisticInfo.h"
 
 bool MYGUIOSGEventHandler::handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa )
 {

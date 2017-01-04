@@ -52,7 +52,7 @@ namespace GASS
 	class GASSExport GraphicsSubMesh
 	{
 	public:
-		GraphicsSubMesh() 
+		GraphicsSubMesh() : Type(TRIANGLE_LIST)
 		{
 
 		}

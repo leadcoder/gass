@@ -55,7 +55,7 @@ namespace GASS
 		/**
 		Convinces function for BaseSceneComponent's that call GetComponent on ComponentContainerTemplate
 		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name);
+		BaseSceneComponentPtr GetBaseSceneComponent(const std::string &comp_name) const;
 	protected:
 		SceneObjectID m_ID;
 		bool m_Instantiable;

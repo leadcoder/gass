@@ -33,7 +33,6 @@ namespace GASS
 		virtual ~IGraphNodeComponent(){}
 		virtual void AddEdge(GraphEdgeComponentPtr edge) = 0;
 		virtual void RemoveEdge(GraphEdgeComponentPtr edge) = 0;
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IGraphNodeComponent> GraphNodeComponentPtr;
 	typedef GASS_WEAK_PTR<IGraphNodeComponent> GraphNodeComponentWeakPtr;

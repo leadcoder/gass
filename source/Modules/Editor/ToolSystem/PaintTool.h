@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
@@ -13,7 +11,6 @@ namespace GASS
 	class IMessage;
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
 	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-
 
 	class EditorModuleExport PaintTool : public IMouseTool
 	{
@@ -31,7 +28,7 @@ namespace GASS
 	private:
 		SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
@@ -39,6 +36,5 @@ namespace GASS
 		MouseToolController* m_Controller;
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		bool m_Active;
-
 	};
 }

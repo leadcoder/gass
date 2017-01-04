@@ -290,7 +290,7 @@ void GASSEd::OnNew()
 	m_Scene = GASS::SimEngine::Get().CreateScene("NewScene");
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
-	GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
+	GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelection,GASS::EditorSelectionChangedEvent,0));
 }
 
 void GASSEd::OnSave()
@@ -319,32 +319,33 @@ void GASSEd::OnOpen()
 		GetScene()->Load(selected_scene);
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SetObjectSite(GetScene()->GetSceneryRoot());
 		GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->CreateCamera();
-		GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
+		GetScene()->RegisterForMessage(REG_TMESS(GASSEd::OnSceneObjectSelection, GASS::EditorSelectionChangedEvent,0));
 	}
 }
 
 void GASSEd::ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos)
 {
 	m_SelectedObject = obj;
+	m_Selection = GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetSelectedObjects();
 	m_EditMenu->exec(pos);
 }
 
 void GASSEd::OnCopy()
 {
-	m_SceneObjectCutBuffer.reset();
-	m_SceneObjectCopyBuffer = m_SelectedObject;
+	m_SelectionCutBuffer.clear();
+	m_SelectionCopyBuffer = m_Selection;
 }
 
 
 void GASSEd::OnCut()
 {
-	m_SceneObjectCopyBuffer.reset();
-	m_SceneObjectCutBuffer = m_SelectedObject;
+	m_SelectionCopyBuffer.clear();
+	m_SelectionCutBuffer = m_Selection;
 }
 
 void GASSEd::OnSetAsSite()
 {
-	GASS::SceneObjectPtr current_object = GASS::SceneObjectPtr(m_SelectedObject);
+	GASS::SceneObjectPtr current_object = m_SelectedObject.lock();
 	if(current_object)
 	{
 		GASS::EditorSceneManagerPtr sm = current_object->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
@@ -352,32 +353,44 @@ void GASSEd::OnSetAsSite()
 	}
 }
 
-
 void GASSEd::OnPaste()
 {
-	GASS::SceneObjectPtr copy_obj(m_SceneObjectCopyBuffer, boost::detail::sp_nothrow_tag());
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
-	if(copy_obj && obj)
-	{
-		GASS::SceneObjectPtr new_obj = copy_obj->CreateCopy();
-		obj->AddChildSceneObject(new_obj,true);
+	GASS::SceneObjectPtr obj = m_SelectedObject.lock();
+	if(obj)
+	{ 
+	for (size_t i = 0; i < m_SelectionCopyBuffer.size();i++)
+	{ 
+		GASS::SceneObjectPtr copy_obj = m_SelectionCopyBuffer[i].lock();
+		if(copy_obj)
+		{
+			GASS::SceneObjectPtr new_obj = copy_obj->CreateCopy();
+			obj->AddChildSceneObject(new_obj,true);
+		}
 	}
-
-	GASS::SceneObjectPtr cut_obj(m_SceneObjectCutBuffer, boost::detail::sp_nothrow_tag());
-	if(cut_obj && obj)
+	
+	for (size_t i = 0; i < m_SelectionCutBuffer.size(); i++)
 	{
-		cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
-		obj->AddChild(cut_obj);
-		int id = (int) this;
-		cut_obj->PostEvent(GASS::ParentChangedEventPtr(new GASS::ParentChangedEvent(id)));
-		cut_obj.reset();
-		m_PasteAct->setEnabled(false);
+		GASS::SceneObjectPtr cut_obj = m_SelectionCutBuffer[i].lock();
+		if (cut_obj)
+		{
+			cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
+			obj->AddChild(cut_obj);
+			int id = (int) this;
+			cut_obj->PostEvent(GASS::ParentChangedEventPtr(new GASS::ParentChangedEvent(id)));
+			cut_obj.reset();
+		}
+	}
+	m_PasteAct->setEnabled(false);
 	}
 }
 
-void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
+void GASSEd::OnSceneObjectSelection(GASS::EditorSelectionChangedEventPtr  message)
 {
-	m_SelectedObject = message->GetSceneObject();
+	m_Selection = message->m_Selection;
+	if (m_Selection.size() > 0)
+		m_SelectedObject = message->m_Selection[0];
+	else
+		m_SelectedObject.reset();
 
 	m_CopyAct->setEnabled(false);
 	m_PasteAct->setEnabled(false);
@@ -406,7 +419,7 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 		m_CopyAct->setEnabled(true);
 		m_CutAct->setEnabled(true);
 
-		if(GASS::SceneObjectPtr copy_obj = m_SceneObjectCopyBuffer.lock())
+		if(m_SelectionCopyBuffer.size() > 0)
 		{
 			m_PasteAct->setEnabled(true);
 		}
@@ -414,7 +427,7 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 		m_ChangeSiteAct->setEnabled(true);
 		m_ChangeSiteAct->setVisible(true);
 
-		if(GASS::SceneObjectPtr cut_obj = m_SceneObjectCutBuffer.lock())
+		if(m_SelectionCutBuffer.size() > 0)
 		{
 			m_PasteAct->setEnabled(true);
 		}
@@ -462,7 +475,7 @@ void GASSEd::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
 			}
 		}
 
-		GASS::ComponentPtr terrain_comp = obj->GetFirstComponentByClass("OgreTerrainPageComponent");
+		GASS::ComponentPtr terrain_comp = obj->GetFirstComponentByClassName("OgreTerrainPageComponent");
 		if(terrain_comp)
 		{
 			m_AddWaypointsAct->setEnabled(true);
@@ -482,7 +495,7 @@ void GASSEd::OnAddTemplate()
 	if(action)
 	{
 		QString name = action->text();
-		GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+		GASS::SceneObjectPtr obj = m_SelectedObject.lock();
 		if(obj)
 		{
 			GASS::SceneObjectPtr new_object = obj->GetScene()->LoadObjectFromTemplate(name.toStdString(),obj);
@@ -493,11 +506,16 @@ void GASSEd::OnAddTemplate()
 
 void GASSEd::OnDelete()
 {
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
-	if(obj)
+	for (size_t i = 0; i < m_Selection.size(); i++)
 	{
-		obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
+		GASS::SceneObjectPtr obj = m_Selection[i].lock();
+		if (obj)
+		{
+			obj->GetParentSceneObject()->RemoveChildSceneObject(obj);
+		}
 	}
+
+	GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->UnselectAllSceneObjects();
 }
 
 

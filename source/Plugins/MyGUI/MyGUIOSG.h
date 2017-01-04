@@ -26,7 +26,7 @@ protected:
 class MYGUIOSGPlatformProxy : public osg::Drawable, public MyGUI::OpenGLImageLoader
 {
 public:
-	MYGUIOSGPlatformProxy() {};
+	MYGUIOSGPlatformProxy() : m_OpenGLPlatform(NULL), m_Initialized(false), m_ActiveContextID(0), m_GUISystem(NULL){};
 	MYGUIOSGPlatformProxy(GASS::MyGUIOSGSystem* system);
 	MYGUIOSGPlatformProxy( const MYGUIOSGPlatformProxy& copy, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 	META_Object( osg, MYGUIOSGPlatformProxy )

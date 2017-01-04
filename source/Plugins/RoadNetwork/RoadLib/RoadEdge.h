@@ -2,8 +2,6 @@
 #ifndef ROAD_EDGE
 #define ROAD_EDGE
 
-#include "Core/Utils/GASSFilePath.h"
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSVector.h"
 
 namespace GASS

@@ -19,30 +19,23 @@
 *****************************************************************************/
 
 #include "WaypointListComponent.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICollisionSceneManager.h"
-
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
+#include "Plugins/Base/CoreMessages.h"
 #include "WaypointComponent.h"
-
-#include <iostream>
 #include <sstream>
 #include <fstream>
 
@@ -367,7 +360,7 @@ namespace GASS
 
 			Vec3 last_point(0,0,0);
 
-			for(size_t  i = 0; i < spline.GetPoints().size(); i++)
+			for(unsigned int  i = 0; i < static_cast<unsigned int>(spline.GetPoints().size()); i++)
 			{
 				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{

@@ -60,7 +60,7 @@ namespace GASS
 		Float seg_dist = 0;
 		Float tot_dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
-		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
+		for(int  i = 0; i < static_cast<int>(m_NodeVector.size()); i++)
 		{
 			for(Float t = 0; t <= (1 + step_size); t += step_size)
 			{
@@ -113,7 +113,7 @@ namespace GASS
 	}
 
 
-	Vec3 SplineAnimation::GetVectorMask(const Vec3 &up_dir)
+	Vec3 SplineAnimation::GetVectorMask(const Vec3 &up_dir) const
 	{
 		Vec3 abs_up_dir(fabs(up_dir.x),fabs(up_dir.y),fabs(up_dir.z));
 		Vec3 ret(1,1,1);
@@ -215,7 +215,7 @@ namespace GASS
 		Float dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
 		
-		for(int  i = 0; i < (int) m_NodeVector.size(); i++)
+		for(int  i = 0; i < static_cast<int>(m_NodeVector.size()); i++)
 		{
 			if(desired_distance <= m_NodeVector[i].m_SegmentDistance + dist)
 			{

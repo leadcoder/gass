@@ -24,10 +24,8 @@
 #include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/Collision/ODECollisionSceneManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -37,13 +35,11 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSPhysicsMesh.h"
 #ifdef _MSC_VER
 #define NOMINMAX
-#include <algorithm>
+//#include <algorithm>
 #endif
 
 namespace GASS
@@ -115,7 +111,6 @@ namespace GASS
 			m_Type = CGT_NONE;
 		else
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unkown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
-
 	}
 
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
@@ -149,7 +144,7 @@ namespace GASS
 		Quaternion rot = message->GetRotation();
 		SetRotation(rot);
 
-		if(m_Type ==CGT_BOX)
+		if(m_Type == CGT_BOX)
 			SetScale(message->GetScale());
 	}
 
@@ -170,6 +165,9 @@ namespace GASS
 			break;
 		case CGT_PLANE:
 			m_GeomID = CreatePlaneGeometry();
+			break;
+		case CGT_NONE:
+			break;
 		}
 
 		if(m_GeomID)
@@ -233,6 +231,23 @@ namespace GASS
 		}
 	}
 
+	void ODECollisionGeometryComponent::SetActive(bool value)
+	{
+		if(value)
+			Enable();
+		else
+			Disable();
+	}
+
+	bool ODECollisionGeometryComponent::GetActive() const
+	{
+		if(m_GeomID)
+		{
+			return dGeomIsEnabled(m_GeomID) > 0;
+		}
+		return false;
+	}
+
 	void ODECollisionGeometryComponent::Disable()
 	{
 		if(m_GeomID)
@@ -258,7 +273,6 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateBoxGeometry()
 	{
-
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		if(!geom)
 		{
@@ -279,7 +293,7 @@ namespace GASS
 		return gid;
 	}
 
-	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry()
+	dGeomID ODECollisionGeometryComponent::CreatePlaneGeometry() const
 	{
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		if(!location)
@@ -301,7 +315,6 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
 	{
-
 		dGeomID geom_id = 0;
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
@@ -310,7 +323,7 @@ namespace GASS
 			ResourceComponentPtr res  = GetSceneObject()->GetFirstComponentByClass<IResourceComponent>();
 			ODECollisionMeshInfo col_mesh;
 			//bool has_col_mesh = false;
-			std::string col_mesh_id;
+			//std::string col_mesh_id;
 			if(res)
 			{
 				std::string col_mesh_id = res->GetResource().Name();
@@ -319,13 +332,23 @@ namespace GASS
 				if(GetCollisionSceneManager()->HasCollisionMesh(col_mesh_id)) //check cache
 				{
 					col_mesh = GetCollisionSceneManager()->GetCollisionMesh(col_mesh_id);
-					//has_col_mesh = true;
 				}
 				else
 				{
 					GraphicsMesh gfx_mesh_data = mesh->GetMeshData();
 					PhysicsMeshPtr physics_mesh(new PhysicsMesh(gfx_mesh_data));
-					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id,physics_mesh);
+
+					LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+					if(lc) //we only support base scale for mesh collision
+					{
+						Vec3 scale = lc->GetScale();
+						for(size_t i = 0; i < physics_mesh->PositionVector.size(); i++)
+						{
+							physics_mesh->PositionVector[i] = physics_mesh->PositionVector[i]*scale;
+						}
+					}
+
+					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id, physics_mesh);
 				}
 				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
 			}
@@ -528,6 +551,5 @@ namespace GASS
 		m.m_Data2[13] = 0;
 		m.m_Data2[14] = 0;
 		m.m_Data2[15] = 1;
-
 	}
 }

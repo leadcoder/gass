@@ -25,7 +25,6 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include <ode/ode.h>
-#include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "ODEPhysicsSceneManager.h"

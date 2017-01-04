@@ -67,17 +67,17 @@
 
 #include "Core/Common.h"
 
-#ifdef _MSC_VER
-#   if defined(GASS_PLUGIN_EXPORTS)
-#       define GASSPluginExport __declspec( dllexport )
-#   else
-#		define GASSPluginExport __declspec( dllimport )
-#   endif
-#  	if defined( GASS_EXPORTS)
-#      	define GASSExport __declspec( dllexport )
-#  	else
-#  		define GASSExport __declspec( dllimport )
-#  	endif
+#if defined(_MSC_VER) && !defined(GASS_STATIC_BUILD)
+#	   	if defined( GASS_EXPORTS )
+#	    	define GASSExport __declspec( dllexport )
+#   	else
+#			define GASSExport __declspec( dllimport )
+#		endif
+#		if defined(GASS_PLUGIN_EXPORTS)
+#			define GASSPluginExport __declspec( dllexport )
+#		else
+#			define GASSPluginExport __declspec( dllimport )
+#endif
 #else
 #   define GASSPluginExport
 #   define GASSExport

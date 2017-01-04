@@ -122,7 +122,7 @@ namespace GASS
 		{
 			PhysicsMaterial mat_data = iter->second;
 			m_Materials[iter->first] = GetPxSDK()->createMaterial(static_cast<float>(mat_data.StaticFriction), static_cast<float>(mat_data.DynamicFriction), static_cast<float>(mat_data.Restitution));
-			iter++;
+			++iter;
 		}
 		m_DefaultMaterial = m_Materials["DEFAULT"];
 

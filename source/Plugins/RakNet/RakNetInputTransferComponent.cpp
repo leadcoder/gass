@@ -21,34 +21,17 @@
 
 #include "RakNetInputTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
-//#include "Plugins/RakNet/RakNetBase.h"
-
-
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkChildComponent.h"
 #include "RakNetMasterReplica.h"
 #include "RakNetChildReplica.h"
-
-
-
-#include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-
-
-
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-
 #include "GetTime.h"
 #include "RakPeerInterface.h"
 
@@ -214,8 +197,8 @@ namespace GASS
 			
 			if(raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
-				NetworkAddress address  = message->GetAddress();
-				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(address ,0,package));
+				NetworkAddress message_address  = message->GetAddress();
+				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(message_address,0,package));
 				GetSceneObject()->PostRequest(serialize_message);
 			}
 			//std::cout << "got input from client" << std::endl;
@@ -231,10 +214,10 @@ namespace GASS
 		}
 		else
 		{
-			RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
-			if(comp)
+			RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
+			if(child_comp)
 			{
-				comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);
+				child_comp->GetReplica()->RemoteMessage(message->GetClient().c_str(),message->GetMessage().c_str(),0);
 			}
 		}
 	}

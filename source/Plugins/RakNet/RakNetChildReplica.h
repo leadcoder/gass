@@ -24,13 +24,10 @@
 #include "Sim/GASSCommon.h"
 #include "PacketPriority.h"
 #include "Replica.h"
-#include "StringTable.h"
 #include "BitStream.h"
-#include "GetTime.h"
 #include "Core/Utils/GASSLogManager.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "RakNetBaseReplica.h"
+
 class ReplicaManager;
 
 namespace GASS
@@ -66,17 +63,17 @@ namespace GASS
 		void SendConstruction(RakNet::BitStream *outBitStream);
 		SystemAddress  GetOwnerSystemAddress() {return m_OwnerSystemAddress;}
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
-		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
+		bool AllowRemoteOwner() {return m_AllowRemoteOwner;}
 
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId() const {return m_PartId;}
-		NetworkID GetPartOfId(){return m_PartOfId;}
+		NetworkID GetPartOfId() const {return m_PartOfId;}
 		int GetPartId(){return m_PartId;}
 		void SerializeProperties(RakNet::BitStream *bit_stream);
 		void DeserializeProperties(RakNet::BitStream *bit_stream);
 		bool HasPropertiesChanged();
 	protected:
-		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property);
+		bool GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property) const;
 
 		bool m_AllowRemoteOwner;
 	private:

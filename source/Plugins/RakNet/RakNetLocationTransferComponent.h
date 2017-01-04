@@ -24,18 +24,10 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSINetworkComponent.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-
-
 #include "Sim/GASSCommon.h"
-#include "Plugins/RakNet/RakNetMessages.h"
-#include "Plugins/RakNet/RakNetPackageFactory.h"
-
 
 namespace GASS
 {
@@ -47,11 +39,19 @@ namespace GASS
 	class TransformationPackage : public NetworkPackage
 	{
 	public:
-		TransformationPackage() 
+		TransformationPackage() : NetworkPackage(0),
+			Position(Vec3(0,0,0)),
+			Velocity(Vec3(0,0,0)),
+			AngularVelocity(Vec3(0, 0, 0)),
+			TimeStamp(0)
 		{
 
 		}
-		TransformationPackage(int id ) : NetworkPackage(id) 
+		TransformationPackage(int id ) : NetworkPackage(id) ,
+			Position(Vec3(0, 0, 0)),
+			Velocity(Vec3(0, 0, 0)),
+			AngularVelocity(Vec3(0, 0, 0)),
+			TimeStamp(0)
 		{
 
 		}

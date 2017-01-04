@@ -21,21 +21,16 @@
 #include "SkyXComponent.h"
 #include "SkyXVolumeCloudComponent.h"
 #include "SkyXCloudLayerComponent.h"
-#include "Plugins/Ogre/IOgreCameraProxy.h"
-#include "Plugins/Ogre/IOgreSceneManagerProxy.h"
-#include "Plugins/Ogre/OgreConvert.h"
+#include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
+#include "Plugins/Ogre/GASSOgreConvert.h"
 
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
-#include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIViewport.h"
-#include "Sim/Interface/GASSICameraComponent.h"
 #include <Ogre.h>
 
 namespace GASS

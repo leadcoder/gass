@@ -21,19 +21,14 @@
 #include "FollowWaypointListComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-#include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSMath.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-
 
 namespace GASS
 {
@@ -73,8 +68,8 @@ namespace GASS
 					WaypointListComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<IWaypointListComponent>(comps[i]);
 					if(wpl)
 					{
-						SceneObjectPtr so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
-						ret.push_back(so);
+						SceneObjectPtr wp_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						ret.push_back(wp_so);
 					}
 				}
 			}
@@ -105,8 +100,8 @@ namespace GASS
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
 					if(wpl)
 					{
-						SceneObjectPtr so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
-						ret.push_back(so);
+						SceneObjectPtr nav_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						ret.push_back(nav_so);
 					}
 				}
 			}
@@ -177,7 +172,7 @@ namespace GASS
 				double dist = (wp_pos - pos).FastLength();
 				if(i == 0 || dist < shortest_dist)
 				{
-					wp_index = i;
+					wp_index = static_cast<int>(i);
 					shortest_dist = dist;
 				}
 			}
@@ -191,9 +186,9 @@ namespace GASS
 		{
 			//if(true)
 			//{
-			int num_waypoints = (int) m_Waypoints.size();
+			int num_waypoints = static_cast<int>( m_Waypoints.size());
 			int wp_index;
-			Vec3 point_on_path;
+			//Vec3 point_on_path;
 			Float ditance_to_path_dist;
 			Float now_distance = Math::GetPathDistance(m_CurrentPos,m_Waypoints,wp_index,ditance_to_path_dist);
 			double look_ahead = 10;
@@ -222,6 +217,8 @@ namespace GASS
 						GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
 					}
 				}
+				break;
+			case PFM_REVERSE_LOOP:
 				break;
 				/*case PFM_REVERSE_LOOP:
 				if(num_waypoints > 1)
@@ -312,7 +309,6 @@ namespace GASS
 		}*/
 		//DriveTo(m_DesiredPos,m_LastPos, m_DesiredSpeed, delta);
 	}
-
 }
 
 void FollowWaypointListComponent::OnWaypointListUpdated(WaypointListUpdatedMessagePtr message)
@@ -324,7 +320,7 @@ void FollowWaypointListComponent::OnWaypointListUpdated(WaypointListUpdatedMessa
 		if(m_NavigationObject.IsValid() && m_Waypoints.size() > 1)
 		{
 			std::vector<Vec3> final_path;
-			bool path_found  =false;
+			bool path_found = false;
 			NavigationComponentPtr nav = m_NavigationObject->GetFirstComponentByClass<INavigationComponent>();
 			for(size_t i = 1; i < m_Waypoints.size(); i++)
 			{
@@ -332,7 +328,6 @@ void FollowWaypointListComponent::OnWaypointListUpdated(WaypointListUpdatedMessa
 				{
 					final_path.pop_back();
 				}
-				path_found = false;
 				path_found = nav->GetShortestPath(m_Waypoints[i-1],m_Waypoints[i],final_path);
 			}
 

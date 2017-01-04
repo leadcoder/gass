@@ -20,7 +20,6 @@
 
 #include "Plugins/OSG/Components/OSGTextComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -34,6 +33,7 @@ namespace GASS
 		m_Offset(0,0,0),
 		m_DropShadow(true),
 		m_Color(1,1,1,1)
+
 	{
 
 	}
@@ -133,7 +133,7 @@ namespace GASS
 
 	AABox OSGTextComponent::GetBoundingBox() const
 	{
-		float max = static_cast<float>(Math::Max(m_Width,m_Height));
+		float max = m_CharSize;// static_cast<float>(Math::Max(m_Width, m_Height));
 		AABox box(Vec3(-max/2.0,-max/2.0,-max/2.0),Vec3(max/2.0,max/2.0,max/2.0));
 		return box;
 	}
@@ -141,7 +141,7 @@ namespace GASS
 	{
 		Sphere sphere;
 		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = static_cast<float>(Math::Max(m_Width,m_Height)/2.0);
+		sphere.m_Radius = m_CharSize;//static_cast<float>(Math::Max(m_Width,m_Height)/2.0);
 		return sphere;
 	}
 

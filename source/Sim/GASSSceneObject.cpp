@@ -23,9 +23,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
-#include "Core/Serialize/GASSSerialize.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainer.h"
@@ -33,9 +31,7 @@
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
-#include <iostream>
 #include <iomanip>
-#include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tinyxml2.h>
 
@@ -212,6 +208,14 @@ namespace GASS
 		//notify that this objects and its children will be removed
 		child->OnDelete();
 		ComponentContainer::RemoveChild(child);
+	}
+	
+	void SceneObject::SendRemoveRequest(float delay)
+	{
+		SceneObjectPtr obj = GASS_STATIC_PTR_CAST<SceneObject>(shared_from_this());
+		SceneMessagePtr remove_msg(new RemoveSceneObjectRequest(obj));
+		remove_msg->SetDeliverDelay(delay);
+		GetScene()->PostMessage(remove_msg);		
 	}
 
 	void SceneObject::OnDelete()
@@ -435,7 +439,7 @@ namespace GASS
 		while(comp_iter != m_ComponentContainerVector.end())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(*comp_iter);
-			comp_iter++;
+			++comp_iter;
 			if(child->GetGUID() == guid)
 			{
 				return child;
@@ -448,7 +452,7 @@ namespace GASS
 			SceneObjectPtr ret = child->GetChildByGUID(guid);
 			if(ret)
 				return ret;
-			iter++;
+			++iter;
 		}
 		return SceneObjectPtr();
 	}
@@ -479,7 +483,7 @@ namespace GASS
 				}
 				if(recursive)
 					child->GetChildrenByName(objects,name,exact_math,recursive);
-				iter++;
+				++iter;
 			}
 		}
 	}
@@ -490,7 +494,7 @@ namespace GASS
 		while(iter != m_ComponentContainerVector.end())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(*iter);
-			iter++;
+			++iter;
 			if(exact_math)
 			{
 				if(child->GetName() == name)
@@ -517,7 +521,7 @@ namespace GASS
 				SceneObjectPtr ret = child->GetFirstChildByName(name,exact_math,recursive);
 				if(ret)
 					return ret;
-				cc_iter ++;
+				++cc_iter;
 			}
 		}
 		return SceneObjectPtr();
@@ -529,7 +533,7 @@ namespace GASS
 		while(iter != m_ComponentContainerVector.end())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(*iter);
-			iter++;
+			++iter;
 			if(child->GetID() == id)
 			{
 				return child;
@@ -540,7 +544,7 @@ namespace GASS
 		while(iter != m_ComponentContainerVector.end())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(*iter);
-			iter++;
+			++iter;
 			SceneObjectPtr ret = child->GetChildByID(id);
 			if(ret)
 				return ret;
@@ -575,7 +579,7 @@ namespace GASS
 				}
 				if(recursive)
 					child->GetChildrenByID(objects,id,exact_math,recursive);
-				iter++;
+				++iter;
 			}
 		}
 	}
@@ -699,12 +703,16 @@ namespace GASS
 		tinyxml2::XMLDeclaration* decl = xmlDoc->NewDeclaration();
 		xmlDoc->LinkEndChild( decl ); 
 
-		//tinyxml2::XMLElement * so_elem = xmlDoc.NewElement("SceneObject");  
-		//doc.LinkEndChild( so_elem); 
-
 		//first save to store filename
 		xmlDoc->SaveFile(filename.c_str());
-		SaveXML((tinyxml2::XMLElement*) (xmlDoc));
+
+		//This is very wrong but works...need to fix this!!!!
+		//SaveXML((tinyxml2::XMLElement*)xmlDoc);
+
+		//SaveXML(dynamic_cast<tinyxml2::XMLElement*>(xmlDoc));
+		tinyxml2::XMLElement * so_elem = xmlDoc->NewElement("SceneObject");
+		xmlDoc->LinkEndChild(so_elem);
+		SaveXML(so_elem);
 		xmlDoc->SaveFile(filename.c_str());
 		delete xmlDoc;
 	}

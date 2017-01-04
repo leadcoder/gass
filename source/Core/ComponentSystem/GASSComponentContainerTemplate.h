@@ -193,7 +193,7 @@ namespace GASS
 		//Help functions during template creation
 		//std::string CreateUniqueName(ComponentContainerTemplateManagerConstPtr manager) const;
 		void _InheritComponentData(ComponentContainerPtr cc) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement *comp_template);
+		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement *comp_template) const;
 
 		ComponentVector m_ComponentVector;
 		ComponentContainerTemplateVector m_ComponentContainerVector;

@@ -1,13 +1,8 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
-#include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Plugins/Base/CoreMessages.h"
 #include "Sim/GASSGraphicsMesh.h"
-#include "Sim/Messages/GASSCoreSceneMessages.h"
-#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -39,12 +34,14 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		//editor selection changed
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationChangedEventPtr message);
 		void OnWorldPosition(WorldPositionRequestPtr message);
-		void OnEditMode(EditModeChangedEventPtr message);
+		void OnWorldRotation(WorldRotationRequestPtr message);
 
-		void SetSelection(SceneObjectPtr  object);
+		void OnEditMode(EditModeChangedEventPtr message);
+		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 		void BuildMesh();
 		std::string GetType() const {return m_Type;}
 		void SetType(const std::string &value) {m_Type = value;}
@@ -53,8 +50,10 @@ namespace GASS
 		ColorRGBA GetColor() const{return m_Color;}
 		void SetColor(const ColorRGBA &value){m_Color =value;}
 		void UpdateScale();
-		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p);
+		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
 		Float SnapValue(Float value, Float snap);
+
+		SceneObjectPtr GetFirstSelected();
 
 		Quaternion m_BaseRot;
 		GraphicsMeshPtr m_MeshData;
@@ -66,14 +65,15 @@ namespace GASS
 		Float m_LastDist;
 		bool m_Highlight;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selection;
 		GizmoEditMode m_Mode;
 		Float m_GridDist;
 		bool m_Active;
 		EditorSceneManagerPtr m_EditorSceneManager;
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
-
+		GASS::Vec3 m_PreviousPos;
+		Quaternion m_PreviousRot;
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;

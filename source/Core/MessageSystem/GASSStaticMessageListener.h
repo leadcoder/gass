@@ -36,7 +36,7 @@ namespace GASS
 		}
 		virtual ~StaticMessageListener(){}
 
-		GASS_SHARED_PTR<StaticMessageListener> shared_from_this()
+		GASS_SHARED_PTR<StaticMessageListener> shared_from_this() const
 		{
 			return m_SharedFromThis;
 		}

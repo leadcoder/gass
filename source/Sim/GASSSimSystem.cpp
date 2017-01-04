@@ -19,10 +19,10 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Sim/GASSSimSystem.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "tinyxml2.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
+
 namespace GASS
 {
 	SimSystem::SimSystem(void) : m_UpdateGroup(UGID_NO_UPDATE)
@@ -69,7 +69,7 @@ namespace GASS
 			if(listener == c_list)
 				iter = m_Listeners.erase(iter);
 			else
-				iter++;
+				++iter;
 		}
 	}
 
@@ -79,7 +79,7 @@ namespace GASS
 			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
 		{}
 		SystemListenerExecutor(SystemListenerExecutor& e,tbb::split)
-			:m_SLVector(e.m_SLVector)
+			:m_SLVector(e.m_SLVector), m_DeltaTime(e.m_DeltaTime)
 		{}
 		SystemListenerExecutor & operator=( const SystemListenerExecutor & ) { return *this; }
 
@@ -106,7 +106,7 @@ namespace GASS
 				iter = m_Listeners.erase(iter);
 			else
 			{
-				iter++;
+				++iter;
 			}
 		}
 		if(m_Listeners.size() == 1)

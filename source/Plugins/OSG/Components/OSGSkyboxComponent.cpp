@@ -21,7 +21,6 @@
 #include "Plugins/OSG/Components/OSGSkyboxComponent.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
-#include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Core/Utils/GASSFileUtils.h"
 

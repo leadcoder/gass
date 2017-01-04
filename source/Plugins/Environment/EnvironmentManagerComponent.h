@@ -23,14 +23,10 @@
 #include "Core/Common.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Core/MessageSystem/GASSIMessage.h"
-#include <OgreRenderTargetListener.h>
 #include <OgreLight.h>
-
 #include "Hydrax/Hydrax.h"
 #include "SkyX.h"
 
@@ -50,7 +46,6 @@ namespace GASS
 		virtual void OnDelete();
 	protected:
 		void UpdateEnvironmentLighting();
-		void OnLoad(MessagePtr message);
 		void OnChangeCamera(CameraChangedEventPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);

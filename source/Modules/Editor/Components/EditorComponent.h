@@ -1,9 +1,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Core/Utils/GASSColorRGB.h"
-
-#include "Plugins/Base/CoreMessages.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/EditorSceneManager.h"
@@ -38,7 +36,7 @@ namespace GASS
 		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
 		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
 		void SetShowBBWhenSelected(bool value) {m_ShowBBWhenSelected = value;}

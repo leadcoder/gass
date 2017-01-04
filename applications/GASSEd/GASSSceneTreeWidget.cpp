@@ -13,7 +13,7 @@ GASSSceneTreeWidget::GASSSceneTreeWidget(GASSEd *parent): QTreeWidget(parent),
 {
 	setHeaderHidden(true);
 	setMinimumSize(200,200);
-	setSelectionMode(QAbstractItemView::SingleSelection);
+	setSelectionMode(QAbstractItemView::ExtendedSelection);
 	QObject::connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(selectionChanged()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
@@ -31,7 +31,7 @@ GASSSceneTreeWidget::~GASSSceneTreeWidget()
 void GASSSceneTreeWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 {
 	m_Scene = message->GetScene();
-	message->GetScene()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
+	message->GetScene()->RegisterForMessage(REG_TMESS(GASSSceneTreeWidget::OnSceneObjectSelectionChanged,GASS::EditorSelectionChangedEvent,0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnLoadSceneObject, GASS::PostComponentsInitializedEvent, 0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnUnloadSceneObject,GASS::SceneObjectRemovedEvent,0));
 	message->GetScene()->RegisterForMessage(REG_TMESS( GASSSceneTreeWidget::OnParentChanged,GASS::SceneObjectChangedParentEvent,0));
@@ -144,44 +144,100 @@ GASS::SceneObjectPtr GASSSceneTreeWidget::GetSceneObject(QTreeWidgetItem*  item)
 	return GASS::SceneObjectPtr();
 }
 
-static bool internal_select = false;
-void GASSSceneTreeWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
+
+void GASSSceneTreeWidget::CheckSceneSelection(QTreeWidgetItem *item)
 {
-	if(message->GetSenderID() != (int) this)
 	{
-		GASS::SceneObjectPtr selected = message->GetSceneObject();
-		if(selected)
+		GASS::SceneObjectPtr obj = GetSceneObject(item);
+		if (obj)
 		{
-			QTreeWidgetItem *item = GetTreeItem(selected);
-			internal_select = true;
-			//setSelected(true);
-			setCurrentItem(item);
-			internal_select = false;
+			if (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->IsSelected(obj))
+				item->setSelected(true);
+			else
+				item->setSelected(false);
 		}
 	}
+
+	for (int i = 0; i < item->childCount(); ++i)
+		CheckSceneSelection(item->child(i));
+}
+
+static bool internal_select = false;
+void GASSSceneTreeWidget::OnSceneObjectSelectionChanged(GASS::EditorSelectionChangedEventPtr message)
+{
+	if (message->GetSenderID() != (int) this)
+	{
+		internal_select = true;
+		CheckSceneSelection(invisibleRootItem());
+		internal_select = false;
+
+		/*for (size_t i = 0; i < message->m_Selection.size(); i++)
+		{
+			GASS::SceneObjectPtr selected = message->m_Selection[i].lock();
+			if (selected)
+			{
+				QTreeWidgetItem *item = GetTreeItem(selected);
+				internal_select = true;
+				item->setSelected(true);
+				//setCurrentItem(item);
+				internal_select = false;
+			}
+		}*/
+	}
+}
+
+void GASSSceneTreeWidget::CheckTreeSelection(QTreeWidgetItem *item)
+{
+	if (item == m_SceneItem)
+	{
+		//send scene selection message
+		GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
+		GASS::ScenePtr(m_Scene)->PostMessage(message);
+		//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(GASS::SceneObjectPtr());
+	}
+	else
+	{
+		GASS::SceneObjectPtr obj = GetSceneObject(item);
+		if (obj)
+		{
+			if(item->isSelected())
+				m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
+			else
+				m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->UnselectSceneObject(obj);
+		}
+	}
+
+	for (int i = 0; i < item->childCount(); ++i)
+		CheckTreeSelection(item->child(i));
 }
 
 void GASSSceneTreeWidget::selectionChanged()
 {
-	QList<QTreeWidgetItem*> items = selectedItems();
+	if (!internal_select)
+		CheckTreeSelection(invisibleRootItem());
+	/*QList<QTreeWidgetItem*> items = selectedItems();
+	QList<QTreeWidgetItem*> items = getItems();
 	if(!internal_select && items.size() > 0)
 	{
-		if(items[0] == m_SceneItem)
+		for (int i = 0; i < items.size(); i++)
 		{
-			//send scene selection message
-			GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
-			GASS::ScenePtr(m_Scene)->PostMessage(message);
-			//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(GASS::SceneObjectPtr());
-		}
-		else
-		{
-			GASS::SceneObjectPtr obj = GetSceneObject(items[0]);
-			if(obj)
+			if (items[i] == m_SceneItem)
 			{
-				m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
+				//send scene selection message
+				GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
+				GASS::ScenePtr(m_Scene)->PostMessage(message);
+				//m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(GASS::SceneObjectPtr());
+			}
+			else
+			{
+				GASS::SceneObjectPtr obj = GetSceneObject(items[i]);
+				if (obj)
+				{
+					m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->SelectSceneObject(obj);
+				}
 			}
 		}
-	}
+	}*/
 }
 
 void GASSSceneTreeWidget::showContextMenu(const QPoint& pos) 
@@ -191,7 +247,7 @@ void GASSSceneTreeWidget::showContextMenu(const QPoint& pos)
     // for QAbstractScrollArea and derived classes you would use:
     // QPoint globalPos = myWidget->viewport()->mapToGlobal(pos); 
 	
-	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetSelectedObject();
+	GASS::SceneObjectPtr obj = m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetFirstSelectedObject();
 
 	QList<QTreeWidgetItem*> items = selectedItems();
 	if(!internal_select && items.size() > 0)

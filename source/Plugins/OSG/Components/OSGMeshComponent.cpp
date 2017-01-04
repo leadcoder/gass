@@ -20,18 +20,15 @@
 
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
-#include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGGeometryRecorder.h"
 #include "Plugins/OSG/OSGConvert.h"
-#include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Sim/GASSResourceManager.h"
 
 namespace GASS
 {
-
 	std::vector<std::string> OSGMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
 	{
 		std::vector<std::string> content;
@@ -49,7 +46,8 @@ namespace GASS
 		m_Lighting(true),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_Expand(false),
-		m_FlipDDS(false)
+		m_FlipDDS(false),
+		m_Collision(true)
 	{
 
 	}
@@ -91,7 +89,6 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
 	}
 
-
 	void OSGMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
@@ -122,7 +119,6 @@ namespace GASS
 		}
 		return content;
 	}
-
 
 	void OSGMeshComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)
 	{
@@ -566,21 +562,21 @@ namespace GASS
 				{
 #ifdef OSG_VERSION_GREATER_OR_EQUAL
 #if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
-					osg::BoundingBox bbox = geode->getDrawable(i)->getBoundingBox();
+					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBoundingBox();
 #else
-					osg::BoundingBox bbox = geode->getDrawable(i)->getBound();
+					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
 #endif
 #else
-					osg::BoundingBox bbox = geode->getDrawable(i)->getBound();
+					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
 #endif
 
-					AABox box;
+					AABox temp_box;
 
-					osg::Vec3d p1 = bbox._max*M;
-					osg::Vec3d p2 = bbox._min*M;
+					osg::Vec3d p1 = osg_bbox._max*M;
+					osg::Vec3d p2 = osg_bbox._min*M;
 
-					box.Union(OSGConvert::ToGASS(p1));
-					box.Union(OSGConvert::ToGASS(p2));
+					temp_box.Union(OSGConvert::ToGASS(p1));
+					temp_box.Union(OSGConvert::ToGASS(p2));
 					m_BBox.Union(box);
 				}
 			}
@@ -614,14 +610,26 @@ namespace GASS
 
 	void OSGMeshComponent::OnCollisionSettings(CollisionSettingsRequestPtr message)
 	{
+		SetCollision(message->EnableCollision());
+	}
+
+	void OSGMeshComponent::SetCollision(bool value)
+	{
 		if(m_MeshNode.valid() && m_MeshNode->getNodeMask())
 		{
-			if(message->EnableCollision())
+			if(value)
 				OSGConvert::SetOSGNodeMask(m_GeomFlags,m_MeshNode.get());
 			else
 			{
 				OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_TRANSPARENT_OBJECT,m_MeshNode.get());
 			}
 		}
+		m_Collision = value;
 	}
+
+	bool OSGMeshComponent::GetCollision() const
+	{
+		return m_Collision;
+	}
+
 }

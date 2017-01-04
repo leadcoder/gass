@@ -121,7 +121,6 @@ namespace GASS
 			@resource_name Name of resource
 		*/
 		void RegisterResourceType(const ResourceType &res_type);
-	protected:
 	private:
 		ResourceGroupVector m_ResourceGroups;
 		std::vector<ResourceType> m_ResourceTypes;

@@ -148,7 +148,7 @@ void Spline::RecalcTangents(void)
 	unsigned int i, numPoints;
 	bool isClosed;
 
-	numPoints = (unsigned int)m_Points.size();
+	numPoints = static_cast<unsigned int>(m_Points.size());
 	if (numPoints < 2)
 	{
 		// Can't do anything yet

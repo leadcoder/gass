@@ -21,8 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/Utils/GASSFilePath.h"
-#include <string>
 
 namespace GASS
 {
@@ -34,7 +32,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IPhysicsSystem(){}
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IPhysicsSystem> PhysicsSystemPtr;
 }

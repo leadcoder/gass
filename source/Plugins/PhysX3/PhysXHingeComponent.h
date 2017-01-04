@@ -21,13 +21,9 @@
 #pragma once
 
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
-#include <extensions/PxRevoluteJoint.h>
-#include <extensions/PxPrismaticJoint.h>
 #include "PhysXCommon.h"
 #include "PhysXBaseJointComponent.h"
 #include "Sim/GASS.h"
-#include "Sim/GASSSceneObjectRef.h"
-
 
 namespace GASS
 {
@@ -49,8 +45,6 @@ namespace GASS
 		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
 		void SceneManagerTick(double delta_time);
 		//Helpers
-		
-		void UpdateSuspension();
 		void UpdateMotor();
 		void UpdateLimits();
 

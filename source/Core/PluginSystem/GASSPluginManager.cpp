@@ -22,7 +22,7 @@
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSFilesystem.h"
+#include "Core/Utils/GASSFileUtils.h"
 #include "tinyxml2.h"
 #include <assert.h>
 
@@ -144,50 +144,44 @@ namespace GASS
 		if(ext == "")
 		{
 #ifndef WIN32
-			ext = ".so";
+			ext = "so";
 #else
-			ext = ".dll";
+			ext = "dll";
 #endif
 		}
-		GASS_FILESYSTEM::path path(directory); 
+		std::vector<std::string> files;
 
+		FileUtils::GetFilesFromPath(files, directory, false, false);
 		std::vector<std::string> plugins;
-		if( GASS_FILESYSTEM::exists( path) )  
+
+		for (int i = 0; i < files.size(); i++)
 		{
+			std::string extension = FileUtils::GetExtension(files[i]);
+			std::string filename = FileUtils::GetFilename(files[i]);
+			//filter debug plugins
+#ifndef NDEBUG
+				if (filename.find("_d") == std::string::npos)
+					continue;
+#else
+				if (filename.find("_d") != std::string::npos)
+					continue;
+#endif
 
-			GASS_FILESYSTEM::directory_iterator end ;    
-			for( GASS_FILESYSTEM::directory_iterator iter(path) ; iter != end ; ++iter )      
-			{
-				if ( !GASS_IS_DIRECTORY( *iter ) )
-				{   
-					std::string extension = GASS_TO_GENERIC_STRING(iter->path().extension());
-					std::string filename = GASS_TO_GENERIC_STRING(iter->path().filename());
-
-					//filter debug plugins
-					#ifndef NDEBUG
-						if(filename.find("_d") == std::string::npos)
-							continue;
-					#else
-						if(filename.find("_d") != std::string::npos)
-							continue;
-					#endif
-				
-					if(extension == ext)
-					{
-						plugins.push_back(filename );
-					}
-				}     
-			}
-			GASS_FILESYSTEM::path saved_path = GASS_CURRENT_PATH();
-			GASS_CURRENT_PATH(path);
-			for(size_t i = 0 ; i < plugins.size() ; i++)
-			{
-				DynamicModule* module = new DynamicModule(plugins[i]);
-				module->Load();
-				LogManager::getSingleton().stream() << plugins[i] << " loaded";
-				m_Plugins.push_back(module);
-			}
-			GASS_CURRENT_PATH(saved_path);
+				if (extension == ext)
+				{
+					plugins.push_back(filename);
+				}
 		}
+
+		std::string saved_path = FileUtils::GetCurrentDir();
+		FileUtils::SetCurrentDir(directory);
+		for (size_t i = 0; i < plugins.size(); i++)
+		{
+			DynamicModule* module = new DynamicModule(plugins[i]);
+			module->Load();
+			LogManager::getSingleton().stream() << plugins[i] << " loaded";
+			m_Plugins.push_back(module);
+		}
+		FileUtils::SetCurrentDir(saved_path);
 	}
 }

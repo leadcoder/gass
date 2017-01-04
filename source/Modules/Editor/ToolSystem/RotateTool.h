@@ -1,8 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "../EditorCommon.h"
 #include "../EditorMessages.h"
-#include <set>
 #include "IMouseTool.h"
 #include "CursorInfo.h"
 
@@ -13,7 +11,6 @@ namespace GASS
 	class IMessage;
 	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
 	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-
 
 	class EditorModuleExport RotateTool : public IMouseTool
 	{
@@ -29,14 +26,14 @@ namespace GASS
 		virtual void Stop();
 		virtual void Start();
 	private:
-		bool CheckIfEditable(SceneObjectPtr obj);
+		bool CheckIfEditable(SceneObjectPtr obj) const;
 		void SetGizmoVisiblity(bool value);
 		SceneObjectPtr GetMasterGizmo();
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
+		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
-		SceneObjectWeakPtr m_SelectedObject;
+		std::vector<SceneObjectWeakPtr> m_Selected;
 		MouseToolController* m_Controller;
 		SceneObjectWeakPtr m_MasterGizmoObject;
 		SceneObjectWeakPtr m_CurrentGizmo;

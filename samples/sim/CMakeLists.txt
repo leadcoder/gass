@@ -1,20 +1,17 @@
-#Add dependencies
-find_package(GASSSharedLibraries)
-#copy binary files to build folders, this is needed for to enable debugging inside MSVC
-FILE(COPY ${ALL_BIN_FILES_RELEASE}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-FILE(COPY ${ALL_BIN_FILES_DEBUG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-#...data is also needed
+
+#copy data to build folder
 FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../common/data/ DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../data)
 
 ADD_SUBDIRECTORY(network)
-ADD_SUBDIRECTORY(gui)
-ADD_SUBDIRECTORY(physics)
+if(GASS_BUILD_PLUGIN_MYGUI)
+	ADD_SUBDIRECTORY(gui)
+endif()
+if(MSVC)
+	ADD_SUBDIRECTORY(physics)
+	ADD_SUBDIRECTORY(editor)
+endif()
 ADD_SUBDIRECTORY(vehicle)
 ADD_SUBDIRECTORY(osgearth)
-
-#install eventual binary files
-INSTALL(FILES ${ALL_BIN_FILES_RELEASE} DESTINATION bin/release CONFIGURATIONS Release)
-INSTALL(FILES ${ALL_BIN_FILES_DEBUG} DESTINATION bin/debug CONFIGURATIONS Debug)
 
 #install data
 INSTALL(DIRECTORY ../common/data DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/../ FILES_MATCHING PATTERN "*.*" PATTERN ".svn" EXCLUDE)

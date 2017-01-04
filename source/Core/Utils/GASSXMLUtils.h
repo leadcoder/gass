@@ -22,7 +22,6 @@
 #define XMLUtils_HH
 
 #include "Core/Common.h"
-#include "Core/Math/GASSVector.h"
 
 namespace tinyxml2
 {

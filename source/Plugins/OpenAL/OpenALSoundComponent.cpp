@@ -5,7 +5,6 @@
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Framework/Framework.h"
 
@@ -105,6 +104,8 @@ namespace GASS
 				//float pitch = GetPitch();
 				SetVolume(value);
 			}
+			break;
+		case SoundParameterRequest::LOOP:
 			break;
 		}
 	}
@@ -235,8 +236,6 @@ namespace GASS
 		if (m_Source == 0)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Play called without m_Source set","OpenALSoundComponent::Play()");
-			//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::Play() called without m_Source set";
-			return;
 		}
 
 		alSourcePlay(m_Source);

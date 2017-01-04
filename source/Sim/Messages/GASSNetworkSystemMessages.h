@@ -24,8 +24,6 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSBaseMessage.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSQuaternion.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include <string>
 
@@ -67,7 +65,6 @@ namespace GASS
 	public:
 		StopServerRequest(SenderID sender_id = -1, double delay= 0) :
 		  SystemRequestMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<StopServerRequest> StopServerRequestPtr;
 
@@ -155,7 +152,6 @@ namespace GASS
 	public:
 		StopClientRequest(SenderID sender_id = -1, double delay= 0) :
 		  SystemRequestMessage(sender_id , delay){}
-	private:
 	};
 	typedef GASS_SHARED_PTR<StopClientRequest> StopClientRequestPtr;
 

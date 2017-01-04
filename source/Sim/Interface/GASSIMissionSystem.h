@@ -33,7 +33,6 @@ namespace GASS
 	{
 	public:
 		virtual ~IMissionSystem(){}
-	protected:
 	};
 	typedef GASS_SHARED_PTR<IMissionSystem> MissionSystemPtr;
 }

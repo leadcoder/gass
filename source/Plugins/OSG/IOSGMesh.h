@@ -29,7 +29,6 @@ namespace GASS
 	public:
 		virtual ~IOSGMesh(){};
 		virtual osg::ref_ptr<osg::Node> GetNode() const = 0;
-	protected:
 	};
 
 	typedef GASS_SHARED_PTR<IOSGMesh> OSGMeshPtr;

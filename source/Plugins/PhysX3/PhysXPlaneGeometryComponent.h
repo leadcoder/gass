@@ -21,7 +21,6 @@
 #pragma once 
 
 #include "PhysXCommon.h"
-#include "PhysXBaseGeometryComponent.h"
 
 namespace GASS
 {

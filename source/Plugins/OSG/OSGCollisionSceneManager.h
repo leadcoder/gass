@@ -26,7 +26,6 @@
 #include "Sim/GASS.h"
 #include "Sim/GASSThreading.h"
 #include "Plugins/OSG/OSGCommon.h"
-#include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include <tbb/spin_mutex.h>
 namespace osgSim {class DatabaseCacheReadCallback;}
 
@@ -103,7 +102,6 @@ namespace GASS
 
 	class OSGCollisionSceneManager : public Reflection<OSGCollisionSceneManager, BaseSceneManager> , public ICollisionSceneManager
 	{
-	public:
 	public:
 		OSGCollisionSceneManager();
 		virtual ~OSGCollisionSceneManager();

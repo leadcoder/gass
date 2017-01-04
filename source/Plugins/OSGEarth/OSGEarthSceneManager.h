@@ -23,6 +23,7 @@
 
 #include "Sim/GASS.h"
 #include <osgEarthUtil/EarthManipulator>
+#include <osgEarthUtil/Controls>
 
 namespace GASS
 {
@@ -37,6 +38,7 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
+		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot);
 	protected:
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
@@ -58,6 +60,8 @@ namespace GASS
 		bool m_AutoAdd;
 		double m_OffsetEast;
 		double m_OffsetNorth;
+
+		osgEarth::Util::Controls::Container* m_GUI;
 		
 		
 	};

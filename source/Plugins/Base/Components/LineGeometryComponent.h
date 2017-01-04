@@ -22,15 +22,11 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
-#include "Core/Utils/GASSEnumBinder.h"
 #include "Core/Utils/GASSColorRGB.h"
 
 namespace GASS

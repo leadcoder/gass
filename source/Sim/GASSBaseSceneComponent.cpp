@@ -25,6 +25,8 @@
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogManager.h"
+
 
 namespace GASS
 {
@@ -82,6 +84,7 @@ namespace GASS
 							else
 								LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() <<  " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 						}
+						//Why?
 						GASS_ANY any_links(links);
 						prop->SetValue(this, any_links);
 					}
@@ -92,7 +95,6 @@ namespace GASS
 						SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
 						if(link.GetLinkObjectID() != UNKOWN_LINK_ID)
 						{
-
 							if(!link.Initlize(GetSceneObject()))
 							{
 								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
@@ -100,8 +102,8 @@ namespace GASS
 										"BaseSceneComponent::InitializePointers()");
 
 							}
-							GASS_ANY any_link(link);
-							prop->SetValue(this,any_link);
+							GASS_ANY new_any_link(link);
+							prop->SetValue(this, new_any_link);
 						}
 						else
 						{

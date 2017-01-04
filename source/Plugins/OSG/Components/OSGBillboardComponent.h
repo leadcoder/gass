@@ -38,11 +38,15 @@ namespace GASS
 		~OSGBillboardComponent (void);
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IGeometryComponent interface
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
 		virtual GeometryFlags GetGeometryFlags() const;
 		virtual void SetGeometryFlags(GeometryFlags flags);
+		virtual bool GetCollision() const;
+		virtual void SetCollision(bool value);
 	protected:
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
@@ -73,5 +77,6 @@ namespace GASS
 		osg::Geometry* m_Geom;
 		GeometryFlags m_GeomFlags;
 		double m_GroundOffset;
+		bool m_Collision;
 	};
 }
