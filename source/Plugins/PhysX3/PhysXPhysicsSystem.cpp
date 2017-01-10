@@ -20,7 +20,7 @@
 
 #include "PhysXPhysicsSystem.h"
 #include "Sim/Interface/GASSIMaterialSystem.h"
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 using namespace physx;
 namespace GASS

@@ -7,7 +7,7 @@
 
 #include "Sim/GASS.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 
 #include <stdio.h>

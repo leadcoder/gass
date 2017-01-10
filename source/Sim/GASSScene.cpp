@@ -40,7 +40,7 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Utils/GASSFilesystem.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

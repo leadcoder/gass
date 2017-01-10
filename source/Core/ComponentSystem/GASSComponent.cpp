@@ -21,7 +21,7 @@
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

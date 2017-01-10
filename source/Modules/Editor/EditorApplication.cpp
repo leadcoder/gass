@@ -2,7 +2,7 @@
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "Sim/GASS.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

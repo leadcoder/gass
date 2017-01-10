@@ -22,7 +22,7 @@
 #include "Core/RTC/GASSTaskNode.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSStringUtils.h"
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>

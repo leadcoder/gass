@@ -24,7 +24,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Utils/GASSXMLUtils.h"
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

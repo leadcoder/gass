@@ -19,7 +19,7 @@
 *****************************************************************************/
 #include "Core/Common.h"
 #include "Sim/GASSSimSystem.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 
