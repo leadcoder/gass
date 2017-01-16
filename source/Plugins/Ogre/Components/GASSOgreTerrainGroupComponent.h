@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Serialize/tinyxml2.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreTerrainIncludes.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
@@ -28,7 +29,6 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include <tinyxml2.h>
 
 namespace GASS
 {

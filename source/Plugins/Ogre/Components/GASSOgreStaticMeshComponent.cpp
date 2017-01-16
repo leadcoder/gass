@@ -23,11 +23,12 @@
 #include <OgreStaticGeometry.h>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Core/Serialize/tinyxml2.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Plugins/Ogre/Components/GASSOgreStaticMeshComponent.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
-#include <tinyxml2.h>
+
 
 using namespace Ogre;
 

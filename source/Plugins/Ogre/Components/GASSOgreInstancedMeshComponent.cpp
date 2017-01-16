@@ -24,12 +24,12 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/Serialize/tinyxml2.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 
-#include <tinyxml2.h>
 using namespace Ogre;
 
 namespace GASS
