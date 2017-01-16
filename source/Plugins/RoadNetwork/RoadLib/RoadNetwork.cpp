@@ -193,8 +193,20 @@ namespace GASS
 		final_path.push_back(path[0]);
 		for(size_t i = 0; i < path.size(); i++)
 		{
-			if(i > 0 && (path[i-1] - path[i]).Length() > 0.01)
-				final_path.push_back(path[i]);
+			if (i > 0)
+			{
+				Float segment_len = (path[i - 1] - path[i]).Length();
+				Float tolerance = 0.01;
+#ifdef TEST_HIGH_TOLERANCE_LAST_WP
+				//higher tolerance for last waypoint to avoid offroad behavior at end points
+				if (i == path.size() - 1)
+				{
+					tolerance = 1.0;
+				}
+#endif				
+				if (segment_len > tolerance)
+					final_path.push_back(path[i]);
+			}
 		}
 		//final_path = Math::GenerateOffset(final_path,2);
 		return final_path;
