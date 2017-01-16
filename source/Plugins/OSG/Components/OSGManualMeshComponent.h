@@ -44,12 +44,13 @@ namespace GASS
 
 		//IMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
+
+		bool GetCastShadow() const { return m_CastShadow; }
+		bool GetReceiveShadow()const { return m_ReceiveShadow; }
 	protected:
 		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
 		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
-		bool GetCastShadow() const {return m_CastShadow;}
-		bool GetReceiveShadow()const {return m_ReceiveShadow;}
 		void SetReceiveShadow(bool value);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDataMessage(ManualMeshDataRequestPtr message);
@@ -68,4 +69,7 @@ namespace GASS
 		OSGGraphicsSystemPtr m_GFXSystem;
 		bool m_Collision;
 	};
+
+	typedef GASS_WEAK_PTR<OSGManualMeshComponent> OSGManualMeshComponentWeakPtr;
+	typedef GASS_SHARED_PTR<OSGManualMeshComponent> OSGManualMeshComponentPtr;
 }

@@ -589,7 +589,13 @@ namespace GASS
 		ColorRGB specular = material.Specular;
 		ColorRGB si = material.SelfIllumination;
 
-		if(!material.TrackVertexColor)
+		if (material.TrackVertexColor)
+		{
+			state_set->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+			state_set->setAttributeAndModes(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
+			state_set->setRenderBinDetails(INT_MAX, "RenderBin");
+		}
+		else
 		{
 			osg::ref_ptr<osg::Material> mat (new osg::Material);
 			mat->setDiffuse(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(diffuse));
@@ -620,7 +626,7 @@ namespace GASS
 		*/
 
 		// Turn on blending
-		if(diffuse.a < 1.0) //special handling if we have transparent a material,
+		if (!material.TrackVertexColor && diffuse.a < 1.0) //special handling if we have transparent a material,
 		{
 			//TODO: provide blending mode in material!
 			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));

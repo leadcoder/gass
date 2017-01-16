@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/Components/OSGManualMeshComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Sim/GASSScriptManager.h"
@@ -56,7 +57,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node", PF_VISIBLE | PF_EDITABLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]", PF_VISIBLE | PF_EDITABLE)));
 
@@ -66,7 +67,7 @@ namespace GASS
 		RegisterProperty<Vec3>("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node", PF_VISIBLE | PF_EDITABLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this location be relative to parent or not", PF_VISIBLE | PF_EDITABLE)));
 
 		//expose this component to script engine
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
@@ -109,6 +110,7 @@ namespace GASS
 		if (!m_TransformNode.valid())
 		{
 			m_TransformNode = new osg::PositionAttitudeTransform();
+			
 			osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
 			m_GFXSceneManager = scene_man;
 
@@ -124,7 +126,14 @@ namespace GASS
 			}
 			else
 			{
-				root_node->addChild(m_TransformNode.get());
+				//HACK: do extra check to see if we should avoid shadow node...
+				OSGManualMeshComponentPtr mm_comp = GetSceneObject()->GetFirstComponentByClass<OSGManualMeshComponent>();
+				if (mm_comp && !mm_comp->GetCastShadow() && !mm_comp->GetReceiveShadow())
+				{
+					scene_man->GetOSGRootNode()->addChild(m_TransformNode.get());
+				}
+				else
+					root_node->addChild(m_TransformNode.get());
 			}
 		}
 		else
