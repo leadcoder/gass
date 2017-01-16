@@ -124,6 +124,25 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES FOLDER "Plugins")
 endmacro()
 
+macro(gass_setup_module _MODULE_NAME)
+	gass_get_source_from_current_dir(SOURCE_FILES HEADER_FILES)
+	gass_setup_lib(${_MODULE_NAME} 
+					${ARGN} 
+					BUILDTYPE ${GASS_BUILDTYPE}
+					SOURCE_FILES ${SOURCE_FILES} 
+					HEADER_FILES ${HEADER_FILES} 
+					SKIP_HEADER_INSTALL )
+	#gass_get_header_directories(HEADER_SUBDIRS)
+	#foreach(INC_DIR ${HEADER_SUBDIRS})
+	#	target_include_directories(${_PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
+	#endforeach()
+	target_link_libraries(${_MODULE_NAME} PRIVATE GASSSim)
+	target_compile_definitions(${_MODULE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} EDITOR_MODULE_EXPORTS)
+	set_target_properties(${_MODULE_NAME} PROPERTIES FOLDER "Modules")
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/modules FILES_MATCHING PATTERN "*.h")
+endmacro()
+
+
 include(CMakeParseArguments)
 
 macro(gass_setup_lib _LIB_NAME)
