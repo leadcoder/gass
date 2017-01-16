@@ -9,9 +9,10 @@ endif()
 if(MSVC)
 	ADD_SUBDIRECTORY(physics)
 	ADD_SUBDIRECTORY(editor)
+	ADD_SUBDIRECTORY(osgearth)
 endif()
 ADD_SUBDIRECTORY(vehicle)
-ADD_SUBDIRECTORY(osgearth)
+
 
 #install data
 INSTALL(DIRECTORY ../common/data DESTINATION ${GASS_INSTALL_SAMPLES_DIR}/../ FILES_MATCHING PATTERN "*.*" PATTERN ".svn" EXCLUDE)

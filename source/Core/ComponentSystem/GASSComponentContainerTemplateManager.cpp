@@ -28,7 +28,7 @@
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 #include <iostream>
 

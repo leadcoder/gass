@@ -30,7 +30,7 @@
 #include "Core/Utils/GASSEnumLookup.h"
 #include "Core/Utils/GASSException.h"
 
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 
 namespace GASS

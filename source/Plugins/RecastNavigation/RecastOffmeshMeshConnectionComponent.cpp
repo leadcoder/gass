@@ -20,7 +20,7 @@
 
 #include "RecastOffmeshMeshConnectionComponent.h"
 #include "Core/Math/GASSMath.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

@@ -82,7 +82,9 @@
 #		else
 #		   	if defined( GASS_CORE_EXPORTS )
 #		    	define GASSCoreExport __declspec( dllexport )
+#		    	define TINYXML2_EXPORT
 #   		else
+#		    	define TINYXML2_IMPORT
 #      			define GASSCoreExport __declspec( dllimport )
 #   		endif
 #   	endif

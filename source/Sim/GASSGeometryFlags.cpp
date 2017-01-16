@@ -20,7 +20,7 @@
 #include "GASSGeometryFlags.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSLogManager.h"
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

@@ -45,6 +45,7 @@ set(CPP_FILES
 	RTC/GASSTaskNode.cpp
 	RTC/GASSTBBManager.cpp
 	Serialize/GASSSerialize.cpp
+	Serialize/tinyxml2.cpp
 	Utils/GASSEnumLookup.cpp
 	Utils/GASSException.cpp
 	Utils/GASSFilePath.cpp
@@ -108,6 +109,7 @@ set(H_FILES
 	Serialize/GASSIXMLSerialize.h
 	Serialize/GASSSerialize.h
 	Serialize/GASSSTDSerialize.h
+	Serialize/tinyxml2.h
 	Utils/GASSAny.h
 	Utils/GASSColorRGB.h
 	Utils/GASSColorRGBA.h
@@ -148,7 +150,7 @@ gass_setup_lib(GASSCore
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
 					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
-					PUBLIC_DEPS TBB TinyXML2 ${BOOST_DEPS}
+					PUBLIC_DEPS TBB ${BOOST_DEPS}
 					PRIVATE_DEPS ${PLATFORM_DEPS}
 					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 

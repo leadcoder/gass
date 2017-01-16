@@ -23,7 +23,7 @@
 #include "GASSXMLUtils.h"
 #include "GASSStringUtils.h"
 #include "GASSException.h"
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

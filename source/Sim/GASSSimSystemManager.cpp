@@ -27,7 +27,7 @@
 #include "Core/RTC/GASSTBBManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {

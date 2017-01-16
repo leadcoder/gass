@@ -22,10 +22,9 @@
 #include <assert.h>
 #include "Core/Common.h"
 
+#ifdef _MSC_VER
 // disable: "no suitable definition provided for explicit template
 // instantiation request" Occurs in VC7 for no justifiable reason on all
-// #includes of Singleton
-#ifdef _MSC_VER
 #   pragma warning( disable: 4661)
 #   pragma warning( disable: 4530)
 #endif

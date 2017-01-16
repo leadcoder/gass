@@ -27,7 +27,7 @@
 #include "RecastOffmeshMeshConnectionComponent.h"
 #include "RecastConvexVolumeComponent.h"
 #include "InputGeom.h"
-#include "tinyxml2.h"
+#include "Core/Serialize/tinyxml2.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/Messages/GASSPlatformMessages.h"

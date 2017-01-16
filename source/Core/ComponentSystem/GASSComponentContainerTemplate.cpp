@@ -29,7 +29,7 @@
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
-#include <tinyxml2.h>
+#include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {
