@@ -167,6 +167,17 @@ namespace GASS
 			osgDB::Registry::instance()->setOptions(opt);
 		}
 
+		//add default material
+		GraphicsMaterial line_mat;
+		line_mat.Name = "WhiteTransparentNoLighting";
+		line_mat.Diffuse.Set(1.0, 1.0, 1.0, 1.0);
+		line_mat.Ambient.Set(1.0, 1.0, 1.0);
+		line_mat.SelfIllumination.Set(1.0, 1.0, 1.0);
+		line_mat.DepthTest = true;
+		line_mat.DepthWrite = true;
+		AddMaterial(line_mat);
+
+
 		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 	}
 
