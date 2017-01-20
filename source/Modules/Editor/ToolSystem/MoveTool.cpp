@@ -51,8 +51,7 @@ namespace GASS
 				//create copy if shift is pressed
 				if(m_Controller->IsShiftDown())
 				{
-					//unselect all, we don't want to move current selection
-					m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
+					EditorSceneManager::SelectionVector new_selection;
 					for(size_t i = 0; i < m_Selected.size(); i++)
 					{
 						SceneObjectPtr selected = m_Selected[i].lock();
@@ -60,8 +59,13 @@ namespace GASS
 						{
 							SceneObjectPtr new_obj = selected->CreateCopy();
 							selected->GetParentSceneObject()->AddChildSceneObject(new_obj,true);
-							m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+							new_selection.push_back(new_obj);
 						}
+					}
+
+					if (new_selection.size() > 0)
+					{
+						m_Controller->GetEditorSceneManager()->SetSelectedObjects(new_selection);
 					}
 				}
 			}
@@ -80,7 +84,7 @@ namespace GASS
 				{
 					m_GroundSnapMove = true; //we want to drag object to cursor, or object "behind" cursor
 					int from_id = GASS_PTR_TO_INT(this);
-					if (m_Controller->IsShiftDown())
+					if (m_Controller->IsShiftDown()) //copy operation
 					{
 						//save selection to be able to restore collision data when mouse is released
 						m_SelectionCopy = m_Selected;
@@ -95,9 +99,7 @@ namespace GASS
 							}
 						}
 
-						//unselect all scene objects if copy is created
-						m_Controller->GetEditorSceneManager()->UnselectAllSceneObjects();
-
+						EditorSceneManager::SelectionVector new_selection;
 						for (size_t i = 0; i < m_Selected.size(); i++)
 						{
 							SceneObjectPtr selected = m_Selected[i].lock();
@@ -105,8 +107,18 @@ namespace GASS
 							{
 								SceneObjectPtr new_obj = selected->CreateCopy();
 								selected->GetParentSceneObject()->AddChildSceneObject(new_obj, true);
-								m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+								//m_Controller->GetEditorSceneManager()->SelectSceneObject(new_obj);
+								new_selection.push_back(new_obj);
+								//update selection...
+								//m_Selected[i] = new_obj;
 							}
+						}
+
+						if (new_selection.size() > 0)
+						{
+							//update internal selection...we don't want to wait for message callback because MouseMove can be called before callback
+							m_Selected = new_selection;
+							m_Controller->GetEditorSceneManager()->SetSelectedObjects(new_selection);
 						}
 					}
 					

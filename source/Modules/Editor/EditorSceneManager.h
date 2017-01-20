@@ -38,10 +38,12 @@ namespace GASS
 		void SystemTick(double delta_time);
 
 		MouseToolControllerPtr GetMouseToolController() const {return m_MouseTools;}
+		void SetSelectedObjects(const SelectionVector &selection);
 		SelectionVector GetSelectedObjects() const;
 		SceneObjectPtr GetFirstSelectedObject() const;
 
 		void SelectSceneObject(SceneObjectPtr obj);
+		
 		void UnselectSceneObject(SceneObjectPtr obj);
 		void UnselectAllSceneObjects();
 		bool IsSelected(SceneObjectPtr obj);

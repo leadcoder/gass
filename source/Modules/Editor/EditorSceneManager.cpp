@@ -130,6 +130,12 @@ namespace GASS
 		return m_SelectedObjects;
 	}
 
+	void EditorSceneManager::SetSelectedObjects(const SelectionVector &selection)
+	{
+		m_SelectedObjects = selection;
+		GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
+	}
+
 	SceneObjectPtr EditorSceneManager::GetFirstSelectedObject() const
 	{
 		if(m_SelectedObjects.size() > 0)
@@ -170,6 +176,8 @@ namespace GASS
 				++iter;
 		}
 	}
+
+	
 
 	void EditorSceneManager::UnselectAllSceneObjects()
 	{

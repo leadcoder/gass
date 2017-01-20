@@ -34,7 +34,6 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnSceneObjectSelected(ObjectSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationChangedEventPtr message);
 		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnEditMode(EditModeChangedEventPtr message);

@@ -375,12 +375,12 @@ namespace GASS
 	class ShowSceneObjectMenuRequest : public SceneRequestMessage
 	{
 	public:
-		ShowSceneObjectMenuRequest(SceneObjectPtr obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
-		  SceneRequestMessage(sender_id , delay), m_Object(obj), m_Pos (screen_pos){}
-		  SceneObjectPtr GetSceneObject() const {return m_Object;}
+		ShowSceneObjectMenuRequest(const Vec2 &screen_pos, SenderID sender_id = -1, double delay= 0) : 
+		  SceneRequestMessage(sender_id , delay), m_Pos (screen_pos){}
+		  //SceneObjectPtr GetSceneObject() const {return m_Object;}
 		  Vec2 GetScreenPosition() const {return m_Pos;}
 	private:
-		SceneObjectPtr m_Object;
+		//SceneObjectPtr m_Object;
 		Vec2 m_Pos;
 	};
 	typedef GASS_SHARED_PTR<ShowSceneObjectMenuRequest> ShowSceneObjectMenuRequestPtr;

@@ -49,6 +49,7 @@ namespace GASS
 				}*/
 
 			}
+			
 		/*	else if(obj_under_cursor == m_SelectedObject.lock())
 			{
 				m_RotateY = true;
@@ -76,6 +77,7 @@ namespace GASS
 	{
 		if(m_MouseIsDown && m_Selected.size() > 0)
 		{
+			int from_id = GASS_PTR_TO_INT(this);
 			SceneObjectPtr gizmo = m_CurrentGizmo.lock();
 			if(gizmo)
 			{
@@ -83,7 +85,7 @@ namespace GASS
 				Float rotation_rad_step = data.XRel*0.2;
 				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
-				int from_id = GASS_PTR_TO_INT(this);
+				
 				gizmo->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot, from_id)));
 
 				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
@@ -100,6 +102,20 @@ namespace GASS
 					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
 					m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(attrib_change_msg);
 				}*/
+			}
+			else
+			{
+				Float rotation_rad_step = data.XRel*0.2;
+				rotation_rad_step = rotation_rad_step;
+				for (size_t i = 0; i < m_Selected.size(); i++)
+				{
+					SceneObjectPtr selected = m_Selected[i].lock();
+					if (selected)
+					{
+						Quaternion rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetRotation() * Quaternion(GASS::Vec3(rotation_rad_step, 0, 0));
+						selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
+					}
+				}
 			}
 		}
 	}
@@ -197,7 +213,10 @@ namespace GASS
 
 	void RotateTool::Start()
 	{
-		SetGizmoVisiblity(true);
+		if (m_Controller->GetEnableGizmo())
+			SetGizmoVisiblity(true);
+		else
+			SetGizmoVisiblity(false);
 		m_Active = true;
 	}
 

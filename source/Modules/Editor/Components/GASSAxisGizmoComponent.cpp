@@ -56,7 +56,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnWorldPosition,WorldPositionRequest,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent, 1000));
-		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnEditMode,EditModeChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnChangeGridRequest,ChangeGridRequest,0));
 
@@ -103,7 +102,6 @@ namespace GASS
 	void AxisGizmoComponent::OnDelete()
 	{
 		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(AxisGizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent));
-		GetSceneObject()->GetScene()->UnregisterForMessage(UNREG_TMESS(AxisGizmoComponent::OnSceneObjectSelected,ObjectSelectionChangedEvent));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(AxisGizmoComponent::OnEditMode,EditModeChangedEvent));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(AxisGizmoComponent::OnChangeGridRequest,ChangeGridRequest));
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(AxisGizmoComponent::OnCameraChanged,CameraChangedEvent));
@@ -185,11 +183,6 @@ namespace GASS
 			}
 			break;
 		}
-	}
-
-	void AxisGizmoComponent::OnSceneObjectSelected(ObjectSelectionChangedEventPtr message)
-	{
-		//SetSelection(message->GetSceneObject());
 	}
 
 	void AxisGizmoComponent::SetSelection(std::vector<SceneObjectWeakPtr>  selection)

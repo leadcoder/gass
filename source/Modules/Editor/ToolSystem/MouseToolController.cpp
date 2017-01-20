@@ -441,12 +441,13 @@ namespace GASS
 			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
 			if(abs(delta.x) + abs(delta.y) < 0.001)
 			{
-				std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
-				if(selected_vec.size() > 0 && info.m_ObjectUnderCursor.lock() == selected_vec[0].lock())
+				//std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
+				//Check that object under cursor is in selection
+				if (m_EditorSceneManager->IsSelected(info.m_ObjectUnderCursor.lock()))
 				{
 					//show Immediate!
 					//Disable OIS input to avoid background selection
-					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(selected_vec[0].lock(),Vec2(data.XAbs,data.YAbs)));
+					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
 					m_EditorSceneManager->GetScene()->SendImmediate(message);
 				}
 			}
