@@ -27,6 +27,12 @@ namespace GASS
 	{
 	public:
 		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
+#ifndef GASS_USE_BOOST_PTR
+		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
+#else
+		typedef std::set<GASS::SceneObjectWeakPtr> SceneObjectSet;
+#endif
+
 
 		EditorSceneManager();
 		virtual ~EditorSceneManager(void);
@@ -63,11 +69,7 @@ namespace GASS
 		void CreateCamera(const std::string &template_name = "");
 		CameraComponentPtr GetActiveCamera() const {return m_ActiveCamera.lock();}
 		SceneObjectPtr GetActiveCameraObject() const {return m_ActiveCameraObject.lock();}
-#ifndef GASS_USE_BOOST_PTR
-		const std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr>>&  GetInvisibleObjects() const {return m_InvisibleObjects;}
-#else
-		const std::set<GASS::SceneObjectWeakPtr>&  GetInvisibleObjects() const { return m_InvisibleObjects; }
-#endif
+		const SceneObjectSet&  GetInvisibleObjects() const { return m_InvisibleObjects; }
 	protected:
 		void OnPostSceneLoaded(PostSceneLoadEventPtr message);
 		void AddStaticObject(SceneObjectPtr obj, bool rec);
@@ -76,11 +78,6 @@ namespace GASS
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		MouseToolControllerPtr m_MouseTools;
 		SelectionVector m_SelectedObjects;
-#ifndef GASS_USE_BOOST_PTR
-		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
-#else
-		typedef std::set<GASS::SceneObjectWeakPtr> SceneObjectSet;
-#endif
 		SceneObjectSet m_LockedObjects;
 		SceneObjectSet m_InvisibleObjects;
 		SceneObjectSet m_StaticObjects;

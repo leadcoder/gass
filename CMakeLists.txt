@@ -121,9 +121,10 @@ if(GASS_BUILD_DOCUMENTATION)
 endif()
 
 # Install CMake files in order to re-use them in other projects
-install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
-# Install xsd files in order to re-use them in other projects
-#file( GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/source/ "*.xsd")
-#install( FILES ${files} DESTINATION schema)
 
-#mkcmakeconfig(GASS 1.5.1)
+configure_file(
+		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
+		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake" 
+		@ONLY)
+
+install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)

@@ -169,9 +169,10 @@ namespace GASS
 	#include <boost/function.hpp>
 	#define GASS_BIND boost::bind
 	#define GASS_FUNCTION boost::function
+	#define GASS_PLACEHOLDER
 #else
 	#include <functional>
-	using namespace std::placeholders;
+	#define GASS_PLACEHOLDERS std::placeholders
 	#define GASS_BIND std::bind
 	#define GASS_FUNCTION std::function
 #endif

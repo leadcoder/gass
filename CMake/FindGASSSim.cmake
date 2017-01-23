@@ -17,7 +17,9 @@ MACRO(LIST_CONTAINS var value)
 ENDMACRO(LIST_CONTAINS)
 
 find_package(GASSCore)
-find_package(GASSSimThirdParty)
+
+set(ANGELSCRIPT_DIR   $ENV{ANGELSCRIPT_HOME} CACHE PATH "Angel Script folder")
+find_package(AngelScript REQUIRED)
 
 #just append angelscript to core includes 
 set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
