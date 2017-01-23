@@ -191,7 +191,6 @@ namespace GASS
 		{
 			m_SelectedObjects.push_back(obj);
 			//notify listeners
-			GetScene()->PostMessage(SceneMessagePtr(new ObjectSelectionChangedEvent(obj, GASS_PTR_TO_INT(this))));
 			GetScene()->PostMessage(SceneMessagePtr(new EditorSelectionChangedEvent(m_SelectedObjects, GASS_PTR_TO_INT(this))));
 		}
 	}

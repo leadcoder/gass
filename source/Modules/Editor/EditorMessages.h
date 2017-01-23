@@ -8,17 +8,6 @@
 
 namespace GASS
 {
-	class ObjectSelectionChangedEvent : public SceneEventMessage
-	{
-	public:
-		ObjectSelectionChangedEvent(SceneObjectPtr obj, SenderID sender_id = -1, double delay= 0) : 
-		  SceneEventMessage(sender_id , delay), m_Object(obj){}
-		  SceneObjectPtr GetSceneObject() const {return m_Object;}
-	private:
-		SceneObjectPtr m_Object;
-	};
-	typedef GASS_SHARED_PTR<ObjectSelectionChangedEvent> ObjectSelectionChangedEventPtr;
-
 	class EditorSelectionChangedEvent : public SceneEventMessage
 	{
 	public:
