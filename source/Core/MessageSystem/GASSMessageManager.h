@@ -25,10 +25,10 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 
-namespace tbb
+/*namespace tbb
 {
 	class spin_mutex;
-}
+}*/
 
 namespace GASS
 {
@@ -111,7 +111,7 @@ namespace GASS
 		void _AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;
-		tbb::spin_mutex *m_Mutex;
+		GASS_MUTEX *m_Mutex;
 	};
 	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
 

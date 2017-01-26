@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Core/RTC/GASSTaskNode.h"
+#include "Sim/RTC/GASSTaskNode.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 
 

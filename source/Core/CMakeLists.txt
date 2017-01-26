@@ -42,8 +42,6 @@ set(CPP_FILES
 	PluginSystem/GASSPluginManager.cpp
 	Reflection/GASSBaseReflectionObject.cpp
 	Reflection/GASSProperty.cpp
-	RTC/GASSTaskNode.cpp
-	RTC/GASSTBBManager.cpp
 	Serialize/GASSSerialize.cpp
 	Serialize/tinyxml2.cpp
 	Utils/GASSEnumLookup.cpp
@@ -103,8 +101,6 @@ set(H_FILES
 	Reflection/GASSReflection.h
 	Reflection/GASSRTTI.h
 	Reflection/GASSTypedProperty.h
-	RTC/GASSTaskNode.h
-	RTC/GASSTBBManager.h
 	Serialize/GASSISerialize.h
 	Serialize/GASSIXMLSerialize.h
 	Serialize/GASSSerialize.h
@@ -142,7 +138,7 @@ if(WIN32)
 endif()
 
 if(GASS_USE_BOOST)
-	set(BOOST_DEPS Boost::filesystem)
+	set(BOOST_DEPS Boost::filesystem Boost::thread)
 endif()
 
 gass_setup_lib(GASSCore
@@ -150,7 +146,7 @@ gass_setup_lib(GASSCore
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
 					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
-					PUBLIC_DEPS TBB ${BOOST_DEPS}
+					PUBLIC_DEPS ${BOOST_DEPS}
 					PRIVATE_DEPS ${PLATFORM_DEPS}
 					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 

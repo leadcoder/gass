@@ -152,6 +152,18 @@ namespace GASS
 	#define GASS_USE_BOOST_PTR
 	#define GASS_USE_BOOST_FILESYSTEM
 	#define GASS_USE_BOOST_ANY
+	#define GASS_USE_BOOST_THREADS
+#endif
+
+#ifdef GASS_USE_BOOST_THREADS
+	#include <boost/thread/lock_guard.hpp>
+	#include <boost/thread/mutex.hpp>
+	#define GASS_MUTEX boost::mutex
+	#define GASS_MUTEX_LOCK(a) boost::lock_guard<boost::mutex> m_lock(a);
+#else
+	#include <mutex>
+	#define GASS_MUTEX std::mutex
+	#define GASS_MUTEX_LOCK(a) std::lock_guard<std::mutex> m_lock(a);
 #endif
 
 #ifdef GASS_USE_BOOST_ANY

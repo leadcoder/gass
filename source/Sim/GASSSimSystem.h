@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSRunTimeController.h"
-#include "Core/RTC/GASSTaskNode.h"
+#include "Sim/RTC/GASSTaskNode.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"

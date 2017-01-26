@@ -23,15 +23,13 @@
 
 #include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
-
-#include <tbb/spin_mutex.h>
 #include <iostream>
 
 namespace GASS
 {
 	MessageManager::MessageManager()
 	{
-		m_Mutex = new tbb::spin_mutex;
+		m_Mutex = new GASS_MUTEX;
 	}
 	MessageManager::~MessageManager()
 	{
@@ -63,7 +61,7 @@ namespace GASS
 	void MessageManager::PostMessage(MessagePtr  message)
 	{
 		//lock
-		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+		GASS_MUTEX_LOCK(*m_Mutex);
 		m_MessageQueue.push_back(message);
 	}
 
@@ -71,7 +69,7 @@ namespace GASS
 	void MessageManager::SendImmediate(MessagePtr  message)
 	{
 		//lock
-		//tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+		//GASS_MUTEX_LOCK(*m_Mutex);
 
 		MessageTypeListenerMap::iterator message_type;
 		message_type = m_MessageTypes.find(message->GetType());
@@ -117,7 +115,7 @@ namespace GASS
 	int MessageManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{
 		//lock
-		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+		GASS_MUTEX_LOCK(*m_Mutex);
 
 		MessageTypeListenerMap::iterator message_type;
 
@@ -152,7 +150,7 @@ namespace GASS
 	void MessageManager::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
 		//lock
-		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+		GASS_MUTEX_LOCK(*m_Mutex);
 
 		MessageTypeListenerMap::iterator message_type;
 
@@ -179,7 +177,7 @@ namespace GASS
 	void MessageManager::Clear()
 	{
 		//lock
-		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+		GASS_MUTEX_LOCK(*m_Mutex);
 
 		m_MessageQueue.clear();
 		//m_MessageTypes.clear();
@@ -191,7 +189,7 @@ namespace GASS
 		//lock message queue and copy to temporary queue for processing
 		MessageQueue work_queue;
 		{
-			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+			GASS_MUTEX_LOCK(*m_Mutex);
 			if(m_MessageQueue.size() == 0)
 				return;
 
@@ -247,7 +245,7 @@ namespace GASS
 
 		//lock and add unprocessed messages back to queue due to delayed delivery
 		{
-			tbb::spin_mutex::scoped_lock lock(*m_Mutex);
+			GASS_MUTEX_LOCK(*m_Mutex);
 			MessageQueue::iterator work_iter = work_queue.begin();
 			while (work_iter !=  work_queue.end())
 			{

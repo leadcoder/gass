@@ -4,33 +4,41 @@
 
 include(Common)
 
-#TBB
-find_package(TBB REQUIRED)
-#post-process results 
-set(TBB_LIBRARIES optimized ${TBB_LIBRARY} debug ${TBB_LIBRARY_DEBUG})
-
-if(WIN32)
-	set(TBB_LIBRARIES ${TBB_LIBRARIES}
-	 optimized ${TBB_MALLOC_LIBRARY}
-	 debug ${TBB_MALLOC_LIBRARY_DEBUG})
-endif()	 
 
 gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
 
 #Boost
 if(GASS_USE_BOOST)
-	find_package(Boost REQUIRED filesystem system)
+	find_package(Boost REQUIRED filesystem system thread date_time chrono)
 	if("${CMAKE_VERSION}" VERSION_LESS 3.5.0)
 		gass_create_dep_target(Boost INCLUDE_DIRS ${Boost_INCLUDE_DIR})
 		set(BOOST_FILE_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
 			 optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
 			 debug ${Boost_FILESYSTEM_LIBRARY_DEBUG}
 			 debug ${Boost_SYSTEM_LIBRARY_DEBUG})
+		
+		set(BOOST_THREAD_LIBRARIES optimized ${Boost_THREAD_LIBRARY_RELEASE} ${Boost_DATE_TIME_LIBRARY_RELEASE} ${Boost_CHRONO_LIBRARY_RELEASE}
+			 debug ${Boost_THREAD_LIBRARY_DEBUG} ${Boost_DATE_TIME_LIBRARY_DEBUG} ${Boost_CHRONO_LIBRARY_DEBUG}) 
+			 
 		gass_create_dep_target(Boost::filesystem INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_FILE_LIBRARIES})
+		gass_create_dep_target(Boost::thread INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_THREAD_LIBRARIES})
 	endif()
 endif()
 
 if(GASS_BUILD_SIM)
+
+	#TBB
+	find_package(TBB REQUIRED)
+	#post-process results 
+	set(TBB_LIBRARIES optimized ${TBB_LIBRARY} debug ${TBB_LIBRARY_DEBUG})
+
+	if(WIN32)
+		set(TBB_LIBRARIES ${TBB_LIBRARIES}
+		 optimized ${TBB_MALLOC_LIBRARY}
+		 debug ${TBB_MALLOC_LIBRARY_DEBUG})
+	endif()	 
+
+
 	find_package(AngelScript REQUIRED)
 	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
 endif()

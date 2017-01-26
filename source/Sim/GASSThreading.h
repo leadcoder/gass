@@ -24,7 +24,16 @@
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
 
-#define GASS_MUTEX tbb::spin_mutex
-#define GASS_MUTEX_LOCK(a) tbb::spin_mutex::scoped_lock m_lock(a);
+
+//#define GASS_MUTEX tbb::spin_mutex
+//#define GASS_MUTEX_LOCK(a) tbb::spin_mutex::scoped_lock m_lock(a);
+
+//#include <boost/thread/mutex.hpp>
+//#define GASS_MUTEX boost::mutex
+//#define GASS_MUTEX_LOCK(a) boost::lock_guard<boost::mutex> m_lock(a);
+
+//#include <mutex>
+//#define GASS_MUTEX std::mutex
+//#define GASS_MUTEX_LOCK(a) std::lock_guard<std::mutex> m_lock(a);
 
 
