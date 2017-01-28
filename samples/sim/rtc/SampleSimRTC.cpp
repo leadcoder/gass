@@ -22,8 +22,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "Core/RTC/GASSTBBManager.h"
-#include "Core/RTC/GASSTaskNode.h"
+#include "Sim/RTC/GASSTBBManager.h"
+#include "Sim/RTC/GASSTaskNode.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #ifdef WIN32
