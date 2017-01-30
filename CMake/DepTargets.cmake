@@ -4,9 +4,6 @@
 
 include(Common)
 
-
-gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
-
 #Boost
 if(GASS_USE_BOOST)
 	find_package(Boost REQUIRED filesystem system thread date_time chrono)
@@ -37,7 +34,8 @@ if(GASS_BUILD_SIM)
 		 optimized ${TBB_MALLOC_LIBRARY}
 		 debug ${TBB_MALLOC_LIBRARY_DEBUG})
 	endif()	 
-
+	
+	gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
 
 	find_package(AngelScript REQUIRED)
 	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
