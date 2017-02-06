@@ -19,27 +19,32 @@ set(GASS_BINARY_DIRS ${GASS_DIR}/bin ${GASS_DIR}/bin/debug ${GASS_DIR}/bin/relea
 find_library(GASS_CORE_LIBRARY_RELEASE GASSCore HINTS ${GASS_LIBRARY_DIRS})
 find_library(GASS_CORE_LIBRARY_DEBUG GASSCore_d HINTS ${GASS_LIBRARY_DIRS})
 
+set(GASS_CORE_LIBRARIES optimized ${GASS_CORE_LIBRARY_RELEASE} debug ${GASS_CORE_LIBRARY_DEBUG})
+
 if(GASS_USE_BOOST)
 	if(WIN32)
 		set (Boost_USE_STATIC_LIBS ON)
 	else()
 		set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
 	endif()
-	find_package(Boost 1.46.1 REQUIRED filesystem system)
+		find_package(Boost 1.46.1 REQUIRED thread)
 	set(GASS_CORE_INCLUDE_DIRS  ${GASS_CORE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+	set(BOOST_THREAD_LIBRARIES optimized ${Boost_THREAD_LIBRARY_RELEASE} 
+							   optimized ${Boost_DATE_TIME_LIBRARY_RELEASE} 
+							   optimized ${Boost_CHRONO_LIBRARY_RELEASE} 
+							   optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
+							   debug ${Boost_THREAD_LIBRARY_DEBUG} 
+							   debug ${Boost_DATE_TIME_LIBRARY_DEBUG} 
+							   debug ${Boost_CHRONO_LIBRARY_DEBUG}
+							   debug ${Boost_SYSTEM_LIBRARY_DEBUG})
+							   
+	set(GASS_CORE_LIBRARIES ${GASS_CORE_LIBRARIES} ${BOOST_THREAD_LIBRARIES})
 	if(GASS_BUILDTYPE EQUAL STATIC)
-		#add boost libraries!
+		find_package(Boost 1.46.1 REQUIRED filesystem)
+		set(BOOST_FILESYSTEM_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE} debug ${Boost_FILESYSTEM_LIBRARY_DEBUG})
+		set(GASS_CORE_LIBRARIES ${GASS_CORE_LIBRARIES} ${BOOST_FILESYSTEM_LIBRARIES})
 	endif()
 endif()
 
-set(GASS_CORE_LIBRARIES optimized ${GASS_CORE_LIBRARY_RELEASE} debug ${GASS_CORE_LIBRARY_DEBUG})
-
 find_file(GASS_CORE_BINARY_RELEASE NAMES GASSCore${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
 find_file(GASS_CORE_BINARY_DEBUG NAMES GASSCore_d${_SHARED_LIB_EXT} HINTS ${GASS_BINARY_DIRS})
- 
-if (WIN32) #find third party shared binaries
-	#TBB
-	find_package(TBB)
-	set(GASS_CORE_BINARIES_REL ${GASS_CORE_BINARY_RELEASE} ${TBB_BINARY_REL})
-	set(GASS_CORE_BINARIES_DBG ${GASS_CORE_BINARY_DEBUG} ${TBB_BINARY_DBG})
-endif()
