@@ -233,7 +233,7 @@ namespace GASS
 	bool FilePath::IsDir() const
 	{
 		GASS_FILESYSTEM::path path(GetFullPath());
-		return GASS_FILESYSTEM::exists(path);
+		return GASS_FILESYSTEM::is_directory(path);
 	}
 
 	void FilePath::GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive, const std::vector<std::string> extenstion_filters)
