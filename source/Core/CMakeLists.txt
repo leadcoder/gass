@@ -135,6 +135,8 @@ set(PLATFORM_DEPS "")
 if(WIN32)
    #Add dependency for timer
    set(PLATFORM_DEPS Winmm)
+else()
+   set(PLATFORM_DEPS ${CMAKE_DL_LIBS})
 endif()
 
 if(GASS_USE_BOOST)
