@@ -35,7 +35,7 @@ namespace GASS
 	*/
 
 	/**
-	*	Class used to handle filesystem paths with environment variables.
+	*	Class used to handle file system paths with environment variables.
 	*/
 
 	class GASSCoreExport FilePath
@@ -44,13 +44,50 @@ namespace GASS
 		FilePath(const std::string &path,bool expand = true);
 		FilePath();
 		~FilePath();
+		/**
+		* \brief Get path with expanded environment variables.
+		* \return
+		*/
 		std::string GetFullPath() const;
+		
+		/**
+		* \brief Get path as it is sent to SetPath, including environment variables.
+		* \return
+		*/
 		std::string GetRawPath() const;
+		
 		void SetPath(const std::string &path);
+		/**
+		* \brief Get complete path without environment variables but not including file type extension.
+		* \return
+		*/
 		std::string GetPathNoExtension() const;
+		/**
+		* \brief Get complete path without environment variables but not including file name.
+		* \return
+		*/
 		std::string GetPathNoFile() const;
+		/**
+		* \brief Get file extension without dot.
+		* \return
+		*/
 		std::string GetExtension() const;
+		
+		bool HasExtension() const;
+		/**
+		* \brief Get file name including extension.
+		* \return
+		*/
 		std::string GetFilename() const;
+		/**
+		* \brief Get file name not including extension.
+		* \return
+		*/
+		std::string GetStem() const;
+		/**
+		* \brief Get name of last folder in a path without trailing slash.
+		* \return
+		*/
 		std::string GetLastFolder() const;
 		
 		static void GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive = false, const std::vector<std::string> extenstion_filters = std::vector<std::string>());

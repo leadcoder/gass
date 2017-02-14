@@ -52,11 +52,25 @@ namespace GASS
 		else
 		{
 			path = StringUtils::Replace(path, "\\", "/");
-			path = StringUtils::Replace(path, "//", "/");
+
+			std::string::size_type pos2 = path.find("//");
+			if (pos2 != std::string::npos)
+			{
+				if (pos2 == 0)
+				{
+					// replace leading duplicate front slashes in UNC path for it to work. How should this be handled more generic?
+					path = StringUtils::Replace(path, "//", "\\\\");
+				}
+				else
+				{
+					// Removes duplicate front slashes if not first in path (UNC path).
+					path = StringUtils::Replace(path, "//", "/");
+				}
+			}
 		}
 		//check if folder or file?
-		GASS_FILESYSTEM::path boost_path(path);
-		if(GASS_FILESYSTEM::exists(boost_path) && GASS_IS_DIRECTORY(boost_path))
+		GASS_FILESYSTEM::path gass_path(path);
+		if(GASS_FILESYSTEM::exists(gass_path) && GASS_IS_DIRECTORY(gass_path))
 		{
 			if (!path.empty() && path[path.length()-1] != '/')
 				path += '/';
@@ -175,10 +189,22 @@ namespace GASS
 		return ext;
 	}
 
+	bool FilePath::HasExtension() const
+	{
+		GASS_FILESYSTEM::path mypath(m_ExpandedPath);
+		return !mypath.extension().empty();
+	}
+
 	std::string FilePath::GetFilename() const
 	{
-		GASS_FILESYSTEM::path boost_path(m_ExpandedPath);
-		return GASS_TO_GENERIC_STRING(boost_path.filename());
+		GASS_FILESYSTEM::path gass_path(m_ExpandedPath);
+		return GASS_TO_GENERIC_STRING(gass_path.filename());
+	}
+
+	std::string FilePath::GetStem() const
+	{
+		GASS_FILESYSTEM::path gass_path(m_ExpandedPath);
+		return GASS_TO_GENERIC_STRING(gass_path.stem());
 	}
 
 	std::string FilePath::GetLastFolder() const
@@ -190,8 +216,8 @@ namespace GASS
 			ret = ret.substr(0, pos);
 		}
 
-		GASS_FILESYSTEM::path boost_path(ret);
-		return GASS_TO_GENERIC_STRING(boost_path.filename()); 
+		GASS_FILESYSTEM::path gass_path(ret);
+		return GASS_TO_GENERIC_STRING(gass_path.filename()); 
 	}
 
 	std::string FilePath::GetPathNoFile() const
@@ -208,17 +234,17 @@ namespace GASS
 
 	void FilePath::GetFoldersFromPath(std::vector<FilePath> &folders, const FilePath &path, bool recursive)
 	{
-		GASS_FILESYSTEM::path boost_path(path.GetFullPath());
-		if( GASS_FILESYSTEM::exists(boost_path) && GASS_IS_DIRECTORY( boost_path))
+		GASS_FILESYSTEM::path gass_path(path.GetFullPath());
+		if( GASS_FILESYSTEM::exists(gass_path) && GASS_IS_DIRECTORY( gass_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end;
-			for( GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )
+			for( GASS_FILESYSTEM::directory_iterator iter(gass_path) ; iter != end ; ++iter )
 			{
 				if (GASS_IS_DIRECTORY( *iter ))
 				{
 					folders.push_back(FilePath(iter->path().string(),false));
 					if(recursive)
-						GetFilesFromPath(folders,FilePath(iter->path().string(),false), recursive);
+						GetFoldersFromPath(folders,FilePath(iter->path().string(),false), recursive);
 				}
 			}
 		}
@@ -226,8 +252,8 @@ namespace GASS
 
 	bool FilePath::Exist() const
 	{
-		GASS_FILESYSTEM::path boost_path(GetFullPath());
-		return GASS_FILESYSTEM::exists(boost_path);
+		GASS_FILESYSTEM::path gass_path(GetFullPath());
+		return GASS_FILESYSTEM::exists(gass_path);
 	}
 
 	bool FilePath::IsDir() const
@@ -238,11 +264,11 @@ namespace GASS
 
 	void FilePath::GetFilesFromPath(std::vector<FilePath> &files, const FilePath &path, bool recursive, const std::vector<std::string> extenstion_filters)
 	{
-		GASS_FILESYSTEM::path boost_path(path.GetFullPath());
-		if( GASS_FILESYSTEM::exists(boost_path) && GASS_IS_DIRECTORY( boost_path))
+		GASS_FILESYSTEM::path gass_path(path.GetFullPath());
+		if( GASS_FILESYSTEM::exists(gass_path) && GASS_IS_DIRECTORY( gass_path))
 		{
 			GASS_FILESYSTEM::directory_iterator end;
-			for( GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )
+			for( GASS_FILESYSTEM::directory_iterator iter(gass_path) ; iter != end ; ++iter )
 			{
 				if (GASS_IS_DIRECTORY( *iter )  && recursive)
 				{
