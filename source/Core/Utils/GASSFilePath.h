@@ -55,7 +55,10 @@ namespace GASS
 		* \return
 		*/
 		std::string GetRawPath() const;
-		
+		/**
+		* \brief Set function that both update FilePath raw path including eventual environment variables as well as expand complete.
+		* \return
+		*/
 		void SetPath(const std::string &path);
 		/**
 		* \brief Get complete path without environment variables but not including file type extension.
@@ -110,7 +113,7 @@ namespace GASS
 		}
 	private:
 		void _FixPath(std::string &path) const;
-		std::string _ExpandEnvVariables(const std::string &inStr);
+		std::string _ExpandEnvVariables(const std::string &inStr) const;
 		std::string m_ExpandedPath;
 		std::string m_RawPath;
 	};

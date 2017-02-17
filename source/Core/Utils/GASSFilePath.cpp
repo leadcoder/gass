@@ -77,7 +77,7 @@ namespace GASS
 		}
 	}
 
-	FilePath::FilePath()
+	FilePath::FilePath() : m_ExpandedPath(""), m_RawPath("")
 	{
 
 	}
@@ -104,7 +104,7 @@ namespace GASS
 		m_ExpandedPath = _ExpandEnvVariables(m_RawPath);
 	}
 
-	std::string FilePath::_ExpandEnvVariables(const std::string &inStr)
+	std::string FilePath::_ExpandEnvVariables(const std::string &inStr) const
 	{
 		std::string curStr = inStr;
 		std::string::size_type occurIndex1 = curStr.find("%");

@@ -43,7 +43,15 @@ namespace GASS
 		ResourceLocationVector GetResourceLocations() const {return m_ResourceLocations;}
 		std::string GetName() const{return m_Name;}
 		bool HasResource(const std::string &resource_name) const;
+		/**
+		* \brief documentera ...
+		* \return
+		*/
 		void GetResourcesByName(ResourceVector &resources, const std::string &resource_name) const;
+		/**
+		* \brief documentera ...
+		* \return
+		*/
 		void GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const;
 	private:
 		void AddResourceLocationRecursive(ResourceLocationPtr rl);
