@@ -76,8 +76,9 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_MYGUI "Build Plugin." OFF "GASS_BUILD_S
 cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OSG" OFF)
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 
-option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_USE_BOOST "Disable Boost" ON)
+option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
+option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
 #boost settings
 if(WIN32)
