@@ -21,6 +21,7 @@
 
 #include "Core/Common.h"
 #include "GASSStringUtils.h"
+#include "Core/Utils/GASSException.h"
 #ifndef _MSC_VER
     #include <cxxabi.h>
 #endif
@@ -64,12 +65,40 @@ namespace GASS
 		std::string::size_type  look_here = 0;
 		std::string new_str = str;
 
-		//if(find.find(replacement)) // what we are going to replace already exist replacement string -> infinite while
+		if (replacement.find(find) != std::string::npos) // what we are going to replace already exist replacement string -> infinite while
+		{
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "String to search for contains string we're replacing it with. I.e infinite loop", "StringUtils::ReplaceAllOccurances");
+		}
+
 		while ((pos = new_str.find(find,look_here)) != std::string::npos)
 		{
 			new_str.replace(pos, find.size(), replacement);
 			look_here = pos + replacement.size();
 		}
+		return new_str;
+	}
+
+	std::string StringUtils::ReplaceAllOccurances(const std::string &str, const std::string &find, const std::string &replacement)
+	{
+		std::string::size_type  pos;
+		std::string::size_type  look_here = 0;
+		std::string new_str = str;
+
+		if (replacement.find(find) != std::string::npos) // what we are going to replace already exist replacement string -> infinite while
+		{
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "String to search for contains string we're replacing it with. I.e infinite loop", "StringUtils::ReplaceAllOccurances");
+		}
+
+		while (new_str.find(find) != std::string::npos)
+		{
+			while ((pos = new_str.find(find)) != std::string::npos)
+			{
+				new_str.replace(pos, find.size(), replacement);
+				look_here = pos + replacement.size();
+			}
+		}
+
+
 		return new_str;
 	}
 

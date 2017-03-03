@@ -61,12 +61,12 @@ namespace GASS
 		*/
 		void SetPath(const std::string &path);
 		/**
-		* \brief Get complete path without environment variables but not including file type extension.
+		* \brief Get complete path without environment variables and without file type extension.
 		* \return
 		*/
 		std::string GetPathNoExtension() const;
 		/**
-		* \brief Get complete path without environment variables but not including file name.
+		* \brief Get complete path without environment variables but not including file name, including trailing slash.
 		* \return
 		*/
 		std::string GetPathNoFile() const;

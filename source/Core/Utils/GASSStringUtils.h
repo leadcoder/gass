@@ -63,6 +63,8 @@ namespace GASS
 		static std::string RemoveQuotation(char* str);
 		static std::string RemoveQuotation(const std::string &str);
 		static std::string Replace(const std::string &str, const std::string &find, const std::string &replacement);
+		static std::string ReplaceAllOccurances(const std::string& str, const std::string& find, const std::string& replacement);
+
 		inline static std::string ToLower(const std::string &str)
 		{
 			std::string new_str = str;
