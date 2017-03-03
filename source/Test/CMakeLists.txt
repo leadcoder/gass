@@ -4,6 +4,8 @@ ENABLE_TESTING(true)
 set(GASS_TEST_SOURCES 
 	${PROJECT_SOURCE_DIR}/source/Test/TestMain.cpp
 	${PROJECT_SOURCE_DIR}/source/Test/Core/TestUtils_FilePath.cpp
+	#${PROJECT_SOURCE_DIR}/source/Test/Core/TestUtils_FilePath_Optional.cpp
+	${PROJECT_SOURCE_DIR}/source/Test/Core/TestUtils_StringUtils.cpp
 )
 
 create_source_group("Test Files" "${CMAKE_CURRENT_SOURCE_DIR}" ${GASS_TEST_SOURCES})
@@ -17,3 +19,4 @@ add_executable(GassTest ${GASS_TEST_SOURCES})
 target_link_libraries(GassTest Catch GASSCore)
 
 add_test(NAME TestBase COMMAND GassTest)
+
