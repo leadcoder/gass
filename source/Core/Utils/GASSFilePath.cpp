@@ -28,15 +28,6 @@
 
 namespace GASS
 {
-	FilePath::FilePath() : m_ExpandedPath(""), m_RawPath("")
-	{
-
-	}
-
-	FilePath::~FilePath()
-	{
-
-	}
 
 	FilePath::FilePath(const std::string &path, bool expand)
 	{
@@ -73,7 +64,7 @@ namespace GASS
 				else
 				{
 					// Removes duplicate front slashes if not first in path (UNC path).
-					path = StringUtils::ReplaceAllOccurances(path, "//", "/");
+					path = StringUtils::Replace(path, "//", "/");
 				}
 			}
 		}
@@ -84,6 +75,16 @@ namespace GASS
 			if (!path.empty() && path[path.length()-1] != '/')
 				path += '/';
 		}
+	}
+
+	FilePath::FilePath() : m_ExpandedPath(""), m_RawPath("")
+	{
+
+	}
+
+	FilePath::~FilePath()
+	{
+
 	}
 
 	std::string FilePath::GetFullPath() const
@@ -179,6 +180,7 @@ namespace GASS
 
 	std::string FilePath::GetExtension() const
 	{
+
 		GASS_FILESYSTEM::path mypath(m_ExpandedPath);
 		std::string ext = GASS_TO_GENERIC_STRING(mypath.extension());
 		//remove dot
