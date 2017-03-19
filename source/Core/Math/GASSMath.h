@@ -21,7 +21,8 @@
 #pragma once
 
 #include "Core/Common.h"
-
+#include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSTriangle.h"
 #include <math.h>
 
 #define GASS_PLANE_FRONT 0
@@ -58,7 +59,7 @@ namespace GASS
 		@param rad Number of radians, as a float.
 		@return Number of degrees.
 		*/
-		static Float Rad2Deg(Float rad);
+		inline static Float Rad2Deg(Float rad);
 
 		/**
 		@brief Convert degrees to radians.
@@ -66,9 +67,9 @@ namespace GASS
 		@return Number of radians.
 		*/
 
-		static Float Deg2Rad(Float deg);
-		static Vec3 Deg2Rad(const Vec3 &vec);
-		static Vec3 Rad2Deg(const Vec3 &vec);
+		inline static Float Deg2Rad(Float deg);
+		inline static Vec3 Deg2Rad(const Vec3 &vec);
+		inline static Vec3 Rad2Deg(const Vec3 &vec);
 
 		/**
 		@brief Check if a line intersect a Polygon.
@@ -84,7 +85,7 @@ namespace GASS
 		@param v2 Second vector, as a Vec3.
 		@return The dot product.
 		*/
-		static Float Dot(const Vec3 &v1,const Vec3 &v2);
+		inline static Float Dot(const Vec3 &v1,const Vec3 &v2);
 
 		/**
 		@brief Calculate the cross product of two vectors.
@@ -92,7 +93,7 @@ namespace GASS
 		@param v2 Second vector, as a Vec3.
 		@return The cross product.
 		*/
-		static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
+		inline static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
 
 		/**
 		@brief Calculate the distance (along the ray) where a infinite
@@ -117,12 +118,12 @@ namespace GASS
 		/**
 		Get Min value of v1, v2,v3
 		*/
-		static Float Min(const Float &v1,const Float &v2,const Float &v3);
+		inline static Float Min(const Float &v1,const Float &v2,const Float &v3);
 
 		/**
 		Get Max value of v1, v2,v3
 		*/
-		static Float Max(const Float &v1,const Float &v2,const Float &v3);
+		inline static Float Max(const Float &v1,const Float &v2,const Float &v3);
 
 
 		/**
@@ -147,7 +148,7 @@ namespace GASS
 		@param tri input triangle
 		@return triangle normal
 		*/
-		static Vec3 GetNormal(const Triangle &tri);
+		inline static Vec3 GetNormal(const Triangle &tri);
 
 		/**
 		Check if two triangles intersect
@@ -157,8 +158,8 @@ namespace GASS
 		@return true if intersection found
 		*/
 		static bool TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point);
-		static Float Min(const Float &v1,const Float &v2);
-		static Float Max(const Float &v1,const Float &v2);
+		inline static Float Min(const Float &v1,const Float &v2);
+		inline static Float Max(const Float &v1,const Float &v2);
 
 		/**
 		Fast invert root square function, (maybe not so fast anymore)
@@ -184,7 +185,7 @@ namespace GASS
 		@return Projected vector
 		*/
 		//TODO: change name or input args,
-		static Vec3 ProjectVectorOnPlane(const Vec3 &plane_normal,const Vec3 &v);
+		inline static Vec3 ProjectVectorOnPlane(const Vec3 &plane_normal,const Vec3 &v);
 
 		/**
 		Get float random value
@@ -192,7 +193,7 @@ namespace GASS
 		@param end End of random span
 		@return random value between start and end
 		*/
-		static Float RandomValue(Float start, Float end);
+		inline static Float RandomValue(Float start, Float end);
 
 		/**
 		Get 2D-line intersection
@@ -239,4 +240,114 @@ namespace GASS
 		static Float _Angle2D(Float x1, Float y1, Float x2, Float y2);
 		static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
 	};
+
+	Float Math::Dot(const Vec3 &v1, const Vec3 &v2)
+	{
+		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
+	}
+
+	Vec3 Math::Cross(const Vec3 &v1, const Vec3 &v2)
+	{
+		Vec3 ret;
+		ret.x = (v1.y * v2.z) - (v1.z * v2.y);
+		ret.y = (v1.z * v2.x) - (v1.x * v2.z);
+		ret.z = (v1.x * v2.y) - (v1.y * v2.x);
+
+		return ret;
+	}
+
+	Float Math::Rad2Deg(Float rad)
+	{
+		return Float(360.0*rad / (2 * GASS_PI));
+	}
+
+	Float Math::Deg2Rad(Float deg)
+	{
+		return Float(2 * GASS_PI * deg / 360.0);
+	}
+
+	Vec3 Math::Deg2Rad(const Vec3 &vec)
+	{
+		Vec3 ret;
+		ret.x = Math::Deg2Rad(vec.x);
+		ret.y = Math::Deg2Rad(vec.y);
+		ret.z = Math::Deg2Rad(vec.z);
+		return ret;
+	}
+
+	Vec3 Math::Rad2Deg(const Vec3 &vec)
+	{
+		Vec3 ret;
+		ret.x = Math::Rad2Deg(vec.x);
+		ret.y = Math::Rad2Deg(vec.y);
+		ret.z = Math::Rad2Deg(vec.z);
+		return ret;
+	}
+
+	Vec3 Math::ProjectVectorOnPlane(const Vec3 &plane_normal, const Vec3 &v)
+	{
+		return  v - Math::Dot(v, plane_normal) * plane_normal;
+	}
+
+	Vec3 Math::GetNormal(const Triangle &tri)
+	{
+		Vec3 normal;
+		Vec3 edge1 = tri.P2 - tri.P1;
+		Vec3 edge2 = tri.P3 - tri.P1;
+
+		normal = Cross(edge1, edge2);
+		normal.Normalize();
+		return normal;
+	}
+
+	Float Math::Min(const Float &v1, const Float &v2)
+	{
+		if (v1 < v2)
+		{
+			return v1;
+		}
+		else return v2;
+	}
+
+
+	Float Math::Max(const Float &v1, const Float &v2)
+	{
+		if (v1 > v2)
+		{
+			return v1;
+
+		}
+		else return v2;
+	}
+
+
+	Float Math::Min(const Float &v1, const Float &v2, const Float &v3)
+	{
+		if (v1 < v2)
+		{
+			if (v1 < v3) return v1;
+			else return v3;
+		}
+		else if (v2 < v3) return v2;
+		else return v3;
+	}
+
+	Float Math::Max(const Float &v1, const Float &v2, const Float &v3)
+	{
+		if (v1 > v2)
+		{
+			if (v1 > v3) return v1;
+			else return v3;
+		}
+		else if (v2 > v3) return v2;
+		else return v3;
+	}
+
+	Float Math::RandomValue(Float start, Float end)
+	{
+		const Float span = end - start;
+		const Float norm_rand = static_cast<Float>(rand()) / static_cast<Float>(RAND_MAX);
+		const Float ret_value = start + norm_rand * span;
+		return ret_value;
+	}
 }

@@ -24,6 +24,8 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSTriangle.h"
+#include "Core/Math/GASSRay.h"
+
 namespace GASS
 {
 	/**
@@ -33,13 +35,25 @@ namespace GASS
 	class GASSCoreExport Plane
 	{
 	public:
-		Plane();
-		
-		/**
-			Construct plane from triangle
-		*/
-		Plane(const Triangle &tri);
+		Plane()
+		{
 
+		}
+
+		virtual ~Plane()
+		{
+
+		}
+
+		/**
+		Construct plane from triangle
+		*/
+		Plane(const Triangle &tri)
+		{
+			m_Normal = Math::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
+			m_Normal.Normalize();
+			m_Origin = tri.P1;
+		}
 
 		/**
 			Construct plane from plane point (origin) and plane normal
@@ -54,8 +68,6 @@ namespace GASS
 			c = normal.z;
 			d = -(normal.x*origin.x+normal.y*origin.y +normal.z*origin.z);*/
 		};
-
-		virtual ~Plane();
 
 		bool IsFrontFacingTo(const Vec3& direction) const
 		{
@@ -73,9 +85,18 @@ namespace GASS
 			return Math::Dot(point,m_Normal) + GetD();
 		};
 
-		//TODO: why?
-		//void Normalize();
-		//float a, b, c, d;
+		Float RayIsect(const Ray &ray) const
+		{
+			const Float d = -(Math::Dot(m_Normal, m_Origin));
+
+			const Float numer = Math::Dot(m_Normal, ray.m_Origin) + d;
+			const Float denom = Math::Dot(m_Normal, ray.m_Dir);
+
+			if (denom == 0)  // normal is orthogonal to vector, cant intersect
+				return (-1.0f);
+
+			return -(numer / denom);
+		}
 		Vec3 m_Normal;
 		Vec3 m_Origin;
 	};

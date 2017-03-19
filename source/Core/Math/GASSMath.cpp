@@ -22,60 +22,17 @@
 #include <limits>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPolygon.h"
-#include "Core/Math/GASSRay.h"
 #include "Core/Math/GASSLineSegment.h"
-#include "Core/Math/GASSTriangle.h"
-#include "Core/Math/GASSPlane.h"
 #include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSRay.h"
+#include "Core/Math/GASSPlane.h"
 
 
 #undef min
 #undef max
 namespace GASS
 {
-	Float Math::Rad2Deg(Float rad )
-	{
-		return Float(360.0*rad/(2*GASS_PI));
-	}
-
-	Float Math::Deg2Rad(Float deg)
-	{
-		return Float(2*GASS_PI * deg/360.0);
-	}
-
-	Vec3 Math::Deg2Rad(const Vec3 &vec)
-	{
-		Vec3 ret;
-		ret.x = Math::Deg2Rad(vec.x);
-		ret.y = Math::Deg2Rad(vec.y);
-		ret.z = Math::Deg2Rad(vec.z);
-		return ret;
-	}
-
-	Vec3 Math::Rad2Deg(const Vec3 &vec)
-	{
-		Vec3 ret;
-		ret.x = Math::Rad2Deg(vec.x);
-		ret.y = Math::Rad2Deg(vec.y);
-		ret.z = Math::Rad2Deg(vec.z);
-		return ret;
-	}
-
-	Vec3 Math::ProjectVectorOnPlane(const Vec3 &plane_normal, const Vec3 &v)
-	{
-		return  v - Math::Dot(v, plane_normal) * plane_normal;
-	}
-
-	Vec3 Math::GetNormal(const Triangle &tri)
-	{
-		Vec3 normal;
-		Vec3 edge1 = tri.P2 - tri.P1;
-		Vec3 edge2 = tri.P3 - tri.P1;
-
-		normal = Cross(edge1,edge2);
-		normal.Normalize();
-		return normal;
-	}
+	
 
 	bool Math::TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point)
 	{
@@ -156,20 +113,7 @@ namespace GASS
 		return false;
 	}
 
-	Float Math::Dot(const Vec3 &v1,const Vec3 &v2)
-	{
-		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
-	}
-
-	Vec3 Math::Cross(const Vec3 &v1,const Vec3 &v2)
-	{
-		Vec3 ret;
-		ret.x = (v1.y * v2.z) - (v1.z * v2.y);
-		ret.y = (v1.z * v2.x) - (v1.x * v2.z);
-		ret.z = (v1.x * v2.y) - (v1.y * v2.x);
-
-		return ret;
-	}
+	
 
 	int Math::_ClassifyPoint(const Vec3 &point, const Polygon &poly)
 	{
@@ -209,19 +153,6 @@ namespace GASS
 		}
 		else if(y > z) return 1;
 		else return 2;
-	}
-
-	Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
-	{
-		const Float d = - (Dot(plane.m_Normal, plane.m_Origin));
-
-		const Float numer = Dot(plane.m_Normal, ray.m_Origin) + d;
-		const Float denom = Dot(plane.m_Normal, ray.m_Dir);
-
-		if (denom == 0)  // normal is orthogonal to vector, cant intersect
-			return (-1.0f);
-
-		return -(numer / denom);
 	}
 
 	Float Math::_Angle2D(Float x1, Float y1, Float x2, Float y2)
@@ -379,49 +310,6 @@ namespace GASS
 	binormal.z=-cp.z/cp.x;
 	}
 	}*/
-
-	Float Math::Min(const Float &v1,const Float &v2)
-	{
-		if(v1 < v2)
-		{
-			return v1;
-		}
-		else return v2;
-	}
-
-
-	Float Math::Max(const Float &v1,const Float &v2)
-	{
-		if(v1 > v2)
-		{
-			return v1;
-
-		}
-		else return v2;
-	}
-
-
-	Float Math::Min(const Float &v1,const Float &v2,const Float &v3)
-	{
-		if(v1 < v2)
-		{
-			if(v1 < v3) return v1;
-			else return v3;
-		}
-		else if(v2 < v3) return v2;
-		else return v3;
-	}
-
-	Float Math::Max(const Float &v1,const Float &v2,const Float &v3)
-	{
-		if(v1 > v2)
-		{
-			if(v1 > v3) return v1;
-			else return v3;
-		}
-		else if(v2 > v3) return v2;
-		else return v3;
-	}
 
 	bool Math::ClosestPointOnTriangle(const Triangle &tri,
 		const Vec3 &p, Vec3 &closest, Float radius)
@@ -836,15 +724,6 @@ namespace GASS
 		return true;
 	}
 
-	Float Math::RandomValue(Float start, Float end)
-	{
-		const Float span = end - start;
-		const Float norm_rand = static_cast<Float>(rand())/ static_cast<Float>(RAND_MAX);
-		const Float ret_value = start + norm_rand * span;
-		return ret_value;
-	}
-
-
 	bool Math::_LineSlabIntersect(Float slabmin, Float slabmax, Float line_start, Float line_end, Float& tbenter, Float& tbexit)
 	{
 		Float raydir = line_end - line_start;
@@ -920,5 +799,18 @@ namespace GASS
 		// all intersections in the green. Return the first time of intersection, tenter.
 		tinter = tenter;
 		return  true;
+	}
+
+	Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
+	{
+		const Float d = -(Dot(plane.m_Normal, plane.m_Origin));
+
+		const Float numer = Dot(plane.m_Normal, ray.m_Origin) + d;
+		const Float denom = Dot(plane.m_Normal, ray.m_Dir);
+
+		if (denom == 0)  // normal is orthogonal to vector, cant intersect
+			return (-1.0f);
+
+		return -(numer / denom);
 	}
 }

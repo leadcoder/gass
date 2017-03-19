@@ -24,27 +24,7 @@
 namespace GASS
 {
 
-	Plane::Plane()
-	{
 
-	}
-
-	Plane::~Plane()
-	{
-
-	}
-
-	Plane::Plane(const Triangle &tri)
-	{
-		m_Normal = Math::Cross((tri.P2 - tri.P1),(tri.P3 - tri.P1));
-		m_Normal.Normalize();
-		m_Origin = tri.P1;
-		/*a = m_Normal.x;
-		b = m_Normal.y;
-		c = m_Normal.z;
-		d = -(m_Normal.x*m_Origin.x+m_Normal.y*m_Origin.y
-			+m_Normal.z*m_Origin.z);*/
-	}
 
 	/*void Plane::Normalize()
 	{
