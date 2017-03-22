@@ -156,7 +156,7 @@ namespace GASS
 #endif
 
 #ifdef GASS_USE_BOOST_THREADS
-	#include <boost/thread/lock_guard.hpp>
+	#include <boost/thread/locks.hpp>
 	#include <boost/thread/mutex.hpp>
 	#define GASS_MUTEX boost::mutex
 	#define GASS_MUTEX_LOCK(a) boost::lock_guard<boost::mutex> m_lock(a);
