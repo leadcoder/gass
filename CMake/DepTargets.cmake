@@ -8,6 +8,7 @@ include(Common)
 if(GASS_USE_BOOST)
 	find_package(Boost REQUIRED system filesystem thread)
 	if("${CMAKE_VERSION}" VERSION_LESS 3.5.0)
+		find_package(Boost REQUIRED date_time chrono)
 		gass_create_dep_target(Boost INCLUDE_DIRS ${Boost_INCLUDE_DIR})
 		set(BOOST_FILE_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
 			 optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
