@@ -119,7 +119,7 @@ namespace GASS
 	{
 		try
 		{
-			GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(in_dir), GASS_FILESYSTEM::path(out_dir), GASS_FILESYSTEM::copy_option::overwrite_if_exists);
+			GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(in_dir), GASS_FILESYSTEM::path(out_dir), GASS_COPY_OPTION_OVERWRITE);
 		}
 		catch (const GASS_FILESYSTEM::filesystem_error& e)
 		{
