@@ -77,7 +77,7 @@
 #endif
 
 #if defined ( _MSC_VER )
-#   	if defined( GASS_STATIC_BUILD )
+#   	if defined( GASS_BUILDTYPE_STATIC )
 #			define GASSCoreExport
 #		else
 #		   	if defined( GASS_CORE_EXPORTS )
