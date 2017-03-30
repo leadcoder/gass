@@ -237,7 +237,9 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
         "DEPS" # list of names of multi-valued arguments (output variables are lists)
         ${ARGN} # arguments of the function to parse, here we take the all original ones
     )
-	set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
+	if(NOT WIN32)
+		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
+	endif()
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	
@@ -276,7 +278,9 @@ endmacro()
 
 macro(gass_setup_core_sample SAMPLE_NAME)
 
-	set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
+	if(NOT WIN32)
+		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
+	endif()
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
