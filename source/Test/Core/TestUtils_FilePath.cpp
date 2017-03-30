@@ -118,7 +118,7 @@ TEST_CASE("Test FilePath helper methods with valid file path")
 		REQUIRE(fp.GetPathNoFile() == "C:/Temp/GASS/");
 	}
 }
-TEST_CASE("Test FilePath sanitation when passing different number of slash/backslash")
+/*TEST_CASE("Test FilePath sanitation when passing different number of slash/backslash")
 {
 	GASS::FilePath fp;
 	fp.SetPath("C:\\Temp\\\\GASS\\\\file.txt");
@@ -130,4 +130,4 @@ TEST_CASE("Test FilePath sanitation when passing different number of slash/backs
 		fp.SetPath("C://///Temp///GASS/file.txt");
 		REQUIRE(fp.GetFullPath() == "C:/Temp/GASS/file.txt");
 	}
-}
+}*/
