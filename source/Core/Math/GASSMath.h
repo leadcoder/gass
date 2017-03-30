@@ -33,8 +33,6 @@
 namespace GASS
 {
 	class Polygon;
-	class Vec3;
-	class Vec2;
 	class LineSegment;
 	class Ray;
 	class Triangle;

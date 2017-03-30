@@ -22,7 +22,10 @@
 #define GASS_VECTOR_H
 
 #include "Core/Common.h"
-#include "Core/Math/GASSMatrix.h"
+
+#include "Core/Math/GASSVec4.h"
+#include "Core/Math/GASSVec3.h"
+#include "Core/Math/GASSVec2.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <assert.h>
@@ -40,9 +43,9 @@ namespace GASS
 	*/
 
 	/**
-	* Class that holds two Floats.
+	 Class representing a vector with 2 elements.
 	*/
-	class GASSCoreExport Vec2
+/*	class GASSCoreExport Vec2
 	{
 	public:
 		Float x,y;
@@ -75,12 +78,12 @@ namespace GASS
 			}
 			return is;
 		}
-	};
+	};*/
 
 	/**
 	* Class that holds two integer.
 	*/
-	class GASSCoreExport Vec2i
+	/*class GASSCoreExport Vec2i
 	{
 	public:
 		int x,y;
@@ -134,12 +137,12 @@ namespace GASS
 		}
 
 
-	};
+	};*/
 
 	/**
 	* Class representing a Float-vector with 3 elements.
 	*/
-	class GASSCoreExport Vec3
+/*	class GASSCoreExport Vec3
 	{
 	public:
 		Float x;//,h;
@@ -352,14 +355,14 @@ namespace GASS
 		Float FastInvLength() const;
 		bool InSphere(Vec3 &v, Float radius) const;
 		std::string ToString(const std::string &separator) const;
-	};
+	};*/
 
 	
 	/**
 	* Class representing a Float-vector with 4 elements.
 	*/
 
-	class GASSCoreExport Vec4
+	/*class GASSCoreExport Vec4
 	{
 	public:
 		Float x,y,z,w;
@@ -487,7 +490,7 @@ namespace GASS
 			}
 			return is;
 		}
-	};
+	};*/
 }
 
 #endif // #ifndef VECTOR_HH

@@ -24,7 +24,7 @@
 namespace GASS
 {
 	/**
-		Class holding ray 
+		Class holding triangle 
 	*/
 	class GASSCoreExport Triangle
 	{

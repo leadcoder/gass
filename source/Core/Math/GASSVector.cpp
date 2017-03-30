@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-
+/*
 	Vec3 Vec3::m_UnitX = Vec3(1,0,0);
 	Vec3 Vec3::m_UnitY = Vec3(0,1,0);
 	Vec3 Vec3::m_UnitZ = Vec3(0,0,1);
@@ -65,4 +65,5 @@ namespace GASS
 #endif
 		return ret;
 	}
+	*/
 }
