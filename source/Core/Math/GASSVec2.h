@@ -57,14 +57,14 @@ namespace GASS
 
 		TVec2 operator+ (const TVec2 &v) const
 		{
-			Vec2i ret;
+			TVec2 ret;
 			ret.x = x + v.x;
 			ret.y = y + v.y;
 			return ret;
 		}
 		TVec2 operator- (const TVec2 &v) const
 		{
-			Vec2i ret;
+			TVec2 ret;
 			ret.x = x - v.x;
 			ret.y = y - v.y;
 			return ret;
