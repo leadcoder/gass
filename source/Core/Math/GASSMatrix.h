@@ -34,7 +34,7 @@ namespace GASS
 	template<class Type> class TVec4;
 	typedef TVec4<Float> Vec4;
 	*/
-	class Quaternion;
+	//class Quaternion;
 
 	class GASSCoreExport Mat3
 	{
