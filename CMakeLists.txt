@@ -80,6 +80,7 @@ option(GASS_USE_BOOST "Disable Boost" ON)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
+ENABLE_TESTING()
 #boost settings
 if(WIN32)
   set (Boost_USE_STATIC_LIBS ON)
