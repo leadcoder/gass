@@ -24,6 +24,10 @@
 
 namespace GASS
 {
+	template class TVec3<double>;
+	template class TVec4<double>;
+	template class TVec2<double>;
+	
 /*
 	Vec3 Vec3::m_UnitX = Vec3(1,0,0);
 	Vec3 Vec3::m_UnitY = Vec3(0,1,0);

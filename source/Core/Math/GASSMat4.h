@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include "Core/Common.h"
+#include "Core/Math/GASSMath.h"
 
 namespace GASS
 {
@@ -29,7 +30,6 @@ namespace GASS
 	//typedef TVec3<Float> Vec3;
 	template<class TYPE> class TVec4;
 	//typedef TVec4<Float> Vec4;
-
 	template<class TYPE> class TQuaternion;
 
 
@@ -174,9 +174,23 @@ namespace GASS
 		*/
 		inline void SetZAxis(const TVec3<TYPE> &dir);
 
+		//TODO: why use this order
+		inline friend TVec4<TYPE> operator* (TVec4<TYPE> vec,	const TMat4<TYPE> &mat)
+		{
+			TVec4<TYPE> ret;
+			ret.x = vec.x*mat.m_Data[0][0] + vec.y*mat.m_Data[1][0] + vec.z*mat.m_Data[2][0] + vec.w*mat.m_Data[3][0];
+			ret.y = vec.x*mat.m_Data[0][1] + vec.y*mat.m_Data[1][1] + vec.z*mat.m_Data[2][1] + vec.w*mat.m_Data[3][1];
+			ret.z = vec.x*mat.m_Data[0][2] + vec.y*mat.m_Data[1][2] + vec.z*mat.m_Data[2][2] + vec.w*mat.m_Data[3][2];
+			ret.w = vec.x*mat.m_Data[0][3] + vec.y*mat.m_Data[1][3] + vec.z*mat.m_Data[2][3] + vec.w*mat.m_Data[3][3];
+			return ret;
+		}
+
 	};
 
 	typedef TMat4<Float> Mat4;
+
+	template <class TYPE> const TYPE TMat4<TYPE>::EPSILON = 0.0001;
+	
 
 	template<class TYPE>
 	TMat4<TYPE>::TMat4(
@@ -306,7 +320,7 @@ namespace GASS
 	template<class TYPE>
 	TMat4<TYPE> TMat4<TYPE>::Transpose()
 	{
-		Mat4<TYPE> ret;
+		TMat4<TYPE> ret;
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -744,7 +758,7 @@ namespace GASS
 	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetRotationRadians() const
 	{
-		const Mat4 &mat = *this;
+		const TMat4<TYPE> &mat = *this;
 
 		TYPE Y = -asin(mat[2][0]);
 		//TYPE D = Y;

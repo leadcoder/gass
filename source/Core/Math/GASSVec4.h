@@ -22,7 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Math/GASSMat4.h"
+//#include "Core/Math/GASSMat4.h"
 #include <iostream>
 #include <assert.h>
 #include <math.h>
@@ -31,6 +31,7 @@
 
 namespace GASS
 {
+	template<class TYPE> class TMat4;
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -137,7 +138,7 @@ namespace GASS
 			return *this;
 		}
 
-		TVec4 operator* (const TMat4<TYPE> &mat) const
+		/*TVec4 operator* (const TMat4<TYPE> &mat) const
 		{
 			TVec4<TYPE> ret;
 			ret.x = x*mat.m_Data[0][0] + y*mat.m_Data[1][0] + z*mat.m_Data[2][0] + w*mat.m_Data[3][0];
@@ -145,7 +146,7 @@ namespace GASS
 			ret.z = x*mat.m_Data[0][2] + y*mat.m_Data[1][2] + z*mat.m_Data[2][2] + w*mat.m_Data[3][2];
 			ret.w = x*mat.m_Data[0][3] + y*mat.m_Data[1][3] + z*mat.m_Data[2][3] + w*mat.m_Data[3][3];
 			return ret;
-		}
+		}*/
 
 		inline void Set(TYPE _x, TYPE _y, TYPE _z, TYPE _w)
 		{

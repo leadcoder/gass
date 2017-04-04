@@ -24,6 +24,7 @@
 
 namespace GASS
 {
+	template class TQuaternion<double>;
 	//const Float Quaternion::ms_fEpsilon = static_cast<Float>(1e-03);
 	//const Quaternion Quaternion::ZERO(0.0,0.0,0.0,0.0);
 	//const Quaternion Quaternion::IDENTITY(1.0,0.0,0.0,0.0);

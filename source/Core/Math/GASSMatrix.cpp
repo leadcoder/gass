@@ -24,6 +24,10 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 
+namespace GASS
+{
+	template class TMat4<double>;
+}
 //namespace GASS
 //{
 //	

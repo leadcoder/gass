@@ -29,6 +29,10 @@
 #define GASS_PLANE_BACK 1
 #define GASS_ON_PLANE 2
 #define GASS_PI 3.14159265358
+//const long double PI = 3.141592653589793238L;
+//const double PI = 3.141592653589793;
+//const float PI = 3.1415927;
+
 
 namespace GASS
 {

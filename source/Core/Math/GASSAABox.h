@@ -24,6 +24,7 @@
 #include <vector>
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSSphere.h"
+#include "Core/Math/GASSMatrix.h"
 
 namespace GASS
 {

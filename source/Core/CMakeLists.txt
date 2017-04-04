@@ -75,6 +75,7 @@ set(H_FILES
 	Math/GASSLineSegment.h
 	Math/GASSMath.h
 	Math/GASSMatrix.h
+	Math/GASSMat4.h
 	Math/GASSPlane.h
 	Math/GASSPolygon.h
 	Math/GASSQuaternion.h
