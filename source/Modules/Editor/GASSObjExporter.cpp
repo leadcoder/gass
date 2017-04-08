@@ -122,7 +122,7 @@ namespace GASS
 								Vec3 v1 = p1 - p3;
 								Vec3 v2 = p2 - p3;
 								Vec3 norm = Math::Cross(v1,v2);
-								norm.FastNormalize();
+								norm.Normalize();
 								sub_mesh->NormalVector[sub_mesh->IndexVector[j]] = norm;
 								sub_mesh->NormalVector[sub_mesh->IndexVector[j+1]] = norm;
 								sub_mesh->NormalVector[sub_mesh->IndexVector[j+2]] = norm;

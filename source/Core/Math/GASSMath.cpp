@@ -380,7 +380,7 @@ namespace GASS
 				const Vec3 wp1 = wps[i];
 				const Vec3 wp2 = wps[i+1];
 				const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wp1,wp2), source_pos);
-				double dist = (source_pos  - closest_point_on_line).FastLength();
+				double dist = (source_pos  - closest_point_on_line).Length();
 				if(dist < shortest_dist)
 				{
 					point = closest_point_on_line;
@@ -401,7 +401,7 @@ namespace GASS
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			lengths.push_back(segmentLength);
 			totalPathLength += segmentLength;
 		}
@@ -460,14 +460,14 @@ namespace GASS
 
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i] - wps[i-1]).FastLength();
+			const Float segmentLength = (wps[i] - wps[i-1]).Length();
 			const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wps[i-1],wps[i]), point);
-			const double dist = (point  - closest_point_on_line).FastLength();
+			const double dist = (point  - closest_point_on_line).Length();
 			if(dist < shortest_dist)
 			{
 				shortest_dist = dist;
 				distance_to_path = dist;
-				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).FastLength();
+				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).Length();
 				index = i-1;
 			}
 			segmentLengthTotal += segmentLength;
@@ -482,7 +482,7 @@ namespace GASS
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			lengths.push_back(segmentLength);
 			totalPathLength += segmentLength;
 		}
@@ -536,7 +536,7 @@ namespace GASS
 		Float totalPathLength = 0;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			totalPathLength += segmentLength;
 		}
 		Float dist = 0;
@@ -546,7 +546,7 @@ namespace GASS
 			Vec3 side;
 			const Float inter = dist/totalPathLength;
 			if(i < wps.size()-2)
-				dist += (wps[i-1] - wps[i]).FastLength();
+				dist += (wps[i-1] - wps[i]).Length();
 			const Float offset = start_offset + inter*(end_offset - start_offset);
 			Float width_mult = 1.0;
 

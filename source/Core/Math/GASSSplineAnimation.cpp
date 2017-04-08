@@ -68,7 +68,7 @@ namespace GASS
 				if(!first)
 				{
 					Vec3  dir = spline_point - last_spline_point;
-					seg_dist += dir.FastLength();
+					seg_dist += dir.Length();
 					
 				}
 				last_spline_point = spline_point;
@@ -226,7 +226,7 @@ namespace GASS
 					if(!first)
 					{
 						Vec3  dir = spline_point - last_spline_point;
-						Float seg_len = dir.FastLength();
+						Float seg_len = dir.Length();
 						dist += seg_len;
 						if(dist > desired_distance)
 						{

@@ -1233,7 +1233,7 @@ namespace GASS
 						Vec3 v1 = p1 - p3;
 						Vec3 v2 = p2 - p3;
 						Vec3 norm = Math::Cross(v1,v2);
-						norm.FastNormalize();
+						norm.Normalize();
 
 						trinorms[norm_index++]=norm.x;
 						trinorms[norm_index++]=norm.y;

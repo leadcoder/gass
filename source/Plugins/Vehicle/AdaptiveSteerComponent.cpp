@@ -71,7 +71,7 @@ namespace GASS
 
 	void AdaptiveSteerComponent::OnVelocityMessage(PhysicsVelocityEventPtr message)
 	{
-		m_VehicleSpeed = static_cast<float>(message->GetLinearVelocity().FastLength());
+		m_VehicleSpeed = static_cast<float>(message->GetLinearVelocity().Length());
 	}
 
 	void AdaptiveSteerComponent::OnInput(InputRelayEventPtr message)

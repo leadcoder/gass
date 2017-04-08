@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Core/Common.h"
-//#include "Core/Math/GASSMatrix.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <assert.h>
@@ -255,7 +254,7 @@ namespace GASS
 			else return false;
 		}
 
-		void FastNormalize()
+	/*	void FastNormalize()
 		{
 			Type invsqrt = Math::InvSqrt(static_cast<float>(x*x + y*y + z*z));
 			x *= invsqrt;
@@ -271,7 +270,7 @@ namespace GASS
 		Type FastInvLength() const
 		{
 			return Math::InvSqrt(static_cast<float>(x*x + y*y + z*z));
-		}
+		}*/
 
 		std::string ToString(const std::string &separator) const
 		{

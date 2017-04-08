@@ -382,7 +382,7 @@ namespace GASS
 		Vec3 ang_vel  = message->GetAngularVelocity();
 		m_AngularVelocity = ang_vel;
 		Vec3 velocity  = message->GetLinearVelocity();
-		m_VehicleSpeed = static_cast<float>(velocity.FastLength());
+		m_VehicleSpeed = static_cast<float>(velocity.Length());
 	}
 
 	void VehicleEngineComponent::OnInput(InputRelayEventPtr message)
