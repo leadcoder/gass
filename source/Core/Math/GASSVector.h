@@ -30,6 +30,7 @@
 #include <iostream>
 #include <assert.h>
 #include <math.h>
+#include <stdio.h>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 
