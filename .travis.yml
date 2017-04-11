@@ -34,3 +34,15 @@ addons:
     #build_command_prepend: cmake -DCMAKE_BUILD_TYPE=Release -DGASS_BUILD_CORE_SAMPLES=OFF  -DGASS_BUILD_SIM=OFF
     build_command: make -j3
    
+
+# blocklist
+branches:
+  except:
+  - legacy
+  - experimental
+
+# safelist
+branches:
+  only:
+  - master
+  - stable
