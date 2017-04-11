@@ -207,7 +207,7 @@ namespace GASS
 	#define GASS_DYNAMIC_PTR_CAST std::dynamic_pointer_cast
 	#define GASS_STATIC_PTR_CAST std::static_pointer_cast
 	#define GASS_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
-	#define GASS_MAKE_SHARED GASS_MAKE_SHARED
+	#define GASS_MAKE_SHARED std::make_shared
 #endif
 
 #define GASS_FORWARD_DECL(CLASS) class CLASS; typedef GASS_SHARED_PTR<CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<CLASS> CLASS##WeakPtr;
