@@ -194,17 +194,20 @@ namespace GASS
 	#include <boost/weak_ptr.hpp>
 	#include <boost/shared_ptr.hpp>
 	#include <boost/enable_shared_from_this.hpp>
+	#include <boost/make_shared.hpp>
 	#define GASS_SHARED_PTR boost::shared_ptr
 	#define GASS_WEAK_PTR boost::weak_ptr
 	#define GASS_DYNAMIC_PTR_CAST boost::dynamic_pointer_cast
 	#define GASS_STATIC_PTR_CAST boost::static_pointer_cast
 	#define GASS_ENABLE_SHARED_FROM_THIS boost::enable_shared_from_this
+	#define GASS_MAKE_SHARED boost::make_shared
 #else
 	#define GASS_SHARED_PTR std::shared_ptr
 	#define GASS_WEAK_PTR std::weak_ptr
 	#define GASS_DYNAMIC_PTR_CAST std::dynamic_pointer_cast
 	#define GASS_STATIC_PTR_CAST std::static_pointer_cast
 	#define GASS_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
+	#define GASS_MAKE_SHARED GASS_MAKE_SHARED
 #endif
 
 #define GASS_FORWARD_DECL(CLASS) class CLASS; typedef GASS_SHARED_PTR<CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<CLASS> CLASS##WeakPtr;

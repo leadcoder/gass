@@ -46,7 +46,10 @@ namespace GASS
 		owned by a ComponentContainer. A ComponentContainer is the owner of
 		the components and has it's functionality in it's components.
 		The Component class is derived from the reflection template class
-		which enables attribute reflection in a easy way.
+		which enables attribute reflection in a easy way. A component always has a 
+		corresponding C++ class. In order to expose/hide or making properites of components
+		write protected or writable, set appropriate PropertyFlags for the properties in 
+		the class.
 
 		@remarks
 		Components are also stored by component container templates.
