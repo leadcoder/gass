@@ -135,16 +135,16 @@ TEST_CASE("Test Vec3")
 
 	SECTION("Test Normalize")
 	{
-		GASS::Vec3 vec(2, 2, 2);
+		GASS::Vec3 vec(2, 0, 0);
 		vec.Normalize();
-		REQUIRE(vec == GASS::Vec3(1,1,1));
+		REQUIRE(vec == GASS::Vec3(1, 0, 0));
 	}
 
 	SECTION("Test FastNormalize")
 	{
-		GASS::Vec3 vec(2, 2, 2);
+		GASS::Vec3 vec(2, 0, 0);
 		vec.FastNormalize();
-		REQUIRE(vec == GASS::Vec3(1, 1, 1));
+		REQUIRE(vec == GASS::Vec3(1, 0, 0));
 	}
 
 	SECTION("Test Fast Length")
