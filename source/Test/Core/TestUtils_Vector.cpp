@@ -138,23 +138,23 @@ TEST_CASE("Test Vec3")
 	{
 		GASS::Vec3 vec(2, 0, 0);
 		vec.Normalize();
-		REQUIRE(vec == GASS::Vec3(1,0,0));
+		REQUIRE(vec == GASS::Vec3(1, 0, 0));
 	}
 
-	SECTION("Test FastNormalize")
+	/*SECTION("Test FastNormalize")
 	{
 		GASS::Vec3 vec(2, 0, 0);
-		vec.FastNormalize();
+		vec.Normalize();
 		REQUIRE(vec == GASS::Vec3(1, 0, 0));
 	}
 
 	SECTION("Test Fast Length")
 	{
-		REQUIRE(GASS::Vec3(1, 2, 2).FastLength() == 3);
+		REQUIRE(GASS::Vec3(1, 2, 2).Length() == 3);
 	}
 
 	SECTION("Test Fast Inv Length")
 	{
 		REQUIRE(GASS::Vec3(1, 0, 0).FastInvLength() == 1);
-	}
+	}*/
 }

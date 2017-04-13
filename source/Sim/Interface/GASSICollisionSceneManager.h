@@ -90,9 +90,14 @@ namespace GASS
 		*/
 	//	virtual void Force(CollisionRequest &request, CollisionResult &result) const = 0;
 
-		/**
-			Racast check
-		*/
+	/**
+		Raycast check
+		@param ray_start
+		@param ray_dir
+		@param flags ???
+		@param result
+		@param return_first_hit
+	*/
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const = 0;
 	};
 
