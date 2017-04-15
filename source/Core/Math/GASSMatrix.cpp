@@ -27,6 +27,7 @@
 namespace GASS
 {
 	template class TMat4<double>;
+	template class TMat4<float>;
 }
 //namespace GASS
 //{

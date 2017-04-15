@@ -27,11 +27,8 @@
 namespace GASS
 {
 	template<class TYPE> class TVec3;
-	//typedef TVec3<Float> Vec3;
 	template<class TYPE> class TVec4;
-	//typedef TVec4<Float> Vec4;
 	template<class TYPE> class TQuaternion;
-
 
 	/** \addtogroup GASSCore
 	*  @{
@@ -58,6 +55,8 @@ namespace GASS
 		{
 			TYPE m_Data[4][4];
 			TYPE m_Data2[16];
+			TYPE Elements16[16];
+			TYPE Elements4x4[4][4];
 		};
 
 		TMat4() {}
@@ -86,6 +85,7 @@ namespace GASS
 			TYPE m30, TYPE m31, TYPE m32, TYPE m33);
 
 
+	
 		inline TYPE* operator [] (unsigned iRow)
 		{
 			assert(iRow < 4);
@@ -184,12 +184,11 @@ namespace GASS
 			ret.w = vec.x*mat.m_Data[0][3] + vec.y*mat.m_Data[1][3] + vec.z*mat.m_Data[2][3] + vec.w*mat.m_Data[3][3];
 			return ret;
 		}
-
 	};
 
 	typedef TMat4<Float> Mat4;
 
-	template <class TYPE> const TYPE TMat4<TYPE>::EPSILON = 0.0001;
+	template <class TYPE> const TYPE TMat4<TYPE>::EPSILON = 0.0001f;
 	
 
 	template<class TYPE>
@@ -800,14 +799,14 @@ namespace GASS
 		dir.Set(dir.x, 0, dir.z);
 		dir.Normalize();
 		TVec3<TYPE> north_dir(0, 0, 1);
-		TYPE cos_h = Vec3::Dot(north_dir, dir);
-		TVec3<TYPE> cross = Vec3::Cross(north_dir, dir);
+		TYPE cos_h = north_dir.Dot(dir);
+		TVec3<TYPE> cross = north_dir.Cross(dir);
 
 		// Dot product may give values slightly higher than one due to normalization/precision error
-		if (cos_h > 1.0f)
-			cos_h = 1.0f;
-		else if (cos_h < -1.0f)
-			cos_h = -1.0f;
+		if (cos_h > 1.0)
+			cos_h = 1.0;
+		else if (cos_h < -1.0)
+			cos_h = -1.0;
 
 		TYPE h_rad = acos(cos_h);
 
@@ -826,10 +825,10 @@ namespace GASS
 		dir = GetZAxis();
 		TVec3<TYPE> xz_dir(dir.x, 0, dir.z);
 		xz_dir.Normalize();
-		TYPE cos_p = Vec3::Dot(xz_dir, dir);
-		TVec3<TYPE> cross = Vec3::Cross(xz_dir, dir);
+		TYPE cos_p = xz_dir.Dot(dir);
+		TVec3<TYPE> cross = xz_dir.Cross(dir);
 		cross.Normalize();
-		cross = Vec3::Cross(cross, xz_dir);
+		cross = cross.Cross(xz_dir);
 
 		// Dot product may give values slightly higher than one due to normalization/precision error
 		if (cos_p > 1.0f)
@@ -852,10 +851,10 @@ namespace GASS
 		left_dir = GetXAxis();
 		TVec3<TYPE> xz_dir(left_dir.x, 0, left_dir.z);
 		xz_dir.Normalize();
-		TYPE cos_r = Vec3::Dot(xz_dir, left_dir);
-		TVec3<TYPE> cross = Vec3::Cross(xz_dir, left_dir);
+		TYPE cos_r = xz_dir.Dot(left_dir);
+		TVec3<TYPE> cross = xz_dir.Cross(left_dir);
 		cross.Normalize();
-		cross = Vec3::Cross(cross, xz_dir);
+		cross = cross.Cross(xz_dir);
 		// Dot product may give values slightly higher than one due to normalization/precision error
 		if (cos_r > 1.0f)
 			cos_r = 1.0f;

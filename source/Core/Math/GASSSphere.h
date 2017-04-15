@@ -39,7 +39,9 @@ namespace GASS
 	 Class holding Sphere information, position and radius
 	*/
 
-	class AABox;
+	template<class TYPE> class TAABox;
+	typedef TAABox<Float> AABox;
+	
 	class GASSCoreExport Sphere
 	{
 	public:

@@ -28,7 +28,8 @@
 #define GASS_PLANE_FRONT 0
 #define GASS_PLANE_BACK 1
 #define GASS_ON_PLANE 2
-#define GASS_PI 3.14159265358
+#define GASS_PI 3.1415926535897
+				
 //const long double PI = 3.141592653589793238L;
 //const double PI = 3.141592653589793;
 //const float PI = 3.1415927;
@@ -41,7 +42,9 @@ namespace GASS
 	class Ray;
 	class Triangle;
 	class Plane;
-	class AABox;
+	//class AABox;
+	template<class TYPE> class TAABox;
+	typedef TAABox<Float> AABox;
 
 	/** \addtogroup GASSCore
 	*  @{
