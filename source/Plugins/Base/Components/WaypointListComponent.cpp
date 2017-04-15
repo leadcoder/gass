@@ -304,9 +304,9 @@ namespace GASS
 					dir = pos_vec[i-1] - pos_vec[i+1];
 
 				dir.Normalize();
-				Vec3 left = Math::Cross(dir,Vec3(0,1,0));
+				Vec3 left = Vec3::Cross(dir,Vec3(0,1,0));
 				left.Normalize();
-				Vec3 up = Math::Cross(left,dir);
+				Vec3 up = Vec3::Cross(left,dir);
 				up.Normalize();
 				rot.SetZAxis(dir);
 				rot.SetYAxis(up);

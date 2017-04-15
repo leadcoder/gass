@@ -350,7 +350,7 @@ namespace GASS
 			hingePoint.Set(temp[0],temp[1],temp[2]);
 			dJointGetHinge2Axis1( m_ODEJoint, temp);
 			axis2.Set(temp[0],temp[1],temp[2]);
-			displacement = Math::Dot((hingePoint - bodyPoint) ,axis2);
+			displacement = Vec3::Dot((hingePoint - bodyPoint) ,axis2);
 			Float amt = displacement * m_SwayForce;
 
 

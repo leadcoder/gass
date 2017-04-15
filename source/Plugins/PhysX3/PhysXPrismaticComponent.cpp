@@ -118,9 +118,9 @@ namespace GASS
 
 		// use provided axis....maybe add support to use body rotation also?
 		Vec3 base(1,0,0);
-		Vec3 transform_axis = Math::Cross(base,m_RotationAxis);
+		Vec3 transform_axis = Vec3::Cross(base,m_RotationAxis);
 		transform_axis.Normalize();
-		double angle = acos(Math::Dot(base,m_RotationAxis));
+		double angle = acos(Vec3::Dot(base,m_RotationAxis));
 		physx::PxQuat rot(static_cast<float>(angle), PxConvert::ToPx(transform_axis));
 
 		m_PrismaticJoint = PxD6JointCreate(*system->GetPxSDK(),

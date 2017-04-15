@@ -226,7 +226,7 @@ namespace GASS
 		forward.y = 0;
 		forward.Normalize();
 		Vec3 up(0,1,0);
-		//Vec3 right = Math::Cross(forward,up);
+		//Vec3 right = Vec3::Cross(forward,up);
 		m_CurrentVel += m_Acceleration*m_ThrottleInput*delta;
 		if(m_CurrentVel > m_MaxSpeed)
 			m_CurrentVel = m_MaxSpeed;

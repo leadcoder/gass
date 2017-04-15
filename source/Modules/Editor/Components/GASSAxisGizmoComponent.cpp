@@ -601,8 +601,8 @@ namespace GASS
 		//select projection plane
 		if(m_Type == GT_AXIS)
 		{
-			Float v1 = fabs(Math::Dot(ray.m_Dir, up_vec));
-			Float v2 = fabs(Math::Dot(ray.m_Dir, v_vec));
+			Float v1 = fabs(Vec3::Dot(ray.m_Dir, up_vec));
+			Float v2 = fabs(Vec3::Dot(ray.m_Dir, v_vec));
 			Float value;
 			if(v1 > v2)
 				value = Math::IsectRayPlane(ray,Plane(c_pos,up_vec));
@@ -682,7 +682,7 @@ namespace GASS
 	Vec3 AxisGizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const
 	{
 		Vec3 c = p-axis_origin;
-		Float t = Math::Dot(axis_dir,c);
+		Float t = Vec3::Dot(axis_dir,c);
 		if(m_Mode == GM_LOCAL)
 		{
 			t = m_EditorSceneManager->GetMouseToolController()->SnapPosition(t);

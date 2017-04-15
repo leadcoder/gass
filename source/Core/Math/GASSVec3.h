@@ -23,6 +23,7 @@
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -223,14 +224,48 @@ namespace GASS
 				x /= dist;
 				y /= dist;
 				z /= dist;
-			}
-			else
+			} 
+			else 
 			{
+				//consider 0, 0, 0 instead or assert
+
 				x = 1;
 				y = 0;
 				z = 0;
 			}
 		}
+
+		Type Dot(const TVec3 &v) const
+		{
+			return Dot(*this,v);
+		}
+
+		TVec3 Cross(const TVec3 &v) const
+		{
+			return Cross(*this, v);
+		}
+		
+		static Type Dot(const TVec3 &v1, const TVec3 &v2)
+		{
+			return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
+		}
+
+		static TVec3 Cross(const TVec3 &v1, const TVec3 &v2)
+		{
+			TVec3 ret;
+			ret.x = (v1.y * v2.z) - (v1.z * v2.y);
+			ret.y = (v1.z * v2.x) - (v1.x * v2.z);
+			ret.z = (v1.x * v2.y) - (v1.y * v2.x);
+			return ret;
+		}
+
+		//move this to sphere?
+		/*bool InSphere(TVec3 &v, Type radius) const
+		{
+			Float dist = (*this - v).SquaredLength();
+			if (dist < radius*radius) return true;
+			else return false;
+		}*/
 
 		friend std::ostream& operator << (std::ostream& os, const TVec3& vec)
 		{
@@ -248,12 +283,7 @@ namespace GASS
 			return is;
 		}
 
-		bool InSphere(TVec3 &v, Type radius) const
-		{
-			Float dist = (*this - v).SquaredLength();
-			if (dist < radius*radius) return true;
-			else return false;
-		}
+		
 
 	/*	void FastNormalize()
 		{
@@ -273,15 +303,20 @@ namespace GASS
 			return Math::InvSqrt(static_cast<float>(x*x + y*y + z*z));
 		}*/
 
-		std::string ToString(const std::string &separator) const
+		std::string ToString() const
 		{
-			char ret[128];
+			std::stringstream ss;
+			ss << this;
+			return ss.str();
+		/*	char ret[128];
 #ifdef _MSC_VER
 			sprintf_s(ret, "%.3f%s%.3f%s%.3f", x, separator.c_str(), y, separator.c_str(), z);
 #else
 			sprintf(ret, "%.3f%s%.3f%s%.3f", x, separator.c_str(), y, separator.c_str(), z);
 #endif
 			return ret;
+			*/
+
 		}
 	};
 	template <class Type> TVec3<Type> TVec3<Type>::m_UnitX = TVec3<Type>(1, 0, 0);

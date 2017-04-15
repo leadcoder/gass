@@ -213,7 +213,7 @@ namespace GASS
 				front = v1 + v2;
 
 				front.Normalize();
-				width_mult = Math::Dot(v1,front);
+				width_mult = Vec3::Dot(v1,front);
 				if(width_mult > 0)
 					width_mult = 1.0/width_mult;
 			}
@@ -224,7 +224,7 @@ namespace GASS
 					vertex_alpha = 0;
 			}
 			front.Normalize();
-			lr_vector = Math::Cross(front,Vec3(0,1,0));
+			lr_vector = Vec3::Cross(front,Vec3(0,1,0));
 			lr_vector.Normalize();
 			// end of lrVector calculation
 

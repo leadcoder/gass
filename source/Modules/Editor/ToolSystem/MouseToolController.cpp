@@ -511,9 +511,9 @@ namespace GASS
 		normal.Normalize();
 
 		Vec3 north_axis(0, 1, 0);
-		Vec3 x_axis = -Math::Cross(normal, north_axis);
+		Vec3 x_axis = -Vec3::Cross(normal, north_axis);
 		x_axis.Normalize();
-		Vec3 z_axis = -Math::Cross(normal, x_axis);
+		Vec3 z_axis = -Vec3::Cross(normal, x_axis);
 		Mat4 rot_mat;
 
 		rot_mat.SetXAxis(x_axis);
@@ -526,7 +526,7 @@ namespace GASS
 		Vec3 rvec = Vec3(normal.z, 0, -normal.x);
 		rvec.Normalize();
 		rot_mat.SetXAxis(rvec);
-		Vec3 up = Math::Cross(normal, rvec);
+		Vec3 up = Vec3::Cross(normal, rvec);
 		up.Normalize();
 		rot_mat.SetYAxis(up);*/
 		rot.FromRotationMatrix(rot_mat);

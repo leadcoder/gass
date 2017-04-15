@@ -189,9 +189,9 @@ namespace GASS
 			Float l = tangent.Length();
 			Vec3 dir = tangent*(1.0/l);
 
-			Vec3 left = Math::Cross(dir,up);
+			Vec3 left = Vec3::Cross(dir,up);
 			left.Normalize();
-			up = Math::Cross(left,dir);
+			up = Vec3::Cross(left,dir);
 			up.Normalize();
 
 			rot_mat.SetXAxis(-left);

@@ -22,7 +22,6 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
-//#include "Core/Math/GASSMat4.h"
 #include <iostream>
 #include <assert.h>
 #include <math.h>

@@ -458,8 +458,8 @@ namespace GASS
 	//	Vec3 uv, uuv; 
 	//	Vec3 qvec;
 	//	qvec.Set(x, y, z);
-	//	uv = Math::Cross(qvec,v); 
-	//	uuv = Math::Cross(qvec,uv); 
+	//	uv = Vec3::Cross(qvec,v); 
+	//	uuv = Vec3::Cross(qvec,uv); 
 	//	uv = uv * (2.0f * w); 
 	//	uuv = uuv * 2.0f; 
 

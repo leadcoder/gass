@@ -90,7 +90,7 @@ namespace GASS
 				if(dir.Length() < m_Radius)
 				{
 					dir.Normalize();
-					Float angle = Math::Rad2Deg(acos(Math::Dot(dir,m_ViewDir)));
+					Float angle = Math::Rad2Deg(acos(Vec3::Dot(dir,m_ViewDir)));
 					if(fabs(angle) < m_FOV  || m_FOV == 0)
 					{
 						Vec3 end_pos = m_Position + east*(i*m_SampleDist) + north*(j*-m_SampleDist);

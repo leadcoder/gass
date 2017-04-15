@@ -87,7 +87,7 @@ namespace GASS
 		@param v2 Second vector, as a Vec3.
 		@return The dot product.
 		*/
-		inline static Float Dot(const Vec3 &v1,const Vec3 &v2);
+		//inline static Float Dot(const Vec3 &v1,const Vec3 &v2);
 
 		/**
 		@brief Calculate the cross product of two vectors.
@@ -95,7 +95,7 @@ namespace GASS
 		@param v2 Second vector, as a Vec3.
 		@return The cross product.
 		*/
-		inline static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
+		//inline static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
 
 		/**
 		@brief Calculate the distance (along the ray) where a infinite
@@ -243,20 +243,15 @@ namespace GASS
 		static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
 	};
 
-	Float Math::Dot(const Vec3 &v1, const Vec3 &v2)
+	/*Float Vec3::Dot(const Vec3 &v1, const Vec3 &v2)
 	{
-		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
+		return Vec3::Dot(v1,v2);
 	}
 
-	Vec3 Math::Cross(const Vec3 &v1, const Vec3 &v2)
+	Vec3 Vec3::Cross(const Vec3 &v1, const Vec3 &v2)
 	{
-		Vec3 ret;
-		ret.x = (v1.y * v2.z) - (v1.z * v2.y);
-		ret.y = (v1.z * v2.x) - (v1.x * v2.z);
-		ret.z = (v1.x * v2.y) - (v1.y * v2.x);
-
-		return ret;
-	}
+		return Vec3::Cross(v1, v2);
+	}*/
 
 	Float Math::Rad2Deg(Float rad)
 	{
@@ -288,7 +283,7 @@ namespace GASS
 
 	Vec3 Math::ProjectVectorOnPlane(const Vec3 &plane_normal, const Vec3 &v)
 	{
-		return  v - Math::Dot(v, plane_normal) * plane_normal;
+		return  v - Vec3::Dot(v, plane_normal) * plane_normal;
 	}
 
 	Vec3 Math::GetNormal(const Triangle &tri)
@@ -297,7 +292,7 @@ namespace GASS
 		Vec3 edge1 = tri.P2 - tri.P1;
 		Vec3 edge2 = tri.P3 - tri.P1;
 
-		normal = Cross(edge1, edge2);
+		normal = Vec3::Cross(edge1, edge2);
 		normal.Normalize();
 		return normal;
 	}

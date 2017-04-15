@@ -142,7 +142,7 @@ namespace GASS
 
 				Vec3 v1 = gp2 - gp1;
 				Vec3 v2 = gp3 - gp1;
-				Vec3 y_dir = -Math::Cross(v1, v2);
+				Vec3 y_dir = -Vec3::Cross(v1, v2);
 				y_dir.Normalize();
 
 				//pick average height
@@ -151,7 +151,7 @@ namespace GASS
 				//Generate new rotation
 				Vec3 x_dir = gp2 - gp3;
 				x_dir.Normalize();
-				Vec3 z_dir = Math::Cross(x_dir, y_dir);
+				Vec3 z_dir = Vec3::Cross(x_dir, y_dir);
 				z_dir.Normalize();
 				m_CurrentRot.FromAxes(x_dir, y_dir, z_dir);
 			}

@@ -73,9 +73,9 @@ namespace GASS
 		look_dir.Normalize();
 		Quaternion q;
 
-		Vec3 z = Math::Cross(look_dir,right_vec);
+		Vec3 z = Vec3::Cross(look_dir,right_vec);
 		z.Normalize();
-		Vec3 x = Math::Cross(look_dir,z);
+		Vec3 x = Vec3::Cross(look_dir,z);
 		z.Normalize();
 		q.FromAxes(x,look_dir,z);
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(q)));

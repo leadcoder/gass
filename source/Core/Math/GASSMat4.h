@@ -800,8 +800,8 @@ namespace GASS
 		dir.Set(dir.x, 0, dir.z);
 		dir.Normalize();
 		TVec3<TYPE> north_dir(0, 0, 1);
-		TYPE cos_h = Math::Dot(north_dir, dir);
-		TVec3<TYPE> cross = Math::Cross(north_dir, dir);
+		TYPE cos_h = Vec3::Dot(north_dir, dir);
+		TVec3<TYPE> cross = Vec3::Cross(north_dir, dir);
 
 		// Dot product may give values slightly higher than one due to normalization/precision error
 		if (cos_h > 1.0f)
@@ -826,10 +826,10 @@ namespace GASS
 		dir = GetZAxis();
 		TVec3<TYPE> xz_dir(dir.x, 0, dir.z);
 		xz_dir.Normalize();
-		TYPE cos_p = Math::Dot(xz_dir, dir);
-		TVec3<TYPE> cross = Math::Cross(xz_dir, dir);
+		TYPE cos_p = Vec3::Dot(xz_dir, dir);
+		TVec3<TYPE> cross = Vec3::Cross(xz_dir, dir);
 		cross.Normalize();
-		cross = Math::Cross(cross, xz_dir);
+		cross = Vec3::Cross(cross, xz_dir);
 
 		// Dot product may give values slightly higher than one due to normalization/precision error
 		if (cos_p > 1.0f)
@@ -852,10 +852,10 @@ namespace GASS
 		left_dir = GetXAxis();
 		TVec3<TYPE> xz_dir(left_dir.x, 0, left_dir.z);
 		xz_dir.Normalize();
-		TYPE cos_r = Math::Dot(xz_dir, left_dir);
-		TVec3<TYPE> cross = Math::Cross(xz_dir, left_dir);
+		TYPE cos_r = Vec3::Dot(xz_dir, left_dir);
+		TVec3<TYPE> cross = Vec3::Cross(xz_dir, left_dir);
 		cross.Normalize();
-		cross = Math::Cross(cross, xz_dir);
+		cross = Vec3::Cross(cross, xz_dir);
 		// Dot product may give values slightly higher than one due to normalization/precision error
 		if (cos_r > 1.0f)
 			cos_r = 1.0f;
