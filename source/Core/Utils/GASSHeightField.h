@@ -22,7 +22,7 @@ namespace GASS
 			Constructor that allocate height data and define max/min values for the field.
 			Note that min_bound.y should hold the lowest elevation value that can be store in the height field,
 			and max_bound.y hold the highest elevation value to be stored.
-			Note that 16-bit limitation have a max range of 65536.0f meters/units. Try to use as tight
+			Note that 16-bit limitation have a max range of 65535.0f meters/units. Try to use as tight
 			height range as possible to get best precision.
 			If you don't know the range at allocation time you have to use some approximation because you can not change the
 			range after construction. This is a performance reason, we don't want to do min/max check for each SetHeight call
