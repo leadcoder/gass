@@ -87,6 +87,7 @@ TEST_CASE("Test Mat4")
 
 	SECTION("Test operator * Mat4")
 	{
+		//Just test random mult
 		GASS::Mat4 mat1(0, 13, 22, 32, 24, 15, 36, 37, 18, 49, 510, 11, 122, 123, 4, 5);
 		GASS::Mat4 mat2(0, 6, 6, 34, 64, 65, 76, 87, 48, 39, 31, 11, 2, 133, 214, 1);
 		GASS::Mat4 ret = mat1 * mat2;

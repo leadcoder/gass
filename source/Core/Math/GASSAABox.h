@@ -25,12 +25,13 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSSphere.h"
 #include "Core/Math/GASSMatrix.h"
+#include "Core/Math/GASSPolygon.h"
 #undef min
 #undef max
 
 namespace GASS
 {
-	class Polygon;
+	
 	class LineSegment;
 
 	/** \addtogroup GASSCore
@@ -52,6 +53,8 @@ namespace GASS
 	public:
 		TAABox();
 		TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos);
+		TAABox(const Polygon &poly);
+		TAABox(const std::vector<Polygon> &polys);
 		virtual ~TAABox();
 		/**
 			Merge this bounding box with other
@@ -67,6 +70,18 @@ namespace GASS
 			Extend bounding box to include 3d point
 		*/
 		void Union(const TVec3<TYPE> &point);
+
+		/**
+		Extend bounding box from polygons
+		*/
+		void Union(const std::vector<Polygon> &poly_vec);
+
+		/**
+		Extend bounding box from polygon
+		*/
+
+		void Union(const Polygon &poly);
+
 		
 		/**
 			Check if polygon is inside bounds
@@ -110,16 +125,7 @@ namespace GASS
 		*/
 		bool IsValid() const;
 
-		/**
-			Create bounding box from polygons,TODO: move to constructor?
-		*/
-		static TAABox CreateTAABox(std::vector<Polygon> &poly_vec);
 		
-		/**
-			Get bounding box from polygon TODO: move to constructor?
-		*/
-		static TAABox CreateTAABox(const Polygon &poly);
-
 		/**
 			Get all corner points of this box
 		*/
@@ -145,6 +151,22 @@ namespace GASS
 	{
 		m_Max = max_pos;
 		m_Min = min_pos;
+	}
+
+	template<class TYPE>
+	TAABox<TYPE>::TAABox(const Polygon &poly)
+	{
+		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
+		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Union(poly);
+	}
+
+	template<class TYPE>
+	TAABox<TYPE>::TAABox(const std::vector<Polygon> &polys)
+	{
+		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
+		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Union(polys);
 	}
 
 	template<class TYPE>
@@ -192,6 +214,25 @@ namespace GASS
 
 		if (TAABox.m_Max.z > m_Max.z) m_Max.z = TAABox.m_Max.z;
 		if (TAABox.m_Min.z < m_Min.z) m_Min.z = TAABox.m_Min.z;
+	}
+
+	template<class TYPE>
+	void TAABox<TYPE>::Union(const std::vector<Polygon> &poly_vec)
+	{
+		for (size_t i = 0; i < poly_vec.size(); i++)
+		{
+			Union(poly_vec[i]);
+		}
+	}
+
+	template<class TYPE>
+	void TAABox<TYPE>::Union(const Polygon &poly)
+	{
+		TAABox<TYPE> ret;
+		for (size_t i = 0; i < poly.m_VertexVector.size(); i++)
+		{
+			Union(poly.m_VertexVector[i]);
+		}
 	}
 
 	template<class TYPE>
@@ -255,47 +296,7 @@ namespace GASS
 		return sphere;
 	}
 
-	template<class TYPE>
-	TAABox<TYPE> TAABox<TYPE>::CreateTAABox(std::vector<Polygon> &poly_vec)
-	{
-		TAABox<TYPE> box;
-		for (size_t i = 0; i < poly_vec.size(); i++)
-		{
-			TAABox<TYPE> poly_TAABox = CreateTAABox(poly_vec[i]);
-			if (i == 0) box = poly_TAABox;
-			else box.Union(poly_TAABox);
-		}
-		return box;
-	}
-
-	template<class TYPE>
-	TAABox<TYPE> TAABox<TYPE>::CreateTAABox(const Polygon &poly)
-	{
-		TAABox<TYPE> ret;
-		for (size_t i = 0; i < poly.m_VertexVector.size(); i++)
-		{
-			const TVec3<TYPE>* pos = &poly.m_VertexVector[i];
-			if (i == 0)
-			{
-				ret.m_Max.x = ret.m_Min.x = pos->x;
-				ret.m_Max.y = ret.m_Min.y = pos->y;
-				ret.m_Max.z = ret.m_Min.z = pos->z;
-			}
-			else
-			{
-				if (pos->x >= ret.m_Max.x) ret.m_Max.x = pos->x;
-				else if (pos->x < ret.m_Min.x) ret.m_Min.x = pos->x;
-
-				if (pos->y >= ret.m_Max.y) ret.m_Max.y = pos->y;
-				else if (pos->y < ret.m_Min.y) ret.m_Min.y = pos->y;
-
-				if (pos->z >= ret.m_Max.z) ret.m_Max.z = pos->z;
-				else if (pos->z < ret.m_Min.z) ret.m_Min.z = pos->z;
-			}
-		}
-		return ret;
-	}
-
+	
 
 	template<class TYPE>
 	bool TAABox<TYPE>::PolyInside(const Polygon &poly) const
