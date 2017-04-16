@@ -26,13 +26,12 @@
 #include "Core/Math/GASSSphere.h"
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSPolygon.h"
+#include "Core/Math/GASSLineSegment.h"
 #undef min
 #undef max
 
 namespace GASS
 {
-	
-	class LineSegment;
 
 	/** \addtogroup GASSCore
 	*  @{
