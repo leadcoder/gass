@@ -26,17 +26,21 @@ namespace GASS
 	/**
 		Class holding line segment
 	*/
-	class GASSCoreExport LineSegment
+	template<class TYPE>
+	class TLineSegment
 	{
 	public:
-		LineSegment(){};
-		LineSegment(const Vec3& start,const Vec3& end): m_Start(start),
+		TLineSegment(){};
+		TLineSegment(const TVec3<TYPE>& start,const TVec3<TYPE>& end): m_Start(start),
 			m_End(end){}
 		//public for fast access
-		Vec3 m_Start;
-		Vec3 m_End;
+		TVec3<TYPE> m_Start;
+		TVec3<TYPE> m_End;
 
-		Vec3 GetPoint(Float dist) const {return m_Start + (m_End - m_Start)*dist;}
-		Float GetLength() const {return (m_End - m_Start).Length();}
+		TVec3<TYPE> GetPoint(TYPE dist) const {return m_Start + (m_End - m_Start)*dist;}
+		TYPE GetLength() const {return (m_End - m_Start).Length();}
 	};
+	typedef TLineSegment<double> LineSegmentd;
+	typedef TLineSegment<float> LineSegmentf;
+	typedef TLineSegment<GASS::Float> LineSegment;
 }

@@ -200,6 +200,13 @@ namespace GASS
 			return (v.x == x &&  v.y == y && v.z == z);
 		}
 
+		inline bool Equal (const TVec3 &v, Type tolerance) const
+		{
+			return Math::Equal(x, v.x, tolerance) &&
+				   Math::Equal(y, v.y, tolerance) &&
+				   Math::Equal(z, v.z, tolerance);
+		}
+
 		inline bool operator!= (const TVec3 &v) const
 		{
 			return !(v.x == x &&  v.y == y && v.z == z);

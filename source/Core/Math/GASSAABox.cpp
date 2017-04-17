@@ -29,7 +29,7 @@
 namespace GASS
 {
 	template class TAABox<double>;
-	//template class TAABox<float>;
+	template class TAABox<float>;
 /*	AABox::AABox()
 	{
 		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<Float>::max();

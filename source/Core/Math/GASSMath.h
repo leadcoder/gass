@@ -37,12 +37,14 @@
 
 namespace GASS
 {
-	class Polygon;
-	class LineSegment;
 	class Ray;
 	class Triangle;
 	class Plane;
-	//class AABox;
+	template<class TYPE> class TPolygon;
+	typedef TPolygon<Float> Polygon;
+
+	template<class TYPE> class TLineSegment;
+	typedef TLineSegment<Float> LineSegment;
 	template<class TYPE> class TAABox;
 	typedef TAABox<Float> AABox;
 
@@ -155,6 +157,11 @@ namespace GASS
 		*/
 		inline static Vec3 GetNormal(const Triangle &tri);
 
+		template <class TYPE>
+		inline bool Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon())
+		{
+			return (abs(v1 - v2) < tolerance);
+		}
 		/**
 		Check if two triangles intersect
 		@param t1 First triangle

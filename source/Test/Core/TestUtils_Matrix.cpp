@@ -137,16 +137,55 @@ TEST_CASE("Test Mat4")
 		REQUIRE(point.y == Approx(-2));
 		REQUIRE(point.z == Approx(0));
 	}
+
+	SECTION("Test operator * Vec4")
+	{
+		GASS::Mat4 mat1(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Vec4 point(0, 0, 0, 1);
+		point = mat1*point;
+		REQUIRE(point == GASS::Vec4(1, 1, 1, 1));
+
+		//rotate around y-axis (heading)
+		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(GASS_PI*0.5, 0, 0), GASS::Vec3(1, 1, 1));
+		point.Set(1, 0, 0, 1);
+		point = mat2*point;
+
+		REQUIRE(point.x == Approx(0));
+		REQUIRE(point.y == Approx(0));
+		REQUIRE(point.z == Approx(1));
+		REQUIRE(point.w == Approx(1));
+
+		//translate, rotate and scale
+		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_PI*0.5), GASS::Vec3(2, 2, 2));
+		point.Set(1, 0, 0, 1);
+		point = mat3*point;
+
+		REQUIRE(point.x == Approx(4));
+		REQUIRE(point.y == Approx(-2));
+		REQUIRE(point.z == Approx(0));
+		REQUIRE(point.w == Approx(1));
+	}
+
+	SECTION("Test Zero")
+	{
+		GASS::Mat4 mat;
+		mat.Zero();
+		for (int i = 0; i < 16; i++)
+			REQUIRE(mat.Elements16[i] == 0);
+	}
+
+	SECTION("Test Rotate")
+	{
+		GASS::Mat4 mat;
+		GASS::Float heading = GASS::Math::Deg2Rad(90);
+		mat.Rotate(heading, 0, 0);
+		GASS::Vec3 xaxis = mat.GetXAxis();
+		REQUIRE(xaxis == GASS::Vec3(1,0,1));
+	}
+
 #if 0
-
-	inline TVec3<TYPE> operator* (const TVec3<TYPE> &vec) const;
-	inline TVec4<TYPE> operator* (const TVec4<TYPE> &vec) const;
-
-	/**
-	* Set all matrix elements to zero.
-	*/
-	inline void Zero();
-
+	
+	
 	inline void Rotate(TYPE h, TYPE p, TYPE r);
 
 	/**

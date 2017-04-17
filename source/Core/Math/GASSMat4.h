@@ -108,7 +108,14 @@ namespace GASS
 			return Concatenate(m2);
 		}
 
+		/**
+		Vector transformation using '*'.
+		Transforms the given point by the matrix, projecting the result back into w = 1.
+		This means that the initial w is considered to be 1.0, and then all the tree elements 
+		of the resulting vector are divided by the resulting w.
+		*/
 		inline TVec3<TYPE> operator* (const TVec3<TYPE> &vec) const;
+		
 		inline TVec4<TYPE> operator* (const TVec4<TYPE> &vec) const;
 
 		/**
@@ -274,6 +281,37 @@ namespace GASS
 
 		return res;
 	}
+
+	template<class TYPE>
+	TVec4<TYPE> TMat4<TYPE>::operator * (const TVec4<TYPE> &vec) const
+	{
+		TVec4<TYPE> res;
+		//first row
+		res.x = m_Data[0][0] * vec.x +
+			m_Data[0][1] * vec.y +
+			m_Data[0][2] * vec.z +
+			m_Data[0][3] * vec.w;
+
+		//second row
+		res.y = m_Data[1][0] * vec.x +
+			m_Data[1][1] * vec.y +
+			m_Data[1][2] * vec.z +
+			m_Data[1][3] * vec.w;
+
+		//third row
+		res.z = m_Data[2][0] * vec.x +
+			m_Data[2][1] * vec.y +
+			m_Data[2][2] * vec.z +
+			m_Data[2][3] * vec.w;
+
+		res.w = m_Data[3][0] * vec.x +
+			m_Data[3][1] * vec.y +
+			m_Data[3][2] * vec.z +
+			m_Data[3][3] * vec.w;
+
+		return res;
+	}
+
 	template<class TYPE>
 	void TMat4<TYPE>::Zero()
 	{
@@ -533,75 +571,6 @@ namespace GASS
 		m_Data[2][0] *= scale.x;
 		m_Data[2][1] *= scale.y;
 		m_Data[2][2] *= scale.z;
-	}
-
-	/*Vec3 Mat4::operator * (const Vec3 &vec) const
-	{
-		Vec3 res;
-		TYPE d;
-		res.x = m_Data[0][0] * vec.x +
-			m_Data[0][1] * vec.y +
-			m_Data[0][2] * vec.z +
-			m_Data[0][3];
-
-		res.y = m_Data[1][0] * vec.x +
-			m_Data[1][1] * vec.y +
-			m_Data[1][2] * vec.z +
-			m_Data[1][3];
-
-		res.z = m_Data[2][0] * vec.x +
-			m_Data[2][1] * vec.y +
-			m_Data[2][2] * vec.z +
-			m_Data[2][3];
-
-		d = m_Data[3][0] * vec.x +
-			m_Data[3][1] * vec.y +
-			m_Data[3][2] * vec.z +
-			m_Data[3][3];
-
-		res.x /= d;
-		res.y /= d;
-		res.z /= d;
-
-		return res;
-	}*/
-
-	template<class TYPE>
-	TVec4<TYPE> TMat4<TYPE>::operator * (const TVec4<TYPE> &vec) const
-	{
-		TVec4<TYPE> res;
-		
-		res.x = m_Data[0][0] * vec.x +
-			m_Data[0][1] * vec.y +
-			m_Data[0][2] * vec.z +
-			m_Data[0][3] * vec.w;
-
-		res.y = m_Data[1][0] * vec.x +
-			m_Data[1][1] * vec.y +
-			m_Data[1][2] * vec.z +
-			m_Data[1][3] * vec.w;
-
-		res.z = m_Data[2][0] * vec.x +
-			m_Data[2][1] * vec.y +
-			m_Data[2][2] * vec.z +
-			m_Data[2][3] * vec.w;
-
-		res.w = m_Data[3][0] * vec.x +
-			m_Data[3][1] * vec.y +
-			m_Data[3][2] * vec.z +
-			m_Data[3][3] * vec.w;
-
-		/*d = m_Data[0][3] * vec.x +
-		m_Data[1][3] * vec.y +
-		m_Data[2][3] * vec.z +
-		m_Data[3][3] * vec.w;
-
-		res.x /= d;
-		res.y /= d;
-		res.z /= d;
-		res.w /= d;*/
-
-		return res;
 	}
 
 	template<class TYPE>

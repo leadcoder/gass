@@ -52,8 +52,8 @@ namespace GASS
 	public:
 		TAABox();
 		TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos);
-		TAABox(const Polygon &poly);
-		TAABox(const std::vector<Polygon> &polys);
+		TAABox(const TPolygon<TYPE> &poly);
+		TAABox(const std::vector< TPolygon<TYPE> > &polys);
 		virtual ~TAABox();
 		/**
 			Merge this bounding box with other
@@ -73,24 +73,24 @@ namespace GASS
 		/**
 		Extend bounding box from polygons
 		*/
-		void Union(const std::vector<Polygon> &poly_vec);
+		void Union(const std::vector< TPolygon<TYPE>> &poly_vec);
 
 		/**
 		Extend bounding box from polygon
 		*/
 
-		void Union(const Polygon &poly);
+		void Union(const TPolygon<TYPE> &poly);
 
 		
 		/**
 			Check if polygon is inside bounds
 		*/
-		bool PolyInside(const Polygon &poly) const;
+		bool PolyInside(const TPolygon<TYPE> &poly) const;
 		
 		/**
 			Check if line is inside bounds, TODO, redefined in Math?
 		*/
-		bool LineInside(const LineSegment &segment) const;
+		bool LineInside(const TLineSegment<TYPE> &segment) const;
 
 
 		/**
@@ -111,7 +111,7 @@ namespace GASS
 		/**
 			Get bounding sphere of this box
 		*/
-		Sphere GetBoundingSphere() const;
+		TSphere<TYPE> GetBoundingSphere() const;
 		
 		/**
 			Get bounding box size
@@ -153,7 +153,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TAABox<TYPE>::TAABox(const Polygon &poly)
+	TAABox<TYPE>::TAABox(const TPolygon<TYPE> &poly)
 	{
 		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
 		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
@@ -161,7 +161,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TAABox<TYPE>::TAABox(const std::vector<Polygon> &polys)
+	TAABox<TYPE>::TAABox(const std::vector<TPolygon<TYPE> > &polys)
 	{
 		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
 		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
@@ -216,7 +216,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TAABox<TYPE>::Union(const std::vector<Polygon> &poly_vec)
+	void TAABox<TYPE>::Union(const std::vector<TPolygon<TYPE> > &poly_vec)
 	{
 		for (size_t i = 0; i < poly_vec.size(); i++)
 		{
@@ -225,7 +225,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TAABox<TYPE>::Union(const Polygon &poly)
+	void TAABox<TYPE>::Union(const TPolygon<TYPE> &poly)
 	{
 		TAABox<TYPE> ret;
 		for (size_t i = 0; i < poly.m_VertexVector.size(); i++)
@@ -237,7 +237,7 @@ namespace GASS
 	template<class TYPE>
 	void TAABox<TYPE>::Transform(const TMat4<TYPE> &mat)
 	{
-		Vec3 p1, p2, p3, p4, p5, p6, p7, p8;
+		TVec3<TYPE> p1, p2, p3, p4, p5, p6, p7, p8;
 
 		p1.Set(m_Min.x, m_Max.y, m_Max.z);
 		p2 = m_Max;
@@ -257,8 +257,8 @@ namespace GASS
 		p7 = mat * p7;
 		p8 = mat * p8;
 
-		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<Float>::max();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<Float>::max();
+		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
+		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
 		Union(p1);
 		Union(p2);
 		Union(p3);
@@ -287,18 +287,16 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	Sphere TAABox<TYPE>::GetBoundingSphere() const
+	TSphere<TYPE> TAABox<TYPE>::GetBoundingSphere() const
 	{
-		Sphere sphere;
+		TSphere<TYPE> sphere;
 		sphere.m_Pos = (m_Max + m_Min)*0.5;
-		sphere.m_Radius = static_cast<float>((sphere.m_Pos - m_Max).Length());
+		sphere.m_Radius = (sphere.m_Pos - m_Max).Length();
 		return sphere;
 	}
 
-	
-
 	template<class TYPE>
-	bool TAABox<TYPE>::PolyInside(const Polygon &poly) const
+	bool TAABox<TYPE>::PolyInside(const TPolygon<TYPE> &poly) const
 	{
 		size_t i = 0;
 		for (; i < poly.m_VertexVector.size(); i++)
@@ -306,7 +304,6 @@ namespace GASS
 			const TVec3<TYPE>* pos = &poly.m_VertexVector[i];
 			if (PointInside(*pos)) return true;
 		}
-
 
 		// Get polygon center
 		const TVec3<TYPE> center = poly.Center();
@@ -320,7 +317,7 @@ namespace GASS
 			if (i == poly.m_VertexVector.size() - 1) i2 = 0; else i2 = i + 1;
 			p1 = &poly.m_VertexVector[i];
 			p2 = &poly.m_VertexVector[i2];
-			if (LineInside(LineSegment(*p1, *p2))) return true;
+			if (LineInside(TLineSegment<TYPE>(*p1, *p2))) return true;
 		}
 		return false;
 	}
@@ -346,10 +343,10 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::LineInside(const LineSegment &seg) const
+	bool TAABox<TYPE>::LineInside(const TLineSegment<TYPE> &seg) const
 	{
-		Float x, y, z, scale;
-		Vec3 dir, pos, isect;
+		TYPE x, y, z, scale;
+		TVec3<TYPE> dir, pos, isect;
 		pos = seg.m_Start;
 		dir = seg.m_End - seg.m_Start;
 
