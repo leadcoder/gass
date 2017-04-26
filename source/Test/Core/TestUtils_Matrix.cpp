@@ -174,20 +174,26 @@ TEST_CASE("Test Mat4")
 			REQUIRE(mat.Elements16[i] == 0);
 	}
 
+
+	SECTION("Test Rotate X")
+	{
+		GASS::Mat4 mat;
+		GASS::Float heading = GASS::Math::Deg2Rad(90);
+		mat.RotateY(heading);
+		GASS::Vec3 xaxis = mat.GetXAxis();
+		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, 1), 1.0e-10));
+	}
+
 	SECTION("Test Rotate")
 	{
 		GASS::Mat4 mat;
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
 		mat.Rotate(heading, 0, 0);
 		GASS::Vec3 xaxis = mat.GetXAxis();
-		REQUIRE(xaxis == GASS::Vec3(1,0,1));
+		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, 1), 1.0e-10));
 	}
 
 #if 0
-	
-	
-	inline void Rotate(TYPE h, TYPE p, TYPE r);
-
 	/**
 	* Set the rotation matrix for heading, pitch, roll.
 	*/

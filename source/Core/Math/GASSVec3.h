@@ -200,11 +200,16 @@ namespace GASS
 			return (v.x == x &&  v.y == y && v.z == z);
 		}
 
-		inline bool Equal (const TVec3 &v, Type tolerance) const
+		inline bool _Equal(Type v1, Type v2, Type tolerance = std::numeric_limits<Type>::epsilon()) const
 		{
-			return Math::Equal(x, v.x, tolerance) &&
-				   Math::Equal(y, v.y, tolerance) &&
-				   Math::Equal(z, v.z, tolerance);
+			return (abs(v1 - v2) < tolerance);
+		}
+
+		inline bool Equal(const TVec3 &v, Type tolerance = std::numeric_limits<Type>::epsilon()) const
+		{
+			return _Equal(x, v.x, tolerance) &&
+				   _Equal(y, v.y, tolerance) &&
+				   _Equal(z, v.z, tolerance);
 		}
 
 		inline bool operator!= (const TVec3 &v) const
