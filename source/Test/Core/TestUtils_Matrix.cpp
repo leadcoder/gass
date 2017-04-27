@@ -181,7 +181,7 @@ TEST_CASE("Test Mat4")
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
 		mat.RotateY(heading);
 		GASS::Vec3 xaxis = mat.GetXAxis();
-		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, 1), 1.0e-10));
+		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
 	}
 
 	SECTION("Test Rotate")
