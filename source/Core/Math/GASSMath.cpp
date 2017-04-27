@@ -56,7 +56,7 @@ namespace GASS
 		const Vec3 edge1 = tri.P2 - tri.P1;
 		const Vec3 edge2 = tri.P3 - tri.P1;
 
-		normal = Cross(edge1,edge2);
+		normal = Vec3::Cross(edge1,edge2);
 		normal.Normalize();
 
 		const int side1 = _ClassifyPoint(line_segment.m_Start,  tri.P1,normal);
@@ -118,7 +118,7 @@ namespace GASS
 	int Math::_ClassifyPoint(const Vec3 &point, const Polygon &poly)
 	{
 		const Vec3 dir = poly.m_VertexVector[0] - point;
-		const double d = Dot(dir, poly.m_Normal);
+		const double d = Vec3::Dot(dir, poly.m_Normal);
 
 		if (d < -0.001f)
 			return GASS_PLANE_FRONT;
@@ -131,7 +131,7 @@ namespace GASS
 	int Math::_ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal)
 	{
 		const Vec3 dir = origin - point;
-		const double d = Dot(dir, normal);
+		const double d = Vec3::Dot(dir, normal);
 
 		if (d<-0.001f)
 			return GASS_PLANE_FRONT;
@@ -231,14 +231,14 @@ namespace GASS
 	{
 		const Vec3 e10= tri.P2 - tri.P1;
 		const Vec3 e20= tri.P3 - tri.P1;
-		const Float a = Math::Dot(e10,e10);
-		const Float b = Math::Dot(e10,e20);
-		const Float c = Math::Dot(e20,e20);
+		const Float a = Vec3::Dot(e10,e10);
+		const Float b = Vec3::Dot(e10,e20);
+		const Float c = Vec3::Dot(e20,e20);
 		const Float ac_bb=(a*c)-(b*b);
 
 		const Vec3 vp(point.x - tri.P1.x, point.y - tri.P1.y, point.z - tri.P1.z);
-		const Float d = Math::Dot(vp,e10);
-		const Float e = Math::Dot(vp,e20);
+		const Float d = Vec3::Dot(vp,e10);
+		const Float e = Vec3::Dot(vp,e20);
 		const Float x = (d*c)-(e*b);
 		const Float y = (e*a)-(d*b);
 		const Float z = x+y-ac_bb;
@@ -328,7 +328,7 @@ namespace GASS
 		*/
 
 		// determine normal to plane containing polygon
-		Vec3 pNormal = Cross(v1, v2);
+		Vec3 pNormal = Vec3::Cross(v1, v2);
 		pNormal.Normalize();
 
 		// find how far away the plane is from point p along the planes normal
@@ -380,7 +380,7 @@ namespace GASS
 				const Vec3 wp1 = wps[i];
 				const Vec3 wp2 = wps[i+1];
 				const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wp1,wp2), source_pos);
-				double dist = (source_pos  - closest_point_on_line).FastLength();
+				double dist = (source_pos  - closest_point_on_line).Length();
 				if(dist < shortest_dist)
 				{
 					point = closest_point_on_line;
@@ -401,7 +401,7 @@ namespace GASS
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			lengths.push_back(segmentLength);
 			totalPathLength += segmentLength;
 		}
@@ -460,14 +460,14 @@ namespace GASS
 
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i] - wps[i-1]).FastLength();
+			const Float segmentLength = (wps[i] - wps[i-1]).Length();
 			const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wps[i-1],wps[i]), point);
-			const double dist = (point  - closest_point_on_line).FastLength();
+			const double dist = (point  - closest_point_on_line).Length();
 			if(dist < shortest_dist)
 			{
 				shortest_dist = dist;
 				distance_to_path = dist;
-				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).FastLength();
+				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).Length();
 				index = i-1;
 			}
 			segmentLengthTotal += segmentLength;
@@ -482,7 +482,7 @@ namespace GASS
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			lengths.push_back(segmentLength);
 			totalPathLength += segmentLength;
 		}
@@ -536,7 +536,7 @@ namespace GASS
 		Float totalPathLength = 0;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).FastLength();
+			const Float segmentLength = (wps[i-1] - wps[i]).Length();
 			totalPathLength += segmentLength;
 		}
 		Float dist = 0;
@@ -546,7 +546,7 @@ namespace GASS
 			Vec3 side;
 			const Float inter = dist/totalPathLength;
 			if(i < wps.size()-2)
-				dist += (wps[i-1] - wps[i]).FastLength();
+				dist += (wps[i-1] - wps[i]).Length();
 			const Float offset = start_offset + inter*(end_offset - start_offset);
 			Float width_mult = 1.0;
 
@@ -563,7 +563,7 @@ namespace GASS
 				d2.Normalize();
 				side = d1 + d2;
 				side.Normalize();
-				width_mult = Math::Dot(d1,side);
+				width_mult = Vec3::Dot(d1,side);
 				if(width_mult > 0)
 					width_mult = 1.0/width_mult;
 
@@ -573,7 +573,7 @@ namespace GASS
 				side = wps[i]-wps[i-1];
 			}
 			side.Normalize();
-			side = Math::Cross(side,Vec3(0,1,0));
+			side = Vec3::Cross(side,Vec3(0,1,0));
 			side.Normalize();
 			offset_path.push_back(wps[i] + side*offset*width_mult);
 		}
@@ -602,7 +602,7 @@ namespace GASS
 				d2.Normalize();
 				side = d1 + d2;
 				side.Normalize();
-				width_mult = Math::Dot(d1,side);
+				width_mult = Vec3::Dot(d1,side);
 				if(width_mult > 0)
 					width_mult = 1.0/width_mult;
 
@@ -612,7 +612,7 @@ namespace GASS
 				side = wps[i]-wps[i-1];
 			}
 			side.Normalize();
-			side = Math::Cross(side,Vec3(0,1,0));
+			side = Vec3::Cross(side,Vec3(0,1,0));
 			side.Normalize();
 			offset_path.push_back(wps[i] + side*offset*width_mult);
 		}
@@ -641,7 +641,7 @@ namespace GASS
 				d2.Normalize();
 				side = d1 + d2;
 				side.Normalize();
-				width_mult = Math::Dot(d1,side);
+				width_mult = Vec3::Dot(d1,side);
 				if(width_mult > 0)
 					width_mult = 1.0/width_mult;
 
@@ -651,7 +651,7 @@ namespace GASS
 				side = wps[i]-wps[i-1];
 			}
 			side.Normalize();
-			side = Math::Cross(side,Vec3(0,1,0));
+			side = Vec3::Cross(side,Vec3(0,1,0));
 			side.Normalize();
 			normals.push_back(side*width_mult);
 		}
@@ -679,7 +679,7 @@ namespace GASS
 		double d = V.Length();
 
 		V.Normalize();
-		double t = Dot(V,c);
+		double t = Vec3::Dot(V,c);
 
 		// Check to see if t is beyond the extents of the line segment
 		if (t < 0.0f) return (line.m_Start);
@@ -803,10 +803,10 @@ namespace GASS
 
 	Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
 	{
-		const Float d = -(Dot(plane.m_Normal, plane.m_Origin));
+		const Float d = -(Vec3::Dot(plane.m_Normal, plane.m_Origin));
 
-		const Float numer = Dot(plane.m_Normal, ray.m_Origin) + d;
-		const Float denom = Dot(plane.m_Normal, ray.m_Dir);
+		const Float numer = Vec3::Dot(plane.m_Normal, ray.m_Origin) + d;
+		const Float denom = Vec3::Dot(plane.m_Normal, ray.m_Dir);
 
 		if (denom == 0)  // normal is orthogonal to vector, cant intersect
 			return (-1.0f);

@@ -28,8 +28,9 @@
 #undef max
 namespace GASS
 {
-
-	AABox::AABox()
+	template class TAABox<double>;
+	template class TAABox<float>;
+/*	AABox::AABox()
 	{
 		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<Float>::max();
 		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<Float>::max();
@@ -319,6 +320,6 @@ namespace GASS
 	Vec3 AABox::GetSize() const
 	{
 		return (m_Max - m_Min);
-	}
+	}*/
 }
 

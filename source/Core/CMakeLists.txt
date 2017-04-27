@@ -9,9 +9,9 @@ endif()
 
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSConfig.h.in"
-		"${CMAKE_CURRENT_SOURCE_DIR}/GASSConfig.h" 
+		"${CMAKE_CURRENT_BINARY_DIR}/GASSConfig.h" 
 		@ONLY)
-set(GASS_CONFIG_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/GASSConfig.h")	
+set(GASS_CONFIG_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSConfig.h")	
 	 
 #add all source files from current directory (recursively)
 set(CPP_FILES
@@ -75,6 +75,7 @@ set(H_FILES
 	Math/GASSLineSegment.h
 	Math/GASSMath.h
 	Math/GASSMatrix.h
+	Math/GASSMat4.h
 	Math/GASSPlane.h
 	Math/GASSPolygon.h
 	Math/GASSQuaternion.h
@@ -85,6 +86,9 @@ set(H_FILES
 	Math/GASSSplineAnimation.h
 	Math/GASSTriangle.h
 	Math/GASSVector.h
+	Math/GASSVec2.h
+	Math/GASSVec3.h
+	Math/GASSVec4.h
 	MessageSystem/GASSBaseMessage.h
 	MessageSystem/GASSIMessage.h
 	MessageSystem/GASSMessageManager.h
@@ -147,9 +151,17 @@ gass_setup_lib(GASSCore
 					BUILDTYPE ${GASS_BUILDTYPE}
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
-					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
+					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_BINARY_DIR}/../"
 					PUBLIC_DEPS ${BOOST_DEPS}
 					PRIVATE_DEPS ${PLATFORM_DEPS}
 					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+					
+#install config and version headers
+INSTALL(FILES ${GASS_CONFIG_HEADER} DESTINATION include/Core)
+
+if(GASS_EMBED_GIT_SHA)
+	INSTALL(FILES ${GASS_VERSION_HEADER} DESTINATION include/Core)
+endif()
+
 
 

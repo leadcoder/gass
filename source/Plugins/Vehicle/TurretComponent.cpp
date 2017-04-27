@@ -148,12 +148,12 @@ namespace GASS
 
 	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
-		Vec3 cross = Math::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
+		Vec3 cross = Vec3::Cross(v1,v2);
+		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
-		if(Math::Dot(plane_normal,cross) > 0)
+		if(Vec3::Dot(plane_normal,cross) > 0)
 			angle *= -1;
 		return angle;
 	}
@@ -161,8 +161,8 @@ namespace GASS
 
 	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
-		//Vec3 cross = Math::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Math::Dot(v1,v2));
+		//Vec3 cross = Vec3::Cross(v1,v2);
+		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
@@ -241,8 +241,8 @@ namespace GASS
 		DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
 
-		Vec3 cross = Math::Cross(turrent_direction,desired_aim_direction);
-		float cos_angle = Math::Dot(turrent_direction,desired_aim_direction);
+		Vec3 cross = Vec3::Cross(turrent_direction,desired_aim_direction);
+		float cos_angle = Vec3::Dot(turrent_direction,desired_aim_direction);
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
@@ -284,8 +284,8 @@ namespace GASS
 				DEBUG_DRAW_LINE(start,end,ColorRGBA(0,0,1,1))
 
 
-				Vec3 cross = Math::Cross(t_dir,desiredDir);
-				float cos_angle = Math::Dot(t_dir,desiredDir);
+				Vec3 cross = Vec3::Cross(t_dir,desiredDir);
+				float cos_angle = Vec3::Dot(t_dir,desiredDir);
 				if(cos_angle > 1) cos_angle = 1;
 				if(cos_angle < -1) cos_angle = -1;
 				float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));
@@ -345,8 +345,8 @@ namespace GASS
 			turret_dir.y = 0;
 			turret_dir.Normalize();
 		}
-		Vec3 cross = Math::Cross(turret_dir,aim_dir);
-		float cos_angle = Math::Dot(turret_dir,aim_dir);
+		Vec3 cross = Vec3::Cross(turret_dir,aim_dir);
+		float cos_angle = Vec3::Dot(turret_dir,aim_dir);
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
 		float angle_to_aim_dir = Math::Rad2Deg(acos(cos_angle));

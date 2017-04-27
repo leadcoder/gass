@@ -22,27 +22,44 @@
 #define GASS_POLYGON_H
 
 #include "Core/Common.h"
-#include <vector>
 #include "Core/Math/GASSVector.h"
+#include <vector>
 
 namespace GASS
 {
-	class GASSCoreExport Polygon
+	template<class TYPE>
+	class TPolygon
 	{
 	public:
-		Polygon();
-		~Polygon();
-		Vec3 Center() const;
+		TPolygon(){}
+		~TPolygon() {}
+		TVec3<TYPE> Center() const
+		{
+			TVec3<TYPE> ret(0, 0, 0);
+			for (size_t i = 0; i < m_VertexVector.size(); i++)
+			{
+				const TVec3<TYPE>* pos = &m_VertexVector[i];
+				ret.x += pos->x;
+				ret.y += pos->y;
+				ret.z += pos->z;
+			}
+			ret = ret * (static_cast<TYPE>(1.0) / static_cast<TYPE>(m_VertexVector.size()));
+			return ret;
+		}
 		
 		/**\var vector<Vec3> m_VertexVector;
 		* \brief Contains the vertices of the polygon.
 		*/
+		std::vector<TVec3<TYPE> > m_VertexVector;
 		/**\var Vec3 m_Normal;
 		* \brief The normal of tha polygon plane.
 		*/
-		std::vector<Vec3> m_VertexVector;
-		Vec3 m_Normal;
+		TVec3<TYPE> m_Normal;
 	};
+
+	typedef TPolygon<double> Polygond;
+	typedef TPolygon<float> Polygonf;
+	typedef TPolygon<GASS::Float> Polygon;
 }
 
 #endif // #ifndef POLYGON_HH

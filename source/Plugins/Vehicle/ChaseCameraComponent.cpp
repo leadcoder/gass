@@ -131,9 +131,9 @@ namespace GASS
 		Vec3 camera_dir = eye_pos - target_pos;
 		
 		camera_dir.Normalize();
-		Vec3 left = Math::Cross(Vec3(0,1,0),camera_dir);
+		Vec3 left = Vec3::Cross(Vec3(0,1,0),camera_dir);
 		left.Normalize();
-		Vec3 up = Math::Cross(camera_dir,left);
+		Vec3 up = Vec3::Cross(camera_dir,left);
 		up.Normalize();
 		Mat4 rot_mat;
 		rot_mat.SetZAxis(camera_dir);

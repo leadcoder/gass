@@ -50,7 +50,7 @@ namespace GASS
 		*/
 		Plane(const Triangle &tri)
 		{
-			m_Normal = Math::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
+			m_Normal = Vec3::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
 			m_Normal.Normalize();
 			m_Origin = tri.P1;
 		}
@@ -71,7 +71,7 @@ namespace GASS
 
 		bool IsFrontFacingTo(const Vec3& direction) const
 		{
-			const double dot = Math::Dot(m_Normal,direction);
+			const double dot = Vec3::Dot(m_Normal,direction);
 			return (dot <= 0);
 		};
 
@@ -82,15 +82,15 @@ namespace GASS
 
 		Float SignedDistanceTo(const Vec3& point) const
 		{
-			return Math::Dot(point,m_Normal) + GetD();
+			return Vec3::Dot(point,m_Normal) + GetD();
 		};
 
 		Float RayIsect(const Ray &ray) const
 		{
-			const Float d = -(Math::Dot(m_Normal, m_Origin));
+			const Float d = -(Vec3::Dot(m_Normal, m_Origin));
 
-			const Float numer = Math::Dot(m_Normal, ray.m_Origin) + d;
-			const Float denom = Math::Dot(m_Normal, ray.m_Dir);
+			const Float numer = Vec3::Dot(m_Normal, ray.m_Origin) + d;
+			const Float denom = Vec3::Dot(m_Normal, ray.m_Dir);
 
 			if (denom == 0)  // normal is orthogonal to vector, cant intersect
 				return (-1.0f);

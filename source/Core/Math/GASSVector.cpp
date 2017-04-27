@@ -18,51 +18,18 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <stdio.h>
+
 #include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSMath.h"
 
 namespace GASS
 {
+	//instance to catch errors at compile time
+	template class TVec3<double>;
+	template class TVec4<double>;
+	template class TVec2<double>;
 
-	Vec3 Vec3::m_UnitX = Vec3(1,0,0);
-	Vec3 Vec3::m_UnitY = Vec3(0,1,0);
-	Vec3 Vec3::m_UnitZ = Vec3(0,0,1);
-
-
-	bool Vec3::InSphere(Vec3 &v, Float radius) const
-	{
-		Float dist = (*this - v).SquaredLength();
-		if(dist < radius*radius) return true;
-		else return false;
-	}
-
-	void Vec3::FastNormalize()
-	{
-		Float invsqrt = Math::InvSqrt(static_cast<float>(x*x+y*y+z*z));
-		x *= invsqrt;
-		y *= invsqrt;
-		z *= invsqrt;
-	}
-
-	Float Vec3::FastLength()  const
-	{
-		return 1.0f/Math::InvSqrt(static_cast<float>(x*x+y*y+z*z));
-	}
-
-	Float Vec3::FastInvLength() const
-	{
-		return Math::InvSqrt(static_cast<float>(x*x+y*y+z*z));
-	}
-
-	std::string Vec3::ToString(const std::string &separator) const
-	{
-		char ret[128];
-#ifdef _MSC_VER
-		sprintf_s(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
-#else
-		sprintf(ret,"%.3f%s%.3f%s%.3f",x,separator.c_str(),y,separator.c_str(),z);
-#endif
-		return ret;
-	}
+	//instance to catch errors at compile time
+	template class TVec3<float>;
+	template class TVec4<float>;
+	template class TVec2<float>;
 }

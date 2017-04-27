@@ -64,7 +64,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 			dir = vPoint - m_KeyVector[i].m_Pos;
 		}
 		dir.Normalize();
-		left = Math::Cross(up,dir);
+		left = Vec3::Cross(up,dir);
 		left.Normalize();
 
 		q.FromAxes(left,up,dir);
@@ -256,7 +256,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 				left.x = dir.z;
 				left.y = 0;
 				left.z = -dir.x;
-				up = Math::Cross(dir,left);
+				up = Vec3::Cross(dir,left);
 				up.Normalize();
 				kret.m_Rot.FromAxes(left,up,dir);
 			}

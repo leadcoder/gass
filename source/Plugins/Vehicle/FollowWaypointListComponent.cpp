@@ -169,7 +169,7 @@ namespace GASS
 			{
 				Vec3 wp_pos = m_Waypoints[i];
 				wp_pos.y = 0;
-				double dist = (wp_pos - pos).FastLength();
+				double dist = (wp_pos - pos).Length();
 				if(i == 0 || dist < shortest_dist)
 				{
 					wp_index = static_cast<int>(i);
@@ -212,7 +212,7 @@ namespace GASS
 				{
 					Vec3 last_wp = m_Waypoints[num_waypoints-1];
 					//Check distance to last wp
-					if((last_wp - m_CurrentPos).FastLength() < m_WaypointRadius)
+					if((last_wp - m_CurrentPos).Length() < m_WaypointRadius)
 					{
 						GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
 					}

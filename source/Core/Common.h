@@ -21,7 +21,7 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
-#include "GASSConfig.h"
+#include "Core/GASSConfig.h"
 
 #ifdef _MSC_VER
 

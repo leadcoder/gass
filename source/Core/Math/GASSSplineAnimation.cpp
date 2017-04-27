@@ -68,7 +68,7 @@ namespace GASS
 				if(!first)
 				{
 					Vec3  dir = spline_point - last_spline_point;
-					seg_dist += dir.FastLength();
+					seg_dist += dir.Length();
 					
 				}
 				last_spline_point = spline_point;
@@ -95,13 +95,13 @@ namespace GASS
 		dir = rot_pos - pos;
 		dir.Normalize();
 
-		left = Math::Cross(up_dir,dir);
+		left = Vec3::Cross(up_dir,dir);
 		left.Normalize();
 		
 		//left.x = dir.z;
 		//left.y = 0;
 		//left.z = -dir.x;
-		up = Math::Cross(dir,left);
+		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
 		transformation.Identity();
@@ -144,13 +144,13 @@ namespace GASS
 		dir = dir*pitch_weight +  mask_dir*(1-pitch_weight);
 		dir.Normalize();
 
-		left = Math::Cross(up_dir,dir);
+		left = Vec3::Cross(up_dir,dir);
 		left.Normalize();
 		
 		//left.x = dir.z;
 		//left.y = 0;
 		//left.z = -dir.x;
-		up = Math::Cross(dir,left);
+		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
 		transformation.Identity();
@@ -180,10 +180,10 @@ namespace GASS
 		Vec3 mask_dir = mask*dir;
 		mask_dir.Normalize();
 
-		left = Math::Cross(up_dir,dir);
+		left = Vec3::Cross(up_dir,dir);
 		left.Normalize();
 		
-		up = Math::Cross(dir,left);
+		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
 		up = up_dir*skew_weight +  up*(1-skew_weight);
@@ -226,7 +226,7 @@ namespace GASS
 					if(!first)
 					{
 						Vec3  dir = spline_point - last_spline_point;
-						Float seg_len = dir.FastLength();
+						Float seg_len = dir.Length();
 						dist += seg_len;
 						if(dist > desired_distance)
 						{

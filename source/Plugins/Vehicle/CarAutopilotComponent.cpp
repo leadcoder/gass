@@ -246,7 +246,7 @@ namespace GASS
 				Vec3 col_dir =  dd.Pos - m_CurrentPos;
 				col_dir.Normalize();
 				Vec3 drive_dir = -m_Transformation.GetZAxis();
-				const Float cos_angle = Math::Dot(drive_dir,col_dir);
+				const Float cos_angle = Vec3::Dot(drive_dir,col_dir);
 				if(cos_angle > -0.1)
 				{
 					target_pos = target_pos + per_pend_target_dir*col_radie;
@@ -282,7 +282,7 @@ namespace GASS
 				Vec3 col_dir =  m_CollisionPoint - m_CurrentPos;
 				col_dir.Normalize();
 				Vec3 drive_dir = -m_Transformation.GetZAxis();
-				const Float cos_angle = Math::Dot(drive_dir,col_dir);
+				const Float cos_angle = Vec3::Dot(drive_dir,col_dir);
 				if(cos_angle > 0)
 				{
 					target_pos = target_pos + per_pend_target_dir*col_radie;
@@ -309,8 +309,8 @@ namespace GASS
 
 			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CurrentPos, m_CurrentPos + drive_dir, ColorRGBA(1,1,1,1), ColorRGBA(1,1,1,1))));
 
-			const Float cos_angle = Math::Dot(drive_dir_n,col_vec_n);
-			//const Vec3 cross_vec = Math::Cross(drive_dir_n,col_vec_n);
+			const Float cos_angle = Vec3::Dot(drive_dir_n,col_vec_n);
+			//const Vec3 cross_vec = Vec3::Cross(drive_dir_n,col_vec_n);
 			const Float proj_dist_forward = cos_angle*col_vec_l;
 			const Float proj_dist_side = fabs(sin(acos(cos_angle))*col_vec_l);
 
@@ -350,8 +350,8 @@ namespace GASS
 			current_dir.y = 0;
 			current_dir.Normalize();
 
-			Vec3 cross = Math::Cross(current_dir,target_dir);
-			float cos_angle = static_cast<float>(Math::Dot(current_dir,target_dir));
+			Vec3 cross = Vec3::Cross(current_dir,target_dir);
+			float cos_angle = static_cast<float>(Vec3::Dot(current_dir,target_dir));
 
 			if(cos_angle > 1)
 				cos_angle = 1;
@@ -501,8 +501,8 @@ namespace GASS
 			{
 				if(m_HasDir)
 				{
-					Vec3 cross = Math::Cross(current_dir,m_FaceDirection);
-					float cos_angle = static_cast<float>(Math::Dot(current_dir,m_FaceDirection));
+					Vec3 cross = Vec3::Cross(current_dir,m_FaceDirection);
+					float cos_angle = static_cast<float>(Vec3::Dot(current_dir,m_FaceDirection));
 
 					if(cos_angle > 1)
 						cos_angle = 1;

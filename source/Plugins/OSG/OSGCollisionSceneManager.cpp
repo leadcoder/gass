@@ -144,7 +144,7 @@ namespace GASS
 										if(flags & geom->GetGeometryFlags())
 										{
 											Vec3 col_pos = OSGConvert::ToGASS(intersection.getWorldIntersectPoint());
-											Float col_dist = (col_pos - ray_start).FastLength(); 
+											Float col_dist = (col_pos - ray_start).Length(); 
 
 											result->CollDist = col_dist;
 											result->Coll = true;

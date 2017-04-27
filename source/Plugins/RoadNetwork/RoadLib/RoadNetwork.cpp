@@ -409,7 +409,7 @@ namespace GASS
 			tinyxml2::XMLElement *node_prop_elem = rootXMLDoc->NewElement( "Node");
 			nodes_elem->LinkEndChild( node_prop_elem);
 			node_prop_elem->SetAttribute("ID", id);
-			std::string pos = m_Nodes[i]->Position.ToString(" ");
+			std::string pos = m_Nodes[i]->Position.ToString();
 			node_prop_elem->SetAttribute("Position",pos.c_str());
 		}
 		tinyxml2::XMLElement *edges_elem = rootXMLDoc->NewElement( "Edges");
@@ -429,7 +429,7 @@ namespace GASS
 			{
 				tinyxml2::XMLElement *wp_prop_elem = rootXMLDoc->NewElement( "WP");
 				wps_elem->LinkEndChild( wp_prop_elem);
-				std::string pos = m_Edges[i]->Waypoints[j].ToString(" ");
+				std::string pos = m_Edges[i]->Waypoints[j].ToString();
 				wp_prop_elem->SetAttribute("Position",pos.c_str());
 			}
 		}

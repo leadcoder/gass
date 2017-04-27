@@ -7,6 +7,7 @@ set(GASS_TEST_SOURCES
 	#${PROJECT_SOURCE_DIR}/source/Test/Core/TestUtils_FilePath_Optional.cpp
 	Core/TestUtils_StringUtils.cpp
 	Core/TestUtils_Vector.cpp
+	Core/TestUtils_Matrix.cpp
 )
 
 set(GASS_MATH_TEST_SOURCES 

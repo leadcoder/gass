@@ -343,7 +343,7 @@ namespace GASS
 				Vec3 rvec = Vec3(dir.z, 0, -dir.x);
 				rvec.Normalize();
 				rot_mat.SetXAxis(rvec);
-				Vec3 up = Math::Cross(dir, rvec);
+				Vec3 up = Vec3::Cross(dir, rvec);
 				up.Normalize();
 				rot_mat.SetYAxis(up);
 				cam_rot.FromRotationMatrix(rot_mat);

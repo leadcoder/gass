@@ -1,4 +1,5 @@
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSMath.h"
 
 #include "catch.hpp"
 
@@ -131,16 +132,42 @@ TEST_CASE("Test Vec3")
 	SECTION("Test Length")
 	{
 		REQUIRE(GASS::Vec3(1, 2, 2).Length() == 3);
+
+		REQUIRE(GASS::Vec3(0, 0, 0).Length() == 0);
 	}
 
 	SECTION("Test Normalize")
 	{
 		GASS::Vec3 vec(2, 0, 0);
 		vec.Normalize();
+		REQUIRE(vec == GASS::Vec3(1,0,0));
+
+		//Test zero vector
+		vec.Set(0, 0, 0);
+		vec.Normalize();
+		//for now 1,0,0 should be returned, consider 0,0,0 instead 
 		REQUIRE(vec == GASS::Vec3(1, 0, 0));
 	}
 
-	SECTION("Test FastNormalize")
+	SECTION("Test streaming <<")
+	{
+		std::stringstream ss;
+		GASS::Vec3 vec(2, 0, 0);
+		ss << vec;
+		const std::string str_vec = ss.str();
+		REQUIRE(str_vec == "2 0 0");
+	}
+
+	SECTION("Test streaming >>")
+	{
+		std::stringstream ss;
+		ss << "2 0 0";
+		GASS::Vec3 vec;
+		ss >> vec;
+		REQUIRE(vec == GASS::Vec3(2, 0, 0));
+	}
+
+	/*SECTION("Test FastNormalize")
 	{
 		GASS::Vec3 vec(2, 0, 0);
 		vec.FastNormalize();
@@ -155,5 +182,5 @@ TEST_CASE("Test Vec3")
 	SECTION("Test Fast Inv Length")
 	{
 		REQUIRE(GASS::Vec3(1, 0, 0).FastInvLength() == 1);
-	}
+	}*/
 }

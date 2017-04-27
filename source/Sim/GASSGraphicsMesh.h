@@ -23,6 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
 #include "Sim/GASSGraphicsMaterial.h"
+#include "Core/Math/GASSMatrix.h"
 
 namespace GASS
 {

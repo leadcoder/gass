@@ -22,7 +22,8 @@
 
 namespace GASS
 {
-
+	template class TPolygon<double>;
+#if 0
 	Polygon::Polygon()
 	{
 
@@ -46,6 +47,6 @@ namespace GASS
 		ret = ret * (1.0/m_VertexVector.size());
 		return ret;
 	}
-
+#endif
 	
 }

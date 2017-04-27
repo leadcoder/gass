@@ -108,7 +108,7 @@ namespace GASS
 				{
 					LocationComponentPtr location = so->GetFirstComponentByClass<ILocationComponent>();
 					Vec3 obj_pos = location->GetWorldPosition();
-					Float dist = (my_pos-obj_pos).FastLength();
+					Float dist = (my_pos-obj_pos).Length();
 					if(dist < 5)
 					{
 						//enter and return

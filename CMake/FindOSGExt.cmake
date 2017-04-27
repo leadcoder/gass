@@ -8,7 +8,7 @@
 #OSGPLUGIN_BINARIES_REL
 
 set(OSG_MODULES ${OSGExt_FIND_COMPONENTS})
-set(OSG_VERSION ${OSGExt_FIND_VERSION})
+#set(OSG_VERSION ${OSGExt_FIND_VERSION})
 
 macro(extract_version var str)
 STRING(REGEX REPLACE ".*VERSION\ *([0-9]+)" "\\1" ${var} ${str})
