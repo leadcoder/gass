@@ -73,7 +73,7 @@ namespace GASS
 		/**
 		Extend bounding box from polygons
 		*/
-		void Union(const std::vector< TPolygon<TYPE>> &poly_vec);
+		void Union(const std::vector< TPolygon<TYPE> > &poly_vec);
 
 		/**
 		Extend bounding box from polygon
