@@ -39,7 +39,37 @@ namespace GASS
 
 
 	/**
-	* Class representing a Float-matrix with 16 elements.
+	 Class representing a OpenGL-style transformation matrix.
+	 Positiv rotations are clockwise around X-axis, 
+	 Y-axis and Z-axis in a right handed coordinate system
+	 defined as:
+	    +Y
+	    |
+	    |
+	    |______ +X
+		/
+	  /
+	 +Z
+	 Matrix layout (single index)
+	 m0  m1  m2  m3    
+	 m4  m5  m6  m7
+	 m8  m9  m10 m11
+	 m12 m13 m14 m15
+	 Matrix layout (row, collum index) 
+	 m00  m01  m02  m03
+	 m10  m11  m12  m13
+	 m20  m21  m22  m23
+	 m30  m31  m32  m33
+
+	 Where m03,m13,m23 hold the position (x,y,z)
+	 And:
+	  m00 m10 m20
+	  m10 m11 m12
+	  m20 m21 m22
+	  is 3x3 rotaion matrix defined by three ortogonal axis, where
+	  m00, m10, m20 is the X-axis 
+	  m01, m11, m21 is the Y-axis
+	  m02, m12, m22 is the Z-axis
 	*/
 	template<class TYPE>
 	class TMat4
@@ -63,6 +93,9 @@ namespace GASS
 
 		/**
 			Setup transformation matrix by pos,rot and scale
+			@param pos Postion part of the transformation
+			@param rot Rotation represented as a quaternion
+			@param scale 
 		*/
 		TMat4(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
@@ -71,8 +104,10 @@ namespace GASS
 
 		/**
 			Setup transformation matrix by pos,rot (Euler angles) and scale
+			@param pos Postion part of the transformation
+			@param rot Rotation represented as a euler angles in radians)
+			@param scale
 		*/
-
 		TMat4(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
 			SetTransformation(pos, rot, scale);
@@ -84,8 +119,6 @@ namespace GASS
 			TYPE m20, TYPE m21, TYPE m22, TYPE m23,
 			TYPE m30, TYPE m31, TYPE m32, TYPE m33);
 
-
-	
 		inline TYPE* operator [] (unsigned iRow)
 		{
 			assert(iRow < 4);
@@ -123,13 +156,27 @@ namespace GASS
 		*/
 		inline void Zero();
 
+		/**
+		 Set the rotation matrix for heading, pitch, roll.
+		 @param h Heading in in radians
+		 @param p Pitch in in radians
+		 @param r Roll in in radians
+		*/
 		inline void Rotate(TYPE h, TYPE p, TYPE r);
 
 		/**
-		* Set the rotation matrix for heading, pitch, roll.
+		* Create Y rotation matrix.
 		*/
 		inline void RotateY(TYPE amount);
+		
+		/**
+		* Create X rotation matrix.
+		*/
 		inline void RotateX(TYPE amount);
+		
+		/**
+		* Create Z rotation matrix.
+		*/
 		inline void RotateZ(TYPE amount);
 		inline void Scale(TYPE sx, TYPE sy, TYPE sz);
 		inline void RelScale(TVec3<TYPE> scale);
@@ -389,7 +436,6 @@ namespace GASS
 	template<class TYPE>
 	void TMat4<TYPE>::Rotate(TYPE h, TYPE p, TYPE r)
 	{
-
 		TYPE cp = cos(p);
 		TYPE sp = sin(p);
 		TYPE ch = cos(h);
@@ -397,8 +443,19 @@ namespace GASS
 		TYPE cr = cos(r);
 		TYPE sr = sin(r);
 
-
 		m_Data[0][0] = (cr*ch + sr*sp*sh);
+		m_Data[0][1] = (-ch*sr + sh*sp*ch);
+		m_Data[0][2] = (sh*cp); 
+
+		m_Data[1][0] = cp*sr;
+		m_Data[1][1] = cp*cr;
+		m_Data[1][2] = -sp;
+
+		m_Data[2][0] = -sh*cr + ch*sp*sr;
+		m_Data[2][1] = sh*sr + ch*sp*cr;
+		m_Data[2][2] = ch*cp;
+
+		/*m_Data[0][0] = (cr*ch + sr*sp*sh);
 		m_Data[0][1] = (sr*cp);
 		m_Data[0][2] = (-cr*sh + sr*sp*ch);
 
@@ -408,15 +465,13 @@ namespace GASS
 
 		m_Data[2][0] = (cp*sh);
 		m_Data[2][1] = (-sp);
-		m_Data[2][2] = (cp*ch);
-
+		m_Data[2][2] = (cp*ch);*/
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 	{
 		Identity();
-
 		m_Data[0][3] = pos.x;
 		m_Data[1][3] = pos.y;
 		m_Data[2][3] = pos.z;
@@ -443,7 +498,6 @@ namespace GASS
 		m_Data[2][1] *= scale.z;
 		m_Data[2][2] *= scale.z;
 		m_Data[2][3] *= scale.z;
-
 	}
 
 	template<class TYPE> 
