@@ -253,9 +253,10 @@ list(APPEND _TBB_LIBRARY_DIR ${_TBB_INSTALL_DIR}/lib)
 #       and LD_LIBRARY_PATH environment variables is now even more important
 #       that tbbvars doesn't export TBB_ARCH_PLATFORM and it facilitates
 #       the use of TBB built from sources.
-find_library(TBB_LIBRARY ${_TBB_LIB_NAME} HINTS ${_TBB_LIBRARY_DIR}
+
+find_library(TBB_LIBRARY ${_TBB_LIB_NAME} HINTS ${_TBB_LIBRARY_DIR} ${_TBB_LIBRARY_DIR}/release
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
-find_library(TBB_MALLOC_LIBRARY ${_TBB_LIB_MALLOC_NAME} HINTS ${_TBB_LIBRARY_DIR}
+find_library(TBB_MALLOC_LIBRARY ${_TBB_LIB_MALLOC_NAME} HINTS ${_TBB_LIBRARY_DIR} ${_TBB_LIBRARY_DIR}/release
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
 		
 if (WIN32)
@@ -276,9 +277,9 @@ mark_as_advanced(TBB_LIBRARY TBB_MALLOC_LIBRARY)
 
 #-- Look for debug libraries
 # Jiri: Changed the same way as for the release libraries.
-find_library(TBB_LIBRARY_DEBUG ${_TBB_LIB_DEBUG_NAME} HINTS ${_TBB_LIBRARY_DIR}
+find_library(TBB_LIBRARY_DEBUG ${_TBB_LIB_DEBUG_NAME} HINTS ${_TBB_LIBRARY_DIR} ${_TBB_LIBRARY_DIR}/debug
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
-find_library(TBB_MALLOC_LIBRARY_DEBUG ${_TBB_LIB_MALLOC_DEBUG_NAME} HINTS ${_TBB_LIBRARY_DIR}
+find_library(TBB_MALLOC_LIBRARY_DEBUG ${_TBB_LIB_MALLOC_DEBUG_NAME} HINTS ${_TBB_LIBRARY_DIR} ${_TBB_LIBRARY_DIR}/debug
         PATHS ENV LIBRARY_PATH ENV LD_LIBRARY_PATH)
 
 # Jiri: Self-built TBB stores the debug libraries in a separate directory.
