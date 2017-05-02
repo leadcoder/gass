@@ -126,7 +126,7 @@ TEST_CASE("Test Mat4")
 		
 		REQUIRE(point.x == Approx(0));
 		REQUIRE(point.y == Approx(0));
-		REQUIRE(point.z == Approx(1));
+		REQUIRE(point.z == Approx(-1));
 
 		//translate, rotate and scale
 		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_PI*0.5), GASS::Vec3(2, 2, 2));
@@ -134,7 +134,7 @@ TEST_CASE("Test Mat4")
 		point = mat3*point;
 
 		REQUIRE(point.x == Approx(4));
-		REQUIRE(point.y == Approx(-2));
+		REQUIRE(point.y == Approx(2));
 		REQUIRE(point.z == Approx(0));
 	}
 
@@ -152,7 +152,7 @@ TEST_CASE("Test Mat4")
 
 		REQUIRE(point.x == Approx(0));
 		REQUIRE(point.y == Approx(0));
-		REQUIRE(point.z == Approx(1));
+		REQUIRE(point.z == Approx(-1));
 		REQUIRE(point.w == Approx(1));
 
 		//translate, rotate and scale
@@ -161,7 +161,7 @@ TEST_CASE("Test Mat4")
 		point = mat3*point;
 
 		REQUIRE(point.x == Approx(4));
-		REQUIRE(point.y == Approx(-2));
+		REQUIRE(point.y == Approx(2));
 		REQUIRE(point.z == Approx(0));
 		REQUIRE(point.w == Approx(1));
 	}
@@ -182,6 +182,28 @@ TEST_CASE("Test Mat4")
 		mat.RotateY(heading);
 		GASS::Vec3 xaxis = mat.GetXAxis();
 		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
+		std::cout << "RotY:" << xaxis;
+		
+		mat.Rotate(heading, 0, 0);
+		xaxis = mat.GetXAxis();
+		std::cout << " Mat" << xaxis << "\n";
+
+
+		mat.RotateX(heading);
+		GASS::Vec3 zaxis = mat.GetZAxis();
+		std::cout << "RotX:" << zaxis;
+		mat.Rotate(0, heading, 0);
+		zaxis = mat.GetZAxis();
+		std::cout << " Mat" << zaxis << "\n";
+
+
+		mat.RotateZ(heading);
+		xaxis = mat.GetXAxis();
+		std::cout << "RotZ:" << xaxis;
+		mat.Rotate(0, 0, heading);
+		xaxis = mat.GetXAxis();
+		std::cout << " Mat" << xaxis << "\n";
+
 	}
 
 	SECTION("Test Rotate")
@@ -190,7 +212,7 @@ TEST_CASE("Test Mat4")
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
 		mat.Rotate(heading, 0, 0);
 		GASS::Vec3 xaxis = mat.GetXAxis();
-		//WIP REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, 1), 1.0e-10));
+		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
 	}
 
 #if 0
