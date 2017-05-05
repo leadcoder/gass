@@ -37,39 +37,40 @@ namespace GASS
 	*  @{
 	*/
 
-
 	/**
-	 Class representing a OpenGL-style transformation matrix.
-	 Positiv rotations are clockwise around X-axis, 
-	 Y-axis and Z-axis in a right handed coordinate system
-	 defined as:
-	    +Y
-	    |
-	    |
-	    |______ +X
-		/
-	  /
-	 +Z
-	 Matrix layout (single index)
-	 m0  m1  m2  m3    
-	 m4  m5  m6  m7
-	 m8  m9  m10 m11
-	 m12 m13 m14 m15
-	 Matrix layout (row, collum index) 
-	 m00  m01  m02  m03
-	 m10  m11  m12  m13
-	 m20  m21  m22  m23
-	 m30  m31  m32  m33
+	Class representing a OpenGL-style collum major transformation matrix.
+	in a right handed coordinate system defined as:
+	+Y
+	|
+	|
+	|______ +X
+	/
+	/
+	+Z
 
-	 Where m03,m13,m23 hold the position (x,y,z)
-	 And:
-	  m00 m10 m20
-	  m10 m11 m12
-	  m20 m21 m22
-	  is 3x3 rotaion matrix defined by three ortogonal axis, where
-	  m00, m10, m20 is the X-axis 
-	  m01, m11, m21 is the Y-axis
-	  m02, m12, m22 is the Z-axis
+	Postive euler rotations are defined clockwise when looking in opposite axis-direction,
+	for instance, looking down at Y-axis in figure above.
+
+	Matrix layout (single index)
+	m0  m1  m2  m3
+	m4  m5  m6  m7
+	m8  m9  m10 m11
+	m12 m13 m14 m15
+	Matrix layout (row, collum index)
+	m00  m01  m02  m03
+	m10  m11  m12  m13
+	m20  m21  m22  m23
+	m30  m31  m32  m33
+
+	Where m03,m13,m23 hold the position (x,y,z)
+	And:
+	m00 m10 m20
+	m10 m11 m12
+	m20 m21 m22
+	is 3x3 rotaion matrix defined by three ortogonal axis, where
+	m00, m10, m20 is the X-axis
+	m01, m11, m21 is the Y-axis
+	m02, m12, m22 is the Z-axis
 	*/
 	template<class TYPE>
 	class TMat4
@@ -85,17 +86,19 @@ namespace GASS
 		{
 			TYPE m_Data[4][4];
 			TYPE m_Data2[16];
-			TYPE Elements16[16];
-			TYPE Elements4x4[4][4];
+			TYPE E4x4[4][4];
+			TYPE E16[16];
 		};
 
 		TMat4() {}
 
 		/**
-			Setup transformation matrix by pos,rot and scale
-			@param pos Postion part of the transformation
-			@param rot Rotation represented as a quaternion
-			@param scale 
+		Setup full transformation matrix (Scale, Rotate and Translate),
+		This transformation matrix will first apply scale followed
+		by a rotation and  last the translation is applied.
+		@param pos Translation part of the transformation
+		@param rot Rotation represented as a quaternion
+		@param scale Scale in each axis
 		*/
 		TMat4(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
@@ -103,10 +106,12 @@ namespace GASS
 		}
 
 		/**
-			Setup transformation matrix by pos,rot (Euler angles) and scale
-			@param pos Postion part of the transformation
-			@param rot Rotation represented as a euler angles in radians)
-			@param scale
+		Setup full transformation matrix: Scale, Rotate (Euler angles)  and Translate.
+		This transformation matrix will first apply scale followed
+		by a rotation and  last the translation is applied.
+		@param pos Translation part of the transformation
+		@param rot Rotation represented as a euler angles in radians)
+		@param scale Scale in each axis
 		*/
 		TMat4(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
@@ -122,17 +127,17 @@ namespace GASS
 		inline TYPE* operator [] (unsigned iRow)
 		{
 			assert(iRow < 4);
-			return m_Data[iRow];
+			return E4x4[iRow];
 		}
 
 		inline const TYPE * operator [] (unsigned iRow) const
 		{
 			assert(iRow < 4);
-			return m_Data[iRow];
+			return E4x4[iRow];
 		}
 
 		inline TMat4 Concatenate(const TMat4  &m2) const;
-		
+
 
 		/** Matrix concatenation using '*'.
 		*/
@@ -144,12 +149,14 @@ namespace GASS
 		/**
 		Vector transformation using '*'.
 		Transforms the given point by the matrix, projecting the result back into w = 1.
-		This means that the initial w is considered to be 1.0, and then all the tree elements 
+		This means that the initial w is considered to be 1.0, and then all the tree elements
 		of the resulting vector are divided by the resulting w.
 		*/
 		inline TVec3<TYPE> operator* (const TVec3<TYPE> &vec) const;
-		
+
 		inline TVec4<TYPE> operator* (const TVec4<TYPE> &vec) const;
+
+		inline bool operator== (const TMat4 &m2) const;
 
 		/**
 		* Set all matrix elements to zero.
@@ -157,10 +164,10 @@ namespace GASS
 		inline void Zero();
 
 		/**
-		 Set the rotation matrix for heading, pitch, roll.
-		 @param h Heading in in radians
-		 @param p Pitch in in radians
-		 @param r Roll in in radians
+		Set the rotation matrix for heading, pitch, roll.
+		@param h Heading in in radians
+		@param p Pitch in in radians
+		@param r Roll in in radians
 		*/
 		inline void Rotate(TYPE h, TYPE p, TYPE r);
 
@@ -168,12 +175,12 @@ namespace GASS
 		* Create Y rotation matrix.
 		*/
 		inline void RotateY(TYPE amount);
-		
+
 		/**
 		* Create X rotation matrix.
 		*/
 		inline void RotateX(TYPE amount);
-		
+
 		/**
 		* Create Z rotation matrix.
 		*/
@@ -183,8 +190,8 @@ namespace GASS
 		inline void Identity();
 		inline TMat4 Transpose();
 		inline void Translate(TYPE x, TYPE y, TYPE z);
-		inline void RelTranslate(TYPE x, TYPE y, TYPE z) { m_Data[0][3] += x;	m_Data[1][3] += y; m_Data[2][3] += z; };
-		inline void SetTranslation(TYPE x, TYPE y, TYPE z) { m_Data[0][3] = x; m_Data[1][3] = y; m_Data[2][3] = z; };
+		inline void RelTranslate(TYPE x, TYPE y, TYPE z) { E4x4[0][3] += x;	E4x4[1][3] += y; E4x4[2][3] += z; };
+		inline void SetTranslation(TYPE x, TYPE y, TYPE z) { E4x4[0][3] = x; E4x4[1][3] = y; E4x4[2][3] = z; };
 		inline TVec3<TYPE> GetTranslation() const;
 		inline void SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
 		inline void SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale);
@@ -228,14 +235,30 @@ namespace GASS
 		*/
 		inline void SetZAxis(const TVec3<TYPE> &dir);
 
+
+		inline bool _Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
+		{
+			return (abs(v1 - v2) < tolerance);
+		}
+
+		inline bool Equal(const TMat4 &m, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (!_Equal(E16[i], m.E16[i], tolerance))
+					return false;
+			}
+			return true;
+		}
+
 		//TODO: why use this order
-		inline friend TVec4<TYPE> operator* (TVec4<TYPE> vec,	const TMat4<TYPE> &mat)
+		inline friend TVec4<TYPE> operator* (TVec4<TYPE> vec, const TMat4<TYPE> &mat)
 		{
 			TVec4<TYPE> ret;
-			ret.x = vec.x*mat.m_Data[0][0] + vec.y*mat.m_Data[1][0] + vec.z*mat.m_Data[2][0] + vec.w*mat.m_Data[3][0];
-			ret.y = vec.x*mat.m_Data[0][1] + vec.y*mat.m_Data[1][1] + vec.z*mat.m_Data[2][1] + vec.w*mat.m_Data[3][1];
-			ret.z = vec.x*mat.m_Data[0][2] + vec.y*mat.m_Data[1][2] + vec.z*mat.m_Data[2][2] + vec.w*mat.m_Data[3][2];
-			ret.w = vec.x*mat.m_Data[0][3] + vec.y*mat.m_Data[1][3] + vec.z*mat.m_Data[2][3] + vec.w*mat.m_Data[3][3];
+			ret.x = vec.x*mat.E4x4[0][0] + vec.y*mat.E4x4[1][0] + vec.z*mat.E4x4[2][0] + vec.w*mat.E4x4[3][0];
+			ret.y = vec.x*mat.E4x4[0][1] + vec.y*mat.E4x4[1][1] + vec.z*mat.E4x4[2][1] + vec.w*mat.E4x4[3][1];
+			ret.z = vec.x*mat.E4x4[0][2] + vec.y*mat.E4x4[1][2] + vec.z*mat.E4x4[2][2] + vec.w*mat.E4x4[3][2];
+			ret.w = vec.x*mat.E4x4[0][3] + vec.y*mat.E4x4[1][3] + vec.z*mat.E4x4[2][3] + vec.w*mat.E4x4[3][3];
 			return ret;
 		}
 	};
@@ -243,7 +266,7 @@ namespace GASS
 	typedef TMat4<Float> Mat4;
 
 	template <class TYPE> const TYPE TMat4<TYPE>::EPSILON = 0.0001f;
-	
+
 
 	template<class TYPE>
 	TMat4<TYPE>::TMat4(
@@ -252,47 +275,47 @@ namespace GASS
 		TYPE m20, TYPE m21, TYPE m22, TYPE m23,
 		TYPE m30, TYPE m31, TYPE m32, TYPE m33)
 	{
-		m_Data[0][0] = m00;
-		m_Data[0][1] = m01;
-		m_Data[0][2] = m02;
-		m_Data[0][3] = m03;
-		m_Data[1][0] = m10;
-		m_Data[1][1] = m11;
-		m_Data[1][2] = m12;
-		m_Data[1][3] = m13;
-		m_Data[2][0] = m20;
-		m_Data[2][1] = m21;
-		m_Data[2][2] = m22;
-		m_Data[2][3] = m23;
-		m_Data[3][0] = m30;
-		m_Data[3][1] = m31;
-		m_Data[3][2] = m32;
-		m_Data[3][3] = m33;
+		E4x4[0][0] = m00;
+		E4x4[0][1] = m01;
+		E4x4[0][2] = m02;
+		E4x4[0][3] = m03;
+		E4x4[1][0] = m10;
+		E4x4[1][1] = m11;
+		E4x4[1][2] = m12;
+		E4x4[1][3] = m13;
+		E4x4[2][0] = m20;
+		E4x4[2][1] = m21;
+		E4x4[2][2] = m22;
+		E4x4[2][3] = m23;
+		E4x4[3][0] = m30;
+		E4x4[3][1] = m31;
+		E4x4[3][2] = m32;
+		E4x4[3][3] = m33;
 	}
 
 	template<class TYPE>
 	TMat4<TYPE>  TMat4<TYPE>::Concatenate(const TMat4<TYPE>  &m2) const
 	{
 		TMat4<TYPE> r;
-		r.m_Data[0][0] = m_Data[0][0] * m2.m_Data[0][0] + m_Data[0][1] * m2.m_Data[1][0] + m_Data[0][2] * m2.m_Data[2][0] + m_Data[0][3] * m2.m_Data[3][0];
-		r.m_Data[0][1] = m_Data[0][0] * m2.m_Data[0][1] + m_Data[0][1] * m2.m_Data[1][1] + m_Data[0][2] * m2.m_Data[2][1] + m_Data[0][3] * m2.m_Data[3][1];
-		r.m_Data[0][2] = m_Data[0][0] * m2.m_Data[0][2] + m_Data[0][1] * m2.m_Data[1][2] + m_Data[0][2] * m2.m_Data[2][2] + m_Data[0][3] * m2.m_Data[3][2];
-		r.m_Data[0][3] = m_Data[0][0] * m2.m_Data[0][3] + m_Data[0][1] * m2.m_Data[1][3] + m_Data[0][2] * m2.m_Data[2][3] + m_Data[0][3] * m2.m_Data[3][3];
+		r.E4x4[0][0] = E4x4[0][0] * m2.E4x4[0][0] + E4x4[0][1] * m2.E4x4[1][0] + E4x4[0][2] * m2.E4x4[2][0] + E4x4[0][3] * m2.E4x4[3][0];
+		r.E4x4[0][1] = E4x4[0][0] * m2.E4x4[0][1] + E4x4[0][1] * m2.E4x4[1][1] + E4x4[0][2] * m2.E4x4[2][1] + E4x4[0][3] * m2.E4x4[3][1];
+		r.E4x4[0][2] = E4x4[0][0] * m2.E4x4[0][2] + E4x4[0][1] * m2.E4x4[1][2] + E4x4[0][2] * m2.E4x4[2][2] + E4x4[0][3] * m2.E4x4[3][2];
+		r.E4x4[0][3] = E4x4[0][0] * m2.E4x4[0][3] + E4x4[0][1] * m2.E4x4[1][3] + E4x4[0][2] * m2.E4x4[2][3] + E4x4[0][3] * m2.E4x4[3][3];
 
-		r.m_Data[1][0] = m_Data[1][0] * m2.m_Data[0][0] + m_Data[1][1] * m2.m_Data[1][0] + m_Data[1][2] * m2.m_Data[2][0] + m_Data[1][3] * m2.m_Data[3][0];
-		r.m_Data[1][1] = m_Data[1][0] * m2.m_Data[0][1] + m_Data[1][1] * m2.m_Data[1][1] + m_Data[1][2] * m2.m_Data[2][1] + m_Data[1][3] * m2.m_Data[3][1];
-		r.m_Data[1][2] = m_Data[1][0] * m2.m_Data[0][2] + m_Data[1][1] * m2.m_Data[1][2] + m_Data[1][2] * m2.m_Data[2][2] + m_Data[1][3] * m2.m_Data[3][2];
-		r.m_Data[1][3] = m_Data[1][0] * m2.m_Data[0][3] + m_Data[1][1] * m2.m_Data[1][3] + m_Data[1][2] * m2.m_Data[2][3] + m_Data[1][3] * m2.m_Data[3][3];
+		r.E4x4[1][0] = E4x4[1][0] * m2.E4x4[0][0] + E4x4[1][1] * m2.E4x4[1][0] + E4x4[1][2] * m2.E4x4[2][0] + E4x4[1][3] * m2.E4x4[3][0];
+		r.E4x4[1][1] = E4x4[1][0] * m2.E4x4[0][1] + E4x4[1][1] * m2.E4x4[1][1] + E4x4[1][2] * m2.E4x4[2][1] + E4x4[1][3] * m2.E4x4[3][1];
+		r.E4x4[1][2] = E4x4[1][0] * m2.E4x4[0][2] + E4x4[1][1] * m2.E4x4[1][2] + E4x4[1][2] * m2.E4x4[2][2] + E4x4[1][3] * m2.E4x4[3][2];
+		r.E4x4[1][3] = E4x4[1][0] * m2.E4x4[0][3] + E4x4[1][1] * m2.E4x4[1][3] + E4x4[1][2] * m2.E4x4[2][3] + E4x4[1][3] * m2.E4x4[3][3];
 
-		r.m_Data[2][0] = m_Data[2][0] * m2.m_Data[0][0] + m_Data[2][1] * m2.m_Data[1][0] + m_Data[2][2] * m2.m_Data[2][0] + m_Data[2][3] * m2.m_Data[3][0];
-		r.m_Data[2][1] = m_Data[2][0] * m2.m_Data[0][1] + m_Data[2][1] * m2.m_Data[1][1] + m_Data[2][2] * m2.m_Data[2][1] + m_Data[2][3] * m2.m_Data[3][1];
-		r.m_Data[2][2] = m_Data[2][0] * m2.m_Data[0][2] + m_Data[2][1] * m2.m_Data[1][2] + m_Data[2][2] * m2.m_Data[2][2] + m_Data[2][3] * m2.m_Data[3][2];
-		r.m_Data[2][3] = m_Data[2][0] * m2.m_Data[0][3] + m_Data[2][1] * m2.m_Data[1][3] + m_Data[2][2] * m2.m_Data[2][3] + m_Data[2][3] * m2.m_Data[3][3];
+		r.E4x4[2][0] = E4x4[2][0] * m2.E4x4[0][0] + E4x4[2][1] * m2.E4x4[1][0] + E4x4[2][2] * m2.E4x4[2][0] + E4x4[2][3] * m2.E4x4[3][0];
+		r.E4x4[2][1] = E4x4[2][0] * m2.E4x4[0][1] + E4x4[2][1] * m2.E4x4[1][1] + E4x4[2][2] * m2.E4x4[2][1] + E4x4[2][3] * m2.E4x4[3][1];
+		r.E4x4[2][2] = E4x4[2][0] * m2.E4x4[0][2] + E4x4[2][1] * m2.E4x4[1][2] + E4x4[2][2] * m2.E4x4[2][2] + E4x4[2][3] * m2.E4x4[3][2];
+		r.E4x4[2][3] = E4x4[2][0] * m2.E4x4[0][3] + E4x4[2][1] * m2.E4x4[1][3] + E4x4[2][2] * m2.E4x4[2][3] + E4x4[2][3] * m2.E4x4[3][3];
 
-		r.m_Data[3][0] = m_Data[3][0] * m2.m_Data[0][0] + m_Data[3][1] * m2.m_Data[1][0] + m_Data[3][2] * m2.m_Data[2][0] + m_Data[3][3] * m2.m_Data[3][0];
-		r.m_Data[3][1] = m_Data[3][0] * m2.m_Data[0][1] + m_Data[3][1] * m2.m_Data[1][1] + m_Data[3][2] * m2.m_Data[2][1] + m_Data[3][3] * m2.m_Data[3][1];
-		r.m_Data[3][2] = m_Data[3][0] * m2.m_Data[0][2] + m_Data[3][1] * m2.m_Data[1][2] + m_Data[3][2] * m2.m_Data[2][2] + m_Data[3][3] * m2.m_Data[3][2];
-		r.m_Data[3][3] = m_Data[3][0] * m2.m_Data[0][3] + m_Data[3][1] * m2.m_Data[1][3] + m_Data[3][2] * m2.m_Data[2][3] + m_Data[3][3] * m2.m_Data[3][3];
+		r.E4x4[3][0] = E4x4[3][0] * m2.E4x4[0][0] + E4x4[3][1] * m2.E4x4[1][0] + E4x4[3][2] * m2.E4x4[2][0] + E4x4[3][3] * m2.E4x4[3][0];
+		r.E4x4[3][1] = E4x4[3][0] * m2.E4x4[0][1] + E4x4[3][1] * m2.E4x4[1][1] + E4x4[3][2] * m2.E4x4[2][1] + E4x4[3][3] * m2.E4x4[3][1];
+		r.E4x4[3][2] = E4x4[3][0] * m2.E4x4[0][2] + E4x4[3][1] * m2.E4x4[1][2] + E4x4[3][2] * m2.E4x4[2][2] + E4x4[3][3] * m2.E4x4[3][2];
+		r.E4x4[3][3] = E4x4[3][0] * m2.E4x4[0][3] + E4x4[3][1] * m2.E4x4[1][3] + E4x4[3][2] * m2.E4x4[2][3] + E4x4[3][3] * m2.E4x4[3][3];
 
 		return r;
 	}
@@ -302,25 +325,25 @@ namespace GASS
 	{
 		TVec3<TYPE> res;
 		TYPE d;
-		res.x = m_Data[0][0] * vec.x +
-			m_Data[0][1] * vec.y +
-			m_Data[0][2] * vec.z +
-			m_Data[0][3];
+		res.x = E4x4[0][0] * vec.x +
+			E4x4[0][1] * vec.y +
+			E4x4[0][2] * vec.z +
+			E4x4[0][3];
 
-		res.y = m_Data[1][0] * vec.x +
-			m_Data[1][1] * vec.y +
-			m_Data[1][2] * vec.z +
-			m_Data[1][3];
+		res.y = E4x4[1][0] * vec.x +
+			E4x4[1][1] * vec.y +
+			E4x4[1][2] * vec.z +
+			E4x4[1][3];
 
-		res.z = m_Data[2][0] * vec.x +
-			m_Data[2][1] * vec.y +
-			m_Data[2][2] * vec.z +
-			m_Data[2][3];
+		res.z = E4x4[2][0] * vec.x +
+			E4x4[2][1] * vec.y +
+			E4x4[2][2] * vec.z +
+			E4x4[2][3];
 
-		d = m_Data[3][0] * vec.x +
-			m_Data[3][1] * vec.y +
-			m_Data[3][2] * vec.z +
-			m_Data[3][3];
+		d = E4x4[3][0] * vec.x +
+			E4x4[3][1] * vec.y +
+			E4x4[3][2] * vec.z +
+			E4x4[3][3];
 
 		res.x /= d;
 		res.y /= d;
@@ -334,71 +357,82 @@ namespace GASS
 	{
 		TVec4<TYPE> res;
 		//first row
-		res.x = m_Data[0][0] * vec.x +
-			m_Data[0][1] * vec.y +
-			m_Data[0][2] * vec.z +
-			m_Data[0][3] * vec.w;
+		res.x = E4x4[0][0] * vec.x +
+			E4x4[0][1] * vec.y +
+			E4x4[0][2] * vec.z +
+			E4x4[0][3] * vec.w;
 
 		//second row
-		res.y = m_Data[1][0] * vec.x +
-			m_Data[1][1] * vec.y +
-			m_Data[1][2] * vec.z +
-			m_Data[1][3] * vec.w;
+		res.y = E4x4[1][0] * vec.x +
+			E4x4[1][1] * vec.y +
+			E4x4[1][2] * vec.z +
+			E4x4[1][3] * vec.w;
 
 		//third row
-		res.z = m_Data[2][0] * vec.x +
-			m_Data[2][1] * vec.y +
-			m_Data[2][2] * vec.z +
-			m_Data[2][3] * vec.w;
+		res.z = E4x4[2][0] * vec.x +
+			E4x4[2][1] * vec.y +
+			E4x4[2][2] * vec.z +
+			E4x4[2][3] * vec.w;
 
-		res.w = m_Data[3][0] * vec.x +
-			m_Data[3][1] * vec.y +
-			m_Data[3][2] * vec.z +
-			m_Data[3][3] * vec.w;
+		res.w = E4x4[3][0] * vec.x +
+			E4x4[3][1] * vec.y +
+			E4x4[3][2] * vec.z +
+			E4x4[3][3] * vec.w;
 
 		return res;
 	}
 
 	template<class TYPE>
+	bool TMat4<TYPE>::operator== (const TMat4<TYPE> &m2) const
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (E16[i] != m2.E16[i])
+				return false;
+		}
+		return true;
+	}
+
+	template<class TYPE>
 	void TMat4<TYPE>::Zero()
 	{
-		m_Data[0][0] = 0;
-		m_Data[0][1] = 0;
-		m_Data[0][2] = 0;
-		m_Data[0][3] = 0;
-		m_Data[1][0] = 0;
-		m_Data[1][1] = 0;
-		m_Data[1][2] = 0;
-		m_Data[1][3] = 0;
-		m_Data[2][0] = 0;
-		m_Data[2][1] = 0;
-		m_Data[2][2] = 0;
-		m_Data[2][3] = 0;
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
-		m_Data[3][3] = 0;
+		E4x4[0][0] = 0;
+		E4x4[0][1] = 0;
+		E4x4[0][2] = 0;
+		E4x4[0][3] = 0;
+		E4x4[1][0] = 0;
+		E4x4[1][1] = 0;
+		E4x4[1][2] = 0;
+		E4x4[1][3] = 0;
+		E4x4[2][0] = 0;
+		E4x4[2][1] = 0;
+		E4x4[2][2] = 0;
+		E4x4[2][3] = 0;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 0;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::Identity()
 	{
-		m_Data[0][0] = 1;
-		m_Data[0][1] = 0;
-		m_Data[0][2] = 0;
-		m_Data[0][3] = 0;
-		m_Data[1][0] = 0;
-		m_Data[1][1] = 1;
-		m_Data[1][2] = 0;
-		m_Data[1][3] = 0;
-		m_Data[2][0] = 0;
-		m_Data[2][1] = 0;
-		m_Data[2][2] = 1;
-		m_Data[2][3] = 0;
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
-		m_Data[3][3] = 1;
+		E4x4[0][0] = 1;
+		E4x4[0][1] = 0;
+		E4x4[0][2] = 0;
+		E4x4[0][3] = 0;
+		E4x4[1][0] = 0;
+		E4x4[1][1] = 1;
+		E4x4[1][2] = 0;
+		E4x4[1][3] = 0;
+		E4x4[2][0] = 0;
+		E4x4[2][1] = 0;
+		E4x4[2][2] = 1;
+		E4x4[2][3] = 0;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 1;
 	}
 
 	template<class TYPE>
@@ -409,7 +443,7 @@ namespace GASS
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				ret.m_Data[j][i] = m_Data[i][j];
+				ret.E4x4[j][i] = E4x4[i][j];
 			}
 		}
 		return ret;
@@ -419,18 +453,18 @@ namespace GASS
 	void TMat4<TYPE>::Translate(TYPE x, TYPE y, TYPE z)
 	{
 		Identity();
-		m_Data[0][3] = x;
-		m_Data[1][3] = y;
-		m_Data[2][3] = z;
+		E4x4[0][3] = x;
+		E4x4[1][3] = y;
+		E4x4[2][3] = z;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::Scale(TYPE sx, TYPE sy, TYPE sz)
 	{
 		Identity();
-		m_Data[0][0] = sx;
-		m_Data[1][1] = sy;
-		m_Data[2][2] = sz;
+		E4x4[0][0] = sx;
+		E4x4[1][1] = sy;
+		E4x4[2][2] = sz;
 	}
 
 	template<class TYPE>
@@ -443,197 +477,229 @@ namespace GASS
 		TYPE cr = cos(r);
 		TYPE sr = sin(r);
 
-		m_Data[0][0] = (cr*ch + sr*sp*sh);
-		m_Data[0][1] = (-ch*sr + sh*sp*ch);
-		m_Data[0][2] = (sh*cp); 
+		E4x4[0][0] = (cr*ch + sr*sp*sh);
+		E4x4[0][1] = (-ch*sr + sh*sp*ch);
+		E4x4[0][2] = (sh*cp);
 
-		m_Data[1][0] = cp*sr;
-		m_Data[1][1] = cp*cr;
-		m_Data[1][2] = -sp;
+		E4x4[1][0] = cp*sr;
+		E4x4[1][1] = cp*cr;
+		E4x4[1][2] = -sp;
 
-		m_Data[2][0] = -sh*cr + ch*sp*sr;
-		m_Data[2][1] = sh*sr + ch*sp*cr;
-		m_Data[2][2] = ch*cp;
+		E4x4[2][0] = -sh*cr + ch*sp*sr;
+		E4x4[2][1] = sh*sr + ch*sp*cr;
+		E4x4[2][2] = ch*cp;
 
-		/*m_Data[0][0] = (cr*ch + sr*sp*sh);
-		m_Data[0][1] = (sr*cp);
-		m_Data[0][2] = (-cr*sh + sr*sp*ch);
+		/*E4x4[0][0] = (cr*ch + sr*sp*sh);
+		E4x4[0][1] = (sr*cp);
+		E4x4[0][2] = (-cr*sh + sr*sp*ch);
 
-		m_Data[1][0] = (-sr*ch + cr*sp*sh);
-		m_Data[1][1] = (cr*cp);
-		m_Data[1][2] = (sr*sh + cr*sp*ch);
+		E4x4[1][0] = (-sr*ch + cr*sp*sh);
+		E4x4[1][1] = (cr*cp);
+		E4x4[1][2] = (sr*sh + cr*sp*ch);
 
-		m_Data[2][0] = (cp*sh);
-		m_Data[2][1] = (-sp);
-		m_Data[2][2] = (cp*ch);*/
+		E4x4[2][0] = (cp*sh);
+		E4x4[2][1] = (-sp);
+		E4x4[2][2] = (cp*ch);*/
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 	{
-		Identity();
-		m_Data[0][3] = pos.x;
-		m_Data[1][3] = pos.y;
-		m_Data[2][3] = pos.z;
+
+		TMat4<TYPE> mat_scale;
+		mat_scale.Identity();
+		mat_scale.Scale(scale.x, scale.y, scale.z);
+
+		TMat4<TYPE> mat_pos;
+		mat_pos.Identity();
+		mat_pos.SetTranslation(pos.x, pos.y, pos.z);
+
+		TMat4<TYPE> mat_rot;
+		mat_rot.Identity();
+		mat_rot.Rotate(rot.x, rot.y, rot.z);
+		//TMat4<TYPE> final_trans = mat_scale*mat_pos*mat_rot;
+		TMat4<TYPE> final_trans = mat_pos*mat_rot*mat_scale;
+		*this = final_trans;
+		/*Identity();
+		E4x4[0][3] = pos.x;
+		E4x4[1][3] = pos.y;
+		E4x4[2][3] = pos.z;
 
 		Rotate(rot.x, rot.y, rot.z);
 
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
 
 		//Scale,
 		//we should only scale diagonal!
-		m_Data[0][0] *= scale.x;
-		m_Data[0][1] *= scale.x;
-		m_Data[0][2] *= scale.x;
-		m_Data[0][3] *= scale.x;
+		E4x4[0][0] *= scale.x;
+		E4x4[0][1] *= scale.x;
+		E4x4[0][2] *= scale.x;
+		E4x4[0][3] *= scale.x;
 
-		m_Data[1][0] *= scale.y;
-		m_Data[1][1] *= scale.y;
-		m_Data[1][2] *= scale.y;
-		m_Data[1][3] *= scale.y;
+		E4x4[1][0] *= scale.y;
+		E4x4[1][1] *= scale.y;
+		E4x4[1][2] *= scale.y;
+		E4x4[1][3] *= scale.y;
 
-		m_Data[2][0] *= scale.z;
-		m_Data[2][1] *= scale.z;
-		m_Data[2][2] *= scale.z;
-		m_Data[2][3] *= scale.z;
+		E4x4[2][0] *= scale.z;
+		E4x4[2][1] *= scale.z;
+		E4x4[2][2] *= scale.z;
+		E4x4[2][3] *= scale.z;*/
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
 	{
-		Identity();
+
+		TMat4<TYPE> mat_scale;
+		mat_scale.Identity();
+		mat_scale.Scale(scale.x, scale.y, scale.z);
+
+		TMat4<TYPE> mat_pos;
+		mat_pos.Identity();
+		mat_pos.SetTranslation(pos.x, pos.y, pos.z);
+
+		TMat4<TYPE> mat_rot;
+		mat_rot.Identity();
+		rot.ToRotationMatrix(mat_rot);
+
+		//TMat4<TYPE> final_trans = mat_scale*mat_pos*mat_rot;
+		TMat4<TYPE> final_trans = mat_pos*mat_rot*mat_scale;
+		*this = final_trans;
+
+		/*Identity();
 		rot.ToRotationMatrix(*this);
 
-		m_Data[0][3] = pos.x;
-		m_Data[1][3] = pos.y;
-		m_Data[2][3] = pos.z;
+		E4x4[0][3] = pos.x;
+		E4x4[1][3] = pos.y;
+		E4x4[2][3] = pos.z;
 
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
 
 		//Scale
-		m_Data[0][0] *= scale.x;
-		m_Data[1][0] *= scale.x;
-		m_Data[2][0] *= scale.x;
+		E4x4[0][0] *= scale.x;
+		E4x4[1][0] *= scale.x;
+		E4x4[2][0] *= scale.x;
 
-		m_Data[0][1] *= scale.y;
-		m_Data[1][1] *= scale.y;
-		m_Data[2][1] *= scale.y;
+		E4x4[0][1] *= scale.y;
+		E4x4[1][1] *= scale.y;
+		E4x4[2][1] *= scale.y;
 
-		m_Data[0][2] *= scale.z;
-		m_Data[1][2] *= scale.z;
-		m_Data[2][2] *= scale.z;
-
+		E4x4[0][2] *= scale.z;
+		E4x4[1][2] *= scale.z;
+		E4x4[2][2] *= scale.z;
+		*/
 	}
 
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::RotateY(TYPE amount)
 	{
 		TYPE ch = cos(amount);
 		TYPE sh = sin(amount);
 
-		m_Data[0][0] = ch;
-		m_Data[0][1] = 0;
-		m_Data[0][2] = sh;
-		m_Data[0][3] = 0;
+		E4x4[0][0] = ch;
+		E4x4[0][1] = 0;
+		E4x4[0][2] = sh;
+		E4x4[0][3] = 0;
 
-		m_Data[1][0] = 0;
-		m_Data[1][1] = 1;
-		m_Data[1][2] = 0;
-		m_Data[1][3] = 0;
+		E4x4[1][0] = 0;
+		E4x4[1][1] = 1;
+		E4x4[1][2] = 0;
+		E4x4[1][3] = 0;
 
-		m_Data[2][0] = -sh;
-		m_Data[2][1] = 0;
-		m_Data[2][2] = ch;
-		m_Data[2][3] = 0;
+		E4x4[2][0] = -sh;
+		E4x4[2][1] = 0;
+		E4x4[2][2] = ch;
+		E4x4[2][3] = 0;
 
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
-		m_Data[3][3] = 1;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 1;
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::RotateX(TYPE amount)
 	{
 		TYPE cp = cos(amount);
 		TYPE sp = sin(amount);
 
-		m_Data[0][0] = 1;
-		m_Data[0][1] = 0;
-		m_Data[0][2] = 0;
-		m_Data[0][3] = 0;
+		E4x4[0][0] = 1;
+		E4x4[0][1] = 0;
+		E4x4[0][2] = 0;
+		E4x4[0][3] = 0;
 
-		m_Data[1][0] = 0;
-		m_Data[1][1] = cp;
-		m_Data[1][2] = -sp;
-		m_Data[1][3] = 0;
+		E4x4[1][0] = 0;
+		E4x4[1][1] = cp;
+		E4x4[1][2] = -sp;
+		E4x4[1][3] = 0;
 
-		m_Data[2][0] = 0;
-		m_Data[2][1] = sp;
-		m_Data[2][2] = cp;
-		m_Data[2][3] = 0;
+		E4x4[2][0] = 0;
+		E4x4[2][1] = sp;
+		E4x4[2][2] = cp;
+		E4x4[2][3] = 0;
 
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
-		m_Data[3][3] = 1;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 1;
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::RotateZ(TYPE amount)
 	{
 		TYPE cr = cos(amount);
 		TYPE sr = sin(amount);
 
-		m_Data[0][0] = cr;
-		m_Data[0][1] = -sr;
-		m_Data[0][2] = 0;
-		m_Data[0][3] = 0;
+		E4x4[0][0] = cr;
+		E4x4[0][1] = -sr;
+		E4x4[0][2] = 0;
+		E4x4[0][3] = 0;
 
-		m_Data[1][0] = sr;
-		m_Data[1][1] = cr;
-		m_Data[1][2] = 0;
-		m_Data[1][3] = 0;
+		E4x4[1][0] = sr;
+		E4x4[1][1] = cr;
+		E4x4[1][2] = 0;
+		E4x4[1][3] = 0;
 
-		m_Data[2][0] = 0;
-		m_Data[2][1] = 0;
-		m_Data[2][2] = 1;
-		m_Data[2][3] = 0;
+		E4x4[2][0] = 0;
+		E4x4[2][1] = 0;
+		E4x4[2][2] = 1;
+		E4x4[2][3] = 0;
 
-		m_Data[3][0] = 0;
-		m_Data[3][1] = 0;
-		m_Data[3][2] = 0;
-		m_Data[3][3] = 1;
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 1;
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::RelScale(TVec3<TYPE> scale)
 	{
-		m_Data[0][0] *= scale.x;
-		m_Data[0][1] *= scale.y;
-		m_Data[0][2] *= scale.x;
+		E4x4[0][0] *= scale.x;
+		E4x4[0][1] *= scale.y;
+		E4x4[0][2] *= scale.x;
 
-		m_Data[1][0] *= scale.x;
-		m_Data[1][1] *= scale.y;
-		m_Data[1][2] *= scale.z;
+		E4x4[1][0] *= scale.x;
+		E4x4[1][1] *= scale.y;
+		E4x4[1][2] *= scale.z;
 
-		m_Data[2][0] *= scale.x;
-		m_Data[2][1] *= scale.y;
-		m_Data[2][2] *= scale.z;
+		E4x4[2][0] *= scale.x;
+		E4x4[2][1] *= scale.y;
+		E4x4[2][2] *= scale.z;
 	}
 
 	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetTranslation()  const
 	{
 		TVec3<TYPE> ret;
-		ret.x = m_Data[0][3];
-		ret.y = m_Data[1][3];
-		ret.z = m_Data[2][3];
+		ret.x = E4x4[0][3];
+		ret.y = E4x4[1][3];
+		ret.z = E4x4[2][3];
 		return ret;
 	}
 
@@ -643,108 +709,108 @@ namespace GASS
 
 		TMat4<TYPE> ret;
 		ret = *this;
-		ret.m_Data[0][3] = 0;
-		ret.m_Data[1][3] = 0;
-		ret.m_Data[2][3] = 0;
+		ret.E4x4[0][3] = 0;
+		ret.E4x4[1][3] = 0;
+		ret.E4x4[2][3] = 0;
 		return ret;
 	}
 
 	template<class TYPE>
 	TYPE TMat4<TYPE>::Determinant() const
 	{
-		TYPE fCofactor00 = m_Data[1][1] * m_Data[2][2] -
-			m_Data[1][2] * m_Data[2][1];
-		TYPE fCofactor10 = m_Data[1][2] * m_Data[2][0] -
-			m_Data[1][0] * m_Data[2][2];
-		TYPE fCofactor20 = m_Data[1][0] * m_Data[2][1] -
-			m_Data[1][1] * m_Data[2][0];
+		TYPE fCofactor00 = E4x4[1][1] * E4x4[2][2] -
+			E4x4[1][2] * E4x4[2][1];
+		TYPE fCofactor10 = E4x4[1][2] * E4x4[2][0] -
+			E4x4[1][0] * E4x4[2][2];
+		TYPE fCofactor20 = E4x4[1][0] * E4x4[2][1] -
+			E4x4[1][1] * E4x4[2][0];
 
 		TYPE fDet =
-			m_Data[0][0] * fCofactor00 +
-			m_Data[0][1] * fCofactor10 +
-			m_Data[0][2] * fCofactor20;
+			E4x4[0][0] * fCofactor00 +
+			E4x4[0][1] * fCofactor10 +
+			E4x4[0][2] * fCofactor20;
 		return fDet;
 	}
 
 
 	/*TYPE Mat4::Determinant()
 	{
-		TYPE det = 0.0f;
+	TYPE det = 0.0f;
 
-		for (int col = 0; col < 4; col++)
-		{
-			const TYPE sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
-			det += sign * m_Data[0][col] * _Determinant(0, col);
-		}
-		return det;
+	for (int col = 0; col < 4; col++)
+	{
+	const TYPE sign = ((col & 0x1) == 0x0) ? 1.0f : -1.0f;
+	det += sign * E4x4[0][col] * _Determinant(0, col);
+	}
+	return det;
 	}
 
 
 
-	
+
 
 	template<class TYPE>
 	TYPE TMat4<TYPE>::_Determinant(int row, int col)
 	{
-		assert(row >= 0 && row < 4 && col >= 0 && col < 4);
+	assert(row >= 0 && row < 4 && col >= 0 && col < 4);
 
-		TYPE data[9];
-		int current = 0;
+	TYPE data[9];
+	int current = 0;
 
-		for (int index = 0; index < 16; index++)
-		{
-			if ((index / 4) == col || (index % 4) == row)
-			{
-				continue;
-			}
-			else
-			{
-				data[current++] = m_Data2[index];
-			}
-		}
-
-
-		//The newly created 3x3 matrix is also in column-major
-		//form:
-
-		//d0 d3 d6
-		//d1 d4 d7
-		//d2 d5 d8
+	for (int index = 0; index < 16; index++)
+	{
+	if ((index / 4) == col || (index % 4) == row)
+	{
+	continue;
+	}
+	else
+	{
+	data[current++] = E16[index];
+	}
+	}
 
 
-		return
-			data[0] * (data[4] * data[8] - data[7] * data[5]) -
-			data[1] * (data[3] * data[8] - data[6] * data[5]) +
-			data[2] * (data[3] * data[7] - data[6] * data[4]);
+	//The newly created 3x3 matrix is also in column-major
+	//form:
+
+	//d0 d3 d6
+	//d1 d4 d7
+	//d2 d5 d8
+
+
+	return
+	data[0] * (data[4] * data[8] - data[7] * data[5]) -
+	data[1] * (data[3] * data[8] - data[6] * data[5]) +
+	data[2] * (data[3] * data[7] - data[6] * data[4]);
 	}
 
 	template<class TYPE>
 	TMat4<TYPE> TMat4<TYPE>::Invert()
 	{
-		TYPE det = Determinant();
-		//assert(fabs(det) > EPSILON);
-		if(fabs(det) < EPSILON) det = EPSILON;
-		Mat4 result;
-		for (int row = 0; row < 4; row++) {
-			for (int col = 0; col < 4; col++) {
-				const TYPE sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
-				result.m_Data2[col * 4 + row] = sign * _Determinant(col, row) / det;
-			}
-		}
-		return result;
+	TYPE det = Determinant();
+	//assert(fabs(det) > EPSILON);
+	if(fabs(det) < EPSILON) det = EPSILON;
+	Mat4 result;
+	for (int row = 0; row < 4; row++) {
+	for (int col = 0; col < 4; col++) {
+	const TYPE sign = (((row + col) & 0x1) == 0x0) ? 1.0f : -1.0f;
+	result.E16[col * 4 + row] = sign * _Determinant(col, row) / det;
+	}
+	}
+	return result;
 	}*/
 
 	template<class TYPE>
 	TMat4<TYPE> TMat4<TYPE>::Invert(void) const
 	{
-		TYPE m10 = m_Data[1][0], m11 = m_Data[1][1], m12 = m_Data[1][2];
-		TYPE m20 = m_Data[2][0], m21 = m_Data[2][1], m22 = m_Data[2][2];
+		TYPE m10 = E4x4[1][0], m11 = E4x4[1][1], m12 = E4x4[1][2];
+		TYPE m20 = E4x4[2][0], m21 = E4x4[2][1], m22 = E4x4[2][2];
 
 		TYPE t00 = m22 * m11 - m21 * m12;
 		TYPE t10 = m20 * m12 - m22 * m10;
 		TYPE t20 = m21 * m10 - m20 * m11;
 
-		TYPE m00 = m_Data[0][0], m01 = m_Data[0][1], m02 = m_Data[0][2];
+		TYPE m00 = E4x4[0][0], m01 = E4x4[0][1], m02 = E4x4[0][2];
 
 		TYPE invDet = 1 / (m00 * t00 + m01 * t10 + m02 * t20);
 
@@ -764,7 +830,7 @@ namespace GASS
 		TYPE r21 = m01 * m20 - m00 * m21;
 		TYPE r22 = m00 * m11 - m01 * m10;
 
-		TYPE m03 = m_Data[0][3], m13 = m_Data[1][3], m23 = m_Data[2][3];
+		TYPE m03 = E4x4[0][3], m13 = E4x4[1][3], m23 = E4x4[2][3];
 
 		TYPE r03 = -(r00 * m03 + r01 * m13 + r02 * m23);
 		TYPE r13 = -(r10 * m03 + r11 * m13 + r12 * m23);
@@ -866,7 +932,7 @@ namespace GASS
 		}
 		return p_rad;
 	}
-	
+
 	template<class TYPE>
 	TYPE TMat4<TYPE>::GetEulerRoll() const
 	{
@@ -894,93 +960,93 @@ namespace GASS
 
 	/*static Float Det2x2(Float a1, Float a2, Float b1, Float b2)
 	{
-		return a1 * b2 - b1 * a2;
+	return a1 * b2 - b1 * a2;
 	}
 
 	static Float Det3x3(Float a1, Float a2, Float a3, Float b1, Float b2, Float b3, Float c1, Float c2, Float c3)
 	{
-		return a1 * Det2x2(b2, b3, c2, c3) - b1 * Det2x2(a2, a3, c2, c3) + c1 * Det2x2(a2, a3, b2, b3);
+	return a1 * Det2x2(b2, b3, c2, c3) - b1 * Det2x2(a2, a3, c2, c3) + c1 * Det2x2(a2, a3, b2, b3);
 	}
 
 	static void FastInvert(const Float A[4][4], Float B[4][4])
 	{
-		B[0][0] = Det3x3(A[1][1], A[1][2], A[1][3], A[2][1], A[2][2], A[2][3], A[3][1], A[3][2], A[3][3]);
-		B[0][1] = -Det3x3(A[0][1], A[0][2], A[0][3], A[2][1], A[2][2], A[2][3], A[3][1], A[3][2], A[3][3]);
-		B[0][2] = Det3x3(A[0][1], A[0][2], A[0][3], A[1][1], A[1][2], A[1][3], A[3][1], A[3][2], A[3][3]);
-		B[0][3] = -Det3x3(A[0][1], A[0][2], A[0][3], A[1][1], A[1][2], A[1][3], A[2][1], A[2][2], A[2][3]);
-		B[1][0] = -Det3x3(A[1][0], A[1][2], A[1][3], A[2][0], A[2][2], A[2][3], A[3][0], A[3][2], A[3][3]);
-		B[1][1] = Det3x3(A[0][0], A[0][2], A[0][3], A[2][0], A[2][2], A[2][3], A[3][0], A[3][2], A[3][3]);
-		B[1][2] = -Det3x3(A[0][0], A[0][2], A[0][3], A[1][0], A[1][2], A[1][3], A[3][0], A[3][2], A[3][3]);
-		B[1][3] = Det3x3(A[0][0], A[0][2], A[0][3], A[1][0], A[1][2], A[1][3], A[2][0], A[2][2], A[2][3]);
-		B[2][0] = Det3x3(A[1][0], A[1][1], A[1][3], A[2][0], A[2][1], A[2][3], A[3][0], A[3][1], A[3][3]);
-		B[2][1] = -Det3x3(A[0][0], A[0][1], A[0][3], A[2][0], A[2][1], A[2][3], A[3][0], A[3][1], A[3][3]);
-		B[2][2] = Det3x3(A[0][0], A[0][1], A[0][3], A[1][0], A[1][1], A[1][3], A[3][0], A[3][1], A[3][3]);
-		B[2][3] = -Det3x3(A[0][0], A[0][1], A[0][3], A[1][0], A[1][1], A[1][3], A[2][0], A[2][1], A[2][3]);
-		B[3][0] = -Det3x3(A[1][0], A[1][1], A[1][2], A[2][0], A[2][1], A[2][2], A[3][0], A[3][1], A[3][2]);
-		B[3][1] = Det3x3(A[0][0], A[0][1], A[0][2], A[2][0], A[2][1], A[2][2], A[3][0], A[3][1], A[3][2]);
-		B[3][2] = -Det3x3(A[0][0], A[0][1], A[0][2], A[1][0], A[1][1], A[1][2], A[3][0], A[3][1], A[3][2]);
-		B[3][3] = Det3x3(A[0][0], A[0][1], A[0][2], A[1][0], A[1][1], A[1][2], A[2][0], A[2][1], A[2][2]);
-		Float det = (A[0][0] * B[0][0]) + (A[1][0] * B[0][1]) + (A[2][0] * B[0][2]) + (A[3][0] * B[0][3]);
-		det = 1 / det;
-		B[0][0] *= det;
-		B[0][1] *= det;
-		B[0][2] *= det;
-		B[0][3] *= det;
-		B[1][0] *= det;
-		B[1][1] *= det;
-		B[1][2] *= det;
-		B[1][3] *= det;
-		B[2][0] *= det;
-		B[2][1] *= det;
-		B[2][2] *= det;
-		B[2][3] *= det;
-		B[3][0] *= det;
-		B[3][1] *= det;
-		B[3][2] *= det;
-		B[3][3] *= det;
+	B[0][0] = Det3x3(A[1][1], A[1][2], A[1][3], A[2][1], A[2][2], A[2][3], A[3][1], A[3][2], A[3][3]);
+	B[0][1] = -Det3x3(A[0][1], A[0][2], A[0][3], A[2][1], A[2][2], A[2][3], A[3][1], A[3][2], A[3][3]);
+	B[0][2] = Det3x3(A[0][1], A[0][2], A[0][3], A[1][1], A[1][2], A[1][3], A[3][1], A[3][2], A[3][3]);
+	B[0][3] = -Det3x3(A[0][1], A[0][2], A[0][3], A[1][1], A[1][2], A[1][3], A[2][1], A[2][2], A[2][3]);
+	B[1][0] = -Det3x3(A[1][0], A[1][2], A[1][3], A[2][0], A[2][2], A[2][3], A[3][0], A[3][2], A[3][3]);
+	B[1][1] = Det3x3(A[0][0], A[0][2], A[0][3], A[2][0], A[2][2], A[2][3], A[3][0], A[3][2], A[3][3]);
+	B[1][2] = -Det3x3(A[0][0], A[0][2], A[0][3], A[1][0], A[1][2], A[1][3], A[3][0], A[3][2], A[3][3]);
+	B[1][3] = Det3x3(A[0][0], A[0][2], A[0][3], A[1][0], A[1][2], A[1][3], A[2][0], A[2][2], A[2][3]);
+	B[2][0] = Det3x3(A[1][0], A[1][1], A[1][3], A[2][0], A[2][1], A[2][3], A[3][0], A[3][1], A[3][3]);
+	B[2][1] = -Det3x3(A[0][0], A[0][1], A[0][3], A[2][0], A[2][1], A[2][3], A[3][0], A[3][1], A[3][3]);
+	B[2][2] = Det3x3(A[0][0], A[0][1], A[0][3], A[1][0], A[1][1], A[1][3], A[3][0], A[3][1], A[3][3]);
+	B[2][3] = -Det3x3(A[0][0], A[0][1], A[0][3], A[1][0], A[1][1], A[1][3], A[2][0], A[2][1], A[2][3]);
+	B[3][0] = -Det3x3(A[1][0], A[1][1], A[1][2], A[2][0], A[2][1], A[2][2], A[3][0], A[3][1], A[3][2]);
+	B[3][1] = Det3x3(A[0][0], A[0][1], A[0][2], A[2][0], A[2][1], A[2][2], A[3][0], A[3][1], A[3][2]);
+	B[3][2] = -Det3x3(A[0][0], A[0][1], A[0][2], A[1][0], A[1][1], A[1][2], A[3][0], A[3][1], A[3][2]);
+	B[3][3] = Det3x3(A[0][0], A[0][1], A[0][2], A[1][0], A[1][1], A[1][2], A[2][0], A[2][1], A[2][2]);
+	Float det = (A[0][0] * B[0][0]) + (A[1][0] * B[0][1]) + (A[2][0] * B[0][2]) + (A[3][0] * B[0][3]);
+	det = 1 / det;
+	B[0][0] *= det;
+	B[0][1] *= det;
+	B[0][2] *= det;
+	B[0][3] *= det;
+	B[1][0] *= det;
+	B[1][1] *= det;
+	B[1][2] *= det;
+	B[1][3] *= det;
+	B[2][0] *= det;
+	B[2][1] *= det;
+	B[2][2] *= det;
+	B[2][3] *= det;
+	B[3][0] *= det;
+	B[3][1] *= det;
+	B[3][2] *= det;
+	B[3][3] *= det;
 	}
 
 	Mat4 Mat4::Invert2() const
 	{
-		Mat4 result;
-		FastInvert(m_Data, result.m_Data);
-		return result;
+	Mat4 result;
+	FastInvert(m_Data, result.m_Data);
+	return result;
 	}*/
 
 	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetXAxis() const
 	{
-		return TVec3<TYPE>(m_Data2[0], m_Data2[4], m_Data2[8]);
+		return TVec3<TYPE>(E16[0], E16[4], E16[8]);
 	}
 
 	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetYAxis() const
 	{
-		return TVec3<TYPE>(m_Data2[1], m_Data2[5], m_Data2[9]);
+		return TVec3<TYPE>(E16[1], E16[5], E16[9]);
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetZAxis() const
 	{
-		return TVec3<TYPE>(m_Data2[2], m_Data2[6], m_Data2[10]);
+		return TVec3<TYPE>(E16[2], E16[6], E16[10]);
 	}
 
-	template<class TYPE> 
+	template<class TYPE>
 	void TMat4<TYPE>::SetXAxis(const TVec3<TYPE> &dir)
 	{
-		m_Data2[0] = dir.x; m_Data2[4] = dir.y; m_Data2[8] = dir.z;
+		E16[0] = dir.x; E16[4] = dir.y; E16[8] = dir.z;
 	}
-	
-	template<class TYPE> 
+
+	template<class TYPE>
 	void TMat4<TYPE>::SetYAxis(const TVec3<TYPE> &dir)
 	{
-		m_Data2[1] = dir.x; m_Data2[5] = dir.y; m_Data2[9] = dir.z;
+		E16[1] = dir.x; E16[5] = dir.y; E16[9] = dir.z;
 	}
-	
-	template<class TYPE> 
+
+	template<class TYPE>
 	void TMat4<TYPE>::SetZAxis(const TVec3<TYPE> &dir)
 	{
-		m_Data2[2] = dir.x; m_Data2[6] = dir.y; m_Data2[10] = dir.z;
+		E16[2] = dir.x; E16[6] = dir.y; E16[10] = dir.z;
 	}
 }
 

@@ -6,22 +6,22 @@ TEST_CASE("Test Mat4")
 	SECTION("Test constructor 2")
 	{
 		GASS::Mat4 mat(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
-		REQUIRE(mat.Elements16[0] == 1);
-		REQUIRE(mat.Elements16[1] == 0);
-		REQUIRE(mat.Elements16[2] == 0);
-		REQUIRE(mat.Elements16[3] == 1);
-		REQUIRE(mat.Elements16[4] == 0);
-		REQUIRE(mat.Elements16[5] == 1);
-		REQUIRE(mat.Elements16[6] == 0);
-		REQUIRE(mat.Elements16[7] == 1);
-		REQUIRE(mat.Elements16[8] == 0);
-		REQUIRE(mat.Elements16[9] == 0);
-		REQUIRE(mat.Elements16[10] == 1);
-		REQUIRE(mat.Elements16[11] == 1);
-		REQUIRE(mat.Elements16[12] == 0);
-		REQUIRE(mat.Elements16[13] == 0);
-		REQUIRE(mat.Elements16[14] == 0);
-		REQUIRE(mat.Elements16[15] == 1);
+		REQUIRE(mat.E16[0] == 1);
+		REQUIRE(mat.E16[1] == 0);
+		REQUIRE(mat.E16[2] == 0);
+		REQUIRE(mat.E16[3] == 1);
+		REQUIRE(mat.E16[4] == 0);
+		REQUIRE(mat.E16[5] == 1);
+		REQUIRE(mat.E16[6] == 0);
+		REQUIRE(mat.E16[7] == 1);
+		REQUIRE(mat.E16[8] == 0);
+		REQUIRE(mat.E16[9] == 0);
+		REQUIRE(mat.E16[10] == 1);
+		REQUIRE(mat.E16[11] == 1);
+		REQUIRE(mat.E16[12] == 0);
+		REQUIRE(mat.E16[13] == 0);
+		REQUIRE(mat.E16[14] == 0);
+		REQUIRE(mat.E16[15] == 1);
 	}
 
 	SECTION("Test constructor 3")
@@ -29,7 +29,7 @@ TEST_CASE("Test Mat4")
 		GASS::Mat4 mat(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
 		for (int i = 0; i < 16; i++)
 		{
-			REQUIRE(mat.Elements16[i] == static_cast<GASS::Float>(i));
+			REQUIRE(mat.E16[i] == static_cast<GASS::Float>(i));
 		}
 	}
 
@@ -72,7 +72,7 @@ TEST_CASE("Test Mat4")
 				test[i][j] = 0;
 				for (int k = 0; k < 4; k++)
 				{
-					test[i][j] += mat1.Elements4x4[i][k] * mat2.Elements4x4[k][j];
+					test[i][j] += mat1.E4x4[i][k] * mat2.E4x4[k][j];
 				}
 			}
 		}
@@ -80,7 +80,7 @@ TEST_CASE("Test Mat4")
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				REQUIRE(ret.Elements4x4[i][j] == test[i][j]);
+				REQUIRE(ret.E4x4[i][j] == test[i][j]);
 			}
 		}
 	}
@@ -99,7 +99,7 @@ TEST_CASE("Test Mat4")
 				test[i][j] = 0;
 				for (int k = 0; k < 4; k++)
 				{
-					test[i][j] += mat1.Elements4x4[i][k] * mat2.Elements4x4[k][j];
+					test[i][j] += mat1.E4x4[i][k] * mat2.E4x4[k][j];
 				}
 			}
 		}
@@ -107,7 +107,7 @@ TEST_CASE("Test Mat4")
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				REQUIRE(ret.Elements4x4[i][j] == test[i][j]);
+				REQUIRE(ret.E4x4[i][j] == test[i][j]);
 			}
 		}
 	}
@@ -128,12 +128,12 @@ TEST_CASE("Test Mat4")
 		REQUIRE(point.y == Approx(0));
 		REQUIRE(point.z == Approx(-1));
 
-		//translate, rotate and scale
+		//scale, rotate and translate
 		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_PI*0.5), GASS::Vec3(2, 2, 2));
 		point.Set(1, 0, 0);
 		point = mat3*point;
 
-		REQUIRE(point.x == Approx(4));
+		REQUIRE(point.x == Approx(2));
 		REQUIRE(point.y == Approx(2));
 		REQUIRE(point.z == Approx(0));
 	}
@@ -160,10 +160,31 @@ TEST_CASE("Test Mat4")
 		point.Set(1, 0, 0, 1);
 		point = mat3*point;
 
-		REQUIRE(point.x == Approx(4));
+		REQUIRE(point.x == Approx(2));
 		REQUIRE(point.y == Approx(2));
 		REQUIRE(point.z == Approx(0));
 		REQUIRE(point.w == Approx(1));
+
+		//Test operation order
+		GASS::Vec3 scale(2, 1, 1);
+		GASS::Vec3 rotate(GASS_PI*0.5, 0, 0);
+		GASS::Mat4 mat4(GASS::Vec3(2, 0, 0), rotate, scale);
+		GASS::Mat4 mat_scale;
+		mat_scale.Identity();
+		mat_scale.Scale(scale.x, scale.y, scale.z);
+
+		GASS::Mat4 mat_pos;
+		mat_pos.Identity();
+		mat_pos.SetTranslation(2, 0, 0);
+
+		GASS::Mat4 mat_rot;
+		mat_rot.Identity();
+		mat_rot.Rotate(rotate.x, rotate.y, rotate.z);
+
+		GASS::Mat4 mat_trans = mat_pos*mat_rot*mat_scale;
+		if(mat_trans.Equal(mat4))
+			std::cout << mat_trans.Determinant();
+
 	}
 
 	SECTION("Test Zero")
@@ -171,39 +192,27 @@ TEST_CASE("Test Mat4")
 		GASS::Mat4 mat;
 		mat.Zero();
 		for (int i = 0; i < 16; i++)
-			REQUIRE(mat.Elements16[i] == 0);
+			REQUIRE(mat.E16[i] == 0);
 	}
 
 
 	SECTION("Test Rotate X")
 	{
 		GASS::Mat4 mat;
-		GASS::Float heading = GASS::Math::Deg2Rad(90);
-		mat.RotateY(heading);
-		GASS::Vec3 xaxis = mat.GetXAxis();
-		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
-		std::cout << "RotY:" << xaxis;
-		
-		mat.Rotate(heading, 0, 0);
-		xaxis = mat.GetXAxis();
-		std::cout << " Mat" << xaxis << "\n";
+		mat.RotateX(GASS::Math::Deg2Rad(90));
+		GASS::Vec3 temp = mat.GetYAxis();
+		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(-GASS::Vec3::m_UnitY, 1.0e-10));
+	}
 
-
-		mat.RotateX(heading);
-		GASS::Vec3 zaxis = mat.GetZAxis();
-		std::cout << "RotX:" << zaxis;
-		mat.Rotate(0, heading, 0);
-		zaxis = mat.GetZAxis();
-		std::cout << " Mat" << zaxis << "\n";
-
-
-		mat.RotateZ(heading);
-		xaxis = mat.GetXAxis();
-		std::cout << "RotZ:" << xaxis;
-		mat.Rotate(0, 0, heading);
-		xaxis = mat.GetXAxis();
-		std::cout << " Mat" << xaxis << "\n";
-
+	SECTION("Test Rotate Y")
+	{
+		GASS::Mat4 mat;
+		mat.RotateY(GASS::Math::Deg2Rad(90));
+		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 	}
 
 	SECTION("Test Rotate")
@@ -212,7 +221,9 @@ TEST_CASE("Test Mat4")
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
 		mat.Rotate(heading, 0, 0);
 		GASS::Vec3 xaxis = mat.GetXAxis();
-		REQUIRE(xaxis.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
+		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 	}
 
 #if 0
