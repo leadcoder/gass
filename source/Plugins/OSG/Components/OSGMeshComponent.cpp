@@ -531,6 +531,42 @@ namespace GASS
 		if (!node)
 			return;
 
+		osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+		if (geode)
+		{
+			osg::BoundingBox bbox = geode->getBoundingBox();
+
+			osg::Vec3d p1 = bbox._max*M;
+			osg::Vec3d p2 = bbox._min*M;
+
+			AABox box;
+			box.Union(OSGConvert::ToGASS(p1));
+			box.Union(OSGConvert::ToGASS(p2));
+			m_BBox.Union(box);
+			// Traverse drawables
+			for (unsigned int i = 0; i < geode->getNumDrawables(); i++)
+			{
+#ifdef OSG_VERSION_GREATER_OR_EQUAL
+#if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
+				osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBoundingBox();
+#else
+				osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
+#endif
+#else
+				osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
+#endif
+
+				AABox temp_box;
+
+				osg::Vec3d p1 = osg_bbox._max*M;
+				osg::Vec3d p2 = osg_bbox._min*M;
+
+				temp_box.Union(OSGConvert::ToGASS(p1));
+				temp_box.Union(OSGConvert::ToGASS(p2));
+				m_BBox.Union(box);
+			}
+		}
+
 		if (node->asTransform() && node->asTransform()->asMatrixTransform())
 		{
 			for (unsigned int i = 0; i < node->asGroup()->getNumChildren(); i++)
@@ -542,44 +578,6 @@ namespace GASS
 			for (unsigned int i = 0; i < node->asGroup()->getNumChildren(); i++)
 				CalulateBoundingbox(node->asGroup()->getChild(i),M);
 			return;
-		}
-		else
-		{
-			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
-			if (geode)
-			{
-				osg::BoundingBox bbox = geode->getBoundingBox();
-
-				osg::Vec3d p1 = bbox._max*M;
-				osg::Vec3d p2 = bbox._min*M;
-
-				AABox box;
-				box.Union(OSGConvert::ToGASS(p1));
-				box.Union(OSGConvert::ToGASS(p2));
-				m_BBox.Union(box);
-				// Traverse drawables
-				for (unsigned int i = 0; i < geode->getNumDrawables(); i++)
-				{
-#ifdef OSG_VERSION_GREATER_OR_EQUAL
-#if(OSG_VERSION_GREATER_OR_EQUAL(3,3,2))
-					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBoundingBox();
-#else
-					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
-#endif
-#else
-					osg::BoundingBox osg_bbox = geode->getDrawable(i)->getBound();
-#endif
-
-					AABox temp_box;
-
-					osg::Vec3d p1 = osg_bbox._max*M;
-					osg::Vec3d p2 = osg_bbox._min*M;
-
-					temp_box.Union(OSGConvert::ToGASS(p1));
-					temp_box.Union(OSGConvert::ToGASS(p2));
-					m_BBox.Union(box);
-				}
-			}
 		}
 	}
 

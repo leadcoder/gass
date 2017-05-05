@@ -40,7 +40,7 @@ else() #assume linux
 endif()
 
 if (WIN32)
-	find_path(OSG_BINARY_DIR osgviewer.exe	${OSG_DIR}/bin)
+	find_path(OSG_BINARY_DIR osgviewer.exe HINTS ${OSG_DIR}/bin)
 
 	find_file(OSG_BINARY_REL NAMES ${OSG_SHARED_PREFIX}osg${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	find_file(OSG_BINARY_DBG NAMES ${OSG_SHARED_PREFIX}osgd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
