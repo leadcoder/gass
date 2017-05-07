@@ -62,13 +62,9 @@ namespace GASS
 	{
 		Vec3 my_pos  = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		Quaternion my_rot  = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		//m_LookAtRot.ToRotationMatrix(rot_mat);
-		my_rot.ToRotationMatrix(rot_mat);
+		Mat4 rot_mat(my_rot);
+		
 		Vec3 right_vec = rot_mat.GetXAxis();
-
-
 		Vec3 look_dir = m_LookAtPos  - my_pos;
 		look_dir.Normalize();
 		Quaternion q;

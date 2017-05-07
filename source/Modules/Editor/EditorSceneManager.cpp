@@ -338,7 +338,7 @@ namespace GASS
 				object_pos = object_pos - dir*object_size;
 				dir = -dir;
 				Mat4 rot_mat;
-				rot_mat.Identity();
+				rot_mat.MakeIdentity();
 				rot_mat.SetZAxis(dir);
 				Vec3 rvec = Vec3(dir.z, 0, -dir.x);
 				rvec.Normalize();

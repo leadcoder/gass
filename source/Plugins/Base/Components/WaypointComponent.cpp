@@ -182,7 +182,7 @@ namespace GASS
 
 			//rotate node
 			Mat4 rot_mat;
-			rot_mat.Identity();
+			rot_mat.MakeIdentity();
 
 			Vec3 up(0,1,0);
 
@@ -223,10 +223,9 @@ namespace GASS
 		return t_location->GetPosition()*10;
 
 		LocationComponentPtr wp_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>(true);
-		Mat4 rot_mat;
-		rot_mat.Identity();
+		
 		Quaternion rot = wp_location->GetRotation();
-		rot.ToRotationMatrix(rot_mat);
+		Mat4 rot_mat(rot);
 		Vec3 tangent = rot_mat.GetZAxis();
 
 		return tangent;

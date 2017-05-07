@@ -1021,10 +1021,9 @@ namespace GASS
 					{
 						Vec3 world_pos = lc->GetWorldPosition();
 						Quaternion world_rot = lc->GetWorldRotation();
-						Mat4 trans_mat;
-						trans_mat.Identity();
-						world_rot.ToRotationMatrix(trans_mat);
-						trans_mat.SetTranslation(world_pos.x,world_pos.y,world_pos.z);
+						Mat4 trans_mat(world_rot, world_pos);
+						//world_rot.ToRotationMatrix(trans_mat);
+						//trans_mat.SetTranslation(world_pos);
 						box.Transform(trans_mat);
 					}
 					m_MeshBounding = box;

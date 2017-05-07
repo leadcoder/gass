@@ -633,10 +633,8 @@ namespace GASS
 	Vec3 GizmoComponent::GetPosition(const Ray &ray)
 	{
 		Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetRotation();
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		rot.ToRotationMatrix(rot_mat);
-
+		Mat4 rot_mat(rot);
+		
 		Vec3 c_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 r_vec = rot_mat.GetXAxis();
 		Vec3 v_vec = rot_mat.GetZAxis();
@@ -692,9 +690,7 @@ namespace GASS
 			{
 				//Quaternion selected_rot = location->GetWorldRotation();
 				Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-				Mat4 rot_mat;
-				rot_mat.Identity();
-				rot.ToRotationMatrix(rot_mat);
+				Mat4 rot_mat(rot);
 				Vec3 r_vec = rot_mat.GetXAxis();
 				r_vec.Normalize();
 

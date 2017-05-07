@@ -179,9 +179,9 @@ namespace GASS
 	{
 		m_CurrentPos = message->GetPosition();
 		Quaternion  rot = message->GetRotation();
-		m_Transformation.Identity();
-		rot.ToRotationMatrix(m_Transformation);
-		m_Transformation.SetTranslation(m_CurrentPos.x,m_CurrentPos.y,m_CurrentPos.z);
+		m_Transformation.MakeTransformationRT(rot, m_CurrentPos);
+		//rot.ToRotationMatrix(m_Transformation);
+		//m_Transformation.SetTranslation(m_CurrentPos);
 	}
 
 	void CarAutopilotComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)

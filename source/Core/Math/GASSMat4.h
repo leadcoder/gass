@@ -101,13 +101,28 @@ namespace GASS
 		Setup full transformation matrix (Scale, Rotate and Translate),
 		This transformation matrix will first apply scale followed
 		by a rotation and  last the translation is applied.
-		@param pos Translation part of the transformation
+		@param translation Translation part of the transformation
 		@param rot Rotation represented as a quaternion
 		@param scale Scale in each axis
 		*/
-		TMat4(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
+		TMat4(const TVec3<TYPE> &translation, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
-			SetTransformation(pos, rot, scale);
+			MakeTransformationSRT(translation, rot, scale);
+		}
+
+		TMat4(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)
+		{
+			MakeTransformationRT(rot, translation);
+		}
+
+		TMat4(const TQuaternion<TYPE> &rot)
+		{
+			*this = rot.GetRotationMatrix();
+		}
+
+		TMat4(const TVec3<TYPE> &translation)
+		{
+			MakeTranslation(translation);
 		}
 
 		/**
@@ -120,7 +135,7 @@ namespace GASS
 		*/
 		TMat4(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 		{
-			SetTransformation(pos, rot, scale);
+			MakeTransformationSRT(pos, rot, scale);
 		}
 
 		inline TMat4(
@@ -165,40 +180,90 @@ namespace GASS
 		/**
 		* Set all matrix elements to zero.
 		*/
-		inline void Zero();
+		inline void MakeZero();
+
+		static inline TMat4 CreateZero()
+		{
+			TMat4 mat;
+			mat.MakeZero();
+			return mat;
+		}
 
 		/**
-		Set the rotation matrix for heading, pitch, roll.
-		@param h Heading in in radians
-		@param p Pitch in in radians
-		@param r Roll in in radians
+		Make a rotation matrix from euler angles, the order of rotation is Y-X-Z.
+		@param radians Around X,Y and Z axis
 		*/
-		inline void Rotate(TYPE h, TYPE p, TYPE r);
+		inline void MakeRotationYXZ(const TVec3<TYPE> &radians);
+
+		static TMat4 CreateRotationYXZ(const TVec3<TYPE> &radians)
+		{
+			TMat4 mat;
+			mat.MakeRotationYXZ(radians);
+			return mat;
+		}
 
 		/**
-		* Create Y rotation matrix.
+		* Make rotation matrix.
 		*/
-		inline void RotateY(TYPE amount);
+		inline void MakeRotationX(TYPE radians);
 
+		
 		/**
-		* Create X rotation matrix.
+		* Make Y rotation matrix.
 		*/
-		inline void RotateX(TYPE amount);
+		inline void MakeRotationY(TYPE amount);
+		
+		
+		/**
+		* Make Z rotation matrix.
+		*/
+		inline void MakeRotationZ(TYPE amount);
+		inline void MakeScale(const TVec3<TYPE> &scale);
 
-		/**
-		* Create Z rotation matrix.
-		*/
-		inline void RotateZ(TYPE amount);
-		inline void Scale(TYPE sx, TYPE sy, TYPE sz);
-		inline void RelScale(TVec3<TYPE> scale);
-		inline void Identity();
-		inline TMat4 Transpose();
-		inline void Translate(TYPE x, TYPE y, TYPE z);
-		inline void RelTranslate(TYPE x, TYPE y, TYPE z) { E4x4[0][3] += x;	E4x4[1][3] += y; E4x4[2][3] += z; };
-		inline void SetTranslation(TYPE x, TYPE y, TYPE z) { E4x4[0][3] = x; E4x4[1][3] = y; E4x4[2][3] = z; };
+		static TMat4 CreateScale(const TVec3<TYPE> &scale)
+		{
+			TMat4 mat;
+			mat.MakeScale(scale);
+			return mat;
+		}
+
+		//inline void RelScale(TVec3<TYPE> scale);
+		inline void MakeIdentity();
+
+		static TMat4 CreateIdentity()
+		{
+			TMat4 mat;
+			mat.MakeIdentity();
+			return mat;
+		}
+		inline TMat4 GetTranspose();
+		inline void MakeTranslation(const TVec3<TYPE> &translation);
+		static TMat4 CreateTranslation(const TVec3<TYPE> &translation)
+		{
+			TMat4 mat;
+			mat.MakeTranslation(translation);
+			return mat;
+		}
+		//inline void RelTranslate(TYPE x, TYPE y, TYPE z) { E4x4[0][3] += x;	E4x4[1][3] += y; E4x4[2][3] += z; };
+		inline void SetTranslation(const TVec3<TYPE> &translation) 
+		{ 
+			E4x4[0][3] = translation.x; 
+			E4x4[1][3] = translation.y; 
+			E4x4[2][3] = translation.z; 
+		};
+
+
+		inline void SetScale(const TVec3<TYPE> &scale) 
+		{ 
+			E4x4[0][0] = scale.x; 
+			E4x4[1][1] = scale.y; 
+			E4x4[2][2] = scale.z; 
+		};
+	
 		inline TVec3<TYPE> GetTranslation() const;
-		inline void SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
-		inline void SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale);
+		inline void MakeTransformationSRT(const TVec3<TYPE> &translation, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
+		inline void MakeTransformationSRT(const TVec3<TYPE> &translation, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale);
+		inline void MakeTransformationRT(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation);
 		inline TYPE Determinant() const;
 
 		//TODO: document diff and select one method
@@ -398,7 +463,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::Zero()
+	void TMat4<TYPE>::MakeZero()
 	{
 		E4x4[0][0] = 0;
 		E4x4[0][1] = 0;
@@ -419,7 +484,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::Identity()
+	void TMat4<TYPE>::MakeIdentity()
 	{
 		E4x4[0][0] = 1;
 		E4x4[0][1] = 0;
@@ -440,7 +505,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TMat4<TYPE> TMat4<TYPE>::Transpose()
+	TMat4<TYPE> TMat4<TYPE>::GetTranspose()
 	{
 		TMat4<TYPE> ret;
 		for (int i = 0; i < 4; i++)
@@ -454,26 +519,29 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::Translate(TYPE x, TYPE y, TYPE z)
+	void TMat4<TYPE>::MakeTranslation(const TVec3<TYPE> &trans)
 	{
-		Identity();
-		E4x4[0][3] = x;
-		E4x4[1][3] = y;
-		E4x4[2][3] = z;
+		MakeIdentity();
+		SetTranslation(trans);
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::Scale(TYPE sx, TYPE sy, TYPE sz)
+	void TMat4<TYPE>::MakeScale(const TVec3<TYPE> &scale)
 	{
-		Identity();
-		E4x4[0][0] = sx;
-		E4x4[1][1] = sy;
-		E4x4[2][2] = sz;
+		MakeIdentity();
+		SetScale(scale);
+		/*E4x4[0][0] = scale.x;
+		E4x4[1][1] = scale.y;
+		E4x4[2][2] = scale.z;*/
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::Rotate(TYPE h, TYPE p, TYPE r)
+	void TMat4<TYPE>::MakeRotationYXZ(const TVec3<TYPE> &radians)
 	{
+		TYPE h = radians.y;
+		TYPE p = radians.x;
+		TYPE r = radians.z;
+		MakeIdentity();
 		TYPE cp = cos(p);
 		TYPE sp = sin(p);
 		TYPE ch = cos(h);
@@ -482,7 +550,7 @@ namespace GASS
 		TYPE sr = sin(r);
 
 		E4x4[0][0] = (cr*ch + sr*sp*sh);
-		E4x4[0][1] = (-ch*sr + sh*sp*ch);
+		E4x4[0][1] = (-ch*sr + sh*sp*cr);
 		E4x4[0][2] = (sh*cp);
 
 		E4x4[1][0] = cp*sr;
@@ -507,23 +575,14 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
+	void TMat4<TYPE>::MakeTransformationSRT(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
 	{
+		TMat4<TYPE> scale_mat = CreateScale(scale);
+		TMat4<TYPE> translation_mat = CreateTranslation(pos);
+		TMat4<TYPE> rotation_mat = CreateRotationYXZ(rot);
 
-		TMat4<TYPE> mat_scale;
-		mat_scale.Identity();
-		mat_scale.Scale(scale.x, scale.y, scale.z);
-
-		TMat4<TYPE> mat_pos;
-		mat_pos.Identity();
-		mat_pos.SetTranslation(pos.x, pos.y, pos.z);
-
-		TMat4<TYPE> mat_rot;
-		mat_rot.Identity();
-		mat_rot.Rotate(rot.x, rot.y, rot.z);
-		//TMat4<TYPE> final_trans = mat_scale*mat_pos*mat_rot;
-		TMat4<TYPE> final_trans = mat_pos*mat_rot*mat_scale;
-		*this = final_trans;
+		*this = translation_mat * rotation_mat * scale_mat;
+		
 		/*Identity();
 		E4x4[0][3] = pos.x;
 		E4x4[1][3] = pos.y;
@@ -554,25 +613,22 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
+	void TMat4<TYPE>::MakeTransformationRT(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)
 	{
+		TMat4<TYPE> translation_mat = CreateTranslation(translation);
+		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
+		*this = translation_mat * rotation_mat;
+	}
 
-		TMat4<TYPE> mat_scale;
-		mat_scale.Identity();
-		mat_scale.Scale(scale.x, scale.y, scale.z);
-
-		TMat4<TYPE> mat_pos;
-		mat_pos.Identity();
-		mat_pos.SetTranslation(pos.x, pos.y, pos.z);
-
-		TMat4<TYPE> mat_rot;
-		mat_rot.Identity();
-		rot.ToRotationMatrix(mat_rot);
-
+	template<class TYPE>
+	void TMat4<TYPE>::MakeTransformationSRT(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
+	{
+		TMat4<TYPE> scale_mat = CreateScale(scale);
+		TMat4<TYPE> translation_mat = CreateTranslation(pos);
+		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
 		//TMat4<TYPE> final_trans = mat_scale*mat_pos*mat_rot;
-		TMat4<TYPE> final_trans = mat_pos*mat_rot*mat_scale;
-		*this = final_trans;
-
+		*this = translation_mat * rotation_mat * scale_mat;
+	
 		/*Identity();
 		rot.ToRotationMatrix(*this);
 
@@ -599,39 +655,11 @@ namespace GASS
 		*/
 	}
 
-
 	template<class TYPE>
-	void TMat4<TYPE>::RotateY(TYPE amount)
+	void TMat4<TYPE>::MakeRotationX(TYPE radians)
 	{
-		TYPE ch = cos(amount);
-		TYPE sh = sin(amount);
-
-		E4x4[0][0] = ch;
-		E4x4[0][1] = 0;
-		E4x4[0][2] = sh;
-		E4x4[0][3] = 0;
-
-		E4x4[1][0] = 0;
-		E4x4[1][1] = 1;
-		E4x4[1][2] = 0;
-		E4x4[1][3] = 0;
-
-		E4x4[2][0] = -sh;
-		E4x4[2][1] = 0;
-		E4x4[2][2] = ch;
-		E4x4[2][3] = 0;
-
-		E4x4[3][0] = 0;
-		E4x4[3][1] = 0;
-		E4x4[3][2] = 0;
-		E4x4[3][3] = 1;
-	}
-
-	template<class TYPE>
-	void TMat4<TYPE>::RotateX(TYPE amount)
-	{
-		TYPE cp = cos(amount);
-		TYPE sp = sin(amount);
+		TYPE cp = cos(radians);
+		TYPE sp = sin(radians);
 
 		E4x4[0][0] = 1;
 		E4x4[0][1] = 0;
@@ -655,10 +683,37 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	void TMat4<TYPE>::RotateZ(TYPE amount)
+	void TMat4<TYPE>::MakeRotationY(TYPE radians)
 	{
-		TYPE cr = cos(amount);
-		TYPE sr = sin(amount);
+		TYPE ch = cos(radians);
+		TYPE sh = sin(radians);
+
+		E4x4[0][0] = ch;
+		E4x4[0][1] = 0;
+		E4x4[0][2] = sh;
+		E4x4[0][3] = 0;
+
+		E4x4[1][0] = 0;
+		E4x4[1][1] = 1;
+		E4x4[1][2] = 0;
+		E4x4[1][3] = 0;
+
+		E4x4[2][0] = -sh;
+		E4x4[2][1] = 0;
+		E4x4[2][2] = ch;
+		E4x4[2][3] = 0;
+
+		E4x4[3][0] = 0;
+		E4x4[3][1] = 0;
+		E4x4[3][2] = 0;
+		E4x4[3][3] = 1;
+	}
+
+	template<class TYPE>
+	void TMat4<TYPE>::MakeRotationZ(TYPE radians)
+	{
+		TYPE cr = cos(radians);
+		TYPE sr = sin(radians);
 
 		E4x4[0][0] = cr;
 		E4x4[0][1] = -sr;
@@ -681,7 +736,7 @@ namespace GASS
 		E4x4[3][3] = 1;
 	}
 
-	template<class TYPE>
+	/*template<class TYPE>
 	void TMat4<TYPE>::RelScale(TVec3<TYPE> scale)
 	{
 		E4x4[0][0] *= scale.x;
@@ -695,7 +750,7 @@ namespace GASS
 		E4x4[2][0] *= scale.x;
 		E4x4[2][1] *= scale.y;
 		E4x4[2][2] *= scale.z;
-	}
+	}*/
 
 	template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetTranslation()  const

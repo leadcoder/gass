@@ -37,7 +37,7 @@ namespace GASS
 	void GraphicsMesh::Transform(const Mat4 &transformation )
 	{
 		Mat4 rot_mat = transformation;
-		rot_mat.SetTranslation(0,0,0);
+		rot_mat.SetTranslation(Vec3(0,0,0));
 		for(size_t i = 0; i < SubMeshVector.size() ;i++)
 		{
 			//Transform all positions

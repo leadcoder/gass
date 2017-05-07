@@ -161,9 +161,7 @@ namespace GASS
 		ALfloat ListenerVel[] = GASS_TO_OAL_VEC(vel);
 		// Orientation of the listener. (first 3 elements are "dir", second 3 are "up")
 
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		rot.ToRotationMatrix(rot_mat);
+		Mat4 rot_mat(rot);
 		Vec3 dir = -rot_mat.GetZAxis();
 		Vec3 up = rot_mat.GetYAxis();
 

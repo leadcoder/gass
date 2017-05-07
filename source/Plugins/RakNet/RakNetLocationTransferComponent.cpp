@@ -162,15 +162,11 @@ namespace GASS
 
 		if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
-			Mat4 transform;
-			m_ParentRot.ToRotationMatrix(transform);
-			transform.SetTranslation(m_ParentPos.x,m_ParentPos.y,m_ParentPos.z);
+			Mat4 transform(m_ParentRot, m_ParentPos);
 			transform = transform.Invert();
 			pos = transform * pos;
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
-			transform.SetTranslation(0,0,0);
+			Mat4 rot_mat = rot.GetRotationMatrix();
+			transform.SetTranslation(Vec3(0,0,0));
 			transform.Invert();
 			rot_mat = transform*rot_mat;
 			rot.FromRotationMatrix(rot_mat);
@@ -275,9 +271,7 @@ namespace GASS
 				//we have no new data ,extrapolate?
 				if(m_ExtrapolatePosition || m_ExtrapolateRotation)
 				{
-					Mat4 trans;
-					trans.Identity();
-					m_LocationHistory[0].Rotation.ToRotationMatrix(trans);
+					Mat4 trans(m_LocationHistory[0].Rotation);
 					Vec3 local_velocity = trans*m_Velocity;
 					Vec3 local_angular_velocity = trans*m_AngularVelocity;
 					Float length = local_velocity.Length();

@@ -223,9 +223,7 @@ namespace GASS
 		{
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 			dReal ode_rot_mat[12];
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
+			Mat4 rot_mat(rot);
 			CreateODERotationMatrix(rot_mat,ode_rot_mat);
 			dGeomSetRotation(m_GeomID, ode_rot_mat);
 		}
@@ -300,9 +298,7 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No LocationComponent found while collision shape type is CST_PLANE", "ODECollisionGeometryComponent::CreatePlaneGeometry");
 		}
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		location->GetWorldRotation().ToRotationMatrix(rot_mat);
+		Mat4 rot_mat(location->GetWorldRotation());
 		Vec3 pos = location->GetWorldPosition();
 		Vec3 normal = rot_mat.GetYAxis();
 

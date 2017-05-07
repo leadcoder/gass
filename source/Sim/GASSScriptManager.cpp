@@ -171,10 +171,10 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opNeg() const", asMETHODPR(Vec3, operator-, () const, Vec3), asCALL_THISCALL); assert(r >= 0);
 
 		r = m_Engine->RegisterObjectType("Mat4", sizeof(Mat4), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Mat4", "void Identity()", asMETHOD(Mat4, Identity), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateX(double)", asMETHOD(Mat4, RotateX), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateY(double)", asMETHOD(Mat4, RotateY), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void RotateZ(double)", asMETHOD(Mat4, RotateZ), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeIdentity()", asMETHOD(Mat4, MakeIdentity), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationX(double)", asMETHOD(Mat4, MakeRotationX), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationY(double)", asMETHOD(Mat4, MakeRotationY), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationZ(double)", asMETHOD(Mat4, MakeRotationZ), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetXAxis() const", asMETHOD(Mat4, GetXAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetYAxis() const", asMETHOD(Mat4, GetYAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetZAxis() const", asMETHOD(Mat4, GetZAxis), asCALL_THISCALL);

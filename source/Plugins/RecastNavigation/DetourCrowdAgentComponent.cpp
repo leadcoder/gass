@@ -351,7 +351,7 @@ namespace GASS
 					right.x = final_dir.z;
 					right.z = -final_dir.x;
 					GASS::Mat4 rot_mat;
-					rot_mat.Identity();
+					rot_mat.MakeIdentity();
 					rot_mat.SetZAxis(final_dir);
 					rot_mat.SetXAxis(right);
 					rot_mat.SetYAxis(up);

@@ -46,7 +46,7 @@ namespace GASS
 		m_AngularVelocity(0),
 		m_RotValue(0)
 	{
-		m_RelTrans.Identity();
+		m_RelTrans.MakeIdentity();
 	}
 
 	TurretComponent::~TurretComponent()
@@ -89,18 +89,16 @@ namespace GASS
 
 	void TurretComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
-		m_Transformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
-
+		m_Transformation.MakeTransformationRT(message->GetRotation(), message->GetPosition());
 	}
 
 	void TurretComponent::OnParentTransformation(TransformationChangedEventPtr message)
 	{
-		m_ParentTransformation.SetTransformation(message->GetPosition(),message->GetRotation(),Vec3(1,1,1));
+		m_ParentTransformation.MakeTransformationRT(message->GetRotation(), message->GetPosition());
 	}
 
 	void TurretComponent::OnPhysicsMessage(PhysicsVelocityEventPtr message)
 	{
-
 		m_AngularVelocity = message->GetAngularVelocity().y;
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
@@ -127,17 +125,17 @@ namespace GASS
 		}
 		//else
 		//	m_RotValue = 0;
-		rot_mat.Identity();
+		
 
 		if(m_Controller == "Pitch")
 		{
-			rot_mat.Rotate(m_ParentTransformation.GetEulerHeading(),m_RotValue,0);
+			rot_mat.MakeRotationYXZ(Vec3(m_RotValue, m_ParentTransformation.GetEulerHeading(),0));
 		}
 		else
-			rot_mat.RotateY(m_RotValue);
+			rot_mat.MakeRotationY(m_RotValue);
 
 		//add relative transformation, we start rotation from this transformation
-		m_RelTrans.SetTranslation(0,0,0);
+		m_RelTrans.SetTranslation(Vec3(0,0,0));
 		//Mat4 parent_rot = m_RelTrans;
 		//parent_rot.SetTranslation(0,0,0);
 		m_AimTrans = rot_mat*m_RelTrans;

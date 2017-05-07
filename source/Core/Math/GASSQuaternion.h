@@ -51,14 +51,11 @@ namespace GASS
 
 		inline void FromEulerAngles (const TVec3<TYPE> &rot);
 		inline void FromRotationMatrix (const TMat4<TYPE>& kRot);
-		TMat4<TYPE> GetRotationMatrix() const
-		{
-			TMat4<TYPE> rot_mat;
-			rot_mat.Identity();
-			ToRotationMatrix(rot_mat);
-			return rot_mat;
-		}
+		
 		inline void ToRotationMatrix (TMat4<TYPE>& kRot) const;
+
+		inline TMat4<TYPE> GetRotationMatrix() const;
+
 
 		inline void FromAngleAxis (const TYPE& rfAngle, const TVec3<TYPE>& rkAxis);
 		inline void ToAngleAxis (TYPE& rfAngle, TVec3<TYPE>& rkAxis) const;
@@ -252,6 +249,14 @@ namespace GASS
 		}
 	}
 
+	template<class TYPE>
+	TMat4<TYPE> TQuaternion<TYPE>::GetRotationMatrix() const
+	{
+		TMat4<TYPE> rot_mat;
+		rot_mat.MakeIdentity();
+		ToRotationMatrix(rot_mat);
+		return rot_mat;
+	}
 
 	template<class TYPE>
 	void TQuaternion<TYPE>::ToRotationMatrix(TMat4<TYPE>& kRot) const
@@ -353,7 +358,7 @@ namespace GASS
 	void TQuaternion<TYPE>::FromAxes(const TVec3<TYPE>* akAxis)
 	{
 		TMat4<TYPE> kRot;
-		kRot.Identity();
+		kRot.MakeIdentity();
 		for (int iCol = 0; iCol < 3; iCol++)
 		{
 			kRot.m_Data[0][iCol] = akAxis[iCol].x;
@@ -367,7 +372,7 @@ namespace GASS
 	void TQuaternion<TYPE>::FromAxes(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis)
 	{
 		TMat4<TYPE> kRot;
-		kRot.Identity();
+		kRot.MakeIdentity();
 		kRot.m_Data[0][0] = xAxis.x;
 		kRot.m_Data[1][0] = xAxis.y;
 		kRot.m_Data[2][0] = xAxis.z;

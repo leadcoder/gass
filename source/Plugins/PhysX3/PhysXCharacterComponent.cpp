@@ -89,14 +89,8 @@ namespace GASS
 
 	void PhysXCharacterComponent::Reset()
 	{
-		m_Yaw = 0;
-
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		GetRotation().ToRotationMatrix(rot_mat);
-		
+		Mat4 rot_mat(GetRotation());
 		m_Yaw = rot_mat.GetEulerHeading();
-
 	}
 
 	void PhysXCharacterComponent::OnPositionChanged(PositionRequestPtr message)
@@ -217,11 +211,8 @@ namespace GASS
 		Quaternion new_rot(Vec3(m_Yaw,0,0));
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
 		
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		new_rot.ToRotationMatrix(rot_mat);
+		Mat4 rot_mat(new_rot);
 		Vec3 forward = rot_mat.GetZAxis();
-
 		Vec3 target_displacement(0,0,0);
 		forward.y = 0;
 		forward.Normalize();

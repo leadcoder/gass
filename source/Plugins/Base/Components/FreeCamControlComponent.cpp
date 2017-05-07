@@ -124,8 +124,7 @@ namespace GASS
 		{
 			RotationRequestPtr pos_mess = GASS_STATIC_PTR_CAST<RotationRequest>(message);
 
-			Mat4 rot_mat;
-			pos_mess->GetRotation().ToRotationMatrix(rot_mat);
+			Mat4 rot_mat(pos_mess->GetRotation());
 			m_Rot.x = rot_mat.GetEulerHeading();
 			m_Rot.y = rot_mat.GetEulerPitch();
 			m_Rot.z = rot_mat.GetEulerRoll();

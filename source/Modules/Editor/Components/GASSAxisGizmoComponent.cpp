@@ -172,7 +172,7 @@ namespace GASS
 		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 			{
 				float value = message->GetValue1();
-				float scale_factor = 0.06;
+				float scale_factor = 0.06f;
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
 				GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
 			}
@@ -308,7 +308,7 @@ namespace GASS
 				if(dist < MIN_SCALE_DISTANCE)
 					dist = MIN_SCALE_DISTANCE;
 
-				float scale_factor = 0.06;
+				float scale_factor = 0.06f;
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
 				GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
 			}
@@ -453,7 +453,7 @@ namespace GASS
 		{
 			sub_mesh_data->Type = TRIANGLE_LIST;
 
-			float thickness = 0.01;
+			float thickness = 0.01f;
 			
 			Vec3 pos = Vec3(0,-thickness,0);
 			sub_mesh_data->PositionVector.push_back(pos);
@@ -526,7 +526,7 @@ namespace GASS
 				grid_size = m_Size;
 			else
 				grid_size = m_EditorSceneManager->GetMouseToolController()->GetGridSize();
-			float half_grid_size = grid_size/2.0;
+			float half_grid_size = grid_size/2.0f;
 			float grid_spacing = m_EditorSceneManager->GetMouseToolController()->GetGridSpacing();
 			int n = (grid_size / grid_spacing)/2;
 			int index = 0;
@@ -588,10 +588,8 @@ namespace GASS
 	Vec3 AxisGizmoComponent::GetPosition(const Ray &ray)
 	{
 		Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetRotation();
-		Mat4 rot_mat;
-		rot_mat.Identity();
-		rot.ToRotationMatrix(rot_mat);
-
+		Mat4 rot_mat(rot);
+	
 		Vec3 c_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 r_vec = rot_mat.GetXAxis();
 		Vec3 v_vec = rot_mat.GetZAxis();
@@ -648,10 +646,7 @@ namespace GASS
 			{
 				Quaternion selected_rot = location->GetWorldRotation();
 				Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-				Mat4 rot_mat;
-				rot_mat.Identity();
-				rot.ToRotationMatrix(rot_mat);
-
+				Mat4 rot_mat(rot);
 				Vec3 r_vec = rot_mat.GetXAxis();
 				//Vec3 v_vec = rot_mat.GetZAxis();
 				//Vec3 up_vec = rot_mat.GetYAxis();

@@ -84,7 +84,7 @@ namespace GASS
 	Mat4 SplineAnimation::GetTransformation(Float desired_distance, const Vec3 &up_dir)
 	{
 		Mat4 transformation;
-		transformation.Identity();
+		transformation.MakeIdentity();
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
@@ -104,11 +104,11 @@ namespace GASS
 		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
-		transformation.Identity();
+		transformation.MakeIdentity();
 		transformation.SetZAxis(dir);
 		transformation.SetYAxis(up);
 		transformation.SetXAxis(left);
-		transformation.SetTranslation(pos.x,pos.y,pos.z);
+		transformation.SetTranslation(pos);
 		return transformation;
 	}
 
@@ -125,7 +125,7 @@ namespace GASS
 	Mat4 SplineAnimation::GetTransformation(Float desired_distance, const Vec3 &up_dir, Float pitch_weight)
 	{
 		Mat4 transformation;
-		transformation.Identity();
+		transformation.MakeIdentity();
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
@@ -153,18 +153,18 @@ namespace GASS
 		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
-		transformation.Identity();
+		transformation.MakeIdentity();
 		transformation.SetZAxis(dir);
 		transformation.SetYAxis(up);
 		transformation.SetXAxis(left);
-		transformation.SetTranslation(pos.x,pos.y,pos.z);
+		transformation.SetTranslation(pos);
 		return transformation;
 	}
 
 	Mat4 SplineAnimation::GetSkewTransformation(Float desired_distance, const Vec3 &up_dir, Float skew_weight)
 	{
 		Mat4 transformation;
-		transformation.Identity();
+		transformation.MakeIdentity();
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
@@ -190,11 +190,11 @@ namespace GASS
 		dir = mask_dir*skew_weight +  dir*(1-skew_weight);
 		
 		
-		transformation.Identity();
+		transformation.MakeIdentity();
 		transformation.SetZAxis(dir);
 		transformation.SetYAxis(up);
 		transformation.SetXAxis(left);
-		transformation.SetTranslation(pos.x,pos.y,pos.z);
+		transformation.SetTranslation(pos);
 		return transformation;
 	}
 

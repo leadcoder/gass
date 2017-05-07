@@ -240,9 +240,7 @@ namespace GASS
 		if(m_Body == NULL && m_TransformGeomID)
 		{
 			dReal ode_rot_mat[12];
-			Mat4 rot_mat;
-			rot_mat.Identity();
-			rot.ToRotationMatrix(rot_mat);
+			Mat4 rot_mat(rot);
 			ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 			dGeomSetRotation(m_TransformGeomID, ode_rot_mat);
 		}

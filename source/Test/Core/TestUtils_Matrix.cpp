@@ -1,9 +1,10 @@
 #include "Core/Math/GASSMatrix.h"
+#include "Core/Math/GASSQuaternion.h"
 #include "catch.hpp"
 
 TEST_CASE("Test Mat4")
 {
-	SECTION("Test constructor 2")
+	SECTION("Test SRT transformation constructor")
 	{
 		GASS::Mat4 mat(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
 		REQUIRE(mat.E16[0] == 1);
@@ -24,7 +25,7 @@ TEST_CASE("Test Mat4")
 		REQUIRE(mat.E16[15] == 1);
 	}
 
-	SECTION("Test constructor 3")
+	SECTION("Test element constructor")
 	{
 		GASS::Mat4 mat(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
 		for (int i = 0; i < 16; i++)
@@ -114,28 +115,46 @@ TEST_CASE("Test Mat4")
 
 	SECTION("Test operator * Vec3")
 	{
+
+		
 		GASS::Mat4 mat1(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
 		GASS::Vec3 point(0,0,0);
 		point = mat1*point;
 		REQUIRE(point == GASS::Vec3(1,1,1));
 
+		
 		//rotate around y-axis (heading)
-		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(GASS_PI*0.5, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(0, GASS_PI*0.5, 0), GASS::Vec3(1, 1, 1));
 		point.Set(1, 0, 0);
 		point = mat2*point;
 		
-		REQUIRE(point.x == Approx(0));
-		REQUIRE(point.y == Approx(0));
-		REQUIRE(point.z == Approx(-1));
-
+		REQUIRE(point.Equal(GASS::Vec3(0, 0,-1), 1.0e-10));
+		
 		//scale, rotate and translate
 		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_PI*0.5), GASS::Vec3(2, 2, 2));
 		point.Set(1, 0, 0);
 		point = mat3*point;
 
-		REQUIRE(point.x == Approx(2));
-		REQUIRE(point.y == Approx(2));
-		REQUIRE(point.z == Approx(0));
+		REQUIRE(point.Equal(GASS::Vec3(2, 2, 0), 1.0e-10));
+
+		/*GASS::Mat4 mat5(GASS::Vec3(0, 0, 0), GASS::Vec3(GASS_PI*0.5, GASS_PI*0.5, 0), GASS::Vec3(1, 1, 1));
+
+		GASS::Mat4 maty;
+		maty.MakeRotationY(GASS_PI*0.5);
+		GASS::Mat4 matx;
+		matx.MakeRotationX(GASS_PI*0.5);
+
+	//	GASS::Mat4 mat5 = maty*matx;
+
+		GASS::Quaternion rt(GASS::Vec3(GASS_PI*0.5, GASS_PI*0.5, 0));
+		GASS::Vec3 tx = rt.GetXAxis();
+		GASS::Vec3 ty = rt.GetYAxis();
+		GASS::Vec3 tz = rt.GetZAxis();
+		
+		GASS::Vec3 mtx = mat5.GetXAxis();
+		GASS::Vec3 mty = mat5.GetYAxis();
+		GASS::Vec3 mtz = mat5.GetZAxis();
+		std::cout << mtz;*/
 	}
 
 	SECTION("Test operator * Vec4")
@@ -146,7 +165,7 @@ TEST_CASE("Test Mat4")
 		REQUIRE(point == GASS::Vec4(1, 1, 1, 1));
 
 		//rotate around y-axis (heading)
-		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(GASS_PI*0.5, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(0, GASS_PI*0.5, 0), GASS::Vec3(1, 1, 1));
 		point.Set(1, 0, 0, 1);
 		point = mat2*point;
 
@@ -167,19 +186,14 @@ TEST_CASE("Test Mat4")
 
 		//Test operation order
 		GASS::Vec3 scale(2, 1, 1);
-		GASS::Vec3 rotate(GASS_PI*0.5, 0, 0);
+		GASS::Vec3 rotate(0, GASS_PI*0.5, 0);
 		GASS::Mat4 mat4(GASS::Vec3(2, 0, 0), rotate, scale);
-		GASS::Mat4 mat_scale;
-		mat_scale.Identity();
-		mat_scale.Scale(scale.x, scale.y, scale.z);
-
-		GASS::Mat4 mat_pos;
-		mat_pos.Identity();
-		mat_pos.SetTranslation(2, 0, 0);
-
+		GASS::Mat4 mat_scale = GASS::Mat4::CreateScale(scale);
+	
+		GASS::Mat4 mat_pos = GASS::Mat4::CreateTranslation(GASS::Vec3(0,0,0));
+		
 		GASS::Mat4 mat_rot;
-		mat_rot.Identity();
-		mat_rot.Rotate(rotate.x, rotate.y, rotate.z);
+		mat_rot.MakeRotationYXZ(rotate);
 
 		GASS::Mat4 mat_trans = mat_pos*mat_rot*mat_scale;
 		if(mat_trans.Equal(mat4))
@@ -187,60 +201,133 @@ TEST_CASE("Test Mat4")
 
 	}
 
-	SECTION("Test Zero")
+	SECTION("Test MakeZero")
 	{
 		GASS::Mat4 mat;
-		mat.Zero();
+		mat.MakeZero();
 		for (int i = 0; i < 16; i++)
 			REQUIRE(mat.E16[i] == 0);
 	}
 
 
-	SECTION("Test Rotate X")
+	SECTION("Test MakeRotateX")
 	{
 		GASS::Mat4 mat;
-		mat.RotateX(GASS::Math::Deg2Rad(90));
+		mat.MakeRotationX(GASS::Math::Deg2Rad(90));
 		GASS::Vec3 temp = mat.GetYAxis();
 		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
 		REQUIRE(mat.GetZAxis().Equal(-GASS::Vec3::m_UnitY, 1.0e-10));
 	}
 
-	SECTION("Test Rotate Y")
+	SECTION("Test MakeRotateY")
 	{
 		GASS::Mat4 mat;
-		mat.RotateY(GASS::Math::Deg2Rad(90));
+		mat.MakeRotationY(GASS::Math::Deg2Rad(90));
 		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
 		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 	}
 
-	SECTION("Test Rotate")
+	SECTION("Test MakeRotateZ")
 	{
 		GASS::Mat4 mat;
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
-		mat.Rotate(heading, 0, 0);
+		mat.MakeRotationY(heading);
 		GASS::Vec3 xaxis = mat.GetXAxis();
 		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
 		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 	}
 
+	SECTION("Test SetScale")
+	{
+		GASS::Mat4 mat;
+		mat.SetScale(GASS::Vec3(1,2,3));
+		REQUIRE(mat.E4x4[0][0] == 1);
+		REQUIRE(mat.E4x4[1][1] == 2);
+		REQUIRE(mat.E4x4[2][2] == 3);
+	}
+
+	SECTION("Test MakeIdentity")
+	{
+		GASS::Mat4 mat;
+		mat.MakeIdentity();
+
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				if(i != j)
+					REQUIRE(mat[i][j] == 0);
+				else
+					REQUIRE(mat[i][j] == 1);
+			}
+		}
+	}
+
+
+	SECTION("Test GetTranspose")
+	{
+		GASS::Mat4 mat(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+		GASS::Mat4 tmat = mat.GetTranspose();
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				GASS::Float value =  j * 4 + i;
+				REQUIRE(tmat[i][j] == value);
+			}
+		}
+	}
+
+	SECTION("Test MakeTranslation")
+	{
+		GASS::Mat4 mat;;
+		mat.MakeTranslation(GASS::Vec3(1, 2, 3));
+		REQUIRE(mat.E16[0] == 1);
+		REQUIRE(mat.E16[1] == 0);
+		REQUIRE(mat.E16[2] == 0);
+		REQUIRE(mat.E16[3] == 1);
+		REQUIRE(mat.E16[4] == 0);
+		REQUIRE(mat.E16[5] == 1);
+		REQUIRE(mat.E16[6] == 0);
+		REQUIRE(mat.E16[7] == 2);
+		REQUIRE(mat.E16[8] == 0);
+		REQUIRE(mat.E16[9] == 0);
+		REQUIRE(mat.E16[10] == 1);
+		REQUIRE(mat.E16[11] == 3);
+		REQUIRE(mat.E16[12] == 0);
+		REQUIRE(mat.E16[13] == 0);
+		REQUIRE(mat.E16[14] == 0);
+		REQUIRE(mat.E16[15] == 1);
+	}
+
+	SECTION("Test SetTranslation")
+	{
+		GASS::Mat4 mat;
+		mat.SetTranslation(GASS::Vec3(1, 2, 3));
+		REQUIRE(mat.E4x4[0][3] == 1);
+		REQUIRE(mat.E4x4[1][3] == 2);
+		REQUIRE(mat.E4x4[2][3] == 3);
+	}
+
+	SECTION("Test GetTranslation")
+	{
+		GASS::Mat4 mat(GASS::Vec3(1, 2, 3));
+		REQUIRE(mat.GetTranslation() == GASS::Vec3(1, 2, 3));
+	}
+
+	SECTION("Test MakeTransformationSRT (Euler rot)")
+	{
+		GASS::Mat4 mat;
+		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Vec3(GASS_PI*0.5, 0, GASS_PI*0.5), GASS::Vec3(2, 3, 4));
+
+		GASS::Mat4 mat1(0, 13, 22, 32, 24, 15, 36, 37, 18, 49, 510, 11, 122, 123, 4, 5);
+		
+	}
+
 #if 0
-	/**
-	* Set the rotation matrix for heading, pitch, roll.
-	*/
-	inline void RotateY(TYPE amount);
-	inline void RotateX(TYPE amount);
-	inline void RotateZ(TYPE amount);
-	inline void Scale(TYPE sx, TYPE sy, TYPE sz);
-	inline void RelScale(TVec3<TYPE> scale);
-	inline void Identity();
-	inline TMat4 Transpose();
-	inline void Translate(TYPE x, TYPE y, TYPE z);
-	inline void RelTranslate(TYPE x, TYPE y, TYPE z) { m_Data[0][3] += x;	m_Data[1][3] += y; m_Data[2][3] += z; };
-	inline void SetTranslation(TYPE x, TYPE y, TYPE z) { m_Data[0][3] = x; m_Data[1][3] = y; m_Data[2][3] = z; };
-	inline TVec3<TYPE> GetTranslation() const;
 	inline void SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
 	inline void SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale);
 	inline TYPE Determinant() const;
