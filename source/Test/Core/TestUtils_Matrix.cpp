@@ -322,8 +322,8 @@ TEST_CASE("Test Mat4")
 	{
 		GASS::Mat4 mat;
 		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Vec3(GASS_PI*0.5, 0, GASS_PI*0.5), GASS::Vec3(2, 3, 4));
-
-		GASS::Mat4 mat1(0, 13, 22, 32, 24, 15, 36, 37, 18, 49, 510, 11, 122, 123, 4, 5);
+		GASS::Mat4 expected_mat(0, -3, 0, 33, 0, 0, -4, 34, 2, 0, 0, 35, 0, 0, 0, 1);
+		REQUIRE(mat.Equal(expected_mat, 1.0e-10));
 		
 	}
 
