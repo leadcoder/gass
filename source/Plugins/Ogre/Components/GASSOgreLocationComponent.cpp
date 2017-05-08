@@ -341,9 +341,9 @@ namespace GASS
 		{
 			q = OgreConvert::ToGASS(m_OgreNode->getOrientation());
 			Mat4 rot_mat(q);
-			m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerHeading());
-			m_Rot.y = Math::Rad2Deg(rot_mat.GetEulerPitch());
-			m_Rot.z = Math::Rad2Deg(rot_mat.GetEulerRoll());
+			m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerRotationY());
+			m_Rot.y = Math::Rad2Deg(rot_mat.GetEulerRotationX());
+			m_Rot.z = Math::Rad2Deg(rot_mat.GetEulerRotationZ());
 		}
 	}
 

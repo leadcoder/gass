@@ -233,11 +233,11 @@ TEST_CASE("Test Mat4")
 	{
 		GASS::Mat4 mat;
 		GASS::Float heading = GASS::Math::Deg2Rad(90);
-		mat.MakeRotationY(heading);
+		mat.MakeRotationZ(heading);
 		GASS::Vec3 xaxis = mat.GetXAxis();
-		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
-		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
-		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
+		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(-GASS::Vec3::m_UnitX, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
 	}
 
 	SECTION("Test SetScale")
@@ -321,15 +321,107 @@ TEST_CASE("Test Mat4")
 	SECTION("Test MakeTransformationSRT (Euler rot)")
 	{
 		GASS::Mat4 mat;
+		//Test zero translation and rotation 
+		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		//Expect identity
+		REQUIRE(mat.Equal(GASS::Mat4::CreateIdentity(), 1.0e-10));
+
+		//Test scale
+		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Vec3(0, 0, 0), GASS::Vec3(2, 3, 4));
+
+		GASS::Mat4 scale_exp = GASS::Mat4::CreateIdentity();
+		scale_exp.SetScale(GASS::Vec3(2, 3, 4));
+		REQUIRE(mat == scale_exp);
+
+		//Test translation, scale and rotaion should not effect translation when usingg S*R*T
+		GASS::Vec3 translation(33, 34, 35);
+		mat.MakeTransformationSRT(translation, GASS::Vec3(0, 0, GASS_PI*0.5), GASS::Vec3(1, 1, 1));
+
+		//Check translation
+		REQUIRE(mat.GetTranslation() == translation);
+		
+
+		//Check that we get expected rotation matrix for 90deg rotation around Z-axis
+		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(-GASS::Vec3::m_UnitX, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
+
+		//Test against kown result matrix
 		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Vec3(GASS_PI*0.5, 0, GASS_PI*0.5), GASS::Vec3(2, 3, 4));
 		GASS::Mat4 expected_mat(0, -3, 0, 33, 0, 0, -4, 34, 2, 0, 0, 35, 0, 0, 0, 1);
 		REQUIRE(mat.Equal(expected_mat, 1.0e-10));
-		
+	}
+
+
+	SECTION("Test MakeTransformationSRT (Quaternion rot)")
+	{
+		GASS::Mat4 mat;
+		//Test zero translation and rotation 
+		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Quaternion(GASS::Vec3(0, 0, 0)), GASS::Vec3(1, 1, 1));
+		//Expect identity
+		REQUIRE(mat.Equal(GASS::Mat4::CreateIdentity(), 1.0e-10));
+
+		//Test scale
+		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Quaternion(GASS::Vec3(0, 0, 0)), GASS::Vec3(2, 3, 4));
+
+		GASS::Mat4 scale_exp = GASS::Mat4::CreateIdentity();
+		scale_exp.SetScale(GASS::Vec3(2, 3, 4));
+		REQUIRE(mat == scale_exp);
+
+		//Test translation, scale and rotaion should not effect translation when usingg S*R*T
+		GASS::Vec3 translation(33, 34, 35);
+		mat.MakeTransformationSRT(translation, GASS::Quaternion(GASS::Vec3(0, 0, GASS_PI*0.5)), GASS::Vec3(1, 1, 1));
+
+		//Check translation
+		REQUIRE(mat.GetTranslation() == translation);
+
+
+		//Check that we get expected rotation matrix for 90deg rotation around Z-axis
+		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
+		REQUIRE(mat.GetYAxis().Equal(-GASS::Vec3::m_UnitX, 1.0e-10));
+		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
+
+		//Test against kown result matrix
+		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Quaternion(GASS::Vec3(0, GASS_PI*0.5, GASS_PI*0.5)), GASS::Vec3(2, 3, 4));
+		GASS::Mat4 expected_mat(0, -3, 0, 33, 0, 0, -4, 34, 2, 0, 0, 35, 0, 0, 0, 1);
+		REQUIRE(mat.Equal(expected_mat, 1.0e-10));
+	}
+
+	SECTION("Test GetEulerRotationX")
+	{
+		GASS::Mat4 mat;
+		GASS::Float rot = GASS_PI;
+		mat.MakeRotationX(rot);
+		//REQUIRE(mat.GetEulerRotationX() == Approx(rot));
+
+		rot = 0;
+		mat.MakeRotationX(rot);
+		//REQUIRE(mat.GetEulerRotationX() == Approx(rot));
+
+		rot = GASS_PI*0.6;
+		mat.MakeRotationX(rot);
+		GASS::Float res = mat.GetEulerRotationX();
+		//REQUIRE(mat.GetEulerRotationX() == Approx(rot));
+	}
+
+	SECTION("Test GetEulerRotationY")
+	{
+		GASS::Mat4 mat;
+		GASS::Float rot = GASS_PI;
+		mat.MakeRotationY(rot);
+		REQUIRE(mat.GetEulerRotationY() == Approx(rot));
+
+		rot = 0;
+		mat.MakeRotationY(rot);
+		REQUIRE(mat.GetEulerRotationY() == Approx(rot));
+
+		rot = GASS_PI*0.7;
+		mat.MakeRotationY(rot);
+		REQUIRE(mat.GetEulerRotationY() == Approx(rot));
 	}
 
 #if 0
-	inline void SetTransformation(const TVec3<TYPE> &pos, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
-	inline void SetTransformation(const TVec3<TYPE> &pos, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale);
+	
 	inline TYPE Determinant() const;
 
 	//TODO: document diff and select one method
@@ -338,7 +430,7 @@ TEST_CASE("Test Mat4")
 
 	inline TMat4 GetRotation() const;
 	inline TVec3<TYPE> GetRotationRadians() const;
-	inline TYPE GetEulerHeading() const;
+	inline TYPE GetEulerRotationY() const;
 	inline TYPE GetEulerPitch() const;
 	inline TYPE GetEulerRoll() const;
 

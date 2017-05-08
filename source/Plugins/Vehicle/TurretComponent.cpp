@@ -129,7 +129,7 @@ namespace GASS
 
 		if(m_Controller == "Pitch")
 		{
-			rot_mat.MakeRotationYXZ(Vec3(m_RotValue, m_ParentTransformation.GetEulerHeading(),0));
+			rot_mat.MakeRotationYXZ(Vec3(m_RotValue, m_ParentTransformation.GetEulerRotationY(), 0));
 		}
 		else
 			rot_mat.MakeRotationY(m_RotValue);

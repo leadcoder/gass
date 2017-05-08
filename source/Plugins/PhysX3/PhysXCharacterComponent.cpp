@@ -90,7 +90,7 @@ namespace GASS
 	void PhysXCharacterComponent::Reset()
 	{
 		Mat4 rot_mat(GetRotation());
-		m_Yaw = rot_mat.GetEulerHeading();
+		m_Yaw = rot_mat.GetEulerRotationY();
 	}
 
 	void PhysXCharacterComponent::OnPositionChanged(PositionRequestPtr message)
