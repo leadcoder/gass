@@ -396,12 +396,13 @@ TEST_CASE("Test Mat4")
 
 		rot = 0;
 		mat.MakeRotationX(rot);
-		//REQUIRE(mat.GetEulerRotationX() == Approx(rot));
-
-		rot = GASS_PI*0.6;
-		mat.MakeRotationX(rot);
 		GASS::Float res = mat.GetEulerRotationX();
 		//REQUIRE(mat.GetEulerRotationX() == Approx(rot));
+
+		rot = GASS_PI*0.4;
+		mat.MakeRotationX(rot);
+		res = mat.GetEulerRotationX();
+//		REQUIRE(mat.GetEulerRotationX() == Approx(rot));
 	}
 
 	SECTION("Test GetEulerRotationY")

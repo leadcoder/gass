@@ -1053,8 +1053,32 @@ namespace GASS
 	template<class TYPE>
 	TYPE TMat4<TYPE>::GetEulerRotationX() const
 	{
-		//projected rotated z-axis to xz-base-plane
+
 		TVec3<TYPE> z_axis = GetZAxis();
+		
+		//calculate angle between projected z-axis and current z-axis
+		TYPE cos_p = z_axis.Dot(-TVec3<TYPE>::m_UnitY);
+
+		// Dot product may give values slightly higher than one due to normalization/precision error
+		if (cos_p > 1.0f) cos_p = 1.0f;
+		else if (cos_p < -1.0f)	cos_p = -1.0f;
+
+		TVec3<TYPE> cross = z_axis.Cross(-TVec3<TYPE>::m_UnitY);
+		cross.Normalize();
+	
+		TYPE p_rad = acos(cos_p);
+		if (cross.y > 0)
+		{
+			p_rad = -p_rad;
+		}
+		p_rad -= GASS_PI * 0.5;
+		if (p_rad < -GASS_PI)
+			p_rad =  p_rad + 2 * GASS_PI;
+		
+		return p_rad;
+		
+		//projected rotated z-axis to xz-base-plane
+		/*TVec3<TYPE> z_axis = GetZAxis();
 		TVec3<TYPE> proj_z(z_axis.x, 0, z_axis.z);
 		proj_z.Normalize();
 
@@ -1074,7 +1098,7 @@ namespace GASS
 		{
 			p_rad = -p_rad;
 		}
-		return p_rad;
+		return p_rad;*/
 	}
 
 	template<class TYPE>
