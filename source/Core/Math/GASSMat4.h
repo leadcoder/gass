@@ -1176,7 +1176,7 @@ namespace GASS
 	};
 
 	template<class TYPE>
-	bool TMat4<TYPE>::Equal(const TMat4<TYPE> &m, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
+	bool TMat4<TYPE>::Equal(const TMat4<TYPE> &m, TYPE tolerance) const
 	{
 		for (int i = 0; i < 16; i++)
 		{
