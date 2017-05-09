@@ -28,7 +28,9 @@
 #define GASS_PLANE_FRONT 0
 #define GASS_PLANE_BACK 1
 #define GASS_ON_PLANE 2
-#define GASS_PI 3.1415926535897
+#define GASS_PI 3.1415926535898
+#define GASS_HALF_PI 1.5707963267949
+
 				
 //const long double PI = 3.141592653589793238L;
 //const double PI = 3.141592653589793;
@@ -77,6 +79,7 @@ namespace GASS
 		inline static Float Deg2Rad(Float deg);
 		inline static Vec3 Deg2Rad(const Vec3 &vec);
 		inline static Vec3 Rad2Deg(const Vec3 &vec);
+		inline static Float ASin(Float fValue);
 
 		/**
 		@brief Check if a line intersect a Polygon.
@@ -249,6 +252,10 @@ namespace GASS
 		static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
 	};
 
+	
+	
+
+
 	/*Float Vec3::Dot(const Vec3 &v1, const Vec3 &v2)
 	{
 		return Vec3::Dot(v1,v2);
@@ -285,6 +292,21 @@ namespace GASS
 		ret.y = Math::Rad2Deg(vec.y);
 		ret.z = Math::Rad2Deg(vec.z);
 		return ret;
+	}
+
+	Float Math::ASin(Float fValue)
+	{
+		if (-1.0 < fValue)
+		{
+			if (fValue < 1.0)
+				return asin(fValue);
+			else
+				return GASS_HALF_PI;
+		}
+		else
+		{
+			return -GASS_HALF_PI;
+		}
 	}
 
 	Vec3 Math::ProjectVectorOnPlane(const Vec3 &plane_normal, const Vec3 &v)

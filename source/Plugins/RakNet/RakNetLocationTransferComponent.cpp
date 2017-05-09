@@ -162,13 +162,21 @@ namespace GASS
 
 		if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
-			Mat4 transform(m_ParentRot, m_ParentPos);
-			transform = transform.Invert();
-			pos = transform * pos;
+			Mat4 parent_transform(m_ParentRot, m_ParentPos);
+			Mat4 inv_parent = parent_transform.GetInvert();
+			pos = inv_parent * pos;
 			Mat4 rot_mat = rot.GetRotationMatrix();
-			transform.SetTranslation(Vec3(0,0,0));
-			transform.Invert();
-			rot_mat = transform*rot_mat;
+
+			//remove translation in inverted....is this OK??
+
+			inv_parent.SetTranslation(Vec3(0, 0, 0));
+
+			//transform.GetInvert(); What was intended??? 
+			
+			//get relativ rotation matrix
+			rot_mat = inv_parent*rot_mat;
+
+			//update quaternion
 			rot.FromRotationMatrix(rot_mat);
 			//pos = pos - m_ParentPos;
 			//std::cout << "pos" << pos << std::endl;

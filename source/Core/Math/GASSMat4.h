@@ -49,32 +49,38 @@ namespace GASS
 	+Z
 	
 	About euler rotation:
-	Postive euler rotations are defined clockwise when looking in positive axis-direction,
+	Postive euler rotations are defined clockwise when looking in positive axis-direction, or
+	counter clockwise if you look down at each plane, for X rotatation the YZ plane and so on.
 	for instance, a 90deg rotation around Y axis will put +Z at +X, and  +X at -Z in figure above
 
-	Matrix is collum major with following indexing
-	Single index:
-	m0  m1  m2  m3
-	m4  m5  m6  m7
-	m8  m9  m10 m11
-	m12 m13 m14 m15
-
-	Row and collum index:
+	Matrix is collum major with following indexing,
+	first index is row second is collum:
 	m00  m01  m02  m03
 	m10  m11  m12  m13
 	m20  m21  m22  m23
 	m30  m31  m32  m33
 
-	Where m03,m13,m23 hold the position (x,y,z)
-	And:
-	m00 m10 m20
-	m10 m11 m12
-	m20 m21 m22
+	For a translation transformation matrix elements m03,m13,m23 hold the position (x,y,z)
+	
+	For at rotation transformation matrix elements 
+	m00  m01  m02  
+	m10  m11  m12  
+	m20  m21  m22 
 
-	is 3x3 rotation matrix defined by three ortogonal axis, where
+	is the actual 3x3 rotation matrix defined by three ortogonal axis, where
 	m00, m10, m20 is the X-axis
 	m01, m11, m21 is the Y-axis
 	m02, m12, m22 is the Z-axis
+
+	For at scale transformation matrix elements
+	in m00,m11,m22 hold the scale in each direction (x,y,z)
+
+	All elements can also be accessed by 
+	single index, the equivalent layout is:
+	m0  m1  m2  m3
+	m4  m5  m6  m7
+	m8  m9  m10 m11
+	m12 m13 m14 m15
 	*/
 
 	template<class TYPE>
@@ -115,46 +121,31 @@ namespace GASS
 			Convenience constructor to initialize a transformation matrix by using MakeTransformationSRT, 
 			see MakeTransformationSRT for documentation.
 		*/
-		TMat4(const TVec3<TYPE> &translation, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale)
-		{
-			MakeTransformationSRT(translation, rot, scale);
-		}
+		TMat4(const TVec3<TYPE> &translation, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &scale){MakeTransformationSRT(translation, rot, scale);}
 
 		/**
 		Convenience constructor to initialize a transformation matrix by using MakeTransformationSRT,
 		see MakeTransformationSRT for documentation.
 		*/
-		TMat4(const TVec3<TYPE> &translation, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)
-		{
-			MakeTransformationSRT(translation, rot, scale);
-		}
+		TMat4(const TVec3<TYPE> &translation, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale)	{MakeTransformationSRT(translation, rot, scale);}
 
 		/**
 		Convenience constructor to initialize a transformation matrix by using MakeTransformationRT,
 		see MakeTransformationRT for documentation.
 		*/
-		TMat4(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)
-		{
-			MakeTransformationRT(rot, translation);
-		}
+		TMat4(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)	{MakeTransformationRT(rot, translation);}
 
 		/**
 		Create rotation matrix.
 		@param rot Rotation represented as a quaternion
 		*/
-		TMat4(const TQuaternion<TYPE> &rot)
-		{
-			*this = rot.GetRotationMatrix();
-		}
+		TMat4(const TQuaternion<TYPE> &rot)	{*this = rot.GetRotationMatrix();}
 
 		/**
 		Convenience constructor to initialize a translation matrix by using MakeTranslation,
 		see MakeTranslation for documentation.
 		*/
-		TMat4(const TVec3<TYPE> &translation)
-		{
-			MakeTranslation(translation);
-		}
+		TMat4(const TVec3<TYPE> &translation){MakeTranslation(translation);	}
 
 		/**
 		* Make zero matrix, all matrix elements are 0.
@@ -196,7 +187,6 @@ namespace GASS
 		* Make scale matrix
 		*/
 		inline void MakeScale(const TVec3<TYPE> &scale);
-
 	
 		/**
 		Make transformation matrix that scale, rotate and translate.
@@ -220,7 +210,6 @@ namespace GASS
 		*/
 		inline void MakeTransformationSRT(const TVec3<TYPE> &translation, const TVec3<TYPE> &rot, const TVec3<TYPE> &scale);
 
-
 		/**
 		Make transformation matrix that rotate and translate.
 		This transformation matrix will first apply rotation and then
@@ -233,20 +222,13 @@ namespace GASS
 		/**
 		Access matrix row.
 		*/
-		inline TYPE* operator [] (unsigned iRow)
-		{
-			assert(iRow < 4);
-			return E4x4[iRow];
-		}
+		inline TYPE* operator [] (unsigned iRow){assert(iRow < 4);	return E4x4[iRow];	}
 
 		/**
 		Access const matrix row.
 		*/
 
-		inline const TYPE * operator [] (unsigned iRow) const
-		{
-			assert(iRow < 4);
-			return E4x4[iRow];
+		inline const TYPE * operator [] (unsigned iRow) const	{	assert(iRow < 4);return E4x4[iRow];
 		}
 
 		/**
@@ -256,10 +238,7 @@ namespace GASS
 
 		/** Matrix concatenation using '*'.
 		*/
-		inline TMat4 operator * (const TMat4 &m2) const
-		{
-			return Concatenate(m2);
-		}
+		inline TMat4 operator * (const TMat4 &m2) const	{return Concatenate(m2);}
 
 		/**
 		Vector transformation using '*'.
@@ -282,23 +261,10 @@ namespace GASS
 		*/
 		inline bool operator== (const TMat4 &m2) const;
 
-		inline bool _Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
-		{
-			return (abs(v1 - v2) < tolerance);
-		}
-
 		/**
 		Test if all elements are near equal
 		*/
-		inline bool Equal(const TMat4 &m, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
-		{
-			for (int i = 0; i < 16; i++)
-			{
-				if (!_Equal(E16[i], m.E16[i], tolerance))
-					return false;
-			}
-			return true;
-		}
+		inline bool Equal(const TMat4 &m, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const;
 	
 		/**
 		Get matrix transpose
@@ -311,47 +277,28 @@ namespace GASS
 		inline TVec3<TYPE> GetTranslation() const;
 
 		/**
-		Set translation part of transformation matrix, rest of matrix is left as is
+		Set translation part of transformation matrix, rest of matrix is left as is.
+		Be aware that this could have unintended effect if you are working on a matrix that
+		have been rotated or scaled depending on concatenation order. 
 		*/
-		inline void SetTranslation(const TVec3<TYPE> &translation)
-		{
-			E4x4[0][3] = translation.x;
-			E4x4[1][3] = translation.y;
-			E4x4[2][3] = translation.z;
-		};
-
+		inline void SetTranslation(const TVec3<TYPE> &translation);
+		
 		/**
 		Set scale part of transformation matrix, rest of matrix is left as is.
 		Be aware that this also will replace any rotation information due to fact
 		that scale and rotation share same elements
 		*/
-		inline void SetScale(const TVec3<TYPE> &scale)
-		{
-			E4x4[0][0] = scale.x;
-			E4x4[1][1] = scale.y;
-			E4x4[2][2] = scale.z;
-		};
-
-		inline TYPE Determinant() const;
-
-		//TODO: document diff and select one method
-		inline TMat4 Invert() const;
-		//inline TMat4 Invert2() const;
-
+		inline void SetScale(const TVec3<TYPE> &scale);
+	
 		/**
-			Get a rotation matrix from standard transformation matrix, ie translation is removed
-			Be aware potential scale values will be included due fact that they share same elements.
-			Also note that any 
+			Get inverted matrix
 		*/
-		//inline TMat4 GetRotation() const;
-		
-		
-
-		inline TYPE GetEulerRotationX() const;
-		inline TYPE GetEulerRotationY() const;
-		inline TYPE GetEulerRotationZ() const;
-		
-		inline TVec3<TYPE> GetEulerRotation() const;
+		inline TMat4 GetInvert() const;
+	
+		/**
+			Extract euler angles from rotation matrix part of transformation matrix
+		*/
+		inline bool ToEulerAnglesYXZ(GASS::TVec3<TYPE>& euler) const;
 
 		/**
 		Get X axis in the rotation part of the matrix
@@ -443,6 +390,12 @@ namespace GASS
 			TMat4 mat;
 			mat.MakeRotationYXZ(radians);
 			return mat;
+		}
+	private: 
+		//use this during Math refactoring....
+		inline bool _Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
+		{
+			return (abs(v1 - v2) < tolerance);
 		}
 	};
 
@@ -772,82 +725,36 @@ namespace GASS
 	template<class TYPE>
 	void TMat4<TYPE>::MakeRotationX(TYPE radians)
 	{
-		TYPE cp = cos(radians);
-		TYPE sp = sin(radians);
+		TYPE ca = cos(radians);
+		TYPE sa = sin(radians);
 
-		E4x4[0][0] = 1;
-		E4x4[0][1] = 0;
-		E4x4[0][2] = 0;
-		E4x4[0][3] = 0;
-
-		E4x4[1][0] = 0;
-		E4x4[1][1] = cp;
-		E4x4[1][2] = -sp;
-		E4x4[1][3] = 0;
-
-		E4x4[2][0] = 0;
-		E4x4[2][1] = sp;
-		E4x4[2][2] = cp;
-		E4x4[2][3] = 0;
-
-		E4x4[3][0] = 0;
-		E4x4[3][1] = 0;
-		E4x4[3][2] = 0;
-		E4x4[3][3] = 1;
+		E4x4[0][0] = 1;	E4x4[0][1] = 0;	 E4x4[0][2] = 0;   E4x4[0][3] = 0;
+		E4x4[1][0] = 0;	E4x4[1][1] = ca; E4x4[1][2] = -sa; E4x4[1][3] = 0;
+		E4x4[2][0] = 0; E4x4[2][1] = sa; E4x4[2][2] = ca;  E4x4[2][3] = 0;
+		E4x4[3][0] = 0;	E4x4[3][1] = 0;	 E4x4[3][2] = 0;   E4x4[3][3] = 1;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::MakeRotationY(TYPE radians)
 	{
-		TYPE ch = cos(radians);
-		TYPE sh = sin(radians);
+		TYPE ca = cos(radians);
+		TYPE sa = sin(radians);
 
-		E4x4[0][0] = ch;
-		E4x4[0][1] = 0;
-		E4x4[0][2] = sh;
-		E4x4[0][3] = 0;
-
-		E4x4[1][0] = 0;
-		E4x4[1][1] = 1;
-		E4x4[1][2] = 0;
-		E4x4[1][3] = 0;
-
-		E4x4[2][0] = -sh;
-		E4x4[2][1] = 0;
-		E4x4[2][2] = ch;
-		E4x4[2][3] = 0;
-
-		E4x4[3][0] = 0;
-		E4x4[3][1] = 0;
-		E4x4[3][2] = 0;
-		E4x4[3][3] = 1;
+		E4x4[0][0] = ca;  E4x4[0][1] = 0; E4x4[0][2] = sa; E4x4[0][3] = 0;
+		E4x4[1][0] = 0;	  E4x4[1][1] = 1; E4x4[1][2] = 0;  E4x4[1][3] = 0;
+		E4x4[2][0] = -sa; E4x4[2][1] = 0; E4x4[2][2] = ca; E4x4[2][3] = 0;
+		E4x4[3][0] = 0;	  E4x4[3][1] = 0; E4x4[3][2] = 0;  E4x4[3][3] = 1;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::MakeRotationZ(TYPE radians)
 	{
-		TYPE cr = cos(radians);
-		TYPE sr = sin(radians);
-
-		E4x4[0][0] = cr;
-		E4x4[0][1] = -sr;
-		E4x4[0][2] = 0;
-		E4x4[0][3] = 0;
-
-		E4x4[1][0] = sr;
-		E4x4[1][1] = cr;
-		E4x4[1][2] = 0;
-		E4x4[1][3] = 0;
-
-		E4x4[2][0] = 0;
-		E4x4[2][1] = 0;
-		E4x4[2][2] = 1;
-		E4x4[2][3] = 0;
-
-		E4x4[3][0] = 0;
-		E4x4[3][1] = 0;
-		E4x4[3][2] = 0;
-		E4x4[3][3] = 1;
+		TYPE ca = cos(radians);
+		TYPE sa = sin(radians);
+		E4x4[0][0] = ca; E4x4[0][1] = -sa; E4x4[0][2] = 0; E4x4[0][3] = 0;
+		E4x4[1][0] = sa; E4x4[1][1] = ca;  E4x4[1][2] = 0; E4x4[1][3] = 0;
+		E4x4[2][0] = 0;	 E4x4[2][1] = 0;   E4x4[2][2] = 1; E4x4[2][3] = 0;
+		E4x4[3][0] = 0;	 E4x4[3][1] = 0;   E4x4[3][2] = 0; E4x4[3][3] = 1;
 	}
 
 	/*template<class TYPE>
@@ -888,7 +795,7 @@ namespace GASS
 		return ret;
 	}*/
 
-	template<class TYPE>
+	/*template<class TYPE>
 	TYPE TMat4<TYPE>::Determinant() const
 	{
 		TYPE fCofactor00 = E4x4[1][1] * E4x4[2][2] -
@@ -903,7 +810,7 @@ namespace GASS
 			E4x4[0][1] * fCofactor10 +
 			E4x4[0][2] * fCofactor20;
 		return fDet;
-	}
+	}*/
 
 
 	/*TYPE Mat4::Determinant()
@@ -970,7 +877,7 @@ namespace GASS
 	}*/
 
 	template<class TYPE>
-	TMat4<TYPE> TMat4<TYPE>::Invert(void) const
+	TMat4<TYPE> TMat4<TYPE>::GetInvert(void) const
 	{
 		TYPE m10 = E4x4[1][0], m11 = E4x4[1][1], m12 = E4x4[1][2];
 		TYPE m20 = E4x4[2][0], m21 = E4x4[2][1], m22 = E4x4[2][2];
@@ -1012,11 +919,11 @@ namespace GASS
 			0, 0, 0, 1);
 	}
 
-	template<class TYPE>
+	/*template<class TYPE>
 	TVec3<TYPE> TMat4<TYPE>::GetEulerRotation() const
 	{
 		const TMat4<TYPE> &mat = *this;
-
+		
 		TYPE Y = -asin(mat[2][0]);
 		//TYPE D = Y;
 		TYPE C = cos(Y);
@@ -1048,37 +955,46 @@ namespace GASS
 		TVec3<TYPE> rot;
 		rot.Set(X, Y, Z);
 		return rot;
+	}*/
+	
+	template<class TYPE>
+	bool TMat4<TYPE>::ToEulerAnglesYXZ(GASS::TVec3<TYPE>& euler) const
+	{
+		euler.x = Math::ASin(-E4x4[1][2]);
+		if (euler.x < GASS_HALF_PI)
+		{
+			if (euler.x > -GASS_HALF_PI)
+			{
+				euler.y = atan2(E4x4[0][2], E4x4[2][2]);
+				euler.z = atan2(E4x4[1][0], E4x4[1][1]);
+				return true;
+			}
+			else
+			{
+				// WARNING.  Not a unique solution.
+				TYPE fRmY = atan2(-E4x4[0][1], E4x4[0][0]);
+				euler.z = 0.0f;  // any angle works
+				euler.y = euler.z - fRmY;
+				return false;
+			}
+		}
+		else
+		{
+			// WARNING.  Not a unique solution.
+			TYPE fRpY = atan2(-E4x4[0][1], E4x4[0][0]);
+			euler.z = 0.0f;  // any angle works
+			euler.y = fRpY - euler.z;
+			return false;
+		}
 	}
 
-	template<class TYPE>
+	/*template<class TYPE>
 	TYPE TMat4<TYPE>::GetEulerRotationX() const
 	{
-
-		TVec3<TYPE> z_axis = GetZAxis();
 		
-		//calculate angle between projected z-axis and current z-axis
-		TYPE cos_p = z_axis.Dot(-TVec3<TYPE>::m_UnitY);
-
-		// Dot product may give values slightly higher than one due to normalization/precision error
-		if (cos_p > 1.0f) cos_p = 1.0f;
-		else if (cos_p < -1.0f)	cos_p = -1.0f;
-
-		TVec3<TYPE> cross = z_axis.Cross(-TVec3<TYPE>::m_UnitY);
-		cross.Normalize();
-	
-		TYPE p_rad = acos(cos_p);
-		if (cross.y > 0)
-		{
-			p_rad = -p_rad;
-		}
-		p_rad -= GASS_PI * 0.5;
-		if (p_rad < -GASS_PI)
-			p_rad =  p_rad + 2 * GASS_PI;
-		
-		return p_rad;
 		
 		//projected rotated z-axis to xz-base-plane
-		/*TVec3<TYPE> z_axis = GetZAxis();
+		TVec3<TYPE> z_axis = GetZAxis();
 		TVec3<TYPE> proj_z(z_axis.x, 0, z_axis.z);
 		proj_z.Normalize();
 
@@ -1098,7 +1014,7 @@ namespace GASS
 		{
 			p_rad = -p_rad;
 		}
-		return p_rad;*/
+		return p_rad;
 	}
 
 	template<class TYPE>
@@ -1151,7 +1067,7 @@ namespace GASS
 			r_rad = -r_rad;
 		}
 		return r_rad;
-	}
+	}*/
 
 	/*static Float Det2x2(Float a1, Float a2, Float b1, Float b2)
 	{
@@ -1242,6 +1158,32 @@ namespace GASS
 	void TMat4<TYPE>::SetZAxis(const TVec3<TYPE> &dir)
 	{
 		E16[2] = dir.x; E16[6] = dir.y; E16[10] = dir.z;
+	}
+	template<class TYPE>
+	void TMat4<TYPE>::SetTranslation(const TVec3<TYPE> &translation)
+	{
+		E4x4[0][3] = translation.x;	
+		E4x4[1][3] = translation.y;	
+		E4x4[2][3] = translation.z;	
+	}
+
+	template<class TYPE>
+	void TMat4<TYPE>::SetScale(const TVec3<TYPE> &scale)
+	{
+		E4x4[0][0] = scale.x;
+		E4x4[1][1] = scale.y;
+		E4x4[2][2] = scale.z;
+	};
+
+	template<class TYPE>
+	bool TMat4<TYPE>::Equal(const TMat4<TYPE> &m, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (!_Equal(E16[i], m.E16[i], tolerance))
+				return false;
+		}
+		return true;
 	}
 }
 
