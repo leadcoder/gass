@@ -32,9 +32,7 @@
 #undef max
 namespace GASS
 {
-	
-
-	bool Math::TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point)
+	/*bool Math::TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point)
 	{
 		//check first against second
 		if(LineIsectTriangle(LineSegment(t1.P1, t1.P2), t2, isect_point)) return true;
@@ -47,9 +45,9 @@ namespace GASS
 		if(LineIsectTriangle(LineSegment(t2.P2, t2.P3),t1,isect_point)) return true;
 
 		return false;
-	}
+	}*/
 
-	bool Math::LineIsectTriangle(const LineSegment &line_segment,const Triangle &tri, Vec3 &isect_point)
+	/*bool Math::LineIsectTriangle(const LineSegment &line_segment,const Triangle &tri, Vec3 &isect_point)
 	{
 
 		Vec3 normal;
@@ -68,7 +66,7 @@ namespace GASS
 
 		ray_dir.Normalize();
 
-		const Float ray_scale = IsectRayPlane(Ray(line_segment.m_Start, ray_dir),  Plane(tri.P1 ,normal));
+		const Float ray_scale = Plane::RayIsect(Ray(line_segment.m_Start, ray_dir),  Plane(tri.P1 ,normal));
 
 		if(ray_scale == -1) return false;
 
@@ -77,7 +75,7 @@ namespace GASS
 		if(_CheckPointInTriangle2(isect_point, tri)) return true;
 
 		return false;
-	}
+	}*/
 
 	bool Math::LineIsectPolygon(const LineSegment &line_segment,const Polygon &poly)
 	{
@@ -90,7 +88,7 @@ namespace GASS
 
 		ray_dir.Normalize();
 
-		const Float ray_scale = IsectRayPlane(Ray(line_segment.m_Start, ray_dir), Plane(poly.m_VertexVector[0], poly.m_Normal));
+		const Float ray_scale = Plane::RayIsect(Ray(line_segment.m_Start, ray_dir), Plane(poly.m_VertexVector[0], poly.m_Normal));
 
 		if(ray_scale == -1) return false;
 
@@ -333,7 +331,7 @@ namespace GASS
 
 		// find how far away the plane is from point p along the planes normal
 
-		const Float distToPlaneIntersection = IsectRayPlane(Ray(p, -pNormal), Plane(pOrigin, pNormal));
+		const Float distToPlaneIntersection = Plane::RayIsect(Ray(p, -pNormal), Plane(pOrigin, pNormal));
 		if ((distToPlaneIntersection == -1) || (distToPlaneIntersection > radius)) return false;
 
 		// find the nearest point on the plane to p
@@ -801,7 +799,7 @@ namespace GASS
 		return  true;
 	}
 
-	Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
+	/*Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
 	{
 		const Float d = -(Vec3::Dot(plane.m_Normal, plane.m_Origin));
 
@@ -812,5 +810,5 @@ namespace GASS
 			return (-1.0f);
 
 		return -(numer / denom);
-	}
+	}*/
 }

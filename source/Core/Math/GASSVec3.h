@@ -240,7 +240,6 @@ namespace GASS
 			else 
 			{
 				//consider 0, 0, 0 instead or assert
-
 				x = 1;
 				y = 0;
 				z = 0;
@@ -256,12 +255,24 @@ namespace GASS
 		{
 			return Cross(*this, v);
 		}
-		
+
+		/**
+		@brief Calculate the dot product of two vectors.
+		@param v1 First vector, as a Vec3.
+		@param v2 Second vector, as a Vec3.
+		@return The dot product.
+		*/
 		static Type Dot(const TVec3 &v1, const TVec3 &v2)
 		{
 			return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 		}
 
+		/**
+		@brief Calculate the cross product of two vectors.
+		@param v1 First vector, as a Vec3.
+		@param v2 Second vector, as a Vec3.
+		@return The cross product.
+		*/
 		static TVec3 Cross(const TVec3 &v1, const TVec3 &v2)
 		{
 			TVec3 ret;

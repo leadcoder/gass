@@ -40,8 +40,13 @@
 namespace GASS
 {
 	class Ray;
-	class Triangle;
-	class Plane;
+	
+	template<class TYPE> class TTriangle;
+	typedef TTriangle<Float> Triangle;
+
+	template<class TYPE> class TPlane;
+	typedef TPlane<Float> Plane;
+	
 	template<class TYPE> class TPolygon;
 	typedef TPolygon<Float> Polygon;
 
@@ -82,6 +87,44 @@ namespace GASS
 		inline static Float ASin(Float fValue);
 
 		/**
+		Get Min value of v1, v2,v3
+		*/
+		inline static Float Min(const Float &v1, const Float &v2, const Float &v3);
+
+		/**
+		Get Max value of v1, v2,v3
+		*/
+		inline static Float Max(const Float &v1, const Float &v2, const Float &v3);
+
+		inline static Float Min(const Float &v1, const Float &v2);
+		inline static Float Max(const Float &v1, const Float &v2);
+
+		/**
+		Fast invert root square function, (maybe not so fast anymore)
+		*/
+		static inline float InvSqrt(float x)
+		{
+#ifdef GASS_USE_FAST_INV
+			float xhalf = 0.5f*x;
+			int i = *(int*)&x;
+			i = 0x5f3759df - (i >> 1); // This line hides a LOT of math!
+			x = *(float*)&i;
+			x = x*(1.5f - xhalf*x*x); // repeat this statement for a better approximation
+			return x;
+#else
+			return 1.0f / sqrt(x);
+#endif
+		}
+
+		/**
+		Get float random value
+		@param start Start of random span
+		@param end End of random span
+		@return random value between start and end
+		*/
+		inline static Float RandomValue(Float start, Float end);
+
+		/**
 		@brief Check if a line intersect a Polygon.
 		@param line_segment Line segment to check.
 		@param poly Polygon to check intersection with, as a Polygon.
@@ -90,29 +133,13 @@ namespace GASS
 		static bool LineIsectPolygon( const LineSegment &line_segment, const Polygon &poly);
 
 		/**
-		@brief Calculate the dot product of two vectors.
-		@param v1 First vector, as a Vec3.
-		@param v2 Second vector, as a Vec3.
-		@return The dot product.
-		*/
-		//inline static Float Dot(const Vec3 &v1,const Vec3 &v2);
-
-		/**
-		@brief Calculate the cross product of two vectors.
-		@param v1 First vector, as a Vec3.
-		@param v2 Second vector, as a Vec3.
-		@return The cross product.
-		*/
-		//inline static Vec3 Cross(const Vec3 &v1,const Vec3 &v2);
-
-		/**
 		@brief Calculate the distance (along the ray) where a infinite
 			ray intersect a infinite plane.
 		@param ray Ray to check.
 		@param plane Plane to check against.
 		@return Intersection distance.
 		*/
-		static Float IsectRayPlane(const Ray& ray, const Plane &plane);
+		//static Float IsectRayPlane(const Ray& ray, const Plane &plane);
 
 		/**
 		@brief Calculate if a line intersect a triangle and if so provide intersection point.
@@ -121,21 +148,10 @@ namespace GASS
 		@param isect_point Possible intersection point, as a Vec3.
 		@return True if line intersect triangle.
 		*/
-		static bool LineIsectTriangle(const LineSegment &line_segment,
+	/*	static bool LineIsectTriangle(const LineSegment &line_segment,
 			const Triangle &tri,
 			Vec3 &isect_point);
-
-		/**
-		Get Min value of v1, v2,v3
-		*/
-		inline static Float Min(const Float &v1,const Float &v2,const Float &v3);
-
-		/**
-		Get Max value of v1, v2,v3
-		*/
-		inline static Float Max(const Float &v1,const Float &v2,const Float &v3);
-
-
+			*/
 		/**
 		Get closest point on triangle
 		@param tri Triangle to check against
@@ -168,27 +184,7 @@ namespace GASS
 		@param iscent_point potential intersection point
 		@return true if intersection found
 		*/
-		static bool TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point);
-		inline static Float Min(const Float &v1,const Float &v2);
-		inline static Float Max(const Float &v1,const Float &v2);
-
-		/**
-		Fast invert root square function, (maybe not so fast anymore)
-		*/
-		static inline float InvSqrt(float x)
-		{
-#ifdef GASS_USE_FAST_INV
-			float xhalf = 0.5f*x;
-			int i = *(int*)&x;
-			i = 0x5f3759df - (i >> 1); // This line hides a LOT of math!
-			x = *(float*)&i;
-			x = x*(1.5f - xhalf*x*x); // repeat this statement for a better approximation
-			return x;
-#else
-            return 1.0f/sqrt(x);
-#endif
-		}
-
+		//static bool TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point);
 		/**
 		Project vector on plane
 		@param plane_normal Normal of the projection plane
@@ -198,13 +194,7 @@ namespace GASS
 		//TODO: change name or input args,
 		inline static Vec3 ProjectVectorOnPlane(const Vec3 &plane_normal,const Vec3 &v);
 
-		/**
-		Get float random value
-		@param start Start of random span
-		@param end End of random span
-		@return random value between start and end
-		*/
-		inline static Float RandomValue(Float start, Float end);
+	
 
 		/**
 		Get 2D-line intersection
@@ -216,7 +206,6 @@ namespace GASS
 		@return true if intersection exist
 		*/
 		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
-
 
 		// path utilities, to be moved to path class?
 		/**
@@ -230,7 +219,6 @@ namespace GASS
 		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float offset);
 		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float start_offset,Float end_offset);
 		static std::vector<Vec3> GenerateNormals(const std::vector<Vec3> &wps);
-
 
 		/**
 			Get intersection between line and axis aligned box
@@ -252,19 +240,6 @@ namespace GASS
 		static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
 	};
 
-	
-	
-
-
-	/*Float Vec3::Dot(const Vec3 &v1, const Vec3 &v2)
-	{
-		return Vec3::Dot(v1,v2);
-	}
-
-	Vec3 Vec3::Cross(const Vec3 &v1, const Vec3 &v2)
-	{
-		return Vec3::Cross(v1, v2);
-	}*/
 
 	Float Math::Rad2Deg(Float rad)
 	{

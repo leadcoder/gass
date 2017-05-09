@@ -648,9 +648,9 @@ namespace GASS
 			Float v2 = fabs(Vec3::Dot(ray.m_Dir, v_vec));
 			Float value;
 			if(v1 > v2)
-				value = Math::IsectRayPlane(ray,Plane(c_pos,up_vec));
+				value = Plane::RayIsect(ray,Plane(c_pos,up_vec));
 			else
-				value  = Math::IsectRayPlane(ray,Plane(c_pos,v_vec));
+				value  = Plane::RayIsect(ray,Plane(c_pos,v_vec));
 
 			if(value > 0)
 			{
@@ -663,7 +663,7 @@ namespace GASS
 		}
 		else
 		{
-			Float value = Math::IsectRayPlane(ray,Plane(c_pos,up_vec));
+			Float value = Plane::RayIsect(ray,Plane(c_pos,up_vec));
 			if(value > 0)
 			{
 				Vec3 isect_pos = ray.m_Origin + ray.m_Dir*value;

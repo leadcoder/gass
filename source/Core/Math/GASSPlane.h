@@ -28,19 +28,26 @@
 
 namespace GASS
 {
+	enum PlaneSide
+	{
+		PS_FRONT,
+		PS_BACK,
+		PS_ON_PLANE
+	};
+
 	/**
 	* Class representing a plane in 3D.
 	*/
-
-	class GASSCoreExport Plane
+	template<class TYPE>
+	class TPlane
 	{
 	public:
-		Plane()
+		TPlane()
 		{
 
 		}
 
-		virtual ~Plane()
+		virtual ~TPlane()
 		{
 
 		}
@@ -48,9 +55,9 @@ namespace GASS
 		/**
 		Construct plane from triangle
 		*/
-		Plane(const Triangle &tri)
+		TPlane(const TTriangle<TYPE> &tri)
 		{
-			m_Normal = Vec3::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
+			m_Normal = TVec3<TYPE>::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
 			m_Normal.Normalize();
 			m_Origin = tri.P1;
 		}
@@ -59,45 +66,74 @@ namespace GASS
 			Construct plane from plane point (origin) and plane normal
 		*/
 
-		Plane(const Vec3& origin, const Vec3& normal)
+		TPlane(const TVec3<TYPE>& origin, const TVec3<TYPE>& normal) :
+			m_Normal(normal),
+			m_Origin(origin)
 		{
-			m_Normal = normal;
-			m_Origin = origin;
 			/*a = normal.x;
 			b = normal.y;
 			c = normal.z;
 			d = -(normal.x*origin.x+normal.y*origin.y +normal.z*origin.z);*/
 		};
 
-		bool IsFrontFacingTo(const Vec3& direction) const
+		bool IsFrontFacingTo(const TVec3<TYPE>& direction) const
 		{
-			const double dot = Vec3::Dot(m_Normal,direction);
+			const TYPE dot = TVec3<TYPE>::Dot(m_Normal,direction);
 			return (dot <= 0);
 		};
 
-		Float GetD() const
+		TYPE GetD() const
 		{
 			return -(m_Normal.x*m_Origin.x+m_Normal.y*m_Origin.y +m_Normal.z*m_Origin.z);
 		}
 
-		Float SignedDistanceTo(const Vec3& point) const
+		TYPE SignedDistanceTo(const TVec3<TYPE>& point) const
 		{
-			return Vec3::Dot(point,m_Normal) + GetD();
+			return TVec3<TYPE>::Dot(point,m_Normal) + GetD();
 		};
 
-		Float RayIsect(const Ray &ray) const
+		/**
+		@brief Calculate the distance (along the ray) where a infinite
+		ray intersect a infinite plane.
+		@param ray Ray to check.
+		@param plane Plane to check against.
+		@return Intersection distance.
+		*/
+		static TYPE RayIsect(const Ray& ray, const Plane &plane)
 		{
-			const Float d = -(Vec3::Dot(m_Normal, m_Origin));
+			return plane.RayIsect(ray);
+		}
 
-			const Float numer = Vec3::Dot(m_Normal, ray.m_Origin) + d;
-			const Float denom = Vec3::Dot(m_Normal, ray.m_Dir);
+		TYPE RayIsect(const Ray &ray) const
+		{
+			const TYPE d = -(TVec3<TYPE>::Dot(m_Normal, m_Origin));
+
+			const TYPE numer = TVec3<TYPE>::Dot(m_Normal, ray.m_Origin) + d;
+			const TYPE denom = TVec3<TYPE>::Dot(m_Normal, ray.m_Dir);
 
 			if (denom == 0)  // normal is orthogonal to vector, cant intersect
 				return (-1.0f);
 
 			return -(numer / denom);
 		}
-		Vec3 m_Normal;
-		Vec3 m_Origin;
+
+		PlaneSide ClassifyPoint(const TVec3<TYPE> &point)
+		{
+			const TVec3<TYPE> dir = origin - point;
+			const double d = TVec3<TYPE>::Dot(dir, normal);
+
+			if (d < -0.001f)
+				return PS_FRONT;
+			else if (d > 0.001f)
+				return PS_BACK;
+			return PS_ON_PLANE;
+		}
+	
+		TVec3<TYPE> m_Normal;
+		TVec3<TYPE> m_Origin;
 	};
+
+	typedef TPlane<float> Planef;
+	typedef TPlane<double> Planed;
+	typedef TPlane<Float> Plane;
 }
