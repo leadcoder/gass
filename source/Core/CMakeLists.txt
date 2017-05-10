@@ -33,6 +33,7 @@ set(CPP_FILES
 	Math/GASSPolygon.cpp
 	Math/GASSQuaternion.cpp
 	Math/GASSRotationSpline.cpp
+	Math/GASSTriangle.cpp
 	Math/GASSSphere.cpp
 	Math/GASSSpline.cpp
 	Math/GASSSplineAnimation.cpp
