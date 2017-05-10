@@ -28,7 +28,12 @@
 
 namespace GASS
 {
-	
+	enum PlaneSide
+	{
+		PS_FRONT,
+		PS_BACK,
+		PS_ON_PLANE
+	};
 
 	/**
 	* Class representing a plane in 3D.
@@ -38,12 +43,7 @@ namespace GASS
 	{
 	public:
 		
-		enum PlaneSide
-		{
-			PS_FRONT,
-			PS_BACK,
-			PS_ON_PLANE
-		};
+		
 
 		TPlane()
 		{
@@ -122,8 +122,8 @@ namespace GASS
 
 		PlaneSide ClassifyPoint(const TVec3<TYPE> &point)
 		{
-			const TVec3<TYPE> dir = origin - point;
-			const double d = TVec3<TYPE>::Dot(dir, normal);
+			const TVec3<TYPE> dir = m_Origin - point;
+			const double d = TVec3<TYPE>::Dot(dir, m_Normal);
 
 			if (d < -0.001f)
 				return PS_FRONT;
