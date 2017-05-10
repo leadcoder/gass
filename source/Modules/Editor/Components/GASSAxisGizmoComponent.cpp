@@ -327,7 +327,7 @@ namespace GASS
 			cam_obj->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnCameraParameter,CameraParameterRequest,0));
 		}
 		LocationComponentPtr lc = message->GetLocation();
-		m_BaseRot = Quaternion(Math::Deg2Rad(lc->GetEulerRotation()));
+		m_BaseRot = Quaternion(Vec3::Deg2Rad(lc->GetEulerRotation()));
 		//std::vector<SceneObjectWeakPtr> selected = m_EditorSceneManager->GetSelectedObjects();
 		//if(selected.size()  > 0 )
 		{
@@ -351,7 +351,7 @@ namespace GASS
 		{
 			sub_mesh_data->Type = TRIANGLE_LIST;
 
-			float box_volume = m_Size * 0.01;
+			Float box_volume = m_Size * 0.01;
 			Vec3 offset(0,-box_volume,box_volume);
 			Vec3 pos = Vec3(0,box_volume,box_volume)  + offset;
 			sub_mesh_data->PositionVector.push_back(pos);

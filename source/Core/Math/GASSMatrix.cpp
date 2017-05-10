@@ -19,9 +19,7 @@
 *****************************************************************************/
 
 #include <math.h>
-#include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSMatrix.h"
-#include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 
 namespace GASS

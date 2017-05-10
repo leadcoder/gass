@@ -19,19 +19,12 @@
 *****************************************************************************/
 
 #include "Core/Math/GASSPlane.h"
-#include "Core/Math/GASSTriangle.h"
 
 namespace GASS
 {
-
-
-
-	/*void Plane::Normalize()
-	{
-		const float t = (float) sqrt(a * a + b * b + c * c);
-		a /= t;
-		b /= t;
-		c /= t;
-		d /= t;
-	}*/
+	template class TPlane<double>;
+	template class TPlane<float>;
 }
+
+
+	

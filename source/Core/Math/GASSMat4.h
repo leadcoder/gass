@@ -392,11 +392,6 @@ namespace GASS
 			return mat;
 		}
 	private: 
-		//use this during Math refactoring....
-		inline bool _Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
-		{
-			return (abs(v1 - v2) < tolerance);
-		}
 	};
 
 	typedef TMat4<Float> Mat4;
@@ -597,9 +592,6 @@ namespace GASS
 	{
 		MakeIdentity();
 		SetScale(scale);
-		/*E4x4[0][0] = scale.x;
-		E4x4[1][1] = scale.y;
-		E4x4[2][2] = scale.z;*/
 	}
 
 	template<class TYPE>
@@ -1180,7 +1172,7 @@ namespace GASS
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			if (!_Equal(E16[i], m.E16[i], tolerance))
+			if (!Math::Equal(E16[i], m.E16[i], tolerance))
 				return false;
 		}
 		return true;

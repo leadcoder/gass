@@ -21,7 +21,7 @@
 #include "FollowWaypointListComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-#include "Core/Math/GASSMath.h"
+#include "Core/Math/GASSPath.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -190,7 +190,7 @@ namespace GASS
 			int wp_index;
 			//Vec3 point_on_path;
 			Float ditance_to_path_dist;
-			Float now_distance = Math::GetPathDistance(m_CurrentPos,m_Waypoints,wp_index,ditance_to_path_dist);
+			Float now_distance = Path::GetPathDistance(m_CurrentPos,m_Waypoints,wp_index,ditance_to_path_dist);
 			double look_ahead = 10;
 
 			if(look_ahead < 3)
@@ -235,7 +235,7 @@ namespace GASS
 				break;*/
 			}
 			Float new_distance = now_distance + look_ahead;
-			Vec3 target_point = Math::GetPointOnPath(new_distance, m_Waypoints, cyclic, wp_index);
+			Vec3 target_point = Path::GetPointOnPath(new_distance, m_Waypoints, cyclic, wp_index);
 			GetSceneObject()->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(target_point)));
 
 			/*	}

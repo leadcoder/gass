@@ -19,26 +19,26 @@
 *****************************************************************************/
 
 #pragma once
+
+#include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include <math.h>
 
 namespace GASS
 {
-	/**
-		Class holding ray 
-	*/
-	template<class TYPE>
-	class TRay
+	//temp class for waypoint path... 
+	class GASSCoreExport Path
 	{
 	public:
-		TRay(const TVec3<TYPE>& origin, const TVec3<TYPE>& dir) : m_Origin(origin), m_Dir(dir){}
-		TRay(){}
-
-		//public for fast access
-		TVec3<TYPE> m_Origin;
-		TVec3<TYPE> m_Dir;
+		// path utilities
+		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
+		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
+		static Float GetPathDistance(const Vec3& point, const std::vector<Vec3> &wps,int &index,Float &distance_to_path);
+		static Float GetPathLength(const std::vector<Vec3> &wps);
+		static std::vector<Vec3> ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps);
+		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float offset);
+		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float start_offset,Float end_offset);
+		static std::vector<Vec3> GenerateNormals(const std::vector<Vec3> &wps);
+	private:
 	};
-
-	typedef TRay<double> Rayd;
-	typedef TRay<float> Rayf;
-	typedef TRay<GASS::Float> Ray;
 }

@@ -58,7 +58,7 @@ namespace GASS
 																					static_cast<float>(mat[3][3]));}
 		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.m_Min),ToOgre(b.m_Max));}
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y), static_cast<float>(q.z));}
-		static inline Ogre::Sphere				ToOgre(const Sphere &s) {return Ogre::Sphere(ToOgre(s.m_Pos),s.m_Radius);}
+		static inline Ogre::Sphere				ToOgre(const Sphere &s) { return Ogre::Sphere(ToOgre(s.m_Pos), static_cast<float>(s.m_Radius)); }
 		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a));}
 		static inline Ogre::ColourValue			ToOgre(const ColorRGB &color) { return Ogre::ColourValue(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), 1.0); }
 #else

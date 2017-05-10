@@ -21,6 +21,8 @@
 #include "TurretComponent.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Core/Math/GASSQuaternion.h"
+#include "Core/Math/GASSPlane.h"
+
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -193,7 +195,7 @@ namespace GASS
 		if(m_Controller == "Pitch")
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetXAxis();
-			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
@@ -206,7 +208,7 @@ namespace GASS
 		else
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetYAxis();
-			Vec3 projected_aim = Math::ProjectVectorOnPlane(plane_normal,desired_aim_direction);
+			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 

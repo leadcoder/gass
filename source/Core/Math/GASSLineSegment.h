@@ -39,6 +39,41 @@ namespace GASS
 
 		TVec3<TYPE> GetPoint(TYPE dist) const {return m_Start + (m_End - m_Start)*dist;}
 		TYPE GetLength() const {return (m_End - m_Start).Length();}
+
+		TVec3<TYPE> GetDirection() const 
+		{ 
+			TVec3<TYPE> dir =  m_End - m_Start;
+			dir.Normalize();
+			return dir;
+		}
+
+		/**
+		Get closest point on line segment
+		@param point Input point
+		@return Closest point on line to input point
+		*/
+		TVec3<TYPE> ClosestPointOnLine(const TVec3<TYPE> &point)
+		{
+			// Determine t (the length of the vector from a to p)
+			TVec3<TYPE> c = point - m_Start;
+			TVec3<TYPE> V = m_End - m_Start;
+
+			double d = V.Length();
+
+			V.Normalize();
+			double t = TVec3<TYPE>::Dot(V, c);
+
+			// Check to see if t is beyond the extents of the line segment
+			if (t < 0.0f) return (m_Start);
+			if (t > d) return (m_End);
+
+			// Return the point between a and b
+			//set length of V to t. V is normalized so this is easy
+			V.x = V.x * t;
+			V.y = V.y * t;
+			V.z = V.z * t;
+			return (m_Start + V);
+		}
 	};
 	typedef TLineSegment<double> LineSegmentd;
 	typedef TLineSegment<float> LineSegmentf;

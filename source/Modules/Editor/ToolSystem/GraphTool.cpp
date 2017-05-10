@@ -226,7 +226,7 @@ namespace GASS
 			{
 				Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				Vec3 end_pos  = end_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-				Vec3 cpos = Math::ClosestPointOnLine(LineSegment(start_pos, end_pos), pos);
+				Vec3 cpos = LineSegment(start_pos, end_pos).ClosestPointOnLine(pos);
 				Float dist = (cpos - pos).Length();
 				if(dist < min_dist)
 				{

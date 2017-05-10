@@ -148,7 +148,7 @@ namespace GASS
 		RotationRequestPtr rot_msg;
 
 		if (m_Rot != Vec3(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
+			rot_msg = RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(m_Rot))));
 		else
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
@@ -323,7 +323,7 @@ namespace GASS
 		m_Rot = value;
 		if (m_TransformNode.valid())
 		{
-			Vec3 rot = Math::Deg2Rad(value);
+			Vec3 rot = Vec3::Deg2Rad(value);
 			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(rot))));
 		}
 	}

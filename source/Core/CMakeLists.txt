@@ -28,6 +28,7 @@ set(CPP_FILES
 	Math/GASSKeyframeAnimation.cpp
 	Math/GASSMath.cpp
 	Math/GASSMatrix.cpp
+	Math/GASSPath.cpp
 	Math/GASSPlane.cpp
 	Math/GASSPolygon.cpp
 	Math/GASSQuaternion.cpp
@@ -76,6 +77,7 @@ set(H_FILES
 	Math/GASSMath.h
 	Math/GASSMatrix.h
 	Math/GASSMat4.h
+	Math/GASSPath.h
 	Math/GASSPlane.h
 	Math/GASSPolygon.h
 	Math/GASSQuaternion.h

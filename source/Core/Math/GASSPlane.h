@@ -20,10 +20,8 @@
 
 #pragma once
 
-
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSMath.h"
-#include "Core/Math/GASSTriangle.h"
 #include "Core/Math/GASSRay.h"
 
 namespace GASS
@@ -42,9 +40,6 @@ namespace GASS
 	class TPlane
 	{
 	public:
-		
-		
-
 		TPlane()
 		{
 
@@ -53,16 +48,6 @@ namespace GASS
 		virtual ~TPlane()
 		{
 
-		}
-
-		/**
-		Construct plane from triangle
-		*/
-		TPlane(const TTriangle<TYPE> &tri)
-		{
-			m_Normal = TVec3<TYPE>::Cross((tri.P2 - tri.P1), (tri.P3 - tri.P1));
-			m_Normal.Normalize();
-			m_Origin = tri.P1;
 		}
 
 		/**
@@ -102,21 +87,19 @@ namespace GASS
 		@param plane Plane to check against.
 		@return Intersection distance.
 		*/
-		static TYPE RayIsect(const Ray& ray, const Plane &plane)
+		static TYPE RayIsect(const TRay<TYPE>& ray, const TPlane &plane)
 		{
 			return plane.RayIsect(ray);
 		}
 
-		TYPE RayIsect(const Ray &ray) const
+		TYPE RayIsect(const TRay<TYPE> &ray) const
 		{
 			const TYPE d = -(TVec3<TYPE>::Dot(m_Normal, m_Origin));
-
 			const TYPE numer = TVec3<TYPE>::Dot(m_Normal, ray.m_Origin) + d;
 			const TYPE denom = TVec3<TYPE>::Dot(m_Normal, ray.m_Dir);
 
 			if (denom == 0)  // normal is orthogonal to vector, cant intersect
 				return (-1.0f);
-
 			return -(numer / denom);
 		}
 
@@ -131,7 +114,16 @@ namespace GASS
 				return PS_BACK;
 			return PS_ON_PLANE;
 		}
-	
+
+		/** Get vector projected on plane
+			@param v Vector to project on plane
+			@return Projected vector
+		*/
+		inline TVec3<TYPE> GetProjectedVector(const TVec3<TYPE> &v) const
+		{
+			return  v - TVec3<TYPE>::Dot(v, m_Normal) * m_Normal;
+		}
+		
 		TVec3<TYPE> m_Normal;
 		TVec3<TYPE> m_Origin;
 	};

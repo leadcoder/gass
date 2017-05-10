@@ -22,6 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Math/GASSMath.h"
 #include <iostream>
 #include <sstream>
 #include <assert.h>
@@ -42,25 +43,25 @@ namespace GASS
 	/**
 	* Class representing a vector with 3 elements.
 	*/
-	template<class Type>
+	template<class TYPE>
 	class TVec3
 	{
 	public:
-		Type x;//,h;
-		Type y;//,p;
-		Type z;//,r;
+		TYPE x;//,h;
+		TYPE y;//,p;
+		TYPE z;//,r;
 
 		static TVec3 m_UnitX;
 		static TVec3 m_UnitY;
 		static TVec3 m_UnitZ;
 
-		inline TVec3(Type _x, Type _y, Type _z)
+		inline TVec3(TYPE _x, TYPE _y, TYPE _z)
 		{
 			x = _x; y = _y; z = _z;
 		}
 		inline TVec3() {}
 
-		inline void Set(Type _x, Type _y, Type _z)
+		inline void Set(TYPE _x, TYPE _y, TYPE _z)
 		{
 			x = _x; y = _y; z = _z;
 		}
@@ -115,7 +116,7 @@ namespace GASS
 			return *this;
 		}
 
-		inline TVec3 operator* (const Type scalar) const
+		inline TVec3 operator* (const TYPE scalar) const
 		{
 			TVec3 temp_v;
 
@@ -126,7 +127,7 @@ namespace GASS
 			return temp_v;
 		}
 
-		inline TVec3& operator *= (const Type scalar)
+		inline TVec3& operator *= (const TYPE scalar)
 		{
 			x *= scalar;
 			y *= scalar;
@@ -161,7 +162,7 @@ namespace GASS
 			return temp_v;
 		}
 
-		inline TVec3 operator/ (const Type scalar) const
+		inline TVec3 operator/ (const TYPE scalar) const
 		{
 			TVec3 temp_v;
 
@@ -171,19 +172,19 @@ namespace GASS
 			return temp_v;
 		}
 
-		inline 	Type& operator [] (unsigned element)
+		inline 	TYPE& operator [] (unsigned element)
 		{
 			assert(element < 3);
 			return *(&x + element);
 		}
 
-		inline 	Type operator [] (unsigned element) const
+		inline 	TYPE operator [] (unsigned element) const
 		{
 			assert(element < 3);
 			return *(&x + element);
 		}
 
-		inline friend TVec3 operator * (Type scalar, const TVec3& v)
+		inline friend TVec3 operator * (TYPE scalar, const TVec3& v)
 		{
 			TVec3 ret;
 
@@ -200,16 +201,29 @@ namespace GASS
 			return (v.x == x &&  v.y == y && v.z == z);
 		}
 
-		inline bool _Equal(Type v1, Type v2, Type tolerance = std::numeric_limits<Type>::epsilon()) const
+		inline bool Equal(const TVec3 &v, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const
 		{
-			return (abs(v1 - v2) < tolerance);
+			return Math::Equal(x, v.x, tolerance) &&
+				   Math::Equal(y, v.y, tolerance) &&
+				   Math::Equal(z, v.z, tolerance);
 		}
 
-		inline bool Equal(const TVec3 &v, Type tolerance = std::numeric_limits<Type>::epsilon()) const
+		static TVec3 Deg2Rad(const TVec3 &vec)
 		{
-			return _Equal(x, v.x, tolerance) &&
-				   _Equal(y, v.y, tolerance) &&
-				   _Equal(z, v.z, tolerance);
+			TVec3 ret;
+			ret.x = Math::Deg2Rad(vec.x);
+			ret.y = Math::Deg2Rad(vec.y);
+			ret.z = Math::Deg2Rad(vec.z);
+			return ret;
+		}
+
+		static TVec3 Rad2Deg(const TVec3 &vec)
+		{
+			TVec3 ret;
+			ret.x = Math::Rad2Deg(vec.x);
+			ret.y = Math::Rad2Deg(vec.y);
+			ret.z = Math::Rad2Deg(vec.z);
+			return ret;
 		}
 
 		inline bool operator!= (const TVec3 &v) const
@@ -217,19 +231,19 @@ namespace GASS
 			return !(v.x == x &&  v.y == y && v.z == z);
 		}
 
-		inline Type SquaredLength() const
+		inline TYPE SquaredLength() const
 		{
 			return x*x + y*y + z*z;
 		}
 
-		inline Type Length() const
+		inline TYPE Length() const
 		{
 			return sqrt(x*x + y*y + z*z);
 		}
 
 		inline void Normalize()
 		{
-			Type dist = Length();
+			TYPE dist = Length();
 
 			if (dist > 0)
 			{
@@ -246,7 +260,7 @@ namespace GASS
 			}
 		}
 
-		Type Dot(const TVec3 &v) const
+		TYPE Dot(const TVec3 &v) const
 		{
 			return Dot(*this,v);
 		}
@@ -262,7 +276,7 @@ namespace GASS
 		@param v2 Second vector, as a Vec3.
 		@return The dot product.
 		*/
-		static Type Dot(const TVec3 &v1, const TVec3 &v2)
+		static TYPE Dot(const TVec3 &v1, const TVec3 &v2)
 		{
 			return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 		}
@@ -342,9 +356,9 @@ namespace GASS
 
 		}
 	};
-	template <class Type> TVec3<Type> TVec3<Type>::m_UnitX = TVec3<Type>(1, 0, 0);
-	template <class Type> TVec3<Type> TVec3<Type>::m_UnitY = TVec3<Type>(0, 1, 0);
-	template <class Type> TVec3<Type> TVec3<Type>::m_UnitZ = TVec3<Type>(0, 0, 1);
+	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitX = TVec3<TYPE>(1, 0, 0);
+	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitY = TVec3<TYPE>(0, 1, 0);
+	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitZ = TVec3<TYPE>(0, 0, 1);
 	
 	typedef TVec3<double> Vec3;
 	typedef TVec3<float> Vec3f;

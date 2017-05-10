@@ -396,7 +396,7 @@ namespace GASS
 			Vec3* v1 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i]];
 			Vec3* v2 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i+1]];
 			Vec3* v3 = &sub_mesh_data->PositionVector[sub_mesh_data->IndexVector[i+2]];
-			Vec3 normal = Math::GetNormal(Triangle(*v1,*v2,*v3));
+			const Vec3 normal = Triangle(*v1,*v2,*v3).GetNormal();
 			Vec3 tangent = *v3 - *v1;
 			tangent.Normalize();
 
@@ -442,9 +442,8 @@ namespace GASS
 				//start cap
 				Vec3 pos0 = sub_mesh_data->PositionVector[0];
 				Vec3 pos1 = sub_mesh_data->PositionVector[i];
-				Vec3 pos2 = sub_mesh_data->PositionVector[i+1];
-
-				Vec3 normal = Math::GetNormal(Triangle(pos0,pos1,pos2));
+				Vec3 pos2 = sub_mesh_data->PositionVector[i + 1];
+				Vec3 normal = Triangle(pos0,pos1,pos2).GetNormal();
 
 				Vec3 t1 = pos1 - pos0;
 				Vec3 t2 = pos2 - pos0;
@@ -491,7 +490,7 @@ namespace GASS
 				pos0 = sub_mesh_data->PositionVector[offset];
 				pos1 = sub_mesh_data->PositionVector[offset + i];
 				pos2 = sub_mesh_data->PositionVector[offset + i+1];
-				normal = -Math::GetNormal(Triangle(pos0,pos1,pos2));
+				normal = -Triangle(pos0,pos1,pos2).GetNormal();
 
 				t1 = pos1 - pos0;
 				t2 = pos2 - pos0;

@@ -23,30 +23,5 @@
 namespace GASS
 {
 	template class TPolygon<double>;
-#if 0
-	Polygon::Polygon()
-	{
-
-	}
-
-	Polygon::~Polygon()
-	{
-
-	}
-
-	Vec3 Polygon::Center() const
-	{
-		Vec3 ret(0,0,0);
-		for(size_t i = 0; i < m_VertexVector.size(); i++)
-		{
-			const Vec3* pos = &m_VertexVector[i];
-			ret.x += pos->x;
-			ret.y += pos->y;
-			ret.z += pos->z;
-		}
-		ret = ret * (1.0/m_VertexVector.size());
-		return ret;
-	}
-#endif
-	
+	template class TPolygon<float>;
 }

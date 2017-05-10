@@ -80,7 +80,6 @@ namespace GASS
 		*/
 
 		void Union(const TPolygon<TYPE> &poly);
-
 		
 		/**
 			Check if polygon is inside bounds
@@ -88,10 +87,18 @@ namespace GASS
 		bool PolyInside(const TPolygon<TYPE> &poly) const;
 		
 		/**
-			Check if line is inside bounds, TODO, redefined in Math?
+			Check if line is inside bounds
 		*/
 		bool LineInside(const TLineSegment<TYPE> &segment) const;
 
+		
+		/**
+		Check intersection between line and box
+		@param segment Line segment to check with
+		@param line_dist Potential intersection distance along line segment
+		@return true if intersection exist
+		*/
+		bool Intersect(const TLineSegment<TYPE> &segment, TYPE &line_dist) const;
 
 		/**
 			Check intersection with other bounding box
@@ -133,6 +140,8 @@ namespace GASS
 		//public for fast access
 		TVec3<TYPE> m_Max;
 		TVec3<TYPE> m_Min;
+	private:
+		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
 	typedef TAABox<double> AABoxd;
 	typedef TAABox<float> AABoxf;
@@ -306,7 +315,7 @@ namespace GASS
 		}
 
 		// Get polygon center
-		const TVec3<TYPE> center = poly.Center();
+		const TVec3<TYPE> center = poly.GetCenter();
 
 		if (PointInside(center)) return true;
 
@@ -419,9 +428,88 @@ namespace GASS
 	}
 
 	template<class TYPE>
+	bool TAABox<TYPE>::Intersect(const TLineSegment<TYPE> &line_seg, TYPE &line_dist) const
+	{
+		// initialize to the segment's boundaries.
+		TYPE tenter = 0.0f, texit = 1.0f;
+
+		// test X slab
+		if (!_LineSlabIntersect(m_Min.x, m_Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
+		{
+			return false;
+		}
+
+		// test Y slab
+
+		if (!_LineSlabIntersect(m_Min.y, m_Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
+		{
+			return false;
+		}
+
+		// test Z slab
+		if (!_LineSlabIntersect(m_Min.z, m_Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
+		{
+			return false;
+		}
+		// all intersections in the green. Return the first time of intersection, tenter.
+		line_dist = tenter;
+		return  true;
+	}
+
+
+	template<class TYPE>
 	TVec3<TYPE> TAABox<TYPE>::GetSize() const
 	{
 		return (m_Max - m_Min);
+	}
+
+	template<class TYPE>
+	bool TAABox<TYPE>::_LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const
+	{
+		TYPE raydir = line_end - line_start;
+
+		// ray parallel to the slab
+		if (fabs(raydir) < 1.0E-9f)
+		{
+			// ray parallel to the slab, but ray not inside the slab planes
+			if (line_start < slabmin || line_start > slabmax)
+			{
+				return false;
+			}
+			// ray parallel to the slab, but ray inside the slab planes
+			else
+			{
+				return true;
+			}
+		}
+
+		// slab's enter and exit parameters
+		TYPE tsenter = (slabmin - line_start) / raydir;
+		TYPE tsexit = (slabmax - line_start) / raydir;
+
+		// order the enter / exit values.
+		if (tsenter > tsexit)
+		{
+			TYPE tmp = tsenter;
+			tsenter = tsexit;
+			tsexit = tmp;
+			//swapf(tsenter, tsexit);
+		}
+
+		// make sure the slab interval and the current box intersection interval overlap
+		if (tbenter > tsexit || tsenter > tbexit)
+		{
+			// nope. Ray missed the box.
+			return false;
+		}
+		// yep, the slab and current intersection interval overlap
+		else
+		{
+			// update the intersection interval
+			tbenter = std::max(tbenter, tsenter);
+			tbexit = std::min(tbexit, tsexit);
+			return true;
+		}
 	}
 }
 

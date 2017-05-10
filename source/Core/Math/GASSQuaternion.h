@@ -220,7 +220,7 @@ namespace GASS
 		if (fTrace > 0.0)
 		{
 			// |w| > 1/2, may as well choose w > 1/2
-			froot = sqrt(fTrace + 1.0);  // 2w
+			froot = sqrt(fTrace + static_cast<TYPE>(1.0));  // 2w
 			w = 0.5f *froot;
 			froot = static_cast<TYPE>(0.5) / froot;  // 1/(4w)
 			x = (kRot.m_Data[2][1] - kRot.m_Data[1][2])*froot;
@@ -239,10 +239,10 @@ namespace GASS
 			int j = s_iNext[i];
 			int k = s_iNext[j];
 
-			froot = sqrt(kRot.m_Data[i][i] - kRot.m_Data[j][j] - kRot.m_Data[k][k] + 1.0);
+			froot = sqrt(kRot.m_Data[i][i] - kRot.m_Data[j][j] - kRot.m_Data[k][k] + static_cast<TYPE>(1.0));
 			TYPE* apkQuat[3] = { &x, &y, &z };
-			*apkQuat[i] = 0.5*froot;
-			froot = 0.5 / froot;
+			*apkQuat[i] = static_cast<TYPE>(0.5)*froot;
+			froot = static_cast<TYPE>(0.5) / froot;
 			w = (kRot.m_Data[k][j] - kRot.m_Data[j][k])*froot;
 			*apkQuat[j] = (kRot.m_Data[j][i] + kRot.m_Data[i][j])*froot;
 			*apkQuat[k] = (kRot.m_Data[k][i] + kRot.m_Data[i][k])*froot;
@@ -624,8 +624,8 @@ namespace GASS
 		TVec3<TYPE> uv, uuv;
 		TVec3<TYPE> qvec;
 		qvec.Set(x, y, z);
-		uv = Vec3::Cross(qvec, v);
-		uuv = Vec3::Cross(qvec, uv);
+		uv = TVec3<TYPE>::Cross(qvec, v);
+		uuv = TVec3<TYPE>::Cross(qvec, uv);
 		uv = uv * (static_cast<TYPE>(2.0) * w);
 		uuv = uuv * static_cast<TYPE>(2.0);
 
@@ -661,7 +661,7 @@ namespace GASS
 			return rkP;
 
 		const TYPE fSin = sin(fAngle);
-		const TYPE fPhase = GASS_PI*iExtraSpins*fT;
+		const TYPE fPhase = static_cast<TYPE>(GASS_PI)*iExtraSpins*fT;
 		const TYPE fInvSin = static_cast<TYPE>(1.0) / fSin;
 		const TYPE fCoeff0 = sin((static_cast<TYPE>(1.0) - fT)*fAngle - fPhase)*fInvSin;
 		const TYPE fCoeff1 = sin(fT*fAngle + fPhase)*fInvSin;

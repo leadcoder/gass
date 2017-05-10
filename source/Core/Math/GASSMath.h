@@ -21,40 +21,16 @@
 #pragma once
 
 #include "Core/Common.h"
-#include "Core/Math/GASSVector.h"
-#include "Core/Math/GASSTriangle.h"
+#include "Core/Math/GASSVec2.h"
 #include <math.h>
-
-#define GASS_PLANE_FRONT 0
-#define GASS_PLANE_BACK 1
-#define GASS_ON_PLANE 2
+//#define GASS_PLANE_FRONT 0
+//#define GASS_PLANE_BACK 1
+//#define GASS_ON_PLANE 2
 #define GASS_PI 3.1415926535898
 #define GASS_HALF_PI 1.5707963267949
 
-				
-//const long double PI = 3.141592653589793238L;
-//const double PI = 3.141592653589793;
-//const float PI = 3.1415927;
-
-
 namespace GASS
 {
-	class Ray;
-	
-	template<class TYPE> class TTriangle;
-	typedef TTriangle<Float> Triangle;
-
-	template<class TYPE> class TPlane;
-	typedef TPlane<Float> Plane;
-	
-	template<class TYPE> class TPolygon;
-	typedef TPolygon<Float> Polygon;
-
-	template<class TYPE> class TLineSegment;
-	typedef TLineSegment<Float> LineSegment;
-	template<class TYPE> class TAABox;
-	typedef TAABox<Float> AABox;
-
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -80,11 +56,10 @@ namespace GASS
 		@param deg Number of degrees, as a float.
 		@return Number of radians.
 		*/
-
 		inline static Float Deg2Rad(Float deg);
-		inline static Vec3 Deg2Rad(const Vec3 &vec);
-		inline static Vec3 Rad2Deg(const Vec3 &vec);
-		inline static Float ASin(Float fValue);
+		//inline static Vec3 Deg2Rad(const Vec3 &vec);
+		//inline static Vec3 Rad2Deg(const Vec3 &vec);
+		template<class TYPE> inline static TYPE ASin(TYPE fValue);
 
 		/**
 		Get Min value of v1, v2,v3
@@ -99,8 +74,32 @@ namespace GASS
 		inline static Float Min(const Float &v1, const Float &v2);
 		inline static Float Max(const Float &v1, const Float &v2);
 
+		template<class TYPE>
+		inline static bool Equal(TYPE v1, TYPE v2, TYPE tolerance = std::numeric_limits<TYPE>::epsilon());
+		
+
 		/**
-		Fast invert root square function, (maybe not so fast anymore)
+		Get float random value
+		@param start Start of random span
+		@param end End of random span
+		@return random value between start and end
+		*/
+		inline static Float RandomValue(Float start, Float end);
+
+		/**
+		Get 2D-line intersection
+		@param  p1 first point in first line
+		@param  p2 second point in first line
+		@param  p3 first point in second  line
+		@param  p4 second point in second  line
+		@param  isect Potential intersection point
+		@return true if intersection exist
+		*/
+		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
+
+
+		/**
+		Inverted root square function
 		*/
 		static inline float InvSqrt(float x)
 		{
@@ -116,13 +115,6 @@ namespace GASS
 #endif
 		}
 
-		/**
-		Get float random value
-		@param start Start of random span
-		@param end End of random span
-		@return random value between start and end
-		*/
-		inline static Float RandomValue(Float start, Float end);
 
 		/**
 		@brief Check if a line intersect a Polygon.
@@ -130,7 +122,7 @@ namespace GASS
 		@param poly Polygon to check intersection with, as a Polygon.
 		@return True if intersection, otherwise false.
 		*/
-		static bool LineIsectPolygon( const LineSegment &line_segment, const Polygon &poly);
+		//static bool LineIsectPolygon( const LineSegment &line_segment, const Polygon &poly);
 
 		/**
 		@brief Calculate the distance (along the ray) where a infinite
@@ -159,7 +151,7 @@ namespace GASS
 		@param radius ?
 		@return Closest point on triangle to input point
 		*/
-		static bool ClosestPointOnTriangle(const Triangle &tri, const Vec3 &p, Vec3 &closest, Float radius);
+		//static bool ClosestPointOnTriangle(const Triangle &tri, const Vec3 &p, Vec3 &closest, Float radius);
 
 		/**
 		Get closest point on line segment
@@ -167,14 +159,7 @@ namespace GASS
 		@param point Input point
 		@return Closest point on line to input point
 		*/
-		static Vec3 ClosestPointOnLine(const LineSegment& line, const Vec3 &point);
-
-		/**
-		Get triangle normal
-		@param tri input triangle
-		@return triangle normal
-		*/
-		inline static Vec3 GetNormal(const Triangle &tri);
+		//static Vec3 ClosestPointOnLine(const LineSegment& line, const Vec3 &point);
 
 		
 		/**
@@ -186,39 +171,19 @@ namespace GASS
 		*/
 		//static bool TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point);
 		/**
-		Project vector on plane
-		@param plane_normal Normal of the projection plane
-		@param v Vector to project
-		@return Projected vector
-		*/
-		//TODO: change name or input args,
-		inline static Vec3 ProjectVectorOnPlane(const Vec3 &plane_normal,const Vec3 &v);
-
-	
-
-		/**
-		Get 2D-line intersection
-		@param  p1 first point in first line
-		@param  p2 second point in first line
-		@param  p3 first point in second  line
-		@param  p4 second point in second  line
-		@param  isect Potential intersection point
-		@return true if intersection exist
-		*/
-		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
 
 		// path utilities, to be moved to path class?
 		/**
 
 		*/
-		static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
+		/*static bool GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point);
 		static Vec3 GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic,int &index);
 		static Float GetPathDistance(const Vec3& point, const std::vector<Vec3> &wps,int &index,Float &distance_to_path);
 		static Float GetPathLength(const std::vector<Vec3> &wps);
 		static std::vector<Vec3> ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps);
 		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float offset);
 		static std::vector<Vec3> GenerateOffset(const std::vector<Vec3> &wps, Float start_offset,Float end_offset);
-		static std::vector<Vec3> GenerateNormals(const std::vector<Vec3> &wps);
+		static std::vector<Vec3> GenerateNormals(const std::vector<Vec3> &wps);*/
 
 		/**
 			Get intersection between line and axis aligned box
@@ -227,19 +192,20 @@ namespace GASS
 			@param tinter Potential intersection distance along line segment
 			@return true if intersection exist
 		*/
-		static bool LineSegmentAABBoxIntersect(const LineSegment& line_seg, const AABox& box, Float& tinter);
+		//static bool LineSegmentAABBoxIntersect(const LineSegment& line_seg, const AABox& box, Float& tinter);
 	private:
 		//helpers
-		static bool	_CheckPointInTriangle1(const Vec3 &point, const Triangle& tri, const Vec3 &normal);
+		//static bool	_CheckPointInTriangle1(const Vec3 &point, const Triangle& tri, const Vec3 &normal);
 		//static int _CheckPointInTriangle2(const Vec3& point, const Triangle& tri);
 		//static Vec3 _ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
-		static int	_ClassifyPoint(const Vec3 &point, const Polygon &poly);
-		static int	_ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);
-		static char	_GetMaxCoord(const Vec3 &coord);
-		static Float _Angle2D(Float x1, Float y1, Float x2, Float y2);
-		static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
+		//static int	_ClassifyPoint(const Vec3 &point, const Polygon &poly);
+		//static int	_ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);
+		//static char	_GetMaxCoord(const Vec3 &coord);
+		//static Float _Angle2D(Float x1, Float y1, Float x2, Float y2);
+		//static bool _LineSlabIntersect(Float slabmin, Float slabmax, Float raystart, Float rayend, Float& tbenter, Float& tbexit);
 	};
 
+	//implementation
 
 	Float Math::Rad2Deg(Float rad)
 	{
@@ -251,53 +217,26 @@ namespace GASS
 		return Float(2 * GASS_PI * deg / 360.0);
 	}
 
-	Vec3 Math::Deg2Rad(const Vec3 &vec)
+	template<class TYPE>
+	TYPE Math::ASin(TYPE value)
 	{
-		Vec3 ret;
-		ret.x = Math::Deg2Rad(vec.x);
-		ret.y = Math::Deg2Rad(vec.y);
-		ret.z = Math::Deg2Rad(vec.z);
-		return ret;
-	}
-
-	Vec3 Math::Rad2Deg(const Vec3 &vec)
-	{
-		Vec3 ret;
-		ret.x = Math::Rad2Deg(vec.x);
-		ret.y = Math::Rad2Deg(vec.y);
-		ret.z = Math::Rad2Deg(vec.z);
-		return ret;
-	}
-
-	Float Math::ASin(Float fValue)
-	{
-		if (-1.0 < fValue)
+		if (-1.0 < value)
 		{
-			if (fValue < 1.0)
-				return asin(fValue);
+			if (value < 1.0)
+				return asin(value);
 			else
-				return GASS_HALF_PI;
+				return static_cast<TYPE>(GASS_HALF_PI);
 		}
 		else
 		{
-			return -GASS_HALF_PI;
+			return -static_cast<TYPE>(GASS_HALF_PI);
 		}
 	}
 
-	Vec3 Math::ProjectVectorOnPlane(const Vec3 &plane_normal, const Vec3 &v)
+	template<class TYPE>
+	bool Math::Equal(TYPE v1, TYPE v2, TYPE tolerance)
 	{
-		return  v - Vec3::Dot(v, plane_normal) * plane_normal;
-	}
-
-	Vec3 Math::GetNormal(const Triangle &tri)
-	{
-		Vec3 normal;
-		Vec3 edge1 = tri.P2 - tri.P1;
-		Vec3 edge2 = tri.P3 - tri.P1;
-
-		normal = Vec3::Cross(edge1, edge2);
-		normal.Normalize();
-		return normal;
+		return (abs(v1 - v2) < tolerance);
 	}
 
 	Float Math::Min(const Float &v1, const Float &v2)
@@ -319,7 +258,6 @@ namespace GASS
 		}
 		else return v2;
 	}
-
 
 	Float Math::Min(const Float &v1, const Float &v2, const Float &v3)
 	{

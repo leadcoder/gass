@@ -1,4 +1,5 @@
 #include <limits>
+#include "Core/Math/GASSPath.h"
 #include "GASSRNRoadNetworkComponent.h"
 #include "GASSRNRoadNodeComponent.h"
 #include "GASSRNRoadEdgeComponent.h"
@@ -304,7 +305,7 @@ namespace GASS
 		
 			RoadEdge* edge = new RoadEdge();
 			edge->Waypoints = road_wps;
-			edge->Distance =  Math::GetPathLength(road_wps);
+			edge->Distance =  Path::GetPathLength(road_wps);
 			edge->StartNode = start_node;
 			edge->EndNode = end_node;
 			edge->LaneWidth = road_comp->GetLaneWidth(); 

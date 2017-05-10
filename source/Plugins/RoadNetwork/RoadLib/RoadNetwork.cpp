@@ -6,6 +6,7 @@
 #include "RoadNavigation.h"
 #include "RoadBuilder.h"
 #include "Core/Math/GASSMath.h"
+#include "Core/Math/GASSPath.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <sstream>
 
@@ -53,8 +54,8 @@ namespace GASS
 		{
 			Vec3 start_point,end_point;
 			int start_seg_index,end_seg_index;
-			Math::GetClosestPointOnPath(from_point,from_edge->Waypoints, start_seg_index, start_point);
-			Math::GetClosestPointOnPath(to_point,from_edge->Waypoints, end_seg_index, end_point);
+			Path::GetClosestPointOnPath(from_point,from_edge->Waypoints, start_seg_index, start_point);
+			Path::GetClosestPointOnPath(to_point, from_edge->Waypoints, end_seg_index, end_point);
 
 			path.push_back(start_point);
 
@@ -88,7 +89,7 @@ namespace GASS
 			}
 			path.push_back(end_point);
 			//add edge offset
-			path = Math::GenerateOffset(path,from_edge->LaneWidth*0.5);
+			path = Path::GenerateOffset(path,from_edge->LaneWidth*0.5);
 
 		}
 		else if(from_edge && to_edge)
@@ -142,7 +143,7 @@ namespace GASS
 						}
 
 						//add edge offset
-						edge_path = Math::GenerateOffset(edge_path,edge->LaneWidth*0.5);
+						edge_path = Path::GenerateOffset(edge_path, edge->LaneWidth*0.5);
 
 						if(edge_path.size() > 1 && path.size() > 1)
 						{
@@ -276,7 +277,7 @@ namespace GASS
 
 		RoadEdge* edge = new RoadEdge;
 		edge->Waypoints = final_wps;
-		edge->Distance =  Math::GetPathLength(edge->Waypoints);
+		edge->Distance = Path::GetPathLength(edge->Waypoints);
 		edge->StartNode = start_node;
 		edge->EndNode = end_node;
 		edge->LaneWidth = node->Edges[0]->LaneWidth;
@@ -314,7 +315,7 @@ namespace GASS
 		int seg_index;
 		Vec3 target_point;
 
-		Math::GetClosestPointOnPath(point,edge->Waypoints, seg_index, target_point);
+		Path::GetClosestPointOnPath(point, edge->Waypoints, seg_index, target_point);
 
 		RoadEdge* edge1 = new RoadEdge();
 		RoadEdge* edge2 = new RoadEdge();
@@ -334,7 +335,7 @@ namespace GASS
 			edge2->Waypoints.push_back(edge->Waypoints[i]);
 		}
 
-		edge1->Distance =  Math::GetPathLength(edge1->Waypoints);
+		edge1->Distance = Path::GetPathLength(edge1->Waypoints);
 		edge1->StartNode = new_node;
 		edge1->EndNode = edge->StartNode;
 		edge1->LaneWidth = edge->LaneWidth;
@@ -343,7 +344,7 @@ namespace GASS
 		new_node->Edges.push_back(edge1);
 		edge->StartNode->Edges.push_back(edge1);
 
-		edge2->Distance =  Math::GetPathLength(edge2->Waypoints);
+		edge2->Distance = Path::GetPathLength(edge2->Waypoints);
 		edge2->StartNode = new_node;
 		edge2->EndNode = edge->EndNode;
 		edge2->LaneWidth = edge->LaneWidth;
@@ -365,7 +366,7 @@ namespace GASS
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
-			if(Math::GetClosestPointOnPath(point,m_Edges[i]->Waypoints, seg_index, target_point))
+			if (Path::GetClosestPointOnPath(point, m_Edges[i]->Waypoints, seg_index, target_point))
 			{
 				Float dist = (target_point - point).Length();
 				if(dist < min_dist )

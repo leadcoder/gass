@@ -137,7 +137,7 @@ namespace GASS
 		PositionRequestPtr pos_msg(new GASS::PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
 		if(m_Rot != Vec3(0,0,0))
-			rot_msg =RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
+			rot_msg =RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(m_Rot))));
 		else //use
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
@@ -300,7 +300,7 @@ namespace GASS
 	{
 		if(m_OgreNode) //initialized?
 		{
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(value)))));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(value)))));
 		}
 		m_Rot = value;
 	}
@@ -343,7 +343,7 @@ namespace GASS
 			Mat4 rot_mat(q);
 			rot_mat.ToEulerAnglesYXZ(m_Rot);
 
-			m_Rot = Math::Rad2Deg(m_Rot);
+			m_Rot = Vec3::Rad2Deg(m_Rot);
 
 			/*m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerRotationY());
 			m_Rot.y = Math::Rad2Deg(rot_mat.GetEulerRotationX());

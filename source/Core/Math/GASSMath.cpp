@@ -21,17 +21,41 @@
 #include <math.h>
 #include <limits>
 #include "Core/Math/GASSMath.h"
-#include "Core/Math/GASSPolygon.h"
-#include "Core/Math/GASSLineSegment.h"
-#include "Core/Math/GASSAABox.h"
-#include "Core/Math/GASSRay.h"
-#include "Core/Math/GASSPlane.h"
-
-
 #undef min
 #undef max
+
 namespace GASS
 {
+	bool Math::GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect)
+	{
+		// Store the values for fast access and easy
+		// equations-to-code conversion
+
+		const Float x1 = p1.x, x2 = p2.x, x3 = p3.x, x4 = p4.x;
+		const Float y1 = p1.y, y2 = p2.y, y3 = p3.y, y4 = p4.y;
+
+		const Float d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+		// If d is zero, there is no intersection
+		if (d == 0)
+			return false;
+
+		// Get the x and y
+		const Float pre = (x1*y2 - y1*x2), post = (x3*y4 - y3*x4);
+		const Float x = (pre * (x3 - x4) - (x1 - x2) * post) / d;
+		const Float y = (pre * (y3 - y4) - (y1 - y2) * post) / d;
+
+		// Check if the x and y coordinates are within both lines
+		if (x < std::min(x1, x2) || x > std::max(x1, x2) ||
+			x < std::min(x3, x4) || x > std::max(x3, x4)) return false;
+		if (y < std::min(y1, y2) || y > std::max(y1, y2) ||
+			y < std::min(y3, y4) || y > std::max(y3, y4)) return false;
+
+		// Return the point of intersection
+		isect.x = x;
+		isect.y = y;
+		return true;
+	}
+
 	/*bool Math::TriangleIsectTriangle(const Triangle &t1,const Triangle &t2,Vec3 &isect_point)
 	{
 		//check first against second
@@ -77,7 +101,7 @@ namespace GASS
 		return false;
 	}*/
 
-	bool Math::LineIsectPolygon(const LineSegment &line_segment,const Polygon &poly)
+	/*bool Math::LineIsectPolygon(const LineSegment &line_segment,const Polygon &poly)
 	{
 		const int side1 = _ClassifyPoint(line_segment.m_Start, poly);
 		const int side2 = _ClassifyPoint(line_segment.m_End, poly);
@@ -111,8 +135,6 @@ namespace GASS
 		return false;
 	}
 
-	
-
 	int Math::_ClassifyPoint(const Vec3 &point, const Polygon &poly)
 	{
 		const Vec3 dir = poly.m_VertexVector[0] - point;
@@ -137,9 +159,9 @@ namespace GASS
 			return GASS_PLANE_BACK;
 
 		return GASS_ON_PLANE;
-	}
+	}*/
 
-	char Math::_GetMaxCoord(const Vec3 &coord)
+	/*char Math::_GetMaxCoord(const Vec3 &coord)
 	{
 		const Float x = fabs(coord.x);
 		const Float y = fabs(coord.y);
@@ -151,9 +173,9 @@ namespace GASS
 		}
 		else if(y > z) return 1;
 		else return 2;
-	}
+	}*/
 
-	Float Math::_Angle2D(Float x1, Float y1, Float x2, Float y2)
+	/*Float Math::_Angle2D(Float x1, Float y1, Float x2, Float y2)
 	{
 		const Float theta1 = atan2(y1,x1);
 		const Float theta2 = atan2(y2,x2);
@@ -223,7 +245,7 @@ namespace GASS
 			return false;
 
 		return true;
-	}
+	}*/
 
 /*	int Math::_CheckPointInTriangle2(const Vec3& point, const Triangle& tri)
 	{
@@ -309,7 +331,7 @@ namespace GASS
 	}
 	}*/
 
-	bool Math::ClosestPointOnTriangle(const Triangle &tri,
+	/*bool Math::ClosestPointOnTriangle(const Triangle &tri,
 		const Vec3 &p, Vec3 &closest, Float radius)
 	{
 
@@ -318,12 +340,12 @@ namespace GASS
 		const Vec3 v1 = tri.P2 - tri.P1;
 		const Vec3 v2 = tri.P3 - tri.P1;
 
-		/*
-		All triangles are valid - MOB
+		
+		//All triangles are valid - MOB
 
 		// You might not need this if you KNOW all your triangles are valid
-		if ((v1.length() == 0) || (v2.length() == 0)) return false;
-		*/
+		//if ((v1.length() == 0) || (v2.length() == 0)) return false;
+		
 
 		// determine normal to plane containing polygon
 		Vec3 pNormal = Vec3::Cross(v1, v2);
@@ -339,7 +361,7 @@ namespace GASS
 
 		// determine if that point is in the triangle
 		return _CheckPointInTriangle1(closest, tri,pNormal);
-	}
+	}*/
 
 	/*Vec3 Math::_ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p)
 	{
@@ -368,7 +390,7 @@ namespace GASS
 		return (result);
 	}*/
 
-	bool Math::GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point )
+	/*bool Math::GetClosestPointOnPath(const Vec3& source_pos , const std::vector<Vec3> &wps, int &segment_index, Vec3& point )
 	{
 		double shortest_dist = std::numeric_limits<double>::max();
 		if(wps.size() > 1)
@@ -377,7 +399,7 @@ namespace GASS
 			{
 				const Vec3 wp1 = wps[i];
 				const Vec3 wp2 = wps[i+1];
-				const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wp1,wp2), source_pos);
+				const Vec3 closest_point_on_line = LineSegment(wp1,wp2).ClosestPointOnLine(source_pos);
 				double dist = (source_pos  - closest_point_on_line).Length();
 				if(dist < shortest_dist)
 				{
@@ -459,7 +481,7 @@ namespace GASS
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
 			const Float segmentLength = (wps[i] - wps[i-1]).Length();
-			const Vec3 closest_point_on_line = Math::ClosestPointOnLine(LineSegment(wps[i-1],wps[i]), point);
+			const Vec3 closest_point_on_line = LineSegment(wps[i-1],wps[i]).ClosestPointOnLine(point);
 			const double dist = (point  - closest_point_on_line).Length();
 			if(dist < shortest_dist)
 			{
@@ -665,10 +687,10 @@ namespace GASS
 			total_path_length += (wps[i-1] - wps[i]).Length();
 		}
 		return total_path_length;
-	}
+	}*/
 
 
-	Vec3 Math::ClosestPointOnLine(const LineSegment& line, const Vec3 &point)
+	/*Vec3 Math::ClosestPointOnLine(const LineSegment& line, const Vec3 &point)
 	{
 		// Determine t (the length of the vector from a to p)
 		Vec3 c = point - line.m_Start;
@@ -690,39 +712,9 @@ namespace GASS
 		V.z = V.z * t;
 
 		return (line.m_Start + V);
-	}
+	}*/
 
-	bool Math::GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect)
-	{
-		// Store the values for fast access and easy
-		// equations-to-code conversion
-
-		const Float x1 = p1.x, x2 = p2.x, x3 = p3.x, x4 = p4.x;
-		const Float y1 = p1.y, y2 = p2.y, y3 = p3.y, y4 = p4.y;
-
-		const Float d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-		// If d is zero, there is no intersection
-		if (d == 0)
-			return false;
-
-		// Get the x and y
-		const Float pre = (x1*y2 - y1*x2), post = (x3*y4 - y3*x4);
-		const Float x = ( pre * (x3 - x4) - (x1 - x2) * post ) / d;
-		const Float y = ( pre * (y3 - y4) - (y1 - y2) * post ) / d;
-
-		// Check if the x and y coordinates are within both lines
-		if ( x < std::min(x1, x2) || x > std::max(x1, x2) ||
-			x < std::min(x3, x4) || x > std::max(x3, x4) ) return false;
-		if ( y < std::min(y1, y2) || y > std::max(y1, y2) ||
-			y < std::min(y3, y4) || y > std::max(y3, y4) ) return false;
-
-		// Return the point of intersection
-		isect.x = x;
-		isect.y = y;
-		return true;
-	}
-
-	bool Math::_LineSlabIntersect(Float slabmin, Float slabmax, Float line_start, Float line_end, Float& tbenter, Float& tbexit)
+	/*bool Math::_LineSlabIntersect(Float slabmin, Float slabmax, Float line_start, Float line_end, Float& tbenter, Float& tbexit)
 	{
 		Float raydir = line_end - line_start;
 
@@ -797,7 +789,7 @@ namespace GASS
 		// all intersections in the green. Return the first time of intersection, tenter.
 		tinter = tenter;
 		return  true;
-	}
+	}*/
 
 	/*Float Math::IsectRayPlane(const Ray &ray, const Plane &plane)
 	{

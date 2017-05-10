@@ -1,5 +1,6 @@
 #include "RoadBuilder.h"
 #include "Core/Math/GASSMath.h"
+#include "Core/Math/GASSPath.h"
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "RoadNetwork.h"
@@ -166,7 +167,7 @@ namespace GASS
 				e->LLWaypoints.clear();
 				for(int j = 0; j < e->LeftLanes; j++)
 				{
-					e->LLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,(e->LaneWidth*(j+1))));
+					e->LLWaypoints.push_back(Path::GenerateOffset(e->Waypoints, (e->LaneWidth*(j + 1))));
 					//extend end points to support better clipping
 					//Extend(e->LLWaypoints[j], e->LaneWidth*e->LeftLanes*4);
 				}
@@ -174,7 +175,7 @@ namespace GASS
 				e->RLWaypoints.clear();
 				for(int j = 0; j < e->RightLanes; j++)
 				{
-					e->RLWaypoints.push_back(Math::GenerateOffset(e->Waypoints,-(e->LaneWidth*(j+1))));
+					e->RLWaypoints.push_back(Path::GenerateOffset(e->Waypoints, -(e->LaneWidth*(j + 1))));
 					//Extend(e->RLWaypoints[j],e->LaneWidth*e->RightLanes*4);
 				}
 			}

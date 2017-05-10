@@ -1,13 +1,12 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSMath.h"
-
 #include "catch.hpp"
 
 TEST_CASE("Test Vec3")
 {
 	SECTION("Test constructor")
 	{
-		GASS::Vec3 vec(1,1,1);
+		GASS::Vec3 vec(1, 1, 1);
 		REQUIRE(vec.x == 1);
 		REQUIRE(vec.y == 1);
 		REQUIRE(vec.z == 1);

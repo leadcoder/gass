@@ -21,13 +21,13 @@
 #pragma once
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSLineSegment.h"
+#include "Core/Math/GASSPlane.h"
 
 namespace GASS
 {
-	template<class TYPE> class TPlane;
 	/**
 		Class holding triangle
-	*/
+		*/
 	template<class TYPE>
 	class TTriangle
 	{
@@ -39,28 +39,39 @@ namespace GASS
 		//public for fast access
 		TVec3<TYPE> P1, P2, P3;
 
-		bool LineIsect(const TLineSegment<TYPE> &line_segment, const TVec3<TYPE> &isect_point)
+		/**
+		Get plane from triangle
+		*/
+		TPlane<TYPE> GetPlane() const
 		{
-			/*Vec3 normal;
-			const Vec3 edge1 = tri.P2 - tri.P1;
-			const Vec3 edge2 = tri.P3 - tri.P1;
+			return TPlane<TYPE>(P1, GetNormal());
+		}
 
-			normal = Vec3::Cross(edge1, edge2);
-			normal.Normalize();*/
-			TPlane<TYPE> tri_plane(*this);
+		/**
+		Get triangle normal
+		*/
+		TVec3<TYPE> GetNormal() const
+		{
+			TVec3<TYPE> normal = TVec3<TYPE>::Cross((P2 - P1), (P3 - P1));
+			normal.Normalize();
+			return normal;
+		}
+
+		bool LineIsect(const TLineSegment<TYPE> &line_segment, TVec3<TYPE> &isect_point)
+		{
+			TPlane<TYPE> tri_plane = GetPlane();
 
 			const PlaneSide side1 = tri_plane.ClassifyPoint(line_segment.m_Start);
 			const PlaneSide side2 = tri_plane.ClassifyPoint(line_segment.m_End);
 
-			if ((side1 == PS_BACK && side2 == PS_BACK) || 
-				(side1 == PS_FRONT && side2 == PS_FRONT)) 
+			if ((side1 == PS_BACK && side2 == PS_BACK) ||
+				(side1 == PS_FRONT && side2 == PS_FRONT))
 				return false;
 
-			TVec3<TYPE> ray_dir = line_segment.m_End - line_segment.m_Start;
-			ray_dir.Normalize();
+			const TVec3<TYPE> ray_dir = line_segment.GetDirection();
 			const TYPE ray_scale = tri_plane.RayIsect(Ray(line_segment.m_Start, ray_dir));
 
-			if (ray_scale == -1) 
+			if (ray_scale == -1)
 				return false;
 
 			isect_point = line_segment.m_Start + ray_dir * ray_scale;
@@ -83,6 +94,22 @@ namespace GASS
 			if (t.LineIsect(LineSegment(P2, P3), isect_point)) return true;
 			return false;
 		}
+
+		bool ClosestPoint(const TVec3<TYPE>  &p, const TVec3<TYPE>  &closest, TYPE radius)
+		{
+			// find how far away the plane is from point p along the planes normal
+			TPlane<TYPE> plane = GetPlane();
+			const TYPE distToPlaneIntersection = plane.RayIsect(Ray(p, -plane.m_Normal));
+			if ((distToPlaneIntersection == -1) || (distToPlaneIntersection > radius)) 
+				return false;
+
+			// find the nearest point on the plane to p
+			closest = p - (pNormal * distToPlaneIntersection);
+			// determine if that point is in the triangle
+			return _CheckPoint(closest);
+		}
+
+	//private:
 
 		int _CheckPoint(const TVec3<TYPE>& point)
 		{

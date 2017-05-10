@@ -23,6 +23,9 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Math/GASSPlane.h"
+#include "Core/Math/GASSTriangle.h"
+#include "Core/Math/GASSLineSegment.h"
 #include <vector>
 
 namespace GASS
@@ -33,7 +36,17 @@ namespace GASS
 	public:
 		TPolygon(){}
 		~TPolygon() {}
-		TVec3<TYPE> Center() const
+		
+		/**\var vector<Vec3> m_VertexVector;
+		* \brief Contains the vertices of the polygon.
+		*/
+		std::vector<TVec3<TYPE> > m_VertexVector;
+		/**\var Vec3 m_Normal;
+		* \brief The normal of the polygon plane.
+		*/
+		TVec3<TYPE> m_Normal;
+
+		TVec3<TYPE> GetCenter() const
 		{
 			TVec3<TYPE> ret(0, 0, 0);
 			for (size_t i = 0; i < m_VertexVector.size(); i++)
@@ -46,15 +59,55 @@ namespace GASS
 			ret = ret * (static_cast<TYPE>(1.0) / static_cast<TYPE>(m_VertexVector.size()));
 			return ret;
 		}
-		
-		/**\var vector<Vec3> m_VertexVector;
-		* \brief Contains the vertices of the polygon.
+
+		/**
+		Get plane from triangle
 		*/
-		std::vector<TVec3<TYPE> > m_VertexVector;
-		/**\var Vec3 m_Normal;
-		* \brief The normal of tha polygon plane.
+		TPlane<TYPE> GetPlane() const
+		{
+			return TPlane<TYPE>(m_VertexVector[0], m_Normal);
+		}
+
+		/**
+		@brief Check if a line intersect a Polygon. NOTE: this assume that the polygon is convex!
+		@param line_segment Line segment to check.
+		@param isect_point Potential intersection point.
+		@return True if intersection, otherwise false.
 		*/
-		TVec3<TYPE> m_Normal;
+		bool LineIsectConvexPolygon(const TLineSegment<TYPE> &line_segment, TVec3<TYPE> &isect_point)
+		{
+			TPlane<TYPE> plane = GetPlane();
+			const int side1 = plane.ClassifyPoint(line_segment.m_Start);
+			const int side2 = plane.ClassifyPoint(line_segment.m_End);
+			if ((side1 == PS_BACK && side2 == PS_BACK) || (side1 == PS_FRONT && side2 == PS_FRONT)) 
+				return false;
+
+			const TVec3<TYPE> ray_dir = line_segment.GetDirection();
+			const TYPE ray_scale = plane.RayIsect(TRay<TYPE>(line_segment.m_Start, ray_dir));
+
+			if (ray_scale == -1) 
+				return false;
+
+			isect_point = line_segment.m_Start + ray_dir * ray_scale;
+
+			size_t size = m_VertexVector.size();
+			size %= 3;
+			size_t index = 1;
+			for (size_t i = 0; i < size + 1; i++)
+			{
+				TTriangle<TYPE> tri(
+					m_VertexVector[0],
+					m_VertexVector[index],
+					m_VertexVector[index + 1]);
+
+				if (tri._CheckPoint(isect_point))
+				{
+					return true;
+				}
+				++index;
+			}
+			return false;
+		}
 	};
 
 	typedef TPolygon<double> Polygond;
