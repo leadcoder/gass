@@ -225,7 +225,7 @@ namespace GASS
 		return true;
 	}
 
-	int Math::_CheckPointInTriangle2(const Vec3& point, const Triangle& tri)
+/*	int Math::_CheckPointInTriangle2(const Vec3& point, const Triangle& tri)
 	{
 		const Vec3 e10= tri.P2 - tri.P1;
 		const Vec3 e20= tri.P3 - tri.P1;
@@ -242,7 +242,7 @@ namespace GASS
 		const Float z = x+y-ac_bb;
 		//return (( in(z)& ~(in(x)|in(y)) ) & 0x80000000);
 		return (( int(z) & ~(int(x)|int(y)) ) & 0x80000000);
-	}
+	}*/
 
 
 

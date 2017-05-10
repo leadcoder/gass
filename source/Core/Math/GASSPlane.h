@@ -28,12 +28,7 @@
 
 namespace GASS
 {
-	enum PlaneSide
-	{
-		PS_FRONT,
-		PS_BACK,
-		PS_ON_PLANE
-	};
+	
 
 	/**
 	* Class representing a plane in 3D.
@@ -42,6 +37,14 @@ namespace GASS
 	class TPlane
 	{
 	public:
+		
+		enum PlaneSide
+		{
+			PS_FRONT,
+			PS_BACK,
+			PS_ON_PLANE
+		};
+
 		TPlane()
 		{
 

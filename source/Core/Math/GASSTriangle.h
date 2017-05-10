@@ -24,6 +24,7 @@
 
 namespace GASS
 {
+	template<class TYPE> class TPlane;
 	/**
 		Class holding triangle
 	*/

@@ -231,7 +231,7 @@ namespace GASS
 	private:
 		//helpers
 		static bool	_CheckPointInTriangle1(const Vec3 &point, const Triangle& tri, const Vec3 &normal);
-		static int _CheckPointInTriangle2(const Vec3& point, const Triangle& tri);
+		//static int _CheckPointInTriangle2(const Vec3& point, const Triangle& tri);
 		//static Vec3 _ClosestPointOnTriangleEdge(Vec3 a, Vec3 b, Vec3 c, Vec3 p);
 		static int	_ClassifyPoint(const Vec3 &point, const Polygon &poly);
 		static int	_ClassifyPoint(const Vec3 &point, const Vec3 &origin, const Vec3 &normal);
