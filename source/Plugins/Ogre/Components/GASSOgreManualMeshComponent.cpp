@@ -237,7 +237,7 @@ namespace GASS
 		if(m_MeshObject->getParentSceneNode())
 		{
 			Vec3 scale = OgreConvert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
-			sphere.m_Radius = sphere.m_Radius * static_cast<float>(Math::Max(scale.x,scale.y,scale.z));
+			sphere.m_Radius = sphere.m_Radius * static_cast<float>(std::max(std::max(scale.x,scale.y),scale.z));
 		}
 		return sphere;
 	}

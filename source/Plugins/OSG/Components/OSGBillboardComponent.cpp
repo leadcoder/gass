@@ -158,7 +158,7 @@ namespace GASS
 			osg::Vec3 p_min = (*coords)[0];
 			osg::Vec3 p_max = (*coords)[2];
 			osg::Vec3 bb_size = p_max - p_min;
-			Float max_size = Math::Max(bb_size.x() ,bb_size.z() )*0.5f;
+			Float max_size = std::max(bb_size.x() ,bb_size.z() )*0.5f;
 			Float offset = bb_size.z() * 0.5f;
 			AABox box(Vec3(-max_size,-max_size + offset,-max_size),Vec3(max_size,max_size+offset,max_size));
 			box.m_Min.y += m_GroundOffset;

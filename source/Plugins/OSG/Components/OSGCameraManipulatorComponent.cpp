@@ -164,7 +164,7 @@ namespace GASS
 			osg::Matrixd vm = m_Manipulator->getMatrix();
 			osg::Vec3d translation = vm.getTrans();
 			vm.identity();
-			osg::Quat rotation = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0)) * OSGConvert::ToOSG(rot);
+			osg::Quat rotation = osg::Quat(Math::Deg2Rad(90.0f),osg::Vec3(1,0,0)) * OSGConvert::ToOSG(rot);
 			vm.setTrans(translation);
 			vm.setRotate(rotation);
 			m_Manipulator->setByMatrix(vm);

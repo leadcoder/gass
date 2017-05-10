@@ -358,7 +358,7 @@ namespace GASS
 			Vec3 scale = OSGConvert::ToGASS(lc->GetOSGNode()->getScale());
 			//scale should not flip
 			scale.z = -scale.z;
-			sphere.m_Radius *= static_cast<float>(Math::Max(scale.x,scale.y,scale.z));
+			sphere.m_Radius *= static_cast<float>(std::max(std::max(scale.x,scale.y),scale.z));
 		}
 		return sphere;
 	}

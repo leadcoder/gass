@@ -206,7 +206,7 @@ namespace GASS
 		r = m_Engine->RegisterGlobalFunction("double MathRad2Deg(double)",  asFUNCTIONPR(Math::Rad2Deg,(Float),Float), asCALL_CDECL); assert( r >= 0 );
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathDeg2Rad(const Vec3 &in)",  asFUNCTIONPR(Vec3::Deg2Rad, (const Vec3&),Vec3), asCALL_CDECL); assert( r >= 0 );
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)", asFUNCTIONPR(Vec3::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); assert(r >= 0);
-		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)",  asFUNCTION(Math::RandomValue), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)", asFUNCTION(Math::RandomValue<Float>), asCALL_CDECL); assert( r >= 0 );
 
 		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);

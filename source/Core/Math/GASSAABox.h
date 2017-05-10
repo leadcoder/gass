@@ -130,7 +130,6 @@ namespace GASS
 			Check that m_Max is greater then m_Min
 		*/
 		bool IsValid() const;
-
 		
 		/**
 			Get all corner points of this box

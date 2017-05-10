@@ -162,11 +162,11 @@ namespace GASS
 
 	AABox OgreBillboardComponent::GetBoundingBox() const
 	{
-		Float max_size = Math::Max(m_Width,m_Height);
+		Float max_size = std::max(m_Width,m_Height);
 		Float offset = 0;
 		if(m_Billboard)
 		{
-			max_size = Math::Max(m_Billboard->getOwnHeight(),m_Billboard->getOwnWidth());
+			max_size = std::max(m_Billboard->getOwnHeight(),m_Billboard->getOwnWidth());
 			Ogre::Vector3 pos = m_Billboard->getPosition();
 			offset = pos.y;
 		}
@@ -179,7 +179,7 @@ namespace GASS
 	{
 		Sphere sphere;
 		sphere.m_Pos = Vec3(0,0,0);
-		sphere.m_Radius = static_cast<float>(Math::Max(m_Width,m_Height)/2.0);
+		sphere.m_Radius = static_cast<float>(std::max(m_Width,m_Height)/2.0);
 		return sphere;
 	}
 

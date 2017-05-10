@@ -56,7 +56,12 @@ namespace GASS
 			normal.Normalize();
 			return normal;
 		}
-
+		/**
+		@brief Calculate if a line intersect the triangle and if so provide the intersection point.
+			@param line_segment Line segment to check.
+			@param isect_point Possible intersection point, as a Vec3.
+			@return True if line intersect triangle.
+		*/
 		bool LineIsect(const TLineSegment<TYPE> &line_segment, TVec3<TYPE> &isect_point) const
 		{
 			TPlane<TYPE> tri_plane = GetPlane();
@@ -81,6 +86,12 @@ namespace GASS
 			return false;
 		}
 
+		/**
+		Check if this triangle intersect with other
+		@param t Triangle to test against
+		@param iscet_point potential intersection point
+		@return true if intersection found
+		*/
 		bool IsectTriangle(const TTriangle &t, TVec3<TYPE> &isect_point) const
 		{
 			//check first against second
@@ -95,6 +106,12 @@ namespace GASS
 			return false;
 		}
 
+		/**
+		Get closest point on triangle
+		@param p Input point
+		@param radius Max distance
+		@return Closest point on triangle to input point
+		*/
 		bool ClosestPoint(const TVec3<TYPE>  &p, TVec3<TYPE>  &closest, TYPE radius) const
 		{
 			// find how far away the plane is from point p along the planes normal

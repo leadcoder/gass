@@ -164,7 +164,7 @@ TEST_CASE("Test Mat4")
 	SECTION("Test MakeRotateX")
 	{
 		GASS::Mat4 mat;
-		mat.MakeRotationX(GASS::Math::Deg2Rad(90));
+		mat.MakeRotationX(GASS::Math::Deg2Rad(90.0));
 		GASS::Vec3 temp = mat.GetYAxis();
 		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
@@ -174,7 +174,7 @@ TEST_CASE("Test Mat4")
 	SECTION("Test MakeRotateY")
 	{
 		GASS::Mat4 mat;
-		mat.MakeRotationY(GASS::Math::Deg2Rad(90));
+		mat.MakeRotationY(GASS::Math::Deg2Rad(90.0));
 		REQUIRE(mat.GetXAxis().Equal(-GASS::Vec3::m_UnitZ, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
 		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitX, 1.0e-10));
@@ -183,7 +183,7 @@ TEST_CASE("Test Mat4")
 	SECTION("Test MakeRotateZ")
 	{
 		GASS::Mat4 mat;
-		GASS::Float heading = GASS::Math::Deg2Rad(90);
+		GASS::Float heading = GASS::Math::Deg2Rad(90.0);
 		mat.MakeRotationZ(heading);
 		GASS::Vec3 xaxis = mat.GetXAxis();
 		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
