@@ -196,7 +196,7 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Quaternion, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAngles(const Vec3&in)", asMETHOD(Quaternion, FromEulerAngles), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAnglesYXZ(const Vec3&in)", asMETHOD(Quaternion, FromEulerAnglesYXZ), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetXAxis() const", asMETHOD(Quaternion, GetXAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetYAxis() const", asMETHOD(Quaternion, GetYAxis), asCALL_THISCALL);
 		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetZAxis() const", asMETHOD(Quaternion, GetZAxis), asCALL_THISCALL);

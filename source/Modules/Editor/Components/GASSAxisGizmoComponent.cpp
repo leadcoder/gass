@@ -327,7 +327,7 @@ namespace GASS
 			cam_obj->RegisterForMessage(REG_TMESS(AxisGizmoComponent::OnCameraParameter,CameraParameterRequest,0));
 		}
 		LocationComponentPtr lc = message->GetLocation();
-		m_BaseRot = Quaternion(Vec3::Deg2Rad(lc->GetEulerRotation()));
+		m_BaseRot = lc->GetEulerRotation().GetQuaternion();
 		//std::vector<SceneObjectWeakPtr> selected = m_EditorSceneManager->GetSelectedObjects();
 		//if(selected.size()  > 0 )
 		{

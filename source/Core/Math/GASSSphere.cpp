@@ -23,6 +23,7 @@
 
 namespace GASS
 {
+	//instantiate to catch compile-time warnings and errors
 	template class TSphere<double>;
 	template class TSphere<float>;
 

@@ -45,8 +45,8 @@
 namespace GASS
 {
 	Scene::Scene(const std::string &name) : m_Name(name) ,
-		m_StartPos(Vec3(0,0,0)),
-		m_StartRot(Vec3(0,0,0)),
+		m_StartPos(0,0,0),
+		m_StartRot(0,0,0),
 		m_SceneMessageManager(new MessageManager()),
 		m_Initlized(false)
 	{
@@ -63,7 +63,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("The scene object", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
-		RegisterProperty<Vec3>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
+		RegisterProperty<EulerRotation>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
 	}
 
 	void Scene::OnCreate()

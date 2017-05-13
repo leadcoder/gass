@@ -184,7 +184,7 @@ namespace GASS
 
 		float speed_factor = 0;
 		if(up.y > 0)
-			m_Rot = Vec3(0,-GASS_PI/2.f,0);
+			m_Rot = Vec3(-GASS_PI / 2.f, 0, 0);
 		else if(up.z > 0)
 			m_Rot = Vec3(0,0,0);
 		speed_factor = m_CurrentWindowSize;
@@ -221,7 +221,7 @@ namespace GASS
 		int from_id = GASS_PTR_TO_INT(this);
 		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
 
-		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(m_Rot,from_id)));
+		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(Quaternion::CreateFromEulerYXZ(m_Rot),from_id)));
 
 		CameraParameterRequestPtr cam_msg(new CameraParameterRequest(CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostRequest(cam_msg);

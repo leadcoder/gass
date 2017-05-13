@@ -18,8 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_VECTOR_H
-#define GASS_VECTOR_H
+#pragma once
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVec4.h"
@@ -27,4 +26,4 @@
 #include "Core/Math/GASSVec2.h"
 #include "Core/Utils/GASSException.h"
 
-#endif // #ifndef VECTOR_HH
+

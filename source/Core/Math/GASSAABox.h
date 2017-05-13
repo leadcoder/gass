@@ -27,6 +27,7 @@
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSPolygon.h"
 #include "Core/Math/GASSLineSegment.h"
+
 #undef min
 #undef max
 
@@ -82,28 +83,30 @@ namespace GASS
 		void Union(const TPolygon<TYPE> &poly);
 		
 		/**
-			Check if polygon is inside bounds
+			Check if polygon intersect bounds
 		*/
-		bool PolyInside(const TPolygon<TYPE> &poly) const;
+		bool PolyIntersect(const TPolygon<TYPE> &poly) const;
 		
-		/**
-			Check if line is inside bounds
-		*/
-		bool LineInside(const TLineSegment<TYPE> &segment) const;
+		
 
-		
 		/**
 		Check intersection between line and box
 		@param segment Line segment to check with
-		@param line_dist Potential intersection distance along line segment
+		@param line_dist Potential normalized intersection distance along line segment
 		@return true if intersection exist
 		*/
-		bool Intersect(const TLineSegment<TYPE> &segment, TYPE &line_dist) const;
+		bool LineIntersect(const TLineSegment<TYPE> &segment, TYPE &line_dist) const;
+
+		/**
+		Check if line intersect box. 
+		TODO: investigate difference from method above and select one implementation
+		*/
+		bool LineIntersect2(const TLineSegment<TYPE> &segment) const;
 
 		/**
 			Check intersection with other bounding box
 		*/
-		bool Intersect(const TAABox &box) const;
+		bool BoxIntersect(const TAABox &box) const;
 
 		/**
 			Check if point is inside bounds
@@ -304,7 +307,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::PolyInside(const TPolygon<TYPE> &poly) const
+	bool TAABox<TYPE>::PolyIntersect(const TPolygon<TYPE> &poly) const
 	{
 		size_t i = 0;
 		for (; i < poly.m_VertexVector.size(); i++)
@@ -325,7 +328,8 @@ namespace GASS
 			if (i == poly.m_VertexVector.size() - 1) i2 = 0; else i2 = i + 1;
 			p1 = &poly.m_VertexVector[i];
 			p2 = &poly.m_VertexVector[i2];
-			if (LineInside(TLineSegment<TYPE>(*p1, *p2))) return true;
+			if (LineIntersect2(TLineSegment<TYPE>(*p1, *p2))) 
+				return true;
 		}
 		return false;
 	}
@@ -340,7 +344,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::Intersect(const TAABox<TYPE> &box) const
+	bool TAABox<TYPE>::BoxIntersect(const TAABox<TYPE> &box) const
 	{
 		return (m_Min.x <= box.m_Max.x &&
 			m_Max.x >= box.m_Min.x &&
@@ -351,7 +355,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::LineInside(const TLineSegment<TYPE> &seg) const
+	bool TAABox<TYPE>::LineIntersect2(const TLineSegment<TYPE> &seg) const
 	{
 		TYPE x, y, z, scale;
 		TVec3<TYPE> dir, pos, isect;
@@ -427,7 +431,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::Intersect(const TLineSegment<TYPE> &line_seg, TYPE &line_dist) const
+	bool TAABox<TYPE>::LineIntersect(const TLineSegment<TYPE> &line_seg, TYPE &line_dist) const
 	{
 		// initialize to the segment's boundaries.
 		TYPE tenter = 0.0f, texit = 1.0f;

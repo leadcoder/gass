@@ -85,7 +85,8 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("Position", &HydraxWaterComponent::GetPosition, &HydraxWaterComponent::SetPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Rotation", &HydraxWaterComponent::GetRotation, &HydraxWaterComponent::SetRotation,
+
+		RegisterProperty<EulerRotation>("Rotation", &HydraxWaterComponent::GetRotation, &HydraxWaterComponent::SetRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Float>("GlobalTransparency", &HydraxWaterComponent::GetGlobalTransparency, &HydraxWaterComponent::SetGlobalTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -419,14 +420,14 @@ namespace GASS
 		return Vec3(0,0,0);
 	}
 
-	void HydraxWaterComponent::SetRotation(const Vec3 &value)
+	void HydraxWaterComponent::SetRotation(const EulerRotation &value)
 	{
 		m_Rot = value;
 		if(m_Hydrax)
-			m_Hydrax->rotate(OgreConvert::ToOgre(Quaternion(value)));
+			m_Hydrax->rotate(OgreConvert::ToOgre(value.GetQuaternion()));
 	}
 
-	Vec3 HydraxWaterComponent::GetRotation() const
+	EulerRotation HydraxWaterComponent::GetRotation() const
 	{
 		return m_Rot;
 	}

@@ -21,6 +21,7 @@
 #pragma once
 //#   pragma warning (disable : 4541)
 #include "Sim/GASS.h"
+#include "Sim/GASSEulerRotation.h"
 #include "Plugins/OSG/OSGCommon.h"
 #include "Plugins/OSG/IOSGNode.h"
 
@@ -46,8 +47,8 @@ namespace GASS
 		virtual void SetWorldPosition(const Vec3 &value);
 		virtual Vec3 GetWorldPosition() const;
 		
-		virtual void SetEulerRotation(const Vec3 &value);
-		virtual Vec3 GetEulerRotation() const;
+		virtual void SetEulerRotation(const EulerRotation &value);
+		virtual EulerRotation GetEulerRotation() const;
 		virtual void SetRotation(const Quaternion &value);
 		virtual Quaternion GetRotation() const;
 		virtual void SetWorldRotation(const Quaternion &value);
@@ -80,7 +81,7 @@ namespace GASS
 		//! relative position of the scene node.
 		Vec3 m_Pos;
 		//! relative rotation of the scene node.
-		Vec3 m_Rot;
+		EulerRotation m_EulerRot;
 		Quaternion m_QRot;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;

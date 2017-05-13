@@ -24,10 +24,9 @@
 #include "Core/Math/GASSPolygon.h"
 #include "Core/Math/GASSLineSegment.h"
 
-#undef min
-#undef max
 namespace GASS
 {
+	//instantiate to catch compile-time warnings and errors
 	template class TAABox<double>;
 	template class TAABox<float>;
 }

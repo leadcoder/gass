@@ -295,7 +295,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 	//terrain_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("terrain.3DS")));
 
 	GASS::SceneObjectPtr light_obj = scene->LoadObjectFromTemplate("LightObject",scene->GetRootSceneObject());
-	light_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(GASS::Vec3(40,32,0))));
+	GASS::Quaternion l_rot = GASS::EulerRotation(42, 32, 0).GetQuaternion();
+	light_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(l_rot)));
 	
 	GASS::SceneObjectPtr bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment",scene->GetRootSceneObject());
 	bdrige_seg_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10,2,0))));

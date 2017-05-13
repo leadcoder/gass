@@ -383,7 +383,7 @@ namespace GASS
 			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterRequest,0));
 		}
 		LocationComponentPtr lc = message->GetLocation();
-		m_BaseRot = Quaternion(Vec3::Deg2Rad(lc->GetEulerRotation()));
+		m_BaseRot = lc->GetEulerRotation().GetQuaternion();
 		SetSelection(m_EditorSceneManager->GetSelectedObjects());
 	}
 

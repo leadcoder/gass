@@ -293,7 +293,7 @@ namespace GASS
 					if(m_ExtrapolateRotation)
 					{
 						Vec3 ang_vel = local_angular_velocity*m_DeadReckoning;
-						new_rot = m_LocationHistory[0].Rotation * Quaternion(Vec3(ang_vel.y,ang_vel.x,ang_vel.z));
+						new_rot = m_LocationHistory[0].Rotation * Quaternion::CreateFromEulerYXZ(ang_vel);
 					}
 #ifdef _DEBUG_LTC_
 					sprintf(debug_text,"extrapolation Time before: %d Vel %f %f %f Dead time %f",(time -m_LocationHistory[0].Time),m_Velocity.x,m_Velocity.y,m_Velocity.z, m_DeadReckoning);

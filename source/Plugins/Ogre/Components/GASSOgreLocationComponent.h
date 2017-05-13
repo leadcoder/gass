@@ -26,6 +26,7 @@
 #include "Core/Math/GASSQuaternion.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSEulerRotation.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 
@@ -50,8 +51,8 @@ namespace GASS
 		virtual void SetPosition(const Vec3 &value);
 		virtual Vec3 GetPosition() const;
 		virtual Vec3 GetWorldPosition() const;
-		virtual void SetEulerRotation(const Vec3 &value);
-		virtual Vec3 GetEulerRotation() const;
+		virtual void SetEulerRotation(const EulerRotation &value);
+		virtual EulerRotation GetEulerRotation() const;
 		virtual void SetScale(const Vec3 &value);
 		virtual Vec3 GetScale() const {return m_Scale;}
 		virtual void SetRotation(const Quaternion &value);
@@ -59,7 +60,7 @@ namespace GASS
 		virtual Quaternion GetWorldRotation() const;
 
 		/** Set if position should be relative to first LocationComponent that is 
-		* found in component hierarchy (true) or absolut position (false) */
+		* found in component hierarchy (true) or absolute position (false) */
 		virtual void SetAttachToParent(bool value);
 		/** Get value indicating if position is relative to first LocationComponent that is found in component hierarchy */
 		virtual bool GetAttachToParent() const;
@@ -94,11 +95,11 @@ namespace GASS
 		OgreLocationComponentPtr GetParentLocation();
 
 		Vec3 m_Pos;
-		Vec3 m_LastPos;
+		//Vec3 m_LastPos;
 
 		//! relative rotation of the scene node.
-		Vec3 m_Rot;
-		Vec3 m_LastRot;
+		EulerRotation m_EulerRot;
+		//Vec3 m_LastRot;
 
 		//! relative scale of the scene node.
 		Vec3 m_Scale;

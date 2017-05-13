@@ -360,7 +360,8 @@ namespace GASS
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitY = TVec3<TYPE>(0, 1, 0);
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitZ = TVec3<TYPE>(0, 0, 1);
 	
-	typedef TVec3<double> Vec3;
+	typedef TVec3<double> Vec3d;
 	typedef TVec3<float> Vec3f;
+	typedef TVec3<Float> Vec3;
 }
 

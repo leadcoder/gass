@@ -81,7 +81,7 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		
 		//Vec3 pos = scene->GetStartPos();
-		Quaternion rot(scene->GetStartRot());
+		Quaternion rot = scene->GetStartRot().GetQuaternion();
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();

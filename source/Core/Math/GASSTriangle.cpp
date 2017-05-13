@@ -22,6 +22,7 @@
 
 namespace GASS
 {
+	//instantiate to catch compile-time warnings and errors
 	template class TTriangle<double>;
 	template class TTriangle<float>;
 }

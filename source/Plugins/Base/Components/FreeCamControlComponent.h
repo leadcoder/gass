@@ -23,6 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSEulerRotation.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
@@ -91,7 +92,7 @@ namespace GASS
 		Float m_TurnSpeed;
 		Float m_WalkSpeed;
 		Vec3 m_Pos;
-		Vec3 m_Rot;
+		Vec3  m_EulerRot;
 		bool m_Active;
 		bool m_EnableRotInput;
 		bool m_SpeedBoostInput;

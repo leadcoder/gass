@@ -266,7 +266,7 @@ namespace GASS
 
 				LocationComponentPtr loc_comp = comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				assert(loc_comp);
-				Mat4 trans(loc_comp->GetWorldPosition(), loc_comp->GetWorldRotation(), Vec3(1,1,1));
+				Mat4 trans(loc_comp->GetWorldRotation(), loc_comp->GetWorldPosition());
 
 				std::vector<float> points;
 
@@ -1159,7 +1159,7 @@ namespace GASS
 						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 						if(lc)
 						{
-							Mat4 trans_mat(lc->GetWorldPosition(),lc->GetWorldRotation(),lc->GetScale());
+							Mat4 trans_mat = Mat4::CreateTransformationSRT(lc->GetScale(),lc->GetWorldRotation(), lc->GetWorldPosition());
 
 							for(size_t j = 0 ; j < physics_mesh->PositionVector.size(); j++)
 							{

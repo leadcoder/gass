@@ -22,6 +22,7 @@
 
 namespace GASS
 {
+	//instantiate to catch compile-time warnings and errors
 	template class TPolygon<double>;
 	template class TPolygon<float>;
 }

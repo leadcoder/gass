@@ -36,9 +36,7 @@ namespace GASS
 {
 	OgreLocationComponent::OgreLocationComponent() : m_AttachToParent(false),
 		m_Pos(0,0,0),
-		m_Rot(0,0,0),
-		m_LastRot(0,0,0),
-		m_LastPos(0,0,0),
+		m_EulerRot(0,0,0),
 		m_Scale(1,1,1),
 		m_OgreNode (NULL),
 		m_QRot()
@@ -57,8 +55,8 @@ namespace GASS
 
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<EulerRotation>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Quaternion>("Quaternion", &GASS::OgreLocationComponent::GetRotation, &GASS::OgreLocationComponent::SetRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion",PF_VISIBLE)));
 		RegisterProperty<Vec3>("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale,
@@ -136,8 +134,9 @@ namespace GASS
 
 		PositionRequestPtr pos_msg(new GASS::PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
-		if(m_Rot != Vec3(0,0,0))
-			rot_msg =RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(m_Rot))));
+		Vec3 axis_rot = m_EulerRot.GetAxisRotation();
+		if (axis_rot != Vec3(0, 0, 0))
+			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_EulerRot.GetQuaternion()));
 		else //use
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
@@ -234,7 +233,7 @@ namespace GASS
 		{
 			Ogre::Quaternion orot = OgreConvert::ToOgre(rot);
 			Ogre::Node* op = m_OgreNode->getParent();
-			if(op) //check that we dont have sm root node?
+			if(op) //check that we don't have sm root node?
 			{
 				Ogre::Matrix4 trans = op->_getFullTransform();
 				Ogre::Matrix4 inv_trans = trans.inverse();
@@ -296,18 +295,18 @@ namespace GASS
 	}
 
 
-	void OgreLocationComponent::SetEulerRotation(const Vec3 &value)
+	void OgreLocationComponent::SetEulerRotation(const EulerRotation &value)
 	{
 		if(m_OgreNode) //initialized?
 		{
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(value)))));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(value.GetQuaternion())));
 		}
-		m_Rot = value;
+		m_EulerRot = value;
 	}
 
-	Vec3 OgreLocationComponent::GetEulerRotation() const
+	EulerRotation OgreLocationComponent::GetEulerRotation() const
 	{
-		return m_Rot;
+		return m_EulerRot;
 	}
 
 	void OgreLocationComponent::SetRotation(const Quaternion &value)
@@ -341,9 +340,12 @@ namespace GASS
 		{
 			q = OgreConvert::ToGASS(m_OgreNode->getOrientation());
 			Mat4 rot_mat(q);
-			rot_mat.ToEulerAnglesYXZ(m_Rot);
-
-			m_Rot = Vec3::Rad2Deg(m_Rot);
+			Vec3 axis_rot;
+			rot_mat.ToEulerAnglesYXZ(axis_rot);
+			//convert to degrees
+			axis_rot = Vec3::Rad2Deg(axis_rot);
+			//swap x-y, we type rotations as heading pitch roll in GASSSim
+			m_EulerRot = EulerRotation::FromAxisRotation(axis_rot);
 
 			/*m_Rot.x = Math::Rad2Deg(rot_mat.GetEulerRotationY());
 			m_Rot.y = Math::Rad2Deg(rot_mat.GetEulerRotationX());

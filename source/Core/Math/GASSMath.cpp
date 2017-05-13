@@ -21,6 +21,7 @@
 #include <math.h>
 #include <limits>
 #include "Core/Math/GASSMath.h"
+
 #undef min
 #undef max
 

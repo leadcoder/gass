@@ -25,6 +25,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Interface/GASSISceneManager.h"
+#include "Sim/GASSEulerRotation.h"
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSException.h"
 
@@ -75,7 +76,7 @@ namespace GASS
 		Get the start rotation for this scene,
 		can be used to give cameras or players a initial rotation
 		*/
-		Vec3 GetStartRot()const {return m_StartRot;}
+		EulerRotation GetStartRot()const {return m_StartRot;}
 
 		/**
 		Set the start position for this scene,
@@ -89,7 +90,7 @@ namespace GASS
 		this attribute should be specified by scene.xml
 		but can be replaced by using this method
 		*/
-		void SetStartRot(const Vec3 &value) {m_StartRot= value;}
+		void SetStartRot(const EulerRotation &value) { m_StartRot = value; }
 
 
 		/**
@@ -216,7 +217,7 @@ protected:
 		SceneManagerPtr LoadSceneManager(tinyxml2::XMLElement *sm_elem);
 
 		Vec3 m_StartPos;
-		Vec3 m_StartRot;
+		EulerRotation m_StartRot;
 		SceneManagerVector m_SceneManagers;
 		std::string m_Name;
 		std::string m_FolderName;

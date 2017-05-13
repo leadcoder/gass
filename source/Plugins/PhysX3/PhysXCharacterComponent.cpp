@@ -211,7 +211,7 @@ namespace GASS
 
 		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
 		
-		Quaternion new_rot(Vec3(m_Yaw,0,0));
+		Quaternion new_rot = Quaternion::CreateFromEulerYXZ(Vec3(0, m_Yaw, 0));
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
 		
 		Mat4 rot_mat(new_rot);

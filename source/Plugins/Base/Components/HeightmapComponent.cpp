@@ -135,7 +135,7 @@ namespace GASS
 						if(lc)
 						{
 							Vec3 world_pos = lc->GetWorldPosition();
-							Mat4 trans_mat(world_pos,lc->GetWorldRotation(),lc->GetScale());
+							Mat4 trans_mat = Mat4::CreateTransformationSRT(lc->GetScale(),lc->GetWorldRotation(), world_pos);
 							mesh_box.Transform(trans_mat);
 						}
 

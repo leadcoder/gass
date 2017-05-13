@@ -200,7 +200,7 @@ TEST_CASE("Test Mat4")
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				if(i != j)
+				if (i != j)
 					REQUIRE(mat[i][j] == 0);
 				else
 					REQUIRE(mat[i][j] == 1);
@@ -216,7 +216,7 @@ TEST_CASE("Test Mat4")
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				GASS::Float value =  j * 4 + i;
+				GASS::Float value = j * 4 + i;
 				REQUIRE(tmat[i][j] == value);
 			}
 		}
@@ -241,34 +241,22 @@ TEST_CASE("Test Mat4")
 	{
 		GASS::Mat4 mat;;
 		mat.MakeTranslation(GASS::Vec3(1, 2, 3));
-		REQUIRE(mat.E16[0] == 1);
-		REQUIRE(mat.E16[1] == 0);
-		REQUIRE(mat.E16[2] == 0);
-		REQUIRE(mat.E16[3] == 1);
-		REQUIRE(mat.E16[4] == 0);
-		REQUIRE(mat.E16[5] == 1);
-		REQUIRE(mat.E16[6] == 0);
-		REQUIRE(mat.E16[7] == 2);
-		REQUIRE(mat.E16[8] == 0);
-		REQUIRE(mat.E16[9] == 0);
-		REQUIRE(mat.E16[10] == 1);
-		REQUIRE(mat.E16[11] == 3);
-		REQUIRE(mat.E16[12] == 0);
-		REQUIRE(mat.E16[13] == 0);
-		REQUIRE(mat.E16[14] == 0);
-		REQUIRE(mat.E16[15] == 1);
+		GASS::Mat4 expected(1, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 3, 0, 0, 0, 1);
+		REQUIRE(mat == expected);
 	}
 
-	SECTION("Test MakeTransformationSRT (Euler rot)")
+	SECTION("Test MakeTransformationSRT")
 	{
 		GASS::Mat4 mat;
-		//Test zero translation and rotation 
-		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		//Test zero translation and rotation
+		GASS::Quaternion rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, 0));
+		mat = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(1, 1, 1), rot, GASS::Vec3(0, 0, 0));
+
 		//Expect identity
 		REQUIRE(mat.Equal(GASS::Mat4::CreateIdentity(), 1.0e-10));
 
 		//Test scale
-		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Vec3(0, 0, 0), GASS::Vec3(2, 3, 4));
+		mat = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(2, 3, 4), rot, GASS::Vec3(0, 0, 0));
 
 		GASS::Mat4 scale_exp = GASS::Mat4::CreateIdentity();
 		scale_exp.SetScale(GASS::Vec3(2, 3, 4));
@@ -276,79 +264,24 @@ TEST_CASE("Test Mat4")
 
 		//Test translation, scale and rotaion should not effect translation when usingg S*R*T
 		GASS::Vec3 translation(33, 34, 35);
-		mat.MakeTransformationSRT(translation, GASS::Vec3(0, 0, GASS_HALF_PI), GASS::Vec3(1, 1, 1));
+		rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, GASS_HALF_PI));
+		mat = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(1, 1, 1), rot , translation);
 
 		//Check translation
 		REQUIRE(mat.GetTranslation() == translation);
-		
 
 		//Check that we get expected rotation matrix for 90deg rotation around Z-axis
 		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
 		REQUIRE(mat.GetYAxis().Equal(-GASS::Vec3::m_UnitX, 1.0e-10));
 		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
 
-		//Test against kown result matrix
-		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Vec3(GASS_HALF_PI, 0, GASS_HALF_PI), GASS::Vec3(2, 3, 4));
-		GASS::Mat4 expected_mat(0, -3, 0, 33, 0, 0, -4, 34, 2, 0, 0, 35, 0, 0, 0, 1);
+		//Test against known result matrix
+		rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, GASS_HALF_PI, GASS_HALF_PI));
+		mat = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(2, 3, 4), rot, GASS::Vec3(33, 34, 35));
+		GASS::Mat4 expected_mat(0, 0, 4, 33, 2, 0, 0, 34, 0, 3, 0, 35, 0, 0, 0, 1);
 		REQUIRE(mat.Equal(expected_mat, 1.0e-10));
 	}
-
-
-	SECTION("Test MakeTransformationSRT (Quaternion rot)")
-	{
-		GASS::Mat4 mat;
-		//Test zero translation and rotation 
-		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Quaternion(GASS::Vec3(0, 0, 0)), GASS::Vec3(1, 1, 1));
-		//Expect identity
-		REQUIRE(mat.Equal(GASS::Mat4::CreateIdentity(), 1.0e-10));
-
-		//Test scale
-		mat.MakeTransformationSRT(GASS::Vec3(0, 0, 0), GASS::Quaternion(GASS::Vec3(0, 0, 0)), GASS::Vec3(2, 3, 4));
-
-		GASS::Mat4 scale_exp = GASS::Mat4::CreateIdentity();
-		scale_exp.SetScale(GASS::Vec3(2, 3, 4));
-		REQUIRE(mat == scale_exp);
-
-		//Test translation, scale and rotaion should not effect translation when usingg S*R*T
-		GASS::Vec3 translation(33, 34, 35);
-		mat.MakeTransformationSRT(translation, GASS::Quaternion(GASS::Vec3(0, 0, GASS_HALF_PI)), GASS::Vec3(1, 1, 1));
-
-		//Check translation
-		REQUIRE(mat.GetTranslation() == translation);
-
-
-		//Check that we get expected rotation matrix for 90deg rotation around Z-axis
-		REQUIRE(mat.GetXAxis().Equal(GASS::Vec3::m_UnitY, 1.0e-10));
-		REQUIRE(mat.GetYAxis().Equal(-GASS::Vec3::m_UnitX, 1.0e-10));
-		REQUIRE(mat.GetZAxis().Equal(GASS::Vec3::m_UnitZ, 1.0e-10));
-
-		//Test against kown result matrix
-		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Quaternion(GASS::Vec3(0, GASS_HALF_PI, GASS_HALF_PI)), GASS::Vec3(2, 3, 4));
-		GASS::Mat4 expected_mat(0, -3, 0, 33, 0, 0, -4, 34, 2, 0, 0, 35, 0, 0, 0, 1);
-		REQUIRE(mat.Equal(expected_mat, 1.0e-10));
-	}
-
-	SECTION("Test SRT transformation constructor")
-	{
-		GASS::Mat4 mat(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
-		REQUIRE(mat.E16[0] == 1);
-		REQUIRE(mat.E16[1] == 0);
-		REQUIRE(mat.E16[2] == 0);
-		REQUIRE(mat.E16[3] == 1);
-		REQUIRE(mat.E16[4] == 0);
-		REQUIRE(mat.E16[5] == 1);
-		REQUIRE(mat.E16[6] == 0);
-		REQUIRE(mat.E16[7] == 1);
-		REQUIRE(mat.E16[8] == 0);
-		REQUIRE(mat.E16[9] == 0);
-		REQUIRE(mat.E16[10] == 1);
-		REQUIRE(mat.E16[11] == 1);
-		REQUIRE(mat.E16[12] == 0);
-		REQUIRE(mat.E16[13] == 0);
-		REQUIRE(mat.E16[14] == 0);
-		REQUIRE(mat.E16[15] == 1);
-	}
-
+	
 	SECTION("Test ToEulerAnglesYXZ")
 	{
 		//first test single axis rotation
@@ -367,7 +300,7 @@ TEST_CASE("Test Mat4")
 			//X
 			mat.MakeRotationX(expected_rot);
 			unique = mat.ToEulerAnglesYXZ(euler);
- 			euler.x = ToPosAngle(euler.x);
+			euler.x = ToPosAngle(euler.x);
 			REQUIRE(euler.x == Approx(expected_rot));
 
 			//Z
@@ -401,7 +334,7 @@ TEST_CASE("Test Mat4")
 		}
 
 		{
-			
+
 			GASS::Float expected_rot = GASS_PI*0.4;
 			GASS::Vec3 euler;
 
@@ -460,42 +393,43 @@ TEST_CASE("Test Mat4")
 		//Test combined free rotation
 		{
 			GASS::Vec3 expected_rot(GASS_HALF_PI*2.1,
-				-GASS_HALF_PI*2,
+				-GASS_HALF_PI * 2,
 				-GASS_HALF_PI*1.2);
 			GASS::Vec3 euler;
 
 			//Y
 			mat.MakeRotationYXZ(expected_rot);
 			bool unique = mat.ToEulerAnglesYXZ(euler);
-		
+
 			//Test that we get same rotation matrix...euler angles will differ when we are outside +- HALF_PI			
 			GASS::Mat4 res_mat;
 			res_mat.MakeRotationYXZ(euler);
-			REQUIRE(res_mat.Equal(mat,0.00001));
+			REQUIRE(res_mat.Equal(mat, 0.00001));
 		}
 	}
 
 
 	SECTION("Test operator * Vec3")
 	{
-		GASS::Mat4 mat1(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Mat4 mat1 = GASS::Mat4::CreateTranslation(GASS::Vec3(1, 1, 1));
 		GASS::Vec3 point(0, 0, 0);
 		point = mat1*point;
 		REQUIRE(point == GASS::Vec3(1, 1, 1));
 
 
 		//rotate around y-axis (heading)
-		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(0, GASS_HALF_PI, 0), GASS::Vec3(1, 1, 1));
+		GASS::Mat4 mat2;
+		mat2.MakeRotationY(GASS_HALF_PI);
 		point.Set(1, 0, 0);
 		point = mat2*point;
 
 		REQUIRE(point.Equal(GASS::Vec3(0, 0, -1), 1.0e-10));
 
 		//scale, rotate and translate
-		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_HALF_PI), GASS::Vec3(2, 2, 2));
+		GASS::Quaternion rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, GASS_HALF_PI));
+		GASS::Mat4 mat3 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(2, 2, 2), rot, GASS::Vec3(2, 0, 0));
 		point.Set(1, 0, 0);
 		point = mat3*point;
-
 		REQUIRE(point.Equal(GASS::Vec3(2, 2, 0), 1.0e-10));
 	}
 
@@ -503,13 +437,14 @@ TEST_CASE("Test Mat4")
 
 	SECTION("Test operator * Vec4")
 	{
-		GASS::Mat4 mat1(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Mat4 mat1 = GASS::Mat4::CreateTranslation(GASS::Vec3(1, 1, 1));
 		GASS::Vec4 point(0, 0, 0, 1);
 		point = mat1*point;
 		REQUIRE(point == GASS::Vec4(1, 1, 1, 1));
 
 		//rotate around y-axis (heading)
-		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(0, GASS_HALF_PI, 0), GASS::Vec3(1, 1, 1));
+		GASS::Quaternion rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, GASS_HALF_PI, 0));
+		GASS::Mat4 mat2 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(1, 1, 1), rot, GASS::Vec3(0, 0, 0));
 		point.Set(1, 0, 0, 1);
 		point = mat2*point;
 
@@ -519,7 +454,8 @@ TEST_CASE("Test Mat4")
 		REQUIRE(point.w == Approx(1));
 
 		//translate, rotate and scale
-		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_HALF_PI), GASS::Vec3(2, 2, 2));
+		rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, GASS_HALF_PI));
+		GASS::Mat4 mat3 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(2, 2, 2), rot, GASS::Vec3(2, 0, 0));
 		point.Set(1, 0, 0, 1);
 		point = mat3*point;
 
@@ -532,13 +468,15 @@ TEST_CASE("Test Mat4")
 
 	SECTION("Test friend operator * Vec4")
 	{
-		GASS::Mat4 mat1(GASS::Vec3(1, 1, 1), GASS::Vec3(0, 0, 0), GASS::Vec3(1, 1, 1));
+		GASS::Quaternion rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, 0));
+		GASS::Mat4 mat1 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(1, 1, 1), rot, GASS::Vec3(1, 1, 1));
 		GASS::Vec4 point(0, 0, 0, 1);
 		point = point*mat1;
 		REQUIRE(point == GASS::Vec4(0, 0, 0, 1));
 
 		//rotate around y-axis (heading)
-		GASS::Mat4 mat2(GASS::Vec3(0, 0, 0), GASS::Vec3(0, GASS_HALF_PI, 0), GASS::Vec3(1, 1, 1));
+		rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, GASS_HALF_PI, 0));
+		GASS::Mat4 mat2 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(1, 1, 1), rot, GASS::Vec3(0, 0, 0));
 		point.Set(1, 0, 0, 1);
 		point = point*mat2;
 
@@ -548,7 +486,8 @@ TEST_CASE("Test Mat4")
 		REQUIRE(point.w == Approx(1));
 
 		//translate, rotate and scale
-		GASS::Mat4 mat3(GASS::Vec3(2, 0, 0), GASS::Vec3(0, 0, GASS_HALF_PI), GASS::Vec3(2, 2, 2));
+		rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, 0, GASS_HALF_PI));
+		GASS::Mat4 mat3 = GASS::Mat4::CreateTransformationSRT(GASS::Vec3(2, 2, 2), rot, GASS::Vec3(2, 0, 0));
 		point.Set(1, 0, 0, 1);
 		point = point*mat3;
 
@@ -562,12 +501,15 @@ TEST_CASE("Test Mat4")
 	SECTION("Test GetInvert")
 	{
 		GASS::Mat4 mat;
-		//Test against kown result matrix
-		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), GASS::Quaternion(GASS::Vec3(0, GASS_HALF_PI, GASS_HALF_PI)), GASS::Vec3(2, 3, 4));
+		//Test against known result matrix
+		GASS::Quaternion rot = GASS::Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, GASS_HALF_PI, GASS_HALF_PI));
+		mat.MakeTransformationSRT(GASS::Vec3(33, 34, 35), rot, GASS::Vec3(2, 3, 4));
 		GASS::Mat4 mat_inv = mat.GetInvert();
 
-		//concatenate and expect identity
+		//concatenate 
 		GASS::Mat4 identity_mat = mat*mat_inv;
+
+		//expect identity
 		GASS::Mat4 expected = GASS::Mat4::CreateIdentity();
 		REQUIRE(identity_mat.Equal(expected, 1.0e-10));
 	}

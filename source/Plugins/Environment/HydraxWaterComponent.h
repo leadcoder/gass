@@ -69,8 +69,8 @@ namespace GASS
 		std::string GetConfigurationFile() const {return m_ConfigurationFile;}
 		void SetPosition(const Vec3 &);
 		Vec3 GetPosition() const;
-		void SetRotation(const Vec3 &);
-		Vec3 GetRotation() const;
+		void SetRotation(const EulerRotation &);
+		EulerRotation GetRotation() const;
 		void SetGlobalTransparency(Float);
 		Float GetGlobalTransparency() const;
 		void SetFullReflectionDistance(Float);
@@ -290,7 +290,7 @@ namespace GASS
 	private:
 		std::string m_ConfigurationFile;
 		Hydrax::Hydrax *m_Hydrax;
-		Vec3 m_Rot;
+		EulerRotation m_Rot;
 
 		// Our Hydrax geometry modules vector
 		std::vector<Hydrax::Module::Module*> mModules;

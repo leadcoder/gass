@@ -73,7 +73,7 @@ namespace GASS
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if(lc && lc != root_lc)
 				{
-					Mat4 trans_mat(lc->GetWorldPosition() + offset, lc->GetWorldRotation(), lc->GetScale());
+					Mat4 trans_mat = Mat4::CreateTransformationSRT(lc->GetScale(), lc->GetWorldRotation(), lc->GetWorldPosition() + offset);
 					mesh_data.Transform(trans_mat);
 				}
 				mesh_data_vec.push_back(mesh_data);

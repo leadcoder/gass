@@ -67,7 +67,7 @@ namespace GASS
 			visible = true;
 
 			GeometryComponentPtr gc = so->GetFirstComponentByClass<IGeometryComponent>();
-			Mat4 world_mat(object_pos - world_pos, lc->GetWorldRotation(), lc->GetScale());
+			Mat4 world_mat = Mat4::CreateTransformationSRT(lc->GetScale(), lc->GetWorldRotation(), object_pos - world_pos);
 			AABox bb = gc->GetBoundingBox();
 
 			const Vec3 size = bb.GetSize() * 0.5;

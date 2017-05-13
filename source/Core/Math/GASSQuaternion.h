@@ -47,9 +47,10 @@ namespace GASS
 			TYPE fW = 1.0,
 			TYPE fX = 0.0, TYPE fY = 0.0, TYPE fZ = 0.0);
 		inline TQuaternion (const TQuaternion& rkQ);
-		inline TQuaternion(const TVec3<TYPE> &euler_rot);
+		//inline TQuaternion(const TVec3<TYPE> &euler_rot);
 
-		inline void FromEulerAngles (const TVec3<TYPE> &rot);
+		inline void FromEulerAnglesXYZ (const TVec3<TYPE> &rot);
+		inline void FromEulerAnglesYXZ (const TVec3<TYPE> &rot);
 		inline void FromRotationMatrix (const TMat4<TYPE>& kRot);
 		
 		inline void ToRotationMatrix (TMat4<TYPE>& kRot) const;
@@ -156,6 +157,19 @@ namespace GASS
 
 		TYPE w, x, y, z;
 
+		static TQuaternion CreateFromEulerXYZ(const TVec3<TYPE>& euler_rot_xyz)
+		{
+			TQuaternion rot;
+			rot.FromEulerAnglesXYZ(euler_rot_xyz);
+			return rot;
+		}
+
+		static TQuaternion CreateFromEulerYXZ(const TVec3<TYPE>& euler_rot_xyz)
+		{
+			TQuaternion rot;
+			rot.FromEulerAnglesYXZ(euler_rot_xyz);
+			return rot;
+		}
 	};
 
 	typedef TQuaternion<Float> Quaternion;
@@ -187,25 +201,39 @@ namespace GASS
 		z = rkQ.z;
 	}
 
-	template<class TYPE>
+	/*template<class TYPE>
 	TQuaternion<TYPE>::TQuaternion(const TVec3<TYPE> &euler_rot)
 	{
 		FromEulerAngles(euler_rot);
+	}*/
+
+	template<class TYPE>
+	void TQuaternion<TYPE>::FromEulerAnglesYXZ(const TVec3<TYPE> &rot)
+	{
+		TQuaternion<TYPE> qx;
+		TQuaternion<TYPE> qy;
+		TQuaternion<TYPE> qz;
+
+		qx.FromAngleAxis(rot.x, TVec3<TYPE>(1, 0, 0));
+		qy.FromAngleAxis(rot.y, TVec3<TYPE>(0, 1, 0));
+		qz.FromAngleAxis(rot.z, TVec3<TYPE>(0, 0, 1));
+
+		*this = qy * qx;
+		*this = (*this) * qz;
 	}
 
 	template<class TYPE>
-	void TQuaternion<TYPE>::FromEulerAngles(const TVec3<TYPE> &rot)
+	void TQuaternion<TYPE>::FromEulerAnglesXYZ(const TVec3<TYPE> &rot)
 	{
-		TQuaternion<TYPE> qh;
-		TQuaternion<TYPE> qp;
-		TQuaternion<TYPE> qr;
+		TQuaternion<TYPE> qx;
+		TQuaternion<TYPE> qy;
+		TQuaternion<TYPE> qz;
 
-		qh.FromAngleAxis(rot.x, TVec3<TYPE>(0, 1, 0));
-		qp.FromAngleAxis(rot.y, TVec3<TYPE>(1, 0, 0));
-		qr.FromAngleAxis(rot.z, TVec3<TYPE>(0, 0, 1));
-
-		*this = qh * qp;
-		*this = (*this) * qr;
+		qx.FromAngleAxis(rot.x, TVec3<TYPE>(1, 0, 0));
+		qy.FromAngleAxis(rot.y, TVec3<TYPE>(0, 1, 0));
+		qz.FromAngleAxis(rot.z, TVec3<TYPE>(0, 0, 1));
+		*this = qx * qy;
+		*this = (*this) * qz;
 	}
 
 	template<class TYPE>

@@ -68,7 +68,7 @@ namespace GASS
 				world_pos = object_pos;
 			visible = true;
 
-			Mat4 world_mat(object_pos - world_pos, lc->GetWorldRotation(), lc->GetScale());
+			Mat4 world_mat = Mat4::CreateTransformationSRT(lc->GetScale(), lc->GetWorldRotation(), object_pos - world_pos);
 
 			AABox bb = gc->GetBoundingBox();
 

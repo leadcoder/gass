@@ -29,11 +29,12 @@
 namespace GASS
 {
 	OSGLocationComponent::OSGLocationComponent() : m_Pos(0, 0, 0),
-		m_Rot(0, 0, 0),
+		m_EulerRot(0, 0, 0),
 		m_Scale(1, 1, 1),
 		m_AttachToParent(false),
 		m_NodeMask(0)
 	{
+
 	}
 
 	OSGLocationComponent::~OSGLocationComponent()
@@ -58,9 +59,9 @@ namespace GASS
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]", PF_VISIBLE | PF_EDITABLE)));
-
+		RegisterProperty<EulerRotation>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]", PF_VISIBLE | PF_EDITABLE)));
+		
 		RegisterProperty<Quaternion>("Quaternion", &GASS::OSGLocationComponent::GetRotation, &GASS::OSGLocationComponent::SetRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion", PF_VISIBLE)));
 
@@ -147,8 +148,9 @@ namespace GASS
 		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
 
-		if (m_Rot != Vec3(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(Quaternion(Vec3::Deg2Rad(m_Rot))));
+		//Check if rotation provided?
+		if (m_EulerRot.Heading == 0 && m_EulerRot.Pitch == 0 && m_EulerRot.Roll == 0)
+			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_EulerRot.GetQuaternion()));
 		else
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
@@ -318,19 +320,18 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::SetEulerRotation(const Vec3 &value)
+	void OSGLocationComponent::SetEulerRotation(const EulerRotation &value)
 	{
-		m_Rot = value;
+		m_EulerRot = value;
 		if (m_TransformNode.valid())
 		{
-			Vec3 rot = Vec3::Deg2Rad(value);
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(rot))));
+			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(m_EulerRot.GetQuaternion())));
 		}
 	}
 
-	Vec3 OSGLocationComponent::GetEulerRotation() const
+	EulerRotation OSGLocationComponent::GetEulerRotation() const
 	{
-		return m_Rot;
+		return m_EulerRot;
 	}
 
 	Quaternion OSGLocationComponent::GetRotation() const

@@ -46,7 +46,7 @@ namespace GASS
 		m_ControlSettingName("FreeCameraInputSettings"),
 		m_AltControlSettingName("FreeCameraInputAltSettings"),
 		m_Pos(0,0,0),
-		m_Rot(0,0,0),
+		m_EulerRot(0,0,0),
 		m_EnableRotInput(false),
 		m_SpeedBoostInput(false),
 		m_ThrottleInput(0),
@@ -125,10 +125,7 @@ namespace GASS
 			RotationRequestPtr pos_mess = GASS_STATIC_PTR_CAST<RotationRequest>(message);
 
 			Mat4 rot_mat(pos_mess->GetRotation());
-			rot_mat.ToEulerAnglesYXZ(m_Rot);
-			/*m_Rot.x = rot_mat.GetEulerRotationY();
-			m_Rot.y = rot_mat.GetEulerRotationX();
-			m_Rot.z = rot_mat.GetEulerRotationZ();*/
+			rot_mat.ToEulerAnglesYXZ(m_EulerRot);
 		}
 	}
 
@@ -230,8 +227,8 @@ namespace GASS
 		Float strafe_speed = m_StrafeInput*delta_time*speed_factor;
 		Float updown_speed = m_UpDownInput*delta_time*speed_factor;
 
-		Float teta = m_Rot.x; //heading
-		Float beta = m_Rot.y; //pitch
+		Float teta = m_EulerRot.y; //heading
+		Float beta = m_EulerRot.x; //pitch
 
 		Vec3 forward_vel;
 		Vec3 strafe_vel;
@@ -312,8 +309,8 @@ namespace GASS
 		//m_Rot = m_Rot +  up*turn_speed_x;
 		//m_Rot = m_Rot +  east*turn_speed_y;
 
-		m_Rot.x +=  turn_speed_x;
-		m_Rot.y +=  turn_speed_y;
+		m_EulerRot.y +=  turn_speed_x;
+		m_EulerRot.x += turn_speed_y;
 		//m_Rot.h +=  turn_speed_x;
 		//m_Rot.p +=  turn_speed_y;
 
@@ -325,8 +322,7 @@ namespace GASS
 		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
 		int from_id = GASS_PTR_TO_INT(this);
 		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
-
-		Quaternion rot_to_send(m_Rot);
+		Quaternion rot_to_send = Quaternion::CreateFromEulerYXZ(m_EulerRot);
 		/*if(up.z == 1)
 		{
 			//fix rotation if we want z as up axis in gass scene
@@ -343,7 +339,7 @@ namespace GASS
 
 		if(m_Debug)
 		{
-			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_Rot << std::endl;
+			std::cout << "FreeCameraComponent Position:" << m_Pos << " Rotation:" << m_EulerRot << std::endl;
 		}
 	}
 }

@@ -23,12 +23,12 @@
 
 namespace GASS
 {
-	//instance to catch errors at compile time
+	//instantiate to catch compile-time warnings and errors
 	template class TVec3<double>;
 	template class TVec4<double>;
 	template class TVec2<double>;
 
-	//instance to catch errors at compile time
+	//instantiate to catch compile-time warnings and errors
 	template class TVec3<float>;
 	template class TVec4<float>;
 	template class TVec2<float>;
