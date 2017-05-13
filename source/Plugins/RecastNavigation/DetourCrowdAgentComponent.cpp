@@ -352,9 +352,7 @@ namespace GASS
 					right.z = -final_dir.x;
 					GASS::Mat4 rot_mat;
 					rot_mat.MakeIdentity();
-					rot_mat.SetZAxis(final_dir);
-					rot_mat.SetXAxis(right);
-					rot_mat.SetYAxis(up);
+					rot_mat.SetRotationByAxis(right, up, final_dir);
 					Quaternion rot;
 					rot.FromRotationMatrix(rot_mat);
 

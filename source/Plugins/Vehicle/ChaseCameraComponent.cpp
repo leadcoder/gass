@@ -136,9 +136,7 @@ namespace GASS
 		Vec3 up = Vec3::Cross(camera_dir,left);
 		up.Normalize();
 		Mat4 rot_mat;
-		rot_mat.SetZAxis(camera_dir);
-		rot_mat.SetYAxis(up);
-		rot_mat.SetXAxis(left);
+		rot_mat.SetRotationByAxis(left, up, camera_dir);
 		Quaternion new_rot;
 		new_rot.FromRotationMatrix(rot_mat);
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot)));

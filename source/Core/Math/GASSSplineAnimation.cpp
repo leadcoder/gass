@@ -105,9 +105,7 @@ namespace GASS
 		up.Normalize();
 
 		transformation.MakeIdentity();
-		transformation.SetZAxis(dir);
-		transformation.SetYAxis(up);
-		transformation.SetXAxis(left);
+		transformation.SetRotationByAxis(left,up,dir);
 		transformation.SetTranslation(pos);
 		return transformation;
 	}
@@ -154,9 +152,7 @@ namespace GASS
 		up.Normalize();
 
 		transformation.MakeIdentity();
-		transformation.SetZAxis(dir);
-		transformation.SetYAxis(up);
-		transformation.SetXAxis(left);
+		transformation.SetRotationByAxis(left, up, dir);
 		transformation.SetTranslation(pos);
 		return transformation;
 	}
@@ -191,9 +187,7 @@ namespace GASS
 		
 		
 		transformation.MakeIdentity();
-		transformation.SetZAxis(dir);
-		transformation.SetYAxis(up);
-		transformation.SetXAxis(left);
+		transformation.SetRotationByAxis(left,up,dir);
 		transformation.SetTranslation(pos);
 		return transformation;
 	}

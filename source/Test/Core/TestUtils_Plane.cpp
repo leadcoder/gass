@@ -62,6 +62,4 @@ TEST_CASE("Test Plane")
 		GASS::Vec3  proj_vec = plane.GetProjectedVector(vec);
 		REQUIRE(proj_vec == GASS::Vec3(10, 0, 10));
 	}
-
-	
 }

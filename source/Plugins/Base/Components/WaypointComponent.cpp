@@ -194,10 +194,8 @@ namespace GASS
 			up = Vec3::Cross(left,dir);
 			up.Normalize();
 
-			rot_mat.SetXAxis(-left);
-			rot_mat.SetYAxis(up);
-			rot_mat.SetZAxis(dir);
-
+			rot_mat.SetRotationByAxis(-left, up, dir);
+			
 			Quaternion rot;
 			rot.FromRotationMatrix(rot_mat);
 			int id = GASS_PTR_TO_INT(this);

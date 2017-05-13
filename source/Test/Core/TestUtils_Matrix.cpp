@@ -111,7 +111,6 @@ TEST_CASE("Test Mat4")
 			REQUIRE(mat.E16[i] == 0);
 	}
 
-
 	SECTION("Test SetScale")
 	{
 		GASS::Mat4 mat;

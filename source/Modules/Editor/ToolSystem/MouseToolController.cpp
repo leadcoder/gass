@@ -515,11 +515,8 @@ namespace GASS
 		x_axis.Normalize();
 		Vec3 z_axis = -Vec3::Cross(normal, x_axis);
 		Mat4 rot_mat;
-
-		rot_mat.SetXAxis(x_axis);
-		rot_mat.SetYAxis(normal);
-		rot_mat.SetZAxis(z_axis);
-
+		rot_mat.SetRotationByAxis(x_axis, normal, z_axis);
+		
 		/*Mat4 rot_mat;
 		rot_mat.Identity();
 		rot_mat.SetZAxis(normal);
