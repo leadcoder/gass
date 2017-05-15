@@ -330,6 +330,27 @@ namespace GASS
 			return ret;
 		}
 
+		friend std::ostream& operator << (std::ostream& os, const TMat4& mat)
+		{
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+				{
+					os << mat[i][j];
+					if(i != 3 && j !=3)
+						os << " ";
+				}
+			
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& is, TMat4& mat)
+		{
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					if (!(is >> mat[i][j]))
+						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Mat4", "Mat4::>>");
+		}
+
 		//Convenience functions
 
 		/**

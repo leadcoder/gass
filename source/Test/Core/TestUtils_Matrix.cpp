@@ -512,4 +512,29 @@ TEST_CASE("Test Mat4")
 		GASS::Mat4 expected = GASS::Mat4::CreateIdentity();
 		REQUIRE(identity_mat.Equal(expected, 1.0e-10));
 	}
+
+	SECTION("Test Compare Mat4 rotations with Quaternion rotations")
+	{
+		GASS::Vec3 euler_rot(0, GASS_HALF_PI, GASS_HALF_PI);
+		GASS::Mat4 qmat(GASS::Quaternion::CreateFromEulerYXZ(euler_rot));
+		GASS::Mat4 mat = GASS::Mat4::CreateRotationYXZ(euler_rot);
+		REQUIRE(mat.Equal(qmat, 1.0e-10));
+		
+		euler_rot = GASS::Vec3(GASS_HALF_PI*0.1, GASS_HALF_PI*0.2, GASS_HALF_PI*0.3);
+		qmat = GASS::Mat4(GASS::Quaternion::CreateFromEulerYXZ(euler_rot));
+		mat = GASS::Mat4::CreateRotationYXZ(euler_rot);
+		REQUIRE(mat.Equal(qmat, 1.0e-10));
+
+		euler_rot = GASS::Vec3(GASS_HALF_PI*2.1, GASS_HALF_PI*2.2, GASS_HALF_PI*2.3);
+		qmat = GASS::Mat4(GASS::Quaternion::CreateFromEulerYXZ(euler_rot));
+		mat = GASS::Mat4::CreateRotationYXZ(euler_rot);
+		REQUIRE(mat.Equal(qmat, 1.0e-10));
+
+		euler_rot = GASS::Vec3(-GASS_HALF_PI*2.1, -GASS_HALF_PI*2.2, -GASS_HALF_PI*2.3);
+		qmat = GASS::Mat4(GASS::Quaternion::CreateFromEulerYXZ(euler_rot));
+		mat = GASS::Mat4::CreateRotationYXZ(euler_rot);
+		REQUIRE(mat.Equal(qmat, 1.0e-10));
+	}
+
+	
 }
