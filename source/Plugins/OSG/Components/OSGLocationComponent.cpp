@@ -149,7 +149,9 @@ namespace GASS
 		RotationRequestPtr rot_msg;
 
 		//Check if rotation provided?
-		if (m_EulerRot.Heading == 0 && m_EulerRot.Pitch == 0 && m_EulerRot.Roll == 0)
+		if (m_EulerRot.Heading != 0 && 
+			m_EulerRot.Pitch != 0 && 
+			m_EulerRot.Roll != 0)
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_EulerRot.GetQuaternion()));
 		else
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
