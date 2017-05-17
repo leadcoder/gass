@@ -53,6 +53,15 @@ namespace GASS
 		{
 			return Quaternion::CreateFromEulerYXZ(GetAxisRotation());
 		}
+
+		bool operator!= (const EulerRotation &rot) const
+		{
+			return !(rot.Heading == Heading &&  rot.Pitch == Pitch && rot.Roll == Roll);
+		}
+		bool operator == (const EulerRotation &rot) const
+		{
+			return (rot.Heading == Heading &&  rot.Pitch == Pitch && rot.Roll == Roll);
+		}
 	
 		static EulerRotation FromQuaternion(const Quaternion &rot)
 		{
