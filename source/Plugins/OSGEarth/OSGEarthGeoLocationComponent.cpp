@@ -57,7 +57,7 @@ namespace GASS
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation,
+		RegisterProperty<EulerRotation>("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]", PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<Quaternion>("Quaternion", &GASS::OSGEarthGeoLocationComponent::GetRotation, &GASS::OSGEarthGeoLocationComponent::SetRotation,
@@ -136,8 +136,8 @@ namespace GASS
 		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
 
-		if (m_Rot != Vec3(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(Quaternion(Math::Deg2Rad(m_Rot))));
+		if (m_Rot != EulerRotation(0, 0, 0))
+			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion()));
 		else
 			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
 
@@ -317,17 +317,17 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::SetEulerRotation(const Vec3 &value)
+	void OSGEarthGeoLocationComponent::SetEulerRotation(const EulerRotation &value)
 	{
 		m_Rot = value;
 		if (m_TransformNode.valid())
 		{
-			Vec3 rot = Math::Deg2Rad(value);
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(Quaternion(rot))));
+			
+			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion())));
 		}
 	}
 
-	Vec3 OSGEarthGeoLocationComponent::GetEulerRotation() const
+	EulerRotation OSGEarthGeoLocationComponent::GetEulerRotation() const
 	{
 		return m_Rot;
 	}
