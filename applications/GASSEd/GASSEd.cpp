@@ -521,7 +521,7 @@ void GASSEd::OnDelete()
 
 void GASSEd::OnAddWaypoints()
 {
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	GASS::SceneObjectPtr obj = m_SelectedObject.lock();
 	if(obj)
 	{
 		GASS::WaypointListComponentPtr waypointlist = obj->GetFirstComponentByClass<GASS::IWaypointListComponent>();
@@ -538,7 +538,7 @@ void GASSEd::OnAddWaypoints()
 
 void GASSEd::OnAddGraphNode()
 {
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	GASS::SceneObjectPtr obj = m_SelectedObject.lock();
 	if(obj)
 	{
 		GASS::GraphComponentPtr graph = obj->GetFirstComponentByClass<GASS::IGraphComponent>();
@@ -574,7 +574,7 @@ void GASSEd::OnAddGraphNode()
 
 void GASSEd::OnInsertGraphNode()
 {
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	GASS::SceneObjectPtr obj = m_SelectedObject.lock();
 	if(obj)
 	{
 		GASS::GraphComponentPtr graph = obj->GetFirstComponentByClass<GASS::IGraphComponent>();
@@ -593,7 +593,7 @@ void GASSEd::OnInsertGraphNode()
 
 void GASSEd::OnExport()
 {
-	GASS::SceneObjectPtr obj(m_SelectedObject, boost::detail::sp_nothrow_tag());
+	GASS::SceneObjectPtr obj = m_SelectedObject.lock();
 	if(obj)
 	{
 		QString file_name = QFileDialog::getSaveFileName(this, tr("Export mesh"));

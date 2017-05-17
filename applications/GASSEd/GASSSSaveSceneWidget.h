@@ -1,13 +1,13 @@
 #ifndef GASS_SAVE_SCENE_WIDGET_H
 #define GASS_SAVE_SCENE_WIDGET_H
 #include <QDialog>
-#include <boost/shared_ptr.hpp>
+#include "Core/Common.h"
 class QComboBox;
 
 namespace GASS
 {
 	class Scene;
-	typedef boost::shared_ptr<Scene> ScenePtr; 
+	typedef GASS_SHARED_PTR<Scene> ScenePtr;
 }
 
 class GASSSSaveSceneWidget : public QDialog

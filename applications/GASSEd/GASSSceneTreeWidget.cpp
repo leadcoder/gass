@@ -139,7 +139,7 @@ GASS::SceneObjectPtr GASSSceneTreeWidget::GetSceneObject(QTreeWidgetItem*  item)
 	std::map<QTreeWidgetItem*,GASS::SceneObjectWeakPtr>::const_iterator iter =  m_ObjectMap.find(item);
 	if(iter != m_ObjectMap.end())
 	{
-		return GASS::SceneObjectPtr(iter->second,boost::detail::sp_nothrow_tag());
+		return iter->second.lock();
 	}
 	return GASS::SceneObjectPtr();
 }

@@ -75,6 +75,7 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_PHYSX "Build Plugin." ON "GASS_BUILD_SI
 cmake_dependent_option(GASS_BUILD_PLUGIN_MYGUI "Build Plugin." OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OSG" OFF)
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
+cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 
 option(GASS_USE_BOOST "Disable Boost" ON)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
@@ -102,6 +103,7 @@ include(DepTargets)
 
 add_subdirectory(source)
 add_subdirectory(samples)
+add_subdirectory(applications)
 
 #-- Add an Option to toggle the generation of the API documentation
 if(GASS_BUILD_DOCUMENTATION)

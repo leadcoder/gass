@@ -1,17 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
-set(APP_NAME "GASSEd")
-project(${APP_NAME})
-
-set(CMAKE_MODULE_PATH
-  "${CMAKE_CURRENT_SOURCE_DIR}/../../CMake"
-  )
-
+set(APP_NAME GASSEd)
 #prepapre search dirs for find_package
-set(GASS_DIR $ENV{GASS_HOME} CACHE PATH "GASS folder")
-
 set(QT_DIR $ENV{QT_DIR} CACHE PATH "QT folder")
 set(QTPROPERTYBROWSER_DIR $ENV{QTPROPERTYBROWSER_HOME} CACHE PATH "qt property browser dependency folder")
-
 option(GASSED_USE_OSG "Add OSG render system" OFF ) 
 #add osg plugin if requested
  
@@ -32,23 +22,13 @@ if(GASSED_USE_OSG)
 	set(GASS_COMPONENTS  ${GASS_COMPONENTS} GASSPluginOSG)
 endif()
 
-
 find_package(GASSSim COMPONENTS ${GASS_COMPONENTS})
-
-FIND_PACKAGE(Qt5Core QUIET)
-FIND_PACKAGE(Qt5Widgets QUIET)
-FIND_PACKAGE(Qt5Gui QUIET)
-FIND_PACKAGE(Qt5OpenGL QUIET)
-SET(QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
-
+find_package(Qt5Core QUIET)
+find_package(Qt5Widgets QUIET)
+find_package(Qt5Gui QUIET)
+find_package(Qt5OpenGL QUIET)
+set(QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
 find_package(QTPropertyBrowser)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #build dlls and exe here
-set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
-
-set(GASSED_INSTALL_BIN_DIR  "bin")
-set(GASSED_INSTALL_BIN_DIR_DEBUG "bin/debug")
-set(GASSED_INSTALL_BIN_DIR_RELEASE "bin/release")
 
 set(GASSED_H 
 	GASSEd.h
@@ -90,19 +70,16 @@ set(GASSED_CPP main.cpp
 	variantfactory.cpp
 	variantmanager.cpp)
 	
-add_definitions( -D_SCL_SECURE_NO_WARNINGS -DQT_QTPROPERTYBROWSER_IMPORT)
-
-#link_directories(${QTPROPERTYBROWSER_DIR}/lib)
-set_target_properties(${LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
-
-include_directories(${GASS_SIM_INCLUDE_DIRS}
-					${QT_INCLUDES}
-					${QTPROPERTYBROWSER_DIR_INCLUDE_DIRS}
-					)
 
 add_executable(${APP_NAME} ${GASSED_CPP} ${GASSED_MOC_H} ${GASSED_RESOURCES_RCC})
-target_link_libraries(${APP_NAME} ${QT_LIBRARIES} 
-					${GASS_SIM_LIBRARIES}
+target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${GASS_SIM_INCLUDE_DIRS}>)
+target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${QT_INCLUDES}>)
+target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${QTPROPERTYBROWSER_DIR_INCLUDE_DIRS}>)
+
+target_link_libraries(${APP_NAME} 
+					GASSSim
+					GASSEditorModule
+					${QT_LIBRARIES} 
 					${QT_QTCORE_LIBRARY}
 					${QT_QTGUI_LIBRARY}
 					${QTPROPERTYBROWSER_LIBRARIES}					
@@ -111,37 +88,35 @@ target_link_libraries(${APP_NAME} ${QT_LIBRARIES}
 qt5_use_modules(${APP_NAME} Core Widgets Gui OpenGL)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Configuration DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-install(TARGETS ${APP_NAME} RUNTIME DESTINATION ${GASSED_INSTALL_BIN_DIR} CONFIGURATIONS Release)
-#install(FILES ${GASSED_CONFIG} DESTINATION ${GASSED_INSTALL_BIN_DIR}/../Configuration)
-install(DIRECTORY Configuration DESTINATION ${GASSED_INSTALL_BIN_DIR}/../)
+install(TARGETS ${APP_NAME} RUNTIME DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+install(DIRECTORY Configuration DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE}/../)
+
 if(WIN32)
 	#HACK to get qt-binaries, findqt don't return binaries nor root/install path, 
 	#we use the QT_DOC_DIR for now as to get root level..
-
-IF(Qt5Widgets_FOUND)
+	if(Qt5Widgets_FOUND)
 	
-else()
-	set(QT_BINARIES_REL ${QT_DOC_DIR}/../bin/QtCore4.dll
-	${QT_DOC_DIR}/../bin/QtGui4.dll
-	${QTPROPERTYBROWSER_BINARY_REL})
+	else()
+		set(QT_BINARIES_REL ${QT_DOC_DIR}/../bin/QtCore4.dll
+		${QT_DOC_DIR}/../bin/QtGui4.dll
+		${QTPROPERTYBROWSER_BINARY_REL})
 	
-	set(QT_BINARIES_DBG ${QT_DOC_DIR}/../bin/QtCored4.dll
-	${QT_DOC_DIR}/../bin/QtGuid4.dll
-	${QTPROPERTYBROWSER_BINARY_DBG})
-endif()
+		set(QT_BINARIES_DBG ${QT_DOC_DIR}/../bin/QtCored4.dll
+		${QT_DOC_DIR}/../bin/QtGuid4.dll
+		${QTPROPERTYBROWSER_BINARY_DBG})
+	endif()
 	
-	set(GASSED_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${GASS_PLUGIN_BINARIES_REL} ${QT_BINARIES_REL})
-	set(GASSED_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${GASS_PLUGIN_BINARIES_DBG} ${QT_BINARIES_DBG})
-	
-	file(COPY ${GASSED_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-	file(COPY ${GASSED_BINARIES_DBG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	#set(GASSED_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${GASS_PLUGIN_BINARIES_REL} ${QT_BINARIES_REL})
+	#set(GASSED_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${GASS_PLUGIN_BINARIES_DBG} ${QT_BINARIES_DBG})
+	file(COPY ${QT_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	file(COPY ${QT_BINARIES_DBG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	
 	if(GASSED_USE_OSG) 
 		#put osg plugins in own dir (must be named osgPlugins-<version> to) avoid cluttering
-		file(COPY ${OSGPLUGIN_BINARIES_REL} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/osgPlugins-${OSG_VERSION})
-		file(COPY ${OSGPLUGIN_BINARIES_DBG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/osgPlugins-${OSG_VERSION})
+		#file(COPY ${OSGPLUGIN_BINARIES_REL} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release/osgPlugins-${OSG_VERSION})
+		#file(COPY ${OSGPLUGIN_BINARIES_DBG} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug/osgPlugins-${OSG_VERSION})
 	endif()
 
-	install(FILES ${GASSED_BINARIES_REL} DESTINATION ${GASSED_INSTALL_BIN_DIR})
+	#install(FILES ${GASSED_BINARIES_REL} DESTINATION ${GASSED_INSTALL_BIN_DIR})
 endif()
 

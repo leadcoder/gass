@@ -50,7 +50,7 @@ public:
 	GASS::EditorApplication* m_GASSApp;
 	void Initialize();
 	void ShowObjectContextMenu(GASS::SceneObjectPtr obj, const QPoint& pos);
-	GASS::ScenePtr GetScene() const {return GASS::ScenePtr(m_Scene,boost::detail::sp_nothrow_tag());}
+	GASS::ScenePtr GetScene() const {return m_Scene.lock();}
 	void OnSceneObjectSelection(GASS::EditorSelectionChangedEventPtr message);
 	void SetConfigFile(const std::string &name) {m_Config = name;}
 	bool IsInitialized()const {return m_Initialized;}

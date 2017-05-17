@@ -56,7 +56,7 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 			{
 				QColor qcolor = v.value<QColor>();
 				GASS::ColorRGB color(qcolor.redF(),qcolor.greenF(),qcolor.blueF());
-				gp.UpdateValue(boost::any(color));
+				gp.UpdateValue(GASS_ANY(color));
 			}
 			else
 			{
@@ -69,7 +69,7 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 void GASSPropertyWidget::OnLoadScene(GASS::PreSceneCreateEventPtr message)
 {
 	GASS::ScenePtr scene = message->GetScene();
-	scene->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneObjectSelected,GASS::ObjectSelectionChangedEvent,0));
+	scene->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneObjectSelected,GASS::EditorSelectionChangedEvent,0));
 	scene->RegisterForMessage(REG_TMESS(GASSPropertyWidget::OnSceneSelected,GASS::SceneSelectionChangedEvent,0));
 	m_Scene = scene;
 }
@@ -79,9 +79,9 @@ void GASSPropertyWidget::OnUnloadScene(GASS::SceneUnloadedEventPtr message)
 
 }
 
-void GASSPropertyWidget::OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message)
+void GASSPropertyWidget::OnSceneObjectSelected(GASS::EditorSelectionChangedEventPtr message)
 {
-	Show(message->GetSceneObject());
+	Show(message->GetFirstSelected().lock());
 }
 
 void GASSPropertyWidget::OnSceneSelected(GASS::SceneSelectionChangedEventPtr message)
@@ -97,6 +97,7 @@ void GASSPropertyWidget::Show(GASS::SceneObjectPtr object)
 	if(m_Root)
 	{
 		delete m_Root;
+		m_Root = NULL;
 	}
 	if(!object)
 		return;
@@ -153,6 +154,7 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 	if(m_Root)
 	{
 		delete m_Root;
+		m_Root = NULL;
 	}
 
 	if(!scene)
@@ -297,9 +299,9 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				}
 				else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
 				{
-					boost::any any_value;
+					GASS_ANY any_value;
 					prop->GetValue(obj.get(),any_value );
-					GASS::ColorRGB color = boost::any_cast<GASS::ColorRGB>(any_value);
+					GASS::ColorRGB color = GASS_ANY_CAST<GASS::ColorRGB>(any_value);
 					item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
 					item->setValue(QColor(color.r*255,color.g*255,color.b*255));
 				}

@@ -25,16 +25,16 @@ public:
 	void SetGASSData(GASS::BaseReflectionObjectPtr obj,GASS::IProperty* prop) {m_Object= obj; m_Prop = prop; }
 	void UpdateValueByString(const std::string &value) 
 	{
-		GASS::BaseReflectionObjectPtr object(m_Object,boost::detail::sp_nothrow_tag());
+		GASS::BaseReflectionObjectPtr object = m_Object.lock();
 		if(object)
 		{
 			m_Prop->SetValueByString(object.get(),value);
 		}
 	}
 
-	void UpdateValue(boost::any  &value) 
+	void UpdateValue(GASS_ANY  &value) 
 	{
-		GASS::BaseReflectionObjectPtr object(m_Object,boost::detail::sp_nothrow_tag());
+		GASS::BaseReflectionObjectPtr object = m_Object.lock();
 		if(object)
 		{
 			m_Prop->SetValue(object.get(),value);
@@ -64,7 +64,7 @@ public:
 		}
 	}
 
-	void UpdateValue(boost::any  &value)
+	void UpdateValue(GASS_ANY  &value)
 	{
 		for (size_t i = 0; i < m_Objects.size(); i++)
 		{
@@ -92,7 +92,7 @@ public:
 	virtual ~GASSPropertyWidget();
 	void OnLoadScene(GASS::PreSceneCreateEventPtr message);
 	void OnUnloadScene(GASS::SceneUnloadedEventPtr message);
-	void OnSceneObjectSelected(GASS::ObjectSelectionChangedEventPtr message);
+	void OnSceneObjectSelected(GASS::EditorSelectionChangedEventPtr message);
 	void OnSceneSelected(GASS::SceneSelectionChangedEventPtr message);
 protected:
 	
