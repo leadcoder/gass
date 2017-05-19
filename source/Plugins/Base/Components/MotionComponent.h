@@ -25,11 +25,13 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
@@ -77,7 +79,7 @@ namespace GASS
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
-		
+		void OnGotoPosition(GotoPositionRequestPtr message);
 		void StepPhysics(double delta);
 		ADD_PROPERTY(bool,GroundClamp)
 		ADD_PROPERTY(bool, Debug)
@@ -91,6 +93,8 @@ namespace GASS
 		Float m_BreakInput;
 		Float m_CurrentSpeed;
 		Vec3 m_CurrentPos;
+		bool m_HasHeight;
+		Float m_DesiredHeight;
 		Quaternion m_CurrentRot;
 		HeightmapTerrainComponentPtr m_Heightmap;
 	};

@@ -51,7 +51,9 @@ namespace GASS
 		m_CurrentSpeed(0),
 		m_Debug(false),
 		m_BreakInput(0),
-		m_GroundClamp(true)
+		m_GroundClamp(true),
+		m_HasHeight(true),
+		m_DesiredHeight(0)
 	{
 
 	}
@@ -83,6 +85,7 @@ namespace GASS
 
 	void MotionComponent::OnInitialize()
 	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnGotoPosition, GotoPositionRequest, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnInput, InputRelayEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnTransMessage, TransformationChangedEvent, 0));
 		//register for updates
@@ -102,7 +105,6 @@ namespace GASS
 		//ground clamp?
 		if (m_GroundClamp)
 		{
-
 			//get vehicle corner pos
 			Float vehicle_with = 2.0;
 			Float vehicle_length = 4.0;
@@ -156,6 +158,11 @@ namespace GASS
 				m_CurrentRot.FromAxes(x_dir, y_dir, z_dir);
 			}
 		}
+		else
+		{
+			//if (m_HasHeight)
+			//	m_CurrentPos.y = m_DesiredHeight;
+		}
 	}
 
 	void MotionComponent::OnInput(InputRelayEventPtr message)
@@ -179,6 +186,13 @@ namespace GASS
 	void MotionComponent::SceneManagerTick(double delta_time)
 	{
 		StepPhysics(delta_time);
+	}
+
+	//HACK to support flying cars!
+	void MotionComponent::OnGotoPosition(GotoPositionRequestPtr message)
+	{
+		m_DesiredHeight = message->GetPosition().y;
+		m_HasHeight = true;
 	}
 
 	void MotionComponent::StepPhysics(double delta_time)
@@ -219,7 +233,17 @@ namespace GASS
 		forward_vel.Normalize();
 		forward_vel = forward_vel * m_CurrentSpeed;
 
+		
+
 		Vec3 new_pos = m_CurrentPos + forward_vel*delta_time;
+
+		if (!m_GroundClamp)
+		{
+			//Interpolate height
+			Float hdiff = m_DesiredHeight - m_CurrentPos.y;
+			new_pos.y += hdiff*delta_time;
+		}
+
 		Quaternion rot;
 
 		Vec3 up_vec= m_CurrentRot.GetYAxis();
