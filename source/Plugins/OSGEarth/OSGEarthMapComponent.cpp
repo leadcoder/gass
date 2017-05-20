@@ -98,6 +98,12 @@ namespace GASS
 				m_MapNode = osgEarth::MapNode::findMapNode(node);
 				root->addChild(m_MapNode);
 
+				osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
+
+				//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
+				manip->setNode(m_MapNode);
+
+
 				OSGNodeData* data = new OSGNodeData(shared_from_this());
 				m_MapNode->setUserData(data);
 				IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
@@ -142,7 +148,7 @@ namespace GASS
 
 				//if (m_UseSky)
 				{
-					
+
 					osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
 					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
 					sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
