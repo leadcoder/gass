@@ -52,7 +52,7 @@ namespace GASS
 		m_Debug(false),
 		m_BreakInput(0),
 		m_GroundClamp(true),
-		m_HasHeight(true),
+		m_HasHeight(false),
 		m_DesiredHeight(0)
 	{
 
@@ -240,8 +240,11 @@ namespace GASS
 		if (!m_GroundClamp)
 		{
 			//Interpolate height
-			Float hdiff = m_DesiredHeight - m_CurrentPos.y;
-			new_pos.y += hdiff*delta_time;
+			if (m_HasHeight)
+			{
+				Float hdiff = m_DesiredHeight - m_CurrentPos.y;
+				new_pos.y += hdiff*delta_time;
+			}
 		}
 
 		Quaternion rot;
