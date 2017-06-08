@@ -55,7 +55,6 @@ namespace GASS
 	void OSGEarthSkyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OSGEarthSkyComponent",new Creator<OSGEarthSkyComponent, Component>);
-		//RegisterProperty<std::string>("EarthFile", &OSGEarthSkyComponent::GetEarthFile, &OSGEarthSkyComponent::SetEarthFile);
 	}
 	
 	void OSGEarthSkyComponent::OnDelete()
@@ -85,17 +84,5 @@ namespace GASS
 		//else
 		//	Log::Warning("No MapNode found for OSGEarthSkyComponent");
 	}
-
-	std::string OSGEarthSkyComponent::GetEarthFile() const
-	{ 
-		return m_EarthFile;
-	}
-
-	void OSGEarthSkyComponent::SetEarthFile(const std::string &earthfile)
-	{ 
-		m_EarthFile = earthfile;
-	}
-
-	
 }
 

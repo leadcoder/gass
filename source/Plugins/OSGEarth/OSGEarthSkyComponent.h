@@ -33,10 +33,5 @@ namespace GASS
 		virtual void OnDelete();
 		
 	protected:
-		
-
-		std::string GetEarthFile() const;
-		void SetEarthFile(const std::string &earthfile);
-		std::string m_EarthFile;
 	};
 }
