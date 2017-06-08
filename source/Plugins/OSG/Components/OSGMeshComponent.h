@@ -33,7 +33,7 @@ namespace GASS
 	class OSGMeshEnumerationMetaData : public EnumerationPropertyMetaData
 	{
 	public:
-		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
+		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags) : EnumerationPropertyMetaData(annotation, flags, false){}
 		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
 	};
 	typedef GASS_SHARED_PTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;

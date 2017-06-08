@@ -77,7 +77,8 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
-		RegisterProperty<bool>("FlipDDS", &GASS::OSGMeshComponent::GetFlipDDS, &GASS::OSGMeshComponent::SetFlipDDS);
+		RegisterProperty<bool>("FlipDDS", &GASS::OSGMeshComponent::GetFlipDDS, &GASS::OSGMeshComponent::SetFlipDDS,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Flip DDS textures for this model? (need reload)", PF_VISIBLE | PF_EDITABLE)));
 
 		std::vector<std::string> ext;
 		ext.push_back("3ds");
