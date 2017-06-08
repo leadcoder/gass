@@ -27,6 +27,7 @@
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
 #include <osgEarth/MapNode>
+
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthUtil/EarthManipulator>
@@ -54,6 +55,40 @@
 
 namespace GASS
 {
+
+	class OSGEarthMapEnumerationMetaData : public EnumerationPropertyMetaData
+	{
+	public:
+		OSGEarthMapEnumerationMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group = "") : EnumerationPropertyMetaData(annotation, flags, false),
+			m_ResourceGroup(res_group)
+		{
+
+		}
+		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
+		{
+			std::vector<std::string> content;
+			ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+			ResourceGroupVector groups = rm->GetResourceGroups();
+			std::vector<std::string> values;
+			for (size_t i = 0; i < groups.size(); i++)
+			{
+				ResourceGroupPtr group = groups[i];
+				if (m_ResourceGroup == "" || group->GetName() == m_ResourceGroup)
+				{
+					ResourceVector res_vec;
+					group->GetResourcesByType(res_vec, "MAP");
+					for (size_t j = 0; j < res_vec.size(); j++)
+					{
+						content.push_back(res_vec[j]->Name());
+					}
+				}
+			}
+			return content;
+		}
+	private:
+		std::string m_ResourceGroup;
+	};
+
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false)
 	{
 
@@ -67,7 +102,9 @@ namespace GASS
 	void OSGEarthMapComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("OSGEarthMapComponent",new Creator<OSGEarthMapComponent, Component>);
-		RegisterProperty<std::string>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
+		RegisterProperty<ResourceHandle>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile,
+			EnumerationPropertyMetaDataPtr(new OSGEarthMapEnumerationMetaData("OSGEarth map file", PF_VISIBLE)));
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -81,28 +118,93 @@ namespace GASS
 		SetEarthFile(m_EarthFile);
 	}
 
-	void OSGEarthMapComponent::SetEarthFile(const std::string &earth_file)
+	void OSGEarthMapComponent::OnDelete()
+	{
+		Shutdown();
+	}
+
+	void OSGEarthMapComponent::Shutdown()
+	{
+		if(m_Initlized && m_MapNode)
+		{
+			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
+			osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
+			manip->setNode(NULL);
+		
+			// disconnect extensions
+			osgViewer::ViewerBase::Views views;
+			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			osg_sys->GetViewer()->getViews(views);
+
+			for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
+				eiter != m_MapNode->getExtensions().end();
+				++eiter)
+			{
+				osgEarth::Extension* e = eiter->get();
+
+				// Check for a View interface:
+				osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
+				if (viewIF)
+					viewIF->disconnect(views[0]);
+
+				// Check for a Control interface:
+				osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
+				if (controlIF)
+					controlIF->disconnect(osgearth_sm->GetGUI());
+			}
+
+
+			if(m_FogEffect)
+				m_FogEffect->detach(m_MapNode->getStateSet());
+			//remove map from scene
+			osg::Group* parent = m_MapNode->getParent(0);
+			if (parent)
+				parent->removeChild(m_MapNode);
+			
+			m_MapNode.release();
+			
+			//release
+			m_Lighting.release();
+			m_FogEffect.release();
+		}
+	}
+	
+	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle &earth_file)
 	{
 			m_EarthFile = earth_file;
 			if (!m_Initlized)
 				return;
-			if (earth_file != "")
+			if (earth_file.Valid())
 			{
 				//disable GLSL
 				IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 				OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-				osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
-				ResourceHandle rh(earth_file);
-				std::string full_path = rh.GetResource()->Path().GetFullPath();
+				osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+				/*if (GetSceneObject()->GetParentSceneObject() && GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IOSGNode>())
+				{
+					osg::ref_ptr<osg::Node> node = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IOSGNode>()->GetNode();
+					root = dynamic_cast<osg::Group*>(node.get());
+				}*/
+				
+				std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
 				osg::Node* node = osgDB::readNodeFile(full_path);
-				m_MapNode = osgEarth::MapNode::findMapNode(node);
-				root->addChild(m_MapNode);
+
+				if (node)
+					Shutdown();
+				else //failed to load earth file
+					return;
 
 				osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
+				
+				m_MapNode = osgEarth::MapNode::findMapNode(node);
+				root->addChild(m_MapNode);
 
 				//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
 				manip->setNode(m_MapNode);
 
+				m_Lighting = new osgEarth::PhongLightingEffect();
+				m_Lighting->setCreateLightingUniform(false);
+				m_Lighting->attach(m_MapNode->getOrCreateStateSet());
 
 				OSGNodeData* data = new OSGNodeData(shared_from_this());
 				m_MapNode->setUserData(data);
@@ -113,11 +215,10 @@ namespace GASS
 				
 				const osgEarth::Config& externals = m_MapNode->externalConfig();
 				const osgEarth::Config& skyConf = externals.child("sky");
-				const osgEarth::Config& oceanConf = externals.child("ocean");
-				const osgEarth::Config& annoConf = externals.child("annotations");
-				const osgEarth::Config& declutterConf = externals.child("decluttering");
-
-				osgEarth::Config        viewpointsConf = externals.child("viewpoints");
+//				const osgEarth::Config& oceanConf = externals.child("ocean");
+//				const osgEarth::Config& annoConf = externals.child("annotations");
+//				const osgEarth::Config& declutterConf = externals.child("decluttering");
+				osgEarth::Config viewpointsConf = externals.child("viewpoints");
 
 				// backwards-compatibility: read viewpoints at the top level:
 				const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
@@ -146,9 +247,8 @@ namespace GASS
 				}
 				}*/
 
-				//if (m_UseSky)
+				if (false)
 				{
-
 					osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
 					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
 					sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
@@ -163,21 +263,36 @@ namespace GASS
 				}
 
 				// Hook up the extensions!
-				for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
-				eiter != m_MapNode->getExtensions().end();
-					++eiter)
+				if (true)
 				{
-					osgEarth::Extension* e = eiter->get();
+					for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
+						eiter != m_MapNode->getExtensions().end();
+						++eiter)
+					{
+						osgEarth::Extension* e = eiter->get();
 
-					// Check for a View interface:
-					osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
-					if (viewIF)
-						viewIF->connect(views[0]);
-
-					// Check for a Control interface:
-					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
-					if (controlIF)
-						controlIF->connect(osgearth_sm->GetGUI());
+						// Check for a View interface:
+						osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
+						if (viewIF)
+							viewIF->connect(views[0]);
+					
+						// Check for a Control interface:
+						osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
+						if (controlIF)
+							controlIF->connect(osgearth_sm->GetGUI());
+					}
+				}
+				
+				//attach fog if present possible
+				osg::ref_ptr<osg::Group> fog_root = osg_sm->GetOSGRootNode();
+				osg::StateSet* state = fog_root->getOrCreateStateSet();
+				osg::Fog* fog = (osg::Fog *) state->getAttribute(osg::StateAttribute::FOG);
+				if (fog)
+				{
+					if(!fog->getUpdateCallback())
+						fog->setUpdateCallback(new osgEarth::Util::FogCallback());
+					m_FogEffect = new osgEarth::Util::FogEffect;
+					m_FogEffect->attach(m_MapNode->getOrCreateStateSet());
 				}
 
 

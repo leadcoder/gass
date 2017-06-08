@@ -21,6 +21,8 @@
 #pragma once
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include <osgEarthUtil/EarthManipulator>
+#include <osgEarth/PhongLightingEffect>
+#include <osgEarthUtil/Fog>
 
 namespace GASS
 {
@@ -31,8 +33,8 @@ namespace GASS
 		virtual ~OSGEarthMapComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		virtual void OnDelete();
 		virtual void SceneManagerTick(double delta_time);
-
 		virtual AABox GetBoundingBox() const { return AABox(); }
 		virtual Sphere GetBoundingSphere() const { return Sphere(); };
 		virtual GeometryFlags GetGeometryFlags() const { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
@@ -41,11 +43,14 @@ namespace GASS
 		virtual void SetCollision(bool value) {  }
 		osg::ref_ptr<osgEarth::MapNode> GetMap() {return m_MapNode;}
 	protected:
-		void SetEarthFile(const std::string &earth_file);
-		std::string GetEarthFile() const { return m_EarthFile; }
+		void Shutdown();
+		void SetEarthFile(const ResourceHandle &earth_file);
+		ResourceHandle GetEarthFile() const { return m_EarthFile; }
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
-		std::string m_EarthFile;
+		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
+		osg::ref_ptr<osgEarth::Util::FogEffect> m_FogEffect;
+		ResourceHandle m_EarthFile;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }
