@@ -48,24 +48,13 @@ if (WIN32)
 	find_file(OSG_OT_BINARY_REL NAMES ot20-OpenThreads${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	find_file(OSG_OT_BINARY_DBG NAMES ot20-OpenThreadsd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	
-	find_file(OSG_ZLIB_BINARY_REL NAMES zlib${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	find_file(OSG_ZLIB_BINARY_DBG NAMES zlibd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	
-	find_file(OSG_LIBPNG_BINARY_REL NAMES libpng16${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	find_file(OSG_LIBPNG_BINARY_DBG NAMES libpng16d${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	
 	set(OSG_BINARIES_REL ${OSG_BINARIES_REL} 
 		${OSG_BINARY_REL} 
-		${OSG_OT_BINARY_REL}
-		${OSG_ZLIB_BINARY_REL}
-		${OSG_LIBPNG_BINARY_REL})
+		${OSG_OT_BINARY_REL})
 	set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} 
 			${OSG_BINARY_DBG} 
-			${OSG_OT_BINARY_DBG}
-			${OSG_ZLIB_BINARY_DBG}
-			${OSG_ZLIB_BINARY_REL}
-			${OSG_LIBPNG_BINARY_DBG})
-	
+			${OSG_OT_BINARY_DBG})
+			
 	foreach(_OSG_MODULE ${OSG_MODULES})
 	    STRING(TOUPPER ${_OSG_MODULE} _UPPER_NAME)
 		set(_COMP_NAME_REL ${_UPPER_NAME}_BINARY_REL)
@@ -76,6 +65,47 @@ if (WIN32)
 	    set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_COMP_NAME_REL}})
 	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_COMP_NAME_DBG}})
 	endforeach()
+	#message(OSG_BINARIES_REL ${OSG_BINARIES_REL})
+			
+	#thirdparty shared libs			
+	set(_OSG_DEP_LIST_REL zlib
+	libpng16
+	gdal110
+	proj
+	libcurl
+	libeay32
+	ssleay32
+	cares
+	libcollada14dom22
+	libtiff)
+
+	set(_OSG_DEP_LIST_DBG zlibd
+	libpng16d
+	gdal110
+	proj
+	libcurld
+	libeay32
+	ssleay32
+	cares
+	libcollada14dom22-d
+	libtiff)
+	
+	
+	foreach(_OSG_BIN_DEP ${_OSG_DEP_LIST_REL})
+	    STRING(TOUPPER ${_OSG_BIN_DEP} _UPPER_NAME)
+		set(_DEP_VAR_NAME OSG_${_UPPER_NAME}_BINARY_REL)
+		find_file(${_DEP_VAR_NAME} NAMES ${_OSG_BIN_DEP}${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
+	    set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_DEP_VAR_NAME}})
+	endforeach()
+	
+	foreach(_OSG_BIN_DEP ${_OSG_DEP_LIST_DBG})
+	    STRING(TOUPPER ${_OSG_BIN_DEP} _UPPER_NAME)
+		set(_DEP_VAR_NAME OSG_${_UPPER_NAME}_BINARY_DBG)
+		find_file(${_DEP_VAR_NAME} NAMES ${_OSG_BIN_DEP}${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
+	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_DEP_VAR_NAME}})
+	endforeach()
+	
+
 	
 	#this plug-in list works with 3.2.1
 	set(OSG_PLUGINS 3dc
