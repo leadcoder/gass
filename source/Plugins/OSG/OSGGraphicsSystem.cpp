@@ -84,6 +84,11 @@ namespace GASS
 		texture_type.Extensions.push_back("jpg");
 		rm->RegisterResourceType(texture_type);
 
+		//add osgEarth files!
+		ResourceType map_type;
+		map_type.Name = "MAP";
+		map_type.Extensions.push_back("earth");
+		rm->RegisterResourceType(map_type);
 	}
 
 	void OSGGraphicsSystem::LoadXML(tinyxml2::XMLElement *elem)
