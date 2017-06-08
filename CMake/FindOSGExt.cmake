@@ -41,7 +41,6 @@ endif()
 
 if (WIN32)
 	find_path(OSG_BINARY_DIR osgviewer.exe HINTS ${OSG_DIR}/bin)
-
 	find_file(OSG_BINARY_REL NAMES ${OSG_SHARED_PREFIX}osg${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	find_file(OSG_BINARY_DBG NAMES ${OSG_SHARED_PREFIX}osgd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	
@@ -69,26 +68,26 @@ if (WIN32)
 			
 	#thirdparty shared libs			
 	set(_OSG_DEP_LIST_REL zlib
-	libpng16
-	gdal110
-	proj
-	libcurl
-	libeay32
-	ssleay32
-	cares
-	libcollada14dom22
-	libtiff)
+		libpng16
+		gdal110
+		proj
+		libcurl
+		libeay32
+		ssleay32
+		cares
+		libcollada14dom22
+		libtiff)
 
 	set(_OSG_DEP_LIST_DBG zlibd
-	libpng16d
-	gdal110
-	proj
-	libcurld
-	libeay32
-	ssleay32
-	cares
-	libcollada14dom22-d
-	libtiff)
+		libpng16d
+		gdal110
+		proj
+		libcurld
+		libeay32
+		ssleay32
+		cares
+		libcollada14dom22-d
+		libtiff)
 	
 	
 	foreach(_OSG_BIN_DEP ${_OSG_DEP_LIST_REL})
@@ -104,8 +103,6 @@ if (WIN32)
 		find_file(${_DEP_VAR_NAME} NAMES ${_OSG_BIN_DEP}${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_DEP_VAR_NAME}})
 	endforeach()
-	
-
 	
 	#this plug-in list works with 3.2.1
 	set(OSG_PLUGINS 3dc
@@ -208,6 +205,4 @@ if (WIN32)
 	    set(OSGPLUGIN_BINARIES_REL ${OSGPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
 	    set(OSGPLUGIN_BINARIES_DBG ${OSGPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
 	endforeach()
-endif()		
-
-#extend with DLL's if windows
+endif()
