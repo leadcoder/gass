@@ -154,7 +154,7 @@ namespace GASS
 		FileUtils::GetFilesFromPath(files, directory, false, false);
 		std::vector<std::string> plugins;
 
-		for (int i = 0; i < files.size(); i++)
+		for (size_t i = 0; i < files.size(); i++)
 		{
 			std::string extension = FileUtils::GetExtension(files[i]);
 			std::string filename = FileUtils::GetFilename(files[i]);

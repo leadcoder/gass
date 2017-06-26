@@ -1,13 +1,6 @@
 #include "GASSRawFile.h"
 #include <math.h>
 #include <cstdio>
-// disable: "conversion from 'double' to 'int', possible loss of data
-
-#ifdef _MSC_VER
-    #pragma warning(push)
-    #pragma warning (disable : 4244)
-#endif
-
 
 namespace GASS
 {
@@ -43,7 +36,7 @@ namespace GASS
 		//only support square images
 		fclose(fp);
 		file_size = file_size / static_cast<unsigned long>((bpp / 8));
-		int im_size = sqrt(static_cast<double>(file_size));
+		int im_size = static_cast<int>(sqrt(static_cast<double>(file_size)));
 		return im_size;
 	}
 
@@ -81,6 +74,3 @@ namespace GASS
 		return true;
 	}
 }
-#ifdef _MSC_VER
-    #pragma warning(pop)
-#endif
