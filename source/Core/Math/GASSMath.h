@@ -23,9 +23,7 @@
 #include "Core/Common.h"
 #include "Core/Math/GASSVec2.h"
 #include <math.h>
-//#define GASS_PLANE_FRONT 0
-//#define GASS_PLANE_BACK 1
-//#define GASS_ON_PLANE 2
+
 #define GASS_PI 3.1415926535898
 #define GASS_HALF_PI 1.5707963267949
 
