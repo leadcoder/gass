@@ -71,7 +71,7 @@ namespace GASS
 		m_TargetPitch = 1.2;
 		Float normalized_force = std::min<Float>(1.0, m_MaxForce/m_ForceLimit);
 
-		if(abs(m_MaxVelRequest) > 0.05)
+		if(fabs(m_MaxVelRequest) > 0.05)
 		{
 			for(size_t i = 0; i < m_ForceToPitch.size(); i++)
 			{
@@ -94,7 +94,7 @@ namespace GASS
 	{
 		Float t = message->GetForce().Length();
 		m_MaxForce = std::max<Float>(t,m_MaxForce);
-		m_MaxVelRequest = std::max<Float>(abs(message->GetTargetVelocity()),m_MaxVelRequest);
+		m_MaxVelRequest = std::max<Float>(fabs(message->GetTargetVelocity()),m_MaxVelRequest);
 	}
 	
 }

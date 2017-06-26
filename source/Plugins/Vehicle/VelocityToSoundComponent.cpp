@@ -101,7 +101,7 @@ namespace GASS
 
 	void VelocityToSoundComponent::OnHingeReport(PhysicsHingeJointReportEventPtr message)
 	{
-		m_MaxVelRequest = std::max<Float>(abs(message->GetTargetVelocity()),m_MaxVelRequest);
+		m_MaxVelRequest = std::max<Float>(fabs(message->GetTargetVelocity()),m_MaxVelRequest);
 	}
 	
 }

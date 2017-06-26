@@ -439,7 +439,7 @@ namespace GASS
 			Vec2 delta;
 			delta.x	= m_MBRScreenPos.x - mouse_pos.x;
 			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
-			if(abs(delta.x) + abs(delta.y) < 0.001)
+			if(fabs(delta.x) + abs(delta.y) < 0.001)
 			{
 				//std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
 				//Check that object under cursor is in selection

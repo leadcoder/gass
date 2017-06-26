@@ -563,7 +563,7 @@ namespace GASS
 		float x_dist = static_cast<float>(end_x - start_x);
 		float y_dist = static_cast<float>(end_y - start_y);
 
-		if(abs(x_dist) > abs(y_dist))
+		if(fabs(x_dist) > fabs(y_dist))
 		{
 
 			Ogre::Vector3 dir,start_pos;

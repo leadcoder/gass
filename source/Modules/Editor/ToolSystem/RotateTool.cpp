@@ -124,7 +124,7 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		bool selection_mode = false;
-		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + abs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
+		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + fabs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
 		{
 			selection_mode = true;
 		}

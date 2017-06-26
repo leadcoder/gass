@@ -299,7 +299,7 @@ namespace GASS
 			Float dist = (gizmo_pos-cam_pos).Length();
 
 
-			if(abs(dist - m_LastDist) > MOVMENT_EPSILON)
+			if(fabs(dist - m_LastDist) > MOVMENT_EPSILON)
 			{
 				m_LastDist = dist;
 				//clamp

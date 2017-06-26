@@ -143,7 +143,7 @@ namespace GASS
 	template<class TYPE>
 	bool Math::Equal(TYPE v1, TYPE v2, TYPE tolerance)
 	{
-		return (abs(v1 - v2) < tolerance);
+		return (fabs(v1 - v2) < tolerance);
 	}
 
 	template<class TYPE>

@@ -195,9 +195,9 @@ namespace GASS
 
 
 		Vec3 filter;
-		filter.x = abs(north.x) + abs(east.x);
-		filter.y = abs(north.y) + abs(east.y);
-		filter.z = abs(north.z) + abs(east.z);
+		filter.x = fabs(north.x) + fabs(east.x);
+		filter.y = fabs(north.y) + fabs(east.y);
+		filter.z = fabs(north.z) + fabs(east.z);
 
 		up = up*m_FixedHeight;
 		m_Pos = (m_Pos*filter) + up;

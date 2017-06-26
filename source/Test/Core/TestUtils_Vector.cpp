@@ -27,6 +27,20 @@ TEST_CASE("Test Vec3")
 		REQUIRE(vec == GASS::Vec3(1, 1, 1));
 	}
 
+	SECTION("Test Equal")
+	{
+		GASS::Vec3 vec1(1.1, 1.2, 1.3);
+		GASS::Vec3 vec2(1.0, 1.0, 1.0);
+
+		//test if in tolerance
+		REQUIRE(vec1.Equal(vec2, 0.4) == true);
+		
+		//test if out of tolerance
+		REQUIRE(vec1.Equal(vec2, 0.2) == false);
+	}
+
+	
+
 	SECTION("Test operator+")
 	{
 		GASS::Vec3 vec1(1, 1, 1);
