@@ -272,7 +272,7 @@ namespace GASS
 		m_MouseIsDown = false;
 		bool selection_mode = false;
 		//Check if mouse is static (or just moved  slightly), if so we are in selection mode
-		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + abs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
+		if(fabs(data.XAbsNorm - m_MouseDownPos.x) + fabs(data.YAbsNorm - m_MouseDownPos.y) < 0.05)
 		{
 			selection_mode = true;
 		}
