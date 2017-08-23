@@ -68,7 +68,7 @@ namespace GASS
 					{
 
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this, any_link);
 						std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
 						for(size_t i = 0 ; i < links.size(); i++)
 						{
@@ -86,12 +86,12 @@ namespace GASS
 						}
 						//Why?
 						GASS_ANY any_links(links);
-						prop->SetValue(this, any_links);
+						prop->SetValueByAny(this, any_links);
 					}
 					else
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
 						if(link.GetLinkObjectID() != UNKOWN_LINK_ID)
 						{
@@ -103,7 +103,7 @@ namespace GASS
 
 							}
 							GASS_ANY new_any_link(link);
-							prop->SetValue(this, new_any_link);
+							prop->SetValueByAny(this, new_any_link);
 						}
 						else
 						{
@@ -137,7 +137,7 @@ namespace GASS
 					if(is_sor_vec)
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
 						for(size_t i = 0 ; i < links.size(); i++)
 						{
@@ -145,16 +145,16 @@ namespace GASS
 							links[i] = new_ref;
 						}
 						GASS_ANY any_links(links);
-						prop->SetValue(this,any_links);
+						prop->SetValueByAny(this,any_links);
 					}
 					else
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
 						SceneObjectRef new_ref( old_ref.GetRefGUID());
 						GASS_ANY any_ref(new_ref);
-						prop->SetValue(this,any_ref);
+						prop->SetValueByAny(this,any_ref);
 					}
 				}
 				++iter;
@@ -182,7 +182,7 @@ namespace GASS
 					if(is_sor_vec)
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
 						for(size_t i = 0 ; i < links.size(); i++)
 						{
@@ -191,16 +191,16 @@ namespace GASS
 							links[i] = new_ref;
 						}
 						GASS_ANY any_links(links);
-						prop->SetValue(this,any_links);
+						prop->SetValueByAny(this,any_links);
 					}
 					else
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						SceneObjectRef so_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
 						so_ref.ResolveTemplateReferences(template_root);
 						GASS_ANY any_so(so_ref);
-						prop->SetValue(this,any_so);
+						prop->SetValueByAny(this,any_so);
 					}
 				}
 				++iter;
@@ -229,7 +229,7 @@ namespace GASS
 					if(is_sor_vec)
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
 						for(size_t i = 0 ; i < links.size(); i++)
 						{
@@ -241,19 +241,19 @@ namespace GASS
 							}
 						}
 						GASS_ANY any_links(links);
-						prop->SetValue(this,any_links);
+						prop->SetValueByAny(this,any_links);
 					}
 					else
 					{
 						GASS_ANY any_link;
-						prop->GetValue(this,any_link);
+						prop->GetValueAsAny(this,any_link);
 						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
 						std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
 						if(guid_iter != ref_map.end())
 						{
 							SceneObjectRef new_ref(  guid_iter->second);
 							GASS_ANY any_ref(new_ref);
-							prop->SetValue(this,any_ref);
+							prop->SetValueByAny(this,any_ref);
 						}
 					}
 				}

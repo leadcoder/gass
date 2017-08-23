@@ -163,7 +163,7 @@ namespace GASS
 				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
-					prop->SetValue(this,value);
+					prop->SetValueByAny(this,value);
 					return;
 				}
 				++iter;
@@ -185,7 +185,7 @@ namespace GASS
 				const std::string prop_name = prop->GetName();
 				if(prop_name == property_name)
 				{
-					prop->GetValue(this,value);
+					prop->GetValueAsAny(this,value);
 					return true;
 				}
 				++iter;
@@ -233,7 +233,7 @@ namespace GASS
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					IProperty * prop = (*iter);
-					prop->SetValue(dest.get(),this);
+					prop->Transfer(dest.get(),this);
 					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();

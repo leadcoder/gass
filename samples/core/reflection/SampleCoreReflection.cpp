@@ -323,14 +323,14 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		//Do type checking by typeid
 		if(*props[i]->GetTypeID() == typeid(GASS::Vec3))
 		{
-			//get property value by using boost any
-			props[i]->GetValue(bro.get(), any_value);
+			//get property value by using any
+			props[i]->GetValueAsAny(bro.get(), any_value);
 			GASS::Vec3 vec3_value = GASS_ANY_CAST<GASS::Vec3>(any_value);
 			std::cout << "Property " << prop_name << " is Vec3 and has value:" << vec3_value << "\n";
 		}
 		else if(*props[i]->GetTypeID() == typeid(GASS::Quaternion))
 		{
-			props[i]->GetValue(bro.get(), any_value);
+			props[i]->GetValueAsAny(bro.get(), any_value);
 			GASS::Quaternion quaternion_value = GASS_ANY_CAST<GASS::Quaternion>(any_value);
 			std::cout << "Property " << prop_name << " is Quaternion and has value:" << quaternion_value << "\n";
 		}
@@ -340,7 +340,7 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		}
 		else if(*props[i]->GetTypeID() == typeid(MyGearBox))
 		{
-			props[i]->GetValue(bro.get(), any_value);
+			props[i]->GetValueAsAny(bro.get(), any_value);
 			MyGearBox gb_value = GASS_ANY_CAST<MyGearBox>(any_value);
 			std::cout << "Property " << prop_name << " is GearBox, Numbers of gears:" << gb_value.Gears;
 			if(gb_value.Automatic)
@@ -350,7 +350,7 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		}
 		else if(*props[i]->GetTypeID() == typeid(MyVector<MyWheel>))
 		{
-			props[i]->GetValue(bro.get(), any_value);
+			props[i]->GetValueAsAny(bro.get(), any_value);
 			MyVector<MyWheel> wheels = GASS_ANY_CAST<MyVector<MyWheel> >(any_value);
 			std::cout << "Property " << prop_name << " is Wheel vector holding:" << wheels.size() << " wheels\n";
 			for(size_t j = 0; j< wheels.size(); j++)

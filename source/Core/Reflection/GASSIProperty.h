@@ -84,21 +84,21 @@ namespace GASS
             @param dest The object that should be modified
             @param src The object that the property value should be fetch from
         */
-		virtual void SetValue(BaseReflectionObject* dest, const BaseReflectionObject* src) = 0;
+		virtual void Transfer(BaseReflectionObject* dest, const BaseReflectionObject* src) = 0;
 
 		/**
             Set this property value by providing the value by the boost any class
             @param object The object that is owner of this property
             @param value Value wrapped in the GASS_ANY class
         */
-		virtual void SetValue(BaseReflectionObject* object, GASS_ANY &value) = 0;
+		virtual void SetValueByAny(BaseReflectionObject* object, GASS_ANY &value) = 0;
 
 		/**
             Get the value of this property, retured by the GASS_ANY class
             @param object The object that is owner of this property
             @param value The value returned, wrapped in the GASS_ANY class
         */
-		virtual void GetValue(const BaseReflectionObject* object, GASS_ANY &value) const = 0;
+		virtual void GetValueAsAny(const BaseReflectionObject* object, GASS_ANY &value) const = 0;
 
 		/**
 			Check if this property has meta data

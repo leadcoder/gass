@@ -193,11 +193,12 @@ namespace GASS
 			return res;
 		}
 
-		void SetValue(BaseReflectionObject* dest, const BaseReflectionObject* src)
+		void Transfer(BaseReflectionObject* dest, const BaseReflectionObject* src)
 		{
 			SetValue(dest,GetValue(src));
 		}
-		void SetValue(BaseReflectionObject* object, GASS_ANY &value)
+
+		void SetValueByAny(BaseReflectionObject* object, GASS_ANY &value)
 		{
 
 			T res;
@@ -213,7 +214,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		void GetValue(const BaseReflectionObject* object, GASS_ANY &value) const
+		void GetValueAsAny(const BaseReflectionObject* object, GASS_ANY &value) const
 		{
 			T res = GetValue(object);
 			value = res;
