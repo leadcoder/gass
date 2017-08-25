@@ -241,7 +241,7 @@ namespace GASS
 			return sqrt(x*x + y*y + z*z);
 		}
 
-		inline void Normalize()
+		inline TYPE Normalize()
 		{
 			TYPE dist = Length();
 
@@ -258,6 +258,7 @@ namespace GASS
 				y = 0;
 				z = 0;
 			}
+			return dist;
 		}
 
 		TYPE Dot(const TVec3 &v) const
