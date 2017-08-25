@@ -300,7 +300,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
 				{
 					GASS_ANY any_value;
-					prop->GetValue(obj.get(),any_value );
+					prop->GetValueAsAny(obj.get(),any_value );
 					GASS::ColorRGB color = GASS_ANY_CAST<GASS::ColorRGB>(any_value);
 					item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
 					item->setValue(QColor(color.r*255,color.g*255,color.b*255));

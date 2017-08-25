@@ -37,7 +37,7 @@ public:
 		GASS::BaseReflectionObjectPtr object = m_Object.lock();
 		if(object)
 		{
-			m_Prop->SetValue(object.get(),value);
+			m_Prop->SetValueByAny(object.get(),value);
 		}
 	}
 
@@ -71,7 +71,7 @@ public:
 			GASS::BaseReflectionObjectPtr object = m_Objects[i].lock();
 			if (object)
 			{
-				m_Prop->SetValue(object.get(), value);
+				m_Prop->SetValueByAny(object.get(), value);
 				
 			}
 		}
