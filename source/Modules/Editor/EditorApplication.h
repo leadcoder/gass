@@ -10,7 +10,7 @@ namespace GASS
 	public:
 		EditorApplication(const FilePath &log_folder);
 		~EditorApplication();
-		void Init(const FilePath &working_folder, const std::string &gass_configuration, void* main_win_handle,void*  render_win_handle);
+		void Init(const FilePath &editor_config, const FilePath &gass_configuration, const FilePath &control_configuration, void* main_win_handle,void*  render_win_handle);
 		bool Update();
 	protected:
 		//void OnRequestSimulatiornStep(TimeStepRequestPtr message);

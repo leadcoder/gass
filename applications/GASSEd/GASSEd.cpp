@@ -111,10 +111,15 @@ void GASSEd::Initialize()
 {
 	if(m_Initialized)
 		return;
-	GASS::FilePath working_folder("./");
+	//GASS::FilePath config_folder("./../Configuration");
+
+	GASS::FilePath gass_config("./../Configuration/GASS.xml");
+	GASS::FilePath control_config("./../Configuration/GASSControlSettings.xml");
+	GASS::FilePath editor_config("./../Configuration/EditorApplication.xml");
+
 	int main_win_handle = (int) winId();
 	int render_win_handle = (int) m_RenderWidget->winId();
-	m_GASSApp->Init(working_folder, m_Config, (void*) main_win_handle, (void*)render_win_handle);
+	m_GASSApp->Init(editor_config, gass_config, control_config, (void*)main_win_handle, (void*)render_win_handle);
 	m_Initialized = true;
 	//send initial resize message
 	m_RenderWidget->sendDelayedResize();
