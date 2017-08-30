@@ -78,6 +78,8 @@ namespace GASS
 
 		void AddChildSceneObject(SceneObjectPtr child , bool load);
 
+		void InsertChildSceneObject(SceneObjectPtr child, size_t index, bool load);
+
 		/**
 		Get owner object that is direct under scene root
 		*/

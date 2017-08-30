@@ -152,6 +152,16 @@ namespace GASS
 			child->Initialize(GetScene());
 	}
 
+	void SceneObject::InsertChildSceneObject(SceneObjectPtr child, size_t index, bool load)
+	{
+		child->InitializePointers(); //initialize SceneObjectLink:s
+
+		ComponentContainer::InsertChild(child,index);
+
+		if (load && GetScene()) //if we have scene Initialize?
+			child->Initialize(GetScene());
+	}
+
 	void SceneObject::ResolveTemplateReferences(SceneObjectPtr template_root)
 	{
 		ComponentVector::iterator iter = m_ComponentVector.begin();
