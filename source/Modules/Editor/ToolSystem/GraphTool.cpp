@@ -16,10 +16,8 @@
 
 namespace GASS
 {
-
 	GraphTool::GraphTool(MouseToolController* controller): m_MouseIsDown(false),
 		m_Controller(controller),
-		m_FirstMoveUpdate(true),
 		m_Mode(GTM_ADD)
 	{
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GraphTool::OnToolChanged,ToolChangedEvent,0));

@@ -45,7 +45,6 @@ namespace GASS
 		bool m_MouseIsDown;
 		GASS::Vec3 m_Offset;
 		MouseToolController* m_Controller;
-		bool m_FirstMoveUpdate;
 		std::string m_NodeObjectName;
 		std::string m_EdgeObjectName;
 		GASS::SceneObjectWeakPtr m_ParentObject; 
