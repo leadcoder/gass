@@ -160,7 +160,7 @@ endif()
 
 #OSG
 if(GASS_BUILD_PLUGIN_OSG)
-	find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA osgText osgShadow osgViewer osgSim osgTerrain osgManipulator)
+	find_package(OSGExt 3.2.1 REQUIRED osgUtil osgDB osgGA  osgFX osgVolume osgText osgShadow osgViewer osgSim osgTerrain osgManipulator)
 	gass_create_dep_target(OSG INCLUDE_DIRS ${OPENSCENEGRAPH_INCLUDE_DIRS} LIBRARIES ${OPENSCENEGRAPH_LIBRARIES} BINARIES_REL ${OSG_BINARIES_REL} BINARIES_DBG ${OSG_BINARIES_DBG})
 	
 	if(GASS_INSTALL_DEP_BINARIES AND WIN32) #install osg plugins to subfolder
