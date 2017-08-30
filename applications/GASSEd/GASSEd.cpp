@@ -113,7 +113,7 @@ void GASSEd::Initialize()
 		return;
 	//GASS::FilePath config_folder("./../Configuration");
 
-	GASS::FilePath gass_config("./../Configuration/GASS.xml");
+	GASS::FilePath gass_config("./../Configuration/" + m_Config);
 	GASS::FilePath control_config("./../Configuration/GASSControlSettings.xml");
 	GASS::FilePath editor_config("./../Configuration/EditorApplication.xml");
 
