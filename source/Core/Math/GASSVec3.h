@@ -344,7 +344,7 @@ namespace GASS
 		std::string ToString() const
 		{
 			std::stringstream ss;
-			ss << this;
+			ss << *this;
 			return ss.str();
 		/*	char ret[128];
 #ifdef _MSC_VER
