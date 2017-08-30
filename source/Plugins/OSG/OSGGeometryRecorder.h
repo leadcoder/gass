@@ -93,9 +93,14 @@ namespace GASS
 						if (plod.getNumFileNames() <= childIndex)
 							validIndex = plod.getNumFileNames()-1;
 
-						m_GetGeode = false; //disable geometry fetch for this PagedLOD node, this is not a high resolution node
-						const std::string plod_file = plod.getDatabasePath() + plod.getFileName( validIndex );
-						child =  osgDB::readNodeFile(plod_file);
+						
+						const std::string filename = plod.getFileName(validIndex);
+						if (filename != "")
+						{
+							m_GetGeode = false; //disable geometry fetch for this PagedLOD node, this is not a high resolution node
+							const std::string plod_file = plod.getDatabasePath() + filename;
+							child = osgDB::readNodeFile(plod_file);
+						}
 					}
 
 					if ( !child.valid() && plod.getNumChildren()>0)
