@@ -24,6 +24,7 @@
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
@@ -53,7 +54,8 @@ namespace GASS
 		m_BreakInput(0),
 		m_GroundClamp(true),
 		m_HasHeight(false),
-		m_DesiredHeight(0)
+		m_DesiredHeight(0),
+		m_PlatformSize(2,1,5)
 	{
 
 	}
@@ -88,12 +90,19 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnGotoPosition, GotoPositionRequest, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnInput, InputRelayEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnTransMessage, TransformationChangedEvent, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnGeometryChanged, GeometryChangedEvent, 0));
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
 
 		//try to get height_map
 		m_Heightmap = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+	}
+
+	void MotionComponent::OnGeometryChanged(GeometryChangedEventPtr message)
+	{
+		if(message->GetGeometry())
+			m_PlatformSize = message->GetGeometry()->GetBoundingBox().GetSize();
 	}
 
 	void MotionComponent::OnTransMessage(TransformationChangedEventPtr message)

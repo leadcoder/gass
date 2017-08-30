@@ -72,14 +72,14 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta_time);
 		PlatformType GetType() const { return PT_CAR; }
-		Vec3 GetSize() const { return Vec3(2, 5, 2); }
+		Vec3 GetSize() const { return m_PlatformSize; }
 		Float GetMaxSpeed() const { return m_MaxSpeed; }
-
 	protected:
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnGotoPosition(GotoPositionRequestPtr message);
+		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void StepPhysics(double delta);
 		ADD_PROPERTY(bool,GroundClamp)
 		ADD_PROPERTY(bool, Debug)
@@ -97,6 +97,7 @@ namespace GASS
 		Float m_DesiredHeight;
 		Quaternion m_CurrentRot;
 		HeightmapTerrainComponentPtr m_Heightmap;
+		Vec3 m_PlatformSize;
 	};
 }
 
