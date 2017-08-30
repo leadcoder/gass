@@ -63,6 +63,7 @@ namespace GASS
 		m_RegionMergeSize ( 20),
 		m_EdgeMaxLen ( 12.0f),
 		m_EdgeMaxError ( 1.3f),
+		m_GridSize(0),
 		m_VertsPerPoly ( 6.0f),
 		m_DetailSampleDist ( 6.0f),
 		m_DetailSampleMaxError ( 1.0f),
@@ -104,6 +105,8 @@ namespace GASS
 		REG_PROPERTY2(float,VertsPerPoly, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(float,DetailSampleDist,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(float,DetailSampleMaxError,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		REG_PROPERTY2(int, GridSize, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		
 
 		REG_PROPERTY2(bool,Visible, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool,ShowMeshLines, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -640,6 +643,29 @@ namespace GASS
 			return 0;
 		}
 
+		//tessellate mesh!
+
+		static unsigned char magic_num = 128;
+		if (m_GridSize > 0)
+		{
+			int checker_size = m_GridSize;
+			if (checker_size > 0)
+			{
+				for (int y = 0; y < chf->height; ++y) {
+					for (int x = 0; x < chf->width; ++x) {
+						const rcCompactCell& c = chf->cells[x + y*chf->width];
+						//for (int i = (int)c.index, ni = (int)(c.index+c.count); i < ni; ++i) {
+						for (int i = (int)c.index, ni = (int)(c.index + c.count); i < ni; ++i) {
+							if (chf->areas[i] != RC_NULL_AREA && (((x / checker_size) ^ (y / checker_size)) & 1))
+								chf->areas[i] = chf->areas[i] + magic_num;
+							//chf->areas[i] = checker(x,y,checker_size);
+						}
+					}
+				}
+			}
+		}
+
+
 		// (Optional) Mark areas.
 		const ConvexVolume* vols = m_Geom->getConvexVolumes();
 		for (int i  = 0; i < m_Geom->getConvexVolumeCount(); ++i)
@@ -713,6 +739,27 @@ namespace GASS
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'dmesh'.");
 			return 0;
+		}
+
+		//restore material ids
+
+		if (m_GridSize > 0)
+		{
+			for (int i = 0; i < pmesh->npolys; ++i)
+			{
+				if (pmesh->areas[i] > magic_num - 1)
+					pmesh->areas[i] = pmesh->areas[i] - magic_num;
+			}
+
+			for (int y = 0; y < chf->height; ++y) {
+				for (int x = 0; x < chf->width; ++x) {
+					const rcCompactCell& c = chf->cells[x + y*chf->width];
+					for (int i = (int)c.index, ni = (int)(c.index + c.count); i < ni; ++i) {
+						if (chf->areas[i] > magic_num - 1)
+							chf->areas[i] = chf->areas[i] - magic_num;
+					}
+				}
+			}
 		}
 
 		if (!rcBuildPolyMeshDetail(m_Ctx, *pmesh, *chf,

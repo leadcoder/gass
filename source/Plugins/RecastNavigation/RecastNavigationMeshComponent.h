@@ -80,7 +80,7 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent,BaseSceneComponent>, public INavigationMeshComponent //, public IShape
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, BaseSceneComponent>, public INavigationMeshComponent //, public IShape
 	{
 	public:
 		RecastNavigationMeshComponent();
@@ -96,8 +96,8 @@ namespace GASS
 
 		//Internal
 
-		dtNavMesh* GetNavMesh() const {return m_NavMesh;}
-		dtNavMeshQuery* GetNavMeshQuery() const {return m_NavQuery;}
+		dtNavMesh* GetNavMesh() const { return m_NavMesh; }
+		dtNavMeshQuery* GetNavMeshQuery() const { return m_NavQuery; }
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
 		//need to be public for enumerator access it
@@ -105,14 +105,14 @@ namespace GASS
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
 		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
-		void RecastToGASS(float* in_pos,GASS::Vec3 &out_pos) const;
+		void RecastToGASS(float* in_pos, GASS::Vec3 &out_pos) const;
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
-		ADD_PROPERTY(bool,AutoCollectMeshes)
-		ADD_PROPERTY(bool,UseBoudingBox)
-		ADD_PROPERTY(Vec3,LocalOrigin)
-		
-		float GetCellSize() const;
+		ADD_PROPERTY(bool, AutoCollectMeshes)
+			ADD_PROPERTY(bool, UseBoudingBox)
+			ADD_PROPERTY(Vec3, LocalOrigin)
+
+			float GetCellSize() const;
 		float GetCellHeight() const;
 		float GetAgentHeight() const;
 		float GetAgentRadius() const;
@@ -126,11 +126,12 @@ namespace GASS
 		float GetDetailSampleDist() const;
 		float GetDetailSampleMaxError() const;
 		int GetTileSize() const;
+		int GetGridSize()const { return m_GridSize; }
 
 		void SetCellSize(const float value);
 		void SetCellHeight(const float value);
 		void SetAgentHeight(const float value);
-		void SetAgentRadius (const float value);
+		void SetAgentRadius(const float value);
 		void SetAgentMaxClimb(const float value);
 		void SetAgentMaxSlope(const float value);
 		void SetRegionMinSize(const float value);
@@ -140,8 +141,12 @@ namespace GASS
 		void SetVertsPerPoly(const float value);
 		void SetDetailSampleDist(const float value);
 		void SetDetailSampleMaxError(const float value);
-		void SetMeshSelection(const std::vector<SceneObjectRef>  &value);
 		void SetTileSize(const int size);
+		void SetGridSize(const int size) { m_GridSize = size; }
+		
+		
+		void SetMeshSelection(const std::vector<SceneObjectRef>  &value);
+		
 		std::vector<SceneObjectRef>  GetMeshSelection() const {return m_SelectedMeshes;}
 		bool GetBuild() const;
 		void SetBuild(const bool value);
@@ -203,6 +208,7 @@ namespace GASS
 		float m_VertsPerPoly;
 		float m_DetailSampleDist;
 		float m_DetailSampleMaxError;
+		int m_GridSize;
 		int m_TileSize;
 		dtNavMeshQuery* m_NavQuery;
 		InputGeom* m_Geom;
