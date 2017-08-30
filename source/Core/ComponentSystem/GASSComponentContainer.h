@@ -98,6 +98,11 @@ namespace GASS
 			Add a child component container.
 		*/
 		virtual void AddChild(ComponentContainerPtr child);
+
+		/**
+		Insert a child component container at index.
+		*/
+		virtual void InsertChild(ComponentContainerPtr child, size_t index);
 		
 		/**
 			Remove a child component container

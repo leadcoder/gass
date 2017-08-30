@@ -51,6 +51,13 @@ namespace GASS
 		m_ComponentContainerVector.push_back(child);
 	}
 
+	void ComponentContainer::InsertChild(ComponentContainerPtr child, size_t index)
+	{
+		ComponentContainerWeakPtr parent = ComponentContainerWeakPtr(shared_from_this());
+		child->SetParent(parent);
+		m_ComponentContainerVector.insert(m_ComponentContainerVector.begin() + index, child);
+	}
+
 
 	void ComponentContainer::RegisterReflection()
 	{
