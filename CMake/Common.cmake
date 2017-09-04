@@ -237,7 +237,9 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
         "DEPS" # list of names of multi-valued arguments (output variables are lists)
         ${ARGN} # arguments of the function to parse, here we take the all original ones
     )
-	if(NOT WIN32)
+	if(NOT WIN32 AND NOT APPLE)
+		#Fix dlopen linkage issue on Ubuntu:
+		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
 		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
 	endif()
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
@@ -278,7 +280,9 @@ endmacro()
 
 macro(gass_setup_core_sample SAMPLE_NAME)
 
-	if(NOT WIN32)
+	if(NOT WIN32 AND NOT APPLE) 
+		#Fix dlopen linkage issue on Ubuntu:
+		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
 		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
 	endif()
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
