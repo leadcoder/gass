@@ -23,6 +23,7 @@
 #include <cassert>
 #include "Core/Common.h"
 #include "Core/Math/GASSMath.h"
+#include <iomanip>
 
 namespace GASS
 {

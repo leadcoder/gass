@@ -23,6 +23,7 @@
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
+#include <iomanip>
 #include <assert.h>
 #include <math.h>
 

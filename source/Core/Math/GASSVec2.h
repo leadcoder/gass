@@ -25,6 +25,7 @@
 #include <iostream>
 #include <assert.h>
 #include <math.h>
+#include <iomanip>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 
