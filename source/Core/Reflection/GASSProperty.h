@@ -124,7 +124,7 @@ namespace GASS
 
 		}
 
-		virtual T GetValue(const BaseReflectionObject* object) const
+		virtual T GetValue(const IPropertyOwner* object) const
 		{
 			return (((OwnerType*)object)->*m_Getter)();
 		}
@@ -144,7 +144,7 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "Property::GetPropertyMetaData");
 		}
 
-		virtual void SetValue( BaseReflectionObject* object, const T &value )
+		virtual void SetValue(IPropertyOwner* object, const T &value )
 		{
 			if (m_SetterConst)
 			{
@@ -156,7 +156,7 @@ namespace GASS
 			}
 		}
 
-		void Serialize(BaseReflectionObject* object,ISerializer* serializer)
+		void Serialize(IPropertyOwner* object,ISerializer* serializer)
 		{
 			if (serializer->Loading())
 			{
@@ -177,7 +177,7 @@ namespace GASS
 			}
 		}
 
-		void SetValueByString(BaseReflectionObject* object, const std::string &value)
+		void SetValueByString(IPropertyOwner* object, const std::string &value)
 		{
 			try
 			{
@@ -191,7 +191,7 @@ namespace GASS
 			}
 		}
 
-		std::string GetValueAsString(const BaseReflectionObject* object) const
+		std::string GetValueAsString(const IPropertyOwner* object) const
 		{
 			T val = GetValue(object);
 			std::string res;
@@ -199,12 +199,12 @@ namespace GASS
 			return res;
 		}
 
-		void Transfer(BaseReflectionObject* dest, const BaseReflectionObject* src)
+		void Copy(IPropertyOwner* dest, const IPropertyOwner* src)
 		{
 			SetValue(dest,GetValue(src));
 		}
 
-		void SetValueByAny(BaseReflectionObject* object, GASS_ANY &value)
+		void SetValueByAny(IPropertyOwner* object, GASS_ANY &value)
 		{
 
 			T res;
@@ -220,7 +220,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		void GetValueAsAny(const BaseReflectionObject* object, GASS_ANY &value) const
+		void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const
 		{
 			T res = GetValue(object);
 			value = res;

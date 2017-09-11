@@ -51,7 +51,7 @@ namespace GASS
         This class implement basic reflection functionality.
         All classes that want reflection support should be derived from this class
     */
-	class GASSCoreExport BaseReflectionObject : public Reflection<BaseReflectionObject, NullClass>
+	class GASSCoreExport BaseReflectionObject : public Reflection<BaseReflectionObject, NullClass>, public IPropertyOwner
 	{
 	public:
 		BaseReflectionObject();
@@ -107,6 +107,20 @@ namespace GASS
 		ClassMetaDataPtr GetMetaData() const;
 		
 		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
+
+		template<class TYPE>
+		bool GetPropertyValue(const std::string &property_name, TYPE &value) const
+		{
+			if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+			{
+				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(prop))
+				{
+					value = typed_prop->GetValue(bro.get());
+					return true;
+				}
+			}
+			return false;
+		}
 
 		//internal stuff
 	protected:

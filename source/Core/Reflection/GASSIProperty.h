@@ -30,6 +30,12 @@ namespace GASS
 	class ISerializer;
 	class BaseReflectionObject;
 
+	class IPropertyOwner
+	{
+	public:
+		
+	};
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -65,40 +71,40 @@ namespace GASS
             @param object The object that is owner of this property
             @param value The value provided as string
         */
-		virtual void SetValueByString(BaseReflectionObject* object,const std::string &s) = 0;
+		virtual void SetValueByString(IPropertyOwner* object,const std::string &s) = 0;
 
 		/**
             Get the value of this property
             @param object The object that is owner of this property
         */
-    	virtual std::string GetValueAsString( const BaseReflectionObject* pObject) const = 0;
+    	virtual std::string GetValueAsString(const IPropertyOwner* pObject) const = 0;
 
 		/**
             Serialize this property
             @param object The object that is owner of this property
             @param serializer The serializer, can be Loader,Saver or Sizer
         */
-		virtual void Serialize(BaseReflectionObject* object, ISerializer* serializer) = 0;
+		virtual void Serialize(IPropertyOwner* object, ISerializer* serializer) = 0;
 		/**
-            Transfer this property from one object to another
+            Copy property from one object to another
             @param dest The object that should be modified
             @param src The object that the property value should be fetch from
         */
-		virtual void Transfer(BaseReflectionObject* dest, const BaseReflectionObject* src) = 0;
+		virtual void Copy(IPropertyOwner* dest, const IPropertyOwner* src) = 0;
 
 		/**
             Set this property value by providing the value by the boost any class
             @param object The object that is owner of this property
             @param value Value wrapped in the GASS_ANY class
         */
-		virtual void SetValueByAny(BaseReflectionObject* object, GASS_ANY &value) = 0;
+		virtual void SetValueByAny(IPropertyOwner* object, GASS_ANY &value) = 0;
 
 		/**
             Get the value of this property, retured by the GASS_ANY class
             @param object The object that is owner of this property
             @param value The value returned, wrapped in the GASS_ANY class
         */
-		virtual void GetValueAsAny(const BaseReflectionObject* object, GASS_ANY &value) const = 0;
+		virtual void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const = 0;
 
 		/**
 			Check if this property has meta data
@@ -109,7 +115,6 @@ namespace GASS
 			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
 		*/
 		virtual PropertyMetaDataPtr GetMetaData() const = 0;
-
 	protected :
 		std::string	m_Name;
 	};

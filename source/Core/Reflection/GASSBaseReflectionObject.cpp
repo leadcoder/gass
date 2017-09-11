@@ -23,7 +23,6 @@
 
 namespace GASS
 {
-
 	BaseReflectionObject::BaseReflectionObject()
 	{
 
@@ -33,7 +32,6 @@ namespace GASS
 	{
 
 	}
-
 
 	void BaseReflectionObject::_LoadProperties(tinyxml2::XMLElement *elem)
 	{
@@ -108,22 +106,10 @@ namespace GASS
 
 	void BaseReflectionObject::SetPropertyByString(const std::string &property_name,const std::string &value)
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
-			{
-				IProperty *prop = (*iter);
-				const std::string prop_name = prop->GetName();
-				if(prop_name == property_name)
-				{
-					prop->SetValueByString(this,value);
-					return;
-				}
-				++iter;
-			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			prop->SetValueByString(this, value);
+			return;
 		}
 		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name + " With value:" + value,"BaseReflectionObject::SetPropertyByString");
 	}
@@ -131,28 +117,22 @@ namespace GASS
 
 	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
-			std::list<IProperty*>::const_iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
-			{
-				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetName();
-				if(prop_name == property_name)
-				{
-					
-					return true;
-				}
-				++iter;
-			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			return true;
 		}
 		return false;
 	}
 
 	void BaseReflectionObject::SetPropertyByType(const std::string &property_name, GASS_ANY value)
 	{
+		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+		{
+			prop->SetValueByAny(this, value);
+			return;
+		}
+		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name, "BaseReflectionObject::SetPropertyByType");
+/*	
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
@@ -171,11 +151,19 @@ namespace GASS
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
 		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name,"BaseReflectionObject::SetPropertyByType");
+	*/
 	}
 
 	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, GASS_ANY &value) const
 	{
-		RTTI* pRTTI = GetRTTI();
+		if(IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+		{
+			prop->GetValueAsAny(this, value);
+			return true;
+		}
+		return false;
+
+		/*RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
 			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
@@ -192,30 +180,16 @@ namespace GASS
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
 		}
-		return false;
+		return false;*/
 	}
 
 
 	bool BaseReflectionObject::GetPropertyByString(const std::string &property_name, std::string &value) const
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
-			//std::list<IProperty*>::const_iterator	iter = pRTTI->GetFirstProperty();
-			std::list<IProperty*>::iterator iter = pRTTI->GetFirstProperty();
-
-			while(iter != pRTTI->GetProperties()->end())
-			{
-				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetName();
-				if(prop_name == property_name)
-				{
-					value = prop->GetValueAsString(this);
-					return true;
-				}
-				++iter;
-			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			value = prop->GetValueAsString(this);
+			return true;
 		}
 		return false;
 	}
@@ -233,7 +207,7 @@ namespace GASS
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					IProperty * prop = (*iter);
-					prop->Transfer(dest.get(),this);
+					prop->Copy(dest.get(),this);
 					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();
@@ -260,7 +234,6 @@ namespace GASS
 		}
 	}
 
-
 	PropertyVector BaseReflectionObject::GetProperties() const
 	{
 		PropertyVector props;
@@ -278,7 +251,6 @@ namespace GASS
 		}
 		return props;
 	}
-
 
 	bool BaseReflectionObject::HasMetaData() const
 	{

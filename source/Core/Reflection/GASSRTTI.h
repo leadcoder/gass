@@ -34,7 +34,7 @@ namespace GASS
 
 	typedef std::string ClassID;
 	typedef BaseReflectionObject* (*ClassFactoryFunc)( ClassID );
-	typedef bool (*RegisterReflectionFunc)();
+	typedef void (*RegisterReflectionFunc)();
 
 
 	/** \addtogroup GASSCore
@@ -108,6 +108,24 @@ namespace GASS
 		RTTI* GetAncestorRTTI() const
 		{
 			return m_BaseRTTI;
+		}
+
+		IProperty * GetPropertyByName(const std::string &property_name, bool check_ancestor = true) const
+		{
+			std::list<IProperty*>::const_iterator iter = m_Properties.begin();
+			while (iter != m_Properties.end())
+			{
+				IProperty * prop = (*iter);
+				const std::string prop_name = prop->GetName();
+				if (prop_name == property_name)
+				{
+					return prop;
+				}
+				++iter;
+			}
+			if (check_ancestor && GetAncestorRTTI())
+				return GetAncestorRTTI()->GetPropertyByName(property_name, check_ancestor);
+			return NULL;
 		}
 
 		/**
