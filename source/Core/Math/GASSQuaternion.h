@@ -135,7 +135,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const TQuaternion& q)
 		{
-			os << q.x << " " << q.y << " " << q.z << " " << q.w;
+			os << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1) << q.x << " " << q.y << " " << q.z << " " << q.w;
 			return os;
 		}
 

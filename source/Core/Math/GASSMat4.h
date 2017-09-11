@@ -332,6 +332,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const TMat4& mat)
 		{
+			os << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1);
 			for (int i = 0; i < 4; i++)
 				for (int j = 0; j < 4; j++)
 				{

@@ -6,6 +6,7 @@
 
 #include "Core/Common.h"
 #include <iostream>
+#include <iomanip>
 
 namespace GASS 
 {
@@ -31,7 +32,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
 		{
-			os << pid.Kp << " " << pid.Ki << " " << pid.Kd;
+			os << std::setprecision(std::numeric_limits<Float>::digits10 + 1) << pid.Kp << " " << pid.Ki << " " << pid.Kd;
 			return os;
 		}
 

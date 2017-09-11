@@ -78,7 +78,10 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const EulerRotation& rot)
 		{
-			os << rot.Heading << " " << rot.Pitch << " " << rot.Roll;
+			os << std::setprecision(std::numeric_limits<Float>::digits10 + 1) << 
+				rot.Heading << " " << 
+				rot.Pitch << " " <<
+				rot.Roll;
 			return os;
 		}
 

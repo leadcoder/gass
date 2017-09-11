@@ -56,7 +56,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const ColorRGB& v)
 		{
-			os << v.r << " " << v.g << " " << v.b;
+			os << std::setprecision(std::numeric_limits<Float>::digits10 + 1)  <<  v.r << " " << v.g << " " << v.b;
 			return os;
 		}
 

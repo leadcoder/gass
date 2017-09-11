@@ -51,7 +51,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const Key& key)
 		{
-			os << key.m_Time << " " << key.m_Pos << " " << key.m_Rot << " " << key.m_Scale;
+			os << std::setprecision(std::numeric_limits<Float>::digits10 + 1)  << key.m_Time << " " << key.m_Pos << " " << key.m_Rot << " " << key.m_Scale;
 			return os;
 		}
 

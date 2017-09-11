@@ -91,7 +91,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const TVec2& vec)
 		{
-			os << vec.x << " " << vec.y;
+			os << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1) << vec.x << " " << vec.y;
 			return os;
 		}
 

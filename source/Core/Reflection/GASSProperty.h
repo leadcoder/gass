@@ -30,42 +30,34 @@
 
 namespace GASS
 {
-	template <class type>
-	bool GetValueFromString(type &res,const std::string &s)
+	//-------------------------Get value from string---------------------
+	template <class TYPE>
+	bool GetValueFromString(TYPE &res, const std::string &s)
 	{
-		std::stringstream str;
+		std::stringstream ss(s);
 		//str.setf(0,std::ios::floatfield);
-		str.precision(10);
-
+		//str.precision(10);
 		//str.setf(std::ios::boolalpha);
-		str << s;
-		str >> res;
-		return true;
+		ss >> res;
+		return !ss.fail();
 	}
 
 	//Use specialized template to catch std::string
 	template <>
 	bool GASSCoreExport GetValueFromString<std::string>(std::string &res,const std::string &s);
 
-
-	//Use specialized template to catch float
-	template <>
-	bool GASSCoreExport GetValueFromString<float>(float &res,const std::string &s);
-
 	//Use specialized template to catch bool
 	template <>
-	bool GASSCoreExport GetValueFromString<bool>(bool &res,const std::string &s);
+	bool GASSCoreExport GetValueFromString<bool>(bool &res, const std::string &s);
 
-
-	template <class type>
-	bool GetStringFromValue(const type &val,std::string &res)
+	//-------------------------Get string from value---------------------
+	template <class TYPE>
+	bool GetStringFromValue(const TYPE &val, std::string &res)
 	{
 		std::stringstream sstream;
 		sstream.unsetf(std::ios::skipws);
 		sstream.setf(std::ios::boolalpha);
-		sstream.unsetf ( std::ios::floatfield );
-		sstream.precision(10);
-
+		sstream.unsetf(std::ios::floatfield);
 		sstream << val;
 		res = sstream.str();
 		return true;
@@ -74,6 +66,20 @@ namespace GASS
 	//Use specialized template to catch float
 	template <>
 	bool GASSCoreExport GetStringFromValue<float>(const float &val, std::string &res);
+
+	//Use specialized template to catch double
+	template <>
+	bool GASSCoreExport GetStringFromValue<double>(const double &val, std::string &res);
+
+	//Use specialized template to catch float vector
+	template <>
+	bool GASSCoreExport GetStringFromValue< std::vector<float> >(const std::vector<float> &val, std::string &res);
+
+	//Use specialized template to catch double vector
+	template <>
+	bool GASSCoreExport GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
+
+
 
 	/** \addtogroup GASSCore
 	*  @{

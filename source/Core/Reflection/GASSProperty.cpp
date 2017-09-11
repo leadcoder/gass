@@ -24,7 +24,6 @@
 namespace GASS
 {
 	//Specialized template implementation to catch std::string
-
 	template <>
 	bool GetValueFromString<std::string>(std::string &res,const std::string &s)
 	{
@@ -32,44 +31,57 @@ namespace GASS
 		return true;
 	}
 
+	//Specialized template implementation to catch bool
 	template <>
 	bool GetValueFromString<bool>(bool &res,const std::string &s)
 	{
-		std::stringstream sstream;
+		std::stringstream ss;
 		if(s == "true" || s == "false" || s == "TRUE" || s == "FALSE")
-			sstream.setf(std::ios::boolalpha);
-        sstream << s;
-        sstream >> res;
-        return true;
+			ss.setf(std::ios::boolalpha);
+		ss << s;
+		ss >> res;
+		return !ss.fail();
 	}
+	
+	template <>
+    bool GetStringFromValue(const float &val, std::string &res)
+    {
+        std::stringstream ss;
+	    //sstream.unsetf(std::ios::skipws);
+		//sstream.setf(std::ios::boolalpha);
+		//sstream.setf(0,std::ios::floatfield);
+		//ss.unsetf(std::ios::floatfield);
+		//ss.precision(std::numeric_limits<float>::digits10 + 1);
+		ss << std::setprecision(std::numeric_limits<float>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+    }
 
-	//Use specialized template to catch float
-    template <>
-    bool GetValueFromString<float>(float &res,const std::string &s)
+	template <>
+	bool GetStringFromValue(const double &val, std::string &res)
 	{
-		std::stringstream str;
-		str.unsetf ( std::ios::floatfield );
-		str.precision(6);
-		str << s;
-        str >> res;
-        return true;
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<double>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
 	}
 
 	template <>
-    bool GetStringFromValue(const float &val,std::string &res)
-    {
-        std::stringstream sstream;
-        sstream.unsetf(std::ios::skipws);
-		sstream.setf(std::ios::boolalpha);
-		//sstream.setf(0,std::ios::floatfield);
-		sstream.unsetf ( std::ios::floatfield );
-		sstream.precision(6);
+	bool GetStringFromValue(const std::vector<float> &val, std::string &res)
+	{
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<float>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
 
-        sstream << val;
-        res = sstream.str();
-        return true;
-    }
-
-
+	template <>
+	bool GetStringFromValue(const std::vector<double> &val, std::string &res)
+	{
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<double>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
 
 }

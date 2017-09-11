@@ -24,6 +24,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSMath.h"
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <assert.h>
 #include <math.h>
@@ -307,7 +308,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const TVec3& vec)
 		{
-			os << vec.x << " " << vec.y << " " << vec.z;
+			os << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1) << vec.x << " " << vec.y << " " << vec.z;
 			return os;
 		}
 
@@ -344,6 +345,9 @@ namespace GASS
 		std::string ToString() const
 		{
 			std::stringstream ss;
+			//ss.unsetf(std::ios::skipws);
+			//ss.unsetf(std::ios::floatfield);
+			ss << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1);
 			ss << *this;
 			return ss.str();
 		/*	char ret[128];
@@ -354,7 +358,6 @@ namespace GASS
 #endif
 			return ret;
 			*/
-
 		}
 	};
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitX = TVec3<TYPE>(1, 0, 0);
