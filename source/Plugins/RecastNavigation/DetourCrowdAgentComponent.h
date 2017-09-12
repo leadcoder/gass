@@ -65,9 +65,10 @@ namespace GASS
 
 			typename std::vector<T>::iterator it = m_History.begin();
 
-			for (it; it != m_History.end(); ++it)
+			while(it != m_History.end())
 			{
 				sum += *it;
+				++it;
 			}
 
 			return sum * (1.0/ (double)m_History.size());

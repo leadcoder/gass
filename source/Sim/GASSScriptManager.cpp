@@ -34,16 +34,8 @@
 #include "Sim/Utils/Script/scriptstdstring.h"
 #include "Sim/Utils/Script/scriptbuilder.h"
 
-#ifdef _MSC_VER
-#pragma warning(disable: 4100)
-#pragma warning(disable: 4189)
-#pragma warning(disable: 4505)
-#endif
-
-
 namespace GASS
 {
-
 	void MessageCallback(const asSMessageInfo *msg, void* /*param*/)
 	{
 
@@ -64,6 +56,12 @@ namespace GASS
 	{
 		SimEngine::Get().GetSimSystemManager()->PostMessage(ScriptEventPtr(new ScriptEvent(str)));
 		//std::cout << str;
+	}
+
+	void CheckReturn(int ret_val, const std::string &error_message = "")
+	{
+		if(ret_val < 0)
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed register:" + error_message, "ScriptManager::?");
 	}
 
 	ScriptManager::ScriptManager(void)
@@ -93,13 +91,14 @@ namespace GASS
 		new(self) Vec3(x, y, z);
 	}
 
-	static void Vec3CopyConstruct(const Vec3 &other, Vec3 *thisPointer)
+	/*static void Vec3CopyConstruct(const Vec3 &other, Vec3 *thisPointer)
 	{
 		new(thisPointer) Vec3(other);
-	}
+	}*/
 
 	static void Vec3Destruct(Vec3 *thisPointer)
 	{
+		(void)thisPointer;
 		thisPointer->~Vec3();
 	}
 
@@ -118,13 +117,14 @@ namespace GASS
 		new(self) Quaternion(x, y, z, w);
 	}
 
-	static void QuaternionCopyConstruct(const Quaternion &other, Quaternion *thisPointer)
+	/*static void QuaternionCopyConstruct(const Quaternion &other, Quaternion *thisPointer)
 	{
 		new(thisPointer) Quaternion(other);
-	}
+	}*/
 
 	static void QuaternionDestruct(Quaternion *thisPointer)
 	{
+		(void)thisPointer;
 		thisPointer->~Quaternion();
 	}
 
@@ -151,69 +151,68 @@ namespace GASS
 
 		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
 		RegisterStdString(m_Engine);
-		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); assert( r >= 0 );
-		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); assert( r >= 0 );
-		r = m_Engine->RegisterObjectType("Vec3", sizeof(Vec3), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
+		int r = m_Engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(PrintString), asCALL_CDECL); CheckReturn(r,"PrintString");
+		//r = m_Engine->RegisterGlobalFunction("uint GetSystemTime()", asFUNCTION(timeGetTime), asCALL_STDCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectType("Vec3", sizeof(Vec3), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); CheckReturn(r);
 
-		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(Vec3DefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f(double, double, double)",	asFUNCTION(Vec3Constructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(Vec3Destruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 &opAssign(Vec3&in)", asFUNCTION(Vec3Assignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Vec3", "double x", offsetof(Vec3, x)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); assert( r >= 0 );
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(Vec3DefaultConstructor),	asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_CONSTRUCT,  "void f(double, double, double)",	asFUNCTION(Vec3Constructor2),	asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectBehaviour("Vec3", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(Vec3Destruct),  asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 &opAssign(Vec3&in)", asFUNCTION(Vec3Assignment), asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Vec3", "double x", offsetof(Vec3, x)); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Vec3", "double y", offsetof(Vec3, y)); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Vec3", "double z", offsetof(Vec3, z)); CheckReturn(r);
 		r = m_Engine->RegisterObjectMethod("Vec3", "double Length() const", asMETHOD(Vec3, Length), asCALL_THISCALL);
 
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opAdd(const Vec3 &in) const", asMETHODPR(Vec3, operator+, (const Vec3&) const,	Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opSub(const Vec3 &in) const", asMETHODPR(Vec3, operator-, (const Vec3&) const,	Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Vec3, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(double) const", asMETHODPR(Vec3, operator*, (Float) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opNeg() const", asMETHODPR(Vec3, operator-, () const, Vec3), asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opAdd(const Vec3 &in) const", asMETHODPR(Vec3, operator+, (const Vec3&) const,	Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opSub(const Vec3 &in) const", asMETHODPR(Vec3, operator-, (const Vec3&) const,	Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Vec3, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opMul(double) const", asMETHODPR(Vec3, operator*, (Float) const, Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Vec3", "Vec3 opNeg() const", asMETHODPR(Vec3, operator-, () const, Vec3), asCALL_THISCALL); CheckReturn(r);
 
-		r = m_Engine->RegisterObjectType("Mat4", sizeof(Mat4), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeIdentity()", asMETHOD(Mat4, MakeIdentity), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationX(double)", asMETHOD(Mat4, MakeRotationX), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationY(double)", asMETHOD(Mat4, MakeRotationY), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationZ(double)", asMETHOD(Mat4, MakeRotationZ), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetXAxis() const", asMETHOD(Mat4, GetXAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetYAxis() const", asMETHOD(Mat4, GetYAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetZAxis() const", asMETHOD(Mat4, GetZAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void SetXAxis(const Vec3&in)", asMETHOD(Mat4, SetXAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void SetYAxis(const Vec3&in)", asMETHOD(Mat4, SetYAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "void SetZAxis(const Vec3&in)", asMETHOD(Mat4, SetZAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Mat4, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 opMul(const Mat4 &in) const", asMETHODPR(Mat4, operator*, (const Mat4&) const, Mat4),	asCALL_THISCALL); assert(r >= 0);
+		r = m_Engine->RegisterObjectType("Mat4", sizeof(Mat4), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeIdentity()", asMETHOD(Mat4, MakeIdentity), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationX(double)", asMETHOD(Mat4, MakeRotationX), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationY(double)", asMETHOD(Mat4, MakeRotationY), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void MakeRotationZ(double)", asMETHOD(Mat4, MakeRotationZ), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetXAxis() const", asMETHOD(Mat4, GetXAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetYAxis() const", asMETHOD(Mat4, GetYAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 GetZAxis() const", asMETHOD(Mat4, GetZAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void SetXAxis(const Vec3&in)", asMETHOD(Mat4, SetXAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void SetYAxis(const Vec3&in)", asMETHOD(Mat4, SetYAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "void SetZAxis(const Vec3&in)", asMETHOD(Mat4, SetZAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Mat4, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Mat4", "Vec3 opMul(const Mat4 &in) const", asMETHODPR(Mat4, operator*, (const Mat4&) const, Mat4),	asCALL_THISCALL); CheckReturn(r);
 
 
-		r = m_Engine->RegisterObjectType("Quaternion", sizeof(Quaternion), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); assert( r >= 0 );
-		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f()",	asFUNCTION(QuaternionDefaultConstructor),	asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f(double, double, double, double)",	asFUNCTION(QuaternionConstructor2),	asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_DESTRUCT,   "void f()",                    asFUNCTION(QuaternionDestruct),  asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Quaternion", "double x", offsetof(Quaternion, x)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Quaternion", "double y", offsetof(Quaternion, y)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Quaternion", "double z", offsetof(Quaternion, z)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectProperty("Quaternion", "double w", offsetof(Quaternion, w)); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Quaternion, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); assert(r >= 0);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAnglesYXZ(const Vec3&in)", asMETHOD(Quaternion, FromEulerAnglesYXZ), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetXAxis() const", asMETHOD(Quaternion, GetXAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetYAxis() const", asMETHOD(Quaternion, GetYAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetZAxis() const", asMETHOD(Quaternion, GetZAxis), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("Quaternion", "void ToRotationMatrix(Mat4&out) const", asMETHOD(Quaternion, ToRotationMatrix), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectType("Quaternion", sizeof(Quaternion), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS_CA | asOBJ_APP_CLASS_ALLFLOATS); CheckReturn(r);
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f()", asFUNCTION(QuaternionDefaultConstructor),	asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_CONSTRUCT,  "void f(double, double, double, double)",	asFUNCTION(QuaternionConstructor2),	asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectBehaviour("Quaternion", asBEHAVE_DESTRUCT,   "void f()", asFUNCTION(QuaternionDestruct),  asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double x", offsetof(Quaternion, x)); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double y", offsetof(Quaternion, y)); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double z", offsetof(Quaternion, z)); CheckReturn(r);
+		r = m_Engine->RegisterObjectProperty("Quaternion", "double w", offsetof(Quaternion, w)); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion &opAssign(Quaternion&in)", asFUNCTION(QuaternionAssignment), asCALL_CDECL_OBJLAST); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Quaternion opMul(const Quaternion &in) const", asMETHODPR(Quaternion, operator*, (const Quaternion&) const, Quaternion),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 opMul(const Vec3 &in) const", asMETHODPR(Quaternion, operator*, (const Vec3&) const, Vec3),	asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void FromEulerAnglesYXZ(const Vec3&in)", asMETHOD(Quaternion, FromEulerAnglesYXZ), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetXAxis() const", asMETHOD(Quaternion, GetXAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetYAxis() const", asMETHOD(Quaternion, GetYAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "Vec3 GetZAxis() const", asMETHOD(Quaternion, GetZAxis), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Quaternion", "void ToRotationMatrix(Mat4&out) const", asMETHOD(Quaternion, ToRotationMatrix), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterGlobalFunction("double MathDeg2Rad(double)",  asFUNCTIONPR(Math::Deg2Rad,(Float),Float), asCALL_CDECL); CheckReturn(r);
+		r = m_Engine->RegisterGlobalFunction("double MathRad2Deg(double)",  asFUNCTIONPR(Math::Rad2Deg,(Float),Float), asCALL_CDECL); CheckReturn(r);
+		r = m_Engine->RegisterGlobalFunction("Vec3 MathDeg2Rad(const Vec3 &in)",  asFUNCTIONPR(Vec3::Deg2Rad, (const Vec3&),Vec3), asCALL_CDECL); CheckReturn(r);
+		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)", asFUNCTIONPR(Vec3::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); CheckReturn(r);
+		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)", asFUNCTION(Math::RandomValue<Float>), asCALL_CDECL); CheckReturn(r);
 
-		r = m_Engine->RegisterGlobalFunction("double MathDeg2Rad(double)",  asFUNCTIONPR(Math::Deg2Rad,(Float),Float), asCALL_CDECL); assert( r >= 0 );
-		r = m_Engine->RegisterGlobalFunction("double MathRad2Deg(double)",  asFUNCTIONPR(Math::Rad2Deg,(Float),Float), asCALL_CDECL); assert( r >= 0 );
-		r = m_Engine->RegisterGlobalFunction("Vec3 MathDeg2Rad(const Vec3 &in)",  asFUNCTIONPR(Vec3::Deg2Rad, (const Vec3&),Vec3), asCALL_CDECL); assert( r >= 0 );
-		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)", asFUNCTIONPR(Vec3::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); assert(r >= 0);
-		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)", asFUNCTION(Math::RandomValue<Float>), asCALL_CDECL); assert( r >= 0 );
+		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
 
-		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL);
-
-		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(ComponentContainer, GetName), asCALL_THISCALL);
-		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL);
+		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(ComponentContainer, GetName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
 	}
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)
@@ -227,7 +226,6 @@ namespace GASS
 			else if( r == asEXECUTION_EXCEPTION )
 			{
 				std::cout << "The script ended with an exception." << std::endl;
-
 				// Write some information about the script exception
 				asIScriptFunction *func = ctx->GetExceptionFunction();
 				std::cout << "func: " << func->GetDeclaration() << std::endl;
@@ -304,7 +302,6 @@ namespace GASS
 		if( r < 0 )
 			return ScriptControllerPtr ();
 
-
 		// Cache the functions and methods that will be used
 		//ctrl->module = script;
 		// Find the class that implements the IController interface
@@ -374,8 +371,7 @@ namespace GASS
 			ctx = m_Engine->CreateContext();
 
 		int r = ctx->Prepare(func);
-		assert( r >= 0 );
-
+		CheckReturn(r);
 		return ctx;
 	}
 

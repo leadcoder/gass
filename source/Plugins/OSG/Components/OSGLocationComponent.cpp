@@ -28,6 +28,12 @@
 
 namespace GASS
 {
+	void CheckASReturn(int ret_val, const std::string &error_message = "")
+	{
+		if (ret_val < 0)
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed register:" + error_message, "OSGLocationComponent::RegisterReflection");
+	}
+
 	OSGLocationComponent::OSGLocationComponent() : m_Pos(0, 0, 0),
 		m_EulerRot(0, 0, 0),
 		m_Scale(1, 1, 1),
@@ -74,25 +80,25 @@ namespace GASS
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
 
 		int r;
-		//r = engine->RegisterObjectType("ILocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert( r >= 0 );
-		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
+		//r = engine->RegisterObjectType("ILocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckASReturn(r);
+		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckASReturn(r);
 
 
-		/*r = engine->RegisterObjectBehaviour("ILocationComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<ILocationComponent,OSGLocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "ILocationComponent@ f()", asFUNCTION((refCast<OSGLocationComponent,ILocationComponent>)), asCALL_CDECL_OBJLAST); assert( r >= 0 );
-		r = engine->RegisterObjectMethod("ILocationComponent", "Vec3 GetPosition() const", asMETHODPR(ILocationComponent, GetPosition,() const, Vec3), asCALL_THISCALL);assert(r >= 0);*/
+		/*r = engine->RegisterObjectBehaviour("ILocationComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<ILocationComponent,OSGLocationComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "ILocationComponent@ f()", asFUNCTION((refCast<OSGLocationComponent,ILocationComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
+		r = engine->RegisterObjectMethod("ILocationComponent", "Vec3 GetPosition() const", asMETHODPR(ILocationComponent, GetPosition,() const, Vec3), asCALL_THISCALL);CheckASReturn(r);*/
 
-		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent, OSGLocationComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGLocationComponent, BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent, OSGLocationComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGLocationComponent, BaseSceneComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
 
-		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGLocationComponent, SetAttachToParent), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OSGLocationComponent, GetAttachToParent), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHODPR(OSGLocationComponent, GetPosition, () const, Vec3), asCALL_THISCALL); assert(r >= 0);
-		//r = engine->RegisterObjectMethod("LocationComponent", "void SetPosition(const Vec3 &in) ", asMETHOD(OSGLocationComponent, SetPosition), asCALL_THISCALL);assert(r >= 0);
+		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckASReturn(r);
+		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGLocationComponent, SetAttachToParent), asCALL_THISCALL); CheckASReturn(r);
+		r = engine->RegisterObjectMethod("LocationComponent", "bool GetAttachToParent() const", asMETHOD(OSGLocationComponent, GetAttachToParent), asCALL_THISCALL); CheckASReturn(r);
+		r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", asMETHODPR(OSGLocationComponent, GetPosition, () const, Vec3), asCALL_THISCALL); CheckASReturn(r);
+		//r = engine->RegisterObjectMethod("LocationComponent", "void SetPosition(const Vec3 &in) ", asMETHOD(OSGLocationComponent, SetPosition), asCALL_THISCALL);CheckASReturn(r);
 		//r = engine->RegisterObjectMethod("LocationComponent", "Vec3 GetPosition() const", 
 		//	asSMethodPtr<sizeof(void (GASS::OSGLocationComponent::*)())>::Convert((void (GASS::OSGLocationComponent::*)())(&GASS::OSGLocationComponent::GetPosition)),
-		//	asCALL_THISCALL);assert(r >= 0);
+		//	asCALL_THISCALL);CheckASReturn(r);
 	}
 
 	void OSGLocationComponent::OnInitialize()

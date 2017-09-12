@@ -146,11 +146,7 @@ namespace GASS
 
 	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
 	{
-		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
-		{
-			return true;
-		}
-		return false;
+		return (GetRTTI()->GetPropertyByName(property_name, true) != NULL);
 	}
 
 	void BaseReflectionObject::CopyPropertiesTo(BaseReflectionObjectPtr dest) const

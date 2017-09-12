@@ -257,8 +257,6 @@ namespace GASS
 		}
 
 		Quaternion rot;
-
-		Vec3 up_vec= m_CurrentRot.GetYAxis();
 		rot.FromAngleAxis(turn_speed_y, Vec3(0, 1, 0));
 		Quaternion new_rot = m_CurrentRot * rot;
 		

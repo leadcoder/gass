@@ -198,7 +198,7 @@ namespace GASS
 
 	/*void TerrainDeformTool::SetLayerTexture(const std::string &texture, float tiling)
 	{
-		/*SceneObjectPtr selected = m_SelectedObject.lock();
+		SceneObjectPtr selected = m_SelectedObject.lock();
 		if(selected)
 		{
 			TerrainComponentPtr terrain = selected->GetFirstComponentByClass<ITerrainComponent>();
@@ -206,9 +206,9 @@ namespace GASS
 			{
 				selected->PostRequest(MessagePtr(new TerrainLayerRequest(m_ActiveLayer,texture,tiling)));
 			}
-		}*/
+		}
 
-	/*	HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
+		HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 		if(terrain)
 		{
 			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST <BaseSceneComponent>(terrain);

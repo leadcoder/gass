@@ -136,11 +136,11 @@ TEST_CASE("Test replacing different strings")
 		//test empty vector!
 		CheckStringRoundTrip<std::vector<float> >(test_vec);
 
-		test_vec.push_back(1.0);
-		test_vec.push_back(1.3);
-		test_vec.push_back(15);
-		test_vec.push_back(235);
-		test_vec.push_back(23.234);
+		test_vec.push_back(1.0f);
+		test_vec.push_back(1.3f);
+		test_vec.push_back(15.0f);
+		test_vec.push_back(235.0f);
+		test_vec.push_back(23.234f);
 		CheckStringRoundTrip<std::vector<float> >(test_vec);
 
 		CheckStringToValue<std::vector<float> >("   1.00  1.3  15.00 235           23.234", test_vec);

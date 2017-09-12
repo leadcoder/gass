@@ -49,8 +49,8 @@ namespace GASS
 					{
 						GASS::Float dist_to_path;
 						int t_index;
-						GASS::Float dist_in_path = Path::GetPathDistance(info.m_3DPos, points, t_index, dist_to_path);
-						if (dist_to_path < 1 && t_index < points.size()-1)
+						Path::GetPathDistance(info.m_3DPos, points, t_index, dist_to_path);
+						if (dist_to_path < 1 && t_index < static_cast<int>(points.size()) - 1)
 						{
 							index = t_index+1;
 						}

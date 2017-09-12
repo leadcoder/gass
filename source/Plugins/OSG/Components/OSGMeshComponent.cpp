@@ -418,15 +418,15 @@ namespace GASS
 						{
 
 							//osg::PositionAttitudeTransform* trans = dynamic_cast<osg::PositionAttitudeTransform*> (child_node);
-							/*if(child_node->asTransform())
-							{
-							osg::Vec3d pos = child_node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
-							LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();
+							//if(child_node->asTransform())
+							//{
+							//osg::Vec3d pos = child_node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
+							//LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();
 
-							}*/
+							//}
 
 
-				/*			GASS_SHARED_PTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
+							GASS_SHARED_PTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 							OSGNodeData* node_data = new OSGNodeData(mesh_comp);
 							child_node->setUserData(node_data);
 							mesh_comp->SetMeshNode(child_node);
