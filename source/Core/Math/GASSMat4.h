@@ -351,6 +351,7 @@ namespace GASS
 				for (int j = 0; j < 4; j++)
 					if (!(is >> mat[i][j]))
 						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Mat4", "Mat4::>>");
+			return is;
 		}
 
 		//Convenience functions
