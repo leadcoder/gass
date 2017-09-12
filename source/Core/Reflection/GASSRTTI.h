@@ -135,7 +135,6 @@ namespace GASS
 		{
 			return m_ClassName;
 		}
-
 	
 		/**
 		Gets access to property iterator.
@@ -166,7 +165,6 @@ namespace GASS
 			return (m_MetaData != NULL);
 			
 		}
-
 
 		/**
 		Gets meta data for this property, meta data can hold 
