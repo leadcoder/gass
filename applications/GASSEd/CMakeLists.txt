@@ -74,7 +74,7 @@ set(GASSED_CPP main.cpp
 	variantmanager.cpp)
 	
 
-add_executable(${APP_NAME} ${GASSED_CPP} ${GASSED_MOC_H} ${GASSED_RESOURCES_RCC})
+add_executable(${APP_NAME} ${GASSED_CPP} ${GASSED_H} ${GASSED_MOC_H} ${GASSED_RESOURCES_RCC})
 target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${GASS_SIM_INCLUDE_DIRS}>)
 target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${QT_INCLUDES}>)
 target_include_directories(${APP_NAME} PRIVATE $<BUILD_INTERFACE:${QTPROPERTYBROWSER_DIR_INCLUDE_DIRS}>)
