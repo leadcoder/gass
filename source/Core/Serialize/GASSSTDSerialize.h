@@ -69,7 +69,7 @@ namespace GASS
 	template<typename KEY, typename VALUE>
 	std::ostream& operator << (std::ostream& os, const std::map<KEY,VALUE>& map)
 	{
-		std::map<KEY, VALUE>::const_iterator iter = map.begin();
+		typename std::map<KEY, VALUE>::const_iterator iter = map.begin();
 
 		while (iter != map.end())
 		{
