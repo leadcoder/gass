@@ -56,7 +56,7 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 			{
 				QColor qcolor = v.value<QColor>();
 				GASS::ColorRGB color(qcolor.redF(),qcolor.greenF(),qcolor.blueF());
-				gp.UpdateValue(GASS_ANY(color));
+				gp.UpdateValue(color);
 			}
 			else
 			{

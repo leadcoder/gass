@@ -31,16 +31,15 @@ public:
 			m_Prop->SetValueByString(object.get(),value);
 		}
 	}
-
-	void UpdateValue(GASS_ANY  &value) 
+	template<typename TYPE>
+	void UpdateValue(TYPE  &value)
 	{
 		GASS::BaseReflectionObjectPtr object = m_Object.lock();
 		if(object)
 		{
-			m_Prop->SetValueByAny(object.get(),value);
+			object->SetPropertyValue(m_Prop,value);
 		}
 	}
-
 	GASS::BaseReflectionObjectWeakPtr m_Object;
 	GASS::IProperty* m_Prop;
 	std::vector<std::string > m_Options;
