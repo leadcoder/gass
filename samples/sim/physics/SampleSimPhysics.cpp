@@ -151,7 +151,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		plane_template->AddBaseSceneComponent("ManualMeshComponent");
 		plane_template->AddBaseSceneComponent("PhysicsPlaneGeometryComponent");
 		GASS::ComponentPtr plane_comp  = plane_template->AddBaseSceneComponent("PlaneGeometryComponent");
-		plane_comp->SetPropertyByType("Size",GASS::Vec2(100,100));
+		plane_comp->SetPropertyValue<GASS::Vec2>("Size", GASS::Vec2(100, 100));
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(plane_template);
 	}
 	{
@@ -159,7 +159,9 @@ int main(int/*argc*/, char* /*argv[]*/)
 		light_template->SetName("LightObject");
 		light_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr light_comp = light_template->AddBaseSceneComponent("LightComponent");
-		light_comp->SetPropertyByString("DiffuseColor","0.5 0.5 0.5");
+		
+		//set by string to support both ogre and osg, DiffuseColor is ColorRGB in Ogre and Vec3 in OSG
+		light_comp->SetPropertyByString("DiffuseColor", "0.5 0.5 0.5");
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(light_template);
 	}
 	{
@@ -169,15 +171,15 @@ int main(int/*argc*/, char* /*argv[]*/)
 			vehicle_template->SetID("VEHICLE");
 			vehicle_template->AddBaseSceneComponent("LocationComponent");
 			GASS::BaseSceneComponentPtr mmc  = vehicle_template->AddBaseSceneComponent("ManualMeshComponent");
-			mmc->SetPropertyByType("CastShadow",true);
+			mmc->SetPropertyValue("CastShadow", true);
 
 			GASS::ComponentPtr body_comp = vehicle_template->AddBaseSceneComponent("PhysicsBodyComponent");
-			body_comp->SetPropertyByType("Mass",1.0f);
+			body_comp->SetPropertyValue("Mass", 1.0f);
 			GASS::ComponentPtr geom_comp = vehicle_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-			geom_comp->SetPropertyByType("Offset",GASS::Vec3(0,-0.9,0));
+			geom_comp->SetPropertyValue<GASS::Vec3>("Offset", GASS::Vec3(0, -0.9, 0));
 			GASS::BaseSceneComponentPtr box_comp  = vehicle_template->AddBaseSceneComponent("BoxGeometryComponent");
-			box_comp->SetPropertyByType("Size",GASS::Vec3(2,1,4));
-			box_comp->SetPropertyByType("Lines",false);
+			box_comp->SetPropertyValue("Size", GASS::Vec3(2, 1, 4));
+			box_comp->SetPropertyValue("Lines", false);
 	
 			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(vehicle_template);
 
@@ -225,15 +227,15 @@ int main(int/*argc*/, char* /*argv[]*/)
 			wheel_template->SetID("WHEEL");
 			wheel_template->AddBaseSceneComponent("LocationComponent");
 			GASS::BaseSceneComponentPtr sphere_comp  = wheel_template->AddBaseSceneComponent("SphereGeometryComponent");
-			sphere_comp->SetPropertyByType("Radius",0.3);
+			sphere_comp->SetPropertyValue<GASS::Float>("Radius", 0.3);
 			wheel_template->AddBaseSceneComponent("PhysicsSphereGeometryComponent");
 			GASS::BaseSceneComponentPtr body_comp = wheel_template->AddBaseSceneComponent("PhysicsBodyComponent");
-			body_comp->SetPropertyByType("Mass",0.1f);
+			body_comp->SetPropertyValue<float>("Mass", 0.1f);
 			wheel_template->AddBaseSceneComponent("ManualMeshComponent");
 			//wheel_template->AddComponent("PhysicsHingeComponent");
 			GASS::BaseSceneComponentPtr susp_comp = wheel_template->AddBaseSceneComponent("PhysicsSuspensionComponent");
-			susp_comp->SetPropertyByType("Damping",300.0f);
-			susp_comp->SetPropertyByType("Strength",3000.0f);
+			susp_comp->SetPropertyValue<float>("Damping", 300.0f);
+			susp_comp->SetPropertyValue<float>("Strength", 3000.0f);
 			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 		}
 	}
@@ -243,12 +245,12 @@ int main(int/*argc*/, char* /*argv[]*/)
 		box_template->SetName("BoxObject");
 		box_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr mmc  = box_template->AddBaseSceneComponent("ManualMeshComponent");
-		mmc->SetPropertyByType("CastShadow",true);
+		mmc->SetPropertyValue("CastShadow", true);
 		box_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
 		box_template->AddBaseSceneComponent("PhysicsBodyComponent");
 		GASS::BaseSceneComponentPtr box_comp  = box_template->AddBaseSceneComponent("BoxGeometryComponent");
-		box_comp->SetPropertyByType("Size",GASS::Vec3(1,1,1));
-		box_comp->SetPropertyByType("Lines",false);
+		box_comp->SetPropertyValue("Size", GASS::Vec3(1, 1, 1));
+		box_comp->SetPropertyValue("Lines", false);
 		
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(box_template);
 	}
@@ -259,18 +261,18 @@ int main(int/*argc*/, char* /*argv[]*/)
 		bridge_seg_template->SetName("BridgeSegment");
 		bridge_seg_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr mmc  = bridge_seg_template->AddBaseSceneComponent("ManualMeshComponent");
-		mmc->SetPropertyByType("CastShadow",true);
+		mmc->SetPropertyValue("CastShadow", true);
 
 		bridge_seg_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
 		bridge_seg_template->AddBaseSceneComponent("PhysicsBodyComponent");
 		GASS::BaseSceneComponentPtr box_comp  = bridge_seg_template->AddBaseSceneComponent("BoxGeometryComponent");
-		box_comp->SetPropertyByType("Size",GASS::Vec3(2,0.3,0.6));
-		box_comp->SetPropertyByType("Lines",false);
+		box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
+		box_comp->SetPropertyValue("Lines", false);
 
 		//test
 		//GASS::BaseSceneComponentPtr script_comp  = bridge_seg_template->AddBaseSceneComponent("ASScriptComponent");
 		//std::string script ="c:/temp/test.lua";
-		//script_comp->SetPropertyByType("Script",script);
+		//script_comp->SetPropertyValue("Script",script);
 	
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
 
@@ -304,7 +306,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	GASS::BaseSceneComponentPtr body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
 	try
 	{
-	body_comp->SetPropertyByType("Kinematic",true);
+		body_comp->SetPropertyValue("Kinematic", true);
 	}
 	catch(...){}
 	for(int i= 1 ; i < 11 ; i++)
@@ -317,13 +319,13 @@ int main(int/*argc*/, char* /*argv[]*/)
 		GASS::BaseSceneComponentPtr hinge_comp = bdrige_hinge_obj->GetBaseSceneComponent("PhysicsHingeComponent");
 		if(i == 1)
 		{
-			hinge_comp->SetPropertyByType("Body1",GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
-			hinge_comp->SetPropertyByType("Body2",GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
+			hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
+			hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
 		}
 		else
 		{
-			hinge_comp->SetPropertyByType("Body1",GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
-			hinge_comp->SetPropertyByType("Body2",GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
+			hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
+			hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
 		}
 	}
 	body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
@@ -331,7 +333,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	
 	try
 	{
-	body_comp->SetPropertyByType("Kinematic",true);
+		body_comp->SetPropertyValue("Kinematic", true);
 	}
 	catch(...){}
 	
@@ -347,8 +349,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 		
 		GASS::SceneObjectPtr road_seg = scene->LoadObjectFromTemplate("TestRoad",scene->GetRootSceneObject());
 		GASS::BaseComponentPtr rs_comp = GASS_DYNAMIC_PTR_CAST<GASS::BaseComponent>(road_seg->GetFirstComponentByClass("RoadSegmentComponent"));
-		rs_comp->SetPropertyByType("StartNode",GASS::SceneObjectRef(intersection1->GetGUID()));
-		rs_comp->SetPropertyByType("EndNode",GASS::SceneObjectRef(intersection2->GetGUID()));
+		rs_comp->SetPropertyValue("StartNode",GASS::SceneObjectRef(intersection1->GetGUID()));
+		rs_comp->SetPropertyValue("EndNode",GASS::SceneObjectRef(intersection2->GetGUID()));
 	}*/
 
 
@@ -392,7 +394,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 		//ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_ADDITIVE");
 		ogre_sm->SetPropertyByString("TextureShadowProjection","UNIFORM_FOCUSED");
-		ogre_sm->SetPropertyByType("SelfShadowing",false);*/
+		ogre_sm->SetPropertyValue("SelfShadowing",false);*/
 	}
 
 	while(true)
@@ -477,7 +479,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 				//ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_ADDITIVE");
 				ogre_sm->SetPropertyByString("TextureShadowProjection","UNIFORM_FOCUSED");
-				ogre_sm->SetPropertyByType("SelfShadowing",false);
+				ogre_sm->SetPropertyValue("SelfShadowing",false);
 
 			}
 		}*/

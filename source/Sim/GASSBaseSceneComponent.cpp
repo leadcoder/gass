@@ -60,59 +60,62 @@ namespace GASS
 			{
 				IProperty * prop = (*iter);
 
-				bool is_sol = *prop->GetTypeID() == typeid(SceneObjectLink);
-				bool is_sol_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectLink>);
-				if(is_sol || is_sol_vec)
+				//bool is_sol = *prop->GetTypeID() == typeid(SceneObjectLink);
+				//bool is_sol_vec = 
+				//if(is_sol || is_sol_vec)
+				//{
+				if (*prop->GetTypeID() == typeid(std::vector<SceneObjectLink>))
 				{
-					if(is_sol_vec)
+					std::vector<SceneObjectLink> links;
+					GetPropertyValue(prop, links);
+					//GASS_ANY any_link;
+					//prop->GetValueAsAny(this, any_link);
+					//std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
+					for (size_t i = 0; i < links.size(); i++)
 					{
-
-						GASS_ANY any_link;
-						prop->GetValueAsAny(this, any_link);
-						std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
-						for(size_t i = 0 ; i < links.size(); i++)
+						if (links[i].GetLinkObjectID() != UNKOWN_LINK_ID)
 						{
-							if(links[i].GetLinkObjectID() != UNKOWN_LINK_ID)
+							if (!links[i].Initlize(GetSceneObject()))
 							{
-								if(!links[i].Initlize(GetSceneObject()))
-								{
-									GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
-										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
-										"BaseSceneComponent::InitializePointers()");
-								}
+								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+									"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
+									"BaseSceneComponent::InitializePointers()");
 							}
-							else
-								LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() <<  " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 						}
-						//Why?
-						GASS_ANY any_links(links);
-						prop->SetValueByAny(this, any_links);
+						else
+							LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
+					}
+					//Why?
+					//GASS_ANY any_links(links);
+					//prop->SetValueByAny(this, links);
+					SetPropertyValue(prop, links);
+				}
+				else if (*prop->GetTypeID() == typeid(SceneObjectLink))
+				{
+					//GASS_ANY any_link;
+					//prop->GetValueAsAny(this,any_link);
+					//SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
+					SceneObjectLink link;
+					GetPropertyValue(prop, link);
+					if (link.GetLinkObjectID() != UNKOWN_LINK_ID)
+					{
+						if (!link.Initlize(GetSceneObject()))
+						{
+							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+								"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
+								"BaseSceneComponent::InitializePointers()");
+
+						}
+						GASS_ANY new_any_link(link);
+						prop->SetValueByAny(this, new_any_link);
 					}
 					else
 					{
-						GASS_ANY any_link;
-						prop->GetValueAsAny(this,any_link);
-						SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
-						if(link.GetLinkObjectID() != UNKOWN_LINK_ID)
-						{
-							if(!link.Initlize(GetSceneObject()))
-							{
-								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
-										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
-										"BaseSceneComponent::InitializePointers()");
-
-							}
-							GASS_ANY new_any_link(link);
-							prop->SetValueByAny(this, new_any_link);
-						}
-						else
-						{
-							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
-										"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
-										"BaseSceneComponent::InitializePointers()");
-
-						}
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+							"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
+							"BaseSceneComponent::InitializePointers()");
 					}
+
 				}
 				++iter;
 			}

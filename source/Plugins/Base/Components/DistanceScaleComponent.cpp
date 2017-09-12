@@ -164,16 +164,7 @@ namespace GASS
 				if(camera_comp)
 				{
 					BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera_comp);
-					GASS_ANY any_value;
-					bsc->GetPropertyByType("Fov",any_value);
-					try
-					{
-						fov = GASS_ANY_CAST<float>(any_value);
-					}
-					catch(...)
-					{
-						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast","DistanceScaleComponent::UpdateScale");
-					}
+					bsc->GetPropertyValue<float>("Fov", fov);
 				}
 			
 				double scale_factor = 0.06;

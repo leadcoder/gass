@@ -373,12 +373,12 @@ namespace GASS
 
 				ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
 				location_comp->SetName("LocationComp");
-				location_comp->SetPropertyByType("AttachToParent",true);
+				location_comp->SetPropertyValue("AttachToParent",true);
 
 
 				ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
 				mesh_comp->SetName("MeshComp");
-				mesh_comp->SetPropertyByType("CastShadows",false);
+				mesh_comp->SetPropertyValue("CastShadows", false);
 
 				debug_template->AddComponent(location_comp);
 				debug_template->AddComponent(mesh_comp );

@@ -323,15 +323,15 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		//Do type checking by typeid
 		if(*props[i]->GetTypeID() == typeid(GASS::Vec3))
 		{
-			//get property value by using any
-			props[i]->GetValueAsAny(bro.get(), any_value);
-			GASS::Vec3 vec3_value = GASS_ANY_CAST<GASS::Vec3>(any_value);
+			//get property value
+			GASS::Vec3 vec3_value;
+			bro->GetPropertyValue(props[i], vec3_value);
 			std::cout << "Property " << prop_name << " is Vec3 and has value:" << vec3_value << "\n";
 		}
 		else if(*props[i]->GetTypeID() == typeid(GASS::Quaternion))
 		{
-			props[i]->GetValueAsAny(bro.get(), any_value);
-			GASS::Quaternion quaternion_value = GASS_ANY_CAST<GASS::Quaternion>(any_value);
+			GASS::Quaternion quaternion_value;
+			bro->GetPropertyValue(props[i], quaternion_value);
 			std::cout << "Property " << prop_name << " is Quaternion and has value:" << quaternion_value << "\n";
 		}
 		else if(*props[i]->GetTypeID() == typeid(std::string))
@@ -340,8 +340,8 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		}
 		else if(*props[i]->GetTypeID() == typeid(MyGearBox))
 		{
-			props[i]->GetValueAsAny(bro.get(), any_value);
-			MyGearBox gb_value = GASS_ANY_CAST<MyGearBox>(any_value);
+			MyGearBox gb_value;
+			bro->GetPropertyValue(props[i], gb_value);
 			std::cout << "Property " << prop_name << " is GearBox, Numbers of gears:" << gb_value.Gears;
 			if(gb_value.Automatic)
 				std::cout << " Automatic mode\n";
@@ -350,8 +350,8 @@ void PrintPropertyTypes(GASS::BaseReflectionObjectPtr bro)
 		}
 		else if(*props[i]->GetTypeID() == typeid(MyVector<MyWheel>))
 		{
-			props[i]->GetValueAsAny(bro.get(), any_value);
-			MyVector<MyWheel> wheels = GASS_ANY_CAST<MyVector<MyWheel> >(any_value);
+			MyVector<MyWheel> wheels;
+			bro->GetPropertyValue(props[i], wheels);
 			std::cout << "Property " << prop_name << " is Wheel vector holding:" << wheels.size() << " wheels\n";
 			for(size_t j = 0; j< wheels.size(); j++)
 			{
@@ -418,13 +418,10 @@ int main(int /*argc*/, char** /* argv[] */)
 	//Change gear by value
 	std::cout << std::endl << "Change gears by value..." << std::endl;
 
-	GASS_ANY any_value;
-	my_car->GetPropertyByType("GearBox",any_value);
-	MyGearBox gb_value = GASS_ANY_CAST<MyGearBox>(any_value);
+	MyGearBox gb_value;
+	my_car->GetPropertyValue("GearBox", gb_value);
 	gb_value.Gears++;
-	my_car->SetPropertyByType("GearBox",gb_value);
-
-
+	my_car->SetPropertyValue("GearBox",gb_value);
 
 	PrintPropertyTypes(my_car);
 

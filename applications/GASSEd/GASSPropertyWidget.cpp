@@ -207,20 +207,18 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	GASSVariantProperty gp;
 	if(prop->HasMetaData())
 	{
-		GASS::BasePropertyMetaDataPtr meta_data = GASS_DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
+		const GASS::BasePropertyMetaDataPtr meta_data = GASS_DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
 		if(meta_data->GetFlags() & GASS::PF_VISIBLE)
 		{
 
-			bool editable = (meta_data->GetFlags() & GASS::PF_EDITABLE);
-			std::string documentation = meta_data->GetAnnotation();
-
+			const bool editable = (meta_data->GetFlags() & GASS::PF_EDITABLE);
+			const std::string documentation = meta_data->GetAnnotation();
 			
 			if(GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(),prop_name.c_str());
 				GASS::SceneObjectEnumerationPropertyMetaDataPtr enumeration_data = GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data);
 				std::vector<GASS::SceneObjectPtr> enumeration = enumeration_data->GetEnumeration(obj);
-
 				QStringList enumNames;
 				int select = -1;
 				for(size_t i = 0 ; i < enumeration.size() ; i++)
@@ -299,15 +297,13 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				}
 				else if(*prop->GetTypeID() == typeid(GASS::ColorRGB))
 				{
-					GASS_ANY any_value;
-					prop->GetValueAsAny(obj.get(),any_value );
-					GASS::ColorRGB color = GASS_ANY_CAST<GASS::ColorRGB>(any_value);
+					GASS::ColorRGB color;
+					obj->GetPropertyValue(prop, color);
 					item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
 					item->setValue(QColor(color.r*255,color.g*255,color.b*255));
 				}
 				else if(*prop->GetTypeID() == typeid(GASS::FilePath))
 				{
-					//GASS::FilePath file_path = boost::any_cast<GASS::FilePath>(any_value);
 					std::string filename = prop_value;
 					filename = GASS::StringUtils::Replace(filename,"/","\\");
 					item = m_VariantManager->addProperty(filePathTypeId(),prop_name.c_str());

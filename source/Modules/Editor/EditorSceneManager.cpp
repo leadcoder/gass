@@ -311,9 +311,7 @@ namespace GASS
 
 			if (cam_props)
 			{
-				GASS_ANY temp;
-				cam_props->GetPropertyByType("Ortho", temp);
-				ortho_mode = GASS_ANY_CAST<bool>(temp);
+				cam_props->GetPropertyValue<bool>("Ortho", ortho_mode);
 			}
 
 			if (ortho_mode)

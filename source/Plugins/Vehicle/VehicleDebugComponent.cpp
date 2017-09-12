@@ -62,14 +62,14 @@ namespace GASS
 			location_comp->SetName("LocationComp");
 			ComponentPtr text_comp = ComponentFactory::Get().Create("TextComponent");
 			text_comp->SetName("TextComp");
-			text_comp->SetPropertyByType("Text",std::string("Next waypoint"));
+			text_comp->SetPropertyValue("Text", std::string("Next waypoint"));
 
 			ComponentPtr bb_comp = ComponentFactory::Get().Create("BillboardComponent");
 			bb_comp->SetName("BBComp");
 			
-			bb_comp->SetPropertyByType("Material",std::string("node.dds"));
-			bb_comp->SetPropertyByType("Height",float(5));
-			bb_comp->SetPropertyByType("Width",float(5));
+			bb_comp->SetPropertyValue("Material", std::string("node.dds"));
+			bb_comp->SetPropertyValue("Height", float(5));
+			bb_comp->SetPropertyValue("Width", float(5));
 			
 			debug_template->AddComponent(location_comp);
 			debug_template->AddComponent(text_comp);

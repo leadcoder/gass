@@ -128,7 +128,7 @@ namespace GASS
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 				BaseSceneComponentPtr base = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(location);
-				base->SetPropertyByType("AttachToParent",GASS_ANY(true));
+				base->SetPropertyValue("AttachToParent", true);
 			}
 		}
 
