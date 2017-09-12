@@ -43,10 +43,65 @@ namespace GASS
 	{
 		T value;
 		v.clear();
-		while(is.peek() != EOF && is >> value)
+		
+		while (!(is.peek() == std::istream::traits_type::eof())) //is.peek() != EOF)
 		{
-			v.push_back(value);
+			if(is >> value)
+				v.push_back(value);
+			else
+			{
+				//catch trailing spaces?
+				if(is.peek() == std::istream::traits_type::eof()) 
+				{
+					is.clear();
+				}
+				return is;
+			}
 		}
+		is.clear();
+		return is;
+	}
+
+
+	/*
+	Stream operator added for std::map to support map property serialization.
+	*/
+	template<typename KEY, typename VALUE>
+	std::ostream& operator << (std::ostream& os, const std::map<KEY,VALUE>& map)
+	{
+		std::map<KEY, VALUE>::const_iterator iter = map.begin();
+
+		while (iter != map.end())
+		{
+			if (iter != map.begin())
+				os << " ";
+			os << iter->first;
+			os << " ";
+			os << iter->second;
+			iter++;
+		}
+		return os;
+	}
+
+	template<typename KEY, typename VALUE>
+	std::istream& operator >> (std::istream& is, std::map<KEY, VALUE>& map)
+	{
+		VALUE value;
+		KEY key;
+		map.clear();
+		while (!(is.peek() == std::istream::traits_type::eof()))
+		{
+			if (is >> key)
+			{
+				if (is >> value) 
+					map[key] = value;
+				else
+					return is;
+			}
+			else
+				return is;
+		}
+		is.clear();
 		return is;
 	}
 }

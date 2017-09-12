@@ -63,50 +63,42 @@ namespace GASS
             @return true if property found and set
 		*/
 		void SetPropertyByString(const std::string &property_name,const std::string &value);
-		/**Get property by string
+		/**Get property as string
 		    @param property_name Name of the property to get
-            @param value The value provided as string
+            @param value The value converted to string
             @return true if property found
 		*/
-		bool GetPropertyByString(const std::string &property_name, std::string &value) const;
+		bool GetPropertyAsString(const std::string &property_name, std::string &value) const;
 
 		/**Set property by value using GASS_ANY
 		    @param property_name Name of the property to get
             @param value The value provided as GASS_ANY
             @return true if property found and set
 		*/
-		void SetPropertyByType(const std::string &property_name, GASS_ANY value);
-		/**Check if property exist
-		    @param property_name Name of the property to get
-            @return true if property found
-		*/
-		bool HasProperty(const std::string &property_name) const;
-
-
-		/**Get property by value using GASS_ANY 
-		    @param property_name Name of the property to get
-            @param value The returned value provided as GASS_ANY argument
-            @return true if property found
-		*/
-		bool GetPropertyByType(const std::string &property_name, GASS_ANY &value) const;
-
-		/**
-		Get all properties from this object
-		*/
-		PropertyVector GetProperties() const;
-
-
-		/**
-			Check if this property has meta data
-		*/
-		bool HasMetaData() const;
-
-		/**
-			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
-		*/
-		ClassMetaDataPtr GetMetaData() const;
+		void SetPropertyByAny(const std::string &property_name, GASS_ANY value);
 		
-		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
+		/**Get property by value using GASS_ANY
+		@param property_name Name of the property to get
+		@param value The returned value as GASS_ANY
+		@return true if property found
+		*/
+		bool GetPropertyAsAny(const std::string &property_name, GASS_ANY &value) const;
+
+
+		template<class TYPE>
+		void SetPropertyValue(const std::string &property_name, const TYPE &value)
+		{
+			if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+			{
+				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(prop))
+				{
+					typed_prop->SetValue(this, value);
+					return;
+				}
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast property:" + property_name + " Property type may differ from provided data-type", "BaseReflectionObject::SetPropertyValue");
+			}
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name, "BaseReflectionObject::SetPropertyValue");
+		}
 
 		template<class TYPE>
 		bool GetPropertyValue(const std::string &property_name, TYPE &value) const
@@ -122,8 +114,58 @@ namespace GASS
 			return false;
 		}
 
-		//internal stuff
+		template<class TYPE>
+		void SetPropertyValue(IProperty *property, const TYPE &value)
+		{
+			if (property)
+			{
+				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
+				{
+					typed_prop->SetValue(this, value);
+					return;
+				}
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast property:" + property->GetName() + " Property type may differ from provided data-type", "BaseReflectionObject::SetPropertyValue");
+			}
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "property == NULL", "BaseReflectionObject::SetPropertyValue");
+		}
+
+		template<class TYPE>
+		bool GetPropertyValue(IProperty *property, TYPE &value) const
+		{
+			if (property)
+			{
+				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
+				{
+					value = typed_prop->GetValue(this);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**Check if property exist
+			@param property_name Name of the property to get
+			@return true if property found
+		*/
+		bool HasProperty(const std::string &property_name) const;
+		
+		/**
+		Get all properties from this object
+		*/
+		PropertyVector GetProperties() const;
+
+		/**
+			Check if this property has meta data
+		*/
+		bool HasMetaData() const;
+
+		/**
+			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
+		*/
+		ClassMetaDataPtr GetMetaData() const;
+		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
 	protected:
+		//internal stuff
 		void _LoadProperties(tinyxml2::XMLElement *elem);
 		void _SaveProperties(tinyxml2::XMLElement *parent) const;
 

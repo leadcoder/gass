@@ -36,7 +36,7 @@ namespace GASS
 	bool GetValueFromString<bool>(bool &res,const std::string &s)
 	{
 		std::stringstream ss;
-		if(s == "true" || s == "false" || s == "TRUE" || s == "FALSE")
+		if (s.find("0") == std::string::npos && s.find("1") == std::string::npos)
 			ss.setf(std::ios::boolalpha);
 		ss << s;
 		ss >> res;
@@ -83,5 +83,4 @@ namespace GASS
 		res = ss.str();
 		return !ss.fail();
 	}
-
 }

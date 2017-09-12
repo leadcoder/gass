@@ -114,47 +114,27 @@ namespace GASS
 		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name + " With value:" + value,"BaseReflectionObject::SetPropertyByString");
 	}
 
-
-	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
+	bool BaseReflectionObject::GetPropertyAsString(const std::string &property_name, std::string &value) const
 	{
 		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
+			value = prop->GetValueAsString(this);
 			return true;
 		}
 		return false;
 	}
 
-	void BaseReflectionObject::SetPropertyByType(const std::string &property_name, GASS_ANY value)
+	void BaseReflectionObject::SetPropertyByAny(const std::string &property_name, GASS_ANY value)
 	{
 		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
 			prop->SetValueByAny(this, value);
 			return;
 		}
-		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name, "BaseReflectionObject::SetPropertyByType");
-/*	
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
-		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
-			{
-				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetName();
-				if(prop_name == property_name)
-				{
-					prop->SetValueByAny(this,value);
-					return;
-				}
-				++iter;
-			}
-			pRTTI = pRTTI->GetAncestorRTTI();
-		}
-		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name,"BaseReflectionObject::SetPropertyByType");
-	*/
+		GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed find property:" + property_name, "BaseReflectionObject::SetPropertyByAny");
 	}
 
-	bool BaseReflectionObject::GetPropertyByType(const std::string &property_name, GASS_ANY &value) const
+	bool BaseReflectionObject::GetPropertyAsAny(const std::string &property_name, GASS_ANY &value) const
 	{
 		if(IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
@@ -162,33 +142,12 @@ namespace GASS
 			return true;
 		}
 		return false;
-
-		/*RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
-		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
-			{
-				IProperty * prop = (*iter);
-				const std::string prop_name = prop->GetName();
-				if(prop_name == property_name)
-				{
-					prop->GetValueAsAny(this,value);
-					return true;
-				}
-				++iter;
-			}
-			pRTTI = pRTTI->GetAncestorRTTI();
-		}
-		return false;*/
 	}
 
-
-	bool BaseReflectionObject::GetPropertyByString(const std::string &property_name, std::string &value) const
+	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
 	{
 		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
-			value = prop->GetValueAsString(this);
 			return true;
 		}
 		return false;

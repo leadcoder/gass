@@ -39,6 +39,7 @@ namespace GASS
 		//str.setf(0,std::ios::floatfield);
 		//str.precision(10);
 		//str.setf(std::ios::boolalpha);
+		
 		ss >> res;
 		return !ss.fail();
 	}
@@ -56,9 +57,16 @@ namespace GASS
 	bool GetStringFromValue(const TYPE &val, std::string &res)
 	{
 		std::stringstream sstream;
-		sstream.unsetf(std::ios::skipws);
+		//we want to keep white space to be able to feed Vec3, 
+		//std::vector, ColorRGB etc. that use white space as parameter delimiter
+		//sstream.unsetf(std::ios::skipws);
+
+		//we prefer bool values as "true"/"false" in string
 		sstream.setf(std::ios::boolalpha);
-		sstream.unsetf(std::ios::floatfield);
+
+		//unnecessary? should not be set by default?
+		//sstream.unsetf(std::ios::floatfield);
+
 		sstream << val;
 		res = sstream.str();
 		return true;
@@ -79,8 +87,6 @@ namespace GASS
 	//Use specialized template to catch double vector
 	template <>
 	bool GASSCoreExport GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
-
-
 
 	/** \addtogroup GASSCore
 	*  @{
