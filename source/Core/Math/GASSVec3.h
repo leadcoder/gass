@@ -318,12 +318,10 @@ namespace GASS
 			{
 				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse Vec3", "Vec3::>>");
 			}
-
 			return is;
 		}
 
-		
-
+	
 	/*	void FastNormalize()
 		{
 			Type invsqrt = Math::InvSqrt(static_cast<float>(x*x + y*y + z*z));
@@ -345,19 +343,8 @@ namespace GASS
 		std::string ToString() const
 		{
 			std::stringstream ss;
-			//ss.unsetf(std::ios::skipws);
-			//ss.unsetf(std::ios::floatfield);
-			ss << std::setprecision(std::numeric_limits<TYPE>::digits10 + 1);
 			ss << *this;
 			return ss.str();
-		/*	char ret[128];
-#ifdef _MSC_VER
-			sprintf_s(ret, "%.3f%s%.3f%s%.3f", x, separator.c_str(), y, separator.c_str(), z);
-#else
-			sprintf(ret, "%.3f%s%.3f%s%.3f", x, separator.c_str(), y, separator.c_str(), z);
-#endif
-			return ret;
-			*/
 		}
 	};
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitX = TVec3<TYPE>(1, 0, 0);
