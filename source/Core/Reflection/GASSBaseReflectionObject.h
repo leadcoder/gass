@@ -115,7 +115,7 @@ namespace GASS
 			{
 				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(prop))
 				{
-					value = typed_prop->GetValue(bro.get());
+					value = typed_prop->GetValue(this);
 					return true;
 				}
 			}
