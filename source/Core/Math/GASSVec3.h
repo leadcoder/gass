@@ -262,6 +262,14 @@ namespace GASS
 			return dist;
 		}
 
+		inline TVec3 NormalizedCopy() const
+		{
+			TVec3 norm_copy(x,y,z);
+			norm_copy.Normalize();
+			return norm_copy;
+		}
+
+
 		TYPE Dot(const TVec3 &v) const
 		{
 			return Dot(*this,v);
