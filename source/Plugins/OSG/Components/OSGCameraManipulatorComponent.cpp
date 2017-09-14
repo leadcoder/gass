@@ -28,10 +28,10 @@
 
 namespace GASS
 {
-	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_ManName("Terrain"),
-		m_TerrainMan(NULL),
+	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_OrbitMan(NULL),
 		m_InitPos(0,0,0),
-		m_ReadyToRun(false)
+		m_ReadyToRun(false),
+		m_ManName("Terrain")
 	{
 
 	}
@@ -58,18 +58,17 @@ namespace GASS
 
 		if(m_ManName == "Trackball")
 		{
-			//osgGA::TrackballManipulator *Tman1 = new osgGA::TrackballManipulator();
-			m_Manipulator = new osgGA::MyTrackballManipulator();
+			m_OrbitMan = new osgGA::MyTrackballManipulator();
 		}
 		else if(m_ManName == "Terrain")
 		{
-			m_TerrainMan = new osgGA::CustomTerrainManipulator();
-			m_TerrainMan->setAllowThrow(false);
-			m_Manipulator = m_TerrainMan;
-
+			m_OrbitMan = new osgGA::CustomTerrainManipulator();
 		}
-		//if(m_Manipulator)
-		//	m_Manipulator->setAutoComputeHomePosition(false);
+		else
+		{
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Manipulator not supported:" + m_ManName, " OSGCameraManipulatorComponent::OnInitialize");
+		}
+		m_OrbitMan->setAllowThrow(false);
 	}
 
 	void OSGCameraManipulatorComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
@@ -108,102 +107,99 @@ namespace GASS
 		}
 	}
 
+	void OSGCameraManipulatorComponent::_SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos)
+	{
+		osg::Vec3d eye, center, up;
+		man->getTransformation(eye, center, up);
+
+		//Note: terrain manipulator will try to intersect to get new center pos and may hit skybox (or other unwanted geometries)
+		man->setTransformation(OSGConvert::ToOSG(pos), center, up);
+		//Keep update direction or center point?
+		/*osg::Vec3d dir = center - eye;
+		dir.normalize();
+		dir = dir * 10000.0;
+		eye = OSGConvert::ToOSG(pos);
+		center = eye + dir;
+		m_OrbitMan->setTransformation(eye, center, up);*/
+	}
+
+	void OSGCameraManipulatorComponent::_SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot)
+	{
+		osg::Vec3d eye, center, up;
+		man->getTransformation(eye, center, up);
+
+		//create new center pos
+		Vec3 dir = -rot.GetZAxis();
+		//just pick a center pos 10000m away
+		dir = dir * 10000.0;
+		center = eye + OSGConvert::ToOSG(dir);
+		//create new up vector
+		up = OSGConvert::ToOSG(rot.GetYAxis());
+		//Note: terrain manipulator will try to intersect to get new center pos and may hit sky box (or other unwanted geometries)
+		man->setTransformation(eye, center, up);
+	}
+
 	void OSGCameraManipulatorComponent::SetPosition(const Vec3& pos)
 	{
-		if(m_TerrainMan)
+		//If not initialized, store position as initial value
+		if (!m_ReadyToRun) 
 		{
-
-			if(m_TerrainMan && !m_ReadyToRun)
-			{
-				//cache data and apply during scene tick
-				m_InitPos = pos;
-			}
-
-			if(m_TerrainMan)
-			{
-				osg::Vec3d eye, center,up;
-				m_TerrainMan->getTransformation(eye, center,up);
-				osg::Vec3d dir = center - eye;
-				dir.normalize();
-				dir = dir * 10000.0;
-				eye = OSGConvert::ToOSG(pos);
-				center = eye + dir;
-				m_TerrainMan->setTransformation(eye, center,up);
-			}
-			else
-			{
-				osg::Matrixd vm = m_Manipulator->getMatrix();
-				vm.setTrans(OSGConvert::ToOSG(pos));
-				m_Manipulator->setByMatrix(vm);
-			}
+			//just save pos, will be  apply on first scene tick
+			m_InitPos = pos;
+		}
+		else if (m_OrbitMan)
+		{
+			_SetOrbitManPosition(m_OrbitMan, pos);
 		}
 	}
 
 	void OSGCameraManipulatorComponent::SetRotation(const Quaternion& rot)
 	{
-		if(m_TerrainMan && !m_ReadyToRun)
+		if (!m_ReadyToRun)
 		{
-			//cache data and apply during scene tick
 			m_InitRot = rot;
 		}
-
-		if(m_TerrainMan)
+		else if (m_OrbitMan)
 		{
-			Vec3 dir = -rot.GetZAxis();
-			dir = dir * 10000.0;
-
-			osg::Vec3d eye, center,up;
-			m_TerrainMan->getTransformation(eye, center,up);
-			center = eye + OSGConvert::ToOSG(dir);
-			up = OSGConvert::ToOSG(rot.GetYAxis());
-			m_TerrainMan->setTransformation(eye, center,up);
-
+			_SetOrbitManRotation(m_OrbitMan, rot);
 		}
-		else
-		{
-			osg::Matrixd vm = m_Manipulator->getMatrix();
-			osg::Vec3d translation = vm.getTrans();
-			vm.identity();
-			osg::Quat rotation = osg::Quat(Math::Deg2Rad(90.0f),osg::Vec3(1,0,0)) * OSGConvert::ToOSG(rot);
-			vm.setTrans(translation);
-			vm.setRotate(rotation);
-			m_Manipulator->setByMatrix(vm);
-		}
+	}
+
+	void OSGCameraManipulatorComponent::_ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, GASS::Vec3 &pos, GASS::Quaternion &rot)
+	{
+		osg::Vec3d eye, center, up;
+		//Camera position is eye
+		man->getTransformation(eye, center, up);
+		pos = OSGConvert::ToGASS(eye);
+
+		//Get rotation axis
+		const GASS::Vec3 z_axis = OSGConvert::ToGASS(eye - center).NormalizedCopy();
+		const GASS::Vec3 y_axis = OSGConvert::ToGASS(up).NormalizedCopy();
+		const GASS::Vec3 x_axis = (y_axis.Cross(z_axis)).NormalizedCopy();
+		rot.FromAxes(x_axis, y_axis, z_axis);
 	}
 
 	void OSGCameraManipulatorComponent::SceneManagerTick(double /*delta*/)
 	{
-		//update location
-		if(m_Manipulator.valid())
+		if (!m_ReadyToRun && m_OrbitMan && m_OrbitMan->getNode())
 		{
-			if(!m_ReadyToRun && m_Manipulator && m_Manipulator->getNode())
-			{
-				m_ReadyToRun = true;
-				SetPosition(m_InitPos);
-				SetRotation(m_InitRot);
-				const Vec3 eye(m_InitPos.x,m_InitPos.y+200,m_InitPos.z);
-				const osg::Vec3d up(1.0,0,0);
-				m_TerrainMan->setTransformation(OSGConvert::ToOSG(eye), OSGConvert::ToOSG(m_InitPos),up);
-				m_Manipulator->setHomePosition(OSGConvert::ToOSG(eye), OSGConvert::ToOSG(m_InitPos),up);
-			}
-			const int id = GASS_PTR_TO_INT(this);
-			if(m_TerrainMan)
-			{
-				//osg::Quat offset_rot = osg::Quat(Math::Deg2Rad(90),osg::Vec3(1,0,0));
-				osg::Quat rotation;
-				osg::Vec3d eye;
-				m_TerrainMan->getTransformation(eye, rotation);
-				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(eye),id)));
-			}else
-			{
-				osg::Matrixd vm = m_Manipulator->getMatrix();
-				osg::Vec3d translation,scale;
-				osg::Quat rotation;
-				osg::Quat so;
-
-				vm.decompose(translation,rotation, scale, so );
-				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(translation),id)));
-			}
+			//set ReadyToRun=true first, used inside SetPosition and SetRotation
+			m_ReadyToRun = true;
+			SetPosition(m_InitPos);
+			SetRotation(m_InitRot);
+			
+			osg::Vec3d eye, center, up;
+			m_OrbitMan->getTransformation(eye, center, up);
+			m_OrbitMan->setHomePosition(eye, center, up);
 		}
+		
+		const int id = GASS_PTR_TO_INT(this);
+
+		//update LocationComponent with current camera pos and rot
+		GASS::Vec3 pos;
+		GASS::Quaternion rot;
+		_ExtractTransformationFromOrbitManipulator(m_OrbitMan, pos, rot);
+		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos, id)));
+		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, id)));
 	}
 }

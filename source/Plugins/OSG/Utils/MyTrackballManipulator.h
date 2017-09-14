@@ -17,7 +17,7 @@
 
 namespace osgGA {
 
-	class MyTrackballManipulator : public CameraManipulator
+	class MyTrackballManipulator : public OrbitManipulator
 	{
 	public:
 		MyTrackballManipulator();

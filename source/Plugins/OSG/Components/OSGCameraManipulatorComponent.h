@@ -41,7 +41,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void SceneManagerTick(double delta);
 		//IOSGCameraManipulator
-		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
+		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_OrbitMan;}
 	protected:
 		void SetRotation(const Quaternion& rot);
 		void SetPosition(const Vec3& pos);
@@ -52,9 +52,12 @@ namespace GASS
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
 	private:
+		static void _ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, GASS::Vec3 &pos, GASS::Quaternion &rot);
+		static void _SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot);
+		static void _SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos);
 		std::string m_ManName;
-		osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
-		osgGA::CustomTerrainManipulator* m_TerrainMan;
+		//osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
+		osg::ref_ptr<osgGA::OrbitManipulator> m_OrbitMan;
 		Vec3 m_InitPos;
 		Quaternion m_InitRot;
 		bool m_ReadyToRun;
