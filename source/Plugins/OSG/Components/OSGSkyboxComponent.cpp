@@ -18,7 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+
 #include "Plugins/OSG/Components/OSGSkyboxComponent.h"
+#include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
@@ -48,7 +50,11 @@ namespace GASS
 	{
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
+		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		m_Node = _CreateSkyBox();
+
+		
+		//lc->GetOSGNode()->addChild(m_Node);
 		root_node->addChild(m_Node);
 	}
 
@@ -231,31 +237,50 @@ namespace GASS
 
 		stateset->setRenderBinDetails(-1,"RenderBin");
 
-		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f,0.0f,0.0f), static_cast<float>(m_Size)));
-
+	
 		osg::Geode* geode = new osg::Geode;
-		geode->setCullingActive(false);
 		geode->setStateSet( stateset );
+		geode->setCullingActive(false);
+		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
+		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
+		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f), static_cast<float>(m_Size)));
+		drawable->setCullingActive(false);
+		drawable->setInitialBound(osg::BoundingBox());
+
 		geode->addDrawable(drawable);
+		geode->setInitialBound(osg::BoundingSphere());
 
+		MyMoveEarthySkyWithEyePointTransform* sky_transform = new MyMoveEarthySkyWithEyePointTransform;
+		sky_transform->m_Skybox = this;
+		sky_transform->addChild(geode);
+		sky_transform->setNodeMask(~NM_RECEIVE_SHADOWS & sky_transform->getNodeMask());
+		sky_transform->setNodeMask(~NM_CAST_SHADOWS & sky_transform->getNodeMask());
+		sky_transform->setCullingActive(false);
+		sky_transform->setInitialBound(osg::BoundingBox());
 
-		MyMoveEarthySkyWithEyePointTransform* transform = new MyMoveEarthySkyWithEyePointTransform;
-		transform->m_Skybox = this;
-		transform->setCullingActive(false);
-		transform->addChild(geode);
+		osg::PositionAttitudeTransform* offset_t = new osg::PositionAttitudeTransform();
+		//move below ground to avoid camera intersection
+		offset_t->setPosition(osg::Vec3(0, 0, -1000));
+		offset_t->addChild(sky_transform);
 
 		osg::ClearNode* clearNode = new osg::ClearNode;
 		clearNode->setRequiresClear(false);
+		
 		clearNode->setCullCallback(new TexMatCallback(*tm));
-		clearNode->addChild(transform);
-
-		geode->setInitialBound(osg::BoundingSphere());
-		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
-		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
+		clearNode->addChild(offset_t);
 		clearNode->setNodeMask(~NM_RECEIVE_SHADOWS & clearNode->getNodeMask());
 		clearNode->setNodeMask(~NM_CAST_SHADOWS & clearNode->getNodeMask());
-		transform->setNodeMask(~NM_RECEIVE_SHADOWS & transform->getNodeMask());
-		transform->setNodeMask(~NM_CAST_SHADOWS & transform->getNodeMask());
-		return clearNode;
+		clearNode->setCullingActive(false);
+		clearNode->setInitialBound(osg::BoundingBox());
+
+		///return clearNode;
+		// A nested camera isolates the projection matrix calculations so the node won't 
+		// affect the clip planes in the rest of the scene.
+		osg::Camera* cam = new osg::Camera();
+		cam->getOrCreateStateSet()->setRenderBinDetails(-100000, "RenderBin");
+		cam->setRenderOrder(osg::Camera::NESTED_RENDER);
+		cam->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+		cam->addChild(clearNode);
+		return cam;
 	}
 }
