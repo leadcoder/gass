@@ -35,21 +35,6 @@ namespace tinyxml2
 
 namespace GASS
 {
-	/*static std::string UnDecorateClassName(const std::string &name)
-	{
-		//substr(6) is used for removing "class_" from string returned by typeid,
-		//we don't want to use any prefix when accessing classes by name,
-
-		std::string ret = name.substr(6);
-		//remove namespace
-		size_t pos = ret.find("::");
-		if(pos != -1)
-		{
-			ret =  ret.substr(pos+2);
-		}
-		return ret;
-	}*/
-
     //forward declaration
 	class BaseReflectionObject;
 
@@ -60,9 +45,11 @@ namespace GASS
 	*  @{
 
 	*/
-    /** Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
-     supporting RTTI need to derived from this class, with their ancestor specified as the TInClass
-    template parameter.*/
+    
+	/** Reflection is the RTTI "sandwich class" being used to augment a class with RTTI support. Classes
+        supporting RTTI need to derived from this class, with their ancestor specified as the TInClass
+        template parameter.
+	*/
 
 	template <class T, class TInClass>
 	class Reflection : public TInClass
@@ -80,7 +67,7 @@ namespace GASS
         }
 
 		/** Registers a property. Takes in the property name, its getter and setter functions, and the property
-		 type as a template parameter. Should be called from within a user-defined RegisterReflection function.
+		    type as a template parameter. Should be called from within a user-defined RegisterReflection function.
 		*/
 		template <class PropertyType>
 		static void RegisterProperty(const std::string &name, 
@@ -102,26 +89,6 @@ namespace GASS
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		/*template <class PropertyType>
-		static void RegisterVectorProperty(const std::string &name, 
-			typename VectorProperty<T, PropertyType>::GetterType getter,
-			typename VectorProperty<T, PropertyType>::SetterType setter,
-			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
-		{
-			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>(name, getter, setter, meta_data);
-			T::GetClassRTTI()->GetProperties()->push_back(property);
-		}
-
-		template <class PropertyType>
-		static void RegisterVectorProperty(const std::string &name, 
-			typename VectorProperty<T, PropertyType>::GetterType getter,
-			typename VectorProperty<T, PropertyType>::SetterTypeConst setter,
-			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
-		{
-			VectorProperty<T, PropertyType>* property = new VectorProperty<T, PropertyType>( name, getter, setter,meta_data);
-			T::GetClassRTTI()->GetProperties()->push_back(property);
-		}*/
-
 		static inline RTTI* GetClassRTTI()
 		{
 			return &m_RTTI;
@@ -132,10 +99,10 @@ namespace GASS
 			return &m_RTTI;
 		}
 	protected :
-			static RTTI	m_RTTI;
+		static RTTI	m_RTTI;
 	};
 
 	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(GASS::StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),/* (ClassFactoryFunc)T::Create,*/
+		(GASS::StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),
 		T::RegisterReflection );
 }
