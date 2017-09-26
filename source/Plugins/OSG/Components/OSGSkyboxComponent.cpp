@@ -244,7 +244,7 @@ namespace GASS
 		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
 		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
 		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f), static_cast<float>(m_Size)));
-		drawable->setCullingActive(false);
+		//drawable->setCullingActive(false);
 		drawable->setInitialBound(osg::BoundingBox());
 
 		geode->addDrawable(drawable);
