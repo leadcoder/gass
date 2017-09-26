@@ -82,8 +82,5 @@ TEST_CASE("Test RTTI")
 		fuel_property->SetValue(&mycar, 2.0f);
 		fuel = fuel_property->GetValue(&mycar);
 		REQUIRE(fuel == 2.0f);
-
-		mycar.m_RTTI.SetPropertyValue("Name", &mycar, std::string("SAAB"));
-
 	}
 }
