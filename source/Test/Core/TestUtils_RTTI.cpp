@@ -77,11 +77,13 @@ TEST_CASE("Test RTTI")
 
 		GASS::TypedProperty<float>* fuel_property = dynamic_cast<GASS::TypedProperty<float>* >(mycar.m_RTTI.GetPropertyByName("Fuel"));
 		
-		float fule = fuel_property->GetValue(&mycar);
-		REQUIRE(fule == 1.0f);
+		float fuel = fuel_property->GetValue(&mycar);
+		REQUIRE(fuel == 1.0f);
 		fuel_property->SetValue(&mycar, 2.0f);
-		fule = fuel_property->GetValue(&mycar);
-		REQUIRE(fule == 2.0f);
+		fuel = fuel_property->GetValue(&mycar);
+		REQUIRE(fuel == 2.0f);
+
+		mycar.m_RTTI.SetPropertyValue("Name", &mycar, std::string("SAAB"));
 
 	}
 }

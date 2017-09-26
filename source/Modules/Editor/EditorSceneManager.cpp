@@ -290,7 +290,7 @@ namespace GASS
 
 			if (gc)
 			{
-				object_size = gc->GetBoundingSphere().m_Radius * 4;
+				object_size = static_cast<float>(gc->GetBoundingSphere().m_Radius * 4);
 				//object_pos = (gc->GetBoundingBox().m_Min + gc->GetBoundingBox().m_Max)*0.5;
 				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
 				if (lc)
