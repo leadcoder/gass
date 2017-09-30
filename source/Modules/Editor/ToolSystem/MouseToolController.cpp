@@ -241,19 +241,21 @@ namespace GASS
 			if(col_obj)
 			{
 				info.m_3DPos = gizmo_result.CollPosition;
+				info.m_Normal = gizmo_result.CollNormal;
 				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
 			}
 		}
 		else
 		{
-			GASS::CollisionResult mesh_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
-			if(mesh_result.Coll)
+			GASS::CollisionResult col_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
+			if (col_result.Coll)
 			{
-				SceneObjectPtr col_obj = mesh_result.CollSceneObject.lock();
+				SceneObjectPtr col_obj = col_result.CollSceneObject.lock();
 				if(col_obj)
 				{
-					info.m_3DPos = mesh_result.CollPosition;
-					info.m_ObjectUnderCursor = mesh_result.CollSceneObject;
+					info.m_3DPos = col_result.CollPosition;
+					info.m_Normal = col_result.CollNormal;
+					info.m_ObjectUnderCursor = col_result.CollSceneObject;
 				}
 			}
 		}
@@ -566,7 +568,8 @@ namespace GASS
 				int from_id = GASS_PTR_TO_INT(this);
 
 				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
-				so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
+				//so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
+				//so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
 			}
 			else
 			{

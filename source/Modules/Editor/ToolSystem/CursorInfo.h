@@ -21,6 +21,7 @@ namespace GASS
 		}
 		SceneObjectWeakPtr m_ObjectUnderCursor;
 		Vec3 m_3DPos;
+		Vec3 m_Normal;
 		Ray m_Ray;
 	};
 }
