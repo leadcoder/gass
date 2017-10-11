@@ -109,7 +109,7 @@ namespace GASS
 
 	double Math::Rad2Deg(double rad)
 	{
-		return 360.0 * rad / GASS_PI*2.0;
+		return 360.0 * rad / (GASS_PI*2.0);
 	}
 
 	float Math::Deg2Rad(float deg)
