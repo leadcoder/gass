@@ -23,7 +23,11 @@
 #ifdef GASS_USE_BOOST_FILESYSTEM
 #include <boost/filesystem.hpp>
 #define GASS_FILESYSTEM boost::filesystem
-#define GASS_TO_GENERIC_STRING(a) a.generic_string()
+#if(BOOST_FILESYSTEM_VERSION > 2)
+	#define GASS_TO_GENERIC_STRING(a) a.generic_string()
+#else
+	#define GASS_TO_GENERIC_STRING(a) a
+#endif
 #define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_option::overwrite_if_exists
