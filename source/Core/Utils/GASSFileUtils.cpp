@@ -52,7 +52,7 @@ namespace GASS
 
 	std::string FileUtils::GetExtension(const std::string &file_name)
 	{
-		std::string ret, reversed_string;
+		std::string ret;
 		std::string::size_type pos  = file_name.find_last_of(".");
 
 		if (pos == file_name.npos)
@@ -65,7 +65,7 @@ namespace GASS
 
 	std::string FileUtils::RemoveExtension(const std::string &file_name)
 	{
-		std::string ret, reversed_string;
+		std::string ret;
 		std::string::size_type pos  = file_name.find_last_of(".");
 
 		if (pos == file_name.npos)
