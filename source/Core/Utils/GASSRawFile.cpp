@@ -17,14 +17,14 @@ namespace GASS
 		delete m_Data;
 	}
 
-	bool RawFile::Load(const std::string filename,int bpp)
+	bool RawFile::Load(const std::string &filename,int bpp)
 	{
 		m_Height = GetSize(filename, bpp);
 		m_Width = m_Height;
 		return Load(filename,m_Width, m_Height, bpp);
 	}
 
-	int RawFile::GetSize(const std::string filename, int bpp) const
+	int RawFile::GetSize(const std::string &filename, int bpp) const
 	{
 		FILE *fp=fopen(filename.c_str(),"rb");
 		if(!fp)return false;
@@ -40,7 +40,7 @@ namespace GASS
 		return im_size;
 	}
 
-	bool RawFile::Load(const std::string filename,unsigned int width, unsigned int height, int bpp)
+	bool RawFile::Load(const std::string &filename,unsigned int width, unsigned int height, int bpp)
 	{
 		FILE *file = fopen(filename.c_str(), "rb");
 		if(	!file)

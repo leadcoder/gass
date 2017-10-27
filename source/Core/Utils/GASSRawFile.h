@@ -10,9 +10,9 @@ namespace GASS
 	public:
 		RawFile();
 		virtual ~RawFile();
-		bool Load(const std::string filename,unsigned int width, unsigned int height, int bpp);
-		bool Load(const std::string filename,int bpp);
-		int GetSize(const std::string filename, int bpp) const;
+		bool Load(const std::string &filename,unsigned int width, unsigned int height, int bpp);
+		bool Load(const std::string &filename,int bpp);
+		int GetSize(const std::string &filename, int bpp) const;
 		unsigned char *m_Data;
 		unsigned int m_Width;
 		unsigned int m_Height;
