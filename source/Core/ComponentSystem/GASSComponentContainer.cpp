@@ -127,31 +127,32 @@ namespace GASS
 						LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
 					}
 				}
-			}
 
-			int num_children = 0;
-			loader->IO<int>(num_children);
-			for(int i  = 0 ; i < num_children; i++)
-			{
 
-				//TODO: need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
-				const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-				ComponentContainerPtr child = ComponentContainerFactory::Get().Create(factory_class_name);
-				if(!child)
+				int num_children = 0;
+				loader->IO<int>(num_children);
+				for (int i = 0; i < num_children; i++)
 				{
-					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_class_name,"ComponentContainer::Serialize");
-				}
 
-				//ComponentContainerPtr child  = GASS_DYNAMIC_PTR_CAST<IComponentContainer> (CreateInstance());
-				if(child)
-				{
-					SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
-					if(s_child)
+					//TODO: need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
+					const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+					ComponentContainerPtr child = ComponentContainerFactory::Get().Create(factory_class_name);
+					if (!child)
 					{
-						if(!s_child->Serialize(serializer))
-							return false;
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_class_name, "ComponentContainer::Serialize");
 					}
-					AddChild(child);
+
+					//ComponentContainerPtr child  = GASS_DYNAMIC_PTR_CAST<IComponentContainer> (CreateInstance());
+					if (child)
+					{
+						SerializePtr s_child = GASS_DYNAMIC_PTR_CAST<ISerialize>(child);
+						if (s_child)
+						{
+							if (!s_child->Serialize(serializer))
+								return false;
+						}
+						AddChild(child);
+					}
 				}
 			}
 		}
