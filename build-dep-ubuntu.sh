@@ -2,7 +2,7 @@
 #sudo apt-get install libtbb-dev
 
 #BOOST
-#sudo-apt-get install boost-dev
+#sudo apt-get install boost-dev
 
 #OGRE
 #sudo apt-get install libogre-1.9-dev
