@@ -325,29 +325,17 @@ namespace GASS
 			}
 			else
 			{
+				object_size = std::max(object_size, 10.0f);
+				EulerRotation rot(45,-45,0);
+				Quaternion cam_rot = Quaternion::CreateFromEulerYXZ(rot.GetAxisRotation());
+				Vec3 camera_pos = object_pos + cam_rot.GetZAxis() * object_size;
 
-				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-				Quaternion cam_rot;
-				Vec3 dir = object_pos - cam_pos;
-				dir.Normalize();
-				dir.y = -0.7;
-				dir.Normalize();
-
-				object_pos = object_pos - dir*object_size;
-				dir = -dir;
-				Mat4 rot_mat;
-				rot_mat.MakeIdentity();
-				rot_mat.SetZAxis(dir);
-				Vec3 rvec = Vec3(dir.z, 0, -dir.x);
-				rvec.Normalize();
-				rot_mat.SetXAxis(rvec);
-				Vec3 up = Vec3::Cross(dir, rvec);
-				up.Normalize();
-				rot_mat.SetYAxis(up);
-				cam_rot.FromRotationMatrix(rot_mat);
-
+				//Get no response from OGRE when using World...
+				//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
+				//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
+				
+				cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
 				cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(cam_rot)));
-				cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(object_pos)));
 			}
 		}
 	}
