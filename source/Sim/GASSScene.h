@@ -181,6 +181,9 @@ namespace GASS
 		*/
 		static std::vector<std::string> GetScenes(const FilePath &path);
 		std::string GetResourceGroupName() const;
+
+		bool GetGeocentric() const { return m_Geocentric; }
+		void SetGeocentric(bool value) { m_Geocentric = value; }
 protected:
 
 	/**
@@ -229,6 +232,7 @@ protected:
 		ResourceGroupWeakPtr m_ResourceGroup;
 		ResourceLocationWeakPtr m_ResourceLocation;
 		bool m_Initlized;
+		bool m_Geocentric;
 	};
 	GASS_PTR_DECL(Scene)
 }

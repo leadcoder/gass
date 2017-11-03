@@ -48,7 +48,8 @@ namespace GASS
 		m_StartPos(0,0,0),
 		m_StartRot(0,0,0),
 		m_SceneMessageManager(new MessageManager()),
-		m_Initlized(false)
+		m_Initlized(false),
+		m_Geocentric(false)
 	{
 
 	}
@@ -64,6 +65,7 @@ namespace GASS
 
 		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterProperty<EulerRotation>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
+		RegisterProperty<bool>("Geocentric", &Scene::GetGeocentric, &Scene::SetGeocentric);
 	}
 
 	void Scene::OnCreate()
