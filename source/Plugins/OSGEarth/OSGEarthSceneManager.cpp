@@ -39,17 +39,14 @@
 
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
+#include "OSGEarthGeoComponent.h"
 #include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Plugins/OSG/OSGConvert.h"
 
 namespace GASS
 {
-	OSGEarthSceneManager::OSGEarthSceneManager() : 	m_AutoAdd(false), 
-		m_EarthFile(""),
-		m_UseSky(true),
-		m_ShowSkyControl(true),
-		m_UseOcean(true),
-		m_ShowOceanControl(true),
+	OSGEarthSceneManager::OSGEarthSceneManager() : 	m_AutoAdd(true), 
 		m_Initlized(false),
 		m_DisableGLSL(false)
 	{
@@ -64,12 +61,12 @@ namespace GASS
 	void OSGEarthSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OSGEarthSceneManager",new GASS::Creator<OSGEarthSceneManager, ISceneManager>);
-		RegisterProperty<std::string>("EarthFile", &OSGEarthSceneManager::GetEarthFile, &OSGEarthSceneManager::SetEarthFile);
+		/*RegisterProperty<std::string>("EarthFile", &OSGEarthSceneManager::GetEarthFile, &OSGEarthSceneManager::SetEarthFile);
 		RegisterProperty<bool>("UseSky", &OSGEarthSceneManager::GetUseSky, &OSGEarthSceneManager::SetUseSky);
 		RegisterProperty<bool>("ShowSkyControl", &OSGEarthSceneManager::GetShowSkyControl, &OSGEarthSceneManager::SetShowSkyControl);
 		RegisterProperty<bool>("UseOcean", &OSGEarthSceneManager::GetUseOcean, &OSGEarthSceneManager::SetUseOcean);
 		RegisterProperty<bool>("ShowOceanControl", &OSGEarthSceneManager::GetShowOceanControl, &OSGEarthSceneManager::SetShowOceanControl);
-		RegisterProperty<bool>("DisableGLSL", &OSGEarthSceneManager::GetDisableGLSL, &OSGEarthSceneManager::SetDisableGLSL);
+		RegisterProperty<bool>("DisableGLSL", &OSGEarthSceneManager::GetDisableGLSL, &OSGEarthSceneManager::SetDisableGLSL);*/
 	}
 
 	void OSGEarthSceneManager::OnCreate()
@@ -86,18 +83,18 @@ namespace GASS
 		if(m_AutoAdd)
 		{
 			LocationComponentPtr location = obj->GetFirstComponentByClass<ILocationComponent>();
-			/*if(location) //only add to objects that have location component
+			if (location) //only add to objects that have location component
 			{
-			GeomKitComponentPtr comp = obj->GetFirstComponentByClass<GeomKitComponent>();
-			if(!comp) //check that component not already exist
-			{
-			comp = DYNAMIC_PTR_CAST<GeomKitComponent>(ComponentFactory::Get().Create("GeomKitComponent"));
-			if(comp)
-			{
-			obj->AddComponent(comp);
+				OSGEarthGeoComponentPtr comp = obj->GetFirstComponentByClass<OSGEarthGeoComponent>();
+				if (!comp) //check that component not already exist
+				{
+					comp = GASS_DYNAMIC_PTR_CAST<OSGEarthGeoComponent>(ComponentFactory::Get().Create("OSGEarthGeoComponent"));
+					if (comp)
+					{
+						obj->AddComponent(comp);
+					}
+				}
 			}
-			}
-			}*/
 		}
 	}
 
@@ -123,9 +120,9 @@ namespace GASS
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 		root->addChild(canvas);
 		m_GUI = mainContainer;
-		//SetEarthFile(m_EarthFile);
 	}
 
+#if 0
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)
 	{
 		m_EarthFile = earth_file;
@@ -149,7 +146,7 @@ namespace GASS
 			m_MapNode->setUserData(data);
 			GeometryFlagsBinder flags;
 			flags.SetValue(GEOMETRY_FLAG_GROUND);
-			geom_comp->SetPropertyByType("GeometryFlags", flags);
+			geom_comp->SetPropertyValue("GeometryFlags", flags);
 			dummy = SceneObjectPtr(new SceneObject);
 			dummy->AddComponent(geom_comp);*/
 			
@@ -237,6 +234,7 @@ namespace GASS
 			
 		}
 	}
+#endif
 
 	void OSGEarthSceneManager::OnShutdown()
 	{
@@ -245,23 +243,107 @@ namespace GASS
 
 	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot)
 	{
-		const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		if (m_MapNode)
+		{
+			const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+			const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 
+			double height = 0;
+			//Create geocentric coordinates from lat long, use  Geographic-SRS!
+			m_MapNode->getTerrain()->getHeight(0L, geoSRS, longitude, latitude, &height, 0L);
+			osgEarth::GeoPoint mapPoint(geoSRS, longitude, latitude, height, osgEarth::ALTMODE_ABSOLUTE);
+
+			//Transform geocentric coordinates to map-space using map-SRS!
+			osgEarth::GeoPoint mapPos = mapPoint.transform(mapSRS);
+			osg::Matrixd out_local2world;
+			mapPos.createLocalToWorld(out_local2world);
+
+			osg::Quat osg_rot = out_local2world.getRotate();
+			osg::Vec3d osg_pos = out_local2world.getTrans();
+			pos = OSGConvert::ToGASS(osg_pos);
+			rot = Quaternion(osg_rot.w(), -osg_rot.x(), -osg_rot.z(), osg_rot.y());
+		}
+	}
+
+	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height)
+	{
+		if (m_MapNode)
+		{
+			if (m_MapNode->isGeocentric())
+			{
+				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+
+				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
+				osg::Vec3d ptXYZ;
+				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
+				map_gp.toWorld(ptXYZ, m_MapNode->getTerrain());
+
+				pos = OSGConvert::ToGASS(ptXYZ);
+			}
+			else //Hack to get correct height in projected mode, have to investigate vertical datum usages further
+			{
+				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+				
+				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
+				osg::Vec3d ptXYZ;
+				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
+				map_gp.toWorld(ptXYZ, m_MapNode->getTerrain());
+
+				//update with correct height, ptXYZ.z don't match scene height
+				//double h_above_msl = 0;
+				//if (ground_clamp)
+				//	m_MapNode->getTerrain()->getHeight(0L, mapSRS, map_gp.x(), map_gp.y(), &h_above_msl, 0L);
+				//ptXYZ.z() = h_above_msl;
+				pos = OSGConvert::ToGASS(ptXYZ);
+			}
+		}
+	}
+
+	void OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height, double *altitude)
+	{
+		if (m_MapNode)
+		{
+			const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+			const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+			const osg::Vec3d osg_pos = OSGConvert::ToOSG(pos);
+			osgEarth::GeoPoint gp;
+			gp.fromWorld(mapSRS, osg_pos);
+			const osg::Vec3d ptLatLong = gp.transform(geoSRS).vec3d();
+			latitude = ptLatLong.y();
+			longitude = ptLatLong.x();
+			height = ptLatLong.z();
+		
+			if (altitude)
+			{
+				double h_above_msl = 0;
+				m_MapNode->getTerrain()->getHeight(0L, geoSRS, longitude, latitude, &h_above_msl, 0L);
+				*altitude = height - h_above_msl;
+			}
+		}
+	}
+
+	void OSGEarthSceneManager::WGS84ToScene(double lat, double lon, double &x, double &y)
+	{
+		Vec3 pos(0,0,0);
 		double height = 0;
-		//Create geocentric coordinates from lat long, use  Geographic-SRS!
-		m_MapNode->getTerrain()->getHeight(0L, geoSRS,longitude,latitude, &height, 0L);
-		osgEarth::GeoPoint mapPoint(geoSRS, longitude, latitude, height,osgEarth::ALTMODE_ABSOLUTE);
+		FromLatLongToMap(lat, lon, height, pos, false);
+	}
 
-		//Transform geocentric coordinates to map-space using map-SRS!
-		osgEarth::GeoPoint mapPos = mapPoint.transform(mapSRS);
-		osg::Matrixd out_local2world;
-		mapPos.createLocalToWorld(out_local2world);
+	void OSGEarthSceneManager::SceneToWGS84(double x, double y, double &lat, double &lon)
+	{
+		double height;
+		FromMapToLatLong(GASS::Vec3(x, y, 0), lat, lon, height,NULL);
+	}
 
-		osg::Quat osg_rot = out_local2world.getRotate();
-		osg::Vec3d osg_pos = out_local2world.getTrans();
+	std::string OSGEarthSceneManager::GetProjection() const
+	{
+		return m_DummyProjection;
+	}
 
-		pos.Set(osg_pos.x(),osg_pos.z(),-osg_pos.y());
-		rot  = Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y());
+	void OSGEarthSceneManager::SetProjection(const std::string &projection)
+	{
+		m_DummyProjection = projection;
 	}
 }

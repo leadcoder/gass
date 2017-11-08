@@ -24,10 +24,13 @@
 #include "Sim/GASS.h"
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthUtil/Controls>
+#include <osgEarthUtil/EarthManipulator>
+#include <osgEarth/PhongLightingEffect>
+#include <osgEarthUtil/Fog>
 
 namespace GASS
 {
-	class OSGEarthSceneManager  : public Reflection<OSGEarthSceneManager, BaseSceneManager> 
+	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IProjectionSceneManager
 	{
 	public:
 		OSGEarthSceneManager();
@@ -40,30 +43,27 @@ namespace GASS
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot);
+		void FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height);
+		void FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height, double *altitude);
+		void SetMapNode(osgEarth::MapNode* map_node) { m_MapNode = map_node; }
+		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
+
+
+		//IProjectionSceneManager interface
+		virtual void WGS84ToScene(double lat, double lon, double &x, double &y);
+		virtual void SceneToWGS84(double x, double y, double &lat, double &lon);
+		virtual std::string GetProjection() const;
+		virtual void SetProjection(const std::string &projection);
 	protected:
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
-		void SetEarthFile(const std::string &earth_file);
-		std::string GetEarthFile() const {return m_EarthFile;}
-		void Load(const std::string earth_file);
-		
-		ADD_PROPERTY(bool,UseSky)
-		ADD_PROPERTY(bool,ShowSkyControl)
-		ADD_PROPERTY(bool,UseOcean)
-		ADD_PROPERTY(bool,ShowOceanControl)
 		ADD_PROPERTY(bool,DisableGLSL)
-		
 
-		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
-		std::string m_EarthFile;
+		osgEarth::MapNode* m_MapNode;
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_EarthManipulator;
 		bool m_AutoAdd;
-		double m_OffsetEast;
-		double m_OffsetNorth;
-
 		osgEarth::Util::Controls::Container* m_GUI;
-		
-		
+		std::string m_DummyProjection;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthSceneManager> OSGEarthSceneManagerPtr;
 	typedef GASS_WEAK_PTR<OSGEarthSceneManager> OSGEarthSceneManagerWeakPtr;
