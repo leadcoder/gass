@@ -275,67 +275,80 @@ namespace GASS
 		return m_CurrentSite.lock();
 	}
 
+	bool GetObjectPosAndSize(SceneObjectPtr obj, double &object_radius, Vec3 &object_pos)
+	{
+		GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>(true);
+		if (gc)
+		{
+			object_radius = gc->GetBoundingSphere().m_Radius;
+			LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+			if (lc)
+				object_pos = lc->GetWorldPosition();
+			else
+				return false;
+		}
+		else
+		{
+			LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+			if (lc)
+				object_pos = lc->GetWorldPosition();
+			else
+				return false;
+		}
+		return true;
+	}
+
+	Quaternion GetGeocentricRotation(const Vec3 &object_pos, EulerRotation rel_rot)
+	{
+		const Vec3 look_dir = object_pos.NormalizedCopy();
+		const double earth_radius = 6371000;
+		const Vec3 north = (Vec3(0, earth_radius, 0) - object_pos).NormalizedCopy();
+		const Vec3 right_vec = -look_dir.Cross(north);
+		const Vec3 z = (-Vec3::Cross(look_dir, right_vec)).NormalizedCopy();
+		const Vec3 x = (Vec3::Cross(look_dir, z)).NormalizedCopy();
+		Quaternion qrot;
+		qrot.FromAxes(x, look_dir, z);
+		//add optional tilt
+		
+		const Quaternion rel_cam_rot = Quaternion::CreateFromEulerYXZ(rel_rot.GetAxisRotation());
+		qrot = qrot*rel_cam_rot;
+		return qrot;
+	}
+
 	void EditorSceneManager::MoveCameraToObject(SceneObjectPtr obj)
 	{
 		SceneObjectPtr cam_obj = m_ActiveCameraObject.lock();
-		CameraComponentPtr cam = m_ActiveCamera.lock();
-		if (cam_obj && cam)
+		if (cam_obj)
 		{
-			BaseReflectionObjectPtr cam_props = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(cam);
-			bool ortho_mode = false;
-
-			float object_size = 10;
+			double object_radius = 10;
 			Vec3 object_pos(0, 0, 0);
-			GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>(true);
-
-			if (gc)
+			if (GetObjectPosAndSize(obj, object_radius, object_pos))
 			{
-				object_size = static_cast<float>(gc->GetBoundingSphere().m_Radius * 4);
-				//object_pos = (gc->GetBoundingBox().m_Min + gc->GetBoundingBox().m_Max)*0.5;
-				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-				if (lc)
-					object_pos = lc->GetWorldPosition();
+				//calculate distance from object
+				const double dist_to_object = std::max(object_radius * 4, 10.0);
 
-				//LogManager::getSingleton().stream() << "zoom box min" << gc->GetBoundingBox().m_Min;
-				//LogManager::getSingleton().stream() << "zoom box max" << gc->GetBoundingBox().m_Max;
+				const bool geocentric = cam_obj->GetScene()->GetGeocentric();
 
-			}
-			else
-			{
-				LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-				if (lc)
-					object_pos = lc->GetWorldPosition();
+				if (geocentric)
+				{
+					const Quaternion camera_rot = GetGeocentricRotation(object_pos, EulerRotation(0, 30, 0));
+					const Vec3 camera_pos = object_pos + camera_rot.GetYAxis() * dist_to_object;
+					cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
+					cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+				}
 				else
-					return;
-			}
-
-			if (cam_props)
-			{
-				cam_props->GetPropertyValue<bool>("Ortho", ortho_mode);
-			}
-
-			if (ortho_mode)
-			{
-				//Vec3 pos = lc->GetWorldPosition();
-				Vec3 cam_pos = cam_obj->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-				object_pos.y = cam_pos.y;
-				cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(object_pos)));
-				CameraParameterRequestPtr zoom_msg(new CameraParameterRequest(CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE, object_size));
-				cam_obj->PostRequest(zoom_msg);
-			}
-			else
-			{
-				object_size = std::max(object_size, 10.0f);
-				EulerRotation rot(45,-45,0);
-				Quaternion cam_rot = Quaternion::CreateFromEulerYXZ(rot.GetAxisRotation());
-				Vec3 camera_pos = object_pos + cam_rot.GetZAxis() * object_size;
-
-				//Get no response from OGRE when using World...
-				//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
-				//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
+				{
+					//object_radius = std::max(object_radius, 10.0);
+					const EulerRotation rel_rot(0, -30, 0);
+					const Quaternion camera_rot = Quaternion::CreateFromEulerYXZ(rel_rot.GetAxisRotation());
+					const Vec3 camera_pos = object_pos + camera_rot.GetZAxis() * dist_to_object;
+					//Get no response from OGRE when using World...
+					//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
+					//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
+					cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
+					cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+				}
 				
-				cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
-				cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(cam_rot)));
 			}
 		}
 	}
