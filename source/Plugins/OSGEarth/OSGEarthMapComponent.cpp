@@ -101,7 +101,7 @@ namespace GASS
 
 	void OSGEarthMapComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OSGEarthMapComponent",new Creator<OSGEarthMapComponent, Component>);
+		ComponentFactory::GetPtr()->Register("OSGEarthMapComponent", new Creator<OSGEarthMapComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
 		RegisterProperty<ResourceHandle>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile,
 			EnumerationPropertyMetaDataPtr(new OSGEarthMapEnumerationMetaData("OSGEarth map file", PF_VISIBLE)));
@@ -125,12 +125,12 @@ namespace GASS
 
 	void OSGEarthMapComponent::Shutdown()
 	{
-		if(m_Initlized && m_MapNode)
+		if (m_Initlized && m_MapNode)
 		{
 			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
 			osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
 			manip->setNode(NULL);
-		
+
 			// disconnect extensions
 			osgViewer::ViewerBase::Views views;
 			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
@@ -153,100 +153,116 @@ namespace GASS
 					controlIF->disconnect(osgearth_sm->GetGUI());
 			}
 
-
-			if(m_FogEffect)
+			if (m_FogEffect)
 				m_FogEffect->detach(m_MapNode->getStateSet());
 			//remove map from scene
-			osg::Group* parent = m_MapNode->getParent(0);
+
+			osg::Group* parent = m_TopNode->getParent(0);
 			if (parent)
-				parent->removeChild(m_MapNode);
-			
+				parent->removeChild(m_TopNode);
+
 			m_MapNode.release();
-			
+			m_TopNode.release();
+
 			//release
 			m_Lighting.release();
 			m_FogEffect.release();
+
+			osgearth_sm->SetMapNode(NULL);
 		}
 	}
-	
+
 	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle &earth_file)
 	{
-			m_EarthFile = earth_file;
-			if (!m_Initlized)
+		//Always store filename
+		m_EarthFile = earth_file;
+
+		//Stop here if we are uninitialized!
+		if (!m_Initlized)
+			return;
+
+		if (earth_file.Valid())
+		{
+			IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
+			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+
+			std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
+			osg::Node* top_node = osgDB::readNodeFile(full_path);
+
+			//If successfully loaded, unload current map (if present)
+			if (top_node)
+				Shutdown();
+			else //failed to load earth file
 				return;
-			if (earth_file.Valid())
-			{
-				//disable GLSL
-				IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
-				OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-				osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
-				/*if (GetSceneObject()->GetParentSceneObject() && GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IOSGNode>())
-				{
-					osg::ref_ptr<osg::Node> node = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IOSGNode>()->GetNode();
-					root = dynamic_cast<osg::Group*>(node.get());
-				}*/
-				
-				std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
-				osg::Node* node = osgDB::readNodeFile(full_path);
 
-				if (node)
-					Shutdown();
-				else //failed to load earth file
-					return;
+			m_TopNode = top_node;
+			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
+			root->addChild(top_node);
 
-				osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
-				
-				m_MapNode = osgEarth::MapNode::findMapNode(node);
-				root->addChild(m_MapNode);
-
-				//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
+			//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
+			osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
+			if (manip)
 				manip->setNode(m_MapNode);
 
-				m_Lighting = new osgEarth::PhongLightingEffect();
-				m_Lighting->setCreateLightingUniform(false);
-				m_Lighting->attach(m_MapNode->getOrCreateStateSet());
+			//if no sky is present (projected mode) but we still want get terrain lightning  
+			//m_Lighting = new osgEarth::PhongLightingEffect();
+			//m_Lighting->setCreateLightingUniform(false);
+			//m_Lighting->attach(m_MapNode->getOrCreateStateSet());
 
-				OSGNodeData* data = new OSGNodeData(shared_from_this());
-				m_MapNode->setUserData(data);
-				IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			osgEarth::Util::SkyNode* skyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+			if (skyNode)
+			{
+				//set default year/month and day to get good lighting
+				osgEarth::DateTime date = skyNode->getDateTime();
+				skyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, 10/*date.hours()*/));
+			}
+			
 
-				osgViewer::ViewerBase::Views views;
-				osg_sys->GetViewer()->getViews(views);
-				
-				const osgEarth::Config& externals = m_MapNode->externalConfig();
-				const osgEarth::Config& skyConf = externals.child("sky");
-//				const osgEarth::Config& oceanConf = externals.child("ocean");
-//				const osgEarth::Config& annoConf = externals.child("annotations");
-//				const osgEarth::Config& declutterConf = externals.child("decluttering");
-				osgEarth::Config viewpointsConf = externals.child("viewpoints");
 
-				// backwards-compatibility: read viewpoints at the top level:
-				const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
-				for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
-					viewpointsConf.add(*i);
+			//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
+			osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
+			m_MapNode->setUserData(data);
 
-				// Loading a viewpoint list from the earth file:
-				/*if ( !viewpointsConf.empty() )
+			//inform OSGEarth scene manager that we have new map node
+			osgearth_sm->SetMapNode(m_MapNode);
+
+			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			osgViewer::ViewerBase::Views views;
+			osg_sys->GetViewer()->getViews(views);
+
+			const osgEarth::Config& externals = m_MapNode->externalConfig();
+			//const osgEarth::Config& skyConf = externals.child("sky");
+			osgEarth::Config viewpointsConf = externals.child("viewpoints");
+
+			// backwards-compatibility: read viewpoints at the top level:
+			const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
+			for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
+				viewpointsConf.add(*i);
+
+			// Hook up the extensions!
+			if (true)
+			{
+				for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
+					eiter != m_MapNode->getExtensions().end();
+					++eiter)
 				{
-				std::vector<osgEarth::Viewpoint> viewpoints;
+					osgEarth::Extension* e = eiter->get();
 
-				const osgEarth::ConfigSet& children = viewpointsConf.children();
-				if ( children.size() > 0 )
-				{
-				for( osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i )
-				{
-				viewpoints.push_back( osgEarth::Viewpoint(*i) );
+					// Check for a View interface:
+					osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
+					if (viewIF)
+						viewIF->connect(views[0]);
+
+					// Check for a Control interface:
+					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
+					if (controlIF)
+						controlIF->connect(osgearth_sm->GetGUI());
 				}
-				}
+			}
 
-				if ( viewpoints.size() > 0 )
-				{
-				osgEarth::Util::Controls::Control* c = osgEarth::Util::ViewpointControlFactory().create(viewpoints, views[0]);
-				if ( c )
-				mainContainer->addControl( c );
-				}
-				}*/
-
+			if (!skyNode)
+			{
 				if (false)
 				{
 					osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
@@ -261,79 +277,79 @@ namespace GASS
 							osgearth_sm->GetGUI()->addControl(c);
 					}
 				}
+			}
 
-				// Hook up the extensions!
-				if (true)
-				{
-					for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
-						eiter != m_MapNode->getExtensions().end();
-						++eiter)
-					{
-						osgEarth::Extension* e = eiter->get();
-
-						// Check for a View interface:
-						osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
-						if (viewIF)
-							viewIF->connect(views[0]);
-					
-						// Check for a Control interface:
-						osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
-						if (controlIF)
-							controlIF->connect(osgearth_sm->GetGUI());
-					}
-				}
-				
-				//attach fog if present possible
+			if (false) //use fog
+			{
 				osg::ref_ptr<osg::Group> fog_root = osg_sm->GetOSGRootNode();
 				osg::StateSet* state = fog_root->getOrCreateStateSet();
 				osg::Fog* fog = (osg::Fog *) state->getAttribute(osg::StateAttribute::FOG);
 				if (fog)
 				{
-					if(!fog->getUpdateCallback())
+					if (!fog->getUpdateCallback())
 						fog->setUpdateCallback(new osgEarth::Util::FogCallback());
 					m_FogEffect = new osgEarth::Util::FogEffect;
 					m_FogEffect->attach(m_MapNode->getOrCreateStateSet());
 				}
-
-
-				//if (m_UseOcean)
-				{
-					/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
-					if ( ocean )
-					{
-					// if there's a sky, we want to ocean under it
-					osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
-					if ( !parent ) parent = root;
-					parent->addChild( ocean );
-
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
-					if ( c )
-					mainContainer->addControl(c);
-					}
-					*/
-
-					/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
-					if ( ocean )
-					{
-					root->addChild( ocean );
-					if(m_ShowOceanControl)
-					{
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
-					if ( c )
-					mainContainer->addControl(c);
-					}
-					}*/
-				}
-				//m_MapNode->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode) );
-				//root->addChild(canvas);
 			}
+
+			
+		
+
+			/*if (true)
+			{
+			osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
+			//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
+			sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
+			sky->attach(views[0]);
+			root->addChild(sky);
+			//if (m_ShowSkyControl)
+			{
+			osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
+			if (c)
+			osgearth_sm->GetGUI()->addControl(c);
+			}
+			}*/
+
+			//attach fog if present possible
+			
+			//if (m_UseOcean)
+			//	{
+			/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
+			if ( ocean )
+			{
+			// if there's a sky, we want to ocean under it
+			osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
+			if ( !parent ) parent = root;
+			parent->addChild( ocean );
+
+			osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
+			if ( c )
+			mainContainer->addControl(c);
+			}
+			*/
+
+			/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
+			if ( ocean )
+			{
+			root->addChild( ocean );
+			if(m_ShowOceanControl)
+			{
+			osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
+			if ( c )
+			mainContainer->addControl(c);
+			}
+			}*/
+			//}
+			//m_MapNode->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode) );
 		}
+	}
 
 
 	void OSGEarthMapComponent::SceneManagerTick(double delta_time)
 	{
-		
+
 	}
-	
+
 }
 

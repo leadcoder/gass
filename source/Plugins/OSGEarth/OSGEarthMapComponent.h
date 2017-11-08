@@ -50,6 +50,7 @@ namespace GASS
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
 		osg::ref_ptr<osgEarth::Util::FogEffect> m_FogEffect;
+		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
