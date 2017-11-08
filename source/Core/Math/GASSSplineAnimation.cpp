@@ -24,10 +24,10 @@
 
 namespace GASS
 {
-	SplineAnimation::SplineAnimation(void)
+	SplineAnimation::SplineAnimation(void) : m_Length(0), m_NumericSteps(25)
 	{
-		m_Length = 0;
-		m_NumericSteps = 25;
+		
+		
 	}
 
 	SplineAnimation::~SplineAnimation(void)
@@ -55,7 +55,7 @@ namespace GASS
 		m_Spline.RecalcTangents();
 	
 
-		Vec3 last_spline_point;
+		Vec3 last_spline_point(0,0,0);
 		bool first = true;
 		Float seg_dist = 0;
 		Float tot_dist = 0;
@@ -98,9 +98,6 @@ namespace GASS
 		left = Vec3::Cross(up_dir,dir);
 		left.Normalize();
 		
-		//left.x = dir.z;
-		//left.y = 0;
-		//left.z = -dir.x;
 		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
@@ -145,9 +142,6 @@ namespace GASS
 		left = Vec3::Cross(up_dir,dir);
 		left.Normalize();
 		
-		//left.x = dir.z;
-		//left.y = 0;
-		//left.z = -dir.x;
 		up = Vec3::Cross(dir,left);
 		up.Normalize();
 
@@ -204,7 +198,7 @@ namespace GASS
 
 	void SplineAnimation::GetIndexAndTime(Float desired_distance,Float &time, int &index)
 	{
-		Vec3 last_spline_point;
+		Vec3 last_spline_point(0,0,0);
 		bool first = true;
 		Float dist = 0;
 		Float step_size = 1.0f / m_NumericSteps;
@@ -213,7 +207,6 @@ namespace GASS
 		{
 			if(desired_distance <= m_NodeVector[i].m_SegmentDistance + dist)
 			{
-				//step_size = m_NodeVector[i].m_SegmentDistance/seg_size;
 				for(Float t = 0; t <= (1 + step_size); t += step_size)
 				{
 					Vec3 spline_point =  m_Spline.Interpolate(i, t);
