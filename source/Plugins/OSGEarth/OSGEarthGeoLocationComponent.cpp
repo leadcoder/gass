@@ -56,7 +56,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node", PF_VISIBLE | PF_EDITABLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<EulerRotation>("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]", PF_VISIBLE | PF_EDITABLE)));
 
@@ -66,7 +66,7 @@ namespace GASS
 		RegisterProperty<Vec3>("Scale", &GASS::OSGEarthGeoLocationComponent::GetScale, &GASS::OSGEarthGeoLocationComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("AttachToParent", &GASS::OSGEarthGeoLocationComponent::GetAttachToParent, &GASS::OSGEarthGeoLocationComponent::SetAttachToParent,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node", PF_VISIBLE | PF_EDITABLE)));
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 
 		//expose this component to script engine
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
