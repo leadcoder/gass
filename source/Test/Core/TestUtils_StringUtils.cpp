@@ -41,12 +41,31 @@ TEST_CASE("Test replacing different strings")
 {
 	SECTION("Test all empty strings")
 	{
-	//	REQUIRE_THROWS(GASS::StringUtils::Replace("", "", ""));
+		REQUIRE_THROWS(GASS::StringUtils::Replace("", "", ""));
 	}
 
 	SECTION("Test that replacement string contain find string will throw to avoid infinite loop")
 	{
-		//REQUIRE_THROWS(GASS::StringUtils::Replace("test string", "ab", "12ab34"));
+		REQUIRE_THROWS(GASS::StringUtils::Replace("test string", "ab", "12ab34"));
+	}
+
+	SECTION("Test that find string not occur in string to search in")
+	{
+		REQUIRE(GASS::StringUtils::Replace("test string", "ab", "1234") == "test string");
+	}
+
+	SECTION("Test to upper/lower with empty strings")
+	{
+		REQUIRE(GASS::StringUtils::ToLower("") == "");
+
+		REQUIRE(GASS::StringUtils::ToUpper("") == "");
+	}
+
+	SECTION("Test case insensitive comparision, which in turn uses GASS::StringUtils::ToLower()")
+	{
+		REQUIRE(GASS::StringUtils::CompareNoCase("ab12cd", "aB12Cd") == 0);
+		REQUIRE(GASS::StringUtils::CompareNoCase("", "aB12Cd") < 0);
+		REQUIRE(GASS::StringUtils::CompareNoCase("aB12Cd", "") > 0);
 	}
 
 	SECTION("Test stringstream string")

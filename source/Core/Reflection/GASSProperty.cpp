@@ -52,6 +52,7 @@ namespace GASS
 		//sstream.setf(0,std::ios::floatfield);
 		//ss.unsetf(std::ios::floatfield);
 		//ss.precision(std::numeric_limits<float>::digits10 + 1);
+		// When converting to float/double, clamp values to max precision data type (digits10) can guarantee + 1 value digit.
 		ss << std::setprecision(std::numeric_limits<float>::digits10 + 1) << val;
 		res = ss.str();
 		return !ss.fail();

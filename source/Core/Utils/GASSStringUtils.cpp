@@ -21,6 +21,7 @@
 
 #include "Core/Common.h"
 #include "GASSStringUtils.h"
+#include "Core/Utils/GASSException.h"
 #ifndef _MSC_VER
     #include <cxxabi.h>
 #endif
@@ -29,12 +30,10 @@ namespace GASS
 {
 	StringUtils::StringUtils()
 	{
-
 	}
 
 	StringUtils::~StringUtils()
 	{
-
 	}
 
 	std::string StringUtils::RemoveQuotation(char* str)
@@ -64,8 +63,11 @@ namespace GASS
 		std::string::size_type  look_here = 0;
 		std::string new_str = str;
 
-		//if(find.find(replacement)) // what we are going to replace already exist replacement string -> infinite while
-		while ((pos = new_str.find(find,look_here)) != std::string::npos)
+		// what we are going to replace already exist replacement string, throw to indicate this.
+		if (replacement.find(find) != std::string::npos)
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "String to replace with contains string searched for - will result in infinite loop!", "StringUtils::Replace");
+
+		while ((pos = new_str.find(find, look_here)) != std::string::npos)
 		{
 			new_str.replace(pos, find.size(), replacement);
 			look_here = pos + replacement.size();

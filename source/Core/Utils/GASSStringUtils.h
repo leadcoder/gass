@@ -60,16 +60,46 @@ namespace GASS
 	public:
 		StringUtils();
 		virtual ~StringUtils();
+		/**
+		@brief Return first and last character in string (actually not checking if quotation characters).
+		@param str String to work on.
+		@return String without first and last character.
+		*/
 		static std::string RemoveQuotation(char* str);
+		/**
+		@brief Return first and last character in string (actually not checking if quotation characters).
+		@param str String to work on.
+		@return String without first and last character.
+		*/
 		static std::string RemoveQuotation(const std::string &str);
+		/**
+		@brief Replace all occurances of find in str with replacement string.
+		@param str String to look in.
+		@param find String to search for in string str.
+		@param replacement String to replace all occurrences of find with.
+		@return String str but with all occurrences of find string replaced by replacement string.
+		*/
 		static std::string Replace(const std::string &str, const std::string &find, const std::string &replacement);
+
+		/**
+		@brief Return string in str with all characters converted to lower case.
+		@param str String to work on.
+		@return All lower case string.
+		*/
 		inline static std::string ToLower(const std::string &str)
 		{
 			std::string new_str = str;
 			std::transform(str.begin(), str.end(), new_str.begin(),::tolower);
 			return new_str;
 		}
+
+		/**
+		@brief Return string in str with all characters converted to upper case.
+		@param str String to work on.
+		@return All upper case string.
+		*/
 		static std::string ToUpper(const std::string&str);
+
 		static int CompareNoCase(const std::string &str1, const std::string &str2)
 		{
 			return StringUtils::ToLower(str1).compare(ToLower(str2));
