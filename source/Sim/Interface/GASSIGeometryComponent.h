@@ -31,8 +31,8 @@ namespace GASS
 	/**
 		Basic geometry interface that all geometry components (mesh, terrain, lines etc) 
 		should be derived from.
-		This can for instanace be used by a physics engine to get information
-		about geomtry size. 
+		This can for instance be used by a physics engine to get information
+		about geometry size. 
 		Note that interaction with this interface during RTC update is undefined 
 		if running GASS in multi-threaded mode. Interaction with components should 
 		instead be done through messages.
