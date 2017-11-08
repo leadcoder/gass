@@ -108,6 +108,9 @@ add_subdirectory(applications)
 #-- Add an Option to toggle the generation of the API documentation
 if(GASS_BUILD_DOCUMENTATION)
   FIND_PACKAGE(Doxygen)
+		#REQUIRED dot
+		#OPTIONAL dia mscgen
+	#)
   if (NOT DOXYGEN_FOUND)
     message(FATAL_ERROR 
       "Doxygen is needed to build the documentation. Please install it correctly")
