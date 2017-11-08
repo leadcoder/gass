@@ -196,7 +196,7 @@ namespace GASS
 			double nx = screenx * 2.0f - 1.0f;
 			double ny = (1.0f-screeny) * 2.0f - 1.0f;
 
-			osg::Vec3d nearPoint(nx, ny, 0.0f);
+			osg::Vec3d nearPoint(nx, ny, -1.0f);
 			// Use midPoint rather than far point to avoid issues with infinite projection
 			osg::Vec3d midPoint (nx, ny,  1.0f);
 
