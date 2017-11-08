@@ -502,33 +502,32 @@ namespace GASS
 	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
 	{
 		SceneCursorInfo cursorInfo = GetSceneCursorInfo(mouse_pos, 1000000);
+
+		SceneObjectPtr object_under_cursor = cursorInfo.m_ObjectUnderCursor.lock();
+		if (!object_under_cursor)
+			return;
+
 		GASS::Vec3 drop_pos = cursorInfo.m_3DPos;
 		drop_pos.x = SnapPosition(drop_pos.x);
 		drop_pos.y = SnapPosition(drop_pos.y);
 		drop_pos.z = SnapPosition(drop_pos.z);
-		//create rotation?
-		GASS::Quaternion rot;
-
-		GASS::Vec3 normal = drop_pos;
-		normal.Normalize();
-
-		Vec3 north_axis(0, 1, 0);
-		Vec3 x_axis = -Vec3::Cross(normal, north_axis);
-		x_axis.Normalize();
-		Vec3 z_axis = -Vec3::Cross(normal, x_axis);
-		Mat4 rot_mat;
-		rot_mat.SetRotationByAxis(x_axis, normal, z_axis);
 		
-		/*Mat4 rot_mat;
-		rot_mat.Identity();
-		rot_mat.SetZAxis(normal);
-		Vec3 rvec = Vec3(normal.z, 0, -normal.x);
-		rvec.Normalize();
-		rot_mat.SetXAxis(rvec);
-		Vec3 up = Vec3::Cross(normal, rvec);
-		up.Normalize();
-		rot_mat.SetYAxis(up);*/
-		rot.FromRotationMatrix(rot_mat);
+		GASS::Quaternion rot;
+		
+		const bool geocentric = object_under_cursor->GetScene()->GetGeocentric();
+
+		//Set base initial rotation if geocentric
+		if (geocentric)
+		{
+			const GASS::Vec3 normal = drop_pos.NormalizedCopy();
+			const Vec3 north_axis(0, 1, 0);
+			const Vec3 x_axis = Vec3::Cross(north_axis, normal).NormalizedCopy();
+			const Vec3 z_axis = Vec3::Cross(x_axis, normal).NormalizedCopy();
+			Mat4 rot_mat;
+			rot_mat.SetRotationByAxis(x_axis, normal, z_axis);
+			rot.FromRotationMatrix(rot_mat);
+		}
+
 		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
 	}
 
@@ -569,7 +568,7 @@ namespace GASS
 
 				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
 				//so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
-				//so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
+				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
 			}
 			else
 			{
