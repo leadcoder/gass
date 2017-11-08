@@ -36,13 +36,13 @@
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "OSGEarthCameraManipulatorComponent.h"
 #include "OSGEarthSceneManager.h"
-//#include "OSGEarthPlaceNodeComponent.h"
 #include "Plugins/OSG/IOSGNode.h"
 
 
 namespace GASS
 {
-	OSGEarthCameraManipulatorComponent::OSGEarthCameraManipulatorComponent() 
+	OSGEarthCameraManipulatorComponent::OSGEarthCameraManipulatorComponent() : m_Fog(NULL),
+		m_CurrentPos(0,0,0)
 	{
 
 	}
@@ -73,9 +73,18 @@ namespace GASS
 
 		osgEarth::Util::EarthManipulator* manip = earth_sm->GetManipulator().get();
 
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnWorldPositionRequest, WorldPositionRequest, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnWorldRotationRequest, WorldRotationRequest, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnPositionRequest, PositionRequest, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnRotationRequest, RotationRequest, 0));
+
 		if (!manip)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed get osgEarth::Util::EarthManipulator from OSGEarthSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
 		
+		IOSGGraphicsSceneManagerPtr iosg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+		osg::ref_ptr<osg::Group> fog_root = iosg_sm->GetOSGRootNode();
+		osg::StateSet* state = fog_root->getOrCreateStateSet();
+		m_Fog = (osg::Fog *) state->getAttribute(osg::StateAttribute::FOG);
 		m_Manipulator = manip;
 
 		osgEarth::Util::EarthManipulator::Settings* settings = new osgEarth::Util::EarthManipulator::Settings();
@@ -123,6 +132,67 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnTrackRequest,CameraTrackObjectRequest,0));
 	}
 
+
+	void OSGEarthCameraManipulatorComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
+	{
+		int id = GASS_PTR_TO_INT(this);
+		if (message->GetSenderID() != id)
+		{
+			_SetPosition(message->GetPosition());
+		}
+	}
+
+	void OSGEarthCameraManipulatorComponent::OnWorldRotationRequest(WorldRotationRequestPtr message)
+	{
+		const int id = GASS_PTR_TO_INT(this);
+		if (message->GetSenderID() != id)
+		{
+			_SetRotation(message->GetRotation());
+		}
+	}
+
+	void OSGEarthCameraManipulatorComponent::OnPositionRequest(PositionRequestPtr message)
+	{
+		int id = GASS_PTR_TO_INT(this);
+		if (message->GetSenderID() != id)
+		{
+			_SetPosition(message->GetPosition());
+		}
+	}
+
+	void OSGEarthCameraManipulatorComponent::OnRotationRequest(RotationRequestPtr message)
+	{
+		int id = GASS_PTR_TO_INT(this);
+		if (message->GetSenderID() != id)
+		{
+			_SetRotation(message->GetRotation());
+		}
+	}
+
+	void OSGEarthCameraManipulatorComponent::_SetPosition(const GASS::Vec3 &pos)
+	{
+		if (m_Manipulator)
+		{
+			osg::Matrix mat = m_Manipulator->getMatrix();
+			mat.setTrans(OSGConvert::ToOSG(pos));
+			m_Manipulator->setByMatrix(mat);
+
+			m_CurrentPos = pos;
+		}
+	}
+
+	void OSGEarthCameraManipulatorComponent::_SetRotation(const GASS::Quaternion &rot)
+	{
+		if (m_Manipulator)
+		{
+
+			osg::Matrixd vm = m_Manipulator->getMatrix();
+			vm.setRotate(OSGConvert::ToOSG(rot));
+			m_Manipulator->setByMatrix(vm);
+			m_CurrentRot = rot;
+		}
+	}
+
 	void OSGEarthCameraManipulatorComponent::OnTrackRequest(CameraTrackObjectRequestPtr message)
 	{
 		if(m_Manipulator.valid())
@@ -130,7 +200,6 @@ namespace GASS
 			SceneObjectPtr so = message->GetTrackObject();
 			if(so)
 			{
-				//OSGEarthPlaceNodeComponentPtr place_comp = so->GetFirstComponentByClass<OSGEarthPlaceNodeComponent>();
 				OSGNodePtr node_wrapper = so->GetFirstComponentByClass<IOSGNode>();
 				if(node_wrapper)
 				{
@@ -152,14 +221,41 @@ namespace GASS
 		//update location
 		if(m_Manipulator.valid())
 		{
+			m_Manipulator->setIntersectTraversalMask(~0);
 			osg::Matrixd vm = m_Manipulator->getMatrix();
+
 			osg::Vec3d translation,scale;
-			osg::Quat rotation;
-			osg::Quat so;
-			vm.decompose(translation,rotation, scale, so );
-			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(translation.x(),translation.z(),-translation.y()))));
+			osg::Quat rotation,so;
+			vm.decompose(translation, rotation, scale, so );
+
+			const int id = GASS_PTR_TO_INT(this);
+			const GASS::Vec3 pos = OSGConvert::ToGASS(translation);
+			const GASS::Quaternion rot = OSGConvert::ToGASS(rotation);
+
+			//only update if position changed
+			if (!pos.Equal(m_CurrentPos, 0.0001))
+			{
+				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos, id)));
+				m_CurrentPos = pos;
+			}
+
+			//only update if rotation changed
+			if (rot != m_CurrentRot)
+			{
+				GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, id)));
+				m_CurrentRot = rot;
+			}
+
+			//use height based fog
+		/*	double visibiliy = 40000;
+			double hazeDensity = 1.0 / visibiliy;
+			double height = translation.z();
+			static const double H = 8435.0; // Pressure scale height of Earth's atmosphere
+			double isothermalEffect = exp(-(height / H));
+			if (isothermalEffect <= 0) isothermalEffect = 1E-9;
+			if (isothermalEffect > 1.0) isothermalEffect = 1.0;
+			hazeDensity *= isothermalEffect;
+			m_Fog->setDensity(hazeDensity);*/
 		}
 	}
-	
 }
-

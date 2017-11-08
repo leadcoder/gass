@@ -34,8 +34,19 @@ namespace GASS
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
 		virtual void SceneManagerTick(double delta_time);
 	protected:
+		void _SetPosition(const GASS::Vec3 &pos);
+		void _SetRotation(const GASS::Quaternion &rot);
 		void OnTrackRequest(CameraTrackObjectRequestPtr message);
+		void OnWorldPositionRequest(WorldPositionRequestPtr message);
+		void OnWorldRotationRequest(WorldRotationRequestPtr message);
+		void OnPositionRequest(PositionRequestPtr message);
+		void OnRotationRequest(RotationRequestPtr message);
+
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;
+		osg::Fog* m_Fog;
+
+		Vec3 m_CurrentPos;
+		Quaternion m_CurrentRot;
 	};
 }
 
