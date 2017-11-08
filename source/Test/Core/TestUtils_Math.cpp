@@ -9,6 +9,7 @@ TEST_CASE("Test Math")
 	{
 		REQUIRE(GASS::Math::Equal(0.0f, 0.0f, 0.001f) == true);
 		REQUIRE(GASS::Math::Equal(0.0f, 1.0f, 0.001f) == false);
+		REQUIRE(GASS::Math::Equal(-1.0f, -1.0001f, 0.001f) == true);
 		REQUIRE(GASS::Math::Equal(1.0f, 1.0011f, 0.001f) == false);
 		REQUIRE(GASS::Math::Equal(100000.0, 100000.0, 0.001) == true);
 		REQUIRE(GASS::Math::Equal(100000.0, 100000.0009, 0.001) == true);
