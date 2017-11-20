@@ -2,6 +2,24 @@
 #include "Core/Reflection/GASSProperty.h"
 #include "catch.hpp"
 
+
+class SimplePropOwner : public GASS::IPropertyOwner
+{
+public:
+	SimplePropOwner() {}
+	~SimplePropOwner() {}
+	void SetName(const std::string &name)
+	{
+		m_Name = name;
+	}
+
+	std::string GetName() const
+	{
+		return m_Name;
+	}
+	std::string m_Name;
+};
+
 class Car : public GASS::IPropertyOwner
 {
 public:
@@ -32,23 +50,6 @@ TEST_CASE("Test RTTI")
 {
 	SECTION("Test property")
 	{
-		class SimplePropOwner : public GASS::IPropertyOwner
-		{
-		public:
-			SimplePropOwner() {}
-			~SimplePropOwner() {}
-			void SetName(const std::string &name)
-			{
-				m_Name = name;
-			}
-
-			std::string GetName() const
-			{
-				return m_Name;
-			}
-			std::string m_Name;
-		};
-
 		GASS::IProperty* property = new GASS::Property<SimplePropOwner, std::string>("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName, GASS::PropertyMetaDataPtr());
 		SimplePropOwner po;
 		property->SetValueByString(&po,"Hello world");
