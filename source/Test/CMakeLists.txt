@@ -3,8 +3,9 @@
 # When adding more tests, list them in GASS_TEST_SOURCES
 set(GASS_TEST_SOURCES 
 	TestMain.cpp
+	Core/TestUtils_EnumLookup.cpp
 	Core/TestUtils_FilePath.cpp
-	#${PROJECT_SOURCE_DIR}/source/Test/Core/TestUtils_FilePath_Optional.cpp
+	Core/TestUtils_FilePath_optional.cpp
 	Core/TestUtils_StringUtils.cpp
 	Core/TestUtils_Math.cpp
 	Core/TestUtils_Vector.cpp
