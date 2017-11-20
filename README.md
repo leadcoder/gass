@@ -1,7 +1,7 @@
 # GASS
 C++ Game Engine
 
-Travis Build (master) [![Build status](https://travis-ci.org/leadcoder/gass.svg?branch=master)](https://travis-ci.org/leadcoder/gass.svg?branch=master)
+Travis Build (master) [![Build status](https://travis-ci.org/leadcoder/gass.svg?branch=master)](https://travis-ci.org/leadcoder/gass)
 
 ## Build instructions MSVC
 ### Prerequisites
