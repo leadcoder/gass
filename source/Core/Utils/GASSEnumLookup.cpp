@@ -31,7 +31,6 @@ namespace GASS
 
 	EnumLookup::~EnumLookup()
 	{
-
 	}
 
 	void EnumLookup::Add(std::string name, int value)
@@ -48,9 +47,8 @@ namespace GASS
 
 	int EnumLookup::Get(const std::string &name)
 	{
-		ConstantMap::iterator pos;
 		std::string lower_name = StringUtils::ToLower(name);
-		pos = m_ConstantMap.find(lower_name);
+		ConstantMap::iterator pos = m_ConstantMap.find(lower_name);
 
 		if (pos != m_ConstantMap.end()) //in map.
 		{
