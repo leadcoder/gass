@@ -63,8 +63,9 @@ namespace GASS
 		void Add(std::string name);
 
 		/**
-            Get int value maped tto enum
+            Get int value maped to enum
             @param name Name of enum
+			@return signed in if valid enum name provided, otherwise -1 
  		*/
 		int Get(const std::string &name);
 	private:

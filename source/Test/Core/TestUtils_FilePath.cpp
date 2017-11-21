@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 
-TEST_CASE("Basic empty FilePath test")
+TEST_CASE("Basic empty FilePath test", "[File system]")
 {
 	GASS::FilePath fp;
 
