@@ -97,7 +97,8 @@ namespace GASS
 		stats->setKeyEventPrintsOutStats('¤');
 
 		view->addEventHandler(stats);
-		view->addEventHandler(new osgViewer::WindowSizeHandler());
+
+		//view->addEventHandler(new osgViewer::WindowSizeHandler());
 		view->addEventHandler(new osgViewer::ThreadingHandler());
 		view->addEventHandler(new osgViewer::LODScaleHandler());
 
