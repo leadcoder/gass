@@ -15,9 +15,9 @@
 // or GASS_LOG(ERROR, FILE_ONLY) << "auto formatted error message only to log file"
 
 #define GASS_LOG GASS::Logger::Logger().Log
-#define GASS_LOG_INITIALIZE GASS::Logger::Logger::Initialize
-#define GASS_LOG_SET_LEVEL GASS::Logger::Logger::SetLogLevel
-#define GASS_LOG_FINALIZE GASS::Logger::Logger::Finalize
+#define GASS_LOG_INITIALIZE GASS::Logger::Initialize
+#define GASS_LOG_SET_LEVEL GASS::Logger::SetLogLevel
+#define GASS_LOG_FINALIZE GASS::Logger::Finalize
 
 // END MACROS
 
@@ -86,6 +86,8 @@ namespace GASS
 		* @param[in] logPath Path to the log file to open
 		*/
 		static void Initialize(const std::string &logPath);
+
+		static bool IsInitialize();
 
 		/**
 		* Set the logging level.

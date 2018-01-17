@@ -26,7 +26,6 @@
 #include "Replica.h"
 #include "StringTable.h"
 #include "BitStream.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSVector.h"
 
 class ReplicaManager;

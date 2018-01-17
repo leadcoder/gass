@@ -45,7 +45,7 @@ public:
 		
 
 		//request server start
-		GASS::LogManager::getSingleton().stream() << "ServerApplication::Init -- Start Loading Scene:" <<  m_SceneName;
+		GASS_LOG(LINFO) << "ServerApplication::Init -- Start Loading Scene:" << m_SceneName;
 		m_Engine->GetSimSystemManager()->SendImmediate(GASS::SystemMessagePtr(new GASS::StartServerRequest("SimDemoServer",2005)));
 	
 		_LoadScene(m_SceneName);

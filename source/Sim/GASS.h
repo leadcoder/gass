@@ -26,7 +26,6 @@
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Utils/GASSTimer.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSFactory.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSException.h"

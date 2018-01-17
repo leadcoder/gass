@@ -20,7 +20,6 @@
 
 #include "HeightmapComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
@@ -180,10 +179,10 @@ namespace GASS
 		bbox.m_Max.y += 100;
 		m_HM = new HeightField(bbox.m_Min, bbox.m_Max, px_width, pz_height);
 
-		LogManager::Get().stream() << "START building heightmap\n";
+		GASS_LOG(LINFO) << "START building heightmap\n";
 		for(unsigned int i = 0; i <  px_width; i++)
 		{
-			LogManager::Get().stream() << "row:" << i << " of:" << px_width-1 << "\n";
+			GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
 			for(unsigned int j = 0; j <  pz_height; j++)
 			{
 				Vec3 pos(bbox.m_Min.x + i*inv_sample_ratio, 0, bbox.m_Min.z + j*inv_sample_ratio); 

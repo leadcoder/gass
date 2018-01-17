@@ -21,7 +21,7 @@
 
 #include "Core/Common.h"
 #include "GASSFileUtils.h"
-#include "GASSLogManager.h"
+#include "GASSLogger.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
 
@@ -123,10 +123,9 @@ namespace GASS
 		}
 		catch (const GASS_FILESYSTEM::filesystem_error& e)
 		{
-			LogManager::getSingleton().stream() << "WARNING: Failed copy file:" << e.what();
+			GASS_LOG(LWARNING) << "Failed copy file:" << e.what();
 		}
 	}
-
 
 	void FileUtils::GetFilesFromPath(std::vector<std::string> &files, const std::string &path, bool recursive, bool full_path)
 	{

@@ -229,7 +229,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-			LogManager::getSingleton().stream() << "WARNING: Failed to find texture:" << texture_name;
+			GASS_LOG(LWARNING) << "WARNING: Failed to find texture:" << texture_name;
 			}
 			if(file_res)
 			{
@@ -244,7 +244,7 @@ namespace GASS
 			catch (const GASS_FILESYSTEM::filesystem_error& e)
 			{
 			//std::cerr << "Error: " << e.what() << std::endl;
-			LogManager::getSingleton().stream() << "WARNING: Failed copy texture during export:" << e.what();
+			GASS_LOG(LWARNING) << "Failed copy texture during export:" << e.what();
 			}
 			}
 			}

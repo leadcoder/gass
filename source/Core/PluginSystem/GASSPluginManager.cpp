@@ -20,7 +20,7 @@
 
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/PluginSystem/GASSDynamicModule.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Serialize/tinyxml2.h"
@@ -43,7 +43,7 @@ namespace GASS
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
 
-		LogManager::getSingleton().stream() << "Start loading plugins from " << filename;
+		GASS_LOG(LINFO) << "Start loading plugins from " << filename;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
@@ -134,7 +134,7 @@ namespace GASS
 		}
 		DynamicModule* module = new DynamicModule(file_name);
 		module->Load();
-		LogManager::getSingleton().stream() << file_name << " loaded";
+		GASS_LOG(LINFO) << file_name << " loaded";
 		m_Plugins.push_back(module);
 	}
 
@@ -179,7 +179,7 @@ namespace GASS
 		{
 			DynamicModule* module = new DynamicModule(plugins[i]);
 			module->Load();
-			LogManager::getSingleton().stream() << plugins[i] << " loaded";
+			GASS_LOG(LINFO) << plugins[i] << " loaded";
 			m_Plugins.push_back(module);
 		}
 		FileUtils::SetCurrentDir(saved_path);

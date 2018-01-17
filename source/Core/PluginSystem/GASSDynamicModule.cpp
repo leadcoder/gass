@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Core/PluginSystem/GASSDynamicModule.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include <assert.h>
 
@@ -54,7 +54,7 @@ namespace GASS
 #ifndef _MSC_VER
 		char *errstr = dlerror();
 		if (errstr != NULL)
-			LogManager::getSingleton().stream() << "WARNING:A dynamic linking error occurred:"  << errstr;
+			GASS_LOG(LWARNING) << "A dynamic linking error occurred:"  << errstr;
 #endif
 		//assert(m_ModuleHandle && "Unable to load dynamic module");
 		if (m_ModuleHandle == NULL)

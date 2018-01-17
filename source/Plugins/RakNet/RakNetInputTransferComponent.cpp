@@ -64,7 +64,7 @@ namespace GASS
 
 		//m_ControlSetting = SimEngine::Get().GetControlSettingsManager()->GetControlSetting(m_ControlSettingName);
 		//if(m_ControlSetting == NULL)
-		//	LogManager::getSingleton().stream() << "WARNING: Could not find control settings:" << m_ControlSettingName << " in RakNetInputTransferComponent";
+		//	GASS_LOG(LWARNING) << "Could not find control settings:" << m_ControlSettingName << " in RakNetInputTransferComponent";
 
 		if(!raknet->IsServer())
 		{

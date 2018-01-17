@@ -27,7 +27,7 @@ THE SOFTWARE.
 */
 
 #include "GASSException.h"
-#include "GASSLogManager.h"
+#include "GASSLogger.h"
 #include <sstream>
 
 namespace GASS {
@@ -38,8 +38,7 @@ namespace GASS {
         description( desc ),
         source( src )
     {
-        // Log this error - not any more, allow catchers to do it
-        //LogManager::getSingleton().logMessage(this->getFullDescription());
+        
     }
 
     Exception::Exception(int num, const std::string& desc, const std::string& src, 
@@ -52,12 +51,13 @@ namespace GASS {
         file( fil )
     {
         // Log this error, mask it from debug though since it may be caught and ignored
-        if(LogManager::getSingletonPtr())
+        /*if(LogManager::getSingletonPtr())
 		{
             LogManager::getSingleton().logMessage(
 				this->getFullDescription(), 
                 LML_CRITICAL, true);
-		}
+		}*/
+		GASS_LOG(LDEBUG) << this->getFullDescription();
 
     }
 

@@ -24,7 +24,7 @@
 #include "Sim/GASSRunTimeController.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include <tbb/task_scheduler_init.h>
 #include <tbb/spin_mutex.h>
 
@@ -66,7 +66,7 @@ namespace GASS
 
 		double update_freq = m_Engine->GetMaxUpdateFreq();
 
-		LogManager::getSingleton().stream() << "MaxUpdateFreq: " << update_freq;
+		GASS_LOG(LINFO) << "RTC MaxUpdateFreq: " << update_freq;
 
 		m_PreSimNode->SetUpdateFrequency(update_freq);
 		m_PreSimNode->SetMaxSimulationSteps(1);

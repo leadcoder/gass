@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Core/Common.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/ComponentSystem/GASSComponentContainer.h"
 #include "Core/Serialize/GASSSerialize.h"
@@ -124,7 +124,7 @@ namespace GASS
 					}
 					else
 					{
-						LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+						GASS_LOG(LWARNING) << "Failed to create component " << comp_type;
 					}
 				}
 
@@ -353,7 +353,7 @@ namespace GASS
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+			GASS_LOG(LWARNING) << "Failed to create component " << comp_type;
 		}
 		return comp;
 	}

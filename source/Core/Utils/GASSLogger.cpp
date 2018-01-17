@@ -52,16 +52,21 @@ namespace GASS
 	void Logger::Initialize(const std::string &logPath)
 	{
 		// You can change the default minimum logging level here
-		Logger::m_MinLogLevel = LINFO;
+		m_MinLogLevel = LINFO;
 
 		// create new file log stream object
-		Logger::m_FileStream = new std::ofstream(logPath.c_str(), m_AppendLogFile ? std::ios_base::app : std::ios_base::out);
+		m_FileStream = new std::ofstream(logPath.c_str(), m_AppendLogFile ? std::ios_base::app : std::ios_base::out);
 
 		// You can customize the initial logging output below
-		(*Logger::m_FileStream) << "========== START: " << DateTimeHelper::getDateTime() << " ==========" << std::endl << std::endl;
+		(*m_FileStream) << "========== START: " << DateTimeHelper::getDateTime() << " ==========" << std::endl << std::endl;
 
 		// initialized and ready to write to log file
-		Logger::m_Initialized = true;
+		m_Initialized = true;
+	}
+
+	bool Logger::IsInitialize()
+	{
+		return m_Initialized;
 	}
 
 	void Logger::SetLogLevel(LogLevel level)
@@ -113,11 +118,11 @@ namespace GASS
 	{
 		m_FreeLogging = false;
 
-		if (!Logger::m_Initialized)
+		/*if (!m_Initialized)
 		{
 			Log() << "[" << DateTimeHelper::getTime() << "] " << "(" << LogLevelStrings[level] << ") ";
 			return Log();
-		}
+		}*/
 
 		m_LogLevel = level;
 		m_OutputMode = mode;

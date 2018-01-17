@@ -133,7 +133,7 @@ namespace GASS
 
 #ifdef WIN32
 			if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
-				LogManager::getSingleton().stream() << "OISInputSystem:" <<m_InputManager->getNumberOfDevices(OIS::OISJoyStick) <<  "joysticks available";
+				GASS_LOG(LINFO) << "OISInputSystem:" << m_InputManager->getNumberOfDevices(OIS::OISJoyStick) << "joysticks available";
 				try {
 					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++)
 					{
@@ -141,38 +141,38 @@ namespace GASS
 						joy->setEventCallback(this);
 						joy->setBuffered(true);
 						joy->capture();
-						LogManager::getSingleton().stream() << "OISInputSystem: Joystick ID" << joy->getID() <<  " " << joy->vendor() << " " << joy->getNumberOfComponents(OIS::OIS_Axis) << " axes " <<  joy->getNumberOfComponents(OIS::OIS_Button) << " buttons " << joy->getNumberOfComponents(OIS::OIS_POV) << " hats";
+						GASS_LOG(LINFO) << "OISInputSystem: Joystick ID" << joy->getID() << " " << joy->vendor() << " " << joy->getNumberOfComponents(OIS::OIS_Axis) << " axes " << joy->getNumberOfComponents(OIS::OIS_Button) << " buttons " << joy->getNumberOfComponents(OIS::OIS_POV) << " hats";
 						m_Joys.push_back(joy);
 						//m_JoyState.push_back(joy->getJoyStickState());
 						//m_OldJoyState.push_back(joy->getJoyStickState());
 					}
 				} catch(std::exception& e) {
-					LogManager::getSingleton().stream() << "OISInputSystem: Exception caught while initializing joysticks:" <<  e.what();
+					GASS_LOG(LINFO) << "OISInputSystem: Exception caught while initializing joysticks:" << e.what();
 				} catch(...) {
-					LogManager::getSingleton().stream() << "OISInputSystem: Something caught while initializing joysticks";
+					GASS_LOG(LERROR) << "OISInputSystem: Something caught while initializing joysticks";
 				}
 			} else {
-				LogManager::getSingleton().stream() <<  "OISInputSystem: No joystick";
+				GASS_LOG(LINFO) << "OISInputSystem: No joystick";
 			}
 #else
 			if (m_InputManager->getNumberOfDevices(OIS::OISJoyStick) > 0) {
-				LogManager::getSingleton().stream() << "OISInputSystem:" <<m_InputManager->getNumberOfDevices(OIS::OISJoyStick) <<  "joysticks available";
+				GASS_LOG(LINFO) << "OISInputSystem:" <<m_InputManager->getNumberOfDevices(OIS::OISJoyStick) <<  "joysticks available";
 				try {
 					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) {
 						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, bufferedJoy ));
-						LogManager::getSingleton().stream() << "OISInputSystem: Joystick ID" << joy->getID() <<  " " << joy->vendor() << " " << joy->getNumberOfComponents(OIS::OIS_Axis) << " axes " <<  joy->getNumberOfComponents(OIS::OIS_Button) << " buttons " << joy->getNumberOfComponents(OIS::OIS_POV) << " hats";
+						GASS_LOG(LINFO) << "OISInputSystem: Joystick ID" << joy->getID() <<  " " << joy->vendor() << " " << joy->getNumberOfComponents(OIS::OIS_Axis) << " axes " <<  joy->getNumberOfComponents(OIS::OIS_Button) << " buttons " << joy->getNumberOfComponents(OIS::OIS_POV) << " hats";
 						joy->capture();
 						m_Joys.push_back(joy);
 						m_JoyState.push_back(joy->getJoyStickState());
 						m_OldJoyState.push_back(joy->getJoyStickState());
 					}
 				} catch(std::exception& e) {
-					LogManager::getSingleton().stream() << "OISInputSystem: Exception caught while initializing joysticks:" <<  e.what();
+					GASS_LOG(LERROR) << "OISInputSystem: Exception caught while initializing joysticks:" <<  e.what();
 				} catch(...) {
-					LogManager::getSingleton().stream() <<  "OISInputSystem: No joystick";
+					GASS_LOG(LINFO) <<  "OISInputSystem: No joystick";
 				}
 			} else {
-				LogManager::getSingleton().stream() <<  "OISInputSystem: No joystick";
+				GASS_LOG(LINFO) <<  "OISInputSystem: No joystick";
 			}
 #endif
 

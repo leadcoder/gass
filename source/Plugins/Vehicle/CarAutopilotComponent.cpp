@@ -21,7 +21,6 @@
 #include "CarAutopilotComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"

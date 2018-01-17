@@ -27,7 +27,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -76,7 +75,7 @@ namespace GASS
 			}
 			else
 			{
-				LogManager::getSingleton().stream() << "WARNING: No replica found for RakNetNetworkMasterComponent, have you created a client unit?";
+				GASS_LOG(LWARNING) << "No replica found for RakNetNetworkMasterComponent, have you created a client unit?";
 			}
 
 		}

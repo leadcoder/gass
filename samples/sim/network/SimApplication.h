@@ -45,7 +45,7 @@ public:
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 		  scene->Load(scene_name);
 		  
-		  GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
+		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
@@ -77,11 +77,11 @@ public:
 	  {
 		  _CreateMainWindow();
 		  
-		  GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Start Loading Scene:" <<  m_SceneName;
+		  GASS_LOG(LINFO) << "SimApplication::Init -- Start Loading Scene:" << m_SceneName;
 		  m_Scene = m_Engine->CreateScene("NewScene");
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 		  scene->Load(m_SceneName);
-		  GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
+		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		  
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());

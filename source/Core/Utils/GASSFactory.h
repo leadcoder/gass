@@ -25,7 +25,7 @@
 #include <map>
 #include <string>
 #include "Core/Utils/GASSStringUtils.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 
 namespace GASS
 {
@@ -120,7 +120,7 @@ namespace GASS
 		if (it != m_creatorMap.end())
 		{
 			delete pCreator;
-			LogManager::getSingleton().stream() << "WARNING:ObjectType "<< type << " already registred";
+			GASS_LOG(LWARNING) << "ObjectType "<< type << " already registred";
 			return false;
 		}
 		m_creatorMap[type] = pCreator;

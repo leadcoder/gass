@@ -59,7 +59,7 @@ namespace GASS
 
 	void MaterialSystem::LoadMaterialFile(const std::string &file)
 	{
-		LogManager::getSingleton().stream() << "Start loading material file " << file;
+		GASS_LOG(LINFO) << "Start loading material file " << file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
@@ -92,7 +92,7 @@ namespace GASS
 	void MaterialSystem::LoadGeometryFlagsFile(const std::string &file)
 	{
 		std::map<GeometryFlags, GeometryFlags> m_CollisionMaskMap;
-		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
+		GASS_LOG(LINFO) << "Start loading collision matrix file " << file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");

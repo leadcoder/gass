@@ -20,7 +20,6 @@
 
 
 #include "LineGeometryComponent.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/Math/GASSTriangle.h"
@@ -97,7 +96,7 @@ namespace GASS
 		{
 			GASS_SHARED_PTR<IWaypointListComponent> wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 			if(!wpl)
-				LogManager::getSingleton().stream() << "WARNING:LineComponent depends on WaypointListComponent";
+				GASS_LOG(LWARNING) << "LineComponent depends on WaypointListComponent";
 			GetSceneObject()->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		}
 

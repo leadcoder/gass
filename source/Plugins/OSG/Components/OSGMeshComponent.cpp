@@ -383,7 +383,7 @@ namespace GASS
 			for(unsigned int i = 0 ; i < node->asGroup()->getNumChildren(); i++)
 			{
 				osg::Node* child_node = node->asGroup()->getChild(i);
-				//LogManager::getSingleton().stream() << "Try to expand OSG node:" << child_node->getName();
+				//GASS_LOG(LINFO) << "Try to expand OSG node:" << child_node->getName();
 
 				//use template if present!
 				const std::string template_name = "OSGExpandedMeshObject";
@@ -403,12 +403,12 @@ namespace GASS
 
 					if (child_node->asTransform())
 					{
-						LogManager::getSingleton().stream() << "found child Transform";
+						GASS_LOG(LINFO) << "found child Transform";
 						//Expand(parent,child_node, load);
 					}
 					else if (child_node->asGroup())
 					{
-						LogManager::getSingleton().stream() << "found child  gorup";
+						GASS_LOG(LINFO) << "found child  gorup";
 						//Expand(parent,child_node, load);
 					}
 					//else
@@ -421,7 +421,7 @@ namespace GASS
 							//if(child_node->asTransform())
 							//{
 							//osg::Vec3d pos = child_node->asTransform()->asMatrixTransform()->getMatrix().getTrans();
-							//LogManager::getSingleton().stream() << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();
+							//GASS_LOG(LINFO) << "found trans:" << pos.x() << " " << pos.y() << " " << pos.z();
 
 							//}
 
@@ -442,7 +442,7 @@ namespace GASS
 		}
 		else if (node->asTransform())
 		{
-			LogManager::getSingleton().stream() << "found Transform";
+			GASS_LOG(LINFO) << "found Transform";
 		}
 		else
 		{
@@ -465,7 +465,7 @@ namespace GASS
 				osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
 				if (geode)
 				{
-					LogManager::getSingleton().stream() << "found Geode";
+					GASS_LOG(LINFO) << "found Geode";
 
 					GASS_SHARED_PTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
 					OSGNodeData* node_data = new OSGNodeData(mesh_comp);
@@ -587,7 +587,7 @@ namespace GASS
 		GraphicsMesh  mesh_data;
 		if(!m_MeshNode.valid())
 		{
-			LogManager::getSingleton().stream() << "WARNING:You have to load mesh before trying to fetch mesh data. Mesh name: " << GetName();
+			GASS_LOG(LWARNING) << "You have to load mesh before trying to fetch mesh data. Mesh name: " << GetName();
 			return mesh_data;
 		}
 		DrawableVisitor<TriangleRecorder> mv;

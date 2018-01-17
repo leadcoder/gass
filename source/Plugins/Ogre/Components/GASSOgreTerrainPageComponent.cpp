@@ -22,7 +22,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
@@ -191,12 +190,12 @@ namespace GASS
 				if(m_Pos != Vec3(0,0,0))
 					SetPosition(m_Pos);
 
-				LogManager::getSingleton().stream() << "UpdatePosition"<<  " OgreTerrainPageComponent::OnInitialize";
+				GASS_LOG(LINFO) << "UpdatePosition" << " OgreTerrainPageComponent::OnInitialize";
 				UpdatePosition();
 
 				//WaitWhileLoading();
 
-				//LogManager::getSingleton().stream() << "Start Import"<<  " OgreTerrainPageComponent::OnInitialize";
+				//GASS_LOG(LINFO) << "Start Import"<<  " OgreTerrainPageComponent::OnInitialize";
 
 				if(m_ColorMap.Valid())
 					ImportColorMap(m_ColorMap.GetResource()->Path());
@@ -255,7 +254,7 @@ namespace GASS
 				if(m_TilingLayer4)
 					SetTilingLayer4(m_TilingLayer4);
 
-				//LogManager::getSingleton().stream() << "DONE!"<<  " OgreTerrainPageComponent::OnInitialize";
+				//GASS_LOG(LINFO) << "DONE!"<<  " OgreTerrainPageComponent::OnInitialize";
 				//std::cout << "load world size:" << m_TerrainGroup->getTerrainWorldSize() << "\n";
 				//std::cout << "load size:" << m_Terrain->getWorldSize() << "\n";
 				//std::cout << "bb size:" << m_Terrain->getAABB().getMaximum().x <<" "<< m_Terrain->getAABB().getMaximum().y <<" " << m_Terrain->getAABB().getMaximum().z << "\n";

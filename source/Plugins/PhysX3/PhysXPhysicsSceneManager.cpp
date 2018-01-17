@@ -154,7 +154,7 @@ namespace GASS
 		//Data to store reports for each wheel.
 		m_WheelQueryResults = VehicleWheelQueryResults::allocate(MAX_NUM_WHEELS);
 	
-		LogManager::getSingleton().stream() << "Create  PxCreateControllerManager...";
+		GASS_LOG(LINFO) << "Create  PxCreateControllerManager...";
 		m_ControllerManager = PxCreateControllerManager(*m_PxScene);
 
 		/*physx::PxVisualDebuggerConnectionFlags theConnectionFlags( physx::PxVisualDebuggerExt::getAllConnectionFlags() );

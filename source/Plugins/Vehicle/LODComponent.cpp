@@ -24,7 +24,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -64,7 +63,7 @@ namespace GASS
 		m_ActiveCameraObject = camera;
 		if(!camera)
 		{
-			LogManager::getSingleton().stream() << "WARNING:Failed to find free camera for LODComponent";
+			GASS_LOG(LWARNING) << "Failed to find free camera for LODComponent";
 		}
 		
 		if(camera)

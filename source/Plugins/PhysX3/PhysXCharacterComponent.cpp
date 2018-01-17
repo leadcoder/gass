@@ -264,8 +264,6 @@ namespace GASS
 		target_displacement += Vec3(0,-9.81,0);
 		target_displacement *= delta;
 		/*PxU32 flags = */ m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(0));
-
-		//LogManager::getSingleton().stream() << m_CurrentVel << "\n";
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
 
 	}

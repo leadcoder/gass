@@ -23,7 +23,6 @@
 #include "Sim/RTC/GASSTBBManager.h"
 #include "Sim/RTC/GASSTaskNode.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSLogManager.h"
 #include <tbb/task_scheduler_init.h>
 
 namespace GASS

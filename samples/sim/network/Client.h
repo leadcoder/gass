@@ -29,7 +29,7 @@ public:
 		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 		scene->Load(mess->GetSceneName());
 
-		GASS::LogManager::getSingleton().stream() << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
+		GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 
 		//create free camera and set start pos
 		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());

@@ -22,7 +22,6 @@
 #include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/Collision/ODECollisionGeometryComponent.h"
 #include "Plugins/ODE/Collision/ODELineCollision.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"

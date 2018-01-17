@@ -20,7 +20,6 @@
 
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystem.h"
 

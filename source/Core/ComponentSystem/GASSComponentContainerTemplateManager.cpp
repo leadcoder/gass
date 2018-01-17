@@ -25,7 +25,7 @@
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Serialize/tinyxml2.h"
@@ -71,7 +71,6 @@ namespace GASS
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer:" << name;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create ComponentContainer:" + name, "ComponentContainerTemplateManager::CreateFromTemplate");
 		}
 		return new_cc;
@@ -237,7 +236,7 @@ namespace GASS
 				}
 				else
 				{
-					LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainerTemplate:" << type;
+					GASS_LOG(LWARNING) << "Failed to create ComponentContainerTemplate:" << type;
 				}
 				templates  = templates->NextSiblingElement();
 			}

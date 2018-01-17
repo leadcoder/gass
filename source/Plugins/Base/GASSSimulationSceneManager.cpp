@@ -20,7 +20,6 @@
 
 #include "GASSSimulationSceneManager.h"
 #include "GASSSimulationSystem.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 

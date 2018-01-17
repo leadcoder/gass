@@ -25,7 +25,7 @@
 #include "Core/ComponentSystem/GASSComponentContainerTemplateFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
@@ -125,7 +125,7 @@ namespace GASS
 					}
 					else
 					{
-						LogManager::getSingleton().stream() << "WARNING:Failed to create component " << comp_type;
+						GASS_LOG(LWARNING) << "Failed to create component " << comp_type;
 					}
 				}
 
@@ -303,7 +303,7 @@ namespace GASS
 					}
 					else
 					{
-						LogManager::getSingleton().stream() << "WARNING:Failed to create ComponentContainer instance from template: " << type;
+						GASS_LOG(LWARNING) << "Failed to create ComponentContainer instance from template: " << type;
 					}
 					cc_elem  = cc_elem->NextSiblingElement();
 				}
@@ -320,15 +320,12 @@ namespace GASS
 					}
 					catch(...)
 					{
-
 						GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed parsing:" + data_name +" With attribute:"+ attrib_val+  " in:" + std::string(obj_elem->GetDocument()->GetFileName()),"ComponentContainerTemplate::LoadXML");
-						//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->GetFileName() << "\t property not found: " << data_name;
 					}
 				}
 				else
 				{
 					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "No value attribute found for xml tag: " + data_name + " In:" + std::string(obj_elem->GetDocument()->GetFileName()), "ComponentContainerTemplate::LoadXML");
-					//LogManager::getSingleton().stream() << "WARNING:ComponentContainerTemplate::LoadXML() - Filename: " << obj_elem->GetDocument()->GetFileName() << "\t no value attribute found for xml tag: " << data_name;
 				}
 			}
 			class_attribute  = class_attribute->NextSiblingElement();
@@ -349,7 +346,7 @@ namespace GASS
 		}
 		else
 		{
-			LogManager::getSingleton().stream() << "WARNING: Failed to create component "<< comp_type;
+			GASS_LOG(LWARNING) << "Failed to create component "<< comp_type;
 		}
 		return comp;
 	}

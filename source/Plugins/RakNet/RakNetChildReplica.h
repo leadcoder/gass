@@ -25,7 +25,6 @@
 #include "PacketPriority.h"
 #include "Replica.h"
 #include "BitStream.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "RakNetBaseReplica.h"
 
 class ReplicaManager;

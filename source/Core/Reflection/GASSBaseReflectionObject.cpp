@@ -181,7 +181,7 @@ namespace GASS
 					//Here we want to copy all common properties from one object to another 
 					//(typically from template to instance), so ignore if some properties don't exist in destination object
 					//if (!ret)
-					//	LogManager::getSingleton().stream() << "WARNING:BaseReflectionObject::CopyPropertiesTo() - Property not found: %s", prop->GetName().c_str());
+					//GASS_LOG(LWARNING) << "BaseReflectionObject::CopyPropertiesTo() - Property not found:" << prop->GetName();
 					++iter;
 				}
 				pRTTI = pRTTI->GetAncestorRTTI();

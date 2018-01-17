@@ -35,7 +35,6 @@
 #endif
 
 
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"

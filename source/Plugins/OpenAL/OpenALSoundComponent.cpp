@@ -1,6 +1,5 @@
 #include "OpenALSoundComponent.h"
 #include "OpenALSoundSystem.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
@@ -76,13 +75,11 @@ namespace GASS
 
 	void OpenALSoundComponent::OnParameterMessage(SoundParameterRequestPtr message)
 	{
-		//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::OnParameterMessage");
 		SoundParameterRequest::SoundParameterType type = message->GetParameter();
 		switch(type)
 		{
 		case SoundParameterRequest::PLAY:
 			{
-				//LogManager::getSingleton().stream() << "WARNING:OpenALSoundComponent::Play() - play!");
 				Play();
 			}
 			break;
@@ -164,7 +161,7 @@ namespace GASS
 	{
 		if(volume <  0)
 		{
-			LogManager::getSingleton().stream() << "WARNING:Invalid volume " << volume;
+			GASS_LOG(LWARNING) << "Invalid volume " << volume;
 			return;
 		}
 		m_Volume = volume;
@@ -178,7 +175,7 @@ namespace GASS
 	{
 		if(pitch <=  0)
 		{
-			LogManager::getSingleton().stream() << "WARNING:Invalid pitch value:" << pitch;
+			GASS_LOG(LWARNING) << "Invalid pitch value:" << pitch;
 			return;
 		}
 		m_Pitch = pitch;

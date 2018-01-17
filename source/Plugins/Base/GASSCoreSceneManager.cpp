@@ -17,7 +17,7 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#include "Core/Utils/GASSLogManager.h"
+
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"

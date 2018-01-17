@@ -140,7 +140,7 @@ namespace GASS
 		//TODO: Add attributes for this settings
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
-		LogManager::getSingleton().stream() << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
+		GASS_LOG(LINFO) << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
 	}
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
@@ -242,7 +242,7 @@ namespace GASS
 
 		if(m_Windows.size() == 1) // this is our first window, send messages that graphic system is initialized
 		{
-			LogManager::getSingleton().stream() << "Initialise Ogre resource groups started";
+			GASS_LOG(LINFO) << "Initialise Ogre resource groups started";
 
 			const std::string file = "gass_shader_cache.bin";
 			Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(m_UseShaderCache);

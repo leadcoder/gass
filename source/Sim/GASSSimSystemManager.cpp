@@ -20,7 +20,6 @@
 
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -44,14 +43,14 @@ namespace GASS
 
 	void SimSystemManager::Init()
 	{
-		LogManager::getSingleton().stream() << "SimSystemManager Initialization Started";
+		GASS_LOG(LINFO) << "SimSystemManager Initialization Started";
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Init();
 			//auto register for updates
 			m_Systems[i]->RegisterForUpdate();
 		}
-		LogManager::getSingleton().stream() << "SimSystemManager Initialization Completed";
+		GASS_LOG(LINFO) << "SimSystemManager Initialization Completed";
 	}	
 
 
@@ -129,7 +128,7 @@ namespace GASS
 				if(system)
 				{
 					system->OnCreate(shared_from_this());
-					LogManager::getSingleton().stream() << system->GetSystemName() << " created";
+					GASS_LOG(LINFO) << system->GetSystemName() << " created";
 					
 					m_Systems.push_back(system);
 					

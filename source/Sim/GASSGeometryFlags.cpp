@@ -19,7 +19,7 @@
 *****************************************************************************/
 #include "GASSGeometryFlags.h"
 #include "Core/Math/GASSVector.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
@@ -44,7 +44,7 @@ namespace GASS
 	void GeometryFlagManager::LoadGeometryFlagsFile(const std::string &file)
 	{
 
-		LogManager::getSingleton().stream() << "Start loading collision matrix file " << file;
+		GASS_LOG(LINFO) << "Start loading collision matrix file " << file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 		{

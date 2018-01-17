@@ -59,7 +59,7 @@ namespace GASS
 			}
 			std::stringstream ss;
 			ss << "PhysX Error Callback:" << file << "(" << line << ") :" << errorCode << " : " << message << "\n";
-			GASS::LogManager::getSingleton().stream() << ss.str();
+			GASS_LOG(LERROR) << ss.str();
 
 		}
 	};
@@ -155,12 +155,12 @@ namespace GASS
 			m_VehicleDrivableSurfaceTypes.push_back(vdst);
 		}
 
-		LogManager::getSingleton().stream() << "Create  PxVehicleDrivableSurfaceToTireFrictionPairs...";
+		GASS_LOG(LINFO) << "Create  PxVehicleDrivableSurfaceToTireFrictionPairs...";
 		m_SurfaceTirePairs=PxVehicleDrivableSurfaceToTireFrictionPairs::allocate((int)m_Tires.size(),(int)m_DrivableMaterials.size());
 		m_SurfaceTirePairs->setup((int)m_Tires.size(),(int)m_DrivableMaterials.size(),(const PxMaterial**)&m_DrivableMaterials[0],&m_VehicleDrivableSurfaceTypes[0]);
 
 		//m_SurfaceTirePairs = PxVehicleDrivableSurfaceToTireFrictionPairs::create((int)m_Tires.size(),(int)m_DrivableMaterials.size(),(const PxMaterial**)&m_DrivableMaterials[0],&m_VehicleDrivableSurfaceTypes[0]);
-		LogManager::getSingleton().stream() << "setup tire friction...";
+		GASS_LOG(LINFO) << "setup tire friction...";
 
 		for(PxU32 i=0; i < m_DrivableMaterials.size(); i++)
 		{
@@ -201,7 +201,7 @@ namespace GASS
 
 	void PhysXPhysicsSystem::LoadTires(const std::string &file)
 	{
-		LogManager::getSingleton().stream() << "Start loading tire settings file " << file;
+		GASS_LOG(LINFO) << "Start loading tire settings file " << file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "PhysXPhysicsSystem::LoadTires");

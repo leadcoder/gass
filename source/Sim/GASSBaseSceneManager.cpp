@@ -22,7 +22,6 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>

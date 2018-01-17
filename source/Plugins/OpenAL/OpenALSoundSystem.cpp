@@ -1,5 +1,4 @@
 #include "OpenALSoundSystem.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -113,7 +112,7 @@ namespace GASS
 		ALFWInit();
 		// Ok
 		m_IsInitialised = true;
-		LogManager::getSingleton().stream() << "GASSSoundOpenOpenAL initialised";
+		GASS_LOG(LINFO) << "GASSSoundOpenOpenAL initialized";
 	}
 
 	void OpenALSoundSystem::OnSceneLoaded(PreSceneCreateEventPtr message)

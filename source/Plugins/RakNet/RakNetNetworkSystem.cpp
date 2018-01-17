@@ -31,7 +31,6 @@
 #include "NetworkData.h"
 #include "GetTime.h"
 #include "AutoRPC.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
@@ -205,10 +204,10 @@ namespace GASS
 	{
 		if(m_Active)
 		{
-			LogManager::getSingleton().stream() << "Warning: Server already started";
+			GASS_LOG(LWARNING) << "Server already started";
 			return;
 		}
-		LogManager::getSingleton().stream() << "Starting raknet server:" << name<<  "port:" << port;
+		GASS_LOG(LINFO) << "Starting Raknet server:" << name << "port:" << port;
 		m_IsServer = 1;
 
 
@@ -232,17 +231,17 @@ namespace GASS
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
 		SocketDescriptor socketDescriptor(port,0);
-		LogManager::getSingleton().stream() << "Raknet starup....";
+		GASS_LOG(LINFO) << "Raknet starup....";
 		bool ret = m_RakPeer->Startup(MAX_PEERS,m_SleepTime,&socketDescriptor, 1);
 		if(ret == false)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to start raknet server","RakNetNetworkSystem::StartServer");
 		}
-		LogManager::getSingleton().stream() << "Raknet startup done";
+		GASS_LOG(LINFO) << "Raknet startup done";
 		m_RakPeer->SetMaximumIncomingConnections(MAX_PEERS);
-		LogManager::getSingleton().stream() << "Raknet SetMaximumIncomingConnections done";
+		GASS_LOG(LINFO) << "Raknet SetMaximumIncomingConnections done";
 
-		//Register update fucntion
+		//Register update function
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		//Catch scene load messages
 
@@ -284,7 +283,7 @@ namespace GASS
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
 		m_RakPeer->SetOccasionalPing(true);
 
-		//Register update fucntion
+		//Register update function
 		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		m_Active = true;

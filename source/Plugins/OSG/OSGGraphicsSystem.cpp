@@ -143,8 +143,7 @@ namespace GASS
 			tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 			if (xmlDoc->LoadFile(m_ShadowSettingsFile.c_str()) != tinyxml2::XML_NO_ERROR)
 			{
-				//Fatal error, cannot load
-				LogManager::getSingleton().stream() << "WARNING: OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " <<  m_ShadowSettingsFile;
+				GASS_LOG(LWARNING) << "OSGGraphicsSystem::OnInit - Couldn't load shadow settings from: " << m_ShadowSettingsFile;
 			}
 			else
 			{
@@ -249,7 +248,7 @@ namespace GASS
 			traits->windowDecoration = false;
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
-
+			//traits->useCursor = false;
 		}
 		else
 		{

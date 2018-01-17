@@ -25,7 +25,7 @@
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 
 
 namespace GASS
@@ -83,7 +83,7 @@ namespace GASS
 							}
 						}
 						else
-							LogManager::getSingleton().stream() << "WARNING:Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
+							GASS_LOG(LWARNING) << "Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 					}
 					//Why?
 					//GASS_ANY any_links(links);

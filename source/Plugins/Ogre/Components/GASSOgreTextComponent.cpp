@@ -29,7 +29,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Plugins/Ogre/Helpers/RectLayoutManager.h"
@@ -151,7 +150,7 @@ namespace GASS
 			}
 		}
 		if(mobj == NULL)
-			LogManager::getSingleton().stream() << "WARNING:Failed to find moveable object for text component: " << m_Name;
+			GASS_LOG(LWARNING) << "Failed to find movable object for text component: " << m_Name;
 
 		if(mobj)
 		{

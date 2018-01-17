@@ -20,7 +20,6 @@
 
 
 #include "RoadComponent.h"
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSTriangle.h"
 #include "Core/Math/GASSSplineAnimation.h"
@@ -116,7 +115,7 @@ namespace GASS
 		//get waypoint list
 		GASS_SHARED_PTR<IWaypointListComponent> wpl = GetSceneObject()->GetFirstComponentByClass<IWaypointListComponent>();
 		if(!wpl)
-			LogManager::getSingleton().stream() << "WARNING:RoadComponent depends on WaypointListComponent";
+			GASS_LOG(LWARNING) << "RoadComponent depends on WaypointListComponent";
 
 		m_Initialized = true;
 	}

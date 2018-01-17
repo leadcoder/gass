@@ -20,8 +20,6 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/MessageSystem/GASSMessageType.h"
-
-#include "Core/Utils/GASSLogManager.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 

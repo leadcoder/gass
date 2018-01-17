@@ -237,7 +237,7 @@ namespace GASS
 		FileLog::Print("ODEBodyComponent BBox mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		dBodySetMass(m_ODEBodyID,&m_ODEMass);
 		} else
-		LogManager::getSingleton().stream() << "WARNING:ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
+		GASS_LOG(LWARNING) << "ODEBodyComponent BBox with zero thickness: mass %.2f x %.2f y %.2f z %.2f",m_Mass,box.x,box.y,box.z);
 		*/
 		if (m_MassRepresentation != MR_GEOMETRY)
 		{

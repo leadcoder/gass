@@ -26,7 +26,7 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <angelscript.h>
@@ -136,7 +136,7 @@ namespace GASS
 
 	void ScriptManager::OnScriptEvent(ScriptEventPtr message)
 	{
-		LogManager::Get().stream() << message->GetMessage();
+		GASS_LOG() << message->GetMessage();
 	}
 
 	void ScriptManager::Init()

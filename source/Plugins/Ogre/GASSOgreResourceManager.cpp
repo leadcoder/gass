@@ -20,7 +20,7 @@
 #include "Core/Common.h"
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreResourceManager.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSResourceManager.h"
@@ -40,7 +40,7 @@ namespace GASS
 
 	void OgreResourceManager::Init()
 	{
-		LogManager::getSingleton().stream() << "OgreResourceManager Initlize Started";
+		GASS_LOG(LINFO) << "OgreResourceManager Initlize Started";
 		//get resource system
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		//Parse for ogre scripts
@@ -49,7 +49,7 @@ namespace GASS
 		{
 			AddResourceGroup(groups[i],false);
 		}
-		LogManager::getSingleton().stream() << "OgreResourceManager Completed";
+		GASS_LOG(LINFO) << "OgreResourceManager Completed";
 	}
 
 	void OgreResourceManager::AddResourceGroup(ResourceGroupPtr group, bool load)

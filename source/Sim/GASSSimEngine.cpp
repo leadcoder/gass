@@ -27,7 +27,7 @@
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
-#include "Core/Utils/GASSLogManager.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSFileUtils.h"
@@ -61,11 +61,17 @@ namespace GASS
 	{
 		m_RTC = RunTimeControllerPtr(new RunTimeController(this));
 		// Create log manager
-		if(LogManager::getSingletonPtr() == 0)
+		/*if(LogManager::getSingletonPtr() == 0)
 		{
 			LogManager* log_man = new LogManager();
 			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
 			log_man->createLog(log_file, true, true);
+		}*/
+		//Always log to file if sim is created?
+		if (!Logger::IsInitialize())
+		{
+			const std::string log_file = log_folder.GetFullPath() + "GASS.log";
+			GASS_LOG_INITIALIZE(log_file);
 		}
 		m_ScriptManager->Init();
 	}
@@ -90,7 +96,7 @@ namespace GASS
 
 	void SimEngine::Init(const FilePath &configuration)
 	{
-		LogManager::getSingleton().stream() << "SimEngine Initialization Started";
+		GASS_LOG(LINFO) << "SimEngine Initialization Started";
 		
 		if(configuration.GetFullPath() != "")
 			LoadSettings(configuration);
@@ -126,7 +132,7 @@ namespace GASS
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
 
-		LogManager::getSingleton().stream() << "SimEngine Initialization Completed";
+		GASS_LOG(LINFO) << "SimEngine Initialization Completed";
 	}
 
 	void SimEngine::ReloadTemplates()
@@ -150,7 +156,7 @@ namespace GASS
 					const FilePath file_path = res_ptr->Path();
 					if(StringUtils::ToLower(file_path.GetExtension()) == "template")
 					{
-						LogManager::getSingleton().stream() << "Start loading template:" << file_path.GetFullPath();
+						GASS_LOG(LINFO) << "Start loading template:" << file_path.GetFullPath();
 						GetSceneObjectTemplateManager()->Load(file_path.GetFullPath());
 					}
 					++iter;
@@ -161,7 +167,7 @@ namespace GASS
 
 	void SimEngine::LoadSettings(const FilePath &configuration_file)
 	{
-		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
+		GASS_LOG(LINFO) << "Start loading SimEngine settings from " << configuration_file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
@@ -229,7 +235,7 @@ namespace GASS
 
 	void SimEngine::LoadResources(const FilePath &configuration_file)
 	{
-		LogManager::getSingleton().stream() << "Start loading SimEngine settings from " << configuration_file;
+		GASS_LOG(LINFO) << "Start loading SimEngine settings from " << configuration_file;
 		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
