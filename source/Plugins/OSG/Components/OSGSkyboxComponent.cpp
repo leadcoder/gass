@@ -153,7 +153,7 @@ namespace GASS
 			  if (cv)
 			  {
 				  const osg::Matrixd& MV = *(cv->getModelViewMatrix());
-				  const osg::Matrixd R = osg::Matrixd::rotate( osg::DegreesToRadians(112.0f), 0.0f,0.0f,1.0f)*
+				  const osg::Matrixd R = osg::Matrixd::rotate( osg::DegreesToRadians(0.0f), 0.0f,0.0f,1.0f)*
 					  osg::Matrixd::rotate( osg::DegreesToRadians(90.0f), 1.0f,0.0f,0.0f);
 
 				  osg::Quat q = MV.getRotate();
