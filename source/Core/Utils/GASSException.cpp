@@ -57,7 +57,7 @@ namespace GASS {
 				this->getFullDescription(), 
                 LML_CRITICAL, true);
 		}*/
-		GASS_LOG(LDEBUG) << this->getFullDescription();
+		GASS_LOG(LERROR) << this->getFullDescription();
 
     }
 
