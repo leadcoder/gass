@@ -60,10 +60,10 @@ namespace GASS
 		m_WaterGradientValues.push_back(Vec3(0.058209*0.1,0.535822*0.1,0.679105*0.025));
 
 		m_WaterGradientWeights.push_back(1);
-		m_WaterGradientWeights.push_back(0.8);
-		m_WaterGradientWeights.push_back(0.6);
-		m_WaterGradientWeights.push_back(0.5);
-		m_WaterGradientWeights.push_back(0.45);
+		m_WaterGradientWeights.push_back(0.8f);
+		m_WaterGradientWeights.push_back(0.6f);
+		m_WaterGradientWeights.push_back(0.5f);
+		m_WaterGradientWeights.push_back(0.45f);
 		m_WaterGradientWeights.push_back(0);
 
 
@@ -75,11 +75,11 @@ namespace GASS
 		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
 
 		m_SunGradientWeights.push_back(1.0);
-		m_SunGradientWeights.push_back(0.75);
-		m_SunGradientWeights.push_back(0.5625);
-		m_SunGradientWeights.push_back(0.5);
-		m_SunGradientWeights.push_back(0.45);
-		m_SunGradientWeights.push_back(0.0);
+		m_SunGradientWeights.push_back(0.75f);
+		m_SunGradientWeights.push_back(0.5625f);
+		m_SunGradientWeights.push_back(0.5f);
+		m_SunGradientWeights.push_back(0.45f);
+		m_SunGradientWeights.push_back(0.0f);
 
 		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
 		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
@@ -88,12 +88,12 @@ namespace GASS
 		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.1);
 		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.05);
 
-		m_AmbientGradientWeights.push_back(1.0);
-		m_AmbientGradientWeights.push_back(0.6);
-		m_AmbientGradientWeights.push_back(0.5);
-		m_AmbientGradientWeights.push_back(0.45);
-		m_AmbientGradientWeights.push_back(0.35);
-		m_AmbientGradientWeights.push_back(0.0);
+		m_AmbientGradientWeights.push_back(1.0f);
+		m_AmbientGradientWeights.push_back(0.6f);
+		m_AmbientGradientWeights.push_back(0.5f);
+		m_AmbientGradientWeights.push_back(0.45f);
+		m_AmbientGradientWeights.push_back(0.35f);
+		m_AmbientGradientWeights.push_back(0.0f);
 
 
 		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
@@ -103,12 +103,12 @@ namespace GASS
 		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
 		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
 
-		m_FogGradientWeights.push_back(1.0);
-		m_FogGradientWeights.push_back(0.6);
-		m_FogGradientWeights.push_back(0.5);
-		m_FogGradientWeights.push_back(0.45);
-		m_FogGradientWeights.push_back(0.35);
-		m_FogGradientWeights.push_back(0.0);
+		m_FogGradientWeights.push_back(1.0f);
+		m_FogGradientWeights.push_back(0.6f);
+		m_FogGradientWeights.push_back(0.5f);
+		m_FogGradientWeights.push_back(0.45f);
+		m_FogGradientWeights.push_back(0.35f);
+		m_FogGradientWeights.push_back(0.0f);
 
 	}
 
@@ -416,7 +416,7 @@ namespace GASS
 
 		Ogre::Vector3 sunPos(0,0,0);
 		if(m_CurrentCamera)
-			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*skyx->GetSkyX()->getMeshManager()->getSkydomeRadius(m_CurrentCamera)*0.1;
+			sunPos = m_CurrentCamera->getDerivedPosition() - lightDir*skyx->GetSkyX()->getMeshManager()->getSkydomeRadius(m_CurrentCamera)*0.1f;
 		if(m_Hydrax)
 			m_Hydrax->setSunPosition(sunPos);
 

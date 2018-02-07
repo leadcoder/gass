@@ -214,5 +214,6 @@ namespace GASS
 #define GASS_PTR_DECL(CLASS) typedef GASS_SHARED_PTR<CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<CLASS> CLASS##WeakPtr;
 #define GASS_IFORWARD_DECL(CLASS) class I##CLASS; typedef GASS_SHARED_PTR<I##CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<I##CLASS> CLASS##WeakPtr;
 #define GASS_IPTR_DECL(CLASS) typedef GASS_SHARED_PTR<I##CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<I##CLASS> CLASS##WeakPtr;
-#define GASS_PTR_TO_INT(ptr) static_cast<int>(reinterpret_cast<long>(ptr))
+#define GASS_PTR_TO_INT(ptr) static_cast<int>(reinterpret_cast<size_t>(ptr))
+
 #endif

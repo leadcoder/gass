@@ -88,61 +88,61 @@ namespace GASS
 
 		RegisterProperty<EulerRotation>("Rotation", &HydraxWaterComponent::GetRotation, &HydraxWaterComponent::SetRotation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("GlobalTransparency", &HydraxWaterComponent::GetGlobalTransparency, &HydraxWaterComponent::SetGlobalTransparency,
+		RegisterProperty<float>("GlobalTransparency", &HydraxWaterComponent::GetGlobalTransparency, &HydraxWaterComponent::SetGlobalTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FullReflectionDistance", &HydraxWaterComponent::GetFullReflectionDistance, &HydraxWaterComponent::SetFullReflectionDistance,
+		RegisterProperty<float>("FullReflectionDistance", &HydraxWaterComponent::GetFullReflectionDistance, &HydraxWaterComponent::SetFullReflectionDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("WaterColor", &HydraxWaterComponent::GetWaterColor, &HydraxWaterComponent::SetWaterColor,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("NormalDistortion", &HydraxWaterComponent::GetNormalDistortion, &HydraxWaterComponent::SetNormalDistortion,
+		RegisterProperty<float>("NormalDistortion", &HydraxWaterComponent::GetNormalDistortion, &HydraxWaterComponent::SetNormalDistortion,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("SunPosition", &HydraxWaterComponent::GetSunPosition, &HydraxWaterComponent::SetSunPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SunStrength", &HydraxWaterComponent::GetSunStrength, &HydraxWaterComponent::SetSunStrength,
+		RegisterProperty<float>("SunStrength", &HydraxWaterComponent::GetSunStrength, &HydraxWaterComponent::SetSunStrength,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SunArea", &HydraxWaterComponent::GetSunArea, &HydraxWaterComponent::SetSunArea,
+		RegisterProperty<float>("SunArea", &HydraxWaterComponent::GetSunArea, &HydraxWaterComponent::SetSunArea,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("SunColor", &HydraxWaterComponent::GetSunColor, &HydraxWaterComponent::SetSunColor,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FoamMaxDistance", &HydraxWaterComponent::GetFoamMaxDistance, &HydraxWaterComponent::SetFoamMaxDistance,
+		RegisterProperty<float>("FoamMaxDistance", &HydraxWaterComponent::GetFoamMaxDistance, &HydraxWaterComponent::SetFoamMaxDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FoamScale", &HydraxWaterComponent::GetFoamScale, &HydraxWaterComponent::SetFoamScale,
+		RegisterProperty<float>("FoamScale", &HydraxWaterComponent::GetFoamScale, &HydraxWaterComponent::SetFoamScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FoamStart", &HydraxWaterComponent::GetFoamStart, &HydraxWaterComponent::SetFoamStart,
+		RegisterProperty<float>("FoamStart", &HydraxWaterComponent::GetFoamStart, &HydraxWaterComponent::SetFoamStart,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FoamTransparency", &HydraxWaterComponent::GetFoamTransparency, &HydraxWaterComponent::SetFoamTransparency,
+		RegisterProperty<float>("FoamTransparency", &HydraxWaterComponent::GetFoamTransparency, &HydraxWaterComponent::SetFoamTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("DepthLimit", &HydraxWaterComponent::GetDepthLimit, &HydraxWaterComponent::SetDepthLimit,
+		RegisterProperty<float>("DepthLimit", &HydraxWaterComponent::GetDepthLimit, &HydraxWaterComponent::SetDepthLimit,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SmoothPower", &HydraxWaterComponent::GetSmoothPower, &HydraxWaterComponent::SetSmoothPower,
+		RegisterProperty<float>("SmoothPower", &HydraxWaterComponent::GetSmoothPower, &HydraxWaterComponent::SetSmoothPower,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("CausticsScale", &HydraxWaterComponent::GetCausticsScale, &HydraxWaterComponent::SetCausticsScale,
+		RegisterProperty<float>("CausticsScale", &HydraxWaterComponent::GetCausticsScale, &HydraxWaterComponent::SetCausticsScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("CausticsPower", &HydraxWaterComponent::GetCausticsPower, &HydraxWaterComponent::SetCausticsPower,
+		RegisterProperty<float>("CausticsPower", &HydraxWaterComponent::GetCausticsPower, &HydraxWaterComponent::SetCausticsPower,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("CausticsEnd", &HydraxWaterComponent::GetCausticsEnd, &HydraxWaterComponent::SetCausticsEnd,
+		RegisterProperty<float>("CausticsEnd", &HydraxWaterComponent::GetCausticsEnd, &HydraxWaterComponent::SetCausticsEnd,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Vec3>("GodRaysExposure", &HydraxWaterComponent::GetGodRaysExposure, &HydraxWaterComponent::SetGodRaysExposure,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("GodRaysIntensity", &HydraxWaterComponent::GetGodRaysIntensity, &HydraxWaterComponent::SetGodRaysIntensity,
+		RegisterProperty<float>("GodRaysIntensity", &HydraxWaterComponent::GetGodRaysIntensity, &HydraxWaterComponent::SetGodRaysIntensity,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("UnderwaterCameraSwitchDelta", &HydraxWaterComponent::GetUnderwaterCameraSwitchDelta, &HydraxWaterComponent::SetUnderwaterCameraSwitchDelta,
+		RegisterProperty<float>("UnderwaterCameraSwitchDelta", &HydraxWaterComponent::GetUnderwaterCameraSwitchDelta, &HydraxWaterComponent::SetUnderwaterCameraSwitchDelta,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("PerlinScale", &HydraxWaterComponent::GetPerlinScale, &HydraxWaterComponent::SetPerlinScale,
+		RegisterProperty<float>("PerlinScale", &HydraxWaterComponent::GetPerlinScale, &HydraxWaterComponent::SetPerlinScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("PerlinSpeed", &HydraxWaterComponent::GetPerlinSpeed, &HydraxWaterComponent::SetPerlinSpeed,
+		RegisterProperty<float>("PerlinSpeed", &HydraxWaterComponent::GetPerlinSpeed, &HydraxWaterComponent::SetPerlinSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FFTScale", &HydraxWaterComponent::GetFFTScale, &HydraxWaterComponent::SetFFTScale,
+		RegisterProperty<float>("FFTScale", &HydraxWaterComponent::GetFFTScale, &HydraxWaterComponent::SetFFTScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FFTSpeed", &HydraxWaterComponent::GetFFTSpeed, &HydraxWaterComponent::SetFFTSpeed,
+		RegisterProperty<float>("FFTSpeed", &HydraxWaterComponent::GetFFTSpeed, &HydraxWaterComponent::SetFFTSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("Strength", &HydraxWaterComponent::GetStrength, &HydraxWaterComponent::SetStrength,
+		RegisterProperty<float>("Strength", &HydraxWaterComponent::GetStrength, &HydraxWaterComponent::SetStrength,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("Elevation", &HydraxWaterComponent::GetElevation, &HydraxWaterComponent::SetElevation,
+		RegisterProperty<float>("Elevation", &HydraxWaterComponent::GetElevation, &HydraxWaterComponent::SetElevation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<std::string>("SaveConfiguration", &HydraxWaterComponent::GetSave, &HydraxWaterComponent::SetSave,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("PlanesError", &HydraxWaterComponent::GetPlanesError, &HydraxWaterComponent::SetPlanesError,
+		RegisterProperty<float>("PlanesError", &HydraxWaterComponent::GetPlanesError, &HydraxWaterComponent::SetPlanesError,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<FilePath>("ResourceLocation", &HydraxWaterComponent::GetResourceLocation, &HydraxWaterComponent::SetResourceLocation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
@@ -237,7 +237,7 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetPlanesError(const Float &value)
+	void HydraxWaterComponent::SetPlanesError(const float &value)
 	{
 		if(m_Hydrax)
 		{
@@ -246,7 +246,7 @@ namespace GASS
 	}
 
 
-	Float HydraxWaterComponent::GetPlanesError() const 
+	float HydraxWaterComponent::GetPlanesError() const 
 	{
 		if(m_Hydrax)
 		{
@@ -256,7 +256,7 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetGPUStrength(const Float &value)
+	void HydraxWaterComponent::SetGPUStrength(const float &value)
 	{
 		if(m_Hydrax)
 		{
@@ -264,12 +264,12 @@ namespace GASS
 		}
 	}
 
-	Float HydraxWaterComponent::GetGPUStrength() const 
+	float HydraxWaterComponent::GetGPUStrength() const 
 	{
 		return 0;
 	}
 
-	void HydraxWaterComponent::SetStrength(const Float &value)
+	void HydraxWaterComponent::SetStrength(const float &value)
 	{
 		if(m_Hydrax && m_ProjectedGridGeometryModuleVertex == m_Hydrax->getModule())
 		{
@@ -286,7 +286,7 @@ namespace GASS
 		}
 	}
 
-	Float HydraxWaterComponent::GetStrength() const 
+	float HydraxWaterComponent::GetStrength() const 
 	{
 		if(m_Hydrax && m_ProjectedGridGeometryModuleVertex == m_Hydrax->getModule())
 		{
@@ -301,7 +301,7 @@ namespace GASS
 		return 0;
 	}
 
-	void HydraxWaterComponent::SetElevation(const Float &value)
+	void HydraxWaterComponent::SetElevation(const float &value)
 	{
 		if(m_ProjectedGridGeometryModuleVertex)
 		{
@@ -312,7 +312,7 @@ namespace GASS
 	}
 
 
-	Float HydraxWaterComponent::GetElevation() const 
+	float HydraxWaterComponent::GetElevation() const 
 	{
 		if(m_ProjectedGridGeometryModuleVertex)
 		{
@@ -322,7 +322,7 @@ namespace GASS
 		return 0;
 	}
 
-	void HydraxWaterComponent::SetPerlinScale(const Float &value)
+	void HydraxWaterComponent::SetPerlinScale(const float &value)
 	{
 		if(m_Perlin)
 		{
@@ -335,7 +335,7 @@ namespace GASS
 
 
 
-	Float HydraxWaterComponent::GetPerlinScale() const
+	float HydraxWaterComponent::GetPerlinScale() const
 	{
 		if(m_Perlin)
 		{
@@ -346,7 +346,7 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetPerlinSpeed(const Float &value)
+	void HydraxWaterComponent::SetPerlinSpeed(const float &value)
 	{
 		if(m_Perlin)
 		{
@@ -356,7 +356,7 @@ namespace GASS
 		}
 	}
 
-	Float HydraxWaterComponent::GetPerlinSpeed() const
+	float HydraxWaterComponent::GetPerlinSpeed() const
 	{
 		if(m_Perlin)
 		{
@@ -367,7 +367,7 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetFFTScale(const Float &value)
+	void HydraxWaterComponent::SetFFTScale(const float &value)
 	{
 		if(m_FFT)
 		{
@@ -377,7 +377,7 @@ namespace GASS
 		}
 	}
 
-	Float HydraxWaterComponent::GetFFTScale() const
+	float HydraxWaterComponent::GetFFTScale() const
 	{
 		if(m_FFT)
 		{
@@ -387,7 +387,7 @@ namespace GASS
 		return 0;
 	}
 
-	void HydraxWaterComponent::SetFFTSpeed(const Float &value)
+	void HydraxWaterComponent::SetFFTSpeed(const float &value)
 	{
 		if(m_FFT)
 		{
@@ -397,7 +397,7 @@ namespace GASS
 		}
 	}
 
-	Float HydraxWaterComponent::GetFFTSpeed() const
+	float HydraxWaterComponent::GetFFTSpeed() const
 	{
 		if(m_FFT)
 		{
@@ -432,25 +432,25 @@ namespace GASS
 		return m_Rot;
 	}
 
-	void HydraxWaterComponent::SetGlobalTransparency(Float value)
+	void HydraxWaterComponent::SetGlobalTransparency(float value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setGlobalTransparency(value);
 	}
 
-	Float HydraxWaterComponent::GetGlobalTransparency() const
+	float HydraxWaterComponent::GetGlobalTransparency() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getGlobalTransparency();
 		return 0;
 	}
-	void HydraxWaterComponent::SetFullReflectionDistance(Float value)
+	void HydraxWaterComponent::SetFullReflectionDistance(float value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setFullReflectionDistance(value);
 	}
 
-	Float HydraxWaterComponent::GetFullReflectionDistance() const
+	float HydraxWaterComponent::GetFullReflectionDistance() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getFullReflectionDistance();
@@ -468,13 +468,13 @@ namespace GASS
 			return OgreConvert::ToGASS(m_Hydrax->getWaterColor());			
 		return Vec3(0,0,0);
 	}
-	void HydraxWaterComponent::SetNormalDistortion(Float value)
+	void HydraxWaterComponent::SetNormalDistortion(float value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setNormalDistortion(value);			
 	}
 
-	Float HydraxWaterComponent::GetNormalDistortion() const
+	float HydraxWaterComponent::GetNormalDistortion() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getNormalDistortion();
@@ -495,27 +495,27 @@ namespace GASS
 
 	}
 
-	void HydraxWaterComponent::SetSunStrength(Float value)
+	void HydraxWaterComponent::SetSunStrength(float value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setSunStrength(value);			
 	}
 
-	Float HydraxWaterComponent::GetSunStrength() const
+	float HydraxWaterComponent::GetSunStrength() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getSunStrength();
 		return 0;
 	}
 
-	void HydraxWaterComponent::SetSunArea(Float value)
+	void HydraxWaterComponent::SetSunArea(float value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setSunArea(value);			
 
 	}
 
-	Float HydraxWaterComponent::GetSunArea() const
+	float HydraxWaterComponent::GetSunArea() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getSunArea();
@@ -537,32 +537,32 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetFoamMaxDistance(const Float &FoamMaxDistance)
+	void HydraxWaterComponent::SetFoamMaxDistance(const float &FoamMaxDistance)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setFoamMaxDistance(FoamMaxDistance);
 	}
 
-	void HydraxWaterComponent::SetFoamScale(const Float &FoamScale)
+	void HydraxWaterComponent::SetFoamScale(const float &FoamScale)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setFoamScale(FoamScale);
 
 	}
 
-	void HydraxWaterComponent::SetFoamStart(const Float &FoamStart)
+	void HydraxWaterComponent::SetFoamStart(const float &FoamStart)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setFoamStart(FoamStart);
 	}
 
-	void HydraxWaterComponent::SetFoamTransparency(const Float &FoamTransparency)
+	void HydraxWaterComponent::SetFoamTransparency(const float &FoamTransparency)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setFoamTransparency(FoamTransparency);
 	}
 
-	void HydraxWaterComponent::SetDepthLimit(const Float &DepthLimit)
+	void HydraxWaterComponent::SetDepthLimit(const float &DepthLimit)
 
 	{
 		if(m_Hydrax)
@@ -570,25 +570,25 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetSmoothPower(const Float &SmoothPower)
+	void HydraxWaterComponent::SetSmoothPower(const float &SmoothPower)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setSmoothPower(SmoothPower);
 	}
 
-	void HydraxWaterComponent::SetCausticsScale(const Float &CausticsScale)
+	void HydraxWaterComponent::SetCausticsScale(const float &CausticsScale)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setCausticsScale(CausticsScale);
 	}
 
-	void HydraxWaterComponent::SetCausticsPower(const Float &CausticsPower)
+	void HydraxWaterComponent::SetCausticsPower(const float &CausticsPower)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setCausticsPower(CausticsPower);
 	}
 
-	void HydraxWaterComponent::SetCausticsEnd(const Float &CausticsEnd)
+	void HydraxWaterComponent::SetCausticsEnd(const float &CausticsEnd)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setCausticsEnd(CausticsEnd);
@@ -601,75 +601,75 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetGodRaysIntensity(const Float &GodRaysIntensity)
+	void HydraxWaterComponent::SetGodRaysIntensity(const float &GodRaysIntensity)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setGodRaysIntensity(GodRaysIntensity);
 	}
 
-	void HydraxWaterComponent::SetUnderwaterCameraSwitchDelta(const Float& value)
+	void HydraxWaterComponent::SetUnderwaterCameraSwitchDelta(const float& value)
 	{
 		if(m_Hydrax)
 			m_Hydrax->setUnderwaterCameraSwitchDelta(value);
 	}
 
-	Float HydraxWaterComponent::GetFoamMaxDistance() const
+	float HydraxWaterComponent::GetFoamMaxDistance() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getFoamMaxDistance();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetFoamScale() const
+	float HydraxWaterComponent::GetFoamScale() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getFoamScale();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetFoamStart() const
+	float HydraxWaterComponent::GetFoamStart() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getFoamStart();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetFoamTransparency() const
+	float HydraxWaterComponent::GetFoamTransparency() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getFoamTransparency();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetDepthLimit() const
+	float HydraxWaterComponent::GetDepthLimit() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getDepthLimit();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetSmoothPower() const
+	float HydraxWaterComponent::GetSmoothPower() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getSmoothPower();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetCausticsScale() const
+	float HydraxWaterComponent::GetCausticsScale() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getCausticsScale();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetCausticsPower() const
+	float HydraxWaterComponent::GetCausticsPower() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getCausticsPower();
 		return 0;
 	}
 
-	Float HydraxWaterComponent::GetCausticsEnd() const
+	float HydraxWaterComponent::GetCausticsEnd() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getCausticsEnd();
@@ -682,13 +682,13 @@ namespace GASS
 		return Vec3(0,0,0);
 	}
 
-	Float HydraxWaterComponent::GetGodRaysIntensity() const
+	float HydraxWaterComponent::GetGodRaysIntensity() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getGodRaysIntensity();
 		return 0;
 	}
-	Float HydraxWaterComponent::GetUnderwaterCameraSwitchDelta() const
+	float HydraxWaterComponent::GetUnderwaterCameraSwitchDelta() const
 	{
 		if(m_Hydrax)
 			return m_Hydrax->getUnderwaterCameraSwitchDelta();
@@ -916,9 +916,9 @@ namespace GASS
 		double c_time = SimEngine::Get().GetRunTimeController()->GetSimulationTime();
 		static double prev_time = 0;
 		if(prev_time == 0)
-			m_Hydrax->update(0.1);
+			m_Hydrax->update(0.1f);
 		else
-			m_Hydrax->update(c_time - prev_time);
+			m_Hydrax->update(static_cast<float>(c_time - prev_time));
 
 		prev_time = c_time;
 		return true;

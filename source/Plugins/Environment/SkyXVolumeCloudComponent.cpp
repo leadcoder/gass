@@ -175,7 +175,9 @@ namespace GASS
 	{
 		m_Weather = value;
 		if(m_CloudManager)
-			m_CloudManager->getVClouds()->setWheater(value.x,value.y,value.z);
+			m_CloudManager->getVClouds()->setWheater(static_cast<float>(value.x),
+													 static_cast<float>(value.y),
+													 value.z > 0);
 	}
 
 

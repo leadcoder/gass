@@ -521,14 +521,14 @@ namespace GASS
 
 			Vec3 pos(0,0,0);
 			
-			float grid_size = 0;
+			Float grid_size = 0;
 			if(m_Type == GT_FIXED_GRID)
 				grid_size = m_Size;
 			else
 				grid_size = m_EditorSceneManager->GetMouseToolController()->GetGridSize();
-			float half_grid_size = grid_size/2.0f;
-			float grid_spacing = m_EditorSceneManager->GetMouseToolController()->GetGridSpacing();
-			int n = (grid_size / grid_spacing)/2;
+			Float half_grid_size = grid_size/2.0;
+			Float grid_spacing = m_EditorSceneManager->GetMouseToolController()->GetGridSpacing();
+			int n = static_cast<int>((grid_size / grid_spacing)/2.0);
 			int index = 0;
 			for(int i = -n ;  i <= n; i++)
 			{
@@ -655,7 +655,7 @@ namespace GASS
 				//v_vec = v_vec* delta;
 				static float rest_angle = 0;
 				Quaternion final_rot;
-				float angle = delta;
+				Float angle = delta;
 				angle = m_EditorSceneManager->GetMouseToolController()->SnapAngle(angle+rest_angle);
 				if(angle == 0)
 				{

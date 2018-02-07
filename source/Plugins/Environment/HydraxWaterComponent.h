@@ -71,20 +71,20 @@ namespace GASS
 		Vec3 GetPosition() const;
 		void SetRotation(const EulerRotation &);
 		EulerRotation GetRotation() const;
-		void SetGlobalTransparency(Float);
-		Float GetGlobalTransparency() const;
-		void SetFullReflectionDistance(Float);
-		Float GetFullReflectionDistance() const;
+		void SetGlobalTransparency(float);
+		float GetGlobalTransparency() const;
+		void SetFullReflectionDistance(float);
+		float GetFullReflectionDistance() const;
 		void SetWaterColor(const Vec3&);
 		Vec3 GetWaterColor() const;
-		void SetNormalDistortion(Float);
-		Float GetNormalDistortion() const;
+		void SetNormalDistortion(float);
+		float GetNormalDistortion() const;
 		void SetSunPosition(const Vec3 &);
 		Vec3 GetSunPosition() const;
-		void SetSunStrength(Float);
-		Float GetSunStrength() const;
-		void SetSunArea(Float);
-		Float GetSunArea() const;
+		void SetSunStrength(float);
+		float GetSunStrength() const;
+		void SetSunArea(float);
+		float GetSunArea() const;
 		void SetSunColor(const Vec3 &);
 		Vec3 GetSunColor() const;
 
@@ -92,48 +92,48 @@ namespace GASS
 		/** Set foam max distance
 		@param FoamMaxDistance Foam max distance
 		*/
-		void SetFoamMaxDistance(const Float &FoamMaxDistance);
+		void SetFoamMaxDistance(const float &FoamMaxDistance);
 
 		/** Set foam scale
 		@param FoamScale Foam scale
 		*/
-		void SetFoamScale(const Float &FoamScale);
+		void SetFoamScale(const float &FoamScale);
 
 		/** Set foam start
 		@param FoamStart Foam start
 		*/
-		void SetFoamStart(const Float &FoamStart);
+		void SetFoamStart(const float &FoamStart);
 
 		/** Set foam transparency
 		@param FoamTransparency Foam transparency
 		*/
-		void SetFoamTransparency(const Float &FoamTransparency);
+		void SetFoamTransparency(const float &FoamTransparency);
 
 		/** Set depth limit
 		@param DepthLimit Depth limit
 		*/
-		void SetDepthLimit(const Float &DepthLimit);
+		void SetDepthLimit(const float &DepthLimit);
 
 		/** Set smooth power
 		@param SmoothPower Smooth power
 		@remarks Less values more transition distance, hight values short transition values, 1-50 range(aprox.)
 		*/
-		void SetSmoothPower(const Float &SmoothPower);
+		void SetSmoothPower(const float &SmoothPower);
 
 		/** Set caustics scale
 		@param CausticsScale Caustics scale
 		*/
-		void SetCausticsScale(const Float &CausticsScale);
+		void SetCausticsScale(const float &CausticsScale);
 
 		/** Set caustics power
 		@param CausticsPower Caustics power
 		*/
-		void SetCausticsPower(const Float &CausticsPower);
+		void SetCausticsPower(const float &CausticsPower);
 
 		/** Set caustics end
 		@param CausticsEnd Caustics end
 		*/
-		void SetCausticsEnd(const Float &CausticsEnd);
+		void SetCausticsEnd(const float &CausticsEnd);
 
 		/** Set god rays exposure
 		@param GodRaysExposure God rays exposure
@@ -144,59 +144,59 @@ namespace GASS
 		/** Set god rays intensity
 		@param GodRaysIntensity God rays intensity
 		*/
-		void SetGodRaysIntensity(const Float &GodRaysIntensity);
+		void SetGodRaysIntensity(const float &GodRaysIntensity);
 
 		/** Set the y-displacement under the water needed to change between underwater and overwater mode
 		@param UnderwaterCameraSwitchDelta Underwater camera switch delta factor
 		@remarks Useful to get a nice underwater-overwater transition, it depends of the world scale
 		*/
-		void SetUnderwaterCameraSwitchDelta(const Float&);
+		void SetUnderwaterCameraSwitchDelta(const float&);
 
 
 		/** Get foam max distance
 		@return Foam max distance
 		*/
-		Float GetFoamMaxDistance() const;
+		float GetFoamMaxDistance() const;
 
 		/** Get foam scale
 		@return Foam scale
 		*/
-		Float GetFoamScale() const;
+		float GetFoamScale() const;
 
 		/** Get foam start
 		@return Foam start
 		*/
-		Float GetFoamStart() const;
+		float GetFoamStart() const;
 
 		/** Get foam transparency
 		@return Foam scale
 		*/
-		Float GetFoamTransparency() const;
+		float GetFoamTransparency() const;
 
 		/** Get depth limit
 		@return Depth limit
 		*/
-		Float GetDepthLimit() const;
+		float GetDepthLimit() const;
 
 		/** Get smooth power
 		@return Smooth power
 		*/
-		Float GetSmoothPower() const;
+		float GetSmoothPower() const;
 
 		/** Get caustics scale
 		@return Caustics scale
 		*/
-		Float GetCausticsScale() const;
+		float GetCausticsScale() const;
 
 		/** Get caustics power
 		@return Caustics power
 		*/
-		Float GetCausticsPower() const;
+		float GetCausticsPower() const;
 
 		/** Get caustics end
 		@return Caustics end
 		*/
-		Float GetCausticsEnd() const;
+		float GetCausticsEnd() const;
 
 		/** Get God rays exposure factors
 		@return God rays exposure factors
@@ -206,13 +206,13 @@ namespace GASS
 		/** Get God rays intensity
 		@return God rays intensity
 		*/
-		Float GetGodRaysIntensity() const;
+		float GetGodRaysIntensity() const;
 
 		/** Get the y-displacement under the water needed to change between underwater and overwater mode
 		@return Underwater camera switch delta
 		@remarks Useful to get a nice underwater-overwater transition, it depends of the world scale
 		*/
-		Float GetUnderwaterCameraSwitchDelta() const;
+		float GetUnderwaterCameraSwitchDelta() const;
 
 
 
@@ -260,25 +260,25 @@ namespace GASS
 		Hydrax::Noise::Noise* GetNoiseModule(const Ogre::String& Name);
 
 
-		void SetPerlinScale(const Float &value);
-		Float GetPerlinScale() const;
-		void SetPerlinSpeed(const Float &value);
-		Float GetPerlinSpeed() const;
-		void SetFFTScale(const Float &value);
-		Float GetFFTScale() const;
-		void SetFFTSpeed(const Float &value);
-		Float GetFFTSpeed() const;
-		void SetStrength(const Float &value);
-		Float GetStrength() const;
-		void SetElevation(const Float &value);
-		Float GetElevation() const;
+		void SetPerlinScale(const float &value);
+		float GetPerlinScale() const;
+		void SetPerlinSpeed(const float &value);
+		float GetPerlinSpeed() const;
+		void SetFFTScale(const float &value);
+		float GetFFTScale() const;
+		void SetFFTSpeed(const float &value);
+		float GetFFTSpeed() const;
+		void SetStrength(const float &value);
+		float GetStrength() const;
+		void SetElevation(const float &value);
+		float GetElevation() const;
 
 		void SetSave(const std::string &value);
 		std::string GetSave() const;
-		void SetPlanesError(const Float &value);
-		Float GetPlanesError() const;
-		void SetGPUStrength(const Float &value);
-		Float GetGPUStrength() const;
+		void SetPlanesError(const float &value);
+		float GetPlanesError() const;
+		void SetGPUStrength(const float &value);
+		float GetGPUStrength() const;
 		FilePath GetResourceLocation() const;
 		void SetResourceLocation(const FilePath &value);
 		void SetActiveModule(const std::string &module);
