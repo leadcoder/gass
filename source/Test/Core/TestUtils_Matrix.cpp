@@ -386,6 +386,7 @@ TEST_CASE("Test Mat4")
 			//Y
 			mat.MakeRotationYXZ(expected_rot);
 			bool unique = mat.ToEulerAnglesYXZ(euler);
+			REQUIRE(unique == true);
 			REQUIRE(euler.Equal(expected_rot));
 		}
 
@@ -399,7 +400,7 @@ TEST_CASE("Test Mat4")
 			//Y
 			mat.MakeRotationYXZ(expected_rot);
 			bool unique = mat.ToEulerAnglesYXZ(euler);
-
+			REQUIRE(unique == true);
 			//Test that we get same rotation matrix...euler angles will differ when we are outside +- HALF_PI			
 			GASS::Mat4 res_mat;
 			res_mat.MakeRotationYXZ(euler);
