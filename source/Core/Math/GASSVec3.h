@@ -61,7 +61,13 @@ namespace GASS
 			x = _x; y = _y; z = _z;
 		}
 		inline TVec3() {}
-
+		
+		template<typename T>
+		TVec3(const T& v)
+		{
+			TVec3::Convert(v,*this);
+		}
+	
 		inline void Set(TYPE _x, TYPE _y, TYPE _z)
 		{
 			x = _x; y = _y; z = _z;
@@ -354,6 +360,32 @@ namespace GASS
 			ss << *this;
 			return ss.str();
 		}
+
+		static TVec3<double> Convert(const TVec3<float> &vf)
+		{
+			return TVec3<double>(vf.x,vf.y,vf.z);
+		}
+
+		static TVec3<float> Convert(const TVec3<double> &vd)
+		{
+			return TVec3<float>(static_cast<float>(vd.x),
+				static_cast<float>(vd.y),
+				static_cast<float>(vd.z));
+		}
+
+		static void Convert(const TVec3<double> &vd, TVec3<float> &vf)
+		{
+			vf.x = static_cast<float>(vd.x);
+			vf.y = static_cast<float>(vd.y);
+			vf.z = static_cast<float>(vd.z);
+		}
+
+		static void Convert(const TVec3<float> &vf, TVec3<double> &vd)
+		{
+			vd.x = vf.x;
+			vd.y = vf.y;
+			vd.z = vf.z;
+		}
 	};
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitX = TVec3<TYPE>(1, 0, 0);
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitY = TVec3<TYPE>(0, 1, 0);
@@ -362,5 +394,7 @@ namespace GASS
 	typedef TVec3<double> Vec3d;
 	typedef TVec3<float> Vec3f;
 	typedef TVec3<Float> Vec3;
+
+	
 }
 
