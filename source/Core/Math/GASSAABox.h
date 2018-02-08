@@ -140,6 +140,7 @@ namespace GASS
 		std::vector<TVec3<TYPE> > GetCorners() const;
 
 		//public for fast access
+#ifdef _MSC_VER
 		union
 		{
 			TVec3<TYPE> m_Max; //allow old name until refactoring is done
@@ -151,6 +152,11 @@ namespace GASS
 			TVec3<TYPE> m_Min; //allow old name until refactoring is done
 			TVec3<TYPE> Min;
 		};
+#else 
+		TVec3<TYPE> Max;
+		TVec3<TYPE> Min;
+#endif
+
 	private:
 		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
