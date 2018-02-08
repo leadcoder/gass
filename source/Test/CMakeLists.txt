@@ -11,6 +11,7 @@ set(GASS_TEST_SOURCES
 	Core/TestUtils_Vector.cpp
 	Core/TestUtils_Matrix.cpp
 	Core/TestUtils_Plane.cpp
+	Core/TestUtils_AABox.cpp
 	Core/TestUtils_RTTI.cpp
 	Core/TestUtils_Logger.cpp
 )
