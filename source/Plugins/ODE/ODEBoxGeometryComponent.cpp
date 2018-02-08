@@ -64,10 +64,10 @@ namespace GASS
 			if(geom)
 			{
 				AABox box = geom->GetBoundingBox();
-				SetSize((box.m_Max - box.m_Min));
+				SetSize((box.Max - box.Min));
 				//only override offset if not set
 				if(m_Offset == Vec3(0,0,0))
-					SetOffset(((box.m_Max + box.m_Min)*0.5));
+					SetOffset(((box.Max + box.Min)*0.5));
 				else
 					SetOffset(m_Offset);
 			}

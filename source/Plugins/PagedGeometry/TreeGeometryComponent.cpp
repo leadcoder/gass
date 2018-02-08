@@ -154,7 +154,7 @@ namespace GASS
 
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
-				m_MapBounds = TBounds(aabox.m_Min.x, aabox.m_Min.z, aabox.m_Max.x, aabox.m_Max.z);
+				m_MapBounds = TBounds(aabox.Min.x, aabox.Min.z, aabox.Max.x, aabox.Max.z);
 			}
 		}
 

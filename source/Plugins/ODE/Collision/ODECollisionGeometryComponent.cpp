@@ -278,11 +278,11 @@ namespace GASS
 		}
 
 		AABox box = geom->GetBoundingBox();
-		Vec3 size = box.m_Max - box.m_Min;
+		Vec3 size = box.Max - box.Min;
 
 		m_OffsetGeomID = dCreateBox(0, size.x, size.y, size.z);
 
-		Vec3 offset = (box.m_Max + box.m_Min)*0.5;
+		Vec3 offset = (box.Max + box.Min)*0.5;
 		GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 		dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
 		dGeomID gid = dCreateGeomTransform(GetCollisionSceneManager()->GetSpace());
@@ -390,12 +390,12 @@ namespace GASS
 				}
 				//Get bounding box,  note that scale already applied in bounding box!
 				AABox box = geom->GetBoundingBox();
-				Vec3 size = box.m_Max - box.m_Min;
+				Vec3 size = box.Max - box.Min;
 
 				GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 
 				dGeomBoxSetLengths(m_OffsetGeomID, size.x, size.y, size.z);
-				Vec3 offset = (box.m_Max + box.m_Min)*0.5;
+				Vec3 offset = (box.Max + box.Min)*0.5;
 				dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
 
 				//also reset position, know why but offset change is not reflected otherwise
@@ -456,13 +456,13 @@ namespace GASS
 			int samples_z = terrain->GetNumSamplesH();
 			m_TerrainData->m_Samples = samples_x;
 
-			Float size_x = m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x;
-			Float size_z = m_TerrainData->m_TerrainBounds.m_Max.z - m_TerrainData->m_TerrainBounds.m_Min.z;
+			Float size_x = m_TerrainData->m_TerrainBounds.Max.x - m_TerrainData->m_TerrainBounds.Min.x;
+			Float size_z = m_TerrainData->m_TerrainBounds.Max.z - m_TerrainData->m_TerrainBounds.Min.z;
 			m_TerrainData->m_SampleWidth = size_x/(samples_x-1);
 			m_TerrainData->m_SampleHeight = size_z/(samples_z-1);
 
 			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
-			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
+			float thickness = 1;//m_TerrainBounds.Max.y - m_TerrainBounds.Min.y;
 
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 
@@ -485,14 +485,14 @@ namespace GASS
 
 			// Give some very bounds which, while conservative,
 			// makes AABB computation more accurate than +/-INF.
-			//dGeomHeightfieldDataSetBounds( heightid, m_TerrainData->m_TerrainBounds.m_Min.y,  m_TerrainData->m_TerrainBounds.m_Max.y);
+			//dGeomHeightfieldDataSetBounds( heightid, m_TerrainData->m_TerrainBounds.Min.y,  m_TerrainData->m_TerrainBounds.Max.y);
 			//if we support dynamic terrains (ie terrain editor) min,max is unkonwn att start so just set some values predefined values
 			dGeomHeightfieldDataSetBounds( heightid, 0, 2000);
 			geom_id = dCreateHeightfield( GetCollisionSceneManager()->GetSpace(), heightid, 1 );
 
 			Vec3 center_position;
-			center_position.x = m_TerrainData->m_TerrainBounds.m_Min.x + (m_TerrainData->m_TerrainBounds.m_Max.x - m_TerrainData->m_TerrainBounds.m_Min.x)*0.5;
-			center_position.z = m_TerrainData->m_TerrainBounds.m_Min.z + (m_TerrainData->m_TerrainBounds.m_Max.z - m_TerrainData->m_TerrainBounds.m_Min.z)*0.5;
+			center_position.x = m_TerrainData->m_TerrainBounds.Min.x + (m_TerrainData->m_TerrainBounds.Max.x - m_TerrainData->m_TerrainBounds.Min.x)*0.5;
+			center_position.z = m_TerrainData->m_TerrainBounds.Min.z + (m_TerrainData->m_TerrainBounds.Max.z - m_TerrainData->m_TerrainBounds.Min.z)*0.5;
 			center_position.y = 0;
 			dGeomSetPosition(geom_id, center_position.x, center_position.y, center_position.z);
 		}

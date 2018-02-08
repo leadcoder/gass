@@ -59,8 +59,8 @@ namespace GASS
 			if(geom)
 			{
 				AABox box = geom->GetBoundingBox();
-				SetSize((box.m_Max - box.m_Min));
-				//SetOffset((box.m_Max + box.m_Min)*0.5);
+				SetSize((box.Max - box.Min));
+				//SetOffset((box.Max + box.Min)*0.5);
 			}
 			else
 			{

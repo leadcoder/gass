@@ -898,22 +898,22 @@ namespace GASS
 
 	Vec3 RecastNavigationMeshComponent::GetMeshBoundingMin() const
 	{
-		return m_MeshBounding.m_Min;
+		return m_MeshBounding.Min;
 	}
 
 	void RecastNavigationMeshComponent::SetMeshBoundingMin(const Vec3 &min)
 	{
-		m_MeshBounding.m_Min = min;
+		m_MeshBounding.Min = min;
 	}
 
 	Vec3 RecastNavigationMeshComponent::GetMeshBoundingMax() const
 	{
-		return m_MeshBounding.m_Max;
+		return m_MeshBounding.Max;
 	}
 
 	void RecastNavigationMeshComponent::SetMeshBoundingMax(const Vec3 &max)
 	{
-		m_MeshBounding.m_Max = max;
+		m_MeshBounding.Max = max;
 	}
 
 	float RecastNavigationMeshComponent::GetCellSize() const
@@ -1287,8 +1287,8 @@ namespace GASS
 					}
 
 				}
-				GASSToRecast(bbox.m_Min,bmin);
-				GASSToRecast(bbox.m_Max,bmax);
+				GASSToRecast(bbox.Min,bmin);
+				GASSToRecast(bbox.Max,bmax);
 
 				rnm_data.Verts =  verts;
 				rnm_data.NumVerts =  tot_verts;

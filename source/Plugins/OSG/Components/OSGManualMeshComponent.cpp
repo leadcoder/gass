@@ -334,8 +334,8 @@ namespace GASS
 			//scale should not flip
 			scale.z = -scale.z;
 
-			comp_box.m_Max = comp_box.m_Max*scale;
-			comp_box.m_Min = comp_box.m_Min*scale;
+			comp_box.Max = comp_box.Max*scale;
+			comp_box.Min = comp_box.Min*scale;
 		}
 		return comp_box;
 	}

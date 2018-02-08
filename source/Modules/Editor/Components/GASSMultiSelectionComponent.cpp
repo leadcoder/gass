@@ -71,7 +71,7 @@ namespace GASS
 			AABox bb = gc->GetBoundingBox();
 
 			const Vec3 size = bb.GetSize() * 0.5;
-			const Vec3 offset = (bb.m_Max + bb.m_Min)*0.5;
+			const Vec3 offset = (bb.Max + bb.Min)*0.5;
 
 			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
 			sub_mesh_data->Type = LINE_LIST;

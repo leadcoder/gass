@@ -101,8 +101,8 @@ namespace GASS
 			int samples_x = terrain->GetNumSamplesW();
 			int samples_z = terrain->GetNumSamplesH();
 			m_TerrainBounds = terrain->GetBoundingBox();
-			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
-			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
+			Float size_x = m_TerrainBounds.Max.x - m_TerrainBounds.Min.x;
+			Float size_z = m_TerrainBounds.Max.z - m_TerrainBounds.Min.z;
 			
 			Float scale_x = size_x/((Float) samples_x-1);
 			Float scale_z = size_z/((Float) samples_z-1);
@@ -116,8 +116,8 @@ namespace GASS
 			{
 				for(int z = 0; z < samples_z; z++)
 				{
-					//Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
-					//Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
+					//Float world_x = x * m_SampleWidth + m_TerrainBounds.Min.x;
+					//Float world_z = z * m_SampleWidth + m_TerrainBounds.Min.z;
 					//Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 					Float height = m_TerrainGeom->GetHeightAtSample(x,z);
 					samples[z+x*samples_z].height = (physx::PxI16)(height/heightScale);
@@ -142,8 +142,8 @@ namespace GASS
 			physx::PxTransform pose = physx::PxTransform::createIdentity();
 
 			Vec3 position;
-			position.x = m_TerrainBounds.m_Min.x;
-			position.z = m_TerrainBounds.m_Min.z;
+			position.x = m_TerrainBounds.Min.x;
+			position.z = m_TerrainBounds.Min.z;
 			position.y = 0;
 
 			pose.p = PxConvert::ToPx(position + scene_manager->GetOffset());

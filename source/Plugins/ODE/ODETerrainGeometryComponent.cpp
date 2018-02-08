@@ -113,13 +113,13 @@ namespace GASS
 			//m_Samples = terrain->GetWidth();
 			int samples_x = terrain->GetNumSamplesW();
 			int samples_z = terrain->GetNumSamplesH();
-			Float size_x = m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x;
-			Float size_z = m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z;
+			Float size_x = m_TerrainBounds.Max.x - m_TerrainBounds.Min.x;
+			Float size_z = m_TerrainBounds.Max.z - m_TerrainBounds.Min.z;
 			m_SampleWidth = size_x/(samples_x-1);
 			m_SampleHeight = size_z/(samples_z-1);
 
 			//FileLog::Print("Terrain  samples_x:%d samples_y:%d size_x:%f size_y:%f",samples_x,samples_z,size_x,size_z);
-			float thickness = 1;//m_TerrainBounds.m_Max.y - m_TerrainBounds.m_Min.y;
+			float thickness = 1;//m_TerrainBounds.Max.y - m_TerrainBounds.Min.y;
 			//FileLog::Print("thickness %f",thickness );
 			dHeightfieldDataID heightid = dGeomHeightfieldDataCreate();
 			dGeomHeightfieldDataBuildCallback(	heightid, //getSpaceID(space),
@@ -140,12 +140,12 @@ namespace GASS
 
 			// Give some very bounds which, while conservative,
 			// makes AABB computation more accurate than +/-INF.
-			dGeomHeightfieldDataSetBounds( heightid, m_TerrainBounds.m_Min.y,  m_TerrainBounds.m_Max.y);
+			dGeomHeightfieldDataSetBounds( heightid, m_TerrainBounds.Min.y,  m_TerrainBounds.Max.y);
 			geom_id = dCreateHeightfield( GetSpace(), heightid, 1 );
 
 			Vec3 center_position;
-			center_position.x = m_TerrainBounds.m_Min.x + (m_TerrainBounds.m_Max.x - m_TerrainBounds.m_Min.x)*0.5;
-			center_position.z = m_TerrainBounds.m_Min.z + (m_TerrainBounds.m_Max.z - m_TerrainBounds.m_Min.z)*0.5;
+			center_position.x = m_TerrainBounds.Min.x + (m_TerrainBounds.Max.x - m_TerrainBounds.Min.x)*0.5;
+			center_position.z = m_TerrainBounds.Min.z + (m_TerrainBounds.Max.z - m_TerrainBounds.Min.z)*0.5;
 			center_position.y = 0;
 			dGeomSetPosition(geom_id, center_position.x, center_position.y, center_position.z);
 
@@ -168,8 +168,8 @@ namespace GASS
 	{
 		//return m_TerrainGeom->GetHeightAtPoint(x,m_Samples-1-z);
 		return m_TerrainGeom->GetHeightAtSample(x,z);
-		/*Float world_x = x * m_SampleWidth + m_TerrainBounds.m_Min.x;
-		Float world_z = z * m_SampleWidth + m_TerrainBounds.m_Min.z;
+		/*Float world_x = x * m_SampleWidth + m_TerrainBounds.Min.x;
+		Float world_z = z * m_SampleWidth + m_TerrainBounds.Min.z;
 		Float h = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 		*/
 	}

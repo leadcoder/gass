@@ -67,7 +67,7 @@ namespace GASS
 					AABox box = geom->GetBoundingBox();
 					sphere = box.GetBoundingSphere();
 					SetRadius(sphere.m_Radius);
-					//SetOffset((box.m_Max + box.m_Min)*0.5);
+					//SetOffset((box.Max + box.Min)*0.5);
 				}
 			}
 		}

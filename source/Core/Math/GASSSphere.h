@@ -87,14 +87,14 @@ namespace GASS
 	TAABox<TYPE> TSphere<TYPE>::GetAABox() const
 	{
 		TAABox<TYPE> aabox;
-		aabox.m_Max.x = m_Pos.x + m_Radius;
-		aabox.m_Min.x = m_Pos.x - m_Radius;
+		aabox.Max.x = m_Pos.x + m_Radius;
+		aabox.Min.x = m_Pos.x - m_Radius;
 
-		aabox.m_Max.y = m_Pos.y + m_Radius;
-		aabox.m_Min.y = m_Pos.y - m_Radius;
+		aabox.Max.y = m_Pos.y + m_Radius;
+		aabox.Min.y = m_Pos.y - m_Radius;
 
-		aabox.m_Max.z = m_Pos.z + m_Radius;
-		aabox.m_Min.z = m_Pos.z - m_Radius;
+		aabox.Max.z = m_Pos.z + m_Radius;
+		aabox.Min.z = m_Pos.z - m_Radius;
 		return aabox;
 	}
 
@@ -102,15 +102,15 @@ namespace GASS
 	bool TSphere<TYPE>::AABoxInside(const TAABox<TYPE> &box) const
 	{
 		TAABox<TYPE> temp;
-		temp.m_Max = box.m_Max;
-		temp.m_Min = box.m_Min;
-		temp.m_Max.x += m_Radius;
-		temp.m_Max.y += m_Radius;
-		temp.m_Max.z += m_Radius;
+		temp.Max = box.Max;
+		temp.Min = box.Min;
+		temp.Max.x += m_Radius;
+		temp.Max.y += m_Radius;
+		temp.Max.z += m_Radius;
 
-		temp.m_Min.x -= m_Radius;
-		temp.m_Min.y -= m_Radius;
-		temp.m_Min.z -= m_Radius;
+		temp.Min.x -= m_Radius;
+		temp.Min.y -= m_Radius;
+		temp.Min.z -= m_Radius;
 		return temp.PointInside(m_Pos);
 	}
 

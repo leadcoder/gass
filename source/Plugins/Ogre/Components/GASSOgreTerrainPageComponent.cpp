@@ -745,8 +745,8 @@ namespace GASS
 			//Hack to get terrain size before loaded
 			Float size = m_TerrainGroup->getTerrainWorldSize()*0.5;
 			Vec3 pos = GetPosition();
-			aabox.m_Min = Vec3(pos.x -size,aabox.m_Min.y, pos.z -size);
-			aabox.m_Max = Vec3(pos.x +size,aabox.m_Max.y, pos.z +size);
+			aabox.Min = Vec3(pos.x -size,aabox.Min.y, pos.z -size);
+			aabox.Max = Vec3(pos.x +size,aabox.Max.y, pos.z +size);
 		}
 		return aabox;
 	}

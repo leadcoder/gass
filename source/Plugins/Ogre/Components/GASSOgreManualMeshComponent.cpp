@@ -222,8 +222,8 @@ namespace GASS
 		if(m_MeshObject->getParentSceneNode())
 		{
 			Vec3 scale = OgreConvert::ToGASS(m_MeshObject->getParentSceneNode()->getScale());
-			box.m_Max = box.m_Max*scale;
-			box.m_Min = box.m_Min*scale;
+			box.Max = box.Max*scale;
+			box.Min = box.Min*scale;
 		}
 		return box;
 	}

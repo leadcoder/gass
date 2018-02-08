@@ -161,8 +161,8 @@ namespace GASS
 			Float max_size = std::max(bb_size.x() ,bb_size.z() )*0.5f;
 			Float offset = bb_size.z() * 0.5f;
 			AABox box(Vec3(-max_size,-max_size + offset,-max_size),Vec3(max_size,max_size+offset,max_size));
-			box.m_Min.y += m_GroundOffset;
-			box.m_Max.y += m_GroundOffset;
+			box.Min.y += m_GroundOffset;
+			box.Max.y += m_GroundOffset;
 			return box;
 		}
 		return AABox();

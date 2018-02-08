@@ -277,8 +277,8 @@ namespace GASS
 		assert(loc_comp);
 		Vec3 pos = loc_comp->GetWorldPosition();
 		AABox box;
-		box.m_Min = pos - m_Size * 0.5;
-		box.m_Max = pos + m_Size * 0.5;
+		box.Min = pos - m_Size * 0.5;
+		box.Max = pos + m_Size * 0.5;
 		return box.PointInside(point);
 	}
 

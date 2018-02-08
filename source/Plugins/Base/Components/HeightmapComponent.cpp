@@ -152,8 +152,8 @@ namespace GASS
 			Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 			Float half_width = m_Size.x*0.5;
 			Float half_height = m_Size.y*0.5;
-			box.m_Min.Set(pos.x - half_width, -500, pos.z - half_height);
-			box.m_Max.Set(pos.x + half_width, 500, pos.z + half_height);
+			box.Min.Set(pos.x - half_width, -500, pos.z - half_height);
+			box.Max.Set(pos.x + half_width, 500, pos.z + half_height);
 		}
 		return box;
 	}
@@ -175,9 +175,9 @@ namespace GASS
 		//delete previous hm
 		delete m_HM;
 		//add some padding to support runtime height change
-		bbox.m_Min.y -= 100;
-		bbox.m_Max.y += 100;
-		m_HM = new HeightField(bbox.m_Min, bbox.m_Max, px_width, pz_height);
+		bbox.Min.y -= 100;
+		bbox.Max.y += 100;
+		m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
 
 		GASS_LOG(LINFO) << "START building heightmap\n";
 		for(unsigned int i = 0; i <  px_width; i++)
@@ -185,7 +185,7 @@ namespace GASS
 			GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
 			for(unsigned int j = 0; j <  pz_height; j++)
 			{
-				Vec3 pos(bbox.m_Min.x + i*inv_sample_ratio, 0, bbox.m_Min.z + j*inv_sample_ratio); 
+				Vec3 pos(bbox.Min.x + i*inv_sample_ratio, 0, bbox.Min.z + j*inv_sample_ratio); 
 				float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
 				m_HM->SetHeightAtSample(i, j, h);
 			}	

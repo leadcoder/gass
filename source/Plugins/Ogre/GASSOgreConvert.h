@@ -56,7 +56,7 @@ namespace GASS
 																					static_cast<float>(mat[3][1]),
 																					static_cast<float>(mat[3][2]),
 																					static_cast<float>(mat[3][3]));}
-		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.m_Min),ToOgre(b.m_Max));}
+		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) {return Ogre::AxisAlignedBox(ToOgre(b.Min),ToOgre(b.Max));}
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) {return Ogre::Quaternion(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y), static_cast<float>(q.z));}
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) { return Ogre::Sphere(ToOgre(s.m_Pos), static_cast<float>(s.m_Radius)); }
 		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) {return Ogre::ColourValue(static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a));}
@@ -66,7 +66,7 @@ namespace GASS
 		static inline Ogre::Vector3				ToOgre(const Vec3 &v) { return Ogre::Vector3(v.x, v.y, v.z); }
 		static inline Ogre::Vector4				ToOgre(const Vec4 &v) { return Ogre::Vector4(v.x, v.y, v.z, v.w); }
 		static inline Ogre::Matrix4				ToOgre(const Mat4 &mat) {return Ogre::Matrix4(mat[0][0], mat[0][1], mat[0][2], mat[0][3], mat[1][0], mat[1][1], mat[1][2], mat[1][3], mat[2][0], mat[2][1], mat[2][2], mat[2][3], mat[3][0], mat[3][1], mat[3][2], mat[3][3]); }
-		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) { return Ogre::AxisAlignedBox(ToOgre(b.m_Min), ToOgre(b.m_Max)); }
+		static inline Ogre::AxisAlignedBox		ToOgre(const AABox &b) { return Ogre::AxisAlignedBox(ToOgre(b.Min), ToOgre(b.Max)); }
 		static inline Ogre::Quaternion			ToOgre(const Quaternion &q) { return Ogre::Quaternion(q.w, q.x, q.y, q.z); }
 		static inline Ogre::Sphere				ToOgre(const Sphere &s) { return Ogre::Sphere(ToOgre(s.m_Pos), s.m_Radius); }
 		static inline Ogre::ColourValue			ToOgre(const ColorRGBA &color) { return Ogre::ColourValue(color.r, color.g, color.b, color.a); }

@@ -130,11 +130,11 @@ namespace GASS
 				GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 				AABox aabox = geom->GetBoundingBox();
 
-				m_Bounds.x = aabox.m_Min.x;
-				m_Bounds.y = aabox.m_Min.z;
+				m_Bounds.x = aabox.Min.x;
+				m_Bounds.y = aabox.Min.z;
 
-				m_Bounds.z = aabox.m_Max.x;
-				m_Bounds.w = aabox.m_Max.z;
+				m_Bounds.z = aabox.Max.x;
+				m_Bounds.w = aabox.Max.z;
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
 			}

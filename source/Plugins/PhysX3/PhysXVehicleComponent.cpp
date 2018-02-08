@@ -1032,7 +1032,7 @@ namespace GASS
 	{
 		/*PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 
-		Vec3 mesh_offset = (m_MeshBounds.m_Min +  m_MeshBounds.m_Max)*0.5;
+		Vec3 mesh_offset = (m_MeshBounds.Min +  m_MeshBounds.Max)*0.5;
 		Vec3 mesh_size = m_MeshBounds.GetSize();
 
 		//do ray at chassis center and each bounding box corner

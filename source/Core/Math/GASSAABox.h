@@ -130,7 +130,7 @@ namespace GASS
 
 
 		/**
-			Check that m_Max is greater then m_Min
+			Check that Max is greater then Min
 		*/
 		bool IsValid() const;
 		
@@ -140,8 +140,17 @@ namespace GASS
 		std::vector<TVec3<TYPE> > GetCorners() const;
 
 		//public for fast access
-		TVec3<TYPE> m_Max;
-		TVec3<TYPE> m_Min;
+		union
+		{
+			TVec3<TYPE> m_Max; //allow old name until refactoring is done
+			TVec3<TYPE> Max;
+		};
+
+		union
+		{
+			TVec3<TYPE> m_Min; //allow old name until refactoring is done
+			TVec3<TYPE> Min;
+		};
 	private:
 		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
@@ -152,30 +161,30 @@ namespace GASS
 	template<class TYPE>
 	TAABox<TYPE>::TAABox()
 	{
-		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Max.x = Max.y = Max.z = -std::numeric_limits<TYPE>::max();
+		Min.x = Min.y = Min.z = std::numeric_limits<TYPE>::max();
 	}
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos)
 	{
-		m_Max = max_pos;
-		m_Min = min_pos;
+		Max = max_pos;
+		Min = min_pos;
 	}
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox(const TPolygon<TYPE> &poly)
 	{
-		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Max.x = Max.y = Max.z = -std::numeric_limits<TYPE>::max();
+		Min.x = Min.y = Min.z = std::numeric_limits<TYPE>::max();
 		Union(poly);
 	}
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox(const std::vector<TPolygon<TYPE> > &polys)
 	{
-		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Max.x = Max.y = Max.z = -std::numeric_limits<TYPE>::max();
+		Min.x = Min.y = Min.z = std::numeric_limits<TYPE>::max();
 		Union(polys);
 	}
 
@@ -188,9 +197,9 @@ namespace GASS
 	template<class TYPE>
 	bool TAABox<TYPE>::IsValid() const
 	{
-		return (m_Max.x >  m_Min.x &&
-			m_Max.y >  m_Min.y &&
-			m_Max.z >  m_Min.z);
+		return (Max.x >  Min.x &&
+			Max.y >  Min.y &&
+			Max.z >  Min.z);
 	}
 
 	template<class TYPE>
@@ -203,27 +212,27 @@ namespace GASS
 	template<class TYPE>
 	void TAABox<TYPE>::Union(const TVec3<TYPE> &point)
 	{
-		if (point.x > m_Max.x) m_Max.x = point.x;
-		if (point.x < m_Min.x) m_Min.x = point.x;
+		if (point.x > Max.x) Max.x = point.x;
+		if (point.x < Min.x) Min.x = point.x;
 
-		if (point.y > m_Max.y) m_Max.y = point.y;
-		if (point.y < m_Min.y) m_Min.y = point.y;
+		if (point.y > Max.y) Max.y = point.y;
+		if (point.y < Min.y) Min.y = point.y;
 
-		if (point.z > m_Max.z) m_Max.z = point.z;
-		if (point.z < m_Min.z) m_Min.z = point.z;
+		if (point.z > Max.z) Max.z = point.z;
+		if (point.z < Min.z) Min.z = point.z;
 	}
 
 	template<class TYPE>
 	void TAABox<TYPE>::Union(const TAABox<TYPE> &TAABox)
 	{
-		if (TAABox.m_Max.x > m_Max.x) m_Max.x = TAABox.m_Max.x;
-		if (TAABox.m_Min.x < m_Min.x) m_Min.x = TAABox.m_Min.x;
+		if (TAABox.Max.x > Max.x) Max.x = TAABox.Max.x;
+		if (TAABox.Min.x < Min.x) Min.x = TAABox.Min.x;
 
-		if (TAABox.m_Max.y > m_Max.y) m_Max.y = TAABox.m_Max.y;
-		if (TAABox.m_Min.y < m_Min.y) m_Min.y = TAABox.m_Min.y;
+		if (TAABox.Max.y > Max.y) Max.y = TAABox.Max.y;
+		if (TAABox.Min.y < Min.y) Min.y = TAABox.Min.y;
 
-		if (TAABox.m_Max.z > m_Max.z) m_Max.z = TAABox.m_Max.z;
-		if (TAABox.m_Min.z < m_Min.z) m_Min.z = TAABox.m_Min.z;
+		if (TAABox.Max.z > Max.z) Max.z = TAABox.Max.z;
+		if (TAABox.Min.z < Min.z) Min.z = TAABox.Min.z;
 	}
 
 	template<class TYPE>
@@ -250,14 +259,14 @@ namespace GASS
 	{
 		TVec3<TYPE> p1, p2, p3, p4, p5, p6, p7, p8;
 
-		p1.Set(m_Min.x, m_Max.y, m_Max.z);
-		p2 = m_Max;
-		p3.Set(m_Min.x, m_Min.y, m_Max.z);
-		p4.Set(m_Max.x, m_Min.y, m_Max.z);
-		p5.Set(m_Min.x, m_Max.y, m_Min.z);
-		p6.Set(m_Max.x, m_Max.y, m_Min.z);
-		p7.Set(m_Max.x, m_Min.y, m_Min.z);
-		p8 = m_Min;
+		p1.Set(Min.x, Max.y, Max.z);
+		p2 = Max;
+		p3.Set(Min.x, Min.y, Max.z);
+		p4.Set(Max.x, Min.y, Max.z);
+		p5.Set(Min.x, Max.y, Min.z);
+		p6.Set(Max.x, Max.y, Min.z);
+		p7.Set(Max.x, Min.y, Min.z);
+		p8 = Min;
 
 		p1 = mat * p1;
 		p2 = mat * p2;
@@ -268,8 +277,8 @@ namespace GASS
 		p7 = mat * p7;
 		p8 = mat * p8;
 
-		m_Max.x = m_Max.y = m_Max.z = -std::numeric_limits<TYPE>::max();
-		m_Min.x = m_Min.y = m_Min.z = std::numeric_limits<TYPE>::max();
+		Max.x = Max.y = Max.z = -std::numeric_limits<TYPE>::max();
+		Min.x = Min.y = Min.z = std::numeric_limits<TYPE>::max();
 		Union(p1);
 		Union(p2);
 		Union(p3);
@@ -284,15 +293,15 @@ namespace GASS
 	std::vector<TVec3<TYPE> > TAABox<TYPE>::GetCorners() const
 	{
 		std::vector< TVec3<TYPE> > ret;
-		ret.push_back(m_Min);
-		ret.push_back(TVec3<TYPE>(m_Max.x, m_Min.y, m_Min.z));
-		ret.push_back(TVec3<TYPE>(m_Max.x, m_Min.y, m_Max.z));
-		ret.push_back(TVec3<TYPE>(m_Min.x, m_Min.y, m_Max.z));
+		ret.push_back(Min);
+		ret.push_back(TVec3<TYPE>(Max.x, Min.y, Min.z));
+		ret.push_back(TVec3<TYPE>(Max.x, Min.y, Max.z));
+		ret.push_back(TVec3<TYPE>(Min.x, Min.y, Max.z));
 
-		ret.push_back(TVec3<TYPE>(m_Min.x, m_Max.y, m_Min.z));
-		ret.push_back(TVec3<TYPE>(m_Max.x, m_Max.y, m_Min.z));
-		ret.push_back(TVec3<TYPE>(m_Max.x, m_Max.y, m_Max.z));
-		ret.push_back(TVec3<TYPE>(m_Min.x, m_Max.y, m_Max.z));
+		ret.push_back(TVec3<TYPE>(Min.x, Max.y, Min.z));
+		ret.push_back(TVec3<TYPE>(Max.x, Max.y, Min.z));
+		ret.push_back(TVec3<TYPE>(Max.x, Max.y, Max.z));
+		ret.push_back(TVec3<TYPE>(Min.x, Max.y, Max.z));
 
 		return ret;
 	}
@@ -301,8 +310,8 @@ namespace GASS
 	TSphere<TYPE> TAABox<TYPE>::GetBoundingSphere() const
 	{
 		TSphere<TYPE> sphere;
-		sphere.m_Pos = (m_Max + m_Min)*0.5;
-		sphere.m_Radius = (sphere.m_Pos - m_Max).Length();
+		sphere.m_Pos = (Max + Min)*0.5;
+		sphere.m_Radius = (sphere.m_Pos - Max).Length();
 		return sphere;
 	}
 
@@ -337,21 +346,21 @@ namespace GASS
 	template<class TYPE>
 	bool TAABox<TYPE>::PointInside(const TVec3<TYPE> &point) const
 	{
-		if (point.x < m_Max.x && point.x > m_Min.x &&
-			point.y < m_Max.y && point.y > m_Min.y &&
-			point.z < m_Max.z && point.z > m_Min.z)return true;
+		if (point.x < Max.x && point.x > Min.x &&
+			point.y < Max.y && point.y > Min.y &&
+			point.z < Max.z && point.z > Min.z)return true;
 		else return false;
 	}
 
 	template<class TYPE>
 	bool TAABox<TYPE>::BoxIntersect(const TAABox<TYPE> &box) const
 	{
-		return (m_Min.x <= box.m_Max.x &&
-			m_Max.x >= box.m_Min.x &&
-			m_Min.y <= box.m_Max.y &&
-			m_Max.y >= box.m_Min.y &&
-			m_Min.z <= box.m_Max.z &&
-			m_Max.z >= box.m_Min.z);
+		return (Min.x <= box.Max.x &&
+			Max.x >= box.Min.x &&
+			Min.y <= box.Max.y &&
+			Max.y >= box.Min.y &&
+			Min.z <= box.Max.z &&
+			Max.z >= box.Min.z);
 	}
 
 	template<class TYPE>
@@ -362,70 +371,70 @@ namespace GASS
 		pos = seg.m_Start;
 		dir = seg.m_End - seg.m_Start;
 
-		if (m_Max.x < seg.m_Start.x && m_Max.x < seg.m_End.x) return false;
-		if (m_Min.x > seg.m_Start.x && m_Min.x > seg.m_End.x) return false;
+		if (Max.x < seg.m_Start.x && Max.x < seg.m_End.x) return false;
+		if (Min.x > seg.m_Start.x && Min.x > seg.m_End.x) return false;
 
-		if (m_Max.y < seg.m_Start.y && m_Max.y < seg.m_End.y) return false;
-		if (m_Min.y > seg.m_Start.y && m_Min.y > seg.m_End.y) return false;
+		if (Max.y < seg.m_Start.y && Max.y < seg.m_End.y) return false;
+		if (Min.y > seg.m_Start.y && Min.y > seg.m_End.y) return false;
 
-		if (m_Max.z < seg.m_Start.z && m_Max.z < seg.m_End.z) return false;
-		if (m_Min.z > seg.m_Start.z && m_Min.z > seg.m_End.z) return false;
+		if (Max.z < seg.m_Start.z && Max.z < seg.m_End.z) return false;
+		if (Min.z > seg.m_Start.z && Min.z > seg.m_End.z) return false;
 
 		//Check max  X plane
-		if ((m_Max.x < seg.m_Start.x && m_Max.x > seg.m_End.x) || (m_Max.x > seg.m_Start.x && m_Max.x <= seg.m_End.x))
+		if ((Max.x < seg.m_Start.x && Max.x > seg.m_End.x) || (Max.x > seg.m_Start.x && Max.x <= seg.m_End.x))
 		{
-			x = m_Max.x;
+			x = Max.x;
 			scale = (x - pos.x) / dir.x;
 			isect = pos + dir * scale;
-			if (isect.y > m_Min.y && isect.y < m_Max.y && isect.z > m_Min.z && isect.z < m_Max.z) return true;
+			if (isect.y > Min.y && isect.y < Max.y && isect.z > Min.z && isect.z < Max.z) return true;
 		}
 		//Check min  X plane
-		if ((m_Min.x < seg.m_Start.x && m_Min.x > seg.m_End.x) || (m_Min.x > seg.m_Start.x && m_Min.x < seg.m_End.x))
+		if ((Min.x < seg.m_Start.x && Min.x > seg.m_End.x) || (Min.x > seg.m_Start.x && Min.x < seg.m_End.x))
 		{
-			x = m_Min.x;
+			x = Min.x;
 			scale = (x - pos.x) / dir.x;
 			isect = pos + dir * scale;
-			if (isect.y > m_Min.y && isect.y < m_Max.y &&
-				isect.z > m_Min.z && isect.z < m_Max.z) return true;
+			if (isect.y > Min.y && isect.y < Max.y &&
+				isect.z > Min.z && isect.z < Max.z) return true;
 		}
 
 		//Check max  Y plane
-		if ((m_Max.y < seg.m_Start.y && m_Max.y > seg.m_End.y) || (m_Max.y > seg.m_Start.y && m_Max.y < seg.m_End.y))
+		if ((Max.y < seg.m_Start.y && Max.y > seg.m_End.y) || (Max.y > seg.m_Start.y && Max.y < seg.m_End.y))
 		{
-			y = m_Max.y;
+			y = Max.y;
 			scale = (y - pos.y) / dir.y;
 			isect = pos + dir * scale;
-			if (isect.x > m_Min.x && isect.x < m_Max.x &&
-				isect.z > m_Min.z && isect.z < m_Max.z) return true;
+			if (isect.x > Min.x && isect.x < Max.x &&
+				isect.z > Min.z && isect.z < Max.z) return true;
 		}
 
 		//Check min  Y plane
-		if ((m_Min.y < seg.m_Start.y && m_Min.y > seg.m_End.y) || (m_Min.y > seg.m_Start.y && m_Min.y < seg.m_End.y))
+		if ((Min.y < seg.m_Start.y && Min.y > seg.m_End.y) || (Min.y > seg.m_Start.y && Min.y < seg.m_End.y))
 		{
-			y = m_Min.y;
+			y = Min.y;
 			scale = (y - pos.y) / dir.y;
 			isect = pos + dir * scale;
-			if (isect.x > m_Min.x && isect.x < m_Max.x &&
-				isect.z > m_Min.z && isect.z < m_Max.z) return true;
+			if (isect.x > Min.x && isect.x < Max.x &&
+				isect.z > Min.z && isect.z < Max.z) return true;
 		}
 		//Check max  Z plane
-		if ((m_Max.z < seg.m_Start.z && m_Max.z > seg.m_End.z) || (m_Max.z > seg.m_Start.z && m_Max.z < seg.m_End.z))
+		if ((Max.z < seg.m_Start.z && Max.z > seg.m_End.z) || (Max.z > seg.m_Start.z && Max.z < seg.m_End.z))
 		{
-			z = m_Max.z;
+			z = Max.z;
 			scale = (z - pos.z) / dir.z;
 			isect = pos + dir * scale;
-			if (isect.y > m_Min.y && isect.y < m_Max.y &&
-				isect.x > m_Min.x && isect.x < m_Max.x) return true;
+			if (isect.y > Min.y && isect.y < Max.y &&
+				isect.x > Min.x && isect.x < Max.x) return true;
 		}
 
 		//Check min  Z plane
-		if ((m_Min.z < seg.m_Start.z && m_Min.z > seg.m_End.z) || (m_Min.z > seg.m_Start.y && m_Min.z < seg.m_End.z))
+		if ((Min.z < seg.m_Start.z && Min.z > seg.m_End.z) || (Min.z > seg.m_Start.y && Min.z < seg.m_End.z))
 		{
-			z = m_Min.z;
+			z = Min.z;
 			scale = (z - pos.z) / dir.z;
 			isect = pos + dir * scale;
-			if (isect.y > m_Min.y && isect.y < m_Max.y &&
-				isect.x > m_Min.x && isect.x < m_Max.x) return true;
+			if (isect.y > Min.y && isect.y < Max.y &&
+				isect.x > Min.x && isect.x < Max.x) return true;
 		}
 		return false;
 	}
@@ -437,20 +446,20 @@ namespace GASS
 		TYPE tenter = 0.0f, texit = 1.0f;
 
 		// test X slab
-		if (!_LineSlabIntersect(m_Min.x, m_Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
+		if (!_LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Y slab
 
-		if (!_LineSlabIntersect(m_Min.y, m_Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
+		if (!_LineSlabIntersect(Min.y, Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Z slab
-		if (!_LineSlabIntersect(m_Min.z, m_Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
+		if (!_LineSlabIntersect(Min.z, Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
 		{
 			return false;
 		}
@@ -463,7 +472,7 @@ namespace GASS
 	template<class TYPE>
 	TVec3<TYPE> TAABox<TYPE>::GetSize() const
 	{
-		return (m_Max - m_Min);
+		return (Max - Min);
 	}
 
 	template<class TYPE>
