@@ -33,15 +33,23 @@
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_option::overwrite_if_exists
 #else //use experimental filesystem, TODO:test gcc
 #include <filesystem>
-#define GASS_FILESYSTEM std::tr2::sys
+
 
 //msvc2013
-#if (_MSC_VER == 1800) 
+#if (_MSC_VER == 1800)
+#define GASS_FILESYSTEM std::tr2::sys
 #define GASS_TO_GENERIC_STRING(a) a
 #define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path<GASS_FILESYSTEM::path>
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory<GASS_FILESYSTEM::path>
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_option::overwrite_if_exists
-#else
+#elif (_MSC_VER == 1900) //MSVC2015
+#define GASS_FILESYSTEM std::tr2::sys
+#define GASS_TO_GENERIC_STRING(a) a.generic_string()
+#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
+#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
+#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
+#elif (_MSC_VER > 1900) //MSVC2017
+#define GASS_FILESYSTEM std::experimental::filesystem
 #define GASS_TO_GENERIC_STRING(a) a.generic_string()
 #define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
