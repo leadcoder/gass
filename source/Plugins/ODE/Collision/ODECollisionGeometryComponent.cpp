@@ -110,7 +110,7 @@ namespace GASS
 		else if(type == "NONE")
 			m_Type = CGT_NONE;
 		else
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unkown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
+			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"Unknown type:" + type, " ODECollisionGeometryComponent::SetTypeByName");
 	}
 
 	void ODECollisionGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)

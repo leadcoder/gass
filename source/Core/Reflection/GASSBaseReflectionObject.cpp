@@ -57,7 +57,7 @@ namespace GASS
 				}
 				else
 				{
-					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unkown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->GetFileName()),"BaseReflectionObject::_LoadProperties");
+					GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Unknown property syntax for:" + prop_name + " in:" + std::string(elem->GetDocument()->GetFileName()),"BaseReflectionObject::_LoadProperties");
 				}
 			}
 			else

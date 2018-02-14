@@ -24,7 +24,7 @@
 namespace GASS
 {
 	SceneObjectLink::SceneObjectLink() : m_Initialized(false),
-		m_LinkObjectID(UNKOWN_LINK_ID)
+		m_LinkObjectID(UNKNOWN_LINK_ID)
 	{
 
 	}
@@ -39,7 +39,7 @@ namespace GASS
 		if(m_Initialized)
 		{
 			SceneObjectPtr owner = m_Owner.lock();
-			if(owner && m_LinkObjectID != UNKOWN_LINK_ID)
+			if(owner && m_LinkObjectID != UNKNOWN_LINK_ID)
 			{
 				SceneObjectPtr obj;
 				if(GetRoot(owner)->GetID()  == m_LinkObjectID)

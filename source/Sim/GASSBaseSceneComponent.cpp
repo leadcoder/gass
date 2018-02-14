@@ -73,7 +73,7 @@ namespace GASS
 					//std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
 					for (size_t i = 0; i < links.size(); i++)
 					{
-						if (links[i].GetLinkObjectID() != UNKOWN_LINK_ID)
+						if (links[i].GetLinkObjectID() != UNKNOWN_LINK_ID)
 						{
 							if (!links[i].Initlize(GetSceneObject()))
 							{
@@ -97,7 +97,7 @@ namespace GASS
 					//SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
 					SceneObjectLink link;
 					GetPropertyValue(prop, link);
-					if (link.GetLinkObjectID() != UNKOWN_LINK_ID)
+					if (link.GetLinkObjectID() != UNKNOWN_LINK_ID)
 					{
 						if (!link.Initlize(GetSceneObject()))
 						{

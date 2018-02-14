@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	static const SceneObjectID UNKOWN_LINK_ID = "";	
+	static const SceneObjectID UNKNOWN_LINK_ID = "";	
 
 	class GASSExport SceneObjectLink 
 	{
