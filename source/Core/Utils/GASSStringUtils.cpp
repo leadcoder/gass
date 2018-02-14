@@ -22,6 +22,7 @@
 #include "Core/Common.h"
 #include "GASSStringUtils.h"
 #include "Core/Utils/GASSException.h"
+#include <cctype>
 #ifndef _MSC_VER
     #include <cxxabi.h>
 #endif
@@ -50,10 +51,27 @@ namespace GASS
 		return ret;
 	}
 
+	unsigned char CharToUpper(char ch)
+	{
+		return static_cast<unsigned char>(std::toupper(static_cast<unsigned char>(ch)));
+	}
+
+	unsigned char CharToLower(char ch)
+	{
+		return static_cast<unsigned char>(std::tolower(static_cast<unsigned char>(ch)));
+	}
+
 	std::string StringUtils::ToUpper(const std::string&str)
 	{
 		std::string new_str = str;
-		std::transform(str.begin(), str.end(), new_str.begin(),::toupper);
+		std::transform(str.begin(), str.end(), new_str.begin(), CharToUpper);
+		return new_str;
+	}
+
+	std::string StringUtils::ToLower(const std::string &str)
+	{
+		std::string new_str = str;
+		std::transform(str.begin(), str.end(), new_str.begin(), CharToLower);
 		return new_str;
 	}
 

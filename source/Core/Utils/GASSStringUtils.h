@@ -86,13 +86,7 @@ namespace GASS
 		@param str String to work on.
 		@return All lower case string.
 		*/
-		inline static std::string ToLower(const std::string &str)
-		{
-			std::string new_str = str;
-			std::transform(str.begin(), str.end(), new_str.begin(),::tolower);
-			return new_str;
-		}
-
+		static std::string ToLower(const std::string &str);
 		/**
 		@brief Return string in str with all characters converted to upper case.
 		@param str String to work on.
