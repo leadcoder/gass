@@ -91,18 +91,18 @@ namespace GASS
 
 			for(int j = 0; j < 4; j++)
 			{
-				Vec3 world_pos = world_mat*conrners[j];
-				sub_mesh_data->PositionVector.push_back(world_pos);
+				Vec3 new_world_pos = world_mat*conrners[j];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
-				world_pos = world_mat*conrners[(j +1)%4];
-				sub_mesh_data->PositionVector.push_back(world_pos);
+				new_world_pos = world_mat*conrners[(j +1)%4];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 
-				world_pos = world_mat*conrners[j];
-				sub_mesh_data->PositionVector.push_back(world_pos);
+				new_world_pos = world_mat*conrners[j];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
-				world_pos = world_mat*conrners[j +4];
-				sub_mesh_data->PositionVector.push_back(world_pos);
+				new_world_pos = world_mat*conrners[j +4];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 			}
 		}
