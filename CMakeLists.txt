@@ -1,4 +1,7 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
+
+cmake_policy(SET CMP0048 OLD)
+
 project(GASS)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -77,17 +80,20 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 
-option(GASS_USE_BOOST "Disable Boost" ON)
+option(GASS_USE_BOOST "Should Boost be used or not" OFF)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
 ENABLE_TESTING()
 #boost settings
-if(WIN32)
-  set (Boost_USE_STATIC_LIBS ON)
-else()
-  set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
-endif()
+
+if(GASS_USE_BOOST)
+  if(WIN32)
+    set (Boost_USE_STATIC_LIBS ON)
+  else()
+    set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
+  endif()
+endif(GASS_USE_BOOST)
 
 if(CMAKE_VERSION VERSION_GREATER "2.8.11") #suppress warnings
   CMAKE_POLICY(SET CMP0022 OLD)
