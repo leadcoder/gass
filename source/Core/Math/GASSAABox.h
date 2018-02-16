@@ -27,6 +27,7 @@
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSPolygon.h"
 #include "Core/Math/GASSLineSegment.h"
+#include "Core/Math/GASSRay.h"
 
 #undef min
 #undef max
@@ -104,6 +105,29 @@ namespace GASS
 		bool LineIntersect2(const TLineSegment<TYPE> &segment) const;
 
 		/**
+		Check intersection between ray and box. 
+		Note that the implementation is branchless and for performance reasons there are some limitations:
+		If ray is parallel to box plane this is not considered an hit, the same if ray origin
+		is located on box-plane (and ray direction is facing away from box). In other words; 
+		if the ray only touch the box shell this is not considered a hit.
+	
+		@param ray Ray to check against
+		@param inv_dir Inverted Ray direction 
+		@param t_near If ray instersection (return true) this is the distance where the ray enter the box.
+		              If ray origin is inside box this value will be zero
+		@param t_far If ray instersection (return true) this is the distance where the ray will exit the box
+		@return true If intersection exist
+		*/
+		bool RayIntersect(const TRay<TYPE> &ray, const TVec3<TYPE> &inv_dir, TYPE &t_near, TYPE &t_far) const;
+
+		/**
+		Convenience function that call RayIntersect function above with the inverted ray direction.
+		Note that if you want to call this function many times with the same ray you should probably precalcualte the inverted
+		ray direction and call the function above instead.
+		*/
+		bool RayIntersect(const TRay<TYPE> &ray, TYPE &t_near, TYPE &t_far) const;
+	
+		/**
 			Check intersection with other bounding box
 		*/
 		bool BoxIntersect(const TAABox &box) const;
@@ -140,22 +164,8 @@ namespace GASS
 		std::vector<TVec3<TYPE> > GetCorners() const;
 
 		//public for fast access
-#ifdef _MSC_VER
-		union
-		{
-			TVec3<TYPE> m_Max; //allow old name until refactoring is done
-			TVec3<TYPE> Max;
-		};
-
-		union
-		{
-			TVec3<TYPE> m_Min; //allow old name until refactoring is done
-			TVec3<TYPE> Min;
-		};
-#else 
 		TVec3<TYPE> Max;
 		TVec3<TYPE> Min;
-#endif
 
 	private:
 		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
@@ -367,6 +377,40 @@ namespace GASS
 			Max.y >= box.Min.y &&
 			Min.z <= box.Max.z &&
 			Max.z >= box.Min.z);
+	}
+
+
+	
+	template<class TYPE>
+	bool TAABox<TYPE>::RayIntersect(const TRay<TYPE> &ray, const TVec3<TYPE> &inv_dir, TYPE &t_near, TYPE &t_far) const
+	{
+		//From: "FAST, BRANCHLESS RAY/BOUNDING BOX INTERSECTIONS, PART 2: NANS"
+		//https://tavianator.com/fast-branchless-raybounding-box-intersections-part-2-nans
+		TYPE t1 = (Min.x - ray.m_Origin.x)*inv_dir.x;
+		TYPE t2 = (Max.x - ray.m_Origin.x)*inv_dir.x;
+
+		t_near = std::min(t1, t2);
+		t_far = std::max(t1, t2);
+
+		for (int i = 1; i < 3; ++i) {
+			t1 = (Min[i] - ray.m_Origin[i])*inv_dir[i];
+			t2 = (Max[i] - ray.m_Origin[i])*inv_dir[i];
+
+			//t_near = std::max(t_near, std::min(t1, t2));
+			//t_far =  std::min(t_far,  std::max(t1, t2));
+
+			//Handle NaN propagated from above
+			t_near = std::max(t_near, std::min(std::min(t1, t2), t_far));
+			t_far =  std::min(t_far,  std::max(std::max(t1, t2), t_near));
+		}
+		return t_far > std::max(t_near, static_cast<TYPE>(0.0));
+	}
+	
+	template<class TYPE>
+	bool TAABox<TYPE>::RayIntersect(const TRay<TYPE> &ray, TYPE &t_near, TYPE &t_far) const
+	{
+		const TVec3<TYPE> inv_dir(1.0f / ray.m_Dir.x, 1.0f / ray.m_Dir.y, 1.0f / ray.m_Dir.z);
+		return RayIntersect(ray, inv_dir, t_near, t_far);
 	}
 
 	template<class TYPE>

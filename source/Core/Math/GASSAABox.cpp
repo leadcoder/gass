@@ -30,4 +30,3 @@ namespace GASS
 	template class TAABox<double>;
 	template class TAABox<float>;
 }
-
