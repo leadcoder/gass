@@ -50,29 +50,24 @@ namespace GASS
 		/**
 		Get closest point on line segment
 		@param point Input point
-		@return Closest point on line to input point
+		@return Closest point on line segment to input point
 		*/
-		TVec3<TYPE> ClosestPointOnLine(const TVec3<TYPE> &point)
+		TVec3<TYPE> ClosestPointOnLine(const TVec3<TYPE> &point) const
 		{
-			// Determine t (the length of the vector from a to p)
-			TVec3<TYPE> c = point - m_Start;
-			TVec3<TYPE> V = m_End - m_Start;
+			const TVec3<TYPE> line_vec = m_End - m_Start;
+			const TVec3<TYPE> point_vec = point - m_Start;
 
-			double d = V.Length();
+			const TYPE p_dot_l = TVec3<TYPE>::Dot(point_vec, line_vec);
+			if (p_dot_l <= 0) 
+				return m_Start;
 
-			V.Normalize();
-			double t = TVec3<TYPE>::Dot(V, c);
+			TYPE l_dot_l = TVec3<TYPE>::Dot(line_vec, line_vec);
+			if (l_dot_l <= p_dot_l)
+				return m_End;
 
-			// Check to see if t is beyond the extents of the line segment
-			if (t < 0.0f) return (m_Start);
-			if (t > d) return (m_End);
-
-			// Return the point between a and b
-			//set length of V to t. V is normalized so this is easy
-			V.x = V.x * t;
-			V.y = V.y * t;
-			V.z = V.z * t;
-			return (m_Start + V);
+			const  TYPE line_dist = p_dot_l / l_dot_l;
+			const TVec3<TYPE> point_on_line = m_Start + line_vec*line_dist;
+			return point_on_line;
 		}
 	};
 	typedef TLineSegment<double> LineSegmentd;
