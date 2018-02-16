@@ -269,7 +269,7 @@ namespace GASS
 		{
 			SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
 			WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
-			if(comp)
+			if(comp &&  comp->IsActive())
 			{
 				LocationComponentPtr wp_location = child_obj->GetFirstComponentByClass<ILocationComponent>();
 				pos_vec.push_back(wp_location->GetPosition()+offset);

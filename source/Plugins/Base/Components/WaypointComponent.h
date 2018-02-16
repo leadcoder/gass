@@ -51,6 +51,7 @@ namespace GASS
 		Vec3 GetTangent() const;
 		bool GetCustomTangent() const {return m_CustomTangent;}
 		void Rotate(const Quaternion &rot);
+		bool IsActive() const { return m_Active; }
 	protected:
 		void SetTangentWeight(Float value);
 		void NotifyUpdate();
@@ -65,6 +66,7 @@ namespace GASS
 		Float m_TangentWeight;
 		bool m_Initialized;
 		bool m_CustomTangent;
+		bool m_Active;
 	};
 
 	typedef GASS_SHARED_PTR<WaypointComponent> WaypointComponentPtr;

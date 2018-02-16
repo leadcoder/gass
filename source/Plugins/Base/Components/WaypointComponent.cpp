@@ -40,7 +40,8 @@ namespace GASS
 	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0),
 		m_Initialized(false),
 		m_Tangent(0,0,0),
-		m_CustomTangent(false)
+		m_CustomTangent(false),
+		m_Active(true)
 
 	{
 
@@ -100,6 +101,7 @@ namespace GASS
 	void WaypointComponent::OnDelete()
 	{
 		//notify parent
+		m_Active = false;
 		NotifyUpdate();
 		m_Initialized = false;
 	}
