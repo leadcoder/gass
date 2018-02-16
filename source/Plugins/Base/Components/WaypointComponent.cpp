@@ -222,13 +222,12 @@ namespace GASS
 		LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>(true);
 		return t_location->GetPosition()*10;
 
-		LocationComponentPtr wp_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>(true);
+		/*LocationComponentPtr wp_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>(true);
 		
 		Quaternion rot = wp_location->GetRotation();
 		Mat4 rot_mat(rot);
 		Vec3 tangent = rot_mat.GetZAxis();
-
-		return tangent;
+		return tangent;*/
 	}
 
 
