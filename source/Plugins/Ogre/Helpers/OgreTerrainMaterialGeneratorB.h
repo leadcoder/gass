@@ -32,9 +32,12 @@ THE SOFTWARE.
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Plugins/Ogre/GASSOgreTerrainIncludes.h"
 
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4100)
+#pragma warning(disable : 4251)
+#endif
 
 namespace Ogre
 {
@@ -275,7 +278,9 @@ namespace Ogre
 
 }
 
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
 
 #endif
 

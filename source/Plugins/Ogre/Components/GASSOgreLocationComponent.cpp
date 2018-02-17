@@ -130,7 +130,7 @@ namespace GASS
 
 		m_OgreNode->setListener(this);
 		Ogre::Any any_this(this);
-		m_OgreNode->setUserAny(any_this);
+		m_OgreNode->getUserObjectBindings().setUserAny(any_this);
 
 		PositionRequestPtr pos_msg(new GASS::PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
