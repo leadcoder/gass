@@ -20,7 +20,16 @@
 #ifndef TREE_GEOMETRY_COMPONENT_H
 #define TREE_GEOMETRY_COMPONENT_H
 #include "Sim/GASSCommon.h"
+
+#if defined(_MSC_VER)
+	#pragma warning(push)
+	#pragma warning(disable : 4244)
+#endif
 #include "PagedGeometry.h"
+#if defined(_MSC_VER)
+	#pragma warning(pop)
+#endif
+
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "PGMessages.h"
@@ -57,7 +66,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		void UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z);
+		void UpdateArea(float start_x, float start_z, float end_x, float end_z);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
@@ -134,23 +143,23 @@ namespace GASS
 			m_ImposterFadeDist = value;
 		}
 
-		Vec4 GetCustomBounds() const
+		Vec4f GetCustomBounds() const
 		{
 			return m_CustomBounds;
 		}
 
-		void SetCustomBounds(const Vec4 &value)
+		void SetCustomBounds(const Vec4f &value)
 		{
 			m_CustomBounds = value;
 		}
 
 
-		Vec2 GetMaxMinScale() const
+		Vec2f GetMaxMinScale() const
 		{
 			return m_MaxMinScale;
 		}
 
-		void SetMaxMinScale(const Vec2 &value)
+		void SetMaxMinScale(const Vec2f &value)
 		{
 			m_MaxMinScale = value;
 		}
@@ -230,7 +239,7 @@ namespace GASS
 		DensityMapComponentPtr m_DensityMap;
 		//Ogre::PixelBox *m_DensityMap;
 		RandomTable* m_RandomTable;
-		Vec2 m_MaxMinScale;
+		Vec2f m_MaxMinScale;
 		bool m_CastShadows;
 		float m_MeshDist;
 		float m_ImposterDist;
@@ -242,7 +251,7 @@ namespace GASS
 		float m_DensityFactor;
 		bool m_CreateShadowMap;
 		float m_PageSize;
-		Vec4 m_CustomBounds;
+		Vec4f m_CustomBounds;
 		PagedGeometry *m_PagedGeometry;
 		TBounds m_MapBounds;
 		float m_ImposterAlphaRejectionValue;

@@ -24,7 +24,16 @@
 #define GRASS_LOADER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
+
+#if defined(_MSC_VER)
+	#pragma warning(push)
+	#pragma warning(disable : 4244)
+#endif
 #include "PagedGeometry.h"
+#if defined(_MSC_VER)
+	#pragma warning(pop)
+#endif
+
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
@@ -70,8 +79,8 @@ namespace GASS
 		void SetDensityMap(const std::string &dm);
 		float GetPageSize() const;
 		void SetPageSize(float size);
-		Vec4 GetCustomBounds() const;
-		void SetCustomBounds(const Vec4 &bounds);
+		Vec4f GetCustomBounds() const;
+		void SetCustomBounds(const Vec4f &bounds);
 		void SetColorMap(const std::string &name);
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
@@ -90,7 +99,7 @@ protected:
 		TBounds m_MapBounds;
 		float m_PageSize;
 		std::string m_DensityMapFilename;
-		Vec4 m_CustomBounds;
+		Vec4f m_CustomBounds;
 		static IHeightmapTerrainComponent *m_Terrain;
 		static ICollisionSceneManager* m_CollisionSM;
 		Ogre::TexturePtr m_DensityTexture;

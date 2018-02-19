@@ -73,7 +73,7 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, ext)));
 		RegisterProperty<float>("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("You need to reload scene before this property take effect",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,
+		RegisterProperty<Vec4f>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 		RegisterProperty<std::string>("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
@@ -118,7 +118,10 @@ namespace GASS
 			{
 				GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(terrain);
 				AABox aabox = geom->GetBoundingBox();
-				m_MapBounds = TBounds(aabox.Min.x, aabox.Min.z, aabox.Max.x, aabox.Max.z);
+				m_MapBounds = TBounds(static_cast<float>(aabox.Min.x), 
+									  static_cast<float>(aabox.Min.z),
+									  static_cast<float>(aabox.Max.x),
+									  static_cast<float>(aabox.Max.z));
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
 			}
@@ -271,12 +274,12 @@ namespace GASS
 		m_PageSize = size;
 	}
 
-	Vec4 GrassLoaderComponent::GetCustomBounds() const
+	Vec4f GrassLoaderComponent::GetCustomBounds() const
 	{
 		return m_CustomBounds;
 	}
 
-	void GrassLoaderComponent::SetCustomBounds(const Vec4 &bounds)
+	void GrassLoaderComponent::SetCustomBounds(const Vec4f &bounds)
 	{
 		m_CustomBounds = bounds;
 	}
@@ -355,7 +358,7 @@ namespace GASS
 	float GrassLoaderComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
-			return m_Terrain->GetHeightAtWorldLocation(x,z);
+			return static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));
 		else
 		{
 			GrassLoaderComponent* grass = static_cast<GrassLoaderComponent*> (user_data);
@@ -423,17 +426,17 @@ namespace GASS
 
 		const Ogre::Real height = m_MapBounds.height();
 		const Ogre::Real width = m_MapBounds.width();
-		const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
-		const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
+		const Ogre::Real x_pos = (static_cast<float>(world_pos.x) - m_MapBounds.left)/width;
+		const Ogre::Real y_pos = (static_cast<float>(world_pos.z) - m_MapBounds.top)/height;
 
 		const Ogre::Real brush_size_texture_space_x = brush_size/width;
 		const Ogre::Real brush_size_texture_space_y = brush_size/height;
-		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
+		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5f)/height;
 
-		long startx = (x_pos - brush_size_texture_space_x) * (wsize);
-		long starty = (y_pos - brush_size_texture_space_y) * (wsize);
-		long endx = (x_pos + brush_size_texture_space_x) * (wsize);
-		long endy= (y_pos + brush_size_texture_space_y) * (wsize);
+		long startx = static_cast<long>((x_pos - brush_size_texture_space_x) * (wsize));
+		long starty = static_cast<long>((y_pos - brush_size_texture_space_y) * (wsize));
+		long endx = static_cast<long>((x_pos + brush_size_texture_space_x) * (wsize));
+		long endy= static_cast<long>((y_pos + brush_size_texture_space_y) * (wsize));
 		startx = std::max(startx, 0L);
 		starty = std::max(starty, 0L);
 		endx = std::min(endx, (long)wsize-1);
@@ -453,7 +456,7 @@ namespace GASS
 
 				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
 				if( weight < 0) weight = 0;
-				weight = 1.0 - (weight * weight);
+				weight = 1.0f - (weight * weight);
 				//weight = 1;
 
 				float val = float(data[((texture_loc + x)*4)])/255.0f;
@@ -465,21 +468,21 @@ namespace GASS
 				if(val < 0.0)
 					val = 0;
 			
-				data[((texture_loc + x)*4)] = val*255;
+				data[((texture_loc + x)*4)] = static_cast<Ogre::uchar>(val*255);
 
 				//also update all layers!
 				for(int i = 0; i < layer_data.size(); i++)
 				{
 					Ogre::uchar *l_data = layer_data[i];
-					l_data [denmap_loc+ x] = val*255;
+					l_data [denmap_loc+ x] = static_cast<Ogre::uchar>(val*255);
 				}
 			}
 		}
 
-		float posL = world_pos.x - brush_size;
-		float posT = world_pos.z - brush_size;
-		float posR = world_pos.x + brush_size;
-		float posB = world_pos.z + brush_size;
+		float posL = static_cast<float>(world_pos.x) - brush_size;
+		float posT = static_cast<float>(world_pos.z) - brush_size;
+		float posR = static_cast<float>(world_pos.x) + brush_size;
+		float posB = static_cast<float>(world_pos.z) + brush_size;
 		Forests::TBounds bounds(posL, posT, posR, posB);
 		m_PagedGeometry->reloadGeometryPages(bounds);
 	}

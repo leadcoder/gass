@@ -132,17 +132,17 @@ namespace GASS
 
 		const Ogre::Real height = m_MapBounds.height();
 		const Ogre::Real width = m_MapBounds.width();
-		const Ogre::Real x_pos = (world_pos.x - m_MapBounds.left)/width;
-		const Ogre::Real y_pos = (world_pos.z - m_MapBounds.top)/height;
+		const Ogre::Real x_pos = (static_cast<Ogre::Real>(world_pos.x) - m_MapBounds.left)/width;
+		const Ogre::Real y_pos = (static_cast<Ogre::Real>(world_pos.z) - m_MapBounds.top)/height;
 
 		const Ogre::Real brush_size_texture_space_x = brush_size/width;
 		const Ogre::Real brush_size_texture_space_y = brush_size/height;
-		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
+		const Ogre::Real brush_inner_radius = (brush_inner_size*0.5f)/height;
 
-		long startx = (x_pos - brush_size_texture_space_x) * (wsize);
-		long starty = (y_pos - brush_size_texture_space_y) * (wsize);
-		long endx = (x_pos + brush_size_texture_space_x) * (wsize);
-		long endy= (y_pos + brush_size_texture_space_y) * (wsize);
+		long startx = static_cast<long >((x_pos - brush_size_texture_space_x) * (wsize));
+		long starty = static_cast<long >((y_pos - brush_size_texture_space_y) * (wsize));
+		long endx = static_cast<long >((x_pos + brush_size_texture_space_x) * (wsize));
+		long endy= static_cast<long >((y_pos + brush_size_texture_space_y) * (wsize));
 		startx = std::max(startx, 0L);
 		starty = std::max(starty, 0L);
 		endx = std::min(endx, (long)wsize-1);
@@ -159,7 +159,7 @@ namespace GASS
 
 				Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
 				if( weight < 0) weight = 0;
-				weight = 1.0 - (weight * weight);
+				weight = 1.0f - (weight * weight);
 				//weight = 1;
 
 				float val = float(data[(tmploc + x)*4])/255.0f;
@@ -170,7 +170,7 @@ namespace GASS
 					val = 1;
 				if(val < 0.0)
 					val = 0;
-				data[(tmploc + x)*4] = val*255;
+				data[(tmploc + x)*4] = static_cast<Ogre::uchar>(val*255);
 			}
 		}
 
@@ -186,8 +186,8 @@ namespace GASS
 		float boundsWidth = m_MapBounds.width();
 		float boundsHeight = m_MapBounds.height();
 
-		int xindex = mapWidth * (x - m_MapBounds.left) / boundsWidth;
-		int zindex = mapHeight * (z - m_MapBounds.top) / boundsHeight;
+		int xindex = static_cast<int>(static_cast<float>(mapWidth) * (x - static_cast<float>(m_MapBounds.left)) / boundsWidth);
+		int zindex = static_cast<int>(static_cast<float>(mapHeight) * (z - static_cast<float>(m_MapBounds.top)) / boundsHeight);
 		if (xindex < 0 || zindex < 0 || xindex >= mapWidth || zindex >= mapHeight)
 			return 0.0f;
 

@@ -82,10 +82,10 @@ namespace GASS
 		void SetRenderTechnique(const RenderTechniqueBinder &tech);
 		bool GetBlendWithGround() const;
 		void SetBlendWithGround(bool value);
-		Vec2 GetMaxSize() const;
-		void SetMaxSize(const Vec2 &size);
-		Vec2 GetMinSize() const;
-		void SetMinSize(const Vec2 &size);
+		Vec2f GetMaxSize() const;
+		void SetMaxSize(const Vec2f &size);
+		Vec2f GetMinSize() const;
+		void SetMinSize(const Vec2f &size);
 		float GetSwaySpeed()const;
 		void SetSwaySpeed(float speed);
 		float GetSwayLength() const;
@@ -102,8 +102,8 @@ protected:
 		OgreMaterial m_Material;
 		GrassLoader* m_GrassLoader;
 		
-		Vec2 m_MaxSize;
-		Vec2 m_MinSize;
+		Vec2f m_MaxSize;
+		Vec2f m_MinSize;
 		bool m_EnableSway;
 		float m_SwaySpeed;
 		float m_SwayLength;

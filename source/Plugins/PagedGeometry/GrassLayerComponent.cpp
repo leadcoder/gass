@@ -36,7 +36,7 @@ namespace GASS
 {
 	IHeightmapTerrainComponent* GrassLayerComponent::m_Terrain = NULL;
 
-	GrassLayerComponent::GrassLayerComponent(void) : m_DensityFactor(0.001),
+	GrassLayerComponent::GrassLayerComponent(void) : m_DensityFactor(0.001f),
 		m_GrassLoader (NULL),
 		m_MaxSize(1,1),
 		m_MinSize(1,1),
@@ -71,9 +71,9 @@ namespace GASS
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("RenderTechnique",PF_VISIBLE,&RenderTechniqueBinder::GetStringEnumeration)));
 		RegisterProperty<bool>("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fade out alpha",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize,
+		RegisterProperty<Vec2f>("MaxSize", &GrassLayerComponent::GetMaxSize, &GrassLayerComponent::SetMaxSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max polygon size radomize interval",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize,
+		RegisterProperty<Vec2f>("MinSize", &GrassLayerComponent::GetMinSize, &GrassLayerComponent::SetMinSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Min polygon size radomize interval",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("SwaySpeed", &GrassLayerComponent::GetSwaySpeed, &GrassLayerComponent::SetSwaySpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -192,12 +192,12 @@ namespace GASS
 		SetRenderTechnique(m_RenderTechnique);
 	}
 
-	Vec2 GrassLayerComponent::GetMaxSize() const
+	Vec2f GrassLayerComponent::GetMaxSize() const
 	{
 		return m_MaxSize;
 	}
 
-	void GrassLayerComponent::SetMaxSize(const Vec2 &size)
+	void GrassLayerComponent::SetMaxSize(const Vec2f &size)
 	{
 		m_MaxSize = size;
 
@@ -205,12 +205,12 @@ namespace GASS
 			m_GrassLayer->setMaximumSize(m_MaxSize.x,m_MaxSize.y);
 	}
 
-	Vec2 GrassLayerComponent::GetMinSize() const
+	Vec2f GrassLayerComponent::GetMinSize() const
 	{
 		return m_MinSize;
 	}
 
-	void GrassLayerComponent::SetMinSize(const Vec2 &size)
+	void GrassLayerComponent::SetMinSize(const Vec2f &size)
 	{
 		m_MinSize = size;
 		if(m_GrassLayer)
@@ -342,17 +342,17 @@ namespace GASS
 
 			const Ogre::Real height = map_bounds.height();
 			const Ogre::Real width = map_bounds.width();
-			const Ogre::Real x_pos = (world_pos.x - map_bounds.left)/width;
-			const Ogre::Real y_pos = (world_pos.z - map_bounds.top)/height;
+			const Ogre::Real x_pos = (static_cast<Ogre::Real>(world_pos.x) - map_bounds.left)/width;
+			const Ogre::Real y_pos = (static_cast<Ogre::Real>(world_pos.z) - map_bounds.top)/height;
 
 			const Ogre::Real brush_size_texture_space_x = brush_size/width;
 			const Ogre::Real brush_size_texture_space_y = brush_size/height;
-			const Ogre::Real brush_inner_radius = (brush_inner_size*0.5)/height;
+			const Ogre::Real brush_inner_radius = (brush_inner_size*0.5f)/height;
 
-			long startx = (x_pos - brush_size_texture_space_x) * (wsize);
-			long starty = (y_pos - brush_size_texture_space_y) * (wsize);
-			long endx = (x_pos + brush_size_texture_space_x) * (wsize);
-			long endy= (y_pos + brush_size_texture_space_y) * (wsize);
+			long startx = static_cast<long>((x_pos - brush_size_texture_space_x) * (wsize));
+			long starty = static_cast<long>((y_pos - brush_size_texture_space_y) * (wsize));
+			long endx = static_cast<long>((x_pos + brush_size_texture_space_x) * (wsize));
+			long endy= static_cast<long>((y_pos + brush_size_texture_space_y) * (wsize));
 			startx = std::max(startx, 0L);
 			starty = std::max(starty, 0L);
 			endx = std::min(endx, (long)wsize-1);
@@ -370,7 +370,7 @@ namespace GASS
 
 					Ogre::Real weight = std::min((Ogre::Real)1.0,((dist - brush_inner_radius )/ Ogre::Real(0.5 * brush_size_texture_space_x - brush_inner_radius)));
 					if( weight < 0) weight = 0;
-					weight = 1.0 - (weight * weight);
+					weight = 1.0f - (weight * weight);
 					//weight = 1;
 
 					float val = float(data[tmploc + x])/255.0f;
@@ -381,7 +381,7 @@ namespace GASS
 						val = 1;
 					if(val < 0.0)
 						val = 0;
-					data[tmploc + x] = val*255;
+					data[tmploc + x] = static_cast<Ogre::uchar>(val*255);
 				}
 			}
 		}

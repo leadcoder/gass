@@ -46,8 +46,8 @@ namespace GASS
 	TreeGeometryComponent::TreeGeometryComponent(void) : m_CustomBounds(0,0,0,0), 
 		m_TreeLoader2d(NULL),
 		m_TreeLoader3d(NULL),
-		m_DensityFactor(0.001),
-		m_MaxMinScale(1.1, 0.9),
+		m_DensityFactor(0.001f),
+		m_MaxMinScale(1.1f, 0.9f),
 		m_CastShadows(true),
 		m_MeshDist(100),
 		m_ImposterDist(500),
@@ -90,9 +90,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometryComponent::GetImposterFadeDistance, &TreeGeometryComponent::SetImposterFadeDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4>("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds,
+		RegisterProperty<Vec4f>("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<Vec2>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale,
+		RegisterProperty<Vec2f>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -154,7 +154,10 @@ namespace GASS
 
 				//for speed we save the raw pointer , we will access this for each height callback
 				m_Terrain = terrain.get();
-				m_MapBounds = TBounds(aabox.Min.x, aabox.Min.z, aabox.Max.x, aabox.Max.z);
+				m_MapBounds = TBounds(static_cast<float>(aabox.Min.x), 
+									  static_cast<float>(aabox.Min.z), 
+									  static_cast<float>(aabox.Max.x), 
+									  static_cast<float>(aabox.Max.z));
 			}
 		}
 
@@ -173,7 +176,7 @@ namespace GASS
 		if(m_MeshDist > 0)
 		{
 			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.1,m_MeshFadeDist,Ogre::Any(1));
-			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.5,m_MeshFadeDist,Ogre::Any(0));
+			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist*0.5f,m_MeshFadeDist,Ogre::Any(0));
 			m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,m_MeshFadeDist,Ogre::Any(1));
 			//m_PagedGeometry->addDetailLevel<BatchPage>(m_MeshDist,0,Ogre::Any(3));
 		}
@@ -268,10 +271,10 @@ namespace GASS
 	void TreeGeometryComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
 	{
 		float radius = brush_size;
-		int minPageX = Ogre::Math::Floor(((world_pos.x-radius) - m_MapBounds.left) / m_PageSize);
-		int minPageZ = Ogre::Math::Floor(((world_pos.z-radius) - m_MapBounds.top) / m_PageSize);
-		int maxPageX = Ogre::Math::Ceil(((world_pos.x+radius) - m_MapBounds.left) / m_PageSize);
-		int maxPageZ = Ogre::Math::Ceil(((world_pos.z+radius) - m_MapBounds.top) / m_PageSize);
+		int minPageX = static_cast<int>(Ogre::Math::Floor(((static_cast<float>(world_pos.x) - radius) - m_MapBounds.left) / m_PageSize));
+		int minPageZ = static_cast<int>(Ogre::Math::Floor(((static_cast<float>(world_pos.z) - radius) - m_MapBounds.top) / m_PageSize));
+		int maxPageX = static_cast<int>(Ogre::Math::Ceil(((static_cast<float>(world_pos.x) + radius) - m_MapBounds.left) / m_PageSize));
+		int maxPageZ = static_cast<int>(Ogre::Math::Ceil(((static_cast<float>(world_pos.z) + radius) - m_MapBounds.top) / m_PageSize));
 	
 		/*Forests::TBounds bounds(m_MapBounds.left + minPageX*m_PageSize, 
 									m_MapBounds.top + minPageZ*m_PageSize, 
@@ -303,7 +306,7 @@ namespace GASS
 	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
 	{
 		if(m_Terrain)
-			return m_Terrain->GetHeightAtWorldLocation(x,z);
+			return static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));
 		else
 			return 0;
 	}
@@ -338,14 +341,14 @@ namespace GASS
 		return m_DynamicImpostorLighting;
 	}
 
-	void TreeGeometryComponent::UpdateArea(Float start_x,Float start_z,Float end_x,Float end_z)
+	void TreeGeometryComponent::UpdateArea(float start_x, float start_z, float end_x, float end_z)
 	{
 		m_RandomTable->resetRandomIndex();
-		Float width = end_x - start_x;
-		Float height = end_z - start_z;
+		float width = end_x - start_x;
+		float height = end_z - start_z;
 
-		Float volume = width * height;
-		unsigned int treeCount = m_DensityFactor * volume;
+		float volume = width * height;
+		unsigned int treeCount = static_cast<unsigned int>(m_DensityFactor * volume);
 
 		//delete all trees in area!
 		if(m_TreeLoader3d)
@@ -355,11 +358,11 @@ namespace GASS
 
 		if (m_DensityMap)
 		{
-			for (int i = 0; i < treeCount; i++)
+			for (unsigned int i = 0; i < treeCount; i++)
 			{
 				//Determine whether this grass will be added based on the local density.
 				//For example, if localDensity is .32, grasses will be added 32% of the time.
-				Float x, y, z, yaw, scale;
+				float x, y, z, yaw, scale;
 
 				x = Ogre::Math::RangeRandom(start_x, end_x);
 				z = Ogre::Math::RangeRandom(start_z, end_z);
@@ -375,7 +378,7 @@ namespace GASS
 					if(m_PrecalcHeight)
 					{
 						if(m_Terrain)
-							y = m_Terrain->GetHeightAtWorldLocation(x,z);
+							y = static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));
 						m_TreeLoader3d->addTree(m_TreeEntity,  Ogre::Vector3(x, y,z) ,Ogre::Degree(yaw), scale);
 					}
 					else

@@ -24,7 +24,15 @@
 #define GRASS_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
+#if defined(_MSC_VER)
+#pragma warning(push)
+	#pragma warning(disable : 4244)
+#endif
 #include "PagedGeometry.h"
+#if defined(_MSC_VER)
+	#pragma warning(pop)
+#endif
+
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
@@ -67,8 +75,8 @@ namespace GASS
 		void SetPageSize(float size);
 		float GetImposterAlphaRejectionValue() const;
 		void SetImposterAlphaRejectionValue(float value);
-		Vec4 GetBounds() const;
-		void SetBounds(const Vec4 &bounds);
+		Vec4f GetBounds() const;
+		void SetBounds(const Vec4f &bounds);
 		std::string GetColorMap() const;
 		void SetColorMap(const std::string &name);
 		OgreMaterial GetMaterial() const;
@@ -79,10 +87,10 @@ namespace GASS
 		void SetRenderTechnique(const std::string &tech);
 		bool GetBlendWithGround() const;
 		void SetBlendWithGround(bool value);
-		Vec2 GetMaxSize() const;
-		void SetMaxSize(const Vec2 &size);
-		Vec2 GetMinSize() const;
-		void SetMinSize(const Vec2 &size);
+		Vec2f GetMaxSize() const;
+		void SetMaxSize(const Vec2f &size);
+		Vec2f GetMinSize() const;
+		void SetMinSize(const Vec2f &size);
 		float GetSwaySpeed()const;
 		void SetSwaySpeed(float speed);
 		float GetSwayLength() const;
@@ -101,8 +109,8 @@ namespace GASS
 		std::string m_ColorMapFilename;
 		OgreMaterial m_Material;
 		GrassLoader* m_GrassLoader;
-		Vec2 m_MaxSize;
-		Vec2 m_MinSize;
+		Vec2f m_MaxSize;
+		Vec2f m_MinSize;
 		bool m_EnableSway;
 		float m_SwaySpeed;
 		float m_SwayLength;
@@ -117,7 +125,7 @@ namespace GASS
 		float m_PageSize;
 		float m_DensityFactor;
 		std::string m_DensityMapFilename;
-		Vec4 m_Bounds;
+		Vec4f m_Bounds;
 		float m_ImposterAlphaRejectionValue;
 		static IHeightmapTerrainComponent *m_Terrain;
 		static ICollisionSceneManager* m_CollisionSM;
