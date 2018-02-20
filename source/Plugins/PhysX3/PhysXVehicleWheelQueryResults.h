@@ -28,9 +28,7 @@
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
 #pragma once
-
-#include "vehicle/PxVehicleSDK.h"
-#include "vehicle/PxVehicleUpdate.h"
+#include "PhysXCommon.h"
 
 using namespace physx;
 namespace GASS

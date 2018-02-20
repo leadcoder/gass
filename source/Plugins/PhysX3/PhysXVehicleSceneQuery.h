@@ -1,12 +1,7 @@
 #ifndef VEHICLE_SCENE_QUERY_H
 #define VEHICLE_SCENE_QUERY_H
 
-#include "common/PxPhysXCommonConfig.h"
-#include "vehicle/PxVehicleSDK.h"
-#include "foundation/PxPreprocessor.h"
-#include "PxScene.h"
-//#include "PxSweepCache.h"
-#include "PxBatchQueryDesc.h"
+#include "PhysXCommon.h"
 
 using namespace physx;
 namespace GASS

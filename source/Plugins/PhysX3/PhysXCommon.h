@@ -23,10 +23,33 @@
 #define PHYSX_COMMON_H
 
 #include "Sim/GASSCommon.h"
+
+
+#ifdef _MSC_VER
+	#pragma warning (push)
+	#pragma warning (disable : 4244)
+#endif
+
+#include <PxScene.h>
 #include <PxPhysicsAPI.h> 
 #include <PxPhysics.h>
 #include <PxRigidActor.h>
+#include <PxBatchQueryDesc.h>
+
 #include <foundation/PxErrorCallback.h>
+#include <foundation/PxPreprocessor.h>
+#include <foundation/PxAssert.h>
+#include <foundation/PxMath.h>
+#include <foundation/PxIO.h>
+
+#include <common/PxPhysXCommonConfig.h>
+
+#include <vehicle/PxVehicleSDK.h>
+#include <vehicle/PxVehicleUpdate.h>
+#include <vehicle/PxVehicleSDK.h>
+
+#include <cooking/PxCooking.h>
+
 #include <extensions/PxExtensionsAPI.h>
 #include <extensions/PxDefaultErrorCallback.h>
 #include <extensions/PxDefaultAllocator.h>
@@ -46,6 +69,11 @@
 
 #include <characterkinematic/PxCapsuleController.h>
 #include <characterkinematic/PxControllerManager.h>
+
+
+#ifdef _MSC_VER
+	#pragma warning (pop)
+#endif
 
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"

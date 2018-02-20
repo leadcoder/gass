@@ -1,8 +1,4 @@
 #include "PhysXStream.h"
-#include <foundation/PxAssert.h>
-#include "foundation/PxMath.h"
-#include "PxPhysics.h"
-#include "cooking/PxCooking.h"
 
 using namespace physx;
 namespace GASS

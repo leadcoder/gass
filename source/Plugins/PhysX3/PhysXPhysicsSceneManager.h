@@ -20,10 +20,10 @@
 
 #pragma once
 #include "PhysXCommon.h"
-//#include <vehicle/PxVehicleUpdate.h>
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 
 #define MAX_NUM_WHEELS 256
+
 namespace physx
 {
 	class PxScene;

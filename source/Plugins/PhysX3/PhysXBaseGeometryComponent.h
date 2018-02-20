@@ -22,7 +22,6 @@
 #if !defined PHYSX_GEOMETRY_H
 #define PHYSX_GEOMETRY_H
 
-#include "PxPhysics.h"
 #include "PhysXCommon.h"
 
 namespace physx

@@ -19,8 +19,8 @@
 *****************************************************************************/
 
 #pragma once
-#include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
+#include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/GASSSceneObjectRef.h"

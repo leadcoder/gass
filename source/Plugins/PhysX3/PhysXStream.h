@@ -1,8 +1,7 @@
 
 #pragma once;
 
-#include <cooking/PxCooking.h>
-#include <foundation/PxIO.h>
+#include "PhysXCommon.h"
 
 namespace physx
 {

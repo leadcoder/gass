@@ -22,6 +22,7 @@
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "IPhysXRigidDynamic.h"
+
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
