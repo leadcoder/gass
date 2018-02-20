@@ -25,7 +25,6 @@
 #include "Modules/Editor/EditorMessages.h"
 #include "Sim/Interface/GASSINavigationMeshComponent.h"
 #include <tbb/spin_mutex.h>
-
 #include "LandCoverType.h"
 
 class dtNavMesh;

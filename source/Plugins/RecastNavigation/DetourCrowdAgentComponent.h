@@ -20,9 +20,9 @@
 #pragma once
 #include "Sim/GASS.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "DetourCrowd.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
-struct dtCrowdAgent;
+#include "RecastIncludes.h"
+
 
 namespace GASS
 {
@@ -71,7 +71,7 @@ namespace GASS
 				++it;
 			}
 
-			return sum * (1.0/ (double)m_History.size());
+			return sum * (1.0f/ static_cast<float>(m_History.size()));
 		}
 	};
 
@@ -93,20 +93,21 @@ namespace GASS
 		//IPlatformComponent
 		PlatformType GetType() const {return PT_HUMAN;}
 		Vec3 GetSize() const;
+		float GetAgentMaxSpeed() const;
+		void SetAgentMaxSpeed(float speed);
 		Float GetMaxSpeed() const;
-		//Float GetMaxSpeed() const;
 
 		void Init(dtCrowd* crowd);
 		void UpdateLocation(double delta_time);
 		int GetIndex() const {return m_Index;}
-		void SetRadius(Float radius);
-		Float GetRadius() const;
-		void SetHeight(Float radius);
-		Float GetHeight() const;
-		void SetMaxSpeed(Float speed);
+		void SetRadius(float radius);
+		float GetRadius() const;
+		void SetHeight(float radius);
+		float GetHeight() const;
+		
 
-		void SetSeparationWeight(Float value);
-		Float GetSeparationWeight() const {return m_SeparationWeight;}
+		void SetSeparationWeight(float value);
+		float GetSeparationWeight() const {return m_SeparationWeight;}
 	protected:
 		DetourCrowdComponentPtr GetCrowdComp() const {return m_CrowdComp.lock();}
 		dtCrowdAgentParams GetAgentParams() const;
@@ -117,14 +118,14 @@ namespace GASS
 		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnLoad(LocationLoadedEventPtr message);
 		void OnChangeName(GASS::MessagePtr message);
-		void SetMaxAcceleration(Float radius);
-		Float GetMaxAcceleration() const;
+		void SetMaxAcceleration(float radius);
+		float GetMaxAcceleration() const;
 		Vec3 m_TargetPos;
-		Float m_Radius;
-		Float m_MaxSpeed;
-		Float m_MaxAcceleration;
-		Float m_Height;
-		Float m_SeparationWeight;
+		float m_Radius;
+		float m_MaxSpeed;
+		float m_MaxAcceleration;
+		float m_Height;
+		float m_SeparationWeight;
 
 		//std::string m_Script;
 		//std::string m_Group;
@@ -132,12 +133,12 @@ namespace GASS
 		GraphicsMeshPtr m_MeshData;
 		const dtCrowdAgent* m_Agent;
 		int m_Index;
-		Smoother<Vec3> m_VelSmoother;
+		Smoother<Vec3f> m_VelSmoother;
 		//Quaternion m_CurrentRot;
 		//Quaternion m_DesiredRot;
-		Vec3 m_CurrentDir;
+		Vec3f m_CurrentDir;
 		double m_AccTime;
-		Vec3 m_LastPos;
+		Vec3f m_LastPos;
 		DetourCrowdComponentWeakPtr m_CrowdComp;
 	};
 	typedef GASS_SHARED_PTR<DetourCrowdAgentComponent> DetourCrowdAgentComponentPtr;

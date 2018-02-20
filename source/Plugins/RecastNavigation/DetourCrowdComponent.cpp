@@ -19,10 +19,9 @@
 *****************************************************************************/
 
 #include "DetourCrowdComponent.h"
-#include "DetourCrowd.h"
 #include "RecastNavigationMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
-
+#include "RecastIncludes.h"
 
 namespace GASS
 {
@@ -37,9 +36,9 @@ namespace GASS
 		m_OptimizeTopo(true),
 		m_Separation(true),
 		m_ObstacleAvoidance(true),
-		m_SeparationWeight(1.0),
+		m_SeparationWeight(1.0f),
 		//m_DefaultAgentHeight(1.75),
-		m_DefaultAgentRadius(0.3)
+		m_DefaultAgentRadius(0.3f)
 	{
 
 	}
@@ -173,7 +172,7 @@ namespace GASS
 	void DetourCrowdComponent::SceneManagerTick(double delta_time)
 	{
 		if(m_Crowd)
-			m_Crowd->update(delta_time, NULL);//&agentDebug);
+			m_Crowd->update(static_cast<float>(delta_time), NULL);//&agentDebug);
 
 		//update location for all agents
 		for(size_t i = 0; i < m_Agents.size(); i++)

@@ -22,7 +22,8 @@
 #include "Sim/GASS.h"
 #include "RecastNavigationMeshComponent.h"
 #include "RecastNavigationMessages.h"
-#include "DetourNavMesh.h"
+#include "RecastIncludes.h"
+
 
 namespace GASS
 {

@@ -19,14 +19,9 @@
 *****************************************************************************/
 
 #include "RecastNavigationMeshComponent.h"
-#include "Recast.h"
-#include "DetourNavMesh.h"
-#include "DetourNavMeshBuilder.h"
-#include "DetourNavMeshQuery.h"
-#include "DetourCommon.h"
 #include "RecastOffmeshMeshConnectionComponent.h"
 #include "RecastConvexVolumeComponent.h"
-#include "InputGeom.h"
+#include "RecastIncludes.h"
 #include "Core/Serialize/tinyxml2.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Math/GASSMath.h"
@@ -1281,9 +1276,9 @@ namespace GASS
 						Vec3 norm = Vec3::Cross(v1,v2);
 						norm.Normalize();
 
-						trinorms[norm_index++]=norm.x;
-						trinorms[norm_index++]=norm.y;
-						trinorms[norm_index++]=norm.z;
+						trinorms[norm_index++] = static_cast<float>(norm.x);
+						trinorms[norm_index++] = static_cast<float>(norm.y);
+						trinorms[norm_index++] = static_cast<float>(norm.z);
 					}
 
 				}
@@ -1361,7 +1356,7 @@ namespace GASS
 
 		for(size_t i = 0; i < nav_tris.size(); i++)
 		{
-			sub_mesh_data->IndexVector.push_back(i);
+			sub_mesh_data->IndexVector.push_back(static_cast<int>(i));
 		}
 
 		SetShowMeshLines(m_ShowMeshLines);
@@ -1536,7 +1531,7 @@ namespace GASS
 			float p2[3];
 			float ext[3];
 			GASSToRecast(point,p1);
-			ext[0] = 0.1; ext[1] = 0.1; ext[2] = 0.1;
+			ext[0] = 0.1f; ext[1] = 0.1f; ext[2] = 0.1f;
 
 			dtPolyRef ref;
 			dtQueryFilter filter;
@@ -1676,9 +1671,9 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const
 	{
-		out_pos[0] = in_pos.x - m_LocalOrigin.x;
-		out_pos[1] = in_pos.y - m_LocalOrigin.y;
-		out_pos[2] = in_pos.z - m_LocalOrigin.z;
+		out_pos[0] = static_cast<float>(in_pos.x - m_LocalOrigin.x);
+		out_pos[1] = static_cast<float>(in_pos.y - m_LocalOrigin.y);
+		out_pos[2] = static_cast<float>(in_pos.z - m_LocalOrigin.z);
 	}
 
 	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos,GASS::Vec3 &out_pos) const

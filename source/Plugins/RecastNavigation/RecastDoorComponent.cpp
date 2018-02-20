@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "RecastDoorComponent.h"
-#include "DetourNavMeshQuery.h"
+#include "RecastIncludes.h"
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
@@ -107,8 +107,12 @@ namespace GASS
 					dtQueryFilter filter;
 					float ext[3];
 					float point[3];
-					point[0] =m_Pos.x; point[1] =m_Pos.y; point[2] =m_Pos.z;
-					ext[0] = size.x; ext[1] = size.y; ext[2] = size.z;
+					point[0] = static_cast<float>(m_Pos.x);
+					point[1] = static_cast<float>(m_Pos.y);
+					point[2] = static_cast<float>(m_Pos.z);
+					ext[0] = static_cast<float>(size.x);
+					ext[1] = static_cast<float>(size.y); 
+					ext[2] = static_cast<float>(size.z);
 					float tgt[3];
 					nav_mesh->GetNavMeshQuery()->findNearestPoly(point, ext, &filter, &m_PolyRefs[0], tgt);
 					if(m_PolyRefs[0])

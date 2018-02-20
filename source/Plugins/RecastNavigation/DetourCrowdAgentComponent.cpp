@@ -31,11 +31,11 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("DetourCrowdAgentComponent",new Creator<DetourCrowdAgentComponent, Component>);
 		//RegisterProperty<std::string>("Group", &DetourCrowdAgentComponent::GetGroup, &DetourCrowdAgentComponent::SetGroup);
-		RegisterProperty<Float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
-		RegisterProperty<Float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
-		RegisterProperty<Float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
-		RegisterProperty<Float>("MaxSpeed", &DetourCrowdAgentComponent::GetMaxSpeed, &DetourCrowdAgentComponent::SetMaxSpeed);
-		RegisterProperty<Float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
+		RegisterProperty<float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
+		RegisterProperty<float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
+		RegisterProperty<float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
+		RegisterProperty<float>("MaxSpeed", &DetourCrowdAgentComponent::GetAgentMaxSpeed, &DetourCrowdAgentComponent::SetAgentMaxSpeed);
+		RegisterProperty<float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
 	}
 
 	void DetourCrowdAgentComponent::OnInitialize()
@@ -55,7 +55,7 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::OnSetDesiredSpeed(DesiredSpeedMessagePtr message)
 	{
-		SetMaxSpeed(message->GetSpeed());
+		SetAgentMaxSpeed(message->GetSpeed());
 	}
 
 	void DetourCrowdAgentComponent::OnLoad(LocationLoadedEventPtr message)
@@ -91,34 +91,39 @@ namespace GASS
 		SceneObjectNameMessagePtr nm = GASS_STATIC_PTR_CAST<SceneObjectNameMessage>(message);
 	}
 
+	float DetourCrowdAgentComponent::GetAgentMaxSpeed() const
+	{
+		return m_MaxSpeed;
+	}
+
 	Float DetourCrowdAgentComponent::GetMaxSpeed() const
 	{
 		return m_MaxSpeed;
 	}
 
-	void DetourCrowdAgentComponent::SetMaxSpeed(Float value)
+	void DetourCrowdAgentComponent::SetAgentMaxSpeed(float value)
 	{
 		m_MaxSpeed = value;
 		//UpdateAgentParams();
 	}
 
-	Float DetourCrowdAgentComponent::GetMaxAcceleration() const
+	float DetourCrowdAgentComponent::GetMaxAcceleration() const
 	{
 		return m_MaxAcceleration;
 	}
 
-	void DetourCrowdAgentComponent::SetMaxAcceleration(Float value)
+	void DetourCrowdAgentComponent::SetMaxAcceleration(float value)
 	{
 		m_MaxAcceleration = value;
 		UpdateAgentParams();
 	}
 
-	Float DetourCrowdAgentComponent::GetRadius() const
+	float DetourCrowdAgentComponent::GetRadius() const
 	{
 		return m_Radius;
 	}
 
-	void DetourCrowdAgentComponent::SetRadius(Float value)
+	void DetourCrowdAgentComponent::SetRadius(float value)
 	{
 		m_Radius = value;
 		if(m_Agent)
@@ -128,12 +133,12 @@ namespace GASS
 		}
 	}
 
-	Float DetourCrowdAgentComponent::GetHeight() const
+	float DetourCrowdAgentComponent::GetHeight() const
 	{
 		return m_Height;
 	}
 
-	void DetourCrowdAgentComponent::SetHeight(Float value)
+	void DetourCrowdAgentComponent::SetHeight(float value)
 	{
 		m_Height = value;
 		if(m_Agent)
@@ -143,7 +148,7 @@ namespace GASS
 		}
 	}
 
-	void DetourCrowdAgentComponent::SetSeparationWeight(Float value)
+	void DetourCrowdAgentComponent::SetSeparationWeight(float value)
 	{
 		m_SeparationWeight = value;
 		if(m_Agent)
@@ -205,7 +210,9 @@ namespace GASS
 		dtCrowdAgentParams ap = GetAgentParams();
 		float dpos[3];
 		Vec3 pos = location->GetPosition();
-		dpos[0] = pos.x; dpos[1] = pos.y; dpos[2] = pos.z;
+		dpos[0] = static_cast<float>(pos.x);
+		dpos[1] = static_cast<float>(pos.y); 
+		dpos[2] = static_cast<float>(pos.z);
 		m_Index = crowd->addAgent(dpos, &ap);
 		if (m_Index != -1)
 		{
@@ -234,9 +241,9 @@ namespace GASS
 				expand_ext[0] = ext[0];
 				expand_ext[1] = 1;
 				expand_ext[2] = ext[2];
-				pos[0] = message->GetPosition().x;
-				pos[1] = message->GetPosition().y;
-				pos[2] = message->GetPosition().z;
+				pos[0] = static_cast<float>(message->GetPosition().x);
+				pos[1] = static_cast<float>(message->GetPosition().y);
+				pos[2] = static_cast<float>(message->GetPosition().z);
 
 				navquery->findNearestPoly(pos, expand_ext, filter, &targetRef, targetPos);
 				if(targetRef)
@@ -268,19 +275,19 @@ namespace GASS
 			{
 				const float* pos = m_Agent->npos;
 				int id = GASS_PTR_TO_INT(this);
-				Vec3 current_pos(pos[0],pos[1],pos[2]);
+				Vec3f current_pos(pos[0],pos[1],pos[2]);
 
 				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos,id)));
 
-				Vec3 target_dir = current_pos - m_TargetPos;
-				Float dist = target_dir.Length();
+				Vec3f target_dir = current_pos - Vec3f(m_TargetPos);
+				float dist = target_dir.Length();
 				DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 
 				const float* vel = m_Agent->nvel;
-				Vec3 view_dir(vel[0],vel[1],vel[2]);
-				Float speed = view_dir.Length();
-				Float dist_to_stop = 0.5;
-				Float dist_to_slow_down = speed + dist_to_stop;
+				Vec3f view_dir(vel[0],vel[1],vel[2]);
+				float speed = view_dir.Length();
+				float dist_to_stop = 0.5f;
+				float dist_to_slow_down = speed + dist_to_stop;
 
 				if(dist < dist_to_stop)
 				{
@@ -301,27 +308,27 @@ namespace GASS
 
 					crowd_comp->GetCrowd()->requestMoveVelocity(m_Index, damp_vel);*/
 					dtCrowdAgentParams ap = GetAgentParams();
-					ap.maxSpeed = m_MaxSpeed*ratio;
+					ap.maxSpeed = static_cast<float>(m_MaxSpeed)*ratio;
 					crowd_comp->GetCrowd()->updateAgentParameters(m_Index,&ap);
 				}
 				else
 				{
 					dtCrowdAgentParams ap = GetAgentParams();
-					ap.maxSpeed = m_MaxSpeed;
+					ap.maxSpeed = static_cast<float>(m_MaxSpeed);
 					crowd_comp->GetCrowd()->updateAgentParameters(m_Index,&ap);
 				}
 
-				Vec3 c_velocity = (current_pos - m_LastPos)/delta_time;
+				Vec3f c_velocity = (current_pos - m_LastPos)/static_cast<float>(delta_time);
 				//Float speed2 = (current_pos - m_LastPos).Length();
 				//speed2 = speed2/delta_time;
 				m_LastPos = current_pos;
 				//std::cout << speed << " S2:" << speed2 << std::endl;
-				if(speed > 0.00001)
+				if(speed > 0.00001f)
 				{
 					view_dir.y = 0;
 					view_dir.Normalize();
 
-					Vec3 final_dir;
+					Vec3f final_dir;
 					//m_CurrentDir = view_dir;
 					//if(speed < 0.2)
 					{
@@ -333,12 +340,12 @@ namespace GASS
 						}
 						m_AccTime += delta_time;
 					}
-					Float max_speed = 2;
-					Float min_speed = 0.6;
+					float max_speed = 2;
+					float min_speed = 0.6f;
 					if(speed > min_speed && speed < max_speed)
 					{
-						Float ratio = (speed-min_speed)/(max_speed - min_speed);
-						final_dir = view_dir*ratio + m_CurrentDir*(1.0-ratio);
+						float ratio = (speed-min_speed)/(max_speed - min_speed);
+						final_dir = view_dir*ratio + m_CurrentDir*(1.0f-ratio);
 						final_dir.Normalize();
 					}
 					else if(speed >= max_speed)
@@ -346,17 +353,16 @@ namespace GASS
 					else if(speed <= min_speed)
 						final_dir = m_CurrentDir;
 
-					Vec3 up(0,1,0);
-					Vec3 right = final_dir;
+					Vec3f up(0,1,0);
+					Vec3f right = final_dir;
 					right.x = final_dir.z;
 					right.z = -final_dir.x;
-					GASS::Mat4 rot_mat;
+					GASS::Mat4f rot_mat;
 					rot_mat.MakeIdentity();
 					rot_mat.SetRotationByAxis(right, up, final_dir);
-					Quaternion rot;
+					Quaternionf rot;
 					rot.FromRotationMatrix(rot_mat);
-
-					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
+					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaterniond(rot.w, rot.x, rot.y, rot.z),id)));
 				}
 				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(c_velocity,Vec3(0,0,0),id)));
 			}
@@ -369,7 +375,7 @@ namespace GASS
 		int id = GASS_PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
-			Vec3 pos = message->GetPosition();
+			Vec3f pos = message->GetPosition();
 			DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 			if(m_Agent && crowd_comp)
 			{
@@ -428,9 +434,9 @@ namespace GASS
 		ColorRGBA color(1,0,0,1);
 
 		float samples = 24;
-		float rad = 2*GASS_PI/samples;
+		float rad = 2*static_cast<float>(GASS_PI)/samples;
 		float x,y;
-		Vec3 pos(0,0,0);
+		Vec3f pos(0,0,0);
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
 		for(float i = 0 ;i <= samples; i++)

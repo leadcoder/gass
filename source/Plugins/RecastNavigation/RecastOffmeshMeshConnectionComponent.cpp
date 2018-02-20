@@ -113,7 +113,7 @@ namespace GASS
 
 		//draw circles
 		const float samples = 24;
-		const float rad = 2*GASS_PI/samples;
+		const float rad = 2*static_cast<float>(GASS_PI)/samples;
 		float x,y;
 		Vec3 pos(0,0,0);
 		sub_mesh_data->PositionVector.push_back(pos);
