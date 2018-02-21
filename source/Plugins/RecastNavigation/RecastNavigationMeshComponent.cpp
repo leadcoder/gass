@@ -287,7 +287,7 @@ namespace GASS
 						maxh = vertex[1];
 				}
 
-				m_Geom->addConvexVolume(&points[0], 4, minh, maxh, area);
+				m_Geom->addConvexVolume(&points[0], 4, minh, maxh, static_cast<unsigned char>(area));
 
 				/*int hull[12];
 				std::vector<float> hull_points;
