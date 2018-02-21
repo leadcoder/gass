@@ -70,7 +70,7 @@ namespace GASS
 
 	}
 
-	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
+	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool /*return_at_first_hit*/) const
 	{
 		ScenePtr scene = GetScene();
 		if(scene)
@@ -96,7 +96,6 @@ namespace GASS
 		osg::Vec3d end = OSGConvert::ToOSG(ray_start + ray_dir);
 
 		result->Coll = false;
-		
 		
 		m_IntersectVisitor->reset();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);

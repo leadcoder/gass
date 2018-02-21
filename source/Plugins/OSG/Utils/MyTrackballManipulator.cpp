@@ -249,7 +249,7 @@ void MyTrackballManipulator::addMouseEvent(const GUIEventAdapter& ea)
 
 void MyTrackballManipulator::setByMatrix(const osg::Matrixd& matrix)
 {
-	_center = osg::Vec3(0.0, 0.0, -_distance) *matrix;
+	_center = osg::Vec3d(0.0, 0.0, -_distance) *matrix;
 	_rotation = matrix.getRotate();
 }
 
