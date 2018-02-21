@@ -24,7 +24,7 @@
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "SkyX.h"
+#include "EnvironmentIncludes.h"
 
 namespace GASS
 {
@@ -43,46 +43,41 @@ namespace GASS
 		void CreateVolume();
 	protected:
 		void OnWeatherRequest(WeatherRequestPtr message);
-		void SetNoiseScale(const Float &value);
-		Float GetNoiseScale() const;
-		void SetCloudFieldScale(const Float &value);
-		Float GetCloudFieldScale() const;
-		void SetWindDirection(const Float &value);
-		Float GetWindDirection() const ;
-		void SetWindSpeed(const Float &value);
-		Float GetWindSpeed() const;
-		void SetGlobalOpacity(const Float &value);
-		Float GetGlobalOpacity() const;
-		void SetWeather(const Vec3 &value);
-		Vec3 GetWeather() const;
-		void SetHeight(const Vec2 &value);
-		Vec2 GetHeight() const;
-		void SetRadius(const Float &value);
-		Float GetRadius() const;
-		Vec4 GetLightResponse() const;
-		void SetLightResponse(const Vec4 &value);
+		void SetNoiseScale(const float &value);
+		float GetNoiseScale() const;
+		void SetCloudFieldScale(const float &value);
+		float GetCloudFieldScale() const;
+		void SetWindDirection(const float &value);
+		float GetWindDirection() const ;
+		void SetWindSpeed(const float &value);
+		float GetWindSpeed() const;
+		void SetGlobalOpacity(const float &value);
+		float GetGlobalOpacity() const;
+		void SetWeather(const Vec3f &value);
+		Vec3f GetWeather() const;
+		void SetHeight(const Vec2f &value);
+		Vec2f GetHeight() const;
+		void SetRadius(const float &value);
+		float GetRadius() const;
+		Vec4f GetLightResponse() const;
+		void SetLightResponse(const Vec4f &value);
 		void SetAutoupdate(const bool& value);
 		bool GetAutoupdate() const;
 		
-		
 	private:
-		
 		SkyX::VCloudsManager* m_CloudManager;
-		Float  m_WindDirection;
-		Float m_NoiseScale;
-		Float m_CloudFieldScale;
-		Float m_WindSpeed;
-		Vec3 m_Weather;
-		Float m_GlobalOpacity;
-		Float m_Radius;
-		Vec2 m_Height;
-		Vec4 m_LightResponse;
+		float  m_WindDirection;
+		float m_NoiseScale;
+		float m_CloudFieldScale;
+		float m_WindSpeed;
+		Vec3f m_Weather;
+		float m_GlobalOpacity;
+		float m_Radius;
+		Vec2f m_Height;
+		Vec4f m_LightResponse;
 		bool m_Autoupdate;
-		
-	
 	};
 	typedef GASS_SHARED_PTR<SkyXVolumeCloudComponent> SkyXVolumeCloudComponentPtr; 
-
 }
 
 #endif

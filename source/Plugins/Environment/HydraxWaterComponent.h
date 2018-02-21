@@ -25,7 +25,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include <OgreFrameListener.h>
+#include "EnvironmentIncludes.h"
 
 
 namespace Hydrax

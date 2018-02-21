@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "SkyX.h"
+#include "EnvironmentIncludes.h"
 
 namespace GASS
 {
@@ -41,30 +41,30 @@ namespace GASS
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
 		void OnTimeOfDayRequest(TimeOfDayRequestPtr message);
-		void SetInnerRadius(const Float &value);
-		Float GetInnerRadius() const;
-		void SetOuterRadius(const Float &value);
-		Float GetOuterRadius() const ;
-		void SetExposure(const Float &value);
-		Float GetExposure() const ;
-		void SetHeightPosition(const Float &value);
-		Float GetHeightPosition() const ;
-		void SetRayleighMultiplier(const Float &value);
-		Float GetRayleighMultiplier() const ;
-		Float GetMieMultiplier() const ;
-		void SetMieMultiplier(const Float &value);
+		void SetInnerRadius(const float &value);
+		float GetInnerRadius() const;
+		void SetOuterRadius(const float &value);
+		float GetOuterRadius() const ;
+		void SetExposure(const float &value);
+		float GetExposure() const ;
+		void SetHeightPosition(const float &value);
+		float GetHeightPosition() const ;
+		void SetRayleighMultiplier(const float &value);
+		float GetRayleighMultiplier() const ;
+		float GetMieMultiplier() const ;
+		void SetMieMultiplier(const float &value);
 		int GetNumberOfSamples() const ;
 		void SetNumberOfSamples(const int &value);
-		void SetTimeMultiplier(const double &value);
-		double GetTimeMultiplier() const;
-		void SetMoonSize(const Float &value);
-		Float GetMoonSize() const ;
+		void SetTimeMultiplier(const float &value);
+		float GetTimeMultiplier() const;
+		void SetMoonSize(const float &value);
+		float GetMoonSize() const ;
 
 		/** Set time
 		    @param value Time, where x = time in [0, 24]h range, y = sunrise hour in [0, 24]h range, z = sunset hour in [0, 24] range
 		 */
-		void SetTime(const Vec3 &value);
-		Vec3 GetTime() const;
+		void SetTime(const Vec3f &value);
+		Vec3f GetTime() const;
 
 		void UpdateOptions();
 
@@ -73,15 +73,15 @@ namespace GASS
 	private:
 		void _Init();
 		Ogre::RenderTarget* m_Target;
-		double m_TimeMultiplier;
+		float m_TimeMultiplier;
 		SkyX::SkyX* m_SkyX;
-		Float m_MoonSize;
+		float m_MoonSize;
 		SkyX::AtmosphereManager::Options m_SkyXOptions;
-		Float m_Radius;
+		float m_Radius;
 		bool m_SkyDomeFog;
 		bool m_Initialized;
 		SkyX::BasicController* m_BasicController;
-		Vec3 m_Time;
+		Vec3f m_Time;
 	};
 	typedef GASS_SHARED_PTR<SkyXComponent> SkyXComponentPtr;
 

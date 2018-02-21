@@ -25,8 +25,6 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
-#pragma warning(disable: 4512)
-#include <Ogre.h>
 
 namespace GASS
 {
@@ -44,23 +42,23 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("SkyXCloudLayerComponent",new Creator<SkyXCloudLayerComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXCloudLayerComponent", OF_VISIBLE )));
-		RegisterProperty<Float>("Scale", &SkyXCloudLayerComponent::GetScale, &SkyXCloudLayerComponent::SetScale,
+		RegisterProperty<float>("Scale", &SkyXCloudLayerComponent::GetScale, &SkyXCloudLayerComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("Height", &SkyXCloudLayerComponent::GetHeight, &SkyXCloudLayerComponent::SetHeight,
+		RegisterProperty<float>("Height", &SkyXCloudLayerComponent::GetHeight, &SkyXCloudLayerComponent::SetHeight,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("WindDirection", &SkyXCloudLayerComponent::GetWindDirection, &SkyXCloudLayerComponent::SetWindDirection,
+		RegisterProperty<Vec2f>("WindDirection", &SkyXCloudLayerComponent::GetWindDirection, &SkyXCloudLayerComponent::SetWindDirection,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("TimeMultiplier", &SkyXCloudLayerComponent::GetTimeMultiplier, &SkyXCloudLayerComponent::SetTimeMultiplier,
+		RegisterProperty<float>("TimeMultiplier", &SkyXCloudLayerComponent::GetTimeMultiplier, &SkyXCloudLayerComponent::SetTimeMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("DistanceAttenuation", &SkyXCloudLayerComponent::GetDistanceAttenuation, &SkyXCloudLayerComponent::SetDistanceAttenuation,
+		RegisterProperty<float>("DistanceAttenuation", &SkyXCloudLayerComponent::GetDistanceAttenuation, &SkyXCloudLayerComponent::SetDistanceAttenuation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("DetailAttenuation", &SkyXCloudLayerComponent::GetDetailAttenuation, &SkyXCloudLayerComponent::SetDetailAttenuation,
+		RegisterProperty<float>("DetailAttenuation", &SkyXCloudLayerComponent::GetDetailAttenuation, &SkyXCloudLayerComponent::SetDetailAttenuation,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("NormalMultiplier", &SkyXCloudLayerComponent::GetNormalMultiplier, &SkyXCloudLayerComponent::SetNormalMultiplier,
+		RegisterProperty<float>("NormalMultiplier", &SkyXCloudLayerComponent::GetNormalMultiplier, &SkyXCloudLayerComponent::SetNormalMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("HeightVolume", &SkyXCloudLayerComponent::GetHeightVolume, &SkyXCloudLayerComponent::SetHeightVolume,
+		RegisterProperty<float>("HeightVolume", &SkyXCloudLayerComponent::GetHeightVolume, &SkyXCloudLayerComponent::SetHeightVolume,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("VolumetricDisplacement", &SkyXCloudLayerComponent::GetVolumetricDisplacement, &SkyXCloudLayerComponent::SetVolumetricDisplacement,
+		RegisterProperty<float>("VolumetricDisplacement", &SkyXCloudLayerComponent::GetVolumetricDisplacement, &SkyXCloudLayerComponent::SetVolumetricDisplacement,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
@@ -69,104 +67,103 @@ namespace GASS
 		
 	}
 	
-	void SkyXCloudLayerComponent::SetScale(const Float &value)
+	void SkyXCloudLayerComponent::SetScale(const float &value)
 	{
 		m_Options.Scale = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetScale() const 
+	float SkyXCloudLayerComponent::GetScale() const
 	{
 		return m_Options.Scale;
 	}
 
-	void SkyXCloudLayerComponent::SetVolumetricDisplacement(const Float &value)
+	void SkyXCloudLayerComponent::SetVolumetricDisplacement(const float &value)
 	{
 		m_Options.VolumetricDisplacement = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetVolumetricDisplacement() const 
+	float SkyXCloudLayerComponent::GetVolumetricDisplacement() const
 	{
 		return m_Options.VolumetricDisplacement;
 	}
 
-	void SkyXCloudLayerComponent::SetHeightVolume(const Float &value)
+	void SkyXCloudLayerComponent::SetHeightVolume(const float &value)
 	{
 		m_Options.HeightVolume = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetHeightVolume() const 
+	float SkyXCloudLayerComponent::GetHeightVolume() const
 	{
 		return m_Options.HeightVolume;
 	}
 
-	void SkyXCloudLayerComponent::SetNormalMultiplier(const Float &value)
+	void SkyXCloudLayerComponent::SetNormalMultiplier(const float &/*value*/)
 	{
 		//m_Options.NormalMultiplier = value;
 		//UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetNormalMultiplier() const 
+	float SkyXCloudLayerComponent::GetNormalMultiplier() const
 	{
 		return 0;//m_Options.NormalMultiplier;
 	}
 	
-	void SkyXCloudLayerComponent::SetDetailAttenuation(const Float &value)
+	void SkyXCloudLayerComponent::SetDetailAttenuation(const float &value)
 	{
 		m_Options.DetailAttenuation = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetDetailAttenuation() const 
+	float SkyXCloudLayerComponent::GetDetailAttenuation() const
 	{
 		return m_Options.DetailAttenuation;
 	}
 
 
-	void SkyXCloudLayerComponent::SetDistanceAttenuation(const Float &value)
+	void SkyXCloudLayerComponent::SetDistanceAttenuation(const float &value)
 	{
 		m_Options.DistanceAttenuation = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetDistanceAttenuation() const 
+	float SkyXCloudLayerComponent::GetDistanceAttenuation() const 
 	{
 		return m_Options.DistanceAttenuation;
 	}
 
-	void SkyXCloudLayerComponent::SetTimeMultiplier(const Float &value)
+	void SkyXCloudLayerComponent::SetTimeMultiplier(const float &value)
 	{
 		m_Options.TimeMultiplier = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetTimeMultiplier() const 
+	float SkyXCloudLayerComponent::GetTimeMultiplier() const
 	{
 		return m_Options.TimeMultiplier;
 	}
 
-
-	void SkyXCloudLayerComponent::SetWindDirection(const Vec2 &value)
+	void SkyXCloudLayerComponent::SetWindDirection(const Vec2f &value)
 	{
-		m_Options.WindDirection = OgreConvert::ToOgre(value);
+		m_Options.WindDirection.x = value.x;
+		m_Options.WindDirection.y = value.y;
 		UpdateOptions();
 	}
 
-	Vec2 SkyXCloudLayerComponent::GetWindDirection() const 
+	Vec2f SkyXCloudLayerComponent::GetWindDirection() const 
 	{
-		return OgreConvert::ToGASS(m_Options.WindDirection);
+		return Vec2f(m_Options.WindDirection.x, m_Options.WindDirection.y);
 	}
 
-
-	void SkyXCloudLayerComponent::SetHeight(const Float &value)
+	void SkyXCloudLayerComponent::SetHeight(const float &value)
 	{
 		m_Options.Height = value;
 		UpdateOptions();
 	}
 
-	Float SkyXCloudLayerComponent::GetHeight() const 
+	float SkyXCloudLayerComponent::GetHeight() const
 	{
 		return m_Options.Height;
 	}

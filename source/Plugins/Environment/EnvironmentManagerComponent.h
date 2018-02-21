@@ -26,9 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include <OgreLight.h>
-#include "Hydrax/Hydrax.h"
-#include "SkyX.h"
+#include "EnvironmentIncludes.h"
 
 namespace GASS
 {
@@ -49,23 +47,23 @@ namespace GASS
 		void OnChangeCamera(CameraChangedEventPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
 		bool frameStarted(const Ogre::FrameEvent& evt);
-		void SetWaterGradient(const std::vector<Vec3> &value);
-		std::vector<Vec3>  GetWaterGradient() const ;
+		void SetWaterGradient(const std::vector<Vec3f> &value);
+		std::vector<Vec3f>  GetWaterGradient() const ;
 		void SetWaterGradientWeights(const std::vector<float> &value);
 		std::vector<float>  GetWaterGradientWeights() const;
 
-		void SetSunGradient(const std::vector<Vec3> &value);
-		std::vector<Vec3>  GetSunGradient() const ;
+		void SetSunGradient(const std::vector<Vec3f> &value);
+		std::vector<Vec3f>  GetSunGradient() const ;
 		void SetSunGradientWeights(const std::vector<float> &value);
 		std::vector<float>  GetSunGradientWeights() const;
 
-		void SetAmbientGradient(const std::vector<Vec3> &value);
-		std::vector<Vec3>  GetAmbientGradient() const ;
+		void SetAmbientGradient(const std::vector<Vec3f> &value);
+		std::vector<Vec3f>  GetAmbientGradient() const ;
 		void SetAmbientGradientWeights(const std::vector<float> &value);
 		std::vector<float>  GetAmbientGradientWeights() const;
 
-		void SetFogGradient(const std::vector<Vec3> &value);
-		std::vector<Vec3>  GetFogGradient() const ;
+		void SetFogGradient(const std::vector<Vec3f> &value);
+		std::vector<Vec3f>  GetFogGradient() const ;
 		void SetFogGradientWeights(const std::vector<float> &value);
 		std::vector<float>  GetFogGradientWeights() const;
 		
@@ -74,10 +72,10 @@ namespace GASS
 	private:
 		Ogre::Light *m_SunLight;
 		
-		std::vector<Vec3> m_WaterGradientValues;
-		std::vector<Vec3> m_SunGradientValues;
-		std::vector<Vec3> m_AmbientGradientValues;
-		std::vector<Vec3> m_FogGradientValues;
+		std::vector<Vec3f> m_WaterGradientValues;
+		std::vector<Vec3f> m_SunGradientValues;
+		std::vector<Vec3f> m_AmbientGradientValues;
+		std::vector<Vec3f> m_FogGradientValues;
 		
 		std::vector<float> m_WaterGradientWeights;
 		std::vector<float> m_SunGradientWeights;

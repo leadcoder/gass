@@ -29,9 +29,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
 
-#pragma warning(disable: 4512)
-#include <Ogre.h>
-
 namespace GASS
 {
 	SkyXVolumeCloudComponent::SkyXVolumeCloudComponent(void) :m_CloudManager(NULL), 
@@ -60,23 +57,23 @@ namespace GASS
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXVolumeCloudComponent", OF_VISIBLE )));
 
-		RegisterProperty<Float>("NoiseScale", &SkyXVolumeCloudComponent::GetNoiseScale, &SkyXVolumeCloudComponent::SetNoiseScale,
+		RegisterProperty<float>("NoiseScale", &SkyXVolumeCloudComponent::GetNoiseScale, &SkyXVolumeCloudComponent::SetNoiseScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("CloudFieldScale", &SkyXVolumeCloudComponent::GetCloudFieldScale, &SkyXVolumeCloudComponent::SetCloudFieldScale,
+		RegisterProperty<float>("CloudFieldScale", &SkyXVolumeCloudComponent::GetCloudFieldScale, &SkyXVolumeCloudComponent::SetCloudFieldScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("WindDirection", &SkyXVolumeCloudComponent::GetWindDirection, &SkyXVolumeCloudComponent::SetWindDirection,
+		RegisterProperty<float>("WindDirection", &SkyXVolumeCloudComponent::GetWindDirection, &SkyXVolumeCloudComponent::SetWindDirection,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("WindSpeed", &SkyXVolumeCloudComponent::GetWindSpeed, &SkyXVolumeCloudComponent::SetWindSpeed,
+		RegisterProperty<float>("WindSpeed", &SkyXVolumeCloudComponent::GetWindSpeed, &SkyXVolumeCloudComponent::SetWindSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("GlobalOpacity", &SkyXVolumeCloudComponent::GetGlobalOpacity, &SkyXVolumeCloudComponent::SetGlobalOpacity,
+		RegisterProperty<float>("GlobalOpacity", &SkyXVolumeCloudComponent::GetGlobalOpacity, &SkyXVolumeCloudComponent::SetGlobalOpacity,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("Height", &SkyXVolumeCloudComponent::GetHeight, &SkyXVolumeCloudComponent::SetHeight,
+		RegisterProperty<Vec2f>("Height", &SkyXVolumeCloudComponent::GetHeight, &SkyXVolumeCloudComponent::SetHeight,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("Radius", &SkyXVolumeCloudComponent::GetRadius, &SkyXVolumeCloudComponent::SetRadius,
+		RegisterProperty<float>("Radius", &SkyXVolumeCloudComponent::GetRadius, &SkyXVolumeCloudComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Weather", &SkyXVolumeCloudComponent::GetWeather, &SkyXVolumeCloudComponent::SetWeather,
+		RegisterProperty<Vec3f>("Weather", &SkyXVolumeCloudComponent::GetWeather, &SkyXVolumeCloudComponent::SetWeather,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4>("LightResponse", &SkyXVolumeCloudComponent::GetLightResponse, &SkyXVolumeCloudComponent::SetLightResponse,
+		RegisterProperty<Vec4f>("LightResponse", &SkyXVolumeCloudComponent::GetLightResponse, &SkyXVolumeCloudComponent::SetLightResponse,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("Autoupdate", &SkyXVolumeCloudComponent::GetAutoupdate, &SkyXVolumeCloudComponent::SetAutoupdate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -92,8 +89,8 @@ namespace GASS
 		float cloud_factor = message->GetClouds();
 		SetGlobalOpacity(cloud_factor);
 
-		Vec4 ls = GetLightResponse();
-		ls.y = 0.1 + (0.9 - cloud_factor-0.1);
+		Vec4f ls = GetLightResponse();
+		ls.y = 0.1f + (0.9f - cloud_factor-0.1f);
 		ls.w = ls.y;
 		SetLightResponse(ls);
 	}
@@ -111,106 +108,106 @@ namespace GASS
 		return m_Autoupdate;
 	}
 
-	void SkyXVolumeCloudComponent::SetLightResponse(const Vec4 &value)
+	void SkyXVolumeCloudComponent::SetLightResponse(const Vec4f &value)
 	{
 		m_LightResponse = value;
 		if(m_CloudManager)
-			m_CloudManager->getVClouds()->setLightResponse(OgreConvert::ToOgre(value));
+			m_CloudManager->getVClouds()->setLightResponse(Ogre::Vector4(value.x, value.y, value.z, value.w));
 	}
 
-	Vec4 SkyXVolumeCloudComponent::GetLightResponse() const 
+	Vec4f SkyXVolumeCloudComponent::GetLightResponse() const 
 	{
 		return m_LightResponse;
 	}
 
-	void SkyXVolumeCloudComponent::SetCloudFieldScale(const Float &value)
+	void SkyXVolumeCloudComponent::SetCloudFieldScale(const float &value)
 	{
 		m_CloudFieldScale = value;
 		if(m_CloudManager)
 			m_CloudManager->getVClouds()->setCloudFieldScale(value);
 	}
 
-	Float SkyXVolumeCloudComponent::GetCloudFieldScale() const 
+	float SkyXVolumeCloudComponent::GetCloudFieldScale() const 
 	{
 		return m_CloudFieldScale;
 	}
 
-	void SkyXVolumeCloudComponent::SetNoiseScale(const Float &value)
+	void SkyXVolumeCloudComponent::SetNoiseScale(const float &value)
 	{
 		m_NoiseScale = value;
 		if(m_CloudManager)
 			m_CloudManager->getVClouds()->setNoiseScale(m_NoiseScale);
 	}
 
-	Float SkyXVolumeCloudComponent::GetNoiseScale() const 
+	float SkyXVolumeCloudComponent::GetNoiseScale() const 
 	{
 		return m_NoiseScale;
 	}
 
-	void SkyXVolumeCloudComponent::SetWindDirection(const Float &value)
+	void SkyXVolumeCloudComponent::SetWindDirection(const float &value)
 	{
 		m_WindDirection = value;
 		if(m_CloudManager)
 			m_CloudManager->getVClouds()->setWindDirection(Ogre::Radian(m_WindDirection));
 	}
 
-	Float SkyXVolumeCloudComponent::GetWindDirection() const 
+	float SkyXVolumeCloudComponent::GetWindDirection() const 
 	{
 		return m_WindDirection;
 	}
 
-	void SkyXVolumeCloudComponent::SetGlobalOpacity(const Float &value)
+	void SkyXVolumeCloudComponent::SetGlobalOpacity(const float &value)
 	{
 		m_GlobalOpacity = value;
 		if(m_CloudManager)
 			m_CloudManager->getVClouds()->setGlobalOpacity(value);
 	}
 
-	Float SkyXVolumeCloudComponent::GetGlobalOpacity() const 
+	float SkyXVolumeCloudComponent::GetGlobalOpacity() const 
 	{
 		return m_GlobalOpacity;
 	}
 
-	void SkyXVolumeCloudComponent::SetWeather(const Vec3 &value)
+	void SkyXVolumeCloudComponent::SetWeather(const Vec3f &value)
 	{
 		m_Weather = value;
 		if(m_CloudManager)
-			m_CloudManager->getVClouds()->setWheater(static_cast<float>(value.x),
-													 static_cast<float>(value.y),
+			m_CloudManager->getVClouds()->setWheater(value.x,
+													 value.y,
 													 value.z > 0);
 	}
 
 
-	Vec3 SkyXVolumeCloudComponent::GetWeather() const 
+	Vec3f SkyXVolumeCloudComponent::GetWeather() const 
 	{
 		return m_Weather;
 	}
 
-	void SkyXVolumeCloudComponent::SetHeight(const Vec2 &value)
+	void SkyXVolumeCloudComponent::SetHeight(const Vec2f &value)
 	{
 		m_Height = value;
 		if(m_CloudManager)
 			CreateVolume();	//reload
 	}
 
-	Vec2 SkyXVolumeCloudComponent::GetHeight() const 
+	Vec2f SkyXVolumeCloudComponent::GetHeight() const 
 	{
 		return m_Height;
 	}
 	
-	void SkyXVolumeCloudComponent::SetWindSpeed(const Float &value)
+	void SkyXVolumeCloudComponent::SetWindSpeed(const float &value)
 	{
 		m_WindSpeed = value;
 		if(m_CloudManager)
 			m_CloudManager->setWindSpeed(value);
 	}
 
-	Float SkyXVolumeCloudComponent::GetWindSpeed() const 
+	float SkyXVolumeCloudComponent::GetWindSpeed() const 
 	{
 		return m_WindSpeed;
 	}
 
-	void SkyXVolumeCloudComponent::SetRadius(const Float &value)
+	void SkyXVolumeCloudComponent::SetRadius(const float &value)
 	{
 		m_Radius = value;
 		if(m_CloudManager)
@@ -218,7 +215,7 @@ namespace GASS
 		//	m_CloudManager->getVClouds()->setRadius(value);
 	}
 
-	Float SkyXVolumeCloudComponent::GetRadius() const 
+	float SkyXVolumeCloudComponent::GetRadius() const 
 	{
 		return m_Radius;
 	}
@@ -235,7 +232,7 @@ namespace GASS
 			//skyx->GetSkyX()->getCamera()->setFarClipDistance(m_Radius);
 			m_CloudManager = skyx->GetSkyX()->getVCloudsManager();
 			// Volumetric clouds
-			m_CloudManager->setHeight(OgreConvert::ToOgre(m_Height));
+			m_CloudManager->setHeight(Ogre::Vector2(m_Height.x, m_Height.y));
 			m_CloudManager->create(m_Radius);
 			//skyx->GetSkyX()->getCamera()->setFarClipDistance(save_clip );
 

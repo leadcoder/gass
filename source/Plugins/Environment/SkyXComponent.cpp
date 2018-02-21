@@ -31,7 +31,6 @@
 
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
-#include <Ogre.h>
 
 namespace GASS
 {
@@ -57,25 +56,25 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("SkyXComponent",new Creator<SkyXComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXComponent", OF_VISIBLE )));
-		RegisterProperty<double>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
+		RegisterProperty<float>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,
+		RegisterProperty<Vec3f>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius,
+		RegisterProperty<float>("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius,
+		RegisterProperty<float>("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure,
+		RegisterProperty<float>("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition,
+		RegisterProperty<float>("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,
+		RegisterProperty<float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,
+		RegisterProperty<float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize,
+		RegisterProperty<float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -202,7 +201,7 @@ namespace GASS
 		//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( SkyXComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
-	void SkyXComponent::SetMoonSize(const Float &value)
+	void SkyXComponent::SetMoonSize(const float &value)
 	{
 		m_MoonSize = value;
 		if(m_SkyX)
@@ -211,73 +210,73 @@ namespace GASS
 		}
 	}
 
-	Float SkyXComponent::GetMoonSize() const 
+	float SkyXComponent::GetMoonSize() const 
 	{
 		return m_MoonSize;
 	}
 
-	void SkyXComponent::SetInnerRadius(const Float &value)
+	void SkyXComponent::SetInnerRadius(const float &value)
 	{
 		m_SkyXOptions.InnerRadius = value;
 		UpdateOptions();
 	}
 
-	Float SkyXComponent::GetInnerRadius() const 
+	float SkyXComponent::GetInnerRadius() const 
 	{
 		return m_SkyXOptions.InnerRadius;
 	}
 
-	void SkyXComponent::SetOuterRadius(const Float &value)
+	void SkyXComponent::SetOuterRadius(const float &value)
 	{
 		m_SkyXOptions.OuterRadius = value;
 		UpdateOptions();
 	}
 
-	Float SkyXComponent::GetOuterRadius() const 
+	float SkyXComponent::GetOuterRadius() const 
 	{
 		return m_SkyXOptions.OuterRadius;
 	}
 
-	void SkyXComponent::SetExposure(const Float &value)
+	void SkyXComponent::SetExposure(const float &value)
 	{
 		m_SkyXOptions.Exposure = value;
 		UpdateOptions();
 	}
 
-	Float SkyXComponent::GetExposure() const 
+	float SkyXComponent::GetExposure() const 
 	{
 		return m_SkyXOptions.Exposure;
 	}
 
 
-	void SkyXComponent::SetHeightPosition(const Float &value)
+	void SkyXComponent::SetHeightPosition(const float &value)
 	{
 		m_SkyXOptions.HeightPosition = value;
 		UpdateOptions();
 	}
 
-	Float SkyXComponent::GetHeightPosition() const 
+	float SkyXComponent::GetHeightPosition() const 
 	{
 		return m_SkyXOptions.HeightPosition;
 	}
 
-	void SkyXComponent::SetRayleighMultiplier(const Float &value)
+	void SkyXComponent::SetRayleighMultiplier(const float &value)
 	{
 		m_SkyXOptions.RayleighMultiplier = value;
 		UpdateOptions();
 	}
 
-	Float SkyXComponent::GetRayleighMultiplier() const 
+	float SkyXComponent::GetRayleighMultiplier() const 
 	{
 		return m_SkyXOptions.RayleighMultiplier;
 	}
 
-	Float SkyXComponent::GetMieMultiplier() const 
+	float SkyXComponent::GetMieMultiplier() const 
 	{
 		return m_SkyXOptions.MieMultiplier;
 	}
 
-	void SkyXComponent::SetMieMultiplier(const Float &value)
+	void SkyXComponent::SetMieMultiplier(const float &value)
 	{
 		m_SkyXOptions.MieMultiplier = value;
 		UpdateOptions();
@@ -296,7 +295,7 @@ namespace GASS
 		UpdateOptions();
 	}
 
-	void SkyXComponent::SetTimeMultiplier(const double &value)
+	void SkyXComponent::SetTimeMultiplier(const float &value)
 	{
 		if(m_SkyX)
 		{
@@ -305,24 +304,24 @@ namespace GASS
 		m_TimeMultiplier = value;
 	}
 
-	double SkyXComponent::GetTimeMultiplier() const 
+	float SkyXComponent::GetTimeMultiplier() const
 	{
 		return m_TimeMultiplier;
 	}
 
 
-	Vec3 SkyXComponent::GetTime() const 
+	Vec3f SkyXComponent::GetTime() const 
 	{
 		//if(m_BasicController)
 		//	return OgreConvert::ToGASS(m_BasicController->getTime());
 		return m_Time;
 	}
 
-	void SkyXComponent::SetTime(const Vec3 &value)
+	void SkyXComponent::SetTime(const Vec3f &value)
 	{
 		m_Time = value;
 		if(m_BasicController)
-			m_BasicController->setTime(OgreConvert::ToOgre(value));
+			m_BasicController->setTime(Ogre::Vector3(value.x, value.y, value.z));
 	}
 
 
@@ -361,9 +360,10 @@ namespace GASS
 
 	void SkyXComponent::OnTimeOfDayRequest(TimeOfDayRequestPtr message)
 	{
-		SetTimeMultiplier(message->GetSpeed());
-		SetTime(Vec3(message->GetTime(),message->GetSunRise(),message->GetSunSet()));
-		//std::cout << "Set time of day, time:" << message->GetTime() << " rise:" << message->GetSunRise() << " Set:" << message->GetSunSet() << " speed:" << message->GetSpeed() << "\n";
+		SetTimeMultiplier(static_cast<float>(message->GetSpeed()));
+		SetTime(Vec3f(static_cast<float>(message->GetTime()),
+			static_cast<float>(message->GetSunRise()),
+			static_cast<float>(message->GetSunSet())));
 	}
 }
 

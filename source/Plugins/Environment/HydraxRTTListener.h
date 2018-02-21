@@ -21,8 +21,7 @@
 #define HYDRAX_RTT_LISTENER_H
 
 #include "Sim/GASSCommon.h"
-#include "Hydrax/Hydrax.h"
-#include "SkyX.h"
+
 
 namespace GASS
 {

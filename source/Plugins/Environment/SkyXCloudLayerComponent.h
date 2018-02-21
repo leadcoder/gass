@@ -23,7 +23,7 @@
 #include "Core/Common.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "SkyX.h"
+#include "EnvironmentIncludes.h"
 
 namespace GASS
 {
@@ -36,24 +36,24 @@ namespace GASS
 		virtual void OnInitialize();
 		void CreateLayer();
 	protected:
-		void SetScale(const Float &value);
-		Float GetScale() const;
-		void SetVolumetricDisplacement(const Float &value);
-		Float GetVolumetricDisplacement() const ;
-		void SetHeightVolume(const Float &value);
-		Float GetHeightVolume() const ;
-		void SetNormalMultiplier(const Float &value);
-		Float GetNormalMultiplier() const ;
-		void SetDetailAttenuation(const Float &value);
-		Float GetDetailAttenuation() const ;
-		void SetDistanceAttenuation(const Float &value);
-		Float GetDistanceAttenuation() const ;
-		void SetTimeMultiplier(const Float &value);
-		Float GetTimeMultiplier() const ;
-		void SetWindDirection(const Vec2 &value);
-		Vec2 GetWindDirection() const ;
-		void SetHeight(const Float &value);
-		Float GetHeight() const ;
+		void SetScale(const float &value);
+		float GetScale() const;
+		void SetVolumetricDisplacement(const float &value);
+		float GetVolumetricDisplacement() const ;
+		void SetHeightVolume(const float &value);
+		float GetHeightVolume() const ;
+		void SetNormalMultiplier(const float &value);
+		float GetNormalMultiplier() const ;
+		void SetDetailAttenuation(const float &value);
+		float GetDetailAttenuation() const ;
+		void SetDistanceAttenuation(const float &value);
+		float GetDistanceAttenuation() const ;
+		void SetTimeMultiplier(const float &value);
+		float GetTimeMultiplier() const ;
+		void SetWindDirection(const Vec2f &value);
+		Vec2f GetWindDirection() const ;
+		void SetHeight(const float &value);
+		float GetHeight() const ;
 		void UpdateOptions();
 		
 	private:

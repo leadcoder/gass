@@ -256,7 +256,7 @@ namespace GASS
 	}
 
 
-	void HydraxWaterComponent::SetGPUStrength(const float &value)
+	void HydraxWaterComponent::SetGPUStrength(const float &/*value*/)
 	{
 		if(m_Hydrax)
 		{
@@ -911,7 +911,7 @@ namespace GASS
 		}
 	}
 
-	bool  HydraxWaterComponent::frameStarted(const Ogre::FrameEvent& evt)
+	bool  HydraxWaterComponent::frameStarted(const Ogre::FrameEvent& /*evt*/)
 	{
 		double c_time = SimEngine::Get().GetRunTimeController()->GetSimulationTime();
 		static double prev_time = 0;

@@ -22,8 +22,6 @@
 #include "SkyXComponent.h"
 #include "HydraxWaterComponent.h"
 #include "HydraxRTTListener.h"
-#include <Hydrax/Hydrax.h>
-#include <SkyX.h>
 
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/GASSIOgreCameraProxy.h"
@@ -38,9 +36,6 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
-#pragma warning(disable: 4512)
-#include <Ogre.h>
-
 
 namespace GASS
 {
@@ -52,12 +47,12 @@ namespace GASS
 		m_CloudFactor(0)
 	{
 
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.4,0.535822*0.4,0.779105*0.4));
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.3,0.535822*0.3,0.779105*0.3));
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.25,0.535822*0.25,0.679105*0.25));
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.2,0.535822*0.2,0.679105*0.2));
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.1,0.535822*0.1,0.679105*0.1));
-		m_WaterGradientValues.push_back(Vec3(0.058209*0.1,0.535822*0.1,0.679105*0.025));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.4f,0.535822f*0.4f,0.779105f*0.4f));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.3f,0.535822f*0.3f,0.779105f*0.3f));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.25f,0.535822f*0.25f,0.679105f*0.25f));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.2f,0.535822f*0.2f,0.679105f*0.2f));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.1f,0.535822f*0.1f,0.679105f*0.1f));
+		m_WaterGradientValues.push_back(Vec3f(0.058209f*0.1f,0.535822f*0.1f,0.679105f*0.025f));
 
 		m_WaterGradientWeights.push_back(1);
 		m_WaterGradientWeights.push_back(0.8f);
@@ -67,12 +62,12 @@ namespace GASS
 		m_WaterGradientWeights.push_back(0);
 
 
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
-		m_SunGradientValues.push_back(Vec3(0.8,0.75,0.55)*1.0);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
-		m_SunGradientValues.push_back(Vec3(0.6,0.5,0.2)*1.0);
+		m_SunGradientValues.push_back(Vec3f(0.8f,0.75f,0.55f)*1.0f);
+		m_SunGradientValues.push_back(Vec3f(0.8f,0.75f,0.55f)*1.0f);
+		m_SunGradientValues.push_back(Vec3f(0.8f,0.75f,0.55f)*1.0f);
+		m_SunGradientValues.push_back(Vec3f(0.6f,0.5f,0.2f)*1.0f);
+		m_SunGradientValues.push_back(Vec3f(0.6f,0.5f,0.2f)*1.0f);
+		m_SunGradientValues.push_back(Vec3f(0.6f,0.5f,0.2f)*1.0f);
 
 		m_SunGradientWeights.push_back(1.0);
 		m_SunGradientWeights.push_back(0.75f);
@@ -81,12 +76,12 @@ namespace GASS
 		m_SunGradientWeights.push_back(0.45f);
 		m_SunGradientWeights.push_back(0.0f);
 
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*1.0);
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.6);
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.3);
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.1);
-		m_AmbientGradientValues.push_back(Vec3(1,1,1)*0.05);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*1.0f);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*1.0f);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*0.6f);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*0.3f);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*0.1f);
+		m_AmbientGradientValues.push_back(Vec3f(1,1,1)*0.05f);
 
 		m_AmbientGradientWeights.push_back(1.0f);
 		m_AmbientGradientWeights.push_back(0.6f);
@@ -96,12 +91,12 @@ namespace GASS
 		m_AmbientGradientWeights.push_back(0.0f);
 
 
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
-		m_FogGradientValues.push_back(Vec3(0.49, 0.62, 0.753)*1.0);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
+		m_FogGradientValues.push_back(Vec3f(0.49f, 0.62f, 0.753f)*1.0f);
 
 		m_FogGradientWeights.push_back(1.0f);
 		m_FogGradientWeights.push_back(0.6f);
@@ -122,19 +117,19 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("EnvironmentManagerComponent",new Creator<EnvironmentManagerComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("EnvironmentManagerComponent", OF_VISIBLE )));
 
-		RegisterProperty< std::vector<Vec3> >("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient,
+		RegisterProperty< std::vector<Vec3f> >("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty< std::vector<float> >("WaterGradientWeights", &EnvironmentManagerComponent::GetWaterGradientWeights, &EnvironmentManagerComponent::SetWaterGradientWeights,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty< std::vector<Vec3> >("SunGradient", &EnvironmentManagerComponent::GetSunGradient, &EnvironmentManagerComponent::SetSunGradient,
+		RegisterProperty< std::vector<Vec3f> >("SunGradient", &EnvironmentManagerComponent::GetSunGradient, &EnvironmentManagerComponent::SetSunGradient,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty< std::vector<float> >("SunGradientWeights", &EnvironmentManagerComponent::GetSunGradientWeights, &EnvironmentManagerComponent::SetSunGradientWeights,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty< std::vector<Vec3> >("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient,
+		RegisterProperty< std::vector<Vec3f> >("AmbientGradient", &EnvironmentManagerComponent::GetAmbientGradient, &EnvironmentManagerComponent::SetAmbientGradient,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty< std::vector<float> >("AmbientGradientWeights", &EnvironmentManagerComponent::GetAmbientGradientWeights, &EnvironmentManagerComponent::SetAmbientGradientWeights,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty< std::vector<Vec3> >("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient,
+		RegisterProperty< std::vector<Vec3f> >("FogGradient", &EnvironmentManagerComponent::GetFogGradient, &EnvironmentManagerComponent::SetFogGradient,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		//RegisterProperty<float>("FogDistance", &EnvironmentManagerComponent::GetFogDistance, &EnvironmentManagerComponent::SetFogDistance);
 		RegisterProperty< std::vector< float> >("FogGradientWeights", &EnvironmentManagerComponent::GetFogGradientWeights, &EnvironmentManagerComponent::SetFogGradientWeights,
@@ -200,7 +195,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS( EnvironmentManagerComponent::OnChangeCamera,CameraChangedEvent));
 	}
 
-	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3> &value)
+	void EnvironmentManagerComponent::SetWaterGradient(const std::vector<Vec3f> &value)
 	{
 		m_WaterGradientValues = value;
 		m_WaterGradient.clear();
@@ -210,7 +205,7 @@ namespace GASS
 		{
 			for(int i = 0; i < value.size(); i++)
 			{
-				m_WaterGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_WaterGradientValues.size()-1.0)));
+				m_WaterGradient.addCFrame(SkyX::ColorGradient::ColorFrame(Ogre::Vector3(value[i].x,value[i].y,value[i].z), float(i) / float(m_WaterGradientValues.size()-1.0f)));
 			}
 		}
 		else
@@ -223,7 +218,7 @@ namespace GASS
 	}
 
 
-	std::vector<Vec3>  EnvironmentManagerComponent::GetWaterGradient() const
+	std::vector<Vec3f>  EnvironmentManagerComponent::GetWaterGradient() const
 	{
 		return m_WaterGradientValues;
 	}
@@ -244,7 +239,7 @@ namespace GASS
 		return m_WaterGradientWeights;
 	}
 
-	void EnvironmentManagerComponent::SetSunGradient(const std::vector<Vec3> &value)
+	void EnvironmentManagerComponent::SetSunGradient(const std::vector<Vec3f> &value)
 	{
 		m_SunGradientValues = value;
 		m_SunGradient.clear();
@@ -266,7 +261,7 @@ namespace GASS
 		}
 	}
 
-	std::vector<Vec3>  EnvironmentManagerComponent::GetSunGradient() const
+	std::vector<Vec3f>  EnvironmentManagerComponent::GetSunGradient() const
 	{
 		return m_SunGradientValues;
 	}
@@ -287,7 +282,7 @@ namespace GASS
 		return m_SunGradientWeights;
 	}
 
-	void EnvironmentManagerComponent::SetAmbientGradient(const std::vector<Vec3> &value)
+	void EnvironmentManagerComponent::SetAmbientGradient(const std::vector<Vec3f> &value)
 	{
 		m_AmbientGradientValues = value;
 		m_AmbientGradient.clear();
@@ -309,7 +304,7 @@ namespace GASS
 		}
 	}
 
-	std::vector<Vec3>  EnvironmentManagerComponent::GetAmbientGradient() const
+	std::vector<Vec3f>  EnvironmentManagerComponent::GetAmbientGradient() const
 	{
 		return m_AmbientGradientValues;
 	}
@@ -330,7 +325,7 @@ namespace GASS
 		return m_AmbientGradientWeights;
 	}
 
-	void EnvironmentManagerComponent::SetFogGradient(const std::vector<Vec3> &value)
+	void EnvironmentManagerComponent::SetFogGradient(const std::vector<Vec3f> &value)
 	{
 		m_FogGradientValues = value;
 		m_FogGradient.clear();
@@ -352,7 +347,7 @@ namespace GASS
 		}
 	}
 
-	std::vector<Vec3>  EnvironmentManagerComponent::GetFogGradient() const
+	std::vector<Vec3f>  EnvironmentManagerComponent::GetFogGradient() const
 	{
 		return m_FogGradientValues;
 	}
@@ -379,7 +374,7 @@ namespace GASS
 		m_CurrentCamera = camera_proxy->GetOgreCamera();
 	}
 
-	bool  EnvironmentManagerComponent::frameStarted(const Ogre::FrameEvent& evt)
+	bool  EnvironmentManagerComponent::frameStarted(const Ogre::FrameEvent& /*evt*/)
 	{
 		UpdateEnvironmentLighting();
 		return true;
@@ -433,7 +428,7 @@ namespace GASS
 		if(m_FogGradientValues.size() > 0)
 		{
 			Ogre::Vector3 fogCol = m_FogGradient.getColor(point);
-			Ogre::Real cloud_colour = ambientCol.x*0.5;
+			Ogre::Real cloud_colour = ambientCol.x*0.5f;
 
 			fogCol.x = fogCol.x*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
 			fogCol.y = fogCol.y*(1-m_CloudFactor) +  cloud_colour*m_CloudFactor;
