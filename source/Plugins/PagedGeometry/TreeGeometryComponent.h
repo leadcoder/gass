@@ -20,20 +20,11 @@
 #ifndef TREE_GEOMETRY_COMPONENT_H
 #define TREE_GEOMETRY_COMPONENT_H
 #include "Sim/GASSCommon.h"
-
-#if defined(_MSC_VER)
-	#pragma warning(push)
-	#pragma warning(disable : 4244)
-#endif
-#include "PagedGeometry.h"
-#if defined(_MSC_VER)
-	#pragma warning(pop)
-#endif
-
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "PGMessages.h"
-#include <OgreRenderTargetListener.h>
+#include "PGIncludes.h"
+
 
 namespace Ogre
 {
@@ -67,7 +58,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		void UpdateArea(float start_x, float start_z, float end_x, float end_z);
-		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
+		void UpdateArea(const Vec3 &world_pos, float radius);
 	protected:
 		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
 		static float GetTerrainHeight(float x, float z, void* user_data);

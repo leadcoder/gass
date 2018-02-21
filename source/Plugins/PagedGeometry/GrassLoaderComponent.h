@@ -24,21 +24,12 @@
 #define GRASS_LOADER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-
-#if defined(_MSC_VER)
-	#pragma warning(push)
-	#pragma warning(disable : 4244)
-#endif
-#include "PagedGeometry.h"
-#if defined(_MSC_VER)
-	#pragma warning(pop)
-#endif
+#include "PGIncludes.h"
 
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include <OgreRenderTargetListener.h>
 #include "PGMessages.h"
 
 namespace Forests
@@ -87,7 +78,7 @@ namespace GASS
 		void SetImportDensityMap(const std::string &dm);
 		std::string GetImportDensityMap() const;
 protected:
-		float GetCollisionSystemHeight(float x, float z);
+		//float GetCollisionSystemHeight(float x, float z);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void OnPaint(GrassPaintMessagePtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
@@ -101,7 +92,6 @@ protected:
 		std::string m_DensityMapFilename;
 		Vec4f m_CustomBounds;
 		static IHeightmapTerrainComponent *m_Terrain;
-		static ICollisionSceneManager* m_CollisionSM;
 		Ogre::TexturePtr m_DensityTexture;
 		Ogre::Image m_DensityImage;
 		GeometryPageManager* m_LOD0;

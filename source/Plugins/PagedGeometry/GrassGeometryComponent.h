@@ -24,20 +24,11 @@
 #define GRASS_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#if defined(_MSC_VER)
-#pragma warning(push)
-	#pragma warning(disable : 4244)
-#endif
-#include "PagedGeometry.h"
-#if defined(_MSC_VER)
-	#pragma warning(pop)
-#endif
-
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include <OgreRenderTargetListener.h>
+#include "PGIncludes.h"
 #include "Plugins/Ogre/GASSOgreMaterial.h"
 #include "PGMessages.h"
 
@@ -101,7 +92,7 @@ namespace GASS
 		void SetSwayDistribution(float distribution);
 		float GetViewDistance() const;
 		void SetViewDistance(float distance);
-		float GetCollisionSystemHeight(float x, float z);
+		//float GetCollisionSystemHeight(float x, float z);
 		HeightmapTerrainComponentPtr GetTerrainComponent(SceneObjectPtr obj);
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		void UpdateSway();

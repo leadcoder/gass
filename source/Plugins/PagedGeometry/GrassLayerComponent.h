@@ -24,8 +24,7 @@
 #define GRASS_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include <GrassLoader.h>
-#include <OgreRenderTargetListener.h>
+#include "PGIncludes.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
@@ -73,7 +72,7 @@ namespace GASS
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);
 		float GetDensityFactor() const;
 		void SetDensityFactor(float factor);
-		void SetColorMap(const std::string &name);
+		//void SetColorMap(const std::string &name);
 		OgreMaterial GetMaterial() const;
 		void SetMaterial(const OgreMaterial &name);
 		FadeTechniqueBinder GetFadeTechnique() const;

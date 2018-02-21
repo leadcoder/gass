@@ -21,7 +21,6 @@
 /* FIXME Fading doesn't work with multiple grass layers */
 
 #include "GrassGeometryComponent.h"
-#include <OgreSceneManager.h>
 #include "ImpostorPage.h"
 #include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
@@ -544,11 +543,11 @@ namespace GASS
 		return terrain;
 	}
 
-	float GrassGeometryComponent::GetCollisionSystemHeight(float x, float z)
+	/*float GrassGeometryComponent::GetCollisionSystemHeight(float x, float z)
 	{
 		if(m_CollisionSM)
 		{
-			/*GASS::CollisionRequest request;
+			GASS::CollisionRequest request;
 			request.LineStart.Set(x,-1000,z);
 			request.LineEnd.Set(x,2000,z);
 			request.Type = COL_LINE_VERTICAL;
@@ -558,23 +557,21 @@ namespace GASS
 			result.Coll = false;
 			m_CollisionSM->Force(request,result);
 			if(result.Coll)
-				return result.CollPosition.y;*/
+				return result.CollPosition.y;
 		}
 		return 0;
+	}*/
 
-	}
-
-	float GrassGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
+	float GrassGeometryComponent::GetTerrainHeight(float x, float z, void* /*user_data*/)
 	{
 		if(m_Terrain)
 			return static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));
-		else
+		return 0;
+		/*else
 		{
 			GrassGeometryComponent* grass = static_cast<GrassGeometryComponent*> (user_data);
 			return grass->GetCollisionSystemHeight(x, z);
-
-
-		}
+		}*/
 	}
 
 	void GrassGeometryComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)

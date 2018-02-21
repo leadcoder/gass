@@ -21,8 +21,6 @@
 /* FIXME Fading doesn't work with multiple grass layers */
 
 #include "GrassLoaderComponent.h"
-#include <OgreSceneManager.h>
-#include <OgreRenderWindow.h>
 #include "GrassLayerComponent.h"
 #include "ImpostorPage.h"
 #include "GrassLoader.h"
@@ -30,6 +28,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Utils/GASSCollisionHelper.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -39,7 +38,6 @@
 namespace GASS
 {
 	IHeightmapTerrainComponent* GrassLoaderComponent::m_Terrain = NULL;
-	ICollisionSceneManager * GrassLoaderComponent::m_CollisionSM = NULL;
 
 	GrassLoaderComponent::GrassLoaderComponent(void) : m_CustomBounds(0,0,0,0),
 		m_PageSize(50),
@@ -107,8 +105,6 @@ namespace GASS
 		{
 			user_bounds = false;
 		}
-
-		m_CollisionSM = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
 
 		if(!user_bounds)
 		{
@@ -335,35 +331,21 @@ namespace GASS
 		m_DensityImage.save(fp_denmap);
 	}
 
-	float GrassLoaderComponent::GetCollisionSystemHeight(float x, float z)
+	/*float GrassLoaderComponent::GetCollisionSystemHeight(float x, float z)
 	{
-		if(m_CollisionSM)
-		{
-/*			GASS::CollisionRequest request;
-			request.LineStart.Set(x,-1000,z);
-			request.LineEnd.Set(x,2000,z);
-			request.Type = COL_LINE_VERTICAL;
-			
-			request.ReturnFirstCollisionPoint = false;
-			request.CollisionBits = GEOMETRY_FLAG_SCENE_OBJECTS;
-			GASS::CollisionResult result;
-			result.Coll = false;
-			m_CollisionSM->Force(request,result);
-			if(result.Coll)
-				return result.CollPosition.y;*/
-		}
-		return 0;
-	}
+		return static_cast<float>(CollisionHelper::GetHeightAtPosition(GetSceneObject()->GetScene(), GASS::Vec3(x, 0, z), GEOMETRY_FLAG_GROUND));
+	}*/
 
-	float GrassLoaderComponent::GetTerrainHeight(float x, float z, void* user_data)
+	float GrassLoaderComponent::GetTerrainHeight(float x, float z, void* /*user_data*/)
 	{
 		if(m_Terrain)
 			return static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));
-		else
+		return 0;
+		/*else
 		{
-			GrassLoaderComponent* grass = static_cast<GrassLoaderComponent*> (user_data);
-			return grass->GetCollisionSystemHeight(x, z);
-		}
+			//GrassLoaderComponent* grass = static_cast<GrassLoaderComponent*> (user_data);
+			//return grass->GetCollisionSystemHeight(x, z);
+		}*/
 	}
 
 	void GrassLoaderComponent::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)

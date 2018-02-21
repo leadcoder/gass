@@ -19,13 +19,6 @@
 *****************************************************************************/
 
 #include "TreeGeometryComponent.h"
-#include <Ogre.h>
-#include <OgreSceneManager.h>
-#include "ImpostorPage.h"
-#include "BatchPage.h"
-#include "TreeLoader2D.h"
-#include "TreeLoader3D.h"
-#include "GrassLoader.h"
 #include "DensityMapComponent.h"
 #include "Plugins/Ogre/GASSIOgreSceneManagerProxy.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
@@ -261,16 +254,13 @@ namespace GASS
 		}
 	}
 
-	
-
 	void TreeGeometryComponent::OnPaint(GrassPaintMessagePtr message)
 	{
-		Paint(message->GetPosition(), message->GetBrushSize(), message->GetBrushInnerSize(), message->GetIntensity());
+		UpdateArea(message->GetPosition(), message->GetBrushSize());
 	}
 
-	void TreeGeometryComponent::Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity)
+	void TreeGeometryComponent::UpdateArea(const Vec3 &world_pos, float radius)
 	{
-		float radius = brush_size;
 		int minPageX = static_cast<int>(Ogre::Math::Floor(((static_cast<float>(world_pos.x) - radius) - m_MapBounds.left) / m_PageSize));
 		int minPageZ = static_cast<int>(Ogre::Math::Floor(((static_cast<float>(world_pos.z) - radius) - m_MapBounds.top) / m_PageSize));
 		int maxPageX = static_cast<int>(Ogre::Math::Ceil(((static_cast<float>(world_pos.x) + radius) - m_MapBounds.left) / m_PageSize));
@@ -303,7 +293,7 @@ namespace GASS
 			m_PagedGeometry->setCamera(vp->getCamera());
 	}
 
-	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* user_data)
+	float TreeGeometryComponent::GetTerrainHeight(float x, float z, void* /*user_data*/)
 	{
 		if(m_Terrain)
 			return static_cast<float>(m_Terrain->GetHeightAtWorldLocation(x,z));

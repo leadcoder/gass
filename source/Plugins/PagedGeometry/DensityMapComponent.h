@@ -21,18 +21,11 @@
 #define DENSITY_MAP_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4244)
-#endif
-#include "PagedGeometry.h"
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "PGIncludes.h"
 #include "PGMessages.h"
-#include <OgreRenderTargetListener.h>
+
 
 namespace Ogre
 {

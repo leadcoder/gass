@@ -19,9 +19,6 @@
 *****************************************************************************/
 
 #include "DensityMapComponent.h"
-#include <Ogre.h>
-#include <OgreHardwarePixelBuffer.h>
-#include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSScene.h"
@@ -224,7 +221,7 @@ namespace GASS
 					for(int j = 0 ;  j < components.size(); j++)
 					{
 						TreeGeometryComponentPtr trees = GASS_DYNAMIC_PTR_CAST<TreeGeometryComponent>(components[j]);
-						trees->Paint(pos, message->GetPaintWidth(),message->GetPaintWidth(), -10);
+						trees->UpdateArea(pos, message->GetPaintWidth());
 					}
 				}
 			}

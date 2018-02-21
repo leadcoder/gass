@@ -23,8 +23,6 @@
 
 #include "GrassLayerComponent.h"
 #include "GrassLoaderComponent.h"
-#include "ImpostorPage.h"
-#include "GrassLoader.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
@@ -133,11 +131,11 @@ namespace GASS
 	}
 
 	
-	void GrassLayerComponent::SetColorMap(const std::string &name)
+	/*void GrassLayerComponent::SetColorMap(const std::string &name)
 	{
 		if(m_GrassLayer)
 			m_GrassLayer->setColorMap(m_ColorMapFilename);
-	}
+	}*/
 
 	OgreMaterial GrassLayerComponent::GetMaterial() const
 	{
