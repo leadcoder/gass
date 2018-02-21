@@ -24,5 +24,5 @@ public:
     void removeTextBox(const std::string& ID);
 	bool hasTextBox(const std::string& ID);
     void setText(const std::string& ID, const std::string& Text);
-    const std::string& getText(const std::string& ID);
+    const DisplayString& getText(const std::string& ID);
 };

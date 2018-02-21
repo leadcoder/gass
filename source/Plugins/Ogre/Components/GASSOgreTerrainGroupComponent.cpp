@@ -648,7 +648,7 @@ namespace GASS
 		}
 	}
 
-	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real intensity, float brush_size_terrain_space, float brush_inner_radius)
+	void OgreTerrainGroupComponent::FlattenTerrain(Ogre::Terrain* terrain,const Ogre::Vector3& centrepos, Ogre::Real /*intensity*/, float brush_size_terrain_space, float brush_inner_radius)
 	{
 		Ogre::Vector3 tsPos;
 		terrain->getTerrainPosition(centrepos, &tsPos);

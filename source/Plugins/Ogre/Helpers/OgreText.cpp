@@ -56,7 +56,7 @@ bool TextRenderer::hasTextBox(const std::string& ID)
     return _overlayMgr->hasOverlayElement(ID);
 }
  
-const std::string& TextRenderer::getText(const std::string& ID)
+const DisplayString& TextRenderer::getText(const std::string& ID)
 {
     Ogre::OverlayElement* textBox = _overlayMgr->getOverlayElement(ID);
     return textBox->getCaption();

@@ -188,7 +188,7 @@ namespace GASS
 		}
 	}
 
-	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
+	void OgreGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &/*end_color*/)
 	{
 		
 		const Ogre::ColourValue ogre_color = OgreConvert::ToOgre(start_color);
