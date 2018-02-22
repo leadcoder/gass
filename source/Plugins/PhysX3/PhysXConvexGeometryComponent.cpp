@@ -72,8 +72,8 @@ namespace GASS
 
 	void PhysXConvexGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
-		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
-		GASSAssert(geom,"PhysXConvexGeometryComponent::OnGeometryChanged");
+		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
+		GASSAssert(mesh,"PhysXConvexGeometryComponent::OnGeometryChanged");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = scene_manager;
 		GASSAssert(scene_manager,"PhysXConvexGeometryComponent::OnGeometryChanged");
@@ -84,7 +84,7 @@ namespace GASS
 		{
 			col_mesh_id = res->GetResource().Name();
 		}
-		m_ConvexMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
+		m_ConvexMesh = scene_manager->CreateConvexMesh(col_mesh_id, mesh);
 
 
 		PhysXBodyComponentPtr body = GetSceneObject()->GetFirstComponentByClass<PhysXBodyComponent>();

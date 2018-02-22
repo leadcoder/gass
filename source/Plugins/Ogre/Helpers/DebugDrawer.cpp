@@ -165,9 +165,9 @@ int IcoSphere::getMiddlePoint(int index0, int index1)
 	Ogre::Vector3 point2 = vertices[index1];
 	Ogre::Vector3 middle = point1.midPoint(point2);
 
-	int index = addVertex(middle);
-	middlePointIndexCache[key] = index;
-	return index;
+	int new_index = addVertex(middle);
+	middlePointIndexCache[key] = new_index;
+	return new_index;
 }
 
 void IcoSphere::addFace(int index0, int index1, int index2)

@@ -559,11 +559,11 @@ namespace GASS
 
 				AABox temp_box;
 
-				osg::Vec3d p1 = osg_bbox._max*M;
-				osg::Vec3d p2 = osg_bbox._min*M;
+				osg::Vec3d tp1 = osg_bbox._max*M;
+				osg::Vec3d tp2 = osg_bbox._min*M;
 
-				temp_box.Union(OSGConvert::ToGASS(p1));
-				temp_box.Union(OSGConvert::ToGASS(p2));
+				temp_box.Union(OSGConvert::ToGASS(tp1));
+				temp_box.Union(OSGConvert::ToGASS(tp2));
 				m_BBox.Union(box);
 			}
 		}

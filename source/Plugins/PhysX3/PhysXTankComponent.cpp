@@ -225,15 +225,15 @@ namespace GASS
 			//we need to force geometry changed message to be fired before we can get data from wheel
 			child->SyncMessages(0);
 
-			std::string col_mesh_id = child->GetName();
-			ResourceComponentPtr res  = child->GetFirstComponentByClass<IResourceComponent>();
-			if(res)
+			std::string child_col_mesh_id = child->GetName();
+			ResourceComponentPtr child_res = child->GetFirstComponentByClass<IResourceComponent>();
+			if(child_res)
 			{
-				col_mesh_id = res->GetResource().Name();
+				child_col_mesh_id = child_res->GetResource().Name();
 			}
-			MeshComponentPtr geom = child->GetFirstComponentByClass<IMeshComponent>();
+			MeshComponentPtr child_mesh = child->GetFirstComponentByClass<IMeshComponent>();
 			LocationComponentPtr location = child->GetFirstComponentByClass<ILocationComponent>();
-			PhysXConvexMesh wheelMesh = scene_manager->CreateConvexMesh(col_mesh_id,geom);
+			PhysXConvexMesh wheelMesh = scene_manager->CreateConvexMesh(child_col_mesh_id, child_mesh);
 			wheelConvexMeshes.push_back(wheelMesh.m_ConvexMesh);
 			Vec3 pos = location->GetPosition();
 			wheelCentreOffsets.push_back(PxConvert::ToPx(pos));
@@ -971,8 +971,8 @@ namespace GASS
 		if(m_Actor)
 		{
 			Reset();
-			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-			Vec3 org_pos = GetPosition();
+			const Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			const Vec3 org_pos = GetPosition();
 			//Vec3 trans_vec = value - org_pos;
 
 			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
@@ -1001,7 +1001,7 @@ namespace GASS
 
 				if(m_AllWheels.size() == numShapes-1)
 				{
-					Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+					//Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
 
 					for(size_t i = 0; i < numShapes-1; i++)
 					{

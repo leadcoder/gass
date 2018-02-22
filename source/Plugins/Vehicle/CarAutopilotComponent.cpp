@@ -500,15 +500,15 @@ namespace GASS
 			{
 				if(m_HasDir)
 				{
-					Vec3 cross = Vec3::Cross(current_dir,m_FaceDirection);
-					float cos_angle = static_cast<float>(Vec3::Dot(current_dir,m_FaceDirection));
+					Vec3 up_vec = Vec3::Cross(current_dir,m_FaceDirection);
+					float cos_face_angle = static_cast<float>(Vec3::Dot(current_dir,m_FaceDirection));
 
-					if(cos_angle > 1)
-						cos_angle = 1;
-					if(cos_angle < -1)
-						cos_angle = -1;
-					float angle_to_face = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
-					if(cross.y < 0)
+					if(cos_face_angle > 1)
+						cos_face_angle = 1;
+					if(cos_face_angle < -1)
+						cos_face_angle = -1;
+					float angle_to_face = static_cast<float>(Math::Rad2Deg(acos(cos_face_angle)));
+					if(up_vec.y < 0)
 						angle_to_face *= -1;
 					m_TurnPID.set(0);
 					turn = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
