@@ -34,7 +34,7 @@
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 
-#pragma warning(disable: 4512)
+/*#pragma warning(disable: 4512)
 #include <Ogre.h>
 
 #include "Hydrax/Hydrax.h"
@@ -43,7 +43,7 @@
 #include "Hydrax/Modules/ProjectedGrid/ProjectedGrid.h"
 #include "Hydrax/Modules/SimpleGrid/SimpleGrid.h"
 #include "Hydrax/Modules/RadialGrid/RadialGrid.h"
-
+*/
 
 namespace GASS
 {

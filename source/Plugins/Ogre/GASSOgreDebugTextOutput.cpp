@@ -24,11 +24,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4100)
 #pragma warning (disable : 4244)
 #pragma warning (disable : 4996)
+#endif
 namespace GASS
 {
 	OgreDebugTextOutput::OgreDebugTextOutput()
@@ -124,5 +126,6 @@ namespace GASS
 	}
 
 }
-
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif

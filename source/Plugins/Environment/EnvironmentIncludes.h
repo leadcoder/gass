@@ -25,6 +25,12 @@
 #endif
 
 #include <Hydrax/Hydrax.h>
+#include "Hydrax/Noise/Perlin/Perlin.h"
+#include "Hydrax/Noise/FFT/FFT.h"
+#include "Hydrax/Modules/ProjectedGrid/ProjectedGrid.h"
+#include "Hydrax/Modules/SimpleGrid/SimpleGrid.h"
+#include "Hydrax/Modules/RadialGrid/RadialGrid.h"
+
 #include <SkyX.h>
 #include <OgreFrameListener.h>
 #include <Ogre.h>

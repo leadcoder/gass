@@ -25,11 +25,12 @@
 #include "Plugins/Ogre/Components/GASSOgreCameraComponent.h"
 
 using namespace Ogre;
-
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4100)
 #pragma warning (disable : 4244)
+#endif
 namespace GASS
 {
 
@@ -468,7 +469,8 @@ namespace GASS
 		}
 	}
 }
-
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif
 
 

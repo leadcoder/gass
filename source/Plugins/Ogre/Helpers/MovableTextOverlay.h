@@ -4,10 +4,11 @@
 
 //TODO: Find  correct license
 #include "Plugins/Ogre/GASSOgreCommon.h"
-#pragma warning(push)
-#pragma warning(disable : 4512)
-#pragma warning(disable : 4100)
-
+#ifdef _MSC_VER
+	#pragma warning(push)
+	#pragma warning(disable : 4512)
+	#pragma warning(disable : 4100)
+#endif
 using namespace Ogre;
 
 class MovableTextOverlayAttributes
@@ -110,5 +111,7 @@ protected:
 	// the Font/Material/Color text attributes
 	MovableTextOverlayAttributes *mAttrs;
 };
-#pragma warning(pop)
+#ifdef _MSC_VER
+	#pragma warning(pop)
+#endif
 #endif /* __MovableTextOverlay_H__ */

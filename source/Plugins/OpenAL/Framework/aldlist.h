@@ -1,7 +1,10 @@
 #ifndef ALDEVICELIST_H
 #define ALDEVICELIST_H
 
+#ifdef _MSC_VER
+#pragma warning(push)
 #pragma warning(disable: 4786)  //disable warning "identifier was truncated to '255' characters in the browser information"
+#endif
 #include <vector>
 #include <string>
 #include "LoadOAL.h"
@@ -45,5 +48,9 @@ public:
 private:
 	unsigned int GetMaxNumSources();
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif // ALDEVICELIST_H

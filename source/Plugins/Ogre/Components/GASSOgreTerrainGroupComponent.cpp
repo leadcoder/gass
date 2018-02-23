@@ -31,9 +31,10 @@
 #include "Plugins/Ogre/Components/GASSOgreGASSTerrainMaterialGenerator.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4244)
-
+#endif
 
 namespace GASS
 {
@@ -898,5 +899,6 @@ namespace GASS
 			m_Collision->SetActive(value);
 	}
 }
-
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif
