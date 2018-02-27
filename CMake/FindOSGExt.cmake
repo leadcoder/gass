@@ -67,26 +67,36 @@ if (WIN32)
 	#message(OSG_BINARIES_REL ${OSG_BINARIES_REL})
 			
 	#thirdparty shared libs			
+
+	# Different names depending on VS version
+	if(${MSVC_VERSION} EQUAL 1800) #MSVC 2013
+   		set(OSG_LIB_PNG_REL "libpng16")
+   		set(OSG_LIB_PNG_DBG "libpng16d")
+   	else()
+   		set(OSG_LIB_PNG_REL "libpng")
+   		set(OSG_LIB_PNG_DBG "libpngd")
+   	endif()
+
 	set(_OSG_DEP_LIST_REL zlib
-		libpng16
+		${OSG_LIB_PNG_REL}
 		gdal110
 		proj
 		libcurl
 		libeay32
 		ssleay32
 		cares
-		libcollada14dom22
+		#libcollada14dom22
 		libtiff)
 
 	set(_OSG_DEP_LIST_DBG zlibd
-		libpng16d
+		${OSG_LIB_PNG_DBG}
 		gdal110
 		proj
 		libcurld
 		libeay32
 		ssleay32
 		cares
-		libcollada14dom22-d
+		#libcollada14dom22-d
 		libtiff)
 	
 	
@@ -104,6 +114,14 @@ if (WIN32)
 	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_DEP_VAR_NAME}})
 	endforeach()
 	
+	# Different names depending on VS version
+	if(${MSVC_VERSION} EQUAL 1800) #MSVC 2013
+   		set(OSG_PLUGIN_DAE "dae")
+   	else()
+   		set(OSG_PLUGIN_DAE "")
+   	endif()
+	
+
 	#this plug-in list works with 3.2.1
 	set(OSG_PLUGINS 3dc
 					3ds
@@ -113,7 +131,7 @@ if (WIN32)
 					bvh
 					cfg
 					curl
-					dae
+					${OSG_PLUGIN_DAE}
 					dds
 					dot
 					dw
@@ -121,7 +139,7 @@ if (WIN32)
 					#exr
 					freetype
 					gdal
-					gif
+					#gif
 					glsl
 					gz
 					hdr
