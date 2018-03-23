@@ -264,8 +264,21 @@ if (WIN32)
 	  find_file(TBB_MALLOC_BINARY_REL NAMES "tbbmalloc.dll" HINTS ${_TBB_BINARY_DIR})
 	  find_file(TBB_BINARY_DBG NAMES "tbb_debug.dll" HINTS ${_TBB_BINARY_DIR})
 	  find_file(TBB_MALLOC_BINARY_DBG NAMES "tbbmalloc_debug.dll" HINTS ${_TBB_BINARY_DIR})
-	  set(TBB_BINARIES_REL ${TBB_BINARY_REL} ${TBB_MALLOC_BINARY_REL})
-	  set(TBB_BINARIES_DBG ${TBB_BINARY_DBG} ${TBB_MALLOC_BINARY_DBG})
+	  #Check if we dlls found, clould be static build
+	  if (TBB_BINARY_REL)
+		set(TBB_BINARIES_REL ${TBB_BINARY_REL})
+	  endif()
+	  if (TBB_MALLOC_BINARY_REL)
+		set(TBB_BINARIES_REL ${TBB_BINARIES_REL} ${TBB_MALLOC_BINARY_REL})
+	  endif()
+	  
+	  if (TBB_BINARY_DBG)
+	     set(TBB_BINARIES_DBG ${TBB_BINARY_DBG})
+	  endif()
+	  
+	  if (TBB_BINARY_DBG)
+	     set(TBB_BINARIES_DBG ${TBB_BINARIES_DBG} ${TBB_MALLOC_BINARY_DBG})
+	  endif()
 endif()
 
 #Extract path from TBB_LIBRARY name
