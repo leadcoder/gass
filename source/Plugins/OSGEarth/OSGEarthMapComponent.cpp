@@ -27,7 +27,7 @@
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
 #include <osgEarth/MapNode>
-
+#include <osgEarth/NodeUtils>
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthUtil/EarthManipulator>

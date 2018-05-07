@@ -41,8 +41,8 @@
 #include <osgEarthAnnotation/LabelNode>
 #include <osgEarthAnnotation/LocalGeometryNode>
 #include <osgEarthAnnotation/FeatureNode>
-#include <osgEarthAnnotation/HighlightDecoration>
-#include <osgEarthAnnotation/ScaleDecoration>
+//#include <osgEarthAnnotation/HighlightDecoration>
+//#include <osgEarthAnnotation/ScaleDecoration>
 #include <osgEarthSymbology/GeometryFactory>
 #include <osg/Camera>
 

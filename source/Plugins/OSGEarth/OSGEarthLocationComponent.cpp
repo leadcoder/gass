@@ -42,8 +42,8 @@
 #include <osgEarthAnnotation/LocalGeometryNode>
 #include <osgEarthAnnotation/FeatureNode>
 //#include <osgEarthAnnotation/Decluttering>
-#include <osgEarthAnnotation/HighlightDecoration>
-#include <osgEarthAnnotation/ScaleDecoration>
+//#include <osgEarthAnnotation/HighlightDecoration>
+//#include <osgEarthAnnotation/ScaleDecoration>
 
 #include <osgEarthSymbology/GeometryFactory>
 #include <osg/Camera>
@@ -100,7 +100,7 @@ namespace GASS
 		if(mapNode)
 		{
 			m_MapNode = mapNode;
-			const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
+			//const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
 			/*osgEarth::Style labelStyle;
 			labelStyle.getOrCreate<osgEarth::TextSymbol>()->alignment() = osgEarth::TextSymbol::ALIGN_CENTER_CENTER;
 			labelStyle.getOrCreate<osgEarth::TextSymbol>()->fill()->color() = osgEarth::Color::Yellow;
@@ -157,7 +157,6 @@ namespace GASS
 	{
 		const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
 		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-
 		osg::Vec3d pos = OSGConvert::ToOSG(message->GetPosition());
 		osgEarth::GeoPoint mapPos;
 		mapPos.fromWorld(geoSRS,pos);
@@ -193,7 +192,6 @@ namespace GASS
 			 //GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
 			 GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(osg_pos))));
 			 GetSceneObject()->PostRequest(BaseRotationRequestPtr(new BaseRotationRequest(OSGConvert::ToGASS(osg_rot))));
-
 			 if (m_DebugNode)
 				 m_DebugNode->setPosition(mapPoint);
 		}

@@ -203,16 +203,28 @@ namespace GASS
 				OSGNodePtr node_wrapper = so->GetFirstComponentByClass<IOSGNode>();
 				if(node_wrapper)
 				{
-					m_Manipulator->setViewpoint(osgEarth::Viewpoint(
+					osgEarth::Viewpoint vp(
 						"Home",
 						-71.0763, 42.34425, 0,   // longitude, latitude, altitude
-						24.261, -21.6, 3450.0), // heading, pitch, range
-						5.0);
-					m_Manipulator->setTetherNode(node_wrapper->GetNode());
+						24.261, -21.6, 3450.0); // heading, pitch, range
+						
+					vp.setNode(node_wrapper->GetNode());
+					m_Manipulator->setViewpoint(vp, 5.0);
+
+					//m_Manipulator->setTetherNode(node_wrapper->GetNode());
+					
 				}
 			}
 			else
-				m_Manipulator->setTetherNode(NULL);
+			{
+				//m_Manipulator->setTetherNode(NULL);
+
+				osgEarth::Viewpoint vp = m_Manipulator->getViewpoint();
+				vp.setNode(NULL);
+				m_Manipulator->setViewpoint(vp);
+				
+			}
+				
 		}
 	}
 
