@@ -49,7 +49,6 @@ namespace GASS
 		osgEarth::Annotation::PlaceNode* m_DebugNode;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 	};
-
-	
-	
+	typedef GASS_WEAK_PTR<OSGEarthLocationComponent> OSGEarthLocationComponentWeakPtr;
+	typedef GASS_SHARED_PTR<OSGEarthLocationComponent> OSGEarthLocationComponentPtr;
 }
