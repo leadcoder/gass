@@ -39,14 +39,14 @@ set(OSGEARTH_PLUGINS_BINARY_LIST
 	osgdb_kml
 	osgdb_osgearth_agglite
 	osgdb_osgearth_arcgis
-	osgdb_osgearth_arcgis_map_cache
+	#osgdb_osgearth_arcgis_map_cache
 	osgdb_osgearth_bing
 	osgdb_osgearth_bumpmap
 	osgdb_osgearth_cache_filesystem
 	osgdb_osgearth_colorramp
 	osgdb_osgearth_debug
 	osgdb_osgearth_detail
-	osgdb_osgearth_engine_byo
+	#osgdb_osgearth_engine_byo
 	osgdb_osgearth_engine_mp
 	osgdb_osgearth_engine_rex
 	osgdb_osgearth_featurefilter_intersect
@@ -63,23 +63,23 @@ set(OSGEARTH_PLUGINS_BINARY_LIST
 	osgdb_osgearth_model_feature_geom
 	osgdb_osgearth_model_simple
 	osgdb_osgearth_monitor
-	osgdb_osgearth_noise
+	#osgdb_osgearth_noise
 	osgdb_osgearth_ocean_simple
 	osgdb_osgearth_ocean_triton
 	osgdb_osgearth_osg
-	osgdb_osgearth_quadkey
-	osgdb_osgearth_refresh
+	#osgdb_osgearth_quadkey
+	#osgdb_osgearth_refresh
 	osgdb_osgearth_scriptengine_javascript
 	osgdb_osgearth_skyview
 	osgdb_osgearth_sky_gl
 	osgdb_osgearth_sky_silverlining
 	osgdb_osgearth_sky_simple
-	osgdb_osgearth_splat_mask
-	osgdb_osgearth_template_matclass
+	#osgdb_osgearth_splat_mask
+	#osgdb_osgearth_template_matclass
 	osgdb_osgearth_terrainshader
-	osgdb_osgearth_tilecache
+	#osgdb_osgearth_tilecache
 	osgdb_osgearth_tileindex
-	osgdb_osgearth_tileservice
+	#osgdb_osgearth_tileservice
 	osgdb_osgearth_tms
 	osgdb_osgearth_vdatum_egm2008
 	osgdb_osgearth_vdatum_egm84
@@ -89,7 +89,7 @@ set(OSGEARTH_PLUGINS_BINARY_LIST
 	osgdb_osgearth_wcs
 	osgdb_osgearth_wms
 	osgdb_osgearth_xyz
-	osgdb_osgearth_yahoo
+	#osgdb_osgearth_yahoo
 	osgdb_template)
 	
 		
