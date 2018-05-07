@@ -78,7 +78,11 @@ namespace GASS
 		osg::Viewport* osg_vp = new osg::Viewport(p_left, p_top, p_width,p_height);
 		osg::ref_ptr<osg::Camera> camera = new osg::Camera;
 	    camera->setGraphicsContext(m_Window.get());
+		camera->setDrawBuffer(GL_BACK);
+		camera->setReadBuffer(GL_BACK);
 		camera->setViewport(osg_vp);
+		
+
 		//camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 		camera->getOrCreateStateSet()->setGlobalDefaults();
 
