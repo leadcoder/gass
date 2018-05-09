@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 
-cmake_policy(SET CMP0048 OLD)
+# The version number.
+set (GASS_VERSION_MAJOR 1)
+set (GASS_VERSION_MINOR 0)
+set (GASS_VERSION_PATCH 0)
 
-project(GASS)
+project(GASS VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH})
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE )
 endif()
 
-# The version number.
-set (GASS_VERSION_MAJOR 1)
-set (GASS_VERSION_MINOR 0)
-set (GASS_VERSION_PATCH 0)
-#set (GASS_VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH})
 
 set(CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake
@@ -63,6 +61,9 @@ if(MSVC)
 elseif()
 	set(GASS_INSTALL_DEP_BINARIES 0)
 endif()
+
+# Enable INSTALL project to be built by default. Inactivated for every configuration otherwise.
+set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
 option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON)
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
