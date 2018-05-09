@@ -166,7 +166,7 @@ namespace GASS
 		{
 		case CameraParameterRequest::CAMERA_FOV:
 			{
-				float value = message->GetValue1();
+				//float value = message->GetValue1();
 			}
 			break;
 		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:

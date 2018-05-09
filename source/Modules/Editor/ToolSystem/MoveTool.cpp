@@ -197,9 +197,9 @@ namespace GASS
 						}
 					}
 					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
-					SceneObjectPtr gizmo = GetOrCreateGizmo();
-					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+					SceneObjectPtr so_gizmo = GetOrCreateGizmo();
+					if(so_gizmo)
+						SendMessageRec(so_gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
 				}
 				else
 				{

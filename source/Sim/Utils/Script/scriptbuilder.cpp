@@ -217,7 +217,7 @@ int CScriptBuilder::ProcessScriptSection(const char *script, unsigned int length
 			int start = pos++;
 
 			// Is this an #if directive?
-			asETokenClass t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+			asETokenClass token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
 
 			string token;
 			token.assign(&modifiedScript[pos], len);
@@ -226,14 +226,14 @@ int CScriptBuilder::ProcessScriptSection(const char *script, unsigned int length
 
 			if( token == "if" )
 			{
-				t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
-				if( t == asTC_WHITESPACE )
+				token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+				if( token_class == asTC_WHITESPACE )
 				{
 					pos += len;
-					t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+					token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
 				}
 
-				if( t == asTC_IDENTIFIER )
+				if( token_class == asTC_IDENTIFIER )
 				{
 					string word;
 					word.assign(&modifiedScript[pos], len);
@@ -408,22 +408,22 @@ int CScriptBuilder::ProcessScriptSection(const char *script, unsigned int length
 		{
 			int start = pos++;
 
-			asETokenClass t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
-			if( t == asTC_IDENTIFIER )
+			asETokenClass token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+			if( token_class == asTC_IDENTIFIER )
 			{
 				string token;
 				token.assign(&modifiedScript[pos], len);
 				if( token == "include" )
 				{
 					pos += len;
-					t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
-					if( t == asTC_WHITESPACE )
+					token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+					if( token_class == asTC_WHITESPACE )
 					{
 						pos += len;
-						t = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
+						token_class = engine->ParseToken(&modifiedScript[pos], modifiedScript.size() - pos, &len);
 					}
 
-					if( t == asTC_VALUE && len > 2 && (modifiedScript[pos] == '"' || modifiedScript[pos] == '\'') )
+					if( token_class == asTC_VALUE && len > 2 && (modifiedScript[pos] == '"' || modifiedScript[pos] == '\'') )
 					{
 						// Get the include file
 						string includefile;
