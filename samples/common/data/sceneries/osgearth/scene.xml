@@ -3,6 +3,7 @@
   <Properties>
     <StartPosition value="0 4 30" />
     <StartRotation value="0 0 0" />
+	<Geocentric value="true" />
   </Properties>
   <SceneManagerSettings>
     <CoreSceneManager>
@@ -10,8 +11,6 @@
     <GameSceneManager>
     </GameSceneManager>
 	<OSGEarthSceneManager>
-		<!--<UseOcean value="false"/>
-		<EarthFile value="openstreetmap.earth"/>-->
 	</OSGEarthSceneManager>
     <OSGGraphicsSceneManager>
           <AmbientColor value= "0.5 0.5 0.5"/>
