@@ -42,7 +42,7 @@ TEST_CASE("Test LineSegment")
 			//test point off line
 			const GASS::Vec3 point_off_line(0, 10, 2);
 			const GASS::Vec3 point = line.ClosestPointOnLine(GASS::Vec3(11, 11, 13));
-			REQUIRE(point.Equal(GASS::Vec3(0, 0, 2)) == true);
+			REQUIRE(point.Equal(p2) == true);
 		}
 	}
 }
