@@ -1,0 +1,20 @@
+
+newmtl DefaultMat
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+
+
+newmtl DemolishedHull
+Kd 0.588235 0.588235 0.588235 1
+Ka 0.588235 0.588235 0.588235
+illum 1
+map_Kd JIM_TANK_demolished_hull.jpg
+
+
+newmtl JIM_TANK_hatches_demo
+Kd 0.694118 0.662745 0.564706 1
+Ka 0.694118 0.662745 0.564706
+illum 1
+map_Kd JIM_TANK_hatches_demolished.jpg
+

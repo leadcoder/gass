@@ -1,0 +1,13 @@
+
+newmtl DefaultMat
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+
+
+newmtl JIM_TANK_turret
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd JIM_TANK_turret.jpg
+

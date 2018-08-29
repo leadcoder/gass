@@ -1,0 +1,83 @@
+
+newmtl Badge
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Badge.bmp
+
+
+newmtl Badge0
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd License.bmp
+
+
+newmtl BlackP
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd window.bmp
+
+
+newmtl Body
+Kd 0.588235 0.396078 0 1
+Ka 0.588235 0.396078 0
+illum 1
+map_Kd body.bmp
+
+
+newmtl Chrome
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Badge.bmp
+
+
+newmtl DefaultMat
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+
+
+newmtl FrontL
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Headlight.bmp
+
+
+newmtl Glass
+Kd 0.0235294 0.0235294 0.0235294 1
+Ka 0.0235294 0.0235294 0.0235294
+illum 1
+map_Kd window.bmp
+
+
+newmtl Grille
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Grille.bmp
+
+
+newmtl Interior
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Interior.bmp
+
+
+newmtl RearLi
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd RearLight.bmp
+
+
+newmtl Unders
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Underside.bmp
+

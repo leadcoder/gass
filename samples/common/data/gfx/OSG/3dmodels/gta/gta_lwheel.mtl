@@ -1,0 +1,26 @@
+
+newmtl Chrome
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+map_Kd Badge.bmp
+
+
+newmtl DefaultMat
+Kd 1 1 1 1
+Ka 1 1 1
+illum 1
+
+
+newmtl Tyre
+Kd 0.301961 0.301961 0.301961 1
+Ka 0.301961 0.301961 0.301961
+illum 1
+map_Kd Tyre_Tile.bmp
+
+
+newmtl WheelV
+Kd 0 0 0 1
+Ka 1 1 1
+illum 1
+

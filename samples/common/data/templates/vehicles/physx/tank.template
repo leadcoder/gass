@@ -62,9 +62,9 @@
 						<Filename value="JIM_TANK_band.mesh"/>
 						<CastShadow value="true"/>
 					</MeshComponent>
-					<ParticleSystemComponent>
+					<!--<ParticleSystemComponent>
 						<ParticleTemplate value="TrackDust"/>
-					</ParticleSystemComponent>
+					</ParticleSystemComponent>-->
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
@@ -82,9 +82,9 @@
 						<Filename value="JIM_TANK_band.mesh"/>
 						<CastShadow value="true"/>
 					</MeshComponent>
-					<ParticleSystemComponent>
+					<!--<ParticleSystemComponent>
 						<ParticleTemplate value="TrackDust"/>
-					</ParticleSystemComponent>
+					</ParticleSystemComponent>-->
 				</Components>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
@@ -274,10 +274,10 @@
 					<InputProxyComponent>
 						<InputHandlerObject value="CHASSIS"/>
 					</InputProxyComponent>
-					<ArmorComponent>
+					<!--<ArmorComponent>
 						<Armor value="50"/>
 						<DamageMesh value="turret_demolished.mesh"/>
-					</ArmorComponent>
+					</ArmorComponent>-->
 					<NetworkChildComponent>
 					</NetworkChildComponent>
 					<LocationTransferComponent>
@@ -356,10 +356,10 @@
 								<Filename value="canon_bas.mesh"/>
 								<CastShadow value="1"/>
 							</MeshComponent>
-							<ArmorComponent>
+							<!--<ArmorComponent>
 								<Armor value="50"/>
 								<DamageMesh value="canon_bas_demolished.mesh"/>
-							</ArmorComponent>
+							</ArmorComponent>-->
 							<PhysicsBodyComponent>
 								<Mass value="1.0"/>
 								<DisableGravity value="true"/>
@@ -388,7 +388,7 @@
 							<InputProxyComponent>
 								<InputHandlerObject value="CHASSIS"/>
 							</InputProxyComponent>
-							<WeaponSystemComponent>
+							<!--<WeaponSystemComponent>
 								<ProjectileTemplate value="JimTankMainGunProjectileObject"/>
 								<ProjectileStartOffset value="4.5"/>
 								<ProjectileStartVelocity value="500"/>
@@ -399,7 +399,7 @@
 								<FireEffectTemplate value="JimTankMainGunFireEffect"/>
 								<FireSoundObject1P value="FIRE_SOUND"/>
 								<FireSoundObject3P value="FIRE_SOUND"/>
-							</WeaponSystemComponent>
+							</WeaponSystemComponent>-->
 							<!--<AutoAimComponent>
 								<BarrelObject value="BARREL"/>
 								<TurretObject value="TURRET"/>

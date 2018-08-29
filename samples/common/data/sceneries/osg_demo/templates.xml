@@ -3,36 +3,30 @@
   <SceneObjectTemplate>
     <Name value ="TerrainObject"/>
     <Components>
-      <!--<MeshComponent>
-        <Filename value="Models/terrain.3ds"/>
-        <CastShadow value="0"/>
-        <ReceiveShadow value="1"/>
-		<GeometryCategory value="GT_TERRAIN"/>
-      </MeshComponent>-->
       <MeshComponent>
-        <Filename value="terrain.3DS"/>
-        <CastShadow value="1"/>
+        <Filename value="default-plane.obj"/>
+        <CastShadow value="0"/>
         <ReceiveShadow value="1"/>
 		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
       </MeshComponent>
-      
-	  <LocationComponent/>
+     <LocationComponent/>
       <PhysicsPlaneGeometryComponent>
-       <!-- <CollisionBits value="5"/>
-        <CollisionCategory value="5"/>-->
-       </PhysicsPlaneGeometryComponent>
+      </PhysicsPlaneGeometryComponent>
     </Components>
   </SceneObjectTemplate>
   <SceneObjectTemplate>
     <Name value ="MeshObject"/>
     <Components>
       <MeshComponent>
-        <Filename value="MESHTEST.3DS"/>
+        <Filename value="cube.obj"/>
         <CastShadow value="1"/>
-        <ReceiveShadow value="1"/>
+        <ReceiveShadow value="0"/>
 		<GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
       </MeshComponent>
-      <LocationComponent/>
+      <LocationComponent>
+        <Position value = "0.0 0.0 0"/>
+        <Rotation value = "0.000000 0.000000 0.000000"/>
+      </LocationComponent>
       <PhysicsMeshGeometryComponent>
       </PhysicsMeshGeometryComponent>
     </Components>
@@ -51,25 +45,12 @@
         <SpecularColor value="1 1 1"/>
         <AmbientColor value="0.7 0.7 0.7"/>
       </LightComponent>
+	  <SkyboxComponent>
+          <Material value="blue_sb_.jpg"/>
+       </SkyboxComponent>
      <!-- <SkyboxComponent>
         <Material value="gfx/textures/skybox/blue_sb_.jpg"/>
       </SkyboxComponent>-->
-    </Components>
-  </SceneObjectTemplate>
-  <SceneObjectTemplate>
-    <Name value ="TankObject"/>
-    <Components>
-      <MeshComponent>
-        <Filename value="Models/t72-tank/t72-tank_des.flt"/>
-        <CastShadow value="1"/>
-        <ReceiveShadow value="0"/>
-      </MeshComponent>
-      <LocationComponent/>
-      <PhysicsBoxGeometryComponent>
-      </PhysicsBoxGeometryComponent>
-      <PhysicsBodyComponent>
-        
-      </PhysicsBodyComponent>
     </Components>
   </SceneObjectTemplate>
 </Templates>
