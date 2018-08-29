@@ -267,6 +267,7 @@ namespace GASS
 
 			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
 			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
+			graphics_context->getState()->setUseModelViewAndProjectionUniforms(true);
 		}
 		else
 		{
