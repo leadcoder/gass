@@ -267,15 +267,13 @@ namespace GASS
 
 			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
 			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
-			
-			
-
 		}
 		else
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
 		}
 
+		
 		OSGRenderWindowPtr win(new  OSGRenderWindow(this,graphics_context));
 		m_Windows.push_back(win);
 		return win;
@@ -476,7 +474,7 @@ namespace GASS
 					sm->setMainVertexShader( NULL );
 					sm->setShadowVertexShader(NULL);
 
-
+				
 					osg::Shader* mainFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
 						" // following expressions are auto modified - do not change them:       \n"
 						" // gl_TexCoord[0]  0 - can be subsituted with other index              \n"
@@ -495,14 +493,17 @@ namespace GASS
 						//"  const float LOG2E = 1.442692;	// = 1/log(2)                        \n"
 						//"  float fog = exp2(-gl_Fog.density * abs(gl_FogFragCoord) * LOG2E);     \n"
 						//"  fog = clamp(fog, 0.0, 1.0);                                            \n"
-
-						//"  float fog = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
-
-
+						//hack to support linear and exp fog, TODO: add fog mode uniform 
+						"  if(gl_Fog.density > 0){                                            \n"
 						"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
 						"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
 						"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
 						"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+						"  } \n"
+						"  else { \n"
+						"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+						"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+						"  } \n"
 						"    gl_FragColor = color;                                                 \n"
 						"} \n" );
 
