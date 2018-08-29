@@ -25,7 +25,7 @@ protected:
 	int m_ClientPort;
 public:
 	SimApplication() :
-	  m_SceneName("new_terrain"),
+	  m_SceneName("osg_demo"),
 		  m_Timer(new GASS::Timer()),
 		  m_UpdateFreq(60),
 		  m_ServerPort(2005),
