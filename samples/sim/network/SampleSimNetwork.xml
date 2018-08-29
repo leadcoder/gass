@@ -42,8 +42,6 @@
   </ControlSettingsSystem>
   <CoreSystem>
   </CoreSystem>
-  <MyGUISystem>
-  </MyGUISystem>
   <SimulationSystem>
   </SimulationSystem>
   <RakNetNetworkSystem>
@@ -51,8 +49,6 @@
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
   </OpenALSoundSystem>
-  <PhysXPhysicsSystem>
-  </PhysXPhysicsSystem>
   <ODEPhysicsSystem>
   </ODEPhysicsSystem>
   <ODECollisionSystem>
@@ -67,11 +63,5 @@
   <MaxUpdateFreqency value="60"/>
   <!-- -1 == not max update freq-->
   <ExternalSimulationUpdate value="false"/>
-  <!-- let application trigger simulation updates PARALLEL-->
-  <TaskNode name="ROOT_NODE" mode="SEQUENCE">
-    <TaskNode name="PRE_SIM" mode="SEQUENCE"/>
-    <TaskNode name="SIM" mode="SEQUENCE"/>
-    <TaskNode name="POST_SIM" mode="SEQUENCE"/>
-  </TaskNode>
 </RTC>
 </GASS>
