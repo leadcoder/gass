@@ -74,10 +74,10 @@ int start(int argc, char* argv[])
 	input_system->SetMainWindowHandle(win->GetHWND());
 	
 	//Create the scene
-	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("new_demo_scene"));
+	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("new_osg_demo"));
 	
 	//Load pre-build scene from data folder
-	scene->Load("new_terrain");
+	scene->Load("osg_demo");
 	
 	//create free camera and add it to the scene under the root node
 	GASS::SceneObjectPtr camera_obj = engine->CreateObjectFromTemplate("FreeCameraObject");
@@ -104,6 +104,11 @@ int start(int argc, char* argv[])
 	GASS::EditorSceneManagerPtr esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
 	esm->GetMouseToolController()->SelectTool("MoveTool");
 	esm->GetMouseToolController()->SetEnableGizmo(true);
+	
+	GASS::CreateTool* ct = (GASS::CreateTool*) esm->GetMouseToolController()->GetTool("CreateTool");
+	ct->SetTemplateName("CubeMeshObject");
+	ct->SetParentObject(scene->GetRootSceneObject());
+
 	std::string name = es->GetName();
 	//Update the engine forever
 	bool done = false;
