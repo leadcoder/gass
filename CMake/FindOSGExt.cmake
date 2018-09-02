@@ -14,6 +14,36 @@ macro(extract_version var str)
 STRING(REGEX REPLACE ".*VERSION\ *([0-9]+)" "\\1" ${var} ${str})
 endmacro(extract_version)
 
+include(CMakeParseArguments)
+
+
+macro(add_bin_rel _BIN_NAME)
+	cmake_parse_arguments(
+        PARSED_ARGS # prefix of output variables
+        ""
+        "" # list of names of mono-valued arguments
+        "NAMES" # list of names of multi-valued arguments (output variables are lists)
+        ${ARGN} # arguments of the function to parse, here we take the all original ones
+    )
+	set(_VAR_NAME OSG_${_BIN_NAME}_BIN_REL)
+	find_file(${_VAR_NAME} NAMES ${PARSED_ARGS_NAMES} HINTS ${OSG_BINARY_DIR})
+	set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_VAR_NAME}})
+endmacro()
+
+macro(add_bin_dbg _BIN_NAME)
+	cmake_parse_arguments(
+        PARSED_ARGS # prefix of output variables
+        ""
+        "" # list of names of mono-valued arguments
+        "NAMES" # list of names of multi-valued arguments (output variables are lists)
+        ${ARGN} # arguments of the function to parse, here we take the all original ones
+    )
+	set(_VAR_NAME OSG_${_BIN_NAME}_BIN_DBG)
+	find_file(${_VAR_NAME} NAMES ${PARSED_ARGS_NAMES} HINTS ${OSG_BINARY_DIR})
+	set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_VAR_NAME}})
+endmacro()
+
+
 find_path(OSG_DIR "include/osg/Version" HINTS $ENV{OSG_DIR} $ENV{OSG_ROOT} $ENV{OSG_HOME} DOC "OpenSceneGraph install path")
 
 if(${OSG_DIR} STREQUAL "OSG_DIR-NOTFOUND")
@@ -64,55 +94,32 @@ if (WIN32)
 	    set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_COMP_NAME_REL}})
 	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_COMP_NAME_DBG}})
 	endforeach()
-	#message(OSG_BINARIES_REL ${OSG_BINARIES_REL})
 			
 	#thirdparty shared libs			
 
-	# Different names depending on VS version
-	if(${MSVC_VERSION} EQUAL 1800) #MSVC 2013
-   		set(OSG_LIB_PNG_REL "libpng16")
-   		set(OSG_LIB_PNG_DBG "libpng16d")
-   	else()
-   		set(OSG_LIB_PNG_REL "libpng")
-   		set(OSG_LIB_PNG_DBG "libpngd")
-   	endif()
-
-	set(_OSG_DEP_LIST_REL zlib
-		${OSG_LIB_PNG_REL}
-		gdal110
-		proj
-		libcurl
-		libeay32
-		ssleay32
-		cares
-		#libcollada14dom22
-		libtiff)
-
-	set(_OSG_DEP_LIST_DBG zlibd
-		${OSG_LIB_PNG_DBG}
-		gdal110
-		proj
-		libcurld
-		libeay32
-		ssleay32
-		cares
-		#libcollada14dom22-d
-		libtiff)
+	add_bin_rel(ZLIB NAMES zlib.dll)
+	add_bin_dbg(ZLIB NAMES zlibd.dll)
 	
+	add_bin_rel(PNG NAMES libpng16.dll libpng.dll)
+	add_bin_dbg(PNG NAMES libpng16d.dll libpngd.dll)
 	
-	foreach(_OSG_BIN_DEP ${_OSG_DEP_LIST_REL})
-	    STRING(TOUPPER ${_OSG_BIN_DEP} _UPPER_NAME)
-		set(_DEP_VAR_NAME OSG_${_UPPER_NAME}_BINARY_REL)
-		find_file(${_DEP_VAR_NAME} NAMES ${_OSG_BIN_DEP}${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	    set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_DEP_VAR_NAME}})
-	endforeach()
+	add_bin_rel(GDAL NAMES gdal202.dll gdal201.dll)
+	add_bin_dbg(GDAL NAMES gdal202.dll gdal201.dll)
 	
-	foreach(_OSG_BIN_DEP ${_OSG_DEP_LIST_DBG})
-	    STRING(TOUPPER ${_OSG_BIN_DEP} _UPPER_NAME)
-		set(_DEP_VAR_NAME OSG_${_UPPER_NAME}_BINARY_DBG)
-		find_file(${_DEP_VAR_NAME} NAMES ${_OSG_BIN_DEP}${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	    set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_DEP_VAR_NAME}})
-	endforeach()
+	add_bin_rel(PROJ NAMES proj.dll)
+	add_bin_dbg(PROJ NAMES proj.dll)
+	
+	add_bin_rel(CURL NAMES libcurl.dll)
+	add_bin_dbg(CURL NAMES libcurld.dll)
+	
+	add_bin_rel(EAY NAMES libeay32.dll)
+	add_bin_dbg(EAY NAMES libeay32.dll)
+	
+	add_bin_rel(SSLEAY NAMES ssleay32.dll)
+	add_bin_dbg(SSLEAY NAMES ssleay32.dll)
+	
+	add_bin_rel(TIFF NAMES libtiff.dll tiff.dll)
+	add_bin_dbg(TIFF NAMES libtiff.dll tiff.dll)
 	
 	# Different names depending on VS version
 	if(${MSVC_VERSION} EQUAL 1800) #MSVC 2013
