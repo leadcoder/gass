@@ -36,7 +36,7 @@ if(GASS_BUILD_SIM)
 		 debug ${TBB_MALLOC_LIBRARY_DEBUG})
 	endif()	 
 	
-	gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARY_REL} BINARIES_DBG ${TBB_BINARY_DBG})
+	gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARIES_REL} BINARIES_DBG ${TBB_BINARIES_DBG})
 
 	find_package(AngelScript REQUIRED)
 	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
@@ -45,8 +45,6 @@ endif()
 if(GASS_BUILD_PLUGIN_OGRE)
 	#FindOgre.cmake use environment var OGRE_HOME
 	find_package(OGRE REQUIRED)
-	
-	#current OGRE version is compiled with boost, add it if we don't use boost in GASS
 	
 	set(OGRE_INCLUDE_DIRS
 		${OGRE_INCLUDE_DIR}
@@ -81,18 +79,18 @@ if(GASS_BUILD_PLUGIN_OGRE)
 		${OGRE_RenderSystem_Direct3D9_DBG}
 		${OGRE_RenderSystem_GL_DBG}
 		${OGRE_PLUGIN_DIR_DBG}/cg.dll)
-		
-		
-	if(NOT GASS_USE_BOOST)
-		find_package(Boost)
-	endif()
 	
+	if (OGRE_CONFIG_THREAD_PROVIDER EQUAL 1) #check if we need to add boost include dirs
+   		if(NOT GASS_USE_BOOST) #Check if boost include dirs already added by GASSCore
+			find_package(Boost)
+			set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+		endif()
+   	endif()
 	gass_create_dep_target(Ogre 
-		INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${Boost_INCLUDE_DIR}
+		INCLUDE_DIRS ${OGRE_INCLUDE_DIRS}
 		LIBRARIES ${OGRE_LIBRARY_LIST}
 		BINARIES_REL ${OGRE_BIN_FILES_RELEASE}
-		BINARIES_DBG ${OGRE_BIN_FILES_DEBUG})
-
+		BINARIES_DBG ${OGRE_BIN_FILES_DEBUG})	
 endif()
 
 if(GASS_BUILD_PLUGIN_ENVIRONMENT)
