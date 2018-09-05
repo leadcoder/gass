@@ -199,7 +199,7 @@ namespace GASS
 				std::copy(env_data_path.begin(), env_data_path.end(), writable);
 				writable[env_data_path.size()] = '\0'; // don't forget the terminating 0
 				putenv(writable);
-				delete[] writable;
+				//delete[] writable;
 #endif
 			}
 		}

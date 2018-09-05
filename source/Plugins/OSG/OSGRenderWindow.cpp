@@ -60,6 +60,9 @@ namespace GASS
 		#if defined(WIN32) && !defined(__CYGWIN__) 	
 			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_Window.get());
 			win_handle = (void*) win32_window->getHWND();
+		#else
+			osgViewer::GraphicsWindowX11* x11_window = (osgViewer::GraphicsWindowX11*)(m_Window.get());
+			win_handle = (void*)x11_window->getWindow();
 		#endif
 		return win_handle;
 	}

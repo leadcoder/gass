@@ -120,8 +120,9 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
-
+#ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);
+#endif
 
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
