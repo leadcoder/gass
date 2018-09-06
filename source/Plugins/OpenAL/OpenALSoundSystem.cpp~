@@ -10,13 +10,11 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
-
 #ifdef WIN32
 	#include "Framework/Framework.h"
 #else
 	#include <AL/alut.h>
 #endif
-
 namespace GASS
 {
 	OpenALSoundSystem::OpenALSoundSystem() : m_Context(NULL),
@@ -198,6 +196,9 @@ namespace GASS
 			{
 				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"All sound buffers are in use","OpenALSoundComponent::LoadWaveSound()");
 			}
+			
+
+			//ALFWLoadWaveToBuffer (ALbyte*)full_path.c_str(), &format, &data, &size, &freq, &loop);
 #ifdef WIN32
 			// We have more buffers free, generate a new one
 			alGenBuffers(1, &buffer);
@@ -208,6 +209,16 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to load wave file:" + filePath ,"OpenALSoundComponent::LoadWaveSound()");
 			}
 #else
+			//ALsizei size, freq;
+			//ALenum format;
+			//ALvoid *data;
+			//ALboolean loop = AL_FALSE;
+			//alutLoadWAVFile(filePath.c_str(), &format, &data, &size, &freq, &loop);
+			//alutLoadWAVFile((ALbyte*) filePath.c_str(), &format, &data, &size, &freq, &loop);
+			//alBufferData(buffer, format, data, size, freq);
+
+			
+			// make sure to call alutInitWithoutContext first
 			buffer = alutCreateBufferFromFile(filePath.c_str());
 #endif
 

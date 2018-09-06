@@ -26,7 +26,7 @@
 
 #ifdef WIN32
 #include<windows.h>
-
+#endif
 #include<stdio.h>
 
 #include "Framework.h"
@@ -302,4 +302,3 @@ ALboolean ALFWIsEFXSupported()
 
 	return bEFXSupport;
 }
-#endif
