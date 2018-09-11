@@ -373,7 +373,7 @@ namespace GASS
 					osg::Matrix inv_world_trans = osg::Matrix::inverse(world_trans);
 
 					osg::Quat inv_rot;
-					inv_world_trans.get(inv_rot);
+					inv_rot = inv_world_trans.getRotate();
 					final = final*inv_rot;
 				}
 			}
@@ -403,7 +403,7 @@ namespace GASS
 					}
 
 					osg::Quat parent_rot;
-					world_trans.get(parent_rot);
+					parent_rot = world_trans.getRotate();
 					rot = rot*parent_rot;
 				}
 			}

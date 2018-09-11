@@ -374,17 +374,7 @@ namespace GASS
 		{
 			std::string type = shadow_elem->Attribute("type");
 
-			if(type == "ShadowVolume")
-			{
-				// hint to tell viewer to request stencil buffer when setting up windows
-				osg::DisplaySettings::instance()->setMinimumNumStencilBits(8);
-				osg::ref_ptr<osgShadow::ShadowVolume> sv = new osgShadow::ShadowVolume;
-				sv->setDynamicShadowVolumes(true);
-				//sv->setDrawMode(osgShadow::ShadowVolumeGeometry::STENCIL_TWO_SIDED);
-				//sv->setDrawMode(osgShadow::ShadowVolumeGeometry::STENCIL_TWO_PASS);
-				m_ShadowTechnique  = sv;
-			}
-			else if(type == "ShadowTexture")
+			if(type == "ShadowTexture")
 			{
 				osg::ref_ptr<osgShadow::ShadowTexture> st = new osgShadow::ShadowTexture;
 				m_ShadowTechnique  = st;

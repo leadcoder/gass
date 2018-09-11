@@ -74,8 +74,8 @@ if (WIN32)
 	find_file(OSG_BINARY_REL NAMES ${OSG_SHARED_PREFIX}osg${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	find_file(OSG_BINARY_DBG NAMES ${OSG_SHARED_PREFIX}osgd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	
-	find_file(OSG_OT_BINARY_REL NAMES ot20-OpenThreads${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
-	find_file(OSG_OT_BINARY_DBG NAMES ot20-OpenThreadsd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
+	find_file(OSG_OT_BINARY_REL NAMES ot21-OpenThreads${_SHARED_LIB_EXT} ot20-OpenThreads${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
+	find_file(OSG_OT_BINARY_DBG NAMES ot21-OpenThreadsd${_SHARED_LIB_EXT} ot20-OpenThreadsd${_SHARED_LIB_EXT} HINTS ${OSG_BINARY_DIR})
 	
 	set(OSG_BINARIES_REL ${OSG_BINARIES_REL} 
 		${OSG_BINARY_REL} 
@@ -141,7 +141,7 @@ if (WIN32)
 					${OSG_PLUGIN_DAE}
 					dds
 					dot
-					dw
+					#dw
 					dxf
 					#exr
 					freetype

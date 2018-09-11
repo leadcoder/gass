@@ -153,10 +153,18 @@ namespace GASS
 		* @param treatVertexDataAsTemporary whether or not to treat the vertex data
 		* as temporary
 		*/
+
 		void operator()(const osg::Vec3& v1,
 			const osg::Vec3& v2,
-			const osg::Vec3& v3,
-			bool /*treatVertexDataAsTemporary*/)
+			const osg::Vec3& v3
+#ifdef OSG_VERSION_LESS_THAN
+#if(OSG_VERSION_LESS_THAN(3,6,0))
+			, bool treatVertexDataAsTemporary
+#endif
+#else
+			, bool treatVertexDataAsTemporary
+#endif
+			)
 		{
 
 			/*mMatrix.set(osg::Quat(Math::Deg2Rad(-90),osg::Vec3(1,0,0),
