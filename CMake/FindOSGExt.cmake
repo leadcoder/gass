@@ -103,8 +103,8 @@ if (WIN32)
 	add_bin_rel(PNG NAMES libpng16.dll libpng.dll)
 	add_bin_dbg(PNG NAMES libpng16d.dll libpngd.dll)
 	
-	add_bin_rel(GDAL NAMES gdal202.dll gdal201.dll)
-	add_bin_dbg(GDAL NAMES gdal202.dll gdal201.dll)
+	add_bin_rel(GDAL NAMES gdal202.dll gdal201.dll gdal110.dll)
+	add_bin_dbg(GDAL NAMES gdal202.dll gdal201.dll gdal110.dll)
 	
 	add_bin_rel(PROJ NAMES proj.dll)
 	add_bin_dbg(PROJ NAMES proj.dll)
