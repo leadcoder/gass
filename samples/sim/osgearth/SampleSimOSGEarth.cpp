@@ -97,7 +97,7 @@ int run(int /*argc*/, char** /*argv[]*/)
 	esm->GetMouseToolController()->SetEnableGizmo(true);
 
 	GASS::CreateTool* ct = (GASS::CreateTool*) esm->GetMouseToolController()->GetTool("CreateTool");
-	ct->SetTemplateName("CustomMeshObject");
+	ct->SetTemplateName("CubeMeshObject");
 	ct->SetParentObject(scene->GetRootSceneObject());
 	//Create vehicle and add it to the root node of the scene
 	//GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
