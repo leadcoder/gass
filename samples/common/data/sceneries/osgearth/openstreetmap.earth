@@ -24,6 +24,16 @@ http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 		<!--<cache_policy usage="cache_only"/>-->
 		<cache_policy usage="read_write"/>
     </options>
-	<xi:include href="viewpoints.xml"/>
-    
+	<sky_simple hours="20.0" atmospheric_lighting="true" ambient="0.3"/>
+	<viewpoints>
+		<viewpoint>
+			<heading>8.806974516644791</heading>
+			<height>4465.397310772911</height>
+			<lat>59.649762</lat>
+			<long>17.923781</long>
+			<name>Arlanda2</name>
+			<pitch>-34.79540299384382</pitch>
+			<range>78142.53643278375</range>
+		</viewpoint>
+	</viewpoints>
 </map>
