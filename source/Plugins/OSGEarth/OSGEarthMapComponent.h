@@ -23,6 +23,7 @@
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarth/PhongLightingEffect>
 #include <osgEarthUtil/Fog>
+#include <osgEarthUtil/Sky>
 
 namespace GASS
 {
@@ -38,20 +39,35 @@ namespace GASS
 		virtual AABox GetBoundingBox() const { return AABox(); }
 		virtual Sphere GetBoundingSphere() const { return Sphere(); };
 		virtual GeometryFlags GetGeometryFlags() const { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
-		virtual void SetGeometryFlags(GeometryFlags flags) { };
+		virtual void SetGeometryFlags(GeometryFlags /*flags*/) { };
 		virtual bool GetCollision() const { return true; }
-		virtual void SetCollision(bool value) {  }
+		virtual void SetCollision(bool /*value*/) {  }
 		osg::ref_ptr<osgEarth::MapNode> GetMap() {return m_MapNode;}
+		std::vector<std::string> GetViewpointNames() const;
+		std::vector<std::string> GetLayerNames() const;
 	protected:
 		void Shutdown();
 		void SetEarthFile(const ResourceHandle &earth_file);
 		ResourceHandle GetEarthFile() const { return m_EarthFile; }
+		std::string GetViewpoint() const;
+		void SetViewpoint(const std::string &name);
+
+		double GetTime() const { return m_Time; }
+		void SetTime(double time);
+
+		
+		std::vector<std::string> GetImageLayers() const;
+		void SetImageLayers(const std::vector<std::string> &layers);
+
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
 		osg::ref_ptr<osgEarth::Util::FogEffect> m_FogEffect;
 		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
+		std::vector<osgEarth::Viewpoint> m_Viewpoints;
+		osgEarth::Util::SkyNode* m_SkyNode;
+		double m_Time;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }
