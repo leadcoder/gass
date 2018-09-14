@@ -250,7 +250,11 @@ namespace GASS
 
 			double height = 0;
 			//Create geocentric coordinates from lat long, use  Geographic-SRS!
-			m_MapNode->getTerrain()->getHeight(0L, geoSRS, longitude, latitude, &height, 0L);
+			//m_MapNode->getTerrain()->getHeight(0L, geoSRS, longitude, latitude, &height, 0L);
+
+			//include all osgEarth geometries
+			m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &height, 0L);
+
 			osgEarth::GeoPoint mapPoint(geoSRS, longitude, latitude, height, osgEarth::ALTMODE_ABSOLUTE);
 
 			//Transform geocentric coordinates to map-space using map-SRS!
@@ -274,10 +278,15 @@ namespace GASS
 				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
 				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 
-				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
+				//Create geocentric coordinates from lat long, use  Geographic-SRS!
+				double new_height = 0;
+				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &new_height, 0L);
+
+				new_height = new_height + height;
+				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, new_height, osgEarth::ALTMODE_ABSOLUTE);
 				osg::Vec3d ptXYZ;
 				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
-				map_gp.toWorld(ptXYZ, m_MapNode->getTerrain());
+				map_gp.toWorld(ptXYZ);
 
 				pos = OSGConvert::ToGASS(ptXYZ);
 			}
@@ -286,16 +295,12 @@ namespace GASS
 				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
 				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 				
+				//update with correct height, ptXYZ.z don't match scene height
 				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
 				osg::Vec3d ptXYZ;
 				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
 				map_gp.toWorld(ptXYZ, m_MapNode->getTerrain());
-
-				//update with correct height, ptXYZ.z don't match scene height
-				//double h_above_msl = 0;
-				//if (ground_clamp)
-				//	m_MapNode->getTerrain()->getHeight(0L, mapSRS, map_gp.x(), map_gp.y(), &h_above_msl, 0L);
-				//ptXYZ.z() = h_above_msl;
+				
 				pos = OSGConvert::ToGASS(ptXYZ);
 			}
 		}
@@ -318,7 +323,8 @@ namespace GASS
 			if (altitude)
 			{
 				double h_above_msl = 0;
-				m_MapNode->getTerrain()->getHeight(0L, geoSRS, longitude, latitude, &h_above_msl, 0L);
+				//getHeight on map node to include all osgEarth geometries
+				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &h_above_msl, 0L);
 				*altitude = height - h_above_msl;
 			}
 		}
