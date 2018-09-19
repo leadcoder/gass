@@ -69,20 +69,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationChangedEvent,10));
 	}
 
-	void OSGCameraComponent::OnChangeCamera(ChangeCameraRequestPtr message)
-	{
-		/*OSGCameraComponentPtr cam_comp = GASS_DYNAMIC_PTR_CAST<OSGCameraComponent>(message->GetCamera());
-		OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		osgViewer::ViewerBase::Views views;
-		gfx_sys->GetViewer()->getViews(views);
-
-		bool this_camera = false;
-		if(cam_comp == shared_from_this())
-		{
-			this_camera = true;
-		}*/
-	}
-
 	void OSGCameraComponent::OnParameter(CameraParameterRequestPtr message)
 	{
 		CameraParameterRequest::CameraParameterType type = message->GetParameter();
@@ -151,7 +137,6 @@ namespace GASS
 					m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, 10000);
 					//m_OSGCamera->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 				}
-					
 			}
 		}
 	}

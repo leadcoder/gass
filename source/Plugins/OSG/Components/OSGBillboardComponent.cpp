@@ -173,15 +173,6 @@ namespace GASS
 		if(m_Geom)
 		{
 			return GetBoundingBox().GetBoundingSphere();
-			/*osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
-			osg::Vec3 p_min = (*coords)[0];
-			osg::Vec3 p_max = (*coords)[2];
-			osg::Vec3 bb_size = p_max - p_min;
-			Float max_size = Math::Max(bb_size.x() ,bb_size.z() )*0.5f;
-			Sphere sphere;
-			sphere.m_Pos = Vec3(0,m_GroundOffset,0);
-			sphere.m_Radius = max_size;
-			return sphere;*/
 		}
 		return Sphere();
 	}
