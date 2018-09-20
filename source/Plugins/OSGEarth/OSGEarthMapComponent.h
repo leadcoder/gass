@@ -56,8 +56,8 @@ namespace GASS
 		void SetTime(double time);
 
 		
-		std::vector<std::string> GetImageLayers() const;
-		void SetImageLayers(const std::vector<std::string> &layers);
+		std::vector<std::string> GetMapLayers() const;
+		void SetMapLayers(const std::vector<std::string> &layers);
 
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;

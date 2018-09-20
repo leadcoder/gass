@@ -122,7 +122,7 @@ namespace GASS
 
 
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
-		m_Time(17),
+		m_Time(10),
 		m_SkyNode(NULL)
 	{
 
@@ -145,8 +145,8 @@ namespace GASS
 		RegisterProperty<double>("Time", &OSGEarthMapComponent::GetTime, &OSGEarthMapComponent::SetTime,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Time of day", PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<std::vector<std::string> >("ImageLayers", &OSGEarthMapComponent::GetImageLayers, &OSGEarthMapComponent::SetImageLayers,
-			EnumerationPropertyMetaDataPtr(new OSGEarthLayerEnumerationMetaData("Image Layers", PF_VISIBLE)));
+		RegisterProperty<std::vector<std::string> >("MapLayers", &OSGEarthMapComponent::GetMapLayers, &OSGEarthMapComponent::SetMapLayers,
+			EnumerationPropertyMetaDataPtr(new OSGEarthLayerEnumerationMetaData("Map Layers", PF_VISIBLE)));
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -409,23 +409,21 @@ namespace GASS
 				osgEarth::Layer* layer = layers[i].get();
 
 				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
-
 				// only show layers that derive from VisibleLayer
-				if (visibleLayer)
+				if (visibleLayer && visibleLayer->getEnabled())
 				{
 					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show coverage layers
-					if (imageLayer && !imageLayer->isCoverage())
-					{
-						layer_names.push_back(visibleLayer->getName());
-					}
+					// don't show hidden coverage layers
+					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
+						continue;
+					layer_names.push_back(visibleLayer->getName());
 				}
 			}
 		}
 		return layer_names;
 	}
 
-	std::vector<std::string> OSGEarthMapComponent::GetImageLayers() const
+	std::vector<std::string> OSGEarthMapComponent::GetMapLayers() const
 	{
 		std::vector<std::string> layer_names;
 		// the active map layers:
@@ -440,21 +438,22 @@ namespace GASS
 				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
 
 				// only show layers that derive from VisibleLayer
-				if (visibleLayer)
+				if (visibleLayer && visibleLayer->getEnabled())
 				{
 					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show coverage layers
-					if (imageLayer && !imageLayer->isCoverage() && imageLayer->getEnabled())
-					{
+					// don't show hidden coverage layers
+					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
+						continue;
+
+					if(visibleLayer->getVisible())
 						layer_names.push_back(visibleLayer->getName());
-					}
 				}
 			}
 		}
 		return layer_names;
 	}
 
-	void OSGEarthMapComponent::SetImageLayers(const std::vector<std::string> &layer_names)
+	void OSGEarthMapComponent::SetMapLayers(const std::vector<std::string> &layer_names)
 	{
 		if (m_Initlized)
 		{
@@ -467,22 +466,21 @@ namespace GASS
 				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
 
 				// only show layers that derive from VisibleLayer
-				if (visibleLayer)
+				if (visibleLayer && visibleLayer->getEnabled())
 				{
 					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show coverage layers
-					if (imageLayer && !imageLayer->isCoverage())
+					// don't show hidden coverage layers
+					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
+						continue;
+					bool found = false;
+					for(size_t j = 0; j < layer_names.size() ; j++)
 					{
-						bool found = false;
-						for(size_t j = 0; j < layer_names.size() ; j++)
+						if(layer_names[j] == visibleLayer->getName())
 						{
-							if(layer_names[j] == imageLayer->getName())
-							{
-								found = true;
-							}
+							found = true;
 						}
-						visibleLayer->setEnabled(found);
 					}
+					visibleLayer->setVisible(found);
 				}
 			}
 		}
