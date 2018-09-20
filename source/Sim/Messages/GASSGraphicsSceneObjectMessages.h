@@ -322,6 +322,21 @@ namespace GASS
 	typedef GASS_SHARED_PTR<CameraParameterRequest> CameraParameterRequestPtr;
 
 
+
+	/**
+	Request camera flight
+	*/
+	class CameraFlyToObjectRequest : public SceneObjectRequestMessage
+	{
+	public:
+		CameraFlyToObjectRequest(SceneObjectPtr target_object, SenderID sender_id = -1, double delay = 0) :
+			SceneObjectRequestMessage(sender_id, delay), m_TargetObject(target_object) {}
+		SceneObjectPtr GetTargetObject()const { return m_TargetObject; }
+	private:
+		SceneObjectPtr m_TargetObject;
+	};
+	typedef GASS_SHARED_PTR<CameraFlyToObjectRequest> CameraFlyToObjectRequestPtr;
+
 	/**
 		Request camera to track scene object
 	*/
