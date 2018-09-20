@@ -44,7 +44,8 @@ namespace GASS
 			Shininess(0), 
 			DepthTest(true),
 			DepthWrite(true),
-			TrackVertexColor(false)
+			TrackVertexColor(false),
+			Transparent(0)
 		{}
 		GraphicsMaterial(const std::string &name, const ColorRGBA &diffuse,const ColorRGB &ambient,const ColorRGB &specular = ColorRGB(-1,-1,-1), const ColorRGB &selfIllumination = ColorRGB(-1,-1,-1), float shininess = -1,bool depth_test_on = true, bool depth_write_on = true) : Diffuse(diffuse),
 			Ambient(ambient),
@@ -54,7 +55,8 @@ namespace GASS
 			DepthTest(depth_test_on),
 			DepthWrite(depth_write_on),
 			Name(name),
-			TrackVertexColor(false)
+			TrackVertexColor(false),
+			Transparent(0)
 		{
 
 		}
@@ -68,6 +70,7 @@ namespace GASS
 		  bool DepthTest;
 		  bool DepthWrite;
 		  bool TrackVertexColor;
+		  int Transparent;
 	};
 	typedef GASS_SHARED_PTR<GraphicsMaterial> GraphicsMaterialPtr;
 
