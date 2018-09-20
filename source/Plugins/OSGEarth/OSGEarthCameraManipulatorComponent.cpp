@@ -27,11 +27,13 @@
 #include <osg/MatrixTransform>
 #include <osgShadow/ShadowTechnique>
 #include <osgEarth/MapNode>
+#include <osgEarthUtil/ViewFitter>
 
 #include <osg/Camera>
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
+#include "Plugins/OSG/IOSGCamera.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "OSGEarthCameraManipulatorComponent.h"
@@ -95,6 +97,7 @@ namespace GASS
 		settings->bindKey( osgEarth::Util::EarthManipulator::ACTION_HOME, osgGA::GUIEventAdapter::KEY_Space );
 
 		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON);
+		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON, osgGA::GUIEventAdapter::MODKEY_CTRL);
 		//settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_PAN, osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON);
 
 		settings->bindMouse( osgEarth::Util::EarthManipulator::ACTION_ROTATE, osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON );
@@ -107,6 +110,8 @@ namespace GASS
 		// zoom with the scroll wheel:
 		settings->bindScroll( osgEarth::Util::EarthManipulator::ACTION_ZOOM_IN,  osgGA::GUIEventAdapter::SCROLL_DOWN );
 		settings->bindScroll( osgEarth::Util::EarthManipulator::ACTION_ZOOM_OUT, osgGA::GUIEventAdapter::SCROLL_UP );
+
+		settings->bindMouse(osgEarth::Util::EarthManipulator::ACTION_ZOOM, osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON, osgGA::GUIEventAdapter::MODKEY_CTRL);
 
 		// pan around with arrow keys:
 		settings->bindKey( osgEarth::Util::EarthManipulator::ACTION_PAN_LEFT,  osgGA::GUIEventAdapter::KEY_Left );
@@ -129,7 +134,7 @@ namespace GASS
 		settings->setLockAzimuthWhilePanning( true );
 		manip->applySettings(settings);
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnTrackRequest,CameraTrackObjectRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnCameraFlyToObject, CameraFlyToObjectRequest,0));
 	}
 
 
@@ -193,38 +198,68 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthCameraManipulatorComponent::OnTrackRequest(CameraTrackObjectRequestPtr message)
+	bool GetObjectPosAndSize(SceneObjectPtr obj, AABox &object_bounds, Vec3 &object_pos)
 	{
-		if(m_Manipulator.valid())
+		GeometryComponentPtr gc = obj->GetFirstComponentByClass<IGeometryComponent>(true);
+		if (gc)
 		{
-			SceneObjectPtr so = message->GetTrackObject();
-			if(so)
+			object_bounds = gc->GetBoundingBox();
+			LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+			if (lc)
 			{
-				OSGNodePtr node_wrapper = so->GetFirstComponentByClass<IOSGNode>();
-				if(node_wrapper)
-				{
-					osgEarth::Viewpoint vp(
-						"Home",
-						-71.0763, 42.34425, 0,   // longitude, latitude, altitude
-						24.261, -21.6, 3450.0); // heading, pitch, range
-						
-					vp.setNode(node_wrapper->GetNode());
-					m_Manipulator->setViewpoint(vp, 5.0);
-
-					//m_Manipulator->setTetherNode(node_wrapper->GetNode());
-					
-				}
+				
+				object_pos = lc->GetWorldPosition();
+				Mat4 trans(lc->GetWorldRotation(), object_pos);
+				object_bounds.Min = trans*object_bounds.Min;
+				object_bounds.Max = trans*object_bounds.Max;
 			}
 			else
-			{
-				//m_Manipulator->setTetherNode(NULL);
+				return false;
+		}
+		else
+		{
+			LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
+			if (lc)
+				object_pos = lc->GetWorldPosition();
+			else
+				return false;
+		}
+		return true;
+	}
 
-				osgEarth::Viewpoint vp = m_Manipulator->getViewpoint();
-				vp.setNode(NULL);
-				m_Manipulator->setViewpoint(vp);
+	void OSGEarthCameraManipulatorComponent::OnCameraFlyToObject(CameraFlyToObjectRequestPtr message)
+	{
+		if (m_Manipulator.valid())
+		{
+			SceneObjectPtr obj = message->GetTargetObject();
+			AABox object_bounds;
+			Vec3 object_pos(0, 0, 0);
+			if (GetObjectPosAndSize(obj, object_bounds, object_pos))
+			{
+
+				const double rad = object_bounds.GetBoundingSphere().m_Radius;
 				
+
+				osgEarth::MapNode* mapNode = osgEarth::MapNode::findMapNode(m_Manipulator->getNode());
+				if (mapNode)
+				{
+					//const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
+					const osgEarth::SpatialReference* mapSRS = mapNode->getMapSRS();
+
+					GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
+					if (earth_sm)
+					{
+						double lat, lon, height, alt;
+						earth_sm->FromMapToLatLong(object_pos, lat, lon, height, &alt);
+
+						osgEarth::Viewpoint vp;
+						vp.focalPoint() = osgEarth::GeoPoint(mapSRS, lon, lat, height, osgEarth::ALTMODE_ABSOLUTE);
+						vp.pitch() = -90;
+						vp.range() = rad * 3;
+						m_Manipulator->setViewpoint(vp, 2.0);
+					}
+				}
 			}
-				
 		}
 	}
 

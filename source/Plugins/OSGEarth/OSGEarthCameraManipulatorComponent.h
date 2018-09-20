@@ -36,7 +36,7 @@ namespace GASS
 	protected:
 		void _SetPosition(const GASS::Vec3 &pos);
 		void _SetRotation(const GASS::Quaternion &rot);
-		void OnTrackRequest(CameraTrackObjectRequestPtr message);
+		void OnCameraFlyToObject(CameraFlyToObjectRequestPtr message);
 		void OnWorldPositionRequest(WorldPositionRequestPtr message);
 		void OnWorldRotationRequest(WorldRotationRequestPtr message);
 		void OnPositionRequest(PositionRequestPtr message);
