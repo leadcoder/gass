@@ -205,6 +205,8 @@ namespace GASS
 		if(sm->MaterialName != "" && m_GFXSystem->HasMaterial(sm->MaterialName))
 		{
 			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(sm->MaterialName);
+			if (!m_ReceiveShadow) //protect from shader override
+				state_set->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
 			geom->setStateSet(state_set);
 		}
 
@@ -390,7 +392,8 @@ namespace GASS
 		if(mat_name != "" && m_GFXSystem->HasMaterial(mat_name))
 		{
 			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(mat_name);
-
+			if (!m_ReceiveShadow) //protect from shader override
+				state_set->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
 			if(geom_index > 0)
 			{
 				if(geom_index  < static_cast<int>(m_OSGGeometries.size()))

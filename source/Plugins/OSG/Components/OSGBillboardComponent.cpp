@@ -33,7 +33,7 @@ namespace GASS
 		m_OSGBillboard (NULL),
 		m_Width(1.0f),
 		m_Height(1.0f),
-		m_GroundOffset(0.5),
+		m_GroundOffset(0.1),
 		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
 		m_Collision(true),
 		m_Geom(NULL)
@@ -145,6 +145,9 @@ namespace GASS
 
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
 		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+		if (!m_CastShadow) //protect from shadow shader override
+			nodess->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
+
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
