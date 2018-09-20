@@ -75,7 +75,7 @@ namespace GASS
 			const Vec3 size = bb.GetSize() * 0.5;
 			const Vec3 offset = (bb.Max + bb.Min)*0.5;
 
-			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
 			std::vector<Vec3> conrners;
 
@@ -102,6 +102,13 @@ namespace GASS
 				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 				new_world_pos = world_mat*conrners[j +4];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+
+				new_world_pos = world_mat*conrners[j + 4];
+				sub_mesh_data->PositionVector.push_back(new_world_pos);
+				sub_mesh_data->ColorVector.push_back(m_Color);
+				new_world_pos = world_mat*conrners[((j + 1) % 4) + 4];
 				sub_mesh_data->PositionVector.push_back(new_world_pos);
 				sub_mesh_data->ColorVector.push_back(m_Color);
 			}
