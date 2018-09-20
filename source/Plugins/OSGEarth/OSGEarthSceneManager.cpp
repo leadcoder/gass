@@ -98,6 +98,39 @@ namespace GASS
 		}
 	}
 
+
+	/**
+	* Toggles the main control canvas on and off.
+	*/
+	struct ToggleCanvasEventHandler : public osgGA::GUIEventHandler
+	{
+		ToggleCanvasEventHandler(osg::Node* canvas, char key) :
+			_canvas(canvas), _key(key)
+		{
+		}
+
+		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
+		{
+			if (ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN)
+			{
+				if (ea.getKey() == _key)
+				{
+					osg::ref_ptr< osg::Node > safeNode = _canvas.get();
+					if (safeNode.valid())
+					{
+						safeNode->setNodeMask(safeNode->getNodeMask() ? 0 : ~0);
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		osg::observer_ptr<osg::Node> _canvas;
+		char _key;
+	};
+
+
 	void OSGEarthSceneManager::OnInit()
 	{
 		m_Initlized = true;
@@ -107,9 +140,17 @@ namespace GASS
 		osgViewer::ViewerBase::Views views;
 		osg_sys->GetViewer()->getViews(views);
 
+		if (views.size() == 0)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find view", "OSGEarthSceneManager::OnInit");
+
+		osgViewer::View* view = dynamic_cast<osgViewer::View*>(views[0]);
+
+		if(view == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthSceneManager::OnInit");
+	
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
-		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(views[0]);
+		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
 
 		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
 		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8));
@@ -118,8 +159,15 @@ namespace GASS
 		
 		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
+
+		//hide GUI by default
+		canvas->setNodeMask(0);
+
 		root->addChild(canvas);
 		m_GUI = mainContainer;
+
+		
+		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
 	}
 
 #if 0
