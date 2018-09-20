@@ -171,17 +171,24 @@ namespace GASS
 			opt->setOptionString("dds_flip");
 			osgDB::Registry::instance()->setOptions(opt);
 		}
+		osgDB::Registry::instance()->setBuildKdTreesHint(osgDB::Options::BUILD_KDTREES);
 
 		//add default material
-		GraphicsMaterial line_mat;
-		line_mat.Name = "WhiteTransparentNoLighting";
-		line_mat.Diffuse.Set(1.0, 1.0, 1.0, 1.0);
-		line_mat.Ambient.Set(1.0, 1.0, 1.0);
-		line_mat.SelfIllumination.Set(1.0, 1.0, 1.0);
-		line_mat.DepthTest = true;
-		line_mat.DepthWrite = true;
-		AddMaterial(line_mat);
-
+		GraphicsMaterial mat_trans;
+		mat_trans.Name = "WhiteTransparentNoLighting";
+		mat_trans.DepthTest = true;
+		mat_trans.DepthWrite = true;
+		mat_trans.TrackVertexColor = true;
+		mat_trans.Transparent = 11;
+		AddMaterial(mat_trans);
+		
+		GraphicsMaterial mat_opaque;
+		mat_opaque.Name = "WhiteNoLighting";
+		mat_opaque.DepthTest = true;
+		mat_opaque.DepthWrite = true;
+		mat_opaque.TrackVertexColor = true;
+		mat_opaque.Transparent = 0;
+		AddMaterial(mat_opaque);
 
 		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 	}
@@ -597,11 +604,14 @@ namespace GASS
 		ColorRGB specular = material.Specular;
 		ColorRGB si = material.SelfIllumination;
 
-		if (material.TrackVertexColor)
+		if (material.TrackVertexColor) //Use vertex color
 		{
 			state_set->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-			state_set->setAttributeAndModes(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
-			state_set->setRenderBinDetails(INT_MAX, "RenderBin");
+			if (material.Transparent > 0)
+			{
+				state_set->setAttributeAndModes(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
+				state_set->setRenderBinDetails(11, "RenderBin");
+			}
 		}
 		else
 		{
@@ -622,7 +632,6 @@ namespace GASS
 		else
 		{
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
-			//also change render order, to get this geometry first
 			state_set->setRenderBinDetails(INT_MAX, "RenderBin");
 		}
 
