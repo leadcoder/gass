@@ -100,7 +100,7 @@ namespace GASS
 				if(debug)
 				{
 					GraphicsMeshPtr mesh_data(new GraphicsMesh());
-					mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(0,1,0,1), "WhiteTransparentNoLighting",false));
+					mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(0,1,0,1), "WhiteNoLighting",false));
 					
 					debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 				}
@@ -259,7 +259,7 @@ namespace GASS
 		if(debug)
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
-			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteTransparentNoLighting",false));
+			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteNoLighting",false));
 			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}
@@ -388,7 +388,7 @@ namespace GASS
 		if(debug)
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
-			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteTransparentNoLighting",true));
+			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteNoLighting",true));
 			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 		}
 	}

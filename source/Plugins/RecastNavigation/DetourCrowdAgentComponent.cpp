@@ -430,7 +430,7 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_STRIP;
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "WhiteNoLighting";
 		ColorRGBA color(1,0,0,1);
 
 		float samples = 24;

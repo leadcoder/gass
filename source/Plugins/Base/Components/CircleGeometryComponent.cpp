@@ -81,7 +81,7 @@ namespace GASS
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "WhiteNoLighting";
 		
 		if(m_Dashed)
 			sub_mesh_data->Type = LINE_LIST;

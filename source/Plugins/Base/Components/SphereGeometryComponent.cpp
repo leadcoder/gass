@@ -86,7 +86,7 @@ namespace GASS
 		if(m_Wireframe)
 			sub_mesh_data = GraphicsSubMesh::GenerateWireframeEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
 		else
-			sub_mesh_data = GraphicsSubMesh::GenerateWireframeEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
+			sub_mesh_data = GraphicsSubMesh::GenerateSolidEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));

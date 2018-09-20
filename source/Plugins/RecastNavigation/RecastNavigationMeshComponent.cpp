@@ -1315,7 +1315,7 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_NavVisLineMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = LINE_LIST;
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "WhiteNoLighting";
 		ColorRGBA color(0.4,0.4,1,float(m_Transparency)/100.0f);
 
 		for(size_t i = 0; i < nav_tris.size(); i += 3)
@@ -1346,7 +1346,7 @@ namespace GASS
 		sub_mesh_data = GraphicsSubMeshPtr(new GraphicsSubMesh());
 		m_NavVisTriMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = TRIANGLE_LIST;
-		sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+		sub_mesh_data->MaterialName = "WhiteNoLighting";
 
 		for(size_t i = 0; i < nav_tris.size(); i++)
 		{
