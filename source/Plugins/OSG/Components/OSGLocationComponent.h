@@ -32,7 +32,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<OSGLocationComponent>  OSGLocationComponentPtr;
 	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
 
-	class OSGLocationComponent : public Reflection<OSGLocationComponent,BaseSceneComponent>, public ILocationComponent,  public IOSGNode, public osg::NodeCallback
+	class OSGLocationComponent : public Reflection<OSGLocationComponent, BaseSceneComponent>, public ILocationComponent, public IOSGNode, public osg::NodeCallback
 	{
 	public:
 		OSGLocationComponent();
@@ -41,19 +41,29 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 
-		virtual void SetScale(const Vec3 &value);
-		virtual void SetPosition(const Vec3 &value);
+		//ILocationComponent
 		virtual Vec3 GetPosition() const;
-		virtual void SetWorldPosition(const Vec3 &value);
+		virtual void SetPosition(const Vec3 &value);
+
 		virtual Vec3 GetWorldPosition() const;
-		
+		virtual void SetWorldPosition(const Vec3 &value);
+
 		virtual void SetEulerRotation(const EulerRotation &value);
 		virtual EulerRotation GetEulerRotation() const;
-		virtual void SetRotation(const Quaternion &value);
+
 		virtual Quaternion GetRotation() const;
-		virtual void SetWorldRotation(const Quaternion &value);
+		virtual void SetRotation(const Quaternion& value);
+
 		virtual Quaternion GetWorldRotation() const;
-		virtual Vec3 GetScale() const {return m_Scale;}
+		virtual void SetWorldRotation(const Quaternion& value);
+
+		virtual Vec3 GetScale() const { return m_Scale; }
+		virtual void SetScale(const Vec3 &value);
+
+		virtual bool GetAttachToParent() const;
+		virtual void SetAttachToParent(bool value);
+		//end ILocationComponent
+
 			
 		//IOSGNode interface
 		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
@@ -62,7 +72,6 @@ namespace GASS
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
-		bool GetAttachToParent() const;
 	protected:
 		void OnPositionMessage(PositionRequestPtr message);
 		void OnRotationMessage(RotationRequestPtr  message);
@@ -72,8 +81,6 @@ namespace GASS
 		void OnParentChangedMessage(ParentChangedEventPtr message);
 		void OnAttachToParent(AttachToParentRequestPtr message);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
-
-		void SetAttachToParent(bool value);
 		
 		//helper
 		OSGLocationComponentPtr _GetParentLocation();

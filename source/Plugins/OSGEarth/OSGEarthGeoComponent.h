@@ -27,7 +27,7 @@ namespace GASS
 {
 	class OSGEarthSceneManager;
 
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,BaseSceneComponent> 
+	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,BaseSceneComponent> , public IWorldLocationComponent
 	{
 	public:
 		OSGEarthGeoComponent();
@@ -35,14 +35,16 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
+
+		//IWorldLocationComponent
 		double GetLatitude() const;
 		void SetLatitude(double lat);
 		double GetLongitude() const;
 		void SetLongitude(double lat);
-		double GetAltitude() const;
-		void SetAltitude(double alt);
+		void SetHeightAboveMSL(double value);
 		double GetHeightAboveMSL() const;
-		void SetHeightAboveMSL(double height);
+		void SetHeightAboveGround(double value);
+		double GetHeightAboveGround() const;
 	protected:
 		
 		void OnTransformation(TransformationChangedEventPtr message);
@@ -51,8 +53,8 @@ namespace GASS
 		double m_Latitude;
 		double m_Longitude;
 		double m_HeightAboveMSL;
-		double m_Altitude;
-		double m_InitialAlt;
+		double m_HeightAboveGround;
+		//double m_InitialAlt;
 		OSGEarthSceneManager* m_OESM;
 	};
 	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;

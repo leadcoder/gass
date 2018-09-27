@@ -39,15 +39,32 @@ namespace GASS
 	class ILocationComponent
 	{
 	public:
-		virtual ~ILocationComponent(){}
-		virtual void SetPosition(const Vec3 &value) = 0;
+		virtual ~ILocationComponent() {}
 		virtual Vec3 GetPosition() const = 0;
+		virtual void SetPosition(const Vec3 &value) = 0;
+
 		virtual Vec3 GetWorldPosition() const = 0;
+		virtual void SetWorldPosition(const Vec3 &value) = 0;
+
 		virtual void SetEulerRotation(const EulerRotation &value) = 0;
 		virtual EulerRotation GetEulerRotation() const = 0;
+
 		virtual Quaternion GetRotation() const = 0;
+		virtual void SetRotation(const Quaternion& value) = 0;
+
 		virtual Quaternion GetWorldRotation() const = 0;
+		virtual void SetWorldRotation(const Quaternion& value) = 0;
+
 		virtual Vec3 GetScale() const = 0;
+		virtual void SetScale(const Vec3 &value) = 0;
+		
+		
+		/** Get value indicating if location is relative to first LocationComponent that is found above in scene tree hierarchy */
+		virtual bool GetAttachToParent() const = 0;
+
+		/** Set if location should be relative to first LocationComponent that is
+		* found above in scene tree hierarchy (true) or world location (false) */
+		virtual void SetAttachToParent(bool value) = 0;
 	protected:
 	};
 

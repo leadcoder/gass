@@ -26,7 +26,6 @@ namespace GASS
 	/**
 		Interface that world referenced location components can expose.
 	*/
-
 	class IWorldLocationComponent
 	{
 	public:
@@ -35,6 +34,10 @@ namespace GASS
 		virtual double GetLatitude() const = 0;
 		virtual void SetLongitude(double value) = 0;
 		virtual double GetLongitude() const = 0;
+		virtual void SetHeightAboveMSL(double value) = 0;
+		virtual double GetHeightAboveMSL() const = 0;
+		virtual void SetHeightAboveGround(double value) = 0;
+		virtual double GetHeightAboveGround() const = 0;
 	};
 
 	typedef GASS_WEAK_PTR<IWorldLocationComponent> WorldLocationComponentWeakPtr;

@@ -48,23 +48,30 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		virtual void SetPosition(const Vec3 &value);
+
+		//ILocationComponent
 		virtual Vec3 GetPosition() const;
+		virtual void SetPosition(const Vec3 &value);
+		
 		virtual Vec3 GetWorldPosition() const;
+		virtual void SetWorldPosition(const Vec3 &value);
+
 		virtual void SetEulerRotation(const EulerRotation &value);
 		virtual EulerRotation GetEulerRotation() const;
-		virtual void SetScale(const Vec3 &value);
-		virtual Vec3 GetScale() const {return m_Scale;}
-		virtual void SetRotation(const Quaternion &value);
+
 		virtual Quaternion GetRotation() const;
+		virtual void SetRotation(const Quaternion& value);
+
 		virtual Quaternion GetWorldRotation() const;
+		virtual void SetWorldRotation(const Quaternion& value);
 
-		/** Set if position should be relative to first LocationComponent that is 
-		* found in component hierarchy (true) or absolute position (false) */
-		virtual void SetAttachToParent(bool value);
-		/** Get value indicating if position is relative to first LocationComponent that is found in component hierarchy */
+		virtual Vec3 GetScale() const { return m_Scale;}
+		virtual void SetScale(const Vec3 &value);
+
 		virtual bool GetAttachToParent() const;
-
+		virtual void SetAttachToParent(bool value);
+		//end ILocationComponent
+	
 		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
 		void SetVisibility(bool visibility);
 
@@ -78,8 +85,6 @@ namespace GASS
 		virtual void nodeDetached(const Ogre::Node* /*node*/) {}
 
 	protected:
-		void SetWorldRotation(const Quaternion &rot);
-		void SetWorldPosition(const Vec3 &pos);
 		void OnScaleMessage(ScaleRequestPtr message);
 		void PositionRequest(PositionRequestPtr message);
 		void RotationRequest(RotationRequestPtr message);

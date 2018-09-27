@@ -354,7 +354,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height, double *altitude)
+	void OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground)
 	{
 		if (m_MapNode)
 		{
@@ -366,14 +366,14 @@ namespace GASS
 			const osg::Vec3d ptLatLong = gp.transform(geoSRS).vec3d();
 			latitude = ptLatLong.y();
 			longitude = ptLatLong.x();
-			height = ptLatLong.z();
+			height_above_msl = ptLatLong.z();
 		
-			if (altitude)
+			if (height_above_ground)
 			{
-				double h_above_msl = 0;
+				double terrain_height_above_msl = 0;
 				//getHeight on map node to include all osgEarth geometries
-				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &h_above_msl, 0L);
-				*altitude = height - h_above_msl;
+				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &terrain_height_above_msl, 0L);
+				*height_above_ground = height_above_msl - terrain_height_above_msl;
 			}
 		}
 	}

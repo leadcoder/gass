@@ -59,11 +59,10 @@
 
 namespace GASS
 {
-	OSGEarthGeoComponent::OSGEarthGeoComponent() :m_Latitude(0),
+	OSGEarthGeoComponent::OSGEarthGeoComponent() : m_Latitude(0),
 		m_Longitude(0),
-		m_Altitude(0),
-		m_InitialAlt(0),
 		m_HeightAboveMSL(0),
+		m_HeightAboveGround(0),
 		m_OESM(NULL)
 	{
 
@@ -84,7 +83,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<double>("HeightAboveMSL", &OSGEarthGeoComponent::GetHeightAboveMSL, &OSGEarthGeoComponent::SetHeightAboveMSL,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<double>("Altitude", &OSGEarthGeoComponent::GetAltitude, &OSGEarthGeoComponent::SetAltitude,
+		RegisterProperty<double>("HeightAboveGround", &OSGEarthGeoComponent::GetHeightAboveGround, &OSGEarthGeoComponent::SetHeightAboveGround,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 	}
 	
@@ -105,7 +104,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoComponent::OnTransformation, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoComponent::OnLocationLoaded, LocationLoadedEvent, 0));
 
-		m_InitialAlt = m_Altitude;
 	}
 
 
@@ -138,20 +136,27 @@ namespace GASS
 		UpdateNode();
 	}
 
-	void OSGEarthGeoComponent::SetAltitude(double alt)
+	void OSGEarthGeoComponent::SetHeightAboveGround(double value)
 	{
-		m_Altitude = alt;
+		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
+		m_HeightAboveGround = value;
+		m_HeightAboveMSL = terrain_height + value;
+		//note that m_HeightAboveMSL will later be update on TransformationChangedEvent 
 		UpdateNode();
 	}
 
-	double OSGEarthGeoComponent::GetAltitude() const
+	double OSGEarthGeoComponent::GetHeightAboveGround() const
 	{
-		return m_Altitude;
+		return m_HeightAboveGround;
 	}
 
-	void OSGEarthGeoComponent::SetHeightAboveMSL(double height)
+	void OSGEarthGeoComponent::SetHeightAboveMSL(double value)
 	{
-		m_HeightAboveMSL = height;
+		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
+		//we need to udpate m_HeightAboveGround because it's used in UpdateNode, TODO: to height updates in own method
+		m_HeightAboveGround = value - terrain_height;
+		m_HeightAboveMSL = value;
+		UpdateNode();
 	}
 
 	double OSGEarthGeoComponent::GetHeightAboveMSL() const
@@ -161,7 +166,7 @@ namespace GASS
 
 	void OSGEarthGeoComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
-		m_OESM->FromMapToLatLong(message->GetPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL , &m_Altitude);
+		m_OESM->FromMapToLatLong(message->GetPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL , &m_HeightAboveGround);
 	}
 
 	void OSGEarthGeoComponent::UpdateNode()
@@ -169,7 +174,7 @@ namespace GASS
 		if (m_OESM)
 		{
 			Vec3 pos;
-			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_Altitude, pos, true);
+			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveGround, pos, true);
 			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos)));
 			//GetSceneObject()->PostRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot)));
 		}

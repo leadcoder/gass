@@ -44,7 +44,7 @@ namespace GASS
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot);
 		void FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height);
-		void FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height, double *altitude);
+		void FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground);
 		void SetMapNode(osgEarth::MapNode* map_node) { m_MapNode = map_node; }
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
