@@ -46,7 +46,8 @@ namespace GASS
 		void SetHeightAboveGround(double value);
 		double GetHeightAboveGround() const;
 	protected:
-		
+		Vec3 _GetWorldPosition() const;
+		void _SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void UpdateNode();

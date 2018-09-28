@@ -136,13 +136,33 @@ namespace GASS
 		UpdateNode();
 	}
 
+	Vec3 OSGEarthGeoComponent::_GetWorldPosition() const
+	{
+		return GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+	}
+
+	void OSGEarthGeoComponent::_SetWorldPosition(const Vec3& pos)
+	{
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
+	}
+
 	void OSGEarthGeoComponent::SetHeightAboveGround(double value)
 	{
+		//first update values from from current location
+		if (m_OESM)
+			m_OESM->FromMapToLatLong(_GetWorldPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL, &m_HeightAboveGround);
+
 		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
 		m_HeightAboveGround = value;
 		m_HeightAboveMSL = terrain_height + value;
+
+		if (m_OESM)
+		{
+			Vec3 pos;
+			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveMSL, pos, false);
+			_SetWorldPosition(pos);
+		}
 		//note that m_HeightAboveMSL will later be update on TransformationChangedEvent 
-		UpdateNode();
 	}
 
 	double OSGEarthGeoComponent::GetHeightAboveGround() const
@@ -152,11 +172,22 @@ namespace GASS
 
 	void OSGEarthGeoComponent::SetHeightAboveMSL(double value)
 	{
+		//first update values from from current location
+		if (m_OESM)
+			m_OESM->FromMapToLatLong(_GetWorldPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL, &m_HeightAboveGround);
+
 		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
 		//we need to udpate m_HeightAboveGround because it's used in UpdateNode, TODO: to height updates in own method
 		m_HeightAboveGround = value - terrain_height;
 		m_HeightAboveMSL = value;
-		UpdateNode();
+
+		if (m_OESM)
+		{
+			Vec3 pos;
+			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveMSL, pos, false);
+			_SetWorldPosition(pos);
+		}
+
 	}
 
 	double OSGEarthGeoComponent::GetHeightAboveMSL() const
@@ -174,8 +205,10 @@ namespace GASS
 		if (m_OESM)
 		{
 			Vec3 pos;
+			//respect m_HeightAboveGround when lat long changed
 			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveGround, pos, true);
-			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos)));
+			_SetWorldPosition(pos);
+			//GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos)));
 			//GetSceneObject()->PostRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot)));
 		}
 	}	

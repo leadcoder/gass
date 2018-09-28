@@ -327,15 +327,19 @@ namespace GASS
 				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 
 				//Create geocentric coordinates from lat long, use  Geographic-SRS!
-				double new_height = 0;
-				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &new_height, 0L);
+				double abs_height = 0;
+				if (relative_height)
+				{
+					m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &abs_height, 0L);
+					abs_height = abs_height + height;
+				}
+				else
+					abs_height = height;
 
-				new_height = new_height + height;
-				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, new_height, osgEarth::ALTMODE_ABSOLUTE);
+				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
 				osg::Vec3d ptXYZ;
 				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
 				map_gp.toWorld(ptXYZ);
-
 				pos = OSGConvert::ToGASS(ptXYZ);
 			}
 			else //Hack to get correct height in projected mode, have to investigate vertical datum usages further
