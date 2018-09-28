@@ -22,7 +22,6 @@
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Sim/Messages/GASSGeoSceneObjectMessages.h"
 
-
 namespace GASS
 {
 	class OSGEarthSceneManager;
@@ -47,15 +46,14 @@ namespace GASS
 		double GetHeightAboveGround() const;
 	protected:
 		Vec3 _GetWorldPosition() const;
+		void _LatOrLongChanged();
 		void _SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr message);
-		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void UpdateNode();
+		
 		double m_Latitude;
 		double m_Longitude;
 		double m_HeightAboveMSL;
 		double m_HeightAboveGround;
-		//double m_InitialAlt;
 		OSGEarthSceneManager* m_OESM;
 	};
 	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;
