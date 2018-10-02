@@ -50,9 +50,7 @@ namespace GASS
 		void _SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr message);
 		
-		double m_Latitude;
-		double m_Longitude;
-		double m_HeightAboveMSL;
+		GeoLocation m_Location;
 		double m_HeightAboveGround;
 		OSGEarthSceneManager* m_OESM;
 	};

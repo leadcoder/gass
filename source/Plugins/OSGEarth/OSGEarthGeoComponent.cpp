@@ -27,10 +27,7 @@
 
 namespace GASS
 {
-	OSGEarthGeoComponent::OSGEarthGeoComponent() : m_Latitude(0),
-		m_Longitude(0),
-		m_HeightAboveMSL(0),
-		m_HeightAboveGround(0),
+	OSGEarthGeoComponent::OSGEarthGeoComponent() : m_HeightAboveGround(0),
 		m_OESM(NULL)
 	{
 
@@ -74,23 +71,23 @@ namespace GASS
 
 	double OSGEarthGeoComponent::GetLatitude() const
 	{ 
-		return m_Latitude;
+		return m_Location.Latitude;
 	}
 
 	void OSGEarthGeoComponent::SetLatitude(double lat)
 	{ 
-		m_Latitude = lat;
+		m_Location.Latitude = lat;
 		_LatOrLongChanged();
 	}
 
 	double OSGEarthGeoComponent::GetLongitude() const
 	{ 
-		return m_Longitude;
+		return m_Location.Longitude;
 	}
 
 	void OSGEarthGeoComponent::SetLongitude(double lat)
 	{ 
-		m_Longitude = lat;
+		m_Location.Longitude = lat;
 		_LatOrLongChanged();
 	}
 
@@ -106,21 +103,21 @@ namespace GASS
 
 	void OSGEarthGeoComponent::SetHeightAboveGround(double value)
 	{
-		//first update values from from current location
-		if (m_OESM)
-			m_OESM->FromMapToLatLong(_GetWorldPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL, &m_HeightAboveGround);
-
-		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
 		m_HeightAboveGround = value;
-		m_HeightAboveMSL = terrain_height + value;
-
 		if (m_OESM)
 		{
-			Vec3 pos;
-			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveMSL, pos, false);
-			_SetWorldPosition(pos);
+			//first update values from from current location
+			m_OESM->SceneToWGS84(_GetWorldPosition(), m_Location);
+			double terrain_height = 0;
+			if(m_OESM->GetTerrainHeight(m_Location, terrain_height))
+			{
+				//update world location with new height
+				m_Location.Height = terrain_height + m_HeightAboveGround;
+				Vec3 pos;
+				if(m_OESM->WGS84ToScene(m_Location,pos))
+					_SetWorldPosition(pos);
+			}
 		}
-		//note that m_HeightAboveMSL will later be update on TransformationChangedEvent 
 	}
 
 	double OSGEarthGeoComponent::GetHeightAboveGround() const
@@ -132,30 +129,33 @@ namespace GASS
 	{
 		//first update values from from current location
 		if (m_OESM)
-			m_OESM->FromMapToLatLong(_GetWorldPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL, &m_HeightAboveGround);
-
-		const double terrain_height = m_HeightAboveMSL - m_HeightAboveGround;
-		//we need to udpate m_HeightAboveGround because it's used in UpdateNode, TODO: to height updates in own method
-		m_HeightAboveGround = value - terrain_height;
-		m_HeightAboveMSL = value;
-
-		if (m_OESM)
 		{
-			Vec3 pos;
-			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveMSL, pos, false);
-			_SetWorldPosition(pos);
+			//first update geolocation from current world location
+			if (m_OESM->SceneToWGS84(_GetWorldPosition(), m_Location))
+			{
+				m_Location.Height = value;
+				Vec3 pos;
+				if (m_OESM->WGS84ToScene(m_Location, pos))
+				{
+					_SetWorldPosition(pos);
+					//update Height above ground
+					m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+				}
+			}
 		}
-
 	}
 
 	double OSGEarthGeoComponent::GetHeightAboveMSL() const
 	{
-		return m_HeightAboveMSL;
+		return m_Location.Height;
 	}
 
 	void OSGEarthGeoComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
-		m_OESM->FromMapToLatLong(message->GetPosition(), m_Latitude, m_Longitude, m_HeightAboveMSL , &m_HeightAboveGround);
+		if (m_OESM->SceneToWGS84(message->GetPosition(), m_Location))
+		{
+			m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+		}
 	}
 
 	void OSGEarthGeoComponent::_LatOrLongChanged()
@@ -163,9 +163,14 @@ namespace GASS
 		if (m_OESM)
 		{
 			Vec3 pos;
-			//respect m_HeightAboveGround when lat long changed
-			m_OESM->FromLatLongToMap(m_Latitude, m_Longitude, m_HeightAboveGround, pos, true);
-			_SetWorldPosition(pos);
+			//preserve height above ground at new location
+			GeoLocation relative_height(m_Location.Longitude,m_Location.Latitude, m_HeightAboveGround,true);
+			if (m_OESM->WGS84ToScene(relative_height, pos))
+			{
+				_SetWorldPosition(pos);
+				
+			}
+			
 		}
 	}	
 }

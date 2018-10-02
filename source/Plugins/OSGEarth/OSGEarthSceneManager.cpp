@@ -46,7 +46,7 @@
 
 namespace GASS
 {
-	OSGEarthSceneManager::OSGEarthSceneManager() : 	m_AutoAdd(true), 
+	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(true),
 		m_Initlized(false),
 		m_DisableGLSL(false)
 	{
@@ -60,7 +60,7 @@ namespace GASS
 
 	void OSGEarthSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("OSGEarthSceneManager",new GASS::Creator<OSGEarthSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register("OSGEarthSceneManager", new GASS::Creator<OSGEarthSceneManager, ISceneManager>);
 		/*RegisterProperty<std::string>("EarthFile", &OSGEarthSceneManager::GetEarthFile, &OSGEarthSceneManager::SetEarthFile);
 		RegisterProperty<bool>("UseSky", &OSGEarthSceneManager::GetUseSky, &OSGEarthSceneManager::SetUseSky);
 		RegisterProperty<bool>("ShowSkyControl", &OSGEarthSceneManager::GetShowSkyControl, &OSGEarthSceneManager::SetShowSkyControl);
@@ -71,16 +71,16 @@ namespace GASS
 
 	void OSGEarthSceneManager::OnCreate()
 	{
-		if(m_DisableGLSL)
+		if (m_DisableGLSL)
 			_putenv("OSGEARTH_NO_GLSL=1");
-		GetScene()->RegisterForMessage(REG_TMESS(OSGEarthSceneManager::OnLoadSceneObject,PreSceneObjectInitializedEvent,0));
+		GetScene()->RegisterForMessage(REG_TMESS(OSGEarthSceneManager::OnLoadSceneObject, PreSceneObjectInitializedEvent, 0));
 	}
 
 	void OSGEarthSceneManager::OnLoadSceneObject(PreSceneObjectInitializedEventPtr message)
 	{
 		//auto add component if location component exist?
 		SceneObjectPtr obj = message->GetSceneObject();
-		if(m_AutoAdd)
+		if (m_AutoAdd)
 		{
 			LocationComponentPtr location = obj->GetFirstComponentByClass<ILocationComponent>();
 			if (location) //only add to objects that have location component
@@ -145,9 +145,9 @@ namespace GASS
 
 		osgViewer::View* view = dynamic_cast<osgViewer::View*>(views[0]);
 
-		if(view == NULL)
+		if (view == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthSceneManager::OnInit");
-	
+
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
@@ -156,7 +156,7 @@ namespace GASS
 		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8));
 		mainContainer->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
 		mainContainer->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
-		
+
 		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 
@@ -166,7 +166,7 @@ namespace GASS
 		root->addChild(canvas);
 		m_GUI = mainContainer;
 
-		
+
 		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
 	}
 
@@ -174,12 +174,12 @@ namespace GASS
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)
 	{
 		m_EarthFile = earth_file;
-		if(!m_Initlized)
+		if (!m_Initlized)
 			return;
-		if(earth_file != "")
+		if (earth_file != "")
 		{
 			//disable GLSL
-			IOSGGraphicsSceneManagerPtr osg_sm  = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+			IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 			ResourceHandle rh(earth_file);
 			std::string full_path = rh.GetResource()->Path().GetFullPath();
@@ -197,7 +197,7 @@ namespace GASS
 			geom_comp->SetPropertyValue("GeometryFlags", flags);
 			dummy = SceneObjectPtr(new SceneObject);
 			dummy->AddComponent(geom_comp);*/
-			
+
 
 			/*const osgEarth::Config& external = m_MapNode->externalConfig();
 			const osgEarth::Config& skyConf         = externals.child("sky");
@@ -213,73 +213,73 @@ namespace GASS
 				viewpointsConf.add( *i );
 
 				*/
-			// Loading a viewpoint list from the earth file:
-			/*if ( !viewpointsConf.empty() )
-			{
-				std::vector<osgEarth::Viewpoint> viewpoints;
-
-				const osgEarth::ConfigSet& children = viewpointsConf.children();
-				if ( children.size() > 0 )
+				// Loading a viewpoint list from the earth file:
+				/*if ( !viewpointsConf.empty() )
 				{
-					for( osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i )
+					std::vector<osgEarth::Viewpoint> viewpoints;
+
+					const osgEarth::ConfigSet& children = viewpointsConf.children();
+					if ( children.size() > 0 )
 					{
-						viewpoints.push_back( osgEarth::Viewpoint(*i) );
+						for( osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i )
+						{
+							viewpoints.push_back( osgEarth::Viewpoint(*i) );
+						}
 					}
-				}
 
-				if ( viewpoints.size() > 0 )
-				{
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::ViewpointControlFactory().create(viewpoints, views[0]);
-					if ( c )
-						mainContainer->addControl( c );
-				}
-			}*/
+					if ( viewpoints.size() > 0 )
+					{
+						osgEarth::Util::Controls::Control* c = osgEarth::Util::ViewpointControlFactory().create(viewpoints, views[0]);
+						if ( c )
+							mainContainer->addControl( c );
+					}
+				}*/
 
-			/*if(m_UseSky)
-			{
-				osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create( m_MapNode);
-				//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
-				sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
-				sky->attach( views[0] );
-				root->addChild( sky );
-				if(m_ShowSkyControl)
+				/*if(m_UseSky)
 				{
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
-					if ( c )
-						mainContainer->addControl( c );
-				}
-			}*/
+					osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create( m_MapNode);
+					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
+					sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
+					sky->attach( views[0] );
+					root->addChild( sky );
+					if(m_ShowSkyControl)
+					{
+						osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
+						if ( c )
+							mainContainer->addControl( c );
+					}
+				}*/
 
 			if (m_UseOcean)
 			{
-			/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
-				if ( ocean )
-				{
-					// if there's a sky, we want to ocean under it
-					osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
-					if ( !parent ) parent = root;
-					parent->addChild( ocean );
-
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
-					if ( c )
-						mainContainer->addControl(c);
-				}
-				*/
-
-				/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
-				if ( ocean )
-				{
-					root->addChild( ocean );
-					if(m_ShowOceanControl)
+				/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
+					if ( ocean )
 					{
-						osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
+						// if there's a sky, we want to ocean under it
+						osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
+						if ( !parent ) parent = root;
+						parent->addChild( ocean );
+
+						osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
 						if ( c )
 							mainContainer->addControl(c);
 					}
-				}*/
+					*/
+
+					/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
+					if ( ocean )
+					{
+						root->addChild( ocean );
+						if(m_ShowOceanControl)
+						{
+							osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
+							if ( c )
+								mainContainer->addControl(c);
+						}
+					}*/
 			}
 			//m_MapNode->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode) );
-			
+
 		}
 	}
 #endif
@@ -289,7 +289,7 @@ namespace GASS
 
 	}
 
-	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot)
+	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const
 	{
 		if (m_MapNode)
 		{
@@ -317,82 +317,173 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height)
+//	bool OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height) const
+//	{
+//		bool status = false;
+//		if (m_MapNode)
+//		{
+//			status = WGS84ToScene(GeoLocation(longitude, latitude, height, relative_height), pos);
+//			return status;
+//#if 0
+//			if (m_MapNode->isGeocentric())
+//			{
+//				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+//				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+//
+//				//Create geocentric coordinates from lat long, use  Geographic-SRS!
+//				double abs_height = 0;
+//				if (relative_height)
+//				{
+//					status = m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &abs_height, 0L);
+//					if (status)
+//						abs_height = abs_height + height;
+//				}
+//				else
+//				{
+//					status = true;
+//					abs_height = height;
+//				}
+//				if (status)
+//				{
+//					osgEarth::GeoPoint gp(geoSRS, longitude, latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
+//					osg::Vec3d ptXYZ;
+//					osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
+//					if (status = map_gp.toWorld(ptXYZ))
+//						pos = OSGConvert::ToGASS(ptXYZ);
+//				}
+//			}
+//			else //Hack to get correct height in projected mode, have to investigate vertical datum usages further
+//			{
+//				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+//				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+//
+//				//update with correct height, ptXYZ.z don't match scene height
+//				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
+//				osg::Vec3d ptXYZ;
+//				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
+//				if (status = map_gp.toWorld(ptXYZ, m_MapNode->getTerrain()))
+//					pos = OSGConvert::ToGASS(ptXYZ);
+//			}
+//#endif
+//		}
+//		return status;
+//	}
+//
+//	bool OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground) const
+//	{
+//		bool status = false;
+//		if (m_MapNode)
+//		{
+//			GeoLocation geo_location;
+//			SceneToWGS84(pos, geo_location);
+//			latitude = geo_location.Latitude;
+//			longitude = geo_location.Longitude;
+//			height_above_msl = geo_location.Height;
+//
+//			if(height_above_ground)
+//			{
+//				double terrain_height_above_msl = 0;
+//				//getHeight on map node to include all osgEarth geometries
+//				if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, osgEarth::SpatialReference::create("wgs84"), longitude, latitude, &terrain_height_above_msl, 0L))
+//				{
+//					*height_above_ground = height_above_msl - terrain_height_above_msl;
+//				}
+//			}
+//#if 0
+//			const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+//			const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+//			const osg::Vec3d osg_pos = OSGConvert::ToOSG(pos);
+//			osgEarth::GeoPoint gp;
+//			//Create GeoPoint from world coordinates
+//			status = gp.fromWorld(mapSRS, osg_pos);
+//			if (status)
+//			{
+//				//Transform to Geographic coordnaties, lat, long, height
+//				const osg::Vec3d ptLatLong = gp.transform(geoSRS).vec3d();
+//				latitude = ptLatLong.y();
+//				longitude = ptLatLong.x();
+//				height_above_msl = ptLatLong.z();
+//				if (height_above_ground)
+//				{
+//					double terrain_height_above_msl = 0;
+//					//getHeight on map node to include all osgEarth geometries
+//					if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &terrain_height_above_msl, 0L))
+//					{
+//						*height_above_ground = height_above_msl - terrain_height_above_msl;
+//					}
+//				}
+//			}
+//#endif
+//		}
+//
+//		return status;
+//	}
+
+	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
 	{
-		if (m_MapNode)
+		const osg::Vec3d osg_location = OSGConvert::ToOSG(scene_location);
+		osgEarth::GeoPoint gp;
+		osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
+		bool status = gp.fromWorld(wgs84, osg_location);
+		geo_location.Latitude = gp.y();
+		geo_location.Longitude = gp.x();
+		geo_location.Height = gp.z();
+
+		if (geo_location.HeightAboveTerrain)
 		{
-			if (m_MapNode->isGeocentric())
+			double terrain_height_above_msl = 0;
+			//getHeight on map node to include all osgEarth geometries
+			if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, geo_location.Longitude, geo_location.Latitude, &terrain_height_above_msl, 0L))
 			{
-				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-
-				//Create geocentric coordinates from lat long, use  Geographic-SRS!
-				double abs_height = 0;
-				if (relative_height)
-				{
-					m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &abs_height, 0L);
-					abs_height = abs_height + height;
-				}
-				else
-					abs_height = height;
-
-				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
-				osg::Vec3d ptXYZ;
-				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
-				map_gp.toWorld(ptXYZ);
-				pos = OSGConvert::ToGASS(ptXYZ);
-			}
-			else //Hack to get correct height in projected mode, have to investigate vertical datum usages further
-			{
-				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-				
-				//update with correct height, ptXYZ.z don't match scene height
-				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
-				osg::Vec3d ptXYZ;
-				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
-				map_gp.toWorld(ptXYZ, m_MapNode->getTerrain());
-				
-				pos = OSGConvert::ToGASS(ptXYZ);
+				geo_location.Height = geo_location.Height - terrain_height_above_msl;
 			}
 		}
+		return status;
 	}
 
-	void OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground)
+	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, GASS::Vec3 &scene_location) const
 	{
-		if (m_MapNode)
+		bool status = false;
+		osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
+		double abs_height = 0;
+		if (geo_location.HeightAboveTerrain)
 		{
-			const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-			const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-			const osg::Vec3d osg_pos = OSGConvert::ToOSG(pos);
-			osgEarth::GeoPoint gp;
-			gp.fromWorld(mapSRS, osg_pos);
-			const osg::Vec3d ptLatLong = gp.transform(geoSRS).vec3d();
-			latitude = ptLatLong.y();
-			longitude = ptLatLong.x();
-			height_above_msl = ptLatLong.z();
-		
-			if (height_above_ground)
-			{
-				double terrain_height_above_msl = 0;
-				//getHeight on map node to include all osgEarth geometries
-				m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &terrain_height_above_msl, 0L);
-				*height_above_ground = height_above_msl - terrain_height_above_msl;
-			}
+			status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, geo_location.Longitude, geo_location.Latitude, &abs_height, 0L);
+			if (status)
+				abs_height = abs_height + geo_location.Height;
 		}
+		else
+		{
+			status = true;
+			abs_height = geo_location.Height;
+		}
+
+		osgEarth::GeoPoint gp(wgs84, geo_location.Longitude, geo_location.Latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
+		osg::Vec3d osg_location;
+		status = gp.toWorld(osg_location);
+		scene_location = OSGConvert::ToGASS(osg_location);
+		return status;
 	}
 
 	void OSGEarthSceneManager::WGS84ToScene(double lat, double lon, double &x, double &y)
 	{
-		Vec3 pos(0,0,0);
-		double height = 0;
-		FromLatLongToMap(lat, lon, height, pos, false);
+		//Vec3 pos(0, 0, 0);
+		//double height = 0;
+		osgEarth::GeoPoint p(osgEarth::SpatialReference::create("wgs84"), lon, lat, 0.0);
+		osg::Vec3d world;
+		p.toWorld(world);
+		x = world.x();
+		y = world.y();
+		//FromLatLongToMap(lat, lon, height, pos, false);
 	}
 
 	void OSGEarthSceneManager::SceneToWGS84(double x, double y, double &lat, double &lon)
 	{
-		double height;
-		FromMapToLatLong(GASS::Vec3(x, y, 0), lat, lon, height,NULL);
+		
+		GeoLocation loc;
+		SceneToWGS84(GASS::Vec3(x, y, 0), loc);
+		lat = loc.Latitude;
+		lon = loc.Longitude;
 	}
 
 	std::string OSGEarthSceneManager::GetProjection() const
@@ -403,5 +494,57 @@ namespace GASS
 	void OSGEarthSceneManager::SetProjection(const std::string &projection)
 	{
 		m_DummyProjection = projection;
+	}
+
+	bool OSGEarthSceneManager::GetTerrainHeight(const Vec3 &location, double &height) const
+	{
+		GeoLocation geo_location;
+		SceneToWGS84(location, geo_location);
+		return GetTerrainHeight(geo_location,height);
+	}
+
+	bool OSGEarthSceneManager::GetTerrainHeight(const GeoLocation &location, double &height) const
+	{
+		bool status = false;
+		if(m_MapNode)
+		{
+			osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
+			status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, location.Longitude, location.Latitude, &height, 0L);
+		}
+		return status;
+	}
+
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GASS::Vec3 &location, double &height) const
+	{
+		GeoLocation geo_location;
+		bool status = SceneToWGS84(location, geo_location);
+		status = GetHeightAboveTerrain(geo_location, height);
+		return status;
+	}
+
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GeoLocation &location, double &height) const
+	{
+		bool status = false;
+		double terrain_height = 0;
+		if (status = GetTerrainHeight(location, terrain_height))
+		{
+			height = location.Height - terrain_height;
+		}
+		return status;
+	}
+
+	bool OSGEarthSceneManager::GetUpVector(const GASS::Vec3 &location, GASS::Vec3 &up_vec) const
+	{
+		bool status = false;
+		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
+		osgEarth::GeoPoint gp;
+		if(status = gp.fromWorld(mapSRS, osg_pos))
+		{
+			osg::Vec3d osg_up_vec;
+			if(status = gp.createWorldUpVector(osg_up_vec))
+				up_vec = OSGConvert::ToGASS(osg_up_vec);
+		}
+		return status;
 	}
 }

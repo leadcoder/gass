@@ -243,21 +243,15 @@ namespace GASS
 				osgEarth::MapNode* mapNode = osgEarth::MapNode::findMapNode(m_Manipulator->getNode());
 				if (mapNode)
 				{
-					//const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
 					const osgEarth::SpatialReference* mapSRS = mapNode->getMapSRS();
-
-					GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
-					if (earth_sm)
-					{
-						double lat, lon, height, alt;
-						earth_sm->FromMapToLatLong(object_pos, lat, lon, height, &alt);
-
-						osgEarth::Viewpoint vp;
-						vp.focalPoint() = osgEarth::GeoPoint(mapSRS, lon, lat, height, osgEarth::ALTMODE_ABSOLUTE);
-						vp.pitch() = -90;
-						vp.range() = rad * 3;
-						m_Manipulator->setViewpoint(vp, 2.0);
-					}
+					const osg::Vec3d osg_location = OSGConvert::ToOSG(object_pos);
+					osgEarth::GeoPoint focalPoint(mapSRS, 0, 0, 0, osgEarth::ALTMODE_ABSOLUTE);
+					bool status = focalPoint.fromWorld(mapSRS, osg_location);
+					osgEarth::Viewpoint vp;
+					vp.focalPoint() = focalPoint;
+					vp.pitch() = -90;
+					vp.range() = rad * 3;
+					m_Manipulator->setViewpoint(vp, 2.0);
 				}
 			}
 		}

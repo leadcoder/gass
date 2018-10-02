@@ -30,7 +30,7 @@
 
 namespace GASS
 {
-	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IProjectionSceneManager
+	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IProjectionSceneManager, public IWGS84Terrain
 	{
 	public:
 		OSGEarthSceneManager();
@@ -42,13 +42,21 @@ namespace GASS
 		virtual bool GetSerialize() const {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
-		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot);
-		void FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height);
-		void FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground);
+		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
+		//bool FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height) const;
+		//bool FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground) const;
 		void SetMapNode(osgEarth::MapNode* map_node) { m_MapNode = map_node; }
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
-
+		//IWGS84Terrain
+		bool GetTerrainHeight(const Vec3 &location, double &height) const;
+		bool GetTerrainHeight(const GeoLocation &location, double &height) const;
+		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const;
+		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;
+		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const;
+		bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const;
+		bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const;
+	
 		//IProjectionSceneManager interface
 		virtual void WGS84ToScene(double lat, double lon, double &x, double &y);
 		virtual void SceneToWGS84(double x, double y, double &lat, double &lon);
