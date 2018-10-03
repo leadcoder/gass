@@ -25,6 +25,7 @@
 
 namespace GASS
 {
+
 	/**
 		Interface projection scene managers should be derived from.
 		A projection scene manager support transformations from local scene space to 
@@ -34,48 +35,8 @@ namespace GASS
 	{
 	public:
 		virtual ~IProjectionSceneManager(){}
-		virtual void WGS84ToScene(double lat,double lon, double &x,double &y) = 0;
-		virtual void SceneToWGS84(double x,double y, double &lat,double &lon) = 0;
 		virtual std::string GetProjection() const = 0;
 		virtual void SetProjection(const std::string &projection) = 0;
 	};
 	typedef GASS_SHARED_PTR<IProjectionSceneManager> ProjectionSceneManagerPtr;
-
-	class GeoLocation
-	{
-	public:
-		GeoLocation(double lon = 0, double lat = 0, double height = 0, bool hat = false) : Longitude(lon),
-			Latitude(lat),
-			Height(height),
-			HeightAboveTerrain(hat)
-		{}
-		virtual ~GeoLocation() {};
-		double Latitude;
-		double Longitude;
-		double Height;
-		bool HeightAboveTerrain;
-	};
-
-
-	class ITerrain
-	{
-	public:
-		virtual ~ITerrain() {}
-		virtual bool GetTerrainHeight(const Vec3 &location, double &height) const = 0;
-		virtual bool GetHeightAboveTerrain(const Vec3 &location, double &height) const = 0;
-		virtual bool GetUpVector(const Vec3 &location, GASS::Vec3 &up_vec) const = 0;
-	};
-	typedef GASS_SHARED_PTR<ITerrain> TerrainPtr;
-
-
-	class IWGS84Terrain : public ITerrain
-	{
-	public:
-		virtual ~IWGS84Terrain() {}
-		virtual bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const = 0;
-		virtual bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const = 0;
-		virtual bool GetTerrainHeight(const GeoLocation &location, double &height) const = 0;
-		virtual bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const = 0;
-	};
-	typedef GASS_SHARED_PTR<IWGS84Terrain> WGS84TerrainPtr;
 }
