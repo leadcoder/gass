@@ -22,15 +22,18 @@
 #define OSG_EARTH_SCENE_MANAGER
 
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSITerrainSceneManager.h"
+#include "Sim/Interface/GASSIWGS84SceneManager.h"
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarth/PhongLightingEffect>
 #include <osgEarthUtil/Fog>
 
+
 namespace GASS
 {
-	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IProjectionSceneManager, public IWGS84Terrain
+	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IWGS84SceneManager, public ITerrainSceneManager
 	{
 	public:
 		OSGEarthSceneManager();
@@ -43,25 +46,22 @@ namespace GASS
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
-		//bool FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height) const;
-		//bool FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground) const;
 		void SetMapNode(osgEarth::MapNode* map_node) { m_MapNode = map_node; }
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
-		//IWGS84Terrain
+		//ITerrainSceneManager
 		bool GetTerrainHeight(const Vec3 &location, double &height) const;
-		bool GetTerrainHeight(const GeoLocation &location, double &height) const;
 		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const;
-		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;
 		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const;
+
+		//IWGS84SceneManager
 		bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const;
 		bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const;
-	
-		//IProjectionSceneManager interface
-		virtual void WGS84ToScene(double lat, double lon, double &x, double &y);
-		virtual void SceneToWGS84(double x, double y, double &lat, double &lon);
-		virtual std::string GetProjection() const;
-		virtual void SetProjection(const std::string &projection);
+
+		//helpers
+		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;
+		bool GetTerrainHeight(const GeoLocation &location, double &height) const;
+
 	protected:
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
 		ADD_PROPERTY(bool,DisableGLSL)

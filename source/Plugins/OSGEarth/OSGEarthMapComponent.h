@@ -46,6 +46,7 @@ namespace GASS
 		std::vector<std::string> GetViewpointNames() const;
 		std::vector<std::string> GetLayerNames() const;
 	protected:
+		bool _GetLLHAtLocation(const GASS::Vec3 &location, double lat, double lon, double &height) const;
 		void Shutdown();
 		void SetEarthFile(const ResourceHandle &earth_file);
 		ResourceHandle GetEarthFile() const { return m_EarthFile; }

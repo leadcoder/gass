@@ -428,16 +428,6 @@ namespace GASS
 		geo_location.Latitude = gp.y();
 		geo_location.Longitude = gp.x();
 		geo_location.Height = gp.z();
-
-		if (geo_location.HeightAboveTerrain)
-		{
-			double terrain_height_above_msl = 0;
-			//getHeight on map node to include all osgEarth geometries
-			if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, geo_location.Longitude, geo_location.Latitude, &terrain_height_above_msl, 0L))
-			{
-				geo_location.Height = geo_location.Height - terrain_height_above_msl;
-			}
-		}
 		return status;
 	}
 
@@ -445,57 +435,12 @@ namespace GASS
 	{
 		bool status = false;
 		osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
-		double abs_height = 0;
-		if (geo_location.HeightAboveTerrain)
-		{
-			status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, geo_location.Longitude, geo_location.Latitude, &abs_height, 0L);
-			if (status)
-				abs_height = abs_height + geo_location.Height;
-		}
-		else
-		{
-			status = true;
-			abs_height = geo_location.Height;
-		}
-
-		osgEarth::GeoPoint gp(wgs84, geo_location.Longitude, geo_location.Latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
+		osgEarth::GeoPoint gp(wgs84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
 		osg::Vec3d osg_location;
 		status = gp.toWorld(osg_location);
 		scene_location = OSGConvert::ToGASS(osg_location);
 		return status;
 	}
-
-	void OSGEarthSceneManager::WGS84ToScene(double lat, double lon, double &x, double &y)
-	{
-		//Vec3 pos(0, 0, 0);
-		//double height = 0;
-		osgEarth::GeoPoint p(osgEarth::SpatialReference::create("wgs84"), lon, lat, 0.0);
-		osg::Vec3d world;
-		p.toWorld(world);
-		x = world.x();
-		y = world.y();
-		//FromLatLongToMap(lat, lon, height, pos, false);
-	}
-
-	void OSGEarthSceneManager::SceneToWGS84(double x, double y, double &lat, double &lon)
-	{
-		
-		GeoLocation loc;
-		SceneToWGS84(GASS::Vec3(x, y, 0), loc);
-		lat = loc.Latitude;
-		lon = loc.Longitude;
-	}
-
-	std::string OSGEarthSceneManager::GetProjection() const
-	{
-		return m_DummyProjection;
-	}
-
-	void OSGEarthSceneManager::SetProjection(const std::string &projection)
-	{
-		m_DummyProjection = projection;
-	}
-
 	bool OSGEarthSceneManager::GetTerrainHeight(const Vec3 &location, double &height) const
 	{
 		GeoLocation geo_location;

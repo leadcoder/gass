@@ -59,7 +59,6 @@ namespace GASS
 
 	void OSGEarthGeoComponent::OnInitialize()
 	{
-
 		GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
 		if (!earth_sm)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find OSGEarthSceneManager", "OSGEarthGeoComponent::OnInitialize");
@@ -164,13 +163,14 @@ namespace GASS
 		{
 			Vec3 pos;
 			//preserve height above ground at new location
-			GeoLocation relative_height(m_Location.Longitude,m_Location.Latitude, m_HeightAboveGround,true);
-			if (m_OESM->WGS84ToScene(relative_height, pos))
+			double terrain_height = 0;
+			if(m_OESM->GetTerrainHeight(m_Location, terrain_height))
+				m_Location.Height = m_HeightAboveGround + terrain_height;
+
+			if (m_OESM->WGS84ToScene(m_Location, pos))
 			{
 				_SetWorldPosition(pos);
-				
 			}
-			
 		}
 	}	
 }

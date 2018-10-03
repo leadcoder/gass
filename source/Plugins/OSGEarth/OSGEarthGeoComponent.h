@@ -21,6 +21,7 @@
 
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Sim/Messages/GASSGeoSceneObjectMessages.h"
+#include "Sim/GASSGeoLocation.h"
 
 namespace GASS
 {
