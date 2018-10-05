@@ -409,7 +409,9 @@ namespace GASS
 	template<class TYPE>
 	bool TAABox<TYPE>::RayIntersect(const TRay<TYPE> &ray, TYPE &t_near, TYPE &t_far) const
 	{
-		const TVec3<TYPE> inv_dir(1.0f / ray.m_Dir.x, 1.0f / ray.m_Dir.y, 1.0f / ray.m_Dir.z);
+		const TVec3<TYPE> inv_dir(static_cast<TYPE>(1.0) / ray.m_Dir.x, 
+			static_cast<TYPE>(1.0) / ray.m_Dir.y, 
+			static_cast<TYPE>(1.0) / ray.m_Dir.z);
 		return RayIntersect(ray, inv_dir, t_near, t_far);
 	}
 
