@@ -29,6 +29,13 @@
 #include "Sim/GASSScene.h"
 #include "Sim/Utils/GASSGUID.h"
 
+
+namespace tinyxml2
+{
+	class XMLDocument;
+}
+
+
 namespace GASS
 {
 	typedef std::string SceneObjectID;
@@ -38,6 +45,7 @@ namespace GASS
 	class SceneObject;
 	class BaseSceneComponent;
 	class SceneObjectVisitor;
+	
 
 	typedef GASS_SHARED_PTR<Scene> ScenePtr;
 	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
@@ -282,8 +290,8 @@ namespace GASS
 		BaseSceneComponent* GetComponentByClassName(const std::string &comp_name) const;
 		SceneObject* GetSceneObjectByName(const std::string &name) const;
 		SceneObject* GetSceneObjectByID(const std::string &id) const;
-		//void LoadFromFile(const std::string &filename);
 		static SceneObjectPtr LoadFromXML(const std::string &filename);
+		static SceneObjectPtr LoadFromXML(tinyxml2::XMLDocument *xmlDoc);
 
 		void PostRequest(SceneObjectRequestMessagePtr message);
 		void SendImmediateRequest(SceneObjectRequestMessagePtr message);

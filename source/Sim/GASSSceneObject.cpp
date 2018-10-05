@@ -630,33 +630,40 @@ namespace GASS
 		SetName(name);
 	}
 
-	/*void SceneObject::LoadFromFile(const std::string &filename)
+	SceneObjectPtr SceneObject::LoadFromXML(tinyxml2::XMLDocument *xmlDoc)
 	{
-		if(filename =="") 
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
-
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
-		{
-			delete xmlDoc;
-			//Fatal error, cannot load
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
-		}
 		tinyxml2::XMLElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
 
-		if(!so_elem)
+		SceneObjectPtr so;
+		if (so_elem->Attribute("from_template"))
 		{
-			delete xmlDoc;
-			//Fatal error, cannot load
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"cant find SceneObject tag in: " + filename , "SceneObject::LoadXML");
+			std::string template_name = so_elem->Attribute("from_template");
+			so = GASS_STATIC_PTR_CAST<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+
+			ComponentContainer::ComponentContainerIterator children = so->GetChildren();
+			while (children.hasMoreElements())
+			{
+				SceneObjectPtr child_obj = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+				so->RemoveChild(child_obj);
+			}
+		}
+		else
+		{
+			const std::string cc_name = so_elem->Value();
+			so = GASS_STATIC_PTR_CAST<SceneObject>(ComponentContainerFactory::Get().Create(cc_name));
 		}
 
-		LoadXML(so_elem);
-		xmlDoc->Clear();
-		//Delete our allocated document and return success ;)
-		delete xmlDoc;
-	}*/
+		if (!so_elem)
+		{
+			std::string file_name = xmlDoc->GetFileName();
+			delete xmlDoc;
+			//Fatal error, cannot load
 
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Can't find SceneObject tag in: " + file_name, "SceneObject::LoadFromXML");
+		}
+		so->LoadXML(so_elem);
+		return so;
+	}
 
 	SceneObjectPtr SceneObject::LoadFromXML(const std::string &filename)
 	{
@@ -670,34 +677,7 @@ namespace GASS
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
-		tinyxml2::XMLElement *so_elem = xmlDoc->FirstChildElement("SceneObject");
-		
-		SceneObjectPtr so;
-		if(so_elem->Attribute("from_template"))
-		{
-			std::string template_name = so_elem->Attribute("from_template");
-			so = GASS_STATIC_PTR_CAST<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
-
-			ComponentContainer::ComponentContainerIterator children = so->GetChildren();
-			while(children.hasMoreElements())
-			{
-				SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
-				so->RemoveChild(child_obj);
-			}
-		}
-		else
-		{
-			const std::string cc_name = so_elem->Value();
-			so = GASS_STATIC_PTR_CAST<SceneObject>(ComponentContainerFactory::Get().Create(cc_name));
-		}
-
-		if(!so_elem)
-		{
-			delete xmlDoc;
-			//Fatal error, cannot load
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"cant find SceneObject tag in: " + filename , "SceneObject::LoadFromFile");
-		}
-		so->LoadXML(so_elem);
+		SceneObjectPtr so = LoadFromXML(xmlDoc);
 		xmlDoc->Clear();
 		//Delete our allocated document and return success ;)
 		delete xmlDoc;
@@ -715,11 +695,7 @@ namespace GASS
 
 		//first save to store filename
 		xmlDoc->SaveFile(filename.c_str());
-
-		//This is very wrong but works...need to fix this!!!!
-		//SaveXML((tinyxml2::XMLElement*)xmlDoc);
-
-		//SaveXML(dynamic_cast<tinyxml2::XMLElement*>(xmlDoc));
+		
 		tinyxml2::XMLElement * so_elem = xmlDoc->NewElement("SceneObject");
 		xmlDoc->LinkEndChild(so_elem);
 		SaveXML(so_elem);
@@ -727,12 +703,10 @@ namespace GASS
 		delete xmlDoc;
 	}
 
-
 	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name) const
 	{
 		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
 	}
-
 
 	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name) const
 	{
@@ -776,7 +750,3 @@ namespace GASS
 		return cc;
 	}
 }
-
-
-
-
