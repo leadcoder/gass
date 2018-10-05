@@ -14,6 +14,7 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -513,21 +514,11 @@ namespace GASS
 		drop_pos.z = SnapPosition(drop_pos.z);
 		
 		GASS::Quaternion rot;
-		
-		const bool geocentric = object_under_cursor->GetScene()->GetGeocentric();
-
-		//Set base initial rotation if geocentric
-		if (geocentric)
+		const TerrainSceneManagerPtr tsm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(false);
+		if (tsm)
 		{
-			const GASS::Vec3 normal = drop_pos.NormalizedCopy();
-			const Vec3 north_axis(0, 1, 0);
-			const Vec3 x_axis = Vec3::Cross(north_axis, normal).NormalizedCopy();
-			const Vec3 z_axis = Vec3::Cross(x_axis, normal).NormalizedCopy();
-			Mat4 rot_mat;
-			rot_mat.SetRotationByAxis(x_axis, normal, z_axis);
-			rot.FromRotationMatrix(rot_mat);
+			 tsm->GetOrientation(drop_pos, rot);
 		}
-
 		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
 	}
 
