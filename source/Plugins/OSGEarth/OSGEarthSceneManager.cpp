@@ -492,4 +492,23 @@ namespace GASS
 		}
 		return status;
 	}
+
+	bool OSGEarthSceneManager::GetOrientation(const Vec3 &location, Quaternion &rot) const
+	{
+		bool status = false;
+		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
+		osgEarth::GeoPoint gp;
+		if (status = gp.fromWorld(mapSRS, osg_pos))
+		{
+			osg::Matrixd local2world;
+			if (status = gp.createLocalToWorld(local2world))
+			{	
+				osg::Quat osg_rot = local2world.getRotate();
+				rot = OSGConvert::ToGASS(osg_rot);
+			}
+		}
+		return status;
+	}
+
 }

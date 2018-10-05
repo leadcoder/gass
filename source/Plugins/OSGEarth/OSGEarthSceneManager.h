@@ -53,6 +53,7 @@ namespace GASS
 		bool GetTerrainHeight(const Vec3 &location, double &height) const;
 		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const;
 		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const;
+		bool GetOrientation(const Vec3 &location, Quaternion &rot) const;
 
 		//IWGS84SceneManager
 		bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const;
