@@ -22,7 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSRunTimeController.h"
+#include "Sim/GASSSystemStepper.h"
 #include "Sim/RTC/GASSTaskNode.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -55,7 +55,7 @@ namespace GASS
 	/**
 		Base class that GASSSim systems should be derived from 
 	*/
-	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SimSystem>,  public IMessageListener, public IXMLSerialize, public ITaskNodeListener
+	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SimSystem>,  public IMessageListener, public IXMLSerialize
 	{
 	public:
 		SimSystem();
@@ -65,17 +65,19 @@ namespace GASS
 		virtual void OnCreate(SimSystemManagerPtr owner) {m_Owner=owner;}
 		virtual void Init() = 0;
 		virtual std::string  GetSystemName() const = 0;
-		virtual void Update(double delta_time, TaskNode* caller);
 		virtual std::string GetName() const {return m_Name;}
 		virtual void Register(SystemListenerPtr listener);
 		virtual void Unregister(SystemListenerPtr listener);
-	
+		virtual void OnSystemUpdate(double delta_time);
+
 		//IXMLSerialize interface
 		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
 		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
+
 		SimSystemManagerPtr GetSimSystemManager() const;
 		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)
-		void RegisterForUpdate();
+	
+		void _UpdateListeners(double delta_time);
 	protected:
 		
 		std::vector<SystemListenerWeakPtr> m_Listeners;

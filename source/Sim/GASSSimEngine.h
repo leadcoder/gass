@@ -38,7 +38,7 @@ namespace GASS
 	GASS_FORWARD_DECL(ResourceManager)
 	GASS_FORWARD_DECL(SimSystemManager)
 	GASS_FORWARD_DECL(TaskNode)
-	GASS_FORWARD_DECL(RunTimeController)
+	GASS_FORWARD_DECL(SystemStepper)
 	GASS_FORWARD_DECL(ComponentContainerTemplateManager)
 	GASS_FORWARD_DECL(SceneObject)
 	GASS_FORWARD_DECL(Scene)
@@ -213,7 +213,7 @@ namespace GASS
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
-		RunTimeControllerPtr GetRunTimeController() const {return m_RTC;}
+		SystemStepperPtr GetRunTimeController() const {return m_SystemStepper;}
 
 		/**
 			Enable/disable external updates
@@ -228,7 +228,7 @@ namespace GASS
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
 		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
-		RunTimeControllerPtr m_RTC;
+		SystemStepperPtr m_SystemStepper;
 		
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;

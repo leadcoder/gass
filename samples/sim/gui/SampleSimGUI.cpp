@@ -115,11 +115,9 @@ int run(int argc, char* argv[])
 	GASS::SimSystemPtr gui_system = GASS::SystemFactory::Get().Create(gui_gfx_system_name);
 	gui_system->OnCreate(m_Engine->GetSimSystemManager());
 	gui_system->Init();
-	gui_system->RegisterForUpdate();
 	m_Engine->GetSimSystemManager()->AddSystem(gui_system);
 	
 	gfx_system->Init();
-	gfx_system->RegisterForUpdate();
 
 	m_Engine->GetSimSystemManager()->AddSystem(gfx_system);
 	//GASS::TaskNode2* node = m_Engine->GetRootTaskNode()->GetChildByID(gfx_system->GetUpdateGroup().GetValue());

@@ -47,13 +47,19 @@ namespace GASS
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Init();
-			//auto register for updates
-			m_Systems[i]->RegisterForUpdate();
 		}
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Completed";
-	}	
+	}
 
-
+	void SimSystemManager::UpdateSystems(double delta_time, UpdateGroupID group)
+	{
+		for (size_t i = 0; i < m_Systems.size(); i++)
+		{
+			if(group == m_Systems[i]->GetUpdateGroup().GetValue())
+				m_Systems[i]->OnSystemUpdate(delta_time);
+		}
+		
+	}
 
 	void SimSystemManager::SyncMessages(double delta_time)
 	{

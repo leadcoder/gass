@@ -50,16 +50,6 @@ namespace GASS
 		m_Listeners.push_back(listener);
 	}
 
-	void SimSystem::RegisterForUpdate()
-	{
-		UpdateGroupID ugid = GetUpdateGroup().GetValue();
-		if(ugid != UGID_NO_UPDATE)
-		{
-			TaskNode* node = SimEngine::Get().GetRunTimeController()->GetRootNode()->GetChildByID(ugid);
-			node->Register(shared_from_this());
-		}
-	}
-
 	void SimSystem::Unregister(SystemListenerPtr listener)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
@@ -94,7 +84,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	void SimSystem::Update(double delta_time, TaskNode* /*caller*/)
+/*	void SimSystem::Update(double delta_time, TaskNode* caller)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners
@@ -118,6 +108,34 @@ namespace GASS
 		{
 			SystemListenerExecutor exec(m_Listeners,delta_time);
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+		}
+	}*/
+
+	void SimSystem::OnSystemUpdate(double delta_time)
+	{
+		_UpdateListeners(delta_time);
+	}
+
+	void SimSystem::_UpdateListeners(double delta_time)
+	{
+		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
+		//remove dead listeners
+		while (iter != m_Listeners.end())
+		{
+			SystemListenerPtr listener = (*iter).lock();
+
+			if (!listener)
+				iter = m_Listeners.erase(iter);
+			else
+			{
+				++iter;
+			}
+		}
+
+		for (size_t i = 0; i < m_Listeners.size(); ++i)
+		{
+			SystemListenerPtr listener = m_Listeners[i].lock();
+			listener->SystemTick(delta_time);
 		}
 	}
 

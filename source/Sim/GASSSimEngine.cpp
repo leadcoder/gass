@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSRunTimeController.h"
+#include "Sim/GASSSystemStepper.h"
 
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
@@ -59,7 +59,7 @@ namespace GASS
 		//m_RequestDeltaTime(0),
 		m_NumThreads(-1)
 	{
-		m_RTC = RunTimeControllerPtr(new RunTimeController(this));
+		m_SystemStepper = SystemStepperPtr(new SystemStepper(this));
 		// Create log manager
 		/*if(LogManager::getSingletonPtr() == 0)
 		{
@@ -101,7 +101,7 @@ namespace GASS
 		if(configuration.GetFullPath() != "")
 			LoadSettings(configuration);
 
-		m_RTC->Init(m_NumThreads);
+		m_SystemStepper->Init();
 		
 		if(configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
@@ -323,7 +323,7 @@ namespace GASS
 		m_RootNode->GetChildByID(UGID_POST_SIM)->Update(delta_time,NULL);
 		SyncMessages(delta_time);
 		*/
-		m_RTC->Tick(delta_time);
+		m_SystemStepper->Tick(delta_time);
 		m_CurrentTime += delta_time;
 
 		//std::stringstream ss;
@@ -337,12 +337,12 @@ namespace GASS
 
 	void SimEngine::SetUpdateSimOnRequest(bool value) 
 	{
-		m_RTC->SetUpdateSimOnRequest(value);
+		m_SystemStepper->SetUpdateSimOnRequest(value);
 	}
 
 	bool SimEngine::GetUpdateSimOnRequest() const
 	{
-		return m_RTC->GetUpdateSimOnRequest();
+		return m_SystemStepper->GetUpdateSimOnRequest();
 	}
 	
 	void SimEngine::DestroyScene(SceneWeakPtr scene)

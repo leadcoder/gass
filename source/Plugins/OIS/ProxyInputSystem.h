@@ -35,7 +35,7 @@ namespace GASS
 		virtual void OnCreate(SimSystemManagerPtr owner);
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "ProxyInputSystem";}
-		virtual void Update(double delta_time,TaskNode* caller);
+		virtual void OnSystemUpdate(double delta_time);
 		
 		//IInputSystem
 		virtual void AddKeyListener(IKeyListener* key_listener);

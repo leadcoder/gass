@@ -41,7 +41,7 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "OSGGraphicsSystem";}
-		virtual void Update(double delta, TaskNode* caller);
+		virtual void OnSystemUpdate(double delta_time);
 
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;

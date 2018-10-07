@@ -128,6 +128,7 @@ namespace GASS
 
 		//Move this to private
 		void SyncMessages(double delta_time);
+		void UpdateSystems(double delta_time, UpdateGroupID group);
 
 
 	private:

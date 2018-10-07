@@ -127,7 +127,7 @@ namespace GASS
 		void OnStopClient(StopClientRequestPtr message);
 		void OnTimeOfDay(TimeOfDayRequestPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
-		void Update(double delta, TaskNode* caller);
+		void OnSystemUpdate(double delta);
 	private:
 		//Helpers
 		void Stop();

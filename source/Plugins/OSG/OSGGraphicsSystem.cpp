@@ -110,8 +110,6 @@ namespace GASS
 		}
 	}
 
-
-
 	void OSGGraphicsSystem::Init()
 	{
 		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
@@ -127,7 +125,7 @@ namespace GASS
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
-		m_Viewer->setReleaseContextAtEndOfFrameHint(false);
+		//m_Viewer->setReleaseContextAtEndOfFrameHint(false);
 
 		std::string full_path;
 
@@ -209,7 +207,6 @@ namespace GASS
 		std::string debug_text = message->GetText();
 		//m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
 		m_DebugVec.push_back(debug_text);
-
 	}
 
 
@@ -323,7 +320,7 @@ namespace GASS
 		}
 	}
 
-	void OSGGraphicsSystem::Update(double delta_time, TaskNode* caller)
+	void OSGGraphicsSystem::OnSystemUpdate(double delta_time)
 	{
 		//static int tick = 0;
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
@@ -342,7 +339,7 @@ namespace GASS
 		m_DebugVec.clear();
 		//m_DebugTextBox->setText("");
 		//update listeners
-		SimSystem::Update(delta_time,caller);
+		SimSystem::_UpdateListeners(delta_time);
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 

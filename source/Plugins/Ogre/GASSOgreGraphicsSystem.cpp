@@ -169,7 +169,7 @@ namespace GASS
 		return main_win;
 	}
 
-	void OgreGraphicsSystem::Update(double delta_time, TaskNode* caller)
+	void OgreGraphicsSystem::OnSystemUpdate(double delta_time)
 	{
 		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
 
@@ -201,7 +201,7 @@ namespace GASS
 			GetSimSystemManager()->SendImmediate(SystemMessagePtr( new DebugPrintRequest(stats_text)));
 		}
 		//update listeners
-		SimSystem::Update(delta_time,caller);
+		SimSystem::_UpdateListeners(delta_time);
 
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}

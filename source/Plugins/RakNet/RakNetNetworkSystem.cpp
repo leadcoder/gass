@@ -289,10 +289,10 @@ namespace GASS
 		m_Active = true;
 	}
 
-	void RakNetNetworkSystem::Update(double delta, TaskNode* caller)
+	void RakNetNetworkSystem::OnSystemUpdate(double delta)
 	{
 		//update listeners
-		SimSystem::Update(delta, caller);
+		SimSystem::_UpdateListeners(delta);
 
 		if(IsServer())
 		{

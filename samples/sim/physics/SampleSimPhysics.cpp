@@ -127,7 +127,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 		GASS::SimSystemPtr system = GASS::SystemFactory::Get().Create(systems[i]);
 		system->OnCreate(m_Engine->GetSimSystemManager());
 		system->Init();
-		system->RegisterForUpdate();
 		m_Engine->GetSimSystemManager()->AddSystem(system);
 	}
 	

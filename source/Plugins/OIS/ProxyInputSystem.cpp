@@ -63,7 +63,7 @@ namespace GASS
 
 	}
 
-	void ProxyInputSystem::Update(double /*delta_time*/,TaskNode* /*caller*/)
+	void ProxyInputSystem::OnSystemUpdate(double /*delta_time*/)
 	{
 
 	}
