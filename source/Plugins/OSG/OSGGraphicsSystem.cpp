@@ -339,7 +339,7 @@ namespace GASS
 		m_DebugVec.clear();
 		//m_DebugTextBox->setText("");
 		//update listeners
-		SimSystem::_UpdateListeners(delta_time);
+		//SimSystem::_UpdateListeners(delta_time);
 		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
 	}
 

@@ -100,4 +100,15 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
 		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
+
+
+	void RaknetNetworkSceneManager::OnPreSystemUpdate(double delta_time)
+	{
+		BaseSceneManager::_UpdateListeners(delta_time);
+	}
+
+	void RaknetNetworkSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+
+	}
 }

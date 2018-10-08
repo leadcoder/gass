@@ -112,6 +112,9 @@ namespace GASS
 
 		//IOgreSceneManagerProxy
 		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}
+
+		void OnPreSystemUpdate(double delta);
+		void OnPostSystemUpdate(double delta_time);
 	protected:
 		//Ogre::SceneManager::Listener
 		virtual bool frameStarted (const Ogre::FrameEvent &evt);

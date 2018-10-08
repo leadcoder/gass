@@ -63,7 +63,7 @@ namespace GASS
 		}
 	}
 
-	struct SystemListenerExecutor
+	/*struct SystemListenerExecutor
 	{
 		SystemListenerExecutor(const std::vector<SystemListenerWeakPtr>& sl_vector, double delta_time)
 			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
@@ -82,7 +82,7 @@ namespace GASS
 		}
 		const std::vector<SystemListenerWeakPtr>& m_SLVector;
 		double m_DeltaTime;
-	};
+	};*/
 
 /*	void SimSystem::Update(double delta_time, TaskNode* caller)
 	{
@@ -113,11 +113,13 @@ namespace GASS
 
 	void SimSystem::OnSystemUpdate(double delta_time)
 	{
-		_UpdateListeners(delta_time);
+	//	_UpdateListeners(delta_time);
 	}
 
-	void SimSystem::_UpdateListeners(double delta_time)
+
+	void SimSystem::_Update(double delta_time)
 	{
+
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners
 		while (iter != m_Listeners.end())
@@ -132,10 +134,27 @@ namespace GASS
 			}
 		}
 
+		_PreUpdate(delta_time);
+		OnSystemUpdate(delta_time);
+		_PostUpdate(delta_time);
+	}
+
+	void SimSystem::_PreUpdate(double delta_time)
+	{
+		
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
 			SystemListenerPtr listener = m_Listeners[i].lock();
-			listener->SystemTick(delta_time);
+			listener->OnPreSystemUpdate(delta_time);
+		}
+	}
+	
+	void SimSystem::_PostUpdate(double delta_time)
+	{
+		for (size_t i = 0; i < m_Listeners.size(); ++i)
+		{
+			SystemListenerPtr listener = m_Listeners[i].lock();
+			listener->OnPostSystemUpdate(delta_time);
 		}
 	}
 

@@ -64,7 +64,7 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	void BaseSceneManager::SystemTick(double delta_time) 
+	void BaseSceneManager::_UpdateListeners(double delta_time)
 	{
 		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		/*while(iter != m_Listeners.end())
@@ -91,8 +91,16 @@ namespace GASS
 				iter = m_Listeners.erase(iter);
 		}
 
-		SceneListenerExecutor exec(m_Listeners,delta_time);
-		tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+		//SceneListenerExecutor exec(m_Listeners,delta_time);
+		//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
+
+		for(size_t i = 0; i < m_Listeners.size(); i++)
+		{
+			SceneManagerListenerPtr listener = m_Listeners[i].lock();
+			if(listener)
+				listener->SceneManagerTick(delta_time);
+		}
+		
 	}
 
 	void BaseSceneManager::Register(SceneManagerListenerPtr listener)

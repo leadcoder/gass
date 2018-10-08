@@ -53,7 +53,8 @@ namespace GASS
 		virtual bool GetSerialize() const {return false;}
 
 		dWorldID GetWorld()const {return m_World;}
-		void SystemTick(double delta);
+		void OnPostSystemUpdate(double delta);
+		void OnPreSystemUpdate(double delta);
 		bool IsActive()const {return !m_Paused;}
 
 		dSpaceID GetPhysicsSpace() const {return m_Space;}

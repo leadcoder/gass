@@ -60,4 +60,14 @@ namespace GASS
 	{
 		
  	}
+
+	void CoreSceneManager::OnPreSystemUpdate(double delta_time)
+	{
+		_UpdateListeners(delta_time);
+	}
+
+	void CoreSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+
+	}
 }

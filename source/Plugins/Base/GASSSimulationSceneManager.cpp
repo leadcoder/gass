@@ -55,5 +55,15 @@ namespace GASS
 	{
 
 	}
+
+	void SimulationSceneManager::OnPreSystemUpdate(double delta_time)
+	{
+		_UpdateListeners(delta_time);
+	}
+
+	void SimulationSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+
+	}
 	
 }

@@ -123,7 +123,12 @@ namespace GASS
 		system->Unregister(listener);
 	}
 
-	void ODEPhysicsSceneManager::SystemTick(double delta_time)
+	void ODEPhysicsSceneManager::OnPreSystemUpdate(double delta)
+	{
+		
+	}
+
+	void ODEPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
 	{
 		if (!m_Paused)
 		{
@@ -160,7 +165,7 @@ namespace GASS
 			col_sys->Process();
 		}*/
 
-		BaseSceneManager::SystemTick(delta_time);
+		BaseSceneManager::_UpdateListeners(delta_time);
 	}
 
 #define MAX_CONTACTS 25		// maximum number of contact points per body

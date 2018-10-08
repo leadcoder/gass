@@ -58,6 +58,9 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
+		virtual void OnPreSystemUpdate(double delta_time);
+		virtual void OnPostSystemUpdate(double delta_time);
+
 		virtual bool GetSerialize() const {return true;}
 		physx::PxScene* GetPxScene() const {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
@@ -69,7 +72,7 @@ namespace GASS
 		Vec3 GetOffset() const {return m_Offset;}
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
-		void SystemTick(double delta);
+		
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void OnActivateMessage(ActivatePhysicsRequestPtr message);
 		void SetGravity(float gravity);

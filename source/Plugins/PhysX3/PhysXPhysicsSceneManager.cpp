@@ -195,6 +195,44 @@ namespace GASS
 
 	}
 
+	void PhysXPhysicsSceneManager::OnPreSystemUpdate(double delta_time)
+	{
+		
+	}
+
+	void PhysXPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+		if (!m_Paused)
+		{
+			//Lock to 60 hz
+			if (delta_time > 1.0 / 60.0)
+				delta_time = 1.0 / 60.0;
+
+			//Process vehicles
+			if (m_Vehicles.size()  > 0)
+			{
+
+
+				PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+
+				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs = system->GetSurfaceTirePairs();
+
+				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleSceneQueryData->getRaycastQueryResultBufferSize(), m_VehicleSceneQueryData->getRaycastQueryResultBuffer());
+				PxVehicleUpdates(static_cast<float>(delta_time), physx::PxVec3(0, static_cast<float>(m_Gravity), 0), *surfaceTirePairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
+			}
+
+			m_PxScene->simulate(static_cast<float>(delta_time));
+
+			while (!m_PxScene->fetchResults())
+			{
+
+			}
+			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
+		}
+		//update tick subscribers
+		BaseSceneManager::_UpdateListeners(delta_time);
+	}
+
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
 	{
 
@@ -223,40 +261,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXPhysicsSceneManager::SystemTick(double delta_time)
-	{
-		if(!m_Paused)
-		{
-			//Lock to 60 hz
-			if(delta_time > 1.0/60.0)
-				delta_time = 1.0/60.0;
-
-			//Process vehicles
-			if(m_Vehicles.size()  > 0)
-			{
-				
-
-				PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-				
-				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs = system->GetSurfaceTirePairs();
-
-				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery,(int)m_Vehicles.size(),&m_Vehicles[0],m_VehicleSceneQueryData->getRaycastQueryResultBufferSize(),m_VehicleSceneQueryData->getRaycastQueryResultBuffer());
-				PxVehicleUpdates(static_cast<float>(delta_time), physx::PxVec3(0, static_cast<float>(m_Gravity) , 0), *surfaceTirePairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
-			}
-
-			m_PxScene->simulate(static_cast<float>(delta_time));
-
-			while(!m_PxScene->fetchResults())
-			{
-
-			}
-			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
-		}
-		//update tick subscribers
-		BaseSceneManager::SystemTick(delta_time);
-
-
-	}
+	
 
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
 	{

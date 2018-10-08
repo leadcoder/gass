@@ -194,12 +194,17 @@ namespace GASS
 		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
 	}
 
-	void OSGGraphicsSceneManager::SystemTick(double delta_time)
+	void OSGGraphicsSceneManager::OnPreSystemUpdate(double delta)
+	{
+
+	}
+
+	void OSGGraphicsSceneManager::OnPostSystemUpdate(double delta_time)
 	{
 		m_DebugDraw->Clear();
-		//update tick subscribers
-		BaseSceneManager::SystemTick(delta_time);
+		_UpdateListeners(delta_time);
 	}
+
 
 /*	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
 	{

@@ -58,10 +58,12 @@ namespace GASS
 		virtual void Unregister(SceneManagerListenerPtr listener);
 	
 		//ISystemListener
-		virtual void SystemTick(double delta_time);
+		//virtual void SystemTick(double delta_time);
 		//IXMLSerialize
 		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
 		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
+
+		void _UpdateListeners(double delta_time);
 	protected:
 		std::string m_Name;
 		SceneWeakPtr m_Scene;

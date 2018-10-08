@@ -65,9 +65,14 @@ namespace GASS
 	{
 	}
 
-	void OSGCollisionSceneManager::SystemTick(double /*delta_time*/)
+	void OSGCollisionSceneManager::OnPreSystemUpdate(double delta_time)
 	{
 
+	}
+
+	void OSGCollisionSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+		
 	}
 
 	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool /*return_at_first_hit*/) const

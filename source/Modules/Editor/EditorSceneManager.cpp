@@ -68,12 +68,18 @@ namespace GASS
 	{
 
 	}
-
-	void EditorSceneManager::SystemTick(double delta_time)
+	
+	void EditorSceneManager::OnPreSystemUpdate(double delta_time)
 	{
 		GetMouseToolController()->Update(delta_time);
-		BaseSceneManager::SystemTick(delta_time);
+		_UpdateListeners(delta_time);
 	}
+
+	void EditorSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+		
+	}
+
 
 	void EditorSceneManager::CreateCamera(const std::string &template_name)
 	{
@@ -320,35 +326,40 @@ namespace GASS
 		SceneObjectPtr cam_obj = m_ActiveCameraObject.lock();
 		if (cam_obj)
 		{
-			double object_radius = 10;
-			Vec3 object_pos(0, 0, 0);
-			if (GetObjectPosAndSize(obj, object_radius, object_pos))
+			//Check if we have osgEarth manipulator component, then send fly request
+			if (cam_obj->GetFirstComponentByClassName("OSGEarthCameraManipulatorComponent"))
 			{
-				//calculate distance from object
-				const double dist_to_object = std::max(object_radius * 4, 10.0);
-
-				const bool geocentric = cam_obj->GetScene()->GetGeocentric();
-
-				if (geocentric)
+				cam_obj->PostRequest(CameraFlyToObjectRequestPtr(new CameraFlyToObjectRequest(obj)));
+			}
+			else
+			{
+				double object_radius = 10;
+				Vec3 object_pos(0, 0, 0);
+				if (GetObjectPosAndSize(obj, object_radius, object_pos))
 				{
-					const Quaternion camera_rot = GetGeocentricRotation(object_pos, EulerRotation(0, 30, 0));
-					const Vec3 camera_pos = object_pos + camera_rot.GetYAxis() * dist_to_object;
-					cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
-					cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+					//calculate distance from object
+					const double dist_to_object = std::max(object_radius * 4, 10.0);
+					const bool geocentric = cam_obj->GetScene()->GetGeocentric();
+					if (geocentric)
+					{
+						const Quaternion camera_rot = GetGeocentricRotation(object_pos, EulerRotation(0, 30, 0));
+						const Vec3 camera_pos = object_pos + camera_rot.GetYAxis() * dist_to_object;
+						cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
+						cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+					}
+					else
+					{
+						//object_radius = std::max(object_radius, 10.0);
+						const EulerRotation rel_rot(0, -30, 0);
+						const Quaternion camera_rot = Quaternion::CreateFromEulerYXZ(rel_rot.GetAxisRotation());
+						const Vec3 camera_pos = object_pos + camera_rot.GetZAxis() * dist_to_object;
+						//Get no response from OGRE when using World...
+						//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
+						//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
+						cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
+						cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+					}
 				}
-				else
-				{
-					//object_radius = std::max(object_radius, 10.0);
-					const EulerRotation rel_rot(0, -30, 0);
-					const Quaternion camera_rot = Quaternion::CreateFromEulerYXZ(rel_rot.GetAxisRotation());
-					const Vec3 camera_pos = object_pos + camera_rot.GetZAxis() * dist_to_object;
-					//Get no response from OGRE when using World...
-					//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
-					//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
-					cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
-					cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
-				}
-				
 			}
 		}
 	}

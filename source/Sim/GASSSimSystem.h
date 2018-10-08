@@ -36,7 +36,8 @@ namespace GASS
 		
 	public:
 		virtual ~ISystemListener(){}
-		virtual void SystemTick(double delta_time) = 0;
+		virtual void OnPreSystemUpdate(double delta_time) = 0;
+		virtual void OnPostSystemUpdate(double delta_time) = 0;
 	};
 	typedef GASS_SHARED_PTR<ISystemListener> SystemListenerPtr;
 	typedef GASS_WEAK_PTR<ISystemListener> SystemListenerWeakPtr;
@@ -77,8 +78,11 @@ namespace GASS
 		SimSystemManagerPtr GetSimSystemManager() const;
 		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)
 	
-		void _UpdateListeners(double delta_time);
+			//internal
+		void _Update(double delta_time);
 	protected:
+		void _PreUpdate(double delta_time);
+		void _PostUpdate(double delta_time);
 		
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;

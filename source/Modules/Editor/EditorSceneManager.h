@@ -41,7 +41,8 @@ namespace GASS
 		virtual void OnInit();
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return false;}
-		void SystemTick(double delta_time);
+		void OnPreSystemUpdate(double delta_time);
+		void OnPostSystemUpdate(double delta_time);
 
 		MouseToolControllerPtr GetMouseToolController() const {return m_MouseTools;}
 		void SetSelectedObjects(const SelectionVector &selection);

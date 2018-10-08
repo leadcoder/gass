@@ -291,9 +291,6 @@ namespace GASS
 
 	void RakNetNetworkSystem::OnSystemUpdate(double delta)
 	{
-		//update listeners
-		SimSystem::_UpdateListeners(delta);
-
 		if(IsServer())
 		{
 			UpdateServer(delta);

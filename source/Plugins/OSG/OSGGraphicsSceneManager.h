@@ -44,6 +44,9 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();		
 		virtual void OnShutdown();
+		void OnPreSystemUpdate(double delta);
+		void OnPostSystemUpdate(double delta_time);
+
 		virtual bool GetSerialize() const {return true;}
 		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}

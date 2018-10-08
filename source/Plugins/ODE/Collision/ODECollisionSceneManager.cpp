@@ -118,9 +118,14 @@ namespace GASS
 		return m_Space;
 	}
 
-	void ODECollisionSceneManager::SystemTick(double delta_time)
+	void ODECollisionSceneManager::OnPreSystemUpdate(double delta_time)
 	{
-		BaseSceneManager::SystemTick(delta_time);
+		BaseSceneManager::_UpdateListeners(delta_time);
+	}
+
+	void ODECollisionSceneManager::OnPostSystemUpdate(double delta_time)
+	{
+		
 	}
 
 	void ODECollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
