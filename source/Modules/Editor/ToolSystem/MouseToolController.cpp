@@ -514,7 +514,7 @@ namespace GASS
 		drop_pos.z = SnapPosition(drop_pos.z);
 		
 		GASS::Quaternion rot;
-		const TerrainSceneManagerPtr tsm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(false);
+		const TerrainSceneManagerPtr tsm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(true);
 		if (tsm)
 		{
 			 tsm->GetOrientation(drop_pos, rot);
