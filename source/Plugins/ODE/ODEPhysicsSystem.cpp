@@ -60,7 +60,6 @@ namespace GASS
 
 	void ODEPhysicsSystem::Init()
 	{
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		dInitODE2(0);
 		dAllocateODEDataForThread(~0U);
 		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);

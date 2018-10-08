@@ -85,7 +85,6 @@ namespace GASS
 	{
 		if(m_OnlyProxy)
 		{
-			//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 			SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 		}
 	}
@@ -98,7 +97,6 @@ namespace GASS
 		}
 		if(!m_OnlyProxy)
 		{
-			//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 			m_Window = main_win_handle;
 			OIS::ParamList pl;
 			size_t windowHnd = (size_t) m_Window;

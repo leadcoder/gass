@@ -105,7 +105,6 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnTransformationChanged,TransformationChangedEvent,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnVelocityNotify,PhysicsVelocityEvent,0));
-			//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 		else
 		{
@@ -198,7 +197,6 @@ namespace GASS
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent));
 		}
-		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 

@@ -53,7 +53,6 @@ namespace GASS
 
 	void ProxyInputSystem::Init()
 	{
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
 		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 	}
 

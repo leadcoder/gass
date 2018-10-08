@@ -30,15 +30,13 @@
 
 namespace GASS
 {
-	SimSystemManager::SimSystemManager() 
+	SimSystemManager::SimSystemManager()
 	{
 		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
-		//m_SimStats = new SimpleProfileDataMap;
 	}
 
 	SimSystemManager::~SimSystemManager()
 	{
-		//delete m_SimStats;
 	}
 
 	void SimSystemManager::Init()
@@ -60,7 +58,6 @@ namespace GASS
 				m_Systems[i]->_Update(delta_time);
 			}
 		}
-		
 	}
 
 	void SimSystemManager::SyncMessages(double delta_time)
@@ -109,7 +106,6 @@ namespace GASS
 		}
 		return SimSystemPtr();
 	}
-
 
 	void SimSystemManager::Load(const std::string &filename)
 	{

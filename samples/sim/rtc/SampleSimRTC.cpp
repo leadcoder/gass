@@ -52,67 +52,7 @@ enum
 	PHYSICS_OBJECT = 2,
 	GFX_SYSTEM = 3,
 };
-/*
-class PhysicsSystem : public GASS::ITaskNode2Listener
-{
-public:
-	class PhysicsObject : public GASS::ITaskNode2Listener, public GASS_ENABLE_SHARED_FROM_THIS<PhysicsObject>
-	{
-	public:
-		PhysicsObject() : m_UpdateCount(0){}
 
-		void Update(double delta_time, GASS::TaskNode2* caller)
-		{
-			std::cout << "PhysicsObject update, time:" << delta_time << "\n";
-
-			//test unregister while updating
-			if(m_UpdateCount == 4)
-				caller->Unregister(shared_from_this());
-
-			m_UpdateCount++;
-		}
-		int m_UpdateCount;
-	};
-
-	PhysicsSystem()
-	{
-
-	}
-
-	void Init(GASS::TaskNode2Ptr physics_node)
-	{
-		//create child node to objects in parallel
-		GASS::TaskNode2Ptr obj_node(new GASS::TaskNode2(physics_node->GetRuntimeController(),PHYSICS_OBJECT));
-		obj_node->SetListenerUpdateMode(GASS::TaskNode2::PARALLEL);
-		physics_node->AddChildNode(obj_node);
-		for(size_t i = 0; i < 20; i++)
-		{
-			GASS_SHARED_PTR<PhysicsObject> po(new PhysicsObject());
-			obj_node->Register(po);
-			m_Objects.push_back(po);
-		}
-	}
-
-	void Update(double delta_time, GASS::TaskNode2* caller)
-	{
-		std::cout << "PhysicsSystem update, time:" << delta_time << "\n";
-	}
-	std::vector <GASS_SHARED_PTR<PhysicsObject>> m_Objects;
-};
-
-class GFXSystem : public GASS::ITaskNode2Listener, public GASS_ENABLE_SHARED_FROM_THIS<GFXSystem>
-{
-public:
-	GFXSystem()
-	{
-
-	}
-
-	void Update(double delta_time, GASS::TaskNode2* caller)
-	{
-		std::cout << "GFXSystem update, time:" << delta_time << "\n";
-	}
-};*/
 
 class GameObject : public GASS::ITaskNodeListener, public GASS_ENABLE_SHARED_FROM_THIS<GameObject>
 {

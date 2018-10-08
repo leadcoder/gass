@@ -45,8 +45,6 @@ namespace GASS
 	void SimulationSystem::Init()
 	{
 		SceneManagerFactory::GetPtr()->Register("SimulationSceneManager",new GASS::Creator<SimulationSceneManager, ISceneManager>);
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-		//SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(SimulationSystem::OnScenarioEvent,SimEvent,0));
 	}
 
 	/*void SimulationSystem::OnScenarioEvent(SimEventPtr message)

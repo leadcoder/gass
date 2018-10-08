@@ -274,9 +274,6 @@ namespace GASS
 
 	void ControlSettingsSystem::Init() 
 	{
-		//Register at rtc
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-
 		//load default settings
 		ResourceHandle res("default_control_settings.xml");
 		Load(res.GetResource()->Path().GetFullPath());

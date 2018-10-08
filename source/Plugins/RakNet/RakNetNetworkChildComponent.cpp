@@ -73,7 +73,6 @@ namespace GASS
 			{
 				GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
 			}
-				//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 		}
 		else
 		{

@@ -42,8 +42,7 @@ namespace GASS
 
 	void CoreSystem::Init()
 	{
-		//Register at rtc
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
+	
 	}
 }
 

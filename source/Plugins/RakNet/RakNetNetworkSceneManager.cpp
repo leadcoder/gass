@@ -96,9 +96,7 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnShutdown()
 	{
-		//int address = GASS_PTR_TO_INT(this);
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
-		//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 	}
 
 

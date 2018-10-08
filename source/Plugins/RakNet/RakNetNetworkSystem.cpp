@@ -87,8 +87,6 @@ namespace GASS
 
 	void RakNetNetworkSystem::Init()
 	{
-		//SimEngine::Get().GetRuntimeController()->Register(shared_from_this(),m_TaskNodeName);
-
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
 
@@ -166,8 +164,6 @@ namespace GASS
 		{
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest));
 			GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkSystem::OnPingRequest,PingRequest));
-			//Unregister update fucntion
-			//SimEngine::GetPtr()->GetRuntimeController()->Unregister(this);
 		}
 		if(m_RakPeer)
 			m_RakPeer->Shutdown(100, 0);
@@ -240,14 +236,9 @@ namespace GASS
 		GASS_LOG(LINFO) << "Raknet startup done";
 		m_RakPeer->SetMaximumIncomingConnections(MAX_PEERS);
 		GASS_LOG(LINFO) << "Raknet SetMaximumIncomingConnections done";
-
-		//Register update function
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
-		//Catch scene load messages
-
+	
 		m_RakPeer->SetOccasionalPing(true);
 		m_Active = true;
-		//m_Logger.LogHeader();
 	}
 
 
@@ -282,9 +273,6 @@ namespace GASS
 
 		m_RakPeer->Ping("255.255.255.255", server_port, true);
 		m_RakPeer->SetOccasionalPing(true);
-
-		//Register update function
-		//SimEngine::GetPtr()->GetRuntimeController()->Register(this);
 
 		m_Active = true;
 	}
