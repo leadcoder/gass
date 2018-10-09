@@ -128,11 +128,35 @@ namespace GASS
 
 		void AddSystem(SimSystemPtr system);
 
+		/**
+		Set simulation node to paused or not
+		*/
+		void SetSimulationPaused(bool value) { return m_SystemStepper.SetSimulationPaused(value); }
+
+		/**
+		Stop simulation node
+		*/
+		void StopSimulation() { return m_SystemStepper.StopSimulation(); }
+
+		/**
+		Start simulation node
+		*/
+		void StartSimulation() { return m_SystemStepper.StartSimulation(); }
+
+		/**
+		Set this to true if we want to step simulation from external source
+		*/
+		SimulationState GetSimulationState() const { return m_SystemStepper.GetSimulationState(); }
+
+		double GetTime() const { return m_SystemStepper.GetTime(); }
+		double GetSimulationTime() const { return m_SystemStepper.GetSimulationTime(); }
+		double GetSimulationTimeScale() const { return m_SystemStepper.GetSimulationTimeScale(); }
+		void SetSimulationTimeScale(double value) { return m_SystemStepper.SetSimulationTimeScale(value); }
+		void SetUpdateSimOnRequest(bool value) { return m_SystemStepper.SetUpdateSimOnRequest(value); }
+		bool GetUpdateSimOnRequest() const { return m_SystemStepper.GetUpdateSimOnRequest(); }
 		//Move this to private
 		void SyncMessages(double delta_time);
 		void OnUpdate(double delta_time);
-		double GetTime() const { return m_SystemStepper.GetTime(); }
-		double GetSimulationTime() const { return m_SystemStepper.GetSimulationTime(); }
 	protected:
 		void _UpdateSystems(double delta_time, UpdateGroupID group);
 	protected:

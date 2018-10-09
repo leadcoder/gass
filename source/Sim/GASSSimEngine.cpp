@@ -444,7 +444,14 @@ namespace GASS
 		return ConstSceneIterator(m_Scenes.begin(),m_Scenes.end());
 	}
 
-	double SimEngine::GetTime() const { return m_SystemManager->GetTime(); }
-	double SimEngine::GetSimulationTime() const { return m_SystemManager->GetSimulationTime(); }
+	double SimEngine::GetTime() const
+	{
+		return m_SystemManager->GetTime();
+	}
+
+	double SimEngine::GetSimulationTime() const
+	{
+		return m_SystemManager->GetSimulationTime();
+	}
 
 }

@@ -21,7 +21,6 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Messages/GASSCoreSystemMessages.h"
 
 namespace GASS
 {
@@ -56,11 +55,13 @@ namespace GASS
 		SS_EXTERNAL,
 	};
 
-	class GASSExport SystemStepper : public GASS_ENABLE_SHARED_FROM_THIS<SystemStepper>, public IMessageListener
+	class GASSExport SystemStepper
 	{
+		friend class SimSystemManager;
 	public:
 		SystemStepper(SimSystemManager* sim_sys_manager);
 		virtual ~SystemStepper();
+	protected:
 		/**
 			Initialize
 		*/
@@ -133,7 +134,6 @@ namespace GASS
 			m_RequestDeltaTime = time;
 		}
 	private:
-		
 		SimSystemManager* m_SimSysManager;
 		bool m_UpdateSimOnRequest;
 		bool m_StepSimulationRequest; //indicate that we want to step simulation next frame

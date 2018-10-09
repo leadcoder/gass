@@ -83,30 +83,30 @@ namespace GASS
 		}
 		else if(item_id == "Command_StartSim")
 		{
-			SimulationState sim_state = SimEngine::Get().GetRunTimeController()->GetSimulationState();
+			SimulationState sim_state = SimEngine::Get().GetSimSystemManager()->GetSimulationState();
 			//m_ItemStartSim->setStateCheck(true);
 			if(sim_state == SS_RUNNING)
 			{
-				SimEngine::Get().GetRunTimeController()->StopSimulation();
+				SimEngine::Get().GetSimSystemManager()->StopSimulation();
 				m_ItemStartStopSim->setItemName("StartSim");
 			}
 			else if(sim_state == SS_STOPPED)
 			{
-				SimEngine::Get().GetRunTimeController()->StartSimulation();
+				SimEngine::Get().GetSimSystemManager()->StartSimulation();
 				m_ItemStartStopSim->setItemName("StopSim");
 			}
 		}
 		else if(item_id == "Command_PauseSim")
 		{
-			SimulationState sim_state = SimEngine::Get().GetRunTimeController()->GetSimulationState();
+			SimulationState sim_state = SimEngine::Get().GetSimSystemManager()->GetSimulationState();
 			if(sim_state == SS_RUNNING)
 			{
-				SimEngine::Get().GetRunTimeController()->SetSimulationPaused(true);
+				SimEngine::Get().GetSimSystemManager()->SetSimulationPaused(true);
 				m_ItemPauseSim->setItemName("ResumeSim");
 			}
 			else if(sim_state == SS_PAUSED)
 			{
-				SimEngine::Get().GetRunTimeController()->SetSimulationPaused(true);
+				SimEngine::Get().GetSimSystemManager()->SetSimulationPaused(true);
 				m_ItemPauseSim->setItemName("PauseSim");
 			}
 		}
