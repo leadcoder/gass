@@ -42,13 +42,15 @@ namespace GASS
 	System manager for all systems used in GASSSim.
 	The system manager load it's systems through xml-files
 	and then handle all SimSystemMessages in GASSSim.
-	To post a SimSystemMessages you simply call 
+	To post a SimSystemMessages you simply call
 	PostMessage in this class with your message as argument.
-	To handle the messages the SimSystemManager use the 
+	To handle the messages the SimSystemManager use the
 	MessageManager class
 	*/
-	class GASSExport SimSystemManager : public GASS_ENABLE_SHARED_FROM_THIS<SimSystemManager>,  public IMessageListener
+	class GASSExport SimSystemManager : public GASS_ENABLE_SHARED_FROM_THIS<SimSystemManager>, public IMessageListener
 	{
+		friend class SystemStepper;
+		friend class SystemGroupStepper;
 	public:
 		SimSystemManager();
 		virtual ~SimSystemManager();
@@ -80,9 +82,9 @@ namespace GASS
 		Clear all unproccessed messages
 		*/
 		void ClearMessages();
-	
+
 		SimSystemPtr GetSystemByName(const std::string &system_name) const;
-		
+
 		/**
 			Get hold of system by class type. If more then one system
 			of the class type exist tbe first one loaded will be returned
@@ -91,16 +93,16 @@ namespace GASS
 		GASS_SHARED_PTR<T> GetFirstSystemByClass(bool no_throw = false)
 		{
 			GASS_SHARED_PTR<T> sys;
-			for(size_t i = 0 ; i < m_Systems.size(); i++)
+			for (size_t i = 0; i < m_Systems.size(); i++)
 			{
 				sys = GASS_DYNAMIC_PTR_CAST<T>(m_Systems[i]);
-				if(sys)
+				if (sys)
 					return sys;
 			}
-			if(!no_throw)
+			if (!no_throw)
 			{
 				std::string sys_name = typeid(T).name();
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"System not found:" + sys_name, "SimSystemManager::GetFirstSystemByClass");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "System not found:" + sys_name, "SimSystemManager::GetFirstSystemByClass");
 			}
 			return sys;
 		}
@@ -112,30 +114,34 @@ namespace GASS
 			<Systems>
 				<GraphicsSystem type="OgreGraphicsSystem">
 					... gfx system params
-	  		    </GraphicsSystem>
+				</GraphicsSystem>
 				<InputSystem type="OISInputSystem">
 					... input system params
 				</InputSystem>
 				...
 			<System>
-			A system is specified by a name tag and att type attribute that 
+			A system is specified by a name tag and att type attribute that
 			specify the class implementing the system.
 		*/
 		void Load(const std::string &filename);
 
-		
+
 		void AddSystem(SimSystemPtr system);
 
 		//Move this to private
 		void SyncMessages(double delta_time);
-		void UpdateSystems(double delta_time, UpdateGroupID group);
-
-
-	private:
+		void OnUpdate(double delta_time);
+		double GetTime() const { return m_SystemStepper.GetTime(); }
+		double GetSimulationTime() const { return m_SystemStepper.GetSimulationTime(); }
+	protected:
+		void _UpdateSystems(double delta_time, UpdateGroupID group);
+	protected:
+		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		SimSystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
 		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SimSystemPtr> SystemVector;
 		SystemVector m_Systems;
+		SystemStepper m_SystemStepper;
 	};
 }

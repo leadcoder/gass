@@ -30,9 +30,10 @@
 
 namespace GASS
 {
-	SimSystemManager::SimSystemManager()
+	SimSystemManager::SimSystemManager() : m_SystemStepper(this),
+		m_SystemMessageManager(new MessageManager())
 	{
-		m_SystemMessageManager = MessageManagerPtr(new MessageManager());
+		
 	}
 
 	SimSystemManager::~SimSystemManager()
@@ -41,15 +42,28 @@ namespace GASS
 
 	void SimSystemManager::Init()
 	{
+		m_SystemStepper.Init();
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Started";
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
 			m_Systems[i]->Init();
 		}
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Completed";
+
+		RegisterForMessage(REG_TMESS(SimSystemManager::OnSimulationStepRequest, TimeStepRequest, 0));
 	}
 
-	void SimSystemManager::UpdateSystems(double delta_time, UpdateGroupID group)
+	void SimSystemManager::OnSimulationStepRequest(TimeStepRequestPtr message)
+	{
+		m_SystemStepper.SetUpdateSimOnRequest(true, message->GetTimeStep());
+	}
+
+	void SimSystemManager::OnUpdate(double delta_time)
+	{
+		m_SystemStepper.OnUpdate(delta_time);
+	}
+
+	void SimSystemManager::_UpdateSystems(double delta_time, UpdateGroupID group)
 	{
 		for (size_t i = 0; i < m_Systems.size(); i++)
 		{

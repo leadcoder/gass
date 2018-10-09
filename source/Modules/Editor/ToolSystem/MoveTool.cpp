@@ -243,7 +243,7 @@ namespace GASS
 #endif
 			}
 
-			const double time = SimEngine::Get().GetRunTimeController()->GetTime();
+			const double time = SimEngine::Get().GetTime();
 			const double send_freq = 20;
 			if(time - m_MouseMoveTime > 1.0 / send_freq)
 			{

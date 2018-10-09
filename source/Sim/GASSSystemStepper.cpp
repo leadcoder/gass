@@ -20,19 +20,20 @@
 
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSystemStepper.h"
+
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSLogger.h"
 
 namespace GASS
 {
-	SystemGroupStepper::SystemGroupStepper(UpdateGroupID id, SimEngine* engine) : m_TimeToProcess(0),
+	SystemGroupStepper::SystemGroupStepper(UpdateGroupID id, SimSystemManager* sim_sys_manager) : m_TimeToProcess(0),
 		m_UpdateFrequency(0),
 		m_Paused(false),
 		m_ID(id),
 		m_MaxSimulationSteps(-1),
 		m_CurrentTime(0),
-		m_Engine(engine)
+		m_SimSysManager(sim_sys_manager)
 	{
 
 	}
@@ -55,33 +56,33 @@ namespace GASS
 				//std::cout << "steps:" << clamp_num_steps << "\n";
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
-					m_Engine->GetSimSystemManager()->UpdateSystems(update_interval, m_ID);
-					m_Engine->SyncMessages(update_interval);
+					m_SimSysManager->_UpdateSystems(update_interval, m_ID);
+					SimEngine::Get().SyncMessages(update_interval);
 					m_CurrentTime += update_interval;
 				}
 				m_TimeToProcess -= update_interval * num_steps;
 			}
 			else
 			{
-				m_Engine->GetSimSystemManager()->UpdateSystems(delta_time, m_ID);
-				m_Engine->SyncMessages(delta_time);
+				m_SimSysManager->_UpdateSystems(delta_time, m_ID);
+				SimEngine::Get().SyncMessages(delta_time);
 			}
 		}
 	}
 	
 
-	SystemStepper::SystemStepper(SimEngine* engine) : m_StepSimulationRequest(false),
+	SystemStepper::SystemStepper(SimSystemManager* sim_system_manager) : m_StepSimulationRequest(false),
 		m_UpdateSimOnRequest(false),
 		m_RequestDeltaTime(0),
-		m_Engine(engine),
+		m_SimSysManager(sim_system_manager),
 		m_CurrentState(SS_STOPPED),
 		m_SimTimeScale(1.0),
 		m_MaxSimulationSteps(20),
 		m_TimeToProcess(0),
 		m_CurrentTime(0),
-		m_PreSimGroup(UGID_PRE_SIM,engine),
-		m_SimGroup(UGID_SIM, engine),
-		m_PostSimGroup(UGID_POST_SIM, engine)
+		m_PreSimGroup(UGID_PRE_SIM, sim_system_manager),
+		m_SimGroup(UGID_SIM, sim_system_manager),
+		m_PostSimGroup(UGID_POST_SIM, sim_system_manager)
 	{
 
 	}
@@ -91,21 +92,19 @@ namespace GASS
 
 	}
 
-	void SystemStepper::Init()
+	void SystemStepper::OnInit()
 	{
-		const double update_freq = m_Engine->GetMaxUpdateFreq();
+		const double update_freq = SimEngine::Get().GetMaxUpdateFreq();
 		m_PreSimGroup.SetUpdateFrequency(update_freq);
 		m_PreSimGroup.SetMaxSimulationSteps(1);
 		m_SimGroup.SetUpdateFrequency(update_freq);
 		m_SimGroup.SetMaxSimulationSteps(m_MaxSimulationSteps);
 		m_PostSimGroup.SetUpdateFrequency(update_freq);
 		m_PostSimGroup.SetMaxSimulationSteps(1);
-		
 		GASS_LOG(LINFO) << "SystemStepper MaxUpdateFreq: " << update_freq;
-		m_Engine->GetSimSystemManager()->RegisterForMessage(REG_TMESS(SystemStepper::OnSimulationStepRequest, TimeStepRequest, 0));
 	}
 
-	void SystemStepper::Tick(double delta_time)
+	void SystemStepper::OnUpdate(double delta_time)
 	{
 		if (m_UpdateSimOnRequest) //simulation is updated on request?
 		{
@@ -113,7 +112,7 @@ namespace GASS
 			if (m_StepSimulationRequest)
 			{
 				m_SimGroup.Update(m_RequestDeltaTime);
-				m_Engine->GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
+				m_SimSysManager->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
 				m_StepSimulationRequest = false;
 			}
 			m_PostSimGroup.Update(delta_time);
@@ -124,12 +123,6 @@ namespace GASS
 			m_SimGroup.Update(delta_time*m_SimTimeScale);
 			m_PostSimGroup.Update(delta_time);
 		}
-	}
-	
-	void SystemStepper::OnSimulationStepRequest(TimeStepRequestPtr message)
-	{
-		m_StepSimulationRequest = true;
-		m_RequestDeltaTime = message->GetTimeStep();
 	}
 
 	void SystemStepper::SetUpdateSimOnRequest(bool value) 
@@ -151,13 +144,13 @@ namespace GASS
 		if(value && m_CurrentState == SS_RUNNING)
 		{
 			m_CurrentState = SS_PAUSED;
-			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_PAUSE)));
+			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_PAUSE)));
 			m_SimGroup.SetPaused(true);
 		}
 		else if(!value && m_CurrentState == SS_PAUSED)
 		{
 			m_CurrentState = SS_RUNNING;
-			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_RESUME)));
+			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_RESUME)));
 			m_SimGroup.SetPaused(false);
 		}
 	}
@@ -165,7 +158,7 @@ namespace GASS
 	void SystemStepper::StopSimulation()
 	{
 		m_CurrentState = SS_STOPPED;
-		m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_STOP)));
+		m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_STOP)));
 		m_SimGroup.SetPaused(true);
 		m_SimGroup.ResetTime();
 	}
@@ -174,7 +167,7 @@ namespace GASS
 	{
 		if(m_CurrentState == SS_STOPPED)
 		{
-			m_Engine->GetSimSystemManager()->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_START)));
+			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_START)));
 			m_SimGroup.SetPaused(false);
 			m_CurrentState = SS_RUNNING;
 		}

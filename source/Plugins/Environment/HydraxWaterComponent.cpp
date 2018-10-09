@@ -913,7 +913,7 @@ namespace GASS
 
 	bool  HydraxWaterComponent::frameStarted(const Ogre::FrameEvent& /*evt*/)
 	{
-		double c_time = SimEngine::Get().GetRunTimeController()->GetSimulationTime();
+		double c_time = SimEngine::Get().GetSimulationTime();
 		static double prev_time = 0;
 		if(prev_time == 0)
 			m_Hydrax->update(0.1f);

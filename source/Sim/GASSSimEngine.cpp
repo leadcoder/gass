@@ -19,8 +19,6 @@
 *****************************************************************************/
 
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSSystemStepper.h"
-
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -59,7 +57,7 @@ namespace GASS
 		//m_RequestDeltaTime(0),
 		m_NumThreads(-1)
 	{
-		m_SystemStepper = SystemStepperPtr(new SystemStepper(this));
+		//m_SystemStepper = SystemStepperPtr(new SystemStepper(this));
 		// Create log manager
 		/*if(LogManager::getSingletonPtr() == 0)
 		{
@@ -93,7 +91,7 @@ namespace GASS
 		assert(m_Instance);
 		return *m_Instance;
 	}
-
+	
 	void SimEngine::Init(const FilePath &configuration)
 	{
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
@@ -101,7 +99,7 @@ namespace GASS
 		if(configuration.GetFullPath() != "")
 			LoadSettings(configuration);
 
-		m_SystemStepper->Init();
+		//m_SystemStepper->Init();
 		
 		if(configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
@@ -299,32 +297,33 @@ namespace GASS
 	{
 		//ProfileSample::ResetAll();
 		{
-		PROFILE("SimEngine::Update")
-		
-		//Manual update nodes
-	/*	m_RootNode->GetChildByID(UGID_PRE_SIM)->Update(delta_time,NULL);
-		SyncMessages(delta_time);
-		
-		if(m_UpdateSimOnRequest)
-		{
-			if(m_StepSimulationRequest)
-			{
-				m_RootNode->GetChildByID(UGID_SIM)->Update(m_RequestDeltaTime,NULL);
-				GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
-				SyncMessages(m_RequestDeltaTime);
-			}
-		}
-		else
-		{
-			m_RootNode->GetChildByID(UGID_SIM)->Update(delta_time,NULL);
-			SyncMessages(delta_time);
-		}
+			PROFILE("SimEngine::Update")
 
-		m_RootNode->GetChildByID(UGID_POST_SIM)->Update(delta_time,NULL);
-		SyncMessages(delta_time);
-		*/
-		m_SystemStepper->Tick(delta_time);
-		m_CurrentTime += delta_time;
+				//Manual update nodes
+			/*	m_RootNode->GetChildByID(UGID_PRE_SIM)->Update(delta_time,NULL);
+				SyncMessages(delta_time);
+
+				if(m_UpdateSimOnRequest)
+				{
+					if(m_StepSimulationRequest)
+					{
+						m_RootNode->GetChildByID(UGID_SIM)->Update(m_RequestDeltaTime,NULL);
+						GetSimSystemManager()->SendImmediate(SystemMessagePtr(new TimeStepDoneEvent()));
+						SyncMessages(m_RequestDeltaTime);
+					}
+				}
+				else
+				{
+					m_RootNode->GetChildByID(UGID_SIM)->Update(delta_time,NULL);
+					SyncMessages(delta_time);
+				}
+
+				m_RootNode->GetChildByID(UGID_POST_SIM)->Update(delta_time,NULL);
+				SyncMessages(delta_time);
+				*/
+				//m_SystemStepper->Tick(delta_time);
+			GetSimSystemManager()->OnUpdate(delta_time);
+			m_CurrentTime += delta_time;
 
 		//std::stringstream ss;
 		//ss << " TICK:" << delta_time << " Time:" << m_CurrentTime << "\n";
@@ -335,15 +334,15 @@ namespace GASS
 #endif
 	}
 
-	void SimEngine::SetUpdateSimOnRequest(bool value) 
+	/*void SimEngine::SetUpdateSimOnRequest(bool value) 
 	{
-		m_SystemStepper->SetUpdateSimOnRequest(value);
-	}
+		GetSimSystemManager()->SetUpdateSimOnRequest(value);
+	}*/
 
-	bool SimEngine::GetUpdateSimOnRequest() const
+	/*bool SimEngine::GetUpdateSimOnRequest() const
 	{
 		return m_SystemStepper->GetUpdateSimOnRequest();
-	}
+	}*/
 	
 	void SimEngine::DestroyScene(SceneWeakPtr scene)
 	{
@@ -444,5 +443,8 @@ namespace GASS
 	{
 		return ConstSceneIterator(m_Scenes.begin(),m_Scenes.end());
 	}
+
+	double SimEngine::GetTime() const { return m_SystemManager->GetTime(); }
+	double SimEngine::GetSimulationTime() const { return m_SystemManager->GetSimulationTime(); }
 
 }

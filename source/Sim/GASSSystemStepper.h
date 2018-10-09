@@ -28,7 +28,7 @@ namespace GASS
 	class GASSExport SystemGroupStepper
 	{
 	public:
-		SystemGroupStepper(UpdateGroupID id, SimEngine* engine);
+		SystemGroupStepper(UpdateGroupID id, SimSystemManager* manager);
 		void Update(double delta_time);
 		void SetPaused(bool value) { m_Paused = value; }
 		bool GetPaused() const { return m_Paused; }
@@ -44,7 +44,7 @@ namespace GASS
 		int m_MaxSimulationSteps;
 		double m_CurrentTime;
 		UpdateGroupID m_ID;
-		SimEngine* m_Engine;
+		SimSystemManager* m_SimSysManager;
 		double m_TimeToProcess;//Keep track of time if not updating
 	};
 
@@ -59,18 +59,17 @@ namespace GASS
 	class GASSExport SystemStepper : public GASS_ENABLE_SHARED_FROM_THIS<SystemStepper>, public IMessageListener
 	{
 	public:
-		SystemStepper(SimEngine* engine);
+		SystemStepper(SimSystemManager* sim_sys_manager);
 		virtual ~SystemStepper();
 		/**
 			Initialize
 		*/
-		void Init();
+		void OnInit();
 
 		/**
 		Step systems
 		*/
-
-		void Tick(double delta_time);
+		void OnUpdate(double delta_time);
 
 		/**
 			Set simulation node to paused or not
@@ -127,9 +126,15 @@ namespace GASS
 
 		*/
 		void SetMaxSimulationSteps(int value) { m_MaxSimulationSteps = value; }
+	
+		void SetUpdateSimOnRequest(bool value, double time)
+		{
+			m_UpdateSimOnRequest = value;
+			m_RequestDeltaTime = time;
+		}
 	private:
-		void OnSimulationStepRequest(TimeStepRequestPtr message);
-		SimEngine* m_Engine;
+		
+		SimSystemManager* m_SimSysManager;
 		bool m_UpdateSimOnRequest;
 		bool m_StepSimulationRequest; //indicate that we want to step simulation next frame
 		double m_RequestDeltaTime;

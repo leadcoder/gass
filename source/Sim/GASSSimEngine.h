@@ -213,14 +213,16 @@ namespace GASS
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
-		SystemStepperPtr GetRunTimeController() const {return m_SystemStepper;}
+		//SimSystemManagerPtr GetRunTimeController() const {return m_SystemManager;}
 
 		/**
 			Enable/disable external updates
 		*/
-		void SetUpdateSimOnRequest(bool value);
-		bool GetUpdateSimOnRequest() const;
+		//void SetUpdateSimOnRequest(bool value);
+		//bool GetUpdateSimOnRequest() const;
 		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
+		double GetTime() const;
+		double GetSimulationTime() const;
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);

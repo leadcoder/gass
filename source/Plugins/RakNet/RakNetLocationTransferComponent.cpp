@@ -81,7 +81,6 @@ namespace GASS
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
 		RegisterProperty<bool>("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
 		RegisterProperty<bool>("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
-
 	}
 
 	void RakNetLocationTransferComponent::OnInitialize()
@@ -146,7 +145,6 @@ namespace GASS
 
 	}
 
-
 	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_ParentPos = message->GetPosition();
@@ -181,7 +179,7 @@ namespace GASS
 			//std::cout << "pos" << pos << std::endl;
 		}
 
-		double current_time = SimEngine::Get().GetRunTimeController()->GetTime();
+		double current_time = SimEngine::Get().GetTime();
 		//double delta = current_time - m_LocationHistory[0].Time;
 
 		m_LocationHistory[0].Position = pos;
@@ -199,7 +197,6 @@ namespace GASS
 		}
 	}
 
-
 	bool RakNetLocationTransferComponent::IsRemote() const
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
@@ -214,7 +211,7 @@ namespace GASS
 
 		if(raknet->IsServer())
 		{
-			double current_time = SimEngine::Get().GetRunTimeController()->GetTime();
+			double current_time = SimEngine::Get().GetTime();
 			double delta = current_time - m_LastSerialize;
 			double send_intervall = 1.0/raknet->GetLocationSendFrequency();
 
