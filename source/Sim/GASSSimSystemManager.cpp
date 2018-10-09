@@ -42,7 +42,7 @@ namespace GASS
 
 	void SimSystemManager::Init()
 	{
-		m_SystemStepper.Init();
+		m_SystemStepper.OnInit();
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Started";
 		for(size_t i = 0 ; i < m_Systems.size(); i++)
 		{
