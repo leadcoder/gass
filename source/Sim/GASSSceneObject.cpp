@@ -57,7 +57,6 @@ namespace GASS
 		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID);
 	}
 
-
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
 	{
 		SceneObjectPtr copy = _CreateCopyRec(copy_children_recursively);
@@ -212,7 +211,6 @@ namespace GASS
 		}
 	}
 
-
 	//Override
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
@@ -305,59 +303,17 @@ namespace GASS
 		return  GASS_STATIC_PTR_CAST<SceneObject>(container);
 	}
 
-
-
-
-	/*struct MessageSyncExecutor
-	{
-		MessageSyncExecutor(const ComponentContainer::ComponentContainerVector& cc_vector, double delta_time)
-			:m_CCVector(cc_vector),m_DeltaTime(delta_time)
-		{}
-		MessageSyncExecutor(MessageSyncExecutor& e,tbb::split)
-			:m_CCVector(e.m_CCVector)
-		{
-		MessageSyncExecutor & operator=( const MessageSyncExecutor & ) { return *this; }
-
-
-		void operator()(const tbb::blocked_range<size_t>& r) const {
-			for (size_t i=r.begin();i!=r.end();++i)
-			{
-				SceneObjectPtr obj = GASS_STATIC_PTR_CAST<SceneObject>(m_CCVector[i]);
-				obj->SyncMessages(m_DeltaTime);
-			}
-		}
-		const ComponentContainer::ComponentContainerVector& m_CCVector;
-		double m_DeltaTime;
-	};*/
-
 	void SceneObject::SyncMessages(double delta_time, bool recursive) const
 	{
 		m_MessageManager->Update(delta_time);
 		if(recursive)
 		{
-
-
 			ComponentContainer::ConstComponentContainerIterator cc_iter = GetChildren();
 			while(cc_iter.hasMoreElements())
 			{
 				SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
 				child->SyncMessages(delta_time);
 			}
-
-			//Create copy before update
-			/*ComponentContainer::ComponentContainerVector cc_vec_copy = m_ComponentContainerVector;
-			ComponentContainer::ComponentContainerVector::const_iterator go_iter;
-			for(go_iter = cc_vec_copy.begin(); go_iter != cc_vec_copy.end(); ++go_iter)
-			{
-			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>( *go_iter);
-			child->SyncMessages(delta_time);
-			}*/
-
-
-
-			//parallel update, problem with set world position that have to use parent transforms
-			//MessageSyncExecutor exec(m_ComponentContainerVector,delta_time);
-			//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_ComponentContainerVector.size()),exec);
 		}
 	}
 
@@ -561,7 +517,6 @@ namespace GASS
 		}
 		return SceneObjectPtr();
 	}
-
 
 	void SceneObject::GetChildrenByID(SceneObjectVector &objects, const SceneObjectID &id, bool exact_math, bool recursive) const
 	{
