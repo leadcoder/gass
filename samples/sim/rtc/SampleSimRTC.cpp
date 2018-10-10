@@ -113,12 +113,12 @@ int main(int /*argc*/, char** /*argv[]*/)
 	//update in parallel, all children will be updated in parallel
 	rtc->Init(-1);
 
-	GASS::TaskNode2Ptr root_node(new GASS::TaskNode(0));
+	GASS::TaskNodePtr root_node(new GASS::TaskNode(0));
 	root_node->SetUpdateFrequency(60.0);
 	root_node->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 	root_node->SetChildrenUpdateMode(GASS::TaskNode::SEQUENCE);
 
-	GASS::TaskNode2Ptr physics_node(new GASS::TaskNode(PHYSICS_SYSTEM));
+	GASS::TaskNodePtr physics_node(new GASS::TaskNode(PHYSICS_SYSTEM));
 	physics_node->SetUpdateFrequency(60.0);
 	physics_node->SetListenerUpdateMode(GASS::TaskNode::SEQUENCE);
 	root_node->AddChildNode(physics_node);
@@ -126,7 +126,7 @@ int main(int /*argc*/, char** /*argv[]*/)
 	//ps->Init(physics_node);
 	//physics_node->Register(ps);
 
-	GASS::TaskNode2Ptr gfx_node(new GASS::TaskNode(GFX_SYSTEM));
+	GASS::TaskNodePtr gfx_node(new GASS::TaskNode(GFX_SYSTEM));
 	gfx_node->SetUpdateFrequency(60.0);
 	gfx_node->SetListenerUpdateMode(GASS::TaskNode::PARALLEL);
 	root_node->AddChildNode(gfx_node);
