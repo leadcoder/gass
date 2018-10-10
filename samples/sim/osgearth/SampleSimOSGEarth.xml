@@ -6,11 +6,8 @@
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPluginOpenAL"/>
-		<Plugin PluginFile = "GASSPluginVehicle"/>
 		<Plugin PluginFile = "GASSPluginInput"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
-		<Plugin PluginFile = "GASSPluginRakNet"/>
 		<Plugin PluginFile = "GASSEditorModule"/>
 	</Plugins>
 	<SetDataPath value="../../data/"/>
@@ -67,9 +64,9 @@
 		</OSGGraphicsSystem>
 	</Systems>
 	<RTC>
-		<NumberOfThreads value="-1"/>
+		<NumberOfThreads value="1"/>
 		<!-- -1 == auto-->
-		<MaxUpdateFreqency value="60"/>
+		<MaxUpdateFreqency value="-1"/>
 		<!-- -1 == not max update freq-->
 		<ExternalSimulationUpdate value="false"/>
 		<!-- let application trigger simulation updates PARALLEL-->
