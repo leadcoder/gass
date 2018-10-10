@@ -31,7 +31,7 @@ namespace GASS
 {
 	class TBBManager;
 	class TaskNode;
-	typedef GASS_SHARED_PTR<TaskNode> TaskNode2Ptr;
+	typedef GASS_SHARED_PTR<TaskNode> TaskNodePtr;
 	class ITaskNodeListener
 	{
 	public:
@@ -61,7 +61,7 @@ namespace GASS
 		typedef std::vector<TaskNodeListenerWeakPtr> Listeners;
 		typedef std::vector<TaskNodeUpdateCallback> CallbackVector;
 
-		typedef std::vector<TaskNode2Ptr> TaskNode2Vector;
+		typedef std::vector<TaskNodePtr> TaskNodeVector;
 		enum UpdateMode
 		{
 			PARALLEL,
@@ -79,7 +79,7 @@ namespace GASS
 		bool GetPaused() const {return m_Paused;}
 		void ResetTime() { m_CurrentTime = 0;}
 		double GetTime() const { return m_CurrentTime;}
-		void AddChildNode(TaskNode2Ptr child);
+		void AddChildNode(TaskNodePtr child);
 		void SetUpdateFrequency(double value) {m_UpdateFrequency = value;}
 		double GetUpdateFrequency() const {return m_UpdateFrequency;}
 		void SetListenerUpdateMode(UpdateMode mode) { m_ListenerMode =mode;}
@@ -97,7 +97,7 @@ namespace GASS
 		void UpdatePostListeners(double delta_time,tbb::task *parent);
 		void _DoUnreg(TaskNodeListenerPtr listener);
 
-		TaskNode2Vector m_Children;
+		TaskNodeVector m_Children;
 		
 		int m_ID;
 		UpdateMode m_ChildrenMode;

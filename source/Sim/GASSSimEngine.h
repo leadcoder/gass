@@ -43,7 +43,6 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObject)
 	GASS_FORWARD_DECL(Scene)
 	GASS_FORWARD_DECL(ScriptManager)
-	class OldTaskNode;
 
 	enum UpdateGroupID
 	{
@@ -138,11 +137,6 @@ namespace GASS
 		See ComponentContainerTemplateManager inside the component system from more info.
 		*/
 		ComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
-
-		/**
-			Get root task node
-		*/
-		//TaskNode2Ptr GetRootTaskNode() const;
 
 		/**
 		Return elapsed time

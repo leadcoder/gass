@@ -49,12 +49,12 @@ namespace GASS
 	}
 
 
-	bool TaskNodeSortPredicate(const TaskNode2Ptr &lhs, const TaskNode2Ptr &rhs)
+	bool TaskNodeSortPredicate(const TaskNodePtr &lhs, const TaskNodePtr &rhs)
 	{
 		return lhs->GetID() < rhs->GetID();
 	}
 
-	void TaskNode::AddChildNode(TaskNode2Ptr child) 
+	void TaskNode::AddChildNode(TaskNodePtr child) 
 	{
 		tbb::spin_mutex::scoped_lock lock(*m_Mutex);
 		m_Children.push_back(child);
@@ -96,15 +96,15 @@ namespace GASS
 		}
 	}
 	
-	struct TaskNode2ListenerExecutor
+	struct TaskNodeListenerExecutor
 	{
-		TaskNode2ListenerExecutor(TaskNode* caller,const TaskNode::Listeners& listeners, double delta_time)
+		TaskNodeListenerExecutor(TaskNode* caller,const TaskNode::Listeners& listeners, double delta_time)
 			:m_Caller(caller),m_Listeners(listeners),m_DeltaTime(delta_time)
 		{}
-		TaskNode2ListenerExecutor(TaskNode2ListenerExecutor& e,tbb::split)
+		TaskNodeListenerExecutor(TaskNodeListenerExecutor& e,tbb::split)
 			:m_Caller(e.m_Caller), m_DeltaTime(e.m_DeltaTime), m_Listeners(e.m_Listeners)
 		{}
-	    TaskNode2ListenerExecutor & operator=( const TaskNode2ListenerExecutor & ) { return *this; }
+		TaskNodeListenerExecutor & operator=( const TaskNodeListenerExecutor & ) { return *this; }
 	
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
@@ -119,15 +119,15 @@ namespace GASS
 		double m_DeltaTime;
 	};
 
-	struct TaskNode2ChildrenExecutor
+	struct TaskNodeChildrenExecutor
 	{
-		TaskNode2ChildrenExecutor(const TaskNode::TaskNode2Vector& children, double delta_time)
+		TaskNodeChildrenExecutor(const TaskNode::TaskNodeVector& children, double delta_time)
 			:m_Children(children),m_DeltaTime(delta_time)
 		{}
-		TaskNode2ChildrenExecutor(TaskNode2ChildrenExecutor& e,tbb::split)
+		TaskNodeChildrenExecutor(TaskNodeChildrenExecutor& e,tbb::split)
 			:m_Children(e.m_Children) , m_DeltaTime(e.m_DeltaTime)
 		{}
-		TaskNode2ChildrenExecutor & operator=( const TaskNode2ChildrenExecutor & ) { return *this; }
+		TaskNodeChildrenExecutor & operator=( const TaskNodeChildrenExecutor & ) { return *this; }
 
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
@@ -135,7 +135,7 @@ namespace GASS
 				m_Children[i]->Update(m_DeltaTime,NULL);
 			}
 		}
-		const TaskNode::TaskNode2Vector& m_Children;
+		const TaskNode::TaskNodeVector& m_Children;
 		double m_DeltaTime;
 	};
 
@@ -222,7 +222,7 @@ namespace GASS
 			}
 			break;
 		case PARALLEL:
-			TaskNode2ListenerExecutor exec(this,m_Listeners,delta_time);
+			TaskNodeListenerExecutor exec(this,m_Listeners,delta_time);
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
 			while(iter != m_Listeners.end())
 			{
@@ -280,7 +280,7 @@ namespace GASS
 			}
 			break;
 		case PARALLEL:
-			TaskNode2ChildrenExecutor exec(m_Children,delta_time);
+			TaskNodeChildrenExecutor exec(m_Children,delta_time);
 			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Children.size()),exec);
 			break;
 		}

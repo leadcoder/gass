@@ -39,7 +39,7 @@ namespace GASS
 	class ITaskNodeListener;
 	class TaskNode;
 	typedef GASS_SHARED_PTR<ITaskNodeListener> TaskNodeListenerPtr;
-	typedef GASS_SHARED_PTR<TaskNode> TaskNode2Ptr;
+	typedef GASS_SHARED_PTR<TaskNode> TaskNodePtr;
 
 	class GASSExport TBBManager : public GASS_ENABLE_SHARED_FROM_THIS<TBBManager>
 	{
