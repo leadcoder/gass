@@ -61,7 +61,6 @@ namespace GASS
 	This class is derived from the ComponentContainer class and extend
 	the ComponentContainer with message functionality.
 	To communicate with components owned by the SceneObject a message manager is used.
-	Some basic object messages is found in SceneObjectNameMessage.h
 
 	As the name indicates a SceneObject is a object in a scene.
 	The SceneObject is owned by a SceneObjectManager which in turn is owned
@@ -73,10 +72,10 @@ namespace GASS
 	{
 		friend class Scene;
 	public:
-
 		SceneObject();
 		virtual ~SceneObject();
 		static void RegisterReflection();
+		void SetName(const std::string &name);
 		void SyncMessages(double delta_time, bool recursive = true) const;
 		ScenePtr GetScene() const {return m_Scene.lock();}
 
@@ -173,7 +172,6 @@ namespace GASS
 			return ret;
 		}
 
-
 		/**Get first component of certain class from parent scene node.
 			This function allow you to pass the class as a template argument
 		*/
@@ -195,7 +193,6 @@ namespace GASS
 			}
 			return ret;
 		}
-
 
 		template <class T>
 		GASS_SHARED_PTR<T> GetTopParentComponentByClass() const
@@ -232,18 +229,15 @@ namespace GASS
 		*/
 		SceneObjectPtr GetFirstChildByName(const std::string &name,bool exact_math = true, bool recursive = true) const;
 
-
 		/** Get child scene objects that match GUID.
 			@name The object GUID to search for
 		*/
 		SceneObjectPtr GetChildByGUID(const SceneObjectGUID &guid) const;
 
-
 		/** Get first child scene objects that match id.
 			@id The object id to search for
 		*/
 		SceneObjectPtr GetChildByID(const SceneObjectID &id) const;
-
 
 		/** Get children scene objects that match ID.
 			@objects Return scene objects that match ID
@@ -252,7 +246,6 @@ namespace GASS
 				that the name argument is found in the scene object name string.
 		*/
 		void GetChildrenByID(SceneObjectVector &objects, const SceneObjectID &id,bool exact_math = true, bool recursive = true) const;
-
 
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
@@ -298,22 +291,25 @@ namespace GASS
 
 		void PostEvent(SceneObjectEventMessagePtr message);
 		void SendImmediateEvent(SceneObjectEventMessagePtr message);
-
-protected:
-
-		void InitializePointers();
-		void Initialize(ScenePtr scene);
+		bool IsInitialized() const;
+	private:
 		void OnDelete();
+		void OnInitialize(ScenePtr scene);
 
-		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
-		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
-		void GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
-
+		//override from component container
 		ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const;
+
+		//internals
+		void _InitializePointers();
+		SceneObjectPtr _CreateCopyRec(bool copy_children_recursively) const;
+		void _RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
+		void _GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively);
+	
 		SceneWeakPtr m_Scene;
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
 		SceneObjectGUID m_GUID;
+		bool m_Initialized;
 	};
 
 

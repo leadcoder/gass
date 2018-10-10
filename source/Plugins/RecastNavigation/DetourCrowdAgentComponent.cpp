@@ -42,7 +42,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnChangeName,SceneObjectNameMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 	}
@@ -84,11 +83,6 @@ namespace GASS
 		{
 			GASS_LOG(LWARNING) << "DetourCrowdAgentComponent need to find DetourCrowdComponent";
 		}
-	}
-
-	void DetourCrowdAgentComponent::OnChangeName(GASS::MessagePtr message)
-	{
-		SceneObjectNameMessagePtr nm = GASS_STATIC_PTR_CAST<SceneObjectNameMessage>(message);
 	}
 
 	float DetourCrowdAgentComponent::GetAgentMaxSpeed() const

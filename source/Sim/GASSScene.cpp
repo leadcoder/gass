@@ -73,7 +73,7 @@ namespace GASS
 		//Create empty root node
 		m_Root = SceneObjectPtr(new SceneObject());
 		m_Root->SetName("Root");
-		m_Root->Initialize(shared_from_this());
+		m_Root->OnInitialize(shared_from_this());
 
 		SystemMessagePtr enter_load_msg(new PreSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);

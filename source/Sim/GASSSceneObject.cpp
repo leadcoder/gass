@@ -37,7 +37,8 @@
 
 namespace GASS
 {
-	SceneObject::SceneObject() : m_MessageManager(new MessageManager())
+	SceneObject::SceneObject() : m_MessageManager(new MessageManager()),
+		m_Initialized(false)
 	{
 		m_GUID = GASS_GUID_NULL;
 	}
@@ -59,12 +60,12 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
 	{
-		SceneObjectPtr copy = CreateCopyRec(copy_children_recursively);
+		SceneObjectPtr copy = _CreateCopyRec(copy_children_recursively);
 		copy->GenerateNewGUID(true);
 		return copy;
 	}
 
-	SceneObjectPtr SceneObject::CreateCopyRec(bool copy_children_recursively) const
+	SceneObjectPtr SceneObject::_CreateCopyRec(bool copy_children_recursively) const
 	{
 		// use object factory instead to support derives from scene object?
 		SceneObjectPtr new_obj(new  SceneObject());
@@ -88,7 +89,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
-			SceneObjectPtr new_child = child->CreateCopyRec(copy_children_recursively);
+			SceneObjectPtr new_child = child->_CreateCopyRec(copy_children_recursively);
 			new_obj->AddChild(new_child);
 		}
 		return new_obj;
@@ -98,13 +99,13 @@ namespace GASS
 	{
 		std::map<SceneObjectGUID,SceneObjectGUID> ref_map;
 		//save old guid:s first
-		GenerateNewGUIDRec(ref_map, recursively);
+		_GenerateNewGUIDRec(ref_map, recursively);
 
 		//remap GUID refs
-		RemapRefRec(ref_map);
+		_RemapRefRec(ref_map);
 	}
 
-	void SceneObject::GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively)
+	void SceneObject::_GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively)
 	{
 		//save old guid:s first
 		SceneObjectGUID new_guid = GASS_GUID_GENERATE;
@@ -117,12 +118,12 @@ namespace GASS
 			while(children.hasMoreElements())
 			{
 				SceneObjectPtr child = GASS_DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
-				child->GenerateNewGUIDRec(ref_map,recursively);
+				child->_GenerateNewGUIDRec(ref_map,recursively);
 			}
 		}
 	}
 
-	void SceneObject::RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
+	void SceneObject::_RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
 	{
 		//remap references
 		ComponentContainer::ComponentIterator comp_iter = GetComponents();
@@ -138,28 +139,28 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_DYNAMIC_PTR_CAST<SceneObject>(children.getNext());
-			child->RemapRefRec(ref_map);
+			child->_RemapRefRec(ref_map);
 		}
 	}
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
-		child->InitializePointers(); //initialize SceneObjectLink:s
+		child->_InitializePointers(); //initialize SceneObjectLink:s
 
 		ComponentContainer::AddChild(child);
 
 		if(load && GetScene()) //if we have scene Initialize?
-			child->Initialize(GetScene());
+			child->OnInitialize(GetScene());
 	}
 
 	void SceneObject::InsertChildSceneObject(SceneObjectPtr child, size_t index, bool load)
 	{
-		child->InitializePointers(); //initialize SceneObjectLink:s
+		child->_InitializePointers(); //initialize SceneObjectLink:s
 
 		ComponentContainer::InsertChild(child,index);
 
 		if (load && GetScene()) //if we have scene Initialize?
-			child->Initialize(GetScene());
+			child->OnInitialize(GetScene());
 	}
 
 	void SceneObject::ResolveTemplateReferences(SceneObjectPtr template_root)
@@ -194,7 +195,7 @@ namespace GASS
 		}
 	}
 
-	void SceneObject::InitializePointers()
+	void SceneObject::_InitializePointers()
 	{
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
@@ -207,7 +208,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
-			child->InitializePointers();
+			child->_InitializePointers();
 		}
 	}
 
@@ -251,7 +252,7 @@ namespace GASS
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
 	}
 
-	void SceneObject::Initialize(ScenePtr scene)
+	void SceneObject::OnInitialize(ScenePtr scene)
 	{
 		//check dependencies
 		_CheckComponentDependencies();
@@ -284,12 +285,13 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
-			child->Initialize(scene);
+			child->OnInitialize(scene);
 		}
 
 		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
 		m_MessageManager->PostMessage(PostInitializedEventPtr(new PostInitializedEvent()));
+		m_Initialized = true;
 	}
 
 	SceneObjectPtr SceneObject::GetObjectUnderRoot() 
@@ -628,6 +630,18 @@ namespace GASS
 	{
 		std::string name = message->GetName();
 		SetName(name);
+	}
+
+	bool SceneObject::IsInitialized() const
+	{
+		return m_Initialized;
+	}
+
+	void SceneObject::SetName(const std::string &name)
+	{ 
+		m_Name = name;
+		if(IsInitialized())
+			SendImmediateEvent(GASS_MAKE_SHARED<SceneObjectNameChanged>(name));
 	}
 
 	SceneObjectPtr SceneObject::LoadFromXML(tinyxml2::XMLDocument *xmlDoc)

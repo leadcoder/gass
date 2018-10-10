@@ -113,6 +113,21 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<DebugComponentSettingsRequest> DebugComponentSettingsRequestPtr;
 
+	/*------------------Events------------------*/
+	
+	class SceneObjectNameChanged : public SceneObjectEventMessage
+	{
+	public:
+		SceneObjectNameChanged(const std::string &name, SenderID sender_id = -1, double delay = 0) :
+			SceneObjectEventMessage(sender_id, delay), m_Name(name)
+		{
+
+		}
+		std::string GetName()const { return m_Name; }
+	private:
+		std::string m_Name;
+	};
+	typedef GASS_SHARED_PTR<SceneObjectNameChanged> SceneObjectNameChangedPtr;
 
 	/**
 	This request indicate that a the scene node structure has changed.  This should 

@@ -117,7 +117,6 @@ namespace GASS
 		void UpdateGeometry();
 		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnLoad(LocationLoadedEventPtr message);
-		void OnChangeName(GASS::MessagePtr message);
 		void SetMaxAcceleration(float radius);
 		float GetMaxAcceleration() const;
 		Vec3 m_TargetPos;

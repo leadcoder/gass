@@ -65,7 +65,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnChangeName,SceneObjectNameMessage,0));
 		m_Initialized = true;
 	}
 
@@ -126,12 +125,6 @@ namespace GASS
 			NotifyUpdate();
 		}
 		UpdateTangentLine();
-	}
-
-	void WaypointComponent::OnChangeName(GASS::SceneObjectNameMessagePtr message)
-	{
-		//notify parent
-		//NotifyUpdate();
 	}
 
 	void WaypointComponent::Rotate(const Quaternion &rot)

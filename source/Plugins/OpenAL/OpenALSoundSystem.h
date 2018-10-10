@@ -55,7 +55,6 @@ namespace GASS
 		std::string GetSystemName() const {return "OpenALSoundSystem";}
 	protected:
 		std::string ListAvailableDevices( void );
-		void OnSceneLoaded(PreSceneCreateEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel);
