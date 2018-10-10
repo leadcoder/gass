@@ -21,7 +21,7 @@
 
 #include "DebugComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -45,8 +45,8 @@ namespace GASS
 
 	void DebugComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(typeid(SceneObjectNameMessage),MESSAGE_FUNC(DebugComponent::OnChangeName),0);
-		GetSceneObject()->RegisterForMessage(typeid(DebugComponentSettingsRequest),MESSAGE_FUNC(DebugComponent::OnSettings),0);
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DebugComponent::OnChangeName, SceneObjectNameChanged, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DebugComponent::OnSettings, DebugComponentSettingsRequest,0));
 
 		if(m_ShowNodeName)
 		{
@@ -78,25 +78,17 @@ namespace GASS
 		}
 	}
 	
-	void DebugComponent::OnChangeName(GASS::MessagePtr message)
+	void DebugComponent::OnChangeName(SceneObjectNameChangedPtr event)
 	{
 		if(m_ShowNodeName)
 		{
-			SceneObjectNameMessagePtr name_mess = GASS_DYNAMIC_PTR_CAST<SceneObjectNameMessage>(message);
-			if(name_mess)
-			{
-				std::string name = name_mess->GetName();
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
-			}
+			std::string name = event->GetName();
+			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(event->GetName())));
 		}
 	}
 
-	void DebugComponent::OnSettings(GASS::MessagePtr message)
+	void DebugComponent::OnSettings(DebugComponentSettingsRequestPtr message)
 	{
-		DebugComponentSettingsRequestPtr settings_mess = GASS_DYNAMIC_PTR_CAST<DebugComponentSettingsRequest>(message);
-		if(settings_mess)
-		{
-			SetShowNodeName(settings_mess->GetShowObjectName());
-		}
+		SetShowNodeName(message->GetShowObjectName());
 	}
 }

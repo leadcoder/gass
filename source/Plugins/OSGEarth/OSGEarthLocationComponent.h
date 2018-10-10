@@ -41,7 +41,7 @@ namespace GASS
 		ADD_PROPERTY(double,Offset);
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnGeoLocationRequest(GeoLocationRequestPtr message);
-		void OnNameChanged(SceneObjectNameMessagePtr message);
+		void OnNameChanged(SceneObjectNameChangedPtr event);
 		void OnCaptionChanged(TextCaptionRequestPtr message);
 		void UpdateNode();
 		double m_Latitude;

@@ -119,7 +119,7 @@ namespace GASS
 		
 		if(m_DebugNode)
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnNameChanged,SceneObjectNameMessage,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnNameChanged, SceneObjectNameChanged,0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnCaptionChanged,TextCaptionRequest,0));
 		}
 	}
@@ -197,10 +197,10 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthLocationComponent::OnNameChanged(SceneObjectNameMessagePtr message)
+	void OSGEarthLocationComponent::OnNameChanged(SceneObjectNameChangedPtr event)
 	{
 		if(m_DebugNode)
-			m_DebugNode->setText(message->GetName());
+			m_DebugNode->setText(event->GetName());
 	}
 
 	void OSGEarthLocationComponent::OnCaptionChanged(TextCaptionRequestPtr message)

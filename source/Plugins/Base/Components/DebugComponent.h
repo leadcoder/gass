@@ -39,8 +39,8 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 	protected:
-		void OnChangeName(MessagePtr message);
-		void OnSettings(GASS::MessagePtr message);
+		void OnChangeName(SceneObjectNameChangedPtr event);
+		void OnSettings(DebugComponentSettingsRequestPtr message);
 		bool m_ShowNodeName;
 		bool GetShowNodeName() const;
 		void SetShowNodeName(bool value);
