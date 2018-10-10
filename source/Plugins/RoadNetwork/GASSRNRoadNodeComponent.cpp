@@ -56,7 +56,6 @@ namespace GASS
 				//Delete edge object
 				BaseSceneComponentPtr bso = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge);
 				bso->GetSceneObject()->SendRemoveRequest(0);
-				//GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new RemoveSceneObjectRequest(bso->GetSceneObject())));
 			}
 		}
 		//update graph
