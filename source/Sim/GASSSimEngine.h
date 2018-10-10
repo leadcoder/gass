@@ -128,7 +128,6 @@ namespace GASS
 		see SystemManager for more details of how to find a 
 		certain system.
 		*/
-
 		SimSystemManagerPtr GetSimSystemManager() const {return m_SystemManager;}
 		
 		/**
@@ -207,35 +206,25 @@ namespace GASS
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
-		//SimSystemManagerPtr GetRunTimeController() const {return m_SystemManager;}
-
-		/**
-			Enable/disable external updates
-		*/
-		//void SetUpdateSimOnRequest(bool value);
-		//bool GetUpdateSimOnRequest() const;
+	
 		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
 		double GetTime() const;
 		double GetSimulationTime() const;
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);
+
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
 		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
 		SystemStepperPtr m_SystemStepper;
-		
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;
 		double m_MaxUpdateFreq;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
-		
-		int m_NumThreads;
-
-		
 	};
 }
 
