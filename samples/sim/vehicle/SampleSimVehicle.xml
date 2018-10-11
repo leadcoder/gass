@@ -1,70 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GASS>
-<Plugins>
-  <!-- load all from path-->
-  <!--<Directory Path = "GASSPlugins"/>-->
-  <Plugin PluginFile = "GASSPluginOSG"/>
-  <Plugin PluginFile = "GASSPluginOIS"/>
-  <Plugin PluginFile = "GASSPluginPhysX3"/>
-  <Plugin PluginFile = "GASSPluginOpenAL"/>
-  <Plugin PluginFile = "GASSPluginVehicle"/>
-  <Plugin PluginFile = "GASSPluginInput"/>
-  <Plugin PluginFile = "GASSPluginBase"/>
-  <Plugin PluginFile = "GASSPluginRakNet"/>
-</Plugins>
-<SetDataPath value="../../data/"/>
-<ScenePath value="../../data/sceneries"/>
-<ResourceManager>
-   <ResourceGroup name="GASS">
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/3dmodels"  type="FileSystem" recursive="true"/>
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/fonts" type="FileSystem" recursive="false"/>
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/sounds" type="FileSystem" recursive="true"/>
-  </ResourceGroup>
-  <ResourceGroup name="GASS_TEMPLATES">
-    <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
-  </ResourceGroup>
-</ResourceManager>
-<SceneObjectTemplateManager>
-  <AddObjectIDToName value ="true"/>
-  <ObjectIDPrefix value="["/>
-  <ObjectIDSufix value="]"/>
-</SceneObjectTemplateManager>
-<Systems>
-<MaterialSystem/>
-  <OISInputSystem>
-    <!-- PRE BUCKET UPDATE-->
-    <ExclusiveMode value="false"/>
-  </OISInputSystem>
-  <ControlSettingsSystem>
-  </ControlSettingsSystem>
-  <CoreSystem>
-  </CoreSystem>
-  <SimulationSystem>
-  </SimulationSystem>
-  <RakNetNetworkSystem>
-  <InterpolationLag value="200"/>
-  </RakNetNetworkSystem>
-  <OpenALSoundSystem>
-  </OpenALSoundSystem>
-  <PhysXPhysicsSystem>
-  </PhysXPhysicsSystem>
-  <OSGCollisionSystem>
-  </OSGCollisionSystem>
-  <OSGGraphicsSystem>
-	<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="400" TextureSize="2048" BaseTextureUnit="0" ShadowTextureUnit="6"/>
-  </OSGGraphicsSystem>
-</Systems>
-<RTC>
-  <NumberOfThreads value="-1"/>
-  <!-- -1 == auto-->
-  <MaxUpdateFreqency value="60"/>
-  <!-- -1 == not max update freq-->
-  <ExternalSimulationUpdate value="false"/>
-  <!-- let application trigger simulation updates PARALLEL-->
-</RTC>
+	<Plugins>
+		<!-- load all from path-->
+		<!--<Directory Path = "GASSPlugins"/>-->
+		<Plugin PluginFile = "GASSPluginOSG"/>
+		<Plugin PluginFile = "GASSPluginOIS"/>
+		<Plugin PluginFile = "GASSPluginPhysX3"/>
+		<Plugin PluginFile = "GASSPluginOpenAL"/>
+		<Plugin PluginFile = "GASSPluginVehicle"/>
+		<Plugin PluginFile = "GASSPluginInput"/>
+		<Plugin PluginFile = "GASSPluginBase"/>
+		<Plugin PluginFile = "GASSPluginRakNet"/>
+	</Plugins>
+	<SetDataPath value="../../data/"/>
+	<ScenePath value="../../data/sceneries"/>
+	<ResourceManager>
+		<ResourceGroup name="GASS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/3dmodels"  type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/fonts" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/sounds" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_TEMPLATES">
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+	</ResourceManager>
+	<SceneObjectTemplateManager>
+		<AddObjectIDToName value ="true"/>
+		<ObjectIDPrefix value="["/>
+		<ObjectIDSufix value="]"/>
+	</SceneObjectTemplateManager>
+	<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="60" MaxSimulationSteps="20">
+		<MaterialSystem/>
+		<OISInputSystem>
+			<ExclusiveMode value="false"/>
+		</OISInputSystem>
+		<ControlSettingsSystem>
+		</ControlSettingsSystem>
+		<CoreSystem>
+		</CoreSystem>
+		<SimulationSystem>
+		</SimulationSystem>
+		<RakNetNetworkSystem>
+			<InterpolationLag value="200"/>
+		</RakNetNetworkSystem>
+		<OpenALSoundSystem>
+		</OpenALSoundSystem>
+		<PhysXPhysicsSystem>
+		</PhysXPhysicsSystem>
+		<OSGCollisionSystem>
+		</OSGCollisionSystem>
+		<OSGGraphicsSystem>
+			<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="400" TextureSize="2048" BaseTextureUnit="0" ShadowTextureUnit="6"/>
+		</OSGGraphicsSystem>
+	</Systems>
 </GASS>

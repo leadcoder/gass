@@ -34,7 +34,7 @@
   <ObjectIDPrefix value="["/>
   <ObjectIDSufix value="]"/>
 </SceneObjectTemplateManager>
-<Systems>
+<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="20" MaxSimulationSteps="20">
   <OISInputSystem>
     <ExclusiveMode value="false"/>
   </OISInputSystem>
@@ -57,11 +57,4 @@
 	<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="400" TextureSize="2048" BaseTextureUnit="0" ShadowTextureUnit="6"/>
   </OSGGraphicsSystem>
 </Systems>
-<RTC>
-  <NumberOfThreads value="-1"/>
-  <!-- -1 == auto-->
-  <MaxUpdateFreqency value="60"/>
-  <!-- -1 == not max update freq-->
-  <ExternalSimulationUpdate value="false"/>
-</RTC>
 </GASS>
