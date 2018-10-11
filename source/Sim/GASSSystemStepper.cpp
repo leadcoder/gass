@@ -77,14 +77,19 @@ namespace GASS
 		m_SimSysManager(sim_system_manager),
 		m_CurrentState(SS_STOPPED),
 		m_SimTimeScale(1.0),
-		m_MaxSimulationSteps(20),
 		m_TimeToProcess(0),
+		m_MaxSimulationSteps(20),
 		m_CurrentTime(0),
 		m_PreSimGroup(UGID_PRE_SIM, sim_system_manager),
 		m_SimGroup(UGID_SIM, sim_system_manager),
 		m_PostSimGroup(UGID_POST_SIM, sim_system_manager)
 	{
-
+		m_PreSimGroup.SetUpdateFrequency(0);
+		m_PreSimGroup.SetMaxSimulationSteps(1);
+		m_SimGroup.SetUpdateFrequency(60.0);
+		m_SimGroup.SetMaxSimulationSteps(m_MaxSimulationSteps);
+		m_PostSimGroup.SetUpdateFrequency(0);
+		m_PostSimGroup.SetMaxSimulationSteps(1);
 	}
 
 	SystemStepper::~SystemStepper()
@@ -94,14 +99,8 @@ namespace GASS
 
 	void SystemStepper::OnInit()
 	{
-		const double update_freq = SimEngine::Get().GetMaxUpdateFreq();
-		m_PreSimGroup.SetUpdateFrequency(update_freq);
-		m_PreSimGroup.SetMaxSimulationSteps(1);
-		m_SimGroup.SetUpdateFrequency(update_freq);
-		m_SimGroup.SetMaxSimulationSteps(m_MaxSimulationSteps);
-		m_PostSimGroup.SetUpdateFrequency(update_freq);
-		m_PostSimGroup.SetMaxSimulationSteps(1);
-		GASS_LOG(LINFO) << "SystemStepper MaxUpdateFreq: " << update_freq;
+		GASS_LOG(LINFO) << "SystemStepper::OnInit - Pre/Post update frequency: " << GetMaxUpdateFrequency();
+		GASS_LOG(LINFO) << "SystemStepper::OnInit - Sim update frequency: " << GetSimulationUpdateFrequency();
 	}
 
 	void SystemStepper::OnUpdate(double delta_time)

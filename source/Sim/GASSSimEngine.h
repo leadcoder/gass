@@ -206,8 +206,6 @@ namespace GASS
 		ResourceManagerPtr GetResourceManager() const {return m_ResourceManager;}
 		ScriptManagerPtr GetScriptManager() const {return m_ScriptManager;}
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
-	
-		double GetMaxUpdateFreq() const {return m_MaxUpdateFreq;}
 		double GetTime() const;
 		double GetSimulationTime() const;
 	private:
@@ -222,7 +220,6 @@ namespace GASS
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;
-		double m_MaxUpdateFreq;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
 	};

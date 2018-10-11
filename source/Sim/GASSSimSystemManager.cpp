@@ -133,25 +133,45 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SimSystemManager::Load");
 		}
 		
-		tinyxml2::XMLElement *systems = xmlDoc->FirstChildElement("GASS");
-		systems = systems->FirstChildElement("Systems");
-
-		if(systems)
+		if (tinyxml2::XMLElement *gass_elem = xmlDoc->FirstChildElement("GASS"))
 		{
-			systems= systems->FirstChildElement();
-			//Load all systems tags
-			while(systems)
+			if (tinyxml2::XMLElement *systems_elem = gass_elem->FirstChildElement("Systems"))
 			{
-				SimSystemPtr system = LoadSystem(systems);
-				if(system)
+
+				if (systems_elem->Attribute("MaxUpdateFrequency"))
 				{
-					system->OnCreate(shared_from_this());
-					GASS_LOG(LINFO) << system->GetSystemName() << " created";
-					
-					m_Systems.push_back(system);
-					
+					double max_update_freq = 0;
+					systems_elem->QueryDoubleAttribute("MaxUpdateFrequency", &max_update_freq);
+					m_SystemStepper.SetMaxUpdateFrequency(max_update_freq);
 				}
-				systems  = systems->NextSiblingElement();
+
+				if (systems_elem->Attribute("SimulationUpdateFrequency"))
+				{
+					double update_freq = 0;
+					systems_elem->QueryDoubleAttribute("SimulationUpdateFrequency", &update_freq);
+					m_SystemStepper.SetSimulationUpdateFrequency(update_freq);
+				}
+
+				if (systems_elem->Attribute("MaxSimulationSteps"))
+				{
+					int max_steps = 0;
+					systems_elem->QueryIntAttribute("MaxSimulationSteps", &max_steps);
+					m_SystemStepper.SetMaxSimulationSteps(max_steps);
+				}
+
+				tinyxml2::XMLElement *system_elem = systems_elem->FirstChildElement();
+				//Load all systems tags
+				while (system_elem)
+				{
+					SimSystemPtr system = LoadSystem(system_elem);
+					if (system)
+					{
+						system->OnCreate(shared_from_this());
+						GASS_LOG(LINFO) << system->GetSystemName() << " created";
+						m_Systems.push_back(system);
+					}
+					system_elem = system_elem->NextSiblingElement();
+				}
 			}
 		}
 		xmlDoc->Clear();

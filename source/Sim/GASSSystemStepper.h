@@ -120,29 +120,50 @@ namespace GASS
 			Get max simulation sub steps each frame, when target frame rate can't be reached (to large delta time)
 			this value clamp number of simulation iteration that has to be executed to reached target delta_time
 		*/
-		int GetMaxSimulationSteps() const { return m_MaxSimulationSteps; }
+		int GetMaxSimulationSteps() const { return m_SimGroup.GetMaxSimulationSteps(); }
 
 		/**
 			Set max simulation sub steps each frame
-
 		*/
-		void SetMaxSimulationSteps(int value) { m_MaxSimulationSteps = value; }
+		void SetMaxSimulationSteps(int value) { m_MaxSimulationSteps = value; m_SimGroup.SetMaxSimulationSteps(value); }
+
+		void SetMaxUpdateFrequency(double fps)
+		{
+			m_PreSimGroup.SetUpdateFrequency(fps);
+			m_PostSimGroup.SetUpdateFrequency(fps);
+		}
+
+		double GetMaxUpdateFrequency() const
+		{
+			return m_PostSimGroup.GetUpdateFrequency();
+		}
+
+		void SetSimulationUpdateFrequency(double fps)
+		{
+			m_SimGroup.SetUpdateFrequency(fps);
+		}
+
+		double GetSimulationUpdateFrequency() const
+		{
+			return m_SimGroup.GetUpdateFrequency();
+		}
 	
 		void SetUpdateSimOnRequest(bool value, double time)
 		{
 			m_UpdateSimOnRequest = value;
 			m_RequestDeltaTime = time;
 		}
+
 	private:
 		SimSystemManager* m_SimSysManager;
 		bool m_UpdateSimOnRequest;
 		bool m_StepSimulationRequest; //indicate that we want to step simulation next frame
 		double m_RequestDeltaTime;
 		double m_SimTimeScale;
-		int m_MaxSimulationSteps;
 		SimulationState m_CurrentState;
 		double m_TimeToProcess;
 		double m_CurrentTime;
+		int m_MaxSimulationSteps;
 
 		SystemGroupStepper m_PreSimGroup;
 		SystemGroupStepper m_SimGroup;

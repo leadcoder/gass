@@ -45,7 +45,6 @@
 namespace GASS
 {
 	SimEngine::SimEngine(const FilePath &log_folder) : m_CurrentTime(0),
-		m_MaxUpdateFreq(0),
 		m_PluginManager(new PluginManager()),
 		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
@@ -192,13 +191,6 @@ namespace GASS
 		tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if (xml_scene_path)
 			m_ScenePath.SetPath(XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "ScenePath"));
-
-		tinyxml2::XMLElement *xml_rtc = xml_settings->FirstChildElement("RTC");
-		if (xml_rtc)
-		{
-			int update_freq = XMLUtils::ReadInt(xml_rtc, "MaxUpdateFreqency");
-			m_MaxUpdateFreq = static_cast<double>(update_freq);
-		}
 
 		//read SceneObjectTemplateManager settings
 		tinyxml2::XMLElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
