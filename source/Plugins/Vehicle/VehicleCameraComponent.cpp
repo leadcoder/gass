@@ -86,8 +86,7 @@ namespace GASS
 	void VehicleCameraComponent::OnEnter(EnterVehicleRequestPtr message)
 	{
 		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
-		SystemRequestMessagePtr cam_msg(new ChangeCameraRequest(camera,m_PreferredViewport));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
+		camera->ShowInViewport(m_PreferredViewport);
 	}
 
 	void VehicleCameraComponent::OnExit(ExitVehicleRequestPtr message)

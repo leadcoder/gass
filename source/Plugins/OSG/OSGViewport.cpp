@@ -66,6 +66,9 @@ namespace GASS
 
 	void OSGViewport::SetCamera(CameraComponentPtr camera)
 	{
+		if(OSGCameraComponentPtr prev_cam_comp = GASS_DYNAMIC_PTR_CAST<OSGCameraComponent>(m_Camera.lock()))
+			prev_cam_comp->SetOSGCamera(NULL);
+		
 		m_Camera = camera;
 		OSGCameraComponentPtr cam_comp = GASS_DYNAMIC_PTR_CAST<OSGCameraComponent>(camera);
 		cam_comp->SetOSGCamera(m_OSGView->getCamera());

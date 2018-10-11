@@ -53,8 +53,7 @@ public:
 		  if(free_obj)
 		  {
 			  free_obj->SendImmediateRequest(pos_msg);
-			  GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-			  m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
+			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 		  }
 	  }
 
@@ -89,9 +88,7 @@ public:
 		  if(free_obj)
 		  {
 			  free_obj->SendImmediateRequest(pos_msg);
-
-			  GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-			  m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
+			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 		  }
 
 		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());

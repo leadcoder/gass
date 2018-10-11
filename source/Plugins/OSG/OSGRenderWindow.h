@@ -41,13 +41,14 @@ namespace GASS
 		virtual unsigned int GetWidth() const;
 		virtual unsigned int GetHeight() const;
 		virtual void* GetHWND() const;
+		virtual ViewportVector GetViewports() const;
+		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
+
 		OSGGraphicsSystem* GetSystem() const{return m_System;}
 		osg::ref_ptr<osg::GraphicsContext> GetOSGWindow() const {return m_Window;}
-		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
-		OSGViewportVector GetViewports() const {return m_Viewports;}
 	private:
 		osg::ref_ptr<osg::GraphicsContext> m_Window;
-		OSGViewportVector m_Viewports;
+		ViewportVector m_Viewports;
 		OSGGraphicsSystem* m_System;
 	};
 	typedef GASS_SHARED_PTR<OSGRenderWindow> OSGRenderWindowPtr;

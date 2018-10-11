@@ -42,7 +42,11 @@ namespace GASS
 		virtual ~OgreCameraComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+		
+		//ICameraComponent
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const;
+		virtual void ShowInViewport(const std::string &viewport_name = "");
+
 		inline Ogre::Camera* GetOgreCamera() const {return m_Camera;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);

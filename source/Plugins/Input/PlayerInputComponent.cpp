@@ -150,8 +150,7 @@ namespace GASS
 			CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 			if(camera)
 			{
-				SystemMessagePtr cam_msg(new ChangeCameraRequest(GetSceneObject()->GetFirstComponentByClass<ICameraComponent>()));
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(cam_msg);
+				camera->ShowInViewport();
 			}
 			m_CurrentVehicle.reset();
 			m_CurrentSeat.reset();

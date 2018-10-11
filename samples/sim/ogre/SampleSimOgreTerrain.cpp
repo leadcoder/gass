@@ -22,6 +22,7 @@
 #include "Sim/GASS.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSIViewport.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
@@ -67,7 +68,7 @@ int start(int argc, char* argv[])
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
 
 	//Create viewport in main window
-	win->CreateViewport("MainViewport", 0, 0, 1, 1);
+	GASS::ViewportPtr vp = win->CreateViewport("MainViewport", 0, 0, 1, 1);
 	
 	//Give input system window handle
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
@@ -88,9 +89,8 @@ int start(int argc, char* argv[])
 	camera_obj->PostRequest(pos_msg);
 
 	//Make this the primary camera
-	GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-	engine->GetSimSystemManager()->PostMessage(camera_msg);
-
+	vp->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
+	
 	//Create vehicle and add it to the root node of the scene
 	GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
 	scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);

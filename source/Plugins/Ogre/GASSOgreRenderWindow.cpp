@@ -68,4 +68,9 @@ namespace GASS
 		m_Viewports.push_back(vp_wrapper);
 		return vp_wrapper;
 	}
+
+	ViewportVector OgreRenderWindow::GetViewports() const
+	{
+		return m_Viewports;
+	}
 }

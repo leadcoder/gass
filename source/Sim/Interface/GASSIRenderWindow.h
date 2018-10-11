@@ -27,7 +27,7 @@ namespace GASS
 {
 	class IViewport;
 	typedef GASS_SHARED_PTR<IViewport> ViewportPtr;
-
+	typedef std::vector<ViewportPtr> ViewportVector;
 	class IRenderWindow
 	{
 	public:
@@ -39,6 +39,7 @@ namespace GASS
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 		virtual void* GetHWND() const = 0;
+		virtual ViewportVector GetViewports() const = 0;
 		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) = 0;
 	};
 	typedef GASS_SHARED_PTR<IRenderWindow> RenderWindowPtr;

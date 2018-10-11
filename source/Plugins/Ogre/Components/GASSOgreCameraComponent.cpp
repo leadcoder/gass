@@ -27,6 +27,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSIViewport.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"
 #include "Plugins/Ogre/GASSOgreConvert.h"
 #include "Plugins/Ogre/Components/GASSOgreLocationComponent.h"
@@ -91,6 +92,22 @@ namespace GASS
 		m_MaterialScheme = value;
 		if(m_Camera && m_Camera->getViewport()) //we are initilized and have viewport!
 			m_Camera->getViewport()->setMaterialScheme(m_MaterialScheme);
+	}
+
+	void OgreCameraComponent::ShowInViewport(const std::string &viewport_name)
+	{
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		RenderWindowVector windows = gfx_system->GetRenderWindows();
+		CameraComponentPtr camera_comp = GASS_DYNAMIC_PTR_CAST<ICameraComponent>(shared_from_this());
+		for (size_t i = 0; i < windows.size(); i++)
+		{
+			ViewportVector  viewports = windows[i]->GetViewports();
+			for (size_t j = 0; j < viewports.size(); j++)
+			{
+				if (viewport_name == "" || viewports[j]->GetName() == viewport_name)
+					viewports[j]->SetCamera(camera_comp);
+			}
+		}
 	}
 
 	void OgreCameraComponent::OnLocationLoaded(LocationLoadedEventPtr message)

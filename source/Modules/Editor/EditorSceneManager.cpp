@@ -103,8 +103,7 @@ namespace GASS
 		{
 			free_obj->SendImmediateRequest(PositionRequestPtr(new PositionRequest(scene->GetStartPos())));
 			free_obj->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot)));
-			SystemMessagePtr camera_msg(new ChangeCameraRequest(free_obj->GetFirstComponentByClass<ICameraComponent>()));
-			SimEngine::Get().GetSimSystemManager()->PostMessage(camera_msg);
+			free_obj->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
 		}
 	}
 

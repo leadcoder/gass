@@ -378,8 +378,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	if(free_obj)
 	{
 		free_obj->SendImmediateRequest(pos_msg);
-		GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-		m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
+		free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 	}
 
 	static float wheel_vel = 0;

@@ -23,6 +23,8 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
+
 #include "Core/Math/GASSMath.h"
 
 namespace GASS
@@ -94,6 +96,22 @@ namespace GASS
 				SetNearClipDistance(message->GetValue2());
 			}
 			break;
+		}
+	}
+
+	void OSGCameraComponent::ShowInViewport(const std::string &viewport_name)
+	{
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		RenderWindowVector windows = gfx_system->GetRenderWindows();
+		CameraComponentPtr camera_comp = GASS_DYNAMIC_PTR_CAST<ICameraComponent>(shared_from_this());
+		for (size_t i = 0; i < windows.size(); i++)
+		{
+			ViewportVector  viewports = windows[i]->GetViewports();
+			for (size_t j = 0; j < viewports.size(); j++)
+			{
+				if (viewport_name == "" || viewports[j]->GetName() == viewport_name)
+					viewports[j]->SetCamera(camera_comp);
+			}
 		}
 	}
 

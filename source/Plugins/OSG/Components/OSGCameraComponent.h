@@ -35,6 +35,8 @@ namespace GASS
 
 		//ICameraComponent interface
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const;
+		virtual void ShowInViewport(const std::string &viewport_name);
+		
 		osg::ref_ptr<osg::Camera> GetOSGCamera() const {return m_OSGCamera;}
 		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
 		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}

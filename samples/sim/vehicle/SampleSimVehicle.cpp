@@ -82,8 +82,7 @@ int start(int argc, char* argv[])
 	camera_obj->PostRequest(pos_msg);
 
 	//Make this the primary camera
-	GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-	engine->GetSimSystemManager()->PostMessage(camera_msg);
+	camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 
 	//Create vehicle and add it to the root node of the scene
 	GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");

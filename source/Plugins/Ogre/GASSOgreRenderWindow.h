@@ -47,12 +47,14 @@ namespace GASS
 		virtual unsigned int GetWidth() const;
 		virtual unsigned int GetHeight() const;
 		virtual void* GetHWND() const;
+		virtual ViewportVector GetViewports() const;
+		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
+
 		OgreGraphicsSystem* GetSystem() const{return m_System;}
 		Ogre::RenderWindow* GetOgreWindow() const{return m_Window;}
-		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
 	private:
 		Ogre::RenderWindow* m_Window;
-		OgreViewportVector m_Viewports;
+		ViewportVector m_Viewports;
 		OgreGraphicsSystem* m_System;
 	};
 	typedef GASS_SHARED_PTR<OgreRenderWindow> OgreRenderWindowPtr;

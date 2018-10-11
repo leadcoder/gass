@@ -39,6 +39,7 @@ namespace GASS
 	public:
 		virtual ~ICameraComponent(){}
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const = 0;
+		virtual void ShowInViewport(const std::string &viewport_name ="") = 0;
 	};
 
 	typedef GASS_WEAK_PTR<ICameraComponent> CameraComponentWeakPtr;

@@ -133,4 +133,9 @@ namespace GASS
 	{
 		return m_Window->getTraits()->height;
 	}
+
+	ViewportVector OSGRenderWindow::GetViewports() const
+	{
+		return m_Viewports;
+	}
 }
