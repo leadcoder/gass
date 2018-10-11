@@ -77,7 +77,7 @@ namespace GASS
 	}
 
 
-	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager() : m_Paused(false),
+	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager() : m_Active(true),
 		m_Init(false),
 		m_Gravity(-9.81f),
 		m_CpuDispatcher(NULL),
@@ -117,7 +117,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
 	{
-		m_Paused = !message->GetActivate();
+		m_Active = message->GetActivate();
 	}
 
 	void PhysXPhysicsSceneManager::OnInit()
@@ -202,7 +202,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
 	{
-		if (!m_Paused)
+		if (m_Active)
 		{
 			//Lock to 60 hz
 			if (delta_time > 1.0 / 60.0)
@@ -260,8 +260,6 @@ namespace GASS
 			++iter;
 		}
 	}
-
-	
 
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
 	{

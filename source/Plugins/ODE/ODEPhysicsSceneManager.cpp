@@ -41,7 +41,7 @@ namespace GASS
 		m_World(0),
 		m_CollisionSpace(0),
 		m_ContactGroup (0),
-		m_Paused(false),
+		m_Active(true),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the
 											  //behavior of simulation is effected and values for
@@ -79,10 +79,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
 	{
-		if(message->GetActivate())
-			m_Paused = false;
-		else
-			m_Paused = true;
+		m_Active = message->GetActivate();
 	}
 
 	void ODEPhysicsSceneManager::OnInit()
@@ -130,7 +127,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
 	{
-		if (!m_Paused)
+		if (m_Active)
 		{
 			dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_Space,this,&NearCallback);
 			//dSpaceCollide2((dGeomID) m_Space,(dGeomID)m_StaticSpace,this,&NearCallback);
@@ -164,7 +161,6 @@ namespace GASS
 		{
 			col_sys->Process();
 		}*/
-
 		BaseSceneManager::_UpdateListeners(delta_time);
 	}
 

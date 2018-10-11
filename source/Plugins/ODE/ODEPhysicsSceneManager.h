@@ -52,10 +52,14 @@ namespace GASS
 		virtual void OnShutdown();
 		virtual bool GetSerialize() const {return false;}
 
+		//IPhysicsSceneManager
+		virtual void SetActive(bool value) { m_Active = value; }
+		virtual bool GetActive() const { return m_Active; }
+
 		dWorldID GetWorld()const {return m_World;}
 		void OnPostSystemUpdate(double delta);
 		void OnPreSystemUpdate(double delta);
-		bool IsActive()const {return !m_Paused;}
+		
 
 		dSpaceID GetPhysicsSpace() const {return m_Space;}
 		dSpaceID GetCollisionSpace() const {return m_CollisionSpace;}
@@ -75,7 +79,7 @@ namespace GASS
 		dSpaceID m_CollisionSpace;
 		dJointGroupID m_ContactGroup;
 		float m_Gravity;
-		bool m_Paused;
+		bool m_Active;
 		CollisionMeshMap m_ColMeshMap;
 		bool m_Init;
 		double m_SimulationUpdateInterval;

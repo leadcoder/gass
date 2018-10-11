@@ -21,6 +21,7 @@
 #pragma once
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
+#include "Sim/Interface/GASSIPhysicsSceneManager.h"
 
 #define MAX_NUM_WHEELS 256
 
@@ -47,7 +48,7 @@ namespace GASS
 	class PhysXBodyComponent;
 	typedef GASS_SHARED_PTR<PhysXBodyComponent> PhysXBodyComponentPtr;
 
-	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>
+	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>, public IPhysicsSceneManager
 	{
 	public:
 		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
@@ -61,6 +62,10 @@ namespace GASS
 		virtual void OnPreSystemUpdate(double delta_time);
 		virtual void OnPostSystemUpdate(double delta_time);
 
+		//IPhysicsSceneManager
+		virtual void SetActive(bool value) { m_Active = value; }
+		virtual bool GetActive() const { return m_Active; }
+
 		virtual bool GetSerialize() const {return true;}
 		physx::PxScene* GetPxScene() const {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
@@ -72,7 +77,6 @@ namespace GASS
 		Vec3 GetOffset() const {return m_Offset;}
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
-		
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void OnActivateMessage(ActivatePhysicsRequestPtr message);
 		void SetGravity(float gravity);
@@ -84,7 +88,7 @@ namespace GASS
 	private:
 		float m_Gravity;
 		Vec3 m_Offset;
-		bool m_Paused;
+		bool m_Active;
 		bool m_Init;
 		physx::PxScene *m_PxScene;
 		physx::PxDefaultCpuDispatcher* m_CpuDispatcher;
