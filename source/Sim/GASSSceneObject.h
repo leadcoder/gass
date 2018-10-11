@@ -250,8 +250,6 @@ namespace GASS
 		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
 		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
 
-		void OnChangeName(SceneObjectNameMessagePtr message);
-
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}
 

@@ -265,8 +265,6 @@ namespace GASS
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
 
-		RegisterForMessage(REG_TMESS(SceneObject::OnChangeName,SceneObjectNameMessage,0));
-
 		ComponentVector::iterator iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
@@ -625,13 +623,7 @@ namespace GASS
 	{
 		m_MessageManager->SendImmediate(message);
 	}
-
-	void SceneObject::OnChangeName(SceneObjectNameMessagePtr message)
-	{
-		std::string name = message->GetName();
-		SetName(name);
-	}
-
+	
 	bool SceneObject::IsInitialized() const
 	{
 		return m_Initialized;
@@ -641,7 +633,7 @@ namespace GASS
 	{ 
 		m_Name = name;
 		if(IsInitialized())
-			SendImmediateEvent(GASS_MAKE_SHARED<SceneObjectNameChanged>(name));
+			SendImmediateEvent(GASS_MAKE_SHARED<SceneObjectNameChangedEvent>(name));
 	}
 
 	SceneObjectPtr SceneObject::LoadFromXML(tinyxml2::XMLDocument *xmlDoc)

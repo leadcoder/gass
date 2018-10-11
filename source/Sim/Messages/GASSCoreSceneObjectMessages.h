@@ -77,48 +77,12 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<SceneObjectRequestMessage> SceneObjectRequestMessagePtr;
 
-	/**
-	Change name of scene object
-	*/
-
-	class SceneObjectNameMessage : public SceneObjectRequestMessage
-	{
-	public:
-		SceneObjectNameMessage(const std::string &name, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Name(name)
-		  {
-
-		  }
-		  std::string GetName()const {return m_Name;}
-	private:
-		std::string m_Name;
-	};
-	typedef GASS_SHARED_PTR<SceneObjectNameMessage> SceneObjectNameMessagePtr;
-
-	/**
-		Message that can be used to show debug information about a object
-		TODO: move this object to other place?
-	*/
-	class DebugComponentSettingsRequest : public SceneObjectRequestMessage
-	{
-	public:
-		DebugComponentSettingsRequest(bool show_object_name, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage( sender_id , delay),
-			  m_ShowObjectName(show_object_name)
-		  {
-		  }
-		  bool GetShowObjectName() const {return m_ShowObjectName;}
-	private:
-		bool m_ShowObjectName;
-	};
-	typedef GASS_SHARED_PTR<DebugComponentSettingsRequest> DebugComponentSettingsRequestPtr;
-
 	/*------------------Events------------------*/
 	
-	class SceneObjectNameChanged : public SceneObjectEventMessage
+	class SceneObjectNameChangedEvent : public SceneObjectEventMessage
 	{
 	public:
-		SceneObjectNameChanged(const std::string &name, SenderID sender_id = -1, double delay = 0) :
+		SceneObjectNameChangedEvent(const std::string &name, SenderID sender_id = -1, double delay = 0) :
 			SceneObjectEventMessage(sender_id, delay), m_Name(name)
 		{
 
@@ -127,7 +91,7 @@ namespace GASS
 	private:
 		std::string m_Name;
 	};
-	typedef GASS_SHARED_PTR<SceneObjectNameChanged> SceneObjectNameChangedPtr;
+	typedef GASS_SHARED_PTR<SceneObjectNameChangedEvent> SceneObjectNameChangedEventPtr;
 
 	/**
 	This request indicate that a the scene node structure has changed.  This should 
