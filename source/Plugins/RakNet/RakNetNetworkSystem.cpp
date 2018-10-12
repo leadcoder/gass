@@ -523,11 +523,7 @@ namespace GASS
 				//m_ServerMap[response.IP] = response;
 				SystemMessagePtr message(new ServerResponseEvent(response.IP, response.Port, response.Ping));
 				GetSimSystemManager()->PostMessage(message);
-
-				std::stringstream ss;
-				ss << "Ping time:" << response.Ping << " Time:" <<response.Time << "\n";
-				SystemMessagePtr debug_msg(new DebugPrintRequest(ss.str()));
-				SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg);
+				GASS_PRINT("Ping time:" << response.Ping << " Time:" << response.Time << "\n")
 				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
 			}
 			else if(packetIdentifier == ID_START_SCENE)

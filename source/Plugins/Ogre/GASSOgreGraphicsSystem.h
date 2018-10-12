@@ -62,13 +62,13 @@ namespace GASS
 		virtual void Init();
 		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
 		virtual void OnSystemUpdate(double time);
+		
 		//IGraphicsSystem
 		virtual RenderWindowPtr GetMainRenderWindow() const;
 		virtual RenderWindowVector GetRenderWindows() const;
-
-		//move this to material manager?
-		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
+		virtual void PrintDebugText(const std::string &message);
 		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
+		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
 		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "");
 		virtual bool HasMaterial(const std::string &mat_name) const;
 		virtual void RemoveMaterial(const std::string &mat_name);

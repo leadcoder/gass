@@ -146,8 +146,12 @@ namespace GASS
 
 	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
-		std::string debug_text = message->GetText();
-		m_DebugTextBox->Print(debug_text.c_str());
+		PrintDebugText(message->GetText());
+	}
+
+	void OgreGraphicsSystem::PrintDebugText(const std::string &message)
+	{
+		m_DebugTextBox->Print(message.c_str());
 		m_DebugTextBox->SetActive(true);
 	}
 

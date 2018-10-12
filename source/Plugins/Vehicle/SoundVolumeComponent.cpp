@@ -62,14 +62,9 @@ namespace GASS
 			//turret sound
 			const float volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
 			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
-
-			/*std::stringstream ss;
-			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
-			std::string soundinfo = ss.str();
-			MessagePtr debug_msg(new DebugPrintRequest(soundinfo));
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+			/*
+			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
 			*/
-			//std::cout << speed << std::endl;
 		}
 	}
 
@@ -85,13 +80,9 @@ namespace GASS
 			
 			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5f)));
 
-			/*std::stringstream ss;
-			ss << "Speed:"<< speed << " Volume:" << volume << "\n";
-			std::string soundinfo = ss.str();
-			MessagePtr debug_msg(new DebugPrintRequest(soundinfo));
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(debug_msg);
+			/*
+			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
 			*/
-			//std::cout << speed << std::endl;
 		}
 		/*if(speed > 0)
 		{

@@ -38,6 +38,7 @@
 #include "Sim/GASSResourceHandle.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/GASSGeometryFlags.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "Core/Serialize/tinyxml2.h"
@@ -249,6 +250,11 @@ namespace GASS
 		return true;
 	}
 
+	void SimEngine::DebugPrint(const std::string &message)
+	{
+		GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>()->PrintDebugText(message);
+	}
+	
 	void SimEngine::Tick(double delta_time)
 	{
 		//ProfileSample::ResetAll();
@@ -257,10 +263,7 @@ namespace GASS
 
 			GetSimSystemManager()->OnUpdate(delta_time);
 			m_CurrentTime += delta_time;
-
-			//std::stringstream ss;
-			//ss << " TICK:" << delta_time << " Time:" << m_CurrentTime << "\n";
-			//GetSimSystemManager()->PostMessage(SystemRequestMessagePtr( new DebugPrintRequest(ss.str())));
+			//GASS_PRINT(" TICK:" << delta_time << " Time:" << m_CurrentTime);
 		}
 #ifdef PROFILER
 		ProfileSample::Output();

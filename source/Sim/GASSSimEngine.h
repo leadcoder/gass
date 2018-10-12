@@ -29,7 +29,7 @@
 #include "Core/MessageSystem/GASSStaticMessageListener.h"
 
 //debug stuff
-#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
+#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().DebugPrint(ss.str());}
 #define GASS_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
 
 namespace GASS
@@ -208,6 +208,9 @@ namespace GASS
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
 		double GetTime() const;
 		double GetSimulationTime() const;
+
+		//print debug message to render window
+		void DebugPrint(const std::string &message);
 	private:
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);

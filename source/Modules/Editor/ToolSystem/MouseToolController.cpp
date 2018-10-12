@@ -359,19 +359,13 @@ namespace GASS
 			m_ActiveTool->Update(delta);
 		
 		//debug message
-		/*std::stringstream ss;
-		ss << " Cursor pos:" << m_LastScreenPos << "\n";
-		const std::string message = ss.str();
-		SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));*/
-
-
+		/*
+		GASS_PRINT("Cursor pos:" << m_LastScreenPos);
+	
 		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
 		if(obj_under_cursor)
 		{
-			std::stringstream ss;
-			ss << " Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos << "\n";
-			const std::string message = "Object under cursor:" + obj_under_cursor->GetName() + ss.str();
-			//SimEngine::Get().GetSimSystemManager()->PostMessage(MessagePtr( new DebugPrintRequest(message)));
+			GASS_PRINT("Object under cursor:" << obj_under_cursor->GetName() << "Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos)
 		}*/
 	}
 

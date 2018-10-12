@@ -39,8 +39,6 @@
 
 namespace GASS
 {
-	#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
-
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
 		m_DesiredPosRadius(0),

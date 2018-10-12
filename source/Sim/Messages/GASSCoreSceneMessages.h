@@ -107,6 +107,7 @@ namespace GASS
 		@param rotation Rotation of the new object
 		@param veclocity Veclocity of the new object
 		@param parent Optional parent object, otherwise this object is attached to the scene root
+		@deprecated
 		*/
 		SpawnObjectFromTemplateRequest(const std::string &template_name, 
 			const Vec3 &position,

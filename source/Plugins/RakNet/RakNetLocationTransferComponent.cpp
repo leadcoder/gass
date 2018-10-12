@@ -256,9 +256,7 @@ namespace GASS
 
 			/*char debug_text[256];
 			sprintf(debug_text,"Time: %d  %d %d",(time - m_LocationHistory[0].Time),m_LocationHistory[0].Time, time);
-
-			DebugPrintRequestPtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
-			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
+			GASS_PRINT(std::string(debug_text))
 			*/
 
 #ifdef _DEBUG_LTC_
@@ -351,13 +349,8 @@ namespace GASS
 
 			GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(m_Velocity, m_AngularVelocity)));
 
-
-
-			//sprintf(debug_text,"\Time Stamp diff: %d %d",m_TimeStampHistory[0]-m_TimeStampHistory[1],m_TimeStampHistory[1]-m_TimeStampHistory[2]);
 #ifdef _DEBUG_LTC_
-			DebugPrintRequestPtr debug_msg2(new DebugPrintRequest(std::string(debug_text)));
-			SimEngine::Get().GetSimSystemManager()->PostMessage(debug_msg2);
-
+			GASS_PRINT(std::string(debug_text))
 #endif
 
 		}

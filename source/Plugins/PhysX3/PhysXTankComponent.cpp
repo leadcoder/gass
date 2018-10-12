@@ -557,7 +557,6 @@ namespace GASS
 			}
 	};
 
-	#define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new DebugPrintRequest(ss.str())));}
 	void PhysXTankComponent::SceneManagerTick(double delta)
 	{
 		if(!m_Vehicle)

@@ -53,6 +53,7 @@ namespace GASS
 		virtual void RemoveMaterial(const std::string &mat_name);
 		virtual GraphicsMaterial GetMaterial(const std::string &mat_name);
 
+		virtual void PrintDebugText(const std::string &message);
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}

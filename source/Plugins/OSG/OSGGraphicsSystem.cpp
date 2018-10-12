@@ -202,9 +202,12 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
 	{
-		std::string debug_text = message->GetText();
-		//m_DebugTextBox->setText(m_DebugTextBox->getText() + "\n" + debug_text);
-		m_DebugVec.push_back(debug_text);
+		PrintDebugText(message->GetText());
+	}
+
+	void OSGGraphicsSystem::PrintDebugText(const std::string &message)
+	{
+		m_DebugVec.push_back(message);
 	}
 
 
