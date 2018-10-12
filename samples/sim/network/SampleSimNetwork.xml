@@ -34,7 +34,7 @@
   <ObjectIDPrefix value="["/>
   <ObjectIDSufix value="]"/>
 </SceneObjectTemplateManager>
-<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="20" MaxSimulationSteps="20">
+<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="60" MaxSimulationSteps="20">
   <OISInputSystem>
     <ExclusiveMode value="false"/>
   </OISInputSystem>
