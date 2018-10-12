@@ -83,6 +83,8 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<DebugPrintRequest> DebugPrintRequestPtr;
 
+
+	//@deprecated	
 	class TimeStepRequest : public SystemRequestMessage
 	{
 	public:

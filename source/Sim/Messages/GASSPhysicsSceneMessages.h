@@ -32,6 +32,7 @@ namespace GASS
 
 	/**
 		Message used to activate/deactivate physics
+		@deprecated
 	*/
 	class ActivatePhysicsRequest : public SceneRequestMessage
 	{

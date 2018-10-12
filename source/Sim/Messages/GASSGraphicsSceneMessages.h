@@ -41,6 +41,7 @@ namespace GASS
 	/**
 	Change time of day, this message can be used to change current time in
 	scenes that support dynamic lighting
+	NOTE: this is only used in OGRE3D 
 	*/
 
 	class TimeOfDayRequest : public SceneRequestMessage
@@ -78,7 +79,8 @@ namespace GASS
 	Change scene weather. 
 	This message can be interpretaded by diffrent system,
 	a sky system for the actual clouds and also maybee 
-	water/sea system for changing waves, gfxsystem for the fog etc. 
+	water/sea system for changing waves, gfxsystem for the fog etc.
+	NOTE: this is only used in OGRE3D	
 	*/
 	class WeatherRequest : public SceneRequestMessage
 	{
@@ -109,6 +111,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<WeatherRequest> WeatherRequestPtr;
 
 	//debug messages
+	//@deprecated
 	class DrawLineRequest : public SceneRequestMessage
 	{
 	public:
@@ -131,7 +134,7 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<DrawLineRequest> DrawLineRequestPtr;
 
-
+	//@deprecated not implemented in OSG
 	class DrawCircleRequest : public SceneRequestMessage
 	{
 	public:
@@ -159,6 +162,7 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<DrawCircleRequest> DrawCircleRequestPtr;
 
+	//@deprecated move this to interface and return Textbox object
 	class CreateTextBoxRequest : public SceneRequestMessage
 	{
 	public:
@@ -187,7 +191,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<CreateTextBoxRequest> CreateTextBoxRequestPtr;
 
 
-
+	//@deprecated
 	class ExportMeshRequest : public SceneRequestMessage
 	{
 	public:
