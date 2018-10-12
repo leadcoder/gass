@@ -21,6 +21,7 @@
 #include "LODComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIViewport.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -28,7 +29,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIViewport.h"
+
 
 namespace GASS
 {

@@ -20,7 +20,6 @@
 
 
 #include "Sim/GASS.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Modules/Editor/EditorSceneManager.h"

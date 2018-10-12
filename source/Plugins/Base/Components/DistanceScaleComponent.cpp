@@ -5,7 +5,6 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"

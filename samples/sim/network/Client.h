@@ -25,21 +25,6 @@ public:
 	{
 		printf("Client got scene request message:%s\n",message->GetSceneName().c_str());
 		_LoadScene(message->GetSceneName());
-		/*m_Scene = GASS::SimEngine::Get().CreateScene(mess->GetSceneName());
-		GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
-		scene->Load(mess->GetSceneName());
-
-		GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
-
-		//create free camera and set start pos
-		GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
-		if(free_obj)
-		{
-			free_obj->SendImmediateRequest(pos_msg);
-			GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-			m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
-		}*/
 	}	
 
 	bool Init()

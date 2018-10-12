@@ -34,7 +34,6 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 
 namespace GASS

@@ -23,8 +23,6 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
-#include "Sim/Interface/GASSIViewport.h"
-
 #include "Core/Math/GASSMath.h"
 
 namespace GASS

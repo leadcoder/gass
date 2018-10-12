@@ -67,7 +67,7 @@ int run(int /*argc*/, char** /*argv[]*/)
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
 
 	//Create viewport in main window
-	win->CreateViewport("MainViewport", 0, 0, 1, 1);
+	GASS::ViewportPtr vp = win->CreateViewport("MainViewport", 0, 0, 1, 1);
 	
 	//Give input system window handle
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
@@ -88,9 +88,8 @@ int run(int /*argc*/, char** /*argv[]*/)
 	camera_obj->PostRequest(pos_msg);
 
 	//Make this the primary camera
-	GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-	engine->GetSimSystemManager()->PostMessage(camera_msg);
-
+	vp->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
+	
 	GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
 	GASS::EditorSceneManagerPtr esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
 	esm->GetMouseToolController()->SelectTool("MoveTool");

@@ -22,7 +22,6 @@
 #include "Plugins/Base/Components/MotionComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSSimEngine.h"

@@ -15,7 +15,6 @@
 #include "Core/Math/GASSPlane.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #define MOVMENT_EPSILON 0.0000001

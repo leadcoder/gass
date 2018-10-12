@@ -31,7 +31,6 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 
 /*#pragma warning(disable: 4512)

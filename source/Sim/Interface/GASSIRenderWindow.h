@@ -22,11 +22,9 @@
 #define GASS_I_RENDER_WINDOW_H
 
 #include "Sim/GASSCommon.h"
-
+#include "Sim/Interface/GASSIViewport.h"
 namespace GASS
 {
-	class IViewport;
-	typedef GASS_SHARED_PTR<IViewport> ViewportPtr;
 	typedef std::vector<ViewportPtr> ViewportVector;
 	class IRenderWindow
 	{
