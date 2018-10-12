@@ -63,22 +63,6 @@ namespace GASS
 			SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage,0));
 			m_Empty = false;
 		}
-		/*ComponentContainerTemplate::ComponentVector components;
-		GetSceneObject()->GetComponentsByClass<ICameraComponent>(components);
-		
-		//configure all cameras
-		if(components.size() > 0)
-		{
-			BaseSceneComponentPtr camera = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[0]);
-			if(camera)
-			{
-				//const std::string vp_name = camera->GetPrefredViewport();
-				MessagePtr cam_msg(new ChangeCameraRequest(camera->GetSceneObject(),vp_name));
-				GetSceneObject()->GetScene()->SendImmediate(cam_msg);
-			}
-		}*/
-
-		//try find camera, move this to vehicle camera class
 	}
 
 	void InputHandlerComponent::OnExit(ExitVehicleRequestPtr message)
