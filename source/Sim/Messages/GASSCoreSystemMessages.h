@@ -272,6 +272,18 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
 
+	class ResourceGroupReloadEvent : public SystemEventMessage
+	{
+	public:
+		ResourceGroupReloadEvent(ResourceGroupPtr group, SenderID sender_id = -1, double delay = 0) : SystemEventMessage(sender_id, delay), m_Group(group)
+		{
+		}
+		ResourceGroupPtr GetGroup() const { return m_Group; }
+	private:
+		ResourceGroupPtr m_Group;
+	};
+	typedef GASS_SHARED_PTR<ResourceGroupReloadEvent> ResourceGroupReloadEventPtr;
+
 	class ResourceLocationAddedEvent  : public SystemEventMessage
 	{
 	public:

@@ -181,6 +181,7 @@ namespace GASS
 	/**
 	Message used for changing camera for viewport. 
 	This message can be sent by user.
+	@deprecated
 	*/
 	class ChangeCameraRequest : public SystemRequestMessage
 	{
@@ -207,6 +208,7 @@ namespace GASS
 	/**
 	Message used for reloading materials. 
 	This message can be sent by user.
+	@deprecated
 	*/
 	class ReloadMaterial : public SystemRequestMessage
 	{

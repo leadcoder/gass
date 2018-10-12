@@ -100,9 +100,10 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupReload, ResourceGroupReloadEvent, 0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationAdded,ResourceLocationAddedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnReloadMaterial,ReloadMaterial,0));
+		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnReloadMaterial,ReloadMaterial,0));
 
 		const std::string log_folder = SimEngine::Get().GetLogFolder().GetFullPath();
 		const std::string ogre_log = log_folder + "ogre.log";
@@ -274,7 +275,6 @@ namespace GASS
 		return win;
 	}
 
-
 	std::vector<RenderWindowPtr> OgreGraphicsSystem::GetRenderWindows() const
 	{
 		std::vector<RenderWindowPtr> windows;
@@ -297,7 +297,6 @@ namespace GASS
 		else
 		TextRenderer::getSingleton().setText(message->m_BoxID,message->m_Text);*/
 	}
-
 
 	void OgreGraphicsSystem::OnResourceGroupCreated(ResourceGroupCreatedEventPtr message)
 	{
@@ -334,9 +333,19 @@ namespace GASS
 		return content;
 	}
 
-	void OgreGraphicsSystem::OnReloadMaterial(ReloadMaterialPtr message)
+	void OgreGraphicsSystem::OnResourceGroupReload(ResourceGroupReloadEventPtr event)
 	{
-		ReloadResources();
+		std::string errorMessages;
+		Ogre::ResourceGroupManager& rgm = Ogre::ResourceGroupManager::getSingleton();
+		Ogre::StringVector all_resource_groups = rgm.getResourceGroups();
+		Ogre::StringVector::iterator iter = all_resource_groups.begin();
+		Ogre::StringVector::iterator iter_end = all_resource_groups.end();
+		
+		for (; iter != iter_end; iter++)
+		{
+			if((*iter) == event->GetGroup()->GetName())
+				resourceGrouphelper.checkTimeAndReloadIfNeeded((*iter), errorMessages, false);
+		}
 	}
 
 	void OgreGraphicsSystem::ReloadResources()

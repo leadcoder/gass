@@ -9,14 +9,15 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGeometryFlags.h"
-#include "Sim/Interface/GASSIInputSystem.h"
-#include "Sim/GASSSimEngine.h"
-#include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "Sim/GASSSimSystemManager.h"
-#include "Sim/Interface/GASSICameraComponent.h"
-#include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSSimEngine.h"
+#include "Sim/GASSSimSystemManager.h"
+#include "Sim/Interface/GASSIInputSystem.h"
+#include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #include "Modules/Editor/ToolSystem/MoveTool.h"
@@ -480,7 +481,8 @@ namespace GASS
 		if(key == KEY_F5 && m_CtrlDown)
 		{
 			//send reload message
-			GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::ReloadMaterial()));
+			//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::ReloadMaterial()));
+			GASS::SimEngine::Get().GetResourceManager()->ReloadAll();
 		}
 
 		if(key == KEY_F6 && m_CtrlDown)

@@ -108,12 +108,13 @@ namespace GASS
 		}
 	}
 
-	void ResourceGroup::Reload() const
+	void ResourceGroup::Reload() 
 	{
 		for (std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin(); iter != m_ResourceLocations.end(); ++iter)
 		{
 			(*iter)->ParseLocation();
 		}
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupReloadEventPtr(new ResourceGroupReloadEvent(shared_from_this())));
 	}
 
 	void ResourceGroup::GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const
@@ -122,7 +123,6 @@ namespace GASS
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
-
 			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
 			while(c_iter != (*iter)->GetResources().end())
 			{

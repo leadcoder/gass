@@ -88,6 +88,15 @@ namespace GASS
 		return false;
 	}
 
+	void ResourceManager::ReloadAll()
+	{
+		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		while (iter != m_ResourceGroups.end())
+		{
+			(*iter)->Reload();
+		}
+	}
+
 	ResourceGroupPtr ResourceManager::GetFirstResourceGroupByName(const std::string &name)
 	{
 		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();

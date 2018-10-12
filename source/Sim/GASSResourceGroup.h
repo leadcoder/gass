@@ -39,7 +39,7 @@ namespace GASS
 		void RemoveResourceLocation(ResourceLocationPtr location);
 		
 		// Reload all ResourceLocations and parse all folders
-		void Reload() const;
+		void Reload();
 		ResourceLocationVector GetResourceLocations() const {return m_ResourceLocations;}
 		std::string GetName() const{return m_Name;}
 		bool HasResource(const std::string &resource_name) const;

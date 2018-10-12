@@ -86,7 +86,7 @@ namespace GASS
 		ADD_PROPERTY(bool,UpdateMessagePump);
 		ADD_PROPERTY(bool,UseShaderCache);
 		void OnDebugPrint(DebugPrintRequestPtr message);
-		void OnReloadMaterial(ReloadMaterialPtr message);
+		//void OnReloadMaterial(ReloadMaterialPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 
 		//Resource listeners
@@ -94,6 +94,7 @@ namespace GASS
 		void OnResourceGroupRemoved(ResourceGroupRemovedEventPtr message);
 		void OnResourceLocationAdded(ResourceLocationAddedEventPtr message);
 		void OnResourceLocationRemoved(ResourceLocationRemovedEventPtr message);
+		void OnResourceGroupReload(ResourceGroupReloadEventPtr event);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 
 		PluginVector GetPlugins() const {return m_Plugins;}
