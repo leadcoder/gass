@@ -247,23 +247,33 @@ namespace GASS
 		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
 	}
 
-	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec)
+	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool relative)
 	{
 		if(m_Actor)
 		{
-			m_Actor->addTorque(PxConvert::ToPx(torque_vec));
+			const physx::PxVec3 world_torq = relative ? m_Actor->getGlobalPose().rotate(PxConvert::ToPx(torque_vec)) : PxConvert::ToPx(torque_vec);
+			m_Actor->addTorque(world_torq);
 		}
 	}
 
-	void PhysXBodyComponent::SetVelocity(const Vec3 &vel)
+	void PhysXBodyComponent::SetVelocity(const Vec3 &vel , bool relative)
 	{
 		if(m_Actor)
 		{
-			m_Actor->setLinearVelocity(PxConvert::ToPx(vel));
+			const physx::PxVec3 world_vel = relative ? m_Actor->getGlobalPose().rotate(PxConvert::ToPx(vel)) : PxConvert::ToPx(vel);
+			m_Actor->setLinearVelocity(world_vel);
 		}
 	}
 
-	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel)
+	Vec3 PhysXBodyComponent::GetVelocity(bool relative) const
+	{
+		Vec3 vel(0, 0, 0);
+		if (m_Actor)
+			vel = relative ? PxConvert::ToGASS(m_Actor->getGlobalPose().rotate(m_Actor->getLinearVelocity())) : PxConvert::ToGASS(m_Actor->getLinearVelocity());
+		return vel;
+	}
+
+	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool relative)
 	{
 		if(m_Actor)
 		{
@@ -272,7 +282,7 @@ namespace GASS
 	}
 
 
-	Vec3 PhysXBodyComponent::GetAngularVelocity() const
+	Vec3 PhysXBodyComponent::GetAngularVelocity(bool relative) const
 	{
 		Vec3 vel(0,0,0);
 		if(m_Actor)
@@ -292,14 +302,16 @@ namespace GASS
 		}
 	}
 	
-	void PhysXBodyComponent::AddForce(const Vec3 &force_vec, bool rel)
+	void PhysXBodyComponent::AddForce(const Vec3 &force_vec, bool relative)
 	{
 		if(m_Actor)
 		{
-			if(rel)
+			/*if(relative)
 				physx::PxRigidBodyExt::addLocalForceAtPos(*m_Actor, PxConvert::ToPx(force_vec),physx::PxVec3(0,0,0));
 			else
-				m_Actor->addForce(PxConvert::ToPx(force_vec));
+				m_Actor->addForce(PxConvert::ToPx(force_vec));*/
+			const physx::PxVec3 world_force = relative ? m_Actor->getGlobalPose().rotate(PxConvert::ToPx(force_vec)) : PxConvert::ToPx(force_vec);
+			m_Actor->addForce(world_force);
 		}
 	}
 
@@ -331,15 +343,5 @@ namespace GASS
 		{
 			m_Actor->setMass(mass);
 		}
-	}
-
-	Vec3 PhysXBodyComponent::GetVelocity() const
-	{
-		Vec3 vel(0,0,0);
-		if (m_Actor) 
-		{
-			vel = PxConvert::ToGASS(m_Actor->getLinearVelocity());
-		}
-		return vel;
 	}
 }

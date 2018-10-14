@@ -84,6 +84,8 @@ namespace GASS
 		}
 	}
 
+	
+
 	void PhysXPrismaticComponent::OnPositionRequest(PhysicsPrismaticJointPositionRequestPtr message)
 	{
 		if(m_Body2.IsValid())

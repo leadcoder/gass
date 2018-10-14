@@ -47,7 +47,6 @@ namespace GASS
 		
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
-		void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		void Disable();
 		void Enable();
 		void Reset();

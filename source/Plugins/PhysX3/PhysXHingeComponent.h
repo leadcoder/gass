@@ -24,19 +24,26 @@
 #include "PhysXCommon.h"
 #include "PhysXBaseJointComponent.h"
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIPhysicsHingeJointComponent.h"
 
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,PhysXBaseJointComponent>
+	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,PhysXBaseJointComponent> , 
+		public IPhysicsHingeJointComponent
 	{
 	public:
 		PhysXHingeComponent();
 		virtual ~PhysXHingeComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IPhysicsHingeJointComponent
+		void SetDriveTargetVelocity(float value);
+		float GetDriveTargetVelocity() const { return m_DriveTargetVelocity; }
+
 		virtual void CreateJoint();
 		physx::PxJoint* GetJoint() const  {return m_RevoluteJoint;}
 	protected:
@@ -51,8 +58,6 @@ namespace GASS
 		//get set section
 		float GetDriveForceLimit()const {return m_DriveForceLimit;}
 		void SetDriveForceLimit(float value);	
-		void SetDriveTargetVelocity(float value);
-		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetSpring()const {return m_Spring;}

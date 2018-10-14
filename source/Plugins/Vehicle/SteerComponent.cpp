@@ -25,6 +25,7 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 
 namespace GASS
 {
@@ -88,9 +89,10 @@ namespace GASS
 		if(angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
 		if(angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
 		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
-		GetSceneObject()->PostRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr(new PhysicsSuspensionJointMaxSteerTorqueRequest(m_SteerForce)));
-		GetSceneObject()->PostRequest(PhysicsSuspensionJointSteerVelocityRequestPtr(new PhysicsSuspensionJointSteerVelocityRequest(angular_vel)));
-
+		PhysicsSuspensionComponentPtr suspension = GetSceneObject()->GetFirstComponentByClass<IPhysicsSuspensionComponent>();
+		suspension->SetMaxSteerTorque(m_SteerForce);
+		suspension->SetAngularSteerVelocity(angular_vel);
+	
 		/*float angular_vel = value*m_MaxSteerVelocity;
 		if (name == "Steer")
 		{

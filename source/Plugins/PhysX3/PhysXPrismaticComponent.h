@@ -24,22 +24,33 @@
 #include "PhysXCommon.h"
 #include "PhysXBaseJointComponent.h"
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIPhysicsPrismaticJointComponent.h"
 
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXPrismaticComponent : public Reflection<PhysXPrismaticComponent,PhysXBaseJointComponent>
+	class PhysXPrismaticComponent : public Reflection<PhysXPrismaticComponent,PhysXBaseJointComponent> , 
+		public IPhysicsPrismaticJointComponent
 	{
 	public:
 		PhysXPrismaticComponent();
 		virtual ~PhysXPrismaticComponent();
 		static void RegisterReflection();
+		
 		virtual void OnInitialize();
 		virtual void CreateJoint();
 		virtual void SceneManagerTick(double delta_time);
 		physx::PxJoint* GetJoint() const  {return m_PrismaticJoint;}
+	
+		//IPrismaticJointComponent
+		void SetDriveTargetVelocity(float velocity);
+		float GetDriveTargetVelocity() const { return m_DriveTargetVelocity; }
+		void SetDriveTargetPosition(float position);
+		float GetDriveTargetPosition() const { return static_cast<float>(m_DriveTargetPosition); }
+		void SetDriveForceLimit(float value);
+		float GetDriveForceLimit() const { return m_DriveForceLimit; }
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsPrismaticJointVelocityRequestPtr message);
@@ -62,15 +73,6 @@ namespace GASS
 		bool GetEnableLimits() const {return m_EnableLimit;}
 		void SetEnableDrive(bool value);
 		bool GetEnableDrive() const {return m_EnableDrive;}
-
-		void SetDriveTargetVelocity(float velocity);
-		float GetDriveTargetVelocity() const {return m_DriveTargetVelocity;}
-		void SetDriveForceLimit(float value);
-		float GetDriveForceLimit() const {return m_DriveForceLimit;}
-
-		void SetDriveTargetPosition(float position);
-		float GetDriveTargetPosition() const {return static_cast<float>(m_DriveTargetPosition);}
-
 	private:
 		float m_Damping;
 		float m_Spring;

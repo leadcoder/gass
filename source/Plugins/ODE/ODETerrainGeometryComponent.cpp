@@ -65,7 +65,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODETerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
 		assert(scene_manager);
@@ -234,11 +233,6 @@ namespace GASS
 			m_SpaceID = dSimpleSpaceCreate(ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace());
 		}
 		return m_SpaceID;
-	}
-
-	void ODETerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
-	{
-		//SetDebug(message->DebugGeometry());
 	}
 }
 

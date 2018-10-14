@@ -83,7 +83,7 @@ namespace GASS
 
 	void PhysXSuspensionComponent::OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message)
 	{
-		SetDriveMaxTorque(static_cast<float>(message->GetMaxTorque()));
+		SetMaxDriveTorque(static_cast<float>(message->GetMaxTorque()));
 	}
 
 	void PhysXSuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message)
@@ -206,7 +206,7 @@ namespace GASS
 		UpdateMotor();
 	}
 
-	void PhysXSuspensionComponent::SetDriveMaxTorque(float value)
+	void PhysXSuspensionComponent::SetMaxDriveTorque(float value)
 	{
 		m_DriveMaxTorque = value;
 		UpdateMotor();

@@ -55,7 +55,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTerrainGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		assert(scene_manager);
@@ -194,10 +193,5 @@ namespace GASS
 
 	void PhysXTerrainGeometryComponent::Enable()
 	{
-	}
-
-	void PhysXTerrainGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
-	{
-		//SetDebug(message->DebugGeometry());
 	}
 }

@@ -27,6 +27,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
+#include "Sim/Interface/GASSIPhysicsHingeJointComponent.h"
 #include "Core/Utils/GASSPIDControl.h"
 
 namespace GASS
@@ -83,6 +84,8 @@ namespace GASS
 		float m_TurnInput;
 		Float m_AngularVelocity;
 		Float m_RotValue;
+
+		PhysicsHingeJointComponentPtr m_Hinge;
 	};
 	typedef GASS_SHARED_PTR<TurretComponent> TurretComponentPtr;
 }

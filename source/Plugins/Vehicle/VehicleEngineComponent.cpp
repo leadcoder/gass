@@ -28,6 +28,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
@@ -610,9 +611,8 @@ namespace GASS
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
 
-		PhysicsSuspensionJointMaxDriveTorqueRequestPtr force_request = PhysicsSuspensionJointMaxDriveTorqueRequestPtr(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
-		PhysicsSuspensionJointDriveVelocityRequestPtr vel_request = PhysicsSuspensionJointDriveVelocityRequestPtr (new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
-
+		//PhysicsSuspensionJointMaxDriveTorqueRequestPtr force_request = PhysicsSuspensionJointMaxDriveTorqueRequestPtr(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
+		//PhysicsSuspensionJointDriveVelocityRequestPtr vel_request = PhysicsSuspensionJointDriveVelocityRequestPtr (new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
 
 		m_WheelRPM = 0;
 		for(size_t i = 0; i < m_VehicleWheels.size(); i++)
@@ -622,9 +622,9 @@ namespace GASS
 
 			if(wheel_obj)
 			{
-				wheel_obj->PostRequest(force_request);
-				wheel_obj->PostRequest(vel_request);
-
+				PhysicsSuspensionComponentPtr suspension = wheel_obj->GetFirstComponentByClass<IPhysicsSuspensionComponent>();
+				suspension->SetMaxDriveTorque(wheel_torque + brake_torque);
+				suspension->SetDriveVelocity(wheel_vel);
 				m_WheelRPM += AngleVel2RPM(wheel->m_AngularVelocity);
 				num_wheels++;
 			}

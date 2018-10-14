@@ -55,7 +55,6 @@ namespace GASS
 		
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
-		void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		void SetFriction(float value){m_Friction = value;}
 		float GetFriction() const {return m_Friction;}
 		unsigned long GetCollisionBits() const;

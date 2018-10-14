@@ -32,6 +32,7 @@
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 
 namespace GASS
 {
@@ -74,9 +75,11 @@ namespace GASS
 		GetSceneObject()->GetParentSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnParentTransformation,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(TurretComponent::OnPhysicsMessage, PhysicsVelocityEvent,0));
 
-
-		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-		GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
+		m_Hinge = GetSceneObject()->GetFirstComponentByClass<IPhysicsHingeJointComponent>();
+		m_Hinge->SetDriveForceLimit(m_SteerForce);
+		m_Hinge->SetDriveTargetVelocity(0);
+		//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+		//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
 
@@ -182,8 +185,10 @@ namespace GASS
 			//m_DesiredDir = turret_dir;
 			m_RotValue = 0;
 			m_RelTrans = m_ParentTransformation;
-			GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
-			GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
+			m_Hinge->SetDriveForceLimit(m_SteerForce);
+			m_Hinge->SetDriveTargetVelocity(0);
+			//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
+			//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
 			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
 			return;
 		}
@@ -399,12 +404,13 @@ namespace GASS
 		//GetSceneObject()->PostMessage(force_msg);
 		//GetSceneObject()->PostMessage(vel_msg);
 
-		GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(0)));
-
-
+		//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(0)));
+		m_Hinge->SetDriveForceLimit(0);
+	
 		if(m_Controller == "Pitch")
 		{
-			GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr (new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0))));
+			GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>()->AddTorque(Vec3(turn_velocity, 0, 0));
+			//GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr (new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0))));
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir <<"\n";;
 			//std::cout << "THeading:" << t_heading << " AHeading:" << a_heading << "\n";
@@ -412,8 +418,8 @@ namespace GASS
 		}
 		else if (m_Controller == "Yaw")
 		{
-
-			GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0))));
+			GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>()->AddTorque(Vec3(0, turn_velocity, 0));
+			//GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0))));
 			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 		}
 

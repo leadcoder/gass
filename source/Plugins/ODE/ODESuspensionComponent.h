@@ -23,20 +23,31 @@
 #include <ode/ode.h>
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-
+#include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 namespace GASS
 {
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
 	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
 
-	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>
+	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>,
+		public IPhysicsSuspensionComponent
 	{
 	public:
 		ODESuspensionComponent();
 		virtual ~ODESuspensionComponent();
 		static void RegisterReflection();
 		virtual void OnInitialize();
+
+		//IPhysicsSuspensionComponent
+		void SetAngularSteerVelocity(float velocity);
+		void SetDriveVelocity(float value);
+
+		void SetMaxSteerTorque(float value);
+		float GetMaxSteerTorque()const;
+
+		void SetMaxDriveTorque(float value);
+		float GetMaxDriveTorque()const;
 	protected:
 		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
 		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
@@ -44,14 +55,6 @@ namespace GASS
 		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
 		void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
 
-		void SetAngularSteerVelocity(float velocity);
-		void SetDriveVelocity(float value);
-		
-		void SetMaxSteerTorque(float value);
-		float GetMaxSteerTorque()const;
-
-		void SetMaxDriveTorque(float value);
-		float GetMaxDriveTorque()const;
 		
 		//Helpers
 

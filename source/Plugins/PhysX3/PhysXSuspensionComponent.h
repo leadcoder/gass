@@ -23,13 +23,15 @@
 #include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
 
-	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>
+	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>,
+		public IPhysicsSuspensionComponent
 	{
 	public:
 		PhysXSuspensionComponent();
@@ -37,6 +39,15 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		void SetPosition(const Vec3 &value);
+
+		//IPhysicsSuspensionComponent
+		void SetDriveVelocity(float velocity);
+		void SetMaxDriveTorque(float value);
+		float GetMaxDriveTorque()const { return m_DriveMaxTorque; }
+
+		void SetAngularSteerVelocity(float value);
+		void SetMaxSteerTorque(float value);
+		float GetMaxSteerTorque() const { return m_MaxSteerTorque; }
 	protected:
 		void OnPositionChanged(PositionRequestPtr message);
 		void OnWorldPositionChanged(WorldPositionRequestPtr message);
@@ -49,12 +60,6 @@ namespace GASS
 
 		float GetRollAngle();
 		float GetRollAngleRate();
-		void SetDriveVelocity(float velocity);
-		float GetDriveMaxTorque()const {return m_DriveMaxTorque;}
-		void SetDriveMaxTorque(float value);
-		void SetAngularSteerVelocity(float value);
-		void SetMaxSteerTorque(float value);
-		float GetMaxSteerTorque() const {return m_MaxSteerTorque;}
 		
 		//Helpers
 		void CreateJoint();

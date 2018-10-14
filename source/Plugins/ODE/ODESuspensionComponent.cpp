@@ -246,6 +246,8 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
+			if (m_Body1)
+				m_Body1->Wake();
 			dJointSetHinge2Param(m_ODEJoint, dParamVel2,value);
 		}
 	}

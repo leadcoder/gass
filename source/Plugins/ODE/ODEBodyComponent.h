@@ -27,11 +27,13 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Core/Math/GASSVector.h"
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 
 #include <ode/ode.h>
 namespace GASS
 {
-	class ODEBodyComponent : public Reflection<ODEBodyComponent,BaseSceneComponent>
+	class ODEBodyComponent : public Reflection<ODEBodyComponent,BaseSceneComponent> , 
+		public IPhysicsBodyComponent
 	{
 		friend class ODEJoint;
 		friend class ODEHingeComponent;
@@ -52,31 +54,35 @@ namespace GASS
 		dBodyID GetODEBodyComponent() const {return m_ODEBodyID;}
 		dSpaceID GetSpace();
 		MassRepresentationType GetMassRepresentation() const { return m_MassRepresentation; }
-		float GetMass() const {return m_Mass;}
-		void SetMass(float mass);
 		void SetODEMass(dMass mass);
 		Vec3 GetCGPosition() const {return m_CGPosition;}
+
+		//IPhysicsBodyComponent
+		void SetVelocity(const Vec3 &vel, bool relative = false);
+		Vec3 GetVelocity(bool relative = false) const;
+		void AddForce(const Vec3 &force_vec, bool relative = false);
+		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
+		void AddTorque(const Vec3 &torque_vec, bool relative = false);
+		float GetMass() const { return m_Mass; }
+		void SetMass(float mass);
+		
+		void SetTorque(const Vec3 &torque);
+		Vec3 GetTorque(bool rel = false) const;
+		void SetAngularVelocity(const Vec3 &vel, bool relative = false);
+		Vec3 GetAngularVelocity(bool relative = false) const;
 	protected:
 		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
 		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
 
-		void SetTorque(const Vec3 &torque);
-		Vec3 GetTorque(bool rel = false) const;
-		void SetVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetVelocity(bool rel = false) const;
-		void SetAngularVelocity(const Vec3 &vel, bool rel = false);
-		Vec3 GetAngularVelocity(bool rel = false) const;
+		
 		void SetActive(bool value);
 		bool GetActive() const;
-		void AddForce(const Vec3 &force_vec, bool rel = false);
-		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
 		void SetForce(const Vec3 &force);
 		Vec3 GetForce(bool rel = false) const;
-		void AddTorque(const Vec3 &torque_vec, bool rel = false);
-		//reflection functions
 		
+		//reflection functions
 		void SetCGPosition(const Vec3 &value) {m_CGPosition = value;}
 		Vec3 GetSymmetricInertia() const {return m_SymmetricInertia;}
 		void SetSymmetricInertia(const Vec3 &value) {m_SymmetricInertia = value;}
