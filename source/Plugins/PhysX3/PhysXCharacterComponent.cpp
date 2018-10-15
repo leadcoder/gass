@@ -35,7 +35,8 @@ namespace GASS
 		m_Acceleration(5.2),
 		m_MaxSpeed(4),
 		m_CurrentVel(0),
-		m_Controller(NULL)
+		m_Controller(NULL),
+		m_TrackTransformation(true)
 	{
 
 	}
@@ -75,11 +76,7 @@ namespace GASS
 	void PhysXCharacterComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnLocationLoaded,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPositionChanged,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldPositionChanged,WorldPositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnRotationChanged,RotationRequest,0 ));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnWorldRotationChanged,WorldRotationRequest,0 ));
-		
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
@@ -96,43 +93,12 @@ namespace GASS
 		//m_Yaw = rot_mat.GetEulerRotationY();
 	}
 
-	void PhysXCharacterComponent::OnPositionChanged(PositionRequestPtr message)
+	void PhysXCharacterComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		if (m_TrackTransformation)
 		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void PhysXCharacterComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void PhysXCharacterComponent::OnRotationChanged(RotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
-		}
-	}
-
-	void PhysXCharacterComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
+			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
 
@@ -206,14 +172,14 @@ namespace GASS
 		int from_id = GASS_PTR_TO_INT(this); //use address as id
 
 		const Vec3 current_pos  = GetPosition();
-		
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
-
 		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
-		
-		Quaternion new_rot = Quaternion::CreateFromEulerYXZ(Vec3(0, m_Yaw, 0));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot,from_id)));
-		
+		const Quaternion new_rot = Quaternion::CreateFromEulerYXZ(Vec3(0, m_Yaw, 0));
+
+		m_TrackTransformation = false;
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(current_pos);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(new_rot);
+		m_TrackTransformation = true;
+
 		Mat4 rot_mat(new_rot);
 		Vec3 forward = rot_mat.GetZAxis();
 		Vec3 target_displacement(0,0,0);

@@ -67,10 +67,7 @@ namespace GASS
 		virtual void onObstacleHit(const physx::PxControllerObstacleHit& /*hit*/) {}
 	protected:
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
-		void OnRotationChanged(RotationRequestPtr message);
-		void OnWorldRotationChanged(WorldRotationRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnPostUpdate(PostPhysicsSceneUpdateEventPtr message);
@@ -97,6 +94,7 @@ namespace GASS
 		Float m_Yaw;
 		Float m_CurrentVel;
 		physx::PxCapsuleController* m_Controller;
+		bool m_TrackTransformation;
 	};
 	typedef GASS_SHARED_PTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;
 }

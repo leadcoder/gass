@@ -196,7 +196,6 @@ namespace GASS
 			physx::PxD6JointDrive drive(0, m_WheelJointDamping, m_DriveMaxTorque, false);
 			m_WheelAxisJoint->setDrive(physx::PxD6Drive::eTWIST, drive);
 			m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_WheelAngularVelocity,0,0));
-		
 		}
 	}
 

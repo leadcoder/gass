@@ -68,7 +68,6 @@ namespace GASS
 		if(m_Body)
 		{
 			if(m_SizeFromMesh)
-				
 				GetSceneObject()->RegisterForMessage(typeid(GeometryChangedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
 			else
 				GetSceneObject()->RegisterForMessage(typeid(PhysicsBodyLoadedEvent), MESSAGE_FUNC(PhysXBaseGeometryComponent::OnLoad));
@@ -148,7 +147,6 @@ namespace GASS
 		geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		return geom;
 	}
-
 	
 	void PhysXBaseGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
@@ -169,18 +167,12 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::SetPosition(const Vec3 &pos)
 	{
-		if(m_Body == NULL)
-		{
-
-		}
+		
 	}
 
 	void PhysXBaseGeometryComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_Body == NULL)
-		{
-
-		}
+		
 	}
 
 	void PhysXBaseGeometryComponent::SetScale(const Vec3 &value)
