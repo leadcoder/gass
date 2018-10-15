@@ -37,12 +37,12 @@ namespace GASS
 		Vec4 GetAttenuationParams()const {return m_AttenuationParams;}
 		void SetSpotParams(const Vec3 &params);
 		Vec3 GetSpotParams()const {return m_SpotParams;}
-		void SetDiffuse(const Vec3 &diffuse);
-		Vec3 GetDiffuse()const {return m_Diffuse;}
-		void SetSpecular(const Vec3 &specular);
-		Vec3 GetSpecular()const {return m_Specular;}
-		void SetAmbient(const Vec3 &ambient);
-		Vec3 GetAmbient()const {return m_Ambient;}
+		void SetDiffuse(const ColorRGB &diffuse);
+		ColorRGB GetDiffuse()const {return m_Diffuse;}
+		void SetSpecular(const ColorRGB &specular);
+		ColorRGB GetSpecular()const {return m_Specular;}
+		void SetAmbient(const ColorRGB &ambient);
+		ColorRGB GetAmbient()const {return m_Ambient;}
 		void SetCastShadow(bool value);
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetLightId(int value);
@@ -51,9 +51,9 @@ namespace GASS
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 
 		LightTypeBinder m_LightType;
-		Vec3 m_Diffuse;
-		Vec3 m_Specular;
-		Vec3 m_Ambient;
+		ColorRGB m_Diffuse;
+		ColorRGB m_Specular;
+		ColorRGB m_Ambient;
 		Vec4 m_AttenuationParams;
 		bool m_CastShadow;
 		Vec3 m_SpotParams;

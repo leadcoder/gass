@@ -161,8 +161,9 @@ int main(int/*argc*/, char* /*argv[]*/)
 		light_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr light_comp = light_template->AddBaseSceneComponent("LightComponent");
 		
-		//set by string to support both ogre and osg, DiffuseColor is ColorRGB in Ogre and Vec3 in OSG
-		light_comp->SetPropertyByString("DiffuseColor", "0.5 0.5 0.5");
+		light_comp->SetPropertyValue("DiffuseColor", GASS::ColorRGB(0.5,0.5,0.5));
+		light_comp->SetPropertyValue("AmbientColor", GASS::ColorRGB(0.5, 0.5, 0.5));
+		
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(light_template);
 	}
 	{

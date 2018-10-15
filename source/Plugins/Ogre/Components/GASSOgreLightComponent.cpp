@@ -74,7 +74,7 @@ namespace GASS
 		RegisterProperty<ColorRGB>("SpecularColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<Vec3>("AmbientColor", &GASS::OgreLightComponent::GetAmbientColor, &GASS::OgreLightComponent::SetAmbientColor);
+		RegisterProperty<ColorRGB>("AmbientColor", &GASS::OgreLightComponent::GetAmbientColor, &GASS::OgreLightComponent::SetAmbientColor);
 	}
 
 	void OgreLightComponent::OnInitialize()

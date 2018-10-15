@@ -57,11 +57,11 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<int>("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse,
+		RegisterProperty<ColorRGB>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular,
+		RegisterProperty<ColorRGB>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient,
+		RegisterProperty<ColorRGB>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
@@ -91,25 +91,25 @@ namespace GASS
 		}
 	}
 
-	void OSGLightComponent::SetDiffuse(const Vec3 &diffuse)
+	void OSGLightComponent::SetDiffuse(const ColorRGB &diffuse)
 	{
 		m_Diffuse = diffuse;
 		if(m_OSGLight.valid())
-			m_OSGLight->setDiffuse(osg::Vec4(static_cast<float>(m_Diffuse.x), static_cast<float>(m_Diffuse.y), static_cast<float>(m_Diffuse.z),1.0f));
+			m_OSGLight->setDiffuse(osg::Vec4(static_cast<float>(m_Diffuse.r), static_cast<float>(m_Diffuse.g), static_cast<float>(m_Diffuse.b),1.0f));
 
 	}
-	void OSGLightComponent::SetSpecular(const Vec3 &specular)
+	void OSGLightComponent::SetSpecular(const ColorRGB &specular)
 	{
 		m_Specular = specular;
 		if(m_OSGLight)
-			m_OSGLight->setSpecular(osg::Vec4(static_cast<float>(m_Specular.x), static_cast<float>(m_Specular.y), static_cast<float>(m_Specular.z), 1.0f));
+			m_OSGLight->setSpecular(osg::Vec4(static_cast<float>(m_Specular.r), static_cast<float>(m_Specular.g), static_cast<float>(m_Specular.b), 1.0f));
 	}
 
-	void OSGLightComponent::SetAmbient(const Vec3 &ambient)
+	void OSGLightComponent::SetAmbient(const ColorRGB &ambient)
 	{
 		m_Ambient = ambient;
 		if(m_OSGLight)
-			m_OSGLight->setAmbient(osg::Vec4(static_cast<float>(m_Ambient.x), static_cast<float>(m_Ambient.y), static_cast<float>(m_Ambient.z), 1.0f));
+			m_OSGLight->setAmbient(osg::Vec4(static_cast<float>(m_Ambient.r), static_cast<float>(m_Ambient.g), static_cast<float>(m_Ambient.b), 1.0f));
 
 	}
 	void OSGLightComponent::SetCastShadow(bool value)

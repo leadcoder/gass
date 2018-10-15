@@ -60,7 +60,7 @@ namespace GASS
 
 	protected:
 		//add this dummy prop for ambient to play nice with OSG templates until better solution is found
-		ADD_PROPERTY(Vec3,AmbientColor)
+		ADD_PROPERTY(ColorRGB,AmbientColor)
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete();
 		Ogre::Light* m_OgreLight;
