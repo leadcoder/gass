@@ -78,8 +78,8 @@ namespace GASS
 		}
 		else if(item_id == "Command_ReloadAllResources")
 		{
-			SystemMessagePtr message(new ReloadMaterial());
-			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
+			//SystemMessagePtr message(new ReloadMaterial());
+			//SimEngine::Get().GetSimSystemManager()->PostMessage(message);
 		}
 		else if(item_id == "Command_StartSim")
 		{

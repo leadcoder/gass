@@ -132,7 +132,7 @@ int run(int argc, char* argv[])
 
 	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow",800,600);
-	win->CreateViewport("MainViewport", 0, 0, 1, 1);
+	GASS::ViewportPtr vp = win->CreateViewport("MainViewport", 0, 0, 1, 1);
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 	input_system->SetMainWindowHandle(win->GetHWND());
 	GASS::ScenePtr scene(m_Engine->CreateScene("NewScene"));
@@ -166,8 +166,7 @@ int run(int argc, char* argv[])
 	if(free_obj)
 	{
 		free_obj->SendImmediateRequest(pos_msg);
-		GASS::SystemMessagePtr camera_msg(new GASS::ChangeCameraRequest(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()));
-		m_Engine->GetSimSystemManager()->PostMessage(camera_msg);
+		vp->SetCamera(free_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
 	}
 
 	

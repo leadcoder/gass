@@ -160,8 +160,7 @@ namespace GASS
 		void SetShadowCasterMaterial(const OgreMaterial &value) {m_ShadowCasterMaterial = value; UpdateShadowSettings();}
 		void SetUseAggressiveFocusRegion(bool value) {m_UseAggressiveFocusRegion = value ;UpdateShadowSettings();}
 		void SetShadowDirectionalLightExtrusionDistance(float value) {m_ShadowDirectionalLightExtrusionDistance = value;UpdateShadowSettings();}
-
-		void OnDrawLine(DrawLineRequestPtr message);
+		
 		void OnDrawCircle(DrawCircleRequestPtr message);
 		void OnExportMesh(ExportMeshRequestPtr message);
 	private:

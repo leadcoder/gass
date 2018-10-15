@@ -138,10 +138,7 @@ namespace GASS
 		system->Register(shared_from_this());
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
-
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawLine,DrawLineRequest ,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle,DrawCircleRequest ,0));
-
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnExportMesh,ExportMeshRequest,0));
 
 		//create unique name
@@ -171,11 +168,6 @@ namespace GASS
 	{
 		OgreMeshExporter exporter;
 		exporter.Export(message->m_Filename, message->m_RootObject);
-	}
-
-	void OgreGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
-	{
-		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
 	}
 
 	void OgreGraphicsSceneManager::OnDrawCircle(DrawCircleRequestPtr message)

@@ -113,7 +113,6 @@ namespace GASS
 	void OSGGraphicsSystem::Init()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 
 #ifdef WIN32
@@ -198,11 +197,6 @@ namespace GASS
 			ret.push_back(m_Windows[i]);
 		}
 		return ret;
-	}
-
-	void OSGGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
-	{
-		PrintDebugText(message->GetText());
 	}
 
 	void OSGGraphicsSystem::PrintDebugText(const std::string &message)

@@ -72,8 +72,6 @@ namespace GASS
 		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
 		void SystemTick(double delta_time);
-
-		void OnDrawLine(DrawLineRequestPtr message);
 	private:	
 		//fog
 		float m_FogDensity;

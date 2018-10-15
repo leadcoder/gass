@@ -23,7 +23,9 @@
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
+
 
 #include <stdio.h>
 #include <iostream>
@@ -418,8 +420,9 @@ int main(int/*argc*/, char* /*argv[]*/)
 				box_obj = scene->LoadObjectFromTemplate("BoxObject",scene->GetRootSceneObject());
 				box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(pos)));
 				box_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(rot)));
-				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddForceRequestPtr(new GASS::PhysicsBodyAddForceRequest(vel)));
-				box_obj->SendImmediateRequest(GASS::PhysicsBodyAddTorqueRequestPtr(new GASS::PhysicsBodyAddTorqueRequest(torq)));
+				box_obj->GetFirstComponentByClass<GASS::IPhysicsBodyComponent>()->AddForce(vel);
+				box_obj->GetFirstComponentByClass<GASS::IPhysicsBodyComponent>()->AddTorque(torq);
+				
 			}
 		}
 		else if(GetAsyncKeyState(VK_DELETE))

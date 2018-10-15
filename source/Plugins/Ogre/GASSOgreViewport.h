@@ -44,7 +44,6 @@ namespace GASS
 		virtual std::string GetName() const {return m_Name;}
 	private:
 		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
 		Ogre::Viewport* m_OgreViewport;
 		std::string m_Name;
 		OgreRenderWindow* m_Window;

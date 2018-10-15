@@ -31,26 +31,6 @@ namespace GASS
 	//*********************************************************
 
 	/**
-		Message used to activate/deactivate physics
-		@deprecated
-	*/
-	class ActivatePhysicsRequest : public SceneRequestMessage
-	{
-	public:
-		/**
-		Constructor
-		@param activate Indicate mode (0 == inactive, 1==active)
-		*/
-		ActivatePhysicsRequest(int activate, SenderID sender_id = -1, double delay= 0) :
-		  SceneRequestMessage(sender_id , delay) ,
-			  m_Activate(activate){}
-		  int GetActivate() const {return m_Activate;}
-	private:
-		int m_Activate;
-	};
-	typedef GASS_SHARED_PTR<ActivatePhysicsRequest> ActivatePhysicsRequestPtr;
-
-	/**
 		Message sent by physics scene manager after physics update
 	*/
 	class PostPhysicsSceneUpdateEvent : public SceneEventMessage

@@ -39,7 +39,6 @@ namespace GASS
 		osg::Camera* GetOSGCamera() const {return m_OSGCamera;}
 	private:
 		void Init();
-		void OnChangeCamera(ChangeCameraRequestPtr message);
 		osg::ref_ptr<osg::Camera> m_OSGCamera; 
 		std::string m_Name;
 		OSGRenderWindow* m_Window;

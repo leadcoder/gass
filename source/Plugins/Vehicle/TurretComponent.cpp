@@ -206,9 +206,9 @@ namespace GASS
 
 			Vec3 start = m_Transformation.GetTranslation();
 			Vec3 end = start + turret_dir;
-			GASS_DRAW_LINE(start,end,ColorRGBA(0,1,0,1))
+			GetSceneObject()->GetScene()->DrawDebugLine(start, end, ColorRGBA(0, 1, 0, 1), ColorRGBA(0, 1, 0, 1));
 			end = start + projected_aim;
-			GASS_DRAW_LINE(start, end, ColorRGBA(0, 0, 1, 1))
+			GetSceneObject()->GetScene()->DrawDebugLine(start, end, ColorRGBA(0, 0, 1, 1), ColorRGBA(0, 0, 1, 1));
 		}
 		else
 		{

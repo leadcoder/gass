@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Interface/GASSISceneManager.h"
@@ -184,6 +185,12 @@ namespace GASS
 
 		bool GetGeocentric() const { return m_Geocentric; }
 		void SetGeocentric(bool value) { m_Geocentric = value; }
+
+
+		/**
+			Connivence function to draw line for debug purpose (immediate mode)
+		*/
+		void DrawDebugLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color, const ColorRGBA &end_color) const;
 protected:
 
 	/**

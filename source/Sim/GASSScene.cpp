@@ -23,6 +23,8 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/Interface/GASSISceneManager.h"
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
+
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -437,24 +439,11 @@ namespace GASS
 				}
 			}
 		}
-		/*GASS_FILESYSTEM::path boost_path(path.GetFullPath());
-
-		std::vector<std::string> scene_names;
-		if(GASS_FILESYSTEM::exists(boost_path))
-		{
-			GASS_FILESYSTEM::directory_iterator end ;
-			for( GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )
-			{
-				if (GASS_IS_DIRECTORY( *iter ) )
-				{
-					if(GASS_FILESYSTEM::exists(GASS_FILESYSTEM::path(iter->path().string() + "/scene.xml")))
-					{
-						std::string scene_name = GASS_TO_GENERIC_STRING(iter->path().filename());
-						scene_names.push_back(scene_name);
-					}
-				}
-			}
-		}*/
 		return scene_names;
+	}
+
+	void Scene::DrawDebugLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color, const ColorRGBA &end_color) const
+	{
+			GetFirstSceneManagerByClass<IGraphicsSceneManager>()->DrawLine(start_point, end_point,start_color,end_color);
 	}
 }

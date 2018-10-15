@@ -65,7 +65,6 @@ namespace GASS
 		dSpaceID GetCollisionSpace() const {return m_CollisionSpace;}
 		ODEPhysicsCollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);
 		bool HasCollisionMesh(const std::string &name);
-		void OnActivateMessage(ActivatePhysicsRequestPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);

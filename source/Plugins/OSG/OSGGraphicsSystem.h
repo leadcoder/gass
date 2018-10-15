@@ -65,7 +65,6 @@ namespace GASS
 		ADD_PROPERTY(bool,FlipDDS);
 		void LoadXML(tinyxml2::XMLElement *elem);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
-		void OnDebugPrint(DebugPrintRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		
 		//void SetActiveData(osg::Group* root);

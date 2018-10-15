@@ -126,9 +126,6 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::OnInit()
 	{
-		//support debug messages
-		GetScene()->RegisterForMessage(REG_TMESS(OSGGraphicsSceneManager::OnDrawLine,DrawLineRequest ,0));
-
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
 
@@ -187,11 +184,6 @@ namespace GASS
 	void OSGGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
 	{
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
-	}
-
-	void OSGGraphicsSceneManager::OnDrawLine(DrawLineRequestPtr message)
-	{
-		DrawLine(message->GetStart(), message->GetEnd(), message->GetColorStart(), message->GetColorEnd());
 	}
 
 	void OSGGraphicsSceneManager::OnPreSystemUpdate(double delta)

@@ -110,30 +110,7 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<WeatherRequest> WeatherRequestPtr;
 
-	//debug messages
-	//@deprecated
-	class DrawLineRequest : public SceneRequestMessage
-	{
-	public:
-		DrawLineRequest(const Vec3 &start, const Vec3 &end, const ColorRGBA &color_start, const ColorRGBA &color_end, SenderID sender_id = -1, double delay= 0) : SceneRequestMessage(sender_id , delay) ,
-			m_Start(start),
-			m_End(end),
-			m_ColorStart(color_start),
-			m_ColorEnd(color_end)
-		{
-
-		}
-
-		Vec3 GetStart()const {return m_Start;}
-		Vec3 GetEnd()const {return m_End;}
-		ColorRGBA GetColorStart()const {return m_ColorEnd;}
-		ColorRGBA GetColorEnd()const {return m_ColorEnd;}
-	private:
-		Vec3 m_Start,m_End;
-		ColorRGBA m_ColorStart,m_ColorEnd;
-	};
-	typedef GASS_SHARED_PTR<DrawLineRequest> DrawLineRequestPtr;
-
+	
 	//@deprecated not implemented in OSG
 	class DrawCircleRequest : public SceneRequestMessage
 	{

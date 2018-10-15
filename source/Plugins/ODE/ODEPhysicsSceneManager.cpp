@@ -74,14 +74,9 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::OnCreate()
 	{
-		GetScene()->RegisterForMessage(REG_TMESS(ODEPhysicsSceneManager::OnActivateMessage,ActivatePhysicsRequest,0));
+	
 	}
-
-	void ODEPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
-	{
-		m_Active = message->GetActivate();
-	}
-
+	
 	void ODEPhysicsSceneManager::OnInit()
 	{
 		ScenePtr scene = GetScene();

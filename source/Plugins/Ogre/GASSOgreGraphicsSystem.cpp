@@ -96,15 +96,13 @@ namespace GASS
 	void OgreGraphicsSystem::Init()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnDebugPrint,DebugPrintRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupCreated,ResourceGroupCreatedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupRemoved,ResourceGroupRemovedEvent ,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceGroupReload, ResourceGroupReloadEvent, 0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationAdded,ResourceLocationAddedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnResourceLocationRemoved,ResourceLocationRemovedEvent,0));
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnReloadMaterial,ReloadMaterial,0));
-
+	
 		const std::string log_folder = SimEngine::Get().GetLogFolder().GetFullPath();
 		const std::string ogre_log = log_folder + "ogre.log";
 		const std::string ogre_cfg = log_folder + "ogre.cfg";
@@ -142,11 +140,6 @@ namespace GASS
 		Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
 		Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(7);
 		GASS_LOG(LINFO) << "Ogre initialized with:" << Ogre::Root::getSingleton().getRenderSystem()->getName();
-	}
-
-	void OgreGraphicsSystem::OnDebugPrint(DebugPrintRequestPtr message)
-	{
-		PrintDebugText(message->GetText());
 	}
 
 	void OgreGraphicsSystem::PrintDebugText(const std::string &message)
@@ -203,7 +196,7 @@ namespace GASS
 				"TRIANGLE COUNT: " << tri_count << "\n"
 				"BATCH COUNT: " << batch_count << "\n";
 			std::string stats_text = sstream.str();
-			GetSimSystemManager()->SendImmediate(SystemMessagePtr( new DebugPrintRequest(stats_text)));
+			PrintDebugText(stats_text);
 		}
 		//update listeners
 		//SimSystem::_UpdateListeners(delta_time);

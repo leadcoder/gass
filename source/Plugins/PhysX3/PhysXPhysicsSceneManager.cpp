@@ -112,12 +112,6 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnCreate()
 	{
 		ScenePtr scene = GetScene();
-		GetScene()->RegisterForMessage(REG_TMESS(PhysXPhysicsSceneManager::OnActivateMessage,ActivatePhysicsRequest,0));
-	}
-
-	void PhysXPhysicsSceneManager::OnActivateMessage(ActivatePhysicsRequestPtr message)
-	{
-		m_Active = message->GetActivate();
 	}
 
 	void PhysXPhysicsSceneManager::OnInit()
@@ -205,14 +199,12 @@ namespace GASS
 		if (m_Active)
 		{
 			//Lock to 60 hz
-			if (delta_time > 1.0 / 60.0)
-				delta_time = 1.0 / 60.0;
+			//if (delta_time > 1.0 / 60.0)
+			//	delta_time = 1.0 / 60.0;
 
 			//Process vehicles
 			if (m_Vehicles.size()  > 0)
 			{
-
-
 				PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
 				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs = system->GetSurfaceTirePairs();

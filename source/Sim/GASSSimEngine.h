@@ -30,7 +30,6 @@
 
 //debug stuff
 #define GASS_PRINT(message){std::stringstream ss; ss << message; SimEngine::Get().DebugPrint(ss.str());}
-#define GASS_DRAW_LINE(start,end,color) GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(start,end,color,color)));
 
 namespace GASS
 {

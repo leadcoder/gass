@@ -47,16 +47,6 @@ namespace GASS
 
 	void OSGViewport::Init()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGViewport::OnChangeCamera,ChangeCameraRequest,0));
-	}
-
-	void OSGViewport::OnChangeCamera(ChangeCameraRequestPtr message)
-	{
-		const std::string vp_name = message->GetViewport();
-		if(vp_name == m_Name || vp_name == "")
-		{
-			SetCamera(message->GetCamera());
-		}
 	}
 
 	CameraComponentPtr OSGViewport::GetCamera() const
@@ -90,7 +80,9 @@ namespace GASS
 			// this should be moved to manipulator?
 			//m_OSGView->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 			 // configure the near/far so we don't clip things that are up close
-			m_OSGView->getCamera()->setNearFarRatio(0.00002);
+			m_OSGView->getCamera()->setNearFarRatio(0.000007);
+			//m_OSGView->getCamera()->setNearFarRatio(0.0001);
+			
 		}
 		else 
 		{

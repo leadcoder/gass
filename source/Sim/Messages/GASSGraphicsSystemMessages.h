@@ -177,62 +177,6 @@ namespace GASS
 		std::string m_WinName;
 	};
 	typedef GASS_SHARED_PTR<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
-
-	/**
-	Message used for changing camera for viewport. 
-	This message can be sent by user.
-	@deprecated
-	*/
-	class ChangeCameraRequest : public SystemRequestMessage
-	{
-	public:
-		/**
-		Constructor
-		@param camera The camera to activate
-		@param viewport The name of the viewport target
-		*/
-		ChangeCameraRequest(CameraComponentPtr camera ,const std::string &viewport="", SenderID sender_id = -1, double delay= 0) : 
-		  SystemRequestMessage(sender_id , delay), m_Camera(camera), m_Viewport(viewport)
-		  {
-
-		  }
-		  CameraComponentPtr GetCamera() const {return m_Camera;}
-		  std::string GetViewport() const {return m_Viewport;}
-	private:
-		CameraComponentPtr m_Camera;
-		std::string m_Viewport;
-	};
-	typedef GASS_SHARED_PTR<ChangeCameraRequest> ChangeCameraRequestPtr;
-
-
-	/**
-	Message used for reloading materials. 
-	This message can be sent by user.
-	@deprecated
-	*/
-	class ReloadMaterial : public SystemRequestMessage
-	{
-	public:
-		/**
-		Constructor
-		@param name The name of the material to reload 
-		*/
-		ReloadMaterial(const std::string &mat_name="", SenderID sender_id = -1, double delay= 0) : 
-		  SystemRequestMessage(sender_id , delay), m_MaterialName(mat_name)
-		  {
-
-		  }
-		  
-		  std::string GetMaterialName() const {return m_MaterialName;}
-	private:
-		std::string m_MaterialName;
-	};
-	typedef GASS_SHARED_PTR<ReloadMaterial> ReloadMaterialPtr;
-
-
-
-
-	
 }
 
 #endif

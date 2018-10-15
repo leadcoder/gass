@@ -42,8 +42,6 @@ namespace GASS
 
 	void OgreViewport::Init()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreViewport::OnChangeCamera,ChangeCameraRequest,0));
-
 		//add post process to all windows, change this to camera effect instead?
 		if(m_PostProcess)
 		{
@@ -51,15 +49,6 @@ namespace GASS
 		}
 		m_PostProcess = OgrePostProcesGASS_SHARED_PTR(new OgrePostProcess(m_OgreViewport));
 
-	}
-
-	void OgreViewport::OnChangeCamera(ChangeCameraRequestPtr message)
-	{
-		const std::string vp_name = message->GetViewport();
-		if(vp_name == m_Name || vp_name == "")
-		{
-			SetCamera(message->GetCamera());
-		}
 	}
 
 	CameraComponentPtr OgreViewport::GetCamera() const

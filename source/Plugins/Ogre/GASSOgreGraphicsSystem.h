@@ -85,7 +85,7 @@ namespace GASS
 	protected:
 		ADD_PROPERTY(bool,UpdateMessagePump);
 		ADD_PROPERTY(bool,UseShaderCache);
-		void OnDebugPrint(DebugPrintRequestPtr message);
+	
 		//void OnReloadMaterial(ReloadMaterialPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 

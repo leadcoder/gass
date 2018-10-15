@@ -66,23 +66,7 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<SystemRequestMessage> SystemRequestMessagePtr;
 
-	/**
-	Message that can be posted by anyone to request that a new debug messages should be visualized during one frame.
-	@deprecated	
-	*/
-
-	class DebugPrintRequest : public SystemRequestMessage
-	{
-	public:
-		DebugPrintRequest(const std::string &text, SenderID sender_id = -1, double delay= 0) :
-		  SystemRequestMessage(sender_id , delay),
-			  m_Text(text)  { }
-		  std::string GetText()const {return m_Text;}
-	private:
-		std::string m_Text;
-	};
-	typedef GASS_SHARED_PTR<DebugPrintRequest> DebugPrintRequestPtr;
-
+	
 
 	//@deprecated	
 	class TimeStepRequest : public SystemRequestMessage

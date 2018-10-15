@@ -78,7 +78,6 @@ namespace GASS
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
-		void OnActivateMessage(ActivatePhysicsRequestPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		bool HasConvexMesh(const std::string &name) const;
