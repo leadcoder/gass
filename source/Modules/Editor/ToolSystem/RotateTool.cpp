@@ -112,7 +112,7 @@ namespace GASS
 					SceneObjectPtr selected = m_Selected[i].lock();
 					if (selected)
 					{
-						Quaternion rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
+						Quaternion rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
 						selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
 					}
 				}
