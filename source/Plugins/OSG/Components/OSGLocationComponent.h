@@ -83,8 +83,19 @@ namespace GASS
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 		
 		//helper
-		OSGLocationComponentPtr _GetParentLocation();
-		void _SendTransMessage();
+
+
+		void _OnPositionUpdate(SceneObjectPtr scene_object, OSGLocationComponentPtr parent_location = OSGLocationComponentPtr());
+		void _OnRotationUpdate(SceneObjectPtr scene_object, OSGLocationComponentPtr parent_location = OSGLocationComponentPtr());
+		void _OnParentPositionUpdated(OSGLocationComponentPtr parent_location);
+		void _OnParentRotationUpdated(OSGLocationComponentPtr parent_location);
+		void _NotifyTransformationChange() const;
+		Vec3 _LocalToWorld(const Vec3 &world_pos) const;
+		Vec3 _WorldToLocal(const Vec3 &local_pos) const;
+		Quaternion _WorldToLocal(const Quaternion &world_rot) const;
+		Quaternion _LocalToWorld(const Quaternion &local_rot) const;
+		OSGLocationComponentPtr _GetParentLocation() const;
+		//void _SendTransMessage();
 		//! relative position of the scene node.
 		Vec3 m_Pos;
 		//! relative rotation of the scene node.
@@ -93,6 +104,10 @@ namespace GASS
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		bool m_AttachToParent;
+
+		Vec3 m_WorldPosition;
+		Quaternion m_WorldRotation;
+
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 		int m_NodeMask;
