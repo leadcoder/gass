@@ -114,6 +114,8 @@ namespace GASS
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
+		ILocationComponent* m_LocationComponent;
+		Vec3 m_LastPos;
 	};
 }
 

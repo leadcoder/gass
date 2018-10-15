@@ -33,7 +33,8 @@ namespace GASS
 		m_EffectJoints(false),
 		m_PositionIterCount(4),
 		m_VelocityIterCount(4),
-		m_ForceReport(false)
+		m_ForceReport(false),
+		m_LocationComponent(NULL)
 	{
 
 	}
@@ -75,9 +76,9 @@ namespace GASS
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 pos = location->GetPosition();
-		Quaternion rot = location->GetRotation();
+		m_LocationComponent = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
+		Vec3 pos = m_LocationComponent->GetPosition();
+		Quaternion rot = m_LocationComponent->GetRotation();
 		
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
@@ -241,10 +242,21 @@ namespace GASS
 
 	void PhysXBodyComponent::SceneManagerTick(double /*delta_time*/)
 	{
-		int from_id = GASS_PTR_TO_INT(this); //use address as id
-		
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(GetPosition(),from_id)));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
+		//Check if last position match current location pos
+		/*Vec3 current_pos = m_LocationComponent->GetWorldPosition();
+		if (current_pos.Equal(m_LastPos))
+		{
+			Vec3 new_pos = GetPosition();
+			m_LocationComponent->SetWorldPosition(new_pos);
+			m_LastPos = new_pos;
+		}
+		else
+		{
+			m_LastPos = current_pos;
+			SetPosition(current_pos);
+		}*/
+		m_LocationComponent->SetWorldPosition(GetPosition());
+		m_LocationComponent->SetWorldRotation(GetRotation());
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool relative)
