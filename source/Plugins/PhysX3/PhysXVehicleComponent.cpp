@@ -49,7 +49,8 @@ namespace GASS
 		m_ChassisDim(0,0,0),
 		m_MaxSpeed(20),
 		m_Debug(false),
-		m_BreakInput(0)
+		m_BreakInput(0),
+		m_TrackTransformation(true)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -133,10 +134,7 @@ namespace GASS
 	void PhysXVehicleComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnLocationLoaded,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPositionChanged,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldPositionChanged,WorldPositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnRotationChanged,RotationRequest,0 ));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnWorldRotationChanged,WorldRotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnTransformationChanged, TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
@@ -493,43 +491,12 @@ namespace GASS
 		m_Initialized = true;
 	}
 
-	void PhysXVehicleComponent::OnPositionChanged(PositionRequestPtr message)
+	void PhysXVehicleComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		if (m_TrackTransformation)
 		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void PhysXVehicleComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void PhysXVehicleComponent::OnRotationChanged(RotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
-		}
-	}
-
-	void PhysXVehicleComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
+			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
 
@@ -598,8 +565,10 @@ namespace GASS
 		Vec3 current_pos  = GetPosition();
 		Quaternion current_rot = GetRotation();
 
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos ,from_id)));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(current_rot,from_id)));
+		m_TrackTransformation = false;
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(current_pos);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(current_rot);
+		m_TrackTransformation = true;
 
 		PxShape* carShapes[PX_MAX_NB_WHEELS+1];
 		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
@@ -616,9 +585,9 @@ namespace GASS
 				if(wheel)
 				{
 					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p) - offset;
-					wheel->PostRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
+					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
 					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
-					wheel->PostRequest(RotationRequestPtr(new RotationRequest(rot,from_id)));
+					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 				}
 			}
 		}
@@ -946,17 +915,16 @@ namespace GASS
 						SceneObjectPtr wheel(m_AllWheels[i]);
 						if(wheel)
 						{
-							int from_id = GASS_PTR_TO_INT(this);
 							Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p) - offset;
-							wheel->SendImmediateRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
+							wheel->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 							Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
-							wheel->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot,from_id)));
+							wheel->GetFirstComponentByClass<ILocationComponent>()->SetRotation(rot);
 						}
 					}
 				}
 				else
 				{
-					GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
+					GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SetPosition")
 				}
 			}
 		}

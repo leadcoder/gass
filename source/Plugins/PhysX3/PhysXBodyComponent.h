@@ -74,18 +74,12 @@ namespace GASS
 		ADD_PROPERTY(bool,ForceReport)
 		
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
-		void OnRotationChanged(RotationRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
 		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
-		//void OnParameterMessage(PhysicsBodyMessagePtr message);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		
-		
 		
 		void SetKinematic(bool value);
 		bool GetKinematic() const;
@@ -111,6 +105,7 @@ namespace GASS
 		bool m_Initialized;
 		bool m_EffectJoints;
 		bool m_Kinematic;
+		bool m_TrackTransformation;
 
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;

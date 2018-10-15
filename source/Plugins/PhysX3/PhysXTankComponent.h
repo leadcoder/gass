@@ -49,10 +49,6 @@ namespace GASS
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
-		void OnRotationChanged(RotationRequestPtr message);
-		void OnWorldRotationChanged(WorldRotationRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputRelayEventPtr message);
@@ -99,6 +95,7 @@ namespace GASS
 		bool m_IsMovingForwardSlowly;
 		bool m_InReverseMode;
 		bool m_UseDigitalInputs;
+		bool m_TrackTransformation;
 		AABox m_MeshBounds;
 		Vec3 m_ChassisDim;
 		

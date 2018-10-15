@@ -34,7 +34,8 @@ namespace GASS
 		m_PositionIterCount(4),
 		m_VelocityIterCount(4),
 		m_ForceReport(false),
-		m_LocationComponent(NULL)
+		m_LocationComponent(NULL),
+		m_TrackTransformation(true)
 	{
 
 	}
@@ -64,9 +65,6 @@ namespace GASS
 	void PhysXBodyComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationRequest,0 ));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
@@ -111,49 +109,14 @@ namespace GASS
 		return m_Kinematic;
 	}
 
-	void PhysXBodyComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			//SetPosition(pos);
-		}
-	}
-
-	void PhysXBodyComponent::OnPositionChanged(PositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			//SetPosition(pos);
-		}
-	}
-
-	void PhysXBodyComponent::OnRotationChanged(RotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			//SetRotation(rot);
-		}
-	}
-
 	void PhysXBodyComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		/*if(GetRotation().  - event->GetRotation())
-		{
-			SetRotation(event->GetRotation());
-		}*/
-
-		if (!GetPosition().Equal(event->GetPosition()))
+		if(m_TrackTransformation)
 		{
 			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
-	
 
 	void PhysXBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
@@ -257,21 +220,11 @@ namespace GASS
 
 	void PhysXBodyComponent::SceneManagerTick(double /*delta_time*/)
 	{
-		//Check if last position match current location pos
-		/*Vec3 current_pos = m_LocationComponent->GetWorldPosition();
-		if (current_pos.Equal(m_LastPos))
-		{
-			Vec3 new_pos = GetPosition();
-			m_LocationComponent->SetWorldPosition(new_pos);
-			m_LastPos = new_pos;
-		}
-		else
-		{
-			m_LastPos = current_pos;
-			SetPosition(current_pos);
-		}*/
+		//skip transformation callbacks from ourself
+		m_TrackTransformation = false; 
 		m_LocationComponent->SetWorldPosition(GetPosition());
 		m_LocationComponent->SetWorldRotation(GetRotation());
+		m_TrackTransformation = true;
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool relative)
