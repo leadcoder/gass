@@ -77,6 +77,7 @@ namespace GASS
 		void OnPositionChanged(PositionRequestPtr message);
 		void OnWorldPositionChanged(WorldPositionRequestPtr message);
 		void OnRotationChanged(RotationRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
 		void OnAddForce(PhysicsBodyAddForceRequestPtr message);

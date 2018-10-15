@@ -67,6 +67,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnPositionChanged,PositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnRotationChanged,RotationRequest,0 ));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
@@ -116,7 +117,7 @@ namespace GASS
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
 			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
+			//SetPosition(pos);
 		}
 	}
 
@@ -126,7 +127,7 @@ namespace GASS
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
 			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
+			//SetPosition(pos);
 		}
 	}
 
@@ -136,9 +137,23 @@ namespace GASS
 		if(message->GetSenderID() != this_id) //Check if this message was from this class
 		{
 			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
+			//SetRotation(rot);
 		}
 	}
+
+	void PhysXBodyComponent::OnTransformationChanged(TransformationChangedEventPtr event)
+	{
+		/*if(GetRotation().  - event->GetRotation())
+		{
+			SetRotation(event->GetRotation());
+		}*/
+
+		if (!GetPosition().Equal(event->GetPosition()))
+		{
+			SetPosition(event->GetPosition());
+		}
+	}
+	
 
 	void PhysXBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
 	{
