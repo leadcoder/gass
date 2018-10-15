@@ -62,6 +62,8 @@ namespace GASS
 		void AddTorque(const Vec3 &torque_vec, bool relative = false);
 		float GetMass() const { return m_Mass; }
 		void SetMass(float mass);
+		void SetActive(bool value);
+		bool GetActive() const;
 
 		//IPhysXBody
 		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
@@ -79,7 +81,6 @@ namespace GASS
 		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
 		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
 		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
-		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		
 		void SetKinematic(bool value);
 		bool GetKinematic() const;
@@ -106,6 +107,7 @@ namespace GASS
 		bool m_EffectJoints;
 		bool m_Kinematic;
 		bool m_TrackTransformation;
+		bool m_Active;
 
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;

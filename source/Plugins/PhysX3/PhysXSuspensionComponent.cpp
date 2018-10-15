@@ -69,31 +69,7 @@ namespace GASS
 	void PhysXSuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,PhysicsBodyLoadedEvent,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnMaxSteerTorqueRequest,PhysicsSuspensionJointMaxSteerTorqueRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,PhysicsVelocityEvent,0));
-	}
-
-	void PhysXSuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
-	{
-		SetDriveVelocity(static_cast<float>(message->GetVelocity()));
-	}
-
-	void PhysXSuspensionComponent::OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message)
-	{
-		SetMaxDriveTorque(static_cast<float>(message->GetMaxTorque()));
-	}
-
-	void PhysXSuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message)
-	{
-		SetAngularSteerVelocity(static_cast<float>(message->GetVelocity()));
-	}
-
-	void PhysXSuspensionComponent::OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message)
-	{
-		SetMaxSteerTorque(static_cast<float>(message->GetMaxTorque()));
 	}
 
 	void PhysXSuspensionComponent::SetAngularSteerVelocity(float value)
@@ -220,6 +196,7 @@ namespace GASS
 			SetPosition(pos);
 		}
 	}
+
 	void PhysXSuspensionComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
 	{
 		int this_id = GASS_PTR_TO_INT(this); //we used address as id

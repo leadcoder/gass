@@ -160,104 +160,8 @@ namespace GASS
 		Float m_MaxTorque;
 	};
 	typedef GASS_SHARED_PTR<PhysicsHingeJointMaxTorqueRequest> PhysicsHingeJointMaxTorqueRequestPtr;
-
-	/**
-	Set desired angular velocity of the suspension joints drive axis
-	*/
-	class PhysicsSuspensionJointDriveVelocityRequest: public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsSuspensionJointDriveVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef GASS_SHARED_PTR<PhysicsSuspensionJointDriveVelocityRequest> PhysicsSuspensionJointDriveVelocityRequestPtr;
-
-
-	/**
-	Set max torque used by the suspension joints drive axis to get to it's desired velocity 
-	*/
-	class PhysicsSuspensionJointMaxDriveTorqueRequest : public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsSuspensionJointMaxDriveTorqueRequest(Float max_torque, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_MaxTorque(max_torque)
-		  {
-
-		  }
-		  Float GetMaxTorque()const {return m_MaxTorque;}
-	private:
-		Float m_MaxTorque;
-	};
-	typedef GASS_SHARED_PTR<PhysicsSuspensionJointMaxDriveTorqueRequest> PhysicsSuspensionJointMaxDriveTorqueRequestPtr;
 	
-	/**
-	Set max torque used by the suspension joints steer axis to get to it's desired velocity 
-	*/
-	class PhysicsSuspensionJointMaxSteerTorqueRequest : public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsSuspensionJointMaxSteerTorqueRequest(Float torque, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_MaxTorque(torque)
-		  {
-
-		  }
-		  Float GetMaxTorque()const {return m_MaxTorque;}
-	private:
-		Float m_MaxTorque;
-	};
-	typedef GASS_SHARED_PTR<PhysicsSuspensionJointMaxSteerTorqueRequest> PhysicsSuspensionJointMaxSteerTorqueRequestPtr;
-
-	/**
-	Set desired angular velocity of the suspension joints steer axis
-	*/
 	
-	class PhysicsSuspensionJointSteerVelocityRequest: public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsSuspensionJointSteerVelocityRequest(Float velocity, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Velocity(velocity)
-		  {
-
-		  }
-		  Float GetVelocity()const {return m_Velocity;}
-	private:
-		Float m_Velocity;
-	};
-	typedef GASS_SHARED_PTR<PhysicsSuspensionJointSteerVelocityRequest> PhysicsSuspensionJointSteerVelocityRequestPtr;
-
-
-
-	/**
-	Request to change the state of a physics bodies.
-	*/
-	class PhysicsBodyStateRequest : public SceneObjectRequestMessage
-	{
-
-	public:
-		enum PhysicsBodyState
-		{
-			ENABLE,
-			DISABLE
-		};
-
-		PhysicsBodyStateRequest(PhysicsBodyState state, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Value(state)
-		  {
-
-		  }
-		  PhysicsBodyState GetState()const {return m_Value;}
-	private:
-		PhysicsBodyState m_Value;
-	};
-	typedef GASS_SHARED_PTR<PhysicsBodyStateRequest> PhysicsBodyStateRequestPtr;
-
-
 
 	/**
 	Request to change the velocity of physics bodies.
@@ -333,23 +237,6 @@ namespace GASS
 		Vec3 m_Value;
 	};
 	typedef GASS_SHARED_PTR<PhysicsBodyAddTorqueRequest> PhysicsBodyAddTorqueRequestPtr;
-
-	/**
-	Message used to change mass of physics bodies.
-	*/
-	class PhysicsBodyMassRequest : public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsBodyMassRequest(Float mass, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Value(mass)
-		  {
-
-		  }
-		  Float GetMass()const {return m_Value;}
-	private:
-		Float m_Value;
-	};
-	typedef GASS_SHARED_PTR<PhysicsBodyMassRequest> PhysicsBodyMassRequestPtr;
 
 	///////////Event section///////////
 	

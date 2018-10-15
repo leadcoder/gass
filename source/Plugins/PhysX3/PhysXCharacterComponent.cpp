@@ -46,11 +46,6 @@ namespace GASS
 
 	}
 
-	void PhysXCharacterComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
-	{
-		SetMass(static_cast<float>(message->GetMass()));
-	}
-
 	void PhysXCharacterComponent::OnDelete()
 	{
 		if(m_Controller)
@@ -77,7 +72,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnTransformationChanged, TransformationChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();

@@ -68,7 +68,6 @@ namespace GASS
 	protected:
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
-		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnPostUpdate(PostPhysicsSceneUpdateEventPtr message);
 	

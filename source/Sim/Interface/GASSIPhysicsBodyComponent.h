@@ -37,6 +37,8 @@ namespace GASS
 		virtual void AddTorque(const Vec3 &torque_vec, bool relative = false) = 0;
 		virtual float GetMass() const = 0;
 		virtual void SetMass(float mass) = 0;
+		virtual void SetActive(bool value) = 0;
+		virtual bool GetActive() const = 0;
 	};
 	typedef GASS_SHARED_PTR<IPhysicsBodyComponent> PhysicsBodyComponentPtr;
 }

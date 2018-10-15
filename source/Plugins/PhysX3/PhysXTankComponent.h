@@ -50,7 +50,6 @@ namespace GASS
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
-		void OnMassMessage(PhysicsBodyMassRequestPtr message);
 		void OnInput(InputRelayEventPtr message);
 		
 		//reflection functions

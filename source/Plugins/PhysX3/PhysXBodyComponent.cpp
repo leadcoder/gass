@@ -35,7 +35,8 @@ namespace GASS
 		m_VelocityIterCount(4),
 		m_ForceReport(false),
 		m_LocationComponent(NULL),
-		m_TrackTransformation(true)
+		m_TrackTransformation(true),
+		m_Active(true)
 	{
 
 	}
@@ -69,7 +70,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 	}
 
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -116,11 +116,6 @@ namespace GASS
 			SetPosition(event->GetPosition());
 			SetRotation(event->GetRotation());
 		}
-	}
-
-	void PhysXBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
-	{
-		SetMass(static_cast<float>(message->GetMass()));
 	}
 
 	void PhysXBodyComponent::OnVelocity(PhysicsBodyVelocityRequestPtr message)
@@ -220,16 +215,19 @@ namespace GASS
 
 	void PhysXBodyComponent::SceneManagerTick(double /*delta_time*/)
 	{
-		//skip transformation callbacks from ourself
-		m_TrackTransformation = false; 
-		m_LocationComponent->SetWorldPosition(GetPosition());
-		m_LocationComponent->SetWorldRotation(GetRotation());
-		m_TrackTransformation = true;
+		if (m_Active)
+		{
+			//skip transformation callbacks from ourself
+			m_TrackTransformation = false;
+			m_LocationComponent->SetWorldPosition(GetPosition());
+			m_LocationComponent->SetWorldRotation(GetRotation());
+			m_TrackTransformation = true;
+		}
 	}
 
 	void PhysXBodyComponent::AddTorque(const Vec3 &torque_vec, bool relative)
 	{
-		if(m_Actor)
+		if(m_Actor && m_Active)
 		{
 			const physx::PxVec3 world_torq = relative ? m_Actor->getGlobalPose().rotate(PxConvert::ToPx(torque_vec)) : PxConvert::ToPx(torque_vec);
 			m_Actor->addTorque(world_torq);
@@ -238,7 +236,7 @@ namespace GASS
 
 	void PhysXBodyComponent::SetVelocity(const Vec3 &vel , bool relative)
 	{
-		if(m_Actor)
+		if(m_Actor && m_Active)
 		{
 			const physx::PxVec3 world_vel = relative ? m_Actor->getGlobalPose().rotate(PxConvert::ToPx(vel)) : PxConvert::ToPx(vel);
 			m_Actor->setLinearVelocity(world_vel);
@@ -255,7 +253,7 @@ namespace GASS
 
 	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool relative)
 	{
-		if(m_Actor)
+		if(m_Actor && m_Active)
 		{
 			m_Actor->setAngularVelocity(PxConvert::ToPx(vel));
 		}
@@ -323,5 +321,19 @@ namespace GASS
 		{
 			m_Actor->setMass(mass);
 		}
+	}
+
+	void PhysXBodyComponent::SetActive(bool value)
+	{
+		m_Active = value;
+		if (m_Actor)
+		{
+			m_Actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !value);
+		}
+	}
+
+	bool PhysXBodyComponent::GetActive() const
+	{
+		return m_Active;
 	}
 }

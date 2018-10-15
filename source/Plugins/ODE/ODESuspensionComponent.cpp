@@ -72,49 +72,8 @@ namespace GASS
 	void ODESuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnBodyLoaded,PhysicsBodyLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnDriveVelocityRequest,PhysicsSuspensionJointDriveVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnSteerVelocityRequest,PhysicsSuspensionJointSteerVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnMaxDriveTorqueRequest,PhysicsSuspensionJointMaxDriveTorqueRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODESuspensionComponent::OnMaxSteerTorqueRequest,PhysicsSuspensionJointMaxSteerTorqueRequest,0));
 	}
-
-	void ODESuspensionComponent::OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message)
-	{
-		if(m_Body1)
-		{
-			m_Body1->Wake();
-			SetDriveVelocity(static_cast<float>(message->GetVelocity()));
-		}
-	}
-
-	void ODESuspensionComponent::OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message)
-	{
-		if(m_Body1)
-		{
-			m_Body1->Wake();
-			SetMaxDriveTorque(static_cast<float>(message->GetMaxTorque()));
-		}
-	}
-
-	void ODESuspensionComponent::OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message)
-	{
-		if(m_Body1)
-		{
-			m_Body1->Wake();
-
-			SetAngularSteerVelocity(static_cast<float>(message->GetVelocity()));
-		}
-	}
-
-	void ODESuspensionComponent::OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message)
-	{
-		if(m_Body1)
-		{
-			m_Body1->Wake();
-			SetMaxSteerTorque(static_cast<float>(message->GetMaxTorque()));
-		}
-	}
-
+	
 	void ODESuspensionComponent::OnBodyLoaded(PhysicsBodyLoadedEventPtr message)
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODEPhysicsSceneManager>();
@@ -238,6 +197,9 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
+			if (m_Body1)
+				m_Body1->Wake();
+
 			dJointSetHinge2Param(m_ODEJoint,dParamVel,velocity);
 		}
 	}
@@ -256,6 +218,8 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
+			if(m_Body1)
+				m_Body1->Wake();
 			dJointSetHinge2Param(m_ODEJoint, dParamFMax2,value);
 		}
 	}
@@ -274,6 +238,9 @@ namespace GASS
 	{
 		if(m_ODEJoint)
 		{
+			if (m_Body1)
+				m_Body1->Wake();
+
 			dJointSetHinge2Param(m_ODEJoint, dParamFMax,value);
 		}
 	}

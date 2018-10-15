@@ -51,11 +51,6 @@ namespace GASS
 	protected:
 		void OnPositionChanged(PositionRequestPtr message);
 		void OnWorldPositionChanged(WorldPositionRequestPtr message);
-		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
-		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
-		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
-		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
-
 		void OnLoad(PhysicsBodyLoadedEventPtr message);
 
 		float GetRollAngle();

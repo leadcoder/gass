@@ -102,8 +102,6 @@ namespace GASS
 		void OnWorldPositionChanged(WorldPositionRequestPtr message);
 		void OnRotationChanged(RotationRequestPtr message);
 		void OnWorldRotationChanged(WorldRotationRequestPtr message);
-		void OnMassMessage(PhysicsBodyMassRequestPtr message);
-		void OnStateRequest(PhysicsBodyStateRequestPtr message);
 		void DampenBody( dBodyID body, float vScale, float aScale );
 		dSpaceID GetSecondarySpace();
 	protected:

@@ -83,12 +83,7 @@ namespace GASS
 			}
 		}
 	}
-
-	void PhysXVehicleComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
-	{
-		SetMass(static_cast<float>(message->GetMass()));
-	}
-
+	
 	void PhysXVehicleComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
@@ -135,7 +130,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnTransformationChanged, TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnMassMessage,PhysicsBodyMassRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();

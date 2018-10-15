@@ -24,6 +24,7 @@
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
+#include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 #include "Core/PluginSystem/GASSPluginManager.h"
 
 
@@ -161,8 +162,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 		light_template->AddBaseSceneComponent("LocationComponent");
 		GASS::BaseSceneComponentPtr light_comp = light_template->AddBaseSceneComponent("LightComponent");
 		
-		light_comp->SetPropertyValue("DiffuseColor", GASS::ColorRGB(0.5,0.5,0.5));
-		light_comp->SetPropertyValue("AmbientColor", GASS::ColorRGB(0.5, 0.5, 0.5));
+		light_comp->SetPropertyValue("DiffuseColor", GASS::ColorRGB(0.5, 0.5, 0.5));
+		light_comp->SetPropertyValue("AmbientColor", GASS::ColorRGB(0.2, 0.2, 0.2));
 		
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(light_template);
 	}
@@ -520,17 +521,17 @@ int main(int/*argc*/, char* /*argv[]*/)
 		if(wheel_vel > 200)
 			wheel_vel = 200;
 		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
-		rr_wheel->PostRequest(GASS::PhysicsSuspensionJointDriveVelocityRequestPtr(new GASS::PhysicsSuspensionJointDriveVelocityRequest(wheel_vel)));
+		rr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 			
 				
 		GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
-		rl_wheel->PostRequest(GASS::PhysicsSuspensionJointDriveVelocityRequestPtr(new GASS::PhysicsSuspensionJointDriveVelocityRequest(wheel_vel)));
+		rl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 
 		GASS::SceneObjectPtr fr_wheel = vehicle_obj->GetChildByID("FR_WHEEL");
-		fr_wheel->PostRequest(GASS::PhysicsSuspensionJointSteerVelocityRequestPtr(new GASS::PhysicsSuspensionJointSteerVelocityRequest(steer_vel)));
+		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 			
 		GASS::SceneObjectPtr fl_wheel = vehicle_obj->GetChildByID("FL_WHEEL");
-		fl_wheel->PostRequest(GASS::PhysicsSuspensionJointSteerVelocityRequestPtr(new GASS::PhysicsSuspensionJointSteerVelocityRequest(steer_vel)));
+		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 		
 	}
 	return 0;

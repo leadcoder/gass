@@ -68,9 +68,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnStateRequest,PhysicsBodyStateRequest,0));
-
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnMassMessage,PhysicsBodyMassRequest,0));
+	
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
@@ -122,24 +120,7 @@ namespace GASS
 		if(GetActive())
 			SetActive(true);
 	}
-
-
-	void ODEBodyComponent::OnStateRequest(PhysicsBodyStateRequestPtr message)
-	{
-		switch(message->GetState())
-		{
-		case PhysicsBodyStateRequest::ENABLE:
-			{
-				SetActive(true);
-				break;
-			}
-		case PhysicsBodyStateRequest::DISABLE:
-			{
-				SetActive(false);
-				break;
-			}
-		}
-	}
+	
 
 	/*void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
 	{
@@ -200,12 +181,6 @@ namespace GASS
 	{
 		Wake();
 		AddTorque(message->GetTorque(),true);
-	}
-
-
-	void ODEBodyComponent::OnMassMessage(PhysicsBodyMassRequestPtr message)
-	{
-		SetMass(static_cast<float> (message->GetMass()));
 	}
 
 	void ODEBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -273,6 +248,9 @@ namespace GASS
 		SetPosition(location->GetPosition());
 
 		dBodySetMovedCallback (m_ODEBodyID, &BodyMovedCallback);
+
+		SetActive(m_Active);
+
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 	}
 
@@ -410,6 +388,7 @@ namespace GASS
 				dBodyDisable(m_ODEBodyID);
 		}
 	}
+
 	bool ODEBodyComponent::GetActive() const
 	{
 		return m_Active;

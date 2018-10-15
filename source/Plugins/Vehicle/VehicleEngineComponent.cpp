@@ -611,9 +611,6 @@ namespace GASS
 		if(m_Invert)
 			wheel_vel = -wheel_vel;
 
-		//PhysicsSuspensionJointMaxDriveTorqueRequestPtr force_request = PhysicsSuspensionJointMaxDriveTorqueRequestPtr(new PhysicsSuspensionJointMaxDriveTorqueRequest(wheel_torque+brake_torque));
-		//PhysicsSuspensionJointDriveVelocityRequestPtr vel_request = PhysicsSuspensionJointDriveVelocityRequestPtr (new PhysicsSuspensionJointDriveVelocityRequest(wheel_vel));
-
 		m_WheelRPM = 0;
 		for(size_t i = 0; i < m_VehicleWheels.size(); i++)
 		{

@@ -31,6 +31,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -109,15 +110,16 @@ namespace GASS
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
 
-			PhysicsBodyStateRequestPtr disable_msg(new PhysicsBodyStateRequest(PhysicsBodyStateRequest::DISABLE));
-			GetSceneObject()->PostRequest(disable_msg);
+			PhysicsBodyComponentPtr body = GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>();
+			if(body)
+				body->SetActive(false);
 
 			ComponentContainerTemplate::ComponentVector components;
-			GetSceneObject()->GetComponentsByClassName(components,"ODEBodyComponent");
+			GetSceneObject()->GetComponentsByClass<IPhysicsBodyComponent>(components,true);
 			for(size_t i = 0;  i< components.size(); i++)
 			{
-				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-				comp->GetSceneObject()->PostRequest(disable_msg);
+				PhysicsBodyComponentPtr comp = GASS_DYNAMIC_PTR_CAST<IPhysicsBodyComponent>(components[i]);
+				comp->SetActive(false);
 			}
 
 			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE ||

@@ -49,12 +49,7 @@ namespace GASS
 		void SetMaxDriveTorque(float value);
 		float GetMaxDriveTorque()const;
 	protected:
-		void OnDriveVelocityRequest(PhysicsSuspensionJointDriveVelocityRequestPtr message);
-		void OnMaxDriveTorqueRequest(PhysicsSuspensionJointMaxDriveTorqueRequestPtr message);
-		void OnSteerVelocityRequest(PhysicsSuspensionJointSteerVelocityRequestPtr message);
-		void OnMaxSteerTorqueRequest(PhysicsSuspensionJointMaxSteerTorqueRequestPtr message);
 		void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
-
 		
 		//Helpers
 
