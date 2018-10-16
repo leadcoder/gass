@@ -38,7 +38,8 @@ namespace GASS
 		m_EulerRot(0, 0, 0),
 		m_Scale(1, 1, 1),
 		m_AttachToParent(false),
-		m_NodeMask(0)
+		m_NodeMask(0),
+		m_ParentLocation(NULL)
 	{
 
 	}
@@ -113,12 +114,13 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent, GASS::AttachToParentRequest, 0));
 
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
-		//assert(scene_man);
-		if (!m_TransformNode.valid())
+		m_GFXSceneManager = scene_man;
+
+		if (!m_TransformNode.valid()) //could this be set from outside?
 		{
 			m_TransformNode = new osg::PositionAttitudeTransform();
-			
-			osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
+			SetAttachToParent(m_AttachToParent);
+			/*osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
 			m_GFXSceneManager = scene_man;
 
 			if (m_AttachToParent)
@@ -126,6 +128,7 @@ namespace GASS
 				OSGLocationComponentPtr parent = _GetParentLocation();
 				if (parent)
 				{
+					m_ParentLocation = parent.get();
 					parent->GetOSGNode()->addChild(m_TransformNode.get());
 				}
 				else
@@ -141,7 +144,7 @@ namespace GASS
 				}
 				else
 					root_node->addChild(m_TransformNode.get());
-			}
+			}*/
 		}
 		else
 		{
@@ -149,7 +152,7 @@ namespace GASS
 			m_TransformNode->setName(name);
 		}
 
-		//Set values
+		//Set m_TransformNode position
 		SetPosition(m_Pos);
 		Quaternion rot;
 		//Check if rotation provided?
@@ -159,11 +162,14 @@ namespace GASS
 			rot = m_EulerRot.GetQuaternion();
 		else
 			rot = m_QRot;
+
+		//Set m_TransformNode rotation
 		SetRotation(rot);
+		//Set m_TransformNode scale
+		SetScale(m_Scale);
 
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>(shared_from_this());
 		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
-		//GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(m_Scale)));
 	}
 
 	void OSGLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
@@ -173,96 +179,61 @@ namespace GASS
 
 	Vec3 OSGLocationComponent::_WorldToLocal(const Vec3 &world_pos) const
 	{
-		if (!m_AttachToParent)
+		if (m_AttachToParent && m_ParentLocation)
 		{
-			return world_pos;
+			//update relative position
+			const Vec3 parent_world_pos = m_ParentLocation->GetWorldPosition();
+			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			GASS::Mat4 parent_trans_mat(parent_world_rot, parent_world_pos);
+			GASS::Mat4 inv_parent_trans_mat = parent_trans_mat.GetInvert();
+			GASS::Mat4 trans_mat(GetWorldRotation(), world_pos);
+			return inv_parent_trans_mat*world_pos;
 		}
 		else
 		{
-			//update relative position
-			OSGLocationComponentPtr parent = _GetParentLocation();
-			if (parent)
-			{
-				const Vec3 parent_world_pos = parent->GetWorldPosition();
-				const Quaternion parent_world_rot = parent->GetWorldRotation();
-				GASS::Mat4 parent_trans_mat(parent_world_rot, parent_world_pos);
-				GASS::Mat4 inv_parent_trans_mat = parent_trans_mat.GetInvert();
-				GASS::Mat4 trans_mat(GetWorldRotation(), world_pos);
-				return inv_parent_trans_mat*world_pos;
-			}
-			else
-			{
-				return world_pos;
-			}
+			return world_pos;
 		}
 	}
 
 	Quaternion OSGLocationComponent::_WorldToLocal(const Quaternion &world_rot) const
 	{
-		if (!m_AttachToParent)
+		if (m_AttachToParent && m_ParentLocation)
 		{
-			return world_rot;
+			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			const Quaternion inv_parent_world_rot = parent_world_rot.Inverse();
+			return inv_parent_world_rot*world_rot;
 		}
 		else
 		{
-			//update relative position
-			OSGLocationComponentPtr parent = _GetParentLocation();
-			if (parent)
-			{
-				//const Vec3 parent_world_pos = parent->GetWorldPosition();
-				const Quaternion parent_world_rot = parent->GetWorldRotation();
-				const Quaternion inv_parent_world_rot = parent_world_rot.Inverse();
-				return inv_parent_world_rot*world_rot;
-			}
-			else
-			{
-				return world_rot;
-			}
+			return world_rot;
 		}
 	}
 
 	Quaternion OSGLocationComponent::_LocalToWorld(const Quaternion &local_rot) const
 	{
-		OSGLocationComponentPtr parent = _GetParentLocation();
-		if (!m_AttachToParent)
+		if (m_AttachToParent && m_ParentLocation)
 		{
-			return local_rot;
+			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			return parent_world_rot*local_rot;
 		}
 		else
 		{
-			if (parent)
-			{
-				const Quaternion parent_world_rot = parent->GetWorldRotation();
-				return parent_world_rot*local_rot;
-			}
-			else
-			{
-				return local_rot;
-			}
+			return local_rot;
 		}
 	}
 
 	Vec3 OSGLocationComponent::_LocalToWorld(const Vec3 &local_pos) const
 	{
-		OSGLocationComponentPtr parent = _GetParentLocation();
-		if (!m_AttachToParent)
+		if (m_AttachToParent && m_ParentLocation)
 		{
-			return local_pos;
+			const Vec3 parent_world_pos = m_ParentLocation->GetWorldPosition();
+			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			GASS::Mat4 parent_trans_mat(parent_world_rot, parent_world_pos);
+			return parent_trans_mat*local_pos;
 		}
 		else
 		{
-			//update world position
-			if (parent)
-			{
-				const Vec3 parent_world_pos = parent->GetWorldPosition();
-				const Quaternion parent_world_rot = parent->GetWorldRotation();
-				GASS::Mat4 parent_trans_mat(parent_world_rot, parent_world_pos);
-				return parent_trans_mat*local_pos;
-			}
-			else
-			{
-				return local_pos;
-			}
+			return local_pos;
 		}
 	}
 	
@@ -517,30 +488,58 @@ namespace GASS
 		}
 	}
 
+
+	osg::ref_ptr<osg::Group> OSGLocationComponent::_GetOSGRootGroup()
+	{
+		osg::ref_ptr<osg::Group> root_node;
+		OSGGraphicsSceneManagerPtr scene_man = m_GFXSceneManager.lock();
+		if (scene_man)
+		{
+			//HACK: do extra check to see if we should avoid shadow node...
+			OSGManualMeshComponentPtr mm_comp = GetSceneObject()->GetFirstComponentByClass<OSGManualMeshComponent>();
+			if (mm_comp && !mm_comp->GetCastShadow() && !mm_comp->GetReceiveShadow())
+			{
+				root_node = scene_man->GetOSGRootNode();
+			}
+			else
+			{
+				root_node = scene_man->GetOSGShadowRootNode();
+			}
+		}
+		GASSAssert(root_node, "Failed to find osg root group in OSGLocationComponent::_GetOSGRootGroup()");
+		return root_node;
+	}
+
 	void OSGLocationComponent::SetAttachToParent(bool value)
 	{
 		m_AttachToParent = value;
 		if (m_TransformNode.valid())
 		{
-			Vec3 world_pos = GetWorldPosition();
-			Quaternion world_rot = GetWorldRotation();
-			if (m_TransformNode->getParent(0))
-				m_TransformNode->getParent(0)->removeChild(m_TransformNode);
-
-			OSGLocationComponentPtr parent = _GetParentLocation();
-			if (parent && value)
-				parent->GetOSGNode()->addChild(m_TransformNode);
-			else
+			bool was_attached = false;
+			if (m_TransformNode->getNumParents() > 0 && m_TransformNode->getParent(0))
 			{
-				OSGGraphicsSceneManagerPtr scene_man = m_GFXSceneManager.lock();
-				if (scene_man)
-				{
-					osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGShadowRootNode();
-					root_node->addChild(m_TransformNode);
-				}
+				m_TransformNode->getParent(0)->removeChild(m_TransformNode);
+				was_attached = true;
 			}
-			SetWorldPosition(world_pos);
-			SetWorldRotation(world_rot);
+
+			m_ParentLocation = _GetFirstParentLocation().get();
+			if (value && m_ParentLocation)
+			{
+				m_ParentLocation->GetOSGNode()->addChild(m_TransformNode);
+			}
+			else //attach under osg root
+			{
+				m_ParentLocation = NULL;
+				osg::ref_ptr<osg::Group> root_node = _GetOSGRootGroup();
+				root_node->addChild(m_TransformNode);
+			}
+			
+			if (was_attached)
+			{
+				//update new local location
+				SetWorldPosition(m_WorldPosition);
+				SetWorldRotation(m_WorldRotation);
+			}
 		}
 	}
 
@@ -554,7 +553,7 @@ namespace GASS
 		return m_AttachToParent;
 	}
 
-	OSGLocationComponentPtr OSGLocationComponent::_GetParentLocation() const 
+	OSGLocationComponentPtr OSGLocationComponent::_GetFirstParentLocation() const
 	{
 		OSGLocationComponentPtr parent_location;
 		SceneObjectPtr scene_obj = GASS_STATIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());

@@ -70,9 +70,9 @@ namespace GASS
 
 		//move this to private
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
-		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 	protected:
+		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }
 		void OnPositionMessage(PositionRequestPtr message);
 		void OnRotationMessage(RotationRequestPtr  message);
 		void OnScaleMessage(ScaleRequestPtr message);
@@ -94,8 +94,9 @@ namespace GASS
 		Vec3 _WorldToLocal(const Vec3 &local_pos) const;
 		Quaternion _WorldToLocal(const Quaternion &world_rot) const;
 		Quaternion _LocalToWorld(const Quaternion &local_rot) const;
-		OSGLocationComponentPtr _GetParentLocation() const;
-		//void _SendTransMessage();
+		OSGLocationComponentPtr _GetFirstParentLocation() const;
+		osg::ref_ptr<osg::Group> _GetOSGRootGroup();
+		
 		//! relative position of the scene node.
 		Vec3 m_Pos;
 		//! relative rotation of the scene node.
@@ -107,6 +108,7 @@ namespace GASS
 
 		Vec3 m_WorldPosition;
 		Quaternion m_WorldRotation;
+		OSGLocationComponent* m_ParentLocation;
 
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
