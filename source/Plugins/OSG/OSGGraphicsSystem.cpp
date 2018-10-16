@@ -280,26 +280,6 @@ namespace GASS
 		return win;
 	}
 
-	void OSGGraphicsSystem::ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp)
-	{
-		osgViewer::ViewerBase::Views views;
-		GetViewer()->getViews(views);
-
-		for(size_t i = 0; i < views.size(); i++)
-		{
-			if(views[i]->getName() == viewport || viewport == "ALL")
-			{
-				cam_comp->SetOSGCamera( views[i]->getCamera());
-				//set manipulator
-				OSGCameraManipulatorPtr man = cam_comp->GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
-				if(man)
-					views[i]->setCameraManipulator(man->GetManipulator());
-				else
-					views[i]->setCameraManipulator(NULL);
-			}
-		}
-	}
-
 	void OSGGraphicsSystem::OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message)
 	{
 

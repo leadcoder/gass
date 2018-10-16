@@ -72,7 +72,7 @@ namespace GASS
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
 		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}
-		void ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp);
+		//void ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp);
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
 		std::vector<OSGRenderWindowPtr> m_Windows;
