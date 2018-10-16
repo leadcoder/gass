@@ -74,14 +74,9 @@ namespace GASS
 		ADD_PROPERTY(int,PositionIterCount)
 		ADD_PROPERTY(int,VelocityIterCount)
 		ADD_PROPERTY(bool,ForceReport)
-		
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
-		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
-		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
-		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
-		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
-		
+
 		void SetKinematic(bool value);
 		bool GetKinematic() const;
 		

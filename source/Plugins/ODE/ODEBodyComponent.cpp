@@ -68,10 +68,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
-	
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
 	}
 
 	void ODEBodyComponent::OnPositionChanged(PositionRequestPtr message)
@@ -119,68 +115,6 @@ namespace GASS
 	{
 		if(GetActive())
 			SetActive(true);
-	}
-	
-
-	/*void ODEBodyComponent::OnParameterMessage(PhysicsBodyMessagePtr message)
-	{
-		PhysicsBodyMessage::PhysicsBodyParameterType type = message->GetParameter();
-		//wake body!!
-		Wake();
-		switch(type)
-		{
-		case PhysicsBodyMessage::FORCE:
-			{
-				Vec3 value = message->GetValue();
-				AddForce(value,true);
-			}
-			break;
-		case PhysicsBodyMessage::TORQUE:
-			{
-				Vec3 value = message->GetValue();
-				AddTorque(value,true);
-				break;
-			}
-		case PhysicsBodyMessage::VELOCITY:
-			{
-				Vec3 value = message->GetValue();
-				SetVelocity(value,true);
-				break;
-			}
-		case PhysicsBodyMessage::ENABLE:
-			{
-				SetActive(true);
-				break;
-			}
-		case PhysicsBodyMessage::DISABLE:
-			{
-				SetActive(false);
-				break;
-			}
-		}
-	}*/
-
-
-	void ODEBodyComponent::OnVelocity(PhysicsBodyVelocityRequestPtr message)
-	{
-		SetVelocity(message->GetVelocity(),true);
-	}
-
-	void ODEBodyComponent::OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message)
-	{
-		SetAngularVelocity(message->GetAngularVelocity());
-	}
-
-	void ODEBodyComponent::OnAddForce(PhysicsBodyAddForceRequestPtr message)
-	{
-		Wake();
-		AddForce(message->GetForce(),true);
-	}
-
-	void ODEBodyComponent::OnAddTorque(PhysicsBodyAddTorqueRequestPtr message)
-	{
-		Wake();
-		AddTorque(message->GetTorque(),true);
 	}
 
 	void ODEBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -327,6 +261,7 @@ namespace GASS
 	{
 		if(m_ODEBodyID)
 		{
+			Wake();
 			if (rel)
 				dBodyAddRelTorque(m_ODEBodyID, torque_vec.x,torque_vec.y,torque_vec.z);
 			else
@@ -450,6 +385,7 @@ namespace GASS
 	{
 		if(m_ODEBodyID)
 		{
+			Wake();
 			if(rel)
 				dBodyAddRelForce(m_ODEBodyID, force_vec.x,force_vec.y,force_vec.z);
 			else

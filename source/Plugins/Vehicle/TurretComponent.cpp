@@ -410,7 +410,6 @@ namespace GASS
 		if(m_Controller == "Pitch")
 		{
 			GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>()->AddTorque(Vec3(turn_velocity, 0, 0));
-			//GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr (new PhysicsBodyAddTorqueRequest(Vec3(turn_velocity,0,0))));
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir <<"\n";;
 			//std::cout << "THeading:" << t_heading << " AHeading:" << a_heading << "\n";
@@ -419,12 +418,8 @@ namespace GASS
 		else if (m_Controller == "Yaw")
 		{
 			GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>()->AddTorque(Vec3(0, turn_velocity, 0));
-			//GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_velocity,0))));
-			std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
+			//std::cout << "angle_to_aim_dir:" << angle_to_aim_dir << "\n";;
 		}
-
-
-
 		//MessagePtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,fabs(turn )));
 		//GetSceneObject()->PostMessage(volume_msg);
 

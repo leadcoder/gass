@@ -29,6 +29,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
@@ -494,9 +495,7 @@ namespace GASS
 		//damp
 		//if(fabs(m_DesiredSteer) < 0.1)
 		//	m_DesiredSteer = m_DesiredSteer*0.9;
-
-		GetSceneObject()->PostRequest(PhysicsBodyAddTorqueRequestPtr(new PhysicsBodyAddTorqueRequest(Vec3(0,turn_torque,0))));
-
+		GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>()->AddTorque(Vec3(0,turn_torque,0),true);
 
 		/*
 		GASS_PRINT("Speed(m/s): "<< m_VehicleSpeed << "Hull angle velocity:" << m_AngularVelocity.y << "\n Desired steer velocity" << m_DesiredSteer << "\n Torq" << turn_torque << " Norm rpm:" << norm_rpm << " MaxTorq:" << m_MaxTurnForce)

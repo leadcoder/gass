@@ -67,9 +67,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnTransformationChanged, TransformationChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnVelocity,PhysicsBodyVelocityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddForce,PhysicsBodyAddForceRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnAddTorque,PhysicsBodyAddTorqueRequest,0));
 	}
 
 	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -117,27 +114,7 @@ namespace GASS
 			SetRotation(event->GetRotation());
 		}
 	}
-
-	void PhysXBodyComponent::OnVelocity(PhysicsBodyVelocityRequestPtr message)
-	{
-		SetVelocity(message->GetVelocity());
-	}
-
-	void PhysXBodyComponent::OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message)
-	{
-		SetAngularVelocity(message->GetAngularVelocity());
-	}
-
-	void PhysXBodyComponent::OnAddForce(PhysicsBodyAddForceRequestPtr message)
-	{
-		AddForce(message->GetForce(),false);
-	}
-
-	void PhysXBodyComponent::OnAddTorque(PhysicsBodyAddTorqueRequestPtr message)
-	{
-		AddTorque(message->GetTorque());
-	}
-
+	
 	Vec3 PhysXBodyComponent::GetPosition() const
 	{
 		Vec3 pos(0,0,0);

@@ -71,12 +71,6 @@ namespace GASS
 		void SetAngularVelocity(const Vec3 &vel, bool relative = false);
 		Vec3 GetAngularVelocity(bool relative = false) const;
 	protected:
-		void OnVelocity(PhysicsBodyVelocityRequestPtr message);
-		void OnAngularVelocity(PhysicsBodyAngularVelocityRequestPtr message);
-		void OnAddForce(PhysicsBodyAddForceRequestPtr message);
-		void OnAddTorque(PhysicsBodyAddTorqueRequestPtr message);
-
-		
 		void SetActive(bool value);
 		bool GetActive() const;
 		void SetForce(const Vec3 &force);

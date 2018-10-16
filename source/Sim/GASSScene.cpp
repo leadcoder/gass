@@ -20,11 +20,14 @@
 
 
 
+
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
-
+#include "Sim/Interface/GASSIPhysicsBodyComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -355,15 +358,17 @@ namespace GASS
 		SceneObjectPtr so = LoadObjectFromTemplate(obj_template,message->GetParent());
 		if(so)
 		{
-			Vec3 pos = message->GetPosition();
-			Quaternion rot = message->GetRotation();
-			Vec3 vel = message->GetVelocity();
-			int sender_id = GASS_PTR_TO_INT (this);
-			//int sender_id = reinterpret_cast<int>(this);
-
-			so->SendImmediateRequest(PositionRequestPtr(new PositionRequest(pos,sender_id)));
-			so->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot,sender_id)));
-			so->SendImmediateRequest(PhysicsBodyVelocityRequestPtr(new PhysicsBodyVelocityRequest(vel,sender_id)));
+			LocationComponentPtr lc = so->GetFirstComponentByClass<ILocationComponent>();
+			if(lc)
+			{
+				lc->SetWorldPosition(message->GetPosition());
+				lc->SetWorldRotation(message->GetRotation());
+			}
+			 
+			//Check if we have body?
+			PhysicsBodyComponentPtr body =  so->GetFirstComponentByClass<IPhysicsBodyComponent>();
+			if(body)
+				body->SetVelocity(message->GetVelocity(),true);
 		}
 	}
 
