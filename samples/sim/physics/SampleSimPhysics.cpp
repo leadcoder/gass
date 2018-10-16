@@ -60,21 +60,23 @@ int main(int/*argc*/, char* /*argv[]*/)
 {
 	//Load plugins
 	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
-	char key = static_cast<char>(_getch());
+	char gfx_key = static_cast<char>(_getch());
 	std::string gfx_plugin = "GASSPluginOgre";
 	std::string gfx_system_name = "OgreGraphicsSystem";
 
-	if (key == '1')
+	if (gfx_key == '1')
 	{
 		gfx_system_name = "OgreGraphicsSystem";
 		gfx_plugin = "GASSPluginOgre";
 	}
-	else if (key == '2')
+	else if (gfx_key == '2')
 	{
 		gfx_system_name = "OSGGraphicsSystem";
 		gfx_plugin = "GASSPluginOSG";
 	}
 
+	bool use_ode = true;
+	
 	std::vector<std::string> plugins;
 	plugins.push_back(gfx_plugin);
 	plugins.push_back("GASSPluginOIS");
@@ -82,7 +84,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 	plugins.push_back("GASSPluginOpenAL");
 	plugins.push_back("GASSPluginInput");
 	plugins.push_back("GASSPluginBase");
-	plugins.push_back("GASSPluginPhysX3");
+	if (!use_ode)
+		plugins.push_back("GASSPluginPhysX3");
 
 	std::vector<std::string> systems;
 	systems.push_back(gfx_system_name);
@@ -91,7 +94,11 @@ int main(int/*argc*/, char* /*argv[]*/)
 	systems.push_back("ControlSettingsSystem");
 	systems.push_back("CoreSystem");
 	systems.push_back("SimulationSystem");
-	systems.push_back("PhysXPhysicsSystem");
+	if (use_ode)
+		systems.push_back("ODEPhysicsSystem");
+	else
+		systems.push_back("PhysXPhysicsSystem");
+
 	systems.push_back("ODECollisionSystem");
 
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
@@ -111,7 +118,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 	GASS::ResourceGroupPtr font_group(new GASS::ResourceGroup("GASS_FONTS"));
 	font_group->AddResourceLocation(GASS::FilePath("../../data/gfx/Ogre/Fonts"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(font_group);
-
 
 	GASS::ResourceGroupPtr temp_group(new GASS::ResourceGroup("GASS_TEMPLATES"));
 	temp_group->AddResourceLocation(GASS::FilePath("../../data/templates/camera"), GASS::RLT_FILESYSTEM, true);
@@ -244,8 +250,17 @@ int main(int/*argc*/, char* /*argv[]*/)
 			wheel_template->AddBaseSceneComponent("ManualMeshComponent");
 			//wheel_template->AddComponent("PhysicsHingeComponent");
 			GASS::BaseSceneComponentPtr susp_comp = wheel_template->AddBaseSceneComponent("PhysicsSuspensionComponent");
-			susp_comp->SetPropertyValue<float>("Damping", 300.0f);
-			susp_comp->SetPropertyValue<float>("Strength", 3000.0f);
+			susp_comp->SetPropertyValue<float>("Damping", 8.0f);
+			susp_comp->SetPropertyValue<float>("Strength", 50.0f);
+			
+			if(use_ode)
+			{
+				susp_comp->SetPropertyValue<float>("HighStop", 1.0f);
+				susp_comp->SetPropertyValue<float>("LowStop", -1.0f);
+			}
+			else
+				susp_comp->SetPropertyValue<float>("SteerLimit", 1.0f);
+
 			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 		}
 	}
@@ -455,6 +470,10 @@ int main(int/*argc*/, char* /*argv[]*/)
 				//bdrige_seg_obj2->PostRequest(GASS::ResetMaterialRequestPtr(new GASS::ResetMaterialRequest()));
 			}
 		}
+		else
+		{
+			key_down = false;
+		}
 
 		/*else if(GetAsyncKeyState(VK_F5))
 		{
@@ -478,30 +497,25 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 
 
-		else if (GetAsyncKeyState(VK_DOWN))
+		if (GetAsyncKeyState(VK_DOWN))
 		{
-			key_down = true;
 			wheel_vel -= 2;
 		}
-		else if (GetAsyncKeyState(VK_UP))
+		if (GetAsyncKeyState(VK_UP))
 		{
-			key_down = true;
 			wheel_vel += 2;
 		}
-		else if (GetAsyncKeyState(VK_LEFT))
+		if (GetAsyncKeyState(VK_LEFT))
 		{
-			key_down = true;
 			steer_vel = 2;
 		}
 		else if (GetAsyncKeyState(VK_RIGHT))
 		{
-			key_down = true;
 			steer_vel = -2;
 		}
 		else
 		{
 			steer_vel = 0;
-			key_down = false;
 		}
 
 		wheel_vel *= 0.9f;
@@ -515,26 +529,31 @@ int main(int/*argc*/, char* /*argv[]*/)
 		if (wheel_vel < -200)
 			wheel_vel = -200;
 
-		const float max_torq = 10;
+		const float max_torq = 1;
 		GASS::SceneObjectPtr rr_wheel = vehicle_obj->GetChildByID("RR_WHEEL");
 		rr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 		rr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(max_torq);
+		rr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(0);
+		rr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
 
 
 		GASS::SceneObjectPtr rl_wheel = vehicle_obj->GetChildByID("RL_WHEEL");
 		rl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
 		rl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(max_torq);
+		rl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(0);
+		rl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
 
 		GASS::SceneObjectPtr fr_wheel = vehicle_obj->GetChildByID("FR_WHEEL");
 		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
-		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(max_torq);
+		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(0);
 		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(steer_vel);
-		
+		fr_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
 
 		GASS::SceneObjectPtr fl_wheel = vehicle_obj->GetChildByID("FL_WHEEL");
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetDriveVelocity(wheel_vel);
-		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(max_torq);
+		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(0);
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(steer_vel);
+		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
 
 	}
 	return 0;
