@@ -41,7 +41,8 @@ namespace GASS
 		m_AssymetricInertia(0,0,0),
 		m_EffectJoints(true),
 		m_Active(true),
-		m_Debug(false)
+		m_Debug(false),
+		m_TrackTransformation(true)
 	{
 	}
 
@@ -64,50 +65,15 @@ namespace GASS
 	void ODEBodyComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnLocationLoaded,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnPositionChanged,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldPositionChanged,WorldPositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnRotationChanged,RotationRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnWorldRotationChanged,WorldRotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBodyComponent::OnTransformationChanged, TransformationChangedEvent,0));
 	}
 
-	void ODEBodyComponent::OnPositionChanged(PositionRequestPtr message)
+	void ODEBodyComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
+		if(m_TrackTransformation) //Check if this message was from this class
 		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-
-	void ODEBodyComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void ODEBodyComponent::OnWorldRotationChanged(WorldRotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
-		}
-	}
-
-	void ODEBodyComponent::OnRotationChanged(RotationRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Quaternion rot = message->GetRotation();
-			SetRotation(rot);
+			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
 
@@ -196,14 +162,13 @@ namespace GASS
 
 	void ODEBodyComponent::BodyMoved()
 	{
-		int from_id = GASS_PTR_TO_INT(this); //use address as id
-		Vec3 pos = GetPosition();
-
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(GetRotation(),from_id)));
+		m_TrackTransformation = false;
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(GetPosition());
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(GetRotation());
+		m_TrackTransformation = true;
+		const int from_id = GASS_PTR_TO_INT(this);
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id)));
 	}
-
 
 	/*	bool ODEBodyComponent::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
 	{

@@ -92,10 +92,7 @@ namespace GASS
 		void BodyMoved();
 		void static BodyMovedCallback(dBodyID id);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
-		void OnRotationChanged(RotationRequestPtr message);
-		void OnWorldRotationChanged(WorldRotationRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void DampenBody( dBodyID body, float vScale, float aScale );
 		dSpaceID GetSecondarySpace();
 	protected:
@@ -110,6 +107,7 @@ namespace GASS
 		bool m_AutoDisable;
 		bool m_FastRotation;
 		bool m_Active;
+		bool m_TrackTransformation;
 		
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;
