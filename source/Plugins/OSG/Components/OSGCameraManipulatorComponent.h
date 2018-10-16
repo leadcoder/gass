@@ -45,10 +45,7 @@ namespace GASS
 	protected:
 		void SetRotation(const Quaternion& rot);
 		void SetPosition(const Vec3& pos);
-		void OnWorldPositionRequest(WorldPositionRequestPtr message);
-		void OnWorldRotationRequest(WorldRotationRequestPtr message);
-		void OnPositionRequest(PositionRequestPtr message);
-		void OnRotationRequest(RotationRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
 	private:
@@ -56,12 +53,9 @@ namespace GASS
 		static void _SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot);
 		static void _SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos);
 		std::string m_ManName;
-		//osg::ref_ptr<osgGA::CameraManipulator> m_Manipulator;
 		osg::ref_ptr<osgGA::OrbitManipulator> m_OrbitMan;
-		Vec3 m_InitPos;
-		Quaternion m_InitRot;
 		bool m_ReadyToRun;
-
+		bool m_UpdateCameraFromLocation;
 	};
 	typedef GASS_SHARED_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
 	typedef GASS_WEAK_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;

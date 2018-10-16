@@ -37,16 +37,13 @@ namespace GASS
 		void _SetPosition(const GASS::Vec3 &pos);
 		void _SetRotation(const GASS::Quaternion &rot);
 		void OnCameraFlyToObject(CameraFlyToObjectRequestPtr message);
-		void OnWorldPositionRequest(WorldPositionRequestPtr message);
-		void OnWorldRotationRequest(WorldRotationRequestPtr message);
-		void OnPositionRequest(PositionRequestPtr message);
-		void OnRotationRequest(RotationRequestPtr message);
-
+		void OnTransformationChanged(TransformationChangedEventPtr event);
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;
 		osg::Fog* m_Fog;
 
 		Vec3 m_CurrentPos;
 		Quaternion m_CurrentRot;
+		bool m_UpdateCameraFromLocation;
 	};
 }
 

@@ -29,9 +29,9 @@
 namespace GASS
 {
 	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_OrbitMan(NULL),
-		m_InitPos(0,0,0),
 		m_ReadyToRun(false),
-		m_ManName("Terrain")
+		m_ManName("Terrain"),
+		m_UpdateCameraFromLocation(true)
 	{
 
 	}
@@ -49,11 +49,7 @@ namespace GASS
 
 	void OSGCameraManipulatorComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnWorldPositionRequest,WorldPositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnWorldRotationRequest,WorldRotationRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnPositionRequest,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnRotationRequest,RotationRequest,0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnTransformationChanged, TransformationChangedEvent,0));
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>()->Register(shared_from_this());
 
 		if(m_ManName == "Trackball")
@@ -71,39 +67,12 @@ namespace GASS
 		m_OrbitMan->setAllowThrow(false);
 	}
 
-	void OSGCameraManipulatorComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
+	void OSGCameraManipulatorComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		const int id = GASS_PTR_TO_INT(this);
-		if(message->GetSenderID() != id)
+		if (m_UpdateCameraFromLocation)
 		{
-			SetPosition(message->GetPosition());
-		}
-	}
-
-	void OSGCameraManipulatorComponent::OnWorldRotationRequest(WorldRotationRequestPtr message)
-	{
-		const int id = GASS_PTR_TO_INT(this);
-		if(message->GetSenderID() != id)
-		{
-			SetRotation(message->GetRotation());
-		}
-	}
-
-	void OSGCameraManipulatorComponent::OnPositionRequest(PositionRequestPtr message)
-	{
-		int id = GASS_PTR_TO_INT(this);
-		if(message->GetSenderID() != id)
-		{
-			SetPosition(message->GetPosition());
-		}
-	}
-
-	void OSGCameraManipulatorComponent::OnRotationRequest(RotationRequestPtr message)
-	{
-		int id = GASS_PTR_TO_INT(this);
-		if(message->GetSenderID() != id)
-		{
-			SetRotation(message->GetRotation());
+			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
 
@@ -114,13 +83,6 @@ namespace GASS
 
 		//Note: terrain manipulator will try to intersect to get new center pos and may hit skybox (or other unwanted geometries)
 		man->setTransformation(OSGConvert::ToOSG(pos), center, up);
-		//Keep update direction or center point?
-		/*osg::Vec3d dir = center - eye;
-		dir.normalize();
-		dir = dir * 10000.0;
-		eye = OSGConvert::ToOSG(pos);
-		center = eye + dir;
-		m_OrbitMan->setTransformation(eye, center, up);*/
 	}
 
 	void OSGCameraManipulatorComponent::_SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot)
@@ -141,13 +103,7 @@ namespace GASS
 
 	void OSGCameraManipulatorComponent::SetPosition(const Vec3& pos)
 	{
-		//If not initialized, store position as initial value
-		if (!m_ReadyToRun) 
-		{
-			//just save pos, will be  apply on first scene tick
-			m_InitPos = pos;
-		}
-		else if (m_OrbitMan)
+		if (m_OrbitMan)
 		{
 			_SetOrbitManPosition(m_OrbitMan, pos);
 		}
@@ -155,11 +111,7 @@ namespace GASS
 
 	void OSGCameraManipulatorComponent::SetRotation(const Quaternion& rot)
 	{
-		if (!m_ReadyToRun)
-		{
-			m_InitRot = rot;
-		}
-		else if (m_OrbitMan)
+		if (m_OrbitMan)
 		{
 			_SetOrbitManRotation(m_OrbitMan, rot);
 		}
@@ -183,23 +135,26 @@ namespace GASS
 	{
 		if (!m_ReadyToRun && m_OrbitMan && m_OrbitMan->getNode())
 		{
-			//set ReadyToRun=true first, used inside SetPosition and SetRotation
+			//set ReadyToRun=true first frame
 			m_ReadyToRun = true;
-			SetPosition(m_InitPos);
-			SetRotation(m_InitRot);
+			const Vec3 initial_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			const Quaternion initial_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			SetPosition(initial_pos);
+			SetRotation(initial_rot);
 			
 			osg::Vec3d eye, center, up;
 			m_OrbitMan->getTransformation(eye, center, up);
 			m_OrbitMan->setHomePosition(eye, center, up);
 		}
 		
-		const int id = GASS_PTR_TO_INT(this);
-
 		//update LocationComponent with current camera pos and rot
 		GASS::Vec3 pos;
 		GASS::Quaternion rot;
 		_ExtractTransformationFromOrbitManipulator(m_OrbitMan, pos, rot);
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos, id)));
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, id)));
+
+		m_UpdateCameraFromLocation = false;
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
+		m_UpdateCameraFromLocation = true;
 	}
 }

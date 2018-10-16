@@ -44,7 +44,8 @@
 namespace GASS
 {
 	OSGEarthCameraManipulatorComponent::OSGEarthCameraManipulatorComponent() : m_Fog(NULL),
-		m_CurrentPos(0,0,0)
+		m_CurrentPos(0,0,0),
+		m_UpdateCameraFromLocation(true)
 	{
 
 	}
@@ -75,10 +76,7 @@ namespace GASS
 
 		osgEarth::Util::EarthManipulator* manip = earth_sm->GetManipulator().get();
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnWorldPositionRequest, WorldPositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnWorldRotationRequest, WorldRotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnPositionRequest, PositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnRotationRequest, RotationRequest, 0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 
 		if (!manip)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed get osgEarth::Util::EarthManipulator from OSGEarthSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
@@ -138,41 +136,16 @@ namespace GASS
 	}
 
 
-	void OSGEarthCameraManipulatorComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
-	{
-		int id = GASS_PTR_TO_INT(this);
-		if (message->GetSenderID() != id)
-		{
-			_SetPosition(message->GetPosition());
-		}
-	}
 
-	void OSGEarthCameraManipulatorComponent::OnWorldRotationRequest(WorldRotationRequestPtr message)
+	void OSGEarthCameraManipulatorComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		const int id = GASS_PTR_TO_INT(this);
-		if (message->GetSenderID() != id)
+		if (m_UpdateCameraFromLocation)
 		{
-			_SetRotation(message->GetRotation());
+			_SetPosition(event->GetPosition());
+			_SetRotation(event->GetRotation());
 		}
 	}
-
-	void OSGEarthCameraManipulatorComponent::OnPositionRequest(PositionRequestPtr message)
-	{
-		int id = GASS_PTR_TO_INT(this);
-		if (message->GetSenderID() != id)
-		{
-			_SetPosition(message->GetPosition());
-		}
-	}
-
-	void OSGEarthCameraManipulatorComponent::OnRotationRequest(RotationRequestPtr message)
-	{
-		int id = GASS_PTR_TO_INT(this);
-		if (message->GetSenderID() != id)
-		{
-			_SetRotation(message->GetRotation());
-		}
-	}
+	
 
 	void OSGEarthCameraManipulatorComponent::_SetPosition(const GASS::Vec3 &pos)
 	{
@@ -273,19 +246,21 @@ namespace GASS
 			const GASS::Vec3 pos = OSGConvert::ToGASS(translation);
 			const GASS::Quaternion rot = OSGConvert::ToGASS(rotation);
 
+			m_UpdateCameraFromLocation = false;
 			//only update if position changed
 			if (!pos.Equal(m_CurrentPos, 0.0001))
 			{
-				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos, id)));
+				GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
 				m_CurrentPos = pos;
 			}
 
 			//only update if rotation changed
 			if (rot != m_CurrentRot)
 			{
-				GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, id)));
+				GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 				m_CurrentRot = rot;
 			}
+			m_UpdateCameraFromLocation = true;
 
 			//use height based fog
 		/*	double visibiliy = 40000;
