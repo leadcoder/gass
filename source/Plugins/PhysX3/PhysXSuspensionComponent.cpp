@@ -103,12 +103,13 @@ namespace GASS
 
 		Vec3 chassis_pos = chassis_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-		Vec3 world_wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		//Vec3 world_wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
 		physx::PxQuat no_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
 
 		//Create actor to connect steer and suspension joint to
-		m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(PxConvert::ToPx(world_wheel_pos),no_rot));
+		//m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(PxConvert::ToPx(world_wheel_pos),no_rot));
+		m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(physx::PxVec3(0, 0, 0), no_rot));
 		m_SuspensionActor->setMass(wheel_comp->GetMass());
 		sm->GetPxScene()->addActor(*m_SuspensionActor);
 
@@ -166,7 +167,6 @@ namespace GASS
 
 	void PhysXSuspensionComponent::UpdateMotor()
 	{
-
 		if(m_WheelAxisJoint)
 		{
 			physx::PxD6JointDrive drive(0, m_WheelJointDamping, m_DriveMaxTorque, false);

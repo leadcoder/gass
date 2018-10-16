@@ -28,7 +28,8 @@ namespace GASS
 	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :m_StaticActor(NULL),
 		m_Shape(NULL),
 		m_Offset(0,0,0),
-		m_SimulationCollision(true)
+		m_SimulationCollision(true),
+		m_SizeFromMesh(true)
 	{
 	}
 
