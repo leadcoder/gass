@@ -122,7 +122,7 @@ namespace GASS
 			m_SuspensionActor, physx::PxTransform(physx::PxVec3(0,0,0),no_rot));
 
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
-		//m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
+		m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
 		//m_SuspensionJoint->setLinearLimit(physx::PxJointLimit(1,0.1));
 		m_SuspensionJoint->setLinearLimit(physx::PxJointLinearLimit(1,physx::PxSpring(1,1)));
 		physx::PxD6JointDrive suspension_drive(m_Strength, m_Damping, m_SpringJointMaxForce, false);
