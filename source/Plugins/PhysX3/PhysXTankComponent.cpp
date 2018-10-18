@@ -52,7 +52,7 @@ namespace GASS
 		m_Debug(false),
 		m_MassOffset(0,0,0),
 		m_SteerLimit(0.6f),
-		m_TrackTransformation(false)
+		m_TrackTransformation(true)
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
