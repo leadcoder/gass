@@ -55,6 +55,9 @@ namespace GASS
 
 		SceneObjectPtr GetFirstSelected();
 
+		void _Move(const Vec3 &pos);
+		void _Rotate(const Quaternion &pos);
+
 		Quaternion m_BaseRot;
 		GraphicsMeshPtr m_MeshData;
 		ColorRGBA m_Color;
@@ -74,6 +77,7 @@ namespace GASS
 		std::string m_HighlightMat;
 		GASS::Vec3 m_PreviousPos;
 		Quaternion m_PreviousRot;
+		bool m_TrackTransformation;
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;
