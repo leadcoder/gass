@@ -96,6 +96,7 @@ namespace GASS
 		void OnUpdateEulerAngles(UpdateEulerAnglesRequestPtr message);
 		void OnAttachToParent(AttachToParentRequestPtr message);
 
+		void NotifyTransformationChange();
 		//helper function to get first parent with location component
 		OgreLocationComponentPtr GetParentLocation();
 

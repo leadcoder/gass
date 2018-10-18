@@ -125,26 +125,24 @@ namespace GASS
 			m_OgreNode = sm->getRootSceneNode()->createChildSceneNode(name);
 		}
 
-		//update scale
-		SetScale(m_Scale);
-
-		m_OgreNode->setListener(this);
 		Ogre::Any any_this(this);
 		m_OgreNode->getUserObjectBindings().setUserAny(any_this);
 
-		PositionRequestPtr pos_msg(new GASS::PositionRequest(m_Pos));
-		RotationRequestPtr rot_msg;
-		Vec3 axis_rot = m_EulerRot.GetAxisRotation();
-		if (axis_rot != Vec3(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_EulerRot.GetQuaternion()));
-		else //use
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
+		m_OgreNode->setListener(this);
 
+		//update scale
+		SetScale(m_Scale);
+		
+
+		SetPosition(m_Pos);
+		Quaternion rot = m_QRot;
+		const Vec3 axis_rot = m_EulerRot.GetAxisRotation();
+		if (axis_rot != Vec3(0, 0, 0))
+			rot = m_EulerRot.GetQuaternion();
+
+		SetRotation(rot);
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>( shared_from_this());
 		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
-
-		GetSceneObject()->PostRequest(pos_msg);
-		GetSceneObject()->PostRequest(rot_msg);
 	}
 
 	void OgreLocationComponent::OnDelete()
@@ -186,11 +184,7 @@ namespace GASS
 
 	void OgreLocationComponent::PositionRequest(PositionRequestPtr message)
 	{
-		m_Pos = message->GetPosition();
-		if(m_OgreNode)
-		{
-			m_OgreNode->setPosition(OgreConvert::ToOgre(m_Pos));
-		}
+		SetPosition(message->GetPosition());
 	}
 
 	void OgreLocationComponent::OnScaleMessage(ScaleRequestPtr message)
@@ -218,6 +212,7 @@ namespace GASS
 			}
 			m_OgreNode->setPosition(opos);
 			m_Pos = OgreConvert::ToGASS(opos);
+			NotifyTransformationChange();
 		}
 	}
 
@@ -246,6 +241,7 @@ namespace GASS
 			}
 			m_OgreNode->setOrientation(orot);
 			m_QRot = OgreConvert::ToGASS(orot);
+			NotifyTransformationChange();
 		}
 	}
 
@@ -261,22 +257,27 @@ namespace GASS
 
 	void OgreLocationComponent::SetVisibility(bool visibility)
 	{
-		if(m_OgreNode) m_OgreNode->setVisible(visibility);
+		if(m_OgreNode) 
+			m_OgreNode->setVisible(visibility);
 	}
 
 	void OgreLocationComponent::SetScale(const Vec3 &value)
 	{
 		m_Scale = value;
-		if(m_OgreNode) m_OgreNode->setScale(OgreConvert::ToOgre(value));
+		if (m_OgreNode)
+		{
+			m_OgreNode->setScale(OgreConvert::ToOgre(value));
+		}
 	}
 
 	void OgreLocationComponent::SetPosition(const Vec3 &value)
 	{
-		if(m_OgreNode) //initialized?
-		{
-			GetSceneObject()->PostRequest(PositionRequestPtr(new GASS::PositionRequest(value)));
-		}
 		m_Pos = value;
+		if (m_OgreNode)
+		{
+			m_OgreNode->setPosition(OgreConvert::ToOgre(m_Pos));
+			NotifyTransformationChange();
+		}
 	}
 
 	Vec3 OgreLocationComponent::GetPosition() const
@@ -315,6 +316,7 @@ namespace GASS
 		if(m_OgreNode)
 		{
 			m_OgreNode->setOrientation(OgreConvert::ToOgre(value));
+			NotifyTransformationChange();
 		}
 	}
 
@@ -398,10 +400,15 @@ namespace GASS
 
 	void OgreLocationComponent::nodeUpdated(const Ogre::Node* /*node*/)
 	{
+		NotifyTransformationChange();
+	}
+
+	void OgreLocationComponent::NotifyTransformationChange()
+	{
 		//send transformation message
 		Vec3 pos = OgreConvert::ToGASS(m_OgreNode->_getDerivedPosition());
 		Vec3 scale = OgreConvert::ToGASS(m_OgreNode->_getDerivedScale());
 		Quaternion rot = OgreConvert::ToGASS(m_OgreNode->_getDerivedOrientation());
-		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos,rot,scale)));
+		GetSceneObject()->SendImmediateEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos, rot, scale)));
 	}
 }
