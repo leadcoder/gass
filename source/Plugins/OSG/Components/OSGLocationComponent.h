@@ -57,13 +57,12 @@ namespace GASS
 		virtual Quaternion GetWorldRotation() const;
 		virtual void SetWorldRotation(const Quaternion& value);
 
-		virtual Vec3 GetScale() const { return m_Scale; }
+		virtual Vec3 GetScale() const;
 		virtual void SetScale(const Vec3 &value);
 
 		virtual bool GetAttachToParent() const;
 		virtual void SetAttachToParent(bool value);
 		//end ILocationComponent
-
 			
 		//IOSGNode interface
 		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
@@ -72,7 +71,7 @@ namespace GASS
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 	protected:
-		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }
+		//@deprected message functions 
 		void OnPositionMessage(PositionRequestPtr message);
 		void OnRotationMessage(RotationRequestPtr  message);
 		void OnScaleMessage(ScaleRequestPtr message);
@@ -82,13 +81,15 @@ namespace GASS
 		void OnAttachToParent(AttachToParentRequestPtr message);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 		
-		//helper
+		//remove this?
+		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }
 
-
-		void _OnPositionUpdate(SceneObjectPtr scene_object, OSGLocationComponentPtr parent_location = OSGLocationComponentPtr());
-		void _OnRotationUpdate(SceneObjectPtr scene_object, OSGLocationComponentPtr parent_location = OSGLocationComponentPtr());
-		void _OnParentPositionUpdated(OSGLocationComponentPtr parent_location);
-		void _OnParentRotationUpdated(OSGLocationComponentPtr parent_location);
+		//Internal functions
+		OSGLocationComponent* _GetParentLocation() const { return m_ParentLocation; }
+		void _OnPositionUpdateRecursive(SceneObjectPtr scene_object);
+		void _OnRotationUpdateRecursive(SceneObjectPtr scene_object);
+		void _OnParentPositionUpdated();
+		void _OnParentRotationUpdated();
 		void _NotifyTransformationChange() const;
 		Vec3 _LocalToWorld(const Vec3 &world_pos) const;
 		Vec3 _WorldToLocal(const Vec3 &local_pos) const;
@@ -98,18 +99,17 @@ namespace GASS
 		osg::ref_ptr<osg::Group> _GetOSGRootGroup();
 		
 		//! relative position of the scene node.
-		Vec3 m_Pos;
+		Vec3 m_Position;
+		Vec3 m_WorldPosition;
 		//! relative rotation of the scene node.
-		EulerRotation m_EulerRot;
-		Quaternion m_QRot;
+		Quaternion m_Rotation;
+		//! relative rotation of the scene node in euler angles.
+		EulerRotation m_EulerRotation;
+		Quaternion m_WorldRotation;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		bool m_AttachToParent;
-
-		Vec3 m_WorldPosition;
-		Quaternion m_WorldRotation;
 		OSGLocationComponent* m_ParentLocation;
-
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 		int m_NodeMask;
