@@ -36,13 +36,12 @@
 
 namespace GASS
 {
-
 	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0),
 		m_Initialized(false),
 		m_Tangent(0,0,0),
 		m_CustomTangent(false),
-		m_Active(true)
-
+		m_Active(true),
+		m_TrackTransformation(true)
 	{
 
 	}
@@ -57,26 +56,24 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("WaypointComponent",new Creator<WaypointComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("TangentWeight", &WaypointComponent::GetTangentWeight, &WaypointComponent::SetTangentWeight);
+		RegisterProperty<bool>("CustomTangent", &WaypointComponent::GetCustomTangent, &WaypointComponent::SetCustomTangent,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	void WaypointComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnPostInitializedEvent,PostInitializedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,PositionRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnMoved,WorldPositionRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnRotate,WorldRotationRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointComponent::OnTransformation, TransformationChangedEvent, 0));
 		m_Initialized = true;
 	}
 
 	void WaypointComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
 	{
-	
 		//notify parent
 		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 		if(tangent)
 		{
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,WorldPositionRequest,1));
-			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentMoved,PositionRequest,1));
+			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentTransformation, TransformationChangedEvent,1));
 		}
 		else
 			std::cout << "Failed to find tangent in waypoint component\n";
@@ -88,7 +85,6 @@ namespace GASS
 			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
 			GetSceneObject()->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
 
-			//SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
 			if(tangent)
 			{
 				tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
@@ -101,49 +97,34 @@ namespace GASS
 	{
 		//notify parent
 		m_Active = false;
-		NotifyUpdate();
+		_NotifyUpdate();
 		m_Initialized = false;
 	}
 
-	void WaypointComponent::OnMoved(MessagePtr message)
+	void WaypointComponent::OnTransformation(TransformationChangedEventPtr event)
 	{
-		//notify parent
-		int id = GASS_PTR_TO_INT(this);
-		if(id != message->GetSenderID())
-		{
-			NotifyUpdate();
-		}
+		if(m_TrackTransformation)
+			_NotifyUpdate();
 	}
 
-
-	void WaypointComponent::OnTangentMoved(MessagePtr message)
+	void WaypointComponent::OnTangentTransformation(TransformationChangedEventPtr message)
 	{
 		//notify parent
-		int id = GASS_PTR_TO_INT(this);
-		if(id != message->GetSenderID())
+		if(m_TrackTransformation)
 		{
-			NotifyUpdate();
+			_NotifyUpdate();
 		}
-		UpdateTangentLine();
+		_UpdateTangentLine();
 	}
 
 	void WaypointComponent::Rotate(const Quaternion &rot)
 	{
-		int id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot,id)));
+		m_TrackTransformation = false;
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetRotation(rot);
+		m_TrackTransformation = true;
 	}
 
-	void WaypointComponent::OnRotate(WorldRotationRequestPtr message)
-	{
-		//use custom tangent?
-		int id = GASS_PTR_TO_INT(this);
-		if(id != message->GetSenderID())
-		{
-			NotifyUpdate();
-		}
-	}
-
-	void WaypointComponent::NotifyUpdate()
+	void WaypointComponent::_NotifyUpdate()
 	{
 		if(m_Initialized)
 		{
@@ -161,70 +142,41 @@ namespace GASS
 	void WaypointComponent::SetTangentWeight(Float value)
 	{
 		m_TangentWeight = value;
-		NotifyUpdate();
+		_NotifyUpdate();
 	}
 
-	void WaypointComponent::SetTangentLength(Float value)
+	/*void WaypointComponent::SetTangentLength(Float value)
 	{
 		m_TangentWeight = value;
-	}
+	}*/
 
 	void WaypointComponent::SetTangent(const Vec3 &tangent)
 	{
-		//m_Tangent = tangent;
-		//if(!m_CustomTangent)
+		SceneObjectPtr tangent_obj = GetSceneObject()->GetFirstChildByName("Tangent", false);
+		if (tangent_obj && tangent_obj->GetFirstComponentByClass<ILocationComponent>())
 		{
-
-			//rotate node
-			Mat4 rot_mat;
-			rot_mat.MakeIdentity();
-
-			Vec3 up(0,1,0);
-
-			Float l = tangent.Length();
-			Vec3 dir = tangent*(1.0/l);
-
-			Vec3 left = Vec3::Cross(dir,up);
-			left.Normalize();
-			up = Vec3::Cross(left,dir);
-			up.Normalize();
-
-			rot_mat.SetRotationByAxis(-left, up, dir);
-			
-			Quaternion rot;
-			rot.FromRotationMatrix(rot_mat);
-			int id = GASS_PTR_TO_INT(this);
-			//GetSceneObject()->PostMessage(MessagePtr(new RotationRequest(rot,id)));
-
-
-			//GetSceneObject()->GetFirstChildByClass<ILocationComponent>();
-			//LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>();
-			Vec3 t_pos = tangent;
-			SceneObjectPtr tangent_obj = GetSceneObject()->GetFirstChildByName("Tangent",false);
-			if(tangent_obj)
-				tangent_obj->PostRequest(PositionRequestPtr(new PositionRequest(t_pos*0.1,id)));
-			else
-				std::cout << "Failed to find tangent in waypoint compoenent\n";
-
+			m_TrackTransformation = false;
+			tangent_obj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(tangent*0.1);
+			m_TrackTransformation = true;
 		}
+		else
+			std::cout << "Failed to find tangent in waypoint compoenent\n";
 	}
 
 	Vec3 WaypointComponent::GetTangent() const
 	{
-
 		LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>(true);
 		return t_location->GetPosition()*10;
-
-		/*LocationComponentPtr wp_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>(true);
-		
-		Quaternion rot = wp_location->GetRotation();
-		Mat4 rot_mat(rot);
-		Vec3 tangent = rot_mat.GetZAxis();
-		return tangent;*/
 	}
 
+	void WaypointComponent::SetCustomTangent(bool value)
+	{ 
+		m_CustomTangent = value;
+		if(!m_CustomTangent && m_Initialized)
+			_NotifyUpdate();
+	}
 
-	void WaypointComponent::UpdateTangentLine()
+	void WaypointComponent::_UpdateTangentLine()
 	{
 		if(!m_Initialized)
 			return;
@@ -232,8 +184,6 @@ namespace GASS
 		LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>(true);
 		Vec3 t_pos = t_location->GetPosition();
 
-		//collect all children and update path
-		//const double line_steps = 115;
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);

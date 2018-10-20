@@ -331,7 +331,7 @@ namespace GASS
 
 			for(size_t  i = 0; i < spline.GetTangents().size(); i++)
 			{
-				if(!m_AutoUpdateTangents) //get tangents from wp
+				if(!m_AutoUpdateTangents || wp_vec[i]->GetCustomTangent()) //get tangents from wp
 				{
 					spline.GetTangents()[i] = wp_vec[i]->GetTangent();//* wp_vec[i]->GetTangentWeight();
 				}
@@ -342,14 +342,13 @@ namespace GASS
 
 					if(m_Radius > 0) //used fixed radius
 					{
-
 						Vec3 norm_tangent = tangent*(1.0/weight);
 						spline.GetTangents()[i] = norm_tangent*m_Radius;
 					}
 					if(i < wp_vec.size())
 					{
 						wp_vec[i]->SetTangent(tangent);
-						wp_vec[i]->SetTangentLength(weight);
+						//wp_vec[i]->SetTangentLength(weight);
 					}
 				}
 			}

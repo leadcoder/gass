@@ -32,11 +32,9 @@ namespace GASS
 	class WaypointComponent;
 	typedef GASS_WEAK_PTR<WaypointComponent> WaypointComponentWeakPtr;
 
-
 	/**
 		Component that hold waypoint data for WaypointListComponent
 	*/
-
 	class WaypointComponent : public Reflection<WaypointComponent,BaseSceneComponent>
 	{
 	public:
@@ -45,27 +43,30 @@ namespace GASS
 		static void RegisterReflection();
 		virtual void OnInitialize();
 		virtual void OnDelete();
-		Float GetTangentWeight()const;
-		void SetTangentLength(Float value);
+		//void SetTangentLength(Float value);
 		void SetTangent(const Vec3 &tangent);
 		Vec3 GetTangent() const;
 		bool GetCustomTangent() const {return m_CustomTangent;}
+		void SetCustomTangent(bool value);
 		void Rotate(const Quaternion &rot);
 		bool IsActive() const { return m_Active; }
 	protected:
+		//@deprecated
 		void SetTangentWeight(Float value);
-		void NotifyUpdate();
+		Float GetTangentWeight()const;
+
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
-		void OnMoved(MessagePtr message);
-		void OnTangentMoved(MessagePtr message);
-		void OnRotate(WorldRotationRequestPtr message);
-		void UpdateTangentLine();
-		
+		void OnTransformation(TransformationChangedEventPtr event);
+		void OnTangentTransformation(TransformationChangedEventPtr event);
+		void _UpdateTangentLine();
+		void _NotifyUpdate();
+
 		Vec3 m_Tangent;
 		Float m_TangentWeight;
 		bool m_Initialized;
 		bool m_CustomTangent;
 		bool m_Active;
+		bool m_TrackTransformation;
 	};
 
 	typedef GASS_SHARED_PTR<WaypointComponent> WaypointComponentPtr;
