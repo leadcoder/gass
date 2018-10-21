@@ -21,6 +21,7 @@
 
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Core/Math/GASSMath.h"
+#include "Core/Utils/GASSException.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
@@ -28,6 +29,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -57,7 +59,8 @@ namespace GASS
 		m_CurrentFov(45),
 		m_UpDownInput(0),
 		m_Mode(MM_AIRCRAFT),
-		m_Debug(false)
+		m_Debug(false),
+		m_TrackTransformation(true)
 	{
 
 	}
@@ -84,12 +87,12 @@ namespace GASS
 
 	void FreeCamControlComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::PositionChange,PositionRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::RotationChange,RotationRequest,0));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnTransformationChanged, TransformationChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(FreeCamControlComponent::OnInput,ControllSettingsMessage,0));
-		//ScenePtr scene = GetSceneObject()->GetScene();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( FreeCamControlComponent::OnCameraChanged,CameraChangedEvent, 0));
-		//const std::string task_node = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<CoreSystem>()->GetTaskNode();
+		
+		m_Location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
+		GASSAssert(m_Location, "Failed find Location component in FreeCamControlComponent::OnInitialize");
 		//register for updates
 		SceneManagerListenerPtr listener = shared_from_this();
 		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
@@ -109,22 +112,12 @@ namespace GASS
 			m_Active = false;
 	}
 
-	void FreeCamControlComponent::PositionChange(MessagePtr message)
+	void FreeCamControlComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
-		if(message->GetSenderID() != GASS_PTR_TO_INT(this))
+		if(m_TrackTransformation)
 		{
-			PositionRequestPtr pos_mess = GASS_STATIC_PTR_CAST<PositionRequest>(message);
-			m_Pos = pos_mess->GetPosition();
-		}
-	}
-
-	void FreeCamControlComponent::RotationChange(MessagePtr message)
-	{
-		if(message->GetSenderID() != GASS_PTR_TO_INT(this))
-		{
-			RotationRequestPtr pos_mess = GASS_STATIC_PTR_CAST<RotationRequest>(message);
-
-			Mat4 rot_mat(pos_mess->GetRotation());
+			m_Pos = event->GetPosition();
+			const Mat4 rot_mat(event->GetRotation());
 			rot_mat.ToEulerAnglesYXZ(m_EulerRot);
 		}
 	}
@@ -178,7 +171,6 @@ namespace GASS
 		}
 	}
 
-
 	void FreeCamControlComponent::SceneManagerTick(double delta_time)
 	{
 		if(m_Active)
@@ -199,15 +191,20 @@ namespace GASS
 		}
 
 		static Float speed_factor = 0;
-
+		const double  acceleration = 20;
 		if(fabs(m_ThrottleInput) > 0 || fabs(m_StrafeInput) > 0 || fabs(m_UpDownInput) > 0)
 		{
-			speed_factor += (fabs(m_ThrottleInput) + fabs(m_StrafeInput) + fabs(m_UpDownInput));
-			speed_factor *= 1.03;
+			//speed_factor += (fabs(m_ThrottleInput) + fabs(m_StrafeInput) + fabs(m_UpDownInput));
+			speed_factor += acceleration * delta_time;
 		}
 		else
 		{
-			speed_factor *= 0.9;
+			speed_factor = 0;
+			//speed_factor -= acceleration * delta_time;
+
+			//if (speed_factor < 0)
+			//	speed_factor = 0;
+			//speed_factor *= 0.9;
 		}
 
 		if(m_SpeedBoostInput)
@@ -318,10 +315,12 @@ namespace GASS
 		//tot_vel.y += up_down_speed;
 
 		m_Pos = m_Pos + tot_vel;
-		//std::cout << "Rot:" << m_Rot.x << " " << m_Rot.y << " " << m_Rot.z << std::endl;
-		//std::cout << "Pos:" << m_Pos.x << " " << m_Pos.y << " " << m_Pos.z << std::endl;
-		int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
+		
+
+		
+		m_TrackTransformation = false;
+		m_Location->SetPosition(m_Pos);
+	
 		Quaternion rot_to_send = Quaternion::CreateFromEulerYXZ(m_EulerRot);
 		/*if(up.z == 1)
 		{
@@ -331,8 +330,8 @@ namespace GASS
 			//we have to rotate 90 deg if z is up
 			//rot_to_send = Quaternion(Vec3(0,Math::Deg2Rad(90),0))*rot_to_send;
 		}*/
-		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(rot_to_send,from_id)));
-
+		m_Location->SetRotation(rot_to_send);
+		m_TrackTransformation = true;
 		m_HeadingInput = 0;
 		m_PitchInput = 0;
 		//m_UpDownInput = m_UpDownInput*0.9;

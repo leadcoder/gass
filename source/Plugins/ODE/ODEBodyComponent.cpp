@@ -438,12 +438,8 @@ namespace GASS
 						const dReal *p = dBodyGetPosition(b2);
 						Vec3 pos(p[0],p[1],p[2]);
 						pos = pos + trans_vec;
-						child_body->SetPosition(pos);
-
-						//send position message in case of paused physics
-						int from_id = GASS_PTR_TO_INT(this);
-
-						child_body->GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(pos,from_id)));
+						//child_body->SetPosition(pos);
+						child_body->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
 					}
 					/*const dReal *p = dBodyGetPosition(b2);
 					Vec3 pos(p[0],p[1],p[2]);

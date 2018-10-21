@@ -41,7 +41,6 @@ namespace GASS
 	void DistanceScaleComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnTransformation,TransformationChangedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnWorldPosition,WorldPositionRequest,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraChanged,CameraChangedEvent,1));
 
 		//EditorSceneManagerPtr esm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
@@ -123,11 +122,6 @@ namespace GASS
 	void DistanceScaleComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		UpdateScale();
-	}
-
-	void DistanceScaleComponent::OnWorldPosition(WorldPositionRequestPtr message)
-	{
-		
 	}
 
 	void DistanceScaleComponent::OnCameraMoved(TransformationChangedEventPtr message)

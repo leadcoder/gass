@@ -28,12 +28,12 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
 {
 	class ControlSetting;
-	class ILocationComponent;
 	class ICameraComponent;
 	class Scene;
 	typedef GASS_SHARED_PTR<Scene> ScenePtr;
@@ -70,8 +70,8 @@ namespace GASS
 	protected:
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(ControllSettingsMessagePtr message);
-		void PositionChange(MessagePtr message);
-		void RotationChange(MessagePtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
+
 		void SetMode(const MotionModeBinder &value) {m_Mode = value;}
 		MotionModeBinder GetMode()const  {return m_Mode;}
 		void SetDebug(bool debug) {m_Debug= debug;}
@@ -97,6 +97,7 @@ namespace GASS
 		bool m_EnableRotInput;
 		bool m_SpeedBoostInput;
 		bool m_Debug;
+		bool m_TrackTransformation;
 		Float m_ThrottleInput;
 		Float m_StrafeInput;
 		Float m_PitchInput;
@@ -105,6 +106,7 @@ namespace GASS
 		Float m_CurrentFov;
 		Float m_MaxFov;
 		Float m_MinFov;
+		ILocationComponent* m_Location;
 	};
 }
 

@@ -183,6 +183,7 @@ namespace GASS
 	{
 		//update osg camera with gass camera attributes?
 		m_OSGCamera = camera;
+		_UpdateFromLocation();
 		_UpdateProjection();
 		SetLODScale(m_LODScale);
 	}

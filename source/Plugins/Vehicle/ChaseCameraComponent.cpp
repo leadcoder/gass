@@ -125,7 +125,7 @@ namespace GASS
 		m_Velocity += spring_acceleration * delta_time;
 		eye_pos += m_Velocity * delta_time;
 		
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(eye_pos)));
+		camera_location->SetWorldPosition(eye_pos);
 		
 		Vec3 camera_dir = eye_pos - target_pos;
 		

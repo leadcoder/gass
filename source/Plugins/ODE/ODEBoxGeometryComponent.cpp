@@ -28,6 +28,8 @@
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+
 
 namespace GASS
 {
@@ -155,10 +157,7 @@ namespace GASS
 
 		SceneObjectPtr scene_object = GetDebugObject();
 		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-
-		//Vec3 pos  = m_Offset + offset;
-		//scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
-		scene_object->PostRequest(PositionRequestPtr(new PositionRequest(offset,-1,0.3)));
+		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 	}
 
 

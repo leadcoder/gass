@@ -17,7 +17,6 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 	private:
-		void OnWorldPosition(WorldPositionRequestPtr message);
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
