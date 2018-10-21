@@ -84,8 +84,8 @@ int start(int argc, char* argv[])
 	scene->GetRootSceneObject()->AddChildSceneObject(camera_obj, true);
 	
 	//Set camera position
-	GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
-	camera_obj->PostRequest(pos_msg);
+	camera_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
+
 
 	//Make this the primary camera
 	vp->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
@@ -95,8 +95,7 @@ int start(int argc, char* argv[])
 	scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);
 
 	//Set start position
-	GASS::Vec3 pos = scene->GetStartPos();
-	vehicle_obj->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
+	vehicle_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
 
 
 	GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();

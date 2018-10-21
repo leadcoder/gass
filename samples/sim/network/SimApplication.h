@@ -49,10 +49,9 @@ public:
 
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		  if(free_obj)
 		  {
-			  free_obj->SendImmediateRequest(pos_msg);
+			  free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
 			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 		  }
 	  }
@@ -84,19 +83,16 @@ public:
 		  
 		  //create free camera and set start pos
 		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
 		  if(free_obj)
 		  {
-			  free_obj->SendImmediateRequest(pos_msg);
+			  free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
 			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 		  }
 
 		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
-		  GASS::Vec3 pos = scene->GetStartPos();
 		  
 		  if(object)
-				object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
-	
+			  object->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
 		  return true;
 	  }
 

@@ -28,7 +28,7 @@ public:
 		pos.x += clients_connected*5;
 		if(object)
 		{
-			object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
+			object->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(pos);
 			object->PostRequest(GASS::ClientRemoteMessagePtr(new GASS::ClientRemoteMessage(message->GetClientName(),"EnterVehicle","")));
 		}
 	}
@@ -57,8 +57,8 @@ public:
 		GASS::Vec3 pos = scene->GetStartPos();
 
 		if(object)
-			object->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
-		
+			object->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(pos);
+	
 		return true;
 	}
 };

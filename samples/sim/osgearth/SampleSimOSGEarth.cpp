@@ -84,8 +84,8 @@ int run(int /*argc*/, char** /*argv[]*/)
 	scene->GetRootSceneObject()->AddChildSceneObject(camera_obj, true);
 	
 	//Set camera position
-	GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(scene->GetStartPos()));
-	camera_obj->PostRequest(pos_msg);
+	camera_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
+
 
 	//Make this the primary camera
 	vp->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());

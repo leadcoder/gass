@@ -75,7 +75,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		gfx_plugin = "GASSPluginOSG";
 	}
 
-	bool use_ode = true;
+	bool use_ode = false;
 	
 	std::vector<std::string> plugins;
 	plugins.push_back(gfx_plugin);
@@ -318,7 +318,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	}
 
 	GASS::SceneObjectPtr terrain_obj = scene->LoadObjectFromTemplate("PlaneObject", scene->GetRootSceneObject());
-	terrain_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0, 0, 0))));
+	//terrain_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0, 0, 0))));
 	//terrain_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("terrain.3DS")));
 
 	GASS::SceneObjectPtr light_obj = scene->LoadObjectFromTemplate("LightObject", scene->GetRootSceneObject());
@@ -328,7 +328,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	//if (false) //create bridge
 	{
 		GASS::SceneObjectPtr bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment", scene->GetRootSceneObject());
-		bdrige_seg_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10, 2, 0))));
+		bdrige_seg_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 2, 0));
 
 		GASS::BaseSceneComponentPtr body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
 		try
@@ -340,7 +340,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		{
 			GASS::SceneObjectPtr bdrige_seg_obj1 = bdrige_seg_obj2;
 			bdrige_seg_obj2 = scene->LoadObjectFromTemplate("BridgeSegment", scene->GetRootSceneObject());
-			bdrige_seg_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10, 2, i))));
+			bdrige_seg_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 2, i));
 
 			GASS::SceneObjectPtr bdrige_hinge_obj = scene->LoadObjectFromTemplate("BridgeHinge", scene->GetRootSceneObject());
 			GASS::BaseSceneComponentPtr hinge_comp = bdrige_hinge_obj->GetBaseSceneComponent("PhysicsHingeComponent");
@@ -364,25 +364,24 @@ int main(int/*argc*/, char* /*argv[]*/)
 		}
 		catch (...) {}
 		GASS::SceneObjectPtr box_obj = scene->LoadObjectFromTemplate("BoxObject", scene->GetRootSceneObject());
-		box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10, 0.6, 2))));
+		box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 0.6, 2));
 
 		GASS::SceneObjectPtr box_obj2 = scene->LoadObjectFromTemplate("BoxObject", scene->GetRootSceneObject());
-		box_obj2->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(10, 0.6, 20))));
+		box_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 0.6, 20));
 	}
 
 
 	GASS::SceneObjectPtr vehicle_obj = scene->LoadObjectFromTemplate("VehicleObject", scene->GetRootSceneObject());
-	vehicle_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(GASS::Vec3(0, 3, 5))));
+	vehicle_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(0, 3, 5));
 
 	//GASS::SceneObjectPtr car_obj = scene->LoadObjectFromTemplate("PxCar",scene->GetRootSceneObject());
 	//car_obj->SendImmediate(GASS::MessagePtr(new GASS::PositionRequest(GASS::Vec3(0,3,0))));
 
 	//create free camera and set start pos
 	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject", scene->GetRootSceneObject());
-	GASS::PositionRequestPtr pos_msg(new GASS::PositionRequest(GASS::Vec3(0, 2, 0)));
 	if (free_obj)
 	{
-		free_obj->SendImmediateRequest(pos_msg);
+		free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(0, 2, 0));
 		free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
 	}
 
@@ -423,8 +422,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 				GASS::Vec3 torq(0, 0, 2000);
 				torq = rot * torq;
 				box_obj = scene->LoadObjectFromTemplate("BoxObject", scene->GetRootSceneObject());
-				box_obj->SendImmediateRequest(GASS::PositionRequestPtr(new GASS::PositionRequest(pos)));
-				box_obj->SendImmediateRequest(GASS::RotationRequestPtr(new GASS::RotationRequest(rot)));
+				box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(pos);
+				box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetRotation(rot);
 				box_obj->GetFirstComponentByClass<GASS::IPhysicsBodyComponent>()->AddForce(vel);
 				box_obj->GetFirstComponentByClass<GASS::IPhysicsBodyComponent>()->AddTorque(torq);
 
