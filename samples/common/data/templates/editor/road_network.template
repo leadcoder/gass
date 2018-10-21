@@ -69,7 +69,7 @@
 					<LocationComponent>
 						<Position value="0 0.1 0"/>
 						<Rotation value="0 0 0"/>
-						<AttachToParent value="false"/>
+						<AttachToParent value="true"/>
 					</LocationComponent>
 					<ManualMeshComponent>
 					</ManualMeshComponent>
@@ -82,7 +82,7 @@
 					<LocationComponent>
 						<Position value="0 0.06 0"/>
 						<Rotation value="0 0 0"/>
-						<AttachToParent value="false"/>
+						<AttachToParent value="true"/>
 					</LocationComponent>
 					<ManualMeshComponent>
 					</ManualMeshComponent>
