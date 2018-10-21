@@ -28,6 +28,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectTemplate.h"
 #include "Sim/GASSSimEngine.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 
 namespace GASS
 {
@@ -90,6 +91,6 @@ namespace GASS
 	void VehicleDebugComponent::OnGotoPosition(GotoPositionRequestPtr message)
 	{
 		Vec3 pos = message->GetPosition();
-		m_WaypointObj->PostRequest(PositionRequestPtr(new PositionRequest(pos)));
+		m_WaypointObj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 	}
 }

@@ -334,19 +334,22 @@ namespace GASS
 
 			}
 
-			if(m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || m_ClientLocationMode == UNCHANGED)
+			if (LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>())
 			{
-				if(m_UpdatePosition)
-					GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(new_pos)));
-				if(m_UpdateRotation)
-					GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(new_rot)));
-			}
-			else if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
-			{
-				if(m_UpdatePosition)
-					GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_pos)));
-				if(m_UpdateRotation)
-					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot)));
+				if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE || m_ClientLocationMode == UNCHANGED)
+				{
+					if (m_UpdatePosition)
+						location->SetPosition(new_pos);
+					if (m_UpdateRotation)
+						location->SetRotation(new_rot);
+				}
+				else if (m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_WORLD)
+				{
+					if (m_UpdatePosition)
+						location->SetWorldPosition(new_pos);
+					if (m_UpdateRotation)
+						location->SetWorldRotation(new_rot);
+				}
 			}
 
 			GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(m_Velocity, m_AngularVelocity)));

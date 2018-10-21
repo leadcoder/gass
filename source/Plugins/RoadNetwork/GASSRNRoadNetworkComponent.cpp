@@ -162,7 +162,7 @@ namespace GASS
 		{
 			SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate,GetSceneObject());
 			GASSAssert(node_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
-			node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(m_Network.m_Nodes[i]->Position)));
+			node_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_Network.m_Nodes[i]->Position);
 			mapping[m_Network.m_Nodes[i]] = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 		}
 
@@ -184,7 +184,7 @@ namespace GASS
 					{
 						SceneObjectPtr node_obj = GetSceneObject()->GetScene()->LoadObjectFromTemplate(m_NodeTemplate, GetSceneObject());
 						GASSAssert(node_obj,"Failed to create scene object in void RNRoadNetworkComponent::SetEdit");
-						node_obj->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(m_Network.m_Edges[i]->Waypoints[j])));
+						node_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_Network.m_Edges[i]->Waypoints[j]);
 						GraphNodeComponentPtr node_comp = node_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						edge_comp->SetEndNode(node_comp);
 						node_comp->AddEdge(edge_comp);

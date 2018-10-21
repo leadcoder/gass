@@ -88,8 +88,7 @@ int start(int argc, char* argv[])
 	scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);
 
 	//Set start position
-	GASS::Vec3 pos = scene->GetStartPos();
-	vehicle_obj->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
+	vehicle_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
 
 	//Update the engine forever
 	bool done = false;

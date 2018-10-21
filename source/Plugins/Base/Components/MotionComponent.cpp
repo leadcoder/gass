@@ -24,6 +24,7 @@
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
@@ -259,9 +260,10 @@ namespace GASS
 		rot.FromAngleAxis(turn_speed_y, Vec3(0, 1, 0));
 		Quaternion new_rot = m_CurrentRot * rot;
 		
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(new_pos);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(new_rot);
+
 		int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot, from_id)));
-		GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(new_pos, from_id)));
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0, 0, -m_CurrentSpeed), Vec3(0, 0, 0), from_id)));
 		
 		if(m_Debug)
