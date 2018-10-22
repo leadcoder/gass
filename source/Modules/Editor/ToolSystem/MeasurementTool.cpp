@@ -9,6 +9,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 
 namespace GASS
 {
@@ -92,7 +93,7 @@ namespace GASS
 			std::string measurement_value = sstream.str();
 			
 			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
-			ruler->PostRequest(PositionRequestPtr(new PositionRequest(text_pos)));
+			ruler->GetFirstComponentByClass<ILocationComponent>()->SetPosition(text_pos);
 		}
 	}
 

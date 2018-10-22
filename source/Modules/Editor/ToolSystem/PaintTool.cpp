@@ -6,6 +6,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
@@ -39,7 +40,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
+			gizmo->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(info.m_3DPos);
 		}
 	}
 

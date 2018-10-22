@@ -13,6 +13,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Plugins/PagedGeometry/PGMessages.h"
 
@@ -90,8 +91,7 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos,from_id)));
+			gizmo->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(info.m_3DPos);
 		}
 	}
 

@@ -339,12 +339,13 @@ namespace GASS
 					//calculate distance from object
 					const double dist_to_object = std::max(object_radius * 4, 10.0);
 					const bool geocentric = cam_obj->GetScene()->GetGeocentric();
+					LocationComponentPtr location = cam_obj->GetFirstComponentByClass<ILocationComponent>();
 					if (geocentric)
 					{
 						const Quaternion camera_rot = GetGeocentricRotation(object_pos, EulerRotation(0, 30, 0));
 						const Vec3 camera_pos = object_pos + camera_rot.GetYAxis() * dist_to_object;
-						cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
-						cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+						location->SetWorldPosition(camera_pos);
+						location->SetWorldRotation(camera_rot);
 					}
 					else
 					{
@@ -352,11 +353,8 @@ namespace GASS
 						const EulerRotation rel_rot(0, -30, 0);
 						const Quaternion camera_rot = Quaternion::CreateFromEulerYXZ(rel_rot.GetAxisRotation());
 						const Vec3 camera_pos = object_pos + camera_rot.GetZAxis() * dist_to_object;
-						//Get no response from OGRE when using World...
-						//cam_obj->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(camera_pos)));
-						//cam_obj->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(cam_rot)));
-						cam_obj->PostRequest(PositionRequestPtr(new PositionRequest(camera_pos)));
-						cam_obj->PostRequest(RotationRequestPtr(new RotationRequest(camera_rot)));
+						location->SetWorldPosition(camera_pos);
+						location->SetWorldRotation(camera_rot);
 					}
 				}
 			}

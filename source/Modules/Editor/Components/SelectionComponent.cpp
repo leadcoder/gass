@@ -117,7 +117,7 @@ namespace GASS
 		GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(visible)));
 
 		if (visible) //move to location
-			GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(world_pos)));
+			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(world_pos);
 	}
 
 	void SelectionComponent::OnSelectionChanged(EditorSelectionChangedEventPtr message)

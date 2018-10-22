@@ -9,6 +9,7 @@
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 
 
 namespace GASS
@@ -42,7 +43,7 @@ namespace GASS
 
 				int from_id = GASS_PTR_TO_INT(this);
 
-				selected->SendImmediateRequest(PositionRequestPtr(new PositionRequest(new_position,from_id)));
+				comp->SetPosition(new_position);
 
 				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);

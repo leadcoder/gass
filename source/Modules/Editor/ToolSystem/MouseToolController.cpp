@@ -17,6 +17,7 @@
 #include "Sim/Interface/GASSIInputSystem.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -550,12 +551,11 @@ namespace GASS
 			if(so)
 			{
 				site->AddChildSceneObject(so, true);
-
-				int from_id = GASS_PTR_TO_INT(this);
-
-				so->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(pos,from_id)));
-				//so->SendImmediateRequest(BaseRotationRequestPtr(new BaseRotationRequest(rot,from_id)));
-				so->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
+				if (LocationComponentPtr location = so->GetFirstComponentByClass<ILocationComponent>())
+				{
+					location->SetWorldPosition(pos);
+					location->SetWorldRotation(rot);
+				}
 			}
 			else
 			{

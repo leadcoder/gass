@@ -8,6 +8,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
@@ -74,14 +75,18 @@ namespace GASS
 					else
 						parent_obj->AddChildSceneObject(scene_object, true);
 					
-					int from_id = GASS_PTR_TO_INT(this);
-					scene_object->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos, from_id)));
+					if (LocationComponentPtr location = scene_object->GetFirstComponentByClass<ILocationComponent>())
+					{
+						location->SetWorldPosition(info.m_3DPos);
+					}
 				}
 				else
 				{
 					parent_obj->AddChildSceneObject(scene_object, true);
-					int from_id = GASS_PTR_TO_INT(this);
-					scene_object->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos, from_id)));
+					if(LocationComponentPtr location = scene_object->GetFirstComponentByClass<ILocationComponent>())
+					{
+						location->SetWorldPosition(info.m_3DPos);
+					}
 				}
 			}
 			else

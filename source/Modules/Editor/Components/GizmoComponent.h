@@ -6,13 +6,20 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
-#define GT_AXIS "GT_AXIS"
-#define GT_PLANE "GT_PLANE"
-#define GT_GRID "GT_GRID"
-#define GT_FIXED_GRID "GT_FIXED_GRID"
-
 namespace GASS
 {
+
+	enum GizmoType
+	{
+		GT_AXIS,
+		GT_PLANE
+	};
+
+	START_ENUM_BINDER(GizmoType, GizmoTypeBinder)
+		BIND(GT_AXIS)
+		BIND(GT_PLANE)
+	END_ENUM_BINDER(GizmoType, GizmoTypeBinder)
+
 	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,BaseSceneComponent>
 	{
 	public:
@@ -26,45 +33,44 @@ namespace GASS
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		GizmoEditMode GetMode() const {return m_Mode;}
+		void SceneManagerTick(double /*delta_time*/);
 	private:
-		void OnChangeGridRequest(ChangeGridRequestPtr message);
-		void OnCameraParameter(CameraParameterRequestPtr message);
+		//getters/setter
+		GizmoTypeBinder GetType() const { return m_Type; }
+		void SetType(const GizmoTypeBinder &value) { m_Type = value; }
+		float GetSize() const { return m_Size; }
+		void SetSize(float value) { m_Size = value; }
+		ColorRGBA GetColor() const { return m_Color; }
+		void SetColor(const ColorRGBA &value) { m_Color = value; }
+		
+		//Events
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnNewCursorInfo(CursorMovedOverSceneEventPtr message);
 		void OnTransformation(TransformationChangedEventPtr message);
-		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
+
 		//editor selection changed
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		void OnSelectedTransformation(TransformationChangedEventPtr message);
-		void OnWorldPosition(WorldPositionRequestPtr message);
-		void OnWorldRotation(WorldRotationRequestPtr message);
-
 		void OnEditMode(EditModeChangedEventPtr message);
-		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
-		void BuildMesh();
-		std::string GetType() const {return m_Type;}
-		void SetType(const std::string &value) {m_Type = value;}
-		float GetSize() const{return m_Size;}
-		void SetSize(float value){m_Size =value;}
-		ColorRGBA GetColor() const{return m_Color;}
-		void SetColor(const ColorRGBA &value){m_Color =value;}
-		void UpdateScale();
-		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
-		Float SnapValue(Float value, Float snap);
-
-		SceneObjectPtr GetFirstSelected();
-
+	
+		//Helpers
 		void _Move(const Vec3 &pos);
 		void _Rotate(const Quaternion &pos);
+		void _Scale(const Vec3 &scale);
+		void _UpdateScale();
+		void _BuildMesh();
+		Vec3 _ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
+		Float _SnapValue(Float value, Float snap);
+		SceneObjectPtr _GetFirstSelected();
+		void _SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 
 		Quaternion m_BaseRot;
 		GraphicsMeshPtr m_MeshData;
 		ColorRGBA m_Color;
 		float m_Size;
-		std::string m_Type;
-
-		//helpers
+		GizmoTypeBinder m_Type;
+		
 		Float m_LastDist;
 		bool m_Highlight;
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
@@ -78,6 +84,7 @@ namespace GASS
 		GASS::Vec3 m_PreviousPos;
 		Quaternion m_PreviousRot;
 		bool m_TrackTransformation;
+		bool m_TrackSelectedTransform;
 	};
 
 	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;

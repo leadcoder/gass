@@ -1,6 +1,7 @@
 #include "RotateTool.h"
 #include "../Components/GizmoComponent.h"
 #include "MouseToolController.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -78,42 +79,26 @@ namespace GASS
 		if(m_MouseIsDown && m_Selected.size() > 0)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
+
+			const double rotation_rad_step = data.XRel*0.2;
+
 			SceneObjectPtr gizmo = m_CurrentGizmo.lock();
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				Float rotation_rad_step = data.XRel*0.2;
-				rotation_rad_step = rotation_rad_step;
 				Quaternion new_rot = gc->GetRotation(rotation_rad_step);
-				
-				gizmo->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot, from_id)));
-
-				//SendMessageRec(selected,GASS::MessagePtr(new GASS::UpdateEulerAnglesRequest(from_id)));
-
-				/*const double time = SimEngine::Get().GetRunTimeController()->GetTime();
-				static double last_time = 0;
-				const double send_freq = 20;
-				if(time - last_time > 1.0/send_freq)
-				{
-					last_time = time;
-					std::vector<std::string> attribs;
-					attribs.push_back("Rotation");
-					attribs.push_back("Quaternion");
-					GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id, 1.0/send_freq));
-					m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(attrib_change_msg);
-				}*/
+				gizmo->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(new_rot);
 			}
 			else
 			{
-				Float rotation_rad_step = data.XRel*0.2;
-				rotation_rad_step = rotation_rad_step;
 				for (size_t i = 0; i < m_Selected.size(); i++)
 				{
 					SceneObjectPtr selected = m_Selected[i].lock();
 					if (selected)
 					{
-						Quaternion rot = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
-						selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(rot, from_id)));
+						LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
+						Quaternion new_rot = location->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
+						location->SetWorldRotation(new_rot);
 					}
 				}
 			}
@@ -187,26 +172,72 @@ namespace GASS
 		m_Active = false;
 	}
 
+
+	SceneObjectPtr _CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	{
+		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+
+		axis_gizmo->SetName(name);
+		axis_gizmo->SetSerialize(false);
+		ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+		location_comp->SetPropertyValue("Rotation", rotation);
+		axis_gizmo->AddComponent(location_comp);
+
+		ComponentPtr editor_comp = ComponentFactory::Get().Create("EditorComponent");
+		editor_comp->SetPropertyValue("AllowDragAndDrop", false);
+		editor_comp->SetPropertyValue("AllowRemove", false);
+		editor_comp->SetPropertyValue("ShowInTree", false);
+		editor_comp->SetPropertyValue("ShowBBWhenSelected", false);
+		editor_comp->SetPropertyValue("ChangeMaterialWhenSelected", false);
+		axis_gizmo->AddComponent(editor_comp);
+
+		ComponentPtr gizmo_comp = ComponentFactory::Get().Create("GizmoComponent");
+		gizmo_comp->SetPropertyValue("Type", GizmoTypeBinder(GT_AXIS));
+		gizmo_comp->SetPropertyValue("Color", color);
+		gizmo_comp->SetPropertyValue("Size", 2.0f);
+		axis_gizmo->AddComponent(gizmo_comp);
+
+		ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
+		mesh_comp->SetPropertyValue("GeometryFlags", GeometryFlagsBinder(GEOMETRY_FLAG_GIZMO));
+		axis_gizmo->AddComponent(mesh_comp);
+		return axis_gizmo;
+	}
+
+	SceneObjectPtr _CreateRotateGizmo()
+	{
+		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		gizmo->SetName("GizmoRotateGizmo");
+		gizmo->SetID("ROTATE_GIZMO");
+		gizmo->SetSerialize(false);
+
+		ComponentPtr editor_comp = ComponentFactory::Get().Create("EditorComponent");
+		editor_comp->SetPropertyValue("AllowDragAndDrop", false);
+		editor_comp->SetPropertyValue("AllowRemove", false);
+		editor_comp->SetPropertyValue("ShowInTree", false);
+		editor_comp->SetPropertyValue("ShowBBWhenSelected", false);
+		editor_comp->SetPropertyValue("ChangeMaterialWhenSelected", false);
+		gizmo->AddComponent(editor_comp);
+
+		//Create Axis
+		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+
+		return gizmo;
+	}
+
+
 	SceneObjectPtr RotateTool::GetMasterGizmo()
 	{
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
-			std::string gizmo_name = "GizmoRotateObject";
+			gizmo = _CreateRotateGizmo();
+			
+			//Add gizmo to scene
+			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);
 
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
-			m_MasterGizmoObject = scene_object;
-			gizmo = scene_object;
-			//Send selection message to inform gizmo about current object
-			/*if(gizmo)
-			{
-				SceneObjectPtr current = m_SelectedObject.lock();
-				if(current)
-				{
-					m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
-				}
-			}*/
+			m_MasterGizmoObject = gizmo;
 		}
 		return gizmo;
 	}

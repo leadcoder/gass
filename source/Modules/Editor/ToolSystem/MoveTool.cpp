@@ -4,6 +4,7 @@
 #include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
@@ -141,11 +142,11 @@ namespace GASS
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
 				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
-				Vec3 new_position = gc->GetPosition(info.m_Ray);
+				const Vec3 new_position = gc->GetPosition(info.m_Ray);
 				if (m_MoveUpdateCount > 0)
 				{
-					Vec3 delta_move = new_position - m_PreviousPos;
-					gizmo->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(gizmo_lc->GetWorldPosition() + delta_move, from_id)));
+					const Vec3 delta_move = new_position - m_PreviousPos;
+					gizmo_lc->SetWorldPosition(gizmo_lc->GetWorldPosition() + delta_move);
 				}
 				m_PreviousPos = new_position;
 			}
@@ -212,14 +213,14 @@ namespace GASS
 							SceneObjectPtr selected = m_Selected[i].lock();
 							if (selected)
 							{
-								Vec3 pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+								const Vec3 pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 								m_SelectedLocations[m_Selected[i]] = pos;
 							}
 						}
 					}
 					else if(m_MoveUpdateCount > 1) //we need to wait 2 frames to get correct delta move
 					{
-						bool first_pos = true;
+						bool has_origo = false;
 						Vec3 origo_pos;
 						Vec3 offset(0,0,0);
 						for (size_t i = 0; i < m_Selected.size(); i++)
@@ -227,14 +228,14 @@ namespace GASS
 							SceneObjectPtr selected = m_Selected[i].lock();
 							if (selected)
 							{
-								if(first_pos)
+								if(!has_origo)
 								{
-									first_pos = false; 
 									origo_pos =  m_SelectedLocations[m_Selected[i]];
+									has_origo = true;
 								}
 								else
 									offset = m_SelectedLocations[m_Selected[i]] - origo_pos;
-								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(info.m_3DPos + offset, from_id)));
+								selected->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(info.m_3DPos + offset);
 							}
 						}
 					}
@@ -357,26 +358,107 @@ namespace GASS
 		m_Active = false;
 	}
 
+
+	SceneObjectPtr _CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	{
+		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+
+		axis_gizmo->SetName(name);
+		axis_gizmo->SetSerialize(false);
+		ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+		location_comp->SetPropertyValue("Rotation", rotation);
+		axis_gizmo->AddComponent(location_comp);
+
+		ComponentPtr editor_comp = ComponentFactory::Get().Create("EditorComponent");
+		editor_comp->SetPropertyValue("AllowDragAndDrop", false);
+		editor_comp->SetPropertyValue("AllowRemove", false);
+		editor_comp->SetPropertyValue("ShowInTree", false);
+		editor_comp->SetPropertyValue("ShowBBWhenSelected", false);
+		editor_comp->SetPropertyValue("ChangeMaterialWhenSelected", false);
+		axis_gizmo->AddComponent(editor_comp);
+
+		ComponentPtr gizmo_comp = ComponentFactory::Get().Create("GizmoComponent");
+		gizmo_comp->SetPropertyValue("Type", GizmoTypeBinder(GT_AXIS));
+		gizmo_comp->SetPropertyValue("Color", color);
+		gizmo_comp->SetPropertyValue("Size", 2.0f);
+		axis_gizmo->AddComponent(gizmo_comp);
+
+		ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
+		mesh_comp->SetPropertyValue("GeometryFlags", GeometryFlagsBinder(GEOMETRY_FLAG_GIZMO));
+		axis_gizmo->AddComponent(mesh_comp);
+		return axis_gizmo;
+	}
+
+	SceneObjectPtr _CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	{
+		SceneObjectPtr plane_gizmo = SceneObjectPtr(new SceneObject());
+
+		plane_gizmo->SetName(name);
+		plane_gizmo->SetSerialize(false);
+		ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+		location_comp->SetPropertyValue("Rotation", rotation);
+		plane_gizmo->AddComponent(location_comp);
+
+		ComponentPtr editor_comp = ComponentFactory::Get().Create("EditorComponent");
+		editor_comp->SetPropertyValue("AllowDragAndDrop", false);
+		editor_comp->SetPropertyValue("AllowRemove", false);
+		editor_comp->SetPropertyValue("ShowInTree", false);
+		editor_comp->SetPropertyValue("ShowBBWhenSelected", false);
+		editor_comp->SetPropertyValue("ChangeMaterialWhenSelected", false);
+		plane_gizmo->AddComponent(editor_comp);
+
+		ComponentPtr gizmo_comp = ComponentFactory::Get().Create("GizmoComponent");
+		gizmo_comp->SetPropertyValue("Type", GizmoTypeBinder(GT_PLANE));
+		gizmo_comp->SetPropertyValue("Color", color);
+		gizmo_comp->SetPropertyValue("Size", 0.5f);
+		plane_gizmo->AddComponent(gizmo_comp);
+		
+		ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
+		mesh_comp->SetPropertyValue("GeometryFlags", GeometryFlagsBinder(GEOMETRY_FLAG_GIZMO));
+		plane_gizmo->AddComponent(mesh_comp);
+		return plane_gizmo;
+	}
+
+	SceneObjectPtr _CreateMoveGizmo()
+	{
+		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		gizmo->SetName("GizmoMoveObject");
+		gizmo->SetID("MOVE_GIZMO");
+		gizmo->SetSerialize(false);
+
+		ComponentPtr editor_comp = ComponentFactory::Get().Create("EditorComponent");
+		editor_comp->SetPropertyValue("AllowDragAndDrop", false);
+		editor_comp->SetPropertyValue("AllowRemove", false);
+		editor_comp->SetPropertyValue("ShowInTree", false);
+		editor_comp->SetPropertyValue("ShowBBWhenSelected", false);
+		editor_comp->SetPropertyValue("ChangeMaterialWhenSelected", false);
+		gizmo->AddComponent(editor_comp);
+
+		//Create Axis
+		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+
+		//Create Planes
+		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXZ", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneYZ", EulerRotation(0, 0, 90), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXY", EulerRotation(0, -90, 0), ColorRGBA(1, 0, 0, 1)), false);
+
+		return gizmo;
+	}
+
+
 	SceneObjectPtr MoveTool::GetOrCreateGizmo()
 	{
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
-			std::string gizmo_name = "GizmoMoveObject";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
-			m_MasterGizmoObject = scene_object;
-			gizmo = scene_object;
-			//Send selection message to inform gizmo about current object
-			/*if(gizmo)
-			{
-			SceneObjectPtr current = m_SelectedObject.lock();
-			if(current)
-			{
-			//gizmo->PostRequest();
-			//m_Controller->GetEditorSceneManager()->SelectSceneObject(current);
-			}
-			}*/
+			gizmo = _CreateMoveGizmo();
+
+			//Add gizmo to scene
+			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);
+
+			m_MasterGizmoObject = gizmo;
 		}
 		return gizmo;
 	}

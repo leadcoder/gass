@@ -29,10 +29,11 @@ namespace GASS
 		m_Type(GT_AXIS),
 		m_Highlight(true),
 		m_LastDist(0),
-		m_Mode(GM_WORLD),
+		m_Mode(GM_LOCAL),
 		m_GridDist(1.0),
 		m_Active(false),
-		m_TrackTransformation(true)
+		m_TrackTransformation(true),
+		m_TrackSelectedTransform(true)
 	{
 
 	}
@@ -47,31 +48,26 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("GizmoComponent",new Creator<GizmoComponent, Component>);
 		RegisterProperty<float>("Size",&GizmoComponent::GetSize, &GizmoComponent::SetSize);
 		RegisterProperty<ColorRGBA>("Color",&GizmoComponent::GetColor, &GizmoComponent::SetColor);
-		RegisterProperty<std::string>("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
+		RegisterProperty<GizmoTypeBinder>("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
 	}
 
 	void GizmoComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnLocationLoaded,LocationLoadedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnTransformation,TransformationChangedEvent,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldPosition,WorldPositionRequest,0));
-		//GetSceneObject()->RegisterForMessage(REG_TMESS(GizmoComponent::OnWorldRotation, WorldRotationRequest, 0));
 
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnNewCursorInfo, CursorMovedOverSceneEvent, 1000));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectionChanged,EditorSelectionChangedEvent,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeChangedEvent,0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnChangeGridRequest,ChangeGridRequest,0));
 
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnEditMode,EditModeChangedEvent,0));
+	
 		m_EditorSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 		m_Mode = m_EditorSceneManager->GetMouseToolController()->GetEditMode();
 
 		//Change geometry flags
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
-		if(m_Type == GT_AXIS || m_Type == GT_PLANE)
-			gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
-		else if(m_Type != GT_FIXED_GRID) //avoid override...can be used as ground plane with collision
-			gc->SetGeometryFlags(GEOMETRY_FLAG_TRANSPARENT_OBJECT);
-
+		gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
+	
 		// create materials
 		m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
 		m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
@@ -81,8 +77,9 @@ namespace GASS
 		regmat.Diffuse.Set(0,0,0,1);
 		regmat.Ambient.Set(0,0,0);
 		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
-		regmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
+		regmat.DepthTest = false;
 		regmat.DepthWrite = true;
+		regmat.TrackVertexColor = false;
 
 
 		GraphicsMaterial hlmat;
@@ -90,8 +87,9 @@ namespace GASS
 		hlmat.Diffuse.Set(0,0,0,1);
 		hlmat.Ambient.Set(0,0,0);
 		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
-		hlmat.DepthTest = (m_Type == GT_GRID || m_Type == GT_FIXED_GRID);
+		hlmat.DepthTest = false;
 		hlmat.DepthWrite = true;
+		hlmat.TrackVertexColor = false;
 
 
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
@@ -102,9 +100,84 @@ namespace GASS
 			gfx_sys->AddMaterial(hlmat,"GizmoArrowMat");
 	}
 
+	void GizmoComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	{
+		_BuildMesh();
+
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged, CameraChangedEvent, 1));
+
+		m_ActiveCameraObject = m_EditorSceneManager->GetActiveCameraObject();
+		LocationComponentPtr lc = message->GetLocation();
+		m_BaseRot = lc->GetEulerRotation().GetQuaternion();
+		_SetSelection(m_EditorSceneManager->GetSelectedObjects());
+		SceneManagerListenerPtr listener = shared_from_this();
+		m_EditorSceneManager->Register(listener);
+	}
+
+	void GizmoComponent::SceneManagerTick(double /*delta_time*/)
+	{
+		_UpdateScale();
+	}
+
+
 	void GizmoComponent::OnDelete()
 	{
 		
+	}
+	
+	void GizmoComponent::OnTransformation(TransformationChangedEventPtr message)
+	{
+		const GASS::Vec3 current_pos = message->GetPosition();
+		if (m_TrackTransformation)
+		{
+			const GASS::Vec3 offset = current_pos - m_PreviousPos;
+			const Quaternion base_inverse = m_BaseRot.Inverse();
+			const Quaternion new_rot = message->GetRotation() * base_inverse;
+
+			for (size_t i = 0; i < m_Selection.size(); i++)
+			{
+				SceneObjectPtr selected = m_Selection[i].lock();
+				if (selected)
+				{
+					m_TrackSelectedTransform = false;
+					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
+					selected_lc->SetWorldRotation(new_rot);
+					selected_lc->SetWorldPosition(offset + selected_lc->GetWorldPosition());
+					m_TrackSelectedTransform = true;
+				}
+			}
+		}
+		m_PreviousPos = current_pos;
+	}
+
+	void GizmoComponent::OnSelectedTransformation(TransformationChangedEventPtr message)
+	{
+		if (m_TrackSelectedTransform)
+		{
+			//move gizmo
+			LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			if (lc && ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
+			{
+				_Move(message->GetPosition());
+			}
+
+			if (m_Mode == GM_LOCAL)
+			{
+				_Rotate(message->GetRotation() * m_BaseRot);
+			}
+		}
+	}
+
+	void GizmoComponent::OnCameraChanged(CameraChangedEventPtr message)
+	{
+		CameraComponentPtr camera = message->GetViewport()->GetCamera();
+		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		m_ActiveCameraObject = cam_obj;
+	}
+
+	void GizmoComponent::OnSelectionChanged(EditorSelectionChangedEventPtr message)
+	{
+		_SetSelection(message->m_Selection);
 	}
 
 	void GizmoComponent::OnEditMode(EditModeChangedEventPtr message)
@@ -112,7 +185,7 @@ namespace GASS
 		m_Mode = message->GetEditMode();
 		if(m_Mode == GM_LOCAL)
 		{
-			SceneObjectPtr  selected = GetFirstSelected();
+			SceneObjectPtr  selected = _GetFirstSelected();
 			if(selected)
 			{
 				LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
@@ -142,156 +215,57 @@ namespace GASS
 		m_TrackTransformation = true;
 	}
 
-	void GizmoComponent::OnChangeGridRequest(ChangeGridRequestPtr message)
+
+	void GizmoComponent::_Scale(const Vec3 &scale)
 	{
-		if(m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
-			BuildMesh();
+		m_TrackTransformation = false;
+		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		lc->SetScale(scale);
+		m_TrackTransformation = true;
 	}
 
-	void GizmoComponent::OnCameraChanged(CameraChangedEventPtr message)
+	void GizmoComponent::_SetSelection(const std::vector<SceneObjectWeakPtr> &selection)
 	{
-		//Unregister from previous camera
-		if(SceneObjectPtr prev_camera = m_ActiveCameraObject.lock())
-		{
-			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraMoved, TransformationChangedEvent));
-			prev_camera->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterRequest));
-		}
-		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
-
-		m_ActiveCameraObject = cam_obj;
-		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationChangedEvent,1));
-		cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterRequest,1));
-	}
-
-	void GizmoComponent::OnCameraParameter(CameraParameterRequestPtr message)
-	{
-		if(m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
-			return;
-		CameraParameterRequest::CameraParameterType type = message->GetParameter();
-		switch(type)
-		{
-		case CameraParameterRequest::CAMERA_FOV:
-			{
-				//Float value = message->GetValue1();
-			}
-			break;
-		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
-			{
-				double value = message->GetValue1();
-				double scale_factor = 0.06;
-				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
-				GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
-			}
-			break;
-		case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
-			{
-
-			}
-			break;
-		}
-	}
-
-	void GizmoComponent::OnSelectionChanged(EditorSelectionChangedEventPtr message)
-	{
-		SetSelection(message->m_Selection);
-	}
-
-	void GizmoComponent::SetSelection(const std::vector<SceneObjectWeakPtr> &selection)
-	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
 
 		//Unregister form previous
-		if(m_Selection.size() > 0)
+		if(SceneObjectPtr  previous_selected = _GetFirstSelected())
 		{
-			SceneObjectPtr  previous_selected = m_Selection[0].lock();
-			if(previous_selected)
-			{
-				previous_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationChangedEvent));
-			}
+			previous_selected->UnregisterForMessage(UNREG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationChangedEvent));
 		}
-
 		m_Selection.clear();
 
+		//Only add objects that has location
 		for(size_t i = 0 ; i < selection.size(); i++)
 		{
-			SceneObjectPtr object = selection[i].lock();
-			if(object)
+			if(SceneObjectPtr object = selection[i].lock())
 			{
-				//move gizmo to position
-				LocationComponentPtr lc = object->GetFirstComponentByClass<ILocationComponent>();
-				if(lc)
+				if(LocationComponentPtr lc = object->GetFirstComponentByClass<ILocationComponent>())
 				{
 					m_Selection.push_back(object);
-					if(m_Selection.size() == 1)
-					{
-						object->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectedTransformation,TransformationChangedEvent,1));
-						
-						if(m_Mode == GM_LOCAL)
-						{
-							//rotate  gizmo  to selected rotation
-							_Rotate(lc->GetWorldRotation()*m_BaseRot);
-						}
-						else
-						{
-							_Rotate(m_BaseRot);
-						}
-						//move gizmo to selected location
-						_Move(lc->GetWorldPosition());
-					}
 				}
 			}
 		}
-	}
 
-	void GizmoComponent::OnSelectedTransformation(TransformationChangedEventPtr message)
-	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
-
-		//move gizmo
-		LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		if(lc &&  ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
+		if (SceneObjectPtr  first_selected = _GetFirstSelected())
 		{
-			_Move(message->GetPosition());
-		}
-
-		if(m_Mode == GM_LOCAL)
-		{
-			_Rotate(message->GetRotation() * m_BaseRot);
-		}
-	}
-
-	void GizmoComponent::OnTransformation(TransformationChangedEventPtr message)
-	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
-			
-
-		const GASS::Vec3 current_pos = message->GetPosition();
-		if (m_TrackTransformation)
-		{
-			
-			const GASS::Vec3 offset = current_pos - m_PreviousPos;
-			for (size_t i = 0; i < m_Selection.size(); i++)
+			//transform gizmo to first selected object
+			first_selected->RegisterForMessage(REG_TMESS(GizmoComponent::OnSelectedTransformation, TransformationChangedEvent, 1));
+			LocationComponentPtr lc = first_selected->GetFirstComponentByClass<ILocationComponent>();
+			if (m_Mode == GM_LOCAL)
 			{
-				SceneObjectPtr selected = m_Selection[i].lock();
-				if (selected)
-				{
-					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-					selected_lc->SetWorldPosition(offset + selected_lc->GetWorldPosition());
-					const Quaternion base_inverse = m_BaseRot.Inverse();
-					const Quaternion selected_rot = message->GetRotation() * base_inverse;
-					selected_lc->SetWorldRotation(selected_rot);
-				}
+				//rotate  gizmo  to selected rotation
+				_Rotate(lc->GetWorldRotation()*m_BaseRot);
 			}
+			else
+			{
+				_Rotate(m_BaseRot);
+			}
+			//move gizmo to selected location
+			_Move(lc->GetWorldPosition());
 		}
-		m_PreviousPos = current_pos;
-		UpdateScale();
 	}
 
-	SceneObjectPtr GizmoComponent::GetFirstSelected()
+	SceneObjectPtr GizmoComponent::_GetFirstSelected()
 	{
 		SceneObjectPtr  ret;
 		if(m_Selection.size() > 0)
@@ -301,69 +275,8 @@ namespace GASS
 		return ret;
 	}
 
-	void GizmoComponent::OnWorldPosition(WorldPositionRequestPtr message)
+	void GizmoComponent::_UpdateScale()
 	{
-		if(GIZMO_SENDER != message->GetSenderID())
-		{
-			GASS::Vec3 current_pos = message->GetPosition();
-			GASS::Vec3 offset = current_pos - m_PreviousPos;
-			for(size_t i = 0; i < m_Selection.size() ; i++)
-			{
-				SceneObjectPtr selected = m_Selection[i].lock();
-				if(selected)
-				{
-					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-					selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(offset + selected_lc->GetWorldPosition(), GIZMO_SENDER)));
-				}
-			}
-		}
-		m_PreviousPos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-	}
-
-	void GizmoComponent::OnWorldRotation(WorldRotationRequestPtr message)
-	{
-		if (GIZMO_SENDER != message->GetSenderID())
-		{
-			//GASS::Mat4 rot_mat = message->GetRotation().GetRotationMatrix();
-			//Quaternion offset = (message->GetRotation()*base_inverse) * m_PreviousRot.Inverse();
-			for (size_t i = 0; i < m_Selection.size(); i++)
-			{
-				SceneObjectPtr selected = m_Selection[i].lock();
-				if (selected)
-				{
-					LocationComponentPtr selected_lc = selected->GetFirstComponentByClass<ILocationComponent>();
-					//selected_lc->GetWorldRotation()*offset;
-					//Mat4 new_rot = selected_lc->GetWorldRotation().GetRotationMatrix() * offset;
-					//Quaternion new_q;
-					//new_q.FromRotationMatrix(new_rot);
-					//selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_q, GIZMO_SENDER)));
-					//Quaternion base_inverse = m_BaseRot.Inverse();
-					//offset = offset * base_inverse;
-
-					//remove base rotation from gizmo rot
-					Quaternion base_inverse = m_BaseRot.Inverse();
-					Quaternion selected_rot = message->GetRotation() * base_inverse;
-					selected->SendImmediateRequest(WorldRotationRequestPtr(new WorldRotationRequest(selected_rot, GIZMO_SENDER)));
-				}
-			}
-		}
-		m_PreviousRot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-	}
-
-	void GizmoComponent::OnCameraMoved(TransformationChangedEventPtr message)
-	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
-		UpdateScale();
-	}
-
-	void GizmoComponent::UpdateScale()
-	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
-
-		if(m_Type == GT_GRID)
-			return;
 		SceneObjectPtr camera = m_ActiveCameraObject.lock();
 		if(camera)
 		{
@@ -372,10 +285,7 @@ namespace GASS
 
 			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 gizmo_pos = gizmo_location->GetWorldPosition();
-
-
 			Float dist = (gizmo_pos-cam_pos).Length();
-
 
 			if(fabs(dist - m_LastDist) > MOVMENT_EPSILON)
 			{
@@ -386,32 +296,14 @@ namespace GASS
 				if(dist < MIN_SCALE_DISTANCE)
 					dist = MIN_SCALE_DISTANCE;
 
-				Float scale_factor = 0.06;
-				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
-				m_TrackTransformation = false;
-				GetSceneObject()->SendImmediateRequest(ScaleRequestPtr(new ScaleRequest(scale)));
-				m_TrackTransformation = true;
+				const Float scale_factor = 0.06;
+				const Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
+				_Scale(scale);
 			}
 		}
 	}
 
-	void GizmoComponent::OnLocationLoaded(LocationLoadedEventPtr message)
-	{
-		BuildMesh();
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraChanged,CameraChangedEvent,1));
-		m_ActiveCameraObject = m_EditorSceneManager->GetActiveCameraObject();
-		SceneObjectPtr cam_obj = m_ActiveCameraObject.lock();
-		if(cam_obj)
-		{
-			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraMoved, TransformationChangedEvent,1));
-			cam_obj->RegisterForMessage(REG_TMESS(GizmoComponent::OnCameraParameter,CameraParameterRequest,0));
-		}
-		LocationComponentPtr lc = message->GetLocation();
-		m_BaseRot = lc->GetEulerRotation().GetQuaternion();
-		SetSelection(m_EditorSceneManager->GetSelectedObjects());
-	}
-
-	void GizmoComponent::BuildMesh()
+	void GizmoComponent::_BuildMesh()
 	{
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		m_MeshData->SubMeshVector.clear();
@@ -583,58 +475,11 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(10);
 			sub_mesh_data->IndexVector.push_back(9);
 		}
-
-
-		else if (m_Type == GT_GRID || m_Type == GT_FIXED_GRID)
-		{
-			sub_mesh_data->Type = LINE_LIST;
-			Vec3 pos(0,0,0);
-
-			Float grid_size = 0;
-			if(m_Type == GT_FIXED_GRID)
-				grid_size = m_Size;
-			else
-				grid_size = m_EditorSceneManager->GetMouseToolController()->GetGridSize();
-			Float half_grid_size = grid_size/2.0;
-			Float grid_spacing = m_EditorSceneManager->GetMouseToolController()->GetGridSpacing();
-			int n = static_cast<int>((grid_size / grid_spacing)/2);
-			int index = 0;
-			for(int i = -n ;  i <= n; i++)
-			{
-				pos = Vec3(-half_grid_size,0,i*grid_spacing);
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(m_Color);
-				pos = Vec3(half_grid_size,0,i*grid_spacing);
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(m_Color);
-				sub_mesh_data->IndexVector.push_back(index++);
-				sub_mesh_data->IndexVector.push_back(index++);
-			}
-			for(int i = -n ;  i <= n; i++)
-			{
-				pos = Vec3(i*grid_spacing,0,-half_grid_size);
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(m_Color);
-				pos = Vec3(i*grid_spacing,0,half_grid_size);
-				sub_mesh_data->PositionVector.push_back(pos);
-				sub_mesh_data->ColorVector.push_back(m_Color);
-				sub_mesh_data->IndexVector.push_back(index++);
-				sub_mesh_data->IndexVector.push_back(index++);
-			}
-
-		}
-
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_MeshData)));
 	}
 
 	void GizmoComponent::OnNewCursorInfo(CursorMovedOverSceneEventPtr message)
 	{
-		if(m_Type == GT_FIXED_GRID)
-			return;
-
-		//bool grid = false;
-		//if(m_Type == GT_GRID)
-		//	grid = true;
 		SceneObjectPtr obj_under_cursor = message->GetSceneObjectUnderCursor();
 		if(m_Active || obj_under_cursor == GetSceneObject())
 		{
@@ -680,7 +525,7 @@ namespace GASS
 			{
 				Vec3 isect_pos = ray.m_Origin + ray.m_Dir*value;
 
-				Vec3 ret = ProjectPointOnAxis(c_pos, r_vec, isect_pos);
+				Vec3 ret = _ProjectPointOnAxis(c_pos, r_vec, isect_pos);
 				return ret;
 
 			}
@@ -692,8 +537,8 @@ namespace GASS
 			{
 				Vec3 isect_pos = ray.m_Origin + ray.m_Dir*value;
 
-				Vec3 proj_r = ProjectPointOnAxis(c_pos, r_vec, isect_pos);
-				Vec3 proj_v = ProjectPointOnAxis(c_pos, v_vec, isect_pos);
+				Vec3 proj_r = _ProjectPointOnAxis(c_pos, r_vec, isect_pos);
+				Vec3 proj_v = _ProjectPointOnAxis(c_pos, v_vec, isect_pos);
 
 				Vec3 ret = c_pos + (proj_r - c_pos ) + (proj_v - c_pos);
 
@@ -706,7 +551,7 @@ namespace GASS
 
 	Quaternion GizmoComponent::GetRotation(Float delta)
 	{
-		SceneObjectPtr selected = GetFirstSelected();
+		SceneObjectPtr selected = _GetFirstSelected();
 		if(selected)
 		{
 			LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
@@ -738,7 +583,7 @@ namespace GASS
 		return Quaternion::IDENTITY;
 	}
 
-	Vec3 GizmoComponent::ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const
+	Vec3 GizmoComponent::_ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const
 	{
 		Vec3 c = p-axis_origin;
 		Float t = Vec3::Dot(axis_dir,c);
@@ -761,7 +606,7 @@ namespace GASS
 		return res;
 	}
 
-	Float GizmoComponent::SnapValue(Float value, Float snap)
+	Float GizmoComponent::_SnapValue(Float value, Float snap)
 	{
 		Float new_value = value/snap;
 		new_value = int(new_value);
