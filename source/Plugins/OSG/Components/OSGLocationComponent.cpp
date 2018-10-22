@@ -149,7 +149,6 @@ namespace GASS
 			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
 			const Mat4 parent_trans_mat(parent_world_rot, parent_world_pos);
 			const Mat4 inv_parent_trans_mat = parent_trans_mat.GetInvert();
-			const Mat4 trans_mat(GetWorldRotation(), world_pos);
 			return inv_parent_trans_mat*world_pos;
 		}
 		else
@@ -164,7 +163,15 @@ namespace GASS
 		{
 			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
 			const Quaternion inv_parent_world_rot = parent_world_rot.Inverse();
-			return inv_parent_world_rot*world_rot;
+			return inv_parent_world_rot * world_rot;
+
+			/*const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			const Mat4 parent_trans_mat(parent_world_rot);
+			const Mat4 inv_parent_trans_mat = parent_trans_mat.GetInvert();
+			const Mat4 local_rot_mat = inv_parent_trans_mat*Mat4(world_rot);
+			Quaternion local_rot;
+			local_rot.FromRotationMatrix(local_rot_mat);
+			return local_rot;*/
 		}
 		else
 		{
@@ -177,7 +184,15 @@ namespace GASS
 		if (m_AttachToParent && m_ParentLocation)
 		{
 			const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
-			return parent_world_rot*local_rot;
+			return parent_world_rot * local_rot;
+
+			/*const Quaternion parent_world_rot = m_ParentLocation->GetWorldRotation();
+			const Mat4 parent_trans_mat(parent_world_rot);
+			const Mat4 world_rot_mat = parent_trans_mat * Mat4(local_rot);
+			Quaternion world_rot;
+			world_rot.FromRotationMatrix(world_rot_mat);
+			return world_rot;*/
+
 		}
 		else
 		{
@@ -312,7 +327,7 @@ namespace GASS
 
 	void OSGLocationComponent::_NotifyTransformationChange() const
 	{
-		GetSceneObject()->SendImmediateEvent(TransformationChangedEventPtr(new TransformationChangedEvent(m_WorldPosition, m_Rotation, m_Scale)));
+		GetSceneObject()->SendImmediateEvent(TransformationChangedEventPtr(new TransformationChangedEvent(m_WorldPosition, m_WorldRotation, m_Scale)));
 	}
 
 	void OSGLocationComponent::_OnParentPositionUpdated()
