@@ -15,7 +15,7 @@ namespace GASS
 		m_MaxSpeed(3.5),
 		m_AccTime(0),
 		m_SeparationWeight(1),
-		m_VelSmoother(120,Vec3(0,0,0)),
+		m_VelSmoother(120,Vec3f(0.0f, 0.0f, 0.0f)),
 		m_TargetPos(0,0,0),
 		m_LastPos(0,0,0)
 	{
@@ -271,9 +271,9 @@ namespace GASS
 				int id = GASS_PTR_TO_INT(this);
 				Vec3f current_pos(pos[0],pos[1],pos[2]);
 
-				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos,id)));
+				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3::Convert(current_pos),id)));
 
-				Vec3f target_dir = current_pos - Vec3f(m_TargetPos);
+				Vec3f target_dir = current_pos - Vec3::Convert(m_TargetPos);
 				float dist = target_dir.Length();
 				DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 
@@ -358,7 +358,7 @@ namespace GASS
 					rot.FromRotationMatrix(rot_mat);
 					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaterniond(rot.w, rot.x, rot.y, rot.z),id)));
 				}
-				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(c_velocity,Vec3(0,0,0),id)));
+				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3::Convert(c_velocity),Vec3(0,0,0),id)));
 			}
 		}
 
@@ -369,7 +369,7 @@ namespace GASS
 		int id = GASS_PTR_TO_INT(this);
 		if(id != message->GetSenderID())
 		{
-			Vec3f pos = message->GetPosition();
+			Vec3f pos = Vec3::Convert(message->GetPosition());
 			DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 			if(m_Agent && crowd_comp)
 			{
@@ -430,7 +430,7 @@ namespace GASS
 		float samples = 24;
 		float rad = 2*static_cast<float>(GASS_PI)/samples;
 		float x,y;
-		Vec3f pos(0,0,0);
+		Vec3 pos(0,0,0);
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
 		for(float i = 0 ;i <= samples; i++)

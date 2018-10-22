@@ -12,19 +12,19 @@ TEST_CASE("Test Vec3")
 		REQUIRE(vec.z == 1);
 	}
 
-	SECTION("Test convert constructor, from Vec3d to Vec3f")
+	SECTION("Test convert , from Vec3d to Vec3f")
 	{
 		GASS::Vec3d vecd(1, 2, 3);
-		GASS::Vec3f vecf(vecd);
+		GASS::Vec3f vecf = GASS::Vec3f::Convert(vecd);
 		REQUIRE(vecf.x == 1);
 		REQUIRE(vecf.y == 2);
 		REQUIRE(vecf.z == 3);
 	}
 
-	SECTION("Test convert constructor, from Vec3f to Vec3d")
+	SECTION("Test convert , from Vec3f to Vec3d")
 	{
 		GASS::Vec3d vecf(1, 2, 3);
-		GASS::Vec3f vecd(vecf);
+		GASS::Vec3f vecd = GASS::Vec3d::Convert(vecf);
 		REQUIRE(vecd.x == 1);
 		REQUIRE(vecd.y == 2);
 		REQUIRE(vecd.z == 3);
