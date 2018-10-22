@@ -65,6 +65,10 @@ namespace GASS
 		/** Set if location should be relative to first LocationComponent that is
 		* found above in scene tree hierarchy (true) or world location (false) */
 		virtual void SetAttachToParent(bool value) = 0;
+
+		virtual void SetVisible(bool value) = 0;
+		virtual bool GetVisible() const = 0;
+
 	protected:
 	};
 

@@ -70,11 +70,14 @@ namespace GASS
 
 		virtual bool GetAttachToParent() const;
 		virtual void SetAttachToParent(bool value);
+
+		virtual void SetVisible(bool value);
+		virtual bool GetVisible() const;
+
 		//end ILocationComponent
 	
 		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
-		void SetVisibility(bool visibility);
-
+		
 		//Ogre node listener interface
 		virtual void nodeUpdated(const Ogre::Node* node);
 		/** Node is being destroyed */
@@ -114,5 +117,6 @@ namespace GASS
 
 		// Should this location node be relative to parent's location? First with a LocationComponent
 		bool m_AttachToParent;
+		bool m_Visible;
 	};
 }

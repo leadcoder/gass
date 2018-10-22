@@ -57,6 +57,10 @@ namespace GASS
 		virtual void SetWorldRotation(const Quaternion &value);
 		virtual Quaternion GetWorldRotation() const;
 		virtual Vec3 GetScale() const {return m_Scale;}
+
+		void SetVisible(bool value);
+		bool GetVisible() const;
+
 			
 		//IOSGNode interface
 		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}

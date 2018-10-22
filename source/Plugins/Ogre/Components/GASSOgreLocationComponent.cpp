@@ -39,7 +39,8 @@ namespace GASS
 		m_EulerRot(0,0,0),
 		m_Scale(1,1,1),
 		m_OgreNode (NULL),
-		m_QRot()
+		m_QRot(),
+		m_Visible(true)
 	{
 	}
 
@@ -129,6 +130,7 @@ namespace GASS
 		m_OgreNode->getUserObjectBindings().setUserAny(any_this);
 
 		m_OgreNode->setListener(this);
+		SetVisible(m_Visible);
 
 		//update scale
 		SetScale(m_Scale);
@@ -252,13 +254,20 @@ namespace GASS
 
 	void OgreLocationComponent::VisibilityRequest(LocationVisibilityRequestPtr message)
 	{
-		SetVisibility(message->GetValue());
+		SetVisible(message->GetValue());
 	}
 
-	void OgreLocationComponent::SetVisibility(bool visibility)
+	void OgreLocationComponent::SetVisible(bool value)
 	{
+		m_Visible = value;
 		if(m_OgreNode) 
-			m_OgreNode->setVisible(visibility);
+			m_OgreNode->setVisible(value);
+	}
+
+	bool OgreLocationComponent::GetVisible() const
+	{
+		return m_Visible;
+		
 	}
 
 	void OgreLocationComponent::SetScale(const Vec3 &value)

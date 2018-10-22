@@ -62,6 +62,9 @@ namespace GASS
 
 		virtual bool GetAttachToParent() const;
 		virtual void SetAttachToParent(bool value);
+
+		virtual void SetVisible(bool value);
+		virtual bool GetVisible() const;
 		//end ILocationComponent
 			
 		//IOSGNode interface
@@ -112,7 +115,7 @@ namespace GASS
 		OSGLocationComponent* m_ParentLocation;
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-		int m_NodeMask;
+		unsigned int m_NodeMask;
 	};
 
 	typedef GASS_WEAK_PTR<OSGLocationComponent> OSGLocationComponentWeakPtr;

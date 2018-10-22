@@ -409,17 +409,19 @@ namespace GASS
 
 	void OSGEarthGeoLocationComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
 	{
-		bool visibility = message->GetValue();
-		if (visibility)
-		{
-			//m_TransformNode->setNodeMask(NM_VISIBLE | m_TransformNode->getNodeMask());
-			m_TransformNode->setNodeMask(~0u);
-		}
-		else
-		{
-			m_TransformNode->setNodeMask(0u);
-			//m_TransformNode->setNodeMask(~NM_VISIBLE & m_TransformNode->getNodeMask());
-		}
+		SetVisible(message->GetValue());
+	}
+
+	void OSGEarthGeoLocationComponent::SetVisible(bool value)
+	{
+		m_NodeMask = value ? ~0u : 0u;
+		if (m_TransformNode)
+			m_TransformNode->setNodeMask(m_NodeMask);
+	}
+
+	bool OSGEarthGeoLocationComponent::GetVisible() const
+	{
+		return m_NodeMask > 0;
 	}
 
 	void OSGEarthGeoLocationComponent::SetAttachToParent(bool value)
