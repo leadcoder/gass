@@ -397,7 +397,7 @@ namespace GASS
 
 	void OSGLocationComponent::SetVisible(bool value)
 	{
-		m_NodeMask = value ? ~0u: 0u;
+		m_NodeMask = value ? ~0u : 0u;
 		if (m_TransformNode)
 			m_TransformNode->setNodeMask(m_NodeMask);
 	}

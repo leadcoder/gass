@@ -180,7 +180,20 @@ namespace GASS
 	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
 	{
 		GraphicsMeshPtr data = message->GetData();
-		CreateMesh(data);
+		SetMeshData(*data);
+	}
+
+	void OSGManualMeshComponent::SetMeshData(const GraphicsMesh &mesh)
+	{
+		Clear();
+		for (size_t i = 0; i < mesh.SubMeshVector.size(); i++)
+		{
+			GraphicsSubMeshPtr sm = mesh.SubMeshVector[i];
+			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
+			m_OSGGeometries.push_back(geom);
+			m_GeoNode->addDrawable(geom.get());
+		}
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
 
 	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
@@ -294,20 +307,7 @@ namespace GASS
 		geom->dirtyBound();
 		return geom;
 	}
-
-	void OSGManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
-	{
-		Clear();
-		for(size_t i = 0; i < data->SubMeshVector.size(); i++)
-		{
-			GraphicsSubMeshPtr sm = data->SubMeshVector[i];
-			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
-			m_OSGGeometries.push_back(geom);
-			m_GeoNode->addDrawable(geom.get());
-		}
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-	}
-
+	
 	AABox OSGManualMeshComponent::GetBoundingBox() const
 	{
 		AABox comp_box;
@@ -387,21 +387,24 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
 	{
-		std::string mat_name = message->GetMaterialName();
-		int geom_index = message->GetSubMeshID();
-		if(mat_name != "" && m_GFXSystem->HasMaterial(mat_name))
+		SetMaterial(message->GetMaterialName(), message->GetSubMeshID());
+	}
+
+	void OSGManualMeshComponent::SetMaterial(const std::string &material_name, int sub_mesh_index)
+	{
+		if (material_name != "" && m_GFXSystem->HasMaterial(material_name))
 		{
-			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(mat_name);
+			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(material_name);
 			if (!m_ReceiveShadow) //protect from shader override
 				state_set->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
-			if(geom_index > 0)
+			if (sub_mesh_index > 0)
 			{
-				if(geom_index  < static_cast<int>(m_OSGGeometries.size()))
-					m_OSGGeometries[geom_index]->setStateSet(state_set);
+				if (sub_mesh_index < static_cast<int>(m_OSGGeometries.size()))
+					m_OSGGeometries[sub_mesh_index]->setStateSet(state_set);
 			}
 			else
 			{
-				for(size_t i = 0; i < m_OSGGeometries.size(); i++)
+				for (size_t i = 0; i < m_OSGGeometries.size(); i++)
 				{
 					m_OSGGeometries[i]->setStateSet(state_set);
 				}

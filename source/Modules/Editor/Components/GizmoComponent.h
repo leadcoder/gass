@@ -66,7 +66,6 @@ namespace GASS
 		void _SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 
 		Quaternion m_BaseRot;
-		GraphicsMeshPtr m_MeshData;
 		ColorRGBA m_Color;
 		float m_Size;
 		GizmoTypeBinder m_Type;

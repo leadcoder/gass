@@ -112,7 +112,7 @@ namespace GASS
 	void OgreManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
 	{
 		GraphicsMeshPtr data = message->GetData();
-		CreateMesh(data);
+		SetMeshData(*data);
 	}
 
 	void OgreManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
@@ -126,14 +126,14 @@ namespace GASS
 			m_MeshObject->clear();
 	}
 
-	void OgreManualMeshComponent::CreateMesh(GraphicsMeshPtr data)
+	void OgreManualMeshComponent::SetMeshData(const GraphicsMesh &data)
 	{
 		if(m_MeshObject)
 		{
 			m_MeshObject->clear();
-			for(size_t i = 0; i < data->SubMeshVector.size() ; i++)
+			for(size_t i = 0; i < data.SubMeshVector.size() ; i++)
 			{
-				GraphicsSubMeshPtr sub_mesh =   data->SubMeshVector[i];
+				GraphicsSubMeshPtr sub_mesh = data.SubMeshVector[i];
 				size_t num_pos = sub_mesh->PositionVector.size();
 				if(num_pos == 0)
 					continue;
@@ -184,7 +184,6 @@ namespace GASS
 			OgreMaterialCache::Add(m_MeshObject);
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 		}
-
 	}
 
 	void OgreManualMeshComponent::OnResetMaterial(ResetMaterialRequestPtr message)
@@ -260,6 +259,8 @@ namespace GASS
 			return;
 		m_MeshObject->setVisible(message->GetValue());
 	}
+
+	
 
 	GraphicsMesh OgreManualMeshComponent::GetMeshData() const
 	{

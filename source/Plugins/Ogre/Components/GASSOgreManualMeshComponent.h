@@ -22,7 +22,7 @@
 #include "Plugins/Ogre/GASSOgreCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSICollisionComponent.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -35,7 +35,7 @@ namespace Ogre
 
 namespace GASS
 {
-	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IMeshComponent, public IGeometryComponent
+	class OgreManualMeshComponent : public Reflection<OgreManualMeshComponent , BaseSceneComponent> , public IManualMeshComponent, public IGeometryComponent
 	{
 	public:
 		OgreManualMeshComponent(void);
@@ -51,8 +51,9 @@ namespace GASS
 		virtual bool GetCollision() const;
 		virtual void SetCollision(bool value);
 		
-		//IMeshComponent
+		//IManaulMeshComponent
 		virtual GraphicsMesh GetMeshData() const;
+		virtual void SetMeshData(const GraphicsMesh& mesh);
 
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
@@ -66,7 +67,6 @@ namespace GASS
 		void OnReplaceMaterial(ReplaceMaterialRequestPtr message);
 		void OnResetMaterial(ResetMaterialRequestPtr message);
 		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void CreateMesh(GraphicsMeshPtr data);
 		void Clear();
 
 		Ogre::ManualObject* m_MeshObject;

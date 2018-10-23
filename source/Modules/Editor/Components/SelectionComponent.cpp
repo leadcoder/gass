@@ -8,6 +8,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 
 namespace GASS
@@ -113,9 +114,9 @@ namespace GASS
 				sub_mesh_data->ColorVector.push_back(m_Color);
 			}
 		}
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-		GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(visible)));
 
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(visible);
 		if (visible) //move to location
 			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(world_pos);
 	}

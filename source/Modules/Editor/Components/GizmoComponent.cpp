@@ -15,6 +15,7 @@
 #include "Core/Math/GASSPlane.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #define MOVMENT_EPSILON 0.0000001
@@ -24,7 +25,7 @@
 
 namespace GASS
 {
-	GizmoComponent::GizmoComponent() : m_MeshData(new GraphicsMesh), m_Color(1,0,0,1),
+	GizmoComponent::GizmoComponent() : m_Color(1,0,0,1),
 		m_Size(5),
 		m_Type(GT_AXIS),
 		m_Highlight(true),
@@ -305,9 +306,9 @@ namespace GASS
 
 	void GizmoComponent::_BuildMesh()
 	{
+		GraphicsMesh mesh;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
-		m_MeshData->SubMeshVector.clear();
-		m_MeshData->SubMeshVector.push_back(sub_mesh_data);
+		mesh.SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->MaterialName = m_RegularMat;
 
 		//Arrow
@@ -475,7 +476,7 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(10);
 			sub_mesh_data->IndexVector.push_back(9);
 		}
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_MeshData)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(mesh);
 	}
 
 	void GizmoComponent::OnNewCursorInfo(CursorMovedOverSceneEventPtr message)

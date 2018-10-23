@@ -22,11 +22,11 @@
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGCommon.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
-#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent , public IMeshComponent
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent , public IManualMeshComponent
 	{
 	public:
 		OSGManualMeshComponent(void);
@@ -42,8 +42,10 @@ namespace GASS
 		virtual bool GetCollision() const;
 		virtual void SetCollision(bool value);
 
-		//IMeshComponent interface
+		//IManualMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
+		virtual void SetMeshData(const GraphicsMesh &mesh);
+		virtual void SetMaterial(const std::string &material_name, int sub_mesh_index);
 
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }
