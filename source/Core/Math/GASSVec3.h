@@ -61,12 +61,6 @@ namespace GASS
 			x = _x; y = _y; z = _z;
 		}
 		inline TVec3() {}
-		
-		template<typename T>
-		TVec3(const T& v)
-		{
-			TVec3::Convert(v,*this);
-		}
 	
 		inline void Set(TYPE _x, TYPE _y, TYPE _z)
 		{
