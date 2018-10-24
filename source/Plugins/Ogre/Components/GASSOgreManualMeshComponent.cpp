@@ -70,12 +70,8 @@ namespace GASS
 	void OgreManualMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-
-	}
-
-	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
-	{
-		OgreGraphicsSceneManagerPtr ogsm =  GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
+		
+		OgreGraphicsSceneManagerPtr ogsm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OgreGraphicsSceneManager>();
 		assert(ogsm);
 		Ogre::SceneManager* sm = ogsm->GetOgreSceneManager();
 
@@ -89,7 +85,10 @@ namespace GASS
 		m_MeshObject = sm->createManualObject(name);
 		m_MeshObject->setDynamic(true);
 		m_MeshObject->setCastShadows(m_CastShadows);
+	}
 
+	void OgreManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	{
 		OgreLocationComponent * lc = GetSceneObject()->GetFirstComponentByClass<OgreLocationComponent>().get();
 		lc->GetOgreNode()->attachObject(m_MeshObject);
 
@@ -100,6 +99,11 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OgreManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
 
 		m_Collision = GetSceneObject()->GetFirstComponentByClass<ICollisionComponent>();
+
+		//Hack to get transfer mesh geom 
+		if(m_MeshObject->getNumSections() > 0)
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()),-1,2)));
+
 	}
 
 	void OgreManualMeshComponent::SetCastShadow(bool castShadow) 
@@ -193,20 +197,26 @@ namespace GASS
 
 	void OgreManualMeshComponent::OnReplaceMaterial(ReplaceMaterialRequestPtr message)
 	{
+		SetSubMeshMaterial(message->GetMaterialName(), message->GetSubMeshID());
+	}
+
+	void OgreManualMeshComponent::SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index)
+	{
 		if(m_MeshObject == NULL)
 			return;
 		if(m_MeshObject->getNumSections() <= 0)
 			return;
 
-		if(message->GetSubMeshID() >= 0)
+		if(sub_mesh_index >= 0)
 		{
-			m_MeshObject->getSection(message->GetSubMeshID())->setMaterialName(message->GetMaterialName());
+			if(static_cast<int>(m_MeshObject->getNumSections()) > sub_mesh_index)
+				m_MeshObject->getSection(sub_mesh_index)->setMaterialName(material_name);
 		}
 		else
 		{
 			for(unsigned int i= 0;  i< m_MeshObject->getNumSections(); i++)
 			{
-				m_MeshObject->getSection(i)->setMaterialName(message->GetMaterialName());
+				m_MeshObject->getSection(i)->setMaterialName(material_name);
 			}
 		}
 	}

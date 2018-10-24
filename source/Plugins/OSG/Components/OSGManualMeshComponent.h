@@ -45,7 +45,7 @@ namespace GASS
 		//IManualMeshComponent interface
 		virtual GraphicsMesh GetMeshData() const;
 		virtual void SetMeshData(const GraphicsMesh &mesh);
-		virtual void SetMaterial(const std::string &material_name, int sub_mesh_index);
+		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index);
 
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }

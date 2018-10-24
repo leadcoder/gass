@@ -387,12 +387,12 @@ namespace GASS
 
 	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
 	{
-		SetMaterial(message->GetMaterialName(), message->GetSubMeshID());
+		SetSubMeshMaterial(message->GetMaterialName(), message->GetSubMeshID());
 	}
 
-	void OSGManualMeshComponent::SetMaterial(const std::string &material_name, int sub_mesh_index)
+	void OSGManualMeshComponent::SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index)
 	{
-		if (material_name != "" && m_GFXSystem->HasMaterial(material_name))
+		if (material_name != "" && m_GFXSystem && m_GFXSystem->HasMaterial(material_name))
 		{
 			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(material_name);
 			if (!m_ReceiveShadow) //protect from shader override

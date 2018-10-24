@@ -486,7 +486,7 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(m_HighlightMat)));
+				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(m_HighlightMat);
 			}
 			m_Highlight = true;
 		}
@@ -494,7 +494,7 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(m_RegularMat)));
+				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(m_RegularMat);
 			}
 			m_Highlight = false;
 		}

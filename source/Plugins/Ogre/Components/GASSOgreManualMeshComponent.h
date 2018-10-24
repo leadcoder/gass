@@ -54,6 +54,7 @@ namespace GASS
 		//IManaulMeshComponent
 		virtual GraphicsMesh GetMeshData() const;
 		virtual void SetMeshData(const GraphicsMesh& mesh);
+		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index);
 
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
