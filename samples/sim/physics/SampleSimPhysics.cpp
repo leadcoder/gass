@@ -102,45 +102,49 @@ int main(int/*argc*/, char* /*argv[]*/)
 	systems.push_back("ODECollisionSystem");
 
 	GASS::SimEngine* m_Engine = new GASS::SimEngine();
+	m_Engine->SetDataPath(GASS::FilePath("../../data/"));
 
 	GASS::ResourceGroupPtr gfx_group(new GASS::ResourceGroup("GASS_GFX"));
-	gfx_group->AddResourceLocation(GASS::FilePath("../../data/gfx"), GASS::RLT_FILESYSTEM, true);
+	gfx_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/gfx"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(gfx_group);
 
 	GASS::ResourceGroupPtr physics_group(new GASS::ResourceGroup("GASS_PHYSICS"));
-	physics_group->AddResourceLocation(GASS::FilePath("../../data/physics"), GASS::RLT_FILESYSTEM, true);
+	physics_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/physics"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(physics_group);
 
 	GASS::ResourceGroupPtr input_group(new GASS::ResourceGroup("GASS_INPUT"));
-	input_group->AddResourceLocation(GASS::FilePath("../../data/input"), GASS::RLT_FILESYSTEM, true);
+	input_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/input"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(input_group);
 
 	GASS::ResourceGroupPtr font_group(new GASS::ResourceGroup("GASS_FONTS"));
-	font_group->AddResourceLocation(GASS::FilePath("../../data/gfx/Ogre/Fonts"), GASS::RLT_FILESYSTEM, true);
+	font_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/gfx/Ogre/Fonts"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(font_group);
 
 	GASS::ResourceGroupPtr temp_group(new GASS::ResourceGroup("GASS_TEMPLATES"));
-	temp_group->AddResourceLocation(GASS::FilePath("../../data/templates/camera"), GASS::RLT_FILESYSTEM, true);
+	temp_group->AddResourceLocation(GASS::FilePath("%GASS_DATA_HOME%/templates/camera"), GASS::RLT_FILESYSTEM, true);
 	m_Engine->GetResourceManager()->AddResourceGroup(temp_group);
 
-	m_Engine->Init(GASS::FilePath("SampleSimPhysics.xml"));
+	//m_Engine->Init(GASS::FilePath("SampleSimPhysics.xml"));
 
-	//Create systems
+	
+	//m_Engine->Init(GASS::FilePath(""));
+
+	//load plugins
 	for (size_t i = 0; i < plugins.size(); i++)
 	{
 		m_Engine->GetPluginManager()->LoadPlugin(plugins[i]);
 	}
 
+	//Create systems
 	for (size_t i = 0; i < systems.size(); i++)
 	{
-		GASS::SimSystemPtr system = GASS::SystemFactory::Get().Create(systems[i]);
-		system->OnCreate(m_Engine->GetSimSystemManager());
-		system->Init();
-		m_Engine->GetSimSystemManager()->AddSystem(system);
+		GASS::SimSystemPtr system = m_Engine->GetSimSystemManager()->AddSystem(systems[i]);
 	}
+	m_Engine->Init(GASS::FilePath(""));
+	//m_Engine->GetSimSystemManager()->Init();
 
 	//reload templates
-	m_Engine->ReloadTemplates();
+	//m_Engine->ReloadTemplates();
 
 	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 
