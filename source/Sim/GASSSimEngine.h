@@ -182,6 +182,8 @@ namespace GASS
 		*/
 		void SetLogFolder(const FilePath &path) {m_LogFolder = path;}
 
+		FilePath GetDataPath() const;
+		void SetDataPath(const FilePath &data_path);
 		/**
 			Get file path where scene are stored
 		*/
@@ -207,10 +209,11 @@ namespace GASS
 		PluginManagerPtr GetPluginManager() const {return m_PluginManager;}
 		double GetTime() const;
 		double GetSimulationTime() const;
-
+		
 		//print debug message to render window
 		void DebugPrint(const std::string &message);
 	private:
+		void PutEnv(const std::string &value);
 		void LoadSettings(const FilePath &configuration_file);
 		void LoadResources(const FilePath &configuration_file);
 
@@ -222,6 +225,7 @@ namespace GASS
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
 		double m_CurrentTime;
+		FilePath m_DataPath;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
 	};

@@ -85,16 +85,12 @@ namespace GASS
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
 
 		if (configuration.GetFullPath() != "")
+		{ 
 			LoadSettings(configuration);
-
-		if (configuration.GetFullPath() != "")
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
-
-		if (configuration.GetFullPath() != "")
 			LoadResources(configuration);
-
-		if (configuration.GetFullPath() != "") //Load systems
 			m_SystemManager->Load(configuration.GetFullPath());
+		}
 
 		//Initialize systems
 		m_SystemManager->Init();
@@ -115,7 +111,6 @@ namespace GASS
 		//initialize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
 		ProfileSample::ResetAll();
-
 		GASS_LOG(LINFO) << "SimEngine Initialization Completed";
 	}
 
@@ -169,23 +164,8 @@ namespace GASS
 		tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if (xml_data_path)
 		{
-			std::string env_data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "SetDataPath");
-			FilePath data_path(env_data_path);
-			if (data_path.Exist())
-			{
-				env_data_path = "GASS_DATA_HOME=" + env_data_path;
-#ifdef WIN32
-				int ret = _putenv(env_data_path.c_str());
-				if (ret == -1)
-					GASS_EXCEPT(Exception::ERR_INVALID_STATE, "Failed to set env var GASS_DATA_HOMR:" + env_data_path, "SimEngine::LoadSettings");
-#else
-				char * writable = new char[env_data_path.size() + 1];
-				std::copy(env_data_path.begin(), env_data_path.end(), writable);
-				writable[env_data_path.size()] = '\0'; // don't forget the terminating 0
-				putenv(writable);
-				//delete[] writable;
-#endif
-			}
+			const std::string data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "SetDataPath");
+			SetDataPath(data_path);
 		}
 		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 
@@ -207,6 +187,37 @@ namespace GASS
 			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
 		}
 		delete xmlDoc;
+	}
+
+	void SimEngine::PutEnv(const std::string &value)
+	{
+#ifdef WIN32
+		int ret = _putenv(value.c_str());
+		if (ret == -1)
+			GASS_EXCEPT(Exception::ERR_INVALID_STATE, "Failed to set env var:" + value, "SimEngine::PutEnv");
+#else
+		char * writable = new char[value.size() + 1];
+		std::copy(value.begin(), value.end(), writable);
+		writable[value.size()] = '\0'; // don't forget the terminating 0
+		putenv(writable);
+		//delete[] writable;
+#endif
+
+	}
+
+	void SimEngine::SetDataPath(const FilePath &data_path)
+	{
+		m_DataPath = data_path;
+		if (data_path.Exist())
+		{
+			const std::string env_str = "GASS_DATA_HOME=" + data_path.GetFullPath();
+			PutEnv(env_str);
+		}
+	}
+
+	FilePath SimEngine::GetDataPath() const
+	{
+		return m_DataPath;
 	}
 
 	void SimEngine::LoadResources(const FilePath &configuration_file)

@@ -126,6 +126,8 @@ namespace GASS
 		void Load(const std::string &filename);
 
 
+		SimSystemPtr AddSystem(const std::string &system_name);
+
 		void AddSystem(SimSystemPtr system);
 
 		/**

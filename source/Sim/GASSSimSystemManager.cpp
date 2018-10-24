@@ -184,6 +184,15 @@ namespace GASS
 		m_Systems.push_back(system);
 	}
 
+
+	SimSystemPtr SimSystemManager::AddSystem(const std::string &system_name)
+	{
+		SimSystemPtr system = SystemFactory::Get().Create(system_name);
+		system->OnCreate(shared_from_this());
+		m_Systems.push_back(system);
+		return system;
+	}
+
 	SimSystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
 	{
 		const std::string system_type = system_elem->Value();
