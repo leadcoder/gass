@@ -65,7 +65,6 @@ namespace GASS
 		RegisterProperty<Float>("YawMaxVelocity", &PhysXCharacterComponent::GetYawMaxVelocity, &PhysXCharacterComponent::SetYawMaxVelocity);
 		RegisterProperty<Float>("Acceleration", &PhysXCharacterComponent::GetAcceleration, &PhysXCharacterComponent::SetAcceleration);
 		RegisterProperty<Float>("MaxSpeed", &PhysXCharacterComponent::GetMaxSpeed, &PhysXCharacterComponent::SetMaxSpeed);
-		
 	}
 
 	void PhysXCharacterComponent::OnInitialize()
@@ -104,13 +103,11 @@ namespace GASS
 
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
-		//Quaternion rot = location->GetRotation();
-
-		PxExtendedVec3 px_vec(pos.x,pos.y+20,pos.z);
+		PxExtendedVec3 px_initial_pos(pos.x, pos.y, pos.z);
 
 		PxCapsuleControllerDesc cDesc;
 		cDesc.material			= system->GetDefaultMaterial();
-		cDesc.position			= px_vec;
+		cDesc.position			= px_initial_pos;
 		cDesc.height			= static_cast<float>(m_StandingSize);
 		cDesc.radius			= static_cast<float>(m_Radius);
 		cDesc.slopeLimit		= 0.0f;
@@ -238,7 +235,8 @@ namespace GASS
 		if(m_Controller)
 		{
 			Reset();
-			Vec3 final_pos = value + PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
+			const PxVec3 final_pos = sm->WorldToLocal(value);
 			m_Controller->setFootPosition(PxExtendedVec3(final_pos.x, final_pos.y, final_pos.z));
 		}
 	}
@@ -249,8 +247,8 @@ namespace GASS
 		if(m_Controller)
 		{
 			PxExtendedVec3 foot_pos = m_Controller->getFootPosition();
-			pos.Set(foot_pos.x,foot_pos.y,foot_pos.z);
-			pos = pos - PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
+			pos = sm->LocalToWorld(PxVec3(foot_pos.x, foot_pos.y, foot_pos.z));
 		}
 		return pos;
 	}

@@ -82,10 +82,9 @@ namespace GASS
 		}
 		m_TriangleMesh = scene_manager->CreateTriangleMesh(col_mesh_id,geom);
 
-		Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-		position = position + scene_manager->GetOffset();
+		const Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 		physx::PxTransform pose = physx::PxTransform::createIdentity();
-		pose.p = PxConvert::ToPx(position);
+		pose.p = scene_manager->WorldToLocal(position);
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		
@@ -126,8 +125,8 @@ namespace GASS
 		if(m_Actor)
 		{
 			//Get offset
-			PhysXPhysicsSceneManagerPtr scene_manager(m_SceneManager);
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos + scene_manager->GetOffset()), m_Actor->getGlobalPose().q));
+			const PhysXPhysicsSceneManagerPtr scene_manager = m_SceneManager.lock();
+			m_Actor->setGlobalPose(physx::PxTransform(scene_manager->WorldToLocal(pos), m_Actor->getGlobalPose().q));
 		}
 	}
 

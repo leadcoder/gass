@@ -145,7 +145,7 @@ namespace GASS
 			position.z = m_TerrainBounds.Min.z;
 			position.y = 0;
 
-			pose.p = PxConvert::ToPx(position + scene_manager->GetOffset());
+			pose.p = scene_manager->WorldToLocal(position);
 
 			physx::PxRigidStatic* hfActor = system->GetPxSDK()->createRigidStatic(pose);
 

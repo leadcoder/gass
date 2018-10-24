@@ -75,6 +75,8 @@ namespace GASS
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 		void SetOffset(const Vec3 &offset) {m_Offset = offset;}
 		Vec3 GetOffset() const {return m_Offset;}
+		Vec3 LocalToWorld(const physx::PxVec3 & local) const; 
+		physx::PxVec3 WorldToLocal(const Vec3 & world) const;
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
 		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);

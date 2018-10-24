@@ -78,7 +78,11 @@ namespace GASS
 		
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;
-		physx::PxTransform transform(PxConvert::ToPx(pos + sm->GetOffset()), PxConvert::ToPx(rot));
+		
+		//Transform to initial offset
+		//NOTE: We dont use PhysXPhysicsSceneManager::WorldToLocal, 
+		//location component is just created and the vehicle is not yet moved to it start location.
+		physx::PxTransform transform(PxConvert::ToPx(pos), PxConvert::ToPx(rot));
 		m_Actor = system->GetPxSDK()->createRigidDynamic(transform);
 		m_Actor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, m_DisableGravity);
 		//transfer loaded attributes to actor
@@ -120,8 +124,8 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p) - offset;
+			PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
+			pos = sm->LocalToWorld(m_Actor->getGlobalPose().p);
 		}
 		return pos;
 	}
@@ -132,8 +136,8 @@ namespace GASS
 		{
 			Vec3 trans_vec = value - GetPosition();
 			//get scene offset used to support double precision
-			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
+			PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
+			m_Actor->setGlobalPose(physx::PxTransform(sm->WorldToLocal(value), m_Actor->getGlobalPose().q));
 
 			if(m_EffectJoints)
 			{

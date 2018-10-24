@@ -230,6 +230,16 @@ namespace GASS
 
 	}
 
+	Vec3 PhysXPhysicsSceneManager::LocalToWorld(const physx::PxVec3 & local) const
+	{
+		return PxConvert::ToGASS(local) - m_Offset;
+	}
+
+	physx::PxVec3 PhysXPhysicsSceneManager::WorldToLocal(const Vec3 & world) const
+	{
+		return  PxConvert::ToPx(world + m_Offset);
+	}
+
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
 	{
 		size_t index = m_Vehicles.size();

@@ -465,10 +465,11 @@ namespace GASS
 
 		//Set the transform and the instantiated car and set it be to be at rest.
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 pos = location->GetPosition();
-		//PxTransform startTransform(PxVec3(pos.x,pos.y,pos.z), PxQuat(0, 0, 0, 1));
-		Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-		m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos + offset), m_Actor->getGlobalPose().q));
+		const Vec3 pos = location->GetPosition();
+
+		//NOTE: We dont use PhysXPhysicsSceneManager::WorldToLocal, 
+		//location component is just created and the vehicle is not yet moved to it start location.
+		m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(pos), m_Actor->getGlobalPose().q));
 
 		Reset();
 
@@ -489,8 +490,9 @@ namespace GASS
 	{
 		if (m_TrackTransformation)
 		{
-			SetPosition(event->GetPosition());
+			//First rotate to get correct wheel rotation in SetPosition
 			SetRotation(event->GetRotation());
+			SetPosition(event->GetPosition());
 		}
 	}
 
@@ -571,14 +573,14 @@ namespace GASS
 
 		if(m_AllWheels.size() == numShapes-1)
 		{
-			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
 
 			for(size_t i = 0; i < numShapes-1; i++)
 			{
 				SceneObjectPtr wheel(m_AllWheels[i]);
 				if(wheel)
 				{
-					Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p) - offset;
+					Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p);
 					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
 					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
 					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
@@ -872,11 +874,12 @@ namespace GASS
 		if(m_Actor)
 		{
 			Reset();
-			const Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
+			
+			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
 			const Vec3 org_pos = GetPosition();
 			//Vec3 trans_vec = value - org_pos;
 
-			m_Actor->setGlobalPose(physx::PxTransform(PxConvert::ToPx(value + offset), m_Actor->getGlobalPose().q));
+			m_Actor->setGlobalPose(physx::PxTransform(sm->WorldToLocal(value), m_Actor->getGlobalPose().q));
 
 			ComponentContainer::ComponentVector components;
 			GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
@@ -902,14 +905,12 @@ namespace GASS
 
 				if(m_AllWheels.size() == numShapes-1)
 				{
-					//Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-
 					for(size_t i = 0; i < numShapes-1; i++)
 					{
 						SceneObjectPtr wheel(m_AllWheels[i]);
 						if(wheel)
 						{
-							Vec3 pos = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p) - offset;
+							Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*carShapes[i], vehicleActor).p);
 							wheel->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
 							Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
 							wheel->GetFirstComponentByClass<ILocationComponent>()->SetRotation(rot);
@@ -929,9 +930,8 @@ namespace GASS
 		Vec3 pos(0,0,0);
 		if(m_Actor)
 		{
-			pos = PxConvert::ToGASS(m_Actor->getGlobalPose().p);
-			Vec3 offset = PhysXPhysicsSceneManagerPtr(m_SceneManager)->GetOffset();
-			pos = pos - offset;
+			PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
+			pos = sm->LocalToWorld(m_Actor->getGlobalPose().p);
 		}
 		return pos;
 	}
