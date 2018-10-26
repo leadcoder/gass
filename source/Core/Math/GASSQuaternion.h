@@ -47,8 +47,8 @@ namespace GASS
 			TYPE fW = 1.0,
 			TYPE fX = 0.0, TYPE fY = 0.0, TYPE fZ = 0.0);
 		inline TQuaternion (const TQuaternion& rkQ);
-		//inline TQuaternion(const TVec3<TYPE> &euler_rot);
-
+		inline TQuaternion(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis);
+	
 		inline void FromEulerAnglesXYZ (const TVec3<TYPE> &rot);
 		inline void FromEulerAnglesYXZ (const TVec3<TYPE> &rot);
 		inline void FromRotationMatrix (const TMat4<TYPE>& kRot);
@@ -201,11 +201,11 @@ namespace GASS
 		z = rkQ.z;
 	}
 
-	/*template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(const TVec3<TYPE> &euler_rot)
+	template<class TYPE>
+	TQuaternion<TYPE>::TQuaternion(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis)
 	{
-		FromEulerAngles(euler_rot);
-	}*/
+		FromAxes(xAxis, yAxis, zAxis);
+	}
 
 	template<class TYPE>
 	void TQuaternion<TYPE>::FromEulerAnglesYXZ(const TVec3<TYPE> &rot)
