@@ -38,10 +38,12 @@ namespace GASS
 {
 	ChaseCameraComponent::ChaseCameraComponent() : m_PreferredViewport(""),
 		m_Velocity(0,0,0),
-		m_DampingConstant(8.0),
-    	m_SpringConstant(16.0),
+		m_DampingConstant(8),
+    	m_SpringConstant(16),
 	    m_OffsetDistance(5.0),
-		m_OffsetHeight(1.0)
+		m_OffsetHeight(1.0),
+		m_CameraLocation(NULL),
+		m_ChaseObjectLocation(NULL)
 	{
 
 	}
@@ -65,14 +67,19 @@ namespace GASS
 
 	void ChaseCameraComponent::OnInitialize()
 	{
-		BaseSceneComponent::InitializeSceneObjectRef();
-		BaseSceneComponent::OnInitialize();
-		
 		if(!m_InputHandlerObject.IsValid())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " ChaseCameraComponent::OnInitialize");
 
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(ChaseCameraComponent::OnEnter,EnterVehicleRequest,0));
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(ChaseCameraComponent::OnExit,ExitVehicleRequest,0));
+
+		//Assume target is parent
+		m_ChaseObjectLocation = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
+		GASSAssert(m_ChaseObjectLocation, "Failed to find ChaseObjectLocation in ChaseCameraComponent::OnInitialize");
+		//Assume our scene object also hold the camera
+		m_CameraLocation = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
+		GASSAssert(m_CameraLocation, "Failed to find CameraLocation in ChaseCameraComponent::OnInitialize");
+
 		RegisterForPostUpdate<IMissionSceneManager>();
 	}
 
@@ -104,39 +111,33 @@ namespace GASS
 
 	void ChaseCameraComponent::SceneManagerTick(double delta_time)
 	{
+		const Vec3 world_up_vec(0, 1, 0);
 		//Get parent location
-		LocationComponentPtr target_location  =  GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 target_pos = target_location->GetWorldPosition();
-		Quaternion target_rot = target_location->GetWorldRotation();
+		
+		const Vec3 object_pos = m_ChaseObjectLocation->GetWorldPosition();
+		const Quaternion object_rot = m_ChaseObjectLocation->GetWorldRotation();
 
-		LocationComponentPtr camera_location  =  GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-		Vec3 eye_pos = camera_location->GetWorldPosition();
+		const Vec3 camera_pos = m_CameraLocation->GetWorldPosition();
 
-		Vec3 dir = target_rot.GetRotationMatrix().GetZAxis();
-		dir.y = 0;
-		dir.Normalize();
-		Vec3 ideal_position = target_pos + dir * m_OffsetDistance;
-		ideal_position.y += m_OffsetHeight;
-		Vec3 displacement = eye_pos - ideal_position;
-		Vec3 spring_acceleration = (-m_SpringConstant * displacement) - 
-			(m_DampingConstant * m_Velocity);
-
+		//Calculate projected object direction
+		const Vec3 proj_object_z_axis = world_up_vec.Cross(object_rot.GetRotationMatrix().GetZAxis()).NormalizedCopy().Cross(world_up_vec);
+		
+		//Calculate the desired camera position
+		const Vec3 desired_camera_pos = object_pos + proj_object_z_axis * m_OffsetDistance + world_up_vec * m_OffsetHeight;
+		
+		//Update the velocity vector using the spring parameters
+		const Vec3 displacement = camera_pos - desired_camera_pos;
+		const Vec3 spring_acceleration = (-m_SpringConstant * displacement) - (m_DampingConstant * m_Velocity);
 		m_Velocity += spring_acceleration * delta_time;
-		eye_pos += m_Velocity * delta_time;
 		
-		camera_location->SetWorldPosition(eye_pos);
+		//Update camera position
+		const Vec3 new_camera_pos = camera_pos + m_Velocity * delta_time;
+		m_CameraLocation->SetWorldPosition(new_camera_pos);
 		
-		Vec3 camera_dir = eye_pos - target_pos;
-		
-		camera_dir.Normalize();
-		Vec3 left = Vec3::Cross(Vec3(0,1,0),camera_dir);
-		left.Normalize();
-		Vec3 up = Vec3::Cross(camera_dir,left);
-		up.Normalize();
-		Mat4 rot_mat;
-		rot_mat.SetRotationByAxis(left, up, camera_dir);
-		Quaternion new_rot;
-		new_rot.FromRotationMatrix(rot_mat);
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(new_rot)));
+		//Update camera orientation from new camera position
+		const Vec3 camera_z_axis = (new_camera_pos - object_pos).NormalizedCopy();
+		const Vec3 camera_x_axis = Vec3::Cross(world_up_vec, camera_z_axis).NormalizedCopy();
+		const Vec3 camera_y_axis = Vec3::Cross(camera_z_axis, camera_x_axis).NormalizedCopy();
+		m_CameraLocation->SetWorldRotation(Quaternion(camera_x_axis, camera_y_axis, camera_z_axis));
 	}
 }

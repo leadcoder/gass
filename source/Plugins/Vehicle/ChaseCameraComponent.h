@@ -49,6 +49,8 @@ namespace GASS
 		void OnEnter(EnterVehicleRequestPtr message);
 		void OnExit(ExitVehicleRequestPtr message);
 
+		ILocationComponent* m_CameraLocation;
+		const ILocationComponent* m_ChaseObjectLocation;
 		Vec3 m_Velocity;
 		std::string m_PreferredViewport;
 		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
