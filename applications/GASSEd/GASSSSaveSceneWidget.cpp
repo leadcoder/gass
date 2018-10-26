@@ -21,7 +21,7 @@
 	 {
 		 m_ComoBox->addItem(scene_paths[i].c_str());
 		 if(scene_name == scene_paths[i])
-			 pre_select = i;
+			 pre_select = static_cast<int>(i);
 	 }
 
 	 if(pre_select != -1)

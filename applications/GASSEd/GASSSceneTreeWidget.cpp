@@ -165,7 +165,7 @@ void GASSSceneTreeWidget::CheckSceneSelection(QTreeWidgetItem *item)
 static bool internal_select = false;
 void GASSSceneTreeWidget::OnSceneObjectSelectionChanged(GASS::EditorSelectionChangedEventPtr message)
 {
-	if (message->GetSenderID() != (int) this)
+	if (message->GetSenderID() != GASS_PTR_TO_INT(this))
 	{
 		internal_select = true;
 		CheckSceneSelection(invisibleRootItem());

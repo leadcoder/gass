@@ -380,7 +380,7 @@ void GASSEd::OnPaste()
 		{
 			cut_obj->GetParentSceneObject()->RemoveChild(cut_obj);
 			obj->AddChild(cut_obj);
-			int id = (int) this;
+			int id = GASS_PTR_TO_INT(this);
 			cut_obj->PostEvent(GASS::ParentChangedEventPtr(new GASS::ParentChangedEvent(id)));
 			cut_obj.reset();
 		}
