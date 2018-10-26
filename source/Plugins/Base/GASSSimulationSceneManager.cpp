@@ -37,6 +37,7 @@ namespace GASS
 
 	void SimulationSceneManager::RegisterReflection()
 	{
+
 	}
 
 	void SimulationSceneManager::OnCreate()
@@ -46,24 +47,11 @@ namespace GASS
 	
 	void SimulationSceneManager::OnInit()
 	{
-		SimulationSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<SimulationSystem>();
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
+		RegisterForPreUpdate<SimulationSystem>();
 	}
 
 	void SimulationSceneManager::OnShutdown()
 	{
 
 	}
-
-	void SimulationSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-		_UpdateListeners(delta_time);
-	}
-
-	void SimulationSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-
-	}
-	
 }

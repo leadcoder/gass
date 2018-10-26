@@ -151,11 +151,7 @@ namespace GASS
 
 	void OSGEarthMapComponent::OnInitialize()
 	{
-		SceneManagerListenerPtr listener = shared_from_this();
-		GASS_SHARED_PTR<BaseSceneManager> osg_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IGraphicsSceneManager>());
-		osg_sm->Register(listener);
-
-		GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
+		RegisterForPreUpdate<IGraphicsSceneManager>();
 		m_Initlized = true;
 		SetEarthFile(m_EarthFile);
 	}

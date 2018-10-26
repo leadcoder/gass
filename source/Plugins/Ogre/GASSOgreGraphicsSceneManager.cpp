@@ -132,10 +132,12 @@ namespace GASS
 
 	void OgreGraphicsSceneManager::OnCreate()
 	{
+		//register on system to get updates
+		RegisterForPostUpdate<OgreGraphicsSystem>();
+	
 		OgreGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OgreGraphicsSystem>();
 		m_GFXSystem = system;
-		//register on system to get updates
-		system->Register(shared_from_this());
+		
 		ScenePtr scene = GetScene();
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
 		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle,DrawCircleRequest ,0));
@@ -205,16 +207,6 @@ namespace GASS
 		Root::getSingleton().destroySceneManager(m_SceneMgr);
 		m_SceneMgr = NULL;
 		//OgreGraphicsSystemPtr(m_GFXSystem)->_UpdateListeners(0); //why?
-	}
-
-	void OgreGraphicsSceneManager::OnPreSystemUpdate(double delta)
-	{
-
-	}
-
-	void OgreGraphicsSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-		_UpdateListeners(delta_time);
 	}
 
 	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &/*evt*/)

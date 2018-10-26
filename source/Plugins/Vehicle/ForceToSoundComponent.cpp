@@ -56,8 +56,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ForceToSoundComponent::OnHingeReport,PhysicsHingeJointReportEvent,0));
 		
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
+		RegisterForPostUpdate<IMissionSceneManager>();
 
 		//Play engine sound
 		

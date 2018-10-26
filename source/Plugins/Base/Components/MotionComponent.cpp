@@ -92,8 +92,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnTransMessage, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(MotionComponent::OnGeometryChanged, GeometryChangedEvent, 0));
 		//register for updates
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
+		RegisterForPostUpdate<IMissionSceneManager>();
 
 		//try to get height_map
 		m_Heightmap = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);

@@ -85,8 +85,7 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GoToLocationComponent::OnTransformationMessage,TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(GoToLocationComponent::OnPathfindToLocation,PathfindToPositionMessage,0));
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
+		RegisterForPostUpdate<IMissionSceneManager>();
 	}
 
 	void GoToLocationComponent::OnTransformationMessage(TransformationChangedEventPtr message)

@@ -61,9 +61,8 @@ namespace GASS
 
 	void DetourCrowdComponent::OnInitialize()
 	{
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
-
+		RegisterForPostUpdate<IMissionSceneManager>();
+	
 		//Get nav mesh by name?
 		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("AI_NAVIGATION_MESH");
 		if(obj)

@@ -109,8 +109,6 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		virtual void OnPreSystemUpdate(double delta_time);
-		virtual void OnPostSystemUpdate(double delta_time);
 		virtual bool GetSerialize() const {return false;}
 
 		//ICollisionSceneManager

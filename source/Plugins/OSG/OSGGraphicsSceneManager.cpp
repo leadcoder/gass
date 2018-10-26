@@ -132,11 +132,7 @@ namespace GASS
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-
-		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		if(system == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find OSGGraphicsSystem", "OSGGraphicsSceneManager::OnLoad");
-		system->Register(shared_from_this());
+		RegisterForPostUpdate<OSGGraphicsSystem>();
 	}
 
 	void OSGGraphicsSceneManager::OnShutdown()
@@ -186,15 +182,10 @@ namespace GASS
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
 	}
 
-	void OSGGraphicsSceneManager::OnPreSystemUpdate(double delta)
-	{
-
-	}
-
-	void OSGGraphicsSceneManager::OnPostSystemUpdate(double delta_time)
+	void OSGGraphicsSceneManager::OnUpdate(double delta_time)
 	{
 		m_DebugDraw->Clear();
-		_UpdateListeners(delta_time);
+		//_UpdateListeners(delta_time);
 	}
 
 

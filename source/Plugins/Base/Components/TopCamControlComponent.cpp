@@ -77,8 +77,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS( TopCamControlComponent::OnCameraChanged, CameraChangedEvent, 0 ));
 
 		//register for updates
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
+		RegisterForPostUpdate<CoreSceneManager>();
 	}
 
 	void TopCamControlComponent::OnDelete()

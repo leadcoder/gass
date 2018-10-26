@@ -91,11 +91,8 @@ namespace GASS
 		if(!raknet->IsActive())
 			return;
 
-
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(listener);
-
-
+		RegisterForPreUpdate<RaknetNetworkSceneManager>();
+		
 		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{

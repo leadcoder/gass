@@ -88,25 +88,11 @@ namespace GASS
 
 	void RaknetNetworkSceneManager::OnInit()
 	{
-		RakNetNetworkSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		if(system == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find RakNetNetworkSystem", "RaketNetworkSceneManager::OnLoad");
-		system->Register(shared_from_this());
+		RegisterForPreUpdate<RakNetNetworkSystem>();
 	}
 
 	void RaknetNetworkSceneManager::OnShutdown()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
-	}
-
-
-	void RaknetNetworkSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-		BaseSceneManager::_UpdateListeners(delta_time);
-	}
-
-	void RaknetNetworkSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-
 	}
 }

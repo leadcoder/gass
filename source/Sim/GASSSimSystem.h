@@ -67,8 +67,8 @@ namespace GASS
 		virtual void Init() = 0;
 		virtual std::string  GetSystemName() const = 0;
 		virtual std::string GetName() const {return m_Name;}
-		virtual void Register(SystemListenerPtr listener);
-		virtual void Unregister(SystemListenerPtr listener);
+		virtual void RegisterListener(SystemListenerPtr listener);
+		virtual void UnregisterListener(SystemListenerPtr listener);
 		virtual void OnSystemUpdate(double delta_time);
 
 		//IXMLSerialize interface

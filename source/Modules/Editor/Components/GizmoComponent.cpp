@@ -112,7 +112,7 @@ namespace GASS
 		m_BaseRot = lc->GetEulerRotation().GetQuaternion();
 		_SetSelection(m_EditorSceneManager->GetSelectedObjects());
 		SceneManagerListenerPtr listener = shared_from_this();
-		m_EditorSceneManager->Register(listener);
+		RegisterForPostUpdate<EditorSceneManager>();
 	}
 
 	void GizmoComponent::SceneManagerTick(double /*delta_time*/)

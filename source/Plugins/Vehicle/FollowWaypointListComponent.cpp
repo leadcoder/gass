@@ -141,8 +141,7 @@ namespace GASS
 	void FollowWaypointListComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(FollowWaypointListComponent::OnTransMessage,TransformationChangedEvent,0));
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
+		RegisterForPostUpdate<IMissionSceneManager>();
 		//update
 		SetWaypointList(m_WaypointList);
 	}

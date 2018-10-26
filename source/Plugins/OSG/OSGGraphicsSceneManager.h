@@ -44,9 +44,8 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();		
 		virtual void OnShutdown();
-		void OnPreSystemUpdate(double delta);
-		void OnPostSystemUpdate(double delta_time);
-
+		virtual void OnUpdate(double delta);
+	
 		virtual bool GetSerialize() const {return true;}
 		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
 		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
@@ -71,7 +70,7 @@ namespace GASS
 		void UpdateFogSettings();
 		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
 		Vec3 GetAmbientColor() const {return m_AmbientColor;}
-		void SystemTick(double delta_time);
+		//void SystemTick(double delta_time);
 	private:	
 		//fog
 		float m_FogDensity;

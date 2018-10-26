@@ -54,20 +54,61 @@ namespace GASS
 		virtual void SetName(const std::string &name) {m_Name = name;}
 		virtual ScenePtr GetScene() const {return m_Scene.lock();}//allow null pointer}
 		virtual void SetScene(ScenePtr owner){m_Scene = owner;}
-		virtual void Register(SceneManagerListenerPtr listener);
-		virtual void Unregister(SceneManagerListenerPtr listener);
+		
+		virtual void RegisterPreUpdate(SceneManagerListenerPtr listener);
+		virtual void RegisterPostUpdate(SceneManagerListenerPtr listener);
+
+		virtual void OnUpdate(double /*delta_time*/) {};
 	
 		//ISystemListener
-		//virtual void SystemTick(double delta_time);
+		void OnPreSystemUpdate(double delta_time)
+		{
+			if (m_PreSystemUpdate)
+			{
+				_UpdatePreListeners(delta_time);
+				OnUpdate(delta_time);
+				_UpdatePostListeners(delta_time);
+			}
+		}
+
+		void OnPostSystemUpdate(double delta_time)
+		{
+			if (!m_PreSystemUpdate)
+			{
+				_UpdatePreListeners(delta_time);
+				OnUpdate(delta_time);
+				_UpdatePostListeners(delta_time);
+			}
+		}
+
 		//IXMLSerialize
 		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
 		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
-
-		void _UpdateListeners(double delta_time);
 	protected:
+
+		template <class T>
+		void RegisterForPostUpdate()
+		{
+			GASS_SHARED_PTR<T> system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<T>();
+			system->RegisterListener(shared_from_this());
+			m_PreSystemUpdate = true;
+		}
+
+		template <class T>
+		void RegisterForPreUpdate()
+		{
+			GASS_SHARED_PTR<T> system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<T>();
+			system->RegisterListener(shared_from_this());
+			m_PreSystemUpdate = false;
+		}
+	private:
+		void _UpdatePreListeners(double delta_time);
+		void _UpdatePostListeners(double delta_time);
 		std::string m_Name;
 		SceneWeakPtr m_Scene;
-		std::vector<SceneManagerListenerWeakPtr> m_Listeners;
+		std::vector<SceneManagerListenerWeakPtr> m_PostListeners;
+		std::vector<SceneManagerListenerWeakPtr> m_PreListeners;
+		bool m_PreSystemUpdate;
 	};
 
 	typedef GASS_SHARED_PTR<BaseSceneManager> BaseSceneManagerPtr;

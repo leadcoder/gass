@@ -71,7 +71,7 @@ namespace GASS
 
 			if(m_Attributes.size() > 0)
 			{
-				GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<RaknetNetworkSceneManager>()->Register(shared_from_this());
+				RegisterForPreUpdate<RaknetNetworkSceneManager>();
 			}
 		}
 		else

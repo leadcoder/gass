@@ -116,11 +116,12 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::OnInit()
 	{
+		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		if(system == NULL)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
+
+		RegisterForPreUpdate<PhysXPhysicsSystem>();
 
 		physx::PxSceneDesc sceneDesc(system->GetPxSDK()->getTolerancesScale());
 		sceneDesc.gravity = physx::PxVec3(0, m_Gravity, 0);
@@ -189,12 +190,7 @@ namespace GASS
 
 	}
 
-	void PhysXPhysicsSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-		
-	}
-
-	void PhysXPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
+	void PhysXPhysicsSceneManager::OnUpdate(double delta_time)
 	{
 		if (m_Active)
 		{
@@ -221,8 +217,6 @@ namespace GASS
 			}
 			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
 		}
-		//update tick subscribers
-		BaseSceneManager::_UpdateListeners(delta_time);
 	}
 
 	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)

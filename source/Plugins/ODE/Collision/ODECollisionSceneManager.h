@@ -50,8 +50,6 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		virtual void OnPreSystemUpdate(double delta_time);
-		virtual void OnPostSystemUpdate(double delta_time);
 		virtual bool GetSerialize() const {return false;}
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const;
 	protected:

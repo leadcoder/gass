@@ -68,10 +68,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXPrismaticComponent::OnVelocityRequest,PhysicsPrismaticJointVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXPrismaticComponent::OnPositionRequest,PhysicsPrismaticJointPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXPrismaticComponent::OnForceRequest,PhysicsPrismaticJointMaxForceRequest,0));
-
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>()->Register(listener);
-
+		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 		PhysXBaseJointComponent::OnInitialize();
 	}
 

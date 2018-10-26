@@ -99,16 +99,6 @@ namespace GASS
 	}
 
 
-	void OSGEarthSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-
-	}
-
-	void OSGEarthSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-
-	}
-
 
 	/**
 	* Toggles the main control canvas on and off.

@@ -80,12 +80,7 @@ namespace GASS
 	void ODEPhysicsSceneManager::OnInit()
 	{
 		ScenePtr scene = GetScene();
-
-		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
-		if(system == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find ODEPhysicsSystem", "ODEPhysicsSceneManager::OnLoad");
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
+		RegisterForPreUpdate<ODEPhysicsSystem>();
 
 		m_Space = 0;
 		m_World = dWorldCreate();
@@ -110,17 +105,12 @@ namespace GASS
 		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
 		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);
 		if(m_World) dWorldDestroy (m_World);
-		ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
+		/*ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
-		system->Unregister(listener);
+		system->UnregisterListener(listener);*/
 	}
 
-	void ODEPhysicsSceneManager::OnPreSystemUpdate(double delta)
-	{
-		
-	}
-
-	void ODEPhysicsSceneManager::OnPostSystemUpdate(double delta_time)
+	void ODEPhysicsSceneManager::OnUpdate(double delta_time)
 	{
 		if (m_Active)
 		{
@@ -156,7 +146,6 @@ namespace GASS
 		{
 			col_sys->Process();
 		}*/
-		BaseSceneManager::_UpdateListeners(delta_time);
 	}
 
 #define MAX_CONTACTS 25		// maximum number of contact points per body

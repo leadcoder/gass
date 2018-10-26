@@ -57,10 +57,8 @@ namespace GASS
 		virtual bool GetActive() const { return m_Active; }
 
 		dWorldID GetWorld()const {return m_World;}
-		void OnPostSystemUpdate(double delta);
-		void OnPreSystemUpdate(double delta);
-		
-
+		void OnUpdate(double delta);
+	
 		dSpaceID GetPhysicsSpace() const {return m_Space;}
 		dSpaceID GetCollisionSpace() const {return m_CollisionSpace;}
 		ODEPhysicsCollisionMesh CreateCollisionMesh(const std::string &col_mesh_id,MeshComponentPtr mesh);

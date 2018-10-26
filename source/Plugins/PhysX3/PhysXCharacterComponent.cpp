@@ -73,8 +73,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXCharacterComponent::OnPostUpdate,PostPhysicsSceneUpdateEvent,0));
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		scene_manager->Register(shared_from_this());
+		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 	}
 
 	void PhysXCharacterComponent::Reset()

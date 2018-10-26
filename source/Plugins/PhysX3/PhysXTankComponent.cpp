@@ -132,8 +132,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTankComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXTankComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXTankComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
-		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		scene_manager->Register(shared_from_this());
+		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 
 		//Play engine sound
 		SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));

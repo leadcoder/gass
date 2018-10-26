@@ -118,10 +118,8 @@ namespace GASS
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSensorEvent,SensorMessage,0));
 
-
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
-
+		RegisterForPostUpdate<IMissionSceneManager>();
+		
 		PlatformComponentPtr platform = GetSceneObject()->GetFirstComponentByClass<IPlatformComponent>();
 		if(platform)
 		{

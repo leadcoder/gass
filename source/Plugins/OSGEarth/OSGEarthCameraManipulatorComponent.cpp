@@ -62,14 +62,8 @@ namespace GASS
 
 	void OSGEarthCameraManipulatorComponent::OnInitialize()
 	{
-		SceneManagerListenerPtr listener = shared_from_this();
-		GASS_SHARED_PTR<BaseSceneManager> osg_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IGraphicsSceneManager>());
-		
-		if(!osg_sm)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find IGraphicsSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");
-		
-		osg_sm->Register(listener);
-
+		RegisterForPreUpdate<IGraphicsSceneManager>();
+	
 		GASS_SHARED_PTR<OSGEarthSceneManager> earth_sm = GASS_DYNAMIC_PTR_CAST<OSGEarthSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>());
 		if (!earth_sm)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find OSGEarthSceneManager", "OSGEarthCameraManipulatorComponent::OnInitialize");

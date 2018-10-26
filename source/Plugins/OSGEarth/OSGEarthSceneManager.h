@@ -42,8 +42,6 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		void OnPreSystemUpdate(double delta_time);
-		void OnPostSystemUpdate(double delta_time);
 		virtual bool GetSerialize() const {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }

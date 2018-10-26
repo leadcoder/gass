@@ -73,8 +73,7 @@ namespace GASS
 
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(ChaseCameraComponent::OnEnter,EnterVehicleRequest,0));
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(ChaseCameraComponent::OnExit,ExitVehicleRequest,0));
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IMissionSceneManager>()->Register(listener);
+		RegisterForPostUpdate<IMissionSceneManager>();
 	}
 
 	void ChaseCameraComponent::OnDelete()

@@ -50,8 +50,9 @@ namespace GASS
 	void OSGCameraManipulatorComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraManipulatorComponent::OnTransformationChanged, TransformationChangedEvent,0));
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>()->Register(shared_from_this());
 
+		RegisterForPreUpdate<OSGGraphicsSceneManager>();
+	
 		if(m_ManName == "Trackball")
 		{
 			m_OrbitMan = new osgGA::MyTrackballManipulator();

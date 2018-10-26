@@ -24,6 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSISceneManager.h"
+#include "Sim/GASSBaseSceneManager.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/RTC/GASSTaskNode.h"
@@ -34,7 +35,7 @@ namespace GASS
 	Base class for all sim components
 	*/
 
-	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, Component> , public GASS_ENABLE_SHARED_FROM_THIS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener, public ITaskNodeListener
+	class GASSExport BaseSceneComponent : public Reflection<BaseSceneComponent, Component> , public GASS_ENABLE_SHARED_FROM_THIS<BaseSceneComponent>, public IMessageListener, public ISceneManagerListener
 	{
 		friend class SceneObject;
 	public:
@@ -63,8 +64,30 @@ namespace GASS
 			Called by responsible SceneManager if components is registered as listener.
 		*/
 		virtual void SceneManagerTick(double delta) {(void)delta;}
-		virtual void Update(double delta, TaskNode* caller) {(void)delta;(void) caller;}
+		//virtual void Update(double delta, TaskNode* caller) {(void)delta;(void) caller;}
+
+		
 	protected:
+		template <class T>
+		void RegisterForPreUpdate()
+		{
+			GASS_SHARED_PTR<BaseSceneManager> base_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<T>());
+			if (!base_sm)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find SceneManager", "BaseSceneManager::RegisterForPreUpdate");
+			SceneManagerListenerPtr listener = shared_from_this();
+			base_sm->RegisterPreUpdate(listener);
+		}
+		template <class T>
+		void RegisterForPostUpdate() 
+		{
+
+			GASS_SHARED_PTR<BaseSceneManager> base_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<T>());
+			if (!base_sm)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find SceneManager", "BaseSceneManager::RegisterForPostUpdate");
+			SceneManagerListenerPtr listener = shared_from_this();
+			base_sm->RegisterPostUpdate(listener);
+		}
+
 		void RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map);
 		void InitializePointers();
 		void InitializeSceneObjectRef();

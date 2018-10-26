@@ -53,9 +53,7 @@ namespace GASS
 	{
 		InitializeSceneObjectRef();
 		m_LookAt->RegisterForMessage(REG_TMESS(LookAtComponent::OnTransformation,TransformationChangedEvent,0));
-		CoreSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>();
-		scene_manager->Register(shared_from_this());
-
+		RegisterForPostUpdate<CoreSceneManager>();
 	}
 
 	void LookAtComponent::SceneManagerTick(double /*delta*/)

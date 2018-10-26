@@ -50,11 +50,9 @@ namespace GASS
 
 	void OSGCollisionSceneManager::OnInit()
 	{
+		//register on system to get updates
+		RegisterForPostUpdate<OSGGraphicsSystem>();
 		
-		OSGGraphicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
-
 		m_IntersectVisitor = new CustomIntersectionVisitor();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
 		m_DatabaseCache  = new osgSim::DatabaseCacheReadCallback();
@@ -65,15 +63,6 @@ namespace GASS
 	{
 	}
 
-	void OSGCollisionSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-
-	}
-
-	void OSGCollisionSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-		
-	}
 
 	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool /*return_at_first_hit*/) const
 	{

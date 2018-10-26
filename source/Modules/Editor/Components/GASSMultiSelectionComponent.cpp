@@ -32,8 +32,7 @@ namespace GASS
 	void MultiSelectionComponent::OnInitialize()
 	{
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(MultiSelectionComponent::OnSelectionChanged, EditorSelectionChangedEvent,0));
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>()->Register(listener);
+		RegisterForPostUpdate<EditorSceneManager>();
 	}
 
 	void MultiSelectionComponent::OnDelete()

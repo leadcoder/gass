@@ -62,9 +62,7 @@ namespace GASS
 
 	void ODECollisionSceneManager::OnCreate()
 	{
-		ODECollisionSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODECollisionSystem>();
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
+		RegisterForPreUpdate<ODECollisionSystem>();
 		GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSceneManager::OnSceneObjectInitialize,PreSceneObjectInitializedEvent,0));
 	}
 
@@ -116,16 +114,6 @@ namespace GASS
 	dSpaceID ODECollisionSceneManager::GetSpace() const 
 	{
 		return m_Space;
-	}
-
-	void ODECollisionSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-		BaseSceneManager::_UpdateListeners(delta_time);
-	}
-
-	void ODECollisionSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-		
 	}
 
 	void ODECollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const

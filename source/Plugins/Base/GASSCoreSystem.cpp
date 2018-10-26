@@ -27,7 +27,7 @@ namespace GASS
 {
 	CoreSystem::CoreSystem(void) 
 	{
-	  m_UpdateGroup=UGID_PRE_SIM;
+	  m_UpdateGroup = UGID_PRE_SIM;
 	}
 
 	CoreSystem::~CoreSystem(void)

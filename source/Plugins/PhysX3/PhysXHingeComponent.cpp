@@ -71,9 +71,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnVelocityRequest,PhysicsHingeJointVelocityRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXHingeComponent::OnForceRequest,PhysicsHingeJointMaxTorqueRequest,0));
 		PhysXBaseJointComponent::OnInitialize();
-
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>()->Register(listener);
+		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 	}
 
 	void PhysXHingeComponent::OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message)

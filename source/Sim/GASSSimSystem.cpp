@@ -45,12 +45,12 @@ namespace GASS
 		return SimSystemManagerPtr(m_Owner);
 	}
 
-	void SimSystem::Register(SystemListenerPtr listener)
+	void SimSystem::RegisterListener(SystemListenerPtr listener)
 	{
 		m_Listeners.push_back(listener);
 	}
 
-	void SimSystem::Unregister(SystemListenerPtr listener)
+	void SimSystem::UnregisterListener(SystemListenerPtr listener)
 	{
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
@@ -141,7 +141,6 @@ namespace GASS
 
 	void SimSystem::_PreUpdate(double delta_time)
 	{
-		
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
 			SystemListenerPtr listener = m_Listeners[i].lock();

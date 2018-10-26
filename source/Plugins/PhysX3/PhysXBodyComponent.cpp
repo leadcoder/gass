@@ -92,8 +92,7 @@ namespace GASS
 		sm->GetPxScene()->addActor(*m_Actor);
 		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
 
-		SceneManagerListenerPtr listener = shared_from_this();
-		sm->Register(listener);
+		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 	}
 
 	void PhysXBodyComponent::SetKinematic(bool value)

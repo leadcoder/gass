@@ -94,8 +94,7 @@ namespace GASS
 		m_Location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
 		GASSAssert(m_Location, "Failed find Location component in FreeCamControlComponent::OnInitialize");
 		//register for updates
-		SceneManagerListenerPtr listener = shared_from_this();
-		GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<CoreSceneManager>()->Register(listener);
+		RegisterForPostUpdate<CoreSceneManager>();
 	}
 
 	void FreeCamControlComponent::OnDelete()

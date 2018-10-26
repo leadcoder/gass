@@ -46,9 +46,7 @@ namespace GASS
 
 	void CoreSceneManager::OnCreate()
 	{
-		CoreSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<CoreSystem>();
-		SystemListenerPtr listener = shared_from_this();
-		system->Register(listener);
+		RegisterForPreUpdate<CoreSystem>();
 	}
 
 	void CoreSceneManager::OnInit()
@@ -60,14 +58,4 @@ namespace GASS
 	{
 		
  	}
-
-	void CoreSceneManager::OnPreSystemUpdate(double delta_time)
-	{
-		_UpdateListeners(delta_time);
-	}
-
-	void CoreSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-
-	}
 }

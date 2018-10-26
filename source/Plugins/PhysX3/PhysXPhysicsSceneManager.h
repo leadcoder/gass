@@ -59,9 +59,8 @@ namespace GASS
 		virtual void OnCreate();
 		virtual void OnInit();
 		virtual void OnShutdown();
-		virtual void OnPreSystemUpdate(double delta_time);
-		virtual void OnPostSystemUpdate(double delta_time);
-
+		virtual void OnUpdate(double delta_time);
+	
 		//IPhysicsSceneManager
 		virtual void SetActive(bool value) { m_Active = value; }
 		virtual bool GetActive() const { return m_Active; }

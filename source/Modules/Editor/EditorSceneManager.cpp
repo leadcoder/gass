@@ -41,9 +41,10 @@ namespace GASS
 
 	void EditorSceneManager::OnInit()
 	{
-		SystemListenerPtr listener = shared_from_this();
+		RegisterForPostUpdate<EditorSystem>();
+		
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
-		system->Register(listener);
+		
 		m_LockTerrainObjects = system->GetLockTerrainObjects();
 
 		ScenePtr scene = GetScene();
@@ -69,17 +70,11 @@ namespace GASS
 
 	}
 	
-	void EditorSceneManager::OnPreSystemUpdate(double delta_time)
+	void EditorSceneManager::OnUpdate(double delta_time)
 	{
 		GetMouseToolController()->Update(delta_time);
-		_UpdateListeners(delta_time);
+		//_UpdateListeners(delta_time);
 	}
-
-	void EditorSceneManager::OnPostSystemUpdate(double delta_time)
-	{
-		
-	}
-
 
 	void EditorSceneManager::CreateCamera(const std::string &template_name)
 	{
@@ -244,7 +239,7 @@ namespace GASS
 		if (m_InvisibleObjects.end() != iter)
 		{
 			m_InvisibleObjects.erase(iter);
-			ScenePtr(m_Scene)->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj), true)));
+			GetScene()->PostMessage(SceneMessagePtr(new ObjectVisibilityChangedEvent(SceneObjectPtr(obj), true)));
 		}
 	}
 

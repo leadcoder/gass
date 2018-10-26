@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	BaseSceneManager::BaseSceneManager(void)
+	BaseSceneManager::BaseSceneManager(void) : m_PreSystemUpdate(false)
 	{
 		
 	}
@@ -43,75 +43,65 @@ namespace GASS
 		RegisterProperty<std::string>( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
 	}
 
-	struct SceneListenerExecutor
+	void BaseSceneManager::_UpdatePostListeners(double delta_time)
 	{
-		SceneListenerExecutor(const std::vector<SceneManagerListenerWeakPtr>& sl_vector, double delta_time)
-			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
-		{}
-		SceneListenerExecutor(SceneListenerExecutor& e,tbb::split)
-			:m_SLVector(e.m_SLVector), m_DeltaTime(e.m_DeltaTime)
-		{}
-		SceneListenerExecutor & operator=( const SceneListenerExecutor & ) { return *this; }
+		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PostListeners.begin();
 
-		void operator()(const tbb::blocked_range<size_t>& r) const {
-			for (size_t i=r.begin();i!=r.end();++i)
-			{
-				SceneManagerListenerPtr listener = m_SLVector[i].lock();
-				listener->SceneManagerTick(m_DeltaTime);
-			}
-		}
-		const std::vector<SceneManagerListenerWeakPtr>& m_SLVector;
-		double m_DeltaTime;
-	};
-
-	void BaseSceneManager::_UpdateListeners(double delta_time)
-	{
-		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
-		/*while(iter != m_Listeners.end())
+		while (iter != m_PostListeners.end())
 		{
 			SceneManagerListenerPtr listener = (*iter).lock();
-			if(listener)
-			{
-				listener->SceneManagerTick(delta_time);
-				iter++;
-			}
-			else 
-				iter = m_Listeners.erase(iter);
-		}*/
-
-
-		while(iter != m_Listeners.end())
-		{
-			SceneManagerListenerPtr listener = (*iter).lock();
-			if(listener)
+			if (listener)
 			{
 				++iter;
 			}
-			else 
-				iter = m_Listeners.erase(iter);
+			else
+				iter = m_PostListeners.erase(iter);
 		}
 
-		//SceneListenerExecutor exec(m_Listeners,delta_time);
-		//tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
-
-		for(size_t i = 0; i < m_Listeners.size(); i++)
+		for (size_t i = 0; i < m_PostListeners.size(); i++)
 		{
-			SceneManagerListenerPtr listener = m_Listeners[i].lock();
-			if(listener)
+			SceneManagerListenerPtr listener = m_PostListeners[i].lock();
+			if (listener)
 				listener->SceneManagerTick(delta_time);
 		}
-		
 	}
 
-	void BaseSceneManager::Register(SceneManagerListenerPtr listener)
+	void BaseSceneManager::_UpdatePreListeners(double delta_time)
 	{
-		//tbb::spin_mutex::scoped_lock lock(m_Mutex);
-		m_Listeners.push_back(listener);
+		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PreListeners.begin();
+
+		while (iter != m_PreListeners.end())
+		{
+			SceneManagerListenerPtr listener = (*iter).lock();
+			if (listener)
+			{
+				++iter;
+			}
+			else
+				iter = m_PreListeners.erase(iter);
+		}
+
+		for (size_t i = 0; i < m_PreListeners.size(); i++)
+		{
+			SceneManagerListenerPtr listener = m_PreListeners[i].lock();
+			if (listener)
+				listener->SceneManagerTick(delta_time);
+		}
+	}
+	
+
+	void BaseSceneManager::RegisterPreUpdate(SceneManagerListenerPtr listener)
+	{
+		m_PreListeners.push_back(listener);
 	}
 
-	void BaseSceneManager::Unregister(SceneManagerListenerPtr listener)
+	void BaseSceneManager::RegisterPostUpdate(SceneManagerListenerPtr listener)
 	{
-		//tbb::spin_mutex::scoped_lock lock(m_Mutex);
+		m_PostListeners.push_back(listener);
+	}
+
+	/*void BaseSceneManager::Unregister(SceneManagerListenerPtr listener)
+	{
 		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
@@ -121,7 +111,7 @@ namespace GASS
 			else
 				++iter;
 		}
-	}
+	}*/
 
 	void BaseSceneManager::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
