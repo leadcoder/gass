@@ -26,6 +26,7 @@
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSimSystem.h"
+#include "Sim/GASSSimSystemManager.h"
 
 
 namespace GASS
