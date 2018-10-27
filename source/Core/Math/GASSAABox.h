@@ -99,11 +99,13 @@ namespace GASS
 		bool LineIntersect(const TLineSegment<TYPE> &segment, TYPE &line_dist) const;
 
 		/**
-		Check if line intersect box. 
-		TODO: investigate difference from method above and select one implementation
+		Check intersection between line and box
+		@param segment Line segment to check with
+		@return true if intersection exist
+		@note Diffrent code path from above, cause no dist request. TODO: profile this!  
 		*/
-		bool LineIntersect2(const TLineSegment<TYPE> &segment) const;
-
+		bool LineIntersect(const TLineSegment<TYPE> &segment) const;
+	
 		/**
 		Check intersection between ray and box. 
 		Note that the implementation is branchless and for performance reasons there are some limitations:
@@ -182,10 +184,8 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TAABox<TYPE>::TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos)
+	TAABox<TYPE>::TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos) : Max(max_pos), Min(min_pos)
 	{
-		Max = max_pos;
-		Min = min_pos;
 	}
 
 	template<class TYPE>
@@ -353,7 +353,7 @@ namespace GASS
 			if (i == poly.m_VertexVector.size() - 1) i2 = 0; else i2 = i + 1;
 			p1 = &poly.m_VertexVector[i];
 			p2 = &poly.m_VertexVector[i2];
-			if (LineIntersect2(TLineSegment<TYPE>(*p1, *p2))) 
+			if (LineIntersect(TLineSegment<TYPE>(*p1, *p2))) 
 				return true;
 		}
 		return false;
@@ -379,8 +379,27 @@ namespace GASS
 			Max.z >= box.Min.z);
 	}
 
+#ifdef USE_EXPERIMENTAL_RAY_TEST
+	template<class TYPE>
+	bool TAABox<TYPE>::RayIntersection(const TRay<TYPE> &ray, const TVec3<TYPE>& dir_inv, TYPE &tmin, TYPE &tmax) const
+	{
+		const TYPE t1 = (Min.x - ray.m_Origin.x)*dir_inv.x;
+		const TYPE t2 = (Max.x - ray.m_Origin.x)*dir_inv.x;
+		const TYPE t3 = (Min.y - ray.m_Origin.y) * dir_inv.y;
+		const TYPE t4 = (Max.y - ray.m_Origin.y) * dir_inv.y;
+		const TYPE t5 = (Min.z - ray.m_Origin.z) * dir_inv.z;
+		const TYPE t6 = (Max.z - ray.m_Origin.z) * dir_inv.z;
 
-	
+		tmin = std::min(t1, t2);
+		tmax = std::max(t1, t2);
+		tmin = std::max(tmin, std::min(std::min(t3, t4), tmax));
+		tmax = std::min(tmax, std::max(std::max(t3, t4), tmin));
+		tmin = std::max(tmin, std::min(std::min(t5, t6), tmax));
+		tmax = std::min(tmax, std::max(std::max(t5, t6), tmin));
+
+		return tmax > std::max(tmin, static_cast<TYPE>(0.0));
+	}
+#else
 	template<class TYPE>
 	bool TAABox<TYPE>::RayIntersect(const TRay<TYPE> &ray, const TVec3<TYPE> &inv_dir, TYPE &t_near, TYPE &t_far) const
 	{
@@ -405,6 +424,7 @@ namespace GASS
 		}
 		return t_far > std::max(t_near, static_cast<TYPE>(0.0));
 	}
+#endif
 	
 	template<class TYPE>
 	bool TAABox<TYPE>::RayIntersect(const TRay<TYPE> &ray, TYPE &t_near, TYPE &t_far) const
@@ -416,12 +436,18 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::LineIntersect2(const TLineSegment<TYPE> &seg) const
+	bool TAABox<TYPE>::LineIntersect(const TLineSegment<TYPE> &seg) const
 	{
 		TYPE x, y, z, scale;
 		TVec3<TYPE> dir, pos, isect;
 		pos = seg.m_Start;
 		dir = seg.m_End - seg.m_Start;
+		
+		if (PointInside(seg.m_Start))
+			return true;
+
+		if (PointInside(seg.m_End))
+			return true;
 
 		if (Max.x < seg.m_Start.x && Max.x < seg.m_End.x) return false;
 		if (Min.x > seg.m_Start.x && Min.x > seg.m_End.x) return false;
@@ -432,13 +458,15 @@ namespace GASS
 		if (Max.z < seg.m_Start.z && Max.z < seg.m_End.z) return false;
 		if (Min.z > seg.m_Start.z && Min.z > seg.m_End.z) return false;
 
+		
 		//Check max  X plane
-		if ((Max.x < seg.m_Start.x && Max.x > seg.m_End.x) || (Max.x > seg.m_Start.x && Max.x <= seg.m_End.x))
+		if ((seg.m_Start.x > Max.x && seg.m_End.x < Max.x) || (Max.x > seg.m_Start.x && Max.x <= seg.m_End.x))
 		{
 			x = Max.x;
 			scale = (x - pos.x) / dir.x;
 			isect = pos + dir * scale;
-			if (isect.y > Min.y && isect.y < Max.y && isect.z > Min.z && isect.z < Max.z) return true;
+			if (isect.y > Min.y && isect.y < Max.y && 
+				isect.z > Min.z && isect.z < Max.z) return true;
 		}
 		//Check min  X plane
 		if ((Min.x < seg.m_Start.x && Min.x > seg.m_End.x) || (Min.x > seg.m_Start.x && Min.x < seg.m_End.x))
@@ -491,6 +519,22 @@ namespace GASS
 		return false;
 	}
 
+
+#ifdef USE_RAY_CAST_FOR_LINE_INTERSECTION_TEST
+	template<class TYPE>
+	bool TAABox<TYPE>::LineIntersect(const TLineSegment<TYPE> &seg, TYPE& dist) const
+	{
+		TYPE tmin, tmax;
+		TVec3<TYPE> ray_dir = seg.m_End - seg.m_Start;
+		if (RayIntersect(TRay<TYPE>(seg.m_Start, ray_dir), tmin, tmax))
+		{
+			dist = std::max(tmin, static_cast<TYPE>(0.0));
+			if (tmin < 1.0)
+				return true;
+		}
+		return false;
+	}
+#else
 	template<class TYPE>
 	bool TAABox<TYPE>::LineIntersect(const TLineSegment<TYPE> &line_seg, TYPE &line_dist) const
 	{
@@ -519,7 +563,7 @@ namespace GASS
 		line_dist = tenter;
 		return  true;
 	}
-
+#endif
 
 	template<class TYPE>
 	TVec3<TYPE> TAABox<TYPE>::GetSize() const
