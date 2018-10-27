@@ -12,9 +12,11 @@ namespace GASS
 	ILogListener* Logger::m_Listener = NULL;
 	LogLevel Logger::m_MinLogLevel = LINFO;
 
-	Logger::Logger()
+	Logger::Logger() : m_FreeLogging(false),
+		m_LogLevel(LINFO),
+		m_OutputMode(STD_OUT)
 	{
-		m_FreeLogging = true;
+		
 	}
 
 	Logger::~Logger()
