@@ -37,6 +37,9 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-long-long -Wno-unused-parameter")
 endif()
 
+
+
+
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
 set(GASS_MAJOR_VERSION 1)
@@ -88,6 +91,13 @@ option(GASS_USE_BOOST "Should Boost be used or not" ON)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
+if(MSVC)
+	option(GASS_COMPILE_WITH_MP "Build with Multiple Processes" OFF)
+	if(GASS_COMPILE_WITH_MP)
+		add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+	endif()
+endif()
+
 ENABLE_TESTING()
 #boost settings
 
@@ -108,6 +118,8 @@ if(GASS_BUILDTYPE_STATIC)
 	set(GASS_BUILDTYPE STATIC)
 	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
 endif()
+
+
 
 include(DepTargets)
 
