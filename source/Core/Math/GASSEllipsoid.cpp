@@ -22,14 +22,9 @@
 
 namespace GASS
 {
-	Ellipsoid::Ellipsoid()
+	Ellipsoid::Ellipsoid() : m_Pos(0, 0, 0),
+		m_Radius(0, 0, 0)
 	{
-		m_Pos.Set(0, 0, 0);
-		m_Radius.Set(0, 0, 0);
-	}
-
-	Ellipsoid::~Ellipsoid()
-	{
-
+		
 	}
 }

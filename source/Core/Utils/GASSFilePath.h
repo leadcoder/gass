@@ -43,7 +43,6 @@ namespace GASS
 	public:
 		FilePath(const std::string &path,bool expand = true);
 		FilePath();
-		~FilePath();
 		/**
 		* \brief Get path with expanded environment variables.
 		* \return

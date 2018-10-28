@@ -82,11 +82,6 @@ namespace GASS
 
 	}
 
-	FilePath::~FilePath()
-	{
-
-	}
-
 	std::string FilePath::GetFullPath() const
 	{
 		return m_ExpandedPath;

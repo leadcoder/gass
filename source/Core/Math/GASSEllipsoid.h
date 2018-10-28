@@ -32,7 +32,6 @@ namespace GASS
 	{
 	public:
 		Ellipsoid();
-		~Ellipsoid();
 		//public for fast access
 		Vec3 m_Radius;
 		Vec3 m_Pos;

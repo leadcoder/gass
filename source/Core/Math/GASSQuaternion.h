@@ -193,12 +193,8 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(const TQuaternion<TYPE>& rkQ)
+	TQuaternion<TYPE>::TQuaternion(const TQuaternion<TYPE>& rkQ) :w(rkQ.w), x(rkQ.x), y(rkQ.y), z(rkQ.z)
 	{
-		w = rkQ.w;
-		x = rkQ.x;
-		y = rkQ.y;
-		z = rkQ.z;
 	}
 
 	template<class TYPE>
