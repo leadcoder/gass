@@ -61,7 +61,7 @@ namespace GASS
 		friend class SimEngine;
 	public:
 		Scene(const std::string &name);
-		virtual ~Scene();
+		~Scene() override;
 		static void RegisterReflection();
 
 

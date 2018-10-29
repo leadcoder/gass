@@ -73,9 +73,9 @@ namespace GASS
 		friend class Scene;
 	public:
 		SceneObject();
-		virtual ~SceneObject();
+		~SceneObject() override;
 		static void RegisterReflection();
-		void SetName(const std::string &name);
+		void SetName(const std::string &name) override;
 		void SyncMessages(double delta_time, bool recursive = true) const;
 		ScenePtr GetScene() const {return m_Scene.lock();}
 
@@ -295,7 +295,7 @@ namespace GASS
 		void OnInitialize(ScenePtr scene);
 
 		//override from component container
-		ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const;
+		ComponentContainerPtr CreateComponentContainerXML(tinyxml2::XMLElement *cc_elem) const override;
 
 		//internals
 		void _InitializePointers();
@@ -329,7 +329,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<SceneObjectPtr> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc(object);}
+		std::vector<SceneObjectPtr> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_EnumFunc(object);}
 	private:
 		SceneObjectEnumerationFunc* m_EnumFunc;
 	};

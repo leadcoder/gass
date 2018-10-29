@@ -59,7 +59,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
 	private:
 		std::string m_ResourceGroup;
 		std::string m_ResourceType;

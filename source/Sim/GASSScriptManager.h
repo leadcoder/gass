@@ -68,7 +68,7 @@ namespace GASS
 	{
 	public:
 		ScriptManager();
-		virtual ~ScriptManager();
+		~ScriptManager() override;
 		void Init();
 		ScriptControllerPtr LoadScript(const std::string &script, const std::string &init_func_arg);
 		void UnloadScript(const std::string &script);

@@ -32,10 +32,10 @@ namespace GASS
 	{
 	public:
 		ASScriptComponent();
-		virtual ~ASScriptComponent();
+		~ASScriptComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta_time) override;
 	private:
 		void SetScriptFile(const std::string &script_file);
 		std::string GetScriptFile() const;

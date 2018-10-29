@@ -53,7 +53,7 @@ namespace GASS
 		friend class SystemGroupStepper;
 	public:
 		SimSystemManager();
-		virtual ~SimSystemManager();
+		~SimSystemManager() override;
 		/**
 		Called by owner before use
 		*/
