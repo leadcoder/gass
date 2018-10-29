@@ -60,7 +60,7 @@ namespace GASS
 			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
-		virtual BasePtr Create(const void* /*params*/ = NULL) const
+		BasePtr Create(const void* /*params*/ = NULL) const override
 		{
 			ProductPtr obj(new Product);
 			return GASS_STATIC_PTR_CAST<Base>(obj);

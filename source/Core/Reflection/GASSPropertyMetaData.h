@@ -116,7 +116,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_Enumeration;}
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_Enumeration;}
 	private:
 		std::vector<std::string> m_Enumeration;
 	};
@@ -137,7 +137,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc();}
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_EnumFunc();}
 	private:
 		EnumerationFunc* m_EnumFunc;
 

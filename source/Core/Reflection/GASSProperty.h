@@ -131,17 +131,17 @@ namespace GASS
 
 		}
 
-		virtual T GetValue(const IPropertyOwner* object) const
+		T GetValue(const IPropertyOwner* object) const override
 		{
 			return (((OwnerType*)object)->*m_Getter)();
 		}
 
-		virtual bool HasMetaData() const
+		bool HasMetaData() const override
 		{
 			return (m_MetaData != NULL);
 		}
 
-		virtual PropertyMetaDataPtr GetMetaData() const
+		PropertyMetaDataPtr GetMetaData() const override
 		{
 			if(m_MetaData)
 			{
@@ -151,7 +151,7 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "Property::GetPropertyMetaData");
 		}
 
-		virtual void SetValue(IPropertyOwner* object, const T &value )
+		void SetValue(IPropertyOwner* object, const T &value ) override
 		{
 			if (m_SetterConst)
 			{
@@ -163,7 +163,7 @@ namespace GASS
 			}
 		}
 
-		void Serialize(IPropertyOwner* object,ISerializer* serializer)
+		void Serialize(IPropertyOwner* object,ISerializer* serializer) override
 		{
 			if (serializer->Loading())
 			{
@@ -184,7 +184,7 @@ namespace GASS
 			}
 		}
 
-		void SetValueByString(IPropertyOwner* object, const std::string &value)
+		void SetValueByString(IPropertyOwner* object, const std::string &value) override
 		{
 			try
 			{
@@ -198,7 +198,7 @@ namespace GASS
 			}
 		}
 
-		std::string GetValueAsString(const IPropertyOwner* object) const
+		std::string GetValueAsString(const IPropertyOwner* object) const override
 		{
 			T val = GetValue(object);
 			std::string res;
@@ -206,12 +206,12 @@ namespace GASS
 			return res;
 		}
 
-		void Copy(IPropertyOwner* dest, const IPropertyOwner* src)
+		void Copy(IPropertyOwner* dest, const IPropertyOwner* src) override
 		{
 			SetValue(dest,GetValue(src));
 		}
 
-		void SetValueByAny(IPropertyOwner* object, GASS_ANY &value)
+		void SetValueByAny(IPropertyOwner* object, GASS_ANY &value) override
 		{
 
 			T res;
@@ -227,7 +227,7 @@ namespace GASS
 			SetValue(object,res);
 		}
 
-		void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const
+		void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const override
 		{
 			T res = GetValue(object);
 			value = res;

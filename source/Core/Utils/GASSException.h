@@ -124,7 +124,7 @@ namespace GASS {
         Exception(const Exception& rhs);
 
 		/// Needed for  compatibility with std::exception
-		~Exception() throw() {}
+		~Exception() throw() override {}
 
         /** Assignment operator.
         */
@@ -162,7 +162,7 @@ namespace GASS {
 		virtual const std::string &getDescription(void) const { return description; }
 
 		/// Override std::exception::what
-		const char* what() const throw() { return getFullDescription().c_str(); }
+		const char* what() const throw() override { return getFullDescription().c_str(); }
         
     };
 

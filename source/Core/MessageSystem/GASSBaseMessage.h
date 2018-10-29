@@ -44,13 +44,13 @@ namespace GASS
 	{
 	public:
 		BaseMessage(SenderID sender_id = -1, double delay= 0);
-		virtual ~BaseMessage();
+		~BaseMessage() override;
 
-		void SetDeliverDelay(double delay);
-		double  GetDeliverDelay() const;
+		void SetDeliverDelay(double delay) override;
+		double  GetDeliverDelay() const override;
 
-		SenderID GetSenderID() const;
-		MessageType GetType() const;
+		SenderID GetSenderID() const override;
+		MessageType GetType() const override;
 
 	private:
 		SenderID m_SenderID;

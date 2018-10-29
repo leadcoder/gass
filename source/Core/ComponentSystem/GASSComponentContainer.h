@@ -77,7 +77,7 @@ namespace GASS
 		typedef ConstVectorIterator<ComponentContainerVector> ConstComponentContainerIterator;
 
 		ComponentContainer();
-		virtual ~ComponentContainer();
+		~ComponentContainer() override;
 		
 		/**
 		Static reflection function called on start up
@@ -167,11 +167,11 @@ namespace GASS
 		virtual ComponentContainerPtr GetChild(size_t index) const;
 
 		//xml serialize interface
-		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 
 		//serialize interface
-		virtual bool Serialize(ISerializer* serializer);
+		bool Serialize(ISerializer* serializer) override;
 
 		//print object
 		void DebugPrint(int tc = 0);

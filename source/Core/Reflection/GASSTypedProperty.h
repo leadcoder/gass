@@ -52,7 +52,7 @@ namespace GASS
 		/**
 		 Returns the type of this property.
 		 */
-		virtual const std::type_info* GetTypeID() const
+		const std::type_info* GetTypeID() const override
 		{
 			return &typeid(T);
 		}
@@ -60,7 +60,7 @@ namespace GASS
 		/**
 		 Returns the name of this property.
 		 */
-		virtual std::string GetTypeName() const
+		std::string GetTypeName() const override
 		{
 			return StringUtils::Demangle(std::string(typeid(T).name()));
 		}

@@ -34,7 +34,7 @@ namespace GASS
 		{
 			m_SharedFromThis = GASS_SHARED_PTR<StaticMessageListener>(this,null_deleter());
 		}
-		virtual ~StaticMessageListener(){}
+		~StaticMessageListener() override {}
 
 		GASS_SHARED_PTR<StaticMessageListener> shared_from_this() const
 		{

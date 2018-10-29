@@ -91,7 +91,7 @@ namespace GASS
 
 
 
-		bool Loading(){return false;}
+		bool Loading() override{return false;}
 
 		bool hasOverflowed() const { return bHasOverflowed; }
 		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
@@ -140,7 +140,7 @@ namespace GASS
 
 
 
-		bool Loading(){return true;}
+		bool Loading() override{return true;}
 
 		bool hasOverflowed() const { return bHasOverflowed; }
 		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done

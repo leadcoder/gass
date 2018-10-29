@@ -138,7 +138,7 @@ namespace GASS
 
 		}
 
-		virtual ~MessageFunc()
+		~MessageFunc() override
 		{
 		}
 
@@ -147,7 +147,7 @@ namespace GASS
 		In this implementation the message is casted to the message type
 		specified by the template argument MESSAGE_TYPE
 		*/
-		void Fire(MessagePtr message)
+		void Fire(MessagePtr message) override
 		{
 			//cast to this message type
 			//TODO: should we use dynamic cast instead so messages of incorrect type can be spotted?
@@ -155,23 +155,23 @@ namespace GASS
 			m_Func(typed_mess);
 		}
 
-		bool operator== (const IMessageFunc &func) const
+		bool operator== (const IMessageFunc &func) const override
 		{
 			return (func.GetObjectPtr() == GetObjectPtr() &&
 				GetFuncHash() == func.GetFuncHash());
 		}
 
-		const std::type_info& GetTypeID() const
+		const std::type_info& GetTypeID() const override
 		{
 			return m_Func.target_type();
 		}
 
-		MessageListenerPtr GetObjectPtr() const
+		MessageListenerPtr GetObjectPtr() const override
 		{
 			return m_Object.lock();
 		}
 
-		size_t GetFuncHash() const
+		size_t GetFuncHash() const override
 		{
 			//return (size_t) m_Func.functor.func_ptr;
 			return m_FunctionHash;
