@@ -38,10 +38,10 @@ namespace GASS
 	{
 	public:
 		PlayerInputComponent();
-		virtual ~PlayerInputComponent();
+		~PlayerInputComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	private:
 		void OnInput(ControllSettingsMessagePtr message);
 		void SetControlSetting(const std::string &controlsetting);
