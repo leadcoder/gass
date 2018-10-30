@@ -12,10 +12,10 @@ namespace GASS
 	{
 	public:
 		LOSComponent(void);
-		~LOSComponent(void);
+		~LOSComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta_time) override;
 	protected:
 		void OnTransChanged(TransformationChangedEventPtr);
 	private:

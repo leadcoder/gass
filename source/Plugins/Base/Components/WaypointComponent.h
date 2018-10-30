@@ -39,10 +39,10 @@ namespace GASS
 	{
 	public:
 		WaypointComponent();
-		virtual ~WaypointComponent();
+		~WaypointComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//void SetTangentLength(Float value);
 		void SetTangent(const Vec3 &tangent);
 		Vec3 GetTangent() const;

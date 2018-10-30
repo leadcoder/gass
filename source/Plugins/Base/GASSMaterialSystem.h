@@ -31,15 +31,15 @@ namespace GASS
 	{
 	public:
 		MaterialSystem();
-		virtual ~MaterialSystem();
+		~MaterialSystem() override;
 		static void RegisterReflection();
-		virtual std::string GetSystemName() const {return "MaterialSystem";}
-		virtual void Init();
-		virtual void LoadMaterialFile(const std::string &file);
-		virtual void AddMaterial(const PhysicsMaterial& mat);
-		virtual bool HasMaterial(const std::string material_name) const;
-		virtual PhysicsMaterial GetMaterial(const std::string material_name) const;
-		virtual MaterialMap& GetMaterials() {return m_Materials;}
+		std::string GetSystemName() const override {return "MaterialSystem";}
+		void Init() override;
+		void LoadMaterialFile(const std::string &file) override;
+		void AddMaterial(const PhysicsMaterial& mat) override;
+		bool HasMaterial(const std::string material_name) const override;
+		PhysicsMaterial GetMaterial(const std::string material_name) const override;
+		MaterialMap& GetMaterials() override {return m_Materials;}
 
 		//experimental
 		void LoadGeometryFlagsFile(const std::string &file);

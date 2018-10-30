@@ -39,9 +39,9 @@ namespace GASS
 	{
 	public:
 		LineGeometryComponent();
-		virtual ~LineGeometryComponent();
+		~LineGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		ADD_PROPERTY(float,CustomDitchTexturePercent)
 		ADD_PROPERTY(bool,FadeStart)

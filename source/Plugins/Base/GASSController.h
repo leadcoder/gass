@@ -36,7 +36,8 @@ namespace GASS
 		Controller(const std::string &name,ControlSetting* owner) :
 			m_Name(name),
 			m_Owner(owner),
-			m_Device(0)
+			m_Device(0),
+			m_NonRepeating(true)
 		{
 
 		}
@@ -58,7 +59,7 @@ namespace GASS
 	{
 	public:
 		RemoteController(const std::string &name,ControlSetting* owner):Controller(name,owner){}
-		virtual ~RemoteController(){}
+		~RemoteController() override {}
 	};
 
 
@@ -86,17 +87,17 @@ namespace GASS
 	class KeyTriggerController : public TriggerController, public IKeyListener
 	{
 	public:
-		KeyTriggerController(const std::string &name,ControlSetting* owner) : TriggerController(name,owner)
+		KeyTriggerController(const std::string &name,ControlSetting* owner) : TriggerController(name,owner), m_Key(0)
 		{
 			m_Owner->GetInputSystem()->AddKeyListener(this);
 		}
 
-		~KeyTriggerController()
+		~KeyTriggerController() override
 		{
 			m_Owner->GetInputSystem()->RemoveKeyListener(this);
 		}
 
-		bool KeyPressed( int key, unsigned int /*text*/) 
+		bool KeyPressed( int key, unsigned int /*text*/)  override
 		{
 			if(key == m_Key)
 			{
@@ -106,7 +107,7 @@ namespace GASS
 			return true;
 		}
 
-		bool KeyReleased( int key, unsigned int /*text*/)
+		bool KeyReleased( int key, unsigned int /*text*/) override
 		{
 			if(key == m_Key)
 			{
@@ -121,24 +122,24 @@ namespace GASS
 	class ButtonTriggerController : public TriggerController, public IMouseListener, public IGameControllerListener
 	{
 	public:
-		ButtonTriggerController(const std::string &name,ControlSetting* owner) : TriggerController(name,owner)
+		ButtonTriggerController(const std::string &name,ControlSetting* owner) : TriggerController(name,owner), m_Button(0)
 		{
 			m_Owner->GetInputSystem()->AddMouseListener(this);
 			m_Owner->GetInputSystem()->AddGameControllerListener(this);
 		}
 
-		~ButtonTriggerController()
+		~ButtonTriggerController() override
 		{
 			m_Owner->GetInputSystem()->RemoveMouseListener(this);
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(const MouseData &/*data*/)
+		bool MouseMoved(const MouseData &/*data*/) override
 		{
 			return true;
 		}
 
-		virtual bool MousePressed(const MouseData &/*data*/, MouseButtonId id )
+		bool MousePressed(const MouseData &/*data*/, MouseButtonId id ) override
 		{
 			if(m_Button == id)
 			{
@@ -151,7 +152,7 @@ namespace GASS
 			}
 			return true;
 		}
-		virtual bool MouseReleased(const MouseData &/*data*/,MouseButtonId id )
+		bool MouseReleased(const MouseData &/*data*/,MouseButtonId id ) override
 		{
 			if(m_Button == id)
 			{
@@ -165,7 +166,7 @@ namespace GASS
 			return true;
 		}
 
-		virtual bool ButtonPressed(int device, int button)
+		bool ButtonPressed(int device, int button) override
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
@@ -174,7 +175,7 @@ namespace GASS
 			return true;	
 		}
 
-		virtual bool ButtonReleased(int device,int button)
+		bool ButtonReleased(int device,int button) override
 		{
 			if(m_Button == button && device == m_Device - DEVICE_GAME_CONTROLLER_0)
 			{
@@ -183,17 +184,17 @@ namespace GASS
 			return true;	
 		}
 
-		virtual bool AxisMoved(int ,int ,float )
+		bool AxisMoved(int ,int ,float ) override
 		{
 			return true;	
 		}
 		//Joystick Event, amd sliderID
-		virtual bool SliderMoved(int, int, float )
+		bool SliderMoved(int, int, float ) override
 		{
 			return true;	
 		}
 		//Joystick Event, amd povID
-		virtual bool PovMoved(int ,int , float )
+		bool PovMoved(int ,int , float ) override
 		{
 			return true;	
 		}
@@ -209,12 +210,12 @@ namespace GASS
 			m_Owner->GetInputSystem()->AddKeyListener(this);
 		}
 
-		~KeyAxisController()
+		~KeyAxisController() override
 		{
 			m_Owner->GetInputSystem()->RemoveKeyListener(this);
 		}
 
-		bool KeyPressed(int key, unsigned int) 
+		bool KeyPressed(int key, unsigned int) override 
 		{
 			if(key == m_PosKey || key == m_NegKey)
 			{
@@ -234,7 +235,7 @@ namespace GASS
 			return true;
 		}
 
-		bool KeyReleased( int key, unsigned int /*text*/)
+		bool KeyReleased( int key, unsigned int /*text*/) override
 		{
 			if(key == m_PosKey || key == m_NegKey)
 			{
@@ -258,13 +259,13 @@ namespace GASS
 			m_Owner->GetInputSystem()->AddGameControllerListener(this);
 		}
 		
-		~AxisAxisController()
+		~AxisAxisController() override
 		{
 			m_Owner->GetInputSystem()->RemoveMouseListener(this);
 			m_Owner->GetInputSystem()->RemoveGameControllerListener(this);
 		}
 
-		virtual bool MouseMoved(const MouseData &data)
+		bool MouseMoved(const MouseData &data) override
 		{
 			float value = 0;
 			switch(m_Device)
@@ -291,25 +292,25 @@ namespace GASS
 			return true;
 
 		}
-		virtual bool MousePressed(const MouseData&, MouseButtonId)
+		bool MousePressed(const MouseData&, MouseButtonId) override
 		{
 			return true;
 
 		}
-		virtual bool MouseReleased(const MouseData&, MouseButtonId)
+		bool MouseReleased(const MouseData&, MouseButtonId) override
 		{
 			return true;
 		}
 
-		virtual bool ButtonPressed(int, int)
+		bool ButtonPressed(int, int) override
 		{
 			return true;	
 		}
-		virtual bool ButtonReleased(int, int)
+		bool ButtonReleased(int, int) override
 		{
 			return true;	
 		}
-		virtual bool AxisMoved(int device,int axis,float value)
+		bool AxisMoved(int device,int axis,float value) override
 		{
 			if(device == m_Device-DEVICE_GAME_CONTROLLER_0 && axis == m_Axis-INPUT_AXIS_0)
 			{
@@ -320,12 +321,12 @@ namespace GASS
 			return true;
 		}
 		//Joystick Event, amd sliderID
-		virtual bool SliderMoved(int, int, float)
+		bool SliderMoved(int, int, float) override
 		{
 			return true;	
 		}
 		//Joystick Event, amd povID
-		virtual bool PovMoved(int, int, float)
+		bool PovMoved(int, int, float) override
 		{
 			return true;	
 		}

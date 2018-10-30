@@ -12,10 +12,10 @@ namespace GASS
 	{
 	public:
 		DistanceScaleComponent();
-		virtual ~DistanceScaleComponent();
+		~DistanceScaleComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	private:
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);

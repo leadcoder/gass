@@ -41,12 +41,12 @@ namespace GASS
 		friend class WaypointComponent;
 	public:
 		WaypointListComponent();
-		virtual ~WaypointListComponent();
+		~WaypointListComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const;
-		virtual std::string GetWaypointTemplate() const;
-		float GetRadius()const;
+		void OnInitialize() override;
+		std::vector<Vec3> GetWaypoints(bool relative_position = true) const override;
+		std::string GetWaypointTemplate() const override;
+		float GetRadius()const override;
 	protected:
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		ADD_PROPERTY(bool,ShowPathLine);

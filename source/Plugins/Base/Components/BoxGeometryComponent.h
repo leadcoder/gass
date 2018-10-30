@@ -35,11 +35,11 @@ namespace GASS
 	{
 	public:
 		BoxGeometryComponent(void);
-		~BoxGeometryComponent(void);
+		~BoxGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual bool IsPointInside(const Vec3 &point) const;
-		Vec3 GetRandomPoint() const;
+		void OnInitialize() override;
+		bool IsPointInside(const Vec3 &point) const override;
+		Vec3 GetRandomPoint() const override;
 	protected:
 		ADD_PROPERTY(bool,Lines);
 		void UpdateMesh();

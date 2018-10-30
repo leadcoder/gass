@@ -33,9 +33,9 @@ namespace GASS
 	{
 	public:
 		PlaneGeometryComponent(void);
-		~PlaneGeometryComponent(void);
+		~PlaneGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetTexture(const std::string &texture_name);
 		std::string GetTexture() const;
 	protected:

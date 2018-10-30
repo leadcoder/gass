@@ -37,23 +37,23 @@ namespace GASS
 	{
 	public:
 		HeightmapComponent(void);
-		~HeightmapComponent(void);
+		~HeightmapComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void OnInitialize() override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 
 		//IHeightmapTerrainComponent
-		virtual Float GetHeightAtSample(int x, int z) const;
-		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
-		virtual unsigned int GetNumSamplesW() const;
-		virtual unsigned int GetNumSamplesH() const;
+		Float GetHeightAtSample(int x, int z) const override;
+		Float GetHeightAtWorldLocation(Float x, Float z) const override;
+		unsigned int GetNumSamplesW() const override;
+		unsigned int GetNumSamplesH() const override;
 		//virtual float* GetHeightData() const;
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags){(void) flags;}
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override{(void) flags;}
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 	protected:
 		void SetUpdate(bool value);
 		bool  GetUpdate() const;

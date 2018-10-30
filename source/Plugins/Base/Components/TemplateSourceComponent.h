@@ -35,12 +35,12 @@ namespace GASS
 	{
 	public:
 		TemplateSourceComponent(void);
-		~TemplateSourceComponent(void);
+		~TemplateSourceComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetTemplates(const std::vector<std::string> &template_vec) {m_Templates = template_vec;}
-		std::vector<std::string>  GetTemplates() const {return m_Templates;}
-		Vec3 GetOffset() const {return Vec3(0,0,0);}
+		std::vector<std::string>  GetTemplates() const override {return m_Templates;}
+		Vec3 GetOffset() const override {return Vec3(0,0,0);}
 	protected:
 		std::vector<std::string> m_Templates;
 	};

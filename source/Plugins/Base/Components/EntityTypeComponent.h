@@ -39,9 +39,9 @@ namespace GASS
 	{
 	public:
 		EntityTypeComponent();
-		virtual ~EntityTypeComponent();
+		~EntityTypeComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		
 		ADD_PROPERTY(int,EntityKind)
 		ADD_PROPERTY(int,Domain)

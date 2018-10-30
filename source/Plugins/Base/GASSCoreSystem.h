@@ -32,10 +32,10 @@ namespace GASS
 	{
 	public:
 		CoreSystem();
-		virtual ~CoreSystem();
+		~CoreSystem() override;
 		static void RegisterReflection();
-		virtual std::string GetSystemName() const {return "CoreSystem";}
-		virtual void Init();
+		std::string GetSystemName() const override {return "CoreSystem";}
+		void Init() override;
 	protected:
 	};
 	typedef GASS_SHARED_PTR<CoreSystem> CoreSystemPtr;

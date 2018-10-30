@@ -37,10 +37,10 @@ namespace GASS
 	{
 	public:
 		LookAtComponent(void);
-		~LookAtComponent(void);
+		~LookAtComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta) override;
 	protected:
 		void OnTransformation(TransformationChangedEventPtr message);
 		ADD_PROPERTY(SceneObjectRef,LookAt);

@@ -35,9 +35,9 @@ namespace GASS
 	{
 	public:
 		DebugComponent(void);
-		~DebugComponent(void);
+		~DebugComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		void OnChangeName(SceneObjectNameChangedEventPtr event);
 		bool m_ShowNodeName;

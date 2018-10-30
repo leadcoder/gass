@@ -35,9 +35,9 @@ namespace GASS
 	{
 	public:
 		GroupComponent();
-		virtual ~GroupComponent();
+		~GroupComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	};
 }
 
