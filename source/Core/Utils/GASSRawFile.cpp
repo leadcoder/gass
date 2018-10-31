@@ -1,5 +1,5 @@
 #include "GASSRawFile.h"
-#include <math.h>
+#include <cmath>
 #include <cstdio>
 
 namespace GASS

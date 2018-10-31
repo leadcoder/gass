@@ -21,7 +21,7 @@
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
-#include <assert.h>
+#include <cassert>
 
 #ifdef _MSC_VER
 #define __STDCALL __stdcall

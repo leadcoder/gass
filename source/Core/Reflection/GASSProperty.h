@@ -25,7 +25,7 @@
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Serialize/GASSSTDSerialize.h" //move content to this file
 #include "Core/Reflection/GASSTypedProperty.h"
-#include <assert.h>
+#include <cassert>
 #include <sstream>
 #include <iomanip>
 

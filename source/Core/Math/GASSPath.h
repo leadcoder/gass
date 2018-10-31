@@ -22,7 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
-#include <math.h>
+#include <cmath>
 
 namespace GASS
 {

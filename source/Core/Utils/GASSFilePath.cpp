@@ -22,9 +22,9 @@
 #include "GASSLogger.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
-#include <stdarg.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <cassert>
 
 namespace GASS
 {
