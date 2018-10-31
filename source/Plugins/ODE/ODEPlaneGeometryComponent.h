@@ -41,12 +41,12 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODEPlaneGeometryComponent();
-		virtual ~ODEPlaneGeometryComponent();
+		~ODEPlaneGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
-		dGeomID CreateODEGeom();
-		void UpdateODEGeom();
+		dGeomID CreateODEGeom() override;
+		void UpdateODEGeom() override;
 		void SetNormal(const Vec3 &normal);
 		Vec3 GetNormal() const;
 		void SetPlaneOffset(Float offset);
@@ -54,10 +54,10 @@ namespace GASS
 
 
 		//override and do nothting to avoid crashen, plane dont support positions and rotations!!!!!
-		void SetPosition(const Vec3 &pos);
-		void SetRotation(const Quaternion &rot);
+		void SetPosition(const Vec3 &pos) override;
+		void SetRotation(const Quaternion &rot) override;
 	
-		void UpdateBodyMass() {};
+		void UpdateBodyMass() override {};
 	protected:
 		Vec3 m_Normal; 
 		Float m_PlaneOffset;

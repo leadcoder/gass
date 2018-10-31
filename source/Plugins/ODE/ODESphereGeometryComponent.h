@@ -40,19 +40,19 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODESphereGeometryComponent();
-		virtual ~ODESphereGeometryComponent();
+		~ODESphereGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetRadius(Float value);
 		Float GetRadius() const;
 	protected:
-		dGeomID CreateODEGeom();
-		void SetSizeFromMesh(bool value);
-		void UpdateBodyMass();
+		dGeomID CreateODEGeom() override;
+		void SetSizeFromMesh(bool value) override;
+		void UpdateBodyMass() override;
 		
 		//debug functions
 		void CreateDebugSphere(Float radius,const Vec3 &offset);
-		void UpdateDebug();
+		void UpdateDebug() override;
 	protected:
 		Float m_Radius; //bounding box start size
 	};

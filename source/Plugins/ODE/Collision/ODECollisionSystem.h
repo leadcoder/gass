@@ -31,11 +31,11 @@ namespace GASS
 	{
 	public:
 		ODECollisionSystem();
-		virtual ~ODECollisionSystem();
+		~ODECollisionSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
+		void Init() override;
 		//virtual void Update(double delta_time);
-		virtual std::string GetSystemName() const {return "ODECollisionSystem";}
+		std::string GetSystemName() const override {return "ODECollisionSystem";}
 	};
 	typedef GASS_SHARED_PTR<ODECollisionSystem> ODECollisionSystemPtr;
 }

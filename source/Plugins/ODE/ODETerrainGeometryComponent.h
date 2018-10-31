@@ -47,16 +47,16 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODETerrainGeometryComponent();
-		virtual ~ODETerrainGeometryComponent();
+		~ODETerrainGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void SetFriction(float value){m_Friction = value;}
-		float GetFriction() const {return m_Friction;}
+		float GetFriction() const override {return m_Friction;}
 		unsigned long GetCollisionBits() const;
 		void SetCollisionBits(unsigned long value);
 		unsigned long GetCollisionCategory() const;

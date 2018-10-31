@@ -39,12 +39,12 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODEMeshGeometryComponent();
-		virtual ~ODEMeshGeometryComponent();
+		~ODEMeshGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
-		dGeomID CreateODEGeom();
-		void UpdateBodyMass();
+		dGeomID CreateODEGeom() override;
+		void UpdateBodyMass() override;
 	protected:
 	};
 }

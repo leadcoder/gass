@@ -34,10 +34,10 @@ namespace GASS
 
 	public:
 		ODEPhysicsSystem();
-		virtual ~ODEPhysicsSystem();
+		~ODEPhysicsSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
-		virtual std::string GetSystemName() const {return "ODEPhysicsSystem";}
+		void Init() override;
+		std::string GetSystemName() const override {return "ODEPhysicsSystem";}
 	protected:
 		void OnShutdown(MessagePtr message);
 	private:

@@ -30,35 +30,35 @@ namespace GASS
 	{
 	public:
 		ProxyInputSystem();
-		virtual ~ProxyInputSystem();
+		~ProxyInputSystem() override;
 		static void RegisterReflection();
-		virtual void OnCreate(SimSystemManagerPtr owner);
-		virtual void Init();
-		virtual std::string GetSystemName() const {return "ProxyInputSystem";}
-		virtual void OnSystemUpdate(double delta_time);
+		void OnCreate(SimSystemManagerPtr owner) override;
+		void Init() override;
+		std::string GetSystemName() const override {return "ProxyInputSystem";}
+		void OnSystemUpdate(double delta_time) override;
 		
 		//IInputSystem
-		virtual void AddKeyListener(IKeyListener* key_listener);
-		virtual void RemoveKeyListener(IKeyListener* key_listener);
-		virtual void AddMouseListener(IMouseListener* mouse_listener);
-		virtual void RemoveMouseListener(IMouseListener* mouse_listener);
-		virtual void AddGameControllerListener(IGameControllerListener* );
-		virtual void RemoveGameControllerListener(IGameControllerListener* );
+		void AddKeyListener(IKeyListener* key_listener) override;
+		void RemoveKeyListener(IKeyListener* key_listener) override;
+		void AddMouseListener(IMouseListener* mouse_listener) override;
+		void RemoveMouseListener(IMouseListener* mouse_listener) override;
+		void AddGameControllerListener(IGameControllerListener* ) override;
+		void RemoveGameControllerListener(IGameControllerListener* ) override;
 		
-		virtual void SetEnableKey(bool value);
-		virtual void SetEnableJoystick(bool value);
-		virtual void SetEnableMouse(bool value);
-		virtual bool GetEnableKey() const;
-		virtual bool GetEnableJoystick() const;
-		virtual bool GetEnableMouse() const;
-		virtual void ClipInputWindow(int left,int top,int right,int bottom);
-		virtual void SetMainWindowHandle(void * /*main_win_handle*/){}
+		void SetEnableKey(bool value) override;
+		void SetEnableJoystick(bool value) override;
+		void SetEnableMouse(bool value) override;
+		bool GetEnableKey() const override;
+		bool GetEnableJoystick() const override;
+		bool GetEnableMouse() const override;
+		void ClipInputWindow(int left,int top,int right,int bottom) override;
+		void SetMainWindowHandle(void * /*main_win_handle*/) override{}
 	
-		virtual void InjectMouseMoved(const MouseData &data);
-		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id );
-		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id );
-		virtual void InjectKeyPressed( int key, unsigned int text);
-		virtual void InjectKeyReleased( int key, unsigned int text);	
+		void InjectMouseMoved(const MouseData &data) override;
+		void InjectMousePressed(const MouseData &data, MouseButtonId id ) override;
+		void InjectMouseReleased(const MouseData &data, MouseButtonId id ) override;
+		void InjectKeyPressed( int key, unsigned int text) override;
+		void InjectKeyReleased( int key, unsigned int text) override;	
 		
 	private:
 		std::vector<IKeyListener*> m_KeyListeners;

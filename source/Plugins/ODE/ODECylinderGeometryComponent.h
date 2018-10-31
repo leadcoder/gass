@@ -39,21 +39,21 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODECylinderGeometryComponent();
-		virtual ~ODECylinderGeometryComponent();
+		~ODECylinderGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
-		dGeomID CreateODEGeom();
+		dGeomID CreateODEGeom() override;
 		void SetRadius(Float radius);
 		Float GetRadius() const;
 		void SetLength(Float length);
 		Float GetLength() const;
 
-		void UpdateBodyMass();
-		void SetSizeFromMesh(bool value);
+		void UpdateBodyMass() override;
+		void SetSizeFromMesh(bool value) override;
 		//debug functions
 		//void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
-		void UpdateDebug();
+		void UpdateDebug() override;
 	protected:
 		Float m_Radius; 
 		Float m_Length;
