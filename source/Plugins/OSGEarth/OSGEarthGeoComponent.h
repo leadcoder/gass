@@ -31,20 +31,20 @@ namespace GASS
 	{
 	public:
 		OSGEarthGeoComponent();
-		virtual ~OSGEarthGeoComponent();
+		~OSGEarthGeoComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		//IWorldLocationComponent
-		double GetLatitude() const;
-		void SetLatitude(double lat);
-		double GetLongitude() const;
-		void SetLongitude(double lat);
-		void SetHeightAboveMSL(double value);
-		double GetHeightAboveMSL() const;
-		void SetHeightAboveGround(double value);
-		double GetHeightAboveGround() const;
+		double GetLatitude() const override;
+		void SetLatitude(double lat) override;
+		double GetLongitude() const override;
+		void SetLongitude(double lat) override;
+		void SetHeightAboveMSL(double value) override;
+		double GetHeightAboveMSL() const override;
+		void SetHeightAboveGround(double value) override;
+		double GetHeightAboveGround() const override;
 	protected:
 		Vec3 _GetWorldPosition() const;
 		void _LatOrLongChanged();

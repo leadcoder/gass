@@ -37,12 +37,12 @@ namespace GASS
 	{
 	public:
 		OSGEarthSceneManager();
-		virtual ~OSGEarthSceneManager();
+		~OSGEarthSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return true;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
@@ -50,14 +50,14 @@ namespace GASS
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
 		//ITerrainSceneManager
-		bool GetTerrainHeight(const Vec3 &location, double &height) const;
-		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const;
-		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const;
-		bool GetOrientation(const Vec3 &location, Quaternion &rot) const;
+		bool GetTerrainHeight(const Vec3 &location, double &height) const override;
+		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const override;
+		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const override;
+		bool GetOrientation(const Vec3 &location, Quaternion &rot) const override;
 
 		//IWGS84SceneManager
-		bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const;
-		bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const;
+		bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const override;
+		bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const override;
 
 		//helpers
 		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;

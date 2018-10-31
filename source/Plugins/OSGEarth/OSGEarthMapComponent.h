@@ -31,17 +31,17 @@ namespace GASS
 	{
 	public:
 		OSGEarthMapComponent();
-		virtual ~OSGEarthMapComponent();
+		~OSGEarthMapComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void SceneManagerTick(double delta_time);
-		virtual AABox GetBoundingBox() const { return AABox(); }
-		virtual Sphere GetBoundingSphere() const { return Sphere(); };
-		virtual GeometryFlags GetGeometryFlags() const { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
-		virtual void SetGeometryFlags(GeometryFlags /*flags*/) { };
-		virtual bool GetCollision() const { return true; }
-		virtual void SetCollision(bool /*value*/) {  }
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta_time) override;
+		AABox GetBoundingBox() const override { return AABox(); }
+		Sphere GetBoundingSphere() const override { return Sphere(); };
+		GeometryFlags GetGeometryFlags() const override { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
+		void SetGeometryFlags(GeometryFlags /*flags*/) override { };
+		bool GetCollision() const override { return true; }
+		void SetCollision(bool /*value*/) override {  }
 		osg::ref_ptr<osgEarth::MapNode> GetMap() {return m_MapNode;}
 		std::vector<std::string> GetViewpointNames() const;
 		std::vector<std::string> GetLayerNames() const;
