@@ -37,14 +37,14 @@ namespace GASS
 	{
 	public:
 		ChaseCameraComponent();
-		virtual ~ChaseCameraComponent();
+		~ChaseCameraComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		void SetPreferredViewport(const std::string &viewport);
 		std::string GetPreferredViewport() const;
-		void SceneManagerTick(double delta_time);
+		void SceneManagerTick(double delta_time) override;
 	private:
 		void OnEnter(EnterVehicleRequestPtr message);
 		void OnExit(ExitVehicleRequestPtr message);

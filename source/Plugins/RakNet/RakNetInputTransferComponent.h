@@ -59,9 +59,9 @@ namespace GASS
 			Value(value),
 			Generator(generated_by)
 			{}
-		virtual ~InputPackage(){}
-		int GetSize() {return sizeof(InputPackage);}
-		void Assign(char* data)
+		~InputPackage() override{}
+		int GetSize() override {return sizeof(InputPackage);}
+		void Assign(char* data) override
 		{
 			*this = *(InputPackage*)data;
 		}
@@ -82,10 +82,10 @@ namespace GASS
 	{
 	public:
 		RakNetInputTransferComponent();
-		virtual ~RakNetInputTransferComponent();
+		~RakNetInputTransferComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
 		void ReceivedInput(int controller, float value);
 	private:

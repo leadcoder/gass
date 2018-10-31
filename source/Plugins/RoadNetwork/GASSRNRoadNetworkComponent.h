@@ -23,8 +23,8 @@ namespace GASS
 	{
 	public:
 		RNRoadNetworkComponent(void);
-		~RNRoadNetworkComponent(void);
-		void OnInitialize();
+		~RNRoadNetworkComponent(void) override;
+		void OnInitialize() override;
 		static void RegisterReflection();
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		bool GetEdit() const;
@@ -34,9 +34,9 @@ namespace GASS
 		ADD_PROPERTY(bool,Optimize)
 
 		//IGraphComponent interface
-		virtual void RebuildGraph();
+		void RebuildGraph() override;
 		//INavigationComponent
-		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
+		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 	private:
 		void _CreateEditableFromNetwork();
 		void _CreateNetworkFromEditable();
@@ -44,8 +44,8 @@ namespace GASS
 		void SetShowGraph(bool value);
 		//void Rebuild();
 		//bool DebugSearchGraph();
-		void SaveXML(tinyxml2::XMLElement * elem);
-		void LoadXML(tinyxml2::XMLElement * elem);
+		void SaveXML(tinyxml2::XMLElement * elem) override;
+		void LoadXML(tinyxml2::XMLElement * elem) override;
 		bool m_Edit;
 		bool m_ShowGraph;
 		RoadNetwork m_Network;

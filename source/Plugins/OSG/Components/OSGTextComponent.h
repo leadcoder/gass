@@ -35,9 +35,9 @@ namespace GASS
 	{
 	public:
 		OSGTextComponent (void);
-		~OSGTextComponent (void);
+		~OSGTextComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);

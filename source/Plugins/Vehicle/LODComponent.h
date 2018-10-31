@@ -37,10 +37,10 @@ namespace GASS
 	{
 	public:
 		LODComponent();
-		virtual ~LODComponent();
+		~LODComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	private:
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnObjectMoved(TransformationChangedEventPtr message);

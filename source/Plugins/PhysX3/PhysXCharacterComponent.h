@@ -43,28 +43,28 @@ namespace GASS
 	{
 	public:
 		PhysXCharacterComponent();
-		virtual ~PhysXCharacterComponent();
+		~PhysXCharacterComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
 		float GetMass() const {return m_Mass;}
 		void SetMass(float mass);
-		void SceneManagerTick(double delta);
+		void SceneManagerTick(double delta) override;
 		
-		PlatformType GetType() const {return PT_HUMAN;}
-		Vec3 GetSize() const{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
+		PlatformType GetType() const override {return PT_HUMAN;}
+		Vec3 GetSize() const override{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
 		ADD_PROPERTY(Float,MaxSpeed)
 
 		// Implements PxControllerBehaviorCallback
-		virtual physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxShape& /*shape*/, const physx::PxActor& /*actor*/){return physx::PxControllerBehaviorFlags();}
-		virtual physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxController& /*controller*/){return physx::PxControllerBehaviorFlags();}
-		virtual physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxObstacle& /*obstacle*/){return physx::PxControllerBehaviorFlags();}
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxShape& /*shape*/, const physx::PxActor& /*actor*/) override{return physx::PxControllerBehaviorFlags();}
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxController& /*controller*/) override{return physx::PxControllerBehaviorFlags();}
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxObstacle& /*obstacle*/) override{return physx::PxControllerBehaviorFlags();}
 
 		// Implements PxUserControllerHitReport
-		virtual void onShapeHit(const physx::PxControllerShapeHit& hit);
-		virtual void onControllerHit(const physx::PxControllersHit& /*hit*/) {}
-		virtual void onObstacleHit(const physx::PxControllerObstacleHit& /*hit*/) {}
+		void onShapeHit(const physx::PxControllerShapeHit& hit) override;
+		void onControllerHit(const physx::PxControllersHit& /*hit*/) override {}
+		void onObstacleHit(const physx::PxControllerObstacleHit& /*hit*/) override {}
 	protected:
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);

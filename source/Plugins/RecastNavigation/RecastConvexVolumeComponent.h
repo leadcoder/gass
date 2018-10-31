@@ -29,9 +29,9 @@ namespace GASS
 	{
 	public:
 		RecastConvexVolumeComponent();
-		virtual ~RecastConvexVolumeComponent();
+		~RecastConvexVolumeComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		ADD_PROPERTY(LandCoverTypeBinder,LandCoverType)
 	protected:
 		bool m_Initialized;

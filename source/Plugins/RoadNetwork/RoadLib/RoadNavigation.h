@@ -21,7 +21,7 @@ namespace GASS
 			pather = new micropather::MicroPather( this, 20 );	// Use a very small memory block to stress the pather
 		}
 
-		virtual ~RoadNavigation() {
+		~RoadNavigation() override {
 			delete pather;
 		}
 
@@ -58,7 +58,7 @@ namespace GASS
 			return (void*) inter;
 		}
 
-		virtual float LeastCostEstimate( void* nodeStart, void* nodeEnd ) 
+		float LeastCostEstimate( void* nodeStart, void* nodeEnd ) override 
 		{
 			RoadNode* start = VoidToRoadNode( nodeStart);
 			RoadNode* end = VoidToRoadNode( nodeEnd);
@@ -70,7 +70,7 @@ namespace GASS
 			return (float) (start->Position - end->Position).Length();
 		}
 
-		virtual void AdjacentCost( void* node, std::vector< micropather::StateCost > *neighbors ) 
+		void AdjacentCost( void* node, std::vector< micropather::StateCost > *neighbors ) override 
 		{
 			RoadNode* road_node = VoidToRoadNode(node);
 
@@ -94,7 +94,7 @@ namespace GASS
 			}
 		}
 
-		virtual void PrintStateInfo( void* /*node*/ ) 
+		void PrintStateInfo( void* /*node*/ ) override 
 		{
 			//int x, y;
 			//NodeToXY( node, &x, &y );

@@ -37,11 +37,11 @@ namespace GASS
 	friend class PhysXPhysicsSceneManager;
 	public:
 		PhysXBoxGeometryComponent();
-		virtual ~PhysXBoxGeometryComponent();
+		~PhysXBoxGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
-		physx::PxShape* CreateShape();
+		physx::PxShape* CreateShape() override;
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
 	protected:

@@ -147,7 +147,7 @@ namespace GASS
 		  {
 		  }
 
-		  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv)
+		  void operator()(osg::Node* node, osg::NodeVisitor* nv) override
 		  {
 			  osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			  if (cv)
@@ -174,7 +174,7 @@ namespace GASS
 	public:
 		OSGSkyboxComponent *m_Skybox;
 		/** Get the transformation matrix which moves from local coordinates to world coordinates.*/
-		virtual bool computeLocalToWorldMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const
+		bool computeLocalToWorldMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const override
 		{
 			osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			if (cv)
@@ -189,7 +189,7 @@ namespace GASS
 		}
 
 		/** Get the transformation matrix which moves from world coordinates to local coordinates.*/
-		virtual bool computeWorldToLocalMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const
+		bool computeWorldToLocalMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const override
 		{
 			osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			if (cv)

@@ -36,28 +36,28 @@ namespace GASS
 	{
 	public:
 		PhysXHingeComponent();
-		virtual ~PhysXHingeComponent();
+		~PhysXHingeComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IPhysicsHingeJointComponent
-		void SetDriveTargetVelocity(float value);
-		float GetDriveTargetVelocity() const { return m_DriveTargetVelocity; }
+		void SetDriveTargetVelocity(float value) override;
+		float GetDriveTargetVelocity() const override { return m_DriveTargetVelocity; }
 
-		virtual void CreateJoint();
-		physx::PxJoint* GetJoint() const  {return m_RevoluteJoint;}
+		void CreateJoint() override;
+		physx::PxJoint* GetJoint() const override  {return m_RevoluteJoint;}
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
 		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
-		void SceneManagerTick(double delta_time);
+		void SceneManagerTick(double delta_time) override;
 		//Helpers
 		void UpdateMotor();
 		void UpdateLimits();
 
 		//get set section
-		float GetDriveForceLimit()const {return m_DriveForceLimit;}
-		void SetDriveForceLimit(float value);	
+		float GetDriveForceLimit()const override {return m_DriveForceLimit;}
+		void SetDriveForceLimit(float value) override;	
 		float GetDamping()const {return m_Damping;}
 		void SetDamping(float value){m_Damping =value;}
 		float GetSpring()const {return m_Spring;}

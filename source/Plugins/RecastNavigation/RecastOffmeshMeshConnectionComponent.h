@@ -29,9 +29,9 @@ namespace GASS
 	{
 	public:
 		RecastOffmeshMeshConnectionComponent();
-		virtual ~RecastOffmeshMeshConnectionComponent();
+		~RecastOffmeshMeshConnectionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		Vec3 GetStartPos() const {return m_StartPos;}
 		Vec3 GetEndPos() const {return m_EndPos;}
 		ADD_PROPERTY(std::string,Mode)

@@ -51,11 +51,11 @@ namespace GASS
 	{
 	public:
 		FollowWaypointListComponent();
-		virtual ~FollowWaypointListComponent();
+		~FollowWaypointListComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta) override;
 		std::vector<SceneObjectPtr>  GetWaypointListEnumeration() const;
 		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:

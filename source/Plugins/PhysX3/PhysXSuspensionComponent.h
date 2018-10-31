@@ -35,19 +35,19 @@ namespace GASS
 	{
 	public:
 		PhysXSuspensionComponent();
-		virtual ~PhysXSuspensionComponent();
+		~PhysXSuspensionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetPosition(const Vec3 &value);
 
 		//IPhysicsSuspensionComponent
-		void SetDriveVelocity(float velocity);
-		void SetMaxDriveTorque(float value);
-		float GetMaxDriveTorque()const { return m_DriveMaxTorque; }
+		void SetDriveVelocity(float velocity) override;
+		void SetMaxDriveTorque(float value) override;
+		float GetMaxDriveTorque()const override { return m_DriveMaxTorque; }
 
-		void SetAngularSteerVelocity(float value);
-		void SetMaxSteerTorque(float value);
-		float GetMaxSteerTorque() const { return m_MaxSteerTorque; }
+		void SetAngularSteerVelocity(float value) override;
+		void SetMaxSteerTorque(float value) override;
+		float GetMaxSteerTorque() const override { return m_MaxSteerTorque; }
 	protected:
 		void OnPositionChanged(PositionRequestPtr message);
 		void OnWorldPositionChanged(WorldPositionRequestPtr message);

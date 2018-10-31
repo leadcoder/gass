@@ -32,12 +32,12 @@ namespace GASS
 	friend class PhysXPhysicsSceneManager;
 	public:
 		PhysXSphereGeometryComponent();
-		virtual ~PhysXSphereGeometryComponent();
+		~PhysXSphereGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		ADD_PROPERTY(std::string,Material);
-		physx::PxShape* CreateShape();
+		physx::PxShape* CreateShape() override;
 		void SetRadius(Float radius);
 		Float GetRadius() const;
 

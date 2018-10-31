@@ -36,10 +36,10 @@ namespace GASS
 	{
 	public:
 		OSGCollisionSystem();
-		virtual ~OSGCollisionSystem();
+		~OSGCollisionSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
-		std::string GetSystemName() const {return "OSGCollisionSystem";}
+		void Init() override;
+		std::string GetSystemName() const override {return "OSGCollisionSystem";}
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSystem> OSGCollisionSystemPtr;
 }

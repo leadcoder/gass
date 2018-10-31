@@ -36,15 +36,15 @@ namespace GASS
 	{
 	public:
 		PhysXTankComponent();
-		virtual ~PhysXTankComponent();
+		~PhysXTankComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
-		void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void OnDelete() override;
+		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
+		void SceneManagerTick(double delta) override;
 		
-		PlatformType GetType() const {return PT_TANK;}
-		Vec3 GetSize() const;
+		PlatformType GetType() const override {return PT_TANK;}
+		Vec3 GetSize() const override;
 		ADD_PROPERTY(Float,MaxSpeed);
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);

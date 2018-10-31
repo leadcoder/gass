@@ -83,15 +83,15 @@ namespace GASS
 	{
 	public:
 		RecastNavigationMeshComponent();
-		virtual ~RecastNavigationMeshComponent();
+		~RecastNavigationMeshComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//INavigationComponent
-		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
-		virtual Vec3 GetRandomPoint() const;
-		virtual bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
-		virtual bool IsPointInside(const Vec3 &point) const;
+		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
+		Vec3 GetRandomPoint() const override;
+		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const override;
+		bool IsPointInside(const Vec3 &point) const override;
 
 		//Internal
 
@@ -159,8 +159,8 @@ namespace GASS
 		void SetMeshBoundingMax(const Vec3 &max);
 		int GetTransparency() const;
 		void SetTransparency(int value);
-		void SaveXML(tinyxml2::XMLElement *obj_elem);
-		void LoadXML(tinyxml2::XMLElement *obj_elem);
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
+		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
 		void SaveAllTiles(const char* path, const dtNavMesh* mesh);
 		dtNavMesh* LoadAll(const char* path);
 		std::vector<Vec3> GetVisualNavMesh();

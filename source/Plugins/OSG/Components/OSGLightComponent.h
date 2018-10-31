@@ -28,9 +28,9 @@ namespace GASS
 	{
 	public:
 		OSGLightComponent();
-		virtual ~OSGLightComponent();
+		~OSGLightComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetLightType(LightTypeBinder lt);
 		LightTypeBinder GetLightType()const {return m_LightType;}
 		void SetAttenuationParams(const Vec4 &params);

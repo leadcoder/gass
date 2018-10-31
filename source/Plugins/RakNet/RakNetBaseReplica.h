@@ -39,7 +39,7 @@ namespace GASS
 	{
 	public:
 		RakNetBaseReplica();
-		virtual ~RakNetBaseReplica();
+		~RakNetBaseReplica() override;
 
 		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
 

@@ -29,15 +29,15 @@ namespace GASS
 	{
 	public:
 		OSGCameraComponent();
-		virtual ~OSGCameraComponent();
+		~OSGCameraComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//ICameraComponent interface
-		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const;
-		virtual void ShowInViewport(const std::string &viewport_name);
+		bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const override;
+		void ShowInViewport(const std::string &viewport_name) override;
 		
-		osg::ref_ptr<osg::Camera> GetOSGCamera() const {return m_OSGCamera;}
+		osg::ref_ptr<osg::Camera> GetOSGCamera() const override {return m_OSGCamera;}
 		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
 		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}
 	protected:

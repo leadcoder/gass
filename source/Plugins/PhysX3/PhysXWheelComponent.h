@@ -32,9 +32,9 @@ namespace GASS
 	{
 	public:
 		PhysXWheelComponent();
-		virtual ~PhysXWheelComponent();
+		~PhysXWheelComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		physx::PxVehicleWheelData GetWheelData() const {return m_WheelData;}
 		physx::PxVehicleSuspensionData GetSuspensionData() const {return m_SuspensionData;}
 		physx::PxVehicleTireData  GetTireData () const {return m_TireData;}

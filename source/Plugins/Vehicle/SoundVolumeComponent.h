@@ -36,9 +36,9 @@ namespace GASS
 	{
 	public:
 		SoundVolumeComponent();
-		virtual ~SoundVolumeComponent();
+		~SoundVolumeComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		void OnVelocityNotifyMessage(PhysicsVelocityEventPtr message);
 		void OnHingeUpdated(ODEPhysicsHingeJointEventPtr message);

@@ -34,7 +34,7 @@ namespace GASS
 	{
 	public:
 		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags) : EnumerationPropertyMetaData(annotation, flags, false){}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
 	};
 	typedef GASS_SHARED_PTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
 
@@ -42,27 +42,27 @@ namespace GASS
 	{
 	public:
 		OSGMeshComponent (void);
-		~OSGMeshComponent (void);
+		~OSGMeshComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		//IResourceComponent
-		ResourceHandle GetResource() const {return m_MeshResource;}
+		ResourceHandle GetResource() const override {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual GraphicsMesh GetMeshData() const;
+		GraphicsMesh GetMeshData() const override;
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
-		osg::ref_ptr<osg::Node> GetNode() const {return m_MeshNode ;}
+		osg::ref_ptr<osg::Node> GetNode() const override {return m_MeshNode ;}
 		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
 		ADD_PROPERTY(std::string,EnumerationResourceGroup)

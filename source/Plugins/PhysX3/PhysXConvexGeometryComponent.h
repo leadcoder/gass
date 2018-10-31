@@ -38,10 +38,10 @@ namespace GASS
 	friend class PhysXPhysicsSceneManager;
 	public:
 		PhysXConvexGeometryComponent();
-		virtual ~PhysXConvexGeometryComponent();
+		~PhysXConvexGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		PhysXConvexMesh GetConvexMesh() const {return m_ConvexMesh;}
 	protected:
 		ADD_PROPERTY(bool,SimulationCollision);

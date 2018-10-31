@@ -33,9 +33,9 @@ namespace GASS
 	{
 	public:
 		OSGNodeProxyComponent (void);
-		~OSGNodeProxyComponent (void);
+		~OSGNodeProxyComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		void UpdateDescriptionFromNode();
 		void OnLocationLoaded(LocationLoadedEventPtr message);

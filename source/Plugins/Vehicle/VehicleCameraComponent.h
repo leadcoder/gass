@@ -38,10 +38,10 @@ namespace GASS
 	{
 	public:
 		VehicleCameraComponent();
-		virtual ~VehicleCameraComponent();
+		~VehicleCameraComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		void SetPreferredViewport(const std::string &viewport);
 		std::string GetPreferredViewport() const;

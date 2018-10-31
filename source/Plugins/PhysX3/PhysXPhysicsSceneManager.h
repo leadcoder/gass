@@ -54,18 +54,18 @@ namespace GASS
 		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
 		typedef std::map<std::string,PhysXTriangleMesh> TriangleMeshMap;
 		PhysXPhysicsSceneManager();
-		virtual ~PhysXPhysicsSceneManager();
+		~PhysXPhysicsSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual void OnUpdate(double delta_time);
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		void OnUpdate(double delta_time) override;
 	
 		//IPhysicsSceneManager
-		virtual void SetActive(bool value) { m_Active = value; }
-		virtual bool GetActive() const { return m_Active; }
+		void SetActive(bool value) override { m_Active = value; }
+		bool GetActive() const override { return m_Active; }
 
-		virtual bool GetSerialize() const {return true;}
+		bool GetSerialize() const override {return true;}
 		physx::PxScene* GetPxScene() const {return m_PxScene;}
 		PhysXConvexMesh CreateConvexMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);
 		PhysXTriangleMesh CreateTriangleMesh(const std::string &col_mesh_id, MeshComponentPtr mesh);

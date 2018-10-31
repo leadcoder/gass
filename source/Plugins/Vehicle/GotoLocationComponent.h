@@ -35,10 +35,10 @@ namespace GASS
 	{
 	public:
 		GoToLocationComponent();
-		virtual ~GoToLocationComponent();
+		~GoToLocationComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta) override;
 		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
 	private:
 		void OnTransformationMessage(TransformationChangedEventPtr message);

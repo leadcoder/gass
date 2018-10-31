@@ -39,9 +39,9 @@ namespace GASS
 	{
 	public:
 		SteerComponent();
-		virtual ~SteerComponent();
+		~SteerComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnInput(InputRelayEventPtr message);

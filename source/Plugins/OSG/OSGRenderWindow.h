@@ -35,14 +35,14 @@ namespace GASS
 		typedef std::vector<OSGViewportPtr> OSGViewportVector;
 
 		OSGRenderWindow(OSGGraphicsSystem* system, osg::ref_ptr<osg::GraphicsContext> win);
-		~OSGRenderWindow();
+		~OSGRenderWindow() override;
 		
 		//IRenderWindow
-		virtual unsigned int GetWidth() const;
-		virtual unsigned int GetHeight() const;
-		virtual void* GetHWND() const;
-		virtual ViewportVector GetViewports() const;
-		virtual ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height);
+		unsigned int GetWidth() const override;
+		unsigned int GetHeight() const override;
+		void* GetHWND() const override;
+		ViewportVector GetViewports() const override;
+		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) override;
 
 		OSGGraphicsSystem* GetSystem() const{return m_System;}
 		osg::ref_ptr<osg::GraphicsContext> GetOSGWindow() const {return m_Window;}

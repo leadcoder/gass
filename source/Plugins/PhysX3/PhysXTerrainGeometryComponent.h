@@ -39,10 +39,10 @@ namespace GASS
 	friend class PhysXPhysicsSceneManager;
 	public:
 		PhysXTerrainGeometryComponent();
-		virtual ~PhysXTerrainGeometryComponent();
+		~PhysXTerrainGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);

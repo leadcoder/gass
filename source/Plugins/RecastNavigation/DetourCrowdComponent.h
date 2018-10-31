@@ -32,11 +32,11 @@ namespace GASS
 		friend class DetourCrowdAgentComponent;
 	public:
 		DetourCrowdComponent();
-		virtual ~DetourCrowdComponent();
+		~DetourCrowdComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta_time) override;
 		dtCrowd* GetCrowd() const {return m_Crowd;}
 		void RegisterAgent(DetourCrowdAgentComponentPtr agent);
 		void UnregisterAgent(DetourCrowdAgentComponentPtr agent);
