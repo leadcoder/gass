@@ -26,9 +26,9 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 

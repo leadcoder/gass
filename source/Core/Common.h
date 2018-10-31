@@ -126,7 +126,7 @@ namespace GASS
 	typedef double Float;
 }
 
-#include <assert.h>
+#include <cassert>
 
 
 

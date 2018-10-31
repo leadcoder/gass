@@ -23,8 +23,8 @@
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include <iomanip>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
