@@ -74,17 +74,17 @@ namespace GASS
 		/** Returns the X orthonormal axis defining the TQuaternion. Same as doing
 			xAxis = Vector3::UNIT_X * this. Also called the local X-axis
 		*/
-		inline TVec3<TYPE> GetXAxis(void) const;
+		inline TVec3<TYPE> GetXAxis() const;
 
 		/** Returns the Y orthonormal axis defining the TQuaternion. Same as doing
 			yAxis = Vector3::UNIT_Y * this. Also called the local Y-axis
 		*/
-		inline TVec3<TYPE> GetYAxis(void) const;
+		inline TVec3<TYPE> GetYAxis() const;
 
 		/** Returns the Z orthonormal axis defining the TQuaternion. Same as doing
 			zAxis = Vector3::UNIT_Z * this. Also called the local Z-axis
 		*/
-		inline TVec3<TYPE> GetZAxis(void) const;
+		inline TVec3<TYPE> GetZAxis() const;
 
 		inline TQuaternion& operator= (const TQuaternion& rkQ);
 		inline TQuaternion operator+ (const TQuaternion& rkQ) const;
@@ -447,7 +447,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetXAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetXAxis() const
 	{
 		TYPE fTy = static_cast<TYPE>(2.0)*y;
 		TYPE fTz = static_cast<TYPE>(2.0)*z;
@@ -462,7 +462,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetYAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetYAxis() const
 	{
 		TYPE fTx = 2.0f*x;
 		TYPE fTy = 2.0f*y;
@@ -478,7 +478,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetZAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetZAxis() const
 	{
 		TYPE fTx = 2.0f*x;
 		TYPE fTy = 2.0f*y;

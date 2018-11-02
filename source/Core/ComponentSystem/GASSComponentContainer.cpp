@@ -39,7 +39,7 @@ namespace GASS
 	}
 
 
-	ComponentContainer::~ComponentContainer(void)
+	ComponentContainer::~ComponentContainer()
 	{
 
 	}

@@ -81,7 +81,7 @@ namespace GASS {
 		typeName = rhs.typeName;
     }
 
-    const std::string& Exception::getFullDescription(void) const
+    const std::string& Exception::getFullDescription() const
     {
 		if (fullDesc.empty())
 		{
@@ -102,7 +102,7 @@ namespace GASS {
 		return fullDesc;
     }
 
-    int Exception::getNumber(void) const throw()
+    int Exception::getNumber() const throw()
     {
         return number;
     }

@@ -23,12 +23,12 @@
 
 namespace GASS
 {
-	RotationSpline::RotationSpline(void)
+	RotationSpline::RotationSpline()
 	{
 		m_AutoCalc = false;
 	}
 
-	RotationSpline::~RotationSpline(void)
+	RotationSpline::~RotationSpline()
 	{
 	}
 
@@ -77,7 +77,7 @@ namespace GASS
 
 	}
 	//---------------------------------------------------------------------
-	void RotationSpline::RecalcTangents(void)
+	void RotationSpline::RecalcTangents()
 	{
 		// ShoeMake (1987) approach
 		// Just like Catmull-Rom floatly, just more gnarly
@@ -156,7 +156,7 @@ namespace GASS
 	}
 
 	//---------------------------------------------------------------------
-	void RotationSpline::Clear(void)
+	void RotationSpline::Clear()
 	{
 		m_Points.clear();
 		m_Tangents.clear();

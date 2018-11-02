@@ -38,7 +38,7 @@ namespace GASS
 
 	}
 
-	ComponentContainerTemplate::~ComponentContainerTemplate(void)
+	ComponentContainerTemplate::~ComponentContainerTemplate()
 	{
 
 	}

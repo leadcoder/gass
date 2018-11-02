@@ -128,7 +128,7 @@ namespace GASS
 		that want to delegate the enumeration request to other class 
 		
 	*/
-	typedef std::vector<std::string> EnumerationFunc(void);
+	typedef std::vector<std::string> EnumerationFunc();
 	class EnumerationProxyPropertyMetaData : public EnumerationPropertyMetaData
 	{
 	public:

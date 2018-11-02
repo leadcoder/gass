@@ -85,7 +85,7 @@ namespace GASS
 
 	}
 
-	SchemaManager::~SchemaManager(void)
+	SchemaManager::~SchemaManager()
 	{
 
 	}

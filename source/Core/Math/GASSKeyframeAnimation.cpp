@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-KeyframeAnimation::KeyframeAnimation(void)
+KeyframeAnimation::KeyframeAnimation()
 {
 	m_SplineBuildNeeded = true;
 	m_InterpolateMode = IM_SPLINE;
@@ -35,7 +35,7 @@ KeyframeAnimation::KeyframeAnimation(void)
 	m_RotToPath = false;
 }
 
-KeyframeAnimation::~KeyframeAnimation(void)
+KeyframeAnimation::~KeyframeAnimation()
 {
 }
 
@@ -280,7 +280,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 }
 
 
- void KeyframeAnimation::BuildInterpolationSplines(void)
+ void KeyframeAnimation::BuildInterpolationSplines()
     {
         // Don't calc automatically, do it on request at the end
         //mPositionSpline.setAutoCalculate(false);

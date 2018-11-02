@@ -276,7 +276,7 @@ class MapIteratorWrapper  : public IteratorWrapper<T, IteratorType, typename T::
 		}
 
         /** Returns the next(=current) key element in the collection, without advancing to the next. */
-        KeyType peekNextKey(void) const
+        KeyType peekNextKey() const
         {
             return this->mCurrent->first;
         }

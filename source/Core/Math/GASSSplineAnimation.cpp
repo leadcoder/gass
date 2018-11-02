@@ -24,13 +24,13 @@
 
 namespace GASS
 {
-	SplineAnimation::SplineAnimation(void) : m_Length(0), m_NumericSteps(25)
+	SplineAnimation::SplineAnimation() : m_Length(0), m_NumericSteps(25)
 	{
 		
 		
 	}
 
-	SplineAnimation::~SplineAnimation(void)
+	SplineAnimation::~SplineAnimation()
 	{
 
 	}
@@ -44,7 +44,7 @@ namespace GASS
 		BuildInterpolationSplines();
 	}
 
-	void SplineAnimation::BuildInterpolationSplines(void) 
+	void SplineAnimation::BuildInterpolationSplines() 
 	{
 		m_Spline.Clear();
 		m_Spline.SetAutoCalc(true);

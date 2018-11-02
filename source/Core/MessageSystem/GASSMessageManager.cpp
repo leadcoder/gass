@@ -50,7 +50,7 @@ namespace GASS
 		message_type = m_MessageTypes.find(type);
 		if(message_type == m_MessageTypes.end())
 		{
-			const MessageTypeListenerGASS_SHARED_PTR new_type = MessageTypeListenerGASS_SHARED_PTR(new MessageTypeListeners);
+			const MessageTypeListenerPtr new_type = GASS_MAKE_SHARED<MessageTypeListeners>();
 			new_type->m_TypeID = type;
 			m_MessageTypes[type] = new_type;
 		}

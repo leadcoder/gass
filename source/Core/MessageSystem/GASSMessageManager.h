@@ -55,7 +55,7 @@ namespace GASS
         typedef GASS_SHARED_PTR<IMessage> MessagePtr;
 		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
-		typedef std::map<MessageType,MessageTypeListenerGASS_SHARED_PTR> MessageTypeListenerMap;
+		typedef std::map<MessageType,MessageTypeListenerPtr> MessageTypeListenerMap;
 	public:
 		MessageManager();
 		virtual ~MessageManager();

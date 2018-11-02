@@ -24,7 +24,7 @@
 namespace GASS
 {
 
-Spline::Spline(void)
+Spline::Spline()
 {
 	m_Coeffs.m_Data[0][0] = 2;
 	m_Coeffs.m_Data[0][1] = -2;
@@ -46,7 +46,7 @@ Spline::Spline(void)
 	m_TanStrength = 1;
 }
 
-Spline::~Spline(void)
+Spline::~Spline()
 {
 
 }
@@ -137,7 +137,7 @@ void Spline::AddPoint(Vec3 &p)
 }
 
 
-void Spline::RecalcTangents(void)
+void Spline::RecalcTangents()
 {
 	// Catmull-Rom approach
 	// 

@@ -63,7 +63,7 @@ namespace GASS
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
-	typedef GASS_SHARED_PTR<MessageTypeListeners> MessageTypeListenerGASS_SHARED_PTR;
+	typedef GASS_SHARED_PTR<MessageTypeListeners> MessageTypeListenerPtr;
 
 }
 #endif 

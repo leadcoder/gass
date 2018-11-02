@@ -705,7 +705,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TMat4<TYPE> TMat4<TYPE>::GetInvert(void) const
+	TMat4<TYPE> TMat4<TYPE>::GetInvert() const
 	{
 		TYPE m10 = E4x4[1][0], m11 = E4x4[1][1], m12 = E4x4[1][2];
 		TYPE m20 = E4x4[2][0], m21 = E4x4[2][1], m22 = E4x4[2][2];

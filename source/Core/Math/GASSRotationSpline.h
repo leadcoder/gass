@@ -30,12 +30,12 @@ namespace GASS
 	class GASSCoreExport RotationSpline
 	{
 	public:
-		RotationSpline(void);
-		~RotationSpline(void);
+		RotationSpline();
+		~RotationSpline();
 		Quaternion Interpolate(unsigned int fromIndex, float t) const;
 		void Clear();
 		void AddPoint(const Quaternion &p);
-		void RecalcTangents(void);
+		void RecalcTangents();
 	private:
 		std::vector<Quaternion> m_Points;
 		std::vector<Quaternion> m_Tangents;

@@ -137,11 +137,11 @@ namespace GASS {
                 and will also supply extra platform-specific information
                 where applicable.
         */
-        virtual const std::string & getFullDescription(void) const;
+        virtual const std::string & getFullDescription() const;
 
         /** Gets the error code.
         */
-        virtual int getNumber(void) const throw();
+        virtual int getNumber() const throw();
 
         /** Gets the source function.
         */
@@ -159,7 +159,7 @@ namespace GASS {
 			getFullDescriptionto get a full description of the error including line number,
 			error number and what function threw the exception.
         */
-		virtual const std::string &getDescription(void) const { return description; }
+		virtual const std::string &getDescription() const { return description; }
 
 		/// Override std::exception::what
 		const char* what() const throw() override { return getFullDescription().c_str(); }

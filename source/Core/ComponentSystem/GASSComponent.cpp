@@ -28,12 +28,12 @@ namespace GASS
 
 	std::map<RTTI* ,std::vector<std::string> >  Component::m_Dependencies;
 
-	Component::Component(void) : m_Owner(ComponentContainerWeakPtr())
+	Component::Component() : m_Owner(ComponentContainerWeakPtr())
 	{
 	
 	}
 
-	Component::~Component(void)
+	Component::~Component()
 	{
 	
 	}
