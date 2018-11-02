@@ -70,13 +70,12 @@ namespace GASS
 
 	ComponentPtr ComponentContainerTemplate::GetComponent(const std::string &name) const
 	{
-		ComponentPtr comp;
-		for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
+		for(const auto & comp : m_ComponentVector)
 		{
-			if(m_ComponentVector[i]->GetName() == name)
-				return m_ComponentVector[i];
+			if(comp->GetName() == name)
+				return comp;
 		}
-		return comp;
+		return ComponentPtr();
 	}
 
 

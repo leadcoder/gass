@@ -276,9 +276,9 @@ namespace GASS
 						const std::string exstension = GASS_TO_GENERIC_STRING(iter->path().extension());
 
 						bool find_ext = false;
-						for(size_t i = 0; i < extenstion_filters.size(); i++)
+						for(const auto & extenstion_filter : extenstion_filters)
 						{
-							if(StringUtils::ToLower(exstension) == extenstion_filters[i])
+							if(StringUtils::ToLower(exstension) == extenstion_filter)
 							{
 								find_ext = true;
 								break;

@@ -93,17 +93,17 @@ namespace GASS
 	void SchemaManager::Generate(const std::string& outpath) const
 	{
 		std::vector<std::string> names = ComponentContainerFactory::GetPtr()->GetFactoryNames();
-		for (size_t i = 0; i < names.size(); i++)
+		for (const auto & name : names)
 		{
-			ComponentContainerPtr container(ComponentContainerFactory::Get().Create(names[i]));
+			ComponentContainerPtr container(ComponentContainerFactory::Get().Create(name));
 			BaseReflectionObjectPtr bro = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
-			_Save(outpath, names[i], bro);
+			_Save(outpath, name, bro);
 		}
 
 		names = ComponentFactory::GetPtr()->GetFactoryNames();
-		for (size_t i = 0; i < names.size(); i++)
+		for (const auto & name : names)
 		{
-			ComponentPtr comp(ComponentFactory::Get().Create(names[i]));
+			ComponentPtr comp(ComponentFactory::Get().Create(name));
 			BaseReflectionObjectPtr bro = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
 			std::string class_name = bro->GetRTTI()->GetClassName();
 			if (bro)
@@ -150,10 +150,10 @@ namespace GASS
 		complex_elem->LinkEndChild(sequence_elem);
 
 		GASS::PropertyVector props = object->GetProperties();
-		for (size_t i = 0; i < props.size(); i++)
+		for (auto & property : props)
 		{
-			const std::string prop_name = props[i]->GetName();
-			_SaveProp(sequence_elem, props[i]);
+			const std::string prop_name = property->GetName();
+			_SaveProp(sequence_elem, property);
 		}
 		std::string filename = outpath + classname;
 		filename += ".xsd";
@@ -205,10 +205,10 @@ namespace GASS
 	{
 		std::vector<std::string> files;
 		FileUtils::GetFilesFromPath(files, filepath, true, true);
-		for (size_t i = 0; i < files.size(); i++)
+		for (const auto & file : files)
 		{
-			if (FileUtils::GetExtension(files[i]) == "xsd")
-				Load(files[i]);
+			if (FileUtils::GetExtension(file) == "xsd")
+				Load(file);
 		}
 	}
 

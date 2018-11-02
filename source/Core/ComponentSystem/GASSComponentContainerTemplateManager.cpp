@@ -250,10 +250,10 @@ namespace GASS
 	{
 		std::vector<std::string> files;
 		FileUtils::GetFilesFromPath(files, path, recursive, true);
-		for(size_t i = 0; i< files.size(); i++)
+		for(const auto & file : files)
 		{
-			if(FileUtils::GetExtension(files[i]) == "template")
-				Load(files[i]);
+			if(FileUtils::GetExtension(file) == "template")
+				Load(file);
 		}
 	}
 	

@@ -292,20 +292,19 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
         m_ScaleSpline.Clear();
 
 
-        for (size_t i = 0; i < m_KeyVector.size(); i++)
+        for (auto & key : m_KeyVector)
         {
-			Key* key = &m_KeyVector[i];
-            m_PositionSpline.AddPoint(key->m_Pos);
-            m_ScaleSpline.AddPoint(key->m_Scale);
+			m_PositionSpline.AddPoint(key.m_Pos);
+            m_ScaleSpline.AddPoint(key.m_Scale);
         }
 
 		m_PositionSpline.RecalcTangents();
         m_ScaleSpline.RecalcTangents();
 
 		//AutoCalulateRotation();
-		for (size_t i = 0; i < m_KeyVector.size(); i++)
+		for (auto & key : m_KeyVector)
         {
-			m_RotationSpline.AddPoint(m_KeyVector[i].m_Rot);
+			m_RotationSpline.AddPoint(key.m_Rot);
 		}
 
 		m_RotationSpline.RecalcTangents();

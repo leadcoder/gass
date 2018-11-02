@@ -48,9 +48,9 @@ namespace GASS
 	{
 		m_Spline.Clear();
 		m_Spline.SetAutoCalc(true);
-		for (size_t i = 0; i < m_NodeVector.size(); i++)
+		for (auto & node : m_NodeVector)
 		{
-			m_Spline.AddPoint(m_NodeVector[i].m_Pos);
+			m_Spline.AddPoint(node.m_Pos);
 		}
 		m_Spline.RecalcTangents();
 	
