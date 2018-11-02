@@ -88,12 +88,12 @@ namespace GASS
 		void UpdateFogSettings();
 	public:
 		OgreGraphicsSceneManager();
-		virtual ~OgreGraphicsSceneManager();
+		~OgreGraphicsSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return true;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return true;}
 		//Fog
 		FogModeBinder GetFogMode() const {return m_FogMode;}
 		float GetFogStart() const {return m_FogStart;}
@@ -108,14 +108,14 @@ namespace GASS
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 
 		//IGraphicsSceneManager
-		void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
+		void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color) override;
 
 		//IOgreSceneManagerProxy
-		Ogre::SceneManager* GetOgreSceneManager() const {return m_SceneMgr;}
+		Ogre::SceneManager* GetOgreSceneManager() const override {return m_SceneMgr;}
 	protected:
 		//Ogre::SceneManager::Listener
-		virtual bool frameStarted (const Ogre::FrameEvent &evt);
-		virtual bool frameEnded (const Ogre::FrameEvent &evt);
+		bool frameStarted (const Ogre::FrameEvent &evt) override;
+		bool frameEnded (const Ogre::FrameEvent &evt) override;
 		void OnWeatherRequest(WeatherRequestPtr message);
 	private:
 		void UpdateLightSettings();

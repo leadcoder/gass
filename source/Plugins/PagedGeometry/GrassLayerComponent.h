@@ -60,13 +60,13 @@ namespace GASS
 	{
 	public:
 		GrassLayerComponent(void);
-		~GrassLayerComponent(void);
+		~GrassLayerComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		GrassLayer *GetLayer() const {return m_GrassLayer;}
 	protected:
 		void OnLoad(GrassLoaderComponentLoadedPtr message);
-		void OnDelete();
+		void OnDelete() override;
 		void OnPaint(GrassPaintMessagePtr message);
 		void OnRoadMessage(RoadRequestPtr message);
 		void Paint(const Vec3 &world_pos, float brush_size, float brush_inner_size , float intensity);

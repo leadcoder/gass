@@ -53,23 +53,23 @@ namespace GASS
 	{
 	public:
 		OgreStaticMeshComponent (void);
-		~OgreStaticMeshComponent (void);
+		~OgreStaticMeshComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		//IGeometryComponent
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual GraphicsMesh  GetMeshData() const;
-		virtual void LoadXML(tinyxml2::XMLElement *elem);
+		GraphicsMesh  GetMeshData() const override;
+		void LoadXML(tinyxml2::XMLElement *elem) override;
 	protected:
 		//void OnMeshFileNameMessage(MeshFileRequestPtr message);
 

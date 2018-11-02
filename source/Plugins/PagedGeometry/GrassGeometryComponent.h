@@ -50,12 +50,12 @@ namespace GASS
 	{
 	public:
 		GrassGeometryComponent(void);
-		~GrassGeometryComponent(void);
+		~GrassGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 	protected:
 		void OnPaint(GrassPaintMessagePtr message);
 		std::string GetDensityMap() const;

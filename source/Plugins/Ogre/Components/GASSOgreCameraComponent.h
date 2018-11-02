@@ -39,15 +39,15 @@ namespace GASS
 	{
 	public:
 		OgreCameraComponent();
-		virtual ~OgreCameraComponent();
+		~OgreCameraComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		
 		//ICameraComponent
-		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const;
-		virtual void ShowInViewport(const std::string &viewport_name = "");
+		bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const override;
+		void ShowInViewport(const std::string &viewport_name = "") override;
 
-		inline Ogre::Camera* GetOgreCamera() const {return m_Camera;}
+		inline Ogre::Camera* GetOgreCamera() const override {return m_Camera;}
 		std::vector<std::string> GetPostFilters() const;
 		void SetPostFilters(const std::vector<std::string> &filters);
 		std::string GetMaterialScheme() const {return m_MaterialScheme;}

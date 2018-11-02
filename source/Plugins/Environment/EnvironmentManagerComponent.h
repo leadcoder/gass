@@ -38,15 +38,15 @@ namespace GASS
 	{
 	public:
 		EnvironmentManagerComponent(void);
-		~EnvironmentManagerComponent(void);
+		~EnvironmentManagerComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		void UpdateEnvironmentLighting();
 		void OnChangeCamera(CameraChangedEventPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
-		bool frameStarted(const Ogre::FrameEvent& evt);
+		bool frameStarted(const Ogre::FrameEvent& evt) override;
 		void SetWaterGradient(const std::vector<Vec3f> &value);
 		std::vector<Vec3f>  GetWaterGradient() const ;
 		void SetWaterGradientWeights(const std::vector<float> &value);

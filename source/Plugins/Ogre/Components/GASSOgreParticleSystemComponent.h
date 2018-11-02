@@ -39,17 +39,17 @@ namespace GASS
 	{
 	public:
 		OgreParticleSystemComponent (void);
-		~OgreParticleSystemComponent (void);
+		~OgreParticleSystemComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere()const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox()const override;
+		Sphere GetBoundingSphere()const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 	protected:
 		void SetParticleTemplate(const std::string &part_temp) {m_ParticleTemplate = part_temp;}
 		std::string GetParticleTemplate()const {return m_ParticleTemplate;}

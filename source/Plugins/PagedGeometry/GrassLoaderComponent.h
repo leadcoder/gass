@@ -50,14 +50,14 @@ namespace GASS
 	{
 	public:
 		GrassLoaderComponent(void);
-		~GrassLoaderComponent(void);
+		~GrassLoaderComponent(void) override;
 		
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 		GrassLoader* GetGrassLoader() const {return m_GrassLoader;}
 		TBounds GetMapBounds() const {return m_MapBounds;}
 		Ogre::TexturePtr GetDensityTexture() const {return  m_DensityTexture;}

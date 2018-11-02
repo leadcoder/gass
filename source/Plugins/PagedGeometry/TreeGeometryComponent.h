@@ -53,14 +53,14 @@ namespace GASS
 	{
 	public:
 		TreeGeometryComponent(void);
-		~TreeGeometryComponent(void);
+		~TreeGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		void UpdateArea(float start_x, float start_z, float end_x, float end_z);
 		void UpdateArea(const Vec3 &world_pos, float radius);
 	protected:
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
+		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
 		static float GetTerrainHeight(float x, float z, void* user_data);
 		std::string GetMesh() const
 		{

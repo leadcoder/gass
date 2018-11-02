@@ -32,7 +32,7 @@ namespace GASS
 	{
 	public:
 		/** @copydoc CompositorLogic::compositorInstanceCreated */
-		virtual void compositorInstanceCreated(Ogre::CompositorInstance* newInstance) 
+		void compositorInstanceCreated(Ogre::CompositorInstance* newInstance) override 
 		{
 			Ogre::CompositorInstance::Listener* listener = createListener(newInstance);
 			newInstance->addListener(listener);
@@ -40,7 +40,7 @@ namespace GASS
 		}
 
 		/** @copydoc CompositorLogic::compositorInstanceDestroyed */
-		virtual void compositorInstanceDestroyed(Ogre::CompositorInstance* destroyedInstance)
+		void compositorInstanceDestroyed(Ogre::CompositorInstance* destroyedInstance) override
 		{
 			delete mListeners[destroyedInstance];
 			mListeners.erase(destroyedInstance);
@@ -58,7 +58,7 @@ namespace GASS
 	{
 	protected:
 		/** @copydoc ListenerFactoryLogic::createListener */
-		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+		Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance) override;
 	};
 
 	//The compositor logic for the hdr compositor
@@ -66,7 +66,7 @@ namespace GASS
 	{
 	protected:
 		/** @copydoc ListenerFactoryLogic::createListener */
-		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+		Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance) override;
 	};
 
 	//The compositor logic for the gaussian blur compositor
@@ -74,7 +74,7 @@ namespace GASS
 	{
 	protected:
 		/** @copydoc ListenerFactoryLogic::createListener */
-		virtual Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance);
+		Ogre::CompositorInstance::Listener* createListener(Ogre::CompositorInstance* instance) override;
 	};
 
 
@@ -85,9 +85,9 @@ namespace GASS
 	{
 	public:
 		SSAOListener(Ogre::Viewport* vp);
-		virtual ~SSAOListener();
+		~SSAOListener() override;
 		//virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
 	protected:
 		Ogre::Viewport* m_Viewport;
 	};
@@ -96,9 +96,9 @@ namespace GASS
 	{
 	public:
 		HeatVisionListener();
-		virtual ~HeatVisionListener();
-		virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		~HeatVisionListener() override;
+		void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
+		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
 	protected:
 		Ogre::GpuProgramParametersSharedPtr fpParams;
 		float start, end, curr;
@@ -117,11 +117,11 @@ namespace GASS
 		float mBloomTexOffsetsVert[15][4];
 	public:
 		HDRListener();
-		virtual ~HDRListener();
+		~HDRListener() override;
 		void notifyViewportSize(int width, int height);
 		void notifyCompositor(Ogre::CompositorInstance* instance);
-		virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
+		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
 	};
 	//---------------------------------------------------------------------------
 	class GaussianListener: public Ogre::CompositorInstance::Listener
@@ -135,10 +135,10 @@ namespace GASS
 		float mBloomTexOffsetsVert[15][4];
 	public:
 		GaussianListener();
-		virtual ~GaussianListener();
+		~GaussianListener() override;
 		void notifyViewportSize(int width, int height);
-		virtual void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
-		virtual void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
+		void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
+		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat) override;
 	};
 	//---------------------------------------------------------------------------
 

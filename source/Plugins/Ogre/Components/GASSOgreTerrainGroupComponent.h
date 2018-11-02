@@ -38,25 +38,25 @@ namespace GASS
 	{
 	public:
 		OgreTerrainGroupComponent();
-		~OgreTerrainGroupComponent();
+		~OgreTerrainGroupComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		
 		//IMeshComponent
-		virtual GraphicsMesh GetMeshData() const;
+		GraphicsMesh GetMeshData() const override;
 	
 		//IGeometryComponent
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		
 		//IXMLSerialize interface overload, we need a way to trigger terrain save!
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 
 		Ogre::TerrainGroup* GetTerrainGroup() const {return m_TerrainGroup;}
 		int GetImportTerrainSize() const;

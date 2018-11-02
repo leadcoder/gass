@@ -50,10 +50,10 @@ namespace GASS
 	{
 	public:
 		DensityMapComponent(void);
-		~DensityMapComponent(void);
+		~DensityMapComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void OnInitialize() override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 		float GetDensityAt(float x, float z);
 		void SetMapBounds(TBounds bounds) {m_MapBounds = bounds;}
 	protected:

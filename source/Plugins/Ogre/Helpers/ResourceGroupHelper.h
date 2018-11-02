@@ -38,7 +38,7 @@ private:
       /// \brief default constructor
       MyMatVisitor();
       /// \brief called for each renderable
-      virtual void visit(Ogre::Renderable *rend, Ogre::ushort lodIndex, bool isDebug, Ogre::Any *pAny=0); 
+      void visit(Ogre::Renderable *rend, Ogre::ushort lodIndex, bool isDebug, Ogre::Any *pAny=0) override; 
    };
    
    ///\brief this class will listen to the log.
@@ -54,9 +54,9 @@ private:
       /// \brief the constructor
       ResourceGroupHelperLogListener();
       ///\brief the destructor de-register itself from the log
-      ~ResourceGroupHelperLogListener();
+      ~ResourceGroupHelperLogListener() override;
       /// \brief called for each message
-      virtual void messageLogged(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName, bool &skipThisMessage );
+      void messageLogged(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName, bool &skipThisMessage ) override;
 				   
 	  
       /// \brief get a copy of kept messages

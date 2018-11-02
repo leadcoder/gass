@@ -37,9 +37,9 @@ namespace GASS
 	{
 	public:
 		SkyXVolumeCloudComponent(void);
-		~SkyXVolumeCloudComponent(void);
+		~SkyXVolumeCloudComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void CreateVolume();
 	protected:
 		void OnWeatherRequest(WeatherRequestPtr message);

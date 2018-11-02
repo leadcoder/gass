@@ -31,9 +31,9 @@ namespace GASS
 	{
 	public:
 		SkyXCloudLayerComponent(void);
-		~SkyXCloudLayerComponent(void);
+		~SkyXCloudLayerComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void CreateLayer();
 	protected:
 		void SetScale(const float &value);

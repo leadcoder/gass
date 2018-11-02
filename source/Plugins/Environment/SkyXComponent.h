@@ -34,10 +34,10 @@ namespace GASS
 	{
 	public:
 		SkyXComponent(void);
-		~SkyXComponent(void);
+		~SkyXComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		SkyX::SkyX* GetSkyX() const {return m_SkyX;}
 	protected:
 		void OnTimeOfDayRequest(TimeOfDayRequestPtr message);

@@ -33,14 +33,14 @@ namespace GASS
 	{
 	public:
 		OgreTextComponent(void);
-		~OgreTextComponent(void);
+		~OgreTextComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere() const;
 	protected:
 		ADD_PROPERTY(bool,ScaleByDistance)
-		virtual void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt);
+		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
 		void OnGeomChanged(GeometryChangedEventPtr message);
 		void OnCaptionMessage(TextCaptionRequestPtr message);
 		std::string GetText() const;
@@ -50,7 +50,7 @@ namespace GASS
 		int GetCharacterSize() const;
 		void SetCharacterSize(int size);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
-		void OnDelete();
+		void OnDelete() override;
 		MovableTextOverlay* m_TextObject;
 		MovableTextOverlayAttributes* m_Attribs;
 		std::string m_TextToDisplay;

@@ -44,48 +44,48 @@ namespace GASS
 	{
 	public:
 		OgreLocationComponent();
-		virtual ~OgreLocationComponent();
+		~OgreLocationComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		//ILocationComponent
-		virtual Vec3 GetPosition() const;
-		virtual void SetPosition(const Vec3 &value);
+		Vec3 GetPosition() const override;
+		void SetPosition(const Vec3 &value) override;
 		
-		virtual Vec3 GetWorldPosition() const;
-		virtual void SetWorldPosition(const Vec3 &value);
+		Vec3 GetWorldPosition() const override;
+		void SetWorldPosition(const Vec3 &value) override;
 
-		virtual void SetEulerRotation(const EulerRotation &value);
-		virtual EulerRotation GetEulerRotation() const;
+		void SetEulerRotation(const EulerRotation &value) override;
+		EulerRotation GetEulerRotation() const override;
 
-		virtual Quaternion GetRotation() const;
-		virtual void SetRotation(const Quaternion& value);
+		Quaternion GetRotation() const override;
+		void SetRotation(const Quaternion& value) override;
 
-		virtual Quaternion GetWorldRotation() const;
-		virtual void SetWorldRotation(const Quaternion& value);
+		Quaternion GetWorldRotation() const override;
+		void SetWorldRotation(const Quaternion& value) override;
 
-		virtual Vec3 GetScale() const { return m_Scale;}
-		virtual void SetScale(const Vec3 &value);
+		Vec3 GetScale() const override { return m_Scale;}
+		void SetScale(const Vec3 &value) override;
 
-		virtual bool GetAttachToParent() const;
-		virtual void SetAttachToParent(bool value);
+		bool GetAttachToParent() const override;
+		void SetAttachToParent(bool value) override;
 
-		virtual void SetVisible(bool value);
-		virtual bool GetVisible() const;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 		//end ILocationComponent
 	
-		inline Ogre::SceneNode* GetOgreNode(){return m_OgreNode;}
+		inline Ogre::SceneNode* GetOgreNode() override{return m_OgreNode;}
 		
 		//Ogre node listener interface
-		virtual void nodeUpdated(const Ogre::Node* node);
+		void nodeUpdated(const Ogre::Node* node) override;
 		/** Node is being destroyed */
-		virtual void nodeDestroyed(const Ogre::Node* /*node*/) {}
+		void nodeDestroyed(const Ogre::Node* /*node*/) override {}
 		/** Node has been attached to a parent */
-		virtual void nodeAttached(const Ogre::Node* /*node*/) {}
+		void nodeAttached(const Ogre::Node* /*node*/) override {}
 		/** Node has been detached from a parent */
-		virtual void nodeDetached(const Ogre::Node* /*node*/) {}
+		void nodeDetached(const Ogre::Node* /*node*/) override {}
 
 	protected:
 		void OnScaleMessage(ScaleRequestPtr message);

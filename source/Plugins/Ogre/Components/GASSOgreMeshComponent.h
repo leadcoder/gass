@@ -46,7 +46,7 @@ namespace GASS
 	{
 	public:
 		OgreMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const;
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
 	};
 	typedef GASS_SHARED_PTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
 
@@ -55,22 +55,22 @@ namespace GASS
 	public:
 		typedef	std::map<std::string, std::vector<std::string> > MeshMaterialCache;
 		OgreMeshComponent (void);
-		~OgreMeshComponent (void);
+		~OgreMeshComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		//IGeometryComponent
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere()const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox()const override;
+		Sphere GetBoundingSphere()const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		//IResourceComponent
-		ResourceHandle GetResource() const {return m_MeshResource;}
+		ResourceHandle GetResource() const override {return m_MeshResource;}
 
 		//IMeshComponent
-		virtual GraphicsMesh GetMeshData() const;
+		GraphicsMesh GetMeshData() const override;
 
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 
@@ -93,7 +93,7 @@ namespace GASS
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnDelete();
+		void OnDelete() override;
 		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void OnTexCoordMessage(TextureCoordinateRequestPtr message);
 		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
