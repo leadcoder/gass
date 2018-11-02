@@ -125,7 +125,7 @@ namespace GASS
 			}
 			if (check_ancestor && GetAncestorRTTI())
 				return GetAncestorRTTI()->GetPropertyByName(property_name, check_ancestor);
-			return NULL;
+			return nullptr;
 		}
 
 		/**
@@ -162,7 +162,7 @@ namespace GASS
 
 		bool HasMetaData() const
 		{
-			return (m_MetaData != NULL);
+			return (m_MetaData != nullptr);
 			
 		}
 

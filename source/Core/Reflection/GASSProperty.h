@@ -113,7 +113,7 @@ namespace GASS
 			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_Setter(setter),
-			m_SetterConst(NULL),
+			m_SetterConst(nullptr),
 			m_MetaData(meta_data)
 		{
 
@@ -125,7 +125,7 @@ namespace GASS
 			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
 			m_Getter(getter),
 			m_SetterConst(setter),
-			m_Setter(NULL),
+			m_Setter(nullptr),
 			m_MetaData(meta_data)
 		{
 
@@ -138,7 +138,7 @@ namespace GASS
 
 		bool HasMetaData() const override
 		{
-			return (m_MetaData != NULL);
+			return (m_MetaData != nullptr);
 		}
 
 		PropertyMetaDataPtr GetMetaData() const override

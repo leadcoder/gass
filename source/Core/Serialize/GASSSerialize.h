@@ -62,7 +62,7 @@ namespace GASS
 	public:
 		SerialSaver()
 		{
-			buffer=NULL; length=0; bytesUsed=0; bHasOverflowed=false;
+			buffer=nullptr; length=0; bytesUsed=0; bHasOverflowed=false;
 		}
 
 		SerialSaver(unsigned char *buf, unsigned long size)

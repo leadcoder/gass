@@ -32,18 +32,18 @@ namespace GASS
 
 	}
 
-	ComponentContainerTemplateFactory* ComponentContainerTemplateFactory::m_Instance = 0;
+	ComponentContainerTemplateFactory* ComponentContainerTemplateFactory::m_Instance = nullptr;
 	ComponentContainerTemplateFactory* ComponentContainerTemplateFactory::GetPtr(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new ComponentContainerTemplateFactory();
 		return m_Instance;
 	}
 	ComponentContainerTemplateFactory& ComponentContainerTemplateFactory::Get(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new ComponentContainerTemplateFactory();
 		return *m_Instance;
 	}

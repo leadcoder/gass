@@ -77,8 +77,8 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	int i;
 	int firstIndex = -1;
 
-	key1 = NULL;
-	key2 = NULL;
+	key1 = nullptr;
+	key2 = nullptr;
 	if(m_KeyVector.size() == 0)
 	{
 		return 0;
@@ -121,7 +121,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	}
 
 	// Fill index of the first key
-	if (firstKeyIndex != NULL)
+	if (firstKeyIndex != nullptr)
 	{
 		*firstKeyIndex = firstIndex;
 	}
@@ -198,8 +198,8 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	Key kret = Key();
 
 	// Keyframe pointers
-	const Key *k1 = NULL;
-	const Key *k2 = NULL;
+	const Key *k1 = nullptr;
+	const Key *k2 = nullptr;
 	int firstKeyIndex;
 
 	Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);

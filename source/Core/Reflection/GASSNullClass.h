@@ -41,7 +41,7 @@ namespace GASS
 	{
 	protected :
 
-		static inline RTTI* GetClassRTTI()			{ return NULL;};
+		static inline RTTI* GetClassRTTI()			{ return nullptr;};
 	};
 }
 

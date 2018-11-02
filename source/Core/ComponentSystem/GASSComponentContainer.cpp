@@ -214,7 +214,7 @@ namespace GASS
 			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
-		tinyxml2::XMLElement* this_elem = NULL;
+		tinyxml2::XMLElement* this_elem = nullptr;
 		if (obj_elem->Parent() == rootXMLDoc) //top element!
 		{
 			this_elem = obj_elem;

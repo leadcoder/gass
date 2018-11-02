@@ -11,7 +11,7 @@ namespace GASS
 		/**
 			Constructor that take float range used by this array
 		*/
-		FloatArray16(float min_value = -1000,float max_value = 6000) : Data(NULL), RangeMin(min_value), RangeMax(max_value){}
+		FloatArray16(float min_value = -1000,float max_value = 6000) : Data(nullptr), RangeMin(min_value), RangeMax(max_value){}
 		~FloatArray16() {delete[] Data;}
 
 		/**

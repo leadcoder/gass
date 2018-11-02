@@ -60,7 +60,7 @@ namespace GASS
 			m_ClassName = StringUtils::Demangle(typeid(Product).name());
 
 		}
-		BasePtr Create(const void* /*params*/ = NULL) const override
+		BasePtr Create(const void* /*params*/ = nullptr) const override
 		{
 			ProductPtr obj(new Product);
 			return GASS_STATIC_PTR_CAST<Base>(obj);
@@ -101,7 +101,7 @@ namespace GASS
 	{
 	public:
 		typedef GASS_SHARED_PTR<Base> BasePtr;
-		BasePtr Create(ObjectType type, ConstructorParams* params= NULL);
+		BasePtr Create(ObjectType type, ConstructorParams* params= nullptr);
 		bool Register(ObjectType type, CreatorBase<Base,ConstructorParams> * pCreator);
 		bool Remove(ObjectType type);
 		std::string GetClassName(const std::string &factory_name);
