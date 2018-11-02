@@ -64,7 +64,7 @@ namespace GASS
 		~Singleton()
 		{
 			assert(m_Instance);
-			m_Instance=0;
+			m_Instance=nullptr;
 		}
 		static inline T& Get()
 		{

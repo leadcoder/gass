@@ -118,7 +118,7 @@ namespace GASS
 		}
 
 		//No need to be attached to parent any more
-		GetSceneObject()->PostRequest(AttachToParentRequestPtr(new AttachToParentRequest(false)));
+		//GetSceneObject()->PostRequest(AttachToParentRequestPtr(new AttachToParentRequest(false)));
 		m_Initialized = true;
 
 		UpdatePath();
@@ -183,14 +183,16 @@ namespace GASS
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
-					child_obj->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-					child_obj->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
+					child_obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
+					//child_obj->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
+					//child_obj->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
 
 					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
 					if(tangent)
 					{
-						tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-						tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
+						//tangent->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
+						//tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
+						//tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
 					}
 				}
 			}

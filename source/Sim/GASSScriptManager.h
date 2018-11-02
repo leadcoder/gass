@@ -45,10 +45,10 @@ namespace GASS
 	{
 	public:
 		ScriptController(asIScriptModule *mod) : m_Module(mod),
-		m_UpdateFunction(NULL),
-		m_InitFunction(NULL),
-		m_FactoryFunction(NULL),
-		m_ShutdownFunction(NULL)
+		m_UpdateFunction(nullptr),
+		m_InitFunction(nullptr),
+		m_FactoryFunction(nullptr),
+		m_ShutdownFunction(nullptr)
 		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}
