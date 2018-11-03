@@ -102,7 +102,7 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+			auto* loader = dynamic_cast<SerialLoader*>(serializer);
 			if (loader)
 			{
 				loader->IO<int>(num_comp);
@@ -158,11 +158,11 @@ namespace GASS
 		else
 		{
 			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			auto* saver = dynamic_cast<SerialSaver*>(serializer);
 			if (saver)
 			{
 				saver->IO<int>(num_comp);
-				ComponentVector::iterator iter = m_ComponentVector.begin();
+				auto iter = m_ComponentVector.begin();
 				while (iter != m_ComponentVector.end())
 				{
 					ComponentPtr comp = (*iter);
@@ -392,7 +392,7 @@ namespace GASS
 	{
 		//get all names
 		std::set<std::string> names;
-		ComponentVector::const_iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		while (comp_iter != m_ComponentVector.end())
 		{
 			ComponentPtr comp = (*comp_iter);
@@ -406,7 +406,7 @@ namespace GASS
 		{
 			ComponentPtr comp = (*comp_iter);
 			const std::vector<std::string> deps = comp->GetDependencies();
-			std::vector<std::string>::const_iterator dep_iter = deps.begin();
+			auto dep_iter = deps.begin();
 			while(dep_iter != deps.end())
 			{
 				const std::string comp_name = *dep_iter;
@@ -439,7 +439,7 @@ namespace GASS
 		{
 			TAB(tc) << "Components" << std::endl;
 		}
-		ComponentVector::iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		tc++;
 		while (comp_iter != m_ComponentVector.end())
 		{

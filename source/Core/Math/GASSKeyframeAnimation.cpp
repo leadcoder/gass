@@ -202,7 +202,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	const Key *k2 = nullptr;
 	int firstKeyIndex;
 
-	Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
+	const Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
 
 	if (t == 0.0)
 	{
@@ -250,7 +250,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 			if(m_RotToPath)
 			{
 				Vec3 left,dir,up;
-				Vec3 vPoint =  m_PositionSpline.Interpolate(firstKeyIndex, t+0.01);
+				const Vec3 vPoint =  m_PositionSpline.Interpolate(firstKeyIndex, t+0.01);
 				dir = vPoint - kret.m_Pos;
 				dir.Normalize();
 				left.x = dir.z;

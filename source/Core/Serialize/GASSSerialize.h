@@ -71,7 +71,7 @@ namespace GASS
 		}
 
 		template <class T>
-		void IO(T &value)
+		void IO(const T &value)
 		{
 			if(buffer)
 			{
@@ -83,7 +83,7 @@ namespace GASS
 			}
 			else //get size
 			{
-				int type_size = sizeof(T);
+				const int type_size = sizeof(T);
 				length+=type_size;
 			}
 		}
@@ -100,10 +100,10 @@ namespace GASS
 
     //Use specialized template to catch std::string
     template <>
-    GASSCoreExport void SerialSaver::IO<std::string>(std::string &value);
+    GASSCoreExport void SerialSaver::IO<std::string>(const std::string &value);
   
     template <>
-    GASSCoreExport void SerialSaver::IO<FilePath>(FilePath &path);
+    GASSCoreExport void SerialSaver::IO<FilePath>(const FilePath &path);
 
 
 

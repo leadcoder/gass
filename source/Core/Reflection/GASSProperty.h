@@ -168,7 +168,7 @@ namespace GASS
 			if (serializer->Loading())
 			{
 				T val;
-				SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+				auto* loader = dynamic_cast<SerialLoader*>(serializer);
 				if (loader)
 				{
 					loader->IO<T>(val);
@@ -178,7 +178,7 @@ namespace GASS
 			else
 			{
 				T val = GetValue(object);
-				SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+				auto* saver = dynamic_cast<SerialSaver*>(serializer);
 				if(saver)
 					saver->IO<T>(val);
 			}

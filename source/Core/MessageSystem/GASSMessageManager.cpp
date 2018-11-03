@@ -87,7 +87,7 @@ namespace GASS
 			}*/
 			return;
 		}
-		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
+		auto msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
 
@@ -125,7 +125,7 @@ namespace GASS
 			message_type = m_MessageTypes.find(type);
 		}
 
-		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
+		auto msg_reg = message_type->second->m_MessageRegistrations.begin();
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
 			if(*(*msg_reg)->m_Callback == *callback)
@@ -158,7 +158,7 @@ namespace GASS
 			return;//Register error;
 		}
 
-		MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
+		auto msg_reg = message_type->second->m_MessageRegistrations.begin();
 
 		while(msg_reg != message_type->second->m_MessageRegistrations.end())
 		{
@@ -197,7 +197,7 @@ namespace GASS
 
 
 		//std::cout << "Messages:" << m_MessageQueue.size()<< std::endl;
-		MessageQueue::iterator iter = work_queue.begin();
+		auto iter = work_queue.begin();
 
 		//start processing messages!
 		while (iter !=  work_queue.end())
@@ -223,7 +223,7 @@ namespace GASS
 					//continue;
 				}
 
-				MessageRegList::iterator msg_reg = message_type->second->m_MessageRegistrations.begin();
+				auto msg_reg = message_type->second->m_MessageRegistrations.begin();
 				while(msg_reg != message_type->second->m_MessageRegistrations.end())
 				{
 					//Check if message listener still alive, if not, erase it
@@ -244,7 +244,7 @@ namespace GASS
 		//lock and add unprocessed messages back to queue due to delayed delivery
 		{
 			GASS_MUTEX_LOCK(*m_Mutex);
-			MessageQueue::iterator work_iter = work_queue.begin();
+			auto work_iter = work_queue.begin();
 			while (work_iter !=  work_queue.end())
 			{
 				m_MessageQueue.push_back(*work_iter);

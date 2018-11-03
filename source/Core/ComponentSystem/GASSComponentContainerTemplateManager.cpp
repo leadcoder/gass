@@ -35,7 +35,7 @@
 namespace GASS
 {
 
-	ComponentContainerTemplateManager::ComponentContainerTemplateManager() : m_AddObjectIDToName(true), m_ObjectIDPrefix("_")
+	ComponentContainerTemplateManager::ComponentContainerTemplateManager()
 	{
 		
 	}
@@ -183,14 +183,14 @@ namespace GASS
 
 	bool ComponentContainerTemplateManager::HasTemplate(const std::string &name) const
 	{
-		TemplateMap::const_iterator pos = m_TemplateMap.find(name);
+		auto pos = m_TemplateMap.find(name);
 		return (pos != m_TemplateMap.end()) ;
 	}
 
 	std::vector<std::string> ComponentContainerTemplateManager::GetTemplateNames() const
 	{
 		std::vector<std::string> templates;
-		TemplateMap::const_iterator iter = m_TemplateMap.begin();
+		auto iter = m_TemplateMap.begin();
 		while(iter != m_TemplateMap.end())
 		{
 			templates.push_back(iter->first);
@@ -211,7 +211,7 @@ namespace GASS
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ComponentContainerTemplateManager::Load");
 
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		auto *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;

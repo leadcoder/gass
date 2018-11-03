@@ -645,17 +645,17 @@ namespace GASS
 	template<class TYPE>
 	void TMat4<TYPE>::MakeTransformationRT(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)
 	{
-		TMat4<TYPE> translation_mat = CreateTranslation(translation);
-		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
+		const TMat4<TYPE> translation_mat = CreateTranslation(translation);
+		const TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
 		*this = translation_mat * rotation_mat;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::MakeTransformationSRT(const TVec3<TYPE> &scale, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translate)
 	{
-		TMat4<TYPE> scale_mat = CreateScale(scale);
-		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
-		TMat4<TYPE> translation_mat = CreateTranslation(translate);
+		const TMat4<TYPE> scale_mat = CreateScale(scale);
+		const TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
+		const TMat4<TYPE> translation_mat = CreateTranslation(translate);
 		*this = translation_mat * rotation_mat * scale_mat;
 	}
 

@@ -44,7 +44,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
 
 		GASS_LOG(LINFO) << "Start loading plugins from " << filename;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		auto *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
@@ -132,7 +132,7 @@ namespace GASS
 			file_name += ".dll";
 #endif
 		}
-		DynamicModule* module = new DynamicModule(file_name);
+		auto* module = new DynamicModule(file_name);
 		module->Load();
 		GASS_LOG(LINFO) << file_name << " loaded";
 		m_Plugins.push_back(module);
@@ -177,7 +177,7 @@ namespace GASS
 		FileUtils::SetCurrentDir(directory);
 		for (const auto & plugin : plugins)
 		{
-			DynamicModule* module = new DynamicModule(plugin);
+			auto* module = new DynamicModule(plugin);
 			module->Load();
 			GASS_LOG(LINFO) << plugin << " loaded";
 			m_Plugins.push_back(module);

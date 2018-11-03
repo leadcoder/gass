@@ -113,7 +113,7 @@ namespace GASS
 		Quaternion invp, part1, part2, preExp;
 		for(i = 0; i < num_Points; ++i)
 		{
-			Quaternion &p = m_Points[i];
+			const Quaternion &p = m_Points[i];
 			invp = p.Inverse();
 
 			if (i ==0)

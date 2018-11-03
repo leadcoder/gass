@@ -112,7 +112,7 @@ namespace GASS
 
 		IProperty * GetPropertyByName(const std::string &property_name, bool check_ancestor = true) const
 		{
-			std::list<IProperty*>::const_iterator iter = m_Properties.begin();
+			auto iter = m_Properties.begin();
 			while (iter != m_Properties.end())
 			{
 				IProperty * prop = (*iter);

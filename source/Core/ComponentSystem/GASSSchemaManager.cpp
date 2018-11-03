@@ -214,7 +214,7 @@ namespace GASS
 
 	void SchemaManager::Load(const std::string filename)
 	{
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		auto *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
@@ -244,7 +244,7 @@ namespace GASS
 
 	const SchemaObject*  SchemaManager::GetSchemaObject(const std::string &name) const
 	{
-		std::map<std::string, SchemaObject> ::const_iterator iter = m_Objects.find(name);
+		auto iter = m_Objects.find(name);
 		if (iter != m_Objects.end())
 			return &iter->second;
 		return nullptr;

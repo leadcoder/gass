@@ -39,7 +39,7 @@ namespace GASS
 				const Vec3 wp1 = wps[i];
 				const Vec3 wp2 = wps[i+1];
 				const Vec3 closest_point_on_line = LineSegment(wp1,wp2).ClosestPointOnLine(source_pos);
-				double dist = (source_pos  - closest_point_on_line).Length();
+				const double dist = (source_pos  - closest_point_on_line).Length();
 				if(dist < shortest_dist)
 				{
 					point = closest_point_on_line;

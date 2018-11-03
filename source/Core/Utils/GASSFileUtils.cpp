@@ -53,7 +53,7 @@ namespace GASS
 	std::string FileUtils::GetExtension(const std::string &file_name)
 	{
 		std::string ret;
-		std::string::size_type pos  = file_name.find_last_of(".");
+		const std::string::size_type pos  = file_name.find_last_of(".");
 
 		if (pos == file_name.npos)
 			return "";
@@ -66,7 +66,7 @@ namespace GASS
 	std::string FileUtils::RemoveExtension(const std::string &file_name)
 	{
 		std::string ret;
-		std::string::size_type pos  = file_name.find_last_of(".");
+		const std::string::size_type pos  = file_name.find_last_of(".");
 
 		if (pos == file_name.npos)
 			return "";
@@ -81,7 +81,7 @@ namespace GASS
 	std::string FileUtils::GetFilename(const std::string &path)
 	{
 		std::string ret = path;
-		std::string::size_type pos = path.find_last_of("/\\");
+		const std::string::size_type pos = path.find_last_of("/\\");
 		if(pos != std::string::npos)
 		{
 			ret = path.substr(pos+1);
@@ -92,7 +92,7 @@ namespace GASS
 	std::string FileUtils::RemoveFilename(const std::string &path)
 	{
 		std::string ret = StringUtils::Replace(path,"\\","/");
-		std::string::size_type pos = ret.find_last_of("/");
+		const std::string::size_type pos = ret.find_last_of("/");
 
 		if(pos != std::string::npos)
 		{

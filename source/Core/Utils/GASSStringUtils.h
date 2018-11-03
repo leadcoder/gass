@@ -65,7 +65,7 @@ namespace GASS
 		@param str String to work on.
 		@return String without first and last character.
 		*/
-		static std::string RemoveQuotation(char* str);
+		static std::string RemoveQuotation(const char* str);
 		/**
 		@brief Return first and last character in string (actually not checking if quotation characters).
 		@param str String to work on.

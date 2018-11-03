@@ -102,7 +102,7 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = dynamic_cast<SerialLoader*>( serializer);
+			auto* loader = dynamic_cast<SerialLoader*>( serializer);
 			if (loader)
 			{
 				loader->IO<int>(num_comp);
@@ -155,12 +155,12 @@ namespace GASS
 		else
 		{
 			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			auto* saver = dynamic_cast<SerialSaver*>(serializer);
 			if (saver)
 			{
 				saver->IO<int>(num_comp);
 
-				ComponentVector::iterator iter = m_ComponentVector.begin();
+				auto iter = m_ComponentVector.begin();
 				while (iter != m_ComponentVector.end())
 				{
 					ComponentPtr comp = (*iter);
@@ -564,7 +564,7 @@ namespace GASS
 		{
 			TAB(tc) << "Components" << std::endl;
 		}
-		ComponentVector::iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		tc++;
 		while (comp_iter != m_ComponentVector.end())
 		{

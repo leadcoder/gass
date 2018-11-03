@@ -143,8 +143,8 @@ namespace GASS
 
 	std::string DateTimeHelper::getDateTime()
 	{
-		time_t t = time(nullptr);   // get time now
-		struct tm * now = localtime(&t);
+		const time_t t = time(nullptr);   // get time now
+		const struct tm * now = localtime(&t);
 		std::stringstream ss;
 		ss << (now->tm_year + 1900) << '-'
 			<< std::setw(2) << std::setfill('0') << (now->tm_mon + 1) << '-'
@@ -157,8 +157,8 @@ namespace GASS
 
 	std::string DateTimeHelper::getTime()
 	{
-		time_t t = time(nullptr);   // get time now
-		struct tm * now = localtime(&t);
+		const time_t t = time(nullptr);   // get time now
+		const struct tm * now = localtime(&t);
 		std::stringstream ss;
 		ss  << std::setw(2) << std::setfill('0') << now->tm_hour << ":"
 			<< std::setw(2) << std::setfill('0') << now->tm_min << ":"

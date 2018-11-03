@@ -111,7 +111,7 @@ Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
         pt[3][2] = tan2.z*m_TanStrength;
         pt[3][3] = 1.0f;
 
-		Vec4 ret =  powers * m_Coeffs*pt;
+		const Vec4 ret =  powers * m_Coeffs*pt;
 		//Vec4 ret =  powers * pt;
 
 
@@ -127,7 +127,7 @@ void Spline::Clear()
     m_Tangents.clear();
 }
 
-void Spline::AddPoint(Vec3 &p)
+void Spline::AddPoint(const Vec3 &p)
 {
 	m_Points.push_back(p);
 	if (m_AutoCalc)

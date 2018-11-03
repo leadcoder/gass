@@ -150,7 +150,7 @@ namespace GASS
 		l = v1.Length();
 		if (r1 < (l + r2))
 		{
-			TVec3<TYPE> vn = v1*(1.f / l);
+			const TVec3<TYPE> vn = v1*(1.f / l);
 			r3 = (r1 + r2 + l) / 2.f;
 			p3 = p1 - vn*r1 + vn*r3;
 		}

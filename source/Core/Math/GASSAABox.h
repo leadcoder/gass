@@ -221,7 +221,7 @@ namespace GASS
 	template<class TYPE>
 	void TAABox<TYPE>::Union(TYPE x, TYPE y, TYPE z)
 	{
-		TVec3<TYPE> point(x,y,z);
+		const TVec3<TYPE> point(x,y,z);
 		Union(point);
 	}
 

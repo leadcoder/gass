@@ -75,7 +75,7 @@ namespace GASS
 			typename Property<T, PropertyType>::SetterType setter,
 			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
+			auto* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
@@ -85,7 +85,7 @@ namespace GASS
 			typename Property<T, PropertyType>::SetterTypeConst setter,
 			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			Property<T, PropertyType>* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
+			auto* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 

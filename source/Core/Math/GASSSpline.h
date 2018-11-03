@@ -34,7 +34,7 @@ namespace GASS
 		~Spline();
 		Vec3 Interpolate(unsigned int fromIndex, Float t) const;
 		void Clear();
-		void AddPoint(Vec3 &p);
+		void AddPoint(const Vec3 &p);
 		void RecalcTangents();
 		void SetAutoCalc(bool value){m_AutoCalc = value;}
 		std::vector<Vec3>& GetPoints() {return m_Points;}

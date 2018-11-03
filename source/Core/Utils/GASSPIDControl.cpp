@@ -33,8 +33,8 @@ namespace GASS
 	}
 
 	double PIDControl::update(double input, double dt) {
-		double error = desired-input;
-		double der = (error-prev)/dt;
+		const double error = desired-input;
+		const double der = (error-prev)/dt;
 		intsum += error*dt;
 		if (intsum > intcap)
 			intsum = intcap;

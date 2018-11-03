@@ -138,8 +138,8 @@ namespace GASS
 		ComponentContainerPtr _CreateComponentContainer(int &part_id, ComponentContainerTemplatePtr cc_temp) const;
 		std::string _CreateUniqueName(ComponentContainerTemplatePtr cc_temp) const;
 
-		bool m_AddObjectIDToName;
-		std::string m_ObjectIDPrefix;
+		bool m_AddObjectIDToName{true};
+		std::string m_ObjectIDPrefix{"_"};
 		std::string m_ObjectIDSuffix;
 		TemplateMap m_TemplateMap;
 	};

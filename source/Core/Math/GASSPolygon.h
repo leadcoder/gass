@@ -95,7 +95,7 @@ namespace GASS
 			size_t index = 1;
 			for (size_t i = 0; i < size + 1; i++)
 			{
-				TTriangle<TYPE> tri(
+				const TTriangle<TYPE> tri(
 					m_VertexVector[0],
 					m_VertexVector[index],
 					m_VertexVector[index + 1]);

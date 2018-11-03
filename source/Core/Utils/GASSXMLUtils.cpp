@@ -40,7 +40,7 @@ namespace GASS
 	std::string XMLUtils::ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		std::string ret;
-		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value)
 		{
 			 ret = xml_value->Attribute("value");
@@ -70,7 +70,7 @@ namespace GASS
 	bool XMLUtils::ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		bool ret;
-		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{
 			 std::string value = xml_value->Attribute("value");
@@ -93,7 +93,7 @@ namespace GASS
 	int XMLUtils::ReadInt(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		int ret;
-		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{
 			 std::string value = xml_value->Attribute("value");
@@ -109,7 +109,7 @@ namespace GASS
 	Float XMLUtils::ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		Float ret = 0;
-		tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
+		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value)
 		{
 			 xml_value->QueryDoubleAttribute("value",&ret);

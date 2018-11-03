@@ -36,7 +36,7 @@ namespace GASS
 		//only support square images
 		fclose(fp);
 		file_size = file_size / static_cast<unsigned long>((bpp / 8));
-		int im_size = static_cast<int>(sqrt(static_cast<double>(file_size)));
+		const int im_size = static_cast<int>(sqrt(static_cast<double>(file_size)));
 		return im_size;
 	}
 
@@ -59,7 +59,7 @@ namespace GASS
 			return false;
 		}
 
-		unsigned int image_size = m_Width*m_Height*m_BPP/8;
+		const unsigned int image_size = m_Width*m_Height*m_BPP/8;
 		m_Data = new unsigned char[image_size];
 
 		if(m_Data== nullptr || fread(m_Data, 1, image_size, file) != image_size)
