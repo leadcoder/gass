@@ -65,7 +65,7 @@ namespace GASS
 		}
 		else
 		{
-			return NULL;
+			return nullptr;
 		}
 	}
 }
