@@ -54,7 +54,7 @@ namespace GASS
 					const std::string group_elem_name = group_elem->Value();
 					if(group_elem_name == "ResourceLocation")
 					{
-						const FilePath path = XMLUtils::ReadStringAttribute(group_elem,"path");
+						const FilePath path = FilePath(XMLUtils::ReadStringAttribute(group_elem,"path"));
 						const std::string type = XMLUtils::ReadStringAttribute(group_elem,"type");
 						const std::string rec = XMLUtils::ReadStringAttribute(group_elem,"recursive");
 						bool recursive = false;

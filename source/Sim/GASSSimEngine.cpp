@@ -165,7 +165,7 @@ namespace GASS
 		if (xml_data_path)
 		{
 			const std::string data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "SetDataPath");
-			SetDataPath(data_path);
+			SetDataPath(FilePath(data_path));
 		}
 		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 

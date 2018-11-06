@@ -181,7 +181,7 @@ namespace GASS
 				m_Terrain = m_TerrainGroup->getTerrain(m_IndexX, m_IndexY);
 
 				if(m_HeightMapFile.Valid()) //import height map
-					ImportHeightMap(m_HeightMapFile.GetResource()->Path().GetFullPath());
+					ImportHeightMap(m_HeightMapFile.GetResource()->Path());
 
 				SetRenderQueue(m_RenderQueue);
 				//m_Terrain->setRenderQueueGroup(Ogre::RENDER_QUEUE_WORLD_GEOMETRY_1);
