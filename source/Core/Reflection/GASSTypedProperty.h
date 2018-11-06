@@ -47,7 +47,7 @@ namespace GASS
 		 Constructor.
 		 @param name Property name.
 		**/
-		TypedProperty(const std::string  &name ) : IProperty(name)	{}
+		explicit TypedProperty(const std::string  &name ) : IProperty(name)	{}
 
 		/**
 		 Returns the type of this property.

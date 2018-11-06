@@ -28,16 +28,6 @@
 
 namespace GASS
 {
-	FileUtils::FileUtils()
-	{
-
-	}
-
-	FileUtils::~FileUtils()
-	{
-
-	}
-
 	void FileUtils::SetCurrentDir(const std::string &path)
 	{
 		GASS_FILESYSTEM::path fs_path(path);

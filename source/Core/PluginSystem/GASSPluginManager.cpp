@@ -28,10 +28,6 @@
 
 namespace GASS
 {
-	PluginManager::PluginManager()
-	{
-	}
-
 	PluginManager::~PluginManager()
 	{
 		Shutdown();

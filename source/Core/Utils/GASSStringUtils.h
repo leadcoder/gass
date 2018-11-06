@@ -58,8 +58,6 @@ namespace GASS
 	class GASSCoreExport StringUtils
 	{
 	public:
-		StringUtils();
-		virtual ~StringUtils();
 		/**
 		@brief Return first and last character in string (actually not checking if quotation characters).
 		@param str String to work on.

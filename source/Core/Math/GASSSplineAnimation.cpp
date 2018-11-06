@@ -30,11 +30,6 @@ namespace GASS
 		
 	}
 
-	SplineAnimation::~SplineAnimation()
-	{
-
-	}
-
 	void SplineAnimation::AddNode(const Vec3 &pos)
 	{
 		SplineNode node;

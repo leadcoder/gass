@@ -83,9 +83,4 @@ namespace GASS
 	{
 		DYNLIB_UNLOAD(m_ModuleHandle);
 	}
-
-	DynamicModule::~DynamicModule()
-	{
-
-	}
 }

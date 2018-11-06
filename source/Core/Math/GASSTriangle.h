@@ -33,7 +33,7 @@ namespace GASS
 	{
 	public:
 		TTriangle(const TVec3<TYPE>& p1, const TVec3<TYPE>& p2, const TVec3<TYPE>& p3) : P1(p1), P2(p2), P3(p3) {}
-		TTriangle() {}
+		TTriangle() = default;
 
 
 		//public for fast access

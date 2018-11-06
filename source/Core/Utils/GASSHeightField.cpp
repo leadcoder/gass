@@ -5,12 +5,6 @@
 
 namespace GASS
 {
-	HeightField::HeightField() 
-		
-	{
-
-	}
-
 	HeightField::HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples) : m_Min(min_bound),
 		m_Max(max_bound),
 		m_NumSamplesW(width_samples),
@@ -19,11 +13,6 @@ namespace GASS
 		//maybe add some padding to min max to support new runtime height values?
 		m_Data = FloatArray16(static_cast<float>(min_bound.y), static_cast<float>(max_bound.y));
 		m_Data.Allocate(width_samples*height_samples);
-	}
-
-	HeightField::~HeightField()
-	{
-
 	}
 
 	#ifndef HM_LERP

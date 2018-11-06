@@ -42,8 +42,7 @@ namespace GASS
 	class GASSCoreExport DynamicModule
 	{
 	public:
-		DynamicModule(const std::string &module_name);
-		virtual ~DynamicModule();
+		explicit DynamicModule(const std::string &module_name);
 		void Load();
 		void Unload() const;
 		void CallFunction(const std::string &func_name, void* arg1) const;

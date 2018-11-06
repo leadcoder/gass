@@ -45,7 +45,6 @@ namespace GASS
 	{
 	public:
 		Timer();
-		virtual ~Timer();
 		/**
 			Get time in seconds
 		*/

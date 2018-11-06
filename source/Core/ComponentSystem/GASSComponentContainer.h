@@ -75,9 +75,6 @@ namespace GASS
 		typedef std::vector<ComponentContainerPtr> ComponentContainerVector;
 		typedef VectorIterator<ComponentContainerVector> ComponentContainerIterator;
 		typedef ConstVectorIterator<ComponentContainerVector> ConstComponentContainerIterator;
-
-		ComponentContainer();
-		~ComponentContainer() override;
 		
 		/**
 		Static reflection function called on start up
@@ -202,7 +199,7 @@ namespace GASS
 		std::string m_TemplateName;
 		ComponentContainerWeakPtr m_Parent;
 		//Activate/deactivate serialization
-		bool m_Serialize;
+		bool m_Serialize{true};
 	};
 	typedef GASS_SHARED_PTR<ComponentContainer> ComponentContainerPtr;
 

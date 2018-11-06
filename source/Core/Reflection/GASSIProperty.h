@@ -53,11 +53,13 @@ namespace GASS
             Constructor
             @param name Name of this property
         */
-        IProperty( const std::string  &name ) :
+		explicit IProperty( const std::string  &name ) :
 		m_Name(name)
         {
 
         }
+
+		~IProperty() = default;
 
         std::string GetName() const
         {

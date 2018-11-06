@@ -54,9 +54,9 @@ namespace GASS
 	public:
 		TAABox();
 		TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos);
-		TAABox(const TPolygon<TYPE> &poly);
-		TAABox(const std::vector< TPolygon<TYPE> > &polys);
-		virtual ~TAABox();
+		explicit TAABox(const TPolygon<TYPE> &poly);
+		explicit TAABox(const std::vector< TPolygon<TYPE> > &polys);
+		~TAABox() = default;
 		/**
 			Merge this bounding box with other
 		*/
@@ -202,12 +202,6 @@ namespace GASS
 		Max.x = Max.y = Max.z = -std::numeric_limits<TYPE>::max();
 		Min.x = Min.y = Min.z = std::numeric_limits<TYPE>::max();
 		Union(polys);
-	}
-
-	template<class TYPE>
-	TAABox<TYPE>::~TAABox()
-	{
-
 	}
 
 	template<class TYPE>

@@ -44,7 +44,6 @@ namespace GASS
 	{
 	public:
 		SplineAnimation();
-		~SplineAnimation();
 		void BuildInterpolationSplines();
 		void AddNode(const Vec3 &pos);
 		Mat4 GetTransformation(Float desired_distance, const Vec3 &up_dir);

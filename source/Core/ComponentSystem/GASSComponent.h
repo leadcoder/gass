@@ -68,8 +68,6 @@ namespace GASS
 	class GASSCoreExport Component : public Reflection<Component, BaseReflectionObject>, public IXMLSerialize, public ISerialize
 	{
 	public:
-		Component();
-		~Component() override;
 		static void RegisterReflection();
 		/**
 			Return the name of the component
@@ -153,7 +151,7 @@ namespace GASS
 			this component to destination component.
 			@dest_comp Destination component
 		*/
-		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
+		//virtual void CopyPropertiesTo(ComponentPtr dest_comp) const;
 
 		/**
 			Get component dependencies.

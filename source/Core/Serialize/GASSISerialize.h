@@ -41,7 +41,7 @@ namespace GASS
 	class GASSCoreExport ISerialize
 	{
 	public:
-		virtual ~ISerialize(){}
+		virtual ~ISerialize() = default;
 
 		/**
 			Serialize functions that provide a the serialize object as argument

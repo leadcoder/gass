@@ -31,7 +31,6 @@ namespace GASS
 	{
 	public:
 		Spline();
-		~Spline();
 		Vec3 Interpolate(unsigned int fromIndex, Float t) const;
 		void Clear();
 		void AddPoint(const Vec3 &p);

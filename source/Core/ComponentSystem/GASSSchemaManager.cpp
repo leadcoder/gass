@@ -80,16 +80,6 @@ namespace GASS
 
 	}
 
-	SchemaManager::SchemaManager()
-	{
-
-	}
-
-	SchemaManager::~SchemaManager()
-	{
-
-	}
-
 	void SchemaManager::Generate(const std::string& outpath) const
 	{
 		std::vector<std::string> names = ComponentContainerFactory::GetPtr()->GetFactoryNames();

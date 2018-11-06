@@ -90,7 +90,7 @@ private:
 
 		virtual std::unique_ptr<placeholder> clone() const = 0;
 		virtual const std::type_info& type() const = 0;
-		virtual ~placeholder() {}
+		virtual ~placeholder() = default;
 
 	};
 

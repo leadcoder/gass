@@ -28,16 +28,6 @@ namespace GASS
 
 	std::map<RTTI* ,std::vector<std::string> >  Component::m_Dependencies;
 
-	Component::Component() : m_Owner(ComponentContainerWeakPtr())
-	{
-	
-	}
-
-	Component::~Component()
-	{
-	
-	}
-
 	void Component::RegisterReflection()
 	{
 		RegisterProperty<std::string>( "Name", &Component::GetName, &Component::SetName);
@@ -108,10 +98,10 @@ namespace GASS
 		return new_comp;
 	}
 
-	void Component::CopyPropertiesTo(ComponentPtr dest_comp)
+	/*void Component::CopyPropertiesTo(ComponentPtr dest_comp) const
 	{
 		BaseReflectionObject::CopyPropertiesTo(dest_comp);
-	}
+	}*/
 
 	std::vector<std::string> Component::GetDependencies() const
 	{

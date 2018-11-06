@@ -49,8 +49,6 @@ namespace GASS
 		/** Map holding templates*/
 		typedef std::map<std::string,ComponentContainerTemplatePtr> TemplateMap;
 	public:
-		ComponentContainerTemplateManager();
-		virtual ~ComponentContainerTemplateManager();
 		/**
 			Create a new object from the template archive.
 		@remarks

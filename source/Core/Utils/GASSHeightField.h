@@ -16,7 +16,7 @@ namespace GASS
 	{
 	public:
 
-		HeightField();
+		HeightField() = default;
 
 		/**
 			Constructor that allocate height data and define max/min values for the field.
@@ -28,8 +28,7 @@ namespace GASS
 			range after construction. This is a performance reason, we don't want to do min/max check for each SetHeight call
 		*/
 		HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples);
-		virtual ~HeightField();
-
+	
 		/**
 			Get interpolated height at absolute location
 		*/

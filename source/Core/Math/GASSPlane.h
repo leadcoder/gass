@@ -40,16 +40,6 @@ namespace GASS
 	class TPlane
 	{
 	public:
-		TPlane()
-		{
-
-		}
-
-		virtual ~TPlane()
-		{
-
-		}
-
 		/**
 			Construct plane from plane point (origin) and plane normal
 		*/

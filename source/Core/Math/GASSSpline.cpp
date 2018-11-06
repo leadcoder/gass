@@ -46,11 +46,6 @@ Spline::Spline()
 	m_TanStrength = 1;
 }
 
-Spline::~Spline()
-{
-
-}
-
 Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
     {
         // Bounds check

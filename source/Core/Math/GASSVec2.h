@@ -50,7 +50,7 @@ namespace GASS
 		{
 			x = _x;y = _y;
 		}
-		inline TVec2(){}
+		inline TVec2() = default;
 		inline void Set(TYPE _x, TYPE _y)
 		{
 			x = _x; y = _y;

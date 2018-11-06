@@ -34,17 +34,6 @@
 
 namespace GASS
 {
-
-	ComponentContainerTemplateManager::ComponentContainerTemplateManager()
-	{
-		
-	}
-
-	ComponentContainerTemplateManager::~ComponentContainerTemplateManager()
-	{
-
-	}
-
 	void ComponentContainerTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
 	{
 		m_TemplateMap[obj->GetName()] = obj;

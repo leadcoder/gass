@@ -56,7 +56,7 @@ namespace GASS
 			a shared pointer with the shared_from_this() function.
 	*/
 	
-	class GASSCoreExport ComponentContainerTemplate : public Reflection<ComponentContainerTemplate, BaseReflectionObject> ,public GASS_ENABLE_SHARED_FROM_THIS<ComponentContainerTemplate>, public IXMLSerialize, public ISerialize
+	class GASSCoreExport ComponentContainerTemplate : public Reflection<ComponentContainerTemplate, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<ComponentContainerTemplate>, public IXMLSerialize, public ISerialize
 	{
 		friend class ComponentContainerTemplateManager;
 	public:
@@ -66,28 +66,26 @@ namespace GASS
 		typedef VectorIterator<ComponentContainerTemplateVector> ComponentContainerTemplateIterator;
 		typedef ConstVectorIterator<ComponentContainerTemplateVector> ConstComponentContainerTemplateIterator;
 
-		ComponentContainerTemplate();
-		~ComponentContainerTemplate() override;
 		/**
 		Static reflection function called on start up
 		*/
 		static	void RegisterReflection();
-		
+
 		/**
 		Get component container template name
 		*/
-		virtual std::string GetName() const {return m_Name;}
-		
+		virtual std::string GetName() const { return m_Name; }
+
 		/**
 		Set component container template name
 		*/
-		virtual void SetName(const std::string &name) {m_Name = name;}
-		
+		virtual void SetName(const std::string &name) { m_Name = name; }
+
 		/**
 			Add a child component container template.
 		*/
 		virtual void AddChild(ComponentContainerTemplatePtr child);
-		
+
 		/**
 			Remove child component container template.
 		*/
@@ -102,13 +100,13 @@ namespace GASS
 		/**
 			Get possible parent component container template
 		*/
-		virtual ComponentContainerTemplatePtr GetParent() const {return m_Parent.lock();}//allow null pointer}
-		
+		virtual ComponentContainerTemplatePtr GetParent() const { return m_Parent.lock(); }//allow null pointer}
+
 		/**
 			Set parent component container template
 		*/
-		virtual void SetParent(ComponentContainerTemplateWeakPtr parent){m_Parent = parent;}
-		
+		virtual void SetParent(ComponentContainerTemplateWeakPtr parent) { m_Parent = parent; }
+
 		/**
 			Add new component to this container
 		*/
@@ -128,7 +126,7 @@ namespace GASS
 		/**
 			Rebuild this template component container from existing ComponentContainer. Still experimental
 		*/
-		virtual void CreateFromComponentContainer(ComponentContainerPtr cc,ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance);
+		virtual void CreateFromComponentContainer(ComponentContainerPtr cc, ComponentContainerTemplateManagerConstPtr manager, bool keep_inheritance);
 
 		//xml serialize interface
 		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
@@ -138,26 +136,26 @@ namespace GASS
 		bool Serialize(ISerializer* serializer) override;
 
 		/**
-			Set the template name that this template should inherit from. 
+			Set the template name that this template should inherit from.
 			Empty string means no inheritance.
 			By using inheritance you will be able to make use of other template configurations,
-			which include: 
+			which include:
 			-	All properties of the template class itself
 			-	All components (including properties)
 			-	All child ComponentContainerTemplate's (recursively)
 			You can add new components and override components from the inheritance. If you have more than
 			one component of the same type (in one ComponentContainerTemplate) the override
 			feature will use the name attribute of the component to do the matching.
-			When overriding a component all attributes need to be specified once more, in other words, 
+			When overriding a component all attributes need to be specified once more, in other words,
 			you can not partially override component properties.
 		*/
-		void SetInheritance(const std::string &inheritance) {m_Inheritance = inheritance;}
-		
-		/** 
+		void SetInheritance(const std::string &inheritance) { m_Inheritance = inheritance; }
+
+		/**
 			Get name of template inheritance, see SetInheritance for more info.
 			It no inheritance is present an empty string will be returned.
 		*/
-		std::string GetInheritance()  const {return m_Inheritance;}
+		std::string GetInheritance()  const { return m_Inheritance; }
 
 		/**Set whether this container should be serialized or not, by default
 		all containers are serialized*/
@@ -168,12 +166,12 @@ namespace GASS
 		bool GetSerialize()  const;
 
 		/**
-			Create and add new component. 
-			This function will create a new component of the supplied type 
-			by using the component factory. Then it will be added to the component 
-			vector for this component container. 
+			Create and add new component.
+			This function will create a new component of the supplied type
+			by using the component factory. Then it will be added to the component
+			vector for this component container.
 			@param comp_type Component type to add
-			@return The new component 
+			@return The new component
 		*/
 		ComponentPtr AddComponent(const std::string &comp_type);
 
@@ -199,7 +197,7 @@ namespace GASS
 		ComponentContainerTemplateVector m_ComponentContainerVector;
 		std::string m_Name;
 		std::string m_Inheritance;
-		bool m_Serialize;
+		bool m_Serialize{true};
 		ComponentContainerTemplateWeakPtr m_Parent;
 	};
 	

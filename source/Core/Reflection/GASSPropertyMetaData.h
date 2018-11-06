@@ -58,7 +58,7 @@ namespace GASS
 	class IPropertyMetaData
 	{
 	public:
-		virtual ~IPropertyMetaData(){}
+		virtual ~IPropertyMetaData()= default;
 	};
 	typedef GASS_SHARED_PTR<IPropertyMetaData> PropertyMetaDataPtr;
 

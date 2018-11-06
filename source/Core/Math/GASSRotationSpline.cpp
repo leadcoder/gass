@@ -27,11 +27,7 @@ namespace GASS
 	{
 		m_AutoCalc = false;
 	}
-
-	RotationSpline::~RotationSpline()
-	{
-	}
-
+	
 	void RotationSpline::AddPoint(const Quaternion& p)
 	{
 		m_Points.push_back(p);

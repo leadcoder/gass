@@ -43,7 +43,7 @@ namespace GASS
 	class TQuaternion
 	{
 	public:
-		inline TQuaternion (
+		explicit inline TQuaternion (
 			TYPE fW = 1.0,
 			TYPE fX = 0.0, TYPE fY = 0.0, TYPE fZ = 0.0);
 		inline TQuaternion (const TQuaternion& rkQ);

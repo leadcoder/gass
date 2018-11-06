@@ -74,7 +74,6 @@ namespace GASS
 	{
 	public:
 		KeyframeAnimation();
-		~KeyframeAnimation();
 		Float GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex) const;
 		Key GetInterpolatedKeyFrame(Float timeIndex);
 		void BuildInterpolationSplines();

@@ -104,7 +104,7 @@ namespace GASS
 			Use Make* functions to initialize matrix to something usefull or call
 			some convenience constructor below
 			*/
-		TMat4() {}
+		TMat4() = default;
 
 		/**
 		Constructor that initialize all matrix elements to custom values.
@@ -126,13 +126,13 @@ namespace GASS
 		Create rotation matrix.
 		@param rot Rotation represented as a quaternion
 		*/
-		TMat4(const TQuaternion<TYPE> &rot)	{ *this = rot.GetRotationMatrix(); }
+		explicit TMat4(const TQuaternion<TYPE> &rot)	{ *this = rot.GetRotationMatrix(); }
 
 		/**
 		Convenience constructor to initialize a translation matrix by using MakeTranslation,
 		see MakeTranslation for documentation.
 		*/
-		TMat4(const TVec3<TYPE> &translation){ MakeTranslation(translation); }
+		explicit TMat4(const TVec3<TYPE> &translation){ MakeTranslation(translation); }
 
 		/**
 		* Make zero matrix, all matrix elements are 0.

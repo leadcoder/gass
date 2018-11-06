@@ -44,7 +44,7 @@ namespace GASS
 	{
 	public:
 		typedef GASS_SHARED_PTR<Base> BasePtr;
-		virtual ~CreatorBase() {}
+		virtual ~CreatorBase() = default;
 		virtual BasePtr Create(const ConstructorParams* params = NULL) const = 0;
 		virtual std::string GetClassName() const = 0;
 	};
@@ -108,7 +108,7 @@ namespace GASS
 		std::string GetFactoryName(const std::string &class_name);
 		std::vector<std::string> GetFactoryNames();
 	private:
-		typedef std::map<ObjectType, CreatorBase<Base, ConstructorParams> *> CreatorMap;
+		typedef std::map<ObjectType, CreatorBase< Base, ConstructorParams> *> CreatorMap;
 		CreatorMap m_creatorMap;
 	};
 

@@ -56,9 +56,7 @@ namespace GASS
 	{
 	public :
 		typedef GASS_SHARED_PTR<T> TPtr;
-		Reflection()
-		{
-		}
+		Reflection() = default;
 
 		// Default reflection registration function. Does nothing by default.
 		static void	RegisterReflection()

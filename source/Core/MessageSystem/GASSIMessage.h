@@ -48,7 +48,7 @@ namespace GASS
 	class GASSCoreExport IMessage
 	{
 	public:
-		virtual ~IMessage(){};
+		virtual ~IMessage() = default;
 
 
 		/**
@@ -73,7 +73,7 @@ namespace GASS
 	class IMessageListener
 	{
 	public:
-		virtual ~IMessageListener(){};
+		virtual ~IMessageListener() = default;;
 	};
 	typedef GASS_SHARED_PTR<IMessageListener> MessageListenerPtr;
 	typedef GASS_WEAK_PTR<IMessageListener> MessageListenerWeakPtr;
@@ -86,7 +86,7 @@ namespace GASS
 	class IMessageFunc
 	{
 	public:
-		virtual ~IMessageFunc(){};
+		virtual ~IMessageFunc()= default;;
 		/*
 		Fire is called by the message manager when a message is being delivered
 		*/

@@ -44,7 +44,7 @@ namespace GASS
 	class GASSCoreExport IXMLSerialize
 	{
 	public:
-		virtual ~IXMLSerialize(){}
+		virtual ~IXMLSerialize() = default;
 		virtual void LoadXML(tinyxml2::XMLElement *obj_elem) = 0;
 		virtual void SaveXML(tinyxml2::XMLElement *obj_elem) = 0;
 	};

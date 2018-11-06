@@ -23,16 +23,6 @@
 
 namespace GASS
 {
-	BaseReflectionObject::BaseReflectionObject()
-	{
-
-	}
-
-	BaseReflectionObject::~BaseReflectionObject()
-	{
-
-	}
-
 	void BaseReflectionObject::_LoadProperties(tinyxml2::XMLElement *elem)
 	{
 		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();

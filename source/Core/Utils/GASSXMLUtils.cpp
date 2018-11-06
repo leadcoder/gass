@@ -27,16 +27,6 @@
 
 namespace GASS
 {
-	XMLUtils::XMLUtils()
-	{
-
-	}
-
-	XMLUtils::~XMLUtils()
-	{
-
-	}
-
 	std::string XMLUtils::ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		std::string ret;

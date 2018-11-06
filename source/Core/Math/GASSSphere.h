@@ -48,7 +48,7 @@ namespace GASS
 	public:
 		TSphere();
 		TSphere(const TVec3<TYPE>& center,TYPE radius);
-		virtual ~TSphere();
+		~TSphere() = default;
 		TAABox<TYPE> GetAABox() const;
 		bool AABoxInside(const TAABox<TYPE> &box) const;
 		bool SphereInside(const TSphere &sphere) const;
@@ -63,24 +63,17 @@ namespace GASS
 	typedef TSphere<Float> Sphere;
 
 	template<class TYPE>
-	TSphere<TYPE>::TSphere(const TVec3<TYPE>& center, TYPE radius)
+	TSphere<TYPE>::TSphere(const TVec3<TYPE>& center, TYPE radius) : m_Radius (radius),
+		m_Pos(center)
 	{
-		m_Radius = radius;
-		m_Pos = center;
+		
 	}
 
 	template<class TYPE>
-	TSphere<TYPE>::TSphere()
+	TSphere<TYPE>::TSphere() : m_Radius(0),
+		m_Pos(0, 0, 0)
 	{
-		m_Radius = 0;
-		m_Pos.Set(0, 0, 0);
-
-	}
-
-	template<class TYPE>
-	TSphere<TYPE>::~TSphere()
-	{
-
+		
 	}
 
 	template<class TYPE>

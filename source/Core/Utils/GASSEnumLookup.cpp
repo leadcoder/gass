@@ -29,10 +29,6 @@ namespace GASS
 		m_NumConstants = 0;
 	}
 
-	EnumLookup::~EnumLookup()
-	{
-	}
-
 	void EnumLookup::Add(std::string name, int value)
 	{
 		m_ConstantMap[StringUtils::ToLower(name)] = value;

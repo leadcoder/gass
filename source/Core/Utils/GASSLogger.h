@@ -48,7 +48,7 @@ namespace GASS
 	class ILogListener
 	{
 	public:
-		virtual ~ILogListener() {}
+		virtual ~ILogListener() = default;
 		virtual void Notify(const std::string &message) = 0;
 	};
 

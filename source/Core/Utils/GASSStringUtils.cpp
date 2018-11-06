@@ -29,14 +29,6 @@
 
 namespace GASS
 {
-	StringUtils::StringUtils()
-	{
-	}
-
-	StringUtils::~StringUtils()
-	{
-	}
-
 	std::string StringUtils::RemoveQuotation(const char* str)
 	{
 		std::string ret = str;

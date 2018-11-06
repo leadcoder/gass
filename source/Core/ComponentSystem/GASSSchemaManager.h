@@ -56,8 +56,6 @@ namespace GASS
 	class GASSCoreExport SchemaManager 
 	{
 	public:
-		SchemaManager();
-		virtual ~SchemaManager();
 		void Generate(const std::string& outpath) const;
 		void LoadAllFromPath(const std::string filepath);
 		void Load(const std::string filename);

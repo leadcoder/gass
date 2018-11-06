@@ -31,7 +31,6 @@ namespace GASS
 	{
 	public:
 		RotationSpline();
-		~RotationSpline();
 		Quaternion Interpolate(unsigned int fromIndex, float t) const;
 		void Clear();
 		void AddPoint(const Quaternion &p);

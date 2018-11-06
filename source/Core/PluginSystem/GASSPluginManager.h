@@ -47,8 +47,7 @@ namespace GASS
 	class GASSCoreExport PluginManager
 	{
 	public:
-		PluginManager();
-		virtual ~PluginManager();
+		~PluginManager();
 		/**
 			Load plugin-configuration file.
 			

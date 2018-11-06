@@ -48,8 +48,6 @@ namespace GASS
 	class GASSCoreExport ComponentFactory : public Factory<Component,std::string,void>
 	{
 	public:
-		ComponentFactory();
-		virtual ~ComponentFactory();
 		static ComponentFactory* GetPtr();
 		static ComponentFactory& Get();
 	protected:

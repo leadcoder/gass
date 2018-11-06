@@ -43,7 +43,7 @@ namespace GASS
 	class GASSCoreExport ISerializer
 	{
 	public:
-		virtual ~ISerializer(){}
+		virtual ~ISerializer()= default;
 		virtual bool Loading()=0;
 	};
 

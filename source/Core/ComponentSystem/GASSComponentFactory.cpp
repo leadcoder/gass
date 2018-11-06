@@ -22,16 +22,6 @@
 
 namespace GASS
 {
-	ComponentFactory::ComponentFactory()
-	{
-
-	}
-
-	ComponentFactory::~ComponentFactory()
-	{
-
-	}
-
 	ComponentFactory* ComponentFactory::m_Instance = nullptr;
 	ComponentFactory* ComponentFactory::GetPtr()
 	{

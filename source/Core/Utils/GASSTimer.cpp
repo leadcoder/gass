@@ -71,11 +71,6 @@ namespace GASS
 #endif
 	}
 
-	Timer::~Timer()
-	{
-
-	}
-
 	// Get Time In Seconds
 	double Timer::GetTime() const
 	{

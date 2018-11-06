@@ -34,9 +34,6 @@ namespace GASS
 	class TPolygon
 	{
 	public:
-		TPolygon(){}
-		~TPolygon() {}
-		
 		/**\var vector<Vec3> m_VertexVector;
 		* \brief Contains the vertices of the polygon.
 		*/

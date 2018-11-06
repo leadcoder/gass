@@ -48,7 +48,7 @@ namespace GASS
 	public:
 		TYPE x,y,z,w;
 
-		inline TVec4(){}
+		inline TVec4()= default;
 		inline TVec4(TYPE _x, TYPE _y, TYPE _z, TYPE _w)
 		{
 			x = _x;y = _y;z = _z;w = _w;

@@ -35,13 +35,13 @@ namespace GASS
 	*/
 
 	/**
-		Class holding the message suscriber registration
+		Class holding the message subscriber registration
 	*/
 	class MessageReg
 	{
 	public:
-		MessageReg(){}
-		virtual ~MessageReg(){}
+		MessageReg()= default;
+		~MessageReg()= default;
 		MessageFuncPtr m_Callback;
 		int m_Priority;
 	};
@@ -55,10 +55,8 @@ namespace GASS
 	class MessageTypeListeners
 	{
 	public:
-		MessageTypeListeners(){}
-		virtual ~MessageTypeListeners()
-		{
-		}
+		MessageTypeListeners()= default;
+		~MessageTypeListeners() = default;
 
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;

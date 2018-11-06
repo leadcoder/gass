@@ -33,17 +33,6 @@
 
 namespace GASS
 {
-	ComponentContainer::ComponentContainer() : m_Serialize(true)
-	{
-
-	}
-
-
-	ComponentContainer::~ComponentContainer()
-	{
-
-	}
-
 	void ComponentContainer::AddChild(ComponentContainerPtr child)
 	{
 		ComponentContainerWeakPtr parent = ComponentContainerWeakPtr(shared_from_this());

@@ -124,7 +124,7 @@ namespace GASS {
         Exception(const Exception& rhs);
 
 		/// Needed for  compatibility with std::exception
-		~Exception() throw() override {}
+		~Exception() throw() override = default;
 
         /** Assignment operator.
         */
@@ -255,7 +255,7 @@ namespace GASS {
 	{
 	private:
 		/// Private constructor, no construction
-		ExceptionFactory() {}
+		ExceptionFactory() = default;
 	public:
 		static UnimplementedException create(
 			ExceptionCodeType<Exception::ERR_NOT_IMPLEMENTED> code, 

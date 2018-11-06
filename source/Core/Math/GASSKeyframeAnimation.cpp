@@ -35,10 +35,6 @@ KeyframeAnimation::KeyframeAnimation()
 	m_RotToPath = false;
 }
 
-KeyframeAnimation::~KeyframeAnimation()
-{
-}
-
 void KeyframeAnimation::AutoCalulateRotation()
 {
 	Vec3 dir,up,left;

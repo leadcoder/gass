@@ -47,7 +47,7 @@ namespace GASS
 
 	public:
 		EnumLookup();
-		virtual ~EnumLookup();
+		virtual ~EnumLookup() = default;
 		/**
             Add string to table
             @param name Name of enum
