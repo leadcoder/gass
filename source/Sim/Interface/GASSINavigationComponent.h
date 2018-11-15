@@ -21,13 +21,15 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Math/GASSVec3.h"
+
 namespace GASS
 {
 	typedef std::vector<Vec3> NavigationPath;
 	class INavigationComponent
 	{
 	public:
-		virtual ~INavigationComponent(){}
+		virtual ~INavigationComponent() {}
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
 	};
 	typedef GASS_SHARED_PTR<INavigationComponent> NavigationComponentPtr;

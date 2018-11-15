@@ -398,6 +398,13 @@ namespace GASS
 		path = m_Network.Search(from,to);
 		return true;
 	}
+	
+
+	bool RNRoadNetworkComponent::GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const
+	{
+		return m_Network.GetClosestRoadPoint(point, closest_point);
+	}
+
 
 	void RNRoadNetworkComponent::SaveXML(tinyxml2::XMLElement * elem)
 	{

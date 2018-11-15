@@ -5,7 +5,7 @@
 #include "Sim/GASS.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
-#include "Sim/Interface/GASSINavigationComponent.h"
+#include "Sim/Interface/GASSIRoadNavigationComponent.h"
 #include "RoadNetwork.h"
 
 namespace tinyxml2
@@ -19,7 +19,7 @@ namespace GASS
 
 	typedef GASS_SHARED_PTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
 
-	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,BaseSceneComponent> , public IGraphComponent, public INavigationComponent
+	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,BaseSceneComponent> , public IGraphComponent, public IRoadNavigationComponent
 	{
 	public:
 		RNRoadNetworkComponent(void);
@@ -35,8 +35,10 @@ namespace GASS
 
 		//IGraphComponent interface
 		virtual void RebuildGraph();
-		//INavigationComponent
+		//IRoadNavigationComponent
+
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
+		virtual bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const;
 	private:
 		void _CreateEditableFromNetwork();
 		void _CreateNetworkFromEditable();

@@ -43,6 +43,18 @@ namespace GASS
 		builder.CreateLanes(*this);
 	}
 
+
+	bool RoadNetwork::GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const
+	{
+		bool success = false;
+		if(RoadEdge* edge = GetCloesestEdge(point))
+		{
+			int seg_index;
+			success = Path::GetClosestPointOnPath(point, edge->Waypoints, seg_index, closest_point);
+		}
+		return success;
+	}
+
 	std::vector<Vec3> RoadNetwork::Search(const Vec3 &from_point,const Vec3 &to_point) const
 	{
 		std::vector<Vec3> path;
