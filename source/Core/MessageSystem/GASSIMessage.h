@@ -47,10 +47,9 @@ namespace GASS
 
 	class GASSCoreExport IMessage
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessage)
 	public:
-		virtual ~IMessage() = default;
-
-
+	
 		/**
 		Set delay (in seconds) from current frame time until this message should be delivered.
 		Note: This time is ignored when using the SendImmediate method of the MessageManager
@@ -72,8 +71,7 @@ namespace GASS
 
 	class IMessageListener
 	{
-	public:
-		virtual ~IMessageListener() = default;;
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessageListener)
 	};
 	typedef GASS_SHARED_PTR<IMessageListener> MessageListenerPtr;
 	typedef GASS_WEAK_PTR<IMessageListener> MessageListenerWeakPtr;
@@ -85,8 +83,9 @@ namespace GASS
 	*/
 	class IMessageFunc
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessageFunc)
 	public:
-		virtual ~IMessageFunc()= default;;
+		
 		/*
 		Fire is called by the message manager when a message is being delivered
 		*/
@@ -137,10 +136,7 @@ namespace GASS
 		{
 
 		}
-
-		~MessageFunc() override
-		{
-		}
+		
 
 		/*
 		Implements the Fire function of the IMessageFunc interface.

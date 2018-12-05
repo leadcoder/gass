@@ -46,8 +46,6 @@ namespace GASS
 	{
 
 	public:
-		EnumLookup();
-		virtual ~EnumLookup() = default;
 		/**
             Add string to table
             @param name Name of enum
@@ -70,7 +68,7 @@ namespace GASS
 		int Get(const std::string &name);
 	private:
 		typedef std::map<std::string,int> ConstantMap;
-		int m_NumConstants;
+		int m_NumConstants = 0;
 		ConstantMap m_ConstantMap;
 	};
 }

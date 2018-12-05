@@ -110,11 +110,12 @@ namespace GASS
 		Property( const std::string &name,
 			GetterType getter,
 			SetterType setter,
-			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
+			PropertyMetaDataPtr meta_data):
 			m_Getter(getter),
 			m_Setter(setter),
 			m_SetterConst(nullptr),
-			m_MetaData(meta_data)
+			m_MetaData(meta_data),
+			m_Name(name)
 		{
 
 		}
@@ -122,11 +123,11 @@ namespace GASS
 		Property( const std::string &name,
 			GetterType getter,
 			SetterTypeConst setter,
-			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
-			m_Getter(getter),
+			PropertyMetaDataPtr meta_data):	m_Getter(getter),
 			m_SetterConst(setter),
 			m_Setter(nullptr),
-			m_MetaData(meta_data)
+			m_MetaData(meta_data),
+			m_Name(name)
 		{
 
 		}
@@ -194,7 +195,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + TypedProperty<T>::m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 
@@ -221,7 +222,7 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + TypedProperty<T>::m_Name + " Property type may differ from provided any value","Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value","Property::SetValue");
 			}
 
 			SetValue(object,res);
@@ -232,11 +233,13 @@ namespace GASS
 			T res = GetValue(object);
 			value = res;
 		}
+		std::string GetName() const override { return m_Name; }
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
 		SetterTypeConst	m_SetterConst;
 		PropertyMetaDataPtr m_MetaData;
+		std::string m_Name;
 	};
 
 #define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);

@@ -42,9 +42,9 @@ namespace GASS
 	template<class Base, class ConstructorParams>
 	class CreatorBase
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(CreatorBase)
 	public:
 		typedef GASS_SHARED_PTR<Base> BasePtr;
-		virtual ~CreatorBase() = default;
 		virtual BasePtr Create(const ConstructorParams* params = NULL) const = 0;
 		virtual std::string GetClassName() const = 0;
 	};

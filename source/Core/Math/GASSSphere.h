@@ -48,7 +48,6 @@ namespace GASS
 	public:
 		TSphere();
 		TSphere(const TVec3<TYPE>& center,TYPE radius);
-		~TSphere() = default;
 		TAABox<TYPE> GetAABox() const;
 		bool AABoxInside(const TAABox<TYPE> &box) const;
 		bool SphereInside(const TSphere &sphere) const;

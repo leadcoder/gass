@@ -42,13 +42,6 @@ namespace GASS
 	{
 
 	public:
-
-		/**
-		 Constructor.
-		 @param name Property name.
-		**/
-		explicit TypedProperty(const std::string  &name ) : IProperty(name)	{}
-
 		/**
 		 Returns the type of this property.
 		 */
@@ -56,6 +49,7 @@ namespace GASS
 		{
 			return &typeid(T);
 		}
+
 
 		/**
 		 Returns the name of this property.
@@ -77,26 +71,5 @@ namespace GASS
 		*/
 		virtual void SetValue(IPropertyOwner* object, const T &value) = 0;
 	};
-
-	/*template <class T>
-	inline TypedProperty<T>::TypedProperty( const std::string &name ) :
-	IProperty(name)
-	{
-	}
-
-
-	template <class T>
-	const std::type_info* TypedProperty<T>::GetTypeID() const
-	{
-		return &typeid(T);
-	}
-
-	template <class T>
-	std::string TypedProperty<T>::GetTypeName() const
-	{
-		return StringUtils::Demangle(std::string(typeid(T).name()));
-	}*/
-
-
 }
 #endif

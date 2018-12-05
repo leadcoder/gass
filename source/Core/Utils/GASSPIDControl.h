@@ -15,7 +15,6 @@ namespace GASS
 	public:
 		PIDControl();
 		explicit PIDControl(double kp, double ki = 0.0, double kd = 0.0);
-		virtual ~PIDControl() = default;
 		void setGain(double kp, double ki = 0.0, double kd = 0.0);
 		void set(double r);
 		double update(double input, double dt);

@@ -40,10 +40,8 @@ namespace GASS
 	class MessageReg
 	{
 	public:
-		MessageReg()= default;
-		~MessageReg()= default;
 		MessageFuncPtr m_Callback;
-		int m_Priority;
+		int m_Priority = 0;
 	};
 	typedef GASS_SHARED_PTR<MessageReg> MessageRegPtr;
 	typedef std::list<MessageRegPtr> MessageRegList;
@@ -55,9 +53,6 @@ namespace GASS
 	class MessageTypeListeners
 	{
 	public:
-		MessageTypeListeners()= default;
-		~MessageTypeListeners() = default;
-
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};

@@ -25,24 +25,6 @@
 
 namespace GASS
 {
-	MessageManager::MessageManager()
-	{
-		m_Mutex = new GASS_MUTEX;
-	}
-	MessageManager::~MessageManager()
-	{
-		delete m_Mutex;
-
-		//release mem
-		/*MessageTypeListenerMap::iterator type_iter  = m_MessageTypes.begin();
-		while(type_iter != m_MessageTypes.end())
-		{
-		MessageTypeListeners* listener = type_iter->second;
-		delete listener;
-		type_iter++;
-		}*/
-	}
-
 	void MessageManager::_AddMessageToSystem(const MessageType &type)
 	{
 		MessageTypeListenerMap::iterator message_type;
@@ -59,7 +41,7 @@ namespace GASS
 	void MessageManager::PostMessage(MessagePtr  message)
 	{
 		//lock
-		GASS_MUTEX_LOCK(*m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 		m_MessageQueue.push_back(message);
 	}
 
@@ -113,7 +95,7 @@ namespace GASS
 	int MessageManager::RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority)
 	{
 		//lock
-		GASS_MUTEX_LOCK(*m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 
 		MessageTypeListenerMap::iterator message_type;
 
@@ -148,7 +130,7 @@ namespace GASS
 	void MessageManager::UnregisterForMessage(const MessageType &type, MessageFuncPtr callback)
 	{
 		//lock
-		GASS_MUTEX_LOCK(*m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 
 		MessageTypeListenerMap::iterator message_type;
 
@@ -175,7 +157,7 @@ namespace GASS
 	void MessageManager::Clear()
 	{
 		//lock
-		GASS_MUTEX_LOCK(*m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 
 		m_MessageQueue.clear();
 		//m_MessageTypes.clear();
@@ -187,7 +169,7 @@ namespace GASS
 		//lock message queue and copy to temporary queue for processing
 		MessageQueue work_queue;
 		{
-			GASS_MUTEX_LOCK(*m_Mutex);
+			GASS_MUTEX_LOCK(m_Mutex);
 			if(m_MessageQueue.size() == 0)
 				return;
 
@@ -243,7 +225,7 @@ namespace GASS
 
 		//lock and add unprocessed messages back to queue due to delayed delivery
 		{
-			GASS_MUTEX_LOCK(*m_Mutex);
+			GASS_MUTEX_LOCK(m_Mutex);
 			auto work_iter = work_queue.begin();
 			while (work_iter !=  work_queue.end())
 			{

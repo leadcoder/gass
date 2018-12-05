@@ -56,7 +56,7 @@ namespace GASS
 		TAABox(const TVec3<TYPE> &min_pos, const TVec3<TYPE> &max_pos);
 		explicit TAABox(const TPolygon<TYPE> &poly);
 		explicit TAABox(const std::vector< TPolygon<TYPE> > &polys);
-		~TAABox() = default;
+		
 		/**
 			Merge this bounding box with other
 		*/

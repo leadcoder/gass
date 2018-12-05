@@ -43,12 +43,10 @@ namespace GASS
 	class TQuaternion
 	{
 	public:
-		explicit inline TQuaternion (
-			TYPE fW = 1.0,
-			TYPE fX = 0.0, TYPE fY = 0.0, TYPE fZ = 0.0);
-		inline TQuaternion (const TQuaternion& rkQ);
+		TQuaternion () = default;
+		inline TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ);
 		inline TQuaternion(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis);
-	
+		
 		inline void FromEulerAnglesXYZ (const TVec3<TYPE> &rot);
 		inline void FromEulerAnglesYXZ (const TVec3<TYPE> &rot);
 		inline void FromRotationMatrix (const TMat4<TYPE>& kRot);
@@ -86,7 +84,7 @@ namespace GASS
 		*/
 		inline TVec3<TYPE> GetZAxis() const;
 
-		inline TQuaternion& operator= (const TQuaternion& rkQ);
+		
 		inline TQuaternion operator+ (const TQuaternion& rkQ) const;
 		inline TQuaternion operator- (const TQuaternion& rkQ) const;
 		inline TQuaternion operator* (const TQuaternion& rkQ) const;
@@ -155,7 +153,10 @@ namespace GASS
 		static const TQuaternion ZERO;
 		static const TQuaternion IDENTITY;
 
-		TYPE w, x, y, z;
+		TYPE w = 1.0;
+		TYPE x = 0.0;
+		TYPE y = 0.0;
+		TYPE z = 0.0;
 
 		static TQuaternion CreateFromEulerXYZ(const TVec3<TYPE>& euler_rot_xyz)
 		{
@@ -179,22 +180,14 @@ namespace GASS
 	template <class TYPE> const TYPE TQuaternion<TYPE>::ms_fEpsilon = static_cast<TYPE>(1e-03);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::ZERO = TQuaternion<TYPE>(0 ,0, 0, 0);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::IDENTITY = TQuaternion<TYPE>(1, 0, 0, 0);
-	//const TYPE TQuaternion::ms_fEpsilon = static_cast<TYPE>(1e-03);
-	//const TQuaternion TQuaternion::ZERO(0.0, 0.0, 0.0, 0.0);
-	//const TQuaternion TQuaternion::IDENTITY(1.0, 0.0, 0.0, 0.0);
 
 	template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ)
+	TQuaternion<TYPE>::TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ) : w(fW),
+		x(fX),
+		y(fY),
+		z(fZ)
 	{
-		w = fW;
-		x = fX;
-		y = fY;
-		z = fZ;
-	}
-
-	template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(const TQuaternion<TYPE>& rkQ) :w(rkQ.w), x(rkQ.x), y(rkQ.y), z(rkQ.z)
-	{
+		
 	}
 
 	template<class TYPE>
@@ -491,16 +484,6 @@ namespace GASS
 		TYPE fTyz = fTz*y;
 		//return TVec3<TYPE>(fTxz-fTwy, fTyz+fTwx, 1.0f-(fTxx+fTyy));
 		return TVec3<TYPE>(fTxz + fTwy, fTyz - fTwx, static_cast<TYPE>(1.0) - (fTxx + fTyy));
-	}
-
-	template<class TYPE>
-	TQuaternion<TYPE>& TQuaternion<TYPE>::operator= (const TQuaternion<TYPE>& rkQ)
-	{
-		w = rkQ.w;
-		x = rkQ.x;
-		y = rkQ.y;
-		z = rkQ.z;
-		return *this;
 	}
 
 	template<class TYPE>

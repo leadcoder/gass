@@ -32,6 +32,7 @@ namespace GASS
 
 	class IPropertyOwner
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyOwner)
 	public:
 		
 	};
@@ -48,24 +49,11 @@ namespace GASS
 	*/
 	class IProperty
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IProperty)
 	public:
-        /**
-            Constructor
-            @param name Name of this property
-        */
-		explicit IProperty( const std::string  &name ) :
-		m_Name(name)
-        {
+		virtual std::string GetName() const = 0;
 
-        }
-
-		~IProperty() = default;
-
-        std::string GetName() const
-        {
-            return m_Name;
-        }
-		virtual const std::type_info* GetTypeID() const = 0;
+        virtual const std::type_info* GetTypeID() const = 0;
 		virtual std::string GetTypeName() const = 0;
 
 		/**
@@ -118,7 +106,6 @@ namespace GASS
 		*/
 		virtual PropertyMetaDataPtr GetMetaData() const = 0;
 	protected :
-		std::string	m_Name;
 	};
 }
 

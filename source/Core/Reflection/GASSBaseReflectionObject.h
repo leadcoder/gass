@@ -54,7 +54,7 @@ namespace GASS
 	class GASSCoreExport BaseReflectionObject : public Reflection<BaseReflectionObject, NullClass>, public IPropertyOwner
 	{
 	public:
-		virtual ~BaseReflectionObject() = default;
+		//virtual ~BaseReflectionObject() = default;
 
 		/**Set property by string
 		    @param property_name Name of the property to change

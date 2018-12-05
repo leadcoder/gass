@@ -57,9 +57,6 @@ namespace GASS
 		typedef std::list<MessagePtr> MessageQueue;
 		typedef std::map<MessageType,MessageTypeListenerPtr> MessageTypeListenerMap;
 	public:
-		MessageManager();
-		virtual ~MessageManager();
-
 		/**
 			This function will put the message in the message queue
 			of the message manager. When the update function is called
@@ -111,7 +108,7 @@ namespace GASS
 		void _AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;
-		GASS_MUTEX *m_Mutex;
+		GASS_MUTEX m_Mutex;
 	};
 	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
 
