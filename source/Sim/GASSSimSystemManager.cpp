@@ -55,7 +55,7 @@ namespace GASS
 
 	void SimSystemManager::OnSimulationStepRequest(TimeStepRequestPtr message)
 	{
-		m_SystemStepper.SetUpdateSimOnRequest(true, message->GetTimeStep());
+		m_SystemStepper.OnTimeStepRequest(message->GetTimeStep());
 	}
 
 	void SimSystemManager::OnUpdate(double delta_time)
