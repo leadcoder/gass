@@ -148,9 +148,9 @@ namespace GASS
 			return m_SimGroup.GetUpdateFrequency();
 		}
 	
-		void SetUpdateSimOnRequest(bool value, double time)
+		void OnTimeStepRequest(double time)
 		{
-			m_UpdateSimOnRequest = value;
+			m_StepSimulationRequest = true;
 			m_RequestDeltaTime = time;
 		}
 

@@ -264,10 +264,7 @@ namespace GASS
 			sub_mesh_data->IndexVector.push_back(23);
 
 			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-			
 		}
-		
-		
 		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
 	}
 

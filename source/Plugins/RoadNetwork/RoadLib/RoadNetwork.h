@@ -23,6 +23,7 @@ namespace GASS
 		void GenerateLanes();
 		void ConvertNodesToWaypoint();
 		std::vector<Vec3> Search(const Vec3 &from_point,const Vec3 &to_point) const;
+		bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const;
 		//void Load(const std::string &filename);
 		//void Save(const std::string &filename);
 		void SaveXML(tinyxml2::XMLElement * elem);

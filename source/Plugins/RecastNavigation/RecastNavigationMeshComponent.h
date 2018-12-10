@@ -79,19 +79,25 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, BaseSceneComponent>, public INavigationMeshComponent //, public IShape
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, BaseSceneComponent>, public INavigationMeshComponent
 	{
 	public:
 		RecastNavigationMeshComponent();
 		~RecastNavigationMeshComponent() override;
 		static void RegisterReflection();
+
 		void OnInitialize() override;
 		void OnDelete() override;
-		//INavigationComponent
+		
+		//INavigationMeshComponent
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
-		Vec3 GetRandomPoint() const override;
-		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const override;
-		bool IsPointInside(const Vec3 &point) const override;
+		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
+		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const override;
+		bool Raycast(const PlatformType platform_type, const GASS::Vec3 &from_pos, const GASS::Vec3 &to_pos, GASS::Vec3 &hit_pos) const override { return false; }
+		
+		Vec3 GetRandomPoint() const;
+		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
+		bool IsPointInside(const Vec3 &point) const;
 
 		//Internal
 
