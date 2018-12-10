@@ -88,6 +88,26 @@ namespace GASS
 	template <>
 	bool GASSCoreExport GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
 
+
+	template <typename T>
+	struct RemoveConstRef {
+		typedef typename std::remove_const<typename std::remove_reference<T>::type>::type Type;
+	};
+	template <typename T,
+		typename GetterReturnType,
+		typename SetterArgumentType,
+		typename SetterReturnType>
+		static IProperty* CreateProperty(const std::string &name,
+			GetterReturnType(T::*getter)() const,
+			SetterReturnType(T::*setter)(SetterArgumentType),
+			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
+	{
+		typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
+		auto* property = new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+		return property;
+	}
+
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -100,39 +120,29 @@ namespace GASS
 	@param OwnerType class that has the getter and setter functions
 	@param T Property type
 	*/
-	template <class OwnerType, class T>
+	template <class OwnerType,
+			class T,
+			typename GetterReturnType,
+			typename SetterArgumentType,
+			typename SetterReturnTypeUnused>
 	class Property : public TypedProperty<T>
 	{
 	public:
-		typedef T (OwnerType::*GetterType)() const; // Getter function
-		typedef void (OwnerType::*SetterType)( T Value); // Setter function
-		typedef void (OwnerType::*SetterTypeConst)( const T &Value ); // Const setter function
+		typedef GetterReturnType(OwnerType::*GetterType)() const;
+		typedef SetterReturnTypeUnused(OwnerType::*SetterType)(SetterArgumentType);
 		Property( const std::string &name,
 			GetterType getter,
 			SetterType setter,
 			PropertyMetaDataPtr meta_data):
 			m_Getter(getter),
 			m_Setter(setter),
-			m_SetterConst(nullptr),
 			m_MetaData(meta_data),
 			m_Name(name)
 		{
 
 		}
 
-		Property( const std::string &name,
-			GetterType getter,
-			SetterTypeConst setter,
-			PropertyMetaDataPtr meta_data):	m_Getter(getter),
-			m_SetterConst(setter),
-			m_Setter(nullptr),
-			m_MetaData(meta_data),
-			m_Name(name)
-		{
-
-		}
-
-		T GetValue(const IPropertyOwner* object) const override
+		GetterReturnType GetValue(const IPropertyOwner* object) const override
 		{
 			return (((OwnerType*)object)->*m_Getter)();
 		}
@@ -154,14 +164,7 @@ namespace GASS
 
 		void SetValue(IPropertyOwner* object, const T &value ) override
 		{
-			if (m_SetterConst)
-			{
-				(((OwnerType*)object)->*m_SetterConst)( value );
-			}
-			else if (m_Setter)
-			{
-				(((OwnerType*)object)->*m_Setter)( value );
-			}
+			(((OwnerType*)object)->*m_Setter)( value );
 		}
 
 		void Serialize(IPropertyOwner* object,ISerializer* serializer) override
@@ -237,7 +240,6 @@ namespace GASS
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
-		SetterTypeConst	m_SetterConst;
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
 	};

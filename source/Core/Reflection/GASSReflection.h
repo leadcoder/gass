@@ -35,6 +35,7 @@ namespace tinyxml2
 
 namespace GASS
 {
+
     //forward declaration
 	class BaseReflectionObject;
 
@@ -64,28 +65,37 @@ namespace GASS
 
         }
 
+		
 		/** Registers a property. Takes in the property name, its getter and setter functions, and the property
 		    type as a template parameter. Should be called from within a user-defined RegisterReflection function.
 		*/
-		template <class PropertyType>
+		template <typename PropertyType,
+			typename GetterReturnType, 
+			typename SetterArgumentType, 
+			typename SetterReturnType>
 		static void RegisterProperty(const std::string &name, 
-			typename Property<T, PropertyType>::GetterType getter,
-			typename Property<T, PropertyType>::SetterType setter,
+			GetterReturnType(T::*getter)() const,
+			SetterReturnType(T::*setter)(SetterArgumentType),
 			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			auto* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
+			auto* property = new Property<T, PropertyType, GetterReturnType, SetterArgumentType, SetterReturnType>( name, getter, setter,meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		template <class PropertyType>
-		static void RegisterProperty(const std::string &name, 
-			typename Property<T, PropertyType>::GetterType getter,
-			typename Property<T, PropertyType>::SetterTypeConst setter,
-			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
+		template <
+			typename GetterReturnType,
+			typename SetterArgumentType,
+			typename SetterReturnType>
+			static void RegisterGetSetProperty(const std::string &name,
+				GetterReturnType(T::*getter)() const,
+				SetterReturnType(T::*setter)(SetterArgumentType),
+				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = new Property<T, PropertyType>( name, getter, setter,meta_data);
+			//typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
+			auto* property = CreateProperty<T, GetterReturnType, SetterArgumentType, SetterReturnType >(name, getter, setter, meta_data);//new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
 			T::GetClassRTTI()->GetProperties()->push_back(property);
 		}
+		
 
 		static inline RTTI* GetClassRTTI()
 		{
