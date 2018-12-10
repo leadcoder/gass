@@ -89,25 +89,6 @@ namespace GASS
 	bool GASSCoreExport GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
 
 
-	template <typename T>
-	struct RemoveConstRef {
-		typedef typename std::remove_const<typename std::remove_reference<T>::type>::type Type;
-	};
-	template <typename T,
-		typename GetterReturnType,
-		typename SetterArgumentType,
-		typename SetterReturnType>
-		static IProperty* CreateProperty(const std::string &name,
-			GetterReturnType(T::*getter)() const,
-			SetterReturnType(T::*setter)(SetterArgumentType),
-			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
-	{
-		typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
-		auto* property = new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
-		return property;
-	}
-
-
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -243,6 +224,25 @@ namespace GASS
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
 	};
+
+	template <typename T>
+	struct RemoveConstRef {
+		typedef typename std::remove_const<typename std::remove_reference<T>::type>::type Type;
+	};
+	template <typename T,
+		typename GetterReturnType,
+		typename SetterArgumentType,
+		typename SetterReturnType>
+		static IProperty* CreateProperty(const std::string &name,
+			GetterReturnType(T::*getter)() const,
+			SetterReturnType(T::*setter)(SetterArgumentType),
+			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
+	{
+		typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
+		auto* property = new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+		return property;
+	}
+
 
 #define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
 #define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
