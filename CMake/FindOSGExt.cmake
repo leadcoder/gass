@@ -40,7 +40,7 @@ macro(add_bin_dbg _BIN_NAME)
     )
 	set(_VAR_NAME OSG_${_BIN_NAME}_BIN_DBG)
 	find_file(${_VAR_NAME} NAMES ${PARSED_ARGS_NAMES} HINTS ${OSG_BINARY_DIR})
-	set(OSG_BINARIES_REL ${OSG_BINARIES_REL} ${${_VAR_NAME}})
+	set(OSG_BINARIES_DBG ${OSG_BINARIES_DBG} ${${_VAR_NAME}})
 endmacro()
 
 
