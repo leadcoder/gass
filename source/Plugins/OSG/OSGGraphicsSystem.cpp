@@ -310,7 +310,7 @@ namespace GASS
 			text = text + m_DebugVec[i]+ "\n";
 		}
 		m_DebugTextBox->setText(text);
-		m_Viewer->frame(delta_time);
+		m_Viewer->frame(SimEngine::Get().GetSimulationTime());
 		m_DebugVec.clear();
 		//m_DebugTextBox->setText("");
 		//update listeners
