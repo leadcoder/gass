@@ -115,7 +115,7 @@ namespace GASS
 		bool ClosestPoint(const TVec3<TYPE>  &p, TVec3<TYPE>  &closest, TYPE radius) const
 		{
 			// find how far away the plane is from point p along the planes normal
-			TPlane<TYPE> plane = GetPlane();
+			const TPlane<TYPE> plane = GetPlane();
 			const TYPE distToPlaneIntersection = plane.RayIsect(TRay<TYPE>(p, -plane.m_Normal));
 			if ((distToPlaneIntersection == -1) || (distToPlaneIntersection > radius)) 
 				return false;

@@ -257,7 +257,6 @@ namespace GASS
 	template<class TYPE>
 	void TAABox<TYPE>::Union(const TPolygon<TYPE> &poly)
 	{
-		TAABox<TYPE> ret;
 		for (size_t i = 0; i < poly.m_VertexVector.size(); i++)
 		{
 			Union(poly.m_VertexVector[i]);

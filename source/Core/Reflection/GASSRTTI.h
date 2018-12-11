@@ -70,7 +70,7 @@ namespace GASS
 		/**
 		Check if same RTTI, return true if same
 		*/
-		bool IsTypeOf( RTTI *rtti) const
+		bool IsTypeOf(const RTTI *rtti) const
 		{
 			return this == rtti;
 		}

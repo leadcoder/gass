@@ -234,7 +234,7 @@ namespace GASS
 
 	const SchemaObject*  SchemaManager::GetSchemaObject(const std::string &name) const
 	{
-		auto iter = m_Objects.find(name);
+		const auto iter = m_Objects.find(name);
 		if (iter != m_Objects.end())
 			return &iter->second;
 		return nullptr;

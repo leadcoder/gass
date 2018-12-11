@@ -172,7 +172,7 @@ namespace GASS
 
 	bool ComponentContainerTemplateManager::HasTemplate(const std::string &name) const
 	{
-		auto pos = m_TemplateMap.find(name);
+		const auto pos = m_TemplateMap.find(name);
 		return (pos != m_TemplateMap.end()) ;
 	}
 

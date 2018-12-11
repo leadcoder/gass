@@ -135,7 +135,7 @@ namespace GASS
 		const double length_2d = ray_2d.Length();
 
 		//get pixel spacing, assume square pixels
-		double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
+		const double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
 
 		double stepsize = 1.0;
 

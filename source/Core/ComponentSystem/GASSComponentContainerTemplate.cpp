@@ -144,7 +144,7 @@ namespace GASS
 		}
 		else
 		{
-			int num_comp = static_cast<int>(m_ComponentVector.size());
+			const int num_comp = static_cast<int>(m_ComponentVector.size());
 			auto* saver = dynamic_cast<SerialSaver*>(serializer);
 			if (saver)
 			{
@@ -164,7 +164,7 @@ namespace GASS
 					++iter;
 				}
 
-				int num_children = static_cast<int>(m_ComponentContainerVector.size());
+				const int num_children = static_cast<int>(m_ComponentContainerVector.size());
 				saver->IO<int>(num_children);
 
 				ComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
