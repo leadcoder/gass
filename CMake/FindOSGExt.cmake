@@ -121,6 +121,10 @@ if (WIN32)
 	add_bin_rel(TIFF NAMES libtiff.dll tiff.dll)
 	add_bin_dbg(TIFF NAMES libtiff.dll tiff.dll)
 	
+	if(${MSVC_VERSION} GREATER 1900) #MSVC 2017
+		add_bin_rel(CARES NAMES cares.dll)
+		add_bin_dbg(CARES NAMES caresd.dll)
+	endif()
 	# Different names depending on VS version
 	if(${MSVC_VERSION} EQUAL 1800) #MSVC 2013
    		set(OSG_PLUGIN_DAE "dae")
