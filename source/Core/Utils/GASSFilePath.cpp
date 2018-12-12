@@ -22,9 +22,9 @@
 #include "GASSLogger.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
-#include <stdarg.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdarg>
+#include <cstdlib>
+#include <cassert>
 
 namespace GASS
 {
@@ -42,7 +42,7 @@ namespace GASS
 	void FilePath::_FixPath(std::string &path) const
 	{
 		//check if path start with \\\\, windows network path
-		std::string::size_type  pos = path.find("\\\\");
+		const std::string::size_type  pos = path.find("\\\\");
 		if(pos != std::string::npos && pos == 0)
 		{
 			path = StringUtils::Replace(path.substr(pos+2,path.length()), "\\", "/");
@@ -53,7 +53,7 @@ namespace GASS
 		{
 			path = StringUtils::Replace(path, "\\", "/");
 
-			std::string::size_type pos2 = path.find("//");
+			const std::string::size_type pos2 = path.find("//");
 			if (pos2 != std::string::npos)
 			{
 				if (pos2 == 0)
@@ -102,12 +102,12 @@ namespace GASS
 	std::string FilePath::_ExpandEnvVariables(const std::string &inStr) const
 	{
 		std::string curStr = inStr;
-		std::string::size_type occurIndex1 = curStr.find("%");
+		const std::string::size_type occurIndex1 = curStr.find("%");
 		std::string varName = "";
 		std::string replaceStr = "";
 		if ( occurIndex1 != std::string::npos )
 		{
-			std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
+			const std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
 			if (endVarIndex == std::string::npos)
 			{
 				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << "\nOnly one percent sign in string";
@@ -119,7 +119,7 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex1, endVarIndex-occurIndex1+1);
 				if (varName.length() > 0)
 				{
-					char* temp_str = getenv(varName.c_str());
+					const char* temp_str = getenv(varName.c_str());
 
 					if (temp_str)
 					{
@@ -134,11 +134,11 @@ namespace GASS
 			}
 
 		}
-		std::string::size_type occurIndex2 = curStr.find("$");
+		const std::string::size_type occurIndex2 = curStr.find("$");
 		if (occurIndex2 != std::string::npos )
 		{
-			std::string::size_type startVarIndex = curStr.find("(");
-			std::string::size_type endVarIndex = curStr.find(")");
+			const std::string::size_type startVarIndex = curStr.find("(");
+			const std::string::size_type endVarIndex = curStr.find(")");
 			if (startVarIndex == std::string::npos || endVarIndex == std::string::npos)
 			{
 				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << " Missing start or end parenthesis";
@@ -150,7 +150,7 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex2, endVarIndex-occurIndex2+1);
 				if (varName.length() > 0)
 				{
-					char* temp_str = getenv(varName.c_str());
+					const char* temp_str = getenv(varName.c_str());
 					if (temp_str)
 					{
 						curStr.replace( occurIndex2, replaceStr.length(), std::string(temp_str) );
@@ -168,7 +168,7 @@ namespace GASS
 	std::string FilePath::GetPathNoExtension() const
 	{
 		std::string ret;
-		std::string::size_type pos = m_ExpandedPath.find_last_of(".");
+		const std::string::size_type pos = m_ExpandedPath.find_last_of(".");
 		ret = m_ExpandedPath.substr(0,pos);
 		return ret;
 	}
@@ -205,7 +205,7 @@ namespace GASS
 	std::string FilePath::GetLastFolder() const
 	{
 		std::string ret = m_ExpandedPath;
-		std::string::size_type  pos = ret.find_last_of("/", ret.size());
+		const std::string::size_type  pos = ret.find_last_of("/", ret.size());
 		if (pos != std::string::npos)
 		{
 			ret = ret.substr(0, pos);
@@ -218,7 +218,7 @@ namespace GASS
 	std::string FilePath::GetPathNoFile() const
 	{
 		std::string ret = m_ExpandedPath;
-		std::string::size_type  pos = ret.find_last_of("/",ret.size());
+		const std::string::size_type  pos = ret.find_last_of("/",ret.size());
 		if(pos != std::string::npos)
 		{
 			ret = ret.substr(0,pos+1);
@@ -276,9 +276,9 @@ namespace GASS
 						const std::string exstension = GASS_TO_GENERIC_STRING(iter->path().extension());
 
 						bool find_ext = false;
-						for(size_t i = 0; i < extenstion_filters.size(); i++)
+						for(const auto & extenstion_filter : extenstion_filters)
 						{
-							if(StringUtils::ToLower(exstension) == extenstion_filters[i])
+							if(StringUtils::ToLower(exstension) == extenstion_filter)
 							{
 								find_ext = true;
 								break;

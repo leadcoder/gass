@@ -32,18 +32,18 @@ namespace GASS
 
 	}
 
-	SystemFactory* SystemFactory::m_Instance = 0;
+	SystemFactory* SystemFactory::m_Instance = nullptr;
 	SystemFactory* SystemFactory::GetPtr(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new SystemFactory();
 		return m_Instance;
 	}
 	SystemFactory& SystemFactory::Get(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new SystemFactory();
 		return *m_Instance;
 	}

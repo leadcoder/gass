@@ -23,8 +23,8 @@
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
 #include <iostream>
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include <iomanip>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
@@ -50,7 +50,7 @@ namespace GASS
 		{
 			x = _x;y = _y;
 		}
-		inline TVec2(){}
+		inline TVec2() = default;
 		inline void Set(TYPE _x, TYPE _y)
 		{
 			x = _x; y = _y;

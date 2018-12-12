@@ -282,6 +282,6 @@ namespace GASS
 		}
 
 		//reset!
-		m_SteerInput = 0;
+		//m_SteerInput = 0;
 	}
 }

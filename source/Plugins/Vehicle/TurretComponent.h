@@ -41,11 +41,11 @@ namespace GASS
 	{
 	public:
 		TurretComponent();
-		virtual ~TurretComponent();
+		~TurretComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta_time) override;
 	private:
 		Vec3 GetDesiredAimDirection(double delta_time);
 		std::string GetController() const {return m_Controller;}

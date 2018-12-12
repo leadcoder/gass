@@ -37,11 +37,11 @@ namespace GASS
 	{
 	public:
 		CarAutopilotComponent();
-		virtual ~CarAutopilotComponent();
+		~CarAutopilotComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta) override;
 	private:
 		ADD_PROPERTY(bool,Enable);
 		ADD_PROPERTY(Float,DesiredSpeed);

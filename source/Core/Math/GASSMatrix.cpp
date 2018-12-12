@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "Core/Math/GASSMatrix.h"
 #include "Core/Math/GASSQuaternion.h"
 

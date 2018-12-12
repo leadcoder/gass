@@ -40,9 +40,8 @@ namespace GASS
 	*/
 	class GASSCoreExport ISerialize
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ISerialize)
 	public:
-		virtual ~ISerialize(){}
-
 		/**
 			Serialize functions that provide a the serialize object as argument
 			(SerialSaver or SerialLoader).

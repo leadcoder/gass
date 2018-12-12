@@ -28,11 +28,11 @@ namespace GASS
 	{
 	public:
 		OSGEarthCameraManipulatorComponent();
-		virtual ~OSGEarthCameraManipulatorComponent();
+		~OSGEarthCameraManipulatorComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_Manipulator;}
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
+		void SceneManagerTick(double delta_time) override;
 	protected:
 		void _SetPosition(const GASS::Vec3 &pos);
 		void _SetRotation(const GASS::Quaternion &rot);

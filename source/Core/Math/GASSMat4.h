@@ -104,7 +104,7 @@ namespace GASS
 			Use Make* functions to initialize matrix to something usefull or call
 			some convenience constructor below
 			*/
-		TMat4() {}
+		TMat4() = default;
 
 		/**
 		Constructor that initialize all matrix elements to custom values.
@@ -126,13 +126,13 @@ namespace GASS
 		Create rotation matrix.
 		@param rot Rotation represented as a quaternion
 		*/
-		TMat4(const TQuaternion<TYPE> &rot)	{ *this = rot.GetRotationMatrix(); }
+		explicit TMat4(const TQuaternion<TYPE> &rot)	{ *this = rot.GetRotationMatrix(); }
 
 		/**
 		Convenience constructor to initialize a translation matrix by using MakeTranslation,
 		see MakeTranslation for documentation.
 		*/
-		TMat4(const TVec3<TYPE> &translation){ MakeTranslation(translation); }
+		explicit TMat4(const TVec3<TYPE> &translation){ MakeTranslation(translation); }
 
 		/**
 		* Make zero matrix, all matrix elements are 0.
@@ -645,17 +645,17 @@ namespace GASS
 	template<class TYPE>
 	void TMat4<TYPE>::MakeTransformationRT(const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translation)
 	{
-		TMat4<TYPE> translation_mat = CreateTranslation(translation);
-		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
+		const TMat4<TYPE> translation_mat = CreateTranslation(translation);
+		const TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
 		*this = translation_mat * rotation_mat;
 	}
 
 	template<class TYPE>
 	void TMat4<TYPE>::MakeTransformationSRT(const TVec3<TYPE> &scale, const TQuaternion<TYPE> &rot, const TVec3<TYPE> &translate)
 	{
-		TMat4<TYPE> scale_mat = CreateScale(scale);
-		TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
-		TMat4<TYPE> translation_mat = CreateTranslation(translate);
+		const TMat4<TYPE> scale_mat = CreateScale(scale);
+		const TMat4<TYPE> rotation_mat = rot.GetRotationMatrix();
+		const TMat4<TYPE> translation_mat = CreateTranslation(translate);
 		*this = translation_mat * rotation_mat * scale_mat;
 	}
 
@@ -705,7 +705,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TMat4<TYPE> TMat4<TYPE>::GetInvert(void) const
+	TMat4<TYPE> TMat4<TYPE>::GetInvert() const
 	{
 		TYPE m10 = E4x4[1][0], m11 = E4x4[1][1], m12 = E4x4[1][2];
 		TYPE m20 = E4x4[2][0], m21 = E4x4[2][1], m22 = E4x4[2][2];

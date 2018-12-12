@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-KeyframeAnimation::KeyframeAnimation(void)
+KeyframeAnimation::KeyframeAnimation()
 {
 	m_SplineBuildNeeded = true;
 	m_InterpolateMode = IM_SPLINE;
@@ -33,10 +33,6 @@ KeyframeAnimation::KeyframeAnimation(void)
 	m_Length = 0;
 	m_Loop = 0;
 	m_RotToPath = false;
-}
-
-KeyframeAnimation::~KeyframeAnimation(void)
-{
 }
 
 void KeyframeAnimation::AutoCalulateRotation()
@@ -77,8 +73,8 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	int i;
 	int firstIndex = -1;
 
-	key1 = NULL;
-	key2 = NULL;
+	key1 = nullptr;
+	key2 = nullptr;
 	if(m_KeyVector.size() == 0)
 	{
 		return 0;
@@ -121,7 +117,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	}
 
 	// Fill index of the first key
-	if (firstKeyIndex != NULL)
+	if (firstKeyIndex != nullptr)
 	{
 		*firstKeyIndex = firstIndex;
 	}
@@ -198,11 +194,11 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	Key kret = Key();
 
 	// Keyframe pointers
-	const Key *k1 = NULL;
-	const Key *k2 = NULL;
+	const Key *k1 = nullptr;
+	const Key *k2 = nullptr;
 	int firstKeyIndex;
 
-	Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
+	const Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
 
 	if (t == 0.0)
 	{
@@ -250,7 +246,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 			if(m_RotToPath)
 			{
 				Vec3 left,dir,up;
-				Vec3 vPoint =  m_PositionSpline.Interpolate(firstKeyIndex, t+0.01);
+				const Vec3 vPoint =  m_PositionSpline.Interpolate(firstKeyIndex, t+0.01);
 				dir = vPoint - kret.m_Pos;
 				dir.Normalize();
 				left.x = dir.z;
@@ -280,7 +276,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 }
 
 
- void KeyframeAnimation::BuildInterpolationSplines(void)
+ void KeyframeAnimation::BuildInterpolationSplines()
     {
         // Don't calc automatically, do it on request at the end
         //mPositionSpline.setAutoCalculate(false);
@@ -292,20 +288,19 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
         m_ScaleSpline.Clear();
 
 
-        for (size_t i = 0; i < m_KeyVector.size(); i++)
+        for (auto & key : m_KeyVector)
         {
-			Key* key = &m_KeyVector[i];
-            m_PositionSpline.AddPoint(key->m_Pos);
-            m_ScaleSpline.AddPoint(key->m_Scale);
+			m_PositionSpline.AddPoint(key.m_Pos);
+            m_ScaleSpline.AddPoint(key.m_Scale);
         }
 
 		m_PositionSpline.RecalcTangents();
         m_ScaleSpline.RecalcTangents();
 
 		//AutoCalulateRotation();
-		for (size_t i = 0; i < m_KeyVector.size(); i++)
+		for (auto & key : m_KeyVector)
         {
-			m_RotationSpline.AddPoint(m_KeyVector[i].m_Rot);
+			m_RotationSpline.AddPoint(key.m_Rot);
 		}
 
 		m_RotationSpline.RecalcTangents();

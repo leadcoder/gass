@@ -41,27 +41,27 @@ namespace GASS
 		friend class OgreTerrainGroupComponent;
 	public:
 		OgreTerrainPageComponent();
-		~OgreTerrainPageComponent();
+		~OgreTerrainPageComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		virtual ResourceHandle GetTerrainResource() const;
 		//IMeshComponent interface
-		virtual GraphicsMesh GetMeshData() const;
+		GraphicsMesh GetMeshData() const override;
 
 		//IHeightmapTerrainComponent
-		virtual Float GetHeightAtWorldLocation(Float x, Float z) const;
-		virtual Float GetHeightAtSample(int x, int y) const;
-		virtual unsigned int GetNumSamplesH() const;
-		virtual unsigned int GetNumSamplesW() const;
+		Float GetHeightAtWorldLocation(Float x, Float z) const override;
+		Float GetHeightAtSample(int x, int y) const override;
+		unsigned int GetNumSamplesH() const override;
+		unsigned int GetNumSamplesW() const override;
 	
 		//IGeometryComponent
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 	protected:
 		void WaitWhileLoading();

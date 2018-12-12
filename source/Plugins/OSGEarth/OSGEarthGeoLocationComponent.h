@@ -39,37 +39,37 @@ namespace GASS
 	{
 	public:
 		OSGEarthGeoLocationComponent();
-		virtual ~OSGEarthGeoLocationComponent();
+		~OSGEarthGeoLocationComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
-		virtual void SetScale(const Vec3 &value);
-		virtual void SetPosition(const Vec3 &value);
-		virtual Vec3 GetPosition() const;
-		virtual void SetWorldPosition(const Vec3 &value);
-		virtual Vec3 GetWorldPosition() const;
+		void SetScale(const Vec3 &value) override;
+		void SetPosition(const Vec3 &value) override;
+		Vec3 GetPosition() const override;
+		void SetWorldPosition(const Vec3 &value) override;
+		Vec3 GetWorldPosition() const override;
 		
-		virtual void SetEulerRotation(const EulerRotation &value);
-		virtual EulerRotation GetEulerRotation() const;
-		virtual void SetRotation(const Quaternion &value);
-		virtual Quaternion GetRotation() const;
-		virtual void SetWorldRotation(const Quaternion &value);
-		virtual Quaternion GetWorldRotation() const;
-		virtual Vec3 GetScale() const {return m_Scale;}
+		void SetEulerRotation(const EulerRotation &value) override;
+		EulerRotation GetEulerRotation() const override;
+		void SetRotation(const Quaternion &value) override;
+		Quaternion GetRotation() const override;
+		void SetWorldRotation(const Quaternion &value) override;
+		Quaternion GetWorldRotation() const override;
+		Vec3 GetScale() const override {return m_Scale;}
 
-		void SetVisible(bool value);
-		bool GetVisible() const;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 			
 		//IOSGNode interface
-		virtual osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
+		osg::ref_ptr<osg::Node> GetNode() override {return m_TransformNode;}
 
 		//move this to private
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
-		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
-		bool GetAttachToParent() const;
+		void operator()(osg::Node* node, osg::NodeVisitor* nv) override;
+		bool GetAttachToParent() const override;
 	protected:
 		void OnPositionMessage(PositionRequestPtr message);
 		void OnRotationMessage(RotationRequestPtr  message);
@@ -80,7 +80,7 @@ namespace GASS
 		void OnAttachToParent(AttachToParentRequestPtr message);
 		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
 
-		void SetAttachToParent(bool value);
+		void SetAttachToParent(bool value) override;
 		
 		//helper
 		OSGEarthGeoLocationComponentPtr _GetParentLocation();

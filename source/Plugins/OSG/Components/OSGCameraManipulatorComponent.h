@@ -36,12 +36,12 @@ namespace GASS
 	{
 	public:
 		OSGCameraManipulatorComponent();
-		virtual ~OSGCameraManipulatorComponent();
+		~OSGCameraManipulatorComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta) override;
 		//IOSGCameraManipulator
-		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_OrbitMan;}
+		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_OrbitMan;}
 	protected:
 		void SetRotation(const Quaternion& rot);
 		void SetPosition(const Vec3& pos);

@@ -35,9 +35,9 @@ namespace GASS
 	{
 	public:
 		PhysXBaseJointComponent();
-		virtual ~PhysXBaseJointComponent();
+		~PhysXBaseJointComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		virtual physx::PxJoint* GetJoint() const  = 0;
 		//virtual void SceneManagerTick(double delta_time);
 	protected:

@@ -60,7 +60,7 @@ namespace GASS
 	{
 	public:
 		SimSystem();
-		virtual ~SimSystem();
+		~SimSystem() override;
 		static void RegisterReflection();
 		
 		virtual void OnCreate(SimSystemManagerPtr owner) {m_Owner=owner;}
@@ -72,8 +72,8 @@ namespace GASS
 		virtual void OnSystemUpdate(double delta_time);
 
 		//IXMLSerialize interface
-		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
-		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
+		void LoadXML(tinyxml2::XMLElement *xml_elem) override;
+		void SaveXML(tinyxml2::XMLElement *xml_elem) override;
 
 		SimSystemManagerPtr GetSimSystemManager() const;
 		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)

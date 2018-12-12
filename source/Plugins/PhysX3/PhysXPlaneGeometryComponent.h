@@ -30,9 +30,9 @@ namespace GASS
 	{
 	public:
 		PhysXPlaneGeometryComponent();
-		virtual ~PhysXPlaneGeometryComponent();
+		~PhysXPlaneGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		ADD_PROPERTY(std::string,Material);
 		

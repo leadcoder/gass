@@ -45,14 +45,14 @@ namespace GASS
 //		typedef std::map<std::string,NxCollisionMesh> CollisionMeshMap;
 	public:
 		PhysXPhysicsSystem();
-		virtual ~PhysXPhysicsSystem();
+		~PhysXPhysicsSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
+		void Init() override;
 		physx::PxPhysics* GetPxSDK() const {return m_PhysicsSDK;}
 		physx::PxMaterial* GetDefaultMaterial() const {return m_DefaultMaterial;}
 		physx::PxMaterial* GetMaterial(const std::string &name) const;
 		physx::PxDefaultAllocator* GetAllocator() {return &m_DefaultAllocator;}
-		virtual std::string GetSystemName() const {return "PhysXPhysicsSystem";}
+		std::string GetSystemName() const override {return "PhysXPhysicsSystem";}
 		physx::PxCooking* GetPxCooking() const {return m_Cooking;}
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* GetSurfaceTirePairs()const {return m_SurfaceTirePairs;}
 		int GetTireIDFromName(const std::string &name) const;

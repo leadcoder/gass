@@ -292,7 +292,7 @@ namespace GASS
 		else
 		{
 			
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -443,7 +443,7 @@ namespace GASS
 	ControlSetting* ControlSettingsSystem::NewRemoteControlSetting(const std::string &name)
 	{
 		ControlSetting* local = GetControlSetting(name);
-		ControlSetting* remote = new ControlSetting(name,this,NULL);
+		ControlSetting* remote = new ControlSetting(name,this, nullptr);
 		if(local)
 		{
 			remote->m_IndexToName = local->m_IndexToName;

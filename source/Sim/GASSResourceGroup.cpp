@@ -48,7 +48,7 @@ namespace GASS
 		{
 			rl->ParseLocation();
 			m_ResourceLocations.push_back(rl);
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS_MAKE_SHARED<ResourceLocationAddedEvent>(rl));
 		}
 		return rl;
 	}
@@ -59,7 +59,7 @@ namespace GASS
 		{
 			rl->ParseLocation();
 			m_ResourceLocations.push_back(rl);
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS_MAKE_SHARED<ResourceLocationAddedEvent>(rl));
 			std::vector<FilePath> folders;
 			FilePath::GetFoldersFromPath(folders, rl->GetPath(), false);
 			
@@ -99,7 +99,7 @@ namespace GASS
 		{
 			if(location == *iter)
 			{
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationRemovedEventPtr(new ResourceLocationRemovedEvent(location)));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS_MAKE_SHARED<ResourceLocationRemovedEvent>(location));
 				iter = m_ResourceLocations.erase(iter);
 
 			}
@@ -114,7 +114,7 @@ namespace GASS
 		{
 			(*iter)->ParseLocation();
 		}
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupReloadEventPtr(new ResourceGroupReloadEvent(shared_from_this())));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(GASS_MAKE_SHARED<ResourceGroupReloadEvent>(shared_from_this()));
 	}
 
 	void ResourceGroup::GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const

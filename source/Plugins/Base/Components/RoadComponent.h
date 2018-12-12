@@ -38,7 +38,7 @@ namespace GASS
 		TerrainLayerBinder(TerrainLayer type) : SingleEnumBinder<TerrainLayer,TerrainLayerBinder>(type)
 		{
 		}
-		virtual ~TerrainLayerBinder(){}
+		~TerrainLayerBinder() override{}
 		static void Register()
 		{
 			Bind("TERRAIN_LAYER_0", TL_0);
@@ -57,9 +57,9 @@ namespace GASS
 	{
 	public:
 		RoadComponent();
-		virtual ~RoadComponent();
+		~RoadComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		ADD_PROPERTY(float,CustomDitchTexturePercent)
 		ADD_PROPERTY(bool,CAP)

@@ -67,13 +67,13 @@ namespace GASS
 	{
 	public:
 		MotionComponent();
-		virtual ~MotionComponent();
+		~MotionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
-		PlatformType GetType() const { return PT_CAR; }
-		Vec3 GetSize() const { return m_PlatformSize; }
-		Float GetMaxSpeed() const { return m_MaxSpeed; }
+		void OnInitialize() override;
+		void SceneManagerTick(double delta_time) override;
+		PlatformType GetType() const override { return PT_CAR; }
+		Vec3 GetSize() const override { return m_PlatformSize; }
+		Float GetMaxSpeed() const override { return m_MaxSpeed; }
 	protected:
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(InputRelayEventPtr message);

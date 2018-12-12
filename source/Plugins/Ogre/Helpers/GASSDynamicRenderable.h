@@ -12,7 +12,7 @@ namespace GASS
 		/// Constructor
 		DynamicRenderable();
 		/// Virtual destructor
-		virtual ~DynamicRenderable();
+		~DynamicRenderable() override;
 
 		/** Initializes the dynamic renderable.
 		@remarks
@@ -26,9 +26,9 @@ namespace GASS
 			bool useIndices);
 
 		/// Implementation of Ogre::SimpleRenderable
-		virtual Ogre::Real getBoundingRadius(void) const;
+		Ogre::Real getBoundingRadius(void) const override;
 		/// Implementation of Ogre::SimpleRenderable
-		virtual Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
+		Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const override;
 
 	protected:
 		/// Maximum capacity of the currently allocated vertex buffer.

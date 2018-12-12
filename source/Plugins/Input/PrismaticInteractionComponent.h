@@ -38,9 +38,9 @@ namespace GASS
 	{
 	public:
 		PrismaticInteractionComponent();
-		virtual ~PrismaticInteractionComponent();
+		~PrismaticInteractionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		ADD_PROPERTY(std::string,InputMapping);
 		ADD_PROPERTY(Float,MaxVelocity);

@@ -33,7 +33,7 @@
 
 namespace GASS
 {
-	HeightmapComponent::HeightmapComponent(void) : m_HM(NULL),
+	HeightmapComponent::HeightmapComponent(void) : m_HM(nullptr),
 		m_Size(200,200),
 		m_Resolution(1.0),
 		m_AutoBBoxGeneration(false)

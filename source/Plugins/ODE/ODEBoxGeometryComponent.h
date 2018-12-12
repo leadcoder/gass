@@ -41,19 +41,19 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODEBoxGeometryComponent();
-		virtual ~ODEBoxGeometryComponent();
+		~ODEBoxGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
-		dGeomID CreateODEGeom();
+		dGeomID CreateODEGeom() override;
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
-		void UpdateBodyMass();
-		void SetSizeFromMesh(bool value);
+		void UpdateBodyMass() override;
+		void SetSizeFromMesh(bool value) override;
 		void OnGeometryScale(GeometryScaleRequestPtr message);
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
-		void UpdateDebug();
+		void UpdateDebug() override;
 	protected:
 		Vec3 m_Size;
 		Vec3 m_Scale;

@@ -36,14 +36,14 @@ namespace GASS
 	{
 	public:
 		PhysXVehicleComponent();
-		virtual ~PhysXVehicleComponent();
+		~PhysXVehicleComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
-		void SceneManagerTick(double delta);
-		PlatformType GetType() const {return PT_CAR;}
-		Vec3 GetSize() const;
+		void OnInitialize() override;
+		void OnDelete() override;
+		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
+		void SceneManagerTick(double delta) override;
+		PlatformType GetType() const override {return PT_CAR;}
+		Vec3 GetSize() const override;
 		ADD_PROPERTY(Float,MaxSpeed);
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);

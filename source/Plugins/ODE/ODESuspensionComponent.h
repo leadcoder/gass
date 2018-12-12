@@ -35,19 +35,19 @@ namespace GASS
 	{
 	public:
 		ODESuspensionComponent();
-		virtual ~ODESuspensionComponent();
+		~ODESuspensionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IPhysicsSuspensionComponent
-		void SetAngularSteerVelocity(float velocity);
-		void SetDriveVelocity(float value);
+		void SetAngularSteerVelocity(float velocity) override;
+		void SetDriveVelocity(float value) override;
 
-		void SetMaxSteerTorque(float value);
-		float GetMaxSteerTorque()const;
+		void SetMaxSteerTorque(float value) override;
+		float GetMaxSteerTorque()const override;
 
-		void SetMaxDriveTorque(float value);
-		float GetMaxDriveTorque()const;
+		void SetMaxDriveTorque(float value) override;
+		float GetMaxDriveTorque()const override;
 	protected:
 		void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
 		

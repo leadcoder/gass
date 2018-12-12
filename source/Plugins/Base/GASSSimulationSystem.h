@@ -31,10 +31,10 @@ namespace GASS
 	{
 	public:
 		SimulationSystem();
-		virtual ~SimulationSystem();
+		~SimulationSystem() override;
 		static void RegisterReflection();
-		virtual std::string GetSystemName() const {return "SimulationSystem";}
-		virtual void Init();
+		std::string GetSystemName() const override {return "SimulationSystem";}
+		void Init() override;
 		//virtual void Update(double delta, TaskNode2* caller);
 	protected:
 		//void OnScenarioEvent(SimEventPtr message);

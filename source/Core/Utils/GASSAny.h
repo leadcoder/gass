@@ -90,7 +90,7 @@ private:
 
 		virtual std::unique_ptr<placeholder> clone() const = 0;
 		virtual const std::type_info& type() const = 0;
-		virtual ~placeholder() {}
+		virtual ~placeholder() = default;
 
 	};
 
@@ -105,11 +105,11 @@ private:
 			: value(x)
 		{}
 
-		virtual std::unique_ptr<placeholder> clone() const override {
+		std::unique_ptr<placeholder> clone() const override {
 			return std::unique_ptr<placeholder>(new concrete<T>(value));
 		}
 
-		virtual const std::type_info& type() const override {
+		const std::type_info& type() const override {
 			return typeid(T);
 		}
 

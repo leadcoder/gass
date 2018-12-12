@@ -56,14 +56,14 @@ namespace GASS
 		};
 
 		ODECollisionGeometryComponent();
-		virtual ~ODECollisionGeometryComponent();
+		~ODECollisionGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
 		//ICollisionComponent
-		virtual void SetActive(bool value);
-		virtual bool GetActive() const;
+		void SetActive(bool value) override;
+		bool GetActive() const override;
 	protected:
 
 		static void CreateODERotationMatrix(const Mat4 &m, dReal *ode_mat);

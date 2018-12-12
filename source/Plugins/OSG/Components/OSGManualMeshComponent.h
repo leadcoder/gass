@@ -30,22 +30,22 @@ namespace GASS
 	{
 	public:
 		OSGManualMeshComponent(void);
-		~OSGManualMeshComponent(void);
+		~OSGManualMeshComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent interface
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		//IManualMeshComponent interface
-		virtual GraphicsMesh GetMeshData() const;
-		virtual void SetMeshData(const GraphicsMesh &mesh);
-		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index);
+		GraphicsMesh GetMeshData() const override;
+		void SetMeshData(const GraphicsMesh &mesh) override;
+		void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index) override;
 
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }

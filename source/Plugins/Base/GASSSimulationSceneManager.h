@@ -34,12 +34,12 @@ namespace GASS
 	{
 	public:
 		SimulationSceneManager();
-		virtual ~SimulationSceneManager();
+		~SimulationSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return false;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return false;}
 	protected:
 	};
 	typedef GASS_SHARED_PTR<SimulationSceneManager> SimulationSceneManagerPtr; 

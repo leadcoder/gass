@@ -38,9 +38,9 @@ namespace GASS
 		typedef std::map<std::string,ALuint> SourceMap;
 
 		OpenALSoundSystem();
-		virtual ~OpenALSoundSystem();
+		~OpenALSoundSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
+		void Init() override;
 
 		// OpenAL-specific functions
 		
@@ -52,7 +52,7 @@ namespace GASS
 		static void CheckAlError(const std::string &what_class);
 		//bool CheckAlError( void );
 		//bool CheckAlError( std::string pMsg );
-		std::string GetSystemName() const {return "OpenALSoundSystem";}
+		std::string GetSystemName() const override {return "OpenALSoundSystem";}
 	protected:
 		std::string ListAvailableDevices( void );
 		void OnCameraChanged(CameraChangedEventPtr message);

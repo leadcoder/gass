@@ -41,7 +41,7 @@ namespace GASS
 	class GASSCoreExport FilePath
 	{
 	public:
-		FilePath(const std::string &path,bool expand = true);
+		explicit FilePath(const std::string &path,bool expand = true);
 		FilePath();
 		/**
 		* \brief Get path with expanded environment variables.

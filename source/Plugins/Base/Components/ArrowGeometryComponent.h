@@ -34,9 +34,9 @@ namespace GASS
 	{
 	public:
 		ArrowGeometryComponent(void);
-		~ArrowGeometryComponent(void);
+		~ArrowGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		void SetTexture(const ResourceHandle &texture_name);
 		ResourceHandle GetTexture() const;
 	protected:

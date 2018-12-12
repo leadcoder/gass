@@ -45,10 +45,10 @@ namespace GASS
 	{
 	public:
 		InputHandlerComponent();
-		virtual ~InputHandlerComponent();
+		~InputHandlerComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	private:
 		void OnEnter(EnterVehicleRequestPtr message);
 		void OnExit(ExitVehicleRequestPtr message);

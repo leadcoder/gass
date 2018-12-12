@@ -37,10 +37,10 @@ namespace GASS
 	{
 	public:
 		OSGSkyboxComponent (void);
-		~OSGSkyboxComponent (void);
+		~OSGSkyboxComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}

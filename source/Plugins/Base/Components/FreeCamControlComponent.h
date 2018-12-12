@@ -62,11 +62,11 @@ namespace GASS
 	{
 	public:
 		FreeCamControlComponent();
-		virtual ~FreeCamControlComponent();
+		~FreeCamControlComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void SceneManagerTick(double delta_time);
+		 void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta_time) override;
 	protected:
 		void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(ControllSettingsMessagePtr message);

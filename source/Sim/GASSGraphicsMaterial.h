@@ -87,7 +87,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const 
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
 		{
 			GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 			std::vector<std::string> content = gfx_system->GetMaterialNames(m_ResourceGroup);

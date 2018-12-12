@@ -45,13 +45,13 @@ namespace GASS
 		friend class ODECollisionGeometryComponent;
 	public:
 		ODECollisionSceneManager();
-		virtual ~ODECollisionSceneManager();
+		~ODECollisionSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return false;}
-		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const;
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return false;}
+		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const override;
 	protected:
 		//used by collision geometry
 		ODECollisionMeshInfo CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr mesh);

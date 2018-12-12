@@ -28,7 +28,7 @@
 namespace GASS
 {
 
-	SchemaObject::SchemaObject() : m_Document(NULL), m_Object(NULL)
+	SchemaObject::SchemaObject() : m_Document(nullptr), m_Object(nullptr)
 	{
 
 	}
@@ -43,10 +43,10 @@ namespace GASS
 	{
 		tinyxml2::XMLElement *elem = m_Object->FirstChildElement("xs:complexType");
 		if (!elem)
-			return NULL;
+			return nullptr;
 		elem = elem->FirstChildElement("xs:sequence");
 		if (!elem)
-			return NULL;
+			return nullptr;
 
 		while (elem)
 		{
@@ -57,14 +57,14 @@ namespace GASS
 				{
 					tinyxml2::XMLElement *anno_elem = elem->FirstChildElement("xs:annotation");
 					if (!anno_elem)
-						return NULL;
+						return nullptr;
 					tinyxml2::XMLElement *user_elem = anno_elem->FirstChildElement(annotation_tag_name.c_str());
 					return user_elem;
 				}
 			}
 			elem = elem->NextSiblingElement();
 		}
-		return NULL;
+		return nullptr;
 
 	}
 
@@ -72,7 +72,7 @@ namespace GASS
 	{
 		tinyxml2::XMLElement *anno_elem = m_Object->FirstChildElement("xs:annotation");
 		if (!anno_elem)
-			return NULL;
+			return nullptr;
 
 		tinyxml2::XMLElement *user_elem = anno_elem->FirstChildElement(annotation_tag_name.c_str());
 		return user_elem;
@@ -80,30 +80,20 @@ namespace GASS
 
 	}
 
-	SchemaManager::SchemaManager()
-	{
-
-	}
-
-	SchemaManager::~SchemaManager(void)
-	{
-
-	}
-
 	void SchemaManager::Generate(const std::string& outpath) const
 	{
 		std::vector<std::string> names = ComponentContainerFactory::GetPtr()->GetFactoryNames();
-		for (size_t i = 0; i < names.size(); i++)
+		for (const auto & name : names)
 		{
-			ComponentContainerPtr container(ComponentContainerFactory::Get().Create(names[i]));
+			ComponentContainerPtr container(ComponentContainerFactory::Get().Create(name));
 			BaseReflectionObjectPtr bro = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
-			_Save(outpath, names[i], bro);
+			_Save(outpath, name, bro);
 		}
 
 		names = ComponentFactory::GetPtr()->GetFactoryNames();
-		for (size_t i = 0; i < names.size(); i++)
+		for (const auto & name : names)
 		{
-			ComponentPtr comp(ComponentFactory::Get().Create(names[i]));
+			ComponentPtr comp(ComponentFactory::Get().Create(name));
 			BaseReflectionObjectPtr bro = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(comp);
 			std::string class_name = bro->GetRTTI()->GetClassName();
 			if (bro)
@@ -150,10 +140,10 @@ namespace GASS
 		complex_elem->LinkEndChild(sequence_elem);
 
 		GASS::PropertyVector props = object->GetProperties();
-		for (size_t i = 0; i < props.size(); i++)
+		for (auto & property : props)
 		{
-			const std::string prop_name = props[i]->GetName();
-			_SaveProp(sequence_elem, props[i]);
+			const std::string prop_name = property->GetName();
+			_SaveProp(sequence_elem, property);
 		}
 		std::string filename = outpath + classname;
 		filename += ".xsd";
@@ -205,16 +195,16 @@ namespace GASS
 	{
 		std::vector<std::string> files;
 		FileUtils::GetFilesFromPath(files, filepath, true, true);
-		for (size_t i = 0; i < files.size(); i++)
+		for (const auto & file : files)
 		{
-			if (FileUtils::GetExtension(files[i]) == "xsd")
-				Load(files[i]);
+			if (FileUtils::GetExtension(file) == "xsd")
+				Load(file);
 		}
 	}
 
 	void SchemaManager::Load(const std::string filename)
 	{
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		auto *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
@@ -222,12 +212,12 @@ namespace GASS
 		}
 
 		tinyxml2::XMLElement *schema = xmlDoc->FirstChildElement("xs:schema");
-		if (schema == NULL)
+		if (schema == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get xs:schema tag", "SchemaManager::Load");
 
 
 		tinyxml2::XMLElement *obj_elem = schema->FirstChildElement("xs:element");
-		if (obj_elem == NULL)
+		if (obj_elem == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get xs:element tag", "SchemaManager::Load");
 
 		if (!obj_elem->Attribute("name"))
@@ -244,9 +234,9 @@ namespace GASS
 
 	const SchemaObject*  SchemaManager::GetSchemaObject(const std::string &name) const
 	{
-		std::map<std::string, SchemaObject> ::const_iterator iter = m_Objects.find(name);
+		const auto iter = m_Objects.find(name);
 		if (iter != m_Objects.end())
 			return &iter->second;
-		return NULL;
+		return nullptr;
 	}
 }

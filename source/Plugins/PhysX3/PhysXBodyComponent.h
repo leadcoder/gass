@@ -41,11 +41,11 @@ namespace GASS
 			MR_SPHERE
 		};
 		PhysXBodyComponent();
-		virtual ~PhysXBodyComponent();
+		~PhysXBodyComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta_time) override;
 		
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
@@ -53,20 +53,20 @@ namespace GASS
 		Quaternion GetRotation();
 
 		//IPhysicsBodyComponent
-		void SetVelocity(const Vec3 &vel, bool relative = false);
-		Vec3 GetVelocity(bool relative = false) const;
+		void SetVelocity(const Vec3 &vel, bool relative = false) override;
+		Vec3 GetVelocity(bool relative = false) const override;
 		void SetAngularVelocity(const Vec3 &vel, bool relative = false);
 		Vec3 GetAngularVelocity(bool relative = false) const;
-		void AddForce(const Vec3 &force_vec, bool relative = false);
-		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
-		void AddTorque(const Vec3 &torque_vec, bool relative = false);
-		float GetMass() const { return m_Mass; }
-		void SetMass(float mass);
-		void SetActive(bool value);
-		bool GetActive() const;
+		void AddForce(const Vec3 &force_vec, bool relative = false) override;
+		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false) override;
+		void AddTorque(const Vec3 &torque_vec, bool relative = false) override;
+		float GetMass() const override { return m_Mass; }
+		void SetMass(float mass) override;
+		void SetActive(bool value) override;
+		bool GetActive() const override;
 
 		//IPhysXBody
-		physx::PxRigidDynamic* GetPxRigidDynamic() const {return m_Actor;}
+		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
 		
 		void WakeUp();
 	protected:

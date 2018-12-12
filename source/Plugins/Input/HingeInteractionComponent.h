@@ -38,9 +38,9 @@ namespace GASS
 	{
 	public:
 		HingeInteractionComponent();
-		virtual ~HingeInteractionComponent();
+		~HingeInteractionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		ADD_PROPERTY(std::string,InputMapping);
 		ADD_PROPERTY(Float,MaxAngularVelocity);

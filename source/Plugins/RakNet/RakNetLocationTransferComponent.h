@@ -61,9 +61,9 @@ namespace GASS
 			Rotation(rot),
 			AngularVelocity(ang_vel),
 			TimeStamp(time_stamp){}
-		virtual ~TransformationPackage(){}
-		int GetSize() {return sizeof(TransformationPackage);}
-		void Assign(char* data)
+		~TransformationPackage() override{}
+		int GetSize() override {return sizeof(TransformationPackage);}
+		void Assign(char* data) override
 		{
 			*this = *(TransformationPackage*)data;
 		}
@@ -124,13 +124,13 @@ namespace GASS
 		
 
 		RakNetLocationTransferComponent();
-		virtual ~RakNetLocationTransferComponent();
+		~RakNetLocationTransferComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//INetworkComponent
-		virtual bool IsRemote() const;
-		virtual void SceneManagerTick(double delta);
+		bool IsRemote() const override;
+		void SceneManagerTick(double delta) override;
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
 		float GetSendFrequency() const {return m_SendFreq;}

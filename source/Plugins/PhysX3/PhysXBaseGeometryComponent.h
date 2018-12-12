@@ -67,10 +67,10 @@ namespace GASS
 	{
 	public:
 		PhysXBaseGeometryComponent();
-		virtual ~PhysXBaseGeometryComponent();
+		~PhysXBaseGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		virtual void Disable(){};
 		virtual void Enable();
 		virtual void SetScale(const Vec3 &value);

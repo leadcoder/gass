@@ -35,13 +35,13 @@ namespace GASS
 	{
 	public:
 		SphereGeometryComponent(void);
-		~SphereGeometryComponent(void);
+		~SphereGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 
-		virtual bool IsPointInside(const Vec3 &point) const;
-		virtual Vec3 GetRandomPoint() const;
+		bool IsPointInside(const Vec3 &point) const override;
+		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
 	protected:
 		ADD_PROPERTY(bool, Wireframe);

@@ -57,20 +57,20 @@ namespace GASS
 		friend class OgreGraphicsSceneManager;
 	public:
 		OgreGraphicsSystem();
-		virtual ~OgreGraphicsSystem();
+		~OgreGraphicsSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
-		virtual std::string GetSystemName() const {return "OgreGraphicsSystem";}
-		virtual void OnSystemUpdate(double time);
+		void Init() override;
+		std::string GetSystemName() const override {return "OgreGraphicsSystem";}
+		void OnSystemUpdate(double time) override;
 		
 		//IGraphicsSystem
-		virtual RenderWindowPtr GetMainRenderWindow() const;
-		virtual RenderWindowVector GetRenderWindows() const;
-		virtual void PrintDebugText(const std::string &message);
-		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0);
-		virtual std::vector<std::string> GetMaterialNames(std::string resource_group) const;
-		virtual void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "");
-		virtual bool HasMaterial(const std::string &mat_name) const;
+		RenderWindowPtr GetMainRenderWindow() const override;
+		RenderWindowVector GetRenderWindows() const override;
+		void PrintDebugText(const std::string &message) override;
+		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_window_handle = 0) override;
+		std::vector<std::string> GetMaterialNames(std::string resource_group) const override;
+		void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "") override;
+		bool HasMaterial(const std::string &mat_name) const override;
 		virtual void RemoveMaterial(const std::string &mat_name);
 		virtual GraphicsMaterial GetMaterial(const std::string &mat_name);
 	public: //ogre specific

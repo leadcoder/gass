@@ -38,10 +38,10 @@ namespace GASS
 	{
 	public:
 		VelocityToSoundComponent();
-		virtual ~VelocityToSoundComponent();
+		~VelocityToSoundComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta_time) override;
 	private:
 		ADD_PROPERTY(Vec2,MinMaxVolume)
 		ADD_PROPERTY(Vec2,MinMaxPitch)

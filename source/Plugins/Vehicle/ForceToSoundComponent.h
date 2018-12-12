@@ -38,10 +38,10 @@ namespace GASS
 	{
 	public:
 		ForceToSoundComponent();
-		virtual ~ForceToSoundComponent();
+		~ForceToSoundComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void SceneManagerTick(double delta_time);
+		void OnInitialize() override;
+		void SceneManagerTick(double delta_time) override;
 	private:
 		ADD_PROPERTY(std::vector<Vec2>,ForceToPitch)
 		ADD_PROPERTY(Float,ForceLimit)

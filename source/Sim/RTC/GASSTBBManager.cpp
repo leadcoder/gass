@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	TBBManager::TBBManager() : m_Scheduler(NULL)
+	TBBManager::TBBManager() : m_Scheduler(nullptr)
 	{
 
 	}

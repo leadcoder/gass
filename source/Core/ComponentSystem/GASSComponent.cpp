@@ -28,16 +28,6 @@ namespace GASS
 
 	std::map<RTTI* ,std::vector<std::string> >  Component::m_Dependencies;
 
-	Component::Component(void) : m_Owner(ComponentContainerWeakPtr())
-	{
-	
-	}
-
-	Component::~Component(void)
-	{
-	
-	}
-
 	void Component::RegisterReflection()
 	{
 		RegisterProperty<std::string>( "Name", &Component::GetName, &Component::SetName);
@@ -71,7 +61,7 @@ namespace GASS
 		}
 		else
 		{
-			SerialSaver* saver = static_cast<SerialSaver*>(serializer);
+			auto* saver = static_cast<SerialSaver*>(serializer);
 			std::string comp_type = GetRTTI()->GetClassName();
 			saver->IO<std::string>(comp_type);
 			if(!BaseReflectionObject::_SerializeProperties(serializer))
@@ -108,10 +98,10 @@ namespace GASS
 		return new_comp;
 	}
 
-	void Component::CopyPropertiesTo(ComponentPtr dest_comp)
+	/*void Component::CopyPropertiesTo(ComponentPtr dest_comp) const
 	{
 		BaseReflectionObject::CopyPropertiesTo(dest_comp);
-	}
+	}*/
 
 	std::vector<std::string> Component::GetDependencies() const
 	{

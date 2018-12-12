@@ -44,8 +44,6 @@ namespace GASS
 	class GASSCoreExport XMLUtils
 	{
 	public:
-		XMLUtils();
-		virtual ~XMLUtils();
 		static std::string ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag);
 		static bool ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag);
 		static Float ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag);

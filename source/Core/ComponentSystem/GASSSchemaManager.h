@@ -40,6 +40,11 @@ namespace GASS
 	public:
 		SchemaObject();
 		virtual ~SchemaObject();
+		SchemaObject(const SchemaObject&) = default;
+		SchemaObject& operator=(const SchemaObject&) = default;
+		SchemaObject(SchemaObject&&) = delete;
+		SchemaObject& operator=(SchemaObject&&) = delete;
+
 		tinyxml2::XMLElement* GetObjectAnnotation(const std::string &annotation_tag_name) const;
 		tinyxml2::XMLElement* GetPropertyAnnotation(const std::string &prop_name,const std::string &annotation_tag_name) const;
 		tinyxml2::XMLDocument* m_Document;
@@ -56,8 +61,6 @@ namespace GASS
 	class GASSCoreExport SchemaManager 
 	{
 	public:
-		SchemaManager();
-		virtual ~SchemaManager();
 		void Generate(const std::string& outpath) const;
 		void LoadAllFromPath(const std::string filepath);
 		void Load(const std::string filename);

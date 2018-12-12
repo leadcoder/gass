@@ -34,9 +34,9 @@ namespace GASS
 	{
 	public:
 		PhysicsReportProxyComponent();
-		virtual ~PhysicsReportProxyComponent();
+		~PhysicsReportProxyComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		ADD_PROPERTY(SceneObjectRef,TargetObject);
 		void OnHingeJointReport(PhysicsHingeJointReportEventPtr message);

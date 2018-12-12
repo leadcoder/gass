@@ -73,11 +73,10 @@ namespace GASS
 	class GASSCoreExport KeyframeAnimation
 	{
 	public:
-		KeyframeAnimation(void);
-		~KeyframeAnimation(void);
+		KeyframeAnimation();
 		Float GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex) const;
 		Key GetInterpolatedKeyFrame(Float timeIndex);
-		void BuildInterpolationSplines(void);
+		void BuildInterpolationSplines();
 		void AutoCalulateRotation() ;
 		Key GetBoneKeyFrame(Float weight,int index0, int index1) const;
 	//public for fast access

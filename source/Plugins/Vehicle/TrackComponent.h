@@ -39,9 +39,9 @@ namespace GASS
 	{
 	public:
 		TrackComponent();
-		virtual ~TrackComponent();
+		~TrackComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		void OnDriveWheelPhysicsMessage(PhysicsVelocityEventPtr message);
 

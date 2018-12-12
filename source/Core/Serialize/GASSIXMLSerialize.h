@@ -41,10 +41,12 @@ namespace GASS
 		Interface for xml serialization
 	*/
 
+
+
 	class GASSCoreExport IXMLSerialize
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IXMLSerialize)
 	public:
-		virtual ~IXMLSerialize(){}
 		virtual void LoadXML(tinyxml2::XMLElement *obj_elem) = 0;
 		virtual void SaveXML(tinyxml2::XMLElement *obj_elem) = 0;
 	};

@@ -24,7 +24,7 @@
 namespace GASS
 {
 
-Spline::Spline(void)
+Spline::Spline()
 {
 	m_Coeffs.m_Data[0][0] = 2;
 	m_Coeffs.m_Data[0][1] = -2;
@@ -44,11 +44,6 @@ Spline::Spline(void)
 	m_Coeffs.m_Data[3][3] = 0;
     m_AutoCalc = false;
 	m_TanStrength = 1;
-}
-
-Spline::~Spline(void)
-{
-
 }
 
 Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
@@ -111,7 +106,7 @@ Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
         pt[3][2] = tan2.z*m_TanStrength;
         pt[3][3] = 1.0f;
 
-		Vec4 ret =  powers * m_Coeffs*pt;
+		const Vec4 ret =  powers * m_Coeffs*pt;
 		//Vec4 ret =  powers * pt;
 
 
@@ -127,7 +122,7 @@ void Spline::Clear()
     m_Tangents.clear();
 }
 
-void Spline::AddPoint(Vec3 &p)
+void Spline::AddPoint(const Vec3 &p)
 {
 	m_Points.push_back(p);
 	if (m_AutoCalc)
@@ -137,7 +132,7 @@ void Spline::AddPoint(Vec3 &p)
 }
 
 
-void Spline::RecalcTangents(void)
+void Spline::RecalcTangents()
 {
 	// Catmull-Rom approach
 	// 

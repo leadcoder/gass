@@ -83,17 +83,17 @@ namespace GASS
 	{
 	public:
 		RecastNavigationMeshComponent();
-		virtual ~RecastNavigationMeshComponent();
+		~RecastNavigationMeshComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+
+		void OnInitialize() override;
+		void OnDelete() override;
 		
 		//INavigationMeshComponent
-		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
-		virtual bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const;
-		virtual bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const;
-		virtual bool Raycast(const PlatformType platform_type, const GASS::Vec3 &from_pos, const GASS::Vec3 &to_pos, GASS::Vec3 &hit_pos) const { return false; }
-
+		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
+		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
+		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const override;
+		bool Raycast(const PlatformType platform_type, const GASS::Vec3 &from_pos, const GASS::Vec3 &to_pos, GASS::Vec3 &hit_pos) const override { return false; }
 		
 		Vec3 GetRandomPoint() const;
 		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
@@ -165,8 +165,8 @@ namespace GASS
 		void SetMeshBoundingMax(const Vec3 &max);
 		int GetTransparency() const;
 		void SetTransparency(int value);
-		void SaveXML(tinyxml2::XMLElement *obj_elem);
-		void LoadXML(tinyxml2::XMLElement *obj_elem);
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
+		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
 		void SaveAllTiles(const char* path, const dtNavMesh* mesh);
 		dtNavMesh* LoadAll(const char* path);
 		std::vector<Vec3> GetVisualNavMesh();

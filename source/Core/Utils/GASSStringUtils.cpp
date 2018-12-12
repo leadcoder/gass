@@ -29,15 +29,7 @@
 
 namespace GASS
 {
-	StringUtils::StringUtils()
-	{
-	}
-
-	StringUtils::~StringUtils()
-	{
-	}
-
-	std::string StringUtils::RemoveQuotation(char* str)
+	std::string StringUtils::RemoveQuotation(const char* str)
 	{
 		std::string ret = str;
 		ret = ret.substr(1,ret.length()-2);
@@ -104,7 +96,7 @@ namespace GASS
 		std::string ret = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
 #endif
 		//remove namespace
-		size_t pos = ret.find("::");
+		const size_t pos = ret.find("::");
 		if(pos != std::string::npos)
 		{
 			ret =  ret.substr(pos+2);

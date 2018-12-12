@@ -33,17 +33,6 @@
 
 namespace GASS
 {
-	ComponentContainer::ComponentContainer() : m_Serialize(true)
-	{
-
-	}
-
-
-	ComponentContainer::~ComponentContainer(void)
-	{
-
-	}
-
 	void ComponentContainer::AddChild(ComponentContainerPtr child)
 	{
 		ComponentContainerWeakPtr parent = ComponentContainerWeakPtr(shared_from_this());
@@ -78,13 +67,12 @@ namespace GASS
 
 	ComponentPtr ComponentContainer::GetComponent(const std::string &name) const
 	{
-		ComponentPtr comp;
-		for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
+		for(const auto & comp : m_ComponentVector)
 		{
-			if(m_ComponentVector[i]->GetName() == name)
-				return m_ComponentVector[i];
+			if(comp->GetName() == name)
+				return comp;
 		}
-		return comp;
+		return ComponentPtr();
 	}
 
 	void ComponentContainer::AddComponent(ComponentPtr comp)
@@ -103,7 +91,7 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+			auto* loader = dynamic_cast<SerialLoader*>(serializer);
 			if (loader)
 			{
 				loader->IO<int>(num_comp);
@@ -158,12 +146,12 @@ namespace GASS
 		}
 		else
 		{
-			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			const int num_comp = static_cast<int>(m_ComponentVector.size());
+			auto* saver = dynamic_cast<SerialSaver*>(serializer);
 			if (saver)
 			{
 				saver->IO<int>(num_comp);
-				ComponentVector::iterator iter = m_ComponentVector.begin();
+				auto iter = m_ComponentVector.begin();
 				while (iter != m_ComponentVector.end())
 				{
 					ComponentPtr comp = (*iter);
@@ -177,7 +165,7 @@ namespace GASS
 					++iter;
 				}
 
-				int num_children = static_cast<int>(m_ComponentContainerVector.size());
+				const int num_children = static_cast<int>(m_ComponentContainerVector.size());
 				saver->IO<int>(num_children);
 				ComponentContainer::ComponentContainerVector::iterator go_iter;
 				for (go_iter = m_ComponentContainerVector.begin(); go_iter != m_ComponentContainerVector.end(); ++go_iter)
@@ -214,7 +202,7 @@ namespace GASS
 			return;
 		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
-		tinyxml2::XMLElement* this_elem = NULL;
+		tinyxml2::XMLElement* this_elem = nullptr;
 		if (obj_elem->Parent() == rootXMLDoc) //top element!
 		{
 			this_elem = obj_elem;
@@ -271,7 +259,7 @@ namespace GASS
 					ComponentPtr target_comp;
 
 					//Try to get component by name first, if not found assume only one component of same type
-					tinyxml2::XMLElement *name_elem =comp_elem->FirstChildElement("Name");
+					const tinyxml2::XMLElement *name_elem =comp_elem->FirstChildElement("Name");
 					if(name_elem)
 					{
 						const std::string comp_name = name_elem->Attribute("value");
@@ -393,7 +381,7 @@ namespace GASS
 	{
 		//get all names
 		std::set<std::string> names;
-		ComponentVector::const_iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		while (comp_iter != m_ComponentVector.end())
 		{
 			ComponentPtr comp = (*comp_iter);
@@ -407,7 +395,7 @@ namespace GASS
 		{
 			ComponentPtr comp = (*comp_iter);
 			const std::vector<std::string> deps = comp->GetDependencies();
-			std::vector<std::string>::const_iterator dep_iter = deps.begin();
+			auto dep_iter = deps.begin();
 			while(dep_iter != deps.end())
 			{
 				const std::string comp_name = *dep_iter;
@@ -440,7 +428,7 @@ namespace GASS
 		{
 			TAB(tc) << "Components" << std::endl;
 		}
-		ComponentVector::iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		tc++;
 		while (comp_iter != m_ComponentVector.end())
 		{

@@ -54,24 +54,24 @@ namespace GASS
 	{
 	public:
 		OgreInstancedMeshComponent (void);
-		~OgreInstancedMeshComponent (void);
+		~OgreInstancedMeshComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere()const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox()const override;
+		Sphere GetBoundingSphere()const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 		
 		//IMeshComponent
 		virtual ResourceHandle GetMeshResource()const {return m_MeshResource;}
-		virtual GraphicsMesh GetMeshData() const;
+		GraphicsMesh GetMeshData() const override;
 
 		//override from Component
-		virtual void LoadXML(tinyxml2::XMLElement *elem);
+		void LoadXML(tinyxml2::XMLElement *elem) override;
 	protected:
 		std::string GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const std::string &rq) {m_RenderQueue = rq;}
@@ -82,7 +82,7 @@ namespace GASS
 		void SetGlobalScale(const Vec3 &scale) {m_GlobalScale = scale;}
 		Vec3 GetGlobalScale() const {return m_GlobalScale;}
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnDelete();
+		void OnDelete() override;
 		//void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void setupInstancedMaterialToEntity(Ogre::Entity*ent);
 		Ogre::String buildInstancedMaterial(const Ogre::String &originalMaterialName);

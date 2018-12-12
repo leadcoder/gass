@@ -47,10 +47,9 @@ namespace GASS
 
 	class GASSCoreExport IMessage
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessage)
 	public:
-		virtual ~IMessage(){};
-
-
+	
 		/**
 		Set delay (in seconds) from current frame time until this message should be delivered.
 		Note: This time is ignored when using the SendImmediate method of the MessageManager
@@ -72,8 +71,7 @@ namespace GASS
 
 	class IMessageListener
 	{
-	public:
-		virtual ~IMessageListener(){};
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessageListener)
 	};
 	typedef GASS_SHARED_PTR<IMessageListener> MessageListenerPtr;
 	typedef GASS_WEAK_PTR<IMessageListener> MessageListenerWeakPtr;
@@ -85,8 +83,9 @@ namespace GASS
 	*/
 	class IMessageFunc
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMessageFunc)
 	public:
-		virtual ~IMessageFunc(){};
+		
 		/*
 		Fire is called by the message manager when a message is being delivered
 		*/
@@ -137,17 +136,14 @@ namespace GASS
 		{
 
 		}
-
-		virtual ~MessageFunc()
-		{
-		}
+		
 
 		/*
 		Implements the Fire function of the IMessageFunc interface.
 		In this implementation the message is casted to the message type
 		specified by the template argument MESSAGE_TYPE
 		*/
-		void Fire(MessagePtr message)
+		void Fire(MessagePtr message) override
 		{
 			//cast to this message type
 			//TODO: should we use dynamic cast instead so messages of incorrect type can be spotted?
@@ -155,23 +151,23 @@ namespace GASS
 			m_Func(typed_mess);
 		}
 
-		bool operator== (const IMessageFunc &func) const
+		bool operator== (const IMessageFunc &func) const override
 		{
 			return (func.GetObjectPtr() == GetObjectPtr() &&
 				GetFuncHash() == func.GetFuncHash());
 		}
 
-		const std::type_info& GetTypeID() const
+		const std::type_info& GetTypeID() const override
 		{
 			return m_Func.target_type();
 		}
 
-		MessageListenerPtr GetObjectPtr() const
+		MessageListenerPtr GetObjectPtr() const override
 		{
 			return m_Object.lock();
 		}
 
-		size_t GetFuncHash() const
+		size_t GetFuncHash() const override
 		{
 			//return (size_t) m_Func.functor.func_ptr;
 			return m_FunctionHash;

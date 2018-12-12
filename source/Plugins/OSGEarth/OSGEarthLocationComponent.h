@@ -29,10 +29,10 @@ namespace GASS
 	{
 	public:
 		OSGEarthLocationComponent();
-		virtual ~OSGEarthLocationComponent();
+		~OSGEarthLocationComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		double GetLatitude() const;
 		void SetLatitude(double lat);
 		double GetLongitude() const;

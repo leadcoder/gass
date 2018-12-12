@@ -70,7 +70,7 @@ namespace GASS
 		/**
 		Check if same RTTI, return true if same
 		*/
-		bool IsTypeOf( RTTI *rtti) const
+		bool IsTypeOf(const RTTI *rtti) const
 		{
 			return this == rtti;
 		}
@@ -112,7 +112,7 @@ namespace GASS
 
 		IProperty * GetPropertyByName(const std::string &property_name, bool check_ancestor = true) const
 		{
-			std::list<IProperty*>::const_iterator iter = m_Properties.begin();
+			auto iter = m_Properties.begin();
 			while (iter != m_Properties.end())
 			{
 				IProperty * prop = (*iter);
@@ -125,7 +125,7 @@ namespace GASS
 			}
 			if (check_ancestor && GetAncestorRTTI())
 				return GetAncestorRTTI()->GetPropertyByName(property_name, check_ancestor);
-			return NULL;
+			return nullptr;
 		}
 
 		/**
@@ -162,7 +162,7 @@ namespace GASS
 
 		bool HasMetaData() const
 		{
-			return (m_MetaData != NULL);
+			return (m_MetaData != nullptr);
 			
 		}
 

@@ -33,12 +33,12 @@ namespace GASS
 	{
 	public:
 		ControlSettingsSystem();
-		virtual ~ControlSettingsSystem();
-		virtual void Load(const std::string &filename);
-		virtual std::string GetSystemName() const {return "ControlSettingsSystem";}
-		virtual std::string GetNameFromIndex(const std::string &settings, int index);
-		virtual int GetIndexFromName(const std::string &settings, const std::string &name);
-		virtual void Init();
+		~ControlSettingsSystem() override;
+		void Load(const std::string &filename) override;
+		std::string GetSystemName() const override {return "ControlSettingsSystem";}
+		std::string GetNameFromIndex(const std::string &settings, int index) override;
+		int GetIndexFromName(const std::string &settings, const std::string &name) override;
+		void Init() override;
 		static void RegisterReflection();
 	private:
 		void Free();

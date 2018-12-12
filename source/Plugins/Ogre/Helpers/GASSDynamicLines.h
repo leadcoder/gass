@@ -17,7 +17,7 @@ namespace GASS
 	public:
 		/// Constructor - see setOperationType() for description of argument.
 		DynamicLines(OperationType opType=Ogre::RenderOperation::OT_LINE_STRIP);
-		virtual ~DynamicLines();
+		~DynamicLines() override;
 
 		/// Add a point to the point list
 		void addPoint(const Ogre::Vector3 &p);
@@ -54,9 +54,9 @@ namespace GASS
 
 	protected:
 		/// Implementation DynamicRenderable, creates a simple vertex-only decl
-		virtual void createVertexDeclaration();
+		void createVertexDeclaration() override;
 		/// Implementation DynamicRenderable, pushes point list out to hardware memory
-		virtual void fillHardwareBuffers();
+		void fillHardwareBuffers() override;
 
 	private:
 		std::vector<Vector3> mPoints;

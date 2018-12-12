@@ -27,10 +27,10 @@ namespace GASS
 	{
 	public:
 		OSGEarthSkyComponent();
-		virtual ~OSGEarthSkyComponent();
+		~OSGEarthSkyComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		
 	protected:
 	};

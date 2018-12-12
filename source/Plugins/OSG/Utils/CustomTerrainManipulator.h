@@ -21,10 +21,10 @@ namespace osgGA{
 	{
 	public:
 		CustomTerrainManipulator();
-		virtual ~CustomTerrainManipulator();
-		virtual bool performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy );
+		~CustomTerrainManipulator() override;
+		bool performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy ) override;
 		//virtual bool performMovementMiddleMouseButton( const double eventTimeDelta, const double dx, const double dy );
-		virtual bool performMovementRightMouseButton( const double eventTimeDelta, const double dx, const double dy );
+		bool performMovementRightMouseButton( const double eventTimeDelta, const double dx, const double dy ) override;
 	};
 
 }

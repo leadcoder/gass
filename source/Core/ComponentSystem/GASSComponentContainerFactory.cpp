@@ -22,28 +22,19 @@
 
 namespace GASS
 {
-	ComponentContainerFactory::ComponentContainerFactory()
-	{
-
-	}
-
-	ComponentContainerFactory::~ComponentContainerFactory()
-	{
-
-	}
-
-	ComponentContainerFactory* ComponentContainerFactory::m_Instance = 0;
-	ComponentContainerFactory* ComponentContainerFactory::GetPtr(void)
+	
+	ComponentContainerFactory* ComponentContainerFactory::m_Instance = nullptr;
+	ComponentContainerFactory* ComponentContainerFactory::GetPtr()
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new ComponentContainerFactory();
 		return m_Instance;
 	}
-	ComponentContainerFactory& ComponentContainerFactory::Get(void)
+	ComponentContainerFactory& ComponentContainerFactory::Get()
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new ComponentContainerFactory();
 		return *m_Instance;
 	}

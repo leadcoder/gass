@@ -86,16 +86,16 @@ namespace GASS
 	{
 	public:
 		DetourCrowdAgentComponent(void);
-		virtual ~DetourCrowdAgentComponent(void);
+		~DetourCrowdAgentComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//IPlatformComponent
-		PlatformType GetType() const {return PT_HUMAN;}
-		Vec3 GetSize() const;
+		PlatformType GetType() const override {return PT_HUMAN;}
+		Vec3 GetSize() const override;
 		float GetAgentMaxSpeed() const;
 		void SetAgentMaxSpeed(float speed);
-		Float GetMaxSpeed() const;
+		Float GetMaxSpeed() const override;
 
 		void Init(dtCrowd* crowd);
 		void UpdateLocation(double delta_time);

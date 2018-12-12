@@ -5,12 +5,6 @@
 
 namespace GASS
 {
-	HeightField::HeightField() : m_NumSamplesH(0),
-		m_NumSamplesW(0)
-	{
-
-	}
-
 	HeightField::HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples) : m_Min(min_bound),
 		m_Max(max_bound),
 		m_NumSamplesW(width_samples),
@@ -21,25 +15,20 @@ namespace GASS
 		m_Data.Allocate(width_samples*height_samples);
 	}
 
-	HeightField::~HeightField()
-	{
-
-	}
-
 	#ifndef HM_LERP
 		#define HM_LERP(a, b, t) (a + (b - a) * t)
 	#endif
 
 	float HeightField::GetInterpolatedHeight(Float x, Float z) const
 	{
-		Float bounds_width = m_Max.x - m_Min.x;
-		Float bounds_height = m_Max.z - m_Min.z;
+		const Float bounds_width = m_Max.x - m_Min.x;
+		const Float bounds_height = m_Max.z - m_Min.z;
 
-		Float fxindex = m_NumSamplesW * (x - m_Min.x) / bounds_width;
-		Float fzindex = m_NumSamplesH * (z - m_Min.z) / bounds_height;
+		const Float fxindex = m_NumSamplesW * (x - m_Min.x) / bounds_width;
+		const Float fzindex = m_NumSamplesH * (z - m_Min.z) / bounds_height;
 		//round?
-		unsigned int xindex = static_cast<unsigned int>(fxindex);
-		unsigned int zindex = static_cast<unsigned int>(fzindex);
+		const auto xindex = static_cast<unsigned int>(fxindex);
+		const auto zindex = static_cast<unsigned int>(fzindex);
 
 		if (xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
 			return 0.0f;
@@ -75,7 +64,7 @@ namespace GASS
 		Float tx, ty;
 		tx = fxindex - x0;
 		ty = fzindex - z0;
-		Float height = HM_LERP(HM_LERP(h00, h01, tx), HM_LERP(h10, h11, tx), ty);
+		const Float height = HM_LERP(HM_LERP(h00, h01, tx), HM_LERP(h10, h11, tx), ty);
 		return static_cast<float>(height);
 	}
 
@@ -93,8 +82,8 @@ namespace GASS
 		ofs.write((char *) &m_NumSamplesW, sizeof(int));
 		ofs.write((char *) &m_NumSamplesH, sizeof(int));
 
-		float min_range = m_Data.GetMinRange();
-		float max_range = m_Data.GetMaxRange();
+		const float min_range = m_Data.GetMinRange();
+		const float max_range = m_Data.GetMaxRange();
 		ofs.write((char *) &min_range, sizeof(float));
 		ofs.write((char *) &max_range, sizeof(float));
 		ofs.write((char *) &m_Data.Data[0], sizeof(unsigned short)*m_NumSamplesH*m_NumSamplesW);
@@ -139,14 +128,14 @@ namespace GASS
 
 	bool HeightField::CheckLineOfSight(const Vec3& p1, const Vec3& p2, Vec3 &isec_pos) const
 	{
-		Vec3 ray = p2 - p1;
+		const Vec3 ray = p2 - p1;
 		Vec3 ray_2d = ray;
 		ray_2d.y = 0;
 
-		double length_2d = ray_2d.Length();
+		const double length_2d = ray_2d.Length();
 
 		//get pixel spacing, assume square pixels
-		double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
+		const double px_spacing = GetBoundingBox().GetSize().x/static_cast<double>(GetNumSamplesW());
 
 		double stepsize = 1.0;
 
@@ -163,7 +152,7 @@ namespace GASS
 		while( s < 1.0 )
 		{
 			Vec3 p = p1 + ray*s;
-			float h = GetInterpolatedHeight(p.x, p.z);
+			const float h = GetInterpolatedHeight(p.x, p.z);
 
 			if(h >= p.y)
 			{

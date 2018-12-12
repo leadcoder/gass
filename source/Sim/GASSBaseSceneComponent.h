@@ -40,7 +40,7 @@ namespace GASS
 		friend class SceneObject;
 	public:
 		BaseSceneComponent();
-		virtual ~BaseSceneComponent();
+		~BaseSceneComponent() override;
 		/**
 			Get owner scene object. 
 			Same as get owner but cast owner from ComponentContainer to SceneObject 
@@ -63,7 +63,7 @@ namespace GASS
 			Implements the ISceneManagerListener interface
 			Called by responsible SceneManager if components is registered as listener.
 		*/
-		virtual void SceneManagerTick(double delta) {(void)delta;}
+		void SceneManagerTick(double delta) override {(void)delta;}
 		//virtual void Update(double delta, TaskNode* caller) {(void)delta;(void) caller;}
 
 		

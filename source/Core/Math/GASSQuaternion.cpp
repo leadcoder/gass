@@ -20,7 +20,7 @@
 
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSMath.h"
-#include <math.h>
+#include <cmath>
 
 namespace GASS
 {

@@ -23,11 +23,11 @@ namespace GASS
 	{
 	public:
 		OpenALSoundComponent(void);
-		virtual ~OpenALSoundComponent(void);
+		~OpenALSoundComponent(void) override;
 		static void RegisterReflection();
 
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		//create sound interface for this?
 		virtual void Play();
 		virtual void Stop();

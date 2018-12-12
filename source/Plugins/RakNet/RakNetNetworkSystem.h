@@ -89,9 +89,9 @@ namespace GASS
 
 	public:
 		RakNetNetworkSystem();
-		virtual ~RakNetNetworkSystem();
+		~RakNetNetworkSystem() override;
 		static void RegisterReflection();
-		virtual void Init();
+		void Init() override;
 
 		bool IsServer() const {return  m_IsServer;}
 		bool IsActive() const {return  m_Active;}
@@ -109,7 +109,7 @@ namespace GASS
 		// get time to step back when values need to be interpolated
 		double GetInterpolationLag() const {return m_InterpolationLag;}
 		void SetInterpolationLag(double  value) {m_InterpolationLag = value;}
-		virtual std::string GetSystemName() const {return "NetworkSystem";}
+		std::string GetSystemName() const override {return "NetworkSystem";}
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
@@ -127,14 +127,14 @@ namespace GASS
 		void OnStopClient(StopClientRequestPtr message);
 		void OnTimeOfDay(TimeOfDayRequestPtr message);
 		void OnWeatherRequest(WeatherRequestPtr message);
-		void OnSystemUpdate(double delta);
+		void OnSystemUpdate(double delta) override;
 	private:
 		//Helpers
 		void Stop();
 		void StartServer(const std::string &name,int port);
 		void StartClient(int client_port,int server_port);
 		bool ConnectToServer(const std::string &server,int server_port,int client_port);
-		ReplicaReturnResult ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller);
+		ReplicaReturnResult ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller) override;
 		void UpdateServer(double delta);
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);

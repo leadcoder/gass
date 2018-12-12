@@ -135,9 +135,9 @@ namespace GASS
 		//	Helper function to generate allocatate and add geomtries
 		static GraphicsSubMeshPtr GenerateWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, const std::string &material="", int segments = 30);
 		static GraphicsSubMeshPtr GenerateSolidEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color,const std::string &material="", int segments = 30);
-		static GraphicsSubMeshPtr GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
-		static GraphicsSubMeshPtr GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
-		static GraphicsSubMeshPtr GenerateWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color,const std::string &material = 0);
+		static GraphicsSubMeshPtr GenerateWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = "");
+		static GraphicsSubMeshPtr GenerateSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color,const std::string &material = "");
+		static GraphicsSubMeshPtr GenerateWireframeRectangle(const Vec2 &box_size, const ColorRGBA &vertex_color,const std::string &material = "");
 		static GraphicsSubMeshPtr GenerateWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, const std::string &material, int segments);
 		static GraphicsSubMeshPtr GenerateArrow(const Vec3 &start, const Vec3 &end, Float pointer_size, const ColorRGBA &vertex_color, const std::string &material);
 		static GraphicsSubMeshPtr GenerateLines(const std::vector<Vec3> &lines, const ColorRGBA &vertex_color, const std::string &material,bool strip);

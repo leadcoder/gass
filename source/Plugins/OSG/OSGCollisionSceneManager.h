@@ -47,11 +47,11 @@ namespace GASS
 		{
 		}
 
-		virtual ~CustomIntersectionVisitor()
+		~CustomIntersectionVisitor() override
 		{
 
 		}
-		void apply(osg::Billboard& billboard)
+		void apply(osg::Billboard& billboard) override
 		{
 			if (!enter(billboard)) return;
 
@@ -104,15 +104,15 @@ namespace GASS
 	{
 	public:
 		OSGCollisionSceneManager();
-		virtual ~OSGCollisionSceneManager();
+		~OSGCollisionSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return false;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return false;}
 
 		//ICollisionSceneManager
-		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const;
+		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const override;
 	private:
 		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
 		mutable GASS_MUTEX m_Mutex;

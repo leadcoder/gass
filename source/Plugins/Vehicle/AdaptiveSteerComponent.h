@@ -38,9 +38,9 @@ namespace GASS
 	{
 	public:
 		AdaptiveSteerComponent();
-		virtual ~AdaptiveSteerComponent();
+		~AdaptiveSteerComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	private:
 		void OnJointUpdate(ODEPhysicsHingeJointEventPtr message);
 		void OnInput(InputRelayEventPtr message);

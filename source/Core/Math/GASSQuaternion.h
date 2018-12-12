@@ -43,12 +43,10 @@ namespace GASS
 	class TQuaternion
 	{
 	public:
-		inline TQuaternion (
-			TYPE fW = 1.0,
-			TYPE fX = 0.0, TYPE fY = 0.0, TYPE fZ = 0.0);
-		inline TQuaternion (const TQuaternion& rkQ);
+		TQuaternion () = default;
+		inline TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ);
 		inline TQuaternion(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis);
-	
+		
 		inline void FromEulerAnglesXYZ (const TVec3<TYPE> &rot);
 		inline void FromEulerAnglesYXZ (const TVec3<TYPE> &rot);
 		inline void FromRotationMatrix (const TMat4<TYPE>& kRot);
@@ -74,19 +72,19 @@ namespace GASS
 		/** Returns the X orthonormal axis defining the TQuaternion. Same as doing
 			xAxis = Vector3::UNIT_X * this. Also called the local X-axis
 		*/
-		inline TVec3<TYPE> GetXAxis(void) const;
+		inline TVec3<TYPE> GetXAxis() const;
 
 		/** Returns the Y orthonormal axis defining the TQuaternion. Same as doing
 			yAxis = Vector3::UNIT_Y * this. Also called the local Y-axis
 		*/
-		inline TVec3<TYPE> GetYAxis(void) const;
+		inline TVec3<TYPE> GetYAxis() const;
 
 		/** Returns the Z orthonormal axis defining the TQuaternion. Same as doing
 			zAxis = Vector3::UNIT_Z * this. Also called the local Z-axis
 		*/
-		inline TVec3<TYPE> GetZAxis(void) const;
+		inline TVec3<TYPE> GetZAxis() const;
 
-		inline TQuaternion& operator= (const TQuaternion& rkQ);
+		
 		inline TQuaternion operator+ (const TQuaternion& rkQ) const;
 		inline TQuaternion operator- (const TQuaternion& rkQ) const;
 		inline TQuaternion operator* (const TQuaternion& rkQ) const;
@@ -155,7 +153,10 @@ namespace GASS
 		static const TQuaternion ZERO;
 		static const TQuaternion IDENTITY;
 
-		TYPE w, x, y, z;
+		TYPE w = 1.0;
+		TYPE x = 0.0;
+		TYPE y = 0.0;
+		TYPE z = 0.0;
 
 		static TQuaternion CreateFromEulerXYZ(const TVec3<TYPE>& euler_rot_xyz)
 		{
@@ -179,22 +180,14 @@ namespace GASS
 	template <class TYPE> const TYPE TQuaternion<TYPE>::ms_fEpsilon = static_cast<TYPE>(1e-03);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::ZERO = TQuaternion<TYPE>(0 ,0, 0, 0);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::IDENTITY = TQuaternion<TYPE>(1, 0, 0, 0);
-	//const TYPE TQuaternion::ms_fEpsilon = static_cast<TYPE>(1e-03);
-	//const TQuaternion TQuaternion::ZERO(0.0, 0.0, 0.0, 0.0);
-	//const TQuaternion TQuaternion::IDENTITY(1.0, 0.0, 0.0, 0.0);
 
 	template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ)
+	TQuaternion<TYPE>::TQuaternion(TYPE fW, TYPE fX, TYPE fY, TYPE fZ) : w(fW),
+		x(fX),
+		y(fY),
+		z(fZ)
 	{
-		w = fW;
-		x = fX;
-		y = fY;
-		z = fZ;
-	}
-
-	template<class TYPE>
-	TQuaternion<TYPE>::TQuaternion(const TQuaternion<TYPE>& rkQ) :w(rkQ.w), x(rkQ.x), y(rkQ.y), z(rkQ.z)
-	{
+		
 	}
 
 	template<class TYPE>
@@ -447,7 +440,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetXAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetXAxis() const
 	{
 		TYPE fTy = static_cast<TYPE>(2.0)*y;
 		TYPE fTz = static_cast<TYPE>(2.0)*z;
@@ -462,7 +455,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetYAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetYAxis() const
 	{
 		TYPE fTx = 2.0f*x;
 		TYPE fTy = 2.0f*y;
@@ -478,7 +471,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	TVec3<TYPE> TQuaternion<TYPE>::GetZAxis(void) const
+	TVec3<TYPE> TQuaternion<TYPE>::GetZAxis() const
 	{
 		TYPE fTx = 2.0f*x;
 		TYPE fTy = 2.0f*y;
@@ -491,16 +484,6 @@ namespace GASS
 		TYPE fTyz = fTz*y;
 		//return TVec3<TYPE>(fTxz-fTwy, fTyz+fTwx, 1.0f-(fTxx+fTyy));
 		return TVec3<TYPE>(fTxz + fTwy, fTyz - fTwx, static_cast<TYPE>(1.0) - (fTxx + fTyy));
-	}
-
-	template<class TYPE>
-	TQuaternion<TYPE>& TQuaternion<TYPE>::operator= (const TQuaternion<TYPE>& rkQ)
-	{
-		w = rkQ.w;
-		x = rkQ.x;
-		y = rkQ.y;
-		z = rkQ.z;
-		return *this;
 	}
 
 	template<class TYPE>

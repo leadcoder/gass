@@ -46,7 +46,7 @@ namespace GASS
 	class ClassMetaData
 	{
 	public:
-		ClassMetaData(const std::string &annotation, ClassFlags flags = static_cast<ClassFlags>(0)): m_Annotation(annotation), m_Flags(flags) {}
+		explicit ClassMetaData(const std::string &annotation, ClassFlags flags = static_cast<ClassFlags>(0)): m_Annotation(annotation), m_Flags(flags) {}
 		std::string GetAnnotation() const {return m_Annotation;}
 		void SetAnnotation(const std::string &value) {m_Annotation= value;}
 		ClassFlags GetFlags() const {return m_Flags;}

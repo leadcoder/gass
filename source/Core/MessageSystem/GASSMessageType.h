@@ -35,15 +35,13 @@ namespace GASS
 	*/
 
 	/**
-		Class holding the message suscriber registration
+		Class holding the message subscriber registration
 	*/
 	class MessageReg
 	{
 	public:
-		MessageReg(){}
-		virtual ~MessageReg(){}
 		MessageFuncPtr m_Callback;
-		int m_Priority;
+		int m_Priority = 0;
 	};
 	typedef GASS_SHARED_PTR<MessageReg> MessageRegPtr;
 	typedef std::list<MessageRegPtr> MessageRegList;
@@ -55,15 +53,10 @@ namespace GASS
 	class MessageTypeListeners
 	{
 	public:
-		MessageTypeListeners(){}
-		virtual ~MessageTypeListeners()
-		{
-		}
-
 		MessageType m_TypeID;
 		MessageRegList m_MessageRegistrations;
 	};
-	typedef GASS_SHARED_PTR<MessageTypeListeners> MessageTypeListenerGASS_SHARED_PTR;
+	typedef GASS_SHARED_PTR<MessageTypeListeners> MessageTypeListenerPtr;
 
 }
 #endif 

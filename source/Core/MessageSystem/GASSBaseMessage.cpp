@@ -28,12 +28,6 @@ namespace GASS
 
 	}
 
-	BaseMessage::~BaseMessage()
-	{
-
-	}
-
-
 	SenderID BaseMessage::GetSenderID() const
 	{
 		return m_SenderID;

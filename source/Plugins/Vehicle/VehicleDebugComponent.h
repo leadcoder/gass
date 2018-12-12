@@ -37,10 +37,10 @@ namespace GASS
 	{
 	public:
 		VehicleDebugComponent();
-		virtual ~VehicleDebugComponent();
+		~VehicleDebugComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	private:
 		void OnGotoPosition(GotoPositionRequestPtr message);
 		bool m_ShowWaypoint;

@@ -38,10 +38,10 @@ namespace GASS
 		friend class OgreRenderWindow;
 	public:
 		OgreViewport(const std::string &name,Ogre::Viewport* vp, OgreRenderWindow* window);
-		virtual ~OgreViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
+		~OgreViewport() override;
+		CameraComponentPtr GetCamera() const override;
+		void SetCamera(CameraComponentPtr camera) override;
+		std::string GetName() const override {return m_Name;}
 	private:
 		void Init();
 		Ogre::Viewport* m_OgreViewport;

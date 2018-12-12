@@ -48,9 +48,9 @@ namespace GASS
 			MR_SPHERE
 		};
 		ODEBodyComponent();
-		virtual ~ODEBodyComponent();
+		~ODEBodyComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		dBodyID GetODEBodyComponent() const {return m_ODEBodyID;}
 		dSpaceID GetSpace();
 		MassRepresentationType GetMassRepresentation() const { return m_MassRepresentation; }
@@ -58,21 +58,21 @@ namespace GASS
 		Vec3 GetCGPosition() const {return m_CGPosition;}
 
 		//IPhysicsBodyComponent
-		void SetVelocity(const Vec3 &vel, bool relative = false);
-		Vec3 GetVelocity(bool relative = false) const;
-		void AddForce(const Vec3 &force_vec, bool relative = false);
-		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false);
-		void AddTorque(const Vec3 &torque_vec, bool relative = false);
-		float GetMass() const { return m_Mass; }
-		void SetMass(float mass);
+		void SetVelocity(const Vec3 &vel, bool relative = false) override;
+		Vec3 GetVelocity(bool relative = false) const override;
+		void AddForce(const Vec3 &force_vec, bool relative = false) override;
+		void AddForceAtPos(const Vec3 &force_vec, const Vec3 &pos_vec, bool rel_force = false, bool rel_pos = false) override;
+		void AddTorque(const Vec3 &torque_vec, bool relative = false) override;
+		float GetMass() const override { return m_Mass; }
+		void SetMass(float mass) override;
 		
 		void SetTorque(const Vec3 &torque);
 		Vec3 GetTorque(bool rel = false) const;
 		void SetAngularVelocity(const Vec3 &vel, bool relative = false);
 		Vec3 GetAngularVelocity(bool relative = false) const;
 	protected:
-		void SetActive(bool value);
-		bool GetActive() const;
+		void SetActive(bool value) override;
+		bool GetActive() const override;
 		void SetForce(const Vec3 &force);
 		Vec3 GetForce(bool rel = false) const;
 		

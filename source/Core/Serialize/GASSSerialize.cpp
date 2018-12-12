@@ -23,11 +23,11 @@
 namespace GASS
 {
 	template <>
-	void SerialSaver::IO<std::string>(std::string &value)
+	void SerialSaver::IO<std::string>(const std::string &value)
 	{
 		if(buffer)
 		{
-			unsigned long l = static_cast<unsigned long>(value.length());
+			auto l = static_cast<unsigned long>(value.length());
 			IO<unsigned long>(l);
 			if(bHasOverflowed)return;
 			if(bytesUsed+l>length){bHasOverflowed=true; return; }
@@ -36,7 +36,7 @@ namespace GASS
 		}
 		else
 		{
-			int type_size = sizeof(unsigned long);
+			const int type_size = sizeof(unsigned long);
 			length +=type_size;
 			length += static_cast<int>( value.length());
 		}
@@ -58,7 +58,7 @@ namespace GASS
 	}
 
 	template <>
-	void SerialSaver::IO<FilePath>(FilePath &path)
+	void SerialSaver::IO<FilePath>(const FilePath &path)
 	{
 	    std::string value = path.GetRawPath();
 		IO(value);

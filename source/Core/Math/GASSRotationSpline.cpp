@@ -23,15 +23,11 @@
 
 namespace GASS
 {
-	RotationSpline::RotationSpline(void)
+	RotationSpline::RotationSpline()
 	{
 		m_AutoCalc = false;
 	}
-
-	RotationSpline::~RotationSpline(void)
-	{
-	}
-
+	
 	void RotationSpline::AddPoint(const Quaternion& p)
 	{
 		m_Points.push_back(p);
@@ -77,7 +73,7 @@ namespace GASS
 
 	}
 	//---------------------------------------------------------------------
-	void RotationSpline::RecalcTangents(void)
+	void RotationSpline::RecalcTangents()
 	{
 		// ShoeMake (1987) approach
 		// Just like Catmull-Rom floatly, just more gnarly
@@ -113,7 +109,7 @@ namespace GASS
 		Quaternion invp, part1, part2, preExp;
 		for(i = 0; i < num_Points; ++i)
 		{
-			Quaternion &p = m_Points[i];
+			const Quaternion &p = m_Points[i];
 			invp = p.Inverse();
 
 			if (i ==0)
@@ -156,7 +152,7 @@ namespace GASS
 	}
 
 	//---------------------------------------------------------------------
-	void RotationSpline::Clear(void)
+	void RotationSpline::Clear()
 	{
 		m_Points.clear();
 		m_Tangents.clear();

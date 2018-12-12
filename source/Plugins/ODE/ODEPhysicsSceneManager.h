@@ -44,20 +44,20 @@ namespace GASS
 		typedef std::map<std::string,ODEPhysicsCollisionMesh> CollisionMeshMap;
 	public:
 		ODEPhysicsSceneManager();
-		virtual ~ODEPhysicsSceneManager();
+		~ODEPhysicsSceneManager() override;
 		static void RegisterReflection();
 		
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return false;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return false;}
 
 		//IPhysicsSceneManager
 		virtual void SetActive(bool value) { m_Active = value; }
 		virtual bool GetActive() const { return m_Active; }
 
 		dWorldID GetWorld()const {return m_World;}
-		void OnUpdate(double delta);
+		void OnUpdate(double delta) override;
 	
 		dSpaceID GetPhysicsSpace() const {return m_Space;}
 		dSpaceID GetCollisionSpace() const {return m_CollisionSpace;}

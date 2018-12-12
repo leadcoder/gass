@@ -60,7 +60,7 @@ namespace GASS
 			CLASS::Register();
 		}
 
-		virtual ~MultiEnumBinder(){}
+		~MultiEnumBinder() override {}
 
 		void SetValue(ENUM value)
 		{
@@ -174,7 +174,7 @@ namespace GASS
 			CLASS::Register();
 		}
 
-		virtual ~SingleEnumBinder(){}
+		~SingleEnumBinder() override {}
 
 		void SetValue(ENUM value)
 		{

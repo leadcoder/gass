@@ -43,14 +43,13 @@ namespace GASS
 	class GASSCoreExport BaseMessage : public IMessage
 	{
 	public:
-		BaseMessage(SenderID sender_id = -1, double delay= 0);
-		virtual ~BaseMessage();
+		explicit BaseMessage(SenderID sender_id = -1, double delay= 0);
+		
+		void SetDeliverDelay(double delay) override;
+		double  GetDeliverDelay() const override;
 
-		void SetDeliverDelay(double delay);
-		double  GetDeliverDelay() const;
-
-		SenderID GetSenderID() const;
-		MessageType GetType() const;
+		SenderID GetSenderID() const override;
+		MessageType GetType() const override;
 
 	private:
 		SenderID m_SenderID;

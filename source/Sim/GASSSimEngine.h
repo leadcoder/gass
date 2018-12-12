@@ -86,7 +86,7 @@ namespace GASS
 		typedef ConstVectorIterator<SceneVector> ConstSceneIterator;
 	public:
 		SimEngine(const FilePath &log_folder = FilePath("./"));
-		virtual ~SimEngine();
+		~SimEngine() override;
 		static SimEngine* GetPtr();
 		static SimEngine& Get();
 

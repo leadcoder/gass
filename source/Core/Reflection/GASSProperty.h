@@ -25,7 +25,7 @@
 #include "Core/Serialize/GASSSerialize.h"
 #include "Core/Serialize/GASSSTDSerialize.h" //move content to this file
 #include "Core/Reflection/GASSTypedProperty.h"
-#include <assert.h>
+#include <cassert>
 #include <sstream>
 #include <iomanip>
 
@@ -88,6 +88,7 @@ namespace GASS
 	template <>
 	bool GASSCoreExport GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
 
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -100,48 +101,39 @@ namespace GASS
 	@param OwnerType class that has the getter and setter functions
 	@param T Property type
 	*/
-	template <class OwnerType, class T>
+	template <class OwnerType,
+			class T,
+			typename GetterReturnType,
+			typename SetterArgumentType,
+			typename SetterReturnTypeUnused>
 	class Property : public TypedProperty<T>
 	{
 	public:
-		typedef T (OwnerType::*GetterType)() const; // Getter function
-		typedef void (OwnerType::*SetterType)( T Value); // Setter function
-		typedef void (OwnerType::*SetterTypeConst)( const T &Value ); // Const setter function
+		typedef GetterReturnType(OwnerType::*GetterType)() const;
+		typedef SetterReturnTypeUnused(OwnerType::*SetterType)(SetterArgumentType);
 		Property( const std::string &name,
 			GetterType getter,
 			SetterType setter,
-			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
+			PropertyMetaDataPtr meta_data):
 			m_Getter(getter),
 			m_Setter(setter),
-			m_SetterConst(NULL),
-			m_MetaData(meta_data)
+			m_MetaData(meta_data),
+			m_Name(name)
 		{
 
 		}
 
-		Property( const std::string &name,
-			GetterType getter,
-			SetterTypeConst setter,
-			PropertyMetaDataPtr meta_data):	TypedProperty<T>(name),
-			m_Getter(getter),
-			m_SetterConst(setter),
-			m_Setter(NULL),
-			m_MetaData(meta_data)
-		{
-
-		}
-
-		virtual T GetValue(const IPropertyOwner* object) const
+		GetterReturnType GetValue(const IPropertyOwner* object) const override
 		{
 			return (((OwnerType*)object)->*m_Getter)();
 		}
 
-		virtual bool HasMetaData() const
+		bool HasMetaData() const override
 		{
-			return (m_MetaData != NULL);
+			return (m_MetaData != nullptr);
 		}
 
-		virtual PropertyMetaDataPtr GetMetaData() const
+		PropertyMetaDataPtr GetMetaData() const override
 		{
 			if(m_MetaData)
 			{
@@ -151,24 +143,17 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No meta data present", "Property::GetPropertyMetaData");
 		}
 
-		virtual void SetValue(IPropertyOwner* object, const T &value )
+		void SetValue(IPropertyOwner* object, const T &value ) override
 		{
-			if (m_SetterConst)
-			{
-				(((OwnerType*)object)->*m_SetterConst)( value );
-			}
-			else if (m_Setter)
-			{
-				(((OwnerType*)object)->*m_Setter)( value );
-			}
+			(((OwnerType*)object)->*m_Setter)( value );
 		}
 
-		void Serialize(IPropertyOwner* object,ISerializer* serializer)
+		void Serialize(IPropertyOwner* object,ISerializer* serializer) override
 		{
 			if (serializer->Loading())
 			{
 				T val;
-				SerialLoader* loader = dynamic_cast<SerialLoader*>(serializer);
+				auto* loader = dynamic_cast<SerialLoader*>(serializer);
 				if (loader)
 				{
 					loader->IO<T>(val);
@@ -178,13 +163,13 @@ namespace GASS
 			else
 			{
 				T val = GetValue(object);
-				SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+				auto* saver = dynamic_cast<SerialSaver*>(serializer);
 				if(saver)
 					saver->IO<T>(val);
 			}
 		}
 
-		void SetValueByString(IPropertyOwner* object, const std::string &value)
+		void SetValueByString(IPropertyOwner* object, const std::string &value) override
 		{
 			try
 			{
@@ -194,11 +179,11 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + TypedProperty<T>::m_Name + " With value:" + value,"Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value,"Property::SetValueByString");
 			}
 		}
 
-		std::string GetValueAsString(const IPropertyOwner* object) const
+		std::string GetValueAsString(const IPropertyOwner* object) const override
 		{
 			T val = GetValue(object);
 			std::string res;
@@ -206,12 +191,12 @@ namespace GASS
 			return res;
 		}
 
-		void Copy(IPropertyOwner* dest, const IPropertyOwner* src)
+		void Copy(IPropertyOwner* dest, const IPropertyOwner* src) override
 		{
 			SetValue(dest,GetValue(src));
 		}
 
-		void SetValueByAny(IPropertyOwner* object, GASS_ANY &value)
+		void SetValueByAny(IPropertyOwner* object, GASS_ANY &value) override
 		{
 
 			T res;
@@ -221,23 +206,43 @@ namespace GASS
 			}
 			catch(...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + TypedProperty<T>::m_Name + " Property type may differ from provided any value","Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value","Property::SetValue");
 			}
 
 			SetValue(object,res);
 		}
 
-		void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const
+		void GetValueAsAny(const IPropertyOwner* object, GASS_ANY &value) const override
 		{
 			T res = GetValue(object);
 			value = res;
 		}
+		std::string GetName() const override { return m_Name; }
 	protected:
 		GetterType		m_Getter;
 		SetterType		m_Setter;
-		SetterTypeConst	m_SetterConst;
 		PropertyMetaDataPtr m_MetaData;
+		std::string m_Name;
 	};
+
+	template <typename T>
+	struct RemoveConstRef {
+		typedef typename std::remove_const<typename std::remove_reference<T>::type>::type Type;
+	};
+	template <typename T,
+		typename GetterReturnType,
+		typename SetterArgumentType,
+		typename SetterReturnType>
+		static IProperty* CreateProperty(const std::string &name,
+			GetterReturnType(T::*getter)() const,
+			SetterReturnType(T::*setter)(SetterArgumentType),
+			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
+	{
+		typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
+		auto* property = new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+		return property;
+	}
+
 
 #define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
 #define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);

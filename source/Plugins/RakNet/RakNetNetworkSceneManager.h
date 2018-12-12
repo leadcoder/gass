@@ -31,12 +31,12 @@ namespace GASS
 	{
 		public:
 		RaknetNetworkSceneManager();
-		virtual ~RaknetNetworkSceneManager();
+		~RaknetNetworkSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
-		virtual bool GetSerialize() const {return false;}
+		void OnCreate() override;
+		void OnInit() override;
+		void OnShutdown() override;
+		bool GetSerialize() const override {return false;}
 	protected:
 		void OnNewMasterReplica(MasterReplicaCreatedEventPtr message);
 		void GeneratePartID(SceneObjectPtr obj, int &id) const;

@@ -21,7 +21,7 @@
 #include "Core/PluginSystem/GASSDynamicModule.h"
 #include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
-#include <assert.h>
+#include <cassert>
 
 #ifdef _MSC_VER
 #define __STDCALL __stdcall
@@ -33,7 +33,7 @@ namespace GASS
 {
 
 
-	DynamicModule::DynamicModule(const std::string &module_name) : m_ModuleName(module_name), m_ModuleHandle(0)
+	DynamicModule::DynamicModule(const std::string &module_name) : m_ModuleName(module_name), m_ModuleHandle(nullptr)
 	{
 		
 	}
@@ -57,7 +57,7 @@ namespace GASS
 			GASS_LOG(LWARNING) << "A dynamic linking error occurred:"  << errstr;
 #endif
 		//assert(m_ModuleHandle && "Unable to load dynamic module");
-		if (m_ModuleHandle == NULL)
+		if (m_ModuleHandle == nullptr)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Unable to load dynamic module:" + m_ModuleName, "DynamicModule::Load()");
 		//OnLoadModule onLoadModule = (OnLoadModule)GetDynamicSymbol(m_ModuleHandle,"onLoadModule");
 		//OnLoadModule onLoadModule = (OnLoadModule)DYNLIB_GETSYM(m_ModuleHandle,"onLoadModule");
@@ -72,7 +72,7 @@ namespace GASS
 	typedef int (__STDCALL *FuncArg1)(void *);
 	void DynamicModule::CallFunction(const std::string &func_name, void* arg1) const
 	{
-		FuncArg1 onLoadModule = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
+		auto onLoadModule = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
 		if(onLoadModule)
 		{
 			(onLoadModule(arg1));
@@ -82,10 +82,5 @@ namespace GASS
 	void DynamicModule::Unload() const
 	{
 		DYNLIB_UNLOAD(m_ModuleHandle);
-	}
-
-	DynamicModule::~DynamicModule()
-	{
-
 	}
 }

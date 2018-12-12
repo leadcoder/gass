@@ -43,10 +43,10 @@ namespace GASS
 	{
 	public:
 		RakNetNetworkChildComponent();
-		virtual ~RakNetNetworkChildComponent();
+		~RakNetNetworkChildComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		RakNetChildReplica* GetReplica() const {return m_Replica;}
 		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
@@ -62,7 +62,7 @@ namespace GASS
 		
 
 	private:
-		void SceneManagerTick(double delta);
+		void SceneManagerTick(double delta) override;
 
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
 		void OnSerialize(NetworkSerializeRequestPtr message);

@@ -30,10 +30,10 @@ namespace GASS
 	{
 	public:
 		ProfileRuntimeHandler();
-		virtual ~ProfileRuntimeHandler();
-		void BeginOutput(double tTime);
-		void EndOutput();
-		void Sample(double fCur, double fMin, double fAvg, double fMax, double tAvg, int callCount, std::string name, int parentCount);
+		~ProfileRuntimeHandler() override;
+		void BeginOutput(double tTime) override;
+		void EndOutput() override;
+		void Sample(double fCur, double fMin, double fAvg, double fMax, double tAvg, int callCount, std::string name, int parentCount) override;
 	};
 }
 

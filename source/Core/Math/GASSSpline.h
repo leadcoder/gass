@@ -30,12 +30,11 @@ namespace GASS
 	class GASSCoreExport Spline
 	{
 	public:
-		Spline(void);
-		~Spline(void);
+		Spline();
 		Vec3 Interpolate(unsigned int fromIndex, Float t) const;
 		void Clear();
-		void AddPoint(Vec3 &p);
-		void RecalcTangents(void);
+		void AddPoint(const Vec3 &p);
+		void RecalcTangents();
 		void SetAutoCalc(bool value){m_AutoCalc = value;}
 		std::vector<Vec3>& GetPoints() {return m_Points;}
 		std::vector<Vec3>& GetTangents() {return m_Tangents;}

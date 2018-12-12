@@ -21,8 +21,11 @@
 #pragma once
 
 #ifdef GASS_USE_BOOST_FILESYSTEM
+#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 #define GASS_FILESYSTEM boost::filesystem
+
 #if(BOOST_FILESYSTEM_VERSION > 2)
 	#define GASS_TO_GENERIC_STRING(a) a.generic_string()
 #else

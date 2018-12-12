@@ -16,7 +16,7 @@ namespace GASS
 	{
 	public:
 
-		HeightField();
+		HeightField() = default;
 
 		/**
 			Constructor that allocate height data and define max/min values for the field.
@@ -28,8 +28,7 @@ namespace GASS
 			range after construction. This is a performance reason, we don't want to do min/max check for each SetHeight call
 		*/
 		HeightField(const Vec3 &min_bound,const Vec3 &max_bound, unsigned int width_samples, unsigned int height_samples);
-		virtual ~HeightField();
-
+	
 		/**
 			Get interpolated height at absolute location
 		*/
@@ -65,10 +64,10 @@ namespace GASS
 		*/
 		void SetHeightAtLocation(Float x, Float z, float height)
 		{
-			Float bounds_width = m_Max.x - m_Min.x;
-			Float bounds_height = m_Max.z - m_Min.z;
-			unsigned int xindex = static_cast<unsigned int>(m_NumSamplesW * (x - m_Min.x) / bounds_width);
-			unsigned int zindex = static_cast<unsigned int>(m_NumSamplesH * (z - m_Min.z) / bounds_height);
+			const Float bounds_width = m_Max.x - m_Min.x;
+			const Float bounds_height = m_Max.z - m_Min.z;
+			const auto xindex = static_cast<unsigned int>(m_NumSamplesW * (x - m_Min.x) / bounds_width);
+			const auto zindex = static_cast<unsigned int>(m_NumSamplesH * (z - m_Min.z) / bounds_height);
 			if (xindex >= m_NumSamplesW || zindex >= m_NumSamplesH)
 				return;
 			m_Data.WriteValue(xindex + zindex*m_NumSamplesW, height);
@@ -121,8 +120,8 @@ namespace GASS
 		FloatArray16 m_Data;
 		Vec3 m_Min;
 		Vec3 m_Max;
-		unsigned int m_NumSamplesH;
-		unsigned int m_NumSamplesW;
+		unsigned int m_NumSamplesH{0};
+		unsigned int m_NumSamplesW{0};
 	};
 	typedef GASS_SHARED_PTR<HeightField> HeightFieldPtr;
 }

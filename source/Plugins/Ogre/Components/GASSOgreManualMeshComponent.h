@@ -39,22 +39,22 @@ namespace GASS
 	{
 	public:
 		OgreManualMeshComponent(void);
-		~OgreManualMeshComponent(void);
+		~OgreManualMeshComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent
-		virtual AABox GetBoundingBox() const;
-		virtual Sphere GetBoundingSphere() const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 		
 		//IManaulMeshComponent
-		virtual GraphicsMesh GetMeshData() const;
-		virtual void SetMeshData(const GraphicsMesh& mesh);
-		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index);
+		GraphicsMesh GetMeshData() const override;
+		void SetMeshData(const GraphicsMesh& mesh) override;
+		void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index) override;
 
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:

@@ -35,18 +35,18 @@ namespace GASS
 	{
 	public:
 		OSGBillboardComponent (void);
-		~OSGBillboardComponent (void);
+		~OSGBillboardComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 
 		//IGeometryComponent interface
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere()const;
+		AABox GetBoundingBox()const override;
+		Sphere GetBoundingSphere()const override;
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 	protected:
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);

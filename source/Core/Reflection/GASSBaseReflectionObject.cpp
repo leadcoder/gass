@@ -23,16 +23,6 @@
 
 namespace GASS
 {
-	BaseReflectionObject::BaseReflectionObject()
-	{
-
-	}
-
-	BaseReflectionObject::~BaseReflectionObject()
-	{
-
-	}
-
 	void BaseReflectionObject::_LoadProperties(tinyxml2::XMLElement *elem)
 	{
 		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
@@ -73,10 +63,10 @@ namespace GASS
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			auto	iter = pRTTI->GetFirstProperty();
 			while(iter != pRTTI->GetProperties()->end())
 			{
-				IProperty * prop = (*iter);
+				const IProperty * prop = (*iter);
 				
 				tinyxml2::XMLElement *prop_elem = parent->GetDocument()->NewElement(prop->GetName().c_str());
 				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
@@ -92,7 +82,7 @@ namespace GASS
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			auto	iter = pRTTI->GetFirstProperty();
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
@@ -116,7 +106,7 @@ namespace GASS
 
 	bool BaseReflectionObject::GetPropertyAsString(const std::string &property_name, std::string &value) const
 	{
-		if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+		if (const IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
 			value = prop->GetValueAsString(this);
 			return true;
@@ -136,7 +126,7 @@ namespace GASS
 
 	bool BaseReflectionObject::GetPropertyAsAny(const std::string &property_name, GASS_ANY &value) const
 	{
-		if(IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
+		if(const IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 		{
 			prop->GetValueAsAny(this, value);
 			return true;
@@ -146,19 +136,19 @@ namespace GASS
 
 	bool BaseReflectionObject::HasProperty(const std::string &property_name) const
 	{
-		return (GetRTTI()->GetPropertyByName(property_name, true) != NULL);
+		return (GetRTTI()->GetPropertyByName(property_name, true) != nullptr);
 	}
 
 	void BaseReflectionObject::CopyPropertiesTo(BaseReflectionObjectPtr dest) const
 	{
 		RTTI* pRTTI = GetRTTI();
-		RTTI* pdestRTTI = dest->GetRTTI();
+		const RTTI* pdestRTTI = dest->GetRTTI();
 
 		if(pRTTI == pdestRTTI)
 		{
 			while(pRTTI)
 			{
-				std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+				auto	iter = pRTTI->GetFirstProperty();
 				while(iter != pRTTI->GetProperties()->end())
 				{
 					IProperty * prop = (*iter);
@@ -172,10 +162,10 @@ namespace GASS
 		{
 			while(pRTTI)
 			{
-				std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+				auto	iter = pRTTI->GetFirstProperty();
 				while(iter != pRTTI->GetProperties()->end())
 				{
-					IProperty * prop = (*iter);
+					const IProperty * prop = (*iter);
 					if(dest->HasProperty(prop->GetName()))
 						dest->SetPropertyByString(prop->GetName(), prop->GetValueAsString(this));
 					//Here we want to copy all common properties from one object to another 
@@ -195,7 +185,7 @@ namespace GASS
 		RTTI* pRTTI = GetRTTI();
 		while(pRTTI)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
+			auto	iter = pRTTI->GetFirstProperty();
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
@@ -209,13 +199,13 @@ namespace GASS
 
 	bool BaseReflectionObject::HasMetaData() const
 	{
-		RTTI* pRTTI = GetRTTI();
+		const RTTI* pRTTI = GetRTTI();
 		return pRTTI->HasMetaData();
 	}
 
 	ClassMetaDataPtr BaseReflectionObject::GetMetaData() const
 	{
-		RTTI* pRTTI = GetRTTI();
+		const RTTI* pRTTI = GetRTTI();
 		return pRTTI->GetMetaData();
 	}
 }

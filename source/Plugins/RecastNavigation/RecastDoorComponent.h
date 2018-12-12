@@ -32,9 +32,9 @@ namespace GASS
 	{
 	public:
 		RecastDoorComponent();
-		virtual ~RecastDoorComponent();
+		~RecastDoorComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnLoad(LocationLoadedEventPtr message);

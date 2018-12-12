@@ -126,7 +126,7 @@ namespace GASS
 	typedef double Float;
 }
 
-#include <assert.h>
+#include <cassert>
 
 
 
@@ -216,4 +216,14 @@ namespace GASS
 #define GASS_IPTR_DECL(CLASS) typedef GASS_SHARED_PTR<I##CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<I##CLASS> CLASS##WeakPtr;
 #define GASS_PTR_TO_INT(ptr) static_cast<int>(reinterpret_cast<size_t>(ptr))
 
+#define GASS_DECLARE_CLASS_AS_INTERFACE(ClassName)\
+	public :\
+	  virtual ~ClassName() = default;\
+   protected :\
+	ClassName() = default;\
+	ClassName(const ClassName & ) = delete;\
+	ClassName & operator = (const ClassName & ) = delete;\
+	ClassName (ClassName &&) = delete;\
+	ClassName & operator=(ClassName &&) = delete;\
+   private :
 #endif

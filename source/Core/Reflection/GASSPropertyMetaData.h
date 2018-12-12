@@ -57,8 +57,7 @@ namespace GASS
 	*/
 	class IPropertyMetaData
 	{
-	public:
-		virtual ~IPropertyMetaData(){}
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyMetaData)
 	};
 	typedef GASS_SHARED_PTR<IPropertyMetaData> PropertyMetaDataPtr;
 
@@ -116,7 +115,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_Enumeration;}
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_Enumeration;}
 	private:
 		std::vector<std::string> m_Enumeration;
 	};
@@ -128,7 +127,7 @@ namespace GASS
 		that want to delegate the enumeration request to other class 
 		
 	*/
-	typedef std::vector<std::string> EnumerationFunc(void);
+	typedef std::vector<std::string> EnumerationFunc();
 	class EnumerationProxyPropertyMetaData : public EnumerationPropertyMetaData
 	{
 	public:
@@ -137,7 +136,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const {return m_EnumFunc();}
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_EnumFunc();}
 	private:
 		EnumerationFunc* m_EnumFunc;
 

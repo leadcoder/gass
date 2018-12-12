@@ -64,7 +64,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
 		{
 			std::vector<std::string> content;
 			ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
@@ -96,7 +96,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
 		{
 			OSGEarthMapComponentPtr map_comp = GASS_DYNAMIC_PTR_CAST<OSGEarthMapComponent>(object);
 			return map_comp->GetViewpointNames();
@@ -112,7 +112,7 @@ namespace GASS
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
+		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
 		{
 			OSGEarthMapComponentPtr map_comp = GASS_DYNAMIC_PTR_CAST<OSGEarthMapComponent>(object);
 			return map_comp->GetLayerNames();

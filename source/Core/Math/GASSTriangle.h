@@ -33,7 +33,7 @@ namespace GASS
 	{
 	public:
 		TTriangle(const TVec3<TYPE>& p1, const TVec3<TYPE>& p2, const TVec3<TYPE>& p3) : P1(p1), P2(p2), P3(p3) {}
-		TTriangle() {}
+		TTriangle() = default;
 
 
 		//public for fast access
@@ -115,7 +115,7 @@ namespace GASS
 		bool ClosestPoint(const TVec3<TYPE>  &p, TVec3<TYPE>  &closest, TYPE radius) const
 		{
 			// find how far away the plane is from point p along the planes normal
-			TPlane<TYPE> plane = GetPlane();
+			const TPlane<TYPE> plane = GetPlane();
 			const TYPE distToPlaneIntersection = plane.RayIsect(TRay<TYPE>(p, -plane.m_Normal));
 			if ((distToPlaneIntersection == -1) || (distToPlaneIntersection > radius)) 
 				return false;

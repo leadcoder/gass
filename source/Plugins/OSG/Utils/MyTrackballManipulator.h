@@ -22,51 +22,51 @@ namespace osgGA {
 	public:
 		MyTrackballManipulator();
 
-		virtual const char* className() const { return "Trackball"; }
+		const char* className() const override { return "Trackball"; }
 
 		/** set the position of the matrix manipulator using a 4x4 Matrix.*/
-		virtual void setByMatrix(const osg::Matrixd& matrix);
+		void setByMatrix(const osg::Matrixd& matrix) override;
 
 		/** set the position of the matrix manipulator using a 4x4 Matrix.*/
-		virtual void setByInverseMatrix(const osg::Matrixd& matrix) { setByMatrix(osg::Matrixd::inverse(matrix)); }
+		void setByInverseMatrix(const osg::Matrixd& matrix) override { setByMatrix(osg::Matrixd::inverse(matrix)); }
 
 		/** get the position of the manipulator as 4x4 Matrix.*/
-		virtual osg::Matrixd getMatrix() const;
+		osg::Matrixd getMatrix() const override;
 
 		/** get the position of the manipulator as a inverse matrix of the manipulator, typically used as a model view matrix.*/
-		virtual osg::Matrixd getInverseMatrix() const;
+		osg::Matrixd getInverseMatrix() const override;
 
 		/** Get the FusionDistanceMode. Used by SceneView for setting up stereo convergence.*/
-		virtual osgUtil::SceneView::FusionDistanceMode getFusionDistanceMode() const { return osgUtil::SceneView::USE_FUSION_DISTANCE_VALUE; }
+		osgUtil::SceneView::FusionDistanceMode getFusionDistanceMode() const override { return osgUtil::SceneView::USE_FUSION_DISTANCE_VALUE; }
 
 		/** Get the FusionDistanceValue. Used by SceneView for setting up stereo convergence.*/
-		virtual float getFusionDistanceValue() const { return static_cast<float>(_distance); }
+		float getFusionDistanceValue() const override { return static_cast<float>(_distance); }
 
 		/** Attach a node to the manipulator.
 			Automatically detaches previously attached node.
 			setNode(NULL) detaches previously nodes.
 			Is ignored by manipulators which do not require a reference model.*/
-		virtual void setNode(osg::Node*);
+		void setNode(osg::Node*) override;
 
 		/** Return node if attached.*/
-		virtual const osg::Node* getNode() const;
+		const osg::Node* getNode() const override;
 
 		/** Return node if attached.*/
-		virtual osg::Node* getNode();
+		osg::Node* getNode() override;
 
 		/** Move the camera to the default position.
 			May be ignored by manipulators if home functionality is not appropriate.*/
-		virtual void home(const GUIEventAdapter& ea, GUIActionAdapter& us);
-		virtual void home(double);
+		void home(const GUIEventAdapter& ea, GUIActionAdapter& us) override;
+		void home(double) override;
 
 		/** Start/restart the manipulator.*/
-		virtual void init(const GUIEventAdapter& ea, GUIActionAdapter& us);
+		void init(const GUIEventAdapter& ea, GUIActionAdapter& us) override;
 
 		/** handle events, return true if handled, false otherwise.*/
-		virtual bool handle(const GUIEventAdapter& ea, GUIActionAdapter& us);
+		bool handle(const GUIEventAdapter& ea, GUIActionAdapter& us) override;
 
 		/** Get the keyboard and mouse usage of this manipulator.*/
-		virtual void getUsage(osg::ApplicationUsage& usage) const;
+		void getUsage(osg::ApplicationUsage& usage) const override;
 
 
 		/** set the minimum distance (as ratio) the eye point can be zoomed in towards the
@@ -77,19 +77,19 @@ namespace osgGA {
 		double getMinimumZoomScale() const { return _minimumZoomScale; }
 
 		/** Set the center of the trackball. */
-		void setCenter(const osg::Vec3d& center) { _center = center; }
+		void setCenter(const osg::Vec3d& center) override { _center = center; }
 
 		/** Get the center of the trackball. */
 		const osg::Vec3d& getCenter() const { return _center; }
 
 		/** Set the rotation of the trackball. */
-		void setRotation(const osg::Quat& rotation) { _rotation = rotation; }
+		void setRotation(const osg::Quat& rotation) override { _rotation = rotation; }
 
 		/** Get the rotation of the trackball. */
 		const osg::Quat& getRotation() const { return _rotation; }
 
 		/** Set the distance of the trackball. */
-		void setDistance(double distance) { _distance = distance; }
+		void setDistance(double distance) override { _distance = distance; }
 
 		/** Get the distance of the trackball. */
 		double getDistance() const { return _distance; }
@@ -101,7 +101,7 @@ namespace osgGA {
 		float getTrackballSize() const { return _trackballSize; }
 	protected:
 
-		virtual ~MyTrackballManipulator();
+		~MyTrackballManipulator() override;
 
 		/** Reset the internal GUIEvent stack.*/
 		void flushMouseEventStack();

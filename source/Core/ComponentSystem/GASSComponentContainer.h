@@ -75,9 +75,6 @@ namespace GASS
 		typedef std::vector<ComponentContainerPtr> ComponentContainerVector;
 		typedef VectorIterator<ComponentContainerVector> ComponentContainerIterator;
 		typedef ConstVectorIterator<ComponentContainerVector> ConstComponentContainerIterator;
-
-		ComponentContainer();
-		virtual ~ComponentContainer();
 		
 		/**
 		Static reflection function called on start up
@@ -167,11 +164,11 @@ namespace GASS
 		virtual ComponentContainerPtr GetChild(size_t index) const;
 
 		//xml serialize interface
-		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 
 		//serialize interface
-		virtual bool Serialize(ISerializer* serializer);
+		bool Serialize(ISerializer* serializer) override;
 
 		//print object
 		void DebugPrint(int tc = 0);
@@ -202,7 +199,7 @@ namespace GASS
 		std::string m_TemplateName;
 		ComponentContainerWeakPtr m_Parent;
 		//Activate/deactivate serialization
-		bool m_Serialize;
+		bool m_Serialize{true};
 	};
 	typedef GASS_SHARED_PTR<ComponentContainer> ComponentContainerPtr;
 

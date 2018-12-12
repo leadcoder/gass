@@ -68,8 +68,6 @@ namespace GASS
 	class GASSCoreExport Component : public Reflection<Component, BaseReflectionObject>, public IXMLSerialize, public ISerialize
 	{
 	public:
-		Component();
-		virtual ~Component();
 		static void RegisterReflection();
 		/**
 			Return the name of the component
@@ -89,7 +87,7 @@ namespace GASS
 		virtual void SetOwner(ComponentContainerPtr owner);
 
 		//binary serialize interface
-		virtual bool Serialize(ISerializer* serializer);
+		bool Serialize(ISerializer* serializer) override;
 
 		//xml-serialize interface
 		/**
@@ -116,7 +114,7 @@ namespace GASS
 			loading procedure, this will of cause also require a custom
 			save implementation.
 		*/
-		virtual void LoadXML(tinyxml2::XMLElement *obj_elem);
+		void LoadXML(tinyxml2::XMLElement *obj_elem) override;
 
 		/**
 			Function to save component attributes to xml-tag.
@@ -139,7 +137,7 @@ namespace GASS
 			load implementation.
 
 		*/
-		virtual void SaveXML(tinyxml2::XMLElement *obj_elem);
+		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
 
 		/**
 			This function will allocate a new component
@@ -153,7 +151,7 @@ namespace GASS
 			this component to destination component.
 			@dest_comp Destination component
 		*/
-		virtual void CopyPropertiesTo(ComponentPtr dest_comp);
+		//virtual void CopyPropertiesTo(ComponentPtr dest_comp) const;
 
 		/**
 			Get component dependencies.

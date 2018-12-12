@@ -36,9 +36,9 @@ namespace GASS
 	{
 	public:
 		ODEHingeComponent();
-		virtual ~ODEHingeComponent();
+		~ODEHingeComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 	protected:
 		void OnBody1Loaded(PhysicsBodyLoadedEventPtr message);
 		void OnBody2Loaded(PhysicsBodyLoadedEventPtr message);

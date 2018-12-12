@@ -52,10 +52,10 @@ namespace GASS
 	friend class ODEPhysicsSceneManager;
 	public:
 		ODEBaseGeometryComponent();
-		virtual ~ODEBaseGeometryComponent();
+		~ODEBaseGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 
 		//Message functions
@@ -76,7 +76,7 @@ namespace GASS
 		virtual void Disable();
 		virtual void Enable();
 		virtual void SetFriction(float value){m_Friction = value;}
-		virtual float GetFriction() const {return m_Friction;}
+		float GetFriction() const override {return m_Friction;}
 		virtual void Reset();
 		virtual void SetPosition(const Vec3 &pos);
 		virtual void SetRotation(const Quaternion &rot);

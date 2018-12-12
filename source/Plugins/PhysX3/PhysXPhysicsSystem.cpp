@@ -30,9 +30,9 @@ namespace GASS
 	{
 	public:
 		PxGASSErrorCallback() :PxErrorCallback(){}
-		virtual ~PxGASSErrorCallback(){}
+		~PxGASSErrorCallback() override{}
 
-        virtual void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line)
+        void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line) override
 		{
 			std::string errorCode;
 

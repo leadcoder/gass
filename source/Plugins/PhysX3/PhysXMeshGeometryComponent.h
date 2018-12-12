@@ -37,10 +37,10 @@ namespace GASS
 	friend class PhysXPhysicsSceneManager;
 	public:
 		PhysXMeshGeometryComponent();
-		virtual ~PhysXMeshGeometryComponent();
+		~PhysXMeshGeometryComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		//Message section
 		void OnGeometryChanged(GeometryChangedEventPtr message);

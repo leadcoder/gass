@@ -132,7 +132,7 @@ namespace GASS
 		void operator()(const tbb::blocked_range<size_t>& r) const {
 			for (size_t i=r.begin();i!=r.end();++i)
 			{
-				m_Children[i]->Update(m_DeltaTime,NULL);
+				m_Children[i]->Update(m_DeltaTime, nullptr);
 			}
 		}
 		const TaskNode::TaskNodeVector& m_Children;

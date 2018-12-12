@@ -32,12 +32,12 @@ namespace GASS
 	{
 	public:
 		RakNetMessageTransferComponent();
-		virtual ~RakNetMessageTransferComponent();
+		~RakNetMessageTransferComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		void Called(const std::string &message, const std::string &data);
-		virtual bool IsRemote() const;
+		bool IsRemote() const override;
 	private:
 		//void OnDeserialize(NetworkDeserializeRequestPtr message);
 		//void OnInput(InputRelayEventPtr message);

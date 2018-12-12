@@ -106,7 +106,7 @@ namespace GASS
 
 			sub_mesh_data->Type = LINE_LIST;
 
-			for(int i = 0; i < 4; i++)
+			for(size_t i = 0; i < 4; i++)
 			{
 				Vec3 pos =conrners[i];
 				sub_mesh_data->PositionVector.push_back(pos);
@@ -119,7 +119,7 @@ namespace GASS
 				sub_mesh_data->PositionVector.push_back(pos);
 			}
 
-			for(int i = 0; i < 4; i++)
+			for(size_t i = 0; i < 4; i++)
 			{
 				Vec3 pos = conrners[4 + i];
 				sub_mesh_data->PositionVector.push_back(pos);

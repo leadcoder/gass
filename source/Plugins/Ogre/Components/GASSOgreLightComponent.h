@@ -38,9 +38,9 @@ namespace GASS
 	{
 	public:
 		OgreLightComponent();
-		virtual ~OgreLightComponent();
+		~OgreLightComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
+		void OnInitialize() override;
 		inline Ogre::Light	* GetOgreLight(){return m_OgreLight;}
 		void SetLightType(LightTypeBinder lt);
 		LightTypeBinder GetLightType()const {return m_LightType;}
@@ -62,7 +62,7 @@ namespace GASS
 		//add this dummy prop for ambient to play nice with OSG templates until better solution is found
 		ADD_PROPERTY(ColorRGB,AmbientColor)
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnDelete();
+		void OnDelete() override;
 		Ogre::Light* m_OgreLight;
 		LightTypeBinder m_LightType;
 

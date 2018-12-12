@@ -13,14 +13,14 @@ namespace GASS
 	{
 	public:
 		RNRoadEdgeComponent(void);
-		~RNRoadEdgeComponent(void);
-		void OnInitialize();
-		void OnDelete();
+		~RNRoadEdgeComponent(void) override;
+		void OnInitialize() override;
+		void OnDelete() override;
 		static void RegisterReflection();
-		void SetStartNode(GraphNodeComponentPtr node) {m_StartNode = node;}
-		void SetEndNode(GraphNodeComponentPtr node) {m_EndNode = node;}
-		GraphNodeComponentPtr GetStartNode() const {return m_StartNode.lock();}
-		GraphNodeComponentPtr GetEndNode() const {return m_EndNode.lock();}
+		void SetStartNode(GraphNodeComponentPtr node) override {m_StartNode = node;}
+		void SetEndNode(GraphNodeComponentPtr node) override {m_EndNode = node;}
+		GraphNodeComponentPtr GetStartNode() const override {return m_StartNode.lock();}
+		GraphNodeComponentPtr GetEndNode() const override {return m_EndNode.lock();}
 		void SetLaneWidth(Float value) { m_LaneWidth = value;}
 		Float GetLaneWidth() const { return m_LaneWidth;}
 		WaypointListComponentPtr GetWaypointList() const;

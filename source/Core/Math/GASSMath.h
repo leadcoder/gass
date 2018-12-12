@@ -22,7 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVec2.h"
-#include <math.h>
+#include <cmath>
 
 #define GASS_PI 3.1415926535898
 #define GASS_HALF_PI 1.5707963267949
@@ -47,16 +47,16 @@ namespace GASS
 		@param rad Number of radians, as a float.
 		@return Number of degrees.
 		*/
-		inline static float Rad2Deg(float rad);
-		inline static double Rad2Deg(double rad);
+		constexpr inline static float Rad2Deg(float rad);
+		constexpr inline static double Rad2Deg(double rad);
 
 		/**
 		@brief Convert degrees to radians.
 		@param deg Number of degrees, as a float.
 		@return Number of radians.
 		*/
-		inline static float Deg2Rad(float deg);
-		inline static double Deg2Rad(double deg);
+		constexpr inline static float Deg2Rad(float deg);
+		constexpr inline static double Deg2Rad(double deg);
 		
 		template<class TYPE> inline static TYPE ASin(TYPE fValue);
 
@@ -102,22 +102,22 @@ namespace GASS
 	};
 
 	//implementation
-	float Math::Rad2Deg(float rad)
+	constexpr float Math::Rad2Deg(float rad)
 	{
 		return 360.0f * rad / (static_cast<float>(GASS_PI*2.0));
 	}
 
-	double Math::Rad2Deg(double rad)
+	constexpr double Math::Rad2Deg(double rad)
 	{
 		return 360.0 * rad / (GASS_PI*2.0);
 	}
 
-	float Math::Deg2Rad(float deg)
+	constexpr float Math::Deg2Rad(float deg)
 	{
 		return static_cast<float>(2.0*GASS_PI) * deg / 360.0f;
 	}
 
-	double Math::Deg2Rad(double deg)
+	constexpr double Math::Deg2Rad(double deg)
 	{
 		return 2.0*GASS_PI * deg / 360.0;
 	}

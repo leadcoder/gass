@@ -33,16 +33,6 @@
 
 namespace GASS
 {
-	ComponentContainerTemplate::ComponentContainerTemplate() : m_Serialize(true)
-	{
-
-	}
-
-	ComponentContainerTemplate::~ComponentContainerTemplate(void)
-	{
-
-	}
-
 	void ComponentContainerTemplate::AddChild(ComponentContainerTemplatePtr child)
 	{
 		ComponentContainerTemplateWeakPtr parent = ComponentContainerTemplateWeakPtr(shared_from_this());
@@ -70,13 +60,12 @@ namespace GASS
 
 	ComponentPtr ComponentContainerTemplate::GetComponent(const std::string &name) const
 	{
-		ComponentPtr comp;
-		for(size_t i = 0 ; i < m_ComponentVector.size(); i++)
+		for(const auto & comp : m_ComponentVector)
 		{
-			if(m_ComponentVector[i]->GetName() == name)
-				return m_ComponentVector[i];
+			if(comp->GetName() == name)
+				return comp;
 		}
-		return comp;
+		return ComponentPtr();
 	}
 
 
@@ -103,7 +92,7 @@ namespace GASS
 		if(serializer->Loading())
 		{
 			int num_comp = 0;
-			SerialLoader* loader = dynamic_cast<SerialLoader*>( serializer);
+			auto* loader = dynamic_cast<SerialLoader*>( serializer);
 			if (loader)
 			{
 				loader->IO<int>(num_comp);
@@ -155,13 +144,13 @@ namespace GASS
 		}
 		else
 		{
-			int num_comp = static_cast<int>(m_ComponentVector.size());
-			SerialSaver* saver = dynamic_cast<SerialSaver*>(serializer);
+			const int num_comp = static_cast<int>(m_ComponentVector.size());
+			auto* saver = dynamic_cast<SerialSaver*>(serializer);
 			if (saver)
 			{
 				saver->IO<int>(num_comp);
 
-				ComponentVector::iterator iter = m_ComponentVector.begin();
+				auto iter = m_ComponentVector.begin();
 				while (iter != m_ComponentVector.end())
 				{
 					ComponentPtr comp = (*iter);
@@ -175,7 +164,7 @@ namespace GASS
 					++iter;
 				}
 
-				int num_children = static_cast<int>(m_ComponentContainerVector.size());
+				const int num_children = static_cast<int>(m_ComponentContainerVector.size());
 				saver->IO<int>(num_children);
 
 				ComponentContainerTemplate::ComponentContainerTemplateVector::iterator go_iter;
@@ -565,7 +554,7 @@ namespace GASS
 		{
 			TAB(tc) << "Components" << std::endl;
 		}
-		ComponentVector::iterator comp_iter = m_ComponentVector.begin();
+		auto comp_iter = m_ComponentVector.begin();
 		tc++;
 		while (comp_iter != m_ComponentVector.end())
 		{

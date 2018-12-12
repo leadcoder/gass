@@ -39,8 +39,6 @@ namespace GASS
 	class GASSCoreExport FileUtils
 	{
 	public:
-		FileUtils();
-		virtual ~FileUtils();
 		static std::string GetExtension(const std::string &file_name);
 		static std::string GetFilename(const std::string &path);
 		static std::string RemoveFilename(const std::string &path);

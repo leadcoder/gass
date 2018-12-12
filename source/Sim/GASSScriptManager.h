@@ -45,10 +45,10 @@ namespace GASS
 	{
 	public:
 		ScriptController(asIScriptModule *mod) : m_Module(mod),
-		m_UpdateFunction(NULL),
-		m_InitFunction(NULL),
-		m_FactoryFunction(NULL),
-		m_ShutdownFunction(NULL)
+		m_UpdateFunction(nullptr),
+		m_InitFunction(nullptr),
+		m_FactoryFunction(nullptr),
+		m_ShutdownFunction(nullptr)
 		{}
 		virtual ~ScriptController(){}
 		asIScriptModule* GetModule() const{return m_Module;}
@@ -68,7 +68,7 @@ namespace GASS
 	{
 	public:
 		ScriptManager();
-		virtual ~ScriptManager();
+		~ScriptManager() override;
 		void Init();
 		ScriptControllerPtr LoadScript(const std::string &script, const std::string &init_func_arg);
 		void UnloadScript(const std::string &script);

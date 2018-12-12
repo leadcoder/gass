@@ -39,17 +39,17 @@ namespace GASS
 	{
 	public:
 		OSGGraphicsSceneManager();
-		virtual ~OSGGraphicsSceneManager();
+		~OSGGraphicsSceneManager() override;
 		static void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();		
-		virtual void OnShutdown();
-		virtual void OnUpdate(double delta);
+		void OnCreate() override;
+		void OnInit() override;		
+		void OnShutdown() override;
+		void OnUpdate(double delta) override;
 	
-		virtual bool GetSerialize() const {return true;}
-		virtual void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color);
-		osg::ref_ptr<osg::Group> GetOSGRootNode() {return m_RootNode;}
-		osg::ref_ptr<osg::Group> GetOSGShadowRootNode()
+		bool GetSerialize() const override {return true;}
+		void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color) override;
+		osg::ref_ptr<osg::Group> GetOSGRootNode() override {return m_RootNode;}
+		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
 				if (m_ShadowedScene.valid())
 					return m_ShadowedScene;

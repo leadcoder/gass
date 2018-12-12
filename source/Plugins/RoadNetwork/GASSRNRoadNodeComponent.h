@@ -12,12 +12,12 @@ namespace GASS
 	{
 	public:
 		RNRoadNodeComponent(void);
-		~RNRoadNodeComponent(void);
-		void OnInitialize();
-		void OnDelete();
+		~RNRoadNodeComponent(void) override;
+		void OnInitialize() override;
+		void OnDelete() override;
 		static void RegisterReflection();
-		virtual void AddEdge(GraphEdgeComponentPtr edge) {m_Edges.push_back(edge);}
-		virtual void RemoveEdge(GraphEdgeComponentPtr edge);
+		void AddEdge(GraphEdgeComponentPtr edge) override {m_Edges.push_back(edge);}
+		void RemoveEdge(GraphEdgeComponentPtr edge) override;
 		std::vector<GraphEdgeComponentWeakPtr> GetEdges() const {return m_Edges;}
 	private:
 		//void OnTransformation(TransformationChangedEventPtr message);

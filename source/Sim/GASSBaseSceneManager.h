@@ -46,23 +46,23 @@ namespace GASS
 	{
 	public:
 		BaseSceneManager();
-		virtual ~BaseSceneManager();
+		~BaseSceneManager() override;
 
 		static void RegisterReflection();
 
 		//ISceneManager
-		virtual std::string GetName() const {return m_Name;}
-		virtual void SetName(const std::string &name) {m_Name = name;}
-		virtual ScenePtr GetScene() const {return m_Scene.lock();}//allow null pointer}
-		virtual void SetScene(ScenePtr owner){m_Scene = owner;}
+		std::string GetName() const override {return m_Name;}
+		void SetName(const std::string &name) override {m_Name = name;}
+		ScenePtr GetScene() const override {return m_Scene.lock();}//allow null pointer}
+		void SetScene(ScenePtr owner) override {m_Scene = owner;}
 		
-		virtual void RegisterPreUpdate(SceneManagerListenerPtr listener);
-		virtual void RegisterPostUpdate(SceneManagerListenerPtr listener);
+		void RegisterPreUpdate(SceneManagerListenerPtr listener) override;
+		void RegisterPostUpdate(SceneManagerListenerPtr listener) override;
 
 		virtual void OnUpdate(double /*delta_time*/) {};
 	
 		//ISystemListener
-		void OnPreSystemUpdate(double delta_time)
+		void OnPreSystemUpdate(double delta_time) override
 		{
 			if (m_PreSystemUpdate)
 			{
@@ -72,7 +72,7 @@ namespace GASS
 			}
 		}
 
-		void OnPostSystemUpdate(double delta_time)
+		void OnPostSystemUpdate(double delta_time) override
 		{
 			if (!m_PreSystemUpdate)
 			{
@@ -83,8 +83,8 @@ namespace GASS
 		}
 
 		//IXMLSerialize
-		virtual void LoadXML(tinyxml2::XMLElement *xml_elem);
-		virtual void SaveXML(tinyxml2::XMLElement *xml_elem);
+		void LoadXML(tinyxml2::XMLElement *xml_elem) override;
+		void SaveXML(tinyxml2::XMLElement *xml_elem) override;
 	protected:
 
 		template <class T>

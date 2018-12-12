@@ -23,16 +23,6 @@
 
 namespace GASS
 {
-
-	EnumLookup::EnumLookup()
-	{
-		m_NumConstants = 0;
-	}
-
-	EnumLookup::~EnumLookup()
-	{
-	}
-
 	void EnumLookup::Add(std::string name, int value)
 	{
 		m_ConstantMap[StringUtils::ToLower(name)] = value;
@@ -47,8 +37,8 @@ namespace GASS
 
 	int EnumLookup::Get(const std::string &name)
 	{
-		std::string lower_name = StringUtils::ToLower(name);
-		ConstantMap::iterator pos = m_ConstantMap.find(lower_name);
+		const std::string lower_name = StringUtils::ToLower(name);
+		const auto pos = m_ConstantMap.find(lower_name);
 
 		if (pos != m_ConstantMap.end()) //in map.
 		{

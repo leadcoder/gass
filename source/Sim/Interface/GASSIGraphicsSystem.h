@@ -61,7 +61,7 @@ namespace GASS
 			@param handle Main window handle (parent window)
 		*/
 
-		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = 0) = 0;
+		virtual RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = nullptr) = 0;
 
 		/**
 			Get material names from rendersystem. This function can be used by external components that want to enumerate materials inside the rendersytem. 

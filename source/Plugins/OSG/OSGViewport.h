@@ -32,10 +32,10 @@ namespace GASS
 		friend class OSGRenderWindow;
 	public:
 		OSGViewport(const std::string &name,osgViewer::View* view, OSGRenderWindow* window);
-		virtual ~OSGViewport();
-		virtual CameraComponentPtr GetCamera() const;
-		virtual void SetCamera(CameraComponentPtr camera);
-		virtual std::string GetName() const {return m_Name;}
+		~OSGViewport() override;
+		CameraComponentPtr GetCamera() const override;
+		void SetCamera(CameraComponentPtr camera) override;
+		std::string GetName() const override {return m_Name;}
 		osg::Camera* GetOSGCamera() const {return m_OSGCamera;}
 	private:
 		void Init();

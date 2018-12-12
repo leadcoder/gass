@@ -26,9 +26,9 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 
@@ -60,7 +60,7 @@ namespace GASS
 		{
 			x = _x; y = _y; z = _z;
 		}
-		inline TVec3() {}
+		inline TVec3() = default;
 	
 		inline void Set(TYPE _x, TYPE _y, TYPE _z)
 		{

@@ -43,10 +43,10 @@ namespace GASS
 	{
 	public:
 		RakNetNetworkMasterComponent();
-		virtual ~RakNetNetworkMasterComponent();
+		~RakNetNetworkMasterComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		RakNetMasterReplica* GetReplica() const {return m_Replica;}
 		void SetReplica(RakNetMasterReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}

@@ -42,7 +42,7 @@ namespace GASS
 	{
 	public:
 		VehicleWheel(SceneObjectPtr  wheel);
-		virtual ~VehicleWheel();
+		~VehicleWheel() override;
 		void Init();
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 
@@ -63,11 +63,11 @@ namespace GASS
 	{
 	public:
 		VehicleEngineComponent();
-		virtual ~VehicleEngineComponent();
+		~VehicleEngineComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		void SceneManagerTick(double delta);
+		void OnInitialize() override;
+		void OnDelete() override;
+		void SceneManagerTick(double delta) override;
 		float GetRPM() const {return m_RPM;}
 		int GetGear() const {return m_Gear;}
 		float GetNormRPM() const;

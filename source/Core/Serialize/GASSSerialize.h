@@ -42,8 +42,8 @@ namespace GASS
 
 	class GASSCoreExport ISerializer
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ISerializer)
 	public:
-		virtual ~ISerializer(){}
 		virtual bool Loading()=0;
 	};
 
@@ -62,7 +62,7 @@ namespace GASS
 	public:
 		SerialSaver()
 		{
-			buffer=NULL; length=0; bytesUsed=0; bHasOverflowed=false;
+			buffer=nullptr; length=0; bytesUsed=0; bHasOverflowed=false;
 		}
 
 		SerialSaver(unsigned char *buf, unsigned long size)
@@ -71,7 +71,7 @@ namespace GASS
 		}
 
 		template <class T>
-		void IO(T &value)
+		void IO(const T &value)
 		{
 			if(buffer)
 			{
@@ -83,7 +83,7 @@ namespace GASS
 			}
 			else //get size
 			{
-				int type_size = sizeof(T);
+				const int type_size = sizeof(T);
 				length+=type_size;
 			}
 		}
@@ -91,7 +91,7 @@ namespace GASS
 
 
 
-		bool Loading(){return false;}
+		bool Loading() override{return false;}
 
 		bool hasOverflowed() const { return bHasOverflowed; }
 		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
@@ -100,10 +100,10 @@ namespace GASS
 
     //Use specialized template to catch std::string
     template <>
-    GASSCoreExport void SerialSaver::IO<std::string>(std::string &value);
+    GASSCoreExport void SerialSaver::IO<std::string>(const std::string &value);
   
     template <>
-    GASSCoreExport void SerialSaver::IO<FilePath>(FilePath &path);
+    GASSCoreExport void SerialSaver::IO<FilePath>(const FilePath &path);
 
 
 
@@ -140,7 +140,7 @@ namespace GASS
 
 
 
-		bool Loading(){return true;}
+		bool Loading() override{return true;}
 
 		bool hasOverflowed() const { return bHasOverflowed; }
 		long getFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done

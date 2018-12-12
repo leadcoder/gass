@@ -24,15 +24,10 @@
 
 namespace GASS
 {
-	SplineAnimation::SplineAnimation(void) : m_Length(0), m_NumericSteps(25)
+	SplineAnimation::SplineAnimation() : m_Length(0), m_NumericSteps(25)
 	{
 		
 		
-	}
-
-	SplineAnimation::~SplineAnimation(void)
-	{
-
 	}
 
 	void SplineAnimation::AddNode(const Vec3 &pos)
@@ -44,13 +39,13 @@ namespace GASS
 		BuildInterpolationSplines();
 	}
 
-	void SplineAnimation::BuildInterpolationSplines(void) 
+	void SplineAnimation::BuildInterpolationSplines() 
 	{
 		m_Spline.Clear();
 		m_Spline.SetAutoCalc(true);
-		for (size_t i = 0; i < m_NodeVector.size(); i++)
+		for (auto & node : m_NodeVector)
 		{
-			m_Spline.AddPoint(m_NodeVector[i].m_Pos);
+			m_Spline.AddPoint(node.m_Pos);
 		}
 		m_Spline.RecalcTangents();
 	
@@ -59,15 +54,15 @@ namespace GASS
 		bool first = true;
 		Float seg_dist = 0;
 		Float tot_dist = 0;
-		Float step_size = 1.0f / m_NumericSteps;
+		const Float step_size = 1.0f / m_NumericSteps;
 		for(int  i = 0; i < static_cast<int>(m_NodeVector.size()); i++)
 		{
 			for(Float t = 0; t <= (1 + step_size); t += step_size)
 			{
-				Vec3 spline_point =  m_Spline.Interpolate(i, t);
+				const Vec3 spline_point =  m_Spline.Interpolate(i, t);
 				if(!first)
 				{
-					Vec3  dir = spline_point - last_spline_point;
+					const Vec3  dir = spline_point - last_spline_point;
 					seg_dist += dir.Length();
 					
 				}
@@ -88,8 +83,8 @@ namespace GASS
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
-		Vec3 pos = m_Spline.Interpolate(index, time);
-		Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
+		const Vec3 pos = m_Spline.Interpolate(index, time);
+		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
 
 		Vec3 left,dir,up;
 		dir = rot_pos - pos;
@@ -110,7 +105,7 @@ namespace GASS
 
 	Vec3 SplineAnimation::GetVectorMask(const Vec3 &up_dir) const
 	{
-		Vec3 abs_up_dir(fabs(up_dir.x),fabs(up_dir.y),fabs(up_dir.z));
+		const Vec3 abs_up_dir(fabs(up_dir.x),fabs(up_dir.y),fabs(up_dir.z));
 		Vec3 ret(1,1,1);
 		ret = (ret - abs_up_dir);
 		return ret;
@@ -124,14 +119,14 @@ namespace GASS
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
-		Vec3 pos = m_Spline.Interpolate(index, time);
-		Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
+		const Vec3 pos = m_Spline.Interpolate(index, time);
+		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
 
 		Vec3 left,dir,up;
 		dir = rot_pos - pos;
 		dir.Normalize();
 
-		Vec3 mask = GetVectorMask(up_dir);
+		const Vec3 mask = GetVectorMask(up_dir);
 
 		Vec3 mask_dir = mask*dir;
 		mask_dir.Normalize();
@@ -158,14 +153,14 @@ namespace GASS
 		Float time;
 		int index;
 		GetIndexAndTime(desired_distance,time,index);
-		Vec3 pos = m_Spline.Interpolate(index, time);
-		Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
+		const Vec3 pos = m_Spline.Interpolate(index, time);
+		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
 
 		Vec3 left,dir,up;
 		dir = rot_pos - pos;
 		dir.Normalize();
 
-		Vec3 mask = GetVectorMask(up_dir);
+		const Vec3 mask = GetVectorMask(up_dir);
 
 		Vec3 mask_dir = mask*dir;
 		mask_dir.Normalize();
@@ -209,11 +204,11 @@ namespace GASS
 			{
 				for(Float t = 0; t <= (1 + step_size); t += step_size)
 				{
-					Vec3 spline_point =  m_Spline.Interpolate(i, t);
+					const Vec3 spline_point =  m_Spline.Interpolate(i, t);
 					if(!first)
 					{
-						Vec3  dir = spline_point - last_spline_point;
-						Float seg_len = dir.Length();
+						const Vec3  dir = spline_point - last_spline_point;
+						const Float seg_len = dir.Length();
 						dist += seg_len;
 						if(dist > desired_distance)
 						{

@@ -21,10 +21,10 @@ namespace GASS
 	{
 	public:
 		EditorSystem();
-		virtual ~EditorSystem(void);
+		~EditorSystem(void) override;
 		static  void RegisterReflection();
-		virtual void Init();
-		virtual std::string GetSystemName() const {return "EditorSystem";}
+		void Init() override;
+		std::string GetSystemName() const override {return "EditorSystem";}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 		ADD_PROPERTY(bool,LockTerrainObjects)
 		ADD_PROPERTY(std::string,DefaultCameraTemplate)

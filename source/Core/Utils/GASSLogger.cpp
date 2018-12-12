@@ -8,8 +8,8 @@ namespace GASS
 	
 	bool Logger::m_AppendLogFile = false;
 	bool Logger::m_Initialized = false;
-	std::ofstream* Logger::m_FileStream = NULL;
-	ILogListener* Logger::m_Listener = NULL;
+	std::ofstream* Logger::m_FileStream = nullptr;
+	ILogListener* Logger::m_Listener = nullptr;
 	LogLevel Logger::m_MinLogLevel = LINFO;
 
 	Logger::Logger() : m_FreeLogging(false),
@@ -84,7 +84,7 @@ namespace GASS
 	void Logger::Finalize()
 	{
 		m_Initialized = false;
-		if (m_FileStream != NULL)
+		if (m_FileStream != nullptr)
 		{
 			// You can customize the final logging output below
 			(*m_FileStream) << std::endl << "========== END: " << DateTimeHelper::getDateTime() << " ==========" << std::endl << std::endl;
@@ -143,8 +143,8 @@ namespace GASS
 
 	std::string DateTimeHelper::getDateTime()
 	{
-		time_t t = time(0);   // get time now
-		struct tm * now = localtime(&t);
+		const time_t t = time(nullptr);   // get time now
+		const struct tm * now = localtime(&t);
 		std::stringstream ss;
 		ss << (now->tm_year + 1900) << '-'
 			<< std::setw(2) << std::setfill('0') << (now->tm_mon + 1) << '-'
@@ -157,8 +157,8 @@ namespace GASS
 
 	std::string DateTimeHelper::getTime()
 	{
-		time_t t = time(0);   // get time now
-		struct tm * now = localtime(&t);
+		const time_t t = time(nullptr);   // get time now
+		const struct tm * now = localtime(&t);
 		std::stringstream ss;
 		ss  << std::setw(2) << std::setfill('0') << now->tm_hour << ":"
 			<< std::setw(2) << std::setfill('0') << now->tm_min << ":"

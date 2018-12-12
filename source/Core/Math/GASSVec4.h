@@ -24,8 +24,8 @@
 #include "Core/Utils/GASSException.h"
 #include <iostream>
 #include <iomanip>
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 
 //NOTE THAT THIS FILE IS BASED ON CODE FROM: Ogre3d
 
@@ -48,7 +48,7 @@ namespace GASS
 	public:
 		TYPE x,y,z,w;
 
-		inline TVec4(){}
+		inline TVec4()= default;
 		inline TVec4(TYPE _x, TYPE _y, TYPE _z, TYPE _w)
 		{
 			x = _x;y = _y;z = _z;w = _w;

@@ -46,51 +46,51 @@ namespace GASS
 	{
 	public:
 		OISInputSystem();
-		virtual ~OISInputSystem();
+		~OISInputSystem() override;
 		static void RegisterReflection();
-		virtual void OnCreate(SimSystemManagerPtr owner);
-		virtual void Init();
-		virtual std::string GetSystemName() const {return "OISInputSystem";}
-		virtual void OnSystemUpdate(double delta_time);
+		void OnCreate(SimSystemManagerPtr owner) override;
+		void Init() override;
+		std::string GetSystemName() const override {return "OISInputSystem";}
+		void OnSystemUpdate(double delta_time) override;
 
 		//IInputSystem
-		virtual void AddKeyListener(IKeyListener* key_listener);
-		virtual void RemoveKeyListener(IKeyListener* key_listener);
-		virtual void AddMouseListener(IMouseListener* mouse_listener);
-		virtual void RemoveMouseListener(IMouseListener* mouse_listener);
-		virtual void AddGameControllerListener(IGameControllerListener* );
-		virtual void RemoveGameControllerListener(IGameControllerListener* );
-		virtual void ClipInputWindow(int left,int top,int right,int bottom);
-		virtual void SetEnableKey(bool value);
-		virtual void SetEnableJoystick(bool value);
-		virtual void SetEnableMouse(bool value);
-		virtual bool GetEnableKey() const;
-		virtual bool GetEnableJoystick() const;
-		virtual bool GetEnableMouse() const;
-		virtual void SetMainWindowHandle(void *main_win_handle);
+		void AddKeyListener(IKeyListener* key_listener) override;
+		void RemoveKeyListener(IKeyListener* key_listener) override;
+		void AddMouseListener(IMouseListener* mouse_listener) override;
+		void RemoveMouseListener(IMouseListener* mouse_listener) override;
+		void AddGameControllerListener(IGameControllerListener* ) override;
+		void RemoveGameControllerListener(IGameControllerListener* ) override;
+		void ClipInputWindow(int left,int top,int right,int bottom) override;
+		void SetEnableKey(bool value) override;
+		void SetEnableJoystick(bool value) override;
+		void SetEnableMouse(bool value) override;
+		bool GetEnableKey() const override;
+		bool GetEnableJoystick() const override;
+		bool GetEnableMouse() const override;
+		void SetMainWindowHandle(void *main_win_handle) override;
 
 		//IProxyInputSystem
-		virtual void InjectMouseMoved(const MouseData &data);
-		virtual void InjectMousePressed(const MouseData &data, MouseButtonId id );
-		virtual void InjectMouseReleased(const MouseData &data, MouseButtonId id );
-		virtual void InjectKeyPressed( int key, unsigned int text);
-		virtual void InjectKeyReleased( int key, unsigned int text);
+		void InjectMouseMoved(const MouseData &data) override;
+		void InjectMousePressed(const MouseData &data, MouseButtonId id ) override;
+		void InjectMouseReleased(const MouseData &data, MouseButtonId id ) override;
+		void InjectKeyPressed( int key, unsigned int text) override;
+		void InjectKeyReleased( int key, unsigned int text) override;
 
 		//OIS::KeyListener
-		virtual bool keyPressed( const OIS::KeyEvent &arg );
-		virtual bool keyReleased( const OIS::KeyEvent &arg );
+		bool keyPressed( const OIS::KeyEvent &arg ) override;
+		bool keyReleased( const OIS::KeyEvent &arg ) override;
 
 		//OIS::MouseListener
-		virtual bool mouseMoved( const OIS::MouseEvent &arg );
-		virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-		virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+		bool mouseMoved( const OIS::MouseEvent &arg ) override;
+		bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) override;
+		bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) override;
 
 		//OIS::JoyStickListener
-		virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
-		virtual bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
-		virtual bool axisMoved( const OIS::JoyStickEvent &arg, int axis ) ;
-		virtual bool sliderMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd sliderID
-		virtual bool povMoved( const OIS::JoyStickEvent &, int ); //Joystick Event, amd povID
+		bool buttonPressed( const OIS::JoyStickEvent &arg, int button ) override;
+		bool buttonReleased( const OIS::JoyStickEvent &arg, int button ) override;
+		bool axisMoved( const OIS::JoyStickEvent &arg, int axis ) override ;
+		bool sliderMoved( const OIS::JoyStickEvent &, int ) override; //Joystick Event, amd sliderID
+		bool povMoved( const OIS::JoyStickEvent &, int ) override; //Joystick Event, amd povID
 	private:
 		//ADD_PROPERTY(double,UpdateFrequency);
 		ADD_PROPERTY(float,GameControllerAxisMinValue);

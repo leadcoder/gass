@@ -36,21 +36,21 @@ namespace GASS
 	{
 	public:
 		PhysXPrismaticComponent();
-		virtual ~PhysXPrismaticComponent();
+		~PhysXPrismaticComponent() override;
 		static void RegisterReflection();
 		
-		virtual void OnInitialize();
-		virtual void CreateJoint();
-		virtual void SceneManagerTick(double delta_time);
-		physx::PxJoint* GetJoint() const  {return m_PrismaticJoint;}
+		void OnInitialize() override;
+		void CreateJoint() override;
+		void SceneManagerTick(double delta_time) override;
+		physx::PxJoint* GetJoint() const override  {return m_PrismaticJoint;}
 	
 		//IPrismaticJointComponent
-		void SetDriveTargetVelocity(float velocity);
-		float GetDriveTargetVelocity() const { return m_DriveTargetVelocity; }
-		void SetDriveTargetPosition(float position);
-		float GetDriveTargetPosition() const { return static_cast<float>(m_DriveTargetPosition); }
-		void SetDriveForceLimit(float value);
-		float GetDriveForceLimit() const { return m_DriveForceLimit; }
+		void SetDriveTargetVelocity(float velocity) override;
+		float GetDriveTargetVelocity() const override { return m_DriveTargetVelocity; }
+		void SetDriveTargetPosition(float position) override;
+		float GetDriveTargetPosition() const override { return static_cast<float>(m_DriveTargetPosition); }
+		void SetDriveForceLimit(float value) override;
+		float GetDriveForceLimit() const override { return m_DriveForceLimit; }
 	protected:
 		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsPrismaticJointVelocityRequestPtr message);

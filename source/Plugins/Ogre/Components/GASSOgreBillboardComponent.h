@@ -40,15 +40,15 @@ namespace GASS
 	{
 	public:
 		OgreBillboardComponent (void);
-		~OgreBillboardComponent (void);
+		~OgreBillboardComponent (void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual AABox GetBoundingBox()const;
-		virtual Sphere GetBoundingSphere()const;
-		virtual GeometryFlags GetGeometryFlags() const;
-		virtual void SetGeometryFlags(GeometryFlags flags);
-		virtual bool GetCollision() const;
-		virtual void SetCollision(bool value);
+		void OnInitialize() override;
+		AABox GetBoundingBox()const override;
+		Sphere GetBoundingSphere()const override;
+		GeometryFlags GetGeometryFlags() const override;
+		void SetGeometryFlags(GeometryFlags flags) override;
+		bool GetCollision() const override;
+		void SetCollision(bool value) override;
 
 		Ogre::BillboardSet* GetBillboardSet() const {return m_BillboardSet;}
 	protected:

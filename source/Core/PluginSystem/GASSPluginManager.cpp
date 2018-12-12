@@ -24,14 +24,10 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Serialize/tinyxml2.h"
-#include <assert.h>
+#include <cassert>
 
 namespace GASS
 {
-	PluginManager::PluginManager()
-	{
-	}
-
 	PluginManager::~PluginManager()
 	{
 		Shutdown();
@@ -44,7 +40,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
 
 		GASS_LOG(LINFO) << "Start loading plugins from " << filename;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
+		auto *xmlDoc = new tinyxml2::XMLDocument();
 		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xmlDoc;
@@ -83,37 +79,37 @@ namespace GASS
 	}
 	void PluginManager::Shutdown()
 	{
-		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		for(auto & plugin : m_Plugins)
 		{
-			m_Plugins[i]->Unload();
-			delete m_Plugins[i];
+			plugin->Unload();
+			delete plugin;
 		}
 		m_Plugins.clear();
 	}
 
 	void PluginManager::UnloadPlugin(const std::string &name)
 	{
-		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		for(auto & plugin : m_Plugins)
 		{
-			if(m_Plugins[i]->GetModuleName() == name)
-				m_Plugins[i]->Unload();
+			if(plugin->GetModuleName() == name)
+				plugin->Unload();
 		}
 	}
 
 	void PluginManager::ReloadAll()
 	{
-		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		for(auto & plugin : m_Plugins)
 		{
-			m_Plugins[i]->Unload();
-			m_Plugins[i]->Load();
+			plugin->Unload();
+			plugin->Load();
 		}
 	}
 
 	void PluginManager::CallFunction(const std::string &func_name, void* arg1)
 	{
-		for(size_t i = 0 ; i < m_Plugins.size(); i++)
+		for(auto & plugin : m_Plugins)
 		{
-			m_Plugins[i]->CallFunction(func_name,arg1);
+			plugin->CallFunction(func_name,arg1);
 		}
 	}
 
@@ -132,7 +128,7 @@ namespace GASS
 			file_name += ".dll";
 #endif
 		}
-		DynamicModule* module = new DynamicModule(file_name);
+		auto* module = new DynamicModule(file_name);
 		module->Load();
 		GASS_LOG(LINFO) << file_name << " loaded";
 		m_Plugins.push_back(module);
@@ -154,10 +150,10 @@ namespace GASS
 		FileUtils::GetFilesFromPath(files, directory, false, false);
 		std::vector<std::string> plugins;
 
-		for (size_t i = 0; i < files.size(); i++)
+		for (const auto & file : files)
 		{
-			std::string extension = FileUtils::GetExtension(files[i]);
-			std::string filename = FileUtils::GetFilename(files[i]);
+			std::string extension = FileUtils::GetExtension(file);
+			std::string filename = FileUtils::GetFilename(file);
 			//filter debug plugins
 #ifndef NDEBUG
 				if (filename.find("_d") == std::string::npos)
@@ -175,11 +171,11 @@ namespace GASS
 
 		std::string saved_path = FileUtils::GetCurrentDir();
 		FileUtils::SetCurrentDir(directory);
-		for (size_t i = 0; i < plugins.size(); i++)
+		for (const auto & plugin : plugins)
 		{
-			DynamicModule* module = new DynamicModule(plugins[i]);
+			auto* module = new DynamicModule(plugin);
 			module->Load();
-			GASS_LOG(LINFO) << plugins[i] << " loaded";
+			GASS_LOG(LINFO) << plugin << " loaded";
 			m_Plugins.push_back(module);
 		}
 		FileUtils::SetCurrentDir(saved_path);

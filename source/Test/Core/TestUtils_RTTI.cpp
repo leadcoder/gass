@@ -37,9 +37,9 @@ public:
 	
 	static void RegisterReflection()
 	{
-		GASS::IProperty* property = new GASS::Property<Car, std::string>("Name", &Car::GetName, &Car::SetName, GASS::PropertyMetaDataPtr());
+		GASS::IProperty* property = GASS::CreateProperty<Car>("Name", &Car::GetName, &Car::SetName, GASS::PropertyMetaDataPtr());
 		m_RTTI.GetProperties()->push_back(property);
-		property = new GASS::Property<Car, float>("Fuel", &Car::GetFuel, &Car::SetFuel, GASS::PropertyMetaDataPtr());
+		property = GASS::CreateProperty<Car>("Fuel", &Car::GetFuel, &Car::SetFuel, GASS::PropertyMetaDataPtr());
 		m_RTTI.GetProperties()->push_back(property);
 	}
 	static GASS::RTTI m_RTTI;
@@ -50,7 +50,7 @@ TEST_CASE("Test RTTI")
 {
 	SECTION("Test property")
 	{
-		GASS::IProperty* property = new GASS::Property<SimplePropOwner, std::string>("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName, GASS::PropertyMetaDataPtr());
+		GASS::IProperty* property = GASS::CreateProperty<SimplePropOwner>("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName, GASS::PropertyMetaDataPtr());
 		SimplePropOwner po;
 		property->SetValueByString(&po,"Hello world");
 		std::string name = property->GetValueAsString(&po);

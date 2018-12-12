@@ -34,12 +34,12 @@ namespace GASS
 	{
 	public:
 		CircleGeometryComponent(void);
-		~CircleGeometryComponent(void);
+		~CircleGeometryComponent(void) override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
-		virtual bool IsPointInside(const Vec3 &point) const;
-		virtual Vec3 GetRandomPoint() const;
+		void OnInitialize() override;
+		void OnDelete() override;
+		bool IsPointInside(const Vec3 &point) const override;
+		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
 	protected:
 		ADD_PROPERTY(Vec3,Color)

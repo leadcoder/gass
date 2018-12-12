@@ -40,8 +40,7 @@ namespace GASS
 	class GASSCoreExport NullClass
 	{
 	protected :
-
-		static inline RTTI* GetClassRTTI()			{ return NULL;};
+		static inline RTTI* GetClassRTTI()			{ return nullptr;};
 	};
 }
 

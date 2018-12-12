@@ -43,10 +43,10 @@ namespace GASS
 	{
 	public:
 		InputProxyComponent();
-		virtual ~InputProxyComponent();
+		~InputProxyComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		void OnPlayerInput(InputRelayEventPtr message);
 	private:
 		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
