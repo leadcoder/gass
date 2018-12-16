@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include <tbb/tick_count.h>
+#include "Core/Utils/GASSTimer.h"
 
 #define ENABLE_SPROFILER
 
@@ -38,8 +38,8 @@ namespace GASS
 
 		}
 		int Count;
-		tbb::tick_count StartTick;
-		tbb::tick_count EndTick;
+		double StartTick;
+		double EndTick;
 		double Time;
 		double AccTime;
 		double AvgTime;
@@ -56,7 +56,7 @@ namespace GASS
 			if(iter == data->end())
 			{
 				SimpleProfileData sample;
-				sample.StartTick = tbb::tick_count::now();
+				sample.StartTick = m_Timer->GetTime();
 				sample.Count = 1;
 				sample.AvgTime = 0;
 				(*data)[name] = sample;
@@ -64,7 +64,7 @@ namespace GASS
 			}
 			else
 			{
-				iter->second.StartTick = tbb::tick_count::now();
+				iter->second.StartTick = m_Timer->GetTime();
 				iter->second.Count++;
 				m_Data = &iter->second;
 			}
@@ -72,13 +72,15 @@ namespace GASS
 		}
 		virtual ~SimpleProfileSample()
 		{
-			m_Data->EndTick = tbb::tick_count::now();
-			m_Data->Time = (m_Data->EndTick - m_Data->StartTick).seconds();
+			m_Data->EndTick = m_Timer->GetTime();
+			m_Data->Time = m_Data->EndTick - m_Data->StartTick;
 			m_Data->AccTime += m_Data->Time;
 		}
 
 		SimpleProfileData *m_Data;
+		static Timer* m_Timer;
 	};
+	Timer* SimpleProfileSample::m_Timer = new Timer();
 }
 
 #ifdef ENABLE_SPROFILER

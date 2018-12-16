@@ -1522,7 +1522,7 @@ namespace GASS
 
 	bool RecastNavigationMeshComponent::IsPointInside(const Vec3 &point) const
 	{
-		tbb::spin_mutex::scoped_lock lock(m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 		bool ret = false;
 		if(m_NavMesh)
 		{
@@ -1553,7 +1553,7 @@ namespace GASS
 
 	Vec3 RecastNavigationMeshComponent::GetRandomPoint() const
 	{
-		tbb::spin_mutex::scoped_lock lock(m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 		Vec3 ret(0,0,0);
 		if(m_NavMesh)
 		{
@@ -1713,7 +1713,7 @@ namespace GASS
 
 	bool RecastNavigationMeshComponent::GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const
 	{
-		tbb::spin_mutex::scoped_lock lock(m_Mutex);
+		GASS_MUTEX_LOCK(m_Mutex);
 		if(!m_NavMesh)
 			GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "m_NavMesh not initialized","RecastNavigationMeshComponent::GetShortestPath");
 

@@ -24,7 +24,6 @@
 #include "Plugins/Base/CoreMessages.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "Sim/Interface/GASSINavigationMeshComponent.h"
-#include <tbb/spin_mutex.h>
 #include "LandCoverType.h"
 
 class dtNavMesh;
@@ -220,7 +219,7 @@ namespace GASS
 		rcContext* m_Ctx;
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
-		mutable tbb::spin_mutex m_Mutex; 
+		mutable GASS_MUTEX m_Mutex; 
 	};
 	typedef GASS_SHARED_PTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
 	typedef GASS_WEAK_PTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;

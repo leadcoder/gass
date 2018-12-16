@@ -24,20 +24,6 @@ if(GASS_USE_BOOST)
 endif()
 
 if(GASS_BUILD_SIM)
-
-	#TBB
-	find_package(TBB REQUIRED)
-	#post-process results 
-	set(TBB_LIBRARIES optimized ${TBB_LIBRARY} debug ${TBB_LIBRARY_DEBUG})
-
-	if(WIN32)
-		set(TBB_LIBRARIES ${TBB_LIBRARIES}
-		 optimized ${TBB_MALLOC_LIBRARY}
-		 debug ${TBB_MALLOC_LIBRARY_DEBUG})
-	endif()	 
-	
-	gass_create_dep_target(TBB INCLUDE_DIRS ${TBB_INCLUDE_DIRS} LIBRARIES ${TBB_LIBRARIES} BINARIES_REL ${TBB_BINARIES_REL} BINARIES_DBG ${TBB_BINARIES_DBG})
-
 	find_package(AngelScript REQUIRED)
 	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
 endif()

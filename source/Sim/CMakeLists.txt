@@ -6,13 +6,17 @@ if(NOT WIN32)
 endif()
 
 gass_get_source_from_current_dir(CPP_FILES H_FILES)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Source Files" FILES ${CPP_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Header Files" FILES ${H_FILES})
+
 gass_setup_lib(GASSSim
 					BUILDTYPE ${GASS_BUILDTYPE}
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
-					PUBLIC_DEPS GASSCore AngelScript TBB
+					PUBLIC_DEPS GASSCore AngelScript
 					PRIVATE_DEPS ${PLATFORM_DEPS}
 					PRIVATE_DEFINITIONS GASS_EXPORTS ${GASS_COMMON_DEFINITIONS} )
+
 					
 # add_library (${LIB_NAME} ${GASS_BUILDTYPE}  ${CPP_FILES} ${H_FILES})
 
