@@ -26,7 +26,6 @@
 #include "Sim/GASS.h"
 #include "Sim/GASSThreading.h"
 #include "Plugins/OSG/OSGCommon.h"
-#include <tbb/spin_mutex.h>
 namespace osgSim {class DatabaseCacheReadCallback;}
 
 namespace GASS

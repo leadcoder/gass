@@ -27,7 +27,7 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/RTC/GASSTaskNode.h"
+
 namespace GASS
 {
 	
@@ -64,9 +64,7 @@ namespace GASS
 			Called by responsible SceneManager if components is registered as listener.
 		*/
 		void SceneManagerTick(double delta) override {(void)delta;}
-		//virtual void Update(double delta, TaskNode* caller) {(void)delta;(void) caller;}
 
-		
 	protected:
 		template <class T>
 		void RegisterForPreUpdate()

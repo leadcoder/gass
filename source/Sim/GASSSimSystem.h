@@ -23,7 +23,6 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSystemStepper.h"
-#include "Sim/RTC/GASSTaskNode.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"

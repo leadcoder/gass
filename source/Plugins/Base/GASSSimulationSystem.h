@@ -35,7 +35,6 @@ namespace GASS
 		static void RegisterReflection();
 		std::string GetSystemName() const override {return "SimulationSystem";}
 		void Init() override;
-		//virtual void Update(double delta, TaskNode2* caller);
 	protected:
 		//void OnScenarioEvent(SimEventPtr message);
 		//bool m_Update;

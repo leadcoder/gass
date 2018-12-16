@@ -20,8 +20,6 @@
 #include "Core/Common.h"
 #include "Sim/GASSSimSystem.h"
 #include "Core/Serialize/tinyxml2.h"
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
 
 namespace GASS
 {
@@ -62,54 +60,6 @@ namespace GASS
 				++iter;
 		}
 	}
-
-	/*struct SystemListenerExecutor
-	{
-		SystemListenerExecutor(const std::vector<SystemListenerWeakPtr>& sl_vector, double delta_time)
-			:m_SLVector(sl_vector),m_DeltaTime(delta_time)
-		{}
-		SystemListenerExecutor(SystemListenerExecutor& e,tbb::split)
-			:m_SLVector(e.m_SLVector), m_DeltaTime(e.m_DeltaTime)
-		{}
-		SystemListenerExecutor & operator=( const SystemListenerExecutor & ) { return *this; }
-
-		void operator()(const tbb::blocked_range<size_t>& r) const {
-			for (size_t i=r.begin();i!=r.end();++i)
-			{
-				SystemListenerPtr listener = m_SLVector[i].lock();
-				listener->SystemTick(m_DeltaTime);
-			}
-		}
-		const std::vector<SystemListenerWeakPtr>& m_SLVector;
-		double m_DeltaTime;
-	};*/
-
-/*	void SimSystem::Update(double delta_time, TaskNode* caller)
-	{
-		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
-		//remove dead listeners
-		while(iter != m_Listeners.end())
-		{
-			SystemListenerPtr listener = (*iter).lock();
-			
-			if(!listener)
-				iter = m_Listeners.erase(iter);
-			else
-			{
-				++iter;
-			}
-		}
-		if(m_Listeners.size() == 1)
-		{
-			SystemListenerPtr listener = (*m_Listeners.begin()).lock();
-			listener->SystemTick(delta_time);
-		}
-		else
-		{
-			SystemListenerExecutor exec(m_Listeners,delta_time);
-			tbb::parallel_for(tbb::blocked_range<size_t>(0,m_Listeners.size()),exec);
-		}
-	}*/
 
 	void SimSystem::OnSystemUpdate(double delta_time)
 	{

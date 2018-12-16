@@ -25,11 +25,6 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSMessageType.h"
 
-/*namespace tbb
-{
-	class spin_mutex;
-}*/
-
 namespace GASS
 {
 	class IMessage;
@@ -53,7 +48,6 @@ namespace GASS
 	{
 	public:
         typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-		//typedef tbb::concurrent_queue<MessagePtr> MessageQueue;
 		typedef std::list<MessagePtr> MessageQueue;
 		typedef std::map<MessageType,MessageTypeListenerPtr> MessageTypeListenerMap;
 	public:

@@ -23,7 +23,6 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/RTC/GASSTBBManager.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
 #include "Core/Serialize/tinyxml2.h"

@@ -32,7 +32,6 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include <iomanip>
-#include <tbb/parallel_for.h>
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS

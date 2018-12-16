@@ -36,7 +36,6 @@ namespace GASS
 	GASS_FORWARD_DECL(PluginManager)
 	GASS_FORWARD_DECL(ResourceManager)
 	GASS_FORWARD_DECL(SimSystemManager)
-	GASS_FORWARD_DECL(TaskNode)
 	GASS_FORWARD_DECL(SystemStepper)
 	GASS_FORWARD_DECL(ComponentContainerTemplateManager)
 	GASS_FORWARD_DECL(SceneObject)
