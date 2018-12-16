@@ -67,10 +67,6 @@ endforeach()
 
 if (WIN32) #find third party shared libraries, TODO: support *nix?
 
-	#TBB
-	find_package(TBB)
-	set(GASS_SIM_BINARIES_REL ${GASS_SIM_BINARIES_REL} ${TBB_BINARIES_REL})
-	set(GASS_SIM_BINARIES_DBG ${GASS_SIM_BINARIES_DBG} ${TBB_BINARIES_DBG})
 	
 	#check requested components
 	LIST_CONTAINS(USE_OGRE_PLUGIN GASSPluginOgre ${GASSSim_FIND_COMPONENTS})
