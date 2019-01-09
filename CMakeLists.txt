@@ -114,7 +114,7 @@ if(GASS_USE_BOOST)
 endif(GASS_USE_BOOST)
 
 if(CMAKE_VERSION VERSION_GREATER "2.8.11") #suppress warnings
-  CMAKE_POLICY(SET CMP0022 OLD)
+  #CMAKE_POLICY(SET CMP0022 OLD)
 endif()
 
 set(GASS_BUILDTYPE SHARED)
@@ -158,6 +158,11 @@ endif()
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake" 
+		@ONLY)
+
+configure_file(
+		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
+		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake" 
 		@ONLY)
 
 install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
