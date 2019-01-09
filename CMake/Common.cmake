@@ -59,6 +59,13 @@ function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
         ENDFOREACH(currentSourceFile ${ARGN})
 endfunction(create_source_group)
 
+macro(gass_filename_only in_list out_list)
+	foreach(_FILENAME ${${in_list}})
+		get_filename_component(_BARENAME ${_FILENAME} NAME)
+		set(${out_list} ${${out_list}} ${_BARENAME})
+	endforeach()
+endmacro()
+
 macro(deprecated_add_source_from_current_dir)
 	#Grab cpp and h  files from path recursively
 	file(GLOB_RECURSE CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
@@ -219,12 +226,18 @@ macro(gass_create_dep_target DEP_NAME)
 			if(WIN32)
 				file(COPY ${PARSED_ARGS_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release) 
 			endif()
+			#store all binary filenames in list, used when configuring consumer find scripts
+			set(_BINARY_LIST_NAME GASS_${DEP_NAME}_BINARIES_REL)
+			gass_filename_only(PARSED_ARGS_BINARIES_REL ${_BINARY_LIST_NAME})
 		endif()
 		if(PARSED_ARGS_BINARIES_DBG)
 			install(FILES ${PARSED_ARGS_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 			if(WIN32)
 				file(COPY ${PARSED_ARGS_BINARIES_DBG}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug) 
 			endif()
+			#store all binary filenames in list, used when configuring consumer find scripts
+			set(_BINARY_LIST_NAME GASS_${DEP_NAME}_BINARIES_DBG)
+			gass_filename_only(PARSED_ARGS_BINARIES_DBG ${_BINARY_LIST_NAME})
 		endif()
 	endif()
 endmacro()
@@ -303,5 +316,7 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 endmacro()
+
+
 
 
