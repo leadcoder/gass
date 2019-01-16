@@ -12,92 +12,14 @@
 #OSGEARTH_ROOT,OSGEARTHDIR,OSGEARTH_DIR or OSGEARTHHOME: Environment var holding path to osgEarth
 #OSG_DIR, OSGDIR. OSG_HOME or OSG_ROOT : Environment var holding path to osg
 
-set(OSGEARTH_BINARY_LIST_REL 
-	osgEarth
-	osgEarthAnnotation
-	osgEarthFeatures
-	osgEarthSilverLining
-	osgEarthSplat
-	osgEarthSymbology
-	osgEarthTriton
-	osgEarthUtil
-)
+find_package(OsgEarth)
 
-set(OSGEARTH_BINARY_LIST_DBG
-	osgEarthd
-	osgEarthAnnotationd
-	osgEarthFeaturesd
-	osgEarthSilverLiningd
-	osgEarthSplatd
-	osgEarthSymbologyd
-	osgEarthTritond
-	osgEarthUtild
-)
-
-set(OSGEARTH_PLUGINS_BINARY_LIST
-	osgdb_earth
-	osgdb_kml
-	osgdb_osgearth_agglite
-	osgdb_osgearth_arcgis
-	#osgdb_osgearth_arcgis_map_cache
-	osgdb_osgearth_bing
-	osgdb_osgearth_bumpmap
-	osgdb_osgearth_cache_filesystem
-	osgdb_osgearth_colorramp
-	osgdb_osgearth_debug
-	osgdb_osgearth_detail
-	#osgdb_osgearth_engine_byo
-	osgdb_osgearth_engine_mp
-	osgdb_osgearth_engine_rex
-	osgdb_osgearth_featurefilter_intersect
-	osgdb_osgearth_featurefilter_join
-	osgdb_osgearth_feature_elevation
-	osgdb_osgearth_feature_ogr
-	osgdb_osgearth_feature_raster
-	osgdb_osgearth_feature_tfs
-	osgdb_osgearth_feature_wfs
-	osgdb_osgearth_gdal
-	osgdb_osgearth_label_annotation
-	osgdb_osgearth_mapinspector
-	osgdb_osgearth_mask_feature
-	osgdb_osgearth_model_feature_geom
-	osgdb_osgearth_model_simple
-	osgdb_osgearth_monitor
-	#osgdb_osgearth_noise
-	osgdb_osgearth_ocean_simple
-	osgdb_osgearth_ocean_triton
-	osgdb_osgearth_osg
-	#osgdb_osgearth_quadkey
-	#osgdb_osgearth_refresh
-	osgdb_osgearth_scriptengine_javascript
-	osgdb_osgearth_skyview
-	osgdb_osgearth_sky_gl
-	osgdb_osgearth_sky_silverlining
-	osgdb_osgearth_sky_simple
-	#osgdb_osgearth_splat_mask
-	#osgdb_osgearth_template_matclass
-	osgdb_osgearth_terrainshader
-	#osgdb_osgearth_tilecache
-	osgdb_osgearth_tileindex
-	#osgdb_osgearth_tileservice
-	osgdb_osgearth_tms
-	osgdb_osgearth_vdatum_egm2008
-	osgdb_osgearth_vdatum_egm84
-	osgdb_osgearth_vdatum_egm96
-	osgdb_osgearth_viewpoints
-	osgdb_osgearth_vpb
-	osgdb_osgearth_wcs
-	osgdb_osgearth_wms
-	osgdb_osgearth_xyz
-	#osgdb_osgearth_yahoo
-	osgdb_template)
-	
-		
 macro(extract_version var str)
 STRING(REGEX REPLACE ".*VERSION\ *([0-9]+)" "\\1" ${var} ${str})
 endmacro(extract_version)
-find_path(OSG_DIR "include/osg/Version" HINTS $ENV{OSGDIR} $ENV{OSG_DIR} $ENV{OSG_ROOT} $ENV{OSG_HOME} DOC "OpenSceneGraph install path")
 
+#find osg version
+find_path(OSG_DIR "include/osg/Version" HINTS $ENV{OSGDIR} $ENV{OSG_DIR} $ENV{OSG_ROOT} $ENV{OSG_HOME} DOC "OpenSceneGraph install path")
 if(${OSG_DIR} STREQUAL "OSG_DIR-NOTFOUND")
 	message("Please set OSG_DIR")
 else() 
@@ -113,16 +35,107 @@ else()
 	set(OSG_SHARED_PREFIX "osg${OSG_SOVERSION}-" CACHE STRING "OpenSceneGraph so-version")
 endif()
 
+#find osgEarth version
+find_path(OSGEARTH_DIR "include/osgEarth/Version" HINTS $ENV{OSGEARTH_DIR} $ENV{OSGEARTHDIR} $ENV{OSGEARTH_ROOT} $ENV{OSGEARTH_HOME} DOC "OSGEarth install path")
+set(OSGEARTH_BINARY_DIR ${OSGEARTH_DIR}/bin)
+if(${OSGEARTH_DIR} STREQUAL "OSGEARTH_DIR-NOTFOUND")
+	message("OSGEarth dir not found")
+else() 
+	file(STRINGS "${OSGEARTH_DIR}/include/osgEarth/Version" OSGEARTH_MAJOR REGEX "#define OSGEARTH_MAJOR_VERSION")
+	file(STRINGS "${OSGEARTH_DIR}/include/osgEarth/Version" OSGEARTH_MINOR REGEX "#define OSGEARTH_MINOR_VERSION")
+	file(STRINGS "${OSGEARTH_DIR}/include/osgEarth/Version" OSGEARTH_PATCH REGEX "#define OSGEARTH_PATCH_VERSION")
+	extract_version(OSGEARTH_MAJOR ${OSGEARTH_MAJOR})
+	extract_version(OSGEARTH_MINOR ${OSGEARTH_MINOR})
+	extract_version(OSGEARTH_PATCH ${OSGEARTH_PATCH})
+	set(OSGEARTH_VERSION "${OSGEARTH_MAJOR}.${OSGEARTH_MINOR}.${OSGEARTH_PATCH}" CACHE STRING "OSGEarth Version")
+endif()
+
+set(OSGEARTH_BINARY_LIST_REL 
+	osgEarth
+	osgEarthAnnotation
+	osgEarthFeatures
+	osgEarthSilverLining
+	osgEarthSplat
+	osgEarthSymbology
+	osgEarthTriton
+	osgEarthUtil
+)
+
+
+set(OSGEARTH_BINARY_LIST_DBG
+	osgEarthd
+	osgEarthAnnotationd
+	osgEarthFeaturesd
+	osgEarthSilverLiningd
+	osgEarthSplatd
+	osgEarthSymbologyd
+	osgEarthTritond
+	osgEarthUtild
+)
+
+if(${MSVC_VERSION} GREATER 1900) #MSVC 2017
+	set(OSGEARTH_BINARY_LIST_REL ${OSGEARTH_BINARY_LIST_REL} geos libprotobuf)
+	set(OSGEARTH_BINARY_LIST_DBG ${OSGEARTH_BINARY_LIST_DBG} geos_d libprotobuf)
+endif()
+
+set(OSGEARTH_PLUGINS_BINARY_LIST
+	osgdb_earth
+	osgdb_fastdxt
+	osgdb_kml
+	osgdb_osgearth_agglite
+	osgdb_osgearth_arcgis
+	osgdb_osgearth_bing
+	osgdb_osgearth_bumpmap
+	osgdb_osgearth_cache_filesystem
+	osgdb_osgearth_cesiumion
+	osgdb_osgearth_colorramp
+	osgdb_osgearth_debug
+	osgdb_osgearth_detail
+	osgdb_osgearth_engine_mp
+	osgdb_osgearth_engine_rex
+	osgdb_osgearth_featurefilter_intersect
+	osgdb_osgearth_featurefilter_join
+	osgdb_osgearth_feature_elevation
+	osgdb_osgearth_feature_mapnikvectortiles
+	osgdb_osgearth_feature_ogr
+	osgdb_osgearth_feature_tfs
+	osgdb_osgearth_feature_wfs
+	osgdb_osgearth_feature_xyz
+	osgdb_osgearth_gdal
+	osgdb_osgearth_label_annotation
+	osgdb_osgearth_mapinspector
+	osgdb_osgearth_mask_feature
+	osgdb_osgearth_mbtiles
+	osgdb_osgearth_model_feature_geom
+	osgdb_osgearth_model_simple
+	osgdb_osgearth_monitor
+	osgdb_osgearth_osg
+	osgdb_osgearth_scriptengine_javascript
+	osgdb_osgearth_skyview
+	osgdb_osgearth_sky_gl
+	osgdb_osgearth_sky_silverlining
+	osgdb_osgearth_sky_simple
+	osgdb_osgearth_terrainshader
+	osgdb_osgearth_tilecache
+	osgdb_osgearth_tileindex
+	osgdb_osgearth_tilepackage
+	osgdb_osgearth_tms
+	osgdb_osgearth_vdatum_egm2008
+	osgdb_osgearth_vdatum_egm84
+	osgdb_osgearth_vdatum_egm96
+	osgdb_osgearth_viewpoints
+	osgdb_osgearth_vpb
+	osgdb_osgearth_wcs
+	osgdb_osgearth_wms
+	osgdb_osgearth_xyz
+	osgdb_template)
+	
+
 if (WIN32)
 	set(_SHARED_LIB_EXT .dll)
 else() #assume linux
 	set(_SHARED_LIB_EXT .so)
 endif()
-
-find_package(OsgEarth)
-
-find_path(OSGEARTH_DIR "include/osgEarth/Version" HINTS $ENV{OSGEARTH_DIR} $ENV{OSGEARTHDIR} $ENV{OSGEARTH_ROOT} $ENV{OSGEARTH_HOME} DOC "OSGEarth install path")
-set(OSGEARTH_BINARY_DIR ${OSGEARTH_DIR}/bin)
 
 foreach(_OSGEARTH_BIN ${OSGEARTH_BINARY_LIST_DBG})
 	    STRING(TOUPPER ${_OSGEARTH_BIN} _UPPER_NAME)
@@ -145,9 +158,12 @@ foreach(_OSGEARTH_PLUGIN ${OSGEARTH_PLUGINS_BINARY_LIST})
 		set(_PLUGIN_NAME_DBG OSGEARTHPLUGIN_${_UPPER_NAME}_BINARY_DBG)
 		find_file(${_PLUGIN_NAME_REL} NAMES ${_OSGEARTH_PLUGIN}${_SHARED_LIB_EXT} HINTS ${OSGEARTHPLUGINS_BINARY_DIR})
 		find_file(${_PLUGIN_NAME_DBG} NAMES ${_OSGEARTH_PLUGIN}d${_SHARED_LIB_EXT} HINTS ${OSGEARTHPLUGINS_BINARY_DIR})
-	    set(OSGEARTHPLUGIN_BINARIES_REL ${OSGEARTHPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
-	    set(OSGEARTHPLUGIN_BINARIES_DBG ${OSGEARTHPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
+	    
+		if(EXISTS ${${_PLUGIN_NAME_REL}})
+			set(OSGEARTHPLUGIN_BINARIES_REL ${OSGEARTHPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
+		endif()
+		
+		if(EXISTS ${${_PLUGIN_NAME_DBG}})
+			set(OSGEARTHPLUGIN_BINARIES_DBG ${OSGEARTHPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
+		endif()
 endforeach()
-
-find_path(OSGEARTH_DIR "include/osg/Version" HINTS $ENV{OSGEARTH_DIR} $ENV{OSGEARTHDIR} $ENV{OSGEARTH_ROOT} $ENV{OSGEARTH_HOME} DOC "OSGEarth install path")
-set(OSGEARTHPLUGINS_BINARY_DIR ${OSGEARTH_DIR}/bin)
