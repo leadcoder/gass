@@ -28,7 +28,7 @@
 #include <osgEarth/MapNode>
 #include <osgEarth/ECEF>
 
-#include <osgEarthUtil/AnnotationEvents>
+//#include <osgEarthUtil/AnnotationEvents>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthAnnotation/AnnotationEditing>
 #include <osgEarthAnnotation/AnnotationRegistry>
