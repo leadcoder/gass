@@ -110,7 +110,12 @@ if (WIN32)
 	add_bin_dbg(PROJ NAMES proj.dll)
 	
 	add_bin_rel(CURL NAMES libcurl.dll)
-	add_bin_dbg(CURL NAMES libcurld.dll)
+	
+	if(${MSVC_VERSION} GREATER 1900) #MSVC 2017
+		add_bin_dbg(CARES NAMES libcurl.dll)
+	else()
+		add_bin_dbg(CURL NAMES libcurld.dll)
+	endif()
 	
 	add_bin_rel(EAY NAMES libeay32.dll)
 	add_bin_dbg(EAY NAMES libeay32.dll)
@@ -220,7 +225,8 @@ if (WIN32)
 					txp
 					vtf
 					x
-					zip)
+					zip
+					ovt)
 	
 	set(OSGPLUGINS_BINARY_DIR ${OSG_BINARY_DIR}/osgPlugins-${OSG_VERSION})
 	
@@ -231,7 +237,11 @@ if (WIN32)
 		#message("osgdb_${_OSG_PLUGIN}${_SHARED_LIB_EXT}")
 		find_file(${_PLUGIN_NAME_REL} NAMES osgdb_${_OSG_PLUGIN}${_SHARED_LIB_EXT} HINTS ${OSGPLUGINS_BINARY_DIR})
 		find_file(${_PLUGIN_NAME_DBG} NAMES osgdb_${_OSG_PLUGIN}d${_SHARED_LIB_EXT} HINTS ${OSGPLUGINS_BINARY_DIR})
-	    set(OSGPLUGIN_BINARIES_REL ${OSGPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
-	    set(OSGPLUGIN_BINARIES_DBG ${OSGPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
+		if(EXISTS ${${_PLUGIN_NAME_REL}})
+			set(OSGPLUGIN_BINARIES_REL ${OSGPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
+		endif()
+		if(EXISTS ${${_PLUGIN_NAME_DBG}})
+			set(OSGPLUGIN_BINARIES_DBG ${OSGPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
+		endif()
 	endforeach()
 endif()
