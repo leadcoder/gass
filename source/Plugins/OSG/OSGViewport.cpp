@@ -76,11 +76,11 @@ namespace GASS
 		OSGCameraManipulatorPtr man = cam_comp->GetSceneObject()->GetFirstComponentByClass<IOSGCameraManipulator>();
 		if(man)
 		{
-			m_OSGView->setCameraManipulator(man->GetManipulator(),false);
+			m_OSGView->setCameraManipulator(man->GetManipulator(), false);
 			// this should be moved to manipulator?
 			//m_OSGView->getCamera()->setComputeNearFarMode(osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 			 // configure the near/far so we don't clip things that are up close
-			m_OSGView->getCamera()->setNearFarRatio(0.000007);
+			//m_OSGView->getCamera()->setNearFarRatio(0.000007);
 			//m_OSGView->getCamera()->setNearFarRatio(0.0001);
 			
 		}

@@ -49,6 +49,8 @@ namespace GASS
 		void SetFarClipDistance(float value);
 		float GetNearClipDistance() const;
 		void SetNearClipDistance(float value);
+		float GetNearFarRatio() const;
+		void SetNearFarRatio(float value);
 		float GetFov() const;
 		void SetFov(float value);
 		bool GetOrtho() const;
@@ -63,6 +65,7 @@ namespace GASS
 		osg::ref_ptr<osg::Camera> m_OSGCamera;
 		float m_NearClip;
 		float m_FarClip;
+		float m_NearFarRatio;
 		float m_Fov;
 		float m_LODScale;
 		bool m_Ortho;

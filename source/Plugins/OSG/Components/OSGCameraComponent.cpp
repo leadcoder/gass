@@ -29,6 +29,7 @@ namespace GASS
 {
 	OSGCameraComponent::OSGCameraComponent() : m_NearClip(0.5),
 		m_FarClip(1000),
+		m_NearFarRatio(0),
 		m_Fov(45.0),
 		m_LODScale(1.0),
 		m_Ortho(false),
@@ -54,8 +55,12 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<float>("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterProperty<float>("NearFarRatio", &GASS::OSGCameraComponent::GetNearFarRatio, &GASS::OSGCameraComponent::SetNearFarRatio,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near Far Ratio", PF_VISIBLE | PF_EDITABLE)));
+
 		RegisterProperty<float>("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Field Of View in Degres",PF_VISIBLE  | PF_EDITABLE)));
+		
 		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Use orthographic projection",PF_VISIBLE  | PF_EDITABLE)));
 		RegisterProperty<float>("LODScale", &GASS::OSGCameraComponent::GetLODScale, &GASS::OSGCameraComponent::SetLODScale,
@@ -186,6 +191,8 @@ namespace GASS
 		_UpdateFromLocation();
 		_UpdateProjection();
 		SetLODScale(m_LODScale);
+		if (m_NearFarRatio > 0)
+			SetNearFarRatio(m_NearFarRatio);
 	}
 
 	bool OSGCameraComponent::GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const
@@ -262,6 +269,22 @@ namespace GASS
 		m_NearClip = value;
 		_UpdateProjection();
 	}
+
+
+	float OSGCameraComponent::GetNearFarRatio() const
+	{
+		return m_NearFarRatio;
+	}
+
+	void OSGCameraComponent::SetNearFarRatio(float value)
+	{
+		m_NearFarRatio = value;
+		if (m_OSGCamera.valid())
+		{
+			m_OSGCamera->setNearFarRatio(value);
+		}
+	}
+
 
 	float OSGCameraComponent::GetFov() const
 	{
