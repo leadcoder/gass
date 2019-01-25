@@ -30,7 +30,7 @@
 #include <osgEarth/NodeUtils>
 #include <osgEarth/ImageLayer>
 #include <osgEarth/ModelLayer>
-#include <osgEarth/GLUtils>
+//#include <osgEarth/GLUtils>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthUtil/LatLongFormatter>
