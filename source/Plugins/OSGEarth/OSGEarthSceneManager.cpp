@@ -48,7 +48,8 @@ namespace GASS
 {
 	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(true),
 		m_Initlized(false),
-		m_DisableGLSL(false)
+		m_DisableGLSL(false),
+		m_MapNode(NULL)
 	{
 
 	}
@@ -151,6 +152,10 @@ namespace GASS
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
+
+		
+
+
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
 
 		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
@@ -170,6 +175,16 @@ namespace GASS
 
 		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
 	}
+
+	void OSGEarthSceneManager::SetMapNode(osgEarth::MapNode* map_node)
+	{
+		//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
+		osgEarth::Util::EarthManipulator* manip = GetManipulator().get();
+		if (manip)
+			manip->setNode(map_node);
+		m_MapNode = map_node;
+	}
+
 
 #if 0
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)

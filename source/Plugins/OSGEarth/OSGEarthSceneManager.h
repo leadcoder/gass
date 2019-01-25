@@ -46,7 +46,7 @@ namespace GASS
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
 		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
-		void SetMapNode(osgEarth::MapNode* map_node) { m_MapNode = map_node; }
+		void SetMapNode(osgEarth::MapNode* map_node);
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
 		//ITerrainSceneManager

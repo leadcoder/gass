@@ -29,12 +29,13 @@
 #include <osgEarth/MapNode>
 #include <osgEarth/NodeUtils>
 #include <osgEarth/ImageLayer>
+#include <osgEarth/ModelLayer>
+#include <osgEarth/GLUtils>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthUtil/LatLongFormatter>
 #include <osgEarthUtil/MGRSFormatter>
 #include <osgEarthUtil/MouseCoordsTool>
-#include <osgEarthUtil/AutoClipPlaneHandler>
 #include <osgEarthUtil/Controls>
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarthAnnotation/AnnotationData>
@@ -55,6 +56,54 @@
 
 namespace GASS
 {
+
+	class OSGEarthMapLayer : public IMapLayer
+	{
+	public:
+		OSGEarthMapLayer(osgEarth::VisibleLayer* layer) : m_Layer(layer)
+		{
+			
+		}
+
+		std::string GetName() const override
+		{
+			return m_Layer->getName();
+		}
+		void SetName(const std::string& name) override
+		{
+			m_Layer->setName(name);
+		}
+
+		bool GetVisible() const override
+		{
+			return m_Layer->getVisible();
+		}
+
+		void SetVisible(bool value) override
+		{
+			m_Layer->setVisible(value);
+		}
+
+		MapLayerType GetType() const override
+		{
+			MapLayerType layer_type = MLT_IMAGE;
+			if (dynamic_cast<osgEarth::ImageLayer*>(m_Layer))
+				layer_type = MLT_IMAGE;
+			else if (dynamic_cast<osgEarth::ElevationLayer*>(m_Layer))
+				layer_type = MLT_ELEVATION;
+			else if (dynamic_cast<osgEarth::ModelLayer*>(m_Layer))
+				layer_type = MLT_MODEL;
+			return layer_type;
+		}
+
+		int GetUID() const override
+		{
+			return m_Layer->getUID();
+		}
+	private:
+		osgEarth::VisibleLayer* m_Layer;
+	};
+
 
 	class OSGEarthMapEnumerationMetaData : public EnumerationPropertyMetaData
 	{
@@ -115,15 +164,23 @@ namespace GASS
 		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
 		{
 			OSGEarthMapComponentPtr map_comp = GASS_DYNAMIC_PTR_CAST<OSGEarthMapComponent>(object);
-			return map_comp->GetLayerNames();
+
+			std::vector<std::string> layer_names;
+			const MapLayers &layers = map_comp->GetMapLayers();
+			for (size_t i = 0; i < layers.size(); i++)
+			{
+				layer_names.push_back(layers[i]->GetName());
+			}
+			return layer_names;
 		}
 	private:
 	};
 
 
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
-		m_Time(10),
-		m_SkyNode(NULL)
+		m_Hour(10),
+		m_SkyNode(NULL),
+		m_UseAutoClipPlane(true)
 	{
 
 	}
@@ -142,10 +199,16 @@ namespace GASS
 		RegisterProperty<std::string>("Viewpoint", &OSGEarthMapComponent::GetViewpoint, &OSGEarthMapComponent::SetViewpoint,
 			EnumerationPropertyMetaDataPtr(new OSGEarthViewpointEnumerationMetaData("Set Viewpoint", PF_VISIBLE)));
 
-		RegisterProperty<double>("Time", &OSGEarthMapComponent::GetTime, &OSGEarthMapComponent::SetTime,
+		RegisterProperty<double>("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Time of day", PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<std::vector<std::string> >("MapLayers", &OSGEarthMapComponent::GetMapLayers, &OSGEarthMapComponent::SetMapLayers,
+		RegisterProperty<float>("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Minimum ambient sky light", PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<bool>("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/disable sky light", PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterProperty<std::vector<std::string> >("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers,
 			EnumerationPropertyMetaDataPtr(new OSGEarthLayerEnumerationMetaData("Map Layers", PF_VISIBLE)));
 	}
 
@@ -166,14 +229,16 @@ namespace GASS
 		if (m_Initlized && m_MapNode)
 		{
 			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-			osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
-			manip->setNode(NULL);
-
+			
 			// disconnect extensions
 			osgViewer::ViewerBase::Views views;
 			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			GASSAssert(osg_sys, "Failed to find OSGGraphicsSystem in OSGEarthMapComponent::Shutdown");
+			
 			osg_sys->GetViewer()->getViews(views);
 
+
+			//shutdown extensions
 			for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
 				eiter != m_MapNode->getExtensions().end();
 				++eiter)
@@ -182,7 +247,7 @@ namespace GASS
 
 				// Check for a View interface:
 				osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
-				if (viewIF)
+				if (viewIF &&  views.size() > 0)
 					viewIF->disconnect(views[0]);
 
 				// Check for a Control interface:
@@ -191,13 +256,18 @@ namespace GASS
 					controlIF->disconnect(osgearth_sm->GetGUI());
 			}
 
+			//remove fog effect
 			if (m_FogEffect)
 				m_FogEffect->detach(m_MapNode->getStateSet());
-			//remove map from scene
 
+			if (m_AutoClipCB)
+				views[0]->getCamera()->removeCullCallback(m_AutoClipCB);
+
+			//remove map from scene
 			osg::Group* parent = m_TopNode->getParent(0);
 			if (parent)
 				parent->removeChild(m_TopNode);
+
 
 			m_MapNode.release();
 			m_TopNode.release();
@@ -205,6 +275,7 @@ namespace GASS
 			//release
 			m_Lighting.release();
 			m_FogEffect.release();
+			m_AutoClipCB.release();
 
 			osgearth_sm->SetMapNode(NULL);
 		}
@@ -219,29 +290,34 @@ namespace GASS
 		if (!m_Initlized)
 			return;
 
+		
 		if (earth_file.Valid())
 		{
 			IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+			GASSAssert(osg_sm, "Failed to find OSGGraphicsSceneManager in OSGEarthMapComponent::SetEarthFile");
 			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+			GASSAssert(osgearth_sm, "Failed to find OSGEarthSceneManager in OSGEarthMapComponent::SetEarthFile");
 
-			std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
+			const std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
+
+			//read earth file
 			osg::Node* top_node = osgDB::readNodeFile(full_path);
+			if (!top_node)
+			{
+				//failed to load earth file!
+				return;
+			}
 
 			//If successfully loaded, unload current map (if present)
-			if (top_node)
-				Shutdown();
-			else //failed to load earth file
-				return;
+			Shutdown();
 
+			//Save top node, to be used during shutdown
 			m_TopNode = top_node;
 			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
-			root->addChild(top_node);
+			GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
 
-			//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
-			osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
-			if (manip)
-				manip->setNode(m_MapNode);
+			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+			root->addChild(top_node);
 
 			//if no sky is present (projected mode) but we still want get terrain lightning  
 			//m_Lighting = new osgEarth::PhongLightingEffect();
@@ -252,7 +328,7 @@ namespace GASS
 			if (m_SkyNode)
 			{
 				//set default year/month and day to get good lighting
-				m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Time));
+				m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
 			}
 
 			//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
@@ -262,33 +338,42 @@ namespace GASS
 			//inform OSGEarth scene manager that we have new map node
 			osgearth_sm->SetMapNode(m_MapNode);
 
-			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
-			osgViewer::ViewerBase::Views views;
-			osg_sys->GetViewer()->getViews(views);
-
-			const osgEarth::Config& externals = m_MapNode->externalConfig();
-			
-			osgEarth::Config viewpointsConf = externals.child("viewpoints");
-
-			if(viewpointsConf.children("viewpoint").size() == 0)
-				viewpointsConf = m_MapNode->getConfig().child("viewpoints");
-
-			// backwards-compatibility: read viewpoints at the top level:
-			const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
-			for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
-				viewpointsConf.add(*i);
-
-			const osgEarth::ConfigSet& children = viewpointsConf.children("viewpoint");
-			if (children.size() > 0)
+			//read viewpoints from earth file and store them in m_Viewpoints vector 
 			{
-				for (osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i)
+				m_Viewpoints.clear();
+				const osgEarth::Config& externals = m_MapNode->externalConfig();
+
+				osgEarth::Config viewpointsConf = externals.child("viewpoints");
+
+				if (viewpointsConf.children("viewpoint").size() == 0)
+					viewpointsConf = m_MapNode->getConfig().child("viewpoints");
+
+				// backwards-compatibility: read viewpoints at the top level:
+				const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
+				for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
+					viewpointsConf.add(*i);
+
+				const osgEarth::ConfigSet& children = viewpointsConf.children("viewpoint");
+				if (children.size() > 0)
 				{
-					m_Viewpoints.push_back(osgEarth::Viewpoint(*i));
+					for (osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i)
+					{
+						m_Viewpoints.push_back(osgEarth::Viewpoint(*i));
+					}
 				}
 			}
+
+			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+			osgViewer::ViewerBase::Views all_views;
+			osg_sys->GetViewer()->getViews(all_views);
+
+			if (all_views.size() == 0)
+			{
+				return;
+			}
+			osgViewer::View* view = all_views[0];
 		
 			// Hook up the extensions!
-			if (true)
 			{
 				for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
 					eiter != m_MapNode->getExtensions().end();
@@ -299,7 +384,7 @@ namespace GASS
 					// Check for a View interface:
 					osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
 					if (viewIF)
-						viewIF->connect(views[0]);
+						viewIF->connect(view);
 
 					// Check for a Control interface:
 					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
@@ -310,12 +395,12 @@ namespace GASS
 			
 			if (!m_SkyNode)
 			{
-				if (false)
+				/*if (false)
 				{
 					m_SkyNode = osgEarth::Util::SkyNode::create(m_MapNode);
 					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
 					m_SkyNode->setDateTime(osgEarth::DateTime(2013, 1, 6, m_Time));
-					m_SkyNode->attach(views[0]);
+					m_SkyNode->attach(view);
 					root->addChild(m_SkyNode);
 					//if (m_ShowSkyControl)
 					{
@@ -323,11 +408,21 @@ namespace GASS
 						if (c)
 							osgearth_sm->GetGUI()->addControl(c);
 					}
-				}
+				}*/
 			}
 			
 			//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
-			views[0]->setLightingMode(osg::View::SKY_LIGHT);
+			view->setLightingMode(osg::View::SKY_LIGHT);
+
+			if (m_UseAutoClipPlane)
+			{
+				//Setup AutoClipPlaneCullCallback to handel near/far clipping issues
+				m_AutoClipCB = new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode);
+				m_AutoClipCB->setMinNearFarRatio(0.00000001); //NearFarRatio at zero altitude
+				m_AutoClipCB->setMaxNearFarRatio(0.00005); //NearFarRatio at height threshold 
+				m_AutoClipCB->setHeightThreshold(3000); // above this height we get MaxNearFarRatio
+				view->getCamera()->addCullCallback(m_AutoClipCB);
+			}
 
 			if (false) //use fog
 			{
@@ -343,22 +438,9 @@ namespace GASS
 				}
 			}
 
-			/*if (true)
-			{
-			osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create(m_MapNode);
-			//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
-			sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
-			sky->attach(views[0]);
-			root->addChild(sky);
-			//if (m_ShowSkyControl)
-			{
-			osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(sky);
-			if (c)
-			osgearth_sm->GetGUI()->addControl(c);
-			}
-			}*/
+			_UpdateMapLayers();
 
-			//attach fog if present possible
+			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 			
 			//if (m_UseOcean)
 			//	{
@@ -388,96 +470,39 @@ namespace GASS
 			}
 			}*/
 			//}
-			//m_MapNode->addCullCallback( new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode) );
 		}
 	}
 
-	std::vector<std::string> OSGEarthMapComponent::GetLayerNames() const
-	{
-		std::vector<std::string> layer_names;
-		// the all map layers:
-		if (m_Initlized)
-		{
-			osgEarth::LayerVector layers;
-			m_MapNode->getMap()->getLayers(layers);
-			for (int i = layers.size() - 1; i >= 0; --i)
-			{
-				osgEarth::Layer* layer = layers[i].get();
-
-				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
-				// only show layers that derive from VisibleLayer
-				if (visibleLayer && visibleLayer->getEnabled())
-				{
-					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show hidden coverage layers
-					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
-						continue;
-					layer_names.push_back(visibleLayer->getName());
-				}
-			}
-		}
-		return layer_names;
-	}
-
-	std::vector<std::string> OSGEarthMapComponent::GetMapLayers() const
+	std::vector<std::string> OSGEarthMapComponent::GetVisibleMapLayers() const
 	{
 		std::vector<std::string> layer_names;
 		// the active map layers:
 		if (m_Initlized)
 		{
-			osgEarth::LayerVector layers;
-			m_MapNode->getMap()->getLayers(layers);
-			for (int i = layers.size() - 1; i >= 0; --i)
+			
+			for (size_t i = 0;  i < m_MapLayers.size(); i++)
 			{
-				osgEarth::Layer* layer = layers[i].get();
-
-				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
-
-				// only show layers that derive from VisibleLayer
-				if (visibleLayer && visibleLayer->getEnabled())
-				{
-					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show hidden coverage layers
-					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
-						continue;
-
-					if(visibleLayer->getVisible())
-						layer_names.push_back(visibleLayer->getName());
-				}
+				if(m_MapLayers[i]->GetVisible())
+					layer_names.push_back(m_MapLayers[i]->GetName());
 			}
 		}
 		return layer_names;
 	}
 
-	void OSGEarthMapComponent::SetMapLayers(const std::vector<std::string> &layer_names)
+	void OSGEarthMapComponent::SetVisibleMapLayers(const std::vector<std::string> &layer_names)
 	{
 		if (m_Initlized)
 		{
-			osgEarth::LayerVector layers;
-			m_MapNode->getMap()->getLayers(layers);
-			for (int i = layers.size() - 1; i >= 0; --i)
+			
+			for (size_t i = 0; i < m_MapLayers.size(); i++)
 			{
-				osgEarth::Layer* layer = layers[i].get();
-
-				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
-
-				// only show layers that derive from VisibleLayer
-				if (visibleLayer && visibleLayer->getEnabled())
+				bool visible = false;
+				for (size_t j = 0; j < layer_names.size(); j++)
 				{
-					osgEarth::ImageLayer* imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer);
-					// don't show hidden coverage layers
-					if (imageLayer && imageLayer->isCoverage() && !imageLayer->getVisible())
-						continue;
-					bool found = false;
-					for(size_t j = 0; j < layer_names.size() ; j++)
-					{
-						if(layer_names[j] == visibleLayer->getName())
-						{
-							found = true;
-						}
-					}
-					visibleLayer->setVisible(found);
+					if (m_MapLayers[i]->GetName() == layer_names[j])
+						visible = true;
 				}
+				m_MapLayers[i]->SetVisible(visible);
 			}
 		}
 	}
@@ -488,14 +513,52 @@ namespace GASS
 
 	}
 
-	void OSGEarthMapComponent::SetTime(double time)
+	void OSGEarthMapComponent::SetTimeOfDay(double hour)
 	{
-		m_Time = time;
+		m_Hour = hour;
 		if (m_SkyNode)
 		{
-			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Time));
+			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
 		}
 	}
+
+	void OSGEarthMapComponent::SetMinimumAmbient(float value)
+	{
+		if (m_SkyNode)
+		{
+			m_SkyNode->setMinimumAmbient(osg::Vec4f(value,value,value,1));
+		}
+	}
+
+	float OSGEarthMapComponent::GetMinimumAmbient() const
+	{
+		float value = 0;
+		if (m_SkyNode)
+		{
+			value = m_SkyNode->getMinimumAmbient().x();
+		}
+		return value;
+	}
+
+	void OSGEarthMapComponent::SetSkyLighting(bool value)
+	{
+		if (m_SkyNode)
+		{
+			m_SkyNode->setLighting(value);
+			
+		}
+	}
+
+	bool OSGEarthMapComponent::GetSkyLighting() const
+	{
+		bool value = false;
+		if (m_SkyNode)
+		{
+			value = m_SkyNode->getLighting();
+		}
+		return value;
+	}
+	
 	
 	std::vector<std::string> OSGEarthMapComponent::GetViewpointNames() const
 	{
@@ -529,6 +592,32 @@ namespace GASS
 						manip->setViewpoint(m_Viewpoints[i], 2.0);
 				}
 				return; //done
+			}
+		}
+	}
+
+	const MapLayers& OSGEarthMapComponent::GetMapLayers() const
+	{
+		return m_MapLayers;
+	}
+
+	void OSGEarthMapComponent::_UpdateMapLayers()
+	{
+		m_MapLayers.clear();
+		// the active map layers:
+		if (m_Initlized)
+		{
+			osgEarth::LayerVector oe_layers;
+			m_MapNode->getMap()->getLayers(oe_layers);
+			for (size_t i = 0; i < oe_layers.size(); i++)
+			{
+				osgEarth::Layer* oe_layer = oe_layers[i].get();
+				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(oe_layer);
+				// only return layers that derive from VisibleLayer
+				if (visibleLayer && visibleLayer->getEnabled())
+				{
+					m_MapLayers.emplace_back(std::make_unique<OSGEarthMapLayer>(OSGEarthMapLayer(visibleLayer)));
+				}
 			}
 		}
 	}

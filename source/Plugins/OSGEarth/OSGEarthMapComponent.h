@@ -20,14 +20,17 @@
 
 #pragma once
 #include "Plugins/OSG/IOSGCameraManipulator.h"
+#include "Sim/Interface/GASSIMapComponent.h"
 #include <osgEarthUtil/EarthManipulator>
 #include <osgEarth/PhongLightingEffect>
+#include <osgEarthUtil/AutoClipPlaneHandler>
 #include <osgEarthUtil/Fog>
 #include <osgEarthUtil/Sky>
 
 namespace GASS
 {
-	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, BaseSceneComponent>, public IGeometryComponent
+
+	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, BaseSceneComponent>, public IGeometryComponent, public IMapComponent
 	{
 	public:
 		OSGEarthMapComponent();
@@ -43,32 +46,42 @@ namespace GASS
 		bool GetCollision() const override { return true; }
 		void SetCollision(bool /*value*/) override {  }
 		osg::ref_ptr<osgEarth::MapNode> GetMap() {return m_MapNode;}
-		std::vector<std::string> GetViewpointNames() const;
 		std::vector<std::string> GetLayerNames() const;
+
+		//IMapComponent
+		std::vector<std::string> GetViewpointNames() const;
+		void SetViewpoint(const std::string& viewpoint_name);
+		const MapLayers& GetMapLayers() const;
+
+		double GetTimeOfDay() const { return m_Hour; }
+		void SetTimeOfDay(double time);
+		float GetMinimumAmbient() const;
+		void SetMinimumAmbient(float value);
+		void SetSkyLighting(bool value);
+		bool GetSkyLighting() const;
 	protected:
-		bool _GetLLHAtLocation(const GASS::Vec3 &location, double lat, double lon, double &height) const;
 		void Shutdown();
 		void SetEarthFile(const ResourceHandle &earth_file);
 		ResourceHandle GetEarthFile() const { return m_EarthFile; }
 		std::string GetViewpoint() const;
-		void SetViewpoint(const std::string &name);
+		void _UpdateMapLayers();
 
-		double GetTime() const { return m_Time; }
-		void SetTime(double time);
-
-		
-		std::vector<std::string> GetMapLayers() const;
-		void SetMapLayers(const std::vector<std::string> &layers);
+		std::vector<std::string> GetVisibleMapLayers() const;
+		void SetVisibleMapLayers(const std::vector<std::string> &layers);
 
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
 		osg::ref_ptr<osgEarth::Util::FogEffect> m_FogEffect;
+		osg::ref_ptr<osgEarth::Util::AutoClipPlaneCullCallback> m_AutoClipCB;
 		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
 		std::vector<osgEarth::Viewpoint> m_Viewpoints;
 		osgEarth::Util::SkyNode* m_SkyNode;
-		double m_Time;
+		double m_Hour;
+		bool m_UseAutoClipPlane;
+
+		MapLayers m_MapLayers;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }
