@@ -19,44 +19,21 @@
 *****************************************************************************/
 
 #pragma once
-#include "Plugins/OSG/IOSGCameraManipulator.h"
-#include "Sim/Interface/GASSIMapCameraComponent.h"
+
+#include "Sim/GASSCommon.h"
 
 namespace GASS
 {
-	class OSGEarthCameraManipulatorComponent : public Reflection<OSGEarthCameraManipulatorComponent,BaseSceneComponent> ,  public  IOSGCameraManipulator, public IMapCameraComponent
+	class IMapCameraComponent
 	{
 	public:
-		OSGEarthCameraManipulatorComponent();
-		~OSGEarthCameraManipulatorComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-
-		//IMapCameraComponent
-		double GetPitch() const;
-		void SetPitch(double value);
-		double GetHeading() const;
-		void SetHeading(double value);
-		double GetRange() const;
-		void SetRange(double value);
-
-		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
-		void SceneManagerTick(double delta_time) override;
-	protected:
-		void _SetPosition(const GASS::Vec3 &pos);
-		void _SetRotation(const GASS::Quaternion &rot);
-		osgEarth::Viewpoint _GetVP() const;
-		void _SetVP(const osgEarth::Viewpoint &vp);
-
-		void OnCameraFlyToObject(CameraFlyToObjectRequestPtr message);
-		void OnTransformationChanged(TransformationChangedEventPtr event);
-
-		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;
-		osg::Fog* m_Fog;
-
-		Vec3 m_CurrentPos;
-		Quaternion m_CurrentRot;
-		bool m_UpdateCameraFromLocation;
+		virtual double GetPitch() const = 0;
+		virtual void SetPitch(double value) = 0;
+		virtual double GetHeading() const = 0;
+		virtual void SetHeading(double value) = 0;
+		virtual double GetRange() const = 0;
+		virtual void SetRange(double value) = 0;
 	};
+	typedef GASS_SHARED_PTR<IMapCameraComponent> MapCameraComponentPtr;
+	typedef GASS_WEAK_PTR<IMapCameraComponent> MapCameraComponentWeakPtr;
 }
-

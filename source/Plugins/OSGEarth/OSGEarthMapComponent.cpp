@@ -20,43 +20,21 @@
 
 
 
-#include <osgViewer/Viewer>
-#include <osgViewer/CompositeViewer>
-#include <osgGA/NodeTrackerManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osg/MatrixTransform>
-#include <osgShadow/ShadowTechnique>
-#include <osgEarth/MapNode>
-#include <osgEarth/NodeUtils>
-#include <osgEarth/ImageLayer>
-#include <osgEarth/ModelLayer>
-//#include <osgEarth/GLUtils>
-#include <osgEarthUtil/ExampleResources>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/LatLongFormatter>
-#include <osgEarthUtil/MGRSFormatter>
-#include <osgEarthUtil/MouseCoordsTool>
-#include <osgEarthUtil/Controls>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthAnnotation/AnnotationData>
-#include <osgEarthAnnotation/AnnotationRegistry>
+#include "OSGEarthCommonIncludes.h"
+#include "OSGEarthMapComponent.h"
+#include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
-
-#include <osg/Camera>
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
-#include "Sim/GASSBaseSceneManager.h"
-#include "Sim/Interface/GASSIGraphicsSceneManager.h"
-#include "OSGEarthMapComponent.h"
-#include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/IOSGNode.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Sim/GASSBaseSceneManager.h"
+#include "Sim/Interface/GASSIGraphicsSceneManager.h"
 
 namespace GASS
 {
-
 	class OSGEarthMapLayer : public IMapLayer
 	{
 	public:
@@ -180,7 +158,8 @@ namespace GASS
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
 		m_Hour(10),
 		m_SkyNode(NULL),
-		m_UseAutoClipPlane(true)
+		m_UseAutoClipPlane(true),
+		m_OESceneManager(nullptr)
 	{
 
 	}
@@ -196,7 +175,7 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
 		RegisterProperty<ResourceHandle>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile,
 			EnumerationPropertyMetaDataPtr(new OSGEarthMapEnumerationMetaData("OSGEarth map file", PF_VISIBLE)));
-		RegisterProperty<std::string>("Viewpoint", &OSGEarthMapComponent::GetViewpoint, &OSGEarthMapComponent::SetViewpoint,
+		RegisterProperty<std::string>("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName,
 			EnumerationPropertyMetaDataPtr(new OSGEarthViewpointEnumerationMetaData("Set Viewpoint", PF_VISIBLE)));
 
 		RegisterProperty<double>("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay,
@@ -215,6 +194,12 @@ namespace GASS
 	void OSGEarthMapComponent::OnInitialize()
 	{
 		RegisterForPreUpdate<IGraphicsSceneManager>();
+
+		if (OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>())
+			m_OESceneManager = osgearth_sm.get();
+		else
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find OSGEarthSceneManager", "OSGEarthMapComponent::OnInitialize");
+		
 		m_Initlized = true;
 		SetEarthFile(m_EarthFile);
 	}
@@ -228,8 +213,6 @@ namespace GASS
 	{
 		if (m_Initlized && m_MapNode)
 		{
-			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-			
 			// disconnect extensions
 			osgViewer::ViewerBase::Views views;
 			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
@@ -253,7 +236,7 @@ namespace GASS
 				// Check for a Control interface:
 				osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
 				if (controlIF)
-					controlIF->disconnect(osgearth_sm->GetGUI());
+					controlIF->disconnect(m_OESceneManager->GetGUI());
 			}
 
 			//remove fog effect
@@ -277,7 +260,7 @@ namespace GASS
 			m_FogEffect.release();
 			m_AutoClipCB.release();
 
-			osgearth_sm->SetMapNode(NULL);
+			m_OESceneManager->SetMapNode(NULL);
 		}
 	}
 
@@ -507,7 +490,6 @@ namespace GASS
 		}
 	}
 
-
 	void OSGEarthMapComponent::SceneManagerTick(double /*delta_time*/)
 	{
 
@@ -545,7 +527,6 @@ namespace GASS
 		if (m_SkyNode)
 		{
 			m_SkyNode->setLighting(value);
-			
 		}
 	}
 
@@ -558,7 +539,7 @@ namespace GASS
 		}
 		return value;
 	}
-	
+
 	
 	std::vector<std::string> OSGEarthMapComponent::GetViewpointNames() const
 	{
@@ -570,13 +551,7 @@ namespace GASS
 		return names;
 	}
 
-	std::string OSGEarthMapComponent::GetViewpoint() const
-	{
-		std::string name;
-		return name;
-	}
-
-	void OSGEarthMapComponent::SetViewpoint(const std::string &name)
+	void OSGEarthMapComponent::SetViewpointByName(const std::string &name)
 	{
 		if (!m_Initlized)
 			return;
@@ -584,13 +559,9 @@ namespace GASS
 		{
 			if( m_Viewpoints[i].name().value() == name)
 			{
-				OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-				if (osgearth_sm)
-				{
-					osgEarth::Util::EarthManipulator* manip = osgearth_sm->GetManipulator().get();
-					if(manip)
-						manip->setViewpoint(m_Viewpoints[i], 2.0);
-				}
+				osgEarth::Util::EarthManipulator* manip = m_OESceneManager->GetManipulator().get();
+				if(manip)
+					manip->setViewpoint(m_Viewpoints[i], 2.0);
 				return; //done
 			}
 		}

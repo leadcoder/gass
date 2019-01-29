@@ -44,13 +44,13 @@ namespace GASS
 
 	typedef std::unique_ptr<IMapLayer> MapLayerPtr;
 	typedef std::vector<MapLayerPtr> MapLayers;
-	
+
 	class IMapComponent
 	{
 	public:
 		virtual ~IMapComponent(){}
 		virtual std::vector<std::string> GetViewpointNames() const = 0;
-		virtual void SetViewpoint(const std::string &viewpoint_name) = 0;
+		virtual void SetViewpointByName(const std::string &viewpoint_name) = 0;
 		virtual const MapLayers& GetMapLayers() const= 0;
 		virtual double GetTimeOfDay() const = 0;
 		virtual void SetTimeOfDay(double time) = 0;

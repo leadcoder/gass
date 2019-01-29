@@ -18,28 +18,16 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-
-#include <osgViewer/Viewer>
-#include <osgViewer/CompositeViewer>
-#include <osgGA/NodeTrackerManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osg/MatrixTransform>
-#include <osgShadow/ShadowTechnique>
-#include <osgEarth/MapNode>
-#include <osgEarthUtil/ViewFitter>
-
-#include <osg/Camera>
+#include "OSGEarthCommonIncludes.h"
+#include "OSGEarthCameraManipulatorComponent.h"
+#include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGCamera.h"
+#include "Plugins/OSG/IOSGNode.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
-#include "OSGEarthCameraManipulatorComponent.h"
-#include "OSGEarthSceneManager.h"
-#include "Plugins/OSG/IOSGNode.h"
-
 
 namespace GASS
 {
@@ -128,8 +116,6 @@ namespace GASS
 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnCameraFlyToObject, CameraFlyToObjectRequest,0));
 	}
-
-
 
 	void OSGEarthCameraManipulatorComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
@@ -224,7 +210,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthCameraManipulatorComponent::SceneManagerTick(double delta_time)
+	void OSGEarthCameraManipulatorComponent::SceneManagerTick(double /*delta_time*/)
 	{
 		//update location
 		if(m_Manipulator.valid())
@@ -256,6 +242,8 @@ namespace GASS
 			}
 			m_UpdateCameraFromLocation = true;
 
+			
+
 			//use height based fog
 		/*	double visibiliy = 40000;
 			double hazeDensity = 1.0 / visibiliy;
@@ -267,5 +255,51 @@ namespace GASS
 			hazeDensity *= isothermalEffect;
 			m_Fog->setDensity(hazeDensity);*/
 		}
+	}
+
+	double OSGEarthCameraManipulatorComponent::GetPitch() const
+	{
+		return _GetVP().getPitch();
+	}
+
+	void OSGEarthCameraManipulatorComponent::SetPitch(double value)
+	{
+		osgEarth::Viewpoint vp = _GetVP();
+		vp.setPitch(value);
+		_SetVP(vp);
+	}
+
+	double OSGEarthCameraManipulatorComponent::GetHeading() const
+	{
+		return _GetVP().getHeading();
+	}
+
+	void OSGEarthCameraManipulatorComponent::SetHeading(double value)
+	{
+		osgEarth::Viewpoint vp = _GetVP();
+		vp.setHeading(value);
+		_SetVP(vp);
+	}
+
+	double OSGEarthCameraManipulatorComponent::GetRange() const
+	{
+		return _GetVP().getRange();
+	}
+
+	void OSGEarthCameraManipulatorComponent::SetRange(double value)
+	{
+		osgEarth::Viewpoint vp = _GetVP();
+		vp.setRange(value);
+		_SetVP(vp);
+	}
+
+	osgEarth::Viewpoint OSGEarthCameraManipulatorComponent::_GetVP() const
+	{
+		return m_Manipulator->getViewpoint();
+	}
+
+	void OSGEarthCameraManipulatorComponent::_SetVP(const osgEarth::Viewpoint &vp)
+	{
+		m_Manipulator->setViewpoint(vp, 1.0);
 	}
 }
