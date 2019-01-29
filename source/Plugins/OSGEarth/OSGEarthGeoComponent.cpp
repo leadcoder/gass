@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include "OSGEarthCommonIncludes.h"
 #include "OSGEarthGeoComponent.h"
 #include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"

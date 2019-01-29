@@ -19,14 +19,11 @@
 *****************************************************************************/
 
 #pragma once
-//#   pragma warning (disable : 4541)
+
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGCommon.h"
 #include "Plugins/OSG/IOSGNode.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
-#include <osgEarth/GeoTransform>
-#include <osgEarth/MapNode>
-
 
 namespace GASS
 {

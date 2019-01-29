@@ -18,29 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <osgViewer/Viewer>
-#include <osgViewer/CompositeViewer>
-#include <osgGA/NodeTrackerManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osg/MatrixTransform>
-#include <osgShadow/ShadowTechnique>
-#include <osgEarth/MapNode>
-#include <osgEarthUtil/Sky>
-#include <osgEarthUtil/ExampleResources>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/LatLongFormatter>
-#include <osgEarthUtil/MGRSFormatter>
-#include <osgEarthUtil/MouseCoordsTool>
-#include <osgEarthUtil/AutoClipPlaneHandler>
-#include <osgEarthUtil/Controls>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthAnnotation/AnnotationData>
-#include <osgEarthAnnotation/AnnotationRegistry>
+#include "OSGEarthCommonIncludes.h"
+#include "OSGEarthSceneManager.h"
+#include "OSGEarthGeoComponent.h"
 
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
-#include "OSGEarthGeoComponent.h"
-#include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Plugins/OSG/OSGConvert.h"
 

@@ -18,41 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <osgViewer/Viewer>
-#include <osgViewer/CompositeViewer>
-#include <osg/PositionAttitudeTransform>
-#include <osgGA/NodeTrackerManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osg/MatrixTransform>
-#include <osgShadow/ShadowTechnique>
-#include <osgEarth/MapNode>
-#include <osgEarth/ECEF>
 
-//#include <osgEarthUtil/AnnotationEvents>
-#include <osgEarthUtil/ExampleResources>
-#include <osgEarthAnnotation/AnnotationEditing>
-#include <osgEarthAnnotation/AnnotationRegistry>
-#include <osgEarthAnnotation/ImageOverlay>
-#include <osgEarthAnnotation/ImageOverlayEditor>
-#include <osgEarthAnnotation/CircleNode>
-#include <osgEarthAnnotation/RectangleNode>
-#include <osgEarthAnnotation/EllipseNode>
-#include <osgEarthAnnotation/PlaceNode>
-#include <osgEarthAnnotation/LabelNode>
-#include <osgEarthAnnotation/LocalGeometryNode>
-#include <osgEarthAnnotation/FeatureNode>
-//#include <osgEarthAnnotation/Decluttering>
-//#include <osgEarthAnnotation/HighlightDecoration>
-//#include <osgEarthAnnotation/ScaleDecoration>
-
-#include <osgEarthSymbology/GeometryFactory>
-#include <osg/Camera>
-
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-
+#include "OSGEarthCommonIncludes.h"
 #include "OSGEarthLocationComponent.h"
-
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"

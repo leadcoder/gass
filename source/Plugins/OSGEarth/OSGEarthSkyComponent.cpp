@@ -19,20 +19,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include <osgViewer/Viewer>
-#include <osgViewer/CompositeViewer>
-#include <osgGA/NodeTrackerManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osg/MatrixTransform>
-#include <osgShadow/ShadowTechnique>
-#include <osgEarth/MapNode>
-#include <osgEarth/DateTime>
-#include <osgEarthUtil/Sky>
-#include <osg/Camera>
-
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-
+#include "OSGEarthCommonIncludes.h"
 #include "OSGEarthSkyComponent.h"
 
 #include "Plugins/OSG/OSGNodeMasks.h"

@@ -24,12 +24,6 @@
 #include "Sim/GASS.h"
 #include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Interface/GASSIWGS84SceneManager.h"
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/Controls>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarth/PhongLightingEffect>
-#include <osgEarthUtil/Fog>
-
 
 namespace GASS
 {
