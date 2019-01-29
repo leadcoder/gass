@@ -25,6 +25,7 @@
 #pragma warning (disable : 4100)
 #pragma warning (disable : 4541)
 #pragma warning (disable : 4127)
+#pragma warning (disable : 4267)
 #endif
 
 #include <osg/Camera>
