@@ -32,7 +32,8 @@ namespace GASS
 	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(true),
 		m_Initlized(false),
 		m_DisableGLSL(false),
-		m_MapNode(NULL)
+		m_WGS84(nullptr),
+		m_MapNode(nullptr)
 	{
 
 	}
@@ -45,12 +46,6 @@ namespace GASS
 	void OSGEarthSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register("OSGEarthSceneManager", new GASS::Creator<OSGEarthSceneManager, ISceneManager>);
-		/*RegisterProperty<std::string>("EarthFile", &OSGEarthSceneManager::GetEarthFile, &OSGEarthSceneManager::SetEarthFile);
-		RegisterProperty<bool>("UseSky", &OSGEarthSceneManager::GetUseSky, &OSGEarthSceneManager::SetUseSky);
-		RegisterProperty<bool>("ShowSkyControl", &OSGEarthSceneManager::GetShowSkyControl, &OSGEarthSceneManager::SetShowSkyControl);
-		RegisterProperty<bool>("UseOcean", &OSGEarthSceneManager::GetUseOcean, &OSGEarthSceneManager::SetUseOcean);
-		RegisterProperty<bool>("ShowOceanControl", &OSGEarthSceneManager::GetShowOceanControl, &OSGEarthSceneManager::SetShowOceanControl);
-		RegisterProperty<bool>("DisableGLSL", &OSGEarthSceneManager::GetDisableGLSL, &OSGEarthSceneManager::SetDisableGLSL);*/
 	}
 
 	void OSGEarthSceneManager::OnCreate()
@@ -94,7 +89,7 @@ namespace GASS
 		{
 		}
 
-		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) override
+		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& /*aa*/) override
 		{
 			if (ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN)
 			{
@@ -120,6 +115,8 @@ namespace GASS
 	{
 		m_Initlized = true;
 
+		m_WGS84 = osgEarth::SpatialReference::create("wgs84");
+
 		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
 
 		osgViewer::ViewerBase::Views views;
@@ -142,7 +139,7 @@ namespace GASS
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
 
 		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
-		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8));
+		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
 		mainContainer->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
 		mainContainer->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
 
@@ -165,7 +162,15 @@ namespace GASS
 		osgEarth::Util::EarthManipulator* manip = GetManipulator().get();
 		if (manip)
 			manip->setNode(map_node);
+		if (map_node == NULL)
+			m_ElevationEnvelope.release();
 		m_MapNode = map_node;
+
+		if (m_MapNode && m_MapNode->getMap())
+		{
+			const unsigned int elev_lod = 20u;
+			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_MapNode->getMap()->getSRS(), elev_lod);
+		}
 	}
 
 
@@ -288,9 +293,7 @@ namespace GASS
 
 	}
 
-
-
-	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const
+	/*void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const
 	{
 		if (m_MapNode)
 		{
@@ -316,14 +319,14 @@ namespace GASS
 			pos = OSGConvert::ToGASS(osg_pos);
 			rot = Quaternion(osg_rot.w(), -osg_rot.x(), -osg_rot.z(), osg_rot.y());
 		}
-	}
+	}*/
 
 	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
 	{
 		const osg::Vec3d osg_location = OSGConvert::ToOSG(scene_location);
 		osgEarth::GeoPoint gp;
-		osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
-		bool status = gp.fromWorld(wgs84, osg_location);
+		
+		bool status = gp.fromWorld(m_WGS84, osg_location);
 		geo_location.Latitude = gp.y();
 		geo_location.Longitude = gp.x();
 		geo_location.Height = gp.z();
@@ -333,13 +336,13 @@ namespace GASS
 	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, GASS::Vec3 &scene_location) const
 	{
 		bool status = false;
-		osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
-		osgEarth::GeoPoint gp(wgs84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
+		osgEarth::GeoPoint gp(m_WGS84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
 		osg::Vec3d osg_location;
 		status = gp.toWorld(osg_location);
 		scene_location = OSGConvert::ToGASS(osg_location);
 		return status;
 	}
+
 	bool OSGEarthSceneManager::GetTerrainHeight(const Vec3 &location, double &height) const
 	{
 		GeoLocation geo_location;
@@ -352,8 +355,16 @@ namespace GASS
 		bool status = false;
 		if(m_MapNode)
 		{
-			osgEarth::SpatialReference* wgs84 = osgEarth::SpatialReference::create("wgs84");
-			status = m_MapNode->getTerrain()->getHeight(m_MapNode, wgs84, location.Longitude, location.Latitude, &height, 0L);
+#if ENV_TERRAIN_HEIGHT
+				float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
+				if (elevation != NO_DATA_VALUE)
+					height = static_cast<double>(elevation);
+				else
+					height = 0;
+				status = true;
+#else
+				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, 0L);
+#endif
 		}
 		return status;
 	}

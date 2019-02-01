@@ -39,7 +39,7 @@ namespace GASS
 		bool GetSerialize() const override {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }
-		void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
+		//void FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const;
 		void SetMapNode(osgEarth::MapNode* map_node);
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
@@ -67,6 +67,8 @@ namespace GASS
 		bool m_AutoAdd;
 		osgEarth::Util::Controls::Container* m_GUI;
 		std::string m_DummyProjection;
+		osg::ref_ptr<osgEarth::ElevationEnvelope> m_ElevationEnvelope;
+		osgEarth::SpatialReference* m_WGS84;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthSceneManager> OSGEarthSceneManagerPtr;
 	typedef GASS_WEAK_PTR<OSGEarthSceneManager> OSGEarthSceneManagerWeakPtr;

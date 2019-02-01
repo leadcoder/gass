@@ -38,6 +38,8 @@ namespace GASS
 		virtual void SetName(const std::string& name) = 0;
 		virtual bool GetVisible() const = 0;
 		virtual void SetVisible(bool value) = 0;
+		virtual bool GetEnabled() const = 0;
+		virtual void SetEnabled(bool value) = 0;
 		virtual MapLayerType GetType() const = 0;
 		virtual int GetUID() const = 0;
 	};

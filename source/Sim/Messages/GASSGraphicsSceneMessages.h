@@ -181,4 +181,15 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ExportMeshRequest> ExportMeshRequestPtr;
 
+
+
+	class TerrainChangedEvent : public SceneEventMessage
+	{
+	public:
+		TerrainChangedEvent(SenderID sender_id = -1, double delay = 0) : SceneEventMessage(sender_id, delay)
+		{
+
+		}
+	};
+	typedef GASS_SHARED_PTR<TerrainChangedEvent> TerrainChangedEventPtr;
 }

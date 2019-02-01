@@ -25,6 +25,7 @@
 namespace GASS
 {
 	class OSGEarthSceneManager;
+	class OETerrainCallbackProxy;
 
 	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, BaseSceneComponent>, public IGeometryComponent, public IMapComponent
 	{
@@ -56,6 +57,11 @@ namespace GASS
 		void SetMinimumAmbient(float value);
 		void SetSkyLighting(bool value);
 		bool GetSkyLighting() const;
+
+		void onTileAdded(
+			const osgEarth::TileKey&          key,
+			osg::Node*              graph,
+			osgEarth::TerrainCallbackContext& context);
 	protected:
 		void Shutdown();
 		void SetEarthFile(const ResourceHandle &earth_file);
@@ -80,6 +86,8 @@ namespace GASS
 
 		MapLayers m_MapLayers;
 		OSGEarthSceneManager* m_OESceneManager;
+		osg::ref_ptr<OETerrainCallbackProxy> m_TerrainCallbackProxy;
+		bool m_TerrainChangedLastFrame;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }

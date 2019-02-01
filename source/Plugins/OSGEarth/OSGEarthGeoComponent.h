@@ -49,11 +49,14 @@ namespace GASS
 		Vec3 _GetWorldPosition() const;
 		void _LatOrLongChanged();
 		void _SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr message);
-		
+		void OnTransformation(TransformationChangedEventPtr event);
+		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
+		bool m_PreserveHAG;
+
 		GeoLocation m_Location;
 		double m_HeightAboveGround;
 		OSGEarthSceneManager* m_OESM;
+		ILocationComponent* m_LocationComp;
 	};
 	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;
 	typedef GASS_SHARED_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentPtr;

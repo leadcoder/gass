@@ -32,9 +32,30 @@
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
+#include "Sim/Messages/GASSGraphicsSceneMessages.h"
 
 namespace GASS
 {
+
+	class OETerrainCallbackProxy : public osgEarth::TerrainCallback
+	{
+	public:
+		OETerrainCallbackProxy(OSGEarthMapComponent* map_comp) : m_MapComponent(map_comp)
+		{
+
+		}
+
+		void onTileAdded(
+			const osgEarth::TileKey&          key,
+			osg::Node*              graph,
+			osgEarth::TerrainCallbackContext& context)
+		{
+			m_MapComponent->onTileAdded(key, graph, context);
+		}
+
+		OSGEarthMapComponent* m_MapComponent;
+	};
+
 	class OSGEarthMapLayer : public IMapLayer
 	{
 	public:
@@ -60,6 +81,16 @@ namespace GASS
 		void SetVisible(bool value) override
 		{
 			m_Layer->setVisible(value);
+		}
+
+		bool GetEnabled() const override
+		{
+			return m_Layer->getEnabled();
+		}
+
+		void SetEnabled(bool value) override
+		{
+			m_Layer->setEnabled(value);
 		}
 
 		MapLayerType GetType() const override
@@ -159,14 +190,16 @@ namespace GASS
 		m_Hour(10),
 		m_SkyNode(NULL),
 		m_UseAutoClipPlane(true),
-		m_OESceneManager(nullptr)
+		m_OESceneManager(nullptr),
+		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this)),
+		m_TerrainChangedLastFrame(false)
 	{
 
 	}
 
 	OSGEarthMapComponent::~OSGEarthMapComponent()
 	{
-
+		
 	}
 
 	void OSGEarthMapComponent::RegisterReflection()
@@ -194,7 +227,6 @@ namespace GASS
 	void OSGEarthMapComponent::OnInitialize()
 	{
 		RegisterForPreUpdate<IGraphicsSceneManager>();
-
 		if (OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>())
 			m_OESceneManager = osgearth_sm.get();
 		else
@@ -213,6 +245,8 @@ namespace GASS
 	{
 		if (m_Initlized && m_MapNode)
 		{
+			if(m_MapNode->getTerrain())
+				m_MapNode->getTerrain()->removeTerrainCallback(m_TerrainCallbackProxy);
 			// disconnect extensions
 			osgViewer::ViewerBase::Views views;
 			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
@@ -264,6 +298,14 @@ namespace GASS
 		}
 	}
 
+	void OSGEarthMapComponent::onTileAdded(
+		const osgEarth::TileKey&          key,
+		osg::Node*              graph,
+		osgEarth::TerrainCallbackContext& context)
+	{
+		m_TerrainChangedLastFrame = true;
+	}
+
 	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle &earth_file)
 	{
 		//Always store filename
@@ -278,8 +320,8 @@ namespace GASS
 		{
 			IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 			GASSAssert(osg_sm, "Failed to find OSGGraphicsSceneManager in OSGEarthMapComponent::SetEarthFile");
-			OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-			GASSAssert(osgearth_sm, "Failed to find OSGEarthSceneManager in OSGEarthMapComponent::SetEarthFile");
+			//OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
+			//GASSAssert(osgearth_sm, "Failed to find OSGEarthSceneManager in OSGEarthMapComponent::SetEarthFile");
 
 			const std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
 
@@ -298,6 +340,9 @@ namespace GASS
 			m_TopNode = top_node;
 			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
 			GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
+		
+			if(m_MapNode->getTerrain())
+				m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
 
 			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
 			root->addChild(top_node);
@@ -319,7 +364,7 @@ namespace GASS
 			m_MapNode->setUserData(data);
 
 			//inform OSGEarth scene manager that we have new map node
-			osgearth_sm->SetMapNode(m_MapNode);
+			m_OESceneManager->SetMapNode(m_MapNode);
 
 			//read viewpoints from earth file and store them in m_Viewpoints vector 
 			{
@@ -372,7 +417,7 @@ namespace GASS
 					// Check for a Control interface:
 					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
 					if (controlIF)
-						controlIF->connect(osgearth_sm->GetGUI());
+						controlIF->connect(m_OESceneManager->GetGUI());
 				}
 			}
 			
@@ -492,7 +537,11 @@ namespace GASS
 
 	void OSGEarthMapComponent::SceneManagerTick(double /*delta_time*/)
 	{
-
+		if (m_TerrainChangedLastFrame)
+		{
+			GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
+			m_TerrainChangedLastFrame = false;
+		}
 	}
 
 	void OSGEarthMapComponent::SetTimeOfDay(double hour)
@@ -585,7 +634,7 @@ namespace GASS
 				osgEarth::Layer* oe_layer = oe_layers[i].get();
 				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(oe_layer);
 				// only return layers that derive from VisibleLayer
-				if (visibleLayer && visibleLayer->getEnabled())
+				if (visibleLayer)// && visibleLayer->getEnabled())
 				{
 					m_MapLayers.emplace_back(std::make_unique<OSGEarthMapLayer>(OSGEarthMapLayer(visibleLayer)));
 				}
