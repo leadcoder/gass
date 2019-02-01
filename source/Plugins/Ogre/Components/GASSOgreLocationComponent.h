@@ -74,6 +74,8 @@ namespace GASS
 		void SetVisible(bool value) override;
 		bool GetVisible() const override;
 
+		bool HasParentLocation() const override;
+
 		//end ILocationComponent
 	
 		inline Ogre::SceneNode* GetOgreNode() override{return m_OgreNode;}

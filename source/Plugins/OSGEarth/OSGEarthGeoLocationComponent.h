@@ -57,6 +57,7 @@ namespace GASS
 
 		void SetVisible(bool value) override;
 		bool GetVisible() const override;
+		bool HasParentLocation() const override;
 
 			
 		//IOSGNode interface

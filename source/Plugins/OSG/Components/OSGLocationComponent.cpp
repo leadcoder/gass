@@ -428,6 +428,11 @@ namespace GASS
 		return root_node;
 	}
 
+	bool OSGLocationComponent::HasParentLocation() const
+	{
+		return (m_ParentLocation != NULL);
+	}
+
 	void OSGLocationComponent::SetAttachToParent(bool value)
 	{
 		m_AttachToParent = value;

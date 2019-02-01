@@ -34,6 +34,7 @@ namespace GASS
 		m_AttachToParent(false),
 		m_NodeMask(0)
 	{
+
 	}
 
 	OSGEarthGeoLocationComponent::~OSGEarthGeoLocationComponent()
@@ -150,6 +151,16 @@ namespace GASS
 	void OSGEarthGeoLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
 	{
 		SetAttachToParent(message->GetAttachToParent());
+	}
+
+	bool OSGEarthGeoLocationComponent::HasParentLocation() const
+	{
+		bool value = m_AttachToParent;
+		/*if (!_GetParentLocation() && m_AttachToParent) //if intialized and we have to check that we are top node 
+		{
+			value = false;
+		}*/
+		return value;
 	}
 
 	void OSGEarthGeoLocationComponent::OnPositionMessage(PositionRequestPtr message)

@@ -378,6 +378,16 @@ namespace GASS
 		return parent_location;
 	}
 
+	bool OgreLocationComponent::HasParentLocation() const
+	{
+		bool value = m_AttachToParent;
+		if (m_OgreNode && m_AttachToParent) //if intialized and we have to check that we are top node 
+		{
+			value = m_OgreNode->getCreator()->getRootSceneNode() != m_OgreNode->getParent();
+		}
+		return value;
+	}
+
 	void OgreLocationComponent::SetAttachToParent(bool value)
 	{
 		m_AttachToParent = value;

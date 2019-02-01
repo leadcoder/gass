@@ -58,17 +58,19 @@ namespace GASS
 		virtual Vec3 GetScale() const = 0;
 		virtual void SetScale(const Vec3 &value) = 0;
 		
-		
-		/** Get value indicating if location is relative to first LocationComponent that is found above in scene tree hierarchy */
+		/*Return true if the location is relative to first LocationComponent that is found above in scene tree hierarchy*/
 		virtual bool GetAttachToParent() const = 0;
 
 		/** Set if location should be relative to first LocationComponent that is
 		* found above in scene tree hierarchy (true) or world location (false) */
 		virtual void SetAttachToParent(bool value) = 0;
 
+		/* return whether the location component currently is the root node, or child of other location component
+		Note that GetAttachToParent can return true but this function can return false*/
+		virtual bool HasParentLocation() const = 0;
+
 		virtual void SetVisible(bool value) = 0;
 		virtual bool GetVisible() const = 0;
-
 	protected:
 	};
 
