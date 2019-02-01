@@ -288,6 +288,8 @@ namespace GASS
 
 	}
 
+
+
 	void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const
 	{
 		if (m_MapNode)
@@ -315,108 +317,6 @@ namespace GASS
 			rot = Quaternion(osg_rot.w(), -osg_rot.x(), -osg_rot.z(), osg_rot.y());
 		}
 	}
-
-//	bool OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, double height, Vec3 &pos, bool relative_height) const
-//	{
-//		bool status = false;
-//		if (m_MapNode)
-//		{
-//			status = WGS84ToScene(GeoLocation(longitude, latitude, height, relative_height), pos);
-//			return status;
-//#if 0
-//			if (m_MapNode->isGeocentric())
-//			{
-//				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-//				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-//
-//				//Create geocentric coordinates from lat long, use  Geographic-SRS!
-//				double abs_height = 0;
-//				if (relative_height)
-//				{
-//					status = m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &abs_height, 0L);
-//					if (status)
-//						abs_height = abs_height + height;
-//				}
-//				else
-//				{
-//					status = true;
-//					abs_height = height;
-//				}
-//				if (status)
-//				{
-//					osgEarth::GeoPoint gp(geoSRS, longitude, latitude, abs_height, osgEarth::ALTMODE_ABSOLUTE);
-//					osg::Vec3d ptXYZ;
-//					osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
-//					if (status = map_gp.toWorld(ptXYZ))
-//						pos = OSGConvert::ToGASS(ptXYZ);
-//				}
-//			}
-//			else //Hack to get correct height in projected mode, have to investigate vertical datum usages further
-//			{
-//				const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-//				const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-//
-//				//update with correct height, ptXYZ.z don't match scene height
-//				osgEarth::GeoPoint gp(geoSRS, longitude, latitude, height, relative_height ? osgEarth::ALTMODE_RELATIVE : osgEarth::ALTMODE_ABSOLUTE);
-//				osg::Vec3d ptXYZ;
-//				osgEarth::GeoPoint map_gp = gp.transform(mapSRS);
-//				if (status = map_gp.toWorld(ptXYZ, m_MapNode->getTerrain()))
-//					pos = OSGConvert::ToGASS(ptXYZ);
-//			}
-//#endif
-//		}
-//		return status;
-//	}
-//
-//	bool OSGEarthSceneManager::FromMapToLatLong(const Vec3 &pos, double &latitude, double &longitude, double &height_above_msl, double *height_above_ground) const
-//	{
-//		bool status = false;
-//		if (m_MapNode)
-//		{
-//			GeoLocation geo_location;
-//			SceneToWGS84(pos, geo_location);
-//			latitude = geo_location.Latitude;
-//			longitude = geo_location.Longitude;
-//			height_above_msl = geo_location.Height;
-//
-//			if(height_above_ground)
-//			{
-//				double terrain_height_above_msl = 0;
-//				//getHeight on map node to include all osgEarth geometries
-//				if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, osgEarth::SpatialReference::create("wgs84"), longitude, latitude, &terrain_height_above_msl, 0L))
-//				{
-//					*height_above_ground = height_above_msl - terrain_height_above_msl;
-//				}
-//			}
-//#if 0
-//			const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-//			const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-//			const osg::Vec3d osg_pos = OSGConvert::ToOSG(pos);
-//			osgEarth::GeoPoint gp;
-//			//Create GeoPoint from world coordinates
-//			status = gp.fromWorld(mapSRS, osg_pos);
-//			if (status)
-//			{
-//				//Transform to Geographic coordnaties, lat, long, height
-//				const osg::Vec3d ptLatLong = gp.transform(geoSRS).vec3d();
-//				latitude = ptLatLong.y();
-//				longitude = ptLatLong.x();
-//				height_above_msl = ptLatLong.z();
-//				if (height_above_ground)
-//				{
-//					double terrain_height_above_msl = 0;
-//					//getHeight on map node to include all osgEarth geometries
-//					if (status = m_MapNode->getTerrain()->getHeight(m_MapNode, geoSRS, longitude, latitude, &terrain_height_above_msl, 0L))
-//					{
-//						*height_above_ground = height_above_msl - terrain_height_above_msl;
-//					}
-//				}
-//			}
-//#endif
-//		}
-//
-//		return status;
-//	}
 
 	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
 	{
