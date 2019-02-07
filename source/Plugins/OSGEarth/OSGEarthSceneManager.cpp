@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(true),
+	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(false),
 		m_Initlized(false),
 		m_DisableGLSL(false),
 		m_WGS84(nullptr),
@@ -161,18 +161,36 @@ namespace GASS
 		//Set EarthManipulator to only work on map node, otherwise entire scene is used for calculating home-position etc.
 		osgEarth::Util::EarthManipulator* manip = GetManipulator().get();
 		if (manip)
-			manip->setNode(map_node);
+		{
+			if (m_MapNode && map_node == NULL)
+			{
+				m_OldVP = manip->getViewpoint();
+				manip->setNode(map_node);
+			}
+			else
+			{
+				manip->setNode(map_node);
+				//restore viewpoint
+				if(m_OldVP.isValid())
+					manip->setViewpoint(m_OldVP);
+			}
+			
+		}
 		if (map_node == NULL)
 			m_ElevationEnvelope.release();
-		m_MapNode = map_node;
 
+		m_MapNode = map_node;
+		OnElevationChanged();
+	}
+
+	void OSGEarthSceneManager::OnElevationChanged()
+	{
 		if (m_MapNode && m_MapNode->getMap())
 		{
 			const unsigned int elev_lod = 20u;
 			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_MapNode->getMap()->getSRS(), elev_lod);
 		}
 	}
-
 
 #if 0
 	void OSGEarthSceneManager::SetEarthFile(const std::string &earth_file)
@@ -349,19 +367,39 @@ namespace GASS
 		SceneToWGS84(location, geo_location);
 		return GetTerrainHeight(geo_location,height);
 	}
-
+#define ENV_TERRAIN_HEIGHT
 	bool OSGEarthSceneManager::GetTerrainHeight(const GeoLocation &location, double &height) const
 	{
 		bool status = false;
 		if(m_MapNode)
 		{
-#if ENV_TERRAIN_HEIGHT
+#ifdef ENV_TERRAIN_HEIGHT
 				float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
 				if (elevation != NO_DATA_VALUE)
 					height = static_cast<double>(elevation);
 				else
 					height = 0;
 				status = true;
+
+				//test model layer 
+				osgEarth::ModelLayerVector modelLayers;
+				m_MapNode->getMap()->getLayers(modelLayers);
+				for (unsigned i = 0; i < modelLayers.size(); ++i)
+				{
+					double model_elevation = 0;
+					if (modelLayers[i]->getNode() && modelLayers[i]->options().terrainPatch() == true)
+					{
+						bool model_status = m_MapNode->getTerrain()->getHeight(modelLayers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, 0L);
+						if (model_status)
+						{
+							//Always use terrain patch height to support terrain mask?
+							if (model_elevation > height)
+							{
+								height = model_elevation;
+							}
+						}
+					}
+				}
 #else
 				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, 0L);
 #endif

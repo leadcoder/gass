@@ -57,6 +57,7 @@ namespace GASS
 		double m_HeightAboveGround;
 		OSGEarthSceneManager* m_OESM;
 		ILocationComponent* m_LocationComp;
+		bool m_HandleTransformations;
 	};
 	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;
 	typedef GASS_SHARED_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentPtr;

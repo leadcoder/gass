@@ -31,7 +31,8 @@ namespace GASS
 	OSGEarthGeoComponent::OSGEarthGeoComponent() : m_HeightAboveGround(0),
 		m_OESM(NULL),
 		m_LocationComp(NULL),
-		m_PreserveHAG(false)
+		m_PreserveHAG(true),
+		m_HandleTransformations(true)
 	{
 
 	}
@@ -73,13 +74,20 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find ILocationComponent", "OSGEarthGeoComponent::OnInitialize");
 
 		m_LocationComp = lc.get();
-#if 0
-		if (GetLatitude() != 0) //assume we have valid location, lat long, height
+#if 1
+		if (fabs(GetLatitude()) > 0.00000001) //assume we have valid location, lat long, height
 		{
+#if 1
+			if (!m_LocationComp->HasParentLocation()) //top node?
+			{
+				_LatOrLongChanged(); //update location component to reflect current terrain elevation
+			}
+#else
 			const Vec3 pos = m_LocationComp->GetPosition();
 			const double half_earth_radius = 6371000.0 / 2.0;
 			if(pos.Length() > half_earth_radius) //assume this is geocentric world coordinates
 				_LatOrLongChanged(); //update location component to reflect current terrain elevation
+#endif
 		}
 #endif 
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoComponent::OnTransformation, TransformationChangedEvent, 0));
@@ -115,7 +123,9 @@ namespace GASS
 
 	void OSGEarthGeoComponent::_SetWorldPosition(const Vec3& pos)
 	{
+		m_HandleTransformations = false;
 		m_LocationComp->SetWorldPosition(pos);
+		m_HandleTransformations = true;
 	}
 
 	void OSGEarthGeoComponent::SetHeightAboveGround(double value)
@@ -139,10 +149,11 @@ namespace GASS
 
 	double OSGEarthGeoComponent::GetHeightAboveGround() const
 	{
-		double hag = m_HeightAboveGround;
-		if(m_OESM)
-			m_OESM->GetHeightAboveTerrain(m_Location, hag);
-		return hag;
+		return m_HeightAboveGround;
+		//double hag = m_HeightAboveGround;
+		//if(m_OESM)
+		//	m_OESM->GetHeightAboveTerrain(m_Location, hag);
+		//return hag;
 	}
 
 	void OSGEarthGeoComponent::SetHeightAboveMSL(double value)
@@ -173,9 +184,14 @@ namespace GASS
 
 	void OSGEarthGeoComponent::OnTransformation(TransformationChangedEventPtr event)
 	{
-		if (m_OESM->SceneToWGS84(event->GetPosition(), m_Location))
+		if (m_HandleTransformations)
 		{
-			//m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+			//update location
+			if (m_OESM->SceneToWGS84(event->GetPosition(), m_Location))
+			{
+				//update HAG
+				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+			}
 		}
 	}
 
@@ -183,7 +199,8 @@ namespace GASS
 	{
 		if (!m_LocationComp->HasParentLocation() && m_PreserveHAG)
 		{
-			_LatOrLongChanged();
+			//_LatOrLongChanged(); //trig new height values
+			SetHeightAboveGround(m_HeightAboveGround);
 		}
 	}
 
@@ -192,11 +209,18 @@ namespace GASS
 		if (m_OESM)
 		{
 			Vec3 pos;
-			//preserve height above ground at new location
-			double terrain_height = 0;
-			if(m_OESM->GetTerrainHeight(m_Location, terrain_height))
-				m_Location.Height = m_HeightAboveGround + terrain_height;
 
+			if (m_PreserveHAG) //preserve height above ground at new location
+			{
+				double terrain_height = 0;
+				if (m_OESM->GetTerrainHeight(m_Location, terrain_height))
+					m_Location.Height = m_HeightAboveGround + terrain_height;
+			}
+			else // updated height above ground
+			{
+				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+			}
+		
 			if (m_OESM->WGS84ToScene(m_Location, pos))
 			{
 				_SetWorldPosition(pos);

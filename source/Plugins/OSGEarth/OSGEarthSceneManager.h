@@ -56,7 +56,7 @@ namespace GASS
 		//helpers
 		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;
 		bool GetTerrainHeight(const GeoLocation &location, double &height) const;
-
+		void OnElevationChanged();
 	protected:
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
 		ADD_PROPERTY(bool,DisableGLSL)
@@ -69,6 +69,7 @@ namespace GASS
 		std::string m_DummyProjection;
 		osg::ref_ptr<osgEarth::ElevationEnvelope> m_ElevationEnvelope;
 		osgEarth::SpatialReference* m_WGS84;
+		osgEarth::Viewpoint m_OldVP;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthSceneManager> OSGEarthSceneManagerPtr;
 	typedef GASS_WEAK_PTR<OSGEarthSceneManager> OSGEarthSceneManagerWeakPtr;

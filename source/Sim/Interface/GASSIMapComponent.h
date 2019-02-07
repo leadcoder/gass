@@ -58,7 +58,10 @@ namespace GASS
 		virtual void SetTimeOfDay(double time) = 0;
 		virtual float GetMinimumAmbient() const = 0;
 		virtual void SetMinimumAmbient(float value) = 0;
+		virtual void SetEarthFile(const ResourceHandle &earth_file) = 0;
+		virtual ResourceHandle GetEarthFile() const = 0;
 	};
+
 	typedef GASS_SHARED_PTR<IMapComponent> MapComponentPtr;
 	typedef GASS_WEAK_PTR<IMapComponent> MapComponentWeakPtr;
 }

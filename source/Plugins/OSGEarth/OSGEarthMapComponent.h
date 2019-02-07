@@ -43,8 +43,7 @@ namespace GASS
 		bool GetCollision() const override { return true; }
 		void SetCollision(bool /*value*/) override {  }
 		osg::ref_ptr<osgEarth::MapNode> GetMap() { return m_MapNode; }
-		std::vector<std::string> GetLayerNames() const;
-
+	
 		//IMapComponent
 		std::vector<std::string> GetViewpointNames() const;
 		void SetViewpointByName(const std::string& viewpoint_name);
@@ -57,15 +56,19 @@ namespace GASS
 		void SetMinimumAmbient(float value);
 		void SetSkyLighting(bool value);
 		bool GetSkyLighting() const;
+		void SetEarthFile(const ResourceHandle &earth_file);
+		ResourceHandle GetEarthFile() const { return m_EarthFile; }
+		//IMapComponent end
 
 		void onTileAdded(
 			const osgEarth::TileKey&          key,
 			osg::Node*              graph,
 			osgEarth::TerrainCallbackContext& context);
+		void onMapModelChanged(const osgEarth::MapModelChange& change);
+
 	protected:
 		void Shutdown();
-		void SetEarthFile(const ResourceHandle &earth_file);
-		ResourceHandle GetEarthFile() const { return m_EarthFile; }
+		
 		std::string GetViewpointName() const {return std::string(""); }
 		void _UpdateMapLayers();
 

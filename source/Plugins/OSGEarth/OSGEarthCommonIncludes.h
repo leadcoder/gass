@@ -32,6 +32,7 @@
 
 #include <osgEarth/PhongLightingEffect>
 #include <osgEarth/MapNode>
+#include <osgEarth/MapModelChange>
 #include <osgEarth/ImageLayer>
 #include <osgEarth/ModelLayer>
 #include <osgEarth/GeoTransform>

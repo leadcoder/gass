@@ -37,6 +37,16 @@
 namespace GASS
 {
 
+	struct OEMapListenerProxy : public osgEarth::MapCallback
+	{
+		OEMapListenerProxy(OSGEarthMapComponent* map_comp) : m_MapComponent(map_comp){}
+		void onMapModelChanged(const osgEarth::MapModelChange& change)
+		{
+			m_MapComponent->onMapModelChanged(change);
+		}
+		OSGEarthMapComponent* m_MapComponent;
+	};
+
 	class OETerrainCallbackProxy : public osgEarth::TerrainCallback
 	{
 	public:
@@ -306,6 +316,16 @@ namespace GASS
 		m_TerrainChangedLastFrame = true;
 	}
 
+	void OSGEarthMapComponent::onMapModelChanged(const osgEarth::MapModelChange& change)
+	{
+		const osgEarth::ElevationLayer* elevationLayer = change.getElevationLayer();
+		if (elevationLayer)
+		{
+			m_OESceneManager->OnElevationChanged();
+			GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
+		}
+	}
+
 	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle &earth_file)
 	{
 		//Always store filename
@@ -341,6 +361,8 @@ namespace GASS
 			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
 			GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
 		
+			m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
+
 			if(m_MapNode->getTerrain())
 				m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
 
@@ -469,6 +491,7 @@ namespace GASS
 			_UpdateMapLayers();
 
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 			
 			//if (m_UseOcean)
 			//	{
@@ -539,7 +562,7 @@ namespace GASS
 	{
 		if (m_TerrainChangedLastFrame)
 		{
-			GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
+			//GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 			m_TerrainChangedLastFrame = false;
 		}
 	}
@@ -634,7 +657,7 @@ namespace GASS
 				osgEarth::Layer* oe_layer = oe_layers[i].get();
 				osgEarth::VisibleLayer* visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(oe_layer);
 				// only return layers that derive from VisibleLayer
-				if (visibleLayer)// && visibleLayer->getEnabled())
+				if (visibleLayer)
 				{
 					m_MapLayers.emplace_back(std::make_unique<OSGEarthMapLayer>(OSGEarthMapLayer(visibleLayer)));
 				}
