@@ -363,8 +363,12 @@ namespace GASS
 		
 			m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
 
-			if(m_MapNode->getTerrain())
+			_SetupNodeMasks();
+
+			if (m_MapNode->getTerrain())
+			{
 				m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
+			}
 
 			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
 			root->addChild(top_node);
@@ -521,6 +525,23 @@ namespace GASS
 			}
 			}*/
 			//}
+		}
+	}
+
+	void OSGEarthMapComponent::_SetupNodeMasks()
+	{
+		osgEarth::ModelLayerVector modelLayers;
+		m_MapNode->getMap()->getLayers(modelLayers);
+		OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_GROUND, m_MapNode->getTerrain()->getGraph());
+		
+		for (unsigned i = 0; i < modelLayers.size(); ++i)
+		{
+			double model_elevation = 0;
+			if (modelLayers[i]->getNode())
+			{
+				const GeometryFlags flags = modelLayers[i]->options().terrainPatch() == true ? GEOMETRY_FLAG_GROUND : GEOMETRY_FLAG_STATIC_OBJECT;
+				OSGConvert::SetOSGNodeMask(flags, modelLayers[i]->getNode());
+			}
 		}
 	}
 

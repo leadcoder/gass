@@ -68,7 +68,8 @@ namespace GASS
 
 	protected:
 		void Shutdown();
-		
+		void _SetupNodeMasks();
+
 		std::string GetViewpointName() const {return std::string(""); }
 		void _UpdateMapLayers();
 

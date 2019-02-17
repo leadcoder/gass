@@ -392,7 +392,6 @@ namespace GASS
 		return result.Coll;
 	}
 	
-#define ENV_TERRAIN_HEIGHT
 	bool OSGEarthSceneManager::GetTerrainHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
 		bool status = false;
