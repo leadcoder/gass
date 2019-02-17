@@ -136,7 +136,7 @@ namespace GASS
 			//first update values from from current location
 			m_OESM->SceneToWGS84(_GetWorldPosition(), m_Location);
 			double terrain_height = 0;
-			if(m_OESM->GetTerrainHeight(m_Location, terrain_height))
+			if(m_OESM->GetTerrainHeight(m_Location, terrain_height, GEOMETRY_FLAG_GROUND_LOD))
 			{
 				//update world location with new height
 				m_Location.Height = terrain_height + m_HeightAboveGround;
@@ -171,7 +171,7 @@ namespace GASS
 				{
 					_SetWorldPosition(pos);
 					//update Height above ground
-					m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+					m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround, GEOMETRY_FLAG_GROUND_LOD);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ namespace GASS
 			if (m_OESM->SceneToWGS84(event->GetPosition(), m_Location))
 			{
 				//update HAG
-				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround, GEOMETRY_FLAG_GROUND_LOD);
 			}
 		}
 	}
@@ -213,12 +213,12 @@ namespace GASS
 			if (m_PreserveHAG) //preserve height above ground at new location
 			{
 				double terrain_height = 0;
-				if (m_OESM->GetTerrainHeight(m_Location, terrain_height))
+				if (m_OESM->GetTerrainHeight(m_Location, terrain_height, GEOMETRY_FLAG_GROUND_LOD))
 					m_Location.Height = m_HeightAboveGround + terrain_height;
 			}
 			else // updated height above ground
 			{
-				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround);
+				m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround, GEOMETRY_FLAG_GROUND_LOD);
 			}
 		
 			if (m_OESM->WGS84ToScene(m_Location, pos))

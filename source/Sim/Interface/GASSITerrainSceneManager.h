@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSGeometryFlags.h"
 #include <string>
 
 namespace GASS
@@ -29,8 +30,8 @@ namespace GASS
 	{
 	public:
 		virtual ~ITerrainSceneManager() {}
-		virtual bool GetTerrainHeight(const Vec3 &location, double &height) const = 0;
-		virtual bool GetHeightAboveTerrain(const Vec3 &location, double &height) const = 0;
+		virtual bool GetTerrainHeight(const Vec3 &location, double &height, GeometryFlags flags) const = 0;
+		virtual bool GetHeightAboveTerrain(const Vec3 &location, double &height, GeometryFlags flags) const = 0;
 		virtual bool GetUpVector(const Vec3 &location, GASS::Vec3 &up_vec) const = 0;
 		virtual bool GetOrientation(const Vec3 &location, Quaternion &rot) const = 0;
 	};

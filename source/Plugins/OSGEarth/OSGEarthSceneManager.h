@@ -44,8 +44,8 @@ namespace GASS
 		osgEarth::MapNode* GetMapNode() const { return m_MapNode;}
 
 		//ITerrainSceneManager
-		bool GetTerrainHeight(const Vec3 &location, double &height) const override;
-		bool GetHeightAboveTerrain(const Vec3 &location, double &height) const override;
+		bool GetTerrainHeight(const Vec3 &location, double &height, GeometryFlags flags) const override;
+		bool GetHeightAboveTerrain(const Vec3 &location, double &height, GeometryFlags flags) const override;
 		bool GetUpVector(const Vec3 &location, Vec3 &up_vec) const override;
 		bool GetOrientation(const Vec3 &location, Quaternion &rot) const override;
 
@@ -54,10 +54,11 @@ namespace GASS
 		bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const override;
 
 		//helpers
-		bool GetHeightAboveTerrain(const GeoLocation &location, double &height) const;
-		bool GetTerrainHeight(const GeoLocation &location, double &height) const;
+		bool GetHeightAboveTerrain(const GeoLocation &location, double &height, GeometryFlags flags) const;
+		bool GetTerrainHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
 		void OnElevationChanged();
 	protected:
+		bool _GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
 		ADD_PROPERTY(bool,DisableGLSL)
 
@@ -70,6 +71,7 @@ namespace GASS
 		osg::ref_ptr<osgEarth::ElevationEnvelope> m_ElevationEnvelope;
 		osgEarth::SpatialReference* m_WGS84;
 		osgEarth::Viewpoint m_OldVP;
+		ICollisionSceneManager* m_CollisionSceneManager;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthSceneManager> OSGEarthSceneManagerPtr;
 	typedef GASS_WEAK_PTR<OSGEarthSceneManager> OSGEarthSceneManagerWeakPtr;

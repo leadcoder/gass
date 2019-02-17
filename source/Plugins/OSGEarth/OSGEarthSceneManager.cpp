@@ -33,7 +33,8 @@ namespace GASS
 		m_Initlized(false),
 		m_DisableGLSL(false),
 		m_WGS84(nullptr),
-		m_MapNode(nullptr)
+		m_MapNode(nullptr),
+		m_CollisionSceneManager(nullptr)
 	{
 
 	}
@@ -77,8 +78,6 @@ namespace GASS
 		}
 	}
 
-
-
 	/**
 	* Toggles the main control canvas on and off.
 	*/
@@ -118,6 +117,7 @@ namespace GASS
 		m_WGS84 = osgEarth::SpatialReference::create("wgs84");
 
 		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+		m_CollisionSceneManager = GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
 
 		osgViewer::ViewerBase::Views views;
 		osg_sys->GetViewer()->getViews(views);
@@ -132,8 +132,6 @@ namespace GASS
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
-
-		
 
 
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
@@ -187,7 +185,9 @@ namespace GASS
 	{
 		if (m_MapNode && m_MapNode->getMap())
 		{
-			const unsigned int elev_lod = 20u;
+			//const unsigned int elev_lod = 23u;
+			const unsigned int elev_lod = 15u;
+			//m_MapNode->getMap()->getElevationPool()->clear();
 			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_MapNode->getMap()->getSRS(), elev_lod);
 		}
 	}
@@ -361,19 +361,45 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetTerrainHeight(const Vec3 &location, double &height) const
+	bool OSGEarthSceneManager::GetTerrainHeight(const Vec3 &location, double &height, GeometryFlags flags) const
 	{
 		GeoLocation geo_location;
 		SceneToWGS84(location, geo_location);
-		return GetTerrainHeight(geo_location,height);
+		return GetTerrainHeight(geo_location,height, flags);
 	}
+
+
+	bool OSGEarthSceneManager::_GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
+	{
+		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osg::EllipsoidModel* em = mapSRS->getEllipsoid();
+		const double r = osg::minimum(em->getRadiusEquator(), em->getRadiusPolar());
+
+		// calculate the endpoints for an intersection test:
+		Vec3 start, end;
+		WGS84ToScene(GeoLocation(location.Longitude, location.Latitude, r), start);
+		WGS84ToScene(GeoLocation(location.Longitude, location.Latitude, -r), end);
+	
+		CollisionResult result;
+		Vec3 dir = end - start;
+		m_CollisionSceneManager->Raycast(start, dir, flags, result);
+		if(result.Coll);
+		{
+			GeoLocation collision_point;
+			SceneToWGS84(result.CollPosition, collision_point);
+			height = collision_point.Height;
+		}
+		return result.Coll;
+	}
+	
 #define ENV_TERRAIN_HEIGHT
-	bool OSGEarthSceneManager::GetTerrainHeight(const GeoLocation &location, double &height) const
+	bool OSGEarthSceneManager::GetTerrainHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
 		bool status = false;
 		if(m_MapNode)
 		{
-#ifdef ENV_TERRAIN_HEIGHT
+			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
+			{
 				float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
 				if (elevation != NO_DATA_VALUE)
 					height = static_cast<double>(elevation);
@@ -400,26 +426,44 @@ namespace GASS
 						}
 					}
 				}
-#else
+			}
+			else 
+			{
 				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, 0L);
-#endif
+			}
+
+			//include height from GASS-geometry
+			if (flags | GEOMETRY_FLAG_SCENE_OBJECTS)
+			{
+				//remove ground...checked above!
+				GeometryFlags no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);
+				double object_h =0 ;
+				if (_GetSceneHeight(location, object_h, no_ground_flags))
+				{
+					if (object_h > height)
+					{
+						height = object_h;
+						status = true;
+					}
+				}
+			}
 		}
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GASS::Vec3 &location, double &height) const
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GASS::Vec3 &location, double &height, GeometryFlags flags) const
 	{
 		GeoLocation geo_location;
 		bool status = SceneToWGS84(location, geo_location);
-		status = GetHeightAboveTerrain(geo_location, height);
+		status = GetHeightAboveTerrain(geo_location, height, flags);
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GeoLocation &location, double &height) const
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
 		bool status = false;
 		double terrain_height = 0;
-		if (status = GetTerrainHeight(location, terrain_height))
+		if (status = GetTerrainHeight(location, terrain_height,flags))
 		{
 			height = location.Height - terrain_height;
 		}
