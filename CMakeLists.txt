@@ -38,8 +38,6 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 
-
-
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
 set(GASS_MAJOR_VERSION 1)
@@ -157,12 +155,16 @@ endif()
 
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
-		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake" 
+		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake" 
 		@ONLY)
+set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
 
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
-		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake" 
+		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake" 
 		@ONLY)
 
+set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+
+install(FILES ${GASS_CMAKE_FILES} DESTINATION CMake/)
 install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
