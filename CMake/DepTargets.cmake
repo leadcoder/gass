@@ -24,8 +24,8 @@ if(GASS_USE_BOOST)
 endif()
 
 if(GASS_BUILD_SIM)
-	find_package(AngelScript REQUIRED)
-	gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
+	#find_package(AngelScript REQUIRED)
+	#gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
 endif()
 
 if(GASS_BUILD_PLUGIN_OGRE)
