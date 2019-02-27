@@ -28,11 +28,6 @@ namespace GASS
 	{
 	}
 
-	ASScriptComponent::~ASScriptComponent()
-	{
-		
-	}
-
 	void ASScriptComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ASScriptComponent",new Creator<ASScriptComponent, Component>);

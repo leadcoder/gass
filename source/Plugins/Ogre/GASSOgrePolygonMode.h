@@ -31,7 +31,6 @@ namespace GASS
 	public:
 		PolygonModeWrapper();
 		PolygonModeWrapper(Ogre::PolygonMode type);
-		~PolygonModeWrapper() override;
 		static void Register();
 	};
 	typedef GASS_SHARED_PTR<PolygonModeWrapper> PolygonModeWrapperPtr;

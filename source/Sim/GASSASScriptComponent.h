@@ -32,7 +32,6 @@ namespace GASS
 	{
 	public:
 		ASScriptComponent();
-		~ASScriptComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void SceneManagerTick(double delta_time) override;

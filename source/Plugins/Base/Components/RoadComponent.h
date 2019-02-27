@@ -38,7 +38,6 @@ namespace GASS
 		TerrainLayerBinder(TerrainLayer type) : SingleEnumBinder<TerrainLayer,TerrainLayerBinder>(type)
 		{
 		}
-		~TerrainLayerBinder() override{}
 		static void Register()
 		{
 			Bind("TERRAIN_LAYER_0", TL_0);

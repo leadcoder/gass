@@ -39,11 +39,6 @@ namespace GASS
 
 	}
 
-	PolygonModeWrapper::~PolygonModeWrapper()
-	{
-
-	}
-
 	void PolygonModeWrapper::Register()
 	{
 		Bind("PM_POINTS", Ogre::PM_POINTS);

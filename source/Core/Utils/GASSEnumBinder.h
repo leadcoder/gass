@@ -41,8 +41,7 @@ namespace GASS
 
 	class IEnumBinder
 	{
-	public:
-		virtual ~IEnumBinder(){}
+		
 	};
 
 
@@ -59,8 +58,6 @@ namespace GASS
 		{
 			CLASS::Register();
 		}
-
-		~MultiEnumBinder() override {}
 
 		void SetValue(ENUM value)
 		{
@@ -174,8 +171,6 @@ namespace GASS
 			CLASS::Register();
 		}
 
-		~SingleEnumBinder() override {}
-
 		void SetValue(ENUM value)
 		{
 			m_Value = value;
@@ -190,8 +185,6 @@ namespace GASS
 		{
 			return (m_Value == v.GetValue());
 		}
-
-
 
 		static std::vector<CLASS> GetEnumeration()
 		{
@@ -266,11 +259,8 @@ namespace GASS
 		static NameEnumMap m_NameToEnumMap;
 		static EnumNameMap m_EnumToNameMap;
 	};
-
 	template<class ENUM ,class CLASS> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,CLASS>::m_NameToEnumMap;\
 	template<class ENUM ,class CLASS> std::map<ENUM,std::string> SingleEnumBinder<ENUM,CLASS>::m_EnumToNameMap;\
-
-
 }
 
 #define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
@@ -279,7 +269,6 @@ namespace GASS
 	public:							\
 	ENUM_BINDER(): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(){};			\
 	ENUM_BINDER(ENUM value): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(value){};			\
-	virtual ~ENUM_BINDER(){};	\
 	static void Register()		\
 	{							\
 
@@ -298,7 +287,6 @@ namespace GASS
 	public:							\
 	ENUM_BINDER(): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(){};			\
 	ENUM_BINDER(ENUM value): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(value){};			\
-	virtual ~ENUM_BINDER(){};	\
 	static void Register()		\
 	{							\
 
