@@ -31,11 +31,6 @@ namespace GASS
 		AddMesh(mesh);
 	}
 
-	PhysicsMesh::~PhysicsMesh()
-	{
-
-	}
-
 	void PhysicsMesh::AddMesh(const GraphicsMesh &mesh)
 	{
 		for(size_t i = 0; i < mesh.SubMeshVector.size() ;i++)

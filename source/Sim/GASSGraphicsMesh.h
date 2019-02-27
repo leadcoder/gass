@@ -57,10 +57,6 @@ namespace GASS
 		{
 
 		}
-		virtual ~GraphicsSubMesh()
-		{
-
-		}
 		
 		/**
 			Vector holding all positions
@@ -153,7 +149,6 @@ namespace GASS
 	{
 	public:
 		GraphicsMesh();
-		virtual ~GraphicsMesh();
 		void Transform(const Mat4 &transformation );
 		std::vector<GraphicsSubMeshPtr> SubMeshVector;
 	};

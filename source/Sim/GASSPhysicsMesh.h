@@ -35,7 +35,6 @@ namespace GASS
 		public:
 		PhysicsMesh();
 		PhysicsMesh(const GraphicsMesh &mesh);
-		virtual ~PhysicsMesh();
 		void AddMesh(const GraphicsMesh &mesh);
 		std::vector<Vec3> PositionVector;
 		std::vector<unsigned int> IndexVector;

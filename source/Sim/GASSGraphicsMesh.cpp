@@ -28,12 +28,6 @@ namespace GASS
 
 	}
 
-	GraphicsMesh::~GraphicsMesh()
-	{
-
-	}
-
-
 	void GraphicsMesh::Transform(const Mat4 &transformation )
 	{
 		Mat4 rot_mat = transformation;
