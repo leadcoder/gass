@@ -93,7 +93,6 @@ namespace GASS
 	{
 	public:
 		GeometryFlagManager() {}
-		virtual ~GeometryFlagManager() {}
 		/**
 			Load geometry flags form xml-files
 		*/
