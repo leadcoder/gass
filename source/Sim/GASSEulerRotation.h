@@ -65,7 +65,7 @@ namespace GASS
 	
 		static EulerRotation FromQuaternion(const Quaternion &rot)
 		{
-			Mat4 rot_mat = rot.GetRotationMatrix();
+			const Mat4 rot_mat = rot.GetRotationMatrix();
 			Vec3 euler_axis;
 			rot_mat.ToEulerAnglesYXZ(euler_axis);
 			return FromAxisRotation(euler_axis);

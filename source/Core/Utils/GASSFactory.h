@@ -62,7 +62,7 @@ namespace GASS
 		}
 		BasePtr Create(const void* /*params*/ = nullptr) const override
 		{
-			ProductPtr obj(new Product);
+			const ProductPtr obj(new Product);
 			return GASS_STATIC_PTR_CAST<Base>(obj);
 		}
 		virtual std::string GetClassName() const {return m_ClassName;}

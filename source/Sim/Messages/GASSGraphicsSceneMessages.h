@@ -100,13 +100,11 @@ namespace GASS
 		  }
 		  float GetFogDensity() const {return m_FogDensity;}
 		  float GetFogDistance() const {return m_FogDistance;}
-		  Vec3 GetFogColor() const {return m_FogColor;}
 		  float GetClouds() const {return m_Clouds;}
 	private:
 		float m_FogDistance;
 		float m_FogDensity;
 		float m_Clouds;
-		Vec3 m_FogColor;
 	};
 	typedef GASS_SHARED_PTR<WeatherRequest> WeatherRequestPtr;
 

@@ -155,7 +155,7 @@ namespace GASS
 		const std::string lower_name = StringUtils::ToLower(resource_name);
 		while(iter != m_ResourceLocations.end())
 		{
-			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().find(lower_name);
+			const ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().find(lower_name);
 			if(c_iter != (*iter)->GetResources().end())
 			{
 				resources.push_back(c_iter->second);

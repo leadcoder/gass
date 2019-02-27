@@ -58,7 +58,7 @@ namespace GASS
 	{
 		FileResourcePtr res;
 		const std::string lower_name = StringUtils::ToLower(name);
-		ResourceMap::const_iterator iter = m_Resources.find(lower_name);
+		const ResourceMap::const_iterator iter = m_Resources.find(lower_name);
 		if(iter != m_Resources.end())
 		{
 			res = iter->second;
@@ -70,7 +70,7 @@ namespace GASS
 	bool ResourceLocation::HasResource(const std::string &name) const
 	{
 		const std::string lower_name = StringUtils::ToLower(name);
-		ResourceMap::const_iterator iter = m_Resources.find(lower_name);
+		const ResourceMap::const_iterator iter = m_Resources.find(lower_name);
 		if(iter != m_Resources.end())
 		{
 			return true;

@@ -217,7 +217,7 @@ namespace GASS
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)
 	{
-		int r = ctx->Execute();
+		const int r = ctx->Execute();
 		if( r != asEXECUTION_FINISHED )
 		{
 			// The execution didn't finish as we had planned. Determine why.
@@ -242,7 +242,7 @@ namespace GASS
 
 	void ScriptManager::UnloadScript(const std::string &script)
 	{
-		std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
+		const std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
 		if( iter != m_ScriptControllers.end())
 		{
 			m_ScriptControllers.erase(iter);
@@ -267,7 +267,7 @@ namespace GASS
 	{
 		int r;
 		// Find the cached controller
-		std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
+		const std::map<std::string,ScriptControllerPtr>::iterator iter = m_ScriptControllers.find(script);
 		if( iter != m_ScriptControllers.end())
 		{
 			return iter->second;
@@ -311,12 +311,12 @@ namespace GASS
 
 		//return ctrl;
 		asIObjectType *type = 0;
-		int tc = mod->GetObjectTypeCount();
+		const int tc = mod->GetObjectTypeCount();
 		for( int n = 0; n < tc; n++ )
 		{
 			bool found = false;
 			type = mod->GetObjectTypeByIndex(n);
-			int ic = type->GetInterfaceCount();
+			const int ic = type->GetInterfaceCount();
 			for( int i = 0; i < ic; i++ )
 			{
 				if( strcmp(type->GetName(), "ScriptController") == 0 )
@@ -370,7 +370,7 @@ namespace GASS
 		else
 			ctx = m_Engine->CreateContext();
 
-		int r = ctx->Prepare(func);
+		const int r = ctx->Prepare(func);
 		CheckReturn(r);
 		return ctx;
 	}

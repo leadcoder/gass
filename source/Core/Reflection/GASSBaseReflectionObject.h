@@ -133,7 +133,7 @@ namespace GASS
 		{
 			if (property)
 			{
-				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
+				if (const GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
 				{
 					value = typed_prop->GetValue(this);
 					return true;

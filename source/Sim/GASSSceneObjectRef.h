@@ -59,7 +59,7 @@ namespace GASS
 		{
 			std::string string_id;
 			is >> string_id;
-			size_t id_len = string_id.length();
+			const size_t id_len = string_id.length();
 			if(id_len == 36) // Must be a real GUID
 			{
 				std::stringstream ss;

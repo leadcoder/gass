@@ -90,7 +90,7 @@ namespace GASS
 
 	void ResourceManager::ReloadAll()
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		const ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
 		while (iter != m_ResourceGroups.end())
 		{
 			(*iter)->Reload();

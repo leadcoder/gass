@@ -140,7 +140,7 @@ Guid::Guid(const string &fromString)
     else
     {
       charTwo = ch;
-      unsigned char byte = hexPairToChar(charOne, charTwo);
+      const unsigned char byte = hexPairToChar(charOne, charTwo);
       _bytes.push_back(byte);
       lookingForFirstChar = true;
     }

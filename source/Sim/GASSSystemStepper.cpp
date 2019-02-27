@@ -47,7 +47,7 @@ namespace GASS
 				const double update_interval = 1.0 / m_UpdateFrequency;
 				//do some time slicing
 				m_TimeToProcess += delta_time;
-				long long num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
+				const long long num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
 				long long clamp_num_steps = num_steps;
 				//Take max 10 simulation step each frame
 				if (m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)

@@ -31,7 +31,7 @@ namespace GASS
 
 	GeometryFlags GeometryFlagManager::GetMask(GeometryFlags geom_flag)
 	{
-		std::map<GeometryFlags, GeometryFlags>::iterator iter = m_CollisionMaskMap.find(geom_flag);
+		const std::map<GeometryFlags, GeometryFlags>::const_iterator iter = m_CollisionMaskMap.find(geom_flag);
 		if(iter != m_CollisionMaskMap.end())
 		{
 			return iter->second;

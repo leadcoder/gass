@@ -37,12 +37,12 @@ namespace GASS
 		{
 
 		}
-		int Count;
-		double StartTick;
-		double EndTick;
-		double Time;
-		double AccTime;
-		double AvgTime;
+		int Count = 0;
+		double StartTick = 0;
+		double EndTick = 0;
+		double Time = 0;
+		double AccTime = 0;
+		double AvgTime = 0;
 	};
 
 	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
@@ -52,7 +52,7 @@ namespace GASS
 	public:
 		SimpleProfileSample(const std::string name,SimpleProfileDataMap *data ) 
 		{
-			SimpleProfileDataMap::iterator iter = data->find(name);
+			const SimpleProfileDataMap::iterator iter = data->find(name);
 			if(iter == data->end())
 			{
 				SimpleProfileData sample;

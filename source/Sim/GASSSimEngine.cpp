@@ -161,7 +161,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
 		}
 
-		tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
+		const tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
 		if (xml_data_path)
 		{
 			const std::string data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "SetDataPath");
@@ -169,7 +169,7 @@ namespace GASS
 		}
 		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
 
-		tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
+		const tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
 		if (xml_scene_path)
 			m_ScenePath.SetPath(XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "ScenePath"));
 
@@ -192,7 +192,7 @@ namespace GASS
 	void SimEngine::PutEnv(const std::string &value)
 	{
 #ifdef WIN32
-		int ret = _putenv(value.c_str());
+		const int ret = _putenv(value.c_str());
 		if (ret == -1)
 			GASS_EXCEPT(Exception::ERR_INVALID_STATE, "Failed to set env var:" + value, "SimEngine::PutEnv");
 #else
@@ -248,7 +248,7 @@ namespace GASS
 	{
 		static GASS::Timer  timer;
 		static double prev_time = 0;
-		double current_time = timer.GetTime();
+		const double current_time = timer.GetTime();
 		double delta_time = current_time - prev_time;
 
 		//clamp delta time

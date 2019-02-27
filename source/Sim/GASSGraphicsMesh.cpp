@@ -70,12 +70,12 @@ namespace GASS
 
 	void  GraphicsSubMesh::AddWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, int segments)
 	{
-		Float samples = segments;
-		Float rad = 2*GASS_PI/samples;
+		const Float samples = segments;
+		const Float rad = 2 * GASS_PI / samples;
 
 		Vec3 pos(0,0,0);
 		Float x,y,z;
-		for(float i = 0 ;i <= samples; i++)
+		for(Float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*radius.x;
 			y = sin(rad*i)*radius.y;
@@ -90,7 +90,7 @@ namespace GASS
 			ColorVector.push_back(vertex_color);
 		}
 
-		for(float i = 0 ;i <= samples; i++)
+		for(Float i = 0 ;i <= samples; i++)
 		{
 			x = cos(rad*i)*radius.x;
 			z = sin(rad*i)*radius.z;
@@ -106,7 +106,7 @@ namespace GASS
 
 		}
 
-		for(float i = 0 ; i <= samples; i++)
+		for(Float i = 0 ; i <= samples; i++)
 		{
 			y = cos(rad*i)*radius.y;
 			z = sin(rad*i)*radius.z;
@@ -135,8 +135,8 @@ namespace GASS
 
 	void GraphicsSubMesh::AddWireframeEllipse(const Vec2 &radius, const ColorRGBA &vertex_color, int segments)
 	{
-		Float samples = segments;
-		Float rad = 2*GASS_PI/samples;
+		const Float samples = segments;
+		const Float rad = 2*GASS_PI/samples;
 
 		Vec3 pos(0,0,0);
 		Float x,z;
@@ -358,7 +358,7 @@ namespace GASS
 
 	void GraphicsSubMesh::AddWireframeBox(const Vec3 &box_size, const ColorRGBA &vertex_color)
 	{
-		Vec3 size = box_size*0.5;
+		const Vec3 size = box_size*0.5;
 		std::vector<Vec3> conrners;
 		conrners.push_back(Vec3( size.x ,size.y , size.z));
 		conrners.push_back(Vec3(-size.x ,size.y , size.z));
@@ -410,7 +410,7 @@ namespace GASS
 
 	void GraphicsSubMesh::AddSolidBox(const Vec3 &box_size, const ColorRGBA &vertex_color)
 	{
-		Vec3 size= box_size*0.5;
+		const Vec3 size= box_size*0.5;
 		std::vector<Vec4> tex_coords;
 
 		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
@@ -567,14 +567,10 @@ namespace GASS
 		PositionVector.push_back(start);
 		PositionVector.push_back(end);
 
-		Vec3 dir = end -start;
-		dir.Normalize();
-		Vec3 left = dir;
-		left.x = dir.z;
-		left.z = -dir.x;
-
-		Vec3 p1 = end + (left - dir*2.0)*pointer_size;
-		Vec3 p2 = end + (-left - dir*2.0)*pointer_size;
+		const Vec3 dir = (end -start).NormalizedCopy();
+		const Vec3 left(dir.z, dir.y, -dir.x);
+		const Vec3 p1 = end + (left - dir*2.0)*pointer_size;
+		const Vec3 p2 = end + (-left - dir*2.0)*pointer_size;
 
 		PositionVector.push_back(p1);
 		PositionVector.push_back(end);

@@ -132,8 +132,8 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
-				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
 
 				if(is_sor || is_sor_vec)
 				{
@@ -177,8 +177,8 @@ namespace GASS
 			{
 				IProperty * prop = (*iter);
 
-				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
-				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
 
 				if(is_sor || is_sor_vec)
 				{
@@ -224,8 +224,8 @@ namespace GASS
 			{
 				IProperty * prop = (*iter);
 
-				bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
-				bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
 
 				if(is_sor || is_sor_vec)
 				{
@@ -236,7 +236,7 @@ namespace GASS
 						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
 						for(size_t i = 0 ; i < links.size(); i++)
 						{
-							std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
+							const std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
 							if(guid_iter != ref_map.end())
 							{
 								SceneObjectRef new_ref( guid_iter->second);
@@ -251,7 +251,7 @@ namespace GASS
 						GASS_ANY any_link;
 						prop->GetValueAsAny(this,any_link);
 						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
-						std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
+						const std::map<SceneObjectGUID,SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
 						if(guid_iter != ref_map.end())
 						{
 							SceneObjectRef new_ref(  guid_iter->second);

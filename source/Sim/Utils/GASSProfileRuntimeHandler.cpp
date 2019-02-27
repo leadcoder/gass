@@ -16,7 +16,7 @@ namespace GASS
 
 	void ProfileRuntimeHandler::BeginOutput(double tTime)
 	{
-		double fps = 1.0f/tTime;
+		const double fps = 1.0f/tTime;
 		GASS_PRINT("FPS:" << fps)
 		GASS_PRINT("Cur: Min: Avg: Max: Time Calls: Profile Name:")
 	}

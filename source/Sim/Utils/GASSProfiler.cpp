@@ -33,7 +33,7 @@ namespace GASS
 	bool ProfileSample::m_ProfilerIsRunning=true;
 	Timer* ProfileSample::m_Timer= new Timer();
 
-	ProfileSample::ProfileSample(std::string sampleName)
+	ProfileSample::ProfileSample(std::string sampleName) : m_ParentIndex(0), m_SampleIndex(0)
 	{
 		if(!m_ProfilerIsRunning)return;
 		//find the sample
@@ -89,11 +89,11 @@ namespace GASS
 	ProfileSample::~ProfileSample()
 	{
 		if(!m_ProfilerIsRunning)return;
-		double fEndTime= GetTime();
+		const double fEndTime= GetTime();
 		//phew... ok, we're done timing
 		m_Samples[m_SampleIndex].m_IsOpen=false;
 		//calculate the time taken this profile, for ease of use later on
-		double fTimeTaken = fEndTime - m_Samples[m_SampleIndex].m_StartTime;
+		const double fTimeTaken = fEndTime - m_Samples[m_SampleIndex].m_StartTime;
 
 		if(m_ParentIndex>=0)
 		{
