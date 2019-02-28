@@ -34,9 +34,8 @@ namespace GASS
 	*/
 	class IMeshComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMeshComponent)
 	public:
-		virtual ~IMeshComponent(){}
-
 		/**
 		Should return actual mesh data (polygons), see MeshData for more info
 		*/

@@ -26,6 +26,7 @@ namespace GASS
 {
 	class IMapCameraComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMapCameraComponent)
 	public:
 		virtual double GetPitch() const = 0;
 		virtual void SetPitch(double value) = 0;

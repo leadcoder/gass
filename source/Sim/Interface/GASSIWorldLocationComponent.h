@@ -28,8 +28,8 @@ namespace GASS
 	*/
 	class IWorldLocationComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IWorldLocationComponent)
 	public:
-		virtual ~IWorldLocationComponent(){}
 		virtual void SetLatitude(double value) = 0;
 		virtual double GetLatitude() const = 0;
 		virtual void SetLongitude(double value) = 0;

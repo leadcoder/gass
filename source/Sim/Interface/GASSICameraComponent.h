@@ -36,8 +36,8 @@ namespace GASS
 	
 	class ICameraComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ICameraComponent)
 	public:
-		virtual ~ICameraComponent(){}
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const = 0;
 		virtual void ShowInViewport(const std::string &viewport_name ="") = 0;
 	};

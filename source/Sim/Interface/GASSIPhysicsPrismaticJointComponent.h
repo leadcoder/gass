@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IPhysicsPrismaticJointComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsPrismaticJointComponent)
 	public:
-		virtual ~IPhysicsPrismaticJointComponent(){}
 		virtual void SetDriveTargetVelocity(float velocity) = 0;
 		virtual float GetDriveTargetVelocity() const = 0;
 		virtual void SetDriveTargetPosition(float position) = 0;

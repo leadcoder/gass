@@ -26,7 +26,8 @@ namespace GASS
 {
 	class IPhysicsGeometryComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsGeometryComponent)
 	public:
-		virtual ~IPhysicsGeometryComponent(){}
+		
 	};
 }

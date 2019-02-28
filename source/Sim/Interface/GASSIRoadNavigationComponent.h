@@ -27,9 +27,9 @@ namespace GASS
 {
 	class IRoadNavigationComponent : public INavigationComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IRoadNavigationComponent)
 	public:
 		typedef std::vector<Vec3> NavigationPath;
-		~IRoadNavigationComponent() {}
 		virtual bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const = 0;
 	};
 	typedef GASS_SHARED_PTR<IRoadNavigationComponent> RoadNavigationComponentPtr;

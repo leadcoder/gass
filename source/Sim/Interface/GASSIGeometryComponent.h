@@ -40,9 +40,8 @@ namespace GASS
 
 	class IGeometryComponent 
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGeometryComponent)
 	public:
-		virtual ~IGeometryComponent(){}
-
 		/**
 			Should return axis aligned bounding box in world coordinates
 		*/

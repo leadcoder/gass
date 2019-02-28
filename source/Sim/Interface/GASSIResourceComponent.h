@@ -29,9 +29,8 @@ namespace GASS
 	*/
 	class IResourceComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IResourceComponent)
 	public:
-		virtual ~IResourceComponent(){}
-
 		/**
 		Should return resource object
 		*/

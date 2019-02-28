@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #pragma once
+
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -80,8 +81,8 @@ namespace GASS
 
 	class IControlSettingsSystem 
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IControlSettingsSystem)
 	public:
-		virtual ~IControlSettingsSystem(){};
 		virtual void Load(const std::string &filename) = 0;
 		virtual std::string GetNameFromIndex(const std::string &settings, int index) = 0;
 		virtual int GetIndexFromName(const std::string &settings, const std::string &name) = 0;

@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IInputComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IInputComponent)
 	public:
-		virtual ~IInputComponent(){}
 	};
 
 	typedef GASS_SHARED_PTR<IInputComponent> InputComponentPtr;

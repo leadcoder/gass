@@ -30,8 +30,8 @@ namespace GASS
 	*/
 	class IPhysicsSystem
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsSystem)
 	public:
-		virtual ~IPhysicsSystem(){}
 	};
 	typedef GASS_SHARED_PTR<IPhysicsSystem> PhysicsSystemPtr;
 }

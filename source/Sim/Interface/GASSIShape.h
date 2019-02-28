@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IShape
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IShape)
 	public:
-		virtual ~IShape(){}
 		virtual bool IsPointInside(const Vec3 &point) const = 0;
 		virtual Vec3 GetRandomPoint() const = 0;
 	};

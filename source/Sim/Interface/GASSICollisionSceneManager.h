@@ -67,8 +67,8 @@ namespace GASS
 
 	class ICollisionSceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ICollisionSceneManager)
 	public:
-		virtual ~ICollisionSceneManager(){}
 		/**
 			Request a new collision query, the handle returned is used when to check
 			if the request is processed.

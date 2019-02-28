@@ -28,8 +28,8 @@ namespace GASS
 {
 	class IWGS84SceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IWGS84SceneManager)
 	public:
-		virtual ~IWGS84SceneManager() {}
 		virtual bool WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const = 0;
 		virtual bool SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const = 0;
 	};

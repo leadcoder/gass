@@ -36,10 +36,8 @@ namespace GASS
 	*/
 	class IHeightmapTerrainComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IHeightmapTerrainComponent)
 	public:
-		virtual ~IHeightmapTerrainComponent(){}
-
-		
 		/**
 		Get terrain height at sample point x,z
 		*/

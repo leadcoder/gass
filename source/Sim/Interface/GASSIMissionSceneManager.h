@@ -28,8 +28,8 @@ namespace GASS
 	*/
 	class IMissionSceneManager : public virtual ISceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMissionSceneManager)
 	public:
-		~IMissionSceneManager() override{}
 	};
 	typedef GASS_SHARED_PTR<IMissionSceneManager> MissionSceneManagerPtr;
 }

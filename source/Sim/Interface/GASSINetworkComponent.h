@@ -35,8 +35,8 @@ namespace GASS
 	
 	class INetworkComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(INetworkComponent)
 	public:
-		virtual ~INetworkComponent(){}
 		//indicates if this object is remote or local
 		virtual bool IsRemote() const = 0;
 	};

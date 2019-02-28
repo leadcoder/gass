@@ -51,7 +51,8 @@ namespace GASS
 	*/
 	class ILightComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ILightComponent)
 	public:
-		virtual ~ILightComponent(){}
+
 	};
 }

@@ -50,9 +50,8 @@ namespace GASS
 	*/
 	class IGraphicsSceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGraphicsSceneManager)
 	public:
-		virtual ~IGraphicsSceneManager(){}
-
 		/**
 			Draw 3d-line for debugging
 		*/

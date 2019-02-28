@@ -30,8 +30,8 @@ namespace GASS
 	*/
 	class IPhysicsSceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsSceneManager)
 	public:
-		virtual ~IPhysicsSceneManager(){}
 		virtual void SetActive(bool value) = 0;
 		virtual bool GetActive() const = 0;
 	};

@@ -33,6 +33,7 @@ namespace GASS
 
 	class IMapLayer
 	{
+		//GASS_DECLARE_CLASS_AS_INTERFACE(IMapLayer)
 	public :
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string& name) = 0;

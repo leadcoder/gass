@@ -28,8 +28,8 @@ namespace GASS
 {
 	class ITerrainSceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ITerrainSceneManager)
 	public:
-		virtual ~ITerrainSceneManager() {}
 		virtual bool GetTerrainHeight(const Vec3 &location, double &height, GeometryFlags flags) const = 0;
 		virtual bool GetHeightAboveTerrain(const Vec3 &location, double &height, GeometryFlags flags) const = 0;
 		virtual bool GetUpVector(const Vec3 &location, GASS::Vec3 &up_vec) const = 0;

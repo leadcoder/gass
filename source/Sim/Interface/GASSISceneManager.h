@@ -48,8 +48,8 @@ namespace GASS
 
 	class ISceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ISceneManager)
 	public:
-		virtual ~ISceneManager(){}
 		virtual void OnCreate() = 0;
 		virtual void OnInit() = 0;
 		virtual void OnShutdown() = 0;

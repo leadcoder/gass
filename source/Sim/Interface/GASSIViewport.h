@@ -32,12 +32,8 @@ namespace GASS
 
 	class IViewport
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IViewport)
 	public:
-		IViewport() 
-		{
-
-		}
-		virtual ~IViewport() {}
 		virtual CameraComponentPtr GetCamera() const = 0;
 		virtual void SetCamera(CameraComponentPtr camera) = 0;
 		virtual std::string GetName() const = 0;

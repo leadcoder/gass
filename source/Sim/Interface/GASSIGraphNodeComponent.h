@@ -29,8 +29,8 @@ namespace GASS
 
 	class IGraphNodeComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGraphNodeComponent)
 	public:
-		virtual ~IGraphNodeComponent(){}
 		virtual void AddEdge(GraphEdgeComponentPtr edge) = 0;
 		virtual void RemoveEdge(GraphEdgeComponentPtr edge) = 0;
 	};

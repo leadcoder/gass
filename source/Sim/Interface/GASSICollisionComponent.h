@@ -26,8 +26,8 @@ namespace GASS
 {
 	class ICollisionComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ICollisionComponent)
 	public:
-		virtual ~ICollisionComponent (){}
 		virtual void SetActive(bool value) = 0;
 		virtual bool GetActive() const = 0;
 	};

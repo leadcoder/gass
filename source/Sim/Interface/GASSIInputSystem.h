@@ -255,8 +255,8 @@ namespace GASS
 
 	class IKeyListener
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IKeyListener)
 	public:
-		virtual ~IKeyListener() {}
 		virtual bool KeyPressed( int key, unsigned int text) = 0;
 		virtual bool KeyReleased( int key, unsigned int text) = 0;		
 	};

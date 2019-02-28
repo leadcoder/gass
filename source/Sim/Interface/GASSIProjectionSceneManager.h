@@ -33,8 +33,8 @@ namespace GASS
 	*/
 	class IProjectionSceneManager
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IProjectionSceneManager)
 	public:
-		virtual ~IProjectionSceneManager(){}
 		virtual std::string GetProjection() const = 0;
 		virtual void SetProjection(const std::string &projection) = 0;
 	};

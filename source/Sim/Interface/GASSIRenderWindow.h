@@ -28,12 +28,8 @@ namespace GASS
 	typedef std::vector<ViewportPtr> ViewportVector;
 	class IRenderWindow
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IRenderWindow)
 	public:
-		IRenderWindow() 
-		{
-
-		}
-		virtual ~IRenderWindow() {}
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 		virtual void* GetHWND() const = 0;

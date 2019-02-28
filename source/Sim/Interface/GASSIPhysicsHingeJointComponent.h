@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IPhysicsHingeJointComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsHingeJointComponent)
 	public:
-		virtual ~IPhysicsHingeJointComponent(){}
 		virtual void SetDriveTargetVelocity(float velocity) = 0;
 		virtual float GetDriveTargetVelocity() const = 0;
 		virtual void SetDriveForceLimit(float value) = 0;

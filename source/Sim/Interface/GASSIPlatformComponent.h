@@ -42,8 +42,8 @@ namespace GASS
 
 	class IPlatformComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPlatformComponent)
 	public:
-		virtual ~IPlatformComponent(){}
 		virtual PlatformType GetType() const = 0;
 		virtual Vec3 GetSize() const = 0;
 		virtual Float GetMaxSpeed() const = 0;

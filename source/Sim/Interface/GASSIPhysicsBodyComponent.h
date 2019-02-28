@@ -28,8 +28,8 @@ namespace GASS
 {
 	class IPhysicsBodyComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsBodyComponent)
 	public:
-		virtual ~IPhysicsBodyComponent(){}
 		virtual void SetVelocity(const Vec3 &vel, bool relative = false) = 0;
 		virtual Vec3 GetVelocity(bool relative = false) const = 0;
 		virtual void AddForce(const Vec3 &force_vec, bool relative = false) = 0;

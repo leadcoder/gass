@@ -27,10 +27,9 @@ namespace GASS
 {
 	class IMaterialSystem
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMaterialSystem)
 	public:
 		typedef std::map<std::string, PhysicsMaterial> MaterialMap;
-
-		virtual ~IMaterialSystem() {};
 		virtual void LoadMaterialFile(const std::string &file) = 0;
 		virtual void AddMaterial(const PhysicsMaterial& mat) = 0;
 		virtual bool HasMaterial(const std::string material_name) const = 0;

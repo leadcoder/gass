@@ -40,9 +40,8 @@ namespace GASS
 
 	class IGraphicsSystem
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGraphicsSystem)
 	public:
-		virtual ~IGraphicsSystem(){}
-
 		/**
 			Get main render window
 		*/

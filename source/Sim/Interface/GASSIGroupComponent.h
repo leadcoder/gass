@@ -31,8 +31,8 @@ namespace GASS
 	*/
 	class IGroupComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGroupComponent)
 	public:
-		virtual ~IGroupComponent(){}
 	};
 	typedef GASS_SHARED_PTR<IGroupComponent> GroupComponentPtr;
 }

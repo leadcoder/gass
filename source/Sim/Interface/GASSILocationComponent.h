@@ -38,8 +38,8 @@ namespace GASS
 
 	class ILocationComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ILocationComponent)
 	public:
-		virtual ~ILocationComponent() {}
 		virtual Vec3 GetPosition() const = 0;
 		virtual void SetPosition(const Vec3 &value) = 0;
 

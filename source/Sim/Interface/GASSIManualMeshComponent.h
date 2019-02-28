@@ -25,8 +25,8 @@ namespace GASS
 {
 	class IManualMeshComponent : public IMeshComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IManualMeshComponent)
 	public:
-		virtual ~IManualMeshComponent() {}
 		virtual void SetMeshData(const GraphicsMesh &mesh) = 0;
 		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index = -1) = 0;
 	};

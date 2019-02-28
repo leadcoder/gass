@@ -31,8 +31,8 @@ namespace GASS
 
 	class IMissionSystem
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IMissionSystem)
 	public:
-		virtual ~IMissionSystem(){}
 	};
 	typedef GASS_SHARED_PTR<IMissionSystem> MissionSystemPtr;
 }

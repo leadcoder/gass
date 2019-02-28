@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IGraphComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IGraphComponent)
 	public:
-		virtual ~IGraphComponent(){}
 		virtual std::string GetNodeTemplate() const = 0;
 		virtual std::string GetEdgeTemplate() const = 0;
 		virtual void RebuildGraph() = 0;

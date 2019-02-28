@@ -26,8 +26,8 @@ namespace GASS
 {
 	class IPhysicsSuspensionComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsSuspensionComponent)
 	public:
-		virtual ~IPhysicsSuspensionComponent(){}
 		virtual void SetDriveVelocity(float velocity) = 0;
 		//virtual float GetDriveVelocity() const = 0;
 		virtual void SetMaxDriveTorque(float value) = 0;

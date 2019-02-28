@@ -31,8 +31,9 @@ namespace GASS
 
 	class ICollisionSystem
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ICollisionSystem)
 	public:
-		virtual ~ICollisionSystem(){}
+		
 	};
 
 	typedef GASS_SHARED_PTR<ICollisionSystem> CollisionSystemPtr;

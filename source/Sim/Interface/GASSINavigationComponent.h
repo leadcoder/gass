@@ -28,8 +28,8 @@ namespace GASS
 	typedef std::vector<Vec3> NavigationPath;
 	class INavigationComponent
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(INavigationComponent)
 	public:
-		virtual ~INavigationComponent() {}
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
 	};
 	typedef GASS_SHARED_PTR<INavigationComponent> NavigationComponentPtr;
