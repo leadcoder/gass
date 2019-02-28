@@ -60,7 +60,6 @@ namespace GASS
 		friend class SimSystemManager;
 	public:
 		SystemStepper(SimSystemManager* sim_sys_manager);
-		virtual ~SystemStepper();
 	protected:
 		/**
 			Initialize

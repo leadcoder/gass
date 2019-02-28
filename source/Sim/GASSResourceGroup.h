@@ -34,7 +34,6 @@ namespace GASS
 	{
 	public:
 		ResourceGroup(const std::string &name);
-		~ResourceGroup();
 		ResourceLocationPtr AddResourceLocation(const FilePath &path, ResourceLocationType type, bool recursive);
 		void RemoveResourceLocation(ResourceLocationPtr location);
 		

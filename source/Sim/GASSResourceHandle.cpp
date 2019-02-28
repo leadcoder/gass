@@ -35,11 +35,6 @@ namespace GASS
 
 	}
 
-	ResourceHandle::~ResourceHandle()
-	{
-
-	}
-
 	FileResourcePtr ResourceHandle::GetResource() const
 	{
 		return SimEngine::Get().GetResourceManager()->GetFirstResourceByName(Name());

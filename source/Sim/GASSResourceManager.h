@@ -49,8 +49,7 @@ namespace GASS
 	{
 	public:
 		ResourceManager();
-		virtual ~ResourceManager();
-
+	
 		/**
 			Load resource groups from xml
 			@resource_group The resources group

@@ -34,11 +34,6 @@ namespace GASS
 
 	}
 
-	ResourceLocation::~ResourceLocation()
-	{
-
-	}
-
 	void ResourceLocation::ParseLocation()
 	{
 		m_Resources.clear();

@@ -31,7 +31,6 @@ namespace GASS
 	public:
 		ResourceHandle();
 		ResourceHandle(const std::string &name);
-		virtual ~ResourceHandle();
 		std::string Name() const { return m_ResourceName;}
 		void SetName(const std::string &name) { m_ResourceName = name;}
 		FileResourcePtr GetResource() const;

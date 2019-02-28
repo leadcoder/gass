@@ -61,10 +61,7 @@ namespace GASS
 		friend class SimEngine;
 	public:
 		Scene(const std::string &name);
-		~Scene() override;
 		static void RegisterReflection();
-
-
 
 		/**
 		Get the start position for this scene,

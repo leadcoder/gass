@@ -29,11 +29,6 @@ namespace GASS
 
 	}
 
-	SceneObjectLink::~SceneObjectLink(void)
-	{
-		
-	}
-
 	bool SceneObjectLink::UpdateLink()
 	{
 		if(m_Initialized)

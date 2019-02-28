@@ -92,11 +92,6 @@ namespace GASS
 		m_PostSimGroup.SetMaxSimulationSteps(1);
 	}
 
-	SystemStepper::~SystemStepper()
-	{
-
-	}
-
 	void SystemStepper::OnInit()
 	{
 		GASS_LOG(LINFO) << "SystemStepper::OnInit - Pre/Post update frequency: " << GetMaxUpdateFrequency();

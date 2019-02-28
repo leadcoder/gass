@@ -73,7 +73,6 @@ namespace GASS
 		friend class Scene;
 	public:
 		SceneObject();
-		~SceneObject() override;
 		static void RegisterReflection();
 		void SetName(const std::string &name) override;
 		void SyncMessages(double delta_time, bool recursive = true) const;

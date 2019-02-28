@@ -30,7 +30,6 @@ namespace GASS
 	{
 	public:
 		SceneManagerFactory();
-		virtual ~SceneManagerFactory();
 		static SceneManagerFactory* GetPtr();
 		static SceneManagerFactory& Get();
 	protected:

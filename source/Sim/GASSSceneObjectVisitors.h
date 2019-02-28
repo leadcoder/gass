@@ -34,7 +34,6 @@ namespace GASS
 	{
 	public:
 		SceneObjectVisitor() {};
-		virtual ~SceneObjectVisitor() {}
 		virtual bool Visit(SceneObjectPtr sceneobject) = 0;
 	};
 	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr;
@@ -43,7 +42,6 @@ namespace GASS
 	{
 	public:
 		ClassComponentsVisitor(const std::string &component_class_name) : m_ComponentClassName(component_class_name) {}
-		virtual ~ClassComponentsVisitor() {}
 		virtual bool Visit(SceneObjectPtr scene_object)
 		{
 			ComponentContainer::ComponentIterator comp_iter = scene_object->GetComponents();
@@ -66,7 +64,6 @@ namespace GASS
 	{
 	public:
 		TypedClassComponentsVisitor() {}
-		virtual ~TypedClassComponentsVisitor() {}
 		virtual bool Visit(SceneObjectPtr scene_object)
 		{
 			ComponentContainer::ComponentIterator comp_iter = scene_object->GetComponents();

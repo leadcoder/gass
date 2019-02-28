@@ -42,7 +42,6 @@ namespace GASS
 		typedef std::map<std::string, FileResourcePtr> ResourceMap;
 
 		ResourceLocation(ResourceGroupPtr owner, const FilePath &path,ResourceLocationType type);
-		~ResourceLocation();
 		FilePath GetPath() const {return m_Path;}
 		ResourceLocationType  GetType() const {return m_Type;}
 		ResourceGroupPtr GetGroup() const {return m_Owner;}

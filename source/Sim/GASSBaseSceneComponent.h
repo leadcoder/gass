@@ -40,7 +40,7 @@ namespace GASS
 		friend class SceneObject;
 	public:
 		BaseSceneComponent();
-		~BaseSceneComponent() override;
+		
 		/**
 			Get owner scene object. 
 			Same as get owner but cast owner from ComponentContainer to SceneObject 

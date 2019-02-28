@@ -43,12 +43,6 @@ namespace GASS
 		UpdateRefPtr();
 	}
 
-
-	SceneObjectRef::~SceneObjectRef(void)
-	{
-		
-	}
-
 	void SceneObjectRef::SetRefGUID(const SceneObjectGUID &guid)
 	{
 		m_RefObjectGUID  = guid;

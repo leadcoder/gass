@@ -40,7 +40,6 @@ namespace GASS
 	{
 	public:
 		SceneObjectTemplate();
-		~SceneObjectTemplate() override;
 		static	void RegisterReflection();
 		void SetID(const SceneObjectID &id){m_ID = id;}
 		SceneObjectID GetID() const {return m_ID;}

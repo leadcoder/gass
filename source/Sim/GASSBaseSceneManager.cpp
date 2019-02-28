@@ -31,11 +31,6 @@ namespace GASS
 		
 	}
 
-	BaseSceneManager::~BaseSceneManager(void)
-	{
-
-	}
-
 	void BaseSceneManager::RegisterReflection()
 	{
 		RegisterProperty<std::string>( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);

@@ -30,10 +30,6 @@ namespace GASS
 		
 	}
 
-	SceneObjectTemplate::~SceneObjectTemplate(void)
-	{
-	}
-
 	void SceneObjectTemplate::RegisterReflection()
 	{
 		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, ComponentContainerTemplate>);

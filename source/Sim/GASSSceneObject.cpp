@@ -42,11 +42,6 @@ namespace GASS
 		m_GUID = GASS_GUID_NULL;
 	}
 
-	SceneObject::~SceneObject(void)
-	{
-
-	}
-
 	void SceneObject::RegisterReflection()
 	{
 		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, ComponentContainer>);

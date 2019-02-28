@@ -36,7 +36,6 @@ namespace GASS
 		friend class BaseSceneComponent;
 	public:
 		SceneObjectLink();
-		virtual ~SceneObjectLink();
 		SceneObjectPtr operator ->()
 		{
 			return m_Link.lock();

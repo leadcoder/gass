@@ -35,7 +35,6 @@ namespace GASS
 		SceneObjectRef();
 		SceneObjectRef(SceneObjectPtr obj);
 		SceneObjectRef(SceneObjectGUID guid);
-		virtual ~SceneObjectRef();
 		SceneObjectPtr operator ->()
 		{
 			return m_RefObject.lock();

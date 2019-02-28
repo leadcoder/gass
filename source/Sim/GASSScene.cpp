@@ -59,11 +59,6 @@ namespace GASS
 
 	}
 
-	Scene::~Scene()
-	{
-
-	}
-
 	void Scene::RegisterReflection()
 	{
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("The scene object", OF_VISIBLE)));

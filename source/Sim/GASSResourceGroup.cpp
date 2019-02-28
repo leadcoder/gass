@@ -34,11 +34,6 @@ namespace GASS
 
 	}
 
-	ResourceGroup::~ResourceGroup()
-	{
-
-	}
-
 	ResourceLocationPtr ResourceGroup::AddResourceLocation(const FilePath &path,ResourceLocationType type, bool recursive)
 	{
 		ResourceLocationPtr rl(new ResourceLocation(shared_from_this(),path,type));

@@ -46,8 +46,7 @@ namespace GASS
 	{
 	public:
 		BaseSceneManager();
-		~BaseSceneManager() override;
-
+	
 		static void RegisterReflection();
 
 		//ISceneManager

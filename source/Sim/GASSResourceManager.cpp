@@ -32,11 +32,6 @@ namespace GASS
 	{
 	
 	}
-
-	ResourceManager::~ResourceManager(void)
-	{
-	
-	}
 	
 	void ResourceManager::LoadXML(tinyxml2::XMLElement *elem)
 	{

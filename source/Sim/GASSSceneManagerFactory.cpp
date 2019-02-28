@@ -27,11 +27,6 @@ namespace GASS
 
 	}
 
-	SceneManagerFactory::~SceneManagerFactory()
-	{
-
-	}
-
 	SceneManagerFactory* SceneManagerFactory::m_Instance = 0;
 	SceneManagerFactory* SceneManagerFactory::GetPtr(void)
 	{

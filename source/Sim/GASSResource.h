@@ -36,8 +36,8 @@ namespace GASS
 			m_ResourceType(type)
 		{
 
-		};
-		virtual ~FileResource(){};
+		}
+		
 		std::string Name() const { return m_ResourcePath.GetFilename();}
 		ResourceLocationPtr Location() const { return m_Location;}
 		std::string Type() const { return m_ResourceType;}
