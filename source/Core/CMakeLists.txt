@@ -24,6 +24,7 @@ set(CPP_FILES
 	ComponentSystem/GASSComponentFactory.cpp
 	ComponentSystem/GASSSchemaManager.cpp
 	Math/GASSAABox.cpp
+	Math/GASSAARect.cpp
 	Math/GASSEllipsoid.cpp
 	Math/GASSKeyframeAnimation.cpp
 	Math/GASSMath.cpp
@@ -71,6 +72,7 @@ set(H_FILES
 	ComponentSystem/GASSComponentFactory.h
 	ComponentSystem/GASSSchemaManager.h
 	Math/GASSAABox.h
+	Math/GASSAARect.h
 	Math/GASSEllipsoid.h
 	Math/GASSKeyframeAnimation.h
 	Math/GASSLineSegment.h
