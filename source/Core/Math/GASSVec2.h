@@ -22,6 +22,7 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Math/GASSMath.h"
 #include <iostream>
 #include <cassert>
 #include <cmath>

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Core/Common.h"
-#include "Core/Math/GASSVec2.h"
+#include "Core/Utils/GASSException.h"
 #include <cmath>
 
 #define GASS_PI 3.1415926535898
@@ -29,6 +29,8 @@
 
 namespace GASS
 {
+	template<class TYPE> class TVec2;
+	typedef TVec2<Float> Vec2;
 	/** \addtogroup GASSCore
 	*  @{
 	*/

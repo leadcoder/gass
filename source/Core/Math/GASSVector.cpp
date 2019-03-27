@@ -24,12 +24,12 @@
 namespace GASS
 {
 	//instantiate to catch compile-time warnings and errors
+	template class TVec2<double>;
 	template class TVec3<double>;
 	template class TVec4<double>;
-	template class TVec2<double>;
 
 	//instantiate to catch compile-time warnings and errors
+	template class TVec2<float>;
 	template class TVec3<float>;
 	template class TVec4<float>;
-	template class TVec2<float>;
 }

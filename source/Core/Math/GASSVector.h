@@ -21,9 +21,9 @@
 #pragma once
 
 #include "Core/Common.h"
+#include "Core/Math/GASSVec2.h"
 #include "Core/Math/GASSVec4.h"
 #include "Core/Math/GASSVec3.h"
-#include "Core/Math/GASSVec2.h"
 #include "Core/Utils/GASSException.h"
 
 

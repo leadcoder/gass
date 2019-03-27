@@ -21,7 +21,7 @@
 #include <cmath>
 #include <limits>
 #include "Core/Math/GASSMath.h"
-
+#include "Core/Math/GASSVec2.h"
 #undef min
 #undef max
 
