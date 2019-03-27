@@ -27,14 +27,14 @@ namespace GASS
 	is present, this class fake that with the null_deleter
 	*/
 
-	class StaticMessageListener : public GASS::IMessageListener
+	class StaticMessageListener : public IMessageListener
 	{
 	public:
 		StaticMessageListener()
 		{
 			m_SharedFromThis = GASS_SHARED_PTR<StaticMessageListener>(this,null_deleter());
 		}
-		~StaticMessageListener() override {}
+		//~StaticMessageListener() override {}
 
 		GASS_SHARED_PTR<StaticMessageListener> shared_from_this() const
 		{

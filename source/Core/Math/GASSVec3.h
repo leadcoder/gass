@@ -96,8 +96,6 @@ namespace GASS
 			return temp_v;
 		}
 
-
-
 		inline TVec3 operator- () const
 		{
 			TVec3 temp_v;
@@ -154,6 +152,15 @@ namespace GASS
 			return *this;
 		}
 
+		inline friend TVec3 operator * (TYPE scalar, const TVec3& v)
+		{
+			TVec3 ret;
+			ret.x = scalar * v.x;
+			ret.y = scalar * v.y;
+			ret.z = scalar * v.z;
+			return ret;
+		}
+
 		inline TVec3 operator/ (const TVec3 &v) const
 		{
 			TVec3 temp_v;
@@ -184,18 +191,6 @@ namespace GASS
 			assert(element < 3);
 			return *(&x + element);
 		}
-
-		inline friend TVec3 operator * (TYPE scalar, const TVec3& v)
-		{
-			TVec3 ret;
-
-			ret.x = scalar * v.x;
-			ret.y = scalar * v.y;
-			ret.z = scalar * v.z;
-
-			return ret;
-		}
-
 
 		inline bool operator== (const TVec3 &v) const
 		{
