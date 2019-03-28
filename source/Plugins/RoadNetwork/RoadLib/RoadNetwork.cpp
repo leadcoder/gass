@@ -7,6 +7,7 @@
 #include "RoadBuilder.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPath.h"
+#include "Core/Math/GASSLineSegment2D.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <sstream>
 
@@ -177,7 +178,9 @@ namespace GASS
 							p3 = p3 - dir*20;
 
 							Vec2 isect;
-							if(Math::GetLineIntersection(Vec2(p1.x,p1.z),Vec2(p2.x,p2.z), Vec2(p3.x ,p3.z), Vec2(p4.x, p4.z), isect))
+							if (LineSegment2Dd::GetIntersection(LineSegment2Dd(Vec2(p1.x, p1.z), Vec2(p2.x, p2.z)), 
+								LineSegment2Dd(Vec2(p3.x, p3.z), Vec2(p4.x, p4.z)), 
+								isect))
 							{
 								Vec3 new_p(isect.x,p3.y,isect.y);
 								path[path.size()-1]  = new_p;

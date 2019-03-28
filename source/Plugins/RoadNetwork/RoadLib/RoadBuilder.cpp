@@ -1,6 +1,7 @@
 #include "RoadBuilder.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPath.h"
+#include "Core/Math/GASSLineSegment2D.h"
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "RoadNetwork.h"
@@ -133,7 +134,7 @@ namespace GASS
 			Vec2 p3(path[i-1].x,path[i-1].z);
 			Vec2 p4(path[i].x,path[i].z);
 			Vec2 isect;
-			if(Math::GetLineIntersection(p1, p2, p3, p4, isect))
+			if(LineSegment2Dd::GetIntersection(LineSegment2Dd(p1,p2), LineSegment2Dd(p3, p4), isect))
 			{
 				out.push_back(Vec3(isect.x,path[i].y,isect.y));
 				break;
