@@ -76,6 +76,7 @@ set(H_FILES
 	Math/GASSEllipsoid.h
 	Math/GASSKeyframeAnimation.h
 	Math/GASSLineSegment.h
+	Math/GASSLineSegment2D.h
 	Math/GASSMath.h
 	Math/GASSMatrix.h
 	Math/GASSMat4.h

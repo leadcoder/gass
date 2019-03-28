@@ -205,6 +205,22 @@ namespace GASS
 			return dist;
 		}
 
+		TYPE Dot(const TVec2 &v) const
+		{
+			return Dot(*this, v);
+		}
+
+		/**
+		@brief Calculate the dot product of two vectors.
+		@param v1 First vector, as a Vec3.
+		@param v2 Second vector, as a Vec3.
+		@return The dot product.
+		*/
+		static TYPE Dot(const TVec2 &v1, const TVec2 &v2)
+		{
+			return (v1.x*v2.x + v1.y*v2.y);
+		}
+
 		inline TVec2 NormalizedCopy() const
 		{
 			TVec2 norm_copy(x, y);

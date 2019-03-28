@@ -29,8 +29,6 @@
 
 namespace GASS
 {
-	template<class TYPE> class TVec2;
-	typedef TVec2<Float> Vec2;
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -72,18 +70,7 @@ namespace GASS
 		@return random value between start and end
 		*/
 		template<class TYPE> inline static TYPE RandomValue(TYPE start, TYPE end);
-
-		/**
-		Get 2D-line intersection
-		@param  p1 first point in first line
-		@param  p2 second point in first line
-		@param  p3 first point in second  line
-		@param  p4 second point in second  line
-		@param  isect Potential intersection point
-		@return true if intersection exist
-		*/
-		static bool GetLineIntersection(const Vec2 &p1, const Vec2 &p2, const Vec2 &p3, const Vec2 &p4, Vec2 &isect);
-
+		
 		/**
 		Inverted root square function
 		*/
