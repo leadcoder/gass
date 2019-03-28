@@ -1,6 +1,19 @@
 #include "Core/Math/GASSAABox.h"
+#include "Core/Math/GASSAARect.h"
 #include "Core/Math/GASSMath.h"
 #include "catch.hpp"
+
+TEST_CASE("Test AARect")
+{
+	SECTION("Test constructor")
+	{
+		const GASS::Vec2d min(1, 2);
+		const GASS::Vec2d max(2, 3);
+		const GASS::AARectd box(min, max);
+		REQUIRE(box.Min == min);
+		REQUIRE(box.Max == max);
+	}
+}
 
 TEST_CASE("Test AABox")
 {
