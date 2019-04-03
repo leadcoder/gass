@@ -177,6 +177,7 @@ namespace GASS
 	typedef TVec4<Float> Vec4;
 	typedef TVec4<double> Vec4d;
 	typedef TVec4<float> Vec4f;
+	typedef TVec4<int> Vec4i;
 }
 
 

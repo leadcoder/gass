@@ -90,11 +90,11 @@ namespace GASS
 		TVec2<TYPE> Max;
 		TVec2<TYPE> Min;
 	};
+
 	typedef TAARect<double> AARectd;
 	typedef TAARect<float> AARectf;
 	typedef TAARect<int> AARecti;
-	typedef TAARect<unsigned int> AARectui;
-
+	
 	template<class TYPE>
 	TAARect<TYPE>::TAARect()
 	{

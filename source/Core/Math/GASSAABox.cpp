@@ -29,4 +29,5 @@ namespace GASS
 	//instantiate to catch compile-time warnings and errors
 	template class TAABox<double>;
 	template class TAABox<float>;
+	template class TAABox<int>;
 }

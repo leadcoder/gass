@@ -184,7 +184,7 @@ namespace GASS
 
 		TYPE Length() const
 		{
-			return sqrt(x * x + y * y);
+			return static_cast<TYPE>(sqrt(x * x + y * y));
 		}
 
 		inline TYPE Normalize()

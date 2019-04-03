@@ -172,9 +172,11 @@ namespace GASS
 	private:
 		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
+
+	typedef TAABox<Float> AABox;
 	typedef TAABox<double> AABoxd;
 	typedef TAABox<float> AABoxf;
-	typedef TAABox<Float> AABox;
+	typedef TAABox<int> AABoxi;
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox()
@@ -319,7 +321,7 @@ namespace GASS
 	TSphere<TYPE> TAABox<TYPE>::GetBoundingSphere() const
 	{
 		TSphere<TYPE> sphere;
-		sphere.m_Pos = (Max + Min)*0.5;
+		sphere.m_Pos = (Max + Min) * static_cast<TYPE>(0.5);
 		sphere.m_Radius = (sphere.m_Pos - Max).Length();
 		return sphere;
 	}
@@ -532,7 +534,8 @@ namespace GASS
 	bool TAABox<TYPE>::LineIntersect(const TLineSegment<TYPE> &line_seg, TYPE &line_dist) const
 	{
 		// initialize to the segment's boundaries.
-		TYPE tenter = 0.0f, texit = 1.0f;
+		TYPE tenter = static_cast<TYPE>(0.0);
+		TYPE texit = static_cast<TYPE>(1.0);
 
 		// test X slab
 		if (!_LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))

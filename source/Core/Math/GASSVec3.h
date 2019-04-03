@@ -207,18 +207,18 @@ namespace GASS
 		static TVec3 Deg2Rad(const TVec3 &vec)
 		{
 			TVec3 ret;
-			ret.x = Math::Deg2Rad(vec.x);
-			ret.y = Math::Deg2Rad(vec.y);
-			ret.z = Math::Deg2Rad(vec.z);
+			ret.x = static_cast<TYPE>(Math::Deg2Rad(static_cast<double>(vec.x)));
+			ret.y = static_cast<TYPE>(Math::Deg2Rad(static_cast<double>(vec.y)));
+			ret.z = static_cast<TYPE>(Math::Deg2Rad(static_cast<double>(vec.z)));
 			return ret;
 		}
 
 		static TVec3 Rad2Deg(const TVec3 &vec)
 		{
 			TVec3 ret;
-			ret.x = Math::Rad2Deg(vec.x);
-			ret.y = Math::Rad2Deg(vec.y);
-			ret.z = Math::Rad2Deg(vec.z);
+			ret.x = static_cast<TYPE>(Math::Rad2Deg(static_cast<double>(vec.x)));
+			ret.y = static_cast<TYPE>(Math::Rad2Deg(static_cast<double>(vec.y)));
+			ret.z = static_cast<TYPE>(Math::Rad2Deg(static_cast<double>(vec.z)));
 			return ret;
 		}
 
@@ -234,7 +234,7 @@ namespace GASS
 
 		inline TYPE Length() const
 		{
-			return sqrt(x*x + y*y + z*z);
+			return static_cast<TYPE>(sqrt(x*x + y*y + z*z));
 		}
 
 		inline TYPE Normalize()
@@ -380,10 +380,9 @@ namespace GASS
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitY = TVec3<TYPE>(0, 1, 0);
 	template <class TYPE> TVec3<TYPE> TVec3<TYPE>::m_UnitZ = TVec3<TYPE>(0, 0, 1);
 	
+	typedef TVec3<Float> Vec3;
 	typedef TVec3<double> Vec3d;
 	typedef TVec3<float> Vec3f;
-	typedef TVec3<Float> Vec3;
-
-	
+	typedef TVec3<int> Vec3i;
 }
 

@@ -28,8 +28,11 @@ namespace GASS
 	template class TVec3<double>;
 	template class TVec4<double>;
 
-	//instantiate to catch compile-time warnings and errors
 	template class TVec2<float>;
 	template class TVec3<float>;
 	template class TVec4<float>;
+
+	template class TVec2<int>;
+	template class TVec3<int>;
+	template class TVec4<int>;
 }
