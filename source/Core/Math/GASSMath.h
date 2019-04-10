@@ -87,6 +87,9 @@ namespace GASS
 			return 1.0f / sqrt(x);
 #endif
 		}
+
+		template<class TYPE>
+		inline static TYPE Clamp(TYPE value, TYPE min_v, TYPE max_v);
 	private:
 	};
 
@@ -140,5 +143,11 @@ namespace GASS
 		const double norm_rand = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
 		const TYPE ret_value = start + static_cast<TYPE>(norm_rand * span);
 		return ret_value;
+	}
+
+	template<class TYPE>
+	TYPE Math::Clamp(TYPE value, TYPE min_v, TYPE max_v)
+	{
+		return std::min<TYPE>(std::max<TYPE>(value, min_v), max_v);
 	}
 }
