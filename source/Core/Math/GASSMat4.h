@@ -339,7 +339,7 @@ namespace GASS
 				{
 					os << mat[i][j];
 					if(i != 3 && j !=3)
-						os << " ";
+						os << std::string(" ");
 				}
 			
 			return os;

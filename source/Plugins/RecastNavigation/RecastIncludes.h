@@ -25,6 +25,7 @@
 #pragma warning (disable : 4244)
 #endif
 
+#include <string.h>
 #include <DetourCrowd.h>
 #include <DetourNavMesh.h>
 #include <DetourNavMeshQuery.h>

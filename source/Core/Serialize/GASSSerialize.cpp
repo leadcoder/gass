@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Core/Serialize/GASSSerialize.h"
+#include <string.h>
 
 namespace GASS
 {
