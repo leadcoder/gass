@@ -62,7 +62,7 @@ namespace GASS
 		m_ScriptManager->Init();
 	}
 
-		SimEngine::~SimEngine()
+	SimEngine::~SimEngine()
 	{
 
 	}
@@ -85,7 +85,7 @@ namespace GASS
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
 
 		if (configuration.GetFullPath() != "")
-		{ 
+		{
 			LoadSettings(configuration);
 			m_PluginManager->LoadFromFile(configuration.GetFullPath());
 			LoadResources(configuration);
@@ -265,14 +265,14 @@ namespace GASS
 	{
 		GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>()->PrintDebugText(message);
 	}
-	
+
 	void SimEngine::Tick(double delta_time)
 	{
 		//ProfileSample::ResetAll();
 		{
 			PROFILE("SimEngine::Update")
 
-			GetSimSystemManager()->OnUpdate(delta_time);
+				GetSimSystemManager()->OnUpdate(delta_time);
 			m_CurrentTime += delta_time;
 			//GASS_PRINT(" TICK:" << delta_time << " Time:" << m_CurrentTime);
 		}
