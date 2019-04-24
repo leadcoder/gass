@@ -103,13 +103,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ENABLE_TESTING()
 #boost settings
 
-if(GASS_USE_BOOST)
-  if(WIN32)
-    set (Boost_USE_STATIC_LIBS ON)
-  else()
-    set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
-  endif()
-endif(GASS_USE_BOOST)
+#if(GASS_USE_BOOST)
+#  if(WIN32)
+#    set (Boost_USE_STATIC_LIBS ON)
+#  else()
+#    set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
+#  endif()
+#endif(GASS_USE_BOOST)
 
 if(CMAKE_VERSION VERSION_GREATER "2.8.11") #suppress warnings
   #CMAKE_POLICY(SET CMP0022 OLD)

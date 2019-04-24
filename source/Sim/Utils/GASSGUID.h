@@ -22,7 +22,7 @@
 
 #include "Core/Common.h"
 
-#ifdef GASS_USE_BOOST
+#if 0 //GASS_USE_BOOST
     #ifdef _MSC_VER
         #pragma warning( push )
         #pragma warning( disable: 4996)
