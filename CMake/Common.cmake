@@ -128,6 +128,7 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	
 	target_compile_definitions(${_PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
 	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .galp)
+	set_target_properties(${_PLUGIN_NAME} PROPERTIES PREFIX "")
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES FOLDER "Plugins")
 endmacro()
 
