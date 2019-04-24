@@ -147,14 +147,14 @@ namespace GASS
 //	#define GASS_USE_BOOST
 //#endif
 
-#ifdef GASS_USE_BOOST
+//#ifdef GASS_USE_BOOST
 	//#define GASS_USE_BOOST_FUNC_BIND
 	//#define GASS_USE_BOOST_PTR
-	#define GASS_USE_BOOST_FILESYSTEM
+	//#define GASS_USE_BOOST_FILESYSTEM
 	//#define GASS_USE_BOOST_ANY
 	//#define GASS_USE_BOOST_THREADS
-#endif
-#undef GASS_USE_BOOST
+//#endif
+//#undef GASS_USE_BOOST
 
 #ifdef GASS_USE_BOOST_THREADS
 	#include <boost/thread/locks.hpp>

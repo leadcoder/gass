@@ -179,21 +179,11 @@ namespace GASS
 	};
 }
 
-#ifdef GASS_USE_BOOST 
-	#include <boost/functional/hash.hpp>
-	#ifdef _MSC_VER
-		static boost::hash<std::string> GASSMessageHasher;
-	#else //to avoid gcc build warnings: "__attribute__((unused))", TODO: investigate this further...
-		static boost::hash<std::string> GASSMessageHasher __attribute__((unused));
-	#endif
-#else
 	#ifdef _MSC_VER
 		static std::hash<std::string> GASSMessageHasher;
 	#else //to avoid gcc build warnings: "__attribute__((unused))", TODO: investigate this further...
 		static std::hash<std::string> GASSMessageHasher __attribute__((unused));
 	#endif
-	
-#endif
 
 #define MESSAGE_FUNC(FUNCTION) GASS::MessageFuncPtr(new GASS::MessageFunc<GASS::IMessage>(GASS_BIND( &FUNCTION, this, GASS_PLACEHOLDERS::_1 ), GASSMessageHasher(#FUNCTION), shared_from_this()))
 #define TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE) GASS::MessageFuncPtr(new GASS::MessageFunc<TYPED_MESSAGE>(GASS_BIND( &FUNCTION, this, GASS_PLACEHOLDERS::_1 ), GASSMessageHasher(#FUNCTION) , shared_from_this()))

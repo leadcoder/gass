@@ -147,9 +147,9 @@ else()
    set(PLATFORM_DEPS ${CMAKE_DL_LIBS})
 endif()
 
-if(GASS_USE_BOOST)
-	set(BOOST_DEPS Boost::filesystem Boost::thread)
-endif()
+#if(GASS_USE_BOOST)
+#	set(BOOST_DEPS Boost::filesystem Boost::thread)
+#endif()
 
 gass_setup_lib(GASSCore
 					BUILDTYPE ${GASS_BUILDTYPE}

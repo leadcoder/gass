@@ -20,7 +20,8 @@
 
 #pragma once
 
-//#define GASS_USE_GHC_FILESYSTEM
+#define GASS_USE_GHC_FILESYSTEM
+
 #ifdef GASS_USE_GHC_FILESYSTEM
 
 #ifdef _MSC_VER
@@ -44,7 +45,9 @@
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
 
-#elif defined(GASS_USE_BOOST_FILESYSTEM)
+#else //keep this for now 
+
+#if defined(GASS_USE_BOOST_FILESYSTEM)
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
@@ -82,4 +85,8 @@
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
 #endif
+
 #endif
+#endif
+
+
