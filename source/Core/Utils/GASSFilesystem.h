@@ -20,7 +20,31 @@
 
 #pragma once
 
-#ifdef GASS_USE_BOOST_FILESYSTEM
+//#define GASS_USE_GHC_FILESYSTEM
+#ifdef GASS_USE_GHC_FILESYSTEM
+
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable : 4100)
+#pragma warning (disable : 4127)
+#pragma warning (disable : 4244)
+#pragma warning (disable : 4701)
+#pragma warning (disable : 4706)
+#endif
+
+#include "filesystem.hpp"
+
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
+
+#define GASS_FILESYSTEM ghc::filesystem
+#define GASS_TO_GENERIC_STRING(a) a.generic_string()
+#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
+#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
+#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
+
+#elif defined(GASS_USE_BOOST_FILESYSTEM)
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #undef BOOST_NO_CXX11_SCOPED_ENUMS
