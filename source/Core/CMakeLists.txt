@@ -136,6 +136,7 @@ set(H_FILES
 	Utils/GASSStringUtils.h
 	Utils/GASSTimer.h
 	Utils/GASSXMLUtils.h
+	Utils/filesystem.hpp
 	${GASS_CONFIG_HEADER}
 	${GASS_VERSION_HEADER}
 )
