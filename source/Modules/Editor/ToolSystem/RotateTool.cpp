@@ -145,9 +145,12 @@ namespace GASS
 			}
 		}
 
-		int from_id = GASS_PTR_TO_INT(this);
-		GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
+		if (!selection_mode)
+		{
+			int from_id = GASS_PTR_TO_INT(this);
+			GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+			SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
+		}
 	}
 
 	void RotateTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
