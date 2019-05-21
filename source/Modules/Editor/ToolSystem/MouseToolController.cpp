@@ -227,7 +227,7 @@ namespace GASS
 		return result;
 	}
 
-	SceneCursorInfo MouseToolController::GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance)
+	SceneCursorInfo MouseToolController::GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance) const
 	{
 		SceneCursorInfo info;
 		CameraComponentPtr cam = m_EditorSceneManager->GetActiveCamera();
@@ -287,7 +287,7 @@ namespace GASS
 		m_SnapAngle = value;
 	}
 
-	Float MouseToolController::SnapPosition(Float value)
+	Float MouseToolController::SnapPosition(Float value) const
 	{
 		if(m_EnableMovmentSnap)
 		{
@@ -298,7 +298,7 @@ namespace GASS
 		return value;
 	}
 
-	Float MouseToolController::SnapAngle(Float value)
+	Float MouseToolController::SnapAngle(Float value) const
 	{
 		if(m_EnableAngleSnap)
 		{
@@ -497,26 +497,34 @@ namespace GASS
 		return true;
 	}
 
-	void MouseToolController::CreateSceneObject(const std::string name, const Vec2 &mouse_pos)
+
+	bool MouseToolController::GetMouseWorldPosAndRot(const Vec2 &mouse_pos, GASS::Vec3 &world_pos, GASS::Quaternion &world_rot) const
 	{
-		SceneCursorInfo cursorInfo = GetSceneCursorInfo(mouse_pos, 1000000);
-
-		SceneObjectPtr object_under_cursor = cursorInfo.m_ObjectUnderCursor.lock();
+		SceneCursorInfo cursor_info = GetSceneCursorInfo(mouse_pos, 1000000);
+		SceneObjectPtr object_under_cursor = cursor_info.m_ObjectUnderCursor.lock();
 		if (!object_under_cursor)
-			return;
+			return false;
 
-		GASS::Vec3 drop_pos = cursorInfo.m_3DPos;
-		drop_pos.x = SnapPosition(drop_pos.x);
-		drop_pos.y = SnapPosition(drop_pos.y);
-		drop_pos.z = SnapPosition(drop_pos.z);
-		
-		GASS::Quaternion rot;
+		world_pos = cursor_info.m_3DPos;
+		world_pos.x = SnapPosition(world_pos.x);
+		world_pos.y = SnapPosition(world_pos.y);
+		world_pos.z = SnapPosition(world_pos.z);
 		const TerrainSceneManagerPtr tsm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(true);
 		if (tsm)
 		{
-			 tsm->GetOrientation(drop_pos, rot);
+			tsm->GetOrientation(world_pos, world_rot);
 		}
-		CreateObjectFromTemplateAtPosition(name,drop_pos,rot);
+		return true;
+	}
+
+	void MouseToolController::CreateSceneObject(const std::string template_name, const Vec2 &mouse_pos)
+	{
+		GASS::Vec3 drop_pos;
+		GASS::Quaternion drop_rot;
+		if (GetMouseWorldPosAndRot(mouse_pos, drop_pos, drop_rot))
+		{
+			_CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
+		}
 	}
 
 	void MouseToolController::SetEditMode(GizmoEditMode value)
@@ -541,7 +549,7 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
+	void MouseToolController::_CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{
 		ScenePtr cur_scene = m_EditorSceneManager->GetScene();
 		SceneObjectPtr site = m_EditorSceneManager->GetObjectSite();

@@ -47,8 +47,8 @@ namespace GASS
 		Float GetSnapAngle() const {return m_SnapAngle;}
 		int GetEnableGizmo() const {return m_EnableGizmo;}
 		void SetEnableGizmo(int value);
-		Float SnapPosition(Float value);
-		Float SnapAngle(Float value);
+		Float SnapPosition(Float value) const;
+		Float SnapAngle(Float value) const;
 		void Update(double delta);
 		bool GetUseTerrainNormalOnDrop() const {return m_UseTerrainNormalOnDrop;}
 		void SetUseTerrainNormalOnDrop(bool value) {m_UseTerrainNormalOnDrop = value;}
@@ -56,7 +56,7 @@ namespace GASS
 		float GetRayPickDistance() const {return m_RayPickDistance;}
 		EditorSceneManager* GetEditorSceneManager() const {return m_EditorSceneManager;}
 		void SelectHelper(SceneObjectPtr obj) const;
-
+		
 		//IMouseListener
 		bool MouseMoved(const MouseData &data);
 		bool MousePressed(const MouseData &data, MouseButtonId id );
@@ -70,7 +70,8 @@ namespace GASS
 		bool IsShiftDown() const {return m_ShiftDown;}
 		bool IsCtrlDown() const { return m_CtrlDown; }
 
-		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance);
+		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance) const;
+		bool GetMouseWorldPosAndRot(const Vec2 &mouse_pos, GASS::Vec3 &world_pos, GASS::Quaternion &world_rot) const;
 	private:
 		void OnInput(GASS::ControllSettingsMessagePtr message);
 		void NextTool();
@@ -78,7 +79,7 @@ namespace GASS
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
 
 		//helper
-		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
+		void _CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
 		GASS::SceneObjectPtr GetPointerObject();
 
 		std::vector<IMouseTool*> m_Tools;

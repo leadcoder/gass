@@ -112,7 +112,18 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<SceneObjectTemplateDroppedEvent> SceneObjectTemplateDroppedEventPtr;
 
-
+	class SceneObjectDroppedEvent : public SystemEventMessage
+	{
+	public:
+		SceneObjectDroppedEvent(const SceneObjectPtr &obj, const Vec2 &screen_pos, SenderID sender_id = -1, double delay = 0) :
+			SystemEventMessage(sender_id, delay), m_Object(obj), m_ScreenPosition(screen_pos) {}
+		SceneObjectPtr GetObject() const { return m_Object; }
+		Vec2 GetScreenPosition() const { return m_ScreenPosition; }
+	private:
+		SceneObjectPtr m_Object;
+		Vec2 m_ScreenPosition;
+	};
+	typedef GASS_SHARED_PTR<SceneObjectDroppedEvent> SceneObjectDroppedEventPtr;
 	
 	class CursorMovedOverSceneEvent : public SceneEventMessage
 	{
