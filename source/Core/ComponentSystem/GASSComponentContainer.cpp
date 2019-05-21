@@ -196,6 +196,11 @@ namespace GASS
 		}
 	}
 
+	void ComponentContainer::RemoveAllChildren()
+	{
+		m_ComponentContainerVector.clear();
+	}
+
 	void ComponentContainer::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
 		if(!m_Serialize)

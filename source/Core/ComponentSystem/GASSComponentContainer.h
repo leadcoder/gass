@@ -105,6 +105,11 @@ namespace GASS
 			Remove a child component container
 		*/
 		virtual void RemoveChild(ComponentContainerPtr child);
+
+		/**
+		Remove all children
+		*/
+		virtual void RemoveAllChildren();
 		
 		/**
 			Get child component containers,
