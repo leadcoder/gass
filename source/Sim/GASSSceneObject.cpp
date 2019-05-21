@@ -594,13 +594,7 @@ namespace GASS
 		{
 			std::string template_name = so_elem->Attribute("from_template");
 			so = GASS_STATIC_PTR_CAST<SceneObject>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
-
-			ComponentContainer::ComponentContainerIterator children = so->GetChildren();
-			while (children.hasMoreElements())
-			{
-				SceneObjectPtr child_obj = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
-				so->RemoveChild(child_obj);
-			}
+			so->RemoveAllChildren();
 		}
 		else
 		{
@@ -690,12 +684,7 @@ namespace GASS
 			std::string template_name = cc_elem->Attribute("from_template");
 			cc = GASS_STATIC_PTR_CAST<ComponentContainer>(SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
 			//remove all children, they should be created by template, or?
-			ComponentContainer::ComponentContainerIterator children = cc->GetChildren();
-			while(children.hasMoreElements())
-			{
-				SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
-				cc->RemoveChild(child_obj);
-			}
+			cc->RemoveAllChildren();
 		}
 		else
 		{
