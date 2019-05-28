@@ -35,8 +35,7 @@ namespace GASS
 	class CoreSceneManager : public Reflection<CoreSceneManager, BaseSceneManager>
 	{
 	public:
-		CoreSceneManager();
-		~CoreSceneManager() override;
+		CoreSceneManager(SceneWeakPtr scene);
 		static void RegisterReflection();
 		void OnCreate() override;
 		void OnInit() override;

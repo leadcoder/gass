@@ -56,7 +56,6 @@ namespace GASS
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string &name) = 0;
 		virtual ScenePtr GetScene() const = 0;
-		virtual void SetScene(ScenePtr owner) = 0;
 		virtual void RegisterPreUpdate(SceneManagerListenerPtr listener) = 0;
 		virtual void RegisterPostUpdate(SceneManagerListenerPtr listener) = 0;
 		//virtual void Unregister(SceneManagerListenerPtr listener) = 0;

@@ -22,7 +22,7 @@ namespace GASS
 	void EditorSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, SimSystem>);
-		SceneManagerFactory::GetPtr()->Register("EditorSceneManager",new GASS::Creator<EditorSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<EditorSceneManager>("EditorSceneManager");
 		RegisterProperty<bool>("LockTerrainObjects",&EditorSystem::GetLockTerrainObjects, &EditorSystem::SetLockTerrainObjects);
 		RegisterProperty<std::string>("DefaultCameraTemplate",&EditorSystem::GetDefaultCameraTemplate, &EditorSystem::SetDefaultCameraTemplate);
 	}

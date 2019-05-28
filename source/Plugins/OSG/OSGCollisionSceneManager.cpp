@@ -28,7 +28,7 @@
 namespace GASS
 {
 
-	OSGCollisionSceneManager::OSGCollisionSceneManager() : m_IntersectVisitor(NULL),
+	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(NULL),
 		m_DatabaseCache(NULL)
 	{
 

@@ -62,7 +62,7 @@ namespace GASS
 	{
 		dInitODE2(0);
 		dAllocateODEDataForThread(~0U);
-		SceneManagerFactory::GetPtr()->Register("ODEPhysicsSceneManager",new GASS::Creator<ODEPhysicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<ODEPhysicsSceneManager>("ODEPhysicsSceneManager");
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<ODEBodyComponent, Component>);
 		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, Component>);
 		ComponentFactory::GetPtr()->Register("PhysicsCylinderGeometryComponent",new Creator<ODECylinderGeometryComponent, Component>);

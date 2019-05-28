@@ -18,6 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include "Sim/GASSScene.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
@@ -27,7 +28,8 @@
 
 namespace GASS
 {
-	OSGGraphicsSceneManager::OSGGraphicsSceneManager(void):  m_Fog(new osg::Fog()),
+	OSGGraphicsSceneManager::OSGGraphicsSceneManager(SceneWeakPtr scene):  Reflection(scene), 
+		m_Fog(new osg::Fog()),
 		m_FogStart (200),
 		m_FogEnd (400),
 		m_UseFog(1),
@@ -46,7 +48,7 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("OSGGraphicsSceneManager",new GASS::Creator<OSGGraphicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
 		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OSGGraphicsSceneManager::GetFogMode, &GASS::OSGGraphicsSceneManager::SetFogMode,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type",PF_VISIBLE,&FogModeBinder::GetStringEnumeration)));

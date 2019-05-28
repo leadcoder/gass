@@ -29,7 +29,8 @@
 
 namespace GASS
 {
-	OSGEarthSceneManager::OSGEarthSceneManager() : m_AutoAdd(false),
+	OSGEarthSceneManager::OSGEarthSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_AutoAdd(false),
 		m_Initlized(false),
 		m_DisableGLSL(false),
 		m_WGS84(nullptr),
@@ -46,7 +47,7 @@ namespace GASS
 
 	void OSGEarthSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("OSGEarthSceneManager", new GASS::Creator<OSGEarthSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<OSGEarthSceneManager>("OSGEarthSceneManager");
 	}
 
 	void OSGEarthSceneManager::OnCreate()

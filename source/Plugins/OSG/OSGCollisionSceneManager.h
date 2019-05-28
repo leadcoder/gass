@@ -102,7 +102,7 @@ namespace GASS
 	class OSGCollisionSceneManager : public Reflection<OSGCollisionSceneManager, BaseSceneManager> , public ICollisionSceneManager
 	{
 	public:
-		OSGCollisionSceneManager();
+		OSGCollisionSceneManager(SceneWeakPtr scene);
 		~OSGCollisionSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

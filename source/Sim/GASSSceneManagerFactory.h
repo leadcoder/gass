@@ -22,19 +22,42 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSISceneManager.h"
-#include "Core/Utils/GASSFactory.h"
+#include "Core/Utils/GASSGenericFactory.h"
 
 namespace GASS
 {
-	class GASSExport SceneManagerFactory : public Factory<ISceneManager,std::string,void>
+	
+
+	class GASSExport SceneManagerFactory  
 	{
 	public:
 		SceneManagerFactory();
+		//virtual ~SceneManagerFactory(){}
+		template<class T>
+		void Register(const std::string& name)
+		{
+			m_Impl.Register<T>(name);
+		}
+
+		SceneManagerPtr Create(const std::string &name, ScenePtr scene)
+		{
+			return m_Impl.Create(name, scene);
+		}
+
+		std::vector<std::string> GetFactoryNames()
+		{
+			return m_Impl.GetAllKeys();
+		}
+
 		static SceneManagerFactory* GetPtr();
 		static SceneManagerFactory& Get();
 	protected:
-		static SceneManagerFactory* m_Instance;
+
 	protected:
+		GenericFactory<std::string, SceneManagerPtr, ScenePtr> m_Impl;
+		static SceneManagerFactory* m_Instance;
 	};
+	//smart pointer typedef
+	typedef GASS_SHARED_PTR<SceneManagerFactory> SceneManagerFactoryPtr;
 }
 

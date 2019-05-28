@@ -93,8 +93,7 @@ namespace GASS
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
 		for(size_t i = 0; i < managers.size();i++)
 		{
-			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i]);
-			sm->SetScene(shared_from_this());
+			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i], shared_from_this());
 			sm->SetName(managers[i]);
 			sm->OnCreate();
 			m_SceneManagers.push_back(sm);

@@ -53,7 +53,7 @@ namespace GASS
 	public:
 		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
 		typedef std::map<std::string,PhysXTriangleMesh> TriangleMeshMap;
-		PhysXPhysicsSceneManager();
+		PhysXPhysicsSceneManager(SceneWeakPtr scene);
 		~PhysXPhysicsSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

@@ -57,7 +57,11 @@ namespace GASS
 	{
 	public :
 		typedef GASS_SHARED_PTR<T> TPtr;
-		Reflection() = default;
+		
+		template<typename... Args>
+		Reflection(Args... args) :
+			TInClass(args...) {}
+
 
 		// Default reflection registration function. Does nothing by default.
 		static void	RegisterReflection()

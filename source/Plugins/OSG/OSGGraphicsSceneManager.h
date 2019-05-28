@@ -38,7 +38,7 @@ namespace GASS
 	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager> , public IGraphicsSceneManager , public IOSGGraphicsSceneManager
 	{
 	public:
-		OSGGraphicsSceneManager();
+		OSGGraphicsSceneManager(SceneWeakPtr scene);
 		~OSGGraphicsSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

@@ -33,8 +33,7 @@ namespace GASS
 	class SimulationSceneManager : public Reflection<SimulationSceneManager, BaseSceneManager>, public IMissionSceneManager
 	{
 	public:
-		SimulationSceneManager();
-		~SimulationSceneManager() override;
+		SimulationSceneManager(SceneWeakPtr scene);
 		static void RegisterReflection();
 		void OnCreate() override;
 		void OnInit() override;

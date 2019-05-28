@@ -16,7 +16,7 @@
 
 namespace GASS
 {
-	EditorSceneManager::EditorSceneManager() : m_LockTerrainObjects(true)
+	EditorSceneManager::EditorSceneManager(SceneWeakPtr scene) : Reflection(scene), m_LockTerrainObjects(true)
 	{
 		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
 	}

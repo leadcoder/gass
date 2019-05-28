@@ -30,9 +30,9 @@
 
 namespace GASS
 {
-	ODECollisionSystem::ODECollisionSystem()  
+	ODECollisionSystem::ODECollisionSystem()
 	{
-		 m_UpdateGroup=UGID_PRE_SIM;
+		m_UpdateGroup = UGID_PRE_SIM;
 	}
 
 	ODECollisionSystem::~ODECollisionSystem()
@@ -43,7 +43,7 @@ namespace GASS
 	void ODECollisionSystem::Init()
 	{
 		ComponentFactory::GetPtr()->Register("ODECollisionGeometryComponent",new Creator<ODECollisionGeometryComponent, Component>);
-		SceneManagerFactory::GetPtr()->Register("ODECollisionSceneManager",new GASS::Creator<ODECollisionSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<ODECollisionSceneManager>("ODECollisionSceneManager");
 
 		SimSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");
 		if(!(system)) //check if ode physics system present, if not initialize ode

@@ -152,7 +152,7 @@ namespace GASS
 	}
 	Vec3 OgreLightComponent::GetDir() const
 	{
-		Vec3 dir;
+		Vec3 dir(0,0,1);
 		if(m_OgreLight)
 		{
 			const Ogre::Vector3 odir = m_OgreLight->getDirection();

@@ -37,7 +37,8 @@ namespace GASS
 {
 	bool ODEPhysicsSceneManager::m_ZUp = true;
 
-	ODEPhysicsSceneManager::ODEPhysicsSceneManager() :m_Space(0),
+	ODEPhysicsSceneManager::ODEPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_Space(0),
 		m_World(0),
 		m_CollisionSpace(0),
 		m_ContactGroup (0),

@@ -122,6 +122,7 @@ set(H_FILES
 	Utils/GASSEnumLookup.h
 	Utils/GASSException.h
 	Utils/GASSFactory.h
+	Utils/GASSGenericFactory.h
 	Utils/GASSFilePath.h
 	Utils/GASSFilesystem.h
 	Utils/GASSFileUtils.h

@@ -37,7 +37,8 @@
 
 namespace GASS
 {
-	ODECollisionSceneManager::ODECollisionSceneManager() : m_Space(0) , 
+	ODECollisionSceneManager::ODECollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), 
+		m_Space(0) ,
 		m_MaxRaySegment(50)
 	{
 

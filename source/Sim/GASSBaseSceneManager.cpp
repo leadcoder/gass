@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	BaseSceneManager::BaseSceneManager(void) : m_PreSystemUpdate(false)
+	BaseSceneManager::BaseSceneManager(SceneWeakPtr scene) : m_Scene(scene), m_PreSystemUpdate(false)
 	{
 		
 	}

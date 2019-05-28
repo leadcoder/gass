@@ -87,7 +87,7 @@ namespace GASS
 	private:
 		void UpdateFogSettings();
 	public:
-		OgreGraphicsSceneManager();
+		OgreGraphicsSceneManager(SceneWeakPtr scene);
 		~OgreGraphicsSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

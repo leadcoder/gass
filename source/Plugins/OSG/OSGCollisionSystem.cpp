@@ -40,6 +40,6 @@ namespace GASS
 
 	void OSGCollisionSystem::Init()
 	{
-		SceneManagerFactory::GetPtr()->Register("OSGCollisionSceneManager",new GASS::Creator<OSGCollisionSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<OSGCollisionSceneManager>("OSGCollisionSceneManager");
 	}
 }

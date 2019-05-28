@@ -77,7 +77,8 @@ namespace GASS
 	}
 
 
-	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager() : m_Active(true),
+	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_Active(true),
 		m_Init(false),
 		m_Gravity(-9.81f),
 		m_CpuDispatcher(NULL),
@@ -94,7 +95,7 @@ namespace GASS
 
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
-		SceneManagerFactory::GetPtr()->Register("PhysXPhysicsSceneManager",new GASS::Creator<PhysXPhysicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
 		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
 		REG_PROPERTY(Vec3,Offset,PhysXPhysicsSceneManager);
 	}

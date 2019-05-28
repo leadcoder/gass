@@ -51,7 +51,8 @@ using namespace Ogre;
 
 namespace GASS
 {
-	OgreGraphicsSceneManager::OgreGraphicsSceneManager(void) :	m_FogStart(200),
+	OgreGraphicsSceneManager::OgreGraphicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_FogStart(200),
 		m_FogEnd(40000),
 		m_UseFog(1),
 		m_FogMode(FM_LINEAR),
@@ -85,7 +86,7 @@ namespace GASS
 	void OgreGraphicsSceneManager::RegisterReflection()
 	{
 
-		SceneManagerFactory::GetPtr()->Register("OgreGraphicsSceneManager",new GASS::Creator<OgreGraphicsSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<OgreGraphicsSceneManager>("OgreGraphicsSceneManager");
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
 

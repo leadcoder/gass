@@ -43,7 +43,7 @@ namespace GASS
 	public:
 		typedef std::map<std::string,ODEPhysicsCollisionMesh> CollisionMeshMap;
 	public:
-		ODEPhysicsSceneManager();
+		ODEPhysicsSceneManager(SceneWeakPtr scene);
 		~ODEPhysicsSceneManager() override;
 		static void RegisterReflection();
 		

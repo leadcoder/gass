@@ -45,7 +45,7 @@ namespace GASS
 	class GASSExport BaseSceneManager : public Reflection<BaseSceneManager, BaseReflectionObject> , public GASS_ENABLE_SHARED_FROM_THIS<BaseSceneManager>, public virtual ISceneManager, public IXMLSerialize, public IMessageListener, public ISystemListener
 	{
 	public:
-		BaseSceneManager();
+		BaseSceneManager(SceneWeakPtr scene);
 	
 		static void RegisterReflection();
 
@@ -53,7 +53,6 @@ namespace GASS
 		std::string GetName() const override {return m_Name;}
 		void SetName(const std::string &name) override {m_Name = name;}
 		ScenePtr GetScene() const override {return m_Scene.lock();}//allow null pointer}
-		void SetScene(ScenePtr owner) override {m_Scene = owner;}
 		
 		void RegisterPreUpdate(SceneManagerListenerPtr listener) override;
 		void RegisterPostUpdate(SceneManagerListenerPtr listener) override;
@@ -84,6 +83,7 @@ namespace GASS
 		//IXMLSerialize
 		void LoadXML(tinyxml2::XMLElement *xml_elem) override;
 		void SaveXML(tinyxml2::XMLElement *xml_elem) override;
+	private:
 	protected:
 
 		template <class T>

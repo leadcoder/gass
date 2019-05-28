@@ -35,7 +35,8 @@
 namespace GASS
 {
 
-	RaknetNetworkSceneManager::RaknetNetworkSceneManager() : m_Paused(false),
+	RaknetNetworkSceneManager::RaknetNetworkSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_Paused(false),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the behavior of simulation is effected and values for bodies and joints must be retweeked
 		m_TimeToProcess(0),
 		m_MaxSimSteps(4)

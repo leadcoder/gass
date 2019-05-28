@@ -32,9 +32,7 @@ namespace GASS
 #else
 		typedef std::set<GASS::SceneObjectWeakPtr> SceneObjectSet;
 #endif
-
-
-		EditorSceneManager();
+		EditorSceneManager(SceneWeakPtr scene);
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();
 		virtual void OnCreate();

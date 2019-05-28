@@ -30,7 +30,7 @@ namespace GASS
 	class OSGEarthSceneManager : public Reflection<OSGEarthSceneManager, BaseSceneManager>, public IWGS84SceneManager, public ITerrainSceneManager
 	{
 	public:
-		OSGEarthSceneManager();
+		OSGEarthSceneManager(SceneWeakPtr scene);
 		~OSGEarthSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

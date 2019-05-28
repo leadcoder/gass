@@ -88,7 +88,7 @@ namespace GASS
 	void RakNetNetworkSystem::Init()
 	{
 		//Only register scene manager if system is created
-		SceneManagerFactory::GetPtr()->Register("NetworkSceneManager",new GASS::Creator<RaknetNetworkSceneManager, ISceneManager>);
+		SceneManagerFactory::GetPtr()->Register<RaknetNetworkSceneManager>("NetworkSceneManager");
 
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneCreateEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerRequest,0));

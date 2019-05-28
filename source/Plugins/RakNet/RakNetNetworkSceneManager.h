@@ -30,7 +30,7 @@ namespace GASS
 	class RaknetNetworkSceneManager  : public Reflection<RaknetNetworkSceneManager, BaseSceneManager> 
 	{
 		public:
-		RaknetNetworkSceneManager();
+		RaknetNetworkSceneManager(SceneWeakPtr scene);
 		~RaknetNetworkSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;

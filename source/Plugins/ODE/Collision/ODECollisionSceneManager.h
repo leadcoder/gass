@@ -44,7 +44,7 @@ namespace GASS
 	{
 		friend class ODECollisionGeometryComponent;
 	public:
-		ODECollisionSceneManager();
+		ODECollisionSceneManager(SceneWeakPtr scene);
 		~ODECollisionSceneManager() override;
 		static void RegisterReflection();
 		void OnCreate() override;
