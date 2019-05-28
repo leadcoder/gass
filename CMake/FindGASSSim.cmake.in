@@ -18,8 +18,8 @@ ENDMACRO(LIST_CONTAINS)
 
 find_package(GASSCore)
 
-set(ANGELSCRIPT_DIR   $ENV{ANGELSCRIPT_HOME} CACHE PATH "Angel Script folder")
-find_package(AngelScript REQUIRED)
+#anglescript headers are installed, just add path
+find_path(ANGELSCRIPT_INCLUDE_DIRS angelscript.h PATHS ${GASS_DIR}/include/Dependencies/Angelscript)
 
 #just append angelscript to core includes 
 set(GASS_SIM_INCLUDE_DIRS ${GASS_CORE_INCLUDE_DIRS} ${ANGELSCRIPT_INCLUDE_DIRS})
