@@ -112,7 +112,7 @@ if (WIN32)
 	add_bin_rel(CURL NAMES libcurl.dll)
 	
 	if(${MSVC_VERSION} GREATER 1900) #MSVC 2017
-		add_bin_dbg(CARES NAMES libcurl.dll)
+		add_bin_dbg(CURL NAMES libcurl.dll)
 	else()
 		add_bin_dbg(CURL NAMES libcurld.dll)
 	endif()
