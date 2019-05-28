@@ -85,7 +85,7 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 
-option(GASS_USE_BOOST "Should Boost be used or not" ON)
+option(GASS_USE_BOOST "Should Boost be used or not" OFF)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
@@ -101,15 +101,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 ENABLE_TESTING()
-#boost settings
-
-#if(GASS_USE_BOOST)
-#  if(WIN32)
-#    set (Boost_USE_STATIC_LIBS ON)
-#  else()
-#    set (Boost_USE_STATIC_LIBS OFF CACHE BOOL "Use static boost libraries")
-#  endif()
-#endif(GASS_USE_BOOST)
 
 if(CMAKE_VERSION VERSION_GREATER "2.8.11") #suppress warnings
   #CMAKE_POLICY(SET CMP0022 OLD)
@@ -157,6 +148,7 @@ configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
 		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake" 
 		@ONLY)
+
 set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
 
 configure_file(
