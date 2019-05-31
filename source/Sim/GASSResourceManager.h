@@ -142,7 +142,7 @@ namespace GASS
 		/**
 			Get or create resource group
 		*/
-		GASS::ResourceGroupPtr ResourceManager::GetOrCreateResourceGroup(const std::string &group_name);
+		GASS::ResourceGroupPtr GetOrCreateResourceGroup(const std::string &group_name);
 
 		/**
 		Add resource location to resource group, the group is created if not already present.
