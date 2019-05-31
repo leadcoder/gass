@@ -33,50 +33,6 @@ namespace GASS
 		Shutdown();
 	}
 
-	void PluginManager::LoadFromFile(const std::string &filename)
-	{
-
-		if(filename =="")
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "PluginManager::LoadFromFile");
-
-		GASS_LOG(LINFO) << "Start loading plugins from " << filename;
-		auto *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
-		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "PluginManager::LoadFromFile");
-		}
-
-
-		tinyxml2::XMLElement *plugins = xmlDoc->FirstChildElement("GASS");
-		if (!plugins)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Couldn't find GASS tag in:" + filename, "PluginManager::LoadFromFile");
-
-		plugins = plugins->FirstChildElement("Plugins");
-
-		if(plugins)
-		{
-			plugins = plugins->FirstChildElement();
-			// Loop through each plugin
-			while(plugins)
-			{
-				if(std::string(plugins->Value()) == "Plugin")
-				{
-					std::string name = plugins->Attribute("PluginFile");
-					LoadPlugin(name);
-				}
-				else if(std::string(plugins->Value()) == "Directory")
-				{
-					std::string path = plugins->Attribute("Path");
-					LoadPluginsFromDirectory(path);
-				}
-				plugins = plugins->NextSiblingElement();
-			}
-		}
-		xmlDoc->Clear();
-		// Delete our allocated document and return success ;)
-		delete xmlDoc;
-	}
 	void PluginManager::Shutdown()
 	{
 		for(auto & plugin : m_Plugins)
@@ -102,6 +58,14 @@ namespace GASS
 		{
 			plugin->Unload();
 			plugin->Load();
+		}
+	}
+
+	void PluginManager::LoadPlugins(const std::vector<std::string> &plugins)
+	{
+		for (auto plugin : plugins)
+		{
+			LoadPlugin(plugin);
 		}
 	}
 

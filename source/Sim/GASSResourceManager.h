@@ -33,11 +33,28 @@ namespace tinyxml2
 namespace GASS
 {
 
+	struct ResourceLocationConfig
+	{
+		ResourceLocationConfig(){}
+		ResourceLocationConfig(std::string group, std::string path,	bool recursive) :  Group(group),
+			Path(path),
+			Recursive(recursive)
+		{}
+		std::string Group;
+		std::string Path;
+		ResourceLocationType Type = RLT_FILESYSTEM;
+		bool Recursive = false;
+	};
+
+	struct ResourceManagerConfig
+	{
+		std::vector<ResourceLocationConfig> ResourceLocations;
+	};
+
 	struct ResourceType
 	{
 		std::string Name;
 		std::vector<std::string> Extensions;
-
 	};
 	typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
 	typedef std::vector<FileResourcePtr> ResourceVector;
@@ -50,12 +67,8 @@ namespace GASS
 	public:
 		ResourceManager();
 	
-		/**
-			Load resource groups from xml
-			@resource_group The resources group
-		*/
-
-		void LoadXML(tinyxml2::XMLElement *elem);
+		void Load(const ResourceManagerConfig &config);
+	
 		/**
 			Add resource group
 			@resource_group The resources group
@@ -125,6 +138,16 @@ namespace GASS
 			Reload all groups
 		*/
 		void ReloadAll();
+
+		/**
+			Get or create resource group
+		*/
+		GASS::ResourceGroupPtr ResourceManager::GetOrCreateResourceGroup(const std::string &group_name);
+
+		/**
+		Add resource location to resource group, the group is created if not already present.
+		*/
+		void AddLocationToGroup(const std::string &group_name, const FilePath &path, ResourceLocationType type, bool recursive);
 	private:
 		ResourceGroupVector m_ResourceGroups;
 		std::vector<ResourceType> m_ResourceTypes;

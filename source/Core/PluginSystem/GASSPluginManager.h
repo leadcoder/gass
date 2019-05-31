@@ -62,8 +62,12 @@ namespace GASS
 				<Plugin PluginFile = "TestPlugin3"/>
 			</Plugins>
 		*/
-		void LoadFromFile(const std::string &filename);
 
+		/*
+			Load single plugin
+		*/
+		void LoadPlugins(const std::vector<std::string> &plugins);
+	
 		/*
 			Load single plugin
 		*/

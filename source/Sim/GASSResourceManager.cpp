@@ -32,40 +32,12 @@ namespace GASS
 	{
 	
 	}
-	
-	void ResourceManager::LoadXML(tinyxml2::XMLElement *elem)
-	{
-		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
-		while(prop_elem)
-		{
-			const std::string elem_name = prop_elem->Value();
-			if(elem_name == "ResourceGroup")
-			{
-				tinyxml2::XMLElement *group_elem = prop_elem->FirstChildElement();
-				const std::string group_name = XMLUtils::ReadStringAttribute(prop_elem,"name");
-				ResourceGroupPtr group(new ResourceGroup(group_name));
-				while(group_elem)
-				{
-					const std::string group_elem_name = group_elem->Value();
-					if(group_elem_name == "ResourceLocation")
-					{
-						const FilePath path = FilePath(XMLUtils::ReadStringAttribute(group_elem,"path"));
-						const std::string type = XMLUtils::ReadStringAttribute(group_elem,"type");
-						const std::string rec = XMLUtils::ReadStringAttribute(group_elem,"recursive");
-						bool recursive = false;
-						if(StringUtils::ToLower(rec) == "true")
-							recursive = true;
 
-						if(StringUtils::ToLower(type) == "filesystem")
-							group->AddResourceLocation(path,RLT_FILESYSTEM,recursive);
-						else if(StringUtils::ToLower(type) == "zip")
-							group->AddResourceLocation(path,RLT_ZIP,recursive);
-					}
-					group_elem  = group_elem->NextSiblingElement();
-				}
-				AddResourceGroup(group);
-			}
-			prop_elem  = prop_elem->NextSiblingElement();
+	void ResourceManager::Load(const ResourceManagerConfig &config)
+	{
+		for (auto res : config.ResourceLocations)
+		{
+			AddLocationToGroup(res.Group, FilePath(res.Path), res.Type, res.Recursive);
 		}
 	}
 
@@ -190,6 +162,30 @@ namespace GASS
 	{
 		m_ResourceTypes.push_back(res_type);
 	}
+
+
+	GASS::ResourceGroupPtr ResourceManager::GetOrCreateResourceGroup(const std::string &group_name)
+	{
+		GASS::ResourceGroupPtr gfx_group;
+		if (HasResourceGroup(group_name))
+		{
+			gfx_group = GetFirstResourceGroupByName(group_name);
+		}
+		else
+		{
+			gfx_group = GASS_MAKE_SHARED<ResourceGroup>(group_name);
+			AddResourceGroup(gfx_group);
+		}
+		return gfx_group;
+	}
+	
+	void ResourceManager::AddLocationToGroup(const std::string &group_name, const FilePath &path, ResourceLocationType type, bool recursive)
+	{
+		GASS::ResourceGroupPtr gfx_group = GetOrCreateResourceGroup(group_name);
+		gfx_group->AddResourceLocation(path, type, recursive);
+	}
+
+
 }
 
 

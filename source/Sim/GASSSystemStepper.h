@@ -21,9 +21,28 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Core/Utils/GASSEnumBinder.h"
 
 namespace GASS
 {
+	enum UpdateGroupID
+	{
+		UGID_NO_UPDATE,
+		UGID_PRE_SIM,
+		UGID_SIM,
+		UGID_POST_SIM,
+		UGID_LAST
+	};
+
+	START_ENUM_BINDER(UpdateGroupID, UpdateGroupIDBinder)
+		BIND(UGID_NO_UPDATE)
+		BIND(UGID_PRE_SIM)
+		BIND(UGID_SIM)
+		BIND(UGID_POST_SIM)
+		END_ENUM_BINDER(UpdateGroupID, UpdateGroupIDBinder)
+
+	class SimSystemManager;
+
 	class GASSExport SystemGroupStepper
 	{
 	public:

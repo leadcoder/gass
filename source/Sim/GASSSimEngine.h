@@ -22,6 +22,9 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
+#include "Sim/GASSSceneManagerFactory.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSSimEngineConfig.h"
 #include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
@@ -42,21 +45,7 @@ namespace GASS
 	GASS_FORWARD_DECL(Scene)
 	GASS_FORWARD_DECL(ScriptManager)
 
-	enum UpdateGroupID
-	{
-		UGID_NO_UPDATE,
-		UGID_PRE_SIM,
-		UGID_SIM,
-		UGID_POST_SIM,
-		UGID_LAST
-	};
-
-	START_ENUM_BINDER(UpdateGroupID,UpdateGroupIDBinder)
-		BIND(UGID_NO_UPDATE)
-		BIND(UGID_PRE_SIM)
-		BIND(UGID_SIM)
-		BIND(UGID_POST_SIM)
-	END_ENUM_BINDER(UpdateGroupID,UpdateGroupIDBinder)
+	
 
 
 	/** \addtogroup GASSSim
@@ -97,7 +86,8 @@ namespace GASS
 			@param log_folder Alternative File path for log files. 
 		*/
 		void Init(const FilePath &configuration_file = FilePath("gass.xml"));
-
+		void Init(const SimEngineConfig &config);
+		
 		/**
 		Main update for GASS.
 		@remarks
@@ -213,9 +203,7 @@ namespace GASS
 		void DebugPrint(const std::string &message);
 	private:
 		void PutEnv(const std::string &value);
-		void LoadSettings(const FilePath &configuration_file);
-		void LoadResources(const FilePath &configuration_file);
-
+	
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;

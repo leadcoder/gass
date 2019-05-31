@@ -18,12 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Sim/GASSSimSystemManager.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
 #include "Core/Serialize/tinyxml2.h"
 
@@ -120,62 +120,26 @@ namespace GASS
 		return SimSystemPtr();
 	}
 
-	void SimSystemManager::Load(const std::string &filename)
+	void SimSystemManager::Load(const SimSystemManagerConfig &config)
 	{
-		if(filename =="")
-			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "SimSystemManager::Load");
-		
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
+		m_SystemStepper.SetMaxUpdateFrequency(config.MaxUpdateFrequency);
+		m_SystemStepper.SetSimulationUpdateFrequency(config.SimulationUpdateFrequency);
+		m_SystemStepper.SetMaxSimulationSteps(config.MaxSimulationSteps);
+
+		for (auto sysc : config.Systems)
 		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SimSystemManager::Load");
-		}
-		
-		if (tinyxml2::XMLElement *gass_elem = xmlDoc->FirstChildElement("GASS"))
-		{
-			if (tinyxml2::XMLElement *systems_elem = gass_elem->FirstChildElement("Systems"))
+			SimSystemPtr system = SystemFactory::Get().Create(sysc.Name);
+			if (system)
 			{
-
-				if (systems_elem->Attribute("MaxUpdateFrequency"))
+				for (auto option : sysc.Settings)
 				{
-					double max_update_freq = 0;
-					systems_elem->QueryDoubleAttribute("MaxUpdateFrequency", &max_update_freq);
-					m_SystemStepper.SetMaxUpdateFrequency(max_update_freq);
+					system->SetPropertyByString(option.Name, option.Value);
 				}
-
-				if (systems_elem->Attribute("SimulationUpdateFrequency"))
-				{
-					double update_freq = 0;
-					systems_elem->QueryDoubleAttribute("SimulationUpdateFrequency", &update_freq);
-					m_SystemStepper.SetSimulationUpdateFrequency(update_freq);
-				}
-
-				if (systems_elem->Attribute("MaxSimulationSteps"))
-				{
-					int max_steps = 0;
-					systems_elem->QueryIntAttribute("MaxSimulationSteps", &max_steps);
-					m_SystemStepper.SetMaxSimulationSteps(max_steps);
-				}
-
-				tinyxml2::XMLElement *system_elem = systems_elem->FirstChildElement();
-				//Load all systems tags
-				while (system_elem)
-				{
-					SimSystemPtr system = LoadSystem(system_elem);
-					if (system)
-					{
-						system->OnCreate(shared_from_this());
-						GASS_LOG(LINFO) << system->GetSystemName() << " created";
-						m_Systems.push_back(system);
-					}
-					system_elem = system_elem->NextSiblingElement();
-				}
+				system->OnCreate(shared_from_this());
+				GASS_LOG(LINFO) << system->GetSystemName() << " created";
+				m_Systems.push_back(system);
 			}
 		}
-		xmlDoc->Clear();
-		// Delete our allocated document and return success
-		delete xmlDoc;
 	}
 
 	void SimSystemManager::AddSystem(SimSystemPtr system)
@@ -192,16 +156,4 @@ namespace GASS
 		return system;
 	}
 
-	SimSystemPtr SimSystemManager::LoadSystem(tinyxml2::XMLElement *system_elem)
-	{
-		const std::string system_type = system_elem->Value();
-		SimSystemPtr system = SystemFactory::Get().Create(system_type);
-		if(system)
-		{
-			XMLSerializePtr  serialize = GASS_DYNAMIC_PTR_CAST<IXMLSerialize> (system);
-			if(serialize)
-				serialize->LoadXML(system_elem);
-		}
-		return system;
-	}
 }

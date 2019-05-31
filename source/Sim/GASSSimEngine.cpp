@@ -22,6 +22,7 @@
 #include "Sim/Utils/GASSProfiler.h"
 #include "Sim/Utils/GASSProfileRuntimeHandler.h"
 #include "Sim/GASSSimSystemManager.h"
+
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
@@ -80,18 +81,25 @@ namespace GASS
 		return *m_Instance;
 	}
 
-	void SimEngine::Init(const FilePath &configuration)
+	void SimEngine::Init(const FilePath &config_file)
+	{
+		SimEngineConfig config = SimEngineConfig::LoadFromfile(config_file);
+		Init(config);
+	}
+
+	void SimEngine::Init(const SimEngineConfig &config)
 	{
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
-
-		if (configuration.GetFullPath() != "")
-		{
-			LoadSettings(configuration);
-			m_PluginManager->LoadFromFile(configuration.GetFullPath());
-			LoadResources(configuration);
-			m_SystemManager->Load(configuration.GetFullPath());
-		}
-
+		SetDataPath(FilePath(config.DataPath));
+		SetScenePath(FilePath(config.ScenePath));
+		GetSceneObjectTemplateManager()->SetAddObjectIDToName(config.AddObjectIDToName);
+		GetSceneObjectTemplateManager()->SetObjectIDPrefix(config.ObjectIDPrefix);
+		GetSceneObjectTemplateManager()->SetObjectIDSuffix(config.ObjectIDSufix);
+		
+		m_PluginManager->LoadPlugins(config.Plugins);
+		m_ResourceManager->Load(config.ResourceConfig);
+		m_SystemManager->Load(config.SimSystemManager);
+	
 		//Initialize systems
 		m_SystemManager->Init();
 
@@ -144,51 +152,6 @@ namespace GASS
 		}
 	}
 
-	void SimEngine::LoadSettings(const FilePath &configuration_file)
-	{
-		GASS_LOG(LINFO) << "Start loading SimEngine settings from " << configuration_file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
-		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		}
-
-		tinyxml2::XMLElement *xml_settings = xmlDoc->FirstChildElement("GASS");
-		if (!xml_settings)
-		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		}
-
-		const tinyxml2::XMLElement *xml_data_path = xml_settings->FirstChildElement("SetDataPath");
-		if (xml_data_path)
-		{
-			const std::string data_path = XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "SetDataPath");
-			SetDataPath(FilePath(data_path));
-		}
-		m_ScenePath.SetPath("%GASS_DATA_HOME%/sceneries/");
-
-		const tinyxml2::XMLElement *xml_scene_path = xml_settings->FirstChildElement("ScenePath");
-		if (xml_scene_path)
-			m_ScenePath.SetPath(XMLUtils::ReadString(dynamic_cast<tinyxml2::XMLElement *>(xml_settings), "ScenePath"));
-
-		//read SceneObjectTemplateManager settings
-		tinyxml2::XMLElement *xml_sotm = xml_settings->FirstChildElement("SceneObjectTemplateManager");
-		if (xml_sotm)
-		{
-			bool add_object_id = XMLUtils::ReadBool(xml_sotm, "AddObjectIDToName");
-			GetSceneObjectTemplateManager()->SetAddObjectIDToName(add_object_id);
-
-			std::string prefix = XMLUtils::ReadString(xml_sotm, "ObjectIDPrefix");
-			GetSceneObjectTemplateManager()->SetObjectIDPrefix(prefix);
-
-			std::string sufix = XMLUtils::ReadString(xml_sotm, "ObjectIDSufix");
-			GetSceneObjectTemplateManager()->SetObjectIDSuffix(sufix);
-		}
-		delete xmlDoc;
-	}
-
 	void SimEngine::PutEnv(const std::string &value)
 	{
 #ifdef WIN32
@@ -218,30 +181,6 @@ namespace GASS
 	FilePath SimEngine::GetDataPath() const
 	{
 		return m_DataPath;
-	}
-
-	void SimEngine::LoadResources(const FilePath &configuration_file)
-	{
-		GASS_LOG(LINFO) << "Start loading SimEngine settings from " << configuration_file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(configuration_file.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
-		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Couldn't load:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		}
-
-		tinyxml2::XMLElement *xml_settings = xmlDoc->FirstChildElement("GASS");
-		if (!xml_settings)
-		{
-			delete xmlDoc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to find GASS tag in:" + configuration_file.GetFullPath(), "SimEngine::LoadSettings");
-		}
-
-		tinyxml2::XMLElement *xml_res_man = xml_settings->FirstChildElement("ResourceManager");
-		if (xml_res_man)
-			m_ResourceManager->LoadXML(xml_res_man);
-
-		delete xmlDoc;
 	}
 
 	bool SimEngine::Update()

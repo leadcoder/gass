@@ -31,6 +31,7 @@ set(CPP_FILES
 	GASSSceneObjectTemplate.cpp
 	GASSScriptManager.cpp
 	GASSSimEngine.cpp
+	GASSSimEngineConfig.cpp
 	GASSSimSystem.cpp
 	GASSSimSystemManager.cpp
 	GASSSystemFactory.cpp
@@ -74,8 +75,10 @@ set(H_FILES
 	GASSSceneObjectVisitors.h
 	GASSScriptManager.h
 	GASSSimEngine.h
+	GASSSimEngineConfig.h
 	GASSSimSystem.h
 	GASSSimSystemManager.h
+	GASSSimSystemManagerConfig.h
 	GASSSystemFactory.h
 	GASSSystemStepper.h
 	GASSThreading.h

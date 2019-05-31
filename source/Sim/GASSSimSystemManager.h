@@ -31,12 +31,15 @@
 
 namespace GASS
 {
+	
 	typedef std::string SystemType;
-
 
 	//forward declare
 	class SimpleProfileData;
 	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
+
+	GASS_FORWARD_DECL(SimSystem)
+
 
 	/**
 	System manager for all systems used in GASSSim.
@@ -107,24 +110,7 @@ namespace GASS
 			return sys;
 		}
 
-		/**
-			Loading systems from xml-file, syntax example:
-
-			<?xml version="1.0" encoding="utf-8"?>
-			<Systems>
-				<GraphicsSystem type="OgreGraphicsSystem">
-					... gfx system params
-				</GraphicsSystem>
-				<InputSystem type="OISInputSystem">
-					... input system params
-				</InputSystem>
-				...
-			<System>
-			A system is specified by a name tag and att type attribute that
-			specify the class implementing the system.
-		*/
-		void Load(const std::string &filename);
-
+		void Load(const SimSystemManagerConfig &config);
 
 		SimSystemPtr AddSystem(const std::string &system_name);
 
@@ -163,7 +149,6 @@ namespace GASS
 		void _UpdateSystems(double delta_time, UpdateGroupID group);
 	protected:
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
-		SimSystemPtr LoadSystem(tinyxml2::XMLElement *system_elem);
 		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SimSystemPtr> SystemVector;
