@@ -62,13 +62,30 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
 		TextBox* GetDebugText() const { return m_DebugTextBox; }
 	protected:
+		void _SetupShadowNode();
 		ADD_PROPERTY(bool,FlipDDS);
-		void LoadXML(tinyxml2::XMLElement *elem) override;
+		ADD_PROPERTY(std::string, ShadowType);
+		ADD_PROPERTY(float, PSSMMaxFarDistance);
+		ADD_PROPERTY(int, PSSMTextureSize);
+		ADD_PROPERTY(int, PSSMTextureCount);
+		ADD_PROPERTY(float, PSSMMinNearDistanceForSplits);
+		ADD_PROPERTY(float, PSSMMoveVCamBehindRCamFactor);
+		ADD_PROPERTY(double, PSSMPolyOffsetFactor);
+		ADD_PROPERTY(double, PSSMPolyOffsetUnit);
+		
+		ADD_PROPERTY(std::string, LiSPSMSubType);
+		ADD_PROPERTY(float, LiSPSMMinLightMargin);
+		ADD_PROPERTY(float, LiSPSMMaxFarPlane);
+		ADD_PROPERTY(int, LiSPSMTextureSize);
+		ADD_PROPERTY(int, LiSPSMBaseTextureUnit);
+		ADD_PROPERTY(int, LiSPSMShadowTextureUnit);
+
+		//void LoadXML(tinyxml2::XMLElement *elem) override;
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		
 		//void SetActiveData(osg::Group* root);
-		void LoadShadowSettings(tinyxml2::XMLElement *shadow_elem);
+		//void LoadShadowSettings(tinyxml2::XMLElement *shadow_elem);
 		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
 		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}
