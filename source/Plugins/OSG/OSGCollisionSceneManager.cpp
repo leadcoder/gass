@@ -28,6 +28,11 @@
 namespace GASS
 {
 
+	void OSGCollisionSceneManager::RegisterReflection()
+	{
+
+	}
+
 	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(NULL),
 		m_DatabaseCache(NULL)
 	{
@@ -39,27 +44,22 @@ namespace GASS
 
 	}
 
-	void OSGCollisionSceneManager::RegisterReflection()
-	{
-	}
-
-	void OSGCollisionSceneManager::OnCreate()
-	{
-
-	}
-
-	void OSGCollisionSceneManager::OnInit()
+	void OSGCollisionSceneManager::OnPostConstruction()
 	{
 		//register on system to get updates
 		RegisterForPostUpdate<OSGGraphicsSystem>();
-		
 		m_IntersectVisitor = new CustomIntersectionVisitor();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
-		m_DatabaseCache  = new osgSim::DatabaseCacheReadCallback();
+		m_DatabaseCache = new osgSim::DatabaseCacheReadCallback();
 		//m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 	}
 
-	void OSGCollisionSceneManager::OnShutdown()
+	void OSGCollisionSceneManager::OnSceneCreated()
+	{
+		
+	}
+
+	void OSGCollisionSceneManager::OnSceneShutdown()
 	{
 	}
 

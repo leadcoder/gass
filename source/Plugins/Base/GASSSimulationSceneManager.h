@@ -35,9 +35,9 @@ namespace GASS
 	public:
 		SimulationSceneManager(SceneWeakPtr scene);
 		static void RegisterReflection();
-		void OnCreate() override;
-		void OnInit() override;
-		void OnShutdown() override;
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		bool GetSerialize() const override {return false;}
 	protected:
 	};

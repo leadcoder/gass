@@ -41,9 +41,9 @@ namespace GASS
 		OSGGraphicsSceneManager(SceneWeakPtr scene);
 		~OSGGraphicsSceneManager() override;
 		static void RegisterReflection();
-		void OnCreate() override;
-		void OnInit() override;		
-		void OnShutdown() override;
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		void OnUpdate(double delta) override;
 	
 		bool GetSerialize() const override {return true;}

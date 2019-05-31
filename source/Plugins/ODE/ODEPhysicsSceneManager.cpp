@@ -37,6 +37,11 @@ namespace GASS
 {
 	bool ODEPhysicsSceneManager::m_ZUp = true;
 
+	void ODEPhysicsSceneManager::RegisterReflection()
+	{
+		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
+	}
+
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
 		m_Space(0),
 		m_World(0),
@@ -54,31 +59,7 @@ namespace GASS
 
 	}
 
-	ODEPhysicsSceneManager::~ODEPhysicsSceneManager()
-	{
-	}
-
-	void ODEPhysicsSceneManager::RegisterReflection()
-	{
-		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
-	}
-
-	void ODEPhysicsSceneManager::SetGravity(float gravity)
-	{
-		m_Gravity = gravity;
-	}
-
-	float ODEPhysicsSceneManager::GetGravity() const
-	{
-		return m_Gravity;
-	}
-
-	void ODEPhysicsSceneManager::OnCreate()
-	{
-	
-	}
-	
-	void ODEPhysicsSceneManager::OnInit()
+	void ODEPhysicsSceneManager::OnPostConstruction()
 	{
 		ScenePtr scene = GetScene();
 		RegisterForPreUpdate<ODEPhysicsSystem>();
@@ -90,9 +71,9 @@ namespace GASS
 		m_CollisionSpace = dHashSpaceCreate(m_CollisionSpace);
 		m_ContactGroup = dJointGroupCreate(0);
 
-		Vec3 gravity_vec = Vec3(0,m_Gravity,0);
+		Vec3 gravity_vec = Vec3(0, m_Gravity, 0);
 
-		dWorldSetGravity(m_World, gravity_vec.x,gravity_vec.y, gravity_vec.z);
+		dWorldSetGravity(m_World, gravity_vec.x, gravity_vec.y, gravity_vec.z);
 		dWorldSetAutoDisableFlag(m_World, 1);
 		dWorldSetAutoDisableLinearThreshold(m_World, 0.01);
 		dWorldSetAutoDisableAngularThreshold(m_World, 0.01);
@@ -101,14 +82,35 @@ namespace GASS
 		m_Init = true;
 	}
 
-	void ODEPhysicsSceneManager::OnShutdown()
+	void ODEPhysicsSceneManager::OnSceneShutdown()
 	{
-		if(m_ContactGroup) dJointGroupDestroy (m_ContactGroup);
-		if(m_CollisionSpace) dSpaceDestroy (m_CollisionSpace);
-		if(m_World) dWorldDestroy (m_World);
+		if (m_ContactGroup) dJointGroupDestroy(m_ContactGroup);
+		if (m_CollisionSpace) dSpaceDestroy(m_CollisionSpace);
+		if (m_World) dWorldDestroy(m_World);
 		/*ODEPhysicsSystemPtr system =  SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<ODEPhysicsSystem>();
 		SystemListenerPtr listener = shared_from_this();
 		system->UnregisterListener(listener);*/
+	}
+
+	ODEPhysicsSceneManager::~ODEPhysicsSceneManager()
+	{
+	}
+
+	
+
+	void ODEPhysicsSceneManager::SetGravity(float gravity)
+	{
+		m_Gravity = gravity;
+	}
+
+	float ODEPhysicsSceneManager::GetGravity() const
+	{
+		return m_Gravity;
+	}
+	
+	void ODEPhysicsSceneManager::OnSceneCreated()
+	{
+		
 	}
 
 	void ODEPhysicsSceneManager::OnUpdate(double delta_time)

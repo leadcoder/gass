@@ -41,7 +41,10 @@ namespace GASS
 
 		SceneManagerPtr Create(const std::string &name, ScenePtr scene)
 		{
-			return m_Impl.Create(name, scene);
+			SceneManagerPtr sm = m_Impl.Create(name, scene);
+			sm->SetName(name);
+			sm->OnPostConstruction();
+			return sm;
 		}
 
 		std::vector<std::string> GetFactoryNames()

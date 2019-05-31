@@ -76,6 +76,12 @@ namespace GASS
 		return PxFilterFlags();
 	}
 
+	void PhysXPhysicsSceneManager::RegisterReflection()
+	{
+		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
+		REG_PROPERTY(float, Gravity, PhysXPhysicsSceneManager);
+		REG_PROPERTY(Vec3, Offset, PhysXPhysicsSceneManager);
+	}
 
 	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
 		m_Active(true),
@@ -89,59 +95,32 @@ namespace GASS
 
 	}
 
-	PhysXPhysicsSceneManager::~PhysXPhysicsSceneManager()
+	void PhysXPhysicsSceneManager::OnPostConstruction()
 	{
-	}
-
-	void PhysXPhysicsSceneManager::RegisterReflection()
-	{
-		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
-		REG_PROPERTY(float,Gravity,PhysXPhysicsSceneManager);
-		REG_PROPERTY(Vec3,Offset,PhysXPhysicsSceneManager);
-	}
-
-	void PhysXPhysicsSceneManager::SetGravity(float gravity)
-	{
-		m_Gravity = gravity;
-	}
-
-	float PhysXPhysicsSceneManager::GetGravity() const
-	{
-		return m_Gravity;
-	}
-
-	void PhysXPhysicsSceneManager::OnCreate()
-	{
-		ScenePtr scene = GetScene();
-	}
-
-	void PhysXPhysicsSceneManager::OnInit()
-	{
-		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		if(system == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
+		if (system == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
 
 		RegisterForPreUpdate<PhysXPhysicsSystem>();
 
 		physx::PxSceneDesc sceneDesc(system->GetPxSDK()->getTolerancesScale());
 		sceneDesc.gravity = physx::PxVec3(0, m_Gravity, 0);
-		if(!sceneDesc.cpuDispatcher) 
+		if (!sceneDesc.cpuDispatcher)
 		{
 			m_CpuDispatcher = physx::PxDefaultCpuDispatcherCreate(3);
-			if(!m_CpuDispatcher)
-				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxDefaultCpuDispatcherCreate failed", "PhysXPhysicsSystem::OnLoad");
+			if (!m_CpuDispatcher)
+				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "PxDefaultCpuDispatcherCreate failed", "PhysXPhysicsSystem::OnLoad");
 			sceneDesc.cpuDispatcher = m_CpuDispatcher;
-		} 
-		if(!sceneDesc.filterShader)
-			sceneDesc.filterShader  = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
+		}
+		if (!sceneDesc.filterShader)
+			sceneDesc.filterShader = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
 
-		//sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
+															   //sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
 		sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 
 		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
 		if (!m_PxScene)
-			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"createScene failed!", "PhysXPhysicsSystem::OnLoad");
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
 		//Vehicle related setup
 		m_VehicleSceneQueryData = VehicleSceneQueryData::allocate(MAX_NUM_WHEELS);
@@ -149,7 +128,7 @@ namespace GASS
 
 		//Data to store reports for each wheel.
 		m_WheelQueryResults = VehicleWheelQueryResults::allocate(MAX_NUM_WHEELS);
-	
+
 		GASS_LOG(LINFO) << "Create  PxCreateControllerManager...";
 		m_ControllerManager = PxCreateControllerManager(*m_PxScene);
 
@@ -168,7 +147,7 @@ namespace GASS
 		//PxMaterial* mMaterial = system->GetPxSDK()->createMaterial(0.5,0.5,0.5);
 
 
-		/*physx::PxReal d = 0.0f;	 
+		/*physx::PxReal d = 0.0f;
 		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f),physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
 
 		physx::PxRigidStatic* plane = system->GetPxSDK()->createRigidStatic(pose);
@@ -181,14 +160,32 @@ namespace GASS
 		std::cerr<<"create shape failed!"<<std::endl;
 		m_PxScene->addActor(*plane);
 		*/
-
 		m_Init = true;
+	}
+
+	void PhysXPhysicsSceneManager::OnSceneShutdown()
+	{
 
 	}
 
-	void PhysXPhysicsSceneManager::OnShutdown()
+	PhysXPhysicsSceneManager::~PhysXPhysicsSceneManager()
 	{
+	}
 
+	void PhysXPhysicsSceneManager::SetGravity(float gravity)
+	{
+		m_Gravity = gravity;
+	}
+
+	float PhysXPhysicsSceneManager::GetGravity() const
+	{
+		return m_Gravity;
+	}
+
+	void PhysXPhysicsSceneManager::OnSceneCreated()
+	{
+		
+		
 	}
 
 	void PhysXPhysicsSceneManager::OnUpdate(double delta_time)

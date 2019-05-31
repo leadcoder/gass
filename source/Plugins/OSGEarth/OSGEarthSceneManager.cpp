@@ -29,56 +29,6 @@
 
 namespace GASS
 {
-	OSGEarthSceneManager::OSGEarthSceneManager(SceneWeakPtr scene) : Reflection(scene),
-		m_AutoAdd(false),
-		m_Initlized(false),
-		m_DisableGLSL(false),
-		m_WGS84(nullptr),
-		m_MapNode(nullptr),
-		m_CollisionSceneManager(nullptr)
-	{
-
-	}
-
-	OSGEarthSceneManager::~OSGEarthSceneManager()
-	{
-
-	}
-
-	void OSGEarthSceneManager::RegisterReflection()
-	{
-		SceneManagerFactory::GetPtr()->Register<OSGEarthSceneManager>("OSGEarthSceneManager");
-	}
-
-	void OSGEarthSceneManager::OnCreate()
-	{
-		if (m_DisableGLSL)
-			_putenv("OSGEARTH_NO_GLSL=1");
-		GetScene()->RegisterForMessage(REG_TMESS(OSGEarthSceneManager::OnLoadSceneObject, PreSceneObjectInitializedEvent, 0));
-	}
-
-	void OSGEarthSceneManager::OnLoadSceneObject(PreSceneObjectInitializedEventPtr message)
-	{
-		//auto add component if location component exist?
-		SceneObjectPtr obj = message->GetSceneObject();
-		if (m_AutoAdd)
-		{
-			LocationComponentPtr location = obj->GetFirstComponentByClass<ILocationComponent>();
-			if (location) //only add to objects that have location component
-			{
-				OSGEarthGeoComponentPtr comp = obj->GetFirstComponentByClass<OSGEarthGeoComponent>();
-				if (!comp) //check that component not already exist
-				{
-					comp = GASS_DYNAMIC_PTR_CAST<OSGEarthGeoComponent>(ComponentFactory::Get().Create("OSGEarthGeoComponent"));
-					if (comp)
-					{
-						obj->AddComponent(comp);
-					}
-				}
-			}
-		}
-	}
-
 	/**
 	* Toggles the main control canvas on and off.
 	*/
@@ -110,8 +60,40 @@ namespace GASS
 		char _key;
 	};
 
+	void OSGEarthSceneManager::RegisterReflection()
+	{
+		SceneManagerFactory::GetPtr()->Register<OSGEarthSceneManager>("OSGEarthSceneManager");
+	}
 
-	void OSGEarthSceneManager::OnInit()
+	OSGEarthSceneManager::OSGEarthSceneManager(SceneWeakPtr scene) : Reflection(scene),
+		m_AutoAdd(false),
+		m_Initlized(false),
+		m_DisableGLSL(false),
+		m_WGS84(nullptr),
+		m_MapNode(nullptr),
+		m_CollisionSceneManager(nullptr)
+	{
+
+	}
+
+	void OSGEarthSceneManager::OnPostConstruction()
+	{
+		if (m_DisableGLSL)
+			_putenv("OSGEARTH_NO_GLSL=1");
+		GetScene()->RegisterForMessage(REG_TMESS(OSGEarthSceneManager::OnLoadSceneObject, PreSceneObjectInitializedEvent, 0));
+	}
+
+	void OSGEarthSceneManager::OnSceneShutdown()
+	{
+
+	}
+
+	OSGEarthSceneManager::~OSGEarthSceneManager()
+	{
+
+	}
+
+	void OSGEarthSceneManager::OnSceneCreated()
 	{
 		m_Initlized = true;
 
@@ -153,6 +135,28 @@ namespace GASS
 
 
 		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
+	}
+
+	void OSGEarthSceneManager::OnLoadSceneObject(PreSceneObjectInitializedEventPtr message)
+	{
+		//auto add component if location component exist?
+		SceneObjectPtr obj = message->GetSceneObject();
+		if (m_AutoAdd)
+		{
+			LocationComponentPtr location = obj->GetFirstComponentByClass<ILocationComponent>();
+			if (location) //only add to objects that have location component
+			{
+				OSGEarthGeoComponentPtr comp = obj->GetFirstComponentByClass<OSGEarthGeoComponent>();
+				if (!comp) //check that component not already exist
+				{
+					comp = GASS_DYNAMIC_PTR_CAST<OSGEarthGeoComponent>(ComponentFactory::Get().Create("OSGEarthGeoComponent"));
+					if (comp)
+					{
+						obj->AddComponent(comp);
+					}
+				}
+			}
+		}
 	}
 
 	void OSGEarthSceneManager::SetMapNode(osgEarth::MapNode* map_node)
@@ -307,10 +311,7 @@ namespace GASS
 	}
 #endif
 
-	void OSGEarthSceneManager::OnShutdown()
-	{
-
-	}
+	
 
 	/*void OSGEarthSceneManager::FromLatLongToMap(double latitude, double longitude, Vec3 &pos, Quaternion &rot) const
 	{

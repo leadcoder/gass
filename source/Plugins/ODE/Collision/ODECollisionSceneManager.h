@@ -47,9 +47,9 @@ namespace GASS
 		ODECollisionSceneManager(SceneWeakPtr scene);
 		~ODECollisionSceneManager() override;
 		static void RegisterReflection();
-		void OnCreate() override;
-		void OnInit() override;
-		void OnShutdown() override;
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		bool GetSerialize() const override {return false;}
 		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const override;
 	protected:

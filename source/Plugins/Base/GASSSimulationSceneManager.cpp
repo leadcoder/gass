@@ -25,27 +25,28 @@
 
 namespace GASS
 {
-	SimulationSceneManager::SimulationSceneManager(SceneWeakPtr scene) : Reflection(scene)
-	{
-
-	}
 
 	void SimulationSceneManager::RegisterReflection()
 	{
 
 	}
 
-	void SimulationSceneManager::OnCreate()
+	SimulationSceneManager::SimulationSceneManager(SceneWeakPtr scene) : Reflection(scene)
 	{
 
 	}
-	
-	void SimulationSceneManager::OnInit()
+
+	void SimulationSceneManager::OnPostConstruction()
 	{
 		RegisterForPreUpdate<SimulationSystem>();
 	}
+	
+	void SimulationSceneManager::OnSceneCreated()
+	{
+		
+	}
 
-	void SimulationSceneManager::OnShutdown()
+	void SimulationSceneManager::OnSceneShutdown()
 	{
 
 	}

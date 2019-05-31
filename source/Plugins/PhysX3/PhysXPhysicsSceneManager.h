@@ -56,9 +56,9 @@ namespace GASS
 		PhysXPhysicsSceneManager(SceneWeakPtr scene);
 		~PhysXPhysicsSceneManager() override;
 		static void RegisterReflection();
-		void OnCreate() override;
-		void OnInit() override;
-		void OnShutdown() override;
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		void OnUpdate(double delta_time) override;
 	
 		//IPhysicsSceneManager

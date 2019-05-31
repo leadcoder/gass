@@ -89,19 +89,16 @@ namespace GASS
 
 
 		//Add all registered scene managers to the scene
-
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
 		for(size_t i = 0; i < managers.size();i++)
 		{
 			SceneManagerPtr sm = SceneManagerFactory::GetPtr()->Create(managers[i], shared_from_this());
-			sm->SetName(managers[i]);
-			sm->OnCreate();
 			m_SceneManagers.push_back(sm);
 		}
 
 		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
-			m_SceneManagers[i]->OnInit();
+			m_SceneManagers[i]->OnSceneCreated();
 		}
 
 		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
@@ -123,7 +120,7 @@ namespace GASS
 		m_Root.reset();
 		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
-			m_SceneManagers[i]->OnShutdown();
+			m_SceneManagers[i]->OnSceneShutdown();
 		}
 
 		SystemMessagePtr unload_msg(new SceneUnloadedEvent(shared_from_this()));

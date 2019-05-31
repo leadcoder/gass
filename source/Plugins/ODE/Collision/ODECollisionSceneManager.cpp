@@ -37,11 +37,33 @@
 
 namespace GASS
 {
+
+	void ODECollisionSceneManager::RegisterReflection()
+	{
+
+	}
+
 	ODECollisionSceneManager::ODECollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), 
 		m_Space(0) ,
 		m_MaxRaySegment(50)
 	{
 
+	}
+
+	void ODECollisionSceneManager::OnPostConstruction()
+	{
+		RegisterForPreUpdate<ODECollisionSystem>();
+		GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSceneManager::OnSceneObjectInitialize, PreSceneObjectInitializedEvent, 0));
+		m_Space = dHashSpaceCreate(m_Space);
+	}
+
+	void ODECollisionSceneManager::OnSceneShutdown()
+	{
+		GASS_MUTEX_LOCK(m_Mutex)
+			dSpaceDestroy(m_Space);
+		m_Space = 0;
+		//m_RequestMap.clear();
+		//m_ResultMap.clear();
 	}
 
 	ODECollisionSceneManager::~ODECollisionSceneManager()
@@ -56,29 +78,9 @@ namespace GASS
 		}
 	}
 
-	void ODECollisionSceneManager::RegisterReflection()
+	void ODECollisionSceneManager::OnSceneCreated()
 	{
 		
-	}
-
-	void ODECollisionSceneManager::OnCreate()
-	{
-		RegisterForPreUpdate<ODECollisionSystem>();
-		GetScene()->RegisterForMessage(REG_TMESS(ODECollisionSceneManager::OnSceneObjectInitialize,PreSceneObjectInitializedEvent,0));
-	}
-
-	void ODECollisionSceneManager::OnInit()
-	{
-		m_Space = dHashSpaceCreate(m_Space);
- 	}
-
-	void ODECollisionSceneManager::OnShutdown()
-	{
-		GASS_MUTEX_LOCK(m_Mutex)
-		dSpaceDestroy(m_Space);
-		m_Space = 0;
-		//m_RequestMap.clear();
-		//m_ResultMap.clear();
  	}
 
 	void ODECollisionSceneManager::OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message)

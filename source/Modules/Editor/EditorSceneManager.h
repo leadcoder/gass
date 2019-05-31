@@ -23,7 +23,7 @@ namespace GASS
 	class MessageManager;
 	typedef GASS_SHARED_PTR<MouseToolController> MouseToolControllerPtr;
 
-	class EditorModuleExport EditorSceneManager :  public Reflection<EditorSceneManager, BaseSceneManager>
+	class EditorModuleExport EditorSceneManager : public Reflection<EditorSceneManager, BaseSceneManager>
 	{
 	public:
 		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
@@ -35,9 +35,9 @@ namespace GASS
 		EditorSceneManager(SceneWeakPtr scene);
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();
-		virtual void OnCreate();
-		virtual void OnInit();
-		virtual void OnShutdown();
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		virtual bool GetSerialize() const {return false;}
 		
 		virtual void OnUpdate(double delta_time);

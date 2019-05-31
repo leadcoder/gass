@@ -50,15 +50,14 @@ namespace GASS
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(ISceneManager)
 	public:
-		virtual void OnCreate() = 0;
-		virtual void OnInit() = 0;
-		virtual void OnShutdown() = 0;
+		virtual void OnPostConstruction() = 0;
+		virtual void OnSceneCreated() = 0;
+		virtual void OnSceneShutdown() = 0;
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string &name) = 0;
 		virtual ScenePtr GetScene() const = 0;
 		virtual void RegisterPreUpdate(SceneManagerListenerPtr listener) = 0;
 		virtual void RegisterPostUpdate(SceneManagerListenerPtr listener) = 0;
-		//virtual void Unregister(SceneManagerListenerPtr listener) = 0;
 		virtual bool GetSerialize() const =0;
 	};
 

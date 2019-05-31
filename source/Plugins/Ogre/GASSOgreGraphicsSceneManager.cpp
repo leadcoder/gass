@@ -51,6 +51,53 @@ using namespace Ogre;
 
 namespace GASS
 {
+	void OgreGraphicsSceneManager::RegisterReflection()
+	{
+		SceneManagerFactory::GetPtr()->Register<OgreGraphicsSceneManager>("OgreGraphicsSceneManager");
+
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
+
+		RegisterProperty<FogModeBinder>("FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type", PF_VISIBLE, &FogModeBinder::GetStringEnumeration)));
+
+		RegisterProperty<float>("FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog start distance", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog end distance", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog density", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<ColorRGB>("FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog Color", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<ColorRGB>("AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene ambient color", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene manager type", PF_VISIBLE)));
+		RegisterProperty<bool>("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable skybox, change sky box material in with SkyboxMaterial property", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial,
+			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Skybox Material selection", PF_VISIBLE, "GASS_SKYBOX_MATERIALS")));
+		RegisterProperty<bool>("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing, &GASS::OgreGraphicsSceneManager::SetSelfShadowing,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("SelfShadowing", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<bool>("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion, &GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("UseAggressiveFocusRegion", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance, &GASS::OgreGraphicsSceneManager::SetFarShadowDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("FarShadowDistance", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("ShadowDirectionalLightExtrusionDistance", &GASS::OgreGraphicsSceneManager::GetShadowDirectionalLightExtrusionDistance, &GASS::OgreGraphicsSceneManager::SetShadowDirectionalLightExtrusionDistance,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("ShadowDirectionalLightExtrusionDistance", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<float>("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor, &GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("OptimalAdjustFactor for LIPSM", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("NumShadowTextures", &GASS::OgreGraphicsSceneManager::GetNumShadowTextures, &GASS::OgreGraphicsSceneManager::SetNumShadowTextures,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("NumShadowTextures", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<int>("TextureShadowSize", &GASS::OgreGraphicsSceneManager::GetTextureShadowSize, &GASS::OgreGraphicsSceneManager::SetTextureShadowSize,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("TextureShadowSize", PF_VISIBLE | PF_EDITABLE)));
+		RegisterProperty<TextureShadowProjectionBinder>("TextureShadowProjection", &GASS::OgreGraphicsSceneManager::GetTextureShadowProjection, &GASS::OgreGraphicsSceneManager::SetTextureShadowProjection,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Texture Shadow Projection Type", PF_VISIBLE, &TextureShadowProjectionBinder::GetStringEnumeration)));
+		RegisterProperty<ShadowModeBinder>("ShadowMode", &GASS::OgreGraphicsSceneManager::GetShadowMode, &GASS::OgreGraphicsSceneManager::SetShadowMode,
+			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Shadow Mode", PF_VISIBLE, &ShadowModeBinder::GetStringEnumeration)));
+		RegisterProperty<OgreMaterial>("ShadowCasterMaterial", &GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial, &GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial,
+			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Shadow Caster Material", PF_VISIBLE)));
+	}
+
 	OgreGraphicsSceneManager::OgreGraphicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
 		m_FogStart(200),
 		m_FogEnd(40000),
@@ -78,71 +125,18 @@ namespace GASS
 
 	}
 
-	OgreGraphicsSceneManager::~OgreGraphicsSceneManager(void)
-	{
-
-	}
-
-	void OgreGraphicsSceneManager::RegisterReflection()
-	{
-
-		SceneManagerFactory::GetPtr()->Register<OgreGraphicsSceneManager>("OgreGraphicsSceneManager");
-
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
-
-		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type",PF_VISIBLE,&FogModeBinder::GetStringEnumeration)));
-
-		RegisterProperty<float>( "FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog start distance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>( "FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog end distance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>( "FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog density",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>( "FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog Color",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>( "AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene ambient color",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene manager type",PF_VISIBLE)));
-		RegisterProperty<bool>("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable skybox, change sky box material in with SkyboxMaterial property",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial,
-			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Skybox Material selection",PF_VISIBLE,"GASS_SKYBOX_MATERIALS")));
-		RegisterProperty<bool> ("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing ,&GASS::OgreGraphicsSceneManager::SetSelfShadowing,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("SelfShadowing",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool> ("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion,&GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("UseAggressiveFocusRegion",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float> ("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance,&GASS::OgreGraphicsSceneManager::SetFarShadowDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("FarShadowDistance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float> ("ShadowDirectionalLightExtrusionDistance", &GASS::OgreGraphicsSceneManager::GetShadowDirectionalLightExtrusionDistance,&GASS::OgreGraphicsSceneManager::SetShadowDirectionalLightExtrusionDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("ShadowDirectionalLightExtrusionDistance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float> ("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor,&GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("OptimalAdjustFactor for LIPSM",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("NumShadowTextures",&GASS::OgreGraphicsSceneManager::GetNumShadowTextures,&GASS::OgreGraphicsSceneManager::SetNumShadowTextures,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("NumShadowTextures",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("TextureShadowSize",&GASS::OgreGraphicsSceneManager::GetTextureShadowSize,&GASS::OgreGraphicsSceneManager::SetTextureShadowSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("TextureShadowSize",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<TextureShadowProjectionBinder>("TextureShadowProjection",&GASS::OgreGraphicsSceneManager::GetTextureShadowProjection,&GASS::OgreGraphicsSceneManager::SetTextureShadowProjection,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Texture Shadow Projection Type",PF_VISIBLE,&TextureShadowProjectionBinder::GetStringEnumeration)));
-		RegisterProperty<ShadowModeBinder>("ShadowMode",&GASS::OgreGraphicsSceneManager::GetShadowMode,&GASS::OgreGraphicsSceneManager::SetShadowMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Shadow Mode",PF_VISIBLE,&ShadowModeBinder::GetStringEnumeration)));
-		RegisterProperty<OgreMaterial>("ShadowCasterMaterial",&GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial,&GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial,
-			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Shadow Caster Material",PF_VISIBLE)));
-	}
-
-	void OgreGraphicsSceneManager::OnCreate()
+	void OgreGraphicsSceneManager::OnPostConstruction()
 	{
 		//register on system to get updates
 		RegisterForPostUpdate<OgreGraphicsSystem>();
-	
+
 		OgreGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OgreGraphicsSystem>();
 		m_GFXSystem = system;
-		
+
 		ScenePtr scene = GetScene();
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest,WeatherRequest,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle,DrawCircleRequest ,0));
-		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnExportMesh,ExportMeshRequest,0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnWeatherRequest, WeatherRequest, 0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnDrawCircle, DrawCircleRequest, 0));
+		scene->RegisterForMessage(REG_TMESS(OgreGraphicsSceneManager::OnExportMesh, ExportMeshRequest, 0));
 
 		//create unique name
 		static unsigned int scene_man_id = 0;
@@ -152,8 +146,8 @@ namespace GASS
 		ss >> name;
 		scene_man_id++;
 		m_SceneMgr = Root::getSingleton().createSceneManager(m_SceneManagerType, name);
-		if(m_SceneMgr == NULL)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"SceneManager " + m_SceneManagerType +" not found","OgreGraphicsSceneManager::OnLoad");
+		if (m_SceneMgr == NULL)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "SceneManager " + m_SceneManagerType + " not found", "OgreGraphicsSceneManager::OnLoad");
 		UpdateShadowSettings();
 		UpdateSkySettings();
 		UpdateLightSettings();
@@ -164,6 +158,21 @@ namespace GASS
 		Ogre::Root::getSingletonPtr()->addFrameListener(this);
 
 		m_SceneMgr->addRenderQueueListener(system->GetOverlaySystem());
+
+	}
+
+	void OgreGraphicsSceneManager::OnSceneShutdown()
+	{
+		delete m_DebugDrawer;
+		m_SceneMgr->clearScene();
+		Ogre::Root::getSingletonPtr()->removeFrameListener(this);
+		Root::getSingleton().destroySceneManager(m_SceneMgr);
+		m_SceneMgr = NULL;
+		//OgreGraphicsSystemPtr(m_GFXSystem)->_UpdateListeners(0); //why?
+	}
+
+	OgreGraphicsSceneManager::~OgreGraphicsSceneManager(void)
+	{
 
 	}
 
@@ -191,23 +200,13 @@ namespace GASS
 			m_DebugDrawer->drawLine(OgreConvert::ToOgre(start_point),OgreConvert::ToOgre(end_point),ogre_color);
 	}
 
-	void OgreGraphicsSceneManager::OnInit()
+	void OgreGraphicsSceneManager::OnSceneCreated()
 	{
 		//Give hook to 3dparty plugins to attach, maybe send more info?
 		void* root = static_cast<void*>(m_SceneMgr->getRootSceneNode());
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("Ogre3D"),root,root));
 		SimSystemManagerPtr sim_sm = OgreGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-	}
-
-	void OgreGraphicsSceneManager::OnShutdown()
-	{
-		delete m_DebugDrawer;
-		m_SceneMgr->clearScene();
-		Ogre::Root::getSingletonPtr()->removeFrameListener(this);
-		Root::getSingleton().destroySceneManager(m_SceneMgr);
-		m_SceneMgr = NULL;
-		//OgreGraphicsSystemPtr(m_GFXSystem)->_UpdateListeners(0); //why?
 	}
 
 	bool  OgreGraphicsSceneManager::frameStarted (const Ogre::FrameEvent &/*evt*/)

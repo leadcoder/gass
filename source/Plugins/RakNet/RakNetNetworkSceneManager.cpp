@@ -34,6 +34,10 @@
 
 namespace GASS
 {
+	void RaknetNetworkSceneManager::RegisterReflection()
+	{
+		//RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
+	}
 
 	RaknetNetworkSceneManager::RaknetNetworkSceneManager(SceneWeakPtr scene) : Reflection(scene),
 		m_Paused(false),
@@ -44,20 +48,15 @@ namespace GASS
 
 	}
 
+	void RaknetNetworkSceneManager::OnPostConstruction()
+	{
+		RegisterForPreUpdate<RakNetNetworkSystem>();
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica, MasterReplicaCreatedEvent, 0));
+	}
+
 	RaknetNetworkSceneManager::~RaknetNetworkSceneManager()
 	{
 	}
-
-	void RaknetNetworkSceneManager::RegisterReflection()
-	{
-		//RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
-	}
-
-	void RaknetNetworkSceneManager::OnCreate()
-	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent,0));
-	}
-
 
 	void RaknetNetworkSceneManager::OnNewMasterReplica(MasterReplicaCreatedEventPtr message)
 	{
@@ -72,8 +71,6 @@ namespace GASS
 		}
 	}
 
-
-
 	void RaknetNetworkSceneManager::GeneratePartID(SceneObjectPtr obj, int &id) const
 	{
 		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
@@ -87,12 +84,12 @@ namespace GASS
 		}
 	}
 
-	void RaknetNetworkSceneManager::OnInit()
+	void RaknetNetworkSceneManager::OnSceneCreated()
 	{
-		RegisterForPreUpdate<RakNetNetworkSystem>();
+		
 	}
 
-	void RaknetNetworkSceneManager::OnShutdown()
+	void RaknetNetworkSceneManager::OnSceneShutdown()
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RaknetNetworkSceneManager::OnNewMasterReplica,MasterReplicaCreatedEvent));
 	}

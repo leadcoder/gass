@@ -40,6 +40,69 @@ namespace GASS
 	{
 	}
 
+	void OSGGraphicsSceneManager::OnPostConstruction()
+	{
+		RegisterForPostUpdate<OSGGraphicsSystem>();
+
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
+		ScenePtr scene = GetScene();
+		if (!scene)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not present", "OSGGraphicsSceneManager::OnInitialize");
+		}
+
+		m_RootNode = new osg::PositionAttitudeTransform();
+		m_RootNode->setName("GASSRootNode");
+
+		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
+		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
+		if (st.valid())
+		{
+			m_ShadowedScene = new osgShadow::ShadowedScene;
+			m_ShadowedScene->setName("ShadowRootNode");
+			m_ShadowedScene->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
+			m_ShadowedScene->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
+
+			//only used by ViewDependentShadowMap
+			osgShadow::ShadowSettings* settings = m_ShadowedScene->getShadowSettings();
+			settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
+			settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
+			settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+			settings->setMaximumShadowMapDistance(200.0);
+
+			//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
+
+			unsigned int unit = 6;
+			settings->setBaseShadowTextureUnit(unit);
+
+			double n = 0.8;
+			settings->setMinimumShadowMapNearFarRatio(n);
+
+			unsigned int numShadowMaps = 2;
+			settings->setNumShadowMapsPerLight(numShadowMaps);
+
+			//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
+			settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
+
+			short mapres = 2048;
+			settings->setTextureSize(osg::Vec2s(mapres, mapres));
+
+			m_ShadowedScene->setShadowTechnique(st);
+			m_RootNode->addChild(m_ShadowedScene);
+		}
+
+		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
+		state->setAttributeAndModes(m_Fog.get());
+
+		UpdateFogSettings();
+
+		//add debug node
+		m_DebugDraw = new OSGDebugDraw();
+		m_RootNode->addChild(m_DebugDraw->GetNode());
+
+		m_RootNode->addChild(&gfx_sys->GetDebugText()->getGroup());
+	}
+
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
 		if(m_ShadowedScene.valid())
@@ -64,69 +127,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 
-	void OSGGraphicsSceneManager::OnCreate()
-	{
-		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		ScenePtr scene = GetScene();
-		if(!scene)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Scene not present", "OSGGraphicsSceneManager::OnInitialize");
-		}
-
-		m_RootNode = new osg::PositionAttitudeTransform();
-		m_RootNode->setName("GASSRootNode");
-
-		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
-		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
-		if(st.valid())
-		{
-			m_ShadowedScene = new osgShadow::ShadowedScene;
-			m_ShadowedScene->setName("ShadowRootNode");
-			m_ShadowedScene->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
-			m_ShadowedScene->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
-
-			//only used by ViewDependentShadowMap
-			osgShadow::ShadowSettings* settings = m_ShadowedScene->getShadowSettings();
-			settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
-			settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
-			settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-			settings->setMaximumShadowMapDistance(200.0);
-
-			//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
-
-			unsigned int unit=6;
-			settings->setBaseShadowTextureUnit(unit);
-
-			double n=0.8;
-			settings->setMinimumShadowMapNearFarRatio(n);
-
-			unsigned int numShadowMaps = 2;
-			settings->setNumShadowMapsPerLight(numShadowMaps);
-
-			//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
-			settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
-
-			short mapres = 2048;
-			settings->setTextureSize(osg::Vec2s(mapres,mapres));
-
-			m_ShadowedScene->setShadowTechnique(st);
-			m_RootNode->addChild(m_ShadowedScene);
-		}
-
-		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
-		state->setAttributeAndModes(m_Fog.get());
-
-		UpdateFogSettings();
-
-		//add debug node
-		m_DebugDraw = new OSGDebugDraw();
-		m_RootNode->addChild(m_DebugDraw->GetNode());
-
-		m_RootNode->addChild(&gfx_sys->GetDebugText()->getGroup());
-		
-	}
-
-	void OSGGraphicsSceneManager::OnInit()
+	void OSGGraphicsSceneManager::OnSceneCreated()
 	{
 		void* root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
@@ -134,10 +135,9 @@ namespace GASS
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
 		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
 		sim_sm->SendImmediate(loaded_msg);
-		RegisterForPostUpdate<OSGGraphicsSystem>();
 	}
 
-	void OSGGraphicsSceneManager::OnShutdown()
+	void OSGGraphicsSceneManager::OnSceneShutdown()
 	{
 
 	}

@@ -3,6 +3,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
+#include "Core/ComponentSystem/GASSComponentFactory.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -13,12 +14,39 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "ToolSystem/MouseToolController.h"
+#include "Components/EditorComponent.h"
+#include "Components/SelectionComponent.h"
+
+
 
 namespace GASS
 {
+	void EditorSceneManager::RegisterReflection()
+	{
+
+	}
+
 	EditorSceneManager::EditorSceneManager(SceneWeakPtr scene) : Reflection(scene), m_LockTerrainObjects(true)
 	{
 		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
+	}
+
+	void EditorSceneManager::OnPostConstruction()
+	{
+		RegisterForPostUpdate<EditorSystem>();
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged, CameraChangedEvent, 0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnPostSceneLoaded, PostSceneLoadEvent, 0));
+
+		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
+		m_LockTerrainObjects = system->GetLockTerrainObjects();
+		ScenePtr scene = GetScene();
+		m_MouseTools->Init();
+		SetObjectSite(scene->GetRootSceneObject());
+	}
+
+	void EditorSceneManager::OnSceneShutdown()
+	{
+
 	}
 
 	EditorSceneManager::~EditorSceneManager(void)
@@ -28,32 +56,40 @@ namespace GASS
 		m_InvisibleObjects.clear();
 	}
 
-	void EditorSceneManager::RegisterReflection()
+	SceneObjectPtr _CreateSelectionObject()
 	{
+		SceneObjectPtr selection_object = SceneObjectPtr(new SceneObject());
+		selection_object->SetName("SelectionObject");
+		selection_object->SetID("BB_SELECTION_OBJECT");
+		selection_object->SetSerialize(false);
+		ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+		selection_object->AddComponent(location_comp);
 
+		ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
+		mesh_comp->SetPropertyValue("GeometryFlags", GeometryFlagsBinder(GEOMETRY_FLAG_EDITOR));
+		selection_object->AddComponent(mesh_comp);
+
+		EditorComponentPtr editor_comp = GASS_MAKE_SHARED<EditorComponent>();
+		editor_comp->SetAllowDragAndDrop(false);
+		editor_comp->SetAllowRemove(false);
+		editor_comp->SetShowInTree(false);
+		editor_comp->SetShowBBWhenSelected(false);
+		editor_comp->SetChangeMaterialWhenSelected(false);
+
+		selection_object->AddComponent(editor_comp);
+
+		SelectionComponentPtr selection_comp = GASS_MAKE_SHARED<SelectionComponent>();
+		selection_comp->SetType("solid");
+		selection_comp->SetColor(ColorRGBA(0.8, 0.8, 0.8, 0.8));
+		selection_object->AddComponent(selection_comp);
+		return selection_object;
 	}
 
-	void EditorSceneManager::OnCreate()
+	void EditorSceneManager::OnSceneCreated()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged, CameraChangedEvent, 0));
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnPostSceneLoaded, PostSceneLoadEvent, 0));
-	}
-
-	void EditorSceneManager::OnInit()
-	{
-		RegisterForPostUpdate<EditorSystem>();
-		
-		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
-		
-		m_LockTerrainObjects = system->GetLockTerrainObjects();
-
-		ScenePtr scene = GetScene();
-		m_MouseTools->Init();
-		SetObjectSite(scene->GetRootSceneObject());
-
-		//Load some objects, why???
-
-		GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("SelectionObject", scene->GetRootSceneObject());
+		//Add selection object to scene
+		GetScene()->GetRootSceneObject()->AddChildSceneObject(_CreateSelectionObject(), true);
+		//GetScene()->LoadObjectFromTemplate("SelectionObject", GetScene()->GetRootSceneObject());
 	}
 
 	void EditorSceneManager::OnPostSceneLoaded(PostSceneLoadEventPtr message)
@@ -65,10 +101,7 @@ namespace GASS
 		SetObjectSite(message->GetScene()->GetRootSceneObject());
 	}
 
-	void EditorSceneManager::OnShutdown()
-	{
-
-	}
+	
 	
 	void EditorSceneManager::OnUpdate(double delta_time)
 	{

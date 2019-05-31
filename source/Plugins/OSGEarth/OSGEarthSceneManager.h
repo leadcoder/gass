@@ -33,9 +33,9 @@ namespace GASS
 		OSGEarthSceneManager(SceneWeakPtr scene);
 		~OSGEarthSceneManager() override;
 		static void RegisterReflection();
-		void OnCreate() override;
-		void OnInit() override;
-		void OnShutdown() override;
+		void OnPostConstruction() override;
+		void OnSceneCreated() override;
+		void OnSceneShutdown() override;
 		bool GetSerialize() const override {return true;}
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> GetManipulator() const{return m_EarthManipulator;}
 		osgEarth::Util::Controls::Container* GetGUI() const { return m_GUI; }

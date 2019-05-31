@@ -29,27 +29,28 @@
 
 namespace GASS
 {
-	CoreSceneManager::CoreSceneManager(SceneWeakPtr scene) : Reflection(scene)
-	{
-
-	}
 
 	void CoreSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<CoreSceneManager>("CoreSceneManager");
 	}
 
-	void CoreSceneManager::OnCreate()
+	CoreSceneManager::CoreSceneManager(SceneWeakPtr scene) : Reflection(scene)
+	{
+
+	}
+
+	void CoreSceneManager::OnPostConstruction()
 	{
 		RegisterForPreUpdate<CoreSystem>();
 	}
 
-	void CoreSceneManager::OnInit()
+	void CoreSceneManager::OnSceneCreated()
 	{
 		
  	}
 
-	void CoreSceneManager::OnShutdown()
+	void CoreSceneManager::OnSceneShutdown()
 	{
 		
  	}
