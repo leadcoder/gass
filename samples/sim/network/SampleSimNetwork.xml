@@ -54,7 +54,7 @@
   <ODECollisionSystem>
  </ODECollisionSystem>
  <OSGGraphicsSystem>
-	<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="400" TextureSize="2048" BaseTextureUnit="0" ShadowTextureUnit="6"/>
+	<ShadowType value="LightSpacePerspectiveShadowMap"/>
   </OSGGraphicsSystem>
 </Systems>
 </GASS>
