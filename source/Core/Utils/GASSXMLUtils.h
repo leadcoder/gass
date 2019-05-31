@@ -44,11 +44,11 @@ namespace GASS
 	class GASSCoreExport XMLUtils
 	{
 	public:
-		static std::string ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag);
-		static bool ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag);
-		static Float ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag);
-		static int ReadInt(tinyxml2::XMLElement *xml_elem, const std::string &tag);
-		static std::string ReadStringAttribute(tinyxml2::XMLElement *xml_elem, const std::string &attrib);
+		static std::string ReadString(const tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static bool ReadBool(const tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static Float ReadFloat(const tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static int ReadInt(const tinyxml2::XMLElement *xml_elem, const std::string &tag);
+		static std::string ReadStringAttribute(const tinyxml2::XMLElement *xml_elem, const std::string &attrib);
 	};
 }
 

@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	std::string XMLUtils::ReadString(tinyxml2::XMLElement *xml_elem, const std::string &tag)
+	std::string XMLUtils::ReadString(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		std::string ret;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
@@ -42,7 +42,7 @@ namespace GASS
 		return ret;
 	}
 
-	std::string XMLUtils::ReadStringAttribute(tinyxml2::XMLElement *xml_elem, const std::string &attrib)
+	std::string XMLUtils::ReadStringAttribute(const tinyxml2::XMLElement *xml_elem, const std::string &attrib)
 	{
 		std::string ret;
 		if(xml_elem->Attribute(attrib.c_str()))
@@ -57,7 +57,7 @@ namespace GASS
 		return ret;
 	}
 
-	bool XMLUtils::ReadBool(tinyxml2::XMLElement *xml_elem, const std::string &tag)
+	bool XMLUtils::ReadBool(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		bool ret;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
@@ -80,7 +80,7 @@ namespace GASS
 		return ret;
 	}
 
-	int XMLUtils::ReadInt(tinyxml2::XMLElement *xml_elem, const std::string &tag)
+	int XMLUtils::ReadInt(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		int ret;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
@@ -96,7 +96,7 @@ namespace GASS
 		return ret;
 	}
 
-	Float XMLUtils::ReadFloat(tinyxml2::XMLElement *xml_elem, const std::string &tag)
+	Float XMLUtils::ReadFloat(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
 		Float ret = 0;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
