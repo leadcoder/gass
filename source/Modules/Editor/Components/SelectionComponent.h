@@ -19,14 +19,14 @@ namespace GASS
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		void SceneManagerTick(double delta_time);
+
+		std::string GetType() const { return m_Type; }
+		void SetType(const std::string &value) { m_Type = value; }
+		ColorRGBA GetColor() const { return m_Color; }
+		void SetColor(const ColorRGBA &value) { m_Color = value; }
 	private:
 		void UpdateSelection();
-		std::string GetType() const {return m_Type;}
-		void SetType(const std::string &value) {m_Type = value;}
-		//float GetSize() const{return m_Size;}
-		//void SetSize(float value){m_Size =value;}
-		ColorRGBA GetColor() const{return m_Color;}
-		void SetColor(const ColorRGBA &value){m_Color =value;}
+		
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 	
 		ColorRGBA m_Color;
