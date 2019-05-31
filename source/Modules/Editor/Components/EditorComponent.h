@@ -18,6 +18,7 @@ namespace GASS
 		virtual void OnInitialize();
 		virtual void OnDelete();
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
+		void SetShowBBWhenSelected(bool value) { m_ShowBBWhenSelected = value; }
 		std::string GetIconFile() const { return m_IconFile;}
 		void SetIconFile(const std::string &value) { m_IconFile = value;}
 		void SetShowInTree(bool value) {m_ShowInTree = value;}
@@ -25,22 +26,21 @@ namespace GASS
 		bool GetAllowRemove() const {return m_AllowRemove;}
 		void SetAllowRemove(bool value) {m_AllowRemove = value;}
 		bool GetAllowDragAndDrop() const {return m_AllowDragAndDrop;}
+		void SetAllowDragAndDrop(bool value) { m_AllowDragAndDrop = value; }
+		bool GetChangeMaterialWhenSelected() const { return m_ChangeMaterialWhenSelected; }
+		void SetChangeMaterialWhenSelected(bool value) { m_ChangeMaterialWhenSelected = value; }
 		bool GetVisible() const{return m_Visible;}
 		void SetVisible(bool value);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
 		ADD_PROPERTY(bool,EditName)
 	private:
-		ADD_PROPERTY(ColorRGBA,SelectedColor)
+		ADD_PROPERTY(ColorRGBA, SelectedColor)
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
 		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
 		void SetVisibilityTransparency(float value);
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
-		bool GetChangeMaterialWhenSelected() const {return m_ChangeMaterialWhenSelected;}
-		void SetChangeMaterialWhenSelected(bool value) {m_ChangeMaterialWhenSelected = value;}
-		void SetShowBBWhenSelected(bool value) {m_ShowBBWhenSelected = value;}
-		void SetAllowDragAndDrop(bool value) {m_AllowDragAndDrop = value;}
 		
 		bool m_Lock;
 		bool m_Visible;
