@@ -94,9 +94,6 @@ set(ANGELSCRIPT_HEADERS
         source/as_variablescope.h
 )
 
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-
 #add_definitions("-D_CRT_SECURE_NO_WARNINGS -DANGELSCRIPT_EXPORT -D_LIB")
 #set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
 # Fix x64 issues on Linux
@@ -113,15 +110,7 @@ target_include_directories(Angelscript PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_
 target_compile_definitions(Angelscript PRIVATE "-D_CRT_SECURE_NO_WARNINGS -DANGELSCRIPT_EXPORT -D_LIB")
 if(MSVC)
         set_target_properties(Angelscript PROPERTIES COMPILE_FLAGS "/MP")
+		target_compile_options(Angelscript PRIVATE /W3)
 endif(MSVC)
-
-#set(RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
-#add_subdirectory(../samples/game/projects/cmake/ ./game)
-
-#install(TARGETS Angelscript
-#        RUNTIME DESTINATION bin
-#        LIBRARY DESTINATION lib
-#        ARCHIVE DESTINATION lib)
 
 install(FILES ${ANGELSCRIPT_HEADERS} DESTINATION include/Dependencies/Angelscript)
