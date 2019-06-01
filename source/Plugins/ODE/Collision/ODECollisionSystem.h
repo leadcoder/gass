@@ -30,7 +30,7 @@ namespace GASS
 	class ODECollisionSystem : public Reflection<ODECollisionSystem , SimSystem> 
 	{
 	public:
-		ODECollisionSystem();
+		ODECollisionSystem(SimSystemManagerWeakPtr manager);
 		~ODECollisionSystem() override;
 		static void RegisterReflection();
 		void Init() override;

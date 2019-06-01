@@ -64,7 +64,7 @@ namespace GASS
 		}
 	};
 
-	PhysXPhysicsSystem::PhysXPhysicsSystem(): m_DefaultMaterial(NULL),
+	PhysXPhysicsSystem::PhysXPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_DefaultMaterial(NULL),
 		m_PhysicsSDK(NULL),
 		m_Foundation(NULL)
 	{
@@ -80,7 +80,7 @@ namespace GASS
 
 	void PhysXPhysicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("PhysXPhysicsSystem",new GASS::Creator<PhysXPhysicsSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<PhysXPhysicsSystem>("PhysXPhysicsSystem");
 		REG_PROPERTY(int,MaxNumThreads,PhysXPhysicsSystem);
 	}
 

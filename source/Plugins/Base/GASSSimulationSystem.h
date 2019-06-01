@@ -30,7 +30,7 @@ namespace GASS
 	class SimulationSystem : public Reflection<SimulationSystem, SimSystem>
 	{
 	public:
-		SimulationSystem();
+		SimulationSystem(SimSystemManagerWeakPtr manager);
 		~SimulationSystem() override;
 		static void RegisterReflection();
 		std::string GetSystemName() const override {return "SimulationSystem";}

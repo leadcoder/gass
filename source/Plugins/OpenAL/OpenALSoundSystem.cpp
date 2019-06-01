@@ -19,7 +19,7 @@
 
 namespace GASS
 {
-	OpenALSoundSystem::OpenALSoundSystem() : m_Context(NULL),
+	OpenALSoundSystem::OpenALSoundSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Context(NULL),
 		m_Device(NULL),
 		m_IsInitialised(false)
 	{
@@ -42,7 +42,7 @@ namespace GASS
 
 	void OpenALSoundSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OpenALSoundSystem",new GASS::Creator<OpenALSoundSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<OpenALSoundSystem>("OpenALSoundSystem");
 	}
 
 	void OpenALSoundSystem::Init()

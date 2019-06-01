@@ -88,7 +88,7 @@ namespace GASS
 	{
 
 	public:
-		RakNetNetworkSystem();
+		RakNetNetworkSystem(SimSystemManagerWeakPtr manager);
 		~RakNetNetworkSystem() override;
 		static void RegisterReflection();
 		void Init() override;

@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	MaterialSystem::MaterialSystem()
+	MaterialSystem::MaterialSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
 		m_UpdateGroup = UGID_PRE_SIM;
 	}
@@ -39,7 +39,7 @@ namespace GASS
 
 	void MaterialSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("MaterialSystem",new GASS::Creator<MaterialSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<MaterialSystem>("MaterialSystem");
 	}
 
 	void MaterialSystem::Init()

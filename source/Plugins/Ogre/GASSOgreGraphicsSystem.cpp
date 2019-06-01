@@ -45,7 +45,7 @@ ResourceGroupHelper resourceGrouphelper;
 
 namespace GASS
 {
-	OgreGraphicsSystem::OgreGraphicsSystem(void): m_CreateMainWindowOnInit(true),
+	OgreGraphicsSystem::OgreGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) ,m_CreateMainWindowOnInit(true),
 		m_SceneMgr(NULL),
 		m_UpdateMessagePump(true),
 		m_DebugTextBox (new OgreDebugTextOutput()),
@@ -67,7 +67,7 @@ namespace GASS
 
 	void OgreGraphicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OgreGraphicsSystem",new GASS::Creator<OgreGraphicsSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<OgreGraphicsSystem>("OgreGraphicsSystem");
 		RegisterProperty<PluginVector>("Plugins", &GASS::OgreGraphicsSystem::GetPlugins, &GASS::OgreGraphicsSystem::SetPlugins);
 		RegisterProperty<PostFilterVector>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);

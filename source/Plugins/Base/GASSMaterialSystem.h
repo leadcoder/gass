@@ -30,7 +30,7 @@ namespace GASS
 	class MaterialSystem : public Reflection<MaterialSystem, SimSystem>, public IMaterialSystem
 	{
 	public:
-		MaterialSystem();
+		MaterialSystem(SimSystemManagerWeakPtr manager);
 		~MaterialSystem() override;
 		static void RegisterReflection();
 		std::string GetSystemName() const override {return "MaterialSystem";}

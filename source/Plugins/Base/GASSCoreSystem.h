@@ -31,7 +31,7 @@ namespace GASS
 	class CoreSystem : public Reflection<CoreSystem, SimSystem>
 	{
 	public:
-		CoreSystem();
+		CoreSystem(SimSystemManagerWeakPtr manager);
 		~CoreSystem() override;
 		static void RegisterReflection();
 		std::string GetSystemName() const override {return "CoreSystem";}

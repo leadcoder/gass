@@ -35,7 +35,7 @@ namespace GASS
 	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
-		OSGCollisionSystem();
+		OSGCollisionSystem(SimSystemManagerWeakPtr manager);
 		~OSGCollisionSystem() override;
 		static void RegisterReflection();
 		void Init() override;

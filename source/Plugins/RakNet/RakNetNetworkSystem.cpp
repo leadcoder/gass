@@ -43,7 +43,8 @@
 
 namespace GASS
 {
-	RakNetNetworkSystem::RakNetNetworkSystem() : m_IsServer(0),
+	RakNetNetworkSystem::RakNetNetworkSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), 
+		m_IsServer(0),
 		m_ReplicaManager (new ReplicaManager()),
 		m_NetworkIDManager(new NetworkIDManager()),
 		m_ServerPort (60005),
@@ -76,7 +77,7 @@ namespace GASS
 
 	void RakNetNetworkSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("RakNetNetworkSystem",new GASS::Creator<RakNetNetworkSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<RakNetNetworkSystem>("RakNetNetworkSystem");
 
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);

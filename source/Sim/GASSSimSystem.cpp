@@ -23,7 +23,8 @@
 
 namespace GASS
 {
-	SimSystem::SimSystem(void) : m_UpdateGroup(UGID_NO_UPDATE)
+	SimSystem::SimSystem(SimSystemManagerWeakPtr manager) : m_UpdateGroup(UGID_NO_UPDATE),
+		m_Owner(manager)
 	{
 		
 	}

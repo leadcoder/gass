@@ -23,7 +23,7 @@
 
 namespace GASS
 {
-	OSGCollisionSystem::OSGCollisionSystem() 
+	OSGCollisionSystem::OSGCollisionSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
 		m_UpdateGroup = UGID_PRE_SIM;
 	}
@@ -35,7 +35,7 @@ namespace GASS
 
 	void OSGCollisionSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OSGCollisionSystem",new GASS::Creator<OSGCollisionSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<OSGCollisionSystem>("OSGCollisionSystem");
 	}
 
 	void OSGCollisionSystem::Init()

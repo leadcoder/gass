@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	CoreSystem::CoreSystem(void) 
+	CoreSystem::CoreSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
 	  m_UpdateGroup = UGID_PRE_SIM;
 	}
@@ -37,7 +37,7 @@ namespace GASS
 
 	void CoreSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("CoreSystem",new GASS::Creator<CoreSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<CoreSystem>("CoreSystem");
 	}
 
 	void CoreSystem::Init()

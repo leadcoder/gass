@@ -24,6 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSimSystem.h"
 #include "Core/Utils/GASSFactory.h"
+#include "Core/Utils/GASSGenericFactory.h"
 
 namespace GASS
 {
@@ -39,16 +40,28 @@ namespace GASS
 		The factory where all systems should be registred in
 	*/
 
-	class GASSExport SystemFactory : public Factory<SimSystem,std::string,void>
+	class GASSExport SystemFactory // : public Factory<SimSystem,std::string,void>
 	{
 	public:
 		SystemFactory();
 		virtual ~SystemFactory();
 		static SystemFactory* GetPtr();
 		static SystemFactory& Get();
+		template<class T>
+		void Register(const std::string& name)
+		{
+			m_Impl.Register<T>(name);
+		}
+
+		SimSystemPtr Create(const std::string &name, SimSystemManagerPtr ssm)
+		{
+			SimSystemPtr ss = m_Impl.IsCreatable(name) ? m_Impl.Create(name, ssm) : SimSystemPtr();
+			return ss;
+		}
 	protected:
 		static SystemFactory* m_Instance;
 	protected:
+		GenericFactory<std::string, SimSystemPtr, SimSystemManagerPtr> m_Impl;
 	};
 }
 #endif // #ifndef SYSTEMFACTORY_HH

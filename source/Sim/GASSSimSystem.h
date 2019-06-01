@@ -58,11 +58,9 @@ namespace GASS
 	class GASSExport SimSystem : public Reflection<SimSystem, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SimSystem>,  public IMessageListener, public IXMLSerialize
 	{
 	public:
-		SimSystem();
+		SimSystem(SimSystemManagerWeakPtr manager);
 		~SimSystem() override;
 		static void RegisterReflection();
-		
-		virtual void OnCreate(SimSystemManagerPtr owner) {m_Owner=owner;}
 		virtual void Init() = 0;
 		virtual std::string  GetSystemName() const = 0;
 		virtual std::string GetName() const {return m_Name;}

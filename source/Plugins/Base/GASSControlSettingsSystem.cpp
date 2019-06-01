@@ -34,7 +34,7 @@
 
 namespace GASS
 {
-	ControlSettingsSystem::ControlSettingsSystem()
+	ControlSettingsSystem::ControlSettingsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
 		m_UpdateGroup = UGID_PRE_SIM;
 		m_InputStringTable = new EnumLookup();
@@ -269,7 +269,7 @@ namespace GASS
 
 	void ControlSettingsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ControlSettingsSystem",new GASS::Creator<ControlSettingsSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<ControlSettingsSystem>("ControlSettingsSystem");
 	}
 
 	void ControlSettingsSystem::Init() 

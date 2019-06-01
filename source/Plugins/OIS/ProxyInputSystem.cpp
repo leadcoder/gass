@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	ProxyInputSystem::ProxyInputSystem() :	m_KeyActive(true),	
+	ProxyInputSystem::ProxyInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), m_KeyActive(true),
 		m_JoyActive(true),	
 		m_MouseActive(true)
 	{
@@ -40,15 +40,10 @@ namespace GASS
 
 	void ProxyInputSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ProxyInputSystem",new GASS::Creator<ProxyInputSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<ProxyInputSystem>("ProxyInputSystem");
 		RegisterProperty<bool>("EnableKey", &GASS::ProxyInputSystem::GetEnableKey, &GASS::ProxyInputSystem::SetEnableKey);
 		RegisterProperty<bool>("EnableMouse", &GASS::ProxyInputSystem::GetEnableMouse, &GASS::ProxyInputSystem::SetEnableMouse);
 		RegisterProperty<bool>("EnableJoystick", &GASS::ProxyInputSystem::GetEnableJoystick, &GASS::ProxyInputSystem::SetEnableJoystick);
-	}
-
-	void ProxyInputSystem::OnCreate(SimSystemManagerPtr owner)
-	{
-		SimSystem::OnCreate(owner);
 	}
 
 	void ProxyInputSystem::Init()

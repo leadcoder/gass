@@ -36,7 +36,7 @@ namespace GASS
 	{
 		friend class OSGGraphicsSceneManager;
 	public:
-		OSGGraphicsSystem();
+		OSGGraphicsSystem(SimSystemManagerWeakPtr manager);
 		~OSGGraphicsSystem() override;
 		static void RegisterReflection();
 		void Init() override;

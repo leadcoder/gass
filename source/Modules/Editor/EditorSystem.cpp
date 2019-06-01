@@ -7,7 +7,8 @@
 
 namespace GASS
 {
-	EditorSystem::EditorSystem() : m_GUISettings(new GUISchemaLoader), 
+	EditorSystem::EditorSystem(SimSystemManagerWeakPtr manager) : Reflection(manager),
+		m_GUISettings(new GUISchemaLoader), 
 		m_LockTerrainObjects(true),
 		m_DefaultCameraTemplate("FreeCameraObject")
 	{
@@ -21,7 +22,7 @@ namespace GASS
 
 	void EditorSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("EditorSystem",new GASS::Creator<EditorSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<EditorSystem>("EditorSystem");
 		SceneManagerFactory::GetPtr()->Register<EditorSceneManager>("EditorSceneManager");
 		RegisterProperty<bool>("LockTerrainObjects",&EditorSystem::GetLockTerrainObjects, &EditorSystem::SetLockTerrainObjects);
 		RegisterProperty<std::string>("DefaultCameraTemplate",&EditorSystem::GetDefaultCameraTemplate, &EditorSystem::SetDefaultCameraTemplate);

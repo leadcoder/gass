@@ -44,7 +44,7 @@ namespace GASS
 	public:
 //		typedef std::map<std::string,NxCollisionMesh> CollisionMeshMap;
 	public:
-		PhysXPhysicsSystem();
+		PhysXPhysicsSystem(SimSystemManagerWeakPtr manager);
 		~PhysXPhysicsSystem() override;
 		static void RegisterReflection();
 		void Init() override;

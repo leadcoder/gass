@@ -32,7 +32,7 @@ namespace GASS
 	class ControlSettingsSystem : public Reflection<ControlSettingsSystem, SimSystem>, public IControlSettingsSystem
 	{
 	public:
-		ControlSettingsSystem();
+		ControlSettingsSystem(SimSystemManagerWeakPtr manager);
 		~ControlSettingsSystem() override;
 		void Load(const std::string &filename) override;
 		std::string GetSystemName() const override {return "ControlSettingsSystem";}

@@ -36,7 +36,7 @@
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(void) : m_ShadowSettingsFile("GASS.xml"),
+	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), m_ShadowSettingsFile("GASS.xml"),
 		m_DebugTextBox(new TextBox()),
 		m_Viewer(NULL),
 		m_FlipDDS(false),
@@ -74,7 +74,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OSGGraphicsSystem",new GASS::Creator<OSGGraphicsSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterProperty<bool>("FlipDDS", &GASS::OSGGraphicsSystem::GetFlipDDS, &GASS::OSGGraphicsSystem::SetFlipDDS);
 		RegisterProperty<std::string>("ShadowType", &GASS::OSGGraphicsSystem::GetShadowType, &GASS::OSGGraphicsSystem::SetShadowType);

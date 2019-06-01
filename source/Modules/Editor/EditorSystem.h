@@ -20,7 +20,7 @@ namespace GASS
 	class EditorModuleExport EditorSystem :  public Reflection<EditorSystem, SimSystem>
 	{
 	public:
-		EditorSystem();
+		EditorSystem(SimSystemManagerWeakPtr manager);
 		~EditorSystem(void) override;
 		static  void RegisterReflection();
 		void Init() override;

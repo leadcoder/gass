@@ -31,7 +31,7 @@
 
 namespace GASS
 {
-	OISInputSystem::OISInputSystem() : m_Window(0),
+	OISInputSystem::OISInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Window(0),
 		m_Inverted (false),
 		m_KeyActive(true),
 		m_JoyActive(true),
@@ -65,7 +65,7 @@ namespace GASS
 
 	void OISInputSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("OISInputSystem",new GASS::Creator<OISInputSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<OISInputSystem>("OISInputSystem");
 		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
 		//RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
 		RegisterProperty<float>("GameControllerAxisMinValue", &GASS::OISInputSystem::GetGameControllerAxisMinValue, &GASS::OISInputSystem::SetGameControllerAxisMinValue);
@@ -74,12 +74,6 @@ namespace GASS
 		RegisterProperty<bool>("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
 		RegisterProperty<bool>("OnlyProxy", &GASS::OISInputSystem::GetOnlyProxy, &GASS::OISInputSystem::SetOnlyProxy);
 
-	}
-
-	void OISInputSystem::OnCreate(SimSystemManagerPtr owner)
-	{
-		SimSystem::OnCreate(owner);
-		//GetSimSystemManager()->RegisterForMessage(REG_TMESS(OISInputSystem::OnInit,RenderWindowCreatedEvent,1));
 	}
 
 	void OISInputSystem::Init()

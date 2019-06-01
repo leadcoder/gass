@@ -33,7 +33,7 @@ namespace GASS
 	{
 
 	public:
-		ODEPhysicsSystem();
+		ODEPhysicsSystem(SimSystemManagerWeakPtr manager);
 		~ODEPhysicsSystem() override;
 		static void RegisterReflection();
 		void Init() override;

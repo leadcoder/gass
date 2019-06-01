@@ -128,14 +128,13 @@ namespace GASS
 
 		for (auto sysc : config.Systems)
 		{
-			SimSystemPtr system = SystemFactory::Get().Create(sysc.Name);
+			SimSystemPtr system = SystemFactory::Get().Create(sysc.Name, shared_from_this());
 			if (system)
 			{
 				for (auto option : sysc.Settings)
 				{
 					system->SetPropertyByString(option.Name, option.Value);
 				}
-				system->OnCreate(shared_from_this());
 				GASS_LOG(LINFO) << system->GetSystemName() << " created";
 				m_Systems.push_back(system);
 			}
@@ -150,8 +149,7 @@ namespace GASS
 
 	SimSystemPtr SimSystemManager::AddSystem(const std::string &system_name)
 	{
-		SimSystemPtr system = SystemFactory::Get().Create(system_name);
-		system->OnCreate(shared_from_this());
+		SimSystemPtr system = SystemFactory::Get().Create(system_name, shared_from_this());
 		m_Systems.push_back(system);
 		return system;
 	}

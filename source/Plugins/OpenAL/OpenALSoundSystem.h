@@ -37,7 +37,7 @@ namespace GASS
 		typedef std::map<std::string,ALuint> SoundMap;
 		typedef std::map<std::string,ALuint> SourceMap;
 
-		OpenALSoundSystem();
+		OpenALSoundSystem(SimSystemManagerWeakPtr manager);
 		~OpenALSoundSystem() override;
 		static void RegisterReflection();
 		void Init() override;

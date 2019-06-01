@@ -56,7 +56,7 @@ namespace GASS
 		
 		friend class OgreGraphicsSceneManager;
 	public:
-		OgreGraphicsSystem();
+		OgreGraphicsSystem(SimSystemManagerWeakPtr manager);
 		~OgreGraphicsSystem() override;
 		static void RegisterReflection();
 		void Init() override;

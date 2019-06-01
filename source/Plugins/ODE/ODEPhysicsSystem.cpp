@@ -42,7 +42,7 @@
 namespace GASS
 {
 
-	ODEPhysicsSystem::ODEPhysicsSystem()  : m_Init(false)
+	ODEPhysicsSystem::ODEPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)  , m_Init(false)
 	{
 		m_UpdateGroup=UGID_SIM;
 	}
@@ -54,7 +54,7 @@ namespace GASS
 
 	void ODEPhysicsSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("ODEPhysicsSystem",new GASS::Creator<ODEPhysicsSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<ODEPhysicsSystem>("ODEPhysicsSystem");
 		
 	}
 

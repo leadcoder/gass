@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	SimulationSystem::SimulationSystem(void) //: m_Update(true)
+	SimulationSystem::SimulationSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
 		m_UpdateGroup = UGID_SIM;
 	}
@@ -39,7 +39,7 @@ namespace GASS
 
 	void SimulationSystem::RegisterReflection()
 	{
-		SystemFactory::GetPtr()->Register("SimulationSystem",new GASS::Creator<SimulationSystem, SimSystem>);
+		SystemFactory::GetPtr()->Register<SimulationSystem>("SimulationSystem");
 	}
 
 	void SimulationSystem::Init()
