@@ -443,13 +443,13 @@ namespace GASS
 
 		if(m_Debug)
 		{
-			std::stringstream ss;
-			ss << "Speed(m/s): "<< m_VehicleSpeed << "\n";
-			ss << "Gear: "<< m_Gear<< "\n";
-			ss << "Throttle: "<< throttle<< "\n";
-			ss << "RPM: "<< m_VehicleEngineRPM << "\n";
-			ss << "Clutch: "<< m_Clutch << "\n";
-			const std::string engine_data = ss.str();
+			std::stringstream debug_ss;
+			debug_ss << "Speed(m/s): "<< m_VehicleSpeed << "\n";
+			debug_ss << "Gear: "<< m_Gear<< "\n";
+			debug_ss << "Throttle: "<< throttle<< "\n";
+			debug_ss << "RPM: "<< m_VehicleEngineRPM << "\n";
+			debug_ss << "Clutch: "<< m_Clutch << "\n";
+			const std::string engine_data = debug_ss.str();
 			GASS_PRINT(engine_data)
 		}
 	}

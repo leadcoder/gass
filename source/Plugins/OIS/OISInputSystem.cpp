@@ -27,6 +27,7 @@
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogger.h"
 #include <string.h>
 
 namespace GASS

@@ -27,11 +27,6 @@ namespace GASS
 
 	}
 
-	SystemFactory::~SystemFactory()
-	{
-
-	}
-
 	SystemFactory* SystemFactory::m_Instance = nullptr;
 	SystemFactory* SystemFactory::GetPtr(void)
 	{

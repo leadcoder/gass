@@ -23,6 +23,7 @@
 #include "Core/Utils/GASSFileUtils.h"
 #include "Sim/GASSGeometryFlags.h"
 #include "Core/Serialize/tinyxml2.h"
+#include "Core/Utils/GASSLogger.h"
 
 
 namespace GASS

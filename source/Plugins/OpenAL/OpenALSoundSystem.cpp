@@ -10,6 +10,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Core/Utils/GASSLogger.h"
 
 #ifdef WIN32
 	#include "Framework/Framework.h"

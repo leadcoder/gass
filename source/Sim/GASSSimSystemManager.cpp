@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Utils/GASSSimpleProfile.h"
 #include "Core/Serialize/tinyxml2.h"
+#include "Core/Utils/GASSLogger.h"
 
 namespace GASS
 {
