@@ -74,7 +74,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, Component>);
 	}
 
-	void ODEPhysicsSystem::OnShutdown(MessagePtr message)
+	void ODEPhysicsSystem::OnSystemShutdown()
 	{
 		dCloseODE();
 	}

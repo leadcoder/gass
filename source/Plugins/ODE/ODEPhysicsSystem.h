@@ -37,9 +37,8 @@ namespace GASS
 		ODEPhysicsSystem(SimSystemManagerWeakPtr manager);
 		~ODEPhysicsSystem() override;
 		void OnSystemInit() override;
+		void OnSystemShutdown() override;
 		std::string GetSystemName() const override {return "ODEPhysicsSystem";}
-	protected:
-		void OnShutdown(MessagePtr message);
 	private:
 		bool m_Init;
 	};

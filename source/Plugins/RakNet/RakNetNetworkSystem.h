@@ -91,7 +91,7 @@ namespace GASS
 		RakNetNetworkSystem(SimSystemManagerWeakPtr manager);
 		~RakNetNetworkSystem() override;
 		void OnSystemInit() override;
-
+		void OnSystemShutdown() override;
 		bool IsServer() const {return  m_IsServer;}
 		bool IsActive() const {return  m_Active;}
 
@@ -115,8 +115,6 @@ namespace GASS
 		ADD_PROPERTY(bool,Debug);
 		ADD_PROPERTY(bool,RelayInputOnServer);
 	private:
-		//void OnInit(MessagePtr message);
-		void OnShutdown(MessagePtr message);
 		void OnStartServer(StartServerRequestPtr message);
 		void OnStartClient(StartClientRequestPtr message);
 		void OnConnectToServer(ConnectToServerRequestPtr message);

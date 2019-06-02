@@ -181,7 +181,7 @@ namespace GASS
 		ConnectToServer(message->GetServerName(),message->GetServerPort(),0);
 	}
 
-	void RakNetNetworkSystem::OnShutdown(MessagePtr message)
+	void RakNetNetworkSystem::OnSystemShutdown()
 	{
 		Stop();
 	}
