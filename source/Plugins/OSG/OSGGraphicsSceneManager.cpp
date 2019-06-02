@@ -100,7 +100,7 @@ namespace GASS
 		m_DebugDraw = new OSGDebugDraw();
 		m_RootNode->addChild(m_DebugDraw->GetNode());
 
-		m_RootNode->addChild(&gfx_sys->GetDebugText()->getGroup());
+		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
 	}
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)

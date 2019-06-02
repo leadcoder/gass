@@ -38,15 +38,19 @@ namespace GASS
 
 	SimSystemManager::~SimSystemManager()
 	{
+		for(auto system : m_Systems)
+		{
+			system->OnSystemShutdown();
+		}
 	}
 
 	void SimSystemManager::Init()
 	{
 		m_SystemStepper.OnInit();
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Started";
-		for(size_t i = 0 ; i < m_Systems.size(); i++)
+		for(auto system : m_Systems)
 		{
-			m_Systems[i]->Init();
+			system->OnSystemInit();
 		}
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Completed";
 

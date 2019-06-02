@@ -94,7 +94,7 @@ namespace GASS
 		rm->RegisterResourceType(texture_type);
 	}
 
-	void OgreGraphicsSystem::Init()
+	void OgreGraphicsSystem::OnSystemInit()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OgreGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));

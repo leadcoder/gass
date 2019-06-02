@@ -31,11 +31,10 @@ namespace GASS
 	class CoreSystem : public Reflection<CoreSystem, SimSystem>
 	{
 	public:
-		CoreSystem(SimSystemManagerWeakPtr manager);
-		~CoreSystem() override;
 		static void RegisterReflection();
+		CoreSystem(SimSystemManagerWeakPtr manager);
+		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "CoreSystem";}
-		void Init() override;
 	protected:
 	};
 	typedef GASS_SHARED_PTR<CoreSystem> CoreSystemPtr;

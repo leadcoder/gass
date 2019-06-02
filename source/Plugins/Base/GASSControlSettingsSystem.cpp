@@ -250,6 +250,10 @@ namespace GASS
 	ControlSettingsSystem::~ControlSettingsSystem()
 	{
 		delete m_InputStringTable;
+	}
+
+	void ControlSettingsSystem::OnSystemShutdown() 
+	{
 		Free();
 	}
 
@@ -272,7 +276,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<ControlSettingsSystem>("ControlSettingsSystem");
 	}
 
-	void ControlSettingsSystem::Init() 
+	void ControlSettingsSystem::OnSystemInit()
 	{
 		//load default settings
 		ResourceHandle res("default_control_settings.xml");

@@ -33,8 +33,7 @@ namespace GASS
 		ODECollisionSystem(SimSystemManagerWeakPtr manager);
 		~ODECollisionSystem() override;
 		static void RegisterReflection();
-		void Init() override;
-		//virtual void Update(double delta_time);
+		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "ODECollisionSystem";}
 	};
 	typedef GASS_SHARED_PTR<ODECollisionSystem> ODECollisionSystemPtr;

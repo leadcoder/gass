@@ -81,9 +81,9 @@ void TextBox::setTextSize(unsigned int size)
     text->setCharacterSize(size);
 }
 
-osg::Group& TextBox::getGroup() const
+osg::ref_ptr <osg::Group> TextBox::getGroup() const
 {
-    return *matrixTransform;
+    return matrixTransform;
 }
 
 string TextBox::getText() const

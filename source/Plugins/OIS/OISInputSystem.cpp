@@ -77,7 +77,7 @@ namespace GASS
 
 	}
 
-	void OISInputSystem::Init()
+	void OISInputSystem::OnSystemInit()
 	{
 		if(m_OnlyProxy)
 		{

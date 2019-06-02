@@ -33,10 +33,10 @@ namespace GASS
 	{
 
 	public:
+		static void RegisterReflection();
 		ODEPhysicsSystem(SimSystemManagerWeakPtr manager);
 		~ODEPhysicsSystem() override;
-		static void RegisterReflection();
-		void Init() override;
+		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "ODEPhysicsSystem";}
 	protected:
 		void OnShutdown(MessagePtr message);

@@ -29,12 +29,12 @@ namespace GASS
 	class ProxyInputSystem :  public Reflection<ProxyInputSystem, SimSystem>, public IInputSystem, public IProxyInputSystem
 	{
 	public:
+		static void RegisterReflection();
 		ProxyInputSystem(SimSystemManagerWeakPtr manager);
 		~ProxyInputSystem() override;
-		static void RegisterReflection();
-		void Init() override;
-		std::string GetSystemName() const override {return "ProxyInputSystem";}
+		void OnSystemInit() override;
 		void OnSystemUpdate(double delta_time) override;
+		std::string GetSystemName() const override {return "ProxyInputSystem";}
 		
 		//IInputSystem
 		void AddKeyListener(IKeyListener* key_listener) override;

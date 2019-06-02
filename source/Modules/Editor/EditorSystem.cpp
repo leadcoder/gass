@@ -28,7 +28,7 @@ namespace GASS
 		RegisterProperty<std::string>("DefaultCameraTemplate",&EditorSystem::GetDefaultCameraTemplate, &EditorSystem::SetDefaultCameraTemplate);
 	}
 
-	void EditorSystem::Init()
+	void EditorSystem::OnSystemInit()
 	{
 	}
 

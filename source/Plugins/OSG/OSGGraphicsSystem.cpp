@@ -63,10 +63,12 @@ namespace GASS
 	{
 		if(m_Viewer)
 		{
-			osgDB::Registry::instance()->closeAllLibraries();
+			delete m_DebugTextBox;
+			m_ShadowTechnique.release();
+			//osgDB::Registry::instance()->closeAllLibraries();
 			m_Viewer->setDone(true);
 			//Sleep(1000);
-			m_Viewer->stopThreading();
+			//m_Viewer->stopThreading();
 			//Sleep(1000);
 		}
 		delete m_Viewer;
@@ -142,7 +144,7 @@ namespace GASS
 		}
 	}*/
 
-	void OSGGraphicsSystem::Init()
+	void OSGGraphicsSystem::OnSystemInit()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
@@ -345,7 +347,7 @@ namespace GASS
 			text_box->setFont(font_res->Path().GetFullPath());
 			text_box->setTextSize(10);
 
-			m_Viewer->getView(0)->getSceneData()->asGroup()->addChild(&text_box->getGroup());
+			m_Viewer->getView(0)->getSceneData()->asGroup()->addChild(text_box->getGroup());
 
 			m_TextBoxes[message->m_BoxID] = text_box;
 		}

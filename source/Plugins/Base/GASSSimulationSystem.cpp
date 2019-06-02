@@ -42,7 +42,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<SimulationSystem>("SimulationSystem");
 	}
 
-	void SimulationSystem::Init()
+	void SimulationSystem::OnSystemInit()
 	{
 		SceneManagerFactory::GetPtr()->Register<SimulationSceneManager>("SimulationSceneManager");
 	}

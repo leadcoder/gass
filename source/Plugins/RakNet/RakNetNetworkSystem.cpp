@@ -86,7 +86,7 @@ namespace GASS
 		RegisterProperty<bool>("RelayInputOnServer", &RakNetNetworkSystem::GetRelayInputOnServer,&RakNetNetworkSystem::SetRelayInputOnServer);
 	}
 
-	void RakNetNetworkSystem::Init()
+	void RakNetNetworkSystem::OnSystemInit()
 	{
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register<RaknetNetworkSceneManager>("NetworkSceneManager");

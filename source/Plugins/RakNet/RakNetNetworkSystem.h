@@ -86,12 +86,11 @@ namespace GASS
 
 	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
 	{
-
 	public:
+		static void RegisterReflection();
 		RakNetNetworkSystem(SimSystemManagerWeakPtr manager);
 		~RakNetNetworkSystem() override;
-		static void RegisterReflection();
-		void Init() override;
+		void OnSystemInit() override;
 
 		bool IsServer() const {return  m_IsServer;}
 		bool IsActive() const {return  m_Active;}

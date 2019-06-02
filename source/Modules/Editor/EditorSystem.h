@@ -23,7 +23,7 @@ namespace GASS
 		EditorSystem(SimSystemManagerWeakPtr manager);
 		~EditorSystem(void) override;
 		static  void RegisterReflection();
-		void Init() override;
+		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "EditorSystem";}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
 		ADD_PROPERTY(bool,LockTerrainObjects)

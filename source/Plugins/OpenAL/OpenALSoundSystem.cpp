@@ -46,7 +46,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<OpenALSoundSystem>("OpenALSoundSystem");
 	}
 
-	void OpenALSoundSystem::Init()
+	void OpenALSoundSystem::OnSystemInit()
 	{
 		if ( m_IsInitialised)
 			return;
@@ -74,7 +74,7 @@ namespace GASS
 
 		// Make the context current and active
 		alcMakeContextCurrent( m_Context );
-		CheckAlError("OpenALSoundSystem::Init()");
+		CheckAlError("OpenALSoundSystem::OnSystemInit()");
 
 		// Check for EAX 2.0 support and
 		// Retrieves function entry addresses to API ARB extensions, in this case,

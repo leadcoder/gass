@@ -46,7 +46,7 @@ namespace GASS
 		RegisterProperty<bool>("EnableJoystick", &GASS::ProxyInputSystem::GetEnableJoystick, &GASS::ProxyInputSystem::SetEnableJoystick);
 	}
 
-	void ProxyInputSystem::Init()
+	void ProxyInputSystem::OnSystemInit()
 	{
 		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new InputSystemLoadedEvent()));
 	}

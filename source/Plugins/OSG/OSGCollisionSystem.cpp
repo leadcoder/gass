@@ -38,7 +38,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<OSGCollisionSystem>("OSGCollisionSystem");
 	}
 
-	void OSGCollisionSystem::Init()
+	void OSGCollisionSystem::OnSystemInit()
 	{
 		SceneManagerFactory::GetPtr()->Register<OSGCollisionSceneManager>("OSGCollisionSceneManager");
 	}

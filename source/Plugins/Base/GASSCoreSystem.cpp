@@ -30,22 +30,14 @@ namespace GASS
 	  m_UpdateGroup = UGID_PRE_SIM;
 	}
 
-	CoreSystem::~CoreSystem(void)
-	{
-	
-	}
-
 	void CoreSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<CoreSystem>("CoreSystem");
 	}
 
-	void CoreSystem::Init()
+	void CoreSystem::OnSystemInit()
 	{
 	
 	}
 }
-
-
-
 

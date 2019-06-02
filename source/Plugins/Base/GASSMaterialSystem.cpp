@@ -43,7 +43,7 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<MaterialSystem>("MaterialSystem");
 	}
 
-	void MaterialSystem::Init()
+	void MaterialSystem::OnSystemInit()
 	{
 		//Load all material files from gass data path
 		std::vector<std::string> files;

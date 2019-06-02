@@ -37,13 +37,12 @@ namespace GASS
 		typedef std::map<std::string,ALuint> SoundMap;
 		typedef std::map<std::string,ALuint> SourceMap;
 
+		static void RegisterReflection();
 		OpenALSoundSystem(SimSystemManagerWeakPtr manager);
 		~OpenALSoundSystem() override;
-		static void RegisterReflection();
-		void Init() override;
-
+		void OnSystemInit() override;
+	
 		// OpenAL-specific functions
-		
 		void LoadWaveSound(const std::string &filePath,ALuint &buffer);
 		/**
 			Check or OpenAL error, will cast exception if error present

@@ -35,10 +35,10 @@ namespace GASS
 	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
+		static void RegisterReflection();
 		OSGCollisionSystem(SimSystemManagerWeakPtr manager);
 		~OSGCollisionSystem() override;
-		static void RegisterReflection();
-		void Init() override;
+		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "OSGCollisionSystem";}
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSystem> OSGCollisionSystemPtr;

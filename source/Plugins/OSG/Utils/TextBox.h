@@ -18,7 +18,8 @@ using std::string;
 
 // ####################################################################
 
-class TextBox{
+class TextBox
+{
 public:
 
   TextBox();
@@ -39,7 +40,7 @@ public:
   void setPosition(osg::Vec3d position);
   void setTextSize(unsigned int size);
     
-  osg::Group& getGroup() const;
+  osg::ref_ptr <osg::Group> getGroup() const;
     
   string getText() const;
     
@@ -48,17 +49,17 @@ private:
   //  Provides a buffer between any parent transformations and our 
   //  new matrix projection, ensures that we're working in our own 
   //  coordinate space.
-  osg::MatrixTransform * matrixTransform;
+  osg::ref_ptr<osg::MatrixTransform> matrixTransform;
     
   //  Projection that provides a surface on which to paint the text.
-  osg::Projection * projectionMatrix;
+  osg::ref_ptr <osg::Projection>  projectionMatrix;
     
   //  The Geode textGeode is used to hold our text. 
   //  osgText is a drawable, so osg::Geode is
   //  needed to add the text to the SceneGraph
-  osg::Geode * textGeode;
+  osg::ref_ptr <osg::Geode>  textGeode;
     
   //  The actual osgText object that holds textual data
-  osgText::Text * text;
+  osg::ref_ptr <osgText::Text> text;
 };
 #endif

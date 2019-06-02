@@ -45,12 +45,12 @@ namespace GASS
 	class OISInputSystem :  public Reflection<OISInputSystem, SimSystem>, public IInputSystem,public IProxyInputSystem, public OIS::MouseListener,public OIS::KeyListener,public OIS::JoyStickListener
 	{
 	public:
+		static void RegisterReflection();
 		OISInputSystem(SimSystemManagerWeakPtr manager);
 		~OISInputSystem() override;
-		static void RegisterReflection();
-		void Init() override;
-		std::string GetSystemName() const override {return "OISInputSystem";}
+		void OnSystemInit() override;
 		void OnSystemUpdate(double delta_time) override;
+		std::string GetSystemName() const override {return "OISInputSystem";}
 
 		//IInputSystem
 		void AddKeyListener(IKeyListener* key_listener) override;

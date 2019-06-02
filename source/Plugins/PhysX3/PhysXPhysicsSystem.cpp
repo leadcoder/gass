@@ -85,7 +85,7 @@ namespace GASS
 	}
 
 	PxGASSErrorCallback myErrorCallback;
-	void PhysXPhysicsSystem::Init()
+	void PhysXPhysicsSystem::OnSystemInit()
 	{
 		bool recordMemoryAllocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);

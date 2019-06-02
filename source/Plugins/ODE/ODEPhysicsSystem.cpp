@@ -58,7 +58,7 @@ namespace GASS
 		
 	}
 
-	void ODEPhysicsSystem::Init()
+	void ODEPhysicsSystem::OnSystemInit()
 	{
 		dInitODE2(0);
 		dAllocateODEDataForThread(~0U);

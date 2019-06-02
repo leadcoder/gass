@@ -34,7 +34,7 @@ namespace GASS
 		~MaterialSystem() override;
 		static void RegisterReflection();
 		std::string GetSystemName() const override {return "MaterialSystem";}
-		void Init() override;
+		void OnSystemInit() override;
 		void LoadMaterialFile(const std::string &file) override;
 		void AddMaterial(const PhysicsMaterial& mat) override;
 		bool HasMaterial(const std::string material_name) const override;

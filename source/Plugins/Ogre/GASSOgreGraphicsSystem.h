@@ -53,15 +53,14 @@ namespace GASS
 	typedef std::vector< std::string > PluginVector;
 	class OgreGraphicsSystem : public Reflection<OgreGraphicsSystem, SimSystem>, public IGraphicsSystem
 	{
-		
 		friend class OgreGraphicsSceneManager;
 	public:
+		static void RegisterReflection();
 		OgreGraphicsSystem(SimSystemManagerWeakPtr manager);
 		~OgreGraphicsSystem() override;
-		static void RegisterReflection();
-		void Init() override;
-		std::string GetSystemName() const override {return "OgreGraphicsSystem";}
+		void OnSystemInit() override;
 		void OnSystemUpdate(double time) override;
+		std::string GetSystemName() const override {return "OgreGraphicsSystem";}
 		
 		//IGraphicsSystem
 		RenderWindowPtr GetMainRenderWindow() const override;

@@ -36,12 +36,12 @@ namespace GASS
 	{
 		friend class OSGGraphicsSceneManager;
 	public:
+		static void RegisterReflection();
 		OSGGraphicsSystem(SimSystemManagerWeakPtr manager);
 		~OSGGraphicsSystem() override;
-		static void RegisterReflection();
-		void Init() override;
-		std::string GetSystemName() const override {return "OSGGraphicsSystem";}
+		void OnSystemInit() override;
 		void OnSystemUpdate(double delta_time) override;
+		std::string GetSystemName() const override { return "OSGGraphicsSystem"; }
 
 		RenderWindowPtr GetMainRenderWindow() const override;
 		RenderWindowVector GetRenderWindows() const override;
