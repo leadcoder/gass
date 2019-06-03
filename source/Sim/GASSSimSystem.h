@@ -62,6 +62,7 @@ namespace GASS
 
 		SimSystem(SimSystemManagerWeakPtr manager);
 		~SimSystem() override;
+		virtual void OnPostConstruction() {};
 		virtual void OnSystemInit() = 0;
 		virtual void OnSystemShutdown() {};
 		virtual std::string  GetSystemName() const = 0;
