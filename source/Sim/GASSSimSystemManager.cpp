@@ -143,6 +143,10 @@ namespace GASS
 				GASS_LOG(LINFO) << system->GetSystemName() << " created";
 				m_Systems.push_back(system);
 			}
+			else
+			{
+				GASS_LOG(LWARNING) << "Failed to create system:" << sysc.Name;
+			}
 		}
 	}
 

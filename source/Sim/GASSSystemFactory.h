@@ -52,8 +52,12 @@ namespace GASS
 
 		SimSystemPtr Create(const std::string &name, SimSystemManagerPtr ssm)
 		{
-			SimSystemPtr ss = m_Impl.IsCreatable(name) ? m_Impl.Create(name, ssm) : SimSystemPtr();
-			ss->OnPostConstruction();
+			SimSystemPtr ss;
+			if (m_Impl.IsCreatable(name))
+			{
+				ss = m_Impl.Create(name, ssm);
+				ss->OnPostConstruction();
+			}
 			return ss;
 		}
 	protected:
