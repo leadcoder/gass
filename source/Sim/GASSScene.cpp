@@ -137,6 +137,16 @@ namespace GASS
 		return "GASSSceneResGroup" + m_Name;
 	}
 
+	void Scene::Clear()
+	{
+		m_Root->RemoveAllChildrenNotify();
+		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		scenery->SetName("Scenery");
+		scenery->SetID("SCENARY_ROOT");
+		m_TerrainObjects = scenery;
+		m_Root->AddChildSceneObject(scenery, true);
+	}
+
 	void Scene::Load(const std::string &name)
 	{
 		m_FolderName = name;
@@ -169,13 +179,13 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
-		tinyxml2::XMLElement *scene = xmlDoc->FirstChildElement("Scene");
-		if(scene == NULL)
+		tinyxml2::XMLElement *scene_elem = xmlDoc->FirstChildElement("Scene");
+		if(scene_elem == NULL)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
 		}
-		LoadXML(scene);
+		LoadXML(scene_elem);
 		xmlDoc->Clear();
 		//Delete our allocated document
 		delete xmlDoc;
@@ -208,25 +218,13 @@ namespace GASS
 		if (!scene_path.Exist())
 		{
 			FileUtils::CreateDir(scene_path.GetFullPath());
-			//GASS_FILESYSTEM::create_directory(boost_path);
 		}
+
 		else if (!scene_path.IsDir())
 		{
 			return;
 		}
-		/*GASS_FILESYSTEM::path boost_path(scene_path.GetFullPath());
-		if(!GASS_FILESYSTEM::exists(boost_path))
-		{
-			//try
-			GASS_FILESYSTEM::create_directory(boost_path);
-		}
-		else if (!GASS_IS_DIRECTORY( boost_path) )
-		{
-			return;
-		}*/
-
-
-
+	
 		if(m_ResourceLocation.lock())//remove previous location?
 		{
 			ResourceGroupPtr(m_ResourceGroup)->RemoveResourceLocation(ResourceLocationPtr(m_ResourceLocation));

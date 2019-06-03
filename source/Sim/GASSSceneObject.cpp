@@ -212,6 +212,17 @@ namespace GASS
 		child->OnDelete();
 		ComponentContainer::RemoveChild(child);
 	}
+
+	void SceneObject::RemoveAllChildrenNotify()
+	{
+		ComponentContainer::ComponentContainerIterator children = GetChildren();
+		while (children.hasMoreElements())
+		{
+			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+			child->OnDelete();
+		}
+		ComponentContainer::RemoveAllChildren();
+	}
 	
 	void SceneObject::SendRemoveRequest(float delay)
 	{

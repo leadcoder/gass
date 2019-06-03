@@ -122,6 +122,8 @@ namespace GASS
 		*/
 		void Save(const std::string &name);
 
+		void Clear();
+
 			/**
 		Get scene scene name
 		*/
