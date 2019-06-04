@@ -20,10 +20,6 @@
 
 #pragma once
 
-#define GASS_USE_GHC_FILESYSTEM
-
-#ifdef GASS_USE_GHC_FILESYSTEM
-
 #ifdef _MSC_VER
 #pragma warning (push)
 #pragma warning (disable : 4100)
@@ -31,6 +27,7 @@
 #pragma warning (disable : 4244)
 #pragma warning (disable : 4701)
 #pragma warning (disable : 4706)
+#pragma warning (disable : 4800)
 #endif
 
 #include "filesystem.hpp"
@@ -44,49 +41,3 @@
 #define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
 #define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
 #define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
-
-#else //keep this for now 
-
-#if defined(GASS_USE_BOOST_FILESYSTEM)
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-#undef BOOST_NO_CXX11_SCOPED_ENUMS
-#define GASS_FILESYSTEM boost::filesystem
-
-#if(BOOST_FILESYSTEM_VERSION > 2)
-	#define GASS_TO_GENERIC_STRING(a) a.generic_string()
-#else
-	#define GASS_TO_GENERIC_STRING(a) a
-#endif
-#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
-#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
-#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_option::overwrite_if_exists
-#else //use experimental filesystem, TODO:test gcc
-#include <filesystem>
-
-
-//msvc2013
-#if (_MSC_VER == 1800)
-#define GASS_FILESYSTEM std::tr2::sys
-#define GASS_TO_GENERIC_STRING(a) a
-#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path<GASS_FILESYSTEM::path>
-#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory<GASS_FILESYSTEM::path>
-#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_option::overwrite_if_exists
-#elif (_MSC_VER == 1900) //MSVC2015
-#define GASS_FILESYSTEM std::tr2::sys
-#define GASS_TO_GENERIC_STRING(a) a.generic_string()
-#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
-#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
-#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
-#elif (_MSC_VER > 1900) //MSVC2017
-#define GASS_FILESYSTEM std::experimental::filesystem
-#define GASS_TO_GENERIC_STRING(a) a.generic_string()
-#define GASS_CURRENT_PATH GASS_FILESYSTEM::current_path
-#define GASS_IS_DIRECTORY GASS_FILESYSTEM::is_directory
-#define GASS_COPY_OPTION_OVERWRITE GASS_FILESYSTEM::copy_options::overwrite_existing
-#endif
-
-#endif
-#endif
-
-

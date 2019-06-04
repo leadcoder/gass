@@ -27,11 +27,8 @@ namespace GASS
 	{
 	public:
 		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
-#ifndef GASS_USE_BOOST_PTR
 		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
-#else
-		typedef std::set<GASS::SceneObjectWeakPtr> SceneObjectSet;
-#endif
+
 		EditorSceneManager(SceneWeakPtr scene);
 		virtual ~EditorSceneManager(void);
 		static  void RegisterReflection();

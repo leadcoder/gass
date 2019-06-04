@@ -83,7 +83,7 @@ namespace GASS
 		virtual void Copy(IPropertyOwner* dest, const IPropertyOwner* src) = 0;
 
 		/**
-            Set this property value by providing the value by the boost any class
+            Set this property value by providing the value by the any class
             @param object The object that is owner of this property
             @param value Value wrapped in the GASS_ANY class
         */

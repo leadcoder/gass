@@ -4,30 +4,6 @@
 
 include(Common)
 
-#Boost
-if(GASS_USE_BOOST)
-	find_package(Boost REQUIRED system filesystem thread)
-	if("${CMAKE_VERSION}" VERSION_LESS 3.5.0)
-		find_package(Boost REQUIRED date_time chrono)
-		gass_create_dep_target(Boost INCLUDE_DIRS ${Boost_INCLUDE_DIR})
-		set(BOOST_FILE_LIBRARIES optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
-			 optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
-			 debug ${Boost_FILESYSTEM_LIBRARY_DEBUG}
-			 debug ${Boost_SYSTEM_LIBRARY_DEBUG})
-		
-		set(BOOST_THREAD_LIBRARIES optimized ${Boost_THREAD_LIBRARY_RELEASE} ${Boost_DATE_TIME_LIBRARY_RELEASE} ${Boost_CHRONO_LIBRARY_RELEASE}
-			 debug ${Boost_THREAD_LIBRARY_DEBUG} ${Boost_DATE_TIME_LIBRARY_DEBUG} ${Boost_CHRONO_LIBRARY_DEBUG}) 
-			 
-		gass_create_dep_target(Boost::filesystem INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_FILE_LIBRARIES})
-		gass_create_dep_target(Boost::thread INCLUDE_DIRS ${Boost_INCLUDE_DIR} LIBRARIES ${BOOST_THREAD_LIBRARIES})
-	endif()
-endif()
-
-if(GASS_BUILD_SIM)
-	#find_package(AngelScript REQUIRED)
-	#gass_create_dep_target(AngelScript INCLUDE_DIRS ${ANGELSCRIPT_INCLUDE_DIRS} LIBRARIES ${ANGELSCRIPT_LIBRARIES})
-endif()
-
 if(GASS_BUILD_PLUGIN_OGRE)
 	#FindOgre.cmake use environment var OGRE_HOME
 	find_package(OGRE REQUIRED)
@@ -66,11 +42,9 @@ if(GASS_BUILD_PLUGIN_OGRE)
 		${OGRE_RenderSystem_GL_DBG}
 		${OGRE_PLUGIN_DIR_DBG}/cg.dll)
 	
-	if (OGRE_CONFIG_THREAD_PROVIDER EQUAL 1) #check if we need to add boost include dirs
-   		if(NOT GASS_USE_BOOST) #Check if boost include dirs already added by GASSCore
-			find_package(Boost)
-			set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
-		endif()
+	if (OGRE_CONFIG_THREAD_PROVIDER EQUAL 1) #need boost headers
+   		find_package(Boost)
+		set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
    	endif()
 	gass_create_dep_target(Ogre 
 		INCLUDE_DIRS ${OGRE_INCLUDE_DIRS}
@@ -80,7 +54,6 @@ if(GASS_BUILD_PLUGIN_OGRE)
 endif()
 
 if(GASS_BUILD_PLUGIN_ENVIRONMENT)
-	#set(SKYX_DIR   $ENV{SKYX_HOME} CACHE PATH "SkyX folder")
 	find_package(SkyX REQUIRED)
 	gass_create_dep_target(SkyX 
 					INCLUDE_DIRS ${SKYX_INCLUDE_DIRS} 
@@ -88,7 +61,6 @@ if(GASS_BUILD_PLUGIN_ENVIRONMENT)
 					BINARIES_REL ${SKYX_BINARY_REL}
 					BINARIES_DBG ${SKYX_BINARY_DBG})
 	
-	#set(HYDRAX_DIR $ENV{HYDRAX_HOME} CACHE PATH "Hydrax folder")
 	find_package(Hydrax REQUIRED)
 	gass_create_dep_target(Hydrax INCLUDE_DIRS ${HYDRAX_INCLUDE_DIRS} LIBRARIES ${HYDRAX_LIBRARIES})
 endif()
@@ -140,7 +112,6 @@ endif()
 
 #RakNet
 if(GASS_BUILD_PLUGIN_RAKNET)
-	#set(RAKNET_DIR  $ENV{RAKNET_HOME} CACHE PATH "RakNet folder")
 	find_package(RakNet)
 	if(WIN32)
 		set(RAKNET_LIBRARIES ${RAKNET_LIBRARIES} debug ws2_32 optimized ws2_32)
@@ -170,13 +141,6 @@ endif()
 if(GASS_BUILD_PLUGIN_PHYSX)
 	set(PHYSX3_INSTALL_DIR $ENV{PHYSX_HOME} CACHE PATH "PhysX folder")
 	find_package(PhysX3 REQUIRED)
-	# if(GASS_INSTALL_DEP_BINARIES AND WIN32)
-		# FILE(COPY ${PX_BINARIES_REL} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-		# FILE(COPY ${PX_BINARIES_DBG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
-			
-		# install(FILES ${PX_BINARIES_REL} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
-		# install(FILES ${PX_BINARIES_DBG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
-	# endif()
 	gass_create_dep_target(PhysX3 INCLUDE_DIRS ${PHYSX3_INCLUDE_DIR} 
 								LIBRARIES ${PHYSX3_LIBRARIES}
 								BINARIES_REL ${PX_BINARIES_REL}
@@ -184,9 +148,6 @@ if(GASS_BUILD_PLUGIN_PHYSX)
 endif()
 
 if(GASS_BUILD_PLUGIN_OSGEARTH)
-	#set(CMAKE_MODULE_PATH
-	#	${CMAKE_MODULE_PATH}
-	#	$ENV{OSGEARTHDIR}/CMakeModules)
 	find_package(OSGEarthExt)
 	set(OSGEARTH_LIBRARIES optimized ${OSGEARTH_LIBRARY}
 						optimized ${OSGEARTHFEATURES_LIBRARY}

@@ -85,7 +85,6 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 
-option(GASS_USE_BOOST "Should Boost be used or not" OFF)
 option(GASS_BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(GASS_BUILD_TESTS "Enable tests (using Catch test framework)" OFF)
 
@@ -111,8 +110,6 @@ if(GASS_BUILDTYPE_STATIC)
 	set(GASS_BUILDTYPE STATIC)
 	set(GASS_COMMON_DEFINITIONS GASS_STATIC_BUILD)
 endif()
-
-
 
 include(DepTargets)
 
@@ -151,12 +148,14 @@ configure_file(
 
 set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
 
-configure_file(
+if(GASS_BUILD_SIM)
+	configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
 		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake" 
 		@ONLY)
 
-set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+	set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+endif()
 
 install(FILES ${GASS_CMAKE_FILES} DESTINATION CMake/)
 install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)

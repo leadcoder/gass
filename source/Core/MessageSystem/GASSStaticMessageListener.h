@@ -23,7 +23,7 @@ namespace GASS
 
 	/**
 	Convenient class that static allocated suscribers can derive from
-	The message registration macro assume that the boost shared_from_this method 
+	The message registration macro assume that the shared_from_this method 
 	is present, this class fake that with the null_deleter
 	*/
 

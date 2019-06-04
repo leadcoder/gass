@@ -21,26 +21,9 @@
 #pragma once
 
 #include "Core/Common.h"
-
-#if 0 //GASS_USE_BOOST
-    #ifdef _MSC_VER
-        #pragma warning( push )
-        #pragma warning( disable: 4996)
-	#endif
-	#include <boost/uuid/uuid.hpp>
-	#include <boost/uuid/uuid_generators.hpp>
-	#include <boost/uuid/uuid_io.hpp>
-	#ifdef _MSC_VER
-        #pragma warning( pop )
-	#endif
-	#define GASS_GUID boost::uuids::uuid
-	#define GASS_GUID_NULL boost::uuids::nil_uuid()
-	#define GASS_GUID_GENERATE boost::uuids::random_generator()()
-#else
-	#include "Sim/Utils/guid.h"
-	#define GASS_GUID Guid
-	#define GASS_GUID_NULL Guid()
-	#define GASS_GUID_GENERATE GuidGenerator::newGuid()
-#endif
+#include "Sim/Utils/guid.h"
+#define GASS_GUID Guid
+#define GASS_GUID_NULL Guid()
+#define GASS_GUID_GENERATE GuidGenerator::newGuid()
 
 

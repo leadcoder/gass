@@ -95,8 +95,8 @@ namespace GASS
 
 	bool FileUtils::FileExist(const std::string &file_name)
 	{
-		GASS_FILESYSTEM::path boost_path(file_name); 
-		return GASS_FILESYSTEM::exists(boost_path);
+		GASS_FILESYSTEM::path file_path(file_name); 
+		return GASS_FILESYSTEM::exists(file_path);
 	}
 
 	void FileUtils::CreateDir(const std::string &dir)

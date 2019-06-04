@@ -67,24 +67,6 @@ namespace GASS
 				}
 			}
 		}
-		
-		/*GASS_FILESYSTEM::path boost_path(rl->GetPath().GetFullPath());
-		if( GASS_FILESYSTEM::exists(boost_path))
-		{
-			rl->ParseLocation();
-			m_ResourceLocations.push_back(rl);
-			SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceLocationAddedEventPtr(new ResourceLocationAddedEvent(rl)));
-			GASS_FILESYSTEM::directory_iterator end ;
-			for(GASS_FILESYSTEM::directory_iterator iter(boost_path) ; iter != end ; ++iter )
-			{
-				if (GASS_IS_DIRECTORY( *iter ) && iter->path().string().find(".svn") == std::string::npos) //ignore svn folders!
-				{
-					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(),iter->path().string(),rl->GetType()));
-
-					AddResourceLocationRecursive(rec_rl);
-				}
-			}
-		}*/
 	}
 
 	void ResourceGroup::RemoveResourceLocation(ResourceLocationPtr location)

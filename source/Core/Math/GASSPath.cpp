@@ -91,7 +91,7 @@ namespace GASS
 		// step through segments, subtracting off segment lengths until
 		// locating the segment that contains the original pathDistance.
 		// Interpolate along that segment to find 3d point value to return.
-		Vec3 result;
+		Vec3 result(0,0,0);
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
 			const Float segmentLength = lengths[i-1];

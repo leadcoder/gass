@@ -128,8 +128,6 @@ namespace GASS
 
 #include <cassert>
 
-
-
 //stl
 #include <string>
 #include <vector>
@@ -142,74 +140,25 @@ namespace GASS
 #endif
 #include <algorithm>
 
-//Force to use boost?
-//#if defined( _MSC_VER ) && _MSC_VER < 1700
-//	#define GASS_USE_BOOST
-//#endif
+#include <mutex>
+#define GASS_MUTEX std::mutex
+#define GASS_MUTEX_LOCK(a) std::lock_guard<std::mutex> m_lock(a);
 
-//#ifdef GASS_USE_BOOST
-	//#define GASS_USE_BOOST_FUNC_BIND
-	//#define GASS_USE_BOOST_PTR
-	//#define GASS_USE_BOOST_FILESYSTEM
-	//#define GASS_USE_BOOST_ANY
-	//#define GASS_USE_BOOST_THREADS
-//#endif
-//#undef GASS_USE_BOOST
+#include "Core/Utils/GASSAny.h"
+#define GASS_ANY any
+#define GASS_ANY_CAST any_cast
 
-#ifdef GASS_USE_BOOST_THREADS
-	#include <boost/thread/locks.hpp>
-	#include <boost/thread/mutex.hpp>
-	#define GASS_MUTEX boost::mutex
-	#define GASS_MUTEX_LOCK(a) boost::lock_guard<boost::mutex> m_lock(a);
-#else
-	#include <mutex>
-	#define GASS_MUTEX std::mutex
-	#define GASS_MUTEX_LOCK(a) std::lock_guard<std::mutex> m_lock(a);
-#endif
+#include <functional>
+#define GASS_PLACEHOLDERS std::placeholders
+#define GASS_BIND std::bind
+#define GASS_FUNCTION std::function
 
-#ifdef GASS_USE_BOOST_ANY
-	#include <boost/any.hpp>
-	#define GASS_ANY boost::any
-	#define GASS_ANY_CAST boost::any_cast
-#else
-	#include "Core/Utils/GASSAny.h"
-	#define GASS_ANY any
-	#define GASS_ANY_CAST any_cast
-#endif
-
-#ifdef GASS_USE_BOOST_FUNC_BIND
-	#include <boost/bind.hpp>
-	#include <boost/function.hpp>
-	#define GASS_BIND boost::bind
-	#define GASS_FUNCTION boost::function
-	#define GASS_PLACEHOLDERS
-#else
-	#include <functional>
-	#define GASS_PLACEHOLDERS std::placeholders
-	#define GASS_BIND std::bind
-	#define GASS_FUNCTION std::function
-#endif
-
-#ifdef GASS_USE_BOOST_PTR
-	#include <boost/shared_ptr.hpp>
-	#include <boost/weak_ptr.hpp>
-	#include <boost/shared_ptr.hpp>
-	#include <boost/enable_shared_from_this.hpp>
-	#include <boost/make_shared.hpp>
-	#define GASS_SHARED_PTR boost::shared_ptr
-	#define GASS_WEAK_PTR boost::weak_ptr
-	#define GASS_DYNAMIC_PTR_CAST boost::dynamic_pointer_cast
-	#define GASS_STATIC_PTR_CAST boost::static_pointer_cast
-	#define GASS_ENABLE_SHARED_FROM_THIS boost::enable_shared_from_this
-	#define GASS_MAKE_SHARED boost::make_shared
-#else
-	#define GASS_SHARED_PTR std::shared_ptr
-	#define GASS_WEAK_PTR std::weak_ptr
-	#define GASS_DYNAMIC_PTR_CAST std::dynamic_pointer_cast
-	#define GASS_STATIC_PTR_CAST std::static_pointer_cast
-	#define GASS_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
-	#define GASS_MAKE_SHARED std::make_shared
-#endif
+#define GASS_SHARED_PTR std::shared_ptr
+#define GASS_WEAK_PTR std::weak_ptr
+#define GASS_DYNAMIC_PTR_CAST std::dynamic_pointer_cast
+#define GASS_STATIC_PTR_CAST std::static_pointer_cast
+#define GASS_ENABLE_SHARED_FROM_THIS std::enable_shared_from_this
+#define GASS_MAKE_SHARED std::make_shared
 
 #define GASS_FORWARD_DECL(CLASS) class CLASS; typedef GASS_SHARED_PTR<CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<CLASS> CLASS##WeakPtr;
 #define GASS_PTR_DECL(CLASS) typedef GASS_SHARED_PTR<CLASS> CLASS##Ptr; typedef GASS_WEAK_PTR<CLASS> CLASS##WeakPtr;

@@ -13,7 +13,7 @@ configure_file(
 		@ONLY)
 set(GASS_CONFIG_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSConfig.h")	
 	 
-#add all source files from current directory (recursively)
+#add all source files from current directory
 set(CPP_FILES
 	ComponentSystem/GASSComponent.cpp
 	ComponentSystem/GASSComponentContainer.cpp
@@ -149,16 +149,11 @@ else()
    set(PLATFORM_DEPS ${CMAKE_DL_LIBS})
 endif()
 
-#if(GASS_USE_BOOST)
-#	set(BOOST_DEPS Boost::filesystem Boost::thread)
-#endif()
-
 gass_setup_lib(GASSCore
 					BUILDTYPE ${GASS_BUILDTYPE}
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
 					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_BINARY_DIR}/../"
-					PUBLIC_DEPS ${BOOST_DEPS}
 					PRIVATE_DEPS ${PLATFORM_DEPS}
 					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 					
