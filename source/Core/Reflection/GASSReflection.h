@@ -52,15 +52,15 @@ namespace GASS
         template parameter.
 	*/
 
-	template <class T, class TInClass>
-	class Reflection : public TInClass
+	template <class DerivedClass, class AncestorClass>
+	class Reflection : public AncestorClass
 	{
 	public :
-		typedef GASS_SHARED_PTR<T> TPtr;
+		typedef GASS_SHARED_PTR<DerivedClass> TPtr;
 		
 		template<typename... Args>
 		Reflection(Args... args) :
-			TInClass(args...) {}
+			AncestorClass(args...) {}
 
 
 		// Default reflection registration function. Does nothing by default.
@@ -78,27 +78,38 @@ namespace GASS
 			typename SetterArgumentType, 
 			typename SetterReturnType>
 		static void RegisterProperty(const std::string &name, 
-			GetterReturnType(T::*getter)() const,
-			SetterReturnType(T::*setter)(SetterArgumentType),
+			GetterReturnType(DerivedClass::*getter)() const,
+			SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
 			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			auto* property = new Property<T, PropertyType, GetterReturnType, SetterArgumentType, SetterReturnType>( name, getter, setter,meta_data);
-			T::GetClassRTTI()->GetProperties()->push_back(property);
+			auto* property = new GetSetProperty<DerivedClass, PropertyType, GetterReturnType, SetterArgumentType, SetterReturnType>( name, getter, setter,meta_data);
+			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		template <
+		//same as above but without out property type, type resolved from get method
+	/*	template <
 			typename GetterReturnType,
 			typename SetterArgumentType,
 			typename SetterReturnType>
-			static void RegisterGetSetProperty(const std::string &name,
-				GetterReturnType(T::*getter)() const,
-				SetterReturnType(T::*setter)(SetterArgumentType),
+			static void RegisterProperty(const std::string &name,
+				GetterReturnType(DerivedClass::*getter)() const,
+				SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			//typedef typename RemoveConstRef<GetterReturnType>::Type RawType;
-			auto* property = CreateProperty<T, GetterReturnType, SetterArgumentType, SetterReturnType >(name, getter, setter, meta_data);//new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
-			T::GetClassRTTI()->GetProperties()->push_back(property);
+			auto* property = CreateProperty<DerivedClass, GetterReturnType, SetterArgumentType, SetterReturnType >(name, getter, setter, meta_data);//new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
+		*/
+		template <typename PropertyType>
+			static void RegisterProperty(const std::string &name,
+				PropertyType DerivedClass::* member_ptr,
+				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
+		{
+			auto* property = new MemberProperty<DerivedClass, PropertyType>(name, member_ptr, meta_data);
+			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
+		}
+		
+		
 		
 
 		static inline RTTI* GetClassRTTI()
@@ -114,7 +125,7 @@ namespace GASS
 		static RTTI	m_RTTI;
 	};
 
-	template <class T, class TInClass> RTTI Reflection<T, TInClass>::m_RTTI
-		(GASS::StringUtils::Demangle(std::string(typeid(T).name())), TInClass::GetClassRTTI(),
-		T::RegisterReflection );
+	template <class DerivedClass, class AncestorClass> RTTI Reflection<DerivedClass, AncestorClass>::m_RTTI
+		(GASS::StringUtils::Demangle(std::string(typeid(DerivedClass).name())), AncestorClass::GetClassRTTI(),
+		DerivedClass::RegisterReflection );
 }

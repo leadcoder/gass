@@ -23,25 +23,8 @@
 
 #include "Core/Common.h"
 #include "Core/Math/GASSVector.h"
+#include "Core/Serialize/GASSSTDSerialize.h"
 
-namespace tinyxml2
-{
-	class XMLElement;
-}
-/*#define READ_ULONG *(unsigned long*)ptr;	ptr += 4
-#define READ_LONG *(long*)ptr;	ptr += 4
-#define READ_FLOAT *(float*)ptr;	ptr += 4
-#define READ_SHORT *(short*)ptr;	ptr += 2
-#define READ_USHORT *(unsigned short*)ptr;	ptr += 2
-#define READ_CHAR *(char*)ptr;	ptr++
-#define READ_UCHAR *(unsigned char*)ptr;	ptr++
-
-// Constants replacing windows specific _MAX_DRIVE, _MAX_DIR etc
-const int GASS_MAX_DRIVE = 3;
-const int GASS_MAX_DIR	= 256;
-const int GASS_MAX_FNAME	= 256;
-const int GASS_MAX_EXT	= 256;
-*/
 namespace GASS
 {
 	/** \addtogroup GASSCore
@@ -98,8 +81,109 @@ namespace GASS
 		}
 		static std::string Demangle(const std::string &name);
 
+		template <class TYPE>
+		static bool GetValueFromString(TYPE &res, const std::string &s)
+		{
+			std::stringstream ss(s);
+			ss >> res;
+			return !ss.fail();
+		}
 
+		//Use specialized template to catch std::string
+		template <>
+		static bool GetValueFromString<std::string>(std::string &res, const std::string &s);
+
+		//Use specialized template to catch bool
+		template <>
+		static bool GetValueFromString<bool>(bool &res, const std::string &s);
+
+		//-------------------------Get string from value---------------------
+		template <class TYPE>
+		static bool GetStringFromValue(const TYPE &val, std::string &res)
+		{
+			std::stringstream sstream;
+
+			//we prefer bool values as "true"/"false" in string
+			sstream.setf(std::ios::boolalpha);
+
+			sstream << val;
+			res = sstream.str();
+			return true;
+		}
+
+		//Use specialized template to catch float
+		template <>
+		static bool GetStringFromValue<float>(const float &val, std::string &res);
+
+		//Use specialized template to catch double
+		template <>
+		static bool GetStringFromValue<double>(const double &val, std::string &res);
+
+		//Use specialized template to catch float vector
+		template <>
+		static bool GetStringFromValue< std::vector<float> >(const std::vector<float> &val, std::string &res);
+
+		//Use specialized template to catch double vector
+		template <>
+		static bool GetStringFromValue< std::vector<double> >(const std::vector<double> &val, std::string &res);
 	};
+
+	//Specialized template implementation to catch std::string
+	template <>
+	bool StringUtils::GetValueFromString<std::string>(std::string &res, const std::string &s)
+	{
+		res = s;
+		return true;
+	}
+
+	//Specialized template implementation to catch bool
+	template <>
+	bool StringUtils::GetValueFromString<bool>(bool &res, const std::string &s)
+	{
+		std::stringstream ss;
+		if (s.find("0") == std::string::npos && s.find("1") == std::string::npos)
+			ss.setf(std::ios::boolalpha);
+		ss << s;
+		ss >> res;
+		return !ss.fail();
+	}
+
+	template <>
+	bool StringUtils::GetStringFromValue(const float &val, std::string &res)
+	{
+		std::stringstream ss;
+		// When converting to float/double, clamp values to max precision data type (digits10) can guarantee + 1 value digit.
+		ss << std::setprecision(std::numeric_limits<float>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
+
+	template <>
+	bool StringUtils::GetStringFromValue(const double &val, std::string &res)
+	{
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<double>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
+
+	template <>
+	bool StringUtils::GetStringFromValue(const std::vector<float> &val, std::string &res)
+	{
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<float>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
+
+	template <>
+	bool StringUtils::GetStringFromValue(const std::vector<double> &val, std::string &res)
+	{
+		std::stringstream ss;
+		ss << std::setprecision(std::numeric_limits<double>::digits10 + 1) << val;
+		res = ss.str();
+		return !ss.fail();
+	}
 }
 
 #endif // #ifndef StringUtils_HH

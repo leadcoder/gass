@@ -22,6 +22,7 @@
 #include "Core/Common.h"
 #include "GASSStringUtils.h"
 #include "Core/Utils/GASSException.h"
+
 #include <cctype>
 #ifndef _MSC_VER
     #include <cxxabi.h>
@@ -103,4 +104,6 @@ namespace GASS
 		}
 		return ret;
 	}
+
+
 }

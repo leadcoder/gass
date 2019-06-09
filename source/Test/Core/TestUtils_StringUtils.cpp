@@ -8,10 +8,10 @@ void TestStream(const TYPE value, const std::string &expected_string)
 {
 	std::string out_str;
 	TYPE out_value;
-	bool success = GASS::GetStringFromValue(value, out_str);
+	bool success = GASS::StringUtils::GetStringFromValue(value, out_str);
 	REQUIRE(success == true);
 	REQUIRE(out_str == expected_string);
-	success = GASS::GetValueFromString(out_value, expected_string);
+	success = GASS::StringUtils::GetValueFromString(out_value, expected_string);
 	REQUIRE(out_value == value);
 }
 
@@ -19,7 +19,7 @@ template<typename TYPE>
 void CheckStringToValue(const std::string &string_to_parse, const TYPE &expected_value)
 {
 	TYPE out_value;
-	bool success = GASS::GetValueFromString(out_value, string_to_parse);
+	bool success = GASS::StringUtils::GetValueFromString(out_value, string_to_parse);
 	REQUIRE(success == true);
 	REQUIRE(out_value == expected_value);
 }
@@ -29,10 +29,10 @@ template<typename TYPE>
 void CheckStringRoundTrip(const TYPE value)
 {
 	std::string str;
-	bool success = GASS::GetStringFromValue(value, str);
+	bool success = GASS::StringUtils::GetStringFromValue(value, str);
 	REQUIRE(success == true);
 	TYPE out_value;
-	success = GASS::GetValueFromString(out_value, str);
+	success = GASS::StringUtils::GetValueFromString(out_value, str);
 	REQUIRE(success == true);
 	REQUIRE(out_value == value);
 }
@@ -117,7 +117,7 @@ TEST_CASE("Test replacing different strings")
 
 		//Test precision (numeric limit)
 		std::string out_str;
-		bool success = GASS::GetStringFromValue(double(123456789.12345679), out_str);
+		bool success = GASS::StringUtils::GetStringFromValue(double(123456789.12345679), out_str);
 		REQUIRE(success == true);
 		REQUIRE(out_str == "123456789.1234568");
 	}
@@ -134,7 +134,7 @@ TEST_CASE("Test replacing different strings")
 		std::string out_str;
 
 		//test float round
-		bool success = GASS::GetStringFromValue(float(1234.3456), out_str);
+		bool success = GASS::StringUtils::GetStringFromValue(float(1234.3456), out_str);
 		REQUIRE(success == true);
 		REQUIRE(out_str == "1234.346");
 	}
