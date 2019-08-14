@@ -36,6 +36,7 @@
 #include <osgEarth/ImageLayer>
 #include <osgEarth/ModelLayer>
 #include <osgEarth/GeoTransform>
+#include <osgEarthFeatures/FeatureModelLayer>
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/ExampleResources>
 #include <osgEarthUtil/EarthManipulator>

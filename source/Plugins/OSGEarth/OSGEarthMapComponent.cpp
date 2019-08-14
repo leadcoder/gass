@@ -112,6 +112,8 @@ namespace GASS
 				layer_type = MLT_ELEVATION;
 			else if (dynamic_cast<osgEarth::ModelLayer*>(m_Layer))
 				layer_type = MLT_MODEL;
+			else if (dynamic_cast<osgEarth::Features::FeatureModelLayer*>(m_Layer))
+				layer_type = MLT_FEATURE_MODEL;
 			return layer_type;
 		}
 

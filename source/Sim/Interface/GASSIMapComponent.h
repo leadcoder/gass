@@ -28,7 +28,8 @@ namespace GASS
 	{
 		MLT_IMAGE,
 		MLT_ELEVATION,
-		MLT_MODEL
+		MLT_MODEL,
+		MLT_FEATURE_MODEL
 	};
 
 	class IMapLayer
