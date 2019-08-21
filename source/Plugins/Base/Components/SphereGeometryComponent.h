@@ -44,12 +44,12 @@ namespace GASS
 		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
 	protected:
-		ADD_PROPERTY(bool, Wireframe);
 		void SetRadius(Float value);
 		void UpdateMesh();
 		void SetColor(const ColorRGBA  &value);
 		ColorRGBA GetColor() const {return m_Color;}
 	private:
+		bool m_Wireframe;
 		Float m_Radius;
 		ColorRGBA m_Color;
 	};

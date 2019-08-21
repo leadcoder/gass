@@ -24,12 +24,12 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register<EditorSystem>("EditorSystem");
 		SceneManagerFactory::GetPtr()->Register<EditorSceneManager>("EditorSceneManager");
-		RegisterProperty<bool>("LockTerrainObjects",&EditorSystem::GetLockTerrainObjects, &EditorSystem::SetLockTerrainObjects);
-		RegisterProperty<std::string>("DefaultCameraTemplate",&EditorSystem::GetDefaultCameraTemplate, &EditorSystem::SetDefaultCameraTemplate);
+		RegisterMember("LockTerrainObjects", &EditorSystem::m_LockTerrainObjects);
+		RegisterMember("DefaultCameraTemplate", &EditorSystem::m_DefaultCameraTemplate);
 	}
 
 	void EditorSystem::OnSystemInit()
 	{
-	}
 
+	}
 }

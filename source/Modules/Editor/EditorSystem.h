@@ -26,9 +26,12 @@ namespace GASS
 		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "EditorSystem";}
 		GUISchemaLoader* GetGUISettings() const {return m_GUISettings;}
-		ADD_PROPERTY(bool,LockTerrainObjects)
-		ADD_PROPERTY(std::string,DefaultCameraTemplate)
+
+		bool GetLockTerrainObjects() const { return m_LockTerrainObjects; }
+		std::string GetDefaultCameraTemplate() const { return m_DefaultCameraTemplate; }
 	protected:
+		bool m_LockTerrainObjects;
+		std::string m_DefaultCameraTemplate;
 		GUISchemaLoader* m_GUISettings;
 	};
 	typedef GASS_SHARED_PTR<EditorSystem> EditorSystemPtr;

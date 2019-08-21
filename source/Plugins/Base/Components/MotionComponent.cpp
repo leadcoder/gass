@@ -69,19 +69,19 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("MotionComponent",new Creator<MotionComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MotionComponent", OF_VISIBLE)));
-		RegisterProperty<Float>("Acceleration", &GASS::MotionComponent::GetAcceleration, &GASS::MotionComponent::SetAcceleration,
+		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Acceleration [m/s2]",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<Float>("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("MaxTurnSpeed", &GASS::MotionComponent::GetMaxTurnSpeed, &GASS::MotionComponent::SetMaxTurnSpeed,
+		RegisterMember("MaxTurnSpeed", &GASS::MotionComponent::m_MaxTurnSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Angular Max Speed [deg/s]",PF_VISIBLE | PF_EDITABLE)));
 		//RegisterProperty<MotionModeBinder>("Mode", &GASS::MotionComponent::GetMode, &GASS::MotionComponent::SetMode,
 		//	EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Motion Mode",PF_VISIBLE,&MotionModeBinder::GetStringEnumeration)));
 
-		RegisterProperty<bool>("GroundClamp", &GASS::MotionComponent::GetGroundClamp, &GASS::MotionComponent::SetGroundClamp,
+		RegisterMember("GroundClamp", &GASS::MotionComponent::m_GroundClamp,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("GroundClamp", PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<bool>("Debug", &GASS::MotionComponent::GetDebug, &GASS::MotionComponent::SetDebug,
+		RegisterMember("Debug", &GASS::MotionComponent::m_Debug,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Debug", PF_VISIBLE | PF_EDITABLE)));
 	}
 

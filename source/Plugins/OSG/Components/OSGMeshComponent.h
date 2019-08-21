@@ -65,8 +65,6 @@ namespace GASS
 		osg::ref_ptr<osg::Node> GetNode() const override {return m_MeshNode ;}
 		std::vector<std::string> GetAvailableMeshFiles() const;
 	protected:
-		ADD_PROPERTY(std::string,EnumerationResourceGroup)
-		ADD_PROPERTY(bool,FlipDDS)
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
@@ -102,6 +100,8 @@ namespace GASS
 		bool m_Lighting;
 		bool m_Expand;
 		bool m_Collision;
+		std::string m_EnumerationResourceGroup;
+		bool m_FlipDDS;
 	};
 
 	typedef GASS_SHARED_PTR<OSGMeshComponent> OSGMeshComponentPtr;

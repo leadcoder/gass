@@ -63,23 +63,7 @@ namespace GASS
 		TextBox* GetDebugText() const { return m_DebugTextBox; }
 	protected:
 		void _SetupShadowNode();
-		ADD_PROPERTY(bool,FlipDDS);
-		ADD_PROPERTY(std::string, ShadowType);
-		ADD_PROPERTY(float, PSSMMaxFarDistance);
-		ADD_PROPERTY(int, PSSMTextureSize);
-		ADD_PROPERTY(int, PSSMTextureCount);
-		ADD_PROPERTY(float, PSSMMinNearDistanceForSplits);
-		ADD_PROPERTY(float, PSSMMoveVCamBehindRCamFactor);
-		ADD_PROPERTY(double, PSSMPolyOffsetFactor);
-		ADD_PROPERTY(double, PSSMPolyOffsetUnit);
 		
-		ADD_PROPERTY(std::string, LiSPSMSubType);
-		ADD_PROPERTY(float, LiSPSMMinLightMargin);
-		ADD_PROPERTY(float, LiSPSMMaxFarPlane);
-		ADD_PROPERTY(int, LiSPSMTextureSize);
-		ADD_PROPERTY(int, LiSPSMBaseTextureUnit);
-		ADD_PROPERTY(int, LiSPSMShadowTextureUnit);
-
 		//void LoadXML(tinyxml2::XMLElement *elem) override;
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
@@ -100,6 +84,23 @@ namespace GASS
 		typedef std::map<std::string, osg::ref_ptr<osg::StateSet> > MaterialMap;
 		MaterialMap m_Materials;
 		std::vector<std::string> m_DebugVec;
+		
+		bool m_FlipDDS;
+		std::string m_ShadowType;
+		float m_PSSMMaxFarDistance;
+		int m_PSSMTextureSize;
+		int m_PSSMTextureCount;
+		float m_PSSMMinNearDistanceForSplits;
+		float m_PSSMMoveVCamBehindRCamFactor;
+		double m_PSSMPolyOffsetFactor;
+		double m_PSSMPolyOffsetUnit;
+
+		std::string m_LiSPSMSubType;
+		float m_LiSPSMMinLightMargin;
+		float m_LiSPSMMaxFarPlane;
+		int m_LiSPSMTextureSize;
+		int m_LiSPSMBaseTextureUnit;
+		int m_LiSPSMShadowTextureUnit;
 	};
 	typedef GASS_SHARED_PTR<OSGGraphicsSystem>  OSGGraphicsSystemPtr;
 	typedef GASS_WEAK_PTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;

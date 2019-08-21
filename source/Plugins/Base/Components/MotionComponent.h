@@ -75,16 +75,16 @@ namespace GASS
 		Vec3 GetSize() const override { return m_PlatformSize; }
 		Float GetMaxSpeed() const override { return m_MaxSpeed; }
 	protected:
-		void OnCameraChanged(CameraChangedEventPtr message);
+		//void OnCameraChanged(CameraChangedEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnGotoPosition(GotoPositionRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void StepPhysics(double delta);
-		ADD_PROPERTY(bool,GroundClamp)
-		ADD_PROPERTY(bool, Debug)
-		ADD_PROPERTY(Float, Acceleration)
-		ADD_PROPERTY(Float, MaxTurnSpeed)
+		bool m_GroundClamp;
+		bool m_Debug;
+		Float m_Acceleration;
+		Float m_MaxTurnSpeed;
 		void SetMaxSpeed(Float speed){ m_MaxSpeed = speed; }
 		Float m_MaxSpeed;
 		//bool m_Active;

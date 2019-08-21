@@ -50,7 +50,7 @@ namespace GASS
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }
 	protected:
-		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder)
+		
 		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		void SetReceiveShadow(bool value);
@@ -70,6 +70,7 @@ namespace GASS
 		bool m_ReceiveShadow;
 		OSGGraphicsSystemPtr m_GFXSystem;
 		bool m_Collision;
+		GeometryFlagsBinder m_GeometryFlagsBinder;
 	};
 
 	typedef GASS_WEAK_PTR<OSGManualMeshComponent> OSGManualMeshComponentWeakPtr;

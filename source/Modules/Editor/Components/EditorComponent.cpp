@@ -42,7 +42,7 @@ namespace GASS
 		RegisterProperty<bool>("ShowInTree",&EditorComponent::GetShowInTree, &EditorComponent::SetShowInTree);
 		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
 		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
-		RegisterProperty<ColorRGBA>("SelectedColor",&EditorComponent::GetSelectedColor, &EditorComponent::SetSelectedColor);
+		RegisterMember("SelectedColor",&EditorComponent::m_SelectedColor);
 		RegisterProperty<bool>("EditName",&EditorComponent::GetEditName, &EditorComponent::SetEditName);
 	}
 

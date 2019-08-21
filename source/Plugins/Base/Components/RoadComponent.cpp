@@ -98,13 +98,13 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial,
 			GraphicsMaterialPropertyMetaDataPtr(new GraphicsMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
-		RegisterProperty<float>("CustomDitchTexturePercent", &GASS::RoadComponent::GetCustomDitchTexturePercent, &GASS::RoadComponent::SetCustomDitchTexturePercent,
+		RegisterMember("CustomDitchTexturePercent", &GASS::RoadComponent::m_CustomDitchTexturePercent,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("CAP", &GASS::RoadComponent::GetCAP, &GASS::RoadComponent::SetCAP,
+		RegisterMember("CAP", &GASS::RoadComponent::m_CAP,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("FadeStart", &GASS::RoadComponent::GetFadeStart, &GASS::RoadComponent::SetFadeStart,
+		RegisterMember("FadeStart", &GASS::RoadComponent::m_FadeStart, 
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("FadeEnd", &GASS::RoadComponent::GetFadeEnd, &GASS::RoadComponent::SetFadeEnd,
+		RegisterMember("FadeEnd", &GASS::RoadComponent::m_FadeEnd,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}
 

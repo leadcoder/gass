@@ -50,13 +50,13 @@ namespace GASS
 	void EntityTypeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("EntityTypeComponent",new Creator<EntityTypeComponent, Component>);
-		REG_PROPERTY(int,EntityKind,EntityTypeComponent)
-		REG_PROPERTY(int,Domain,EntityTypeComponent)
-		REG_PROPERTY(int,CountryCode,EntityTypeComponent)
-		REG_PROPERTY(int,Category,EntityTypeComponent)
-		REG_PROPERTY(int,Subcategory,EntityTypeComponent)
-		REG_PROPERTY(int,Specific,EntityTypeComponent)
-		REG_PROPERTY(int,Extra,EntityTypeComponent)
+		RegisterMember("EntityKind", &EntityTypeComponent::m_EntityKind);
+		RegisterMember("Domain", &EntityTypeComponent::m_Domain);
+		RegisterMember("CountryCode", &EntityTypeComponent::m_CountryCode);
+		RegisterMember("Category", &EntityTypeComponent::m_Category);
+		RegisterMember("Subcategory", &EntityTypeComponent::m_Subcategory);
+		RegisterMember("Specific", &EntityTypeComponent::m_Specific);
+		RegisterMember("Extra", &EntityTypeComponent::m_Extra);
 	}
 
 	void EntityTypeComponent::OnInitialize()

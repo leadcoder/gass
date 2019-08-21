@@ -49,7 +49,7 @@ namespace GASS
 		void OnDelete() override;
 		void OnPlayerInput(InputRelayEventPtr message);
 	private:
-		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
+		SceneObjectRef m_InputHandlerObject;
 	};
 
 	typedef GASS_SHARED_PTR<InputProxyComponent> InputProxyComponentPtr;

@@ -60,10 +60,10 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		ADD_PROPERTY(float,CustomDitchTexturePercent)
-		ADD_PROPERTY(bool,CAP)
-		ADD_PROPERTY(bool,FadeStart)
-		ADD_PROPERTY(bool,FadeEnd)
+		float m_CustomDitchTexturePercent;
+		bool m_CAP;
+		bool m_FadeStart;
+		bool m_FadeEnd;
 		
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;

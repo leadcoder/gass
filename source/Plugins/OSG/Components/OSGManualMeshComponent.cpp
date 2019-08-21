@@ -54,7 +54,7 @@ namespace GASS
 		RegisterProperty<bool>("ReceiveShadow", &OSGManualMeshComponent::GetReceiveShadow, &OSGManualMeshComponent::SetReceiveShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh receive shadows or not",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGManualMeshComponent::GetGeometryFlagsBinder, &OSGManualMeshComponent::SetGeometryFlagsBinder,
+		RegisterMember("GeometryFlags", &OSGManualMeshComponent::m_GeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 

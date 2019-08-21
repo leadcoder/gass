@@ -65,7 +65,7 @@ namespace GASS
 
 		RegisterProperty<ResourceHandle>("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource,
 			OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
-		RegisterProperty<std::string>("EnumerationResourceGroup", &OSGMeshComponent::GetEnumerationResourceGroup, &OSGMeshComponent::SetEnumerationResourceGroup,
+		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
 		RegisterProperty<bool>("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
@@ -77,7 +77,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
 		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
-		RegisterProperty<bool>("FlipDDS", &GASS::OSGMeshComponent::GetFlipDDS, &GASS::OSGMeshComponent::SetFlipDDS,
+		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Flip DDS textures for this model? (need reload)", PF_VISIBLE | PF_EDITABLE)));
 
 		std::vector<std::string> ext;

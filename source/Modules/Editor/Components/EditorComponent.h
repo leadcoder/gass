@@ -33,9 +33,9 @@ namespace GASS
 		void SetVisible(bool value);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
-		ADD_PROPERTY(bool,EditName)
+		GASS_GETSET_MEMBER(bool,EditName)
 	private:
-		ADD_PROPERTY(ColorRGBA, SelectedColor)
+		
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
 		void OnObjectLock(ObjectLockChangedEventPtr message);
 		float GetVisibilityTransparency() const{return m_VisibilityTransparency;}
@@ -53,6 +53,7 @@ namespace GASS
 		bool m_ShowInTree;
 		bool m_AllowRemove;
 		bool m_AllowDragAndDrop;
+		ColorRGBA m_SelectedColor;
 		EditorSceneManagerPtr m_EditorSceneManager;
 	};
 	typedef GASS_SHARED_PTR<EditorComponent> EditorComponentPtr;

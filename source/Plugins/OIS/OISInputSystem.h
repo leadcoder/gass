@@ -91,10 +91,6 @@ namespace GASS
 		bool sliderMoved( const OIS::JoyStickEvent &, int ) override; //Joystick Event, amd sliderID
 		bool povMoved( const OIS::JoyStickEvent &, int ) override; //Joystick Event, amd povID
 	private:
-		//ADD_PROPERTY(double,UpdateFrequency);
-		ADD_PROPERTY(float,GameControllerAxisMinValue);
-		ADD_PROPERTY(bool,OnlyProxy);
-
 		int	 GetJoystickIndex() const{ return m_JoystickDeviceCount; }
 		void IncJoystickDeviceCount() { m_JoystickDeviceCount++; }
 
@@ -144,6 +140,7 @@ namespace GASS
 		int m_MouseWinOffsetY;
 		int m_MouseWinWidth;
 		int m_MouseWinHeight;
-
+		float m_GameControllerAxisMinValue;
+		bool m_OnlyProxy;
 	};
 }

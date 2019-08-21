@@ -78,7 +78,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ShowPathLine", &WaypointListComponent::GetShowPathLine, &WaypointListComponent::SetShowPathLine,
+		RegisterMember("ShowPathLine", &WaypointListComponent::m_ShowPathLine,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<int>("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -86,11 +86,10 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export this path to text file",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE,ext)));
 		RegisterProperty<std::string>("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<bool>("Closed", &WaypointListComponent::GetClosed, &WaypointListComponent::SetClosed,
+		RegisterMember("Closed", &WaypointListComponent::m_Closed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<bool>("AutoRotateWaypoints", &WaypointListComponent::GetAutoRotateWaypoints, &WaypointListComponent::SetAutoRotateWaypoints,
+		RegisterMember("AutoRotateWaypoints", &WaypointListComponent::m_AutoRotateWaypoints,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-
 	}
 
 	void WaypointListComponent::OnInitialize()

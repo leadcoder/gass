@@ -43,14 +43,13 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		
-		ADD_PROPERTY(int,EntityKind)
-		ADD_PROPERTY(int,Domain)
-		ADD_PROPERTY(int,CountryCode)
-		ADD_PROPERTY(int,Category)
-		ADD_PROPERTY(int,Subcategory)
-		ADD_PROPERTY(int,Specific)
-		ADD_PROPERTY(int,Extra)
-	
+		int m_EntityKind;
+		int m_Domain;
+		int m_CountryCode;
+		int m_Category;
+		int m_Subcategory;
+		int m_Specific;
+		int m_Extra;
 	};
 
 	typedef GASS_SHARED_PTR<EntityTypeComponent> EntityTypeComponentPtr;

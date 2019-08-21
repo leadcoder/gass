@@ -78,23 +78,23 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
 		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
-		RegisterProperty<bool>("FlipDDS", &GASS::OSGGraphicsSystem::GetFlipDDS, &GASS::OSGGraphicsSystem::SetFlipDDS);
-		RegisterProperty<std::string>("ShadowType", &GASS::OSGGraphicsSystem::GetShadowType, &GASS::OSGGraphicsSystem::SetShadowType);
+		RegisterMember("FlipDDS", &GASS::OSGGraphicsSystem::m_FlipDDS);
+		RegisterMember("ShadowType", &GASS::OSGGraphicsSystem::m_ShadowType);
 
-		RegisterProperty<float>("PSSMMaxFarDistance", &GASS::OSGGraphicsSystem::GetPSSMMaxFarDistance, &GASS::OSGGraphicsSystem::SetPSSMMaxFarDistance);
-		RegisterProperty<int>("PSSMTextureSize", &GASS::OSGGraphicsSystem::GetPSSMTextureSize, &GASS::OSGGraphicsSystem::SetPSSMTextureSize);
-		RegisterProperty<int>("PSSMTextureCount", &GASS::OSGGraphicsSystem::GetPSSMTextureCount, &GASS::OSGGraphicsSystem::SetPSSMTextureCount);
-		RegisterProperty<float>("PSSMMinNearDistanceForSplits", &GASS::OSGGraphicsSystem::GetPSSMMinNearDistanceForSplits, &GASS::OSGGraphicsSystem::SetPSSMMinNearDistanceForSplits);
-		RegisterProperty<float>("PSSMMoveVCamBehindRCamFactor", &GASS::OSGGraphicsSystem::GetPSSMMoveVCamBehindRCamFactor, &GASS::OSGGraphicsSystem::SetPSSMMoveVCamBehindRCamFactor);
-		RegisterProperty<double>("PSSMPolyOffsetFactor", &GASS::OSGGraphicsSystem::GetPSSMPolyOffsetFactor, &GASS::OSGGraphicsSystem::SetPSSMPolyOffsetFactor);
-		RegisterProperty<double>("PSSMPolyOffsetUnit", &GASS::OSGGraphicsSystem::GetPSSMPolyOffsetUnit, &GASS::OSGGraphicsSystem::SetPSSMPolyOffsetUnit);
+		RegisterMember("PSSMMaxFarDistance", &GASS::OSGGraphicsSystem::m_PSSMMaxFarDistance);
+		RegisterMember("PSSMTextureSize", &GASS::OSGGraphicsSystem::m_PSSMTextureSize);
+		RegisterMember("PSSMTextureCount", &GASS::OSGGraphicsSystem::m_PSSMTextureCount);
+		RegisterMember("PSSMMinNearDistanceForSplits", &GASS::OSGGraphicsSystem::m_PSSMMinNearDistanceForSplits);
+		RegisterMember("PSSMMoveVCamBehindRCamFactor", &GASS::OSGGraphicsSystem::m_PSSMMoveVCamBehindRCamFactor);
+		RegisterMember("PSSMPolyOffsetFactor", &GASS::OSGGraphicsSystem::m_PSSMPolyOffsetFactor);
+		RegisterMember("PSSMPolyOffsetUnit", &GASS::OSGGraphicsSystem::m_PSSMPolyOffsetUnit);
 		
-		RegisterProperty<std::string>("LiSPSMSubType", &GASS::OSGGraphicsSystem::GetLiSPSMSubType, &GASS::OSGGraphicsSystem::SetLiSPSMSubType);
-		RegisterProperty<float>("LiSPSMMinLightMargin", &GASS::OSGGraphicsSystem::GetLiSPSMMinLightMargin, &GASS::OSGGraphicsSystem::SetLiSPSMMinLightMargin);
-		RegisterProperty<float>("LiSPSMMaxFarPlane", &GASS::OSGGraphicsSystem::GetLiSPSMMaxFarPlane, &GASS::OSGGraphicsSystem::SetLiSPSMMaxFarPlane);
-		RegisterProperty<int>("LiSPSMTextureSize", &GASS::OSGGraphicsSystem::GetLiSPSMTextureSize, &GASS::OSGGraphicsSystem::SetLiSPSMTextureSize);
-		RegisterProperty<int>("LiSPSMBaseTextureUnit", &GASS::OSGGraphicsSystem::GetLiSPSMBaseTextureUnit, &GASS::OSGGraphicsSystem::SetLiSPSMBaseTextureUnit);
-		RegisterProperty<int>("LiSPSMShadowTextureUnit", &GASS::OSGGraphicsSystem::GetLiSPSMShadowTextureUnit, &GASS::OSGGraphicsSystem::SetLiSPSMShadowTextureUnit);
+		RegisterMember("LiSPSMSubType", &GASS::OSGGraphicsSystem::m_LiSPSMSubType);
+		RegisterMember("LiSPSMMinLightMargin", &GASS::OSGGraphicsSystem::m_LiSPSMMinLightMargin);
+		RegisterMember("LiSPSMMaxFarPlane", &GASS::OSGGraphicsSystem::m_LiSPSMMaxFarPlane);
+		RegisterMember("LiSPSMTextureSize", &GASS::OSGGraphicsSystem::m_LiSPSMTextureSize);
+		RegisterMember("LiSPSMBaseTextureUnit", &GASS::OSGGraphicsSystem::m_LiSPSMBaseTextureUnit);
+		RegisterMember("LiSPSMShadowTextureUnit", &GASS::OSGGraphicsSystem::m_LiSPSMShadowTextureUnit);
 
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();

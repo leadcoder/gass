@@ -49,9 +49,6 @@ namespace GASS
 		float GetRadius()const override;
 	protected:
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
-		ADD_PROPERTY(bool,ShowPathLine);
-		ADD_PROPERTY(bool,Closed);
-		ADD_PROPERTY(bool,AutoRotateWaypoints);
 		void SetRadius(float radius);
 		int GetSplineSteps()const;
 		void SetSplineSteps(int steps);
@@ -79,10 +76,9 @@ namespace GASS
 		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
 		SceneObjectWeakPtr m_ConnectionLines;
+		bool m_ShowPathLine;
+		bool m_Closed;
+		bool m_AutoRotateWaypoints;
 	};
-
-	//typedef GASS_SHARED_PTR<WaypointListComponent> WaypointListComponentPtr;
-	//typedef GASS_WEAK_PTR<WaypointListComponent> WaypointListComponentWeakPtr;
-	
 }
 

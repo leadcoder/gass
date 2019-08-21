@@ -68,13 +68,11 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register<OISInputSystem>("OISInputSystem");
 		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
-		//RegisterProperty<double>("UpdateFrequency", &GASS::OISInputSystem::GetUpdateFrequency, &GASS::OISInputSystem::SetUpdateFrequency);
-		RegisterProperty<float>("GameControllerAxisMinValue", &GASS::OISInputSystem::GetGameControllerAxisMinValue, &GASS::OISInputSystem::SetGameControllerAxisMinValue);
+		RegisterMember("GameControllerAxisMinValue", &GASS::OISInputSystem::m_GameControllerAxisMinValue);
 		RegisterProperty<bool>("EnableKey", &GASS::OISInputSystem::GetEnableKey, &GASS::OISInputSystem::SetEnableKey);
 		RegisterProperty<bool>("EnableMouse", &GASS::OISInputSystem::GetEnableMouse, &GASS::OISInputSystem::SetEnableMouse);
 		RegisterProperty<bool>("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
-		RegisterProperty<bool>("OnlyProxy", &GASS::OISInputSystem::GetOnlyProxy, &GASS::OISInputSystem::SetOnlyProxy);
-
+		RegisterMember("OnlyProxy", &GASS::OISInputSystem::m_OnlyProxy);
 	}
 
 	void OISInputSystem::OnSystemInit()

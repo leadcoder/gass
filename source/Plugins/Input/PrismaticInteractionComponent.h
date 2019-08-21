@@ -42,8 +42,8 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	private:
-		ADD_PROPERTY(std::string,InputMapping);
-		ADD_PROPERTY(Float,MaxVelocity);
+		std::string m_InputMapping;
+		Float m_MaxVelocity;
 		void OnInput(InputRelayEventPtr message);
 	};
 }
