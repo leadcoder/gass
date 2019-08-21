@@ -43,15 +43,14 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		ADD_PROPERTY(float,CustomDitchTexturePercent)
-		ADD_PROPERTY(bool,FadeStart)
-		ADD_PROPERTY(bool,FadeEnd)
-		ADD_PROPERTY(bool,ClampToTerrain)
-		ADD_PROPERTY(ColorRGBA,Color)
-		ADD_PROPERTY(Vec2,TileScale)
-		ADD_PROPERTY(SceneObjectRef,WapointListObject)
-		ADD_PROPERTY(bool,RotateTexture)
-		
+		float m_CustomDitchTexturePercent;
+		bool m_FadeStart;
+		bool m_FadeEnd;
+		bool m_ClampToTerrain;
+		ColorRGBA m_Color;
+		Vec2 m_TileScale;
+		SceneObjectRef m_WapointListObject;
+		bool m_RotateTexture;
 		
 		void SetWidth(float value) {m_Width = value;UpdateMesh();}
 		float GetWidth() const {return m_Width;}

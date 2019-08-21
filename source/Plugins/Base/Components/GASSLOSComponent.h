@@ -23,9 +23,7 @@ namespace GASS
 		bool GetCalculate() const {return false;}
 		bool _CheckLOS(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const;
 		Float _GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const;
-		ADD_PROPERTY(bool,Debug)
-		ADD_PROPERTY(bool,AutUpdateOnTransform)
-
+		
 		void SetFOV(Float value) {m_FOV = value; SetCalculate(true);}
 		Float GetFOV() const {return m_FOV;}
 		void SetRadius(Float value) {m_Radius = value;SetCalculate(true);}
@@ -52,6 +50,9 @@ namespace GASS
 		Float m_SourceOffset;
 		Float m_TargetOffset;
 		Float m_Transparency;
+		bool m_Debug;
+		bool m_AutUpdateOnTransform;
+
 	};
 	typedef GASS_SHARED_PTR<LOSComponent> LOSComponentPtr;
 }

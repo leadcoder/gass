@@ -46,7 +46,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register("LookAtComponent",new GASS::Creator<LookAtComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LookAtComponent", OF_VISIBLE)));
-		REG_PROPERTY(SceneObjectRef,LookAt,GASS::LookAtComponent);
+		RegisterMember("LookAt", &GASS::LookAtComponent::m_LookAt);
 	}
 
 	void LookAtComponent::OnInitialize()

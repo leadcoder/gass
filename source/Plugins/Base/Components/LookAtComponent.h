@@ -43,7 +43,7 @@ namespace GASS
 		void SceneManagerTick(double delta) override;
 	protected:
 		void OnTransformation(TransformationChangedEventPtr message);
-		ADD_PROPERTY(SceneObjectRef,LookAt);
+		SceneObjectRef m_LookAt;
 	private:
 		Vec3 m_LookAtPos;
 		Quaternion m_LookAtRot;

@@ -48,7 +48,7 @@ namespace GASS
 		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of box",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<bool>("Lines", &GASS::BoxGeometryComponent::GetLines, &GASS::BoxGeometryComponent::SetLines,
+		RegisterGetSet("Lines", &GASS::BoxGeometryComponent::GetLines, &GASS::BoxGeometryComponent::SetLines,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Wireframe or solid",PF_VISIBLE | PF_EDITABLE)));
 	}
 
@@ -81,6 +81,17 @@ namespace GASS
 			UpdateMesh();
 	}
 
+	bool BoxGeometryComponent::GetLines() const
+	{
+		return m_Lines;
+	}
+
+	void BoxGeometryComponent::SetLines(bool value)
+	{
+		m_Lines = value;
+		if (GetSceneObject())
+			UpdateMesh();
+	}
 
 	void BoxGeometryComponent::UpdateMesh()
 	{

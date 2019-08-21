@@ -42,8 +42,8 @@ namespace GASS
 		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
 	protected:
-		ADD_PROPERTY(Vec3,Color)
-		ADD_PROPERTY(bool,Dashed)
+		Vec3 m_Color;
+		bool m_Dashed;
 		void SetRadius(Float value);
 		void UpdateMesh();
 	private:

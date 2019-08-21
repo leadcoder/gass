@@ -51,10 +51,10 @@ namespace GASS
 		GASS::ComponentFactory::GetPtr()->Register("HeightmapComponent",new GASS::Creator<HeightmapComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
 
-		RegisterProperty<Vec2>("Size", &GASS::HeightmapComponent::GetSize, &GASS::HeightmapComponent::SetSize,
+		RegisterMember("Size", &GASS::HeightmapComponent::m_Size,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of heighttmap in [m]",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<Float>("Resolution", &GASS::HeightmapComponent::GetResolution, &GASS::HeightmapComponent::SetResolution,
+		RegisterMember("Resolution", &GASS::HeightmapComponent::m_Resolution,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("[samples/m]",PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<bool>("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,

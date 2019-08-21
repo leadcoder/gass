@@ -59,16 +59,15 @@ namespace GASS
 		bool  GetUpdate() const;
 		bool GetAutoBBoxGeneration() const;
 		void SetAutoBBoxGeneration(bool value);
-
-		ADD_PROPERTY(Vec2,Size)
-		ADD_PROPERTY(Float,Resolution)
-
+		
 		//internal
 		void _UpdateData();
 		FilePath _GetFilePath() const;
 		AABox _GetTerrainBoundingBox() const;
 	private:
 		HeightField* m_HM;
+		Vec2 m_Size;
+		Float m_Resolution;
 		bool m_AutoBBoxGeneration;
 	};
 }

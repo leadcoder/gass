@@ -67,23 +67,23 @@ namespace GASS
 
 		RegisterProperty<float>("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGBA>("Color", &GASS::LineGeometryComponent::GetColor, &GASS::LineGeometryComponent::SetColor,
+		RegisterMember("Color", &GASS::LineGeometryComponent::m_Color,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("Offset", &GASS::LineGeometryComponent::GetOffset, &GASS::LineGeometryComponent::SetOffset,
+		RegisterMember("Offset", &GASS::LineGeometryComponent::m_Offset,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("TileScale", &GASS::LineGeometryComponent::GetTileScale, &GASS::LineGeometryComponent::SetTileScale,
+		RegisterMember("TileScale", &GASS::LineGeometryComponent::m_TileScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<std::string>("Material", &GASS::LineGeometryComponent::GetMaterial, &GASS::LineGeometryComponent::SetMaterial,
 			GraphicsMaterialPropertyMetaDataPtr(new GraphicsMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
-		RegisterProperty<bool>("FadeStart", &GASS::LineGeometryComponent::GetFadeStart, &GASS::LineGeometryComponent::SetFadeStart,
+		RegisterMember("FadeStart", &GASS::LineGeometryComponent::m_FadeStart,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("FadeEnd", &GASS::LineGeometryComponent::GetFadeEnd, &GASS::LineGeometryComponent::SetFadeEnd,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-
-		RegisterProperty<bool>("RotateTexture", &GASS::LineGeometryComponent::GetRotateTexture, &GASS::LineGeometryComponent::SetRotateTexture,
+		RegisterMember("FadeEnd", &GASS::LineGeometryComponent::m_FadeEnd,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<SceneObjectRef>("WapointListObject", &GASS::LineGeometryComponent::GetWapointListObject, &GASS::LineGeometryComponent::SetWapointListObject);
+		RegisterMember("RotateTexture", &GASS::LineGeometryComponent::m_RotateTexture,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+
+		RegisterMember("WapointListObject", &GASS::LineGeometryComponent::m_WapointListObject);
 	}
 
 	void LineGeometryComponent::OnInitialize()

@@ -49,8 +49,8 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CircleGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::CircleGeometryComponent::GetRadius, &GASS::CircleGeometryComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Circle Radius",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Color", &GASS::CircleGeometryComponent::GetColor, &GASS::CircleGeometryComponent::SetColor);
-		RegisterProperty<bool>("Dashed", &GASS::CircleGeometryComponent::GetDashed, &GASS::CircleGeometryComponent::SetDashed);
+		RegisterMember("Color", &GASS::CircleGeometryComponent::m_Color);
+		RegisterMember("Dashed", &GASS::CircleGeometryComponent::m_Dashed);
 		
 	}
 

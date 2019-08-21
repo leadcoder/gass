@@ -30,7 +30,6 @@ namespace GASS
 	/**
 		Component that create  box geometry
 	*/
-
 	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,BaseSceneComponent> , public IShape
 	{
 	public:
@@ -41,12 +40,14 @@ namespace GASS
 		bool IsPointInside(const Vec3 &point) const override;
 		Vec3 GetRandomPoint() const override;
 	protected:
-		ADD_PROPERTY(bool,Lines);
 		void UpdateMesh();
 		Vec3 GetSize() const;
 		void SetSize(const Vec3 &value);
-		Vec3 m_Size;
+		bool GetLines() const;
+		void SetLines(bool value);
 	private:
+		bool m_Lines;
+		Vec3 m_Size;
 	};
 }
 #endif
