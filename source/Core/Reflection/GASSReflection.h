@@ -87,11 +87,11 @@ namespace GASS
 		}
 
 		//same as above but without out property type, type resolved from get method
-	/*	template <
+		template <
 			typename GetterReturnType,
 			typename SetterArgumentType,
 			typename SetterReturnType>
-			static void RegisterProperty(const std::string &name,
+			static void RegisterGetSet(const std::string &name,
 				GetterReturnType(DerivedClass::*getter)() const,
 				SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
@@ -99,9 +99,9 @@ namespace GASS
 			auto* property = CreateProperty<DerivedClass, GetterReturnType, SetterArgumentType, SetterReturnType >(name, getter, setter, meta_data);//new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
-		*/
+		
 		template <typename PropertyType>
-			static void RegisterProperty(const std::string &name,
+			static void RegisterMember(const std::string &name,
 				PropertyType DerivedClass::* member_ptr,
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
