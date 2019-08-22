@@ -385,7 +385,7 @@ namespace GASS
 		CollisionResult result;
 		Vec3 dir = end - start;
 		m_CollisionSceneManager->Raycast(start, dir, flags, result);
-		if(result.Coll);
+		if(result.Coll)
 		{
 			GeoLocation collision_point;
 			SceneToWGS84(result.CollPosition, collision_point);
