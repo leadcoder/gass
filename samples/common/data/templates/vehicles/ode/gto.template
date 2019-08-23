@@ -65,7 +65,7 @@
 						<OffsetDistance value="6"/>
 					</ChaseCameraComponent>
 					<LocationComponent>
-						<AttachToParent value ="1"/>
+						<AttachToParent value ="0"/>
 						<Position value="0 0.0 0"/>
 						<Rotation value="0 0 0"/>
 					</LocationComponent>
