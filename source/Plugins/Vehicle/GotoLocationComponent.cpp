@@ -77,7 +77,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("GoToLocationComponent",new Creator<GoToLocationComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
-		RegisterProperty<SceneObjectRef>("NavigationObject", &GoToLocationComponent::GetNavigationObject, &GoToLocationComponent::SetNavigationObject,
+		RegisterMember("NavigationObject", &GoToLocationComponent::m_NavigationObject,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,GoToLocationComponentNavigationEnumeration,false)));
 	}
 

@@ -40,7 +40,7 @@ namespace GASS
 	{
 		REG_PROPERTY(SceneObjectRef,Body1,PhysXBaseJointComponent);
 		REG_PROPERTY(SceneObjectRef,Body2,PhysXBaseJointComponent);
-		REG_PROPERTY(bool,Report,PhysXBaseJointComponent)
+		RegisterMember("Report", &GASS::PhysXBaseJointComponent::m_Report);
 	}
 
 	void PhysXBaseJointComponent::OnInitialize()

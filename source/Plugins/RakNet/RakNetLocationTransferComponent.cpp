@@ -77,7 +77,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("LocationTransferComponent",new Creator<RakNetLocationTransferComponent, Component>);
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);
 		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
-		RegisterProperty<ClientLocationMode>("ClientLocationMode", &RakNetLocationTransferComponent::GetClientLocationMode, &RakNetLocationTransferComponent::SetClientLocationMode);
+		RegisterMember("ClientLocationMode", &RakNetLocationTransferComponent::m_ClientLocationMode);
 		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
 		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
 		RegisterProperty<bool>("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);

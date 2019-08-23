@@ -42,7 +42,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("RecastOffmeshMeshConnectionComponent",new Creator<RecastOffmeshMeshConnectionComponent, Component>);
 		REG_PROPERTY(float,Radius,RecastOffmeshMeshConnectionComponent);
-		REG_PROPERTY(std::string,Mode,RecastOffmeshMeshConnectionComponent);
+		RegisterMember("Mode",&RecastOffmeshMeshConnectionComponent::m_Mode);
 	}
 
 	void RecastOffmeshMeshConnectionComponent::OnInitialize()

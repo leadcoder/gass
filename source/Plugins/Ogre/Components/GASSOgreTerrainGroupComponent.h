@@ -62,7 +62,6 @@ namespace GASS
 		int GetImportTerrainSize() const;
 		Vec3 GetScale() const {return m_Scale;}
 	protected:
-		ADD_PROPERTY(bool, EnableLightmap);
 		ResourceHandle GetTerrainResource()const {return m_TerrainResource;}
 		void RemoveAllPages();
 		std::string GetCustomMaterial() const;
@@ -113,6 +112,7 @@ namespace GASS
 		bool m_EnableLayerParallax;
 		bool m_EnableLayerSpecular;
 		bool m_EnableLayerNormal;
+		bool m_EnableLightmap;
 		Vec3 m_Scale;
 		bool m_Center;
 		Float m_WorldWidth;

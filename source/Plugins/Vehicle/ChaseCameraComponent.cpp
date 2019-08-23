@@ -57,12 +57,12 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register("ChaseCameraComponent",new Creator<ChaseCameraComponent, Component>);
 		RegisterProperty<std::string>("PreferredViewport", &ChaseCameraComponent::GetPreferredViewport, &ChaseCameraComponent::SetPreferredViewport);
-		RegisterProperty<SceneObjectRef>("InputHandlerObject", &ChaseCameraComponent::GetInputHandlerObject, &ChaseCameraComponent::SetInputHandlerObject);
-		RegisterProperty<Float>("DampingConstant", &ChaseCameraComponent::GetDampingConstant, &ChaseCameraComponent::SetDampingConstant);
-		RegisterProperty<Float>("SpringConstant", &ChaseCameraComponent::GetSpringConstant, &ChaseCameraComponent::SetSpringConstant);
-		RegisterProperty<Float>("DampingConstant", &ChaseCameraComponent::GetDampingConstant, &ChaseCameraComponent::SetDampingConstant);
-		RegisterProperty<Float>("OffsetDistance", &ChaseCameraComponent::GetOffsetDistance, &ChaseCameraComponent::SetOffsetDistance);
-		RegisterProperty<Float>("OffsetHeight", &ChaseCameraComponent::GetOffsetHeight, &ChaseCameraComponent::SetOffsetHeight);
+		RegisterMember("InputHandlerObject", &ChaseCameraComponent::m_InputHandlerObject);
+		RegisterMember("DampingConstant", &ChaseCameraComponent::m_DampingConstant);
+		RegisterMember("SpringConstant", &ChaseCameraComponent::m_SpringConstant);
+		RegisterMember("DampingConstant", &ChaseCameraComponent::m_DampingConstant);
+		RegisterMember("OffsetDistance", &ChaseCameraComponent::m_OffsetDistance);
+		RegisterMember("OffsetHeight", &ChaseCameraComponent::m_OffsetHeight);
 	}
 
 	void ChaseCameraComponent::OnInitialize()

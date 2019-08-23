@@ -34,7 +34,7 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		ADD_PROPERTY(std::string,Material);
+		std::string m_Material;
 		
 	};
 }

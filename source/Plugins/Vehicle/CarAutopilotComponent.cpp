@@ -79,29 +79,29 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for steer",PF_VISIBLE)));
 		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for throttle",PF_VISIBLE)));
-		RegisterProperty<Float>("DesiredSpeed", &CarAutopilotComponent::GetDesiredSpeed, &CarAutopilotComponent::SetDesiredSpeed,
+		RegisterMember("DesiredSpeed", &CarAutopilotComponent::m_DesiredSpeed,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Desired speed",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<bool>("Enable", &CarAutopilotComponent::GetEnable, &CarAutopilotComponent::SetEnable,
+		RegisterMember("Enable", &CarAutopilotComponent::m_Enable,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<Float>("DesiredPosRadius", &CarAutopilotComponent::GetDesiredPosRadius, &CarAutopilotComponent::SetDesiredPosRadius,
+		RegisterMember("DesiredPosRadius", &CarAutopilotComponent::m_DesiredPosRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<Float>("BrakeDistanceFactor", &CarAutopilotComponent::GetBrakeDistanceFactor, &CarAutopilotComponent::SetBrakeDistanceFactor,
+		RegisterMember("BrakeDistanceFactor", &CarAutopilotComponent::m_BrakeDistanceFactor,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Multiplier for default linear brake distance (1m at 1m/s) ",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<Float>("MaxReverseDistance", &CarAutopilotComponent::GetMaxReverseDistance, &CarAutopilotComponent::SetMaxReverseDistance,
+		RegisterMember("MaxReverseDistance", &CarAutopilotComponent::m_MaxReverseDistance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max waypoint distance to use reverse",PF_VISIBLE  | PF_EDITABLE)));
 
-		RegisterProperty<PIDControl>("TurnPID", &CarAutopilotComponent::GetTurnPID, &CarAutopilotComponent::SetTurnPID,
+		RegisterMember("TurnPID", &CarAutopilotComponent::m_TurnPID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<PIDControl>("TrottlePID", &CarAutopilotComponent::GetTrottlePID, &CarAutopilotComponent::SetTrottlePID,
+		RegisterMember("TrottlePID", &CarAutopilotComponent::m_TrottlePID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Throttle PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
 
-		RegisterProperty<bool>("Support3PointTurn", &CarAutopilotComponent::GetSupport3PointTurn, &CarAutopilotComponent::SetSupport3PointTurn,
+		RegisterMember("Support3PointTurn", &CarAutopilotComponent::m_Support3PointTurn,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable Three Point Turn",PF_VISIBLE  | PF_EDITABLE)));
 
-		RegisterProperty<bool>("InvertBackWardSteering", &CarAutopilotComponent::GetInvertBackWardSteering, &CarAutopilotComponent::SetInvertBackWardSteering,
+		RegisterMember("InvertBackWardSteering", &CarAutopilotComponent::m_InvertBackWardSteering,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE  | PF_EDITABLE)));
 
-		RegisterProperty<bool>("CollisionAvoidance", &CarAutopilotComponent::GetCollisionAvoidance, &CarAutopilotComponent::SetCollisionAvoidance,
+		RegisterMember("CollisionAvoidance", &CarAutopilotComponent::m_CollisionAvoidance,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Try to avoid collision with other entities", PF_VISIBLE | PF_EDITABLE)));
 	}
 

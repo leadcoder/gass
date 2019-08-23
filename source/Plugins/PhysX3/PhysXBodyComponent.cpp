@@ -58,9 +58,9 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<PhysXBodyComponent, Component>);
 		REG_PROPERTY(float,Mass,PhysXBodyComponent);
 		REG_PROPERTY(bool,Kinematic,PhysXBodyComponent);
-		REG_PROPERTY(bool,DisableGravity,PhysXBodyComponent);
-		REG_PROPERTY(int,PositionIterCount,PhysXBodyComponent)
-		REG_PROPERTY(int,VelocityIterCount,PhysXBodyComponent)
+		RegisterMember("DisableGravity", &GASS::PhysXBodyComponent::m_DisableGravity);
+		RegisterMember("PositionIterCount", &GASS::PhysXBodyComponent::m_PositionIterCount);
+		RegisterMember("VelocityIterCount", &GASS::PhysXBodyComponent::m_VelocityIterCount);
 	}
 
 	void PhysXBodyComponent::OnInitialize()

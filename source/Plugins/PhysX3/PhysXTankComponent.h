@@ -43,9 +43,10 @@ namespace GASS
 		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
 		void SceneManagerTick(double delta) override;
 		
+		//IPlatformComponent
 		PlatformType GetType() const override {return PT_TANK;}
 		Vec3 GetSize() const override;
-		ADD_PROPERTY(Float,MaxSpeed);
+		Float GetMaxSpeed() const override { return m_MaxSpeed;}
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
@@ -68,19 +69,19 @@ namespace GASS
 		bool& newIsMovingForwardSlowly) const;
 		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
-		ADD_PROPERTY(std::vector<SceneObjectRef>,Wheels)
-		ADD_PROPERTY(bool,UseAutoReverse);
-		ADD_PROPERTY(float,ScaleMass);
-		ADD_PROPERTY(float,EnginePeakTorque)
-		ADD_PROPERTY(float,EngineMaxRotationSpeed)
-		ADD_PROPERTY(float,ClutchStrength)
-		ADD_PROPERTY(float,Mass)
-		ADD_PROPERTY(Vec3,MassOffset)
-		ADD_PROPERTY(float,GearSwitchTime)
-		ADD_PROPERTY(std::vector<float>,GearRatios)
-		ADD_PROPERTY(bool,Debug)
-		ADD_PROPERTY(float,SteerLimit)
-
+		std::vector<SceneObjectRef> m_Wheels;
+		bool m_UseAutoReverse;
+		float m_ScaleMass;
+		float m_EnginePeakTorque;
+		float m_EngineMaxRotationSpeed;
+		float m_ClutchStrength;
+		float m_Mass;
+		Vec3 m_MassOffset;
+		float m_GearSwitchTime;
+		std::vector<float> m_GearRatios;
+		bool m_Debug;
+		float m_SteerLimit;
+		Float m_MaxSpeed;
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;

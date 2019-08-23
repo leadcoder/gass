@@ -30,15 +30,15 @@ namespace GASS
 		RegisterProperty<bool>("ShowGraph", &RNRoadNetworkComponent::GetShowGraph, &RNRoadNetworkComponent::SetShowGraph,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<bool>("Optimize", &RNRoadNetworkComponent::GetOptimize, &RNRoadNetworkComponent::SetOptimize,
+		RegisterMember("Optimize", &RNRoadNetworkComponent::m_Optimize,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
 		RegisterProperty<bool>("Edit", &RNRoadNetworkComponent::GetEdit, &RNRoadNetworkComponent::SetEdit,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<std::string>("NodeTemplate", &RNRoadNetworkComponent::GetNodeTemplate, &RNRoadNetworkComponent::SetNodeTemplate,
+		RegisterMember("NodeTemplate", &RNRoadNetworkComponent::m_NodeTemplate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE )));
-		RegisterProperty<std::string>("EdgeTemplate", &RNRoadNetworkComponent::GetEdgeTemplate, &RNRoadNetworkComponent::SetEdgeTemplate,
+		RegisterMember("EdgeTemplate", &RNRoadNetworkComponent::m_EdgeTemplate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE )));
 	}
 

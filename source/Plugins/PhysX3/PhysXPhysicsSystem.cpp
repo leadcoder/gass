@@ -81,7 +81,7 @@ namespace GASS
 	void PhysXPhysicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<PhysXPhysicsSystem>("PhysXPhysicsSystem");
-		REG_PROPERTY(int,MaxNumThreads,PhysXPhysicsSystem);
+		RegisterMember("MaxNumThreads", &GASS::PhysXPhysicsSystem::m_MaxNumThreads);
 	}
 
 	PxGASSErrorCallback myErrorCallback;

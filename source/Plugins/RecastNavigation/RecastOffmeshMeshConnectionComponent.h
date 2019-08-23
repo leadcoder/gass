@@ -34,8 +34,8 @@ namespace GASS
 		void OnInitialize() override;
 		Vec3 GetStartPos() const {return m_StartPos;}
 		Vec3 GetEndPos() const {return m_EndPos;}
-		ADD_PROPERTY(std::string,Mode)
 		float GetRadius() const;
+		std::string GetMode() const {return m_Mode;}
 	protected:
 		void OnStartNodeTransformation(TransformationChangedEventPtr message);
 		void OnEndNodeTransformation(TransformationChangedEventPtr message);
@@ -51,6 +51,7 @@ namespace GASS
 		Vec3 m_StartPos;
 		Vec3 m_EndPos;
 		SceneObjectWeakPtr m_EndNode;
+		std::string m_Mode;
 	};
 	typedef GASS_SHARED_PTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentPtr;
 	typedef GASS_WEAK_PTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentWeakPtr;

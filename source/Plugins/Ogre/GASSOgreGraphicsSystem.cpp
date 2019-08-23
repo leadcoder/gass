@@ -72,9 +72,9 @@ namespace GASS
 		RegisterProperty<PluginVector>("Plugins", &GASS::OgreGraphicsSystem::GetPlugins, &GASS::OgreGraphicsSystem::SetPlugins);
 		RegisterProperty<PostFilterVector>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
 		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
-		RegisterProperty<bool>("UpdateMessagePump", &GASS::OgreGraphicsSystem::GetUpdateMessagePump, &GASS::OgreGraphicsSystem::SetUpdateMessagePump);
-		RegisterProperty<bool>("ShowStats", &GASS::OgreGraphicsSystem::GetShowStats, &GASS::OgreGraphicsSystem::SetShowStats);
-		RegisterProperty<bool>("UseShaderCache", &GASS::OgreGraphicsSystem::GetUseShaderCache, &GASS::OgreGraphicsSystem::SetUseShaderCache);
+		RegisterMember("UpdateMessagePump", &GASS::OgreGraphicsSystem::m_UpdateMessagePump);
+		RegisterMember("ShowStats", &GASS::OgreGraphicsSystem::m_ShowStats);
+		RegisterMember("UseShaderCache", &GASS::OgreGraphicsSystem::m_UseShaderCache);
 
 		//we need to register resource types here, if we wait to ::Init() ResourceManager is already initialized
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();

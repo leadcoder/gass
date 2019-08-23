@@ -72,7 +72,7 @@ namespace GASS
 		ADD_DEPENDENCY("OgreLocationComponent")
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
 			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
-		RegisterProperty<std::string>("EnumerationResourceGroup", &OgreMeshComponent::GetEnumerationResourceGroup, &OgreMeshComponent::SetEnumerationResourceGroup,
+		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
 		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));

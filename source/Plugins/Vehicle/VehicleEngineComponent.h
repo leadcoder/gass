@@ -72,11 +72,8 @@ namespace GASS
 		int GetGear() const {return m_Gear;}
 		float GetNormRPM() const;
 	private:
-
-		ADD_PROPERTY(float,TurnRPMAmount)
 		std::vector<SceneObjectRef> GetWheels() const;
 		void SetWheels(const std::vector<SceneObjectRef> &wheels);
-
 		
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnInput(InputRelayEventPtr message);
@@ -196,6 +193,7 @@ namespace GASS
 		//float m_TurnForce;
 		float m_MaxTurnForce;
 		float m_MaxTurnVel;
+		float m_TurnRPMAmount;
 
 		std::vector<SceneObjectRef> m_WheelObjects;
 		std::vector<VehicleWheelPtr> m_VehicleWheels;

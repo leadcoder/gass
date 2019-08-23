@@ -59,8 +59,7 @@ namespace GASS
 		Vec3 GetDir() const;
 
 	protected:
-		//add this dummy prop for ambient to play nice with OSG templates until better solution is found
-		ADD_PROPERTY(ColorRGB,AmbientColor)
+		
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnDelete() override;
 		Ogre::Light* m_OgreLight;
@@ -71,5 +70,7 @@ namespace GASS
 		Vec4 m_AttenuationParams;
 		bool m_CastShadow;
 		Vec3 m_SpotParams;
+		//add this dummy prop for ambient to play nice with OSG templates until better solution is found
+		ColorRGB m_AmbientColor;
 	};
 }

@@ -75,7 +75,7 @@ namespace GASS
 		virtual void Enable();
 		virtual void SetScale(const Vec3 &value);
 	protected:
-		ADD_PROPERTY(bool,SimulationCollision);
+		
 		//messages functions
 		void OnLoad(MessagePtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
@@ -96,6 +96,7 @@ namespace GASS
 		bool m_SizeFromMesh;
 		physx::PxRigidStatic *m_StaticActor;
 		physx::PxShape *m_Shape;
+		bool m_SimulationCollision;
 	};
 	typedef GASS_SHARED_PTR<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
 }

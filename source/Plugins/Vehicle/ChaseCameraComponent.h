@@ -53,11 +53,11 @@ namespace GASS
 		const ILocationComponent* m_ChaseObjectLocation;
 		Vec3 m_Velocity;
 		std::string m_PreferredViewport;
-		ADD_PROPERTY(SceneObjectRef,InputHandlerObject);
-		ADD_PROPERTY(Float,DampingConstant);
-		ADD_PROPERTY(Float,SpringConstant);
-		ADD_PROPERTY(Float,OffsetDistance);
-		ADD_PROPERTY(Float,OffsetHeight);
+		SceneObjectRef m_InputHandlerObject;
+		Float m_DampingConstant;
+		Float m_SpringConstant;
+		Float m_OffsetDistance;
+		Float m_OffsetHeight;
 	};
 	typedef GASS_SHARED_PTR<ChaseCameraComponent> ChaseCameraComponentPtr;
 }

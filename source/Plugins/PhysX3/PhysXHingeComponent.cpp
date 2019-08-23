@@ -61,7 +61,7 @@ namespace GASS
 		RegisterProperty<float>("LowStop", &GASS::PhysXHingeComponent::GetLowStop, &GASS::PhysXHingeComponent::SetLowStop);
 		RegisterProperty<bool>("EnableLimits", &GASS::PhysXHingeComponent::GetEnableLimits, &GASS::PhysXHingeComponent::SetEnableLimits);
 		RegisterProperty<bool>("EnableDrive", &GASS::PhysXHingeComponent::GetEnableDrive, &GASS::PhysXHingeComponent::SetEnableDrive);
-		RegisterProperty<Vec3>("Offset", &GASS::PhysXHingeComponent::GetOffset, &GASS::PhysXHingeComponent::SetOffset);
+		RegisterMember("Offset", &GASS::PhysXHingeComponent::m_Offset);
 		RegisterProperty<float>("Spring", &GASS::PhysXHingeComponent::GetSpring, &GASS::PhysXHingeComponent::SetSpring);
 		RegisterProperty<float>("Damping", &GASS::PhysXHingeComponent::GetDamping, &GASS::PhysXHingeComponent::SetDamping);
 	}

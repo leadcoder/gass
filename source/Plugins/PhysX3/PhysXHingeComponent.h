@@ -47,7 +47,7 @@ namespace GASS
 		void CreateJoint() override;
 		physx::PxJoint* GetJoint() const override  {return m_RevoluteJoint;}
 	protected:
-		ADD_PROPERTY(Vec3,Offset)
+		
 		void OnVelocityRequest(PhysicsHingeJointVelocityRequestPtr message);
 		void OnForceRequest(PhysicsHingeJointMaxTorqueRequestPtr message);
 		void SceneManagerTick(double delta_time) override;
@@ -76,6 +76,7 @@ namespace GASS
 		float m_DriveForceLimit;
 		float m_DriveTargetVelocity;
 		Vec3 m_RotationAxis;
+		Vec3 m_Offset;
 		float m_SpringJointForce;
 		float m_HighStop;
 		float m_LowStop;
@@ -84,6 +85,7 @@ namespace GASS
 		float m_TargetAngle;
 		float m_Damping;
 		float m_Spring;
+		
 		physx::PxD6Joint *m_RevoluteJoint;
 	};
 	typedef GASS_SHARED_PTR<PhysXHingeComponent> PhysXHingeComponentPtr;

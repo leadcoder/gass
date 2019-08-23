@@ -52,9 +52,10 @@ namespace GASS
 		void SetMass(float mass);
 		void SceneManagerTick(double delta) override;
 		
+		//IPlatformComponent
 		PlatformType GetType() const override {return PT_HUMAN;}
 		Vec3 GetSize() const override{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
-		ADD_PROPERTY(Float,MaxSpeed)
+		Float GetMaxSpeed() const override {return m_MaxSpeed;}
 
 		// Implements PxControllerBehaviorCallback
 		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxShape& /*shape*/, const physx::PxActor& /*actor*/) override{return physx::PxControllerBehaviorFlags();}
@@ -79,21 +80,22 @@ namespace GASS
 		//helpers
 		void Reset();
 	protected:
-		ADD_PROPERTY(Float,StandingSize)
-		ADD_PROPERTY(Float,Radius)
-		ADD_PROPERTY(Float,YawMaxVelocity)
-		ADD_PROPERTY(Float,Acceleration)
-		
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
 		float m_ThrottleInput;
 		float m_SteerInput;
 		float m_Mass;
+		Float m_MaxSpeed;
 		Float m_Yaw;
 		Float m_CurrentVel;
+		Float m_StandingSize;
+		Float m_Radius;
+		Float m_YawMaxVelocity;
+		Float m_Acceleration;
 		physx::PxCapsuleController* m_Controller;
 		bool m_TrackTransformation;
+		
 	};
 	typedef GASS_SHARED_PTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;
 }

@@ -52,9 +52,7 @@ namespace GASS
 		void SetSoundVolumeFactor(float value) {m_SoundVolumeFactor = value;}
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		
-
-		ADD_PROPERTY(SceneObjectRef,DriveWheel)
-		
+		SceneObjectRef m_DriveWheel;
 		bool m_Initialized;
 		Vec2 m_AnimationSpeedFactor;
 		Vec2 m_AnimationValue;

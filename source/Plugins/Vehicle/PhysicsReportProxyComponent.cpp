@@ -39,7 +39,7 @@ namespace GASS
 	void PhysicsReportProxyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysicsReportProxyComponent",new Creator<PhysicsReportProxyComponent, Component>);
-		RegisterProperty<SceneObjectRef>("TargetObject", &PhysicsReportProxyComponent::GetTargetObject, &PhysicsReportProxyComponent::SetTargetObject);
+		RegisterMember("TargetObject", &PhysicsReportProxyComponent::m_TargetObject);
 	}
 
 	void PhysicsReportProxyComponent::OnInitialize()

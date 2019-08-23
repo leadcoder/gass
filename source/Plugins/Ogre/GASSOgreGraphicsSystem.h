@@ -82,9 +82,7 @@ namespace GASS
 		static void SetGASSMaterial(Ogre::MaterialPtr mat , GraphicsMaterial &material);
 
 	protected:
-		ADD_PROPERTY(bool,UpdateMessagePump);
-		ADD_PROPERTY(bool,UseShaderCache);
-	
+		
 		//void OnReloadMaterial(ReloadMaterialPtr message);
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 
@@ -118,6 +116,9 @@ namespace GASS
 		OgreDebugTextOutput* m_DebugTextBox;
 		bool m_CreateMainWindowOnInit;
 		bool m_ShowStats;
+		bool m_UpdateMessagePump;
+		bool m_UseShaderCache;
+
 		OgrePostProcesGASS_SHARED_PTR m_PostProcess;
 		OgreResourceManagerPtr m_ResourceManager;
 		Ogre::OverlaySystem* m_OverlaySystem;

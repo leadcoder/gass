@@ -168,7 +168,7 @@ namespace GASS
 		Vec3 m_ParentPos;
 		int m_NumHistoryFrames;
 		Quaternion m_ParentRot;
-		ADD_PROPERTY(ClientLocationMode,ClientLocationMode);
+		ClientLocationMode m_ClientLocationMode;
 	};
 	typedef GASS_SHARED_PTR<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
 }

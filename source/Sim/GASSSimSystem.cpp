@@ -36,7 +36,7 @@ namespace GASS
 
 	void SimSystem::RegisterReflection()
 	{
-		RegisterProperty<UpdateGroupIDBinder>("UpdateGroup", &GASS::SimSystem::GetUpdateGroup, &GASS::SimSystem::SetUpdateGroup);
+		RegisterMember("UpdateGroup", &GASS::SimSystem::m_UpdateGroup);
 	}
 
 	SimSystemManagerPtr SimSystem::GetSimSystemManager() const

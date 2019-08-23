@@ -51,11 +51,11 @@ namespace GASS
 	void DetourCrowdComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("DetourCrowdComponent",new Creator<DetourCrowdComponent, Component>);
-		RegisterProperty<bool>("AnticipateTurns", &DetourCrowdComponent::GetAnticipateTurns, &DetourCrowdComponent::SetAnticipateTurns);
-		RegisterProperty<bool>("OptimizeVis", &DetourCrowdComponent::GetOptimizeVis, &DetourCrowdComponent::SetOptimizeVis);
-		RegisterProperty<bool>("OptimizeTopo", &DetourCrowdComponent::GetOptimizeTopo, &DetourCrowdComponent::SetOptimizeTopo);
-		RegisterProperty<bool>("Separation", &DetourCrowdComponent::GetSeparation, &DetourCrowdComponent::SetSeparation);
-		RegisterProperty<bool>("ObstacleAvoidance", &DetourCrowdComponent::GetObstacleAvoidance, &DetourCrowdComponent::SetObstacleAvoidance);
+		RegisterMember("AnticipateTurns", &DetourCrowdComponent::m_AnticipateTurns);
+		RegisterMember("OptimizeVis", &DetourCrowdComponent::m_OptimizeVis);
+		RegisterMember("OptimizeTopo", &DetourCrowdComponent::m_OptimizeTopo);
+		RegisterMember("Separation", &DetourCrowdComponent::m_Separation);
+		RegisterMember("ObstacleAvoidance", &DetourCrowdComponent::m_ObstacleAvoidance);
 		RegisterProperty<float>("DefaultAgentRadius", &DetourCrowdComponent::GetDefaultAgentRadius, &DetourCrowdComponent::SetDefaultAgentRadius);
 	}
 

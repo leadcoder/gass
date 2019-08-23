@@ -63,7 +63,7 @@ namespace GASS
 			RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
 
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreManualMeshComponent::GetGeometryFlagsBinder, &OgreManualMeshComponent::SetGeometryFlagsBinder,
+		RegisterMember("GeometryFlags", &OgreManualMeshComponent::m_GeometryFlagsBinder,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 

@@ -70,10 +70,6 @@ namespace GASS
 		
 		void WakeUp();
 	protected:
-		ADD_PROPERTY(bool,DisableGravity)
-		ADD_PROPERTY(int,PositionIterCount)
-		ADD_PROPERTY(int,VelocityIterCount)
-		ADD_PROPERTY(bool,ForceReport)
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 
@@ -103,7 +99,11 @@ namespace GASS
 		bool m_Kinematic;
 		bool m_TrackTransformation;
 		bool m_Active;
-
+		bool m_DisableGravity;
+		bool m_ForceReport;
+		int m_PositionIterCount;
+		int m_VelocityIterCount;
+	
 		MassRepresentationType m_MassRepresentation;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;

@@ -89,22 +89,22 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
 
-		REG_PROPERTY(float,Mass, PhysXVehicleComponent)
-		REG_PROPERTY(float,ScaleMass, PhysXVehicleComponent)
-		REG_PROPERTY(float,EnginePeakTorque, PhysXVehicleComponent)
-		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXVehicleComponent)
-		REG_PROPERTY(float,ClutchStrength, PhysXVehicleComponent)
-		REG_PROPERTY(std::vector<float> ,GearRatios,PhysXVehicleComponent)
-		REG_PROPERTY(bool,UseAutoReverse, PhysXVehicleComponent)
-		REG_PROPERTY(float,GearSwitchTime, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,FrontLeftWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,FrontRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearLeftWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(SceneObjectRef,RearRightWheel, PhysXVehicleComponent)
-		REG_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels,PhysXVehicleComponent)
-		REG_PROPERTY(Float,MaxSpeed, PhysXVehicleComponent)
-		REG_PROPERTY2(bool,Debug, PhysXVehicleComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Mass", &GASS::PhysXVehicleComponent::m_Mass);
+		RegisterMember("ScaleMass", &GASS::PhysXVehicleComponent::m_ScaleMass);
+		RegisterMember("EnginePeakTorque", &GASS::PhysXVehicleComponent::m_EnginePeakTorque);
+		RegisterMember("EngineMaxRotationSpeed", &GASS::PhysXVehicleComponent::m_EngineMaxRotationSpeed);
+		RegisterMember("ClutchStrength", &GASS::PhysXVehicleComponent::m_ClutchStrength);
+		RegisterMember("GearRatios", &GASS::PhysXVehicleComponent::m_GearRatios);
+		RegisterMember("UseAutoReverse", &GASS::PhysXVehicleComponent::m_UseAutoReverse);
+		RegisterMember("GearSwitchTime", &GASS::PhysXVehicleComponent::m_GearSwitchTime);
+		RegisterMember("FrontLeftWheel", &GASS::PhysXVehicleComponent::m_FrontLeftWheel);
+		RegisterMember("FrontRightWheel", &GASS::PhysXVehicleComponent::m_FrontRightWheel);
+		RegisterMember("RearLeftWheel", &GASS::PhysXVehicleComponent::m_RearLeftWheel);
+		RegisterMember("RearRightWheel", &GASS::PhysXVehicleComponent::m_RearRightWheel);
+		RegisterMember("ExtraWheels", &GASS::PhysXVehicleComponent::m_ExtraWheels);
+		RegisterMember("MaxSpeed", &GASS::PhysXVehicleComponent::m_MaxSpeed);
+		RegisterMember("Debug", &GASS::PhysXVehicleComponent::m_Debug,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)

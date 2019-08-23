@@ -42,23 +42,22 @@ namespace GASS
 	protected:
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void ComputeWheelDim(physx::PxConvexMesh* wheel_convex_mesh, physx::PxF32 &wheel_width, physx::PxF32 &wheel_rad);
-		ADD_PROPERTY(float,Mass)
-		ADD_PROPERTY(float,MaxBrakeTorque)
-		ADD_PROPERTY(float,MaxHandBrakeTorque)
-		ADD_PROPERTY(float,MaxSteer)
-		ADD_PROPERTY(float,DampingRate)
-		ADD_PROPERTY(float,SuspensionMaxCompression)
-		ADD_PROPERTY(float,SuspensionMaxDroop)
-		ADD_PROPERTY(float,SuspensionSpringStrength)
-		ADD_PROPERTY(float,SuspensionSpringDamperRate)
-		ADD_PROPERTY(float,TireLongitudinalStiffnessPerUnitGravity)
-		ADD_PROPERTY(std::string,TireType)
-
 	private:
 		physx::PxVehicleSuspensionData m_SuspensionData;
 		physx::PxVehicleTireData m_TireData;
 		physx::PxVehicleWheelData m_WheelData;
 		bool m_Initialized;
+		float m_Mass;
+		float m_MaxBrakeTorque;
+		float m_MaxHandBrakeTorque;
+		float m_MaxSteer;
+		float m_DampingRate;
+		float m_SuspensionMaxCompression;
+		float m_SuspensionMaxDroop;
+		float m_SuspensionSpringStrength;
+		float m_SuspensionSpringDamperRate;
+		float m_TireLongitudinalStiffnessPerUnitGravity;
+		std::string m_TireType;
 	};
 	typedef GASS_SHARED_PTR<PhysXWheelComponent> PhysXWheelComponentPtr;
 }

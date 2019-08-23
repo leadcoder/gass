@@ -81,9 +81,9 @@ namespace GASS
 
 		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
-		RegisterProperty<double>("SleepTime", &RakNetNetworkSystem::GetSleepTime, &RakNetNetworkSystem::SetSleepTime);
-		RegisterProperty<bool>("Debug", &RakNetNetworkSystem::GetDebug, &RakNetNetworkSystem::SetDebug);
-		RegisterProperty<bool>("RelayInputOnServer", &RakNetNetworkSystem::GetRelayInputOnServer,&RakNetNetworkSystem::SetRelayInputOnServer);
+		RegisterMember("SleepTime", &RakNetNetworkSystem::m_SleepTime);
+		RegisterMember("Debug", &RakNetNetworkSystem::m_Debug);
+		RegisterMember("RelayInputOnServer", &RakNetNetworkSystem::m_RelayInputOnServer);
 	}
 
 	void RakNetNetworkSystem::OnSystemInit()

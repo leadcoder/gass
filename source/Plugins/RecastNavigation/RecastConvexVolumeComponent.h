@@ -32,9 +32,10 @@ namespace GASS
 		~RecastConvexVolumeComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
-		ADD_PROPERTY(LandCoverTypeBinder,LandCoverType)
+		LandCoverTypeBinder GetLandCoverType() const { return m_LandCoverType; }
 	protected:
 		bool m_Initialized;
+		LandCoverTypeBinder m_LandCoverType;
 	};
 	typedef GASS_SHARED_PTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;
 	typedef GASS_WEAK_PTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentWeakPtr;

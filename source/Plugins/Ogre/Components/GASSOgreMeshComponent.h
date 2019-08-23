@@ -82,8 +82,7 @@ namespace GASS
 		static void AddIndexData(const Ogre::IndexData *index_data, const unsigned int offset,GraphicsSubMeshPtr mesh);
 
 	protected:
-		ADD_PROPERTY(std::string,EnumerationResourceGroup)
-			RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
+		RenderQueueBinder GetRenderQueue()const {return m_RenderQueue;}
 		void SetRenderQueue(const RenderQueueBinder &rq);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
 		void SetMeshResource(const ResourceHandle &res);
@@ -115,6 +114,7 @@ namespace GASS
 		bool m_UniqueMaterialCreated;
 		GeometryFlags m_GeomFlags;
 		CollisionComponentPtr m_Collision;
+		std::string m_EnumerationResourceGroup;
 	};
 	typedef GASS_SHARED_PTR<OgreMeshComponent> OgreMeshComponentPtr;
 }

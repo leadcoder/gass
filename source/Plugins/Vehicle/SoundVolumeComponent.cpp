@@ -41,7 +41,7 @@ namespace GASS
 	void SoundVolumeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("SoundVolumeComponent",new Creator<SoundVolumeComponent, Component>);
-		RegisterProperty<Float>("MaxVolumeAtSpeed", &SoundVolumeComponent::GetMaxVolumeAtSpeed, &SoundVolumeComponent::SetMaxVolumeAtSpeed);
+		RegisterMember("MaxVolumeAtSpeed", &SoundVolumeComponent::m_MaxVolumeAtSpeed);
 		
 	}
 

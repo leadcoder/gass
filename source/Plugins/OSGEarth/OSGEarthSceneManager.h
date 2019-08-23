@@ -60,12 +60,13 @@ namespace GASS
 	protected:
 		bool _GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
-		ADD_PROPERTY(bool,DisableGLSL)
+		
 
 		osgEarth::MapNode* m_MapNode;
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_EarthManipulator;
 		bool m_AutoAdd;
+		bool m_DisableGLSL;
 		osgEarth::Util::Controls::Container* m_GUI;
 		std::string m_DummyProjection;
 		osg::ref_ptr<osgEarth::ElevationEnvelope> m_ElevationEnvelope;

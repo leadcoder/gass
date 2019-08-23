@@ -85,7 +85,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, Component>);
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
-		REG_PROPERTY2(bool,AutoCollectMeshes, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("AutoCollectMeshes", &RecastNavigationMeshComponent::m_AutoCollectMeshes, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool, Build, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(float,CellSize, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(float,CellHeight, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -106,7 +106,7 @@ namespace GASS
 		REG_PROPERTY2(bool,Visible, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool,ShowMeshLines, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(bool,ShowMeshSolid, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(bool,UseBoudingBox, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("UseBoudingBox", &RecastNavigationMeshComponent::m_UseBoudingBox,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(Vec3,MeshBoundingMin,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(Vec3,MeshBoundingMax, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(int,TileSize,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
@@ -115,7 +115,7 @@ namespace GASS
 		REG_PROPERTY2(std::string,BoundingBoxFromShape, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(FilePath,ImportMesh, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		REG_PROPERTY2(FilePath,ExportMesh, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(Vec3,LocalOrigin, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterMember("LocalOrigin", &RecastNavigationMeshComponent::m_LocalOrigin,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
 	}
 
 	void RecastNavigationMeshComponent::OnInitialize()

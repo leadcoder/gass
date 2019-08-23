@@ -39,7 +39,6 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere() const;
 	protected:
-		ADD_PROPERTY(bool,ScaleByDistance)
 		void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
 		void OnGeomChanged(GeometryChangedEventPtr message);
 		void OnCaptionMessage(TextCaptionRequestPtr message);
@@ -58,5 +57,6 @@ namespace GASS
 		int m_Size;
 		Vec4 m_Color;
 		bool m_Visible;
+		bool m_ScaleByDistance;
 	};
 }

@@ -76,9 +76,9 @@ namespace GASS
 		void SaveXML(tinyxml2::XMLElement *xml_elem) override;
 
 		SimSystemManagerPtr GetSimSystemManager() const;
-		ADD_PROPERTY(UpdateGroupIDBinder, UpdateGroup)
+		UpdateGroupIDBinder GetUpdateGroup() const {return m_UpdateGroup;}
 	
-			//internal
+		//internal
 		void _Update(double delta_time);
 	protected:
 		void _PreUpdate(double delta_time);
@@ -87,6 +87,7 @@ namespace GASS
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SimSystemManagerWeakPtr m_Owner;
+		UpdateGroupIDBinder m_UpdateGroup;
 	};
 	typedef GASS_SHARED_PTR<SimSystem> SimSystemPtr;
 }

@@ -53,17 +53,17 @@ namespace GASS
 	void PhysXWheelComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, Component>);
-		REG_PROPERTY(float,Mass,PhysXWheelComponent)
-		REG_PROPERTY(float,MaxBrakeTorque,PhysXWheelComponent)
-		REG_PROPERTY(float,MaxHandBrakeTorque,PhysXWheelComponent)
-		REG_PROPERTY(float,MaxSteer,PhysXWheelComponent)
-		REG_PROPERTY(float,DampingRate,PhysXWheelComponent)
-		REG_PROPERTY(float,SuspensionMaxCompression,PhysXWheelComponent)
-		REG_PROPERTY(float,SuspensionMaxDroop,PhysXWheelComponent)
-		REG_PROPERTY(float,SuspensionSpringStrength,PhysXWheelComponent)
-		REG_PROPERTY(float,SuspensionSpringDamperRate,PhysXWheelComponent)
-		REG_PROPERTY(float,TireLongitudinalStiffnessPerUnitGravity,PhysXWheelComponent)
-		REG_PROPERTY(std::string,TireType,PhysXWheelComponent)
+		RegisterMember("Mass", &GASS::PhysXWheelComponent::m_Mass);
+		RegisterMember("MaxBrakeTorque", &GASS::PhysXWheelComponent::m_MaxBrakeTorque);
+		RegisterMember("MaxHandBrakeTorque", &GASS::PhysXWheelComponent::m_MaxHandBrakeTorque);
+		RegisterMember("MaxSteer", &GASS::PhysXWheelComponent::m_MaxSteer);
+		RegisterMember("DampingRate", &GASS::PhysXWheelComponent::m_DampingRate);
+		RegisterMember("SuspensionMaxCompression", &GASS::PhysXWheelComponent::m_SuspensionMaxCompression);
+		RegisterMember("SuspensionMaxDroop", &GASS::PhysXWheelComponent::m_SuspensionMaxDroop);
+		RegisterMember("SuspensionSpringStrength", &GASS::PhysXWheelComponent::m_SuspensionSpringStrength);
+		RegisterMember("SuspensionSpringDamperRate", &GASS::PhysXWheelComponent::m_SuspensionSpringDamperRate);
+		RegisterMember("TireLongitudinalStiffnessPerUnitGravity", &GASS::PhysXWheelComponent::m_TireLongitudinalStiffnessPerUnitGravity);
+		RegisterMember("TireType", &GASS::PhysXWheelComponent::m_TireType);
 	}
 
 	void PhysXWheelComponent::ComputeWheelDim(PxConvexMesh* wheel_convex_mesh, PxF32 &wheel_width, PxF32 &wheel_rad)

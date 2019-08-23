@@ -40,6 +40,13 @@ namespace GASS
 		dtCrowd* GetCrowd() const {return m_Crowd;}
 		void RegisterAgent(DetourCrowdAgentComponentPtr agent);
 		void UnregisterAgent(DetourCrowdAgentComponentPtr agent);
+
+		bool GetAnticipateTurns() const {return m_AnticipateTurns;}
+		bool GetOptimizeVis() const { return m_OptimizeVis; }
+		bool GetOptimizeTopo() const { return m_OptimizeTopo; }
+		bool GetSeparation() const { return m_Separation; }
+		bool GetObstacleAvoidance() const { return m_ObstacleAvoidance; }
+		
 	protected:
 		//std::vector<std::string> GetScatteringSelection() const;
 		//void SetScatteringSelection(const std::vector<std::string> &selection);
@@ -101,11 +108,11 @@ namespace GASS
 		dtCrowd* m_Crowd;
 		RecastNavigationMeshComponentWeakPtr m_Mesh;
 
-		ADD_PROPERTY(bool,AnticipateTurns);
-		ADD_PROPERTY(bool,OptimizeVis);
-		ADD_PROPERTY(bool,OptimizeTopo);
-		ADD_PROPERTY(bool,Separation);
-		ADD_PROPERTY(bool,ObstacleAvoidance);
+		bool m_AnticipateTurns;
+		bool m_OptimizeVis;
+		bool m_OptimizeTopo;
+		bool m_Separation;
+		bool m_ObstacleAvoidance;
 		float m_SeparationWeight;
 		std::vector<DetourCrowdAgentComponentPtr> m_Agents;
 	};

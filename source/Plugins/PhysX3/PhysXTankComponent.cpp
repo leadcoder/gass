@@ -92,19 +92,20 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register("PhysXTankComponent",new Creator<PhysXTankComponent, Component>);
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXTankComponent", OF_VISIBLE)));
 
-		REG_PROPERTY(float,Mass, PhysXTankComponent)
-		REG_PROPERTY(Vec3,MassOffset, PhysXTankComponent)
-		REG_PROPERTY(float,ScaleMass, PhysXTankComponent)
-		REG_PROPERTY(float,EnginePeakTorque, PhysXTankComponent)
-		REG_PROPERTY(float,EngineMaxRotationSpeed,PhysXTankComponent)
-		REG_PROPERTY(float,ClutchStrength, PhysXTankComponent)
-		REG_PROPERTY(std::vector<float> ,GearRatios,PhysXTankComponent)
-		REG_PROPERTY(bool,UseAutoReverse, PhysXTankComponent)
-		REG_PROPERTY(float,GearSwitchTime, PhysXTankComponent)
-		REG_PROPERTY(std::vector<SceneObjectRef>,Wheels,PhysXTankComponent)
-		REG_PROPERTY(Float,MaxSpeed, PhysXTankComponent)
-		REG_PROPERTY(float,SteerLimit, PhysXTankComponent)
-		REG_PROPERTY2(bool,Debug, PhysXTankComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Mass", &GASS::PhysXTankComponent::m_Mass);
+		RegisterMember("MassOffset", &GASS::PhysXTankComponent::m_MassOffset);
+		RegisterMember("ScaleMass", &GASS::PhysXTankComponent::m_ScaleMass);
+		RegisterMember("EnginePeakTorque", &GASS::PhysXTankComponent::m_EnginePeakTorque);
+		RegisterMember("EngineMaxRotationSpeed", &GASS::PhysXTankComponent::m_EngineMaxRotationSpeed);
+		RegisterMember("ClutchStrength", &GASS::PhysXTankComponent::m_ClutchStrength);
+		RegisterMember("GearRatios", &GASS::PhysXTankComponent::m_GearRatios);
+		RegisterMember("UseAutoReverse", &GASS::PhysXTankComponent::m_UseAutoReverse);
+		RegisterMember("GearSwitchTime", &GASS::PhysXTankComponent::m_GearSwitchTime);
+		RegisterMember("Wheels", &GASS::PhysXTankComponent::m_Wheels);
+		RegisterMember("MaxSpeed", &GASS::PhysXTankComponent::m_MaxSpeed);
+		RegisterMember("SteerLimit", &GASS::PhysXTankComponent::m_SteerLimit);
+		RegisterMember("Debug", &GASS::PhysXTankComponent::m_Debug,
+			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 	}
 
 	PxVec3 PhysXTankComponent::ComputeDim(const PxConvexMesh* cm)

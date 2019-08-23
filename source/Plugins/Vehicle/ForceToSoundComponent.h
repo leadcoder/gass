@@ -43,15 +43,14 @@ namespace GASS
 		void OnInitialize() override;
 		void SceneManagerTick(double delta_time) override;
 	private:
-		ADD_PROPERTY(std::vector<Vec2>,ForceToPitch)
-		ADD_PROPERTY(Float,ForceLimit)
 		
 		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
 		Float m_Pitch;
 		Float m_TargetPitch;
 		Float m_MaxVelRequest;
 		Float m_MaxForce;
-		
+		Float m_ForceLimit;
+		std::vector<Vec2> m_ForceToPitch;
 	};
 }
 #endif

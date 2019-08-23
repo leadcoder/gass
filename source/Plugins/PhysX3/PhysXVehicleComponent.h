@@ -42,9 +42,11 @@ namespace GASS
 		void OnDelete() override;
 		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
 		void SceneManagerTick(double delta) override;
+
+		//IPlatformComponent
 		PlatformType GetType() const override {return PT_CAR;}
 		Vec3 GetSize() const override;
-		ADD_PROPERTY(Float,MaxSpeed);
+		Float GetMaxSpeed() const override { return m_MaxSpeed; }
 	protected:
 		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
@@ -67,21 +69,21 @@ namespace GASS
 		bool& newIsMovingForwardSlowly) const;
 		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
-
-		ADD_PROPERTY(SceneObjectRef,FrontLeftWheel);
-		ADD_PROPERTY(SceneObjectRef,FrontRightWheel);
-		ADD_PROPERTY(SceneObjectRef,RearLeftWheel);
-		ADD_PROPERTY(SceneObjectRef,RearRightWheel);
-		ADD_PROPERTY(std::vector<SceneObjectRef>,ExtraWheels)
-		ADD_PROPERTY(bool,UseAutoReverse);
-		ADD_PROPERTY(float,ScaleMass);
-		ADD_PROPERTY(float,EnginePeakTorque)
-		ADD_PROPERTY(float,EngineMaxRotationSpeed)
-		ADD_PROPERTY(float,ClutchStrength)
-		ADD_PROPERTY(float,Mass)
-		ADD_PROPERTY(float,GearSwitchTime)
-		ADD_PROPERTY(std::vector<float>,GearRatios)
-		ADD_PROPERTY(bool,Debug)
+		Float m_MaxSpeed;
+		SceneObjectRef m_FrontLeftWheel;
+		SceneObjectRef m_FrontRightWheel;
+		SceneObjectRef m_RearLeftWheel;
+		SceneObjectRef m_RearRightWheel;
+		std::vector<SceneObjectRef>m_ExtraWheels;
+		bool m_UseAutoReverse;
+		float m_ScaleMass;
+		float m_EnginePeakTorque;
+		float m_EngineMaxRotationSpeed;
+		float m_ClutchStrength;
+		float m_Mass;
+		float m_GearSwitchTime;
+		std::vector<float> m_GearRatios;
+		bool m_Debug;
 
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;

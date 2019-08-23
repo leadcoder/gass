@@ -38,7 +38,7 @@ namespace GASS
 		double GetLongitude() const;
 		void SetLongitude(double lat);
 	protected:
-		ADD_PROPERTY(double,Offset);
+		
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnGeoLocationRequest(GeoLocationRequestPtr message);
 		void OnNameChanged(SceneObjectNameChangedEventPtr event);
@@ -46,6 +46,7 @@ namespace GASS
 		void UpdateNode();
 		double m_Latitude;
 		double m_Longitude;
+		double m_Offset;
 		osgEarth::Annotation::PlaceNode* m_DebugNode;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 	};

@@ -61,8 +61,6 @@ namespace GASS
 	private:
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
-		ADD_PROPERTY(Float,WaypointRadius);
-		ADD_PROPERTY(SceneObjectRef,NavigationObject);
 		void SetInvertDirection(bool value);
 		bool GetInvertDirection() const;
 		void SetWaypointList(SceneObjectRef waypointlist);
@@ -71,7 +69,8 @@ namespace GASS
 		void SetMode(const PathFollowModeBinder &mode);
 		int GetCloesetWaypoint();
 		
-		
+		Float m_WaypointRadius;
+		SceneObjectRef m_NavigationObject;
 		Vec3  m_CurrentPos;
 		std::vector<Vec3> m_Waypoints;
 		SceneObjectRef m_WaypointList;

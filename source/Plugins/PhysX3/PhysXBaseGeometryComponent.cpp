@@ -57,7 +57,7 @@ namespace GASS
 	{
 		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
 		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
-		RegisterProperty<bool>("SimulationCollision", &GASS::PhysXBaseGeometryComponent::GetSimulationCollision, &GASS::PhysXBaseGeometryComponent::SetSimulationCollision);
+		RegisterMember("SimulationCollision", &GASS::PhysXBaseGeometryComponent::m_SimulationCollision);
 	}
 
 	void PhysXBaseGeometryComponent::OnInitialize()

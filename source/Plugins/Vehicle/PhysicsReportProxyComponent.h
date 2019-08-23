@@ -38,8 +38,9 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	private:
-		ADD_PROPERTY(SceneObjectRef,TargetObject);
 		void OnHingeJointReport(PhysicsHingeJointReportEventPtr message);
+		SceneObjectRef m_TargetObject;
+
 	};
 }
 #endif

@@ -52,7 +52,6 @@ namespace GASS
 		void SetDriveForceLimit(float value) override;
 		float GetDriveForceLimit() const override { return m_DriveForceLimit; }
 	protected:
-		ADD_PROPERTY(Vec3,Offset)
 		void OnVelocityRequest(PhysicsPrismaticJointVelocityRequestPtr message);
 		void OnForceRequest(PhysicsPrismaticJointMaxForceRequestPtr message);
 		void OnPositionRequest(PhysicsPrismaticJointPositionRequestPtr message);
@@ -77,6 +76,7 @@ namespace GASS
 		float m_Damping;
 		float m_Spring;
 		Vec3 m_RotationAxis;
+		Vec3 m_Offset;
 		float m_Limit;
 		bool m_EnableLimit;
 		bool m_EnableDrive;

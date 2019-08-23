@@ -43,8 +43,7 @@ namespace GASS
 		void OnVelocityNotifyMessage(PhysicsVelocityEventPtr message);
 		void OnHingeUpdated(ODEPhysicsHingeJointEventPtr message);
 
-		ADD_PROPERTY(Float,MaxVolumeAtSpeed)
-
+		Float m_MaxVolumeAtSpeed;
 		Float m_HingeAngle;
 	};
 }

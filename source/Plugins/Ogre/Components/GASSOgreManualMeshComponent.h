@@ -58,7 +58,6 @@ namespace GASS
 
 		Ogre::ManualObject* GetManualObject() const {return m_MeshObject;}
 	protected:
-		ADD_PROPERTY(GeometryFlagsBinder,GeometryFlagsBinder);
 		void SetCastShadow(bool castShadow);
 		bool GetCastShadow() const {return m_CastShadows;}
 
@@ -74,5 +73,6 @@ namespace GASS
 		std::vector<GraphicsMesh> m_MeshData;
 		bool m_CastShadows;
 		CollisionComponentPtr m_Collision;
+		GeometryFlagsBinder m_GeometryFlagsBinder;
 	};
 }

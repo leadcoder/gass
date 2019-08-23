@@ -55,16 +55,15 @@ namespace GASS
 		}
 	}
 
-
 	void PhysXCharacterComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("PhysXCharacterComponent",new Creator<PhysXCharacterComponent, Component>);
 		RegisterProperty<float>("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
-		RegisterProperty<Float>("Radius", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
-		RegisterProperty<Float>("StandingSize", &PhysXCharacterComponent::GetRadius, &PhysXCharacterComponent::SetRadius);
-		RegisterProperty<Float>("YawMaxVelocity", &PhysXCharacterComponent::GetYawMaxVelocity, &PhysXCharacterComponent::SetYawMaxVelocity);
-		RegisterProperty<Float>("Acceleration", &PhysXCharacterComponent::GetAcceleration, &PhysXCharacterComponent::SetAcceleration);
-		RegisterProperty<Float>("MaxSpeed", &PhysXCharacterComponent::GetMaxSpeed, &PhysXCharacterComponent::SetMaxSpeed);
+		RegisterMember("MaxSpeed", &PhysXCharacterComponent::m_MaxSpeed);
+		RegisterMember("Radius", &PhysXCharacterComponent::m_Radius);
+		RegisterMember("StandingSize", &PhysXCharacterComponent::m_StandingSize);
+		RegisterMember("YawMaxVelocity", &PhysXCharacterComponent::m_YawMaxVelocity);
+		RegisterMember("Acceleration", &PhysXCharacterComponent::m_Acceleration);
 	}
 
 	void PhysXCharacterComponent::OnInitialize()

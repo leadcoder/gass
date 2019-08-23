@@ -43,8 +43,7 @@ namespace GASS
 	protected:
 		void OnBody1Loaded(PhysicsBodyLoadedEventPtr message);
 		void OnBody2Loaded(PhysicsBodyLoadedEventPtr message);
-		ADD_PROPERTY(bool,Report)
-
+	
 		//get set section
 		SceneObjectRef GetBody1() const {return m_Body1;}
 		void SetBody1(SceneObjectRef value);
@@ -56,6 +55,7 @@ namespace GASS
 		SceneObjectRef m_Body2;
 		bool m_Body1Loaded;
 		bool m_Body2Loaded;
+		bool m_Report;
 	private:
 	};
 	typedef GASS_SHARED_PTR<PhysXBaseJointComponent> PhysXBaseJointComponentPtr;

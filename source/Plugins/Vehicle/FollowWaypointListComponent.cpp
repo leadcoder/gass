@@ -116,9 +116,9 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration,false)));
-		RegisterProperty<SceneObjectRef>("NavigationObject", &FollowWaypointListComponent::GetNavigationObject, &FollowWaypointListComponent::SetNavigationObject,
+		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,NavigationEnumeration,false)));
-		RegisterProperty<Float>("WaypointRadius", &FollowWaypointListComponent::GetWaypointRadius, &FollowWaypointListComponent::SetWaypointRadius,
+		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Radius that should be used to consider a waypoint reached",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<PathFollowModeBinder>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Follow mode",PF_VISIBLE,&PathFollowModeBinder::GetStringEnumeration)));

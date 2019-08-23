@@ -36,7 +36,6 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		ADD_PROPERTY(std::string,Material);
 		physx::PxShape* CreateShape() override;
 		void SetRadius(Float radius);
 		Float GetRadius() const;
@@ -44,6 +43,7 @@ namespace GASS
 		//debug functions
 		void UpdateDebug();
 	protected:
-		Float m_Radius; 
+		Float m_Radius;
+		std::string m_Material;
 	};
 }

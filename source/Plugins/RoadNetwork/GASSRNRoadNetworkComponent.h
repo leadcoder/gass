@@ -29,12 +29,12 @@ namespace GASS
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
 		bool GetEdit() const;
 		void SetEdit(bool value);
-		ADD_PROPERTY(std::string,NodeTemplate)
-		ADD_PROPERTY(std::string,EdgeTemplate)
-		ADD_PROPERTY(bool,Optimize)
-
+		
 		//IGraphComponent interface
 		void RebuildGraph() override;
+		std::string GetNodeTemplate() const override { return m_NodeTemplate; }
+		std::string GetEdgeTemplate() const override { return m_EdgeTemplate; }
+
 		//IRoadNavigationComponent
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 		bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const override;
@@ -49,7 +49,10 @@ namespace GASS
 		void LoadXML(tinyxml2::XMLElement * elem) override;
 		bool m_Edit;
 		bool m_ShowGraph;
+		bool m_Optimize;
 		RoadNetwork m_Network;
+		std::string m_NodeTemplate;
+		std::string m_EdgeTemplate;
 	};
 	typedef GASS_SHARED_PTR<RNRoadNetworkComponent> RNRoadNetworkComponentPtr;
 

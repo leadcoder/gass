@@ -43,17 +43,6 @@ namespace GASS
 		void OnDelete() override;
 		void SceneManagerTick(double delta) override;
 	private:
-		ADD_PROPERTY(bool,Enable);
-		ADD_PROPERTY(Float,DesiredSpeed);
-		ADD_PROPERTY(Float,DesiredPosRadius);
-		ADD_PROPERTY(PIDControl,TurnPID);
-		ADD_PROPERTY(PIDControl,TrottlePID);
-		ADD_PROPERTY(Float,BrakeDistanceFactor);
-		ADD_PROPERTY(bool,InvertBackWardSteering);
-		ADD_PROPERTY(bool,Support3PointTurn);
-		ADD_PROPERTY(Float,MaxReverseDistance);
-		ADD_PROPERTY(bool, CollisionAvoidance);
-		
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
@@ -67,6 +56,17 @@ namespace GASS
 		void OnRadarEvent(VehicleRadarEventPtr message);
 		void OnSensorEvent(SensorMessagePtr message);
 		
+		bool m_Enable;
+		Float m_DesiredSpeed;
+		Float m_DesiredPosRadius;
+		PIDControl m_TurnPID;
+		PIDControl m_TrottlePID;
+		Float m_BrakeDistanceFactor;
+		bool m_InvertBackWardSteering;
+		bool m_Support3PointTurn;
+		Float m_MaxReverseDistance;
+		bool m_CollisionAvoidance;
+
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
 		Vec3 m_DesiredPos;

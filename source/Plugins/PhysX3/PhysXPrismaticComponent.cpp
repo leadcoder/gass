@@ -58,7 +58,7 @@ namespace GASS
 		RegisterProperty<float>("Limit", &GASS::PhysXPrismaticComponent::GetLimit, &GASS::PhysXPrismaticComponent::SetLimit);
 		RegisterProperty<bool>("EnableLimits", &GASS::PhysXPrismaticComponent::GetEnableLimits, &GASS::PhysXPrismaticComponent::SetEnableLimits);
 		RegisterProperty<bool>("EnableDrive", &GASS::PhysXPrismaticComponent::GetEnableDrive, &GASS::PhysXPrismaticComponent::SetEnableDrive);
-		RegisterProperty<Vec3>("Offset", &GASS::PhysXPrismaticComponent::GetOffset, &GASS::PhysXPrismaticComponent::SetOffset);
+		RegisterMember("Offset", &GASS::PhysXPrismaticComponent::m_Offset);
 		RegisterProperty<float>("DriveForceLimit", &GASS::PhysXPrismaticComponent::GetDriveForceLimit, &GASS::PhysXPrismaticComponent::SetDriveForceLimit);
 
 	}

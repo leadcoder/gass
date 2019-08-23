@@ -112,11 +112,8 @@ namespace GASS
 		void RecastToGASS(float* in_pos, GASS::Vec3 &out_pos) const;
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
-		ADD_PROPERTY(bool, AutoCollectMeshes)
-			ADD_PROPERTY(bool, UseBoudingBox)
-			ADD_PROPERTY(Vec3, LocalOrigin)
-
-			float GetCellSize() const;
+		
+		float GetCellSize() const;
 		float GetCellHeight() const;
 		float GetAgentHeight() const;
 		float GetAgentRadius() const;
@@ -219,6 +216,10 @@ namespace GASS
 		rcContext* m_Ctx;
 		bool m_MonotonePartitioning;
 		bool m_Initialized;
+		bool m_AutoCollectMeshes;
+		bool m_UseBoudingBox;
+		Vec3 m_LocalOrigin;
+
 		mutable GASS_MUTEX m_Mutex; 
 	};
 	typedef GASS_SHARED_PTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;

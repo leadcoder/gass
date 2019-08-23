@@ -60,7 +60,7 @@ namespace GASS
 	protected:
 		void LoadTires(const std::string &file);
 	private:
-		ADD_PROPERTY(int,MaxNumThreads)
+		
 		// PhysX
 		physx::PxPhysics* m_PhysicsSDK;
 		physx::PxFoundation* m_Foundation;
@@ -76,7 +76,7 @@ namespace GASS
 		std::vector<physx::PxMaterial*> m_DrivableMaterials;
 		std::map<std::string,physx::PxMaterial*> m_Materials;
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
-		
+		int m_MaxNumThreads;
 	};
 
 	typedef GASS_SHARED_PTR<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;

@@ -112,8 +112,9 @@ namespace GASS
 
 		double GetLocationSendFrequency() const {return m_LocationSendFrequency ;}
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
-		ADD_PROPERTY(bool,Debug);
-		ADD_PROPERTY(bool,RelayInputOnServer);
+		bool GetDebug() const { return m_Debug; }
+		bool GetRelayInputOnServer() const { return m_RelayInputOnServer; }
+		
 	private:
 		void OnStartServer(StartServerRequestPtr message);
 		void OnStartClient(StartClientRequestPtr message);
@@ -136,10 +137,6 @@ namespace GASS
 		void UpdateClient(double delta);
 		void SerializeServerData(RakNet::BitStream &bstream,ServerData* data);
 		void DeserializeServerData(RakNet::BitStream *bstream ,ServerData* data);
-		
-		ADD_PROPERTY(double,SleepTime);
-
-		
 
 		ReplicaManager* m_ReplicaManager;
 		RakPeerInterface *m_RakPeer;
@@ -159,6 +156,8 @@ namespace GASS
 		bool m_RemoteCreatePlayers;
 		bool m_AcceptLateJoin;
 		bool m_SceneIsRunning;
+		double m_SleepTime;
+
 		ClientDataMap m_ClientMap;
 		SceneWeakPtr m_Scene;
 
@@ -166,6 +165,8 @@ namespace GASS
 		double m_InterpolationLag;
 		double m_LocationSendFrequency;
 		PacketLogger m_Logger;
+		bool m_Debug;
+		bool m_RelayInputOnServer;
 	};
 	typedef GASS_SHARED_PTR<RakNetNetworkSystem> RakNetNetworkSystemPtr;
 }

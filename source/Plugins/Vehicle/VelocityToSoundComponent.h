@@ -43,14 +43,14 @@ namespace GASS
 		void OnInitialize() override;
 		void SceneManagerTick(double delta_time) override;
 	private:
-		ADD_PROPERTY(Vec2,MinMaxVolume)
-		ADD_PROPERTY(Vec2,MinMaxPitch)
-		ADD_PROPERTY(Float,VelocityLimit)
 		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
 		Float m_Volume;
 		Float m_Pitch;
 		Float m_TargetPitch;
 		Float m_MaxVelRequest;
+		Vec2 m_MinMaxVolume;
+		Vec2 m_MinMaxPitch;
+		Float m_VelocityLimit;
 	};
 }
 #endif

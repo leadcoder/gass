@@ -48,8 +48,8 @@ namespace GASS
 	void ForceToSoundComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register("ForceToSoundComponent",new Creator<ForceToSoundComponent, Component>);
-		REG_PROPERTY(std::vector<Vec2>, ForceToPitch, ForceToSoundComponent);
-		REG_PROPERTY(Float ,ForceLimit,ForceToSoundComponent);
+		RegisterMember("ForceToPitch", &ForceToSoundComponent::m_ForceToPitch);
+		RegisterMember("ForceLimit", &ForceToSoundComponent::m_ForceLimit);
 	}
 
 	void ForceToSoundComponent::OnInitialize()

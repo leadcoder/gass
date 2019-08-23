@@ -43,7 +43,7 @@ namespace GASS
 	private:
 		void OnTransformationMessage(TransformationChangedEventPtr message);
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);
-		ADD_PROPERTY(SceneObjectRef,NavigationObject);
+		SceneObjectRef m_NavigationObject;
 		Vec3 m_CurrentLocation;
 		Vec3 m_DestinationLocation;
 		std::vector<Vec3> m_Path;
