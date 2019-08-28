@@ -123,11 +123,11 @@ namespace GASS
 				{
 
 					//TODO: need to change this, should save componentcontainer type instead and create from factory, (same way as components are created)
-					const std::string factory_class_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-					ComponentContainerPtr child = ComponentContainerFactory::Get().Create(factory_class_name);
+					const auto factory_key = ComponentContainerFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
+					ComponentContainerPtr child = ComponentContainerFactory::Get().Create(factory_key);
 					if (!child)
 					{
-						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_class_name, "ComponentContainer::Serialize");
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create instance " + factory_key, "ComponentContainer::Serialize");
 					}
 
 					//ComponentContainerPtr child  = GASS_DYNAMIC_PTR_CAST<IComponentContainer> (CreateInstance());
@@ -205,7 +205,7 @@ namespace GASS
 	{
 		if(!m_Serialize)
 			return;
-		std::string factory_name = ComponentContainerFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
+		const std::string factory_key = ComponentContainerFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
 		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
 		tinyxml2::XMLElement* this_elem = nullptr;
 		if (obj_elem->Parent() == rootXMLDoc) //top element!
@@ -214,12 +214,10 @@ namespace GASS
 		}
 		else
 		{
-			this_elem = rootXMLDoc->NewElement(factory_name.c_str());
+			this_elem = rootXMLDoc->NewElement(factory_key.c_str());
 			obj_elem->LinkEndChild(this_elem);
 		}
 
-		
-		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
 		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");

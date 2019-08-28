@@ -79,35 +79,28 @@ namespace GASS
 	void Component::SaveXML(tinyxml2::XMLElement *xml_elem)
 	{
 		tinyxml2::XMLElement * this_elem;
-		std::string factoryname = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		this_elem = xml_elem->GetDocument()->NewElement(factoryname.c_str() );  
+		const std::string factory_key = ComponentFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
+		this_elem = xml_elem->GetDocument()->NewElement(factory_key.c_str() );
 		xml_elem->LinkEndChild( this_elem );  
 		_SaveProperties(this_elem);
 	}
 
 	ComponentPtr Component::CreateCopy()
 	{
-		const std::string factory_class_name = ComponentFactory::Get().GetFactoryName(GetRTTI()->GetClassName());
-		ComponentPtr new_comp = GASS_STATIC_PTR_CAST<Component>(ComponentFactory::Get().Create(factory_class_name));
+		const std::string factory_key = ComponentFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
+		ComponentPtr new_comp = GASS_STATIC_PTR_CAST<Component>(ComponentFactory::Get().Create(factory_key));
 		if(!new_comp)
 		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_class_name,"Component::CreateCopy");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create component instance " + factory_key,"Component::CreateCopy");
 		}
-		//ComponentPtr new_comp = GASS_STATIC_PTR_CAST<Component>(CreateInstance());
 		BaseReflectionObject::CopyPropertiesTo(new_comp);
 		return new_comp;
 	}
-
-	/*void Component::CopyPropertiesTo(ComponentPtr dest_comp) const
-	{
-		BaseReflectionObject::CopyPropertiesTo(dest_comp);
-	}*/
-
+	
 	std::vector<std::string> Component::GetDependencies() const
 	{
 		return m_Dependencies[GetRTTI()];
 	}
-	
 }
 
 

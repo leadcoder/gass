@@ -75,6 +75,7 @@ namespace GASS
 			Initialization message  and want a certain call order*/
 
 		int RegisterForMessage(const MessageType &type,  MessageFuncPtr callback, int priority = 0);
+		
 
 		/**
 			Unregister to listen to messages of certain type.

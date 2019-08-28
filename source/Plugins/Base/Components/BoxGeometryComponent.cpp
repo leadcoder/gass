@@ -42,7 +42,7 @@ namespace GASS
 
 	void BoxGeometryComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("BoxGeometryComponent",new GASS::Creator<BoxGeometryComponent, Component>);
+		ComponentFactory::Get().Register<BoxGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("BoxGeometryComponent", OF_VISIBLE)));
 	
 		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,

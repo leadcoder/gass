@@ -38,7 +38,7 @@ namespace GASS
 
 	void InputProxyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("InputProxyComponent",new Creator<InputProxyComponent, Component>);
+		ComponentFactory::Get().Register<InputProxyComponent>();
 		RegisterMember("InputHandlerObject", &InputProxyComponent::m_InputHandlerObject);
 	}
 

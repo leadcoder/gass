@@ -43,7 +43,7 @@ namespace GASS
 
 	void OSGLightComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OSGLightComponent, Component>);
+		ComponentFactory::Get().Register<OSGLightComponent>("LightComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used for lights", OF_VISIBLE)));
 

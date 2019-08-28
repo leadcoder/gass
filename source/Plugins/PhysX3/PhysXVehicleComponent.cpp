@@ -86,7 +86,7 @@ namespace GASS
 	
 	void PhysXVehicleComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXVehicleComponent",new Creator<PhysXVehicleComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXVehicleComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
 
 		RegisterMember("Mass", &GASS::PhysXVehicleComponent::m_Mass);

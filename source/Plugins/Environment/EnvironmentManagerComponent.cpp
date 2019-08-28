@@ -113,7 +113,7 @@ namespace GASS
 
 	void EnvironmentManagerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("EnvironmentManagerComponent",new Creator<EnvironmentManagerComponent, Component>);
+		ComponentFactory::Get().Register<EnvironmentManagerComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("EnvironmentManagerComponent", OF_VISIBLE )));
 
 		RegisterProperty< std::vector<Vec3f> >("WaterGradient", &EnvironmentManagerComponent::GetWaterGradient, &EnvironmentManagerComponent::SetWaterGradient,

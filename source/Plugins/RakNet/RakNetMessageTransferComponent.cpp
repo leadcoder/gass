@@ -49,8 +49,7 @@ namespace GASS
 
 	void RakNetMessageTransferComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("MessageTransferComponent",new Creator<RakNetMessageTransferComponent, Component>);
-		//RegisterProperty<std::string>("ControlSetting", &RakNetMessageTransferComponent::GetControlSetting, &RakNetMessageTransferComponent::SetControlSetting);
+		ComponentFactory::GetPtr()->Register<RakNetMessageTransferComponent>("MessageTransferComponent");
 	}
 
 	void RakNetMessageTransferComponent::OnInitialize()

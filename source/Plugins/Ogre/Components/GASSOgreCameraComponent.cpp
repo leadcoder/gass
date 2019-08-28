@@ -55,7 +55,7 @@ namespace GASS
 
 	void OgreCameraComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("CameraComponent",new Creator<OgreCameraComponent, Component>);
+		ComponentFactory::Get().Register<OgreCameraComponent>("CameraComponent");
 		ADD_DEPENDENCY("OgreLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 

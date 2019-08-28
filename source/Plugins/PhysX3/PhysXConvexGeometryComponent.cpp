@@ -50,7 +50,7 @@ namespace GASS
 
 	void PhysXConvexGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsConvexGeometryComponent",new Creator<PhysXConvexGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXConvexGeometryComponent>("PhysicsConvexGeometryComponent");
 		RegisterMember("SimulationCollision", &GASS::PhysXConvexGeometryComponent::m_SimulationCollision);
 	}
 

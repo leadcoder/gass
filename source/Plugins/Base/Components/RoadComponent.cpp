@@ -69,7 +69,7 @@ namespace GASS
 
 	void RoadComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RoadComponent",new Creator<RoadComponent, Component>);
+		ComponentFactory::Get().Register<RoadComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RoadComponent", OF_VISIBLE)));
 		RegisterProperty<bool>("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

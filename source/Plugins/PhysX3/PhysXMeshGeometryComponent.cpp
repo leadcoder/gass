@@ -51,7 +51,7 @@ namespace GASS
 
 	void PhysXMeshGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<PhysXMeshGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXMeshGeometryComponent>("PhysicsMeshGeometryComponent");
 	}
 
 	void PhysXMeshGeometryComponent::OnInitialize()

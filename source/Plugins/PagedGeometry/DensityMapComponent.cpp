@@ -36,7 +36,7 @@ namespace GASS
 		ext.push_back("png");
 		ext.push_back("tga");
 		
-		ComponentFactory::GetPtr()->Register("DensityMapComponent",new Creator<DensityMapComponent, Component>);
+		ComponentFactory::Get().Register<DensityMapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("DensityMapComponent", OF_VISIBLE)));
 		RegisterProperty<std::string>("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

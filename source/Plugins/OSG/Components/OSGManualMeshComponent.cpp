@@ -45,7 +45,7 @@ namespace GASS
 
 	void OSGManualMeshComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OSGManualMeshComponent, Component>);
+		ComponentFactory::Get().Register<OSGManualMeshComponent>("ManualMeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterProperty<bool>("CastShadow", &OSGManualMeshComponent::GetCastShadow, &OSGManualMeshComponent::SetCastShadow,

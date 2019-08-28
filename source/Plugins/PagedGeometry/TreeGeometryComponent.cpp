@@ -66,7 +66,7 @@ namespace GASS
 
 	void TreeGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("TreeGeometryComponent",new Creator<TreeGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<TreeGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TreeGeometryComponent", OF_VISIBLE)));
 
 		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh,

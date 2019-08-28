@@ -42,7 +42,7 @@ namespace GASS
 	
 	void ODECollisionSystem::OnSystemInit()
 	{
-		ComponentFactory::GetPtr()->Register("ODECollisionGeometryComponent",new Creator<ODECollisionGeometryComponent, Component>);
+		ComponentFactory::Get().Register<ODECollisionGeometryComponent>();
 		SceneManagerFactory::GetPtr()->Register<ODECollisionSceneManager>("ODECollisionSceneManager");
 
 		SimSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetSystemByName("ODEPhysicsSystem");

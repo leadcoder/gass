@@ -46,7 +46,7 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("NetworkMasterComponent",new Creator<RakNetNetworkMasterComponent, Component>);
+		ComponentFactory::GetPtr()->Register<RakNetNetworkMasterComponent>("NetworkMasterComponent");
 		RegisterProperty<std::vector<std::string> >("Attributes", &RakNetNetworkMasterComponent::GetAttributes, &RakNetNetworkMasterComponent::SetAttributes);
 	}
 

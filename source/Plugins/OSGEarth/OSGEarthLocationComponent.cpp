@@ -44,7 +44,7 @@ namespace GASS
 
 	void OSGEarthLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OSGEarthLocationComponent",new Creator<OSGEarthLocationComponent, Component>);
+		ComponentFactory::GetPtr()->Register<OSGEarthLocationComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation", OF_VISIBLE)));
 		RegisterProperty<double>("Latitude", &OSGEarthLocationComponent::GetLatitude, &OSGEarthLocationComponent::SetLatitude,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));

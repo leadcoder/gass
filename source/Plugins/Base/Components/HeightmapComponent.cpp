@@ -48,7 +48,7 @@ namespace GASS
 
 	void HeightmapComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("HeightmapComponent",new GASS::Creator<HeightmapComponent, Component>);
+		ComponentFactory::Get().Register<HeightmapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
 
 		RegisterMember("Size", &GASS::HeightmapComponent::m_Size,

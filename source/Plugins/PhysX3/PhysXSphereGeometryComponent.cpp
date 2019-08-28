@@ -39,7 +39,7 @@ namespace GASS
 
 	void PhysXSphereGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<PhysXSphereGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXSphereGeometryComponent>("PhysicsSphereGeometryComponent");
 		RegisterProperty<Float>("Radius", &GASS::PhysXSphereGeometryComponent::GetRadius, &GASS::PhysXSphereGeometryComponent::SetRadius);
 		RegisterMember("Material", &GASS::PhysXSphereGeometryComponent::m_Material);
 	}

@@ -82,7 +82,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("RecastNavigationMeshComponent",new Creator<RecastNavigationMeshComponent, Component>);
+		ComponentFactory::GetPtr()->Register<RecastNavigationMeshComponent>();
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
 		RegisterMember("AutoCollectMeshes", &RecastNavigationMeshComponent::m_AutoCollectMeshes, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

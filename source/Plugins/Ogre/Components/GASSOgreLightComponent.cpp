@@ -54,7 +54,7 @@ namespace GASS
 
 	void OgreLightComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LightComponent",new Creator<OgreLightComponent, Component>);
+		ComponentFactory::Get().Register<OgreLightComponent>("LightComponent");
 		ADD_DEPENDENCY("OgreLocationComponent")
 			GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 		RegisterProperty<LightTypeBinder>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType,

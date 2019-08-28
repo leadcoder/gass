@@ -62,7 +62,7 @@ namespace GASS
 
 	void LineGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LineGeometryComponent",new Creator<LineGeometryComponent, Component>);
+		ComponentFactory::Get().Register<LineGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LineGeometryComponent", OF_VISIBLE)));
 
 		RegisterProperty<float>("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,

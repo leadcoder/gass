@@ -40,7 +40,7 @@ namespace GASS
 
 	void SkyXCloudLayerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SkyXCloudLayerComponent",new Creator<SkyXCloudLayerComponent, Component>);
+		ComponentFactory::Get().Register<SkyXCloudLayerComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXCloudLayerComponent", OF_VISIBLE )));
 		RegisterProperty<float>("Scale", &SkyXCloudLayerComponent::GetScale, &SkyXCloudLayerComponent::SetScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

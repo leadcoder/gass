@@ -60,7 +60,7 @@ namespace GASS
 
 	void OSGLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationComponent", new Creator<OSGLocationComponent, Component>);
+		ComponentFactory::GetPtr()->Register<OSGLocationComponent>("LocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition,

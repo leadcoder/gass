@@ -45,7 +45,7 @@ namespace GASS
 
 	void CircleGeometryComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("CircleGeometryComponent",new GASS::Creator<CircleGeometryComponent, Component>);
+		ComponentFactory::Get().Register<CircleGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CircleGeometryComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("Radius", &GASS::CircleGeometryComponent::GetRadius, &GASS::CircleGeometryComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Circle Radius",PF_VISIBLE | PF_EDITABLE)));

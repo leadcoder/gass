@@ -37,7 +37,7 @@ namespace GASS
 
 	void GroupComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("GroupComponent",new Creator<GroupComponent, Component>);
+		ComponentFactory::Get().Register<GroupComponent>();
 	}
 
 	void GroupComponent::OnInitialize()

@@ -55,7 +55,7 @@ namespace GASS
 
 	void ChaseCameraComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ChaseCameraComponent",new Creator<ChaseCameraComponent, Component>);
+		ComponentFactory::GetPtr()->Register<ChaseCameraComponent>();
 		RegisterProperty<std::string>("PreferredViewport", &ChaseCameraComponent::GetPreferredViewport, &ChaseCameraComponent::SetPreferredViewport);
 		RegisterMember("InputHandlerObject", &ChaseCameraComponent::m_InputHandlerObject);
 		RegisterMember("DampingConstant", &ChaseCameraComponent::m_DampingConstant);

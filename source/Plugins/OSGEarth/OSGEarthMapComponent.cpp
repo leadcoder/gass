@@ -216,7 +216,7 @@ namespace GASS
 
 	void OSGEarthMapComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OSGEarthMapComponent", new Creator<OSGEarthMapComponent, Component>);
+		ComponentFactory::Get().Register<OSGEarthMapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
 		RegisterProperty<ResourceHandle>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile,
 			EnumerationPropertyMetaDataPtr(new OSGEarthMapEnumerationMetaData("OSGEarth map file", PF_VISIBLE)));

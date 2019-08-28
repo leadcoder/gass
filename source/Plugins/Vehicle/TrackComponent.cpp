@@ -39,7 +39,7 @@ namespace GASS
 
 	void TrackComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("TrackComponent",new Creator<TrackComponent, Component>);
+		ComponentFactory::GetPtr()->Register<TrackComponent>();
 		RegisterMember<SceneObjectRef>("DriveWheel", &TrackComponent::m_DriveWheel);
 		RegisterProperty<Vec2>("AnimationSpeedFactor", &TrackComponent::GetAnimationSpeedFactor, &TrackComponent::SetAnimationSpeedFactor);
 		RegisterProperty<float>("ParticleEmissionFactor", &TrackComponent::GetParticleEmissionFactor, &TrackComponent::SetParticleEmissionFactor);

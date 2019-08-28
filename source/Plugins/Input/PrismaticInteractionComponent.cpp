@@ -39,7 +39,7 @@ namespace GASS
 
 	void PrismaticInteractionComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PrismaticInteractionComponent",new Creator<PrismaticInteractionComponent, Component>);
+		ComponentFactory::Get().Register<PrismaticInteractionComponent>();
 		RegisterMember("InputMapping", &PrismaticInteractionComponent::m_InputMapping);
 		RegisterMember("MaxVelocity", &PrismaticInteractionComponent::m_MaxVelocity);
 	}

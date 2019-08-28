@@ -54,7 +54,7 @@ namespace GASS
 
 	void OSGEarthGeoLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("GeoLocationComponent", new Creator<OSGEarthGeoLocationComponent, Component>);
+		ComponentFactory::Get().Register<OSGEarthGeoLocationComponent>("GeoLocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition,

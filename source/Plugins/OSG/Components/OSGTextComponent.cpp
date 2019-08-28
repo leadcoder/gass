@@ -45,7 +45,7 @@ namespace GASS
 
 	void OSGTextComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("TextComponent",new GASS::Creator<OSGTextComponent, Component>);
+		ComponentFactory::Get().Register<OSGTextComponent>("TextComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterProperty<ResourceHandle>("Font", &OSGTextComponent::GetFont, &OSGTextComponent::SetFont);
 		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);

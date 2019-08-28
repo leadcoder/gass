@@ -41,7 +41,7 @@ namespace GASS
 
 	void OSGSkyboxComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("SkyboxComponent",new GASS::Creator<OSGSkyboxComponent, Component>);
+		ComponentFactory::Get().Register<OSGSkyboxComponent>("SkyboxComponent");
 		RegisterProperty<std::string>("Material", &OSGSkyboxComponent::GetMaterial, &OSGSkyboxComponent::SetMaterial);
 		RegisterMember("Size", &OSGSkyboxComponent::m_Size);
 	}

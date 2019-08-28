@@ -30,7 +30,7 @@ namespace GASS
 
 	void ASScriptComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ASScriptComponent",new Creator<ASScriptComponent, Component>);
+		ComponentFactory::GetPtr()->Register<ASScriptComponent>();
 		RegisterProperty<std::string>("Script", &ASScriptComponent::GetScriptFile, &ASScriptComponent::SetScriptFile);
 	}
 

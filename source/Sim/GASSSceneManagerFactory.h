@@ -32,7 +32,6 @@ namespace GASS
 	{
 	public:
 		SceneManagerFactory();
-		//virtual ~SceneManagerFactory(){}
 		template<class T>
 		void Register(const std::string& name)
 		{
@@ -51,7 +50,7 @@ namespace GASS
 		{
 			return m_Impl.GetAllKeys();
 		}
-
+	
 		static SceneManagerFactory* GetPtr();
 		static SceneManagerFactory& Get();
 	protected:

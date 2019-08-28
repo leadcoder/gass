@@ -47,7 +47,7 @@ namespace GASS
 
 	void ForceToSoundComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ForceToSoundComponent",new Creator<ForceToSoundComponent, Component>);
+		ComponentFactory::GetPtr()->Register<ForceToSoundComponent>();
 		RegisterMember("ForceToPitch", &ForceToSoundComponent::m_ForceToPitch);
 		RegisterMember("ForceLimit", &ForceToSoundComponent::m_ForceLimit);
 	}

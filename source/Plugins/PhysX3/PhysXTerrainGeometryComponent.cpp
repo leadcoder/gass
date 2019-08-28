@@ -48,7 +48,7 @@ namespace GASS
 
 	void PhysXTerrainGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<PhysXTerrainGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXTerrainGeometryComponent>("PhysicsTerrainGeometryComponent");
 	}
 
 	void PhysXTerrainGeometryComponent::OnInitialize()

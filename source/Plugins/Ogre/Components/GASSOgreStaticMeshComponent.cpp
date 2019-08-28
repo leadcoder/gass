@@ -52,7 +52,7 @@ namespace GASS
 
 	void OgreStaticMeshComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("StaticMeshComponent",new GASS::Creator<OgreStaticMeshComponent, Component>);
+		ComponentFactory::Get().Register<OgreStaticMeshComponent>("StaticMeshComponent");
 		RegisterProperty<std::string>("RenderQueue", &GASS::OgreStaticMeshComponent::GetRenderQueue, &GASS::OgreStaticMeshComponent::SetRenderQueue);
 		RegisterProperty<bool>("CastShadow", &GASS::OgreStaticMeshComponent::GetCastShadow, &GASS::OgreStaticMeshComponent::SetCastShadow);
 		RegisterProperty<Float>("RegionSize", &GASS::OgreStaticMeshComponent::GetRegionSize, &GASS::OgreStaticMeshComponent::SetRegionSize);

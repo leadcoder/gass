@@ -41,7 +41,7 @@ namespace GASS
 
 	void InputHandlerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("InputHandlerComponent",new Creator<InputHandlerComponent, Component>);
+		ComponentFactory::Get().Register<InputHandlerComponent>();
 		RegisterProperty<std::string>("ControlSetting", &InputHandlerComponent::GetControlSetting, &InputHandlerComponent::SetControlSetting);
 	}
 

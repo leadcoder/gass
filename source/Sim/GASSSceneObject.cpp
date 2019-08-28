@@ -44,7 +44,7 @@ namespace GASS
 
 	void SceneObject::RegisterReflection()
 	{
-		ComponentContainerFactory::GetPtr()->Register("SceneObject",new Creator<SceneObject, ComponentContainer>);
+		ComponentContainerFactory::Get().Register<SceneObject>("SceneObject");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Container for all components", OF_VISIBLE)));
 		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Local IDentifier string",PF_VISIBLE)));
@@ -670,7 +670,7 @@ namespace GASS
 
 	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name) const
 	{
-		const std::string factory_class_name = ComponentFactory::Get().GetClassName(comp_name);
+		const std::string factory_class_name = ComponentFactory::Get().GetClassNameFromKey(comp_name);
 		GASS::BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetFirstComponentByClassName(factory_class_name,false));
 		return bsc.get();
 	}

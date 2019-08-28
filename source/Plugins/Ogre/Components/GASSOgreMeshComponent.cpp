@@ -67,7 +67,7 @@ namespace GASS
 
 	void OgreMeshComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OgreMeshComponent, Component>);
+		ComponentFactory::Get().Register<OgreMeshComponent>("MeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,

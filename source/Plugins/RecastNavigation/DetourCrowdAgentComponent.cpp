@@ -29,7 +29,7 @@ namespace GASS
 
 	void DetourCrowdAgentComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("DetourCrowdAgentComponent",new Creator<DetourCrowdAgentComponent, Component>);
+		ComponentFactory::GetPtr()->Register<DetourCrowdAgentComponent>();
 		//RegisterProperty<std::string>("Group", &DetourCrowdAgentComponent::GetGroup, &DetourCrowdAgentComponent::SetGroup);
 		RegisterProperty<float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
 		RegisterProperty<float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);

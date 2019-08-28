@@ -49,7 +49,7 @@ namespace GASS
 
 	void LODComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LODComponent",new Creator<LODComponent, Component>);
+		ComponentFactory::GetPtr()->Register<LODComponent>();
 		RegisterProperty<float>("MediumLODDistance", &LODComponent::GetMediumLODDistance, &LODComponent::SetMediumLODDistance);
 		RegisterProperty<float>("LowLODDistance", &LODComponent::GetLowLODDistance, &LODComponent::SetLowLODDistance);
 	}

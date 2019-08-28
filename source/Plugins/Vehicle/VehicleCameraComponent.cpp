@@ -45,7 +45,7 @@ namespace GASS
 
 	void VehicleCameraComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VehicleCameraComponent",new Creator<VehicleCameraComponent, Component>);
+		ComponentFactory::GetPtr()->Register<VehicleCameraComponent>();
 		RegisterProperty<std::string>("PreferredViewport", &VehicleCameraComponent::GetPreferredViewport, &VehicleCameraComponent::SetPreferredViewport);
 		RegisterMember<SceneObjectRef>("InputHandlerObject", &VehicleCameraComponent::m_InputHandlerObject);
 	}

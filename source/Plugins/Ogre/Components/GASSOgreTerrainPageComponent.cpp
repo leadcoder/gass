@@ -57,7 +57,7 @@ namespace GASS
 
 	void OgreTerrainPageComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OgreTerrainPageComponent",new Creator<OgreTerrainPageComponent, Component>);
+		ComponentFactory::Get().Register<OgreTerrainPageComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OgreTerrainPageComponent", OF_VISIBLE)));
 
 		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap,

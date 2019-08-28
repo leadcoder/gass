@@ -49,7 +49,7 @@ namespace GASS
 
 	void EntityTypeComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("EntityTypeComponent",new Creator<EntityTypeComponent, Component>);
+		ComponentFactory::Get().Register<EntityTypeComponent>();
 		RegisterMember("EntityKind", &EntityTypeComponent::m_EntityKind);
 		RegisterMember("Domain", &EntityTypeComponent::m_Domain);
 		RegisterMember("CountryCode", &EntityTypeComponent::m_CountryCode);

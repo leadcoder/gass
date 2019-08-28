@@ -89,7 +89,7 @@ namespace GASS
 
 	void PhysXTankComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXTankComponent",new Creator<PhysXTankComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXTankComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXTankComponent", OF_VISIBLE)));
 
 		RegisterMember("Mass", &GASS::PhysXTankComponent::m_Mass);

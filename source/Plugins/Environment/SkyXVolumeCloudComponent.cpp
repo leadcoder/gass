@@ -53,8 +53,7 @@ namespace GASS
 
 	void SkyXVolumeCloudComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("SkyXVolumeCloudComponent",new Creator<SkyXVolumeCloudComponent, Component>);
-
+		ComponentFactory::Get().Register<SkyXVolumeCloudComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXVolumeCloudComponent", OF_VISIBLE )));
 
 		RegisterProperty<float>("NoiseScale", &SkyXVolumeCloudComponent::GetNoiseScale, &SkyXVolumeCloudComponent::SetNoiseScale,

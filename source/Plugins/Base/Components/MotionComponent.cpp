@@ -67,7 +67,7 @@ namespace GASS
 
 	void MotionComponent::RegisterReflection()                         // static
 	{
-		ComponentFactory::GetPtr()->Register("MotionComponent",new Creator<MotionComponent, Component>);
+		ComponentFactory::Get().Register<MotionComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MotionComponent", OF_VISIBLE)));
 		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Acceleration [m/s2]",PF_VISIBLE | PF_EDITABLE)));

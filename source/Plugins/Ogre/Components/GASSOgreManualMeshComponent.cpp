@@ -57,7 +57,7 @@ namespace GASS
 
 	void OgreManualMeshComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("ManualMeshComponent",new Creator<OgreManualMeshComponent, Component>);
+		ComponentFactory::Get().Register<OgreManualMeshComponent>("ManualMeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
 			RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,

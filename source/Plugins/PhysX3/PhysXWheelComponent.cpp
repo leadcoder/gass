@@ -52,7 +52,7 @@ namespace GASS
 
 	void PhysXWheelComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysXWheelComponent",new Creator<PhysXWheelComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXWheelComponent>();
 		RegisterMember("Mass", &GASS::PhysXWheelComponent::m_Mass);
 		RegisterMember("MaxBrakeTorque", &GASS::PhysXWheelComponent::m_MaxBrakeTorque);
 		RegisterMember("MaxHandBrakeTorque", &GASS::PhysXWheelComponent::m_MaxHandBrakeTorque);

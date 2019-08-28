@@ -48,7 +48,7 @@ namespace GASS
 
 	void OSGBillboardComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("BillboardComponent",new GASS::Creator<OSGBillboardComponent, Component>);
+		ComponentFactory::Get().Register<OSGBillboardComponent>("BillboardComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterProperty<std::string>("Material", &OSGBillboardComponent::GetMaterial, &OSGBillboardComponent::SetMaterial);
 		RegisterProperty<bool>("CastShadow", &OSGBillboardComponent::GetCastShadow, &OSGBillboardComponent::SetCastShadow);

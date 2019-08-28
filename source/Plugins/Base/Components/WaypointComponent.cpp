@@ -53,7 +53,7 @@ namespace GASS
 
 	void WaypointComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("WaypointComponent",new Creator<WaypointComponent, Component>);
+		ComponentFactory::Get().Register<WaypointComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointComponent", OF_VISIBLE)));
 		RegisterProperty<Float>("TangentWeight", &WaypointComponent::GetTangentWeight, &WaypointComponent::SetTangentWeight);
 		RegisterProperty<bool>("CustomTangent", &WaypointComponent::GetCustomTangent, &WaypointComponent::SetCustomTangent,

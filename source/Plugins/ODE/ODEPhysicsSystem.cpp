@@ -63,15 +63,15 @@ namespace GASS
 		dInitODE2(0);
 		dAllocateODEDataForThread(~0U);
 		SceneManagerFactory::GetPtr()->Register<ODEPhysicsSceneManager>("ODEPhysicsSceneManager");
-		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<ODEBodyComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<ODEBoxGeometryComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsCylinderGeometryComponent",new Creator<ODECylinderGeometryComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsHingeComponent",new Creator<ODEHingeComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsMeshGeometryComponent",new Creator<ODEMeshGeometryComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsPlaneGeometryComponent",new Creator<ODEPlaneGeometryComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsSphereGeometryComponent",new Creator<ODESphereGeometryComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsSuspensionComponent",new Creator<ODESuspensionComponent, Component>);
-		ComponentFactory::GetPtr()->Register("PhysicsTerrainGeometryComponent",new Creator<ODETerrainGeometryComponent, Component>);
+		ComponentFactory::Get().Register<ODEBodyComponent>("PhysicsBodyComponent");
+		ComponentFactory::Get().Register<ODEBoxGeometryComponent>("PhysicsBoxGeometryComponent");
+		ComponentFactory::Get().Register<ODECylinderGeometryComponent>("PhysicsCylinderGeometryComponent");
+		ComponentFactory::Get().Register<ODEHingeComponent>("PhysicsHingeComponent");
+		ComponentFactory::Get().Register<ODEMeshGeometryComponent>("PhysicsMeshGeometryComponent");
+		ComponentFactory::Get().Register<ODEPlaneGeometryComponent>("PhysicsPlaneGeometryComponent");
+		ComponentFactory::Get().Register<ODESphereGeometryComponent>("PhysicsSphereGeometryComponent");
+		ComponentFactory::Get().Register<ODESuspensionComponent>("PhysicsSuspensionComponent");
+		ComponentFactory::Get().Register<ODETerrainGeometryComponent>("PhysicsTerrainGeometryComponent");
 	}
 
 	void ODEPhysicsSystem::OnSystemShutdown()

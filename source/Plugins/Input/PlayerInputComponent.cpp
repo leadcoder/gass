@@ -48,9 +48,8 @@ namespace GASS
 
 	void PlayerInputComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PlayerInputComponent",new Creator<PlayerInputComponent, Component>);
+		ComponentFactory::Get().Register<PlayerInputComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PlayerInputComponent", OF_VISIBLE)));
-
 		RegisterProperty<std::string>("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 

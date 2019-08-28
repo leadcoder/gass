@@ -59,7 +59,7 @@ namespace GASS
 
 	void OSGMeshComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register("MeshComponent",new GASS::Creator<OSGMeshComponent, Component>);
+		ComponentFactory::Get().Register<OSGMeshComponent>("MeshComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 

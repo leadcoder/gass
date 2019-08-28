@@ -72,8 +72,7 @@ namespace GASS
 
 	void HydraxWaterComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("HydraxWaterComponent",new Creator<HydraxWaterComponent, Component>);
-
+		ComponentFactory::Get().Register<HydraxWaterComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HydraxWaterComponent", OF_VISIBLE )));
 
 		RegisterProperty<std::string>("ConfigurationFile", &HydraxWaterComponent::GetConfigurationFile, &HydraxWaterComponent::SetConfigurationFile,

@@ -41,7 +41,7 @@ namespace GASS
 
 	void OSGEarthSkyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OSGEarthSkyComponent",new Creator<OSGEarthSkyComponent, Component>);
+		ComponentFactory::Get().Register<OSGEarthSkyComponent>();
 	}
 	
 	void OSGEarthSkyComponent::OnDelete()

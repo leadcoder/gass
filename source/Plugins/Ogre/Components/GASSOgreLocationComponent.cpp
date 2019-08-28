@@ -51,7 +51,7 @@ namespace GASS
 
 	void OgreLocationComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("LocationComponent",new Creator<OgreLocationComponent, Component>);
+		ComponentFactory::Get().Register<OgreLocationComponent>("LocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
 		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,

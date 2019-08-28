@@ -38,7 +38,7 @@ namespace GASS
 
 	void PhysXBoxGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsBoxGeometryComponent",new Creator<PhysXBoxGeometryComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXBoxGeometryComponent>("PhysicsBoxGeometryComponent");
 		RegisterProperty<Vec3>("Size", &GASS::PhysXBoxGeometryComponent::GetSize, &GASS::PhysXBoxGeometryComponent::SetSize);
 	}
 

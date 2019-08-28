@@ -67,7 +67,7 @@ namespace GASS
 
 	void OgreTerrainGroupComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OgreTerrainGroupComponent",new Creator<OgreTerrainGroupComponent, Component>);
+		ComponentFactory::Get().Register<OgreTerrainGroupComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OgreTerrainGroupComponent", OF_VISIBLE)));
 		RegisterProperty<float>("ImportScale", &GASS::OgreTerrainGroupComponent::GetImportScale, &GASS::OgreTerrainGroupComponent::SetImportScale,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

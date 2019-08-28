@@ -44,7 +44,7 @@ namespace GASS
 
 	void VehicleDebugComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("VehicleDebugComponent",new Creator<VehicleDebugComponent, Component>);
+		ComponentFactory::GetPtr()->Register<VehicleDebugComponent>();
 //		RegisterProperty<bool>("ShowWaypoint", &VehicleDebugComponent::GetShowWaypoint, &VehicleDebugComponent::SetShowWaypoint);
 	}
 

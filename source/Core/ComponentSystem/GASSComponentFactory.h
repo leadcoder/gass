@@ -23,7 +23,8 @@
 
 #include "Core/Common.h"
 #include "Core/ComponentSystem/GASSComponent.h"
-#include "Core/Utils/GASSFactory.h"
+#include "Core/Utils/GASSGenericFactory.h"
+#include "Core/Utils/GASSLogger.h"
 
 namespace GASS
 {
@@ -45,14 +46,65 @@ namespace GASS
 		See Factory class for more information on how to
 		do the actual registration.
 	*/
-	class GASSCoreExport ComponentFactory : public Factory<Component,std::string,void>
+	class GASSCoreExport ComponentFactory
 	{
 	public:
+		template<class T>
+		void Register(const std::string& key)
+		{
+			m_Impl.Register<T>(key);
+			const std::string class_name = StringUtils::Demangle(typeid(T).name());
+			m_ClassNameToKey[class_name] = key;
+			m_KeyToClassName[key] = class_name;
+		}
+
+		template<class T>
+		void Register()
+		{
+			const std::string class_name = StringUtils::Demangle(typeid(T).name());
+			m_Impl.Register<T>(class_name);
+			m_ClassNameToKey[class_name] = class_name;
+			m_KeyToClassName[class_name] = class_name;
+		}
+
+		ComponentPtr Create(const std::string &name)
+		{
+			ComponentPtr component;
+			if(m_Impl.IsCreatable(name))
+				component = m_Impl.Create(name);
+			else
+				GASS_LOG() << "Failed to create component: " << name;
+			return component;
+		}
+
+		std::vector<std::string> GetFactoryNames()
+		{
+			return m_Impl.GetAllKeys();
+		}
+
+		std::string GetKeyFromClassName(const std::string &class_name)
+		{
+			auto iter = m_ClassNameToKey.find(class_name);
+			if (iter != m_ClassNameToKey.end())
+				return iter->second;
+			return "";
+		}
+
+		std::string GetClassNameFromKey(const std::string &factory_key)
+		{
+			auto iter = m_KeyToClassName.find(factory_key);
+			if (iter != m_KeyToClassName.end())
+				return iter->second;
+			return "";
+		}
+
 		static ComponentFactory* GetPtr();
 		static ComponentFactory& Get();
 	protected:
 		static ComponentFactory* m_Instance;
-	protected:
+		GenericFactory<std::string, ComponentPtr> m_Impl;
+		std::map<std::string, std::string> m_ClassNameToKey;
+		std::map<std::string, std::string> m_KeyToClassName;
 	};
 }
 

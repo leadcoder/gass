@@ -67,8 +67,7 @@ namespace GASS
 
 		std::vector<std::string> ext;
 		ext.push_back("txt");
-
-		ComponentFactory::GetPtr()->Register("WaypointListComponent",new Creator<WaypointListComponent, Component>);
+		ComponentFactory::Get().Register<WaypointListComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointListComponent", OF_VISIBLE)));
 		RegisterProperty<float>("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));

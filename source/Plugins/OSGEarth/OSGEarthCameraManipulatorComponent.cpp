@@ -45,7 +45,7 @@ namespace GASS
 
 	void OSGEarthCameraManipulatorComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("OSGEarthCameraManipulatorComponent",new Creator<OSGEarthCameraManipulatorComponent, Component>);
+		ComponentFactory::Get().Register<OSGEarthCameraManipulatorComponent>();
 	}
 
 	void OSGEarthCameraManipulatorComponent::OnInitialize()

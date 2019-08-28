@@ -55,7 +55,7 @@ namespace GASS
 
 	void PhysXBodyComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("PhysicsBodyComponent",new Creator<PhysXBodyComponent, Component>);
+		ComponentFactory::GetPtr()->Register<PhysXBodyComponent>("PhysicsBodyComponent");
 		REG_PROPERTY(float,Mass,PhysXBodyComponent);
 		REG_PROPERTY(bool,Kinematic,PhysXBodyComponent);
 		RegisterMember("DisableGravity", &GASS::PhysXBodyComponent::m_DisableGravity);

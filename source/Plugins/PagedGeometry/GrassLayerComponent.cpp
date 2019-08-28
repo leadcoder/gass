@@ -57,7 +57,7 @@ namespace GASS
 
 	void GrassLayerComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register("GrassLayerComponent",new Creator<GrassLayerComponent, Component>);
+		ComponentFactory::GetPtr()->Register<GrassLayerComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLayerComponent", OF_VISIBLE)));
 		RegisterProperty<float>("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
