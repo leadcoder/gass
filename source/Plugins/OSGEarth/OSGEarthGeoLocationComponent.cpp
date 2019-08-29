@@ -71,9 +71,9 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
 
 		//expose this component to script engine
-		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
+	/*	asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
 
-	/*	int r;
+		int r;
 		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 
 

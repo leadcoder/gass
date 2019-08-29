@@ -98,17 +98,13 @@ namespace GASS
 
 	void PlaneGeometryComponent::GenerateMesh()
 	{
-		Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
+		const Vec2 size(m_Size.x*0.5,m_Size.y*0.5);
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-
-		Vec3 p1,p2,p3,p4;
-		Vec3 n1,n2,n3,n4;
-
 		sub_mesh_data->MaterialName = "PlaneMaterial";
 		
-		ColorRGBA color(1,1,1,m_Transparency);
+		const ColorRGBA color(1,1,1,m_Transparency);
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		std::vector<Vec4> tex_coords;

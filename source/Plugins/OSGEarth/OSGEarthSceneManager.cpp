@@ -464,9 +464,10 @@ namespace GASS
 	{
 		bool status = false;
 		double terrain_height = 0;
-		if (status = GetTerrainHeight(location, terrain_height,flags))
+		if (GetTerrainHeight(location, terrain_height,flags))
 		{
 			height = location.Height - terrain_height;
+			status = true;
 		}
 		return status;
 	}
@@ -477,11 +478,14 @@ namespace GASS
 		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if(status = gp.fromWorld(mapSRS, osg_pos))
+		if(gp.fromWorld(mapSRS, osg_pos))
 		{
 			osg::Vec3d osg_up_vec;
-			if(status = gp.createWorldUpVector(osg_up_vec))
+			if (gp.createWorldUpVector(osg_up_vec))
+			{
 				up_vec = OSGConvert::ToGASS(osg_up_vec);
+				status = true;
+			}
 		}
 		return status;
 	}
@@ -492,13 +496,14 @@ namespace GASS
 		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if (status = gp.fromWorld(mapSRS, osg_pos))
+		if (gp.fromWorld(mapSRS, osg_pos))
 		{
 			osg::Matrixd local2world;
-			if (status = gp.createLocalToWorld(local2world))
+			if (gp.createLocalToWorld(local2world))
 			{	
 				osg::Quat osg_rot = local2world.getRotate();
 				rot = OSGConvert::ToGASS(osg_rot);
+				status = true;
 			}
 		}
 		return status;

@@ -246,7 +246,9 @@ namespace GASS
 		{
 			PxExtendedVec3 foot_pos = m_Controller->getFootPosition();
 			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
-			pos = sm->LocalToWorld(PxVec3(foot_pos.x, foot_pos.y, foot_pos.z));
+			pos = sm->LocalToWorld(PxVec3(static_cast<PxReal>(foot_pos.x), 
+										  static_cast<PxReal>(foot_pos.y), 
+										  static_cast<PxReal>(foot_pos.z)));
 		}
 		return pos;
 	}

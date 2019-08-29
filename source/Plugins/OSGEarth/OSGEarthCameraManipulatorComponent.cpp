@@ -200,12 +200,14 @@ namespace GASS
 					const osgEarth::SpatialReference* mapSRS = mapNode->getMapSRS();
 					const osg::Vec3d osg_location = OSGConvert::ToOSG(object_pos);
 					osgEarth::GeoPoint focalPoint(mapSRS, 0, 0, 0, osgEarth::ALTMODE_ABSOLUTE);
-					bool status = focalPoint.fromWorld(mapSRS, osg_location);
-					osgEarth::Viewpoint vp;
-					vp.focalPoint() = focalPoint;
-					vp.pitch() = -90;
-					vp.range() = rad * 3;
-					m_Manipulator->setViewpoint(vp, 2.0);
+					if (focalPoint.fromWorld(mapSRS, osg_location))
+					{
+						osgEarth::Viewpoint vp;
+						vp.focalPoint() = focalPoint;
+						vp.pitch() = -90;
+						vp.range() = rad * 3;
+						m_Manipulator->setViewpoint(vp, 2.0);
+					}
 				}
 			}
 		}

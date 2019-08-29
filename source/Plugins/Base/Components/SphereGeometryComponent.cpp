@@ -94,11 +94,9 @@ namespace GASS
 	
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const
 	{
-
-		Vec3 location;
-		LocationComponentPtr loc_comp = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		const LocationComponentPtr loc_comp = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		assert(loc_comp);
-		Vec3 pos = loc_comp->GetWorldPosition();
+		const Vec3 pos = loc_comp->GetWorldPosition();
 
 		if((pos - point).Length() < m_Radius)
 			return true;

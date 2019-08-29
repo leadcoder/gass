@@ -311,9 +311,9 @@ namespace GASS
 	}
 
 	void OSGEarthMapComponent::onTileAdded(
-		const osgEarth::TileKey&          key,
-		osg::Node*              graph,
-		osgEarth::TerrainCallbackContext& context)
+		const osgEarth::TileKey&          /*key*/,
+		osg::Node*              /*graph*/,
+		osgEarth::TerrainCallbackContext& /*context*/)
 	{
 		m_TerrainChangedLastFrame = true;
 	}
@@ -549,7 +549,6 @@ namespace GASS
 		
 		for (unsigned i = 0; i < modelLayers.size(); ++i)
 		{
-			double model_elevation = 0;
 			if (modelLayers[i]->getNode())
 			{
 				const GeometryFlags flags = modelLayers[i]->options().terrainPatch() == true ? GEOMETRY_FLAG_GROUND : GEOMETRY_FLAG_STATIC_OBJECT;

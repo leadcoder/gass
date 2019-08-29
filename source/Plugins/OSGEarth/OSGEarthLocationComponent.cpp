@@ -124,7 +124,6 @@ namespace GASS
 	void OSGEarthLocationComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
 		const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 		osg::Vec3d pos = OSGConvert::ToOSG(message->GetPosition());
 		osgEarth::GeoPoint mapPos;
 		mapPos.fromWorld(geoSRS,pos);

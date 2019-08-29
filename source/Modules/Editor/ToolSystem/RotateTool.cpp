@@ -78,8 +78,6 @@ namespace GASS
 	{
 		if(m_MouseIsDown && m_Selected.size() > 0)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-
 			const double rotation_rad_step = data.XRel*0.2;
 
 			SceneObjectPtr gizmo = m_CurrentGizmo.lock();

@@ -281,7 +281,6 @@ namespace GASS
 
 	bool BoxGeometryComponent::IsPointInside(const Vec3 &point) const
 	{
-		Vec3 location;
 		LocationComponentPtr loc_comp = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		assert(loc_comp);
 		Vec3 pos = loc_comp->GetWorldPosition();
