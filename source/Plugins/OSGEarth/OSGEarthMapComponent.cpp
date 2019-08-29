@@ -347,6 +347,17 @@ namespace GASS
 
 			const std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
 
+			//set cache path
+
+			const char* temp_str = getenv("OE_CACHE_DATA_PATH");
+			if (temp_str)
+			{
+				osgEarth::Drivers::FileSystemCacheOptions osgEarthCacheOptions;
+				osgEarthCacheOptions.rootPath() = temp_str;//"c:/OSGEarthCache/test_cache";
+				osgEarth::Registry::instance()->setDefaultCache(osgEarth::CacheFactory::create(osgEarthCacheOptions));
+				osgEarth::Registry::instance()->setDefaultCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
+			}
+
 			//read earth file
 			osg::Node* top_node = osgDB::readNodeFile(full_path);
 			if (!top_node)

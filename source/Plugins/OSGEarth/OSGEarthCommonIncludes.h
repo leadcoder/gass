@@ -36,6 +36,8 @@
 #include <osgEarth/ImageLayer>
 #include <osgEarth/ModelLayer>
 #include <osgEarth/GeoTransform>
+#include <osgEarth/Registry>
+
 #include <osgEarthFeatures/FeatureModelLayer>
 #include <osgEarthUtil/Sky>
 #include <osgEarthUtil/ExampleResources>
@@ -52,6 +54,7 @@
 #include <osgEarthAnnotation/AnnotationData>
 #include <osgEarthAnnotation/AnnotationRegistry>
 #include <osgEarthAnnotation/PlaceNode>
+#include <osgEarthDrivers/cache_filesystem/FileSystemCache>
 
 #ifdef _MSC_VER
 #pragma warning (pop)
