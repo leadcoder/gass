@@ -218,7 +218,7 @@ namespace GASS
 		//update location
 		if(m_Manipulator.valid())
 		{
-			m_Manipulator->setIntersectTraversalMask(~0);
+			m_Manipulator->setIntersectTraversalMask(~0u);
 			osg::Matrixd vm = m_Manipulator->getMatrix();
 
 			osg::Vec3d translation,scale;
