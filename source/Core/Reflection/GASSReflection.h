@@ -86,7 +86,6 @@ namespace GASS
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		//same as above but without out property type, type resolved from get method
 		template <
 			typename GetterReturnType,
 			typename SetterArgumentType,
@@ -96,7 +95,7 @@ namespace GASS
 				SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = CreateProperty<DerivedClass, GetterReturnType, SetterArgumentType, SetterReturnType >(name, getter, setter, meta_data);//new Property<T, RawType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+			auto* property = CreateGetSetProperty(name, getter, setter, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 		
@@ -105,7 +104,7 @@ namespace GASS
 				PropertyType DerivedClass::* member_ptr,
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = new MemberProperty<DerivedClass, PropertyType>(name, member_ptr, meta_data);
+			auto* property = CreateMemberProperty(name, member_ptr, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 		
