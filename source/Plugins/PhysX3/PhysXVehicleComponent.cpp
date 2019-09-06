@@ -103,8 +103,7 @@ namespace GASS
 		RegisterMember("RearRightWheel", &GASS::PhysXVehicleComponent::m_RearRightWheel);
 		RegisterMember("ExtraWheels", &GASS::PhysXVehicleComponent::m_ExtraWheels);
 		RegisterMember("MaxSpeed", &GASS::PhysXVehicleComponent::m_MaxSpeed);
-		RegisterMember("Debug", &GASS::PhysXVehicleComponent::m_Debug,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Debug", &GASS::PhysXVehicleComponent::m_Debug, PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	PxVec3 PhysXVehicleComponent::ComputeDim(const PxConvexMesh* cm)

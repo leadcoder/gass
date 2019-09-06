@@ -51,11 +51,9 @@ namespace GASS
 		ComponentFactory::Get().Register<HeightmapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
 
-		RegisterMember("Size", &GASS::HeightmapComponent::m_Size,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of heighttmap in [m]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Size", &GASS::HeightmapComponent::m_Size,PF_VISIBLE | PF_EDITABLE,"Size of heighttmap in [m]");
 
-		RegisterMember("Resolution", &GASS::HeightmapComponent::m_Resolution,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("[samples/m]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Resolution", &GASS::HeightmapComponent::m_Resolution,PF_VISIBLE | PF_EDITABLE,"[samples/m]");
 
 		RegisterProperty<bool>("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("Update height values from scene geometry",PF_VISIBLE | PF_EDITABLE)));

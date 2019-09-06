@@ -42,8 +42,9 @@ namespace GASS
 	enum PropertyFlags 
 	{
 		PF_RESET  = 0,
-		PF_VISIBLE  =   1 << 0,
-		PF_EDITABLE =   1 << 1,
+		PF_VISIBLE  = 1 << 0, //visible in editor
+		PF_EDITABLE = 1 << 1, //editaable
+		PF_RUNTIME =  1 << 2, //skipe serialization
 	};
 	class BaseReflectionObject;
 	typedef GASS_SHARED_PTR<BaseReflectionObject> BaseReflectionObjectPtr;

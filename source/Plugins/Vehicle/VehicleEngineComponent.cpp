@@ -164,8 +164,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("Debug", &VehicleEngineComponent::GetDebug, &VehicleEngineComponent::SetDebug,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("TurnRPMAmount", &VehicleEngineComponent::m_TurnRPMAmount,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("TurnRPMAmount", &VehicleEngineComponent::m_TurnRPMAmount,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterProperty<float>("MaxTurnVel", &VehicleEngineComponent::GetMaxTurnVel, &VehicleEngineComponent::SetMaxTurnVel,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}

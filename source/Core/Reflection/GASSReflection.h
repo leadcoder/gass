@@ -69,7 +69,6 @@ namespace GASS
 
         }
 
-		
 		/** Registers a property. Takes in the property name, its getter and setter functions, and the property
 		    type as a template parameter. Should be called from within a user-defined RegisterReflection function.
 		*/
@@ -82,34 +81,36 @@ namespace GASS
 			SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
 			PropertyMetaDataPtr meta_data =  PropertyMetaDataPtr())
 		{
-			auto* property = new GetSetProperty<DerivedClass, PropertyType, GetterReturnType, SetterArgumentType, SetterReturnType>( name, getter, setter,meta_data);
+			auto* property = new GetSetProperty<DerivedClass, PropertyType, GetterReturnType, SetterArgumentType, SetterReturnType>( name, getter, setter, PF_RESET, "", meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
 
-		template <
-			typename GetterReturnType,
+		template <typename GetterReturnType,
+			typename MemberType = RemoveConstRef<GetterReturnType>::Type,
 			typename SetterArgumentType,
 			typename SetterReturnType>
-			static void RegisterGetSet(const std::string &name,
+			static GetSetProperty<DerivedClass, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>* RegisterGetSet(const std::string &name,
 				GetterReturnType(DerivedClass::*getter)() const,
 				SetterReturnType(DerivedClass::*setter)(SetterArgumentType),
+				PropertyFlags flags = PF_RESET,
+				const std::string& description = "",
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = CreateGetSetProperty(name, getter, setter, meta_data);
+			auto* property = MakeGetSetProperty(name, getter, setter, flags, description, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
+			return property;
 		}
 		
 		template <typename PropertyType>
 			static void RegisterMember(const std::string &name,
 				PropertyType DerivedClass::* member_ptr,
+				PropertyFlags flags = PF_RESET,
+				const std::string& description = "",
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = CreateMemberProperty(name, member_ptr, meta_data);
+			auto* property = MakeMemberProperty(name, member_ptr , flags , description, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
 		}
-		
-		
-		
 
 		static inline RTTI* GetClassRTTI()
 		{

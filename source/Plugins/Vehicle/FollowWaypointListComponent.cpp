@@ -118,8 +118,7 @@ namespace GASS
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration,false)));
 		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,NavigationEnumeration,false)));
-		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Radius that should be used to consider a waypoint reached",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,PF_VISIBLE | PF_EDITABLE,"Radius that should be used to consider a waypoint reached");
 		RegisterProperty<PathFollowModeBinder>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode,
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Follow mode",PF_VISIBLE,&PathFollowModeBinder::GetStringEnumeration)));
 		RegisterProperty<bool>("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,

@@ -46,8 +46,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("Calculate", &GASS::LOSComponent::GetCalculate, &GASS::LOSComponent::SetCalculate,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("AutUpdateOnTransform", &GASS::LOSComponent::m_AutUpdateOnTransform,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("AutUpdateOnTransform", &GASS::LOSComponent::m_AutUpdateOnTransform,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterProperty<Float>("Transparency", &GASS::LOSComponent::GetTransparency, &GASS::LOSComponent::SetTransparency,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 	}

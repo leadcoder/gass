@@ -98,8 +98,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<bool>("EnableLayerParallax", &GASS::OgreTerrainGroupComponent::GetEnableLayerParallax, &GASS::OgreTerrainGroupComponent::SetEnableLayerParallax,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("EnableLightmap", &GASS::OgreTerrainGroupComponent::m_EnableLightmap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("EnableLightmap", &GASS::OgreTerrainGroupComponent::m_EnableLightmap,PF_VISIBLE | PF_EDITABLE,"");
 
 	}
 

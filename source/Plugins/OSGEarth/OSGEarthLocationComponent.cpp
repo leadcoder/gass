@@ -50,8 +50,7 @@ namespace GASS
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
 		RegisterProperty<double>("Longitude", &OSGEarthLocationComponent::GetLongitude, &OSGEarthLocationComponent::SetLongitude,
 			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("Offset", &OSGEarthLocationComponent::m_Offset,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Offset", &OSGEarthLocationComponent::m_Offset, PF_VISIBLE | PF_EDITABLE,"");
 	}
 	
 	void OSGEarthLocationComponent::OnDelete()

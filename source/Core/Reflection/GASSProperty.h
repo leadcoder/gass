@@ -18,8 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef GASS_PROPERTY_H
-#define GASS_PROPERTY_H
+#pragma once
 
 #include "Core/Common.h"
 
@@ -43,7 +42,9 @@ namespace GASS
 	{
 	public:
 		ObjectTypedProperty(const std::string &name,
-			PropertyMetaDataPtr meta_data) : TypedProperty<MemberType>(name, meta_data)
+			PropertyFlags flags,
+			const std::string& description,
+			PropertyMetaDataPtr meta_data) : TypedProperty<MemberType>(name, flags, description, meta_data)
 		{
 
 		}
@@ -54,21 +55,17 @@ namespace GASS
 		MemberType GetValue(const IPropertyOwner* object) const override
 		{
 			const OwnerType* o = dynamic_cast<const OwnerType*>(object);
-			MemberType ret;
-			if (o != nullptr)
-			{
-				ret = Get(o);
-			}
-			return ret;
+			if (o == nullptr)
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + m_Name, "ObjectTypedProperty::GetValue");
+			return Get(o);
 		}
 
 		void SetValue(IPropertyOwner* object, const MemberType &value) override
 		{
 			OwnerType* o = dynamic_cast<OwnerType*>(object);
-			if (o != nullptr)
-			{
-				Set(o, value);
-			}
+			if (o == nullptr)
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + m_Name, "ObjectTypedProperty::SetValue");
+			Set(o, value);
 		}
 	};
 
@@ -90,7 +87,9 @@ namespace GASS
 		GetSetProperty(const std::string &name,
 			GetterType getter,
 			SetterType setter,
-			PropertyMetaDataPtr meta_data) : ObjectTypedProperty<OwnerType, MemberType, GetterReturnType>(name, meta_data),
+			PropertyFlags flags,
+			const std::string& description, 
+			PropertyMetaDataPtr meta_data) : ObjectTypedProperty<OwnerType, MemberType, GetterReturnType>(name, flags, description, meta_data),
 			m_Getter(getter),
 			m_Setter(setter)
 		{
@@ -122,12 +121,14 @@ namespace GASS
 		typename SetterArgumentType,
 		typename SetterReturnType
 		>
-		static GetSetProperty<OwnerType, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>* CreateGetSetProperty(const std::string &name,
+		static GetSetProperty<OwnerType, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>* MakeGetSetProperty(const std::string &name,
 			GetterReturnType(OwnerType::*getter)() const,
 			SetterReturnType(OwnerType::*setter)(SetterArgumentType),
+			PropertyFlags flags = PF_RESET,
+			const std::string& description = "",
 			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 	{
-		auto* property = new GetSetProperty<OwnerType, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter, meta_data);
+		auto* property = new GetSetProperty<OwnerType, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>(name, getter, setter,flags, description, meta_data);
 		return property;
 	}
 
@@ -139,7 +140,9 @@ namespace GASS
 		typedef MemberType OwnerType::* MemberPointer;
 		MemberProperty(const std::string &name,
 			MemberPointer member,
-			PropertyMetaDataPtr meta_data) : ObjectTypedProperty<OwnerType, MemberType, MemberType>(name, meta_data),
+			PropertyFlags flags,
+			const std::string& description,
+			PropertyMetaDataPtr meta_data) : ObjectTypedProperty<OwnerType, MemberType, MemberType>(name, flags, description, meta_data),
 			m_Member(member)
 		{
 
@@ -160,13 +163,16 @@ namespace GASS
 
 	template <typename OwnerType,
 		typename MemberType>
-		static MemberProperty<OwnerType, MemberType>* CreateMemberProperty(const std::string &name,
+		static MemberProperty<OwnerType, MemberType>* MakeMemberProperty(const std::string &name,
 			MemberType OwnerType::* member,
+			PropertyFlags flags = PF_RESET,
+			const std::string& description = "",
 			PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 	{
-		auto* property = new MemberProperty<OwnerType, MemberType>(name, member, meta_data);
+		auto* property = new MemberProperty<OwnerType, MemberType>(name, member, flags, description, meta_data);
 		return property;
 	}
+
 
 #define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
 #define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
@@ -185,4 +191,4 @@ TYPE Get ## NAME () const {return m_ ## NAME ;} \
 
 #define ADD_DEPENDENCY(COMPONENT_NAME) m_Dependencies[GetClassRTTI()].push_back(COMPONENT_NAME);
 }
-#endif
+

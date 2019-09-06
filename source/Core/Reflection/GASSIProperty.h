@@ -19,8 +19,7 @@
 *****************************************************************************/
 
 
-#ifndef GASS_I_PROPERTY_H
-#define GASS_I_PROPERTY_H
+#pragma once
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSPropertyMetaData.h"
@@ -105,8 +104,13 @@ namespace GASS
 			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
 		*/
 		virtual PropertyMetaDataPtr GetMetaData() const = 0;
+
+		virtual PropertyFlags GetFlags() const = 0;
+		virtual void SetFlags(PropertyFlags flags) = 0;
+
+		virtual std::string GetDescription() const = 0;
+		virtual void SetDescription(const std::string& ) = 0;
 	protected :
 	};
 }
 
-#endif

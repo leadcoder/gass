@@ -45,9 +45,13 @@ namespace GASS
 
 	public:
 		TypedProperty(const std::string &name,
+				PropertyFlags flags,
+				const std::string& description,
 				PropertyMetaDataPtr meta_data) :
-			m_MetaData(meta_data),
-			m_Name(name)
+			m_Name(name),
+			m_Flags(flags),
+			m_Description(description),
+			m_MetaData(meta_data)
 		{}
 		/**
 		 Returns the type of this property.
@@ -90,7 +94,7 @@ namespace GASS
 				return m_MetaData;
 			}
 			else
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "No meta data present", "Property::GetPropertyMetaData");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "No meta data present", "TypedProperty::GetMetaData");
 		}
 
 		void Serialize(IPropertyOwner* object, ISerializer* serializer) override
@@ -124,7 +128,7 @@ namespace GASS
 			}
 			catch (...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value, "Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value, "TypedProperty::SetValueByString");
 			}
 		}
 
@@ -151,7 +155,7 @@ namespace GASS
 			}
 			catch (...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value", "Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value", "Property::SetValueByAny");
 			}
 
 			SetValue(object, res);
@@ -163,9 +167,15 @@ namespace GASS
 			value = res;
 		}
 		std::string GetName() const override { return m_Name; }
+		PropertyFlags GetFlags() const override { return m_Flags;}
+		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
+		std::string GetDescription() const override { return m_Description; }
+		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
 	protected:
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
+		std::string m_Description;
+		PropertyFlags m_Flags;
 	};
 }
 #endif
