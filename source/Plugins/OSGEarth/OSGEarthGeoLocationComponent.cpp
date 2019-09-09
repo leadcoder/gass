@@ -57,18 +57,13 @@ namespace GASS
 		ComponentFactory::Get().Register<OSGEarthGeoLocationComponent>("GeoLocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
-		RegisterProperty<Vec3>("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<EulerRotation>("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
+		RegisterGetSet("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation, PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]");
 
-		RegisterProperty<Quaternion>("Quaternion", &GASS::OSGEarthGeoLocationComponent::GetRotation, &GASS::OSGEarthGeoLocationComponent::SetRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion", PF_VISIBLE)));
+		RegisterGetSet("Quaternion", &GASS::OSGEarthGeoLocationComponent::GetRotation, &GASS::OSGEarthGeoLocationComponent::SetRotation, PF_VISIBLE,"Rotation represented as Quaternion");
 
-		RegisterProperty<Vec3>("Scale", &GASS::OSGEarthGeoLocationComponent::GetScale, &GASS::OSGEarthGeoLocationComponent::SetScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("AttachToParent", &GASS::OSGEarthGeoLocationComponent::GetAttachToParent, &GASS::OSGEarthGeoLocationComponent::SetAttachToParent,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Scale", &GASS::OSGEarthGeoLocationComponent::GetScale, &GASS::OSGEarthGeoLocationComponent::SetScale, PF_VISIBLE | PF_EDITABLE,"Scale relative to parent node");
+		RegisterGetSet("AttachToParent", &GASS::OSGEarthGeoLocationComponent::GetAttachToParent, &GASS::OSGEarthGeoLocationComponent::SetAttachToParent, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
 
 		//expose this component to script engine
 	/*	asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();

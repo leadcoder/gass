@@ -58,7 +58,7 @@ namespace GASS
 	void PhysXCharacterComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXCharacterComponent>();
-		RegisterProperty<float>("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
+		RegisterGetSet("Mass", &PhysXCharacterComponent::GetMass, &PhysXCharacterComponent::SetMass);
 		RegisterMember("MaxSpeed", &PhysXCharacterComponent::m_MaxSpeed);
 		RegisterMember("Radius", &PhysXCharacterComponent::m_Radius);
 		RegisterMember("StandingSize", &PhysXCharacterComponent::m_StandingSize);

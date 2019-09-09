@@ -63,12 +63,12 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::RegisterReflection()
 	{
-		RegisterProperty<Vec3>("Offset", &GASS::ODEBaseGeometryComponent::GetOffset, &GASS::ODEBaseGeometryComponent::SetOffset);
-		RegisterProperty<float>("Friction", &GASS::ODEBaseGeometryComponent::GetFriction, &GASS::ODEBaseGeometryComponent::SetFriction);
-		RegisterProperty<bool>("SizeFromMesh", &GASS::ODEBaseGeometryComponent::GetSizeFromMesh, &GASS::ODEBaseGeometryComponent::SetSizeFromMesh);
-		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODEBaseGeometryComponent::GetCollisionBits, &GASS::ODEBaseGeometryComponent::SetCollisionBits);
-		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODEBaseGeometryComponent::GetCollisionCategory, &GASS::ODEBaseGeometryComponent::SetCollisionCategory);
-		RegisterProperty<bool>("Debug", &GASS::ODEBaseGeometryComponent::GetDebug, &GASS::ODEBaseGeometryComponent::SetDebug);
+		RegisterGetSet("Offset", &GASS::ODEBaseGeometryComponent::GetOffset, &GASS::ODEBaseGeometryComponent::SetOffset);
+		RegisterGetSet("Friction", &GASS::ODEBaseGeometryComponent::GetFriction, &GASS::ODEBaseGeometryComponent::SetFriction);
+		RegisterGetSet("SizeFromMesh", &GASS::ODEBaseGeometryComponent::GetSizeFromMesh, &GASS::ODEBaseGeometryComponent::SetSizeFromMesh);
+		RegisterGetSet("CollisionBits", &GASS::ODEBaseGeometryComponent::GetCollisionBits, &GASS::ODEBaseGeometryComponent::SetCollisionBits);
+		RegisterGetSet("CollisionCategory", &GASS::ODEBaseGeometryComponent::GetCollisionCategory, &GASS::ODEBaseGeometryComponent::SetCollisionCategory);
+		RegisterGetSet("Debug", &GASS::ODEBaseGeometryComponent::GetDebug, &GASS::ODEBaseGeometryComponent::SetDebug);
 	}
 
 	void ODEBaseGeometryComponent::OnInitialize()

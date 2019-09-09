@@ -50,7 +50,7 @@ namespace GASS
 	void RakNetNetworkChildComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RakNetNetworkChildComponent>("NetworkChildComponent");
-		RegisterProperty<std::vector<std::string> >("Attributes", &RakNetNetworkChildComponent::GetAttributes, &RakNetNetworkChildComponent::SetAttributes);
+		RegisterGetSet("Attributes", &RakNetNetworkChildComponent::GetAttributes, &RakNetNetworkChildComponent::SetAttributes);
 	}
 
 	void RakNetNetworkChildComponent::OnInitialize()

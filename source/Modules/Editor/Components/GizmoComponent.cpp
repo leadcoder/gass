@@ -47,9 +47,9 @@ namespace GASS
 	void GizmoComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<GizmoComponent>();
-		RegisterProperty<float>("Size",&GizmoComponent::GetSize, &GizmoComponent::SetSize);
-		RegisterProperty<ColorRGBA>("Color",&GizmoComponent::GetColor, &GizmoComponent::SetColor);
-		RegisterProperty<GizmoTypeBinder>("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
+		RegisterGetSet("Size",&GizmoComponent::GetSize, &GizmoComponent::SetSize);
+		RegisterGetSet("Color",&GizmoComponent::GetColor, &GizmoComponent::SetColor);
+		RegisterGetSet("Type",&GizmoComponent::GetType, &GizmoComponent::SetType);
 	}
 
 	void GizmoComponent::OnInitialize()

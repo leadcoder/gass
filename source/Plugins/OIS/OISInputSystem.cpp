@@ -67,11 +67,11 @@ namespace GASS
 	void OISInputSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<OISInputSystem>("OISInputSystem");
-		RegisterProperty<bool>("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
+		RegisterGetSet("ExclusiveMode", &GASS::OISInputSystem::GetExclusiveMode, &GASS::OISInputSystem::SetExclusiveMode);
 		RegisterMember("GameControllerAxisMinValue", &GASS::OISInputSystem::m_GameControllerAxisMinValue);
-		RegisterProperty<bool>("EnableKey", &GASS::OISInputSystem::GetEnableKey, &GASS::OISInputSystem::SetEnableKey);
-		RegisterProperty<bool>("EnableMouse", &GASS::OISInputSystem::GetEnableMouse, &GASS::OISInputSystem::SetEnableMouse);
-		RegisterProperty<bool>("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
+		RegisterGetSet("EnableKey", &GASS::OISInputSystem::GetEnableKey, &GASS::OISInputSystem::SetEnableKey);
+		RegisterGetSet("EnableMouse", &GASS::OISInputSystem::GetEnableMouse, &GASS::OISInputSystem::SetEnableMouse);
+		RegisterGetSet("EnableJoystick", &GASS::OISInputSystem::GetEnableJoystick, &GASS::OISInputSystem::SetEnableJoystick);
 		RegisterMember("OnlyProxy", &GASS::OISInputSystem::m_OnlyProxy);
 	}
 

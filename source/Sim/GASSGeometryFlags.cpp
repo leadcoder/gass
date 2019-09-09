@@ -24,9 +24,8 @@
 
 namespace GASS
 {
-    template<> std::map<std::string ,GeometryFlags> MultiEnumBinder<GeometryFlags,GeometryFlagsBinder>::m_NameToEnumMap;
-	template<> std::map<GeometryFlags, std::string> MultiEnumBinder<GeometryFlags,GeometryFlagsBinder>::m_EnumToNameMap;
-
+   // template<> std::map<std::string ,GeometryFlags> MultiEnumBinder<GeometryFlags,GeometryFlagsBinder>::m_NameToEnumMap;
+	
 	std::map<GeometryFlags, GeometryFlags> GeometryFlagManager::m_CollisionMaskMap;
 
 	GeometryFlags GeometryFlagManager::GetMask(GeometryFlags geom_flag)
@@ -86,5 +85,4 @@ namespace GASS
 		}
 		delete xmlDoc;
 	}
-
 }

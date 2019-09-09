@@ -25,10 +25,6 @@
 
 namespace GASS
 {
-	
-	template<> std::map<std::string ,Ogre::PolygonMode> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_NameToEnumMap;
-	template<> std::map<Ogre::PolygonMode,std::string> SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>::m_EnumToNameMap;
-
 	PolygonModeWrapper::PolygonModeWrapper() : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>()
 	{
 
@@ -37,12 +33,5 @@ namespace GASS
 	PolygonModeWrapper::PolygonModeWrapper(Ogre::PolygonMode type) : SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>(type)
 	{
 
-	}
-
-	void PolygonModeWrapper::Register()
-	{
-		Bind("PM_POINTS", Ogre::PM_POINTS);
-		Bind("PM_WIREFRAME", Ogre::PM_WIREFRAME);
-		Bind("PM_SOLID", Ogre::PM_SOLID);
 	}
 }

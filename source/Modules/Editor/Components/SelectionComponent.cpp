@@ -26,8 +26,8 @@ namespace GASS
 	void SelectionComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<SelectionComponent>();
-		RegisterProperty<ColorRGBA>("Color",&SelectionComponent::GetColor, &SelectionComponent::SetColor);
-		RegisterProperty<std::string>("Type",&SelectionComponent::GetType, &SelectionComponent::SetType);
+		RegisterGetSet("Color",&SelectionComponent::GetColor, &SelectionComponent::SetColor);
+		RegisterGetSet("Type",&SelectionComponent::GetType, &SelectionComponent::SetType);
 	}
 
 	void SelectionComponent::OnInitialize()

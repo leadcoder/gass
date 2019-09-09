@@ -66,30 +66,23 @@ namespace GASS
 	void GrassGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<GrassGeometryComponent>();
-		RegisterProperty<std::string>("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<float>("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("PageSize", &GrassGeometryComponent::GetPageSize, &GrassGeometryComponent::SetPageSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Need scene reload to take effect",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4f>("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<std::string>("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<OgreMaterial>("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<std::string>("FadeTech", &GrassGeometryComponent::GetFadeTech, &GrassGeometryComponent::SetFadeTech);
-		RegisterProperty<std::string>("RenderTechnique", &GrassGeometryComponent::GetRenderTechnique, &GrassGeometryComponent::SetRenderTechnique);
-		RegisterProperty<bool>("BlendWithGround", &GrassGeometryComponent::GetBlendWithGround, &GrassGeometryComponent::SetBlendWithGround);
-		RegisterProperty<Vec2f>("MaxSize", &GrassGeometryComponent::GetMaxSize, &GrassGeometryComponent::SetMaxSize);
-		RegisterProperty<Vec2f>("MinSize", &GrassGeometryComponent::GetMinSize, &GrassGeometryComponent::SetMinSize);
-		RegisterProperty<float>("SwaySpeed", &GrassGeometryComponent::GetSwaySpeed, &GrassGeometryComponent::SetSwaySpeed);
-		RegisterProperty<float>("SwayLength", &GrassGeometryComponent::GetSwayLength, &GrassGeometryComponent::SetSwayLength);
-		RegisterProperty<bool>("EnableSway", &GrassGeometryComponent::GetEnableSway, &GrassGeometryComponent::SetEnableSway);
-		RegisterProperty<float>("SwayDistribution", &GrassGeometryComponent::GetSwayDistribution, &GrassGeometryComponent::SetSwayDistribution);
-		RegisterProperty<float>("ViewDistance", &GrassGeometryComponent::GetViewDistance, &GrassGeometryComponent::SetViewDistance);
+		RegisterGetSet("DensityMap", &GrassGeometryComponent::GetDensityMap, &GrassGeometryComponent::SetDensityMap,PF_VISIBLE,"");
+		RegisterGetSet("DensityFactor", &GrassGeometryComponent::GetDensityFactor, &GrassGeometryComponent::SetDensityFactor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("PageSize", &GrassGeometryComponent::GetPageSize, &GrassGeometryComponent::SetPageSize,PF_VISIBLE | PF_EDITABLE,"Need scene reload to take effect");
+		RegisterGetSet("ImposterAlphaRejectionValue", &GrassGeometryComponent::GetImposterAlphaRejectionValue, &GrassGeometryComponent::SetImposterAlphaRejectionValue,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("Bounds", &GrassGeometryComponent::GetBounds, &GrassGeometryComponent::SetBounds,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ColorMap", &GrassGeometryComponent::GetColorMap, &GrassGeometryComponent::SetColorMap,PF_VISIBLE,"");
+		RegisterGetSet("Material", &GrassGeometryComponent::GetMaterial, &GrassGeometryComponent::SetMaterial,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("FadeTech", &GrassGeometryComponent::GetFadeTech, &GrassGeometryComponent::SetFadeTech);
+		RegisterGetSet("RenderTechnique", &GrassGeometryComponent::GetRenderTechnique, &GrassGeometryComponent::SetRenderTechnique);
+		RegisterGetSet("BlendWithGround", &GrassGeometryComponent::GetBlendWithGround, &GrassGeometryComponent::SetBlendWithGround);
+		RegisterGetSet("MaxSize", &GrassGeometryComponent::GetMaxSize, &GrassGeometryComponent::SetMaxSize);
+		RegisterGetSet("MinSize", &GrassGeometryComponent::GetMinSize, &GrassGeometryComponent::SetMinSize);
+		RegisterGetSet("SwaySpeed", &GrassGeometryComponent::GetSwaySpeed, &GrassGeometryComponent::SetSwaySpeed);
+		RegisterGetSet("SwayLength", &GrassGeometryComponent::GetSwayLength, &GrassGeometryComponent::SetSwayLength);
+		RegisterGetSet("EnableSway", &GrassGeometryComponent::GetEnableSway, &GrassGeometryComponent::SetEnableSway);
+		RegisterGetSet("SwayDistribution", &GrassGeometryComponent::GetSwayDistribution, &GrassGeometryComponent::SetSwayDistribution);
+		RegisterGetSet("ViewDistance", &GrassGeometryComponent::GetViewDistance, &GrassGeometryComponent::SetViewDistance);
 	}
 
 	void GrassGeometryComponent::OnInitialize()

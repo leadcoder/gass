@@ -73,12 +73,9 @@ namespace GASS
 		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
 			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
 		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
-		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		RegisterGetSet("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
+		RegisterGetSet("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue, PF_VISIBLE | PF_EDITABLE, "Render Queue");
+		RegisterGetSet("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
 	}
 
 	void OgreMeshComponent::OnInitialize()

@@ -30,12 +30,12 @@ namespace GASS
 	void OpenALSoundComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OpenALSoundComponent>();
-		RegisterProperty<float>("MinDistance", &OpenALSoundComponent::GetMinDistance, &OpenALSoundComponent::SetMinDistance);
-		RegisterProperty<float>("MaxDistance", &OpenALSoundComponent::GetMaxDistance, &OpenALSoundComponent::SetMaxDistance);
-		RegisterProperty<float>("RolloffFactor", &OpenALSoundComponent::GetRolloff, &OpenALSoundComponent::SetRolloff);
-		RegisterProperty<float>("Volume", &OpenALSoundComponent::GetVolume, &OpenALSoundComponent::SetVolume);
-		RegisterProperty<bool>("Loop", &OpenALSoundComponent::GetLoop, &OpenALSoundComponent::SetLoop);
-		RegisterProperty<ResourceHandle>("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
+		RegisterGetSet("MinDistance", &OpenALSoundComponent::GetMinDistance, &OpenALSoundComponent::SetMinDistance);
+		RegisterGetSet("MaxDistance", &OpenALSoundComponent::GetMaxDistance, &OpenALSoundComponent::SetMaxDistance);
+		RegisterGetSet("RolloffFactor", &OpenALSoundComponent::GetRolloff, &OpenALSoundComponent::SetRolloff);
+		RegisterGetSet("Volume", &OpenALSoundComponent::GetVolume, &OpenALSoundComponent::SetVolume);
+		RegisterGetSet("Loop", &OpenALSoundComponent::GetLoop, &OpenALSoundComponent::SetLoop);
+		RegisterGetSet("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
 	}
 
 	void OpenALSoundComponent::OnInitialize()

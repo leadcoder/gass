@@ -60,11 +60,11 @@ namespace GASS
 	void TurretComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<TurretComponent>();
-		RegisterProperty<std::string>("RotationController", &TurretComponent::GetController, &TurretComponent::SetController);
-		RegisterProperty<float>("MaxSteerVelocity", &TurretComponent::GetMaxSteerVelocity, &TurretComponent::SetMaxSteerVelocity);
-		RegisterProperty<float>("MaxSteerAngle", &TurretComponent::GetMaxSteerAngle, &TurretComponent::SetMaxSteerAngle);
-		RegisterProperty<float>("SteerForce", &TurretComponent::GetSteerForce, &TurretComponent::SetSteerForce);
-		RegisterProperty<Vec2>("MaxMinAngle", &TurretComponent::GetMaxMinAngle, &TurretComponent::SetMaxMinAngle);
+		RegisterGetSet("RotationController", &TurretComponent::GetController, &TurretComponent::SetController);
+		RegisterGetSet("MaxSteerVelocity", &TurretComponent::GetMaxSteerVelocity, &TurretComponent::SetMaxSteerVelocity);
+		RegisterGetSet("MaxSteerAngle", &TurretComponent::GetMaxSteerAngle, &TurretComponent::SetMaxSteerAngle);
+		RegisterGetSet("SteerForce", &TurretComponent::GetSteerForce, &TurretComponent::SetSteerForce);
+		RegisterGetSet("MaxMinAngle", &TurretComponent::GetMaxMinAngle, &TurretComponent::SetMaxMinAngle);
 	}
 
 	void TurretComponent::OnInitialize()

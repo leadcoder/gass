@@ -33,7 +33,7 @@ namespace GASS
 
 	void BaseSceneManager::RegisterReflection()
 	{
-		RegisterProperty<std::string>( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
+		RegisterGetSet( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
 	}
 
 	void BaseSceneManager::_UpdatePostListeners(double delta_time)

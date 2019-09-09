@@ -51,20 +51,14 @@ namespace GASS
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 
-		RegisterProperty<float>("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<float>("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near clipping plane distance",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<float>("NearFarRatio", &GASS::OSGCameraComponent::GetNearFarRatio, &GASS::OSGCameraComponent::SetNearFarRatio,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near Far Ratio", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance,PF_VISIBLE  | PF_EDITABLE,"Far clipping plane distance");
+		RegisterGetSet("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance,PF_VISIBLE  | PF_EDITABLE,"Near clipping plane distance");
+		RegisterGetSet("NearFarRatio", &GASS::OSGCameraComponent::GetNearFarRatio, &GASS::OSGCameraComponent::SetNearFarRatio, PF_VISIBLE | PF_EDITABLE,"Near Far Ratio");
 
-		RegisterProperty<float>("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Field Of View in Degres",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterGetSet("Fov", &GASS::OSGCameraComponent::GetFov, &GASS::OSGCameraComponent::SetFov,PF_VISIBLE  | PF_EDITABLE,"Field Of View in Degres");
 		
-		RegisterProperty<bool>("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Use orthographic projection",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterProperty<float>("LODScale", &GASS::OSGCameraComponent::GetLODScale, &GASS::OSGCameraComponent::SetLODScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("OSG LODScale",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterGetSet("Ortho", &GASS::OSGCameraComponent::GetOrtho, &GASS::OSGCameraComponent::SetOrtho,PF_VISIBLE  | PF_EDITABLE,"Use orthographic projection");
+		RegisterGetSet("LODScale", &GASS::OSGCameraComponent::GetLODScale, &GASS::OSGCameraComponent::SetLODScale,PF_VISIBLE  | PF_EDITABLE,"OSG LODScale");
 	}
 
 	void OSGCameraComponent::OnInitialize()

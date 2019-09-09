@@ -70,8 +70,7 @@ namespace GASS
 		ComponentFactory::Get().Register<MotionComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MotionComponent", OF_VISIBLE)));
 		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,PF_VISIBLE | PF_EDITABLE,"Acceleration [m/s2]");
-		RegisterProperty<Float>("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max Speed [m/s]",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,PF_VISIBLE | PF_EDITABLE,"Max Speed [m/s]");
 		RegisterMember("MaxTurnSpeed", &GASS::MotionComponent::m_MaxTurnSpeed,PF_VISIBLE | PF_EDITABLE,"Angular Max Speed [deg/s]");
 		//RegisterProperty<MotionModeBinder>("Mode", &GASS::MotionComponent::GetMode, &GASS::MotionComponent::SetMode,
 		//	EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Motion Mode",PF_VISIBLE,&MotionModeBinder::GetStringEnumeration)));

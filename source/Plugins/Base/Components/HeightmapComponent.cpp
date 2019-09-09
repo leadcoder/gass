@@ -55,11 +55,9 @@ namespace GASS
 
 		RegisterMember("Resolution", &GASS::HeightmapComponent::m_Resolution,PF_VISIBLE | PF_EDITABLE,"[samples/m]");
 
-		RegisterProperty<bool>("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Update height values from scene geometry",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,PF_VISIBLE | PF_EDITABLE,"Update height values from scene geometry");
 
-		RegisterProperty<bool>("AutoBBoxGeneration", &GASS::HeightmapComponent::GetAutoBBoxGeneration, &GASS::HeightmapComponent::SetAutoBBoxGeneration,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Get bounding box from terrain",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("AutoBBoxGeneration", &GASS::HeightmapComponent::GetAutoBBoxGeneration, &GASS::HeightmapComponent::SetAutoBBoxGeneration,PF_VISIBLE | PF_EDITABLE,"Get bounding box from terrain");
 	}
 
 	void HeightmapComponent::OnInitialize()

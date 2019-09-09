@@ -45,8 +45,7 @@ namespace GASS
 		ComponentFactory::Get().Register<BoxGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("BoxGeometryComponent", OF_VISIBLE)));
 	
-		RegisterProperty<Vec3>("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Size of box",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,PF_VISIBLE | PF_EDITABLE,"Size of box");
 
 		RegisterGetSet("Lines", &BoxGeometryComponent::GetLines, &BoxGeometryComponent::SetLines, PF_VISIBLE | PF_EDITABLE, "Wireframe or solid");
 	}

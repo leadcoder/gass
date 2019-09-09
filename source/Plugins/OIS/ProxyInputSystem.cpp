@@ -41,9 +41,9 @@ namespace GASS
 	void ProxyInputSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<ProxyInputSystem>("ProxyInputSystem");
-		RegisterProperty<bool>("EnableKey", &GASS::ProxyInputSystem::GetEnableKey, &GASS::ProxyInputSystem::SetEnableKey);
-		RegisterProperty<bool>("EnableMouse", &GASS::ProxyInputSystem::GetEnableMouse, &GASS::ProxyInputSystem::SetEnableMouse);
-		RegisterProperty<bool>("EnableJoystick", &GASS::ProxyInputSystem::GetEnableJoystick, &GASS::ProxyInputSystem::SetEnableJoystick);
+		RegisterGetSet("EnableKey", &GASS::ProxyInputSystem::GetEnableKey, &GASS::ProxyInputSystem::SetEnableKey);
+		RegisterGetSet("EnableMouse", &GASS::ProxyInputSystem::GetEnableMouse, &GASS::ProxyInputSystem::SetEnableMouse);
+		RegisterGetSet("EnableJoystick", &GASS::ProxyInputSystem::GetEnableJoystick, &GASS::ProxyInputSystem::SetEnableJoystick);
 	}
 
 	void ProxyInputSystem::OnSystemInit()

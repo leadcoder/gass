@@ -41,7 +41,7 @@ namespace GASS
 	{
 		GASS::ComponentFactory::GetPtr()->Register<OSGNodeProxyComponent>();
 		ADD_DEPENDENCY("OSGLocationComponent")
-		RegisterProperty< std::vector<std::string> >("DescriptionList", &OSGNodeProxyComponent::GetDescriptionList, &OSGNodeProxyComponent::SetDescriptionList);
+		RegisterGetSet("DescriptionList", &OSGNodeProxyComponent::GetDescriptionList, &OSGNodeProxyComponent::SetDescriptionList);
 	}
 
 	void OSGNodeProxyComponent::OnInitialize()

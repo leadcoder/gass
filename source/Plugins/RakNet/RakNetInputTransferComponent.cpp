@@ -53,7 +53,7 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<RakNetInputTransferComponent>("InputTransferComponent");
 		GASS::PackageFactory::GetPtr()->Register(INPUT_DATA,new GASS::Creator<InputPackage, NetworkPackage>);
 
-		RegisterProperty<std::string>("ControlSetting", &RakNetInputTransferComponent::GetControlSetting, &RakNetInputTransferComponent::SetControlSetting);
+		RegisterGetSet("ControlSetting", &RakNetInputTransferComponent::GetControlSetting, &RakNetInputTransferComponent::SetControlSetting);
 	}
 
 	void RakNetInputTransferComponent::OnInitialize()

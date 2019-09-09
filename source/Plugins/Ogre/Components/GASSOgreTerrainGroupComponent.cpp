@@ -69,35 +69,22 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OgreTerrainGroupComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OgreTerrainGroupComponent", OF_VISIBLE)));
-		RegisterProperty<float>("ImportScale", &GASS::OgreTerrainGroupComponent::GetImportScale, &GASS::OgreTerrainGroupComponent::SetImportScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("ImportTerrainSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("ImportTerrainWorldSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainWorldSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainWorldSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<std::string>("SaveTerrain", &GASS::OgreTerrainGroupComponent::GetSaveTerrain, &GASS::OgreTerrainGroupComponent::SetSaveTerrain);
-		RegisterProperty<std::string>("LoadTerrain", &GASS::OgreTerrainGroupComponent::GetLoadTerrain, &GASS::OgreTerrainGroupComponent::SetLoadTerrain);
-		RegisterProperty<std::string>("CustomMaterial", &GASS::OgreTerrainGroupComponent::GetCustomMaterial, &GASS::OgreTerrainGroupComponent::SetCustomMaterial,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2i>("CreatePages", &GASS::OgreTerrainGroupComponent::GetPages, &GASS::OgreTerrainGroupComponent::CreatePages,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("Origin", &GASS::OgreTerrainGroupComponent::GetOrigin, &GASS::OgreTerrainGroupComponent::SetOrigin,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("FadeDetail", &GASS::OgreTerrainGroupComponent::GetFadeDetail, &GASS::OgreTerrainGroupComponent::SetFadeDetail,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("DetailFadeDist", &GASS::OgreTerrainGroupComponent::GetDetailFadeDist, &GASS::OgreTerrainGroupComponent::SetDetailFadeDist,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("FadeOutColor", &GASS::OgreTerrainGroupComponent::GetFadeOutColor, &GASS::OgreTerrainGroupComponent::SetFadeOutColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("NearColorWeight", &GASS::OgreTerrainGroupComponent::GetNearColorWeight, &GASS::OgreTerrainGroupComponent::SetNearColorWeight,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("ImportScale", &GASS::OgreTerrainGroupComponent::GetImportScale, &GASS::OgreTerrainGroupComponent::SetImportScale,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImportTerrainSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainSize,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImportTerrainWorldSize", &GASS::OgreTerrainGroupComponent::GetImportTerrainWorldSize, &GASS::OgreTerrainGroupComponent::SetImportTerrainWorldSize,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SaveTerrain", &GASS::OgreTerrainGroupComponent::GetSaveTerrain, &GASS::OgreTerrainGroupComponent::SetSaveTerrain);
+		RegisterGetSet("LoadTerrain", &GASS::OgreTerrainGroupComponent::GetLoadTerrain, &GASS::OgreTerrainGroupComponent::SetLoadTerrain);
+		RegisterGetSet("CustomMaterial", &GASS::OgreTerrainGroupComponent::GetCustomMaterial, &GASS::OgreTerrainGroupComponent::SetCustomMaterial,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("CreatePages", &GASS::OgreTerrainGroupComponent::GetPages, &GASS::OgreTerrainGroupComponent::CreatePages,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("Origin", &GASS::OgreTerrainGroupComponent::GetOrigin, &GASS::OgreTerrainGroupComponent::SetOrigin,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("FadeDetail", &GASS::OgreTerrainGroupComponent::GetFadeDetail, &GASS::OgreTerrainGroupComponent::SetFadeDetail,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("DetailFadeDist", &GASS::OgreTerrainGroupComponent::GetDetailFadeDist, &GASS::OgreTerrainGroupComponent::SetDetailFadeDist,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("FadeOutColor", &GASS::OgreTerrainGroupComponent::GetFadeOutColor, &GASS::OgreTerrainGroupComponent::SetFadeOutColor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("NearColorWeight", &GASS::OgreTerrainGroupComponent::GetNearColorWeight, &GASS::OgreTerrainGroupComponent::SetNearColorWeight,PF_VISIBLE | PF_EDITABLE,"");
 
-		RegisterProperty<bool>("EnableLayerNormal", &GASS::OgreTerrainGroupComponent::GetEnableLayerNormal, &GASS::OgreTerrainGroupComponent::SetEnableLayerNormal,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("EnableLayerSpecular", &GASS::OgreTerrainGroupComponent::GetEnableLayerSpecular, &GASS::OgreTerrainGroupComponent::SetEnableLayerSpecular,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("EnableLayerParallax", &GASS::OgreTerrainGroupComponent::GetEnableLayerParallax, &GASS::OgreTerrainGroupComponent::SetEnableLayerParallax,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("EnableLayerNormal", &GASS::OgreTerrainGroupComponent::GetEnableLayerNormal, &GASS::OgreTerrainGroupComponent::SetEnableLayerNormal,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("EnableLayerSpecular", &GASS::OgreTerrainGroupComponent::GetEnableLayerSpecular, &GASS::OgreTerrainGroupComponent::SetEnableLayerSpecular,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("EnableLayerParallax", &GASS::OgreTerrainGroupComponent::GetEnableLayerParallax, &GASS::OgreTerrainGroupComponent::SetEnableLayerParallax,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("EnableLightmap", &GASS::OgreTerrainGroupComponent::m_EnableLightmap,PF_VISIBLE | PF_EDITABLE,"");
 
 	}

@@ -79,8 +79,8 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register<RakNetNetworkSystem>("RakNetNetworkSystem");
 
-		RegisterProperty<double>("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
-		RegisterProperty<double>("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
+		RegisterGetSet("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
+		RegisterGetSet("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
 		RegisterMember("SleepTime", &RakNetNetworkSystem::m_SleepTime);
 		RegisterMember("Debug", &RakNetNetworkSystem::m_Debug);
 		RegisterMember("RelayInputOnServer", &RakNetNetworkSystem::m_RelayInputOnServer);

@@ -56,13 +56,12 @@ namespace GASS
 		ADD_DEPENDENCY("OgreLocationComponent")
 
 		ComponentFactory::Get().Register<OgreBillboardComponent>("BillboardComponent");
-		RegisterProperty<std::string>("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
-		RegisterProperty<OgreMaterial>("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
-		RegisterProperty<bool>("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
-		RegisterProperty<float>("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
-		RegisterProperty<float>("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreBillboardComponent::GetGeometryFlagsBinder, &OgreBillboardComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		RegisterGetSet("RenderQueue", &GASS::OgreBillboardComponent::GetRenderQueue, &GASS::OgreBillboardComponent::SetRenderQueue);
+		RegisterGetSet("Material", &GASS::OgreBillboardComponent::GetMaterial, &GASS::OgreBillboardComponent::SetMaterial);
+		RegisterGetSet("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
+		RegisterGetSet("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
+		RegisterGetSet("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
+		RegisterGetSet("GeometryFlags", &OgreBillboardComponent::GetGeometryFlagsBinder, &OgreBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
 	}
 
 	void OgreBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

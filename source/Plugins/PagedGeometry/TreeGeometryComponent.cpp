@@ -69,39 +69,23 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<TreeGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TreeGeometryComponent", OF_VISIBLE)));
 
-		RegisterProperty<std::string>("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<std::string>("ColorMap", &TreeGeometryComponent::GetColorMap, &TreeGeometryComponent::SetColorMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<float>("DensityFactor", &TreeGeometryComponent::GetDensityFactor, &TreeGeometryComponent::SetDensityFactor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("MeshDistance", &TreeGeometryComponent::GetMeshDistance, &TreeGeometryComponent::SetMeshDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("MeshFadeDistance", &TreeGeometryComponent::GetMeshFadeDistance, &TreeGeometryComponent::SetMeshFadeDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("ImposterDistance", &TreeGeometryComponent::GetImposterDistance, &TreeGeometryComponent::SetImposterDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("ImposterFadeDistance", &TreeGeometryComponent::GetImposterFadeDistance, &TreeGeometryComponent::SetImposterFadeDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4f>("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<Vec2f>("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		//RegisterProperty<bool>("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
-		RegisterProperty<bool>("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("ImposterResolution", &TreeGeometryComponent::GetImposterResolution, &TreeGeometryComponent::SetImposterResolution,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("RegenerateAllImpostors", &TreeGeometryComponent::GetRegenerateAllImpostors, &TreeGeometryComponent::SetRegenerateAllImpostors,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("DynamicImpostorLighting", &TreeGeometryComponent::GetDynamicImpostorLighting, &TreeGeometryComponent::SetDynamicImpostorLighting,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable experimental dynamic impostor lighting. Note that this will effect all TreeGeometryComponent",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Mesh", &TreeGeometryComponent::GetMesh, &TreeGeometryComponent::SetMesh,PF_VISIBLE,"");
+		RegisterGetSet("ColorMap", &TreeGeometryComponent::GetColorMap, &TreeGeometryComponent::SetColorMap,PF_VISIBLE,"");
+		RegisterGetSet("DensityFactor", &TreeGeometryComponent::GetDensityFactor, &TreeGeometryComponent::SetDensityFactor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("MeshDistance", &TreeGeometryComponent::GetMeshDistance, &TreeGeometryComponent::SetMeshDistance,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("MeshFadeDistance", &TreeGeometryComponent::GetMeshFadeDistance, &TreeGeometryComponent::SetMeshFadeDistance,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImposterDistance", &TreeGeometryComponent::GetImposterDistance, &TreeGeometryComponent::SetImposterDistance,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImposterFadeDistance", &TreeGeometryComponent::GetImposterFadeDistance, &TreeGeometryComponent::SetImposterFadeDistance,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("CustomBounds", &TreeGeometryComponent::GetCustomBounds, &TreeGeometryComponent::SetCustomBounds,PF_VISIBLE,"");
+		RegisterGetSet("MaxMinScale", &TreeGeometryComponent::GetMaxMinScale, &TreeGeometryComponent::SetMaxMinScale,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("CastShadows", &TreeGeometryComponent::GetCastShadows, &TreeGeometryComponent::SetCastShadows,PF_VISIBLE | PF_EDITABLE,"");
+		//RegisterGetSet("CreateShadowMap", &TreeGeometryComponent::GetCreateShadowMap, &TreeGeometryComponent::SetCreateShadowMap);
+		RegisterGetSet("SetHeightAtStartup", &TreeGeometryComponent::GetPrecalcHeight, &TreeGeometryComponent::SetPrecalcHeight,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("PageSize", &TreeGeometryComponent::GetPageSize, &TreeGeometryComponent::SetPageSize,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImposterAlphaRejectionValue", &TreeGeometryComponent::GetImposterAlphaRejectionValue, &TreeGeometryComponent::SetImposterAlphaRejectionValue,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ImposterResolution", &TreeGeometryComponent::GetImposterResolution, &TreeGeometryComponent::SetImposterResolution,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("RegenerateAllImpostors", &TreeGeometryComponent::GetRegenerateAllImpostors, &TreeGeometryComponent::SetRegenerateAllImpostors,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("DynamicImpostorLighting", &TreeGeometryComponent::GetDynamicImpostorLighting, &TreeGeometryComponent::SetDynamicImpostorLighting,PF_VISIBLE | PF_EDITABLE,"Enable experimental dynamic impostor lighting. Note that this will effect all TreeGeometryComponent");
 		
 	}
 

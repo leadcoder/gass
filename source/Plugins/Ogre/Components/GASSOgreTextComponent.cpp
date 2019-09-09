@@ -72,9 +72,9 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OgreTextComponent>("TextComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TextComponent")));
-		RegisterProperty<std::string>("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
-		RegisterProperty<float>("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
-		RegisterProperty<int>("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
+		RegisterGetSet("Text", &GASS::OgreTextComponent::GetText, &GASS::OgreTextComponent::SetText);
+		RegisterGetSet("Offset", &GASS::OgreTextComponent::GetOffset, &GASS::OgreTextComponent::SetOffset);
+		RegisterGetSet("CharacterSize", &GASS::OgreTextComponent::GetCharacterSize, &GASS::OgreTextComponent::SetCharacterSize);
 		RegisterMember("ScaleByDistance", &OgreTextComponent::m_ScaleByDistance);
 	}
 

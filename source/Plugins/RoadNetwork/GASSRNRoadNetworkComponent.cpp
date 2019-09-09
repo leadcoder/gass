@@ -27,13 +27,11 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<RNRoadNetworkComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadNetworkComponent", OF_VISIBLE)));
 
-		RegisterProperty<bool>("ShowGraph", &RNRoadNetworkComponent::GetShowGraph, &RNRoadNetworkComponent::SetShowGraph,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("ShowGraph", &RNRoadNetworkComponent::GetShowGraph, &RNRoadNetworkComponent::SetShowGraph,PF_VISIBLE | PF_EDITABLE,"");
 
 		RegisterMember("Optimize", &RNRoadNetworkComponent::m_Optimize,PF_VISIBLE | PF_EDITABLE,"");
 
-		RegisterProperty<bool>("Edit", &RNRoadNetworkComponent::GetEdit, &RNRoadNetworkComponent::SetEdit,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Edit", &RNRoadNetworkComponent::GetEdit, &RNRoadNetworkComponent::SetEdit,PF_VISIBLE | PF_EDITABLE,"");
 
 		RegisterMember("NodeTemplate", &RNRoadNetworkComponent::m_NodeTemplate,PF_VISIBLE ,"");
 		RegisterMember("EdgeTemplate", &RNRoadNetworkComponent::m_EdgeTemplate,PF_VISIBLE ,"");

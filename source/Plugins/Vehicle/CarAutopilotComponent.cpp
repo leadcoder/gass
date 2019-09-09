@@ -75,10 +75,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<CarAutopilotComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CarAutopilotComponent", OF_VISIBLE)));
 
-		RegisterProperty<std::string>("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for steer",PF_VISIBLE)));
-		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for throttle",PF_VISIBLE)));
+		RegisterGetSet("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,PF_VISIBLE,"Input mapping for steer");
+		RegisterGetSet("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,PF_VISIBLE,"Input mapping for throttle");
 		RegisterMember("DesiredSpeed", &CarAutopilotComponent::m_DesiredSpeed,PF_VISIBLE  | PF_EDITABLE,"Desired speed");
 		RegisterMember("Enable", &CarAutopilotComponent::m_Enable,PF_VISIBLE  | PF_EDITABLE,"Enable/Disable this component");
 		RegisterMember("DesiredPosRadius", &CarAutopilotComponent::m_DesiredPosRadius,PF_VISIBLE  | PF_EDITABLE,"Enable/Disable this component");

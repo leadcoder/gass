@@ -60,12 +60,9 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreTerrainPageComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OgreTerrainPageComponent", OF_VISIBLE)));
 
-		RegisterProperty<ResourceHandle>("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ResourceHandle>("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ResourceHandle>("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("HeightMap", &GASS::OgreTerrainPageComponent::GetHeightMap, &GASS::OgreTerrainPageComponent::SetHeightMap,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask,PF_VISIBLE | PF_EDITABLE,"");
 
 		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0,
 			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer texture map for layer 0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
@@ -87,27 +84,17 @@ namespace GASS
 			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
 		RegisterProperty<ResourceHandle>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4,
 			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<float>("TilingLayer0", &GASS::OgreTerrainPageComponent::GetTilingLayer0, &GASS::OgreTerrainPageComponent::SetTilingLayer0,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TilingLayer1", &GASS::OgreTerrainPageComponent::GetTilingLayer1, &GASS::OgreTerrainPageComponent::SetTilingLayer1,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TilingLayer2", &GASS::OgreTerrainPageComponent::GetTilingLayer2, &GASS::OgreTerrainPageComponent::SetTilingLayer2,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TilingLayer3", &GASS::OgreTerrainPageComponent::GetTilingLayer3, &GASS::OgreTerrainPageComponent::SetTilingLayer3,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TilingLayer4", &GASS::OgreTerrainPageComponent::GetTilingLayer3, &GASS::OgreTerrainPageComponent::SetTilingLayer4,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("TilingLayer0", &GASS::OgreTerrainPageComponent::GetTilingLayer0, &GASS::OgreTerrainPageComponent::SetTilingLayer0,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TilingLayer1", &GASS::OgreTerrainPageComponent::GetTilingLayer1, &GASS::OgreTerrainPageComponent::SetTilingLayer1,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TilingLayer2", &GASS::OgreTerrainPageComponent::GetTilingLayer2, &GASS::OgreTerrainPageComponent::SetTilingLayer2,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TilingLayer3", &GASS::OgreTerrainPageComponent::GetTilingLayer3, &GASS::OgreTerrainPageComponent::SetTilingLayer3,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TilingLayer4", &GASS::OgreTerrainPageComponent::GetTilingLayer3, &GASS::OgreTerrainPageComponent::SetTilingLayer4,PF_VISIBLE | PF_EDITABLE,"");
 
-		RegisterProperty<Vec3>("Position", &GASS::OgreTerrainPageComponent::GetPosition, &GASS::OgreTerrainPageComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("IndexX", &GASS::OgreTerrainPageComponent::GetIndexX, &GASS::OgreTerrainPageComponent::SetIndexX,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("IndexY", &GASS::OgreTerrainPageComponent::GetIndexY, &GASS::OgreTerrainPageComponent::SetIndexY,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-
-		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreTerrainPageComponent::GetRenderQueue, &GASS::OgreTerrainPageComponent::SetRenderQueue,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
-
+		RegisterGetSet("Position", &GASS::OgreTerrainPageComponent::GetPosition, &GASS::OgreTerrainPageComponent::SetPosition,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("IndexX", &GASS::OgreTerrainPageComponent::GetIndexX, &GASS::OgreTerrainPageComponent::SetIndexX,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("IndexY", &GASS::OgreTerrainPageComponent::GetIndexY, &GASS::OgreTerrainPageComponent::SetIndexY,PF_VISIBLE | PF_EDITABLE,"");
+		
+		RegisterGetSet("RenderQueue", &GASS::OgreTerrainPageComponent::GetRenderQueue, &GASS::OgreTerrainPageComponent::SetRenderQueue, PF_VISIBLE | PF_EDITABLE, "Render Queue");
 		//import functions, can be used from editor, use full-path to resource and execute import
 		std::vector<std::string> hm_ext;
 		hm_ext.push_back("png");
@@ -130,8 +117,7 @@ namespace GASS
 			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE, color_ext)));
 
 
-		RegisterProperty<bool>("DumpTextues", &GASS::OgreTerrainPageComponent::GetDumpTextues, &GASS::OgreTerrainPageComponent::SetDumpTextues,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("DumpTextues", &GASS::OgreTerrainPageComponent::GetDumpTextues, &GASS::OgreTerrainPageComponent::SetDumpTextues,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void OgreTerrainPageComponent::SetDumpTextues(bool /*value*/)

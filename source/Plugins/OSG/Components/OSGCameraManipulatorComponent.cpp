@@ -44,7 +44,7 @@ namespace GASS
 	void OSGCameraManipulatorComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGCameraManipulatorComponent>();
-		RegisterProperty<std::string>("Manipulator", &GASS::OSGCameraManipulatorComponent::GetManipulatorName, &GASS::OSGCameraManipulatorComponent::SetManipulatorName);
+		RegisterGetSet("Manipulator", &GASS::OSGCameraManipulatorComponent::GetManipulatorName, &GASS::OSGCameraManipulatorComponent::SetManipulatorName);
 	}
 
 	void OSGCameraManipulatorComponent::OnInitialize()

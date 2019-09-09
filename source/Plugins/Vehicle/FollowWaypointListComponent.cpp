@@ -116,13 +116,11 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
 		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration,false)));
-		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject,
+		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject, PF_VISIBLE,"Object that hold navigation component",
 			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,NavigationEnumeration,false)));
 		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,PF_VISIBLE | PF_EDITABLE,"Radius that should be used to consider a waypoint reached");
-		RegisterProperty<PathFollowModeBinder>("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Follow mode",PF_VISIBLE,&PathFollowModeBinder::GetStringEnumeration)));
-		RegisterProperty<bool>("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Invert direction",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode, PF_VISIBLE | PF_EDITABLE, "Follow mode");
+		RegisterGetSet("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,PF_VISIBLE | PF_EDITABLE,"Invert direction");
 	}
 
 	void FollowWaypointListComponent::SetInvertDirection(bool value)

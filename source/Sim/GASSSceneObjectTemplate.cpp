@@ -33,8 +33,8 @@ namespace GASS
 	void SceneObjectTemplate::RegisterReflection()
 	{
 		ComponentContainerTemplateFactory::GetPtr()->Register("SceneObjectTemplate",new Creator<SceneObjectTemplate, ComponentContainerTemplate>);
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
-		RegisterProperty<bool>("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
+		RegisterGetSet("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
+		RegisterGetSet("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
 	}
 
 

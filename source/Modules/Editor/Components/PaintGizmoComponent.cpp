@@ -31,9 +31,9 @@ namespace GASS
 	void PaintGizmoComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<PaintGizmoComponent>();
-		RegisterProperty<float>("Size",&PaintGizmoComponent::GetSize, &PaintGizmoComponent::SetSize);
-		RegisterProperty<ColorRGBA>("Color",&PaintGizmoComponent::GetColor, &PaintGizmoComponent::SetColor);
-		RegisterProperty<std::string>("Type",&PaintGizmoComponent::GetType, &PaintGizmoComponent::SetType);
+		RegisterGetSet("Size",&PaintGizmoComponent::GetSize, &PaintGizmoComponent::SetSize);
+		RegisterGetSet("Color",&PaintGizmoComponent::GetColor, &PaintGizmoComponent::SetColor);
+		RegisterGetSet("Type",&PaintGizmoComponent::GetType, &PaintGizmoComponent::SetType);
 	}
 
 	void PaintGizmoComponent::OnInitialize()

@@ -63,18 +63,13 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<OSGLocationComponent>("LocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
-		RegisterProperty<Vec3>("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Position relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<EulerRotation>("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
+		RegisterGetSet("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation, PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]");
 		
-		RegisterProperty<Quaternion>("Quaternion", &GASS::OSGLocationComponent::GetRotation, &GASS::OSGLocationComponent::SetRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion", PF_VISIBLE)));
+		RegisterGetSet("Quaternion", &GASS::OSGLocationComponent::GetRotation, &GASS::OSGLocationComponent::SetRotation, PF_VISIBLE,"Rotation represented as Quaternion");
 
-		RegisterProperty<Vec3>("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this location be relative to parent or not", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Scale", &GASS::OSGLocationComponent::GetScale, &GASS::OSGLocationComponent::SetScale, PF_VISIBLE | PF_EDITABLE,"Scale relative to parent node");
+		RegisterGetSet("AttachToParent", &GASS::OSGLocationComponent::GetAttachToParent, &GASS::OSGLocationComponent::SetAttachToParent, PF_VISIBLE | PF_EDITABLE,"Should this location be relative to parent or not");
 
 		//expose this component to script engine
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();

@@ -62,10 +62,10 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<TopCamControlComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TopCamControlComponent", OF_VISIBLE)));
-		RegisterProperty<float>("MaxWindowSize", &GASS::TopCamControlComponent::GetMaxWindowSize, &GASS::TopCamControlComponent::SetMaxWindowSize);
-		RegisterProperty<float>("MinWindowSize", &GASS::TopCamControlComponent::GetMinWindowSize, &GASS::TopCamControlComponent::SetMinWindowSize);
-		RegisterProperty<float>("FixedHeight", &GASS::TopCamControlComponent::GetFixedHeight, &GASS::TopCamControlComponent::SetFixedHeight);
-		RegisterProperty<float>("WindowSize", &GASS::TopCamControlComponent::GetWindowSize, &GASS::TopCamControlComponent::SetWindowSize);
+		RegisterGetSet("MaxWindowSize", &GASS::TopCamControlComponent::GetMaxWindowSize, &GASS::TopCamControlComponent::SetMaxWindowSize);
+		RegisterGetSet("MinWindowSize", &GASS::TopCamControlComponent::GetMinWindowSize, &GASS::TopCamControlComponent::SetMinWindowSize);
+		RegisterGetSet("FixedHeight", &GASS::TopCamControlComponent::GetFixedHeight, &GASS::TopCamControlComponent::SetFixedHeight);
+		RegisterGetSet("WindowSize", &GASS::TopCamControlComponent::GetWindowSize, &GASS::TopCamControlComponent::SetWindowSize);
 	}
 
 	void TopCamControlComponent::OnInitialize()

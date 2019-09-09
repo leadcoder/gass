@@ -65,8 +65,7 @@ namespace GASS
 		ComponentFactory::Get().Register<LineGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LineGeometryComponent", OF_VISIBLE)));
 
-		RegisterProperty<float>("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Color", &GASS::LineGeometryComponent::m_Color,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Offset", &GASS::LineGeometryComponent::m_Offset,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("TileScale", &GASS::LineGeometryComponent::m_TileScale,PF_VISIBLE | PF_EDITABLE,"");

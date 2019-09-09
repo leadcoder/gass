@@ -31,7 +31,14 @@ namespace GASS
 	public:
 		PolygonModeWrapper();
 		PolygonModeWrapper(Ogre::PolygonMode type);
-		static void Register();
+		static NameEnumMap InitMapping()
+		{
+			NameEnumMap mapping;
+			mapping["PM_POINTS"] = Ogre::PM_POINTS;
+			mapping["PM_WIREFRAME"] = Ogre::PM_WIREFRAME;
+			mapping["PM_SOLID"] = Ogre::PM_SOLID;
+			return mapping;
+		}
 	};
 	typedef GASS_SHARED_PTR<PolygonModeWrapper> PolygonModeWrapperPtr;
 }

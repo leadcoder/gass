@@ -59,19 +59,13 @@ namespace GASS
 		ADD_DEPENDENCY("OgreLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
 
-		RegisterProperty<float>("FarClipDistance", &GASS::OgreCameraComponent::GetFarClipDistance, &GASS::OgreCameraComponent::SetFarClipDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Far clip plane Distance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("NearClipDistance", &GASS::OgreCameraComponent::GetNearClipDistance, &GASS::OgreCameraComponent::SetNearClipDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Near clipplane distance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("Fov", &GASS::OgreCameraComponent::GetFov, &GASS::OgreCameraComponent::SetFov,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Field Of View (degress)",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Ortho", &GASS::OgreCameraComponent::GetOrtho, &GASS::OgreCameraComponent::SetOrtho,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Orthographic projection (otherwise Perpective)",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ClipToFog", &GASS::OgreCameraComponent::GetClipToFog, &GASS::OgreCameraComponent::SetClipToFog,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Let far clip plane be locked to end fog distance",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<PolygonModeWrapper>("PolygonMode", &GASS::OgreCameraComponent::GetPolygonMode, &GASS::OgreCameraComponent::SetPolygonMode,	
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Polygon render mode for this camera",PF_VISIBLE,&PolygonModeWrapper::GetStringEnumeration)));
-		RegisterProperty< std::vector<std::string> >("PostFilters", &GASS::OgreCameraComponent::GetPostFilters, &GASS::OgreCameraComponent::SetPostFilters);
+		RegisterGetSet("FarClipDistance", &OgreCameraComponent::GetFarClipDistance, &OgreCameraComponent::SetFarClipDistance,PF_VISIBLE | PF_EDITABLE,"Far clip plane Distance");
+		RegisterGetSet("NearClipDistance", &OgreCameraComponent::GetNearClipDistance, &OgreCameraComponent::SetNearClipDistance,PF_VISIBLE | PF_EDITABLE,"Near clipplane distance");
+		RegisterGetSet("Fov", &OgreCameraComponent::GetFov, &OgreCameraComponent::SetFov,PF_VISIBLE | PF_EDITABLE,"Field Of View (degress)");
+		RegisterGetSet("Ortho", &OgreCameraComponent::GetOrtho, &OgreCameraComponent::SetOrtho,PF_VISIBLE | PF_EDITABLE,"Orthographic projection (otherwise Perpective)");
+		RegisterGetSet("ClipToFog", &OgreCameraComponent::GetClipToFog, &OgreCameraComponent::SetClipToFog,PF_VISIBLE | PF_EDITABLE,"Let far clip plane be locked to end fog distance");
+		RegisterGetSet("PolygonMode", &OgreCameraComponent::GetPolygonMode, &OgreCameraComponent::SetPolygonMode, PF_VISIBLE | PF_EDITABLE, "Polygon render mode for this camera");
+		RegisterGetSet("PostFilters", &OgreCameraComponent::GetPostFilters, &OgreCameraComponent::SetPostFilters);
 
 		std::vector<std::string> scheme_enumeration;
 		//hard code for now

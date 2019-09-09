@@ -47,22 +47,14 @@ namespace GASS
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used for lights", OF_VISIBLE)));
 
-		RegisterProperty<LightTypeBinder>("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light Type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
-		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType, PF_VISIBLE | PF_EDITABLE, "Light Type");
+		RegisterGetSet("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SpotlightParams", &GASS::OSGLightComponent::GetSpotParams, &GASS::OSGLightComponent::SetSpotParams,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("CastShadow", &GASS::OSGLightComponent::GetCastShadow, &GASS::OSGLightComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("LightId", &GASS::OSGLightComponent::GetLightId, &GASS::OSGLightComponent::SetLightId,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("DiffuseColor", &GASS::OSGLightComponent::GetDiffuse, &GASS::OSGLightComponent::SetDiffuse,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SpecularColor", &GASS::OSGLightComponent::GetSpecular, &GASS::OSGLightComponent::SetSpecular,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("AmbientColor", &GASS::OSGLightComponent::GetAmbient, &GASS::OSGLightComponent::SetAmbient,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void OSGLightComponent::OnInitialize()

@@ -37,14 +37,17 @@ namespace GASS
 		TerrainLayerBinder(){}
 		TerrainLayerBinder(TerrainLayer type) : SingleEnumBinder<TerrainLayer,TerrainLayerBinder>(type)
 		{
+
 		}
-		static void Register()
+		static NameEnumMap InitMapping()
 		{
-			Bind("TERRAIN_LAYER_0", TL_0);
-			Bind("TERRAIN_LAYER_1", TL_1);
-			Bind("TERRAIN_LAYER_2", TL_2);
-			Bind("TERRAIN_LAYER_3", TL_3);
-			Bind("TERRAIN_LAYER_4", TL_4);
+			NameEnumMap mapping;
+			mapping["TERRAIN_LAYER_0"] = TL_0;
+			mapping["TERRAIN_LAYER_1"] = TL_1;
+			mapping["TERRAIN_LAYER_2"] = TL_2;
+			mapping["TERRAIN_LAYER_3"] = TL_3;
+			mapping["TERRAIN_LAYER_4"] = TL_4;
+			return mapping;
 		}
 	};
 

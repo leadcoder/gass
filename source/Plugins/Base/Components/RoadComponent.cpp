@@ -71,37 +71,23 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<RoadComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RoadComponent", OF_VISIBLE)));
-		RegisterProperty<bool>("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("PaintTerrain", &GASS::RoadComponent::GetPaintTerrain, &GASS::RoadComponent::SetPaintTerrain,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainFlattenWidth", &GASS::RoadComponent::GetTerrainFlattenWidth, &GASS::RoadComponent::SetTerrainFlattenWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainPaintWidth", &GASS::RoadComponent::GetTerrainPaintWidth, &GASS::RoadComponent::SetTerrainPaintWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("TerrainPaintIntensity", &GASS::RoadComponent::GetTerrainPaintIntensity, &GASS::RoadComponent::SetTerrainPaintIntensity,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<TerrainLayerBinder>("TerrainPaintLayer", &GASS::RoadComponent::GetTerrainPaintLayer, &GASS::RoadComponent::SetTerrainPaintLayer,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Select paint layer",PF_VISIBLE,&TerrainLayerBinder::GetStringEnumeration)));
-
-		RegisterProperty<float>("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec2>("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("PaintTerrain", &GASS::RoadComponent::GetPaintTerrain, &GASS::RoadComponent::SetPaintTerrain,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TerrainFlattenWidth", &GASS::RoadComponent::GetTerrainFlattenWidth, &GASS::RoadComponent::SetTerrainFlattenWidth,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TerrainPaintWidth", &GASS::RoadComponent::GetTerrainPaintWidth, &GASS::RoadComponent::SetTerrainPaintWidth,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TerrainPaintIntensity", &GASS::RoadComponent::GetTerrainPaintIntensity, &GASS::RoadComponent::SetTerrainPaintIntensity,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TerrainPaintLayer", &RoadComponent::GetTerrainPaintLayer, &RoadComponent::SetTerrainPaintLayer, PF_VISIBLE | PF_EDITABLE, "Select paint layer");
+		RegisterGetSet("RoadWidth", &GASS::RoadComponent::GetRoadWidth, &GASS::RoadComponent::SetRoadWidth,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("RoadOffset", &GASS::RoadComponent::GetRoadOffset, &GASS::RoadComponent::SetRoadOffset,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("DitchWidth", &GASS::RoadComponent::GetDitchWidth, &GASS::RoadComponent::SetDitchWidth,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial,
 			GraphicsMaterialPropertyMetaDataPtr(new GraphicsMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
 		RegisterMember("CustomDitchTexturePercent", &GASS::RoadComponent::m_CustomDitchTexturePercent,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("CAP", &GASS::RoadComponent::m_CAP,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterMember("FadeStart", &GASS::RoadComponent::m_FadeStart, 
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("FadeStart", &GASS::RoadComponent::m_FadeStart,PF_VISIBLE | PF_EDITABLE);
 		RegisterMember("FadeEnd", &GASS::RoadComponent::m_FadeEnd,PF_VISIBLE | PF_EDITABLE,"");
 	}
 

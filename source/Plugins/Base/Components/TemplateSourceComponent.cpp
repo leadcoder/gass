@@ -39,7 +39,7 @@ namespace GASS
 	void TemplateSourceComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<TemplateSourceComponent>();
-		RegisterProperty< std::vector<std::string> >("Templates", &GASS::TemplateSourceComponent::GetTemplates, &GASS::TemplateSourceComponent::SetTemplates);
+		RegisterGetSet("Templates", &GASS::TemplateSourceComponent::GetTemplates, &GASS::TemplateSourceComponent::SetTemplates);
 	}
 
 	void TemplateSourceComponent::OnInitialize()

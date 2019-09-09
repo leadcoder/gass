@@ -66,16 +66,11 @@ namespace GASS
 		RegisterProperty<ResourceHandle>("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource,
 			OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
 		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
-		RegisterProperty<bool>("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh receive shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Lighting", &OSGMeshComponent::GetLighting, &OSGMeshComponent::SetLighting,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable Light for this mesh",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
+		RegisterGetSet("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
+		RegisterGetSet("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh receive shadows or not");
+		RegisterGetSet("Lighting", &OSGMeshComponent::GetLighting, &OSGMeshComponent::SetLighting,PF_VISIBLE | PF_EDITABLE,"Enable Light for this mesh");
+		RegisterGetSet("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,PF_VISIBLE,"Expand mesh child nodes");
+		RegisterGetSet("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
 		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS, PF_VISIBLE | PF_EDITABLE,"Flip DDS textures for this model? (need reload)");
 
 		std::vector<std::string> ext;

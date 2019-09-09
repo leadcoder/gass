@@ -223,14 +223,11 @@ namespace GASS
 		RegisterProperty<std::string>("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName,
 			EnumerationPropertyMetaDataPtr(new OSGEarthViewpointEnumerationMetaData("Set Viewpoint", PF_VISIBLE)));
 
-		RegisterProperty<double>("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Time of day", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay, PF_VISIBLE | PF_EDITABLE,"Time of day");
 
-		RegisterProperty<float>("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Minimum ambient sky light", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient, PF_VISIBLE | PF_EDITABLE,"Minimum ambient sky light");
 
-		RegisterProperty<bool>("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/disable sky light", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE,"Enable/disable sky light");
 
 		RegisterProperty<std::vector<std::string> >("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers,
 			EnumerationPropertyMetaDataPtr(new OSGEarthLayerEnumerationMetaData("Map Layers", PF_VISIBLE)));

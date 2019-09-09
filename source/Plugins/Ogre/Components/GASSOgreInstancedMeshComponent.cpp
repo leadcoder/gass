@@ -54,10 +54,10 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OgreInstancedMeshComponent>("InstancedMeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
-		RegisterProperty<std::string>("RenderQueue", &GASS::OgreInstancedMeshComponent::GetRenderQueue, &GASS::OgreInstancedMeshComponent::SetRenderQueue);
-		RegisterProperty<bool>("CastShadow", &GASS::OgreInstancedMeshComponent::GetCastShadow, &GASS::OgreInstancedMeshComponent::SetCastShadow);
-		RegisterProperty<Float>("RegionSize", &GASS::OgreInstancedMeshComponent::GetRegionSize, &GASS::OgreInstancedMeshComponent::SetRegionSize);
-		RegisterProperty<Vec3>("GlobalScale", &GASS::OgreInstancedMeshComponent::GetGlobalScale, &GASS::OgreInstancedMeshComponent::SetGlobalScale);
+		RegisterGetSet("RenderQueue", &GASS::OgreInstancedMeshComponent::GetRenderQueue, &GASS::OgreInstancedMeshComponent::SetRenderQueue);
+		RegisterGetSet("CastShadow", &GASS::OgreInstancedMeshComponent::GetCastShadow, &GASS::OgreInstancedMeshComponent::SetCastShadow);
+		RegisterGetSet("RegionSize", &GASS::OgreInstancedMeshComponent::GetRegionSize, &GASS::OgreInstancedMeshComponent::SetRegionSize);
+		RegisterGetSet("GlobalScale", &GASS::OgreInstancedMeshComponent::GetGlobalScale, &GASS::OgreInstancedMeshComponent::SetGlobalScale);
 	}
 
 	void OgreInstancedMeshComponent::OnInitialize()

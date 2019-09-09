@@ -50,16 +50,16 @@ namespace GASS
 	void PhysXPrismaticComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXPrismaticComponent>("PhysicsPrismaticComponent");
-		RegisterProperty<SceneObjectRef>("Body1", &GASS::PhysXPrismaticComponent::GetBody1, &GASS::PhysXPrismaticComponent::SetBody1);
-		RegisterProperty<SceneObjectRef>("Body2", &GASS::PhysXPrismaticComponent::GetBody2, &GASS::PhysXPrismaticComponent::SetBody2);
-		RegisterProperty<Vec3>("RotationAxis", &GASS::PhysXPrismaticComponent::GetRotationAxis, &GASS::PhysXPrismaticComponent::SetRotationAxis);
-		RegisterProperty<float>("Spring", &GASS::PhysXPrismaticComponent::GetSpring, &GASS::PhysXPrismaticComponent::SetSpring);
-		RegisterProperty<float>("Damping", &GASS::PhysXPrismaticComponent::GetDamping, &GASS::PhysXPrismaticComponent::SetDamping);
-		RegisterProperty<float>("Limit", &GASS::PhysXPrismaticComponent::GetLimit, &GASS::PhysXPrismaticComponent::SetLimit);
-		RegisterProperty<bool>("EnableLimits", &GASS::PhysXPrismaticComponent::GetEnableLimits, &GASS::PhysXPrismaticComponent::SetEnableLimits);
-		RegisterProperty<bool>("EnableDrive", &GASS::PhysXPrismaticComponent::GetEnableDrive, &GASS::PhysXPrismaticComponent::SetEnableDrive);
+		RegisterGetSet("Body1", &GASS::PhysXPrismaticComponent::GetBody1, &GASS::PhysXPrismaticComponent::SetBody1);
+		RegisterGetSet("Body2", &GASS::PhysXPrismaticComponent::GetBody2, &GASS::PhysXPrismaticComponent::SetBody2);
+		RegisterGetSet("RotationAxis", &GASS::PhysXPrismaticComponent::GetRotationAxis, &GASS::PhysXPrismaticComponent::SetRotationAxis);
+		RegisterGetSet("Spring", &GASS::PhysXPrismaticComponent::GetSpring, &GASS::PhysXPrismaticComponent::SetSpring);
+		RegisterGetSet("Damping", &GASS::PhysXPrismaticComponent::GetDamping, &GASS::PhysXPrismaticComponent::SetDamping);
+		RegisterGetSet("Limit", &GASS::PhysXPrismaticComponent::GetLimit, &GASS::PhysXPrismaticComponent::SetLimit);
+		RegisterGetSet("EnableLimits", &GASS::PhysXPrismaticComponent::GetEnableLimits, &GASS::PhysXPrismaticComponent::SetEnableLimits);
+		RegisterGetSet("EnableDrive", &GASS::PhysXPrismaticComponent::GetEnableDrive, &GASS::PhysXPrismaticComponent::SetEnableDrive);
 		RegisterMember("Offset", &GASS::PhysXPrismaticComponent::m_Offset);
-		RegisterProperty<float>("DriveForceLimit", &GASS::PhysXPrismaticComponent::GetDriveForceLimit, &GASS::PhysXPrismaticComponent::SetDriveForceLimit);
+		RegisterGetSet("DriveForceLimit", &GASS::PhysXPrismaticComponent::GetDriveForceLimit, &GASS::PhysXPrismaticComponent::SetDriveForceLimit);
 
 	}
 

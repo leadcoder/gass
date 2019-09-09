@@ -57,16 +57,16 @@ namespace GASS
 
 	void ODESuspensionComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("MaxSteerTorque", &GASS::ODESuspensionComponent::GetMaxSteerTorque, &GASS::ODESuspensionComponent::SetMaxSteerTorque);
-		RegisterProperty<float>("MaxDriveTorque", &GASS::ODESuspensionComponent::GetMaxDriveTorque, &GASS::ODESuspensionComponent::SetMaxDriveTorque);
-		RegisterProperty<float>("Damping", &GASS::ODESuspensionComponent::GetDamping, &GASS::ODESuspensionComponent::SetDamping);
-		RegisterProperty<float>("Strength", &GASS::ODESuspensionComponent::GetStrength, &GASS::ODESuspensionComponent::SetStrength);
-		RegisterProperty<float>("HighStop", &GASS::ODESuspensionComponent::GetHighStop, &GASS::ODESuspensionComponent::SetHighStop);
-		RegisterProperty<float>("LowStop", &GASS::ODESuspensionComponent::GetLowStop, &GASS::ODESuspensionComponent::SetLowStop);
-		RegisterProperty<float>("SwayForce", &GASS::ODESuspensionComponent::GetSwayForce, &GASS::ODESuspensionComponent::SetSwayForce);
-		RegisterProperty<Vec3>("Axis1", &GASS::ODESuspensionComponent::GetAxis1, &GASS::ODESuspensionComponent::SetAxis1);
-		RegisterProperty<Vec3>("Axis2", &GASS::ODESuspensionComponent::GetAxis2, &GASS::ODESuspensionComponent::SetAxis2);
-		RegisterProperty<Vec3>("Anchor", &GASS::ODESuspensionComponent::GetAnchor, &GASS::ODESuspensionComponent::SetAnchor);
+		RegisterGetSet("MaxSteerTorque", &GASS::ODESuspensionComponent::GetMaxSteerTorque, &GASS::ODESuspensionComponent::SetMaxSteerTorque);
+		RegisterGetSet("MaxDriveTorque", &GASS::ODESuspensionComponent::GetMaxDriveTorque, &GASS::ODESuspensionComponent::SetMaxDriveTorque);
+		RegisterGetSet("Damping", &GASS::ODESuspensionComponent::GetDamping, &GASS::ODESuspensionComponent::SetDamping);
+		RegisterGetSet("Strength", &GASS::ODESuspensionComponent::GetStrength, &GASS::ODESuspensionComponent::SetStrength);
+		RegisterGetSet("HighStop", &GASS::ODESuspensionComponent::GetHighStop, &GASS::ODESuspensionComponent::SetHighStop);
+		RegisterGetSet("LowStop", &GASS::ODESuspensionComponent::GetLowStop, &GASS::ODESuspensionComponent::SetLowStop);
+		RegisterGetSet("SwayForce", &GASS::ODESuspensionComponent::GetSwayForce, &GASS::ODESuspensionComponent::SetSwayForce);
+		RegisterGetSet("Axis1", &GASS::ODESuspensionComponent::GetAxis1, &GASS::ODESuspensionComponent::SetAxis1);
+		RegisterGetSet("Axis2", &GASS::ODESuspensionComponent::GetAxis2, &GASS::ODESuspensionComponent::SetAxis2);
+		RegisterGetSet("Anchor", &GASS::ODESuspensionComponent::GetAnchor, &GASS::ODESuspensionComponent::SetAnchor);
 	}
 
 	void ODESuspensionComponent::OnInitialize()

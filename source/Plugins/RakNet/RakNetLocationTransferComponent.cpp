@@ -76,12 +76,12 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<RakNetLocationTransferComponent>("LocationTransferComponent");
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);
-		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
+		RegisterGetSet("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
 		RegisterMember("ClientLocationMode", &RakNetLocationTransferComponent::m_ClientLocationMode);
-		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
-		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
-		RegisterProperty<bool>("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
-		RegisterProperty<bool>("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
+		RegisterGetSet("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
+		RegisterGetSet("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
+		RegisterGetSet("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
+		RegisterGetSet("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
 	}
 
 	void RakNetLocationTransferComponent::OnInitialize()

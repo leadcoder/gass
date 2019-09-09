@@ -57,43 +57,25 @@ namespace GASS
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Handle ogre scene nodes and global graphics properties related to the scene", OF_VISIBLE)));
 
-		RegisterProperty<FogModeBinder>("FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type", PF_VISIBLE, &FogModeBinder::GetStringEnumeration)));
-
-		RegisterProperty<float>("FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog start distance", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog end distance", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog density", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Fog Color", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene ambient color", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<std::string>("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scene manager type", PF_VISIBLE)));
-		RegisterProperty<bool>("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable skybox, change sky box material in with SkyboxMaterial property", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("FogMode", &GASS::OgreGraphicsSceneManager::GetFogMode, &GASS::OgreGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
+		RegisterGetSet("FogStart", &GASS::OgreGraphicsSceneManager::GetFogStart, &GASS::OgreGraphicsSceneManager::SetFogStart, PF_VISIBLE | PF_EDITABLE,"Fog start distance");
+		RegisterGetSet("FogEnd", &GASS::OgreGraphicsSceneManager::GetFogEnd, &GASS::OgreGraphicsSceneManager::SetFogEnd, PF_VISIBLE | PF_EDITABLE,"Fog end distance");
+		RegisterGetSet("FogDensity", &GASS::OgreGraphicsSceneManager::GetFogDensity, &GASS::OgreGraphicsSceneManager::SetFogDensity, PF_VISIBLE | PF_EDITABLE,"Fog density");
+		RegisterGetSet("FogColor", &GASS::OgreGraphicsSceneManager::GetFogColor, &GASS::OgreGraphicsSceneManager::SetFogColor, PF_VISIBLE | PF_EDITABLE,"Fog Color");
+		RegisterGetSet("AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor, PF_VISIBLE | PF_EDITABLE,"Scene ambient color");
+		RegisterGetSet("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType, PF_VISIBLE,"Scene manager type");
+		RegisterGetSet("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox, PF_VISIBLE | PF_EDITABLE,"Enable/Disable skybox, change sky box material in with SkyboxMaterial property");
 		RegisterProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial,
 			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Skybox Material selection", PF_VISIBLE, "GASS_SKYBOX_MATERIALS")));
-		RegisterProperty<bool>("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing, &GASS::OgreGraphicsSceneManager::SetSelfShadowing,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("SelfShadowing", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion, &GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("UseAggressiveFocusRegion", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance, &GASS::OgreGraphicsSceneManager::SetFarShadowDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("FarShadowDistance", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("ShadowDirectionalLightExtrusionDistance", &GASS::OgreGraphicsSceneManager::GetShadowDirectionalLightExtrusionDistance, &GASS::OgreGraphicsSceneManager::SetShadowDirectionalLightExtrusionDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("ShadowDirectionalLightExtrusionDistance", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor, &GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("OptimalAdjustFactor for LIPSM", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("NumShadowTextures", &GASS::OgreGraphicsSceneManager::GetNumShadowTextures, &GASS::OgreGraphicsSceneManager::SetNumShadowTextures,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("NumShadowTextures", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("TextureShadowSize", &GASS::OgreGraphicsSceneManager::GetTextureShadowSize, &GASS::OgreGraphicsSceneManager::SetTextureShadowSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("TextureShadowSize", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<TextureShadowProjectionBinder>("TextureShadowProjection", &GASS::OgreGraphicsSceneManager::GetTextureShadowProjection, &GASS::OgreGraphicsSceneManager::SetTextureShadowProjection,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Texture Shadow Projection Type", PF_VISIBLE, &TextureShadowProjectionBinder::GetStringEnumeration)));
-		RegisterProperty<ShadowModeBinder>("ShadowMode", &GASS::OgreGraphicsSceneManager::GetShadowMode, &GASS::OgreGraphicsSceneManager::SetShadowMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Shadow Mode", PF_VISIBLE, &ShadowModeBinder::GetStringEnumeration)));
+		RegisterGetSet("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing, &GASS::OgreGraphicsSceneManager::SetSelfShadowing, PF_VISIBLE | PF_EDITABLE,"SelfShadowing");
+		RegisterGetSet("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion, &GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion, PF_VISIBLE | PF_EDITABLE,"UseAggressiveFocusRegion");
+		RegisterGetSet("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance, &GASS::OgreGraphicsSceneManager::SetFarShadowDistance, PF_VISIBLE | PF_EDITABLE,"FarShadowDistance");
+		RegisterGetSet("ShadowDirectionalLightExtrusionDistance", &GASS::OgreGraphicsSceneManager::GetShadowDirectionalLightExtrusionDistance, &GASS::OgreGraphicsSceneManager::SetShadowDirectionalLightExtrusionDistance, PF_VISIBLE | PF_EDITABLE,"ShadowDirectionalLightExtrusionDistance");
+		RegisterGetSet("OptimalAdjustFactor", &GASS::OgreGraphicsSceneManager::GetOptimalAdjustFactor, &GASS::OgreGraphicsSceneManager::SetOptimalAdjustFactor, PF_VISIBLE | PF_EDITABLE,"OptimalAdjustFactor for LIPSM");
+		RegisterGetSet("NumShadowTextures", &GASS::OgreGraphicsSceneManager::GetNumShadowTextures, &GASS::OgreGraphicsSceneManager::SetNumShadowTextures, PF_VISIBLE | PF_EDITABLE,"NumShadowTextures");
+		RegisterGetSet("TextureShadowSize", &GASS::OgreGraphicsSceneManager::GetTextureShadowSize, &GASS::OgreGraphicsSceneManager::SetTextureShadowSize, PF_VISIBLE | PF_EDITABLE,"TextureShadowSize");
+		RegisterGetSet("TextureShadowProjection", &GASS::OgreGraphicsSceneManager::GetTextureShadowProjection, &GASS::OgreGraphicsSceneManager::SetTextureShadowProjection, PF_VISIBLE | PF_EDITABLE, "Texture Shadow Projection Type");
+		RegisterGetSet("ShadowMode", &GASS::OgreGraphicsSceneManager::GetShadowMode, &GASS::OgreGraphicsSceneManager::SetShadowMode, PF_VISIBLE | PF_EDITABLE, "Shadow Mode");
 		RegisterProperty<OgreMaterial>("ShadowCasterMaterial", &GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial, &GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial,
 			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Shadow Caster Material", PF_VISIBLE)));
 	}

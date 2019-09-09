@@ -34,21 +34,14 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<LOSComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LOSComponent", OF_VISIBLE)));
-		RegisterProperty<Float>("Radius", &GASS::LOSComponent::GetRadius, &GASS::LOSComponent::SetRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SampleDist", &GASS::LOSComponent::GetSampleDist, &GASS::LOSComponent::SetSampleDist,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("FOV", &GASS::LOSComponent::GetFOV, &GASS::LOSComponent::SetFOV,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("TargetOffset", &GASS::LOSComponent::GetTargetOffset, &GASS::LOSComponent::SetTargetOffset,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Float>("SourceOffset", &GASS::LOSComponent::GetSourceOffset, &GASS::LOSComponent::SetSourceOffset,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Calculate", &GASS::LOSComponent::GetCalculate, &GASS::LOSComponent::SetCalculate,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Radius", &GASS::LOSComponent::GetRadius, &GASS::LOSComponent::SetRadius,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SampleDist", &GASS::LOSComponent::GetSampleDist, &GASS::LOSComponent::SetSampleDist,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("FOV", &GASS::LOSComponent::GetFOV, &GASS::LOSComponent::SetFOV,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("TargetOffset", &GASS::LOSComponent::GetTargetOffset, &GASS::LOSComponent::SetTargetOffset,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SourceOffset", &GASS::LOSComponent::GetSourceOffset, &GASS::LOSComponent::SetSourceOffset,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("Calculate", &GASS::LOSComponent::GetCalculate, &GASS::LOSComponent::SetCalculate,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("AutUpdateOnTransform", &GASS::LOSComponent::m_AutUpdateOnTransform,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<Float>("Transparency", &GASS::LOSComponent::GetTransparency, &GASS::LOSComponent::SetTransparency,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Transparency", &GASS::LOSComponent::GetTransparency, &GASS::LOSComponent::SetTransparency,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void LOSComponent::OnInitialize()

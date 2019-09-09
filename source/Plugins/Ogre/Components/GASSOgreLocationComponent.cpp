@@ -54,16 +54,11 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreLocationComponent>("LocationComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
 
-		RegisterProperty<Vec3>("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Postion relative to parent node",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<EulerRotation>("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Quaternion>("Quaternion", &GASS::OgreLocationComponent::GetRotation, &GASS::OgreLocationComponent::SetRotation,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Rotation represented as Quaternion",PF_VISIBLE)));
-		RegisterProperty<Vec3>("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Scale relative to parent node",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("If true this node is attached to first ancestor SceneObject that has a location component",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Position", &GASS::OgreLocationComponent::GetPosition, &GASS::OgreLocationComponent::SetPosition,PF_VISIBLE | PF_EDITABLE,"Postion relative to parent node");
+		RegisterGetSet("Rotation", &GASS::OgreLocationComponent::GetEulerRotation, &GASS::OgreLocationComponent::SetEulerRotation,PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]");
+		RegisterGetSet("Quaternion", &GASS::OgreLocationComponent::GetRotation, &GASS::OgreLocationComponent::SetRotation,PF_VISIBLE,"Rotation represented as Quaternion");
+		RegisterGetSet("Scale", &GASS::OgreLocationComponent::GetScale, &GASS::OgreLocationComponent::SetScale,PF_VISIBLE | PF_EDITABLE,"Scale relative to parent node");
+		RegisterGetSet("AttachToParent", &GASS::OgreLocationComponent::GetAttachToParent, &GASS::OgreLocationComponent::SetAttachToParent,PF_VISIBLE | PF_EDITABLE,"If true this node is attached to first ancestor SceneObject that has a location component");
 
 		asIScriptEngine *engine = SimEngine::Get().GetScriptManager()->GetEngine();
 		int r;
