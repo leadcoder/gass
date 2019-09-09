@@ -70,7 +70,7 @@ namespace GASS
 		RegisterGetSet("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh receive shadows or not");
 		RegisterGetSet("Lighting", &OSGMeshComponent::GetLighting, &OSGMeshComponent::SetLighting,PF_VISIBLE | PF_EDITABLE,"Enable Light for this mesh");
 		RegisterGetSet("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,PF_VISIBLE,"Expand mesh child nodes");
-		RegisterGetSet("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
+		RegisterGetSet("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS, PF_VISIBLE | PF_EDITABLE,"Flip DDS textures for this model? (need reload)");
 
 		std::vector<std::string> ext;

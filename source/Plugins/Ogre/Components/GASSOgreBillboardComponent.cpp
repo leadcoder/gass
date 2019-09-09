@@ -61,7 +61,7 @@ namespace GASS
 		RegisterGetSet("CastShadow", &GASS::OgreBillboardComponent::GetCastShadow, &GASS::OgreBillboardComponent::SetCastShadow);
 		RegisterGetSet("Height", &GASS::OgreBillboardComponent::GetHeight, &GASS::OgreBillboardComponent::SetHeight);
 		RegisterGetSet("Width", &GASS::OgreBillboardComponent::GetWidth, &GASS::OgreBillboardComponent::SetWidth);
-		RegisterGetSet("GeometryFlags", &OgreBillboardComponent::GetGeometryFlagsBinder, &OgreBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
+		RegisterGetSet("GeometryFlags", &OgreBillboardComponent::GetGeometryFlagsBinder, &OgreBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OgreBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

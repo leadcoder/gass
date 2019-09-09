@@ -54,7 +54,7 @@ namespace GASS
 		RegisterGetSet("CastShadow", &OSGBillboardComponent::GetCastShadow, &OSGBillboardComponent::SetCastShadow);
 		RegisterGetSet("Height", &OSGBillboardComponent::GetHeight, &OSGBillboardComponent::SetHeight);
 		RegisterGetSet("Width", &OSGBillboardComponent::GetWidth, &OSGBillboardComponent::SetWidth);
-		RegisterGetSet("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
+		RegisterGetSet("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OSGBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

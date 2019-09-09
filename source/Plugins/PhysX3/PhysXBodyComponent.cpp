@@ -56,11 +56,11 @@ namespace GASS
 	void PhysXBodyComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXBodyComponent>("PhysicsBodyComponent");
-		REG_PROPERTY(float,Mass,PhysXBodyComponent);
-		REG_PROPERTY(bool,Kinematic,PhysXBodyComponent);
-		RegisterMember("DisableGravity", &GASS::PhysXBodyComponent::m_DisableGravity);
-		RegisterMember("PositionIterCount", &GASS::PhysXBodyComponent::m_PositionIterCount);
-		RegisterMember("VelocityIterCount", &GASS::PhysXBodyComponent::m_VelocityIterCount);
+		RegisterGetSet("Mass", &PhysXBodyComponent::GetMass, &PhysXBodyComponent::SetMass);
+		RegisterGetSet("Kinematic", &PhysXBodyComponent::GetKinematic, &PhysXBodyComponent::SetKinematic);
+		RegisterMember("DisableGravity", &PhysXBodyComponent::m_DisableGravity);
+		RegisterMember("PositionIterCount", &PhysXBodyComponent::m_PositionIterCount);
+		RegisterMember("VelocityIterCount", &PhysXBodyComponent::m_VelocityIterCount);
 	}
 
 	void PhysXBodyComponent::OnInitialize()

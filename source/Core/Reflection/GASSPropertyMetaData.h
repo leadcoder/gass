@@ -45,6 +45,7 @@ namespace GASS
 		PF_VISIBLE  = 1 << 0, //visible in editor
 		PF_EDITABLE = 1 << 1, //editaable
 		PF_RUNTIME =  1 << 2, //skipe serialization
+		PF_MULTI_OPTIONS = 1 << 3, //value can be one or more options
 	};
 	class BaseReflectionObject;
 	typedef GASS_SHARED_PTR<BaseReflectionObject> BaseReflectionObjectPtr;

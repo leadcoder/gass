@@ -33,7 +33,8 @@ namespace GASS
 		void SetVisible(bool value);
 		bool GetLock() const {return m_Lock;}
 		void SetLock(bool value);
-		GASS_GETSET_MEMBER(bool,EditName)
+		void SetEditName(bool value) { m_EditName = value; }
+		bool GetEditName() const { return m_EditName; }
 	private:
 		
 		void OnObjectVisible(ObjectVisibilityChangedEventPtr message);
@@ -42,6 +43,7 @@ namespace GASS
 		void SetVisibilityTransparency(float value);
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		
+		bool m_EditName;
 		bool m_Lock;
 		bool m_Visible;
 		float m_VisibilityTransparency;

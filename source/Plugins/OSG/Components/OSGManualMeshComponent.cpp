@@ -52,7 +52,7 @@ namespace GASS
 
 		RegisterGetSet("ReceiveShadow", &OSGManualMeshComponent::GetReceiveShadow, &OSGManualMeshComponent::SetReceiveShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh receive shadows or not");
 
-		RegisterMember("GeometryFlags", &OSGManualMeshComponent::m_GeometryFlagsBinder, PF_VISIBLE,"Geometry Flags",
+		RegisterMember("GeometryFlags", &OSGManualMeshComponent::m_GeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS,"Geometry Flags",
 			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
 	}
 

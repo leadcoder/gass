@@ -62,8 +62,7 @@ namespace GASS
 		ADD_DEPENDENCY("OgreLocationComponent")
 			RegisterGetSet("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 
-		RegisterMember("GeometryFlags", &OgreManualMeshComponent::m_GeometryFlagsBinder, PF_VISIBLE, "Geometry Flags",
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		RegisterMember("GeometryFlags", &OgreManualMeshComponent::m_GeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OgreManualMeshComponent::OnInitialize()

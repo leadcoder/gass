@@ -75,7 +75,7 @@ namespace GASS
 		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
 		RegisterGetSet("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 		RegisterGetSet("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue, PF_VISIBLE | PF_EDITABLE, "Render Queue");
-		RegisterGetSet("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE, "Geometry Flags");
+		RegisterGetSet("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OgreMeshComponent::OnInitialize()
