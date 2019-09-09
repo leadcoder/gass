@@ -41,7 +41,7 @@ namespace GASS
 
 	class IEnumBinder
 	{
-		
+		virtual std::vector<std::string> GetOptions() const = 0;
 	};
 
 
@@ -51,12 +51,12 @@ namespace GASS
 	public:
 		MultiEnumBinder(ENUM value) : m_Value(value)
 		{
-			CLASS::Register();
+
 		}
 
 		MultiEnumBinder()
 		{
-			CLASS::Register();
+
 		}
 
 		void SetValue(ENUM value)
@@ -86,6 +86,12 @@ namespace GASS
 			}
 			return types;
 		}
+
+		std::vector<std::string> GetOptions() const override
+		{
+			return GetStringEnumeration();
+		}
+
 	protected:
 		void SetValueFromNames(const std::vector<std::string> &names)
 		{
@@ -141,21 +147,11 @@ namespace GASS
 			return os;
 		}
 
-		static void Bind(const std::string &name, ENUM type)
-		{
-			m_NameToEnumMap[name] = type;
-			m_EnumToNameMap[type] = name;
-		}
-
 		ENUM m_Value;
 		typedef std::map<std::string ,ENUM > NameEnumMap;
-		typedef std::map<ENUM ,std::string > EnumNameMap;
 		static NameEnumMap m_NameToEnumMap;
-		static EnumNameMap m_EnumToNameMap;
 	};
-    template< class ENUM,class CLASS> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,CLASS>::m_NameToEnumMap;
-	template< class ENUM,class CLASS> std::map<ENUM,std::string> MultiEnumBinder<ENUM,CLASS>::m_EnumToNameMap;
-
+    template< class ENUM,class CLASS> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,CLASS>::m_NameToEnumMap = CLASS::InitMapping();
 
 	template< class ENUM,class CLASS>
 	class SingleEnumBinder : public IEnumBinder
@@ -163,12 +159,10 @@ namespace GASS
 	public:
 		SingleEnumBinder(ENUM value) : m_Value(value)
 		{
-			CLASS::Register();
 		}
 
 		SingleEnumBinder()
 		{
-			CLASS::Register();
 		}
 
 		void SetValue(ENUM value)
@@ -186,6 +180,7 @@ namespace GASS
 			return (m_Value == v.GetValue());
 		}
 
+		
 		static std::vector<CLASS> GetEnumeration()
 		{
 			std::vector<CLASS> types;
@@ -196,6 +191,11 @@ namespace GASS
 				++iter;
 			}
 			return types;
+		}
+
+		std::vector<std::string> GetOptions() const override
+		{
+			return GetStringEnumeration();
 		}
 
 		static std::vector<std::string> GetStringEnumeration()
@@ -224,7 +224,14 @@ namespace GASS
 
 		std::string GetNameFromValue() const
 		{
-			return m_EnumToNameMap[m_Value];
+			typename NameEnumMap::iterator iter = m_NameToEnumMap.begin();
+			while (iter != m_NameToEnumMap.end())
+			{
+				if(m_Value == iter->second)
+					return iter->first;
+				iter++;
+			}
+			return "";
 		}
 
 		friend std::ostream& operator << (std::ostream& os, const CLASS& enum_binder)
@@ -246,21 +253,11 @@ namespace GASS
 			}
 			return os;
 		}
-
-		static void Bind(const std::string &name, ENUM type)
-		{
-			m_NameToEnumMap[name] = type;
-			m_EnumToNameMap[type] = name;
-		}
-
 		ENUM m_Value;
 		typedef std::map<std::string ,ENUM > NameEnumMap;
-		typedef std::map<ENUM ,std::string > EnumNameMap;
 		static NameEnumMap m_NameToEnumMap;
-		static EnumNameMap m_EnumToNameMap;
 	};
-	template<class ENUM ,class CLASS> std::map<std::string ,ENUM>  SingleEnumBinder<ENUM,CLASS>::m_NameToEnumMap;\
-	template<class ENUM ,class CLASS> std::map<ENUM,std::string> SingleEnumBinder<ENUM,CLASS>::m_EnumToNameMap;\
+	template<class ENUM, class CLASS> std::map<std::string, ENUM>  SingleEnumBinder<ENUM, CLASS>::m_NameToEnumMap = CLASS::InitMapping();
 }
 
 #define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
@@ -269,13 +266,15 @@ namespace GASS
 	public:							\
 	ENUM_BINDER(): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(){};			\
 	ENUM_BINDER(ENUM value): GASS::MultiEnumBinder<ENUM,ENUM_BINDER>(value){};			\
-	static void Register()		\
+static NameEnumMap InitMapping()		\
 	{							\
+		NameEnumMap mapping; 
 
-#define BIND_FLAG(ENUM) Bind(#ENUM, ENUM);
-
+#define BIND_FLAG(ENUM) mapping[#ENUM] = ENUM;
+#define BIND_FLAG2(NAME, ENUM) mapping[NAME] = ENUM;
 
 #define END_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
+		return mapping; \
 	}							\
 	};								\
 
@@ -287,13 +286,15 @@ namespace GASS
 	public:							\
 	ENUM_BINDER(): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(){};			\
 	ENUM_BINDER(ENUM value): GASS::SingleEnumBinder<ENUM, ENUM_BINDER>(value){};			\
-	static void Register()		\
+	static NameEnumMap InitMapping()		\
 	{							\
+		NameEnumMap mapping; 
 
-#define BIND(ENUM) Bind(#ENUM, ENUM);
-
+#define BIND(ENUM) mapping[#ENUM] = ENUM;
+#define BIND2(NAME, ENUM) mapping[NAME] = ENUM;
 
 #define END_ENUM_BINDER(ENUM,ENUM_BINDER) \
+		return mapping; \
 	}							\
 	};								\
 

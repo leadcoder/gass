@@ -52,7 +52,22 @@ namespace GASS
 			m_Flags(flags),
 			m_Description(description),
 			m_MetaData(meta_data)
-		{}
+		{
+			m_Options = _GetEnumeration();
+			//std::vector<std::string> = doBar<T>(0);
+		}
+
+		static std::vector<std::string> _GetEnumeration() 
+		{
+			return _GetEnumerationImpl(static_cast<T*>(nullptr));
+		}
+		template <typename EnumClass>
+		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetStringEnumeration(), std::vector<std::string>()) {
+			return EnumClass::GetStringEnumeration();
+		}
+
+		static std::vector<std::string> _GetEnumerationImpl(...) { std::vector<std::string> ret;  return ret; }
+
 		/**
 		 Returns the type of this property.
 		 */
@@ -171,11 +186,13 @@ namespace GASS
 		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
 		std::string GetDescription() const override { return m_Description; }
 		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
-	protected:
+		std::vector<std::string> GetOptions() const override { return m_Options; }
+protected:
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
 		std::string m_Description;
 		PropertyFlags m_Flags;
+		std::vector<std::string> m_Options;
 	};
 }
 #endif

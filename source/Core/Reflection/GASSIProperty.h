@@ -110,6 +110,8 @@ namespace GASS
 
 		virtual std::string GetDescription() const = 0;
 		virtual void SetDescription(const std::string& ) = 0;
+
+		virtual std::vector<std::string> GetOptions() const = 0;
 	protected :
 	};
 }

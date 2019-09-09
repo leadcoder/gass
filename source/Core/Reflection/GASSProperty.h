@@ -46,7 +46,7 @@ namespace GASS
 			const std::string& description,
 			PropertyMetaDataPtr meta_data) : TypedProperty<MemberType>(name, flags, description, meta_data)
 		{
-
+			
 		}
 
 		virtual GetterType Get(const OwnerType*) const = 0;
@@ -174,8 +174,8 @@ namespace GASS
 	}
 
 
-#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
-#define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterProperty< TYPE >(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
+#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterGetSet(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
+#define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterGetSet(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
 	//#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME);
 	//#define REG_VECTOR_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME, META_DATA);
 #define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
