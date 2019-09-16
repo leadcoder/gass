@@ -144,7 +144,7 @@ namespace GASS
 
 	template <typename OwnerType,
 		typename GetterReturnType,
-		typename MemberType = RemoveConstRef<GetterReturnType>::Type,
+		typename MemberType = typename RemoveConstRef<GetterReturnType>::Type,
 		typename SetterArgumentType,
 		typename SetterReturnType
 		>
@@ -199,21 +199,6 @@ namespace GASS
 		auto* property = new MemberProperty<OwnerType, MemberType>(name, member, flags, description, meta_data);
 		return property;
 	}
-
-//#define REG_PROPERTY(TYPE,NAME,CLASS) RegisterGetSet(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME);
-//#define REG_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterGetSet(#NAME, & CLASS::Get##NAME, & CLASS::Set##NAME, META_DATA);
-	//#define REG_VECTOR_PROPERTY(TYPE,NAME,CLASS) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME);
-	//#define REG_VECTOR_PROPERTY2(TYPE,NAME,CLASS,META_DATA) RegisterVectorProperty< TYPE >(#NAME, & CLASS::Get##NAME , & CLASS::Set##NAME, META_DATA);
-//#define ADD_PROPERTY(TYPE,NAME) TYPE m_ ## NAME ; \
-//TYPE Get ## NAME () const {return m_ ## NAME ;} \
-//	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}
-
-//#define GASS_GETSET_MEMBER(TYPE,NAME) private : \
-//TYPE m_ ## NAME ; \
-//public: \
-//TYPE Get ## NAME () const {return m_ ## NAME ;} \
-//	void Set ## NAME ( const TYPE &value) {m_ ## NAME = value;}
-
 
 #define ADD_DEPENDENCY(COMPONENT_NAME) m_Dependencies[GetClassRTTI()].push_back(COMPONENT_NAME);
 }

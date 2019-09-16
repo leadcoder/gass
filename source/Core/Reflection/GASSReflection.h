@@ -86,7 +86,7 @@ namespace GASS
 		}
 
 		template <typename GetterReturnType,
-			typename MemberType = RemoveConstRef<GetterReturnType>::Type,
+			typename MemberType = typename RemoveConstRef<GetterReturnType>::Type,
 			typename SetterArgumentType,
 			typename SetterReturnType>
 			static GetSetProperty<DerivedClass, MemberType, GetterReturnType, SetterArgumentType, SetterReturnType>* RegisterGetSet(const std::string &name,
