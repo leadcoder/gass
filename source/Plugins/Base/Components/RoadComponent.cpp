@@ -67,6 +67,13 @@ namespace GASS
 
 	}
 
+	std::vector<std::string> GetRoadMaterials()
+	{
+		GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		std::vector<std::string> content = gfx_system->GetMaterialNames("GASS_ROAD_MATERIALS");
+		return content;
+	}
+
 	void RoadComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<RoadComponent>();
@@ -83,8 +90,8 @@ namespace GASS
 		RegisterGetSet("TileScale", &GASS::RoadComponent::GetTileScale, &GASS::RoadComponent::SetTileScale,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("UseSkirts", &GASS::RoadComponent::GetUseSkirts, &GASS::RoadComponent::SetUseSkirts,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("ClampToTerrain", &GASS::RoadComponent::GetClampToTerrain, &GASS::RoadComponent::SetClampToTerrain,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<std::string>("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial,
-			GraphicsMaterialPropertyMetaDataPtr(new GraphicsMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
+		auto mat_prop = RegisterGetSet("Material", &GASS::RoadComponent::GetMaterial, &GASS::RoadComponent::SetMaterial, PF_VISIBLE | PF_EDITABLE, "Road material from GASS_ROAD_MATERIALS resource group");
+		mat_prop->SetOptionsFunction(GetRoadMaterials);
 		RegisterMember("CustomDitchTexturePercent", &GASS::RoadComponent::m_CustomDitchTexturePercent,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("CAP", &GASS::RoadComponent::m_CAP,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("FadeStart", &GASS::RoadComponent::m_FadeStart,PF_VISIBLE | PF_EDITABLE);

@@ -60,8 +60,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<GrassLayerComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLayerComponent", OF_VISIBLE)));
 		RegisterGetSet("DensityFactor", &GrassLayerComponent::GetDensityFactor, &GrassLayerComponent::SetDensityFactor,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<OgreMaterial>("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial,
-			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Grass Material",PF_VISIBLE,"GASS_VEGETATION_MATERIALS")));
+		auto prop = RegisterGetSet("Material", &GrassLayerComponent::GetMaterial, &GrassLayerComponent::SetMaterial, PF_VISIBLE, "Grass Material");
+		prop->SetOptionsCallback(std::make_shared<OgreMaterialOptions>("GASS_VEGETATION_MATERIALS"));
 		RegisterGetSet("FadeTechnique", &GrassLayerComponent::GetFadeTechnique, &GrassLayerComponent::SetFadeTechnique, PF_VISIBLE | PF_EDITABLE, "Fade Technique");
 		RegisterGetSet("RenderTechnique", &GrassLayerComponent::GetRenderTechnique, &GrassLayerComponent::SetRenderTechnique, PF_VISIBLE | PF_EDITABLE, "Render TechniqueFadeTechnique");
 		RegisterGetSet("BlendWithGround", &GrassLayerComponent::GetBlendWithGround, &GrassLayerComponent::SetBlendWithGround,PF_VISIBLE | PF_EDITABLE,"Fade out alpha");

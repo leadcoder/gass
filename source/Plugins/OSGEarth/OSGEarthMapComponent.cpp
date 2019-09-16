@@ -125,78 +125,24 @@ namespace GASS
 		osgEarth::VisibleLayer* m_Layer;
 	};
 
-
-	class OSGEarthMapEnumerationMetaData : public EnumerationPropertyMetaData
+	std::vector<std::string> GetAllEarthFiles()
 	{
-	public:
-		OSGEarthMapEnumerationMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group = "") : EnumerationPropertyMetaData(annotation, flags, false),
-			m_ResourceGroup(res_group)
+		std::vector<std::string> content;
+		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+		ResourceGroupVector groups = rm->GetResourceGroups();
+		std::vector<std::string> values;
+		for (size_t i = 0; i < groups.size(); i++)
 		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
-		{
-			std::vector<std::string> content;
-			ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
-			ResourceGroupVector groups = rm->GetResourceGroups();
-			std::vector<std::string> values;
-			for (size_t i = 0; i < groups.size(); i++)
+			ResourceGroupPtr group = groups[i];
+			ResourceVector res_vec;
+			group->GetResourcesByType(res_vec, "MAP");
+			for (size_t j = 0; j < res_vec.size(); j++)
 			{
-				ResourceGroupPtr group = groups[i];
-				if (m_ResourceGroup == "" || group->GetName() == m_ResourceGroup)
-				{
-					ResourceVector res_vec;
-					group->GetResourcesByType(res_vec, "MAP");
-					for (size_t j = 0; j < res_vec.size(); j++)
-					{
-						content.push_back(res_vec[j]->Name());
-					}
-				}
+				content.push_back(res_vec[j]->Name());
 			}
-			return content;
 		}
-	private:
-		std::string m_ResourceGroup;
-	};
-
-	class OSGEarthViewpointEnumerationMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		OSGEarthViewpointEnumerationMetaData(const std::string &annotation, PropertyFlags flags) : EnumerationPropertyMetaData(annotation, flags, false)
-		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
-		{
-			OSGEarthMapComponentPtr map_comp = GASS_DYNAMIC_PTR_CAST<OSGEarthMapComponent>(object);
-			return map_comp->GetViewpointNames();
-		}
-	private:
-	};
-
-
-	class OSGEarthLayerEnumerationMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		OSGEarthLayerEnumerationMetaData(const std::string &annotation, PropertyFlags flags) : EnumerationPropertyMetaData(annotation, flags, true)
-		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
-		{
-			OSGEarthMapComponentPtr map_comp = GASS_DYNAMIC_PTR_CAST<OSGEarthMapComponent>(object);
-
-			std::vector<std::string> layer_names;
-			const MapLayers &layers = map_comp->GetMapLayers();
-			for (size_t i = 0; i < layers.size(); i++)
-			{
-				layer_names.push_back(layers[i]->GetName());
-			}
-			return layer_names;
-		}
-	private:
-	};
-
+		return content;
+	}
 
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
 		m_Hour(10),
@@ -218,19 +164,17 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGEarthMapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
-		RegisterProperty<ResourceHandle>("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile,
-			EnumerationPropertyMetaDataPtr(new OSGEarthMapEnumerationMetaData("OSGEarth map file", PF_VISIBLE)));
-		RegisterProperty<std::string>("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName,
-			EnumerationPropertyMetaDataPtr(new OSGEarthViewpointEnumerationMetaData("Set Viewpoint", PF_VISIBLE)));
+		auto earth_file_prop = RegisterGetSet("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile, PF_VISIBLE, "OSGEarth map file");
+		earth_file_prop->SetOptionsFunction(&GetAllEarthFiles);
+		auto vp_prop = RegisterGetSet("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName, PF_VISIBLE | PF_EDITABLE, "Set Viewpoint");
+		vp_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetViewpointNames);
 
 		RegisterGetSet("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay, PF_VISIBLE | PF_EDITABLE,"Time of day");
-
 		RegisterGetSet("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient, PF_VISIBLE | PF_EDITABLE,"Minimum ambient sky light");
-
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE,"Enable/disable sky light");
 
-		RegisterProperty<std::vector<std::string> >("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers,
-			EnumerationPropertyMetaDataPtr(new OSGEarthLayerEnumerationMetaData("Map Layers", PF_VISIBLE)));
+		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
+		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -566,6 +510,17 @@ namespace GASS
 				if(m_MapLayers[i]->GetVisible())
 					layer_names.push_back(m_MapLayers[i]->GetName());
 			}
+		}
+		return layer_names;
+	}
+
+	std::vector<std::string> OSGEarthMapComponent::GetMapLayerNames() const
+	{
+		std::vector<std::string> layer_names;
+		const MapLayers &layers = GetMapLayers();
+		for (size_t i = 0; i < layers.size(); i++)
+		{
+			layer_names.push_back(layers[i]->GetName());
 		}
 		return layer_names;
 	}

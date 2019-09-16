@@ -40,6 +40,13 @@
 namespace GASS
 {
 
+	std::vector<std::string> GetLineMaterials()
+	{
+		GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		std::vector<std::string> content = gfx_system->GetMaterialNames("GASS_ROAD_MATERIALS");
+		return content;
+	}
+
 	LineGeometryComponent::LineGeometryComponent() : m_Initialized(false),
 		m_Offset(0.3f),
 		m_Material("MuddyRoadWithTracks"),
@@ -69,13 +76,11 @@ namespace GASS
 		RegisterMember("Color", &GASS::LineGeometryComponent::m_Color,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Offset", &GASS::LineGeometryComponent::m_Offset,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("TileScale", &GASS::LineGeometryComponent::m_TileScale,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<std::string>("Material", &GASS::LineGeometryComponent::GetMaterial, &GASS::LineGeometryComponent::SetMaterial,
-			GraphicsMaterialPropertyMetaDataPtr(new GraphicsMaterialPropertyMetaData("Road material from GASS_ROAD_MATERIALS resource group",PF_VISIBLE, "GASS_ROAD_MATERIALS")));
+		auto prop = RegisterGetSet("Material", &GASS::LineGeometryComponent::GetMaterial, &GASS::LineGeometryComponent::SetMaterial, PF_VISIBLE | PF_EDITABLE, "Road material from GASS_ROAD_MATERIALS resource group");
+		prop->SetOptionsFunction(&GetLineMaterials);
 		RegisterMember("FadeStart", &GASS::LineGeometryComponent::m_FadeStart,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("FadeEnd", &GASS::LineGeometryComponent::m_FadeEnd,PF_VISIBLE | PF_EDITABLE,"");
-
 		RegisterMember("RotateTexture", &GASS::LineGeometryComponent::m_RotateTexture,PF_VISIBLE | PF_EDITABLE,"");
-
 		RegisterMember("WapointListObject", &GASS::LineGeometryComponent::m_WapointListObject);
 	}
 

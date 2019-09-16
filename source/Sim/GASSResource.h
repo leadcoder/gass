@@ -50,16 +50,15 @@ namespace GASS
 	GASS_PTR_DECL(FileResource)
 
 
-	class GASSExport FileResourcePropertyMetaData : public EnumerationPropertyMetaData
+	class GASSExport FileResourcePropertyMetaData : public IPropertyOptionsCallback
 	{
 	public:
-		FileResourcePropertyMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group, std::string res_type): EnumerationPropertyMetaData(annotation,flags,false),
-			m_ResourceGroup(res_group),
+		FileResourcePropertyMetaData(std::string res_group, std::string res_type): m_ResourceGroup(res_group),
 			m_ResourceType(res_type)
 		{
 
 		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
+		std::vector<std::string> GetEnumeration() const override;
 	private:
 		std::string m_ResourceGroup;
 		std::string m_ResourceType;

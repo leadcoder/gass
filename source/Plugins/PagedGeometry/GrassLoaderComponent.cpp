@@ -66,8 +66,8 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<GrassLoaderComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLoaderComponent", OF_VISIBLE)));
 		RegisterGetSet("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,PF_VISIBLE,"Can only be specified in template");
-		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, ext)));
+		RegisterGetSet("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap, PF_VISIBLE | PF_EDITABLE,"Import density map",
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, ext));
 		RegisterGetSet("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,PF_VISIBLE | PF_EDITABLE,"You need to reload scene before this property take effect");
 		RegisterGetSet("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,PF_VISIBLE,"");
 		RegisterGetSet("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap,PF_VISIBLE,"");

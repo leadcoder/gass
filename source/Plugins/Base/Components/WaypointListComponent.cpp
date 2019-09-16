@@ -75,8 +75,8 @@ namespace GASS
 		RegisterGetSet("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("ShowPathLine", &WaypointListComponent::m_ShowPathLine,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<FilePath>("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export this path to text file",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE,ext)));
+		auto prop = RegisterGetSet("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport, PF_VISIBLE | PF_EDITABLE, "Export this path to text file");
+		prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::EXPORT_FILE,ext));
 		RegisterGetSet("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,PF_VISIBLE,"");
 		RegisterMember("Closed", &WaypointListComponent::m_Closed,PF_VISIBLE,"");
 		RegisterMember("AutoRotateWaypoints", &WaypointListComponent::m_AutoRotateWaypoints,PF_VISIBLE,"");

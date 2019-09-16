@@ -64,26 +64,35 @@ namespace GASS
 		RegisterGetSet("ColorMap", &GASS::OgreTerrainPageComponent::GetColorMap, &GASS::OgreTerrainPageComponent::SetColorMap,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("DetailMask", &GASS::OgreTerrainPageComponent::GetMask, &GASS::OgreTerrainPageComponent::SetMask,PF_VISIBLE | PF_EDITABLE,"");
 
-		RegisterProperty<ResourceHandle>("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer texture map for layer 0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer0",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer1",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer1",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer2",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer2",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer3",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer3",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("DiffuseLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
-		RegisterProperty<ResourceHandle>("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4,
-			FileResourcePropertyMetaDataPtr(new FileResourcePropertyMetaData("NormalLayer4",PF_VISIBLE,"GASS_DETAIL_TEXTURES","TEXTURE")));
+		
+		auto diff0 = RegisterGetSet("DiffuseLayer0", &GASS::OgreTerrainPageComponent::GetDiffuseLayer0, &GASS::OgreTerrainPageComponent::SetDiffuseLayer0, PF_VISIBLE, "DiffuseLayer texture map for layer 0");
+		auto norm0 = RegisterGetSet("NormalLayer0", &GASS::OgreTerrainPageComponent::GetNormalLayer0, &GASS::OgreTerrainPageComponent::SetNormalLayer0, PF_VISIBLE);
+		
+		auto diff1 = RegisterGetSet("DiffuseLayer1", &GASS::OgreTerrainPageComponent::GetDiffuseLayer1, &GASS::OgreTerrainPageComponent::SetDiffuseLayer1, PF_VISIBLE);
+		auto norm1 = RegisterGetSet("NormalLayer1", &GASS::OgreTerrainPageComponent::GetNormalLayer1, &GASS::OgreTerrainPageComponent::SetNormalLayer1, PF_VISIBLE);
+		
+		auto diff2 = RegisterGetSet("DiffuseLayer2", &GASS::OgreTerrainPageComponent::GetDiffuseLayer2, &GASS::OgreTerrainPageComponent::SetDiffuseLayer2, PF_VISIBLE);
+		auto norm2 = RegisterGetSet("NormalLayer2", &GASS::OgreTerrainPageComponent::GetNormalLayer2, &GASS::OgreTerrainPageComponent::SetNormalLayer2, PF_VISIBLE);
+		
+		auto diff3 = RegisterGetSet("DiffuseLayer3", &GASS::OgreTerrainPageComponent::GetDiffuseLayer3, &GASS::OgreTerrainPageComponent::SetDiffuseLayer3, PF_VISIBLE);
+		auto norm3 = RegisterGetSet("NormalLayer3", &GASS::OgreTerrainPageComponent::GetNormalLayer3, &GASS::OgreTerrainPageComponent::SetNormalLayer3, PF_VISIBLE);
+		
+		auto diff4 = RegisterGetSet("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4, PF_VISIBLE);
+		auto norm4 = RegisterGetSet("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4, PF_VISIBLE);
+	
+		FileResourcePropertyMetaDataPtr option_callback = std::make_shared<FileResourcePropertyMetaData>("GASS_DETAIL_TEXTURES", "TEXTURE");
+		diff0->SetOptionsCallback(option_callback);
+		diff1->SetOptionsCallback(option_callback);
+		diff2->SetOptionsCallback(option_callback);
+		diff3->SetOptionsCallback(option_callback);
+		diff4->SetOptionsCallback(option_callback);
+
+		norm0->SetOptionsCallback(option_callback);
+		norm1->SetOptionsCallback(option_callback);
+		norm2->SetOptionsCallback(option_callback);
+		norm3->SetOptionsCallback(option_callback);
+		norm4->SetOptionsCallback(option_callback);
+
 		RegisterGetSet("TilingLayer0", &GASS::OgreTerrainPageComponent::GetTilingLayer0, &GASS::OgreTerrainPageComponent::SetTilingLayer0,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("TilingLayer1", &GASS::OgreTerrainPageComponent::GetTilingLayer1, &GASS::OgreTerrainPageComponent::SetTilingLayer1,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("TilingLayer2", &GASS::OgreTerrainPageComponent::GetTilingLayer2, &GASS::OgreTerrainPageComponent::SetTilingLayer2,PF_VISIBLE | PF_EDITABLE,"");
@@ -98,8 +107,8 @@ namespace GASS
 		//import functions, can be used from editor, use full-path to resource and execute import
 		std::vector<std::string> hm_ext;
 		hm_ext.push_back("png");
-		RegisterProperty<FilePath>("ImportHeightMap", &GASS::OgreTerrainPageComponent::GetImportHeightMap, &GASS::OgreTerrainPageComponent::ImportHeightMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import height map, only png files supported",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, hm_ext)));
+		RegisterGetSet("ImportHeightMap", &OgreTerrainPageComponent::GetImportHeightMap, &OgreTerrainPageComponent::ImportHeightMap, PF_VISIBLE | PF_EDITABLE, "Import height map, only png files supported",
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, hm_ext));
 
 		std::vector<std::string> color_ext;
 		color_ext.push_back("png");
@@ -107,16 +116,14 @@ namespace GASS
 		color_ext.push_back("jpg");
 		color_ext.push_back("*");
 
-		RegisterProperty<FilePath>("ImportColorMap", &GASS::OgreTerrainPageComponent::GetImportColorMap, &GASS::OgreTerrainPageComponent::ImportColorMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import color map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, color_ext)));
+		RegisterGetSet("ImportColorMap", &GASS::OgreTerrainPageComponent::GetImportColorMap, &GASS::OgreTerrainPageComponent::ImportColorMap, PF_VISIBLE | PF_EDITABLE,"Import color map" ,
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, color_ext));
 
-		RegisterProperty<FilePath>("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, color_ext)));
+		RegisterGetSet("ImportDetailMask", &GASS::OgreTerrainPageComponent::GetImportDetailMask, &GASS::OgreTerrainPageComponent::ImportDetailMask, PF_VISIBLE | PF_EDITABLE, "Import detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, color_ext));
 
-		RegisterProperty<FilePath>("ExportDetailMask", &GASS::OgreTerrainPageComponent::GetExportDetailMask, &GASS::OgreTerrainPageComponent::ExportDetailMask,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Export detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::EXPORT_FILE, color_ext)));
-
-
+		RegisterGetSet("ExportDetailMask", &GASS::OgreTerrainPageComponent::GetExportDetailMask, &GASS::OgreTerrainPageComponent::ExportDetailMask, PF_VISIBLE | PF_EDITABLE, "Export detail map (RGB = detail_layer_1,detail_layer_2,detail_layer_3",
+			std::make_shared < FilePathPropertyMetaData>(FilePathPropertyMetaData::EXPORT_FILE, color_ext));
 		RegisterGetSet("DumpTextues", &GASS::OgreTerrainPageComponent::GetDumpTextues, &GASS::OgreTerrainPageComponent::SetDumpTextues,PF_VISIBLE | PF_EDITABLE,"");
 	}
 

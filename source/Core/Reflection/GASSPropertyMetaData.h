@@ -53,6 +53,13 @@ namespace GASS
 	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
 	{return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));}
 
+	class IPropertyOptionsCallback
+	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyOptionsCallback)
+	public:
+		virtual std::vector<std::string> GetEnumeration() const = 0;
+	};
+	typedef GASS_SHARED_PTR<IPropertyOptionsCallback> PropertyOptionsCallbackPtr;
 
 	/**
 		Interface for all property meta data
@@ -104,26 +111,6 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<EnumerationPropertyMetaData> EnumerationPropertyMetaDataPtr;
 	
-	/**
-		Meta data class that can be used for static enumeration properties, 
-		enumeration is known when property is registered
-	*/
-
-	class StaticEnumerationPropertyMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		StaticEnumerationPropertyMetaData(const std::string &annotation, PropertyFlags flags,const std::vector<std::string> enumeration,bool multi_select = false): EnumerationPropertyMetaData(annotation,flags,multi_select) , 
-			m_Enumeration(enumeration)
-		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override {return m_Enumeration;}
-	private:
-		std::vector<std::string> m_Enumeration;
-	};
-	typedef GASS_SHARED_PTR<StaticEnumerationPropertyMetaData> StaticEnumerationPropertyMetaDataPtr;
-
-
 	/**
 		Meta data class that can be used for enumeration properties 
 		that want to delegate the enumeration request to other class 
@@ -190,7 +177,7 @@ namespace GASS
 		Meta data class for file path properties that want to support extention filters ect.
 	*/
 
-	class FilePathPropertyMetaData : public BasePropertyMetaData
+	class FilePathPropertyMetaData : public IPropertyMetaData
 	{
 	public:
 		enum FilePathEditType
@@ -200,7 +187,7 @@ namespace GASS
 			PATH_SELECTION,
 		};
 
-		FilePathPropertyMetaData(const std::string &annotation, PropertyFlags flags, FilePathEditType type, const std::vector<std::string> &extensions): BasePropertyMetaData(annotation,flags) ,
+		FilePathPropertyMetaData(FilePathEditType type, const std::vector<std::string> &extensions) :
 			m_Type(type), m_Extensions(extensions)
 		{
 		}
@@ -209,7 +196,6 @@ namespace GASS
 	private:
 		FilePathEditType m_Type;
 		std::vector<std::string> m_Extensions;
-		
 	};
 	typedef GASS_SHARED_PTR<FilePathPropertyMetaData> FilePathPropertyMetaDataPtr;
 

@@ -65,8 +65,8 @@ namespace GASS
 		RegisterGetSet("AmbientColor", &GASS::OgreGraphicsSceneManager::GetAmbientColor, &GASS::OgreGraphicsSceneManager::SetAmbientColor, PF_VISIBLE | PF_EDITABLE,"Scene ambient color");
 		RegisterGetSet("SceneManagerType", &GASS::OgreGraphicsSceneManager::GetSceneManagerType, &GASS::OgreGraphicsSceneManager::SetSceneManagerType, PF_VISIBLE,"Scene manager type");
 		RegisterGetSet("UseSkybox", &GASS::OgreGraphicsSceneManager::GetUseSkybox, &GASS::OgreGraphicsSceneManager::SetUseSkybox, PF_VISIBLE | PF_EDITABLE,"Enable/Disable skybox, change sky box material in with SkyboxMaterial property");
-		RegisterProperty<OgreMaterial>("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial,
-			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Skybox Material selection", PF_VISIBLE, "GASS_SKYBOX_MATERIALS")));
+		auto prop_skybox = RegisterGetSet("SkyboxMaterial", &GASS::OgreGraphicsSceneManager::GetSkyboxMaterial, &GASS::OgreGraphicsSceneManager::SetSkyboxMaterial, PF_VISIBLE, "Skybox Material selection");
+		prop_skybox->SetOptionsCallback(std::make_shared<OgreMaterialOptions>("GASS_SKYBOX_MATERIALS"));
 		RegisterGetSet("SelfShadowing", &GASS::OgreGraphicsSceneManager::GetSelfShadowing, &GASS::OgreGraphicsSceneManager::SetSelfShadowing, PF_VISIBLE | PF_EDITABLE,"SelfShadowing");
 		RegisterGetSet("UseAggressiveFocusRegion", &GASS::OgreGraphicsSceneManager::GetUseAggressiveFocusRegion, &GASS::OgreGraphicsSceneManager::SetUseAggressiveFocusRegion, PF_VISIBLE | PF_EDITABLE,"UseAggressiveFocusRegion");
 		RegisterGetSet("FarShadowDistance", &GASS::OgreGraphicsSceneManager::GetFarShadowDistance, &GASS::OgreGraphicsSceneManager::SetFarShadowDistance, PF_VISIBLE | PF_EDITABLE,"FarShadowDistance");
@@ -76,8 +76,8 @@ namespace GASS
 		RegisterGetSet("TextureShadowSize", &GASS::OgreGraphicsSceneManager::GetTextureShadowSize, &GASS::OgreGraphicsSceneManager::SetTextureShadowSize, PF_VISIBLE | PF_EDITABLE,"TextureShadowSize");
 		RegisterGetSet("TextureShadowProjection", &GASS::OgreGraphicsSceneManager::GetTextureShadowProjection, &GASS::OgreGraphicsSceneManager::SetTextureShadowProjection, PF_VISIBLE | PF_EDITABLE, "Texture Shadow Projection Type");
 		RegisterGetSet("ShadowMode", &GASS::OgreGraphicsSceneManager::GetShadowMode, &GASS::OgreGraphicsSceneManager::SetShadowMode, PF_VISIBLE | PF_EDITABLE, "Shadow Mode");
-		RegisterProperty<OgreMaterial>("ShadowCasterMaterial", &GASS::OgreGraphicsSceneManager::GetShadowCasterMaterial, &GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial,
-			OgreMaterialPropertyMetaDataPtr(new OgreMaterialPropertyMetaData("Shadow Caster Material", PF_VISIBLE)));
+		auto prop_shadow = RegisterGetSet("ShadowCasterMaterial", &OgreGraphicsSceneManager::GetShadowCasterMaterial, &GASS::OgreGraphicsSceneManager::SetShadowCasterMaterial, PF_VISIBLE, "Shadow Caster Material");
+		prop_shadow->SetOptionsCallback(std::make_shared<OgreMaterialOptions>());
 	}
 
 	OgreGraphicsSceneManager::OgreGraphicsSceneManager(SceneWeakPtr scene) : Reflection(scene),

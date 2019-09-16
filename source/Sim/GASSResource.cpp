@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	std::vector<std::string> FileResourcePropertyMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
+	std::vector<std::string> FileResourcePropertyMetaData::GetEnumeration() const
 	{
 		std::vector<std::string> content;
 		GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();

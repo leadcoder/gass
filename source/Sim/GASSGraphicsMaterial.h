@@ -74,6 +74,8 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<GraphicsMaterial> GraphicsMaterialPtr;
 
+	
+	
 
 	/**
 		Property meta data used for material property binding.

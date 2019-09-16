@@ -112,6 +112,10 @@ namespace GASS
 		virtual void SetDescription(const std::string& ) = 0;
 
 		virtual std::vector<std::string> GetOptions() const = 0;
+		virtual void AddOption(const std::string& option) = 0;
+		virtual std::vector<std::string> GetObjectOptions(IPropertyOwner* object) const = 0;
+		virtual bool HasObjectOptions() const = 0;
+		virtual bool HasOptions() const = 0;
 	protected :
 	};
 }

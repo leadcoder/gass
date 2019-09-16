@@ -67,6 +67,33 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + m_Name, "ObjectTypedProperty::SetValue");
 			Set(o, value);
 		}
+
+		typedef std::function<std::vector<std::string>(OwnerType*)> ObjectOptionsFunction;
+		void SetObjectOptionsFunction(ObjectOptionsFunction func) { m_ObjectOptionsFunction = func;}
+		bool HasObjectOptions() const { return m_ObjectOptionsFunction != nullptr;}
+		std::vector<std::string> GetObjectOptions(IPropertyOwner* object) const override
+		{
+			std::vector<std::string> options;
+			if (m_ObjectOptionsFunction)
+			{
+				if(OwnerType* o = dynamic_cast<OwnerType*>(object))
+					options = m_ObjectOptionsFunction(o);
+			}
+			return options;
+		}
+
+		bool HasOptions() const override
+		{
+			bool has_opions = !m_Options.empty();
+			if (HasObjectOptions() || m_OptionsCallback || m_OptionsFunction)
+			{
+				has_opions = true;
+			}
+			return has_opions;
+		}
+
+	private:
+		ObjectOptionsFunction m_ObjectOptionsFunction;
 	};
 
 	/**

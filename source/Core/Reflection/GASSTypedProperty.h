@@ -54,7 +54,6 @@ namespace GASS
 			m_MetaData(meta_data)
 		{
 			m_Options = _GetEnumeration();
-			//std::vector<std::string> = doBar<T>(0);
 		}
 
 		static std::vector<std::string> _GetEnumeration() 
@@ -186,13 +185,39 @@ namespace GASS
 		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
 		std::string GetDescription() const override { return m_Description; }
 		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
-		std::vector<std::string> GetOptions() const override { return m_Options; }
+		std::vector<std::string> GetOptions() const override 
+		{ 
+			std::vector<std::string> options = m_Options;
+			if (m_OptionsCallback)
+			{
+				std::vector<std::string> cb_options = m_OptionsCallback->GetEnumeration();
+				options.insert(options.end(), cb_options.begin(), cb_options.end());
+			}
+			if (m_OptionsFunction)
+			{
+				std::vector<std::string> func_options = m_OptionsFunction();
+				options.insert(options.end(), func_options.begin(), func_options.end());
+			}
+			return options;
+		}
+
+		void AddOption(const std::string& option) override { m_Options.push_back(option);}
+		typedef std::function<std::vector<std::string>()> OptionsFunction;
+		void SetOptionsFunction(OptionsFunction func)
+		{
+			m_OptionsFunction = func;
+		}
+
+		void SetOptionsCallback(PropertyOptionsCallbackPtr callback) { m_OptionsCallback = callback; }
+		void SetMetaData(PropertyMetaDataPtr meta_data) { m_MetaData = meta_data; }
 protected:
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
 		std::string m_Description;
 		PropertyFlags m_Flags;
 		std::vector<std::string> m_Options;
+		OptionsFunction m_OptionsFunction;
+		PropertyOptionsCallbackPtr m_OptionsCallback;
 	};
 }
 #endif

@@ -62,9 +62,8 @@ namespace GASS
 		ComponentFactory::Get().Register<OSGMeshComponent>("MeshComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
-
-		RegisterProperty<ResourceHandle>("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource,
-			OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		auto filename_prop = RegisterGetSet("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
+		filename_prop->SetObjectOptionsFunction(&OSGMeshComponent::GetAvailableMeshFiles);
 		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
 		RegisterGetSet("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 		RegisterGetSet("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh receive shadows or not");
@@ -72,15 +71,14 @@ namespace GASS
 		RegisterGetSet("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,PF_VISIBLE,"Expand mesh child nodes");
 		RegisterGetSet("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS, PF_VISIBLE | PF_EDITABLE,"Flip DDS textures for this model? (need reload)");
-
+		
+		auto import_mesh_prop = RegisterGetSet("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh, PF_VISIBLE | PF_EDITABLE, "Import new mesh");
 		std::vector<std::string> ext;
 		ext.push_back("3ds");
 		ext.push_back("flt");
 		ext.push_back("obj");
 		ext.push_back("*");
-
-		RegisterProperty<FilePath>("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
+		import_mesh_prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE,ext));
 	}
 
 	void OSGMeshComponent::OnInitialize()

@@ -52,15 +52,15 @@ namespace GASS
 		std::string m_Name;
 	};
 
-	class OgreMaterialPropertyMetaData : public EnumerationPropertyMetaData
+	class OgreMaterialOptions : public IPropertyOptionsCallback
 	{
 	public:
-		OgreMaterialPropertyMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group = ""): EnumerationPropertyMetaData(annotation,flags,false),
-			m_ResourceGroup(res_group)
+		OgreMaterialOptions(std::string res_group = "") : m_ResourceGroup(res_group)
 		{
 
 		}
-		virtual std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const
+
+		virtual std::vector<std::string> GetEnumeration() const
 		{
 			std::vector<std::string> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
@@ -82,5 +82,4 @@ namespace GASS
 	private:
 		std::string m_ResourceGroup;
 	};
-	typedef GASS_SHARED_PTR<OgreMaterialPropertyMetaData> OgreMaterialPropertyMetaDataPtr;
 }

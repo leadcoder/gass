@@ -101,15 +101,16 @@ namespace GASS
 			return property;
 		}
 		
-		template <typename PropertyType>
-			static void RegisterMember(const std::string &name,
-				PropertyType DerivedClass::* member_ptr,
+		template <typename MemberType>
+			static MemberProperty<DerivedClass, MemberType>* RegisterMember(const std::string &name,
+				MemberType DerivedClass::* member_ptr,
 				PropertyFlags flags = PF_RESET,
 				const std::string& description = "",
 				PropertyMetaDataPtr meta_data = PropertyMetaDataPtr())
 		{
-			auto* property = MakeMemberProperty(name, member_ptr , flags , description, meta_data);
+			MemberProperty<DerivedClass, MemberType>* property = MakeMemberProperty<DerivedClass, MemberType>(name, member_ptr , flags , description, meta_data);
 			DerivedClass::GetClassRTTI()->GetProperties()->push_back(property);
+			return property;
 		}
 
 		static inline RTTI* GetClassRTTI()

@@ -67,12 +67,10 @@ namespace GASS
 		RegisterGetSet("PolygonMode", &OgreCameraComponent::GetPolygonMode, &OgreCameraComponent::SetPolygonMode, PF_VISIBLE | PF_EDITABLE, "Polygon render mode for this camera");
 		RegisterGetSet("PostFilters", &OgreCameraComponent::GetPostFilters, &OgreCameraComponent::SetPostFilters);
 
-		std::vector<std::string> scheme_enumeration;
 		//hard code for now
-		scheme_enumeration.push_back("ALM_STD"); //Additive light masking 
-		scheme_enumeration.push_back("FFP_STD"); //Regular fixed function pipe line 
-		RegisterProperty<std::string>("MaterialScheme", &GASS::OgreCameraComponent::GetMaterialScheme, &GASS::OgreCameraComponent::SetMaterialScheme,	
-			StaticEnumerationPropertyMetaDataPtr(new StaticEnumerationPropertyMetaData("Material scheme for this camera",PF_VISIBLE,scheme_enumeration)));
+		auto ms_prop = RegisterGetSet("MaterialScheme", &GASS::OgreCameraComponent::GetMaterialScheme, &GASS::OgreCameraComponent::SetMaterialScheme, PF_VISIBLE | PF_EDITABLE, "Material scheme for this camera");
+		ms_prop->AddOption("ALM_STD"); //Additive light masking 
+		ms_prop->AddOption("FFP_STD"); //Regular fixed function pipe line 
 	}
 
 	void OgreCameraComponent::OnInitialize()

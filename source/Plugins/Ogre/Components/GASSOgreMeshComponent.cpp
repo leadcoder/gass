@@ -70,8 +70,8 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreMeshComponent>("MeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
-		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
-			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
+		auto prop = RegisterGetSet("Filename", &OgreMeshComponent::GetMeshResource, &OgreMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
+		prop->SetObjectOptionsFunction(&OgreMeshComponent::GetAvailableMeshFiles);
 		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
 		RegisterGetSet("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 		RegisterGetSet("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue, PF_VISIBLE | PF_EDITABLE, "Render Queue");

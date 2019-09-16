@@ -39,8 +39,8 @@ namespace GASS
 		ComponentFactory::Get().Register<DensityMapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("DensityMapComponent", OF_VISIBLE)));
 		RegisterGetSet("DensityMap", &DensityMapComponent::GetDensityMap, &DensityMapComponent::SetDensityMap,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterProperty<FilePath>("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, ext)));
+		RegisterGetSet("Import", &DensityMapComponent::GetImport, &DensityMapComponent::SetImport, PF_VISIBLE | PF_EDITABLE,"Import density map",
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, ext));
 	}
 
 	void DensityMapComponent::OnInitialize()
