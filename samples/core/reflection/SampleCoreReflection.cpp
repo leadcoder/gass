@@ -124,6 +124,8 @@ struct MyWheel
 };
 
 
+
+
 //Base class for all cars, dervied from the GASS::BaseReflectionObject to enable property reflection
 class MyCar : public GASS::Reflection<MyCar, GASS::BaseReflectionObject>
 {
@@ -147,12 +149,14 @@ public:
 	static void RegisterReflection()
 	{
 		//register our attributes to the rtti system
-		RegisterProperty<GASS::Vec3>("Position", &MyCar::GetPosition, &MyCar::SetPosition);
-		RegisterProperty<GASS::Quaternion>("Rotation", &MyCar::GetRotation, &MyCar::SetRotation);
-		RegisterProperty<std::string>("Description", &MyCar::GetDescription, &MyCar::SetDescription);
-		RegisterProperty<MyGearBox>("GearBox", &MyCar::GetGearBox, &MyCar::SetGearBox);
-		RegisterProperty<MyVector<MyWheel> >("Wheels", &MyCar::GetWheels, &MyCar::SetWheels);
-		RegisterProperty<std::vector<GASS::Vec3> >("TagPoints", &MyCar::GetTagPoints, &MyCar::SetTagPoints);
+		RegisterGetSet("Position", &MyCar::GetPosition, &MyCar::SetPosition);
+		RegisterGetSet("Rotation", &MyCar::GetRotation, &MyCar::SetRotation);
+		RegisterGetSet("Description", &MyCar::GetDescription, &MyCar::SetDescription);
+		RegisterGetSet("GearBox", &MyCar::GetGearBox, &MyCar::SetGearBox);
+		RegisterGetSet("Wheels", &MyCar::GetWheels, &MyCar::SetWheels);
+		RegisterGetSet("TagPoints", &MyCar::GetTagPoints, &MyCar::SetTagPoints);
+		auto p = RegisterMember("TagPoints2", &MyCar::m_TagPoints, GASS::PF_EDITABLE ,"");
+		p->SetDescription("");
 
 
 
@@ -171,13 +175,6 @@ public:
 	void SetWheels(const MyVector<MyWheel> &value)  {m_Wheels = value;}
 	std::vector<GASS::Vec3> GetTagPoints() const {return m_TagPoints;}
 	void SetTagPoints(const std::vector<GASS::Vec3>  &value)  {m_TagPoints = value;}
-
-
-
-	//If you just want regular get/set you can use the
-	//convenience macro, ADD_PROPERTY, that will implement simple get/set.
-	//ei. ADD_PROPERTY(std::string,Description)
-
 private:
 	GASS::Vec3 m_Pos;
 	GASS::Quaternion m_Rot;
@@ -256,7 +253,7 @@ public:
 			200)); //max engine power value
 
 		//register our attributes to the RTTI system
-		RegisterProperty<float>("EnginePower", &MyDerivedCar::GetEnginePower, &MyDerivedCar::SetEnginePower,ep_meta_data);
+		RegisterGetSet("EnginePower", &MyDerivedCar::GetEnginePower, &MyDerivedCar::SetEnginePower, GASS::PF_VISIBLE | GASS::PF_EDITABLE, "Engine power [HP]", ep_meta_data);
 
 		//Create some meta data for the EngineType property
 		GASS::BasePropertyMetaDataPtr et_meta_data(new GASS::EnumerationProxyPropertyMetaData(
@@ -264,13 +261,13 @@ public:
 			GASS::PF_VISIBLE, //editor flags
 			&EngineTypeBinder::GetStringEnumeration)); //delegate enumeration function here
 
-		RegisterProperty<EngineTypeBinder>("EngineType", &MyDerivedCar::GetEngineType, &MyDerivedCar::SetEngineType,et_meta_data);
+		RegisterGetSet("EngineType", &MyDerivedCar::GetEngineType, &MyDerivedCar::SetEngineType, GASS::PF_VISIBLE, "Engine type",et_meta_data);
 
 		//Create some meta data for the Color property that give us possibility to have instance based enumeration,
 		GASS::BasePropertyMetaDataPtr color_meta_data(new MyColorPropertyMetaData(
 			"Color name",//annotation
 			GASS::PF_VISIBLE));
-		RegisterProperty<std::string>("Color", &MyDerivedCar::GetColor, &MyDerivedCar::SetColor,color_meta_data);
+		RegisterGetSet("Color", &MyDerivedCar::GetColor, &MyDerivedCar::SetColor, GASS::PF_VISIBLE, "Color name",color_meta_data);
 	}
 
 	//get/set section
