@@ -56,7 +56,7 @@ namespace GASS
 		{
 			const OwnerType* o = dynamic_cast<const OwnerType*>(object);
 			if (o == nullptr)
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + m_Name, "ObjectTypedProperty::GetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + this->m_Name, "ObjectTypedProperty::GetValue");
 			return Get(o);
 		}
 
@@ -64,7 +64,7 @@ namespace GASS
 		{
 			OwnerType* o = dynamic_cast<OwnerType*>(object);
 			if (o == nullptr)
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + m_Name, "ObjectTypedProperty::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + this->m_Name, "ObjectTypedProperty::SetValue");
 			Set(o, value);
 		}
 
@@ -84,8 +84,8 @@ namespace GASS
 
 		bool HasOptions() const override
 		{
-			bool has_opions = !m_Options.empty();
-			if (HasObjectOptions() || m_OptionsCallback || m_OptionsFunction)
+			bool has_opions = !this->m_Options.empty();
+			if (HasObjectOptions() || this->m_OptionsCallback || this->m_OptionsFunction)
 			{
 				has_opions = true;
 			}
