@@ -52,6 +52,18 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 				const std::string str_name = gp.m_Options[value.toInt()];
 				gp.UpdateValueByString(str_name);
 			}
+			else if (varProp && varProp->propertyType() == QtVariantPropertyManager::flagTypeId())
+			{
+				int flags = value.toInt();
+				std::string str_name;
+				for (size_t i = 0; i < gp.m_Options.size(); i++)
+				{
+					int flag = 1 << i;
+					if (flags & flag)
+						str_name = str_name + " " + gp.m_Options[i];
+				}
+				gp.UpdateValueByString(str_name);
+			}
 			else if (varProp && varProp->propertyType() == QVariant::Color)
 			{
 				QColor qcolor = v.value<QColor>();
@@ -207,9 +219,9 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 	{
 		if (prop->HasMetaData())
 		{
-			const GASS::BasePropertyMetaDataPtr meta_data = GASS_DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(prop->GetMetaData());
-			const bool editable = (meta_data->GetFlags() & GASS::PF_EDITABLE);
-			const std::string documentation = meta_data->GetAnnotation();
+			GASS::PropertyMetaDataPtr meta_data = prop->GetMetaData();
+			const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
+			const std::string documentation = prop->GetDescription();
 
 			if (GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data))
 			{
@@ -288,53 +300,95 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		}
 		else if (!item)
 		{
-			const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
-			if (!prop->GetOptions().empty())
-			{
-				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
-				std::vector<std::string> enumeration = prop->GetOptions();
-
-				QStringList enumNames;
-				int select = -1;
-				for (size_t i = 0; i < enumeration.size(); i++)
-				{
-					gp.m_Options.push_back(enumeration[i]);
-					enumNames << enumeration[i].c_str();
-					if (prop_value == enumeration[i])
-						select = (int)i;
+			/*subProperty = m_manager->addProperty(QtVariantPropertyManager::flagTypeId(), memberVarName);
+			QMetaEnum metaEnum = metaProperty.enumerator();
+			QMap<int, bool> valueMap;
+			QStringList flagNames;
+			for (int i = 0; i < metaEnum.keyCount(); i++) {
+				int value = metaEnum.value(i);
+				if (!valueMap.contains(value) && isPowerOf2(value)) {
+					valueMap[value] = true;
+					flagNames.append(QLatin1String(metaEnum.key(i)));
 				}
-				item->setAttribute(QLatin1String("enumNames"), enumNames);
-				if (select > -1)
-					item->setValue(select);
-			}
+				subProperty->setAttribute(QLatin1String("flagNames"), flagNames);
+				subProperty->setValue(flagToInt(metaEnum, metaProperty.read(m_object).toInt()));
+			}*/
 
-			else if (*prop->GetTypeID() == typeid(bool))
+			const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
+			const bool multi = (prop->GetFlags() & GASS::PF_MULTI_OPTIONS);
+			if (prop->HasOptions())
 			{
-				item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
-				item->setValue(prop_value.c_str());
-			}
-			else if (*prop->GetTypeID() == typeid(GASS::ColorRGB))
-			{
-				GASS::ColorRGB color;
-				obj->GetPropertyValue(prop, color);
-				item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
-				item->setValue(QColor(color.r * 255, color.g * 255, color.b * 255));
-			}
-			else if (*prop->GetTypeID() == typeid(GASS::FilePath))
-			{
-				std::string filename = prop_value;
-				filename = GASS::StringUtils::Replace(filename, "/", "\\");
-				item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
-				item->setValue(filename.c_str());
-				//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
-				//item->setAttribute(QLatin1String("filter"),QVariant("*.png;*.jpg"));
+				std::vector<std::string> options = prop->GetOptions();
+				if (prop->HasObjectOptions())
+				{
+					std::vector<std::string> object_options = prop->GetObjectOptions(obj.get());
+					options.insert(options.end(), object_options.begin(), object_options.end());
+				}
+
+				if (multi)
+				{
+					item = m_VariantManager->addProperty(QtVariantPropertyManager::flagTypeId(), prop_name.c_str());
+					QStringList enumNames;
+					int flags = 0;
+					for (size_t i = 0; i < options.size(); i++)
+					{
+						gp.m_Options.push_back(options[i]);
+						enumNames << options[i].c_str();
+						item->setAttribute(QLatin1String("flagNames"), enumNames);
+						if (prop_value.find(options[i]) != std::string::npos)
+							flags = flags | (1 << i);
+					}
+					item->setValue(flags);
+				}
+				else
+				{
+					item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
+
+					QStringList enumNames;
+					int select = -1;
+					for (size_t i = 0; i < options.size(); i++)
+					{
+						gp.m_Options.push_back(options[i]);
+						enumNames << options[i].c_str();
+						if (prop_value == options[i])
+							select = (int)i;
+					}
+					item->setAttribute(QLatin1String("enumNames"), enumNames);
+					if (select > -1)
+						item->setValue(select);
+				}
+				item->setEnabled(true);
 			}
 			else
 			{
-				item = m_VariantManager->addProperty(QVariant::String, prop_name.c_str());
-				item->setValue(prop_value.c_str());
+				if (*prop->GetTypeID() == typeid(bool))
+				{
+					item = m_VariantManager->addProperty(QVariant::Bool, prop_name.c_str());
+					item->setValue(prop_value.c_str());
+				}
+				else if (*prop->GetTypeID() == typeid(GASS::ColorRGB))
+				{
+					GASS::ColorRGB color;
+					obj->GetPropertyValue(prop, color);
+					item = m_VariantManager->addProperty(QVariant::Color, prop_name.c_str());
+					item->setValue(QColor(color.r * 255, color.g * 255, color.b * 255));
+				}
+				else if (*prop->GetTypeID() == typeid(GASS::FilePath))
+				{
+					std::string filename = prop_value;
+					filename = GASS::StringUtils::Replace(filename, "/", "\\");
+					item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
+					item->setValue(filename.c_str());
+					//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
+					//item->setAttribute(QLatin1String("filter"),QVariant("*.png;*.jpg"));
+				}
+				else
+				{
+					item = m_VariantManager->addProperty(QVariant::String, prop_name.c_str());
+					item->setValue(prop_value.c_str());
+				}
+				item->setEnabled(editable);
 			}
-			item->setEnabled(editable);
 		}
 		gp.SetGASSData(obj, prop);
 		m_PropMap[item] = gp;
