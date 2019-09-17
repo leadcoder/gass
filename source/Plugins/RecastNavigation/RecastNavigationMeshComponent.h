@@ -179,6 +179,7 @@ namespace GASS
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
 		FilePath _GetFilePath() const;
+		std::vector<std::string> GetMeshSelectionEnum2();
 
 		void OnEditPosition(EditPositionMessagePtr message);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);

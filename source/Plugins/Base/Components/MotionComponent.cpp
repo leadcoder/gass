@@ -72,11 +72,7 @@ namespace GASS
 		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,PF_VISIBLE | PF_EDITABLE,"Acceleration [m/s2]");
 		RegisterGetSet("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,PF_VISIBLE | PF_EDITABLE,"Max Speed [m/s]");
 		RegisterMember("MaxTurnSpeed", &GASS::MotionComponent::m_MaxTurnSpeed,PF_VISIBLE | PF_EDITABLE,"Angular Max Speed [deg/s]");
-		//RegisterProperty<MotionModeBinder>("Mode", &GASS::MotionComponent::GetMode, &GASS::MotionComponent::SetMode,
-		//	EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Motion Mode",PF_VISIBLE,&MotionModeBinder::GetStringEnumeration)));
-
 		RegisterMember("GroundClamp", &GASS::MotionComponent::m_GroundClamp, PF_VISIBLE | PF_EDITABLE,"GroundClamp");
-
 		RegisterMember("Debug", &GASS::MotionComponent::m_Debug, PF_VISIBLE | PF_EDITABLE,"Debug");
 	}
 

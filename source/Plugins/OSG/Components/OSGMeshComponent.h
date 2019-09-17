@@ -30,14 +30,6 @@ namespace osg
 }
 namespace GASS
 {
-	class OSGMeshEnumerationMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		OSGMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags) : EnumerationPropertyMetaData(annotation, flags, false){}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
-	};
-	typedef GASS_SHARED_PTR<OSGMeshEnumerationMetaData> OSGMeshEnumerationMetaDataPtr;
-
 	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
 	{
 	public:

@@ -23,7 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSFilePath.h"
-#include "Core/Reflection/GASSPropertyMetaData.h"
+#include "Core/Reflection/GASSIProperty.h"
 #include "Sim/GASSResourceLocation.h"
 
 namespace GASS
@@ -50,10 +50,10 @@ namespace GASS
 	GASS_PTR_DECL(FileResource)
 
 
-	class GASSExport FileResourcePropertyMetaData : public IPropertyOptionsCallback
+	class GASSExport FileResourceCallback : public IPropertyOptionsCallback
 	{
 	public:
-		FileResourcePropertyMetaData(std::string res_group, std::string res_type): m_ResourceGroup(res_group),
+		FileResourceCallback(std::string res_group, std::string res_type): m_ResourceGroup(res_group),
 			m_ResourceType(res_type)
 		{
 
@@ -63,6 +63,6 @@ namespace GASS
 		std::string m_ResourceGroup;
 		std::string m_ResourceType;
 	};
-	typedef GASS_SHARED_PTR<FileResourcePropertyMetaData> FileResourcePropertyMetaDataPtr;
+	typedef GASS_SHARED_PTR<FileResourceCallback> FileResourceCallbackPtr;
 }
 #endif 

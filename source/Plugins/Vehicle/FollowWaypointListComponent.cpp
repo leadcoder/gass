@@ -114,10 +114,10 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<FollowWaypointListComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
-		RegisterProperty<SceneObjectRef>("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList,
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Waypoint list that we should follow",PF_VISIBLE,WaypointListEnumeration,false)));
+		RegisterGetSet("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList, PF_VISIBLE, "Waypoint list that we should follow",
+			std::make_shared<SceneObjectEnumerationProxyPropertyMetaData>(WaypointListEnumeration,false));
 		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject, PF_VISIBLE,"Object that hold navigation component",
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Object that hold navigation component",PF_VISIBLE,NavigationEnumeration,false)));
+			std::make_shared<SceneObjectEnumerationProxyPropertyMetaData>(NavigationEnumeration, false));
 		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,PF_VISIBLE | PF_EDITABLE,"Radius that should be used to consider a waypoint reached");
 		RegisterGetSet("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode, PF_VISIBLE | PF_EDITABLE, "Follow mode");
 		RegisterGetSet("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,PF_VISIBLE | PF_EDITABLE,"Invert direction");

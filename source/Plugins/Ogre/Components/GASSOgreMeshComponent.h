@@ -42,14 +42,6 @@ namespace Ogre
 
 namespace GASS
 {
-	class OgreMeshEnumerationMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		OgreMeshEnumerationMetaData(const std::string &annotation, PropertyFlags flags): EnumerationPropertyMetaData(annotation,flags,false){}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
-	};
-	typedef GASS_SHARED_PTR<OgreMeshEnumerationMetaData> OgreMeshEnumerationMetaDataPtr;
-
 	class OgreMeshComponent : public Reflection<OgreMeshComponent,BaseSceneComponent>, public IMeshComponent , public IGeometryComponent, public IResourceComponent
 	{
 	public:

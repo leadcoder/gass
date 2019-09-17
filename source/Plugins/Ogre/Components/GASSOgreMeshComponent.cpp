@@ -39,17 +39,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-	std::vector<std::string> OgreMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
-	{
-		std::vector<std::string> content;
-		OgreMeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<OgreMeshComponent>(object);
-		if(mesh)
-		{
-			content = mesh->GetAvailableMeshFiles();
-		}
-		return content;
-	}
-
 	OgreMeshComponent::OgreMeshComponent() : m_OgreEntity(NULL),
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),

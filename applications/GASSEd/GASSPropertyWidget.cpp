@@ -242,7 +242,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				if (select > -1)
 					item->setValue(select);
 			}
-			else if (GASS_DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
+		/*	else if (GASS_DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
 				GASS::EnumerationPropertyMetaDataPtr enumeration_data = GASS_DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
@@ -260,7 +260,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				item->setAttribute(QLatin1String("enumNames"), enumNames);
 				if (select > -1)
 					item->setValue(select);
-			}
+			}*/
 			else if (GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
@@ -300,20 +300,6 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 		}
 		else if (!item)
 		{
-			/*subProperty = m_manager->addProperty(QtVariantPropertyManager::flagTypeId(), memberVarName);
-			QMetaEnum metaEnum = metaProperty.enumerator();
-			QMap<int, bool> valueMap;
-			QStringList flagNames;
-			for (int i = 0; i < metaEnum.keyCount(); i++) {
-				int value = metaEnum.value(i);
-				if (!valueMap.contains(value) && isPowerOf2(value)) {
-					valueMap[value] = true;
-					flagNames.append(QLatin1String(metaEnum.key(i)));
-				}
-				subProperty->setAttribute(QLatin1String("flagNames"), flagNames);
-				subProperty->setValue(flagToInt(metaEnum, metaProperty.read(m_object).toInt()));
-			}*/
-
 			const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
 			const bool multi = (prop->GetFlags() & GASS::PF_MULTI_OPTIONS);
 			if (prop->HasOptions())

@@ -311,7 +311,7 @@ namespace GASS
 	};
 
 
-	class ISceneObjectEnumerationPropertyMetaData
+	class ISceneObjectEnumerationPropertyMetaData : public IPropertyMetaData
 	{
 	public:
 		virtual ~ISceneObjectEnumerationPropertyMetaData() {}
@@ -319,12 +319,11 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ISceneObjectEnumerationPropertyMetaData> SceneObjectEnumerationPropertyMetaDataPtr;
 
-
 	typedef std::vector<SceneObjectPtr> SceneObjectEnumerationFunc(BaseReflectionObjectPtr obj);
-	class SceneObjectEnumerationProxyPropertyMetaData : public BasePropertyMetaData, public ISceneObjectEnumerationPropertyMetaData
+	class SceneObjectEnumerationProxyPropertyMetaData : public ISceneObjectEnumerationPropertyMetaData
 	{
 	public:
-		SceneObjectEnumerationProxyPropertyMetaData(const std::string &annotation, PropertyFlags flags,SceneObjectEnumerationFunc *enumeration_func ,bool /*multi_select*/): BasePropertyMetaData(annotation,flags),
+		SceneObjectEnumerationProxyPropertyMetaData(SceneObjectEnumerationFunc *enumeration_func ,bool /*multi_select*/):
 			m_EnumFunc(enumeration_func)
 		{
 
@@ -334,5 +333,4 @@ namespace GASS
 		SceneObjectEnumerationFunc* m_EnumFunc;
 	};
 	typedef GASS_SHARED_PTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
-
 }

@@ -73,33 +73,4 @@ namespace GASS
 		  int Transparent;
 	};
 	typedef GASS_SHARED_PTR<GraphicsMaterial> GraphicsMaterialPtr;
-
-	
-	
-
-	/**
-		Property meta data used for material property binding.
-		
-	*/
-	class GraphicsMaterialPropertyMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		GraphicsMaterialPropertyMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group = ""): EnumerationPropertyMetaData(annotation,flags,false),
-			m_ResourceGroup(res_group)
-		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override
-		{
-			GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-			std::vector<std::string> content = gfx_system->GetMaterialNames(m_ResourceGroup);
-			return content;
-		}
-	private:
-		std::string m_ResourceGroup;
-	};
-	typedef GASS_SHARED_PTR<GraphicsMaterialPropertyMetaData> GraphicsMaterialPropertyMetaDataPtr;
-
-
-
 }

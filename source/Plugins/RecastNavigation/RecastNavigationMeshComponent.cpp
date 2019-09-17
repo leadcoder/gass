@@ -114,8 +114,9 @@ namespace GASS
 		RegisterGetSet("Transparency", &RecastNavigationMeshComponent::GetTransparency, &RecastNavigationMeshComponent::SetTransparency, PF_VISIBLE | PF_EDITABLE);
 
 		RegisterMember("LocalOrigin", &RecastNavigationMeshComponent::m_LocalOrigin, PF_VISIBLE);
-		RegisterGetSet("MeshSelection", &RecastNavigationMeshComponent::GetMeshSelection, &RecastNavigationMeshComponent::SetMeshSelection, PF_VISIBLE | PF_EDITABLE,"",
-			SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection", PF_VISIBLE | PF_EDITABLE, NavMeshEnumeration, true)));
+		RegisterGetSet("MeshSelection", &RecastNavigationMeshComponent::GetMeshSelection, &RecastNavigationMeshComponent::SetMeshSelection, PF_VISIBLE | PF_EDITABLE, "",
+		SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData(NavMeshEnumeration, true)));
+		//mesh_prop->SetObjectOptionsFunction(&RecastNavigationMeshComponent::GetMeshSelectionEnum2);
 		RegisterMember("UseBoudingBox", &RecastNavigationMeshComponent::m_UseBoudingBox, PF_VISIBLE | PF_EDITABLE);
 	}
 
@@ -1123,6 +1124,25 @@ namespace GASS
 			{
 				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				objs.push_back(comp->GetSceneObject());
+			}
+		}
+		return objs;
+	}
+
+	std::vector<std::string> RecastNavigationMeshComponent::GetMeshSelectionEnum2()
+	{
+		std::vector<std::string> objs;
+		if (GetSceneObject())
+		{
+			ComponentContainer::ComponentVector components;
+			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
+			for (size_t i = 0; i < components.size(); i++)
+			{
+				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
+				SceneObjectRef ref = comp->GetSceneObject();
+				std::stringstream ss;
+				ss << ref;
+				objs.push_back(ss.str());
 			}
 		}
 		return objs;

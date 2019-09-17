@@ -29,17 +29,6 @@
 
 namespace GASS
 {
-	std::vector<std::string> OSGMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
-	{
-		std::vector<std::string> content;
-		OSGMeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<OSGMeshComponent>(object);
-		if(mesh)
-		{
-			content = mesh->GetAvailableMeshFiles();
-		}
-		return content;
-	}
-
 	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
 		m_ReceiveShadow  (false),
 		m_Initlized(false),

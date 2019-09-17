@@ -44,6 +44,34 @@ namespace GASS
 	*/
 
 	/**
+		Property flags indicating if the property mode
+		that can be used by editor applications
+	*/
+	enum PropertyFlags
+	{
+		PF_RESET = 0,
+		PF_VISIBLE = 1 << 0, //visible in editor
+		PF_EDITABLE = 1 << 1, //editaable
+		PF_RUNTIME = 1 << 2, //skipe serialization
+		PF_MULTI_OPTIONS = 1 << 3, //value can be one or more options
+	};
+	
+	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
+	{
+		return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));
+	}
+
+	class IPropertyOptionsCallback
+	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyOptionsCallback)
+	public:
+		virtual std::vector<std::string> GetEnumeration() const = 0;
+	};
+	typedef GASS_SHARED_PTR<IPropertyOptionsCallback> PropertyOptionsCallbackPtr;
+
+
+
+	/**
         Interface class for all properties
 	*/
 	class IProperty

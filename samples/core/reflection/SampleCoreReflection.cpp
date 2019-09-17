@@ -205,31 +205,6 @@ class MyDerivedCar;
 class MyDerivedCar : public GASS::Reflection<MyDerivedCar, MyCar>
 {
 public:
-	//Use custom meta data for color info
-	class MyColorPropertyMetaData : public GASS::EnumerationPropertyMetaData
-	{
-	public:
-		MyColorPropertyMetaData(const std::string &annotation, GASS::PropertyFlags flags): GASS::EnumerationPropertyMetaData(annotation,flags,false)
-		{
-
-		}
-		virtual std::vector<std::string> GetEnumeration(GASS::BaseReflectionObjectPtr object) const
-		{
-			std::vector<std::string> content;
-			GASS_SHARED_PTR<MyDerivedCar> car = GASS_DYNAMIC_PTR_CAST<MyDerivedCar>(object);
-			if(car) //get enumeration from unique instance
-				content = car->GetColorEnumeration();
-			else //if some other class use this metadata we just add some static colors
-			{
-				content.push_back("Blue");
-				content.push_back("Red");
-				content.push_back("Green");
-			}
-			return content;
-		}
-	};
-	typedef GASS_SHARED_PTR<MyColorPropertyMetaData> MyCustomPropertyMetaDataPtr;
-
 	MyDerivedCar() : m_EngineType(ET_V8),
 		m_EnginePower(120)
 	{
@@ -246,28 +221,18 @@ public:
 	static void RegisterReflection()
 	{
 		//Create some meta data for the EnginePower property ,
-		GASS::BasePropertyMetaDataPtr ep_meta_data(new GASS::FloatMaxMinPropertyMetaData(
-			"Engine power [HP]",//annotation
-			GASS::PF_VISIBLE | GASS::PF_EDITABLE, //editor flags
-			100, //min engine power value
-			200)); //max engine power value
+		GASS::PropertyMetaDataPtr ep_meta_data(new GASS::FloatMaxMinPropertyMetaData(
+			  100,   //min engine power value
+			  200)); //max engine power value
 
 		//register our attributes to the RTTI system
 		RegisterGetSet("EnginePower", &MyDerivedCar::GetEnginePower, &MyDerivedCar::SetEnginePower, GASS::PF_VISIBLE | GASS::PF_EDITABLE, "Engine power [HP]", ep_meta_data);
 
 		//Create some meta data for the EngineType property
-		GASS::BasePropertyMetaDataPtr et_meta_data(new GASS::EnumerationProxyPropertyMetaData(
-			"Engine type",//annotation
-			GASS::PF_VISIBLE, //editor flags
-			&EngineTypeBinder::GetStringEnumeration)); //delegate enumeration function here
-
-		RegisterGetSet("EngineType", &MyDerivedCar::GetEngineType, &MyDerivedCar::SetEngineType, GASS::PF_VISIBLE, "Engine type",et_meta_data);
+		RegisterGetSet("EngineType", &MyDerivedCar::GetEngineType, &MyDerivedCar::SetEngineType, GASS::PF_VISIBLE, "Engine type");
 
 		//Create some meta data for the Color property that give us possibility to have instance based enumeration,
-		GASS::BasePropertyMetaDataPtr color_meta_data(new MyColorPropertyMetaData(
-			"Color name",//annotation
-			GASS::PF_VISIBLE));
-		RegisterGetSet("Color", &MyDerivedCar::GetColor, &MyDerivedCar::SetColor, GASS::PF_VISIBLE, "Color name",color_meta_data);
+		RegisterGetSet("Color", &MyDerivedCar::GetColor, &MyDerivedCar::SetColor, GASS::PF_VISIBLE, "Color name");
 	}
 
 	//get/set section
@@ -375,25 +340,25 @@ void PrintPropertyMetaData(GASS::BaseReflectionObjectPtr bro)
 		const std::string prop_name = props[i]->GetName();
 		const std::string prop_value = props[i]->GetValueAsString(bro.get());
 
+		std::cout << "Property:" << prop_name << "  Annotation:\"" << props[i]->GetDescription() << "\"";
+
+		if (props[i]->HasOptions())
+		{
+			std::cout << "  Possible enumeration values:";
+			std::vector<std::string> values = props[i]->GetOptions();
+			for (size_t j = 0; j < values.size(); j++)
+			{
+				std::cout << "," << values[j];
+			}
+			std::cout << std::endl;
+		}
+
 		if(props[i]->HasMetaData())
 		{
-			GASS::BasePropertyMetaDataPtr meta_data = GASS_DYNAMIC_PTR_CAST<GASS::BasePropertyMetaData>(props[i]->GetMetaData());
-			std::cout << "Property:" << prop_name  << "  Annotation:\"" << meta_data->GetAnnotation() << "\"";
-			GASS::FloatMaxMinPropertyMetaDataPtr float_meta_data = GASS_DYNAMIC_PTR_CAST<GASS::FloatMaxMinPropertyMetaData>(meta_data);
+			GASS::FloatMaxMinPropertyMetaDataPtr float_meta_data = GASS_DYNAMIC_PTR_CAST<GASS::FloatMaxMinPropertyMetaData>(props[i]->GetMetaData());
 			if(float_meta_data)
 			{
 				std::cout << "  Min:" << float_meta_data->GetMin() << " Max:" << float_meta_data->GetMax() << "\n";
-			}
-			GASS::EnumerationPropertyMetaDataPtr enum_meta_data = GASS_DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data);
-			if(enum_meta_data)
-			{
-				std::cout << "  Possible enumeration values:";
-				std::vector<std::string> values = enum_meta_data->GetEnumeration(bro);
-				for(size_t j = 0; j< values.size(); j++)
-				{
-					std::cout << "," << values[j];
-				}
-				std::cout << std::endl;
 			}
 		}
 	}
