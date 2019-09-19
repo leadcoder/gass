@@ -25,6 +25,11 @@
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Reflection/GASSIProperty.h"
 #include "Sim/GASSResourceLocation.h"
+#include "Sim/GASSResourceManager.h"
+#include "Sim/GASSResourceGroup.h"
+#include "Sim/GASSResourceLocation.h"
+
+
 
 namespace GASS
 {
@@ -49,8 +54,8 @@ namespace GASS
 	};
 	GASS_PTR_DECL(FileResource)
 
-
-	class GASSExport FileResourceCallback : public IPropertyOptionsCallback
+	template <class TYPE>
+	class FileResourceCallback : public IPropertyOptionsCallback<TYPE>
 	{
 	public:
 		FileResourceCallback(std::string res_group, std::string res_type): m_ResourceGroup(res_group),
@@ -58,11 +63,31 @@ namespace GASS
 		{
 
 		}
-		std::vector<std::string> GetEnumeration() const override;
+		std::vector<TYPE> GetEnumeration() const override
+		{
+			std::vector<TYPE> content;
+			GASS::ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+			GASS::ResourceGroupVector groups = rm->GetResourceGroups();
+			std::vector<std::string> values;
+			for (size_t i = 0; i < groups.size(); i++)
+			{
+				GASS::ResourceGroupPtr group = groups[i];
+				if (m_ResourceGroup == "" || group->GetName() == m_ResourceGroup)
+				{
+					GASS::ResourceVector res_vec;
+					group->GetResourcesByType(res_vec, m_ResourceType);
+					for (size_t j = 0; j < res_vec.size(); j++)
+					{
+						content.push_back(res_vec[j]->Name());
+					}
+				}
+			}
+			return content;
+		}
 	private:
 		std::string m_ResourceGroup;
 		std::string m_ResourceType;
 	};
-	typedef GASS_SHARED_PTR<FileResourceCallback> FileResourceCallbackPtr;
+	//typedef GASS_SHARED_PTR<FileResourceCallback<TYPE> > FileResourceCallbackPtr;
 }
 #endif 

@@ -67,7 +67,7 @@ namespace GASS
 		Ogre::Entity*  GetOgreEntity(){return m_OgreEntity;}
 
 		//used by enumeration class
-		std::vector<std::string> GetAvailableMeshFiles() const;
+		std::vector<ResourceHandle> GetAvailableMeshFiles() const;
 
 		static void CopyMeshToMeshData(Ogre::MeshPtr mesh, GraphicsMesh &mesh_data);
 		static void AddVertexData(const Ogre::VertexData *vertex_data,GraphicsSubMeshPtr mesh);

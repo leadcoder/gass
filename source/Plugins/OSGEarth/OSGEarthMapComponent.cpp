@@ -125,9 +125,9 @@ namespace GASS
 		osgEarth::VisibleLayer* m_Layer;
 	};
 
-	std::vector<std::string> GetAllEarthFiles()
+	std::vector<ResourceHandle> GetAllEarthFiles()
 	{
-		std::vector<std::string> content;
+		std::vector<ResourceHandle> content;
 		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
 		std::vector<std::string> values;
@@ -174,7 +174,7 @@ namespace GASS
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE,"Enable/disable sky light");
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
-		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
+//		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
 	}
 
 	void OSGEarthMapComponent::OnInitialize()

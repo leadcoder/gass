@@ -55,7 +55,7 @@ namespace GASS
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
 		osg::ref_ptr<osg::Node> GetNode() const override {return m_MeshNode ;}
-		std::vector<std::string> GetAvailableMeshFiles() const;
+		std::vector<ResourceHandle> GetAvailableMeshFiles() const;
 	protected:
 		bool GetLighting() const;
 		void SetLighting(bool value);

@@ -61,13 +61,14 @@ namespace GASS
 		return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));
 	}
 
+	template <class TYPE>
 	class IPropertyOptionsCallback
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyOptionsCallback)
 	public:
-		virtual std::vector<std::string> GetEnumeration() const = 0;
+		virtual std::vector<TYPE> GetEnumeration() const = 0;
 	};
-	typedef GASS_SHARED_PTR<IPropertyOptionsCallback> PropertyOptionsCallbackPtr;
+	//typedef GASS_SHARED_PTR<IPropertyOptionsCallback> PropertyOptionsCallbackPtr;
 
 
 
@@ -139,9 +140,8 @@ namespace GASS
 		virtual std::string GetDescription() const = 0;
 		virtual void SetDescription(const std::string& ) = 0;
 
-		virtual std::vector<std::string> GetOptions() const = 0;
-		virtual void AddOption(const std::string& option) = 0;
-		virtual std::vector<std::string> GetObjectOptions(IPropertyOwner* object) const = 0;
+		virtual std::vector<std::string> GetStringOptions() const = 0;
+		virtual std::vector<std::string> GetStringOptionsByObject(IPropertyOwner* object) const = 0;
 		virtual bool HasObjectOptions() const = 0;
 		virtual bool HasOptions() const = 0;
 	protected :

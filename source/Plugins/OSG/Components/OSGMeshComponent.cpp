@@ -79,9 +79,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
 
-	std::vector<std::string> OSGMeshComponent::GetAvailableMeshFiles() const
+	std::vector<ResourceHandle> OSGMeshComponent::GetAvailableMeshFiles() const
 	{
-		std::vector<std::string> content;
+		std::vector<ResourceHandle> content;
 		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
 		std::vector<std::string> values;

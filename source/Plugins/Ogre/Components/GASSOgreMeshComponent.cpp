@@ -543,12 +543,12 @@ namespace GASS
 	}
 
 
-	std::vector<std::string> OgreMeshComponent::GetAvailableMeshFiles() const
+	std::vector<ResourceHandle> OgreMeshComponent::GetAvailableMeshFiles() const
 	{
-		std::vector<std::string> content;
+		std::vector<ResourceHandle> content;
 		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
-		std::vector<std::string> values;
+		
 		for(size_t i = 0; i < groups.size();i++)
 		{
 			ResourceGroupPtr group = groups[i];

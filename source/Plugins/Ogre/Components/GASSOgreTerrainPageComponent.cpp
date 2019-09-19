@@ -80,7 +80,7 @@ namespace GASS
 		auto diff4 = RegisterGetSet("DiffuseLayer4", &GASS::OgreTerrainPageComponent::GetDiffuseLayer4, &GASS::OgreTerrainPageComponent::SetDiffuseLayer4, PF_VISIBLE);
 		auto norm4 = RegisterGetSet("NormalLayer4", &GASS::OgreTerrainPageComponent::GetNormalLayer4, &GASS::OgreTerrainPageComponent::SetNormalLayer4, PF_VISIBLE);
 	
-		FileResourceCallbackPtr option_callback = std::make_shared<FileResourceCallback>("GASS_DETAIL_TEXTURES", "TEXTURE");
+		std::shared_ptr<FileResourceCallback<ResourceHandle>> option_callback = std::make_shared<FileResourceCallback<ResourceHandle>>("GASS_DETAIL_TEXTURES", "TEXTURE");
 		diff0->SetOptionsCallback(option_callback);
 		diff1->SetOptionsCallback(option_callback);
 		diff2->SetOptionsCallback(option_callback);

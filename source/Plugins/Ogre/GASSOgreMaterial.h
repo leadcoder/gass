@@ -52,7 +52,7 @@ namespace GASS
 		std::string m_Name;
 	};
 
-	class OgreMaterialOptions : public IPropertyOptionsCallback
+	class OgreMaterialOptions : public IPropertyOptionsCallback<OgreMaterial>
 	{
 	public:
 		OgreMaterialOptions(std::string res_group = "") : m_ResourceGroup(res_group)
@@ -60,9 +60,9 @@ namespace GASS
 
 		}
 
-		virtual std::vector<std::string> GetEnumeration() const
+		virtual std::vector<OgreMaterial> GetEnumeration() const
 		{
-			std::vector<std::string> content;
+			std::vector<OgreMaterial> content;
 			Ogre::MaterialManager::ResourceMapIterator iter = Ogre::MaterialManager::getSingleton().getResourceIterator();
 			while(iter.hasMoreElements())
 			{
@@ -74,7 +74,7 @@ namespace GASS
 #endif
 				if(m_ResourceGroup == "" ||  ptr->getGroup() == m_ResourceGroup)
 				{
-					content.push_back(ptr->getName());
+					content.push_back(OgreMaterial(ptr->getName()));
 				}
 			}
 			return content;

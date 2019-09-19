@@ -68,16 +68,29 @@ namespace GASS
 			Set(o, value);
 		}
 
-		typedef std::function<std::vector<std::string>(OwnerType*)> ObjectOptionsFunction;
+		typedef std::function<std::vector<MemberType>(OwnerType*)> ObjectOptionsFunction;
 		void SetObjectOptionsFunction(ObjectOptionsFunction func) { m_ObjectOptionsFunction = func;}
 		bool HasObjectOptions() const { return m_ObjectOptionsFunction != nullptr;}
-		std::vector<std::string> GetObjectOptions(IPropertyOwner* object) const override
+		std::vector<MemberType> GetOptionsByObject(IPropertyOwner* object) const
 		{
-			std::vector<std::string> options;
+			std::vector<MemberType> options;
 			if (m_ObjectOptionsFunction)
 			{
 				if(OwnerType* o = dynamic_cast<OwnerType*>(object))
 					options = m_ObjectOptionsFunction(o);
+			}
+			return options;
+		}
+
+		std::vector<std::string> GetStringOptionsByObject(IPropertyOwner* object) const override
+		{
+			std::vector<std::string> options;
+			std::vector<MemberType> typed_options = GetOptionsByObject(object);
+			for (MemberType option : typed_options)
+			{
+				std::stringstream ss;
+				ss << option;
+				options.push_back(ss.str());
 			}
 			return options;
 		}

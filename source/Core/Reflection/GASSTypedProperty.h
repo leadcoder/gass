@@ -56,16 +56,16 @@ namespace GASS
 			m_Options = _GetEnumeration();
 		}
 
-		static std::vector<std::string> _GetEnumeration() 
+		static std::vector<T> _GetEnumeration() 
 		{
 			return _GetEnumerationImpl(static_cast<T*>(nullptr));
 		}
 		template <typename EnumClass>
-		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetStringEnumeration(), std::vector<std::string>()) {
-			return EnumClass::GetStringEnumeration();
+		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetEnumeration(), std::vector<T>()) {
+			return EnumClass::GetEnumeration();
 		}
 
-		static std::vector<std::string> _GetEnumerationImpl(...) { std::vector<std::string> ret;  return ret; }
+		static std::vector<T> _GetEnumerationImpl(...) { std::vector<T> ret;  return ret; }
 
 		/**
 		 Returns the type of this property.
@@ -185,39 +185,53 @@ namespace GASS
 		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
 		std::string GetDescription() const override { return m_Description; }
 		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
-		std::vector<std::string> GetOptions() const override 
+		std::vector<std::string> GetStringOptions() const override
 		{ 
-			std::vector<std::string> options = m_Options;
+			std::vector<std::string> options;
+			std::vector<T> typed_options = GetOptions();
+			for (T option : typed_options)
+			{
+				std::stringstream ss;
+				ss << option;
+				options.push_back(ss.str());
+			}
+			return options;
+		}
+
+		std::vector<T> GetOptions() const
+		{
+			std::vector<T> options = m_Options;
 			if (m_OptionsCallback)
 			{
-				std::vector<std::string> cb_options = m_OptionsCallback->GetEnumeration();
+				std::vector<T> cb_options = m_OptionsCallback->GetEnumeration();
 				options.insert(options.end(), cb_options.begin(), cb_options.end());
 			}
 			if (m_OptionsFunction)
 			{
-				std::vector<std::string> func_options = m_OptionsFunction();
+				std::vector<T> func_options = m_OptionsFunction();
 				options.insert(options.end(), func_options.begin(), func_options.end());
 			}
 			return options;
 		}
 
-		void AddOption(const std::string& option) override { m_Options.push_back(option);}
-		typedef std::function<std::vector<std::string>()> OptionsFunction;
+		void AddOption(const T& option) { m_Options.push_back(option);}
+		
+		typedef std::function<std::vector<T>()> OptionsFunction;
 		void SetOptionsFunction(OptionsFunction func)
 		{
 			m_OptionsFunction = func;
 		}
-
-		void SetOptionsCallback(PropertyOptionsCallbackPtr callback) { m_OptionsCallback = callback; }
+		typedef std::shared_ptr<IPropertyOptionsCallback<T>> OptionsCallbackObjectPtr;
+		void SetOptionsCallback(OptionsCallbackObjectPtr callback) { m_OptionsCallback = callback; }
 		void SetMetaData(PropertyMetaDataPtr meta_data) { m_MetaData = meta_data; }
 protected:
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
 		std::string m_Description;
 		PropertyFlags m_Flags;
-		std::vector<std::string> m_Options;
+		std::vector<T> m_Options;
 		OptionsFunction m_OptionsFunction;
-		PropertyOptionsCallbackPtr m_OptionsCallback;
+		OptionsCallbackObjectPtr m_OptionsCallback;
 	};
 }
 #endif

@@ -87,6 +87,18 @@ namespace GASS
 			return types;
 		}
 
+		static std::vector<CLASS> GetEnumeration()
+		{
+			std::vector<CLASS> types;
+			typename NameEnumMap::iterator iter = m_NameToEnumMap.begin();
+			while (iter != m_NameToEnumMap.end())
+			{
+				types.push_back(iter->second);
+				++iter;
+			}
+			return types;
+		}
+
 		std::vector<std::string> GetOptions() const override
 		{
 			return GetStringEnumeration();
