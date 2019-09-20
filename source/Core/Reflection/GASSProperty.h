@@ -29,7 +29,19 @@
 
 namespace GASS
 {
+	template<typename T>
+	struct GetOptionType 
+	{
+		typedef typename  std::remove_reference<T>::type Type;
+	};
 
+	template<typename T>
+	struct GetOptionType<std::vector<T>> 
+	{
+		typedef typename std::remove_reference<T>::type Type;
+	};
+
+	
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -67,13 +79,13 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + this->m_Name, "ObjectTypedProperty::SetValue");
 			Set(o, value);
 		}
-
-		typedef std::function<std::vector<MemberType>(OwnerType*)> ObjectOptionsFunction;
+		typedef typename GetOptionType<MemberType>::Type OptionType;
+		typedef std::function<std::vector<OptionType>(OwnerType*)> ObjectOptionsFunction;
 		void SetObjectOptionsFunction(ObjectOptionsFunction func) { m_ObjectOptionsFunction = func;}
 		bool HasObjectOptions() const { return m_ObjectOptionsFunction != nullptr;}
-		std::vector<MemberType> GetOptionsByObject(IPropertyOwner* object) const
+		std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const
 		{
-			std::vector<MemberType> options;
+			std::vector<OptionType> options;
 			if (m_ObjectOptionsFunction)
 			{
 				if(OwnerType* o = dynamic_cast<OwnerType*>(object))
@@ -85,8 +97,8 @@ namespace GASS
 		std::vector<std::string> GetStringOptionsByObject(IPropertyOwner* object) const override
 		{
 			std::vector<std::string> options;
-			std::vector<MemberType> typed_options = GetOptionsByObject(object);
-			for (MemberType option : typed_options)
+			std::vector<OptionType> typed_options = GetOptionsByObject(object);
+			for (OptionType option : typed_options)
 			{
 				std::stringstream ss;
 				ss << option;

@@ -174,7 +174,7 @@ namespace GASS
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE,"Enable/disable sky light");
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
-//		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
+		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
