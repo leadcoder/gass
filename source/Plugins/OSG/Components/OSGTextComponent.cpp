@@ -27,7 +27,7 @@
 namespace GASS
 {
 	OSGTextComponent::OSGTextComponent() :	m_OSGText(NULL),
-		m_CharSize(32.0f),
+		m_CharSize(16.0f),
 		m_Font("arial.ttf"),
 		m_ScaleByDistance(false),
 		m_Offset(0,0,0),
@@ -76,10 +76,12 @@ namespace GASS
 		m_OSGText->setAxisAlignment(osgText::Text::SCREEN);
 
 		if(m_ScaleByDistance)
-			m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
-		else
 			m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS_WITH_MAXIMUM_SCREEN_SIZE_CAPPED_BY_FONT_HEIGHT);
-
+			//m_OSGText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
+		else
+			m_OSGText->setCharacterSizeMode(osgText::Text::SCREEN_COORDS);
+			
+		m_OSGText->setFontResolution(16, 16);
 
 		const osg::Vec3d offset = OSGConvert::ToOSG(m_Offset);
 		m_OSGText->setPosition(offset);
@@ -104,6 +106,10 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> nodess = m_OSGGeode->getOrCreateStateSet();
 		nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
 
+		//skip depth test for text.
+		nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
+		nodess->setRenderBinDetails(INT_MAX, "RenderBin");
+		
 		osg::Program* program = new osg::Program;
         nodess->setAttribute(program);
 	}

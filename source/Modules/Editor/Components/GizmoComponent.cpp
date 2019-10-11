@@ -19,7 +19,7 @@
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 
 #define MOVMENT_EPSILON 0.0000001
-#define MAX_SCALE_DISTANCE 300.0 //meters
+#define MAX_SCALE_DISTANCE 1000000.0 //meters
 #define MIN_SCALE_DISTANCE 0.1 //meters
 #define GIZMO_SENDER 999
 
