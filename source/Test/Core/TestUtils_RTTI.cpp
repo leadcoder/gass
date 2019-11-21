@@ -53,7 +53,7 @@ GASS::RTTI Car::m_RTTI = GASS::RTTI("SimpleRTTITest", NULL, Car::RegisterReflect
 
 TEST_CASE("Test RTTI")
 {
-	SECTION("Test property")
+	SECTION("Test SimplePropOwner Set/Get Property By String")
 	{
 		GASS::IProperty* property = GASS::MakeGetSetProperty("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName);
 		SimplePropOwner po;
