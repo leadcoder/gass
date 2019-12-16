@@ -29,6 +29,19 @@ namespace GASS
 	class BaseReflectionObject;
 
 
+	template<typename T>
+	struct GetOptionType
+	{
+		typedef typename  std::remove_reference<T>::type Type;
+	};
+
+	template<typename T>
+	struct GetOptionType<std::vector<T>>
+	{
+		typedef typename std::remove_reference<T>::type Type;
+	};
+
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -55,17 +68,19 @@ namespace GASS
 		{
 			m_Options = _GetEnumeration();
 		}
+		typedef typename GetOptionType<T>::Type OptionType;
 
-		static std::vector<T> _GetEnumeration() 
+
+		static std::vector<OptionType> _GetEnumeration()
 		{
-			return _GetEnumerationImpl(static_cast<T*>(nullptr));
+			return _GetEnumerationImpl(static_cast<OptionType*>(nullptr));
 		}
 		template <typename EnumClass>
-		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetEnumeration(), std::vector<T>()) {
+		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetEnumeration(), std::vector<OptionType>()) {
 			return EnumClass::GetEnumeration();
 		}
 
-		static std::vector<T> _GetEnumerationImpl(...) { std::vector<T> ret;  return ret; }
+		static std::vector<OptionType> _GetEnumerationImpl(...) { std::vector<OptionType> ret;  return ret; }
 
 		/**
 		 Returns the type of this property.
@@ -185,11 +200,12 @@ namespace GASS
 		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
 		std::string GetDescription() const override { return m_Description; }
 		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
+
 		std::vector<std::string> GetStringOptions() const override
 		{ 
 			std::vector<std::string> options;
-			std::vector<T> typed_options = GetOptions();
-			for (T option : typed_options)
+			std::vector<OptionType> typed_options = GetOptions();
+			for (OptionType option : typed_options)
 			{
 				std::stringstream ss;
 				ss << option;
@@ -198,30 +214,32 @@ namespace GASS
 			return options;
 		}
 
-		std::vector<T> GetOptions() const
+		std::vector<OptionType> GetOptions() const
 		{
-			std::vector<T> options = m_Options;
+			std::vector<OptionType> options = m_Options;
 			if (m_OptionsCallback)
 			{
-				std::vector<T> cb_options = m_OptionsCallback->GetEnumeration();
+				std::vector<OptionType> cb_options = m_OptionsCallback->GetEnumeration();
 				options.insert(options.end(), cb_options.begin(), cb_options.end());
 			}
 			if (m_OptionsFunction)
 			{
-				std::vector<T> func_options = m_OptionsFunction();
+				std::vector<OptionType> func_options = m_OptionsFunction();
 				options.insert(options.end(), func_options.begin(), func_options.end());
 			}
 			return options;
 		}
 
-		void AddOption(const T& option) { m_Options.push_back(option);}
+		virtual std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const = 0;
+
+		void AddOption(const OptionType& option) { m_Options.push_back(option);}
 		
-		typedef std::function<std::vector<T>()> OptionsFunction;
+		typedef std::function<std::vector<OptionType>()> OptionsFunction;
 		void SetOptionsFunction(OptionsFunction func)
 		{
 			m_OptionsFunction = func;
 		}
-		typedef std::shared_ptr<IPropertyOptionsCallback<T>> OptionsCallbackObjectPtr;
+		typedef std::shared_ptr<IPropertyOptionsCallback<OptionType>> OptionsCallbackObjectPtr;
 		void SetOptionsCallback(OptionsCallbackObjectPtr callback) { m_OptionsCallback = callback; }
 		void SetMetaData(PropertyMetaDataPtr meta_data) { m_MetaData = meta_data; }
 protected:
@@ -229,7 +247,7 @@ protected:
 		std::string m_Name;
 		std::string m_Description;
 		PropertyFlags m_Flags;
-		std::vector<T> m_Options;
+		std::vector<OptionType> m_Options;
 		OptionsFunction m_OptionsFunction;
 		OptionsCallbackObjectPtr m_OptionsCallback;
 	};

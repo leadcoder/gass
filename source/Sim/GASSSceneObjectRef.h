@@ -28,7 +28,7 @@
 
 namespace GASS
 {
-	class GASSExport SceneObjectRef 
+	class GASSExport SceneObjectRef
 	{
 		friend class BaseSceneComponent;
 	public:
@@ -44,6 +44,10 @@ namespace GASS
 		void SetRefGUID(const SceneObjectGUID &guid);
 		SceneObjectPtr GetRefObject() const {return m_RefObject.lock();}
 		bool IsValid() const {if(m_RefObject.lock()) return true; else return false;}
+		bool operator==(const SceneObjectRef& other) const
+		{
+			return m_RefObjectGUID == other.m_RefObjectGUID;
+		}
 	protected:
 		void UpdateRefPtr();
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
@@ -77,5 +81,18 @@ namespace GASS
 		SceneObjectWeakPtr m_RefObject;
 		SceneObjectGUID m_RefObjectGUID;
 		std::string m_LocalID;
+	};
+}
+namespace std
+{
+	template<>
+	struct hash <GASS::SceneObjectRef >
+	{
+		size_t operator()(const GASS::SceneObjectRef& object) const
+		{
+			std::stringstream ss;
+			ss << object;
+			return std::hash<std::string>()(ss.str());
+		}
 	};
 }

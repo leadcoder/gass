@@ -29,18 +29,6 @@
 
 namespace GASS
 {
-	template<typename T>
-	struct GetOptionType 
-	{
-		typedef typename  std::remove_reference<T>::type Type;
-	};
-
-	template<typename T>
-	struct GetOptionType<std::vector<T>> 
-	{
-		typedef typename std::remove_reference<T>::type Type;
-	};
-
 	
 	/** \addtogroup GASSCore
 	*  @{
@@ -83,7 +71,7 @@ namespace GASS
 		typedef std::function<std::vector<OptionType>(OwnerType*)> ObjectOptionsFunction;
 		void SetObjectOptionsFunction(ObjectOptionsFunction func) { m_ObjectOptionsFunction = func;}
 		bool HasObjectOptions() const { return m_ObjectOptionsFunction != nullptr;}
-		std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const
+		std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const override
 		{
 			std::vector<OptionType> options;
 			if (m_ObjectOptionsFunction)
