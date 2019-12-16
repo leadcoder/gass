@@ -304,10 +304,10 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			const bool multi = (prop->GetFlags() & GASS::PF_MULTI_OPTIONS);
 			if (prop->HasOptions())
 			{
-				std::vector<std::string> options = prop->GetOptions();
+				std::vector<std::string> options = prop->GetStringOptions();
 				if (prop->HasObjectOptions())
 				{
-					std::vector<std::string> object_options = prop->GetObjectOptions(obj.get());
+					std::vector<std::string> object_options = prop->GetStringOptionsByObject(obj.get());
 					options.insert(options.end(), object_options.begin(), object_options.end());
 				}
 
