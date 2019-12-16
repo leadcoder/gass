@@ -18,8 +18,6 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-
-
 #include "RakNetMessageTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "RakNetNetworkMasterComponent.h"
@@ -80,7 +78,6 @@ namespace GASS
 	{
 		if(message->GetSenderID() == 8888)
 			return;
-		//SystemAddress address = raknet->GetRakPeer()->GetInternalID();
 		Call("OutOfArmorMessage","");
 		
 	}

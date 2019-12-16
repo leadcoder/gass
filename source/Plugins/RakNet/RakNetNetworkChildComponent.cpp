@@ -220,6 +220,5 @@ namespace GASS
 		if(m_Replica)
 			m_Replica->ProcessMessages();
 	}
-
 }
 

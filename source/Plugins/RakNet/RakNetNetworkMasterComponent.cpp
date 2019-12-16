@@ -151,7 +151,6 @@ namespace GASS
 	{
 		int num_packs = 0;
 		inBitStream->Read(num_packs);
-		//std::cout << "RakNetNetworkMasterComponent::Deserialize packages:"<<  num_packs << std::endl;
 		for(int i = 0 ; i < num_packs; i++)
 		{
 
@@ -206,4 +205,3 @@ namespace GASS
 
 	}
 }
-

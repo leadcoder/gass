@@ -43,7 +43,6 @@ namespace GASS
 		m_NetworkIDManager(new NetworkIDManager()),
 		m_ServerPort (60005),
 		m_ClientPort (60006),
-		//m_UseP2P(false),
 		m_RakPeer(NULL),
 		m_ServerData(new ServerData()),
 		m_ServerDataOnClient(new ServerData()),
@@ -72,7 +71,6 @@ namespace GASS
 	void RakNetNetworkSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<RakNetNetworkSystem>("RakNetNetworkSystem");
-
 		RegisterGetSet("InterpolationLag", &RakNetNetworkSystem::GetInterpolationLag, &RakNetNetworkSystem::SetInterpolationLag);
 		RegisterGetSet("LocationSendFrequency", &RakNetNetworkSystem::GetLocationSendFrequency, &RakNetNetworkSystem::SetLocationSendFrequency);
 		RegisterMember("SleepTime", &RakNetNetworkSystem::m_SleepTime);
@@ -91,9 +89,6 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartClient,StartClientRequest,0));
 
-
-
-
 		m_RakPeer = RakNetworkFactory::GetRakPeerInterface();
 		//You have to attach ReplicaManager for it to work, as it is one of the RakNet plugins
 		m_RakPeer->AttachPlugin(m_ReplicaManager);
@@ -105,13 +100,10 @@ namespace GASS
 		RakNet::StringTable::Instance()->AddString("RakNetChildReplica", false);
 
 		//register RPC
-		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::EnterVehicle", int, RakNetBaseReplica, EnterVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
-		//ARPC_REGISTER_CPP_FUNCTION2(GetRPC(), "RakNetBaseReplica::ExitVehicle", int, RakNetBaseReplica, ExitVehicle, const char *client_address, RakNet::AutoRPC* networkCaller);
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessage", int, RakNetBaseReplica, RemoteMessage, const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
 		ARPC_REGISTER_CPP_FUNCTION4(GetRPC(), "RakNetBaseReplica::RemoteInput", int, RakNetBaseReplica, RemoteInput, SystemAddress input_source, int controller, float value,RakNet::AutoRPC* networkCaller);
 		ARPC_REGISTER_CPP_FUNCTION3(GetRPC(), "RakNetBaseReplica::RemoteMessageWithData", int, RakNetBaseReplica, RemoteMessageWithData, const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 	}
-
 
 	void RakNetNetworkSystem::OnTimeOfDay(TimeOfDayRequestPtr message)
 	{
@@ -287,17 +279,6 @@ namespace GASS
 	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int /*client_port*/)
 	{
 		bool connected =  m_RakPeer->Connect(server.c_str(), static_cast<unsigned short>(server_port), 0, 0);
-		if(connected)
-		{
-			// Server data on the client
-			/*if (m_RakClient->GetStaticServerData())
-			{
-			ServerData* data = (ServerData*)m_RakClient->GetStaticServerData()->GetData();
-			int da;
-			da = 0;
-			//DeserializeServerData((char *)m_RakClient->GetStaticServerData()->GetData(),m_ServerDataOnClient);
-			}*/
-		}
 		return connected;
 	}
 
@@ -634,69 +615,6 @@ namespace GASS
 		}
 	}
 
-
-	/*INetworkObject* RakNetNetworkSystem::Init(RaknetNetworkComponenPtr object)
-	{
-	// check if root/to object
-	if(object->IsRoot())
-	{
-	//this should never happen, or?
-	if(object->GetNetworkObject())
-	return object->GetNetworkObject();
-	else
-	{
-	//Create network object for this scene node
-	return NewNetworkObject(object);
-	}
-	}
-	else
-	{
-	//This is a child object
-	BaseObject* root = (BaseObject*) object->GetRoot();
-	if(root->IsMaster())
-	{
-	//root object master, create new network object
-	return NewNetworkObject(object);
-	}
-	else
-	{
-	//Try to find existing network object for this node
-	INetworkObject* network_obj = FindNetworkObject(object);
-	network_obj->SetOwner(object);
-	return network_obj;
-	}
-	}
-	}*/
-
-
-	/*RakNetBase* RakNetNetworkSystem::NewNetworkObject(RaknetNetworkComponenPtr object)
-	{
-	RakNetBase* net_obj = NULL;
-	if(object->IsKindOf(&BasePlayer::m_RTTI))
-	{
-	net_obj = new RakNetPlayer();
-	}
-	else if(object->IsKindOf(&BaseObject::m_RTTI))
-	{
-	net_obj = new RakNetBase();
-	}
-	if(net_obj)
-	{
-	//Check if we want other owner then the server, only valid for players?
-	if(net_obj->AllowRemoteOwner() && m_RemoteOwnerId != UNASSIGNED_SYSTEM_ADDRESS)
-	{
-	net_obj->SetOwnerSystemAddress(m_RemoteOwnerId);
-	}
-	else
-	{
-	net_obj->SetOwnerSystemAddress(m_RakPeer->GetInternalID());
-	}
-	net_obj->LocalInit(object, this);
-	}
-	return net_obj;
-	}*/
-
-
 	RakNetChildReplica* RakNetNetworkSystem::FindReplica(const NetworkID &part_of_network_id,int part_id) const
 	{
 		//Find replica object
@@ -755,5 +673,4 @@ namespace GASS
 		data->ServerName = RakNetNetworkSystem::ReadString(bstream);
 		data->MapName = RakNetNetworkSystem::ReadString(bstream);
 	}
-
 }

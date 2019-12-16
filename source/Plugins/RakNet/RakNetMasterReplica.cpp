@@ -58,16 +58,13 @@ namespace GASS
 		// For security, as a server disable these interfaces
 		if (raknet->IsServer())
 		{
-			//std::cout << "RakNetMasterReplica::LocalInit - server " << std::endl;
 			m_Manager->Construct(this, false, UNASSIGNED_SYSTEM_ADDRESS, true);
 			// For security, as a server disable all receives except REPLICA_RECEIVE_SERIALIZE
 			// I could do this manually by putting if (isServer) return; at the top of all my receive functions too.
-
 			m_Manager->DisableReplicaInterfaces(this, REPLICA_RECEIVE_DESTRUCTION | REPLICA_RECEIVE_SCOPE_CHANGE );
 		}
 		else
 		{
-			//std::cout << "RakNetMasterReplica::LocalInit - client " << std::endl;
 			// For convenience and for saving bandwidth, as a client disable all sends except REPLICA_SEND_SERIALIZE
 			// I could do this manually by putting if (isServer==false) return; at the top of all my send functions too.
 			m_Manager->DisableReplicaInterfaces(this, REPLICA_SEND_CONSTRUCTION | REPLICA_SEND_DESTRUCTION | REPLICA_SEND_SCOPE_CHANGE );
@@ -208,7 +205,6 @@ namespace GASS
 
 	ReplicaReturnResult RakNetMasterReplica::ReceiveDestruction(RakNet::BitStream * /*inBitStream*/, SystemAddress /*systemAddress*/, RakNetTime /*timestamp*/)
 	{
-		//printf("Remote object owned by %s:%i destroyed\n", rakPeer->PlayerIDToDottedIP(owner), owner.port);
 		SceneObjectPtr obj(m_Owner);
 		if(obj) //remove object
 		{
@@ -245,10 +241,8 @@ namespace GASS
 	ReplicaReturnResult RakNetMasterReplica::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
 		//inBitStream->Read(m_DataToReceive);
-		//std::cout << "RakNetMasterReplica::Deserialize" << std::endl;
 		if(m_Owner)
 		{
-			//std::cout << "RakNetMasterReplica::Deserialize got owner" << std::endl;
 			RakNetNetworkMasterComponentPtr net_obj = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 			net_obj->Deserialize(inBitStream, timestamp, lastDeserializeTime, systemAddress );
 			// If this is a server

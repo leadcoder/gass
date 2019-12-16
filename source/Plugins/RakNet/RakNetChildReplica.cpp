@@ -19,26 +19,17 @@
 *****************************************************************************/
 
 #include "RakNetChildReplica.h"
-
-
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/ComponentSystem/GASSComponentContainerFactory.h"
-
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSScene.h"
-
-
-
 #include "RakNetMasterReplica.h"
-
 #include "RakNetNetworkChildComponent.h"
 #include "RakNetNetworkMasterComponent.h"
 #include "RakNetNetworkSystem.h"
-//#include "RakNetReplicaMember.h"
-
 
 namespace GASS
 {
@@ -58,8 +49,6 @@ namespace GASS
 	void RakNetChildReplica::LocalInit(SceneObjectPtr object)
 	{
 		SetOwner(object);
-
-//		m_TemplateName = object->GetTemplateName();
 
 		SceneObjectPtr object_root =  object->GetObjectUnderRoot();
 		if(object_root)
@@ -148,11 +137,6 @@ namespace GASS
 		outBitStream->Write(m_PartId);
 		outBitStream->Write(m_PartOfId);
 		assert(m_Owner);
-
-		//std::string name = m_Owner->GetName();
-		//std::string template_name = m_Owner->GetTemplateName();
-		//RakNetNetworkManager::WriteString(name,outBitStream);
-		//RakNetNetworkSystem::WriteString(template_name,outBitStream);
 	}
 
 	bool RakNetChildReplica::GetProperty(const std::string &prop_name, BaseReflectionObject* &component, IProperty* &abstract_property) const
@@ -187,7 +171,6 @@ namespace GASS
 		return false;
 	}
 
-
 	void RakNetChildReplica::DeserializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkChildComponent>();
@@ -212,8 +195,6 @@ namespace GASS
 					std::string after = prop->GetValueAsString(component);
 					std::cout << attributes[i] << " before:" << before << " after:" << after << "\n";
 				}
-
-
 			}
 		}
 	}
@@ -292,7 +273,6 @@ namespace GASS
 		inBitStream->Read(m_OwnerSystemAddress);
 		inBitStream->Read(m_PartId);
 		inBitStream->Read(m_PartOfId);
-		//m_TemplateName = RakNetNetworkSystem::ReadString(inBitStream);
 	}
 
 	ReplicaReturnResult  RakNetChildReplica::SendDestruction(RakNet::BitStream * /*outBitStream*/, SystemAddress /*systemAddress*/, bool * /*includeTimestamp*/)
@@ -303,9 +283,6 @@ namespace GASS
 
 	ReplicaReturnResult RakNetChildReplica::ReceiveDestruction(RakNet::BitStream * /*inBitStream*/, SystemAddress /*systemAddress*/, RakNetTime /*timestamp*/)
 	{
-		//printf("Remote object owned by %s:%i destroyed\n", rakPeer->PlayerIDToDottedIP(owner), owner.port);
-		//remove SceneObject
-
 		delete this;
 		return REPLICA_PROCESSING_DONE;
 	}
@@ -335,7 +312,6 @@ namespace GASS
 
 	ReplicaReturnResult RakNetChildReplica::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
 	{
-		//inBitStream->Read(m_DataToReceive);
 		if(m_Owner)
 		{
 			RakNetNetworkChildComponentPtr net_obj = m_Owner->GetFirstComponentByClass<RakNetNetworkChildComponent>();
@@ -351,5 +327,4 @@ namespace GASS
 		//raknet->GetReplicaManager()->SignalSerializeNeeded(this, playerId, true);
 		return REPLICA_PROCESSING_DONE;
 	}
-
 }
