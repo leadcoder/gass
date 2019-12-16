@@ -32,8 +32,7 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
-#include "GetTime.h"
-#include "RakPeerInterface.h"
+
 
 
 namespace GASS
@@ -128,17 +127,17 @@ namespace GASS
 			else if(message->GetControllerType() == CT_TRIGGER)
 			{
 				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
-				RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
-				if(comp)
+				RakNetNetworkMasterComponentPtr master_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
+				if(master_comp)
 				{
-					comp->GetReplica()->RemoteInput(address ,controller_index, message->GetValue(),0);
+					master_comp->GetReplica()->RemoteInput(address ,controller_index, message->GetValue(),0);
 				}
 				else
 				{
-					RakNetNetworkChildComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
-					if(comp)
+					RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
+					if(child_comp)
 					{
-						comp->GetReplica()->RemoteInput(address,controller_index,message->GetValue(),0);
+						child_comp->GetReplica()->RemoteInput(address,controller_index,message->GetValue(),0);
 					}
 				}
 			}

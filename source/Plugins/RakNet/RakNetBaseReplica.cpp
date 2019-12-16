@@ -20,8 +20,8 @@
 
 
 #include "RakNetBaseReplica.h"
-#include "RakPeerInterface.h"
-#include "ReplicaManager.h"
+
+
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"

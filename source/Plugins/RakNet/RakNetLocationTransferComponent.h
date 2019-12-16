@@ -28,6 +28,7 @@
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {

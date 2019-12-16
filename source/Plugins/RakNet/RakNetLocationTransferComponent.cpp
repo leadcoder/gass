@@ -35,7 +35,6 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "GetTime.h"
 
 //#define _DEBUG_LTC_
 
@@ -178,9 +177,9 @@ namespace GASS
 			//std::cout << "pos" << pos << std::endl;
 		}
 
-		double current_time = SimEngine::Get().GetTime();
+		//double current_time = SimEngine::Get().GetTime();
 		//double delta = current_time - m_LocationHistory[0].Time;
-
+		unsigned int current_time = RakNet::GetTime();
 		m_LocationHistory[0].Position = pos;
 		m_LocationHistory[0].Rotation = rot;
 		m_LocationHistory[0].Time = current_time;
@@ -234,7 +233,7 @@ namespace GASS
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-			static RakNetTime  step_back = raknet->GetInterpolationLag();
+			static RakNetTime  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
 #ifdef _DEBUG_LTC_
 			if(GetAsyncKeyState(VK_F2))
 				step_back--;
@@ -263,7 +262,7 @@ namespace GASS
 #endif
 			if(time > m_LocationHistory[0].Time)
 			{
-				m_DeadReckoning = (float(time - m_LocationHistory[0].Time))/1000.0f;
+				m_DeadReckoning = static_cast<double>(time - m_LocationHistory[0].Time)/1000.0;
 
 				new_pos = m_LocationHistory[0].Position;
 				new_rot = m_LocationHistory[0].Rotation;
@@ -319,7 +318,7 @@ namespace GASS
 						RakNetTime tot = m_LocationHistory[i-1].Time - m_LocationHistory[i].Time;
 						double inter = 0;
 						if(tot > 0)
-							inter = double(elapsed)/double(tot);
+							inter = static_cast<double>(elapsed)/ static_cast<double>(tot);
 						new_pos = (m_LocationHistory[i].Position*inter) + (m_LocationHistory[i-1].Position*(1.0-inter));
 						new_rot = Quaternion::Slerp2(inter,m_LocationHistory[i-1].Rotation, m_LocationHistory[i].Rotation);
 #ifdef _DEBUG_LTC_

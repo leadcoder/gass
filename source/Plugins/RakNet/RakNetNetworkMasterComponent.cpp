@@ -121,14 +121,14 @@ namespace GASS
 
 		SystemAddress address;
 		address.binaryAddress = message->GetAddress().m_Address;
-		address.port  = message->GetAddress().m_Port;
+		address.port  = static_cast<unsigned short>(message->GetAddress().m_Port);
 
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		//Signal serialize
 		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
 	}
 
-	void RakNetNetworkMasterComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
+	void RakNetNetworkMasterComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime /*lastSendTime*/, PacketPriority * /*priority*/, PacketReliability * /*reliability*/, RakNetTime /*currentTime*/, SystemAddress /*systemAddress*/, unsigned int & /*flags*/)
 	{
 		int num_packs = static_cast<int>(m_SerializePackages.size());
 		outBitStream->Write(num_packs);
@@ -147,7 +147,7 @@ namespace GASS
 
 	}
 
-	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
+	void RakNetNetworkMasterComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime /*lastDeserializeTime*/, SystemAddress systemAddress )
 	{
 		int num_packs = 0;
 		inBitStream->Read(num_packs);

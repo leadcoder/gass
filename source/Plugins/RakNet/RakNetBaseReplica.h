@@ -22,10 +22,7 @@
 #define RAKNET_BASE_REPLICA_H
 
 #include "Sim/GASSCommon.h"
-#include "AutoRPC.h"
-#include "Replica.h"
-#include "StringTable.h"
-#include "BitStream.h"
+#include "RakNetCommon.h"
 #include "Core/Math/GASSVector.h"
 
 class ReplicaManager;

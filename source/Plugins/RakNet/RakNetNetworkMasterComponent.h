@@ -22,14 +22,12 @@
 #define RAK_NET_NETWORK_MASTER_COMPONENT_H
 
 
-#include "PacketPriority.h"
-#include "Replica.h"
-#include "BitStream.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {

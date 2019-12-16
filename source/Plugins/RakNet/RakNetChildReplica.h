@@ -22,10 +22,8 @@
 #define RAKNET_CHILD_REPLICA_H
 
 #include "Sim/GASSCommon.h"
-#include "PacketPriority.h"
-#include "Replica.h"
-#include "BitStream.h"
 #include "RakNetBaseReplica.h"
+#include "RakNetCommon.h"
 
 class ReplicaManager;
 

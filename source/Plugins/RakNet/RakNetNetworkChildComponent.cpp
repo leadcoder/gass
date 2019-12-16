@@ -147,7 +147,7 @@ namespace GASS
 		SystemAddress address;
 
 		address.binaryAddress = message->GetAddress().m_Address;
-		address.port  = message->GetAddress().m_Port;
+		address.port  = static_cast<unsigned short>(message->GetAddress().m_Port);
 
 		//Signal serialize
 		raknet->GetReplicaManager()->SignalSerializeNeeded((Replica*)m_Replica, address, true);
@@ -155,7 +155,7 @@ namespace GASS
 		//m_SerializePackages.clear();
 	}
 
-	void RakNetNetworkChildComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags)
+	void RakNetNetworkChildComponent::Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime /*lastSendTime*/, PacketPriority * /*priority*/, PacketReliability * /*reliability*/, RakNetTime /*currentTime*/, SystemAddress /*systemAddress*/, unsigned int & /*flags*/)
 	{
 		int num_packs = static_cast<int>(m_SerializePackages.size());
 		outBitStream->Write(num_packs);
@@ -172,7 +172,7 @@ namespace GASS
 			m_Replica->SerializeProperties(outBitStream);
 	}
 
-	void RakNetNetworkChildComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress )
+	void RakNetNetworkChildComponent::Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime /*lastDeserializeTime*/, SystemAddress systemAddress )
 	{
 		int num_packs = 0;
 		inBitStream->Read(num_packs);
@@ -199,7 +199,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkChildComponent::SceneManagerTick(double delta)
+	void RakNetNetworkChildComponent::SceneManagerTick(double /*delta*/)
 	{
 		//check if attributes are changed
 		if(m_Replica && m_Replica->HasPropertiesChanged())

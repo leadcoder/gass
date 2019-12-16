@@ -24,13 +24,6 @@
 #include "Plugins/RakNet/RakNetInputTransferComponent.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetMessages.h"
-#include "RakNetworkFactory.h"
-#include "RakPeerInterface.h"
-#include "ReplicaManager.h"
-#include "StringTable.h"
-#include "NetworkData.h"
-#include "GetTime.h"
-#include "AutoRPC.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
@@ -40,6 +33,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
+#include "NetworkData.h"
 
 namespace GASS
 {
@@ -227,9 +221,9 @@ namespace GASS
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
-		SocketDescriptor socketDescriptor(port,0);
+		SocketDescriptor socketDescriptor(static_cast<unsigned short>(port),0);
 		GASS_LOG(LINFO) << "Raknet starup....";
-		bool ret = m_RakPeer->Startup(MAX_PEERS,m_SleepTime,&socketDescriptor, 1);
+		bool ret = m_RakPeer->Startup(MAX_PEERS,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
 		if(ret == false)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to start raknet server","RakNetNetworkSystem::StartServer");
@@ -243,7 +237,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkSystem::StartClient(int client_port,int server_port)
+	void RakNetNetworkSystem::StartClient(int /*client_port*/,int server_port)
 	{
 		m_IsServer = 0;
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnConnectToServer,ConnectToServerRequest,0));
@@ -270,9 +264,9 @@ namespace GASS
 		m_ReplicaManager->SetDefaultScope(true);
 
 		SocketDescriptor socketDescriptor(0,0);
-		m_RakPeer->Startup(1,m_SleepTime,&socketDescriptor, 1);
+		m_RakPeer->Startup(1,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
 
-		m_RakPeer->Ping("255.255.255.255", server_port, true);
+		m_RakPeer->Ping("255.255.255.255", static_cast<unsigned short>(server_port), true);
 		m_RakPeer->SetOccasionalPing(true);
 
 		m_Active = true;
@@ -290,9 +284,9 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(SystemMessagePtr(new NetworkPostUpdateEvent()));
 	}
 
-	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int client_port)
+	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int /*client_port*/)
 	{
-		bool connected =  m_RakPeer->Connect(server.c_str(), server_port, 0, 0);
+		bool connected =  m_RakPeer->Connect(server.c_str(), static_cast<unsigned short>(server_port), 0, 0);
 		if(connected)
 		{
 			// Server data on the client
@@ -307,7 +301,7 @@ namespace GASS
 		return connected;
 	}
 
-	ReplicaReturnResult RakNetNetworkSystem::ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject *existingObject, SystemAddress senderId, ReplicaManager *caller)
+	ReplicaReturnResult RakNetNetworkSystem::ReceiveConstruction(RakNet::BitStream *inBitStream, RakNetTime timestamp, NetworkID networkID, NetworkIDObject * /*existingObject*/, SystemAddress senderId, ReplicaManager * /*caller*/)
 	{
 		char output[255];
 
@@ -351,7 +345,7 @@ namespace GASS
 		return REPLICA_PROCESSING_DONE;
 	}
 
-	void RakNetNetworkSystem::UpdateServer(double delta)
+	void RakNetNetworkSystem::UpdateServer(double /*delta*/)
 	{
 		Packet *p;
 
@@ -465,7 +459,7 @@ namespace GASS
 	{
 		if(m_RakPeer)
 		{
-			m_RakPeer->Ping("255.255.255.255", message->GetServerPort(), true);
+			m_RakPeer->Ping("255.255.255.255", static_cast<unsigned short>(message->GetServerPort()), true);
 		}
 	}
 
@@ -516,8 +510,8 @@ namespace GASS
 				//response.IP = m_RakPeer->PlayerIDToDottedIP(p->systemAddress);
 				response.IP = p->systemAddress.ToString();//binaryAddress;
 				response.Port = p->systemAddress.port;
-				response.Ping = RakNet::GetTime()-time;
-				response.Time = time;
+				response.Ping = static_cast<float>(RakNet::GetTime() - time);
+				response.Time = static_cast<float>(time);
 				//printf("Time is %i\n",time);
 				//printf("Ping is %i\n", (unsigned int)(RakNet::GetTime()-time));
 				//printf("Data is %i bytes longIBaseSound.hn", dataLength);

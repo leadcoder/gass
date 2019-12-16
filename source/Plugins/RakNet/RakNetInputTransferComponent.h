@@ -26,6 +26,8 @@
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Sim/Messages/GASSInputMessages.h"
+#include "RakNetCommon.h"
+
 
 namespace GASS
 {

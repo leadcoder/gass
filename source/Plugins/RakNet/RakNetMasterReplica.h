@@ -20,13 +20,11 @@
 
 #ifndef RAKNET_MASTER_REPLICA_H
 #define RAKNET_MASTER_REPLICA_H
-#include "PacketPriority.h"
-#include "Replica.h"
-#include "AutoRPC.h"
-#include "BitStream.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "RakNetBaseReplica.h"
+#include "RakNetCommon.h"
+
 
 class ReplicaManager;
 	

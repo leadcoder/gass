@@ -23,15 +23,6 @@
 
 #include "Sim/GASSCommon.h"
 
-//Raknet includes
-#include "MessageIdentifiers.h"
-#include "NetworkIDManager.h"
-#include "ReplicaEnums.h"
-#include "ReplicaManager.h"
-#include "PacketLogger.h"
-#include "BitStream.h"
-#include "AutoRPC.h"
-
 //GASS includes
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
@@ -41,6 +32,8 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSNetworkSystemMessages.h"
+
+#include "RakNetCommon.h"
 
 class ReplicaManager;
 class RakPeerInterface;

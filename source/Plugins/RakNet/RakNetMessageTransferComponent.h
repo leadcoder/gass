@@ -25,6 +25,7 @@
 #include "Sim/Interface/GASSINetworkComponent.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSWeaponMessages.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {

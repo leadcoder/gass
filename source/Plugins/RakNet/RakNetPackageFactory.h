@@ -23,6 +23,7 @@
 #include "Core/Common.h"
 #include "Core/Utils/GASSFactory.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {

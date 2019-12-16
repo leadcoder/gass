@@ -33,7 +33,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
-#include "RakPeerInterface.h"
+
 
 namespace GASS
 {
