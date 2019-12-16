@@ -345,7 +345,7 @@ void PrintPropertyMetaData(GASS::BaseReflectionObjectPtr bro)
 		if (props[i]->HasOptions())
 		{
 			std::cout << "  Possible enumeration values:";
-			std::vector<std::string> values = props[i]->GetOptions();
+			std::vector<std::string> values = props[i]->GetStringOptions();
 			for (size_t j = 0; j < values.size(); j++)
 			{
 				std::cout << "," << values[j];
