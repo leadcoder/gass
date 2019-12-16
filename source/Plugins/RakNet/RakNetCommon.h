@@ -39,7 +39,6 @@
 #include "PacketLogger.h"
 #include "RakPeerInterface.h"
 #include "RakNetworkFactory.h"
-//#include "NetworkData.h"
 #include "GetTime.h"
 #include "AutoRPC.h"
 

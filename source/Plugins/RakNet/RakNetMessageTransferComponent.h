@@ -40,9 +40,6 @@ namespace GASS
 		void Called(const std::string &message, const std::string &data);
 		bool IsRemote() const override;
 	private:
-		//void OnDeserialize(NetworkDeserializeRequestPtr message);
-		//void OnInput(InputRelayEventPtr message);
-		//void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		void Call(const std::string &message, const std::string &data);
 	};

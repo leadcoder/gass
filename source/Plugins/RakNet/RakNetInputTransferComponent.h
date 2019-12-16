@@ -88,7 +88,6 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
-		//int AUTO_RPC_CALLSPEC EnterObject(const char *object, RakNet::AutoRPC* networkCaller);
 		void ReceivedInput(int controller, float value);
 	private:
 		void OnDeserialize(NetworkDeserializeRequestPtr message);
@@ -98,7 +97,6 @@ namespace GASS
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		
 		std::string m_ControlSettingName;
-		//ControlSetting* m_ControlSetting;
 		typedef std::map<int,float> InputHistoryMap;
 		InputHistoryMap m_InputHistory;
 	};
