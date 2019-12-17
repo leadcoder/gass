@@ -207,6 +207,15 @@ void GASSPropertyWidget::Show(GASS::ScenePtr scene)
 	m_Polulating = false;
 }
 
+template<typename TYPE>
+GASS::TypedProperty<TYPE>* AsTypedProp(GASS::IProperty* prop)
+{
+	if (*prop->GetTypeID() == typeid(TYPE))
+	{
+		return dynamic_cast<GASS::TypedProperty<TYPE>*>(prop);
+	}
+	return nullptr;
+}
 
 
 QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr obj, GASS::IProperty* prop)//const GASS::PropertySettings *ps)
@@ -223,7 +232,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
 			const std::string documentation = prop->GetDescription();
 
-			if (GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data))
+		/*	if (GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
 				GASS::SceneObjectEnumerationPropertyMetaDataPtr enumeration_data = GASS_DYNAMIC_PTR_CAST<GASS::ISceneObjectEnumerationPropertyMetaData>(meta_data);
@@ -241,7 +250,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				item->setAttribute(QLatin1String("enumNames"), enumNames);
 				if (select > -1)
 					item->setValue(select);
-			}
+			}*/
 		/*	else if (GASS_DYNAMIC_PTR_CAST<GASS::EnumerationPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
@@ -261,7 +270,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 				if (select > -1)
 					item->setValue(select);
 			}*/
-			else if (GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
+			if (GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
 			{
 				item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
 				GASS::FilePathPropertyMetaDataPtr file_path_data = GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data);
@@ -305,10 +314,30 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 			if (prop->HasOptions())
 			{
 				std::vector<std::string> options = prop->GetStringOptions();
+				std::vector<std::string> option_names = options;
+
 				if (prop->HasObjectOptions())
 				{
 					std::vector<std::string> object_options = prop->GetStringOptionsByObject(obj.get());
 					options.insert(options.end(), object_options.begin(), object_options.end());
+					if (auto sor_prop = AsTypedProp<GASS::SceneObjectRef>(prop))
+					{
+						std::vector<GASS::SceneObjectRef> sor_options =  sor_prop->GetOptionsByObject(obj.get());
+						for (auto ref : sor_options)
+						{
+							option_names.push_back(ref->GetName());
+						}
+					}
+					else if (auto sor_vec_prop = AsTypedProp<std::vector<GASS::SceneObjectRef> >(prop))
+					{
+						std::vector<GASS::SceneObjectRef> sor_options = sor_vec_prop->GetOptionsByObject(obj.get());
+						for (auto ref : sor_options)
+						{
+							option_names.push_back(ref->GetName());
+						}
+					}
+					else
+						option_names.insert(option_names.end(), object_options.begin(), object_options.end());
 				}
 
 				if (multi)
@@ -319,7 +348,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					for (size_t i = 0; i < options.size(); i++)
 					{
 						gp.m_Options.push_back(options[i]);
-						enumNames << options[i].c_str();
+						enumNames << option_names[i].c_str();
 						item->setAttribute(QLatin1String("flagNames"), enumNames);
 						if (prop_value.find(options[i]) != std::string::npos)
 							flags = flags | (1 << i);
@@ -335,7 +364,7 @@ QtVariantProperty *GASSPropertyWidget::CreateProp(GASS::BaseReflectionObjectPtr 
 					for (size_t i = 0; i < options.size(); i++)
 					{
 						gp.m_Options.push_back(options[i]);
-						enumNames << options[i].c_str();
+						enumNames << option_names[i].c_str();
 						if (prop_value == options[i])
 							select = (int)i;
 					}
