@@ -31,14 +31,6 @@
 
 namespace GASS
 {
-	std::vector<SceneObjectPtr> NavMeshEnumeration(BaseReflectionObjectPtr obj)
-	{
-		RecastNavigationMeshComponentPtr navmesh_comp = GASS_DYNAMIC_PTR_CAST<RecastNavigationMeshComponent>(obj);
-		return navmesh_comp->GetMeshSelectionEnum();
-	}
-
-
-	typedef GASS_SHARED_PTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
 	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new GraphicsMesh()),
 		m_NavVisLineMesh(new GraphicsMesh()),
 		m_NavMesh(NULL),
@@ -114,9 +106,8 @@ namespace GASS
 		RegisterGetSet("Transparency", &RecastNavigationMeshComponent::GetTransparency, &RecastNavigationMeshComponent::SetTransparency, PF_VISIBLE | PF_EDITABLE);
 
 		RegisterMember("LocalOrigin", &RecastNavigationMeshComponent::m_LocalOrigin, PF_VISIBLE);
-		RegisterGetSet("MeshSelection", &RecastNavigationMeshComponent::GetMeshSelection, &RecastNavigationMeshComponent::SetMeshSelection, PF_VISIBLE | PF_EDITABLE, "",
-		SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData(NavMeshEnumeration, true)));
-		//mesh_prop->SetObjectOptionsFunction(&RecastNavigationMeshComponent::GetMeshSelectionEnum2);
+		auto mesh_prop = RegisterGetSet("MeshSelection", &RecastNavigationMeshComponent::GetMeshSelection, &RecastNavigationMeshComponent::SetMeshSelection, PF_VISIBLE | PF_EDITABLE, "");
+		mesh_prop->SetObjectOptionsFunction(&RecastNavigationMeshComponent::GetMeshSelectionEnum);
 		RegisterMember("UseBoudingBox", &RecastNavigationMeshComponent::m_UseBoudingBox, PF_VISIBLE | PF_EDITABLE);
 	}
 
@@ -1113,9 +1104,9 @@ namespace GASS
 		return FilePath("");
 	}
 
-	std::vector<SceneObjectPtr> RecastNavigationMeshComponent::GetMeshSelectionEnum()
+	std::vector<SceneObjectRef> RecastNavigationMeshComponent::GetMeshSelectionEnum()
 	{
-		std::vector<SceneObjectPtr> objs;
+		std::vector<SceneObjectRef> objs;
 		if(GetSceneObject())
 		{
 			ComponentContainer::ComponentVector components;
@@ -1124,25 +1115,6 @@ namespace GASS
 			{
 				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				objs.push_back(comp->GetSceneObject());
-			}
-		}
-		return objs;
-	}
-
-	std::vector<std::string> RecastNavigationMeshComponent::GetMeshSelectionEnum2()
-	{
-		std::vector<std::string> objs;
-		if (GetSceneObject())
-		{
-			ComponentContainer::ComponentVector components;
-			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
-			for (size_t i = 0; i < components.size(); i++)
-			{
-				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-				SceneObjectRef ref = comp->GetSceneObject();
-				std::stringstream ss;
-				ss << ref;
-				objs.push_back(ss.str());
 			}
 		}
 		return objs;

@@ -105,7 +105,7 @@ namespace GASS
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
 		//need to be public for enumerator access it
-		std::vector<SceneObjectPtr> GetMeshSelectionEnum();
+		std::vector<SceneObjectRef> GetMeshSelectionEnum();
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
 		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
@@ -179,8 +179,7 @@ namespace GASS
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
 		FilePath _GetFilePath() const;
-		std::vector<std::string> GetMeshSelectionEnum2();
-
+	
 		void OnEditPosition(EditPositionMessagePtr message);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 

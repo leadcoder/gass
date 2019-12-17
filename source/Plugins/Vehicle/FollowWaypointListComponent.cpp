@@ -47,26 +47,36 @@ namespace GASS
 
 	}
 
-	std::vector<SceneObjectPtr> WaypointListEnumeration(BaseReflectionObjectPtr obj)
+	
+
+	void FollowWaypointListComponent::RegisterReflection()
 	{
-		GASS_SHARED_PTR<FollowWaypointListComponent> wpl= GASS_DYNAMIC_PTR_CAST<FollowWaypointListComponent>(obj);
-		return  wpl->GetWaypointListEnumeration();
+		ComponentFactory::GetPtr()->Register<FollowWaypointListComponent>();
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		auto wp_list_prop = RegisterGetSet("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList, PF_VISIBLE, "Waypoint list that we should follow");
+		wp_list_prop->SetObjectOptionsFunction(&FollowWaypointListComponent::GetWaypointListEnumeration);
+		auto nav_prop = RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject, PF_VISIBLE, "Object that hold navigation component");
+		nav_prop->SetObjectOptionsFunction(&FollowWaypointListComponent::GetNavigationEnumeration);
+		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,PF_VISIBLE | PF_EDITABLE,"Radius that should be used to consider a waypoint reached");
+		RegisterGetSet("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode, PF_VISIBLE | PF_EDITABLE, "Follow mode");
+		RegisterGetSet("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,PF_VISIBLE | PF_EDITABLE,"Invert direction");
 	}
 
-	std::vector<SceneObjectPtr>  FollowWaypointListComponent::GetWaypointListEnumeration() const
+
+	std::vector<SceneObjectRef>  FollowWaypointListComponent::GetWaypointListEnumeration() const
 	{
-		std::vector<SceneObjectPtr> ret;
+		std::vector<SceneObjectRef> ret;
 		SceneObjectPtr so = GetSceneObject();
-		if(so)
+		if (so)
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<IWaypointListComponent>(comps);
-			for(size_t i = 0 ; i < comps.size();i++)
+			for (size_t i = 0; i < comps.size(); i++)
 			{
-				if(comps[i]->GetOwner() != so)
+				if (comps[i]->GetOwner() != so)
 				{
 					WaypointListComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<IWaypointListComponent>(comps[i]);
-					if(wpl)
+					if (wpl)
 					{
 						SceneObjectPtr wp_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
 						ret.push_back(wp_so);
@@ -77,28 +87,20 @@ namespace GASS
 		return ret;
 	}
 
-
-
-	std::vector<SceneObjectPtr> NavigationEnumeration(BaseReflectionObjectPtr obj)
+	std::vector<SceneObjectRef>  FollowWaypointListComponent::GetNavigationEnumeration() const
 	{
-		GASS_SHARED_PTR<FollowWaypointListComponent> wpl= GASS_DYNAMIC_PTR_CAST<FollowWaypointListComponent>(obj);
-		return  wpl->GetNavigationEnumeration();
-	}
-
-	std::vector<SceneObjectPtr>  FollowWaypointListComponent::GetNavigationEnumeration() const
-	{
-		std::vector<SceneObjectPtr> ret;
+		std::vector<SceneObjectRef> ret;
 		SceneObjectPtr so = GetSceneObject();
-		if(so)
+		if (so)
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
-			for(size_t i = 0 ; i < comps.size();i++)
+			for (size_t i = 0; i < comps.size(); i++)
 			{
-				if(comps[i]->GetOwner() != so)
+				if (comps[i]->GetOwner() != so)
 				{
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
-					if(wpl)
+					if (wpl)
 					{
 						SceneObjectPtr nav_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
 						ret.push_back(nav_so);
@@ -109,19 +111,6 @@ namespace GASS
 		return ret;
 	}
 
-
-	void FollowWaypointListComponent::RegisterReflection()
-	{
-		ComponentFactory::GetPtr()->Register<FollowWaypointListComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
-		RegisterGetSet("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList, PF_VISIBLE, "Waypoint list that we should follow",
-			std::make_shared<SceneObjectEnumerationProxyPropertyMetaData>(WaypointListEnumeration,false));
-		RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject, PF_VISIBLE,"Object that hold navigation component",
-			std::make_shared<SceneObjectEnumerationProxyPropertyMetaData>(NavigationEnumeration, false));
-		RegisterMember("WaypointRadius", &FollowWaypointListComponent::m_WaypointRadius,PF_VISIBLE | PF_EDITABLE,"Radius that should be used to consider a waypoint reached");
-		RegisterGetSet("Mode", &FollowWaypointListComponent::GetMode, &FollowWaypointListComponent::SetMode, PF_VISIBLE | PF_EDITABLE, "Follow mode");
-		RegisterGetSet("InvertDirection", &FollowWaypointListComponent::GetInvertDirection, &FollowWaypointListComponent::SetInvertDirection,PF_VISIBLE | PF_EDITABLE,"Invert direction");
-	}
 
 	void FollowWaypointListComponent::SetInvertDirection(bool value)
 	{

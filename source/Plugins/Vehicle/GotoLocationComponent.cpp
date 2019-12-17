@@ -42,27 +42,30 @@ namespace GASS
 
 	}
 
+	
 
-	std::vector<SceneObjectPtr> GoToLocationComponentNavigationEnumeration(BaseReflectionObjectPtr obj)
+	void GoToLocationComponent::RegisterReflection()
 	{
-		GASS_SHARED_PTR<GoToLocationComponent> lgc = GASS_DYNAMIC_PTR_CAST<GoToLocationComponent>(obj);
-		return  lgc->GetNavigationEnumeration();
+		ComponentFactory::GetPtr()->Register<GoToLocationComponent>();
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		auto nav_prop = RegisterMember("NavigationObject", &GoToLocationComponent::m_NavigationObject, PF_VISIBLE, "Object that hold navigation component");
+		nav_prop->SetObjectOptionsFunction(&GoToLocationComponent::GetNavigationEnumeration);
 	}
 
-	std::vector<SceneObjectPtr>  GoToLocationComponent::GetNavigationEnumeration() const
+	std::vector<SceneObjectRef>  GoToLocationComponent::GetNavigationEnumeration() const
 	{
-		std::vector<SceneObjectPtr> ret;
+		std::vector<SceneObjectRef> ret;
 		SceneObjectPtr so = GetSceneObject();
-		if(so)
+		if (so)
 		{
 			ComponentContainer::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
-			for(size_t i = 0 ; i < comps.size();i++)
+			for (size_t i = 0; i < comps.size(); i++)
 			{
-				if(comps[i]->GetOwner() != so)
+				if (comps[i]->GetOwner() != so)
 				{
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
-					if(wpl)
+					if (wpl)
 					{
 						SceneObjectPtr new_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
 						ret.push_back(new_so);
@@ -71,14 +74,6 @@ namespace GASS
 			}
 		}
 		return ret;
-	}
-
-	void GoToLocationComponent::RegisterReflection()
-	{
-		ComponentFactory::GetPtr()->Register<GoToLocationComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
-		RegisterMember("NavigationObject", &GoToLocationComponent::m_NavigationObject, PF_VISIBLE, "Object that hold navigation component",
-			std::make_shared<SceneObjectEnumerationProxyPropertyMetaData>(GoToLocationComponentNavigationEnumeration,false));
 	}
 
 	void GoToLocationComponent::OnInitialize()
