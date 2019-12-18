@@ -39,7 +39,7 @@ namespace GASS
 		{
 			return m_RefObject.lock();
 		}
-		//bool IsValid() const {return SceneObjectPtr(m_RefObject,NO_THROW);}
+		
 		SceneObjectGUID GetRefGUID() const {return m_RefObjectGUID;}
 		void SetRefGUID(const SceneObjectGUID &guid);
 		SceneObjectPtr GetRefObject() const {return m_RefObject.lock();}
@@ -47,6 +47,11 @@ namespace GASS
 		bool operator==(const SceneObjectRef& other) const
 		{
 			return m_RefObjectGUID == other.m_RefObjectGUID;
+		}
+
+		bool operator!=(const SceneObjectRef& other) const
+		{
+			return m_RefObjectGUID != other.m_RefObjectGUID;
 		}
 	protected:
 		void UpdateRefPtr();
