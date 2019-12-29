@@ -12,7 +12,7 @@ namespace GASS
 		VEHICLE_UNDRIVABLE_SURFACE = 0x0000ffff
 	};
 
-	static PxSceneQueryHitType::Enum VehicleWheelRaycastPreFilter(	
+	static PxQueryHitType::Enum VehicleWheelRaycastPreFilter(
 		PxFilterData filterData0, 
 		PxFilterData filterData1,
 		const void* constantBlock, PxU32 constantBlockSize,
@@ -24,7 +24,7 @@ namespace GASS
 		PX_UNUSED(constantBlockSize);
 		PX_UNUSED(constantBlock);
 		PX_UNUSED(filterData0);
-		return ((0 == (filterData1.word3 & VEHICLE_DRIVABLE_SURFACE)) ? PxSceneQueryHitType::eNONE : PxSceneQueryHitType::eBLOCK);
+		return ((0 == (filterData1.word3 & VEHICLE_DRIVABLE_SURFACE)) ? PxQueryHitType::eNONE : PxQueryHitType::eBLOCK);
 	}
 
 	//Set up query filter data so that vehicles can drive on shapes with this filter data.

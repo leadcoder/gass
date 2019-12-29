@@ -19,10 +19,10 @@
 *****************************************************************************/
 
 
-#include "Plugins/PhysX3/PhysXTerrainGeometryComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX/PhysXTerrainGeometryComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -137,8 +137,8 @@ namespace GASS
 			//hfDesc.convexEdgeThreshold = 0;
 			//hfDesc.flags = 0;
 
-			physx::PxHeightField* heightField = system->GetPxSDK()->createHeightField(hfDesc);
-			physx::PxTransform pose = physx::PxTransform::createIdentity();
+			physx::PxHeightField* heightField = system->GetPxCooking()->createHeightField(hfDesc, system->GetPxSDK()->getPhysicsInsertionCallback());// system->GetPxSDK()->createHeightField();
+			physx::PxTransform pose = physx::PxTransform(PxIdentity);
 
 			Vec3 position;
 			position.x = m_TerrainBounds.Min.x;
@@ -150,7 +150,7 @@ namespace GASS
 			physx::PxRigidStatic* hfActor = system->GetPxSDK()->createRigidStatic(pose);
 
 			physx::PxHeightFieldGeometry hfGeom(heightField, physx::PxMeshGeometryFlags(), static_cast<float>(heightScale), static_cast<float>(scale_x), static_cast<float>(scale_z));
-			shape = hfActor->createShape(hfGeom, *system->GetDefaultMaterial());
+			shape = PxRigidActorExt::createExclusiveShape(*hfActor,hfGeom, *system->GetDefaultMaterial());
 
 
 			physx::PxFilterData collFilterData;

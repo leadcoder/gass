@@ -19,87 +19,78 @@
 *****************************************************************************/
 
 
-#include "Plugins/PhysX3/PhysXSphereGeometryComponent.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXBoxGeometryComponent.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
 
 namespace GASS
 {
-	PhysXSphereGeometryComponent::PhysXSphereGeometryComponent():
-		m_Radius(1),
-		m_Material("DEFAULT")
+	PhysXBoxGeometryComponent::PhysXBoxGeometryComponent():
+		m_Size(1,1,1)
 	{
 
 	}
 
-	PhysXSphereGeometryComponent::~PhysXSphereGeometryComponent()
+	PhysXBoxGeometryComponent::~PhysXBoxGeometryComponent()
 	{
 
 	}
 
-	void PhysXSphereGeometryComponent::RegisterReflection()
+	void PhysXBoxGeometryComponent::RegisterReflection()
 	{
-		ComponentFactory::GetPtr()->Register<PhysXSphereGeometryComponent>("PhysicsSphereGeometryComponent");
-		RegisterGetSet("Radius", &GASS::PhysXSphereGeometryComponent::GetRadius, &GASS::PhysXSphereGeometryComponent::SetRadius);
-		RegisterMember("Material", &GASS::PhysXSphereGeometryComponent::m_Material);
+		ComponentFactory::GetPtr()->Register<PhysXBoxGeometryComponent>("PhysicsBoxGeometryComponent");
+		RegisterGetSet("Size", &GASS::PhysXBoxGeometryComponent::GetSize, &GASS::PhysXBoxGeometryComponent::SetSize);
 	}
 
-	void PhysXSphereGeometryComponent::OnInitialize()
+	void PhysXBoxGeometryComponent::OnInitialize()
 	{
 		PhysXBaseGeometryComponent::OnInitialize();
 	}
 
-	physx::PxShape* PhysXSphereGeometryComponent::CreateShape()
+	physx::PxShape* PhysXBoxGeometryComponent::CreateShape()
 	{
 		if(!m_Body)
 			return NULL;
-
 		//Create shape
 		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
+
 			if(geom)
 			{
-				Sphere sphere = geom->GetBoundingSphere();
-				m_Radius = sphere.m_Radius;
+				AABox box = geom->GetBoundingBox();
+				SetSize((box.Max - box.Min));
+				//SetOffset((box.Max + box.Min)*0.5);
+			}
+			else
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found, not possible to get size from geomtry","PhysXBoxGeometryComponent::CreateShape");
 			}
 		}
-		Float  rad = GetRadius();
+		Vec3 size = GetSize();
+		physx::PxTransform offset = physx::PxTransform(physx::PxIdentity);
 
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = m_Body->GetPxRigidDynamic()->createShape(physx::PxSphereGeometry(static_cast<float>(rad)), *material,physx::PxTransform(physx::PxVec3(0,0,0)));
+		physx::PxMaterial* material = system->GetDefaultMaterial();
 
+		physx::PxVec3 dims(static_cast<float>(size.x/2.0) , static_cast<float>(size.y/2.0) , static_cast<float>(size.z/2.0));
+
+		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*m_Body->GetPxRigidDynamic(), physx::PxBoxGeometry(dims), *material);
+		if (shape)
+			shape->setLocalPose(offset);
 		return shape;
 	}
 
-
-	void PhysXSphereGeometryComponent::SetRadius(Float rad)
+	void PhysXBoxGeometryComponent::SetSize(const Vec3 &size)
 	{
-		if(rad > 0)
+		if(size.x > 0 && size.y > 0 && size.z > 0)
 		{
-			m_Radius = rad;
+			m_Size = size;
 		}
 	}
 
-	Float PhysXSphereGeometryComponent::GetRadius() const
+	Vec3 PhysXBoxGeometryComponent::GetSize() const
 	{
-		return m_Radius;
-	}
-
-	void PhysXSphereGeometryComponent::UpdateDebug()
-	{
-		/*if(m_Debug)
-		{
-			if(m_BoxShape)
-			{
-				//dVector3 temp_size;
-				//dGeomBoxGetLengths (m_GeomID, temp_size);
-				hkVector4 h_size = m_BoxShape->getHalfExtents();
-				Vec3 size(h_size(0),h_size(1),h_size(2));
-				//const dReal* pos =  dGeomGetPosition(m_GeomID);
-				CreateDebugBox(size*2,m_Offset);
-			}
-		}*/
+		return m_Size;
 	}
 }

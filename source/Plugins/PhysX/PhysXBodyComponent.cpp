@@ -18,10 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
-#include "Plugins/PhysX3/PhysXSuspensionComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXSuspensionComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
 
 namespace GASS
 {
@@ -100,7 +100,7 @@ namespace GASS
 		m_Kinematic = value;
 		if(m_Actor)
 		{
-			m_Actor->setRigidDynamicFlag(physx::PxRigidDynamicFlag::eKINEMATIC, m_Kinematic);
+			m_Actor->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, m_Kinematic);
 		}
 	}
 

@@ -90,12 +90,12 @@ namespace GASS
 		bool recordMemoryAllocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), recordMemoryAllocations );
-		PxInitExtensions(*m_PhysicsSDK );
+		
 		if(m_PhysicsSDK == NULL)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Error creating PhysX device!", "PhysXPhysicsSystem::OnInit");
 		}
-		if(!PxInitExtensions(*m_PhysicsSDK))
+		if(!PxInitExtensions(*m_PhysicsSDK, nullptr))
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxInitExtensions failed!", "PhysXPhysicsSystem::OnInit");
 
 		//m_DefaultMaterial = m_PhysicsSDK->createMaterial(0.5,0.5,0.5);
@@ -103,7 +103,7 @@ namespace GASS
 		PxTolerancesScale scale;
 		PxCookingParams params(scale);
 		params.meshWeldTolerance = 0.001f;
-		params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES | PxMeshPreprocessingFlag::eREMOVE_UNREFERENCED_VERTICES | PxMeshPreprocessingFlag::eREMOVE_DUPLICATED_TRIANGLES);
+		params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES);
 
 		m_Cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, params);
 		if(!m_Cooking)

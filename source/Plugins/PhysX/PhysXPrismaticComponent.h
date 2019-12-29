@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
+#include "Plugins/PhysX/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "PhysXBaseJointComponent.h"
 #include "Sim/GASS.h"

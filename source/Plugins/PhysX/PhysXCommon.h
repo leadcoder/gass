@@ -36,6 +36,7 @@
 #include <PxRigidActor.h>
 #include <PxBatchQueryDesc.h>
 
+
 #include <foundation/PxErrorCallback.h>
 #include <foundation/PxPreprocessor.h>
 #include <foundation/PxAssert.h>
@@ -59,7 +60,7 @@
 #include <extensions/PxJoint.h>
 #include <extensions/PxDistanceJoint.h>
 #include <extensions/PxSphericalJoint.h>
-
+#include <extensions/PxRigidActorExt.h>
 #include <geometry/PxPlaneGeometry.h>
 #include <geometry/PxSphereGeometry.h>
 #include <geometry/PxBoxGeometry.h>
@@ -100,6 +101,6 @@
 #include "Sim/GASSSimSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
-#include "Plugins/PhysX3/PhysXConvert.h"
+#include "Plugins/PhysX/PhysXConvert.h"
 
 #endif 

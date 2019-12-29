@@ -19,89 +19,84 @@
 *****************************************************************************/
 
 #pragma once
-#include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
+#include "Plugins/PhysX/PhysXBaseGeometryComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"
-#include "Sim/Messages/GASSInputMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "IPhysXRigidDynamic.h"
+#include "Sim/Messages/GASSInputMessages.h"
+#include "characterkinematic/PxControllerBehavior.h"
 
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-
-	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent> , public IPhysXRigidDynamic, public IPlatformComponent
+	
+	/**
+		Component that utilize physx character controller. 
+	*/
+	
+	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>, 
+		public physx::PxControllerBehaviorCallback, 
+		public physx::PxUserControllerHitReport,
+		public IPlatformComponent
 	{
 	public:
-		PhysXVehicleComponent();
-		~PhysXVehicleComponent() override;
+		PhysXCharacterComponent();
+		~PhysXCharacterComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
-		physx::PxRigidDynamic* GetPxRigidDynamic() const override {return m_Actor;}
+		physx::PxRigidDynamic* GetPxActor() {return m_Actor;}
+		float GetMass() const {return m_Mass;}
+		void SetMass(float mass);
 		void SceneManagerTick(double delta) override;
-
+		
 		//IPlatformComponent
-		PlatformType GetType() const override {return PT_CAR;}
-		Vec3 GetSize() const override;
-		Float GetMaxSpeed() const override { return m_MaxSpeed; }
+		PlatformType GetType() const override {return PT_HUMAN;}
+		Vec3 GetSize() const override{return Vec3(m_Radius*2,m_StandingSize,m_Radius*2);}
+		Float GetMaxSpeed() const override {return m_MaxSpeed;}
+
+		// Implements PxControllerBehaviorCallback
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxShape& /*shape*/, const physx::PxActor& /*actor*/) override{return physx::PxControllerBehaviorFlags();}
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxController& /*controller*/) override{return physx::PxControllerBehaviorFlags();}
+		physx::PxControllerBehaviorFlags getBehaviorFlags(const physx::PxObstacle& /*obstacle*/) override{return physx::PxControllerBehaviorFlags();}
+
+		// Implements PxUserControllerHitReport
+		void onShapeHit(const physx::PxControllerShapeHit& hit) override;
+		void onControllerHit(const physx::PxControllersHit& /*hit*/) override {}
+		void onObstacleHit(const physx::PxControllerObstacleHit& /*hit*/) override {}
 	protected:
-		void OnPostSceneObjectInitializedEvent(PostSceneObjectInitializedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 		void OnInput(InputRelayEventPtr message);
-		
+		void OnPostUpdate(PostPhysicsSceneUpdateEventPtr message);
+	
 		//reflection functions
 		void SetPosition(const Vec3 &value);
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
-		Quaternion GetRotation() const;
-		
+		Quaternion GetRotation();
 		//helpers
 		void Reset();
-		physx::PxVec3 ComputeDim(const physx::PxConvexMesh* cm);
-		void ProcessAutoReverse(const physx::PxVehicleWheels& focusVehicle, 
-					const physx::PxVehicleDriveDynData& driveDynData, 
-					const physx::PxVehicleDrive4WRawInputData& carRawInputs,
-		bool& toggleAutoReverse, 
-		bool& newIsMovingForwardSlowly) const;
-		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
-		Float m_MaxSpeed;
-		SceneObjectRef m_FrontLeftWheel;
-		SceneObjectRef m_FrontRightWheel;
-		SceneObjectRef m_RearLeftWheel;
-		SceneObjectRef m_RearRightWheel;
-		std::vector<SceneObjectRef>m_ExtraWheels;
-		bool m_UseAutoReverse;
-		float m_ScaleMass;
-		float m_EnginePeakTorque;
-		float m_EngineMaxRotationSpeed;
-		float m_ClutchStrength;
-		float m_Mass;
-		float m_GearSwitchTime;
-		std::vector<float> m_GearRatios;
-		bool m_Debug;
-
-		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxRigidDynamic* m_Actor;
-		physx::PxVehicleDrive4W* m_Vehicle;
 		float m_ThrottleInput;
 		float m_SteerInput;
-		float m_BreakInput;
-		bool m_DigBrakeInput;
-		bool m_DigAccelInput;
-		bool m_IsMovingForwardSlowly;
-		bool m_InReverseMode;
-		bool m_UseDigitalInputs;
+		float m_Mass;
+		Float m_MaxSpeed;
+		Float m_Yaw;
+		Float m_CurrentVel;
+		Float m_StandingSize;
+		Float m_Radius;
+		Float m_YawMaxVelocity;
+		Float m_Acceleration;
+		physx::PxCapsuleController* m_Controller;
 		bool m_TrackTransformation;
-		AABox m_MeshBounds;
-		Vec3 m_ChassisDim;
+		
 	};
-	typedef GASS_SHARED_PTR<PhysXVehicleComponent> PhysXVehicleComponentPtr;
+	typedef GASS_SHARED_PTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;
 }
 

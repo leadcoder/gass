@@ -18,9 +18,9 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXCharacterComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXCharacterComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
 #include "Core/Math/GASSMath.h"
 using namespace physx;
 namespace GASS

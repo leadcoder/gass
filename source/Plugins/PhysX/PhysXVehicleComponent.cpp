@@ -18,12 +18,12 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXVehicleComponent.h"
-#include "Plugins/PhysX3/PhysXWheelComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXVehicleComponent.h"
+#include "Plugins/PhysX/PhysXWheelComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
@@ -404,7 +404,7 @@ namespace GASS
 
 		//We need a rigid body actor for the vehicle.
 		//Don't forget to add the actor the scene after setting up the associated vehicle.
-		m_Actor = system->GetPxSDK()->createRigidDynamic(PxTransform::createIdentity());
+		m_Actor = system->GetPxSDK()->createRigidDynamic(PxTransform(PxIdentity));
 
 
 		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
@@ -422,15 +422,15 @@ namespace GASS
 		for(PxU32 i=0;i < num_wheels;i++)
 		{
 			PxConvexMeshGeometry wheelGeom(wheelConvexMeshes[i]);
-			PxShape* wheelShape = m_Actor->createShape(wheelGeom,wheelMaterial);
+			PxShape* wheelShape = PxRigidActorExt::createExclusiveShape(*m_Actor,wheelGeom,wheelMaterial);
 			wheelShape->setQueryFilterData(vehQryFilterData);
 			wheelShape->setSimulationFilterData(wheelCollFilterData);
-			wheelShape->setLocalPose(PxTransform::createIdentity());
+			wheelShape->setLocalPose(PxTransform(PxIdentity));
 		}
 
 		PxConvexMeshGeometry chassisConvexGeom(chassisMesh.m_ConvexMesh);
 		const PxMaterial& chassisMaterial= *system->GetDefaultMaterial();
-		PxShape* chassisShape = m_Actor->createShape(chassisConvexGeom,chassisMaterial);
+		PxShape* chassisShape = PxRigidActorExt::createExclusiveShape(*m_Actor,chassisConvexGeom,chassisMaterial);
 		chassisShape->setQueryFilterData(vehQryFilterData);
 		chassisShape->userData = this;
 
@@ -441,11 +441,11 @@ namespace GASS
 		chassisShape->setSimulationFilterData(chassisCollFilterData);
 
 		chassisShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
-		chassisShape->setLocalPose(PxTransform::createIdentity());
+		chassisShape->setLocalPose(PxTransform(PxIdentity));
 
 		m_Actor->setMass(chassisData.mMass);
 		m_Actor->setMassSpaceInertiaTensor(chassisData.mMOI);
-		m_Actor->setCMassLocalPose(PxTransform(chassisData.mCMOffset,PxQuat::createIdentity()));
+		m_Actor->setCMassLocalPose(PxTransform(chassisData.mCMOffset, PxQuat(PxIdentity)));
 
 		m_Vehicle = PxVehicleDrive4W::allocate(static_cast<physx::PxU32>(num_wheels));
 		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-static_cast<physx::PxU32>(num_wheels));

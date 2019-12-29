@@ -18,8 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXBaseJointComponent.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXBaseJointComponent.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Sim/GASS.h"
 
 namespace GASS

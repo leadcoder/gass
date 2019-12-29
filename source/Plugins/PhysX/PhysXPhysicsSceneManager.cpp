@@ -18,11 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
-#include "Plugins/PhysX3/PhysXVehicleWheelQueryResults.h"
-#include "Plugins/PhysX3/PhysXStream.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX/PhysXVehicleWheelQueryResults.h"
+#include "Plugins/PhysX/PhysXStream.h"
 #include <PxPhysicsAPI.h>
 
 namespace GASS
@@ -116,7 +116,7 @@ namespace GASS
 			sceneDesc.filterShader = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
 
 															   //sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
-		sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
+		//sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 
 		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
 		if (!m_PxScene)
@@ -262,7 +262,7 @@ namespace GASS
 		convexDesc.points.count			= numVerts;
 		convexDesc.points.stride		= sizeof(physx::PxVec3);
 		convexDesc.points.data			= verts;
-		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX | physx::PxConvexFlag::eINFLATE_CONVEX;
+		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		physx::PxConvexMesh* convexMesh = NULL;
 		MemoryOutputStream buf;
@@ -340,20 +340,31 @@ namespace GASS
 	{
 		Float ray_length = ray_dir.Length();
 		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);
-		PxRaycastHit ray_hit;	
+		/*PxRaycastHit ray_hit;	
 		result.Coll = m_PxScene->raycastSingle(PxConvert::ToPx(ray_start + GetOffset()), 
 			PxConvert::ToPx(norm_ray_dir), 
 			static_cast<float>(ray_length),
 			PxSceneQueryFlag::eIMPACT | PxSceneQueryFlag::eNORMAL, 
 			ray_hit,
 			PxSceneQueryFilterData());
+
+		*/
+
+		PxRaycastBuffer ray_hit;
+		result.Coll = m_PxScene->raycast(PxConvert::ToPx(ray_start + GetOffset()),
+			PxConvert::ToPx(norm_ray_dir),
+			static_cast<PxReal>(ray_length),
+			ray_hit,
+			PxSceneQueryFlag::ePOSITION | PxSceneQueryFlag::eNORMAL,
+			PxSceneQueryFilterData());
+
 		if(result.Coll)
 		{
-			result.CollPosition = PxConvert::ToGASS(ray_hit.position) - GetOffset();
-			result.CollNormal = PxConvert::ToGASS(ray_hit.normal);
+			result.CollPosition = PxConvert::ToGASS(ray_hit.block.position) - GetOffset();
+			result.CollNormal = PxConvert::ToGASS(ray_hit.block.normal);
 			result.CollDist = (ray_start - result.CollPosition).Length();
-			if(ray_hit.shape && ray_hit.shape->userData)
-				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.shape->userData)->GetSceneObject();
+			if(ray_hit.block.shape && ray_hit.block.shape->userData)
+				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.block.shape->userData)->GetSceneObject();
 		}
 	}
 

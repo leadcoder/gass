@@ -18,11 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXMeshGeometryComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX/PhysXMeshGeometryComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -83,7 +83,7 @@ namespace GASS
 		m_TriangleMesh = scene_manager->CreateTriangleMesh(col_mesh_id,geom);
 
 		const Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-		physx::PxTransform pose = physx::PxTransform::createIdentity();
+		physx::PxTransform pose = physx::PxTransform(physx::PxIdentity);
 		pose.p = scene_manager->WorldToLocal(position);
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
@@ -93,7 +93,7 @@ namespace GASS
 		physx::PxMaterial* material = system->GetDefaultMaterial();
 		
 		physx::PxTriangleMeshGeometry geometry = physx::PxTriangleMeshGeometry(m_TriangleMesh.m_TriangleMesh);
-		m_Shape = m_Actor->createShape(geometry, *material);
+		m_Shape = physx::PxRigidActorExt::createExclusiveShape(*m_Actor, geometry, *material);
 
 		if(!m_Shape)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"failed to create shape","PhysXMeshGeometryComponent::OnGeometryChanged");

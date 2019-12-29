@@ -58,8 +58,8 @@ namespace GASS
 		sqDesc.queryMemory.userRaycastTouchBuffer = mSqHitBuffer;
 		sqDesc.queryMemory.raycastTouchBufferSize = mNumQueries;
 		sqDesc.preFilterShader = mPreFilterShader;
-		sqDesc.spuPreFilterShader = mSpuPreFilterShader;
-		sqDesc.spuPreFilterShaderSize = mSpuPreFilterShaderSize;
+		//sqDesc.spuPreFilterShader = mSpuPreFilterShader;
+		//sqDesc.spuPreFilterShaderSize = mSpuPreFilterShaderSize;
 		return scene->createBatchQuery(sqDesc);
 	}
 

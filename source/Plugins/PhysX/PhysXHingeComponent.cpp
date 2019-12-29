@@ -18,10 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXHingeComponent.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXHingeComponent.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASS.h"
 
@@ -132,7 +132,7 @@ namespace GASS
 		SetDriveForceLimit(m_DriveForceLimit);
 		UpdateLimits();
 		
-		m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::eREPORTING,m_Report);
+		//m_RevoluteJoint->setConstraintFlag(physx::PxConstraintFlag::eREPORTING,m_Report);
 
 		//m_RevoluteJoint->setProjectionLinearTolerance(0.01);
 		//m_RevoluteJoint->setProjectionAngularTolerance(0.01);

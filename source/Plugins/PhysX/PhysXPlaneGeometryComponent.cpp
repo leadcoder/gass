@@ -18,10 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPlaneGeometryComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXVehicleSceneQuery.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPlaneGeometryComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
 
 namespace GASS
 {
@@ -49,8 +49,8 @@ namespace GASS
 		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f),physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
 		physx::PxRigidStatic* plane = system->GetPxSDK()->createRigidStatic(pose);
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = plane->createShape(physx::PxPlaneGeometry(), *material);
-
+		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*plane, physx::PxPlaneGeometry(), *material);
+	
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
 		shape->setQueryFilterData(queryFilterData);

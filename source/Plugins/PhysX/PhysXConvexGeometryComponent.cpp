@@ -18,10 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#include "Plugins/PhysX3/PhysXConvexGeometryComponent.h"
-#include "Plugins/PhysX3/PhysXPhysicsSceneManager.h"
-#include "Plugins/PhysX3/PhysXPhysicsSystem.h"
-#include "Plugins/PhysX3/PhysXBodyComponent.h"
+#include "Plugins/PhysX/PhysXConvexGeometryComponent.h"
+#include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -96,7 +96,7 @@ namespace GASS
 
 
 			PxConvexMeshGeometry convex_geom(m_ConvexMesh.m_ConvexMesh);
-			m_Shape = body->GetPxRigidDynamic()->createShape(convex_geom, *material);
+			m_Shape = physx::PxRigidActorExt::createExclusiveShape(*body->GetPxRigidDynamic(), convex_geom, *material);
 			//update collision flags
 			GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 			physx::PxFilterData collFilterData;

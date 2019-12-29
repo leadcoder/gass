@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-#include "Plugins/PhysX3/PhysXBaseGeometryComponent.h"
+#include "Plugins/PhysX/PhysXBaseGeometryComponent.h"
 #include "PhysXCommon.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSIPlatformComponent.h"

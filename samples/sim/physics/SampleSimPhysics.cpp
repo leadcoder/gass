@@ -111,7 +111,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	}
 	else
 	{
-		config.Plugins.push_back("GASSPluginPhysX3");
+		config.Plugins.push_back("GASSPluginPhysX");
 		systems.push_back("PhysXPhysicsSystem");
 	}
 
