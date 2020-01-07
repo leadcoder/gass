@@ -80,7 +80,7 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
 		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity);
-		RegisterGetSet("Offset", &PhysXPhysicsSceneManager::GetOffset, &PhysXPhysicsSceneManager::SetOffset);
+		RegisterGetSet("Offset", &PhysXPhysicsSceneManager::GetOrigin, &PhysXPhysicsSceneManager::SetOrigin);
 	}
 
 	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
@@ -90,7 +90,7 @@ namespace GASS
 		m_CpuDispatcher(NULL),
 		m_VehicleSceneQueryData(NULL),
 		m_WheelRaycastBatchQuery(NULL),
-		m_Offset(0,0,0)
+		m_Origin(0,0,0)
 	{
 
 	}
@@ -103,8 +103,11 @@ namespace GASS
 
 		RegisterForPreUpdate<PhysXPhysicsSystem>();
 
+		
 		physx::PxSceneDesc sceneDesc(system->GetPxSDK()->getTolerancesScale());
+	
 		sceneDesc.gravity = physx::PxVec3(0, m_Gravity, 0);
+		
 		if (!sceneDesc.cpuDispatcher)
 		{
 			m_CpuDispatcher = physx::PxDefaultCpuDispatcherCreate(3);
@@ -119,6 +122,7 @@ namespace GASS
 		//sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 
 		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
+		
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
@@ -182,6 +186,19 @@ namespace GASS
 		return m_Gravity;
 	}
 
+	void PhysXPhysicsSceneManager::SetOrigin(const Vec3& origin)
+	{
+		m_Origin = origin;
+		if (m_PxScene)
+		{
+			if (GetScene()->GetGeocentric())
+			{
+				const physx::PxVec3 gravity = PxConvert::ToPx(m_Origin.NormalizedCopy() * m_Gravity);
+				m_PxScene->setGravity(gravity);
+			}
+		}
+	}
+
 	void PhysXPhysicsSceneManager::OnSceneCreated()
 	{
 		
@@ -203,8 +220,11 @@ namespace GASS
 
 				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs = system->GetSurfaceTirePairs();
 
+				
+				const physx::PxVec3 gravity = GetScene()->GetGeocentric() ? PxConvert::ToPx(m_Origin.NormalizedCopy() * m_Gravity) : physx::PxVec3(0, static_cast<float>(m_Gravity), 0);
+
 				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleSceneQueryData->getRaycastQueryResultBufferSize(), m_VehicleSceneQueryData->getRaycastQueryResultBuffer());
-				PxVehicleUpdates(static_cast<float>(delta_time), physx::PxVec3(0, static_cast<float>(m_Gravity), 0), *surfaceTirePairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
+				PxVehicleUpdates(static_cast<float>(delta_time), gravity, *surfaceTirePairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
 			}
 
 			m_PxScene->simulate(static_cast<float>(delta_time));
@@ -224,12 +244,12 @@ namespace GASS
 
 	Vec3 PhysXPhysicsSceneManager::LocalToWorld(const physx::PxVec3 & local) const
 	{
-		return PxConvert::ToGASS(local) - m_Offset;
+		return PxConvert::ToGASS(local) + m_Origin;
 	}
 
 	physx::PxVec3 PhysXPhysicsSceneManager::WorldToLocal(const Vec3 & world) const
 	{
-		return  PxConvert::ToPx(world + m_Offset);
+		return  PxConvert::ToPx(world - m_Origin);
 	}
 
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
@@ -351,7 +371,7 @@ namespace GASS
 		*/
 
 		PxRaycastBuffer ray_hit;
-		result.Coll = m_PxScene->raycast(PxConvert::ToPx(ray_start + GetOffset()),
+		result.Coll = m_PxScene->raycast(PxConvert::ToPx(ray_start - GetOrigin()),
 			PxConvert::ToPx(norm_ray_dir),
 			static_cast<PxReal>(ray_length),
 			ray_hit,
@@ -360,7 +380,7 @@ namespace GASS
 
 		if(result.Coll)
 		{
-			result.CollPosition = PxConvert::ToGASS(ray_hit.block.position) - GetOffset();
+			result.CollPosition = PxConvert::ToGASS(ray_hit.block.position) + GetOrigin();
 			result.CollNormal = PxConvert::ToGASS(ray_hit.block.normal);
 			result.CollDist = (ray_start - result.CollPosition).Length();
 			if(ray_hit.block.shape && ray_hit.block.shape->userData)

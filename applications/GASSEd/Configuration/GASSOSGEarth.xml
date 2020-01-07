@@ -5,6 +5,7 @@
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
+		<Plugin PluginFile = "GASSPluginPhysX"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginVehicle"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
@@ -38,7 +39,7 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
-	<MaterialSystem/>
+		<MaterialSystem/>
 		<EditorSystem>
 			<LockTerrainObjects value="false"/> 
 			<DefaultCameraTemplate value="OSGEarthCamera"/>
@@ -57,8 +58,6 @@
 		</RakNetNetworkSystem>
 		<OpenALSoundSystem>
 		</OpenALSoundSystem>
-		<ODECollisionSystem>
-		</ODECollisionSystem>
 		<PhysXPhysicsSystem>
 		</PhysXPhysicsSystem>
 		<OSGCollisionSystem>

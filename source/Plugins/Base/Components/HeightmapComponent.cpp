@@ -28,6 +28,7 @@
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Utils/GASSCollisionHelper.h"
 
@@ -158,6 +159,7 @@ namespace GASS
 	{
 		if(!GetSceneObject())
 			return;
+
 		AABox bbox = _GetTerrainBoundingBox();
 
 		Vec3 bbsize = bbox.GetSize();
@@ -168,24 +170,65 @@ namespace GASS
 		GeometryFlags flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 		ScenePtr scene = GetSceneObject()->GetScene();
 
+		TerrainSceneManagerPtr terrain_sm = scene->GetFirstSceneManagerByClass<ITerrainSceneManager>();
+		
 		//delete previous hm
 		delete m_HM;
-		//add some padding to support runtime height change
-		bbox.Min.y -= 100;
-		bbox.Max.y += 100;
-		m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
 
-		GASS_LOG(LINFO) << "START building heightmap\n";
-		for(unsigned int i = 0; i <  px_width; i++)
+		if (terrain_sm)
 		{
-			GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
-			for(unsigned int j = 0; j <  pz_height; j++)
+			Float half_width = m_Size.x * 0.5;
+			Float half_height = m_Size.y * 0.5;
+
+			bbox.Min.Set(-half_width, -500, -half_height);
+			bbox.Max.Set(half_width, 500, half_height);
+
+			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
+
+			GASS_LOG(LINFO) << "START building heightmap\n";
+		
+		
+			GASS_LOG(LINFO) << "OE Terrain\n";
+			Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			Mat4 transform(rot, pos);
+			
+
+			for (unsigned int i = 0; i < px_width; i++)
 			{
-				Vec3 pos(bbox.Min.x + i*inv_sample_ratio, 0, bbox.Min.z + j*inv_sample_ratio); 
-				float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
-				m_HM->SetHeightAtSample(i, j, h);
-			}	
+				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
+				for (unsigned int j = 0; j < pz_height; j++)
+				{
+					Vec3d loca_pos(bbox.Min.x + i * inv_sample_ratio, 0, bbox.Min.z + j * inv_sample_ratio);
+					Vec3d pos = transform * loca_pos;
+					double height;
+					terrain_sm->GetTerrainHeight(pos, height, flags);
+					//float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
+					m_HM->SetHeightAtSample(i, j, height);
+				}
+			}
 		}
+
+		else
+		{
+			//add some padding to support runtime height change
+			bbox.Min.y -= 100;
+			bbox.Max.y += 100;
+			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
+
+
+			for (unsigned int i = 0; i < px_width; i++)
+			{
+				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
+				for (unsigned int j = 0; j < pz_height; j++)
+				{
+					Vec3 pos(bbox.Min.x + i * inv_sample_ratio, 0, bbox.Min.z + j * inv_sample_ratio);
+					float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
+					m_HM->SetHeightAtSample(i, j, h);
+				}
+			}
+		}
+
 		m_HM->Save(_GetFilePath().GetFullPath());
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}

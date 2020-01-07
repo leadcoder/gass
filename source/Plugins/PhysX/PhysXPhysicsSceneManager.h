@@ -72,8 +72,8 @@ namespace GASS
 		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit = false) const;
 		void RegisterVehicle(physx::PxVehicleWheels* vehicle);
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
-		void SetOffset(const Vec3 &offset) {m_Offset = offset;}
-		Vec3 GetOffset() const {return m_Offset;}
+		void SetOrigin(const Vec3& offset);
+		Vec3 GetOrigin() const {return m_Origin;}
 		Vec3 LocalToWorld(const physx::PxVec3 & local) const; 
 		physx::PxVec3 WorldToLocal(const Vec3 & world) const;
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
@@ -87,7 +87,7 @@ namespace GASS
 		physx::PxTriangleMesh* _CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount);
 	private:
 		float m_Gravity;
-		Vec3 m_Offset;
+		Vec3 m_Origin;
 		bool m_Active;
 		bool m_Init;
 		physx::PxScene *m_PxScene;
