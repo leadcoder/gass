@@ -94,7 +94,7 @@ namespace GASS
 
 	void PhysXHingeComponent::CreateJoint()
 	{
-		if(!(m_Body1.IsValid() && m_Body1.IsValid()))
+		if(!(m_Body1.IsValid() && m_Body2.IsValid()))
 			return;
 
 		physx::PxRigidDynamic* a1 = m_Body1->GetFirstComponentByClass<IPhysXRigidDynamic>()->GetPxRigidDynamic();
