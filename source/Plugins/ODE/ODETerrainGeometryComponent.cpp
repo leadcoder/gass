@@ -57,8 +57,8 @@ namespace GASS
 	{
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ODETerrainGeometryComponent", OF_VISIBLE)));
 
-		RegisterProperty<unsigned long>("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
-		RegisterProperty<unsigned long>("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
+		RegisterGetSet("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
+		RegisterGetSet("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
 	}
 
 	void ODETerrainGeometryComponent::OnInitialize()

@@ -75,34 +75,22 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<CarAutopilotComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CarAutopilotComponent", OF_VISIBLE)));
 
-		RegisterProperty<std::string>("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for steer",PF_VISIBLE)));
-		RegisterProperty<std::string>("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Input mapping for throttle",PF_VISIBLE)));
-		RegisterMember("DesiredSpeed", &CarAutopilotComponent::m_DesiredSpeed,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Desired speed",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterMember("Enable", &CarAutopilotComponent::m_Enable,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterMember("DesiredPosRadius", &CarAutopilotComponent::m_DesiredPosRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable this component",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterMember("BrakeDistanceFactor", &CarAutopilotComponent::m_BrakeDistanceFactor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Multiplier for default linear brake distance (1m at 1m/s) ",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterMember("MaxReverseDistance", &CarAutopilotComponent::m_MaxReverseDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Max waypoint distance to use reverse",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterGetSet("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,PF_VISIBLE,"Input mapping for steer");
+		RegisterGetSet("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,PF_VISIBLE,"Input mapping for throttle");
+		RegisterMember("DesiredSpeed", &CarAutopilotComponent::m_DesiredSpeed,PF_VISIBLE  | PF_EDITABLE,"Desired speed");
+		RegisterMember("Enable", &CarAutopilotComponent::m_Enable,PF_VISIBLE  | PF_EDITABLE,"Enable/Disable this component");
+		RegisterMember("DesiredPosRadius", &CarAutopilotComponent::m_DesiredPosRadius,PF_VISIBLE  | PF_EDITABLE,"Enable/Disable this component");
+		RegisterMember("BrakeDistanceFactor", &CarAutopilotComponent::m_BrakeDistanceFactor,PF_VISIBLE  | PF_EDITABLE,"Multiplier for default linear brake distance (1m at 1m/s) ");
+		RegisterMember("MaxReverseDistance", &CarAutopilotComponent::m_MaxReverseDistance,PF_VISIBLE  | PF_EDITABLE,"Max waypoint distance to use reverse");
 
-		RegisterMember("TurnPID", &CarAutopilotComponent::m_TurnPID,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Steer PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
-		RegisterMember("TrottlePID", &CarAutopilotComponent::m_TrottlePID,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Throttle PID regulator values",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterMember("TurnPID", &CarAutopilotComponent::m_TurnPID,PF_VISIBLE  | PF_EDITABLE,"Steer PID regulator values");
+		RegisterMember("TrottlePID", &CarAutopilotComponent::m_TrottlePID,PF_VISIBLE  | PF_EDITABLE,"Throttle PID regulator values");
 
-		RegisterMember("Support3PointTurn", &CarAutopilotComponent::m_Support3PointTurn,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable/Disable Three Point Turn",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterMember("Support3PointTurn", &CarAutopilotComponent::m_Support3PointTurn,PF_VISIBLE  | PF_EDITABLE,"Enable/Disable Three Point Turn");
 
-		RegisterMember("InvertBackWardSteering", &CarAutopilotComponent::m_InvertBackWardSteering,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE  | PF_EDITABLE)));
+		RegisterMember("InvertBackWardSteering", &CarAutopilotComponent::m_InvertBackWardSteering,PF_VISIBLE  | PF_EDITABLE,"");
 
-		RegisterMember("CollisionAvoidance", &CarAutopilotComponent::m_CollisionAvoidance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Try to avoid collision with other entities", PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("CollisionAvoidance", &CarAutopilotComponent::m_CollisionAvoidance, PF_VISIBLE | PF_EDITABLE,"Try to avoid collision with other entities");
 	}
 
 	void CarAutopilotComponent::OnInitialize()

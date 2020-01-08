@@ -47,12 +47,12 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGTextComponent>("TextComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		RegisterProperty<ResourceHandle>("Font", &OSGTextComponent::GetFont, &OSGTextComponent::SetFont);
-		RegisterProperty<float>("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
-		RegisterProperty<bool>("ScaleByDistance", &OSGTextComponent::GetScaleByDistance, &OSGTextComponent::SetScaleByDistance);
-		RegisterProperty<Vec3>("Offset", &OSGTextComponent::GetOffset, &OSGTextComponent::SetOffset);
-		RegisterProperty<Vec4>("Color", &OSGTextComponent::GetColor, &OSGTextComponent::SetColor);
-		RegisterProperty<bool>("DropShadow", &OSGTextComponent::GetDropShadow, &OSGTextComponent::SetDropShadow);
+		RegisterGetSet("Font", &OSGTextComponent::GetFont, &OSGTextComponent::SetFont);
+		RegisterGetSet("CharacterSize", &OSGTextComponent::GetCharacterSize, &OSGTextComponent::SetCharacterSize);
+		RegisterGetSet("ScaleByDistance", &OSGTextComponent::GetScaleByDistance, &OSGTextComponent::SetScaleByDistance);
+		RegisterGetSet("Offset", &OSGTextComponent::GetOffset, &OSGTextComponent::SetOffset);
+		RegisterGetSet("Color", &OSGTextComponent::GetColor, &OSGTextComponent::SetColor);
+		RegisterGetSet("DropShadow", &OSGTextComponent::GetDropShadow, &OSGTextComponent::SetDropShadow);
 	}
 
 	void OSGTextComponent::OnInitialize()

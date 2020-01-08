@@ -65,7 +65,7 @@ namespace GASS
 
 	void ODECollisionGeometryComponent::RegisterReflection()
 	{
-		RegisterProperty<std::string>("Type", &GASS::ODECollisionGeometryComponent::GetTypeByName, &GASS::ODECollisionGeometryComponent::SetTypeByName);
+		RegisterGetSet("Type", &GASS::ODECollisionGeometryComponent::GetTypeByName, &GASS::ODECollisionGeometryComponent::SetTypeByName);
 	}
 
 	void ODECollisionGeometryComponent::OnInitialize()

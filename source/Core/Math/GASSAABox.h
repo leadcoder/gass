@@ -165,6 +165,8 @@ namespace GASS
 		*/
 		std::vector<TVec3<TYPE> > GetCorners() const;
 
+		bool operator== (const TAABox &box) const;
+	
 		//public for fast access
 		TVec3<TYPE> Max;
 		TVec3<TYPE> Min;
@@ -614,6 +616,12 @@ namespace GASS
 			tbexit = std::min(tbexit, tsexit);
 			return true;
 		}
+	}
+
+	template<class TYPE>
+	bool TAABox<TYPE>::operator== (const TAABox<TYPE> &box) const
+	{
+		return (box.Min == Min && box.Max == Max);
 	}
 }
 

@@ -45,9 +45,9 @@ namespace GASS
 		ComponentFactory::Get().Register<ArrowGeometryComponent>();
 		ADD_DEPENDENCY("LocationComponent")
 		ADD_DEPENDENCY("ManualMeshComponent")
-		RegisterProperty<Vec2>("Size", &GASS::ArrowGeometryComponent::GetSize, &GASS::ArrowGeometryComponent::SetSize);
-		RegisterProperty<ResourceHandle>("Texture", &GASS::ArrowGeometryComponent::GetTexture, &GASS::ArrowGeometryComponent::SetTexture);
-		RegisterProperty<Vec4>("Color",&ArrowGeometryComponent::GetColor, &ArrowGeometryComponent::SetColor);
+		RegisterGetSet("Size", &GASS::ArrowGeometryComponent::GetSize, &GASS::ArrowGeometryComponent::SetSize);
+		RegisterGetSet("Texture", &GASS::ArrowGeometryComponent::GetTexture, &GASS::ArrowGeometryComponent::SetTexture);
+		RegisterGetSet("Color",&ArrowGeometryComponent::GetColor, &ArrowGeometryComponent::SetColor);
 	}
 
 	void ArrowGeometryComponent::OnInitialize()

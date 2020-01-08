@@ -92,7 +92,7 @@ namespace GASS
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const override;
-		bool Raycast(const PlatformType platform_type, const GASS::Vec3 &from_pos, const GASS::Vec3 &to_pos, GASS::Vec3 &hit_pos) const override { return false; }
+		bool Raycast(const PlatformType /*platform_type*/, const GASS::Vec3 & /*from_pos*/, const GASS::Vec3 & /*to_pos*/, GASS::Vec3 & /*hit_pos*/) const override { return false; }
 		
 		Vec3 GetRandomPoint() const;
 		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
@@ -105,7 +105,7 @@ namespace GASS
 		//temp public to allow debug updates from outside
 		void UpdateNavMeshVis();
 		//need to be public for enumerator access it
-		std::vector<SceneObjectPtr> GetMeshSelectionEnum();
+		std::vector<SceneObjectRef> GetMeshSelectionEnum();
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
 		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
@@ -179,7 +179,7 @@ namespace GASS
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
 		FilePath _GetFilePath() const;
-
+	
 		void OnEditPosition(EditPositionMessagePtr message);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 

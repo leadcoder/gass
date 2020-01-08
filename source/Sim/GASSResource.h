@@ -23,7 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSFilePath.h"
-#include "Core/Reflection/GASSPropertyMetaData.h"
+#include "Core/Reflection/GASSIProperty.h"
 #include "Sim/GASSResourceLocation.h"
 
 namespace GASS
@@ -48,22 +48,5 @@ namespace GASS
 		std::string m_ResourceType;
 	};
 	GASS_PTR_DECL(FileResource)
-
-
-	class GASSExport FileResourcePropertyMetaData : public EnumerationPropertyMetaData
-	{
-	public:
-		FileResourcePropertyMetaData(const std::string &annotation, PropertyFlags flags, std::string res_group, std::string res_type): EnumerationPropertyMetaData(annotation,flags,false),
-			m_ResourceGroup(res_group),
-			m_ResourceType(res_type)
-		{
-
-		}
-		std::vector<std::string> GetEnumeration(BaseReflectionObjectPtr object) const override;
-	private:
-		std::string m_ResourceGroup;
-		std::string m_ResourceType;
-	};
-	typedef GASS_SHARED_PTR<FileResourcePropertyMetaData> FileResourcePropertyMetaDataPtr;
 }
 #endif 

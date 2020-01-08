@@ -60,11 +60,9 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreManualMeshComponent>("ManualMeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
-			RegisterProperty<bool>("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
+			RegisterGetSet("CastShadow", &GASS::OgreManualMeshComponent::GetCastShadow, &GASS::OgreManualMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 
-		RegisterMember("GeometryFlags", &OgreManualMeshComponent::m_GeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		RegisterMember("GeometryFlags", &OgreManualMeshComponent::m_GeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OgreManualMeshComponent::OnInitialize()

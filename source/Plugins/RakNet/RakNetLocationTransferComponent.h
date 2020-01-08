@@ -28,6 +28,7 @@
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {
@@ -120,9 +121,6 @@ namespace GASS
 	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public INetworkComponent
 	{
 	public:
-
-		
-
 		RakNetLocationTransferComponent();
 		~RakNetLocationTransferComponent() override;
 		static void RegisterReflection();
@@ -160,7 +158,6 @@ namespace GASS
 		double m_DeadReckoning;
 		double m_LastSerialize;
 		float m_SendFreq;
-		//int m_RelativeToParent;
 		bool m_UpdatePosition;
 		bool m_UpdateRotation;
 		bool m_ExtrapolatePosition;

@@ -39,10 +39,10 @@ namespace GASS
 	};
 
 	START_ENUM_BINDER(FogMode,FogModeBinder)
-		Bind("FM_LINEAR",FM_LINEAR);
-		Bind("FM_EXP",FM_EXP);
-		Bind("FM_EXP2",FM_EXP2);
-		Bind("FM_NONE",FM_NONE);
+		BIND(FM_LINEAR)
+		BIND(FM_EXP)
+		BIND(FM_EXP2)
+		BIND(FM_NONE)
 	END_ENUM_BINDER(FogMode,FogModeBinder)
 
 	/**

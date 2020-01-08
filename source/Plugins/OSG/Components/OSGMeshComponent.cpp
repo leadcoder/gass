@@ -29,17 +29,6 @@
 
 namespace GASS
 {
-	std::vector<std::string> OSGMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
-	{
-		std::vector<std::string> content;
-		OSGMeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<OSGMeshComponent>(object);
-		if(mesh)
-		{
-			content = mesh->GetAvailableMeshFiles();
-		}
-		return content;
-	}
-
 	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
 		m_ReceiveShadow  (false),
 		m_Initlized(false),
@@ -62,32 +51,23 @@ namespace GASS
 		ComponentFactory::Get().Register<OSGMeshComponent>("MeshComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
-
-		RegisterProperty<ResourceHandle>("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource,
-			OSGMeshEnumerationMetaDataPtr(new OSGMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
-		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
-		RegisterProperty<bool>("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh receive shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Lighting", &OSGMeshComponent::GetLighting, &OSGMeshComponent::SetLighting,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Enable Light for this mesh",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Expand mesh child nodes",PF_VISIBLE)));
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration,true)));
-		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Flip DDS textures for this model? (need reload)", PF_VISIBLE | PF_EDITABLE)));
-
+		auto filename_prop = RegisterGetSet("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
+		filename_prop->SetObjectOptionsFunction(&OSGMeshComponent::GetAvailableMeshFiles);
+		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
+		RegisterGetSet("CastShadow", &OSGMeshComponent::GetCastShadow, &OSGMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
+		RegisterGetSet("ReceiveShadow", &OSGMeshComponent::GetReceiveShadow, &OSGMeshComponent::SetReceiveShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh receive shadows or not");
+		RegisterGetSet("Lighting", &OSGMeshComponent::GetLighting, &OSGMeshComponent::SetLighting,PF_VISIBLE | PF_EDITABLE,"Enable Light for this mesh");
+		RegisterGetSet("Expand", &OSGMeshComponent::GetExpand, &OSGMeshComponent::SetExpand,PF_VISIBLE,"Expand mesh child nodes");
+		RegisterGetSet("GeometryFlags", &OSGMeshComponent::GetGeometryFlagsBinder, &OSGMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
+		RegisterMember("FlipDDS", &GASS::OSGMeshComponent::m_FlipDDS, PF_VISIBLE | PF_EDITABLE,"Flip DDS textures for this model? (need reload)");
+		
+		auto import_mesh_prop = RegisterGetSet("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh, PF_VISIBLE | PF_EDITABLE, "Import new mesh");
 		std::vector<std::string> ext;
 		ext.push_back("3ds");
 		ext.push_back("flt");
 		ext.push_back("obj");
 		ext.push_back("*");
-
-		RegisterProperty<FilePath>("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import new mesh",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE,ext)));
+		import_mesh_prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE,ext));
 	}
 
 	void OSGMeshComponent::OnInitialize()
@@ -99,9 +79,9 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
 
-	std::vector<std::string> OSGMeshComponent::GetAvailableMeshFiles() const
+	std::vector<ResourceHandle> OSGMeshComponent::GetAvailableMeshFiles() const
 	{
-		std::vector<std::string> content;
+		std::vector<ResourceHandle> content;
 		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
 		std::vector<std::string> values;

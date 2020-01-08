@@ -53,12 +53,12 @@ namespace GASS
 
 	void ODEBodyComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("Mass", &ODEBodyComponent::GetMass, &ODEBodyComponent::SetMass);
-		RegisterProperty<Vec3>("CGPosition",&ODEBodyComponent::GetCGPosition, &ODEBodyComponent::SetCGPosition);
-		RegisterProperty<Vec3>("SymmetricInertia",&ODEBodyComponent::GetSymmetricInertia, &ODEBodyComponent::SetSymmetricInertia);
-		RegisterProperty<Vec3>("AssymetricInertia",&ODEBodyComponent::GetAssymetricInertia, &ODEBodyComponent::SetAssymetricInertia);
-		RegisterProperty<bool>("EffectJoints",&ODEBodyComponent::GetEffectJoints, &ODEBodyComponent::SetEffectJoints);
-		RegisterProperty<bool>("Active",&ODEBodyComponent::GetActive, &ODEBodyComponent::SetActive);
+		RegisterGetSet("Mass", &ODEBodyComponent::GetMass, &ODEBodyComponent::SetMass);
+		RegisterGetSet("CGPosition",&ODEBodyComponent::GetCGPosition, &ODEBodyComponent::SetCGPosition);
+		RegisterGetSet("SymmetricInertia",&ODEBodyComponent::GetSymmetricInertia, &ODEBodyComponent::SetSymmetricInertia);
+		RegisterGetSet("AssymetricInertia",&ODEBodyComponent::GetAssymetricInertia, &ODEBodyComponent::SetAssymetricInertia);
+		RegisterGetSet("EffectJoints",&ODEBodyComponent::GetEffectJoints, &ODEBodyComponent::SetEffectJoints);
+		RegisterGetSet("Active",&ODEBodyComponent::GetActive, &ODEBodyComponent::SetActive);
 
 	}
 

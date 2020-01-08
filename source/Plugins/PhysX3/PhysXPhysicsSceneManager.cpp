@@ -79,8 +79,8 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
-		REG_PROPERTY(float, Gravity, PhysXPhysicsSceneManager);
-		REG_PROPERTY(Vec3, Offset, PhysXPhysicsSceneManager);
+		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity);
+		RegisterGetSet("Offset", &PhysXPhysicsSceneManager::GetOffset, &PhysXPhysicsSceneManager::SetOffset);
 	}
 
 	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),

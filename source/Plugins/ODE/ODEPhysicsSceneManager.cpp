@@ -39,7 +39,7 @@ namespace GASS
 
 	void ODEPhysicsSceneManager::RegisterReflection()
 	{
-		RegisterProperty<float>("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
+		RegisterGetSet("Gravity", &GASS::ODEPhysicsSceneManager::GetGravity, &GASS::ODEPhysicsSceneManager::SetGravity);
 	}
 
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),

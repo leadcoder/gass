@@ -55,8 +55,8 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::RegisterReflection()
 	{
-		RegisterProperty<Vec3>("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
-		RegisterProperty<bool>("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
+		RegisterGetSet("Offset", &GASS::PhysXBaseGeometryComponent::GetOffset, &GASS::PhysXBaseGeometryComponent::SetOffset);
+		RegisterGetSet("SizeFromMesh", &GASS::PhysXBaseGeometryComponent::GetSizeFromMesh, &GASS::PhysXBaseGeometryComponent::SetSizeFromMesh);
 		RegisterMember("SimulationCollision", &GASS::PhysXBaseGeometryComponent::m_SimulationCollision);
 	}
 

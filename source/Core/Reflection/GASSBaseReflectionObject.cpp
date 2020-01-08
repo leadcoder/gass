@@ -67,10 +67,13 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				const IProperty * prop = (*iter);
-				
-				tinyxml2::XMLElement *prop_elem = parent->GetDocument()->NewElement(prop->GetName().c_str());
-				prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
-				parent->LinkEndChild( prop_elem);
+				bool serialize = !(prop->GetFlags() & PF_RUNTIME);
+				if (serialize)
+				{
+					tinyxml2::XMLElement *prop_elem = parent->GetDocument()->NewElement(prop->GetName().c_str());
+					prop_elem->SetAttribute("value", prop->GetValueAsString(this).c_str());
+					parent->LinkEndChild(prop_elem);
+				}
 				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();
@@ -86,7 +89,9 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-				prop->Serialize(this,serializer);
+				const bool serialize = !(prop->GetFlags() & PF_RUNTIME);
+				if(serialize)
+					prop->Serialize(this,serializer);
 				++iter;
 			}
 			pRTTI = pRTTI->GetAncestorRTTI();

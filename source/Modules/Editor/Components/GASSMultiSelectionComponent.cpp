@@ -25,8 +25,8 @@ namespace GASS
 	void MultiSelectionComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<MultiSelectionComponent>();
-		RegisterProperty<ColorRGBA>("Color",&MultiSelectionComponent::GetColor, &MultiSelectionComponent::SetColor);
-		RegisterProperty<std::string>("Type",&MultiSelectionComponent::GetType, &MultiSelectionComponent::SetType);
+		RegisterGetSet("Color",&MultiSelectionComponent::GetColor, &MultiSelectionComponent::SetColor);
+		RegisterGetSet("Type",&MultiSelectionComponent::GetType, &MultiSelectionComponent::SetType);
 	}
 
 	void MultiSelectionComponent::OnInitialize()

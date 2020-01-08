@@ -35,36 +35,25 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "GetTime.h"
 
 //#define _DEBUG_LTC_
 
 namespace GASS
 {
 	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_Velocity(0,0,0),
-//		m_LocalVelocity(0,0,0),
 		m_AngularVelocity(0,0,0),
-//		m_LocalAngularVelocity(0,0,0),
 		m_DeadReckoning(0),
 		m_LastSerialize(0),
 		m_ParentPos(0,0,0),
-		//m_ClientLocationMode(0),
 		m_UpdatePosition(true),
 		m_UpdateRotation(true),
-		m_SendFreq(0), // 20fps
+		m_SendFreq(0),
 		m_NumHistoryFrames(6),
 		m_ExtrapolatePosition(true),
 		m_ExtrapolateRotation(true),
 		m_ClientLocationMode(UNCHANGED)
 	{
-
 		m_LocationHistory.resize(m_NumHistoryFrames);
-		/*for(int i = 0 ; i < m_NumHistoryFrames; i++)
-		{
-			m_LocationHistory[i].Position = Vec3(0,0,0);
-			m_LocationHistory[i].Rotation = Quaternion::IDENTITY;
-			m_LocationHistory[i].Time = 0;
-		}*/
 	}
 
 	RakNetLocationTransferComponent::~RakNetLocationTransferComponent()
@@ -76,12 +65,12 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<RakNetLocationTransferComponent>("LocationTransferComponent");
 		GASS::PackageFactory::GetPtr()->Register(TRANSFORMATION_DATA,new GASS::Creator<TransformationPackage, NetworkPackage>);
-		RegisterProperty<float>("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
+		RegisterGetSet("SendFrequency", &RakNetLocationTransferComponent::GetSendFrequency, &RakNetLocationTransferComponent::SetSendFrequency);
 		RegisterMember("ClientLocationMode", &RakNetLocationTransferComponent::m_ClientLocationMode);
-		RegisterProperty<bool>("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
-		RegisterProperty<bool>("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
-		RegisterProperty<bool>("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
-		RegisterProperty<bool>("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
+		RegisterGetSet("UpdatePosition", &RakNetLocationTransferComponent::GetUpdatePosition, &RakNetLocationTransferComponent::SetUpdatePosition);
+		RegisterGetSet("UpdateRotation", &RakNetLocationTransferComponent::GetUpdateRotation, &RakNetLocationTransferComponent::SetUpdateRotation);
+		RegisterGetSet("ExtrapolatePosition", &RakNetLocationTransferComponent::GetExtrapolatePosition, &RakNetLocationTransferComponent::SetExtrapolatePosition);
+		RegisterGetSet("ExtrapolateRotation", &RakNetLocationTransferComponent::GetExtrapolateRotation, &RakNetLocationTransferComponent::SetExtrapolateRotation);
 	}
 
 	void RakNetLocationTransferComponent::OnInitialize()
@@ -128,27 +117,18 @@ namespace GASS
 				base->SetPropertyValue("AttachToParent", true);
 			}
 		}
-
 	}
 
 	void RakNetLocationTransferComponent::OnVelocityNotify(PhysicsVelocityEventPtr message)
 	{
-		/*Mat4 trans;
-		trans.Identity();
-		m_RotationHistory[0].ToRotationMatrix(trans);
-		//transform
-		m_Velocity = trans*message->GetLinearVelocity();
-		m_AngularVelocity = trans*message->GetAngularVelocity();*/
 		m_Velocity = message->GetLinearVelocity();
 		m_AngularVelocity = message->GetAngularVelocity();
-
 	}
 
 	void RakNetLocationTransferComponent::OnParentTransformationChanged(TransformationChangedEventPtr message)
 	{
 		m_ParentPos = message->GetPosition();
 		m_ParentRot = message->GetRotation();
-		//std::cout << "pos" << m_ParentPos << std::endl;
 	}
 
 	void RakNetLocationTransferComponent::OnTransformationChanged(TransformationChangedEventPtr message)
@@ -164,9 +144,7 @@ namespace GASS
 			Mat4 rot_mat = rot.GetRotationMatrix();
 
 			//remove translation in inverted....is this OK??
-
 			inv_parent.SetTranslation(Vec3(0, 0, 0));
-
 			//transform.GetInvert(); What was intended??? 
 			
 			//get relativ rotation matrix
@@ -174,13 +152,9 @@ namespace GASS
 
 			//update quaternion
 			rot.FromRotationMatrix(rot_mat);
-			//pos = pos - m_ParentPos;
-			//std::cout << "pos" << pos << std::endl;
 		}
 
-		double current_time = SimEngine::Get().GetTime();
-		//double delta = current_time - m_LocationHistory[0].Time;
-
+		unsigned int current_time = RakNet::GetTime();
 		m_LocationHistory[0].Position = pos;
 		m_LocationHistory[0].Rotation = rot;
 		m_LocationHistory[0].Time = current_time;
@@ -234,7 +208,7 @@ namespace GASS
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-			static RakNetTime  step_back = raknet->GetInterpolationLag();
+			static RakNetTime  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
 #ifdef _DEBUG_LTC_
 			if(GetAsyncKeyState(VK_F2))
 				step_back--;
@@ -263,7 +237,7 @@ namespace GASS
 #endif
 			if(time > m_LocationHistory[0].Time)
 			{
-				m_DeadReckoning = (float(time - m_LocationHistory[0].Time))/1000.0f;
+				m_DeadReckoning = static_cast<double>(time - m_LocationHistory[0].Time)/1000.0;
 
 				new_pos = m_LocationHistory[0].Position;
 				new_rot = m_LocationHistory[0].Rotation;
@@ -319,7 +293,7 @@ namespace GASS
 						RakNetTime tot = m_LocationHistory[i-1].Time - m_LocationHistory[i].Time;
 						double inter = 0;
 						if(tot > 0)
-							inter = double(elapsed)/double(tot);
+							inter = static_cast<double>(elapsed)/ static_cast<double>(tot);
 						new_pos = (m_LocationHistory[i].Position*inter) + (m_LocationHistory[i-1].Position*(1.0-inter));
 						new_rot = Quaternion::Slerp2(inter,m_LocationHistory[i-1].Rotation, m_LocationHistory[i].Rotation);
 #ifdef _DEBUG_LTC_
@@ -328,7 +302,6 @@ namespace GASS
 						break;
 					}
 				}
-
 			}
 
 			if (LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>())
@@ -360,14 +333,10 @@ namespace GASS
 
 	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
 	{
-		//std::cout << "RakNetLocationTransferComponent::OnDeserialize" << std::endl;
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
 			NetworkPackagePtr package = message->GetPackage();
 			TransformationPackagePtr trans_package = GASS_DYNAMIC_PTR_CAST<TransformationPackage>(package);
-
-			//if(trans_package->TimeStamp < m_TimeStampHistory[0])
-			//	std::cout << "wrong order!!" << std::endl;
 
 			m_Velocity = trans_package->Velocity;
 			m_AngularVelocity = trans_package->AngularVelocity;
@@ -379,13 +348,6 @@ namespace GASS
 			m_LocationHistory[0].Position = trans_package->Position;
 			m_LocationHistory[0].Rotation = trans_package->Rotation;
 			m_LocationHistory[0].Time = message->GetTimeStamp();
-
-
-
-			//RakNetTime time = RakNet::GetTime();
-			//std::cout << "Time diff:" <<  (time - message->GetTimeStamp()) <<std::endl;
-			//std::cout << "Time:" <<  time  << " Stamp:" << message->GetTimeStamp() << " Diff:" <<(time - message->GetTimeStamp()) << std::endl;
-
 		}
 	}
 }

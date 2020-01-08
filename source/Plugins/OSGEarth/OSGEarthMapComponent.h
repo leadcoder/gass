@@ -48,6 +48,7 @@ namespace GASS
 		std::vector<std::string> GetViewpointNames() const;
 		void SetViewpointByName(const std::string& viewpoint_name);
 
+		std::vector<std::string> GetMapLayerNames() const;
 		const MapLayers& GetMapLayers() const;
 
 		double GetTimeOfDay() const { return m_Hour; }

@@ -104,8 +104,7 @@ namespace GASS
 		RegisterMember("Wheels", &GASS::PhysXTankComponent::m_Wheels);
 		RegisterMember("MaxSpeed", &GASS::PhysXTankComponent::m_MaxSpeed);
 		RegisterMember("SteerLimit", &GASS::PhysXTankComponent::m_SteerLimit);
-		RegisterMember("Debug", &GASS::PhysXTankComponent::m_Debug,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterMember("Debug", &GASS::PhysXTankComponent::m_Debug, PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	PxVec3 PhysXTankComponent::ComputeDim(const PxConvexMesh* cm)

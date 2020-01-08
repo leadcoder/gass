@@ -65,18 +65,13 @@ namespace GASS
 
 		ComponentFactory::GetPtr()->Register<GrassLoaderComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("GrassLoaderComponent", OF_VISIBLE)));
-		RegisterProperty<std::string>("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Can only be specified in template",PF_VISIBLE)));
-		RegisterProperty<std::string>("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap,
-			FilePathPropertyMetaDataPtr(new FilePathPropertyMetaData("Import density map",PF_VISIBLE | PF_EDITABLE, FilePathPropertyMetaData::IMPORT_FILE, ext)));
-		RegisterProperty<float>("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("You need to reload scene before this property take effect",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec4f>("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<std::string>("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
-		RegisterProperty<float>("ViewDistance", &GrassLoaderComponent::GetViewDistance, &GrassLoaderComponent::SetViewDistance,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("DensityMap", &GrassLoaderComponent::GetDensityMap, &GrassLoaderComponent::SetDensityMap,PF_VISIBLE,"Can only be specified in template");
+		RegisterGetSet("ImportDensityMap", &GrassLoaderComponent::GetImportDensityMap, &GrassLoaderComponent::SetImportDensityMap, PF_VISIBLE | PF_EDITABLE,"Import density map",
+			std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE, ext));
+		RegisterGetSet("PageSize", &GrassLoaderComponent::GetPageSize, &GrassLoaderComponent::SetPageSize,PF_VISIBLE | PF_EDITABLE,"You need to reload scene before this property take effect");
+		RegisterGetSet("CustomBounds", &GrassLoaderComponent::GetCustomBounds, &GrassLoaderComponent::SetCustomBounds,PF_VISIBLE,"");
+		RegisterGetSet("ColorMap", &GrassLoaderComponent::GetColorMap, &GrassLoaderComponent::SetColorMap,PF_VISIBLE,"");
+		RegisterGetSet("ViewDistance", &GrassLoaderComponent::GetViewDistance, &GrassLoaderComponent::SetViewDistance,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void GrassLoaderComponent::OnInitialize()

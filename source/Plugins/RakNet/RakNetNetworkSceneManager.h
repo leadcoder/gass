@@ -24,6 +24,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {

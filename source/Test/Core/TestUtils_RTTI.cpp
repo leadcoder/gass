@@ -39,12 +39,12 @@ public:
 	
 	static void RegisterReflection()
 	{
-		GASS::IProperty* property = GASS::CreateProperty<Car>("Name", &Car::GetName, &Car::SetName, GASS::PropertyMetaDataPtr());
+		GASS::IProperty* property = GASS::MakeGetSetProperty("Name", &Car::GetName, &Car::SetName);
 		m_RTTI.GetProperties()->push_back(property);
-		property = GASS::CreateProperty<Car>("Fuel", &Car::GetFuel, &Car::SetFuel, GASS::PropertyMetaDataPtr());
+		property = GASS::MakeGetSetProperty("Fuel", &Car::GetFuel, &Car::SetFuel);
 		m_RTTI.GetProperties()->push_back(property);
 
-		property = GASS::CreateProperty<Car>("Gears", &Car::m_Gears, GASS::PropertyMetaDataPtr());
+		property = GASS::MakeMemberProperty("Gears", &Car::m_Gears);
 		m_RTTI.GetProperties()->push_back(property);
 	}
 	static GASS::RTTI m_RTTI;
@@ -53,9 +53,9 @@ GASS::RTTI Car::m_RTTI = GASS::RTTI("SimpleRTTITest", NULL, Car::RegisterReflect
 
 TEST_CASE("Test RTTI")
 {
-	SECTION("Test property")
+	SECTION("Test SimplePropOwner Set/Get Property By String")
 	{
-		GASS::IProperty* property = GASS::CreateProperty<SimplePropOwner>("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName, GASS::PropertyMetaDataPtr());
+		GASS::IProperty* property = GASS::MakeGetSetProperty("Name", &SimplePropOwner::GetName, &SimplePropOwner::SetName);
 		SimplePropOwner po;
 		property->SetValueByString(&po,"Hello world");
 		std::string name = property->GetValueAsString(&po);

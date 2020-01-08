@@ -30,7 +30,7 @@ namespace GASS
 
 	void Component::RegisterReflection()
 	{
-		RegisterProperty<std::string>( "Name", &Component::GetName, &Component::SetName);
+		RegisterGetSet( "Name", &Component::GetName, &Component::SetName);
 	}
 
 	std::string Component::GetName() const 

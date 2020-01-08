@@ -113,18 +113,12 @@ namespace GASS
 	{
 		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
-		RegisterProperty<FogModeBinder>( "FogMode", &GASS::OSGGraphicsSceneManager::GetFogMode, &GASS::OSGGraphicsSceneManager::SetFogMode,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Fog type",PF_VISIBLE,&FogModeBinder::GetStringEnumeration)));
-		RegisterProperty<float>( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>( "FogDensity", &OSGGraphicsSceneManager::GetFogDensity, &OSGGraphicsSceneManager::SetFogDensity,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3>( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("FogMode", &OSGGraphicsSceneManager::GetFogMode, &OSGGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
+		RegisterGetSet( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogDensity", &OSGGraphicsSceneManager::GetFogDensity, &OSGGraphicsSceneManager::SetFogDensity,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void OSGGraphicsSceneManager::OnSceneCreated()

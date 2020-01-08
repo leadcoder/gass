@@ -31,14 +31,6 @@
 
 namespace GASS
 {
-	std::vector<SceneObjectPtr> NavMeshEnumeration(BaseReflectionObjectPtr obj)
-	{
-		RecastNavigationMeshComponentPtr navmesh_comp = GASS_DYNAMIC_PTR_CAST<RecastNavigationMeshComponent>(obj);
-		return navmesh_comp->GetMeshSelectionEnum();
-	}
-
-
-	typedef GASS_SHARED_PTR<SceneObjectEnumerationProxyPropertyMetaData > SceneObjectEnumerationProxyPropertyMetaDataPtr;
 	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new GraphicsMesh()),
 		m_NavVisLineMesh(new GraphicsMesh()),
 		m_NavMesh(NULL),
@@ -85,37 +77,38 @@ namespace GASS
 		ComponentFactory::GetPtr()->Register<RecastNavigationMeshComponent>();
 
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
-		RegisterMember("AutoCollectMeshes", &RecastNavigationMeshComponent::m_AutoCollectMeshes, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(bool, Build, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,CellSize, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,CellHeight, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,AgentHeight, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,AgentRadius, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,AgentMaxClimb, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,AgentMaxSlope, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,RegionMinSize,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,RegionMergeSize, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,EdgeMaxLen,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,EdgeMaxError,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,VertsPerPoly, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,DetailSampleDist,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(float,DetailSampleMaxError,RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(int, GridSize, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		
+		RegisterMember("AutoCollectMeshes", &RecastNavigationMeshComponent::m_AutoCollectMeshes, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("Build", &RecastNavigationMeshComponent::GetBuild, &RecastNavigationMeshComponent::SetBuild,PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("CellSize", &RecastNavigationMeshComponent::GetCellSize, &RecastNavigationMeshComponent::SetCellSize, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("CellHeight", &RecastNavigationMeshComponent::GetCellHeight, &RecastNavigationMeshComponent::SetCellHeight, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("AgentHeight", &RecastNavigationMeshComponent::GetAgentHeight, &RecastNavigationMeshComponent::SetAgentHeight, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("AgentRadius", &RecastNavigationMeshComponent::GetAgentRadius, &RecastNavigationMeshComponent::SetAgentRadius, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("AgentMaxClimb", &RecastNavigationMeshComponent::GetAgentMaxClimb, &RecastNavigationMeshComponent::SetAgentMaxClimb, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("AgentMaxSlope", &RecastNavigationMeshComponent::GetAgentMaxSlope, &RecastNavigationMeshComponent::SetAgentMaxSlope, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("RegionMinSize", &RecastNavigationMeshComponent::GetRegionMinSize, &RecastNavigationMeshComponent::SetRegionMinSize, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("RegionMergeSize", &RecastNavigationMeshComponent::GetRegionMergeSize, &RecastNavigationMeshComponent::SetRegionMergeSize, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("EdgeMaxLen", &RecastNavigationMeshComponent::GetEdgeMaxLen, &RecastNavigationMeshComponent::SetEdgeMaxLen, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("EdgeMaxError", &RecastNavigationMeshComponent::GetEdgeMaxError, &RecastNavigationMeshComponent::SetEdgeMaxError, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("VertsPerPoly", &RecastNavigationMeshComponent::GetVertsPerPoly, &RecastNavigationMeshComponent::SetVertsPerPoly, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("DetailSampleDist", &RecastNavigationMeshComponent::GetDetailSampleDist, &RecastNavigationMeshComponent::SetDetailSampleDist, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("DetailSampleMaxError", &RecastNavigationMeshComponent::GetDetailSampleMaxError, &RecastNavigationMeshComponent::SetDetailSampleMaxError, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("GridSize", &RecastNavigationMeshComponent::GetGridSize, &RecastNavigationMeshComponent::SetGridSize, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("Visible", &RecastNavigationMeshComponent::GetVisible, &RecastNavigationMeshComponent::SetVisible, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("ShowMeshLines", &RecastNavigationMeshComponent::GetShowMeshLines, &RecastNavigationMeshComponent::SetShowMeshLines, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("ShowMeshSolid", &RecastNavigationMeshComponent::GetShowMeshSolid, &RecastNavigationMeshComponent::SetShowMeshSolid, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("MeshBoundingMin", &RecastNavigationMeshComponent::GetMeshBoundingMin, &RecastNavigationMeshComponent::SetMeshBoundingMin, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("MeshBoundingMax", &RecastNavigationMeshComponent::GetMeshBoundingMax, &RecastNavigationMeshComponent::SetMeshBoundingMax, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("TileSize", &RecastNavigationMeshComponent::GetTileSize, &RecastNavigationMeshComponent::SetTileSize, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("Transparency", &RecastNavigationMeshComponent::GetTransparency, &RecastNavigationMeshComponent::SetTransparency, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("BoundingBoxFromShape", &RecastNavigationMeshComponent::GetBoundingBoxFromShape, &RecastNavigationMeshComponent::SetBoundingBoxFromShape, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("ImportMesh", &RecastNavigationMeshComponent::GetImportMesh, &RecastNavigationMeshComponent::SetImportMesh, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("ExportMesh", &RecastNavigationMeshComponent::GetExportMesh, &RecastNavigationMeshComponent::SetExportMesh, PF_VISIBLE | PF_EDITABLE);
+		RegisterGetSet("Transparency", &RecastNavigationMeshComponent::GetTransparency, &RecastNavigationMeshComponent::SetTransparency, PF_VISIBLE | PF_EDITABLE);
 
-		REG_PROPERTY2(bool,Visible, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(bool,ShowMeshLines, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(bool,ShowMeshSolid, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("UseBoudingBox", &RecastNavigationMeshComponent::m_UseBoudingBox,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(Vec3,MeshBoundingMin,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(Vec3,MeshBoundingMax, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(int,TileSize,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(int,Transparency,	RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(std::vector<SceneObjectRef>, MeshSelection, RecastNavigationMeshComponent,SceneObjectEnumerationProxyPropertyMetaDataPtr(new SceneObjectEnumerationProxyPropertyMetaData("Mesh selection",PF_VISIBLE | PF_EDITABLE,NavMeshEnumeration,true)));
-		REG_PROPERTY2(std::string,BoundingBoxFromShape, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(FilePath,ImportMesh, RecastNavigationMeshComponent,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		REG_PROPERTY2(FilePath,ExportMesh, RecastNavigationMeshComponent, BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterMember("LocalOrigin", &RecastNavigationMeshComponent::m_LocalOrigin,BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE)));
+		RegisterMember("LocalOrigin", &RecastNavigationMeshComponent::m_LocalOrigin, PF_VISIBLE);
+		auto mesh_prop = RegisterGetSet("MeshSelection", &RecastNavigationMeshComponent::GetMeshSelection, &RecastNavigationMeshComponent::SetMeshSelection, PF_VISIBLE | PF_EDITABLE, "");
+		mesh_prop->SetObjectOptionsFunction(&RecastNavigationMeshComponent::GetMeshSelectionEnum);
+		RegisterMember("UseBoudingBox", &RecastNavigationMeshComponent::m_UseBoudingBox, PF_VISIBLE | PF_EDITABLE);
 	}
 
 	void RecastNavigationMeshComponent::OnInitialize()
@@ -1111,9 +1104,9 @@ namespace GASS
 		return FilePath("");
 	}
 
-	std::vector<SceneObjectPtr> RecastNavigationMeshComponent::GetMeshSelectionEnum()
+	std::vector<SceneObjectRef> RecastNavigationMeshComponent::GetMeshSelectionEnum()
 	{
-		std::vector<SceneObjectPtr> objs;
+		std::vector<SceneObjectRef> objs;
 		if(GetSceneObject())
 		{
 			ComponentContainer::ComponentVector components;
@@ -1569,15 +1562,13 @@ namespace GASS
 		return ret;
 	}
 
-
 	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const
 	{
-		bool ret = false;
 		if (m_NavMesh)
 		{
 			GASS::Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
-			float rescast_pos[3];
-			GASSToRecast(in_pos_v3, rescast_pos);
+			float recast_pos[3];
+			GASSToRecast(in_pos_v3, recast_pos);
 
 			dtQueryFilter filter;
 			dtPolyRef poly_ref = 0;
@@ -1586,11 +1577,11 @@ namespace GASS
 			polyPickExt[0] = search_radius;
 			polyPickExt[1] = FLT_MAX / 3.0f; //should be large enough, is later clamped to tile bounding box
 			polyPickExt[2] = search_radius;
-			ret = m_NavQuery->findNearestPoly(rescast_pos, polyPickExt, &filter, &poly_ref, 0);
+			ret = m_NavQuery->findNearestPoly(recast_pos, polyPickExt, &filter, &poly_ref, 0);
 			if (dtStatusFailed(ret))
 				return false;
 		}
-		return ret;
+		return true;
 	}
 
 	bool RecastNavigationMeshComponent::GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const

@@ -9,9 +9,18 @@ TEST_CASE("Test AARect")
 	{
 		const GASS::Vec2d min(1, 2);
 		const GASS::Vec2d max(2, 3);
-		const GASS::AARectd box(min, max);
-		REQUIRE(box.Min == min);
-		REQUIRE(box.Max == max);
+		const GASS::AARectd rect(min, max);
+		REQUIRE(rect.Min == min);
+		REQUIRE(rect.Max == max);
+	}
+
+	SECTION("Test operator==")
+	{
+		const GASS::Vec2d min(1, 2);
+		const GASS::Vec2d max(2, 3);
+		const GASS::AARectd rect1(min, max);
+		const GASS::AARectd rect2(rect1);
+		REQUIRE(rect1 == rect2);
 	}
 }
 

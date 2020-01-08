@@ -46,14 +46,10 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGEarthGeoComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation", OF_VISIBLE)));
-		RegisterProperty<double>("Latitude", &OSGEarthGeoComponent::GetLatitude, &OSGEarthGeoComponent::SetLatitude,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<double>("Longitude", &OSGEarthGeoComponent::GetLongitude, &OSGEarthGeoComponent::SetLongitude,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<double>("HeightAboveMSL", &OSGEarthGeoComponent::GetHeightAboveMSL, &OSGEarthGeoComponent::SetHeightAboveMSL,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<double>("HeightAboveGround", &OSGEarthGeoComponent::GetHeightAboveGround, &OSGEarthGeoComponent::SetHeightAboveGround,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("", PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("Latitude", &OSGEarthGeoComponent::GetLatitude, &OSGEarthGeoComponent::SetLatitude, PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("Longitude", &OSGEarthGeoComponent::GetLongitude, &OSGEarthGeoComponent::SetLongitude, PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("HeightAboveMSL", &OSGEarthGeoComponent::GetHeightAboveMSL, &OSGEarthGeoComponent::SetHeightAboveMSL, PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("HeightAboveGround", &OSGEarthGeoComponent::GetHeightAboveGround, &OSGEarthGeoComponent::SetHeightAboveGround, PF_VISIBLE | PF_EDITABLE,"");
 	}
 	
 	void OSGEarthGeoComponent::OnDelete()

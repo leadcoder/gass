@@ -30,12 +30,12 @@ namespace GASS
 	void DetourCrowdAgentComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<DetourCrowdAgentComponent>();
-		//RegisterProperty<std::string>("Group", &DetourCrowdAgentComponent::GetGroup, &DetourCrowdAgentComponent::SetGroup);
-		RegisterProperty<float>("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
-		RegisterProperty<float>("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
-		RegisterProperty<float>("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
-		RegisterProperty<float>("MaxSpeed", &DetourCrowdAgentComponent::GetAgentMaxSpeed, &DetourCrowdAgentComponent::SetAgentMaxSpeed);
-		RegisterProperty<float>("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
+		//RegisterGetSet("Group", &DetourCrowdAgentComponent::GetGroup, &DetourCrowdAgentComponent::SetGroup);
+		RegisterGetSet("Radius", &DetourCrowdAgentComponent::GetRadius, &DetourCrowdAgentComponent::SetRadius);
+		RegisterGetSet("Height", &DetourCrowdAgentComponent::GetHeight, &DetourCrowdAgentComponent::SetHeight);
+		RegisterGetSet("MaxAcceleration", &DetourCrowdAgentComponent::GetMaxAcceleration, &DetourCrowdAgentComponent::SetMaxAcceleration);
+		RegisterGetSet("MaxSpeed", &DetourCrowdAgentComponent::GetAgentMaxSpeed, &DetourCrowdAgentComponent::SetAgentMaxSpeed);
+		RegisterGetSet("SeparationWeight", &DetourCrowdAgentComponent::GetSeparationWeight, &DetourCrowdAgentComponent::SetSeparationWeight);
 	}
 
 	void DetourCrowdAgentComponent::OnInitialize()

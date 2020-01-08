@@ -48,7 +48,7 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::RegisterReflection()
 	{
-		RegisterProperty<Vec3>("Size", &GASS::ODEBoxGeometryComponent::GetSize, &GASS::ODEBoxGeometryComponent::SetSize);
+		RegisterGetSet("Size", &GASS::ODEBoxGeometryComponent::GetSize, &GASS::ODEBoxGeometryComponent::SetSize);
 	}
 
 	void ODEBoxGeometryComponent::OnInitialize()

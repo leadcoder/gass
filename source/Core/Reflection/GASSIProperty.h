@@ -19,8 +19,7 @@
 *****************************************************************************/
 
 
-#ifndef GASS_I_PROPERTY_H
-#define GASS_I_PROPERTY_H
+#pragma once
 
 #include "Core/Common.h"
 #include "Core/Reflection/GASSPropertyMetaData.h"
@@ -43,6 +42,35 @@ namespace GASS
 	/** \addtogroup Reflection
 	*  @{
 	*/
+
+	/**
+		Property flags indicating if the property mode
+		that can be used by editor applications
+	*/
+	enum PropertyFlags
+	{
+		PF_RESET = 0,
+		PF_VISIBLE = 1 << 0, //visible in editor
+		PF_EDITABLE = 1 << 1, //editaable
+		PF_RUNTIME = 1 << 2, //skipe serialization
+		PF_MULTI_OPTIONS = 1 << 3, //value can be one or more options
+	};
+	
+	inline PropertyFlags operator|(PropertyFlags a, PropertyFlags b)
+	{
+		return static_cast<PropertyFlags>(static_cast<int>(a) | static_cast<int>(b));
+	}
+
+	template <class TYPE>
+	class IPropertyOptionsCallback
+	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyOptionsCallback)
+	public:
+		virtual std::vector<TYPE> GetEnumeration() const = 0;
+	};
+	//typedef GASS_SHARED_PTR<IPropertyOptionsCallback> PropertyOptionsCallbackPtr;
+
+
 
 	/**
         Interface class for all properties
@@ -105,8 +133,18 @@ namespace GASS
 			Get meta data for this object, if not present an exception is thrown (use HasMetaData to be sure)
 		*/
 		virtual PropertyMetaDataPtr GetMetaData() const = 0;
+
+		virtual PropertyFlags GetFlags() const = 0;
+		virtual void SetFlags(PropertyFlags flags) = 0;
+
+		virtual std::string GetDescription() const = 0;
+		virtual void SetDescription(const std::string& ) = 0;
+
+		virtual std::vector<std::string> GetStringOptions() const = 0;
+		virtual std::vector<std::string> GetStringOptionsByObject(IPropertyOwner* object) const = 0;
+		virtual bool HasObjectOptions() const = 0;
+		virtual bool HasOptions() const = 0;
 	protected :
 	};
 }
 
-#endif

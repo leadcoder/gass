@@ -63,9 +63,9 @@ namespace GASS
 	{
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("The scene object", OF_VISIBLE)));
 
-		RegisterProperty<Vec3>("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
-		RegisterProperty<EulerRotation>("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
-		RegisterProperty<bool>("Geocentric", &Scene::GetGeocentric, &Scene::SetGeocentric);
+		RegisterGetSet("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
+		RegisterGetSet("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
+		RegisterGetSet("Geocentric", &Scene::GetGeocentric, &Scene::SetGeocentric);
 	}
 
 	void Scene::OnCreate()

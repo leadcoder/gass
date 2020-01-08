@@ -56,7 +56,7 @@ namespace GASS
 		RegisterMember("OptimizeTopo", &DetourCrowdComponent::m_OptimizeTopo);
 		RegisterMember("Separation", &DetourCrowdComponent::m_Separation);
 		RegisterMember("ObstacleAvoidance", &DetourCrowdComponent::m_ObstacleAvoidance);
-		RegisterProperty<float>("DefaultAgentRadius", &DetourCrowdComponent::GetDefaultAgentRadius, &DetourCrowdComponent::SetDefaultAgentRadius);
+		RegisterGetSet("DefaultAgentRadius", &DetourCrowdComponent::GetDefaultAgentRadius, &DetourCrowdComponent::SetDefaultAgentRadius);
 	}
 
 	void DetourCrowdComponent::OnInitialize()

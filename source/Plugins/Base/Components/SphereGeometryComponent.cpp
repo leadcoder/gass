@@ -45,9 +45,9 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<SphereGeometryComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SphereGeometryComponent", OF_VISIBLE)));
-		RegisterProperty<Float>("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
+		RegisterGetSet("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
 		RegisterMember("Wireframe", &GASS::SphereGeometryComponent::m_Wireframe);
-		RegisterProperty<ColorRGBA>("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
+		RegisterGetSet("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
 	}
 
 	void SphereGeometryComponent::OnInitialize()

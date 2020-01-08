@@ -42,10 +42,10 @@ namespace GASS
 	void SteerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<SteerComponent>();
-		RegisterProperty<float>("SteerForce", &SteerComponent::GetSteerForce, &SteerComponent::SetSteerForce);
-		RegisterProperty<float>("MaxSteerVelocity", &SteerComponent::GetMaxSteerVelocity, &SteerComponent::SetMaxSteerVelocity);
-		RegisterProperty<float>("MaxSteerAngle", &SteerComponent::GetMaxSteerAngle, &SteerComponent::SetMaxSteerAngle);
-		RegisterProperty<float>("SpeedMultiplier", &SteerComponent::GetSpeedMultiplier, &SteerComponent::SetSpeedMultiplier);
+		RegisterGetSet("SteerForce", &SteerComponent::GetSteerForce, &SteerComponent::SetSteerForce);
+		RegisterGetSet("MaxSteerVelocity", &SteerComponent::GetMaxSteerVelocity, &SteerComponent::SetMaxSteerVelocity);
+		RegisterGetSet("MaxSteerAngle", &SteerComponent::GetMaxSteerAngle, &SteerComponent::SetMaxSteerAngle);
+		RegisterGetSet("SpeedMultiplier", &SteerComponent::GetSpeedMultiplier, &SteerComponent::SetSpeedMultiplier);
 	}
 
 	void SteerComponent::OnInitialize()

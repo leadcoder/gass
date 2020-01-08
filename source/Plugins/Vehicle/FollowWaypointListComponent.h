@@ -56,8 +56,8 @@ namespace GASS
 		void OnInitialize() override;
 		void OnDelete() override;
 		void SceneManagerTick(double delta) override;
-		std::vector<SceneObjectPtr>  GetWaypointListEnumeration() const;
-		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
+		std::vector<SceneObjectRef>  GetWaypointListEnumeration() const;
+		std::vector<SceneObjectRef>  GetNavigationEnumeration() const;
 	private:
 		void OnWaypointListUpdated(WaypointListUpdatedMessagePtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);

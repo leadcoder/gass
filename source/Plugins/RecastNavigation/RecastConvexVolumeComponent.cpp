@@ -38,8 +38,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<RecastConvexVolumeComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastConvexVolumeComponent", OF_VISIBLE)));
-		RegisterMember("LandCoverType", &RecastConvexVolumeComponent::m_LandCoverType,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Land Cover Type",PF_VISIBLE,&LandCoverTypeBinder::GetStringEnumeration)));
+		RegisterMember("LandCoverType", &RecastConvexVolumeComponent::m_LandCoverType, PF_VISIBLE, "Land Cover Type");
 	}
 
 	/*void RecastConvexVolumeComponent::SetAreaType(const std::string value)

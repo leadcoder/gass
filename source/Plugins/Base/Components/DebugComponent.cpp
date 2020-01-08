@@ -40,7 +40,7 @@ namespace GASS
 	void DebugComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<DebugComponent>();
-		RegisterProperty<bool>("ShowSceneObjectName", &GASS::DebugComponent::GetShowNodeName, &GASS::DebugComponent::SetShowNodeName);
+		RegisterGetSet("ShowSceneObjectName", &GASS::DebugComponent::GetShowNodeName, &GASS::DebugComponent::SetShowNodeName);
 	}
 
 	void DebugComponent::OnInitialize()

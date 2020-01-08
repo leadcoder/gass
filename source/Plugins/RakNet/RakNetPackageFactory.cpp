@@ -34,7 +34,6 @@ namespace GASS
 	PackageFactory* PackageFactory::m_Instance = 0;
 	PackageFactory* PackageFactory::GetPtr(void)
 	{
-		//assert(m_Instance);
 		if(m_Instance == NULL)
 			m_Instance = new PackageFactory();
 		return m_Instance;
@@ -42,7 +41,6 @@ namespace GASS
 
 	PackageFactory& PackageFactory::Get(void)
 	{
-		//assert(m_Instance);
 		if(m_Instance == NULL)
 			m_Instance = new PackageFactory();
 		return *m_Instance;

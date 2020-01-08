@@ -6,6 +6,7 @@ set(GASS_TEST_SOURCES
 	Core/TestUtils_EnumLookup.cpp
 	Core/TestUtils_FilePath.cpp
 	Core/TestUtils_FilePath_optional.cpp
+	Core/TestUtils_GenericFactory.cpp
 	Core/TestUtils_StringUtils.cpp
 	Core/TestUtils_Math.cpp
 	Core/TestUtils_Vector.cpp

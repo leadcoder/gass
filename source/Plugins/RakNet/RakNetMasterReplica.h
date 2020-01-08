@@ -20,13 +20,11 @@
 
 #ifndef RAKNET_MASTER_REPLICA_H
 #define RAKNET_MASTER_REPLICA_H
-#include "PacketPriority.h"
-#include "Replica.h"
-#include "AutoRPC.h"
-#include "BitStream.h"
 #include "Core/Math/GASSVector.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "RakNetBaseReplica.h"
+#include "RakNetCommon.h"
+
 
 class ReplicaManager;
 	
@@ -62,9 +60,7 @@ namespace GASS
 		void SetOwnerSystemAddress(SystemAddress sa) {m_OwnerSystemAddress = sa;}
 		bool AllowRemoteOwner(){return m_AllowRemoteOwner;}
 		std::string GetTemplateName() const {return m_TemplateName;}
-		
 		void SerializeProperties(RakNet::BitStream *bit_stream);
-		//int AUTO_RPC_CALLSPEC EnterObject(const char *str, RakNet::AutoRPC* networkCaller);
 	protected:
 		IProperty* GetProperty(const std::string &prop_name) const;
 		std::string m_TemplateName;

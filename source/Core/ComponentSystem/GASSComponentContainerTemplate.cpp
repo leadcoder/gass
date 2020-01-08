@@ -43,9 +43,9 @@ namespace GASS
 
 	void ComponentContainerTemplate::RegisterReflection()
 	{
-		RegisterProperty<std::string>("Name", &GASS::ComponentContainerTemplate::GetName, &GASS::ComponentContainerTemplate::SetName);
-		RegisterProperty<std::string>("Inheritance", &GASS::ComponentContainerTemplate::GetInheritance, &GASS::ComponentContainerTemplate::SetInheritance);
-		RegisterProperty<bool>("Serialize", &GASS::ComponentContainerTemplate::GetSerialize, &GASS::ComponentContainerTemplate::SetSerialize);
+		RegisterGetSet("Name", &GASS::ComponentContainerTemplate::GetName, &GASS::ComponentContainerTemplate::SetName);
+		RegisterGetSet("Inheritance", &GASS::ComponentContainerTemplate::GetInheritance, &GASS::ComponentContainerTemplate::SetInheritance);
+		RegisterGetSet("Serialize", &GASS::ComponentContainerTemplate::GetSerialize, &GASS::ComponentContainerTemplate::SetSerialize);
 	}
 
 	bool ComponentContainerTemplate::GetSerialize() const

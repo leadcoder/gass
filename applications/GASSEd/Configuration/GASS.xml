@@ -16,8 +16,7 @@
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 	</Plugins>
-	<!--<SetDataPath value="../data/"/>
-	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>-->
+	<SetDataPath value="../../data/"/>
 	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
 	<ResourceManager>
 		<ResourceGroup name="Bootstrap">

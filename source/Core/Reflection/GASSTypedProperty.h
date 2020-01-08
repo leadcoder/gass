@@ -29,6 +29,19 @@ namespace GASS
 	class BaseReflectionObject;
 
 
+	template<typename T>
+	struct GetOptionType
+	{
+		typedef typename  std::remove_reference<T>::type Type;
+	};
+
+	template<typename T>
+	struct GetOptionType<std::vector<T>>
+	{
+		typedef typename std::remove_reference<T>::type Type;
+	};
+
+
 	/** \addtogroup GASSCore
 	*  @{
 	*/
@@ -45,10 +58,30 @@ namespace GASS
 
 	public:
 		TypedProperty(const std::string &name,
+				PropertyFlags flags,
+				const std::string& description,
 				PropertyMetaDataPtr meta_data) :
-			m_MetaData(meta_data),
-			m_Name(name)
-		{}
+			m_Name(name),
+			m_Flags(flags),
+			m_Description(description),
+			m_MetaData(meta_data)
+		{
+			m_Options = _GetEnumeration();
+		}
+		typedef typename GetOptionType<T>::Type OptionType;
+
+
+		static std::vector<OptionType> _GetEnumeration()
+		{
+			return _GetEnumerationImpl(static_cast<OptionType*>(nullptr));
+		}
+		template <typename EnumClass>
+		static auto _GetEnumerationImpl(EnumClass*) -> decltype(EnumClass::GetEnumeration(), std::vector<OptionType>()) {
+			return EnumClass::GetEnumeration();
+		}
+
+		static std::vector<OptionType> _GetEnumerationImpl(...) { std::vector<OptionType> ret;  return ret; }
+
 		/**
 		 Returns the type of this property.
 		 */
@@ -90,7 +123,7 @@ namespace GASS
 				return m_MetaData;
 			}
 			else
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "No meta data present", "Property::GetPropertyMetaData");
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "No meta data present", "TypedProperty::GetMetaData");
 		}
 
 		void Serialize(IPropertyOwner* object, ISerializer* serializer) override
@@ -124,7 +157,7 @@ namespace GASS
 			}
 			catch (...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value, "Property::SetValueByString");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to set property:" + m_Name + " With value:" + value, "TypedProperty::SetValueByString");
 			}
 		}
 
@@ -151,7 +184,7 @@ namespace GASS
 			}
 			catch (...)
 			{
-				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value", "Property::SetValue");
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed any_cast property:" + m_Name + " Property type may differ from provided any value", "Property::SetValueByAny");
 			}
 
 			SetValue(object, res);
@@ -163,9 +196,60 @@ namespace GASS
 			value = res;
 		}
 		std::string GetName() const override { return m_Name; }
-	protected:
+		PropertyFlags GetFlags() const override { return m_Flags;}
+		void SetFlags(PropertyFlags flags) override { m_Flags = flags; }
+		std::string GetDescription() const override { return m_Description; }
+		void SetDescription(const std::string &desciption) override { m_Description = desciption; }
+
+		std::vector<std::string> GetStringOptions() const override
+		{ 
+			std::vector<std::string> options;
+			std::vector<OptionType> typed_options = GetOptions();
+			for (OptionType option : typed_options)
+			{
+				std::stringstream ss;
+				ss << option;
+				options.push_back(ss.str());
+			}
+			return options;
+		}
+
+		std::vector<OptionType> GetOptions() const
+		{
+			std::vector<OptionType> options = m_Options;
+			if (m_OptionsCallback)
+			{
+				std::vector<OptionType> cb_options = m_OptionsCallback->GetEnumeration();
+				options.insert(options.end(), cb_options.begin(), cb_options.end());
+			}
+			if (m_OptionsFunction)
+			{
+				std::vector<OptionType> func_options = m_OptionsFunction();
+				options.insert(options.end(), func_options.begin(), func_options.end());
+			}
+			return options;
+		}
+
+		virtual std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const = 0;
+
+		void AddOption(const OptionType& option) { m_Options.push_back(option);}
+		
+		typedef std::function<std::vector<OptionType>()> OptionsFunction;
+		void SetOptionsFunction(OptionsFunction func)
+		{
+			m_OptionsFunction = func;
+		}
+		typedef std::shared_ptr<IPropertyOptionsCallback<OptionType>> OptionsCallbackObjectPtr;
+		void SetOptionsCallback(OptionsCallbackObjectPtr callback) { m_OptionsCallback = callback; }
+		void SetMetaData(PropertyMetaDataPtr meta_data) { m_MetaData = meta_data; }
+protected:
 		PropertyMetaDataPtr m_MetaData;
 		std::string m_Name;
+		std::string m_Description;
+		PropertyFlags m_Flags;
+		std::vector<OptionType> m_Options;
+		OptionsFunction m_OptionsFunction;
+		OptionsCallbackObjectPtr m_OptionsCallback;
 	};
 }
 #endif

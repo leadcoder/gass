@@ -50,12 +50,12 @@ namespace GASS
 	void AdaptiveSteerComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<AdaptiveSteerComponent>();
-		RegisterProperty<float>("SteerForce", &AdaptiveSteerComponent::GetSteerForce, &AdaptiveSteerComponent::SetSteerForce);
-		RegisterProperty<Vec2>("MaxSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMaxSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMaxSteerAngleAtSpeed);
-		RegisterProperty<Vec2>("MinSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMinSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMinSteerAngleAtSpeed);
-		RegisterProperty<float>("MaxSteerVelocity", &AdaptiveSteerComponent::GetMaxSteerVelocity, &AdaptiveSteerComponent::SetMaxSteerVelocity);
-		RegisterProperty<float>("SpeedMultiplier", &AdaptiveSteerComponent::GetSpeedMultiplier, &AdaptiveSteerComponent::SetSpeedMultiplier);
-		RegisterProperty<int>("DynamicInputPower", &AdaptiveSteerComponent::GetDynamicInputPower, &AdaptiveSteerComponent::SetDynamicInputPower);
+		RegisterGetSet("SteerForce", &AdaptiveSteerComponent::GetSteerForce, &AdaptiveSteerComponent::SetSteerForce);
+		RegisterGetSet("MaxSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMaxSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMaxSteerAngleAtSpeed);
+		RegisterGetSet("MinSteerAngleAtSpeed", &AdaptiveSteerComponent::GetMinSteerAngleAtSpeed, &AdaptiveSteerComponent::SetMinSteerAngleAtSpeed);
+		RegisterGetSet("MaxSteerVelocity", &AdaptiveSteerComponent::GetMaxSteerVelocity, &AdaptiveSteerComponent::SetMaxSteerVelocity);
+		RegisterGetSet("SpeedMultiplier", &AdaptiveSteerComponent::GetSpeedMultiplier, &AdaptiveSteerComponent::SetSpeedMultiplier);
+		RegisterGetSet("DynamicInputPower", &AdaptiveSteerComponent::GetDynamicInputPower, &AdaptiveSteerComponent::SetDynamicInputPower);
 		
 	}
 

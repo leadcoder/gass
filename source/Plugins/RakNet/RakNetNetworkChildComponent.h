@@ -21,15 +21,12 @@
 #ifndef RAK_NET_NETWORK_CHILD_COMPONENT_H
 #define RAK_NET_NETWORK_CHILD_COMPONENT_H
 
-
-#include "PacketPriority.h"
-#include "Replica.h"
-#include "BitStream.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
+#include "RakNetCommon.h"
 
 namespace GASS
 {
@@ -51,29 +48,21 @@ namespace GASS
 		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
 		std::vector<std::string> GetAttributes()const {return m_Attributes;}
-		//NetworkPackageVector GetNetworkPackages() {return m_SerilizePackages;}
 		void Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
-
 		void SetPartId(int id) {m_PartId = id;}
 		int GetPartId()const {return m_PartId;}
 		void OnNetworkPostUpdate(NetworkPostUpdateEventPtr message);
-
-		
-
 	private:
 		void SceneManagerTick(double delta) override;
-
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
 		void OnSerialize(NetworkSerializeRequestPtr message);
-		//void OnNewReplica(ReplicaCreatedMessagePtr message);
 		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
 		RakNetChildReplica* m_Replica;
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
 		int m_PartId;
 	};
-
 	typedef GASS_SHARED_PTR<RakNetNetworkChildComponent> RakNetNetworkChildComponentPtr;
 }
 #endif

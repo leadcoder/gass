@@ -36,7 +36,6 @@ namespace GASS
 {
 	void RaknetNetworkSceneManager::RegisterReflection()
 	{
-		//RegisterProperty<TaskGroup>("TaskGroup", &GASS::RaknetNetworkSceneManager::GetTaskGroup, &GASS::RaknetNetworkSceneManager::SetTaskGroup);
 	}
 
 	RaknetNetworkSceneManager::RaknetNetworkSceneManager(SceneWeakPtr scene) : Reflection(scene),

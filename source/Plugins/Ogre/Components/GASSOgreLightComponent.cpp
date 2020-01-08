@@ -57,23 +57,13 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreLightComponent>("LightComponent");
 		ADD_DEPENDENCY("OgreLocationComponent")
 			GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
-		RegisterProperty<LightTypeBinder>("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Light type",PF_VISIBLE,&LightTypeBinder::GetStringEnumeration)));
-
-		RegisterProperty<Vec4>("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Attenuation Parameters: Distance, Constant, Linear, Quad",PF_VISIBLE | PF_EDITABLE)));
-
-		RegisterProperty<Vec3>("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Spotlight Parameters: Inner cone, Outer cone, falloff",PF_VISIBLE | PF_EDITABLE)));
-
-		RegisterProperty<Vec3>("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
-		RegisterProperty<bool>("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("CastShadow",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("DiffuseColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<ColorRGB>("SpecularColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-
+		RegisterGetSet("LightType", &GASS::OgreLightComponent::GetLightType, &GASS::OgreLightComponent::SetLightType, PF_VISIBLE | PF_EDITABLE, "Light type");
+		RegisterGetSet("AttenuationParmas", &GASS::OgreLightComponent::GetAttenuationParams, &GASS::OgreLightComponent::SetAttenuationParams,PF_VISIBLE | PF_EDITABLE,"Attenuation Parameters: Distance, Constant, Linear, Quad");
+		RegisterGetSet("SpotlightParams", &GASS::OgreLightComponent::GetSpotParams, &GASS::OgreLightComponent::SetSpotParams,PF_VISIBLE | PF_EDITABLE,"Spotlight Parameters: Inner cone, Outer cone, falloff");
+		RegisterGetSet("LightDir", &GASS::OgreLightComponent::GetDir, &GASS::OgreLightComponent::SetDir);
+		RegisterGetSet("CastShadow", &GASS::OgreLightComponent::GetCastShadow, &GASS::OgreLightComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"CastShadow");
+		RegisterGetSet("DiffuseColor", &GASS::OgreLightComponent::GetDiffuse, &GASS::OgreLightComponent::SetDiffuse,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SpecularColor", &GASS::OgreLightComponent::GetSpecular, &GASS::OgreLightComponent::SetSpecular,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("AmbientColor", &GASS::OgreLightComponent::m_AmbientColor);
 	}
 

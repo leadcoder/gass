@@ -26,18 +26,6 @@
 
 namespace GASS
 {
-	/*class RakNetBase;
-	class ReplicaCreatedMessage : public BaseMessage
-	{
-	public:
-		ReplicaCreatedMessage(RakNetBase* replica, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Replica(replica){}
-		  RakNetBase* GetReplica() const {return m_Replica;}
-	private:
-		RakNetBase* m_Replica;
-	};
-	typedef GASS_SHARED_PTR<ReplicaCreatedMessage> ReplicaCreatedMessagePtr;*/
-
 	class RakNetMasterReplica;
 	class MasterReplicaCreatedEvent : public SystemEventMessage
 	{
@@ -74,7 +62,6 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ComponentGotReplicaEvent> ComponentGotReplicaEventPtr;
 
-
 	class NetworkPostUpdateEvent : public SystemEventMessage
 	{
 	public:
@@ -86,8 +73,6 @@ namespace GASS
 		
 	};
 	typedef GASS_SHARED_PTR<NetworkPostUpdateEvent> NetworkPostUpdateEventPtr;
-
-
 	
 }
 #endif

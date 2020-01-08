@@ -39,7 +39,7 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void SceneManagerTick(double delta) override;
-		std::vector<SceneObjectPtr>  GetNavigationEnumeration() const;
+		std::vector<SceneObjectRef>  GetNavigationEnumeration() const;
 	private:
 		void OnTransformationMessage(TransformationChangedEventPtr message);
 		void OnPathfindToLocation(PathfindToPositionMessagePtr message);

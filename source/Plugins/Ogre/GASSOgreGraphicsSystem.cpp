@@ -69,9 +69,9 @@ namespace GASS
 	void OgreGraphicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<OgreGraphicsSystem>("OgreGraphicsSystem");
-		RegisterProperty<PluginVector>("Plugins", &GASS::OgreGraphicsSystem::GetPlugins, &GASS::OgreGraphicsSystem::SetPlugins);
-		RegisterProperty<PostFilterVector>("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
-		RegisterProperty<bool>("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
+		RegisterGetSet("Plugins", &GASS::OgreGraphicsSystem::GetPlugins, &GASS::OgreGraphicsSystem::SetPlugins);
+		RegisterGetSet("PostFilters", &GASS::OgreGraphicsSystem::GetPostFilters, &GASS::OgreGraphicsSystem::SetPostFilters);
+		RegisterGetSet("CreateMainWindowOnInit", &GASS::OgreGraphicsSystem::GetCreateMainWindowOnInit, &GASS::OgreGraphicsSystem::SetCreateMainWindowOnInit);
 		RegisterMember("UpdateMessagePump", &GASS::OgreGraphicsSystem::m_UpdateMessagePump);
 		RegisterMember("ShowStats", &GASS::OgreGraphicsSystem::m_ShowStats);
 		RegisterMember("UseShaderCache", &GASS::OgreGraphicsSystem::m_UseShaderCache);

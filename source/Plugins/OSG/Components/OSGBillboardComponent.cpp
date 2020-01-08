@@ -50,13 +50,11 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGBillboardComponent>("BillboardComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		RegisterProperty<std::string>("Material", &OSGBillboardComponent::GetMaterial, &OSGBillboardComponent::SetMaterial);
-		RegisterProperty<bool>("CastShadow", &OSGBillboardComponent::GetCastShadow, &OSGBillboardComponent::SetCastShadow);
-		RegisterProperty<float>("Height", &OSGBillboardComponent::GetHeight, &OSGBillboardComponent::SetHeight);
-		RegisterProperty<float>("Width", &OSGBillboardComponent::GetWidth, &OSGBillboardComponent::SetWidth);
-
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		RegisterGetSet("Material", &OSGBillboardComponent::GetMaterial, &OSGBillboardComponent::SetMaterial);
+		RegisterGetSet("CastShadow", &OSGBillboardComponent::GetCastShadow, &OSGBillboardComponent::SetCastShadow);
+		RegisterGetSet("Height", &OSGBillboardComponent::GetHeight, &OSGBillboardComponent::SetHeight);
+		RegisterGetSet("Width", &OSGBillboardComponent::GetWidth, &OSGBillboardComponent::SetWidth);
+		RegisterGetSet("GeometryFlags", &OSGBillboardComponent::GetGeometryFlagsBinder, &OSGBillboardComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OSGBillboardComponent::SetGeometryFlagsBinder(GeometryFlagsBinder value)

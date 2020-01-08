@@ -38,8 +38,8 @@ namespace GASS
 
 	void PhysXBaseJointComponent::RegisterReflection()
 	{
-		REG_PROPERTY(SceneObjectRef,Body1,PhysXBaseJointComponent);
-		REG_PROPERTY(SceneObjectRef,Body2,PhysXBaseJointComponent);
+		RegisterGetSet("Body1",&PhysXBaseJointComponent::GetBody1, &PhysXBaseJointComponent::SetBody1);
+		RegisterGetSet("Body2", &PhysXBaseJointComponent::GetBody2, &PhysXBaseJointComponent::SetBody2);
 		RegisterMember("Report", &GASS::PhysXBaseJointComponent::m_Report);
 	}
 

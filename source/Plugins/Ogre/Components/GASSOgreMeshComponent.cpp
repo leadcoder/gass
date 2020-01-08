@@ -39,17 +39,6 @@ using namespace Ogre;
 
 namespace GASS
 {
-	std::vector<std::string> OgreMeshEnumerationMetaData::GetEnumeration(BaseReflectionObjectPtr object) const
-	{
-		std::vector<std::string> content;
-		OgreMeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<OgreMeshComponent>(object);
-		if(mesh)
-		{
-			content = mesh->GetAvailableMeshFiles();
-		}
-		return content;
-	}
-
 	OgreMeshComponent::OgreMeshComponent() : m_OgreEntity(NULL),
 		m_CastShadow(true),
 		m_ReadyToLoadMesh(false),
@@ -70,16 +59,12 @@ namespace GASS
 		ComponentFactory::Get().Register<OgreMeshComponent>("MeshComponent");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
 		ADD_DEPENDENCY("OgreLocationComponent")
-		RegisterProperty<ResourceHandle>("Filename", &GASS::OgreMeshComponent::GetMeshResource, &GASS::OgreMeshComponent::SetMeshResource,
-			OgreMeshEnumerationMetaDataPtr(new OgreMeshEnumerationMetaData("Mesh File",PF_VISIBLE)));
-		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("EnumerationResourceGroup",PF_VISIBLE)));
-		RegisterProperty<bool>("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Should this mesh cast shadows or not",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<RenderQueueBinder>("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Render Queue",PF_VISIBLE,&RenderQueueBinder::GetStringEnumeration)));
-		RegisterProperty<GeometryFlagsBinder>("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder,
-			EnumerationProxyPropertyMetaDataPtr(new EnumerationProxyPropertyMetaData("Geometry Flags",PF_VISIBLE,&GeometryFlagsBinder::GetStringEnumeration, true)));
+		auto prop = RegisterGetSet("Filename", &OgreMeshComponent::GetMeshResource, &OgreMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
+		prop->SetObjectOptionsFunction(&OgreMeshComponent::GetAvailableMeshFiles);
+		RegisterMember("EnumerationResourceGroup", &OgreMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
+		RegisterGetSet("CastShadow", &GASS::OgreMeshComponent::GetCastShadow, &GASS::OgreMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
+		RegisterGetSet("RenderQueue", &GASS::OgreMeshComponent::GetRenderQueue, &GASS::OgreMeshComponent::SetRenderQueue, PF_VISIBLE | PF_EDITABLE, "Render Queue");
+		RegisterGetSet("GeometryFlags", &OgreMeshComponent::GetGeometryFlagsBinder, &OgreMeshComponent::SetGeometryFlagsBinder, PF_VISIBLE | PF_EDITABLE | PF_MULTI_OPTIONS, "Geometry Flags");
 	}
 
 	void OgreMeshComponent::OnInitialize()
@@ -558,12 +543,12 @@ namespace GASS
 	}
 
 
-	std::vector<std::string> OgreMeshComponent::GetAvailableMeshFiles() const
+	std::vector<ResourceHandle> OgreMeshComponent::GetAvailableMeshFiles() const
 	{
-		std::vector<std::string> content;
+		std::vector<ResourceHandle> content;
 		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
-		std::vector<std::string> values;
+		
 		for(size_t i = 0; i < groups.size();i++)
 		{
 			ResourceGroupPtr group = groups[i];

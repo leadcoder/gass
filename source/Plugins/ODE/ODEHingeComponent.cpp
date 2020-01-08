@@ -54,13 +54,13 @@ namespace GASS
 
 	void ODEHingeComponent::RegisterReflection()
 	{
-		RegisterProperty<float>("MaxTorque", &GASS::ODEHingeComponent::GetMaxTorque, &GASS::ODEHingeComponent::SetMaxTorque);
-		RegisterProperty<float>("HighStop", &GASS::ODEHingeComponent::GetHighStop, &GASS::ODEHingeComponent::SetHighStop);
-		RegisterProperty<float>("LowStop", &GASS::ODEHingeComponent::GetLowStop, &GASS::ODEHingeComponent::SetLowStop);
-		RegisterProperty<Vec3>("Axis", &GASS::ODEHingeComponent::GetAxis, &GASS::ODEHingeComponent::SetAxis);
-		RegisterProperty<Vec3>("Anchor", &GASS::ODEHingeComponent::GetAnchor, &GASS::ODEHingeComponent::SetAnchor);
-		RegisterProperty<SceneObjectRef>("Body1", &GASS::ODEHingeComponent::GetBody1, &GASS::ODEHingeComponent::SetBody1);
-		RegisterProperty<SceneObjectRef>("Body2", &GASS::ODEHingeComponent::GetBody2, &GASS::ODEHingeComponent::SetBody2);
+		RegisterGetSet("MaxTorque", &GASS::ODEHingeComponent::GetMaxTorque, &GASS::ODEHingeComponent::SetMaxTorque);
+		RegisterGetSet("HighStop", &GASS::ODEHingeComponent::GetHighStop, &GASS::ODEHingeComponent::SetHighStop);
+		RegisterGetSet("LowStop", &GASS::ODEHingeComponent::GetLowStop, &GASS::ODEHingeComponent::SetLowStop);
+		RegisterGetSet("Axis", &GASS::ODEHingeComponent::GetAxis, &GASS::ODEHingeComponent::SetAxis);
+		RegisterGetSet("Anchor", &GASS::ODEHingeComponent::GetAnchor, &GASS::ODEHingeComponent::SetAnchor);
+		RegisterGetSet("Body1", &GASS::ODEHingeComponent::GetBody1, &GASS::ODEHingeComponent::SetBody1);
+		RegisterGetSet("Body2", &GASS::ODEHingeComponent::GetBody2, &GASS::ODEHingeComponent::SetBody2);
 	}
 	
 	void ODEHingeComponent::OnInitialize()

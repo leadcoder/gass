@@ -20,26 +20,28 @@
 
 #pragma once
 
+//Raknet includes
 
-#include "Core/Utils/GASSEnumBinder.h"
-#include <GASSOgreCommon.h>
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable : 4244)
+#endif
 
-namespace GASS
-{
-	class PolygonModeWrapper : public SingleEnumBinder<Ogre::PolygonMode,PolygonModeWrapper>
-	{
-	public:
-		PolygonModeWrapper();
-		PolygonModeWrapper(Ogre::PolygonMode type);
-		static NameEnumMap InitMapping()
-		{
-			NameEnumMap mapping;
-			mapping["PM_POINTS"] = Ogre::PM_POINTS;
-			mapping["PM_WIREFRAME"] = Ogre::PM_WIREFRAME;
-			mapping["PM_SOLID"] = Ogre::PM_SOLID;
-			return mapping;
-		}
-	};
-	typedef GASS_SHARED_PTR<PolygonModeWrapper> PolygonModeWrapperPtr;
-}
+#include "AutoRPC.h"
+#include "Replica.h"
+#include "StringTable.h"
+#include "BitStream.h"
+#include "PacketPriority.h"
+#include "MessageIdentifiers.h"
+#include "NetworkIDManager.h"
+#include "ReplicaEnums.h"
+#include "ReplicaManager.h"
+#include "PacketLogger.h"
+#include "RakPeerInterface.h"
+#include "RakNetworkFactory.h"
+#include "GetTime.h"
+#include "AutoRPC.h"
 
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif

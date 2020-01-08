@@ -33,17 +33,17 @@ namespace GASS
 	void EditorComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<EditorComponent>();
-		RegisterProperty<bool>("Lock",&EditorComponent::GetLock, &EditorComponent::SetLock);
-		RegisterProperty<bool>("Visible",&EditorComponent::GetVisible, &EditorComponent::SetVisible);
-		RegisterProperty<bool>("ChangeMaterialWhenSelected",&EditorComponent::GetChangeMaterialWhenSelected, &EditorComponent::SetChangeMaterialWhenSelected);
-		RegisterProperty<bool>("ShowBBWhenSelected",&EditorComponent::GetShowBBWhenSelected, &EditorComponent::SetShowBBWhenSelected);
-		RegisterProperty<float>("VisibilityTransparency",&EditorComponent::GetVisibilityTransparency, &EditorComponent::SetVisibilityTransparency);
-		RegisterProperty<std::string>("IconFile",&EditorComponent::GetIconFile, &EditorComponent::SetIconFile);
-		RegisterProperty<bool>("ShowInTree",&EditorComponent::GetShowInTree, &EditorComponent::SetShowInTree);
-		RegisterProperty<bool>("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
-		RegisterProperty<bool>("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
+		RegisterGetSet("Lock",&EditorComponent::GetLock, &EditorComponent::SetLock);
+		RegisterGetSet("Visible",&EditorComponent::GetVisible, &EditorComponent::SetVisible);
+		RegisterGetSet("ChangeMaterialWhenSelected",&EditorComponent::GetChangeMaterialWhenSelected, &EditorComponent::SetChangeMaterialWhenSelected);
+		RegisterGetSet("ShowBBWhenSelected",&EditorComponent::GetShowBBWhenSelected, &EditorComponent::SetShowBBWhenSelected);
+		RegisterGetSet("VisibilityTransparency",&EditorComponent::GetVisibilityTransparency, &EditorComponent::SetVisibilityTransparency);
+		RegisterGetSet("IconFile",&EditorComponent::GetIconFile, &EditorComponent::SetIconFile);
+		RegisterGetSet("ShowInTree",&EditorComponent::GetShowInTree, &EditorComponent::SetShowInTree);
+		RegisterGetSet("AllowRemove",&EditorComponent::GetAllowRemove, &EditorComponent::SetAllowRemove);
+		RegisterGetSet("AllowDragAndDrop",&EditorComponent::GetAllowDragAndDrop, &EditorComponent::SetAllowDragAndDrop);
 		RegisterMember("SelectedColor",&EditorComponent::m_SelectedColor);
-		RegisterProperty<bool>("EditName",&EditorComponent::GetEditName, &EditorComponent::SetEditName);
+		RegisterGetSet("EditName",&EditorComponent::GetEditName, &EditorComponent::SetEditName);
 	}
 
 	void EditorComponent::OnInitialize()

@@ -22,25 +22,16 @@
 #define RAKNET_NETWORK_SYSTEM_H
 
 #include "Sim/GASSCommon.h"
-
-//Raknet includes
-#include "MessageIdentifiers.h"
-#include "NetworkIDManager.h"
-#include "ReplicaEnums.h"
-#include "ReplicaManager.h"
-#include "PacketLogger.h"
-#include "BitStream.h"
-#include "AutoRPC.h"
-
-//GASS includes
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-
 #include "Sim/GASSSimSystem.h"
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSNetworkSystemMessages.h"
+#include "RakNetCommon.h"
+
+#define MAX_PEERS 64
 
 class ReplicaManager;
 class RakPeerInterface;
@@ -48,11 +39,8 @@ class RakPeerInterface;
 
 namespace GASS
 {
-#define MAX_PEERS 64
 	struct ServerData;
-	//class RakNetBase;
 	class RakNetChildReplica;
-
 
 	enum
 	{
@@ -62,8 +50,6 @@ namespace GASS
 		ID_TIME_OF_DAY = ID_USER_PACKET_ENUM+4,
 		ID_WEATHER = ID_USER_PACKET_ENUM+5,
 	};
-
-
 
 	struct ServerPingReponse
 	{
@@ -81,9 +67,6 @@ namespace GASS
 	typedef std::map<std::string,ServerPingReponse> ServerReponseMap;
 	typedef std::map<std::string,ClientData> ClientDataMap;
 
-
-
-
 	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
 	{
 	public:
@@ -98,6 +81,7 @@ namespace GASS
 		ReplicaManager* GetReplicaManager()const {return m_ReplicaManager;}
 		RakPeerInterface* GetRakPeer() const {return m_RakPeer;}
 		NetworkIDManager* GetNetworkIDManager() const{return m_NetworkIDManager;}
+
 		//helpers
 		static void WriteString(const std::string &str,RakNet::BitStream *outBitStream);
 		static std::string ReadString(RakNet::BitStream *inBitStream);
@@ -114,7 +98,6 @@ namespace GASS
 		void SetLocationSendFrequency(double  value) {m_LocationSendFrequency = value;}
 		bool GetDebug() const { return m_Debug; }
 		bool GetRelayInputOnServer() const { return m_RelayInputOnServer; }
-		
 	private:
 		void OnStartServer(StartServerRequestPtr message);
 		void OnStartClient(StartClientRequestPtr message);
@@ -144,11 +127,8 @@ namespace GASS
 
 		int m_IsServer;
 		bool m_Active;
-		//std::string m_ServerIP;
 		int m_ServerPort;
 		int m_ClientPort;
-		//bool m_UpdateTransformations;
-		//float m_TransformationUpdateInterval;
 		ServerData *m_ServerData;
 		ServerData *m_ServerDataOnClient;
 		SystemAddress m_RemoteOwnerId;

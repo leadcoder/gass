@@ -283,23 +283,15 @@ namespace GASS
 			{
 				const std::string prop_name = props[i]->GetName();
 				const PropertySettings* prop = settings->GetProperty(prop_name);
-				if(prop)
+				if (prop)
 				{
-					if(props[i]->HasMetaData())
-					{
-						BasePropertyMetaDataPtr data = GASS_DYNAMIC_PTR_CAST<BasePropertyMetaData>(props[i]->GetMetaData());
-						data->SetAnnotation(settings->Documentation);
-						int flags = 0;
-						if(prop->Visible)
-							flags = flags | PF_VISIBLE;
-						if(prop->Editable)
-							flags = flags | PF_EDITABLE;
-						data->SetFlags(static_cast<PropertyFlags>(flags));
-					}
-					else //add meta data?
-					{
-
-					}
+					props[i]->SetDescription(settings->Documentation);
+					int flags = 0;
+					if (prop->Visible)
+						flags = flags | PF_VISIBLE;
+					if (prop->Editable)
+						flags = flags | PF_EDITABLE;
+					props[i]->SetFlags(static_cast<PropertyFlags>(flags));
 				}
 			}
 		}

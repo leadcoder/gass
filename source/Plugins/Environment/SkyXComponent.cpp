@@ -56,28 +56,17 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<SkyXComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SkyXComponent", OF_VISIBLE )));
-		RegisterProperty<float>("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<Vec3f>("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<int>("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<float>("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
-		RegisterProperty<bool>("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("TimeMultiplier", &SkyXComponent::GetTimeMultiplier, &SkyXComponent::SetTimeMultiplier,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("Time", &SkyXComponent::GetTime, &SkyXComponent::SetTime,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SunInnerRadius", &SkyXComponent::GetInnerRadius, &SkyXComponent::SetInnerRadius,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SunOuterRadius", &SkyXComponent::GetOuterRadius, &SkyXComponent::SetOuterRadius,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SunExposure", &SkyXComponent::GetExposure, &SkyXComponent::SetExposure,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("HeightPosition", &SkyXComponent::GetHeightPosition, &SkyXComponent::SetHeightPosition,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("RayleighMultiplier", &SkyXComponent::GetRayleighMultiplier, &SkyXComponent::SetRayleighMultiplier,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("MieMultiplier", &SkyXComponent::GetMieMultiplier, &SkyXComponent::SetMieMultiplier,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("NumberOfSamples", &SkyXComponent::GetNumberOfSamples, &SkyXComponent::SetNumberOfSamples,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("MoonSize", &SkyXComponent::GetMoonSize, &SkyXComponent::SetMoonSize,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("SkyDomeFog", &SkyXComponent::GetSkyDomeFog, &SkyXComponent::SetSkyDomeFog,PF_VISIBLE | PF_EDITABLE,"");
 	}
 
 	void SkyXComponent::OnInitialize()

@@ -46,9 +46,8 @@ namespace GASS
 	{
 		ComponentContainerFactory::Get().Register<SceneObject>("SceneObject");
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Container for all components", OF_VISIBLE)));
-		RegisterProperty<SceneObjectID>("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Local IDentifier string",PF_VISIBLE)));
-		RegisterProperty<SceneObjectGUID>("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID);
+		RegisterGetSet("ID", &GASS::SceneObject::GetID, &GASS::SceneObject::SetID,PF_VISIBLE,"Local IDentifier string");
+		RegisterGetSet("GUID", &GASS::SceneObject::GetGUID, &GASS::SceneObject::SetGUID);
 	}
 
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const

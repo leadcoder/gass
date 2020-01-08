@@ -18,14 +18,10 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef RAKNET_BASE_REPLICA_H
-#define RAKNET_BASE_REPLICA_H
+#pragma once
 
 #include "Sim/GASSCommon.h"
-#include "AutoRPC.h"
-#include "Replica.h"
-#include "StringTable.h"
-#include "BitStream.h"
+#include "RakNetCommon.h"
 #include "Core/Math/GASSVector.h"
 
 class ReplicaManager;
@@ -44,8 +40,6 @@ namespace GASS
 		void SetOwner(SceneObjectPtr object) {m_Owner = object;}
 
 		//Remote calls
-		//int AUTO_RPC_CALLSPEC EnterVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
-		//int AUTO_RPC_CALLSPEC ExitVehicle(const char *client_address, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteMessage(const char *client_address, const char *message, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteMessageWithData(const char *message, const char *data, RakNet::AutoRPC* networkCaller);
 		int AUTO_RPC_CALLSPEC RemoteInput(SystemAddress input_source, int controller, float value, RakNet::AutoRPC* networkCaller); 
@@ -57,5 +51,3 @@ namespace GASS
 		std::vector<std::string> m_MessageBuffer;
 	};
 }
-
-#endif

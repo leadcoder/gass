@@ -77,7 +77,7 @@ namespace GASS
 	void OSGGraphicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
-		RegisterProperty<std::string>("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
+		RegisterGetSet("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterMember("FlipDDS", &GASS::OSGGraphicsSystem::m_FlipDDS);
 		RegisterMember("ShadowType", &GASS::OSGGraphicsSystem::m_ShadowType);
 

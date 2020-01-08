@@ -86,6 +86,9 @@ namespace GASS
 		*/
 		bool PointInside(const TVec2<TYPE> &point) const;
 
+		bool operator== (const TAARect &rect) const;
+		
+
 		//public for fast access
 		TVec2<TYPE> Max;
 		TVec2<TYPE> Min;
@@ -169,5 +172,11 @@ namespace GASS
 	TVec2<TYPE> TAARect<TYPE>::GetSize() const
 	{
 		return (Max - Min);
+	}
+
+	template<class TYPE>
+	bool TAARect<TYPE>::operator== (const TAARect<TYPE> &rect) const
+	{
+		return (rect.Min == Min && rect.Max == Max);
 	}
 }

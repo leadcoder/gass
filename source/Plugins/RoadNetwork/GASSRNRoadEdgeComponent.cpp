@@ -22,8 +22,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<RNRoadEdgeComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadEdgeComponent", OF_VISIBLE)));
-		RegisterProperty<Float>("LaneWidth", &RNRoadEdgeComponent::GetLaneWidth, &RNRoadEdgeComponent::SetLaneWidth,
-			BasePropertyMetaDataPtr(new BasePropertyMetaData("Lane width",PF_VISIBLE | PF_EDITABLE)));
+		RegisterGetSet("LaneWidth", &RNRoadEdgeComponent::GetLaneWidth, &RNRoadEdgeComponent::SetLaneWidth,PF_VISIBLE | PF_EDITABLE,"Lane width");
 	}
 
 	void RNRoadEdgeComponent::OnInitialize()
