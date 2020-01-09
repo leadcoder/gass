@@ -42,20 +42,23 @@ include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
 set(GASS_MAJOR_VERSION 1)
 
+
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #static libs
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) #dynamic libs
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #dlls and exe
 
 set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
 
-set(GASS_INSTALL_LIB_DIR_DEBUG "lib/debug")
-set(GASS_INSTALL_BIN_DIR_DEBUG "bin/debug")
+include(GNUInstallDirs)
+set(GASS_INSTALL_LIB_DIR_DEBUG ${CMAKE_INSTALL_LIBDIR}/debug CACHE PATH "Debug lib install path")
+set(GASS_INSTALL_BIN_DIR_DEBUG ${CMAKE_INSTALL_BINDIR}/debug CACHE PATH "Debug bin install path")
 
-set(GASS_INSTALL_LIB_DIR_RELEASE "lib/release")
-set(GASS_INSTALL_BIN_DIR_RELEASE "bin/release")
+set(GASS_INSTALL_LIB_DIR_RELEASE ${CMAKE_INSTALL_LIBDIR}/release CACHE PATH "Release lib install path")
+set(GASS_INSTALL_BIN_DIR_RELEASE ${CMAKE_INSTALL_BINDIR}/release CACHE PATH "Release lib install path")
 
+set(GASS_INSTALL_INCLUDE_DIR  ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "include install path")
 set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
-set(GASS_INSTALL_INCLUDE_DIR  "include")
 set(GASS_INSTALL_SAMPLES_DIR  "bin")
 
 option(GASS_BUILDTYPE_STATIC "Static Build" OFF)
