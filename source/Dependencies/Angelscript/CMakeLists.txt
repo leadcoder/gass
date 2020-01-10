@@ -113,4 +113,4 @@ if(MSVC)
 		target_compile_options(Angelscript PRIVATE /W3)
 endif(MSVC)
 
-install(FILES ${ANGELSCRIPT_HEADERS} DESTINATION include/Dependencies/Angelscript)
+install(FILES ${ANGELSCRIPT_HEADERS} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Dependencies/Angelscript)
