@@ -10,9 +10,9 @@ else() #assume linux
 	set(_SHARED_LIB_EXT .so)
 endif()
 
-find_path(GASS_CORE_INCLUDE_DIRS Core/Prerequisits.h PATHS ${GASS_DIR}/include ${GASS_DIR}/source)
+find_path(GASS_CORE_INCLUDE_DIRS Core/Prerequisits.h PATHS ${GASS_DIR}/include ${GASS_DIR}/source PATH_SUFFIXES gass)
 set(GASS_LIBRARY_DIRS ${GASS_DIR}/lib ${GASS_DIR}/lib/debug ${GASS_DIR}/lib/release)
-set(GASS_BINARY_DIRS ${GASS_DIR}/bin ${GASS_DIR}/bin/debug ${GASS_DIR}/bin/release)
+set(GASS_BINARY_DIRS ${GASS_DIR}/bin ${GASS_DIR}/bin/debug ${GASS_DIR}/bin/release ${GASS_DIR}/debug/bin)
 
 find_library(GASS_CORE_LIBRARY_RELEASE GASSCore HINTS ${GASS_LIBRARY_DIRS})
 find_library(GASS_CORE_LIBRARY_DEBUG GASSCore_d HINTS ${GASS_LIBRARY_DIRS})
