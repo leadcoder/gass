@@ -51,11 +51,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) #dlls and exe
 set(CMAKE_DEBUG_POSTFIX  "_d" CACHE STRING "add a postfix, usually d on windows")
 
 include(GNUInstallDirs)
-set(GASS_INSTALL_LIB_DIR_DEBUG ${CMAKE_INSTALL_LIBDIR}/debug CACHE PATH "Debug lib install path")
-set(GASS_INSTALL_BIN_DIR_DEBUG ${CMAKE_INSTALL_BINDIR}/debug CACHE PATH "Debug bin install path")
+set(GASS_INSTALL_LIB_DIR_DEBUG ${CMAKE_INSTALL_LIBDIR} CACHE PATH "Debug lib install path")
+set(GASS_INSTALL_BIN_DIR_DEBUG ${CMAKE_INSTALL_BINDIR} CACHE PATH "Debug bin install path")
 
-set(GASS_INSTALL_LIB_DIR_RELEASE ${CMAKE_INSTALL_LIBDIR}/release CACHE PATH "Release lib install path")
-set(GASS_INSTALL_BIN_DIR_RELEASE ${CMAKE_INSTALL_BINDIR}/release CACHE PATH "Release bin install path")
+set(GASS_INSTALL_LIB_DIR_RELEASE ${CMAKE_INSTALL_LIBDIR} CACHE PATH "Release lib install path")
+set(GASS_INSTALL_BIN_DIR_RELEASE ${CMAKE_INSTALL_BINDIR} CACHE PATH "Release bin install path")
 
 set(GASS_INSTALL_INCLUDE_DIR  ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "include install path")
 set(GASS_INSTALL_PLUGIN_LIB_DIR  "lib")
@@ -64,7 +64,7 @@ set(GASS_INSTALL_SAMPLES_DIR  "bin")
 option(GASS_BUILDTYPE_STATIC "Static Build" OFF)
 
 if(MSVC)
-	option(GASS_INSTALL_DEP_BINARIES "Install dependency binaries (and copy to build folder) " ON)
+	option(GASS_INSTALL_DEP_BINARIES "Install dependency binaries (and copy to build folder) " OFF)
 elseif()
 	set(GASS_INSTALL_DEP_BINARIES 0)
 endif()
@@ -144,21 +144,21 @@ endif()
 
 # Install CMake files in order to re-use them in other projects
 
-configure_file(
-		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
-		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake" 
-		@ONLY)
+#configure_file(
+#		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
+#		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake" 
+#		@ONLY)
 
-set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
-
+#set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
+set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSCoreConfig.cmake)
 if(GASS_BUILD_SIM)
-	configure_file(
-		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
-		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake" 
-		@ONLY)
-
-	set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+	#configure_file(
+	#	"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
+	#	"${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake" 
+	#	@ONLY)
+	#set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+	set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSSimConfig.cmake)
 endif()
 
 install(FILES ${GASS_CMAKE_FILES} DESTINATION CMake/)
-install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
+#install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)

@@ -108,9 +108,16 @@ find_package(Threads)
 target_link_libraries(Angelscript ${CMAKE_THREAD_LIBS_INIT})
 target_include_directories(Angelscript PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_compile_definitions(Angelscript PRIVATE "-D_CRT_SECURE_NO_WARNINGS -DANGELSCRIPT_EXPORT -D_LIB")
+set_target_properties(Angelscript PROPERTIES DEBUG_POSTFIX _d)
 if(MSVC)
         set_target_properties(Angelscript PROPERTIES COMPILE_FLAGS "/MP")
 		target_compile_options(Angelscript PRIVATE /W3)
 endif(MSVC)
 
 install(FILES ${ANGELSCRIPT_HEADERS} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Dependencies/Angelscript)
+
+install(TARGETS Angelscript EXPORT AngelscriptTargets)
+install(EXPORT AngelscriptTargets
+        FILE AngelscriptTargets.cmake
+        NAMESPACE Angelscript::
+        DESTINATION CMake)
