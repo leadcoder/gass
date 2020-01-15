@@ -1,0 +1,11 @@
+Source: gass
+Version: 2020-01-07
+Homepage: https://github.com/leadcoder/gass
+Description: GASS
+
+Feature: sim
+Description: Build gass sim
+Build-Depends: ois, osg, osgearth, physx, ode, openal-soft
+
+Feature: force-static
+Description: Force static build

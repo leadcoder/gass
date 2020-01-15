@@ -1,0 +1,34 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO leadcoder/gass-dependencies
+    REF 7c0895f54a22313071a8b556a664f2e0f995b4de
+    SHA512 90772602cb384454382755d21ee712ac6b452fde9522563d7067276e293b7284931be51ba618102a2a8d27f269467629e19394db2593ad24bbc6dc9bb34dfa73
+    HEAD_REF master
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(RAKNET_ENABLE_STATIC TRUE)
+    set(RAKNET_ENABLE_DLL FALSE)
+else()
+    set(RAKNET_ENABLE_STATIC FALSE)
+    set(RAKNET_ENABLE_DLL TRUE)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}/RakNet
+    PREFER_NINJA
+    OPTIONS
+        -DRAKNET_ENABLE_DLL=${RAKNET_ENABLE_DLL}
+        -DRAKNET_ENABLE_STATIC=${RAKNET_ENABLE_STATIC}
+        -DRAKNET_ENABLE_SAMPLES=FALSE
+)
+
+vcpkg_install_cmake()
+
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/RakNet/readme.txt.in DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
