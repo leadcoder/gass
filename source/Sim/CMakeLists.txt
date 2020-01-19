@@ -52,6 +52,7 @@ set(H_FILES
 	GASSBaseSceneManager.h
 	GASSCommon.h
 	GASSEulerRotation.h
+	GASSFileResourceCallback.h
 	GASSGeoLocation.h
 	GASSGeometryFlags.h
 	GASSGraphicsMaterial.h
