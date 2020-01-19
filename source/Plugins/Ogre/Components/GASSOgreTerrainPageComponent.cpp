@@ -25,6 +25,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
+#include "Sim/GASSFileResourceCallback.h"
 #include "Sim/GASSSimEngine.h"
 #include "Plugins/Ogre/Components/GASSOgreTerrainGroupComponent.h"
 #include "Plugins/Ogre/GASSOgreGraphicsSceneManager.h"

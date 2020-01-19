@@ -1562,15 +1562,13 @@ namespace GASS
 		return ret;
 	}
 
-
 	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const
 	{
-		bool ret = false;
 		if (m_NavMesh)
 		{
 			GASS::Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
-			float rescast_pos[3];
-			GASSToRecast(in_pos_v3, rescast_pos);
+			float recast_pos[3];
+			GASSToRecast(in_pos_v3, recast_pos);
 
 			dtQueryFilter filter;
 			dtPolyRef poly_ref = 0;
@@ -1579,11 +1577,11 @@ namespace GASS
 			polyPickExt[0] = search_radius;
 			polyPickExt[1] = FLT_MAX / 3.0f; //should be large enough, is later clamped to tile bounding box
 			polyPickExt[2] = search_radius;
-			ret = m_NavQuery->findNearestPoly(rescast_pos, polyPickExt, &filter, &poly_ref, 0);
+			ret = m_NavQuery->findNearestPoly(recast_pos, polyPickExt, &filter, &poly_ref, 0);
 			if (dtStatusFailed(ret))
 				return false;
 		}
-		return ret;
+		return true;
 	}
 
 	bool RecastNavigationMeshComponent::GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const
