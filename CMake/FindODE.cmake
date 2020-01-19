@@ -28,14 +28,14 @@ else (ODE_INCLUDE_DIRS AND ODE_LIBRARIES)
         PATHS ${ODE_HOME}/include 
     )
     find_library(ODE_LIBRARIES_RELEASE ODE
-        NAMES ODE ode_double ${PC_ODE_LIBRARIES}
+        NAMES ODE ode ode_double ${PC_ODE_LIBRARIES}
         HINTS ${PC_ODE_LIBDIR}
         PATHS ${ODE_HOME}/lib/release 
 			  ${ODE_HOME}/lib
     )
 	
 	find_library(ODE_LIBRARIES_DEBUG ODE_d ODE
-        NAMES ODE ode_doubled ${PC_ODE_LIBRARIES}
+        NAMES ODE ode ode_doubled ${PC_ODE_LIBRARIES}
         HINTS ${PC_ODE_LIBDIR}
         PATHS ${ODE_HOME}/lib/debug
 			  ${ODE_HOME}/lib
