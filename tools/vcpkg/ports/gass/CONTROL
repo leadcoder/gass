@@ -5,7 +5,7 @@ Description: GASS
 
 Feature: sim
 Description: Build gass sim
-Build-Depends: ois, osg, osgearth, physx, ode, openal-soft
+Build-Depends: ois, osg (windows), osgearth (windows), physx (windows), ode, openal-soft, libuuid (linux)
 
 Feature: force-static
 Description: Force static build
