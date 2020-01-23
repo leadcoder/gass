@@ -5,7 +5,7 @@
 		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPluginPhysX3"/>
+		<Plugin PluginFile = "GASSPluginPhysX"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginVehicle"/>
 		<Plugin PluginFile = "GASSPluginInput"/>

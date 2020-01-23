@@ -4,7 +4,7 @@
 		<!-- load all from path-->
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPluginPhysX3"/>
+		<Plugin PluginFile = "GASSPluginPhysX"/>
 		<Plugin PluginFile = "GASSPluginODE"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginVehicle"/>

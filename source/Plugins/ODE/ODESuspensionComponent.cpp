@@ -139,11 +139,25 @@ namespace GASS
 		Mat4 rot_mat(rot);
 		ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 
+#if 0
 		if (m_Axis1.Length() != 0)
 			dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
 		else
 			dJointSetHinge2Axis1(m_ODEJoint,ode_rot_mat[4],ode_rot_mat[5],ode_rot_mat[6]);
 		dJointSetHinge2Axis2(m_ODEJoint,    ode_rot_mat[0],    ode_rot_mat[1],    ode_rot_mat[2]);
+#else
+		dReal axis1[3], axis2[3];
+		if (m_Axis1.Length() != 0)
+		{
+			axis1[0] = m_Axis1.x; axis1[1] = m_Axis1.y; axis1[2] = m_Axis1.z;
+		}
+		else
+		{
+			axis1[0] = ode_rot_mat[4]; axis1[1] = ode_rot_mat[5]; axis1[2] = ode_rot_mat[6];
+		}
+		axis2[0] = ode_rot_mat[0]; axis2[1] = ode_rot_mat[1]; axis2[2] = ode_rot_mat[2];
+		dJointSetHinge2Axes(m_ODEJoint, axis1, axis2);
+#endif
 	}
 
 	void ODESuspensionComponent::SetAnchor(const Vec3 &value)

@@ -1,8 +1,10 @@
 
 set(PLATFORM_DEPS "")
 if(NOT WIN32)
-   #Add dependency guid
-   set(PLATFORM_DEPS uuid)
+	#Add dependency guid
+	find_package(UUID REQUIRED)
+	gass_create_dep_target(UUID INCLUDE_DIRS ${UUID_INCLUDE_DIRS} LIBRARIES ${UUID_LIBRARIES})
+   	set(PLATFORM_DEPS UUID)
 endif()
 
 #gass_get_source_from_current_dir(CPP_FILES H_FILES)
