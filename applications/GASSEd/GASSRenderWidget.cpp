@@ -194,6 +194,9 @@ GASS::MouseButtonId GASSRenderWidget::GetMouseButton(QMouseEvent *e) const
 	case Qt::RightButton:
 		mb = GASS::MBID_RIGHT;
 		break;
+	case Qt::MiddleButton:
+		mb = GASS::MBID_MIDDLE;
+		break;
 	}
 	return mb;
 }
