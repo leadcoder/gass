@@ -56,6 +56,7 @@ set(CPP_FILES
 	Utils/GASSPIDControl.cpp
 	Utils/GASSRawFile.cpp
 	Utils/GASSStringUtils.cpp
+	Utils/GASSSystem.cpp
 	Utils/GASSTimer.cpp
 	Utils/GASSXMLUtils.cpp
 )
@@ -135,6 +136,7 @@ set(H_FILES
 	Utils/GASSRawFile.h
 	Utils/GASSSingleton.h
 	Utils/GASSStringUtils.h
+	Utils/GASSSystem.h
 	Utils/GASSTimer.h
 	Utils/GASSXMLUtils.h
 	Utils/filesystem.hpp
