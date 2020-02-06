@@ -54,6 +54,7 @@ namespace GASS
 		virtual GraphicsMaterial GetMaterial(const std::string &mat_name);
 
 		void PrintDebugText(const std::string &message) override;
+		std::string GetShadowType() const { return m_ShadowType; }
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const override {return m_Viewer ;}

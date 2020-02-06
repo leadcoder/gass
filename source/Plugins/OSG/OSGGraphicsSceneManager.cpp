@@ -68,7 +68,19 @@ namespace GASS
 			settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
 			settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 			settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+
 			settings->setMaximumShadowMapDistance(200.0);
+
+			if (gfx_sys->GetShadowType() == "ViewDependentShadowMap")
+			{
+				settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
+				//settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+				//settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+				//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+				settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+			}
+			else
+				settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 
 			//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
 
@@ -89,12 +101,41 @@ namespace GASS
 
 			m_ShadowedScene->setShadowTechnique(st);
 			m_RootNode->addChild(m_ShadowedScene);
+
+			if (gfx_sys->GetShadowType() == "LightSpacePerspectiveShadowMap")
+			{
+				m_RootNode->getOrCreateStateSet()->setDefine("SM_LISPSM");
+				osg::Uniform* shadowTextureUnit = new osg::Uniform(osg::Uniform::INT, "shadowTextureUnit0");
+				shadowTextureUnit->set((int)unit);
+				m_RootNode->getOrCreateStateSet()->addUniform(shadowTextureUnit);
+			}
+			else if (gfx_sys->GetShadowType() == "ViewDependentShadowMap")
+			{
+				m_RootNode->getOrCreateStateSet()->setDefine("SM_VDSM2");
+			}
+
 		}
 
 		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
 		state->setAttributeAndModes(m_Fog.get());
 
 		UpdateFogSettings();
+
+		switch (m_FogMode.GetValue())
+		{
+		case FM_LINEAR:
+			m_RootNode->getOrCreateStateSet()->setDefine("FM_LINEAR");
+			break;
+		case FM_EXP:
+			m_RootNode->getOrCreateStateSet()->setDefine("FM_EXP");
+			break;
+		case FM_EXP2:
+			m_RootNode->getOrCreateStateSet()->setDefine("FM_EXP2");
+			break;
+		case FM_NONE:
+			break;
+		}
+
 
 		//add debug node
 		m_DebugDraw = new OSGDebugDraw();
