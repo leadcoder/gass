@@ -143,28 +143,36 @@ namespace GASS
 		m_Fog->setEnd(m_FogEnd);
 		m_Fog->setStart(m_FogStart);
 
-		if(m_RootNode)
+		osg::StateSet* state = m_RootNode ? m_RootNode->getOrCreateStateSet() : nullptr;
+
+		if(state)
 		{
-			osg::StateSet* state = m_RootNode->getOrCreateStateSet();
 			short attr = osg::StateAttribute::ON;
 			state->setMode(GL_FOG, attr);
+
+			state->removeDefine("FM_LINEAR");
+			state->removeDefine("FM_EXP");
+			state->removeDefine("FM_EXP2");
 		}
 
+		//state->getDefineList().clear();
 		switch(m_FogMode.GetValue())
 		{
 		case FM_LINEAR:
 			m_Fog->setMode(osg::Fog::LINEAR);
+			if(state) state->setDefine("FM_LINEAR");
 			break;
 		case FM_EXP:
 			m_Fog->setMode(osg::Fog::EXP);
+			if (state) state->setDefine("FM_EXP");
 			break;
 		case FM_EXP2:
 			m_Fog->setMode(osg::Fog::EXP2);
+			if (state) state->setDefine("FM_EXP2");
 			break;
 		case FM_NONE:
-			if(m_RootNode)
+			if(state)
 			{
-				osg::StateSet* state = m_RootNode->getOrCreateStateSet();
 				short attr = osg::StateAttribute::OFF;
 				state->setMode(GL_FOG, attr);
 				m_RootNode->setStateSet(state);
