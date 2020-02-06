@@ -121,22 +121,6 @@ namespace GASS
 
 		UpdateFogSettings();
 
-		switch (m_FogMode.GetValue())
-		{
-		case FM_LINEAR:
-			m_RootNode->getOrCreateStateSet()->setDefine("FM_LINEAR");
-			break;
-		case FM_EXP:
-			m_RootNode->getOrCreateStateSet()->setDefine("FM_EXP");
-			break;
-		case FM_EXP2:
-			m_RootNode->getOrCreateStateSet()->setDefine("FM_EXP2");
-			break;
-		case FM_NONE:
-			break;
-		}
-
-
 		//add debug node
 		m_DebugDraw = new OSGDebugDraw();
 		m_RootNode->addChild(m_DebugDraw->GetNode());
