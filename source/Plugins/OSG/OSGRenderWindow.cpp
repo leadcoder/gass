@@ -94,7 +94,8 @@ namespace GASS
 		view->setCamera(camera);
 		
 		//move this to scene manager
-		view->setLightingMode(osg::View::SKY_LIGHT); 
+		//view->setLightingMode(osg::View::SKY_LIGHT); 
+		view->setLightingMode(osg::View::NO_LIGHT);
 		view->getDatabasePager()->setDoPreCompile( true );
 		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
 		

@@ -25,6 +25,8 @@
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGDebugDraw.h"
 #include "Plugins/OSG/Utils/TextBox.h"
+#include "Plugins/OSG/Utils/ViewDependentShadowMapExt.h"
+
 
 namespace GASS
 {
@@ -34,11 +36,132 @@ namespace GASS
 		m_FogEnd (400),
 		m_UseFog(1),
 		m_FogMode (FM_LINEAR),
-		m_FogDensity ( 0.01f),
+		m_FogDensity(0.01f),
 		m_FogColor(1,1,1),
-		m_AmbientColor(0.5,0.5,0.5)
+		m_AmbientColor(0.0,0.0,0.0),
+		m_ShadowMaxFarDistance(400),
+		m_ShadowTextureSize(2048)
 	{
 	}
+
+#if 1
+	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode() const
+	{
+		osg::ref_ptr<osgShadow::ViewDependentShadowMap> vdsm = new osgShadow::ViewDependentShadowMapExt;
+		osg::ref_ptr<osgShadow::ShadowedScene> ss = new osgShadow::ShadowedScene;
+		ss->setName("ShadowRootNode");
+		ss->setShadowTechnique(vdsm);
+		ss->getOrCreateStateSet()->setDefine("SM_VDSM2");
+
+		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
+		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS | 0x1);
+		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
+		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
+		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
+		//settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+		//settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+		//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+		
+		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
+
+		unsigned int unit = 6;
+		settings->setBaseShadowTextureUnit(unit);
+
+		double n = 0.1;
+		settings->setMinimumShadowMapNearFarRatio(n);
+
+		unsigned int numShadowMaps = 2;
+		settings->setNumShadowMapsPerLight(numShadowMaps);
+
+		//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
+		settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
+		settings->setTextureSize(osg::Vec2s(m_ShadowTextureSize, m_ShadowTextureSize));
+		
+		return ss;
+	}
+
+#else
+	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode() const
+	{
+		osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
+		sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
+		//sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
+		//sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
+		float minLightMargin(1);
+		float maxFarPlane(400);
+		short textureSize(2048);
+		int baseTextureUnit(0);
+		int shadowTextureUnit(6);
+
+		sm->setMinLightMargin(minLightMargin);
+		sm->setMaxFarPlane(maxFarPlane);
+		sm->setTextureSize(osg::Vec2s(static_cast<short>(textureSize), static_cast<short>(textureSize)));
+		sm->setShadowTextureCoordIndex(shadowTextureUnit);
+		sm->setShadowTextureUnit(shadowTextureUnit);
+		sm->setBaseTextureCoordIndex(baseTextureUnit);
+		sm->setBaseTextureUnit(baseTextureUnit);
+		//sm->setShadowReceivingCoarseBoundAccuracy(osgShadow::MinimalShadowMap::EMPTY_BOX);
+		sm->setMainVertexShader(NULL);
+		sm->setShadowVertexShader(NULL);
+
+		osg::Shader* mainFragmentShader = new osg::Shader(osg::Shader::FRAGMENT,
+			" // following expressions are auto modified - do not change them:       \n"
+			" // gl_TexCoord[0]  0 - can be subsituted with other index              \n"
+			"                                                                        \n"
+			"float DynamicShadow( );                                                 \n"
+			"                                                                        \n"
+			"uniform sampler2D baseTexture;                                          \n"
+			"                                                                        \n"
+			"void main(void)                                                         \n"
+			"{                                                                       \n"
+			"  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;     \n"
+			"  // Add ambient from Light of index = 0                                \n"
+			"  colorAmbientEmissive += gl_FrontLightProduct[0].ambient;              \n"
+			"  vec4 color = texture2D( baseTexture, gl_TexCoord[0].xy );             \n"
+			"  color *= mix( colorAmbientEmissive, gl_Color, DynamicShadow() );      \n"
+			//"  const float LOG2E = 1.442692;	// = 1/log(2)                        \n"
+			//"  float fog = exp2(-gl_Fog.density * abs(gl_FogFragCoord) * LOG2E);     \n"
+			//"  fog = clamp(fog, 0.0, 1.0);                                            \n"
+			//hack to support linear and exp fog, TODO: add fog mode uniform 
+			"  if(gl_Fog.density > 0){                                            \n"
+			"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
+			"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
+			"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
+			"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+			"  } \n"
+			"  else { \n"
+			"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+			"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+			"  } \n"
+			"    gl_FragColor = color;                                                 \n"
+			"} \n");
+
+		sm->setMainFragmentShader(mainFragmentShader);
+		/*osg::Shader* shadowFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
+		" // following expressions are auto modified - do not change them:      \n"
+		" // gl_TexCoord[1]  1 - can be subsituted with other index             \n"
+		"                                                                       \n"
+		"uniform sampler2DShadow shadowTexture;                                 \n"
+		"                                                                       \n"
+		"float DynamicShadow( )                                                 \n"
+		"{                                                                      \n"
+		"    return shadow2DProj( shadowTexture, gl_TexCoord[1] ).r;            \n"
+		"} \n" );*/
+		osg::ref_ptr<osgShadow::ShadowedScene> ss = new osgShadow::ShadowedScene;
+		ss->setName("ShadowRootNode");
+		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
+		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
+		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
+		ss->setShadowTechnique(sm);
+
+		ss->getOrCreateStateSet()->setDefine("SM_LISPSM");
+		osg::Uniform* shadowTextureUnitUniform = new osg::Uniform(osg::Uniform::INT, "shadowTextureUnit0");
+		shadowTextureUnitUniform->set((int)shadowTextureUnit);
+		ss->getOrCreateStateSet()->addUniform(shadowTextureUnitUniform);
+		return ss;
+	}
+#endif
 
 	void OSGGraphicsSceneManager::OnPostConstruction()
 	{
@@ -53,71 +176,18 @@ namespace GASS
 
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
+		m_ShadowedScene = _CreateShadowNode();
+		m_RootNode->addChild(m_ShadowedScene);
+
+		m_LightModel = new osg::LightModel;
+		m_LightModel->setTwoSided(false);
+		SetAmbientColor(m_AmbientColor);
+		m_RootNode->getOrCreateStateSet()->setAttributeAndModes(m_LightModel, osg::StateAttribute::ON);
 
 		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
-		osg::ref_ptr<osgShadow::ShadowTechnique>  st = gfx_sys->GetShadowTechnique();
-		if (st.valid())
-		{
-			m_ShadowedScene = new osgShadow::ShadowedScene;
-			m_ShadowedScene->setName("ShadowRootNode");
-			m_ShadowedScene->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
-			m_ShadowedScene->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 
-			//only used by ViewDependentShadowMap
-			osgShadow::ShadowSettings* settings = m_ShadowedScene->getShadowSettings();
-			settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
-			settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
-			settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-
-			settings->setMaximumShadowMapDistance(200.0);
-
-			if (gfx_sys->GetShadowType() == "ViewDependentShadowMap")
-			{
-				settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
-				//settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-				//settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-				//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
-				settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
-			}
-			else
-				settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-
-			//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
-
-			unsigned int unit = 6;
-			settings->setBaseShadowTextureUnit(unit);
-
-			double n = 0.8;
-			settings->setMinimumShadowMapNearFarRatio(n);
-
-			unsigned int numShadowMaps = 2;
-			settings->setNumShadowMapsPerLight(numShadowMaps);
-
-			//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
-			settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
-
-			short mapres = 2048;
-			settings->setTextureSize(osg::Vec2s(mapres, mapres));
-
-			m_ShadowedScene->setShadowTechnique(st);
-			m_RootNode->addChild(m_ShadowedScene);
-
-			if (gfx_sys->GetShadowType() == "LightSpacePerspectiveShadowMap")
-			{
-				m_RootNode->getOrCreateStateSet()->setDefine("SM_LISPSM");
-				osg::Uniform* shadowTextureUnit = new osg::Uniform(osg::Uniform::INT, "shadowTextureUnit0");
-				shadowTextureUnit->set((int)unit);
-				m_RootNode->getOrCreateStateSet()->addUniform(shadowTextureUnit);
-			}
-			else if (gfx_sys->GetShadowType() == "ViewDependentShadowMap")
-			{
-				m_RootNode->getOrCreateStateSet()->setDefine("SM_VDSM2");
-			}
-
-		}
-
-		osg::StateSet* state = m_RootNode->getOrCreateStateSet();
-		state->setAttributeAndModes(m_Fog.get());
+		osg::StateSet* stateset = m_RootNode->getOrCreateStateSet();
+		stateset->setAttributeAndModes(m_Fog.get());
 
 		UpdateFogSettings();
 
@@ -144,6 +214,27 @@ namespace GASS
 		RegisterGetSet( "FogDensity", &OSGGraphicsSceneManager::GetFogDensity, &OSGGraphicsSceneManager::SetFogDensity,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ShadowMaxFarDistance", &OSGGraphicsSceneManager::GetShadowMaxFarDistance, &OSGGraphicsSceneManager::SetShadowMaxFarDistance, PF_VISIBLE | PF_EDITABLE, "");
+		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
+	}
+
+	float OSGGraphicsSceneManager::GetShadowMaxFarDistance() const
+	{
+		return m_ShadowMaxFarDistance;
+	}
+	
+	void OSGGraphicsSceneManager::SetShadowMaxFarDistance(float value)
+	{
+		m_ShadowMaxFarDistance = value;
+		if (m_ShadowedScene)
+			m_ShadowedScene->getShadowSettings()->setMaximumShadowMapDistance(value);
+	}
+
+	void OSGGraphicsSceneManager::SetAmbientColor(const ColorRGB& value)
+	{ 
+		m_AmbientColor = value;
+		if (m_LightModel)
+			m_LightModel->setAmbientIntensity(osg::Vec4(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b,1.0));
 	}
 
 	void OSGGraphicsSceneManager::OnSceneCreated()

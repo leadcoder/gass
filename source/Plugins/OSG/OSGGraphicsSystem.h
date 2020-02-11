@@ -63,22 +63,18 @@ namespace GASS
 		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
 		TextBox* GetDebugText() const { return m_DebugTextBox; }
 	protected:
-		void _SetupShadowNode();
-		
 		//void LoadXML(tinyxml2::XMLElement *elem) override;
 		void OnInitializeTextBox(CreateTextBoxRequestPtr message);
 		void OnViewportMovedOrResized(ViewportMovedOrResizedEventPtr message);
 		
 		//void SetActiveData(osg::Group* root);
 		//void LoadShadowSettings(tinyxml2::XMLElement *shadow_elem);
-		osg::ref_ptr<osgShadow::ShadowTechnique> GetShadowTechnique() const {return m_ShadowTechnique;}
 		void SetShadowSettingsFile(const std::string& file_name) {m_ShadowSettingsFile = file_name;}
 		std::string GetShadowSettingsFile() const {return m_ShadowSettingsFile;}
 		//void ChangeCamera(const std::string &viewport, OSGCameraComponentPtr cam_comp);
 	private:
 		osgViewer::CompositeViewer* m_Viewer;
 		std::vector<OSGRenderWindowPtr> m_Windows;
-		osg::ref_ptr<osgShadow::ShadowTechnique> m_ShadowTechnique;
 		std::string m_ShadowSettingsFile;
 		TextBox* m_DebugTextBox;
 		std::map<std::string,TextBox*>  m_TextBoxes;
