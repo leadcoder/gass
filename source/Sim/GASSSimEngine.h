@@ -202,8 +202,6 @@ namespace GASS
 		//print debug message to render window
 		void DebugPrint(const std::string &message);
 	private:
-		void PutEnv(const std::string &value);
-	
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
