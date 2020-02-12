@@ -40,8 +40,165 @@ namespace GASS
 		m_FogColor(1,1,1),
 		m_AmbientColor(0.0,0.0,0.0),
 		m_ShadowMaxFarDistance(400),
-		m_ShadowTextureSize(2048)
+		m_ShadowTextureSize(2048),
+		m_ShadowMinimumNearFarRatio(0.1f)
 	{
+	}
+
+	void OSGGraphicsSceneManager::OnPostConstruction()
+	{
+		RegisterForPostUpdate<OSGGraphicsSystem>();
+
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
+		ScenePtr scene = GetScene();
+		if (!scene)
+		{
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not present", "OSGGraphicsSceneManager::OnInitialize");
+		}
+
+		m_RootNode = new osg::PositionAttitudeTransform();
+		m_RootNode->setName("GASSRootNode");
+		m_ShadowedScene = _CreateShadowNode();
+		m_RootNode->addChild(m_ShadowedScene);
+
+		m_LightModel = new osg::LightModel;
+		m_LightModel->setTwoSided(false);
+		SetAmbientColor(m_AmbientColor);
+		m_RootNode->getOrCreateStateSet()->setAttributeAndModes(m_LightModel, osg::StateAttribute::ON);
+
+		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
+
+		osg::StateSet* stateset = m_RootNode->getOrCreateStateSet();
+		stateset->setAttributeAndModes(m_Fog.get());
+
+		UpdateFogSettings();
+
+		//add debug node
+		m_DebugDraw = new OSGDebugDraw();
+		m_RootNode->addChild(m_DebugDraw->GetNode());
+
+		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
+	}
+
+	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
+	{
+		if(m_ShadowedScene.valid())
+			m_ShadowedScene->setShadowTechnique(0);
+	}
+
+	void OSGGraphicsSceneManager::RegisterReflection()
+	{
+		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
+		RegisterGetSet("FogMode", &OSGGraphicsSceneManager::GetFogMode, &OSGGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
+		RegisterGetSet( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogDensity", &OSGGraphicsSceneManager::GetFogDensity, &OSGGraphicsSceneManager::SetFogDensity,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ShadowMaxFarDistance", &OSGGraphicsSceneManager::GetShadowMaxFarDistance, &OSGGraphicsSceneManager::SetShadowMaxFarDistance, PF_VISIBLE | PF_EDITABLE, "");
+		RegisterGetSet("ShadowMinimumNearFarRatio", &OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio, &OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio, PF_VISIBLE | PF_EDITABLE, "");
+		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
+	}
+
+	float OSGGraphicsSceneManager::GetShadowMaxFarDistance() const
+	{
+		return m_ShadowMaxFarDistance;
+	}
+	
+	void OSGGraphicsSceneManager::SetShadowMaxFarDistance(float value)
+	{
+		m_ShadowMaxFarDistance = value;
+		if (m_ShadowedScene)
+			m_ShadowedScene->getShadowSettings()->setMaximumShadowMapDistance(value);
+	}
+
+	float OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio() const
+	{
+		return m_ShadowMinimumNearFarRatio;
+	}
+
+	void OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio(float value)
+	{
+		m_ShadowMinimumNearFarRatio = value;
+		if (m_ShadowedScene)
+			m_ShadowedScene->getShadowSettings()->setMinimumShadowMapNearFarRatio(value);
+	}
+
+	void OSGGraphicsSceneManager::SetAmbientColor(const ColorRGB& value)
+	{ 
+		m_AmbientColor = value;
+		if (m_LightModel)
+			m_LightModel->setAmbientIntensity(osg::Vec4(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b,1.0));
+	}
+
+	void OSGGraphicsSceneManager::OnSceneCreated()
+	{
+		void* root = static_cast<void*>(m_RootNode.get());
+		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
+
+		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
+		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
+		sim_sm->SendImmediate(loaded_msg);
+	}
+
+	void OSGGraphicsSceneManager::OnSceneShutdown()
+	{
+
+	}
+
+	void OSGGraphicsSceneManager::UpdateFogSettings()
+	{
+		m_Fog->setColor(osg::Vec4(static_cast<float>(m_FogColor.x), static_cast<float>(m_FogColor.y), static_cast<float>(m_FogColor.z),1));
+		m_Fog->setDensity(m_FogDensity);
+		m_Fog->setEnd(m_FogEnd);
+		m_Fog->setStart(m_FogStart);
+
+		osg::StateSet* state = m_RootNode ? m_RootNode->getOrCreateStateSet() : nullptr;
+
+		if(state)
+		{
+			short attr = osg::StateAttribute::ON;
+			state->setMode(GL_FOG, attr);
+
+			state->removeDefine("FM_LINEAR");
+			state->removeDefine("FM_EXP");
+			state->removeDefine("FM_EXP2");
+		}
+		
+		switch(m_FogMode.GetValue())
+		{
+		case FM_LINEAR:
+			m_Fog->setMode(osg::Fog::LINEAR);
+			if(state) state->setDefine("FM_LINEAR");
+			break;
+		case FM_EXP:
+			m_Fog->setMode(osg::Fog::EXP);
+			if (state) state->setDefine("FM_EXP");
+			break;
+		case FM_EXP2:
+			m_Fog->setMode(osg::Fog::EXP2);
+			if (state) state->setDefine("FM_EXP2");
+			break;
+		case FM_NONE:
+			if(state)
+			{
+				short attr = osg::StateAttribute::OFF;
+				state->setMode(GL_FOG, attr);
+				m_RootNode->setStateSet(state);
+			}
+			break;
+		}
+	}
+
+	void OSGGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
+	{
+		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
+	}
+
+	void OSGGraphicsSceneManager::OnUpdate(double delta_time)
+	{
+		m_DebugDraw->Clear();
 	}
 
 #if 1
@@ -54,30 +211,23 @@ namespace GASS
 		ss->getOrCreateStateSet()->setDefine("SM_VDSM2");
 
 		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
-		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS | 0x1);
+		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
 		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
 		//settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 		//settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-		//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
 		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
-		
+		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
-
+		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
+		unsigned int numShadowMaps = 2;
 		unsigned int unit = 6;
 		settings->setBaseShadowTextureUnit(unit);
-
-		double n = 0.1;
-		settings->setMinimumShadowMapNearFarRatio(n);
-
-		unsigned int numShadowMaps = 2;
 		settings->setNumShadowMapsPerLight(numShadowMaps);
-
-		//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
 		settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
+		//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
 		settings->setTextureSize(osg::Vec2s(m_ShadowTextureSize, m_ShadowTextureSize));
-		
 		return ss;
 	}
 
@@ -162,158 +312,5 @@ namespace GASS
 		return ss;
 	}
 #endif
-
-	void OSGGraphicsSceneManager::OnPostConstruction()
-	{
-		RegisterForPostUpdate<OSGGraphicsSystem>();
-
-		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		ScenePtr scene = GetScene();
-		if (!scene)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not present", "OSGGraphicsSceneManager::OnInitialize");
-		}
-
-		m_RootNode = new osg::PositionAttitudeTransform();
-		m_RootNode->setName("GASSRootNode");
-		m_ShadowedScene = _CreateShadowNode();
-		m_RootNode->addChild(m_ShadowedScene);
-
-		m_LightModel = new osg::LightModel;
-		m_LightModel->setTwoSided(false);
-		SetAmbientColor(m_AmbientColor);
-		m_RootNode->getOrCreateStateSet()->setAttributeAndModes(m_LightModel, osg::StateAttribute::ON);
-
-		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
-
-		osg::StateSet* stateset = m_RootNode->getOrCreateStateSet();
-		stateset->setAttributeAndModes(m_Fog.get());
-
-		UpdateFogSettings();
-
-		//add debug node
-		m_DebugDraw = new OSGDebugDraw();
-		m_RootNode->addChild(m_DebugDraw->GetNode());
-
-		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
-	}
-
-	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
-	{
-		if(m_ShadowedScene.valid())
-			m_ShadowedScene->setShadowTechnique(0);
-	}
-
-	void OSGGraphicsSceneManager::RegisterReflection()
-	{
-		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
-		RegisterGetSet("FogMode", &OSGGraphicsSceneManager::GetFogMode, &OSGGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
-		RegisterGetSet( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterGetSet( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterGetSet( "FogDensity", &OSGGraphicsSceneManager::GetFogDensity, &OSGGraphicsSceneManager::SetFogDensity,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterGetSet( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterGetSet( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterGetSet("ShadowMaxFarDistance", &OSGGraphicsSceneManager::GetShadowMaxFarDistance, &OSGGraphicsSceneManager::SetShadowMaxFarDistance, PF_VISIBLE | PF_EDITABLE, "");
-		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
-	}
-
-	float OSGGraphicsSceneManager::GetShadowMaxFarDistance() const
-	{
-		return m_ShadowMaxFarDistance;
-	}
-	
-	void OSGGraphicsSceneManager::SetShadowMaxFarDistance(float value)
-	{
-		m_ShadowMaxFarDistance = value;
-		if (m_ShadowedScene)
-			m_ShadowedScene->getShadowSettings()->setMaximumShadowMapDistance(value);
-	}
-
-	void OSGGraphicsSceneManager::SetAmbientColor(const ColorRGB& value)
-	{ 
-		m_AmbientColor = value;
-		if (m_LightModel)
-			m_LightModel->setAmbientIntensity(osg::Vec4(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b,1.0));
-	}
-
-	void OSGGraphicsSceneManager::OnSceneCreated()
-	{
-		void* root = static_cast<void*>(m_RootNode.get());
-		void* shadow_node = static_cast<void*>(GetOSGShadowRootNode().get());
-
-		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"),root,shadow_node));
-		SimSystemManagerPtr sim_sm = OSGGraphicsSystemPtr(m_GFXSystem)->GetSimSystemManager();
-		sim_sm->SendImmediate(loaded_msg);
-	}
-
-	void OSGGraphicsSceneManager::OnSceneShutdown()
-	{
-
-	}
-
-	void OSGGraphicsSceneManager::UpdateFogSettings()
-	{
-		m_Fog->setColor(osg::Vec4(static_cast<float>(m_FogColor.x), static_cast<float>(m_FogColor.y), static_cast<float>(m_FogColor.z),1));
-		m_Fog->setDensity(m_FogDensity);
-		m_Fog->setEnd(m_FogEnd);
-		m_Fog->setStart(m_FogStart);
-
-		osg::StateSet* state = m_RootNode ? m_RootNode->getOrCreateStateSet() : nullptr;
-
-		if(state)
-		{
-			short attr = osg::StateAttribute::ON;
-			state->setMode(GL_FOG, attr);
-
-			state->removeDefine("FM_LINEAR");
-			state->removeDefine("FM_EXP");
-			state->removeDefine("FM_EXP2");
-		}
-
-		//state->getDefineList().clear();
-		switch(m_FogMode.GetValue())
-		{
-		case FM_LINEAR:
-			m_Fog->setMode(osg::Fog::LINEAR);
-			if(state) state->setDefine("FM_LINEAR");
-			break;
-		case FM_EXP:
-			m_Fog->setMode(osg::Fog::EXP);
-			if (state) state->setDefine("FM_EXP");
-			break;
-		case FM_EXP2:
-			m_Fog->setMode(osg::Fog::EXP2);
-			if (state) state->setDefine("FM_EXP2");
-			break;
-		case FM_NONE:
-			if(state)
-			{
-				short attr = osg::StateAttribute::OFF;
-				state->setMode(GL_FOG, attr);
-				m_RootNode->setStateSet(state);
-			}
-			break;
-		}
-	}
-
-	void OSGGraphicsSceneManager::DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color)
-	{
-		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
-	}
-
-	void OSGGraphicsSceneManager::OnUpdate(double delta_time)
-	{
-		m_DebugDraw->Clear();
-		//_UpdateListeners(delta_time);
-	}
-
-
-/*	osg::ref_ptr<osg::Group> OSGGraphicsSceneManager::GetOSGShadowRootNode()
-	{
-		if(m_ShadowedScene.valid())
-			return m_ShadowedScene;
-		return m_RootNode;
-	}*/
 }
 

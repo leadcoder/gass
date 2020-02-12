@@ -72,6 +72,8 @@ namespace GASS
 		ColorRGB GetAmbientColor() const {return m_AmbientColor;}
 		float GetShadowMaxFarDistance() const;
 		void SetShadowMaxFarDistance(float value);
+		float GetShadowMinimumNearFarRatio() const;
+		void SetShadowMinimumNearFarRatio(float value);
 	private:
 		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode() const;
 
@@ -87,6 +89,7 @@ namespace GASS
 
 		//Shadows
 		float m_ShadowMaxFarDistance;
+		float m_ShadowMinimumNearFarRatio;
 		short m_ShadowTextureSize;
 
 		OSGGraphicsSystemWeakPtr m_GFXSystem;

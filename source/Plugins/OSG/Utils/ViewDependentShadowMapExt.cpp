@@ -642,6 +642,16 @@ namespace osgShadow
 		"  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor + gl_FrontLightProduct[0].ambient;     \n"
 		"  vec4 color = texture2D( baseTexture, gl_TexCoord[baseTextureUnit].xy );                                              \n"
 		"  color *= mix( colorAmbientEmissive, gl_Color, shadow2DProj( shadowTexture0, gl_TexCoord[shadowTextureUnit0] ).r );     \n"
+		"  if(gl_Fog.density > 0){                                            \n"
+		"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
+		"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
+		"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
+		"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+		"  } \n"
+		"  else { \n"
+		"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+		"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+		"  } \n"
 		"  gl_FragColor = color;                                                                                                \n"
 		"} \n";
 
@@ -660,6 +670,16 @@ namespace osgShadow
 		"  float shadow0 = shadow2DProj( shadowTexture0, gl_TexCoord[shadowTextureUnit0] ).r;   \n"
 		"  float shadow1 = shadow2DProj( shadowTexture1, gl_TexCoord[shadowTextureUnit1] ).r;   \n"
 		"  color *= mix( colorAmbientEmissive, gl_Color, shadow0*shadow1 );                     \n"
+		"  if(gl_Fog.density > 0){                                            \n"
+		"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
+		"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
+		"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
+		"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+		"  } \n"
+		"  else { \n"
+		"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
+		"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
+		"  } \n"
 		"  gl_FragColor = color;                                                                \n"
 		"} \n";
 #endif
@@ -692,7 +712,9 @@ namespace osgShadow
 			// make sure GL_CULL_FACE is off by default
 			// we assume that if object has cull face attribute set to back
 			// it will also set cull face mode ON so no need for override
-			_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
+			//_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
+
+			_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::ON);
 		}
 
 #if 1
