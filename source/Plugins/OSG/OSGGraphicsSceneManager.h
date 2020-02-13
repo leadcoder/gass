@@ -51,8 +51,8 @@ namespace GASS
 		osg::ref_ptr<osg::Group> GetOSGRootNode() override {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
-				if (m_ShadowedScene.valid())
-					return m_ShadowedScene;
+				if (m_ShadowRootNode.valid())
+					return m_ShadowRootNode;
 				return m_RootNode;
 		}
 	private:
@@ -74,6 +74,8 @@ namespace GASS
 		void SetShadowMaxFarDistance(float value);
 		float GetShadowMinimumNearFarRatio() const;
 		void SetShadowMinimumNearFarRatio(float value);
+		bool GetEnableShadows() const;
+		void SetEnableShadows(bool value);
 	private:
 		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode() const;
 
@@ -91,9 +93,11 @@ namespace GASS
 		float m_ShadowMaxFarDistance;
 		float m_ShadowMinimumNearFarRatio;
 		short m_ShadowTextureSize;
+		bool m_EnableShadows;
 
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		osg::ref_ptr<osg::Group> m_RootNode;
+		osg::ref_ptr<osg::Group> m_ShadowRootNode;
 		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osg::LightModel> m_LightModel;

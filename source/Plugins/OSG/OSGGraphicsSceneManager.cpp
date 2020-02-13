@@ -41,7 +41,8 @@ namespace GASS
 		m_AmbientColor(0.0,0.0,0.0),
 		m_ShadowMaxFarDistance(400),
 		m_ShadowTextureSize(2048),
-		m_ShadowMinimumNearFarRatio(0.1f)
+		m_ShadowMinimumNearFarRatio(0.1f),
+		m_EnableShadows(true)
 	{
 	}
 
@@ -58,8 +59,8 @@ namespace GASS
 
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
-		m_ShadowedScene = _CreateShadowNode();
-		m_RootNode->addChild(m_ShadowedScene);
+		m_ShadowRootNode = new osg::Group();
+		SetEnableShadows(m_EnableShadows);
 
 		m_LightModel = new osg::LightModel;
 		m_LightModel->setTwoSided(false);
@@ -99,6 +100,8 @@ namespace GASS
 		RegisterGetSet("ShadowMaxFarDistance", &OSGGraphicsSceneManager::GetShadowMaxFarDistance, &OSGGraphicsSceneManager::SetShadowMaxFarDistance, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterGetSet("ShadowMinimumNearFarRatio", &OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio, &OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
+		RegisterGetSet("ShadowEnabled", &OSGGraphicsSceneManager::GetEnableShadows, &OSGGraphicsSceneManager::SetEnableShadows, PF_VISIBLE | PF_EDITABLE, "");
+
 	}
 
 	float OSGGraphicsSceneManager::GetShadowMaxFarDistance() const
@@ -116,6 +119,41 @@ namespace GASS
 	float OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio() const
 	{
 		return m_ShadowMinimumNearFarRatio;
+	}
+
+	bool OSGGraphicsSceneManager::GetEnableShadows() const
+	{
+		return m_EnableShadows;
+	}
+
+	void OSGGraphicsSceneManager::SetEnableShadows(bool value)
+	{
+		m_EnableShadows = value;
+		if (m_ShadowRootNode) //initialized?
+		{
+			if (m_EnableShadows)
+			{
+				if (!m_ShadowedScene)
+				{
+					m_ShadowedScene = _CreateShadowNode();
+					m_RootNode->addChild(m_ShadowedScene);
+				}
+
+				if (!m_ShadowedScene->containsNode(m_ShadowRootNode))
+				{
+					m_ShadowedScene->addChild(m_ShadowRootNode);
+					if(m_RootNode->containsNode(m_ShadowRootNode))
+						m_RootNode->removeChild(m_ShadowRootNode);
+				}
+			}
+			else
+			{
+				if (!m_RootNode->containsNode(m_ShadowRootNode))
+					m_RootNode->addChild(m_ShadowRootNode);
+				if(m_ShadowedScene && m_ShadowedScene->containsNode(m_ShadowRootNode))
+					m_ShadowedScene->removeChild(m_ShadowRootNode);
+			}
+		}
 	}
 
 	void OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio(float value)
@@ -211,22 +249,18 @@ namespace GASS
 		ss->getOrCreateStateSet()->setDefine("SM_VDSM2");
 
 		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
-		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS);
+		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS | 0x1);
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
 		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
-		//settings->setComputeNearFarModeOverride(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-		//settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
-		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::PERSPECTIVE_SHADOW_MAP);
 		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
 		unsigned int numShadowMaps = 2;
 		unsigned int unit = 6;
 		settings->setBaseShadowTextureUnit(unit);
 		settings->setNumShadowMapsPerLight(numShadowMaps);
 		settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
-		//settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::PARALLEL_SPLIT);
 		settings->setTextureSize(osg::Vec2s(m_ShadowTextureSize, m_ShadowTextureSize));
 		return ss;
 	}
