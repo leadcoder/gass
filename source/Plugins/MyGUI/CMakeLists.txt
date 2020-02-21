@@ -56,7 +56,7 @@ foreach(INC_DIR ${HEADER_SUBDIRS})
 	target_include_directories(${LIB_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
 endforeach()
 
-target_compile_definitions(${LIB_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
+target_compile_definitions(${LIB_NAME} PRIVATE GASS_PLUGIN_EXPORTS)
 
 set_target_properties(${LIB_NAME} PROPERTIES FOLDER "Plugins")
 

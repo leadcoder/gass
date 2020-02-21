@@ -126,8 +126,8 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	
 	target_link_libraries(${_PLUGIN_NAME} PRIVATE GASSSim)
 	
-	target_compile_definitions(${_PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
-	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .galp)
+	target_compile_definitions(${_PLUGIN_NAME} PRIVATE GASS_PLUGIN_EXPORTS)
+	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .gassp)
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES PREFIX "")
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES FOLDER "Plugins")
 endmacro()
@@ -140,16 +140,10 @@ macro(gass_setup_module _MODULE_NAME)
 					SOURCE_FILES ${SOURCE_FILES} 
 					HEADER_FILES ${HEADER_FILES} 
 					SKIP_HEADER_INSTALL )
-	#gass_get_header_directories(HEADER_SUBDIRS)
-	#foreach(INC_DIR ${HEADER_SUBDIRS})
-	#	target_include_directories(${_PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
-	#endforeach()
 	target_link_libraries(${_MODULE_NAME} PRIVATE GASSSim)
-	target_compile_definitions(${_MODULE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} EDITOR_MODULE_EXPORTS)
 	set_target_properties(${_MODULE_NAME} PROPERTIES FOLDER "Modules")
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/modules FILES_MATCHING PATTERN "*.h")
 endmacro()
-
 
 include(CMakeParseArguments)
 
@@ -282,7 +276,6 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	target_link_libraries(${SAMPLE_NAME} GASSSim)
 	
-	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
 	
@@ -312,7 +305,6 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
-	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "CoreSamples")
 	
@@ -324,7 +316,3 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 endmacro()
-
-
-
-

@@ -80,7 +80,7 @@
 #   	if defined( GASS_BUILDTYPE_STATIC )
 #			define GASSCoreExport
 #		else
-#		   	if defined( GASS_CORE_EXPORTS )
+#		   	if defined( GASSCore_EXPORTS )
 #		    	define GASSCoreExport __declspec( dllexport )
 #		    	define TINYXML2_EXPORT
 #   		else
