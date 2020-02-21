@@ -158,12 +158,19 @@ set(H_FILES
 	Utils/Script/scriptarray.h
 	Utils/Script/scriptbuilder.h
 	Utils/Script/scriptstdstring.h)
-	
+
+if(GASS_BUILD_CORE)
+	set(CORE_TARGET GASSCore)
+else()
+	find_package(gass)
+	set(CORE_TARGET GASS::GASSCore)
+endif()
 gass_setup_lib(GASSSim
 				BUILDTYPE ${GASS_BUILDTYPE}
 				SOURCE_FILES ${CPP_FILES} 
 				HEADER_FILES ${H_FILES}
-				PUBLIC_DEPS GASSCore Angelscript
+				PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
+				PUBLIC_DEPS ${CORE_TARGET} Angelscript
 				PRIVATE_DEPS ${PLATFORM_DEPS}
 				PRIVATE_DEFINITIONS GASS_EXPORTS ${GASS_COMMON_DEFINITIONS} )
 					

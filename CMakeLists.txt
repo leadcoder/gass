@@ -72,8 +72,11 @@ endif()
 # Enable INSTALL project to be built by default. Inactivated for every configuration otherwise.
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
-option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON)
+option(GASS_BUILD_CORE "Build Core" ON)
+cmake_dependent_option(GASS_BUILD_CORE_SAMPLES "Build Core Samples" ON "GASS_BUILD_CORE" OFF)
+
 option(GASS_BUILD_SIM "Build GASS Sim" ON )
+
 cmake_dependent_option(GASS_BUILD_PLUGIN_OGRE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_PAGED_GEOMETRY "Build Plugin." ON "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OGRE" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_ENVIRONMENT "Build Plugin." ON "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OGRE" OFF)
