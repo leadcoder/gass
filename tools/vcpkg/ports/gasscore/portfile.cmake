@@ -1,0 +1,56 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO leadcoder/gass
+    REF 40e306cdeb8720c6fb2c6a785acae71db1e48686
+    SHA512 7c7c78bf1e1609255520bd8949783c7d2d57ba01cf1afa7b7fe706eca2fd514cf0497745c1a6364c536e3b54ea974a3bedf19cbea9743ff312386486ca37094f
+    HEAD_REF devel
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(GASS_BUILDTYPE_STATIC TRUE)
+else()
+    set(GASS_BUILDTYPE_STATIC FALSE)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DGASS_BUILDTYPE_STATIC=${GASS_BUILDTYPE_STATIC}
+        -DGASS_BUILD_CORE=ON
+		-DGASS_BUILD_SIM=OFF
+		-DGASS_INSTALL_DEP_BINARIES=OFF
+		-DGASS_INSTALL_INCLUDE_DIR:STRING=include/gasscore
+)
+
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake")
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+set(GASS_TOOL_PATH_REL ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+set(GASS_TOOL_PATH_DBG ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
+
+file(GLOB GASS_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
+if(GASS_TOOLS)
+	file(COPY ${GASS_TOOLS} DESTINATION ${GASS_TOOL_PATH_REL})
+	file(REMOVE_RECURSE ${GASS_TOOLS})
+endif()
+
+file(GLOB GASS_TOOLS_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
+
+if(GASS_TOOLS_DBG)
+	file(REMOVE_RECURSE ${GASS_TOOLS_DBG})
+endif()
+
+#move cmake-files to share
+file(GLOB GASS_CMAKE_FILES ${CURRENT_PACKAGES_DIR}/CMake/*.cmake)
+file(COPY ${GASS_CMAKE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/CMake)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/CMake ${CURRENT_PACKAGES_DIR}/debug/CMake)
+
+#install copyright
+file(INSTALL ${SOURCE_PATH}/LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
