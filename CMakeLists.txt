@@ -145,22 +145,12 @@ if(GASS_BUILD_DOCUMENTATION)
   install(DIRECTORY ${CMAKE_BINARY_DIR}/Documentation/html/ DESTINATION doc)
 endif()
 
-# Install CMake files in order to re-use them in other projects
+#set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSConfig.cmake)
 
-#configure_file(
-#		"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSCore.cmake.in"
-#		"${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake" 
-#		@ONLY)
-
-#set(GASS_CMAKE_FILES ${CMAKE_CURRENT_BINARY_DIR}/FindGASSCore.cmake)		
-set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSConfig.cmake)
-if(GASS_BUILD_SIM)
-	#configure_file(
-	#	"${CMAKE_CURRENT_SOURCE_DIR}/CMake/FindGASSSim.cmake.in"
-	#	"${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake" 
-	#	@ONLY)
-	#set(GASS_CMAKE_FILES ${GASS_CMAKE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/FindGASSSim.cmake)
+if(GASS_BUILD_CORE)
+	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSCoreConfig.cmake DESTINATION CMake/)	
 endif()
 
-install(FILES ${GASS_CMAKE_FILES} DESTINATION CMake/)
-#install( DIRECTORY CMake/ DESTINATION CMake/ PATTERN *.cmake)
+if(GASS_BUILD_SIM)
+	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSSimConfig.cmake DESTINATION CMake/)	
+endif()

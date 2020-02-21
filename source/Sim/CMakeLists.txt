@@ -162,7 +162,7 @@ set(H_FILES
 if(GASS_BUILD_CORE)
 	set(CORE_TARGET GASSCore)
 else()
-	find_package(gass)
+	find_package(GASSCore)
 	set(CORE_TARGET GASS::GASSCore)
 endif()
 gass_setup_lib(GASSSim
