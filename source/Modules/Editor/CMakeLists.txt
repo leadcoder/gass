@@ -1,2 +1,1 @@
 gass_setup_module(GASSEditorModule)
-
