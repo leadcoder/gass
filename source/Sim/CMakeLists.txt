@@ -172,4 +172,12 @@ gass_setup_lib(GASSSim
 				PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../"
 				PUBLIC_DEPS ${CORE_TARGET} Angelscript
 				PRIVATE_DEPS ${PLATFORM_DEPS})
-					
+				
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/GASSSimConfigVersion.cmake
+  VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH}
+  COMPATIBILITY SameMajorVersion)
+  
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/GASSSimConfig.cmake DESTINATION CMake/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GASSSimConfigVersion.cmake DESTINATION CMake/)

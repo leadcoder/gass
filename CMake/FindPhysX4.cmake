@@ -41,7 +41,7 @@ ENDIF()
 #vcpkg hack
 set(PHYSX4_DEBUG_LIB_DIR ${PHYSX4_INCLUDE_DIR}/../../debug/lib)
 set(PHYSX4_RELEASE_LIB_DIR ${PHYSX4_INCLUDE_DIR}/../../lib)
-message(${PHYSX4_RELEASE_LIB_DIR})
+
 # Look for the libraries.
 FOREACH( PHYSX4_LIB ${PHYSX4_LIBS})
   STRING(TOUPPER ${PHYSX4_LIB} _upper_lib_name)

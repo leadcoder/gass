@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 
 # The version number.
-set (GASS_VERSION_MAJOR 1)
-set (GASS_VERSION_MINOR 0)
-set (GASS_VERSION_PATCH 0)
+set(GASS_VERSION_MAJOR 1)
+set(GASS_VERSION_MINOR 0)
+set(GASS_VERSION_PATCH 0)
+set(GASS_VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH})
 
-project(GASS VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH})
+project(GASS VERSION ${GASS_VERSION})
 
 set(CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake
@@ -16,7 +17,6 @@ include(CMakeDependentOption)
 include(Common)
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
-set(GASS_MAJOR_VERSION 1)
 
 #all options
 option(GASS_BUILD_CORE "Build Core" ON)
@@ -99,11 +99,3 @@ enable_testing()
 add_subdirectory(source)
 add_subdirectory(samples)
 add_subdirectory(applications)
-
-if(GASS_BUILD_CORE)
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSCoreConfig.cmake DESTINATION CMake/)	
-endif()
-
-if(GASS_BUILD_SIM)
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CMake/GASSSimConfig.cmake DESTINATION CMake/)	
-endif()

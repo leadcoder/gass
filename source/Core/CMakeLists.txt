@@ -1,11 +1,9 @@
 
-if(GASS_EMBED_GIT_SHA)
-	configure_file(
+configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSVersion.h.in"
 		"${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h" 
 		@ONLY)
- 	set(GASS_VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
-endif()
+set(GASS_VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
 
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSConfig.h.in"
@@ -157,13 +155,17 @@ gass_setup_lib(GASSCore
 					HEADER_FILES ${H_FILES}
 					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_BINARY_DIR}/../"
 					PRIVATE_DEPS ${PLATFORM_DEPS})
-					
-#install config and version headers
+
 INSTALL(FILES ${GASS_CONFIG_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
 
-if(GASS_EMBED_GIT_SHA)
-	INSTALL(FILES ${GASS_VERSION_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
-endif()
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/GASSCoreConfigVersion.cmake
+  VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH}
+  COMPATIBILITY SameMajorVersion)
+  
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/GASSCoreConfig.cmake DESTINATION CMake/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GASSCoreConfigVersion.cmake DESTINATION CMake/)
 
 
 
