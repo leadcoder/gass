@@ -36,6 +36,7 @@ namespace GASS
 	void OSGCollisionSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<OSGCollisionSystem>("OSGCollisionSystem");
+		RegisterMember("ReadPagedLOD", &OSGCollisionSystem::m_ReadPagedLOD, PF_VISIBLE, "Read PagedLod nodes on intersection test");
 	}
 
 	void OSGCollisionSystem::OnSystemInit()

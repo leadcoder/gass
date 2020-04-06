@@ -126,7 +126,7 @@ namespace GASS
 
 
 			//check ground and static geometry for now
-			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT);/* | GEOMETRY_FLAG_PAGED_LOD);*/
+			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT | GEOMETRY_FLAG_PAGED_LOD);
 
 			/*if (m_Heightmap)
 			{

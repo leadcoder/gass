@@ -22,6 +22,7 @@
 
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGCollisionSystem.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 
@@ -30,11 +31,9 @@ namespace GASS
 
 	void OSGCollisionSceneManager::RegisterReflection()
 	{
-
 	}
 
-	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(NULL),
-		m_DatabaseCache(NULL)
+	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(NULL)
 	{
 
 	}
@@ -48,10 +47,12 @@ namespace GASS
 	{
 		//register on system to get updates
 		RegisterForPostUpdate<OSGGraphicsSystem>();
+
+		m_ColSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGCollisionSystem>().get();
+		m_GFXSystem = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>().get();
 		m_IntersectVisitor = new CustomIntersectionVisitor();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
 		m_DatabaseCache = new osgSim::DatabaseCacheReadCallback();
-		//m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 	}
 
 	void OSGCollisionSceneManager::OnSceneCreated()
@@ -69,16 +70,10 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		if(scene)
 		{
-			OSGGraphicsSceneManagerPtr gfx_sm = scene->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
-
-			OSGGraphicsSystemPtr gfx_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 			osgViewer::ViewerBase::Views views;
-			gfx_sys->GetViewer()->getViews(views);
-
-			if(gfx_sm)
-			{
+			m_GFXSystem->GetViewer()->getViews(views);
+			if(views.size() > 0)
 				_ProcessRaycast(ray_start, ray_dir, flags,&result,views[0]->getCamera());
-			}
 		}
 	}
 
@@ -93,7 +88,7 @@ namespace GASS
 		
 		m_IntersectVisitor->reset();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
-		if(flags & GEOMETRY_FLAG_PAGED_LOD)
+		if((flags & GEOMETRY_FLAG_PAGED_LOD) && m_ColSystem->GetReadPagedLOD())
 			m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 		else
 			m_IntersectVisitor->setReadCallback(NULL);
