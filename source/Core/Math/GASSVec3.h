@@ -204,6 +204,24 @@ namespace GASS
 				   Math::Equal(z, v.z, tolerance);
 		}
 
+		static TVec3 Max(const TVec3& v1, const TVec3& v2)
+		{
+			TVec3 ret;
+			ret.x = std::max<TYPE>(v1.x, v2.x);
+			ret.y = std::max<TYPE>(v1.y, v2.y);
+			ret.z = std::max<TYPE>(v1.z, v2.z);
+			return ret;
+		}
+
+		static TVec3 Min(const TVec3& v1, const TVec3& v2)
+		{
+			TVec3 ret;
+			ret.x = std::min<TYPE>(v1.x, v2.x);
+			ret.y = std::min<TYPE>(v1.y, v2.y);
+			ret.z = std::min<TYPE>(v1.z, v2.z);
+			return ret;
+		}
+
 		static TVec3 Deg2Rad(const TVec3 &vec)
 		{
 			TVec3 ret;

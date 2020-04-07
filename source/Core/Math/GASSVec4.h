@@ -172,6 +172,26 @@ namespace GASS
 			}
 			return is;
 		}
+
+		static TVec4 Max(const TVec4& v1, const TVec4& v2)
+		{
+			TVec4 ret;
+			ret.x = std::max<TYPE>(v1.x, v2.x);
+			ret.y = std::max<TYPE>(v1.y, v2.y);
+			ret.z = std::max<TYPE>(v1.z, v2.z);
+			ret.z = std::max<TYPE>(v1.w, v2.w);
+			return ret;
+		}
+
+		static TVec4 Min(const TVec4& v1, const TVec4& v2)
+		{
+			TVec4 ret;
+			ret.x = std::min<TYPE>(v1.x, v2.x);
+			ret.y = std::min<TYPE>(v1.y, v2.y);
+			ret.z = std::min<TYPE>(v1.z, v2.z);
+			ret.w = std::min<TYPE>(v1.w, v2.w);
+			return ret;
+		}
 	};
 
 	typedef TVec4<Float> Vec4;

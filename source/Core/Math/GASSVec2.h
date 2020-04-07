@@ -221,6 +221,22 @@ namespace GASS
 			return (v1.x*v2.x + v1.y*v2.y);
 		}
 
+		static TVec2 Max(const TVec2& v1, const TVec2& v2)
+		{
+			TVec2 ret;
+			ret.x = std::max<TYPE>(v1.x, v2.x);
+			ret.y = std::max<TYPE>(v1.y, v2.y);
+			return ret;
+		}
+
+		static TVec2 Min(const TVec2& v1, const TVec2& v2)
+		{
+			TVec2 ret;
+			ret.x = std::min<TYPE>(v1.x, v2.x);
+			ret.y = std::min<TYPE>(v1.y, v2.y);
+			return ret;
+		}
+
 		inline TVec2 NormalizedCopy() const
 		{
 			TVec2 norm_copy(x, y);
