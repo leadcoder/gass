@@ -79,6 +79,9 @@ namespace GASS
 		m_RootNode->addChild(m_DebugDraw->GetNode());
 
 		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
+
+		const bool enable_shader_light = true;
+		m_RootNode->getOrCreateStateSet()->setDefine("OSG_LIGHTING", enable_shader_light ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
 	}
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
@@ -194,29 +197,28 @@ namespace GASS
 
 		osg::StateSet* state = m_RootNode ? m_RootNode->getOrCreateStateSet() : nullptr;
 
+		const std::string fog_mode_str = "OSG_FOG_MODE";
+
 		if(state)
 		{
 			short attr = osg::StateAttribute::ON;
 			state->setMode(GL_FOG, attr);
-
-			state->removeDefine("FM_LINEAR");
-			state->removeDefine("FM_EXP");
-			state->removeDefine("FM_EXP2");
 		}
+		
 		
 		switch(m_FogMode.GetValue())
 		{
 		case FM_LINEAR:
 			m_Fog->setMode(osg::Fog::LINEAR);
-			if(state) state->setDefine("FM_LINEAR");
+			if(state) state->setDefine(fog_mode_str, "1");
 			break;
 		case FM_EXP:
 			m_Fog->setMode(osg::Fog::EXP);
-			if (state) state->setDefine("FM_EXP");
+			if (state) state->setDefine(fog_mode_str, "2");
 			break;
 		case FM_EXP2:
 			m_Fog->setMode(osg::Fog::EXP2);
-			if (state) state->setDefine("FM_EXP2");
+			if (state) state->setDefine(fog_mode_str, "3");
 			break;
 		case FM_NONE:
 			if(state)
@@ -224,6 +226,7 @@ namespace GASS
 				short attr = osg::StateAttribute::OFF;
 				state->setMode(GL_FOG, attr);
 				m_RootNode->setStateSet(state);
+				state->removeDefine(fog_mode_str);
 			}
 			break;
 		}
@@ -246,7 +249,7 @@ namespace GASS
 		osg::ref_ptr<osgShadow::ShadowedScene> ss = new osgShadow::ShadowedScene;
 		ss->setName("ShadowRootNode");
 		ss->setShadowTechnique(vdsm);
-		ss->getOrCreateStateSet()->setDefine("SM_VDSM2");
+		
 
 		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
 		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS | 0x1);
@@ -262,6 +265,10 @@ namespace GASS
 		settings->setNumShadowMapsPerLight(numShadowMaps);
 		settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
 		settings->setTextureSize(osg::Vec2s(m_ShadowTextureSize, m_ShadowTextureSize));
+		//shader hint
+		std::stringstream num_shadow_maps_ss;
+		num_shadow_maps_ss << numShadowMaps;
+		ss->getOrCreateStateSet()->setDefine("OSG_NUM_SHADOW_MAPS", num_shadow_maps_ss.str());
 		return ss;
 	}
 
@@ -269,10 +276,10 @@ namespace GASS
 	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode() const
 	{
 		osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
-		sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
+		//sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
 		//sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
-		//sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
-		float minLightMargin(1);
+		sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
+		float minLightMargin(20);
 		float maxFarPlane(400);
 		short textureSize(2048);
 		int baseTextureUnit(0);
@@ -339,10 +346,15 @@ namespace GASS
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		ss->setShadowTechnique(sm);
 
-		ss->getOrCreateStateSet()->setDefine("SM_LISPSM");
+		ss->getOrCreateStateSet()->setDefine("OSG_NUM_SHADOW_MAPS", "1");
 		osg::Uniform* shadowTextureUnitUniform = new osg::Uniform(osg::Uniform::INT, "shadowTextureUnit0");
 		shadowTextureUnitUniform->set((int)shadowTextureUnit);
 		ss->getOrCreateStateSet()->addUniform(shadowTextureUnitUniform);
+		//Add texture sampler and unit uniforms,to match vdms and our shadow shaders
+		osg::Uniform* shadowTextureSampler = new osg::Uniform(osg::Uniform::INT, "shadowTexture0");
+		shadowTextureSampler->set((int)shadowTextureUnit);
+		ss->getOrCreateStateSet()->addUniform(shadowTextureSampler);
+		
 		return ss;
 	}
 #endif
