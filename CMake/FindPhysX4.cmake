@@ -83,6 +83,17 @@ FOREACH( PHYSX4_LIB ${PHYSX4_LIBS})
     SET( PHYSX4_DEBUG_LIBS_FOUND 0 )
     SET( PHYSX4_DEBUG_LIBS_NOTFOUND ${PHYSX4_DEBUG_LIBS_NOTFOUND} ${PHYSX4_LIB} ) 
   ENDIF()
+  
+  STRING(TOLOWER ${PHYSX4_LIB} _lower_lib_name)
+  set(_TARGET_NAME physx4::${_lower_lib_name})
+		list(APPEND PHYSX4_ALL_MODULE_TARGETS ${_TARGET_NAME})
+		if(NOT TARGET ${_TARGET_NAME})
+			add_library(${_TARGET_NAME} UNKNOWN IMPORTED)
+			set_target_properties(${_TARGET_NAME} PROPERTIES
+				INTERFACE_INCLUDE_DIRECTORIES ${PHYSX4_INCLUDE_DIR}
+				IMPORTED_LOCATION ${${LIB_RELASE_NAME}}
+				IMPORTED_LOCATION_DEBUG ${${LIB_DEBUG_NAME}})
+		endif()
 ENDFOREACH()
 
                       
@@ -103,6 +114,7 @@ ENDIF()
 
 # Report the results.
 IF(NOT PHYSX4_FOUND)
+	
   SET(PHYSX4_DIR_MESSAGE
     "PHYSX4 was not found. Set PHYSX4_INSTALL_DIR to the root directory of the 
 installation containing the 'include' and 'lib' folders.")
