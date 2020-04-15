@@ -59,6 +59,20 @@ function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
         ENDFOREACH(currentSourceFile ${ARGN})
 endfunction(create_source_group)
 
+
+function(gass_get_binary_dirs RELASE_DIRS DEBUG_DIRS )
+
+	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
+		set(_BIN_DIR_REL "${_VCPKG_DIR}/bin"
+						 "${_VCPKG_DIR}/tools/osg")
+		set(_BIN_DIR_DBG "${_VCPKG_DIR}/debug/bin"
+						 "${_VCPKG_DIR}/debug/tools/osg")
+		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
+		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
+	endif()
+endfunction()
+
 macro(gass_filename_only in_list out_list)
 	foreach(_FILENAME ${${in_list}})
 		get_filename_component(_BARENAME ${_FILENAME} NAME)
@@ -257,9 +271,7 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
 		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
 	endif()
-	if(MSVC)
-		set_target_properties(${APP_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}$(Configuration)")
-	endif()
+	
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	
@@ -281,6 +293,17 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
+	if(MSVC)
+		set_target_properties(${SAMPLE_NAME} PROPERTIES 
+			VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${SAMPLE_NAME}>")
+		
+		gass_get_binary_dirs(BIN_RELASE_DIRS BIN_DEBUG_DIRS)
+		set(_BIN_DIRS $<IF:$<CONFIG:Debug>,${BIN_DEBUG_DIRS},${BIN_RELASE_DIRS}>)
+		set(_BIN_DIRS "${_BIN_DIRS}")
+		set_target_properties(${SAMPLE_NAME} PROPERTIES 
+			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS};%PATH%")
+	endif()
+	
 	#copy configurations to enable execution from build folder
 	file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
