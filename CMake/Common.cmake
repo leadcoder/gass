@@ -65,9 +65,11 @@ function(gass_get_binary_dirs RELASE_DIRS DEBUG_DIRS )
 	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
 		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
 		set(_BIN_DIR_REL "${_VCPKG_DIR}/bin"
-						 "${_VCPKG_DIR}/tools/osg")
+						 "${_VCPKG_DIR}/tools/osg"
+						 "${_VCPKG_DIR}/tools/osgearth")
 		set(_BIN_DIR_DBG "${_VCPKG_DIR}/debug/bin"
-						 "${_VCPKG_DIR}/debug/tools/osg")
+						 "${_VCPKG_DIR}/debug/tools/osg"
+						 "${_VCPKG_DIR}/debug/tools/osgearth")
 		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
 		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
 	endif()
@@ -301,7 +303,8 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		set(_BIN_DIRS $<IF:$<CONFIG:Debug>,${BIN_DEBUG_DIRS},${BIN_RELASE_DIRS}>)
 		set(_BIN_DIRS "${_BIN_DIRS}")
 		set_target_properties(${SAMPLE_NAME} PROPERTIES 
-			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS};%PATH%")
+			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS}")
+			#;%PATH%")
 	endif()
 	
 	#copy configurations to enable execution from build folder
