@@ -39,7 +39,7 @@ cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUIL
 cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 if(MSVC)
   option(GASS_FORCE_W4 "Build GASS with warning level 4" ON )
-  option(GASS_COMPILE_WITH_MP "Build with Multiple Processes" OFF)
+  option(GASS_COMPILE_WITH_MP "Build with Multiple Processes" ON)
   option(GASS_INSTALL_DEP_BINARIES "Install dependency binaries (and copy to build folder) " OFF)
 endif()
 
