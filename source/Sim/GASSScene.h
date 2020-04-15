@@ -53,7 +53,7 @@ namespace GASS
 	a scene object manager used as a container for scene objects
 	*/
 
-	class GASSExport Scene : public Reflection<Scene, BaseReflectionObject>,
+	class GASSExport Scene final : public Reflection<Scene, BaseReflectionObject>,
 		public GASS_ENABLE_SHARED_FROM_THIS<Scene> ,
 		public IMessageListener
 	{
