@@ -176,5 +176,12 @@ TEST_CASE("Test AABox")
 		const GASS::AABoxd b3({ min.x + diff, min.y + diff, min.z + diff }, { max.x + diff, max.y + diff, max.z + diff });
 		REQUIRE(b1.Equal(b3, diff + 0.0001));
 	}
+
+	SECTION("Test GetIntersection")
+	{
+		const GASS::AABoxd b1({ 0, 0, 2 }, { 3, 3, 12 });
+		const GASS::AABoxd b2({ 1, 1, 1 }, { 4, 10,10 });
+		REQUIRE(b1.GetIntersection(b2) == GASS::AABoxd({ 1, 1,2 }, { 3, 3, 10 }));
+	}
 	
 }

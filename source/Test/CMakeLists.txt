@@ -17,6 +17,7 @@ set(GASS_TEST_SOURCES
 	Core/TestUtils_LineSegment.cpp
 	Core/TestUtils_RTTI.cpp
 	Core/TestUtils_Logger.cpp
+	Core/TestUtils_Quaternion.cpp
 	#Core/TestReflection_Property.cpp
 )
 
