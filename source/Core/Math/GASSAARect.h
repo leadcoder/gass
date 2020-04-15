@@ -178,7 +178,7 @@ namespace GASS
 	{
 		TAARect<TYPE> ret;
 		ret.Min = TVec2<TYPE>::Max(rect.Min, Min);
-		ret.Max = TVec2<TYPE>::Min(rect.Min, Min);
+		ret.Max = TVec2<TYPE>::Min(rect.Max, Max);
 		return ret;
 	}
 

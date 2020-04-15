@@ -389,7 +389,7 @@ namespace GASS
 	{
 		TAABox<TYPE> ret;
 		ret.Min = TVec3<TYPE>::Max(rect.Min, Min);
-		ret.Max = TVec3<TYPE>::Min(rect.Min, Min);
+		ret.Max = TVec3<TYPE>::Min(rect.Max, Max);
 		return ret;
 	}
 	
