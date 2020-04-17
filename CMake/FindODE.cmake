@@ -74,13 +74,27 @@ else (ODE_INCLUDE_DIRS AND ODE_LIBRARIES)
 
     # Show messages
     if (ODE_FOUND)
+	
+		set(TARGET_NAME ode::ode)
+		if(NOT TARGET ${TARGET_NAME})
+			add_library(${TARGET_NAME} UNKNOWN IMPORTED)
+			set_target_properties(${TARGET_NAME} PROPERTIES
+						INTERFACE_INCLUDE_DIRECTORIES ${ODE_INCLUDE_DIRS}
+						IMPORTED_LOCATION ${ODE_LIBRARIES_RELEASE}
+						IMPORTED_LOCATION_DEBUG ${ODE_LIBRARIES_DEBUG})
+			#set_target_properties(${TARGET_NAME} PROPERTIES	INTERFACE_COMPILE_DEFINITIONS dDOUBLE)
+			#if (ODE_DEFINITIONS_FOUND)
+			#    message(ODE_DEFINITIONS: ${ODE_DEFINITIONS})
+			#set_target_properties(${TARGET_NAME} PROPERTIES	INTERFACE_COMPILE_OPTIONS ${ODE_DEFINITIONS})
+			#endif()
+		endif()
         if (NOT ODE_FIND_QUIETLY)
             message(STATUS "Found ODE: ${ODE_LIBRARIES}")
             # Show the ODE precision if the definitions were detected
             if (ODE_DEFINITIONS_FOUND)
                 if (ODE_DEFINITIONS MATCHES -DdDOUBLE)
                     message(STATUS "ODE uses double precision")
-                else (ODE_DEFINITIONS MATCHES -DdDOUBLE)
+                elseif (ODE_DEFINITIONS MATCHES -DdDOUBLE)
                     message(STATUS "ODE uses single precision")
                 endif (ODE_DEFINITIONS MATCHES -DdDOUBLE)
             else (ODE_DEFINITIONS_FOUND)

@@ -133,4 +133,13 @@ if(ALUT_FOUND)
 		list(APPEND ALUT_INCLUDE_DIRS "${_parent}")
 	endif()
 	mark_as_advanced(ALUT_ROOT_DIR)
+	
+	set(TARGET_NAME alut::alut)
+	if(NOT TARGET ${TARGET_NAME})
+		add_library(${TARGET_NAME} UNKNOWN IMPORTED)
+		set_target_properties(${TARGET_NAME} PROPERTIES
+				INTERFACE_INCLUDE_DIRECTORIES ${ALUT_INCLUDE_DIR}
+				IMPORTED_LOCATION ${ALUT_LIBRARY}
+				IMPORTED_LOCATION_DEBUG ${ALUT_LIBRARY})
+	endif()
 endif()
