@@ -41,38 +41,70 @@
     #                    Window.cpp
     #
 function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
-		#dont know why but foreach skip first element if we use ARGN
-		set(my_files ${ARGN})
+	#dont know why but foreach skip first element if we use ARGN
+	set(my_files ${ARGN})
+	
+	foreach(currentSourceFile ${my_files})
+	   
+		file(RELATIVE_PATH folder ${relativeSourcePath} ${currentSourceFile})
+		get_filename_component(filename ${folder} NAME)
 		
-		FOREACH(currentSourceFile ${my_files})
-		   
-			FILE(RELATIVE_PATH folder ${relativeSourcePath} ${currentSourceFile})
-            get_filename_component(filename ${folder} NAME)
-			
-            string(REPLACE ${filename} "" folder ${folder})
-			
-            if(NOT folder STREQUAL "")
-                string(REGEX REPLACE "/+$" "" folderlast ${folder})
-                string(REPLACE "/" "\\" folderlast ${folderlast})
-                SOURCE_GROUP("${sourceGroupName}\\${folderlast}" FILES ${currentSourceFile})
-            endif(NOT folder STREQUAL "")
-        ENDFOREACH(currentSourceFile ${ARGN})
+		string(REPLACE ${filename} "" folder ${folder})
+		
+		if(NOT folder STREQUAL "")
+			string(REGEX REPLACE "/+$" "" folderlast ${folder})
+			string(REPLACE "/" "\\" folderlast ${folderlast})
+			SOURCE_GROUP("${sourceGroupName}\\${folderlast}" FILES ${currentSourceFile})
+		endif(NOT folder STREQUAL "")
+	endforeach(currentSourceFile ${ARGN})
 endfunction(create_source_group)
-
 
 function(gass_get_binary_dirs RELASE_DIRS DEBUG_DIRS )
 
 	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
 		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
 		set(_BIN_DIR_REL "${_VCPKG_DIR}/bin"
-						 "${_VCPKG_DIR}/tools/osg"
-						 "${_VCPKG_DIR}/tools/osgearth")
+						 "${_VCPKG_DIR}/tools/osg/osgPlugins-3.6.4"
+						 "${_VCPKG_DIR}/tools/osgearth/osgPlugins-3.6.4")
 		set(_BIN_DIR_DBG "${_VCPKG_DIR}/debug/bin"
-						 "${_VCPKG_DIR}/debug/tools/osg"
-						 "${_VCPKG_DIR}/debug/tools/osgearth")
+						 "${_VCPKG_DIR}/debug/tools/osg/osgPlugins-3.6.4"
+						 "${_VCPKG_DIR}/debug/tools/osgearth/osgPlugins-3.6.4")
 		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
 		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
 	endif()
+endfunction()
+
+
+function(gass_find_files BINARY_NAMES SEARCH_DIRS FOUND_BINARIES)
+	foreach(_FILE_NAME ${${BINARY_NAMES}})
+		 string(TOUPPER ${_FILE_NAME} _FILE_NAME_UPPER)
+		 set(VAR_NAME FILE_${_FILE_NAME_UPPER})
+		 find_file(${VAR_NAME} NAMES ${_FILE_NAME} HINTS ${${SEARCH_DIRS}})
+		 if(${VAR_NAME})
+			list(APPEND _FOUND_BINARIES ${${VAR_NAME}})
+		 endif()
+	endforeach()
+	set(${FOUND_BINARIES} ${_FOUND_BINARIES} PARENT_SCOPE)
+endfunction()
+
+function(gass_find_and_install_binaries RELASE_BINS DEBUG_BINS)
+
+	gass_get_binary_dirs(RELASE_DIRS DEBUG_DIRS)
+	gass_find_files(${RELASE_BINS} RELASE_DIRS FOUND_REL_BINS)
+	gass_find_files(${DEBUG_BINS} DEBUG_DIRS FOUND_DBG_BINS)
+	if(FOUND_REL_BINS)
+		install(FILES ${FOUND_REL_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+	endif()
+	if(FOUND_DBG_BINS)
+		install(FILES ${FOUND_DBG_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+	endif()
+	# if(_ALL_REL_FILES)
+	# message(_ALL_REL_FILES : ${_ALL_REL_FILES})
+		# install(FILES ${_ALL_REL_FILES} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+			# #if(WIN32)
+			# #	file(COPY ${PARSED_ARGS_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release) 
+			# #endif()
+	# endif()
 endfunction()
 
 macro(gass_filename_only in_list out_list)
