@@ -95,7 +95,13 @@ endif()
 
 include(DepTargets)
 
+
 enable_testing()
 add_subdirectory(source)
 add_subdirectory(samples)
 add_subdirectory(applications)
+
+if(GASS_INSTALL_DEP_BINARIES)
+	include(GASSDependentDLLs)
+	gass_find_and_install_dep_binaries(GASS_DEP_BINARIES_REL GASS_DEP_BINARIES_DBG)
+endif()
