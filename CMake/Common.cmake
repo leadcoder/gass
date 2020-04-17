@@ -1,65 +1,5 @@
-# create_source_group(relativeSourcePath sourceGroupName files)
-    #
-    # Creates a source group with the specified name relative to the relative path
-    # specified.
-    #
-    # Parameters:
-    #    - sourceGroupName: Name of the source group to create.
-    #    - relativeSourcePath: Relative path to the files.
-    #    - sourceFiles: Files to add to the source group.
-    #
-    # For example if you have the following directory structure:
-    #
-    #    - ExampleApplication
-    #        - include
-    #            - Main.h
-    #                - Window
-    #                    Window.h
-    #        - source
-    #            - Main.cpp
-    #                - Window
-    #                    Window.cpp
-    #
-    # You can get your list of files and call create_source_group the following way
-    #
-    #    file(GLOB_RECURSE my_source_files ${CMAKE_CURRENT_SOURCE_DIR}/source/*)
-    #    create_source_group("Source Files"  "${CMAKE_CURRENT_SOURCE_DIR}/source" ${my_source_files})
-    #    file(GLOB_RECURSE my_header_files ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
-    #    create_source_group("Header Files" "${CMAKE_CURRENT_SOURCE_DIR}/include" ${my_header_files})
-    #    add_executable(ExampleApplication ${my_source_files} ${my_header_files})
-    #
-    # Then the generated solution would look like this
-    #
-    #    - ExampleApplication (project)
-    #        - Header Files
-    #            - Main.h
-    #                - Window
-    #                    Window.h
-    #        - Source Files
-    #            - Main.cpp
-    #                - Window
-    #                    Window.cpp
-    #
-function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
-	#dont know why but foreach skip first element if we use ARGN
-	set(my_files ${ARGN})
-	
-	foreach(currentSourceFile ${my_files})
-	   
-		file(RELATIVE_PATH folder ${relativeSourcePath} ${currentSourceFile})
-		get_filename_component(filename ${folder} NAME)
-		
-		string(REPLACE ${filename} "" folder ${folder})
-		
-		if(NOT folder STREQUAL "")
-			string(REGEX REPLACE "/+$" "" folderlast ${folder})
-			string(REPLACE "/" "\\" folderlast ${folderlast})
-			SOURCE_GROUP("${sourceGroupName}\\${folderlast}" FILES ${currentSourceFile})
-		endif(NOT folder STREQUAL "")
-	endforeach(currentSourceFile ${ARGN})
-endfunction(create_source_group)
 
-function(gass_get_binary_dirs RELASE_DIRS DEBUG_DIRS )
+function(gass_get_dep_binary_dirs RELASE_DIRS DEBUG_DIRS )
 
 	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
 		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
@@ -74,11 +14,10 @@ function(gass_get_binary_dirs RELASE_DIRS DEBUG_DIRS )
 	endif()
 endfunction()
 
-
-function(gass_find_files BINARY_NAMES SEARCH_DIRS FOUND_BINARIES)
+function(gass_find_files BINARY_NAMES SEARCH_DIRS VAR_PREFIX FOUND_BINARIES)
 	foreach(_FILE_NAME ${${BINARY_NAMES}})
 		 string(TOUPPER ${_FILE_NAME} _FILE_NAME_UPPER)
-		 set(VAR_NAME FILE_${_FILE_NAME_UPPER})
+		 set(VAR_NAME ${VAR_PREFIX}_${_FILE_NAME_UPPER})
 		 find_file(${VAR_NAME} NAMES ${_FILE_NAME} HINTS ${${SEARCH_DIRS}})
 		 if(${VAR_NAME})
 			list(APPEND _FOUND_BINARIES ${${VAR_NAME}})
@@ -87,24 +26,19 @@ function(gass_find_files BINARY_NAMES SEARCH_DIRS FOUND_BINARIES)
 	set(${FOUND_BINARIES} ${_FOUND_BINARIES} PARENT_SCOPE)
 endfunction()
 
-function(gass_find_and_install_binaries RELASE_BINS DEBUG_BINS)
+function(gass_find_and_install_dep_binaries RELASE_BINS DEBUG_BINS)
 
-	gass_get_binary_dirs(RELASE_DIRS DEBUG_DIRS)
-	gass_find_files(${RELASE_BINS} RELASE_DIRS FOUND_REL_BINS)
-	gass_find_files(${DEBUG_BINS} DEBUG_DIRS FOUND_DBG_BINS)
+	gass_get_dep_binary_dirs(RELASE_DIRS DEBUG_DIRS)
+	gass_find_files(${RELASE_BINS} RELASE_DIRS "GASSDEP_REL" FOUND_REL_BINS)
+	gass_find_files(${DEBUG_BINS} DEBUG_DIRS "GASSDEP_DBG" FOUND_DBG_BINS)
 	if(FOUND_REL_BINS)
 		install(FILES ${FOUND_REL_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+		file(COPY ${FOUND_REL_BINS}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	endif()
 	if(FOUND_DBG_BINS)
 		install(FILES ${FOUND_DBG_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+		file(COPY ${FOUND_DBG_BINS}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
-	# if(_ALL_REL_FILES)
-	# message(_ALL_REL_FILES : ${_ALL_REL_FILES})
-		# install(FILES ${_ALL_REL_FILES} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
-			# #if(WIN32)
-			# #	file(COPY ${PARSED_ARGS_BINARIES_REL}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release) 
-			# #endif()
-	# endif()
 endfunction()
 
 macro(gass_filename_only in_list out_list)
@@ -114,24 +48,10 @@ macro(gass_filename_only in_list out_list)
 	endforeach()
 endmacro()
 
-macro(deprecated_add_source_from_current_dir)
+macro(gass_get_source_from_current_dir SOURCE_FILES HEADER_FILES)
 	#Grab cpp and h  files from path recursively
-	file(GLOB_RECURSE CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-	file(GLOB_RECURSE H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-
-	#add dummy element 
-	set(TEMP_CPP_FILES "dummy" ${CPP_FILES})
-	set(TEMP_H_FILES "dummy" ${H_FILES})
-	
-	#Create ide source groups that repilicates folder structure 
-	create_source_group("Source Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_CPP_FILES})
-	create_source_group("Header Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_H_FILES})	
-endmacro()
-
-macro(gass_get_source_from_current_dir _SOURCE_FILES _HEADER_FILES)
-	#Grab cpp and h  files from path recursively
-	file(GLOB_RECURSE ${_SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-	file(GLOB_RECURSE ${_HEADER_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+	file(GLOB_RECURSE ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+	file(GLOB_RECURSE ${HEADER_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 endmacro()
 
 macro(gass_filter_list INPUT OUTPUT GOOD BAD)
@@ -331,7 +251,7 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		set_target_properties(${SAMPLE_NAME} PROPERTIES 
 			VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${SAMPLE_NAME}>")
 		
-		gass_get_binary_dirs(BIN_RELASE_DIRS BIN_DEBUG_DIRS)
+		gass_get_dep_binary_dirs(BIN_RELASE_DIRS BIN_DEBUG_DIRS)
 		set(_BIN_DIRS $<IF:$<CONFIG:Debug>,${BIN_DEBUG_DIRS},${BIN_RELASE_DIRS}>)
 		set(_BIN_DIRS "${_BIN_DIRS}")
 		set_target_properties(${SAMPLE_NAME} PROPERTIES 
