@@ -606,10 +606,11 @@ namespace GASS
 			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(static_cast<float>(specular.r), static_cast<float>(specular.g), static_cast<float>(specular.b),1));
 			mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
 			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(static_cast<float>(si.r), static_cast<float>(si.g), static_cast<float>(si.b),1));
-
-			state_set->setAttribute(mat.get());
-			state_set->setAttributeAndModes( mat.get() , osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+			state_set->setAttribute(mat);
+			state_set->setAttributeAndModes(mat, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+			state_set->setMode(GL_LIGHTING, osg::StateAttribute::ON);
 		}
+
 		//mat->setColorMode(osg::Material::ColorMode::DIFFUSE); //Track vertex color
 
 		if(material.DepthTest)
