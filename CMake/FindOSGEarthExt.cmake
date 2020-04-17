@@ -50,126 +50,33 @@ else()
 	set(OSGEARTH_VERSION "${OSGEARTH_MAJOR}.${OSGEARTH_MINOR}.${OSGEARTH_PATCH}" CACHE STRING "OSGEarth Version")
 endif()
 
-set(OSGEARTH_BINARY_LIST_REL 
-	osgEarth
-	osgEarthAnnotation
-	osgEarthFeatures
-	osgEarthSilverLining
-	osgEarthSplat
-	osgEarthSymbology
-	osgEarthTriton
-	osgEarthUtil
-)
+if(OSGEARTH_FOUND)
+	set(OE_TARGETS 
+		osgEarth
+		osgEarthAnnotation
+		osgEarthFeatures
+		osgEarthSilverLining
+		osgEarthSplat
+		osgEarthSymbology
+		osgEarthTriton
+		osgEarthUtil
+	)
 
-
-set(OSGEARTH_BINARY_LIST_DBG
-	osgEarthd
-	osgEarthAnnotationd
-	osgEarthFeaturesd
-	osgEarthSilverLiningd
-	osgEarthSplatd
-	osgEarthSymbologyd
-	osgEarthTritond
-	osgEarthUtild
-)
-
-if(${MSVC_VERSION} GREATER 1900) #MSVC 2017
-	set(OSGEARTH_BINARY_LIST_REL ${OSGEARTH_BINARY_LIST_REL} geos libprotobuf)
-	set(OSGEARTH_BINARY_LIST_DBG ${OSGEARTH_BINARY_LIST_DBG} geosd libprotobuf)
+	set(OSGEARTH_ALL_TARGETS)
+	foreach(_OE_TARGET ${OE_TARGETS})	
+		STRING(TOUPPER ${_OE_TARGET} _OE_TARGET_UPPER)
+		set(_TARGET_LIB_REL ${${_OE_TARGET_UPPER}_LIBRARY})
+		set(_TARGET_LIB_DBG ${${_OE_TARGET_UPPER}_LIBRARY_DEBUG})
+		if(_TARGET_LIB_REL AND _TARGET_LIB_DBG)
+			set(_TARGET_NAME osgEarth::${_OE_TARGET})
+			list(APPEND OSGEARTH_ALL_TARGETS ${_TARGET_NAME})
+			if(NOT TARGET ${_TARGET_NAME})
+				add_library(${_TARGET_NAME} UNKNOWN IMPORTED)
+				set_target_properties(${_TARGET_NAME} PROPERTIES
+					INTERFACE_INCLUDE_DIRECTORIES ${OSGEARTH_INCLUDE_DIR}
+					IMPORTED_LOCATION ${_TARGET_LIB_REL}
+					IMPORTED_LOCATION_DEBUG ${_TARGET_LIB_DBG})
+			endif()
+		endif()
+	endforeach()
 endif()
-
-set(OSGEARTH_PLUGINS_BINARY_LIST
-	osgdb_earth
-	osgdb_fastdxt
-	osgdb_kml
-	osgdb_osgearth_agglite
-	osgdb_osgearth_arcgis
-	osgdb_osgearth_bing
-	osgdb_osgearth_bumpmap
-	osgdb_osgearth_cache_filesystem
-	osgdb_osgearth_cesiumion
-	osgdb_osgearth_colorramp
-	osgdb_osgearth_debug
-	osgdb_osgearth_detail
-	osgdb_osgearth_engine_mp
-	osgdb_osgearth_engine_rex
-	osgdb_osgearth_featurefilter_intersect
-	osgdb_osgearth_featurefilter_join
-	osgdb_osgearth_feature_elevation
-	osgdb_osgearth_feature_mapnikvectortiles
-	osgdb_osgearth_feature_ogr
-	osgdb_osgearth_feature_tfs
-	osgdb_osgearth_feature_wfs
-	osgdb_osgearth_feature_xyz
-	osgdb_osgearth_gdal
-	osgdb_osgearth_label_annotation
-	osgdb_osgearth_mapinspector
-	osgdb_osgearth_mask_feature
-	osgdb_osgearth_mbtiles
-	osgdb_osgearth_model_feature_geom
-	osgdb_osgearth_model_simple
-	osgdb_osgearth_monitor
-	osgdb_osgearth_osg
-	osgdb_osgearth_scriptengine_javascript
-	osgdb_osgearth_skyview
-	osgdb_osgearth_sky_gl
-	osgdb_osgearth_sky_silverlining
-	osgdb_osgearth_sky_simple
-	osgdb_osgearth_terrainshader
-	osgdb_osgearth_tilecache
-	osgdb_osgearth_tileindex
-	osgdb_osgearth_tilepackage
-	osgdb_osgearth_tms
-	osgdb_osgearth_vdatum_egm2008
-	osgdb_osgearth_vdatum_egm84
-	osgdb_osgearth_vdatum_egm96
-	osgdb_osgearth_viewpoints
-	osgdb_osgearth_vpb
-	osgdb_osgearth_wcs
-	osgdb_osgearth_wms
-	osgdb_osgearth_xyz
-	osgdb_template)
-	
-
-if (WIN32)
-	set(_SHARED_LIB_EXT .dll)
-else() #assume linux
-	set(_SHARED_LIB_EXT .so)
-endif()
-
-foreach(_OSGEARTH_BIN ${OSGEARTH_BINARY_LIST_DBG})
-	    STRING(TOUPPER ${_OSGEARTH_BIN} _UPPER_NAME)
-		set(_BIN_NAME_DBG OSGEARTH_${_UPPER_NAME}_BINARY_DBG)
-		find_file(${_BIN_NAME_DBG} NAMES ${_OSGEARTH_BIN}${_SHARED_LIB_EXT} HINTS ${OSGEARTH_BINARY_DIR})
-		if(EXISTS ${${_BIN_NAME_DBG}})
-			set(OSGEARTH_BINARIES_DBG ${OSGEARTH_BINARIES_DBG} ${${_BIN_NAME_DBG}})
-		endif()
-endforeach()
-
-foreach(_OSGEARTH_BIN ${OSGEARTH_BINARY_LIST_REL})
-	    STRING(TOUPPER ${_OSGEARTH_BIN} _UPPER_NAME)
-		set(_BIN_NAME_REL OSGEARTH_${_UPPER_NAME}_BINARY_REL)
-		find_file(${_BIN_NAME_REL} NAMES ${_OSGEARTH_BIN}${_SHARED_LIB_EXT} HINTS ${OSGEARTH_BINARY_DIR})
-	    if(EXISTS ${${_BIN_NAME_REL}})
-			set(OSGEARTH_BINARIES_REL ${OSGEARTH_BINARIES_REL} ${${_BIN_NAME_REL}})
-		endif()
-endforeach()
-
-set(OSGEARTHPLUGINS_BINARY_DIR ${OSGEARTH_DIR}/bin/osgPlugins-${OSG_VERSION} 
-								${OSGEARTH_DIR}/tools/osgearth/osgPlugins-${OSG_VERSION}
-								${OSGEARTH_DIR}/debug/tools/osgearth/osgPlugins-${OSG_VERSION})
-foreach(_OSGEARTH_PLUGIN ${OSGEARTH_PLUGINS_BINARY_LIST})
-	    STRING(TOUPPER ${_OSGEARTH_PLUGIN} _UPPER_NAME)
-		set(_PLUGIN_NAME_REL OSGEARTHPLUGIN_${_UPPER_NAME}_BINARY_REL)
-		set(_PLUGIN_NAME_DBG OSGEARTHPLUGIN_${_UPPER_NAME}_BINARY_DBG)
-		find_file(${_PLUGIN_NAME_REL} NAMES ${_OSGEARTH_PLUGIN}${_SHARED_LIB_EXT} HINTS ${OSGEARTHPLUGINS_BINARY_DIR})
-		find_file(${_PLUGIN_NAME_DBG} NAMES ${_OSGEARTH_PLUGIN}d${_SHARED_LIB_EXT} HINTS ${OSGEARTHPLUGINS_BINARY_DIR})
-	    
-		if(EXISTS ${${_PLUGIN_NAME_REL}})
-			set(OSGEARTHPLUGIN_BINARIES_REL ${OSGEARTHPLUGIN_BINARIES_REL} ${${_PLUGIN_NAME_REL}})
-		endif()
-		
-		if(EXISTS ${${_PLUGIN_NAME_DBG}})
-			set(OSGEARTHPLUGIN_BINARIES_DBG ${OSGEARTHPLUGIN_BINARIES_DBG} ${${_PLUGIN_NAME_DBG}})
-		endif()
-endforeach()

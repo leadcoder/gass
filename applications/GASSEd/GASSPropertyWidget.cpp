@@ -40,8 +40,6 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 	{
 		QVariant v = value;
 
-		const QString value_as_sstring = v.value<QString>();
-		const std::string value_as_std_string = value_as_sstring.toStdString();
 		std::map<QtProperty*, GASSVariantProperty>::iterator iter = m_PropMap.find(property);
 		if (iter != m_PropMap.end())
 		{
@@ -72,7 +70,16 @@ void GASSPropertyWidget::slotValueChanged(QtProperty *property, const QVariant &
 			}
 			else
 			{
-				gp.UpdateValueByString(value_as_std_string);
+				const QString value_as_sstring = v.value<QString>();
+				const std::string value_as_std_string = value_as_sstring.toStdString();
+				try
+				{
+					gp.UpdateValueByString(value_as_std_string);
+				}
+				catch (...)
+				{
+
+				}
 			}
 		}
 	}

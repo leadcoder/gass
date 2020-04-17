@@ -36,7 +36,7 @@ namespace GASS
 {
 
 	/**
-		2D Axis Aligned Box usually holding bounding information. 
+		2D Axis Aligned Rectangle usually holding bounding information. 
 		The box is represented by a max 2d-coordinate and min 2d-coordinate
 	*/
 
@@ -48,20 +48,17 @@ namespace GASS
 		TAARect(const TVec2<TYPE> &min_pos, const TVec2<TYPE> &max_pos);
 		
 		/**
-			Merge this bounding box with other
+			Merge this rect with other
 		*/
 		void Union(const TAARect &TAARect);
 		
 		/**
-			Extend bounding box to include 2D point
+			Extend rect to include 2D point
 		*/
 		void Union(const TVec2<TYPE> &point);
 
 		/**
-		Extend bounding box from polygon
-		*/
-		/**
-			Get bounding box size
+			Get bounding rect size
 		*/
 		TVec2<TYPE> GetSize() const;
 
@@ -72,14 +69,19 @@ namespace GASS
 		bool IsValid() const;
 		
 		/**
-			Get all corner points of this box
+			Get all corner points of this rect
 		*/
 		std::vector<TVec2<TYPE> > GetCorners() const;
 
 		/**
-			Check intersection with other bounding box
+			Check intersection with other rect
 		*/
-		bool BoxIntersect(const TAARect &box) const;
+		bool RectIntersect(const TAARect &box) const;
+
+		/**
+			Get intersection rect between this rect and provided rect
+		*/
+		TAARect GetIntersection(const TAARect& rect) const;
 
 		/**
 			Check if point is inside bounds
@@ -87,6 +89,9 @@ namespace GASS
 		bool PointInside(const TVec2<TYPE> &point) const;
 
 		bool operator== (const TAARect &rect) const;
+
+		bool Equal(const TAARect& rect, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const;
+
 		
 
 		//public for fast access
@@ -160,12 +165,21 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAARect<TYPE>::BoxIntersect(const TAARect<TYPE> &box) const
+	bool TAARect<TYPE>::RectIntersect(const TAARect<TYPE> &rect) const
 	{
-		return (Min.x <= box.Max.x &&
-			Max.x >= box.Min.x &&
-			Min.y <= box.Max.y &&
-			Max.y >= box.Min.y);
+		return (Min.x <= rect.Max.x &&
+			Max.x >= rect.Min.x &&
+			Min.y <= rect.Max.y &&
+			Max.y >= rect.Min.y);
+	}
+
+	template<class TYPE>
+	TAARect<TYPE> TAARect<TYPE>::GetIntersection(const TAARect<TYPE>& rect) const
+	{
+		TAARect<TYPE> ret;
+		ret.Min = TVec2<TYPE>::Max(rect.Min, Min);
+		ret.Max = TVec2<TYPE>::Min(rect.Max, Max);
+		return ret;
 	}
 
 	template<class TYPE>
@@ -178,5 +192,11 @@ namespace GASS
 	bool TAARect<TYPE>::operator== (const TAARect<TYPE> &rect) const
 	{
 		return (rect.Min == Min && rect.Max == Max);
+	}
+
+	template<class TYPE>
+	bool TAARect<TYPE>::Equal(const TAARect<TYPE>& rect, TYPE tolerance) const
+	{
+		return Min.Equal(rect.Min, tolerance) && Max.Equal(rect.Max, tolerance);
 	}
 }

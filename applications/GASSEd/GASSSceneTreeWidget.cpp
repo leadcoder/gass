@@ -188,7 +188,7 @@ void GASSSceneTreeWidget::OnSceneObjectSelectionChanged(GASS::EditorSelectionCha
 
 void GASSSceneTreeWidget::CheckTreeSelection(QTreeWidgetItem *item)
 {
-	if (item == m_SceneItem)
+	if (item == m_SceneItem && item->isSelected())
 	{
 		//send scene selection message
 		GASS::SceneSelectionChangedEventPtr message(new GASS::SceneSelectionChangedEvent(GASS::ScenePtr(m_Scene)));
@@ -205,10 +205,12 @@ void GASSSceneTreeWidget::CheckTreeSelection(QTreeWidgetItem *item)
 			else
 				m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->UnselectSceneObject(obj);
 		}
+
+		for (int i = 0; i < item->childCount(); ++i)
+			CheckTreeSelection(item->child(i));
 	}
 
-	for (int i = 0; i < item->childCount(); ++i)
-		CheckTreeSelection(item->child(i));
+	
 }
 
 void GASSSceneTreeWidget::selectionChanged()

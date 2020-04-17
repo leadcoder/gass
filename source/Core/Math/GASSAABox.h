@@ -166,6 +166,14 @@ namespace GASS
 		std::vector<TVec3<TYPE> > GetCorners() const;
 
 		bool operator== (const TAABox &box) const;
+
+		bool Equal(const TAABox& box, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const;
+
+
+		/**
+			Get intersection box between this box and provided box
+		*/
+		TAABox GetIntersection(const TAABox& box) const;
 	
 		//public for fast access
 		TVec3<TYPE> Max;
@@ -375,6 +383,17 @@ namespace GASS
 			Min.z <= box.Max.z &&
 			Max.z >= box.Min.z);
 	}
+	
+	template<class TYPE>
+	TAABox<TYPE> TAABox<TYPE>::GetIntersection(const TAABox<TYPE>& rect) const
+	{
+		TAABox<TYPE> ret;
+		ret.Min = TVec3<TYPE>::Max(rect.Min, Min);
+		ret.Max = TVec3<TYPE>::Min(rect.Max, Max);
+		return ret;
+	}
+	
+
 
 #ifdef USE_EXPERIMENTAL_RAY_TEST
 	template<class TYPE>
@@ -622,6 +641,12 @@ namespace GASS
 	bool TAABox<TYPE>::operator== (const TAABox<TYPE> &box) const
 	{
 		return (box.Min == Min && box.Max == Max);
+	}
+
+	template<class TYPE>
+	bool TAABox<TYPE>::Equal(const TAABox<TYPE>& box, TYPE tolerance) const
+	{
+		return Min.Equal(box.Min, tolerance) &&	Max.Equal(box.Max, tolerance);
 	}
 }
 

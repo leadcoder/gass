@@ -1,11 +1,9 @@
 
-if(GASS_EMBED_GIT_SHA)
-	configure_file(
+configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSVersion.h.in"
 		"${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h" 
 		@ONLY)
- 	set(GASS_VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
-endif()
+set(GASS_VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSVersion.h")	
 
 configure_file(
 		"${CMAKE_CURRENT_SOURCE_DIR}/GASSConfig.h.in"
@@ -56,6 +54,7 @@ set(CPP_FILES
 	Utils/GASSPIDControl.cpp
 	Utils/GASSRawFile.cpp
 	Utils/GASSStringUtils.cpp
+	Utils/GASSSystem.cpp
 	Utils/GASSTimer.cpp
 	Utils/GASSXMLUtils.cpp
 )
@@ -135,6 +134,7 @@ set(H_FILES
 	Utils/GASSRawFile.h
 	Utils/GASSSingleton.h
 	Utils/GASSStringUtils.h
+	Utils/GASSSystem.h
 	Utils/GASSTimer.h
 	Utils/GASSXMLUtils.h
 	Utils/filesystem.hpp
@@ -154,15 +154,19 @@ gass_setup_lib(GASSCore
 					SOURCE_FILES ${CPP_FILES} 
 					HEADER_FILES ${H_FILES}
 					PUBLIC_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../" "${CMAKE_CURRENT_BINARY_DIR}/../"
-					PRIVATE_DEPS ${PLATFORM_DEPS}
-					PRIVATE_DEFINITIONS GASS_CORE_EXPORTS ${GASS_COMMON_DEFINITIONS} )
-					
-#install config and version headers
-INSTALL(FILES ${GASS_CONFIG_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
+					PRIVATE_DEPS ${PLATFORM_DEPS})
 
-if(GASS_EMBED_GIT_SHA)
-	INSTALL(FILES ${GASS_VERSION_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
-endif()
+INSTALL(FILES ${GASS_CONFIG_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
+INSTALL(FILES ${GASS_VERSION_HEADER} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Core)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/GASSCoreConfigVersion.cmake
+  VERSION ${GASS_VERSION_MAJOR}.${GASS_VERSION_MINOR}.${GASS_VERSION_PATCH}
+  COMPATIBILITY SameMajorVersion)
+  
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/GASSCoreConfig.cmake DESTINATION CMake/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GASSCoreConfigVersion.cmake DESTINATION CMake/)
 
 
 

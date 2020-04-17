@@ -30,6 +30,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSFileUtils.h"
+#include "Core/Utils/GASSSystem.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
@@ -152,29 +153,14 @@ namespace GASS
 		}
 	}
 
-	void SimEngine::PutEnv(const std::string &value)
-	{
-#ifdef WIN32
-		const int ret = _putenv(value.c_str());
-		if (ret == -1)
-			GASS_EXCEPT(Exception::ERR_INVALID_STATE, "Failed to set env var:" + value, "SimEngine::PutEnv");
-#else
-		char * writable = new char[value.size() + 1];
-		std::copy(value.begin(), value.end(), writable);
-		writable[value.size()] = '\0'; // don't forget the terminating 0
-		putenv(writable);
-		//delete[] writable;
-#endif
-
-	}
-
 	void SimEngine::SetDataPath(const FilePath &data_path)
 	{
 		m_DataPath = data_path;
 		if (data_path.Exist())
 		{
 			const std::string env_str = "GASS_DATA_HOME=" + data_path.GetFullPath();
-			PutEnv(env_str);
+			if(!System::SetEnvVar(env_str))
+				GASS_EXCEPT(Exception::ERR_INVALID_STATE, "Failed to GASS_DATA_HOME env var:" + data_path.GetFullPath(), "SimEngine::SetDataPath");
 		}
 	}
 

@@ -1,63 +1,45 @@
-# create_source_group(relativeSourcePath sourceGroupName files)
-    #
-    # Creates a source group with the specified name relative to the relative path
-    # specified.
-    #
-    # Parameters:
-    #    - sourceGroupName: Name of the source group to create.
-    #    - relativeSourcePath: Relative path to the files.
-    #    - sourceFiles: Files to add to the source group.
-    #
-    # For example if you have the following directory structure:
-    #
-    #    - ExampleApplication
-    #        - include
-    #            - Main.h
-    #                - Window
-    #                    Window.h
-    #        - source
-    #            - Main.cpp
-    #                - Window
-    #                    Window.cpp
-    #
-    # You can get your list of files and call create_source_group the following way
-    #
-    #    file(GLOB_RECURSE my_source_files ${CMAKE_CURRENT_SOURCE_DIR}/source/*)
-    #    create_source_group("Source Files"  "${CMAKE_CURRENT_SOURCE_DIR}/source" ${my_source_files})
-    #    file(GLOB_RECURSE my_header_files ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
-    #    create_source_group("Header Files" "${CMAKE_CURRENT_SOURCE_DIR}/include" ${my_header_files})
-    #    add_executable(ExampleApplication ${my_source_files} ${my_header_files})
-    #
-    # Then the generated solution would look like this
-    #
-    #    - ExampleApplication (project)
-    #        - Header Files
-    #            - Main.h
-    #                - Window
-    #                    Window.h
-    #        - Source Files
-    #            - Main.cpp
-    #                - Window
-    #                    Window.cpp
-    #
-function(create_source_group sourceGroupName relativeSourcePath sourceFiles)
-		#dont know why but foreach skip first element if we use ARGN
-		set(my_files ${ARGN})
-		
-		FOREACH(currentSourceFile ${my_files})
-		   
-			FILE(RELATIVE_PATH folder ${relativeSourcePath} ${currentSourceFile})
-            get_filename_component(filename ${folder} NAME)
-			
-            string(REPLACE ${filename} "" folder ${folder})
-			
-            if(NOT folder STREQUAL "")
-                string(REGEX REPLACE "/+$" "" folderlast ${folder})
-                string(REPLACE "/" "\\" folderlast ${folderlast})
-                SOURCE_GROUP("${sourceGroupName}\\${folderlast}" FILES ${currentSourceFile})
-            endif(NOT folder STREQUAL "")
-        ENDFOREACH(currentSourceFile ${ARGN})
-endfunction(create_source_group)
+
+function(gass_get_dep_binary_dirs RELASE_DIRS DEBUG_DIRS )
+
+	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
+		set(_BIN_DIR_REL "${_VCPKG_DIR}/bin"
+						 "${_VCPKG_DIR}/tools/osg/osgPlugins-3.6.4"
+						 "${_VCPKG_DIR}/tools/osgearth/osgPlugins-3.6.4")
+		set(_BIN_DIR_DBG "${_VCPKG_DIR}/debug/bin"
+						 "${_VCPKG_DIR}/debug/tools/osg/osgPlugins-3.6.4"
+						 "${_VCPKG_DIR}/debug/tools/osgearth/osgPlugins-3.6.4")
+		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
+		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
+	endif()
+endfunction()
+
+function(gass_find_files BINARY_NAMES SEARCH_DIRS VAR_PREFIX FOUND_BINARIES)
+	foreach(_FILE_NAME ${${BINARY_NAMES}})
+		 string(TOUPPER ${_FILE_NAME} _FILE_NAME_UPPER)
+		 set(VAR_NAME ${VAR_PREFIX}_${_FILE_NAME_UPPER})
+		 find_file(${VAR_NAME} NAMES ${_FILE_NAME} HINTS ${${SEARCH_DIRS}})
+		 if(${VAR_NAME})
+			list(APPEND _FOUND_BINARIES ${${VAR_NAME}})
+		 endif()
+	endforeach()
+	set(${FOUND_BINARIES} ${_FOUND_BINARIES} PARENT_SCOPE)
+endfunction()
+
+function(gass_find_and_install_dep_binaries RELASE_BINS DEBUG_BINS)
+
+	gass_get_dep_binary_dirs(RELASE_DIRS DEBUG_DIRS)
+	gass_find_files(${RELASE_BINS} RELASE_DIRS "GASSDEP_REL" FOUND_REL_BINS)
+	gass_find_files(${DEBUG_BINS} DEBUG_DIRS "GASSDEP_DBG" FOUND_DBG_BINS)
+	if(FOUND_REL_BINS)
+		install(FILES ${FOUND_REL_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
+		file(COPY ${FOUND_REL_BINS}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+	endif()
+	if(FOUND_DBG_BINS)
+		install(FILES ${FOUND_DBG_BINS} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
+		file(COPY ${FOUND_DBG_BINS}  DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+	endif()
+endfunction()
 
 macro(gass_filename_only in_list out_list)
 	foreach(_FILENAME ${${in_list}})
@@ -66,24 +48,10 @@ macro(gass_filename_only in_list out_list)
 	endforeach()
 endmacro()
 
-macro(deprecated_add_source_from_current_dir)
+macro(gass_get_source_from_current_dir SOURCE_FILES HEADER_FILES)
 	#Grab cpp and h  files from path recursively
-	file(GLOB_RECURSE CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-	file(GLOB_RECURSE H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-
-	#add dummy element 
-	set(TEMP_CPP_FILES "dummy" ${CPP_FILES})
-	set(TEMP_H_FILES "dummy" ${H_FILES})
-	
-	#Create ide source groups that repilicates folder structure 
-	create_source_group("Source Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_CPP_FILES})
-	create_source_group("Header Files"  "${CMAKE_CURRENT_SOURCE_DIR}" ${TEMP_H_FILES})	
-endmacro()
-
-macro(gass_get_source_from_current_dir _SOURCE_FILES _HEADER_FILES)
-	#Grab cpp and h  files from path recursively
-	file(GLOB_RECURSE ${_SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-	file(GLOB_RECURSE ${_HEADER_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+	file(GLOB_RECURSE ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+	file(GLOB_RECURSE ${HEADER_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 endmacro()
 
 macro(gass_filter_list INPUT OUTPUT GOOD BAD)
@@ -126,8 +94,8 @@ macro(gass_setup_plugin _PLUGIN_NAME)
 	
 	target_link_libraries(${_PLUGIN_NAME} PRIVATE GASSSim)
 	
-	target_compile_definitions(${_PLUGIN_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} GASS_PLUGIN_EXPORTS)
-	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .galp)
+	target_compile_definitions(${_PLUGIN_NAME} PRIVATE GASS_PLUGIN_EXPORTS)
+	#set_target_properties(${_PLUGIN_NAME} PROPERTIES SUFFIX .gassp)
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES PREFIX "")
 	set_target_properties(${_PLUGIN_NAME} PROPERTIES FOLDER "Plugins")
 endmacro()
@@ -140,16 +108,10 @@ macro(gass_setup_module _MODULE_NAME)
 					SOURCE_FILES ${SOURCE_FILES} 
 					HEADER_FILES ${HEADER_FILES} 
 					SKIP_HEADER_INSTALL )
-	#gass_get_header_directories(HEADER_SUBDIRS)
-	#foreach(INC_DIR ${HEADER_SUBDIRS})
-	#	target_include_directories(${_PLUGIN_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
-	#endforeach()
 	target_link_libraries(${_MODULE_NAME} PRIVATE GASSSim)
-	target_compile_definitions(${_MODULE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS} EDITOR_MODULE_EXPORTS)
 	set_target_properties(${_MODULE_NAME} PROPERTIES FOLDER "Modules")
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/modules FILES_MATCHING PATTERN "*.h")
 endmacro()
-
 
 include(CMakeParseArguments)
 
@@ -263,9 +225,7 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
 		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
 	endif()
-	if(MSVC)
-		set_target_properties(${APP_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}$(Configuration)")
-	endif()
+	
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	
@@ -282,12 +242,23 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	target_link_libraries(${SAMPLE_NAME} GASSSim)
 	
-	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
 	
 	set(SAMPLE_CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/${SAMPLE_NAME}.xml)
 
+	if(MSVC)
+		set_target_properties(${SAMPLE_NAME} PROPERTIES 
+			VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${SAMPLE_NAME}>")
+		
+		gass_get_dep_binary_dirs(BIN_RELASE_DIRS BIN_DEBUG_DIRS)
+		set(_BIN_DIRS $<IF:$<CONFIG:Debug>,${BIN_DEBUG_DIRS},${BIN_RELASE_DIRS}>)
+		set(_BIN_DIRS "${_BIN_DIRS}")
+		set_target_properties(${SAMPLE_NAME} PROPERTIES 
+			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS}")
+			#;%PATH%")
+	endif()
+	
 	#copy configurations to enable execution from build folder
 	file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
 	file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
@@ -312,7 +283,6 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
 	target_link_libraries(${SAMPLE_NAME} GASSCore)
-	target_compile_definitions(${SAMPLE_NAME} PRIVATE ${GASS_COMMON_DEFINITIONS})
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "CoreSamples")
 	
@@ -324,7 +294,3 @@ macro(gass_setup_core_sample SAMPLE_NAME)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_RELEASE} CONFIGURATIONS Release)
 	install(FILES ${SAMPLE_CONFIG} DESTINATION ${GASS_INSTALL_BIN_DIR_DEBUG} CONFIGURATIONS Debug)
 endmacro()
-
-
-
-

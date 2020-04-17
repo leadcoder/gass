@@ -40,6 +40,9 @@ namespace GASS
 		~OSGCollisionSystem() override;
 		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "OSGCollisionSystem";}
+		bool GetReadPagedLOD() { return m_ReadPagedLOD; }
+	private:
+		bool m_ReadPagedLOD = true;
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSystem> OSGCollisionSystemPtr;
 }

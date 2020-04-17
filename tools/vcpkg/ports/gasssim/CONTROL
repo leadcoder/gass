@@ -1,0 +1,5 @@
+Source: gasssim
+Version: 2020-02-21
+Homepage: https://github.com/leadcoder/gass
+Description: GASSSim
+Build-Depends: gasscore, ois, osg (windows), osgearth (windows), physx (windows), ode, openal-soft, libuuid (linux)

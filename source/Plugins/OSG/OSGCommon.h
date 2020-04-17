@@ -47,6 +47,7 @@
 #include <osg/Transform>
 #include <osg/Light>
 #include <osg/LightSource>
+#include <osg/LightModel>
 #include <osg/Geometry>
 #include <osg/CullSettings>
 #include <osg/Depth>
