@@ -25,7 +25,9 @@
 
 namespace GASS
 {
-	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent() : m_Material("DEFAULT")
+	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent() : m_Material("DEFAULT"),
+		m_Actor(nullptr),
+		m_Shape(nullptr)
 	{
 
 	}
@@ -46,22 +48,33 @@ namespace GASS
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
 		//physx::PxReal d = 0.0f;
-		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f),physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
-		physx::PxRigidStatic* plane = system->GetPxSDK()->createRigidStatic(pose);
+		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f), physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
+		m_Actor = system->GetPxSDK()->createRigidStatic(pose);
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*plane, physx::PxPlaneGeometry(), *material);
-	
+		m_Shape = physx::PxRigidActorExt::createExclusiveShape(*m_Actor, physx::PxPlaneGeometry(), *material);
+
 		PxFilterData queryFilterData;
 		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
-		shape->setQueryFilterData(queryFilterData);
+		m_Shape->setQueryFilterData(queryFilterData);
 
 		physx::PxFilterData collFilterData;
 		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
 		collFilterData.word0 = GEOMETRY_FLAG_GROUND;
 		collFilterData.word1 = against;
-		shape->setSimulationFilterData(collFilterData);
+		m_Shape->setSimulationFilterData(collFilterData);
 
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		scene_manager->GetPxScene()->addActor(*plane);
+		scene_manager->GetPxScene()->addActor(*m_Actor);
+	}
+
+	void PhysXPlaneGeometryComponent::OnDelete()
+	{
+		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		if (m_Actor)
+		{
+			scene_manager->GetPxScene()->removeActor(*m_Actor);
+			m_Actor->release();
+			m_Actor = nullptr;
+		}
 	}
 }

@@ -63,7 +63,14 @@ namespace GASS
 
 	void PhysXMeshGeometryComponent::OnDelete()
 	{
-
+		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+		if (m_Actor)
+		{
+			scene_manager->GetPxScene()->removeActor(*m_Actor);
+			m_Actor->release();
+			m_Actor = nullptr;
+			m_Shape = nullptr;
+		}
 	}
 
 	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)

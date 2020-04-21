@@ -33,8 +33,10 @@ namespace GASS
 		~PhysXPlaneGeometryComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
+		void OnDelete() override;
 	protected:
 		std::string m_Material;
-		
+		physx::PxRigidStatic* m_Actor;
+		physx::PxShape* m_Shape;
 	};
 }
