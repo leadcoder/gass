@@ -79,8 +79,10 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
-		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity);
-		RegisterGetSet("Offset", &PhysXPhysicsSceneManager::GetOrigin, &PhysXPhysicsSceneManager::SetOrigin);
+		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysX Scene Manager", OF_VISIBLE)));
+		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity, PF_VISIBLE | PF_EDITABLE, "Gravity");
+		RegisterGetSet("Origin", &PhysXPhysicsSceneManager::GetOrigin, &PhysXPhysicsSceneManager::SetOrigin, PF_VISIBLE | PF_EDITABLE, "Local simulation origin");
+		RegisterMember("Active", &PhysXPhysicsSceneManager::m_Active, PF_VISIBLE | PF_EDITABLE, "Enable/disable simulation");
 	}
 
 	PhysXPhysicsSceneManager::PhysXPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
