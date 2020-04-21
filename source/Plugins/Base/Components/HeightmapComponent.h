@@ -41,34 +41,39 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void SaveXML(tinyxml2::XMLElement *obj_elem) override;
-
+	
 		//IHeightmapTerrainComponent
 		Float GetHeightAtSample(int x, int z) const override;
 		Float GetHeightAtWorldLocation(Float x, Float z) const override;
 		unsigned int GetNumSamplesW() const override;
 		unsigned int GetNumSamplesH() const override;
-		//virtual float* GetHeightData() const;
 		AABox GetBoundingBox() const override;
 		Sphere GetBoundingSphere() const override;
 		GeometryFlags GetGeometryFlags() const override;
 		void SetGeometryFlags(GeometryFlags flags) override{(void) flags;}
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		AABoxd GetExtent() const;
+		void SetExtent(const AABoxd& extent);
 	protected:
 		void SetUpdate(bool value);
 		bool  GetUpdate() const;
-		bool GetAutoBBoxGeneration() const;
-		void SetAutoBBoxGeneration(bool value);
+		bool GetUpdateExtentFromGeometry() const;
+		void SetUpdateExtentFromGeometry(bool value);
 		
 		//internal
 		void _UpdateData();
 		FilePath _GetFilePath() const;
-		AABox _GetTerrainBoundingBox() const;
+		SceneObjectPtr _GetOrCreateDebugObject();
+		void _UpdateDebugObject(const AABoxd& extent);
+		void SetDebug(bool value);
+		bool GetDebug() const;
 	private:
 		HeightField* m_HM;
-		Vec2 m_Size;
-		Float m_Resolution;
+		AABoxd m_Extent;
+		double m_SampleStep;
 		bool m_AutoBBoxGeneration;
+		bool m_Debug;
 	};
 }
 #endif

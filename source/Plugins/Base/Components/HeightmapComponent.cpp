@@ -35,9 +35,10 @@
 namespace GASS
 {
 	HeightmapComponent::HeightmapComponent(void) : m_HM(nullptr),
-		m_Size(200,200),
-		m_Resolution(1.0),
-		m_AutoBBoxGeneration(false)
+		m_Extent({0, 0, 0}, { 200, 200, 200 }),
+		m_SampleStep(1.0),
+		m_AutoBBoxGeneration(false),
+		m_Debug(false)
 	{
 
 	}
@@ -52,13 +53,11 @@ namespace GASS
 		ComponentFactory::Get().Register<HeightmapComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
 
-		RegisterMember("Size", &GASS::HeightmapComponent::m_Size,PF_VISIBLE | PF_EDITABLE,"Size of heighttmap in [m]");
-
-		RegisterMember("Resolution", &GASS::HeightmapComponent::m_Resolution,PF_VISIBLE | PF_EDITABLE,"[samples/m]");
-
-		RegisterGetSet("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,PF_VISIBLE | PF_EDITABLE,"Update height values from scene geometry");
-
-		RegisterGetSet("AutoBBoxGeneration", &GASS::HeightmapComponent::GetAutoBBoxGeneration, &GASS::HeightmapComponent::SetAutoBBoxGeneration,PF_VISIBLE | PF_EDITABLE,"Get bounding box from terrain");
+		RegisterGetSet("Extent", &GASS::HeightmapComponent::GetExtent, &GASS::HeightmapComponent::SetExtent, PF_VISIBLE | PF_EDITABLE,"Relative heightfield extent: <min-x min-y min-z> <max-x max-y max-z> [m]");
+		RegisterMember("SampleStep", &GASS::HeightmapComponent::m_SampleStep, PF_VISIBLE | PF_EDITABLE,"[m]");
+		RegisterGetSet("Update", &GASS::HeightmapComponent::GetUpdate, &GASS::HeightmapComponent::SetUpdate,PF_VISIBLE | PF_EDITABLE | PF_RUNTIME,"Update height values from scene geometry");
+		RegisterGetSet("UpdateExtentFromGeometry", &GASS::HeightmapComponent::GetUpdateExtentFromGeometry, &GASS::HeightmapComponent::SetUpdateExtentFromGeometry,PF_VISIBLE | PF_EDITABLE | PF_RUNTIME,"Get bounding box from terrain");
+		RegisterGetSet("Debug", &GASS::HeightmapComponent::GetDebug, &GASS::HeightmapComponent::SetDebug, PF_VISIBLE | PF_EDITABLE | PF_RUNTIME, "Show/hide bounds");
 	}
 
 	void HeightmapComponent::OnInitialize()
@@ -69,13 +68,16 @@ namespace GASS
 		{
 			m_HM = new HeightField();
 			m_HM->Load(full_path.GetFullPath());
+			//m_SampleStep = m_HM->GetBoundingBox().GetSize().x / static_cast<double>(m_HM->GetNumSamplesH());
+			SetExtent(m_HM->GetBoundingBox());
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			
 		}
 	}
 
 	FilePath HeightmapComponent::_GetFilePath() const
 	{
-		ScenePtr  scene = GetSceneObject()->GetScene();
+		ScenePtr scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetSceneFolder().GetFullPath();
 		std::string filename = "heightmap_" + GetName() + ".hm";
 		FilePath full_path(scene_path + "/" + filename);
@@ -101,58 +103,15 @@ namespace GASS
 		return false;
 	}
 
-	AABox HeightmapComponent::_GetTerrainBoundingBox() const
+	AABoxd HeightmapComponent::GetExtent() const
 	{
-		if(!GetSceneObject())
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed generate bounding box, no scene object found","HeightmapComponent::_GetTerrainBoundingBox");
+		return m_Extent;
+	}
 
-		AABox box;
-		if(m_AutoBBoxGeneration)
-		{
-			std::vector<SceneObjectPtr> objs;
-			ComponentContainer::ComponentVector components;
-			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
-			for(size_t i = 0; i < components.size() ; i++)
-			{
-				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-				objs.push_back(comp->GetSceneObject());
-			}
-			if(objs.size() > 0)
-			{
-				for(size_t i = 0;  i <  objs.size(); i++)
-				{
-					SceneObjectPtr obj = objs[i];
-					MeshComponentPtr mesh = obj->GetFirstComponentByClass<IMeshComponent>();
-					GeometryComponentPtr geom = obj->GetFirstComponentByClass<IGeometryComponent>();
-					if(geom && geom->GetGeometryFlags() & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
-					{
-						AABox mesh_box = geom->GetBoundingBox();
-						LocationComponentPtr lc = obj->GetFirstComponentByClass<ILocationComponent>();
-						if(lc)
-						{
-							Vec3 world_pos = lc->GetWorldPosition();
-							Mat4 trans_mat = Mat4::CreateTransformationSRT(lc->GetScale(),lc->GetWorldRotation(), world_pos);
-							mesh_box.Transform(trans_mat);
-						}
-
-						box.Union(mesh_box);
-					}
-				}
-			}
-			else //no terrain data in scene
-			{
-				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed generate bounding box, no terrain found (GEOMETRY_FLAG_GROUND)","HeightmapComponent::_GetTerrainBoundingBox");
-			}
-		}
-		else
-		{
-			Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			Float half_width = m_Size.x*0.5;
-			Float half_height = m_Size.y*0.5;
-			box.Min.Set(pos.x - half_width, -500, pos.z - half_height);
-			box.Max.Set(pos.x + half_width, 500, pos.z + half_height);
-		}
-		return box;
+	void HeightmapComponent::SetExtent(const AABoxd& extent)
+	{
+		_UpdateDebugObject(extent);
+		m_Extent = extent;
 	}
 
 	void HeightmapComponent::_UpdateData()
@@ -160,51 +119,47 @@ namespace GASS
 		if(!GetSceneObject())
 			return;
 
-		AABox bbox = _GetTerrainBoundingBox();
+		const AABoxd bbox = GetExtent();
+		//_UpdateDebugObject(bbox);
 
-		Vec3 bbsize = bbox.GetSize();
-		const unsigned int px_width = static_cast<unsigned int>(bbsize.x * m_Resolution);
-		const unsigned int pz_height = static_cast<unsigned int>(bbsize.z * m_Resolution);
-		Float inv_sample_ratio = 1.0/m_Resolution;
+		const Vec3 bbsize = bbox.GetSize();
+		
+		const double inv_sample_step = 1.0/m_SampleStep;
+		const unsigned int px_width = static_cast<unsigned int>(bbsize.x * inv_sample_step);
+		const unsigned int pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
+		
 		//GEOMETRY_FLAG_GROUND
 		GeometryFlags flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 		ScenePtr scene = GetSceneObject()->GetScene();
 
-		TerrainSceneManagerPtr terrain_sm = scene->GetFirstSceneManagerByClass<ITerrainSceneManager>();
+		TerrainSceneManagerPtr terrain_sm = scene->GetFirstSceneManagerByClass<ITerrainSceneManager>(true);
 		
 		//delete previous hm
 		delete m_HM;
 
 		if (terrain_sm)
 		{
-			Float half_width = m_Size.x * 0.5;
-			Float half_height = m_Size.y * 0.5;
-
-			bbox.Min.Set(-half_width, -500, -half_height);
-			bbox.Max.Set(half_width, 500, half_height);
-
 			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
 
 			GASS_LOG(LINFO) << "START building heightmap\n";
 		
 		
 			GASS_LOG(LINFO) << "OE Terrain\n";
-			Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			Mat4 transform(rot, pos);
-			
-
+			const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			Mat4 transform(world_rot, world_pos);
+		
 			for (unsigned int i = 0; i < px_width; i++)
 			{
 				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
 				for (unsigned int j = 0; j < pz_height; j++)
 				{
-					Vec3d loca_pos(bbox.Min.x + i * inv_sample_ratio, 0, bbox.Min.z + j * inv_sample_ratio);
-					Vec3d pos = transform * loca_pos;
+					const Vec3d local_sample_pos(bbox.Min.x + i * m_SampleStep, 0, bbox.Min.z + j * m_SampleStep);
+					const Vec3d world_sample_pos = transform * local_sample_pos;
 					double height;
-					terrain_sm->GetTerrainHeight(pos, height, flags);
+					terrain_sm->GetTerrainHeight(world_sample_pos, height, flags);
 					//float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
-					m_HM->SetHeightAtSample(i, j, height);
+					m_HM->SetHeightAtSample(i, j, static_cast<float>(height));
 				}
 			}
 		}
@@ -212,23 +167,29 @@ namespace GASS
 		else
 		{
 			//add some padding to support runtime height change
-			bbox.Min.y -= 100;
-			bbox.Max.y += 100;
-			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
+			//bbox.Min.y -= 100;
+			//bbox.Max.y += 100;
 
+			const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			Mat4 transform(world_rot, world_pos);
+			const float hae = world_pos.y;
+			//const float offset = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, world_pos, flags, true));
+			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
 
 			for (unsigned int i = 0; i < px_width; i++)
 			{
 				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
 				for (unsigned int j = 0; j < pz_height; j++)
 				{
-					Vec3 pos(bbox.Min.x + i * inv_sample_ratio, 0, bbox.Min.z + j * inv_sample_ratio);
-					float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
+					const Vec3d local_pos(bbox.Min.x + i * m_SampleStep, 0.0, bbox.Min.z + j * m_SampleStep);
+					const Vec3d world_sample_pos = transform * local_pos;
+					float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, world_sample_pos, flags, true));
+					h = h - hae;
 					m_HM->SetHeightAtSample(i, j, h);
 				}
 			}
 		}
-
 		m_HM->Save(_GetFilePath().GetFullPath());
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}
@@ -239,6 +200,7 @@ namespace GASS
 			return m_HM->GetHeightAtSample(x,z);
 		return 0;
 	}
+
 	Float HeightmapComponent::GetHeightAtWorldLocation(Float x, Float z) const
 	{
 		if(m_HM)
@@ -280,14 +242,34 @@ namespace GASS
 		return GEOMETRY_FLAG_GROUND;
 	}
 
-	bool HeightmapComponent::GetAutoBBoxGeneration()const
+	bool HeightmapComponent::GetUpdateExtentFromGeometry()const
 	{
-		return m_AutoBBoxGeneration;
+		return false;
 	}
 
-	void HeightmapComponent::SetAutoBBoxGeneration(bool value)
+	void HeightmapComponent::SetUpdateExtentFromGeometry(bool value)
 	{
-		m_AutoBBoxGeneration = value;
+		if (GetSceneObject())
+		{
+			MeshComponentPtr mesh = GetSceneObject()->GetFirstParentComponentByClass<IMeshComponent>();
+			if (mesh)
+			{
+				GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(mesh);
+				if (geom)// && geom->GetGeometryFlags()  & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
+				{
+					const AABox mesh_box = geom->GetBoundingBox();
+					SetExtent(mesh_box);
+				}
+				else //no geometry
+				{
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed updating extent, no IGeometryComponent found", "HeightmapComponent::SetUpdateExtentFromGeometry");
+				}
+			}
+			else //no mesh found
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed updating extent, no mesh found", "HeightmapComponent::SetUpdateExtentFromGeometry");
+			}
+		}
 	}
 
 	bool HeightmapComponent::GetCollision() const
@@ -298,5 +280,63 @@ namespace GASS
 	void HeightmapComponent::SetCollision(bool /*value*/)
 	{
 
+	}
+
+	void HeightmapComponent::SetDebug(bool value)
+	{
+		if (m_Debug && !value)
+		{
+			SceneObjectPtr obj = _GetOrCreateDebugObject();
+			obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(false);
+		}
+
+		m_Debug = value;
+	
+		_UpdateDebugObject(m_Extent);
+	}
+
+	bool HeightmapComponent::GetDebug() const
+	{
+		return m_Debug;
+	}
+
+	void HeightmapComponent::_UpdateDebugObject(const AABoxd& extent)
+	{
+		if (!m_Debug)
+			return;
+		if (!GetSceneObject())
+			return;
+		SceneObjectPtr obj = _GetOrCreateDebugObject();
+		obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_Debug);
+		const Vec3d center = extent.Min + (extent.Max - extent.Min) * 0.5;
+		obj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(center);
+		BaseSceneComponent *box_comp = obj->GetComponentByClassName("BoxGeometryComponent");
+		if (box_comp)
+		{
+			box_comp->SetPropertyValue("Size", extent.GetSize());
+		}
+	}
+
+	SceneObjectPtr HeightmapComponent::_GetOrCreateDebugObject()
+	{
+		const std::string obj_id = "DEBUG_OBJECT";
+		SceneObjectPtr scene_object = GetSceneObject()->GetChildByID(obj_id);
+		if (!scene_object)
+		{
+			scene_object = std::make_shared<SceneObject>();
+			scene_object->SetSerialize(false);
+			scene_object->SetID(obj_id);
+			scene_object->SetName("DebugObject");
+			ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+			location_comp->SetPropertyValue("AttachToParent", true);
+			ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
+			mesh_comp->SetPropertyValue("CastShadow", false);
+			ComponentPtr box_comp = ComponentFactory::Get().Create("BoxGeometryComponent");
+			scene_object->AddComponent(location_comp);
+			scene_object->AddComponent(mesh_comp);
+			scene_object->AddComponent(box_comp);
+			GetSceneObject()->AddChildSceneObject(scene_object, true);
+		}
+		return scene_object;
 	}
 }
