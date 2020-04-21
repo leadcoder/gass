@@ -44,20 +44,26 @@ namespace GASS
 		void OnInitialize() override;
 		void OnDelete() override;
 	protected:
-		
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr message);
+
 		void Disable();
 		void Enable();
 		void Reset();
-		physx::PxShape* CreateTerrain();
+		void SetPosition(const Vec3& pos);
+		void SetRotation(const Quaternion& rot);
 		HeightmapTerrainComponentPtr GetTerrainComponent() const;
 	protected:
+		void _CreateTerrain();
+		void _Release();
+
 		AABox m_TerrainBounds;
 		IHeightmapTerrainComponent* m_TerrainGeom;
 		std::string m_GeometryTemplate;
 		bool m_Debug;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 		physx::PxShape* m_Shape;
+		physx::PxRigidStatic* m_Actor;
 	};
 }
