@@ -174,6 +174,21 @@ namespace GASS
 			Get intersection box between this box and provided box
 		*/
 		TAABox GetIntersection(const TAABox& box) const;
+
+		friend std::ostream& operator << (std::ostream& os, const TAABox& box)
+		{
+			os << box.Min << " " << box.Max;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& is, TAABox& box)
+		{
+			if (!(is >> box.Min >> box.Max))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse AABox", "TAABox::>>");
+			}
+			return is;
+		}
 	
 		//public for fast access
 		TVec3<TYPE> Max;

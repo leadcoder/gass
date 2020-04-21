@@ -92,7 +92,20 @@ namespace GASS
 
 		bool Equal(const TAARect& rect, TYPE tolerance = std::numeric_limits<TYPE>::epsilon()) const;
 
-		
+		friend std::ostream& operator << (std::ostream& os, const TAARect& rect)
+		{
+			os << rect.Min << " " << rect.Max;
+			return os;
+		}
+
+		friend std::istream& operator >> (std::istream& is, TAARect& rect)
+		{
+			if (!(is >> rect.Min >> rect.Max))
+			{
+				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed to parse AARect", "TAARect::>>");
+			}
+			return is;
+		}
 
 		//public for fast access
 		TVec2<TYPE> Max;

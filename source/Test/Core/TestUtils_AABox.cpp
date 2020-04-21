@@ -42,6 +42,25 @@ TEST_CASE("Test AARect")
 		const GASS::AARectd rect2({ 1, 1 }, { 4, 10 });
 		REQUIRE(rect1.GetIntersection(rect2) == GASS::AARectd({ 1, 1 }, { 3, 3 }));
 	}
+
+
+	SECTION("Test streaming <<")
+	{
+		std::stringstream ss;
+		const GASS::AARectd rect({ 0, 0}, { 3, 3});
+		ss << rect;
+		const std::string str_rect = ss.str();
+		REQUIRE(str_rect == "0 0 3 3");
+	}
+
+	SECTION("Test streaming >>")
+	{
+		std::stringstream ss;
+		ss << "0 0 3 3";
+		GASS::AARectd rect;
+		ss >> rect;
+		REQUIRE(rect.Equal(GASS::AARectd({ 0, 0}, { 3, 3})));
+	}
 }
 
 TEST_CASE("Test AABox")
@@ -182,6 +201,24 @@ TEST_CASE("Test AABox")
 		const GASS::AABoxd b1({ 0, 0, 2 }, { 3, 3, 12 });
 		const GASS::AABoxd b2({ 1, 1, 1 }, { 4, 10,10 });
 		REQUIRE(b1.GetIntersection(b2) == GASS::AABoxd({ 1, 1,2 }, { 3, 3, 10 }));
+	}
+
+	SECTION("Test streaming <<")
+	{
+		std::stringstream ss;
+		const GASS::AABoxd box({ 0, 0, 2 }, { 3, 3, 12 });
+		ss << box;
+		const std::string str_box = ss.str();
+		REQUIRE(str_box == "0 0 2 3 3 12");
+	}
+
+	SECTION("Test streaming >>")
+	{
+		std::stringstream ss;
+		ss << "0 0 2 3 3 12";
+		GASS::AABoxd box;
+		ss >> box;
+		REQUIRE(box.Equal(GASS::AABoxd({ 0, 0, 2 }, { 3, 3, 12 })));
 	}
 	
 }
