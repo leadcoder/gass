@@ -25,6 +25,8 @@
 #include "Plugins/OSG/OSGCollisionSystem.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Sim/Interface/GASSITerrainSceneManager.h"
+#include <osg/CoordinateSystemNode>
 
 namespace GASS
 {
@@ -57,18 +59,18 @@ namespace GASS
 
 	void OSGCollisionSceneManager::OnSceneCreated()
 	{
-		
+		m_Scene = GetScene().get();
+		m_TerrainSM = GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(true).get();
 	}
 
 	void OSGCollisionSceneManager::OnSceneShutdown()
 	{
-	}
 
+	}
 
 	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool /*return_at_first_hit*/) const
 	{
-		ScenePtr scene = GetScene();
-		if(scene)
+		if(m_GFXSystem)
 		{
 			osgViewer::ViewerBase::Views views;
 			m_GFXSystem->GetViewer()->getViews(views);
@@ -149,5 +151,108 @@ namespace GASS
 				}
 			}
 		}
+	}
+
+	bool OSGCollisionSceneManager::GetTerrainHeight(const Vec3& location, double& terrain_height, GeometryFlags flags) const
+	{
+		if (m_TerrainSM)
+			return m_TerrainSM->GetTerrainHeight(location, terrain_height, flags);
+		if (m_Scene->GetGeocentric())
+		{
+			const double r = osg::WGS_84_RADIUS_EQUATOR;
+
+			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
+			double latitude, longitude, height_hae;
+			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
+			
+			constexpr double min_height = -20000;
+			const Vec3 dir = -up_vector * (height_hae - min_height);
+			CollisionResult result;
+			Raycast(location, dir, flags, result, true);
+			if (result.Coll)
+			{
+				terrain_height = height_hae - (location - result.CollPosition).Length();
+			}
+			return result.Coll;
+		}
+		else
+		{
+			constexpr double max_terrain_height = 20000;
+			CollisionResult result;
+			const Vec3 ray_start(location.x, max_terrain_height, location.z);
+			const Vec3 ray_direction = Vec3(0, -1, 0) * (max_terrain_height * 2.0);
+			Raycast(ray_start, ray_direction, flags, result,true);
+			if (result.Coll)
+			{
+				terrain_height = result.CollPosition.y;
+			}
+		}
+		return false;
+	}
+
+	bool OSGCollisionSceneManager::GetHeightAboveSeaLevel(const Vec3& location, double& height) const
+	{
+		if (m_Scene->GetGeocentric())
+		{
+			double latitude, longitude;
+			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height);
+		}
+		else
+		{
+			return location.y;
+		}
+		return true;
+	}
+
+	bool OSGCollisionSceneManager::GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const
+	{
+		if (m_TerrainSM)
+			return m_TerrainSM->GetHeightAboveTerrain(location, height,flags);
+
+		double terrain_height = 0;
+		if (GetTerrainHeight(location, terrain_height, flags))
+		{
+			double height_above_msl = 0;
+			GetHeightAboveSeaLevel(location, height_above_msl);
+			height = height_above_msl - terrain_height;
+			return true;
+		}
+		return false;
+	}
+
+	bool OSGCollisionSceneManager::GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const
+	{
+		if (m_TerrainSM)
+			return m_TerrainSM->GetUpVector(location, up_vec);
+
+		if (m_Scene->GetGeocentric())
+		{
+			up_vec = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
+		}
+		else
+		{
+			up_vec.Set(0,1,0);
+		}
+		return true;
+	}
+
+	bool OSGCollisionSceneManager::GetOrientation(const Vec3& location, Quaternion& rot) const
+	{
+		if (m_TerrainSM)
+			return m_TerrainSM->GetOrientation(location, rot);
+
+		if (m_Scene->GetGeocentric())
+		{
+			double  latitude, longitude, height;
+			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height);
+			osg::Matrixd localToWorld;
+			m_EllipsoidModel.computeCoordinateFrame(latitude, longitude, localToWorld);
+			rot = GASS::OSGConvert::ToGASS(localToWorld.getRotate());
+		}
+		else
+		{
+			rot = Quaternion::IDENTITY;
+		}
+		return true;
 	}
 }

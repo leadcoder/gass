@@ -173,6 +173,7 @@ namespace GASS
 
 	class OSGCollisionSystem;
 	class OSGGraphicsSystem;
+	class ITerrainSceneManager;
 
 	class OSGCollisionSceneManager : public Reflection<OSGCollisionSceneManager, BaseSceneManager> , public ICollisionSceneManager
 	{
@@ -187,6 +188,11 @@ namespace GASS
 
 		//ICollisionSceneManager
 		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const override;
+		bool GetTerrainHeight(const Vec3& location, double& height, GeometryFlags flags) const override;
+		bool GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const override;
+		bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const override;
+		bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const override;
+		bool GetOrientation(const Vec3& location, Quaternion& rot) const override;
 	private:
 		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
 		mutable GASS_MUTEX m_Mutex;
@@ -194,6 +200,9 @@ namespace GASS
 		osg::ref_ptr<osgSim::DatabaseCacheReadCallback> m_DatabaseCache;
 		OSGCollisionSystem* m_ColSystem = nullptr;
 		OSGGraphicsSystem* m_GFXSystem = nullptr;
+		ITerrainSceneManager* m_TerrainSM = nullptr;
+		Scene* m_Scene = nullptr;
+		osg::EllipsoidModel m_EllipsoidModel;
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSceneManager> OSGCollisionSceneManagerPtr;
 }

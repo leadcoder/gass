@@ -29,6 +29,7 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSITerrainSceneManager.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Utils/GASSCollisionHelper.h"
 
@@ -68,10 +69,8 @@ namespace GASS
 		{
 			m_HM = new HeightField();
 			m_HM->Load(full_path.GetFullPath());
-			//m_SampleStep = m_HM->GetBoundingBox().GetSize().x / static_cast<double>(m_HM->GetNumSamplesH());
 			SetExtent(m_HM->GetBoundingBox());
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-			
 		}
 	}
 
@@ -120,8 +119,6 @@ namespace GASS
 			return;
 
 		const AABoxd bbox = GetExtent();
-		//_UpdateDebugObject(bbox);
-
 		const Vec3 bbsize = bbox.GetSize();
 		
 		const double inv_sample_step = 1.0/m_SampleStep;
@@ -129,67 +126,38 @@ namespace GASS
 		const unsigned int pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
 		
 		//GEOMETRY_FLAG_GROUND
-		GeometryFlags flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
-		ScenePtr scene = GetSceneObject()->GetScene();
-
-		TerrainSceneManagerPtr terrain_sm = scene->GetFirstSceneManagerByClass<ITerrainSceneManager>(true);
+		
 		
 		//delete previous hm
 		delete m_HM;
+		
+		const ScenePtr scene = GetSceneObject()->GetScene();
+		const ICollisionSceneManager* col_sm = scene->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
+		const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+		const Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+		const Mat4 transform(world_rot, world_pos);
+		const double hae = [&] {
+			double ret = 0;
+			col_sm->GetHeightAboveSeaLevel(world_pos, ret);
+			return ret;
+			}();
+		m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
+		const GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 
-		if (terrain_sm)
+		for (unsigned int i = 0; i < px_width; i++)
 		{
-			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
-
-			GASS_LOG(LINFO) << "START building heightmap\n";
-		
-		
-			GASS_LOG(LINFO) << "OE Terrain\n";
-			const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			Mat4 transform(world_rot, world_pos);
-		
-			for (unsigned int i = 0; i < px_width; i++)
+			GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
+			for (unsigned int j = 0; j < pz_height; j++)
 			{
-				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
-				for (unsigned int j = 0; j < pz_height; j++)
-				{
-					const Vec3d local_sample_pos(bbox.Min.x + i * m_SampleStep, 0, bbox.Min.z + j * m_SampleStep);
-					const Vec3d world_sample_pos = transform * local_sample_pos;
-					double height;
-					terrain_sm->GetTerrainHeight(world_sample_pos, height, flags);
-					//float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, pos, flags, true));
-					m_HM->SetHeightAtSample(i, j, static_cast<float>(height));
-				}
+				const Vec3d local_pos(bbox.Min.x + i * m_SampleStep, 0.0, bbox.Min.z + j * m_SampleStep);
+				const Vec3d world_sample_pos = transform * local_pos;
+				double h = 0;
+				col_sm->GetTerrainHeight(world_sample_pos, h, flags);
+				h = h - hae;
+				m_HM->SetHeightAtSample(i, j, static_cast<float>(h));
 			}
 		}
 
-		else
-		{
-			//add some padding to support runtime height change
-			//bbox.Min.y -= 100;
-			//bbox.Max.y += 100;
-
-			const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			Mat4 transform(world_rot, world_pos);
-			const float hae = world_pos.y;
-			//const float offset = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, world_pos, flags, true));
-			m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
-
-			for (unsigned int i = 0; i < px_width; i++)
-			{
-				GASS_LOG(LINFO) << "row:" << i << " of:" << px_width - 1 << "\n";
-				for (unsigned int j = 0; j < pz_height; j++)
-				{
-					const Vec3d local_pos(bbox.Min.x + i * m_SampleStep, 0.0, bbox.Min.z + j * m_SampleStep);
-					const Vec3d world_sample_pos = transform * local_pos;
-					float h = static_cast<float>(CollisionHelper::GetHeightAtPosition(scene, world_sample_pos, flags, true));
-					h = h - hae;
-					m_HM->SetHeightAtSample(i, j, h);
-				}
-			}
-		}
 		m_HM->Save(_GetFilePath().GetFullPath());
 		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
 	}

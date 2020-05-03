@@ -146,8 +146,13 @@ namespace GASS
 				Vec3 y_dir = -Vec3::Cross(v1, v2);
 				y_dir.Normalize();
 
+
+				Vec3d center = m_CurrentPos;
+				CollisionHelper::GetGroundData(scene, m_CurrentPos, ray_dist, flags, center, normal);
+
 				//pick average height
-				m_CurrentPos.y = (gp1.y + ((gp2.y + gp3.y)*0.5))*0.5;
+				//m_CurrentPos.y = (gp1.y + ((gp2.y + gp3.y)*0.5))*0.5;
+				m_CurrentPos = center;
 
 				//Generate new rotation
 				Vec3 x_dir = gp2 - gp3;

@@ -22,29 +22,13 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSSphere.h"
+#include "Core/Math/GASSQuaternion.h"
 #include "Sim/GASSGeometryFlags.h"
 
 namespace GASS
 {
 	class SceneObject;
 	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	
-	/*enum CollisionType
-	{
-		COL_SPHERE,
-		COL_LINE,
-		COL_LINE_VERTICAL
-	};
-
-	struct CollisionRequest
-	{
-		CollisionType Type;
-		Sphere ColSphere;
-		Vec3 LineStart;
-		Vec3 LineEnd;
-		bool ReturnFirstCollisionPoint;
-		GeometryFlags CollisionBits;
-	};*/
 	
 	struct CollisionResult
 	{
@@ -55,8 +39,7 @@ namespace GASS
 		SceneObjectWeakPtr CollSceneObject;
 	};
 
-	//typedef unsigned int CollisionHandle;
-
+	
 	/**
 		Collision interface
 		
@@ -69,27 +52,7 @@ namespace GASS
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(ICollisionSceneManager)
 	public:
-		/**
-			Request a new collision query, the handle returned is used when to check
-			if the request is processed.
-		*/
-	//	virtual CollisionHandle Request(const CollisionRequest &request)= 0;
-		
-		/**
-			Check is a collision request is processed. The function return true is the 
-			request is processed and the result is placed in the CollisionResult argument.
-		*/
-	//	virtual bool Check(CollisionHandle handle, CollisionResult &result) = 0;
-
-		/**
-			This function will force a the collision system to process 
-			the collision request and the collision result will be
-			available immediately. 
-			@remarks Calling this method can stall the caller if the collision system
-			implementation is threaded and therefore is busy processing other requests
-		*/
-	//	virtual void Force(CollisionRequest &request, CollisionResult &result) const = 0;
-
+	
 	/**
 		Raycast check
 		@param ray_start
@@ -99,6 +62,11 @@ namespace GASS
 		@param return_first_hit
 	*/
 		virtual void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_first_hit = false) const = 0;
+		virtual bool GetTerrainHeight(const Vec3& location, double& height, GeometryFlags flags) const = 0;
+		virtual bool GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const = 0;
+		virtual bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const = 0;
+		virtual bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const = 0;
+		virtual bool GetOrientation(const Vec3& location, Quaternion& rot) const = 0;
 	};
 
 	typedef GASS_SHARED_PTR<ICollisionSceneManager> CollisionSceneManagerPtr;
