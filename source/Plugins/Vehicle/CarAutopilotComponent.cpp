@@ -95,7 +95,6 @@ namespace GASS
 
 	void CarAutopilotComponent::OnInitialize()
 	{
-
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnGotoPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(CarAutopilotComponent::OnFaceDirectionRequest,FaceDirectionRequest,0));
@@ -113,6 +112,7 @@ namespace GASS
 		{
 			m_PlatformType = platform->GetType();
 		}
+		m_Terrain = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
 	}
 
 	void CarAutopilotComponent::OnDelete()
@@ -181,7 +181,7 @@ namespace GASS
 			_UpdateDrive(delta);
 		}
 	}
-
+#if 0
 	void CarAutopilotComponent::_UpdateDrive(double delta_time)
 	{
 		Vec3 target_pos  = m_DesiredPos;
@@ -192,9 +192,6 @@ namespace GASS
 		Vec3 current_pos = m_CurrentPos;
 		Vec3 target_dir = target_pos - current_pos;
 		Float target_dist = target_dir.Length();
-		//Vec3 drive_dir_n = drive_dir;
-		//drive_dir_n.Normalize();
-
 
 		if (m_CollisionAvoidance && m_ProximityData.size() > 0)
 		{
@@ -238,92 +235,6 @@ namespace GASS
 				}
 			}
 		}
-
-
-		/*if(m_HasCollision && target_dist > 0)
-		{
-			const Float col_radie1 = 3;
-			const Float col_radie2 = 3;
-			const Float col_radie = col_radie1 + col_radie2;
-
-			Vec3 target_to_col_dir = target_pos - m_CollisionPoint;
-			Float target_to_col_dist = target_to_col_dir.Length();
-			if(target_to_col_dist < col_radie) //inside collision sphere
-			{
-				//always turn to right side of sphere
-				//Vec3 drive_dir = -m_Transformation.GetZAxis();
-				//Vec3 per_pend_drive_dir = drive_dir;
-				//per_pend_drive_dir.x = -drive_dir.z;
-				//per_pend_drive_dir.z = drive_dir.x;
-
-				Vec3 per_pend_target_dir = target_dir;
-				per_pend_target_dir.x = -target_dir.z;
-				per_pend_target_dir.z = target_dir.x;
-				per_pend_target_dir.Normalize();
-
-				//check if behind
-				Vec3 col_dir =  m_CollisionPoint - m_CurrentPos;
-				col_dir.Normalize();
-				Vec3 drive_dir = -m_Transformation.GetZAxis();
-				const Float cos_angle = Vec3::Dot(drive_dir,col_dir);
-				if(cos_angle > 0)
-				{
-					target_pos = target_pos + per_pend_target_dir*col_radie;
-					target_dir = target_pos - current_pos;
-					target_dist = target_pos.Length();
-				}
-			}
-		}*/
-
-	/*	if(m_HasCollision && target_dist > 0)
-		{
-			Vec3 col_vec =  m_CollisionPoint - m_CurrentPos;
-			Vec3 col_vec_n = col_vec;
-			col_vec_n.Normalize();
-			const Float col_vec_l = col_vec.Length();
-
-			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CurrentPos, m_CurrentPos + col_vec, ColorRGBA(1,0,0,1), ColorRGBA(1,0,0,1))));
-
-			Float drive_dist = 30;
-			Vec3 drive_dir = -m_Transformation.GetZAxis()*drive_dist;
-			Vec3 drive_dir_n = drive_dir;
-			drive_dir_n.Normalize();
-
-
-			GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CurrentPos, m_CurrentPos + drive_dir, ColorRGBA(1,1,1,1), ColorRGBA(1,1,1,1))));
-
-			const Float cos_angle = Vec3::Dot(drive_dir_n,col_vec_n);
-			//const Vec3 cross_vec = Vec3::Cross(drive_dir_n,col_vec_n);
-			const Float proj_dist_forward = cos_angle*col_vec_l;
-			const Float proj_dist_side = fabs(sin(acos(cos_angle))*col_vec_l);
-
-			const Float col_radie1 = 3;
-			const Float col_radie2 = 3;
-			const Float col_radie = col_radie1 + col_radie2;
-			//if(proj_dist_side < col_radie1 &&
-			//	proj_dist_forward > 0
-			//	&& proj_dist_forward < drive_dist )
-			if(proj_dist_forward > 0)
-			{
-				//generate new target pos
-				Vec3 offset_vec = drive_dir_n*proj_dist_forward;
-				offset_vec = col_vec - offset_vec;
-				offset_vec.Normalize();
-
-				GetSceneObject()->GetScene()->PostMessage(SceneMessagePtr(new DrawLineRequest(m_CollisionPoint, m_CollisionPoint + offset_vec * col_radie, ColorRGBA(0,0,0,1), ColorRGBA(1,0,0,1))));
-
-				//if(cross_vec.y > 0)
-				//	offset_vec = -offset_vec;
-
-				target_pos = m_CollisionPoint - offset_vec*col_radie;
-
-				target_dir = target_pos - current_pos;
-				target_dist = drive_dir.Length();
-			}
-		}*/
-
-		//GetSceneObject()->GetParentSceneObject()->GetChildByID("TARGET")->PostRequest(PositionRequestPtr(new PositionRequest(target_pos)));
-
 
 		if(target_dist > 0)// && dist_to_wp > m_DesiredPosRadius)
 		{
@@ -520,6 +431,213 @@ namespace GASS
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_ThrottleInput,0,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("",m_SteerInput,0,CT_AXIS)));
 			GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", 1.0f, CT_AXIS)));
+		}
+	}
+#endif
+
+	double GetAngleOnPlane(const Vec3& plane_normal, const Vec3& v1, const Vec3& v2)
+	{
+		Vec3d cross = Vec3d::Cross(v1, v2);
+		double cos_angle = Vec3d::Dot(v1, v2);
+		if (cos_angle > 1) cos_angle = 1;
+		if (cos_angle < -1) cos_angle = -1;
+		double angle = Math::Rad2Deg(acos(cos_angle));
+		if (Vec3::Dot(plane_normal, cross) > 0)
+			angle *= -1;
+		return angle;
+	}
+
+
+	CarAutopilotComponent::NavState CarAutopilotComponent::_DecideNavState(const double angle_to_target_dir, const double target_dist, const double turn_radius) const
+	{
+		const bool target_inside_turn_radius = target_dist < turn_radius&& fabs(angle_to_target_dir) > 45;
+		const bool target_behinde = fabs(angle_to_target_dir) > 90;
+		const bool reverse_possible = target_dist < m_MaxReverseDistance;//&& fabs(angle_to_target_dir) > 90;
+		
+		NavState nav_state = UNDEF;
+		if (target_inside_turn_radius)
+		{
+			if (m_MaxReverseDistance > 0)
+			{
+				//std::cout << "angle_to_target_dir:" << fabs(angle_to_target_dir) << "\n";
+				if (fabs(angle_to_target_dir) > 45)
+				{
+					if (reverse_possible && fabs(angle_to_target_dir) > 135)
+						nav_state = REVERSE_TO_TARGET;
+					else
+						nav_state = REVERSE_AWAY_FROM_TARGET;
+				}
+			}
+			else
+			{
+				nav_state = FORWARD_AWAY_FROM_TARGET;
+			}
+		}
+		else if (reverse_possible && target_behinde)
+		{
+			nav_state = REVERSE_TO_TARGET;
+		}
+		else if (m_Support3PointTurn && target_behinde)
+		{
+			nav_state = REVERSE_AWAY_FROM_TARGET;
+		}
+		else
+		{
+			nav_state = FORWARD_TO_TARGET;
+		}
+		return nav_state;
+	}
+
+	double Clampd(double value, double min_val, double max_val)
+	{
+		return std::min(max_val, std::max(min_val, value));
+	}
+
+	double CarAutopilotComponent::_UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir)
+	{
+		m_TurnPID.setIntCap(60.0);
+		m_TurnPID.set(0);
+
+		double steer_input = 0;
+		const double reverse_angle_to_target = angle_to_target_dir > 0 ? -(angle_to_target_dir - 180) : -(angle_to_target_dir + 180);
+		const double current_speed = -m_VehicleSpeed.z;
+
+		if (nav_state == FORWARD_TO_TARGET)
+		{
+			steer_input = -m_TurnPID.update(angle_to_target_dir, delta_time);
+		}
+		else if (nav_state == REVERSE_TO_TARGET)
+		{
+			steer_input = m_TurnPID.update(reverse_angle_to_target, delta_time);
+		}
+		else if (nav_state == FORWARD_AWAY_FROM_TARGET)
+		{
+			steer_input = m_TurnPID.update(reverse_angle_to_target, delta_time);
+		}
+		else if (nav_state == REVERSE_AWAY_FROM_TARGET)
+		{
+			steer_input = -m_TurnPID.update(angle_to_target_dir, delta_time);
+		}
+
+		if (m_InvertBackWardSteering && current_speed < 0) //invert reverse steering
+			steer_input *= -1;
+
+		steer_input = Clampd(steer_input, -1, 1);
+		return steer_input;
+	}
+
+	double CarAutopilotComponent::_CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target)
+	{
+		const double current_speed = -m_VehicleSpeed.z;
+		double desired_speed = m_DesiredSpeed;
+		if (nav_state == FORWARD_TO_TARGET)
+		{
+			//slow down if we are turning sharp and speed is to high
+			const double min_steer_speed = 5;
+			const double max_steer_speed = 20;
+			if (current_speed > min_steer_speed)
+			{
+				const double w = (current_speed - min_steer_speed) / (max_steer_speed - min_steer_speed);
+				desired_speed = desired_speed * (1.0 - w) + w * (desired_speed * fabs(cos_angle_to_target));
+			}
+		}
+		else if (nav_state == REVERSE_TO_TARGET)
+		{
+			desired_speed *= -1;
+		}
+		else if (nav_state == FORWARD_AWAY_FROM_TARGET)
+		{
+		}
+		else if (nav_state == REVERSE_AWAY_FROM_TARGET)
+		{
+			desired_speed *= -1;
+		}
+
+		//Linear damp speed if we are inside radius from waypoint,
+		//the radius is dynamic and is based on the desired speed of the vehicle.
+		//The vehicle will have longer brake distance at high speed
+		//and this is compensated by taking the speed in consideration.
+		//The user can tweak this radius with the m_BrakeDistanceFactor based
+		//on the properties of the vehicle, better brakes == lower m_BrakeDistanceFactor value
+		//By default this value is 1 which means that the vehicle can come to rest
+		//after 1m if traveling at 1 m/s. This formula should probably be expanded to support
+		//more non linear behavior
+		double radius = fabs(desired_speed) * m_BrakeDistanceFactor;
+		if (target_dist > 0 && target_dist < radius)
+		{
+			desired_speed = desired_speed * (target_dist / radius);
+		}
+
+		if (m_DesiredPosRadius > 0 && target_dist < m_DesiredPosRadius)
+		{
+			desired_speed = 0;
+		}
+
+		return desired_speed;
+	}
+	
+	void CarAutopilotComponent::_SendInput(double steer_input, double throttle_input, double brake_input)
+	{
+		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_ThrottleInput, static_cast<float>(throttle_input), CT_AXIS)));
+		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_SteerInput, static_cast<float>(steer_input), CT_AXIS)));
+		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", static_cast<float>(brake_input), CT_AXIS)));
+	}
+
+	void CarAutopilotComponent::_UpdateDrive(double delta_time)
+	{
+		const Vec3d current_pos = m_CurrentPos;
+		const Plane plane = [&] {
+			Vec3d local_up_vector(0, 1, 0);
+			m_Terrain->GetUpVector(current_pos, local_up_vector);
+			return Plane(current_pos, local_up_vector);
+		}();
+		const Vec3d current_dir = plane.GetProjectedVector(-m_Transformation.GetZAxis()).NormalizedCopy();
+		const Vec3d proj_side_dir = plane.GetProjectedVector(m_Transformation.GetXAxis()).NormalizedCopy();
+		//project target_pos on plane
+		const Vec3d target_pos = plane.GetProjectedPoint(m_DesiredPos);
+		const double current_speed = -m_VehicleSpeed.z;
+		
+		const Vec3d target_vec = target_pos - current_pos;
+		const Vec3d target_dir = target_vec.NormalizedCopy();
+		const double target_dist = target_vec.Length();
+		
+		if (m_DesiredPosRadius > 0 && target_dist < m_DesiredPosRadius)
+			m_WPReached = true;
+
+		if (m_WPReached) //apply desired end rotation if we have reached end location
+		{
+			float steer_input = 0.0f;
+			if (m_HasDir && m_PlatformType == PT_HUMAN)
+			{
+				//TODO, refactor and TEST this
+				const Vec3d face_dir = plane.GetProjectedVector(m_FaceDirection).NormalizedCopy();
+				const double angle_to_face = GetAngleOnPlane(plane.m_Normal, face_dir, current_dir);
+				
+				m_TurnPID.set(0);
+				steer_input = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
+			}
+			const float brake_input = 1.0f;
+			const float throttle_input = 0.0f;
+			_SendInput(steer_input, throttle_input, brake_input);
+		}
+		else if (target_dist > 0)
+		{
+			const double angle_to_target = GetAngleOnPlane(plane.m_Normal, target_dir, current_dir);
+			//GASS_PRINT("angle_to_target_dir:" << angle_to_target_dir);
+			const double turn_radius = 10;
+			const NavState nav_state = _DecideNavState(angle_to_target, target_dist, turn_radius);
+			const double steer_input = _UpdateSteerInput(nav_state, delta_time, angle_to_target);
+
+			const double cos_angle_to_target = Clampd(Vec3::Dot(current_dir, target_dir), -1, 1);
+			const double desired_speed = _CalcDesiredSpeed(nav_state, target_dist, cos_angle_to_target);
+			m_TrottlePID.set(desired_speed);
+			const double throttle_input = Clampd(m_TrottlePID.update(current_speed, delta_time), -1, 1);
+			const float brake_input = 0.0f;
+			_SendInput(steer_input, throttle_input, brake_input);
+		}
+		else
+		{
+			_SendInput(0, 0, 1);
 		}
 	}
 }
