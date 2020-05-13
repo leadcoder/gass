@@ -35,6 +35,7 @@
 #include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Utils/GASSCollisionHelper.h"
 
@@ -95,6 +96,32 @@ namespace GASS
 			m_PlatformSize = message->GetGeometry()->GetBoundingBox().GetSize();
 	}
 
+	bool GetGroundData(ICollisionSceneManager* csm, const Vec3& pos, double vertical_ray_dist, GeometryFlags flags, Vec3& ground_pos, Vec3& normal)
+	{
+		CollisionResult result;
+		const Vec3 ray_start = pos;
+		Vec3d up_vec(0, 1, 0);
+		csm->GetUpVector(pos, up_vec);
+		const Vec3 ray_direction = -vertical_ray_dist * up_vec;
+		csm->Raycast(ray_start, ray_direction, flags, result);
+		if (result.Coll)
+		{
+			ground_pos = result.CollPosition;
+			normal = result.CollNormal;
+		}
+		else //check upwards
+		{
+			csm->Raycast(ray_start, -ray_direction, flags, result);
+			if (result.Coll)
+			{
+				ground_pos = result.CollPosition;
+				normal = result.CollNormal;
+			}
+		}
+		return result.Coll;
+	}
+
+
 	void MotionComponent::OnTransMessage(TransformationChangedEventPtr message)
 	{
 		m_CurrentPos = message->GetPosition();
@@ -109,21 +136,18 @@ namespace GASS
 			Float vehicle_length = 4.0;
 			Float vehicle_step_height = 1.0;
 
-			Vec3 forward = -m_CurrentRot.GetZAxis();
-			Vec3 side = m_CurrentRot.GetXAxis();
+			const Vec3d forward = -m_CurrentRot.GetZAxis();
+			const Vec3d side = m_CurrentRot.GetXAxis();
+			const Vec3d up = m_CurrentRot.GetYAxis();
 
 			Vec3 p1 = m_CurrentPos + forward * vehicle_length*0.5;
 			Vec3 p2 = m_CurrentPos - forward * vehicle_length*0.5 + side*vehicle_with*0.5;
 			Vec3 p3 = m_CurrentPos - forward * vehicle_length*0.5 - side*vehicle_with*0.5;
-			Vec3 normal;
-			Vec3 gp1, gp2, gp3;
-
-			p1.y += vehicle_step_height;
-			p2.y += vehicle_step_height;
-			p3.y += vehicle_step_height;
+			p1 += up * vehicle_step_height;
+			p2 += up * vehicle_step_height;
+			p3 += up * vehicle_step_height;
 
 			const Float ray_dist = 100.0;
-
 
 			//check ground and static geometry for now
 			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT | GEOMETRY_FLAG_PAGED_LOD);
@@ -133,12 +157,15 @@ namespace GASS
 				p1.y = m_Heightmap->GetHeightAtWorldLocation(p1.x, p1.z);
 				p2.y = m_Heightmap->GetHeightAtWorldLocation(p2.x, p2.z);
 			}*/
-			
+		
+			Vec3 normal;
+			Vec3 gp1, gp2, gp3;
+
 			//do tripod ground clamp
-			ScenePtr scene = GetSceneObject()->GetScene();
-			if (CollisionHelper::GetGroundData(scene, p1, ray_dist, flags, gp1, normal) &&
-				CollisionHelper::GetGroundData(scene, p2, ray_dist, flags, gp2, normal) &&
-				CollisionHelper::GetGroundData(scene, p3, ray_dist, flags, gp3, normal))
+			ICollisionSceneManager* csm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
+			if (GetGroundData(csm, p1, ray_dist, flags, gp1, normal) &&
+				GetGroundData(csm, p2, ray_dist, flags, gp2, normal) &&
+				GetGroundData(csm, p3, ray_dist, flags, gp3, normal))
 			{
 
 				Vec3 v1 = gp2 - gp1;
@@ -146,12 +173,13 @@ namespace GASS
 				Vec3 y_dir = -Vec3::Cross(v1, v2);
 				y_dir.Normalize();
 
-
-				Vec3d center = m_CurrentPos;
-				CollisionHelper::GetGroundData(scene, m_CurrentPos, ray_dist, flags, center, normal);
-
+				Vec3d terrain_up(0, 1, 0);
+				csm->GetUpVector(m_CurrentPos, terrain_up);
+				Vec3d center = m_CurrentPos + terrain_up * 10;
+				GetGroundData(csm, center, ray_dist, flags, center, normal);
 				//pick average height
 				//m_CurrentPos.y = (gp1.y + ((gp2.y + gp3.y)*0.5))*0.5;
+				//m_CurrentPos = (gp1 + ((gp2 + gp3) * 0.5)) * 0.5;
 				m_CurrentPos = center;
 
 				//Generate new rotation
@@ -236,8 +264,6 @@ namespace GASS
 		forward_vel = -m_CurrentRot.GetZAxis();
 		forward_vel.Normalize();
 		forward_vel = forward_vel * m_CurrentSpeed;
-
-		
 
 		Vec3 new_pos = m_CurrentPos + forward_vel*delta_time;
 
