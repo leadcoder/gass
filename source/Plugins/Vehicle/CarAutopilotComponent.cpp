@@ -498,9 +498,10 @@ namespace GASS
 		m_TurnPID.setIntCap(60.0);
 		m_TurnPID.set(0);
 
-		double steer_input = 0;
 		const double reverse_angle_to_target = angle_to_target_dir > 0 ? -(angle_to_target_dir - 180) : -(angle_to_target_dir + 180);
 		const double current_speed = -m_VehicleSpeed.z;
+
+		double steer_input = 0;
 
 		if (nav_state == FORWARD_TO_TARGET)
 		{
@@ -530,7 +531,8 @@ namespace GASS
 	{
 		const double current_speed = -m_VehicleSpeed.z;
 		double desired_speed = m_DesiredSpeed;
-		if (nav_state == FORWARD_TO_TARGET)
+		if (nav_state == FORWARD_TO_TARGET ||
+			nav_state == FORWARD_AWAY_FROM_TARGET)
 		{
 			//slow down if we are turning sharp and speed is to high
 			const double min_steer_speed = 5;
@@ -541,18 +543,13 @@ namespace GASS
 				desired_speed = desired_speed * (1.0 - w) + w * (desired_speed * fabs(cos_angle_to_target));
 			}
 		}
-		else if (nav_state == REVERSE_TO_TARGET)
-		{
-			desired_speed *= -1;
-		}
-		else if (nav_state == FORWARD_AWAY_FROM_TARGET)
-		{
-		}
-		else if (nav_state == REVERSE_AWAY_FROM_TARGET)
-		{
-			desired_speed *= -1;
-		}
 
+		if (nav_state == REVERSE_TO_TARGET || 
+			nav_state == REVERSE_AWAY_FROM_TARGET)
+		{
+			desired_speed *= -1;
+		}
+	
 		//Linear damp speed if we are inside radius from waypoint,
 		//the radius is dynamic and is based on the desired speed of the vehicle.
 		//The vehicle will have longer brake distance at high speed
@@ -585,54 +582,52 @@ namespace GASS
 
 	void CarAutopilotComponent::_UpdateDrive(double delta_time)
 	{
-		const Vec3d current_pos = m_CurrentPos;
+		const Vec3d vehicle_pos = m_CurrentPos;
 		const Plane plane = [&] {
 			Vec3d local_up_vector(0, 1, 0);
-			m_Terrain->GetUpVector(current_pos, local_up_vector);
-			return Plane(current_pos, local_up_vector);
+			m_Terrain->GetUpVector(vehicle_pos, local_up_vector);
+			return Plane(vehicle_pos, local_up_vector);
 		}();
-		const Vec3d current_dir = plane.GetProjectedVector(-m_Transformation.GetZAxis()).NormalizedCopy();
-		const Vec3d proj_side_dir = plane.GetProjectedVector(m_Transformation.GetXAxis()).NormalizedCopy();
-		//project target_pos on plane
+		const Vec3d vehicle_dir = plane.GetProjectedVector(-m_Transformation.GetZAxis()).NormalizedCopy();
+		const double vehicle_speed = -m_VehicleSpeed.z;
 		const Vec3d target_pos = plane.GetProjectedPoint(m_DesiredPos);
-		const double current_speed = -m_VehicleSpeed.z;
-		
-		const Vec3d target_vec = target_pos - current_pos;
+		const Vec3d target_vec = target_pos - vehicle_pos;
 		const Vec3d target_dir = target_vec.NormalizedCopy();
 		const double target_dist = target_vec.Length();
 		
 		if (m_DesiredPosRadius > 0 && target_dist < m_DesiredPosRadius)
 			m_WPReached = true;
 
-		if (m_WPReached) //apply desired end rotation if we have reached end location
+		if (m_WPReached) 
 		{
-			float steer_input = 0.0f;
+			//apply desired end direction if we have reached target location
+			double steer_input = 0.0f;
 			if (m_HasDir && m_PlatformType == PT_HUMAN)
 			{
 				//TODO, refactor and TEST this
 				const Vec3d face_dir = plane.GetProjectedVector(m_FaceDirection).NormalizedCopy();
-				const double angle_to_face = GetAngleOnPlane(plane.m_Normal, face_dir, current_dir);
-				
+				const double angle_to_face = GetAngleOnPlane(plane.m_Normal, face_dir, vehicle_dir);
 				m_TurnPID.set(0);
-				steer_input = static_cast<float>(m_TurnPID.update(angle_to_face, delta_time));
+				steer_input = m_TurnPID.update(angle_to_face, delta_time);
 			}
-			const float brake_input = 1.0f;
-			const float throttle_input = 0.0f;
+			const double brake_input = 1.0f;
+			const double throttle_input = 0.0f;
 			_SendInput(steer_input, throttle_input, brake_input);
 		}
 		else if (target_dist > 0)
 		{
-			const double angle_to_target = GetAngleOnPlane(plane.m_Normal, target_dir, current_dir);
+			const double angle_to_target = GetAngleOnPlane(plane.m_Normal, target_dir, vehicle_dir);
 			//GASS_PRINT("angle_to_target_dir:" << angle_to_target_dir);
-			const double turn_radius = 10;
-			const NavState nav_state = _DecideNavState(angle_to_target, target_dist, turn_radius);
+			
+			const double vehicle_turn_radius = 10;
+			const NavState nav_state = _DecideNavState(angle_to_target, target_dist, vehicle_turn_radius);
 			const double steer_input = _UpdateSteerInput(nav_state, delta_time, angle_to_target);
 
-			const double cos_angle_to_target = Clampd(Vec3::Dot(current_dir, target_dir), -1, 1);
+			const double cos_angle_to_target = Clampd(Vec3d::Dot(vehicle_dir, target_dir), -1, 1);
 			const double desired_speed = _CalcDesiredSpeed(nav_state, target_dist, cos_angle_to_target);
 			m_TrottlePID.set(desired_speed);
-			const double throttle_input = Clampd(m_TrottlePID.update(current_speed, delta_time), -1, 1);
-			const float brake_input = 0.0f;
+			const double throttle_input = Clampd(m_TrottlePID.update(vehicle_speed, delta_time), -1, 1);
+			const double brake_input = 0.0;
 			_SendInput(steer_input, throttle_input, brake_input);
 		}
 		else
