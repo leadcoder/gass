@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GASS>
+	<Plugins>
+		<!-- load all from path-->
+		<!--<Directory Path = "GASSPlugins"/>-->
+		<Plugin PluginFile = "GASSPluginOgre"/>
+		<Plugin PluginFile = "GASSPluginOIS"/>
+		<!--<Plugin PluginFile = "GASSPluginPhysX3"/>-->
+		<Plugin PluginFile = "GASSPluginODE"/>
+		<Plugin PluginFile = "GASSPluginPagedGeometry"/>
+		<Plugin PluginFile = "GASSPluginOpenAL"/>
+		<Plugin PluginFile = "GASSPluginVehicle"/>
+		
+		<Plugin PluginFile = "GASSPluginBase"/>
+		<Plugin PluginFile = "GASSPluginEnvironment"/>
+		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
+		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
+	</Plugins>
+	<SetDataPath value="../../data/"/>
+	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
+	<ResourceManager>
+		<ResourceGroup name="Bootstrap">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/Ogre/OgreCore.zip" type="Zip" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="SkyX">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/SkyX" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="HYDRAX">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/hydrax" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="PagedGeometry">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/ExternalResources/PagedGeometry" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/base" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/particle" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/Ogre/Particles" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels"  type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/base" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/sounds" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_VEGETATION_MATERIALS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/vegetation" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/vegetation" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_ROAD_MATERIALS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/road" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/road" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_SKYBOX_MATERIALS">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/materials/sky" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/sky" type="FileSystem" recursive="false"/>
+		</ResourceGroup>
+		<!--<ResourceGroup name="GASS_VEGETATION">
+		<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/3dmodels/vegetation" type="FileSystem" recursive="true"/>
+    </ResourceGroup>-->
+		<ResourceGroup name="GASS_DETAIL_TEXTURES">
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures/detail" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+		<ResourceGroup name="GASS_TEMPLATES">
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/editor" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
+			<!--<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/characters/physx" type="FileSystem" recursive="false"/>-->
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/AI" type="FileSystem" recursive="true"/>
+		</ResourceGroup>
+	</ResourceManager>
+	<SceneObjectTemplateManager>
+		<AddObjectIDToName value ="true"/>
+		<ObjectIDPrefix value="["/>
+		<ObjectIDSufix value="]"/>
+	</SceneObjectTemplateManager>
+	<Systems>
+		<MaterialSystem/>
+		<EditorSystem>
+			<LockTerrainObjects value="false"/> 
+		</EditorSystem>
+		<OISInputSystem>
+			<ExclusiveMode value ="0"/>
+			<EnableMouse value="false"/>
+		</OISInputSystem>
+		<ControlSettingsSystem>
+		</ControlSettingsSystem>
+		<CoreSystem>
+		</CoreSystem>
+		<MyGUISystem>
+		</MyGUISystem>  
+		<GameSystem>
+		</GameSystem>
+		<RakNetNetworkSystem>
+		</RakNetNetworkSystem>
+		<OpenALSoundSystem>
+		</OpenALSoundSystem>
+		<LuaScriptSystem>
+		</LuaScriptSystem>
+		<ODECollisionSystem>
+		</ODECollisionSystem>
+		<PhysXPhysicsSystem>
+		</PhysXPhysicsSystem>
+		<OgreGraphicsSystem>
+			<CreateMainWindowOnInit value="0"/>
+			<UpdateMessagePump value="false"/>
+			<!--<Plugin value="RenderSystem_GL"/>-->
+			<Plugins value="RenderSystem_Direct3D9 Plugin_OctreeSceneManager Plugin_ParticleFX"/>
+			<PostFilters value="HDR"/>
+		</OgreGraphicsSystem>
+	</Systems>
+	<RTC>
+		<NumberOfThreads value="-1"/> <!-- -1 == auto-->
+		<MaxUpdateFreqency value="1000"/> <!-- -1 == not max update freq-->
+		<ExternalSimulationUpdate value="false"/> <!-- let application trigger simulation updates-->
+	</RTC>
+</GASS>
