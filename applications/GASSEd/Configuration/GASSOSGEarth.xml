@@ -5,13 +5,13 @@
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
 		<Plugin PluginFile = "GASSPluginOIS"/>
-		<Plugin PluginFile = "GASSPluginPhysX"/>
 		<Plugin PluginFile = "GASSPluginOpenAL"/>
 		<Plugin PluginFile = "GASSPluginVehicle"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
+		<Plugin PluginFile = "GASSPluginInput"/>
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
-	
+		<Plugin PluginFile = "GASSPluginPhysX"/>
 	</Plugins>
 	<SetDataPath value="../../data/"/>
 	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
@@ -31,6 +31,7 @@
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/terrain" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="true"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/templates/AI" type="FileSystem" recursive="true"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/physx" type="FileSystem" recursive="true"/>
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>
@@ -54,6 +55,8 @@
 		</CoreSystem>
 		<GameSystem>
 		</GameSystem>
+		<SimulationSystem>
+		</SimulationSystem>
 		<RakNetNetworkSystem>
 		</RakNetNetworkSystem>
 		<OpenALSoundSystem>
