@@ -37,7 +37,6 @@
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
-#include "Sim/Utils/GASSCollisionHelper.h"
 
 //move
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"

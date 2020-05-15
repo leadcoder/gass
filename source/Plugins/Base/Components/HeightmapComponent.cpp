@@ -31,7 +31,6 @@
 #include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/Utils/GASSCollisionHelper.h"
 
 namespace GASS
 {
