@@ -58,6 +58,7 @@ int _getch() {
 std::vector<std::string> GetCommonPlugins()
 {
 	std::vector<std::string> plugins;
+	plugins.push_back("GASSPluginOSG");
 	plugins.push_back("GASSPluginOIS");
 	plugins.push_back("GASSPluginOpenAL");
 	plugins.push_back("GASSPluginInput");
@@ -69,6 +70,7 @@ std::vector<std::string> GetCommonPlugins()
 std::vector<std::string> GetCommonSystems()
 {
 	std::vector<std::string> systems;
+	systems.push_back("OSGGraphicsSystem");
 	systems.push_back("MaterialSystem");
 	systems.push_back("OISInputSystem");
 	systems.push_back("ControlSettingsSystem");
@@ -81,30 +83,14 @@ std::vector<std::string> GetCommonSystems()
 int main(int/*argc*/, char* /*argv[]*/)
 {
 	//Load plugins
-	std::cout << "Select render system, press [1] for Ogre , [2] for OSG";
+	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
 	char gfx_key = static_cast<char>(_getch());
-	std::string gfx_plugin = "GASSPluginOgre";
-	std::string gfx_system_name = "OgreGraphicsSystem";
-
-	if (gfx_key == '1')
-	{
-		gfx_system_name = "OgreGraphicsSystem";
-		gfx_plugin = "GASSPluginOgre";
-	}
-	else if (gfx_key == '2')
-	{
-		gfx_system_name = "OSGGraphicsSystem";
-		gfx_plugin = "GASSPluginOSG";
-	}
 
 	GASS::SimEngineConfig config;
 	config.Plugins = GetCommonPlugins();
-	config.Plugins.push_back(gfx_plugin);
-
 	std::vector<std::string> systems = GetCommonSystems();
-	systems.push_back(gfx_system_name);
 
-	bool use_ode = false;
+	bool use_ode = gfx_key == 1;
 	if (use_ode)
 	{
 		systems.push_back("ODEPhysicsSystem");
