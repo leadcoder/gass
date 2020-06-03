@@ -3,10 +3,9 @@ set(APP_NAME GASSEd)
 #set (CMAKE_PREFIX_PATH "C:/Qt/Qt5.6.0/5.6/msvc2013_64")
 set(Qt5_DIR $ENV{QT5_DIR} CACHE PATH "QT5 folder where Qt5Config.cmake is located")
 set(QTPROPERTYBROWSER_DIR $ENV{QTPROPERTYBROWSER_HOME} CACHE PATH "qt property browser dependency folder")
-option(GASSED_USE_OSG "Add OSG render system" OFF )
 
 set(GASS_COMPONENTS  GASSEditorModule 
-								GASSPluginOgre 
+								GASSPluginOSG
 								GASSPluginOIS 
 								GASSPluginPhysX3 
 								GASSPluginODE 
@@ -18,10 +17,6 @@ set(GASS_COMPONENTS  GASSEditorModule
 								GASSPluginRecastNavigation
 								GASSPluginRoadNetwork)
 								
-#add osg plugin if requested
-if(GASSED_USE_OSG)
-	set(GASS_COMPONENTS  ${GASS_COMPONENTS} GASSPluginOSG)
-endif()
 set(GASSED_QT_COMPONENTS Core Widgets Gui OpenGL)
 find_package(Qt5 COMPONENTS ${GASSED_QT_COMPONENTS} REQUIRED)
 
