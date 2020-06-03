@@ -50,7 +50,7 @@ Q_DECLARE_METATYPE(QDockWidget::DockWidgetFeatures)
 
 	GASSEd::GASSEd( QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags), 
 	m_GASSApp(NULL), 
-	m_Config("GASS.xml"),
+	m_Config("GASSOSGEarth.xml"),
 	m_FileMenu(NULL),
 	m_EditMenu(NULL),
 	m_CopyAct(NULL),
@@ -131,8 +131,8 @@ void GASSEd::SetupToolBar()
 {
 	StandardToolBar *tb = new StandardToolBar("Object Tools", this);
 	addToolBar(tb);
-	BrushSettingsWidget* bsw = new BrushSettingsWidget("Brush Settings", this);
-	addToolBar(bsw);
+	//BrushSettingsWidget* bsw = new BrushSettingsWidget("Brush Settings", this);
+	//addToolBar(bsw);
 }
 
 void GASSEd::SetupMenuBar()

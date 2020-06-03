@@ -29,10 +29,10 @@ protected:
 	QAction* m_RotateAct;
 
 	QAction* m_TerrainDeformAct;
-	QAction* m_TerrainSmoothAct;
-	QAction* m_TerrainFlattenAct;
-	QAction* m_TerrainPaintAct;
-	QAction* m_VegetationPaintAct;
+	//QAction* m_TerrainSmoothAct;
+	//QAction* m_TerrainFlattenAct;
+	//QAction* m_TerrainPaintAct;
+	//QAction* m_VegetationPaintAct;
 	GASSEd* m_GASSEd;
 private slots:
 	void OnNew();
@@ -43,11 +43,11 @@ private slots:
 	void OnRotate();
 	void OnMove();
 	void OnTerrainDeform();
-	void OnTerrainSmooth();
-	void OnTerrainFlatten();
-	void OnTerrainPaint();
-	void OnVegetationPaint();
-	void OnPaintLayerChanged(int value);
+	//void OnTerrainSmooth();
+	//void OnTerrainFlatten();
+	//void OnTerrainPaint();
+	//void OnVegetationPaint();
+	//void OnPaintLayerChanged(int value);
 
 };
 

@@ -64,6 +64,7 @@ StandardToolBar::StandardToolBar(const QString &title, GASSEd *parent)
 	connect(m_TerrainDeformAct, SIGNAL(triggered()), this, SLOT(OnTerrainDeform()));
 	addAction(m_TerrainDeformAct);
 
+#if 0
 	m_TerrainSmoothAct = new QAction(QIcon(":/images/smooth.png"), tr("&Smooth"), this);
 	m_TerrainSmoothAct->setStatusTip(tr("Terrain Smooth Tool"));
 	m_TerrainSmoothAct->setCheckable(true);
@@ -96,13 +97,12 @@ StandardToolBar::StandardToolBar(const QString &title, GASSEd *parent)
 	m_VegetationPaintAct->setCheckable(true);
 	connect(m_VegetationPaintAct, SIGNAL(triggered()), this, SLOT(OnVegetationPaint()));
 	addAction(m_VegetationPaintAct);
-
-
+#endif
 	GASS::SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(StandardToolBar::OnToolChanged,GASS::ToolChangedEvent,0));	
+
 }
 
-
-
+#if 0
 void StandardToolBar::OnPaintLayerChanged(int value)
 {
 	GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
@@ -123,6 +123,7 @@ void StandardToolBar::OnPaintLayerChanged(int value)
 		break;
 	}
 }
+#endif
 
 void StandardToolBar::OnToolChanged(GASS::ToolChangedEventPtr message)
 {
@@ -131,10 +132,10 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedEventPtr message)
 	m_MoveAct->setChecked(false);
 	m_RotateAct->setChecked(false);
 	m_TerrainDeformAct->setChecked(false);
-	m_TerrainSmoothAct->setChecked(false);
-	m_TerrainFlattenAct->setChecked(false);
-	m_TerrainPaintAct->setChecked(false);
-	m_VegetationPaintAct->setChecked(false);
+	//m_TerrainSmoothAct->setChecked(false);
+	//m_TerrainFlattenAct->setChecked(false);
+	//m_TerrainPaintAct->setChecked(false);
+	//m_VegetationPaintAct->setChecked(false);
 
 	if(message->GetTool() == TID_SELECT)
 		m_SelectAct->setChecked(true);
@@ -142,6 +143,8 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedEventPtr message)
 		m_MoveAct->setChecked(true);
 	if(message->GetTool() == TID_ROTATE)
 		m_RotateAct->setChecked(true);
+
+#if 0
 	if(message->GetTool() == TID_TERRAIN)
 	{
 		GASS::TerrainDeformTool* tool = static_cast<GASS::TerrainDeformTool*> (m_GASSEd->GetScene()->GetFirstSceneManagerByClass<GASS::EditorSceneManager>()->GetMouseToolController()->GetTool(TID_TERRAIN));
@@ -164,6 +167,7 @@ void StandardToolBar::OnToolChanged(GASS::ToolChangedEventPtr message)
 			break;
 		}
 	}
+#endif
 }
 
 void StandardToolBar::OnSelect()
@@ -192,6 +196,7 @@ void StandardToolBar::OnTerrainDeform()
 	}
 }
 
+#if 0
 void StandardToolBar::OnTerrainSmooth()
 {
 	if(m_GASSEd->GetScene())
@@ -229,6 +234,7 @@ void StandardToolBar::OnVegetationPaint()
 		tool->SetModMode(GASS::TerrainDeformTool::TEM_VEGETATION_PAINT);
 	}
 }
+#endif
 
 void StandardToolBar::OnNew()
 {
