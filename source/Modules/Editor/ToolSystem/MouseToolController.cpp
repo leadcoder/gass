@@ -519,9 +519,13 @@ namespace GASS
 
 	void MouseToolController::CreateSceneObject(const std::string template_name, const Vec2 &mouse_pos)
 	{
-		GASS::Vec3 drop_pos;
-		GASS::Quaternion drop_rot;
+		Vec3 drop_pos(0,0,0);
+		Quaternion drop_rot(GASS::Quaternion::IDENTITY);
 		if (GetMouseWorldPosAndRot(mouse_pos, drop_pos, drop_rot))
+		{
+			_CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
+		}
+		else
 		{
 			_CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
 		}

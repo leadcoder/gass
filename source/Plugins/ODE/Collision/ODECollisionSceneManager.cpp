@@ -203,4 +203,50 @@ namespace GASS
 	{
 		return m_ColMeshMap[name];
 	}
+
+	bool ODECollisionSceneManager::GetTerrainHeight(const Vec3& location, double& height, GeometryFlags flags) const
+	{
+		constexpr double max_terrain_height = 20000;
+		CollisionResult result;
+		const Vec3 ray_start(location.x, max_terrain_height, location.z);
+		const Vec3 ray_direction = Vec3(0, -1, 0) * (max_terrain_height * 2.0);
+		Raycast(ray_start, ray_direction, flags, result, true);
+		if (result.Coll)
+		{
+			height = result.CollPosition.y;
+		}
+		return result.Coll;
+	}
+
+	bool ODECollisionSceneManager::GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const
+	{
+		double terrain_height = 0;
+		if (GetTerrainHeight(location, terrain_height, flags))
+		{
+			double height_above_msl = 0;
+			GetHeightAboveSeaLevel(location, height_above_msl);
+			height = height_above_msl - terrain_height;
+			return true;
+		}
+		return false;
+	}
+
+	bool ODECollisionSceneManager::GetHeightAboveSeaLevel(const Vec3& location, double& height) const
+	{
+		return location.y;
+		return true;
+	}
+
+	bool ODECollisionSceneManager::GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const
+	{
+		up_vec.Set(0, 1, 0);
+		return true;
+	}
+
+	bool ODECollisionSceneManager::GetOrientation(const Vec3& location, Quaternion& rot) const
+	{
+		rot = Quaternion::IDENTITY;
+		return true;
+	}
+
 }

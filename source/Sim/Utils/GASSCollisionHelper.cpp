@@ -46,8 +46,11 @@ namespace GASS
 		CollisionResult result;
 		const Vec3 ray_start = pos;
 		//first check downwards
-		const Vec3 ray_direction(0, -vertical_ray_dist, 0);
+		///const Vec3 ray_direction(0, -vertical_ray_dist, 0);
 		CollisionSceneManagerPtr csm = scene->GetFirstSceneManagerByClass<ICollisionSceneManager>();
+		Vec3d up_vec(0,1,0);
+		csm->GetUpVector(pos, up_vec);
+		const Vec3 ray_direction = -vertical_ray_dist * up_vec;
 		csm->Raycast(ray_start, ray_direction, flags, result);
 		if (result.Coll)
 		{

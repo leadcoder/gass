@@ -22,13 +22,12 @@
 #include "GASSLogger.h"
 #include "GASSStringUtils.h"
 #include "GASSFilesystem.h"
+#include "GASSSystem.h"
 #include <cstdarg>
-#include <cstdlib>
 #include <cassert>
 
 namespace GASS
 {
-
 	FilePath::FilePath(const std::string &path, bool expand)
 	{
 		m_RawPath  = path;
@@ -119,16 +118,14 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex1, endVarIndex-occurIndex1+1);
 				if (varName.length() > 0)
 				{
-					const char* temp_str = getenv(varName.c_str());
-
-					if (temp_str)
+					const std::string var_value = System::GetEnvVar(varName);
+					if (var_value.empty())
 					{
-						curStr.replace( occurIndex1, replaceStr.length(), std::string(temp_str));
-
+						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
 					}
 					else
 					{
-						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
+						curStr.replace(occurIndex1, replaceStr.length(), var_value);
 					}
 				}
 			}
@@ -150,14 +147,14 @@ namespace GASS
 				replaceStr = curStr.substr(occurIndex2, endVarIndex-occurIndex2+1);
 				if (varName.length() > 0)
 				{
-					const char* temp_str = getenv(varName.c_str());
-					if (temp_str)
+					const std::string env_var_value = System::GetEnvVar(varName.c_str());
+					if (env_var_value.empty())
 					{
-						curStr.replace( occurIndex2, replaceStr.length(), std::string(temp_str) );
+						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
 					}
 					else
 					{
-						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
+						curStr.replace(occurIndex2, replaceStr.length(), env_var_value);
 					}
 				}
 			}

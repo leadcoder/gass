@@ -5,7 +5,7 @@
   <!--<Directory Path = "GASSPlugins"/>-->
   <Plugin PluginFile = "GASSPluginOgre"/>
   <Plugin PluginFile = "GASSPluginOIS"/>
-  <Plugin PluginFile = "GASSPluginPhysX3"/>
+  <Plugin PluginFile = "GASSPluginPhysX"/>
   <Plugin PluginFile = "GASSPluginODE"/>
   <!--<Plugin PluginFile = "GASSPluginHavok"/>-->
   <Plugin PluginFile = "GASSPluginPagedGeometry"/>

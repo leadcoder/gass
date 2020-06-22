@@ -44,9 +44,14 @@ namespace GASS
 			r = _r;g = _g;b = _b;a=_a;
 		}
 
-		inline bool operator== (const ColorRGBA &v) const
+		inline bool operator== (const ColorRGBA &c) const
 		{
-			return (v.r == r &&  v.g == g &&  v.b == b && v.a == a);
+			return (c.r == r && c.g == g && c.b == b && c.a == a);
+		}
+
+		inline bool operator!= (const ColorRGBA &c) const
+		{
+			return !(*this == c);
 		}
 
 		friend std::ostream& operator << (std::ostream& os, const ColorRGBA& v)

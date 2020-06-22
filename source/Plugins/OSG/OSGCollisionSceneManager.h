@@ -31,7 +31,7 @@ namespace osgSim {class DatabaseCacheReadCallback;}
 namespace GASS
 {
 	/**
-		Extended IntersectionVisitor to support billboard intersection
+		Extended IntersectionVisitor to support billboard intersection and plod with empty string
 	*/
 	class CustomIntersectionVisitor : public osgUtil::IntersectionVisitor
 	{
@@ -50,6 +50,80 @@ namespace GASS
 		{
 
 		}
+
+        void apply(osg::PagedLOD& plod) override
+        {
+            if (!enter(plod)) return;
+
+            if (plod.getNumFileNames() > 0)
+            {
+                // Identify the range value for the highest res child
+                float targetRangeValue;
+                if (plod.getRangeMode() == osg::LOD::DISTANCE_FROM_EYE_POINT)
+                    targetRangeValue = 1e6; // Init high to find min value
+                else
+                    targetRangeValue = 0; // Init low to find max value
+
+                const osg::LOD::RangeList rl = plod.getRangeList();
+                osg::LOD::RangeList::const_iterator rit;
+                for (rit = rl.begin();
+                    rit != rl.end();
+                    rit++)
+                {
+                    if (plod.getRangeMode() == osg::LOD::DISTANCE_FROM_EYE_POINT)
+                    {
+                        if (rit->first < targetRangeValue)
+                            targetRangeValue = rit->first;
+                    }
+                    else
+                    {
+                        if (rit->first > targetRangeValue)
+                            targetRangeValue = rit->first;
+                    }
+                }
+
+                // Perform an intersection test only on children that display
+                // at the maximum resolution.
+                unsigned int childIndex;
+                for (rit = rl.begin(), childIndex = 0;
+                    rit != rl.end();
+                    rit++, childIndex++)
+                {
+                    if (rit->first != targetRangeValue)
+                        // This is not one of the highest res children
+                        continue;
+
+                    osg::ref_ptr<osg::Node> child(NULL);
+                    if (plod.getNumChildren() > childIndex)
+                        child = plod.getChild(childIndex);
+
+                    if ((!child.valid()) && (_readCallback.valid()))
+                    {
+                        // Child is NULL; attempt to load it, if we have a readCallback...
+                        unsigned int validIndex(childIndex);
+                        if (plod.getNumFileNames() <= childIndex)
+                            validIndex = plod.getNumFileNames() - 1;
+
+                        //Patched: Check for empty string
+                        if(plod.getFileName(validIndex) != "") 
+                            child = _readCallback->readNodeFile(plod.getDatabasePath() + plod.getFileName(validIndex));
+                    }
+
+                    if (!child.valid() && plod.getNumChildren() > 0)
+                    {
+                        // Child is still NULL, so just use the one at the end of the list.
+                        child = plod.getChild(plod.getNumChildren() - 1);
+                    }
+
+                    if (child.valid())
+                    {
+                        child->accept(*this);
+                    }
+                }
+            }
+            leave();
+        }
+
 		void apply(osg::Billboard& billboard) override
 		{
 			if (!enter(billboard)) return;
@@ -97,7 +171,9 @@ namespace GASS
 		}
 	};
 
-
+	class OSGCollisionSystem;
+	class OSGGraphicsSystem;
+	class ITerrainSceneManager;
 
 	class OSGCollisionSceneManager : public Reflection<OSGCollisionSceneManager, BaseSceneManager> , public ICollisionSceneManager
 	{
@@ -112,11 +188,21 @@ namespace GASS
 
 		//ICollisionSceneManager
 		void Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const override;
+		bool GetTerrainHeight(const Vec3& location, double& height, GeometryFlags flags) const override;
+		bool GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const override;
+		bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const override;
+		bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const override;
+		bool GetOrientation(const Vec3& location, Quaternion& rot) const override;
 	private:
 		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
 		mutable GASS_MUTEX m_Mutex;
 		osgUtil::IntersectionVisitor* m_IntersectVisitor;
-		osgSim::DatabaseCacheReadCallback* m_DatabaseCache;
+		osg::ref_ptr<osgSim::DatabaseCacheReadCallback> m_DatabaseCache;
+		OSGCollisionSystem* m_ColSystem = nullptr;
+		OSGGraphicsSystem* m_GFXSystem = nullptr;
+		ITerrainSceneManager* m_TerrainSM = nullptr;
+		Scene* m_Scene = nullptr;
+		osg::EllipsoidModel m_EllipsoidModel;
 	};
 	typedef GASS_SHARED_PTR<OSGCollisionSceneManager> OSGCollisionSceneManagerPtr;
 }

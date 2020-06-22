@@ -1,5 +1,5 @@
 #ifdef  _MSC_VER
-#	if defined( EDITOR_MODULE_EXPORTS )
+#	if defined( GASSEditorModule_EXPORTS )
 #  		define EditorModuleExport __declspec( dllexport )
 #	else
 #		define EditorModuleExport __declspec( dllimport )

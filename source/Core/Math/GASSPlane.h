@@ -113,6 +113,15 @@ namespace GASS
 		{
 			return  v - TVec3<TYPE>::Dot(v, m_Normal) * m_Normal;
 		}
+
+		/** Get point projected on plane
+			@param p Point to project on plane
+			@return Projected vector
+		*/
+		inline TVec3<TYPE> GetProjectedPoint(const TVec3<TYPE>& p) const
+		{
+			return m_Origin + GetProjectedVector(p - m_Origin);
+		}
 		
 		TVec3<TYPE> m_Normal;
 		TVec3<TYPE> m_Origin;

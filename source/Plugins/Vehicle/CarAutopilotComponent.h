@@ -18,12 +18,11 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
-#ifndef CAR_AUTOPILOT_H
-#define CAR_AUTOPILOT_H
-
+#pragma once
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -33,9 +32,18 @@
 
 namespace GASS
 {
+	
 	class CarAutopilotComponent :  public Reflection<CarAutopilotComponent,BaseSceneComponent>
 	{
 	public:
+		enum NavState
+		{
+			UNDEF,
+			FORWARD_TO_TARGET,
+			REVERSE_TO_TARGET,
+			REVERSE_AWAY_FROM_TARGET,
+			FORWARD_AWAY_FROM_TARGET
+		};
 		CarAutopilotComponent();
 		~CarAutopilotComponent() override;
 		static void RegisterReflection();
@@ -43,6 +51,11 @@ namespace GASS
 		void OnDelete() override;
 		void SceneManagerTick(double delta) override;
 	private:
+		NavState _DecideNavState(double angle_to_target_dir, double target_dist, double turn_radius) const;
+		double _UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir);
+		double _CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target);
+		void _SendInput(double steer_input, double throttle_input, double brake_input);
+
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
@@ -85,6 +98,7 @@ namespace GASS
 		Float m_CollisionDist;
 		
 		DetectionVector m_ProximityData;
+
+		ICollisionSceneManager* m_Terrain;
 	};
 }
-#endif

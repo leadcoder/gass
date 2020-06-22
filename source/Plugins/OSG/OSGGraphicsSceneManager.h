@@ -51,8 +51,8 @@ namespace GASS
 		osg::ref_ptr<osg::Group> GetOSGRootNode() override {return m_RootNode;}
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
-				if (m_ShadowedScene.valid())
-					return m_ShadowedScene;
+				if (m_ShadowRootNode.valid())
+					return m_ShadowRootNode;
 				return m_RootNode;
 		}
 	private:
@@ -68,10 +68,17 @@ namespace GASS
 		void SetFogColor(const Vec3 &value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 		void UpdateFogSettings();
-		void SetAmbientColor(const Vec3 &value) {m_AmbientColor = value;}
-		Vec3 GetAmbientColor() const {return m_AmbientColor;}
-		//void SystemTick(double delta_time);
-	private:	
+		void SetAmbientColor(const ColorRGB& value);
+		ColorRGB GetAmbientColor() const {return m_AmbientColor;}
+		float GetShadowMaxFarDistance() const;
+		void SetShadowMaxFarDistance(float value);
+		float GetShadowMinimumNearFarRatio() const;
+		void SetShadowMinimumNearFarRatio(float value);
+		bool GetEnableShadows() const;
+		void SetEnableShadows(bool value);
+	private:
+		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode() const;
+
 		//fog
 		float m_FogDensity;
 		int m_UseFog;
@@ -80,15 +87,20 @@ namespace GASS
 		float m_FogStart;
 		FogModeBinder m_FogMode;
 		//light attributes
-		Vec3 m_AmbientColor;
+		ColorRGB m_AmbientColor;
+
 		//Shadows
-		std::string m_ShadowType;
-		std::string m_ShadowCasterMaterial;
-		std::string m_ShadowProjType;
+		float m_ShadowMaxFarDistance;
+		float m_ShadowMinimumNearFarRatio;
+		short m_ShadowTextureSize;
+		bool m_EnableShadows;
+
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		osg::ref_ptr<osg::Group> m_RootNode;
+		osg::ref_ptr<osg::Group> m_ShadowRootNode;
 		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
+		osg::ref_ptr<osg::LightModel> m_LightModel;
 		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};
 	typedef GASS_SHARED_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
