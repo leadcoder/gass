@@ -18,7 +18,6 @@ set(CPP_FILES
 	GASSGeometryFlags.cpp
 	GASSGraphicsMesh.cpp
 	GASSPhysicsMesh.cpp
-	GASSPlatformTeam.cpp
 	GASSPlatformType.cpp
 	GASSResource.cpp
 	GASSResourceGroup.cpp
