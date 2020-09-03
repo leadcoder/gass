@@ -35,4 +35,8 @@ namespace GASS
 	template class TVec2<int>;
 	template class TVec3<int>;
 	template class TVec4<int>;
+
+	template class TVec2<short>;
+	template class TVec3<short>;
+	template class TVec4<short>;
 }
