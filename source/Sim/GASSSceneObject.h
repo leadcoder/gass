@@ -68,7 +68,7 @@ namespace GASS
 	By design the SceneObject class is not intended to be derived from,
 	Instead new functionality should be added through components
 	*/
-	class GASSExport SceneObject : public Reflection<SceneObject, ComponentContainer>
+	class GASSExport SceneObject final : public Reflection<SceneObject, ComponentContainer>
 	{
 		friend class Scene;
 	public:
