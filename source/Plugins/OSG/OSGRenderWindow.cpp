@@ -22,6 +22,7 @@
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/OSGInputSystem.h"
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgViewer/ViewerEventHandlers>
@@ -109,6 +110,9 @@ namespace GASS
 		//view->addEventHandler(new osgViewer::WindowSizeHandler());
 		view->addEventHandler(new osgViewer::ThreadingHandler());
 		view->addEventHandler(new osgViewer::LODScaleHandler());
+
+		if(auto is = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGInputSystem>(true))
+			view->addEventHandler(new OSGInputHandler(is.get()));
 
 		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
 		ssm->setKeyEventCyclePolygonMode('p');
