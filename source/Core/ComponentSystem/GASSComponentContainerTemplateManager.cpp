@@ -34,6 +34,12 @@
 
 namespace GASS
 {
+
+	ComponentContainerTemplateManager::ComponentContainerTemplateManager()
+	{
+
+	}
+
 	void ComponentContainerTemplateManager::AddTemplate(ComponentContainerTemplatePtr obj)
 	{
 		m_TemplateMap[obj->GetName()] = obj;
@@ -50,13 +56,10 @@ namespace GASS
 	ComponentContainerPtr ComponentContainerTemplateManager::CreateFromTemplate(const std::string &name) const
 	{
 		ComponentContainerPtr new_cc;
-		ComponentContainerTemplatePtr temp =  GetTemplate(name);
-		int part_id = 0;
-		if(temp)
+		ComponentContainerTemplatePtr cc_tempate =  GetTemplate(name);
+		if(cc_tempate)
 		{
-			//ComponentContainerTemplateManagerConstPtr manager = shared_from_this();
-			//new_cc = temp->CreateComponentContainer(part_id,manager);
-			new_cc = _CreateComponentContainer(part_id,temp);
+			new_cc = _CreateComponentContainer(cc_tempate);
 		}
 		else
 		{
@@ -65,7 +68,7 @@ namespace GASS
 		return new_cc;
 	}
 
-	ComponentContainerPtr ComponentContainerTemplateManager::_CreateComponentContainer(int &part_id, ComponentContainerTemplatePtr cc_temp) const
+	ComponentContainerPtr ComponentContainerTemplateManager::_CreateComponentContainer(ComponentContainerTemplatePtr cc_temp) const
 	{
 		ComponentContainerPtr new_object;
 		if(cc_temp->GetInheritance() != "")
@@ -73,22 +76,15 @@ namespace GASS
 			ComponentContainerTemplatePtr inheritance = GetTemplate(cc_temp->GetInheritance());
 			if(inheritance)
 			{
-				new_object =  _CreateComponentContainer(part_id,inheritance);
+				new_object =  _CreateComponentContainer(inheritance);
 				BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
 				//copy container attributes to new object
 				if(ref_obj)
 					cc_temp->CopyPropertiesTo(ref_obj);
 		
-				if(GetAddObjectIDToName())
-					new_object->SetName(_CreateUniqueName(cc_temp));
-				else 
-					new_object->SetName(cc_temp->GetName());
+				new_object->SetName(cc_temp->GetName());
 				//set template name
 				new_object->SetTemplateName(cc_temp->GetName());
-				//if(m_ContainerData)
-				//	m_ContainerData->Assign(new_object);
-				//check if components already exist,
-				//if so replace components 
 				cc_temp->_InheritComponentData(new_object);
 			}
 			else
@@ -102,24 +98,8 @@ namespace GASS
 			new_object = cc_temp->CreateComponentContainer();
 			if(new_object)
 			{
-				/*if(m_NameCheck)
-				{
-				BaseComponentContainerTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				while(obj)
-				{
-				sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
-				object_counter++;
-				obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				}
-				}*/
-				if(GetAddObjectIDToName())
-					new_object->SetName(_CreateUniqueName(cc_temp));
-				else 
-					new_object->SetName(cc_temp->GetName());
-
+				new_object->SetName(cc_temp->GetName());
 				new_object->SetTemplateName(cc_temp->GetName());
-				//new_object->SetPartId(part_id);
-				part_id++;
 			}
 			else
 			{
@@ -133,7 +113,7 @@ namespace GASS
 			ComponentContainerTemplatePtr child = iter.getNext();
 			if(child)
 			{
-				ComponentContainerPtr new_cc_child (_CreateComponentContainer(part_id,child));
+				ComponentContainerPtr new_cc_child (_CreateComponentContainer(child));
 				if(new_cc_child)
 				{
 					//Add new child
@@ -142,17 +122,6 @@ namespace GASS
 			}
 		}
 		return new_object;
-	}
-
-	std::string ComponentContainerTemplateManager::_CreateUniqueName(ComponentContainerTemplatePtr cc_temp) const
-	{
-		static int object_counter = 0;
-		std::stringstream ss;
-		ss << cc_temp->GetName() << GetObjectIDPrefix() << object_counter << GetObjectIDSuffix();
-		std::string u_name;
-		ss >> u_name;
-		object_counter++;
-		return u_name ;
 	}
 
 	ComponentContainerTemplatePtr ComponentContainerTemplateManager::GetTemplate(const std::string &name) const

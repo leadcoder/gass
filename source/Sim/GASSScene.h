@@ -185,11 +185,13 @@ namespace GASS
 		bool GetGeocentric() const { return m_Geocentric; }
 		void SetGeocentric(bool value) { m_Geocentric = value; }
 
-
+		std::string CreateUniqueName(const std::string& name);
 		/**
 			Connivence function to draw line for debug purpose (immediate mode)
 		*/
 		void DrawDebugLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color, const ColorRGBA &end_color) const;
+		void SetObjectIDCount(int value) { m_CurrentObjectId = value;}
+		int GetObjectIDCount() const { return	m_CurrentObjectId;}
 protected:
 
 	/**
@@ -239,6 +241,7 @@ protected:
 		ResourceLocationWeakPtr m_ResourceLocation;
 		bool m_Initlized;
 		bool m_Geocentric;
+		int m_CurrentObjectId = 0;
 	};
 	GASS_PTR_DECL(Scene)
 }

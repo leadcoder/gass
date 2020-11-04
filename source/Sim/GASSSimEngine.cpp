@@ -93,9 +93,9 @@ namespace GASS
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
 		SetDataPath(FilePath(config.DataPath));
 		SetScenePath(FilePath(config.ScenePath));
-		GetSceneObjectTemplateManager()->SetAddObjectIDToName(config.AddObjectIDToName);
-		GetSceneObjectTemplateManager()->SetObjectIDPrefix(config.ObjectIDPrefix);
-		GetSceneObjectTemplateManager()->SetObjectIDSuffix(config.ObjectIDSufix);
+		//GetSceneObjectTemplateManager()->SetAddObjectIDToName(config.AddObjectIDToName);
+		//GetSceneObjectTemplateManager()->SetObjectIDPrefix(config.ObjectIDPrefix);
+		//GetSceneObjectTemplateManager()->SetObjectIDSuffix(config.ObjectIDSufix);
 		
 		m_PluginManager->LoadPlugins(config.Plugins);
 		m_ResourceManager->Load(config.ResourceConfig);
@@ -261,6 +261,9 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create object from template:" + template_name, "SimEngine::CreateObjectFromTemplate");
 		so->GenerateGUID(true);
 		so->ResolveTemplateReferences(so);
+
+		if (!m_Scenes.empty())
+			so->SetName(m_Scenes[0]->CreateUniqueName(so->GetName()));
 		return so;
 	}
 

@@ -49,6 +49,7 @@ namespace GASS
 		/** Map holding templates*/
 		typedef std::map<std::string,ComponentContainerTemplatePtr> TemplateMap;
 	public:
+		ComponentContainerTemplateManager();
 		/**
 			Create a new object from the template archive.
 		@remarks
@@ -78,50 +79,15 @@ namespace GASS
 		*/
 		bool HasTemplate(const std::string &name) const;
 
-
 		/**
 			Load templates from xml-file
 		*/
 		void Load(const std::string &filename);
 
-
 		/**
 			Load all templates from path
 		*/
 		void LoadFromPath(const std::string &path, bool recursive = true);
-
-		/**
-			Check if each new component container instance returned
-			from the CreateFromTemplate function should have a
-			unique name.
-		*/
-
-		bool GetAddObjectIDToName() const{return m_AddObjectIDToName;}
-		/**
-			Set whether each new component container instance returned
-			from the CreateFromTemplate function should have a
-			unique name or not.
-		*/
-		void SetAddObjectIDToName(bool value) {m_AddObjectIDToName = value;}
-
-		/**
-			Get unique name prefix, default is "_"
-		*/
-		std::string GetObjectIDPrefix() const {return m_ObjectIDPrefix;}
-		/**
-			Set unique name prefix
-		*/
-		void SetObjectIDPrefix(const std::string &prefix) {m_ObjectIDPrefix = prefix;}
-
-
-		/**
-			Get unique name suffix, default is ""
-		*/
-		std::string GetObjectIDSuffix() const {return m_ObjectIDSuffix;}
-		/**
-			Set unique name suffix
-		*/
-		void SetObjectIDSuffix(const std::string &suffix) {m_ObjectIDSuffix = suffix;}
 		
 		/**
 		Get a vector of all templates hold by this manager
@@ -133,12 +99,7 @@ namespace GASS
 		*/
 		void Clear();
 	protected:
-		ComponentContainerPtr _CreateComponentContainer(int &part_id, ComponentContainerTemplatePtr cc_temp) const;
-		std::string _CreateUniqueName(ComponentContainerTemplatePtr cc_temp) const;
-
-		bool m_AddObjectIDToName{true};
-		std::string m_ObjectIDPrefix{"_"};
-		std::string m_ObjectIDSuffix;
+		ComponentContainerPtr _CreateComponentContainer(ComponentContainerTemplatePtr cc_temp) const;
 		TemplateMap m_TemplateMap;
 	};
 	typedef GASS_SHARED_PTR<ComponentContainerTemplateManager> ComponentContainerTemplateManagerPtr;

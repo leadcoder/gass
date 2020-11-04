@@ -64,6 +64,9 @@ namespace GASS
 		//set object properties
 		CopyPropertiesTo(new_obj);
 
+		if (GetScene())
+			new_obj->SetName(GetScene()->CreateUniqueName(GetName()));
+		
 		//copy components
 		ComponentContainer::ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
@@ -388,6 +391,7 @@ namespace GASS
 		}
 		return ComponentPtr();
 	}
+
 
 	bool SceneObject::Accept(SceneObjectVisitorPtr visitor)
 	{

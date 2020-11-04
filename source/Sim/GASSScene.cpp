@@ -22,6 +22,7 @@
 
 
 #include "Sim/GASSScene.h"
+#include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSBaseSceneComponent.h"
 #include "Sim/Interface/GASSISceneManager.h"
@@ -202,6 +203,65 @@ namespace GASS
 		//scene loaded!
 		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
+	}
+
+#if 0
+	class MaxNameIDVisitor : public SceneObjectVisitor
+	{
+	public:
+		
+		std::string GetStrippedName(const std::string& name) const
+		{
+			auto pos = name.find(m_Prefix);
+			if (pos != std::string::npos)
+				return name.substr(0, pos);
+			return name;
+		}
+
+		int GetLastNumber(const std::string& name)
+		{
+			int num = 0;
+			std::size_t const n = name.find_last_of("0123456789");
+			if (n != std::string::npos)
+			{
+				std::size_t const m = name.find_last_not_of("0123456789", n);
+				const auto num_str = m != std::string::npos ? name.substr(m + 1, n - m) : name.substr(0, n + 1);
+				num = std::stoi(num_str);
+			}
+			return num;
+		}
+
+		MaxNameIDVisitor(const std::string& name)  { m_Name = GetStrippedName(name); }
+		virtual bool Visit(SceneObjectPtr scene_object)
+		{
+			const auto object_name = scene_object->GetName();
+			const auto stripped_name = GetStrippedName(object_name);
+			if (stripped_name == m_Name)
+			{
+				m_MaxId = std::max<int>(m_MaxId, GetLastNumber(object_name));
+			}
+			return true;
+		}
+		int m_MaxId = 0;
+		std::string m_Name;
+		std::string m_Prefix = " (";
+	};
+
+	std::string Scene::CreateUniqueName(const std::string &name)
+	{
+		auto vistor = std::make_shared<MaxNameIDVisitor>(name);
+		m_Root->Accept(vistor);
+		return vistor->m_Name + " (" + std::to_string(vistor->m_MaxId +1 )+ ")";
+	}
+#endif
+
+	std::string Scene::CreateUniqueName(const std::string& name)
+	{
+		const std::string prefix = "[";
+		const std::string suffix = "]";
+		const auto pos = name.find(prefix);
+		const std::string stripped_name = pos != std::string::npos ? name.substr(0, pos):name;
+		return stripped_name + prefix + std::to_string(m_CurrentObjectId++) + suffix;
 	}
 
 	FilePath Scene::GetSceneFolder() const
