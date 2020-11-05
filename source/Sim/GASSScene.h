@@ -29,6 +29,7 @@
 #include "Sim/GASSEulerRotation.h"
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSNameGenerator.h"
 
 namespace tinyxml2
 {
@@ -54,13 +55,13 @@ namespace GASS
 	*/
 
 	class GASSExport Scene final : public Reflection<Scene, BaseReflectionObject>,
-		public GASS_ENABLE_SHARED_FROM_THIS<Scene> ,
+		public GASS_ENABLE_SHARED_FROM_THIS<Scene>,
 		public IMessageListener
 	{
 		friend class SceneObject;
 		friend class SimEngine;
 	public:
-		Scene(const std::string &name);
+		Scene(const std::string& name);
 		static void RegisterReflection();
 
 		/**
@@ -68,39 +69,39 @@ namespace GASS
 		can be used to give cameras or players a initial position
 		*/
 
-		Vec3 GetStartPos()const {return m_StartPos;}
+		Vec3 GetStartPos()const { return m_StartPos; }
 
 		/**
 		Get the start rotation for this scene,
 		can be used to give cameras or players a initial rotation
 		*/
-		EulerRotation GetStartRot()const {return m_StartRot;}
+		EulerRotation GetStartRot()const { return m_StartRot; }
 
 		/**
 		Set the start position for this scene,
 		this attribute should be specified by scene.xml
 		but can be replaced by using this method
 		*/
-		void SetStartPos(const Vec3 &value) {m_StartPos = value;}
+		void SetStartPos(const Vec3& value) { m_StartPos = value; }
 
 		/**
 		Set the start rotation for this scene,
 		this attribute should be specified by scene.xml
 		but can be replaced by using this method
 		*/
-		void SetStartRot(const EulerRotation &value) { m_StartRot = value; }
+		void SetStartRot(const EulerRotation& value) { m_StartRot = value; }
 
 
 		/**
 		Register for scene scene messages, see SceneSceneMessages.h for available messages
 		*/
 
-		int RegisterForMessage(const MessageType &type, MessageFuncPtr callback, int priority = 0);
+		int RegisterForMessage(const MessageType& type, MessageFuncPtr callback, int priority = 0);
 
 		/**
 		Unregister for scene scene messages
 		*/
-		void UnregisterForMessage(const MessageType &type, MessageFuncPtr callback);
+		void UnregisterForMessage(const MessageType& type, MessageFuncPtr callback);
 
 
 		void PostMessage(SceneMessagePtr message);
@@ -115,19 +116,19 @@ namespace GASS
 		/**
 		Load a new scene from path
 		*/
-		void Load(const std::string &name);
+		void Load(const std::string& name);
 
 		/**
 		Save scene to path
 		*/
-		void Save(const std::string &name);
+		void Save(const std::string& name);
 
 		void Clear();
 
-			/**
+		/**
 		Get scene scene name
 		*/
-		std::string GetName() const {return m_Name;}
+		std::string GetName() const { return m_Name; }
 
 		/**
 		Set scene scene name
@@ -148,21 +149,21 @@ namespace GASS
 
 		void SyncMessages(double delta_time) const;
 
-		SceneManagerPtr GetSceneManagerByName(const std::string &name) const;
+		SceneManagerPtr GetSceneManagerByName(const std::string& name) const;
 
 		/**Get first SceneManager of certain class. This function allow you to pass the class as a template
 		*/
 		template <class T>
-		GASS_SHARED_PTR<T> GetFirstSceneManagerByClass(bool no_throw=false) const
+		GASS_SHARED_PTR<T> GetFirstSceneManagerByClass(bool no_throw = false) const
 		{
 			GASS_SHARED_PTR<T> ret;
-			for(size_t i = 0 ; i < m_SceneManagers.size(); i++)
+			for (size_t i = 0; i < m_SceneManagers.size(); i++)
 			{
 				ret = GASS_DYNAMIC_PTR_CAST<T>(m_SceneManagers[i]);
-				if(ret)
+				if (ret)
 					return ret;
 			}
-			if(!no_throw)
+			if (!no_throw)
 			{
 				std::string sm_name = typeid(T).name();
 				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND,"Scene Manager not found:" + sm_name, "Scene::GetFirstSceneManagerByClass");
@@ -171,15 +172,15 @@ namespace GASS
 		}
 
 		//remove this!
-		SceneObjectPtr LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent) const;
-		SceneObjectPtr GetRootSceneObject() const {return m_Root;}
-		SceneObjectPtr GetSceneryRoot() const {return SceneObjectPtr(m_TerrainObjects);}
+		SceneObjectPtr LoadObjectFromTemplate(const std::string& template_name, SceneObjectPtr parent) const;
+		SceneObjectPtr GetRootSceneObject() const { return m_Root; }
+		SceneObjectPtr GetSceneryRoot() const { return SceneObjectPtr(m_TerrainObjects); }
 
 		/**
 		Get all scenes from path. This function recursively search for scene.xml
 		files and push that path to the return vector
 		*/
-		static std::vector<std::string> GetScenes(const FilePath &path);
+		static std::vector<std::string> GetScenes(const FilePath& path);
 		std::string GetResourceGroupName() const;
 
 		bool GetGeocentric() const { return m_Geocentric; }
@@ -189,12 +190,11 @@ namespace GASS
 		/**
 			Connivence function to draw line for debug purpose (immediate mode)
 		*/
-		void DrawDebugLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color, const ColorRGBA &end_color) const;
-		void SetObjectIDCount(int value) { m_CurrentObjectId = value;}
-		int GetObjectIDCount() const { return	m_CurrentObjectId;}
-protected:
+		void DrawDebugLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) const;
+		NameGenerator& GetNameGenerator() { return m_NameGenerator; }
+	protected:
 
-	/**
+		/**
 		This function must be called by creator before using this class.
 		This function allocate the scene object manager which take the
 		Scene as constructor argument and therefore can not be
@@ -212,20 +212,20 @@ protected:
 		this method is called by the scene LoadXML method in the scene class
 		scene_elem is the should point to the SceneScene tag
 		*/
-		void LoadXML(tinyxml2::XMLElement *scene_elem);
+		void LoadXML(tinyxml2::XMLElement* scene_elem);
 
 		/**
 		Save scene  from xml,
 		this method is called by the scene SaveXML method in the scene class
 		scene_elem is the should point to the SceneScene tag
 		*/
-		void SaveXML(tinyxml2::XMLElement *scene_elem);
+		void SaveXML(tinyxml2::XMLElement* scene_elem);
 
 		void OnSpawnSceneObjectFromTemplate(SpawnObjectFromTemplateRequestPtr message);
 		void OnRemoveSceneObject(RemoveSceneObjectRequestPtr message);
 
 		//Helper function to LoadXML
-		SceneManagerPtr LoadSceneManager(tinyxml2::XMLElement *sm_elem);
+		SceneManagerPtr LoadSceneManager(tinyxml2::XMLElement* sm_elem);
 
 		Vec3 m_StartPos;
 		EulerRotation m_StartRot;
@@ -241,7 +241,7 @@ protected:
 		ResourceLocationWeakPtr m_ResourceLocation;
 		bool m_Initlized;
 		bool m_Geocentric;
-		int m_CurrentObjectId = 0;
+		NameGenerator m_NameGenerator;
 	};
 	GASS_PTR_DECL(Scene)
 }

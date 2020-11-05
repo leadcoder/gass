@@ -192,6 +192,7 @@ namespace GASS
 		delete xmlDoc;
 
 		//Create new scenery node
+		m_NameGenerator.Clear("Scenery");
 		m_Root->RemoveChildSceneObject(SceneObjectPtr(m_TerrainObjects));
 		SceneObjectPtr  scenery =  SceneObject::LoadFromXML(GetSceneFolder().GetFullPath() + "/instances.xml");
 		scenery->SetName("Scenery");
@@ -254,15 +255,6 @@ namespace GASS
 		return vistor->m_Name + " (" + std::to_string(vistor->m_MaxId +1 )+ ")";
 	}
 #endif
-
-	std::string Scene::CreateUniqueName(const std::string& name)
-	{
-		const std::string prefix = "[";
-		const std::string suffix = "]";
-		const auto pos = name.find(prefix);
-		const std::string stripped_name = pos != std::string::npos ? name.substr(0, pos):name;
-		return stripped_name + prefix + std::to_string(m_CurrentObjectId++) + suffix;
-	}
 
 	FilePath Scene::GetSceneFolder() const
 	{

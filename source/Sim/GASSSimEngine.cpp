@@ -261,9 +261,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create object from template:" + template_name, "SimEngine::CreateObjectFromTemplate");
 		so->GenerateGUID(true);
 		so->ResolveTemplateReferences(so);
-
-		if (!m_Scenes.empty())
-			so->SetName(m_Scenes[0]->CreateUniqueName(so->GetName()));
 		return so;
 	}
 

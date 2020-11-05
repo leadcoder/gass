@@ -63,9 +63,6 @@ namespace GASS
 		SceneObjectPtr new_obj(new  SceneObject());
 		//set object properties
 		CopyPropertiesTo(new_obj);
-
-		if (GetScene())
-			new_obj->SetName(GetScene()->CreateUniqueName(GetName()));
 		
 		//copy components
 		ComponentContainer::ConstComponentIterator comp_iter = GetComponents();
@@ -251,7 +248,7 @@ namespace GASS
 			bsc->OnDelete();
 			++iter;
 		}
-
+		
 		SceneObjectPtr this_obj = GASS_STATIC_PTR_CAST<SceneObject>(shared_from_this());
 		MessagePtr unload_msg(new SceneObjectRemovedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
@@ -265,6 +262,8 @@ namespace GASS
 		if(m_GUID.is_nil())
 			m_GUID = GASS_GUID_GENERATE;
 		m_Scene = scene;
+
+		m_Name = GetScene()->GetNameGenerator().CreateUniqueName(m_Name);
 
 		SceneObjectPtr this_obj = GASS_STATIC_PTR_CAST<SceneObject>(shared_from_this());
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
@@ -595,8 +594,12 @@ namespace GASS
 	void SceneObject::SetName(const std::string &name)
 	{ 
 		m_Name = name;
-		if(IsInitialized())
+		
+		if (IsInitialized())
+		{
+			GetScene()->GetNameGenerator().CreateUniqueName(m_Name);
 			SendImmediateEvent(GASS_MAKE_SHARED<SceneObjectNameChangedEvent>(name));
+		}
 	}
 
 	SceneObjectPtr SceneObject::LoadFromXML(tinyxml2::XMLDocument *xmlDoc)
