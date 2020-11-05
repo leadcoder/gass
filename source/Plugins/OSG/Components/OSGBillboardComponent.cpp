@@ -327,6 +327,7 @@ namespace GASS
 		{
 			if(visibility)
 			{
+				m_OSGBillboard->setNodeMask(1);
 				SetGeometryFlags(m_GeomFlags);
 				SetCastShadow(m_CastShadow);
 			}

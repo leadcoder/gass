@@ -174,6 +174,7 @@ namespace GASS
 		bool visibility = message->GetValue();
 		if(visibility)
 		{
+			m_MeshNode->setNodeMask(0);
 			//restore flags
 			SetCastShadow(m_CastShadow);
 			SetReceiveShadow(m_ReceiveShadow);
