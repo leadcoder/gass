@@ -51,6 +51,7 @@ set(CPP_FILES
 	Utils/GASSFileUtils.cpp
 	Utils/GASSHeightField.cpp
 	Utils/GASSLogger.cpp
+	Utils/GASSNameGenerator.cpp
 	Utils/GASSPIDControl.cpp
 	Utils/GASSRawFile.cpp
 	Utils/GASSStringUtils.cpp
@@ -130,6 +131,7 @@ set(H_FILES
 	Utils/GASSIterators.h
 	Utils/GASSLogger.h
 	Utils/GASSLokiTypeInfo.h
+	Utils/GASSNameGenerator.h
 	Utils/GASSPIDControl.h
 	Utils/GASSRawFile.h
 	Utils/GASSSingleton.h

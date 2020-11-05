@@ -50,7 +50,7 @@ namespace GASS
 
 	void ComponentContainer::RegisterReflection()
 	{
-		RegisterGetSet("Name", &GASS::ComponentContainer::GetName, &GASS::ComponentContainer::SetName);
+		RegisterGetSet("Name", &GASS::ComponentContainer::GetName, &GASS::ComponentContainer::SetName, PF_VISIBLE | PF_EDITABLE, "Object Name");
 		RegisterGetSet("TemplateName", &GASS::ComponentContainer::GetTemplateName, &GASS::ComponentContainer::SetTemplateName);
 		RegisterGetSet("Serialize", &GASS::ComponentContainer::GetSerialize, &GASS::ComponentContainer::SetSerialize);
 	}
