@@ -1,6 +1,7 @@
 #include "Core/Utils/GASSStringUtils.h"
 #include "Core/Reflection/GASSProperty.h"
-
+#include "Core/Utils/GASSNameGenerator.h"
+#include <regex>
 #include "catch.hpp"
 
 template<typename TYPE>

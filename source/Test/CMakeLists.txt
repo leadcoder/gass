@@ -3,21 +3,22 @@
 # When adding more tests, list them in GASS_TEST_SOURCES
 set(GASS_TEST_SOURCES
 	TestMain.cpp
-	Core/TestUtils_EnumLookup.cpp
-	Core/TestUtils_FilePath.cpp
-	Core/TestUtils_FilePath_optional.cpp
-	Core/TestUtils_GenericFactory.cpp
-	Core/TestUtils_StringUtils.cpp
-	#Core/TestUtils_Enum.cpp
-	Core/TestUtils_Math.cpp
-	Core/TestUtils_Vector.cpp
-	Core/TestUtils_Matrix.cpp
-	Core/TestUtils_Plane.cpp
-	Core/TestUtils_AABox.cpp
-	Core/TestUtils_LineSegment.cpp
-	Core/TestUtils_RTTI.cpp
-	Core/TestUtils_Logger.cpp
-	Core/TestUtils_Quaternion.cpp
+	Core/Test_EnumLookup.cpp
+	Core/Test_FilePath.cpp
+	Core/Test_FilePath_optional.cpp
+	Core/Test_GenericFactory.cpp
+	Core/Test_StringUtils.cpp
+	#Core/Test_Enum.cpp
+	Core/Test_Math.cpp
+	Core/Test_Vector.cpp
+	Core/Test_Matrix.cpp
+	Core/Test_Plane.cpp
+	Core/Test_AABox.cpp
+	Core/Test_LineSegment.cpp
+	Core/Test_RTTI.cpp
+	Core/Test_Logger.cpp
+	Core/Test_Quaternion.cpp
+	Core/Test_NameGenerator.cpp
 	#Core/TestReflection_Property.cpp
 )
 
