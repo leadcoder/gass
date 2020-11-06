@@ -431,23 +431,27 @@ namespace GASS
 
 		else if(button == MBID_RIGHT)
 		{
-			Vec2 mouse_pos(data.XAbsNorm,data.YAbsNorm);
-			SceneCursorInfo info = GetSceneCursorInfo(mouse_pos,m_RayPickDistance);
-
-			//check if cursor at rest
-			Vec2 delta;
-			delta.x	= m_MBRScreenPos.x - mouse_pos.x;
-			delta.y	= m_MBRScreenPos.y - mouse_pos.y;
-			if(fabs(delta.x) + abs(delta.y) < 0.001)
+			if (m_ActiveTool && m_ActiveTool->GetName() == TID_CREATE)
 			{
-				//std::vector<SceneObjectWeakPtr> selected_vec =  m_EditorSceneManager->GetSelectedObjects();
-				//Check that object under cursor is in selection
-				if (m_EditorSceneManager->IsSelected(info.m_ObjectUnderCursor.lock()))
+				SelectTool(TID_MOVE);
+			}
+			else
+			{
+				const Vec2 mouse_pos(data.XAbsNorm, data.YAbsNorm);
+				const SceneCursorInfo info = GetSceneCursorInfo(mouse_pos, m_RayPickDistance);
+
+				//check if cursor at rest
+				const Vec2 delta(m_MBRScreenPos.x - mouse_pos.x, m_MBRScreenPos.y - mouse_pos.y);
+				if (fabs(delta.x) + abs(delta.y) < 0.001)
 				{
-					//show Immediate!
-					//Disable OIS input to avoid background selection
-					GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
-					m_EditorSceneManager->GetScene()->SendImmediate(message);
+					//Check that object under cursor is in selection
+					if (m_EditorSceneManager->IsSelected(info.m_ObjectUnderCursor.lock()))
+					{
+						//show Immediate!
+						//Disable OIS input to avoid background selection
+						GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
+						m_EditorSceneManager->GetScene()->SendImmediate(message);
+					}
 				}
 			}
 			return true;
