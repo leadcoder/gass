@@ -17,8 +17,6 @@
 #include "Components/EditorComponent.h"
 #include "Components/SelectionComponent.h"
 
-
-
 namespace GASS
 {
 	void EditorSceneManager::RegisterReflection()
@@ -36,7 +34,6 @@ namespace GASS
 		RegisterForPostUpdate<EditorSystem>();
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnCameraChanged, CameraChangedEvent, 0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSceneManager::OnPostSceneLoaded, PostSceneLoadEvent, 0));
-
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		m_LockTerrainObjects = system->GetLockTerrainObjects();
 		ScenePtr scene = GetScene();
@@ -100,8 +97,6 @@ namespace GASS
 		}
 		SetObjectSite(message->GetScene()->GetRootSceneObject());
 	}
-
-	
 	
 	void EditorSceneManager::OnUpdate(double delta_time)
 	{

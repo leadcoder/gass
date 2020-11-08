@@ -55,15 +55,14 @@ namespace GASS
 					if (ImGui::MenuItem("Open", "Ctrl+O"))
 					{
 
-						char const* filterPatterns[1] = { "*.earth" };
-
+						//char const* filterPatterns[1] = { "*.earth" };
 						//if (char const* fileToOpen = tinyfd_openFileDialog("Open File", "", 1, filterPatterns, NULL, 0))
 						{
 						}
 					}
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
-						char const* filterPatterns[1] = { "*.earth" };
+						//char const* filterPatterns[1] = { "*.earth" };
 						//if (char const* fileToSave = tinyfd_saveFileDialog("Save File", "", 1, filterPatterns, nullptr))
 						{
 						}
@@ -157,35 +156,7 @@ namespace GASS
 				if (ImGui::MenuItem("Delete"))
 				{
 					so->GetParentSceneObject()->RemoveChildSceneObject(so);
-					//m_Editor->deleteNode(node);
 					node_deleted = true;
-				}
-
-				if (ImGui::MenuItem("Add Object"))
-				{
-					//m_Editor->createTestObjects();
-				}
-
-				if (ImGui::MenuItem("Add Feature"))
-				{
-					//m_Editor->addFeature();
-				}
-				if (!node_deleted)
-				{
-					/*if (auto fn = dynamic_cast<FeatureNode*>(node))
-					{
-						if (ImGui::MenuItem("Add Points..."))
-						{
-							auto addp = new AddPointHandler(fn);
-							m_Editor->getViewer()->addEventHandler(addp);
-						}
-
-						if (ImGui::MenuItem("Edit"))
-						{
-							auto fe = new FeatureEditor(fn);
-							m_Editor->getRoot()->addChild(fe);
-						}
-					}*/
 				}
 
 				ImGui::EndPopup();
@@ -225,7 +196,7 @@ namespace GASS
 			ImGui::End();
 		}
 
-		bool DragDouble(const char* label, double* v, float v_speed = 1.0f, double v_min = 0.0f, double v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
+		/*bool DragDouble(const char* label, double* v, float v_speed = 1.0f, double v_min = 0.0f, double v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
 		{
 			return ImGui::DragScalar(label, ImGuiDataType_Double, v, v_speed, &v_min, &v_max, format, flags);
 		}
@@ -233,7 +204,7 @@ namespace GASS
 		bool SliderDouble(const char* label, double* v, double v_min = 0.0, double v_max = 0.0, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
 		{
 			return ImGui::SliderScalar(label, ImGuiDataType_Double, v, &v_min, &v_max, format, flags);
-		}
+		}*/
 
 
 		template<typename TYPE>
@@ -544,7 +515,6 @@ namespace GASS
 				auto esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>();
 				so = esm->GetFirstSelectedObject().get();
 			}
-			
 			
 			if (so)
 			{

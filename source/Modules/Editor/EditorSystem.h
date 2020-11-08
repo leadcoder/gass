@@ -34,7 +34,7 @@ namespace GASS
 		void OnDrawGui(DrawGUIEventPtr gui_event);
 		bool m_LockTerrainObjects;
 		std::string m_DefaultCameraTemplate;
-		bool m_ShowGUI = true;
+		bool m_ShowGUI = false;
 		GUISchemaLoader* m_GUISettings;
 	};
 	typedef GASS_SHARED_PTR<EditorSystem> EditorSystemPtr;
