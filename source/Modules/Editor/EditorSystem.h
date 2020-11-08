@@ -7,6 +7,7 @@
 
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/GASSSimSystem.h"
 #include "GUISchemaLoader.h"
 
@@ -30,8 +31,10 @@ namespace GASS
 		bool GetLockTerrainObjects() const { return m_LockTerrainObjects; }
 		std::string GetDefaultCameraTemplate() const { return m_DefaultCameraTemplate; }
 	protected:
+		void OnDrawGui(DrawGUIEventPtr gui_event);
 		bool m_LockTerrainObjects;
 		std::string m_DefaultCameraTemplate;
+		bool m_ShowGUI = true;
 		GUISchemaLoader* m_GUISettings;
 	};
 	typedef GASS_SHARED_PTR<EditorSystem> EditorSystemPtr;

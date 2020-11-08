@@ -4,6 +4,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "EditorGui.h"
 
 namespace GASS
 {
@@ -26,10 +27,22 @@ namespace GASS
 		SceneManagerFactory::GetPtr()->Register<EditorSceneManager>("EditorSceneManager");
 		RegisterMember("LockTerrainObjects", &EditorSystem::m_LockTerrainObjects);
 		RegisterMember("DefaultCameraTemplate", &EditorSystem::m_DefaultCameraTemplate);
+		RegisterMember("ShowGUI", &EditorSystem::m_ShowGUI);
 	}
 
 	void EditorSystem::OnSystemInit()
 	{
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(EditorSystem::OnDrawGui, DrawGUIEvent, 0));
+	}
 
+	void EditorSystem::OnDrawGui(DrawGUIEventPtr gui_event)
+	{
+		static EditorGui editor;
+		if (m_ShowGUI)
+		{
+			ImGuiContext* context = static_cast<ImGuiContext*>(gui_event->m_Context);
+			ImGui::SetCurrentContext(context);
+			editor.drawUi();
+		}
 	}
 }

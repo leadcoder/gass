@@ -1,1 +1,1 @@
-gass_setup_module(GASSEditorModule)
+gass_setup_module(GASSEditorModule PRIVATE_DEPS ImGui)
