@@ -22,6 +22,7 @@
 
 #include "Core/Common.h"
 #include "Sim/GASS.h"
+#include "Plugins/OSG/OSGImGuiHandler.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/Utils/TextBox.h"
@@ -155,6 +156,8 @@ namespace GASS
 		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
 		//m_Viewer->setReleaseContextAtEndOfFrameHint(false);
+
+		m_Viewer->setRealizeOperation(new OSGImGuiHandler::GlewInitOperation);
 
 		std::string full_path;
 

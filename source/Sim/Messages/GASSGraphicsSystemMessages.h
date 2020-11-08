@@ -177,6 +177,18 @@ namespace GASS
 		std::string m_WinName;
 	};
 	typedef GASS_SHARED_PTR<RenderWindowResizedEvent> RenderWindowResizedEventPtr;
+
+	class DrawGUIEvent : public SystemEventMessage
+	{
+	public:
+		DrawGUIEvent(void* context,SenderID sender_id = -1, double delay = 0) :
+			SystemEventMessage(sender_id, delay), m_Context(context){}
+		void* m_Context = nullptr;
+	private:
+		
+	};
+	typedef GASS_SHARED_PTR<DrawGUIEvent> DrawGUIEventPtr;
+	
 }
 
 #endif

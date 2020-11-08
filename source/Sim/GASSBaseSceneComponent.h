@@ -65,6 +65,13 @@ namespace GASS
 		*/
 		void SceneManagerTick(double delta) override {(void)delta;}
 
+		/*template <typename Message>
+		int RegisterForMessage(GASS_FUNCTION message_callback, int priority = 0)
+		{
+			GASS::MessageFuncPtr mess_func(new GASS::MessageFunc<Message>(GASS_BIND(message_callback, this, GASS_PLACEHOLDERS::_1), GASSMessageHasher(#FUNCTION), shared_from_this()));
+			RegisterForMessage(typeid(Message), mess_func);
+		}*/
+
 	protected:
 		template <class T>
 		void RegisterForPreUpdate()

@@ -19,6 +19,7 @@
 *****************************************************************************/
 
 #include "Core/Common.h"
+#include "Plugins/OSG/OSGImGuiHandler.h"
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/OSGViewport.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -111,6 +112,7 @@ namespace GASS
 		view->addEventHandler(new osgViewer::ThreadingHandler());
 		view->addEventHandler(new osgViewer::LODScaleHandler());
 
+
 		if(auto is = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGInputSystem>(true))
 			view->addEventHandler(new OSGInputHandler(is.get()));
 
@@ -122,9 +124,16 @@ namespace GASS
 
 		system->GetViewer()->addView(view);
 
+		
+		system->GetViewer()->realize();
+		view->addEventHandler(new OSGImGuiHandler());
+
 		OSGViewportPtr vp(new OSGViewport(name,view, this));
 		
 		vp->Init();
+
+		
+
 		m_Viewports.push_back(vp);
 		return vp;
 	}
