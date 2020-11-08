@@ -60,65 +60,71 @@ namespace GASS
 
 	bool OSGInputHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& /*aa*/)
 	{
+		if (ea.getHandled())
+			return false;
 		const bool wantCaptureMouse = false;
 		const bool wantCaptureKeyboard = false;
-
-		static std::map<int, int> keymap;
 		using osgKey = osgGA::GUIEventAdapter::KeySymbol;
-		keymap[osgKey::KEY_A] = KEY_A;
-		keymap[osgKey::KEY_B] = KEY_B;
-		keymap[osgKey::KEY_C] = KEY_C;
-		keymap[osgKey::KEY_D] = KEY_D;
-		keymap[osgKey::KEY_E] = KEY_E;
-		keymap[osgKey::KEY_F] = KEY_F;
-		keymap[osgKey::KEY_G] = KEY_G;
-		keymap[osgKey::KEY_H] = KEY_H;
-		keymap[osgKey::KEY_I] = KEY_I;
-		keymap[osgKey::KEY_J] = KEY_J;
-		keymap[osgKey::KEY_K] = KEY_K;
-		keymap[osgKey::KEY_L] = KEY_L;
-		keymap[osgKey::KEY_M] = KEY_M;
-		keymap[osgKey::KEY_N] = KEY_N;
-		keymap[osgKey::KEY_O] = KEY_O;
-		keymap[osgKey::KEY_P] = KEY_P;
-		keymap[osgKey::KEY_Q] = KEY_Q;
-		keymap[osgKey::KEY_R] = KEY_R;
-		keymap[osgKey::KEY_S] = KEY_S;
-		keymap[osgKey::KEY_T] = KEY_T;
-		keymap[osgKey::KEY_U] = KEY_U;
-		keymap[osgKey::KEY_V] = KEY_V;
-		keymap[osgKey::KEY_W] = KEY_W;
-		keymap[osgKey::KEY_X] = KEY_X;
-		keymap[osgKey::KEY_Y] = KEY_Y;
-		keymap[osgKey::KEY_Z] = KEY_Z;
+		static std::map<int, int> keymap;
+		if (keymap.empty())
+		{
+			keymap[osgKey::KEY_A] = KEY_A;
+			keymap[osgKey::KEY_B] = KEY_B;
+			keymap[osgKey::KEY_C] = KEY_C;
+			keymap[osgKey::KEY_D] = KEY_D;
+			keymap[osgKey::KEY_E] = KEY_E;
+			keymap[osgKey::KEY_F] = KEY_F;
+			keymap[osgKey::KEY_G] = KEY_G;
+			keymap[osgKey::KEY_H] = KEY_H;
+			keymap[osgKey::KEY_I] = KEY_I;
+			keymap[osgKey::KEY_J] = KEY_J;
+			keymap[osgKey::KEY_K] = KEY_K;
+			keymap[osgKey::KEY_L] = KEY_L;
+			keymap[osgKey::KEY_M] = KEY_M;
+			keymap[osgKey::KEY_N] = KEY_N;
+			keymap[osgKey::KEY_O] = KEY_O;
+			keymap[osgKey::KEY_P] = KEY_P;
+			keymap[osgKey::KEY_Q] = KEY_Q;
+			keymap[osgKey::KEY_R] = KEY_R;
+			keymap[osgKey::KEY_S] = KEY_S;
+			keymap[osgKey::KEY_T] = KEY_T;
+			keymap[osgKey::KEY_U] = KEY_U;
+			keymap[osgKey::KEY_V] = KEY_V;
+			keymap[osgKey::KEY_W] = KEY_W;
+			keymap[osgKey::KEY_X] = KEY_X;
+			keymap[osgKey::KEY_Y] = KEY_Y;
+			keymap[osgKey::KEY_Z] = KEY_Z;
 
-		keymap[osgKey::KEY_0] = KEY_0;
-		keymap[osgKey::KEY_1] = KEY_1;
-		keymap[osgKey::KEY_2] = KEY_2;
-		keymap[osgKey::KEY_3] = KEY_3;
-		keymap[osgKey::KEY_4] = KEY_4;
-		keymap[osgKey::KEY_5] = KEY_5;
-		keymap[osgKey::KEY_6] = KEY_6;
-		keymap[osgKey::KEY_7] = KEY_7;
-		keymap[osgKey::KEY_8] = KEY_8;
-		keymap[osgKey::KEY_9] = KEY_9;
+			keymap[osgKey::KEY_0] = KEY_0;
+			keymap[osgKey::KEY_1] = KEY_1;
+			keymap[osgKey::KEY_2] = KEY_2;
+			keymap[osgKey::KEY_3] = KEY_3;
+			keymap[osgKey::KEY_4] = KEY_4;
+			keymap[osgKey::KEY_5] = KEY_5;
+			keymap[osgKey::KEY_6] = KEY_6;
+			keymap[osgKey::KEY_7] = KEY_7;
+			keymap[osgKey::KEY_8] = KEY_8;
+			keymap[osgKey::KEY_9] = KEY_9;
 
-		keymap[osgKey::KEY_F1] = KEY_F1;
-		keymap[osgKey::KEY_F2] = KEY_F2;
-		keymap[osgKey::KEY_F3] = KEY_F3;
-		keymap[osgKey::KEY_F4] = KEY_F4;
-		keymap[osgKey::KEY_F5] = KEY_F5;
-		keymap[osgKey::KEY_F6] = KEY_F6;
-		keymap[osgKey::KEY_F7] = KEY_F7;
-		keymap[osgKey::KEY_F8] = KEY_F8;
-		keymap[osgKey::KEY_F9] = KEY_F9;
-		keymap[osgKey::KEY_F10] = KEY_F10;
-		keymap[osgKey::KEY_F11] = KEY_F11;
-		keymap[osgKey::KEY_F12] = KEY_F12;
+			keymap[osgKey::KEY_F1] = KEY_F1;
+			keymap[osgKey::KEY_F2] = KEY_F2;
+			keymap[osgKey::KEY_F3] = KEY_F3;
+			keymap[osgKey::KEY_F4] = KEY_F4;
+			keymap[osgKey::KEY_F5] = KEY_F5;
+			keymap[osgKey::KEY_F6] = KEY_F6;
+			keymap[osgKey::KEY_F7] = KEY_F7;
+			keymap[osgKey::KEY_F8] = KEY_F8;
+			keymap[osgKey::KEY_F9] = KEY_F9;
+			keymap[osgKey::KEY_F10] = KEY_F10;
+			keymap[osgKey::KEY_F11] = KEY_F11;
+			keymap[osgKey::KEY_F12] = KEY_F12;
 
-		keymap[osgKey::KEY_Shift_L] = KEY_LSHIFT;
-		keymap[osgKey::KEY_Shift_R] = KEY_RSHIFT;
-		keymap[osgKey::KEY_Space] = KEY_SPACE;
+			keymap[osgKey::KEY_Shift_L] = KEY_LSHIFT;
+			keymap[osgKey::KEY_Shift_R] = KEY_RSHIFT;
+			keymap[osgKey::KEY_Control_L] = KEY_LCONTROL;
+			keymap[osgKey::KEY_Control_R] = KEY_RCONTROL;
+			keymap[osgKey::KEY_Space] = KEY_SPACE;
+		}
 		static MouseData last_data;
 		switch (ea.getEventType())
 		{
@@ -126,7 +132,7 @@ namespace GASS
 		case osgGA::GUIEventAdapter::KEYUP:
 		{
 			const bool isKeyDown = ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN;
-			const int c = ea.getKey();
+			const int c = ea.getUnmodifiedKey();
 			isKeyDown ? m_IS->InjectKeyPressed(keymap[c], keymap[c]) : m_IS->InjectKeyReleased(keymap[c], keymap[c]);
 			return wantCaptureKeyboard;
 		}

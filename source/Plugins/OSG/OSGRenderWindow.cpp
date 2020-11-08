@@ -101,6 +101,8 @@ namespace GASS
 		view->getDatabasePager()->setDoPreCompile( true );
 		view->getDatabasePager()->setTargetMaximumNumberOfPageLOD(100);
 		
+		OSGGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
+		
 		// add some OSG handlers, maybe only in first view?
 		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
 		stats->setKeyEventTogglesOnScreenStats('y');
@@ -113,20 +115,20 @@ namespace GASS
 		view->addEventHandler(new osgViewer::LODScaleHandler());
 
 
-		if(auto is = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGInputSystem>(true))
-			view->addEventHandler(new OSGInputHandler(is.get()));
+	
 
 		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
 		ssm->setKeyEventCyclePolygonMode('p');
 		ssm->setKeyEventToggleTexturing('o');
 		view->addEventHandler(ssm);
-		OSGGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-
+		
 		system->GetViewer()->addView(view);
 
-		
 		system->GetViewer()->realize();
 		view->addEventHandler(new OSGImGuiHandler());
+
+		if (auto is = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGInputSystem>(true))
+			view->addEventHandler(new OSGInputHandler(is.get()));
 
 		OSGViewportPtr vp(new OSGViewport(name,view, this));
 		
