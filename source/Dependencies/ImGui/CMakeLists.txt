@@ -7,7 +7,7 @@ set(IMGUI_SOURCE
 	imgui_stdlib.cpp
 	imgui_widgets.cpp
 	backends/imgui_impl_opengl3.cpp
-	tinyfiledialogs.c
+	#tinyfiledialogs.c
 )
 
 set(IMGUI_HEADERS
@@ -19,7 +19,7 @@ set(IMGUI_HEADERS
 	imstb_textedit.h
 	imstb_truetype.h
 	backends/imgui_impl_opengl3.h
-	tinyfiledialogs.h
+	#tinyfiledialogs.h
 )
 
 
