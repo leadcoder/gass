@@ -42,7 +42,7 @@ namespace GASS
 		bool m_ShowLayers = false;
 		bool m_ShowTools = true;
 		bool m_ShowTemplates = true;
-		SceneObjectPtr m_Selected;
+		Scene* m_SceneSelected = nullptr;
 		std::string m_DropTemplate;
 
 		void drawMainMenu()
@@ -53,9 +53,9 @@ namespace GASS
 			{
 				if (ImGui::BeginMenu("File"))
 				{
-
 					if (ImGui::MenuItem("New"))
 					{
+						m_SceneSelected = nullptr;
 						auto scene = getFirstScene();
 						if (scene)
 							SimEngine::Get().DestroyScene(scene);
@@ -71,10 +71,11 @@ namespace GASS
 						{
 							if (ImGui::MenuItem(scenes[i].c_str()))
 							{
+								m_SceneSelected = nullptr;
 								auto scene = getFirstScene();
 								if (scene)
 									SimEngine::Get().DestroyScene(scene);
-								scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
+								scene = ScenePtr(SimEngine::Get().CreateScene(scenes[i]));
 								scene->Load(scenes[i]);
 								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
 								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
@@ -162,7 +163,20 @@ namespace GASS
 
 		void drawScene(Scene* scene)
 		{
-			drawSceneObject(scene->GetRootSceneObject());
+			bool node_open = ImGui::TreeNode(scene->GetName().c_str());
+			
+			if (ImGui::IsItemClicked())
+			{
+				auto editor = scene->GetFirstSceneManagerByClass<EditorSceneManager>();
+				editor->SetSelectedObjects({ });
+				m_SceneSelected = scene;
+			}
+
+			if (node_open)
+			{
+				drawSceneObject(scene->GetRootSceneObject());
+				ImGui::TreePop();
+			}
 		}
 
 		void drawSceneObject(SceneObjectPtr so)
@@ -185,7 +199,6 @@ namespace GASS
 			if (ImGui::IsItemClicked())
 			{
 				editor->SetSelectedObjects({ so });
-				m_Selected = so;
 			}
 
 			if (m_DropTemplate != "" && ImGui::BeginDragDropTarget())
@@ -561,6 +574,7 @@ namespace GASS
 			
 			if (so)
 			{
+				m_SceneSelected = nullptr;
 				auto props = so->GetProperties();
 				for (auto prop : props)
 				{
@@ -588,6 +602,30 @@ namespace GASS
 					}
 				}
 			}
+			else if (m_SceneSelected)
+			{
+				std::string scene_name = m_SceneSelected->GetName();
+				/*if (ImGui::InputText("Name", &scene_name))
+				{
+					
+				}*/
+				auto props = m_SceneSelected->GetProperties();
+				for (auto prop : props)
+				{
+					drawProp(m_SceneSelected, prop);
+				}
+				auto sms = m_SceneSelected->GetSceneManagers();
+				for (auto sm : sms)
+				{
+					GASS::BaseReflectionObjectPtr obj = GASS_DYNAMIC_PTR_CAST<GASS::BaseReflectionObject>(sm);
+					auto sm_props = obj->GetProperties();
+					for (auto prop : sm_props)
+					{
+						drawProp(obj.get(), prop);
+					}
+				}
+			}
+
 
 			ImGui::End();
 		}
@@ -691,5 +729,6 @@ namespace GASS
 				dragging = true;
 			}
 		}
+		
 	};
 }
