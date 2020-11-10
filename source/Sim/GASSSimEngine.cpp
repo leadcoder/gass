@@ -244,7 +244,7 @@ namespace GASS
 			{
 				if (FileUtils::FileExist(folders[i].GetFullPath() + "scene.xml"))
 				{
-					std::cout << folders[i] << "\n";
+					//std::cout << folders[i] << "\n";
 					std::string scene_name = folders[i].GetLastFolder();
 					scene_names.push_back(scene_name);
 				}

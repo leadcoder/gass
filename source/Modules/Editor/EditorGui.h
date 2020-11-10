@@ -9,6 +9,9 @@
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSimEngine.h"
 #include "EditorSceneManager.h"
+#include "ToolSystem/MouseToolController.h"
+#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+
 namespace GASS
 {
 	class EditorGui
@@ -27,16 +30,20 @@ namespace GASS
 
 			if (m_ShowProperties)
 				drawProperties();
+			if (m_ShowTools)
+				drawTools();
+			if (m_ShowTemplates)
+				drawTemplates();
 		}
 	protected:
 		bool m_ShowProperties = true;
 		bool m_ShowObjectTree = true;
 		bool m_ShowLog = false;
 		bool m_ShowLayers = false;
-		bool m_ShowNetwork = false;
-		bool m_ShowSearch = true;
-
+		bool m_ShowTools = true;
+		bool m_ShowTemplates = true;
 		SceneObjectPtr m_Selected;
+		std::string m_DropTemplate;
 
 		void drawMainMenu()
 		{
@@ -49,12 +56,45 @@ namespace GASS
 
 					if (ImGui::MenuItem("New"))
 					{
+						auto scene = getFirstScene();
+						if (scene)
+							SimEngine::Get().DestroyScene(scene);
+						scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
+						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
+					}
 
+					if (ImGui::BeginMenu("Load Scene"))
+					{
+						auto scenes= GASS::SimEngine::Get().GetSavedScenes();
+						for (size_t i = 0; i < scenes.size(); i++)
+						{
+							if (ImGui::MenuItem(scenes[i].c_str()))
+							{
+								auto scene = getFirstScene();
+								if (scene)
+									SimEngine::Get().DestroyScene(scene);
+								scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
+								scene->Load(scenes[i]);
+								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
+								break;
+							}
+						}
+						ImGui::EndMenu();
 					}
 
 					if (ImGui::MenuItem("Open", "Ctrl+O"))
 					{
+						if (ImGui::MenuItem("Scene1"))
+						{
 
+						}
+
+						if (ImGui::MenuItem("Scene2"))
+						{
+
+						}
 						//char const* filterPatterns[1] = { "*.earth" };
 						//if (char const* fileToOpen = tinyfd_openFileDialog("Open File", "", 1, filterPatterns, NULL, 0))
 						{
@@ -148,6 +188,17 @@ namespace GASS
 				m_Selected = so;
 			}
 
+			if (m_DropTemplate != "" && ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TREENODE"))
+				{
+					auto new_obj = SimEngine::Get().CreateObjectFromTemplate(m_DropTemplate);
+					so->AddChildSceneObject(new_obj, true);
+					m_DropTemplate = "";
+				}
+				ImGui::EndDragDropTarget();
+			}
+
 			bool node_deleted = false;
 
 			if (ImGui::BeginPopupContextItem())
@@ -178,6 +229,9 @@ namespace GASS
 
 		void drawObjectTree()
 		{
+			auto scene = getFirstScene();
+			if (!scene)
+				return;
 			ImGuiWindowFlags window_flags = 0;
 			if (!ImGui::Begin("Object tree", &m_ShowObjectTree, window_flags))
 			{
@@ -185,27 +239,9 @@ namespace GASS
 				ImGui::End();
 				return;
 			}
-
-			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
-			while (iter.hasMoreElements())
-			{
-				ScenePtr scene = iter.getNext();
-				drawScene(scene.get());
-			}
-
+			drawScene(scene.get());
 			ImGui::End();
 		}
-
-		/*bool DragDouble(const char* label, double* v, float v_speed = 1.0f, double v_min = 0.0f, double v_max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
-		{
-			return ImGui::DragScalar(label, ImGuiDataType_Double, v, v_speed, &v_min, &v_max, format, flags);
-		}
-
-		bool SliderDouble(const char* label, double* v, double v_min = 0.0, double v_max = 0.0, const char* format = "%.3f", ImGuiSliderFlags flags = 0)
-		{
-			return ImGui::SliderScalar(label, ImGuiDataType_Double, v, &v_min, &v_max, format, flags);
-		}*/
-
 
 		template<typename TYPE>
 		GASS::TypedProperty<TYPE>* AsTypedProp(GASS::IProperty* prop)
@@ -215,6 +251,17 @@ namespace GASS
 				return dynamic_cast<GASS::TypedProperty<TYPE>*>(prop);
 			}
 			return nullptr;
+		}
+
+		ScenePtr getFirstScene()
+		{
+			ScenePtr scene;
+			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
+			if (iter.hasMoreElements())
+			{
+				scene = iter.getNext();
+			}
+			return scene;
 		}
 
 		void drawProp(BaseReflectionObject* obj, IProperty* prop)
@@ -499,6 +546,9 @@ namespace GASS
 
 		void drawProperties()
 		{
+			ScenePtr scene = getFirstScene();
+			if (!scene)
+				return;
 			ImGuiWindowFlags window_flags = 0;
 			if (!ImGui::Begin("Properties", &m_ShowProperties, window_flags))
 			{
@@ -507,14 +557,7 @@ namespace GASS
 				return;
 			}
 
-			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
-			SceneObject* so = nullptr;
-			if(iter.hasMoreElements())
-			{
-				ScenePtr scene = iter.getNext();
-				auto esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>();
-				so = esm->GetFirstSelectedObject().get();
-			}
+			auto* so = scene->GetFirstSceneManagerByClass<EditorSceneManager>()->GetFirstSelectedObject().get();
 			
 			if (so)
 			{
@@ -547,6 +590,106 @@ namespace GASS
 			}
 
 			ImGui::End();
+		}
+
+		void drawTools()
+		{
+			ScenePtr scene = getFirstScene();
+			if (!scene)
+				return;
+			ImGuiWindowFlags window_flags = 0;
+			if (!ImGui::Begin("Tools", &m_ShowTools, window_flags))
+			{
+				// Early out if the window is collapsed, as an optimization.
+				ImGui::End();
+				return;
+			}
+
+			auto* esm= scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
+			std::string tool_name;
+			if (auto* active_tool = esm->GetMouseToolController()->GetActiveTool())
+			{
+				tool_name =  active_tool->GetName();
+			}
+			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE };
+
+			int e = -1;
+			for (size_t i = 0; i < tools.size(); i++)
+			{
+				if (tools[i] == tool_name)
+					e = i;
+				if (ImGui::RadioButton(tools[i].c_str(), &e, i))
+					esm->GetMouseToolController()->SelectTool(tools[i]);
+			}
+			
+			ImGui::End();
+		}
+
+		void drawTemplates()
+		{
+			ScenePtr scene = getFirstScene();
+			if (!scene)
+				return;
+			ImGuiWindowFlags window_flags = 0;
+			if (!ImGui::Begin("Templates", &m_ShowTemplates, window_flags))
+			{
+				// Early out if the window is collapsed, as an optimization.
+				ImGui::End();
+				return;
+			}
+
+			ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_Leaf;// | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+			//if (so == selected)
+			//base_flags |= ImGuiTreeNodeFlags_Selected;
+
+			
+
+			auto templates = SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplateNames();
+			for (auto temp : templates)
+			{
+				GASS::SceneObjectTemplatePtr sot = GASS_DYNAMIC_PTR_CAST<GASS::SceneObjectTemplate>(GASS::SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temp));
+				if (sot->GetInstantiable())
+				{
+					bool node_open = ImGui::TreeNodeEx(sot.get(), base_flags, temp.c_str());
+
+					
+
+					if (ImGui::BeginDragDropSource())
+					{
+						m_DropTemplate = temp;
+						//uintptr_t addr = reinterpret_cast<uintptr_t>(node);
+						ImGui::SetDragDropPayload("_TREENODE", nullptr, 0);
+						ImGui::Text("Drop in scene");
+						ImGui::EndDragDropSource();
+					}
+					
+					if (node_open)
+						ImGui::TreePop();
+					
+				}
+			}
+			ImGui::End();
+
+			static bool dragging = false;
+			if (!ImGui::IsMouseDragging(0) && dragging)
+			{
+				if (m_DropTemplate != "")
+				{
+					auto* esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
+					ImVec2 screen_pos = ImGui::GetIO().MousePos;
+					ImVec2 whole_content_size = ImGui::GetIO().DisplaySize;
+					float x = float(screen_pos.x) / float(whole_content_size.x);
+					float y = float(screen_pos.y) / float(whole_content_size.y);
+					esm->GetMouseToolController()->CreateSceneObject(m_DropTemplate,Vec2(x, y));
+					m_DropTemplate = "";
+					//auto so = SimEngine::Get().CreateObjectFromTemplate(m_DropTemplate);
+				}
+				dragging = false;
+			}
+			if (ImGui::IsMouseDragging(0))
+			{
+				dragging = true;
+			}
 		}
 	};
 }

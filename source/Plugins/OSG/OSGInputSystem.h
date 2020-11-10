@@ -19,7 +19,7 @@ namespace GASS
 		OSGInputSystem* m_IS = nullptr;
 	};
 
-	class OSGInputSystem : public Reflection<OSGInputSystem, SimSystem>, public IInputSystem, public IProxyInputSystem
+	class OSGInputSystem : public Reflection<OSGInputSystem, SimSystem>, public IInputSystem
 	{
 	public:
 		static void RegisterReflection();
@@ -44,12 +44,12 @@ namespace GASS
 		bool GetEnableMouse() const override;
 		void SetMainWindowHandle(void* main_win_handle) override;
 
-		//IProxyInputSystem
-		void InjectMouseMoved(const MouseData& data) override;
-		void InjectMousePressed(const MouseData& data, MouseButtonId id) override;
-		void InjectMouseReleased(const MouseData& data, MouseButtonId id) override;
-		void InjectKeyPressed(int key, unsigned int text) override;
-		void InjectKeyReleased(int key, unsigned int text) override;
+		
+		void InjectMouseMoved(const MouseData& data);
+		void InjectMousePressed(const MouseData& data, MouseButtonId id);
+		void InjectMouseReleased(const MouseData& data, MouseButtonId id);
+		void InjectKeyPressed(int key, unsigned int text);
+		void InjectKeyReleased(int key, unsigned int text);
 
 	private:
 		std::vector<IKeyListener*> m_KeyListeners;
