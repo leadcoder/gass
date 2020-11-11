@@ -70,7 +70,6 @@ namespace GASS
 
 	void SimSystem::_Update(double delta_time)
 	{
-
 		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
 		//remove dead listeners
 		while (iter != m_Listeners.end())
@@ -95,7 +94,8 @@ namespace GASS
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
 			SystemListenerPtr listener = m_Listeners[i].lock();
-			listener->OnPreSystemUpdate(delta_time);
+			if(listener)
+				listener->OnPreSystemUpdate(delta_time);
 		}
 	}
 	
@@ -104,7 +104,8 @@ namespace GASS
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
 			SystemListenerPtr listener = m_Listeners[i].lock();
-			listener->OnPostSystemUpdate(delta_time);
+			if (listener)
+				listener->OnPostSystemUpdate(delta_time);
 		}
 	}
 
