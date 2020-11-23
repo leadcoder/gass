@@ -41,10 +41,8 @@
 		<EditorSystem>
 			<LockTerrainObjects value="false"/> 
 		</EditorSystem>
-		<OISInputSystem>
-			<!-- PRE BUCKET UPDATE-->
-			<ExclusiveMode value="false"/>
-		</OISInputSystem>
+		<OSGInputSystem>
+		</OSGInputSystem>
 		<ControlSettingsSystem>
 		</ControlSettingsSystem>
 		<CoreSystem>
