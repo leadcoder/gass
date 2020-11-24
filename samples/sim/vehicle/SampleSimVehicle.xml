@@ -55,7 +55,6 @@
 		<OSGCollisionSystem>
 		</OSGCollisionSystem>
 		<OSGGraphicsSystem>
-			<ShadowType value="LightSpacePerspectiveShadowMap"/>
 		</OSGGraphicsSystem>
 	</Systems>
 </GASS>

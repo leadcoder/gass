@@ -59,14 +59,6 @@
 		<OSGCollisionSystem>
 		</OSGCollisionSystem>
 		<OSGGraphicsSystem>
-			<ShadowType value="LightSpacePerspectiveShadowMap"/>
-			<LiSPSMSubType value="Draw"/>
-			<LiSPSMMaxFarPlane value="400"/>
-			<LiSPSMMinLightMargin value="10"/>
-			<LiSPSMTextureSize value="2048"/>
-			<LiSPSMBaseTextureUnit value="0"/>
-			<LiSPSMShadowTextureUnit value="6"/>
-			<!--<ShadowSettings type="LightSpacePerspectiveShadowMap" SubType="Draw" MinLightMargin="10" MaxFarPlane="400" TextureSize="2048" BaseTextureUnit="0" ShadowTextureUnit="6"/>-->
 		</OSGGraphicsSystem>
 	</Systems>
 </GASS>

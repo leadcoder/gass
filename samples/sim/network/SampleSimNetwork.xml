@@ -54,7 +54,6 @@
   <ODECollisionSystem>
  </ODECollisionSystem>
  <OSGGraphicsSystem>
-	<ShadowType value="LightSpacePerspectiveShadowMap"/>
   </OSGGraphicsSystem>
 </Systems>
 </GASS>
