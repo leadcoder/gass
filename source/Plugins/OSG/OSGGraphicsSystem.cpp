@@ -27,7 +27,6 @@
 #include "Plugins/OSG/OSGRenderWindow.h"
 #include "Plugins/OSG/Utils/TextBox.h"
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
-//#include "Plugins/OSG/Components/OSGCameraManipulatorComponent.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/OSGConvert.h"
 
@@ -37,24 +36,10 @@
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), m_ShadowSettingsFile("GASS.xml"),
+	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), 
 		m_DebugTextBox(new TextBox()),
 		m_Viewer(NULL),
-		m_FlipDDS(false),
-		m_PSSMTextureCount(4),
-		m_PSSMTextureSize(1024),
-		m_PSSMMaxFarDistance(200),
-		m_PSSMMinNearDistanceForSplits(10),
-		m_PSSMMoveVCamBehindRCamFactor(1),
-		m_PSSMPolyOffsetFactor(1), 
-		m_PSSMPolyOffsetUnit(1),
-
-		m_LiSPSMSubType("Draw"),
-		m_LiSPSMMinLightMargin(10),
-		m_LiSPSMMaxFarPlane(400),
-		m_LiSPSMTextureSize(2048),
-		m_LiSPSMBaseTextureUnit(0),
-		m_LiSPSMShadowTextureUnit(6)
+		m_FlipDDS(false)
 	{
 		m_UpdateGroup=UGID_POST_SIM;
 	}
@@ -76,26 +61,7 @@ namespace GASS
 	void OSGGraphicsSystem::RegisterReflection()
 	{
 		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
-		RegisterGetSet("ShadowSettingsFile", &GASS::OSGGraphicsSystem::GetShadowSettingsFile, &GASS::OSGGraphicsSystem::SetShadowSettingsFile);
 		RegisterMember("FlipDDS", &GASS::OSGGraphicsSystem::m_FlipDDS);
-		RegisterMember("ShadowType", &GASS::OSGGraphicsSystem::m_ShadowType);
-
-		RegisterMember("PSSMMaxFarDistance", &GASS::OSGGraphicsSystem::m_PSSMMaxFarDistance);
-		RegisterMember("PSSMTextureSize", &GASS::OSGGraphicsSystem::m_PSSMTextureSize);
-		RegisterMember("PSSMTextureCount", &GASS::OSGGraphicsSystem::m_PSSMTextureCount);
-		RegisterMember("PSSMMinNearDistanceForSplits", &GASS::OSGGraphicsSystem::m_PSSMMinNearDistanceForSplits);
-		RegisterMember("PSSMMoveVCamBehindRCamFactor", &GASS::OSGGraphicsSystem::m_PSSMMoveVCamBehindRCamFactor);
-		RegisterMember("PSSMPolyOffsetFactor", &GASS::OSGGraphicsSystem::m_PSSMPolyOffsetFactor);
-		RegisterMember("PSSMPolyOffsetUnit", &GASS::OSGGraphicsSystem::m_PSSMPolyOffsetUnit);
-		
-		RegisterMember("LiSPSMSubType", &GASS::OSGGraphicsSystem::m_LiSPSMSubType);
-		RegisterMember("LiSPSMMinLightMargin", &GASS::OSGGraphicsSystem::m_LiSPSMMinLightMargin);
-		RegisterMember("LiSPSMMaxFarPlane", &GASS::OSGGraphicsSystem::m_LiSPSMMaxFarPlane);
-		RegisterMember("LiSPSMTextureSize", &GASS::OSGGraphicsSystem::m_LiSPSMTextureSize);
-		RegisterMember("LiSPSMBaseTextureUnit", &GASS::OSGGraphicsSystem::m_LiSPSMBaseTextureUnit);
-		RegisterMember("LiSPSMShadowTextureUnit", &GASS::OSGGraphicsSystem::m_LiSPSMShadowTextureUnit);
-
-
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";
@@ -123,25 +89,6 @@ namespace GASS
 		map_type.Extensions.push_back("earth");
 		rm->RegisterResourceType(map_type);
 	}
-
-	/*void OSGGraphicsSystem::LoadXML(tinyxml2::XMLElement *elem)
-	{
-		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
-		while(prop_elem)
-		{
-			std::string prop_name = prop_elem->Value();
-			if(prop_name == "ShadowSettings")
-			{
-				LoadShadowSettings(prop_elem);
-			}
-			else
-			{
-				std::string prop_val = prop_elem->FirstAttribute()->Value();
-				SetPropertyByString(prop_name,prop_val);
-			}
-			prop_elem  = prop_elem->NextSiblingElement();
-		}
-	}*/
 
 	void OSGGraphicsSystem::OnSystemInit()
 	{
@@ -360,157 +307,6 @@ namespace GASS
 		Vec4 color = message->m_Color;
 		text_box->setColor(osg::Vec4(static_cast<float>(color.x), static_cast<float>(color.y), static_cast<float>(color.z), static_cast<float>(color.w)));
 	}
-
-#if 0
-	void OSGGraphicsSystem::LoadShadowSettings(tinyxml2::XMLElement *shadow_elem)
-	{
-		if(shadow_elem)
-		{
-			std::string type = shadow_elem->Attribute("type");
-
-			if(type == "ShadowTexture")
-			{
-				osg::ref_ptr<osgShadow::ShadowTexture> st = new osgShadow::ShadowTexture;
-				m_ShadowTechnique  = st;
-			}
-			else if(type == "ShadowMap")
-			{
-				osg::ref_ptr<osgShadow::ShadowMap> sm = new osgShadow::ShadowMap;
-				m_ShadowTechnique = sm;
-			}
-			else if(type == "StandardShadowMap")
-			{
-				osg::ref_ptr<osgShadow::StandardShadowMap> ssm = new osgShadow::StandardShadowMap;
-				m_ShadowTechnique = ssm;
-			}
-			else if(type == "ParallelSplitShadowMap")
-			{
-				// pssm isn't yet thread safe
-				//GetViewer()->setThreadingModel(osgViewer::Viewer::SingleThreaded);
-				int mapcount = 4;
-				int mapres = 1024;
-				float maxFarPlane = 200;
-				float minNearDistanceForSplits = 10;
-				float moveVCamBehindRCamFactor = 1;
-
-				shadow_elem->QueryFloatAttribute("MaxFarDistance",&maxFarPlane);
-				shadow_elem->QueryIntAttribute("TextureSize",&mapres);
-				shadow_elem->QueryIntAttribute("NumCount",&mapcount);
-				shadow_elem->QueryFloatAttribute("MinNearDistanceForSplits",&minNearDistanceForSplits);
-				shadow_elem->QueryFloatAttribute("MoveVCamBehindRCamFactor",&moveVCamBehindRCamFactor);
-
-				osg::ref_ptr<osgShadow::ParallelSplitShadowMap> pssm = new osgShadow::ParallelSplitShadowMap(NULL,mapcount);
-
-				pssm->setTextureResolution(mapres);
-				pssm->setMaxFarDistance(maxFarPlane);
-				pssm->setMoveVCamBehindRCamFactor(moveVCamBehindRCamFactor);
-				pssm->setMinNearDistanceForSplits(minNearDistanceForSplits);
-
-				double polyoffsetfactor = pssm->getPolygonOffset().x();
-				double polyoffsetunit   = pssm->getPolygonOffset().y();
-
-				shadow_elem->QueryDoubleAttribute("PolyOffsetFactor",&polyoffsetfactor);
-				shadow_elem->QueryDoubleAttribute("PolyOffsetUnit",&polyoffsetunit);
-
-				pssm->setPolygonOffset(osg::Vec2(static_cast<float>(polyoffsetfactor) , static_cast<float>(polyoffsetunit) ));
-				m_ShadowTechnique = pssm;
-			}
-			else if(type == "ViewDependentShadowMap")
-			{
-				osg::ref_ptr<osgShadow::ViewDependentShadowMap> vdsm = new osgShadow::ViewDependentShadowMap;
-				m_ShadowTechnique = vdsm;
-			}
-			else if(type == "LightSpacePerspectiveShadowMap")
-			{
-				osg::ref_ptr<osgShadow::MinimalShadowMap> sm = NULL;
-
-				std::string sub_type = shadow_elem->Attribute("SubType");
-				if(sub_type == "Draw")
-					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
-				else if(sub_type == "Cull")
-					sm = new osgShadow::LightSpacePerspectiveShadowMapCB;
-				else if(sub_type == "Frustum")
-					sm = new osgShadow::LightSpacePerspectiveShadowMapVB;
-				else
-					sm = new osgShadow::LightSpacePerspectiveShadowMapDB;
-
-				if( sm.valid() )
-				{
-					float minLightMargin = 20.f;
-					float maxFarPlane = 500;
-					int texSize = 1024;
-					int baseTexUnit = 0;
-					int shadowTexUnit = 1;
-
-					shadow_elem->QueryFloatAttribute("MinLightMargin",&minLightMargin);
-					shadow_elem->QueryFloatAttribute("MaxFarPlane",&maxFarPlane);
-					shadow_elem->QueryIntAttribute("TextureSize",&texSize);
-					shadow_elem->QueryIntAttribute("BaseTextureUnit",&baseTexUnit);
-					shadow_elem->QueryIntAttribute("ShadowTextureUnit",&shadowTexUnit);
-
-					sm->setMinLightMargin( minLightMargin );
-					sm->setMaxFarPlane( maxFarPlane );
-					sm->setTextureSize( osg::Vec2s( static_cast<short>(texSize), static_cast<short>(texSize)) );
-					sm->setShadowTextureCoordIndex( shadowTexUnit );
-					sm->setShadowTextureUnit( shadowTexUnit );
-					sm->setBaseTextureCoordIndex( baseTexUnit );
-					sm->setBaseTextureUnit( baseTexUnit );
-					//sm->setShadowReceivingCoarseBoundAccuracy(osgShadow::MinimalShadowMap::EMPTY_BOX);
-				
-					sm->setMainVertexShader( NULL );
-					sm->setShadowVertexShader(NULL);
-
-				
-					osg::Shader* mainFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
-						" // following expressions are auto modified - do not change them:       \n"
-						" // gl_TexCoord[0]  0 - can be subsituted with other index              \n"
-						"                                                                        \n"
-						"float DynamicShadow( );                                                 \n"
-						"                                                                        \n"
-						"uniform sampler2D baseTexture;                                          \n"
-						"                                                                        \n"
-						"void main(void)                                                         \n"
-						"{                                                                       \n"
-						"  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;     \n"
-						"  // Add ambient from Light of index = 0                                \n"
-						"  colorAmbientEmissive += gl_FrontLightProduct[0].ambient;              \n"
-						"  vec4 color = texture2D( baseTexture, gl_TexCoord[0].xy );             \n"
-						"  color *= mix( colorAmbientEmissive, gl_Color, DynamicShadow() );      \n"
-						//"  const float LOG2E = 1.442692;	// = 1/log(2)                        \n"
-						//"  float fog = exp2(-gl_Fog.density * abs(gl_FogFragCoord) * LOG2E);     \n"
-						//"  fog = clamp(fog, 0.0, 1.0);                                            \n"
-						//hack to support linear and exp fog, TODO: add fog mode uniform 
-						"  if(gl_Fog.density > 0){                                            \n"
-						"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
-						"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
-						"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
-						"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
-						"  } \n"
-						"  else { \n"
-						"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
-						"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
-						"  } \n"
-						"    gl_FragColor = color;                                                 \n"
-						"} \n" );
-
-					sm->setMainFragmentShader(mainFragmentShader);
-
-					/*osg::Shader* shadowFragmentShader = new osg::Shader( osg::Shader::FRAGMENT,
-					" // following expressions are auto modified - do not change them:      \n"
-					" // gl_TexCoord[1]  1 - can be subsituted with other index             \n"
-					"                                                                       \n"
-					"uniform sampler2DShadow shadowTexture;                                 \n"
-					"                                                                       \n"
-					"float DynamicShadow( )                                                 \n"
-					"{                                                                      \n"
-					"    return shadow2DProj( shadowTexture, gl_TexCoord[1] ).r;            \n"
-					"} \n" );*/
-					m_ShadowTechnique = sm;
-				}
-			}
-		}
-	}
-#endif
 
 	std::vector<std::string> OSGGraphicsSystem::GetMaterialNames(std::string resource_group) const
 	{

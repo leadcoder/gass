@@ -61,11 +61,11 @@ namespace GASS
 		float GetFogStart() const {return m_FogStart;}
 		float GetFogEnd() const {return m_FogEnd;}
 		float GetFogDensity() const {return m_FogDensity;}
-		Vec3 GetFogColor() const {return m_FogColor;}
+		ColorRGB GetFogColor() const {return m_FogColor;}
 		void SetFogMode(FogModeBinder mode) {m_FogMode = mode; UpdateFogSettings();}
 		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
 		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
-		void SetFogColor(const Vec3 &value) {m_FogColor = value; UpdateFogSettings();}
+		void SetFogColor(const ColorRGB &value) {m_FogColor = value; UpdateFogSettings();}
 		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
 		void UpdateFogSettings();
 		void SetAmbientColor(const ColorRGB& value);
@@ -82,7 +82,7 @@ namespace GASS
 		//fog
 		float m_FogDensity;
 		int m_UseFog;
-		Vec3 m_FogColor;
+		ColorRGB m_FogColor;
 		float m_FogEnd;
 		float m_FogStart;
 		FogModeBinder m_FogMode;

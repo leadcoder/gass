@@ -660,61 +660,66 @@ namespace osgShadow
 		"  gl_FragColor = color;                                                                                                \n"
 		"} \n";
 
-	static const char fragmentShaderSource_withBaseTexture_twoShadowMaps[] =
-		"uniform sampler2D baseTexture;                                          \n"
-		"uniform int baseTextureUnit;                                            \n"
-		"uniform sampler2DShadow shadowTexture0;                                 \n"
-		"uniform int shadowTextureUnit0;                                         \n"
-		"uniform sampler2DShadow shadowTexture1;                                 \n"
-		"uniform int shadowTextureUnit1;                                         \n"
-		"uniform vec2 osg_ShadowMaxDistance;\n"
-		"uniform float osg_ShadowSoftness;\n"
-		"                                                                        \n"
-		"float getShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV)\n"
-		"{\n"
-		"float shadowTerm = 1.0;\n"
-		"// PCF filtering\n"
-		"if(osg_ShadowSoftness> 0)\n"
-		"{\n"
-		"float invTexel = 1.0 / 2048.0;\n"
-		"float softness = osg_ShadowSoftness;\n"
-		"float offset = softness * invTexel * shadowUV.w;\n"
-		"shadowTerm = shadow2DProj(shadowmap, shadowUV).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, 0.0, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, 0.0, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(0.0, offset, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(0.0, offset, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, offset, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, offset, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, -offset, 0.0, 0.0)).r;\n"
-		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, -offset, 0.0, 0.0)).r;\n"
-		"shadowTerm = shadowTerm / 9.0;\n"
-		"}\n"
-		"else\n"
-		"{\n"
-		"	shadowTerm = shadow2DProj(shadowmap, shadowUV).r;\n"
-		"}\n"
-		"return shadowTerm;\n"
-	"}\n"
-		"void main(void)                                                         \n"
-		"{                                                                       \n"
-		"  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor + gl_FrontLightProduct[0].ambient;     \n"
-		"  vec4 color = texture2D( baseTexture, gl_TexCoord[baseTextureUnit].xy );              \n"
-		"  float shadow0 = getShadowMapValue( shadowTexture0, gl_TexCoord[shadowTextureUnit0] );   \n"
-		"  float shadow1 = getShadowMapValue( shadowTexture1, gl_TexCoord[shadowTextureUnit1] );   \n"
-		"  color *= mix( colorAmbientEmissive, gl_Color, shadow0*shadow1 );                     \n"
-		"  if(gl_Fog.density > 0){                                            \n"
-		"    float depth = gl_FragCoord.z / gl_FragCoord.w;\n"
-		"    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));\n"
-		"    fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
-		"    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
-		"  } \n"
-		"  else { \n"
-		"     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);\n"
-		"     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            \n"
-		"  } \n"
-		"  gl_FragColor = color;                                                                \n"
-		"} \n";
+	static const char fragmentShaderSource_withBaseTexture_twoShadowMaps[] = R"(
+		uniform sampler2D baseTexture;                                          
+		uniform int baseTextureUnit;                                            
+		uniform sampler2DShadow shadowTexture0;                                 
+		uniform int shadowTextureUnit0;                                         
+		uniform sampler2DShadow shadowTexture1;                                 
+		uniform int shadowTextureUnit1;                                         
+		uniform vec2 osg_ShadowMaxDistance;
+		uniform float osg_ShadowSoftness;
+		                                                                        
+		float getShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV)
+		{
+		float bias = 0.001;
+		shadowUV.z -= bias * shadowUV.w;
+		float shadowTerm = 1.0;
+		// PCF filtering
+		if(osg_ShadowSoftness> 0)
+		{
+		float invTexel = 1.0 / 2048.0;
+		float softness = osg_ShadowSoftness;
+		float offset = softness * invTexel * shadowUV.w;
+		shadowTerm = shadow2DProj(shadowmap, shadowUV).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, 0.0, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, 0.0, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(0.0, offset, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(0.0, offset, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, offset, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, offset, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, -offset, 0.0, 0.0)).r;
+		shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, -offset, 0.0, 0.0)).r;
+		shadowTerm = shadowTerm / 9.0;
+		}
+		else
+		{
+			shadowTerm = shadow2DProj(shadowmap, shadowUV).r;
+		}
+		return shadowTerm;
+	}
+		void main(void)                                                         
+		{   
+
+
+	  	                                                                      
+		  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor + gl_FrontLightProduct[0].ambient;     
+		  vec4 color = texture2D( baseTexture, gl_TexCoord[baseTextureUnit].xy );              
+		  float shadow0 = getShadowMapValue( shadowTexture0, gl_TexCoord[shadowTextureUnit0] );   
+		  float shadow1 = getShadowMapValue( shadowTexture1, gl_TexCoord[shadowTextureUnit1] );   
+		  color *= mix( colorAmbientEmissive, gl_Color, shadow0*shadow1 );                     
+		  if(gl_Fog.density > 0){                                            
+		    float depth = gl_FragCoord.z / gl_FragCoord.w;
+		    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));
+		    fogFactor = clamp(fogFactor, 0.0, 1.0);
+		    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            
+		  } 
+		  else { 
+		     float fogFactor = clamp((gl_Fog.end - abs(gl_FogFragCoord))*gl_Fog.scale, 0.0,1.0);
+		     color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            
+		  } 
+		  gl_FragColor = color;                                                                
+		} )";
 #endif
 
 	void ViewDependentShadowMapExt::createShaders()

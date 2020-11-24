@@ -193,7 +193,7 @@ namespace GASS
 
 	void OSGGraphicsSceneManager::UpdateFogSettings()
 	{
-		m_Fog->setColor(osg::Vec4(static_cast<float>(m_FogColor.x), static_cast<float>(m_FogColor.y), static_cast<float>(m_FogColor.z),1));
+		m_Fog->setColor(osg::Vec4(static_cast<float>(m_FogColor.r), static_cast<float>(m_FogColor.g), static_cast<float>(m_FogColor.b),1));
 		m_Fog->setDensity(m_FogDensity);
 		m_Fog->setEnd(m_FogEnd);
 		m_Fog->setStart(m_FogStart);
