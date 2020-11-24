@@ -170,7 +170,10 @@ namespace GASS
 	{ 
 		m_AmbientColor = value;
 		if (m_LightModel)
-			m_LightModel->setAmbientIntensity(osg::Vec4(m_AmbientColor.r, m_AmbientColor.g, m_AmbientColor.b,1.0));
+			m_LightModel->setAmbientIntensity(osg::Vec4(static_cast<float>(m_AmbientColor.r), 
+				static_cast<float>(m_AmbientColor.g), 
+				static_cast<float>(m_AmbientColor.b)
+				,1.0f));
 	}
 
 	void OSGGraphicsSceneManager::OnSceneCreated()
@@ -269,6 +272,15 @@ namespace GASS
 		std::stringstream num_shadow_maps_ss;
 		num_shadow_maps_ss << numShadowMaps;
 		ss->getOrCreateStateSet()->setDefine("OSG_NUM_SHADOW_MAPS", num_shadow_maps_ss.str());
+		
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTextureUnit0", int(unit)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTexture0", int(unit)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTextureUnit1", int(unit + 1)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTexture1", int(unit + 1)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ReceiveShadow", bool(true)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowMaxDistance", osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * 0.2f)));
+		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowSoftness", float(0.0f)));
+
 		return ss;
 	}
 

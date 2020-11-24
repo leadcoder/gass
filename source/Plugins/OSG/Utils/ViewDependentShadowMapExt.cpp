@@ -26,7 +26,7 @@ namespace osgShadow
 
 	protected:
 
-		ViewDependentShadowMap*                 _vdsm;
+		ViewDependentShadowMap* _vdsm;
 		osg::ref_ptr<osg::RefMatrix>            _projectionMatrix;
 		osg::ref_ptr<osgUtil::RenderStage>      _renderStage;
 		osg::Polytope                           _polytope;
@@ -83,7 +83,7 @@ namespace osgShadow
 
 			osg::Matrix::value_type left, right, bottom, top, zNear, zFar;
 			osg::Matrix::value_type epsilon = 1e-6;
-			if (fabs(projection(0, 3)) < epsilon  && fabs(projection(1, 3)) < epsilon  && fabs(projection(2, 3)) < epsilon)
+			if (fabs(projection(0, 3)) < epsilon && fabs(projection(1, 3)) < epsilon && fabs(projection(2, 3)) < epsilon)
 			{
 				projection.getOrtho(left, right,
 					bottom, top,
@@ -291,7 +291,7 @@ namespace osgShadow
 		if (settings->getComputeNearFarModeOverride() != osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR)
 		{
 			cv.setComputeNearFarMode(settings->getComputeNearFarModeOverride());
-			cv.setCalculatedNearPlane(1.0);
+			//cv.setCalculatedNearPlane(1.0);
 		}
 
 		// 1. Traverse main scene graph
@@ -316,6 +316,11 @@ namespace osgShadow
 		if (minZNear > maxZFar) minZNear = maxZFar * settings->getMinimumShadowMapNearFarRatio();
 
 		//OSG_NOTICE<<"maxZFar "<<maxZFar<<std::endl;
+
+#if 0 //Push back near clipping plane to mitigate clipping issues with gpu generated geometry
+		const double push_back_near_dist = 20.0;
+		cv.setCalculatedNearPlane(osg::maximum(cv.getCalculatedNearPlane() - push_back_near_dist, 0.1));
+#endif
 
 		Frustum frustum(&cv, minZNear, maxZFar);
 
@@ -405,13 +410,13 @@ namespace osgShadow
 					// OSG_NOTICE<<"Need to clamp projection matrix"<<std::endl;
 
 #if 1
-					double xMid = (clsb._bb.xMin() + clsb._bb.xMax())*0.5f;
+					double xMid = (clsb._bb.xMin() + clsb._bb.xMax()) * 0.5f;
 					double xRange = clsb._bb.xMax() - clsb._bb.xMin();
 #else
 					double xMid = 0.0;
 					double xRange = 2.0;
 #endif
-					double yMid = (clsb._bb.yMin() + clsb._bb.yMax())*0.5f;
+					double yMid = (clsb._bb.yMin() + clsb._bb.yMax()) * 0.5f;
 					double yRange = (clsb._bb.yMax() - clsb._bb.yMin());
 
 					// OSG_NOTICE<<"  xMid="<<xMid<<", yMid="<<yMid<<", xRange="<<xRange<<", yRange="<<yRange<<std::endl;
@@ -451,7 +456,7 @@ namespace osgShadow
 				{
 					double n = -1.0 - eye_ls.y();
 					double f = 1.0 - eye_ls.y();
-					double sqrt_nf = sqrt(n*f);
+					double sqrt_nf = sqrt(n * f);
 					double mid = eye_ls.y() + sqrt_nf;
 					double ratioOfMidToUseForSplit = 0.8;
 					splitPoint = mid * ratioOfMidToUseForSplit;
@@ -500,8 +505,8 @@ namespace osgShadow
 				{
 					// compute the start and end range in non-dimensional coords
 #if 0
-					double r_start = (sm_i == 0) ? -1.0 : (double(sm_i) / double(numShadowMapsPerLight)*2.0 - 1.0);
-					double r_end = (sm_i + 1 == numShadowMapsPerLight) ? 1.0 : (double(sm_i + 1) / double(numShadowMapsPerLight)*2.0 - 1.0);
+					double r_start = (sm_i == 0) ? -1.0 : (double(sm_i) / double(numShadowMapsPerLight) * 2.0 - 1.0);
+					double r_end = (sm_i + 1 == numShadowMapsPerLight) ? 1.0 : (double(sm_i + 1) / double(numShadowMapsPerLight) * 2.0 - 1.0);
 #endif
 
 					// hardwired for 2 splits
@@ -548,7 +553,7 @@ namespace osgShadow
 					// OSG_NOTICE<<"Need to adjust RTT camera projection and view matrix here, r_start="<<r_start<<", r_end="<<r_end<<std::endl;
 					// OSG_NOTICE<<"  textureUnit = "<<textureUnit<<std::endl;
 
-					double mid_r = (r_start + r_end)*0.5;
+					double mid_r = (r_start + r_end) * 0.5;
 					double range_r = (r_end - r_start);
 
 					// OSG_NOTICE<<"  mid_r = "<<mid_r<<", range_r = "<<range_r<<std::endl;
@@ -662,14 +667,19 @@ namespace osgShadow
 		"uniform int shadowTextureUnit0;                                         \n"
 		"uniform sampler2DShadow shadowTexture1;                                 \n"
 		"uniform int shadowTextureUnit1;                                         \n"
+		"uniform vec2 osg_ShadowMaxDistance;\n"
+		"uniform float osg_ShadowSoftness;\n"
 		"                                                                        \n"
 		"float getShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV)\n"
 		"{\n"
+		"float shadowTerm = 1.0;\n"
 		"// PCF filtering\n"
+		"if(osg_ShadowSoftness> 0)\n"
+		"{\n"
 		"float invTexel = 1.0 / 2048.0;\n"
-		"float softness = 3.0;\n"
+		"float softness = osg_ShadowSoftness;\n"
 		"float offset = softness * invTexel * shadowUV.w;\n"
-		"float shadowTerm = shadow2DProj(shadowmap, shadowUV).r;\n"
+		"shadowTerm = shadow2DProj(shadowmap, shadowUV).r;\n"
 		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, 0.0, 0.0, 0.0)).r;\n"
 		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, 0.0, 0.0, 0.0)).r;\n"
 		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(0.0, offset, 0.0, 0.0)).r;\n"
@@ -679,7 +689,12 @@ namespace osgShadow
 		"shadowTerm += shadow2DProj(shadowmap, shadowUV - vec4(offset, -offset, 0.0, 0.0)).r;\n"
 		"shadowTerm += shadow2DProj(shadowmap, shadowUV + vec4(offset, -offset, 0.0, 0.0)).r;\n"
 		"shadowTerm = shadowTerm / 9.0;\n"
-		"	return shadowTerm;\n"
+		"}\n"
+		"else\n"
+		"{\n"
+		"	shadowTerm = shadow2DProj(shadowmap, shadowUV).r;\n"
+		"}\n"
+		"return shadowTerm;\n"
 	"}\n"
 		"void main(void)                                                         \n"
 		"{                                                                       \n"
@@ -711,7 +726,7 @@ namespace osgShadow
 		OpenThreads::ScopedLock<OpenThreads::Mutex> lock(_accessUniformsAndProgramMutex);
 
 		_shadowCastingStateSet = new osg::StateSet;
-
+		_shadowCastingStateSet->setDefine("OSG_IS_SHADOW_CAMERA");
 		ShadowSettings* settings = getShadowedScene()->getShadowSettings();
 
 		if (!settings->getDebugDraw())
@@ -730,9 +745,8 @@ namespace osgShadow
 			// make sure GL_CULL_FACE is off by default
 			// we assume that if object has cull face attribute set to back
 			// it will also set cull face mode ON so no need for override
-			//_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
-
-			_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::ON);
+			_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
+			//_shadowCastingStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::ON);
 		}
 
 #if 1
