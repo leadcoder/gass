@@ -101,6 +101,7 @@ namespace GASS
 		RegisterGetSet( "FogColor", &OSGGraphicsSceneManager::GetFogColor, &OSGGraphicsSceneManager::SetFogColor,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet( "AmbientColor", &OSGGraphicsSceneManager::GetAmbientColor, &OSGGraphicsSceneManager::SetAmbientColor,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("ShadowMaxFarDistance", &OSGGraphicsSceneManager::GetShadowMaxFarDistance, &OSGGraphicsSceneManager::SetShadowMaxFarDistance, PF_VISIBLE | PF_EDITABLE, "");
+		RegisterGetSet("ShadowFadeDistanceRatio", &OSGGraphicsSceneManager::GetShadowFadeDistanceRatio, &OSGGraphicsSceneManager::SetShadowFadeDistanceRatio, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterGetSet("ShadowMinimumNearFarRatio", &OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio, &OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
 		RegisterGetSet("ShadowEnabled", &OSGGraphicsSceneManager::GetEnableShadows, &OSGGraphicsSceneManager::SetEnableShadows, PF_VISIBLE | PF_EDITABLE, "");
@@ -116,7 +117,26 @@ namespace GASS
 	{
 		m_ShadowMaxFarDistance = value;
 		if (m_ShadowedScene)
+		{
 			m_ShadowedScene->getShadowSettings()->setMaximumShadowMapDistance(value);
+			if(m_ShadowMaxDistanceUniform)
+				m_ShadowMaxDistanceUniform->set(osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * m_ShadowFadeDistanceRatio));
+		}
+	}
+
+	float OSGGraphicsSceneManager::GetShadowFadeDistanceRatio() const
+	{
+		return m_ShadowFadeDistanceRatio;
+	}
+
+	void OSGGraphicsSceneManager::SetShadowFadeDistanceRatio(float value)
+	{
+		m_ShadowFadeDistanceRatio = value;
+		if (m_ShadowedScene)
+		{
+			if (m_ShadowMaxDistanceUniform)
+				m_ShadowMaxDistanceUniform->set(osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * m_ShadowFadeDistanceRatio));
+		}
 	}
 
 	float OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio() const
@@ -246,19 +266,18 @@ namespace GASS
 	}
 
 #if 1
-	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode() const
+	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode()
 	{
 		osg::ref_ptr<osgShadow::ViewDependentShadowMap> vdsm = new osgShadow::ViewDependentShadowMapExt;
 		osg::ref_ptr<osgShadow::ShadowedScene> ss = new osgShadow::ShadowedScene;
 		ss->setName("ShadowRootNode");
 		ss->setShadowTechnique(vdsm);
-		
-
+	
 		osgShadow::ShadowSettings* settings = ss->getShadowSettings();
 		settings->setReceivesShadowTraversalMask(NM_RECEIVE_SHADOWS | 0x1);
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
-		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_PRIMITIVES);
+		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
 		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
@@ -278,8 +297,12 @@ namespace GASS
 		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTextureUnit1", int(unit + 1)));
 		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTexture1", int(unit + 1)));
 		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ReceiveShadow", bool(true)));
-		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowMaxDistance", osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * 0.2f)));
-		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowSoftness", float(0.0f)));
+		
+		m_ShadowMaxDistanceUniform = new osg::Uniform("osg_ShadowMaxDistance", osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * m_ShadowFadeDistanceRatio));
+		ss->getOrCreateStateSet()->addUniform(m_ShadowMaxDistanceUniform);
+
+		m_ShadowSoftnessUniform = new osg::Uniform("osg_ShadowSoftness", m_ShadowSoftness);
+		ss->getOrCreateStateSet()->addUniform(m_ShadowSoftnessUniform);
 
 		return ss;
 	}

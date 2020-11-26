@@ -35,7 +35,7 @@ namespace GASS
 	class OSGGraphicsSystem;
 	typedef GASS_WEAK_PTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
 
-	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager> , public IGraphicsSceneManager , public IOSGGraphicsSceneManager
+	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager>, public IGraphicsSceneManager, public IOSGGraphicsSceneManager
 	{
 	public:
 		OSGGraphicsSceneManager(SceneWeakPtr scene);
@@ -45,39 +45,41 @@ namespace GASS
 		void OnSceneCreated() override;
 		void OnSceneShutdown() override;
 		void OnUpdate(double delta) override;
-	
-		bool GetSerialize() const override {return true;}
-		void DrawLine(const Vec3 &start_point, const Vec3 &end_point, const ColorRGBA &start_color , const ColorRGBA &end_color) override;
-		osg::ref_ptr<osg::Group> GetOSGRootNode() override {return m_RootNode;}
+
+		bool GetSerialize() const override { return true; }
+		void DrawLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) override;
+		osg::ref_ptr<osg::Group> GetOSGRootNode() override { return m_RootNode; }
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
-				if (m_ShadowRootNode.valid())
-					return m_ShadowRootNode;
-				return m_RootNode;
+			if (m_ShadowRootNode.valid())
+				return m_ShadowRootNode;
+			return m_RootNode;
 		}
 	private:
 		//Fog
-		FogModeBinder GetFogMode() const {return m_FogMode;}
-		float GetFogStart() const {return m_FogStart;}
-		float GetFogEnd() const {return m_FogEnd;}
-		float GetFogDensity() const {return m_FogDensity;}
-		ColorRGB GetFogColor() const {return m_FogColor;}
-		void SetFogMode(FogModeBinder mode) {m_FogMode = mode; UpdateFogSettings();}
-		void SetFogStart(float value) {m_FogStart = value; UpdateFogSettings();}
-		void SetFogEnd(float value) {m_FogEnd = value; UpdateFogSettings();}
-		void SetFogColor(const ColorRGB &value) {m_FogColor = value; UpdateFogSettings();}
-		void SetFogDensity(float value) {m_FogDensity = value; UpdateFogSettings();}
+		FogModeBinder GetFogMode() const { return m_FogMode; }
+		float GetFogStart() const { return m_FogStart; }
+		float GetFogEnd() const { return m_FogEnd; }
+		float GetFogDensity() const { return m_FogDensity; }
+		ColorRGB GetFogColor() const { return m_FogColor; }
+		void SetFogMode(FogModeBinder mode) { m_FogMode = mode; UpdateFogSettings(); }
+		void SetFogStart(float value) { m_FogStart = value; UpdateFogSettings(); }
+		void SetFogEnd(float value) { m_FogEnd = value; UpdateFogSettings(); }
+		void SetFogColor(const ColorRGB& value) { m_FogColor = value; UpdateFogSettings(); }
+		void SetFogDensity(float value) { m_FogDensity = value; UpdateFogSettings(); }
 		void UpdateFogSettings();
 		void SetAmbientColor(const ColorRGB& value);
-		ColorRGB GetAmbientColor() const {return m_AmbientColor;}
+		ColorRGB GetAmbientColor() const { return m_AmbientColor; }
 		float GetShadowMaxFarDistance() const;
 		void SetShadowMaxFarDistance(float value);
+		float GetShadowFadeDistanceRatio() const;
+		void SetShadowFadeDistanceRatio(float value);
 		float GetShadowMinimumNearFarRatio() const;
 		void SetShadowMinimumNearFarRatio(float value);
 		bool GetEnableShadows() const;
 		void SetEnableShadows(bool value);
 	private:
-		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode() const;
+		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode();
 
 		//fog
 		float m_FogDensity;
@@ -91,9 +93,16 @@ namespace GASS
 
 		//Shadows
 		float m_ShadowMaxFarDistance;
+		float m_ShadowFadeDistanceRatio = 0.2f;
+		osg::Uniform* m_ShadowMaxDistanceUniform = nullptr;
+
 		float m_ShadowMinimumNearFarRatio;
 		short m_ShadowTextureSize;
 		bool m_EnableShadows;
+		float m_ShadowSoftness = 0;
+		osg::Uniform* m_ShadowSoftnessUniform = nullptr;
+
+		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		osg::ref_ptr<osg::Group> m_RootNode;
@@ -101,7 +110,6 @@ namespace GASS
 		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osg::LightModel> m_LightModel;
-		osg::ref_ptr<osgShadow::ShadowedScene> m_ShadowedScene;
 	};
 	typedef GASS_SHARED_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
 	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;

@@ -700,16 +700,15 @@ namespace osgShadow
 	}
 		void main(void)                                                         
 		{   
-
-
-	  	                                                                      
 		  vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor + gl_FrontLightProduct[0].ambient;     
 		  vec4 color = texture2D( baseTexture, gl_TexCoord[baseTextureUnit].xy );              
 		  float shadow0 = getShadowMapValue( shadowTexture0, gl_TexCoord[shadowTextureUnit0] );   
-		  float shadow1 = getShadowMapValue( shadowTexture1, gl_TexCoord[shadowTextureUnit1] );   
-		  color *= mix( colorAmbientEmissive, gl_Color, shadow0*shadow1 );                     
+		  float shadow1 = getShadowMapValue( shadowTexture1, gl_TexCoord[shadowTextureUnit1] );
+		  float fade_dist = osg_ShadowMaxDistance.y;
+		  float depth = gl_FragCoord.z / gl_FragCoord.w;
+		  float shadow_fade = min( max(osg_ShadowMaxDistance.x - depth, 0.0) / fade_dist, 1.0);
+		  color *= mix( colorAmbientEmissive, gl_Color, mix(1.0, shadow0*shadow1 ,shadow_fade));                     
 		  if(gl_Fog.density > 0){                                            
-		    float depth = gl_FragCoord.z / gl_FragCoord.w;
 		    float fogFactor = exp(-pow((gl_Fog.density * depth), 2.0));
 		    fogFactor = clamp(fogFactor, 0.0, 1.0);
 		    color.rgb = mix( gl_Fog.color.rgb, color.rgb, fogFactor );            
