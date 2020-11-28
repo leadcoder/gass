@@ -104,8 +104,8 @@ namespace GASS
 		RegisterGetSet("ShadowFadeDistanceRatio", &OSGGraphicsSceneManager::GetShadowFadeDistanceRatio, &OSGGraphicsSceneManager::SetShadowFadeDistanceRatio, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterGetSet("ShadowMinimumNearFarRatio", &OSGGraphicsSceneManager::GetShadowMinimumNearFarRatio, &OSGGraphicsSceneManager::SetShadowMinimumNearFarRatio, PF_VISIBLE | PF_EDITABLE, "");
 		RegisterMember("ShadowTextureSize", &OSGGraphicsSceneManager::m_ShadowTextureSize, PF_VISIBLE, "");
+		RegisterGetSet("ShadowSoftness", &OSGGraphicsSceneManager::GetShadowSoftness, &OSGGraphicsSceneManager::SetShadowSoftness, PF_VISIBLE, "");
 		RegisterGetSet("ShadowEnabled", &OSGGraphicsSceneManager::GetEnableShadows, &OSGGraphicsSceneManager::SetEnableShadows, PF_VISIBLE | PF_EDITABLE, "");
-
 	}
 
 	float OSGGraphicsSceneManager::GetShadowMaxFarDistance() const
@@ -122,6 +122,18 @@ namespace GASS
 			if(m_ShadowMaxDistanceUniform)
 				m_ShadowMaxDistanceUniform->set(osg::Vec2f(m_ShadowMaxFarDistance, m_ShadowMaxFarDistance * m_ShadowFadeDistanceRatio));
 		}
+	}
+
+	float OSGGraphicsSceneManager::GetShadowSoftness() const
+	{
+		return m_ShadowSoftness;
+	}
+
+	void OSGGraphicsSceneManager::SetShadowSoftness(float value)
+	{
+		m_ShadowSoftness = value;
+		if (m_ShadowSoftnessUniform)
+			m_ShadowSoftnessUniform->set(m_ShadowSoftness);
 	}
 
 	float OSGGraphicsSceneManager::GetShadowFadeDistanceRatio() const

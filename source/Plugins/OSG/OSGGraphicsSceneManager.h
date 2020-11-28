@@ -73,6 +73,8 @@ namespace GASS
 		float GetShadowMaxFarDistance() const;
 		void SetShadowMaxFarDistance(float value);
 		float GetShadowFadeDistanceRatio() const;
+		float GetShadowSoftness() const;
+		void SetShadowSoftness(float value);
 		void SetShadowFadeDistanceRatio(float value);
 		float GetShadowMinimumNearFarRatio() const;
 		void SetShadowMinimumNearFarRatio(float value);
