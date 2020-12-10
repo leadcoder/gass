@@ -24,6 +24,11 @@ set(IMGUI_HEADERS
 
 
 add_library(ImGui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADERS})
+
+if(NOT WIN32)
+   set_property(TARGET ImGui PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
+
 find_package(GLEW)
 target_link_libraries(ImGui GLEW::GLEW)
 target_include_directories(ImGui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
