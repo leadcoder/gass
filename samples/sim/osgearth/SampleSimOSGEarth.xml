@@ -5,7 +5,6 @@
 		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
-		<Plugin PluginFile = "GASSPluginOIS"/>
 		<Plugin PluginFile = "GASSPluginInput"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSEditorModule"/>
@@ -40,11 +39,7 @@
 		<EditorSystem>
 			<LockTerrainObjects value="false"/> 
 		</EditorSystem>
-
-		<OISInputSystem>
-			<!-- PRE BUCKET UPDATE-->
-			<ExclusiveMode value="false"/>
-		</OISInputSystem>
+		<OSGInputSystem/>
 		<ControlSettingsSystem>
 		</ControlSettingsSystem>
 		<CoreSystem>
