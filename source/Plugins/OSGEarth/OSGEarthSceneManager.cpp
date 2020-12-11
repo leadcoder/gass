@@ -192,8 +192,8 @@ namespace GASS
 		{
 			//const unsigned int elev_lod = 23u;
 			const unsigned int elev_lod = 15u;
-			//m_MapNode->getMap()->getElevationPool()->clear();
-			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_MapNode->getMap()->getSRS(), elev_lod);
+			//Use m_WGS84 here because we ask for height in GeoCoords
+			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_WGS84, elev_lod);
 		}
 	}
 
@@ -344,21 +344,21 @@ namespace GASS
 	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
 	{
 		const osg::Vec3d osg_location = OSGConvert::ToOSG(scene_location);
-		osgEarth::GeoPoint gp;
-		
-		bool status = gp.fromWorld(m_WGS84, osg_location);
-		geo_location.Latitude = gp.y();
-		geo_location.Longitude = gp.x();
-		geo_location.Height = gp.z();
+		osgEarth::GeoPoint input;
+		const bool status = input.fromWorld(m_MapNode->getMapSRS(), osg_location);
+		const osgEarth::GeoPoint output = input.transform(m_WGS84);// SpatialReference::create("epsg:4326"));
+		geo_location.Latitude = output.y();
+		geo_location.Longitude = output.x();
+		geo_location.Height = output.z();
 		return status;
 	}
 
 	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, GASS::Vec3 &scene_location) const
 	{
-		bool status = false;
-		osgEarth::GeoPoint gp(m_WGS84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
+		const osgEarth::GeoPoint input(m_WGS84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
+		const osgEarth::GeoPoint output = input.transform(m_MapNode->getMapSRS());
 		osg::Vec3d osg_location;
-		status = gp.toWorld(osg_location);
+		const bool status = output.toWorld(osg_location);
 		scene_location = OSGConvert::ToGASS(osg_location);
 		return status;
 	}
@@ -401,7 +401,7 @@ namespace GASS
 		{
 			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
 			{
-				float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
+				const float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
 				if (elevation != NO_DATA_VALUE)
 					height = static_cast<double>(elevation);
 				else
