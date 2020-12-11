@@ -60,6 +60,22 @@ namespace GASS
 			return Vec3(v.x(), v.z(), -v.y());
 		}
 
+		static AABoxd ToGASS(const osg::BoundingBoxd& in_bb)
+		{
+			AABoxd out_bb;
+			out_bb.Union(ToGASS(in_bb._min));
+			out_bb.Union(ToGASS(in_bb._max));
+			return out_bb;
+		}
+
+		static osg::BoundingBoxd ToOSG(const AABoxd &in_bb)
+		{
+			osg::BoundingBoxd out_bb;
+			out_bb.expandBy(ToOSG(in_bb.Min));
+			out_bb.expandBy(ToOSG(in_bb.Max));
+			return out_bb;
+		}
+
 		static Quaternion ToGASS(const osg::Quat &value)
 		{
 			return Quaternion(-value.w(), -value.x(), -value.z(), value.y());
