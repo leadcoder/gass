@@ -132,8 +132,15 @@ namespace GASS
 		
 		const ScenePtr scene = GetSceneObject()->GetScene();
 		const ICollisionSceneManager* col_sm = scene->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
-		const Vec3 world_pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-		const Quaternion world_rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+
+		Vec3d world_pos(0, 0, 0);
+		Quaterniond world_rot = Quaterniond::IDENTITY;
+		auto lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+		if (lc)
+		{
+			world_pos = lc->GetWorldPosition();
+			world_rot = lc->GetWorldRotation();
+		}
 		const Mat4 transform(world_rot, world_pos);
 		const double hae = [&] {
 			double ret = 0;
@@ -218,10 +225,11 @@ namespace GASS
 	{
 		if (GetSceneObject())
 		{
-			MeshComponentPtr mesh = GetSceneObject()->GetFirstParentComponentByClass<IMeshComponent>();
-			if (mesh)
+			//MeshComponentPtr mesh = GetSceneObject()->GetFirstParentComponentByClass<IMeshComponent>();
+			GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
+			if (geom)
 			{
-				GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(mesh);
+				//GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(mesh);
 				if (geom)// && geom->GetGeometryFlags()  & (GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT))
 				{
 					const AABox mesh_box = geom->GetBoundingBox();

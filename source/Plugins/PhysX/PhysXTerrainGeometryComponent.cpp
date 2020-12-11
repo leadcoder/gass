@@ -183,8 +183,16 @@ namespace GASS
 			position.z = m_TerrainBounds.Min.z;
 			position.y = 0;
 
-			const Quaternion rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
-			const Vec3 pos = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			
+			Vec3 pos(0,0,0);
+			Quaternion rot = Quaternion::IDENTITY;
+			auto lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			if (lc)
+			{
+				pos = lc->GetWorldPosition();
+				rot = lc->GetWorldRotation();
+			}
+			
 			const Mat4 transform(rot,pos);
 			position = transform * position;
 
