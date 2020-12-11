@@ -249,4 +249,19 @@ namespace GASS
 		return true;
 	}
 
+	bool ODECollisionSceneManager::GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const
+	{
+		constexpr double max_terrain_height = 20000;
+		CollisionResult result;
+		const Vec3 ray_start(location.x, max_terrain_height, location.z);
+		const Vec3 ray_direction = Vec3(0, -1, 0) * (max_terrain_height * 2.0);
+		Raycast(ray_start, ray_direction, flags, result, true);
+		if (result.Coll)
+		{
+			terrain_location = result.CollPosition;
+		}
+		return result.Coll;
+	}
+
+
 }

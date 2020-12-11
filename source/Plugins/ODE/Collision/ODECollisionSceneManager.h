@@ -57,6 +57,7 @@ namespace GASS
 		bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const override;
 		bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const override;
 		bool GetOrientation(const Vec3& location, Quaternion& rot) const override;
+		bool GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const override;
 	protected:
 		//used by collision geometry
 		ODECollisionMeshInfo CreateCollisionMeshAndCache(const std::string &cache_id, PhysicsMeshPtr mesh);
