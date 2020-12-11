@@ -649,5 +649,44 @@ namespace GASS
 			}
 		}
 	}
+
+	AABox OSGEarthMapComponent::GetBoundingBox() const 
+	{ 
+		AABoxd bb;
+		if (m_MapNode)
+		{
+			auto extent = m_MapNode->getMap()->getProfile()->getExtent();
+			auto srs = m_MapNode->getMap()->getSRS();
+			if (srs->isProjected())
+			{
+				const double minElev = -1000;
+				const double maxElev = 1000;
+				osg::Vec3d w;
+				osg::BoundingBoxd box;
+				osgEarth::GeoPoint(srs, extent.xMin(), extent.yMin(), minElev, osgEarth::ALTMODE_ABSOLUTE).toWorld(w); box.expandBy(w);
+				osgEarth::GeoPoint(srs, extent.xMax(), extent.yMax(), maxElev, osgEarth::ALTMODE_ABSOLUTE).toWorld(w); box.expandBy(w);
+				bb = OSGConvert::ToGASS(box);
+			}
+			else
+			{
+				auto sphere = GetBoundingSphere();
+				bb.Min = sphere.m_Pos - Vec3(sphere.m_Radius, sphere.m_Radius, sphere.m_Radius);
+				bb.Max = sphere.m_Pos + Vec3(sphere.m_Radius, sphere.m_Radius, sphere.m_Radius);
+			}
+		}
+		return bb;
+	}
+
+	Sphere OSGEarthMapComponent::GetBoundingSphere() const 
+	{ 
+		Sphere sphere;
+		if (m_MapNode)
+		{
+			auto bounds = m_MapNode->getBound();
+			sphere.m_Pos = OSGConvert::ToGASS(bounds.center());
+			sphere.m_Radius = bounds.radius();
+		}
+		return sphere;
+	}
 }
 

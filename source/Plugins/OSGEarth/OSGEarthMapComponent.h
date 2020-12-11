@@ -36,8 +36,8 @@ namespace GASS
 		void OnInitialize() override;
 		void OnDelete() override;
 		void SceneManagerTick(double delta_time) override;
-		AABox GetBoundingBox() const override { return AABox(); }
-		Sphere GetBoundingSphere() const override { return Sphere(); };
+		AABox GetBoundingBox() const;
+		Sphere GetBoundingSphere() const;
 		GeometryFlags GetGeometryFlags() const override { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
 		void SetGeometryFlags(GeometryFlags /*flags*/) override { };
 		bool GetCollision() const override { return true; }
