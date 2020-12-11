@@ -68,29 +68,29 @@ namespace GASS
 
 	}
 
-	void OSGCollisionSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool /*return_at_first_hit*/) const
+	void OSGCollisionSceneManager::Raycast(const Vec3& ray_start, const Vec3& ray_dir, GeometryFlags flags, CollisionResult& result, bool /*return_at_first_hit*/) const
 	{
-		if(m_GFXSystem)
+		if (m_GFXSystem)
 		{
 			osgViewer::ViewerBase::Views views;
 			m_GFXSystem->GetViewer()->getViews(views);
-			if(views.size() > 0)
-				_ProcessRaycast(ray_start, ray_dir, flags,&result,views[0]->getCamera());
+			if (views.size() > 0)
+				_ProcessRaycast(ray_start, ray_dir, flags, &result, views[0]->getCamera());
 		}
 	}
 
-	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const
+	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3& ray_start, const Vec3& ray_dir, GeometryFlags flags, CollisionResult* result, osg::Node* node) const
 	{
 		GASS_MUTEX_LOCK(m_Mutex)
 
-		osg::Vec3d start = OSGConvert::ToOSG(ray_start);
+			osg::Vec3d start = OSGConvert::ToOSG(ray_start);
 		osg::Vec3d end = OSGConvert::ToOSG(ray_start + ray_dir);
 
 		result->Coll = false;
-		
+
 		m_IntersectVisitor->reset();
 		m_IntersectVisitor->setLODSelectionMode(osgUtil::IntersectionVisitor::USE_HIGHEST_LEVEL_OF_DETAIL);
-		if((flags & GEOMETRY_FLAG_PAGED_LOD) && m_ColSystem->GetReadPagedLOD())
+		if ((flags & GEOMETRY_FLAG_PAGED_LOD) && m_ColSystem->GetReadPagedLOD())
 			m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 		else
 			m_IntersectVisitor->setReadCallback(NULL);
@@ -103,10 +103,10 @@ namespace GASS
 
 		node->accept(*m_IntersectVisitor);
 
-		if ( intersector->containsIntersections() )
+		if (intersector->containsIntersections())
 		{
 			osgUtil::LineSegmentIntersector::Intersections& intersections = intersector->getIntersections();
-			for(osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
+			for (osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
 				itr != intersections.end();
 				++itr)
 			{
@@ -115,31 +115,31 @@ namespace GASS
 				//get first user data
 
 				//reverse
-				if(intersection.nodePath.size() > 0)
+				if (intersection.nodePath.size() > 0)
 				{
-					for(int i = static_cast<int>(intersection.nodePath.size()) - 1 ; i >= 0  ;i--)
+					for (int i = static_cast<int>(intersection.nodePath.size()) - 1; i >= 0; i--)
 					{
-						if(intersection.nodePath[i]->getUserData())
+						if (intersection.nodePath[i]->getUserData())
 						{
 							OSGNodeData* data = dynamic_cast<OSGNodeData*>(intersection.nodePath[i]->getUserData());
-							if(data)
+							if (data)
 							{
 								BaseSceneComponentPtr bo = data->m_Component.lock();
-								if(bo)
+								if (bo)
 								{
-									GeometryComponentPtr geom  = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(bo);
-									if(geom)
+									GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(bo);
+									if (geom)
 									{
-									
-										if(flags & geom->GetGeometryFlags())
+
+										if (flags & geom->GetGeometryFlags())
 										{
 											Vec3 col_pos = OSGConvert::ToGASS(intersection.getWorldIntersectPoint());
-											Float col_dist = (col_pos - ray_start).Length(); 
+											Float col_dist = (col_pos - ray_start).Length();
 
 											result->CollDist = col_dist;
 											result->Coll = true;
 											result->CollPosition = col_pos;
-											result->CollNormal =  OSGConvert::ToGASS(intersection.getWorldIntersectNormal());
+											result->CollNormal = OSGConvert::ToGASS(intersection.getWorldIntersectNormal());
 											result->CollSceneObject = bo->GetSceneObject();
 											return;
 										}
@@ -155,8 +155,12 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetTerrainHeight(const Vec3& location, double& terrain_height, GeometryFlags flags) const
 	{
+
 		if (m_TerrainSM)
 			return m_TerrainSM->GetTerrainHeight(location, terrain_height, flags);
+
+		bool found_height = false;
+
 		if (m_Scene->GetGeocentric())
 		{
 			const double r = osg::WGS_84_RADIUS_EQUATOR;
@@ -164,7 +168,7 @@ namespace GASS
 			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
 			double latitude, longitude, height_hae;
 			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
-			
+
 			constexpr double min_height = -20000;
 			const Vec3 dir = -up_vector * (height_hae - min_height);
 			CollisionResult result;
@@ -173,7 +177,7 @@ namespace GASS
 			{
 				terrain_height = height_hae - (location - result.CollPosition).Length();
 			}
-			return result.Coll;
+			found_height = result.Coll;
 		}
 		else
 		{
@@ -181,13 +185,12 @@ namespace GASS
 			CollisionResult result;
 			const Vec3 ray_start(location.x, max_terrain_height, location.z);
 			const Vec3 ray_direction = Vec3(0, -1, 0) * (max_terrain_height * 2.0);
-			Raycast(ray_start, ray_direction, flags, result,true);
+			Raycast(ray_start, ray_direction, flags, result, true);
 			if (result.Coll)
-			{
 				terrain_height = result.CollPosition.y;
-			}
+			found_height = result.Coll;
 		}
-		return false;
+		return found_height;
 	}
 
 	bool OSGCollisionSceneManager::GetHeightAboveSeaLevel(const Vec3& location, double& height) const
@@ -207,7 +210,7 @@ namespace GASS
 	bool OSGCollisionSceneManager::GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const
 	{
 		if (m_TerrainSM)
-			return m_TerrainSM->GetHeightAboveTerrain(location, height,flags);
+			return m_TerrainSM->GetHeightAboveTerrain(location, height, flags);
 
 		double terrain_height = 0;
 		if (GetTerrainHeight(location, terrain_height, flags))
@@ -231,7 +234,7 @@ namespace GASS
 		}
 		else
 		{
-			up_vec.Set(0,1,0);
+			up_vec.Set(0, 1, 0);
 		}
 		return true;
 	}
@@ -254,5 +257,53 @@ namespace GASS
 			rot = Quaternion::IDENTITY;
 		}
 		return true;
+	}
+
+	bool OSGCollisionSceneManager::GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const
+	{
+		/*if (m_TerrainSM)
+		{
+			double hat = 0;
+			if (m_TerrainSM->GetHeightAboveTerrain(location, hat, flags))
+			{
+				Vec3 up_vec;
+				m_TerrainSM->GetUpVector(location, up_vec);
+				terrain_location = location - up_vec * hat;
+				return true;
+			}
+			return false;
+		}*/
+		
+		bool found_location = false;
+
+		if (m_Scene->GetGeocentric())
+		{
+			const double r = osg::WGS_84_RADIUS_EQUATOR;
+
+			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
+			double latitude, longitude, height_hae;
+			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
+			constexpr double min_height = -20000;
+			const Vec3 dir = -up_vector * (height_hae - min_height);
+			CollisionResult result;
+			Raycast(location, dir, flags, result, true);
+			if (result.Coll)
+			{
+				terrain_location = result.CollPosition;
+			}
+			found_location = result.Coll;
+		}
+		else
+		{
+			constexpr double max_terrain_height = 20000;
+			CollisionResult result;
+			const Vec3 ray_start(location.x, max_terrain_height, location.z);
+			const Vec3 ray_direction = Vec3(0, -1, 0) * (max_terrain_height * 2.0);
+			Raycast(ray_start, ray_direction, flags, result, true);
+			if (result.Coll)
+				terrain_location = result.CollPosition;
+			found_location = result.Coll;
+		}
+		return found_location;
 	}
 }

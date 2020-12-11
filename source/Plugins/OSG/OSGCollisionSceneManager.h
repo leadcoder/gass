@@ -193,6 +193,7 @@ namespace GASS
 		bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const override;
 		bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const override;
 		bool GetOrientation(const Vec3& location, Quaternion& rot) const override;
+		bool GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const override;
 	private:
 		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
 		mutable GASS_MUTEX m_Mutex;

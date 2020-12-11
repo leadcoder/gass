@@ -67,6 +67,7 @@ namespace GASS
 		virtual bool GetHeightAboveSeaLevel(const Vec3& location, double& height) const = 0;
 		virtual bool GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const = 0;
 		virtual bool GetOrientation(const Vec3& location, Quaternion& rot) const = 0;
+		virtual bool GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const = 0;
 	};
 
 	typedef GASS_SHARED_PTR<ICollisionSceneManager> CollisionSceneManagerPtr;
