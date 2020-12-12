@@ -4,6 +4,7 @@
 //#include "windows.h"
 //#include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
+#include "Core/Math/GASSAABox.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectRef.h"
@@ -84,28 +85,16 @@ namespace GASS
 						}
 						ImGui::EndMenu();
 					}
-
-					if (ImGui::MenuItem("Open", "Ctrl+O"))
-					{
-						if (ImGui::MenuItem("Scene1"))
-						{
-
-						}
-
-						if (ImGui::MenuItem("Scene2"))
-						{
-
-						}
-						//char const* filterPatterns[1] = { "*.earth" };
-						//if (char const* fileToOpen = tinyfd_openFileDialog("Open File", "", 1, filterPatterns, NULL, 0))
-						{
-						}
-					}
+					
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
+						auto scene = getFirstScene();
+						if (scene && scene->GetName() != "")
+							scene->Save(scene->GetName());
 						//char const* filterPatterns[1] = { "*.earth" };
 						//if (char const* fileToSave = tinyfd_saveFileDialog("Save File", "", 1, filterPatterns, nullptr))
 						{
+
 						}
 					}
 
@@ -533,6 +522,21 @@ namespace GASS
 								obj->SetPropertyValue(prop, ColorRGBA(col4[0], col4[1], col4[2], col4[3]));
 							}
 						}
+						else if (*prop->GetTypeID() == typeid(AABoxd))
+						{
+							AABox bb;
+							obj->GetPropertyValue(prop, bb);
+							std::string min_name = prop_name + " Min";
+							if (ImGui::DragScalarN(min_name.c_str(), ImGuiDataType_Double, (void*)&bb.Min, 3, 0.1f))
+							{
+								obj->SetPropertyValue(prop, bb);
+							}
+							std::string max_name = prop_name + " Max";
+							if (ImGui::DragScalarN(max_name.c_str(), ImGuiDataType_Double, (void*)&bb.Max, 3, 0.1f))
+							{
+								obj->SetPropertyValue(prop, bb);
+							}
+						}
 						else if (*prop->GetTypeID() == typeid(GASS::FilePath))
 						{
 							//std::string filename = prop_value;
@@ -548,8 +552,11 @@ namespace GASS
 							std::string prop_value = prop->GetValueAsString(obj);
 							if (ImGui::InputText(prop_name.c_str(), &prop_value))
 							{
-								prop->SetValueByString(obj, prop_value);
+								
 							}
+							if(ImGui::IsItemDeactivated())
+								prop->SetValueByString(obj, prop_value);
+
 						}
 
 					}
