@@ -157,6 +157,7 @@ namespace GASS
 				"You must provide a scene name",
 				"Scene::Load");
 		}
+		m_Name = name;
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		rm->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
