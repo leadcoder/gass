@@ -139,7 +139,7 @@ namespace GASS
 		Mat4 rot_mat(rot);
 		ODEPhysicsSceneManager::CreateODERotationMatrix(rot_mat,ode_rot_mat);
 
-#if 0
+#ifndef WIN32 //we use older ode version in linux...
 		if (m_Axis1.Length() != 0)
 			dJointSetHinge2Axis1(m_ODEJoint,m_Axis1.x,m_Axis1.y,m_Axis1.z);
 		else
