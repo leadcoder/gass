@@ -30,7 +30,6 @@ namespace GASS
 		m_SteerInput(0),
 		m_StandingSize(1.8),
 		m_Radius(0.4),
-		m_Yaw(0),
 		m_YawMaxVelocity(2),
 		m_Acceleration(5.2),
 		m_MaxSpeed(4),
@@ -75,15 +74,6 @@ namespace GASS
 		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 	}
 
-	void PhysXCharacterComponent::Reset()
-	{
-		Mat4 rot_mat(GetRotation());
-		GASS::Vec3 rot;
-		rot_mat.ToEulerAnglesYXZ(rot);
-		m_Yaw = rot.y;
-		//m_Yaw = rot_mat.GetEulerRotationY();
-	}
-
 	void PhysXCharacterComponent::OnTransformationChanged(TransformationChangedEventPtr event)
 	{
 		if (m_TrackTransformation)
@@ -95,10 +85,9 @@ namespace GASS
 
 	void PhysXCharacterComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
-		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		m_SceneManager = sm;
+		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>().get();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-
+		
 		LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 		Vec3 pos = location->GetPosition();
 		PxExtendedVec3 px_initial_pos(pos.x, pos.y, pos.z);
@@ -111,12 +100,9 @@ namespace GASS
 		cDesc.slopeLimit		= 0.0f;
 		cDesc.contactOffset		= 0.1f;
 		cDesc.stepOffset		= 0.02f;
-		//cDesc.callback			= this;
+		cDesc.upDirection = PxConvert::ToPx(m_SceneManager->GetUpVector());
 		cDesc.behaviorCallback	= this;
-		
-		//m_Controller = static_cast<PxCapsuleController*>(sm->GetControllerManager()->createController(*system->GetPxSDK(),sm->GetPxScene(),cDesc));
-		m_Controller = static_cast<PxCapsuleController*>(sm->GetControllerManager()->createController(cDesc));
-
+		m_Controller = static_cast<PxCapsuleController*>(m_SceneManager->GetControllerManager()->createController(cDesc));
 		// remove controller shape from scene query for standup overlap test
 		m_Actor = m_Controller->getActor();
 		if(m_Actor)
@@ -127,12 +113,8 @@ namespace GASS
 				m_Actor->getShapes(&ctrlShape,1);
 				ctrlShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE,false);
 			}
-			//else
-			//	fatalError("character actor has no shape");
 		}
 		m_Initialized = true;
-		//else
-		//	fatalError("character could not create actor");
 	}
 
 	void PhysXCharacterComponent::onShapeHit(const PxControllerShapeHit& hit)
@@ -161,34 +143,25 @@ namespace GASS
 		int from_id = GASS_PTR_TO_INT(this); //use address as id
 
 		const Vec3 current_pos  = GetPosition();
-		m_Yaw += m_SteerInput * m_YawMaxVelocity* delta;
-		const Quaternion new_rot = Quaternion::CreateFromEulerYXZ(Vec3(0, m_Yaw, 0));
+
+		//update rotation
+		const double yaw = m_SteerInput * m_YawMaxVelocity* delta;
+		const Quaternion new_rot = GetRotation() * Quaternion::CreateFromEulerYXZ(Vec3(0, yaw, 0));
+		SetRotation(new_rot);
 
 		m_TrackTransformation = false;
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(current_pos);
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(new_rot);
 		m_TrackTransformation = true;
 
-		Mat4 rot_mat(new_rot);
-		Vec3 forward = rot_mat.GetZAxis();
+		const Vec3 forward = new_rot.GetZAxis();
 		Vec3 target_displacement(0,0,0);
-		forward.y = 0;
-		forward.Normalize();
-		Vec3 up(0,1,0);
-		//Vec3 right = Vec3::Cross(forward,up);
 		m_CurrentVel += m_Acceleration*m_ThrottleInput*delta;
 		if(m_CurrentVel > m_MaxSpeed)
 			m_CurrentVel = m_MaxSpeed;
 		if(m_CurrentVel < -m_MaxSpeed)
 			m_CurrentVel = -m_MaxSpeed;
 
-		/*if(m_ThrottleInput > 0)
-		{
-			target_displacement += forward*m_CurrentVel;
-		}
-		else if(m_ThrottleInput < 0)	
-			target_displacement -= forward;
-*/
 		//damp
 		if(m_ThrottleInput == 0)
 		{
@@ -207,20 +180,10 @@ namespace GASS
 		}
 		
 		target_displacement += forward*m_CurrentVel;
-
-		//if(m_SteerInput > 0)	
-		//	target_displacement += right;
-		//if(m_SteerInput < 0)	
-		//	target_displacement -= right;
-		
-		//m_Pitch		+= mGamepadPitchInc * dtime;
-		// Clamp pitch
-		//camera.setRot(PxVec3(0,-m_TargetYaw,0));
-		target_displacement += Vec3(0,-9.81,0);
+		target_displacement += PxConvert::ToGASS(m_SceneManager->GetPxScene()->getGravity());
 		target_displacement *= delta;
-		/*PxU32 flags = */ m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(0));
+		PxControllerCollisionFlags flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(0));
 		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
-
 	}
 
 	void PhysXCharacterComponent::SetMass(float mass)
@@ -232,9 +195,7 @@ namespace GASS
 	{
 		if(m_Controller)
 		{
-			Reset();
-			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
-			const PxVec3 final_pos = sm->WorldToLocal(value);
+			const PxVec3 final_pos = m_SceneManager->WorldToLocal(value);
 			m_Controller->setFootPosition(PxExtendedVec3(final_pos.x, final_pos.y, final_pos.z));
 		}
 	}
@@ -245,8 +206,7 @@ namespace GASS
 		if(m_Controller)
 		{
 			PxExtendedVec3 foot_pos = m_Controller->getFootPosition();
-			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
-			pos = sm->LocalToWorld(PxVec3(static_cast<PxReal>(foot_pos.x), 
+			pos = m_SceneManager->LocalToWorld(PxVec3(static_cast<PxReal>(foot_pos.x),
 										  static_cast<PxReal>(foot_pos.y), 
 										  static_cast<PxReal>(foot_pos.z)));
 		}
@@ -255,21 +215,12 @@ namespace GASS
 
 	void PhysXCharacterComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_Actor)
-		{
-			Reset();
-			m_Actor->setGlobalPose(physx::PxTransform(m_Actor->getGlobalPose().p,PxConvert::ToPx(rot)));
-		}
+		m_Rotation = rot;
 	}
 
 	Quaternion PhysXCharacterComponent::GetRotation()
 	{
-		Quaternion q;
-		if(m_Actor)
-		{
-			q = PxConvert::ToGASS(m_Actor->getGlobalPose().q);
-		}
-		return q;
+		return m_Rotation;
 	}
 
 	void PhysXCharacterComponent::OnInput(InputRelayEventPtr message)

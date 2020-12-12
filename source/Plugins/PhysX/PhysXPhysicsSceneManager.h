@@ -74,6 +74,7 @@ namespace GASS
 		void UnregisterVehicle(physx::PxVehicleWheels* vehicle);
 		void SetOrigin(const Vec3& offset);
 		Vec3 GetOrigin() const {return m_Origin;}
+		Vec3 GetUpVector() const;
 		Vec3 LocalToWorld(const physx::PxVec3 & local) const; 
 		physx::PxVec3 WorldToLocal(const Vec3 & world) const;
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
@@ -88,6 +89,7 @@ namespace GASS
 	private:
 		float m_Gravity;
 		Vec3 m_Origin;
+		Vec3 m_UpVector;
 		bool m_Active;
 		bool m_Init;
 		physx::PxScene *m_PxScene;

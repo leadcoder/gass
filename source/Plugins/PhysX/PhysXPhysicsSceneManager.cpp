@@ -92,7 +92,8 @@ namespace GASS
 		m_CpuDispatcher(NULL),
 		m_VehicleSceneQueryData(NULL),
 		m_WheelRaycastBatchQuery(NULL),
-		m_Origin(0,0,0)
+		m_Origin(0,0,0),
+		m_UpVector(0,1,0)
 	{
 
 	}
@@ -195,10 +196,16 @@ namespace GASS
 		{
 			if (GetScene()->GetGeocentric())
 			{
-				const physx::PxVec3 gravity = PxConvert::ToPx(m_Origin.NormalizedCopy() * m_Gravity);
+				m_UpVector = m_Origin.NormalizedCopy();
+				const physx::PxVec3 gravity = PxConvert::ToPx(m_UpVector * m_Gravity);
 				m_PxScene->setGravity(gravity);
 			}
 		}
+	}
+
+	Vec3 PhysXPhysicsSceneManager::GetUpVector() const
+	{
+		return m_UpVector;
 	}
 
 	void PhysXPhysicsSceneManager::OnSceneCreated()

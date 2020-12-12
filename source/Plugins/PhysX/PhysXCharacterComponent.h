@@ -77,17 +77,14 @@ namespace GASS
 		Vec3 GetPosition() const;
 		void SetRotation(const Quaternion &rot);
 		Quaternion GetRotation();
-		//helpers
-		void Reset();
 	protected:
 		bool m_Initialized;
-		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
+		PhysXPhysicsSceneManager* m_SceneManager = nullptr;
 		physx::PxRigidDynamic* m_Actor;
 		float m_ThrottleInput;
 		float m_SteerInput;
 		float m_Mass;
 		Float m_MaxSpeed;
-		Float m_Yaw;
 		Float m_CurrentVel;
 		Float m_StandingSize;
 		Float m_Radius;
@@ -95,6 +92,7 @@ namespace GASS
 		Float m_Acceleration;
 		physx::PxCapsuleController* m_Controller;
 		bool m_TrackTransformation;
+		Quaternion m_Rotation = Quaternion::IDENTITY;
 		
 	};
 	typedef GASS_SHARED_PTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;
