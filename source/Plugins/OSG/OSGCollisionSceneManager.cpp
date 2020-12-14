@@ -202,7 +202,7 @@ namespace GASS
 		}
 		else
 		{
-			return location.y;
+			height = location.y;
 		}
 		return true;
 	}
