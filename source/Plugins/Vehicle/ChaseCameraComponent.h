@@ -26,6 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSICollisionSceneManager.h"
 
 namespace GASS
 {
@@ -51,6 +52,7 @@ namespace GASS
 
 		ILocationComponent* m_CameraLocation;
 		const ILocationComponent* m_ChaseObjectLocation;
+		ICollisionSceneManager* m_CollisionSM = nullptr;
 		Vec3 m_Velocity;
 		std::string m_PreferredViewport;
 		SceneObjectRef m_InputHandlerObject;

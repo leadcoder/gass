@@ -79,6 +79,7 @@ namespace GASS
 		//Assume our scene object also hold the camera
 		m_CameraLocation = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();
 		GASSAssert(m_CameraLocation, "Failed to find CameraLocation in ChaseCameraComponent::OnInitialize");
+		m_CollisionSM = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
 
 		RegisterForPostUpdate<IMissionSceneManager>();
 	}
@@ -111,11 +112,14 @@ namespace GASS
 
 	void ChaseCameraComponent::SceneManagerTick(double delta_time)
 	{
-		const Vec3 world_up_vec(0, 1, 0);
+		
 		//Get parent location
 		
 		const Vec3 object_pos = m_ChaseObjectLocation->GetWorldPosition();
 		const Quaternion object_rot = m_ChaseObjectLocation->GetWorldRotation();
+		
+		Vec3 world_up_vec(0, 1, 0);
+		m_CollisionSM->GetUpVector(object_pos, world_up_vec);
 
 		const Vec3 camera_pos = m_CameraLocation->GetWorldPosition();
 
