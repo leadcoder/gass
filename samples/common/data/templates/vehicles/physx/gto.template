@@ -4,6 +4,7 @@
 		<Name value="PXGTO"/>
 		<ID value="CHASSIS"/>
 		<Serialize value="false"/>
+		<Instantiable value= "true"/>
 		<Components>
 			<LocationComponent>
 				<AttachToParent value="0"/>
