@@ -26,16 +26,7 @@
 #include "Plugins/OSG/OSGDebugDraw.h"
 #include "Plugins/OSG/Utils/TextBox.h"
 #include "Plugins/OSG/Utils/ViewDependentShadowMapExt.h"
-#include "Plugins/OSG/Utils/EffectCompositor.h"
 
-const std::string base_vert =
-#include "Plugins/OSG/Shaders/Base.vert.glsl"
-;
-
-const std::string base_frag =
-#include "Plugins/OSG/Shaders/Base.frag.glsl"
-;
-//#include "Plugins/OSG/Shaders/Base.frag.glsl"
 
 namespace GASS
 {
@@ -66,15 +57,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not present", "OSGGraphicsSceneManager::OnInitialize");
 		}
 
-		//const std::string effectFile = "D:/dev_zone/osgpbr/osgRecipes-master/effectcompositor/hdr.xml";
-		const std::string effectFile = "D:/dev_zone/osgpbr/osgEffect/effectcompositor/data/shaders/ForwardPass2.xml";
-		osgFX::EffectCompositor* compositor = osgFX::readEffectFile(effectFile);
-		if (!compositor)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Effect file " + effectFile + " can't be loaded!", "OSGGraphicsSceneManager::OnInitialize");
-			//OSG_WARN << "Effect file " << effectFile << " can't be loaded!" << std::endl;
-			
-		}
 		m_RootNode = new osg::PositionAttitudeTransform();
 		m_RootNode->setName("GASSRootNode");
 		m_ShadowRootNode = new osg::Group();
@@ -308,13 +290,8 @@ namespace GASS
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
 		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-		//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
-		settings->setShaderHint(osgShadow::ShadowSettings::NO_SHADERS);
+		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
-		osg::Program* program = new osg::Program;
-		program->addShader(new osg::Shader(osg::Shader::VERTEX, base_vert.c_str()));
-		program->addShader(new osg::Shader(osg::Shader::FRAGMENT, base_frag.c_str()));
-		ss->getOrCreateStateSet()->setAttribute(program, osg::StateAttribute::PROTECTED | osg::StateAttribute::ON);
 		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
 		unsigned int numShadowMaps = 2;
 		unsigned int unit = 6;
