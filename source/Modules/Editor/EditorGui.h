@@ -505,10 +505,10 @@ namespace GASS
 							ColorRGB color;
 							obj->GetPropertyValue(prop, color);
 
-							float col3[3] = { (float)color.r, (float)color.r, (float)color.b };
+							float col3[3] = { (float)color.r, (float)color.g, (float)color.b };
 							if (ImGui::ColorEdit3(prop_name.c_str(), col3))
 							{
-								obj->SetPropertyValue(prop, ColorRGB(col3[0], col3[1], col3[2]));
+								obj->SetPropertyValue(prop, ColorRGB(double(col3[0]), double(col3[1]), double(col3[2])));
 							}
 						}
 						else if (*prop->GetTypeID() == typeid(ColorRGBA))
@@ -516,7 +516,7 @@ namespace GASS
 							ColorRGBA color;
 							obj->GetPropertyValue(prop, color);
 
-							float col4[4] = { static_cast<float>(color.r), static_cast<float>(color.r), static_cast<float>(color.b), static_cast<float>(color.a) };
+							float col4[4] = { static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a) };
 							if (ImGui::ColorEdit4(prop_name.c_str(), col4))
 							{
 								obj->SetPropertyValue(prop, ColorRGBA(col4[0], col4[1], col4[2], col4[3]));

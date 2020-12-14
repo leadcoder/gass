@@ -22,7 +22,9 @@
 
 #include "Core/Common.h"
 #include "Core/Utils/GASSException.h"
+#include <iostream>
 #include <iomanip>
+
 
 namespace GASS
 {
@@ -39,7 +41,7 @@ namespace GASS
 	class ColorRGB
 	{
 	public:
-		Float r,g,b;
+		double r,g,b;
 		inline ColorRGB(Float _r,Float _g,Float _b)
 		{
 			r = _r;g = _g;b = _b;
@@ -62,7 +64,7 @@ namespace GASS
 
 		friend std::ostream& operator << (std::ostream& os, const ColorRGB& v)
 		{
-			os << std::setprecision(std::numeric_limits<Float>::digits10 + 1)  <<  v.r << " " << v.g << " " << v.b;
+			os << std::setprecision(std::numeric_limits<double>::digits10 + 1) << v.r << " " << v.g << " " << v.b;
 			return os;
 		}
 
