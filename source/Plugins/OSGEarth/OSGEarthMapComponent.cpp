@@ -147,7 +147,7 @@ namespace GASS
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
 		m_Hour(10),
 		m_SkyNode(NULL),
-		m_UseAutoClipPlane(false),
+		m_UseAutoClipPlane(true),
 		m_OESceneManager(nullptr),
 		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this)),
 		m_TerrainChangedLastFrame(false)
@@ -325,7 +325,7 @@ namespace GASS
 		
 			m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
 
-			//_SetupNodeMasks();
+			_SetupNodeMasks();
 
 			if (m_MapNode->getTerrain())
 			{
