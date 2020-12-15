@@ -38,22 +38,24 @@
 #include <osgEarth/GeoTransform>
 #include <osgEarth/Registry>
 
-#include <osgEarthFeatures/FeatureModelLayer>
-#include <osgEarthUtil/Sky>
-#include <osgEarthUtil/ExampleResources>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/LatLongFormatter>
-#include <osgEarthUtil/MGRSFormatter>
-#include <osgEarthUtil/MouseCoordsTool>
-#include <osgEarthUtil/AutoClipPlaneHandler>
-#include <osgEarthUtil/Controls>
-#include <osgEarthUtil/Fog>
-#include <osgEarthUtil/Controls>
-#include <osgEarthUtil/ViewFitter>
+#include <osgEarth/FeatureModelLayer>
+#include <osgEarth/Sky>
+#include <osgEarth/ExampleResources>
+#include <osgEarth/EarthManipulator>
+#include <osgEarth/LatLongFormatter>
+#include <osgEarth/MGRSFormatter>
+#include <osgEarth/MouseCoordsTool>
+#include <osgEarth/AutoClipPlaneHandler>
+#include <osgEarth/Controls>
+#ifdef HAS_FOG
+#include <osgEarth/Fog>
+#endif
+#include <osgEarth/Controls>
+#include <osgEarth/ViewFitter>
 
-#include <osgEarthAnnotation/AnnotationData>
-#include <osgEarthAnnotation/AnnotationRegistry>
-#include <osgEarthAnnotation/PlaceNode>
+#include <osgEarth/AnnotationData>
+#include <osgEarth/AnnotationRegistry>
+#include <osgEarth/PlaceNode>
 #include <osgEarthDrivers/cache_filesystem/FileSystemCache>
 
 #ifdef _MSC_VER

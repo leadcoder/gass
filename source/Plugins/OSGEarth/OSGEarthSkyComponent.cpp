@@ -58,7 +58,9 @@ namespace GASS
 		osgEarth::MapNode* mapNode = osgEarth::MapNode::findMapNode(root);
 		if(mapNode)
 		{
-			osgEarth::Util::SkyNode* sky = osgEarth::Util::SkyNode::create( mapNode);
+			osgEarth::SkyOptions sky_options;
+			sky_options.coordinateSystem() = osgEarth::SkyOptions::COORDSYS_ECEF;
+			osgEarth::SkyNode* sky = osgEarth::SkyNode::create(sky_options);
 			sky->setDateTime(osgEarth::DateTime(2013, 1, 6, 17.0));
 			root->addChild( sky );
 

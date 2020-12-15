@@ -112,7 +112,7 @@ namespace GASS
 				layer_type = MLT_ELEVATION;
 			else if (dynamic_cast<osgEarth::ModelLayer*>(m_Layer))
 				layer_type = MLT_MODEL;
-			else if (dynamic_cast<osgEarth::Features::FeatureModelLayer*>(m_Layer))
+			else if (dynamic_cast<osgEarth::FeatureModelLayer*>(m_Layer))
 				layer_type = MLT_FEATURE_MODEL;
 			return layer_type;
 		}
@@ -147,7 +147,7 @@ namespace GASS
 	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
 		m_Hour(10),
 		m_SkyNode(NULL),
-		m_UseAutoClipPlane(true),
+		m_UseAutoClipPlane(false),
 		m_OESceneManager(nullptr),
 		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this)),
 		m_TerrainChangedLastFrame(false)
@@ -226,10 +226,11 @@ namespace GASS
 					controlIF->disconnect(m_OESceneManager->GetGUI());
 			}
 
+#ifdef HAS_FOG
 			//remove fog effect
 			if (m_FogEffect)
 				m_FogEffect->detach(m_MapNode->getStateSet());
-
+#endif
 			if (m_AutoClipCB)
 				views[0]->getCamera()->removeCullCallback(m_AutoClipCB);
 
@@ -244,7 +245,9 @@ namespace GASS
 
 			//release
 			m_Lighting.release();
+#ifdef HAS_FOG
 			m_FogEffect.release();
+#endif
 			m_AutoClipCB.release();
 
 			m_OESceneManager->SetMapNode(NULL);
@@ -314,10 +317,15 @@ namespace GASS
 			m_TopNode = top_node;
 			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
 			GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
+
+			if (!m_MapNode->open())
+			{
+				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to open map node", "OSGEarthMapComponent::OnInitialize");
+			}
 		
 			m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
 
-			_SetupNodeMasks();
+			//_SetupNodeMasks();
 
 			if (m_MapNode->getTerrain())
 			{
@@ -432,6 +440,7 @@ namespace GASS
 				view->getCamera()->addCullCallback(m_AutoClipCB);
 			}
 
+#ifdef HAS_FOG
 			if (false) //use fog
 			{
 				osg::ref_ptr<osg::Group> fog_root = osg_sm->GetOSGRootNode();
@@ -445,7 +454,7 @@ namespace GASS
 					m_FogEffect->attach(m_MapNode->getOrCreateStateSet());
 				}
 			}
-
+#endif
 			_UpdateMapLayers();
 
 			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
@@ -486,7 +495,8 @@ namespace GASS
 	{
 		osgEarth::ModelLayerVector modelLayers;
 		m_MapNode->getMap()->getLayers(modelLayers);
-		OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_GROUND, m_MapNode->getTerrain()->getGraph());
+		if(m_MapNode->getTerrain())
+			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_GROUND, m_MapNode->getTerrain()->getGraph());
 		
 		for (unsigned i = 0; i < modelLayers.size(); ++i)
 		{
@@ -565,7 +575,7 @@ namespace GASS
 	{
 		if (m_SkyNode)
 		{
-			m_SkyNode->setMinimumAmbient(osg::Vec4f(value,value,value,1));
+			//m_SkyNode-setMinimumAmbient(osg::Vec4f(value,value,value,1));
 		}
 	}
 
@@ -574,7 +584,7 @@ namespace GASS
 		float value = 0;
 		if (m_SkyNode)
 		{
-			value = m_SkyNode->getMinimumAmbient().x();
+			//value = m_SkyNode->getMinimumAmbient().x();
 		}
 		return value;
 	}

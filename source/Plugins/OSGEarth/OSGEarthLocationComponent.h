@@ -47,7 +47,7 @@ namespace GASS
 		double m_Latitude;
 		double m_Longitude;
 		double m_Offset;
-		osgEarth::Annotation::PlaceNode* m_DebugNode;
+		osgEarth::PlaceNode* m_DebugNode;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 	};
 	typedef GASS_WEAK_PTR<OSGEarthLocationComponent> OSGEarthLocationComponentWeakPtr;

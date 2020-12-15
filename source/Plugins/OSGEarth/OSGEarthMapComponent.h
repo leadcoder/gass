@@ -80,7 +80,9 @@ namespace GASS
 		bool m_Initlized;
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
+#ifdef HAS_FOG
 		osg::ref_ptr<osgEarth::Util::FogEffect> m_FogEffect;
+#endif
 		osg::ref_ptr<osgEarth::Util::AutoClipPlaneCullCallback> m_AutoClipCB;
 		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
