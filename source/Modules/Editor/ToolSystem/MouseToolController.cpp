@@ -3,6 +3,7 @@
 
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "IMouseTool.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
@@ -479,14 +480,18 @@ namespace GASS
 
 		if(key == KEY_F5 && m_CtrlDown)
 		{
-			//send reload message
-			//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::ReloadMaterial()));
 			GASS::SimEngine::Get().GetResourceManager()->ReloadAll();
 		}
 
 		if(key == KEY_F6 && m_CtrlDown)
 		{
 			GASS::SimEngine::Get().ReloadTemplates();
+		}
+
+		if (key == KEY_E && m_CtrlDown)
+		{
+			const bool toggle_value = !GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->GetShowGUI();
+			GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->SetShowGUI(toggle_value);
 		}
 
 		return true;
