@@ -176,6 +176,9 @@ namespace GASS
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
 		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
+
+		RegisterMember("AddSky", &OSGEarthMapComponent::m_AddSky, PF_VISIBLE , "Add sky light");
+
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -425,22 +428,11 @@ namespace GASS
 			}
 		}
 
-		if (!m_SkyNode)
+		if (!m_SkyNode && m_AddSky)
 		{
-			/*if (false)
-			{
-				m_SkyNode = osgEarth::Util::SkyNode::create(m_MapNode);
-				//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
-				m_SkyNode->setDateTime(osgEarth::DateTime(2013, 1, 6, m_Time));
-				m_SkyNode->attach(view);
-				root->addChild(m_SkyNode);
-				//if (m_ShowSkyControl)
-				{
-					osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(m_SkyNode);
-					if (c)
-						osgearth_sm->GetGUI()->addControl(c);
-				}
-			}*/
+			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
+			m_MapNode->addExtension(osgEarth::Extension::create(ext, osgEarth::ConfigOptions()));
+			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
 		}
 
 		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene

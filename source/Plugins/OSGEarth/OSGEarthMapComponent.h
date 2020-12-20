@@ -95,6 +95,7 @@ namespace GASS
 		OSGEarthSceneManager* m_OESceneManager;
 		osg::ref_ptr<OETerrainCallbackProxy> m_TerrainCallbackProxy;
 		bool m_TerrainChangedLastFrame;
+		bool m_AddSky = false;
 	};
 	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
 }
