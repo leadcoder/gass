@@ -290,7 +290,7 @@ namespace GASS
 
 		const std::string full_path = [&]
 		{
-			if (earth_file.Valid())
+			if (SimEngine::Get().GetResourceManager()->HasResource(earth_file.Name()))
 				return m_EarthFile.GetResource()->Path().GetFullPath();
 
 			if (osgDB::fileExists(m_EarthFile.Name()) && osgDB::isAbsolutePath(m_EarthFile.Name()))
