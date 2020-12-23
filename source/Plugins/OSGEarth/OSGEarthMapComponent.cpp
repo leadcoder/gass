@@ -433,6 +433,7 @@ namespace GASS
 			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
 			m_MapNode->addExtension(osgEarth::Extension::create(ext, osgEarth::ConfigOptions()));
 			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+			SetTimeOfDay(m_Hour);
 		}
 
 		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
@@ -583,7 +584,7 @@ namespace GASS
 	{
 		if (m_SkyNode)
 		{
-			//m_SkyNode-setMinimumAmbient(osg::Vec4f(value,value,value,1));
+			m_SkyNode->getSunLight()->setAmbient(osg::Vec4f(value,value,value,1));
 		}
 	}
 
@@ -592,7 +593,7 @@ namespace GASS
 		float value = 0;
 		if (m_SkyNode)
 		{
-			//value = m_SkyNode->getMinimumAmbient().x();
+			value = m_SkyNode->getSunLight()->getAmbient().x();
 		}
 		return value;
 	}
