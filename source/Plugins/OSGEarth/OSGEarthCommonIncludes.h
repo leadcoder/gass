@@ -56,6 +56,7 @@
 #include <osgEarth/AnnotationData>
 #include <osgEarth/AnnotationRegistry>
 #include <osgEarth/PlaceNode>
+#include <osgEarthDrivers/sky_simple/SimpleSkyOptions>
 #include <osgEarthDrivers/cache_filesystem/FileSystemCache>
 
 #ifdef _MSC_VER

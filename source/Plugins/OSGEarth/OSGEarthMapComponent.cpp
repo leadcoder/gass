@@ -430,8 +430,11 @@ namespace GASS
 
 		if (!m_SkyNode && m_AddSky)
 		{
+			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
+			sky_options.atmosphericLighting() = false;
+			
 			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
-			m_MapNode->addExtension(osgEarth::Extension::create(ext, osgEarth::ConfigOptions()));
+			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
 			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
 			SetTimeOfDay(m_Hour);
 		}
