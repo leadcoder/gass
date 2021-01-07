@@ -322,8 +322,8 @@ namespace GASS
 		}
 
 		//read earth file
-		osg::Node* top_node = osgDB::readNodeFile(full_path);
-		if (!top_node)
+		osg::Node* read_node = osgDB::readNodeFile(full_path);
+		if (!read_node)
 		{
 			//failed to load earth file!
 			return;
@@ -332,9 +332,7 @@ namespace GASS
 		//If successfully loaded, unload current map (if present)
 		Shutdown();
 
-		//Save top node, to be used during shutdown
-		m_TopNode = top_node;
-		m_MapNode = osgEarth::MapNode::findMapNode(top_node);
+		m_MapNode = osgEarth::MapNode::findMapNode(read_node);
 		GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
 
 		if (!m_MapNode->open())
@@ -342,6 +340,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to open map node", "OSGEarthMapComponent::OnInitialize");
 		}
 
+		
 		m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
 
 		_SetupNodeMasks();
@@ -352,8 +351,7 @@ namespace GASS
 		}
 
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
-		root->addChild(top_node);
-
+	
 		//if no sky is present (projected mode) but we still want get terrain lightning  
 		//m_Lighting = new osgEarth::PhongLightingEffect();
 		//m_Lighting->setCreateLightingUniform(false);
@@ -364,7 +362,12 @@ namespace GASS
 		{
 			//set default year/month and day to get good lighting
 			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
+			
 		}
+
+		//Save top node, to be used during shutdown
+		m_TopNode = osgEarth::findTopOfGraph(read_node);
+		root->addChild(m_TopNode);
 
 		//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
 		osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
