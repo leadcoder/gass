@@ -656,7 +656,7 @@ namespace GASS
 			{
 				tool_name =  active_tool->GetName();
 			}
-			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE };
+			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE,TID_GOTO_POS };
 
 			int e = -1;
 			for (size_t i = 0; i < tools.size(); i++)
