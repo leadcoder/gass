@@ -32,6 +32,7 @@
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
+#include "Modules/Editor/ToolSystem/BoxTool.h"
 
 namespace GASS
 {
@@ -43,7 +44,7 @@ namespace GASS
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
-		m_RayPickDistance(10000),
+		m_RayPickDistance(6371000.0),
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
 		m_ControlSettingName("EditorInputSettings"),
@@ -93,6 +94,9 @@ namespace GASS
 		tool = new PaintTool(this);
 		AddTool(tool);
 		tool = new GraphTool(this);
+		AddTool(tool);
+		
+		tool = new BoxTool(this);
 		AddTool(tool);
 
 		SelectTool(TID_SELECT);
