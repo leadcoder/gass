@@ -133,7 +133,7 @@ namespace GASS
 		/**
 		Set scene scene name
 		*/
-		//void SetName(const std::string &name) {m_Name = name;}
+		void SetName(const std::string &name) {m_Name = name;}
 
 		/**
 		Register for scene scene messages, see SceneSceneMessages.h for available messages
