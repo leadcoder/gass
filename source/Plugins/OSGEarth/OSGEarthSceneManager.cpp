@@ -408,7 +408,7 @@ namespace GASS
 		{
 			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
 			{
-				osgEarth::GeoPoint mapPoint(m_WGS84, location.Latitude, location.Longitude);
+				osgEarth::GeoPoint mapPoint(m_WGS84, location.Longitude, location.Latitude);
 				// Query the elevation at the map location:
 				osgEarth::ElevationSample sample = m_MapNode->getMap()->getElevationPool()->getSample(
 					mapPoint,
