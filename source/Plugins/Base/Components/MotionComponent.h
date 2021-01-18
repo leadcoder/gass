@@ -33,6 +33,7 @@
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
+#include "Sim/GASSPlatformType.h"
 #include "Plugins/Base/CoreMessages.h"
 
 namespace GASS
@@ -43,17 +44,6 @@ namespace GASS
 	class Scene;
 	typedef GASS_SHARED_PTR<Scene> ScenePtr;
 	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
-
-	/*enum MotionMode
-	{
-		MM_AIRCRAFT,
-		MM_RTS,
-	};
-
-	START_ENUM_BINDER(MotionMode,MotionModeBinder)
-		BIND(MM_AIRCRAFT)
-		BIND(MM_RTS)
-	END_ENUM_BINDER(MotionMode,MotionModeBinder)*/
 
 	/**
 	Basic motion model that can be used to move a camera. 
@@ -71,7 +61,7 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void SceneManagerTick(double delta_time) override;
-		PlatformType GetType() const override { return PT_CAR; }
+		PlatformType GetType() const override { return m_PlatformType.GetValue(); }
 		Vec3 GetSize() const override { return m_PlatformSize; }
 		Float GetMaxSpeed() const override { return m_MaxSpeed; }
 	protected:
@@ -98,6 +88,7 @@ namespace GASS
 		Quaternion m_CurrentRot;
 		HeightmapTerrainComponentPtr m_Heightmap;
 		Vec3 m_PlatformSize;
+		PlatformTypeReflection m_PlatformType;
 	};
 }
 
