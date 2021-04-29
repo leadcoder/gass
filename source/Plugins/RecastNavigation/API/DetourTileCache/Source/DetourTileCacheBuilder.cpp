@@ -2114,7 +2114,7 @@ dtStatus dtDecompressTileCacheLayer(dtTileCacheAlloc* alloc, dtTileCacheCompress
 
 
 
-bool dtTileCacheHeaderSwapEndian(unsigned char* data, const int dataSize)
+bool dtTileCacheHeaderSwapEndian(unsigned char* data, const int /*dataSize*/)
 {
 	dtTileCacheLayerHeader* header = (dtTileCacheLayerHeader*)data;
 	

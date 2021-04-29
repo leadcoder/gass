@@ -29,6 +29,9 @@
 #include "ChunkyTriMesh.h"
 #include "MeshLoaderObj.h"
 
+#ifdef _MSC_VER
+#pragma warning (disable : 4996)
+#endif
 
 static bool intersectSegmentTriangle(const float* sp, const float* sq,
 									 const float* a, const float* b, const float* c,

@@ -23,6 +23,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#ifdef _MSC_VER
+#pragma warning (disable : 4996)
+#endif
+
 rcMeshLoaderObj::rcMeshLoaderObj() :
 	m_verts(0),
 	m_tris(0),

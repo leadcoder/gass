@@ -149,7 +149,7 @@ dtNavMesh* TiledNavigationMeshBuilder::Build(InputGeom* geom)
 	}
 	// Start the build process.	
 	m_Ctx->stopTimer(RC_TIMER_TEMP);
-	float totalBuildTimeMs = m_Ctx->getAccumulatedTime(RC_TIMER_TEMP)/1000.0f;
+	//float totalBuildTimeMs = m_Ctx->getAccumulatedTime(RC_TIMER_TEMP)/1000.0f;
 	return nav_mesh;
 }
 
@@ -257,7 +257,7 @@ unsigned char* TiledNavigationMeshBuilder::BuildTileMesh(InputGeom* geom, const 
 		for (int j = 0; j < nctris; ++j)
 		{
 			if(triareas[j])
-				triareas[j] = mesh_areas[chunkyMesh->area_indices[node.i+j]];
+				triareas[j] = (unsigned char) mesh_areas[chunkyMesh->area_indices[node.i+j]];
 		}
 
 		rcRasterizeTriangles(m_Ctx, verts, nverts, ctris, triareas, nctris, *solid, cfg.walkableClimb);
@@ -468,7 +468,7 @@ unsigned char* TiledNavigationMeshBuilder::BuildTileMesh(InputGeom* geom, const 
 				return 0;
 			}		
 		}
-		int tileMemUsage = navDataSize/1024.0f;
+		//int tileMemUsage = (int) navDataSize/1024.0f;
 
 		m_Ctx->stopTimer(RC_TIMER_TOTAL);
 		// Show performance stats.
@@ -479,7 +479,7 @@ unsigned char* TiledNavigationMeshBuilder::BuildTileMesh(InputGeom* geom, const 
 		rcFreePolyMesh(pmesh);
 		rcFreePolyMeshDetail(dmesh);
 
-		float tileBuildTime = m_Ctx->getAccumulatedTime(RC_TIMER_TOTAL)/1000.0f;
+		//float tileBuildTime = m_Ctx->getAccumulatedTime(RC_TIMER_TOTAL)/1000.0f;
 		dataSize = navDataSize;
 		return navData;
 	}

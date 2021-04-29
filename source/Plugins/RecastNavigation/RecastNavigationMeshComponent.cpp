@@ -1580,6 +1580,7 @@ namespace GASS
 			ret = m_NavQuery->findNearestPoly(recast_pos, polyPickExt, &filter, &poly_ref, 0);
 			if (dtStatusFailed(ret))
 				return false;
+
 		}
 		return true;
 	}
