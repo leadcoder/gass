@@ -2,10 +2,10 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO leadcoder/gass-dependencies
-    REF 7c0895f54a22313071a8b556a664f2e0f995b4de
-    SHA512 90772602cb384454382755d21ee712ac6b452fde9522563d7067276e293b7284931be51ba618102a2a8d27f269467629e19394db2593ad24bbc6dc9bb34dfa73
-    HEAD_REF master
+    REPO leadcoder/raknet
+    REF b1cfe659cc6b704484a4b96577166cfe4f06ba37
+    SHA512 767ff2e4a165003eee6f5cc8261efac2f13d267a72fa4b58b5eb9a68cc50286338b888ad6baaaaf5161a9718e139ba10e0e146876d156b3efd9dd0cad69d2266
+    HEAD_REF main
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -17,7 +17,7 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/RakNet
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DRAKNET_ENABLE_DLL=${RAKNET_ENABLE_DLL}
@@ -31,4 +31,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/RakNet/readme.txt.in DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/readme.txt.in DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
