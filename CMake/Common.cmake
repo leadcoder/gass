@@ -3,12 +3,14 @@ function(gass_get_dep_binary_dirs RELASE_DIRS DEBUG_DIRS )
 
 	if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
 		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
-		set(_BIN_DIR_REL "${_VCPKG_DIR}/bin"
-						 "${_VCPKG_DIR}/tools/osg/osgPlugins-3.6.4"
-						 "${_VCPKG_DIR}/tools/osgearth/osgPlugins-3.6.4")
-		set(_BIN_DIR_DBG "${_VCPKG_DIR}/debug/bin"
-						 "${_VCPKG_DIR}/debug/tools/osg/osgPlugins-3.6.4"
-						 "${_VCPKG_DIR}/debug/tools/osgearth/osgPlugins-3.6.4")
+		set(_BIN_DIR_REL 
+						 "${_VCPKG_DIR}/bin"
+						 "${_VCPKG_DIR}/tools/osg"
+						 "${_VCPKG_DIR}/tools/osgearth")
+		set(_BIN_DIR_DBG 
+						 "${_VCPKG_DIR}/debug/bin"
+						 "${_VCPKG_DIR}/debug/tools/osg"
+						 "${_VCPKG_DIR}/debug/tools/osgearth")
 		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
 		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
 	endif()
