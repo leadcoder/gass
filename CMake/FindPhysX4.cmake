@@ -38,9 +38,14 @@ IF ( NOT DEFINED PHYSX4_LIBS )
 
 ENDIF()
 
-#vcpkg hack
-set(PHYSX4_DEBUG_LIB_DIR ${PHYSX4_INCLUDE_DIR}/../../debug/lib)
-set(PHYSX4_RELEASE_LIB_DIR ${PHYSX4_INCLUDE_DIR}/../../lib)
+#hack to find folder where libs are installed by vcpkg
+FIND_PATH( PHYSX4_DEBUG_LIB_DIR NAMES PhysX_${LIB}.lib
+           PATHS ${PHYSX4_INCLUDE_DIR}/../../debug/lib
+			     ${PHYSX4_INCLUDE_DIR}/../debug/lib)
+
+FIND_PATH( PHYSX4_RELEASE_LIB_DIR NAMES PhysX_${LIB}.lib
+           PATHS ${PHYSX4_INCLUDE_DIR}/../../lib
+			     ${PHYSX4_INCLUDE_DIR}/../lib)
 
 # Look for the libraries.
 FOREACH( PHYSX4_LIB ${PHYSX4_LIBS})

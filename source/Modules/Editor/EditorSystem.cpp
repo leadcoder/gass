@@ -27,7 +27,7 @@ namespace GASS
 		SceneManagerFactory::GetPtr()->Register<EditorSceneManager>("EditorSceneManager");
 		RegisterMember("LockTerrainObjects", &EditorSystem::m_LockTerrainObjects);
 		RegisterMember("DefaultCameraTemplate", &EditorSystem::m_DefaultCameraTemplate);
-		RegisterMember("ShowGUI", &EditorSystem::m_ShowGUI);
+		RegisterGetSet("ShowGUI", &EditorSystem::GetShowGUI, &EditorSystem::SetShowGUI);
 	}
 
 	void EditorSystem::OnSystemInit()

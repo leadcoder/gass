@@ -55,7 +55,8 @@ namespace GASS
 		m_GroundClamp(true),
 		m_HasHeight(false),
 		m_DesiredHeight(0),
-		m_PlatformSize(2,1,5)
+		m_PlatformSize(2,1,5),
+		m_PlatformType(PT_CAR)
 	{
 
 	}
@@ -69,6 +70,7 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<MotionComponent>();
 		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MotionComponent", OF_VISIBLE)));
+		RegisterMember("PlatformType", &GASS::MotionComponent::m_PlatformType);
 		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,PF_VISIBLE | PF_EDITABLE,"Acceleration [m/s2]");
 		RegisterGetSet("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,PF_VISIBLE | PF_EDITABLE,"Max Speed [m/s]");
 		RegisterMember("MaxTurnSpeed", &GASS::MotionComponent::m_MaxTurnSpeed,PF_VISIBLE | PF_EDITABLE,"Angular Max Speed [deg/s]");
@@ -95,9 +97,10 @@ namespace GASS
 			m_PlatformSize = message->GetGeometry()->GetBoundingBox().GetSize();
 	}
 
-	bool GetGroundData(ICollisionSceneManager* csm, const Vec3& pos, double vertical_ray_dist, GeometryFlags flags, Vec3& ground_pos, Vec3& normal)
+	bool GetGroundData(ICollisionSceneManager* csm, const Vec3& pos, double vertical_ray_dist, GeometryFlags flags, Vec3& ground_pos)
 	{
-		CollisionResult result;
+		return csm->GetLocationOnTerrain(pos, flags, ground_pos);
+		/*CollisionResult result;
 		const Vec3 ray_start = pos;
 		Vec3d up_vec(0, 1, 0);
 		csm->GetUpVector(pos, up_vec);
@@ -106,7 +109,6 @@ namespace GASS
 		if (result.Coll)
 		{
 			ground_pos = result.CollPosition;
-			normal = result.CollNormal;
 		}
 		else //check upwards
 		{
@@ -114,10 +116,9 @@ namespace GASS
 			if (result.Coll)
 			{
 				ground_pos = result.CollPosition;
-				normal = result.CollNormal;
 			}
 		}
-		return result.Coll;
+		return result.Coll;*/
 	}
 
 
@@ -149,7 +150,10 @@ namespace GASS
 			const Float ray_dist = 100.0;
 
 			//check ground and static geometry for now
-			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | GEOMETRY_FLAG_STATIC_OBJECT | GEOMETRY_FLAG_PAGED_LOD);
+			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | 
+															GEOMETRY_FLAG_STATIC_OBJECT | 
+															GEOMETRY_FLAG_PAGED_LOD | 
+															GEOMETRY_FLAG_GROUND_LOD);
 
 			/*if (m_Heightmap)
 			{
@@ -157,14 +161,13 @@ namespace GASS
 				p2.y = m_Heightmap->GetHeightAtWorldLocation(p2.x, p2.z);
 			}*/
 		
-			Vec3 normal;
 			Vec3 gp1, gp2, gp3;
 
 			//do tripod ground clamp
 			ICollisionSceneManager* csm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
-			if (GetGroundData(csm, p1, ray_dist, flags, gp1, normal) &&
-				GetGroundData(csm, p2, ray_dist, flags, gp2, normal) &&
-				GetGroundData(csm, p3, ray_dist, flags, gp3, normal))
+			if (GetGroundData(csm, p1, ray_dist, flags, gp1) &&
+				GetGroundData(csm, p2, ray_dist, flags, gp2) &&
+				GetGroundData(csm, p3, ray_dist, flags, gp3))
 			{
 
 				Vec3 v1 = gp2 - gp1;
@@ -175,7 +178,7 @@ namespace GASS
 				Vec3d terrain_up(0, 1, 0);
 				csm->GetUpVector(m_CurrentPos, terrain_up);
 				Vec3d center = m_CurrentPos + terrain_up * 10;
-				GetGroundData(csm, center, ray_dist, flags, center, normal);
+				GetGroundData(csm, center, ray_dist, flags, center);
 				//pick average height
 				//m_CurrentPos.y = (gp1.y + ((gp2.y + gp3.y)*0.5))*0.5;
 				//m_CurrentPos = (gp1 + ((gp2 + gp3) * 0.5)) * 0.5;

@@ -69,7 +69,7 @@ namespace GASS
 		bool m_DisableGLSL;
 		osgEarth::Util::Controls::Container* m_GUI;
 		std::string m_DummyProjection;
-		osg::ref_ptr<osgEarth::ElevationEnvelope> m_ElevationEnvelope;
+		osgEarth::ElevationPool::WorkingSet* m_WorkingSet = nullptr;
 		osgEarth::SpatialReference* m_WGS84;
 		osgEarth::Viewpoint m_OldVP;
 		ICollisionSceneManager* m_CollisionSceneManager;

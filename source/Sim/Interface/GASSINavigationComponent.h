@@ -22,6 +22,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSVec3.h"
+#include "Sim/Interface/GASSIPlatformComponent.h"
 
 namespace GASS
 {
@@ -31,6 +32,7 @@ namespace GASS
 		GASS_DECLARE_CLASS_AS_INTERFACE(INavigationComponent)
 	public:
 		virtual bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
+		virtual bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const = 0;
 	};
 	typedef GASS_SHARED_PTR<INavigationComponent> NavigationComponentPtr;
 	typedef GASS_WEAK_PTR<INavigationComponent> NavigationComponentWeakPtr;

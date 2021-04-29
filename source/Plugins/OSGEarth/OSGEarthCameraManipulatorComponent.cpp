@@ -204,8 +204,8 @@ namespace GASS
 					{
 						osgEarth::Viewpoint vp;
 						vp.focalPoint() = focalPoint;
-						vp.pitch() = -90;
-						vp.range() = rad * 3;
+						vp.pitch()->set(-90.0, osgEarth::Units::DEGREES);
+						vp.range()->set(rad * 3, osgEarth::Units::METERS);
 						m_Manipulator->setViewpoint(vp, 2.0);
 					}
 				}
@@ -262,37 +262,37 @@ namespace GASS
 
 	double OSGEarthCameraManipulatorComponent::GetPitch() const
 	{
-		return _GetVP().getPitch();
+		return _GetVP().pitch()->as(osgEarth::Units::DEGREES);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetPitch(double value)
 	{
 		osgEarth::Viewpoint vp = _GetVP();
-		vp.setPitch(value);
+		vp.setPitch(osgEarth::Angle(value, osgEarth::Units::DEGREES));
 		_SetVP(vp);
 	}
 
 	double OSGEarthCameraManipulatorComponent::GetHeading() const
 	{
-		return _GetVP().getHeading();
+		return _GetVP().heading()->as(osgEarth::Units::DEGREES);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetHeading(double value)
 	{
 		osgEarth::Viewpoint vp = _GetVP();
-		vp.setHeading(value);
+		vp.setHeading(osgEarth::Angle(value, osgEarth::Units::DEGREES));
 		_SetVP(vp);
 	}
 
 	double OSGEarthCameraManipulatorComponent::GetRange() const
 	{
-		return _GetVP().getRange();
+		return _GetVP().range()->as(osgEarth::Units::METERS);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetRange(double value)
 	{
 		osgEarth::Viewpoint vp = _GetVP();
-		vp.setRange(value);
+		vp.setRange(osgEarth::Distance(value, osgEarth::Units::METERS));
 		_SetVP(vp);
 	}
 

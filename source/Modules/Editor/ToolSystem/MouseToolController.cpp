@@ -3,6 +3,7 @@
 
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
+#include "Modules/Editor/EditorSystem.h"
 #include "IMouseTool.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
@@ -31,6 +32,7 @@
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
+#include "Modules/Editor/ToolSystem/BoxTool.h"
 
 namespace GASS
 {
@@ -42,7 +44,7 @@ namespace GASS
 		m_SnapAngle(15),
 		m_EnableMovmentSnap(false),
 		m_EnableAngleSnap(false),
-		m_RayPickDistance(10000),
+		m_RayPickDistance(6371000.0),
 		m_EnableGizmo(true),
 		m_UseTerrainNormalOnDrop(false),
 		m_ControlSettingName("EditorInputSettings"),
@@ -92,6 +94,9 @@ namespace GASS
 		tool = new PaintTool(this);
 		AddTool(tool);
 		tool = new GraphTool(this);
+		AddTool(tool);
+		
+		tool = new BoxTool(this);
 		AddTool(tool);
 
 		SelectTool(TID_SELECT);
@@ -479,14 +484,18 @@ namespace GASS
 
 		if(key == KEY_F5 && m_CtrlDown)
 		{
-			//send reload message
-			//GASS::SimEngine::Get().GetSimSystemManager()->PostMessage(GASS::SystemMessagePtr(new GASS::ReloadMaterial()));
 			GASS::SimEngine::Get().GetResourceManager()->ReloadAll();
 		}
 
 		if(key == KEY_F6 && m_CtrlDown)
 		{
 			GASS::SimEngine::Get().ReloadTemplates();
+		}
+
+		if (key == KEY_E && m_CtrlDown)
+		{
+			const bool toggle_value = !GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->GetShowGUI();
+			GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->SetShowGUI(toggle_value);
 		}
 
 		return true;

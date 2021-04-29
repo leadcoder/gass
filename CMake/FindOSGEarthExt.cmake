@@ -53,13 +53,9 @@ endif()
 if(OSGEARTH_FOUND)
 	set(OE_TARGETS 
 		osgEarth
-		osgEarthAnnotation
-		osgEarthFeatures
 		osgEarthSilverLining
 		osgEarthSplat
-		osgEarthSymbology
 		osgEarthTriton
-		osgEarthUtil
 	)
 
 	set(OSGEARTH_ALL_TARGETS)

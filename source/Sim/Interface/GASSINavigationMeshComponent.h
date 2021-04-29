@@ -21,19 +21,15 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/Interface/GASSIPlatformComponent.h"
 #include "Sim/Interface/GASSINavigationComponent.h"
-
 namespace GASS
 {
 	class INavigationMeshComponent : public INavigationComponent
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(INavigationMeshComponent)
 	public:
-		virtual bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const = 0;
 		virtual bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const = 0;
 		virtual bool Raycast(const PlatformType platform_type, const GASS::Vec3 &from_pos, const GASS::Vec3 &to_pos, GASS::Vec3 &hit_pos) const = 0;
-		
 		//virtual Vec3 GetRandomPoint() const = 0;
 		//virtual bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point)  const = 0;
 		//virtual bool IsPointInside(const Vec3 &point) const = 0;

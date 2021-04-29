@@ -37,6 +37,7 @@ namespace GASS
 
 		//IRoadNavigationComponent
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
+		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const override;
 		bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const override;
 	private:
 		void _CreateEditableFromNetwork();

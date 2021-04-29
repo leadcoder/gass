@@ -40,12 +40,11 @@ namespace GASS
 
 				//Send message
 				int from_id = GASS_PTR_TO_INT(this);
-				//MessagePtr goto_msg(new GotoPositionRequest(info.m_3DPos,from_id));
-
+				selected->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(info.m_3DPos, from_id)));
 				Vec3 dir(1,0,1);
 				dir.Normalize();
 				FaceDirectionRequestPtr fd_msg(new FaceDirectionRequest(dir,from_id));
-				selected->PostRequest(PathfindToPositionMessagePtr(new PathfindToPositionMessage(info.m_3DPos,from_id)));
+				//selected->PostRequest(PathfindToPositionMessagePtr(new PathfindToPositionMessage(info.m_3DPos,from_id)));
 				selected->PostRequest(fd_msg);
 			}
 		}

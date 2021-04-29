@@ -393,7 +393,11 @@ namespace GASS
 		path = m_Network.Search(from,to);
 		return true;
 	}
-	
+
+	bool RNRoadNetworkComponent::GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const
+	{
+		return GetShortestPath(from, to, path);
+	}
 
 	bool RNRoadNetworkComponent::GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const
 	{

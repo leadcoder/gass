@@ -1,0 +1,5 @@
+Source: gass-deps
+Version: 2021-04-29
+Homepage: https://github.com/leadcoder/gass
+Description: GASSSim dependencies
+Build-Depends: ois, osg (windows), osgearth (windows), physx (windows), ode, openal-soft, libuuid (linux)

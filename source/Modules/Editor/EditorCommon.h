@@ -20,3 +20,4 @@
 #define TID_MEASUREMENT "MeasurementTool"
 #define TID_CREATE "CreateTool"
 #define TID_GRAPH "GraphTool"
+#define TID_BOX "BoxTool"

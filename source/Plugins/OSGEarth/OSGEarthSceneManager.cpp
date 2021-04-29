@@ -26,6 +26,7 @@
 #include "Plugins/OSG/IOSGGraphicsSystem.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Plugins/OSG/OSGConvert.h"
+//#include <osgEarth/LogarithmicDepthBuffer>
 
 namespace GASS
 {
@@ -73,7 +74,7 @@ namespace GASS
 		m_MapNode(nullptr),
 		m_CollisionSceneManager(nullptr)
 	{
-
+		
 	}
 
 	void OSGEarthSceneManager::OnPostConstruction()
@@ -90,7 +91,7 @@ namespace GASS
 
 	OSGEarthSceneManager::~OSGEarthSceneManager()
 	{
-
+		delete m_WorkingSet;
 	}
 
 	void OSGEarthSceneManager::OnSceneCreated()
@@ -115,6 +116,10 @@ namespace GASS
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
+
+		//osgEarth::Util::LogarithmicDepthBuffer logDepth;
+		//logDepth.setUseFragDepth(false);
+		//logDepth.install(views[0]->getCamera());
 
 
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
@@ -180,8 +185,10 @@ namespace GASS
 			
 		}
 		if (map_node == NULL)
-			m_ElevationEnvelope.release();
-
+		{ 
+			delete m_WorkingSet;
+			m_WorkingSet = nullptr;
+		}
 		m_MapNode = map_node;
 		OnElevationChanged();
 	}
@@ -193,7 +200,7 @@ namespace GASS
 			//const unsigned int elev_lod = 23u;
 			const unsigned int elev_lod = 15u;
 			//Use m_WGS84 here because we ask for height in GeoCoords
-			m_ElevationEnvelope = m_MapNode->getMap()->getElevationPool()->createEnvelope(m_WGS84, elev_lod);
+			m_WorkingSet = new osgEarth::ElevationPool::WorkingSet();
 		}
 	}
 
@@ -401,7 +408,21 @@ namespace GASS
 		{
 			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
 			{
-				const float elevation = m_ElevationEnvelope->getElevation(location.Longitude, location.Latitude);
+				osgEarth::GeoPoint mapPoint(m_WGS84, location.Longitude, location.Latitude);
+				// Query the elevation at the map location:
+				osgEarth::ElevationSample sample = m_MapNode->getMap()->getElevationPool()->getSample(
+					mapPoint,
+					m_WorkingSet);
+
+
+				float elevation = NO_DATA_VALUE;
+				if (sample.hasData())
+				{
+					// convert to geodetic to get the HAE:
+					elevation = sample.elevation().as(osgEarth::Units::METERS);
+				}
+
+				
 				if (elevation != NO_DATA_VALUE)
 					height = static_cast<double>(elevation);
 				else

@@ -261,7 +261,7 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const
 	{
-		/*if (m_TerrainSM)
+		if (m_TerrainSM)
 		{
 			double hat = 0;
 			if (m_TerrainSM->GetHeightAboveTerrain(location, hat, flags))
@@ -272,8 +272,8 @@ namespace GASS
 				return true;
 			}
 			return false;
-		}*/
-		
+		}
+
 		bool found_location = false;
 
 		if (m_Scene->GetGeocentric())
@@ -281,12 +281,15 @@ namespace GASS
 			const double r = osg::WGS_84_RADIUS_EQUATOR;
 
 			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
-			double latitude, longitude, height_hae;
-			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
-			constexpr double min_height = -20000;
-			const Vec3 dir = -up_vector * (height_hae - min_height);
+			//double latitude, longitude, height_hae;
+			//m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
+			//constexpr double min_height = -20000;
+			//const Vec3 dir = -up_vector * (height_hae - min_height);
+			const Vec3 dir = -up_vector * 2.0 * r;
+			const Vec3 start_pos = location + (up_vector * r);
+
 			CollisionResult result;
-			Raycast(location, dir, flags, result, true);
+			Raycast(start_pos, dir, flags, result, true);
 			if (result.Coll)
 			{
 				terrain_location = result.CollPosition;

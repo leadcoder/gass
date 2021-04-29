@@ -13,6 +13,12 @@
 #include "ToolSystem/MouseToolController.h"
 #include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 
+#include "Sim/Interface/GASSIGraphComponent.h"
+#include "Sim/Interface/GASSIGraphNodeComponent.h"
+#include "Sim/Interface/GASSIGraphEdgeComponent.h"
+#include "Modules/Editor/ToolSystem/GraphTool.h"
+
+
 namespace GASS
 {
 	class EditorGui
@@ -211,6 +217,34 @@ namespace GASS
 					so->GetParentSceneObject()->RemoveChildSceneObject(so);
 					node_deleted = true;
 				}
+
+				if (ImGui::MenuItem("Set as parent for new objects"))
+				{
+					editor->SetObjectSite(so);
+				}
+				
+				if (so->GetFirstComponentByClass<IGraphComponent>().get())
+				{
+					if (ImGui::MenuItem("Add Node..."))
+					{
+						OnAddGraphNode(so);
+					}
+
+					if (ImGui::MenuItem("Insert Node..."))
+					{
+						OnInsertGraphNode(so);
+					}
+				}
+
+				if (so->GetFirstComponentByClass<IGraphNodeComponent>().get())
+				{
+					if (ImGui::MenuItem("Add Node..."))
+					{
+						OnAddGraphNode(so);
+					}
+				}
+
+				
 
 				ImGui::EndPopup();
 
@@ -612,10 +646,10 @@ namespace GASS
 			else if (m_SceneSelected)
 			{
 				std::string scene_name = m_SceneSelected->GetName();
-				/*if (ImGui::InputText("Name", &scene_name))
+				if (ImGui::InputText("Name", &scene_name))
 				{
-					
-				}*/
+					m_SceneSelected->SetName(scene_name);
+				}
 				auto props = m_SceneSelected->GetProperties();
 				for (auto prop : props)
 				{
@@ -656,7 +690,7 @@ namespace GASS
 			{
 				tool_name =  active_tool->GetName();
 			}
-			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE };
+			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE,TID_GOTO_POS,TID_BOX };
 
 			int e = -1;
 			for (size_t i = 0; i < tools.size(); i++)
@@ -736,6 +770,62 @@ namespace GASS
 				dragging = true;
 			}
 		}
-		
+
+
+
+		void OnAddGraphNode(SceneObjectPtr obj)
+		{
+			if (obj)
+			{
+				GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
+				if (graph)
+				{
+					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+					sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+					GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+					tool->SetMode(GASS::GTM_ADD);
+					tool->SetParentObject(obj);
+					tool->SetConnetionObject(SceneObjectPtr());
+					tool->SetNodeTemplateName(graph->GetNodeTemplate());
+					tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+				}
+
+				GraphNodeComponentPtr node = obj->GetFirstComponentByClass<IGraphNodeComponent>();
+				if (node)
+				{
+					GraphComponentPtr graph = obj->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();
+					if (graph)
+					{
+						EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+						sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+						GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+						tool->SetParentObject(obj->GetParentSceneObject());
+						tool->SetMode(GTM_ADD);
+						tool->SetConnetionObject(obj);
+						tool->SetNodeTemplateName(graph->GetNodeTemplate());
+						tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+					}
+				}
+			}
+		}
+
+		void OnInsertGraphNode(SceneObjectPtr obj)
+		{
+			if (obj)
+			{
+				GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
+				if (graph)
+				{
+					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+					sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+					GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+					tool->SetMode(GTM_INSERT);
+					tool->SetParentObject(obj);
+					tool->SetNodeTemplateName(graph->GetNodeTemplate());
+					tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+				}
+			}
+		}
+
 	};
 }

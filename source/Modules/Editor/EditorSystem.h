@@ -30,6 +30,8 @@ namespace GASS
 
 		bool GetLockTerrainObjects() const { return m_LockTerrainObjects; }
 		std::string GetDefaultCameraTemplate() const { return m_DefaultCameraTemplate; }
+		void SetShowGUI(bool value) { m_ShowGUI = value; }
+		bool GetShowGUI() const { return m_ShowGUI; }
 	protected:
 		void OnDrawGui(DrawGUIEventPtr gui_event);
 		bool m_LockTerrainObjects;

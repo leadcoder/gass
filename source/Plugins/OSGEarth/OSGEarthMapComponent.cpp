@@ -33,13 +33,14 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include <osgDB/FileUtils>
 
 namespace GASS
 {
 
 	struct OEMapListenerProxy : public osgEarth::MapCallback
 	{
-		OEMapListenerProxy(OSGEarthMapComponent* map_comp) : m_MapComponent(map_comp){}
+		OEMapListenerProxy(OSGEarthMapComponent* map_comp) : m_MapComponent(map_comp) {}
 		void onMapModelChanged(const osgEarth::MapModelChange& change)
 		{
 			m_MapComponent->onMapModelChanged(change);
@@ -56,8 +57,8 @@ namespace GASS
 		}
 
 		void onTileAdded(
-			const osgEarth::TileKey&          key,
-			osg::Node*              graph,
+			const osgEarth::TileKey& key,
+			osg::Node* graph,
 			osgEarth::TerrainCallbackContext& context)
 		{
 			m_MapComponent->onTileAdded(key, graph, context);
@@ -71,7 +72,7 @@ namespace GASS
 	public:
 		OSGEarthMapLayer(osgEarth::VisibleLayer* layer) : m_Layer(layer)
 		{
-			
+
 		}
 
 		std::string GetName() const override
@@ -112,7 +113,7 @@ namespace GASS
 				layer_type = MLT_ELEVATION;
 			else if (dynamic_cast<osgEarth::ModelLayer*>(m_Layer))
 				layer_type = MLT_MODEL;
-			else if (dynamic_cast<osgEarth::Features::FeatureModelLayer*>(m_Layer))
+			else if (dynamic_cast<osgEarth::FeatureModelLayer*>(m_Layer))
 				layer_type = MLT_FEATURE_MODEL;
 			return layer_type;
 		}
@@ -157,7 +158,7 @@ namespace GASS
 
 	OSGEarthMapComponent::~OSGEarthMapComponent()
 	{
-		
+
 	}
 
 	void OSGEarthMapComponent::RegisterReflection()
@@ -169,12 +170,15 @@ namespace GASS
 		auto vp_prop = RegisterGetSet("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName, PF_VISIBLE | PF_EDITABLE, "Set Viewpoint");
 		vp_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetViewpointNames);
 
-		RegisterGetSet("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay, PF_VISIBLE | PF_EDITABLE,"Time of day");
-		RegisterGetSet("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient, PF_VISIBLE | PF_EDITABLE,"Minimum ambient sky light");
-		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE,"Enable/disable sky light");
+		RegisterGetSet("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay, PF_VISIBLE | PF_EDITABLE, "Time of day");
+		RegisterGetSet("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient, PF_VISIBLE | PF_EDITABLE, "Minimum ambient sky light");
+		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE, "Enable/disable sky light");
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
 		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
+
+		RegisterMember("AddSky", &OSGEarthMapComponent::m_AddSky, PF_VISIBLE , "Add sky light");
+
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -184,7 +188,7 @@ namespace GASS
 			m_OESceneManager = osgearth_sm.get();
 		else
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find OSGEarthSceneManager", "OSGEarthMapComponent::OnInitialize");
-		
+
 		m_Initlized = true;
 		SetEarthFile(m_EarthFile);
 	}
@@ -198,13 +202,13 @@ namespace GASS
 	{
 		if (m_Initlized && m_MapNode)
 		{
-			if(m_MapNode->getTerrain())
+			if (m_MapNode->getTerrain())
 				m_MapNode->getTerrain()->removeTerrainCallback(m_TerrainCallbackProxy);
 			// disconnect extensions
 			osgViewer::ViewerBase::Views views;
 			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
 			GASSAssert(osg_sys, "Failed to find OSGGraphicsSystem in OSGEarthMapComponent::Shutdown");
-			
+
 			osg_sys->GetViewer()->getViews(views);
 
 
@@ -217,7 +221,7 @@ namespace GASS
 
 				// Check for a View interface:
 				osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
-				if (viewIF &&  views.size() > 0)
+				if (viewIF && views.size() > 0)
 					viewIF->disconnect(views[0]);
 
 				// Check for a Control interface:
@@ -226,10 +230,11 @@ namespace GASS
 					controlIF->disconnect(m_OESceneManager->GetGUI());
 			}
 
+#ifdef HAS_FOG
 			//remove fog effect
 			if (m_FogEffect)
 				m_FogEffect->detach(m_MapNode->getStateSet());
-
+#endif
 			if (m_AutoClipCB)
 				views[0]->getCamera()->removeCullCallback(m_AutoClipCB);
 
@@ -244,7 +249,9 @@ namespace GASS
 
 			//release
 			m_Lighting.release();
+#ifdef HAS_FOG
 			m_FogEffect.release();
+#endif
 			m_AutoClipCB.release();
 
 			m_OESceneManager->SetMapNode(NULL);
@@ -269,7 +276,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle &earth_file)
+	void OSGEarthMapComponent::SetEarthFile(const ResourceHandle& earth_file)
 	{
 		//Always store filename
 		m_EarthFile = earth_file;
@@ -278,216 +285,234 @@ namespace GASS
 		if (!m_Initlized)
 			return;
 
-		
-		if (earth_file.Valid())
+		IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
+		GASSAssert(osg_sm, "Failed to find OSGGraphicsSceneManager in OSGEarthMapComponent::SetEarthFile");
+
+		const std::string full_path = [&]
 		{
-			IOSGGraphicsSceneManagerPtr osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
-			GASSAssert(osg_sm, "Failed to find OSGGraphicsSceneManager in OSGEarthMapComponent::SetEarthFile");
-			//OSGEarthSceneManagerPtr osgearth_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGEarthSceneManager>();
-			//GASSAssert(osgearth_sm, "Failed to find OSGEarthSceneManager in OSGEarthMapComponent::SetEarthFile");
+			if (SimEngine::Get().GetResourceManager()->HasResource(earth_file.Name()))
+				return m_EarthFile.GetResource()->Path().GetFullPath();
 
-			const std::string full_path = m_EarthFile.GetResource()->Path().GetFullPath();
-
-			//set cache path
-
-			const char* temp_str = getenv("OE_CACHE_DATA_PATH");
-			if (temp_str)
+			if (osgDB::fileExists(m_EarthFile.Name()) && osgDB::isAbsolutePath(m_EarthFile.Name()))
 			{
-				osgEarth::Drivers::FileSystemCacheOptions osgEarthCacheOptions;
-				osgEarthCacheOptions.rootPath() = temp_str;//"c:/OSGEarthCache/test_cache";
-				osgEarth::Registry::instance()->setDefaultCache(osgEarth::CacheFactory::create(osgEarthCacheOptions));
-				osgEarth::Registry::instance()->setDefaultCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
+				return m_EarthFile.Name();
 			}
+			return std::string("");
+		}();
 
-			//read earth file
-			osg::Node* top_node = osgDB::readNodeFile(full_path);
-			if (!top_node)
-			{
-				//failed to load earth file!
-				return;
-			}
-
-			//If successfully loaded, unload current map (if present)
-			Shutdown();
-
-			//Save top node, to be used during shutdown
-			m_TopNode = top_node;
-			m_MapNode = osgEarth::MapNode::findMapNode(top_node);
-			GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
-		
-			m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
-
-			_SetupNodeMasks();
-
-			if (m_MapNode->getTerrain())
-			{
-				m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
-			}
-
-			osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
-			root->addChild(top_node);
-
-			//if no sky is present (projected mode) but we still want get terrain lightning  
-			//m_Lighting = new osgEarth::PhongLightingEffect();
-			//m_Lighting->setCreateLightingUniform(false);
-			//m_Lighting->attach(m_MapNode->getOrCreateStateSet());
-
-			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
-			if (m_SkyNode)
-			{
-				//set default year/month and day to get good lighting
-				m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
-			}
-
-			//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
-			osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
-			m_MapNode->setUserData(data);
-
-			//inform OSGEarth scene manager that we have new map node
-			m_OESceneManager->SetMapNode(m_MapNode);
-
-			//read viewpoints from earth file and store them in m_Viewpoints vector 
-			{
-				m_Viewpoints.clear();
-				const osgEarth::Config& externals = m_MapNode->externalConfig();
-
-				osgEarth::Config viewpointsConf = externals.child("viewpoints");
-
-				if (viewpointsConf.children("viewpoint").size() == 0)
-					viewpointsConf = m_MapNode->getConfig().child("viewpoints");
-
-				// backwards-compatibility: read viewpoints at the top level:
-				const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
-				for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
-					viewpointsConf.add(*i);
-
-				const osgEarth::ConfigSet& children = viewpointsConf.children("viewpoint");
-				if (children.size() > 0)
-				{
-					for (osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i)
-					{
-						m_Viewpoints.push_back(osgEarth::Viewpoint(*i));
-					}
-				}
-			}
-
-			IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
-			osgViewer::ViewerBase::Views all_views;
-			osg_sys->GetViewer()->getViews(all_views);
-
-			if (all_views.size() == 0)
-			{
-				return;
-			}
-			osgViewer::View* view = all_views[0];
-		
-			// Hook up the extensions!
-			{
-				for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
-					eiter != m_MapNode->getExtensions().end();
-					++eiter)
-				{
-					osgEarth::Extension* e = eiter->get();
-
-					// Check for a View interface:
-					osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
-					if (viewIF)
-						viewIF->connect(view);
-
-					// Check for a Control interface:
-					osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
-					if (controlIF)
-						controlIF->connect(m_OESceneManager->GetGUI());
-				}
-			}
-			
-			if (!m_SkyNode)
-			{
-				/*if (false)
-				{
-					m_SkyNode = osgEarth::Util::SkyNode::create(m_MapNode);
-					//osgEarth::Util::SkyNode* sky = new osgEarth::Util::SkyNode::vre( m_MapNode->getMap());
-					m_SkyNode->setDateTime(osgEarth::DateTime(2013, 1, 6, m_Time));
-					m_SkyNode->attach(view);
-					root->addChild(m_SkyNode);
-					//if (m_ShowSkyControl)
-					{
-						osgEarth::Util::Controls::Control* c = osgEarth::Util::SkyControlFactory().create(m_SkyNode);
-						if (c)
-							osgearth_sm->GetGUI()->addControl(c);
-					}
-				}*/
-			}
-			
-			//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
-			view->setLightingMode(osg::View::SKY_LIGHT);
-
-			if (m_UseAutoClipPlane)
-			{
-				//Setup AutoClipPlaneCullCallback to handel near/far clipping issues
-				m_AutoClipCB = new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode);
-				m_AutoClipCB->setMinNearFarRatio(0.00000001); //NearFarRatio at zero altitude
-				m_AutoClipCB->setMaxNearFarRatio(0.00005); //NearFarRatio at height threshold 
-				m_AutoClipCB->setHeightThreshold(3000); // above this height we get MaxNearFarRatio
-				view->getCamera()->addCullCallback(m_AutoClipCB);
-			}
-
-			if (false) //use fog
-			{
-				osg::ref_ptr<osg::Group> fog_root = osg_sm->GetOSGRootNode();
-				osg::StateSet* state = fog_root->getOrCreateStateSet();
-				osg::Fog* fog = (osg::Fog *) state->getAttribute(osg::StateAttribute::FOG);
-				if (fog)
-				{
-					if (!fog->getUpdateCallback())
-						fog->setUpdateCallback(new osgEarth::Util::FogCallback());
-					m_FogEffect = new osgEarth::Util::FogEffect;
-					m_FogEffect->attach(m_MapNode->getOrCreateStateSet());
-				}
-			}
-
-			_UpdateMapLayers();
-
-			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-			GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
-			
-			//if (m_UseOcean)
-			//	{
-			/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
-			if ( ocean )
-			{
-			// if there's a sky, we want to ocean under it
-			osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
-			if ( !parent ) parent = root;
-			parent->addChild( ocean );
-
-			osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
-			if ( c )
-			mainContainer->addControl(c);
-			}
-			*/
-
-			/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
-			if ( ocean )
-			{
-			root->addChild( ocean );
-			if(m_ShowOceanControl)
-			{
-			osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
-			if ( c )
-			mainContainer->addControl(c);
-			}
-			}*/
-			//}
+		if (full_path == "")
+		{
+			GASS_LOG(LINFO) << "OSGEarthMapComponent::SetEarthFile, could not load:" << m_EarthFile.Name();
+			return;
 		}
+		
+		//Add to path to let oe find shaders
+		osgDB::Registry::instance()->getDataFilePathList().push_back(osgDB::getFilePath(full_path));
+
+
+		//set cache path
+
+		const char* temp_str = getenv("OE_CACHE_DATA_PATH");
+		if (temp_str)
+		{
+			osgEarth::Drivers::FileSystemCacheOptions osgEarthCacheOptions;
+			osgEarthCacheOptions.rootPath() = temp_str;//"c:/OSGEarthCache/test_cache";
+			osgEarth::Registry::instance()->setDefaultCache(osgEarth::CacheFactory::create(osgEarthCacheOptions));
+			osgEarth::Registry::instance()->setDefaultCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
+		}
+
+		//read earth file
+		osg::Node* read_node = osgDB::readNodeFile(full_path);
+		if (!read_node)
+		{
+			//failed to load earth file!
+			return;
+		}
+
+		//If successfully loaded, unload current map (if present)
+		Shutdown();
+
+		m_MapNode = osgEarth::MapNode::findMapNode(read_node);
+		GASSAssert(m_MapNode, "Failed to find mapnode in OSGEarthMapComponent::SetEarthFile");
+
+		if (!m_MapNode->open())
+		{
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to open map node", "OSGEarthMapComponent::OnInitialize");
+		}
+
+		
+		m_MapNode->getMap()->addMapCallback(new OEMapListenerProxy(this));
+
+		_SetupNodeMasks();
+
+		if (m_MapNode->getTerrain())
+		{
+			m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
+		}
+
+		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+	
+		//if no sky is present (projected mode) but we still want get terrain lightning  
+		//m_Lighting = new osgEarth::PhongLightingEffect();
+		//m_Lighting->setCreateLightingUniform(false);
+		//m_Lighting->attach(m_MapNode->getOrCreateStateSet());
+
+		m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+		if (m_SkyNode)
+		{
+			//set default year/month and day to get good lighting
+			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
+			
+		}
+
+		//Save top node, to be used during shutdown
+		m_TopNode = osgEarth::findTopOfGraph(read_node);
+		root->addChild(m_TopNode);
+
+		//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
+		osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
+		m_MapNode->setUserData(data);
+
+		//inform OSGEarth scene manager that we have new map node
+		m_OESceneManager->SetMapNode(m_MapNode);
+
+		//read viewpoints from earth file and store them in m_Viewpoints vector 
+		{
+			m_Viewpoints.clear();
+			const osgEarth::Config& externals = m_MapNode->externalConfig();
+
+			osgEarth::Config viewpointsConf = externals.child("viewpoints");
+
+			if (viewpointsConf.children("viewpoint").size() == 0)
+				viewpointsConf = m_MapNode->getConfig().child("viewpoints");
+
+			// backwards-compatibility: read viewpoints at the top level:
+			const osgEarth::ConfigSet& old_viewpoints = externals.children("viewpoint");
+			for (osgEarth::ConfigSet::const_iterator i = old_viewpoints.begin(); i != old_viewpoints.end(); ++i)
+				viewpointsConf.add(*i);
+
+			const osgEarth::ConfigSet& children = viewpointsConf.children("viewpoint");
+			if (children.size() > 0)
+			{
+				for (osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i)
+				{
+					m_Viewpoints.push_back(osgEarth::Viewpoint(*i));
+				}
+			}
+		}
+
+		IOSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IOSGGraphicsSystem>();
+		osgViewer::ViewerBase::Views all_views;
+		osg_sys->GetViewer()->getViews(all_views);
+
+		if (all_views.size() == 0)
+		{
+			return;
+		}
+		osgViewer::View* view = all_views[0];
+
+		// Hook up the extensions!
+		{
+			for (std::vector<osg::ref_ptr<osgEarth::Extension> >::const_iterator eiter = m_MapNode->getExtensions().begin();
+				eiter != m_MapNode->getExtensions().end();
+				++eiter)
+			{
+				osgEarth::Extension* e = eiter->get();
+
+				// Check for a View interface:
+				osgEarth::ExtensionInterface<osg::View>* viewIF = osgEarth::ExtensionInterface<osg::View>::get(e);
+				if (viewIF)
+					viewIF->connect(view);
+
+				// Check for a Control interface:
+				osgEarth::ExtensionInterface<osgEarth::Util::Control>* controlIF = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
+				if (controlIF)
+					controlIF->connect(m_OESceneManager->GetGUI());
+			}
+		}
+
+		if (!m_SkyNode && m_AddSky)
+		{
+			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
+			sky_options.atmosphericLighting() = false;
+			
+			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
+			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
+			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+			SetTimeOfDay(m_Hour);
+		}
+
+		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
+		view->setLightingMode(osg::View::SKY_LIGHT);
+
+		if (m_UseAutoClipPlane)
+		{
+			//Setup AutoClipPlaneCullCallback to handel near/far clipping issues
+			m_AutoClipCB = new osgEarth::Util::AutoClipPlaneCullCallback(m_MapNode);
+			m_AutoClipCB->setMinNearFarRatio(0.00000001); //NearFarRatio at zero altitude
+			m_AutoClipCB->setMaxNearFarRatio(0.00005); //NearFarRatio at height threshold 
+			m_AutoClipCB->setHeightThreshold(3000); // above this height we get MaxNearFarRatio
+			view->getCamera()->addCullCallback(m_AutoClipCB);
+		}
+
+#ifdef HAS_FOG
+		if (true) //use fog
+		{
+			osg::ref_ptr<osg::Group> fog_root = osg_sm->GetOSGRootNode();
+			osg::StateSet* state = fog_root->getOrCreateStateSet();
+			osg::Fog* fog = (osg::Fog*) state->getAttribute(osg::StateAttribute::FOG);
+			if (fog)
+			{
+				if (!fog->getUpdateCallback())
+					fog->setUpdateCallback(new osgEarth::Util::FogCallback());
+				m_FogEffect = new osgEarth::Util::FogEffect;
+				m_FogEffect->attach(m_MapNode->getOrCreateStateSet());
+			}
 	}
+#endif
+		_UpdateMapLayers();
+
+		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
+
+		//if (m_UseOcean)
+		//	{
+		/*	osgEarth::Util::OceanNode* ocean = osgEarth::Util::OceanNode::create(osgEarth::Util::OceanOptions(oceanConf), m_MapNode);
+		if ( ocean )
+		{
+		// if there's a sky, we want to ocean under it
+		osg::Group* parent = osgEarth::findTopMostNodeOfType<osgEarth::Util::SkyNode>(root);
+		if ( !parent ) parent = root;
+		parent->addChild( ocean );
+
+		osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean);
+		if ( c )
+		mainContainer->addControl(c);
+		}
+		*/
+
+		/*osgEarth::Util::OceanSurfaceNode* ocean = new  osgEarth::Util::OceanSurfaceNode( m_MapNode, oceanConf );
+		if ( ocean )
+		{
+		root->addChild( ocean );
+		if(m_ShowOceanControl)
+		{
+		osgEarth::Util::Controls::Control* c = osgEarth::Util::OceanControlFactory().create(ocean, views[0]);
+		if ( c )
+		mainContainer->addControl(c);
+		}
+		}*/
+		//}
+
+}
 
 	void OSGEarthMapComponent::_SetupNodeMasks()
 	{
 		osgEarth::ModelLayerVector modelLayers;
 		m_MapNode->getMap()->getLayers(modelLayers);
-		OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_GROUND, m_MapNode->getTerrain()->getGraph());
-		
+		if (m_MapNode->getTerrain())
+			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_GROUND, m_MapNode->getTerrain()->getGraph());
+
 		for (unsigned i = 0; i < modelLayers.size(); ++i)
 		{
 			if (modelLayers[i]->getNode())
@@ -504,10 +529,10 @@ namespace GASS
 		// the active map layers:
 		if (m_Initlized)
 		{
-			
-			for (size_t i = 0;  i < m_MapLayers.size(); i++)
+
+			for (size_t i = 0; i < m_MapLayers.size(); i++)
 			{
-				if(m_MapLayers[i]->GetVisible())
+				if (m_MapLayers[i]->GetVisible())
 					layer_names.push_back(m_MapLayers[i]->GetName());
 			}
 		}
@@ -517,7 +542,7 @@ namespace GASS
 	std::vector<std::string> OSGEarthMapComponent::GetMapLayerNames() const
 	{
 		std::vector<std::string> layer_names;
-		const MapLayers &layers = GetMapLayers();
+		const MapLayers& layers = GetMapLayers();
 		for (size_t i = 0; i < layers.size(); i++)
 		{
 			layer_names.push_back(layers[i]->GetName());
@@ -525,11 +550,11 @@ namespace GASS
 		return layer_names;
 	}
 
-	void OSGEarthMapComponent::SetVisibleMapLayers(const std::vector<std::string> &layer_names)
+	void OSGEarthMapComponent::SetVisibleMapLayers(const std::vector<std::string>& layer_names)
 	{
 		if (m_Initlized)
 		{
-			
+
 			for (size_t i = 0; i < m_MapLayers.size(); i++)
 			{
 				bool visible = false;
@@ -565,7 +590,7 @@ namespace GASS
 	{
 		if (m_SkyNode)
 		{
-			m_SkyNode->setMinimumAmbient(osg::Vec4f(value,value,value,1));
+			m_SkyNode->getSunLight()->setAmbient(osg::Vec4f(value,value,value,1));
 		}
 	}
 
@@ -574,7 +599,7 @@ namespace GASS
 		float value = 0;
 		if (m_SkyNode)
 		{
-			value = m_SkyNode->getMinimumAmbient().x();
+			value = m_SkyNode->getSunLight()->getAmbient().x();
 		}
 		return value;
 	}
@@ -597,27 +622,27 @@ namespace GASS
 		return value;
 	}
 
-	
+
 	std::vector<std::string> OSGEarthMapComponent::GetViewpointNames() const
 	{
 		std::vector<std::string> names;
-		for (size_t i = 0; i <  m_Viewpoints.size(); i++)
+		for (size_t i = 0; i < m_Viewpoints.size(); i++)
 		{
 			names.push_back(m_Viewpoints[i].name().value());
 		}
 		return names;
 	}
 
-	void OSGEarthMapComponent::SetViewpointByName(const std::string &name)
+	void OSGEarthMapComponent::SetViewpointByName(const std::string& name)
 	{
 		if (!m_Initlized)
 			return;
 		for (size_t i = 0; i < m_Viewpoints.size(); i++)
 		{
-			if( m_Viewpoints[i].name().value() == name)
+			if (m_Viewpoints[i].name().value() == name)
 			{
 				osgEarth::Util::EarthManipulator* manip = m_OESceneManager->GetManipulator().get();
-				if(manip)
+				if (manip)
 					manip->setViewpoint(m_Viewpoints[i], 2.0);
 				return; //done
 			}
@@ -650,8 +675,8 @@ namespace GASS
 		}
 	}
 
-	AABox OSGEarthMapComponent::GetBoundingBox() const 
-	{ 
+	AABox OSGEarthMapComponent::GetBoundingBox() const
+	{
 		AABoxd bb;
 		if (m_MapNode)
 		{
@@ -677,8 +702,8 @@ namespace GASS
 		return bb;
 	}
 
-	Sphere OSGEarthMapComponent::GetBoundingSphere() const 
-	{ 
+	Sphere OSGEarthMapComponent::GetBoundingSphere() const
+	{
 		Sphere sphere;
 		if (m_MapNode)
 		{
