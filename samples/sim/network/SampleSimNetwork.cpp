@@ -60,7 +60,7 @@ int main(int /*argc*/, char* /*argv[]*/)
 	SimApplicationPtr app;
 
 	std::cout << "Server or client?, Press [S] or [C]";
-	char key = static_cast<int>(_getch());
+	char key = static_cast<char>(_getch());
 	if(key == 'c' || key == 'C')
 		app = SimApplicationPtr(new SimClient());
 	else if(key == 's' || key == 'S')

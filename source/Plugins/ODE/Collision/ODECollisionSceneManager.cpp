@@ -233,17 +233,17 @@ namespace GASS
 
 	bool ODECollisionSceneManager::GetHeightAboveSeaLevel(const Vec3& location, double& height) const
 	{
-		return location.y;
+		height = location.y;
 		return true;
 	}
 
-	bool ODECollisionSceneManager::GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const
+	bool ODECollisionSceneManager::GetUpVector(const Vec3& /*location*/, GASS::Vec3& up_vec) const
 	{
 		up_vec.Set(0, 1, 0);
 		return true;
 	}
 
-	bool ODECollisionSceneManager::GetOrientation(const Vec3& location, Quaternion& rot) const
+	bool ODECollisionSceneManager::GetOrientation(const Vec3& /*location*/, Quaternion& rot) const
 	{
 		rot = Quaternion::IDENTITY;
 		return true;

@@ -322,7 +322,7 @@ namespace GASS
 					view_dir.y = 0;
 					view_dir.Normalize();
 
-					Vec3f final_dir;
+					Vec3f final_dir = m_CurrentDir;
 					//m_CurrentDir = view_dir;
 					//if(speed < 0.2)
 					{

@@ -696,8 +696,8 @@ namespace GASS
 			for (size_t i = 0; i < tools.size(); i++)
 			{
 				if (tools[i] == tool_name)
-					e = i;
-				if (ImGui::RadioButton(tools[i].c_str(), &e, i))
+					e = int(i);
+				if (ImGui::RadioButton(tools[i].c_str(), &e,int(i)))
 					esm->GetMouseToolController()->SelectTool(tools[i]);
 			}
 			
