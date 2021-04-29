@@ -1,7 +1,6 @@
 /****************************************************************************
 * This file is part of GASS.                                                *
 * See https://github.com/leadcoder/gass                                     *
-* See https://github.com/leadcoder/gass                                     *
 *                                                                           *
 * Copyright (c) 2008-2016 GASS team. See Contributors.txt for details.      *
 *                                                                           *

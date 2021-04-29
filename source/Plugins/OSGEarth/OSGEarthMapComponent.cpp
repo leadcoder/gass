@@ -33,6 +33,7 @@
 #include "Sim/GASSBaseSceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
+#include "Core/Utils/GASSSystem.h"
 #include <osgDB/FileUtils>
 
 namespace GASS
@@ -312,8 +313,8 @@ namespace GASS
 
 		//set cache path
 
-		const char* temp_str = getenv("OE_CACHE_DATA_PATH");
-		if (temp_str)
+		std::string temp_str = System::GetEnvVar("OE_CACHE_DATA_PATH");
+		if (!temp_str.empty())
 		{
 			osgEarth::Drivers::FileSystemCacheOptions osgEarthCacheOptions;
 			osgEarthCacheOptions.rootPath() = temp_str;//"c:/OSGEarthCache/test_cache";

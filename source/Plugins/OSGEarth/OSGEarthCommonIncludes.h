@@ -28,6 +28,7 @@
 #pragma warning (disable : 4245)
 #pragma warning (disable : 4244)
 #pragma warning (disable : 4267)
+#pragma warning (disable : 4515) //"namespace uses itself"
 #endif
 
 #include <osgEarth/PhongLightingEffect>

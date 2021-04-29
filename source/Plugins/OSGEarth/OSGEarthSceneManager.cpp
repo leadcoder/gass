@@ -415,7 +415,7 @@ namespace GASS
 					m_WorkingSet);
 
 
-				float elevation = NO_DATA_VALUE;
+				double elevation = NO_DATA_VALUE;
 				if (sample.hasData())
 				{
 					// convert to geodetic to get the HAE:
@@ -424,7 +424,7 @@ namespace GASS
 
 				
 				if (elevation != NO_DATA_VALUE)
-					height = static_cast<double>(elevation);
+					height = elevation;
 				else
 					height = 0;
 				status = true;
