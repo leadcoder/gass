@@ -186,6 +186,9 @@ namespace GASS
 		bool GetGeocentric() const { return m_Geocentric; }
 		void SetGeocentric(bool value) { m_Geocentric = value; }
 
+		bool GetOSGEarth() const { return m_OSGEarth; }
+		void SetOSGEarth(bool value) { m_OSGEarth = value; }
+
 		std::string CreateUniqueName(const std::string& name);
 		/**
 			Connivence function to draw line for debug purpose (immediate mode)
@@ -239,8 +242,10 @@ namespace GASS
 		SceneObjectWeakPtr m_TerrainObjects;
 		ResourceGroupWeakPtr m_ResourceGroup;
 		ResourceLocationWeakPtr m_ResourceLocation;
-		bool m_Initlized;
-		bool m_Geocentric;
+
+		bool m_Initlized = false;
+		bool m_Geocentric = false;
+		bool m_OSGEarth = false;
 		NameGenerator m_NameGenerator;
 	};
 	GASS_PTR_DECL(Scene)

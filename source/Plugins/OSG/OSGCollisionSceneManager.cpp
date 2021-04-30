@@ -156,7 +156,7 @@ namespace GASS
 	bool OSGCollisionSceneManager::GetTerrainHeight(const Vec3& location, double& terrain_height, GeometryFlags flags) const
 	{
 
-		if (m_TerrainSM)
+		if (m_TerrainSM && m_Scene->GetOSGEarth())
 			return m_TerrainSM->GetTerrainHeight(location, terrain_height, flags);
 
 		bool found_height = false;
@@ -209,7 +209,7 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetHeightAboveTerrain(const Vec3& location, double& height, GeometryFlags flags) const
 	{
-		if (m_TerrainSM)
+		if (m_TerrainSM && m_Scene->GetOSGEarth())
 			return m_TerrainSM->GetHeightAboveTerrain(location, height, flags);
 
 		double terrain_height = 0;
@@ -225,7 +225,7 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const
 	{
-		if (m_TerrainSM)
+		if (m_TerrainSM && m_Scene->GetOSGEarth())
 			return m_TerrainSM->GetUpVector(location, up_vec);
 
 		if (m_Scene->GetGeocentric())
@@ -241,7 +241,7 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetOrientation(const Vec3& location, Quaternion& rot) const
 	{
-		if (m_TerrainSM)
+		if (m_TerrainSM && m_Scene->GetOSGEarth())
 			return m_TerrainSM->GetOrientation(location, rot);
 
 		if (m_Scene->GetGeocentric())
@@ -261,7 +261,7 @@ namespace GASS
 
 	bool OSGCollisionSceneManager::GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const
 	{
-		if (m_TerrainSM)
+		if (m_TerrainSM && m_Scene->GetOSGEarth())
 		{
 			double hat = 0;
 			if (m_TerrainSM->GetHeightAboveTerrain(location, hat, flags))

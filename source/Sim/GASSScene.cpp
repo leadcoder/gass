@@ -67,6 +67,7 @@ namespace GASS
 		RegisterGetSet("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterGetSet("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
 		RegisterGetSet("Geocentric", &Scene::GetGeocentric, &Scene::SetGeocentric);
+		RegisterGetSet("OSGEarth", &Scene::GetOSGEarth, &Scene::SetOSGEarth);
 	}
 
 	void Scene::OnCreate()

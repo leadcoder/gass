@@ -19,7 +19,6 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
-#include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #include "Modules/Editor/ToolSystem/MoveTool.h"
@@ -522,10 +521,10 @@ namespace GASS
 		world_pos.x = SnapPosition(world_pos.x);
 		world_pos.y = SnapPosition(world_pos.y);
 		world_pos.z = SnapPosition(world_pos.z);
-		const TerrainSceneManagerPtr tsm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ITerrainSceneManager>(true);
-		if (tsm)
+		const CollisionSceneManagerPtr csm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>(true);
+		if (csm)
 		{
-			tsm->GetOrientation(world_pos, world_rot);
+			csm->GetOrientation(world_pos, world_rot);
 		}
 		return true;
 	}
