@@ -39,7 +39,6 @@ ALDeviceList::ALDeviceList()
 	const char *actualDeviceName;
 
 	// DeviceInfo vector stores, for each enumerated device, it's device name, selection status, spec version #, and extension support
-	vDeviceInfo.empty();
 	vDeviceInfo.reserve(10);
 
 	defaultDeviceIndex = 0;
@@ -130,13 +129,9 @@ ALDeviceList::~ALDeviceList()
 {
 	for (unsigned int i = 0; i < vDeviceInfo.size(); i++) {
 		if (vDeviceInfo[i].pvstrExtensions) {
-			vDeviceInfo[i].pvstrExtensions->empty();
 			delete vDeviceInfo[i].pvstrExtensions;
 		}
 	}
-
-	vDeviceInfo.empty();
-
 	UnloadOAL10Library();
 }
 

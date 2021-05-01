@@ -394,7 +394,7 @@ namespace GASS
 		return true;
 	}
 
-	bool RNRoadNetworkComponent::GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const
+	bool RNRoadNetworkComponent::GetShortestPathForPlatform(const PlatformType /*platform_type*/, const Vec3& from, const Vec3& to, NavigationPath& path) const
 	{
 		return GetShortestPath(from, to, path);
 	}

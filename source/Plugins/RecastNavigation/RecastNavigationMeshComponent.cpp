@@ -1698,7 +1698,7 @@ namespace GASS
 		out_pos.z = in_pos[2] + m_LocalOrigin.z;
 	}
 
-	bool RecastNavigationMeshComponent::GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const
+	bool RecastNavigationMeshComponent::GetShortestPathForPlatform(const PlatformType /*platform_type */, const Vec3 &from, const Vec3 &to, NavigationPath &path) const
 	{
 		return GetShortestPath(from, to, path);
 	}

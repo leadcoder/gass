@@ -34,8 +34,8 @@ namespace GASS
 
 	class IMapLayer
 	{
-		//GASS_DECLARE_CLASS_AS_INTERFACE(IMapLayer)
 	public :
+		virtual ~IMapLayer() = default;
 		virtual std::string GetName() const = 0;
 		virtual void SetName(const std::string& name) = 0;
 		virtual bool GetVisible() const = 0;
