@@ -3,27 +3,48 @@ C++ Game Engine
 
 Travis Build (master) [![Build status](https://travis-ci.org/leadcoder/gass.svg?branch=master)](https://travis-ci.org/leadcoder/gass)
 
-## Build instructions MSVC
+## Build instructions windows, MSVC 2019 
 ### Prerequisites
+  - Visual Studio 2019
   - CMake
-  - Git
-  - (Optional) Doxygen
   
-### Dependencies (prebuild)
-  - Download dependencies from [here](https://www.dropbox.com/sh/ccvd9nfr3ef203g/AACfPrh5gLeGyMDkESLpG3E8a?dl=0)
-  - Unzip to location of choice    
-  - (Optional) Run prepare-cmake-environment.bat in the new dep folder, this will setup environment variables used by cmake to find dependencies
+### Build Dependencies (vcpkg)
 
-### Clone & Build
+Setup vcpkg by
+1. Clone vcpkg from https://github.com/microsoft/vcpkg 
+2. Checkout last verified commit
+3. Build vcpkg.exe
+4. Set overlay ports folder, https://github.com/leadcoder/gass/tree/master/tools/vcpkg/ports.
 ```
- git clone https://github.com/leadcoder/gass master
- cd master
+> git clone https://github.com/microsoft/vcpkg
+> cd vcpkg
+> git checkout 546813ae7b9e2873dd3d38e78b27ac5582feae10
+> bootstrap-vcpkg.bat
+> set VCPKG_OVERLAY_PORTS=<path-to-cloned-gass-repo>/tools/vcpkg/ports
 ```
-You can now either:
-- Edit build-msvc.bat and set GASS_DEP_ROOT to your dep folder
-- Run build-msvc.bat
+Install GASSSim deps:
+```
+> vcpkg install gass-deps:x64-windows
+```
+Note that you can install GASS using vcpkg if you depend on GASS in your own project
+```
+> vcpkg install gasssim:x64-windows
+```
+...or just GASSCore
+```
+> vcpkg install gasscore:x64-windows
+```
 
-Or if you have done the optional step above (prepare-cmake-environment.bat) you can:
-  - Start CMake GUI, configure GASS to your requirements and generate the solution.
-  - Open solution in MSVC and build
+### Build GASS CMake
 
+Generate solution
+```
+> mkdir build
+> cd build
+> cmake -G"Visual Studio 16 2019" <path-to-cloned-gass-repo> -DCMAKE_TOOLCHAIN_FILE=<path-to-cloned-vcpkg-repo>/scripts/buildsystems/vcpkg.cmake
+```
+
+Build release from command line
+```
+> cmake.exe --build . --target ALL_BUILD --config Release
+```
