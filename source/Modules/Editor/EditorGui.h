@@ -1,6 +1,8 @@
 #pragma once
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "imgui_stdlib.h"
+
 //#include "windows.h"
 //#include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
@@ -120,6 +122,23 @@ namespace GASS
 
 				ImGui::EndMenuBar();
 			}
+
+			//ImGuiViewportP* viewport = (ImGuiViewportP*)(void*)ImGui::GetMainViewport();
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+			float height = ImGui::GetFrameHeight();
+
+			if (ImGui::BeginViewportSideBar("##StatusBar", viewport, ImGuiDir_Down, height, window_flags)) {
+				if (ImGui::BeginMenuBar()) {
+					auto scene = getFirstScene();
+					if(scene)
+						ImGui::Text("Loaded Scene:%s", scene->GetName().c_str());
+					ImGui::EndMenuBar();
+				}
+				ImGui::End();
+			}
+
+			
 		}
 
 		void dockingBegin()
@@ -130,8 +149,8 @@ namespace GASS
 
 			ImGuiWindowFlags window_dock_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->GetWorkPos());
-			ImGui::SetNextWindowSize(viewport->GetWorkSize());
+			ImGui::SetNextWindowPos(viewport->WorkPos);
+			ImGui::SetNextWindowSize(viewport->WorkSize);
 			ImGui::SetNextWindowViewport(viewport->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
