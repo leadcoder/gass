@@ -97,12 +97,23 @@ namespace GASS
 
 		bool GetEnabled() const override
 		{
-			return m_Layer->getEnabled();
+			return m_Layer->isOpen();
+			//return m_Layer->getEnabled();
 		}
 
 		void SetEnabled(bool value) override
 		{
 			m_Layer->setEnabled(value);
+			if (value)
+			{
+				if (!m_Layer->isOpen())
+					m_Layer->open();
+			}
+			else
+			{
+				if (m_Layer->isOpen())
+					m_Layer->close();
+			}
 		}
 
 		MapLayerType GetType() const override
