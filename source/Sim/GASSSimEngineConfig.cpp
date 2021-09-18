@@ -29,6 +29,73 @@
 
 namespace GASS
 {
+
+	SimEngineConfig SimEngineConfig::Create(PhysicsOptions physics,
+		SoundOptions sound,
+		NetworkOptions network,
+		InputOptions input)
+	{
+		SimEngineConfig conf;
+		conf.Plugins = {"GASSPluginOSG",
+						"GASSPluginInput",
+						"GASSPluginBase",
+						"GASSEditorModule" };
+		if (input == InputOptions::OIS)
+			conf.Plugins.push_back("GASSPluginOIS");
+		if (sound == SoundOptions::OPENAL)
+			conf.Plugins.push_back("GASSPluginOpenAL");
+		if (physics != PhysicsOptions::NONE)
+		{
+			conf.Plugins.push_back(physics == PhysicsOptions::PHYSX ? "GASSPluginPhysX" : "GASSPluginODE");
+			conf.Plugins.push_back("GASSPluginVehicle");
+		}
+		if (network == NetworkOptions::RAKNET)
+			conf.Plugins.push_back("GASSPluginRaknet");
+
+		std::vector<std::string> systems;
+		
+		systems.push_back("EditorSystem");
+		systems.push_back(input == InputOptions::OSG ? "OSGInputSystem" : "OISInputSystem");
+		systems.push_back("CoreSystem");
+		systems.push_back("ControlSettingsSystem");
+		systems.push_back("SimulationSystem");
+
+		if (physics != PhysicsOptions::NONE)
+		{
+			systems.push_back("MaterialSystem"); //must be listed before physics system
+			systems.push_back(physics == PhysicsOptions::PHYSX ? "PhysXPhysicsSystem" : "ODEPhysicsSystem");
+		}
+		
+		if (network == NetworkOptions::RAKNET)
+			systems.push_back("RakNetNetworkSystem");
+
+		systems.push_back("OSGGraphicsSystem");
+		systems.push_back("OSGCollisionSystem");
+
+
+		for (auto system_name : systems)
+		{
+			GASS::SimSystemConfig sysc;
+			sysc.Name = system_name;
+			conf.SimSystemManager.Systems.push_back(sysc);
+		}
+		conf.DataPath = "../../data/";
+		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/gfx", true));
+		if (physics != PhysicsOptions::NONE)
+		{
+			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true));
+			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/physics", true));
+
+		}
+		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/input", true));
+		if(sound != SoundOptions::NONE)
+			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/sounds", true));
+		
+		//templates
+		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true));
+		return conf;
+	}
+
 	SimEngineConfig SimEngineConfig::LoadFromfile(const FilePath& filename)
 	{
 		SimEngineConfig config;

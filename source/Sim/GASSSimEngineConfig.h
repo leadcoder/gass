@@ -27,10 +27,39 @@
 
 namespace GASS
 {
-	class SimEngineConfig
+	enum class InputOptions
+	{
+		OSG,
+		OIS
+	};
+
+	enum class PhysicsOptions
+	{
+		PHYSX,
+		ODE,
+		NONE
+	};
+
+	enum class SoundOptions
+	{
+		OPENAL,
+		NONE
+	};
+
+	enum class NetworkOptions
+	{
+		RAKNET,
+		NONE
+	};
+
+	class GASSExport SimEngineConfig
 	{
 	public:
 		static SimEngineConfig LoadFromfile(const FilePath& filename);
+		static SimEngineConfig Create(PhysicsOptions physics= PhysicsOptions::NONE,
+			SoundOptions sound = SoundOptions::NONE,
+			NetworkOptions network = NetworkOptions::NONE,
+			InputOptions input = InputOptions::OSG);
 		std::string DataPath = "%GASS_DATA_HOME%";
 		std::string ScenePath = "%GASS_DATA_HOME%/sceneries/";
 		std::string LogFolder;
