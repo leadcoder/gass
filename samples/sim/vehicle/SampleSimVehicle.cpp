@@ -53,8 +53,13 @@ int start(int argc, char* argv[])
 	(void) argc;
 	(void) argv;
 	//Create engine instance and initialize with config file
+	
 	GASS::SimEngine* engine = new GASS::SimEngine();
-	engine->Init(GASS::FilePath("SampleSimVehicle.xml"));
+	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
+		GASS::SoundOptions::NONE,
+		GASS::NetworkOptions::NONE);
+	engine->Init(config);
+	//engine->Init(GASS::FilePath("SampleSimVehicle.xml"));
 	
 	//Get graphic system and create one main rendering window
 	GASS::GraphicsSystemPtr gfx_sys = engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();

@@ -61,7 +61,10 @@ int start(int argc, char* argv[])
 	//Create engine instance and initialize with config file
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	{
-		engine->Init(GASS::FilePath("SampleSimEditor.xml"));
+		GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
+			GASS::SoundOptions::NONE,
+			GASS::NetworkOptions::NONE);
+		engine->Init(config);
 
 		//Get graphic system and create one main rendering window
 		GASS::GraphicsSystemPtr gfx_sys = engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();

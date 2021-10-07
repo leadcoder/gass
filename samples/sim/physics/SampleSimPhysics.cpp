@@ -55,71 +55,22 @@ int _getch() {
 }
 #endif
 
-std::vector<std::string> GetCommonPlugins()
-{
-	std::vector<std::string> plugins;
-	plugins.push_back("GASSPluginOSG");
-	plugins.push_back("GASSPluginOIS");
-	plugins.push_back("GASSPluginOpenAL");
-	plugins.push_back("GASSPluginInput");
-	plugins.push_back("GASSPluginBase");
-	plugins.push_back("GASSPluginODE");
-	return plugins;
-}
-
-std::vector<std::string> GetCommonSystems()
-{
-	std::vector<std::string> systems;
-	systems.push_back("OSGGraphicsSystem");
-	systems.push_back("MaterialSystem");
-	systems.push_back("OISInputSystem");
-	systems.push_back("ControlSettingsSystem");
-	systems.push_back("CoreSystem");
-	systems.push_back("SimulationSystem");
-	//systems.push_back("ODECollisionSystem");
-	return systems;
-}
-
 int main(int/*argc*/, char* /*argv[]*/)
 {
 	//Load plugins
 	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
-	char gfx_key = static_cast<char>(_getch());
+	char key = static_cast<char>(_getch());
+	bool use_ode = key == 1;
 
-	GASS::SimEngineConfig config;
-	config.Plugins = GetCommonPlugins();
-	std::vector<std::string> systems = GetCommonSystems();
 
-	bool use_ode = gfx_key == 1;
-	if (use_ode)
-	{
-		systems.push_back("ODEPhysicsSystem");
-	}
-	else
-	{
-		config.Plugins.push_back("GASSPluginPhysX");
-		systems.push_back("PhysXPhysicsSystem");
-	}
+	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(use_ode ? 
+		GASS::PhysicsOptions::ODE : 
+		GASS::PhysicsOptions::PHYSX);
 
-	for (auto system_name : systems)
-	{
-		GASS::SimSystemConfig sysc;
-		sysc.Name = system_name;
-		config.SimSystemManager.Systems.push_back(sysc);
-	}
-
-	config.DataPath = "../../data/";
-	config.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_GFX", "%GASS_DATA_HOME%/gfx",true));
-	config.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_PHYSICS", "%GASS_DATA_HOME%/physics", true));
-	config.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_INPUT", "%GASS_DATA_HOME%/input", true));
-	config.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_FONTS", "%GASS_DATA_HOME%/gfx/Ogre/Fonts", true));
-	config.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true));
+	GASS::SimEngine* engine = new GASS::SimEngine();
+	engine->Init(config);
 	
-	GASS::SimEngine* m_Engine = new GASS::SimEngine();
-
-	m_Engine->Init(config);
-	
-	GASS::GraphicsSystemPtr gfx_sys = m_Engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
+	GASS::GraphicsSystemPtr gfx_sys = engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
 
 	GASS::RenderWindowPtr win = gfx_sys->CreateRenderWindow("MainWindow", 800, 600);
 	win->CreateViewport("MainViewport", 0, 0, 1, 1);
@@ -127,7 +78,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 	input_system->SetMainWindowHandle(win->GetHWND());
 
-	GASS::ScenePtr scene(m_Engine->CreateScene("NewScene"));
+	GASS::ScenePtr scene(engine->CreateScene("NewScene"));
 
 	{
 		GASS::SceneObjectTemplatePtr plane_template(new GASS::SceneObjectTemplate);
@@ -172,7 +123,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 			box_comp->SetPropertyValue("Size", GASS::Vec3(2, 1, 4));
 			box_comp->SetPropertyValue("Lines", false);
 
-			GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(vehicle_template);
+			engine->GetSceneObjectTemplateManager()->AddTemplate(vehicle_template);
 
 			//add wheels
 			GASS::SceneObjectTemplatePtr wheel_template;
@@ -254,7 +205,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		box_comp->SetPropertyValue("Size", GASS::Vec3(1, 1, 1));
 		box_comp->SetPropertyValue("Lines", false);
 
-		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(box_template);
+		engine->GetSceneObjectTemplateManager()->AddTemplate(box_template);
 	}
 
 	{
@@ -271,17 +222,13 @@ int main(int/*argc*/, char* /*argv[]*/)
 		box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
 		box_comp->SetPropertyValue("Lines", false);
 
-		//test
-		//GASS::BaseSceneComponentPtr script_comp  = bridge_seg_template->AddBaseSceneComponent("ASScriptComponent");
-		//std::string script ="c:/temp/test.lua";
-		//script_comp->SetPropertyValue("Script",script);
 
-		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
+		engine->GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
 
 		GASS::SceneObjectTemplatePtr bridge_hinge_template(new GASS::SceneObjectTemplate);
 		bridge_hinge_template->SetName("BridgeHinge");
 		bridge_hinge_template->AddBaseSceneComponent("PhysicsHingeComponent");
-		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(bridge_hinge_template);
+		engine->GetSceneObjectTemplateManager()->AddTemplate(bridge_hinge_template);
 	}
 
 	{
@@ -291,7 +238,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		mesh_template->AddBaseSceneComponent("MeshComponent");
 		mesh_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
 		mesh_template->AddBaseSceneComponent("PhysicsBodyComponent");
-		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(mesh_template);
+		engine->GetSceneObjectTemplateManager()->AddTemplate(mesh_template);
 	}
 
 	GASS::SceneObjectPtr terrain_obj = scene->LoadObjectFromTemplate("PlaneObject", scene->GetRootSceneObject());
@@ -365,22 +312,11 @@ int main(int/*argc*/, char* /*argv[]*/)
 	static float wheel_vel = 0;
 	static float steer_vel = 0;
 
-	GASS::BaseSceneManagerPtr ogre_sm = GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneManager>(scene->GetSceneManagerByName("OgreGraphicsSceneManager"));
-	if (ogre_sm)
-	{
-		/*ogre_sm->SetPropertyByString("ShadowMode","SHADOWS_DISABLED");
-		ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_MODULATIVE");
-
-		//ogre_sm->SetPropertyByString("ShadowMode","TEXTURE_SHADOWS_ADDITIVE");
-		ogre_sm->SetPropertyByString("TextureShadowProjection","UNIFORM_FOCUSED");
-		ogre_sm->SetPropertyValue("SelfShadowing",false);*/
-	}
-
 	GASS::SceneObjectPtr box_obj;
 	while (true)
 	{
 		
-		m_Engine->Update();
+		engine->Update();
 		static bool key_down = false;
 		if (GetAsyncKeyState(VK_SPACE))
 		{
@@ -469,9 +405,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 			}
 		}*/
-
-
-
 
 		if (GetAsyncKeyState(VK_DOWN))
 		{
