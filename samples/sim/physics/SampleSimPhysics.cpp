@@ -151,7 +151,12 @@ GASS::SceneObjectPtr CreateEnvironment()
 	auto ground_plane = std::make_shared<GASS::SceneObject>();
 	ground_plane->SetName("PlaneObject");
 	ground_plane->AddComponent(GASS::ComponentFactory::Get().Create("LocationComponent"));
-	ground_plane->AddComponent(GASS::ComponentFactory::Get().Create("ManualMeshComponent"));
+	auto mmc = GASS::ComponentFactory::Get().Create("ManualMeshComponent");
+	ground_plane->AddComponent(mmc);
+	mmc->SetPropertyValue("CastShadow", true);
+	mmc->SetPropertyValue("ReceiveShadow", true);
+
+
 	auto plane_geom_comp = GASS::ComponentFactory::Get().Create("PlaneGeometryComponent");
 	plane_geom_comp->SetPropertyValue<GASS::Vec2>("Size", GASS::Vec2(100, 100));
 	ground_plane->AddComponent(GASS::ComponentFactory::Get().Create("PhysicsPlaneGeometryComponent"));
@@ -166,6 +171,7 @@ GASS::SceneObjectPtr CreateEnvironment()
 	auto light_comp = GASS::ComponentFactory::Get().Create("LightComponent");
 	light_comp->SetPropertyValue("DiffuseColor", GASS::ColorRGB(0.5, 0.5, 0.5));
 	light_comp->SetPropertyValue("AmbientColor", GASS::ColorRGB(0.2, 0.2, 0.2));
+	light_comp->SetPropertyValue("CastShadow", true);
 	light->AddComponent(light_comp);
 	auto env = std::make_shared<GASS::SceneObject>();
 	env->AddChild(ground_plane);
@@ -180,6 +186,8 @@ std::string CreateBoxTemplate(GASS::SimEngine* engine)
 	box_template->AddBaseSceneComponent("LocationComponent");
 	GASS::BaseSceneComponentPtr mmc = box_template->AddBaseSceneComponent("ManualMeshComponent");
 	mmc->SetPropertyValue("CastShadow", true);
+	mmc->SetPropertyValue("ReceiveShadow", true);
+	
 	box_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
 	box_template->AddBaseSceneComponent("PhysicsBodyComponent");
 	GASS::BaseSceneComponentPtr box_comp = box_template->AddBaseSceneComponent("BoxGeometryComponent");
