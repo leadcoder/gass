@@ -199,6 +199,7 @@ std::string CreateBoxTemplate(GASS::SimEngine* engine)
 
 GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 {
+#if 0
 	//Create bridge templates
 	GASS::SceneObjectTemplatePtr bridge_seg_template(new GASS::SceneObjectTemplate);
 	bridge_seg_template->SetName("BridgeSegment");
@@ -210,8 +211,7 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 	box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
 	box_comp->SetPropertyValue("Lines", false);
 	engine->GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
-	
-#if 1
+
 	auto bridge = std::make_shared<GASS::SceneObjectTemplate>();
 	bridge->SetName("Bridge");
 	{
@@ -287,9 +287,21 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 	}
 
 #else
+	
+	auto bridge_seg_template = std::make_shared<GASS::SceneObject>();
+	bridge_seg_template->SetName("BridgeSegment");
+	GASS::BaseSceneComponentPtr mmc = bridge_seg_template->AddBaseSceneComponent("ManualMeshComponent");
+	mmc->SetPropertyValue("CastShadow", true);
+	bridge_seg_template->AddBaseSceneComponent("LocationComponent");
+	bridge_seg_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
+	bridge_seg_template->AddBaseSceneComponent("PhysicsBodyComponent");
+	GASS::BaseSceneComponentPtr box_comp = bridge_seg_template->AddBaseSceneComponent("BoxGeometryComponent");
+	box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
+	box_comp->SetPropertyValue("Lines", false);
+
 	auto bridge = std::make_shared<GASS::SceneObject>();
 	{
-		GASS::SceneObjectPtr bdrige_seg_obj2 = engine->CreateObjectFromTemplate("BridgeSegment");
+		GASS::SceneObjectPtr bdrige_seg_obj2 = bridge_seg_template->CreateCopy();
 		bdrige_seg_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 2, 0));
 		bridge->AddChildSceneObject(bdrige_seg_obj2, false);
 		GASS::BaseSceneComponentPtr body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
@@ -301,20 +313,22 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 		for (int i = 1; i < 11; i++)
 		{
 			GASS::SceneObjectPtr bdrige_seg_obj1 = bdrige_seg_obj2;
-			bdrige_seg_obj2 = engine->CreateObjectFromTemplate("BridgeSegment");
+			bdrige_seg_obj2 = bridge_seg_template->CreateCopy();
 			bdrige_seg_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 2, i));
 			bridge->AddChildSceneObject(bdrige_seg_obj2, false);
-			GASS::SceneObjectPtr bdrige_hinge_obj = engine->CreateObjectFromTemplate("BridgeHinge");
-			GASS::BaseSceneComponentPtr hinge_comp = bdrige_hinge_obj->GetBaseSceneComponent("PhysicsHingeComponent");
+			auto bdrige_hinge_obj = std::make_shared<GASS::SceneObject>();
+			auto hinge_comp = GASS::ComponentFactory::Get().Create("PhysicsHingeComponent");
+			bdrige_hinge_obj->AddComponent(hinge_comp);
+
 			if (i == 1)
 			{
-				hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
-				hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
+				hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj2));
+				hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj1));
 			}
 			else
 			{
-				hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj1->GetGUID()));
-				hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj2->GetGUID()));
+				hinge_comp->SetPropertyValue("Body1", GASS::SceneObjectRef(bdrige_seg_obj1));
+				hinge_comp->SetPropertyValue("Body2", GASS::SceneObjectRef(bdrige_seg_obj2));
 			}
 			bridge->AddChildSceneObject(bdrige_hinge_obj, false);
 		}
@@ -326,12 +340,12 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 			body_comp->SetPropertyValue("Kinematic", true);
 		}
 		catch (...) {}
-		GASS::SceneObjectPtr box_obj = engine->CreateObjectFromTemplate("BoxObject");
+		/*GASS::SceneObjectPtr box_obj = engine->CreateObjectFromTemplate("BoxObject");
 		box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 0.6, 2));
 		bridge->AddChildSceneObject(box_obj, false);
 		GASS::SceneObjectPtr box_obj2 = engine->CreateObjectFromTemplate("BoxObject");
 		box_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 0.6, 20));
-		bridge->AddChildSceneObject(box_obj2,false);
+		bridge->AddChildSceneObject(box_obj2,false);*/
 	}
 	return bridge;
 #endif

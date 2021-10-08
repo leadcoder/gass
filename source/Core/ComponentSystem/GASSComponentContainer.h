@@ -191,6 +191,8 @@ namespace GASS
 		/**Get whether this container should be serialized or not, 
 		by default all containers are serialized*/
 		bool GetSerialize()  const;
+
+		ComponentPtr AddComponent(const std::string& comp_type);
 	protected:
 		void _CheckComponentDependencies() const;
 		

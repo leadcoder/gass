@@ -420,6 +420,16 @@ namespace GASS
 		return m_ComponentContainerVector[index];
 	}
 
+	ComponentPtr ComponentContainer::AddComponent(const std::string& comp_type)
+	{
+		ComponentPtr comp = ComponentFactory::Get().Create(comp_type);
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create Component:" + comp_type, "ComponentContainer::AddComponent");
+		comp->SetName(comp_type);
+		AddComponent(comp);
+		return comp;
+	}
+
 
 	#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void ComponentContainer::DebugPrint(int tc)

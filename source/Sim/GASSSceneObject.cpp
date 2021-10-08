@@ -710,4 +710,9 @@ namespace GASS
 		}
 		return cc;
 	}
+
+	BaseSceneComponentPtr SceneObject::AddBaseSceneComponent(const std::string& comp_name)
+	{
+		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(AddComponent(comp_name));
+	}
 }

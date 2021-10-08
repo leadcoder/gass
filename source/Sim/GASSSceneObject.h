@@ -290,6 +290,9 @@ namespace GASS
 		void PostEvent(SceneObjectEventMessagePtr message);
 		void SendImmediateEvent(SceneObjectEventMessagePtr message);
 		bool IsInitialized() const;
+
+		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
+
 	private:
 		void OnDelete();
 		void OnInitialize(ScenePtr scene);
