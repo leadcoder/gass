@@ -241,7 +241,7 @@ namespace GASS
 		{
 			m_Geom->deleteConvexVolume(i);
 		}
-		ComponentContainer::ComponentVector components;
+		SceneObject::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastConvexVolumeComponent>(components,true);
 
 		for(size_t i = 0; i < components.size(); i++)
@@ -317,7 +317,7 @@ namespace GASS
 		const unsigned short flags = SAMPLE_POLYFLAGS_JUMP;
 		float p1[3];
 		float p2[3];
-		ComponentContainer::ComponentVector components;
+		SceneObject::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<RecastOffmeshMeshConnectionComponent>(components,true);
 		for(size_t i = 0; i < components.size(); i++)
 		{
@@ -1109,7 +1109,7 @@ namespace GASS
 		std::vector<SceneObjectRef> objs;
 		if(GetSceneObject())
 		{
-			ComponentContainer::ComponentVector components;
+			SceneObject::ComponentVector components;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 			for(size_t i = 0; i < components.size() ; i++)
 			{
@@ -1165,7 +1165,7 @@ namespace GASS
 			//m_MeshBounding = AABox();
 			if(GetSceneObject())
 			{
-				ComponentContainer::ComponentVector components;
+				SceneObject::ComponentVector components;
 				GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 				for(size_t i = 0; i < components.size() ; i++)
 				{

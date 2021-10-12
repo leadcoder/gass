@@ -23,6 +23,7 @@
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSBaseSceneManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 #include "Core/PluginSystem/GASSPluginManager.h"

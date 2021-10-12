@@ -20,8 +20,8 @@
 
 #include "PlayerInputComponent.h"
 #include "InputHandlerComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
+#include "Sim/GASSComponentFactory.h"
+#include "Sim/GASSSceneObjectTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -78,8 +78,7 @@ namespace GASS
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
-			//ComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
-			ComponentContainer::ComponentVector comps;
+			SceneObject::ComponentVector comps;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>(comps);
 			for(size_t i = 0 ; i < comps.size();i++)
 			{
@@ -123,7 +122,7 @@ namespace GASS
 		}
 		else if(name == "CycleVehicle" && value > 0)
 		{
-			ComponentContainerTemplate::ComponentVector components;
+			SceneObjectTemplate::ComponentVector components;
 			if(m_CurrentVehicle)
 			{
 				m_CurrentVehicle->GetComponentsByClass<InputHandlerComponent>(components);//,"InputHandlerComponent");

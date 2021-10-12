@@ -20,7 +20,7 @@
 
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/Math/GASSAABox.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSSceneObject.h"

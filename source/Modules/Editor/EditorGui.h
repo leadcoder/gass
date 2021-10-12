@@ -13,7 +13,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "EditorSceneManager.h"
 #include "ToolSystem/MouseToolController.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"

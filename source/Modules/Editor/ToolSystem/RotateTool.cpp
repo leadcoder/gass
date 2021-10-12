@@ -1,11 +1,11 @@
 #include "RotateTool.h"
 #include "../Components/GizmoComponent.h"
 #include "MouseToolController.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -154,7 +154,7 @@ namespace GASS
 	void RotateTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
 		obj->PostRequest(msg);
-		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		auto iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());

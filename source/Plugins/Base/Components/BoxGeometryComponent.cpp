@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "BoxGeometryComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"

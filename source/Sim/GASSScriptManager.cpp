@@ -27,7 +27,7 @@
 #include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSLogger.h"
-#include "Core/ComponentSystem/GASSComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <angelscript.h>
 //addons
@@ -211,7 +211,7 @@ namespace GASS
 		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
 
 		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
-		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(ComponentContainer, GetName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(SceneObject, GetName), asCALL_THISCALL); CheckReturn(r);
 		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
 	}
 

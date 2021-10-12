@@ -339,10 +339,10 @@ namespace GASS
 
 	void OSGLocationComponent::_OnPositionUpdateRecursive(SceneObjectPtr scene_object)
 	{
-		ComponentContainer::ComponentContainerIterator iter = scene_object->GetChildren();
+		auto iter = scene_object->GetChildren();
 		while (iter.hasMoreElements())
 		{
-			SceneObjectPtr child_obj = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+			SceneObjectPtr child_obj = iter.getNext();
 			OSGLocationComponentPtr location_comp = child_obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if (location_comp)
 				location_comp->_OnParentPositionUpdated();
@@ -369,10 +369,10 @@ namespace GASS
 
 	void OSGLocationComponent::_OnRotationUpdateRecursive(SceneObjectPtr scene_object)
 	{
-		ComponentContainer::ComponentContainerIterator iter = scene_object->GetChildren();
+		auto iter = scene_object->GetChildren();
 		while (iter.hasMoreElements())
 		{
-			SceneObjectPtr child_obj = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+			SceneObjectPtr child_obj = iter.getNext();
 			OSGLocationComponentPtr location_comp = child_obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if (location_comp)
 				location_comp->_OnParentRotationUpdated();

@@ -20,7 +20,7 @@
 
 #include "RakNetMasterReplica.h"
 
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -136,7 +136,7 @@ namespace GASS
 	IProperty* RakNetMasterReplica::GetProperty(const std::string &prop_name) const
 	{
 		m_Owner->GetComponents();
-		ComponentContainer::ComponentIterator comp_iter = m_Owner->GetComponents();
+		auto comp_iter = m_Owner->GetComponents();
 
 		while(comp_iter.hasMoreElements())
 		{

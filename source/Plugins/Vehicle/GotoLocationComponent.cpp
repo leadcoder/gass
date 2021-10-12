@@ -21,7 +21,7 @@
 #include "GotoLocationComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPath.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -58,7 +58,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if (so)
 		{
-			ComponentContainer::ComponentVector comps;
+			SceneObject::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
 			for (size_t i = 0; i < comps.size(); i++)
 			{

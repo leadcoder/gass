@@ -22,7 +22,7 @@
 
 #include "Plugins/ODE/ODEPlaneGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObjectTemplate.h"
 
 namespace GASS

@@ -117,7 +117,7 @@ namespace GASS
 	void PaintTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
 		obj->PostRequest(msg);
-		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		auto iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());

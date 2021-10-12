@@ -7,7 +7,7 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/GASSBaseSceneManager.h"
-#include "GUISchemaLoader.h"
+#include "Modules/Editor/EditorCommon.h"
 
 namespace GASS
 {

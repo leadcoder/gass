@@ -15,6 +15,8 @@ set(CPP_FILES
 	GASSASScriptComponent.cpp
 	GASSBaseSceneComponent.cpp
 	GASSBaseSceneManager.cpp
+	GASSComponent.cpp
+	GASSComponentFactory.cpp
 	GASSGeometryFlags.cpp
 	GASSGraphicsMesh.cpp
 	GASSPhysicsMesh.cpp
@@ -30,6 +32,7 @@ set(CPP_FILES
 	GASSSceneObjectLink.cpp
 	GASSSceneObjectRef.cpp
 	GASSSceneObjectTemplate.cpp
+	GASSSceneObjectTemplateManager.cpp
 	GASSScriptManager.cpp
 	GASSSimEngine.cpp
 	GASSSimEngineConfig.cpp
@@ -52,6 +55,8 @@ set(H_FILES
 	GASSBaseSceneComponent.h
 	GASSBaseSceneManager.h
 	GASSCommon.h
+	GASSComponent.h
+	GASSComponentFactory.h
 	GASSEulerRotation.h
 	GASSFileResourceCallback.h
 	GASSGeoLocation.h
@@ -74,6 +79,7 @@ set(H_FILES
 	GASSSceneObjectLink.h
 	GASSSceneObjectRef.h
 	GASSSceneObjectTemplate.h
+	GASSSceneObjectTemplateManager.h
 	GASSSceneObjectVisitors.h
 	GASSScriptManager.h
 	GASSSimEngine.h

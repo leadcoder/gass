@@ -4,12 +4,12 @@
 #include "Modules/Editor/EditorSystem.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSceneObject.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -340,7 +340,7 @@ namespace GASS
 	void MoveTool::SendMessageRec(SceneObjectPtr obj, SceneObjectRequestMessagePtr msg)
 	{
 		obj->SendImmediateRequest(msg);
-		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		auto iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());

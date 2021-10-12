@@ -4,7 +4,7 @@
 #include "Modules/Editor/Components/PaintGizmoComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
@@ -154,7 +154,7 @@ namespace GASS
 	void TerrainDeformTool::SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg)
 	{
 		obj->PostRequest(msg);
-		GASS::ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+		auto iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
 			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());

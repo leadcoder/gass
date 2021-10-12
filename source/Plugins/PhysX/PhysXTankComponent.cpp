@@ -928,7 +928,7 @@ namespace GASS
 
 			m_Actor->setGlobalPose(physx::PxTransform(sm->WorldToLocal(value), m_Actor->getGlobalPose().q));
 
-			ComponentContainer::ComponentVector components;
+			SceneObject::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass<IPhysicsBodyComponent>(components, true);
 
 			for(int i = 0 ; i < components.size(); i++)
@@ -1145,7 +1145,7 @@ namespace GASS
 
 
 
-		ComponentContainerTemplate::ComponentVector components;
+		SceneObjectTemplate::ComponentVector components;
 		GetSceneObject()->GetParentSceneObject()->GetParentSceneObject()->GetParentSceneObject()->GetComponentsByClass<PhysXTankComponent>(components);
 
 		for(int i = 0;  i < components.size(); i++)

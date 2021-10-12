@@ -26,6 +26,7 @@
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Sim/GASSResourceManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 
 namespace GASS
 {

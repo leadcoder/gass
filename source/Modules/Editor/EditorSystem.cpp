@@ -9,7 +9,6 @@
 namespace GASS
 {
 	EditorSystem::EditorSystem(SimSystemManagerWeakPtr manager) : Reflection(manager),
-		m_GUISettings(new GUISchemaLoader), 
 		m_LockTerrainObjects(true),
 		m_DefaultCameraTemplate("FreeCameraObject")
 	{
@@ -18,7 +17,6 @@ namespace GASS
 
 	EditorSystem::~EditorSystem(void)
 	{
-		delete m_GUISettings;
 	}
 
 	void EditorSystem::RegisterReflection()

@@ -24,8 +24,8 @@
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
+#include "Sim/GASSComponentFactory.h"
+#include "Sim/GASSSceneObjectTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -100,7 +100,7 @@ namespace GASS
 			if(body)
 				body->SetActive(false);
 
-			ComponentContainerTemplate::ComponentVector components;
+			SceneObjectTemplate::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass<IPhysicsBodyComponent>(components,true);
 			for(size_t i = 0;  i< components.size(); i++)
 			{

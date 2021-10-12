@@ -130,7 +130,7 @@ namespace GASS
 				_CreateNetworkFromEditable();
 
 				//remove all nodes and edges
-				ComponentContainer::ComponentVector components;
+				SceneObject::ComponentVector components;
 				GetSceneObject()->GetComponentsByClass<RNRoadNodeComponent>(components);
 				for(size_t i = 0 ;  i < components.size(); i++)
 				{
@@ -219,7 +219,7 @@ namespace GASS
 	{
 		if(!m_Edit)
 			return;
-		ComponentContainer::ComponentVector components;
+		SceneObject::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass<RNRoadNodeComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
@@ -263,7 +263,7 @@ namespace GASS
 	{
 		m_Network.Clear();
 		std::map<RNRoadNodeComponentPtr,RoadNode*> node_mapping;
-		ComponentContainer::ComponentVector components;
+		SceneObject::ComponentVector components;
 		GetSceneObject()->GetComponentsByClass<RNRoadNodeComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
@@ -317,7 +317,7 @@ namespace GASS
 	/*void RNRoadNetworkComponent::GenerateGraph()
 	{
 		std::map<AIRoadIntersectionComponentPtr,RoadNode*> node_mapping;
-		ComponentContainer::ComponentVector components;
+		SceneObject::ComponentVector components;
 		GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<AIRoadIntersectionComponent>(components);
 		for(size_t i = 0 ;  i < components.size(); i++)
 		{
