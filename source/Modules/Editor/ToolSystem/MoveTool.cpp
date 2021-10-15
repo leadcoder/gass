@@ -343,7 +343,7 @@ namespace GASS
 		auto iter = obj->GetChildren();
 		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+			auto child = iter.getNext();
 			SendMessageRec(child,msg);
 		}
 	}

@@ -86,10 +86,10 @@ namespace GASS
 		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
-		auto cc_iter = obj->GetChildren();
-		while(cc_iter.hasMoreElements())
+		auto iter = obj->GetChildren();
+		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = cc_iter.getNext();
+			SceneObjectPtr child = iter.getNext();
 			GeneratePartID(child,++id);
 		}
 	}

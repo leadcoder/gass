@@ -67,7 +67,7 @@ namespace GASS
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
 					if (wpl)
 					{
-						SceneObjectPtr new_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						SceneObjectPtr new_so = comps[i]->GetOwner();
 						ret.push_back(new_so);
 					}
 				}

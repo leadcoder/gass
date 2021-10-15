@@ -78,7 +78,7 @@ namespace GASS
 					WaypointListComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<IWaypointListComponent>(comps[i]);
 					if (wpl)
 					{
-						SceneObjectPtr wp_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						SceneObjectPtr wp_so = comps[i]->GetOwner();
 						ret.push_back(wp_so);
 					}
 				}
@@ -102,7 +102,7 @@ namespace GASS
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
 					if (wpl)
 					{
-						SceneObjectPtr nav_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						SceneObjectPtr nav_so = comps[i]->GetOwner();
 						ret.push_back(nav_so);
 					}
 				}

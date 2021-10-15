@@ -121,17 +121,12 @@ namespace GASS
 		/**
 		Get the object template manager. 
 		The object template manager holds templates for sim objects that can be created.
-		See ComponentContainerTemplateManager inside the component system from more info.
+		See SceneObjectTemplateManager for more info.
 		*/
 		SceneObjectTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
 
 		/**
-		Return elapsed time
-		*/
-		//double GetTime() const {return m_CurrentTime;}
-		
-		/**
-			Convince function to create new objects from templates
+			Convenience function to create new objects from templates
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 

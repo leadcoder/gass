@@ -27,18 +27,10 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObject);
 	GASS_FORWARD_DECL(SceneObjectTemplate);
 
-
-	/** \addtogroup GASSCore
-	*  @{
-	*/
-	/** \addtogroup Component
-	*  @{
-	*/
-
 	/**
-	A component container template manager is responsible for holding component container templates
-	and creating component containers.
-	For more information on container templates see the SceneObjectTemplate class
+	This manager is responsible for holding SceneObjectTemplates
+	and creating SceneObject.
+	For more information see SceneObjectTemplate class
 	*/
 
 	class GASSExport SceneObjectTemplateManager : public GASS_ENABLE_SHARED_FROM_THIS<SceneObjectTemplateManager>

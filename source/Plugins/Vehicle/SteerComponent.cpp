@@ -53,7 +53,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SteerComponent::OnJointUpdate,ODEPhysicsHingeJointEvent,0));
 		
 		//get input from parent?
-		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputRelayEvent,0));
 	}
 

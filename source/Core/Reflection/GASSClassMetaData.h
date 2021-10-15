@@ -34,7 +34,7 @@ namespace GASS
 	};
 	
 	/**
-		Class holding meta data for RTTI based classes like component containers or components.
+		Class holding meta data for RTTI based classes.
 		This is the base class for class meta data and implements some basic settings like annotation/description and
 		class flags that can be used inside editor environment to give class information. 
 		Properties have it' own meta data found in GASSPropertyMetaData.h

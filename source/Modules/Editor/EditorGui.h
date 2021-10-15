@@ -275,7 +275,7 @@ namespace GASS
 				{
 					for (int i = 0; i < so->GetNumChildren(); i++)
 					{
-						drawSceneObject(std::static_pointer_cast<SceneObject>(so->GetChild(i)));
+						drawSceneObject(so->GetChild(i));
 					}
 				}
 				ImGui::TreePop();

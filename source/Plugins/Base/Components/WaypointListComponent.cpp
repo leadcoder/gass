@@ -166,7 +166,7 @@ namespace GASS
 			auto children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+				auto child_obj =  children.getNext();
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
@@ -256,7 +256,7 @@ namespace GASS
 		auto children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+			auto child_obj =  children.getNext();
 			WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 			if(comp &&  comp->IsActive())
 			{

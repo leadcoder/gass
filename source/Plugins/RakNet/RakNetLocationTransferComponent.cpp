@@ -82,7 +82,7 @@ namespace GASS
 
 		RegisterForPreUpdate<RaknetNetworkSceneManager>();
 		
-		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent,0));
@@ -163,7 +163,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnDelete()
 	{
 
-		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent));

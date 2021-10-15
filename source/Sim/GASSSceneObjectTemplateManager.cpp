@@ -78,7 +78,7 @@ namespace GASS
 			{
 				new_object =  _CreateSceneObject(inheritance);
 				BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
-				//copy container attributes to new object
+				//copy attributes to new object
 				if(ref_obj)
 					cc_temp->CopyPropertiesTo(ref_obj);
 		
@@ -103,7 +103,7 @@ namespace GASS
 			}
 			else
 			{
-				//failed to create comp container
+				//failed to create SceneObject
 			}
 		}
 		//recursive add children
@@ -184,13 +184,13 @@ namespace GASS
 			while(templates)
 			{
 				std::string type = templates->Value();
-				SceneObjectTemplatePtr container = std::make_shared<SceneObjectTemplate>();
-				if(container)
+				auto sot = std::make_shared<SceneObjectTemplate>();
+				if(sot)
 				{
-					XMLSerializePtr s_cont = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(container);
-					if(s_cont)
-						s_cont->LoadXML(templates);
-					AddTemplate(container);
+					XMLSerializePtr xml_obj = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(sot);
+					if(xml_obj)
+						xml_obj->LoadXML(templates);
+					AddTemplate(sot);
 				}
 				else
 				{
@@ -214,5 +214,4 @@ namespace GASS
 				Load(file);
 		}
 	}
-	
 }

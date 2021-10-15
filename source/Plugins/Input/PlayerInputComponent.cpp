@@ -96,29 +96,6 @@ namespace GASS
 					return;
 				}
 			}
-
-			/*while(objects.hasMoreElements())
-			{
-				ComponentContainerPtr cc = objects.getNext();
-				SceneObjectPtr so = GASS_STATIC_PTR_CAST<SceneObject>(cc);
-				InputHandlerComponentPtr ihc = so->GetFirstComponentByClass<InputHandlerComponent>();
-				if(ihc)
-				{
-					LocationComponentPtr location = so->GetFirstComponentByClass<ILocationComponent>();
-					Vec3 obj_pos = location->GetWorldPosition();
-					Float dist = (my_pos-obj_pos).Length();
-					if(dist < 5)
-					{
-						//enter and return
-						MessagePtr enter_msg(new EnterVehicleMessage());
-						so->PostMessage(enter_msg);
-						m_CurrentVehicle = so;
-						m_CurrentSeat = so;
-						seat = 0;
-						return;
-					}
-				}
-			}*/
 		}
 		else if(name == "CycleVehicle" && value > 0)
 		{

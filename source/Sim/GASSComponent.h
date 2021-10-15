@@ -43,7 +43,7 @@ namespace GASS
 		A component is the core building block in the component system,
 		here we find actual functionality like vehicle models,
 		graphics, network capability etc. All components that should work together is
-		owned by a ComponentContainer. A ComponentContainer is the owner of
+		owned by a SceneObject. A SceneObject is the owner of
 		the components and has it's functionality in it's components.
 		The Component class is derived from the reflection template class
 		which enables attribute reflection in a easy way. A component always has a
@@ -52,11 +52,11 @@ namespace GASS
 		the class.
 
 		@remarks
-		Components are also stored by component container templates.
+		Components are also stored by SceneObject templates.
 		The obvious choice would be to have a ComponentTemplate
-		class used by the ComnponentContainerTemplate class,
+		class used by the SceneObjectTemplate class,
 		however in this component system Components are used in both
-		ComnponentContainer's and ComnponentContainerTemplate.
+		SceneObject's and SceneObjectTemplate.
 		This choice was made to make new component
 		implementations as convenient as possible.
 		To be more precise: the downside of separating
@@ -78,11 +78,11 @@ namespace GASS
 		*/
 		virtual void SetName(const std::string& name);
 		/**
-		Get the component container that owns this component
+		Get the SceneObject that owns this component
 		*/
 		virtual SceneObjectPtr GetOwner() const;
 		/**
-		Set the component container that this component should belong to
+		Set the SceneObject that this component should belong to
 		*/
 		virtual void SetOwner(SceneObjectPtr owner);
 

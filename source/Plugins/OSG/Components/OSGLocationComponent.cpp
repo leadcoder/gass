@@ -474,13 +474,13 @@ namespace GASS
 	OSGLocationComponentPtr OSGLocationComponent::_GetFirstParentLocation() const
 	{
 		OSGLocationComponentPtr parent_location;
-		SceneObjectPtr scene_obj = GASS_STATIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		auto scene_obj = GetSceneObject()->GetParent();
 		while (scene_obj && !parent_location)
 		{
 			parent_location = scene_obj->GetFirstComponentByClass<OSGLocationComponent>();
 			if (parent_location)
 				return parent_location;
-			scene_obj = GASS_STATIC_PTR_CAST<SceneObject>(scene_obj->GetParent());
+			scene_obj = scene_obj->GetParent();
 		}
 		return parent_location;
 	}

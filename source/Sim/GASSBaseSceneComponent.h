@@ -43,7 +43,7 @@ namespace GASS
 		
 		/**
 			Get owner scene object. 
-			Same as get owner but cast owner from ComponentContainer to SceneObject 
+			Same as get owner in component 
 		*/
 		SceneObjectPtr GetSceneObject() const;
 		/**

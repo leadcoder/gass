@@ -40,7 +40,6 @@ namespace GASS
 		RegisterGetSet("Name", &GASS::SceneObjectTemplate::GetName, &GASS::SceneObjectTemplate::SetName);
 		RegisterGetSet("Inheritance", &GASS::SceneObjectTemplate::GetInheritance, &GASS::SceneObjectTemplate::SetInheritance);
 		RegisterGetSet("Serialize", &GASS::SceneObjectTemplate::GetSerialize, &GASS::SceneObjectTemplate::SetSerialize);
-
 		RegisterGetSet("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
 		RegisterGetSet("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
 	}
@@ -227,7 +226,6 @@ namespace GASS
 		tinyxml2::XMLDocument* rootXMLDoc = obj_elem->GetDocument();
 		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement("SceneObjectTemplate");
 		obj_elem->LinkEndChild(this_elem);
-		//this_elem->SetAttribute("type", GetRTTI()->GetClassName().c_str());
 		_SaveProperties(this_elem);
 
 		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
@@ -243,7 +241,7 @@ namespace GASS
 		}
 
 
-		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("ComponentContainers");
+		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("Children");
 		this_elem->LinkEndChild(cc_elem);
 
 		SceneObjectTemplate::SceneObjectTemplateVector::iterator cc_iter;
@@ -289,19 +287,19 @@ namespace GASS
 					comp_elem = comp_elem->NextSiblingElement();
 				}
 			}
-			else if (data_name == "ComponentContainers")
+			else if (data_name == "Children" || data_name == "ComponentContainers")
 			{
 				tinyxml2::XMLElement* cc_elem = class_attribute->FirstChildElement();
 				while (cc_elem)
 				{
 					
-					SceneObjectTemplatePtr container = std::make_shared<SceneObjectTemplate>();
-					if (container)
+					auto so = std::make_shared<SceneObjectTemplate>();
+					if (so)
 					{
-						AddChild(container);
-						XMLSerializePtr s_container = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(container);
-						if (s_container)
-							s_container->LoadXML(cc_elem);
+						AddChild(so);
+						XMLSerializePtr xml_obj = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(so);
+						if (xml_obj)
+							xml_obj->LoadXML(cc_elem);
 					}
 					else
 					{
@@ -390,83 +388,10 @@ namespace GASS
 		}
 	}
 
-	/*ComponentContainerPtr SceneObjectTemplate::CreateComponentContainer(int &part_id, SceneObjectTemplateManagerConstPtr manager) const
-	{
-		ComponentContainerPtr new_object;
-		if(m_Inheritance != "")
-		{
-			SceneObjectTemplatePtr inheritance = manager->GetTemplate(m_Inheritance);
-			if(inheritance)
-			{
-				new_object =  inheritance->CreateComponentContainer(part_id,manager);
-				BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
-				//copy container attributes to new object
-				if(ref_obj)
-					BaseReflectionObject::CopyPropertiesTo(ref_obj);
-				if(manager->GetAddObjectIDToName())
-					new_object->SetName(CreateUniqueName(manager));
-				else
-					new_object->SetName(GetName());
-				//set template name
-				new_object->SetTemplateName(GetName());
-				//if(m_ContainerData)
-				//	m_ContainerData->Assign(new_object);
-				//check if components already exist,
-				//if so replace components
-				InheritComponentData(new_object);
-			}
-		}
-		else
-		{
-			new_object = CreateComponentContainer();
-			if(new_object)
-			{
-				//if(m_NameCheck)
-				//{
-				//SceneObjectTemplate* obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				//while(obj)
-				//{
-				//sprintf(temp,"%s_%d",base_name.c_str(),object_counter);
-				//object_counter++;
-				//obj = SimEngine::GetPtr()->GetLevel()->GetDynamicObjectContainer()->Get(temp);
-				//}
-				//}
-				if(manager->GetAddObjectIDToName())
-					new_object->SetName(CreateUniqueName(manager));
-				else
-					new_object->SetName(GetName());
-				new_object->SetTemplateName(GetName());
-				//new_object->SetPartId(part_id);
-				part_id++;
-			}
-			else
-			{
-				//failed to create comp container
-			}
-		}
-		//recursive add children
-		SceneObjectTemplate::SceneObjectTemplateVector::const_iterator iter;
-		for(iter = m_SceneObjectVector.begin(); iter != m_SceneObjectVector.end(); ++iter)
-		{
-			SceneObjectTemplatePtr child = (*iter);
-			if(child)
-			{
-				ComponentContainerPtr new_child (child->CreateComponentContainer(part_id,manager));
-				if(new_child)
-				{
-					//Add new child
-					new_object->AddChild(new_child);
-				}
-			}
-		}
-		return new_object;
-	}
-	*/
-
 	SceneObjectPtr SceneObjectTemplate::CreateSceneObject() const
 	{
-		SceneObjectPtr container = std::make_shared<SceneObject>();
-		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(container);
+		auto so = std::make_shared<SceneObject>();
+		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(so);
 		BaseReflectionObject::CopyPropertiesTo(ref_obj);
 
 		ComponentVector::const_iterator iter;
@@ -476,10 +401,10 @@ namespace GASS
 			if (comp)
 			{
 				ComponentPtr new_comp = comp->CreateCopy();
-				container->AddComponent(new_comp);
+				so->AddComponent(new_comp);
 			}
 		}
-		return container;
+		return so;
 	}
 
 	void SceneObjectTemplate::CreateFromSceneObject(SceneObjectPtr cc, SceneObjectTemplateManagerConstPtr manager, bool keep_inheritance)
@@ -539,15 +464,15 @@ namespace GASS
 		}
 	}
 
-#define TAB(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
+#define GASS_INDENT(val) std::cout << std::setfill(' ') << std::setw(val*3) << std::right << " "; std::cout
 	void SceneObjectTemplate::DebugPrint(int tc)
 	{
 
-		TAB(tc) << GetRTTI()->GetClassName() << " - " << GetName() << std::endl;
+		GASS_INDENT(tc) << GetRTTI()->GetClassName() << " - " << GetName() << std::endl;
 		tc++;
 		if (m_ComponentVector.size() > 0)
 		{
-			TAB(tc) << "Components" << std::endl;
+			GASS_INDENT(tc) << "Components" << std::endl;
 		}
 		auto comp_iter = m_ComponentVector.begin();
 		tc++;
@@ -556,7 +481,7 @@ namespace GASS
 			ComponentPtr comp = (*comp_iter);
 			//std::string comp_type = comp->GetRTTI()->GetClassName();
 			//TAB(tc) << comp_type << " - " << comp->GetName() << std::endl;
-			TAB(tc) << comp->GetName() << std::endl;
+			GASS_INDENT(tc) << comp->GetName() << std::endl;
 			++comp_iter;
 		}
 		tc--;
@@ -564,16 +489,13 @@ namespace GASS
 		SceneObjectTemplate::SceneObjectTemplateVector::iterator iter;
 		if (m_SceneObjectVector.size() > 0)
 		{
-			TAB(tc) << "Children" << std::endl;
+			GASS_INDENT(tc) << "Children" << std::endl;
 		}
 		for (iter = m_SceneObjectVector.begin(); iter != m_SceneObjectVector.end(); ++iter)
 		{
 			SceneObjectTemplatePtr child = GASS_STATIC_PTR_CAST<SceneObjectTemplate>(*iter);
 			child->DebugPrint(tc + 1);
 		}
-		//TAB(tc) << "Children - " << std::endl;
-		tc--;
-		//TAB(tc) << "IComponentContainer - " << std::endl;
 	}
 
 }

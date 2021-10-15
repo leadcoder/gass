@@ -31,21 +31,14 @@
 
 namespace GASS
 {
-
 	class MessageManager;
 	GASS_FORWARD_DECL(SceneObjectTemplate);
 	GASS_FORWARD_DECL(Component);
 	GASS_FORWARD_DECL(SceneObject);
 	GASS_FORWARD_DECL(SceneObjectTemplateManager);
 	typedef GASS_SHARED_PTR<SceneObjectTemplateManager const> SceneObjectTemplateManagerConstPtr;
-
-
 	typedef std::string SceneObjectID;
-	//class SceneObjectTemplate;
 	class BaseSceneComponent;
-
-	//typedef GASS_SHARED_PTR<SceneObjectTemplate> SceneObjectTemplatePtr;
-	//typedef GASS_WEAK_PTR<SceneObjectTemplate> SceneObjectTemplateWeakPtr;
 	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
 	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
 
@@ -67,70 +60,70 @@ namespace GASS
 		void SetInstantiable(bool value) { m_Instantiable = value; }
 		bool GetInstantiable() const { return m_Instantiable; }
 		/**
-		Convinces function for BaseSceneComponent's that call AddComponent on SceneObjectTemplate
+			Convenience function for BaseSceneComponent's that call AddComponent on SceneObjectTemplate
 		*/
 		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
 
 
 		/**
-		Convinces function for BaseSceneComponent's that call GetComponent on SceneObjectTemplate
+			Convenience function for BaseSceneComponent's that call GetComponent on SceneObjectTemplate
 		*/
 		BaseSceneComponentPtr GetBaseSceneComponent(const std::string& comp_name) const;
 
 		/**
-		Get component container template name
+			Get SceneObject template name
 		*/
 		virtual std::string GetName() const { return m_Name; }
 
 		/**
-		Set component container template name
+			Set SceneObject template name
 		*/
 		virtual void SetName(const std::string& name) { m_Name = name; }
 
 		/**
-			Add a child component container template.
+			Add a child SceneObject template.
 		*/
 		virtual void AddChild(SceneObjectTemplatePtr child);
 
 		/**
-			Remove child component container template.
+			Remove child SceneObject template.
 		*/
 		virtual void RemoveChild(SceneObjectTemplatePtr child);
 		/**
-			Get child component containers templates,
-			this will only return the ones owned by this container i.e.
+			Get child SceneObjects templates,
+			this will only return the ones owned by this object i.e.
 			no grandchildren will be returned
 		*/
 		virtual SceneObjectTemplateIterator GetChildren();
 
 		/**
-			Get possible parent component container template
+			Get possible parent SceneObject template
 		*/
 		virtual SceneObjectTemplatePtr GetParent() const { return m_Parent.lock(); }//allow null pointer}
 
 		/**
-			Set parent component container template
+			Set parent SceneObject template
 		*/
 		virtual void SetParent(SceneObjectTemplateWeakPtr parent) { m_Parent = parent; }
 
 		/**
-			Add new component to this container
+			Add component
 		*/
 		virtual void AddComponent(ComponentPtr comp);
 
 		/**
 			Get component by name,
-			only search this containers components and first one is returned
+			only search this SceneObject and first one is returned
 		*/
 		virtual ComponentPtr GetComponent(const std::string& name) const;
 
 		/**
-			Get all components owned by this container
+			Get all components
 		*/
 		virtual ComponentIterator GetComponents();
 
 		/**
-			Rebuild this template component container from existing SceneObject. Still experimental
+			Rebuild this template SceneObject from existing SceneObject. Still experimental
 		*/
 		virtual void CreateFromSceneObject(SceneObjectPtr cc, SceneObjectTemplateManagerConstPtr manager, bool keep_inheritance);
 
@@ -163,19 +156,23 @@ namespace GASS
 		*/
 		std::string GetInheritance()  const { return m_Inheritance; }
 
-		/**Set whether this container should be serialized or not, by default
-		all containers are serialized*/
+		/**
+			Set whether this object should be serialized or not, by default
+			all SceneObjects are serialized
+		*/
 		void SetSerialize(bool value);
 
-		/**Get whether this container should be serialized or not, by default
-		all containers are serialized*/
+		/**
+			Get whether this object should be serialized or not, by default
+			all SceneObjects are serialized
+		*/
 		bool GetSerialize()  const;
 
 		/**
 			Create and add new component.
 			This function will create a new component of the supplied type
 			by using the component factory. Then it will be added to the component
-			vector for this component container.
+			vector for this SceneObject.
 			@param comp_type Component type to add
 			@return The new component
 		*/
@@ -187,7 +184,7 @@ namespace GASS
 	protected:
 
 		//It's possible to override this function if custom creation process is needed.
-		//By default the container factory name used is the same as the template
+		//By default the factory name used is the same as the template
 		//with the Template part removed, however if thats not the case you have to
 		//override this function and supply your own instance. 
 		//Another case could be that some attributes have to be transfered 
@@ -195,7 +192,6 @@ namespace GASS
 		virtual SceneObjectPtr CreateSceneObject() const;
 
 		//Help functions during template creation
-		//std::string CreateUniqueName(SceneObjectTemplateManagerConstPtr manager) const;
 		void _InheritComponentData(SceneObjectPtr cc) const;
 		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
 
