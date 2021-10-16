@@ -54,18 +54,10 @@ namespace GASS
 			while(iter != pRTTI->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
-
-				//bool is_sol = *prop->GetTypeID() == typeid(SceneObjectLink);
-				//bool is_sol_vec = 
-				//if(is_sol || is_sol_vec)
-				//{
 				if (*prop->GetTypeID() == typeid(std::vector<SceneObjectLink>))
 				{
 					std::vector<SceneObjectLink> links;
 					GetPropertyValue(prop, links);
-					//GASS_ANY any_link;
-					//prop->GetValueAsAny(this, any_link);
-					//std::vector<SceneObjectLink> links = GASS_ANY_CAST<std::vector<SceneObjectLink> >(any_link);
 					for (size_t i = 0; i < links.size(); i++)
 					{
 						if (links[i].GetLinkObjectID() != UNKNOWN_LINK_ID)
@@ -80,16 +72,10 @@ namespace GASS
 						else
 							GASS_LOG(LWARNING) << "Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
 					}
-					//Why?
-					//GASS_ANY any_links(links);
-					//prop->SetValueByAny(this, links);
 					SetPropertyValue(prop, links);
 				}
 				else if (*prop->GetTypeID() == typeid(SceneObjectLink))
 				{
-					//GASS_ANY any_link;
-					//prop->GetValueAsAny(this,any_link);
-					//SceneObjectLink link = GASS_ANY_CAST<SceneObjectLink>(any_link);
 					SceneObjectLink link;
 					GetPropertyValue(prop, link);
 					if (link.GetLinkObjectID() != UNKNOWN_LINK_ID)

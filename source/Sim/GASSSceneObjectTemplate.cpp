@@ -407,24 +407,24 @@ namespace GASS
 		return so;
 	}
 
-	void SceneObjectTemplate::CreateFromSceneObject(SceneObjectPtr cc, SceneObjectTemplateManagerConstPtr manager, bool keep_inheritance)
+	void SceneObjectTemplate::CreateFromSceneObject(SceneObjectPtr so, SceneObjectTemplateManagerConstPtr manager, bool keep_inheritance)
 	{
 		SceneObjectTemplatePtr old_temp;
 		if (keep_inheritance)
 		{
-			const std::string old_template_name = cc->GetTemplateName();
+			const std::string old_template_name = so->GetTemplateName();
 			if (old_template_name != "")
 			{
-				old_temp = GASS_DYNAMIC_PTR_CAST<SceneObjectTemplate>(manager->GetTemplate(old_template_name));
+				old_temp = manager->GetTemplate(old_template_name);
 				if (old_temp)
 					SetInheritance(old_temp->GetInheritance());
 			}
 		}
 
-		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(cc);
+		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(so);
 		ref_obj->CopyPropertiesTo(shared_from_this());
 
-		SceneObject::ComponentIterator comp_iter = cc->GetComponents();
+		auto comp_iter = so->GetComponents();
 		while (comp_iter.hasMoreElements())
 		{
 			ComponentPtr comp = comp_iter.getNext();
@@ -435,7 +435,7 @@ namespace GASS
 			}
 		}
 
-		SceneObject::SceneObjectIterator children = cc->GetChildren();
+		auto children = so->GetChildren();
 
 		while (children.hasMoreElements())
 		{
@@ -443,7 +443,7 @@ namespace GASS
 			bool found = false;
 			if (old_temp)
 			{
-				SceneObjectTemplate::SceneObjectTemplateIterator temp_children = old_temp->GetChildren();
+				auto temp_children = old_temp->GetChildren();
 				while (temp_children.hasMoreElements())
 				{
 					SceneObjectTemplatePtr temp_child = temp_children.getNext();
@@ -455,7 +455,6 @@ namespace GASS
 				}
 			}
 			SceneObjectTemplatePtr new_child = std::make_shared<SceneObjectTemplate>();
-			//SceneObjectTemplatePtr new_child = GASS_DYNAMIC_PTR_CAST<SceneObjectTemplate>( CreateInstance());
 			if (!found && new_child)
 			{
 				new_child->CreateFromSceneObject(child, manager, keep_inheritance);
@@ -493,7 +492,7 @@ namespace GASS
 		}
 		for (iter = m_SceneObjectVector.begin(); iter != m_SceneObjectVector.end(); ++iter)
 		{
-			SceneObjectTemplatePtr child = GASS_STATIC_PTR_CAST<SceneObjectTemplate>(*iter);
+			auto child = *iter;
 			child->DebugPrint(tc + 1);
 		}
 	}
