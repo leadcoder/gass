@@ -47,7 +47,7 @@
 				<Offset value="0 5 0"/>
 			</TextComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="TankTrackL"/>
 				<Components>
@@ -286,7 +286,7 @@
 						<UpdatePosition value="0"/>
 					</LocationTransferComponent>
 				</Components>
-				<ComponentContainers>
+				<Children>
 					<SceneObjectTemplate>
 						<Name value="FireSound"/>
 						<ID value="FIRE_SOUND"/>
@@ -419,13 +419,10 @@
 								<InputHandlerObject value="CHASSIS"/>
 							</VehicleCameraComponent>-->
 						</Components>
-						<ComponentContainers>
-
-						</ComponentContainers>
 					</SceneObjectTemplate>
-				</ComponentContainers>
+				</Children>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 	<!-- base templates for wheels on left side-->
 	<SceneObjectTemplate>

@@ -52,7 +52,7 @@
 			</InputTransferComponent>
 			<!-- <Debug type="VehicleDebugComponent"/>-->
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="GTOCameraObject"/>
 				<Components>
@@ -132,7 +132,7 @@
 					</MeshComponent>
 				</Components>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="GTOFrontWheel"/>

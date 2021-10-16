@@ -63,7 +63,7 @@
 				<ControlSetting value ="TankInputSettings"/>
 			</InputTransferComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="JimTankTurret"/>
 				<ID value="TURRET"/>
@@ -102,7 +102,7 @@
 						<UpdatePosition value="0"/>
 					</LocationTransferComponent>
 				</Components>
-				<ComponentContainers>
+				<Children>
 					<SceneObjectTemplate>
 						<Name value="FireSound"/>
 						<ID value="FIRE_SOUND"/>
@@ -224,12 +224,8 @@
 								<InputHandlerObject value="CHASSIS"/>
 							</VehicleCameraComponent>-->
 						</Components>
-						<ComponentContainers>
-
-						</ComponentContainers>
 					</SceneObjectTemplate>
-
-				</ComponentContainers>
+				</Children>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
 				<Name value="JimTankTrackL"/>
@@ -379,7 +375,7 @@
 					</LocationComponent>
 				</Components>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="JimTankWheel"/>

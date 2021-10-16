@@ -43,7 +43,7 @@
 				<Offset value="0 5 0"/>
 			</TextComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="TLC_FL_Wheel"/>
 				<ID value="FRONT_LEFT_WHEEL"/>
@@ -152,6 +152,6 @@
 					<PhysicsConvexGeometryComponent/>
 				</Components>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 </Templates>
