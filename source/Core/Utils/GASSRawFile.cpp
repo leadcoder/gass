@@ -65,7 +65,7 @@ namespace GASS
 		if(m_Data== nullptr || fread(m_Data, 1, image_size, file) != image_size)
 		{
 			if(m_Data!=nullptr)
-				free(m_Data);
+				delete m_Data;
 
 			fclose(file);
 			return false;

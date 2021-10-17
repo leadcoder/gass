@@ -38,7 +38,6 @@ namespace GASS
 	private:
 		std::vector<Quaternion> m_Points;
 		std::vector<Quaternion> m_Tangents;
-		Mat4 m_Coeffs;
 		bool m_AutoCalc;
 	};
 }

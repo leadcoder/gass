@@ -120,8 +120,8 @@ namespace GASS
 		FloatArray16 m_Data;
 		Vec3 m_Min;
 		Vec3 m_Max;
+		unsigned int m_NumSamplesW{ 0 };
 		unsigned int m_NumSamplesH{0};
-		unsigned int m_NumSamplesW{0};
 	};
 	typedef GASS_SHARED_PTR<HeightField> HeightFieldPtr;
 }
