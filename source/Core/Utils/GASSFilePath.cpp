@@ -100,66 +100,66 @@ namespace GASS
 
 	std::string FilePath::_ExpandEnvVariables(const std::string &inStr) const
 	{
-		std::string curStr = inStr;
-		const std::string::size_type occurIndex1 = curStr.find("%");
-		std::string varName = "";
-		std::string replaceStr = "";
-		if ( occurIndex1 != std::string::npos )
+		std::string cur_str = inStr;
+		const std::string::size_type occur_index1 = cur_str.find("%");
+		std::string var_name = "";
+		std::string replace_str = "";
+		if ( occur_index1 != std::string::npos )
 		{
-			const std::string::size_type endVarIndex = curStr.find("%", occurIndex1+1);
-			if (endVarIndex == std::string::npos)
+			const std::string::size_type end_var_index = cur_str.find("%", occur_index1+1);
+			if (end_var_index == std::string::npos)
 			{
-				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << "\nOnly one percent sign in string";
+				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << cur_str << "\nOnly one percent sign in string";
 				assert(true);
 			}
 			else
 			{
-				varName = curStr.substr(occurIndex1+1, endVarIndex-occurIndex1-1);
-				replaceStr = curStr.substr(occurIndex1, endVarIndex-occurIndex1+1);
-				if (varName.length() > 0)
+				var_name = cur_str.substr(occur_index1+1, end_var_index-occur_index1-1);
+				replace_str = cur_str.substr(occur_index1, end_var_index-occur_index1+1);
+				if (var_name.length() > 0)
 				{
-					const std::string var_value = System::GetEnvVar(varName);
+					const std::string var_value = System::GetEnvVar(var_name);
 					if (var_value.empty())
 					{
-						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
+						GASS_LOG(LWARNING) << "Failed to find env var: " << var_name;
 					}
 					else
 					{
-						curStr.replace(occurIndex1, replaceStr.length(), var_value);
+						cur_str.replace(occur_index1, replace_str.length(), var_value);
 					}
 				}
 			}
 
 		}
-		const std::string::size_type occurIndex2 = curStr.find("$");
-		if (occurIndex2 != std::string::npos )
+		const std::string::size_type occur_index2 = cur_str.find("$");
+		if (occur_index2 != std::string::npos )
 		{
-			const std::string::size_type startVarIndex = curStr.find("(");
-			const std::string::size_type endVarIndex = curStr.find(")");
-			if (startVarIndex == std::string::npos || endVarIndex == std::string::npos)
+			const std::string::size_type start_var_index = cur_str.find("(");
+			const std::string::size_type end_var_index = cur_str.find(")");
+			if (start_var_index == std::string::npos || end_var_index == std::string::npos)
 			{
-				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << curStr << " Missing start or end parenthesis";
+				GASS_LOG(LWARNING) << "FilePath::ExpandEnvVariables - Erroneous use of environment variable: " << cur_str << " Missing start or end parenthesis";
 				assert(true);
 			}
 			else
 			{
-				varName = curStr.substr(startVarIndex+1, endVarIndex-startVarIndex-1);
-				replaceStr = curStr.substr(occurIndex2, endVarIndex-occurIndex2+1);
-				if (varName.length() > 0)
+				var_name = cur_str.substr(start_var_index+1, end_var_index-start_var_index-1);
+				replace_str = cur_str.substr(occur_index2, end_var_index-occur_index2+1);
+				if (var_name.length() > 0)
 				{
-					const std::string env_var_value = System::GetEnvVar(varName.c_str());
+					const std::string env_var_value = System::GetEnvVar(var_name.c_str());
 					if (env_var_value.empty())
 					{
-						GASS_LOG(LWARNING) << "Failed to find env var: " << varName;
+						GASS_LOG(LWARNING) << "Failed to find env var: " << var_name;
 					}
 					else
 					{
-						curStr.replace(occurIndex2, replaceStr.length(), env_var_value);
+						cur_str.replace(occur_index2, replace_str.length(), env_var_value);
 					}
 				}
 			}
 		}
-		return curStr;
+		return cur_str;
 	}
 
 	std::string FilePath::GetPathNoExtension() const

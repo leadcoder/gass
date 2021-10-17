@@ -137,32 +137,32 @@ namespace GASS {
                 and will also supply extra platform-specific information
                 where applicable.
         */
-        virtual const std::string & getFullDescription() const;
+        virtual const std::string & GetFullDescription() const;
 
         /** Gets the error code.
         */
-        virtual int getNumber() const throw();
+        virtual int GetNumber() const throw();
 
         /** Gets the source function.
         */
-        virtual const std::string &getSource() const { return source; }
+        virtual const std::string &GetSource() const { return source; }
 
         /** Gets source file name.
         */
-        virtual const std::string &getFile() const { return file; }
+        virtual const std::string &GetFile() const { return file; }
 
         /** Gets line number.
         */
-        virtual long getLine() const { return line; }
+        virtual long GetLine() const { return line; }
 
 		/** Returns a string with only the 'description' field of this exception. Use 
 			getFullDescriptionto get a full description of the error including line number,
 			error number and what function threw the exception.
         */
-		virtual const std::string &getDescription() const { return description; }
+		virtual const std::string &GetDescription() const { return description; }
 
 		/// Override std::exception::what
-		const char* what() const throw() override { return getFullDescription().c_str(); }
+		const char* what() const throw() override { return GetFullDescription().c_str(); }
         
     };
 
@@ -257,7 +257,7 @@ namespace GASS {
 		/// Private constructor, no construction
 		ExceptionFactory() = default;
 	public:
-		static UnimplementedException create(
+		static UnimplementedException Create(
 			ExceptionCodeType<Exception::ERR_NOT_IMPLEMENTED> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -265,7 +265,7 @@ namespace GASS {
 			(void) code;
 			return UnimplementedException(code.number, desc, src, file, line);
 		}
-		static FileNotFoundException create(
+		static FileNotFoundException Create(
 			ExceptionCodeType<Exception::ERR_FILE_NOT_FOUND> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -273,7 +273,7 @@ namespace GASS {
 			(void) code;
 			return FileNotFoundException(code.number, desc, src, file, line);
 		}
-		static FileReadException create(
+		static FileReadException Create(
 			ExceptionCodeType<Exception::ERR_CANNOT_READ_FILE> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -282,7 +282,7 @@ namespace GASS {
 			return FileReadException(code.number, desc, src, file, line);
 		}
 
-		static IOException create(
+		static IOException Create(
 			ExceptionCodeType<Exception::ERR_CANNOT_WRITE_TO_FILE> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -290,7 +290,7 @@ namespace GASS {
 			(void) code;
 			return IOException(code.number, desc, src, file, line);
 		}
-		static InvalidStateException create(
+		static InvalidStateException Create(
 			ExceptionCodeType<Exception::ERR_INVALID_STATE> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -298,7 +298,7 @@ namespace GASS {
 			(void) code;
 			return InvalidStateException(code.number, desc, src, file, line);
 		}
-		static InvalidParametersException create(
+		static InvalidParametersException Create(
 			ExceptionCodeType<Exception::ERR_INVALIDPARAMS> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -306,7 +306,7 @@ namespace GASS {
 			(void) code;
 			return InvalidParametersException(code.number, desc, src, file, line);
 		}
-		static ItemIdentityException create(
+		static ItemIdentityException Create(
 			ExceptionCodeType<Exception::ERR_ITEM_NOT_FOUND> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -314,7 +314,7 @@ namespace GASS {
 			(void) code;
 			return ItemIdentityException(code.number, desc, src, file, line);
 		}
-		static ItemIdentityException create(
+		static ItemIdentityException Create(
 			ExceptionCodeType<Exception::ERR_DUPLICATE_ITEM> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -322,7 +322,7 @@ namespace GASS {
 			(void) code;
 			return ItemIdentityException(code.number, desc, src, file, line);
 		}
-		static InternalErrorException create(
+		static InternalErrorException Create(
 			ExceptionCodeType<Exception::ERR_INTERNAL_ERROR> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -330,7 +330,7 @@ namespace GASS {
 			(void) code;
 			return InternalErrorException(code.number, desc, src, file, line);
 		}
-		static RuntimeAssertionException create(
+		static RuntimeAssertionException Create(
 			ExceptionCodeType<Exception::ERR_RT_ASSERTION_FAILED> code, 
 			const std::string & desc, 
 			const std::string & src, const char* file, long line)
@@ -344,7 +344,7 @@ namespace GASS {
 
 	
 #ifndef GASS_EXCEPT
-#define GASS_EXCEPT(num, desc, src) throw GASS::ExceptionFactory::create( \
+#define GASS_EXCEPT(num, desc, src) throw GASS::ExceptionFactory::Create( \
 	GASS::ExceptionCodeType<num>(), desc, src, __FILE__, __LINE__ );
 #endif
 	/** @} */

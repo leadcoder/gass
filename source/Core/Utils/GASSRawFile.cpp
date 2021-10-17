@@ -62,10 +62,10 @@ namespace GASS
 		const unsigned int image_size = m_Width*m_Height*m_BPP/8;
 		m_Data = new unsigned char[image_size];
 
-		if(m_Data== nullptr || fread(m_Data, 1, image_size, file) != image_size)
+		if(m_Data == nullptr || fread(m_Data, 1, image_size, file) != image_size)
 		{
 			if(m_Data!=nullptr)
-				delete m_Data;
+				delete[] m_Data;
 
 			fclose(file);
 			return false;

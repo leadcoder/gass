@@ -57,7 +57,7 @@ namespace GASS {
 				this->getFullDescription(), 
                 LML_CRITICAL, true);
 		}*/
-		GASS_LOG(LERROR) << this->getFullDescription();
+		GASS_LOG(LERROR) << this->GetFullDescription();
 
     }
 
@@ -81,7 +81,7 @@ namespace GASS {
 		typeName = rhs.typeName;
     }
 
-    const std::string& Exception::getFullDescription() const
+    const std::string& Exception::GetFullDescription() const
     {
 		if (fullDesc.empty())
 		{
@@ -102,7 +102,7 @@ namespace GASS {
 		return fullDesc;
     }
 
-    int Exception::getNumber() const throw()
+    int Exception::GetNumber() const throw()
     {
         return number;
     }
