@@ -13,10 +13,10 @@ namespace GASS
 		bool Load(const std::string &filename,unsigned int width, unsigned int height, int bpp);
 		bool Load(const std::string &filename,int bpp);
 		int GetSize(const std::string &filename, int bpp) const;
-		unsigned char *m_Data;
-		unsigned int m_Width;
-		unsigned int m_Height;
-		int m_BPP;
+		unsigned char *m_Data{nullptr};
+		unsigned int m_Width{0};
+		unsigned int m_Height{0};
+		int m_BPP{8};
 	};
 }
 #endif 

@@ -4,10 +4,8 @@
 
 namespace GASS
 {
-	RawFile::RawFile() : m_Data(nullptr),
-		m_Height(0),
-		m_Width(0),
-		m_BPP(8)
+	RawFile::RawFile() 
+		
 	{
 
 	}

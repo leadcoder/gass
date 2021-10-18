@@ -64,10 +64,10 @@ namespace GASS
 		static LogLevel m_MinLogLevel; //current minimum logging level
 		static ILogListener* m_Listener;
 	protected:
-		LogLevel m_LogLevel; 
-		OutputMode m_OutputMode; 
+		LogLevel m_LogLevel{LINFO}; 
+		OutputMode m_OutputMode{STD_OUT}; 
 		std::ostringstream m_OutputStream; 
-		bool m_FreeLogging; //true implies do not automatically add endl to end of string stream
+		bool m_FreeLogging{false}; //true implies do not automatically add endl to end of string stream
 	public:
 		/**
 		* Construct a Logger object.

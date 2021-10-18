@@ -26,9 +26,9 @@
 #include "GASSTimer.h"
 namespace GASS
 {
-	Timer::Timer() : m_StartTime(0)
+	Timer::Timer() : 
 #ifdef WIN32
-		, m_PerfTimerStart(0)
+		, 
 #endif
 	{
 #ifdef WIN32

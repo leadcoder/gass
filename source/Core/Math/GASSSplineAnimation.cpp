@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	SplineAnimation::SplineAnimation() : m_Length(0), m_NumericSteps(25)
+	SplineAnimation::SplineAnimation()  
 	{
 		
 		

@@ -55,7 +55,7 @@ namespace GASS
 		void Reset();
 	private:
 #ifdef WIN32
-	    __int64			m_PerfTimerStart;	// Performance Timer Start Value
+	    __int64			m_PerfTimerStart{0};	// Performance Timer Start Value
 		__int64			m_PerfTimerElapsed;	// Performance Timer Elapsed Time
 		bool			m_PerfTimer;		// Using The Performance Timer?
 		__int64			m_Frequency;		// Timer Frequency
@@ -65,7 +65,7 @@ namespace GASS
 		float			m_Resolution;		// Timer Resolution
 		unsigned long	m_MMTimerStart;		// Multimedia Timer Start Value
 		unsigned long	m_MMTimerElapsed;	// Multimedia Timer Elapsed Time
-		double m_StartTime;
+		double m_StartTime{0};
 
 
 	};
