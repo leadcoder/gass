@@ -55,7 +55,7 @@ namespace GASS
 	{
 		if(serializer->Loading())
 		{
-			if(!BaseReflectionObject::_SerializeProperties(serializer))
+			if(!BaseReflectionObject::SerializeProperties(serializer))
 				return false;
 		}
 		else
@@ -63,7 +63,7 @@ namespace GASS
 			auto* saver = static_cast<SerialSaver*>(serializer);
 			std::string comp_type = GetRTTI()->GetClassName();
 			saver->IO<std::string>(comp_type);
-			if(!BaseReflectionObject::_SerializeProperties(serializer))
+			if(!BaseReflectionObject::SerializeProperties(serializer))
 				return false;
 		}
 		return true;
@@ -72,7 +72,7 @@ namespace GASS
 
 	void Component::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
-		BaseReflectionObject::_LoadProperties(obj_elem);
+		BaseReflectionObject::LoadProperties(obj_elem);
 	}
 
 	void Component::SaveXML(tinyxml2::XMLElement *xml_elem)
@@ -81,7 +81,7 @@ namespace GASS
 		const std::string factory_key = ComponentFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
 		this_elem = xml_elem->GetDocument()->NewElement(factory_key.c_str() );
 		xml_elem->LinkEndChild( this_elem );  
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 	}
 
 	ComponentPtr Component::CreateCopy()

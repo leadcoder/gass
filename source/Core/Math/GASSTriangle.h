@@ -81,7 +81,7 @@ namespace GASS
 
 			isect_point = line_segment.m_Start + ray_dir * ray_scale;
 
-			if (_CheckPoint(isect_point))
+			if (CheckPoint(isect_point))
 				return true;
 			return false;
 		}
@@ -116,19 +116,19 @@ namespace GASS
 		{
 			// find how far away the plane is from point p along the planes normal
 			const TPlane<TYPE> plane = GetPlane();
-			const TYPE distToPlaneIntersection = plane.RayIsect(TRay<TYPE>(p, -plane.m_Normal));
-			if ((distToPlaneIntersection == -1) || (distToPlaneIntersection > radius)) 
+			const TYPE dist_to_plane_intersection = plane.RayIsect(TRay<TYPE>(p, -plane.m_Normal));
+			if ((dist_to_plane_intersection == -1) || (dist_to_plane_intersection > radius)) 
 				return false;
 
 			// find the nearest point on the plane to p
-			closest = p - (plane.m_Normal * distToPlaneIntersection);
+			closest = p - (plane.m_Normal * dist_to_plane_intersection);
 			// determine if that point is in the triangle
-			return _CheckPoint(closest) > 0;
+			return CheckPoint(closest) > 0;
 		}
 
 	//private:
 
-		int _CheckPoint(const TVec3<TYPE>& point) const
+		int CheckPoint(const TVec3<TYPE>& point) const
 		{
 			const TVec3<TYPE> e10 = P2 - P1;
 			const TVec3<TYPE> e20 = P3 - P1;

@@ -112,7 +112,7 @@ namespace GASS
 		*/
 		const FloatArray16& GetFloatArray() const {return m_Data;}
 	private:
-		void SetDimensions(const Vec3 &min,const Vec3 &max)
+		void _SetDimensions(const Vec3 &min,const Vec3 &max)
 		{
 			m_Max = max;
 			m_Min = min;

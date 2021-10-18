@@ -165,10 +165,10 @@ namespace GASS
 		void CopyPropertiesTo(BaseReflectionObjectPtr dest) const;
 	protected:
 		//internal stuff
-		void _LoadProperties(tinyxml2::XMLElement *elem);
-		void _SaveProperties(tinyxml2::XMLElement *parent) const;
+		void LoadProperties(tinyxml2::XMLElement *elem);
+		void SaveProperties(tinyxml2::XMLElement *parent) const;
 
-		bool _SerializeProperties(ISerializer* serializer);
+		bool SerializeProperties(ISerializer* serializer);
 	};
 
 }

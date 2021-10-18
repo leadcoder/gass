@@ -56,20 +56,20 @@ namespace GASS
 
 	Vec3 Path::GetPointOnPath(Float pathDistance, const std::vector<Vec3> &wps, bool cyclic, int &index)
 	{
-		Float  totalPathLength  = 0;
+		Float  total_path_length  = 0;
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).Length();
-			lengths.push_back(segmentLength);
-			totalPathLength += segmentLength;
+			const Float segment_length = (wps[i-1] - wps[i]).Length();
+			lengths.push_back(segment_length);
+			total_path_length += segment_length;
 		}
 
 		// clip or wrap given path distance according to cyclic flag
 		Float remaining = pathDistance;
 		if (cyclic)
 		{
-			remaining = fmod(pathDistance, totalPathLength);
+			remaining = fmod(pathDistance, total_path_length);
 		}
 		else
 		{
@@ -78,7 +78,7 @@ namespace GASS
 				index = 0;
 				return wps[0];
 			}
-			if (pathDistance >= totalPathLength)
+			if (pathDistance >= total_path_length)
 			{
 				if(wps.size() > 1)
 				{
@@ -94,14 +94,14 @@ namespace GASS
 		Vec3 result(0,0,0);
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = lengths[i-1];
-			if (segmentLength < remaining)
+			const Float segment_length = lengths[i-1];
+			if (segment_length < remaining)
 			{
-				remaining -= segmentLength;
+				remaining -= segment_length;
 			}
 			else
 			{
-				const Float ratio = remaining / segmentLength;
+				const Float ratio = remaining / segment_length;
 				result = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
 				index = i-1;
 				break;
@@ -114,36 +114,36 @@ namespace GASS
 	Float Path::GetPathDistance(const Vec3& point, const std::vector<Vec3> &wps, int &index, Float &distance_to_path)
 	{
 		Float shortest_dist = std::numeric_limits<Float>::max();
-		Float segmentLengthTotal = 0;
-		Float pathDistance = 0;
+		Float segment_length_total = 0;
+		Float path_distance = 0;
 
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i] - wps[i-1]).Length();
+			const Float segment_length = (wps[i] - wps[i-1]).Length();
 			const Vec3 closest_point_on_line = LineSegment(wps[i-1],wps[i]).ClosestPointOnLine(point);
 			const double dist = (point  - closest_point_on_line).Length();
 			if(dist < shortest_dist)
 			{
 				shortest_dist = dist;
 				distance_to_path = dist;
-				pathDistance = segmentLengthTotal + (wps[i-1] - closest_point_on_line).Length();
+				path_distance = segment_length_total + (wps[i-1] - closest_point_on_line).Length();
 				index = i-1;
 			}
-			segmentLengthTotal += segmentLength;
+			segment_length_total += segment_length;
 		}
 		// return distance along path of onPath point
-		return pathDistance;
+		return path_distance;
 	}
 
 	std::vector<Vec3> Path::ClipPath(Float start_distance, Float end_distance, const std::vector<Vec3> &wps)
 	{
-		Float  totalPathLength  = 0;
+		Float  total_path_length  = 0;
 		std::vector<Float> lengths;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).Length();
-			lengths.push_back(segmentLength);
-			totalPathLength += segmentLength;
+			const Float segment_length = (wps[i-1] - wps[i]).Length();
+			lengths.push_back(segment_length);
+			total_path_length += segment_length;
 		}
 
 		Float start_remaining = start_distance;
@@ -152,15 +152,15 @@ namespace GASS
 		int index = 0;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = lengths[i-1];
-			if (segmentLength < start_remaining)
+			const Float segment_length = lengths[i-1];
+			if (segment_length < start_remaining)
 			{
-				start_remaining -= segmentLength;
-				end_remaining -= segmentLength;
+				start_remaining -= segment_length;
+				end_remaining -= segment_length;
 			}
 			else
 			{
-				const Float ratio = start_remaining / segmentLength;
+				const Float ratio = start_remaining / segment_length;
 				const Vec3 start_point = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
 				path.push_back(start_point);
 				index = i;
@@ -170,18 +170,18 @@ namespace GASS
 
 		for (unsigned int i = index; i < wps.size(); i++)
 		{
-			const Float segmentLength = lengths[i-1];
+			const Float segment_length = lengths[i-1];
 
-			if (segmentLength < end_remaining)
+			if (segment_length < end_remaining)
 			{
-				end_remaining -= segmentLength;
+				end_remaining -= segment_length;
 				//path.push_back(wps[i-1]);
 				//if(index == wps.size()-1) // if last
 				path.push_back(wps[i]);
 			}
 			else
 			{
-				const Float ratio = end_remaining / segmentLength;
+				const Float ratio = end_remaining / segment_length;
 				const Vec3 end_wp = wps[i-1] + ((wps[i] - wps[i-1])*ratio);
 				path.push_back(end_wp);
 				break;
@@ -192,18 +192,18 @@ namespace GASS
 
 	std::vector<Vec3> Path::GenerateOffset(const std::vector<Vec3> &wps, Float start_offset, Float end_offset)
 	{
-		Float totalPathLength = 0;
+		Float total_path_length = 0;
 		for (unsigned int i = 1; i < wps.size(); i++)
 		{
-			const Float segmentLength = (wps[i-1] - wps[i]).Length();
-			totalPathLength += segmentLength;
+			const Float segment_length = (wps[i-1] - wps[i]).Length();
+			total_path_length += segment_length;
 		}
 		Float dist = 0;
 		std::vector<Vec3> offset_path;
 		for(size_t i = 0; i < wps.size(); i++)
 		{
 			Vec3 side;
-			const Float inter = dist/totalPathLength;
+			const Float inter = dist/total_path_length;
 			if(i < wps.size()-2)
 				dist += (wps[i-1] - wps[i]).Length();
 			const Float offset = start_offset + inter*(end_offset - start_offset);

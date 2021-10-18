@@ -72,10 +72,10 @@ namespace GASS
 	typedef int (__STDCALL *FuncArg1)(void *);
 	void DynamicModule::CallFunction(const std::string &func_name, void* arg1) const
 	{
-		auto onLoadModule = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
-		if(onLoadModule)
+		auto on_load_module = (FuncArg1)DYNLIB_GETSYM(m_ModuleHandle,func_name.c_str());
+		if(on_load_module)
 		{
-			(onLoadModule(arg1));
+			(on_load_module(arg1));
 		}
 	}
 

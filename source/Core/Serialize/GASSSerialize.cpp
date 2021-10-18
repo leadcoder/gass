@@ -50,11 +50,11 @@ namespace GASS
 		IO<unsigned long>(l);
 		if(bHasOverflowed)return;
 		if(bytesUsed + l > length){bHasOverflowed=true; return; }
-		char *szBuf=new char[l+1];
-		szBuf[l]=0;
-		memcpy(szBuf,buffer,l);
-		value=szBuf;
-		delete[] szBuf;
+		char *sz_buf=new char[l+1];
+		sz_buf[l]=0;
+		memcpy(sz_buf,buffer,l);
+		value=sz_buf;
+		delete[] sz_buf;
 		buffer+=l; bytesUsed+=l;
 	}
 

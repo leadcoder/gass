@@ -23,7 +23,7 @@
 
 namespace GASS
 {
-	void BaseReflectionObject::_LoadProperties(tinyxml2::XMLElement *elem)
+	void BaseReflectionObject::LoadProperties(tinyxml2::XMLElement *elem)
 	{
 		tinyxml2::XMLElement *prop_elem = elem->FirstChildElement();
 		while(prop_elem)
@@ -58,13 +58,13 @@ namespace GASS
 		}
 	}
 
-	void BaseReflectionObject::_SaveProperties(tinyxml2::XMLElement *parent) const
+	void BaseReflectionObject::SaveProperties(tinyxml2::XMLElement *parent) const
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			auto	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			auto	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				const IProperty * prop = (*iter);
 				bool serialize = !(prop->GetFlags() & PF_RUNTIME);
@@ -76,17 +76,17 @@ namespace GASS
 				}
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 	}
 
-	bool BaseReflectionObject::_SerializeProperties(ISerializer* serializer)
+	bool BaseReflectionObject::SerializeProperties(ISerializer* serializer)
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			auto	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			auto	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 				const bool serialize = !(prop->GetFlags() & PF_RUNTIME);
@@ -94,7 +94,7 @@ namespace GASS
 					prop->Serialize(this,serializer);
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 		return true;
 	}
@@ -146,29 +146,29 @@ namespace GASS
 
 	void BaseReflectionObject::CopyPropertiesTo(BaseReflectionObjectPtr dest) const
 	{
-		RTTI* pRTTI = GetRTTI();
-		const RTTI* pdestRTTI = dest->GetRTTI();
+		RTTI* p_rtti = GetRTTI();
+		const RTTI* pdest_rtti = dest->GetRTTI();
 
-		if(pRTTI == pdestRTTI)
+		if(p_rtti == pdest_rtti)
 		{
-			while(pRTTI)
+			while(p_rtti)
 			{
-				auto	iter = pRTTI->GetFirstProperty();
-				while(iter != pRTTI->GetProperties()->end())
+				auto	iter = p_rtti->GetFirstProperty();
+				while(iter != p_rtti->GetProperties()->end())
 				{
 					IProperty * prop = (*iter);
 					prop->Copy(dest.get(),this);
 					++iter;
 				}
-				pRTTI = pRTTI->GetAncestorRTTI();
+				p_rtti = p_rtti->GetAncestorRTTI();
 			}
 		}
 		else
 		{
-			while(pRTTI)
+			while(p_rtti)
 			{
-				auto	iter = pRTTI->GetFirstProperty();
-				while(iter != pRTTI->GetProperties()->end())
+				auto	iter = p_rtti->GetFirstProperty();
+				while(iter != p_rtti->GetProperties()->end())
 				{
 					const IProperty * prop = (*iter);
 					if(dest->HasProperty(prop->GetName()))
@@ -179,7 +179,7 @@ namespace GASS
 					//GASS_LOG(LWARNING) << "BaseReflectionObject::CopyPropertiesTo() - Property not found:" << prop->GetName();
 					++iter;
 				}
-				pRTTI = pRTTI->GetAncestorRTTI();
+				p_rtti = p_rtti->GetAncestorRTTI();
 			}
 		}
 	}
@@ -187,30 +187,30 @@ namespace GASS
 	PropertyVector BaseReflectionObject::GetProperties() const
 	{
 		PropertyVector props;
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			auto	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			auto	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 				props.push_back(prop);
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 		return props;
 	}
 
 	bool BaseReflectionObject::HasMetaData() const
 	{
-		const RTTI* pRTTI = GetRTTI();
-		return pRTTI->HasMetaData();
+		const RTTI* p_rtti = GetRTTI();
+		return p_rtti->HasMetaData();
 	}
 
 	ClassMetaDataPtr BaseReflectionObject::GetMetaData() const
 	{
-		const RTTI* pRTTI = GetRTTI();
-		return pRTTI->GetMetaData();
+		const RTTI* p_rtti = GetRTTI();
+		return p_rtti->GetMetaData();
 	}
 }

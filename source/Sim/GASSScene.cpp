@@ -322,7 +322,7 @@ namespace GASS
 	{
 		tinyxml2::XMLElement *prop = scene->FirstChildElement("Properties");
 		if(prop)
-			BaseReflectionObject::_LoadProperties(prop);
+			BaseReflectionObject::LoadProperties(prop);
 		else // fallback for old scenes
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scene::LoadXML");
 		tinyxml2::XMLElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
@@ -347,7 +347,7 @@ namespace GASS
 		tinyxml2::XMLElement *prop = rootXMLDoc->NewElement("Properties");
 		parent->LinkEndChild(prop);
 
-		BaseReflectionObject::_SaveProperties(prop);
+		BaseReflectionObject::SaveProperties(prop);
 
 		tinyxml2::XMLElement *sms_elem = rootXMLDoc->NewElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);

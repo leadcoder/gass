@@ -19,20 +19,20 @@ namespace GASS
 		intsum = prev = 0;
 		outlimit = numeric_limits<double>::infinity();
 		intcap = numeric_limits<double>::infinity();
-		setGain(kp,ki,kd);
+		SetGain(kp,ki,kd);
 	}
-	void PIDControl::setGain(double kp, double ki, double kd) {
+	void PIDControl::SetGain(double kp, double ki, double kd) {
 		Kp = kp;
 		Ki = ki;
 		Kd = kd;
 	}
 
-	void PIDControl::set(double r) {
+	void PIDControl::Set(double r) {
 		//intsum = 0;
 		desired = r;
 	}
 
-	double PIDControl::update(double input, double dt) {
+	double PIDControl::Update(double input, double dt) {
 		const double error = desired-input;
 		const double der = (error-prev)/dt;
 		intsum += error*dt;
@@ -49,11 +49,11 @@ namespace GASS
 		return output;
 	}
 
-	void PIDControl::setOutputLimit(double limit) {
+	void PIDControl::SetOutputLimit(double limit) {
 		outlimit = limit;
 	}
 
-	void PIDControl::setIntCap(double limit) {
+	void PIDControl::SetIntCap(double limit) {
 		intcap = limit;
 	}
 }

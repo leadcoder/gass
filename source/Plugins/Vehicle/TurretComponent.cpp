@@ -390,10 +390,10 @@ namespace GASS
 
 
 		//float turn_velocity = -angle_to_aim_dir*m_MaxSteerVelocity*4;
-		m_TurnPID.setOutputLimit(m_SteerForce*3);
-		m_TurnPID.setGain(0.00003,0.0001,0.0009);
-		m_TurnPID.set(0);
-		float turn_velocity = static_cast<float>(m_TurnPID.update(angle_to_aim_dir,delta_time));
+		m_TurnPID.SetOutputLimit(m_SteerForce*3);
+		m_TurnPID.SetGain(0.00003,0.0001,0.0009);
+		m_TurnPID.Set(0);
+		float turn_velocity = static_cast<float>(m_TurnPID.Update(angle_to_aim_dir,delta_time));
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
 
 

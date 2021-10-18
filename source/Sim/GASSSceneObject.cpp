@@ -756,7 +756,7 @@ namespace GASS
 	{
 		if (!m_Serialize)
 			return true;
-		if (!BaseReflectionObject::_SerializeProperties(serializer))
+		if (!BaseReflectionObject::SerializeProperties(serializer))
 			return false;
 
 		if (serializer->Loading())
@@ -880,7 +880,7 @@ namespace GASS
 			obj_elem->LinkEndChild(this_elem);
 		}
 
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 
 		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);

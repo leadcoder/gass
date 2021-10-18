@@ -97,7 +97,7 @@ namespace GASS
 					m_VertexVector[index],
 					m_VertexVector[index + 1]);
 
-				if (tri._CheckPoint(isect_point))
+				if (tri.CheckPoint(isect_point))
 				{
 					return true;
 				}

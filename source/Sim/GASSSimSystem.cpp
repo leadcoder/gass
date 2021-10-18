@@ -111,7 +111,7 @@ namespace GASS
 
 	void SimSystem::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
-		_LoadProperties(xml_elem);
+		LoadProperties(xml_elem);
 	}
 
 	void SimSystem::SaveXML(tinyxml2::XMLElement *xml_elem)
@@ -119,7 +119,7 @@ namespace GASS
 		tinyxml2::XMLElement * this_elem;
 		this_elem = xml_elem->GetDocument()->NewElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 	}
 }
 

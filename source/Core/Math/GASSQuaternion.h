@@ -147,7 +147,7 @@ namespace GASS
 		}
 
 		// cutoff for sine near zero
-		static const TYPE ms_fEpsilon;
+		static const TYPE MS_F_EPSILON;
 
 		// special values
 		static const TQuaternion ZERO;
@@ -177,7 +177,7 @@ namespace GASS
 	typedef TQuaternion<float> Quaternionf;
 	typedef TQuaternion<double> Quaterniond;
 
-	template <class TYPE> const TYPE TQuaternion<TYPE>::ms_fEpsilon = static_cast<TYPE>(1e-03);
+	template <class TYPE> const TYPE TQuaternion<TYPE>::MS_F_EPSILON = static_cast<TYPE>(1e-03);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::ZERO = TQuaternion<TYPE>(0 ,0, 0, 0);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::IDENTITY = TQuaternion<TYPE>(1, 0, 0, 0);
 
@@ -231,13 +231,13 @@ namespace GASS
 		// Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
 		// article "TQuaternion<TYPE> Calculus and Fast Animation".
 
-		const TYPE fTrace = kRot.m_Data[0][0] + kRot.m_Data[1][1] + kRot.m_Data[2][2];
+		const TYPE f_trace = kRot.m_Data[0][0] + kRot.m_Data[1][1] + kRot.m_Data[2][2];
 		TYPE froot;
 
-		if (fTrace > 0.0)
+		if (f_trace > 0.0)
 		{
 			// |w| > 1/2, may as well choose w > 1/2
-			froot = sqrt(fTrace + static_cast<TYPE>(1.0));  // 2w
+			froot = sqrt(f_trace + static_cast<TYPE>(1.0));  // 2w
 			w = 0.5f *froot;
 			froot = static_cast<TYPE>(0.5) / froot;  // 1/(4w)
 			x = (kRot.m_Data[2][1] - kRot.m_Data[1][2])*froot;
@@ -247,22 +247,22 @@ namespace GASS
 		else
 		{
 			// |w| <= 1/2
-			static int s_iNext[3] = { 1, 2, 0 };
+			static int s_i_next[3] = { 1, 2, 0 };
 			int i = 0;
 			if (kRot.m_Data[1][1] > kRot.m_Data[0][0])
 				i = 1;
 			if (kRot.m_Data[2][2] > kRot.m_Data[i][i])
 				i = 2;
-			int j = s_iNext[i];
-			int k = s_iNext[j];
+			int j = s_i_next[i];
+			int k = s_i_next[j];
 
 			froot = sqrt(kRot.m_Data[i][i] - kRot.m_Data[j][j] - kRot.m_Data[k][k] + static_cast<TYPE>(1.0));
-			TYPE* apkQuat[3] = { &x, &y, &z };
-			*apkQuat[i] = static_cast<TYPE>(0.5)*froot;
+			TYPE* apk_quat[3] = { &x, &y, &z };
+			*apk_quat[i] = static_cast<TYPE>(0.5)*froot;
 			froot = static_cast<TYPE>(0.5) / froot;
 			w = (kRot.m_Data[k][j] - kRot.m_Data[j][k])*froot;
-			*apkQuat[j] = (kRot.m_Data[j][i] + kRot.m_Data[i][j])*froot;
-			*apkQuat[k] = (kRot.m_Data[k][i] + kRot.m_Data[i][k])*froot;
+			*apk_quat[j] = (kRot.m_Data[j][i] + kRot.m_Data[i][j])*froot;
+			*apk_quat[k] = (kRot.m_Data[k][i] + kRot.m_Data[i][k])*froot;
 		}
 	}
 
@@ -296,26 +296,26 @@ namespace GASS
 
 		//Calculate 3x3 matrix from orthonormal basis
 
-		const int kX = 0;
-		const int kY = 1;
-		const int kZ = 2;
-		const int kW = 3;
+		const int k_x = 0;
+		const int k_y = 1;
+		const int k_z = 2;
+		const int k_w = 3;
 
 		//x axis
 
-		kRot.m_Data[kX][kX] = static_cast<TYPE>(1.0) - (yy + zz);
-		kRot.m_Data[kY][kX] = xy + wz;
-		kRot.m_Data[kZ][kX] = xz - wy;
+		kRot.m_Data[k_x][k_x] = static_cast<TYPE>(1.0) - (yy + zz);
+		kRot.m_Data[k_y][k_x] = xy + wz;
+		kRot.m_Data[k_z][k_x] = xz - wy;
 
 		//y axis
-		kRot.m_Data[kX][kY] = xy - wz;
-		kRot.m_Data[kY][kY] = static_cast<TYPE>(1.0) - (xx + zz);
-		kRot.m_Data[kZ][kY] = yz + wx;
+		kRot.m_Data[k_x][k_y] = xy - wz;
+		kRot.m_Data[k_y][k_y] = static_cast<TYPE>(1.0) - (xx + zz);
+		kRot.m_Data[k_z][k_y] = yz + wx;
 
 		//z axis
-		kRot.m_Data[kX][kZ] = xz + wy;
-		kRot.m_Data[kY][kZ] = yz - wx;
-		kRot.m_Data[kZ][kZ] = static_cast<TYPE>(1.0) - (xx + yy);
+		kRot.m_Data[k_x][k_z] = xz + wy;
+		kRot.m_Data[k_y][k_z] = yz - wx;
+		kRot.m_Data[k_z][k_z] = static_cast<TYPE>(1.0) - (xx + yy);
 
 		/*
 		4th row and column of 4x4 matrix
@@ -324,8 +324,8 @@ namespace GASS
 		For systems where m comes pre-loaded with scale and translation
 		factors, this code can be excluded.
 		*/
-		kRot.m_Data[kW][kX] = kRot.m_Data[kW][kY] = kRot.m_Data[kW][kZ] = kRot.m_Data[kX][kW] = kRot.m_Data[kY][kW] = kRot.m_Data[kZ][kW] = 0.0;
-		kRot.m_Data[kW][kW] = static_cast<TYPE>(1.0);
+		kRot.m_Data[k_w][k_x] = kRot.m_Data[k_w][k_y] = kRot.m_Data[k_w][k_z] = kRot.m_Data[k_x][k_w] = kRot.m_Data[k_y][k_w] = kRot.m_Data[k_z][k_w] = 0.0;
+		kRot.m_Data[k_w][k_w] = static_cast<TYPE>(1.0);
 
 	}
 
@@ -338,12 +338,12 @@ namespace GASS
 		// The TQuaternion<TYPE> representing the rotation is
 		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
-		const TYPE fHalfAngle = static_cast<TYPE>(0.5)*rfAngle;
-		const TYPE fSin = sin(fHalfAngle);
-		w = cos(fHalfAngle);
-		x = fSin*rkAxis.x;
-		y = fSin*rkAxis.y;
-		z = fSin*rkAxis.z;
+		const TYPE f_half_angle = static_cast<TYPE>(0.5)*rfAngle;
+		const TYPE f_sin = sin(f_half_angle);
+		w = cos(f_half_angle);
+		x = f_sin*rkAxis.x;
+		y = f_sin*rkAxis.y;
+		z = f_sin*rkAxis.z;
 	}
 
 	template<class TYPE>
@@ -352,14 +352,14 @@ namespace GASS
 		// The TQuaternion<TYPE> representing the rotation is
 		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
-		const TYPE fSqrLength = x*x + y*y + z*z;
-		if (fSqrLength > 0.0)
+		const TYPE f_sqr_length = x*x + y*y + z*z;
+		if (f_sqr_length > 0.0)
 		{
 			rfAngle = static_cast<TYPE>(2.0)*acos(w);
-			const TYPE fInvLength = static_cast<TYPE>(1.0) / sqrt(fSqrLength);
-			rkAxis.x = x*fInvLength;
-			rkAxis.y = y*fInvLength;
-			rkAxis.z = z*fInvLength;
+			const TYPE f_inv_length = static_cast<TYPE>(1.0) / sqrt(f_sqr_length);
+			rkAxis.x = x*f_inv_length;
+			rkAxis.y = y*f_inv_length;
+			rkAxis.z = z*f_inv_length;
 		}
 		else
 		{
@@ -374,116 +374,116 @@ namespace GASS
 	template<class TYPE>
 	void TQuaternion<TYPE>::FromAxes(const TVec3<TYPE>* akAxis)
 	{
-		TMat4<TYPE> kRot;
-		kRot.MakeIdentity();
-		for (int iCol = 0; iCol < 3; iCol++)
+		TMat4<TYPE> k_rot;
+		k_rot.MakeIdentity();
+		for (int i_col = 0; i_col < 3; i_col++)
 		{
-			kRot.m_Data[0][iCol] = akAxis[iCol].x;
-			kRot.m_Data[1][iCol] = akAxis[iCol].y;
-			kRot.m_Data[2][iCol] = akAxis[iCol].z;
+			k_rot.m_Data[0][i_col] = akAxis[i_col].x;
+			k_rot.m_Data[1][i_col] = akAxis[i_col].y;
+			k_rot.m_Data[2][i_col] = akAxis[i_col].z;
 		}
-		FromRotationMatrix(kRot);
+		FromRotationMatrix(k_rot);
 	}
 	
 	template<class TYPE>
 	void TQuaternion<TYPE>::FromAxes(const TVec3<TYPE>& xAxis, const TVec3<TYPE>& yAxis, const TVec3<TYPE>& zAxis)
 	{
-		TMat4<TYPE> kRot;
-		kRot.MakeIdentity();
-		kRot.m_Data[0][0] = xAxis.x;
-		kRot.m_Data[1][0] = xAxis.y;
-		kRot.m_Data[2][0] = xAxis.z;
+		TMat4<TYPE> k_rot;
+		k_rot.MakeIdentity();
+		k_rot.m_Data[0][0] = xAxis.x;
+		k_rot.m_Data[1][0] = xAxis.y;
+		k_rot.m_Data[2][0] = xAxis.z;
 
-		kRot.m_Data[0][1] = yAxis.x;
-		kRot.m_Data[1][1] = yAxis.y;
-		kRot.m_Data[2][1] = yAxis.z;
+		k_rot.m_Data[0][1] = yAxis.x;
+		k_rot.m_Data[1][1] = yAxis.y;
+		k_rot.m_Data[2][1] = yAxis.z;
 
-		kRot.m_Data[0][2] = zAxis.x;
-		kRot.m_Data[1][2] = zAxis.y;
-		kRot.m_Data[2][2] = zAxis.z;
-		FromRotationMatrix(kRot);
+		k_rot.m_Data[0][2] = zAxis.x;
+		k_rot.m_Data[1][2] = zAxis.y;
+		k_rot.m_Data[2][2] = zAxis.z;
+		FromRotationMatrix(k_rot);
 	}
 	
 	template<class TYPE>
 	void TQuaternion<TYPE>::ToAxes(TVec3<TYPE>* akAxis) const
 	{
-		TMat4<TYPE> kRot;
+		TMat4<TYPE> k_rot;
 
-		ToRotationMatrix(kRot);
+		ToRotationMatrix(k_rot);
 
-		for (int iCol = 0; iCol < 3; iCol++)
+		for (int i_col = 0; i_col < 3; i_col++)
 		{
-			akAxis[iCol].x = kRot.m_Data[0][iCol];
-			akAxis[iCol].y = kRot.m_Data[1][iCol];
-			akAxis[iCol].z = kRot.m_Data[2][iCol];
+			akAxis[i_col].x = k_rot.m_Data[0][i_col];
+			akAxis[i_col].y = k_rot.m_Data[1][i_col];
+			akAxis[i_col].z = k_rot.m_Data[2][i_col];
 		}
 	}
 
 	template<class TYPE>
 	void TQuaternion<TYPE>::ToAxes(TVec3<TYPE>& xAxis, TVec3<TYPE>& yAxis, TVec3<TYPE>& zAxis) const
 	{
-		TMat4<TYPE> kRot;
+		TMat4<TYPE> k_rot;
 
-		ToRotationMatrix(kRot);
+		ToRotationMatrix(k_rot);
 
-		xAxis.x = kRot.m_Data[0][0];
-		xAxis.y = kRot.m_Data[1][0];
-		xAxis.z = kRot.m_Data[2][0];
+		xAxis.x = k_rot.m_Data[0][0];
+		xAxis.y = k_rot.m_Data[1][0];
+		xAxis.z = k_rot.m_Data[2][0];
 
-		yAxis.x = kRot.m_Data[0][1];
-		yAxis.y = kRot.m_Data[1][1];
-		yAxis.z = kRot.m_Data[2][1];
+		yAxis.x = k_rot.m_Data[0][1];
+		yAxis.y = k_rot.m_Data[1][1];
+		yAxis.z = k_rot.m_Data[2][1];
 
-		zAxis.x = kRot.m_Data[0][2];
-		zAxis.y = kRot.m_Data[1][2];
-		zAxis.z = kRot.m_Data[2][2];
+		zAxis.x = k_rot.m_Data[0][2];
+		zAxis.y = k_rot.m_Data[1][2];
+		zAxis.z = k_rot.m_Data[2][2];
 	}
 
 	template<class TYPE>
 	TVec3<TYPE> TQuaternion<TYPE>::GetXAxis() const
 	{
-		TYPE fTy = static_cast<TYPE>(2.0)*y;
-		TYPE fTz = static_cast<TYPE>(2.0)*z;
-		TYPE fTwy = fTy*w;
-		TYPE fTwz = fTz*w;
-		TYPE fTxy = fTy*x;
-		TYPE fTxz = fTz*x;
-		TYPE fTyy = fTy*y;
-		TYPE fTzz = fTz*z;
+		TYPE f_ty = static_cast<TYPE>(2.0)*y;
+		TYPE f_tz = static_cast<TYPE>(2.0)*z;
+		TYPE f_twy = f_ty*w;
+		TYPE f_twz = f_tz*w;
+		TYPE f_txy = f_ty*x;
+		TYPE f_txz = f_tz*x;
+		TYPE f_tyy = f_ty*y;
+		TYPE f_tzz = f_tz*z;
 		//return TVec3<TYPE>(1.0f-(fTyy+fTzz), fTxy-fTwz, fTxz+fTwy);
-		return TVec3<TYPE>(static_cast<TYPE>(1.0) - (fTyy + fTzz), fTxy + fTwz, fTxz - fTwy);
+		return TVec3<TYPE>(static_cast<TYPE>(1.0) - (f_tyy + f_tzz), f_txy + f_twz, f_txz - f_twy);
 	}
 
 	template<class TYPE>
 	TVec3<TYPE> TQuaternion<TYPE>::GetYAxis() const
 	{
-		TYPE fTx = 2.0f*x;
-		TYPE fTy = 2.0f*y;
-		TYPE fTz = 2.0f*z;
-		TYPE fTwx = fTx*w;
-		TYPE fTwz = fTz*w;
-		TYPE fTxx = fTx*x;
-		TYPE fTxy = fTy*x;
-		TYPE fTyz = fTz*y;
-		TYPE fTzz = fTz*z;
+		TYPE f_tx = 2.0f*x;
+		TYPE f_ty = 2.0f*y;
+		TYPE f_tz = 2.0f*z;
+		TYPE f_twx = f_tx*w;
+		TYPE f_twz = f_tz*w;
+		TYPE f_txx = f_tx*x;
+		TYPE f_txy = f_ty*x;
+		TYPE f_tyz = f_tz*y;
+		TYPE f_tzz = f_tz*z;
 		//return TVec3<TYPE>(fTxy+fTwz, 1.0f-(fTxx+fTzz), fTyz-fTwx);
-		return TVec3<TYPE>(fTxy - fTwz, static_cast<TYPE>(1.0) - (fTxx + fTzz), fTyz + fTwx);
+		return TVec3<TYPE>(f_txy - f_twz, static_cast<TYPE>(1.0) - (f_txx + f_tzz), f_tyz + f_twx);
 	}
 
 	template<class TYPE>
 	TVec3<TYPE> TQuaternion<TYPE>::GetZAxis() const
 	{
-		TYPE fTx = 2.0f*x;
-		TYPE fTy = 2.0f*y;
-		TYPE fTz = 2.0f*z;
-		TYPE fTwx = fTx*w;
-		TYPE fTwy = fTy*w;
-		TYPE fTxx = fTx*x;
-		TYPE fTxz = fTz*x;
-		TYPE fTyy = fTy*y;
-		TYPE fTyz = fTz*y;
+		TYPE f_tx = 2.0f*x;
+		TYPE f_ty = 2.0f*y;
+		TYPE f_tz = 2.0f*z;
+		TYPE f_twx = f_tx*w;
+		TYPE f_twy = f_ty*w;
+		TYPE f_txx = f_tx*x;
+		TYPE f_txz = f_tz*x;
+		TYPE f_tyy = f_ty*y;
+		TYPE f_tyz = f_tz*y;
 		//return TVec3<TYPE>(fTxz-fTwy, fTyz+fTwx, 1.0f-(fTxx+fTyy));
-		return TVec3<TYPE>(fTxz + fTwy, fTyz - fTwx, static_cast<TYPE>(1.0) - (fTxx + fTyy));
+		return TVec3<TYPE>(f_txz + f_twy, f_tyz - f_twx, static_cast<TYPE>(1.0) - (f_txx + f_tyy));
 	}
 
 	template<class TYPE>
@@ -543,11 +543,11 @@ namespace GASS
 	template<class TYPE>
 	TQuaternion<TYPE> TQuaternion<TYPE>::Inverse() const
 	{
-		const TYPE fNorm = w*w + x*x + y*y + z*z;
-		if (fNorm > 0.0)
+		const TYPE f_norm = w*w + x*x + y*y + z*z;
+		if (f_norm > 0.0)
 		{
-			const TYPE fInvNorm = static_cast<TYPE>(1.0) / fNorm;
-			return TQuaternion<TYPE>(w*fInvNorm, -x*fInvNorm, -y*fInvNorm, -z*fInvNorm);
+			const TYPE f_inv_norm = static_cast<TYPE>(1.0) / f_norm;
+			return TQuaternion<TYPE>(w*f_inv_norm, -x*f_inv_norm, -y*f_inv_norm, -z*f_inv_norm);
 		}
 		else
 		{
@@ -570,27 +570,27 @@ namespace GASS
 		// exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
 		// use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
 
-		const TYPE fAngle = sqrt(x*x + y*y + z*z);
-		const TYPE fSin = sin(fAngle);
+		const TYPE f_angle = sqrt(x*x + y*y + z*z);
+		const TYPE f_sin = sin(f_angle);
 
-		TQuaternion<TYPE> kResult;
-		kResult.w = cos(fAngle);
+		TQuaternion<TYPE> k_result;
+		k_result.w = cos(f_angle);
 
-		if (fabs(fSin) >= ms_fEpsilon)
+		if (fabs(f_sin) >= MS_F_EPSILON)
 		{
-			TYPE fCoeff = fSin / fAngle;
-			kResult.x = fCoeff*x;
-			kResult.y = fCoeff*y;
-			kResult.z = fCoeff*z;
+			TYPE f_coeff = f_sin / f_angle;
+			k_result.x = f_coeff*x;
+			k_result.y = f_coeff*y;
+			k_result.z = f_coeff*z;
 		}
 		else
 		{
-			kResult.x = x;
-			kResult.y = y;
-			kResult.z = z;
+			k_result.x = x;
+			k_result.y = y;
+			k_result.z = z;
 		}
 
-		return kResult;
+		return k_result;
 	}
 	
 	template<class TYPE>
@@ -600,28 +600,28 @@ namespace GASS
 		// log(q) = A*(x*i+y*j+z*k).  If sin(A) is near zero, use log(q) =
 		// sin(A)*(x*i+y*j+z*k) since sin(A)/A has limit 1.
 
-		TQuaternion<TYPE> kResult;
-		kResult.w = 0.0;
+		TQuaternion<TYPE> k_result;
+		k_result.w = 0.0;
 
 		if (fabs(w) < static_cast<TYPE>(1.0))
 		{
-			const TYPE fAngle = acos(w);
-			const TYPE fSin = sin(fAngle);
-			if (fabs(fSin) >= ms_fEpsilon)
+			const TYPE f_angle = acos(w);
+			const TYPE f_sin = sin(f_angle);
+			if (fabs(f_sin) >= MS_F_EPSILON)
 			{
-				TYPE fCoeff = fAngle / fSin;
-				kResult.x = fCoeff*x;
-				kResult.y = fCoeff*y;
-				kResult.z = fCoeff*z;
-				return kResult;
+				TYPE f_coeff = f_angle / f_sin;
+				k_result.x = f_coeff*x;
+				k_result.y = f_coeff*y;
+				k_result.z = f_coeff*z;
+				return k_result;
 			}
 		}
 
-		kResult.x = x;
-		kResult.y = y;
-		kResult.z = z;
+		k_result.x = x;
+		k_result.y = y;
+		k_result.z = z;
 
-		return kResult;
+		return k_result;
 	}
 	
 	template<class TYPE>
@@ -644,35 +644,35 @@ namespace GASS
 	TQuaternion<TYPE> TQuaternion<TYPE>::Slerp(TYPE fT, const TQuaternion<TYPE>& rkP,
 		const TQuaternion<TYPE>& rkQ)
 	{
-		const TYPE fCos = rkP.Dot(rkQ);
-		const TYPE fAngle = acos(fCos);
+		const TYPE f_cos = rkP.Dot(rkQ);
+		const TYPE f_angle = acos(f_cos);
 
-		if (fabs(fAngle) < ms_fEpsilon)
+		if (fabs(f_angle) < MS_F_EPSILON)
 			return rkP;
 
-		const TYPE fSin = sin(fAngle);
-		const TYPE fInvSin = static_cast<TYPE>(1.0) / fSin;
-		const TYPE fCoeff0 = sin((static_cast<TYPE>(1.0) - fT)*fAngle)*fInvSin;
-		const TYPE fCoeff1 = sin(fT*fAngle)*fInvSin;
-		return fCoeff0*rkP + fCoeff1*rkQ;
+		const TYPE f_sin = sin(f_angle);
+		const TYPE f_inv_sin = static_cast<TYPE>(1.0) / f_sin;
+		const TYPE f_coeff0 = sin((static_cast<TYPE>(1.0) - fT)*f_angle)*f_inv_sin;
+		const TYPE f_coeff1 = sin(fT*f_angle)*f_inv_sin;
+		return f_coeff0*rkP + f_coeff1*rkQ;
 	}
 	
 	template<class TYPE>
 	TQuaternion<TYPE> TQuaternion<TYPE>::SlerpExtraSpins(TYPE fT,
 		const TQuaternion<TYPE>& rkP, const TQuaternion<TYPE>& rkQ, int iExtraSpins)
 	{
-		const TYPE fCos = rkP.Dot(rkQ);
-		const TYPE fAngle = acos(fCos);
+		const TYPE f_cos = rkP.Dot(rkQ);
+		const TYPE f_angle = acos(f_cos);
 
-		if (fabs(fAngle) < ms_fEpsilon)
+		if (fabs(f_angle) < MS_F_EPSILON)
 			return rkP;
 
-		const TYPE fSin = sin(fAngle);
-		const TYPE fPhase = static_cast<TYPE>(GASS_PI)*iExtraSpins*fT;
-		const TYPE fInvSin = static_cast<TYPE>(1.0) / fSin;
-		const TYPE fCoeff0 = sin((static_cast<TYPE>(1.0) - fT)*fAngle - fPhase)*fInvSin;
-		const TYPE fCoeff1 = sin(fT*fAngle + fPhase)*fInvSin;
-		return fCoeff0*rkP + fCoeff1*rkQ;
+		const TYPE f_sin = sin(f_angle);
+		const TYPE f_phase = static_cast<TYPE>(GASS_PI)*iExtraSpins*fT;
+		const TYPE f_inv_sin = static_cast<TYPE>(1.0) / f_sin;
+		const TYPE f_coeff0 = sin((static_cast<TYPE>(1.0) - fT)*f_angle - f_phase)*f_inv_sin;
+		const TYPE f_coeff1 = sin(fT*f_angle + f_phase)*f_inv_sin;
+		return f_coeff0*rkP + f_coeff1*rkQ;
 	}
 	
 	template<class TYPE>
@@ -682,15 +682,15 @@ namespace GASS
 	{
 		// assert:  q0, q1, q2 are unit TQuaternion<TYPE>s
 
-		const TQuaternion<TYPE> kQ0inv = rkQ0.UnitInverse();
-		const TQuaternion<TYPE> kQ1inv = rkQ1.UnitInverse();
-		const TQuaternion<TYPE> rkP0 = kQ0inv*rkQ1;
-		const TQuaternion<TYPE> rkP1 = kQ1inv*rkQ2;
-		const TQuaternion<TYPE> kArg = 0.25*(rkP0.Log() - rkP1.Log());
-		const TQuaternion<TYPE> kMinusArg = -kArg;
+		const TQuaternion<TYPE> k_q0inv = rkQ0.UnitInverse();
+		const TQuaternion<TYPE> k_q1inv = rkQ1.UnitInverse();
+		const TQuaternion<TYPE> rk_p0 = k_q0inv*rkQ1;
+		const TQuaternion<TYPE> rk_p1 = k_q1inv*rkQ2;
+		const TQuaternion<TYPE> k_arg = 0.25*(rk_p0.Log() - rk_p1.Log());
+		const TQuaternion<TYPE> k_minus_arg = -k_arg;
 
-		rkA = rkQ1*kArg.Exp();
-		rkB = rkQ1*kMinusArg.Exp();
+		rkA = rkQ1*k_arg.Exp();
+		rkB = rkQ1*k_minus_arg.Exp();
 	}
 	
 	template<class TYPE>
@@ -698,10 +698,10 @@ namespace GASS
 		const TQuaternion<TYPE>& rkP, const TQuaternion<TYPE>& rkA,
 		const TQuaternion<TYPE>& rkB, const TQuaternion<TYPE>& rkQ)
 	{
-		const TYPE fSlerpT = static_cast<TYPE>(2.0)*fT*(static_cast<TYPE>(1.0) - fT);
-		const TQuaternion<TYPE> kSlerpP = Slerp2(fT, rkP, rkQ);
-		const TQuaternion<TYPE> kSlerpQ = Slerp2(fT, rkA, rkB);
-		return Slerp2(fSlerpT, kSlerpP, kSlerpQ);
+		const TYPE f_slerp_t = static_cast<TYPE>(2.0)*fT*(static_cast<TYPE>(1.0) - fT);
+		const TQuaternion<TYPE> k_slerp_p = Slerp2(fT, rkP, rkQ);
+		const TQuaternion<TYPE> k_slerp_q = Slerp2(fT, rkA, rkB);
+		return Slerp2(f_slerp_t, k_slerp_p, k_slerp_q);
 	}
 	
 	template<class TYPE>
@@ -721,7 +721,7 @@ namespace GASS
 	TQuaternion<TYPE> TQuaternion<TYPE>::Slerp2(TYPE t, const TQuaternion<TYPE> &q1, const TQuaternion<TYPE> &q2)
 	{
 
-		TQuaternion<TYPE> qInterpolated;
+		TQuaternion<TYPE> q_interpolated;
 		TQuaternion<TYPE> q2_t = q2;
 
 		if (q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w)
@@ -756,22 +756,22 @@ namespace GASS
 		{
 			// Get the angle between the 2 TQuaternion<TYPE>s, and then store the sin() of that angle
 			const TYPE theta = acos(result);
-			const TYPE sinTheta = sin(theta);
+			const TYPE sin_theta = sin(theta);
 
 			// Calculate the scale for q1 and q2, according to the angle and it's sine value
-			scale0 = sin((static_cast<TYPE>(1.0) - t) * theta) / sinTheta;
-			scale1 = sin((t * theta)) / sinTheta;
+			scale0 = sin((static_cast<TYPE>(1.0) - t) * theta) / sin_theta;
+			scale1 = sin((t * theta)) / sin_theta;
 		}
 
 		// Calculate the x, y, z and w values for the TQuaternion<TYPE> by using a special
 		// form of linear interpolation for TQuaternion<TYPE>s.
-		qInterpolated.x = (scale0 * q1.x) + (scale1 * q2_t.x);
-		qInterpolated.y = (scale0 * q1.y) + (scale1 * q2_t.y);
-		qInterpolated.z = (scale0 * q1.z) + (scale1 * q2_t.z);
-		qInterpolated.w = (scale0 * q1.w) + (scale1 * q2_t.w);
+		q_interpolated.x = (scale0 * q1.x) + (scale1 * q2_t.x);
+		q_interpolated.y = (scale0 * q1.y) + (scale1 * q2_t.y);
+		q_interpolated.z = (scale0 * q1.z) + (scale1 * q2_t.z);
+		q_interpolated.w = (scale0 * q1.w) + (scale1 * q2_t.w);
 
 		// Return the interpolated TQuaternion<TYPE>
-		return qInterpolated;
+		return q_interpolated;
 	}
 }
 #endif // #ifndef QUARTERNION_HH

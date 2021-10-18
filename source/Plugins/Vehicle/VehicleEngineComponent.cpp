@@ -466,10 +466,10 @@ namespace GASS
 		//if tank, try to keep angular velocity to steer factor
 		//m_SteerCtrl.setGain(1000,1,1);
 
-		m_SteerCtrl.set(-m_DesiredSteer*m_MaxTurnVel);
+		m_SteerCtrl.Set(-m_DesiredSteer*m_MaxTurnVel);
 		//limit pid to max turn force
-		m_SteerCtrl.setOutputLimit(m_MaxTurnForce*norm_rpm);
-		float turn_torque = static_cast<float>(m_SteerCtrl.update(m_AngularVelocity.y, delta));
+		m_SteerCtrl.SetOutputLimit(m_MaxTurnForce*norm_rpm);
+		float turn_torque = static_cast<float>(m_SteerCtrl.Update(m_AngularVelocity.y, delta));
 
 		//damp
 		//if(fabs(m_DesiredSteer) < 0.1)

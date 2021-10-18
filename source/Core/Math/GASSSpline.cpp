@@ -140,49 +140,49 @@ void Spline::RecalcTangents()
 	//
 	// Assume endpoint tangents are parallel with line with neighbour
 
-	unsigned int i, numPoints;
-	bool isClosed;
+	unsigned int i, num_points;
+	bool is_closed;
 
-	numPoints = static_cast<unsigned int>(m_Points.size());
-	if (numPoints < 2)
+	num_points = static_cast<unsigned int>(m_Points.size());
+	if (num_points < 2)
 	{
 		// Can't do anything yet
 		return;
 	}
 
 	// Closed or open?
-	if (m_Points[0] == m_Points[numPoints-1])
+	if (m_Points[0] == m_Points[num_points-1])
 	{
-		isClosed = true;
+		is_closed = true;
 	}
 	else
 	{
-		isClosed = false;
+		is_closed = false;
 	}
 
-	m_Tangents.resize(numPoints);
+	m_Tangents.resize(num_points);
 
 
 
-	for(i = 0; i < numPoints; ++i)
+	for(i = 0; i < num_points; ++i)
 	{
 		if (i == 0)
 		{
 			// Special case start
-			if (isClosed)
+			if (is_closed)
 			{
 				// Use numPoints-2 since numPoints-1 is the last point and == [0]
-				m_Tangents[i] = (m_Points[1] - m_Points[numPoints-2])*0.5;
+				m_Tangents[i] = (m_Points[1] - m_Points[num_points-2])*0.5;
 			}
 			else
 			{
 				m_Tangents[i] = (m_Points[1] - m_Points[0])* 0.5;
 			}
 		}
-		else if (i == numPoints-1)
+		else if (i == num_points-1)
 		{
 			// Special case end
-			if (isClosed)
+			if (is_closed)
 			{
 				// Use same tangent as already calculated for [0]
 				m_Tangents[i] = m_Tangents[0];

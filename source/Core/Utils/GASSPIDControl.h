@@ -15,19 +15,19 @@ namespace GASS
 	public:
 		PIDControl();
 		explicit PIDControl(double kp, double ki = 0.0, double kd = 0.0);
-		void setGain(double kp, double ki = 0.0, double kd = 0.0);
-		void set(double r);
-		double update(double input, double dt);
+		void SetGain(double kp, double ki = 0.0, double kd = 0.0);
+		void Set(double r);
+		double Update(double input, double dt);
 
-		void setOutputLimit(double limit);
-		double getOutputLimit() const { return outlimit; }
-		double getKp() const { return Kp; }
-		double getKi() const { return Ki; }
-		double getKd() const { return Kd; }
-		void setIntCap(double limit);
-		double getIntCap() const { return intcap; }
-		void setIntSum(double value) { intsum = value; }
-		double getIntSum() const { return intsum; }
+		void SetOutputLimit(double limit);
+		double GetOutputLimit() const { return outlimit; }
+		double GetKp() const { return Kp; }
+		double GetKi() const { return Ki; }
+		double GetKd() const { return Kd; }
+		void SetIntCap(double limit);
+		double GetIntCap() const { return intcap; }
+		void SetIntSum(double value) { intsum = value; }
+		double GetIntSum() const { return intsum; }
 
 		friend std::ostream& operator << (std::ostream& os, const PIDControl& pid)
 		{

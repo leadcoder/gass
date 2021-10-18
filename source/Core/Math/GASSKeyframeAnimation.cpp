@@ -39,7 +39,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 {
 	Vec3 dir,up,left;
 	up.Set(0,1,0);
-	Vec3 vPoint;
+	Vec3 v_point;
 
 	bool closed = false;
 
@@ -50,14 +50,14 @@ void KeyframeAnimation::AutoCalulateRotation()
 		Quaternion q;
 		if( !closed && i == static_cast<int>(m_KeyVector.size())-1 && i > 0)
 		{
-			vPoint =  m_PositionSpline.Interpolate(i-1, 0.99);
-			dir = vPoint - m_KeyVector[i].m_Pos;
+			v_point =  m_PositionSpline.Interpolate(i-1, 0.99);
+			dir = v_point - m_KeyVector[i].m_Pos;
 			dir = -dir;
 		}
 		else
 		{
-			vPoint =  m_PositionSpline.Interpolate(i, 0.01);
-			dir = vPoint - m_KeyVector[i].m_Pos;
+			v_point =  m_PositionSpline.Interpolate(i, 0.01);
+			dir = v_point - m_KeyVector[i].m_Pos;
 		}
 		dir.Normalize();
 		left = Vec3::Cross(up,dir);
@@ -71,7 +71,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex)  const
 {
 	int i;
-	int firstIndex = -1;
+	int first_index = -1;
 
 	key1 = nullptr;
 	key2 = nullptr;
@@ -105,21 +105,21 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	{
 		key1 = &m_KeyVector[i];
 		++i;
-		++firstIndex;
+		++first_index;
 	}
 
 	// Trap case where there is no key before this time (problem with animation config)
 	// In this case use the first key anyway and pretend it's time index 0
-	if (firstIndex == -1)
+	if (first_index == -1)
 	{
 		key1 = &m_KeyVector[0];
-		++firstIndex;
+		++first_index;
 	}
 
 	// Fill index of the first key
 	if (firstKeyIndex != nullptr)
 	{
-		*firstKeyIndex = firstIndex;
+		*firstKeyIndex = first_index;
 	}
 
 	// Parametric time
@@ -196,9 +196,9 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	// Keyframe pointers
 	const Key *k1 = nullptr;
 	const Key *k2 = nullptr;
-	int firstKeyIndex;
+	int first_key_index;
 
-	const Float t = GetKeys(timeIndex, k1, k2, &firstKeyIndex);
+	const Float t = GetKeys(timeIndex, k1, k2, &first_key_index);
 
 	if (t == 0.0)
 	{
@@ -237,17 +237,17 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 			}
 
 			// Translation
-			kret.m_Pos =  m_PositionSpline.Interpolate(firstKeyIndex, t);
+			kret.m_Pos =  m_PositionSpline.Interpolate(first_key_index, t);
 
 			// Scale
-			kret.m_Scale = m_ScaleSpline.Interpolate(firstKeyIndex, t);
+			kret.m_Scale = m_ScaleSpline.Interpolate(first_key_index, t);
 
 			// Rotation
 			if(m_RotToPath)
 			{
 				Vec3 left,dir,up;
-				const Vec3 vPoint =  m_PositionSpline.Interpolate(firstKeyIndex, t+0.01);
-				dir = vPoint - kret.m_Pos;
+				const Vec3 v_point =  m_PositionSpline.Interpolate(first_key_index, t+0.01);
+				dir = v_point - kret.m_Pos;
 				dir.Normalize();
 				left.x = dir.z;
 				left.y = 0;

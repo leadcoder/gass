@@ -173,7 +173,7 @@ namespace GASS
 			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&ss);
 		//}
-		unsigned long size=ss.getLength();
+		unsigned long size=ss.GetLength();
 		unsigned char *buffer=new unsigned char[size];
 		SerialSaver sv(buffer,size);
 
