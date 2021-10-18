@@ -36,9 +36,9 @@ namespace GASS
 {
 	class BaseReflectionObject;
 	
-	typedef GASS_SHARED_PTR<BaseReflectionObject> BaseReflectionObjectPtr;
-	typedef GASS_WEAK_PTR<BaseReflectionObject> BaseReflectionObjectWeakPtr;
-	typedef std::vector<IProperty*> PropertyVector;
+	using BaseReflectionObjectPtr = std::shared_ptr<BaseReflectionObject>;
+	using BaseReflectionObjectWeakPtr = std::weak_ptr<BaseReflectionObject>;
+	using PropertyVector = std::vector<IProperty *>;
 
 	/** \addtogroup GASSCore
 	*  @{

@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	typedef void* ModuleHandle;
+	using ModuleHandle = void *;
 
 
 	/** \addtogroup GASSCore

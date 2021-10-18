@@ -112,9 +112,9 @@ namespace GASS
 		TVec2<TYPE> Min;
 	};
 
-	typedef TAARect<double> AARectd;
-	typedef TAARect<float> AARectf;
-	typedef TAARect<int> AARecti;
+	using AARectd = TAARect<double>;
+	using AARectf = TAARect<float>;
+	using AARecti = TAARect<int>;
 	
 	template<class TYPE>
 	TAARect<TYPE>::TAARect()

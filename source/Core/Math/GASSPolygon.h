@@ -107,9 +107,9 @@ namespace GASS
 		}
 	};
 
-	typedef TPolygon<double> Polygond;
-	typedef TPolygon<float> Polygonf;
-	typedef TPolygon<GASS::Float> Polygon;
+	using Polygond = TPolygon<double>;
+	using Polygonf = TPolygon<float>;
+	using Polygon = TPolygon<GASS::Float>;
 }
 
 #endif // #ifndef POLYGON_HH

@@ -47,9 +47,9 @@ namespace GASS
 	class GASSCoreExport MessageManager
 	{
 	public:
-        typedef GASS_SHARED_PTR<IMessage> MessagePtr;
-		typedef std::list<MessagePtr> MessageQueue;
-		typedef std::map<MessageType,MessageTypeListenerPtr> MessageTypeListenerMap;
+        using MessagePtr = std::shared_ptr<IMessage>;
+		using MessageQueue = std::list<MessagePtr>;
+		using MessageTypeListenerMap = std::map<MessageType, MessageTypeListenerPtr>;
 	public:
 		/**
 			This function will put the message in the message queue
@@ -105,7 +105,7 @@ namespace GASS
 		MessageTypeListenerMap m_MessageTypes;
 		GASS_MUTEX m_Mutex;
 	};
-	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
+	using MessageManagerPtr = std::shared_ptr<MessageManager>;
 
 	#define REG_TMESS(FUNCTION,TYPED_MESSAGE,PRIORITY) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE),PRIORITY
 	#define UNREG_TMESS(FUNCTION,TYPED_MESSAGE) typeid(TYPED_MESSAGE),TYPED_MESSAGE_FUNC(FUNCTION,TYPED_MESSAGE)

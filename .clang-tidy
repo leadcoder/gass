@@ -1,6 +1,6 @@
 
 #Checks: '-*,cppcoreguidelines-prefer-member-initializer'
-Checks: '-*,modernize-use-default-member-init'
+Checks: '-*,modernize-use-default-member-init,modernize-use-using,modernize-use-nullptr,modernize-make-unique,modernize-make-shared,modernize-use-emplace,modernize-use-override'
 
 #Checks: '-*,readability-redundant-member-init'
 #Checks: '-*,readability-identifier-naming'

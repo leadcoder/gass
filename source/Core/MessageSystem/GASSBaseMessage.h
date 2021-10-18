@@ -55,6 +55,6 @@ namespace GASS
 		SenderID m_SenderID;
 		double m_Delay;
 	};
-	typedef GASS_SHARED_PTR<BaseMessage> BaseMessagePtr;
+	using BaseMessagePtr = std::shared_ptr<BaseMessage>;
 }
 #endif

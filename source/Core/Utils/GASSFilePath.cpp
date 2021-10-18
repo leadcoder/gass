@@ -234,7 +234,7 @@ namespace GASS
 			{
 				if (GASS_IS_DIRECTORY( *iter ))
 				{
-					folders.push_back(FilePath(iter->path().string(),false));
+					folders.emplace_back(iter->path().string(),false);
 					if(recursive)
 						GetFoldersFromPath(folders,FilePath(iter->path().string(),false), recursive);
 				}
@@ -282,11 +282,11 @@ namespace GASS
 							}
 						}
 						if(find_ext)
-							files.push_back(FilePath(iter->path().string(),false));
+							files.emplace_back(iter->path().string(),false);
 					}
 					else
 					{
-						files.push_back(FilePath(iter->path().string(),false));
+						files.emplace_back(iter->path().string(),false);
 					}
 				}
 			}

@@ -198,10 +198,10 @@ namespace GASS
 		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
 
-	typedef TAABox<Float> AABox;
-	typedef TAABox<double> AABoxd;
-	typedef TAABox<float> AABoxf;
-	typedef TAABox<int> AABoxi;
+	using AABox = TAABox<Float>;
+	using AABoxd = TAABox<double>;
+	using AABoxf = TAABox<float>;
+	using AABoxi = TAABox<int>;
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox()

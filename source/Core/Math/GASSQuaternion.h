@@ -173,9 +173,9 @@ namespace GASS
 		}
 	};
 
-	typedef TQuaternion<Float> Quaternion;
-	typedef TQuaternion<float> Quaternionf;
-	typedef TQuaternion<double> Quaterniond;
+	using Quaternion = TQuaternion<Float>;
+	using Quaternionf = TQuaternion<float>;
+	using Quaterniond = TQuaternion<double>;
 
 	template <class TYPE> const TYPE TQuaternion<TYPE>::MS_F_EPSILON = static_cast<TYPE>(1e-03);
 	template <class TYPE> const TQuaternion<TYPE> TQuaternion<TYPE>::ZERO = TQuaternion<TYPE>(0 ,0, 0, 0);

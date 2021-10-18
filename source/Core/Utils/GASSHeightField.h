@@ -123,6 +123,6 @@ namespace GASS
 		unsigned int m_NumSamplesW{ 0 };
 		unsigned int m_NumSamplesH{0};
 	};
-	typedef GASS_SHARED_PTR<HeightField> HeightFieldPtr;
+	using HeightFieldPtr = std::shared_ptr<HeightField>;
 }
 #endif

@@ -56,18 +56,16 @@ namespace GASS
 	private:
 #ifdef WIN32
 	    __int64			m_PerfTimerStart{0};	// Performance Timer Start Value
-		__int64			m_PerfTimerElapsed;	// Performance Timer Elapsed Time
-		bool			m_PerfTimer;		// Using The Performance Timer?
-		__int64			m_Frequency;		// Timer Frequency
+		__int64			m_PerfTimerElapsed{ 0 };	// Performance Timer Elapsed Time
+		bool			m_PerfTimer = false;		// Using The Performance Timer?
+		__int64			m_Frequency{ 0 };		// Timer Frequency
 #else
         int64_t         m_Frequency;		// Timer Frequency
 #endif
-		float			m_Resolution;		// Timer Resolution
-		unsigned long	m_MMTimerStart;		// Multimedia Timer Start Value
-		unsigned long	m_MMTimerElapsed;	// Multimedia Timer Elapsed Time
+		float			m_Resolution{ 0 };		// Timer Resolution
+		unsigned long	m_MMTimerStart{ 0 };		// Multimedia Timer Start Value
+		unsigned long	m_MMTimerElapsed{ 0 };	// Multimedia Timer Elapsed Time
 		double m_StartTime{0};
-
-
 	};
 }
 

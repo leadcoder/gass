@@ -26,10 +26,7 @@
 #include "GASSTimer.h"
 namespace GASS
 {
-	Timer::Timer() : 
-#ifdef WIN32
-		, 
-#endif
+	Timer::Timer() 
 	{
 #ifdef WIN32
 		

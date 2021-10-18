@@ -146,7 +146,7 @@ namespace GASS
 		}
 	};
 
-	typedef TTriangle<float> Trianglef;
-	typedef TTriangle<double> Triangled;
-	typedef TTriangle<Float> Triangle;
+	using Trianglef = TTriangle<float>;
+	using Triangled = TTriangle<double>;
+	using Triangle = TTriangle<Float>;
 }
