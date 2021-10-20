@@ -62,9 +62,9 @@ namespace GASS
 		}
 	}
 
-	void SimSystem::OnSystemUpdate(double delta_time)
+	void SimSystem::OnSystemUpdate(double /*delta_time*/)
 	{
-	//	_UpdateListeners(delta_time);
+	
 	}
 
 

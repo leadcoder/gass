@@ -43,8 +43,8 @@ namespace tinyxml2
 
 namespace GASS
 {
-	typedef std::string SceneObjectID;
-	typedef GASS_GUID SceneObjectGUID;
+	using SceneObjectID = std::string;
+	using SceneObjectGUID = Guid;
 	class MessageManager;
 	class Scene;
 	class SceneObject;
@@ -52,15 +52,15 @@ namespace GASS
 	class SceneObjectVisitor;
 	GASS_FORWARD_DECL(Component);
 
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
-	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr;
+	using ScenePtr = std::shared_ptr<Scene>;
+	using SceneWeakPtr = std::weak_ptr<Scene>;
+	using SceneObjectVisitorPtr = std::shared_ptr<SceneObjectVisitor>;
 
-	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef std::vector<SceneObjectPtr> SceneObjectVector;
+	using MessageManagerPtr = std::shared_ptr<MessageManager>;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
+	using SceneObjectVector = std::vector<SceneObjectPtr>;
 
 
 	/**
@@ -82,11 +82,11 @@ namespace GASS
 	{
 		friend class Scene;
 	public:
-		typedef std::vector<ComponentPtr> ComponentVector;
-		typedef VectorIterator<ComponentVector>  ComponentIterator;
-		typedef ConstVectorIterator<ComponentVector>  ConstComponentIterator;
-		typedef VectorIterator<SceneObjectVector> SceneObjectIterator;
-		typedef ConstVectorIterator<SceneObjectVector> ConstSceneObjectIterator;
+		using ComponentVector = std::vector<ComponentPtr>;
+		using ComponentIterator = VectorIterator<ComponentVector>;
+		using ConstComponentIterator = ConstVectorIterator<ComponentVector>;
+		using SceneObjectIterator = VectorIterator<SceneObjectVector>;
+		using ConstSceneObjectIterator = ConstVectorIterator<SceneObjectVector>;
 
 		SceneObject();
 		static void RegisterReflection();

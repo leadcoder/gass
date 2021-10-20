@@ -111,5 +111,5 @@ namespace GASS
 		bool m_PreSystemUpdate;
 	};
 
-	typedef GASS_SHARED_PTR<BaseSceneManager> BaseSceneManagerPtr;
+	using BaseSceneManagerPtr = std::shared_ptr<BaseSceneManager>;
 }

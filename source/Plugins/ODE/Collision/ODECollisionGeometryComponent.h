@@ -108,7 +108,6 @@ namespace GASS
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
 		dGeomID m_GeomID;
-		dGeomID m_OffsetGeomID;
 		CollisionGeomType m_Type;
 		Vec3 m_Offset;
 		//Static Terrain data, only support one terrain loaded at the same time

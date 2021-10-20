@@ -99,7 +99,7 @@ namespace GASS
 		//called by scene object to resolve SceneObjectRef 
 		void ResolveTemplateReferences(SceneObjectPtr template_root);
 	};
-	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef GASS_WEAK_PTR<BaseSceneComponent> BaseSceneComponentWeakPtr;
+	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
+	using BaseSceneComponentWeakPtr = std::weak_ptr<BaseSceneComponent>;
 }
 #endif 

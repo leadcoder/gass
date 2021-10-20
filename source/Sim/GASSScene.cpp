@@ -21,6 +21,8 @@
 
 
 
+#include <memory>
+
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSceneManagerFactory.h"
@@ -53,16 +55,15 @@ namespace GASS
 	Scene::Scene(const std::string &name) : m_Name(name) ,
 		m_StartPos(0,0,0),
 		m_StartRot(0,0,0),
-		m_SceneMessageManager(new MessageManager()),
-		m_Initlized(false),
-		m_Geocentric(false)
+		m_SceneMessageManager(new MessageManager())
+		
 	{
 
 	}
 
 	void Scene::RegisterReflection()
 	{
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("The scene object", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("The scene object", OF_VISIBLE));
 
 		RegisterGetSet("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterGetSet("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
@@ -73,7 +74,7 @@ namespace GASS
 	void Scene::OnCreate()
 	{
 		//Create empty root node
-		m_Root = SceneObjectPtr(new SceneObject());
+		m_Root = std::make_shared<SceneObject>();
 		m_Root->SetName("Root");
 		m_Root->OnInitialize(shared_from_this());
 
@@ -103,7 +104,7 @@ namespace GASS
 			m_SceneManagers[i]->OnSceneCreated();
 		}
 
-		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr  scenery = std::make_shared<SceneObject>();
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
 		m_TerrainObjects = scenery;
@@ -142,7 +143,7 @@ namespace GASS
 	void Scene::Clear()
 	{
 		m_Root->RemoveAllChildrenNotify();
-		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr  scenery = std::make_shared<SceneObject>();
 		scenery->SetName("Scenery");
 		scenery->SetID("SCENARY_ROOT");
 		m_TerrainObjects = scenery;
@@ -183,7 +184,7 @@ namespace GASS
 		}
 
 		tinyxml2::XMLElement *scene_elem = xmlDoc->FirstChildElement("Scene");
-		if(scene_elem == NULL)
+		if(scene_elem == nullptr)
 		{
 			delete xmlDoc;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");

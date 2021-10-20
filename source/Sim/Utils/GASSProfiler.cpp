@@ -27,13 +27,13 @@ namespace GASS
 	int ProfileSample::m_LastOpenedSample=-1;
 	int ProfileSample::m_OpenSampleCount=0;
 	ProfileSample::ProfileSampleData ProfileSample::m_Samples[MAX_PROFILER_SAMPLES];
-	IProfilerOutputHandler *ProfileSample::m_OutputHandler=0;
+	IProfilerOutputHandler *ProfileSample::m_OutputHandler=nullptr;
 	double ProfileSample::m_RootBegin=0.0;
 	double ProfileSample::m_RootEnd=0.0;
 	bool ProfileSample::m_ProfilerIsRunning=true;
 	Timer* ProfileSample::m_Timer= new Timer();
 
-	ProfileSample::ProfileSample(std::string sampleName) : m_ParentIndex(0), m_SampleIndex(0)
+	ProfileSample::ProfileSample(std::string sampleName)  
 	{
 		if(!m_ProfilerIsRunning)return;
 		//find the sample

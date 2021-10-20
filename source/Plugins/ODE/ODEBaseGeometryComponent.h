@@ -100,7 +100,7 @@ namespace GASS
 		virtual SceneObjectPtr GetDebugObject();
 	protected:
 		dGeomID m_GeomID;
-		dGeomID m_TransformGeomID;
+		//dGeomID m_TransformGeomID;
 		dSpaceID m_ODESpaceID;
 		ODEBodyComponent* m_Body; //pointer to body!
 		std::string m_GeometryTemplate;

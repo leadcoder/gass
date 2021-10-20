@@ -39,7 +39,7 @@ namespace GASS
 	class GASSExport ResourceLocation : public  GASS_ENABLE_SHARED_FROM_THIS<ResourceLocation>
 	{
 	public:
-		typedef std::map<std::string, FileResourcePtr> ResourceMap;
+		using ResourceMap = std::map<std::string, FileResourcePtr>;
 
 		ResourceLocation(ResourceGroupPtr owner, const FilePath &path,ResourceLocationType type);
 		FilePath GetPath() const {return m_Path;}
@@ -55,6 +55,6 @@ namespace GASS
 		ResourceGroupPtr m_Owner;
 		ResourceMap m_Resources;
 	};
-	typedef GASS_SHARED_PTR<ResourceLocation> ResourceLocationPtr;
-	typedef GASS_WEAK_PTR<ResourceLocation> ResourceLocationWeakPtr;
+	using ResourceLocationPtr = std::shared_ptr<ResourceLocation>;
+	using ResourceLocationWeakPtr = std::weak_ptr<ResourceLocation>;
 }

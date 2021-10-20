@@ -38,7 +38,7 @@ namespace GASS
 		friend class SceneObjectTemplate;
 	public:
 		/** Map holding templates*/
-		typedef std::map<std::string, SceneObjectTemplatePtr> TemplateMap;
+		using TemplateMap = std::map<std::string, SceneObjectTemplatePtr>;
 	public:
 		SceneObjectTemplateManager();
 		/**
@@ -93,6 +93,6 @@ namespace GASS
 		SceneObjectPtr _CreateSceneObject(SceneObjectTemplatePtr cc_temp) const;
 		TemplateMap m_TemplateMap;
 	};
-	typedef GASS_SHARED_PTR<SceneObjectTemplateManager> SceneObjectTemplateManagerPtr;
-	typedef GASS_SHARED_PTR<SceneObjectTemplateManager const> SceneObjectTemplateManagerConstPtr;
+	using SceneObjectTemplateManagerPtr = std::shared_ptr<SceneObjectTemplateManager>;
+	using SceneObjectTemplateManagerConstPtr = std::shared_ptr<const SceneObjectTemplateManager>;
 }

@@ -45,8 +45,8 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObjectManager)
 	GASS_IFORWARD_DECL(SceneManager)
 
-	typedef std::vector<SceneManagerPtr> SceneManagerVector;
-	typedef VectorIterator<SceneManagerVector> SceneManagerIterator;
+	using SceneManagerVector = std::vector<SceneManagerPtr>;
+	using SceneManagerIterator = VectorIterator<SceneManagerVector>;
 
 	/**
 	A Scene in gass can be loaded from disc or created in runtime.

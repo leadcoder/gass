@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
@@ -81,7 +83,7 @@ namespace GASS
 	void ResourceManager::AddResourceGroup(ResourceGroupPtr group)
 	{
 		m_ResourceGroups.push_back(group);
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(std::make_shared<ResourceGroupCreatedEvent>(group));
 	}
 
 	void ResourceManager::RemoveResourceGroup(ResourceGroupPtr group)
@@ -91,7 +93,7 @@ namespace GASS
 		{
 			if(group == (*iter))
 			{
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupRemovedEventPtr(new ResourceGroupRemovedEvent(group)));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(std::make_shared<ResourceGroupRemovedEvent>(group));
 				iter = m_ResourceGroups.erase(iter);
 				
 			}

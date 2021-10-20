@@ -40,5 +40,5 @@ namespace GASS
 		std::vector<unsigned int> IndexVector;
 		std::vector<unsigned int> MaterialIDVector;
 	};
-	typedef GASS_SHARED_PTR<PhysicsMesh> PhysicsMeshPtr;
+	using PhysicsMeshPtr = std::shared_ptr<PhysicsMesh>;
 }

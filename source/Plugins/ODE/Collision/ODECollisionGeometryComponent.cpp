@@ -46,7 +46,6 @@ namespace GASS
 {
 	ODECollisionGeometryComponent::ODECollisionGeometryComponent():
 		m_GeomID(0),
-		m_OffsetGeomID(0),
 		m_Type(CGT_NONE),
 		m_Offset(0,0,0),
 		m_TerrainData(NULL)
@@ -276,18 +275,11 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found while collision shape type is CST_BOX", "ODECollisionGeometryComponent::CreateBoxGeometry");
 		}
-
 		AABox box = geom->GetBoundingBox();
 		Vec3 size = box.Max - box.Min;
-
-		m_OffsetGeomID = dCreateBox(0, size.x, size.y, size.z);
-
+		auto gid = dCreateBox(0, size.x, size.y, size.z);
 		Vec3 offset = (box.Max + box.Min)*0.5;
-		GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
-		dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
-		dGeomID gid = dCreateGeomTransform(GetCollisionSceneManager()->GetSpace());
-		dGeomTransformSetCleanup(gid, 1 );
-		dGeomTransformSetGeom(gid,m_OffsetGeomID);
+		dGeomSetOffsetPosition(gid, offset.x, offset.y, offset.z);
 		return gid;
 	}
 
@@ -394,9 +386,9 @@ namespace GASS
 
 				GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 
-				dGeomBoxSetLengths(m_OffsetGeomID, size.x, size.y, size.z);
+				dGeomBoxSetLengths(m_GeomID, size.x, size.y, size.z);
 				Vec3 offset = (box.Max + box.Min)*0.5;
-				dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
+				dGeomSetOffsetPosition(m_GeomID, offset.x, offset.y, offset.z);
 
 				//also reset position, know why but offset change is not reflected otherwise
 				const dReal* pos = dGeomGetPosition(m_GeomID);

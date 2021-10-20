@@ -60,6 +60,6 @@ namespace GASS
 		static SceneManagerFactory* m_Instance;
 	};
 	//smart pointer typedef
-	typedef GASS_SHARED_PTR<SceneManagerFactory> SceneManagerFactoryPtr;
+	using SceneManagerFactoryPtr = std::shared_ptr<SceneManagerFactory>;
 }
 
