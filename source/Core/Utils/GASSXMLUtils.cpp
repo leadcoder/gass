@@ -59,7 +59,7 @@ namespace GASS
 
 	bool XMLUtils::ReadBool(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
-		bool ret;
+		bool ret = false;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{
@@ -82,7 +82,7 @@ namespace GASS
 
 	int XMLUtils::ReadInt(const tinyxml2::XMLElement *xml_elem, const std::string &tag)
 	{
-		int ret;
+		int ret = 0;
 		const tinyxml2::XMLElement *xml_value = xml_elem->FirstChildElement(tag.c_str());
 		if(xml_value && xml_value->Attribute("value"))
 		{

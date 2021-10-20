@@ -70,9 +70,7 @@ void KeyframeAnimation::AutoCalulateRotation()
 
 Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &key2, int *firstKeyIndex)  const
 {
-	int i;
 	int first_index = -1;
-
 	key1 = nullptr;
 	key2 = nullptr;
 	if(m_KeyVector.size() == 0)
@@ -100,7 +98,7 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	}
 
 	// Find last keyframe before or on current time
-	i = 0;
+	int i = 0;
 	while (i < static_cast<int>( m_KeyVector.size()) && m_KeyVector[i].m_Time <= timePos)
 	{
 		key1 = &m_KeyVector[i];
@@ -125,7 +123,8 @@ Float KeyframeAnimation::GetKeys(Float timePos, const Key* &key1, const Key* &ke
 	// Parametric time
 	// t1 = time of previous keyframe
 	// t2 = time of next keyframe
-	Float t1, t2;
+	double t1 = 0;
+	double t2 = 0;
 
 	// Find first keyframe after the time
 	// If no next keyframe, wrap back to first
@@ -196,7 +195,7 @@ Key KeyframeAnimation::GetInterpolatedKeyFrame(Float timeIndex)
 	// Keyframe pointers
 	const Key *k1 = nullptr;
 	const Key *k2 = nullptr;
-	int first_key_index;
+	int first_key_index = 0;
 
 	const Float t = GetKeys(timeIndex, k1, k2, &first_key_index);
 

@@ -77,7 +77,7 @@ namespace GASS
 
 		std::string Replace(const std::string &str, const std::string &find, const std::string &replacement)
 		{
-			std::string::size_type  pos;
+			std::string::size_type  pos = 0;
 			std::string::size_type  look_here = 0;
 			std::string new_str = str;
 

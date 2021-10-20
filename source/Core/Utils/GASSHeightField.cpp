@@ -42,11 +42,10 @@ namespace GASS
 		//use all 4 combos
 		//x0 <= x <= x1
 		//z0 <= z <= z1
-		unsigned int x0, z0, x1, z1;
-		x0 = xindex;
-		x1 = xindex + 1;
-		z0 = zindex;
-		z1 = z0 + 1;
+		const unsigned int x0 = xindex;
+		const unsigned int x1 = xindex + 1;
+		const unsigned int z0 = zindex;
+		const unsigned int z1 = z0 + 1;
 
 		//we are just slightly off the edge of the terrain if x1 or z1 is off the terrain
 		if( x0 < 0.0 || z0 < 0.0 )
@@ -55,16 +54,14 @@ namespace GASS
 		if( x1 >= m_NumSamplesW || z1 >= m_NumSamplesH )
 			return 0.0;
 
-		float h00, h01, h10, h11;
-		h00 = m_Data.ReadValue(x0 + z0*m_NumSamplesW);
-		h01 = m_Data.ReadValue(x1 + z0*m_NumSamplesW);
-		h10 = m_Data.ReadValue(x0 + z1*m_NumSamplesW);
-		h11 = m_Data.ReadValue(x1 + z1*m_NumSamplesW);
+		const float h00 = m_Data.ReadValue(x0 + z0*m_NumSamplesW);
+		const float h01 = m_Data.ReadValue(x1 + z0*m_NumSamplesW);
+		const float h10 = m_Data.ReadValue(x0 + z1*m_NumSamplesW);
+		const float h11 = m_Data.ReadValue(x1 + z1*m_NumSamplesW);
 
-		Float tx, ty;
-		tx = fxindex - x0;
-		ty = fzindex - z0;
-		const Float height = HM_LERP(HM_LERP(h00, h01, tx), HM_LERP(h10, h11, tx), ty);
+		const double tx = fxindex - x0;
+		const double ty = fzindex - z0;
+		const double height = HM_LERP(HM_LERP(h00, h01, tx), HM_LERP(h10, h11, tx), ty);
 		return static_cast<float>(height);
 	}
 
@@ -116,8 +113,8 @@ namespace GASS
 		}
 		delete[] data;*/
 
-		float min_range;
-		float max_range;
+		float min_range = 0;
+		float max_range = 0;
 
 		fin.read((char *) &min_range, sizeof(float));
 		fin.read((char *) &max_range, sizeof(float));

@@ -118,8 +118,8 @@ namespace GASS
 			m_Min = min;
 		}
 		FloatArray16 m_Data;
-		Vec3 m_Min;
-		Vec3 m_Max;
+		Vec3 m_Min{0,0,0};
+		Vec3 m_Max{ 0,0,0 };
 		unsigned int m_NumSamplesW{ 0 };
 		unsigned int m_NumSamplesH{0};
 	};

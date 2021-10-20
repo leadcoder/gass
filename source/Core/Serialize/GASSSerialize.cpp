@@ -46,7 +46,7 @@ namespace GASS
 	template <>
 	void SerialLoader::IO<std::string>(std::string &value)
 	{
-		unsigned long l;
+		unsigned long l = 0;
 		IO<unsigned long>(l);
 		if(bHasOverflowed)return;
 		if(bytesUsed + l > length){bHasOverflowed=true; return; }

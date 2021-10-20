@@ -84,10 +84,7 @@ namespace GASS
 		//
 		// Assume endpoint tangents are parallel with line with neighbour
 
-		unsigned int i, num_points;
-		bool is_closed;
-
-		num_points = static_cast<unsigned int>(m_Points.size());
+		const unsigned int num_points = static_cast<unsigned int>(m_Points.size());
 
 		if (num_points < 2)
 		{
@@ -97,17 +94,10 @@ namespace GASS
 
 		m_Tangents.resize(num_points);
 
-		if (m_Points[0] == m_Points[num_points-1])
-		{
-			is_closed = true;
-		}
-		else
-		{
-			is_closed = false;
-		}
-
+		const bool is_closed = m_Points[0] == m_Points[num_points - 1];
+	
 		Quaternion invp, part1, part2, pre_exp;
-		for(i = 0; i < num_points; ++i)
+		for(unsigned int i = 0; i < num_points; ++i)
 		{
 			const Quaternion &p = m_Points[i];
 			invp = p.Inverse();

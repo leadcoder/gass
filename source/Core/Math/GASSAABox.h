@@ -364,16 +364,13 @@ namespace GASS
 		// Get polygon center
 		const TVec3<TYPE> center = poly.GetCenter();
 
-		if (PointInside(center)) return true;
+		if (PointInside(center)) 
+			return true;
 
-		const TVec3<TYPE>* p1, *p2;
 		for (i = 0; i < poly.m_VertexVector.size(); i++)
 		{
-			size_t i2;
-			if (i == poly.m_VertexVector.size() - 1) i2 = 0; else i2 = i + 1;
-			p1 = &poly.m_VertexVector[i];
-			p2 = &poly.m_VertexVector[i2];
-			if (LineIntersect(TLineSegment<TYPE>(*p1, *p2))) 
+			const size_t i2 = (i == (poly.m_VertexVector.size() - 1)) ? 0 : i + 1;
+			if (LineIntersect(TLineSegment<TYPE>(poly.m_VertexVector[i], poly.m_VertexVector[i2])))
 				return true;
 		}
 		return false;
