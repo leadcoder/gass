@@ -83,7 +83,8 @@ namespace GASS
 		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/gfx", true));
 		if (physics != PhysicsOptions::NONE)
 		{
-			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true));
+			if (physics == PhysicsOptions::PHYSX)
+				conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true));
 			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/physics", true));
 
 		}

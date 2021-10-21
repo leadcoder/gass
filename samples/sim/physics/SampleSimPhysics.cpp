@@ -357,7 +357,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 	//Load plugins
 	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
 	char key = static_cast<char>(_getch());
-	bool use_ode = key == 1;
+	
+	bool use_ode = (key == '1');
 
 
 	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(use_ode ? 
@@ -410,14 +411,14 @@ int main(int/*argc*/, char* /*argv[]*/)
 				key_down = true;
 				GASS::Vec3 pos = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
 				GASS::Quaternion rot = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
-				GASS::Vec3 vel = rot.GetZAxis()*-2500;
+				GASS::Vec3 vel = rot.GetZAxis()*- (GetAsyncKeyState(VK_RIGHT) ? 2500 : 1000);
 				/*
 								GASS::Mat4 rot_mat;
 								rot_mat.Identity();
 								rot.ToRotationMatrix(rot_mat);
 								GASS::Vec3 vel = rot_mat.GetZAxis()*-2500;
 				*/
-				GASS::Vec3 torq(0, 0, 2000);
+				GASS::Vec3 torq(0, 0, 0);
 				torq = rot * torq;
 				box_obj = scene->LoadObjectFromTemplate(box_template, scene->GetRootSceneObject());
 				box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(pos);
