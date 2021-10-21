@@ -78,7 +78,7 @@ namespace GASS
 
 	dGeomID ODEBoxGeometryComponent::CreateODEGeom()
 	{
-		return dCreateBox(0, m_Size.x, m_Size.y, m_Size.z); 
+		return dCreateBox(GetSpace(), m_Size.x, m_Size.y, m_Size.z); 
 	}
 
 	void ODEBoxGeometryComponent::SetSize(const Vec3 &size)

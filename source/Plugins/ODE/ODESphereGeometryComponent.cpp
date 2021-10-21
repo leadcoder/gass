@@ -77,7 +77,7 @@ namespace GASS
 
 	dGeomID ODESphereGeometryComponent::CreateODEGeom()
 	{
-		return dCreateSphere(0, m_Radius);
+		return dCreateSphere(GetSpace(), m_Radius);
 	}
 
 	void ODESphereGeometryComponent::SetRadius(Float value)

@@ -171,11 +171,10 @@ namespace GASS
 
 		m_GeomID  = CreateODEGeom();
 
-		dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
-
 		if(m_Body)
 		{
 			dGeomSetBody(m_GeomID, m_Body->GetODEBodyComponent());
+			dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
 		}
 		else
 		{
@@ -212,7 +211,8 @@ namespace GASS
 		m_Offset = value;
 		if(m_GeomID)
 		{
-			dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+			if (m_Body)
+				dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
 
 			//also reset position, know why but offset change is not reflected otherwise
 			//const dReal* pos = dGeomGetPosition(m_TransformGeomID);
@@ -396,7 +396,8 @@ namespace GASS
 			m_Offset = pos;
 			if(m_GeomID)
 			{
-				dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
+				if (m_Body)
+					dGeomSetOffsetPosition(m_GeomID, m_Offset.x, m_Offset.y, m_Offset.z);
 
 				//also reset position, know why but offset change is not reflected otherwise
 				const dReal* ode_pos = dGeomGetPosition(m_GeomID);

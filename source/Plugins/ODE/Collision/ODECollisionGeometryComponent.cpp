@@ -277,7 +277,9 @@ namespace GASS
 		}
 		AABox box = geom->GetBoundingBox();
 		Vec3 size = box.Max - box.Min;
-		auto gid = dCreateBox(0, size.x, size.y, size.z);
+
+		GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
+		auto gid = dCreateBox(GetCollisionSceneManager()->GetSpace(), size.x, size.y, size.z);
 		Vec3 offset = (box.Max + box.Min)*0.5;
 		dGeomSetOffsetPosition(gid, offset.x, offset.y, offset.z);
 		return gid;
