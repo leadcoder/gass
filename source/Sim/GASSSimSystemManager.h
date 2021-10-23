@@ -145,11 +145,10 @@ namespace GASS
 		//Move this to private
 		void SyncMessages(double delta_time);
 		void OnUpdate(double delta_time);
-	protected:
+	private:
 		void _UpdateSystems(double delta_time, UpdateGroupID group);
-	protected:
-		void OnSimulationStepRequest(TimeStepRequestPtr message);
-		size_t GetQueuedMessages() const;
+		void _OnSimulationStepRequest(TimeStepRequestPtr message);
+		size_t _GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
 		typedef std::vector<SimSystemPtr> SystemVector;
 		SystemVector m_Systems;

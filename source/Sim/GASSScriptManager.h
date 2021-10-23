@@ -77,7 +77,7 @@ namespace GASS
 		asIScriptContext *PrepareContextFromPool(asIScriptFunction *func);
 		int ExecuteCall(asIScriptContext *ctx);
 	private:
-		void OnScriptEvent(ScriptEventPtr message);
+		void _OnScriptEvent(ScriptEventPtr message);
 		asIScriptEngine *m_Engine;
 		std::map<std::string,ScriptControllerPtr> m_ScriptControllers;
 

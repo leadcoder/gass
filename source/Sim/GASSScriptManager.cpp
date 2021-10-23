@@ -134,14 +134,14 @@ namespace GASS
 	}
 
 
-	void ScriptManager::OnScriptEvent(ScriptEventPtr message)
+	void ScriptManager::_OnScriptEvent(ScriptEventPtr message)
 	{
 		GASS_LOG() << message->GetMessage();
 	}
 
 	void ScriptManager::Init()
 	{
-		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ScriptManager::OnScriptEvent,ScriptEvent,0));
+		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(ScriptManager::_OnScriptEvent,ScriptEvent,0));
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType script_type;

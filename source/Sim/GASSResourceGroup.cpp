@@ -38,7 +38,7 @@ namespace GASS
 	{
 		ResourceLocationPtr rl(new ResourceLocation(shared_from_this(),path,type));
 		if(recursive)
-			AddResourceLocationRecursive(rl);
+			_AddResourceLocationRecursive(rl);
 		else
 		{
 			rl->ParseLocation();
@@ -48,7 +48,7 @@ namespace GASS
 		return rl;
 	}
 
-	void ResourceGroup::AddResourceLocationRecursive(ResourceLocationPtr rl)
+	void ResourceGroup::_AddResourceLocationRecursive(ResourceLocationPtr rl)
 	{
 		if (rl->GetPath().Exist())
 		{
@@ -63,7 +63,7 @@ namespace GASS
 				if (folders[i].GetFullPath().find(".svn") == std::string::npos) //ignore svn folders!
 				{
 					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(), folders[i], rl->GetType()));
-					AddResourceLocationRecursive(rec_rl);
+					_AddResourceLocationRecursive(rec_rl);
 				}
 			}
 		}

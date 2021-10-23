@@ -100,13 +100,13 @@ namespace GASS
 	SimEngineConfig SimEngineConfig::LoadFromfile(const FilePath& filename)
 	{
 		SimEngineConfig config;
-		tinyxml2::XMLDocument xmlDoc;
-		if (xmlDoc.LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
+		tinyxml2::XMLDocument xml_doc;
+		if (xml_doc.LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Couldn't load:" + filename.GetFullPath(), "SimEngineConfig::LoadSettings");
 		}
 
-		tinyxml2::XMLElement *gass_elem = xmlDoc.FirstChildElement("GASS");
+		tinyxml2::XMLElement *gass_elem = xml_doc.FirstChildElement("GASS");
 		if (!gass_elem)
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to find GASS tag in:" + filename.GetFullPath(), "SimEngineConfig::LoadSettings");

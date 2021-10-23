@@ -432,8 +432,8 @@ namespace GASS
 		void _CheckComponentDependencies() const;
 		SceneObjectPtr _CreateSceneObjectXML(tinyxml2::XMLElement* cc_elem) const;
 		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
-		void OnDelete();
-		void OnInitialize(ScenePtr scene);
+		void _OnDelete();
+		void _OnInitialize(ScenePtr scene);
 
 		//internals
 		void _InitializePointers();

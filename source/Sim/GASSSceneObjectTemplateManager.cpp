@@ -95,7 +95,7 @@ namespace GASS
 		}
 		else
 		{
-			new_object = cc_temp->CreateSceneObject();
+			new_object = cc_temp->_CreateSceneObject();
 			if(new_object)
 			{
 				new_object->SetName(cc_temp->GetName());
@@ -169,13 +169,13 @@ namespace GASS
 		if(filename =="")
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "SceneObjectTemplateManager::Load");
 
-		auto *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
-			delete xmlDoc;
+			delete xml_doc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to load:" + filename,"SceneObjectTemplateManager::Load()");
 		}
-		tinyxml2::XMLElement *templates = xmlDoc->FirstChildElement("Templates");
+		tinyxml2::XMLElement *templates = xml_doc->FirstChildElement("Templates");
 
 		if(templates)
 		{
@@ -199,9 +199,9 @@ namespace GASS
 				templates  = templates->NextSiblingElement();
 			}
 		}
-		xmlDoc->Clear();
+		xml_doc->Clear();
 		// Delete our allocated document
-		delete xmlDoc;
+		delete xml_doc;
 	}
 
 	void SceneObjectTemplateManager::LoadFromPath(const std::string &path, bool recursive)

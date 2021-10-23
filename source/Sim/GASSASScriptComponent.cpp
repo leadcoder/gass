@@ -31,7 +31,7 @@ namespace GASS
 	void ASScriptComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<ASScriptComponent>();
-		RegisterGetSet("Script", &ASScriptComponent::GetScriptFile, &ASScriptComponent::SetScriptFile);
+		RegisterGetSet("Script", &ASScriptComponent::_GetScriptFile, &ASScriptComponent::_SetScriptFile);
 	}
 
 	void ASScriptComponent::OnInitialize()
@@ -77,12 +77,12 @@ namespace GASS
 		}
 	}
 
-	void ASScriptComponent::SetScriptFile(const std::string &script_file)
+	void ASScriptComponent::_SetScriptFile(const std::string &script_file)
 	{
 		m_Script = script_file;
 	}
 
-	std::string ASScriptComponent::GetScriptFile() const
+	std::string ASScriptComponent::_GetScriptFile() const
 	{
 		return m_Script;
 	}

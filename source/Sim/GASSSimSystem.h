@@ -79,15 +79,17 @@ namespace GASS
 		UpdateGroupIDBinder GetUpdateGroup() const {return m_UpdateGroup;}
 	
 		//internal
-		void _Update(double delta_time);
+		void Update(double delta_time);
 	protected:
+		UpdateGroupIDBinder m_UpdateGroup;
+	private:
 		void _PreUpdate(double delta_time);
 		void _PostUpdate(double delta_time);
 		
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SimSystemManagerWeakPtr m_Owner;
-		UpdateGroupIDBinder m_UpdateGroup;
+		
 	};
 	typedef GASS_SHARED_PTR<SimSystem> SimSystemPtr;
 }

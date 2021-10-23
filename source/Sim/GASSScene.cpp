@@ -76,7 +76,7 @@ namespace GASS
 		//Create empty root node
 		m_Root = std::make_shared<SceneObject>();
 		m_Root->SetName("Root");
-		m_Root->OnInitialize(shared_from_this());
+		m_Root->_OnInitialize(shared_from_this());
 
 		SystemMessagePtr enter_load_msg(new PreSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
@@ -119,7 +119,7 @@ namespace GASS
 
 	void Scene::OnUnload()
 	{
-		m_Root->OnDelete();
+		m_Root->_OnDelete();
 		m_Root.reset();
 		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
@@ -176,23 +176,23 @@ namespace GASS
 		if(FileUtils::FileExist(template_file_name))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if(xmlDoc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
+		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		if(xml_doc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
-			delete xmlDoc;
+			delete xml_doc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
-		tinyxml2::XMLElement *scene_elem = xmlDoc->FirstChildElement("Scene");
+		tinyxml2::XMLElement *scene_elem = xml_doc->FirstChildElement("Scene");
 		if(scene_elem == nullptr)
 		{
-			delete xmlDoc;
+			delete xml_doc;
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
 		}
 		LoadXML(scene_elem);
-		xmlDoc->Clear();
+		xml_doc->Clear();
 		//Delete our allocated document
-		delete xmlDoc;
+		delete xml_doc;
 
 		//Create new scenery node
 		m_NameGenerator.Clear("Scenery");
@@ -343,14 +343,14 @@ namespace GASS
 
 	void Scene::SaveXML(tinyxml2::XMLElement *parent)
 	{
-		tinyxml2::XMLDocument *rootXMLDoc = parent->GetDocument();
+		tinyxml2::XMLDocument *root_xml_doc = parent->GetDocument();
 		//Create
-		tinyxml2::XMLElement *prop = rootXMLDoc->NewElement("Properties");
+		tinyxml2::XMLElement *prop = root_xml_doc->NewElement("Properties");
 		parent->LinkEndChild(prop);
 
 		BaseReflectionObject::SaveProperties(prop);
 
-		tinyxml2::XMLElement *sms_elem = rootXMLDoc->NewElement("SceneManagerSettings");
+		tinyxml2::XMLElement *sms_elem = root_xml_doc->NewElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);
 
 		for(size_t i  = 0 ; i < m_SceneManagers.size();i++)

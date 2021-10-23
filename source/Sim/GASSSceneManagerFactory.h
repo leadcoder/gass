@@ -54,8 +54,6 @@ namespace GASS
 		static SceneManagerFactory* GetPtr();
 		static SceneManagerFactory& Get();
 	protected:
-
-	protected:
 		GenericFactory<std::string, SceneManagerPtr, ScenePtr> m_Impl;
 		static SceneManagerFactory* m_Instance;
 	};

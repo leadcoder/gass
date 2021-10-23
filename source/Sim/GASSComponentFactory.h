@@ -100,7 +100,7 @@ namespace GASS
 
 		static ComponentFactory* GetPtr();
 		static ComponentFactory& Get();
-	protected:
+	private:
 		static ComponentFactory* m_Instance;
 		GenericFactory<std::string, ComponentPtr> m_Impl;
 		std::map<std::string, std::string> m_ClassNameToKey;

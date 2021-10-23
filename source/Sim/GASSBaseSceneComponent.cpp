@@ -47,11 +47,11 @@ namespace GASS
 
 	void BaseSceneComponent::InitializePointers()
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 				if (*prop->GetTypeID() == typeid(std::vector<SceneObjectLink>))
@@ -100,17 +100,17 @@ namespace GASS
 				}
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 	}
 
 	void BaseSceneComponent::InitializeSceneObjectRef()
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
@@ -143,18 +143,18 @@ namespace GASS
 				}
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 	}
 
 
 	void BaseSceneComponent::ResolveTemplateReferences(SceneObjectPtr template_root)
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 
@@ -189,7 +189,7 @@ namespace GASS
 				}
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 	}
 
@@ -197,11 +197,11 @@ namespace GASS
 
 	void BaseSceneComponent::RemapReferences(const std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
 	{
-		RTTI* pRTTI = GetRTTI();
-		while(pRTTI)
+		RTTI* p_rtti = GetRTTI();
+		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-			while(iter != pRTTI->GetProperties()->end())
+			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
 
@@ -243,7 +243,7 @@ namespace GASS
 				}
 				++iter;
 			}
-			pRTTI = pRTTI->GetAncestorRTTI();
+			p_rtti = p_rtti->GetAncestorRTTI();
 		}
 	}
 }

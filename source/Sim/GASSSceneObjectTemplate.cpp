@@ -223,12 +223,12 @@ namespace GASS
 
 	void SceneObjectTemplate::SaveXML(tinyxml2::XMLElement* obj_elem)
 	{
-		tinyxml2::XMLDocument* rootXMLDoc = obj_elem->GetDocument();
-		tinyxml2::XMLElement* this_elem = rootXMLDoc->NewElement("SceneObjectTemplate");
+		tinyxml2::XMLDocument* root_xml_doc = obj_elem->GetDocument();
+		tinyxml2::XMLElement* this_elem = root_xml_doc->NewElement("SceneObjectTemplate");
 		obj_elem->LinkEndChild(this_elem);
 		SaveProperties(this_elem);
 
-		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
+		tinyxml2::XMLElement* comp_elem = root_xml_doc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
 		ComponentVector::iterator iter;
@@ -241,7 +241,7 @@ namespace GASS
 		}
 
 
-		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("Children");
+		tinyxml2::XMLElement* cc_elem = root_xml_doc->NewElement("Children");
 		this_elem->LinkEndChild(cc_elem);
 
 		SceneObjectTemplate::SceneObjectTemplateVector::iterator cc_iter;
@@ -388,7 +388,7 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr SceneObjectTemplate::CreateSceneObject() const
+	SceneObjectPtr SceneObjectTemplate::_CreateSceneObject() const
 	{
 		auto so = std::make_shared<SceneObject>();
 		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(so);

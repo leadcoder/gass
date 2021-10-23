@@ -36,8 +36,8 @@ namespace GASS
 		void OnInitialize() override;
 		void SceneManagerTick(double delta_time) override;
 	private:
-		void SetScriptFile(const std::string &script_file);
-		std::string GetScriptFile() const;
+		void _SetScriptFile(const std::string &script_file);
+		std::string _GetScriptFile() const;
 		std::string m_Script;
 		asIScriptObject *m_ScriptObject{nullptr};
 		ScriptControllerPtr  m_Controller;

@@ -24,7 +24,7 @@ namespace GASS
 
 	void ProfileRuntimeHandler::Sample(double fCurrent, double fMin, double fAvg, double fMax, double tAvg, int callCount, std::string name, int parentCount)
 	{
-		char namebuf[256], indentedName[256];
+		char namebuf[256], indented_name[256];
 		char avg[16], min[16], max[16], num[16], time[16], cur[16];
 
 		sprintf(cur, "%3.1f", fCurrent);
@@ -40,13 +40,13 @@ namespace GASS
 		if (strlen(time) < 4) time[3] = ' '; time[4] = 0;
 
 
-		strcpy(indentedName, name.c_str());
+		strcpy(indented_name, name.c_str());
 		for (int indent = 0; indent < parentCount; ++indent)
 		{
-			sprintf(namebuf, " %s", indentedName);
-			strcpy(indentedName, namebuf);
+			sprintf(namebuf, " %s", indented_name);
+			strcpy(indented_name, namebuf);
 		}
-		GASS_PRINT(cur << " " << min << " " << avg << " " << max << " " << time << " " << num << " " << indentedName)
+		GASS_PRINT(cur << " " << min << " " << avg << " " << max << " " << time << " " << num << " " << indented_name)
 	}
 
 	void ProfileRuntimeHandler::EndOutput()

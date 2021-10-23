@@ -181,15 +181,8 @@ namespace GASS
 		//Debug functions to print object recursivly to std::cout
 		void DebugPrint(int tc = 0);
 
-	protected:
-
-		//It's possible to override this function if custom creation process is needed.
-		//By default the factory name used is the same as the template
-		//with the Template part removed, however if thats not the case you have to
-		//override this function and supply your own instance. 
-		//Another case could be that some attributes have to be transfered 
-		//from template to instance in a custom way.
-		virtual SceneObjectPtr CreateSceneObject() const;
+	private:
+		SceneObjectPtr _CreateSceneObject() const;
 
 		//Help functions during template creation
 		void _InheritComponentData(SceneObjectPtr cc) const;

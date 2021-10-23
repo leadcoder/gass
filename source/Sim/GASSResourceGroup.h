@@ -53,7 +53,7 @@ namespace GASS
 		*/
 		void GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const;
 	private:
-		void AddResourceLocationRecursive(ResourceLocationPtr rl);
+		void _AddResourceLocationRecursive(ResourceLocationPtr rl);
 		std::string m_Name;
 		ResourceLocationVector m_ResourceLocations;
 	};

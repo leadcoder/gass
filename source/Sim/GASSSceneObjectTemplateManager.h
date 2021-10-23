@@ -89,7 +89,7 @@ namespace GASS
 			Remove all templates
 		*/
 		void Clear();
-	protected:
+	private:
 		SceneObjectPtr _CreateSceneObject(SceneObjectTemplatePtr cc_temp) const;
 		TemplateMap m_TemplateMap;
 	};

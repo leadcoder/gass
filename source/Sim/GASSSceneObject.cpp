@@ -142,7 +142,7 @@ namespace GASS
 		AddChild(child);
 
 		if(load && GetScene()) //if we have scene Initialize?
-			child->OnInitialize(GetScene());
+			child->_OnInitialize(GetScene());
 	}
 
 	void SceneObject::InsertChildSceneObject(SceneObjectPtr child, size_t index, bool load)
@@ -150,7 +150,7 @@ namespace GASS
 		child->_InitializePointers(); //initialize SceneObjectLink:s
 		InsertChild(child,index);
 		if (load && GetScene()) //if we have scene Initialize?
-			child->OnInitialize(GetScene());
+			child->_OnInitialize(GetScene());
 	}
 
 	void SceneObject::ResolveTemplateReferences(SceneObjectPtr template_root)
@@ -206,7 +206,7 @@ namespace GASS
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
 		//notify that this objects and its children will be removed
-		child->OnDelete();
+		child->_OnDelete();
 		RemoveChild(child);
 	}
 
@@ -216,7 +216,7 @@ namespace GASS
 		while (children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->OnDelete();
+			child->_OnDelete();
 		}
 		RemoveAllChildren();
 	}
@@ -229,13 +229,13 @@ namespace GASS
 		GetScene()->PostMessage(remove_msg);		
 	}
 
-	void SceneObject::OnDelete()
+	void SceneObject::_OnDelete()
 	{
 		SceneObjectIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->OnDelete();
+			child->_OnDelete();
 		}
 
 		auto iter = m_ComponentVector.begin();
@@ -251,7 +251,7 @@ namespace GASS
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
 	}
 
-	void SceneObject::OnInitialize(ScenePtr scene)
+	void SceneObject::_OnInitialize(ScenePtr scene)
 	{
 		//check dependencies
 		_CheckComponentDependencies();
@@ -284,7 +284,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->OnInitialize(scene);
+			child->_OnInitialize(scene);
 		}
 
 		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
@@ -635,17 +635,17 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
 
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if(xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
+		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		if(xml_doc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
-			delete xmlDoc;
+			delete xml_doc;
 			//Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " +  filename, "SceneObject::LoadXML");
 		}
-		SceneObjectPtr so = LoadFromXML(xmlDoc);
-		xmlDoc->Clear();
+		SceneObjectPtr so = LoadFromXML(xml_doc);
+		xml_doc->Clear();
 		//Delete our allocated document and return success ;)
-		delete xmlDoc;
+		delete xml_doc;
 		return so;
 	}
 
@@ -654,18 +654,18 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::SaveToFile");
 
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		tinyxml2::XMLDeclaration* decl = xmlDoc->NewDeclaration();
-		xmlDoc->LinkEndChild( decl ); 
+		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		tinyxml2::XMLDeclaration* decl = xml_doc->NewDeclaration();
+		xml_doc->LinkEndChild( decl ); 
 
 		//first save to store filename
-		xmlDoc->SaveFile(filename.c_str());
+		xml_doc->SaveFile(filename.c_str());
 		
-		tinyxml2::XMLElement * so_elem = xmlDoc->NewElement("SceneObject");
-		xmlDoc->LinkEndChild(so_elem);
+		tinyxml2::XMLElement * so_elem = xml_doc->NewElement("SceneObject");
+		xml_doc->LinkEndChild(so_elem);
 		SaveXML(so_elem);
-		xmlDoc->SaveFile(filename.c_str());
-		delete xmlDoc;
+		xml_doc->SaveFile(filename.c_str());
+		delete xml_doc;
 	}
 
 	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name) const
@@ -867,22 +867,22 @@ namespace GASS
 	{
 		if (!m_Serialize)
 			return;
-		tinyxml2::XMLDocument* rootXMLDoc = obj_elem->GetDocument();
+		tinyxml2::XMLDocument* root_xml_doc = obj_elem->GetDocument();
 		tinyxml2::XMLElement* this_elem = nullptr;
-		if (obj_elem->Parent() == rootXMLDoc) //top element!
+		if (obj_elem->Parent() == root_xml_doc) //top element!
 		{
 			this_elem = obj_elem;
 		}
 		else
 		{
 			const std::string tag_name = "SceneObject";
-			this_elem = rootXMLDoc->NewElement(tag_name.c_str());
+			this_elem = root_xml_doc->NewElement(tag_name.c_str());
 			obj_elem->LinkEndChild(this_elem);
 		}
 
 		SaveProperties(this_elem);
 
-		tinyxml2::XMLElement* comp_elem = rootXMLDoc->NewElement("Components");
+		tinyxml2::XMLElement* comp_elem = root_xml_doc->NewElement("Components");
 		this_elem->LinkEndChild(comp_elem);
 
 		ComponentVector::iterator iter;
@@ -894,7 +894,7 @@ namespace GASS
 				s_comp->SaveXML(comp_elem);
 		}
 
-		tinyxml2::XMLElement* cc_elem = rootXMLDoc->NewElement("Children");
+		tinyxml2::XMLElement* cc_elem = root_xml_doc->NewElement("Children");
 		this_elem->LinkEndChild(cc_elem);
 
 		SceneObjectVector::iterator cc_iter;
