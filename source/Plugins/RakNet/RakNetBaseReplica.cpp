@@ -49,7 +49,7 @@ namespace GASS
 		if (m_Owner)
 		{
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-			if (networkCaller == 0)
+			if (networkCaller == nullptr)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
 				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteMessageWithData", message, data);
@@ -67,7 +67,7 @@ namespace GASS
 	int RakNetBaseReplica::RemoteMessage(const char *client_address, const char *message, RakNet::AutoRPC* networkCaller)
 	{
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		if (networkCaller == 0)
+		if (networkCaller == nullptr)
 		{
 			raknet->GetRPC()->SetRecipientObject(GetNetworkID());
 			raknet->GetRPC()->Call("RakNetBaseReplica::RemoteMessage", client_address, message);
@@ -78,7 +78,7 @@ namespace GASS
 			std::string my_addres(raknet->GetRakPeer()->GetExternalID(UNASSIGNED_SYSTEM_ADDRESS).ToString());
 			if (std::string(client_address) == my_addres)
 			{
-				m_MessageBuffer.push_back(std::string(message));
+				m_MessageBuffer.emplace_back(message);
 				ProcessMessages();
 			}
 		}
@@ -113,7 +113,7 @@ namespace GASS
 		if (m_Owner)
 		{
 			RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-			if (networkCaller == 0)
+			if (networkCaller == nullptr)
 			{
 				raknet->GetRPC()->SetRecipientObject(GetNetworkID());
 				raknet->GetRPC()->Call("RakNetBaseReplica::RemoteInput", input_source, controller, value);

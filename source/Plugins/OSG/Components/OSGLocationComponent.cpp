@@ -26,6 +26,8 @@
 #include "Core/Math/GASSMath.h"
 #include <angelscript.h>
 
+#include <memory>
+
 namespace GASS
 {
 	void CheckASReturn(int ret_val, const std::string &error_message = "")
@@ -36,10 +38,8 @@ namespace GASS
 
 	OSGLocationComponent::OSGLocationComponent() : m_Position(0, 0, 0),
 		m_EulerRotation(0, 0, 0),
-		m_Scale(1, 1, 1),
-		m_AttachToParent(false),
-		m_NodeMask(0),
-		m_ParentLocation(NULL)
+		m_Scale(1, 1, 1)
+		
 	{
 
 	}
@@ -61,7 +61,7 @@ namespace GASS
 	void OSGLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<OSGLocationComponent>("LocationComponent");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to handle object position, rotation and scale", OF_VISIBLE));
 
 		RegisterGetSet("Position", &GASS::OSGLocationComponent::GetPosition, &GASS::OSGLocationComponent::SetPosition, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
 		RegisterGetSet("Rotation", &GASS::OSGLocationComponent::GetEulerRotation, &GASS::OSGLocationComponent::SetEulerRotation, PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, heading = Y-axis rotation, pitch = X-axis rotation, roll= Z-axis rotation [Degrees]");
@@ -127,7 +127,7 @@ namespace GASS
 		SetScale(m_Scale);
 
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>(shared_from_this());
-		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
+		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
 	}
 
 	void OSGLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
@@ -322,7 +322,7 @@ namespace GASS
 
 	void OSGLocationComponent::_NotifyTransformationChange() const
 	{
-		GetSceneObject()->SendImmediateEvent(TransformationChangedEventPtr(new TransformationChangedEvent(m_WorldPosition, m_WorldRotation, m_Scale)));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<TransformationChangedEvent>(m_WorldPosition, m_WorldRotation, m_Scale));
 	}
 
 	void OSGLocationComponent::_OnParentPositionUpdated()
@@ -425,7 +425,7 @@ namespace GASS
 
 	bool OSGLocationComponent::HasParentLocation() const
 	{
-		return (m_ParentLocation != NULL);
+		return (m_ParentLocation != nullptr);
 	}
 
 	void OSGLocationComponent::SetAttachToParent(bool value)
@@ -447,7 +447,7 @@ namespace GASS
 			}
 			else //attach under osg root
 			{
-				m_ParentLocation = NULL;
+				m_ParentLocation = nullptr;
 				osg::ref_ptr<osg::Group> root_node = _GetOSGRootGroup();
 				root_node->addChild(m_TransformNode);
 			}

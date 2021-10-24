@@ -21,9 +21,9 @@ namespace GASS
 		while(iter != Edges.end())
 		{
 			if((*iter)->StartNode == this)
-				(*iter)->StartNode = NULL;
+				(*iter)->StartNode = nullptr;
 			if((*iter)->EndNode == this)
-				(*iter)->EndNode = NULL;
+				(*iter)->EndNode = nullptr;
 			++iter;
 		}
 

@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -31,8 +33,8 @@
 
 namespace GASS
 {
-	ODESphereGeometryComponent::ODESphereGeometryComponent():
-		m_Radius(1)
+	ODESphereGeometryComponent::ODESphereGeometryComponent()
+		
 	{
 
 	}
@@ -154,7 +156,7 @@ namespace GASS
 		}
 	
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		scene_object->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 	}
 

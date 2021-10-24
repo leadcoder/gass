@@ -97,26 +97,26 @@ namespace GASS
 		dSpaceID GetSecondarySpace();
 	protected:
 		void Wake();
-		dBodyID m_ODEBodyID;
-		dSpaceID m_ODESpaceID;
+		dBodyID m_ODEBodyID{0};
+		dSpaceID m_ODESpaceID{NULL};
 		
-		dSpaceID m_ODESecondarySpaceID;
+		dSpaceID m_ODESecondarySpaceID{NULL};
 		dMass m_ODEMass;
-		float m_Mass;
-		bool m_Debug;
-		bool m_AutoDisable;
-		bool m_FastRotation;
-		bool m_Active;
-		bool m_TrackTransformation;
+		float m_Mass{1};
+		bool m_Debug{false};
+		bool m_AutoDisable{true};
+		bool m_FastRotation{true};
+		bool m_Active{true};
+		bool m_TrackTransformation{true};
 		
 		Vec3 m_CGPosition;
 		Vec3 m_SymmetricInertia;
 		Vec3 m_AssymetricInertia;
-		bool m_EffectJoints;
+		bool m_EffectJoints{true};
 		Mat4 m_LastTrans;
-		MassRepresentationType m_MassRepresentation;
+		MassRepresentationType m_MassRepresentation{MR_GEOMETRY};
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
-	typedef GASS_SHARED_PTR<ODEBodyComponent> ODEBodyComponentPtr;
+	using ODEBodyComponentPtr = std::shared_ptr<ODEBodyComponent>;
 }
 

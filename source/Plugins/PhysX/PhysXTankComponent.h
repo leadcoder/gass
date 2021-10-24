@@ -30,7 +30,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
 	class PhysXTankComponent : public Reflection<PhysXTankComponent,BaseSceneComponent> , public IPhysXRigidDynamic, public IPlatformComponent
 	{
@@ -70,36 +70,36 @@ namespace GASS
 		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
 		std::vector<SceneObjectRef> m_Wheels;
-		bool m_UseAutoReverse;
-		float m_ScaleMass;
-		float m_EnginePeakTorque;
-		float m_EngineMaxRotationSpeed;
-		float m_ClutchStrength;
-		float m_Mass;
+		bool m_UseAutoReverse{false};
+		float m_ScaleMass{1.0};
+		float m_EnginePeakTorque{500};
+		float m_EngineMaxRotationSpeed{200};
+		float m_ClutchStrength{10};
+		float m_Mass{1500};
 		Vec3 m_MassOffset;
-		float m_GearSwitchTime;
+		float m_GearSwitchTime{0.5};
 		std::vector<float> m_GearRatios;
-		bool m_Debug;
-		float m_SteerLimit;
-		Float m_MaxSpeed;
+		bool m_Debug{false};
+		float m_SteerLimit{0.6f};
+		Float m_MaxSpeed{20};
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic* m_Actor;
-		physx::PxVehicleDriveTank* m_Vehicle;
-		float m_ThrottleInput;
-		float m_SteerInput;
-		float m_BreakInput;
-		bool m_DigBrakeInput;
-		bool m_DigAccelInput;
-		bool m_IsMovingForwardSlowly;
-		bool m_InReverseMode;
-		bool m_UseDigitalInputs;
-		bool m_TrackTransformation;
+		physx::PxRigidDynamic* m_Actor{NULL};
+		physx::PxVehicleDriveTank* m_Vehicle{NULL};
+		float m_ThrottleInput{0};
+		float m_SteerInput{0};
+		float m_BreakInput{0};
+		bool m_DigBrakeInput{false};
+		bool m_DigAccelInput{false};
+		bool m_IsMovingForwardSlowly{false};
+		bool m_InReverseMode{false};
+		bool m_UseDigitalInputs{false};
+		bool m_TrackTransformation{true};
 		AABox m_MeshBounds;
 		Vec3 m_ChassisDim;
 		
 	};
-	typedef GASS_SHARED_PTR<PhysXTankComponent> PhysXTankComponentPtr;
+	using PhysXTankComponentPtr = std::shared_ptr<PhysXTankComponent>;
 }
 

@@ -37,13 +37,8 @@
 namespace GASS
 {
 	ChaseCameraComponent::ChaseCameraComponent() : m_PreferredViewport(""),
-		m_Velocity(0,0,0),
-		m_DampingConstant(8),
-    	m_SpringConstant(16),
-	    m_OffsetDistance(5.0),
-		m_OffsetHeight(1.0),
-		m_CameraLocation(NULL),
-		m_ChaseObjectLocation(NULL)
+		m_Velocity(0,0,0)
+		
 	{
 
 	}

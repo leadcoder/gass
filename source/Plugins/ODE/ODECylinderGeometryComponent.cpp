@@ -28,8 +28,8 @@
 
 namespace GASS
 {
-	ODECylinderGeometryComponent::ODECylinderGeometryComponent(): m_Radius(1),
-			m_Length(3)
+	ODECylinderGeometryComponent::ODECylinderGeometryComponent()
+			
 		
 	{
 

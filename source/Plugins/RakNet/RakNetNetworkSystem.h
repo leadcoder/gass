@@ -64,8 +64,8 @@ namespace GASS
 		std::string IP;
 
 	};
-	typedef std::map<std::string,ServerPingReponse> ServerReponseMap;
-	typedef std::map<std::string,ClientData> ClientDataMap;
+	using ServerReponseMap = std::map<std::string, ServerPingReponse>;
+	using ClientDataMap = std::map<std::string, ClientData>;
 
 	class RakNetNetworkSystem  : public Reflection<RakNetNetworkSystem, SimSystem>, ReceiveConstructionInterface
 	{
@@ -148,7 +148,7 @@ namespace GASS
 		bool m_Debug;
 		bool m_RelayInputOnServer;
 	};
-	typedef GASS_SHARED_PTR<RakNetNetworkSystem> RakNetNetworkSystemPtr;
+	using RakNetNetworkSystemPtr = std::shared_ptr<RakNetNetworkSystem>;
 }
 
 #endif

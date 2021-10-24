@@ -27,7 +27,7 @@
 
 namespace GASS
 {
-	ODEPlaneGeometryComponent::ODEPlaneGeometryComponent() : m_Normal(0,1,0), m_PlaneOffset(0)
+	ODEPlaneGeometryComponent::ODEPlaneGeometryComponent() : m_Normal(0,1,0) 
 	{
 
 	}
@@ -57,7 +57,7 @@ namespace GASS
 	void ODEPlaneGeometryComponent::UpdateODEGeom()
 	{
 		Reset();
-		m_Body = NULL;
+		m_Body = nullptr;
 		m_GeomID  = CreateODEGeom();
 		
 		dGeomSetData(m_GeomID, (void*)this);

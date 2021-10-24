@@ -33,8 +33,8 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 
 	class ODEPlaneGeometryComponent : public Reflection<ODEPlaneGeometryComponent,ODEBaseGeometryComponent>
 	{
@@ -60,6 +60,6 @@ namespace GASS
 		void UpdateBodyMass() override {};
 	protected:
 		Vec3 m_Normal; 
-		Float m_PlaneOffset;
+		Float m_PlaneOffset{0};
 	};
 }

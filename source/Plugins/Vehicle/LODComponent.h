@@ -30,8 +30,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class LODComponent :  public Reflection<LODComponent,BaseSceneComponent>
 	{
@@ -52,12 +52,12 @@ namespace GASS
 		float GetLowLODDistance() const {return m_LowLODDistance;}
 		void UpdateLOD();
 		
-		float m_MediumLODDistance;
-		float m_LowLODDistance;
+		float m_MediumLODDistance{10};
+		float m_LowLODDistance{20};
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		Vec3 m_ObjectPosition;
 		Vec3 m_CameraPosition;
-		LODMessage::LODLevel m_CurrentLevel;
+		LODMessage::LODLevel m_CurrentLevel{LODMessage::LOD_HIGH};
 	};
 }
 #endif

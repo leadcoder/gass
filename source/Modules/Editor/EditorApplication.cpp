@@ -75,7 +75,7 @@ namespace GASS
 			//Fatal error, cannot load
 			return false;
 		}
-		tinyxml2::XMLElement *xSettings = 0;
+		tinyxml2::XMLElement *xSettings = nullptr;
 		xSettings = xmlDoc->FirstChildElement("EditorApplication");
 		tinyxml2::XMLElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
 		tinyxml2::XMLElement *xnetwork = xSettings->FirstChildElement("Network");

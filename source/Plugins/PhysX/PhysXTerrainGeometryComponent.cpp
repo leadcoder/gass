@@ -36,10 +36,8 @@
 
 namespace GASS
 {
-	PhysXTerrainGeometryComponent::PhysXTerrainGeometryComponent(): m_Debug(false),
-		m_Actor(nullptr),
-		m_Shape(nullptr),
-		m_TerrainGeom(nullptr)
+	PhysXTerrainGeometryComponent::PhysXTerrainGeometryComponent()
+		
 
 	{
 

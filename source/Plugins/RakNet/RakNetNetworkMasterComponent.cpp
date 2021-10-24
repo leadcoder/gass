@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "RakNetNetworkMasterComponent.h"
+
+#include <memory>
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
@@ -34,7 +36,7 @@
 
 namespace GASS
 {
-	RakNetNetworkMasterComponent::RakNetNetworkMasterComponent() : m_Replica(NULL)
+	RakNetNetworkMasterComponent::RakNetNetworkMasterComponent()  
 	{
 
 	}
@@ -100,7 +102,7 @@ namespace GASS
 		if(raknet->IsServer())
 		{
 			delete m_Replica;
-			m_Replica = NULL;
+			m_Replica = nullptr;
 		}
 	}
 
@@ -167,7 +169,7 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete[] data_to_read ;
-				GetSceneObject()->PostRequest(NetworkDeserializeRequestPtr(new NetworkDeserializeRequest(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
+				GetSceneObject()->PostRequest(std::make_shared<NetworkDeserializeRequest>(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package));
 
 			}
 			//NetworkPackagePtr package;

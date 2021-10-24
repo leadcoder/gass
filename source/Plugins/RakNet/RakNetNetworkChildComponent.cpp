@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "RakNetNetworkChildComponent.h"
+
+#include <memory>
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetChildReplica.h"
 #include "Plugins/RakNet/RakNetMasterReplica.h"
@@ -36,7 +38,7 @@
 
 namespace GASS
 {
-	RakNetNetworkChildComponent::RakNetNetworkChildComponent() : m_Replica(NULL), m_PartId(0)
+	RakNetNetworkChildComponent::RakNetNetworkChildComponent()  
 	{
 
 	}
@@ -84,7 +86,7 @@ namespace GASS
 			if(master && master->GetReplica())
 				m_Replica = raknet->FindReplica(master->GetReplica()->GetNetworkID(),m_PartId);
 
-			if(m_Replica== NULL) //replica not available jet, trig serach on new child replica messages
+			if(m_Replica== nullptr) //replica not available jet, trig serach on new child replica messages
 			{
 				SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent,0));
 //
@@ -106,7 +108,7 @@ namespace GASS
 			{
 				m_Replica = replica;
 				m_Replica->SetOwner(GetSceneObject());
-				GetSceneObject()->PostEvent(ComponentGotReplicaEventPtr(new ComponentGotReplicaEvent(m_Replica)));
+				GetSceneObject()->PostEvent(std::make_shared<ComponentGotReplicaEvent>(m_Replica));
 				//this is not allowed, post to finalize object
 				//SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent));
 			}
@@ -124,7 +126,7 @@ namespace GASS
 		if(raknet->IsServer())
 		{
 			delete m_Replica;
-			m_Replica = NULL;
+			m_Replica = nullptr;
 		}
 	}
 
@@ -191,7 +193,7 @@ namespace GASS
 				inBitStream->Read(data_to_read, size);
 				package->Assign(data_to_read);
 				delete[] data_to_read;
-				GetSceneObject()->PostRequest(NetworkDeserializeRequestPtr(new NetworkDeserializeRequest(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package)));
+				GetSceneObject()->PostRequest(std::make_shared<NetworkDeserializeRequest>(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package));
 			}
 		}
 		if(m_Replica && m_Attributes.size() > 0)

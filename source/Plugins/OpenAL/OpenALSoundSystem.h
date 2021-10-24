@@ -27,15 +27,15 @@ namespace GASS
 {
 	class Scene;
 	class SceneObject;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using SceneWeakPtr = std::weak_ptr<Scene>;
 
 
 	class OpenALSoundSystem  :  public Reflection<OpenALSoundSystem, SimSystem>
 	{
 	public:
-		typedef std::map<std::string,ALuint> SoundMap;
-		typedef std::map<std::string,ALuint> SourceMap;
+		using SoundMap = std::map<std::string, ALuint>;
+		using SourceMap = std::map<std::string, ALuint>;
 
 		static void RegisterReflection();
 		OpenALSoundSystem(SimSystemManagerWeakPtr manager);

@@ -64,7 +64,7 @@ namespace GASS
 	};
 
 	OSGImGuiHandler::OSGImGuiHandler()
-		: time_(0.0f), mousePressed_{ false }, mouseWheel_(0.0f), initialized_(false)
+		 
 	{
 
 		ImGuiIO& io = ImGui::GetIO();

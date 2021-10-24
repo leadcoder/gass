@@ -37,9 +37,9 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
-	typedef GASS_SHARED_PTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
+	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
 
 	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
@@ -70,18 +70,18 @@ namespace GASS
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-		Float m_SampleWidth;
+		Float m_SampleWidth{0};
 		//int m_Samples;
-		Float m_SampleHeight;
+		Float m_SampleHeight{0};
 		AABox m_TerrainBounds;
-		IHeightmapTerrainComponent* m_TerrainGeom;
-		unsigned long m_CollisionCategory;
-		unsigned long m_CollisionBits;
-		dGeomID m_GeomID;
-		dSpaceID m_SpaceID;
+		IHeightmapTerrainComponent* m_TerrainGeom{NULL};
+		unsigned long m_CollisionCategory{1};
+		unsigned long m_CollisionBits{1};
+		dGeomID m_GeomID{0};
+		dSpaceID m_SpaceID{NULL};
 		std::string m_GeometryTemplate;
-		float m_Friction;
-		bool m_Debug;
+		float m_Friction{1};
+		bool m_Debug{false};
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 }

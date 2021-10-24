@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Plugins/PhysX/PhysXSuspensionComponent.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
@@ -25,18 +27,8 @@
 
 namespace GASS
 {
-	PhysXBodyComponent::PhysXBodyComponent() :	m_MassRepresentation(MR_GEOMETRY),
-		m_Mass(1),
-		m_Actor(NULL),
-		m_Kinematic(false),
-		m_DisableGravity(false),
-		m_EffectJoints(false),
-		m_PositionIterCount(4),
-		m_VelocityIterCount(4),
-		m_ForceReport(false),
-		m_LocationComponent(NULL),
-		m_TrackTransformation(true),
-		m_Active(true)
+	PhysXBodyComponent::PhysXBodyComponent() 
+		
 	{
 
 	}
@@ -50,7 +42,7 @@ namespace GASS
 	{
 		if(m_Actor)
 			m_Actor->release();
-		m_Actor = NULL;
+		m_Actor = nullptr;
 	}
 
 	void PhysXBodyComponent::RegisterReflection()
@@ -90,7 +82,7 @@ namespace GASS
 		m_Actor->setSolverIterationCounts(m_PositionIterCount,m_VelocityIterCount);
 		
 		sm->GetPxScene()->addActor(*m_Actor);
-		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<PhysicsBodyLoadedEvent>());
 
 		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 	}

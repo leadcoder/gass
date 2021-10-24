@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
@@ -29,14 +31,9 @@
 
 namespace GASS
 {
-	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(false),
-		m_OSGBillboard (NULL),
-		m_Width(1.0f),
-		m_Height(1.0f),
-		m_GroundOffset(0.1),
-		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
-		m_Collision(true),
-		m_Geom(NULL)
+	OSGBillboardComponent::OSGBillboardComponent() : 
+		m_OSGBillboard (nullptr)
+		
 	{
 
 	}
@@ -148,7 +145,7 @@ namespace GASS
 
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const

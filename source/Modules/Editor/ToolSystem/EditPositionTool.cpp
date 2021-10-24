@@ -1,4 +1,6 @@
 #include "EditPositionTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -37,7 +39,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = m_Selection[i].lock();
 				if(obj)
-					obj->PostRequest(EditPositionMessagePtr(new EditPositionMessage(info.m_3DPos, from_id)));
+					obj->PostRequest(std::make_shared<EditPositionMessage>(info.m_3DPos, from_id));
 			}
 		}
 	}

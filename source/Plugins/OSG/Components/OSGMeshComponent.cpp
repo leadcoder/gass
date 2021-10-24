@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -30,14 +32,8 @@
 
 namespace GASS
 {
-	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
-		m_ReceiveShadow  (false),
-		m_Initlized(false),
-		m_Lighting(true),
-		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
-		m_Expand(false),
-		m_FlipDDS(false),
-		m_Collision(true)
+	OSGMeshComponent::OSGMeshComponent() 
+		
 	{
 
 	}
@@ -51,7 +47,7 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGMeshComponent>("MeshComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("MeshComponent", OF_VISIBLE));
 		auto filename_prop = RegisterGetSet("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
 		filename_prop->SetObjectOptionsFunction(&OSGMeshComponent::GetAvailableMeshFiles);
 		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
@@ -64,10 +60,10 @@ namespace GASS
 		
 		auto import_mesh_prop = RegisterGetSet("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh, PF_VISIBLE | PF_EDITABLE, "Import new mesh");
 		std::vector<std::string> ext;
-		ext.push_back("3ds");
-		ext.push_back("flt");
-		ext.push_back("obj");
-		ext.push_back("*");
+		ext.emplace_back("3ds");
+		ext.emplace_back("flt");
+		ext.emplace_back("obj");
+		ext.emplace_back("*");
 		import_mesh_prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE,ext));
 	}
 
@@ -95,7 +91,7 @@ namespace GASS
 				group->GetResourcesByType(res_vec,"MESH");
 				for(size_t j = 0; j < res_vec.size();j++)
 				{
-					content.push_back(res_vec[j]->Name());
+					content.emplace_back(res_vec[j]->Name());
 				}
 			}
 		}
@@ -272,7 +268,7 @@ namespace GASS
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 
 		//expand children
 		if(m_Expand)
@@ -329,7 +325,7 @@ namespace GASS
 		}
 		catch(...)
 		{
-			so = SceneObjectPtr(new SceneObject());
+			so = std::make_shared<SceneObject>();
 		}
 
 		if (so)

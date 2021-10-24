@@ -31,8 +31,8 @@
 
 #if defined(WIN32) && !defined(__CYGWIN__) 
 	#include <osgViewer/api/Win32/GraphicsWindowWin32>
-	typedef HWND WindowHandle; 
-	typedef osgViewer::GraphicsWindowWin32::WindowData WindowData; 
+	using WindowHandle = HWND; 
+	using WindowData = osgViewer::GraphicsWindowWin32::WindowData; 
 #elif defined(__APPLE__) // Assume using Carbon on Mac. 
 	#include <osgViewer/api/Carbon/GraphicsWindowCarbon> 
 	typedef WindowRef WindowHandle; 
@@ -58,7 +58,7 @@ namespace GASS
 
 	void* OSGRenderWindow::GetHWND() const
 	{
-		void* win_handle = NULL;
+		void* win_handle = nullptr;
 		#if defined(WIN32) && !defined(__CYGWIN__) 	
 			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_Window.get());
 			win_handle = (void*) win32_window->getHWND();

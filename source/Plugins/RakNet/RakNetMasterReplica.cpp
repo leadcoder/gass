@@ -160,14 +160,14 @@ namespace GASS
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
-		SerialSaver ss(NULL,0);
+		SerialSaver ss(nullptr,0);
 		//for(size_t i = 0 ;  i < attributes.size(); i++)
 		//{
 			//IProperty * prop = GetProperty(attributes[i]);

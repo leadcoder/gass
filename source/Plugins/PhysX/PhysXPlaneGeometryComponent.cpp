@@ -25,9 +25,8 @@
 
 namespace GASS
 {
-	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent() : m_Material("DEFAULT"),
-		m_Actor(nullptr),
-		m_Shape(nullptr)
+	PhysXPlaneGeometryComponent::PhysXPlaneGeometryComponent() : m_Material("DEFAULT")
+		
 	{
 
 	}

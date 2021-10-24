@@ -2,6 +2,8 @@
 
 
 #include "MouseToolController.h"
+
+#include <memory>
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "IMouseTool.h"
@@ -35,7 +37,7 @@
 
 namespace GASS
 {
-	MouseToolController::MouseToolController(EditorSceneManager* sm): m_ActiveTool(NULL),
+	MouseToolController::MouseToolController(EditorSceneManager* sm): m_ActiveTool(nullptr),
 		m_Active(false),
 		m_GridSpacing(1),
 		m_GridSize(10),
@@ -111,7 +113,7 @@ namespace GASS
 				return m_Tools[i];
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void MouseToolController::OnInput(ControllSettingsMessagePtr message)
@@ -353,7 +355,7 @@ namespace GASS
 			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
 
-			scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+			scene_object->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 		}
 		return pointer;
 	}

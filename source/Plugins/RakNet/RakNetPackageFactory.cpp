@@ -31,17 +31,17 @@ namespace GASS
 
 	}
 
-	PackageFactory* PackageFactory::m_Instance = 0;
+	PackageFactory* PackageFactory::m_Instance = nullptr;
 	PackageFactory* PackageFactory::GetPtr(void)
 	{
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new PackageFactory();
 		return m_Instance;
 	}
 
 	PackageFactory& PackageFactory::Get(void)
 	{
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new PackageFactory();
 		return *m_Instance;
 	}

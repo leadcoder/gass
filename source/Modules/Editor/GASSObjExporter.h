@@ -24,9 +24,9 @@ namespace GASS
 		void SetWrapTexCoords(bool value) {m_WrapTexCoords = value;}
 		bool GetWrapTexCoords() const {return m_WrapTexCoords;}
 	private:
-		bool m_CopyTextures;
-		bool m_FlipDDSTexCoords;
-		bool m_WrapTexCoords;
+		bool m_CopyTextures{true};
+		bool m_FlipDDSTexCoords{true};
+		bool m_WrapTexCoords{true};
 	};
 }
 #endif

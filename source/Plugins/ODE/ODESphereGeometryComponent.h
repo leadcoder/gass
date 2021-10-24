@@ -32,8 +32,8 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 
 	class ODESphereGeometryComponent : public Reflection<ODESphereGeometryComponent,ODEBaseGeometryComponent>
 	{
@@ -54,7 +54,7 @@ namespace GASS
 		void CreateDebugSphere(Float radius,const Vec3 &offset);
 		void UpdateDebug() override;
 	protected:
-		Float m_Radius; //bounding box start size
+		Float m_Radius{1}; //bounding box start size
 	};
-	typedef GASS_SHARED_PTR<ODESphereGeometryComponent> ODESphereGeometryComponentPtr;
+	using ODESphereGeometryComponentPtr = std::shared_ptr<ODESphereGeometryComponent>;
 }

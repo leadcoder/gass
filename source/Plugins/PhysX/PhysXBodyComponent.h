@@ -27,7 +27,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
 	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>, public IPhysXRigidDynamic, public IPhysicsBodyComponent
 	{
@@ -87,7 +87,7 @@ namespace GASS
 		void SetEffectJoints(bool value) {m_EffectJoints = value;}
 		MassRepresentationType GetMassRepresentation() const { return m_MassRepresentation; }
 	protected:
-		float m_Mass;
+		float m_Mass{1};
 		float m_Density;
 		bool m_Debug;
 		float m_BodyMass;
@@ -95,19 +95,19 @@ namespace GASS
 		Vec3 m_SymmetricInertia;
 		Vec3 m_AssymetricInertia;
 		bool m_Initialized;
-		bool m_EffectJoints;
-		bool m_Kinematic;
-		bool m_TrackTransformation;
-		bool m_Active;
-		bool m_DisableGravity;
-		bool m_ForceReport;
-		int m_PositionIterCount;
-		int m_VelocityIterCount;
+		bool m_EffectJoints{false};
+		bool m_Kinematic{false};
+		bool m_TrackTransformation{true};
+		bool m_Active{true};
+		bool m_DisableGravity{false};
+		bool m_ForceReport{false};
+		int m_PositionIterCount{4};
+		int m_VelocityIterCount{4};
 	
-		MassRepresentationType m_MassRepresentation;
+		MassRepresentationType m_MassRepresentation{MR_GEOMETRY};
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic* m_Actor;
-		ILocationComponent* m_LocationComponent;
+		physx::PxRigidDynamic* m_Actor{NULL};
+		ILocationComponent* m_LocationComponent{NULL};
 		Vec3 m_LastPos;
 	};
 }

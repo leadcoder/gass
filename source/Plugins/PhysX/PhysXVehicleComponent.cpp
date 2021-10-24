@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/PhysX/PhysXVehicleComponent.h"
 #include "Plugins/PhysX/PhysXWheelComponent.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
@@ -30,27 +32,9 @@
 using namespace physx;
 namespace GASS
 {
-	PhysXVehicleComponent::PhysXVehicleComponent(): m_Actor(NULL),
-		m_ThrottleInput(0),
-		m_SteerInput(0),
-		m_Vehicle(NULL),
-		m_DigAccelInput(false),
-		m_DigBrakeInput(false),
-		m_IsMovingForwardSlowly(false),
-		m_InReverseMode(false),
-		m_UseDigitalInputs(false),
-		m_UseAutoReverse(false),
-		m_ScaleMass(1.0),
-		m_Mass(1500),
-		m_EnginePeakTorque(500),
-		m_EngineMaxRotationSpeed(200),
-		m_ClutchStrength(10),
-		m_GearSwitchTime(0.5),
-		m_ChassisDim(0,0,0),
-		m_MaxSpeed(20),
-		m_Debug(false),
-		m_BreakInput(0),
-		m_TrackTransformation(true)
+	PhysXVehicleComponent::PhysXVehicleComponent(): 
+		m_ChassisDim(0,0,0)
+		
 	{
 		//add some default gears, start with reverse!
 		m_GearRatios.push_back(-4); //reverse
@@ -74,12 +58,12 @@ namespace GASS
 			PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 			scene_manager->UnregisterVehicle(m_Vehicle);
 			m_Vehicle->free();
-			m_Vehicle = NULL;
+			m_Vehicle = nullptr;
 			if(m_Actor)
 			{
 				scene_manager->GetPxScene()->removeActor(*m_Actor);
 				m_Actor->release();
-				m_Actor = NULL;
+				m_Actor = nullptr;
 			}
 		}
 	}
@@ -87,7 +71,7 @@ namespace GASS
 	void PhysXVehicleComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXVehicleComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysXVehicleComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("PhysXVehicleComponent", OF_VISIBLE));
 
 		RegisterMember("Mass", &GASS::PhysXVehicleComponent::m_Mass);
 		RegisterMember("ScaleMass", &GASS::PhysXVehicleComponent::m_ScaleMass);
@@ -480,7 +464,7 @@ namespace GASS
 			m_AllWheels.push_back(wheel_objects[i]);
 		}
 
-		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<PhysicsBodyLoadedEvent>());
 		m_Initialized = true;
 	}
 
@@ -706,7 +690,7 @@ namespace GASS
 		const PxU32 currentGear = driveDynData.getCurrentGear();
 		const PxU32 targetGear = driveDynData.getTargetGear();
 
-		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id)));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
 
 		//pitch engine sound
 		float pitch = 1.0;
@@ -729,7 +713,7 @@ namespace GASS
 		SoundParameterRequestPtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
 		GetSceneObject()->PostRequest(volume_msg);
 
-		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
+		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forwardSpeed,currentGear));
 
 		if(m_Debug)
 		{
@@ -738,10 +722,10 @@ namespace GASS
 			ss  <<  "\nGear::" << currentGear;
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(ss.str()));
 		}
 
-		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(engine_rot_speed,forwardSpeed,currentGear)));
+		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forwardSpeed,currentGear));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
@@ -761,7 +745,7 @@ namespace GASS
 			ss  <<  "\nTarget:" << targetGear;
 			ss  <<  "\nSpeed:" << forwardSpeed;
 			ss  <<  "\nCollision:" << col;
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(ss.str())));
+			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(ss.str()));
 		}
 	}
 

@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "GotoLocationComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSPath.h"
 #include "Sim/GASSComponentFactory.h"
@@ -47,7 +49,7 @@ namespace GASS
 	void GoToLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<GoToLocationComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE));
 		auto nav_prop = RegisterMember("NavigationObject", &GoToLocationComponent::m_NavigationObject, PF_VISIBLE, "Object that hold navigation component");
 		nav_prop->SetObjectOptionsFunction(&GoToLocationComponent::GetNavigationEnumeration);
 	}
@@ -68,7 +70,7 @@ namespace GASS
 					if (wpl)
 					{
 						SceneObjectPtr new_so = comps[i]->GetOwner();
-						ret.push_back(new_so);
+						ret.emplace_back(new_so);
 					}
 				}
 			}
@@ -118,7 +120,7 @@ namespace GASS
 			bool cyclic = false;
 			Float new_distance = now_distance + look_ahead;
 			Vec3 target_point = Path::GetPointOnPath(new_distance, m_Path, cyclic, wp_index);
-			GetSceneObject()->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(target_point)));
+			GetSceneObject()->PostRequest(std::make_shared<GotoPositionRequest>(target_point));
 		}
 	}
 }

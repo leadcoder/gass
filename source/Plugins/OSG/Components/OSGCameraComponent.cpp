@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -27,15 +29,9 @@
 
 namespace GASS
 {
-	OSGCameraComponent::OSGCameraComponent() : m_NearClip(0.5),
-		m_FarClip(1000),
-		m_NearFarRatio(0),
-		m_Fov(45.0),
-		m_LODScale(1.0),
-		m_Ortho(false),
-		m_OSGCamera(NULL),
-		m_UpdateCameraFromLocation(true),
-		m_OrthoWindowHeight(0)
+	OSGCameraComponent::OSGCameraComponent() : 
+		m_OSGCamera(nullptr)
+		
 	{
 
 	}
@@ -49,7 +45,7 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGCameraComponent>("CameraComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CameraComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("CameraComponent", OF_VISIBLE));
 
 		RegisterGetSet("FarClipDistance", &GASS::OSGCameraComponent::GetFarClipDistance, &GASS::OSGCameraComponent::SetFarClipDistance,PF_VISIBLE  | PF_EDITABLE,"Far clipping plane distance");
 		RegisterGetSet("NearClipDistance", &GASS::OSGCameraComponent::GetNearClipDistance, &GASS::OSGCameraComponent::SetNearClipDistance,PF_VISIBLE  | PF_EDITABLE,"Near clipping plane distance");

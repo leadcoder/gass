@@ -20,6 +20,8 @@
 
 
 #include "RakNetLocationTransferComponent.h"
+
+#include <memory>
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
@@ -42,16 +44,9 @@ namespace GASS
 {
 	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_Velocity(0,0,0),
 		m_AngularVelocity(0,0,0),
-		m_DeadReckoning(0),
-		m_LastSerialize(0),
-		m_ParentPos(0,0,0),
-		m_UpdatePosition(true),
-		m_UpdateRotation(true),
-		m_SendFreq(0),
-		m_NumHistoryFrames(6),
-		m_ExtrapolatePosition(true),
-		m_ExtrapolateRotation(true),
-		m_ClientLocationMode(UNCHANGED)
+		
+		m_ParentPos(0,0,0)
+		
 	{
 		m_LocationHistory.resize(m_NumHistoryFrames);
 	}
@@ -322,7 +317,7 @@ namespace GASS
 				}
 			}
 
-			GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(m_Velocity, m_AngularVelocity)));
+			GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(m_Velocity, m_AngularVelocity));
 
 #ifdef _DEBUG_LTC_
 			GASS_PRINT(std::string(debug_text))

@@ -7,21 +7,21 @@ namespace GASS
 {
 	class MouseToolController;
 	class SceneObject;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class EditorModuleExport VerticalMoveTool : public IMouseTool
 	{
 	public:
 		VerticalMoveTool(MouseToolController* controller);
-		virtual ~VerticalMoveTool(void);
+		~VerticalMoveTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual std::string GetName() {return TID_VERTICAL_MOVE;}
-		virtual void Stop() {};
-		virtual void Start() {};
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		std::string GetName() override {return TID_VERTICAL_MOVE;}
+		void Stop() override {};
+		void Start() override {};
 	private:
 		bool m_MouseIsDown;
 		SceneObjectWeakPtr m_SelectedObject;

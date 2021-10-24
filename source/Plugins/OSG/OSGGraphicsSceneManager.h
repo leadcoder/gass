@@ -33,7 +33,7 @@ namespace osgShadow
 namespace GASS
 {
 	class OSGGraphicsSystem;
-	typedef GASS_WEAK_PTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
+	using OSGGraphicsSystemWeakPtr = std::weak_ptr<OSGGraphicsSystem>;
 
 	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager>, public IGraphicsSceneManager, public IOSGGraphicsSceneManager
 	{
@@ -113,6 +113,6 @@ namespace GASS
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osg::LightModel> m_LightModel;
 	};
-	typedef GASS_SHARED_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
-	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	using OSGGraphicsSceneManagerPtr = std::shared_ptr<OSGGraphicsSceneManager>;
+	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 }

@@ -1,4 +1,6 @@
 #include "MoveTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "../Components/GizmoComponent.h"
 #include "Modules/Editor/EditorSystem.h"
@@ -96,7 +98,7 @@ namespace GASS
 							SceneObjectPtr selected = m_SelectionCopy[i].lock();
 							if (selected)
 							{
-								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+								SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(false, from_id));
 							}
 						}
 
@@ -125,7 +127,7 @@ namespace GASS
 					
 					SceneObjectPtr gizmo = GetOrCreateGizmo();
 					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+						SendMessageRec(gizmo, std::make_shared<CollisionSettingsRequest>(false, from_id));
 				}
 			}
 		}
@@ -194,13 +196,13 @@ namespace GASS
 						SceneObjectPtr selected = m_Selected[i].lock();
 						if (selected)
 						{
-							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(false, from_id));
 						}
 					}
 					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
 					SceneObjectPtr so_gizmo = GetOrCreateGizmo();
 					if(so_gizmo)
-						SendMessageRec(so_gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+						SendMessageRec(so_gizmo, std::make_shared<CollisionSettingsRequest>(false, from_id));
 				}
 				else
 				{
@@ -250,10 +252,10 @@ namespace GASS
 			{
 				m_MouseMoveTime = time;
 				std::vector<std::string> attribs;
-				attribs.push_back("Position");
-				attribs.push_back("Latitude");
-				attribs.push_back("Longitude");
-				attribs.push_back("Projected");
+				attribs.emplace_back("Position");
+				attribs.emplace_back("Latitude");
+				attribs.emplace_back("Longitude");
+				attribs.emplace_back("Projected");
 				for (size_t i = 0; i < m_Selected.size(); i++)
 				{
 					SceneObjectPtr selected = m_Selected[i].lock();
@@ -295,7 +297,7 @@ namespace GASS
 			SceneObjectPtr selected = m_Selected[i].lock();
 			if(selected && CheckIfEditable(selected))
 			{
-				SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+				SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 			}
 		}
 
@@ -304,13 +306,13 @@ namespace GASS
 			SceneObjectPtr selected = m_SelectionCopy[i].lock();
 			if(selected && CheckIfEditable(selected))
 			{
-				SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+				SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 			}
 		}
 
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo && m_Controller->GetEnableGizmo())
-			SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+			SendMessageRec(gizmo, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 
 		if(selection_mode) //selection mode
 		{
@@ -364,7 +366,7 @@ namespace GASS
 
 	SceneObjectPtr _CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
 		axis_gizmo->SetName(name);
 		axis_gizmo->SetSerialize(false);
@@ -394,7 +396,7 @@ namespace GASS
 
 	SceneObjectPtr _CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr plane_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr plane_gizmo = std::make_shared<SceneObject>();
 
 		plane_gizmo->SetName(name);
 		plane_gizmo->SetSerialize(false);
@@ -424,7 +426,7 @@ namespace GASS
 
 	SceneObjectPtr _CreateMoveGizmo()
 	{
-		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoMoveObject");
 		gizmo->SetID("MOVE_GIZMO");
 		gizmo->SetSerialize(false);

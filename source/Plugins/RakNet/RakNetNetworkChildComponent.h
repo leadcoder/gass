@@ -32,9 +32,9 @@ namespace GASS
 {
 	class SceneObject;
 	class RakNetChildReplica;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using NetworkPackageVector = std::vector<NetworkPackagePtr>;
 
 	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> 
 	{
@@ -58,11 +58,11 @@ namespace GASS
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
 		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
-		RakNetChildReplica* m_Replica;
+		RakNetChildReplica* m_Replica{NULL};
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
-		int m_PartId;
+		int m_PartId{0};
 	};
-	typedef GASS_SHARED_PTR<RakNetNetworkChildComponent> RakNetNetworkChildComponentPtr;
+	using RakNetNetworkChildComponentPtr = std::shared_ptr<RakNetNetworkChildComponent>;
 }
 #endif

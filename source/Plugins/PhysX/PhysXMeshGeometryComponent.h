@@ -29,8 +29,8 @@ namespace GASS
 {
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 	
 	class PhysXMeshGeometryComponent : public Reflection<PhysXMeshGeometryComponent,BaseSceneComponent>
 	{
@@ -50,9 +50,9 @@ namespace GASS
 		void SetRotation(const Quaternion &rot);
 	protected:
 		PhysXTriangleMesh m_TriangleMesh;
-		physx::PxRigidStatic* m_Actor;
-		physx::PxShape* m_Shape;
+		physx::PxRigidStatic* m_Actor{NULL};
+		physx::PxShape* m_Shape{NULL};
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
-	typedef GASS_SHARED_PTR<PhysXMeshGeometryComponent> PhysXMeshGeometryComponentPtr;
+	using PhysXMeshGeometryComponentPtr = std::shared_ptr<PhysXMeshGeometryComponent>;
 }

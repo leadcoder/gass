@@ -38,8 +38,8 @@ using namespace physx;
 
 namespace GASS
 {
-	PhysXMeshGeometryComponent::PhysXMeshGeometryComponent() : m_Actor(NULL),
-		m_Shape(NULL)
+	PhysXMeshGeometryComponent::PhysXMeshGeometryComponent() 
+		
 	{
 
 	}

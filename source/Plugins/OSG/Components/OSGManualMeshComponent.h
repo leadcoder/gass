@@ -66,13 +66,13 @@ namespace GASS
 		std::vector<osg::ref_ptr<osg::Geometry> > m_OSGGeometries;
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<GraphicsMesh> m_MeshData;
-		bool m_CastShadow;
-		bool m_ReceiveShadow;
+		bool m_CastShadow{false};
+		bool m_ReceiveShadow{false};
 		OSGGraphicsSystemPtr m_GFXSystem;
-		bool m_Collision;
+		bool m_Collision{true};
 		GeometryFlagsBinder m_GeometryFlagsBinder;
 	};
 
-	typedef GASS_WEAK_PTR<OSGManualMeshComponent> OSGManualMeshComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGManualMeshComponent> OSGManualMeshComponentPtr;
+	using OSGManualMeshComponentWeakPtr = std::weak_ptr<OSGManualMeshComponent>;
+	using OSGManualMeshComponentPtr = std::shared_ptr<OSGManualMeshComponent>;
 }

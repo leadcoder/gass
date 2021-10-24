@@ -32,8 +32,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	/**
 		Component used to delegate input from input system to this scene object.
@@ -56,9 +56,9 @@ namespace GASS
 		void SetControlSetting(const std::string &controlsetting);
 		std::string GetControlSetting() const;
 		std::string m_ControlSetting;
-		bool m_Empty;
+		bool m_Empty{true};
 	};
 
-	typedef GASS_SHARED_PTR<InputHandlerComponent> InputHandlerComponentPtr;
+	using InputHandlerComponentPtr = std::shared_ptr<InputHandlerComponent>;
 }
 #endif

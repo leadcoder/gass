@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1),m_CurrentAngle(0),m_DesiredAngle(0),m_MaxSteerAngle(45),m_Speed(1)
+	SteerComponent::SteerComponent() 
 	{
 
 	}

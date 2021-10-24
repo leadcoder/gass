@@ -32,8 +32,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	/**
 		Delegate input from user specified SceneObject to owner for this component 
@@ -52,6 +52,6 @@ namespace GASS
 		SceneObjectRef m_InputHandlerObject;
 	};
 
-	typedef GASS_SHARED_PTR<InputProxyComponent> InputProxyComponentPtr;
+	using InputProxyComponentPtr = std::shared_ptr<InputProxyComponent>;
 }
 #endif

@@ -1,4 +1,6 @@
 #include "EditorSceneManager.h"
+
+#include <memory>
 #include "EditorSystem.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSMath.h"
@@ -26,7 +28,7 @@ namespace GASS
 
 	EditorSceneManager::EditorSceneManager(SceneWeakPtr scene) : Reflection(scene), m_LockTerrainObjects(true)
 	{
-		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
+		m_MouseTools = std::make_shared<MouseToolController>(this);
 	}
 
 	void EditorSceneManager::OnPostConstruction()
@@ -55,7 +57,7 @@ namespace GASS
 
 	SceneObjectPtr _CreateSelectionObject()
 	{
-		SceneObjectPtr selection_object = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr selection_object = std::make_shared<SceneObject>();
 		selection_object->SetName("SelectionObject");
 		selection_object->SetID("BB_SELECTION_OBJECT");
 		selection_object->SetSerialize(false);
@@ -124,8 +126,8 @@ namespace GASS
 
 		if (free_obj)
 		{
-			free_obj->SendImmediateRequest(PositionRequestPtr(new PositionRequest(scene->GetStartPos())));
-			free_obj->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot)));
+			free_obj->SendImmediateRequest(std::make_shared<PositionRequest>(scene->GetStartPos()));
+			free_obj->SendImmediateRequest(std::make_shared<RotationRequest>(rot));
 			free_obj->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
 		}
 	}
@@ -352,7 +354,7 @@ namespace GASS
 			//Check if we have osgEarth manipulator component, then send fly request
 			if (cam_obj->GetFirstComponentByClassName("OSGEarthCameraManipulatorComponent"))
 			{
-				cam_obj->PostRequest(CameraFlyToObjectRequestPtr(new CameraFlyToObjectRequest(obj)));
+				cam_obj->PostRequest(std::make_shared<CameraFlyToObjectRequest>(obj));
 			}
 			else
 			{

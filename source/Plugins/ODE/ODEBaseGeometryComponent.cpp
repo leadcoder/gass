@@ -42,15 +42,9 @@
 namespace GASS
 {
 	ODEBaseGeometryComponent::ODEBaseGeometryComponent():
-		m_ODESpaceID (NULL),
-		m_Body (NULL),
-		m_Friction(1),
-		m_Offset(0,0,0),
-		m_CollisionCategory(1),
-		m_CollisionBits(1),
-		m_GeomID(0),
-		m_SizeFromMesh(true),
-		m_Debug(false)
+		
+		m_Offset(0,0,0)
+		
 	{
 
 	}
@@ -145,7 +139,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
-		if(m_Body == 0) //only update position for static geometry 
+		if(m_Body == nullptr) //only update position for static geometry 
 		{
 			
 			//Reflect scaling			
@@ -167,7 +161,6 @@ namespace GASS
 	{
 		Reset();
 		m_Body = GetSceneObject()->GetFirstComponentByClass<ODEBodyComponent>().get();
-		dSpaceID space = GetSpace();
 
 		m_GeomID  = CreateODEGeom();
 
@@ -178,7 +171,7 @@ namespace GASS
 		}
 		else
 		{
-			dGeomSetBody(m_GeomID, NULL);
+			dGeomSetBody(m_GeomID, nullptr);
 		}
 		dGeomSetData(m_GeomID, (void*)this);
 		UpdateBodyMass();
@@ -202,7 +195,7 @@ namespace GASS
 			dGeomDestroy(m_GeomID);
 		if(m_ODESpaceID) 
 			dSpaceDestroy(m_ODESpaceID);
-		m_ODESpaceID = NULL;
+		m_ODESpaceID = nullptr;
 		m_GeomID = nullptr;
 	}
 
@@ -224,7 +217,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::SetPosition(const Vec3 &pos)
 	{
-		if(m_Body == NULL && m_GeomID)
+		if(m_Body == nullptr && m_GeomID)
 		{
 			dGeomSetPosition(m_GeomID, pos.x, pos.y, pos.z);
 		}
@@ -232,7 +225,7 @@ namespace GASS
 
 	void ODEBaseGeometryComponent::SetRotation(const Quaternion &rot)
 	{
-		if(m_Body == NULL && m_GeomID)
+		if(m_Body == nullptr && m_GeomID)
 		{
 			dReal ode_rot_mat[12];
 			Mat4 rot_mat(rot);
@@ -280,7 +273,7 @@ namespace GASS
 
 	bool ODEBaseGeometryComponent::IsInitialized() const
 	{
-		return (m_GeomID == 0) ? false:true;
+		return (m_GeomID == nullptr) ? false:true;
 	}
 
 	unsigned long  ODEBaseGeometryComponent::GetCollisionCategory() const 
@@ -305,7 +298,7 @@ namespace GASS
 		}
 		else
 		{
-			if(m_ODESpaceID == NULL)
+			if(m_ODESpaceID == nullptr)
 			{
 				m_ODESpaceID = dSimpleSpaceCreate(ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace());
 			}

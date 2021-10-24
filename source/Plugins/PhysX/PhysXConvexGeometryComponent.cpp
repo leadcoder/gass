@@ -37,8 +37,8 @@ using namespace physx;
 
 namespace GASS
 {
-	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent() : m_Shape(0),
-		m_SimulationCollision(true)
+	PhysXConvexGeometryComponent::PhysXConvexGeometryComponent() 
+		
 	{
 
 	}

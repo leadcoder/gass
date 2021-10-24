@@ -124,14 +124,14 @@ namespace GASS
 				RakNetNetworkMasterComponentPtr master_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 				if (master_comp)
 				{
-					master_comp->GetReplica()->RemoteInput(address, controller_index, message->GetValue(), 0);
+					master_comp->GetReplica()->RemoteInput(address, controller_index, message->GetValue(), nullptr);
 				}
 				else
 				{
 					RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 					if (child_comp)
 					{
-						child_comp->GetReplica()->RemoteInput(address, controller_index, message->GetValue(), 0);
+						child_comp->GetReplica()->RemoteInput(address, controller_index, message->GetValue(), nullptr);
 					}
 				}
 			}
@@ -193,14 +193,14 @@ namespace GASS
 		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		if (comp)
 		{
-			comp->GetReplica()->RemoteMessage(message->GetClient().c_str(), message->GetMessage().c_str(), 0);
+			comp->GetReplica()->RemoteMessage(message->GetClient().c_str(), message->GetMessage().c_str(), nullptr);
 		}
 		else
 		{
 			RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 			if (child_comp)
 			{
-				child_comp->GetReplica()->RemoteMessage(message->GetClient().c_str(), message->GetMessage().c_str(), 0);
+				child_comp->GetReplica()->RemoteMessage(message->GetClient().c_str(), message->GetMessage().c_str(), nullptr);
 			}
 		}
 	}

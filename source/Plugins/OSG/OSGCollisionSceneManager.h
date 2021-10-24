@@ -93,7 +93,7 @@ namespace GASS
                         // This is not one of the highest res children
                         continue;
 
-                    osg::ref_ptr<osg::Node> child(NULL);
+                    osg::ref_ptr<osg::Node> child(nullptr);
                     if (plod.getNumChildren() > childIndex)
                         child = plod.getChild(childIndex);
 
@@ -205,5 +205,5 @@ namespace GASS
 		Scene* m_Scene = nullptr;
 		osg::EllipsoidModel m_EllipsoidModel;
 	};
-	typedef GASS_SHARED_PTR<OSGCollisionSceneManager> OSGCollisionSceneManagerPtr;
+	using OSGCollisionSceneManagerPtr = std::shared_ptr<OSGCollisionSceneManager>;
 }

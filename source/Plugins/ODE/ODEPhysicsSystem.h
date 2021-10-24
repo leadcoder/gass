@@ -43,6 +43,6 @@ namespace GASS
 		bool m_Init;
 	};
 
-	typedef GASS_SHARED_PTR<ODEPhysicsSystem> ODEPhysicsSystemPtr;
+	using ODEPhysicsSystemPtr = std::shared_ptr<ODEPhysicsSystem>;
 }
 

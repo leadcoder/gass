@@ -61,16 +61,16 @@ namespace GASS
 		void OnPhysicsUpdate(PhysicsVelocityEventPtr message);
 		void OnParameterMessage(SoundParameterRequestPtr message);
 		
-		ALuint m_Buffer;
-		ALuint m_Source; // Source for current sound, allocated when sample is to be played, 0 otherwise
+		ALuint m_Buffer{0};
+		ALuint m_Source{0}; // Source for current sound, allocated when sample is to be played, 0 otherwise
 		ResourceHandle m_SoundResource;
-		float m_Pitch;
+		float m_Pitch{1};
 		//int m_Frequency;
-		float m_MinDistance;
-		float m_MaxDistance;
-		float m_Rolloff;
-		bool m_Loop;
-		float m_Volume;
+		float m_MinDistance{1};
+		float m_MaxDistance{200};
+		float m_Rolloff{1};
+		bool m_Loop{false};
+		float m_Volume{1};
 	};
 }
 #endif

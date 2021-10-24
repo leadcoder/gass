@@ -1,5 +1,6 @@
 #include "MeasurementTool.h"
 #include <iomanip>
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
@@ -45,13 +46,13 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
-		ruler->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+		ruler->PostRequest(std::make_shared<ClearManualMeshRequest>());
 
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
 			std::string measurement_value = "";
-			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
+			ruler->PostRequest(std::make_shared<TextCaptionRequest>(measurement_value));
 		}
 	}
 
@@ -96,7 +97,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(1);
 
 		
-		ruler->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		ruler->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -105,7 +106,7 @@ namespace GASS
 			std::stringstream sstream;
 			sstream << std::fixed << std::setprecision(2) << value << "m";
 			std::string measurement_value = sstream.str();
-			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
+			ruler->PostRequest(std::make_shared<TextCaptionRequest>(measurement_value));
 			ruler->GetFirstComponentByClass<ILocationComponent>()->SetPosition(text_pos);
 		}
 	}

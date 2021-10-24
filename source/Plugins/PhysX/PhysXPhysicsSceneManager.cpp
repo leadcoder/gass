@@ -25,6 +25,8 @@
 #include "Plugins/PhysX/PhysXStream.h"
 #include <PxPhysicsAPI.h>
 
+#include <memory>
+
 namespace GASS
 {
 
@@ -79,7 +81,7 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysX Scene Manager", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("PhysX Scene Manager", OF_VISIBLE));
 		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity, PF_VISIBLE | PF_EDITABLE, "Gravity");
 		RegisterGetSet("Origin", &PhysXPhysicsSceneManager::GetOrigin, &PhysXPhysicsSceneManager::SetOrigin, PF_VISIBLE | PF_EDITABLE, "Local simulation origin");
 		RegisterMember("Active", &PhysXPhysicsSceneManager::m_Active, PF_VISIBLE | PF_EDITABLE, "Enable/disable simulation");
@@ -89,9 +91,9 @@ namespace GASS
 		m_Active(true),
 		m_Init(false),
 		m_Gravity(-9.81f),
-		m_CpuDispatcher(NULL),
-		m_VehicleSceneQueryData(NULL),
-		m_WheelRaycastBatchQuery(NULL),
+		m_CpuDispatcher(nullptr),
+		m_VehicleSceneQueryData(nullptr),
+		m_WheelRaycastBatchQuery(nullptr),
 		m_Origin(0,0,0),
 		m_UpVector(0,1,0)
 	{
@@ -101,7 +103,7 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnPostConstruction()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		if (system == NULL)
+		if (system == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
 
 		RegisterForPreUpdate<PhysXPhysicsSystem>();
@@ -242,7 +244,7 @@ namespace GASS
 			{
 
 			}
-			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
+			GetScene()->PostMessage(std::make_shared<PostPhysicsSceneUpdateEvent>(delta_time));
 		}
 	}
 
@@ -293,7 +295,7 @@ namespace GASS
 		convexDesc.points.data			= verts;
 		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
-		physx::PxConvexMesh* convexMesh = NULL;
+		physx::PxConvexMesh* convexMesh = nullptr;
 		MemoryOutputStream buf;
 		if(cooking.cookConvexMesh(convexDesc, buf))
 		{
@@ -315,7 +317,7 @@ namespace GASS
 		desc.triangles.stride		= 3*sizeof(PxU32);
 		desc.triangles.data			= indices32;
 
-		physx::PxTriangleMesh* triMesh = NULL;
+		physx::PxTriangleMesh* triMesh = nullptr;
 		MemoryOutputStream buf;
 		if(cooking.cookTriangleMesh(desc, buf))
 		{
@@ -365,7 +367,7 @@ namespace GASS
 		//GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 
-	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
+	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags /*flags*/, CollisionResult& result, bool /*return_at_first_hit*/) const
 	{
 		Float ray_length = ray_dir.Length();
 		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);

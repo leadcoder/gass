@@ -29,17 +29,7 @@ using namespace physx;
 namespace GASS
 {
 	PhysXWheelComponent::PhysXWheelComponent() :
-		m_Mass(20),
-		m_MaxHandBrakeTorque(4000.0f),
-		m_MaxBrakeTorque(1500.0f),
-		m_MaxSteer(60.0f),
-		m_DampingRate(0.25f),
-		m_SuspensionMaxCompression(0.3f),
-		m_SuspensionMaxDroop(0.1f),
-		m_SuspensionSpringStrength(35000.0f),
-		m_SuspensionSpringDamperRate(4500.0f),
-		m_TireLongitudinalStiffnessPerUnitGravity(1000.0f),
-		m_Initialized(false),
+		
 		m_TireType("SLICKS")
 	{
 	

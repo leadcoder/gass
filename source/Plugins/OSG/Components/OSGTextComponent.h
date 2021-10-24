@@ -62,10 +62,10 @@ namespace GASS
 		//float m_Height;
 		osg::ref_ptr<osgText::Text> m_OSGText;
 		osg::ref_ptr<osg::Geode> m_OSGGeode;
-		float m_CharSize;
-		bool m_ScaleByDistance;
+		float m_CharSize{16.0f};
+		bool m_ScaleByDistance{false};
 		Vec3 m_Offset;
-		bool m_DropShadow;
+		bool m_DropShadow{true};
 		Vec4 m_Color;
 	};
 }

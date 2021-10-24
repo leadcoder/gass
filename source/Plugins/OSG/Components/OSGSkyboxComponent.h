@@ -49,7 +49,7 @@ namespace GASS
 		osg::Node* _CreateSkyBox();
 
 		std::string m_Material;
-		osg::Node* m_Node;
-		Float m_Size;
+		osg::Node* m_Node{NULL};
+		Float m_Size{200};
 	};
 }

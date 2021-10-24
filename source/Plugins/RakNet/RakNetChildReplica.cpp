@@ -227,7 +227,7 @@ namespace GASS
 	{
 		RakNetNetworkChildComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
-		SerialSaver ss(NULL,0);
+		SerialSaver ss(nullptr,0);
 		for(size_t i = 0 ;  i < attributes.size(); i++)
 		{
 			IProperty * prop;

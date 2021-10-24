@@ -32,7 +32,7 @@ namespace GASS
 	class SceneObject;
 	class BaseReflectionObject;
 	class IProperty;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 
 	class RakNetChildReplica  : public RakNetBaseReplica
 	{

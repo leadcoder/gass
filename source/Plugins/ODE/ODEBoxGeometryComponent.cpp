@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/ODE/ODEBoxGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -123,15 +125,15 @@ namespace GASS
 		sub_mesh_data->Type = LINE_LIST;
 		std::vector<Vec3> conrners;
 
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
+		conrners.emplace_back( size.x/2.0 ,size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0);
+		conrners.emplace_back( size.x/2.0 ,size.y/2.0 ,-size.z/2.0);
 
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
+		conrners.emplace_back( size.x/2.0 ,-size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,-size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0);
+		conrners.emplace_back( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0);
 
 		Vec3 pos(0,0,0);
 		for(int i = 0; i < 4; i++)
@@ -156,7 +158,7 @@ namespace GASS
 		}
 
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		scene_object->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 	}
 

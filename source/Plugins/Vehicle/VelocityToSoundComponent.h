@@ -31,8 +31,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class VelocityToSoundComponent :  public Reflection<VelocityToSoundComponent,BaseSceneComponent>
 	{
@@ -44,13 +44,13 @@ namespace GASS
 		void SceneManagerTick(double delta_time) override;
 	private:
 		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
-		Float m_Volume;
-		Float m_Pitch;
-		Float m_TargetPitch;
-		Float m_MaxVelRequest;
+		Float m_Volume{1.0};
+		Float m_Pitch{1.0};
+		Float m_TargetPitch{1.0};
+		Float m_MaxVelRequest{0};
 		Vec2 m_MinMaxVolume;
 		Vec2 m_MinMaxPitch;
-		Float m_VelocityLimit;
+		Float m_VelocityLimit{16};
 	};
 }
 #endif

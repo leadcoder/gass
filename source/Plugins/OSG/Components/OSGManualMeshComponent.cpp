@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "OSGManualMeshComponent.h"
+
+#include <memory>
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -30,10 +32,8 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN),
-		m_CastShadow(false),
-		m_ReceiveShadow(false),
-		m_Collision(true)
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN)
+		
 	{
 
 	}
@@ -46,7 +46,7 @@ namespace GASS
 	void OSGManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGManualMeshComponent>("ManualMeshComponent");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("ManualMeshComponent", OF_VISIBLE));
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterGetSet("CastShadow", &OSGManualMeshComponent::GetCastShadow, &OSGManualMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 
@@ -191,7 +191,7 @@ namespace GASS
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
 		}
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)

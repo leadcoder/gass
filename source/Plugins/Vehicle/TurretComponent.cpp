@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "TurretComponent.h"
+
+#include <memory>
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSPlane.h"
@@ -37,17 +39,9 @@
 namespace GASS
 {
 	TurretComponent::TurretComponent()  :m_Controller("Yaw"),
-		m_MaxSteerVelocity(1),
-		m_SteerForce(10),
-		m_MaxSteerAngle(0),
-		m_MinAngle(-1000),
-		m_MaxAngle(1000),
-		m_CurrentAngle(0),
-		m_DesiredDir(0,0,-1),
-		m_Active(false),
-		m_TurnInput(0),
-		m_AngularVelocity(0),
-		m_RotValue(0)
+		
+		m_DesiredDir(0,0,-1)
+		
 	{
 		m_RelTrans.MakeIdentity();
 	}
@@ -80,8 +74,8 @@ namespace GASS
 		m_Hinge->SetDriveTargetVelocity(0);
 		//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY, 0.0f));
 
 		RegisterForPostUpdate<IMissionSceneManager>();
 	}
@@ -188,7 +182,7 @@ namespace GASS
 			m_Hinge->SetDriveTargetVelocity(0);
 			//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 			//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
+			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
 			return;
 		}
 

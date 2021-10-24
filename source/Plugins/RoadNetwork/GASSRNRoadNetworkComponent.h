@@ -17,7 +17,7 @@ namespace GASS
 {
 	class AIRoadLaneSectionComponent;
 
-	typedef GASS_SHARED_PTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
+	using AIRoadLaneSectionComponentPtr = std::shared_ptr<AIRoadLaneSectionComponent>;
 
 	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,BaseSceneComponent> , public IGraphComponent, public IRoadNavigationComponent
 	{
@@ -48,14 +48,14 @@ namespace GASS
 		//bool DebugSearchGraph();
 		void SaveXML(tinyxml2::XMLElement * elem) override;
 		void LoadXML(tinyxml2::XMLElement * elem) override;
-		bool m_Edit;
-		bool m_ShowGraph;
-		bool m_Optimize;
+		bool m_Edit{true};
+		bool m_ShowGraph{false};
+		bool m_Optimize{true};
 		RoadNetwork m_Network;
 		std::string m_NodeTemplate;
 		std::string m_EdgeTemplate;
 	};
-	typedef GASS_SHARED_PTR<RNRoadNetworkComponent> RNRoadNetworkComponentPtr;
+	using RNRoadNetworkComponentPtr = std::shared_ptr<RNRoadNetworkComponent>;
 
 }
 #endif

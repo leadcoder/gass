@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "VehicleEngineComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -68,43 +70,12 @@ namespace GASS
 	//	std::cout << "anglvel:" << ang_vel.x << " " << ang_vel.y << " " << ang_vel.z << std::endl;
 	}
 
-	VehicleEngineComponent::VehicleEngineComponent() :m_Initialized(false),
-		m_VehicleSpeed(0),
-		m_Invert(false),
-		m_ConstantTorque(0),
-		m_Debug(false),
-		m_RPM(0),
-		m_AutoShiftStart(0),
-		m_ThrottleAccel(2),
-		m_MaxTurnForce(200),
-		m_SmoothRPMOutput(true),
+	VehicleEngineComponent::VehicleEngineComponent() :
 		m_InputToThrottle("Throttle"),
 		m_InputToSteer("Steer"),
-		m_NeutralGear(1),
-		m_Gear (2),
-		m_Clutch (1),
-		m_Automatic (1),
-		m_RPMGearChangeUp (1500),
-		m_RPMGearChangeDown (700),
-		m_MaxBrakeTorque (1000),
-		m_MinRPM (500),
-		m_MaxRPM (4000),
-		m_DeclutchTimeChangeGear (0.5f),
-		m_ClutchTimeChangeGear (0.5f),
-		m_AutoClutchStart (0),
-		m_CurrentTime (0),
-		m_DesiredThrottle (0),
-		m_DesiredSteer (0),
-		m_VehicleEngineRPM (0),
-		m_Power (0.2f),
-		m_AngularVelocity(0,0,0),
-		m_EngineType(ET_TANK),
-		m_TurnRPMAmount(1.0f),
-		m_MaxTurnVel(1.0f),
-		m_WheelRPM(0),
-		m_ShiftDown(0),
-		m_ShiftUp(0),
-		m_FutureGear(0)
+		
+		m_AngularVelocity(0,0,0)
+		
 	{
 		m_SteerCtrl = PIDControl(100,1,1);
 		m_GearBoxRatio.resize(6);
@@ -125,7 +96,7 @@ namespace GASS
 	void VehicleEngineComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<VehicleEngineComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("VehicleEngineComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("VehicleEngineComponent", OF_VISIBLE));
 
 		RegisterGetSet("Wheels", &VehicleEngineComponent::GetWheels, &VehicleEngineComponent::SetWheels);
 
@@ -166,7 +137,7 @@ namespace GASS
 		SetWheels(m_WheelObjects);
 
 		//Play engine sound
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
 	}
 
 
@@ -437,18 +408,18 @@ namespace GASS
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0f;
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PITCH,pitch));
 	}
 
 	void VehicleEngineComponent::UpdateExhaustFumes(double /*delta*/)
 	{
 		float emission = GetNormRPM()*30;
-		GetSceneObject()->PostRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
+		GetSceneObject()->PostRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
 	}
 
 	void VehicleEngineComponent::UpdateInstruments(double /*delta*/)
 	{
-		GetSceneObject()->PostEvent(VehicleEngineStatusMessagePtr(new VehicleEngineStatusMessage(m_RPM,m_VehicleSpeed,m_Gear)));
+		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(m_RPM,m_VehicleSpeed,m_Gear));
 	}
 
 	float VehicleEngineComponent::GetNormRPM() const

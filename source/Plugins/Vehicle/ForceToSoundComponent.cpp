@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "ForceToSoundComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -30,12 +32,8 @@
 
 namespace GASS
 {
-	ForceToSoundComponent::ForceToSoundComponent() : 
-		m_TargetPitch(1.0),
-		m_Pitch(1.0),
-		m_MaxVelRequest(0),
-		m_MaxForce(0),
-		m_ForceLimit(300)
+	ForceToSoundComponent::ForceToSoundComponent() 
+		
 	{
 
 	}
@@ -60,7 +58,7 @@ namespace GASS
 
 		//Play engine sound
 		
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
 	}
 
 	void ForceToSoundComponent::SceneManagerTick(double delta_time)
@@ -82,7 +80,7 @@ namespace GASS
 			m_Pitch += delta_time*0.5;
 		else
 			m_Pitch -= delta_time*0.5;
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch))));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch)));
 		//reset!
 		m_MaxVelRequest = 0;
 		m_MaxForce = 0;

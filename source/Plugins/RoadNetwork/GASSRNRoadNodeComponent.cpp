@@ -2,6 +2,7 @@
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include <limits>
+#include <memory>
 
 namespace GASS
 {
@@ -18,7 +19,7 @@ namespace GASS
 	void RNRoadNodeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RNRoadNodeComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadNodeComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RNRoadNodeComponent", OF_VISIBLE));
 	}
 
 	void RNRoadNodeComponent::OnInitialize()

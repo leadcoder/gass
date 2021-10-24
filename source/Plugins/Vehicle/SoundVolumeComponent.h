@@ -29,8 +29,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class SoundVolumeComponent :  public Reflection<SoundVolumeComponent,BaseSceneComponent>
 	{
@@ -43,8 +43,8 @@ namespace GASS
 		void OnVelocityNotifyMessage(PhysicsVelocityEventPtr message);
 		void OnHingeUpdated(ODEPhysicsHingeJointEventPtr message);
 
-		Float m_MaxVolumeAtSpeed;
-		Float m_HingeAngle;
+		Float m_MaxVolumeAtSpeed{0.3};
+		Float m_HingeAngle{0};
 	};
 }
 #endif

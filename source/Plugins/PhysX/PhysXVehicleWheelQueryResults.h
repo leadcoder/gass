@@ -49,17 +49,17 @@ public:
 private:
 
 	//One result for each wheel.
-	PxWheelQueryResult* mWheelQueryResults;
+	PxWheelQueryResult* mWheelQueryResults{NULL};
 
 	//Maximum number of wheels.
-	PxU32 mMaxNumWheels;
+	PxU32 mMaxNumWheels{0};
 
 	//Number of wheels 
-	PxU32 mNumWheels;
+	PxU32 mNumWheels{0};
 
 
 	VehicleWheelQueryResults()
-		: mWheelQueryResults(NULL),mMaxNumWheels(0), mNumWheels(0)
+		 
 	{
 		init();
 	}
@@ -70,7 +70,7 @@ private:
 
 	void init()
 	{
-		mWheelQueryResults=NULL;
+		mWheelQueryResults=nullptr;
 		mMaxNumWheels=0;
 		mNumWheels=0;
 	}

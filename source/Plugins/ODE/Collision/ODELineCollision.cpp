@@ -28,7 +28,7 @@ namespace GASS
 {
 	ODELineCollision::ODELineCollision(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags,bool return_first_collision, CollisionResult *result,dGeomID space_id, float segment_length) :m_Result(result),
 		m_Space(space_id),
-		m_RayGeom(0),
+		m_RayGeom(nullptr),
 		m_SegmentLength(segment_length),
 		m_ReturnFirstCollisionPoint(return_first_collision),
 		m_CollisionBits(flags),
@@ -58,7 +58,7 @@ namespace GASS
 			Float l = dir.Length();
 			const int segments = static_cast<int>(l / m_SegmentLength);
 
-			dGeomID ray = dCreateRay (0, m_RayLength);
+			dGeomID ray = dCreateRay (nullptr, m_RayLength);
 			dGeomSetCollideBits (ray,m_CollisionBits);
 			dGeomSetCategoryBits(ray,0);
 			double last_ray_length = m_RayLength;
@@ -149,7 +149,7 @@ namespace GASS
 		}
 		else
 		{
-			m_RayGeom = dCreateRay (0, m_RayLength);
+			m_RayGeom = dCreateRay (nullptr, m_RayLength);
 			dGeomSetCollideBits (m_RayGeom,m_CollisionBits);
 			dGeomSetCategoryBits(m_RayGeom,m_CollisionBits);
 			dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
@@ -191,8 +191,8 @@ namespace GASS
 
 	void ODELineCollision::ProcessCallback(dGeomID o1, dGeomID o2)
 	{
-		dGeomID ray_geom =0;
-		dGeomID other_geom =0;
+		dGeomID ray_geom =nullptr;
+		dGeomID other_geom =nullptr;
 
 		if(dGeomGetClass(o1) == dRayClass)
 		{

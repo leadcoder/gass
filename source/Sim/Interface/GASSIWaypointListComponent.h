@@ -32,5 +32,5 @@ namespace GASS
 		virtual float GetRadius() const = 0; 
 		virtual std::string GetWaypointTemplate() const = 0;
 	};
-	typedef GASS_SHARED_PTR<IWaypointListComponent> WaypointListComponentPtr;
+	using WaypointListComponentPtr = std::shared_ptr<IWaypointListComponent>;
 }

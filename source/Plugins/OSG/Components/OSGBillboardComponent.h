@@ -68,15 +68,15 @@ namespace GASS
 		//Helpers
 		void _UpdateSize(float width,float height);
 
-		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);
+		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=nullptr);
 		std::string m_Material;
-		bool m_CastShadow;
-		float m_Width;
-		float m_Height;
+		bool m_CastShadow{false};
+		float m_Width{1.0f};
+		float m_Height{1.0f};
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
-		osg::Geometry* m_Geom;
-		GeometryFlags m_GeomFlags;
-		double m_GroundOffset;
-		bool m_Collision;
+		osg::Geometry* m_Geom{NULL};
+		GeometryFlags m_GeomFlags{GEOMETRY_FLAG_UNKNOWN};
+		double m_GroundOffset{0.1};
+		bool m_Collision{true};
 	};
 }

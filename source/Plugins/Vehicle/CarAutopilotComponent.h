@@ -69,16 +69,16 @@ namespace GASS
 		void OnRadarEvent(VehicleRadarEventPtr message);
 		void OnSensorEvent(SensorMessagePtr message);
 		
-		bool m_Enable;
-		Float m_DesiredSpeed;
-		Float m_DesiredPosRadius;
+		bool m_Enable{false};
+		Float m_DesiredSpeed{0};
+		Float m_DesiredPosRadius{0};
 		PIDControl m_TurnPID;
 		PIDControl m_TrottlePID;
-		Float m_BrakeDistanceFactor;
-		bool m_InvertBackWardSteering;
-		bool m_Support3PointTurn;
-		Float m_MaxReverseDistance;
-		bool m_CollisionAvoidance;
+		Float m_BrakeDistanceFactor{1.0};
+		bool m_InvertBackWardSteering{true};
+		bool m_Support3PointTurn{true};
+		Float m_MaxReverseDistance{5};
+		bool m_CollisionAvoidance{false};
 
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
@@ -88,14 +88,14 @@ namespace GASS
 		std::string m_SteerInput;
 		Vec3 m_VehicleSpeed;
 		Mat4 m_Transformation;
-		bool m_WPReached;
-		PlatformType m_PlatformType;
+		bool m_WPReached{false};
+		PlatformType m_PlatformType{PT_CAR};
 
 		Vec3 m_FaceDirection;
-		bool m_HasDir;
-		bool m_HasCollision;
+		bool m_HasDir{false};
+		bool m_HasCollision{false};
 		Vec3 m_CollisionPoint;
-		Float m_CollisionDist;
+		Float m_CollisionDist{0};
 		
 		DetectionVector m_ProximityData;
 

@@ -43,10 +43,10 @@ namespace GASS
 	}
 
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
-		m_Space(0),
-		m_World(0),
-		m_CollisionSpace(0),
-		m_ContactGroup (0),
+		m_Space(nullptr),
+		m_World(nullptr),
+		m_CollisionSpace(nullptr),
+		m_ContactGroup (nullptr),
 		m_Active(true),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the
@@ -64,7 +64,7 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		RegisterForPreUpdate<ODEPhysicsSystem>();
 
-		m_Space = 0;
+		m_Space = nullptr;
 		m_World = dWorldCreate();
 		m_Space = dHashSpaceCreate(m_Space);
 

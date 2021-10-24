@@ -26,20 +26,8 @@
 
 namespace GASS
 {
-	PhysXSuspensionComponent::PhysXSuspensionComponent() : m_SpringJointMaxForce (PX_MAX_F32),
-		m_MaxSteerTorque(1000),
-		m_SteerJointSpring(10),
-		m_SteerJointDamping(100),
-		m_AngularSteerVelocity(0),
-		m_DriveMaxTorque(PX_MAX_F32),
-		m_WheelJointDamping(100),
-		m_Strength(1000),
-		m_Damping(10),
-		m_WheelAxisJoint(0),
-		m_SuspensionJoint (0),
-		m_SuspensionActor(NULL),
-		m_WheelAngularVelocity(0),
-		m_SteerLimit(0.5)
+	PhysXSuspensionComponent::PhysXSuspensionComponent() 
+		
 	{
 
 	}

@@ -1,4 +1,6 @@
 #include "RotateTool.h"
+
+#include <memory>
 #include "../Components/GizmoComponent.h"
 #include "MouseToolController.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -176,7 +178,7 @@ namespace GASS
 
 	SceneObjectPtr _CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
 		axis_gizmo->SetName(name);
 		axis_gizmo->SetSerialize(false);
@@ -206,7 +208,7 @@ namespace GASS
 
 	SceneObjectPtr _CreateRotateGizmo()
 	{
-		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoRotateGizmo");
 		gizmo->SetID("ROTATE_GIZMO");
 		gizmo->SetSerialize(false);

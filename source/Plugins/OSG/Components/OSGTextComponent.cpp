@@ -26,12 +26,12 @@
 
 namespace GASS
 {
-	OSGTextComponent::OSGTextComponent() :	m_OSGText(NULL),
-		m_CharSize(16.0f),
+	OSGTextComponent::OSGTextComponent() :	m_OSGText(nullptr),
+		
 		m_Font("arial.ttf"),
-		m_ScaleByDistance(false),
+		
 		m_Offset(0,0,0),
-		m_DropShadow(true),
+		
 		m_Color(1,1,1,1)
 
 	{

@@ -1562,7 +1562,7 @@ namespace GASS
 		return ret;
 	}
 
-	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const
+	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType /*platform_type*/, const GASS::Vec2& in_pos, const float search_radius, GASS::Vec3& out_pos) const
 	{
 		if (m_NavMesh)
 		{
@@ -1580,7 +1580,11 @@ namespace GASS
 			ret = m_NavQuery->findNearestPoly(recast_pos, polyPickExt, &filter, &poly_ref, 0);
 			if (dtStatusFailed(ret))
 				return false;
-
+			float recast_out_pos[3];
+			if (!poly_ref)
+				return false;
+			m_NavQuery->closestPointOnPoly(poly_ref, recast_pos, recast_out_pos);
+			RecastToGASS(recast_out_pos, out_pos);
 		}
 		return true;
 	}

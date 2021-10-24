@@ -43,8 +43,8 @@ namespace GASS
 		TransformationPackage() : NetworkPackage(0),
 			Position(Vec3(0,0,0)),
 			Velocity(Vec3(0,0,0)),
-			AngularVelocity(Vec3(0, 0, 0)),
-			TimeStamp(0)
+			AngularVelocity(Vec3(0, 0, 0))
+			
 		{
 
 		}
@@ -72,23 +72,23 @@ namespace GASS
 		Quaternion Rotation;
 		Vec3 Velocity;
 		Vec3 AngularVelocity;
-		unsigned int TimeStamp;
+		unsigned int TimeStamp{0};
 	};
-	typedef GASS_SHARED_PTR<TransformationPackage> TransformationPackagePtr;
+	using TransformationPackagePtr = std::shared_ptr<TransformationPackage>;
 
 
 
 	class LocationHistory
 	{
 	public:
-		LocationHistory() : Position(0,0,0),Rotation(1,0,0,0), Time(0)
+		LocationHistory() : Position(0,0,0),Rotation(1,0,0,0) 
 		{
 		}
 		~LocationHistory(){}
 
 		Vec3 Position;
 		Quaternion Rotation;
-		unsigned int Time;
+		unsigned int Time{0};
 	};
 
 
@@ -115,8 +115,8 @@ namespace GASS
 
 	class SceneObject;
 
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public INetworkComponent
 	{
@@ -155,18 +155,18 @@ namespace GASS
 
 		std::vector<LocationHistory> m_LocationHistory;
 
-		double m_DeadReckoning;
-		double m_LastSerialize;
-		float m_SendFreq;
-		bool m_UpdatePosition;
-		bool m_UpdateRotation;
-		bool m_ExtrapolatePosition;
-		bool m_ExtrapolateRotation;
+		double m_DeadReckoning{0};
+		double m_LastSerialize{0};
+		float m_SendFreq{0};
+		bool m_UpdatePosition{true};
+		bool m_UpdateRotation{true};
+		bool m_ExtrapolatePosition{true};
+		bool m_ExtrapolateRotation{true};
 		Vec3 m_ParentPos;
-		int m_NumHistoryFrames;
+		int m_NumHistoryFrames{6};
 		Quaternion m_ParentRot;
-		ClientLocationMode m_ClientLocationMode;
+		ClientLocationMode m_ClientLocationMode{UNCHANGED};
 	};
-	typedef GASS_SHARED_PTR<RakNetLocationTransferComponent> RakNetLocationTransferComponentPtr;
+	using RakNetLocationTransferComponentPtr = std::shared_ptr<RakNetLocationTransferComponent>;
 }
 #endif

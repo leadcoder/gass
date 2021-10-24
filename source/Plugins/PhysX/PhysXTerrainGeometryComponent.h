@@ -30,9 +30,9 @@ namespace GASS
 	class IHeightmapTerrainComponent;
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
-	typedef GASS_SHARED_PTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
+	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
 	class PhysXTerrainGeometryComponent : public Reflection<PhysXTerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
 	{
@@ -59,11 +59,11 @@ namespace GASS
 		void _Release();
 
 		AABox m_TerrainBounds;
-		IHeightmapTerrainComponent* m_TerrainGeom;
+		IHeightmapTerrainComponent* m_TerrainGeom{nullptr};
 		std::string m_GeometryTemplate;
-		bool m_Debug;
+		bool m_Debug{false};
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxShape* m_Shape;
-		physx::PxRigidStatic* m_Actor;
+		physx::PxShape* m_Shape{nullptr};
+		physx::PxRigidStatic* m_Actor{nullptr};
 	};
 }

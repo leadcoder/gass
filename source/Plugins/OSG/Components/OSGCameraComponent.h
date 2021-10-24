@@ -63,17 +63,17 @@ namespace GASS
 		void _UpdateProjection();
 	
 		osg::ref_ptr<osg::Camera> m_OSGCamera;
-		float m_NearClip;
-		float m_FarClip;
-		float m_NearFarRatio;
-		float m_Fov;
-		float m_LODScale;
-		bool m_Ortho;
-		float m_OrthoWindowHeight;
-		bool m_UpdateCameraFromLocation;
+		float m_NearClip{0.5};
+		float m_FarClip{1000};
+		float m_NearFarRatio{0};
+		float m_Fov{45.0};
+		float m_LODScale{1.0};
+		bool m_Ortho{false};
+		float m_OrthoWindowHeight{0};
+		bool m_UpdateCameraFromLocation{true};
 	};
 
-	typedef GASS_SHARED_PTR<OSGCameraComponent> OSGCameraComponentPtr;
-	typedef GASS_WEAK_PTR<OSGCameraComponent> OSGCameraComponentWeakPtr;
+	using OSGCameraComponentPtr = std::shared_ptr<OSGCameraComponent>;
+	using OSGCameraComponentWeakPtr = std::weak_ptr<OSGCameraComponent>;
 }
 

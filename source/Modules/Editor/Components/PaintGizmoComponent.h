@@ -13,10 +13,10 @@ namespace GASS
 	{
 	public:
 		PaintGizmoComponent();
-		virtual ~PaintGizmoComponent();
+		~PaintGizmoComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		void SetSize(float value){m_Size =value;}
 		void SetInnerSize(float value){m_InnerSize =value;}
 		void SetActive(bool active)  {m_Active =active;}
@@ -31,17 +31,17 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		GraphicsMeshPtr m_MeshData;	
 		ColorRGBA m_Color;
-		float m_Size;
-		float m_InnerSize;
+		float m_Size{30};
+		float m_InnerSize{20};
 		std::string m_Type;
 		//helpers
 		std::string m_Mode;
-		bool m_Active;
+		bool m_Active{false};
 		Vec3 m_Pos;
 		HeightmapTerrainComponentPtr m_HMTerrain;
 	};
 
-	typedef GASS_SHARED_PTR<PaintGizmoComponent> PaintGizmoComponentPtr;
+	using PaintGizmoComponentPtr = std::shared_ptr<PaintGizmoComponent>;
 }
 
 

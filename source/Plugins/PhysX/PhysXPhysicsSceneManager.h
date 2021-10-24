@@ -46,13 +46,13 @@ namespace GASS
 	};
 
 	class PhysXBodyComponent;
-	typedef GASS_SHARED_PTR<PhysXBodyComponent> PhysXBodyComponentPtr;
+	using PhysXBodyComponentPtr = std::shared_ptr<PhysXBodyComponent>;
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>, public IPhysicsSceneManager
 	{
 	public:
-		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
-		typedef std::map<std::string,PhysXTriangleMesh> TriangleMeshMap;
+		using ConvexMeshMap = std::map<std::string, PhysXConvexMesh>;
+		using TriangleMeshMap = std::map<std::string, PhysXTriangleMesh>;
 		PhysXPhysicsSceneManager(SceneWeakPtr scene);
 		~PhysXPhysicsSceneManager() override;
 		static void RegisterReflection();
@@ -106,5 +106,5 @@ namespace GASS
 		std::vector<physx::PxVehicleWheels*> m_Vehicles;
 		physx::PxControllerManager* m_ControllerManager;
 	};
-	typedef GASS_SHARED_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
+	using PhysXPhysicsSceneManagerPtr = std::shared_ptr<PhysXPhysicsSceneManager>;
 }

@@ -54,10 +54,10 @@ namespace GASS
 		static void _SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos);
 		std::string m_ManName;
 		osg::ref_ptr<osgGA::OrbitManipulator> m_OrbitMan;
-		bool m_ReadyToRun;
-		bool m_UpdateCameraFromLocation;
+		bool m_ReadyToRun{false};
+		bool m_UpdateCameraFromLocation{true};
 	};
-	typedef GASS_SHARED_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
-	typedef GASS_WEAK_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;
+	using OSGCameraManipulatorComponentPtr = std::shared_ptr<OSGCameraManipulatorComponent>;
+	using OSGCameraManipulatorComponentWeakPtr = std::weak_ptr<OSGCameraManipulatorComponent>;
 }
 

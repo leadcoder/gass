@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "LODComponent.h"
+
+#include <memory>
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
@@ -33,11 +35,10 @@
 
 namespace GASS
 {
-	LODComponent::LODComponent() : m_LowLODDistance(20) , 
-		m_MediumLODDistance(10),
+	LODComponent::LODComponent() : 
 		m_CameraPosition(0,0,0),
-		m_ObjectPosition(0,0,0),
-		m_CurrentLevel(LODMessage::LOD_HIGH)
+		m_ObjectPosition(0,0,0)
+		
 	{
 
 	}
@@ -126,7 +127,7 @@ namespace GASS
 		}
 		if(m_CurrentLevel != level)
 		{
-			GetSceneObject()->PostEvent(LODMessagePtr(new LODMessage(level)));
+			GetSceneObject()->PostEvent(std::make_shared<LODMessage>(level));
 			m_CurrentLevel = level;
 		}
 	}

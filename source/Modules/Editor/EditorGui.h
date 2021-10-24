@@ -114,9 +114,9 @@ namespace GASS
 				}
 				if (ImGui::BeginMenu("View"))
 				{
-					ImGui::MenuItem("Object Tree", NULL, &m_ShowObjectTree);
-					ImGui::MenuItem("Properties", NULL, &m_ShowProperties);
-					ImGui::MenuItem("Log", NULL, &m_ShowLog);
+					ImGui::MenuItem("Object Tree", nullptr, &m_ShowObjectTree);
+					ImGui::MenuItem("Properties", nullptr, &m_ShowProperties);
+					ImGui::MenuItem("Log", nullptr, &m_ShowLog);
 					ImGui::EndMenu();
 				}
 
@@ -796,19 +796,20 @@ namespace GASS
 		{
 			if (obj)
 			{
-				GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
-				if (graph)
 				{
-					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
-					sm->GetMouseToolController()->SelectTool(TID_GRAPH);
-					GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
-					tool->SetMode(GASS::GTM_ADD);
-					tool->SetParentObject(obj);
-					tool->SetConnetionObject(SceneObjectPtr());
-					tool->SetNodeTemplateName(graph->GetNodeTemplate());
-					tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+					GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
+					if (graph)
+					{
+						EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+						sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+						GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+						tool->SetMode(GASS::GTM_ADD);
+						tool->SetParentObject(obj);
+						tool->SetConnetionObject(SceneObjectPtr());
+						tool->SetNodeTemplateName(graph->GetNodeTemplate());
+						tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+					}
 				}
-
 				GraphNodeComponentPtr node = obj->GetFirstComponentByClass<IGraphNodeComponent>();
 				if (node)
 				{

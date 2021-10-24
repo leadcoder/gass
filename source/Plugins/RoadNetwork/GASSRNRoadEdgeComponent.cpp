@@ -5,10 +5,11 @@
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include <limits>
+#include <memory>
 
 namespace GASS
 {
-	RNRoadEdgeComponent::RNRoadEdgeComponent(void) : m_LaneWidth(2)
+	RNRoadEdgeComponent::RNRoadEdgeComponent(void)  
 	{
 
 	}	
@@ -21,7 +22,7 @@ namespace GASS
 	void RNRoadEdgeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RNRoadEdgeComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadEdgeComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RNRoadEdgeComponent", OF_VISIBLE));
 		RegisterGetSet("LaneWidth", &RNRoadEdgeComponent::GetLaneWidth, &RNRoadEdgeComponent::SetLaneWidth,PF_VISIBLE | PF_EDITABLE,"Lane width");
 	}
 

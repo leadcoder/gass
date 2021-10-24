@@ -39,11 +39,8 @@ namespace GASS
 	class InputPackage : public NetworkPackage
 	{
 	public:
-		InputPackage() : NetworkPackage(0),
-			TimeStamp(0),
-			Index(0),
-			Value(0),
-			Generator(0)
+		InputPackage() : NetworkPackage(0)
+			
 		{
 			
 		}
@@ -67,18 +64,18 @@ namespace GASS
 		{
 			*this = *(InputPackage*)data;
 		}
-		int Index;
-		float Value;
-		unsigned int Generator;
-		unsigned int TimeStamp;
+		int Index{0};
+		float Value{0};
+		unsigned int Generator{0};
+		unsigned int TimeStamp{0};
 	};
 
-	typedef GASS_SHARED_PTR<InputPackage> InputPackagePtr;
+	using InputPackagePtr = std::shared_ptr<InputPackage>;
 
 	class SceneObject;
 	
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>
 	{
@@ -97,9 +94,9 @@ namespace GASS
 		void OnClientRemoteMessage(ClientRemoteMessagePtr message);
 		
 		std::string m_ControlSettingName;
-		typedef std::map<int,float> InputHistoryMap;
+		using InputHistoryMap = std::map<int, float>;
 		InputHistoryMap m_InputHistory;
 	};
-	typedef GASS_SHARED_PTR<RakNetInputTransferComponent> RakNetInputTransferComponentPtr;
+	using RakNetInputTransferComponentPtr = std::shared_ptr<RakNetInputTransferComponent>;
 }
 #endif

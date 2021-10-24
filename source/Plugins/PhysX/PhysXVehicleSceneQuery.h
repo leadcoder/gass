@@ -94,7 +94,7 @@ namespace GASS
 		void init()
 		{
 			mPreFilterShader=VehicleWheelRaycastPreFilter;
-			mSpuPreFilterShader=NULL;
+			mSpuPreFilterShader=nullptr;
 			mSpuPreFilterShaderSize=0;
 		}
 

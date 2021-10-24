@@ -122,7 +122,7 @@ namespace GASS
 					RoadNode* n1 = node_path[i];
 					RoadNode* n2 = node_path[i+1];
 					//Get edge!
-					RoadEdge* edge = NULL;
+					RoadEdge* edge = nullptr;
 					bool invert_dir = false;
 					for(size_t j = 0; j < n1->Edges.size(); j++)
 					{
@@ -267,8 +267,8 @@ namespace GASS
 	{
 		std::vector<Vec3>  wps1 = node->Edges[0]->Waypoints;
 		std::vector<Vec3>  wps2 = node->Edges[1]->Waypoints;
-		RoadNode* start_node = NULL;
-		RoadNode* end_node = NULL;
+		RoadNode* start_node = nullptr;
+		RoadNode* end_node = nullptr;
 		if(node->Edges[0]->StartNode == node)
 		{
 			std::reverse(wps1.begin(),wps1.end());
@@ -375,7 +375,7 @@ namespace GASS
 	RoadEdge* RoadNetwork::GetCloesestEdge(const Vec3 &point) const
 	{
 		int seg_index;
-		RoadEdge* best_edge = NULL;
+		RoadEdge* best_edge = nullptr;
 		Vec3 target_point;
 		//Vec3 best_target_point;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
@@ -397,7 +397,7 @@ namespace GASS
 
 	RoadNode* RoadNetwork::GetCloesestNode(const Vec3 &point) const
 	{
-		RoadNode* best_node = NULL;
+		RoadNode* best_node = nullptr;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{

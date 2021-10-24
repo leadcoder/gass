@@ -36,7 +36,7 @@ namespace GASS
 		void OnDelete() override;
 	protected:
 		std::string m_Material;
-		physx::PxRigidStatic* m_Actor;
-		physx::PxShape* m_Shape;
+		physx::PxRigidStatic* m_Actor{nullptr};
+		physx::PxShape* m_Shape{nullptr};
 	};
 }

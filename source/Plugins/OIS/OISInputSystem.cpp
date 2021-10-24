@@ -32,7 +32,7 @@
 
 namespace GASS
 {
-	OISInputSystem::OISInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Window(0),
+	OISInputSystem::OISInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Window(nullptr),
 		m_Inverted (false),
 		m_KeyActive(true),
 		m_JoyActive(true),
@@ -43,9 +43,9 @@ namespace GASS
 		m_GameControllerAxisMinValue(0),
 		m_MouseWinOffsetX(0),
 		m_MouseWinOffsetY(0),
-		m_InputManager(NULL),
-		m_Keyboard(NULL),
-		m_Mouse(NULL),
+		m_InputManager(nullptr),
+		m_Keyboard(nullptr),
+		m_Mouse(nullptr),
 		m_JoystickDeviceCount(0),
 		m_MouseWinHeight(0),
 		m_MouseWinWidth(0)
@@ -193,9 +193,9 @@ namespace GASS
 				m_InputManager->destroyInputObject(m_Joys[i]);
 			m_Joys.erase(m_Joys.begin(),m_Joys.end());
 			m_InputManager->destroyInputSystem(m_InputManager);
-			m_Keyboard = 0;
-			m_Mouse = 0;
-			m_InputManager = 0;
+			m_Keyboard = nullptr;
+			m_Mouse = nullptr;
+			m_InputManager = nullptr;
 		}
 	}
 
@@ -222,7 +222,7 @@ namespace GASS
 
 	void OISInputSystem::OnSystemUpdate(double /*delta_time*/)
 	{
-		if(m_Window == 0)
+		if(m_Window == nullptr)
 			return;
 
 		if(m_KeyActive)

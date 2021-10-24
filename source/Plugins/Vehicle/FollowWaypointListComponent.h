@@ -69,15 +69,15 @@ namespace GASS
 		void SetMode(const PathFollowModeBinder &mode);
 		int GetCloesetWaypoint();
 		
-		Float m_WaypointRadius;
+		Float m_WaypointRadius{ 4};
 		SceneObjectRef m_NavigationObject;
 		Vec3  m_CurrentPos;
 		std::vector<Vec3> m_Waypoints;
 		SceneObjectRef m_WaypointList;
-		float m_Direction;
-		bool m_InvertDirection;
-		bool m_HasWaypoints;
-		int m_CurrentWaypoint;
+		float m_Direction{1};
+		bool m_InvertDirection{false};
+		bool m_HasWaypoints{false};
+		int m_CurrentWaypoint{-1};
 		PathFollowModeBinder m_Mode;
 	};
 }

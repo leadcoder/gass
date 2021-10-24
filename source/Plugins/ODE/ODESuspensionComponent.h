@@ -28,7 +28,7 @@ namespace GASS
 {
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
 
 	class ODESuspensionComponent : public Reflection<ODESuspensionComponent,BaseSceneComponent>,
 		public IPhysicsSuspensionComponent
@@ -82,17 +82,17 @@ namespace GASS
 		void JointCorrectHinge2();
 		void UpdateSwayBars(PhysicsVelocityEventPtr message);
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
-		dJointID m_ODEJoint;
+		dJointID m_ODEJoint{0};
 		
-		ODEBodyComponent* m_Body1;
-		ODEBodyComponent* m_Body2;
+		ODEBodyComponent* m_Body1{NULL};
+		ODEBodyComponent* m_Body2{NULL};
 		
-		float m_SwayForce;
-		float m_Strength;
-		float m_Damping;
+		float m_SwayForce{0};
+		float m_Strength{1};
+		float m_Damping{2};
 
-		float m_HighStop;
-		float m_LowStop;
+		float m_HighStop{0};
+		float m_LowStop{0};
 
 		Vec3 m_Anchor; 
 		Vec3 m_Axis1; //remove?

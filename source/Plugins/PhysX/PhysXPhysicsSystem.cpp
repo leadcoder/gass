@@ -64,9 +64,9 @@ namespace GASS
 		}
 	};
 
-	PhysXPhysicsSystem::PhysXPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_DefaultMaterial(NULL),
-		m_PhysicsSDK(NULL),
-		m_Foundation(NULL)
+	PhysXPhysicsSystem::PhysXPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_DefaultMaterial(nullptr),
+		m_PhysicsSDK(nullptr),
+		m_Foundation(nullptr)
 	{
 		m_UpdateGroup = UGID_SIM;
 
@@ -91,7 +91,7 @@ namespace GASS
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), recordMemoryAllocations );
 		
-		if(m_PhysicsSDK == NULL)
+		if(m_PhysicsSDK == nullptr)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Error creating PhysX device!", "PhysXPhysicsSystem::OnInit");
 		}
@@ -214,7 +214,7 @@ namespace GASS
 				while(xml_ds)
 				{
 					if(xml_ds->Attribute("MaterialName"))
-						m_DrivableMaterialNames.push_back(xml_ds->Attribute("MaterialName"));
+						m_DrivableMaterialNames.emplace_back(xml_ds->Attribute("MaterialName"));
 					else
 						GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find MaterialName attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
 					xml_ds = xml_ds->NextSiblingElement("DriveableSurface");

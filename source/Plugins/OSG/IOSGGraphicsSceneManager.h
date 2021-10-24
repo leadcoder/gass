@@ -32,7 +32,7 @@ namespace GASS
 		virtual osg::ref_ptr<osg::Group> GetOSGRootNode() = 0 ;
 		virtual osg::ref_ptr<osg::Group> GetOSGShadowRootNode() = 0;
 	};
-	typedef GASS_SHARED_PTR<IOSGGraphicsSceneManager> IOSGGraphicsSceneManagerPtr;
-	typedef GASS_WEAK_PTR<IOSGGraphicsSceneManager> IOSGGraphicsSceneManagerWeakPtr;
+	using IOSGGraphicsSceneManagerPtr = std::shared_ptr<IOSGGraphicsSceneManager>;
+	using IOSGGraphicsSceneManagerWeakPtr = std::weak_ptr<IOSGGraphicsSceneManager>;
 }
 

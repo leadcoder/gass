@@ -7,10 +7,8 @@
 namespace GASS
 {
 
-	ObjExporter::ObjExporter() :
-		m_CopyTextures(true),
-		m_FlipDDSTexCoords(true),
-		m_WrapTexCoords(true)
+	ObjExporter::ObjExporter() 
+		
 	{
 
 
@@ -165,7 +163,7 @@ namespace GASS
 						{
 							for (size_t j = 0; j < sub_mesh->PositionVector.size(); j++)
 							{
-								TexCoordVector.push_back(Vec4(1, 0, 0, 0));
+								TexCoordVector.emplace_back(1, 0, 0, 0);
 							}
 						}
 					}

@@ -44,6 +44,6 @@ namespace GASS
 	private:
 		bool m_ReadPagedLOD = true;
 	};
-	typedef GASS_SHARED_PTR<OSGCollisionSystem> OSGCollisionSystemPtr;
+	using OSGCollisionSystemPtr = std::shared_ptr<OSGCollisionSystem>;
 }
 

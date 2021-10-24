@@ -9,14 +9,8 @@
 
 namespace GASS
 {
-	OpenALSoundComponent::OpenALSoundComponent(): m_Buffer(0),
-		m_Source(0),
-		m_Volume(1),
-		m_Pitch(1),
-		m_Loop(false),
-		m_MinDistance(1), //meters
-		m_MaxDistance(200),//meters
-		m_Rolloff(1)
+	OpenALSoundComponent::OpenALSoundComponent()
+		
 	{
 		
 

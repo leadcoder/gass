@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSScene.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -87,13 +89,13 @@ namespace GASS
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
 		if(m_ShadowedScene.valid())
-			m_ShadowedScene->setShadowTechnique(0);
+			m_ShadowedScene->setShadowTechnique(nullptr);
 	}
 
 	void OSGGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("OSG Scene Manager", OF_VISIBLE));
 		RegisterGetSet("FogMode", &OSGGraphicsSceneManager::GetFogMode, &OSGGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
 		RegisterGetSet( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,PF_VISIBLE | PF_EDITABLE,"");

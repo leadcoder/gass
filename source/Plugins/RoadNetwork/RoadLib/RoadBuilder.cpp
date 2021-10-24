@@ -136,7 +136,7 @@ namespace GASS
 			Vec2 isect;
 			if(LineSegment2Dd::GetIntersection(LineSegment2Dd(p1,p2), LineSegment2Dd(p3, p4), isect))
 			{
-				out.push_back(Vec3(isect.x,path[i].y,isect.y));
+				out.emplace_back(isect.x,path[i].y,isect.y);
 				break;
 			}
 			else

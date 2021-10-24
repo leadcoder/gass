@@ -9,7 +9,7 @@ namespace GASS
 	{
 	public:
 		EditorApplication(const FilePath &log_folder);
-		~EditorApplication();
+		~EditorApplication() override;
 		void Init(const FilePath &editor_config, const FilePath &gass_configuration, const FilePath &control_configuration, void* main_win_handle,void*  render_win_handle);
 		bool Update();
 	protected:

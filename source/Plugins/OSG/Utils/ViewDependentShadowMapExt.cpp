@@ -19,7 +19,7 @@ namespace osgShadow
 
 		VDSMCameraCullCallback(ViewDependentShadowMap* vdsm, osg::Polytope& polytope);
 
-		virtual void operator()(osg::Node*, osg::NodeVisitor* nv);
+		void operator()(osg::Node*, osg::NodeVisitor* nv) override;
 
 		osg::RefMatrix* getProjectionMatrix() { return _projectionMatrix.get(); }
 		osgUtil::RenderStage* getRenderStage() { return _renderStage.get(); }
@@ -134,7 +134,7 @@ namespace osgShadow
 			pushModelViewMatrix(new osg::RefMatrix(viewMatrix), osg::Transform::ABSOLUTE_RF);
 		}
 
-		void apply(osg::Node& node)
+		void apply(osg::Node& node) override
 		{
 			if (isCulled(node)) return;
 
@@ -147,7 +147,7 @@ namespace osgShadow
 			popCurrentMask();
 		}
 
-		void apply(osg::Drawable& drawable)
+		void apply(osg::Drawable& drawable) override
 		{
 			if (isCulled(drawable)) return;
 
@@ -160,19 +160,19 @@ namespace osgShadow
 			popCurrentMask();
 		}
 
-		void apply(osg::Billboard&)
+		void apply(osg::Billboard&) override
 		{
 			OSG_INFO << "Warning Billboards not yet supported" << std::endl;
 			return;
 		}
 
-		void apply(osg::Projection&)
+		void apply(osg::Projection&) override
 		{
 			// projection nodes won't affect a shadow map so their subgraphs should be ignored
 			return;
 		}
 
-		void apply(osg::Transform& transform)
+		void apply(osg::Transform& transform) override
 		{
 			if (isCulled(transform)) return;
 
@@ -196,7 +196,7 @@ namespace osgShadow
 
 		}
 
-		void apply(osg::Camera&)
+		void apply(osg::Camera&) override
 		{
 			// camera nodes won't affect a shadow map so their subgraphs should be ignored
 			return;

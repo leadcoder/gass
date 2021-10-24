@@ -26,7 +26,7 @@
 namespace GASS
 {
 	PhysXSphereGeometryComponent::PhysXSphereGeometryComponent():
-		m_Radius(1),
+		
 		m_Material("DEFAULT")
 	{
 
@@ -52,7 +52,7 @@ namespace GASS
 	physx::PxShape* PhysXSphereGeometryComponent::CreateShape()
 	{
 		if(!m_Body)
-			return NULL;
+			return nullptr;
 
 		//Create shape
 		if(m_SizeFromMesh)

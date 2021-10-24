@@ -1,4 +1,6 @@
 #include "VerticalMoveTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -64,7 +66,7 @@ namespace GASS
 			{
 				int from_id = GASS_PTR_TO_INT(this);
 				m_SelectedObject = obj_under_cursor;
-				obj_under_cursor->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(false,from_id)));
+				obj_under_cursor->SendImmediateRequest(std::make_shared<CollisionSettingsRequest>(false,from_id));
 			}
 		}
 	}
@@ -76,7 +78,7 @@ namespace GASS
 		if(selected)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			selected->SendImmediateRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(true,from_id)));
+			selected->SendImmediateRequest(std::make_shared<CollisionSettingsRequest>(true,from_id));
 
 		}
 		m_SelectedObject.reset();;

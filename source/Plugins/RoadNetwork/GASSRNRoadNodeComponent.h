@@ -24,7 +24,7 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr event);
 		std::vector<GraphEdgeComponentWeakPtr> m_Edges;
 	};
-	typedef GASS_SHARED_PTR<RNRoadNodeComponent> RNRoadNodeComponentPtr;
-	typedef GASS_WEAK_PTR<RNRoadNodeComponent> RNRoadNodeComponentWeakPtr;
+	using RNRoadNodeComponentPtr = std::shared_ptr<RNRoadNodeComponent>;
+	using RNRoadNodeComponentWeakPtr = std::weak_ptr<RNRoadNodeComponent>;
 }
 #endif

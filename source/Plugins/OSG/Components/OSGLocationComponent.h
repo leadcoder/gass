@@ -29,8 +29,8 @@ namespace GASS
 {
 	class OSGGraphicsSceneManager;
 	class OSGLocationComponent;
-	typedef GASS_SHARED_PTR<OSGLocationComponent>  OSGLocationComponentPtr;
-	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	using OSGLocationComponentPtr = std::shared_ptr<OSGLocationComponent>;
+	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 
 	class OSGLocationComponent : public Reflection<OSGLocationComponent, BaseSceneComponent>, public ILocationComponent, public IOSGNode, public osg::NodeCallback
 	{
@@ -113,13 +113,13 @@ namespace GASS
 		Quaternion m_WorldRotation;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
-		bool m_AttachToParent;
-		OSGLocationComponent* m_ParentLocation;
+		bool m_AttachToParent{false};
+		OSGLocationComponent* m_ParentLocation{NULL};
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-		unsigned int m_NodeMask;
+		unsigned int m_NodeMask{0};
 	};
 
-	typedef GASS_WEAK_PTR<OSGLocationComponent> OSGLocationComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGLocationComponent> OSGLocationComponentPtr;	
+	using OSGLocationComponentWeakPtr = std::weak_ptr<OSGLocationComponent>;
+	using OSGLocationComponentPtr = std::shared_ptr<OSGLocationComponent>;	
 }

@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "OSGLightComponent.h"
+
+#include <memory>
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 
@@ -29,9 +31,9 @@ namespace GASS
 		m_Specular(1,1,1),
 		m_Ambient(1,1,1),
 		m_AttenuationParams(0,1,0,20),
-		m_CastShadow(true),
-		m_SpotParams(1,30,40),
-		m_LightId(0)
+		
+		m_SpotParams(1,30,40)
+		
 	{
 
 	}
@@ -45,7 +47,7 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGLightComponent>("LightComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used for lights", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used for lights", OF_VISIBLE));
 
 		RegisterGetSet("LightType", &GASS::OSGLightComponent::GetLightType, &GASS::OSGLightComponent::SetLightType, PF_VISIBLE | PF_EDITABLE, "Light Type");
 		RegisterGetSet("AttenuationParmas", &GASS::OSGLightComponent::GetAttenuationParams, &GASS::OSGLightComponent::SetAttenuationParams,PF_VISIBLE | PF_EDITABLE,"");

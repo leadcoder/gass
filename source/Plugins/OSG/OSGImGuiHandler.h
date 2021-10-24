@@ -39,9 +39,9 @@ namespace GASS
 		struct ImGuiNewFrameCallback;
 		struct ImGuiRenderCallback;
 
-		double time_;
-		bool mousePressed_[3];
-		float mouseWheel_;
-		bool initialized_;
+		double time_{0.0f};
+		bool mousePressed_[3]{ false };
+		float mouseWheel_{0.0f};
+		bool initialized_{false};
 	};
 }

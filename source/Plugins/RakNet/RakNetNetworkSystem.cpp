@@ -43,7 +43,7 @@ namespace GASS
 		m_NetworkIDManager(new NetworkIDManager()),
 		m_ServerPort (60005),
 		m_ClientPort (60006),
-		m_RakPeer(NULL),
+		m_RakPeer(nullptr),
 		m_ServerData(new ServerData()),
 		m_ServerDataOnClient(new ServerData()),
 		m_SceneIsRunning (false),
@@ -213,7 +213,7 @@ namespace GASS
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
-		SocketDescriptor socketDescriptor(static_cast<unsigned short>(port),0);
+		SocketDescriptor socketDescriptor(static_cast<unsigned short>(port),nullptr);
 		GASS_LOG(LINFO) << "Raknet starup....";
 		bool ret = m_RakPeer->Startup(MAX_PEERS,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
 		if(ret == false)
@@ -255,7 +255,7 @@ namespace GASS
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
 
-		SocketDescriptor socketDescriptor(0,0);
+		SocketDescriptor socketDescriptor(0,nullptr);
 		m_RakPeer->Startup(1,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
 
 		m_RakPeer->Ping("255.255.255.255", static_cast<unsigned short>(server_port), true);
@@ -278,7 +278,7 @@ namespace GASS
 
 	bool RakNetNetworkSystem::ConnectToServer(const std::string &server,int server_port,int /*client_port*/)
 	{
-		bool connected =  m_RakPeer->Connect(server.c_str(), static_cast<unsigned short>(server_port), 0, 0);
+		bool connected =  m_RakPeer->Connect(server.c_str(), static_cast<unsigned short>(server_port), nullptr, 0);
 		return connected;
 	}
 
@@ -632,7 +632,7 @@ namespace GASS
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void RakNetNetworkSystem::WriteString(const std::string &str,RakNet::BitStream *outBitStream)

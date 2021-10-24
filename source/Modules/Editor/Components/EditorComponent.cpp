@@ -2,6 +2,8 @@
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorMessages.h"
 #include "EditorComponent.h"
+
+#include <memory>
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
@@ -10,17 +12,9 @@
 
 namespace GASS
 {
-	EditorComponent::EditorComponent() : m_Lock (false), 
-		m_Visible(true), 
-		m_VisibilityTransparency(0.3f), 
-		m_Selected(false), 
-		m_SelectedColor(1.0, 1.0, 0.0, 1.0),
-		m_ChangeMaterialWhenSelected(false),
-		m_ShowBBWhenSelected(true),
-		m_ShowInTree(false),
-		m_AllowRemove(false),
-		m_AllowDragAndDrop(false),
-		m_EditName(true)
+	EditorComponent::EditorComponent() :  
+		m_SelectedColor(1.0, 1.0, 0.0, 1.0)
+		
 	{
 		
 	}
@@ -110,8 +104,8 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Visible = message->GetVisible();
-			GetSceneObject()->PostRequest(GeometryVisibilityRequestPtr(new GeometryVisibilityRequest(m_Visible)));
-			GetSceneObject()->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_Visible)));
+			GetSceneObject()->PostRequest(std::make_shared<GeometryVisibilityRequest>(m_Visible));
+			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(m_Visible));
 			
 			/*if(m_Visible)
 			{
@@ -141,11 +135,11 @@ namespace GASS
 		if(message->IsSelected(GetSceneObject()))
 		{
 			m_Selected = true;
-			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(m_SelectedColor)));
+			GetSceneObject()->PostRequest(std::make_shared<BillboardColorRequest>(m_SelectedColor));
 		}
 		else if(m_Selected)
 		{
-			GetSceneObject()->PostRequest(BillboardColorRequestPtr(new BillboardColorRequest(ColorRGBA(1,1,1,1))));
+			GetSceneObject()->PostRequest(std::make_shared<BillboardColorRequest>(ColorRGBA(1,1,1,1)));
 			m_Selected = false;
 		}
 	}

@@ -24,15 +24,15 @@ namespace GASS
 	{
 	public:
 		GraphTool(MouseToolController* controller);
-		virtual ~GraphTool(void);
+		~GraphTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual std::string GetName() {return TID_GRAPH;}
-		virtual void Stop() {};
-		virtual void Start() {};
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		std::string GetName() override {return TID_GRAPH;}
+		void Stop() override {};
+		void Start() override {};
 		void SetParentObject(SceneObjectPtr object) {m_ParentObject = object;}
 		void SetConnetionObject(SceneObjectPtr object) {m_PrevObject = object;}
 		void SetNodeTemplateName(const std::string &name) {m_NodeObjectName= name;}

@@ -35,7 +35,7 @@ namespace GASS
 	{
 	}
 
-	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(NULL)
+	OSGCollisionSceneManager::OSGCollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), m_IntersectVisitor(nullptr)
 	{
 
 	}
@@ -93,7 +93,7 @@ namespace GASS
 		if ((flags & GEOMETRY_FLAG_PAGED_LOD) && m_ColSystem->GetReadPagedLOD())
 			m_IntersectVisitor->setReadCallback(m_DatabaseCache);
 		else
-			m_IntersectVisitor->setReadCallback(NULL);
+			m_IntersectVisitor->setReadCallback(nullptr);
 
 		osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector = new osgUtil::LineSegmentIntersector(osgUtil::Intersector::MODEL, start, end);
 		m_IntersectVisitor->setIntersector(intersector.get());

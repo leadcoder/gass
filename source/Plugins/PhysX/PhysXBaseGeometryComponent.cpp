@@ -25,11 +25,9 @@
 namespace GASS
 {
 
-	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :m_StaticActor(NULL),
-		m_Shape(NULL),
-		m_Offset(0,0,0),
-		m_SimulationCollision(true),
-		m_SizeFromMesh(true)
+	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :
+		m_Offset(0,0,0)
+		
 	{
 	}
 
@@ -50,7 +48,7 @@ namespace GASS
 			if(m_Shape)
 				m_Shape->release();
 		}
-		m_Shape = NULL;
+		m_Shape = nullptr;
 	}
 
 	void PhysXBaseGeometryComponent::RegisterReflection()
@@ -97,7 +95,7 @@ namespace GASS
 			m_Shape->release();
 		m_Shape = CreateShape();
 		
-		if(m_Shape == NULL)
+		if(m_Shape == nullptr)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create shape","PhysXBaseGeometryComponent::OnLoad");
 		}

@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Core/Math/GASSAABox.h"
@@ -29,20 +31,11 @@
 namespace GASS
 {
 	ODEBodyComponent::ODEBodyComponent()
-		:m_ODESpaceID(NULL),
-		m_ODESecondarySpaceID(NULL),
-		m_ODEBodyID(0),
-		m_AutoDisable(true),
-		m_FastRotation(true),
-		m_MassRepresentation(MR_GEOMETRY),
-		m_Mass(1),
+		:
 		m_CGPosition(0,0,0),
 		m_SymmetricInertia(0,0,0),
-		m_AssymetricInertia(0,0,0),
-		m_EffectJoints(true),
-		m_Active(true),
-		m_Debug(false),
-		m_TrackTransformation(true)
+		m_AssymetricInertia(0,0,0)
+		
 	{
 	}
 
@@ -151,7 +144,7 @@ namespace GASS
 
 		SetActive(m_Active);
 
-		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<PhysicsBodyLoadedEvent>());
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
@@ -167,7 +160,7 @@ namespace GASS
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(GetRotation());
 		m_TrackTransformation = true;
 		const int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id)));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(GetVelocity(true),GetAngularVelocity(true),from_id));
 	}
 
 	/*	bool ODEBodyComponent::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
@@ -327,7 +320,7 @@ namespace GASS
 	dSpaceID ODEBodyComponent::GetSpace()
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
-		if(scene_manager && m_ODESpaceID == NULL)
+		if(scene_manager && m_ODESpaceID == nullptr)
 		{
 			m_ODESpaceID = scene_manager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
 		}
@@ -336,7 +329,7 @@ namespace GASS
 
 	dSpaceID ODEBodyComponent::GetSecondarySpace()
 	{
-		if(m_ODESecondarySpaceID == 0)
+		if(m_ODESecondarySpaceID == nullptr)
 		{
 			ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
 			m_ODESecondarySpaceID = dSimpleSpaceCreate(scene_manager->GetCollisionSpace());

@@ -20,8 +20,8 @@
 
 namespace GASS
 {
-	OpenALSoundSystem::OpenALSoundSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Context(NULL),
-		m_Device(NULL),
+	OpenALSoundSystem::OpenALSoundSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Context(nullptr),
+		m_Device(nullptr),
 		m_IsInitialised(false)
 	{
 		m_UpdateGroup = UGID_SIM;
@@ -36,7 +36,7 @@ namespace GASS
 		ALCdevice *pDevice;
 		pContext = alcGetCurrentContext();
 		pDevice = alcGetContextsDevice(pContext);
-		alcMakeContextCurrent(NULL);
+		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(pContext);
 		alcCloseDevice(pDevice);
 	}
@@ -55,7 +55,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));
 
 		// Open an audio device
-		m_Device = alcOpenDevice( NULL ); // TODO ((ALubyte*) "DirectSound3D");
+		m_Device = alcOpenDevice( nullptr ); // TODO ((ALubyte*) "DirectSound3D");
 		// mSoundDevice = alcOpenDevice( "DirectSound3D" );
 
 		// Check for errors
@@ -64,7 +64,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"No sound device", "SoundManager::Init");
 		}
 
-		m_Context = alcCreateContext( m_Device, NULL );
+		m_Context = alcCreateContext( m_Device, nullptr );
 		//   if ( CheckAlError() || !mSoundContext ) // TODO seems not to work! why ?
 
 		if ( !m_Context )
@@ -216,10 +216,10 @@ namespace GASS
 	{
 		std::string str = "Sound Devices available : ";
 
-		if ( alcIsExtensionPresent( NULL, "ALC_ENUMERATION_EXT" ) == AL_TRUE )
+		if ( alcIsExtensionPresent( nullptr, "ALC_ENUMERATION_EXT" ) == AL_TRUE )
 		{
 			str = "List of Devices : ";
-			str += (char*) alcGetString( NULL, ALC_DEVICE_SPECIFIER );
+			str += (char*) alcGetString( nullptr, ALC_DEVICE_SPECIFIER );
 			str += "\n";
 		}
 		else

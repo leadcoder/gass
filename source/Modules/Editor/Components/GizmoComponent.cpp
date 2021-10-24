@@ -26,15 +26,9 @@
 namespace GASS
 {
 	GizmoComponent::GizmoComponent() : m_Color(1,0,0,1),
-		m_Size(5),
-		m_Type(GT_AXIS),
-		m_Highlight(true),
-		m_LastDist(0),
-		m_Mode(GM_LOCAL),
-		m_GridDist(1.0),
-		m_Active(false),
-		m_TrackTransformation(true),
-		m_TrackSelectedTransform(true)
+		
+		m_Type(GT_AXIS)
+		
 	{
 
 	}

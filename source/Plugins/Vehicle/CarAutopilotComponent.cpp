@@ -33,6 +33,8 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include <float.h>
 
+#include <memory>
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
@@ -41,24 +43,16 @@ namespace GASS
 {
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
-		m_DesiredPosRadius(0),
+		
 		m_DesiredPos(0,0,0),
 		m_CurrentPos(0,0,0),
-		m_DesiredSpeed(0),
-		m_Enable(false),
-		m_WPReached(false),
+		
 		m_VehicleSpeed(0,0,0),
-		m_BrakeDistanceFactor(1.0),
-		m_InvertBackWardSteering(true),
-		m_Support3PointTurn(true),
+		
 		m_FaceDirection(0,0,0),
-		m_HasDir(false),
-		m_MaxReverseDistance(5),
-		m_PlatformType(PT_CAR),
-		m_HasCollision(false),
-		m_CollisionPoint(0,0,0),
-		m_CollisionDist(0),
-		m_CollisionAvoidance(false)
+		
+		m_CollisionPoint(0,0,0)
+		
 	{
 		m_TurnPID.SetGain(2.0,0.02,0.01);
 		m_TrottlePID.SetGain(1.0,0,0);
@@ -73,7 +67,7 @@ namespace GASS
 	void CarAutopilotComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<CarAutopilotComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CarAutopilotComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("CarAutopilotComponent", OF_VISIBLE));
 
 		RegisterGetSet("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,PF_VISIBLE,"Input mapping for steer");
 		RegisterGetSet("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,PF_VISIBLE,"Input mapping for throttle");
@@ -575,9 +569,9 @@ namespace GASS
 	
 	void CarAutopilotComponent::_SendInput(double steer_input, double throttle_input, double brake_input)
 	{
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_ThrottleInput, static_cast<float>(throttle_input), CT_AXIS)));
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_SteerInput, static_cast<float>(steer_input), CT_AXIS)));
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", static_cast<float>(brake_input), CT_AXIS)));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", m_ThrottleInput, static_cast<float>(throttle_input), CT_AXIS));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", m_SteerInput, static_cast<float>(steer_input), CT_AXIS));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", "Break", static_cast<float>(brake_input), CT_AXIS));
 	}
 
 	void CarAutopilotComponent::_UpdateDrive(double delta_time)

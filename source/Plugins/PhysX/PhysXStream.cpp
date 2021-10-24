@@ -3,9 +3,8 @@
 using namespace physx;
 namespace GASS
 {
-	MemoryOutputStream::MemoryOutputStream() : m_Data(NULL),
-		m_Size(0),
-		m_Capacity(0)
+	MemoryOutputStream::MemoryOutputStream() 
+		
 	{
 	}
 

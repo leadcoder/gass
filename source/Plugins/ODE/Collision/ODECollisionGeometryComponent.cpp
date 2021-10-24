@@ -45,12 +45,11 @@
 namespace GASS
 {
 	ODECollisionGeometryComponent::ODECollisionGeometryComponent():
-		m_GeomID(0),
-		m_Type(CGT_NONE),
-		m_Offset(0,0,0),
-		m_TerrainData(NULL)
+		
+		m_Offset(0,0,0)
+		
 	{
-		m_ColMeshInfo.ID = 0;
+		m_ColMeshInfo.ID = nullptr;
 	}
 
 	ODECollisionGeometryComponent::~ODECollisionGeometryComponent()
@@ -129,10 +128,10 @@ namespace GASS
 
 		if(m_Type == CGT_PLANE)
 		{
-			if(m_GeomID == NULL) //Hack to use plane without geometry component
+			if(m_GeomID == nullptr) //Hack to use plane without geometry component
 			{
 				CreateGeometry();
-				if(m_GeomID == NULL) //Maybe geometry is found but not loaded?, ie OnGeometryChanged not called, assume plane is ground?
+				if(m_GeomID == nullptr) //Maybe geometry is found but not loaded?, ie OnGeometryChanged not called, assume plane is ground?
 					SetFlags(GEOMETRY_FLAG_GROUND);
 			}
 			return;
@@ -172,7 +171,7 @@ namespace GASS
 		if(m_GeomID)
 		{
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
-			dGeomSetBody(m_GeomID , NULL);
+			dGeomSetBody(m_GeomID , nullptr);
 			dGeomSetData(m_GeomID , (void*)this);
 		}
 
@@ -203,7 +202,7 @@ namespace GASS
 		{
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 			dGeomDestroy(m_GeomID);
-			m_GeomID = 0;
+			m_GeomID = nullptr;
 		}
 	}
 
@@ -305,7 +304,7 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
 	{
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
 		{
@@ -340,7 +339,7 @@ namespace GASS
 
 					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id, physics_mesh);
 				}
-				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
+				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, nullptr, nullptr, nullptr);
 			}
 			else //probably manual mesh
 			{
@@ -353,7 +352,7 @@ namespace GASS
 						dGeomTriMeshDataDestroy(m_ColMeshInfo.ID);
 					}
 					m_ColMeshInfo = GetCollisionSceneManager()->_CreateCollisionMesh(physics_mesh);
-					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, 0, 0, 0);
+					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, nullptr, nullptr, nullptr);
 				}
 			}
 		}
@@ -370,7 +369,7 @@ namespace GASS
 		SetScale(message->GetScale());
 	}
 
-	void ODECollisionGeometryComponent::SetScale(const Vec3 &scale)
+	void ODECollisionGeometryComponent::SetScale(const Vec3 &/*scale*/)
 	{
 		if(m_GeomID)
 		{
@@ -401,7 +400,7 @@ namespace GASS
 
 	bool ODECollisionGeometryComponent::IsInitialized() const
 	{
-		return (m_GeomID == 0) ? false:true;
+		return (m_GeomID == nullptr) ? false:true;
 	}
 
 	unsigned long  ODECollisionGeometryComponent::GetFlags() const
@@ -439,7 +438,7 @@ namespace GASS
 		//save raw point for fast height access, not thread safe!!
 
 
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 
 		if(terrain)
 		{

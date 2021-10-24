@@ -20,6 +20,8 @@
 
 
 
+#include <memory>
+
 #include "Core/Common.h"
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGImGuiHandler.h"
@@ -38,7 +40,7 @@ namespace GASS
 
 	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), 
 		m_DebugTextBox(new TextBox()),
-		m_Viewer(NULL),
+		m_Viewer(nullptr),
 		m_FlipDDS(false)
 	{
 		m_UpdateGroup=UGID_POST_SIM;
@@ -65,28 +67,28 @@ namespace GASS
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";
-		mesh_type.Extensions.push_back("3ds");
-		mesh_type.Extensions.push_back("obj");
-		mesh_type.Extensions.push_back("flt");
-		mesh_type.Extensions.push_back("ive");
-		mesh_type.Extensions.push_back("osg");
-		mesh_type.Extensions.push_back("osgt");
+		mesh_type.Extensions.emplace_back("3ds");
+		mesh_type.Extensions.emplace_back("obj");
+		mesh_type.Extensions.emplace_back("flt");
+		mesh_type.Extensions.emplace_back("ive");
+		mesh_type.Extensions.emplace_back("osg");
+		mesh_type.Extensions.emplace_back("osgt");
 		rm->RegisterResourceType(mesh_type);
 
 		ResourceType texture_type;
 		texture_type.Name = "TEXTURE";
-		texture_type.Extensions.push_back("dds");
-		texture_type.Extensions.push_back("png");
-		texture_type.Extensions.push_back("bmp");
-		texture_type.Extensions.push_back("tga");
-		texture_type.Extensions.push_back("gif");
-		texture_type.Extensions.push_back("jpg");
+		texture_type.Extensions.emplace_back("dds");
+		texture_type.Extensions.emplace_back("png");
+		texture_type.Extensions.emplace_back("bmp");
+		texture_type.Extensions.emplace_back("tga");
+		texture_type.Extensions.emplace_back("gif");
+		texture_type.Extensions.emplace_back("jpg");
 		rm->RegisterResourceType(texture_type);
 
 		//add osgEarth files!
 		ResourceType map_type;
 		map_type.Name = "MAP";
-		map_type.Extensions.push_back("earth");
+		map_type.Extensions.emplace_back("earth");
 		rm->RegisterResourceType(map_type);
 	}
 
@@ -117,7 +119,7 @@ namespace GASS
 		
 	
 		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions();
-		if (opt == NULL)
+		if (opt == nullptr)
 		{
 			opt = new osgDB::ReaderWriter::Options();
 		}
@@ -196,7 +198,7 @@ namespace GASS
 		traits->width = width;
 		traits->height = height;
 		traits->doubleBuffer = true;
-		traits->sharedContext = 0;
+		traits->sharedContext = nullptr;
 		
 		if(m_Windows.size() > 0)
 		{
@@ -259,7 +261,7 @@ namespace GASS
 	void OSGGraphicsSystem::OnSystemUpdate(double delta_time)
 	{
 		//static int tick = 0;
-		GetSimSystemManager()->SendImmediate(PreGraphicsSystemUpdateEventPtr(new PreGraphicsSystemUpdateEvent(delta_time)));
+		GetSimSystemManager()->SendImmediate(std::make_shared<PreGraphicsSystemUpdateEvent>(delta_time));
 		if(m_Viewer->done())
 		{
 			return;
@@ -276,7 +278,7 @@ namespace GASS
 		//m_DebugTextBox->setText("");
 		//update listeners
 		//SimSystem::_UpdateListeners(delta_time);
-		GetSimSystemManager()->SendImmediate(PostGraphicsSystemUpdateEventPtr(new PostGraphicsSystemUpdateEvent(delta_time)));
+		GetSimSystemManager()->SendImmediate(std::make_shared<PostGraphicsSystemUpdateEvent>(delta_time));
 	}
 
 	void OSGGraphicsSystem::OnInitializeTextBox(CreateTextBoxRequestPtr message)

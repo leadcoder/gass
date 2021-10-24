@@ -31,8 +31,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class PlayerInputComponent : public Reflection<PlayerInputComponent,BaseSceneComponent>
 	{

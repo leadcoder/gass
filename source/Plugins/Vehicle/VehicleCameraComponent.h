@@ -31,8 +31,8 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,BaseSceneComponent>
 	{
@@ -52,6 +52,6 @@ namespace GASS
 		std::string m_PreferredViewport;
 		SceneObjectRef m_InputHandlerObject;
 	};
-	typedef GASS_SHARED_PTR<VehicleCameraComponent> VehicleCameraComponentPtr;
+	using VehicleCameraComponentPtr = std::shared_ptr<VehicleCameraComponent>;
 }
 #endif

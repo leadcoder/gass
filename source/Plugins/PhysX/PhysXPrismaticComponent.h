@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
 	class PhysXPrismaticComponent : public Reflection<PhysXPrismaticComponent,PhysXBaseJointComponent> , 
 		public IPhysicsPrismaticJointComponent
@@ -73,18 +73,18 @@ namespace GASS
 		void SetEnableDrive(bool value);
 		bool GetEnableDrive() const {return m_EnableDrive;}
 	private:
-		float m_Damping;
-		float m_Spring;
+		float m_Damping{0};
+		float m_Spring{0};
 		Vec3 m_RotationAxis;
 		Vec3 m_Offset;
-		float m_Limit;
-		bool m_EnableLimit;
-		bool m_EnableDrive;
-		float m_DriveTargetVelocity;
-		float m_DriveForceLimit;
-		Float m_DriveTargetPosition;
-		physx::PxD6Joint *m_PrismaticJoint;
+		float m_Limit{0};
+		bool m_EnableLimit{false};
+		bool m_EnableDrive{true};
+		float m_DriveTargetVelocity{0};
+		float m_DriveForceLimit{PX_MAX_F32};
+		Float m_DriveTargetPosition{0};
+		physx::PxD6Joint *m_PrismaticJoint{0};
 	};
-	typedef GASS_SHARED_PTR<PhysXPrismaticComponent> PhysXPrismaticComponentPtr;
+	using PhysXPrismaticComponentPtr = std::shared_ptr<PhysXPrismaticComponent>;
 }
 

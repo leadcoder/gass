@@ -1,4 +1,6 @@
 #include "PaintTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -32,7 +34,7 @@ namespace GASS
 		{
 			if(selected)
 			{
-				selected->GetParentSceneObject()->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116, 90,1.0)));
+				selected->GetParentSceneObject()->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116.0f, 90.0f,1.0f,0.0f));
 			}
 			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos, selected, from_id));
 			m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(paint_msg);
@@ -96,8 +98,8 @@ namespace GASS
 		if(gizmo)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			SendMessageRec(gizmo,CollisionSettingsRequestPtr(new CollisionSettingsRequest(value,from_id)));
-			SendMessageRec(gizmo,LocationVisibilityRequestPtr(new LocationVisibilityRequest(value,from_id)));
+			SendMessageRec(gizmo,std::make_shared<CollisionSettingsRequest>(value,from_id));
+			SendMessageRec(gizmo,std::make_shared<LocationVisibilityRequest>(value,from_id));
 		}
 	}
 

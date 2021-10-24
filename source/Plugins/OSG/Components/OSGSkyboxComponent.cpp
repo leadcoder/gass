@@ -28,8 +28,8 @@
 
 namespace GASS
 {
-	OSGSkyboxComponent::OSGSkyboxComponent() : m_Size(200), 
-		m_Node(NULL)
+	OSGSkyboxComponent::OSGSkyboxComponent()  
+		
 	{
 
 	}

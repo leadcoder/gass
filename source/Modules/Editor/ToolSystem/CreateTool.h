@@ -14,15 +14,15 @@ namespace GASS
 	{
 	public:
 		CreateTool(MouseToolController* controller);
-		virtual ~CreateTool(void);
+		~CreateTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual std::string GetName() { return TID_CREATE; }
-		virtual void Stop() {};
-		virtual void Start() {};
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		std::string GetName() override { return TID_CREATE; }
+		void Stop() override {};
+		void Start() override {};
 		void SetParentObject(SceneObjectPtr object) { m_ParentObject = object; }
 		void SetTemplateName(const std::string &name) { m_ObjectName = name; }
 		void SetAllowWaypointInsert(bool value) {m_AllowWPInsert = value;}

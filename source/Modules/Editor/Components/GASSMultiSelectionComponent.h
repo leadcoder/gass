@@ -12,13 +12,13 @@ namespace GASS
 	{
 	public:
 		MultiSelectionComponent();
-		virtual ~MultiSelectionComponent();
+		~MultiSelectionComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
-		void SceneManagerTick(double delta_time);
+		void SceneManagerTick(double delta_time) override;
 	private:
 		void UpdateSelection();
 		std::string GetType() const {return m_Type;}
@@ -34,10 +34,10 @@ namespace GASS
 		std::string m_Type;
 		std::vector<GASS::SceneObjectWeakPtr> m_Selection;
 		std::string m_Mode;
-		bool m_Active;
+		bool m_Active{false};
 		AABox m_BBox;
 	};
-	typedef GASS_SHARED_PTR<MultiSelectionComponent> MultiSelectionComponentPtr;
+	using MultiSelectionComponentPtr = std::shared_ptr<MultiSelectionComponent>;
 }
 
 

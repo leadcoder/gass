@@ -83,19 +83,19 @@ namespace GASS
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
 		ResourceHandle m_MeshResource;
-		bool m_CastShadow;
-		bool m_ReceiveShadow;
+		bool m_CastShadow{false};
+		bool m_ReceiveShadow{false};
 		osg::ref_ptr<osg::Node> m_MeshNode;
 		AABox m_BBox;
-		bool m_Initlized;
-		GeometryFlags m_GeomFlags;
-		bool m_Lighting;
-		bool m_Expand;
-		bool m_Collision;
+		bool m_Initlized{false};
+		GeometryFlags m_GeomFlags{GEOMETRY_FLAG_UNKNOWN};
+		bool m_Lighting{true};
+		bool m_Expand{false};
+		bool m_Collision{true};
 		std::string m_EnumerationResourceGroup;
-		bool m_FlipDDS;
+		bool m_FlipDDS{false};
 	};
 
-	typedef GASS_SHARED_PTR<OSGMeshComponent> OSGMeshComponentPtr;
+	using OSGMeshComponentPtr = std::shared_ptr<OSGMeshComponent>;
 }
 

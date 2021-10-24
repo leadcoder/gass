@@ -28,18 +28,10 @@
 
 namespace GASS
 {
-	PhysXHingeComponent::PhysXHingeComponent() : m_DriveTargetVelocity (0),
-		m_DriveForceLimit(PX_MAX_F32),
-		m_RevoluteJoint(0),
-		m_HighStop(0),
-		m_LowStop(0),
-		m_EnableDrive(true),
-		m_EnableLimit(false),
+	PhysXHingeComponent::PhysXHingeComponent() : 
 		m_RotationAxis(1,0,0),
-		m_Offset(0,0,0),
-		m_TargetAngle(0),
-		m_Spring(0),
-		m_Damping(0)
+		m_Offset(0,0,0)
+		
 	{
 
 	}

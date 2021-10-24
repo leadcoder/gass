@@ -55,9 +55,9 @@ namespace GASS
 		ColorRGB m_Specular;
 		ColorRGB m_Ambient;
 		Vec4 m_AttenuationParams;
-		bool m_CastShadow;
+		bool m_CastShadow{true};
 		Vec3 m_SpotParams;
-		int m_LightId;
+		int m_LightId{0};
 		osg::ref_ptr<osg::Light> m_OSGLight;
 		osg::ref_ptr<osg::LightSource>  m_OSGLightSource;
 	};

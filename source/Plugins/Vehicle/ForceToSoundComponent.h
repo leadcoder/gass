@@ -31,8 +31,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class ForceToSoundComponent :  public Reflection<ForceToSoundComponent,BaseSceneComponent>
 	{
@@ -45,11 +45,11 @@ namespace GASS
 	private:
 		
 		void OnHingeReport(PhysicsHingeJointReportEventPtr message);
-		Float m_Pitch;
-		Float m_TargetPitch;
-		Float m_MaxVelRequest;
-		Float m_MaxForce;
-		Float m_ForceLimit;
+		Float m_Pitch{1.0};
+		Float m_TargetPitch{1.0};
+		Float m_MaxVelRequest{0};
+		Float m_MaxForce{0};
+		Float m_ForceLimit{300};
 		std::vector<Vec2> m_ForceToPitch;
 	};
 }

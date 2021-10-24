@@ -28,10 +28,10 @@
 
 namespace GASS
 {
-	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_OrbitMan(NULL),
-		m_ReadyToRun(false),
-		m_ManName("Terrain"),
-		m_UpdateCameraFromLocation(true)
+	OSGCameraManipulatorComponent::OSGCameraManipulatorComponent() : m_OrbitMan(nullptr),
+		
+		m_ManName("Terrain")
+		
 	{
 
 	}

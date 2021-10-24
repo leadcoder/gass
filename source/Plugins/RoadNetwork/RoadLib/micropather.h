@@ -63,7 +63,7 @@ distribution.
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400 )
 	#include <stdlib.h>
-	typedef uintptr_t		MP_UPTR;
+	using MP_UPTR = uintptr_t;
 #elif defined (__GNUC__) && (__GNUC__ >= 3 )
 	#include <stdlib.h>
 	#include <stdint.h>
@@ -164,7 +164,7 @@ namespace micropather
 		}
 		void InitSentinel() {
 			Clear();
-			Init( 0, 0, FLT_MAX, FLT_MAX, 0 );
+			Init( 0, nullptr, FLT_MAX, FLT_MAX, nullptr );
 			prev = next = this;
 		}
 
@@ -188,7 +188,7 @@ namespace micropather
 		void Unlink() {
 			next->prev = prev;
 			prev->next = next;
-			next = prev = 0;
+			next = prev = nullptr;
 		}
 		void AddBefore( PathNode* addThis ) {
 			addThis->next = this;

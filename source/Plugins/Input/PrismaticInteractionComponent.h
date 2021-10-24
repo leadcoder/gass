@@ -31,8 +31,8 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class PrismaticInteractionComponent :  public Reflection<PrismaticInteractionComponent,BaseSceneComponent>
 	{
@@ -43,7 +43,7 @@ namespace GASS
 		void OnInitialize() override;
 	private:
 		std::string m_InputMapping;
-		Float m_MaxVelocity;
+		Float m_MaxVelocity{1};
 		void OnInput(InputRelayEventPtr message);
 	};
 }

@@ -29,15 +29,10 @@
 
 namespace GASS
 {
-	AdaptiveSteerComponent::AdaptiveSteerComponent() : m_SteerForce(100)
-		,m_MaxSteerVelocity(1)
-		,m_CurrentAngle(0)
-		,m_DesiredAngle(0)
-		,m_MaxSteerAngleAtSpeed(45,1)
+	AdaptiveSteerComponent::AdaptiveSteerComponent() : 
+		m_MaxSteerAngleAtSpeed(45,1)
 		,m_MinSteerAngleAtSpeed(45,20)
-		,m_Speed(1)
-		,m_VehicleSpeed(0)
-		,m_DynamicInputPower(4)
+		
 	{
 
 	}
@@ -103,7 +98,7 @@ namespace GASS
 			if(m_DynamicInputPower > 0)
 			{
 				m_DesiredAngle = value*(1.0f-interp)* rad_angle;
-				m_DesiredAngle += pow(value,m_DynamicInputPower)*(interp)* rad_angle;
+				m_DesiredAngle += pow(value, static_cast<float>(m_DynamicInputPower))*(interp)* rad_angle;
 			}
 			else
 				m_DesiredAngle = value* rad_angle;

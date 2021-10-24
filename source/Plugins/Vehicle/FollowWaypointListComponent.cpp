@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "FollowWaypointListComponent.h"
+
+#include <memory>
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Core/Math/GASSPath.h"
@@ -32,12 +34,9 @@
 
 namespace GASS
 {
-	FollowWaypointListComponent::FollowWaypointListComponent() : m_WaypointRadius( 4),
-		m_HasWaypoints(false),
-		m_CurrentWaypoint(-1),
-		m_Direction(1),
-		m_Mode(PFM_LOOP_TO_START),
-		m_InvertDirection(false)
+	FollowWaypointListComponent::FollowWaypointListComponent() : 
+		m_Mode(PFM_LOOP_TO_START)
+		
 	{
 
 	}
@@ -52,7 +51,7 @@ namespace GASS
 	void FollowWaypointListComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<FollowWaypointListComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to let vehicles follow any waypoint list by sending goto messages to autopilot component", OF_VISIBLE));
 		auto wp_list_prop = RegisterGetSet("WaypointList", &FollowWaypointListComponent::GetWaypointList, &FollowWaypointListComponent::SetWaypointList, PF_VISIBLE, "Waypoint list that we should follow");
 		wp_list_prop->SetObjectOptionsFunction(&FollowWaypointListComponent::GetWaypointListEnumeration);
 		auto nav_prop = RegisterMember("NavigationObject", &FollowWaypointListComponent::m_NavigationObject, PF_VISIBLE, "Object that hold navigation component");
@@ -79,7 +78,7 @@ namespace GASS
 					if (wpl)
 					{
 						SceneObjectPtr wp_so = comps[i]->GetOwner();
-						ret.push_back(wp_so);
+						ret.emplace_back(wp_so);
 					}
 				}
 			}
@@ -103,7 +102,7 @@ namespace GASS
 					if (wpl)
 					{
 						SceneObjectPtr nav_so = comps[i]->GetOwner();
-						ret.push_back(nav_so);
+						ret.emplace_back(nav_so);
 					}
 				}
 			}
@@ -199,7 +198,7 @@ namespace GASS
 					//Check distance to last wp
 					if((last_wp - m_CurrentPos).Length() < m_WaypointRadius)
 					{
-						GetSceneObject()->PostRequest(DesiredSpeedMessagePtr(new DesiredSpeedMessage(0)));
+						GetSceneObject()->PostRequest(std::make_shared<DesiredSpeedMessage>(0.0f));
 					}
 				}
 				break;
@@ -221,7 +220,7 @@ namespace GASS
 			}
 			Float new_distance = now_distance + look_ahead;
 			Vec3 target_point = Path::GetPointOnPath(new_distance, m_Waypoints, cyclic, wp_index);
-			GetSceneObject()->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(target_point)));
+			GetSceneObject()->PostRequest(std::make_shared<GotoPositionRequest>(target_point));
 
 			/*	}
 			else
@@ -343,7 +342,7 @@ void FollowWaypointListComponent::SetWaypointList(SceneObjectRef waypointlist)
 
 			//force update
 			WaypointListComponentPtr wpl = waypointlist->GetFirstComponentByClass<IWaypointListComponent>();
-			waypointlist->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wpl->GetWaypoints())));
+			waypointlist->PostEvent(std::make_shared<WaypointListUpdatedMessage>(wpl->GetWaypoints()));
 		}
 	}
 	m_WaypointList = waypointlist;

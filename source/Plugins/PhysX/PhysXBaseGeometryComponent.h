@@ -34,9 +34,9 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	class PhysXBodyComponent;
 	class IGeometryComponent;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
-	typedef GASS_SHARED_PTR<PhysXBodyComponent> PhysXBodyComponentPtr;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
+	using PhysXBodyComponentPtr = std::shared_ptr<PhysXBodyComponent>;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 	
 	
 	enum
@@ -93,11 +93,11 @@ namespace GASS
 		
 		PhysXBodyComponentPtr m_Body;		
 		Vec3 m_Offset;
-		bool m_SizeFromMesh;
-		physx::PxRigidStatic *m_StaticActor;
-		physx::PxShape *m_Shape;
-		bool m_SimulationCollision;
+		bool m_SizeFromMesh{true};
+		physx::PxRigidStatic *m_StaticActor{NULL};
+		physx::PxShape *m_Shape{NULL};
+		bool m_SimulationCollision{true};
 	};
-	typedef GASS_SHARED_PTR<PhysXBaseGeometryComponent> PhysXBaseGeometryComponentPtr;
+	using PhysXBaseGeometryComponentPtr = std::shared_ptr<PhysXBaseGeometryComponent>;
 }
 #endif 

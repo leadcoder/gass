@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/PhysX/PhysXCharacterComponent.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
 #include "Plugins/PhysX/PhysXPhysicsSystem.h"
@@ -25,17 +27,8 @@
 using namespace physx;
 namespace GASS
 {
-	PhysXCharacterComponent::PhysXCharacterComponent() : m_Actor(NULL),
-		m_ThrottleInput(0),
-		m_SteerInput(0),
-		m_StandingSize(1.8),
-		m_Radius(0.4),
-		m_YawMaxVelocity(2),
-		m_Acceleration(5.2),
-		m_MaxSpeed(4),
-		m_CurrentVel(0),
-		m_Controller(NULL),
-		m_TrackTransformation(true)
+	PhysXCharacterComponent::PhysXCharacterComponent() 
+		
 	{
 
 	}
@@ -50,7 +43,7 @@ namespace GASS
 		if(m_Controller)
 		{
 			m_Controller->release();
-			m_Controller= NULL;
+			m_Controller= nullptr;
 		}
 	}
 
@@ -182,8 +175,8 @@ namespace GASS
 		target_displacement += forward*m_CurrentVel;
 		target_displacement += PxConvert::ToGASS(m_SceneManager->GetPxScene()->getGravity());
 		target_displacement *= delta;
-		PxControllerCollisionFlags flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(0));
-		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id)));
+		PxControllerCollisionFlags flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(nullptr));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id));
 	}
 
 	void PhysXCharacterComponent::SetMass(float mass)

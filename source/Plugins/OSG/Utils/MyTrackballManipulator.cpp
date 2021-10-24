@@ -221,7 +221,7 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 
 bool MyTrackballManipulator::isMouseMoving()
 {
-	if (_ga_t0.get()==NULL || _ga_t1.get()==NULL) return false;
+	if (_ga_t0.get()==nullptr || _ga_t1.get()==nullptr) return false;
 
 	static const float velocity = 0.1f;
 
@@ -236,8 +236,8 @@ bool MyTrackballManipulator::isMouseMoving()
 
 void MyTrackballManipulator::flushMouseEventStack()
 {
-	_ga_t1 = NULL;
-	_ga_t0 = NULL;
+	_ga_t1 = nullptr;
+	_ga_t0 = nullptr;
 }
 
 
@@ -289,7 +289,7 @@ void MyTrackballManipulator::computePosition(const osg::Vec3& eye,const osg::Vec
 bool MyTrackballManipulator::calcMovement()
 {
 	// return if less then two events have been added.
-	if (_ga_t0.get()==NULL || _ga_t1.get()==NULL) return false;
+	if (_ga_t0.get()==nullptr || _ga_t1.get()==nullptr) return false;
 
 	float dx = _ga_t0->getXnormalized()-_ga_t1->getXnormalized();
 	float dy = _ga_t0->getYnormalized()-_ga_t1->getYnormalized();

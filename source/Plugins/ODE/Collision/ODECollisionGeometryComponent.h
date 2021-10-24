@@ -37,9 +37,9 @@ namespace GASS
 	class IGeometryComponent;
 	class IHeightmapTerrainComponent;
 	class ODECollisionSceneManager;
-	typedef GASS_SHARED_PTR<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
-	typedef GASS_SHARED_PTR<IHeightmapTerrainComponent> HeightmapTerrainComponentPtr;
+	using ODECollisionSceneManagerPtr = std::shared_ptr<ODECollisionSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
+	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
 	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>, ICollisionComponent
 	{
@@ -107,8 +107,8 @@ namespace GASS
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-		dGeomID m_GeomID;
-		CollisionGeomType m_Type;
+		dGeomID m_GeomID{0};
+		CollisionGeomType m_Type{CGT_NONE};
 		Vec3 m_Offset;
 		//Static Terrain data, only support one terrain loaded at the same time
 		struct TerrainData
@@ -119,9 +119,9 @@ namespace GASS
 			IHeightmapTerrainComponent* m_TerrainGeom;
 			int m_Samples;
 		};
-		TerrainData* m_TerrainData;
+		TerrainData* m_TerrainData{NULL};
 		ODECollisionSceneManagerPtr m_CollisionSceneManager;
 		ODECollisionMeshInfo m_ColMeshInfo;
 	};
-	typedef GASS_SHARED_PTR<ODECollisionGeometryComponent> ODECollisionGeometryComponentPtr;
+	using ODECollisionGeometryComponentPtr = std::shared_ptr<ODECollisionGeometryComponent>;
 }

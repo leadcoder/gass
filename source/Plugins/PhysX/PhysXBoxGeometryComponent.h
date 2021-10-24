@@ -29,8 +29,8 @@ namespace GASS
 	class ITerrainComponent;
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 
 	class PhysXBoxGeometryComponent : public Reflection<PhysXBoxGeometryComponent,PhysXBaseGeometryComponent>
 	{

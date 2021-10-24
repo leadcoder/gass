@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "SoundVolumeComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -27,8 +29,8 @@
 
 namespace GASS
 {
-	SoundVolumeComponent::SoundVolumeComponent() : m_MaxVolumeAtSpeed(0.3), 
-		m_HingeAngle(0)
+	SoundVolumeComponent::SoundVolumeComponent()  
+		
 	{
 
 	}
@@ -48,8 +50,8 @@ namespace GASS
 	void SoundVolumeComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,PhysicsVelocityEvent,0));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
+		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
 	}
 
 	void SoundVolumeComponent::OnHingeUpdated(ODEPhysicsHingeJointEventPtr message)
@@ -61,7 +63,7 @@ namespace GASS
 		{
 			//turret sound
 			const float volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
+			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume));
 			/*
 			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
 			*/
@@ -78,7 +80,7 @@ namespace GASS
 			//turret sound
 			const float volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
 			
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5f)));
+			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume*0.5f));
 
 			/*
 			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
