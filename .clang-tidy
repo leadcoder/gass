@@ -1,16 +1,31 @@
 
 #Checks: '-*,cppcoreguidelines-prefer-member-initializer'
-Checks: '-*,modernize-use-default-member-init,modernize-use-using,modernize-use-nullptr,modernize-make-unique,modernize-make-shared,modernize-use-emplace,modernize-use-override'
+#Checks: '-*,modernize-use-default-member-init,modernize-use-using,modernize-use-nullptr,modernize-make-unique,modernize-make-shared,modernize-use-emplace,modernize-use-override'
+#Checks: '-*,cppcoreguidelines-init-variables'
 
 #Checks: '-*,readability-redundant-member-init'
-#Checks: '-*,readability-identifier-naming'
+Checks: '-*,readability-identifier-naming'
 
 CheckOptions:
-  - { key: readability-identifier-naming.NamespaceCase,       value: CamelCase }
-  - { key: readability-identifier-naming.ClassCase,           value: CamelCase  }
-  - { key: readability-identifier-naming.PrivateMemberPrefix, value: m_         }
+# - { key: readability-identifier-naming.NamespaceCase,       value: CamelCase }
+  - { key: readability-identifier-naming.ClassCase,           value: CamelCase }
+ # - { key: readability-identifier-naming.ClassConstantPrefix, value: Off       }
+ # - { key: readability-identifier-naming.ClassConstantCase,   value: UPPER_CASE }
+  - { key: readability-identifier-naming.ClassMemberCase, 	  value: CamelCase }
+  - { key: readability-identifier-naming.ClassMemberPrefix, value: m_        }
+  - { key: readability-identifier-naming.PrivateMemberCase, 	  value: CamelCase }
+  - { key: readability-identifier-naming.PrivateMemberPrefix, value: m_        }
   - { key: readability-identifier-naming.PrivateMethodPrefix, value: _         }
-  - { key: readability-identifier-naming.StructCase,          value: CamelCase  }
+  - { key: readability-identifier-naming.ProtectedMemberCase, 	  value: CamelCase }
+  - { key: readability-identifier-naming.ProtectedMemberPrefix, value: m_        }
+  
+  - { key: readability-identifier-naming.StructCase,          value: CamelCase }
   - { key: readability-identifier-naming.FunctionCase,        value: CamelCase }
   - { key: readability-identifier-naming.VariableCase,        value: lower_case }
   - { key: readability-identifier-naming.GlobalConstantCase,  value: UPPER_CASE }
+ # - { key: readability-identifier-naming.StaticVariableCase, value: UPPER_CASE }
+# - { key: readability-identifier-naming.StaticVariableHungarianPrefix, value: Off }
+#  - { key: readability-identifier-naming.StaticConstantCase, value: UPPER_CASE }
+  
+  
+  
