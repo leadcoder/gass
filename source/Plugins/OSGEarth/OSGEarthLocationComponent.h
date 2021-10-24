@@ -44,12 +44,12 @@ namespace GASS
 		void OnNameChanged(SceneObjectNameChangedEventPtr event);
 		void OnCaptionChanged(TextCaptionRequestPtr message);
 		void UpdateNode();
-		double m_Latitude;
-		double m_Longitude;
-		double m_Offset;
-		osgEarth::PlaceNode* m_DebugNode;
+		double m_Latitude{0};
+		double m_Longitude{0};
+		double m_Offset{0};
+		osgEarth::PlaceNode* m_DebugNode{NULL};
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 	};
-	typedef GASS_WEAK_PTR<OSGEarthLocationComponent> OSGEarthLocationComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGEarthLocationComponent> OSGEarthLocationComponentPtr;
+	using OSGEarthLocationComponentWeakPtr = std::weak_ptr<OSGEarthLocationComponent>;
+	using OSGEarthLocationComponentPtr = std::shared_ptr<OSGEarthLocationComponent>;
 }

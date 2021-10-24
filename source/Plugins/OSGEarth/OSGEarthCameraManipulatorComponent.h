@@ -33,12 +33,12 @@ namespace GASS
 		void OnInitialize() override;
 
 		//IMapCameraComponent
-		double GetPitch() const;
-		void SetPitch(double value);
-		double GetHeading() const;
-		void SetHeading(double value);
-		double GetRange() const;
-		void SetRange(double value);
+		double GetPitch() const override;
+		void SetPitch(double value) override;
+		double GetHeading() const override;
+		void SetHeading(double value) override;
+		double GetRange() const override;
+		void SetRange(double value) override;
 
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
 		void SceneManagerTick(double delta_time) override;
@@ -52,11 +52,11 @@ namespace GASS
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;
-		osg::Fog* m_Fog;
+		osg::Fog* m_Fog{NULL};
 
 		Vec3 m_CurrentPos;
 		Quaternion m_CurrentRot;
-		bool m_UpdateCameraFromLocation;
+		bool m_UpdateCameraFromLocation{true};
 	};
 }
 

@@ -20,6 +20,8 @@
 
 #include "OSGEarthCommonIncludes.h"
 #include "OSGEarthGeoComponent.h"
+
+#include <memory>
 #include "OSGEarthSceneManager.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -28,11 +30,8 @@
 
 namespace GASS
 {
-	OSGEarthGeoComponent::OSGEarthGeoComponent() : m_HeightAboveGround(0),
-		m_OESM(NULL),
-		m_LocationComp(NULL),
-		m_PreserveHAG(true),
-		m_HandleTransformations(true)
+	OSGEarthGeoComponent::OSGEarthGeoComponent() 
+		
 	{
 
 	}
@@ -45,7 +44,7 @@ namespace GASS
 	void OSGEarthGeoComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGEarthGeoComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to handle object position, rotation", OF_VISIBLE));
 		RegisterGetSet("Latitude", &OSGEarthGeoComponent::GetLatitude, &OSGEarthGeoComponent::SetLatitude, PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("Longitude", &OSGEarthGeoComponent::GetLongitude, &OSGEarthGeoComponent::SetLongitude, PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("HeightAboveMSL", &OSGEarthGeoComponent::GetHeightAboveMSL, &OSGEarthGeoComponent::SetHeightAboveMSL, PF_VISIBLE | PF_EDITABLE,"");

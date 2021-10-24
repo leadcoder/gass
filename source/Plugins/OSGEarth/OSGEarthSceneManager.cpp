@@ -111,7 +111,7 @@ namespace GASS
 
 		osgViewer::View* view = dynamic_cast<osgViewer::View*>(views[0]);
 
-		if (view == NULL)
+		if (view == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthSceneManager::OnInit");
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
@@ -170,7 +170,7 @@ namespace GASS
 		osgEarth::Util::EarthManipulator* manip = GetManipulator().get();
 		if (manip)
 		{
-			if (m_MapNode && map_node == NULL)
+			if (m_MapNode && map_node == nullptr)
 			{
 				m_OldVP = manip->getViewpoint();
 				manip->setNode(map_node);
@@ -184,7 +184,7 @@ namespace GASS
 			}
 			
 		}
-		if (map_node == NULL)
+		if (map_node == nullptr)
 		{ 
 			delete m_WorkingSet;
 			m_WorkingSet = nullptr;
@@ -437,7 +437,7 @@ namespace GASS
 					double model_elevation = 0;
 					if (modelLayers[i]->getNode() && modelLayers[i]->options().terrainPatch() == true)
 					{
-						bool model_status = m_MapNode->getTerrain()->getHeight(modelLayers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, 0L);
+						bool model_status = m_MapNode->getTerrain()->getHeight(modelLayers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, nullptr);
 						if (model_status)
 						{
 							//Always use terrain patch height to support terrain mask?
@@ -451,7 +451,7 @@ namespace GASS
 			}
 			else 
 			{
-				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, 0L);
+				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, nullptr);
 			}
 
 			//include height from GASS-geometry

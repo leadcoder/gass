@@ -17,6 +17,6 @@ namespace GASS
 		std::string GetSystemName() const override {return "OSGEarthGraphicsSystem";}
 	private:
 	};
-	typedef GASS_SHARED_PTR<OSGEarthGraphicsSystem> OSGCollisionSystemPtr;
+	using OSGCollisionSystemPtr = std::shared_ptr<OSGEarthGraphicsSystem>;
 }
 

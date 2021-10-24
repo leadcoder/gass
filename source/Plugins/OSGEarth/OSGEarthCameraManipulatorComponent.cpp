@@ -31,9 +31,9 @@
 
 namespace GASS
 {
-	OSGEarthCameraManipulatorComponent::OSGEarthCameraManipulatorComponent() : m_Fog(NULL),
-		m_CurrentPos(0,0,0),
-		m_UpdateCameraFromLocation(true)
+	OSGEarthCameraManipulatorComponent::OSGEarthCameraManipulatorComponent() : 
+		m_CurrentPos(0,0,0)
+		
 	{
 
 	}

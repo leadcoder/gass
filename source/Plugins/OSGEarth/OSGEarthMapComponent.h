@@ -36,8 +36,8 @@ namespace GASS
 		void OnInitialize() override;
 		void OnDelete() override;
 		void SceneManagerTick(double delta_time) override;
-		AABox GetBoundingBox() const;
-		Sphere GetBoundingSphere() const;
+		AABox GetBoundingBox() const override;
+		Sphere GetBoundingSphere() const override;
 		GeometryFlags GetGeometryFlags() const override { return static_cast<GeometryFlags>(static_cast<int>(GEOMETRY_FLAG_GROUND) | static_cast<int>(GEOMETRY_FLAG_STATIC_OBJECT)); }
 		void SetGeometryFlags(GeometryFlags /*flags*/) override { };
 		bool GetCollision() const override { return true; }
@@ -45,20 +45,20 @@ namespace GASS
 		osg::ref_ptr<osgEarth::MapNode> GetMap() { return m_MapNode; }
 	
 		//IMapComponent
-		std::vector<std::string> GetViewpointNames() const;
-		void SetViewpointByName(const std::string& viewpoint_name);
+		std::vector<std::string> GetViewpointNames() const override;
+		void SetViewpointByName(const std::string& viewpoint_name) override;
 
 		std::vector<std::string> GetMapLayerNames() const;
-		const MapLayers& GetMapLayers() const;
+		const MapLayers& GetMapLayers() const override;
 
-		double GetTimeOfDay() const { return m_Hour; }
-		void SetTimeOfDay(double time);
-		float GetMinimumAmbient() const;
-		void SetMinimumAmbient(float value);
+		double GetTimeOfDay() const override { return m_Hour; }
+		void SetTimeOfDay(double time) override;
+		float GetMinimumAmbient() const override;
+		void SetMinimumAmbient(float value) override;
 		void SetSkyLighting(bool value);
 		bool GetSkyLighting() const;
-		void SetEarthFile(const ResourceHandle &earth_file);
-		ResourceHandle GetEarthFile() const { return m_EarthFile; }
+		void SetEarthFile(const ResourceHandle &earth_file) override;
+		ResourceHandle GetEarthFile() const override { return m_EarthFile; }
 		//IMapComponent end
 
 		void onTileAdded(
@@ -77,7 +77,7 @@ namespace GASS
 		std::vector<std::string> GetVisibleMapLayers() const;
 		void SetVisibleMapLayers(const std::vector<std::string> &layers);
 
-		bool m_Initlized;
+		bool m_Initlized{false};
 		osg::ref_ptr<osgEarth::MapNode> m_MapNode;
 		osg::ref_ptr<osgEarth::PhongLightingEffect> m_Lighting;
 #ifdef HAS_FOG
@@ -87,16 +87,16 @@ namespace GASS
 		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
 		std::vector<osgEarth::Viewpoint> m_Viewpoints;
-		osgEarth::Util::SkyNode* m_SkyNode;
-		double m_Hour;
-		bool m_UseAutoClipPlane;
+		osgEarth::Util::SkyNode* m_SkyNode{NULL};
+		double m_Hour{10};
+		bool m_UseAutoClipPlane{true};
 
 		MapLayers m_MapLayers;
-		OSGEarthSceneManager* m_OESceneManager;
+		OSGEarthSceneManager* m_OESceneManager{nullptr};
 		osg::ref_ptr<OETerrainCallbackProxy> m_TerrainCallbackProxy;
-		bool m_TerrainChangedLastFrame;
+		bool m_TerrainChangedLastFrame{false};
 		bool m_AddSky = false;
 	};
-	typedef GASS_SHARED_PTR<OSGEarthMapComponent> OSGEarthMapComponentPtr;
+	using OSGEarthMapComponentPtr = std::shared_ptr<OSGEarthMapComponent>;
 }
 

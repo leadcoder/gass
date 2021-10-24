@@ -1,10 +1,10 @@
 
 #Checks: '-*,cppcoreguidelines-prefer-member-initializer'
-#Checks: '-*,modernize-use-default-member-init,modernize-use-using,modernize-use-nullptr,modernize-make-unique,modernize-make-shared,modernize-use-emplace,modernize-use-override'
+Checks: '-*,modernize-use-default-member-init,modernize-use-using,modernize-use-nullptr,modernize-make-unique,modernize-make-shared,modernize-use-emplace,modernize-use-override'
 #Checks: '-*,cppcoreguidelines-init-variables'
 
 #Checks: '-*,readability-redundant-member-init'
-Checks: '-*,readability-identifier-naming'
+#Checks: '-*,readability-identifier-naming'
 
 CheckOptions:
 # - { key: readability-identifier-naming.NamespaceCase,       value: CamelCase }

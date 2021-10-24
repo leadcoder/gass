@@ -29,8 +29,8 @@ namespace GASS
 {
 	class OSGGraphicsSceneManager;
 	class OSGEarthGeoLocationComponent;
-	typedef GASS_SHARED_PTR<OSGEarthGeoLocationComponent>  OSGEarthGeoLocationComponentPtr;
-	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;
+	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 
 	class OSGEarthGeoLocationComponent : public Reflection<OSGEarthGeoLocationComponent,BaseSceneComponent>, public ILocationComponent,  public IOSGNode, public osg::NodeCallback
 	{
@@ -90,14 +90,14 @@ namespace GASS
 		Quaternion m_QRot;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
-		bool m_AttachToParent;
+		bool m_AttachToParent{false};
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		osg::ref_ptr<osgEarth::GeoTransform> m_GeoTransform;
 		IOSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-		int m_NodeMask;
+		int m_NodeMask{0};
 		osg::ref_ptr<osgEarth::MapNode> m_Map;
 	};
 
-	typedef GASS_WEAK_PTR<OSGEarthGeoLocationComponent> OSGEarthGeoLocationComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGEarthGeoLocationComponent> OSGEarthGeoLocationComponentPtr;	
+	using OSGEarthGeoLocationComponentWeakPtr = std::weak_ptr<OSGEarthGeoLocationComponent>;
+	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;	
 }

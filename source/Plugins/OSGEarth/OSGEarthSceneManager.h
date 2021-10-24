@@ -74,8 +74,8 @@ namespace GASS
 		osgEarth::Viewpoint m_OldVP;
 		ICollisionSceneManager* m_CollisionSceneManager;
 	};
-	typedef GASS_SHARED_PTR<OSGEarthSceneManager> OSGEarthSceneManagerPtr;
-	typedef GASS_WEAK_PTR<OSGEarthSceneManager> OSGEarthSceneManagerWeakPtr;
+	using OSGEarthSceneManagerPtr = std::shared_ptr<OSGEarthSceneManager>;
+	using OSGEarthSceneManagerWeakPtr = std::weak_ptr<OSGEarthSceneManager>;
 	
 	
 }

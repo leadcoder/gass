@@ -51,14 +51,14 @@ namespace GASS
 		void _SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG;
+		bool m_PreserveHAG{true};
 
 		GeoLocation m_Location;
-		double m_HeightAboveGround;
-		OSGEarthSceneManager* m_OESM;
-		ILocationComponent* m_LocationComp;
-		bool m_HandleTransformations;
+		double m_HeightAboveGround{0};
+		OSGEarthSceneManager* m_OESM{NULL};
+		ILocationComponent* m_LocationComp{NULL};
+		bool m_HandleTransformations{true};
 	};
-	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentPtr;
+	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
+	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
 }

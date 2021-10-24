@@ -26,13 +26,14 @@
 #include "Core/Math/GASSMath.h"
 #include <angelscript.h>
 
+#include <memory>
+
 namespace GASS
 {
 	OSGEarthGeoLocationComponent::OSGEarthGeoLocationComponent() : m_Pos(0, 0, 0),
 		m_Rot(0, 0, 0),
-		m_Scale(1, 1, 1),
-		m_AttachToParent(false),
-		m_NodeMask(0)
+		m_Scale(1, 1, 1)
+		
 	{
 
 	}
@@ -55,7 +56,7 @@ namespace GASS
 	void OSGEarthGeoLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGEarthGeoLocationComponent>("GeoLocationComponent");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to handle object position, rotation and scale", OF_VISIBLE));
 
 		RegisterGetSet("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
 		RegisterGetSet("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation, PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]");
@@ -128,19 +129,19 @@ namespace GASS
 			m_TransformNode->setName(name);
 		}
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>(shared_from_this());
-		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
+		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
 
 		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
 		RotationRequestPtr rot_msg;
 
 		if (m_Rot != EulerRotation(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion()));
+			rot_msg = std::make_shared<GASS::RotationRequest>(m_Rot.GetQuaternion());
 		else
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
+			rot_msg = std::make_shared<GASS::RotationRequest>(m_QRot);
 
 		GetSceneObject()->PostRequest(pos_msg);
 		GetSceneObject()->PostRequest(rot_msg);
-		GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(m_Scale)));
+		GetSceneObject()->PostRequest(std::make_shared<ScaleRequest>(m_Scale));
 	}
 
 	void OSGEarthGeoLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
@@ -214,7 +215,7 @@ namespace GASS
 		m_Pos = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(value)));
+			GetSceneObject()->PostRequest(std::make_shared<PositionRequest>(value));
 		}
 	}
 
@@ -238,7 +239,7 @@ namespace GASS
 		const Vec3 scale = GetScale();
 		const Quaternion rot = GetWorldRotation();
 
-		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos, rot, scale)));
+		GetSceneObject()->PostEvent(std::make_shared<TransformationChangedEvent>(pos, rot, scale));
 		//send for all child transforms also?
 		auto iter = GetSceneObject()->GetChildren();
 		while (iter.hasMoreElements())
@@ -320,7 +321,7 @@ namespace GASS
 		m_QRot = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(Quaternion(value))));
+			GetSceneObject()->PostRequest(std::make_shared<RotationRequest>(Quaternion(value)));
 		}
 	}
 
@@ -330,7 +331,7 @@ namespace GASS
 		if (m_TransformNode.valid())
 		{
 			
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion())));
+			GetSceneObject()->PostRequest(std::make_shared<GASS::RotationRequest>(m_Rot.GetQuaternion()));
 		}
 	}
 

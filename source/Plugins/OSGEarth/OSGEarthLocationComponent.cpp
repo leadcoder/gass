@@ -21,6 +21,8 @@
 
 #include "OSGEarthCommonIncludes.h"
 #include "OSGEarthLocationComponent.h"
+
+#include <memory>
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGGraphicsSceneManager.h"
@@ -29,10 +31,8 @@
 
 namespace GASS
 {
-	OSGEarthLocationComponent::OSGEarthLocationComponent() :m_Latitude(0),
-		m_Longitude(0),
-		m_DebugNode(NULL),
-		m_Offset(0)
+	OSGEarthLocationComponent::OSGEarthLocationComponent() 
+		
 	{
 
 	}
@@ -45,7 +45,7 @@ namespace GASS
 	void OSGEarthLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<OSGEarthLocationComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to handle object position, rotation", OF_VISIBLE));
 		RegisterGetSet("Latitude", &OSGEarthLocationComponent::GetLatitude, &OSGEarthLocationComponent::SetLatitude, PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("Longitude", &OSGEarthLocationComponent::GetLongitude, &OSGEarthLocationComponent::SetLongitude, PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Offset", &OSGEarthLocationComponent::m_Offset, PF_VISIBLE | PF_EDITABLE,"");
@@ -138,7 +138,7 @@ namespace GASS
 			 double height = 0;
 
 			 //Create geocentric coordinates from lat long, use  Geographic-SRS!
-			 m_MapNode->getTerrain()->getHeight(0L, geoSRS,m_Longitude,m_Latitude, &height, 0L);
+			 m_MapNode->getTerrain()->getHeight(nullptr, geoSRS,m_Longitude,m_Latitude, &height, nullptr);
 			 osgEarth::GeoPoint mapPoint(geoSRS, m_Longitude, m_Latitude, height,osgEarth::ALTMODE_ABSOLUTE);
 
 			 height += m_Offset;
@@ -154,8 +154,8 @@ namespace GASS
 			 
 			 //GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(osg_pos.x(),osg_pos.z(),-osg_pos.y()))));
 			 //GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
-			 GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(OSGConvert::ToGASS(osg_pos))));
-			 GetSceneObject()->PostRequest(BaseRotationRequestPtr(new BaseRotationRequest(OSGConvert::ToGASS(osg_rot))));
+			 GetSceneObject()->PostRequest(std::make_shared<WorldPositionRequest>(OSGConvert::ToGASS(osg_pos)));
+			 GetSceneObject()->PostRequest(std::make_shared<BaseRotationRequest>(OSGConvert::ToGASS(osg_rot)));
 			 if (m_DebugNode)
 				 m_DebugNode->setPosition(mapPoint);
 		}

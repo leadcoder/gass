@@ -34,6 +34,7 @@
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Core/Utils/GASSSystem.h"
+#include <memory>
 #include <osgDB/FileUtils>
 
 namespace GASS
@@ -42,7 +43,7 @@ namespace GASS
 	struct OEMapListenerProxy : public osgEarth::MapCallback
 	{
 		OEMapListenerProxy(OSGEarthMapComponent* map_comp) : m_MapComponent(map_comp) {}
-		void onMapModelChanged(const osgEarth::MapModelChange& change)
+		void onMapModelChanged(const osgEarth::MapModelChange& change) override
 		{
 			m_MapComponent->onMapModelChanged(change);
 		}
@@ -60,7 +61,7 @@ namespace GASS
 		void onTileAdded(
 			const osgEarth::TileKey& key,
 			osg::Node* graph,
-			osgEarth::TerrainCallbackContext& context)
+			osgEarth::TerrainCallbackContext& context) override
 		{
 			m_MapComponent->onTileAdded(key, graph, context);
 		}
@@ -151,19 +152,15 @@ namespace GASS
 			group->GetResourcesByType(res_vec, "MAP");
 			for (size_t j = 0; j < res_vec.size(); j++)
 			{
-				content.push_back(res_vec[j]->Name());
+				content.emplace_back(res_vec[j]->Name());
 			}
 		}
 		return content;
 	}
 
-	OSGEarthMapComponent::OSGEarthMapComponent() : m_Initlized(false),
-		m_Hour(10),
-		m_SkyNode(NULL),
-		m_UseAutoClipPlane(true),
-		m_OESceneManager(nullptr),
-		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this)),
-		m_TerrainChangedLastFrame(false)
+	OSGEarthMapComponent::OSGEarthMapComponent() : 
+		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this))
+		
 	{
 
 	}
@@ -176,7 +173,7 @@ namespace GASS
 	void OSGEarthMapComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGEarthMapComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to OSGEarth map", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to OSGEarth map", OF_VISIBLE));
 		auto earth_file_prop = RegisterGetSet("EarthFile", &OSGEarthMapComponent::GetEarthFile, &OSGEarthMapComponent::SetEarthFile, PF_VISIBLE, "OSGEarth map file");
 		earth_file_prop->SetOptionsFunction(&GetAllEarthFiles);
 		auto vp_prop = RegisterGetSet("Viewpoint", &OSGEarthMapComponent::GetViewpointName, &OSGEarthMapComponent::SetViewpointByName, PF_VISIBLE | PF_EDITABLE, "Set Viewpoint");
@@ -266,7 +263,7 @@ namespace GASS
 #endif
 			m_AutoClipCB.release();
 
-			m_OESceneManager->SetMapNode(NULL);
+			m_OESceneManager->SetMapNode(nullptr);
 		}
 	}
 
@@ -408,7 +405,7 @@ namespace GASS
 			{
 				for (osgEarth::ConfigSet::const_iterator i = children.begin(); i != children.end(); ++i)
 				{
-					m_Viewpoints.push_back(osgEarth::Viewpoint(*i));
+					m_Viewpoints.emplace_back(*i);
 				}
 			}
 		}
@@ -484,7 +481,7 @@ namespace GASS
 #endif
 		_UpdateMapLayers();
 
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 
 		//if (m_UseOcean)
