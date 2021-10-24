@@ -33,22 +33,22 @@ THE SOFTWARE.
 namespace GASS {
 
     Exception::Exception(int num, const std::string& desc, const std::string& src) :
-        line( 0 ),
-        number( num ),
-        description( desc ),
-        source( src )
+        m_Line( 0 ),
+        m_Number( num ),
+        m_Description( desc ),
+        m_Source( src )
     {
         
     }
 
     Exception::Exception(int num, const std::string& desc, const std::string& src, 
 		const char* typ, const char* fil, long lin) :
-        line( lin ),
-        number( num ),
-		typeName(typ),
-        description( desc ),
-        source( src ),
-        file( fil )
+        m_Line( lin ),
+        m_Number( num ),
+		m_TypeName(typ),
+        m_Description( desc ),
+        m_Source( src ),
+        m_File( fil )
     {
         // Log this error, mask it from debug though since it may be caught and ignored
         /*if(LogManager::getSingletonPtr())
@@ -62,49 +62,49 @@ namespace GASS {
     }
 
     Exception::Exception(const Exception& rhs)
-        : line( rhs.line ), 
-		number( rhs.number ), 
-		typeName( rhs.typeName ), 
-		description( rhs.description ), 
-		source( rhs.source ), 
-		file( rhs.file )
+        : m_Line( rhs.m_Line ), 
+		m_Number( rhs.m_Number ), 
+		m_TypeName( rhs.m_TypeName ), 
+		m_Description( rhs.m_Description ), 
+		m_Source( rhs.m_Source ), 
+		m_File( rhs.m_File )
     {
     }
 
     void Exception::operator = ( const Exception& rhs )
     {
-        description = rhs.description;
-        number = rhs.number;
-        source = rhs.source;
-        file = rhs.file;
-        line = rhs.line;
-		typeName = rhs.typeName;
+        m_Description = rhs.m_Description;
+        m_Number = rhs.m_Number;
+        m_Source = rhs.m_Source;
+        m_File = rhs.m_File;
+        m_Line = rhs.m_Line;
+		m_TypeName = rhs.m_TypeName;
     }
 
     const std::string& Exception::GetFullDescription() const
     {
-		if (fullDesc.empty())
+		if (m_FullDesc.empty())
 		{
 			std::stringstream desc;
 			
-			desc <<  "GASS EXCEPTION(" << number << ":" << typeName << "): "
-				<< description 
-				<< " in " << source;
+			desc <<  "GASS EXCEPTION(" << m_Number << ":" << m_TypeName << "): "
+				<< m_Description 
+				<< " in " << m_Source;
 
-			if( line > 0 )
+			if( m_Line > 0 )
 			{
-				desc << " at " << file << " (line " << line << ")";
+				desc << " at " << m_File << " (line " << m_Line << ")";
 			}
 
-			fullDesc = desc.str();
+			m_FullDesc = desc.str();
 		}
 
-		return fullDesc;
+		return m_FullDesc;
     }
 
     int Exception::GetNumber() const throw()
     {
-        return number;
+        return m_Number;
     }
 
 }

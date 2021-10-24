@@ -55,36 +55,36 @@ namespace GASS
 	{
 
 	protected:
-		unsigned char *buffer;
-		bool bHasOverflowed;
-		unsigned long length;
-		unsigned long bytesUsed;
+		unsigned char *m_Buffer;
+		bool m_BHasOverflowed;
+		unsigned long m_Length;
+		unsigned long m_BytesUsed;
 	public:
 		SerialSaver()
 		{
-			buffer=nullptr; length=0; bytesUsed=0; bHasOverflowed=false;
+			m_Buffer=nullptr; m_Length=0; m_BytesUsed=0; m_BHasOverflowed=false;
 		}
 
 		SerialSaver(unsigned char *buf, unsigned long size)
 		{
-			buffer=buf; length=size; bytesUsed=0; bHasOverflowed=false;
+			m_Buffer=buf; m_Length=size; m_BytesUsed=0; m_BHasOverflowed=false;
 		}
 
 		template <class T>
 		void IO(const T &value)
 		{
-			if(buffer)
+			if(m_Buffer)
 			{
-				if(bHasOverflowed)return; //stop writing when overflowed
+				if(m_BHasOverflowed)return; //stop writing when overflowed
 				int type_size = sizeof(T);
-				if(bytesUsed+type_size > length){bHasOverflowed=true; return; }
-				*(T*) buffer = value;
-				buffer+=type_size; bytesUsed+=type_size;
+				if(m_BytesUsed+type_size > m_Length){m_BHasOverflowed=true; return; }
+				*(T*) m_Buffer = value;
+				m_Buffer+=type_size; m_BytesUsed+=type_size;
 			}
 			else //get size
 			{
 				const int type_size = sizeof(T);
-				length+=type_size;
+				m_Length+=type_size;
 			}
 		}
 
@@ -93,9 +93,9 @@ namespace GASS
 
 		bool Loading() override{return false;}
 
-		bool HasOverflowed() const { return bHasOverflowed; }
-		long GetFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
-		unsigned long GetLength() const { return length; }
+		bool HasOverflowed() const { return m_BHasOverflowed; }
+		long GetFlow() const { return m_Length-m_BytesUsed; } //should be equal to 0 when we're done
+		unsigned long GetLength() const { return m_Length; }
 	};
 
     //Use specialized template to catch std::string
@@ -115,35 +115,35 @@ namespace GASS
 	{
 
 	protected:
-		unsigned char *buffer;
-		bool bHasOverflowed;
-		unsigned long length;
-		unsigned long bytesUsed;
+		unsigned char *m_Buffer;
+		bool m_BHasOverflowed;
+		unsigned long m_Length;
+		unsigned long m_BytesUsed;
 	public:
 
 
 		SerialLoader(unsigned char *buf, unsigned long size)
 		{
-			buffer=buf; length=size; bytesUsed=0; bHasOverflowed=false;
+			m_Buffer=buf; m_Length=size; m_BytesUsed=0; m_BHasOverflowed=false;
 		}
 
 
 		template <class T>
 		void IO(T &value)
 		{
-			if(bHasOverflowed)return; //stop writing when overflowed
+			if(m_BHasOverflowed)return; //stop writing when overflowed
 			int type_size = sizeof(T);
-			if(bytesUsed+type_size > length){bHasOverflowed=true; return; }
-			value = *(T*) buffer;
-			buffer+=type_size; bytesUsed+=type_size;
+			if(m_BytesUsed+type_size > m_Length){m_BHasOverflowed=true; return; }
+			value = *(T*) m_Buffer;
+			m_Buffer+=type_size; m_BytesUsed+=type_size;
 		}
 
 
 
 		bool Loading() override{return true;}
 
-		bool HasOverflowed() const { return bHasOverflowed; }
-		long GetFlow() const { return length-bytesUsed; } //should be equal to 0 when we're done
+		bool HasOverflowed() const { return m_BHasOverflowed; }
+		long GetFlow() const { return m_Length-m_BytesUsed; } //should be equal to 0 when we're done
 
 	};
 

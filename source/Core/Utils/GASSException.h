@@ -85,13 +85,13 @@ namespace GASS {
 	class GASSCoreExport Exception : public std::exception
     {
     protected:
-        long line;
-        int number;
-		std::string typeName;
-        std::string description;
-        std::string source;
-        std::string file;
-		mutable std::string fullDesc;
+        long m_Line;
+        int m_Number;
+		std::string m_TypeName;
+        std::string m_Description;
+        std::string m_Source;
+        std::string m_File;
+		mutable std::string m_FullDesc;
     public:
         /** Static definitions of error codes.
             @todo
@@ -145,21 +145,21 @@ namespace GASS {
 
         /** Gets the source function.
         */
-        virtual const std::string &GetSource() const { return source; }
+        virtual const std::string &GetSource() const { return m_Source; }
 
         /** Gets source file name.
         */
-        virtual const std::string &GetFile() const { return file; }
+        virtual const std::string &GetFile() const { return m_File; }
 
         /** Gets line number.
         */
-        virtual long GetLine() const { return line; }
+        virtual long GetLine() const { return m_Line; }
 
 		/** Returns a string with only the 'description' field of this exception. Use 
 			getFullDescriptionto get a full description of the error including line number,
 			error number and what function threw the exception.
         */
-		virtual const std::string &GetDescription() const { return description; }
+		virtual const std::string &GetDescription() const { return m_Description; }
 
 		/// Override std::exception::what
 		const char* what() const throw() override { return GetFullDescription().c_str(); }

@@ -4,7 +4,7 @@
 namespace GASS
 {
 	// define log level strings here
-	const std::string LogLevelStrings[] = { "DEBUG", "INFO", "WARNING", "ERROR" };
+	const std::string LOG_LEVEL_STRINGS[] = { "DEBUG", "INFO", "WARNING", "ERROR" };
 	
 	bool Logger::m_AppendLogFile = false;
 	bool Logger::m_Initialized = false;
@@ -59,7 +59,7 @@ namespace GASS
 		m_FileStream = new std::ofstream(logPath.c_str(), m_AppendLogFile ? std::ios_base::app : std::ios_base::out);
 
 		// You can customize the initial logging output below
-		(*m_FileStream) << "========== START: " << DateTimeHelper::getDateTime() << " ==========" << std::endl << std::endl;
+		(*m_FileStream) << "========== START: " << DateTimeHelper::GetDateTime() << " ==========" << std::endl << std::endl;
 
 		// initialized and ready to write to log file
 		m_Initialized = true;
@@ -86,7 +86,7 @@ namespace GASS
 		if (m_FileStream != nullptr)
 		{
 			// You can customize the final logging output below
-			(*m_FileStream) << std::endl << "========== END: " << DateTimeHelper::getDateTime() << " ==========" << std::endl << std::endl;
+			(*m_FileStream) << std::endl << "========== END: " << DateTimeHelper::GetDateTime() << " ==========" << std::endl << std::endl;
 
 			// close file log stream
 			m_FileStream->close();
@@ -130,17 +130,17 @@ namespace GASS
 
 		// You can customize below to control logging output formatting
 		// The default is "[time_elapsed] (log_level) message"
-		m_OutputStream << "[" << DateTimeHelper::getTime() << "] "
-			<< "(" << LogLevelStrings[level] << ") ";
+		m_OutputStream << "[" << DateTimeHelper::GetTime() << "] "
+			<< "(" << LOG_LEVEL_STRINGS[level] << ") ";
 		return m_OutputStream;
 	}
 
-	double DateTimeHelper::getTimeElapsed()
+	double DateTimeHelper::GetTimeElapsed()
 	{
 		return (double)clock() / CLOCKS_PER_SEC;
 	}
 
-	std::string DateTimeHelper::getDateTime()
+	std::string DateTimeHelper::GetDateTime()
 	{
 		const time_t t = time(nullptr);   // get time now
 		const struct tm * now = localtime(&t);
@@ -154,7 +154,7 @@ namespace GASS
 		return ss.str();
 	}
 
-	std::string DateTimeHelper::getTime()
+	std::string DateTimeHelper::GetTime()
 	{
 		const time_t t = time(nullptr);   // get time now
 		const struct tm * now = localtime(&t);
