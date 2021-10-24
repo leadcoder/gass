@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/Base/Components/TopCamControlComponent.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
 #include "Core/Math/GASSMath.h"
@@ -35,20 +37,12 @@
 
 namespace GASS
 {
-	TopCamControlComponent::TopCamControlComponent() : m_ZoomSpeed(5),
-		m_MaxWindowSize(520),
-		m_MinWindowSize(10),
+	TopCamControlComponent::TopCamControlComponent() : 
 		m_Pos(0,0,0),
 		m_Rot(0,0,0),
-		m_EnablePanInput(false),
-		m_ScrollBoostInput(0),
-		m_ZoomInput(0),
-		m_ScrollUpInput(0),
-		m_ScrollDownInput(0),
-		m_Active(false),
-		m_CurrentWindowSize(45),
-		m_ControlSettingName("FreeCameraInputSettings"),
-		m_FixedHeight(0)
+		
+		m_ControlSettingName("FreeCameraInputSettings")
+		
 	{
 
 	}
@@ -61,7 +55,7 @@ namespace GASS
 	void TopCamControlComponent::RegisterReflection()                         // static
 	{
 		ComponentFactory::Get().Register<TopCamControlComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("TopCamControlComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("TopCamControlComponent", OF_VISIBLE));
 		RegisterGetSet("MaxWindowSize", &GASS::TopCamControlComponent::GetMaxWindowSize, &GASS::TopCamControlComponent::SetMaxWindowSize);
 		RegisterGetSet("MinWindowSize", &GASS::TopCamControlComponent::GetMinWindowSize, &GASS::TopCamControlComponent::SetMinWindowSize);
 		RegisterGetSet("FixedHeight", &GASS::TopCamControlComponent::GetFixedHeight, &GASS::TopCamControlComponent::SetFixedHeight);
@@ -218,9 +212,9 @@ namespace GASS
 		if(m_CurrentWindowSize > m_MaxWindowSize) m_CurrentWindowSize = m_MaxWindowSize;
 
 		int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(m_Pos,from_id)));
+		GetSceneObject()->PostRequest(std::make_shared<PositionRequest>(m_Pos,from_id));
 
-		GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(Quaternion::CreateFromEulerYXZ(m_Rot),from_id)));
+		GetSceneObject()->PostRequest(std::make_shared<RotationRequest>(Quaternion::CreateFromEulerYXZ(m_Rot),from_id));
 
 		CameraParameterRequestPtr cam_msg(new CameraParameterRequest(CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE,m_CurrentWindowSize,0,from_id));
 		GetSceneObject()->PostRequest(cam_msg);

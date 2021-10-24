@@ -63,10 +63,10 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		float m_CustomDitchTexturePercent;
-		bool m_CAP;
-		bool m_FadeStart;
-		bool m_FadeEnd;
+		float m_CustomDitchTexturePercent{0};
+		bool m_CAP{false};
+		bool m_FadeStart{false};
+		bool m_FadeEnd{false};
 		
 		void SetFlattenTerrain(bool value);
 		bool GetFlattenTerrain() const;
@@ -109,22 +109,22 @@ namespace GASS
 		void UpdateRoadMesh();
 		void OnUpdate(WaypointListUpdatedMessagePtr message);
 
-		bool m_Initialized;
-		bool m_UseSkirts;
-		bool m_ClampToTerrain;
-		float m_TerrainPaintIntensity;
-		float m_TerrainPaintWidth;
-		float m_TerrainFlattenWidth;
-		float m_RoadWidth;
-		float m_RoadOffset;
-		float m_DitchWidth;
+		bool m_Initialized{false};
+		bool m_UseSkirts{false};
+		bool m_ClampToTerrain{true};
+		float m_TerrainPaintIntensity{0.01f};
+		float m_TerrainPaintWidth{20};
+		float m_TerrainFlattenWidth{30};
+		float m_RoadWidth{10};
+		float m_RoadOffset{0.3f};
+		float m_DitchWidth{1};
 		std::string m_Material;
 		Vec2 m_TileScale;
 		TerrainLayerBinder m_TerrainPaintLayer;
 	};
 
-	typedef GASS_SHARED_PTR<RoadComponent> RoadComponentPtr;
-	typedef GASS_WEAK_PTR<RoadComponent> RoadComponentWeakPtr;
+	using RoadComponentPtr = std::shared_ptr<RoadComponent>;
+	using RoadComponentWeakPtr = std::weak_ptr<RoadComponent>;
 
 }
 

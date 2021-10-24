@@ -69,11 +69,11 @@ namespace GASS
 		void SetDebug(bool value);
 		bool GetDebug() const;
 	private:
-		HeightField* m_HM;
+		HeightField* m_HM{nullptr};
 		AABoxd m_Extent;
-		double m_SampleStep;
-		bool m_AutoBBoxGeneration;
-		bool m_Debug;
+		double m_SampleStep{1.0};
+		bool m_AutoBBoxGeneration{false};
+		bool m_Debug{false};
 	};
 }
 #endif

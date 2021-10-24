@@ -49,8 +49,8 @@ namespace GASS
 		void SetColor(const ColorRGBA  &value);
 		ColorRGBA GetColor() const {return m_Color;}
 	private:
-		bool m_Wireframe;
-		Float m_Radius;
+		bool m_Wireframe{true};
+		Float m_Radius{1};
 		ColorRGBA m_Color;
 	};
 }

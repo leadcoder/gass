@@ -40,7 +40,7 @@ namespace GASS
 		IInputSystem* GetInputSystem() const {return m_Input;}
 	
 		//public for fast acess
-		typedef std::map<std::string,Controller*> ControllerMap;
+		using ControllerMap = std::map<std::string, Controller *>;
 		std::map<std::string,int> m_NameToIndex;
 		std::map<int,std::string> m_IndexToName;
 		ControllerMap m_ControllerMap;

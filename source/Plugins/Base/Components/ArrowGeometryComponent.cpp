@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "ArrowGeometryComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSceneObject.h"
@@ -185,7 +187,7 @@ namespace GASS
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 
 		/*MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),

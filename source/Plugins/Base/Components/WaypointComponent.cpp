@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "WaypointComponent.h"
+
+#include <memory>
 #include "WaypointListComponent.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSMath.h"
@@ -35,12 +37,9 @@
 
 namespace GASS
 {
-	WaypointComponent::WaypointComponent() : m_TangentWeight(1.0),
-		m_Initialized(false),
-		m_Tangent(0,0,0),
-		m_CustomTangent(false),
-		m_Active(true),
-		m_TrackTransformation(true)
+	WaypointComponent::WaypointComponent() : 
+		m_Tangent(0,0,0)
+		
 	{
 
 	}
@@ -53,7 +52,7 @@ namespace GASS
 	void WaypointComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<WaypointComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("WaypointComponent", OF_VISIBLE));
 		RegisterGetSet("TangentWeight", &WaypointComponent::GetTangentWeight, &WaypointComponent::SetTangentWeight);
 		RegisterGetSet("CustomTangent", &WaypointComponent::GetCustomTangent, &WaypointComponent::SetCustomTangent, PF_VISIBLE | PF_EDITABLE,"");
 	}
@@ -80,13 +79,13 @@ namespace GASS
 		if(list)
 		{
 			bool show = list->GetShowWaypoints();
-			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
-			GetSceneObject()->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
+			GetSceneObject()->PostRequest(std::make_shared<LocationVisibilityRequest>(show));
+			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 
 			if(tangent)
 			{
-				tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(show)));
-				tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(show)));
+				tangent->PostRequest(std::make_shared<LocationVisibilityRequest>(show));
+				tangent->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 			}
 		}
 	}
@@ -193,6 +192,6 @@ namespace GASS
 
 		pos = t_pos;
 		sub_mesh_data->PositionVector.push_back(pos);
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 	}
 }

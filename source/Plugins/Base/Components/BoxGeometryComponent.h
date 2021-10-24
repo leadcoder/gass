@@ -46,7 +46,7 @@ namespace GASS
 		bool GetLines() const;
 		void SetLines(bool value);
 	private:
-		bool m_Lines;
+		bool m_Lines{true};
 		Vec3 m_Size;
 	};
 }

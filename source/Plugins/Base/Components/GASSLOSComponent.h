@@ -41,19 +41,19 @@ namespace GASS
 		Float GetTransparency() const {return m_Transparency;}
 		
 		
-		bool m_Initialized;
+		bool m_Initialized{false};
 		Vec3 m_Position;
 		Vec3 m_ViewDir;
-		Float m_FOV;
-		Float m_Radius;
-		Float m_SampleDist;
-		Float m_SourceOffset;
-		Float m_TargetOffset;
-		Float m_Transparency;
-		bool m_Debug;
-		bool m_AutUpdateOnTransform;
+		Float m_FOV{40};
+		Float m_Radius{100};
+		Float m_SampleDist{1};
+		Float m_SourceOffset{1.7};
+		Float m_TargetOffset{1.7};
+		Float m_Transparency{0.2};
+		bool m_Debug{false};
+		bool m_AutUpdateOnTransform{true};
 
 	};
-	typedef GASS_SHARED_PTR<LOSComponent> LOSComponentPtr;
+	using LOSComponentPtr = std::shared_ptr<LOSComponent>;
 }
 #endif

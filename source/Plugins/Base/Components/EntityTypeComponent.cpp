@@ -30,13 +30,8 @@
 namespace GASS
 {
 
-	EntityTypeComponent::EntityTypeComponent() : m_EntityKind (0),
-			m_Domain (0),
-			m_CountryCode(0), 
-			m_Category (0),
-			m_Subcategory (0),
-			m_Specific (0),
-			m_Extra(0)
+	EntityTypeComponent::EntityTypeComponent() 
+			
 	{
 
 	}

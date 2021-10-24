@@ -47,7 +47,7 @@ namespace GASS
 		ControlSetting* GetControlSetting(const std::string &name) const;
 		ControlSetting* NewRemoteControlSetting(const std::string &name);
 		void Add(const std::string &name,ControlSetting* cs);
-		typedef std::map<std::string,ControlSetting*> ControlSettingMap;
+		using ControlSettingMap = std::map<std::string, ControlSetting *>;
 		ControlSettingMap m_ControlSettingMap;
 		EnumLookup* m_InputStringTable;
 	};

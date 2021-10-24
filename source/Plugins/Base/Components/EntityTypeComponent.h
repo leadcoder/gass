@@ -34,7 +34,7 @@ namespace GASS
 	*/
 
 	class EntityTypeComponent;
-	typedef GASS_WEAK_PTR<EntityTypeComponent> EntityTypeComponentWeakPtr;
+	using EntityTypeComponentWeakPtr = std::weak_ptr<EntityTypeComponent>;
 	class EntityTypeComponent : public Reflection<EntityTypeComponent,BaseSceneComponent>
 	{
 	public:
@@ -43,16 +43,16 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		
-		int m_EntityKind;
-		int m_Domain;
-		int m_CountryCode;
-		int m_Category;
-		int m_Subcategory;
-		int m_Specific;
-		int m_Extra;
+		int m_EntityKind{0};
+		int m_Domain{0};
+		int m_CountryCode{0};
+		int m_Category{0};
+		int m_Subcategory{0};
+		int m_Specific{0};
+		int m_Extra{0};
 	};
 
-	typedef GASS_SHARED_PTR<EntityTypeComponent> EntityTypeComponentPtr;
+	using EntityTypeComponentPtr = std::shared_ptr<EntityTypeComponent>;
 	
 }
 

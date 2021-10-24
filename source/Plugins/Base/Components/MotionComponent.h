@@ -42,8 +42,8 @@ namespace GASS
 	class ILocationComponent;
 	class ICameraComponent;
 	class Scene;
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
+	using ScenePtr = std::shared_ptr<Scene>;
+	using SceneWeakPtr = std::weak_ptr<Scene>;
 
 	/**
 	Basic motion model that can be used to move a camera. 
@@ -71,20 +71,20 @@ namespace GASS
 		void OnGotoPosition(GotoPositionRequestPtr message);
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void StepPhysics(double delta);
-		bool m_GroundClamp;
-		bool m_Debug;
-		Float m_Acceleration;
-		Float m_MaxTurnSpeed;
+		bool m_GroundClamp{true};
+		bool m_Debug{false};
+		Float m_Acceleration{10};
+		Float m_MaxTurnSpeed{1};
 		void SetMaxSpeed(Float speed){ m_MaxSpeed = speed; }
-		Float m_MaxSpeed;
+		Float m_MaxSpeed{20};
 		//bool m_Active;
-		Float m_ThrottleInput;
-		Float m_SteerInput;
-		Float m_BreakInput;
-		Float m_CurrentSpeed;
+		Float m_ThrottleInput{0};
+		Float m_SteerInput{0};
+		Float m_BreakInput{0};
+		Float m_CurrentSpeed{0};
 		Vec3 m_CurrentPos;
-		bool m_HasHeight;
-		Float m_DesiredHeight;
+		bool m_HasHeight{false};
+		Float m_DesiredHeight{0};
 		Quaternion m_CurrentRot;
 		HeightmapTerrainComponentPtr m_Heightmap;
 		Vec3 m_PlatformSize;

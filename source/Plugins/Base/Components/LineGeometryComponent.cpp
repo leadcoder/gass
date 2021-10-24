@@ -20,6 +20,8 @@
 
 
 #include "LineGeometryComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/Math/GASSTriangle.h"
@@ -45,17 +47,13 @@ namespace GASS
 		return content;
 	}
 
-	LineGeometryComponent::LineGeometryComponent() : m_Initialized(false),
-		m_Offset(0.3f),
+	LineGeometryComponent::LineGeometryComponent() : 
 		m_Material("MuddyRoadWithTracks"),
-		m_Width(10),
-		m_ClampToTerrain(true),
+		
 		m_TileScale(1,1),
-		m_FadeStart(false),
-		m_FadeEnd(false),
-		m_Color(1,1,1,1),
-		m_RotateTexture(false),
-		m_CustomDitchTexturePercent(0)
+		
+		m_Color(1,1,1,1)
+		
 	{
 
 	}
@@ -68,7 +66,7 @@ namespace GASS
 	void LineGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<LineGeometryComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LineGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("LineGeometryComponent", OF_VISIBLE));
 
 		RegisterGetSet("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Color", &GASS::LineGeometryComponent::m_Color,PF_VISIBLE | PF_EDITABLE,"");
@@ -318,6 +316,6 @@ namespace GASS
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 	}
 }

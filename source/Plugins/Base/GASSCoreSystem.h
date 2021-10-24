@@ -37,5 +37,5 @@ namespace GASS
 		std::string GetSystemName() const override {return "CoreSystem";}
 	protected:
 	};
-	typedef GASS_SHARED_PTR<CoreSystem> CoreSystemPtr;
+	using CoreSystemPtr = std::shared_ptr<CoreSystem>;
 }

@@ -20,6 +20,8 @@
 
 
 #include "RoadComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSTriangle.h"
 #include "Core/Math/GASSSplineAnimation.h"
@@ -40,22 +42,13 @@ namespace GASS
 	//template<> std::map<std::string ,TerrainLayer> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_NameToEnumMap;
 	//template<> std::map<TerrainLayer,std::string> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_EnumToNameMap;
 
-	RoadComponent::RoadComponent() : m_Initialized(false),
-		m_TerrainPaintIntensity(0.01f),
-		m_RoadOffset(0.3f),
-		m_TerrainFlattenWidth(30),
-		m_TerrainPaintWidth(20),
+	RoadComponent::RoadComponent() : 
 		m_Material("MuddyRoadWithTracks"),
-		m_RoadWidth(10),
-		m_DitchWidth(1),
-		m_UseSkirts(false),
+		
 		m_TerrainPaintLayer(TL_2),
-		m_ClampToTerrain(true),
-		m_TileScale(1,10),
-		m_CAP(false),
-		m_FadeStart(false),
-		m_FadeEnd(false),
-		m_CustomDitchTexturePercent(0)
+		
+		m_TileScale(1,10)
+		
 	{
 
 	}
@@ -75,7 +68,7 @@ namespace GASS
 	void RoadComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<RoadComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RoadComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RoadComponent", OF_VISIBLE));
 		RegisterGetSet("FlattenTerrain", &GASS::RoadComponent::GetFlattenTerrain, &GASS::RoadComponent::SetFlattenTerrain,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("PaintTerrain", &GASS::RoadComponent::GetPaintTerrain, &GASS::RoadComponent::SetPaintTerrain,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("TerrainFlattenWidth", &GASS::RoadComponent::GetTerrainFlattenWidth, &GASS::RoadComponent::SetTerrainFlattenWidth,PF_VISIBLE | PF_EDITABLE,"");
@@ -141,7 +134,7 @@ namespace GASS
 				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
 				if(bsc->GetSceneObject())
 				{
-					bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+					bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points, 0.0f, m_TerrainPaintWidth, m_TerrainPaintIntensity, m_TerrainPaintLayer.GetValue()));
 				}
 			}
 
@@ -153,7 +146,7 @@ namespace GASS
 			{
 				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
 				if(last_obj != bsc->GetSceneObject())
-					bsc->GetSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,0,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue())));
+					bsc->GetSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,0.0f,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue()));
 				last_obj = bsc->GetSceneObject();
 			}
 		}
@@ -184,7 +177,7 @@ namespace GASS
 			if(terrain)
 			{
 				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
-				bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(RoadRequestPtr(new RoadRequest(points,m_TerrainFlattenWidth,0,0,m_TerrainPaintLayer.GetValue())));
+				bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,m_TerrainFlattenWidth,0.0f,0.0f,m_TerrainPaintLayer.GetValue()));
 			}
 		}
 	}
@@ -539,6 +532,6 @@ namespace GASS
 
 			}
 		} */
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 	}
 }

@@ -30,7 +30,7 @@
 namespace GASS
 {
 	class WaypointComponent;
-	typedef GASS_WEAK_PTR<WaypointComponent> WaypointComponentWeakPtr;
+	using WaypointComponentWeakPtr = std::weak_ptr<WaypointComponent>;
 
 	/**
 		Component that hold waypoint data for WaypointListComponent
@@ -62,14 +62,14 @@ namespace GASS
 		void _NotifyUpdate();
 
 		Vec3 m_Tangent;
-		Float m_TangentWeight;
-		bool m_Initialized;
-		bool m_CustomTangent;
-		bool m_Active;
-		bool m_TrackTransformation;
+		Float m_TangentWeight{1.0};
+		bool m_Initialized{false};
+		bool m_CustomTangent{false};
+		bool m_Active{true};
+		bool m_TrackTransformation{true};
 	};
 
-	typedef GASS_SHARED_PTR<WaypointComponent> WaypointComponentPtr;
+	using WaypointComponentPtr = std::shared_ptr<WaypointComponent>;
 	
 }
 

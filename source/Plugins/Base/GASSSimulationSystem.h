@@ -39,5 +39,5 @@ namespace GASS
 		//void OnScenarioEvent(SimEventPtr message);
 		//bool m_Update;
 	};
-	typedef GASS_SHARED_PTR<SimulationSystem> SimulationSystemPtr;
+	using SimulationSystemPtr = std::shared_ptr<SimulationSystem>;
 }

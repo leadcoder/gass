@@ -36,8 +36,8 @@ namespace GASS
 	class ControlSetting;
 	class ICameraComponent;
 	class Scene;
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
+	using ScenePtr = std::shared_ptr<Scene>;
+	using SceneWeakPtr = std::weak_ptr<Scene>;
 
 	enum MotionMode
 	{
@@ -87,25 +87,25 @@ namespace GASS
 		MotionModeBinder m_Mode;
 		std::string m_ControlSettingName;
 		std::string m_AltControlSettingName;
-		Float m_FovChangeSpeed;
-		Float m_RunSpeed;
-		Float m_TurnSpeed;
-		Float m_WalkSpeed;
+		Float m_FovChangeSpeed{10};
+		Float m_RunSpeed{1000};
+		Float m_TurnSpeed{10};
+		Float m_WalkSpeed{20};
 		Vec3 m_Pos;
 		Vec3  m_EulerRot;
-		bool m_Active;
-		bool m_EnableRotInput;
-		bool m_SpeedBoostInput;
-		bool m_Debug;
-		bool m_TrackTransformation;
-		Float m_ThrottleInput;
-		Float m_StrafeInput;
-		Float m_PitchInput;
-		Float m_HeadingInput;
-		Float m_UpDownInput;
-		Float m_CurrentFov;
-		Float m_MaxFov;
-		Float m_MinFov;
+		bool m_Active{false};
+		bool m_EnableRotInput{false};
+		bool m_SpeedBoostInput{false};
+		bool m_Debug{false};
+		bool m_TrackTransformation{true};
+		Float m_ThrottleInput{0};
+		Float m_StrafeInput{0};
+		Float m_PitchInput{0};
+		Float m_HeadingInput{0};
+		Float m_UpDownInput{0};
+		Float m_CurrentFov{45};
+		Float m_MaxFov{120};
+		Float m_MinFov{10};
 		ILocationComponent* m_Location;
 	};
 }

@@ -67,18 +67,18 @@ namespace GASS
 
 		SceneObjectPtr _GetConnectionLines() const {return m_ConnectionLines.lock();}
 
-		float m_Radius;
-		int m_SplineSteps;
-		bool m_EnableSpline;
-		bool m_Initialized;
-		bool m_AutoUpdateTangents;
-		bool m_ShowWaypoints;
+		float m_Radius{0};
+		int m_SplineSteps{10};
+		bool m_EnableSpline{false};
+		bool m_Initialized{false};
+		bool m_AutoUpdateTangents{true};
+		bool m_ShowWaypoints{true};
 		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
 		SceneObjectWeakPtr m_ConnectionLines;
-		bool m_ShowPathLine;
-		bool m_Closed;
-		bool m_AutoRotateWaypoints;
+		bool m_ShowPathLine{false};
+		bool m_Closed{false};
+		bool m_AutoRotateWaypoints{false};
 	};
 }
 

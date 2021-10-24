@@ -68,19 +68,19 @@ namespace GASS
 		void UpdateTopCam(double delta);
 		
 		std::string m_ControlSettingName;
-		float m_ZoomSpeed;
-		float m_FixedHeight;
+		float m_ZoomSpeed{5};
+		float m_FixedHeight{0};
 		Vec3 m_Pos;
 		Vec3 m_Rot;
-		bool m_Active;
-		bool m_EnablePanInput;
-		float m_ScrollBoostInput;
-		float m_ScrollUpInput;
-		float m_ScrollDownInput;
-		float m_ZoomInput;
-		float m_CurrentWindowSize;
-		float m_MaxWindowSize;
-		float m_MinWindowSize;
+		bool m_Active{false};
+		bool m_EnablePanInput{false};
+		float m_ScrollBoostInput{0};
+		float m_ScrollUpInput{0};
+		float m_ScrollDownInput{0};
+		float m_ZoomInput{0};
+		float m_CurrentWindowSize{45};
+		float m_MaxWindowSize{520};
+		float m_MinWindowSize{10};
 	};
 }
 

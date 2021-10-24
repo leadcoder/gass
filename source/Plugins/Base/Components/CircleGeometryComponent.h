@@ -43,11 +43,11 @@ namespace GASS
 		Float GetRadius() const;
 	protected:
 		Vec3 m_Color;
-		bool m_Dashed;
+		bool m_Dashed{false};
 		void SetRadius(Float value);
 		void UpdateMesh();
 	private:
-		Float m_Radius;
+		Float m_Radius{1};
 	};
 }
 #endif

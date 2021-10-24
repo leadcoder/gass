@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "HeightmapComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"
@@ -33,11 +35,9 @@
 
 namespace GASS
 {
-	HeightmapComponent::HeightmapComponent(void) : m_HM(nullptr),
-		m_Extent({0, 0, 0}, { 200, 200, 200 }),
-		m_SampleStep(1.0),
-		m_AutoBBoxGeneration(false),
-		m_Debug(false)
+	HeightmapComponent::HeightmapComponent(void) : 
+		m_Extent({0, 0, 0}, { 200, 200, 200 })
+		
 	{
 
 	}
@@ -50,7 +50,7 @@ namespace GASS
 	void HeightmapComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<HeightmapComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("HeightmapComponent", OF_VISIBLE));
 
 		RegisterGetSet("Extent", &GASS::HeightmapComponent::GetExtent, &GASS::HeightmapComponent::SetExtent, PF_VISIBLE | PF_EDITABLE,"Relative heightfield extent: <min-x min-y min-z> <max-x max-y max-z> [m]");
 		RegisterMember("SampleStep", &GASS::HeightmapComponent::m_SampleStep, PF_VISIBLE | PF_EDITABLE,"[m]");
@@ -68,7 +68,7 @@ namespace GASS
 			m_HM = new HeightField();
 			m_HM->Load(full_path.GetFullPath());
 			SetExtent(m_HM->GetBoundingBox());
-			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace GASS
 		}
 
 		m_HM->Save(_GetFilePath().GetFullPath());
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	Float HeightmapComponent::GetHeightAtSample(int x, int z) const
@@ -220,7 +220,7 @@ namespace GASS
 		return false;
 	}
 
-	void HeightmapComponent::SetUpdateExtentFromGeometry(bool value)
+	void HeightmapComponent::SetUpdateExtentFromGeometry(bool /*value*/)
 	{
 		if (GetSceneObject())
 		{

@@ -47,7 +47,7 @@ namespace GASS
 
 		Vec2 m_Size;
 		std::string  m_Texture;
-		float m_Transparency;
+		float m_Transparency{1};
 	private:
 	};
 }

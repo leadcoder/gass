@@ -40,12 +40,12 @@ namespace GASS
 		void OnInitialize() override;
 	protected:
 		void OnChangeName(SceneObjectNameChangedEventPtr event);
-		bool m_ShowNodeName;
+		bool m_ShowNodeName{false};
 		bool GetShowNodeName() const;
 		void SetShowNodeName(bool value);
 	private:
 	};
 
-	typedef GASS_SHARED_PTR<DebugComponent> DebugComponentPtr;
+	using DebugComponentPtr = std::shared_ptr<DebugComponent>;
 }
 #endif

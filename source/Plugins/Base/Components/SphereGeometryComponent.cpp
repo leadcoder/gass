@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "SphereGeometryComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSSceneObject.h"
@@ -29,8 +31,7 @@
 
 namespace GASS
 {
-	SphereGeometryComponent::SphereGeometryComponent(void) : m_Radius(1), 
-		m_Wireframe(true),
+	SphereGeometryComponent::SphereGeometryComponent(void) : 
 		m_Color(0,0,1,1)
 	{
 
@@ -44,7 +45,7 @@ namespace GASS
 	void SphereGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<SphereGeometryComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("SphereGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("SphereGeometryComponent", OF_VISIBLE));
 		RegisterGetSet("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
 		RegisterMember("Wireframe", &GASS::SphereGeometryComponent::m_Wireframe);
 		RegisterGetSet("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
@@ -89,7 +90,7 @@ namespace GASS
 			sub_mesh_data = GraphicsSubMesh::GenerateSolidEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 	}
 	
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const

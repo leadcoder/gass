@@ -34,23 +34,17 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "WaypointComponent.h"
+#include <memory>
 #include <sstream>
 #include <fstream>
 
 
 namespace GASS
 {
-	WaypointListComponent::WaypointListComponent() : m_Radius(0),
-		m_EnableSpline(false),
-		m_Initialized(false),
-		m_AutoUpdateTangents(true),
-		m_SplineSteps(10),
-		m_ShowWaypoints(true),
-		m_ShowPathLine(false),
+	WaypointListComponent::WaypointListComponent() : 
 		m_LineColor(0,0,1,1),
-		m_WaypointTemplate("Waypoint"),
-		m_Closed(false),
-		m_AutoRotateWaypoints(false)
+		m_WaypointTemplate("Waypoint")
+		
 	{
 
 	}
@@ -64,9 +58,9 @@ namespace GASS
 	{
 
 		std::vector<std::string> ext;
-		ext.push_back("txt");
+		ext.emplace_back("txt");
 		ComponentFactory::Get().Register<WaypointListComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointListComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("WaypointListComponent", OF_VISIBLE));
 		RegisterGetSet("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("EnableSpline", &WaypointListComponent::GetEnableSpline, &WaypointListComponent::SetEnableSpline,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("AutoUpdateTangents", &WaypointListComponent::GetAutoUpdateTangents, &WaypointListComponent::SetAutoUpdateTangents,PF_VISIBLE | PF_EDITABLE,"");
@@ -223,9 +217,9 @@ namespace GASS
 				else //remove this*/
 				{
 
-					GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+					GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
 					//update material
-					GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
+					GetSceneObject()->PostRequest(std::make_shared<ReplaceMaterialRequest>(MAT_NAME));
 				}
 			}
 		}
@@ -236,7 +230,7 @@ namespace GASS
 		{
 			wps[i] += world_pos;
 		}
-		GetSceneObject()->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wps)));
+		GetSceneObject()->PostEvent(std::make_shared<WaypointListUpdatedMessage>(wps));
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints(bool relative_position) const

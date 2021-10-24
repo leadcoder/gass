@@ -1,4 +1,6 @@
 #include "DistanceScaleComponent.h"
+
+#include <memory>
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -16,11 +18,8 @@
 
 namespace GASS
 {
-	DistanceScaleComponent::DistanceScaleComponent() : m_MaxDistance(30000.0f), 
-		m_MinDistance(0.1f),
-		m_FOV(45.0f),
-		m_ScaleLocation(false),
-		m_LastDist(0)
+	DistanceScaleComponent::DistanceScaleComponent() 
+		
 	{
 
 	}
@@ -102,11 +101,11 @@ namespace GASS
 				Vec3 scale(scale_factor * value,scale_factor* value,scale_factor* value);
 
 				if(m_ScaleLocation)
-					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
+					GetSceneObject()->PostRequest(std::make_shared<ScaleRequest>(scale));
 				else
 				{
-					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(Vec3(1,1,1))));
-					GetSceneObject()->PostRequest(GeometryScaleRequestPtr(new GeometryScaleRequest(scale)));
+					GetSceneObject()->PostRequest(std::make_shared<ScaleRequest>(Vec3(1,1,1)));
+					GetSceneObject()->PostRequest(std::make_shared<GeometryScaleRequest>(scale));
 				}
 
 			}
@@ -164,9 +163,9 @@ namespace GASS
 				scale_factor = scale_factor*tan(Math::Deg2Rad(fov));
 				Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
 				if(m_ScaleLocation)
-					GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(scale)));
+					GetSceneObject()->PostRequest(std::make_shared<ScaleRequest>(scale));
 				else
-					GetSceneObject()->PostRequest(GeometryScaleRequestPtr(new GeometryScaleRequest(scale)));
+					GetSceneObject()->PostRequest(std::make_shared<GeometryScaleRequest>(scale));
 			}
 		}
 	}

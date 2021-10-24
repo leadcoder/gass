@@ -20,6 +20,8 @@
 
 
 #include "DebugComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSceneObject.h"
@@ -27,7 +29,7 @@
 
 namespace GASS
 {
-	DebugComponent::DebugComponent(void) : m_ShowNodeName(false)
+	DebugComponent::DebugComponent(void)  
 	{
 
 	}
@@ -50,7 +52,7 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
 		}
 	}
 
@@ -67,12 +69,12 @@ namespace GASS
 			if(m_ShowNodeName)
 			{
 				std::string name = GetSceneObject()->GetName();
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+				GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
 			}
 			else
 			{
 				std::string name = "";
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+				GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
 			}
 		}
 	}
@@ -82,7 +84,7 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = event->GetName();
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(event->GetName())));
+			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(event->GetName()));
 		}
 	}
 }
