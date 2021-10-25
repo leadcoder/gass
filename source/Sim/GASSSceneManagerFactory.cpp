@@ -27,18 +27,18 @@ namespace GASS
 
 	}
 
-	SceneManagerFactory* SceneManagerFactory::m_Instance = 0;
+	SceneManagerFactory* SceneManagerFactory::m_Instance = nullptr;
 	SceneManagerFactory* SceneManagerFactory::GetPtr(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new SceneManagerFactory();
 		return m_Instance;
 	}
 	SceneManagerFactory& SceneManagerFactory::Get(void)
 	{
 		//assert(m_Instance);
-		if(m_Instance == NULL)
+		if(m_Instance == nullptr)
 			m_Instance = new SceneManagerFactory();
 		return *m_Instance;
 	}

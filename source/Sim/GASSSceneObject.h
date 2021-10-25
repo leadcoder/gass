@@ -451,6 +451,6 @@ namespace GASS
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
 		SceneObjectGUID m_GUID;
-		bool m_Initialized;
+		bool m_Initialized{false};
 	};
 }

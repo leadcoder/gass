@@ -32,11 +32,11 @@
 namespace GASS
 {
 	
-	typedef std::string SystemType;
+	using SystemType = std::string;
 
 	//forward declare
 	class SimpleProfileData;
-	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
+	using SimpleProfileDataMap = std::map<std::string, SimpleProfileData>;
 
 	GASS_FORWARD_DECL(SimSystem)
 
@@ -150,7 +150,7 @@ namespace GASS
 		void _OnSimulationStepRequest(TimeStepRequestPtr message);
 		size_t _GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
-		typedef std::vector<SimSystemPtr> SystemVector;
+		using SystemVector = std::vector<SimSystemPtr>;
 		SystemVector m_Systems;
 		SystemStepper m_SystemStepper;
 	};

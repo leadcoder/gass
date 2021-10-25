@@ -59,7 +59,7 @@ namespace GASS
 	private:
 		asIScriptModule *m_Module;
 	};
-	typedef GASS_SHARED_PTR<ScriptController> ScriptControllerPtr;
+	using ScriptControllerPtr = std::shared_ptr<ScriptController>;
 
 	/**
 		ScriptManager
@@ -87,7 +87,7 @@ namespace GASS
 		std::vector<asIScriptContext *> m_Contexts;
 
 	};
-	typedef GASS_SHARED_PTR<ScriptManager> ScriptManagerPtr;
+	using ScriptManagerPtr = std::shared_ptr<ScriptManager>;
 
 
 	/**

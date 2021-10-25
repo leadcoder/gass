@@ -36,22 +36,22 @@ namespace GASS
 	GASS_FORWARD_DECL(Component);
 	GASS_FORWARD_DECL(SceneObject);
 	GASS_FORWARD_DECL(SceneObjectTemplateManager);
-	typedef GASS_SHARED_PTR<SceneObjectTemplateManager const> SceneObjectTemplateManagerConstPtr;
-	typedef std::string SceneObjectID;
+	using SceneObjectTemplateManagerConstPtr = std::shared_ptr<const SceneObjectTemplateManager>;
+	using SceneObjectID = std::string;
 	class BaseSceneComponent;
-	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
+	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
+	using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
 
 	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SceneObjectTemplate>, public IXMLSerialize, public ISerialize
 	{
 		friend class SceneObjectTemplateManager;
 	public:
 
-		typedef std::vector<ComponentPtr> ComponentVector;
-		typedef VectorIterator<ComponentVector>  ComponentIterator;
-		typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
-		typedef VectorIterator<SceneObjectTemplateVector> SceneObjectTemplateIterator;
-		typedef ConstVectorIterator<SceneObjectTemplateVector> ConstSceneObjectTemplateIterator;
+		using ComponentVector = std::vector<ComponentPtr>;
+		using ComponentIterator = VectorIterator<ComponentVector>;
+		using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
+		using SceneObjectTemplateIterator = VectorIterator<SceneObjectTemplateVector>;
+		using ConstSceneObjectTemplateIterator = ConstVectorIterator<SceneObjectTemplateVector>;
 
 		SceneObjectTemplate();
 		static	void RegisterReflection();
@@ -196,6 +196,6 @@ namespace GASS
 		SceneObjectTemplateWeakPtr m_Parent;
 	protected:
 		SceneObjectID m_ID;
-		bool m_Instantiable;
+		bool m_Instantiable{false};
 	};
 }

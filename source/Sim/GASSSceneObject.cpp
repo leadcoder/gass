@@ -30,19 +30,20 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Utils/GASSException.h"
 #include <iomanip>
+#include <memory>
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {
-	SceneObject::SceneObject() : m_MessageManager(new MessageManager()),
-		m_Initialized(false)
+	SceneObject::SceneObject() : m_MessageManager(new MessageManager())
+		
 	{
 		m_GUID = GASS_GUID_NULL;
 	}
 
 	void SceneObject::RegisterReflection()
 	{
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Container for all components", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Container for all components", OF_VISIBLE));
 		RegisterGetSet("Name", &GASS::SceneObject::GetName, &GASS::SceneObject::SetName, PF_VISIBLE | PF_EDITABLE, "Object Name");
 		RegisterGetSet("TemplateName", &GASS::SceneObject::GetTemplateName, &GASS::SceneObject::SetTemplateName);
 		RegisterGetSet("Serialize", &GASS::SceneObject::GetSerialize, &GASS::SceneObject::SetSerialize);
@@ -289,7 +290,7 @@ namespace GASS
 
 		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
-		m_MessageManager->PostMessage(PostInitializedEventPtr(new PostInitializedEvent()));
+		m_MessageManager->PostMessage(std::make_shared<PostInitializedEvent>());
 		m_Initialized = true;
 	}
 

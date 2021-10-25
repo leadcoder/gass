@@ -30,7 +30,7 @@
 
 namespace GASS
 {
-	SceneObjectTemplate::SceneObjectTemplate() : m_Instantiable(false)
+	SceneObjectTemplate::SceneObjectTemplate()  
 	{
 		
 	}

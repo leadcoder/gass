@@ -64,6 +64,6 @@ namespace GASS
 		SceneObjectWeakPtr m_Link;
 		SceneObjectWeakPtr m_Owner;
 		SceneObjectID m_LinkObjectID;
-		bool m_Initialized;
+		bool m_Initialized{false};
 	};
 }

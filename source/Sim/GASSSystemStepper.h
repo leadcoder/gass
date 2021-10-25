@@ -187,5 +187,5 @@ namespace GASS
 		SystemGroupStepper m_SimGroup;
 		SystemGroupStepper m_PostSimGroup;
 	};
-	typedef GASS_SHARED_PTR<SystemStepper> SystemStepperPtr;
+	using SystemStepperPtr = std::shared_ptr<SystemStepper>;
 }

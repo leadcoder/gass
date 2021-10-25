@@ -25,7 +25,6 @@
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimEngineConfig.h"
-#include "Core/Utils/GASSSingleton.h"
 #include "Core/Utils/GASSFilePath.h"
 #include "Core/Utils/GASSIterators.h"
 #include "Core/Utils/GASSEnumBinder.h"
@@ -66,12 +65,12 @@ namespace GASS
 		be created by the application after SimEngine has been initialized. 
 	*/
 
-	class GASSExport SimEngine : public Singleton<SimEngine> , StaticMessageListener
+	class GASSExport SimEngine :  StaticMessageListener
 	{
 	public:
-		typedef std::vector<ScenePtr> SceneVector;
-		typedef VectorIterator<SceneVector> SceneIterator;
-		typedef ConstVectorIterator<SceneVector> ConstSceneIterator;
+		using SceneVector = std::vector<ScenePtr>;
+		using SceneIterator = VectorIterator<SceneVector>;
+		using ConstSceneIterator = ConstVectorIterator<SceneVector>;
 	public:
 		SimEngine(const FilePath &log_folder = FilePath("./"));
 		~SimEngine() override;
@@ -204,10 +203,11 @@ namespace GASS
 		SystemStepperPtr m_SystemStepper;
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;
-		double m_CurrentTime;
+		double m_CurrentTime{0};
 		FilePath m_DataPath;
 		FilePath m_ScenePath;
 		FilePath m_LogFolder;
+		static SimEngine* m_Instance;
 	};
 }
 

@@ -23,7 +23,7 @@
 
 namespace GASS
 {
-	SceneObjectLink::SceneObjectLink() : m_Initialized(false),
+	SceneObjectLink::SceneObjectLink() : 
 		m_LinkObjectID(UNKNOWN_LINK_ID)
 	{
 
