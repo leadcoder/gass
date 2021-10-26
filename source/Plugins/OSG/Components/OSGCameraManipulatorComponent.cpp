@@ -77,7 +77,7 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraManipulatorComponent::_SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos)
+	void OSGCameraManipulatorComponent::SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos)
 	{
 		osg::Vec3d eye, center, up;
 		man->getTransformation(eye, center, up);
@@ -86,7 +86,7 @@ namespace GASS
 		man->setTransformation(OSGConvert::ToOSG(pos), center, up);
 	}
 
-	void OSGCameraManipulatorComponent::_SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot)
+	void OSGCameraManipulatorComponent::SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot)
 	{
 		osg::Vec3d eye, center, up;
 		man->getTransformation(eye, center, up);
@@ -106,7 +106,7 @@ namespace GASS
 	{
 		if (m_OrbitMan)
 		{
-			_SetOrbitManPosition(m_OrbitMan, pos);
+			SetOrbitManPosition(m_OrbitMan, pos);
 		}
 	}
 
@@ -114,11 +114,11 @@ namespace GASS
 	{
 		if (m_OrbitMan)
 		{
-			_SetOrbitManRotation(m_OrbitMan, rot);
+			SetOrbitManRotation(m_OrbitMan, rot);
 		}
 	}
 
-	void OSGCameraManipulatorComponent::_ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, GASS::Vec3 &pos, GASS::Quaternion &rot)
+	void OSGCameraManipulatorComponent::ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, GASS::Vec3 &pos, GASS::Quaternion &rot)
 	{
 		osg::Vec3d eye, center, up;
 		//Camera position is eye
@@ -151,7 +151,7 @@ namespace GASS
 		//update LocationComponent with current camera pos and rot
 		GASS::Vec3 pos;
 		GASS::Quaternion rot;
-		_ExtractTransformationFromOrbitManipulator(m_OrbitMan, pos, rot);
+		ExtractTransformationFromOrbitManipulator(m_OrbitMan, pos, rot);
 
 		m_UpdateCameraFromLocation = false;
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);

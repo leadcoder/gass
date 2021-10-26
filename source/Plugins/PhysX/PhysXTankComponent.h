@@ -85,8 +85,8 @@ namespace GASS
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic* m_Actor{NULL};
-		physx::PxVehicleDriveTank* m_Vehicle{NULL};
+		physx::PxRigidDynamic* m_Actor{nullptr};
+		physx::PxVehicleDriveTank* m_Vehicle{nullptr};
 		float m_ThrottleInput{0};
 		float m_SteerInput{0};
 		float m_BreakInput{0};

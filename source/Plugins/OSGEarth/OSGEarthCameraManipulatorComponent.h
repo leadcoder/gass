@@ -43,16 +43,16 @@ namespace GASS
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
 		void SceneManagerTick(double delta_time) override;
 	protected:
-		void _SetPosition(const GASS::Vec3 &pos);
-		void _SetRotation(const GASS::Quaternion &rot);
-		osgEarth::Viewpoint _GetVP() const;
-		void _SetVP(const osgEarth::Viewpoint &vp);
+		void SetPosition(const GASS::Vec3 &pos);
+		void SetRotation(const GASS::Quaternion &rot);
+		osgEarth::Viewpoint GetViewpoint() const;
+		void SetViewpoint(const osgEarth::Viewpoint &vp);
 
 		void OnCameraFlyToObject(CameraFlyToObjectRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;
-		osg::Fog* m_Fog{NULL};
+		osg::Fog* m_Fog{nullptr};
 
 		Vec3 m_CurrentPos;
 		Quaternion m_CurrentRot;

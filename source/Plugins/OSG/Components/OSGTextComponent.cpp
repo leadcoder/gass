@@ -110,7 +110,7 @@ namespace GASS
 		nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
 		nodess->setRenderBinDetails(INT_MAX, "RenderBin");
 		
-		osg::Program* program = new osg::Program;
+		auto* program = new osg::Program;
         nodess->setAttribute(program);
 	}
 

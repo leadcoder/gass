@@ -51,16 +51,16 @@ namespace GASS
 		void OnDelete() override;
 		void SceneManagerTick(double delta) override;
 	private:
-		NavState _DecideNavState(double angle_to_target_dir, double target_dist, double turn_radius) const;
-		double _UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir);
-		double _CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target);
-		void _SendInput(double steer_input, double throttle_input, double brake_input);
+		NavState DecideNavState(double angle_to_target_dir, double target_dist, double turn_radius) const;
+		double UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir);
+		double CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target);
+		void SendInput(double steer_input, double throttle_input, double brake_input);
 
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
-		void _UpdateDrive(double  delta_time);
+		void UpdateDrive(double  delta_time);
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnGotoPosition(GotoPositionRequestPtr message);

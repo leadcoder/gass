@@ -51,8 +51,8 @@ namespace GASS
 		TransformationPackage(int id ) : NetworkPackage(id) ,
 			Position(Vec3(0, 0, 0)),
 			Velocity(Vec3(0, 0, 0)),
-			AngularVelocity(Vec3(0, 0, 0)),
-			TimeStamp(0)
+			AngularVelocity(Vec3(0, 0, 0))
+			
 		{
 
 		}

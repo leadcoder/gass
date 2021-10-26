@@ -94,14 +94,14 @@ namespace GASS
 	{
 		//notify parent
 		m_Active = false;
-		_NotifyUpdate();
+		NotifyUpdate();
 		m_Initialized = false;
 	}
 
 	void WaypointComponent::OnTransformation(TransformationChangedEventPtr event)
 	{
 		if(m_TrackTransformation)
-			_NotifyUpdate();
+			NotifyUpdate();
 	}
 
 	void WaypointComponent::OnTangentTransformation(TransformationChangedEventPtr message)
@@ -109,9 +109,9 @@ namespace GASS
 		//notify parent
 		if(m_TrackTransformation)
 		{
-			_NotifyUpdate();
+			NotifyUpdate();
 		}
-		_UpdateTangentLine();
+		UpdateTangentLine();
 	}
 
 	void WaypointComponent::Rotate(const Quaternion &rot)
@@ -121,7 +121,7 @@ namespace GASS
 		m_TrackTransformation = true;
 	}
 
-	void WaypointComponent::_NotifyUpdate()
+	void WaypointComponent::NotifyUpdate()
 	{
 		if(m_Initialized)
 		{
@@ -139,7 +139,7 @@ namespace GASS
 	void WaypointComponent::SetTangentWeight(Float value)
 	{
 		m_TangentWeight = value;
-		_NotifyUpdate();
+		NotifyUpdate();
 	}
 
 	/*void WaypointComponent::SetTangentLength(Float value)
@@ -170,10 +170,10 @@ namespace GASS
 	{ 
 		m_CustomTangent = value;
 		if(!m_CustomTangent && m_Initialized)
-			_NotifyUpdate();
+			NotifyUpdate();
 	}
 
-	void WaypointComponent::_UpdateTangentLine()
+	void WaypointComponent::UpdateTangentLine()
 	{
 		if(!m_Initialized)
 			return;

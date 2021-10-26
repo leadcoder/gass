@@ -74,15 +74,15 @@ namespace GASS
 
 	private:
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
-		dJointID m_ODEJoint{0};
+		dJointID m_ODEJoint{nullptr};
 
 
 		SceneObjectRef m_Body1;
 		SceneObjectRef m_Body2;
 		bool m_Body1Loaded{0};
 		bool m_Body2Loaded{0};
-		dBodyID m_ODEBody1{0};
-		dBodyID m_ODEBody2{0};
+		dBodyID m_ODEBody1{nullptr};
+		dBodyID m_ODEBody2{nullptr};
 		
 		float m_MaxTorque{0};
 		//float m_SwayForce;

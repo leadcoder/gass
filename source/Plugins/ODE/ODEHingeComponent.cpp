@@ -280,8 +280,8 @@ namespace GASS
 		ODEPhysicsHingeJointEventPtr joint_message;
 		if(m_ODEJoint)
 		{
-			float angle = static_cast<float>(dJointGetHingeAngle(m_ODEJoint));
-			float angle_rate = static_cast<float>(dJointGetHingeAngleRate(m_ODEJoint));
+			auto angle = static_cast<float>(dJointGetHingeAngle(m_ODEJoint));
+			auto angle_rate = static_cast<float>(dJointGetHingeAngleRate(m_ODEJoint));
 			joint_message = std::make_shared<ODEPhysicsHingeJointEvent>(angle,angle_rate);
 			if(joint_message)
 				GetSceneObject()->SendImmediateEvent(joint_message);

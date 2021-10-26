@@ -67,7 +67,7 @@ namespace GASS
 	void PhysXTerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
 	{
 		Reset();
-		_CreateTerrain();
+		CreateTerrain();
 	}
 
 	void PhysXTerrainGeometryComponent::OnTransformationChanged(TransformationChangedEventPtr message)
@@ -114,7 +114,7 @@ namespace GASS
 		return geom;
 	}
 
-	void PhysXTerrainGeometryComponent::_CreateTerrain()
+	void PhysXTerrainGeometryComponent::CreateTerrain()
 	{
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
@@ -133,7 +133,7 @@ namespace GASS
 				return;
 			}
 
-			_Release();
+			Release();
 
 			m_TerrainBounds = terrain->GetBoundingBox();
 			Float size_x = m_TerrainBounds.Max.x - m_TerrainBounds.Min.x;
@@ -142,9 +142,9 @@ namespace GASS
 			Float scale_x = size_x/((Float) samples_x-1);
 			Float scale_z = size_z/((Float) samples_z-1);
 			//physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) system->GetAllocator()->allocate(sizeof(physx::PxHeightFieldSample)*samples_x*samples_z,0,__FILE__, __LINE__);
-			physx::PxHeightFieldSample* samples = (physx::PxHeightFieldSample*) new physx::PxHeightFieldSample[samples_x*samples_z];//(sizeof(physx::PxHeightFieldSample)*(samples_x*samples_z));
+			auto* samples = (physx::PxHeightFieldSample*) new physx::PxHeightFieldSample[samples_x*samples_z];//(sizeof(physx::PxHeightFieldSample)*(samples_x*samples_z));
 
-			const physx::PxReal heightScale = 0.1f;
+			const physx::PxReal height_scale = 0.1f;
 			memset(samples,0, samples_x * samples_z * sizeof(physx::PxHeightFieldSample));
 
 			for(int x = 0; x < samples_x; x++)
@@ -155,25 +155,25 @@ namespace GASS
 					//Float world_z = z * m_SampleWidth + m_TerrainBounds.Min.z;
 					//Float height = m_TerrainGeom->GetHeightAtWorldLocation(world_x,world_z);
 					Float height = m_TerrainGeom->GetHeightAtSample(x,z);
-					samples[z+x*samples_z].height = (physx::PxI16)(height/heightScale);
+					samples[z+x*samples_z].height = (physx::PxI16)(height/height_scale);
 					//samples[x+z*samples_x].setTessFlag();
 					samples[z+x*samples_z].materialIndex0=0;
 					samples[z+x*samples_z].materialIndex1=0;
 				}
 			}
 
-			physx::PxHeightFieldDesc hfDesc;
+			physx::PxHeightFieldDesc hf_desc;
 
-			hfDesc.format             = physx::PxHeightFieldFormat::eS16_TM;
-			hfDesc.nbColumns          = samples_z;
-			hfDesc.nbRows             = samples_x;
-			hfDesc.samples.data       = samples;
-			hfDesc.samples.stride     = sizeof(physx::PxHeightFieldSample);
+			hf_desc.format             = physx::PxHeightFieldFormat::eS16_TM;
+			hf_desc.nbColumns          = samples_z;
+			hf_desc.nbRows             = samples_x;
+			hf_desc.samples.data       = samples;
+			hf_desc.samples.stride     = sizeof(physx::PxHeightFieldSample);
 			//hfDesc.thickness = 0.1;
 			//hfDesc.convexEdgeThreshold = 0;
 			//hfDesc.flags = 0;
 
-			physx::PxHeightField* heightField = system->GetPxCooking()->createHeightField(hfDesc, system->GetPxSDK()->getPhysicsInsertionCallback());// system->GetPxSDK()->createHeightField();
+			physx::PxHeightField* height_field = system->GetPxCooking()->createHeightField(hf_desc, system->GetPxSDK()->getPhysicsInsertionCallback());// system->GetPxSDK()->createHeightField();
 			physx::PxTransform pose = physx::PxTransform(PxIdentity);
 
 			Vec3 position;
@@ -199,25 +199,25 @@ namespace GASS
 
 			m_Actor = system->GetPxSDK()->createRigidStatic(pose);
 
-			physx::PxHeightFieldGeometry hfGeom(heightField, physx::PxMeshGeometryFlags(), static_cast<float>(heightScale), static_cast<float>(scale_x), static_cast<float>(scale_z));
-			m_Shape = PxRigidActorExt::createExclusiveShape(*m_Actor,hfGeom, *system->GetDefaultMaterial());
+			physx::PxHeightFieldGeometry hf_geom(height_field, physx::PxMeshGeometryFlags(), static_cast<float>(height_scale), static_cast<float>(scale_x), static_cast<float>(scale_z));
+			m_Shape = PxRigidActorExt::createExclusiveShape(*m_Actor,hf_geom, *system->GetDefaultMaterial());
 
-			physx::PxFilterData collFilterData;
+			physx::PxFilterData coll_filter_data;
 			GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
-			collFilterData.word0 = GEOMETRY_FLAG_GROUND;
-			collFilterData.word1 = against;
-			m_Shape->setSimulationFilterData(collFilterData);
+			coll_filter_data.word0 = GEOMETRY_FLAG_GROUND;
+			coll_filter_data.word1 = against;
+			m_Shape->setSimulationFilterData(coll_filter_data);
 
-			PxFilterData queryFilterData;
-			VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
-			m_Shape->setQueryFilterData(queryFilterData);
+			PxFilterData query_filter_data;
+			VehicleSetupDrivableShapeQueryFilterData(&query_filter_data);
+			m_Shape->setQueryFilterData(query_filter_data);
 
 			PhysXPhysicsSceneManagerPtr sm = PhysXPhysicsSceneManagerPtr(m_SceneManager);
 			sm->GetPxScene()->addActor(*m_Actor);
 		}
 	}
 
-	void PhysXTerrainGeometryComponent::_Release()
+	void PhysXTerrainGeometryComponent::Release()
 	{
 		PhysXPhysicsSceneManagerPtr sm = PhysXPhysicsSceneManagerPtr(m_SceneManager); 
 		if (sm && m_Actor)
@@ -230,7 +230,7 @@ namespace GASS
 
 	void PhysXTerrainGeometryComponent::OnDelete()
 	{
-		_Release();
+		Release();
 	}
 	
 	

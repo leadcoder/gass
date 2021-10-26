@@ -81,7 +81,7 @@ namespace GASS
 		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
 
 		//helper
-		void _CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
+		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
 		GASS::SceneObjectPtr GetPointerObject();
 
 		std::vector<IMouseTool*> m_Tools;

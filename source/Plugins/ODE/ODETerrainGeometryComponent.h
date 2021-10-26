@@ -74,11 +74,11 @@ namespace GASS
 		//int m_Samples;
 		Float m_SampleHeight{0};
 		AABox m_TerrainBounds;
-		IHeightmapTerrainComponent* m_TerrainGeom{NULL};
+		IHeightmapTerrainComponent* m_TerrainGeom{nullptr};
 		unsigned long m_CollisionCategory{1};
 		unsigned long m_CollisionBits{1};
-		dGeomID m_GeomID{0};
-		dSpaceID m_SpaceID{NULL};
+		dGeomID m_GeomID{nullptr};
+		dSpaceID m_SpaceID{nullptr};
 		std::string m_GeometryTemplate;
 		float m_Friction{1};
 		bool m_Debug{false};

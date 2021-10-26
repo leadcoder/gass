@@ -280,10 +280,10 @@ namespace GASS
 		if(m_ODEJoint)
 		{
 			float s = 1.0f;
-			float suspensionERP = s*m_Strength / (s*m_Strength + m_Damping);
-			float suspensionCFM = 1.0f / (s*m_Strength + m_Damping);
-			dJointSetHinge2Param (m_ODEJoint,dParamSuspensionERP, suspensionERP);
-			dJointSetHinge2Param (m_ODEJoint,dParamSuspensionCFM, suspensionCFM);
+			float suspension_erp = s*m_Strength / (s*m_Strength + m_Damping);
+			float suspension_cfm = 1.0f / (s*m_Strength + m_Damping);
+			dJointSetHinge2Param (m_ODEJoint,dParamSuspensionERP, suspension_erp);
+			dJointSetHinge2Param (m_ODEJoint,dParamSuspensionCFM, suspension_cfm);
 		}
 	}
 
@@ -298,8 +298,8 @@ namespace GASS
 		ODEPhysicsHingeJointEventPtr joint_message;
 		if(m_ODEJoint)
 		{
-			float angle = static_cast<float>(dJointGetHinge2Angle1(m_ODEJoint));
-			float angle_rate = static_cast<float>(dJointGetHinge2Angle1Rate (m_ODEJoint));
+			auto angle = static_cast<float>(dJointGetHinge2Angle1(m_ODEJoint));
+			auto angle_rate = static_cast<float>(dJointGetHinge2Angle1Rate (m_ODEJoint));
 			joint_message = std::make_shared<ODEPhysicsHingeJointEvent>(angle,angle_rate);
 			if(joint_message)
 				GetSceneObject()->SendImmediateEvent(joint_message);
@@ -314,18 +314,18 @@ namespace GASS
 			dBodyID b1 = m_Body1->GetODEBodyComponent();
 			dBodyID b2 = m_Body2->GetODEBodyComponent();
 
-			Vec3 bodyPoint;
-			Vec3 hingePoint;
+			Vec3 body_point;
+			Vec3 hinge_point;
 			Vec3 axis2;
 			Float displacement;
 			dReal temp[3];
 			dJointGetHinge2Anchor2( m_ODEJoint, temp);
-			bodyPoint.Set(temp[0],temp[1],temp[2]);
+			body_point.Set(temp[0],temp[1],temp[2]);
 			dJointGetHinge2Anchor( m_ODEJoint, temp);
-			hingePoint.Set(temp[0],temp[1],temp[2]);
+			hinge_point.Set(temp[0],temp[1],temp[2]);
 			dJointGetHinge2Axis1( m_ODEJoint, temp);
 			axis2.Set(temp[0],temp[1],temp[2]);
-			displacement = Vec3::Dot((hingePoint - bodyPoint) ,axis2);
+			displacement = Vec3::Dot((hinge_point - body_point) ,axis2);
 			Float amt = displacement * m_SwayForce;
 
 
@@ -337,9 +337,9 @@ namespace GASS
 			}
 
 //			GASS::ODECollisionSystemPtr ode_col_sys = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::ODECollisionSystem>();
-			GeometryFlags flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
+			auto flags =  static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 			ScenePtr scene = GetSceneObject()->GetScene();
-			Float height_above_ground = hingePoint.y - CollisionHelper::GetHeightAtPosition(scene, hingePoint, flags, true);
+			Float height_above_ground = hinge_point.y - CollisionHelper::GetHeightAtPosition(scene, hinge_point, flags, true);
 			//Float height_above_ground = ode_col_sys->GetHeight(GetSceneObject()->GetScene(),hingePoint,false);
 			//std::cout << "height" <<  height_above_ground << "\n";
 
@@ -377,37 +377,37 @@ namespace GASS
 		//if(joint->node[1].body)
 		{
 			// Get the current turn angle of the joint
-			dReal rAng=dJointGetHinge2Angle1(m_ODEJoint);
+			dReal r_ang=dJointGetHinge2Angle1(m_ODEJoint);
 
 			// Get the high and low turning stops for the m_ODEJoint
-			dReal rLoStop = dJointGetHinge2Param(m_ODEJoint,dParamLoStop);
-			dReal rHiStop = dJointGetHinge2Param(m_ODEJoint,dParamHiStop);
+			dReal r_lo_stop = dJointGetHinge2Param(m_ODEJoint,dParamLoStop);
+			dReal r_hi_stop = dJointGetHinge2Param(m_ODEJoint,dParamHiStop);
 
 			// Get the (transformed) axis the wheel left/right turn.
-			dVector3 Axis;
-			dJointGetHinge2Axis1(m_ODEJoint,Axis);
+			dVector3 axis;
+			dJointGetHinge2Axis1(m_ODEJoint,axis);
 
 			// Calculate the angle the wheel has be turned PAST its limit.
-			if(rAng<rLoStop)
+			if(r_ang<r_lo_stop)
 			{
-				rAng=rAng-rLoStop;
+				r_ang=r_ang-r_lo_stop;
 			}
-			else if(rAng>rHiStop)
+			else if(r_ang>r_hi_stop)
 			{
-				rAng=rAng-rHiStop;
+				r_ang=r_ang-r_hi_stop;
 			}
 			else
 			{
-				rAng=0.0;
+				r_ang=0.0;
 			}
 
-			if(rAng)
+			if(r_ang)
 			{
 				// Here's the fix!
 				// If there's a value in rAng, this angle is the angle PAST the wheel stops
 				// Create a matrix the that's the inverse of the turn angle we DON'T want.
-				dMatrix3 matODE;
-				dRFromAxisAndAngle(matODE,Axis[0],Axis[1],Axis[2],rAng);
+				dMatrix3 mat_ode;
+				dRFromAxisAndAngle(mat_ode,axis[0],axis[1],axis[2],r_ang);
 
 				// Multiply this matrix by the wheels body.
 				// The wheel body is now in the range we want.
@@ -419,7 +419,7 @@ namespace GASS
 
 				dReal res_rot[3][3];
 
-				dMultiply0(&res_rot[0][0],matODE,body_rot,3,3,3);
+				dMultiply0(&res_rot[0][0],mat_ode,body_rot,3,3,3);
 				dBodySetRotation(body, &res_rot[0][0]);
 			}
 		}

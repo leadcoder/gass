@@ -351,7 +351,7 @@ namespace GASS
 					{
 						dGeomTriMeshDataDestroy(m_ColMeshInfo.ID);
 					}
-					m_ColMeshInfo = GetCollisionSceneManager()->_CreateCollisionMesh(physics_mesh);
+					m_ColMeshInfo = GetCollisionSceneManager()->CreateCollisionMesh(physics_mesh);
 					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, nullptr, nullptr, nullptr);
 				}
 			}
@@ -494,7 +494,7 @@ namespace GASS
 
 	dReal ODECollisionGeometryComponent::TerrainHeightCallback(void* data,int x,int z)
 	{
-		ODECollisionGeometryComponent* ode_terrain = (ODECollisionGeometryComponent*)data;
+		auto* ode_terrain = (ODECollisionGeometryComponent*)data;
 		return ode_terrain->GetTerrainHeight(x,z);
 	}
 

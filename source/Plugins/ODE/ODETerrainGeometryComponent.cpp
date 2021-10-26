@@ -153,7 +153,7 @@ namespace GASS
 	//Not thread safe!!! TODO:Keep a copy of the terrain height map instead
 	dReal ODETerrainGeometryComponent::TerrainHeightCallback(void* data,int x,int z)
 	{
-		ODETerrainGeometryComponent* ode_terrain = (ODETerrainGeometryComponent*)data;
+		auto* ode_terrain = (ODETerrainGeometryComponent*)data;
 		return ode_terrain->GetTerrainHeight(x,z);
 	}
 

@@ -81,7 +81,7 @@ namespace GASS
 		bool GetEnableShadows() const;
 		void SetEnableShadows(bool value);
 	private:
-		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode();
+		osg::ref_ptr<osgShadow::ShadowedScene> CreateShadowNode();
 
 		//fog
 		float m_FogDensity;

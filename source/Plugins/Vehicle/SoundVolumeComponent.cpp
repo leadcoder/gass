@@ -62,7 +62,7 @@ namespace GASS
 		if(speed < m_MaxVolumeAtSpeed)
 		{
 			//turret sound
-			const float volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
+			const auto volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
 			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume));
 			/*
 			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
@@ -78,7 +78,7 @@ namespace GASS
 		{
 			
 			//turret sound
-			const float volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
+			const auto volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
 			
 			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume*0.5f));
 

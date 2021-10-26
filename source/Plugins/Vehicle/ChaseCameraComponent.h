@@ -50,8 +50,8 @@ namespace GASS
 		void OnEnter(EnterVehicleRequestPtr message);
 		void OnExit(ExitVehicleRequestPtr message);
 
-		ILocationComponent* m_CameraLocation{NULL};
-		const ILocationComponent* m_ChaseObjectLocation{NULL};
+		ILocationComponent* m_CameraLocation{nullptr};
+		const ILocationComponent* m_ChaseObjectLocation{nullptr};
 		ICollisionSceneManager* m_CollisionSM = nullptr;
 		Vec3 m_Velocity;
 		std::string m_PreferredViewport;

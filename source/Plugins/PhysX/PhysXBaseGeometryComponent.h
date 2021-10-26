@@ -94,8 +94,8 @@ namespace GASS
 		PhysXBodyComponentPtr m_Body;		
 		Vec3 m_Offset;
 		bool m_SizeFromMesh{true};
-		physx::PxRigidStatic *m_StaticActor{NULL};
-		physx::PxShape *m_Shape{NULL};
+		physx::PxRigidStatic *m_StaticActor{nullptr};
+		physx::PxShape *m_Shape{nullptr};
 		bool m_SimulationCollision{true};
 	};
 	using PhysXBaseGeometryComponentPtr = std::shared_ptr<PhysXBaseGeometryComponent>;

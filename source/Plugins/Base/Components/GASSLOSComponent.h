@@ -21,8 +21,8 @@ namespace GASS
 	private:
 		void SetCalculate(bool value);
 		bool GetCalculate() const {return false;}
-		bool _CheckLOS(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const;
-		Float _GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const;
+		bool CheckLos(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const;
+		Float GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const;
 		
 		void SetFOV(Float value) {m_FOV = value; SetCalculate(true);}
 		Float GetFOV() const {return m_FOV;}

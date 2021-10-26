@@ -44,12 +44,12 @@ namespace GASS
 	protected:
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
-		std::string _GetTexturePath(const std::string &side) const;
-		osg::TextureCubeMap* _ReadCubeMap();
-		osg::Node* _CreateSkyBox();
+		std::string GetTexturePath(const std::string &side) const;
+		osg::TextureCubeMap* ReadCubeMap();
+		osg::Node* CreateSkyBox();
 
 		std::string m_Material;
-		osg::Node* m_Node{NULL};
+		osg::Node* m_Node{nullptr};
 		Float m_Size{200};
 	};
 }

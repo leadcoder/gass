@@ -228,7 +228,7 @@ namespace GASS
 			graphics_context->setClearColor(osg::Vec4f(0.0f,0.0f,1.0f,1.0f));
 			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
+			auto* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
 			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
 			graphics_context->getState()->setUseModelViewAndProjectionUniforms(true);
 		}
@@ -285,7 +285,7 @@ namespace GASS
 	{
 		if(m_TextBoxes.end() == m_TextBoxes.find(message->m_BoxID))
 		{
-			TextBox* text_box = new TextBox();
+			auto* text_box = new TextBox();
 
 			std::string full_path;
 			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
@@ -366,7 +366,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set, GraphicsMaterial &material)
 	{
-		osg::Material* mat  = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
+		auto* mat  = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
 		const osg::Vec4 &ambient = mat->getAmbient(osg::Material::FRONT_AND_BACK);
 		const osg::Vec4 &diffuse = mat->getDiffuse(osg::Material::FRONT_AND_BACK);
 		const osg::Vec4 &specular = mat->getSpecular(osg::Material::FRONT_AND_BACK);

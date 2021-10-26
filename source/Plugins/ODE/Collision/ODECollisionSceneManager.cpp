@@ -71,7 +71,7 @@ namespace GASS
 	ODECollisionSceneManager::~ODECollisionSceneManager()
 	{
 		//Fee all meshes in cache
-		CollisionMeshMap::iterator iter = m_ColMeshMap.begin();
+		auto iter = m_ColMeshMap.begin();
 		while (iter!= m_ColMeshMap.end()) //in map.
 		{
 			if(iter->second.ID)
@@ -143,13 +143,13 @@ namespace GASS
 		{
 			return m_ColMeshMap[cache_id];
 		}
-		ODECollisionMeshInfo id = _CreateCollisionMesh(physics_mesh);
+		ODECollisionMeshInfo id = CreateCollisionMesh(physics_mesh);
 		//save to cache
 		m_ColMeshMap[cache_id] = id;
 		return id;
 	}
 
-	ODECollisionMeshInfo ODECollisionSceneManager::_CreateCollisionMesh(PhysicsMeshPtr physics_mesh) const 
+	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(PhysicsMeshPtr physics_mesh) const 
 	{
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{

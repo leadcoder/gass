@@ -176,7 +176,7 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr _CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
 		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
@@ -206,7 +206,7 @@ namespace GASS
 		return axis_gizmo;
 	}
 
-	SceneObjectPtr _CreateRotateGizmo()
+	SceneObjectPtr CreateRotateGizmo()
 	{
 		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoRotateGizmo");
@@ -222,9 +222,9 @@ namespace GASS
 		gizmo->AddComponent(editor_comp);
 
 		//Create Axis
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
 
 		return gizmo;
 	}
@@ -235,7 +235,7 @@ namespace GASS
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			gizmo = _CreateRotateGizmo();
+			gizmo = CreateRotateGizmo();
 			
 			//Add gizmo to scene
 			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);

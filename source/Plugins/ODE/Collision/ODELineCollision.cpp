@@ -75,13 +75,13 @@ namespace GASS
 				{
 					m_Result->Coll = false;
 					m_Result->CollDist = 0;
-					const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*ray_segment);
-					dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+					const Vec3 ray_start = m_RayStart + m_RayDir*(double(i)*ray_segment);
+					dGeomRaySet(ray, ray_start.x,ray_start.y,ray_start.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 					dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 
 					if(m_Result->Coll == true)
 					{
-						m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+						m_Result->CollPosition = ray_start + m_RayDir*m_Result->CollDist;
 						m_Result->CollDist = m_Result->CollDist+i*ray_segment;
 						dGeomDestroy(ray);
 						return;
@@ -93,14 +93,14 @@ namespace GASS
 			{
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
-				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment);
+				const Vec3 ray_start = m_RayStart + m_RayDir*(segments*ray_segment);
 
 				dGeomRaySetLength(ray,last_ray_length);
-				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dGeomRaySet(ray, ray_start.x,ray_start.y,ray_start.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 				if(m_Result->Coll == true)
 				{
-					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollPosition = ray_start + m_RayDir*m_Result->CollDist;
 					m_Result->CollDist = m_Result->CollDist+segments*ray_segment;
 				}
 			}
@@ -156,7 +156,7 @@ namespace GASS
 			assert(m_Result);
 			m_Result->Coll = false;
 			m_Result->CollDist = 0;
-			dGeomID geom_space = (dGeomID) m_Space;
+			auto geom_space = (dGeomID) m_Space;
 			dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
 			if(m_Result->Coll == true)
 			{
@@ -183,7 +183,7 @@ namespace GASS
 			long int col2 = dGeomGetCollideBits (o2);
 			if ((cat1 & col2) || (cat2 & col1))
 			{
-				ODELineCollision* rs = (ODELineCollision*) data;
+				auto* rs = (ODELineCollision*) data;
 				rs->ProcessCallback(o1,o2);
 			}
 		}
@@ -207,7 +207,7 @@ namespace GASS
 
 		if(!dGeomIsEnabled(other_geom)) return;
 
-		BaseSceneComponent* pobj = static_cast<BaseSceneComponent*>(dGeomGetData(other_geom));
+		auto* pobj = static_cast<BaseSceneComponent*>(dGeomGetData(other_geom));
 		SceneObjectPtr scene_object = pobj->GetSceneObject();
 
 		int num_contact_points = 10;

@@ -99,10 +99,10 @@ namespace GASS
 		virtual bool GetDebug() const;
 		virtual SceneObjectPtr GetDebugObject();
 	protected:
-		dGeomID m_GeomID{0};
+		dGeomID m_GeomID{nullptr};
 		//dGeomID m_TransformGeomID;
-		dSpaceID m_ODESpaceID{NULL};
-		ODEBodyComponent* m_Body{NULL}; //pointer to body!
+		dSpaceID m_ODESpaceID{nullptr};
+		ODEBodyComponent* m_Body{nullptr}; //pointer to body!
 		std::string m_GeometryTemplate;
 		std::string m_AddToBody;
 		Vec3 m_Offset;

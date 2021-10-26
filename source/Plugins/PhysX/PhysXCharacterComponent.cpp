@@ -85,26 +85,26 @@ namespace GASS
 		Vec3 pos = location->GetPosition();
 		PxExtendedVec3 px_initial_pos(pos.x, pos.y, pos.z);
 
-		PxCapsuleControllerDesc cDesc;
-		cDesc.material			= system->GetDefaultMaterial();
-		cDesc.position			= px_initial_pos;
-		cDesc.height			= static_cast<float>(m_StandingSize);
-		cDesc.radius			= static_cast<float>(m_Radius);
-		cDesc.slopeLimit		= 0.0f;
-		cDesc.contactOffset		= 0.1f;
-		cDesc.stepOffset		= 0.02f;
-		cDesc.upDirection = PxConvert::ToPx(m_SceneManager->GetUpVector());
-		cDesc.behaviorCallback	= this;
-		m_Controller = static_cast<PxCapsuleController*>(m_SceneManager->GetControllerManager()->createController(cDesc));
+		PxCapsuleControllerDesc c_desc;
+		c_desc.material			= system->GetDefaultMaterial();
+		c_desc.position			= px_initial_pos;
+		c_desc.height			= static_cast<float>(m_StandingSize);
+		c_desc.radius			= static_cast<float>(m_Radius);
+		c_desc.slopeLimit		= 0.0f;
+		c_desc.contactOffset		= 0.1f;
+		c_desc.stepOffset		= 0.02f;
+		c_desc.upDirection = PxConvert::ToPx(m_SceneManager->GetUpVector());
+		c_desc.behaviorCallback	= this;
+		m_Controller = static_cast<PxCapsuleController*>(m_SceneManager->GetControllerManager()->createController(c_desc));
 		// remove controller shape from scene query for standup overlap test
 		m_Actor = m_Controller->getActor();
 		if(m_Actor)
 		{
 			if(m_Actor->getNbShapes())
 			{
-				PxShape* ctrlShape;
-				m_Actor->getShapes(&ctrlShape,1);
-				ctrlShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE,false);
+				PxShape* ctrl_shape;
+				m_Actor->getShapes(&ctrl_shape,1);
+				ctrl_shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE,false);
 			}
 		}
 		m_Initialized = true;
@@ -112,7 +112,7 @@ namespace GASS
 
 	void PhysXCharacterComponent::onShapeHit(const PxControllerShapeHit& hit)
 	{
-		PxRigidDynamic* actor = hit.shape->getActor()->is<PxRigidDynamic>();
+		auto* actor = hit.shape->getActor()->is<PxRigidDynamic>();
 		if(actor)
 		{
 			// We only allow horizontal pushes. Vertical pushes when we stand on dynamic objects creates

@@ -62,10 +62,10 @@ namespace GASS
 		void SetUpdateExtentFromGeometry(bool value);
 		
 		//internal
-		void _UpdateData();
-		FilePath _GetFilePath() const;
-		SceneObjectPtr _GetOrCreateDebugObject();
-		void _UpdateDebugObject(const AABoxd& extent);
+		void UpdateData();
+		FilePath GetFilePath() const;
+		SceneObjectPtr GetOrCreateDebugObject();
+		void UpdateDebugObject(const AABoxd& extent);
 		void SetDebug(bool value);
 		bool GetDebug() const;
 	private:

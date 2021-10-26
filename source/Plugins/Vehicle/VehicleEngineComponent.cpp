@@ -440,7 +440,7 @@ namespace GASS
 		m_SteerCtrl.Set(-m_DesiredSteer*m_MaxTurnVel);
 		//limit pid to max turn force
 		m_SteerCtrl.SetOutputLimit(m_MaxTurnForce*norm_rpm);
-		float turn_torque = static_cast<float>(m_SteerCtrl.Update(m_AngularVelocity.y, delta));
+		auto turn_torque = static_cast<float>(m_SteerCtrl.Update(m_AngularVelocity.y, delta));
 
 		//damp
 		//if(fabs(m_DesiredSteer) < 0.1)

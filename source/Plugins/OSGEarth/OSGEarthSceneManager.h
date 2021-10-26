@@ -58,7 +58,7 @@ namespace GASS
 		bool GetTerrainHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
 		void OnElevationChanged();
 	protected:
-		bool _GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
+		bool GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const;
 		void OnLoadSceneObject(PreSceneObjectInitializedEventPtr message);
 		
 

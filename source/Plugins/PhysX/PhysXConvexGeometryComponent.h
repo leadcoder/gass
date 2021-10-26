@@ -47,7 +47,7 @@ namespace GASS
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 	protected:
 		bool m_SimulationCollision{true};
-		physx::PxShape *m_Shape{0};
+		physx::PxShape *m_Shape{nullptr};
 		PhysXConvexMesh m_ConvexMesh;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};

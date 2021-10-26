@@ -46,17 +46,17 @@ namespace GASS
 		void SetHeightAboveGround(double value) override;
 		double GetHeightAboveGround() const override;
 	protected:
-		Vec3 _GetWorldPosition() const;
-		void _LatOrLongChanged();
-		void _SetWorldPosition(const Vec3& pos);
+		Vec3 GetWorldPosition() const;
+		void LatOrLongChanged();
+		void SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
 		bool m_PreserveHAG{true};
 
 		GeoLocation m_Location;
 		double m_HeightAboveGround{0};
-		OSGEarthSceneManager* m_OESM{NULL};
-		ILocationComponent* m_LocationComp{NULL};
+		OSGEarthSceneManager* m_OESM{nullptr};
+		ILocationComponent* m_LocationComp{nullptr};
 		bool m_HandleTransformations{true};
 	};
 	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;

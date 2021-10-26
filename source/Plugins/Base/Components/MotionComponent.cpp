@@ -142,7 +142,7 @@ namespace GASS
 			const Float ray_dist = 100.0;
 
 			//check ground and static geometry for now
-			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | 
+			auto flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | 
 															GEOMETRY_FLAG_STATIC_OBJECT | 
 															GEOMETRY_FLAG_PAGED_LOD | 
 															GEOMETRY_FLAG_GROUND_LOD);

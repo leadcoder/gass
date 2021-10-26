@@ -122,13 +122,13 @@ namespace GASS
 	{
 		if (m_UpdateCameraFromLocation)
 		{
-			_SetPosition(event->GetPosition());
-			_SetRotation(event->GetRotation());
+			SetPosition(event->GetPosition());
+			SetRotation(event->GetRotation());
 		}
 	}
 	
 
-	void OSGEarthCameraManipulatorComponent::_SetPosition(const GASS::Vec3 &pos)
+	void OSGEarthCameraManipulatorComponent::SetPosition(const GASS::Vec3 &pos)
 	{
 		if (m_Manipulator)
 		{
@@ -140,7 +140,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthCameraManipulatorComponent::_SetRotation(const GASS::Quaternion &rot)
+	void OSGEarthCameraManipulatorComponent::SetRotation(const GASS::Quaternion &rot)
 	{
 		if (m_Manipulator)
 		{
@@ -262,46 +262,46 @@ namespace GASS
 
 	double OSGEarthCameraManipulatorComponent::GetPitch() const
 	{
-		return _GetVP().pitch()->as(osgEarth::Units::DEGREES);
+		return GetViewpoint().pitch()->as(osgEarth::Units::DEGREES);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetPitch(double value)
 	{
-		osgEarth::Viewpoint vp = _GetVP();
+		osgEarth::Viewpoint vp = GetViewpoint();
 		vp.setPitch(osgEarth::Angle(value, osgEarth::Units::DEGREES));
-		_SetVP(vp);
+		SetViewpoint(vp);
 	}
 
 	double OSGEarthCameraManipulatorComponent::GetHeading() const
 	{
-		return _GetVP().heading()->as(osgEarth::Units::DEGREES);
+		return GetViewpoint().heading()->as(osgEarth::Units::DEGREES);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetHeading(double value)
 	{
-		osgEarth::Viewpoint vp = _GetVP();
+		osgEarth::Viewpoint vp = GetViewpoint();
 		vp.setHeading(osgEarth::Angle(value, osgEarth::Units::DEGREES));
-		_SetVP(vp);
+		SetViewpoint(vp);
 	}
 
 	double OSGEarthCameraManipulatorComponent::GetRange() const
 	{
-		return _GetVP().range()->as(osgEarth::Units::METERS);
+		return GetViewpoint().range()->as(osgEarth::Units::METERS);
 	}
 
 	void OSGEarthCameraManipulatorComponent::SetRange(double value)
 	{
-		osgEarth::Viewpoint vp = _GetVP();
+		osgEarth::Viewpoint vp = GetViewpoint();
 		vp.setRange(osgEarth::Distance(value, osgEarth::Units::METERS));
-		_SetVP(vp);
+		SetViewpoint(vp);
 	}
 
-	osgEarth::Viewpoint OSGEarthCameraManipulatorComponent::_GetVP() const
+	osgEarth::Viewpoint OSGEarthCameraManipulatorComponent::GetViewpoint() const
 	{
 		return m_Manipulator->getViewpoint();
 	}
 
-	void OSGEarthCameraManipulatorComponent::_SetVP(const osgEarth::Viewpoint &vp)
+	void OSGEarthCameraManipulatorComponent::SetViewpoint(const osgEarth::Viewpoint &vp)
 	{
 		m_Manipulator->setViewpoint(vp, 1.0);
 	}

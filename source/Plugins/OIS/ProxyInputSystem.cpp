@@ -69,7 +69,7 @@ namespace GASS
 	}
 	void ProxyInputSystem::RemoveKeyListener(IKeyListener* key_listener)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -88,7 +88,7 @@ namespace GASS
 
 	void ProxyInputSystem::RemoveMouseListener(IMouseListener* mouse_listener)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -107,7 +107,7 @@ namespace GASS
 
 	void ProxyInputSystem::RemoveGameControllerListener(IGameControllerListener* gc_listener)
 	{
-		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
+		auto iter = m_GameControllerListeners.begin();
 		while(iter != m_GameControllerListeners.end())
 		{
 			IGameControllerListener* ml = *iter;
@@ -151,7 +151,7 @@ namespace GASS
 	{
 		if(m_MouseActive)
 		{
-			std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+			auto iter = m_MouseListeners.begin();
 			while(iter != m_MouseListeners.end())
 			{
 				IMouseListener* ml = *iter;
@@ -166,7 +166,7 @@ namespace GASS
 	{
 		if(m_MouseActive)
 		{
-			std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+			auto iter = m_MouseListeners.begin();
 			while(iter != m_MouseListeners.end())
 			{
 				IMouseListener* ml = *iter;
@@ -180,7 +180,7 @@ namespace GASS
 	{
 		if(m_MouseActive)
 		{
-			std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+			auto iter = m_MouseListeners.begin();
 			while(iter != m_MouseListeners.end())
 			{
 				IMouseListener* ml = *iter;
@@ -194,7 +194,7 @@ namespace GASS
 	{
 		if(m_KeyActive)
 		{
-			std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+			auto iter = m_KeyListeners.begin();
 			while(iter != m_KeyListeners.end())
 			{
 				IKeyListener* kl = *iter;
@@ -207,7 +207,7 @@ namespace GASS
 	{
 		if(m_KeyActive)
 		{
-			std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+			auto iter = m_KeyListeners.begin();
 			while(iter != m_KeyListeners.end())
 			{
 				IKeyListener* kl = *iter;

@@ -52,15 +52,15 @@ namespace GASS
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
 		m_Shape = physx::PxRigidActorExt::createExclusiveShape(*m_Actor, physx::PxPlaneGeometry(), *material);
 
-		PxFilterData queryFilterData;
-		VehicleSetupDrivableShapeQueryFilterData(&queryFilterData);
-		m_Shape->setQueryFilterData(queryFilterData);
+		PxFilterData query_filter_data;
+		VehicleSetupDrivableShapeQueryFilterData(&query_filter_data);
+		m_Shape->setQueryFilterData(query_filter_data);
 
-		physx::PxFilterData collFilterData;
+		physx::PxFilterData coll_filter_data;
 		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_GROUND);
-		collFilterData.word0 = GEOMETRY_FLAG_GROUND;
-		collFilterData.word1 = against;
-		m_Shape->setSimulationFilterData(collFilterData);
+		coll_filter_data.word0 = GEOMETRY_FLAG_GROUND;
+		coll_filter_data.word1 = against;
+		m_Shape->setSimulationFilterData(coll_filter_data);
 
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		scene_manager->GetPxScene()->addActor(*m_Actor);

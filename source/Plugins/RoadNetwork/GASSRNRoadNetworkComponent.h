@@ -40,8 +40,8 @@ namespace GASS
 		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const override;
 		bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const override;
 	private:
-		void _CreateEditableFromNetwork();
-		void _CreateNetworkFromEditable();
+		void CreateEditableFromNetwork();
+		void CreateNetworkFromEditable();
 		bool GetShowGraph() const;
 		void SetShowGraph(bool value);
 		//void Rebuild();

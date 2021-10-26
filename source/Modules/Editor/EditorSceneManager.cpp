@@ -55,7 +55,7 @@ namespace GASS
 		m_InvisibleObjects.clear();
 	}
 
-	SceneObjectPtr _CreateSelectionObject()
+	SceneObjectPtr CreateSelectionObject()
 	{
 		SceneObjectPtr selection_object = std::make_shared<SceneObject>();
 		selection_object->SetName("SelectionObject");
@@ -87,7 +87,7 @@ namespace GASS
 	void EditorSceneManager::OnSceneCreated()
 	{
 		//Add selection object to scene
-		GetScene()->GetRootSceneObject()->AddChildSceneObject(_CreateSelectionObject(), true);
+		GetScene()->GetRootSceneObject()->AddChildSceneObject(CreateSelectionObject(), true);
 		//GetScene()->LoadObjectFromTemplate("SelectionObject", GetScene()->GetRootSceneObject());
 	}
 
@@ -177,7 +177,7 @@ namespace GASS
 	
 	bool EditorSceneManager::IsSelected(SceneObjectPtr obj)
 	{
-		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		auto iter = m_SelectedObjects.begin();
 		while(iter != m_SelectedObjects.end())
 		{
 			SceneObjectPtr so = (*iter).lock();
@@ -193,7 +193,7 @@ namespace GASS
 
 	void EditorSceneManager::UnselectSceneObject(SceneObjectPtr obj)
 	{
-		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		auto iter = m_SelectedObjects.begin();
 		while(iter != m_SelectedObjects.end())
 		{
 			SceneObjectPtr so = (*iter).lock();
@@ -227,7 +227,7 @@ namespace GASS
 
 	void EditorSceneManager::UnlockObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_LockedObjects.find(obj);
+		auto iter = m_LockedObjects.find(obj);
 		if (m_LockedObjects.end() != iter)
 		{
 			m_LockedObjects.erase(iter);
@@ -237,7 +237,7 @@ namespace GASS
 
 	void EditorSceneManager::LockObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_LockedObjects.find(obj);
+		auto iter = m_LockedObjects.find(obj);
 		if (m_LockedObjects.end() == iter)
 		{
 			m_LockedObjects.insert(obj);
@@ -265,7 +265,7 @@ namespace GASS
 
 	void EditorSceneManager::UnhideObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_InvisibleObjects.find(obj);
+		auto iter = m_InvisibleObjects.find(obj);
 		if (m_InvisibleObjects.end() != iter)
 		{
 			m_InvisibleObjects.erase(iter);
@@ -275,7 +275,7 @@ namespace GASS
 
 	void EditorSceneManager::HideObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_InvisibleObjects.find(obj);
+		auto iter = m_InvisibleObjects.find(obj);
 		if (m_InvisibleObjects.end() == iter)
 		{
 			m_InvisibleObjects.insert(obj);

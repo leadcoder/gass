@@ -61,10 +61,10 @@ namespace GASS
 		IOSGGraphicsSceneManagerPtr osg_sm  = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 		//osg::Group* root = static_cast<osg::Group*> (message->GetUserData());
-		osgEarth::MapNode* mapNode = osgEarth::MapNode::findMapNode(root);
-		if(mapNode)
+		osgEarth::MapNode* map_node = osgEarth::MapNode::findMapNode(root);
+		if(map_node)
 		{
-			m_MapNode = mapNode;
+			m_MapNode = map_node;
 			//const osgEarth::SpatialReference* geoSRS = mapNode->getMapSRS()->getGeographicSRS();
 			/*osgEarth::Style labelStyle;
 			labelStyle.getOrCreate<osgEarth::TextSymbol>()->alignment() = osgEarth::TextSymbol::ALIGN_CENTER_CENTER;
@@ -120,33 +120,33 @@ namespace GASS
 
 	void OSGEarthLocationComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
-		const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
+		const osgEarth::SpatialReference* geo_srs = m_MapNode->getMapSRS()->getGeographicSRS();
 		osg::Vec3d pos = OSGConvert::ToOSG(message->GetPosition());
-		osgEarth::GeoPoint mapPos;
-		mapPos.fromWorld(geoSRS,pos);
-		m_Latitude = mapPos.y();
-		m_Longitude = mapPos.x();
+		osgEarth::GeoPoint map_pos;
+		map_pos.fromWorld(geo_srs,pos);
+		m_Latitude = map_pos.y();
+		m_Longitude = map_pos.x();
 	}
 
 	void OSGEarthLocationComponent::UpdateNode()
 	{
 		if(m_MapNode)
 		{
-			 const osgEarth::SpatialReference* geoSRS = m_MapNode->getMapSRS()->getGeographicSRS();
-			 const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+			 const osgEarth::SpatialReference* geo_srs = m_MapNode->getMapSRS()->getGeographicSRS();
+			 const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
 			 
 			 double height = 0;
 
 			 //Create geocentric coordinates from lat long, use  Geographic-SRS!
-			 m_MapNode->getTerrain()->getHeight(nullptr, geoSRS,m_Longitude,m_Latitude, &height, nullptr);
-			 osgEarth::GeoPoint mapPoint(geoSRS, m_Longitude, m_Latitude, height,osgEarth::ALTMODE_ABSOLUTE);
+			 m_MapNode->getTerrain()->getHeight(nullptr, geo_srs,m_Longitude,m_Latitude, &height, nullptr);
+			 osgEarth::GeoPoint map_point(geo_srs, m_Longitude, m_Latitude, height,osgEarth::ALTMODE_ABSOLUTE);
 
 			 height += m_Offset;
 			 
 			 //Transform geocentric coordinates to map-space using map-SRS!
-			 osgEarth::GeoPoint mapPos = mapPoint.transform(mapSRS);
+			 osgEarth::GeoPoint map_pos = map_point.transform(map_srs);
 			 osg::Matrixd out_local2world;
-			 mapPos.createLocalToWorld(out_local2world);
+			 map_pos.createLocalToWorld(out_local2world);
 			 
 			 osg::Quat osg_rot = out_local2world.getRotate();
 			 osg::Vec3d osg_pos = out_local2world.getTrans();
@@ -157,7 +157,7 @@ namespace GASS
 			 GetSceneObject()->PostRequest(std::make_shared<WorldPositionRequest>(OSGConvert::ToGASS(osg_pos)));
 			 GetSceneObject()->PostRequest(std::make_shared<BaseRotationRequest>(OSGConvert::ToGASS(osg_rot)));
 			 if (m_DebugNode)
-				 m_DebugNode->setPosition(mapPoint);
+				 m_DebugNode->setPosition(map_point);
 		}
 	}
 

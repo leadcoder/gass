@@ -59,8 +59,8 @@ namespace GASS
 		void SetLODScale(float value);
 
 		//helpers
-		void _UpdateFromLocation();
-		void _UpdateProjection();
+		void UpdateFromLocation();
+		void UpdateProjection();
 	
 		osg::ref_ptr<osg::Camera> m_OSGCamera;
 		float m_NearClip{0.5};

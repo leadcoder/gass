@@ -80,7 +80,7 @@ namespace GASS
 	protected:
 		bool m_Initialized;
 		PhysXPhysicsSceneManager* m_SceneManager = nullptr;
-		physx::PxRigidDynamic* m_Actor{NULL};
+		physx::PxRigidDynamic* m_Actor{nullptr};
 		float m_ThrottleInput{0};
 		float m_SteerInput{0};
 		float m_Mass;
@@ -90,7 +90,7 @@ namespace GASS
 		Float m_Radius{0.4};
 		Float m_YawMaxVelocity{2};
 		Float m_Acceleration{5.2};
-		physx::PxCapsuleController* m_Controller{NULL};
+		physx::PxCapsuleController* m_Controller{nullptr};
 		bool m_TrackTransformation{true};
 		Quaternion m_Rotation = Quaternion::IDENTITY;
 		

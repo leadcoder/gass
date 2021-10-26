@@ -58,11 +58,11 @@ namespace GASS
             if (plod.getNumFileNames() > 0)
             {
                 // Identify the range value for the highest res child
-                float targetRangeValue;
+                float target_range_value;
                 if (plod.getRangeMode() == osg::LOD::DISTANCE_FROM_EYE_POINT)
-                    targetRangeValue = 1e6; // Init high to find min value
+                    target_range_value = 1e6; // Init high to find min value
                 else
-                    targetRangeValue = 0; // Init low to find max value
+                    target_range_value = 0; // Init low to find max value
 
                 const osg::LOD::RangeList rl = plod.getRangeList();
                 osg::LOD::RangeList::const_iterator rit;
@@ -72,41 +72,41 @@ namespace GASS
                 {
                     if (plod.getRangeMode() == osg::LOD::DISTANCE_FROM_EYE_POINT)
                     {
-                        if (rit->first < targetRangeValue)
-                            targetRangeValue = rit->first;
+                        if (rit->first < target_range_value)
+                            target_range_value = rit->first;
                     }
                     else
                     {
-                        if (rit->first > targetRangeValue)
-                            targetRangeValue = rit->first;
+                        if (rit->first > target_range_value)
+                            target_range_value = rit->first;
                     }
                 }
 
                 // Perform an intersection test only on children that display
                 // at the maximum resolution.
-                unsigned int childIndex;
-                for (rit = rl.begin(), childIndex = 0;
+                unsigned int child_index;
+                for (rit = rl.begin(), child_index = 0;
                     rit != rl.end();
-                    rit++, childIndex++)
+                    rit++, child_index++)
                 {
-                    if (rit->first != targetRangeValue)
+                    if (rit->first != target_range_value)
                         // This is not one of the highest res children
                         continue;
 
                     osg::ref_ptr<osg::Node> child(nullptr);
-                    if (plod.getNumChildren() > childIndex)
-                        child = plod.getChild(childIndex);
+                    if (plod.getNumChildren() > child_index)
+                        child = plod.getChild(child_index);
 
                     if ((!child.valid()) && (_readCallback.valid()))
                     {
                         // Child is NULL; attempt to load it, if we have a readCallback...
-                        unsigned int validIndex(childIndex);
-                        if (plod.getNumFileNames() <= childIndex)
-                            validIndex = plod.getNumFileNames() - 1;
+                        unsigned int valid_index(child_index);
+                        if (plod.getNumFileNames() <= child_index)
+                            valid_index = plod.getNumFileNames() - 1;
 
                         //Patched: Check for empty string
-                        if(plod.getFileName(validIndex) != "") 
-                            child = _readCallback->readNodeFile(plod.getDatabasePath() + plod.getFileName(validIndex));
+                        if(plod.getFileName(valid_index) != "") 
+                            child = _readCallback->readNodeFile(plod.getDatabasePath() + plod.getFileName(valid_index));
                     }
 
                     if (!child.valid() && plod.getNumChildren() > 0)
@@ -195,7 +195,7 @@ namespace GASS
 		bool GetOrientation(const Vec3& location, Quaternion& rot) const override;
 		bool GetLocationOnTerrain(const Vec3& location, GeometryFlags flags, Vec3& terrain_location) const override;
 	private:
-		void _ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
+		void ProcessRaycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult *result, osg::Node *node) const;
 		mutable GASS_MUTEX m_Mutex;
 		osgUtil::IntersectionVisitor* m_IntersectVisitor;
 		osg::ref_ptr<osgSim::DatabaseCacheReadCallback> m_DatabaseCache;

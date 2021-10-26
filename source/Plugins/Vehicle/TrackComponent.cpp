@@ -71,7 +71,7 @@ namespace GASS
 		
 		GetSceneObject()->SendImmediateRequest(std::make_shared<TextureCoordinateRequest>(m_AnimationValue));
 
-		float emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
+		auto emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
 
 		if(emission >50)
 			emission =50;
@@ -87,7 +87,7 @@ namespace GASS
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 
-		const float speed = static_cast<float>(fabs(ang_vel.x));
+		const auto speed = static_cast<float>(fabs(ang_vel.x));
 		const float max_volume_at_speed = 10;
 		float volume = m_SoundVolumeFactor;
 		if(speed < max_volume_at_speed)

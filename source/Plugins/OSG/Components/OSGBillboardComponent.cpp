@@ -80,7 +80,7 @@ namespace GASS
 	void OSGBillboardComponent::SetWidth(float width)
 	{
 		m_Width = width;
-		_UpdateSize(m_Width,m_Height);
+		UpdateSize(m_Width,m_Height);
 	}
 
 	float OSGBillboardComponent::GetHeight() const
@@ -91,7 +91,7 @@ namespace GASS
 	void OSGBillboardComponent::SetHeight(float height)
 	{
 		m_Height = height;
-		_UpdateSize(m_Width,m_Height);
+		UpdateSize(m_Width,m_Height);
 	}
 
 	GeometryFlags OSGBillboardComponent::GetGeometryFlags() const
@@ -118,7 +118,7 @@ namespace GASS
 
 		//make offset
 		Vec3 corner = -east*0.5;
-		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options("dds_flip");
+		auto* options = new osgDB::ReaderWriter::Options("dds_flip");
 
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
@@ -132,7 +132,7 @@ namespace GASS
 		m_Geom = geom.get();
 
 		m_OSGBillboard->setPosition(0,osg::Vec3(0,0,static_cast<float>(m_GroundOffset)));
-		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		auto* node_data = new OSGNodeData(shared_from_this());
 		m_OSGBillboard->setUserData(node_data);
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -152,7 +152,7 @@ namespace GASS
 	{
 		if(m_Geom)
 		{
-			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 			osg::Vec3 p_min = (*coords)[0];
 			osg::Vec3 p_max = (*coords)[2];
 			osg::Vec3 bb_size = p_max - p_min;
@@ -223,9 +223,9 @@ namespace GASS
 			osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
 			texture->setImage(image);
 
-			osg::ref_ptr<osg::AlphaFunc> alphaFunc = new osg::AlphaFunc;
-			alphaFunc->setFunction(osg::AlphaFunc::GEQUAL,0.05f);
-			stateset->setAttributeAndModes( alphaFunc.get(), osg::StateAttribute::ON );
+			osg::ref_ptr<osg::AlphaFunc> alpha_func = new osg::AlphaFunc;
+			alpha_func->setFunction(osg::AlphaFunc::GEQUAL,0.05f);
+			stateset->setAttributeAndModes( alpha_func.get(), osg::StateAttribute::ON );
 
 			stateset->setTextureAttributeAndModes(0,texture.get(),osg::StateAttribute::ON);
 			geom->setStateSet(stateset.get());
@@ -251,15 +251,15 @@ namespace GASS
 	void OSGBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
 	{
 		const Vec3 scale = message->GetScale();
-		_UpdateSize(static_cast<float>(m_Width*scale.x), 
+		UpdateSize(static_cast<float>(m_Width*scale.x), 
 			        static_cast<float>(m_Height*scale.y));
 	}
 
-	void OSGBillboardComponent::_UpdateSize(float width,float height)
+	void OSGBillboardComponent::UpdateSize(float width,float height)
 	{
 		if(m_OSGBillboard.valid())
 		{
-			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 
 			osg::Vec3f osg_height(0.0f,0.0f, height);
 			osg::Vec3f osg_width(width,0.0f,0.0f);
@@ -279,7 +279,7 @@ namespace GASS
 		if(m_Geom)
 		{
 			const ColorRGBA color = message->GetColor();
-			osg::Vec4Array* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
+			auto* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
 			osg::Vec4 osg_color = OSGConvert::ToOSG(color);
 			(*colors)[0]= osg_color;
 			(*colors)[1]= osg_color;

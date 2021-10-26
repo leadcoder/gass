@@ -203,7 +203,7 @@ namespace GASS
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-			static RakNetTime  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
+			static auto  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
 #ifdef _DEBUG_LTC_
 			if(GetAsyncKeyState(VK_F2))
 				step_back--;

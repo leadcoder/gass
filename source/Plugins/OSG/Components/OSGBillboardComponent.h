@@ -66,7 +66,7 @@ namespace GASS
 		void SetCastShadow(bool castShadow);
 
 		//Helpers
-		void _UpdateSize(float width,float height);
+		void UpdateSize(float width,float height);
 
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=nullptr);
 		std::string m_Material;
@@ -74,7 +74,7 @@ namespace GASS
 		float m_Width{1.0f};
 		float m_Height{1.0f};
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
-		osg::Geometry* m_Geom{NULL};
+		osg::Geometry* m_Geom{nullptr};
 		GeometryFlags m_GeomFlags{GEOMETRY_FLAG_UNKNOWN};
 		double m_GroundOffset{0.1};
 		bool m_Collision{true};

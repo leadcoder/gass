@@ -95,7 +95,7 @@ namespace GASS
 	*/
 
 	template<class A, class B>
-	B* RefCast(A* a)
+	B* refCast(A* a)
 	{
 		// If the handle already is a null handle, then just return the null handle
 		if( !a ) return 0;

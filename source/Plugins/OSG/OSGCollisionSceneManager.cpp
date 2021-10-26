@@ -75,11 +75,11 @@ namespace GASS
 			osgViewer::ViewerBase::Views views;
 			m_GFXSystem->GetViewer()->getViews(views);
 			if (views.size() > 0)
-				_ProcessRaycast(ray_start, ray_dir, flags, &result, views[0]->getCamera());
+				ProcessRaycast(ray_start, ray_dir, flags, &result, views[0]->getCamera());
 		}
 	}
 
-	void OSGCollisionSceneManager::_ProcessRaycast(const Vec3& ray_start, const Vec3& ray_dir, GeometryFlags flags, CollisionResult* result, osg::Node* node) const
+	void OSGCollisionSceneManager::ProcessRaycast(const Vec3& ray_start, const Vec3& ray_dir, GeometryFlags flags, CollisionResult* result, osg::Node* node) const
 	{
 		GASS_MUTEX_LOCK(m_Mutex)
 
@@ -106,7 +106,7 @@ namespace GASS
 		if (intersector->containsIntersections())
 		{
 			osgUtil::LineSegmentIntersector::Intersections& intersections = intersector->getIntersections();
-			for (osgUtil::LineSegmentIntersector::Intersections::iterator itr = intersections.begin();
+			for (auto itr = intersections.begin();
 				itr != intersections.end();
 				++itr)
 			{
@@ -121,7 +121,7 @@ namespace GASS
 					{
 						if (intersection.nodePath[i]->getUserData())
 						{
-							OSGNodeData* data = dynamic_cast<OSGNodeData*>(intersection.nodePath[i]->getUserData());
+							auto* data = dynamic_cast<OSGNodeData*>(intersection.nodePath[i]->getUserData());
 							if (data)
 							{
 								BaseSceneComponentPtr bo = data->m_Component.lock();
@@ -248,9 +248,9 @@ namespace GASS
 		{
 			double  latitude, longitude, height;
 			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height);
-			osg::Matrixd localToWorld;
-			m_EllipsoidModel.computeCoordinateFrame(latitude, longitude, localToWorld);
-			rot = GASS::OSGConvert::ToGASS(localToWorld.getRotate());
+			osg::Matrixd local_to_world;
+			m_EllipsoidModel.computeCoordinateFrame(latitude, longitude, local_to_world);
+			rot = GASS::OSGConvert::ToGASS(local_to_world.getRotate());
 		}
 		else
 		{

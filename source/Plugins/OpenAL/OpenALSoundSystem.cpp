@@ -32,13 +32,13 @@ namespace GASS
 #ifdef WIN32
 		ALFWShutdown();
 #endif
-		ALCcontext *pContext;
-		ALCdevice *pDevice;
-		pContext = alcGetCurrentContext();
-		pDevice = alcGetContextsDevice(pContext);
+		ALCcontext *p_context;
+		ALCdevice *p_device;
+		p_context = alcGetCurrentContext();
+		p_device = alcGetContextsDevice(p_context);
 		alcMakeContextCurrent(nullptr);
-		alcDestroyContext(pContext);
-		alcCloseDevice(pDevice);
+		alcDestroyContext(p_context);
+		alcCloseDevice(p_device);
 	}
 
 	void OpenALSoundSystem::RegisterReflection()
@@ -148,10 +148,10 @@ namespace GASS
 
 	void OpenALSoundSystem::CheckAlError(const std::string &what_class)
 	{
-		ALenum errCode;
-		if ( ( errCode = alGetError() ) != AL_NO_ERROR )
+		ALenum err_code;
+		if ( ( err_code = alGetError() ) != AL_NO_ERROR )
 		{
-			std::string error = (char*) alGetString( errCode );
+			std::string error = (char*) alGetString( err_code );
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"OpenAL error:" + error, what_class);
 		}
 	}
@@ -159,21 +159,21 @@ namespace GASS
 	void OpenALSoundSystem::UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel)
 	{
 		// Position of the listener.
-		ALfloat ListenerPos[] = GASS_TO_OAL_VEC(pos);
+		ALfloat listener_pos[] = GASS_TO_OAL_VEC(pos);
 		// Velocity of the listener.
-		ALfloat ListenerVel[] = GASS_TO_OAL_VEC(vel);
+		ALfloat listener_vel[] = GASS_TO_OAL_VEC(vel);
 		// Orientation of the listener. (first 3 elements are "dir", second 3 are "up")
 
 		Mat4 rot_mat(rot);
 		Vec3 dir = -rot_mat.GetZAxis();
 		Vec3 up = rot_mat.GetYAxis();
 
-		ALfloat ListenerOri[] = { static_cast<ALfloat>(dir.x), static_cast<ALfloat>(dir.y), static_cast<ALfloat>(dir.z),  
+		ALfloat listener_ori[] = { static_cast<ALfloat>(dir.x), static_cast<ALfloat>(dir.y), static_cast<ALfloat>(dir.z),  
 								  static_cast<ALfloat>(up.x),  static_cast<ALfloat>(up.y),  static_cast<ALfloat>(up.z)};
 
-		alListenerfv(AL_POSITION,    ListenerPos);
-		alListenerfv(AL_VELOCITY,    ListenerVel);
-		alListenerfv(AL_ORIENTATION, ListenerOri);
+		alListenerfv(AL_POSITION,    listener_pos);
+		alListenerfv(AL_VELOCITY,    listener_vel);
+		alListenerfv(AL_ORIENTATION, listener_ori);
 	}
 
 	void OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer)

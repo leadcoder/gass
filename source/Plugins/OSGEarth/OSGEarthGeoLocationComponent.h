@@ -81,8 +81,8 @@ namespace GASS
 		void SetAttachToParent(bool value) override;
 		
 		//helper
-		OSGEarthGeoLocationComponentPtr _GetParentLocation();
-		void _SendTransMessage();
+		OSGEarthGeoLocationComponentPtr GetParentLocation();
+		void SendTransMessage();
 		//! relative position of the scene node.
 		Vec3 m_Pos;
 		//! relative rotation of the scene node.

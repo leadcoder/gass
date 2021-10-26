@@ -55,8 +55,8 @@ namespace GASS
 		void SetRotation(const Quaternion& rot);
 		HeightmapTerrainComponentPtr GetTerrainComponent() const;
 	protected:
-		void _CreateTerrain();
-		void _Release();
+		void CreateTerrain();
+		void Release();
 
 		AABox m_TerrainBounds;
 		IHeightmapTerrainComponent* m_TerrainGeom{nullptr};

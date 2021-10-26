@@ -37,8 +37,8 @@ namespace GASS
 		RoadNode* InsertNodeOnEdge(const Vec3& point,RoadEdge* edge) const;
 		RoadEdge* GetCloesestEdge(const Vec3 &point) const;
 		RoadNode* GetCloesestNode(const Vec3 &point) const;
-		void _RemoveNode(RoadNode* node) const;
-		void _ConvertNodeToWaypoint(RoadNode* node);
+		void RemoveNode(RoadNode* node) const;
+		void ConvertNodeToWaypoint(RoadNode* node);
 	};
 }
 #endif

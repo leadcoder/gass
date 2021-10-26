@@ -39,8 +39,8 @@ namespace GASS
 		void SetEdgeTemplateName(const std::string &name) {m_EdgeObjectName= name;}
 		void SetMode(GraphToolMode mode) {m_Mode= mode;}
 	private:
-		void _TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const;
-		GraphEdgeComponentPtr _GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const;
+		void TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const;
+		GraphEdgeComponentPtr GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const;
 		void OnToolChanged(ToolChangedEventPtr message);
 		bool m_MouseIsDown;
 		GASS::Vec3 m_Offset;

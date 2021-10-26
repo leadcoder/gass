@@ -364,7 +364,7 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr _CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
 		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
@@ -394,7 +394,7 @@ namespace GASS
 		return axis_gizmo;
 	}
 
-	SceneObjectPtr _CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
 		SceneObjectPtr plane_gizmo = std::make_shared<SceneObject>();
 
@@ -424,7 +424,7 @@ namespace GASS
 		return plane_gizmo;
 	}
 
-	SceneObjectPtr _CreateMoveGizmo()
+	SceneObjectPtr CreateMoveGizmo()
 	{
 		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoMoveObject");
@@ -440,14 +440,14 @@ namespace GASS
 		gizmo->AddComponent(editor_comp);
 
 		//Create Axis
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
 
 		//Create Planes
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXZ", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneYZ", EulerRotation(0, 0, 90), ColorRGBA(0, 0, 1, 1)), false);
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXY", EulerRotation(0, -90, 0), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneXZ", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneYZ", EulerRotation(0, 0, 90), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneXY", EulerRotation(0, -90, 0), ColorRGBA(1, 0, 0, 1)), false);
 
 		return gizmo;
 	}
@@ -458,7 +458,7 @@ namespace GASS
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			gizmo = _CreateMoveGizmo();
+			gizmo = CreateMoveGizmo();
 
 			//Add gizmo to scene
 			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);

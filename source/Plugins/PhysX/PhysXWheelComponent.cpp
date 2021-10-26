@@ -99,10 +99,10 @@ namespace GASS
 		PxF32 wheel_width;
 		PxF32 wheel_rad;
 		ComputeWheelDim(cgc->GetConvexMesh().m_ConvexMesh,wheel_width,wheel_rad);
-		PxF32 wheel_MOI = 0.5f*m_WheelData.mMass*wheel_rad*wheel_rad;
+		PxF32 wheel_moi = 0.5f*m_WheelData.mMass*wheel_rad*wheel_rad;
 	
 		m_WheelData.mRadius = wheel_rad;
-		m_WheelData.mMOI = wheel_MOI;
+		m_WheelData.mMOI = wheel_moi;
 		m_WheelData.mWidth = wheel_width;
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();

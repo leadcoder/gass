@@ -67,7 +67,7 @@ namespace GASS
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		GASS_MUTEX& GetMutex() const {return m_Mutex;}
 	private:
-		ODECollisionMeshInfo _CreateCollisionMesh(PhysicsMeshPtr mesh) const;
+		ODECollisionMeshInfo CreateCollisionMesh(PhysicsMeshPtr mesh) const;
 
 		using CollisionMeshMap = std::map<std::string, ODECollisionMeshInfo>;
 		mutable GASS_MUTEX m_Mutex;

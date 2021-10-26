@@ -147,10 +147,10 @@ namespace GASS
 	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
 		Vec3 cross = Vec3::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
+		auto cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
-		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
+		auto angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 		if(Vec3::Dot(plane_normal,cross) > 0)
 			angle *= -1;
 		return angle;
@@ -160,10 +160,10 @@ namespace GASS
 	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
 		//Vec3 cross = Vec3::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
+		auto cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
-		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
+		auto angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 		if(v1.y < v2.y)
 			angle *= -1;
 		return angle;
@@ -387,7 +387,7 @@ namespace GASS
 		m_TurnPID.SetOutputLimit(m_SteerForce*3);
 		m_TurnPID.SetGain(0.00003,0.0001,0.0009);
 		m_TurnPID.Set(0);
-		float turn_velocity = static_cast<float>(m_TurnPID.Update(angle_to_aim_dir,delta_time));
+		auto turn_velocity = static_cast<float>(m_TurnPID.Update(angle_to_aim_dir,delta_time));
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
 
 

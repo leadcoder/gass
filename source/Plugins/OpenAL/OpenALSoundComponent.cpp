@@ -234,23 +234,23 @@ namespace GASS
 
 	void OpenALSoundComponent::SetPosition(const Vec3 &pos)
 	{
-		ALfloat sourcePos[] = GASS_TO_OAL_VEC(pos);
+		ALfloat source_pos[] = GASS_TO_OAL_VEC(pos);
 		if(m_Source)
-			alSourcefv(m_Source, AL_POSITION, sourcePos);
+			alSourcefv(m_Source, AL_POSITION, source_pos);
 	}
 
 	void OpenALSoundComponent::SetVelocity(const Vec3 &vel)
 	{
-		ALfloat sourceVel[] = GASS_TO_OAL_VEC(vel);
+		ALfloat source_vel[] = GASS_TO_OAL_VEC(vel);
 		if(m_Source)
-			alSourcefv(m_Source, AL_VELOCITY, sourceVel);
+			alSourcefv(m_Source, AL_VELOCITY, source_vel);
 
 	}
 
 
 	bool OpenALSoundComponent::IsPlaying()
 	{
-		ALint iVal;
+		ALint i_val;
 		alGetError();
 
 		if (m_Source == 0)
@@ -258,9 +258,9 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"IsPlaying called without m_Source set","OpenALSoundComponent::IsPlaying()");
 		}
 
-		alGetSourcei(m_Source, AL_SOURCE_STATE, &iVal);
+		alGetSourcei(m_Source, AL_SOURCE_STATE, &i_val);
 		OpenALSoundSystem::CheckAlError("OpenALSoundComponent::IsPlaying");
-		return (iVal == AL_PLAYING);
+		return (i_val == AL_PLAYING);
 	}
 
 	void OpenALSoundComponent::LoadWaveSound(const std::string &filePath)

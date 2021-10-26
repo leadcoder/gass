@@ -34,10 +34,10 @@ namespace GASS
 		void OnInitialize() override;
 		LandCoverTypeBinder GetLandCoverType() const { return m_LandCoverType; }
 	protected:
-		bool m_Initialized;
+		bool m_Initialized{false};
 		LandCoverTypeBinder m_LandCoverType;
 	};
-	typedef GASS_SHARED_PTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentPtr;
-	typedef GASS_WEAK_PTR<RecastConvexVolumeComponent> RecastConvexVolumeComponentWeakPtr;
+	using RecastConvexVolumeComponentPtr = std::shared_ptr<RecastConvexVolumeComponent>;
+	using RecastConvexVolumeComponentWeakPtr = std::weak_ptr<RecastConvexVolumeComponent>;
 }
 

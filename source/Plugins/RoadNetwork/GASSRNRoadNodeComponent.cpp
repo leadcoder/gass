@@ -65,7 +65,7 @@ namespace GASS
 
 	void RNRoadNodeComponent::RemoveEdge(GraphEdgeComponentPtr edge)
 	{
-		std::vector<GraphEdgeComponentWeakPtr>::iterator iter = m_Edges.begin();
+		auto iter = m_Edges.begin();
 		while(iter !=m_Edges.end())
 		{
 			GraphEdgeComponentPtr edge_ptr = (*iter).lock();

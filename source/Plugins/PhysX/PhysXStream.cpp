@@ -16,20 +16,20 @@ namespace GASS
 
 	PxU32 MemoryOutputStream::write(const void* src, PxU32 size)
 	{
-		PxU32 expectedSize = m_Size + size;
-		if(expectedSize > m_Capacity)
+		PxU32 expected_size = m_Size + size;
+		if(expected_size > m_Capacity)
 		{
-			m_Capacity = expectedSize + 4096;
+			m_Capacity = expected_size + 4096;
 
-			PxU8* newData = new PxU8[m_Capacity];
+			PxU8* new_data = new PxU8[m_Capacity];
 			PX_ASSERT(newData!=NULL);
 
-			if(newData)
+			if(new_data)
 			{
-				memcpy(newData, m_Data, m_Size);
+				memcpy(new_data, m_Data, m_Size);
 				delete[] m_Data;
 			}
-			m_Data = newData;
+			m_Data = new_data;
 		}
 		memcpy(m_Data+m_Size, src, size);
 		m_Size += size;
@@ -46,7 +46,7 @@ namespace GASS
 
 	PxU32 MemoryInputData::read(void* dest, PxU32 count)
 	{
-		PxU32 length = PxMin<PxU32>(count, m_Size-m_Pos);
+		auto length = PxMin<PxU32>(count, m_Size-m_Pos);
 		memcpy(dest, m_Data+m_Pos, length);
 		m_Pos += length;
 		return length;

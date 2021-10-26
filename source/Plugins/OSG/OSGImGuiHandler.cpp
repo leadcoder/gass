@@ -20,7 +20,7 @@ namespace GASS
 
 	void OSGImGuiHandler::GlewInitOperation::operator()(osg::Object* object)
 	{
-		osg::GraphicsContext* context = dynamic_cast<osg::GraphicsContext*>(object);
+		auto* context = dynamic_cast<osg::GraphicsContext*>(object);
 		if (!context)
 			return;
 
@@ -28,39 +28,39 @@ namespace GASS
 		{
 			std::cout << "glewInit() failed\n";
 		}
-		OSGImGuiHandler::init();
+		OSGImGuiHandler::Init();
 	}
 
 	struct OSGImGuiHandler::ImGuiNewFrameCallback : public osg::Camera::DrawCallback
 	{
 		ImGuiNewFrameCallback(OSGImGuiHandler& handler)
-			: handler_(handler)
+			: m_Handler(handler)
 		{
 		}
 
 		void operator()(osg::RenderInfo& renderInfo) const override
 		{
-			handler_.newFrame(renderInfo);
+			m_Handler.NewFrame(renderInfo);
 		}
 
 	private:
-		OSGImGuiHandler& handler_;
+		OSGImGuiHandler& m_Handler;
 	};
 
 	struct OSGImGuiHandler::ImGuiRenderCallback : public osg::Camera::DrawCallback
 	{
 		ImGuiRenderCallback(OSGImGuiHandler& handler)
-			: handler_(handler)
+			: m_Handler(handler)
 		{
 		}
 
 		void operator()(osg::RenderInfo& renderInfo) const override
 		{
-			handler_.render(renderInfo);
+			m_Handler.Render(renderInfo);
 		}
 
 	private:
-		OSGImGuiHandler& handler_;
+		OSGImGuiHandler& m_Handler;
 	};
 
 	OSGImGuiHandler::OSGImGuiHandler()
@@ -116,7 +116,7 @@ namespace GASS
 		}
 	}
 
-	void OSGImGuiHandler::init()
+	void OSGImGuiHandler::Init()
 	{
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -151,13 +151,13 @@ namespace GASS
 		//io.RenderDrawListsFn = ImGui_ImplOpenGL3_RenderDrawData;
 	}
 
-	void OSGImGuiHandler::setCameraCallbacks(osg::Camera* camera)
+	void OSGImGuiHandler::SetCameraCallbacks(osg::Camera* camera)
 	{
 		camera->setPreDrawCallback(new ImGuiNewFrameCallback(*this));
 		camera->setPostDrawCallback(new ImGuiRenderCallback(*this));
 	}
 
-	void OSGImGuiHandler::newFrame(osg::RenderInfo& renderInfo)
+	void OSGImGuiHandler::NewFrame(osg::RenderInfo& renderInfo)
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 
@@ -166,89 +166,89 @@ namespace GASS
 		osg::Viewport* viewport = renderInfo.getCurrentCamera()->getViewport();
 		io.DisplaySize = ImVec2(viewport->width(), viewport->height());
 
-		double currentTime = renderInfo.getView()->getFrameStamp()->getSimulationTime();
-		io.DeltaTime = currentTime - time_ + 0.0000001;
-		time_ = currentTime;
+		double current_time = renderInfo.getView()->getFrameStamp()->getSimulationTime();
+		io.DeltaTime = current_time - m_Time + 0.0000001;
+		m_Time = current_time;
 
 		for (int i = 0; i < 3; i++)
 		{
-			io.MouseDown[i] = mousePressed_[i];
+			io.MouseDown[i] = m_MousePressed[i];
 		}
 
-		io.MouseWheel = mouseWheel_;
-		mouseWheel_ = 0.0f;
+		io.MouseWheel = m_MouseWheel;
+		m_MouseWheel = 0.0f;
 
 		ImGui::NewFrame();
 	}
 
-	void OSGImGuiHandler::render(osg::RenderInfo&)
+	void OSGImGuiHandler::Render(osg::RenderInfo&)
 	{
-		drawUi();
+		DrawUi();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
 	bool OSGImGuiHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
 	{
-		if (!initialized_)
+		if (!m_Initialized)
 		{
 			auto view = aa.asView();
 			if (view)
 			{
-				setCameraCallbacks(view->getCamera());
-				initialized_ = true;
+				SetCameraCallbacks(view->getCamera());
+				m_Initialized = true;
 			}
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
-		const bool wantCaptureMouse = io.WantCaptureMouse;
-		const bool wantCaptureKeyboard = io.WantCaptureKeyboard;
+		const bool want_capture_mouse = io.WantCaptureMouse;
+		const bool want_capture_keyboard = io.WantCaptureKeyboard;
 
 		switch (ea.getEventType())
 		{
 		case osgGA::GUIEventAdapter::KEYDOWN:
 		case osgGA::GUIEventAdapter::KEYUP:
 		{
-			const bool isKeyDown = ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN;
+			const bool is_key_down = ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN;
 			const int c = ea.getKey();
 			const int special_key = ConvertFromOSGKey(c);
 			if (special_key > 0)
 			{
 				assert((special_key >= 0 && special_key < 512) && "ImGui KeysMap is an array of 512");
 
-				io.KeysDown[special_key] = isKeyDown;
+				io.KeysDown[special_key] = is_key_down;
 
 				io.KeyCtrl = ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL;
 				io.KeyShift = ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT;
 				io.KeyAlt = ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT;
 				io.KeySuper = ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SUPER;
 			}
-			else if (isKeyDown && c > 0 && c < 0xFF)
+			else if (is_key_down && c > 0 && c < 0xFF)
 			{
 				io.AddInputCharacter((unsigned short)c);
 			}
-			return wantCaptureKeyboard;
+			return want_capture_keyboard;
 		}
 		case (osgGA::GUIEventAdapter::RELEASE):
 		case (osgGA::GUIEventAdapter::DOUBLECLICK):
 		case (osgGA::GUIEventAdapter::PUSH):
 		{
 			io.MousePos = ImVec2(ea.getX(), io.DisplaySize.y - ea.getY());
-			mousePressed_[0] = ea.getButtonMask() & osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON;
-			mousePressed_[1] = ea.getButtonMask() & osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON;
-			mousePressed_[2] = ea.getButtonMask() & osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON;
-			return wantCaptureMouse;
+			m_MousePressed[0] = ea.getButtonMask() & osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON;
+			m_MousePressed[1] = ea.getButtonMask() & osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON;
+			m_MousePressed[2] = ea.getButtonMask() & osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON;
+			return want_capture_mouse;
 		}
 		case (osgGA::GUIEventAdapter::DRAG):
 		case (osgGA::GUIEventAdapter::MOVE):
 		{
 			io.MousePos = ImVec2(ea.getX(), io.DisplaySize.y - ea.getY());
-			return wantCaptureMouse;
+			return want_capture_mouse;
 		}
 		case (osgGA::GUIEventAdapter::SCROLL):
 		{
-			mouseWheel_ = ea.getScrollingMotion() == osgGA::GUIEventAdapter::SCROLL_UP ? 1.0 : -1.0;
-			return wantCaptureMouse;
+			m_MouseWheel = ea.getScrollingMotion() == osgGA::GUIEventAdapter::SCROLL_UP ? 1.0 : -1.0;
+			return want_capture_mouse;
 		}
 		default:
 		{
@@ -259,7 +259,7 @@ namespace GASS
 		return false;
 	}
 
-	void OSGImGuiHandler::drawUi()
+	void OSGImGuiHandler::DrawUi()
 	{
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(std::make_shared<DrawGUIEvent>(ImGui::GetCurrentContext()));
 	}

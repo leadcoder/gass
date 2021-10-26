@@ -148,11 +148,11 @@ namespace GASS
 			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
 			if(comp)
 			{
-				RTTI* pRTTI = comp->GetRTTI();
-				while(pRTTI)
+				RTTI* p_rtti = comp->GetRTTI();
+				while(p_rtti)
 				{
-					std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-					while(iter != pRTTI->GetProperties()->end())
+					auto	iter = p_rtti->GetFirstProperty();
+					while(iter != p_rtti->GetProperties()->end())
 					{
 						IProperty * prop = (*iter);
 						if(prop->GetName() == prop_name)
@@ -163,7 +163,7 @@ namespace GASS
 						}
 						++iter;
 					}
-					pRTTI = pRTTI->GetAncestorRTTI();
+					p_rtti = p_rtti->GetAncestorRTTI();
 				}
 			}
 		}
@@ -236,7 +236,7 @@ namespace GASS
 				prop->Serialize(component,&ss);
 		}
 		unsigned long size=ss.GetLength();
-		unsigned char *buffer=new unsigned char[size];
+		auto *buffer=new unsigned char[size];
 		SerialSaver sv(buffer,size);
 
 

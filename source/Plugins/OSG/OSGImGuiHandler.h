@@ -21,27 +21,27 @@ namespace GASS
 		OSGImGuiHandler();
 
 		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) override;
-		static void init();
+		static void Init();
 	protected:
 		// Put your ImGui code inside this function
-		virtual void drawUi();
+		virtual void DrawUi();
 
 	private:
 
 
-		void setCameraCallbacks(osg::Camera* camera);
+		void SetCameraCallbacks(osg::Camera* camera);
 
-		void newFrame(osg::RenderInfo& renderInfo);
+		void NewFrame(osg::RenderInfo& renderInfo);
 
-		void render(osg::RenderInfo& renderInfo);
+		void Render(osg::RenderInfo& renderInfo);
 
 	private:
 		struct ImGuiNewFrameCallback;
 		struct ImGuiRenderCallback;
 
-		double time_{0.0f};
-		bool mousePressed_[3]{ false };
-		float mouseWheel_{0.0f};
-		bool initialized_{false};
+		double m_Time{0.0f};
+		bool m_MousePressed[3]{ false };
+		float m_MouseWheel{0.0f};
+		bool m_Initialized{false};
 	};
 }

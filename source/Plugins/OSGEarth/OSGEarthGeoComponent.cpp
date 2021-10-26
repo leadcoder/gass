@@ -75,7 +75,7 @@ namespace GASS
 #if 1
 			if (!m_LocationComp->HasParentLocation()) //top node?
 			{
-				_LatOrLongChanged(); //update location component to reflect current terrain elevation
+				LatOrLongChanged(); //update location component to reflect current terrain elevation
 			}
 #else
 			const Vec3 pos = m_LocationComp->GetPosition();
@@ -97,7 +97,7 @@ namespace GASS
 	void OSGEarthGeoComponent::SetLatitude(double lat)
 	{ 
 		m_Location.Latitude = lat;
-		_LatOrLongChanged();
+		LatOrLongChanged();
 	}
 
 	double OSGEarthGeoComponent::GetLongitude() const
@@ -108,15 +108,15 @@ namespace GASS
 	void OSGEarthGeoComponent::SetLongitude(double lat)
 	{ 
 		m_Location.Longitude = lat;
-		_LatOrLongChanged();
+		LatOrLongChanged();
 	}
 
-	Vec3 OSGEarthGeoComponent::_GetWorldPosition() const
+	Vec3 OSGEarthGeoComponent::GetWorldPosition() const
 	{
 		return m_LocationComp->GetWorldPosition();
 	}
 
-	void OSGEarthGeoComponent::_SetWorldPosition(const Vec3& pos)
+	void OSGEarthGeoComponent::SetWorldPosition(const Vec3& pos)
 	{
 		m_HandleTransformations = false;
 		m_LocationComp->SetWorldPosition(pos);
@@ -129,7 +129,7 @@ namespace GASS
 		if (m_OESM)
 		{
 			//first update values from from current location
-			m_OESM->SceneToWGS84(_GetWorldPosition(), m_Location);
+			m_OESM->SceneToWGS84(GetWorldPosition(), m_Location);
 			double terrain_height = 0;
 			if(m_OESM->GetTerrainHeight(m_Location, terrain_height, GEOMETRY_FLAG_GROUND_LOD))
 			{
@@ -137,7 +137,7 @@ namespace GASS
 				m_Location.Height = terrain_height + m_HeightAboveGround;
 				Vec3 pos;
 				if(m_OESM->WGS84ToScene(m_Location,pos))
-					_SetWorldPosition(pos);
+					SetWorldPosition(pos);
 			}
 		}
 	}
@@ -158,13 +158,13 @@ namespace GASS
 		if (m_OESM)
 		{
 			//first update geolocation from current world location
-			if (m_OESM->SceneToWGS84(_GetWorldPosition(), m_Location))
+			if (m_OESM->SceneToWGS84(GetWorldPosition(), m_Location))
 			{
 				m_Location.Height = value;
 				Vec3 pos;
 				if (m_OESM->WGS84ToScene(m_Location, pos))
 				{
-					_SetWorldPosition(pos);
+					SetWorldPosition(pos);
 					//update Height above ground
 					m_OESM->GetHeightAboveTerrain(m_Location, m_HeightAboveGround, GEOMETRY_FLAG_GROUND_LOD);
 				}
@@ -199,7 +199,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoComponent::_LatOrLongChanged()
+	void OSGEarthGeoComponent::LatOrLongChanged()
 	{
 		if (m_OESM)
 		{
@@ -218,7 +218,7 @@ namespace GASS
 		
 			if (m_OESM->WGS84ToScene(m_Location, pos))
 			{
-				_SetWorldPosition(pos);
+				SetWorldPosition(pos);
 			}
 		}
 	}	

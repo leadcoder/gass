@@ -50,8 +50,8 @@ namespace GASS
 		void SetRotation(const Quaternion &rot);
 	protected:
 		PhysXTriangleMesh m_TriangleMesh;
-		physx::PxRigidStatic* m_Actor{NULL};
-		physx::PxShape* m_Shape{NULL};
+		physx::PxRigidStatic* m_Actor{nullptr};
+		physx::PxShape* m_Shape{nullptr};
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
 	using PhysXMeshGeometryComponentPtr = std::shared_ptr<PhysXMeshGeometryComponent>;

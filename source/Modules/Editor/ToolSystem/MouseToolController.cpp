@@ -537,11 +537,11 @@ namespace GASS
 		Quaternion drop_rot(GASS::Quaternion::IDENTITY);
 		if (GetMouseWorldPosAndRot(mouse_pos, drop_pos, drop_rot))
 		{
-			_CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
+			CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
 		}
 		else
 		{
-			_CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
+			CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
 		}
 	}
 
@@ -567,7 +567,7 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::_CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
+	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
 	{
 		ScenePtr cur_scene = m_EditorSceneManager->GetScene();
 		SceneObjectPtr site = m_EditorSceneManager->GetObjectSite();

@@ -58,7 +58,7 @@ namespace GASS
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
 		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
-		RakNetChildReplica* m_Replica{NULL};
+		RakNetChildReplica* m_Replica{nullptr};
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
 		int m_PartId{0};

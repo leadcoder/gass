@@ -24,9 +24,8 @@
 
 namespace GASS
 {
-	RecastDoorComponent::RecastDoorComponent() : m_Initialized(false),
-		m_Open(true),
-		m_PolyRefCount(0)
+	RecastDoorComponent::RecastDoorComponent() 
+		
 	{
 
 	}

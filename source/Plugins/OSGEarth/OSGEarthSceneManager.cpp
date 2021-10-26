@@ -46,10 +46,10 @@ namespace GASS
 			{
 				if (ea.getKey() == _key)
 				{
-					osg::ref_ptr< osg::Node > safeNode = _canvas.get();
-					if (safeNode.valid())
+					osg::ref_ptr< osg::Node > safe_node = _canvas.get();
+					if (safe_node.valid())
 					{
-						safeNode->setNodeMask(safeNode->getNodeMask() ? 0 : ~0);
+						safe_node->setNodeMask(safe_node->getNodeMask() ? 0 : ~0);
 					}
 					return true;
 				}
@@ -109,7 +109,7 @@ namespace GASS
 		if (views.size() == 0)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find view", "OSGEarthSceneManager::OnInit");
 
-		osgViewer::View* view = dynamic_cast<osgViewer::View*>(views[0]);
+		auto* view = dynamic_cast<osgViewer::View*>(views[0]);
 
 		if (view == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthSceneManager::OnInit");
@@ -124,10 +124,10 @@ namespace GASS
 
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
 
-		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
-		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
-		mainContainer->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
-		mainContainer->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
+		osgEarth::Util::Controls::Container* main_container = canvas->addControl(new osgEarth::Util::Controls::VBox());
+		main_container->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
+		main_container->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
+		main_container->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
 
 		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
@@ -136,7 +136,7 @@ namespace GASS
 		canvas->setNodeMask(0);
 
 		root->addChild(canvas);
-		m_GUI = mainContainer;
+		m_GUI = main_container;
 
 
 		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
@@ -378,10 +378,10 @@ namespace GASS
 	}
 
 
-	bool OSGEarthSceneManager::_GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
+	bool OSGEarthSceneManager::GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-		const osgEarth::Ellipsoid em = mapSRS->getEllipsoid();
+		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
+		const osgEarth::Ellipsoid em = map_srs->getEllipsoid();
 		const double r = osg::minimum(em.getRadiusEquator(), em.getRadiusPolar());
 
 		// calculate the endpoints for an intersection test:
@@ -408,10 +408,10 @@ namespace GASS
 		{
 			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
 			{
-				osgEarth::GeoPoint mapPoint(m_WGS84, location.Longitude, location.Latitude);
+				osgEarth::GeoPoint map_point(m_WGS84, location.Longitude, location.Latitude);
 				// Query the elevation at the map location:
 				osgEarth::ElevationSample sample = m_MapNode->getMap()->getElevationPool()->getSample(
-					mapPoint,
+					map_point,
 					m_WorkingSet);
 
 
@@ -430,14 +430,14 @@ namespace GASS
 				status = true;
 
 				//test model layer 
-				osgEarth::ModelLayerVector modelLayers;
-				m_MapNode->getMap()->getLayers(modelLayers);
-				for (unsigned i = 0; i < modelLayers.size(); ++i)
+				osgEarth::ModelLayerVector model_layers;
+				m_MapNode->getMap()->getLayers(model_layers);
+				for (unsigned i = 0; i < model_layers.size(); ++i)
 				{
 					double model_elevation = 0;
-					if (modelLayers[i]->getNode() && modelLayers[i]->options().terrainPatch() == true)
+					if (model_layers[i]->getNode() && model_layers[i]->options().terrainPatch() == true)
 					{
-						bool model_status = m_MapNode->getTerrain()->getHeight(modelLayers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, nullptr);
+						bool model_status = m_MapNode->getTerrain()->getHeight(model_layers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, nullptr);
 						if (model_status)
 						{
 							//Always use terrain patch height to support terrain mask?
@@ -458,9 +458,9 @@ namespace GASS
 			if (flags | GEOMETRY_FLAG_SCENE_OBJECTS)
 			{
 				//remove ground...checked above!
-				GeometryFlags no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);
+				auto no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);
 				double object_h =0 ;
-				if (_GetSceneHeight(location, object_h, no_ground_flags))
+				if (GetSceneHeight(location, object_h, no_ground_flags))
 				{
 					if (object_h > height)
 					{
@@ -496,10 +496,10 @@ namespace GASS
 	bool OSGEarthSceneManager::GetUpVector(const GASS::Vec3 &location, GASS::Vec3 &up_vec) const
 	{
 		bool status = false;
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if(gp.fromWorld(mapSRS, osg_pos))
+		if(gp.fromWorld(map_srs, osg_pos))
 		{
 			osg::Vec3d osg_up_vec;
 			if (gp.createWorldUpVector(osg_up_vec))
@@ -514,10 +514,10 @@ namespace GASS
 	bool OSGEarthSceneManager::GetOrientation(const Vec3 &location, Quaternion &rot) const
 	{
 		bool status = false;
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if (gp.fromWorld(mapSRS, osg_pos))
+		if (gp.fromWorld(map_srs, osg_pos))
 		{
 			osg::Matrixd local2world;
 			if (gp.createLocalToWorld(local2world))

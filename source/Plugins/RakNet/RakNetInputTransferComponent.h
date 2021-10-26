@@ -44,11 +44,8 @@ namespace GASS
 		{
 			
 		}
-		InputPackage(int id ) : NetworkPackage(id),
-			TimeStamp(0),
-			Index(0),
-			Value(0),
-			Generator(0)
+		InputPackage(int id ) : NetworkPackage(id)
+			
 		{
 		
 		}

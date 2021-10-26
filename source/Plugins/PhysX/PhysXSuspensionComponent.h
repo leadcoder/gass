@@ -84,9 +84,9 @@ namespace GASS
 		float m_AngularSteerVelocity{0};
 
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic *m_SuspensionActor{NULL};
-		physx::PxD6Joint *m_SuspensionJoint{0};
-		physx::PxD6Joint *m_WheelAxisJoint{0};
+		physx::PxRigidDynamic *m_SuspensionActor{nullptr};
+		physx::PxD6Joint *m_SuspensionJoint{nullptr};
+		physx::PxD6Joint *m_WheelAxisJoint{nullptr};
 	};
 	using PhysXSuspensionComponentPtr = std::shared_ptr<PhysXSuspensionComponent>;
 }

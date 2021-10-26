@@ -257,7 +257,7 @@ namespace GASS
 		osgUtil::Optimizer optimizer;
 		optimizer.optimize(m_MeshNode.get(), osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS & ~osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS);
 
-		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		auto* data = new OSGNodeData(shared_from_this());
 		m_MeshNode->setUserData(data);
 
 		SetLighting(m_Lighting);
@@ -332,11 +332,11 @@ namespace GASS
 		{
 			so->SetName(node->getName());
 			so->SetID(node->getName());
-			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+			auto* geode = dynamic_cast<osg::Geode*> (node);
 			if(geode)
 			{
 				GASS_SHARED_PTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
-				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+				auto* node_data = new OSGNodeData(mesh_comp);
 				node->setUserData(node_data);
 				mesh_comp->SetMeshNode(node);
 				so->AddComponent(mesh_comp);
@@ -510,7 +510,7 @@ namespace GASS
 		if (!node)
 			return;
 
-		osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+		auto* geode = dynamic_cast<osg::Geode*> (node);
 		if (geode)
 		{
 			osg::BoundingBox bbox = geode->getBoundingBox();

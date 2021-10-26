@@ -99,20 +99,20 @@ namespace GASS
 			m_Shape = physx::PxRigidActorExt::createExclusiveShape(*body->GetPxRigidDynamic(), convex_geom, *material);
 			//update collision flags
 			GeometryComponentPtr geom  = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
-			physx::PxFilterData collFilterData;
+			physx::PxFilterData coll_filter_data;
 			if(geom)
 			{
 				GeometryFlags against = GeometryFlagManager::GetMask(geom->GetGeometryFlags());
-				collFilterData.word0 = geom->GetGeometryFlags();
-				collFilterData.word1 = against;
-				m_Shape->setSimulationFilterData(collFilterData);
+				coll_filter_data.word0 = geom->GetGeometryFlags();
+				coll_filter_data.word1 = against;
+				m_Shape->setSimulationFilterData(coll_filter_data);
 			}
 			m_Shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,m_SimulationCollision);
 			if(body)
 			{
 				physx::PxReal mass = body->GetMass();
-				const physx::PxVec3 localPos = physx::PxVec3(0,0,0);
-				physx::PxRigidBodyExt::setMassAndUpdateInertia(*body->GetPxRigidDynamic(), mass,&localPos);
+				const physx::PxVec3 local_pos = physx::PxVec3(0,0,0);
+				physx::PxRigidBodyExt::setMassAndUpdateInertia(*body->GetPxRigidDynamic(), mass,&local_pos);
 
 				//density!!!
 				//physx::PxRigidBodyExt::updateMassAndInertia(*body->GetPxRigidDynamic(), mass,&localPos);

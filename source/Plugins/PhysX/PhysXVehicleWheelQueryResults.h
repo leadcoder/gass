@@ -39,40 +39,40 @@ class VehicleWheelQueryResults
 public:
 
 	//Allocate a buffer of wheel query results for up to maxNumWheels.
-	static VehicleWheelQueryResults* allocate(const PxU32 maxNumWheels);
+	static VehicleWheelQueryResults* Allocate(const PxU32 maxNumWheels);
 
 	//Free allocated buffer.
-	void free();
+	void Free();
 
-	PxWheelQueryResult* addVehicle(const PxU32 numWheels);
+	PxWheelQueryResult* AddVehicle(const PxU32 numWheels);
 
 private:
 
 	//One result for each wheel.
-	PxWheelQueryResult* mWheelQueryResults{NULL};
+	PxWheelQueryResult* m_MWheelQueryResults{nullptr};
 
 	//Maximum number of wheels.
-	PxU32 mMaxNumWheels{0};
+	PxU32 m_MMaxNumWheels{0};
 
 	//Number of wheels 
-	PxU32 mNumWheels{0};
+	PxU32 m_MNumWheels{0};
 
 
 	VehicleWheelQueryResults()
 		 
 	{
-		init();
+		Init();
 	}
 
 	~VehicleWheelQueryResults()
 	{
 	}
 
-	void init()
+	void Init()
 	{
-		mWheelQueryResults=nullptr;
-		mMaxNumWheels=0;
-		mNumWheels=0;
+		m_MWheelQueryResults=nullptr;
+		m_MMaxNumWheels=0;
+		m_MNumWheels=0;
 	}
 };
 }

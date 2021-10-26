@@ -82,10 +82,10 @@ namespace GASS
 		void JointCorrectHinge2();
 		void UpdateSwayBars(PhysicsVelocityEventPtr message);
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
-		dJointID m_ODEJoint{0};
+		dJointID m_ODEJoint{nullptr};
 		
-		ODEBodyComponent* m_Body1{NULL};
-		ODEBodyComponent* m_Body2{NULL};
+		ODEBodyComponent* m_Body1{nullptr};
+		ODEBodyComponent* m_Body2{nullptr};
 		
 		float m_SwayForce{0};
 		float m_Strength{1};

@@ -86,7 +86,7 @@ namespace GASS
 		float m_Damping{0};
 		float m_Spring{0};
 		
-		physx::PxD6Joint *m_RevoluteJoint{0};
+		physx::PxD6Joint *m_RevoluteJoint{nullptr};
 	};
 	using PhysXHingeComponentPtr = std::shared_ptr<PhysXHingeComponent>;
 }

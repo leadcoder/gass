@@ -213,9 +213,9 @@ namespace GASS
 		// By default all objects are not in scope, meaning we won't serialize the data automatically when they are constructed
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
-		SocketDescriptor socketDescriptor(static_cast<unsigned short>(port),nullptr);
+		SocketDescriptor socket_descriptor(static_cast<unsigned short>(port),nullptr);
 		GASS_LOG(LINFO) << "Raknet starup....";
-		bool ret = m_RakPeer->Startup(MAX_PEERS,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
+		bool ret = m_RakPeer->Startup(MAX_PEERS,static_cast<int>(m_SleepTime),&socket_descriptor, 1);
 		if(ret == false)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to start raknet server","RakNetNetworkSystem::StartServer");
@@ -255,8 +255,8 @@ namespace GASS
 		// Calling this eliminates the need to call replicaManager.SetScope(this, true, playerId); in Replica::SendConstruction.
 		m_ReplicaManager->SetDefaultScope(true);
 
-		SocketDescriptor socketDescriptor(0,nullptr);
-		m_RakPeer->Startup(1,static_cast<int>(m_SleepTime),&socketDescriptor, 1);
+		SocketDescriptor socket_descriptor(0,nullptr);
+		m_RakPeer->Startup(1,static_cast<int>(m_SleepTime),&socket_descriptor, 1);
 
 		m_RakPeer->Ping("255.255.255.255", static_cast<unsigned short>(server_port), true);
 		m_RakPeer->SetOccasionalPing(true);
@@ -308,7 +308,7 @@ namespace GASS
 		else*/ if (strcmp(output, "RakNetMasterReplica")==0)
 		{
 			//printf("replica about to be created!\n");
-			RakNetMasterReplica* object = new RakNetMasterReplica(m_ReplicaManager);
+			auto* object = new RakNetMasterReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			SystemMessagePtr message( new MasterReplicaCreatedEvent(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
@@ -317,7 +317,7 @@ namespace GASS
 		else if (strcmp(output, "RakNetChildReplica")==0)
 		{
 			//printf("replica about to be created!\n");
-			RakNetChildReplica* object = new RakNetChildReplica(m_ReplicaManager);
+			auto* object = new RakNetChildReplica(m_ReplicaManager);
 			object->RemoteInit(inBitStream, timestamp, networkID,senderId);
 			SystemMessagePtr message( new ChildReplicaCreatedEvent(object));
 			SimEngine::Get().GetSimSystemManager()->PostMessage(message);
@@ -480,7 +480,7 @@ namespace GASS
 		p = m_RakPeer->Receive();
 		while(p)
 		{
-			unsigned char packetIdentifier = ( unsigned char ) p->data[ 0 ];
+			auto packet_identifier = ( unsigned char ) p->data[ 0 ];
 			if (p->data[0]==ID_PONG)
 			{
 				RakNetTime time;//, dataLength;
@@ -502,7 +502,7 @@ namespace GASS
 				GASS_PRINT("Ping time:" << response.Ping << " Time:" << response.Time << "\n")
 				//printf("Got pong from %s with time %i\n", client->PlayerIDToDottedIP(p->systemAddress), RakNet::GetTime() - time);
 			}
-			else if(packetIdentifier == ID_START_SCENE)
+			else if(packet_identifier == ID_START_SCENE)
 			{
 				ServerData data;
 				RakNet::BitStream server_data(p->data+1,p->length-1,false);
@@ -620,7 +620,7 @@ namespace GASS
 		//Find replica object
 		for (unsigned int index=0; index < m_ReplicaManager->GetReplicaCount(); index++)
 		{
-			RakNetChildReplica *rep = (RakNetChildReplica*) dynamic_cast<RakNetChildReplica*>(m_ReplicaManager->GetReplicaAtIndex(index));
+			auto *rep = (RakNetChildReplica*) dynamic_cast<RakNetChildReplica*>(m_ReplicaManager->GetReplicaAtIndex(index));
 			if(rep)
 			{
 				if(rep->GetPartOfId() == part_of_network_id) //we are part of this object
@@ -652,11 +652,11 @@ namespace GASS
 		inBitStream->Read(str_size);
 		if(str_size >0)
 		{
-			char* inString = new char[ str_size + 1 ];
-			inBitStream->Read(inString, str_size);
-			inString[ str_size] = '\0';
-			final = inString;
-			delete[] inString;
+			char* in_string = new char[ str_size + 1 ];
+			inBitStream->Read(in_string, str_size);
+			in_string[ str_size] = '\0';
+			final = in_string;
+			delete[] in_string;
 		}
 		return final;
 	}

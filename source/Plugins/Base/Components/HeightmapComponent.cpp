@@ -62,7 +62,7 @@ namespace GASS
 	void HeightmapComponent::OnInitialize()
 	{
 		//Try to load from file!	
-		FilePath full_path = _GetFilePath();
+		FilePath full_path = GetFilePath();
 		if(full_path.Exist()) //Check if file exist
 		{
 			m_HM = new HeightField();
@@ -72,7 +72,7 @@ namespace GASS
 		}
 	}
 
-	FilePath HeightmapComponent::_GetFilePath() const
+	FilePath HeightmapComponent::GetFilePath() const
 	{
 		ScenePtr scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetSceneFolder().GetFullPath();
@@ -86,13 +86,13 @@ namespace GASS
 		BaseSceneComponent::SaveXML(obj_elem);
 		if(m_HM)
 		{
-			m_HM->Save(_GetFilePath().GetFullPath());
+			m_HM->Save(GetFilePath().GetFullPath());
 		}
 	}
 
 	void HeightmapComponent::SetUpdate(bool)
 	{
-		_UpdateData();
+		UpdateData();
 	}
 
 	bool  HeightmapComponent::GetUpdate() const
@@ -107,11 +107,11 @@ namespace GASS
 
 	void HeightmapComponent::SetExtent(const AABoxd& extent)
 	{
-		_UpdateDebugObject(extent);
+		UpdateDebugObject(extent);
 		m_Extent = extent;
 	}
 
-	void HeightmapComponent::_UpdateData()
+	void HeightmapComponent::UpdateData()
 	{
 		if(!GetSceneObject())
 			return;
@@ -120,8 +120,8 @@ namespace GASS
 		const Vec3 bbsize = bbox.GetSize();
 		
 		const double inv_sample_step = 1.0/m_SampleStep;
-		const unsigned int px_width = static_cast<unsigned int>(bbsize.x * inv_sample_step);
-		const unsigned int pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
+		const auto px_width = static_cast<unsigned int>(bbsize.x * inv_sample_step);
+		const auto pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
 		
 		//GEOMETRY_FLAG_GROUND
 		
@@ -147,7 +147,7 @@ namespace GASS
 			return ret;
 			}();
 		m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
-		const GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
+		const auto flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 
 		for (unsigned int i = 0; i < px_width; i++)
 		{
@@ -163,7 +163,7 @@ namespace GASS
 			}
 		}
 
-		m_HM->Save(_GetFilePath().GetFullPath());
+		m_HM->Save(GetFilePath().GetFullPath());
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
@@ -260,13 +260,13 @@ namespace GASS
 	{
 		if (m_Debug && !value)
 		{
-			SceneObjectPtr obj = _GetOrCreateDebugObject();
+			SceneObjectPtr obj = GetOrCreateDebugObject();
 			obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(false);
 		}
 
 		m_Debug = value;
 	
-		_UpdateDebugObject(m_Extent);
+		UpdateDebugObject(m_Extent);
 	}
 
 	bool HeightmapComponent::GetDebug() const
@@ -274,13 +274,13 @@ namespace GASS
 		return m_Debug;
 	}
 
-	void HeightmapComponent::_UpdateDebugObject(const AABoxd& extent)
+	void HeightmapComponent::UpdateDebugObject(const AABoxd& extent)
 	{
 		if (!m_Debug)
 			return;
 		if (!GetSceneObject())
 			return;
-		SceneObjectPtr obj = _GetOrCreateDebugObject();
+		SceneObjectPtr obj = GetOrCreateDebugObject();
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_Debug);
 		const Vec3d center = extent.Min + (extent.Max - extent.Min) * 0.5;
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(center);
@@ -291,7 +291,7 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr HeightmapComponent::_GetOrCreateDebugObject()
+	SceneObjectPtr HeightmapComponent::GetOrCreateDebugObject()
 	{
 		const std::string obj_id = "DEBUG_OBJECT";
 		SceneObjectPtr scene_object = GetSceneObject()->GetChildByID(obj_id);

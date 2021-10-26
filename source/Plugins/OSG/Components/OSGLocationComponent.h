@@ -90,18 +90,18 @@ namespace GASS
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }
 
 		//Internal functions
-		OSGLocationComponent* _GetParentLocation() const { return m_ParentLocation; }
-		void _OnPositionUpdateRecursive(SceneObjectPtr scene_object);
-		void _OnRotationUpdateRecursive(SceneObjectPtr scene_object);
-		void _OnParentPositionUpdated();
-		void _OnParentRotationUpdated();
-		void _NotifyTransformationChange() const;
-		Vec3 _LocalToWorld(const Vec3 &world_pos) const;
-		Vec3 _WorldToLocal(const Vec3 &local_pos) const;
-		Quaternion _WorldToLocal(const Quaternion &world_rot) const;
-		Quaternion _LocalToWorld(const Quaternion &local_rot) const;
-		OSGLocationComponentPtr _GetFirstParentLocation() const;
-		osg::ref_ptr<osg::Group> _GetOSGRootGroup();
+		OSGLocationComponent* GetParentLocation() const { return m_ParentLocation; }
+		void OnPositionUpdateRecursive(SceneObjectPtr scene_object);
+		void OnRotationUpdateRecursive(SceneObjectPtr scene_object);
+		void OnParentPositionUpdated();
+		void OnParentRotationUpdated();
+		void NotifyTransformationChange() const;
+		Vec3 LocalToWorld(const Vec3 &world_pos) const;
+		Vec3 WorldToLocal(const Vec3 &local_pos) const;
+		Quaternion WorldToLocal(const Quaternion &world_rot) const;
+		Quaternion LocalToWorld(const Quaternion &local_rot) const;
+		OSGLocationComponentPtr GetFirstParentLocation() const;
+		osg::ref_ptr<osg::Group> GetOsgRootGroup();
 		
 		//! relative position of the scene node.
 		Vec3 m_Position;
@@ -114,7 +114,7 @@ namespace GASS
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		bool m_AttachToParent{false};
-		OSGLocationComponent* m_ParentLocation{NULL};
+		OSGLocationComponent* m_ParentLocation{nullptr};
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
 		unsigned int m_NodeMask{0};

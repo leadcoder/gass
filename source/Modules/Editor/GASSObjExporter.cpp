@@ -36,7 +36,7 @@ namespace GASS
 			}
 		}
 
-		std::map<std::string, SceneObjectPtr >::iterator iter = meshmap.begin();
+		auto iter = meshmap.begin();
 		while (iter != meshmap.end())
 		{
 			Export(iter->first, iter->second, false);
@@ -78,14 +78,14 @@ namespace GASS
 			}
 
 			//ManualMeshData final_mesh_data;
-			std::vector<Vec3> PositionVector;
-			std::vector<Vec3> NormalVector;
-			std::vector<Vec4> TexCoordVector;
-			std::vector<unsigned int > FaceVector;
-			std::map<std::string, GraphicsMaterial> Materials;
+			std::vector<Vec3> position_vector;
+			std::vector<Vec3> normal_vector;
+			std::vector<Vec4> tex_coord_vector;
+			std::vector<unsigned int > face_vector;
+			std::map<std::string, GraphicsMaterial> materials;
 
 			GraphicsMaterial def_mat;
-			Materials["DefaultMat"] = def_mat;
+			materials["DefaultMat"] = def_mat;
 
 			for (size_t i = 0; i < mesh_data_vec.size(); i++)
 			{
@@ -97,7 +97,7 @@ namespace GASS
 					{
 
 						if (sub_mesh->MaterialName != "")
-							Materials[sub_mesh->MaterialName] = sub_mesh->Material;
+							materials[sub_mesh->MaterialName] = sub_mesh->Material;
 						else
 						{
 							sub_mesh->MaterialName = "DefaultMat";
@@ -105,7 +105,7 @@ namespace GASS
 						}
 						for (size_t j = 0; j < sub_mesh->PositionVector.size(); j++)
 						{
-							PositionVector.push_back(sub_mesh->PositionVector[j]);
+							position_vector.push_back(sub_mesh->PositionVector[j]);
 						}
 
 						//generate normals if not present
@@ -129,7 +129,7 @@ namespace GASS
 
 						for (size_t j = 0; j < sub_mesh->NormalVector.size(); j++)
 						{
-							NormalVector.push_back(sub_mesh->NormalVector[j]);
+							normal_vector.push_back(sub_mesh->NormalVector[j]);
 						}
 
 						bool dds_tex = false;
@@ -156,14 +156,14 @@ namespace GASS
 									//tc.x = fmod(tc.x, 1.0);
 									//tc.y = fmod(tc.y, 1.0);
 								}
-								TexCoordVector.push_back(tc);
+								tex_coord_vector.push_back(tc);
 							}
 						}
 						else
 						{
 							for (size_t j = 0; j < sub_mesh->PositionVector.size(); j++)
 							{
-								TexCoordVector.emplace_back(1, 0, 0, 0);
+								tex_coord_vector.emplace_back(1, 0, 0, 0);
 							}
 						}
 					}
@@ -180,16 +180,16 @@ namespace GASS
 			obj_file_ptr << "mtllib " << FileUtils::GetFilename(out_file) << ".mtl" << "\n";
 			obj_file_ptr << "\n";
 
-			obj_file_ptr << "#num verts" << PositionVector.size() << "\n";
+			obj_file_ptr << "#num verts" << position_vector.size() << "\n";
 			//Serialize mesh data to obj format!
-			for (size_t i = 0; i < PositionVector.size(); i++)
-				obj_file_ptr << "v " << PositionVector[i] << "\n";
+			for (size_t i = 0; i < position_vector.size(); i++)
+				obj_file_ptr << "v " << position_vector[i] << "\n";
 			obj_file_ptr << "\n";
-			for (size_t i = 0; i < TexCoordVector.size(); i++)
-				obj_file_ptr << "vt " << TexCoordVector[i].x << " " << TexCoordVector[i].y << "\n";
+			for (size_t i = 0; i < tex_coord_vector.size(); i++)
+				obj_file_ptr << "vt " << tex_coord_vector[i].x << " " << tex_coord_vector[i].y << "\n";
 			obj_file_ptr << "\n";
-			for (size_t i = 0; i < NormalVector.size(); i++)
-				obj_file_ptr << "vn " << NormalVector[i] << "\n";
+			for (size_t i = 0; i < normal_vector.size(); i++)
+				obj_file_ptr << "vn " << normal_vector[i] << "\n";
 			obj_file_ptr << "\n";
 
 			int sub_mesh_index = 0;
@@ -241,8 +241,8 @@ namespace GASS
 			std::ofstream mtl_file_ptr;
 			mtl_file_ptr.open((out_file + ".mtl").c_str());
 
-			std::map<std::string, GraphicsMaterial>::iterator iter = Materials.begin();
-			while (iter != Materials.end())
+			auto iter = materials.begin();
+			while (iter != materials.end())
 			{
 				GraphicsMaterial mat = iter->second;
 				mtl_file_ptr << "\n";
@@ -260,8 +260,8 @@ namespace GASS
 			//copy textures
 			if (m_CopyTextures)
 			{
-				iter = Materials.begin();
-				while (iter != Materials.end())
+				iter = materials.begin();
+				while (iter != materials.end())
 				{
 					GraphicsMaterial mat = iter->second;
 					if (mat.Textures.size() > 0)

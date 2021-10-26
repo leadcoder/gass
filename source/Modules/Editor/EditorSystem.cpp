@@ -38,9 +38,9 @@ namespace GASS
 		static EditorGui editor;
 		if (m_ShowGUI)
 		{
-			ImGuiContext* context = static_cast<ImGuiContext*>(gui_event->m_Context);
+			auto* context = static_cast<ImGuiContext*>(gui_event->m_Context);
 			ImGui::SetCurrentContext(context);
-			editor.drawUi();
+			editor.DrawUi();
 		}
 	}
 }

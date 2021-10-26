@@ -26,41 +26,41 @@ namespace GASS
 		qryFilterData->word3 = (PxU32)VEHICLE_UNDRIVABLE_SURFACE;
 	}
 
-	VehicleSceneQueryData* VehicleSceneQueryData::allocate(const PxU32 maxNumWheels)
+	VehicleSceneQueryData* VehicleSceneQueryData::Allocate(const PxU32 maxNumWheels)
 	{
 		const PxU32 size0 = SIZEALIGN16(sizeof(VehicleSceneQueryData));
 		const PxU32 size1 = SIZEALIGN16(sizeof(PxRaycastQueryResult)*maxNumWheels);
 		const PxU32 size2 = SIZEALIGN16(sizeof(PxRaycastHit)*maxNumWheels);
 		const PxU32 size = size0 + size1 + size2;
 		//VehicleSceneQueryData* sqData = (VehicleSceneQueryData*)PX_ALLOC(size, PX_DEBUG_EXP("PxVehicleNWSceneQueryData"));
-		VehicleSceneQueryData* sqData = (VehicleSceneQueryData*)malloc(size);
-		sqData->init();
-		PxU8* ptr = (PxU8*) sqData;
+		auto* sq_data = (VehicleSceneQueryData*)malloc(size);
+		sq_data->Init();
+		PxU8* ptr = (PxU8*) sq_data;
 		ptr += size0;
-		sqData->mSqResults = (PxRaycastQueryResult*)ptr;
-		sqData->mNbSqResults = maxNumWheels;
+		sq_data->m_MSqResults = (PxRaycastQueryResult*)ptr;
+		sq_data->m_MNbSqResults = maxNumWheels;
 		ptr += size1;
-		sqData->mSqHitBuffer = (PxRaycastHit*)ptr;
+		sq_data->m_MSqHitBuffer = (PxRaycastHit*)ptr;
 		//ptr += size2;
-		sqData->mNumQueries = maxNumWheels;
-		return sqData;
+		sq_data->m_MNumQueries = maxNumWheels;
+		return sq_data;
 	}
 
-	void VehicleSceneQueryData::free()
+	void VehicleSceneQueryData::Free()
 	{
 		delete (this);
 	}
 
-	PxBatchQuery* VehicleSceneQueryData::setUpBatchedSceneQuery(PxScene* scene)
+	PxBatchQuery* VehicleSceneQueryData::SetUpBatchedSceneQuery(PxScene* scene)
 	{
-		PxBatchQueryDesc sqDesc(mNbSqResults, 0, 0);
-		sqDesc.queryMemory.userRaycastResultBuffer = mSqResults;
-		sqDesc.queryMemory.userRaycastTouchBuffer = mSqHitBuffer;
-		sqDesc.queryMemory.raycastTouchBufferSize = mNumQueries;
-		sqDesc.preFilterShader = mPreFilterShader;
+		PxBatchQueryDesc sq_desc(m_MNbSqResults, 0, 0);
+		sq_desc.queryMemory.userRaycastResultBuffer = m_MSqResults;
+		sq_desc.queryMemory.userRaycastTouchBuffer = m_MSqHitBuffer;
+		sq_desc.queryMemory.raycastTouchBufferSize = m_MNumQueries;
+		sq_desc.preFilterShader = m_MPreFilterShader;
 		//sqDesc.spuPreFilterShader = mSpuPreFilterShader;
 		//sqDesc.spuPreFilterShaderSize = mSpuPreFilterShaderSize;
-		return scene->createBatchQuery(sqDesc);
+		return scene->createBatchQuery(sq_desc);
 	}
 
 

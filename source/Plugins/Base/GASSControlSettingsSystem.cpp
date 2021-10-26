@@ -305,13 +305,13 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No File name provided", "ControlSettingsSystem::Load");
 		
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			// Fatal error, cannot load
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + filename, "ControlSettingsSystem::Load");
 		}
-		tinyxml2::XMLElement *control_settings = xmlDoc->FirstChildElement("ControlSettings");	
+		tinyxml2::XMLElement *control_settings = xml_doc->FirstChildElement("ControlSettings");	
 	
 		control_settings = control_settings->FirstChildElement();
 		//remove previous settings
@@ -325,7 +325,7 @@ namespace GASS
 		while(control_settings)
 		{
 			const std::string name = control_settings->Value();
-			ControlSetting* cs = new ControlSetting(name,this,input_system.get());
+			auto* cs = new ControlSetting(name,this,input_system.get());
 			Add(name,cs);
 			tinyxml2::XMLElement *control_map = control_settings->FirstChildElement();
 			while(control_map)
@@ -343,7 +343,7 @@ namespace GASS
 					if(control_map->Attribute("Key"))
 					{
 						const std::string input = control_map->Attribute("Key");
-						KeyTriggerController* controller = new KeyTriggerController(controller_name,cs);
+						auto* controller = new KeyTriggerController(controller_name,cs);
 						controller->m_Device = inputdevice;
 						controller->m_Key = m_InputStringTable->Get(input);
 						std::string repete;
@@ -359,7 +359,7 @@ namespace GASS
 					{
 						const std::string pos_input = control_map->Attribute("PosKey");
 						const std::string neg_input = control_map->Attribute("NegKey");
-						KeyAxisController* controller = new KeyAxisController(controller_name,cs);
+						auto* controller = new KeyAxisController(controller_name,cs);
 						controller->m_NonRepeating = false;
 						controller->m_Device = inputdevice;
 						controller->m_PosKey = m_InputStringTable->Get(pos_input);
@@ -375,7 +375,7 @@ namespace GASS
 					if(control_map->Attribute("Axis"))//axis
 					{
 						const std::string input = control_map->Attribute("Axis");
-						AxisAxisController* controller = new AxisAxisController(controller_name,cs);
+						auto* controller = new AxisAxisController(controller_name,cs);
 						controller->m_Device = inputdevice;
 						controller->m_Axis = m_InputStringTable->Get(input);
 						controller->m_NonRepeating = false;
@@ -406,7 +406,7 @@ namespace GASS
 						if(control_map->Attribute("Button")) //button
 						{
 							const std::string input = control_map->Attribute("Button");
-							ButtonTriggerController* controller = new ButtonTriggerController(controller_name,cs);
+							auto* controller = new ButtonTriggerController(controller_name,cs);
 							controller->m_Device = inputdevice;
 							controller->m_Button = m_InputStringTable->Get(input);
 							std::string repete;
@@ -424,7 +424,7 @@ namespace GASS
 						{
 							const std::string posinput = control_map->Attribute("PosButton");
 							const std::string neginput = control_map->Attribute("NegButton");
-							ButtonAxisController* controller = new ButtonAxisController(controller_name,cs);
+							auto* controller = new ButtonAxisController(controller_name,cs);
 							controller->m_Device = inputdevice;
 							controller->m_PosKey = m_InputStringTable->Get(posinput);
 							controller->m_NegKey = m_InputStringTable->Get(neginput);
@@ -438,16 +438,16 @@ namespace GASS
 			}
 			control_settings = control_settings->NextSiblingElement();
 		}
-		xmlDoc->Clear();
+		xml_doc->Clear();
 		// Delete our allocated document and return success ;)
-		delete xmlDoc;
+		delete xml_doc;
 	}
 
 	
 	ControlSetting* ControlSettingsSystem::NewRemoteControlSetting(const std::string &name)
 	{
 		ControlSetting* local = GetControlSetting(name);
-		ControlSetting* remote = new ControlSetting(name,this, nullptr);
+		auto* remote = new ControlSetting(name,this, nullptr);
 		if(local)
 		{
 			remote->m_IndexToName = local->m_IndexToName;
@@ -458,7 +458,7 @@ namespace GASS
 				const std::string mapname = (std::string) iter->first;
 				Controller* remote_controller  = new RemoteController("remotecontroller",local);
 				remote->m_ControllerMap[mapname] = remote_controller;
-				Controller* controller = (Controller*) iter->second;
+				auto* controller = (Controller*) iter->second;
 				*remote_controller  = *controller;
 			}
 			/*for(int i = 0;  i< MAX_ACTIONS; i++)

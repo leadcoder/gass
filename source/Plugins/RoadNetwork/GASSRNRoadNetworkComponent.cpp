@@ -122,12 +122,12 @@ namespace GASS
 		{
 			if(value)
 			{
-				_CreateEditableFromNetwork();
+				CreateEditableFromNetwork();
 				RebuildGraph();
 			}
 			else
 			{
-				_CreateNetworkFromEditable();
+				CreateNetworkFromEditable();
 
 				//remove all nodes and edges
 				SceneObject::ComponentVector components;
@@ -149,7 +149,7 @@ namespace GASS
 		}
 	}
 
-	void RNRoadNetworkComponent::_CreateEditableFromNetwork()
+	void RNRoadNetworkComponent::CreateEditableFromNetwork()
 	{
 		//create all nodes and  edges!
 		std::map<RoadNode*,GraphNodeComponentPtr> mapping;
@@ -259,7 +259,7 @@ namespace GASS
 		}
 	}
 
-	void RNRoadNetworkComponent::_CreateNetworkFromEditable()
+	void RNRoadNetworkComponent::CreateNetworkFromEditable()
 	{
 		m_Network.Clear();
 		std::map<RNRoadNodeComponentPtr,RoadNode*> node_mapping;
@@ -269,7 +269,7 @@ namespace GASS
 		{
 			RNRoadNodeComponentPtr node_comp = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(components[i]);
 			Vec3 node_pos  = node_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			RoadNode* road_node = new RoadNode();
+			auto* road_node = new RoadNode();
 			road_node->Position = node_pos;
 			node_mapping[node_comp] = road_node; 
 			m_Network.m_Nodes.push_back(road_node);
@@ -298,7 +298,7 @@ namespace GASS
 				//road_wps.push_back(end_pos);
 			}
 		
-			RoadEdge* edge = new RoadEdge();
+			auto* edge = new RoadEdge();
 			edge->Waypoints = road_wps;
 			edge->Distance =  Path::GetPathLength(road_wps);
 			edge->StartNode = start_node;
@@ -408,7 +408,7 @@ namespace GASS
 	void RNRoadNetworkComponent::SaveXML(tinyxml2::XMLElement * elem)
 	{
 		if(m_Edit)
-			_CreateNetworkFromEditable();
+			CreateNetworkFromEditable();
 		m_Edit = false;
 		m_ShowGraph = false;
 		BaseSceneComponent::SaveXML(elem);

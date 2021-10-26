@@ -97,10 +97,10 @@ namespace GASS
 		dSpaceID GetSecondarySpace();
 	protected:
 		void Wake();
-		dBodyID m_ODEBodyID{0};
-		dSpaceID m_ODESpaceID{NULL};
+		dBodyID m_ODEBodyID{nullptr};
+		dSpaceID m_ODESpaceID{nullptr};
 		
-		dSpaceID m_ODESecondarySpaceID{NULL};
+		dSpaceID m_ODESecondarySpaceID{nullptr};
 		dMass m_ODEMass;
 		float m_Mass{1};
 		bool m_Debug{false};

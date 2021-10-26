@@ -152,9 +152,9 @@ namespace GASS
 	{
 		if(message->GetSceneObject() != GetSceneObject())
 			return;
-		physx::PxVehicleChassisData chassisData;
+		physx::PxVehicleChassisData chassis_data;
 
-		chassisData.mMass = m_Mass*m_ScaleMass;
+		chassis_data.mMass = m_Mass*m_ScaleMass;
 
 		//Get chassis mesh
 		std::string col_mesh_id = GetSceneObject()->GetName();
@@ -168,14 +168,14 @@ namespace GASS
 		GASSAssert(mesh,"PhysXVehicleComponent::OnInitialize");
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		GASSAssert(scene_manager,"PhysXVehicleComponent::OnInitialize");
-		PhysXConvexMesh chassisMesh = scene_manager->CreateConvexMesh(col_mesh_id,mesh);
+		PhysXConvexMesh chassis_mesh = scene_manager->CreateConvexMesh(col_mesh_id,mesh);
 
 		GeometryComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		GASSAssert(geom,"PhysXVehicleComponent::OnInitialize");
 		m_MeshBounds = geom->GetBoundingBox();
 
-		std::vector<PxConvexMesh*> wheelConvexMeshes;
-		std::vector<PxVec3 > wheelCentreOffsets;
+		std::vector<PxConvexMesh*> wheel_convex_meshes;
+		std::vector<PxVec3 > wheel_centre_offsets;
 		//Add wheels
 		std::vector<SceneObjectPtr> wheel_objects;
 
@@ -214,10 +214,10 @@ namespace GASS
 			}
 			MeshComponentPtr child_mesh = child->GetFirstComponentByClass<IMeshComponent>();
 			LocationComponentPtr location = child->GetFirstComponentByClass<ILocationComponent>();
-			PhysXConvexMesh wheelMesh = scene_manager->CreateConvexMesh(child_col_mesh_id, child_mesh);
-			wheelConvexMeshes.push_back(wheelMesh.m_ConvexMesh);
+			PhysXConvexMesh wheel_mesh = scene_manager->CreateConvexMesh(child_col_mesh_id, child_mesh);
+			wheel_convex_meshes.push_back(wheel_mesh.m_ConvexMesh);
 			Vec3 pos = location->GetPosition();
-			wheelCentreOffsets.push_back(PxConvert::ToPx(pos));
+			wheel_centre_offsets.push_back(PxConvert::ToPx(pos));
 
 			PhysXWheelComponentPtr wheel_comp = child->GetFirstComponentByClass<PhysXWheelComponent>();
 			wheels[i] = wheel_comp->GetWheelData();
@@ -225,32 +225,32 @@ namespace GASS
 			tires[i]  = wheel_comp->GetTireData();
 		}
 
-		PxVehicleWheelsSimData* wheelsSimData = PxVehicleWheelsSimData::allocate(static_cast<physx::PxU32>(num_wheels));
-		PxVehicleDriveSimData4W driveSimData;
+		PxVehicleWheelsSimData* wheels_sim_data = PxVehicleWheelsSimData::allocate(static_cast<physx::PxU32>(num_wheels));
+		PxVehicleDriveSimData4W drive_sim_data;
 
 		//Extract the chassis AABB dimensions from the chassis convex mesh.
-		const PxVec3 chassisDims=ComputeDim(chassisMesh.m_ConvexMesh);
+		const PxVec3 chassis_dims=ComputeDim(chassis_mesh.m_ConvexMesh);
 
-		m_ChassisDim = PxConvert::ToGASS(chassisDims);
+		m_ChassisDim = PxConvert::ToGASS(chassis_dims);
 
 
 		//The origin is at the center of the chassis mesh.
 		//Set the center of mass to be below this point and a little towards the front.
-		const PxVec3 chassisCMOffset=PxVec3(0.0f,-chassisDims.y*0.5f+0.65f,0.125f);
+		const PxVec3 chassis_cm_offset=PxVec3(0.0f,-chassis_dims.y*0.5f+0.65f,0.125f);
 
 		//Now compute the chassis mass and moment of inertia.
 		//Use the moment of inertia of a cuboid as an approximate value for the chassis moi.
-		PxVec3 chassisMOI
-			((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisData.mMass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*chassisData.mMass/12.0f,
-			(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisData.mMass/12.0f);
+		PxVec3 chassis_moi
+			((chassis_dims.y*chassis_dims.y + chassis_dims.z*chassis_dims.z)*chassis_data.mMass/12.0f,
+			(chassis_dims.x*chassis_dims.x + chassis_dims.z*chassis_dims.z)*chassis_data.mMass/12.0f,
+			(chassis_dims.x*chassis_dims.x + chassis_dims.y*chassis_dims.y)*chassis_data.mMass/12.0f);
 		//A bit of tweaking here.  The car will have more responsive turning if we reduce the
 		//y-component of the chassis moment of inertia.
-		chassisMOI.y*=0.8f;
+		chassis_moi.y*=0.8f;
 
 		//Let's set up the chassis data structure now.
-		chassisData.mMOI=chassisMOI;
-		chassisData.mCMOffset=chassisCMOffset;
+		chassis_data.mMOI=chassis_moi;
+		chassis_data.mCMOffset=chassis_cm_offset;
 
 		//Work out the front/rear mass split from the cm offset.
 		//This is a very approximate calculation with lots of assumptions.
@@ -267,22 +267,22 @@ namespace GASS
 		//zRear = (-z-cm)/2                                                                     (6b)
 		//Substituting (6a-b) into (5) gives
 		//massRear = 0.5*mass*(z-3cm)/z                                         (7)
-		PxF32 massRear=0.5f * chassisData.mMass * (chassisDims.z-3*chassisCMOffset.z)/chassisDims.z;
-		const PxF32 massFront=chassisData.mMass - massRear;
-		massRear = massRear/PxF32 (wheels.size()-2);
+		PxF32 mass_rear=0.5f * chassis_data.mMass * (chassis_dims.z-3*chassis_cm_offset.z)/chassis_dims.z;
+		const PxF32 mass_front=chassis_data.mMass - mass_rear;
+		mass_rear = mass_rear/PxF32 (wheels.size()-2);
 		//float tot = massRear*4 + massFront;
 
 
 		//set mSprungMass from vehicle mass move this to wheel?
-		susps[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].mSprungMass=massFront*0.5f;
-		susps[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].mSprungMass=massFront*0.5f;
-		susps[PxVehicleDrive4WWheelOrder::eREAR_LEFT].mSprungMass=massRear;
-		susps[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].mSprungMass=massRear;
+		susps[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].mSprungMass=mass_front*0.5f;
+		susps[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].mSprungMass=mass_front*0.5f;
+		susps[PxVehicleDrive4WWheelOrder::eREAR_LEFT].mSprungMass=mass_rear;
+		susps[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].mSprungMass=mass_rear;
 
 		//Set mass of extra wheels
 		for(size_t i = 4; i < wheels.size() ; i++)
 		{
-			susps[i].mSprungMass=massRear;
+			susps[i].mSprungMass=mass_rear;
 			//wheels[i].mMaxSteer=0.0f;
 			//wheels[i].mMaxHandBrakeTorque=4000.0f*m_ScaleMass;
 			//wheels[i].mMaxBrakeTorque = 1500.0f*m_ScaleMass;
@@ -305,33 +305,33 @@ namespace GASS
 		//From here we can approximate application points for the tire and suspension forces.
 		//Lets assume that the suspension travel directions are absolutely vertical.
 		//Also assume that we apply the tire and suspension forces 30cm below the centre of mass.
-		std::vector<PxVec3> suGASS_SHARED_PTRavelDirections;
-		std::vector<PxVec3> wheelCentreCMOffsets;
-		std::vector<PxVec3> suspForceAppCMOffsets;
-		std::vector<PxVec3> tireForceAppCMOffsets;
-		suGASS_SHARED_PTRavelDirections.resize(num_wheels);
-		wheelCentreCMOffsets.resize(num_wheels);
-		suspForceAppCMOffsets.resize(num_wheels);
-		tireForceAppCMOffsets.resize(num_wheels);
+		std::vector<PxVec3> susp_travel_directions;
+		std::vector<PxVec3> wheel_centre_cm_offsets;
+		std::vector<PxVec3> susp_force_app_cm_offsets;
+		std::vector<PxVec3> tire_force_app_cm_offsets;
+		susp_travel_directions.resize(num_wheels);
+		wheel_centre_cm_offsets.resize(num_wheels);
+		susp_force_app_cm_offsets.resize(num_wheels);
+		tire_force_app_cm_offsets.resize(num_wheels);
 
 		for(PxU32 i=0;i<num_wheels;i++)
 		{
-			suGASS_SHARED_PTRavelDirections[i]= PxVec3(0,-1,0);
-			wheelCentreCMOffsets[i]= wheelCentreOffsets[i]-chassisCMOffset;
-			suspForceAppCMOffsets[i]=PxVec3(wheelCentreCMOffsets[i].x,-0.3f,wheelCentreCMOffsets[i].z);
-			tireForceAppCMOffsets[i]=PxVec3(wheelCentreCMOffsets[i].x,-0.3f,wheelCentreCMOffsets[i].z);
+			susp_travel_directions[i]= PxVec3(0,-1,0);
+			wheel_centre_cm_offsets[i]= wheel_centre_offsets[i]-chassis_cm_offset;
+			susp_force_app_cm_offsets[i]=PxVec3(wheel_centre_cm_offsets[i].x,-0.3f,wheel_centre_cm_offsets[i].z);
+			tire_force_app_cm_offsets[i]=PxVec3(wheel_centre_cm_offsets[i].x,-0.3f,wheel_centre_cm_offsets[i].z);
 		}
 
 		//Now add the wheel, tire and suspension data.
 		for(PxU32 i=0;i<num_wheels;i++)
 		{
-			wheelsSimData->setWheelData(i,wheels[i]);
-			wheelsSimData->setTireData(i,tires[i]);
-			wheelsSimData->setSuspensionData(i,susps[i]);
-			wheelsSimData->setSuspTravelDirection(i,suGASS_SHARED_PTRavelDirections[i]);
-			wheelsSimData->setWheelCentreOffset(i,wheelCentreCMOffsets[i]);
-			wheelsSimData->setSuspForceAppPointOffset(i,suspForceAppCMOffsets[i]);
-			wheelsSimData->setTireForceAppPointOffset(i,tireForceAppCMOffsets[i]);
+			wheels_sim_data->setWheelData(i,wheels[i]);
+			wheels_sim_data->setTireData(i,tires[i]);
+			wheels_sim_data->setSuspensionData(i,susps[i]);
+			wheels_sim_data->setSuspTravelDirection(i,susp_travel_directions[i]);
+			wheels_sim_data->setWheelCentreOffset(i,wheel_centre_cm_offsets[i]);
+			wheels_sim_data->setSuspForceAppPointOffset(i,susp_force_app_cm_offsets[i]);
+			wheels_sim_data->setTireForceAppPointOffset(i,tire_force_app_cm_offsets[i]);
 		}
 
 		//Now set up the differential, engine, gears, clutch, and ackermann steering.
@@ -339,7 +339,7 @@ namespace GASS
 		//Diff
 		PxVehicleDifferential4WData diff;
 		diff.mType=PxVehicleDifferential4WData::eDIFF_TYPE_LS_4WD;
-		driveSimData.setDiffData(diff);
+		drive_sim_data.setDiffData(diff);
 
 		//Engine
 		PxVehicleEngineData engine;
@@ -350,7 +350,7 @@ namespace GASS
 		engine.mDampingRateZeroThrottleClutchDisengaged *= m_ScaleMass;
 		engine.mDampingRateZeroThrottleClutchEngaged *= m_ScaleMass;
 		*/
-		driveSimData.setEngineData(engine);
+		drive_sim_data.setEngineData(engine);
 
 		//Gears
 		PxVehicleGearsData gears;
@@ -365,20 +365,20 @@ namespace GASS
 			gears.mRatios[i] = m_GearRatios[i];
 		}
 		gears.mSwitchTime = m_GearSwitchTime;
-		driveSimData.setGearsData(gears);
+		drive_sim_data.setGearsData(gears);
 
 		//Clutch
 		PxVehicleClutchData clutch;
 		clutch.mStrength = m_ClutchStrength*m_ScaleMass;
-		driveSimData.setClutchData(clutch);
+		drive_sim_data.setClutchData(clutch);
 
 		//Ackermann steer accuracy
 		PxVehicleAckermannGeometryData ackermann;
 		ackermann.mAccuracy=1.0f;
-		ackermann.mAxleSeparation= fabs(wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].z - wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eREAR_LEFT].z);
-		ackermann.mFrontWidth=fabs(wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].x-wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].x);
-		ackermann.mRearWidth=fabs(wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].x-wheelCentreOffsets[PxVehicleDrive4WWheelOrder::eREAR_LEFT].x);
-		driveSimData.setAckermannGeometryData(ackermann);
+		ackermann.mAxleSeparation= fabs(wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].z - wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eREAR_LEFT].z);
+		ackermann.mFrontWidth=fabs(wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].x-wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].x);
+		ackermann.mRearWidth=fabs(wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].x-wheel_centre_offsets[PxVehicleDrive4WWheelOrder::eREAR_LEFT].x);
+		drive_sim_data.setAckermannGeometryData(ackermann);
 
 		//////////////
 		//PxRigidDynamic* vehActor=createVehicleActor4W(chassisData,&wheelConvexMeshes4[0],chassisMesh.m_ConvexMesh,*scene_manager->GetPxScene(),*system->GetPxSDK(),*system->GetDefaultMaterial());
@@ -391,48 +391,48 @@ namespace GASS
 		m_Actor = system->GetPxSDK()->createRigidDynamic(PxTransform(PxIdentity));
 
 
-		const PxMaterial& wheelMaterial = *system->GetDefaultMaterial();
-		PxFilterData wheelCollFilterData;
-		wheelCollFilterData.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
+		const PxMaterial& wheel_material = *system->GetDefaultMaterial();
+		PxFilterData wheel_coll_filter_data;
+		wheel_coll_filter_data.word0=GEOMETRY_FLAG_RAY_CAST_WHEEL;
 		GeometryFlags against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_RAY_CAST_WHEEL);
-		wheelCollFilterData.word1=against;
+		wheel_coll_filter_data.word1=against;
 
 		//Create a query filter data for the car to ensure that cars
 		//do not attempt to drive on themselves.
-		PxFilterData vehQryFilterData;
-		VehicleSetupVehicleShapeQueryFilterData(&vehQryFilterData);
+		PxFilterData veh_qry_filter_data;
+		VehicleSetupVehicleShapeQueryFilterData(&veh_qry_filter_data);
 
 		//Add all the wheel shapes to the actor.
 		for(PxU32 i=0;i < num_wheels;i++)
 		{
-			PxConvexMeshGeometry wheelGeom(wheelConvexMeshes[i]);
-			PxShape* wheelShape = PxRigidActorExt::createExclusiveShape(*m_Actor,wheelGeom,wheelMaterial);
-			wheelShape->setQueryFilterData(vehQryFilterData);
-			wheelShape->setSimulationFilterData(wheelCollFilterData);
-			wheelShape->setLocalPose(PxTransform(PxIdentity));
+			PxConvexMeshGeometry wheel_geom(wheel_convex_meshes[i]);
+			PxShape* wheel_shape = PxRigidActorExt::createExclusiveShape(*m_Actor,wheel_geom,wheel_material);
+			wheel_shape->setQueryFilterData(veh_qry_filter_data);
+			wheel_shape->setSimulationFilterData(wheel_coll_filter_data);
+			wheel_shape->setLocalPose(PxTransform(PxIdentity));
 		}
 
-		PxConvexMeshGeometry chassisConvexGeom(chassisMesh.m_ConvexMesh);
-		const PxMaterial& chassisMaterial= *system->GetDefaultMaterial();
-		PxShape* chassisShape = PxRigidActorExt::createExclusiveShape(*m_Actor,chassisConvexGeom,chassisMaterial);
-		chassisShape->setQueryFilterData(vehQryFilterData);
-		chassisShape->userData = this;
+		PxConvexMeshGeometry chassis_convex_geom(chassis_mesh.m_ConvexMesh);
+		const PxMaterial& chassis_material= *system->GetDefaultMaterial();
+		PxShape* chassis_shape = PxRigidActorExt::createExclusiveShape(*m_Actor,chassis_convex_geom,chassis_material);
+		chassis_shape->setQueryFilterData(veh_qry_filter_data);
+		chassis_shape->userData = this;
 
-		PxFilterData chassisCollFilterData;
-		chassisCollFilterData.word0=GEOMETRY_FLAG_VEHICLE_CHASSIS;
+		PxFilterData chassis_coll_filter_data;
+		chassis_coll_filter_data.word0=GEOMETRY_FLAG_VEHICLE_CHASSIS;
 		against = GeometryFlagManager::GetMask(GEOMETRY_FLAG_VEHICLE_CHASSIS);
-		chassisCollFilterData.word1=against;
-		chassisShape->setSimulationFilterData(chassisCollFilterData);
+		chassis_coll_filter_data.word1=against;
+		chassis_shape->setSimulationFilterData(chassis_coll_filter_data);
 
-		chassisShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
-		chassisShape->setLocalPose(PxTransform(PxIdentity));
+		chassis_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE,true);
+		chassis_shape->setLocalPose(PxTransform(PxIdentity));
 
-		m_Actor->setMass(chassisData.mMass);
-		m_Actor->setMassSpaceInertiaTensor(chassisData.mMOI);
-		m_Actor->setCMassLocalPose(PxTransform(chassisData.mCMOffset, PxQuat(PxIdentity)));
+		m_Actor->setMass(chassis_data.mMass);
+		m_Actor->setMassSpaceInertiaTensor(chassis_data.mMOI);
+		m_Actor->setCMassLocalPose(PxTransform(chassis_data.mCMOffset, PxQuat(PxIdentity)));
 
 		m_Vehicle = PxVehicleDrive4W::allocate(static_cast<physx::PxU32>(num_wheels));
-		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheelsSimData,driveSimData,4-static_cast<physx::PxU32>(num_wheels));
+		m_Vehicle->setup(system->GetPxSDK(),m_Actor,*wheels_sim_data,drive_sim_data,4-static_cast<physx::PxU32>(num_wheels));
 
 		for(size_t i = 0; i < num_wheels; i++)
 		{
@@ -440,7 +440,7 @@ namespace GASS
 		}
 
 		//Free the sim data because we don't need that any more.
-		wheelsSimData->free();
+		wheels_sim_data->free();
 
 		//Don't forget to add the actor to the scene.
 		scene_manager->GetPxScene()->addActor(*m_Actor);
@@ -485,7 +485,7 @@ namespace GASS
 	}
 
 
-	PxVehicleKeySmoothingData VehicleKeySmoothingData=
+	PxVehicleKeySmoothingData vehicle_key_smoothing_data=
 	{
 		{
 			3.0f,	//rise rate eANALOG_INPUT_ACCEL
@@ -503,7 +503,7 @@ namespace GASS
 			}
 	};
 
-	PxVehiclePadSmoothingData VehiclePadSmoothingData=
+	PxVehiclePadSmoothingData vehicle_pad_smoothing_data=
 	{
 		{
 			6.0f,	//rise rate eANALOG_INPUT_ACCEL
@@ -521,7 +521,7 @@ namespace GASS
 			}
 	};
 
-	PxF32 VehicleSteerVsForwardSpeedData[2*8]=
+	PxF32 vehicle_steer_vs_forward_speed_data[2*8]=
 	{
 		0.0f,		0.75f,
 		5.0f,		0.75f,
@@ -532,7 +532,7 @@ namespace GASS
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32
 	};
-	PxFixedSizeLookupTable<8> VehicleSteerVsForwardSpeedTable(VehicleSteerVsForwardSpeedData,4);
+	PxFixedSizeLookupTable<8> vehicle_steer_vs_forward_speed_table(vehicle_steer_vs_forward_speed_data,4);
 
 	void PhysXVehicleComponent::SceneManagerTick(double delta)
 	{
@@ -548,23 +548,23 @@ namespace GASS
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(current_rot);
 		m_TrackTransformation = true;
 
-		PxShape* carShapes[PX_MAX_NB_WHEELS+1];
-		const PxU32 numShapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
-		m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
-		const PxRigidDynamic& vehicleActor = *m_Vehicle->getRigidDynamicActor();
+		PxShape* car_shapes[PX_MAX_NB_WHEELS+1];
+		const PxU32 num_shapes=m_Vehicle->getRigidDynamicActor()->getNbShapes();
+		m_Vehicle->getRigidDynamicActor()->getShapes(car_shapes,num_shapes);
+		const PxRigidDynamic& vehicle_actor = *m_Vehicle->getRigidDynamicActor();
 
-		if(m_AllWheels.size() == numShapes-1)
+		if(m_AllWheels.size() == num_shapes-1)
 		{
 			const PhysXPhysicsSceneManagerPtr sm = m_SceneManager.lock();
 
-			for(size_t i = 0; i < numShapes-1; i++)
+			for(size_t i = 0; i < num_shapes-1; i++)
 			{
 				SceneObjectPtr wheel(m_AllWheels[i]);
 				if(wheel)
 				{
-					Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).p);
+					Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*car_shapes[i],vehicle_actor).p);
 					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(pos);
-					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
+					Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*car_shapes[i],vehicle_actor).q);
 					wheel->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 				}
 			}
@@ -574,22 +574,22 @@ namespace GASS
 			GASS_EXCEPT(GASS::Exception::ERR_RT_ASSERTION_FAILED,"Physics shapes dont match visual geomtries","PhysXVehicleComponent::SceneManagerTick")
 		}
 
-		PxVehicleDrive4WRawInputData rawInputData;
+		PxVehicleDrive4WRawInputData raw_input_data;
 
 		if(m_UseDigitalInputs)
 		{
-			rawInputData.setDigitalAccel(m_DigAccelInput);
-			rawInputData.setDigitalBrake(m_DigBrakeInput);
-			rawInputData.setDigitalHandbrake(0);
+			raw_input_data.setDigitalAccel(m_DigAccelInput);
+			raw_input_data.setDigitalBrake(m_DigBrakeInput);
+			raw_input_data.setDigitalHandbrake(0);
 			if(m_SteerInput > 0)
 			{
-				rawInputData.setDigitalSteerLeft(true);
-				rawInputData.setDigitalSteerRight(0);
+				raw_input_data.setDigitalSteerLeft(true);
+				raw_input_data.setDigitalSteerRight(0);
 			}
 			else
 			{
-				rawInputData.setDigitalSteerLeft(0);
-				rawInputData.setDigitalSteerRight(true);
+				raw_input_data.setDigitalSteerLeft(0);
+				raw_input_data.setDigitalSteerRight(true);
 			}
 		}
 		else
@@ -598,55 +598,55 @@ namespace GASS
 			{
 				if (m_ThrottleInput < 0)
 				{
-					rawInputData.setAnalogBrake(fabs(m_ThrottleInput) + m_BreakInput);
-					rawInputData.setAnalogAccel(0);
+					raw_input_data.setAnalogBrake(fabs(m_ThrottleInput) + m_BreakInput);
+					raw_input_data.setAnalogAccel(0);
 				}
 				else
 				{
-					rawInputData.setAnalogAccel(fabs(m_ThrottleInput));
-					rawInputData.setAnalogBrake(m_BreakInput);
+					raw_input_data.setAnalogAccel(fabs(m_ThrottleInput));
+					raw_input_data.setAnalogBrake(m_BreakInput);
 				}
 			}
 			else
 			{
-				rawInputData.setAnalogAccel(0);
-				rawInputData.setAnalogBrake(m_BreakInput);
+				raw_input_data.setAnalogAccel(0);
+				raw_input_data.setAnalogBrake(m_BreakInput);
 			}
 
 			
-			rawInputData.setAnalogHandbrake(m_BreakInput);
-			rawInputData.setAnalogSteer(m_SteerInput);
+			raw_input_data.setAnalogHandbrake(m_BreakInput);
+			raw_input_data.setAnalogSteer(m_SteerInput);
 		}
-		rawInputData.setGearDown(false);
-		rawInputData.setGearUp(false);
+		raw_input_data.setGearDown(false);
+		raw_input_data.setGearUp(false);
 
-		PxVehicleDriveDynData& driveDynData=m_Vehicle->mDriveDynData;
+		PxVehicleDriveDynData& drive_dyn_data=m_Vehicle->mDriveDynData;
 
 		//Work out if the car is to flip from reverse to forward gear or from forward gear to reverse.
 		//Store if the car is moving slowly to help decide if the car is to toggle from reverse to forward in the next update.
 
 		if(m_UseAutoReverse)
 		{
-			bool toggleAutoReverse = false;
-			bool newIsMovingForwardSlowly = false;
+			bool toggle_auto_reverse = false;
+			bool new_is_moving_forward_slowly = false;
 
-			ProcessAutoReverse(*m_Vehicle, driveDynData, rawInputData, toggleAutoReverse, newIsMovingForwardSlowly);
+			ProcessAutoReverse(*m_Vehicle, drive_dyn_data, raw_input_data, toggle_auto_reverse, new_is_moving_forward_slowly);
 
-			m_IsMovingForwardSlowly = newIsMovingForwardSlowly;
+			m_IsMovingForwardSlowly = new_is_moving_forward_slowly;
 
 
 			//If the car is to flip gear direction then switch gear as appropriate.
-			if(toggleAutoReverse)
+			if(toggle_auto_reverse)
 			{
 				m_InReverseMode = !m_InReverseMode;
 
 				if(m_InReverseMode)
 				{
-					driveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+					drive_dyn_data.forceGearChange(PxVehicleGearsData::eREVERSE);
 				}
 				else
 				{
-					driveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+					drive_dyn_data.forceGearChange(PxVehicleGearsData::eFIRST);
 				}
 			}
 
@@ -655,49 +655,49 @@ namespace GASS
 			{
 				if(m_UseDigitalInputs)
 				{
-					const bool accel=rawInputData.getDigitalAccel();
-					const bool brake=rawInputData.getDigitalBrake();
-					rawInputData.setDigitalAccel(brake);
-					rawInputData.setDigitalBrake(accel);
+					const bool accel=raw_input_data.getDigitalAccel();
+					const bool brake=raw_input_data.getDigitalBrake();
+					raw_input_data.setDigitalAccel(brake);
+					raw_input_data.setDigitalBrake(accel);
 				}
 				else
 				{
-					const PxF32 accel=rawInputData.getAnalogAccel();
-					const PxF32 brake=rawInputData.getAnalogBrake();
-					rawInputData.setAnalogAccel(brake);
-					rawInputData.setAnalogBrake(accel);
+					const PxF32 accel=raw_input_data.getAnalogAccel();
+					const PxF32 brake=raw_input_data.getAnalogBrake();
+					raw_input_data.setAnalogAccel(brake);
+					raw_input_data.setAnalogBrake(accel);
 				}
 			}
 		}
 
-		bool isVehicleInAir  = false;
+		bool is_vehicle_in_air  = false;
 		// Now filter the raw input values and apply them to focus vehicle
 		// as floats for brake,accel,handbrake,steer and bools for gearup,geardown.
 		if(m_UseDigitalInputs)
 		{
 
-			PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(VehicleKeySmoothingData, VehicleSteerVsForwardSpeedTable, rawInputData, static_cast<float>(delta), isVehicleInAir, *m_Vehicle);
+			PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(vehicle_key_smoothing_data, vehicle_steer_vs_forward_speed_table, raw_input_data, static_cast<float>(delta), is_vehicle_in_air, *m_Vehicle);
 		}
 		else
 		{
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(VehiclePadSmoothingData, VehicleSteerVsForwardSpeedTable, rawInputData, static_cast<float>(delta), isVehicleInAir, *m_Vehicle);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(vehicle_pad_smoothing_data, vehicle_steer_vs_forward_speed_table, raw_input_data, static_cast<float>(delta), is_vehicle_in_air, *m_Vehicle);
 		}
 
-		const PxF32 forwardSpeed = m_Vehicle->computeForwardSpeed();
+		const PxF32 forward_speed = m_Vehicle->computeForwardSpeed();
 		//const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);
 		//const PxF32 sidewaysSpeedAbs = PxAbs(m_Vehicle->computeSidewaysSpeed());
 
-		const PxU32 currentGear = driveDynData.getCurrentGear();
-		const PxU32 targetGear = driveDynData.getTargetGear();
+		const PxU32 current_gear = drive_dyn_data.getCurrentGear();
+		const PxU32 target_gear = drive_dyn_data.getTargetGear();
 
-		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0,0,-forwardSpeed),Vec3(0,0,0),from_id));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0,0,-forward_speed),Vec3(0,0,0),from_id));
 
 		//pitch engine sound
 		float pitch = 1.0;
 		float volume = 0;
 
 		//rps (rad/s)
-		const float engine_rot_speed = fabs(driveDynData.getEngineRotationSpeed());
+		const float engine_rot_speed = fabs(drive_dyn_data.getEngineRotationSpeed());
 		float norm_engine_rot_speed = engine_rot_speed/m_EngineMaxRotationSpeed;
 
 		if(norm_engine_rot_speed > 1.0)
@@ -713,19 +713,19 @@ namespace GASS
 		SoundParameterRequestPtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
 		GetSceneObject()->PostRequest(volume_msg);
 
-		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forwardSpeed,currentGear));
+		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forward_speed,current_gear));
 
 		if(m_Debug)
 		{
 			std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
-			ss  <<  "\nGear::" << currentGear;
-			ss  <<  "\nTarget:" << targetGear;
-			ss  <<  "\nSpeed:" << forwardSpeed;
+			ss  <<  "\nGear::" << current_gear;
+			ss  <<  "\nTarget:" << target_gear;
+			ss  <<  "\nSpeed:" << forward_speed;
 			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(ss.str()));
 		}
 
-		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forwardSpeed,currentGear));
+		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forward_speed,current_gear));
 
 		//std::cout << "current Gear:" << currentGear << " Target:" << targetGear << "\n";
 		//std::cout << "Speed:" << forwardSpeed << " Sideways:" << sidewaysSpeedAbs << "\n";
@@ -735,15 +735,15 @@ namespace GASS
 		//	MessagePtr physics_msg(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id));
 		//	GetSceneObject()->PostMessage(physics_msg);
 
-		bool col = CheckCollisions(current_pos,current_rot,forwardSpeed);
+		bool col = CheckCollisions(current_pos,current_rot,forward_speed);
 
 		if(m_Debug)
 		{
 			std::stringstream ss;
 			ss  <<  GetSceneObject()->GetName();
-			ss  <<  "\nGear::" << currentGear;
-			ss  <<  "\nTarget:" << targetGear;
-			ss  <<  "\nSpeed:" << forwardSpeed;
+			ss  <<  "\nGear::" << current_gear;
+			ss  <<  "\nTarget:" << target_gear;
+			ss  <<  "\nSpeed:" << forward_speed;
 			ss  <<  "\nCollision:" << col;
 			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(ss.str()));
 		}
@@ -773,66 +773,66 @@ namespace GASS
 			//(If the player brings the car to rest with the brake the player needs to release the brake then reapply it
 			//to indicate they want to toggle between forward and reverse.)
 
-			const bool prevIsMovingForwardSlowly=m_IsMovingForwardSlowly;
-			bool isMovingForwardSlowly=false;
-			bool isMovingBackwards=false;
+			const bool prev_is_moving_forward_slowly=m_IsMovingForwardSlowly;
+			bool is_moving_forward_slowly=false;
+			bool is_moving_backwards=false;
 			//const bool isInAir = false;//focusVehicle.isInAir();
 			//if(!isInAir)
 			{
-				bool accelRaw,brakeRaw,handbrakeRaw;
+				bool accel_raw,brake_raw,handbrake_raw;
 				if(m_UseDigitalInputs)
 				{
-					accelRaw=carRawInputs.getDigitalAccel();
-					brakeRaw=carRawInputs.getDigitalBrake();
-					handbrakeRaw=carRawInputs.getDigitalHandbrake();
+					accel_raw=carRawInputs.getDigitalAccel();
+					brake_raw=carRawInputs.getDigitalBrake();
+					handbrake_raw=carRawInputs.getDigitalHandbrake();
 				}
 				else
 				{
-					accelRaw=carRawInputs.getAnalogAccel() > 0 ? true : false;
-					brakeRaw=carRawInputs.getAnalogBrake() > 0 ? true : false;
-					handbrakeRaw=carRawInputs.getAnalogHandbrake() > 0 ? true : false;
+					accel_raw=carRawInputs.getAnalogAccel() > 0 ? true : false;
+					brake_raw=carRawInputs.getAnalogBrake() > 0 ? true : false;
+					handbrake_raw=carRawInputs.getAnalogHandbrake() > 0 ? true : false;
 				}
 
-				const PxF32 forwardSpeed = focusVehicle.computeForwardSpeed();
-				const PxF32 forwardSpeedAbs = PxAbs(forwardSpeed);
-				const PxF32 sidewaysSpeedAbs = PxAbs(focusVehicle.computeSidewaysSpeed());
-				const PxU32 currentGear = driveDynData.getCurrentGear();
-				const PxU32 targetGear = driveDynData.getTargetGear();
+				const PxF32 forward_speed = focusVehicle.computeForwardSpeed();
+				const PxF32 forward_speed_abs = PxAbs(forward_speed);
+				const PxF32 sideways_speed_abs = PxAbs(focusVehicle.computeSidewaysSpeed());
+				const PxU32 current_gear = driveDynData.getCurrentGear();
+				const PxU32 target_gear = driveDynData.getTargetGear();
 
 				//Check if the car is rolling against the gear (backwards in forward gear or forwards in reverse gear).
-				if(PxVehicleGearsData::eFIRST == currentGear  && forwardSpeed < -THRESHOLD_ROLLING_BACKWARDS_SPEED)
+				if(PxVehicleGearsData::eFIRST == current_gear  && forward_speed < -THRESHOLD_ROLLING_BACKWARDS_SPEED)
 				{
-					isMovingBackwards = true;
+					is_moving_backwards = true;
 				}
-				else if(PxVehicleGearsData::eREVERSE == currentGear && forwardSpeed > THRESHOLD_ROLLING_BACKWARDS_SPEED)
+				else if(PxVehicleGearsData::eREVERSE == current_gear && forward_speed > THRESHOLD_ROLLING_BACKWARDS_SPEED)
 				{
-					isMovingBackwards = true;
+					is_moving_backwards = true;
 				}
 
 				//Check if the car is moving slowly.
-				if(forwardSpeedAbs < THRESHOLD_FORWARD_SPEED && sidewaysSpeedAbs < THRESHOLD_SIDEWAYS_SPEED)
+				if(forward_speed_abs < THRESHOLD_FORWARD_SPEED && sideways_speed_abs < THRESHOLD_SIDEWAYS_SPEED)
 				{
-					isMovingForwardSlowly=true;
+					is_moving_forward_slowly=true;
 				}
 
 				//Now work if we need to toggle from forwards gear to reverse gear or vice versa.
-				if(isMovingBackwards)
+				if(is_moving_backwards)
 				{
-					if(!accelRaw && !brakeRaw && !handbrakeRaw && (currentGear == targetGear))
+					if(!accel_raw && !brake_raw && !handbrake_raw && (current_gear == target_gear))
 					{
 						//The car is rolling against the gear and the player is doing nothing to stop this.
 						toggleAutoReverse = true;
 					}
 				}
-				else if(prevIsMovingForwardSlowly && isMovingForwardSlowly)
+				else if(prev_is_moving_forward_slowly && is_moving_forward_slowly)
 				{
-					if((currentGear > PxVehicleGearsData::eNEUTRAL) && brakeRaw && !accelRaw && (currentGear == targetGear))
+					if((current_gear > PxVehicleGearsData::eNEUTRAL) && brake_raw && !accel_raw && (current_gear == target_gear))
 					{
 						//The car was moving slowly in forward gear without player input and is now moving slowly with player input that indicates the
 						//player wants to switch to reverse gear.
 						toggleAutoReverse = true;
 					}
-					else if(currentGear == PxVehicleGearsData::eREVERSE && accelRaw && !brakeRaw && (currentGear == targetGear))
+					else if(current_gear == PxVehicleGearsData::eREVERSE && accel_raw && !brake_raw && (current_gear == target_gear))
 					{
 						//The car was moving slowly in reverse gear without player input and is now moving slowly with player input that indicates the
 						//player wants to switch to forward gear.
@@ -846,7 +846,7 @@ namespace GASS
 				{
 				newIsMovingForwardSlowly = true;
 				}*/
-				newIsMovingForwardSlowly = isMovingForwardSlowly;
+				newIsMovingForwardSlowly = is_moving_forward_slowly;
 			}
 		}
 	}
@@ -880,21 +880,21 @@ namespace GASS
 
 			if(m_Vehicle)
 			{
-				PxShape* carShapes[PX_MAX_NB_WHEELS+1];
-				const PxU32 numShapes= m_Vehicle->getRigidDynamicActor()->getNbShapes();
-				m_Vehicle->getRigidDynamicActor()->getShapes(carShapes,numShapes);
-				const PxRigidDynamic& vehicleActor = *m_Vehicle->getRigidDynamicActor();
+				PxShape* car_shapes[PX_MAX_NB_WHEELS+1];
+				const PxU32 num_shapes= m_Vehicle->getRigidDynamicActor()->getNbShapes();
+				m_Vehicle->getRigidDynamicActor()->getShapes(car_shapes,num_shapes);
+				const PxRigidDynamic& vehicle_actor = *m_Vehicle->getRigidDynamicActor();
 
-				if(m_AllWheels.size() == numShapes-1)
+				if(m_AllWheels.size() == num_shapes-1)
 				{
-					for(size_t i = 0; i < numShapes-1; i++)
+					for(size_t i = 0; i < num_shapes-1; i++)
 					{
 						SceneObjectPtr wheel(m_AllWheels[i]);
 						if(wheel)
 						{
-							Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*carShapes[i], vehicleActor).p);
+							Vec3 pos = sm->LocalToWorld(PxShapeExt::getGlobalPose(*car_shapes[i], vehicle_actor).p);
 							wheel->GetFirstComponentByClass<ILocationComponent>()->SetPosition(pos);
-							Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*carShapes[i],vehicleActor).q);
+							Quaternion rot = PxConvert::ToGASS(PxShapeExt::getGlobalPose(*car_shapes[i],vehicle_actor).q);
 							wheel->GetFirstComponentByClass<ILocationComponent>()->SetRotation(rot);
 						}
 					}

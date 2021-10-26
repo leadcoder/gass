@@ -83,7 +83,7 @@ namespace GASS
 		float m_DriveTargetVelocity{0};
 		float m_DriveForceLimit{PX_MAX_F32};
 		Float m_DriveTargetPosition{0};
-		physx::PxD6Joint *m_PrismaticJoint{0};
+		physx::PxD6Joint *m_PrismaticJoint{nullptr};
 	};
 	using PhysXPrismaticComponentPtr = std::shared_ptr<PhysXPrismaticComponent>;
 }

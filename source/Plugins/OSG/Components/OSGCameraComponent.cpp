@@ -78,7 +78,7 @@ namespace GASS
 		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
 			{
 				m_OrthoWindowHeight = message->GetValue1();
-				_UpdateProjection();
+				UpdateProjection();
 				//if(m_Camera)
 				//m_Camera->setOrthoWindowHeight(value);
 			}
@@ -111,48 +111,48 @@ namespace GASS
 	void OSGCameraComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
 		if(m_UpdateCameraFromLocation)
-			_UpdateFromLocation();
+			UpdateFromLocation();
 	}
 
-	void OSGCameraComponent::_UpdateProjection()
+	void OSGCameraComponent::UpdateProjection()
 	{
 		if(m_OSGCamera.valid())
 		{
 			if(m_Ortho)
 			{
-				double aspectRatio = 1.0;
+				double aspect_ratio = 1.0;
 				if(m_OSGCamera->getViewport())
-					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
+					aspect_ratio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
 
 				const double  h_size = m_OrthoWindowHeight/2.0;
-				const double  w_size = h_size*aspectRatio;
+				const double  w_size = h_size*aspect_ratio;
 				m_OSGCamera->setProjectionMatrixAsOrtho(-w_size,w_size,-h_size,h_size,m_NearClip,m_FarClip);
 			}
 			else
 			{
 				//m_OSGCamera->setProjectionResizePolicy(osg::Camera::FIXED);
 				m_OSGCamera->setProjectionResizePolicy(osg::Camera::HORIZONTAL);
-				double aspectRatio = 4.0/3.0;
+				double aspect_ratio = 4.0/3.0;
 
 				if(m_OSGCamera->getViewport())
-					aspectRatio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
+					aspect_ratio = m_OSGCamera->getViewport()->width()/m_OSGCamera->getViewport()->height();
 
 				if(m_FarClip > 0.0)
 				{
-					m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, m_FarClip);
+					m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspect_ratio, m_NearClip, m_FarClip);
 					m_OSGCamera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 				}
 				else
 				{
 					//just intialize to default values and autocompute far distance
-					m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspectRatio, m_NearClip, 10000);
+					m_OSGCamera->setProjectionMatrixAsPerspective(m_Fov, aspect_ratio, m_NearClip, 10000);
 					//m_OSGCamera->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
 				}
 			}
 		}
 	}
 
-	void OSGCameraComponent::_UpdateFromLocation()
+	void OSGCameraComponent::UpdateFromLocation()
 	{
 		if(!m_OSGCamera.valid())
 			return;
@@ -161,16 +161,16 @@ namespace GASS
 		const osg::Vec3d pos = OSGConvert::ToOSG(lc->GetWorldPosition());
 		osg::Quat rot = OSGConvert::ToOSG(lc->GetWorldRotation());
 
-		osg::Matrixd cameraMatrix;
-		cameraMatrix.identity();
+		osg::Matrixd camera_matrix;
+		camera_matrix.identity();
 
 		osg::Quat q = osg::Quat(Math::Deg2Rad(90.0f),osg::Vec3(1,0,0));
 		rot = q * rot;
 
-		cameraMatrix.setTrans(pos);
-		cameraMatrix.setRotate(rot);
+		camera_matrix.setTrans(pos);
+		camera_matrix.setRotate(rot);
 
-		const osg::Matrixd final_cam_view= cameraMatrix.inverse(cameraMatrix);
+		const osg::Matrixd final_cam_view= camera_matrix.inverse(camera_matrix);
 		m_OSGCamera->setViewMatrix(final_cam_view);
 	}
 
@@ -178,8 +178,8 @@ namespace GASS
 	{
 		//update osg camera with gass camera attributes?
 		m_OSGCamera = camera;
-		_UpdateFromLocation();
-		_UpdateProjection();
+		UpdateFromLocation();
+		UpdateProjection();
 		SetLODScale(m_LODScale);
 		if (m_NearFarRatio > 0)
 			SetNearFarRatio(m_NearFarRatio);
@@ -190,26 +190,26 @@ namespace GASS
 		if(m_OSGCamera.valid())
 		{
 			//use same method as ogre3d
-			osg::Matrixd inverseVP = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
+			osg::Matrixd inverse_vp = osg::Matrix::inverse(m_OSGCamera->getViewMatrix()*m_OSGCamera->getProjectionMatrix()); 
 
 			double nx = screenx * 2.0f - 1.0f;
 			double ny = (1.0f-screeny) * 2.0f - 1.0f;
 
-			osg::Vec3d nearPoint(nx, ny, -1.0f);
+			osg::Vec3d near_point(nx, ny, -1.0f);
 			// Use midPoint rather than far point to avoid issues with infinite projection
-			osg::Vec3d midPoint (nx, ny,  1.0f);
+			osg::Vec3d mid_point (nx, ny,  1.0f);
 
 			// Get ray origin and ray target on near plane in world space
-			osg::Vec3d rayOrigin, rayTarget;
+			osg::Vec3d ray_origin, ray_target;
 
-			rayOrigin = nearPoint*inverseVP;
-			rayTarget = midPoint*inverseVP;
+			ray_origin = near_point*inverse_vp;
+			ray_target = mid_point*inverse_vp;
 
-			osg::Vec3d rayDirection = rayTarget - rayOrigin;
-			rayDirection.normalize();
+			osg::Vec3d ray_direction = ray_target - ray_origin;
+			ray_direction.normalize();
 
-			ray.m_Origin = OSGConvert::ToGASS(rayOrigin);
-			ray.m_Dir = OSGConvert::ToGASS(rayDirection);
+			ray.m_Origin = OSGConvert::ToGASS(ray_origin);
+			ray.m_Dir = OSGConvert::ToGASS(ray_direction);
 
 			return true;
 		}
@@ -246,7 +246,7 @@ namespace GASS
 	void OSGCameraComponent::SetFarClipDistance(float value)
 	{
 		m_FarClip = value;
-		_UpdateProjection();
+		UpdateProjection();
 	}
 
 	float OSGCameraComponent::GetNearClipDistance() const
@@ -257,7 +257,7 @@ namespace GASS
 	void OSGCameraComponent::SetNearClipDistance(float value)
 	{
 		m_NearClip = value;
-		_UpdateProjection();
+		UpdateProjection();
 	}
 
 
@@ -284,7 +284,7 @@ namespace GASS
 	void OSGCameraComponent::SetFov(float value)
 	{
 		m_Fov = value;
-		_UpdateProjection();
+		UpdateProjection();
 	}
 
 	bool OSGCameraComponent::GetOrtho() const
@@ -295,7 +295,7 @@ namespace GASS
 	void OSGCameraComponent::SetOrtho(bool value)
 	{
 		m_Ortho = value;
-		_UpdateProjection();
+		UpdateProjection();
 	}
 }
 

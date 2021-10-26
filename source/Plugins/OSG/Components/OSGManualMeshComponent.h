@@ -51,7 +51,7 @@ namespace GASS
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }
 	protected:
 		
-		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
+		osg::ref_ptr<osg::Geometry>  CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		void SetReceiveShadow(bool value);
 		void OnLocationLoaded(LocationLoadedEventPtr message);

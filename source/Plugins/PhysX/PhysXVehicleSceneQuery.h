@@ -47,60 +47,60 @@ namespace GASS
 	public:
 
 		//Allocate scene query data for up to maxNumWheels suspension raycasts.
-		static VehicleSceneQueryData* allocate(const PxU32 maxNumWheels);
+		static VehicleSceneQueryData* Allocate(const PxU32 maxNumWheels);
 
 		//Free allocated buffer for scene queries of suspension raycasts.
-		void free();
+		void Free();
 
 		//Create a PxBatchQuery instance that will be used as a single batched raycast of multiple suspension lines of multiple vehicles
-		PxBatchQuery* setUpBatchedSceneQuery(PxScene* scene);
+		PxBatchQuery* SetUpBatchedSceneQuery(PxScene* scene);
 
 		//Get the buffer of scene query results that will be used by PxVehicleNWSuspensionRaycasts
-		PxRaycastQueryResult* getRaycastQueryResultBuffer() {return mSqResults;}
+		PxRaycastQueryResult* GetRaycastQueryResultBuffer() {return m_MSqResults;}
 
 		//Get the number of scene query results that have been allocated for use by PxVehicleNWSuspensionRaycasts
-		PxU32 getRaycastQueryResultBufferSize() const {return mNumQueries;}
+		PxU32 GetRaycastQueryResultBufferSize() const {return m_MNumQueries;}
 
 		//Set the pre-filter shader 
-		void setPreFilterShader(PxBatchQueryPreFilterShader preFilterShader) {mPreFilterShader=preFilterShader;}
+		void SetPreFilterShader(PxBatchQueryPreFilterShader preFilterShader) {m_MPreFilterShader=preFilterShader;}
 
 		//Set the spu pre-filter shader (essential to run filtering on spu)
-		void setSpuPreFilterShader(void* spuPreFilterShader, const PxU32 spuPreFilterShaderSize) {mSpuPreFilterShader=spuPreFilterShader; mSpuPreFilterShaderSize=spuPreFilterShaderSize;}
+		void SetSpuPreFilterShader(void* spuPreFilterShader, const PxU32 spuPreFilterShaderSize) {m_MSpuPreFilterShader=spuPreFilterShader; m_MSpuPreFilterShaderSize=spuPreFilterShaderSize;}
 
 	private:
 
 		//One result for each wheel.
-		PxRaycastQueryResult* mSqResults;
-		PxU32 mNbSqResults;
+		PxRaycastQueryResult* m_MSqResults;
+		PxU32 m_MNbSqResults;
 
 		//One hit for each wheel.
-		PxRaycastHit* mSqHitBuffer;
+		PxRaycastHit* m_MSqHitBuffer;
 
 		//Filter shader used to filter drivable and non-drivable surfaces
-		PxBatchQueryPreFilterShader mPreFilterShader;
+		PxBatchQueryPreFilterShader m_MPreFilterShader;
 
 		//Ptr to compiled spu filter shader 
 		//Set this on ps3 for spu raycasts
-		void* mSpuPreFilterShader;
+		void* m_MSpuPreFilterShader;
 
 		//Size of compiled spu filter shader 
 		//Set this on ps3 for spu raycasts.
-		PxU32 mSpuPreFilterShaderSize;
+		PxU32 m_MSpuPreFilterShaderSize;
 
 		//Maximum number of suspension raycasts that can be supported by the allocated buffers 
 		//assuming a single query and hit per suspension line.
-		PxU32 mNumQueries;
+		PxU32 m_MNumQueries;
 
-		void init()
+		void Init()
 		{
-			mPreFilterShader=VehicleWheelRaycastPreFilter;
-			mSpuPreFilterShader=nullptr;
-			mSpuPreFilterShaderSize=0;
+			m_MPreFilterShader=VehicleWheelRaycastPreFilter;
+			m_MSpuPreFilterShader=nullptr;
+			m_MSpuPreFilterShaderSize=0;
 		}
 
 		VehicleSceneQueryData()
 		{
-			init();
+			Init();
 		}
 
 		~VehicleSceneQueryData()

@@ -110,7 +110,7 @@ namespace GASS
 			
 			if (m_AttachToParent)
 			{
-				OSGEarthGeoLocationComponentPtr parent = _GetParentLocation();
+				OSGEarthGeoLocationComponentPtr parent = GetParentLocation();
 				if (parent)
 				{
 					parent->GetOSGNode()->addChild(m_GeoTransform.get());
@@ -168,7 +168,7 @@ namespace GASS
 			geo_pos.fromWorld(m_Map->getMapSRS(),OSGConvert::ToOSG(m_Pos));
 			m_GeoTransform->setPosition(geo_pos);
 			//m_TransformNode->setPosition(OSGConvert::ToOSG(m_Pos));
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -183,7 +183,7 @@ namespace GASS
 		{
 			const osg::Quat final = OSGConvert::ToOSG(message->GetRotation());
 			m_TransformNode->setAttitude(final);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -229,11 +229,11 @@ namespace GASS
 			double z = fabs(scale.z());
 			scale.set(scale.x(), y, z);
 			m_TransformNode->setScale(scale);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::_SendTransMessage()
+	void OSGEarthGeoLocationComponent::SendTransMessage()
 	{
 		const Vec3 pos = GetWorldPosition();
 		const Vec3 scale = GetScale();
@@ -247,7 +247,7 @@ namespace GASS
 			SceneObjectPtr obj = iter.getNext();
 			OSGEarthGeoLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGEarthGeoLocationComponent>();
 			if (c_location && c_location->GetAttachToParent())
-				c_location->_SendTransMessage();
+				c_location->SendTransMessage();
 		}
 	}
 
@@ -263,7 +263,7 @@ namespace GASS
 			osg::Vec3d new_pos = OSGConvert::ToOSG(value);
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -283,7 +283,7 @@ namespace GASS
 			m_GeoTransform->setPosition(geo_pos);
 			//m_TransformNode->setPosition(new_pos);
 			m_Pos = OSGConvert::ToGASS(new_pos);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -298,7 +298,7 @@ namespace GASS
 			world_pos = OSGConvert::ToGASS(wpos);
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -358,7 +358,7 @@ namespace GASS
 
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -376,7 +376,7 @@ namespace GASS
 				}
 			}
 			m_TransformNode->setAttitude(final);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -389,7 +389,7 @@ namespace GASS
 			osg::Quat rot = m_TransformNode->getAttitude();
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -442,7 +442,7 @@ namespace GASS
 			if (m_TransformNode->getParent(0))
 				m_TransformNode->getParent(0)->removeChild(m_TransformNode);
 
-			OSGEarthGeoLocationComponentPtr parent = _GetParentLocation();
+			OSGEarthGeoLocationComponentPtr parent = GetParentLocation();
 			if (parent && value)
 				parent->GetOSGNode()->addChild(m_TransformNode);
 			else
@@ -469,7 +469,7 @@ namespace GASS
 		return m_AttachToParent;
 	}
 
-	OSGEarthGeoLocationComponentPtr OSGEarthGeoLocationComponent::_GetParentLocation()
+	OSGEarthGeoLocationComponentPtr OSGEarthGeoLocationComponent::GetParentLocation()
 	{
 		OSGEarthGeoLocationComponentPtr parent_location;
 		auto scene_obj = GetSceneObject()->GetParent();

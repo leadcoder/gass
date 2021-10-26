@@ -56,7 +56,7 @@ namespace GASS
 		void GeneratePartID(SceneObjectPtr obj, int &id);
 		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNetworkPostUpdate(NetworkPostUpdateEventPtr message);
-		RakNetMasterReplica* m_Replica{NULL};
+		RakNetMasterReplica* m_Replica{nullptr};
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
 	};

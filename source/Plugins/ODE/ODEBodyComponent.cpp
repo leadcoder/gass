@@ -149,7 +149,7 @@ namespace GASS
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
 	{
-		ODEBodyComponent* ode_body = (ODEBodyComponent*) dBodyGetData(id);
+		auto* ode_body = (ODEBodyComponent*) dBodyGetData(id);
 		ode_body->BodyMoved();
 	}
 
@@ -311,10 +311,10 @@ namespace GASS
 		{
 			return;
 		}
-		dReal const * V = dBodyGetLinearVel( body );
-		dBodyAddForce( body, vScale*V[0], vScale*V[1], vScale*V[2] );
-		dReal const * A = dBodyGetAngularVel( body );
-		dBodyAddTorque( body, aScale*A[0], aScale*A[1], aScale*A[2] );
+		dReal const * v = dBodyGetLinearVel( body );
+		dBodyAddForce( body, vScale*v[0], vScale*v[1], vScale*v[2] );
+		dReal const * a = dBodyGetAngularVel( body );
+		dBodyAddTorque( body, aScale*a[0], aScale*a[1], aScale*a[2] );
 	}
 
 	dSpaceID ODEBodyComponent::GetSpace()
@@ -425,7 +425,7 @@ namespace GASS
 				{
 					dJointID joint = dBodyGetJoint(m_ODEBodyID,i);
 					dBodyID b2 = dJointGetBody (joint, 1);
-					ODEBodyComponent* child_body = (ODEBodyComponent*) dBodyGetData(b2);
+					auto* child_body = (ODEBodyComponent*) dBodyGetData(b2);
 					if(child_body && child_body != this)
 					{
 						const dReal *p = dBodyGetPosition(b2);

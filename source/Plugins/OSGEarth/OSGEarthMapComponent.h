@@ -61,18 +61,18 @@ namespace GASS
 		ResourceHandle GetEarthFile() const override { return m_EarthFile; }
 		//IMapComponent end
 
-		void onTileAdded(
+		void OnTileAdded(
 			const osgEarth::TileKey&          key,
 			osg::Node*              graph,
 			osgEarth::TerrainCallbackContext& context);
-		void onMapModelChanged(const osgEarth::MapModelChange& change);
+		void OnMapModelChanged(const osgEarth::MapModelChange& change);
 
 	protected:
 		void Shutdown();
-		void _SetupNodeMasks();
+		void SetupNodeMasks();
 
 		std::string GetViewpointName() const {return std::string(""); }
-		void _UpdateMapLayers();
+		void UpdateMapLayers();
 
 		std::vector<std::string> GetVisibleMapLayers() const;
 		void SetVisibleMapLayers(const std::vector<std::string> &layers);
@@ -87,7 +87,7 @@ namespace GASS
 		osg::ref_ptr<osg::Node> m_TopNode;
 		ResourceHandle m_EarthFile;
 		std::vector<osgEarth::Viewpoint> m_Viewpoints;
-		osgEarth::Util::SkyNode* m_SkyNode{NULL};
+		osgEarth::Util::SkyNode* m_SkyNode{nullptr};
 		double m_Hour{10};
 		bool m_UseAutoClipPlane{true};
 

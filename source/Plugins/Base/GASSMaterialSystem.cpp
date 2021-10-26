@@ -61,11 +61,11 @@ namespace GASS
 	void MaterialSystem::LoadMaterialFile(const std::string &file)
 	{
 		GASS_LOG(LINFO) << "Start loading material file " << file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
 		
-		tinyxml2::XMLElement *xml_ml = xmlDoc->FirstChildElement("MaterialList");
+		tinyxml2::XMLElement *xml_ml = xml_doc->FirstChildElement("MaterialList");
 		if(xml_ml)
 		{
 			tinyxml2::XMLElement *xml_mat = xml_ml->FirstChildElement("Material");
@@ -87,18 +87,18 @@ namespace GASS
 				xml_mat = xml_mat->NextSiblingElement("Material");
 			}
 		}
-		delete xmlDoc;
+		delete xml_doc;
 	}
 
 	void MaterialSystem::LoadGeometryFlagsFile(const std::string &file)
 	{
-		std::map<GeometryFlags, GeometryFlags> m_CollisionMaskMap;
+		std::map<GeometryFlags, GeometryFlags> m_collision_mask_map;
 		GASS_LOG(LINFO) << "Start loading collision matrix file " << file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "MaterialSystem::LoadMaterialFile");
 		
-		tinyxml2::XMLElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		tinyxml2::XMLElement *xml_geom_list = xml_doc->FirstChildElement("GeometryList");
 		if(xml_geom_list)
 		{
 			tinyxml2::XMLElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
@@ -120,14 +120,14 @@ namespace GASS
 				std::stringstream ss_gf_mask(value);
 				ss_gf_mask >> gf_mask;
 
-				m_CollisionMaskMap[gf.GetValue()] = gf_mask.GetValue();
+				m_collision_mask_map[gf.GetValue()] = gf_mask.GetValue();
 
 				//int mask = static_cast<int> (gf_mask.GetValue());
 				
 				xml_geom = xml_geom->NextSiblingElement("Geometry");
 			}
 		}
-		delete xmlDoc;
+		delete xml_doc;
 	}
 
 	void MaterialSystem::AddMaterial(const PhysicsMaterial& mat) 
@@ -145,7 +145,7 @@ namespace GASS
 	PhysicsMaterial MaterialSystem::GetMaterial(const std::string material_name) const
 	{
 		PhysicsMaterial material;	
-		MaterialMap::const_iterator iter = m_Materials.find(material_name);
+		auto iter = m_Materials.find(material_name);
 		if(iter == m_Materials.end())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Material:" + material_name + " not found", "MaterialSystem::GetMaterial");
 		return iter->second;

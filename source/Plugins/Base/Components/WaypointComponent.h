@@ -58,8 +58,8 @@ namespace GASS
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OnTangentTransformation(TransformationChangedEventPtr event);
-		void _UpdateTangentLine();
-		void _NotifyUpdate();
+		void UpdateTangentLine();
+		void NotifyUpdate();
 
 		Vec3 m_Tangent;
 		Float m_TangentWeight{1.0};

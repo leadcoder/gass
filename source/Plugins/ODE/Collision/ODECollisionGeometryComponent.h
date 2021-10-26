@@ -107,7 +107,7 @@ namespace GASS
 		static dReal TerrainHeightCallback(void* data,int x,int z);	
 		Float GetTerrainHeight(unsigned int x,unsigned int z);
 	protected:
-		dGeomID m_GeomID{0};
+		dGeomID m_GeomID{nullptr};
 		CollisionGeomType m_Type{CGT_NONE};
 		Vec3 m_Offset;
 		//Static Terrain data, only support one terrain loaded at the same time
@@ -119,7 +119,7 @@ namespace GASS
 			IHeightmapTerrainComponent* m_TerrainGeom;
 			int m_Samples;
 		};
-		TerrainData* m_TerrainData{NULL};
+		TerrainData* m_TerrainData{nullptr};
 		ODECollisionSceneManagerPtr m_CollisionSceneManager;
 		ODECollisionMeshInfo m_ColMeshInfo;
 	};

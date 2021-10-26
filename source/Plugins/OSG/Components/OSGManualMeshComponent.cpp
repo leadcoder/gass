@@ -68,7 +68,7 @@ namespace GASS
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		osg::CullFace* cull = new osg::CullFace();
+		auto* cull = new osg::CullFace();
 		cull->setMode(osg::CullFace::BACK);
 		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
 
@@ -81,7 +81,7 @@ namespace GASS
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
 
-		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		auto* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(GetGeometryFlags());
 
@@ -187,7 +187,7 @@ namespace GASS
 		for (size_t i = 0; i < mesh.SubMeshVector.size(); i++)
 		{
 			GraphicsSubMeshPtr sm = mesh.SubMeshVector[i];
-			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
+			osg::ref_ptr<osg::Geometry> geom = CreateSubMesh(sm);
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
 		}
@@ -209,7 +209,7 @@ namespace GASS
 		m_OSGGeometries.clear();
 	}
 
-	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::_CreateSubMesh(GraphicsSubMeshPtr sm)
+	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::CreateSubMesh(GraphicsSubMeshPtr sm)
 	{
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 

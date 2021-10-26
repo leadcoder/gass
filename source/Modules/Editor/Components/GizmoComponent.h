@@ -55,15 +55,15 @@ namespace GASS
 		void OnEditMode(EditModeChangedEventPtr message);
 	
 		//Helpers
-		void _Move(const Vec3 &pos);
-		void _Rotate(const Quaternion &pos);
-		void _Scale(const Vec3 &scale);
-		void _UpdateScale();
-		void _BuildMesh();
-		Vec3 _ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
-		Float _SnapValue(Float value, Float snap);
-		SceneObjectPtr _GetFirstSelected();
-		void _SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
+		void Move(const Vec3 &pos);
+		void Rotate(const Quaternion &pos);
+		void Scale(const Vec3 &scale);
+		void UpdateScale();
+		void BuildMesh();
+		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
+		Float SnapValue(Float value, Float snap);
+		SceneObjectPtr GetFirstSelected();
+		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 
 		Quaternion m_BaseRot;
 		ColorRGBA m_Color;

@@ -30,19 +30,19 @@ namespace GASS
 		{
 		}
 
-		void drawUi()
+		void DrawUi()
 		{
-			dockingBegin();
+			DockingBegin();
 
 			if (m_ShowObjectTree)
-				drawObjectTree();
+				DrawObjectTree();
 
 			if (m_ShowProperties)
-				drawProperties();
+				DrawProperties();
 			if (m_ShowTools)
-				drawTools();
+				DrawTools();
 			if (m_ShowTemplates)
-				drawTemplates();
+				DrawTemplates();
 		}
 	protected:
 		bool m_ShowProperties = true;
@@ -54,7 +54,7 @@ namespace GASS
 		Scene* m_SceneSelected = nullptr;
 		std::string m_DropTemplate;
 
-		void drawMainMenu()
+		void DrawMainMenu()
 		{
 			// Menu Bar
 			ImGui::BeginMenuBar();
@@ -65,7 +65,7 @@ namespace GASS
 					if (ImGui::MenuItem("New"))
 					{
 						m_SceneSelected = nullptr;
-						auto scene = getFirstScene();
+						auto scene = GetFirstScene();
 						if (scene)
 							SimEngine::Get().DestroyScene(scene);
 						scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
@@ -81,7 +81,7 @@ namespace GASS
 							if (ImGui::MenuItem(scenes[i].c_str()))
 							{
 								m_SceneSelected = nullptr;
-								auto scene = getFirstScene();
+								auto scene = GetFirstScene();
 								if (scene)
 									SimEngine::Get().DestroyScene(scene);
 								scene = ScenePtr(SimEngine::Get().CreateScene(scenes[i]));
@@ -96,7 +96,7 @@ namespace GASS
 					
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
-						auto scene = getFirstScene();
+						auto scene = GetFirstScene();
 						if (scene && scene->GetName() != "")
 							scene->Save(scene->GetName());
 						//char const* filterPatterns[1] = { "*.earth" };
@@ -130,7 +130,7 @@ namespace GASS
 
 			if (ImGui::BeginViewportSideBar("##StatusBar", viewport, ImGuiDir_Down, height, window_flags)) {
 				if (ImGui::BeginMenuBar()) {
-					auto scene = getFirstScene();
+					auto scene = GetFirstScene();
 					if(scene)
 						ImGui::Text("Loaded Scene:%s", scene->GetName().c_str());
 					ImGui::EndMenuBar();
@@ -141,7 +141,7 @@ namespace GASS
 			
 		}
 
-		void dockingBegin()
+		void DockingBegin()
 		{
 			// ImGui code goes here...
 			//ImGui::ShowDemoWindow();
@@ -170,12 +170,12 @@ namespace GASS
 				ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 			}
-			drawMainMenu();
+			DrawMainMenu();
 			ImGui::End();
 		}
 
 
-		void drawScene(Scene* scene)
+		void DrawScene(Scene* scene)
 		{
 			bool node_open = ImGui::TreeNode(scene->GetName().c_str());
 			
@@ -188,12 +188,12 @@ namespace GASS
 
 			if (node_open)
 			{
-				drawSceneObject(scene->GetRootSceneObject());
+				DrawSceneObject(scene->GetRootSceneObject());
 				ImGui::TreePop();
 			}
 		}
 
-		void drawSceneObject(SceneObjectPtr so)
+		void DrawSceneObject(SceneObjectPtr so)
 		{
 			auto editor = so->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 			SceneObjectPtr selected = editor->GetFirstSelectedObject();
@@ -275,16 +275,16 @@ namespace GASS
 				{
 					for (int i = 0; i < so->GetNumChildren(); i++)
 					{
-						drawSceneObject(so->GetChild(i));
+						DrawSceneObject(so->GetChild(i));
 					}
 				}
 				ImGui::TreePop();
 			}
 		}
 
-		void drawObjectTree()
+		void DrawObjectTree()
 		{
-			auto scene = getFirstScene();
+			auto scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -294,7 +294,7 @@ namespace GASS
 				ImGui::End();
 				return;
 			}
-			drawScene(scene.get());
+			DrawScene(scene.get());
 			ImGui::End();
 		}
 
@@ -308,7 +308,7 @@ namespace GASS
 			return nullptr;
 		}
 
-		ScenePtr getFirstScene()
+		ScenePtr GetFirstScene()
 		{
 			ScenePtr scene;
 			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
@@ -319,7 +319,7 @@ namespace GASS
 			return scene;
 		}
 
-		void drawProp(BaseReflectionObject* obj, IProperty* prop)
+		void DrawProp(BaseReflectionObject* obj, IProperty* prop)
 		{
 			const std::string prop_name = prop->GetName();
 
@@ -617,9 +617,9 @@ namespace GASS
 			}
 		}
 
-		void drawProperties()
+		void DrawProperties()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -638,7 +638,7 @@ namespace GASS
 				auto props = so->GetProperties();
 				for (auto prop : props)
 				{
-					drawProp(so, prop);
+					DrawProp(so, prop);
 				}
 
 				auto comp_iter = so->GetComponents();
@@ -655,7 +655,7 @@ namespace GASS
 							auto comp_props = comp->GetProperties();
 							for (auto comp_prop : comp_props)
 							{
-								drawProp(comp.get(), comp_prop);
+								DrawProp(comp.get(), comp_prop);
 							}
 							ImGui::TreePop();
 						}
@@ -672,7 +672,7 @@ namespace GASS
 				auto props = m_SceneSelected->GetProperties();
 				for (auto prop : props)
 				{
-					drawProp(m_SceneSelected, prop);
+					DrawProp(m_SceneSelected, prop);
 				}
 				auto sms = m_SceneSelected->GetSceneManagers();
 				for (auto sm : sms)
@@ -681,7 +681,7 @@ namespace GASS
 					auto sm_props = obj->GetProperties();
 					for (auto prop : sm_props)
 					{
-						drawProp(obj.get(), prop);
+						DrawProp(obj.get(), prop);
 					}
 				}
 			}
@@ -690,9 +690,9 @@ namespace GASS
 			ImGui::End();
 		}
 
-		void drawTools()
+		void DrawTools()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -723,9 +723,9 @@ namespace GASS
 			ImGui::End();
 		}
 
-		void drawTemplates()
+		void DrawTemplates()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;

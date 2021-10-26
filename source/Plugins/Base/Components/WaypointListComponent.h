@@ -65,7 +65,7 @@ namespace GASS
 		//Helpers
 		void UpdatePath();
 
-		SceneObjectPtr _GetConnectionLines() const {return m_ConnectionLines.lock();}
+		SceneObjectPtr GetConnectionLines() const {return m_ConnectionLines.lock();}
 
 		float m_Radius{0};
 		int m_SplineSteps{10};
