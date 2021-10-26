@@ -429,17 +429,17 @@ namespace GASS
 		//print object
 		void DebugPrint(int tc = 0);
 	private:
-		void _CheckComponentDependencies() const;
-		SceneObjectPtr _CreateSceneObjectXML(tinyxml2::XMLElement* cc_elem) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
-		void _OnDelete();
-		void _OnInitialize(ScenePtr scene);
+		void CheckComponentDependencies() const;
+		SceneObjectPtr CreateSceneObjectXml(tinyxml2::XMLElement* cc_elem) const;
+		ComponentPtr LoadComponentXml(tinyxml2::XMLElement* comp_template) const;
+		void OnDelete();
+		void OnInitialize(ScenePtr scene);
 
 		//internals
-		void _InitializePointers();
-		SceneObjectPtr _CreateCopyRec(bool copy_children_recursively) const;
-		void _RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map);
-		void _GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map, bool recursively);
+		void InitializePointers();
+		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
+		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map);
+		void GenerateNewGuidRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map, bool recursively);
 
 		ComponentVector m_ComponentVector;
 		SceneObjectVector m_Children;

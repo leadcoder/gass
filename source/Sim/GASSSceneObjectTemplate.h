@@ -182,11 +182,11 @@ namespace GASS
 		void DebugPrint(int tc = 0);
 
 	private:
-		SceneObjectPtr _CreateSceneObject() const;
+		SceneObjectPtr CreateSceneObject() const;
 
 		//Help functions during template creation
-		void _InheritComponentData(SceneObjectPtr cc) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
+		void InheritComponentData(SceneObjectPtr cc) const;
+		ComponentPtr LoadComponentXml(tinyxml2::XMLElement* comp_template) const;
 
 		ComponentVector m_ComponentVector;
 		SceneObjectTemplateVector m_SceneObjectVector;

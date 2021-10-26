@@ -36,9 +36,9 @@ namespace GASS
 		RegisterGetSet( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
 	}
 
-	void BaseSceneManager::_UpdatePostListeners(double delta_time)
+	void BaseSceneManager::UpdatePostListeners(double delta_time)
 	{
-		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PostListeners.begin();
+		auto iter = m_PostListeners.begin();
 
 		while (iter != m_PostListeners.end())
 		{
@@ -59,9 +59,9 @@ namespace GASS
 		}
 	}
 
-	void BaseSceneManager::_UpdatePreListeners(double delta_time)
+	void BaseSceneManager::UpdatePreListeners(double delta_time)
 	{
-		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PreListeners.begin();
+		auto iter = m_PreListeners.begin();
 
 		while (iter != m_PreListeners.end())
 		{

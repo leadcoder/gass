@@ -271,7 +271,7 @@ namespace GASS
 					ComponentPtr target_comp(GetComponent(comp_name));
 					if (target_comp) //over loading component
 					{
-						ComponentPtr comp = _LoadComponentXML(comp_elem);
+						ComponentPtr comp = LoadComponentXml(comp_elem);
 						//ComponentTemplatePtr template_comp = GASS_DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if (comp)
 						{
@@ -280,7 +280,7 @@ namespace GASS
 					}
 					else
 					{
-						ComponentPtr comp = _LoadComponentXML(comp_elem);
+						ComponentPtr comp = LoadComponentXml(comp_elem);
 						if (comp)
 							AddComponent(comp);
 					}
@@ -332,7 +332,7 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr SceneObjectTemplate::_LoadComponentXML(tinyxml2::XMLElement* comp_template) const
+	ComponentPtr SceneObjectTemplate::LoadComponentXml(tinyxml2::XMLElement* comp_template) const
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -362,7 +362,7 @@ namespace GASS
 		return u_name ;
 	}*/
 
-	void SceneObjectTemplate::_InheritComponentData(SceneObjectPtr cc) const
+	void SceneObjectTemplate::InheritComponentData(SceneObjectPtr cc) const
 	{
 		ComponentVector::const_iterator iter;
 		for (iter = m_ComponentVector.begin(); iter != m_ComponentVector.end(); ++iter)
@@ -388,7 +388,7 @@ namespace GASS
 		}
 	}
 
-	SceneObjectPtr SceneObjectTemplate::_CreateSceneObject() const
+	SceneObjectPtr SceneObjectTemplate::CreateSceneObject() const
 	{
 		auto so = std::make_shared<SceneObject>();
 		BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(so);

@@ -50,7 +50,7 @@ namespace GASS
 		RTTI* p_rtti = GetRTTI();
 		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			auto	iter = p_rtti->GetFirstProperty();
 			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
@@ -109,7 +109,7 @@ namespace GASS
 		RTTI* p_rtti = GetRTTI();
 		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			auto	iter = p_rtti->GetFirstProperty();
 			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
@@ -153,7 +153,7 @@ namespace GASS
 		RTTI* p_rtti = GetRTTI();
 		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			auto	iter = p_rtti->GetFirstProperty();
 			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);
@@ -200,7 +200,7 @@ namespace GASS
 		RTTI* p_rtti = GetRTTI();
 		while(p_rtti)
 		{
-			std::list<IProperty*>::iterator	iter = p_rtti->GetFirstProperty();
+			auto	iter = p_rtti->GetFirstProperty();
 			while(iter != p_rtti->GetProperties()->end())
 			{
 				IProperty * prop = (*iter);

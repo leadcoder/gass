@@ -59,7 +59,7 @@ namespace GASS
 		SceneObjectTemplatePtr cc_tempate =  GetTemplate(name);
 		if(cc_tempate)
 		{
-			new_cc = _CreateSceneObject(cc_tempate);
+			new_cc = CreateSceneObject(cc_tempate);
 		}
 		else
 		{
@@ -68,7 +68,7 @@ namespace GASS
 		return new_cc;
 	}
 
-	SceneObjectPtr SceneObjectTemplateManager::_CreateSceneObject(SceneObjectTemplatePtr cc_temp) const
+	SceneObjectPtr SceneObjectTemplateManager::CreateSceneObject(SceneObjectTemplatePtr cc_temp) const
 	{
 		SceneObjectPtr new_object;
 		if(cc_temp->GetInheritance() != "")
@@ -76,7 +76,7 @@ namespace GASS
 			SceneObjectTemplatePtr inheritance = GetTemplate(cc_temp->GetInheritance());
 			if(inheritance)
 			{
-				new_object =  _CreateSceneObject(inheritance);
+				new_object =  CreateSceneObject(inheritance);
 				BaseReflectionObjectPtr ref_obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(new_object);
 				//copy attributes to new object
 				if(ref_obj)
@@ -85,7 +85,7 @@ namespace GASS
 				new_object->SetName(cc_temp->GetName());
 				//set template name
 				new_object->SetTemplateName(cc_temp->GetName());
-				cc_temp->_InheritComponentData(new_object);
+				cc_temp->InheritComponentData(new_object);
 			}
 			else
 			{
@@ -95,7 +95,7 @@ namespace GASS
 		}
 		else
 		{
-			new_object = cc_temp->_CreateSceneObject();
+			new_object = cc_temp->CreateSceneObject();
 			if(new_object)
 			{
 				new_object->SetName(cc_temp->GetName());
@@ -113,7 +113,7 @@ namespace GASS
 			SceneObjectTemplatePtr child = iter.getNext();
 			if(child)
 			{
-				SceneObjectPtr new_cc_child (_CreateSceneObject(child));
+				SceneObjectPtr new_cc_child (CreateSceneObject(child));
 				if(new_cc_child)
 				{
 					//Add new child

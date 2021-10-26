@@ -54,10 +54,10 @@ namespace GASS
 		}
 		GASS_LOG(LINFO) << "SimSystemManager Initialization Completed";
 
-		RegisterForMessage(REG_TMESS(SimSystemManager::_OnSimulationStepRequest, TimeStepRequest, 0));
+		RegisterForMessage(REG_TMESS(SimSystemManager::OnSimulationStepRequest, TimeStepRequest, 0));
 	}
 
-	void SimSystemManager::_OnSimulationStepRequest(TimeStepRequestPtr message)
+	void SimSystemManager::OnSimulationStepRequest(TimeStepRequestPtr message)
 	{
 		m_SystemStepper.OnTimeStepRequest(message->GetTimeStep());
 	}
@@ -67,7 +67,7 @@ namespace GASS
 		m_SystemStepper.OnUpdate(delta_time);
 	}
 
-	void SimSystemManager::_UpdateSystems(double delta_time, UpdateGroupID group)
+	void SimSystemManager::UpdateSystems(double delta_time, UpdateGroupID group)
 	{
 		for (size_t i = 0; i < m_Systems.size(); i++)
 		{
@@ -83,7 +83,7 @@ namespace GASS
 		m_SystemMessageManager->Update(delta_time);
 	}
 
-	size_t SimSystemManager::_GetQueuedMessages() const
+	size_t SimSystemManager::GetQueuedMessages() const
 	{
 		return m_SystemMessageManager->GetQueuedMessages();
 	}

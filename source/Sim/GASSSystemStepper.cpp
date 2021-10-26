@@ -49,7 +49,7 @@ namespace GASS
 				const double update_interval = 1.0 / m_UpdateFrequency;
 				//do some time slicing
 				m_TimeToProcess += delta_time;
-				const long long num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
+				const auto num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
 				long long clamp_num_steps = num_steps;
 				
 				if (m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)
@@ -58,7 +58,7 @@ namespace GASS
 				//std::cout << "steps:" << clamp_num_steps << "\n";
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
-					m_SimSysManager->_UpdateSystems(update_interval, m_ID);
+					m_SimSysManager->UpdateSystems(update_interval, m_ID);
 					SimEngine::Get().SyncMessages(update_interval);
 					m_CurrentTime += update_interval;
 				}
@@ -66,7 +66,7 @@ namespace GASS
 			}
 			else
 			{
-				m_SimSysManager->_UpdateSystems(delta_time, m_ID);
+				m_SimSysManager->UpdateSystems(delta_time, m_ID);
 				SimEngine::Get().SyncMessages(delta_time);
 			}
 		}

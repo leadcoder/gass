@@ -77,7 +77,7 @@ namespace GASS
 		asIScriptContext *PrepareContextFromPool(asIScriptFunction *func);
 		int ExecuteCall(asIScriptContext *ctx);
 	private:
-		void _OnScriptEvent(ScriptEventPtr message);
+		void OnScriptEvent(ScriptEventPtr message);
 		asIScriptEngine *m_Engine;
 		std::map<std::string,ScriptControllerPtr> m_ScriptControllers;
 
@@ -95,7 +95,7 @@ namespace GASS
 	*/
 
 	template<class A, class B>
-	B* refCast(A* a)
+	B* RefCast(A* a)
 	{
 		// If the handle already is a null handle, then just return the null handle
 		if( !a ) return 0;

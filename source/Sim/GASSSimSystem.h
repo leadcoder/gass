@@ -83,8 +83,8 @@ namespace GASS
 	protected:
 		UpdateGroupIDBinder m_UpdateGroup;
 	private:
-		void _PreUpdate(double delta_time);
-		void _PostUpdate(double delta_time);
+		void PreUpdate(double delta_time);
+		void PostUpdate(double delta_time);
 		
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;

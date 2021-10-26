@@ -76,7 +76,7 @@ namespace GASS
 		//Create empty root node
 		m_Root = std::make_shared<SceneObject>();
 		m_Root->SetName("Root");
-		m_Root->_OnInitialize(shared_from_this());
+		m_Root->OnInitialize(shared_from_this());
 
 		SystemMessagePtr enter_load_msg(new PreSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(enter_load_msg);
@@ -119,7 +119,7 @@ namespace GASS
 
 	void Scene::OnUnload()
 	{
-		m_Root->_OnDelete();
+		m_Root->OnDelete();
 		m_Root.reset();
 		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
 		{
@@ -176,7 +176,7 @@ namespace GASS
 		if(FileUtils::FileExist(template_file_name))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
-		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		auto *xml_doc = new tinyxml2::XMLDocument();
 		if(xml_doc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xml_doc;

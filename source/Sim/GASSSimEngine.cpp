@@ -216,7 +216,7 @@ namespace GASS
 		if (!the_scene)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not valid", "SimEngine::DestroyScene");
 		the_scene->OnUnload();
-		SceneVector::iterator iter = m_Scenes.begin();
+		auto iter = m_Scenes.begin();
 		while (iter != m_Scenes.end())
 		{
 			if (the_scene == *iter)

@@ -38,7 +38,7 @@ namespace GASS
 			//only support triangle data
 			if(mesh.SubMeshVector[i]->Type == TRIANGLE_LIST)
 			{
-				const unsigned int offset = static_cast<unsigned int>(PositionVector.size());
+				const auto offset = static_cast<unsigned int>(PositionVector.size());
 
 				for(size_t j = 0; j < mesh.SubMeshVector[i]->IndexVector.size() ; j++)
 				{

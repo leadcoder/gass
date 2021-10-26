@@ -146,9 +146,9 @@ namespace GASS
 		void SyncMessages(double delta_time);
 		void OnUpdate(double delta_time);
 	private:
-		void _UpdateSystems(double delta_time, UpdateGroupID group);
-		void _OnSimulationStepRequest(TimeStepRequestPtr message);
-		size_t _GetQueuedMessages() const;
+		void UpdateSystems(double delta_time, UpdateGroupID group);
+		void OnSimulationStepRequest(TimeStepRequestPtr message);
+		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
 		using SystemVector = std::vector<SimSystemPtr>;
 		SystemVector m_Systems;

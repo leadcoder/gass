@@ -45,7 +45,7 @@ namespace GASS
 
 	bool ResourceManager::HasResourceGroup(const std::string &name)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(name == (*iter)->GetName())
@@ -68,7 +68,7 @@ namespace GASS
 
 	ResourceGroupPtr ResourceManager::GetFirstResourceGroupByName(const std::string &name)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(name == (*iter)->GetName())
@@ -88,7 +88,7 @@ namespace GASS
 
 	void ResourceManager::RemoveResourceGroup(ResourceGroupPtr group)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(group == (*iter))
@@ -122,7 +122,7 @@ namespace GASS
 
 	FileResourcePtr ResourceManager::GetFirstResourceByName(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{
@@ -136,7 +136,7 @@ namespace GASS
 
 	ResourceVector ResourceManager::GetResourcesByName(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{
@@ -149,7 +149,7 @@ namespace GASS
 
 	bool ResourceManager::HasResource(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{

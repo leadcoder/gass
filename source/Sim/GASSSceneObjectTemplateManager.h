@@ -90,7 +90,7 @@ namespace GASS
 		*/
 		void Clear();
 	private:
-		SceneObjectPtr _CreateSceneObject(SceneObjectTemplatePtr cc_temp) const;
+		SceneObjectPtr CreateSceneObject(SceneObjectTemplatePtr cc_temp) const;
 		TemplateMap m_TemplateMap;
 	};
 	using SceneObjectTemplateManagerPtr = std::shared_ptr<SceneObjectTemplateManager>;

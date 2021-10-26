@@ -53,12 +53,12 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::CreateCopy(bool copy_children_recursively) const
 	{
-		SceneObjectPtr copy = _CreateCopyRec(copy_children_recursively);
+		SceneObjectPtr copy = CreateCopyRec(copy_children_recursively);
 		copy->GenerateNewGUID(true);
 		return copy;
 	}
 
-	SceneObjectPtr SceneObject::_CreateCopyRec(bool copy_children_recursively) const
+	SceneObjectPtr SceneObject::CreateCopyRec(bool copy_children_recursively) const
 	{
 		// use object factory instead to support derives from scene object?
 		SceneObjectPtr new_obj(new  SceneObject());
@@ -82,7 +82,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			auto new_child = child->_CreateCopyRec(copy_children_recursively);
+			auto new_child = child->CreateCopyRec(copy_children_recursively);
 			new_obj->AddChild(new_child);
 		}
 		return new_obj;
@@ -92,13 +92,13 @@ namespace GASS
 	{
 		std::map<SceneObjectGUID,SceneObjectGUID> ref_map;
 		//save old guid:s first
-		_GenerateNewGUIDRec(ref_map, recursively);
+		GenerateNewGuidRec(ref_map, recursively);
 
 		//remap GUID refs
-		_RemapRefRec(ref_map);
+		RemapRefRec(ref_map);
 	}
 
-	void SceneObject::_GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively)
+	void SceneObject::GenerateNewGuidRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map, bool recursively)
 	{
 		//save old guid:s first
 		SceneObjectGUID new_guid = GASS_GUID_GENERATE;
@@ -111,12 +111,12 @@ namespace GASS
 			while(children.hasMoreElements())
 			{
 				auto child = children.getNext();
-				child->_GenerateNewGUIDRec(ref_map,recursively);
+				child->GenerateNewGuidRec(ref_map,recursively);
 			}
 		}
 	}
 
-	void SceneObject::_RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
+	void SceneObject::RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID> &ref_map)
 	{
 		//remap references
 		ComponentIterator comp_iter = GetComponents();
@@ -132,31 +132,31 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->_RemapRefRec(ref_map);
+			child->RemapRefRec(ref_map);
 		}
 	}
 
 	void SceneObject::AddChildSceneObject(SceneObjectPtr child , bool load)
 	{
-		child->_InitializePointers(); //initialize SceneObjectLink:s
+		child->InitializePointers(); //initialize SceneObjectLink:s
 
 		AddChild(child);
 
 		if(load && GetScene()) //if we have scene Initialize?
-			child->_OnInitialize(GetScene());
+			child->OnInitialize(GetScene());
 	}
 
 	void SceneObject::InsertChildSceneObject(SceneObjectPtr child, size_t index, bool load)
 	{
-		child->_InitializePointers(); //initialize SceneObjectLink:s
+		child->InitializePointers(); //initialize SceneObjectLink:s
 		InsertChild(child,index);
 		if (load && GetScene()) //if we have scene Initialize?
-			child->_OnInitialize(GetScene());
+			child->OnInitialize(GetScene());
 	}
 
 	void SceneObject::ResolveTemplateReferences(SceneObjectPtr template_root)
 	{
-		ComponentVector::iterator iter = m_ComponentVector.begin();
+		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
 			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
@@ -186,9 +186,9 @@ namespace GASS
 		}
 	}
 
-	void SceneObject::_InitializePointers()
+	void SceneObject::InitializePointers()
 	{
-		ComponentVector::iterator iter = m_ComponentVector.begin();
+		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
 			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
@@ -199,7 +199,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->_InitializePointers();
+			child->InitializePointers();
 		}
 	}
 
@@ -207,7 +207,7 @@ namespace GASS
 	void SceneObject::RemoveChildSceneObject(SceneObjectPtr child)
 	{
 		//notify that this objects and its children will be removed
-		child->_OnDelete();
+		child->OnDelete();
 		RemoveChild(child);
 	}
 
@@ -217,7 +217,7 @@ namespace GASS
 		while (children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->_OnDelete();
+			child->OnDelete();
 		}
 		RemoveAllChildren();
 	}
@@ -230,13 +230,13 @@ namespace GASS
 		GetScene()->PostMessage(remove_msg);		
 	}
 
-	void SceneObject::_OnDelete()
+	void SceneObject::OnDelete()
 	{
 		SceneObjectIterator children = GetChildren();
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->_OnDelete();
+			child->OnDelete();
 		}
 
 		auto iter = m_ComponentVector.begin();
@@ -252,10 +252,10 @@ namespace GASS
 		GetScene()->m_SceneMessageManager->SendImmediate(unload_msg);
 	}
 
-	void SceneObject::_OnInitialize(ScenePtr scene)
+	void SceneObject::OnInitialize(ScenePtr scene)
 	{
 		//check dependencies
-		_CheckComponentDependencies();
+		CheckComponentDependencies();
 
 		if(m_GUID.is_nil())
 			m_GUID = GASS_GUID_GENERATE;
@@ -267,7 +267,7 @@ namespace GASS
 		MessagePtr pre_load_msg(new PreSceneObjectInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(pre_load_msg);
 
-		ComponentVector::iterator iter = m_ComponentVector.begin();
+		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
 			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
@@ -285,7 +285,7 @@ namespace GASS
 		while(children.hasMoreElements())
 		{
 			auto child = children.getNext();
-			child->_OnInitialize(scene);
+			child->OnInitialize(scene);
 		}
 
 		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
@@ -406,7 +406,7 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::GetChildByGUID(const SceneObjectGUID &guid) const
 	{
-		SceneObjectVector::const_iterator iter =  m_Children.begin();
+		auto iter =  m_Children.begin();
 		while(iter != m_Children.end())
 		{
 			auto child = *iter;
@@ -433,7 +433,7 @@ namespace GASS
 	{
 		if(recursive)
 		{
-			SceneObjectVector::const_iterator iter =  m_Children.begin();
+			auto iter =  m_Children.begin();
 			while(iter != m_Children.end())
 			{
 				auto child = *iter;
@@ -461,7 +461,7 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::GetFirstChildByName(const std::string &name, bool exact_math, bool recursive) const
 	{
-		SceneObjectVector::const_iterator iter =  m_Children.begin();
+		auto iter =  m_Children.begin();
 		while(iter != m_Children.end())
 		{
 			auto child = *iter;
@@ -500,7 +500,7 @@ namespace GASS
 
 	SceneObjectPtr SceneObject::GetChildByID(const SceneObjectID &id) const
 	{
-		SceneObjectVector::const_iterator iter =  m_Children.begin();
+		auto iter =  m_Children.begin();
 		while(iter != m_Children.end())
 		{
 			auto child = *iter;
@@ -527,7 +527,7 @@ namespace GASS
 	{
 		if(recursive)
 		{
-			SceneObjectVector::const_iterator iter =  m_Children.begin();
+			auto iter =  m_Children.begin();
 			while(iter != m_Children.end())
 			{
 				auto child = *iter;
@@ -636,7 +636,7 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::LoadFromFile");
 
-		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		auto *xml_doc = new tinyxml2::XMLDocument();
 		if(xml_doc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xml_doc;
@@ -655,7 +655,7 @@ namespace GASS
 		if(filename =="") 
 			GASS_EXCEPT(Exception::ERR_INVALIDPARAMS,"No filename provided", "SceneObject::SaveToFile");
 
-		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		auto *xml_doc = new tinyxml2::XMLDocument();
 		tinyxml2::XMLDeclaration* decl = xml_doc->NewDeclaration();
 		xml_doc->LinkEndChild( decl ); 
 
@@ -693,7 +693,7 @@ namespace GASS
 		return so.get();
 	}
 
-	SceneObjectPtr SceneObject::_CreateSceneObjectXML(tinyxml2::XMLElement *cc_elem) const
+	SceneObjectPtr SceneObject::CreateSceneObjectXml(tinyxml2::XMLElement *cc_elem) const
 	{
 		SceneObjectPtr cc;
 		if(cc_elem->Attribute("from_template"))
@@ -939,7 +939,7 @@ namespace GASS
 
 					if (target_comp) //component already exist, replace attributes component
 					{
-						ComponentPtr comp = _LoadComponentXML(comp_elem);
+						ComponentPtr comp = LoadComponentXml(comp_elem);
 						//ComponentTemplatePtr template_comp = GASS_DYNAMIC_PTR_CAST<IComponentTemplate>(comp);
 						if (comp)
 						{
@@ -948,7 +948,7 @@ namespace GASS
 					}
 					else
 					{
-						ComponentPtr comp = _LoadComponentXML(comp_elem);
+						ComponentPtr comp = LoadComponentXml(comp_elem);
 						if (comp)
 							AddComponent(comp);
 					}
@@ -961,7 +961,7 @@ namespace GASS
 				while (cc_elem)
 				{
 					//allow over loading
-					SceneObjectPtr so = _CreateSceneObjectXML(cc_elem);
+					SceneObjectPtr so = CreateSceneObjectXml(cc_elem);
 					AddChild(so);
 					XMLSerializePtr xml_obj = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(so);
 					if (xml_obj)
@@ -985,7 +985,7 @@ namespace GASS
 		}
 	}
 
-	ComponentPtr SceneObject::_LoadComponentXML(tinyxml2::XMLElement* comp_template) const
+	ComponentPtr SceneObject::LoadComponentXml(tinyxml2::XMLElement* comp_template) const
 	{
 		const std::string comp_type = comp_template->Value();
 		//std::string comp_type = comp_template->Attribute("type");
@@ -1036,7 +1036,7 @@ namespace GASS
 	}
 
 
-	void SceneObject::_CheckComponentDependencies() const
+	void SceneObject::CheckComponentDependencies() const
 	{
 		//get all names
 		std::set<std::string> names;

@@ -44,7 +44,7 @@ namespace GASS
 	{
 
 		GASS_LOG(LINFO) << "Start loading collision matrix file " << file;
-		tinyxml2::XMLDocument *xml_doc = new tinyxml2::XMLDocument();
+		auto *xml_doc = new tinyxml2::XMLDocument();
 		if (xml_doc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xml_doc;

@@ -38,7 +38,7 @@ namespace GASS
 	{
 		ResourceLocationPtr rl(new ResourceLocation(shared_from_this(),path,type));
 		if(recursive)
-			_AddResourceLocationRecursive(rl);
+			AddResourceLocationRecursive(rl);
 		else
 		{
 			rl->ParseLocation();
@@ -48,7 +48,7 @@ namespace GASS
 		return rl;
 	}
 
-	void ResourceGroup::_AddResourceLocationRecursive(ResourceLocationPtr rl)
+	void ResourceGroup::AddResourceLocationRecursive(ResourceLocationPtr rl)
 	{
 		if (rl->GetPath().Exist())
 		{
@@ -63,7 +63,7 @@ namespace GASS
 				if (folders[i].GetFullPath().find(".svn") == std::string::npos) //ignore svn folders!
 				{
 					ResourceLocationPtr rec_rl(new ResourceLocation(shared_from_this(), folders[i], rl->GetType()));
-					_AddResourceLocationRecursive(rec_rl);
+					AddResourceLocationRecursive(rec_rl);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ namespace GASS
 
 	void ResourceGroup::RemoveResourceLocation(ResourceLocationPtr location)
 	{
-		std::vector<ResourceLocationPtr>::iterator iter = m_ResourceLocations.begin();
+		auto iter = m_ResourceLocations.begin();
 		while(iter != m_ResourceLocations.end())
 		{
 			if(location == *iter)
@@ -96,11 +96,11 @@ namespace GASS
 
 	void ResourceGroup::GetResourcesByType(ResourceVector &resources, const std::string &resource_type) const
 	{
-		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
+		auto iter = m_ResourceLocations.begin();
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		while(iter != m_ResourceLocations.end())
 		{
-			ResourceLocation::ResourceMap::const_iterator c_iter = (*iter)->GetResources().begin();
+			auto c_iter = (*iter)->GetResources().begin();
 			while(c_iter != (*iter)->GetResources().end())
 			{
 				if(c_iter->second->Type() == resource_type)
@@ -115,7 +115,7 @@ namespace GASS
 
 	bool ResourceGroup::HasResource(const std::string &resource_name) const
 	{
-		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
+		auto iter = m_ResourceLocations.begin();
 		while(iter != m_ResourceLocations.end())
 		{
 			if((*iter)->HasResource(resource_name))
@@ -127,7 +127,7 @@ namespace GASS
 
 	void ResourceGroup::GetResourcesByName(ResourceVector &resources, const std::string &resource_name) const
 	{
-		std::vector<ResourceLocationPtr>::const_iterator iter = m_ResourceLocations.begin();
+		auto iter = m_ResourceLocations.begin();
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		const std::string lower_name = StringUtils::ToLower(resource_name);
 		while(iter != m_ResourceLocations.end())
