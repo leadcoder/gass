@@ -31,14 +31,14 @@ namespace GASS
 	FilePath::FilePath(const std::string &path, bool expand)
 	{
 		m_RawPath  = path;
-		_FixPath(m_RawPath);
+		FixPath(m_RawPath);
 		if(expand)
-			m_ExpandedPath = _ExpandEnvVariables(m_RawPath);
+			m_ExpandedPath = ExpandEnvVariables(m_RawPath);
 		else
 			m_ExpandedPath = m_RawPath;
 	}
 
-	void FilePath::_FixPath(std::string &path) const
+	void FilePath::FixPath(std::string &path) const
 	{
 		//check if path start with \\\\, windows network path
 		const std::string::size_type  pos = path.find("\\\\");
@@ -94,11 +94,11 @@ namespace GASS
 	void FilePath::SetPath(const std::string &path)
 	{
 		m_RawPath  = path;
-		_FixPath(m_RawPath);
-		m_ExpandedPath = _ExpandEnvVariables(m_RawPath);
+		FixPath(m_RawPath);
+		m_ExpandedPath = ExpandEnvVariables(m_RawPath);
 	}
 
-	std::string FilePath::_ExpandEnvVariables(const std::string &inStr) const
+	std::string FilePath::ExpandEnvVariables(const std::string &inStr) const
 	{
 		std::string cur_str = inStr;
 		const std::string::size_type occur_index1 = cur_str.find("%");

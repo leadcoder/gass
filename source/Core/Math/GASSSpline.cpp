@@ -138,7 +138,7 @@ void Spline::RecalcTangents()
 	// tangent[i] = 0.5 * (point[i+1] - point[i-1])
 	//
 	// Assume endpoint tangents are parallel with line with neighbour
-	const unsigned int num_points = static_cast<unsigned int>(m_Points.size());
+	const auto num_points = static_cast<unsigned int>(m_Points.size());
 	if (num_points < 2)
 	{
 		// Can't do anything yet

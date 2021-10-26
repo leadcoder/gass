@@ -100,7 +100,7 @@ namespace GASS
 		*/
 		size_t GetQueuedMessages() const {return m_MessageQueue.size();}
 	private:
-		void _AddMessageToSystem(const MessageType &type);
+		void AddMessageToSystem(const MessageType &type);
 		MessageQueue m_MessageQueue;
 		MessageTypeListenerMap m_MessageTypes;
 		GASS_MUTEX m_Mutex;

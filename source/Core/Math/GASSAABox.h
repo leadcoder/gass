@@ -195,7 +195,7 @@ namespace GASS
 		TVec3<TYPE> Min;
 
 	private:
-		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
+		bool LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
 
 	using AABox = TAABox<Float>;
@@ -571,20 +571,20 @@ namespace GASS
 		TYPE texit = static_cast<TYPE>(1.0);
 
 		// test X slab
-		if (!_LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
+		if (!LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Y slab
 
-		if (!_LineSlabIntersect(Min.y, Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
+		if (!LineSlabIntersect(Min.y, Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Z slab
-		if (!_LineSlabIntersect(Min.z, Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
+		if (!LineSlabIntersect(Min.z, Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
 		{
 			return false;
 		}
@@ -601,7 +601,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::_LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const
+	bool TAABox<TYPE>::LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const
 	{
 		TYPE raydir = line_end - line_start;
 

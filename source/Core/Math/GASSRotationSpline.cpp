@@ -84,7 +84,7 @@ namespace GASS
 		//
 		// Assume endpoint tangents are parallel with line with neighbour
 
-		const unsigned int num_points = static_cast<unsigned int>(m_Points.size());
+		const auto num_points = static_cast<unsigned int>(m_Points.size());
 
 		if (num_points < 2)
 		{
