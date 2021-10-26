@@ -14,7 +14,7 @@
 	<ResourceManager>
 		<ResourceGroup name="GASS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/3dmodels"  type="FileSystem" recursive="true"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/ogre/fonts" type="FileSystem" recursive="false"/>
+			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/fonts" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/textures" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 			<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
