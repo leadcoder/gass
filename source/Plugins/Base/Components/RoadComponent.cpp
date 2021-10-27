@@ -60,7 +60,7 @@ namespace GASS
 
 	std::vector<std::string> GetRoadMaterials()
 	{
-		GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		std::vector<std::string> content = gfx_system->GetMaterialNames("GASS_ROAD_MATERIALS");
 		return content;
 	}

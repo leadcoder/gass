@@ -28,7 +28,7 @@ namespace GASS
 		void Start() override {};
 	private:
 		SceneObjectPtr GetOrCreateRulerObject();
-		void UpdateLine(const GASS::Vec3 &start, const GASS::Vec3 &end);
+		void UpdateLine(const Vec3 &start, const Vec3 &end);
 		bool m_MouseIsDown;
 		SceneObjectWeakPtr m_RulerObject;
 		MouseToolController* m_Controller;

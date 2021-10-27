@@ -348,7 +348,7 @@ namespace GASS
 		}
 	}*/
 
-	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
+	bool OSGEarthSceneManager::SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const
 	{
 		const osg::Vec3d osg_location = OSGConvert::ToOSG(scene_location);
 		osgEarth::GeoPoint input;
@@ -360,7 +360,7 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, GASS::Vec3 &scene_location) const
+	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const
 	{
 		const osgEarth::GeoPoint input(m_WGS84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
 		const osgEarth::GeoPoint output = input.transform(m_MapNode->getMapSRS());
@@ -473,7 +473,7 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GASS::Vec3 &location, double &height, GeometryFlags flags) const
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const Vec3 &location, double &height, GeometryFlags flags) const
 	{
 		GeoLocation geo_location;
 		bool status = SceneToWGS84(location, geo_location);
@@ -493,7 +493,7 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetUpVector(const GASS::Vec3 &location, GASS::Vec3 &up_vec) const
+	bool OSGEarthSceneManager::GetUpVector(const Vec3 &location, Vec3 &up_vec) const
 	{
 		bool status = false;
 		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();

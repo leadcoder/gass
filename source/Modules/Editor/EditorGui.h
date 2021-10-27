@@ -75,7 +75,7 @@ namespace GASS
 
 					if (ImGui::BeginMenu("Load Scene"))
 					{
-						auto scenes= GASS::SimEngine::Get().GetSavedScenes();
+						auto scenes= SimEngine::Get().GetSavedScenes();
 						for (size_t i = 0; i < scenes.size(); i++)
 						{
 							if (ImGui::MenuItem(scenes[i].c_str()))
@@ -299,11 +299,11 @@ namespace GASS
 		}
 
 		template<typename TYPE>
-		GASS::TypedProperty<TYPE>* AsTypedProp(GASS::IProperty* prop)
+		TypedProperty<TYPE>* AsTypedProp(IProperty* prop)
 		{
 			if (*prop->GetTypeID() == typeid(TYPE))
 			{
-				return dynamic_cast<GASS::TypedProperty<TYPE>*>(prop);
+				return dynamic_cast<TypedProperty<TYPE>*>(prop);
 			}
 			return nullptr;
 		}
@@ -323,19 +323,19 @@ namespace GASS
 		{
 			const std::string prop_name = prop->GetName();
 
-			if (prop->GetFlags() & GASS::PF_VISIBLE)
+			if (prop->GetFlags() & PF_VISIBLE)
 			{
 				if (prop->HasMetaData())
 				{
-					GASS::PropertyMetaDataPtr meta_data = prop->GetMetaData();
-					const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
+					PropertyMetaDataPtr meta_data = prop->GetMetaData();
+					const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const std::string documentation = prop->GetDescription();
-					if (GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
+					if (GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data))
 					{
 						//item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
-						GASS::FilePathPropertyMetaDataPtr file_path_data = GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data);
+						FilePathPropertyMetaDataPtr file_path_data = GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data);
 						std::vector<std::string> exts = file_path_data->GetExtensions();
-						GASS::FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
+						FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
 
 						std::string filter;
 						for (size_t i = 0; i < exts.size(); i++)
@@ -347,30 +347,30 @@ namespace GASS
 						}
 
 						std::string filename = prop->GetValueAsString(obj);
-						filename = GASS::StringUtils::Replace(filename, "/", "\\");
+						filename = StringUtils::Replace(filename, "/", "\\");
 
 						//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
 						switch (type)
 						{
-						case GASS::FilePathPropertyMetaData::IMPORT_FILE:
+						case FilePathPropertyMetaData::IMPORT_FILE:
 							//item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
 							//item->setValue(filename.c_str());
 							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
 							break;
-						case GASS::FilePathPropertyMetaData::EXPORT_FILE:
+						case FilePathPropertyMetaData::EXPORT_FILE:
 							//item = m_VariantManager->addProperty(newFileTypeId(), prop_name.c_str());
 							//item->setValue(filename.c_str());
 							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
 							break;
-						case GASS::FilePathPropertyMetaData::PATH_SELECTION:
+						case FilePathPropertyMetaData::PATH_SELECTION:
 							break;
 						}
 					}
 				}
 				else //if (!item)
 				{
-					const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
-					const bool multi = (prop->GetFlags() & GASS::PF_MULTI_OPTIONS);
+					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					const bool multi = (prop->GetFlags() & PF_MULTI_OPTIONS);
 					if (prop->HasOptions())
 					{
 						std::vector<std::string> options = prop->GetStringOptions();
@@ -590,10 +590,10 @@ namespace GASS
 								obj->SetPropertyValue(prop, bb);
 							}
 						}
-						else if (*prop->GetTypeID() == typeid(GASS::FilePath))
+						else if (*prop->GetTypeID() == typeid(FilePath))
 						{
 							//std::string filename = prop_value;
-							//filename = GASS::StringUtils::Replace(filename, "/", "\\");
+							//filename = StringUtils::Replace(filename, "/", "\\");
 							if (ImGui::Button(prop_name.c_str()))
 							{
 
@@ -646,7 +646,7 @@ namespace GASS
 				{
 					ComponentPtr comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 					std::string class_name = comp->GetRTTI()->GetClassName();
-					if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
+					if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
 					{
 						ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 						const bool open = ImGui::TreeNode(class_name.c_str());
@@ -677,7 +677,7 @@ namespace GASS
 				auto sms = m_SceneSelected->GetSceneManagers();
 				for (auto sm : sms)
 				{
-					GASS::BaseReflectionObjectPtr obj = GASS_DYNAMIC_PTR_CAST<GASS::BaseReflectionObject>(sm);
+					BaseReflectionObjectPtr obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(sm);
 					auto sm_props = obj->GetProperties();
 					for (auto prop : sm_props)
 					{
@@ -745,7 +745,7 @@ namespace GASS
 			auto templates = SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplateNames();
 			for (auto temp : templates)
 			{
-				GASS::SceneObjectTemplatePtr sot = GASS_DYNAMIC_PTR_CAST<GASS::SceneObjectTemplate>(GASS::SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temp));
+				SceneObjectTemplatePtr sot = GASS_DYNAMIC_PTR_CAST<SceneObjectTemplate>(SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temp));
 				if (sot->GetInstantiable())
 				{
 					bool node_open = ImGui::TreeNodeEx(sot.get(), base_flags, temp.c_str());
@@ -803,7 +803,7 @@ namespace GASS
 						EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 						sm->GetMouseToolController()->SelectTool(TID_GRAPH);
 						GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
-						tool->SetMode(GASS::GTM_ADD);
+						tool->SetMode(GTM_ADD);
 						tool->SetParentObject(obj);
 						tool->SetConnetionObject(SceneObjectPtr());
 						tool->SetNodeTemplateName(graph->GetNodeTemplate());

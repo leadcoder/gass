@@ -314,7 +314,7 @@ namespace GASS
 	{
 		std::vector<std::string> content;
 
-		ResourceManagerPtr rm = GASS::SimEngine::Get().GetResourceManager();
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
 		for(size_t i = 0; i < groups.size();i++)
 		{

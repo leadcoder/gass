@@ -29,10 +29,10 @@ namespace GASS
 		bool GetAllowWaypointInsert() const { return m_AllowWPInsert; }
 	private:
 		bool m_MouseIsDown;
-		GASS::Vec3 m_Offset;
+		Vec3 m_Offset;
 		MouseToolController* m_Controller;
 		std::string m_ObjectName;
-		GASS::SceneObjectWeakPtr m_ParentObject; 
+		SceneObjectWeakPtr m_ParentObject; 
 		bool m_AllowWPInsert;
 	};
 }

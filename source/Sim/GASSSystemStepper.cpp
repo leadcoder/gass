@@ -140,13 +140,13 @@ namespace GASS
 		if(value && m_CurrentState == SS_RUNNING)
 		{
 			m_CurrentState = SS_PAUSED;
-			m_SimSysManager->PostMessage(std::make_shared<GASS::SimEvent>(GASS::SET_PAUSE));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_PAUSE));
 			m_SimGroup.SetPaused(true);
 		}
 		else if(!value && m_CurrentState == SS_PAUSED)
 		{
 			m_CurrentState = SS_RUNNING;
-			m_SimSysManager->PostMessage(std::make_shared<GASS::SimEvent>(GASS::SET_RESUME));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_RESUME));
 			m_SimGroup.SetPaused(false);
 		}
 	}
@@ -154,7 +154,7 @@ namespace GASS
 	void SystemStepper::StopSimulation()
 	{
 		m_CurrentState = SS_STOPPED;
-		m_SimSysManager->PostMessage(std::make_shared<GASS::SimEvent>(GASS::SET_STOP));
+		m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_STOP));
 		m_SimGroup.SetPaused(true);
 		m_SimGroup.ResetTime();
 	}
@@ -163,7 +163,7 @@ namespace GASS
 	{
 		if(m_CurrentState == SS_STOPPED)
 		{
-			m_SimSysManager->PostMessage(std::make_shared<GASS::SimEvent>(GASS::SET_START));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_START));
 			m_SimGroup.SetPaused(false);
 			m_CurrentState = SS_RUNNING;
 		}

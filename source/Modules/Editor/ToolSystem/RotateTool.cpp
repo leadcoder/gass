@@ -97,7 +97,7 @@ namespace GASS
 					if (selected)
 					{
 						LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
-						Quaternion new_rot = location->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
+						Quaternion new_rot = location->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(Vec3(0, rotation_rad_step, 0));
 						location->SetWorldRotation(new_rot);
 					}
 				}
@@ -148,7 +148,7 @@ namespace GASS
 		if (!selection_mode)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+			SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 		}
 	}

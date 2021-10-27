@@ -89,7 +89,7 @@ namespace GASS
 		{
 			if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 			{
-				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(prop))
+				if (TypedProperty<TYPE>* typed_prop = dynamic_cast<TypedProperty<TYPE>*>(prop))
 				{
 					typed_prop->SetValue(this, value);
 					return;
@@ -104,7 +104,7 @@ namespace GASS
 		{
 			if (IProperty *prop = GetRTTI()->GetPropertyByName(property_name, true))
 			{
-				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(prop))
+				if (TypedProperty<TYPE>* typed_prop = dynamic_cast<TypedProperty<TYPE>*>(prop))
 				{
 					value = typed_prop->GetValue(this);
 					return true;
@@ -118,7 +118,7 @@ namespace GASS
 		{
 			if (property)
 			{
-				if (GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
+				if (TypedProperty<TYPE>* typed_prop = dynamic_cast<TypedProperty<TYPE>*>(property))
 				{
 					typed_prop->SetValue(this, value);
 					return;
@@ -133,7 +133,7 @@ namespace GASS
 		{
 			if (property)
 			{
-				if (const GASS::TypedProperty<TYPE>* typed_prop = dynamic_cast<GASS::TypedProperty<TYPE>*>(property))
+				if (const TypedProperty<TYPE>* typed_prop = dynamic_cast<TypedProperty<TYPE>*>(property))
 				{
 					value = typed_prop->GetValue(this);
 					return true;

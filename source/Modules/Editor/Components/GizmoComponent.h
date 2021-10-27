@@ -72,7 +72,7 @@ namespace GASS
 		
 		Float m_LastDist{0};
 		bool m_Highlight{true};
-		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
+		SceneObjectWeakPtr m_ActiveCameraObject;
 		std::vector<SceneObjectWeakPtr> m_Selection;
 		GizmoEditMode m_Mode{GM_LOCAL};
 		Float m_GridDist{1.0};
@@ -80,7 +80,7 @@ namespace GASS
 		EditorSceneManagerPtr m_EditorSceneManager;
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
-		GASS::Vec3 m_PreviousPos;
+		Vec3 m_PreviousPos;
 		Quaternion m_PreviousRot;
 		bool m_TrackTransformation{true};
 		bool m_TrackSelectedTransform{true};

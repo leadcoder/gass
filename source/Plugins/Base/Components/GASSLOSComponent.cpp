@@ -102,7 +102,7 @@ namespace GASS
 		GetSceneObject()->GetChildByID("LOS_GEOM")->PostRequest(message);
 	}
 
-	bool LOSComponent::CheckLos(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const
+	bool LOSComponent::CheckLos(const Vec3 &start_pos, const Vec3 &end_pos, CollisionSceneManagerPtr col_sm) const
 	{
 		Vec3 ray_direction = end_pos - start_pos;
 		CollisionResult result;
@@ -112,7 +112,7 @@ namespace GASS
 		return !result.Coll;
 	}
 
-	Float LOSComponent::GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const
+	Float LOSComponent::GetHeight(const Vec3 &pos, CollisionSceneManagerPtr col_sm) const
 	{
 		if(col_sm)
 		{

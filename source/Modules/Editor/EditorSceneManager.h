@@ -26,8 +26,8 @@ namespace GASS
 	class EditorModuleExport EditorSceneManager : public Reflection<EditorSceneManager, BaseSceneManager>
 	{
 	public:
-		using SelectionVector = std::vector<GASS::SceneObjectWeakPtr>;
-		using SceneObjectSet = std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr>>;
+		using SelectionVector = std::vector<SceneObjectWeakPtr>;
+		using SceneObjectSet = std::set<SceneObjectWeakPtr, std::owner_less<SceneObjectWeakPtr>>;
 
 		EditorSceneManager(SceneWeakPtr scene);
 		~EditorSceneManager(void) override;

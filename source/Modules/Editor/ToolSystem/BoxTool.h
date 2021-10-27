@@ -28,10 +28,10 @@ namespace GASS
 		void Start() override {};
 	private:
 		SceneObjectPtr GetOrCreateBoxObject();
-		void UpdateBox(const GASS::Vec3& start, const GASS::Vec3& end);
+		void UpdateBox(const Vec3& start, const Vec3& end);
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_BoxObject;
+		SceneObjectWeakPtr m_BoxObject;
 		MouseToolController* m_Controller;
-		GASS::Vec3 m_StartPos;
+		Vec3 m_StartPos;
 	};
 }

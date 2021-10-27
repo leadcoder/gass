@@ -32,7 +32,7 @@ namespace GASS
 		ColorRGBA m_Color;
 		float m_Size;
 		std::string m_Type;
-		std::vector<GASS::SceneObjectWeakPtr> m_Selection;
+		std::vector<SceneObjectWeakPtr> m_Selection;
 		std::string m_Mode;
 		bool m_Active{false};
 		AABox m_BBox;

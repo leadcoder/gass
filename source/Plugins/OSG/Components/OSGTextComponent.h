@@ -43,7 +43,7 @@ namespace GASS
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
 	protected:
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnTextCaptionMessage(GASS::TextCaptionRequestPtr message);
+		void OnTextCaptionMessage(TextCaptionRequestPtr message);
 		void SetFont(const ResourceHandle &font);
 		ResourceHandle GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;

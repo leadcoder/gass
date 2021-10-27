@@ -32,7 +32,7 @@ namespace GASS
 		SceneObjectPtr selected = m_SelectedObject.lock();
 		if(m_MouseIsDown && selected)
 		{
-			LocationComponentPtr comp = selected->GetFirstComponentByClass<GASS::ILocationComponent>();
+			LocationComponentPtr comp = selected->GetFirstComponentByClass<ILocationComponent>();
 			if(comp)
 			{
 				ScenePtr scene = selected->GetScene();
@@ -47,7 +47,7 @@ namespace GASS
 
 				comp->SetPosition(new_position);
 
-				GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+				SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 				SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 			}
 		}

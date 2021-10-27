@@ -143,7 +143,7 @@ namespace GASS
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
+				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<ILocationComponent>();
 				const Vec3 new_position = gc->GetPosition(info.m_Ray);
 				if (m_MoveUpdateCount > 0)
 				{
@@ -261,7 +261,7 @@ namespace GASS
 					SceneObjectPtr selected = m_Selected[i].lock();
 					if (selected)
 					{
-						GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id));
+						SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id));
 						m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
 					}
 				}
@@ -334,7 +334,7 @@ namespace GASS
 		if (!selection_mode)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+			SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 		}
 	}

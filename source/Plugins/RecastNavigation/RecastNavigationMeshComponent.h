@@ -91,8 +91,8 @@ namespace GASS
 		//INavigationMeshComponent
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
-		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const override;
-		bool Raycast(const PlatformType /*platform_type*/, const GASS::Vec3 & /*from_pos*/, const GASS::Vec3 & /*to_pos*/, GASS::Vec3 & /*hit_pos*/) const override { return false; }
+		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const Vec2 &in_pos, const float search_radius, Vec3 &out_pos) const override;
+		bool Raycast(const PlatformType /*platform_type*/, const Vec3 & /*from_pos*/, const Vec3 & /*to_pos*/, Vec3 & /*hit_pos*/) const override { return false; }
 		
 		Vec3 GetRandomPoint() const;
 		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
@@ -108,8 +108,8 @@ namespace GASS
 		std::vector<SceneObjectRef> GetMeshSelectionEnum();
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
-		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
-		void RecastToGASS(float* in_pos, GASS::Vec3 &out_pos) const;
+		void GASSToRecast(const Vec3 &in_pos, float* out_pos) const;
+		void RecastToGASS(float* in_pos, Vec3 &out_pos) const;
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 		

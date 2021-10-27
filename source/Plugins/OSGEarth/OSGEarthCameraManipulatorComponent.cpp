@@ -128,7 +128,7 @@ namespace GASS
 	}
 	
 
-	void OSGEarthCameraManipulatorComponent::SetPosition(const GASS::Vec3 &pos)
+	void OSGEarthCameraManipulatorComponent::SetPosition(const Vec3 &pos)
 	{
 		if (m_Manipulator)
 		{
@@ -140,7 +140,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthCameraManipulatorComponent::SetRotation(const GASS::Quaternion &rot)
+	void OSGEarthCameraManipulatorComponent::SetRotation(const Quaternion &rot)
 	{
 		if (m_Manipulator)
 		{

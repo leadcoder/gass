@@ -126,9 +126,9 @@ namespace GASS
 		pos = OSGConvert::ToGASS(eye);
 
 		//Get rotation axis
-		const GASS::Vec3 z_axis = OSGConvert::ToGASS(eye - center).NormalizedCopy();
-		const GASS::Vec3 y_axis = OSGConvert::ToGASS(up).NormalizedCopy();
-		const GASS::Vec3 x_axis = (y_axis.Cross(z_axis)).NormalizedCopy();
+		const Vec3 z_axis = OSGConvert::ToGASS(eye - center).NormalizedCopy();
+		const Vec3 y_axis = OSGConvert::ToGASS(up).NormalizedCopy();
+		const Vec3 x_axis = (y_axis.Cross(z_axis)).NormalizedCopy();
 		rot.FromAxes(x_axis, y_axis, z_axis);
 	}
 
@@ -149,8 +149,8 @@ namespace GASS
 		}
 		
 		//update LocationComponent with current camera pos and rot
-		GASS::Vec3 pos;
-		GASS::Quaternion rot;
+		Vec3 pos;
+		Quaternion rot;
 		ExtractTransformationFromOrbitManipulator(m_OrbitMan, pos, rot);
 
 		m_UpdateCameraFromLocation = false;

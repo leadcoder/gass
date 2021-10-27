@@ -113,7 +113,7 @@ namespace GASS
 
 	SceneObjectPtr MeasurementTool::GetOrCreateRulerObject() 
 	{
-		GASS::SceneObjectPtr ruler = m_RulerObject.lock();
+		SceneObjectPtr ruler = m_RulerObject.lock();
 
 		if(!ruler)
 		{

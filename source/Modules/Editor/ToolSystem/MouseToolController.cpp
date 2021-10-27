@@ -217,7 +217,7 @@ namespace GASS
 		}
 	}
 
-	GASS::CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const
+	CollisionResult MouseToolController::CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const
 	{
 		CollisionResult result;
 		result.Coll = false;
@@ -242,7 +242,7 @@ namespace GASS
 		if(cam)
 			cam->GetCameraToViewportRay(static_cast<float>(cursor_pos.x), static_cast<float>(cursor_pos.y), info.m_Ray);
 
-		GASS::CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
+		CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
 
 		if(gizmo_result.Coll)
 		{
@@ -256,7 +256,7 @@ namespace GASS
 		}
 		else
 		{
-			GASS::CollisionResult col_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
+			CollisionResult col_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
 			if (col_result.Coll)
 			{
 				SceneObjectPtr col_obj = col_result.CollSceneObject.lock();
@@ -323,7 +323,7 @@ namespace GASS
 		SceneObjectPtr pointer = m_PointerObject.lock();
 		if(!pointer &&  scene)
 		{
-			GASS::SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("PointerObject",scene->GetRootSceneObject());
+			SceneObjectPtr scene_object = scene->LoadObjectFromTemplate("PointerObject",scene->GetRootSceneObject());
 			m_PointerObject = scene_object;
 			pointer = scene_object;
 
@@ -455,7 +455,7 @@ namespace GASS
 					{
 						//show Immediate!
 						//Disable OIS input to avoid background selection
-						GASS::SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
+						SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
 						m_EditorSceneManager->GetScene()->SendImmediate(message);
 					}
 				}
@@ -485,18 +485,18 @@ namespace GASS
 
 		if(key == KEY_F5 && m_CtrlDown)
 		{
-			GASS::SimEngine::Get().GetResourceManager()->ReloadAll();
+			SimEngine::Get().GetResourceManager()->ReloadAll();
 		}
 
 		if(key == KEY_F6 && m_CtrlDown)
 		{
-			GASS::SimEngine::Get().ReloadTemplates();
+			SimEngine::Get().ReloadTemplates();
 		}
 
 		if (key == KEY_E && m_CtrlDown)
 		{
-			const bool toggle_value = !GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->GetShowGUI();
-			GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->SetShowGUI(toggle_value);
+			const bool toggle_value = !SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->GetShowGUI();
+			SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>()->SetShowGUI(toggle_value);
 		}
 
 		return true;
@@ -512,7 +512,7 @@ namespace GASS
 	}
 
 
-	bool MouseToolController::GetMouseWorldPosAndRot(const Vec2 &mouse_pos, GASS::Vec3 &world_pos, GASS::Quaternion &world_rot) const
+	bool MouseToolController::GetMouseWorldPosAndRot(const Vec2 &mouse_pos, Vec3 &world_pos, Quaternion &world_rot) const
 	{
 		SceneCursorInfo cursor_info = GetSceneCursorInfo(mouse_pos, 1000000);
 		SceneObjectPtr object_under_cursor = cursor_info.m_ObjectUnderCursor.lock();
@@ -534,7 +534,7 @@ namespace GASS
 	void MouseToolController::CreateSceneObject(const std::string template_name, const Vec2 &mouse_pos)
 	{
 		Vec3 drop_pos(0,0,0);
-		Quaternion drop_rot(GASS::Quaternion::IDENTITY);
+		Quaternion drop_rot(Quaternion::IDENTITY);
 		if (GetMouseWorldPosAndRot(mouse_pos, drop_pos, drop_rot))
 		{
 			CreateObjectFromTemplateAtPosition(template_name, drop_pos, drop_rot);
@@ -567,7 +567,7 @@ namespace GASS
 		}
 	}
 
-	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot)
+	void MouseToolController::CreateObjectFromTemplateAtPosition(const std::string &obj_name, const Vec3 &pos, const Quaternion &rot)
 	{
 		ScenePtr cur_scene = m_EditorSceneManager->GetScene();
 		SceneObjectPtr site = m_EditorSceneManager->GetObjectSite();

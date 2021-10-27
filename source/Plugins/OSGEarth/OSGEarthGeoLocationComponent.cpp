@@ -135,9 +135,9 @@ namespace GASS
 		RotationRequestPtr rot_msg;
 
 		if (m_Rot != EulerRotation(0, 0, 0))
-			rot_msg = std::make_shared<GASS::RotationRequest>(m_Rot.GetQuaternion());
+			rot_msg = std::make_shared<RotationRequest>(m_Rot.GetQuaternion());
 		else
-			rot_msg = std::make_shared<GASS::RotationRequest>(m_QRot);
+			rot_msg = std::make_shared<RotationRequest>(m_QRot);
 
 		GetSceneObject()->PostRequest(pos_msg);
 		GetSceneObject()->PostRequest(rot_msg);
@@ -331,7 +331,7 @@ namespace GASS
 		if (m_TransformNode.valid())
 		{
 			
-			GetSceneObject()->PostRequest(std::make_shared<GASS::RotationRequest>(m_Rot.GetQuaternion()));
+			GetSceneObject()->PostRequest(std::make_shared<RotationRequest>(m_Rot.GetQuaternion()));
 		}
 	}
 

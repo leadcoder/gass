@@ -39,7 +39,7 @@ namespace GASS
 		SceneObjectWeakPtr m_CurrentGizmo;
 
 		bool m_UseGizmo;
-		GASS::Vec2 m_MouseDownPos;
+		Vec2 m_MouseDownPos;
 		bool m_RotateY;
 		bool  m_Active;
 	};

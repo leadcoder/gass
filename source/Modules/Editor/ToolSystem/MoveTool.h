@@ -42,7 +42,7 @@ namespace GASS
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
 
-		using SelectionMap = std::map<GASS::SceneObjectWeakPtr, Vec3, std::owner_less<GASS::SceneObjectWeakPtr>>;
+		using SelectionMap = std::map<SceneObjectWeakPtr, Vec3, std::owner_less<SceneObjectWeakPtr>>;
 		SelectionMap m_SelectedLocations;
 		
 		bool m_UseGizmo;

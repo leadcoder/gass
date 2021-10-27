@@ -122,10 +122,10 @@ namespace GASS
 	
 	void GizmoComponent::OnTransformation(TransformationChangedEventPtr message)
 	{
-		const GASS::Vec3 current_pos = message->GetPosition();
+		const Vec3 current_pos = message->GetPosition();
 		if (m_TrackTransformation)
 		{
-			const GASS::Vec3 offset = current_pos - m_PreviousPos;
+			const Vec3 offset = current_pos - m_PreviousPos;
 			const Quaternion base_inverse = m_BaseRot.Inverse();
 			const Quaternion new_rot = message->GetRotation() * base_inverse;
 

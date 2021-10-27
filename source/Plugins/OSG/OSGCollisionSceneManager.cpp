@@ -165,7 +165,7 @@ namespace GASS
 		{
 			const double r = osg::WGS_84_RADIUS_EQUATOR;
 
-			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
+			const Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
 			double latitude, longitude, height_hae;
 			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
 
@@ -223,7 +223,7 @@ namespace GASS
 		return false;
 	}
 
-	bool OSGCollisionSceneManager::GetUpVector(const Vec3& location, GASS::Vec3& up_vec) const
+	bool OSGCollisionSceneManager::GetUpVector(const Vec3& location, Vec3& up_vec) const
 	{
 		if (m_TerrainSM && m_Scene->GetOSGEarth())
 			return m_TerrainSM->GetUpVector(location, up_vec);
@@ -250,7 +250,7 @@ namespace GASS
 			m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height);
 			osg::Matrixd local_to_world;
 			m_EllipsoidModel.computeCoordinateFrame(latitude, longitude, local_to_world);
-			rot = GASS::OSGConvert::ToGASS(local_to_world.getRotate());
+			rot = OSGConvert::ToGASS(local_to_world.getRotate());
 		}
 		else
 		{
@@ -280,7 +280,7 @@ namespace GASS
 		{
 			const double r = osg::WGS_84_RADIUS_EQUATOR;
 
-			const GASS::Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
+			const Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
 			//double latitude, longitude, height_hae;
 			//m_EllipsoidModel.convertXYZToLatLongHeight(location.x, -location.z, location.y, latitude, longitude, height_hae);
 			//constexpr double min_height = -20000;

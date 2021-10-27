@@ -73,16 +73,16 @@ namespace GASS
 		bool IsCtrlDown() const { return m_CtrlDown; }
 
 		SceneCursorInfo GetSceneCursorInfo(const Vec2 &cursor_pos, Float raycast_distance) const;
-		bool GetMouseWorldPosAndRot(const Vec2 &mouse_pos, GASS::Vec3 &world_pos, GASS::Quaternion &world_rot) const;
+		bool GetMouseWorldPosAndRot(const Vec2 &mouse_pos, Vec3 &world_pos, Quaternion &world_rot) const;
 	private:
-		void OnInput(GASS::ControllSettingsMessagePtr message);
+		void OnInput(ControllSettingsMessagePtr message);
 		void NextTool();
 		void PrevTool();
-		GASS::CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
+		CollisionResult CameraRaycast(CameraComponentPtr cam, const Vec2 &viewport_pos, Float raycast_distance, GeometryFlags col_bits) const;
 
 		//helper
-		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const GASS::Vec3 &pos, const GASS::Quaternion &rot);
-		GASS::SceneObjectPtr GetPointerObject();
+		void CreateObjectFromTemplateAtPosition(const std::string &obj_name, const Vec3 &pos, const Quaternion &rot);
+		SceneObjectPtr GetPointerObject();
 
 		std::vector<IMouseTool*> m_Tools;
 		IMouseTool* m_ActiveTool;
@@ -104,7 +104,7 @@ namespace GASS
 		bool m_CtrlDown;
 		GizmoEditMode m_EditMode;
 		Vec2 m_MBRScreenPos;
-		GASS::SceneObjectWeakPtr m_PointerObject;
+		SceneObjectWeakPtr m_PointerObject;
 		EditorSceneManager* m_EditorSceneManager;
 	};
 }

@@ -36,7 +36,7 @@ namespace GASS
 			{
 				selected->GetParentSceneObject()->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_DEFORM,info.m_3DPos,116.0f, 90.0f,1.0f,0.0f));
 			}
-			GASS::SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos, selected, from_id));
+			SceneMessagePtr paint_msg(new PaintRequest(info.m_3DPos, selected, from_id));
 			m_Controller->GetEditorSceneManager()->GetScene()->SendImmediate(paint_msg);
 		}
 		SceneObjectPtr gizmo = GetMasterGizmo();
@@ -75,7 +75,7 @@ namespace GASS
 		{
 			ScenePtr scene = m_Controller->GetEditorSceneManager()->GetScene();
 			std::string gizmo_name = "PaintGizmo";
-			GASS::SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
+			SceneObjectPtr scene_object = m_Controller->GetEditorSceneManager()->GetScene()->LoadObjectFromTemplate(gizmo_name,m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject());
 			m_MasterGizmoObject = scene_object;
 			gizmo = scene_object;
 

@@ -32,9 +32,9 @@ namespace GASS
 		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
-		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
+		SceneObjectWeakPtr m_MasterGizmoObject;
 		bool m_Active;
 	};
 }

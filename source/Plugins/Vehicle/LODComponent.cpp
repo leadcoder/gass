@@ -114,7 +114,7 @@ namespace GASS
 
 	void LODComponent::UpdateLOD()
 	{
-		GASS::Float distance = (m_CameraPosition-m_ObjectPosition).Length();
+		Float distance = (m_CameraPosition-m_ObjectPosition).Length();
 
 		LODMessage::LODLevel level = LODMessage::LOD_HIGH;
 		if(distance > m_MediumLODDistance)

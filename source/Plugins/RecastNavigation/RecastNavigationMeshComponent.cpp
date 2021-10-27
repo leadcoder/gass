@@ -1543,7 +1543,7 @@ namespace GASS
 	{
 		if (m_NavMesh)
 		{
-			GASS::Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
+			Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
 			float recast_pos[3];
 			GASSToRecast(in_pos_v3, recast_pos);
 
@@ -1665,14 +1665,14 @@ namespace GASS
 	}
 
 
-	void RecastNavigationMeshComponent::GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const
+	void RecastNavigationMeshComponent::GASSToRecast(const Vec3 &in_pos, float* out_pos) const
 	{
 		out_pos[0] = static_cast<float>(in_pos.x - m_LocalOrigin.x);
 		out_pos[1] = static_cast<float>(in_pos.y - m_LocalOrigin.y);
 		out_pos[2] = static_cast<float>(in_pos.z - m_LocalOrigin.z);
 	}
 
-	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos,GASS::Vec3 &out_pos) const
+	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos, Vec3 &out_pos) const
 	{
 		out_pos.x = in_pos[0] + m_LocalOrigin.x;
 		out_pos.y = in_pos[1] + m_LocalOrigin.y;

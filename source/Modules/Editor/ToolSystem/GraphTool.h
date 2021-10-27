@@ -43,12 +43,12 @@ namespace GASS
 		GraphEdgeComponentPtr GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const;
 		void OnToolChanged(ToolChangedEventPtr message);
 		bool m_MouseIsDown;
-		GASS::Vec3 m_Offset;
+		Vec3 m_Offset;
 		MouseToolController* m_Controller;
 		std::string m_NodeObjectName;
 		std::string m_EdgeObjectName;
-		GASS::SceneObjectWeakPtr m_ParentObject; 
-		GASS::SceneObjectWeakPtr m_PrevObject; 
+		SceneObjectWeakPtr m_ParentObject; 
+		SceneObjectWeakPtr m_PrevObject; 
 		GraphToolMode m_Mode;
 	};
 }

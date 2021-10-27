@@ -61,7 +61,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionRequest,0));
 	}
 
-	void OSGTextComponent::OnTextCaptionMessage(GASS::TextCaptionRequestPtr message)
+	void OSGTextComponent::OnTextCaptionMessage(TextCaptionRequestPtr message)
 	{
 		const std::string caption = message->GetCaption();
 		if(m_OSGText)

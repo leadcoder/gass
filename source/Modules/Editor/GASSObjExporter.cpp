@@ -267,8 +267,8 @@ namespace GASS
 					if (mat.Textures.size() > 0)
 					{
 						std::string texture_name = mat.Textures[0];
-						GASS::ResourceHandle res(texture_name);
-						GASS::FileResourcePtr file_res;
+						ResourceHandle res(texture_name);
+						FileResourcePtr file_res;
 						try
 						{
 							file_res = res.GetResource();

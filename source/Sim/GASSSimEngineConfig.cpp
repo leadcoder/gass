@@ -75,7 +75,7 @@ namespace GASS
 
 		for (auto system_name : systems)
 		{
-			GASS::SimSystemConfig sysc;
+			SimSystemConfig sysc;
 			sysc.Name = system_name;
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}

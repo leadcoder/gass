@@ -193,7 +193,7 @@ namespace GASS
 		if(m_Controller == "Pitch")
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetXAxis();
-			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
+			Vec3 projected_aim = Plane(Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
@@ -206,7 +206,7 @@ namespace GASS
 		else
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetYAxis();
-			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
+			Vec3 projected_aim = Plane(Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 

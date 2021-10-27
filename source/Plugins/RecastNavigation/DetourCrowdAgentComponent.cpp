@@ -351,7 +351,7 @@ namespace GASS
 					Vec3f right = final_dir;
 					right.x = final_dir.z;
 					right.z = -final_dir.x;
-					GASS::Mat4f rot_mat;
+					Mat4f rot_mat;
 					rot_mat.MakeIdentity();
 					rot_mat.SetRotationByAxis(right, up, final_dir);
 					Quaternionf rot;
