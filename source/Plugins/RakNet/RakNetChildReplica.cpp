@@ -145,7 +145,7 @@ namespace GASS
 
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			auto comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 			if(comp)
 			{
 				RTTI* p_rtti = comp->GetRTTI();

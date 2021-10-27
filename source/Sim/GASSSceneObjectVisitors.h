@@ -45,7 +45,7 @@ namespace GASS
 			SceneObject::ComponentIterator comp_iter = scene_object->GetComponents();
 			while(comp_iter.hasMoreElements())
 			{
-				BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+				ComponentPtr comp = comp_iter.getNext();
 				if(comp->GetRTTI()->IsDerivedFrom(m_ComponentClassName))
 				{
 					m_Components.push_back(comp);

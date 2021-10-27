@@ -53,7 +53,7 @@ namespace GASS
 			HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
-				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
+				auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(terrain);
 				SceneObjectPtr terrain_group = bsc->GetSceneObject()->GetParentSceneObject();
 
 				switch(m_TEM)

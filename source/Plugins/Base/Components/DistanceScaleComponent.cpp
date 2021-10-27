@@ -47,7 +47,7 @@ namespace GASS
 		CameraComponentPtr camera = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<ICameraComponent>(true);
 		if(camera)
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera);
+			auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(camera);
 			SceneObjectPtr cam_obj = bsc->GetSceneObject();
 			m_ActiveCameraObject = cam_obj;
 			if(cam_obj)
@@ -77,7 +77,7 @@ namespace GASS
 			prev_camera->UnregisterForMessage(UNREG_TMESS(DistanceScaleComponent::OnCameraParameter,CameraParameterRequest));
 		}
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		auto cam_obj = GASS_DYNAMIC_PTR_CAST<Component>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent,1));
@@ -155,7 +155,7 @@ namespace GASS
 				CameraComponentPtr camera_comp = camera->GetFirstComponentByClass<ICameraComponent>();	
 				if(camera_comp)
 				{
-					BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera_comp);
+					auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(camera_comp);
 					bsc->GetPropertyValue<float>("Fov", fov);
 				}
 			

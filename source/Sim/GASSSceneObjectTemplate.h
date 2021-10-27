@@ -38,7 +38,7 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObjectTemplateManager);
 	using SceneObjectTemplateManagerConstPtr = std::shared_ptr<const SceneObjectTemplateManager>;
 	using SceneObjectID = std::string;
-	class BaseSceneComponent;
+	using BaseSceneComponent = Component;
 	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
 	using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
 

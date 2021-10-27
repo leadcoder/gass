@@ -48,7 +48,7 @@ namespace GASS
 	class MessageManager;
 	class Scene;
 	class SceneObject;
-	class BaseSceneComponent;
+	//class BaseSceneComponent;
 	class SceneObjectVisitor;
 	GASS_FORWARD_DECL(Component);
 
@@ -59,6 +59,7 @@ namespace GASS
 	using MessageManagerPtr = std::shared_ptr<MessageManager>;
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using BaseSceneComponent = Component;
 	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
 	using SceneObjectVector = std::vector<SceneObjectPtr>;
 

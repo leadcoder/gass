@@ -32,7 +32,7 @@ namespace GASS
 
 	class GASSExport SceneObjectLink 
 	{
-		friend class BaseSceneComponent;
+		friend class Component;
 	public:
 		SceneObjectLink();
 		SceneObjectPtr operator ->()

@@ -30,7 +30,7 @@ namespace GASS
 {
 	class GASSExport SceneObjectRef
 	{
-		friend class BaseSceneComponent;
+		friend class Component;
 	public:
 		SceneObjectRef();
 		SceneObjectRef(SceneObjectPtr obj);

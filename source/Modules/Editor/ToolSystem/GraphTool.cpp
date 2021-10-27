@@ -216,9 +216,9 @@ namespace GASS
 		graph_obj->GetComponentsByClass<IGraphEdgeComponent>(comps,true);
 		for(size_t i =  0; i < comps.size(); i++)
 		{
-			GraphEdgeComponentPtr edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
-			BaseSceneComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetStartNode());
-			BaseSceneComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetEndNode());
+			auto edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
+			auto start_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetStartNode());
+			auto end_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetEndNode());
 			if(start_node && end_node)
 			{
 				Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();

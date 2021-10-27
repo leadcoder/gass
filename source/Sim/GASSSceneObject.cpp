@@ -122,7 +122,7 @@ namespace GASS
 		ComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			ComponentPtr comp = comp_iter.getNext();
 			if(comp)
 			{
 				comp->RemapReferences(ref_map);
@@ -159,7 +159,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = *iter;
 			bsc->ResolveTemplateReferences(template_root);
 			++iter;
 		}
@@ -191,7 +191,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = *iter;
 			bsc->InitializePointers();
 			++iter;
 		}
@@ -242,7 +242,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = *iter;
 			bsc->OnDelete();
 			++iter;
 		}
@@ -270,7 +270,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(*iter);
+			BaseSceneComponentPtr bsc = *iter;
 			bsc->OnInitialize();
 			++iter;
 		}
@@ -345,7 +345,7 @@ namespace GASS
 		ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			BaseSceneComponentPtr comp = comp_iter.getNext();
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				components.push_back(comp);
@@ -369,7 +369,7 @@ namespace GASS
 		auto comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			BaseSceneComponentPtr comp = comp_iter.getNext();
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				return comp;

@@ -25,7 +25,7 @@ namespace GASS
 		std::map<std::string, SceneObjectPtr > meshmap;
 		for (size_t i = 0; i < comps.size(); i++)
 		{
-			SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
+			SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<Component>(comps[i]))->GetSceneObject();
 			MeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
 			ResourceComponentPtr res = GASS_DYNAMIC_PTR_CAST<IResourceComponent>(comps[i]);
 			if (mesh && res)
@@ -62,7 +62,7 @@ namespace GASS
 			std::vector<GraphicsMesh> mesh_data_vec;
 			for (size_t i = 0; i < comps.size(); i++)
 			{
-				SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(comps[i]))->GetSceneObject();
+				SceneObjectPtr obj = (GASS_DYNAMIC_PTR_CAST<Component>(comps[i]))->GetSceneObject();
 				MeshComponentPtr mesh = GASS_DYNAMIC_PTR_CAST<IMeshComponent>(comps[i]);
 				GraphicsMesh  mesh_data = mesh->GetMeshData();
 

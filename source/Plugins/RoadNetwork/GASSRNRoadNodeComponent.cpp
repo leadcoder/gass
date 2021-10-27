@@ -53,7 +53,7 @@ namespace GASS
 			if(edge)
 			{
 				//Delete edge object
-				BaseSceneComponentPtr bso = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge);
+				auto bso = GASS_DYNAMIC_PTR_CAST<Component>(edge);
 				bso->GetSceneObject()->SendRemoveRequest(0);
 			}
 		}

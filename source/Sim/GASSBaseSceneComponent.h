@@ -21,6 +21,8 @@
 #ifndef GASS_BASE_SCENE_COMPONENT_H
 #define GASS_BASE_SCENE_COMPONENT_H
 
+#include "Sim/GASSComponent.h"
+#if 0
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSISceneManager.h"
@@ -102,4 +104,5 @@ namespace GASS
 	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
 	using BaseSceneComponentWeakPtr = std::weak_ptr<BaseSceneComponent>;
 }
+#endif
 #endif 

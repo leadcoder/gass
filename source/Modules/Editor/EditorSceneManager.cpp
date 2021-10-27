@@ -135,7 +135,7 @@ namespace GASS
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<Component>(camera)->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = camera;

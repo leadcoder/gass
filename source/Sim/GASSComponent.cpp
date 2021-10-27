@@ -20,7 +20,11 @@
 #include "Sim/GASSComponent.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Serialize/tinyxml2.h"
+//#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 
 namespace GASS
 {
@@ -99,6 +103,218 @@ namespace GASS
 	std::vector<std::string> Component::GetDependencies() const
 	{
 		return m_Dependencies[GetRTTI()];
+	}
+
+	SceneObjectPtr Component::GetSceneObject() const
+	{
+		return GetOwner();
+	}
+
+	void Component::OnInitialize()
+	{
+
+	}
+
+	void Component::InitializePointers()
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+				if (*prop->GetTypeID() == typeid(std::vector<SceneObjectLink>))
+				{
+					std::vector<SceneObjectLink> links;
+					GetPropertyValue(prop, links);
+					for (size_t i = 0; i < links.size(); i++)
+					{
+						if (links[i].GetLinkObjectID() != UNKNOWN_LINK_ID)
+						{
+							if (!links[i].Initlize(GetSceneObject()))
+							{
+								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+									"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
+									"BaseSceneComponent::InitializePointers()");
+							}
+						}
+						else
+							GASS_LOG(LWARNING) << "Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
+					}
+					SetPropertyValue(prop, links);
+				}
+				else if (*prop->GetTypeID() == typeid(SceneObjectLink))
+				{
+					SceneObjectLink link;
+					GetPropertyValue(prop, link);
+					if (link.GetLinkObjectID() != UNKNOWN_LINK_ID)
+					{
+						if (!link.Initlize(GetSceneObject()))
+						{
+							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+								"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
+								"BaseSceneComponent::InitializePointers()");
+
+						}
+						GASS_ANY new_any_link(link);
+						prop->SetValueByAny(this, new_any_link);
+					}
+					else
+					{
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+							"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
+							"BaseSceneComponent::InitializePointers()");
+					}
+
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+	void Component::InitializeSceneObjectRef()
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref(links[i].GetRefGUID());
+							links[i] = new_ref;
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						SceneObjectRef new_ref(old_ref.GetRefGUID());
+						GASS_ANY any_ref(new_ref);
+						prop->SetValueByAny(this, any_ref);
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+
+	void Component::ResolveTemplateReferences(SceneObjectPtr template_root)
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref = links[i];
+							new_ref.ResolveTemplateReferences(template_root);
+							links[i] = new_ref;
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef so_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						so_ref.ResolveTemplateReferences(template_root);
+						GASS_ANY any_so(so_ref);
+						prop->SetValueByAny(this, any_so);
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+
+
+	void Component::RemapReferences(const std::map<SceneObjectGUID, SceneObjectGUID>& ref_map)
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							const std::map<SceneObjectGUID, SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
+							if (guid_iter != ref_map.end())
+							{
+								SceneObjectRef new_ref(guid_iter->second);
+								links[i] = new_ref;
+							}
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						const std::map<SceneObjectGUID, SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
+						if (guid_iter != ref_map.end())
+						{
+							SceneObjectRef new_ref(guid_iter->second);
+							GASS_ANY any_ref(new_ref);
+							prop->SetValueByAny(this, any_ref);
+						}
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
 	}
 }
 
