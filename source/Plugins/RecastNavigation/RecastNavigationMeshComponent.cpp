@@ -1092,8 +1092,7 @@ namespace GASS
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 			for(size_t i = 0; i < components.size() ; i++)
 			{
-				auto comp = GASS_DYNAMIC_PTR_CAST<Component>(components[i]);
-				objs.emplace_back(comp->GetSceneObject());
+				objs.emplace_back(components[i]->GetSceneObject());
 			}
 		}
 		return objs;
@@ -1148,8 +1147,7 @@ namespace GASS
 				GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 				for(size_t i = 0; i < components.size() ; i++)
 				{
-					auto comp = GASS_DYNAMIC_PTR_CAST<Component>(components[i]);
-					m_SelectedMeshes.emplace_back(comp->GetSceneObject());
+					m_SelectedMeshes.emplace_back(components[i]->GetSceneObject());
 				}
 			}
 		}

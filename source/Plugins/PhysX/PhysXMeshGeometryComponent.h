@@ -32,7 +32,7 @@ namespace GASS
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 	
-	class PhysXMeshGeometryComponent : public Reflection<PhysXMeshGeometryComponent,BaseSceneComponent>
+	class PhysXMeshGeometryComponent : public Reflection<PhysXMeshGeometryComponent,Component>
 	{
 	friend class PhysXPhysicsSceneManager;
 	public:

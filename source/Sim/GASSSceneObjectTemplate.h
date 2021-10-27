@@ -38,8 +38,6 @@ namespace GASS
 	GASS_FORWARD_DECL(SceneObjectTemplateManager);
 	using SceneObjectTemplateManagerConstPtr = std::shared_ptr<const SceneObjectTemplateManager>;
 	using SceneObjectID = std::string;
-	using BaseSceneComponent = Component;
-	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
 	using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
 
 	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SceneObjectTemplate>, public IXMLSerialize, public ISerialize
@@ -59,16 +57,6 @@ namespace GASS
 		SceneObjectID GetID() const { return m_ID; }
 		void SetInstantiable(bool value) { m_Instantiable = value; }
 		bool GetInstantiable() const { return m_Instantiable; }
-		/**
-			Convenience function for BaseSceneComponent's that call AddComponent on SceneObjectTemplate
-		*/
-		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
-
-
-		/**
-			Convenience function for BaseSceneComponent's that call GetComponent on SceneObjectTemplate
-		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string& comp_name) const;
 
 		/**
 			Get SceneObject template name

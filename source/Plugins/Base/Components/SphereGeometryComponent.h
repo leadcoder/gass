@@ -19,7 +19,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGBA.h"
@@ -31,7 +31,7 @@ namespace GASS
 		Component that create sphere geometry
 	*/
 
-	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,BaseSceneComponent> , public IShape
+	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,Component> , public IShape
 	{
 	public:
 		SphereGeometryComponent(void);

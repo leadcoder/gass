@@ -24,7 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Plugins/Base/CoreMessages.h"
@@ -47,7 +47,7 @@ namespace GASS
 	END_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
 
 
-	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>
+	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,Component>
 	{
 	public:
 		FollowWaypointListComponent();

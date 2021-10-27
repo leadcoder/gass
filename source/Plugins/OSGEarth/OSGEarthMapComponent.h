@@ -27,7 +27,7 @@ namespace GASS
 	class OSGEarthSceneManager;
 	class OETerrainCallbackProxy;
 
-	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, BaseSceneComponent>, public IGeometryComponent, public IMapComponent
+	class OSGEarthMapComponent : public Reflection<OSGEarthMapComponent, Component>, public IGeometryComponent, public IMapComponent
 	{
 	public:
 		OSGEarthMapComponent();

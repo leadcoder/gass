@@ -18,7 +18,7 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #include "Sim/GASSSceneObjectTemplate.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Serialize/GASSSerialize.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObjectTemplateManager.h"
@@ -43,18 +43,7 @@ namespace GASS
 		RegisterGetSet("ID", &GASS::SceneObjectTemplate::GetID, &GASS::SceneObjectTemplate::SetID);
 		RegisterGetSet("Instantiable", &GASS::SceneObjectTemplate::GetInstantiable, &GASS::SceneObjectTemplate::SetInstantiable);
 	}
-
-
-	BaseSceneComponentPtr SceneObjectTemplate::AddBaseSceneComponent(const std::string &comp_name)
-	{
-		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(AddComponent(comp_name));
-	}
-
-	BaseSceneComponentPtr SceneObjectTemplate::GetBaseSceneComponent(const std::string &comp_name) const
-	{
-		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
-	}
-
+	
 	void SceneObjectTemplate::AddChild(SceneObjectTemplatePtr child)
 	{
 		SceneObjectTemplateWeakPtr parent = SceneObjectTemplateWeakPtr(shared_from_this());

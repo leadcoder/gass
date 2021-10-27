@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -33,7 +33,7 @@
 namespace GASS
 {
 	
-	class CarAutopilotComponent :  public Reflection<CarAutopilotComponent,BaseSceneComponent>
+	class CarAutopilotComponent :  public Reflection<CarAutopilotComponent,Component>
 	{
 	public:
 		enum NavState

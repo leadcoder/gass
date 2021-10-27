@@ -175,8 +175,8 @@ namespace GASS
 		{
 			// check that both bodies has a geometry
 
-			auto* geom1 = static_cast<BaseSceneComponent*>(dGeomGetData(o1));
-			auto* geom2 = static_cast<BaseSceneComponent*>(dGeomGetData(o2));
+			auto* geom1 = static_cast<Component*>(dGeomGetData(o1));
+			auto* geom2 = static_cast<Component*>(dGeomGetData(o2));
 
 
 			if(!(geom1 && geom2))

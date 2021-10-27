@@ -124,7 +124,7 @@ namespace GASS
 							auto* data = dynamic_cast<OSGNodeData*>(intersection.nodePath[i]->getUserData());
 							if (data)
 							{
-								BaseSceneComponentPtr bo = data->m_Component.lock();
+								ComponentPtr bo = data->m_Component.lock();
 								if (bo)
 								{
 									GeometryComponentPtr geom = GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(bo);

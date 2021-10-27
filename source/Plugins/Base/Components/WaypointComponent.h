@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -35,7 +35,7 @@ namespace GASS
 	/**
 		Component that hold waypoint data for WaypointListComponent
 	*/
-	class WaypointComponent : public Reflection<WaypointComponent,BaseSceneComponent>
+	class WaypointComponent : public Reflection<WaypointComponent,Component>
 	{
 	public:
 		WaypointComponent();

@@ -22,7 +22,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
@@ -53,7 +53,7 @@ namespace GASS
 	this kind of messages and actually implement the transformation change
 	*/
 
-	class MotionComponent : public Reflection<MotionComponent, BaseSceneComponent>, public IPlatformComponent
+	class MotionComponent : public Reflection<MotionComponent, Component>, public IPlatformComponent
 	{
 	public:
 		MotionComponent();

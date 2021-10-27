@@ -34,7 +34,7 @@ namespace GASS
 	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
-	class PhysXTerrainGeometryComponent : public Reflection<PhysXTerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent
+	class PhysXTerrainGeometryComponent : public Reflection<PhysXTerrainGeometryComponent,Component> , public IPhysicsGeometryComponent
 	{
 	friend class PhysXPhysicsSceneManager;
 	public:

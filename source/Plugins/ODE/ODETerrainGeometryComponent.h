@@ -20,7 +20,7 @@
 
 #pragma once 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -42,7 +42,7 @@ namespace GASS
 	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
 
-	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
+	class ODETerrainGeometryComponent : public Reflection<ODETerrainGeometryComponent,Component> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:

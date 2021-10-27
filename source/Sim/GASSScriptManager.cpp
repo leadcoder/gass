@@ -209,12 +209,12 @@ namespace GASS
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)", asFUNCTIONPR(Vec3::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); CheckReturn(r);
 		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)", asFUNCTION(Math::RandomValue<Float>), asCALL_CDECL); CheckReturn(r);
 
-		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
-		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectType("Component", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Component", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
 
 		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
 		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(SceneObject, GetName), asCALL_THISCALL); CheckReturn(r);
-		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "Component @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
 	}
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)

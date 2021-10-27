@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Plugins/Base/CoreMessages.h"
@@ -55,7 +55,7 @@ namespace GASS
 		Component that create road geomtry
 	*/
 
-	class RoadComponent : public Reflection<RoadComponent,BaseSceneComponent>
+	class RoadComponent : public Reflection<RoadComponent,Component>
 	{
 	public:
 		RoadComponent();

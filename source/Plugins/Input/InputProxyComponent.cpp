@@ -45,7 +45,7 @@ namespace GASS
 	void InputProxyComponent::OnInitialize()
 	{
 		//Init pointers
-		BaseSceneComponent::OnInitialize();
+		Component::OnInitialize();
 		m_InputHandlerObject->RegisterForMessage(REG_TMESS(GASS::InputProxyComponent::OnPlayerInput,InputRelayEvent,0));
 	}
 

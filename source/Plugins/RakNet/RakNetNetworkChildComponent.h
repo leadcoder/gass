@@ -22,7 +22,7 @@
 #define RAK_NET_NETWORK_CHILD_COMPONENT_H
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
@@ -36,7 +36,7 @@ namespace GASS
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 	using NetworkPackageVector = std::vector<NetworkPackagePtr>;
 
-	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,BaseSceneComponent> 
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,Component> 
 	{
 	public:
 		RakNetNetworkChildComponent();

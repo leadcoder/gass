@@ -24,7 +24,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -36,7 +36,7 @@ namespace GASS
 		Component that handles waypoints lists. 
 	*/
 
-	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>, public IWaypointListComponent
+	class WaypointListComponent : public Reflection<WaypointListComponent,Component>, public IWaypointListComponent
 	{
 		friend class WaypointComponent;
 	public:

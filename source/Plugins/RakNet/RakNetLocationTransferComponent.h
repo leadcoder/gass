@@ -22,7 +22,7 @@
 #define RAK_NET_LOCATION_TRANSFER_COMPONENT_H
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSINetworkComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
@@ -118,7 +118,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,Component>, public INetworkComponent
 	{
 	public:
 		RakNetLocationTransferComponent();

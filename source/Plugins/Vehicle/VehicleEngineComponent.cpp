@@ -125,7 +125,7 @@ namespace GASS
 
 	void VehicleEngineComponent::OnInitialize()
 	{
-		BaseSceneComponent::OnInitialize();
+		Component::OnInitialize();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnInput,InputRelayEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(VehicleEngineComponent::OnPhysicsMessage,PhysicsVelocityEvent,0));
 

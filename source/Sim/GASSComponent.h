@@ -230,8 +230,5 @@ namespace GASS
 	};
 	//Declare shared pointers
 	GASS_PTR_DECL(Component)
-	using BaseSceneComponent = Component;
-	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
-	using BaseSceneComponentWeakPtr = std::weak_ptr<BaseSceneComponent>;
 }
 #endif // #ifndef Component_HH

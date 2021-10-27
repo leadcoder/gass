@@ -14,7 +14,7 @@
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "ToolSystem/MouseToolController.h"
 #include "Components/EditorComponent.h"
 #include "Components/SelectionComponent.h"

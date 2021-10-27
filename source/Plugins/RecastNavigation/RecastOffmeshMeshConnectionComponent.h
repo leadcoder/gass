@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	class RecastOffmeshMeshConnectionComponent : public Reflection<RecastOffmeshMeshConnectionComponent,BaseSceneComponent>
+	class RecastOffmeshMeshConnectionComponent : public Reflection<RecastOffmeshMeshConnectionComponent,Component>
 	{
 	public:
 		RecastOffmeshMeshConnectionComponent();

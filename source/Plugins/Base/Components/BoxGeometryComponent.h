@@ -22,7 +22,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 
 namespace GASS
@@ -30,7 +30,7 @@ namespace GASS
 	/**
 		Component that create  box geometry
 	*/
-	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,BaseSceneComponent> , public IShape
+	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,Component> , public IShape
 	{
 	public:
 		BoxGeometryComponent(void);

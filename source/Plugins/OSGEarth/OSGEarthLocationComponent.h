@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	class OSGEarthLocationComponent : public Reflection<OSGEarthLocationComponent,BaseSceneComponent> 
+	class OSGEarthLocationComponent : public Reflection<OSGEarthLocationComponent,Component> 
 	{
 	public:
 		OSGEarthLocationComponent();

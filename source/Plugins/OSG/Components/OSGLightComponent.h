@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class OSGLightComponent : public Reflection<OSGLightComponent,BaseSceneComponent>, public ILightComponent
+	class OSGLightComponent : public Reflection<OSGLightComponent,Component>, public ILightComponent
 	{
 	public:
 		OSGLightComponent();

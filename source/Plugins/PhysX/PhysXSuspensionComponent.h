@@ -30,7 +30,7 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>,
+	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,Component>,
 		public IPhysicsSuspensionComponent
 	{
 	public:

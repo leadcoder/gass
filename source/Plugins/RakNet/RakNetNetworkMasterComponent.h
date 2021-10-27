@@ -23,7 +23,7 @@
 
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
@@ -37,7 +37,7 @@ namespace GASS
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 	using NetworkPackageVector = std::vector<NetworkPackagePtr>;
 
-	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,BaseSceneComponent>
+	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,Component>
 	{
 	public:
 		RakNetNetworkMasterComponent();

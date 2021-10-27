@@ -31,7 +31,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,BaseSceneComponent> , public IGeometryComponent
+	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,Component> , public IGeometryComponent
 	{
 	public:
 		OSGBillboardComponent (void);

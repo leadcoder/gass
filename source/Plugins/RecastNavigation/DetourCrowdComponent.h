@@ -27,7 +27,7 @@ class dtCrowd;
 class dtNavMesh;
 namespace GASS
 {
-	class DetourCrowdComponent : public Reflection<DetourCrowdComponent,BaseSceneComponent> 
+	class DetourCrowdComponent : public Reflection<DetourCrowdComponent,Component> 
 	{
 		friend class DetourCrowdAgentComponent;
 	public:

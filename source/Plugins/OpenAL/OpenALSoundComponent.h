@@ -3,7 +3,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -19,7 +19,7 @@
 
 namespace GASS
 {
-	class OpenALSoundComponent : public Reflection<OpenALSoundComponent,BaseSceneComponent>
+	class OpenALSoundComponent : public Reflection<OpenALSoundComponent,Component>
 	{
 	public:
 		OpenALSoundComponent(void);

@@ -25,7 +25,7 @@
 namespace GASS
 {
 	
-	class RecastConvexVolumeComponent : public Reflection<RecastConvexVolumeComponent,BaseSceneComponent>
+	class RecastConvexVolumeComponent : public Reflection<RecastConvexVolumeComponent,Component>
 	{
 	public:
 		RecastConvexVolumeComponent();

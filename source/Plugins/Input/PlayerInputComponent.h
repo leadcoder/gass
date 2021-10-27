@@ -24,7 +24,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 
@@ -34,7 +34,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class PlayerInputComponent : public Reflection<PlayerInputComponent,BaseSceneComponent>
+	class PlayerInputComponent : public Reflection<PlayerInputComponent,Component>
 	{
 	public:
 		PlayerInputComponent();

@@ -22,7 +22,7 @@
 #include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Common.h"
 #include "Sim/GASSComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -159,7 +159,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = *iter;
+			ComponentPtr bsc = *iter;
 			bsc->ResolveTemplateReferences(template_root);
 			++iter;
 		}
@@ -191,7 +191,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = *iter;
+			ComponentPtr bsc = *iter;
 			bsc->InitializePointers();
 			++iter;
 		}
@@ -242,7 +242,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = *iter;
+			ComponentPtr bsc = *iter;
 			bsc->OnDelete();
 			++iter;
 		}
@@ -270,7 +270,7 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			BaseSceneComponentPtr bsc = *iter;
+			ComponentPtr bsc = *iter;
 			bsc->OnInitialize();
 			++iter;
 		}
@@ -345,7 +345,7 @@ namespace GASS
 		ConstComponentIterator comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = comp_iter.getNext();
+			ComponentPtr comp = comp_iter.getNext();
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				components.push_back(comp);
@@ -369,7 +369,7 @@ namespace GASS
 		auto comp_iter = GetComponents();
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = comp_iter.getNext();
+			ComponentPtr comp = comp_iter.getNext();
 			if(comp->GetRTTI()->IsDerivedFrom(class_name))
 			{
 				return comp;
@@ -669,15 +669,10 @@ namespace GASS
 		delete xml_doc;
 	}
 
-	BaseSceneComponentPtr SceneObject::GetBaseSceneComponent(const std::string &comp_name) const
-	{
-		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetComponent(comp_name));
-	}
-
-	BaseSceneComponent* SceneObject::GetComponentByClassName(const std::string &comp_name) const
+	Component* SceneObject::GetComponentByClassName(const std::string &comp_name) const
 	{
 		const std::string factory_class_name = ComponentFactory::Get().GetClassNameFromKey(comp_name);
-		GASS::BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(GetFirstComponentByClassName(factory_class_name,false));
+		auto bsc = GetFirstComponentByClassName(factory_class_name,false);
 		return bsc.get();
 	}
 
@@ -708,11 +703,6 @@ namespace GASS
 			cc = std::make_shared<SceneObject>();
 		}
 		return cc;
-	}
-
-	BaseSceneComponentPtr SceneObject::AddBaseSceneComponent(const std::string& comp_name)
-	{
-		return GASS_DYNAMIC_PTR_CAST<GASS::BaseSceneComponent>(AddComponent(comp_name));
 	}
 
 	void SceneObject::AddChild(SceneObjectPtr child)

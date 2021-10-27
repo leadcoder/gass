@@ -31,7 +31,7 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXBaseJointComponent : public Reflection<PhysXBaseJointComponent,BaseSceneComponent>
+	class PhysXBaseJointComponent : public Reflection<PhysXBaseJointComponent,Component>
 	{
 	public:
 		PhysXBaseJointComponent();

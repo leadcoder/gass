@@ -50,7 +50,7 @@ namespace GASS
 
 	void TrackComponent::OnInitialize()
 	{
-		BaseSceneComponent::OnInitialize();
+		Component::OnInitialize();
 		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
 		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
 		

@@ -29,7 +29,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGNodeProxyComponent : public Reflection<OSGNodeProxyComponent,BaseSceneComponent>
+	class OSGNodeProxyComponent : public Reflection<OSGNodeProxyComponent,Component>
 	{
 	public:
 		OSGNodeProxyComponent (void);

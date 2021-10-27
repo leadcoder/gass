@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -37,7 +37,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
+	class TurretComponent :  public Reflection<TurretComponent,Component>
 	{
 	public:
 		TurretComponent();

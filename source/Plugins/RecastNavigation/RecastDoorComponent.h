@@ -28,7 +28,7 @@
 namespace GASS
 {
 	#define MAX_REF_POLYS 256
-	class RecastDoorComponent : public Reflection<RecastDoorComponent,BaseSceneComponent>
+	class RecastDoorComponent : public Reflection<RecastDoorComponent,Component>
 	{
 	public:
 		RecastDoorComponent();

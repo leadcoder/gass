@@ -73,8 +73,8 @@ namespace GASS
 		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 
 
-		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent, OSGEarthGeoLocationComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGEarthGeoLocationComponent, BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour("Component", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<Component, OSGEarthGeoLocationComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "Component@ f()", asFUNCTION((refCast<OSGEarthGeoLocationComponent, Component>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGEarthGeoLocationComponent, SetAttachToParent), asCALL_THISCALL); assert(r >= 0);

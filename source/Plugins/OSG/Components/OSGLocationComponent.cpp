@@ -76,8 +76,8 @@ namespace GASS
 
 		int r;
 		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckASReturn(r);
-		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent, OSGLocationComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
-		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGLocationComponent, BaseSceneComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
+		r = engine->RegisterObjectBehaviour("Component", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<Component, OSGLocationComponent>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "Component@ f()", asFUNCTION((refCast<OSGLocationComponent, Component>)), asCALL_CDECL_OBJLAST); CheckASReturn(r);
 
 		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckASReturn(r);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGLocationComponent, SetAttachToParent), asCALL_THISCALL); CheckASReturn(r);

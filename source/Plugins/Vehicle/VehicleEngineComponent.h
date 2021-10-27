@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Core/Utils/GASSPIDControl.h"
 
@@ -59,7 +59,7 @@ namespace GASS
 		ET_TANK,
 	};
 
-	class VehicleEngineComponent :  public Reflection<VehicleEngineComponent,BaseSceneComponent>
+	class VehicleEngineComponent :  public Reflection<VehicleEngineComponent,Component>
 	{
 	public:
 		VehicleEngineComponent();

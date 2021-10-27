@@ -7,13 +7,8 @@ if(NOT WIN32)
    	set(PLATFORM_DEPS UUID)
 endif()
 
-#gass_get_source_from_current_dir(CPP_FILES H_FILES)
-#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Source Files" FILES ${CPP_FILES})
-#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Header Files" FILES ${H_FILES})
-
 set(CPP_FILES
 	GASSASScriptComponent.cpp
-	GASSBaseSceneComponent.cpp
 	GASSBaseSceneManager.cpp
 	GASSComponent.cpp
 	GASSComponentFactory.cpp
@@ -52,7 +47,6 @@ set(CPP_FILES
 set(H_FILES
 	GASS.h
 	GASSASScriptComponent.h
-	GASSBaseSceneComponent.h
 	GASSBaseSceneManager.h
 	GASSCommon.h
 	GASSComponent.h

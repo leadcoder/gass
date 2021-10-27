@@ -8,7 +8,7 @@
 
 namespace GASS
 {
-	class LOSComponent :  public Reflection<LOSComponent,BaseSceneComponent> 
+	class LOSComponent :  public Reflection<LOSComponent,Component> 
 	{
 	public:
 		LOSComponent(void);

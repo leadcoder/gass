@@ -30,10 +30,10 @@ namespace GASS
 		SceneObjectPtr GetOrCreateRulerObject();
 		void UpdateLine(const GASS::Vec3 &start, const GASS::Vec3 &end);
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_RulerObject;
+		SceneObjectWeakPtr m_RulerObject;
 		MouseToolController* m_Controller;
-		GASS::ComponentWeakPtr m_TextComp;
-		GASS::Vec3 m_StartPos;
+		ComponentWeakPtr m_TextComp;
+		Vec3 m_StartPos;
 
 	};
 }

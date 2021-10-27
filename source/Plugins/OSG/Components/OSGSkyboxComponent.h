@@ -33,7 +33,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGSkyboxComponent : public Reflection<OSGSkyboxComponent,BaseSceneComponent>
+	class OSGSkyboxComponent : public Reflection<OSGSkyboxComponent,Component>
 	{
 	public:
 		OSGSkyboxComponent (void);

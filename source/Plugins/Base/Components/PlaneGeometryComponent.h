@@ -21,7 +21,7 @@
 #define PLANE_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 
 namespace GASS
 {
@@ -29,7 +29,7 @@ namespace GASS
 		Component that render plane geometry with texture/material
 	*/
 
-	class PlaneGeometryComponent : public Reflection<PlaneGeometryComponent,BaseSceneComponent>
+	class PlaneGeometryComponent : public Reflection<PlaneGeometryComponent,Component>
 	{
 	public:
 		PlaneGeometryComponent(void);

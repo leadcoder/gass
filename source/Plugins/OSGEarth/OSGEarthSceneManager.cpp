@@ -223,7 +223,7 @@ namespace GASS
 
 			//Add dummy component for collisison
 
-			/*BaseSceneComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(ComponentFactory::Get().Create("ManualMeshComponent")));
+			/*ComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<Component>(ComponentFactory::Get().Create("ManualMeshComponent")));
 			OSGNodeData* data = new OSGNodeData(geom_comp);
 			m_MapNode->setUserData(data);
 			GeometryFlagsBinder flags;

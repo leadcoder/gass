@@ -28,7 +28,7 @@ namespace GASS
 {
 	GASS_FORWARD_DECL(ScriptController);
 
-	class ASScriptComponent:  public Reflection<ASScriptComponent,BaseSceneComponent>
+	class ASScriptComponent:  public Reflection<ASScriptComponent,Component>
 	{
 	public:
 		ASScriptComponent();

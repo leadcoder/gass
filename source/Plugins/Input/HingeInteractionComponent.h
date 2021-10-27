@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 
@@ -34,7 +34,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,BaseSceneComponent>
+	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,Component>
 	{
 	public:
 		HingeInteractionComponent();

@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent , public IManualMeshComponent
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , Component> , public IGeometryComponent , public IManualMeshComponent
 	{
 	public:
 		OSGManualMeshComponent(void);

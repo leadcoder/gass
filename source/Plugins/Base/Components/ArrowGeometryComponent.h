@@ -21,7 +21,7 @@
 #define ARROW_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSResourceHandle.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
@@ -30,7 +30,7 @@ namespace GASS
 	/**
 		Component that create  3d arrow geometry
 	*/
-	class ArrowGeometryComponent : public Reflection<ArrowGeometryComponent,BaseSceneComponent>
+	class ArrowGeometryComponent : public Reflection<ArrowGeometryComponent,Component>
 	{
 	public:
 		ArrowGeometryComponent(void);

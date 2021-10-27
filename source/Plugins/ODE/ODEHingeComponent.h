@@ -21,7 +21,7 @@
 #pragma once 
 #include "Sim/GASSCommon.h"
 #include <ode/ode.h>
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
@@ -32,7 +32,7 @@ namespace GASS
 	class ODEBodyComponent;
 	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
 
-	class ODEHingeComponent : public Reflection<ODEHingeComponent,BaseSceneComponent>
+	class ODEHingeComponent : public Reflection<ODEHingeComponent,Component>
 	{
 	public:
 		ODEHingeComponent();

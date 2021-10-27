@@ -78,7 +78,7 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, BaseSceneComponent>, public INavigationMeshComponent
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, Component>, public INavigationMeshComponent
 	{
 	public:
 		RecastNavigationMeshComponent();

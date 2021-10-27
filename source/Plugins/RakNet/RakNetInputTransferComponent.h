@@ -22,7 +22,7 @@
 #define RAK_NET_INPUT_TRANSFER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -74,7 +74,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,BaseSceneComponent>
+	class RakNetInputTransferComponent : public Reflection<RakNetInputTransferComponent,Component>
 	{
 	public:
 		RakNetInputTransferComponent();

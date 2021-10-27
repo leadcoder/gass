@@ -23,7 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -34,7 +34,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,BaseSceneComponent>
+	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,Component>
 	{
 	public:
 		VehicleCameraComponent();

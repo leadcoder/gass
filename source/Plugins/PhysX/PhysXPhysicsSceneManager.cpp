@@ -395,7 +395,7 @@ namespace GASS
 			result.CollNormal = PxConvert::ToGASS(ray_hit.block.normal);
 			result.CollDist = (ray_start - result.CollPosition).Length();
 			if(ray_hit.block.shape && ray_hit.block.shape->userData)
-				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.block.shape->userData)->GetSceneObject();
+				result.CollSceneObject = ((Component*) ray_hit.block.shape->userData)->GetSceneObject();
 		}
 	}
 

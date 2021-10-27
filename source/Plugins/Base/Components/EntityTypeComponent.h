@@ -24,7 +24,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 
 namespace GASS
@@ -35,7 +35,7 @@ namespace GASS
 
 	class EntityTypeComponent;
 	using EntityTypeComponentWeakPtr = std::weak_ptr<EntityTypeComponent>;
-	class EntityTypeComponent : public Reflection<EntityTypeComponent,BaseSceneComponent>
+	class EntityTypeComponent : public Reflection<EntityTypeComponent,Component>
 	{
 	public:
 		EntityTypeComponent();

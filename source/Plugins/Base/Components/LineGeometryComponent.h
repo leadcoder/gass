@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -35,7 +35,7 @@ namespace GASS
 		Component that create  line/path (with material and width) 
 	*/
 
-	class LineGeometryComponent : public Reflection<LineGeometryComponent,BaseSceneComponent>
+	class LineGeometryComponent : public Reflection<LineGeometryComponent,Component>
 	{
 	public:
 		LineGeometryComponent();

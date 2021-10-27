@@ -19,7 +19,7 @@ namespace GASS
 
 	using AIRoadLaneSectionComponentPtr = std::shared_ptr<AIRoadLaneSectionComponent>;
 
-	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,BaseSceneComponent> , public IGraphComponent, public IRoadNavigationComponent
+	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,Component> , public IGraphComponent, public IRoadNavigationComponent
 	{
 	public:
 		RNRoadNetworkComponent(void);

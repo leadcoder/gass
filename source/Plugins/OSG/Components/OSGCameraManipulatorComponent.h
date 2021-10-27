@@ -32,7 +32,7 @@ namespace osgGA
 
 namespace GASS
 {
-	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,BaseSceneComponent> , public IOSGCameraManipulator
+	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,Component> , public IOSGCameraManipulator
 	{
 	public:
 		OSGCameraManipulatorComponent();

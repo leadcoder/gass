@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	class OSGCameraComponent : public Reflection<OSGCameraComponent,BaseSceneComponent>, public ICameraComponent, public IOSGCamera
+	class OSGCameraComponent : public Reflection<OSGCameraComponent,Component>, public ICameraComponent, public IOSGCamera
 	{
 	public:
 		OSGCameraComponent();

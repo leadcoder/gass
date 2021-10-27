@@ -26,7 +26,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSceneManagerFactory.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"

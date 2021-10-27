@@ -22,7 +22,7 @@
 #define LOD_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -33,7 +33,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class LODComponent :  public Reflection<LODComponent,BaseSceneComponent>
+	class LODComponent :  public Reflection<LODComponent,Component>
 	{
 	public:
 		LODComponent();

@@ -31,7 +31,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGTextComponent : public Reflection<OSGTextComponent,BaseSceneComponent> 
+	class OSGTextComponent : public Reflection<OSGTextComponent,Component> 
 	{
 	public:
 		OSGTextComponent (void);

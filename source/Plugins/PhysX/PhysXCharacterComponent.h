@@ -36,7 +36,7 @@ namespace GASS
 		Component that utilize physx character controller. 
 	*/
 	
-	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>, 
+	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,Component>, 
 		public physx::PxControllerBehaviorCallback, 
 		public physx::PxUserControllerHitReport,
 		public IPlatformComponent

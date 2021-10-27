@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIGroupComponent.h"
 
 namespace GASS
@@ -31,7 +31,7 @@ namespace GASS
 		Deprecated due to unkonwn usage 
 	*/
 
-	class GroupComponent : public Reflection<GroupComponent,BaseSceneComponent> , public IGroupComponent
+	class GroupComponent : public Reflection<GroupComponent,Component> , public IGroupComponent
 	{
 	public:
 		GroupComponent();

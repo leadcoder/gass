@@ -24,7 +24,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -39,7 +39,7 @@ namespace GASS
 		Delegate input from user specified SceneObject to owner for this component 
 	*/
 
-	class InputProxyComponent : public Reflection<InputProxyComponent,BaseSceneComponent>
+	class InputProxyComponent : public Reflection<InputProxyComponent,Component>
 	{
 	public:
 		InputProxyComponent();

@@ -52,8 +52,8 @@ namespace GASS
 
 	void VehicleCameraComponent::OnInitialize()
 	{
-		BaseSceneComponent::InitializeSceneObjectRef();
-		BaseSceneComponent::OnInitialize();
+		Component::InitializeSceneObjectRef();
+		Component::OnInitialize();
 
 		if(!m_InputHandlerObject.IsValid())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " VehicleCameraComponent::OnInitialize");

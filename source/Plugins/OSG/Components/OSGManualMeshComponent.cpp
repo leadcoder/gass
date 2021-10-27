@@ -85,7 +85,7 @@ namespace GASS
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(GetGeometryFlags());
 
-		BaseSceneComponent::OnInitialize();
+		Component::OnInitialize();
 	}
 
 	void OSGManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)

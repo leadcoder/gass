@@ -8,7 +8,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/Utils/GASSLogger.h"
 

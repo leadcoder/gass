@@ -53,8 +53,8 @@ namespace GASS
 			if(edge)
 			{
 				//Delete edge object
-				auto bso = GASS_DYNAMIC_PTR_CAST<Component>(edge);
-				bso->GetSceneObject()->SendRemoveRequest(0);
+				auto component = GASS_DYNAMIC_PTR_CAST<Component>(edge);
+				component->GetSceneObject()->SendRemoveRequest(0);
 			}
 		}
 		//update graph

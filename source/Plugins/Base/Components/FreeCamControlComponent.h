@@ -22,7 +22,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSEulerRotation.h"
 #include "Core/Utils/GASSEnumBinder.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -58,7 +58,7 @@ namespace GASS
 	this kind of messages and actually implement the transformation change
 	*/
 
-	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, BaseSceneComponent>
+	class FreeCamControlComponent  :  public Reflection<FreeCamControlComponent, Component>
 	{
 	public:
 		FreeCamControlComponent();

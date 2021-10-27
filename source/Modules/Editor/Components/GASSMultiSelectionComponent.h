@@ -2,13 +2,13 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Math/GASSAABox.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {
-	class EditorModuleExport MultiSelectionComponent : public Reflection<MultiSelectionComponent,BaseSceneComponent>
+	class EditorModuleExport MultiSelectionComponent : public Reflection<MultiSelectionComponent,Component>
 	{
 	public:
 		MultiSelectionComponent();

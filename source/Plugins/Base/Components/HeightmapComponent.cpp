@@ -83,7 +83,7 @@ namespace GASS
 
 	void HeightmapComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
-		BaseSceneComponent::SaveXML(obj_elem);
+		Component::SaveXML(obj_elem);
 		if(m_HM)
 		{
 			m_HM->Save(GetFilePath().GetFullPath());
@@ -284,7 +284,7 @@ namespace GASS
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_Debug);
 		const Vec3d center = extent.Min + (extent.Max - extent.Min) * 0.5;
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(center);
-		BaseSceneComponent *box_comp = obj->GetComponentByClassName("BoxGeometryComponent");
+		Component *box_comp = obj->GetComponentByClassName("BoxGeometryComponent");
 		if (box_comp)
 		{
 			box_comp->SetPropertyValue("Size", extent.GetSize());

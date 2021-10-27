@@ -22,7 +22,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSLogger.h"
 #include "Core/Serialize/tinyxml2.h"
-//#include "Sim/GASSBaseSceneComponent.h"
+//#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObjectLink.h"
 #include "Sim/GASSSceneObjectRef.h"
 
@@ -136,7 +136,7 @@ namespace GASS
 							{
 								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 									"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
-									"BaseSceneComponent::InitializePointers()");
+									"Component::InitializePointers()");
 							}
 						}
 						else
@@ -154,7 +154,7 @@ namespace GASS
 						{
 							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 								"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
-								"BaseSceneComponent::InitializePointers()");
+								"Component::InitializePointers()");
 
 						}
 						GASS_ANY new_any_link(link);
@@ -164,7 +164,7 @@ namespace GASS
 					{
 						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
 							"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
-							"BaseSceneComponent::InitializePointers()");
+							"Component::InitializePointers()");
 					}
 
 				}

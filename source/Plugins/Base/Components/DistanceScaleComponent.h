@@ -1,14 +1,14 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSystem.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 namespace GASS
 {
-	class DistanceScaleComponent : public Reflection<DistanceScaleComponent,BaseSceneComponent>
+	class DistanceScaleComponent : public Reflection<DistanceScaleComponent,Component>
 	{
 	public:
 		DistanceScaleComponent();

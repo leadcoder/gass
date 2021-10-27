@@ -1,6 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
@@ -9,7 +9,7 @@
 
 namespace GASS
 {
-	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,BaseSceneComponent>
+	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,Component>
 	{
 	public:
 		EditorComponent();

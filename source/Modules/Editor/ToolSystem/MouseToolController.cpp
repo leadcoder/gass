@@ -12,7 +12,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSGeometryFlags.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSimEngine.h"

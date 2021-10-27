@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -9,7 +9,7 @@ namespace GASS
 {
 	GASS_IFORWARD_DECL(HeightmapTerrainComponent)
 
-	class EditorModuleExport PaintGizmoComponent : public Reflection<PaintGizmoComponent,BaseSceneComponent>
+	class EditorModuleExport PaintGizmoComponent : public Reflection<PaintGizmoComponent,Component>
 	{
 	public:
 		PaintGizmoComponent();

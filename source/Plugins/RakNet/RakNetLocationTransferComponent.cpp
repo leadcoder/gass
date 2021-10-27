@@ -108,8 +108,8 @@ namespace GASS
 			{
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				auto base = GASS_DYNAMIC_PTR_CAST<Component>(location);
-				base->SetPropertyValue("AttachToParent", true);
+				auto component = GASS_DYNAMIC_PTR_CAST<Component>(location);
+				component->SetPropertyValue("AttachToParent", true);
 			}
 		}
 	}

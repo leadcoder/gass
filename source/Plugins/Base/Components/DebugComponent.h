@@ -21,7 +21,7 @@
 #define DEBUG_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -31,7 +31,7 @@ namespace GASS
 		Debug component that show scene object name
 	*/
 
-	class DebugComponent : public Reflection<DebugComponent,BaseSceneComponent>
+	class DebugComponent : public Reflection<DebugComponent,Component>
 	{
 	public:
 		DebugComponent(void);

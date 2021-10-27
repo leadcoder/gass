@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	class OSGEarthCameraManipulatorComponent : public Reflection<OSGEarthCameraManipulatorComponent,BaseSceneComponent> ,  public  IOSGCameraManipulator, public IMapCameraComponent
+	class OSGEarthCameraManipulatorComponent : public Reflection<OSGEarthCameraManipulatorComponent,Component> ,  public  IOSGCameraManipulator, public IMapCameraComponent
 	{
 	public:
 		OSGEarthCameraManipulatorComponent();

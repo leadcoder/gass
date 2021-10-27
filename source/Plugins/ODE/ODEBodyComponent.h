@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODESuspensionComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Core/Math/GASSVector.h"
@@ -32,7 +32,7 @@
 #include <ode/ode.h>
 namespace GASS
 {
-	class ODEBodyComponent : public Reflection<ODEBodyComponent,BaseSceneComponent> , 
+	class ODEBodyComponent : public Reflection<ODEBodyComponent,Component> , 
 		public IPhysicsBodyComponent
 	{
 		friend class ODEJoint;

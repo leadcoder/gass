@@ -21,7 +21,7 @@
 #ifndef RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
 #define RAK_NET_MESSAGE_TRANSFER_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSINetworkComponent.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSWeaponMessages.h"
@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,BaseSceneComponent>, public INetworkComponent
+	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,Component>, public INetworkComponent
 	{
 	public:
 		RakNetMessageTransferComponent();

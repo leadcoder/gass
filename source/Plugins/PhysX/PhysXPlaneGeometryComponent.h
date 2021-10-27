@@ -26,7 +26,7 @@ namespace GASS
 {
 	class PhysXPhysicsSceneManager;
 	
-	class PhysXPlaneGeometryComponent : public Reflection<PhysXPlaneGeometryComponent , BaseSceneComponent>
+	class PhysXPlaneGeometryComponent : public Reflection<PhysXPlaneGeometryComponent , Component>
 	{
 	public:
 		PhysXPlaneGeometryComponent();

@@ -20,7 +20,7 @@
 #ifndef LOOK_AT_COMPONENT_H
 #define LOOK_AT_COMPONENT_H
 
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSCommon.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Core/Utils/GASSColorRGB.h"
@@ -33,7 +33,7 @@ namespace GASS
 		Component that roatate scene object to target object
 	*/
 
-	class LookAtComponent : public Reflection<LookAtComponent,BaseSceneComponent>
+	class LookAtComponent : public Reflection<LookAtComponent,Component>
 	{
 	public:
 		LookAtComponent(void);

@@ -644,7 +644,7 @@ namespace GASS
 				auto comp_iter = so->GetComponents();
 				while (comp_iter.hasMoreElements())
 				{
-					GASS::ComponentPtr comp = GASS_STATIC_PTR_CAST<GASS::Component>(comp_iter.getNext());
+					ComponentPtr comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 					std::string class_name = comp->GetRTTI()->GetClassName();
 					if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
 					{

@@ -213,7 +213,7 @@ namespace GASS
 		HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 		if(terrain)
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST <BaseSceneComponent>(terrain);
+			ComponentPtr bsc = GASS_DYNAMIC_PTR_CAST <Component>(terrain);
 			bsc->GetSceneObject()->PostRequest(MessagePtr(new TerrainLayerRequest(m_ActiveLayer,texture,tiling)));
 		}
 	}*/

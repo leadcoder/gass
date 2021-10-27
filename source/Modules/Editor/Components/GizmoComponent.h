@@ -1,7 +1,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSceneManager.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -20,7 +20,7 @@ namespace GASS
 		BIND(GT_PLANE)
 	END_ENUM_BINDER(GizmoType, GizmoTypeBinder)
 
-	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,BaseSceneComponent>
+	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,Component>
 	{
 	public:
 		GizmoComponent();

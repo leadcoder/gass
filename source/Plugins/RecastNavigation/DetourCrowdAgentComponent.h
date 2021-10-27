@@ -81,7 +81,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<DetourCrowdComponent> DetourCrowdComponentPtr;
 	typedef GASS_WEAK_PTR<DetourCrowdComponent> DetourCrowdComponentWeakPtr;
 
-	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , BaseSceneComponent>, public IPlatformComponent
+	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , Component>, public IPlatformComponent
 
 	{
 	public:

@@ -48,7 +48,6 @@ namespace GASS
 	class MessageManager;
 	class Scene;
 	class SceneObject;
-	//class BaseSceneComponent;
 	class SceneObjectVisitor;
 	GASS_FORWARD_DECL(Component);
 
@@ -59,8 +58,7 @@ namespace GASS
 	using MessageManagerPtr = std::shared_ptr<MessageManager>;
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
-	using BaseSceneComponent = Component;
-	using BaseSceneComponentPtr = std::shared_ptr<BaseSceneComponent>;
+	using ComponentPtr = std::shared_ptr<Component>;
 	using SceneObjectVector = std::vector<SceneObjectPtr>;
 
 
@@ -242,8 +240,7 @@ namespace GASS
 		*/
 		void AddComponent(ComponentPtr comp);
 		ComponentPtr AddComponent(const std::string& comp_type);
-		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
-
+		
 		/**
 			Get component by name,
 			only search this SceneObject and first one is returned
@@ -266,16 +263,12 @@ namespace GASS
 		SceneObjectPtr GetObjectUnderRoot();
 
 		bool Accept(SceneObjectVisitorPtr visitor);
-
-		/**
-			Convenience function for BaseSceneComponent's
-		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string& comp_name) const;
+		
 
 		/**
 			Function used by scripts to get components by class name, note that this will return a raw pointer!
 		*/
-		BaseSceneComponent* GetComponentByClassName(const std::string& comp_name) const;
+		Component* GetComponentByClassName(const std::string& comp_name) const;
 
 		/**
 			Get all components of certain class. This function allow you to pass the class name as a string

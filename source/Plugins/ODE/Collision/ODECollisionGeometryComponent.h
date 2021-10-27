@@ -21,7 +21,7 @@
 #pragma once 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSICollisionComponent.h"
 
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
@@ -41,7 +41,7 @@ namespace GASS
 	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 	using HeightmapTerrainComponentPtr = std::shared_ptr<IHeightmapTerrainComponent>;
 
-	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,BaseSceneComponent>, ICollisionComponent
+	class ODECollisionGeometryComponent : public Reflection<ODECollisionGeometryComponent,Component>, ICollisionComponent
 	{
 		friend class ODECollisionSceneManager;
 	public:

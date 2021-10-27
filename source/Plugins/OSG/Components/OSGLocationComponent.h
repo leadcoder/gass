@@ -32,7 +32,7 @@ namespace GASS
 	using OSGLocationComponentPtr = std::shared_ptr<OSGLocationComponent>;
 	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 
-	class OSGLocationComponent : public Reflection<OSGLocationComponent, BaseSceneComponent>, public ILocationComponent, public IOSGNode, public osg::NodeCallback
+	class OSGLocationComponent : public Reflection<OSGLocationComponent, Component>, public ILocationComponent, public IOSGNode, public osg::NodeCallback
 	{
 	public:
 		OSGLocationComponent();

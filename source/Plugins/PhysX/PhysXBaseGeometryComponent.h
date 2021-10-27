@@ -63,7 +63,7 @@ namespace GASS
 	*/
 	};
 	
-	class PhysXBaseGeometryComponent : public Reflection<PhysXBaseGeometryComponent,BaseSceneComponent>
+	class PhysXBaseGeometryComponent : public Reflection<PhysXBaseGeometryComponent,Component>
 	{
 	public:
 		PhysXBaseGeometryComponent();

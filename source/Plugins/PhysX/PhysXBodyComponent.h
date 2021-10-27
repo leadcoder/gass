@@ -29,7 +29,7 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,BaseSceneComponent>, public IPhysXRigidDynamic, public IPhysicsBodyComponent
+	class PhysXBodyComponent : public Reflection<PhysXBodyComponent,Component>, public IPhysXRigidDynamic, public IPhysicsBodyComponent
 	{
 	public:
 		enum MassRepresentationType

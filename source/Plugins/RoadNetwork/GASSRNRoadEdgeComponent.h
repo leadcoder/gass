@@ -9,7 +9,7 @@
 
 namespace GASS
 {
-	class RNRoadEdgeComponent :  public Reflection<RNRoadEdgeComponent,BaseSceneComponent> , public IGraphEdgeComponent
+	class RNRoadEdgeComponent :  public Reflection<RNRoadEdgeComponent,Component> , public IGraphEdgeComponent
 	{
 	public:
 		RNRoadEdgeComponent(void);

@@ -411,7 +411,7 @@ namespace GASS
 			CreateNetworkFromEditable();
 		m_Edit = false;
 		m_ShowGraph = false;
-		BaseSceneComponent::SaveXML(elem);
+		Component::SaveXML(elem);
 
 		tinyxml2::XMLElement *  net_elem = elem->FirstChildElement("RNRoadNetworkComponent");
 		m_Network.SaveXML(net_elem);

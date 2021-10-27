@@ -24,7 +24,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -41,7 +41,7 @@ namespace GASS
 		Enter and exit messages are sent by the PlayerInputComponent that should be attached to the player object.
 	*/
 
-	class InputHandlerComponent : public Reflection<InputHandlerComponent,BaseSceneComponent>
+	class InputHandlerComponent : public Reflection<InputHandlerComponent,Component>
 	{
 	public:
 		InputHandlerComponent();

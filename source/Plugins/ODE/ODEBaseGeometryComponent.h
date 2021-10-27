@@ -20,7 +20,7 @@
 
 #pragma once 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -47,7 +47,7 @@ namespace GASS
 	not be instantiated in configuration files
 	*/
 
-	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
+	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,Component> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:

@@ -21,7 +21,7 @@
 #define HEIGHTMAP_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 
@@ -33,7 +33,7 @@ namespace GASS
 	*/
 
 	class HeightField;
-	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent> , public IHeightmapTerrainComponent, public IGeometryComponent
+	class HeightmapComponent : public Reflection<HeightmapComponent,Component> , public IHeightmapTerrainComponent, public IGeometryComponent
 	{
 	public:
 		HeightmapComponent(void);

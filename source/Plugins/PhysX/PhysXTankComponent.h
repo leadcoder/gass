@@ -32,7 +32,7 @@ namespace GASS
 	class PhysXPhysicsSceneManager;
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXTankComponent : public Reflection<PhysXTankComponent,BaseSceneComponent> , public IPhysXRigidDynamic, public IPlatformComponent
+	class PhysXTankComponent : public Reflection<PhysXTankComponent,Component> , public IPhysXRigidDynamic, public IPlatformComponent
 	{
 	public:
 		PhysXTankComponent();

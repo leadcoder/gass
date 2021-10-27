@@ -7,7 +7,7 @@
 #include "Core/Math/GASSLineSegment.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -61,8 +61,8 @@ namespace GASS
 				for(size_t i =  0; i < comps.size(); i++)
 				{
 					GraphEdgeComponentPtr edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
-					BaseSceneComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetStartNode());
-					BaseSceneComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetEndNode());
+					ComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetStartNode());
+					ComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetEndNode());
 					if(start_node && end_node)
 					{
 						Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();

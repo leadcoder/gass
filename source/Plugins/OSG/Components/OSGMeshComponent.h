@@ -30,7 +30,7 @@ namespace osg
 }
 namespace GASS
 {
-	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
+	class OSGMeshComponent : public Reflection<OSGMeshComponent,Component> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
 	{
 	public:
 		OSGMeshComponent (void);

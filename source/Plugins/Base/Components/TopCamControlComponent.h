@@ -24,7 +24,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 
 namespace GASS
@@ -42,7 +42,7 @@ namespace GASS
 			this kind of messages and actually implement the transformations
 		*/
 
-	class TopCamControlComponent : public Reflection<TopCamControlComponent, BaseSceneComponent>
+	class TopCamControlComponent : public Reflection<TopCamControlComponent, Component>
 	{
 	public:
 		TopCamControlComponent();
