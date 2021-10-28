@@ -59,12 +59,8 @@ namespace GASS
 	{
 		m_GFXSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
-
+		
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
@@ -88,10 +84,16 @@ namespace GASS
 		Component::OnInitialize();
 	}
 
-	void OSGManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGManualMeshComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
-		if(visibility)
+		if (m_GeoNode)
+			return m_GeoNode->getNodeMask() > 0;
+		return false;
+	}
+
+	void OSGManualMeshComponent::SetVisible(bool value)
+	{
+		if(value)
 		{
 			m_GeoNode->setNodeMask(1);
 			//restore flags
@@ -175,12 +177,6 @@ namespace GASS
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
 	}
 
-	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
-	{
-		GraphicsMeshPtr data = message->GetData();
-		SetMeshData(*data);
-	}
-
 	void OSGManualMeshComponent::SetMeshData(const GraphicsMesh &mesh)
 	{
 		Clear();
@@ -192,11 +188,6 @@ namespace GASS
 			m_GeoNode->addDrawable(geom.get());
 		}
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
-	}
-
-	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
-	{
-		Clear();
 	}
 
 	void OSGManualMeshComponent::Clear()
@@ -383,11 +374,7 @@ namespace GASS
 		return mesh_data;
 	}
 
-	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
-	{
-		SetSubMeshMaterial(message->GetMaterialName(), message->GetSubMeshID());
-	}
-
+	
 	void OSGManualMeshComponent::SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index)
 	{
 		if (material_name != "" && m_GFXSystem && m_GFXSystem->HasMaterial(material_name))

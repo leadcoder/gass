@@ -53,6 +53,8 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override{(void) flags;}
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		bool GetVisible() const override { return false; }
+		void SetVisible(bool /*value*/) override {}
 		AABoxd GetExtent() const;
 		void SetExtent(const AABoxd& extent);
 	protected:

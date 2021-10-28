@@ -150,12 +150,9 @@ namespace GASS
 			 
 			 osg::Quat osg_rot = out_local2world.getRotate();
 			 osg::Vec3d osg_pos = out_local2world.getTrans();
-
 			 
-			 //GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3(osg_pos.x(),osg_pos.z(),-osg_pos.y()))));
-			 //GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaternion(osg_rot.w(),-osg_rot.x(),-osg_rot.z(),osg_rot.y()))));
-			 GetSceneObject()->PostRequest(std::make_shared<WorldPositionRequest>(OSGConvert::ToGASS(osg_pos)));
-			 GetSceneObject()->PostRequest(std::make_shared<BaseRotationRequest>(OSGConvert::ToGASS(osg_rot)));
+			 GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(OSGConvert::ToGASS(osg_pos));
+			//GetSceneObject()->PostRequest(std::make_shared<BaseRotationRequest>(OSGConvert::ToGASS(osg_rot)));
 			 if (m_DebugNode)
 				 m_DebugNode->setPosition(map_point);
 		}

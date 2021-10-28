@@ -42,6 +42,9 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags /*flags*/) override { };
 		bool GetCollision() const override { return true; }
 		void SetCollision(bool /*value*/) override {  }
+		bool GetVisible() const override { return true; }
+		void SetVisible(bool /*value*/) override {  }
+
 		osg::ref_ptr<osgEarth::MapNode> GetMap() { return m_MapNode; }
 	
 		//IMapComponent

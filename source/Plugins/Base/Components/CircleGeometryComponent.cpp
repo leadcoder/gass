@@ -28,6 +28,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 
@@ -101,8 +102,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.emplace_back(m_Color.x,m_Color.y,m_Color.z,1);
 		
 		}
-		int id = -1;
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data,id, 0.1));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 
 	bool CircleGeometryComponent::IsPointInside(const Vec3 &point) const

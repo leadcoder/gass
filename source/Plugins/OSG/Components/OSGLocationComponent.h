@@ -76,15 +76,7 @@ namespace GASS
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
 		void operator()(osg::Node* node, osg::NodeVisitor* nv) override;
 	protected:
-		//@deprected message functions 
-		void OnPositionMessage(PositionRequestPtr message);
-		void OnRotationMessage(RotationRequestPtr  message);
-		void OnScaleMessage(ScaleRequestPtr message);
-		void OnWorldPositionRequest(WorldPositionRequestPtr message);
-		void OnWorldRotationMessage(WorldRotationRequestPtr message);
-		void OnParentChangedMessage(ParentChangedEventPtr message);
-		void OnAttachToParent(AttachToParentRequestPtr message);
-		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
+		void OnParentChanged(ParentChangedEventPtr message);
 		
 		//remove this?
 		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }

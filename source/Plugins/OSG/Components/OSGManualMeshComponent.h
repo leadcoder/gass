@@ -41,12 +41,14 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 		//IManualMeshComponent interface
 		GraphicsMesh GetMeshData() const override;
 		void SetMeshData(const GraphicsMesh &mesh) override;
 		void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index) override;
-
+		void Clear() override;
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }
 	protected:
@@ -55,13 +57,8 @@ namespace GASS
 		void SetCastShadow(bool value);
 		void SetReceiveShadow(bool value);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnDataMessage(ManualMeshDataRequestPtr message);
-		void OnClearMessage(ClearManualMeshRequestPtr message);
-		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void CreateMesh(GraphicsMeshPtr data);
-		void Clear();
+		
 		
 		std::vector<osg::ref_ptr<osg::Geometry> > m_OSGGeometries;
 		osg::ref_ptr<osg::Geode> m_GeoNode;

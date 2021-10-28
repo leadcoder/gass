@@ -71,6 +71,16 @@ namespace GASS
 			Get collision status
 		*/
 		virtual bool GetCollision() const = 0;
+
+		/**
+			Change visiblity	
+		*/
+		virtual void SetVisible(bool value) = 0;
+
+		/**
+			Get visiblity
+		*/
+		virtual bool GetVisible() const = 0;
 	};
 	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
 }

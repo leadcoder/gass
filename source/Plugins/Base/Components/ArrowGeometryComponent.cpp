@@ -26,6 +26,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -187,7 +188,7 @@ namespace GASS
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
 		
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 
 		/*MessagePtr mat_mess(new MaterialMessage(Vec4(0,0,0,m_Color.w),
 				Vec3(0,0,0),

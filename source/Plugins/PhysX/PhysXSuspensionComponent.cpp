@@ -40,18 +40,9 @@ namespace GASS
 	void PhysXSuspensionComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXSuspensionComponent>("PhysicsSuspensionComponent");
-		//RegisterGetSet("Axis1Force", &GASS::PhysXSuspensionComponent::GetAxis1Force, &GASS::PhysXSuspensionComponent::SetAxis1Force);
-		//RegisterGetSet("Axis2Force", &GASS::PhysXSuspensionComponent::GetAxis2Force, &GASS::PhysXSuspensionComponent::SetAxis2Force);
 		RegisterGetSet("Damping", &GASS::PhysXSuspensionComponent::GetDamping, &GASS::PhysXSuspensionComponent::SetDamping);
 		RegisterGetSet("Strength", &GASS::PhysXSuspensionComponent::GetStrength, &GASS::PhysXSuspensionComponent::SetStrength);
 		RegisterGetSet("SteerLimit", &GASS::PhysXSuspensionComponent::GetSteerLimit, &GASS::PhysXSuspensionComponent::SetSteerLimit);
-		//RegisterGetSet("HighStop", &GASS::PhysXSuspensionComponent::GetHighStop, &GASS::PhysXSuspensionComponent::SetHighStop);
-		//RegisterGetSet("LowStop", &GASS::PhysXSuspensionComponent::GetLowStop, &GASS::PhysXSuspensionComponent::SetLowStop);
-		//RegisterGetSet("SwayForce", &GASS::PhysXSuspensionComponent::GetSwayForce, &GASS::PhysXSuspensionComponent::SetSwayForce);
-		//RegisterGetSet("Axis1", &GASS::PhysXSuspensionComponent::GetAxis1, &GASS::PhysXSuspensionComponent::SetAxis1);
-		//RegisterGetSet("Axis2", &GASS::PhysXSuspensionComponent::GetAxis2, &GASS::PhysXSuspensionComponent::SetAxis2);
-		//RegisterGetSet("Anchor", &GASS::PhysXSuspensionComponent::GetAnchor, &GASS::PhysXSuspensionComponent::SetAnchor);
-
 	}
 
 	void PhysXSuspensionComponent::OnInitialize()
@@ -173,26 +164,6 @@ namespace GASS
 	{
 		m_DriveMaxTorque = value;
 		UpdateMotor();
-	}
-
-	void PhysXSuspensionComponent::OnPositionChanged(PositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
-	}
-
-	void PhysXSuspensionComponent::OnWorldPositionChanged(WorldPositionRequestPtr message)
-	{
-		int this_id = GASS_PTR_TO_INT(this); //we used address as id
-		if(message->GetSenderID() != this_id) //Check if this message was from this class
-		{
-			Vec3 pos = message->GetPosition();
-			SetPosition(pos);
-		}
 	}
 
 	void PhysXSuspensionComponent::SendJointUpdate(PhysicsVelocityEventPtr message)

@@ -34,6 +34,7 @@ namespace GASS
 		virtual void SetHeading(double value) = 0;
 		virtual double GetRange() const = 0;
 		virtual void SetRange(double value) = 0;
+		virtual void FlyToObject(SceneObjectPtr obj) = 0;
 	};
 	typedef GASS_SHARED_PTR<IMapCameraComponent> MapCameraComponentPtr;
 	typedef GASS_WEAK_PTR<IMapCameraComponent> MapCameraComponentWeakPtr;

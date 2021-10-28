@@ -11,6 +11,7 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
@@ -46,7 +47,7 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
-		ruler->PostRequest(std::make_shared<ClearManualMeshRequest>());
+		ruler->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -97,7 +98,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(1);
 
 		
-		ruler->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		ruler->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 
 		ComponentPtr text(m_TextComp);
 		if(text)

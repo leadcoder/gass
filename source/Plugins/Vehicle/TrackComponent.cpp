@@ -69,13 +69,13 @@ namespace GASS
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
 		
-		GetSceneObject()->SendImmediateRequest(std::make_shared<TextureCoordinateRequest>(m_AnimationValue));
+		//GetSceneObject()->SendImmediateRequest(std::make_shared<TextureCoordinateRequest>(m_AnimationValue));
 
 		auto emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
 
 		if(emission >50)
 			emission =50;
-		GetSceneObject()->SendImmediateRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
+		//GetSceneObject()->SendImmediateRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
 
 		//float duration = fabs(static_cast<float>(ang_vel.x))*0.05f;
 

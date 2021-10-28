@@ -45,6 +45,8 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 		//IResourceComponent
 		ResourceHandle GetResource() const override {return m_MeshResource;}
@@ -70,10 +72,7 @@ namespace GASS
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
 		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const ResourceHandle &filename);
 		void LoadMesh(const std::string &file_name);

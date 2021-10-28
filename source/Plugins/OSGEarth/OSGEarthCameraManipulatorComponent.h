@@ -39,6 +39,7 @@ namespace GASS
 		void SetHeading(double value) override;
 		double GetRange() const override;
 		void SetRange(double value) override;
+		void FlyToObject(SceneObjectPtr obj) override;
 
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
 		void SceneManagerTick(double delta_time) override;
@@ -48,7 +49,7 @@ namespace GASS
 		osgEarth::Viewpoint GetViewpoint() const;
 		void SetViewpoint(const osgEarth::Viewpoint &vp);
 
-		void OnCameraFlyToObject(CameraFlyToObjectRequestPtr message);
+		
 		void OnTransformationChanged(TransformationChangedEventPtr event);
 
 		osg::ref_ptr<osgEarth::Util::EarthManipulator> m_Manipulator;

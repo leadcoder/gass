@@ -74,7 +74,7 @@ namespace GASS
 		Vec3 x = Vec3::Cross(look_dir,z);
 		z.Normalize();
 		q.FromAxes(x,look_dir,z);
-		GetSceneObject()->PostRequest(std::make_shared<WorldRotationRequest>(q));
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(q);
 	}
 
 	void LookAtComponent::OnTransformation(TransformationChangedEventPtr message)

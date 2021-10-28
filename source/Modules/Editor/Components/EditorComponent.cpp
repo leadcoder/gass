@@ -8,6 +8,8 @@
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSComponentFactory.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIBillboardComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 
 namespace GASS
@@ -104,27 +106,13 @@ namespace GASS
 		if(message->GetSceneObject() == GetSceneObject())
 		{
 			m_Visible = message->GetVisible();
-			GetSceneObject()->PostRequest(std::make_shared<GeometryVisibilityRequest>(m_Visible));
-			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(m_Visible));
-			
-			/*if(m_Visible)
+			SceneObject::ComponentVector components;
+			GetSceneObject()->GetComponentsByClass<IGeometryComponent>(components, false);
+			for (auto comp : components)
 			{
-
-				//if(m_ChangeMaterialWhenSelected)
-				{
-					if(m_Selected && m_ChangeMaterialWhenSelected)
-						GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(m_SelectedColor,Vec3(-1,-1,-1))));
-					else
-						GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,1),Vec3(-1,-1,-1))));
-				}
-
-				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsRequest(true)));
+				std::dynamic_pointer_cast<IGeometryComponent>(comp)->SetVisible(m_Visible);
 			}
-			else
-			{
-				GetSceneObject()->PostRequest(MessagePtr(new MaterialMessage(Vec4(1,1,1,m_VisibilityTransparency),Vec3(-1,-1,-1))));
-				GetSceneObject()->PostRequest(MessagePtr(new CollisionSettingsRequest(false)));
-			}*/
+			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(m_Visible));
 		}
 	}
 
@@ -132,14 +120,17 @@ namespace GASS
 	{
 		if(!m_ChangeMaterialWhenSelected)
 			return;
+		auto bb = GetSceneObject()->GetFirstComponentByClass<IBillboardComponent>();
 		if(message->IsSelected(GetSceneObject()))
 		{
 			m_Selected = true;
-			GetSceneObject()->PostRequest(std::make_shared<BillboardColorRequest>(m_SelectedColor));
+			if(bb)
+				bb->SetColor(m_SelectedColor);
 		}
 		else if(m_Selected)
 		{
-			GetSceneObject()->PostRequest(std::make_shared<BillboardColorRequest>(ColorRGBA(1,1,1,1)));
+			if (bb)
+				bb->SetColor(ColorRGBA(1, 1, 1, 1));
 			m_Selected = false;
 		}
 	}

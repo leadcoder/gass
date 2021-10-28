@@ -288,11 +288,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
-			SendMessageRec(gizmo,col_msg);
-			LocationVisibilityRequestPtr vis_msg(new LocationVisibilityRequest(value,from_id));
-			SendMessageRec(gizmo,vis_msg);
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 }

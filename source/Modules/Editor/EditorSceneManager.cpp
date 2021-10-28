@@ -13,6 +13,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIMapCameraComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSComponent.h"
 #include "ToolSystem/MouseToolController.h"
@@ -126,8 +127,8 @@ namespace GASS
 
 		if (free_obj)
 		{
-			free_obj->SendImmediateRequest(std::make_shared<PositionRequest>(scene->GetStartPos()));
-			free_obj->SendImmediateRequest(std::make_shared<RotationRequest>(rot));
+			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
+			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 			free_obj->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
 		}
 	}
@@ -135,7 +136,7 @@ namespace GASS
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<Component>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = camera->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = camera;
@@ -352,9 +353,10 @@ namespace GASS
 		if (cam_obj)
 		{
 			//Check if we have osgEarth manipulator component, then send fly request
-			if (cam_obj->GetFirstComponentByClassName("OSGEarthCameraManipulatorComponent"))
+			auto camera_manipulator = cam_obj->GetFirstComponentByClass<IMapCameraComponent>();
+			if (camera_manipulator)
 			{
-				cam_obj->PostRequest(std::make_shared<CameraFlyToObjectRequest>(obj));
+				camera_manipulator->FlyToObject(obj);
 			}
 			else
 			{

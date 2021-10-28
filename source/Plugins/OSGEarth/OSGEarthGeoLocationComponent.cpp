@@ -85,15 +85,8 @@ namespace GASS
 
 	void OSGEarthGeoLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnPositionMessage, PositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnRotationMessage, RotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnWorldPositionRequest, WorldPositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnWorldRotationMessage, WorldRotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnVisibilityMessage, LocationVisibilityRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnScaleMessage, ScaleRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnParentChangedMessage, GASS::ParentChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnAttachToParent, GASS::AttachToParentRequest, 0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnParentChanged, GASS::ParentChangedEvent, 0));
+	
 		IOSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		OSGEarthMapComponentPtr map_comp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<OSGEarthMapComponent>(true);
 		//assert(scene_man);
@@ -128,25 +121,21 @@ namespace GASS
 			const std::string name = GetSceneObject()->GetName();
 			m_TransformNode->setName(name);
 		}
+
+		//Set m_TransformNode position
+		SetPosition(m_Pos);
+
+		//Check if euler rotation provided
+		const Quaternion rot = (m_Rot != EulerRotation(0, 0, 0)) ? m_Rot.GetQuaternion() : m_QRot;
+
+		//Set m_TransformNode rotation
+		SetRotation(rot);
+
+		//Set m_TransformNode scale
+		SetScale(m_Scale);
+
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>(shared_from_this());
 		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
-
-		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
-		RotationRequestPtr rot_msg;
-
-		if (m_Rot != EulerRotation(0, 0, 0))
-			rot_msg = std::make_shared<RotationRequest>(m_Rot.GetQuaternion());
-		else
-			rot_msg = std::make_shared<RotationRequest>(m_QRot);
-
-		GetSceneObject()->PostRequest(pos_msg);
-		GetSceneObject()->PostRequest(rot_msg);
-		GetSceneObject()->PostRequest(std::make_shared<ScaleRequest>(m_Scale));
-	}
-
-	void OSGEarthGeoLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
-	{
-		SetAttachToParent(message->GetAttachToParent());
 	}
 
 	bool OSGEarthGeoLocationComponent::HasParentLocation() const
@@ -158,42 +147,7 @@ namespace GASS
 		}*/
 		return value;
 	}
-
-	void OSGEarthGeoLocationComponent::OnPositionMessage(PositionRequestPtr message)
-	{
-		m_Pos = message->GetPosition();
-		if (m_TransformNode.valid())
-		{
-			osgEarth::GeoPoint geo_pos;
-			geo_pos.fromWorld(m_Map->getMapSRS(),OSGConvert::ToOSG(m_Pos));
-			m_GeoTransform->setPosition(geo_pos);
-			//m_TransformNode->setPosition(OSGConvert::ToOSG(m_Pos));
-			SendTransMessage();
-		}
-	}
-
-	void OSGEarthGeoLocationComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
-	{
-		SetWorldPosition(message->GetPosition());
-	}
-
-	void OSGEarthGeoLocationComponent::OnRotationMessage(RotationRequestPtr message)
-	{
-		if (m_TransformNode.valid())
-		{
-			const osg::Quat final = OSGConvert::ToOSG(message->GetRotation());
-			m_TransformNode->setAttitude(final);
-			SendTransMessage();
-		}
-	}
-
-	void OSGEarthGeoLocationComponent::OnWorldRotationMessage(WorldRotationRequestPtr message)
-	{
-		if (m_TransformNode.valid())
-		{
-			SetWorldRotation(message->GetRotation());
-		}
-	}
+	
 
 	void OSGEarthGeoLocationComponent::SetScale(const Vec3 &value)
 	{
@@ -215,23 +169,14 @@ namespace GASS
 		m_Pos = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(std::make_shared<PositionRequest>(value));
-		}
-	}
-
-	void OSGEarthGeoLocationComponent::OnScaleMessage(ScaleRequestPtr message)
-	{
-		m_Scale = message->GetScale();
-		if (m_TransformNode.valid())
-		{
-			osg::Vec3d scale = OSGConvert::ToOSG(m_Scale);
-			double y = fabs(scale.y());
-			double z = fabs(scale.z());
-			scale.set(scale.x(), y, z);
-			m_TransformNode->setScale(scale);
+			osgEarth::GeoPoint geo_pos;
+			geo_pos.fromWorld(m_Map->getMapSRS(), OSGConvert::ToOSG(m_Pos));
+			m_GeoTransform->setPosition(geo_pos);
 			SendTransMessage();
 		}
 	}
+
+	
 
 	void OSGEarthGeoLocationComponent::SendTransMessage()
 	{
@@ -321,18 +266,16 @@ namespace GASS
 		m_QRot = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(std::make_shared<RotationRequest>(Quaternion(value)));
+			const osg::Quat final = OSGConvert::ToOSG(value);
+			m_TransformNode->setAttitude(final);
+			SendTransMessage();
 		}
 	}
 
 	void OSGEarthGeoLocationComponent::SetEulerRotation(const EulerRotation &value)
 	{
 		m_Rot = value;
-		if (m_TransformNode.valid())
-		{
-			
-			GetSceneObject()->PostRequest(std::make_shared<RotationRequest>(m_Rot.GetQuaternion()));
-		}
+		SetRotation(value.GetQuaternion());
 	}
 
 	EulerRotation OSGEarthGeoLocationComponent::GetEulerRotation() const
@@ -415,11 +358,6 @@ namespace GASS
 		traverse(node, nv);
 	}
 
-	void OSGEarthGeoLocationComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
-	{
-		SetVisible(message->GetValue());
-	}
-
 	void OSGEarthGeoLocationComponent::SetVisible(bool value)
 	{
 		m_NodeMask = value ? ~0u : 0u;
@@ -459,7 +397,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::OnParentChangedMessage(ParentChangedEventPtr message)
+	void OSGEarthGeoLocationComponent::OnParentChanged(ParentChangedEventPtr message)
 	{
 		SetAttachToParent(GetAttachToParent());
 	}

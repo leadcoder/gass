@@ -70,10 +70,7 @@ namespace GASS
 	void OSGMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
 
 	std::vector<ResourceHandle> OSGMeshComponent::GetAvailableMeshFiles() const
@@ -144,13 +141,6 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
-	{
-
-		//TODO:implement this...
-	}
-
-
 	void OSGMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		LoadMesh(m_MeshResource);
@@ -166,10 +156,16 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGMeshComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
-		if(visibility)
+		if (m_MeshNode)
+			return m_MeshNode->getNodeMask() > 0;
+		return false;
+	}
+
+	void OSGMeshComponent::SetVisible(bool value)
+	{
+		if(value)
 		{
 			m_MeshNode->setNodeMask(1);
 			//restore flags
@@ -462,12 +458,6 @@ namespace GASS
 	{
 		m_MeshNode =mesh;
 		CalulateBoundingbox(mesh.get());
-	}
-
-	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileRequestPtr message)
-	{
-		ResourceHandle res(message->GetFileName());
-		SetMeshResource(res);
 	}
 
 	AABox OSGMeshComponent::GetBoundingBox() const

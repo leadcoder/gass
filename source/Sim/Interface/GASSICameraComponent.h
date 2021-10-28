@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Math/GASSRay.h"
 
 namespace GASS
@@ -34,12 +35,24 @@ namespace GASS
 		instead be done through messages.
 	*/
 	
-	class ICameraComponent
+	class ICameraComponent : public Reflection<ICameraComponent, Component>
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(ICameraComponent)
 	public:
 		virtual bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const = 0;
 		virtual void ShowInViewport(const std::string &viewport_name ="") = 0;
+		virtual float GetFarClipDistance() const = 0;
+		virtual void SetFarClipDistance(float value) = 0;
+		virtual float GetNearClipDistance() const = 0;
+		virtual void SetNearClipDistance(float value) = 0;
+		virtual float GetNearFarRatio() const = 0;
+		virtual void SetNearFarRatio(float value) = 0;
+		virtual float GetFov() const = 0;
+		virtual void SetFov(float value) = 0;
+		virtual bool GetOrtho() const = 0;
+		virtual void SetOrtho(bool value) = 0;
+		virtual float GetLODScale() const = 0;
+		virtual void SetLODScale(float value) = 0;
 	};
 
 	typedef GASS_WEAK_PTR<ICameraComponent> CameraComponentWeakPtr;

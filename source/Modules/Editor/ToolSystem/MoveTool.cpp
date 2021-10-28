@@ -154,41 +154,7 @@ namespace GASS
 			}
 			else if(m_GroundSnapMove)
 			{
-#ifdef DELTA_MOVE
-				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
-				{
-					for (size_t i = 0; i < m_Selected.size(); i++)
-					{
-						SceneObjectPtr selected = m_Selected[i].lock();
-						if (selected)
-						{
-							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-						}
-					}
 
-					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
-					SceneObjectPtr gizmo = GetOrCreateGizmo();
-					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-				}
-				else
-				{
-					if(m_MoveUpdateCount > 2) //we need to wait 2 frames to get correct delta move
-					{
-						Vec3 delta_move = info.m_3DPos - m_PreviousPos;
-						for (size_t i = 0; i < m_Selected.size(); i++)
-						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected)
-							{
-								Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
-							}
-						}
-					}
-					m_PreviousPos = info.m_3DPos;
-				}
-#else
 				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
 				{
 					for (size_t i = 0; i < m_Selected.size(); i++)
@@ -243,7 +209,7 @@ namespace GASS
 					}
 					m_PreviousPos = info.m_3DPos;
 				}
-#endif
+
 			}
 
 			const double time = SimEngine::Get().GetTime();
@@ -482,11 +448,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
-			SendMessageRec(gizmo,col_msg);
-			LocationVisibilityRequestPtr vis_msg(new LocationVisibilityRequest(value,from_id));
-			SendMessageRec(gizmo,vis_msg);
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 

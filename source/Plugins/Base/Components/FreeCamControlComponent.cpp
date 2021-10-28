@@ -88,7 +88,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		auto cam_obj = GASS_DYNAMIC_PTR_CAST<Component>(message->GetViewport()->GetCamera())->GetSceneObject();
+		auto cam_obj = message->GetViewport()->GetCamera()->GetSceneObject();
 		if(GetSceneObject() == cam_obj)
 			m_Active = true;
 		else

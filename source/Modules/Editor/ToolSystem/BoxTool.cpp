@@ -49,7 +49,7 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr box = GetOrCreateBoxObject();
-		box->PostRequest(std::make_shared<ClearManualMeshRequest>());
+		box->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 	}
 
 

@@ -21,6 +21,7 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 #include "Modules/Editor/ToolSystem/MoveTool.h"
@@ -221,10 +222,9 @@ namespace GASS
 	{
 		CollisionResult result;
 		result.Coll = false;
-		auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(cam);
-		if(cam && bsc)
+		if(cam)
 		{
-			CollisionSceneManagerPtr col_sm = bsc->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
+			CollisionSceneManagerPtr col_sm = cam->GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>();
 			Ray ray;
 			cam->GetCameraToViewportRay(static_cast<float>(viewport_pos.x), static_cast<float>(viewport_pos.y), ray);
 			Vec3 ray_direction = ray.m_Dir*raycast_distance;
@@ -355,7 +355,7 @@ namespace GASS
 			sub_mesh_data->MaterialName = "WhiteNoLighting";
 			sub_mesh_data->Type = LINE_LIST;
 
-			scene_object->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+			scene_object->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		}
 		return pointer;
 	}

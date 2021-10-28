@@ -34,8 +34,10 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/GASSComponentFactory.h"
+
 
 namespace GASS
 {
@@ -134,7 +136,7 @@ namespace GASS
 				auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(terrain);
 				if(bsc->GetSceneObject())
 				{
-					bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points, 0.0f, m_TerrainPaintWidth, m_TerrainPaintIntensity, m_TerrainPaintLayer.GetValue()));
+					//bsc->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points, 0.0f, m_TerrainPaintWidth, m_TerrainPaintIntensity, m_TerrainPaintLayer.GetValue()));
 				}
 			}
 
@@ -145,8 +147,8 @@ namespace GASS
 			for(size_t i = 0 ;  i < components.size(); i++)
 			{
 				auto component = components[i];
-				if(last_obj != component->GetSceneObject())
-					component->GetSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,0.0f,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue()));
+				//if(last_obj != component->GetSceneObject())
+					//component->GetSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,0.0f,m_TerrainPaintWidth,m_TerrainPaintIntensity,m_TerrainPaintLayer.GetValue()));
 				last_obj = component->GetSceneObject();
 			}
 		}
@@ -177,7 +179,7 @@ namespace GASS
 			if(terrain)
 			{
 				auto component = GASS_DYNAMIC_PTR_CAST<Component>(terrain);
-				component->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,m_TerrainFlattenWidth,0.0f,0.0f,m_TerrainPaintLayer.GetValue()));
+				//component->GetSceneObject()->GetParentSceneObject()->PostRequest(std::make_shared<RoadRequest>(points,m_TerrainFlattenWidth,0.0f,0.0f,m_TerrainPaintLayer.GetValue()));
 			}
 		}
 	}
@@ -532,6 +534,6 @@ namespace GASS
 
 			}
 		} */
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 }

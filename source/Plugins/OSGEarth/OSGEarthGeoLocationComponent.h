@@ -69,15 +69,7 @@ namespace GASS
 		void operator()(osg::Node* node, osg::NodeVisitor* nv) override;
 		bool GetAttachToParent() const override;
 	protected:
-		void OnPositionMessage(PositionRequestPtr message);
-		void OnRotationMessage(RotationRequestPtr  message);
-		void OnScaleMessage(ScaleRequestPtr message);
-		void OnWorldPositionRequest(WorldPositionRequestPtr message);
-		void OnWorldRotationMessage(WorldRotationRequestPtr message);
-		void OnParentChangedMessage(ParentChangedEventPtr message);
-		void OnAttachToParent(AttachToParentRequestPtr message);
-		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
-
+		void OnParentChanged(ParentChangedEventPtr message);
 		void SetAttachToParent(bool value) override;
 		
 		//helper

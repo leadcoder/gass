@@ -34,6 +34,7 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/GASSComponentFactory.h"
 
@@ -316,6 +317,6 @@ namespace GASS
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 }

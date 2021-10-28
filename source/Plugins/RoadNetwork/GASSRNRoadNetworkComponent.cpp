@@ -5,6 +5,7 @@
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <limits>
 #include <memory>
@@ -96,15 +97,14 @@ namespace GASS
 				{
 					GraphicsMeshPtr mesh_data(new GraphicsMesh());
 					mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(0,1,0,1), "WhiteNoLighting",false));
-					
-					debug->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 				}
 			}
 			else
 			{
 				if(debug)
 				{
-					debug->PostRequest(std::make_shared<ClearManualMeshRequest>());
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 			}
 		}
@@ -142,7 +142,7 @@ namespace GASS
 				SceneObjectPtr debug = GetSceneObject()->GetChildByID("EDIT_EDGES");
 				if(debug)
 				{
-					debug->PostRequest(std::make_shared<ClearManualMeshRequest>());
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 				SetShowGraph(m_ShowGraph);
 			}
@@ -255,7 +255,7 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteNoLighting",false));
-			debug->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+			debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		}
 	}
 
@@ -384,7 +384,7 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteNoLighting",true));
-			debug->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+			debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		}
 	}
 

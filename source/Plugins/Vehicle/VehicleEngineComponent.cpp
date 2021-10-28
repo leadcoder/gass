@@ -414,7 +414,7 @@ namespace GASS
 	void VehicleEngineComponent::UpdateExhaustFumes(double /*delta*/)
 	{
 		float emission = GetNormRPM()*30;
-		GetSceneObject()->PostRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
+		//GetSceneObject()->PostRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
 	}
 
 	void VehicleEngineComponent::UpdateInstruments(double /*delta*/)

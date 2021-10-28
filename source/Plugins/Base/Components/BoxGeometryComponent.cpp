@@ -25,6 +25,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -276,7 +277,7 @@ namespace GASS
 
 			sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 		}
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 
 	bool BoxGeometryComponent::IsPointInside(const Vec3 &point) const

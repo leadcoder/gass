@@ -27,6 +27,7 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSPhysicsMesh.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include <cfloat> //FLT_MIN/MAX
 #include <memory>
 
@@ -850,7 +851,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(std::make_shared<LocationVisibilityRequest>(value));
+			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
 		}
 	}
 
@@ -1343,12 +1344,12 @@ namespace GASS
 			{
 				if(m_ShowMeshLines)
 				{
-					obj->PostRequest(std::make_shared<ManualMeshDataRequest>(m_NavVisLineMesh));
-					obj->PostRequest(std::make_shared<PositionRequest>(m_LocalOrigin));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_NavVisLineMesh);
+					obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_LocalOrigin);
 				}
 				else
 				{
-					obj->PostRequest(std::make_shared<ClearManualMeshRequest>());
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 			}
 		}
@@ -1365,13 +1366,13 @@ namespace GASS
 			{
 				if(m_ShowMeshSolid)
 				{
-					obj->PostRequest(std::make_shared<ManualMeshDataRequest>(m_NavVisTriMesh));
-					obj->PostRequest(std::make_shared<PositionRequest>(m_LocalOrigin));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_NavVisTriMesh);
+					obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_LocalOrigin);
 				}
 				else
 				{
 					//Hide mesh
-					obj->PostRequest(std::make_shared<ClearManualMeshRequest>());
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->Clear(); 
 				}
 			}
 		}

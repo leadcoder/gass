@@ -30,6 +30,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSGraphicsMesh.h"
@@ -79,12 +80,12 @@ namespace GASS
 		if(list)
 		{
 			bool show = list->GetShowWaypoints();
-			GetSceneObject()->PostRequest(std::make_shared<LocationVisibilityRequest>(show));
+			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(show);
 			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 
 			if(tangent)
 			{
-				tangent->PostRequest(std::make_shared<LocationVisibilityRequest>(show));
+				tangent->GetFirstComponentByClass<ILocationComponent>()->SetVisible(show);
 				tangent->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 			}
 		}
@@ -192,6 +193,6 @@ namespace GASS
 
 		pos = t_pos;
 		sub_mesh_data->PositionVector.push_back(pos);
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 }

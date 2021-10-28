@@ -11,6 +11,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
@@ -113,8 +114,8 @@ namespace GASS
 
 			}
 		}
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
-		GetSceneObject()->PostRequest(std::make_shared<LocationVisibilityRequest>(visible));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(visible);
 		
 		if(visible) //move to location
 			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(world_pos);

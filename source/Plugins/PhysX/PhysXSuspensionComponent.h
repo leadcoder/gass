@@ -49,8 +49,6 @@ namespace GASS
 		void SetMaxSteerTorque(float value) override;
 		float GetMaxSteerTorque() const override { return m_MaxSteerTorque; }
 	protected:
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
 		void OnLoad(PhysicsBodyLoadedEventPtr message);
 
 		float GetRollAngle();

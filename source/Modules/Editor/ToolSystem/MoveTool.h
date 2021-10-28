@@ -17,7 +17,6 @@ namespace GASS
 	class EditorModuleExport MoveTool : public IMouseTool 
 	{
 	public:
-		
 		MoveTool(MouseToolController* controller);
 		~MoveTool(void) override;
 

@@ -20,8 +20,7 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnCameraParameter(CameraParameterRequestPtr message);
-
+	
 		float GetMaxDistance() const{return m_MaxDistance;}
 		void SetMaxDistance(float value){m_MaxDistance =value;}
 		float GetMinDistance() const{return m_MinDistance;}

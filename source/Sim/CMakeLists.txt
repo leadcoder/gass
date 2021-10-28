@@ -84,6 +84,7 @@ set(H_FILES
 	GASSSystemFactory.h
 	GASSSystemStepper.h
 	GASSThreading.h
+	Interface/GASSIBillboardComponent.h
 	Interface/GASSICameraComponent.h
 	Interface/GASSICollisionComponent.h
 	Interface/GASSICollisionSceneManager.h

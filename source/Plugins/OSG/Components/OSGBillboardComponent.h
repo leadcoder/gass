@@ -19,6 +19,7 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIBillboardComponent.h"
 #include "Plugins/OSG/OSGCommon.h"
 
 namespace osg
@@ -31,7 +32,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,Component> , public IGeometryComponent
+	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,Component> , public IBillboardComponent
 	{
 	public:
 		OSGBillboardComponent (void);
@@ -47,10 +48,11 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
+		void SetColor(const ColorRGBA& color) override;
 	protected:
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void OnSetColorMessage(BillboardColorRequestPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 		void OnGeometryScale(GeometryScaleRequestPtr message);
 

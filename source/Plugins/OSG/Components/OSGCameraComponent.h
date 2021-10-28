@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	class OSGCameraComponent : public Reflection<OSGCameraComponent,Component>, public ICameraComponent, public IOSGCamera
+	class OSGCameraComponent : public Reflection<OSGCameraComponent, ICameraComponent>, public IOSGCamera
 	{
 	public:
 		OSGCameraComponent();
@@ -36,28 +36,28 @@ namespace GASS
 		//ICameraComponent interface
 		bool GetCameraToViewportRay(float screenx, float screeny, Ray &ray) const override;
 		void ShowInViewport(const std::string &viewport_name) override;
+		float GetFarClipDistance() const override;
+		void SetFarClipDistance(float value) override;
+		float GetNearClipDistance() const override;
+		void SetNearClipDistance(float value) override;
+		float GetNearFarRatio() const override;
+		void SetNearFarRatio(float value) override;
+		float GetFov() const override;
+		void SetFov(float value) override;
+		bool GetOrtho() const override;
+		void SetOrtho(bool value) override;
+		float GetLODScale() const override;
+		void SetLODScale(float value) override;
+
 		
 		osg::ref_ptr<osg::Camera> GetOSGCamera() const override {return m_OSGCamera;}
 		void SetOSGCamera(osg::ref_ptr<osg::Camera> camera);
 		void SetUpdateCameraFromLocation(bool value) {m_UpdateCameraFromLocation = value;}
 	protected:
-		void OnParameter(CameraParameterRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
 	
-		float GetFarClipDistance() const;
-		void SetFarClipDistance(float value);
-		float GetNearClipDistance() const;
-		void SetNearClipDistance(float value);
-		float GetNearFarRatio() const;
-		void SetNearFarRatio(float value);
-		float GetFov() const;
-		void SetFov(float value);
-		bool GetOrtho() const;
-		void SetOrtho(bool value);
-		float GetLODScale() const;
-		void SetLODScale(float value);
-
+		
 		//helpers
 		void UpdateFromLocation();
 		void UpdateProjection();

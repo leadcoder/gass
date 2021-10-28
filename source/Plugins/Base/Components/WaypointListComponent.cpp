@@ -31,6 +31,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Plugins/Base/CoreMessages.h"
 #include "WaypointComponent.h"
@@ -98,8 +99,6 @@ namespace GASS
 			gfx_sys->AddMaterial(line_mat);
 		}
 
-		//No need to be attached to parent any more
-		//GetSceneObject()->PostRequest(AttachToParentRequestPtr(new AttachToParentRequest(false)));
 		m_Initialized = true;
 
 		UpdatePath();
@@ -165,16 +164,6 @@ namespace GASS
 				if(comp)
 				{
 					child_obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
-					//child_obj->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-					//child_obj->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
-
-					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
-					if(tangent)
-					{
-						//tangent->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
-						//tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-						//tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
-					}
 				}
 			}
 		}
@@ -217,9 +206,12 @@ namespace GASS
 				else //remove this*/
 				{
 
-					GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+					GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 					//update material
-					GetSceneObject()->PostRequest(std::make_shared<ReplaceMaterialRequest>(MAT_NAME));
+					auto mm_comp = GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>();
+					if(mm_comp)
+						mm_comp->SetSubMeshMaterial(MAT_NAME);
+					
 				}
 			}
 		}

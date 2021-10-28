@@ -22,6 +22,7 @@
 
 #include <memory>
 #include "Core/Math/GASSMath.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
@@ -94,7 +95,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(std::make_shared<LocationVisibilityRequest>(value));
+			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
 			if(m_Visible)
 				UpdateConnectionLine();
 		}
@@ -147,7 +148,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(m_ConnectionLine));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_ConnectionLine);
 
 	}
 }

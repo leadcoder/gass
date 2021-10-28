@@ -5,6 +5,7 @@
 #include "Core/Math/GASSMath.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 
@@ -98,8 +99,9 @@ namespace GASS
 				}
 			}
 		}
-		ManualMeshDataRequestPtr message(new ManualMeshDataRequest(mesh_data));
-		GetSceneObject()->GetChildByID("LOS_GEOM")->PostRequest(message);
+		
+		auto los_obj = GetSceneObject()->GetChildByID("LOS_GEOM");
+		los_obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 
 	bool LOSComponent::CheckLos(const Vec3 &start_pos, const Vec3 &end_pos, CollisionSceneManagerPtr col_sm) const

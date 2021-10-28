@@ -27,6 +27,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
@@ -90,7 +91,7 @@ namespace GASS
 			sub_mesh_data = GraphicsSubMesh::GenerateSolidEllipsoid(Vec3(m_Radius,m_Radius,m_Radius), m_Color, "WhiteTransparentNoLighting", 20);
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 	
 	bool SphereGeometryComponent::IsPointInside(const Vec3 &point) const

@@ -114,8 +114,6 @@ namespace GASS
 		//settings->setThrowingEnabled( false );
 		settings->setLockAzimuthWhilePanning( true );
 		manip->applySettings(settings);
-
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthCameraManipulatorComponent::OnCameraFlyToObject, CameraFlyToObjectRequest,0));
 	}
 
 	void OSGEarthCameraManipulatorComponent::OnTransformationChanged(TransformationChangedEventPtr event)
@@ -181,11 +179,10 @@ namespace GASS
 		return true;
 	}
 
-	void OSGEarthCameraManipulatorComponent::OnCameraFlyToObject(CameraFlyToObjectRequestPtr message)
+	void OSGEarthCameraManipulatorComponent::FlyToObject(SceneObjectPtr obj)
 	{
 		if (m_Manipulator.valid())
 		{
-			SceneObjectPtr obj = message->GetTargetObject();
 			AABox object_bounds;
 			Vec3 object_pos(0, 0, 0);
 			if (GetObjectPosAndSize(obj, object_bounds, object_pos))

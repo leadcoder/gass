@@ -53,6 +53,5 @@ namespace GASS
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(ILightComponent)
 	public:
-
 	};
 }

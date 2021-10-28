@@ -442,7 +442,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 			if (!key_down)
 			{
 				key_down = true;
-				//				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("wheel.3ds")));
 			}
 		}
 		else if (GetAsyncKeyState(VK_F2))
@@ -450,7 +449,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 			if (!key_down)
 			{
 				key_down = true;
-				//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("car.3ds")));
 			}
 		}
 		else if (GetAsyncKeyState(VK_F3))

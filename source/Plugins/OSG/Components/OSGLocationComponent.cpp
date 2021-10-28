@@ -91,15 +91,7 @@ namespace GASS
 
 	void OSGLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnPositionMessage, PositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnRotationMessage, RotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldPositionRequest, WorldPositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnWorldRotationMessage, WorldRotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnVisibilityMessage, LocationVisibilityRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnScaleMessage, ScaleRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChangedMessage, ParentChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnAttachToParent, AttachToParentRequest, 0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGLocationComponent::OnParentChanged, ParentChangedEvent, 0));
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		m_GFXSceneManager = scene_man;
 
@@ -130,10 +122,7 @@ namespace GASS
 		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
 	}
 
-	void OSGLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
-	{
-		SetAttachToParent(message->GetAttachToParent());
-	}
+	
 
 	Vec3 OSGLocationComponent::WorldToLocal(const Vec3 &world_pos) const
 	{
@@ -385,10 +374,7 @@ namespace GASS
 		traverse(node, nv);
 	}
 
-	void OSGLocationComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
-	{
-		SetVisible(message->GetValue());
-	}
+	
 
 	void OSGLocationComponent::SetVisible(bool value)
 	{
@@ -461,8 +447,9 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::OnParentChangedMessage(ParentChangedEventPtr message)
+	void OSGLocationComponent::OnParentChanged(ParentChangedEventPtr message)
 	{
+		//use SetAttachToParent to reflect gass scene graph has changed
 		SetAttachToParent(GetAttachToParent());
 	}
 
@@ -483,33 +470,5 @@ namespace GASS
 			scene_obj = scene_obj->GetParent();
 		}
 		return parent_location;
-	}
-
-	void OSGLocationComponent::OnPositionMessage(PositionRequestPtr message)
-	{
-		SetPosition(message->GetPosition());
-	}
-
-	void OSGLocationComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
-	{
-		SetWorldPosition(message->GetPosition());
-	}
-
-	void OSGLocationComponent::OnWorldRotationMessage(WorldRotationRequestPtr message)
-	{
-		if (m_TransformNode.valid())
-		{
-			SetWorldRotation(message->GetRotation());
-		}
-	}
-
-	void OSGLocationComponent::OnRotationMessage(RotationRequestPtr message)
-	{
-		SetRotation(message->GetRotation());
-	}
-
-	void OSGLocationComponent::OnScaleMessage(ScaleRequestPtr message)
-	{
-		SetScale(message->GetScale());
 	}
 }

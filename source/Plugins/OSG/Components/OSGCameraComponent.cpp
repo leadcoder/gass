@@ -60,36 +60,7 @@ namespace GASS
 	void OSGCameraComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnLocationLoaded,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnParameter,CameraParameterRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCameraComponent::OnTransformationChanged,TransformationChangedEvent,10));
-	}
-
-	void OSGCameraComponent::OnParameter(CameraParameterRequestPtr message)
-	{
-		CameraParameterRequest::CameraParameterType type = message->GetParameter();
-		switch(type)
-		{
-		case CameraParameterRequest::CAMERA_FOV:
-			{
-				float value = message->GetValue1();
-				SetFov(value);
-			}
-			break;
-		case CameraParameterRequest::CAMERA_ORTHO_WIN_SIZE:
-			{
-				m_OrthoWindowHeight = message->GetValue1();
-				UpdateProjection();
-				//if(m_Camera)
-				//m_Camera->setOrthoWindowHeight(value);
-			}
-			break;
-		case CameraParameterRequest::CAMERA_CLIP_DISTANCE:
-			{
-				SetFarClipDistance(message->GetValue1());
-				SetNearClipDistance(message->GetValue2());
-			}
-			break;
-		}
 	}
 
 	void OSGCameraComponent::ShowInViewport(const std::string &viewport_name)

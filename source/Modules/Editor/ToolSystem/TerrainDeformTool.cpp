@@ -59,16 +59,16 @@ namespace GASS
 				switch(m_TEM)
 				{
 				case TEM_DEFORM:
-					terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_FLATTEN:
-					terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_SMOOTH:
-					terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_LAYER_PAINT:
-					terrain_group->PostRequest(std::make_shared<TerrainPaintRequest>(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise));
+					//terrain_group->PostRequest(std::make_shared<TerrainPaintRequest>(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise));
 					break;
 				case TEM_VEGETATION_PAINT:
 					break;
@@ -143,8 +143,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			SendMessageRec(gizmo,std::make_shared<LocationVisibilityRequest>(value,from_id));
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 

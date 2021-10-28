@@ -30,6 +30,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
@@ -156,7 +157,7 @@ namespace GASS
 		}
 	
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(std::make_shared<ManualMeshDataRequest>(mesh_data));
+		scene_object->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 	}
 

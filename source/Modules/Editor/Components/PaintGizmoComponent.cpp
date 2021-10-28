@@ -9,6 +9,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 //#define GIZMO_SENDER 999
 
@@ -109,6 +110,6 @@ namespace GASS
 		sub_mesh_data->ColorVector.push_back(m_Color);
 		
 		
-		GetSceneObject()->PostRequest(std::make_shared<ManualMeshDataRequest>(m_MeshData));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_MeshData);
 	}
 }

@@ -58,7 +58,6 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXConvexGeometryComponent::OnGeometryChanged,GeometryChangedEvent,0));
 		PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
-		
 	}
 
 	void PhysXConvexGeometryComponent::OnDelete()

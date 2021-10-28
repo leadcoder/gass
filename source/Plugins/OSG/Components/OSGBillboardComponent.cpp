@@ -68,8 +68,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
 	}
 
 	float OSGBillboardComponent::GetWidth() const
@@ -274,11 +272,10 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnSetColorMessage(BillboardColorRequestPtr message)
+	void OSGBillboardComponent::SetColor(const ColorRGBA &color)
 	{
 		if(m_Geom)
 		{
-			const ColorRGBA color = message->GetColor();
 			auto* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
 			osg::Vec4 osg_color = OSGConvert::ToOSG(color);
 			(*colors)[0]= osg_color;
@@ -286,7 +283,6 @@ namespace GASS
 			(*colors)[2]= osg_color;
 			(*colors)[3]= osg_color;
 			m_Geom->setColorArray(colors);
-
 		}
 	}
 
@@ -316,13 +312,18 @@ namespace GASS
 		return m_Collision;
 	}
 
-	void OSGBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGBillboardComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
+		if (m_OSGBillboard)
+			return m_OSGBillboard->getNodeMask() > 0;
+		return false;
+	}
 
+	void OSGBillboardComponent::SetVisible(bool value)
+	{
 		if(m_OSGBillboard)
 		{
-			if(visibility)
+			if(value)
 			{
 				m_OSGBillboard->setNodeMask(1);
 				SetGeometryFlags(m_GeomFlags);
