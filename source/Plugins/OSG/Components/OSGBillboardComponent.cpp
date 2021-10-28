@@ -66,7 +66,6 @@ namespace GASS
 	void OSGBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
 	}
 
@@ -77,8 +76,7 @@ namespace GASS
 
 	void OSGBillboardComponent::SetWidth(float width)
 	{
-		m_Width = width;
-		UpdateSize(m_Width,m_Height);
+		SetSize(width,m_Height);
 	}
 
 	float OSGBillboardComponent::GetHeight() const
@@ -88,8 +86,7 @@ namespace GASS
 
 	void OSGBillboardComponent::SetHeight(float height)
 	{
-		m_Height = height;
-		UpdateSize(m_Width,m_Height);
+		SetSize(m_Width, height);
 	}
 
 	GeometryFlags OSGBillboardComponent::GetGeometryFlags() const
@@ -246,15 +243,10 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
+	void OSGBillboardComponent::SetSize(float width,float height)
 	{
-		const Vec3 scale = message->GetScale();
-		UpdateSize(static_cast<float>(m_Width*scale.x), 
-			        static_cast<float>(m_Height*scale.y));
-	}
-
-	void OSGBillboardComponent::UpdateSize(float width,float height)
-	{
+		m_Width = width; 
+		m_Height = width;
 		if(m_OSGBillboard.valid())
 		{
 			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());

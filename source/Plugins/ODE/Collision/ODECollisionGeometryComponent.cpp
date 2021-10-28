@@ -72,7 +72,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryFlagsChanged,GeometryFlagsChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedEvent ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleRequest ,0));
 		m_CollisionSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODECollisionSceneManager>();
 	}
 
@@ -361,12 +360,6 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No MeshComponent found while collision shape type is CST_MESH", "ODECollisionGeometryComponent::CreateMeshGeometry");
 		}
 		return geom_id;
-	}
-
-	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
-	{
-		//update scale
-		SetScale(message->GetScale());
 	}
 
 	void ODECollisionGeometryComponent::SetScale(const Vec3 &/*scale*/)

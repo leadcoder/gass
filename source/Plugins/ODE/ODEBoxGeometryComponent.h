@@ -50,7 +50,6 @@ namespace GASS
 		Vec3 GetSize() const;
 		void UpdateBodyMass() override;
 		void SetSizeFromMesh(bool value) override;
-		void OnGeometryScale(GeometryScaleRequestPtr message);
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		void UpdateDebug() override;

@@ -56,7 +56,6 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBoxGeometryComponent::OnGeometryScale,GeometryScaleRequest,0));
 		ODEBaseGeometryComponent::OnInitialize();
 	}
 
@@ -161,17 +160,6 @@ namespace GASS
 		SceneObjectPtr scene_object = GetDebugObject();
 		scene_object->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
-	}
-
-
-	void ODEBoxGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
-	{
-		//rescale box geom
-		m_Scale = message->GetScale();
-		if(m_GeomID)
-		{
-			SetSizeFromMesh(m_SizeFromMesh);
-		}
 	}
 
 	void ODEBoxGeometryComponent::UpdateDebug()

@@ -73,7 +73,6 @@ namespace GASS
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnTransformationChanged(TransformationChangedEventPtr message);
-		void OnGeometryScale(GeometryScaleRequestPtr message);
 		void OnGeometryFlagsChanged(GeometryFlagsChangedEventPtr message);
 
 		//Get set section

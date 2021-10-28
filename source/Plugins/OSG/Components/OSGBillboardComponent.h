@@ -51,25 +51,24 @@ namespace GASS
 		void SetVisible(bool value) override;
 		bool GetVisible() const override;
 		void SetColor(const ColorRGBA& color) override;
+		void SetSize(float width, float height) override;
+		float GetWidth() const override;
+		void SetWidth(float width) override;;
+		float GetHeight() const override;;
+		void SetHeight(float height) override;
 	protected:
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnGeometryScale(GeometryScaleRequestPtr message);
-
+		
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-		float GetWidth() const;
-		void SetWidth(float width);
-		float GetHeight() const;
-		void SetHeight(float height);
+		
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
 		bool GetCastShadow()const {return m_CastShadow;}
 		void SetCastShadow(bool castShadow);
 
-		//Helpers
-		void UpdateSize(float width,float height);
-
+		
 		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=nullptr);
 		std::string m_Material;
 		bool m_CastShadow{false};
