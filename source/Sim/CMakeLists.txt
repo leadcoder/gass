@@ -136,7 +136,6 @@ set(H_FILES
 	Messages/GASSCoreSceneMessages.h
 	Messages/GASSCoreSceneObjectMessages.h
 	Messages/GASSCoreSystemMessages.h
-	Messages/GASSGeoSceneObjectMessages.h
 	Messages/GASSGraphicsSceneMessages.h
 	Messages/GASSGraphicsSceneObjectMessages.h
 	Messages/GASSGraphicsSystemMessages.h
