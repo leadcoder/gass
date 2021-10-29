@@ -75,17 +75,14 @@ namespace GASS
 			*/
 			//Get lat lon from location
 			UpdateNode();
-			//HACK: send a request with delay to give osgearth some time to load better height data:(
-			//GetSceneObject()->PostRequest(GeoLocationRequestPtr(new GeoLocationRequest(m_Latitude,m_Longitude,-1,10)));
+		
 		}
 
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnGeoLocationRequest,GeoLocationRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnTransformation, TransformationChangedEvent, 0));
 		
 		if(m_DebugNode)
 		{
 			GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnNameChanged, SceneObjectNameChangedEvent,0));
-			GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthLocationComponent::OnCaptionChanged,TextCaptionRequest,0));
 		}
 	}
 
@@ -108,13 +105,6 @@ namespace GASS
 	void OSGEarthLocationComponent::SetLongitude(double lat)
 	{ 
 		m_Longitude = lat;
-		UpdateNode();
-	}
-
-	void OSGEarthLocationComponent::OnGeoLocationRequest(GeoLocationRequestPtr message)
-	{
-		m_Latitude = message->GetLatitude();
-		m_Longitude = message->GetLongitude();
 		UpdateNode();
 	}
 
@@ -164,10 +154,6 @@ namespace GASS
 			m_DebugNode->setText(event->GetName());
 	}
 
-	void OSGEarthLocationComponent::OnCaptionChanged(TextCaptionRequestPtr message)
-	{
-		if(m_DebugNode)
-			m_DebugNode->setText(message->GetCaption());
-	}
+	
 }
 

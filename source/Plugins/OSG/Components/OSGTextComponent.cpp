@@ -27,13 +27,9 @@
 namespace GASS
 {
 	OSGTextComponent::OSGTextComponent() :	m_OSGText(nullptr),
-		
 		m_Font("arial.ttf"),
-		
 		m_Offset(0,0,0),
-		
 		m_Color(1,1,1,1)
-
 	{
 
 	}
@@ -58,14 +54,20 @@ namespace GASS
 	void OSGTextComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGTextComponent::OnTextCaptionMessage, TextCaptionRequest,0));
 	}
 
-	void OSGTextComponent::OnTextCaptionMessage(TextCaptionRequestPtr message)
+	void OSGTextComponent::SetCaption(const std::string& caption)
 	{
-		const std::string caption = message->GetCaption();
-		if(m_OSGText)
+		if (m_OSGText)
 			m_OSGText->setText(caption.c_str());
+	}
+
+	std::string OSGTextComponent::GetCaption() const
+	{
+		std::string caption;
+		if (m_OSGText)
+			caption = m_OSGText->getText().createUTF8EncodedString();
+		return caption;
 	}
 
 	void OSGTextComponent::OnLocationLoaded(LocationLoadedEventPtr message)

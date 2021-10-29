@@ -128,6 +128,7 @@ set(H_FILES
 	Interface/GASSITemplateSourceComponent.h
 	Interface/GASSITerrainComponent.h
 	Interface/GASSITerrainSceneManager.h
+	Interface/GASSITextComponent.h
 	Interface/GASSIViewport.h
 	Interface/GASSIWaypointListComponent.h
 	Interface/GASSIWGS84SceneManager.h

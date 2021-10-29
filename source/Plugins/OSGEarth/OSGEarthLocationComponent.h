@@ -20,7 +20,7 @@
 #pragma once
 
 #include "Plugins/OSG/IOSGCameraManipulator.h"
-#include "Sim/Messages/GASSGeoSceneObjectMessages.h"
+
 
 
 namespace GASS
@@ -38,11 +38,9 @@ namespace GASS
 		double GetLongitude() const;
 		void SetLongitude(double lat);
 	protected:
-		
 		void OnTransformation(TransformationChangedEventPtr message);
-		void OnGeoLocationRequest(GeoLocationRequestPtr message);
 		void OnNameChanged(SceneObjectNameChangedEventPtr event);
-		void OnCaptionChanged(TextCaptionRequestPtr message);
+		
 		void UpdateNode();
 		double m_Latitude{0};
 		double m_Longitude{0};

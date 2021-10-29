@@ -28,6 +28,7 @@
 #include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSITextComponent.h"
 
 using namespace physx;
 namespace GASS
@@ -781,7 +782,9 @@ namespace GASS
 			ss  <<  "\nTarget:" << target_gear;
 			ss  <<  "\nSpeed:" << forward_speed;
 			ss  <<  "\nCollision:" << col;
-			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(ss.str()));
+			auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+			if (comp)
+				comp->SetCaption(ss.str());
 		}
 	}
 

@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSITextComponent.h"
 
 namespace GASS
 {
@@ -52,7 +53,9 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
+			auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+			if(comp)
+				comp->SetCaption(name);
 		}
 	}
 
@@ -69,12 +72,18 @@ namespace GASS
 			if(m_ShowNodeName)
 			{
 				std::string name = GetSceneObject()->GetName();
-				GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
+				auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+				if (comp)
+					comp->SetCaption(name);
+
 			}
 			else
 			{
 				std::string name = "";
-				GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(name));
+				auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+				if (comp)
+					comp->SetCaption(name);
+
 			}
 		}
 	}
@@ -84,7 +93,10 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = event->GetName();
-			GetSceneObject()->PostRequest(std::make_shared<TextCaptionRequest>(event->GetName()));
+			auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+			if (comp)
+				comp->SetCaption(name);
+
 		}
 	}
 }

@@ -17,47 +17,32 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
 #pragma once
 
-#include "Plugins/OSG/IOSGCameraManipulator.h"
-#include "Sim/GASSGeoLocation.h"
+#include "Sim/GASSCommon.h"
+#include "Sim/GASSComponent.h"
+#include "Core/Math/GASSRay.h"
 
 namespace GASS
 {
-	class OSGEarthSceneManager;
 
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	/**
+		Camera interface that all camera components should be derived from
+		
+		Note that interaction with this interface during RTC update is undefined 
+		if running GASS in multi-threaded mode. Interaction with components should 
+		instead be done through messages.
+	*/
+	
+	class ITextComponent : public Reflection<ITextComponent, Component>
 	{
+		GASS_DECLARE_CLASS_AS_INTERFACE(ITextComponent)
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
-
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		virtual void SetCaption(const std::string &caption) = 0;
+		virtual std::string GetCaption() const = 0;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+
+	using TextComponentWeakPtr = GASS_WEAK_PTR<ITextComponent>;
+	using TextComponentPtr = GASS_SHARED_PTR<ITextComponent>;
 }

@@ -85,39 +85,6 @@ namespace GASS
 		TL_4
 	};
 
-	
-	/**
-		Scale actual geometry and not scene node, 
-		Note that only a few geometry components support this.
-	*/
-
-	class GeometryScaleRequest : public SceneObjectRequestMessage
-	{
-	public:
-
-		GeometryScaleRequest(const Vec3 &scale, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Scale(scale)
-		  {
-
-		  }
-		  Vec3 GetScale() const {return m_Scale;}
-	private:
-		Vec3 m_Scale;
-	};
-	typedef GASS_SHARED_PTR<GeometryScaleRequest> GeometryScaleRequestPtr;
-
-	class TextCaptionRequest : public SceneObjectRequestMessage
-	{
-	public:
-		TextCaptionRequest(const std::string  &caption, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Caption(caption){}
-		  std::string GetCaption()const {return m_Caption;}
-	private:
-		std::string m_Caption;
-	};
-	typedef GASS_SHARED_PTR<TextCaptionRequest> TextCaptionRequestPtr;
-
-
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************

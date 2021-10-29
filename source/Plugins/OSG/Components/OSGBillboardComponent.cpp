@@ -243,6 +243,13 @@ namespace GASS
 		}
 	}
 
+	void OSGBillboardComponent::SetScale(float width, float height)
+	{
+		m_ScaleWidth = width;
+		m_ScaleWidth = width;
+		SetSize(m_Width, m_Height);
+	}
+
 	void OSGBillboardComponent::SetSize(float width,float height)
 	{
 		m_Width = width; 
@@ -251,8 +258,8 @@ namespace GASS
 		{
 			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 
-			osg::Vec3f osg_height(0.0f,0.0f, height);
-			osg::Vec3f osg_width(width,0.0f,0.0f);
+			osg::Vec3f osg_height(0.0f,0.0f, m_ScaleHeight*height);
+			osg::Vec3f osg_width(m_ScaleWidth*width,0.0f,0.0f);
 			osg::Vec3f osg_corner = -osg_width*0.5f;
 
 

@@ -8,10 +8,12 @@
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIBillboardComponent.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
+
 
 #define MOVMENT_EPSILON 0.0000001
 #define DISTANCE_SENDER 997
@@ -125,7 +127,11 @@ namespace GASS
 				if(m_ScaleLocation)
 					gizmo_location->SetScale(scale);
 				else
-					GetSceneObject()->PostRequest(std::make_shared<GeometryScaleRequest>(scale));
+				{
+					auto bb = GetSceneObject()->GetFirstComponentByClass<IBillboardComponent>();
+					if(bb)
+						bb->SetScale(static_cast<float>(scale.x), static_cast<float>(scale.y));
+				}
 			}
 		}
 	}

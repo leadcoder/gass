@@ -19,6 +19,7 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSITextComponent.h"
 #include "Plugins/OSG/OSGCommon.h"
 
 namespace osg
@@ -31,7 +32,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGTextComponent : public Reflection<OSGTextComponent,Component> 
+	class OSGTextComponent : public Reflection<OSGTextComponent, ITextComponent>
 	{
 	public:
 		OSGTextComponent (void);
@@ -41,9 +42,10 @@ namespace GASS
 		virtual AABox GetBoundingBox()const;
 		virtual Sphere GetBoundingSphere()const;
 		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
+		void SetCaption(const std::string& caption) override;
+		std::string GetCaption() const override;
 	protected:
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnTextCaptionMessage(TextCaptionRequestPtr message);
 		void SetFont(const ResourceHandle &font);
 		ResourceHandle GetFont()const {return m_Font;}
 		float GetCharacterSize() const ;
@@ -58,8 +60,6 @@ namespace GASS
 		bool GetDropShadow() const {return m_DropShadow;}
 
 		ResourceHandle m_Font;
-		//float m_Width;
-		//float m_Height;
 		osg::ref_ptr<osgText::Text> m_OSGText;
 		osg::ref_ptr<osg::Geode> m_OSGGeode;
 		float m_CharSize{16.0f};

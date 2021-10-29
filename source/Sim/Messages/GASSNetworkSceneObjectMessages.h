@@ -34,25 +34,11 @@ namespace GASS
 
 
 
-	//*********************************************************
-	// ALL MESSAGES IN THIS SECTION CAN BE POSTED BY USER
-	//*********************************************************
-
+	
 	//*********************************************************
 	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
 	//*********************************************************
 
-	/*class LoadNetworkComponentsMessage : public SceneObjectRequestMessage
-	{
-	public:
-		LoadNetworkComponentsMessage(SceneManagerPtr network_scene_manager, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage( sender_id , delay), m_NetworkSceneManager(network_scene_manager){}
-		  SceneManagerPtr GetNetworkSceneManager() const {return m_NetworkSceneManager;}
-	private:
-		SceneManagerPtr m_NetworkSceneManager;
-	};
-	typedef GASS_SHARED_PTR<LoadNetworkComponentsMessage> LoadNetworkComponentsMessagePtr;
-	*/
 	
 	
 

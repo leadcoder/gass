@@ -12,6 +12,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIManualMeshComponent.h"
+#include "Sim/Interface/GASSITextComponent.h"
 
 namespace GASS
 {
@@ -53,7 +54,7 @@ namespace GASS
 		if(text)
 		{
 			std::string measurement_value = "";
-			ruler->PostRequest(std::make_shared<TextCaptionRequest>(measurement_value));
+			ruler->GetFirstComponentByClass<ITextComponent>()->SetCaption(measurement_value);
 		}
 	}
 
@@ -107,7 +108,9 @@ namespace GASS
 			std::stringstream sstream;
 			sstream << std::fixed << std::setprecision(2) << value << "m";
 			std::string measurement_value = sstream.str();
-			ruler->PostRequest(std::make_shared<TextCaptionRequest>(measurement_value));
+			auto comp = ruler->GetFirstComponentByClass<ITextComponent>();
+			if (comp)
+				comp->SetCaption(measurement_value);
 			ruler->GetFirstComponentByClass<ILocationComponent>()->SetPosition(text_pos);
 		}
 	}
