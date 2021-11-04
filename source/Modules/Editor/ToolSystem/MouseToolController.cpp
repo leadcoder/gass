@@ -274,13 +274,11 @@ namespace GASS
 	void MouseToolController::SetGridSpacing(Float value)
 	{
 		m_GridSpacing = value;
-		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetGridSize(Float value)
 	{
 		m_GridSize = value;
-		SimEngine::Get().GetSimSystemManager()->PostMessage(SystemMessagePtr(new ChangeGridRequest(m_GridSize,m_GridSpacing)));
 	}
 
 	void MouseToolController::SetSnapMovment(Float value)
@@ -454,7 +452,6 @@ namespace GASS
 					if (m_EditorSceneManager->IsSelected(info.m_ObjectUnderCursor.lock()))
 					{
 						//show Immediate!
-						//Disable OIS input to avoid background selection
 						SceneMessagePtr message(new ShowSceneObjectMenuRequest(Vec2(data.XAbs, data.YAbs)));
 						m_EditorSceneManager->GetScene()->SendImmediate(message);
 					}

@@ -203,9 +203,6 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<ObjectAttributeChangedEvent> ObjectAttributeChangedEventPtr;
 
-
-	
-
 	class LayoutLoadedMessage : public BaseMessage
 	{
 	public:
@@ -213,8 +210,6 @@ namespace GASS
 		  BaseMessage(sender_id , delay){}
 	};
 	typedef GASS_SHARED_PTR<LayoutLoadedMessage> LayoutLoadedMessagePtr;
-
-
 
 	class CreateResourceRequest : public SystemRequestMessage
 	{
@@ -230,7 +225,6 @@ namespace GASS
 		std::string m_Icon;
 	};
 	typedef GASS_SHARED_PTR<CreateResourceRequest> CreateResourceRequestPtr;
-
 
 	class RemoveResourceRequest : public SystemRequestMessage
 	{
@@ -253,42 +247,6 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<AboutMessage> AboutMessagePtr;
 
-
-
-	class NewGASSSceneMessage : public BaseMessage
-	{
-	public:
-		NewGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetSceneName() const {return m_Filename;}
-	private:
-		std::string  m_Filename;
-	};
-	typedef GASS_SHARED_PTR<NewGASSSceneMessage> NewGASSSceneMessagePtr;
-
-	class LoadGASSSceneMessage : public BaseMessage
-	{
-	public:
-		LoadGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetSceneName() const {return m_Filename;}
-	private:
-		std::string  m_Filename;
-	};
-	typedef GASS_SHARED_PTR<LoadGASSSceneMessage> LoadGASSSceneMessagePtr;
-
-
-	class SaveGASSSceneMessage : public BaseMessage
-	{
-	public:
-		SaveGASSSceneMessage(const std::string &filename, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_Filename(filename){}
-		  std::string GetSceneName() const {return m_Filename;}
-	private:
-		std::string  m_Filename;
-	};
-	typedef GASS_SHARED_PTR<SaveGASSSceneMessage> SaveGASSSceneMessagePtr;
-
 	class EditModeChangedEvent : public SystemEventMessage
 	{
 	public:
@@ -299,49 +257,6 @@ namespace GASS
 		GizmoEditMode  m_Mode;
 	};
 	typedef GASS_SHARED_PTR<EditModeChangedEvent> EditModeChangedEventPtr;
-
-
-	/*class SnapSettingsMessage : public BaseMessage
-	{
-	public:
-		SnapSettingsMessage(Float movment_snap, Float angle_snap, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_MSnap(movment_snap), m_RSnap(angle_snap){}
-		  Float GetMovementSnap() const {return m_MSnap;}
-		  Float GetRotationSnap() const {return m_RSnap;}
-	private:
-		Float m_MSnap;
-		Float m_RSnap;
-	};
-	typedef GASS_SHARED_PTR<SnapSettingsMessage> SnapSettingsMessagePtr;
-
-	class SnapModeMessage : public BaseMessage
-	{
-	public:
-		SnapModeMessage (bool movment_snap, bool angle_snap, SenderID sender_id = -1, double delay= 0) : 
-		  BaseMessage(sender_id , delay), m_MSnap(movment_snap), m_RSnap(angle_snap){}
-		  bool MovementSnapEnabled() const {return m_MSnap;}
-		  bool RotationSnapEnabled() const {return m_RSnap;}
-	private:
-		bool m_MSnap;
-		bool m_RSnap;
-	};
-	typedef GASS_SHARED_PTR<SnapModeMessage> SnapModeMessagePtr;
-	*/
-
-
-	class ChangeGridRequest : public SystemRequestMessage
-	{
-	public:
-		ChangeGridRequest(Float size, Float spacing, SenderID sender_id = -1, double delay= 0) : 
-		  SystemRequestMessage(sender_id , delay), m_Size(size), m_Spacing(spacing){}
-		  Float GetSpacing() const {return m_Spacing;}
-		  Float GetSize() const {return m_Size;}
-	private:
-		Float m_Spacing;
-		Float m_Size;
-	};
-	typedef GASS_SHARED_PTR<ChangeGridRequest> ChangeGridRequestPtr;
-	
 
 	class TemplateSelectedMessage : public BaseMessage
 	{
@@ -356,19 +271,17 @@ namespace GASS
 	typedef GASS_SHARED_PTR<TemplateSelectedMessage> TemplateSelectedMessagePtr;
 
 
-	class EditPositionMessage : public SceneObjectRequestMessage
+	class EditPositionEvent : public SceneObjectEventMessage
 	{
 	public:
-		EditPositionMessage(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) : 
-		  SceneObjectRequestMessage(sender_id , delay),m_Position(pos)
+		EditPositionEvent(const Vec3 &pos, SenderID sender_id = -1, double delay= 0) :
+			SceneObjectEventMessage(sender_id , delay),m_Position(pos)
 		  {
 
 		  }
-		  Vec3 GetPosition() const {return m_Position;}
-	private:
 		Vec3 m_Position;
 	};
-	typedef GASS_SHARED_PTR<EditPositionMessage> EditPositionMessagePtr;
+	typedef GASS_SHARED_PTR<EditPositionEvent> EditPositionEventPtr;
 
 
 	//MFC stuff, use mfc/windows messages instead?

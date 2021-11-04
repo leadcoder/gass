@@ -39,7 +39,7 @@ namespace GASS
 			{
 				SceneObjectPtr obj = m_Selection[i].lock();
 				if(obj)
-					obj->PostRequest(std::make_shared<EditPositionMessage>(info.m_3DPos, from_id));
+					obj->PostEvent(std::make_shared<EditPositionEvent>(info.m_3DPos, from_id));
 			}
 		}
 	}
