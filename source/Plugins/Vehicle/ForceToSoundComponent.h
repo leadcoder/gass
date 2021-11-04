@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-
+	class ISoundComponent;
 	class SceneObject;
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
@@ -51,6 +51,7 @@ namespace GASS
 		Float m_MaxForce{0};
 		Float m_ForceLimit{300};
 		std::vector<Vec2> m_ForceToPitch;
+		ISoundComponent* m_Sound = nullptr;
 	};
 }
 #endif

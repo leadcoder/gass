@@ -29,6 +29,7 @@
 
 namespace GASS
 {
+	class ISoundComponent;
 	class PhysXPhysicsSceneManager;
 	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
@@ -101,6 +102,7 @@ namespace GASS
 		bool m_TrackTransformation{true};
 		AABox m_MeshBounds;
 		Vec3 m_ChassisDim;
+		ISoundComponent* m_Sound = nullptr;
 	};
 	using PhysXVehicleComponentPtr = std::shared_ptr<PhysXVehicleComponent>;
 }

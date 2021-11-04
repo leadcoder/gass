@@ -29,24 +29,22 @@ namespace GASS
 		RegisterGetSet("RolloffFactor", &OpenALSoundComponent::GetRolloff, &OpenALSoundComponent::SetRolloff);
 		RegisterGetSet("Volume", &OpenALSoundComponent::GetVolume, &OpenALSoundComponent::SetVolume);
 		RegisterGetSet("Loop", &OpenALSoundComponent::GetLoop, &OpenALSoundComponent::SetLoop);
+		RegisterGetSet("Play", &OpenALSoundComponent::GetPlay, &OpenALSoundComponent::SetPlay);
 		RegisterGetSet("SoundFile", &OpenALSoundComponent::GetSoundFile, &OpenALSoundComponent::SetSoundFile);
 	}
 
 	void OpenALSoundComponent::OnInitialize()
 	{
-		
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPositionChanged, TransformationChangedEvent,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnPhysicsUpdate,PhysicsVelocityEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OpenALSoundComponent::OnParameterMessage,SoundParameterRequest,0));
 
-		LoadWaveSound(m_SoundResource.GetResource()->Path().GetFullPath());//, 0);
+		LoadWaveSound(m_SoundResource.GetResource()->Path().GetFullPath());
 		//sound loaded, update sound settings
 		SetLoop(m_Loop);
 		SetMaxDistance(m_MaxDistance);
 		SetMinDistance(m_MinDistance);
 		SetRolloff(m_Rolloff);
-		//Play();
-	
+		SetPlay(m_Play);
 	}
 
 	void OpenALSoundComponent::OnDelete()
@@ -67,7 +65,7 @@ namespace GASS
 		SetVelocity(vel);
 	}
 
-	void OpenALSoundComponent::OnParameterMessage(SoundParameterRequestPtr message)
+	/*void OpenALSoundComponent::OnParameterMessage(SoundParameterRequestPtr message)
 	{
 		SoundParameterRequest::SoundParameterType type = message->GetParameter();
 		switch(type)
@@ -99,7 +97,7 @@ namespace GASS
 		case SoundParameterRequest::LOOP:
 			break;
 		}
-	}
+	}*/
 
 	float OpenALSoundComponent::GetMinDistance() const
 	{
@@ -202,7 +200,6 @@ namespace GASS
 			else
 				alSourcei(m_Source, AL_LOOPING, 0);
 		}
-
 	}
 
 	ResourceHandle OpenALSoundComponent::GetSoundFile() const
@@ -215,7 +212,23 @@ namespace GASS
 		m_SoundResource = file;
 	}
 
-	
+
+	bool OpenALSoundComponent::GetPlay() const
+	{
+		return m_Play;
+	}
+
+	void OpenALSoundComponent::SetPlay(bool value)
+	{
+		m_Play = value;
+		if (m_Source)
+		{
+			if (value)
+				Play();
+			else
+				Stop();
+		}
+	}
 
 
 	void OpenALSoundComponent::Play()
@@ -244,11 +257,10 @@ namespace GASS
 		ALfloat source_vel[] = GASS_TO_OAL_VEC(vel);
 		if(m_Source)
 			alSourcefv(m_Source, AL_VELOCITY, source_vel);
-
 	}
 
 
-	bool OpenALSoundComponent::IsPlaying()
+	bool OpenALSoundComponent::IsPlaying() const
 	{
 		ALint i_val;
 		alGetError();
@@ -284,12 +296,6 @@ namespace GASS
 		alSourcei( m_Source, AL_LOOPING, m_Loop);
 		//if( CheckAlError( "loadSource()::alSourcei" ) )
 		//	return false;
-	}
-
-	void OpenALSoundComponent::StopLooping()
-	{
-		if (m_Source == 0) return;
-		alSourcei( m_Source, AL_LOOPING, 0);
 	}
 
 	void OpenALSoundComponent::Stop()

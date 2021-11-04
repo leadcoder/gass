@@ -53,25 +53,6 @@ namespace GASS
 	};
 	typedef GASS_SHARED_PTR<CollisionSettingsRequest> CollisionSettingsRequestPtr;
 
-	/**
-	Message used to request debugging info
-	*/
-
-	class PhysicsDebugRequest : public SceneObjectRequestMessage
-	{
-	public:
-		PhysicsDebugRequest(bool show_collision_geometry, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_DebugGeometry(show_collision_geometry)
-		  {
-
-		  }
-		  bool DebugGeometry() const {return m_DebugGeometry;}
-	private:
-		bool m_DebugGeometry;
-	};
-	typedef GASS_SHARED_PTR<PhysicsDebugRequest> PhysicsDebugRequestPtr;
-
-
 	
 	/**
 	Set desired linear velocity for prismatic joint. 

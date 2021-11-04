@@ -68,7 +68,7 @@ namespace GASS
 		}
 		//we've not found it, so it must be a new sample
 		//use the storeIndex value to store the new sample
-		assert(storeIndex>=0 && "Profiler has run out of sample slots!");
+		assert(store_index>=0 && "Profiler has run out of sample slots!");
 		m_Samples[store_index].m_IsValid=true;
 		m_Samples[store_index].m_Name=sampleName;
 		m_SampleIndex=store_index;

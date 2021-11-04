@@ -93,7 +93,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnEditPosition,EditPositionMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnEditPosition,EditPositionEvent,1));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( RecastNavigationMeshComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
 
 		const std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
@@ -137,14 +137,14 @@ namespace GASS
 		m_NavMesh = nullptr;
 	}
 
-	void RecastNavigationMeshComponent::OnEditPosition(EditPositionMessagePtr message)
+	void RecastNavigationMeshComponent::OnEditPosition(EditPositionEventPtr message)
 	{
 		if (m_NavMesh && m_NavQuery)
 		{
 			dtQueryFilter filter;
 			float ext[3];
 			float point[3];
-			Vec3 pos = message->GetPosition();
+			Vec3 pos = message->m_Position;
 			GASSToRecast(pos,point);
 			//point[0] =pos.x; point[1] =pos.y; point[2] =pos.z;
 			ext[0] = 0.1f; ext[1] = 0.1f; ext[2] = 0.1f;

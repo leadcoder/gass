@@ -29,58 +29,6 @@
 
 namespace GASS
 {
-	class Scene;
-	class Scene;
-	class SceneObject;
-
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-
-
-	//Script messages
-	/**
-	Lua script state is distributed through this message
-	*/
-	class LuaScriptStateRequest : public SceneObjectRequestMessage
-	{
-	public:
-		LuaScriptStateRequest(void *state, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay) ,
-			  m_State(state){}
-		 void* GetState() const {return m_State;}
-	private:
-		void *m_State;
-	};
-	typedef GASS_SHARED_PTR<LuaScriptStateRequest> LuaScriptStateRequestPtr;
-
-	/**
-	Load a gui script file	
-	*/
-	class GUIScriptRequest : public SystemRequestMessage
-	{
-	public:
-		GUIScriptRequest(const std::string &filename, SenderID sender_id = -1, double delay= 0) :
-		  SystemRequestMessage(sender_id , delay) ,
-			  m_Name(filename){}
-
-		 std::string GetFilename() const {return m_Name;}
-	private:
-		std::string m_Name;
-	};
-	typedef GASS_SHARED_PTR<GUIScriptRequest> GUIScriptRequestPtr;
-
-	class GUILoadedEvent : public SystemEventMessage
-	{
-	public:
-		GUILoadedEvent(void *data, SenderID sender_id = -1, double delay= 0) :
-		  SystemEventMessage(sender_id , delay) ,
-			  m_Data(data){}
-
-		  void* GetData() const {return m_Data;}
-	private:
-		void *m_Data;
-	};
-	typedef GASS_SHARED_PTR<GUILoadedEvent> GUILoadedEventPtr;
+	
 }
 #endif

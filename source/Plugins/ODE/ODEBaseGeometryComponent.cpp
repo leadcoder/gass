@@ -99,7 +99,6 @@ namespace GASS
 		}
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBaseGeometryComponent::OnPhysicsDebug,PhysicsDebugRequest,0));
 	}
 
 	void ODEBaseGeometryComponent::OnDelete()
@@ -304,11 +303,6 @@ namespace GASS
 			}
 			return m_ODESpaceID;
 		}
-	}
-
-	void ODEBaseGeometryComponent::OnPhysicsDebug(PhysicsDebugRequestPtr message)
-	{
-		SetDebug(message->DebugGeometry());
 	}
 
 	void ODEBaseGeometryComponent::SetDebug(bool value)

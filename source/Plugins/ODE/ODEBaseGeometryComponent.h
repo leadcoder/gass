@@ -93,7 +93,6 @@ namespace GASS
 
 		//debug fucntions
 		virtual void UpdateDebug() {};
-		virtual void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		virtual void OnDebugTransformation(TransformationChangedEventPtr message);
 		virtual void SetDebug(bool value);
 		virtual bool GetDebug() const;

@@ -26,7 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 namespace GASS
 {
@@ -51,9 +51,12 @@ namespace GASS
 	void TrackComponent::OnInitialize()
 	{
 		Component::OnInitialize();
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
-		
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+			sound->SetVolume(0);
+		}
 		if(m_DriveWheel.IsValid())
 			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,PhysicsVelocityEvent,0));
 		else
@@ -96,8 +99,11 @@ namespace GASS
 			//Play engine sound
 			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
-		GetSceneObject()->SendImmediateRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume));
 
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+			sound->SetVolume(volume);
+	
 		if(speed > 0)
 		{
 			float pitch = 0.8f + speed*0.015f;
@@ -105,7 +111,8 @@ namespace GASS
 			if(pitch > 1.7f)
 				pitch = 1.7f;
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
-			GetSceneObject()->SendImmediateRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PITCH,pitch));
+			if (sound)
+				sound->SetPitch(pitch);
 		}
 	}
 }

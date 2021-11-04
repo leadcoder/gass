@@ -180,7 +180,7 @@ namespace GASS
 		std::string GetBoundingBoxFromShape() const;
 		FilePath GetFilePath() const;
 	
-		void OnEditPosition(EditPositionMessagePtr message);
+		void OnEditPosition(EditPositionEventPtr message);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 
 		GraphicsMeshPtr m_NavVisTriMesh;

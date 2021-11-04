@@ -29,6 +29,7 @@
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSITextComponent.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 using namespace physx;
 namespace GASS
@@ -118,9 +119,9 @@ namespace GASS
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS(PhysXVehicleComponent::OnPostSceneObjectInitializedEvent,PostSceneObjectInitializedEvent,0));
 		RegisterForPostUpdate<PhysXPhysicsSceneManager>();
 
-		//Play engine sound
-		SoundParameterRequestPtr sound_msg(new SoundParameterRequest(SoundParameterRequest::PLAY,0));
-		GetSceneObject()->PostRequest(sound_msg);
+		m_Sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>().get();
+		if (m_Sound)
+			m_Sound->SetPlay(true);
 	}
 
 	Vec3 PhysXVehicleComponent::GetSize() const
@@ -708,11 +709,11 @@ namespace GASS
 		volume += norm_engine_rot_speed;
 		volume = sqrt(volume)*1.05f;
 
-		SoundParameterRequestPtr pitch_msg(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch));
-		GetSceneObject()->PostRequest(pitch_msg);
-
-		SoundParameterRequestPtr volume_msg(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume));
-		GetSceneObject()->PostRequest(volume_msg);
+		if (m_Sound)
+		{
+			m_Sound->SetPitch(pitch);
+			m_Sound->SetPitch(volume);
+		}
 
 		GetSceneObject()->PostEvent(std::make_shared<VehicleEngineStatusMessage>(engine_rot_speed,forward_speed,current_gear));
 

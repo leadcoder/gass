@@ -29,6 +29,7 @@
 namespace GASS
 {
 	class SceneObject;
+	class ISoundComponent;
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
@@ -45,6 +46,7 @@ namespace GASS
 
 		Float m_MaxVolumeAtSpeed{0.3};
 		Float m_HingeAngle{0};
+		ISoundComponent* m_Sound = nullptr;
 	};
 }
 #endif

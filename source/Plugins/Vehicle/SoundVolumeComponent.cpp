@@ -26,6 +26,7 @@
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 namespace GASS
 {
@@ -50,8 +51,13 @@ namespace GASS
 	void SoundVolumeComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,PhysicsVelocityEvent,0));
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
+
+		m_Sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>().get();
+		if (m_Sound)
+		{
+			m_Sound->SetVolume(0);
+			m_Sound->SetPlay(true);
+		}
 	}
 
 	void SoundVolumeComponent::OnHingeUpdated(ODEPhysicsHingeJointEventPtr message)
@@ -63,7 +69,10 @@ namespace GASS
 		{
 			//turret sound
 			const auto volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
-			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume));
+			if (m_Sound)
+			{
+				m_Sound->SetVolume(volume);
+			}
 			/*
 			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
 			*/
@@ -80,11 +89,10 @@ namespace GASS
 			//turret sound
 			const auto volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
 			
-			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,volume*0.5f));
-
-			/*
-			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
-			*/
+			if (m_Sound)
+			{
+				m_Sound->SetVolume(volume);
+			}
 		}
 		/*if(speed > 0)
 		{

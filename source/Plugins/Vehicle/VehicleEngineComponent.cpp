@@ -32,7 +32,7 @@
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
 namespace GASS
@@ -137,7 +137,11 @@ namespace GASS
 		SetWheels(m_WheelObjects);
 
 		//Play engine sound
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY,0.0f));
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+		}
 	}
 
 
@@ -408,12 +412,16 @@ namespace GASS
 	{
 		//Play engine sound
 		float pitch = GetNormRPM() + 1.0f;
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PITCH,pitch));
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPitch(pitch);
+		}
 	}
 
 	void VehicleEngineComponent::UpdateExhaustFumes(double /*delta*/)
 	{
-		float emission = GetNormRPM()*30;
+		//float emission = GetNormRPM()*30;
 		//GetSceneObject()->PostRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
 	}
 

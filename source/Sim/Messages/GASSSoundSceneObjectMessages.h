@@ -25,35 +25,5 @@
 
 namespace GASS
 {
-	class SimSceneManager;
-	class ISceneManager;
-	class IGeometryComponent;
-	typedef GASS_SHARED_PTR<ISceneManager> SceneManagerPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
 
-	class SoundParameterRequest : public SceneObjectRequestMessage
-	{
-	public:
-		enum SoundParameterType
-		{
-			PLAY,
-			STOP,
-			PAUSE,
-			PITCH,
-			LOOP,
-			VOLUME,
-		};
-	public:
-		SoundParameterRequest(SoundParameterType parameter, float value, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay), m_Value(value), m_Parameter(parameter)
-		  {
-
-		  }
-		  float GetValue()const {return m_Value;}
-		  SoundParameterType GetParameter()const {return m_Parameter;}
-	private:
-		SoundParameterType m_Parameter;
-		float m_Value;
-	};
-	typedef GASS_SHARED_PTR<SoundParameterRequest> SoundParameterRequestPtr;
 }

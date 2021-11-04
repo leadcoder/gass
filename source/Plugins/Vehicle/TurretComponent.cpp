@@ -32,7 +32,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 
@@ -74,8 +74,13 @@ namespace GASS
 		m_Hinge->SetDriveTargetVelocity(0);
 		//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
-		GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::PLAY, 0.0f));
+
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+			sound->SetVolume(0);
+		}
 
 		RegisterForPostUpdate<IMissionSceneManager>();
 	}
@@ -182,7 +187,11 @@ namespace GASS
 			m_Hinge->SetDriveTargetVelocity(0);
 			//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 			//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-			GetSceneObject()->PostRequest(std::make_shared<SoundParameterRequest>(SoundParameterRequest::VOLUME,0.0f));
+			auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+			if (sound)
+			{
+				sound->SetVolume(0);
+			}
 			return;
 		}
 
