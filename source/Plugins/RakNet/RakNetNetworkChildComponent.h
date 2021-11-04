@@ -24,6 +24,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
+#include "Sim/Interface/GASSINetworkComponent.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
 #include "RakNetCommon.h"
@@ -36,7 +37,7 @@ namespace GASS
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 	using NetworkPackageVector = std::vector<NetworkPackagePtr>;
 
-	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent,Component> 
+	class RakNetNetworkChildComponent : public Reflection<RakNetNetworkChildComponent, INetworkComponent>
 	{
 	public:
 		RakNetNetworkChildComponent();
@@ -48,6 +49,8 @@ namespace GASS
 		void SetReplica(RakNetChildReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
 		std::vector<std::string> GetAttributes()const {return m_Attributes;}
+		bool IsRemote() const override;
+		void Serialize(NetworkPackagePtr package, unsigned int timeStamp, NetworkAddress address) override;
 		void Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
 		void SetPartId(int id) {m_PartId = id;}
@@ -56,7 +59,6 @@ namespace GASS
 	private:
 		void SceneManagerTick(double delta) override;
 		void OnGotReplica(ComponentGotReplicaEventPtr message);
-		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNewChildReplica(ChildReplicaCreatedEventPtr message);
 		RakNetChildReplica* m_Replica{nullptr};
 		std::vector<std::string> m_Attributes;

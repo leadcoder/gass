@@ -54,8 +54,6 @@ namespace GASS
 
 	void RakNetNetworkMasterComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetNetworkMasterComponent::OnSerialize,NetworkSerializeRequest,0));
-
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		if(!raknet->IsActive())
 			return;
@@ -106,24 +104,24 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkMasterComponent::OnSerialize(NetworkSerializeRequestPtr message)
+	void RakNetNetworkMasterComponent::Serialize(NetworkPackagePtr package, unsigned int /*timeStamp*/, NetworkAddress net_address)
 	{
 		bool found = false;
 		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)
 		{
-			if(m_SerializePackages[i]->Id == message->GetPackage()->Id)
+			if(m_SerializePackages[i]->Id == package->Id)
 			{
-				m_SerializePackages[i] = message->GetPackage();
+				m_SerializePackages[i] = package;
 				found = true;
 				break;
 			}
 		}
 		if(!found)
-			m_SerializePackages.push_back(message->GetPackage());
+			m_SerializePackages.push_back(package);
 
 		SystemAddress address;
-		address.binaryAddress = message->GetAddress().m_Address;
-		address.port  = static_cast<unsigned short>(message->GetAddress().m_Port);
+		address.binaryAddress = net_address.m_Address;
+		address.port  = static_cast<unsigned short>(net_address.m_Port);
 
 		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
 		//Signal serialize
@@ -169,7 +167,7 @@ namespace GASS
 				inBitStream->Read(data_to_read,size);
 				package->Assign(data_to_read);
 				delete[] data_to_read ;
-				GetSceneObject()->PostRequest(std::make_shared<NetworkDeserializeRequest>(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package));
+				GetSceneObject()->PostEvent(std::make_shared<NetworkDeserializeEvent>(NetworkAddress(systemAddress.binaryAddress,systemAddress.port),timestamp,package));
 
 			}
 			//NetworkPackagePtr package;
@@ -205,5 +203,13 @@ namespace GASS
 		if(m_Replica)
 			m_Replica->ProcessMessages();
 
+	}
+
+	bool RakNetNetworkMasterComponent::IsRemote() const
+	{
+		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
+		if (raknet && raknet->IsActive())
+			return !raknet->IsServer();
+		return false;
 	}
 }

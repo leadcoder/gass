@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,Component>, public INetworkComponent
+	class RakNetMessageTransferComponent : public Reflection<RakNetMessageTransferComponent,Component>
 	{
 	public:
 		RakNetMessageTransferComponent();
@@ -38,7 +38,7 @@ namespace GASS
 		void OnInitialize() override;
 		void OnDelete() override;
 		void Called(const std::string &message, const std::string &data);
-		bool IsRemote() const override;
+		bool IsRemote() const;
 	private:
 		void OnOutOfArmor(OutOfArmorMessagePtr message);
 		void Call(const std::string &message, const std::string &data);

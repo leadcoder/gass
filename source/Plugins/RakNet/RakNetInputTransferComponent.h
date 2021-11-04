@@ -84,7 +84,7 @@ namespace GASS
 		void OnDelete() override;
 		void ReceivedInput(int controller, float value);
 	private:
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
+		void OnDeserialize(NetworkDeserializeEventPtr message);
 		void OnInput(InputRelayEventPtr message);
 		void SetControlSetting(const std::string &controlsetting) {m_ControlSettingName = controlsetting;}
 		std::string GetControlSetting() const {return m_ControlSettingName;}

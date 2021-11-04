@@ -23,6 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
+#include "Sim/Interface/GASSINetworkComponent.h"
 
 namespace GASS
 {
@@ -33,17 +34,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
 
 
-
-	
-	//*********************************************************
-	// ALL MESSAGES BELOW SHOULD ONLY BE POSTED GASS INTERNALS
-	//*********************************************************
-
-	
-	
-
-	//typedef GASS_SHARED_PTR<char> NetworkDataPtr;
-	class NetworkPackage
+/*	class NetworkPackage
 	{
 	public:
 		NetworkPackage() : Id(0)
@@ -87,14 +78,14 @@ namespace GASS
 
 	};
 	typedef GASS_SHARED_PTR<NetworkSerializeRequest> NetworkSerializeRequestPtr;
+	*/
+	
 
-
-
-	class NetworkDeserializeRequest : public SceneObjectRequestMessage
+	class NetworkDeserializeEvent : public SceneObjectEventMessage
 	{
 	public:
-		NetworkDeserializeRequest(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage( sender_id , delay),
+		NetworkDeserializeEvent(const NetworkAddress &address, unsigned int time_stamp, NetworkPackagePtr package, SenderID sender_id = -1, double delay= 0) :
+			SceneObjectEventMessage( sender_id , delay),
 			  m_Package(package),
 			  m_TimeStamp(time_stamp),
 			  m_Address(address)
@@ -109,7 +100,8 @@ namespace GASS
 		NetworkAddress m_Address;
 
 	};
-	typedef GASS_SHARED_PTR<NetworkDeserializeRequest> NetworkDeserializeRequestPtr;
+	typedef GASS_SHARED_PTR<NetworkDeserializeEvent> NetworkDeserializeEventPtr;
+	
 
 	class ClientRemoteMessage : public SceneObjectRequestMessage
 	{

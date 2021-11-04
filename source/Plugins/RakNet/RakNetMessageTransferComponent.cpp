@@ -79,7 +79,6 @@ namespace GASS
 		if(message->GetSenderID() == 8888)
 			return;
 		Call("OutOfArmorMessage","");
-		
 	}
 
 	void RakNetMessageTransferComponent::Call(const std::string &message, const std::string &data)

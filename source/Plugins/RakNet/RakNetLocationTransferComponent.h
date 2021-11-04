@@ -23,7 +23,7 @@
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSComponent.h"
-#include "Sim/Interface/GASSINetworkComponent.h"
+
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -118,7 +118,7 @@ namespace GASS
 	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,Component>, public INetworkComponent
+	class RakNetLocationTransferComponent : public Reflection<RakNetLocationTransferComponent,Component>
 	{
 	public:
 		RakNetLocationTransferComponent();
@@ -126,8 +126,6 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
-		//INetworkComponent
-		bool IsRemote() const override;
 		void SceneManagerTick(double delta) override;
 	private:
 		void SetSendFrequency(float value) {m_SendFreq = value;}
@@ -135,7 +133,7 @@ namespace GASS
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnParentTransformationChanged(TransformationChangedEventPtr message);
 		void OnVelocityNotify(PhysicsVelocityEventPtr message);
-		void OnDeserialize(NetworkDeserializeRequestPtr message);
+		void OnDeserialize(NetworkDeserializeEventPtr message);
 
 		bool GetUpdatePosition() const {return m_UpdatePosition;}
 		void SetUpdatePosition(bool value) {m_UpdatePosition=value;}

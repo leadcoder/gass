@@ -64,11 +64,11 @@ namespace GASS
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput, InputRelayEvent, 0));
 
 			//test input chain
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize, NetworkDeserializeRequest, 0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize, NetworkDeserializeEvent, 0));
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize, NetworkDeserializeRequest, 0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnDeserialize, NetworkDeserializeEvent, 0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnClientRemoteMessage, ClientRemoteMessage, 0));
 			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetInputTransferComponent::OnInput, InputRelayEvent, 0));
 		}
@@ -114,9 +114,7 @@ namespace GASS
 				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
 				GASS_SHARED_PTR<InputPackage> package(new InputPackage(INPUT_DATA, time_stamp, address.binaryAddress, controller_index, value));
 
-
-				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(NetworkAddress(address.binaryAddress, address.port), 0, package));
-				GetSceneObject()->SendImmediateRequest(serialize_message);
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package, 0, NetworkAddress(address.binaryAddress, address.port));
 			}
 			else if (message->GetControllerType() == CT_TRIGGER)
 			{
@@ -156,7 +154,7 @@ namespace GASS
 		GetSceneObject()->PostEvent(message);
 	}
 
-	void RakNetInputTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
+	void RakNetInputTransferComponent::OnDeserialize(NetworkDeserializeEventPtr message)
 	{
 		if (message->GetPackage()->Id == INPUT_DATA)
 		{
@@ -182,8 +180,7 @@ namespace GASS
 			if (raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
 				NetworkAddress message_address = message->GetAddress();
-				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(message_address, 0, package));
-				GetSceneObject()->PostRequest(serialize_message);
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package, 0, message_address);
 			}
 		}
 	}

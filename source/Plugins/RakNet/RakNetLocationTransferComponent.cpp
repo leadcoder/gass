@@ -89,7 +89,7 @@ namespace GASS
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeEvent,0));
 
 			PhysicsBodyComponentPtr body = GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>();
 			if(body)
@@ -165,13 +165,7 @@ namespace GASS
 		}
 	}
 
-	bool RakNetLocationTransferComponent::IsRemote() const
-	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		if(raknet && raknet->IsActive())
-			return !raknet->IsServer();
-		return false;
-	}
+	
 
 	void RakNetLocationTransferComponent::SceneManagerTick(double /*delta*/)
 	{
@@ -195,8 +189,7 @@ namespace GASS
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				GASS_SHARED_PTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
-				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(NetworkAddress(address.binaryAddress,address.port),0,package));
-				GetSceneObject()->SendImmediateRequest(serialize_message);
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package,0, NetworkAddress(address.binaryAddress, address.port));
 			}
 		}
 		else //client
@@ -326,7 +319,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
+	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeEventPtr message)
 	{
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{
