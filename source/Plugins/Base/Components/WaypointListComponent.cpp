@@ -22,11 +22,9 @@
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSSplineAnimation.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"
@@ -165,10 +163,10 @@ namespace GASS
 		if(m_Initialized)
 		{
 			std::vector<WaypointComponentPtr> wp_vec;
-			ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+			auto children = GetSceneObject()->GetChildren();
 			while(children.hasMoreElements())
 			{
-				SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+				auto child_obj =  children.getNext();
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
@@ -255,10 +253,10 @@ namespace GASS
 		std::vector<Vec3> pos_vec;
 		std::vector<WaypointComponentPtr> wp_vec;
 		std::vector<SceneObjectPtr> obj_vec;
-		ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		auto children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child_obj =  GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+			auto child_obj =  children.getNext();
 			WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 			if(comp &&  comp->IsActive())
 			{

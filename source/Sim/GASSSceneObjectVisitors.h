@@ -22,8 +22,6 @@
 
 #include "Sim/GASSCommon.h"
 #include "Core/Reflection/GASSBaseReflectionObject.h"
-#include "Core/ComponentSystem/GASSComponentContainer.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSBaseSceneComponent.h"
@@ -44,7 +42,7 @@ namespace GASS
 		ClassComponentsVisitor(const std::string &component_class_name) : m_ComponentClassName(component_class_name) {}
 		virtual bool Visit(SceneObjectPtr scene_object)
 		{
-			ComponentContainer::ComponentIterator comp_iter = scene_object->GetComponents();
+			SceneObject::ComponentIterator comp_iter = scene_object->GetComponents();
 			while(comp_iter.hasMoreElements())
 			{
 				BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
@@ -55,7 +53,7 @@ namespace GASS
 			}
 			return true;
 		}
-		ComponentContainer::ComponentVector m_Components;
+		SceneObject::ComponentVector m_Components;
 		std::string m_ComponentClassName;
 	};
 
@@ -66,7 +64,7 @@ namespace GASS
 		TypedClassComponentsVisitor() {}
 		virtual bool Visit(SceneObjectPtr scene_object)
 		{
-			ComponentContainer::ComponentIterator comp_iter = scene_object->GetComponents();
+			SceneObject::ComponentIterator comp_iter = scene_object->GetComponents();
 			while(comp_iter.hasMoreElements())
 			{
 			    ComponentPtr comp = comp_iter.getNext();
@@ -78,6 +76,6 @@ namespace GASS
 			}
 			return true;
 		}
-		ComponentContainer::ComponentVector m_Components;
+		SceneObject::ComponentVector m_Components;
 	};
 }

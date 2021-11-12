@@ -20,7 +20,7 @@
 
 
 #include "GroupComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 
 namespace GASS
 {

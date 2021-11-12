@@ -39,7 +39,7 @@
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
 #include "Core/Utils/GASSException.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"

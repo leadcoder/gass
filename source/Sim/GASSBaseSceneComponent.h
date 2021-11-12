@@ -25,7 +25,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/GASSBaseSceneManager.h"
-#include "Core/ComponentSystem/GASSComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -43,7 +43,7 @@ namespace GASS
 		
 		/**
 			Get owner scene object. 
-			Same as get owner but cast owner from ComponentContainer to SceneObject 
+			Same as get owner in component 
 		*/
 		SceneObjectPtr GetSceneObject() const;
 		/**

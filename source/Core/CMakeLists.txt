@@ -13,14 +13,7 @@ set(GASS_CONFIG_HEADER "${CMAKE_CURRENT_BINARY_DIR}/GASSConfig.h")
 	 
 #add all source files from current directory
 set(CPP_FILES
-	ComponentSystem/GASSComponent.cpp
-	ComponentSystem/GASSComponentContainer.cpp
-	ComponentSystem/GASSComponentContainerFactory.cpp
-	ComponentSystem/GASSComponentContainerTemplate.cpp
-	ComponentSystem/GASSComponentContainerTemplateFactory.cpp
-	ComponentSystem/GASSComponentContainerTemplateManager.cpp
-	ComponentSystem/GASSComponentFactory.cpp
-	ComponentSystem/GASSSchemaManager.cpp
+
 	Math/GASSAABox.cpp
 	Math/GASSAARect.cpp
 	Math/GASSEllipsoid.cpp
@@ -63,14 +56,7 @@ set(CPP_FILES
 set(H_FILES
 	Common.h
 	Prerequisits.h
-	ComponentSystem/GASSComponent.h
-	ComponentSystem/GASSComponentContainer.h
-	ComponentSystem/GASSComponentContainerFactory.h
-	ComponentSystem/GASSComponentContainerTemplate.h
-	ComponentSystem/GASSComponentContainerTemplateFactory.h
-	ComponentSystem/GASSComponentContainerTemplateManager.h
-	ComponentSystem/GASSComponentFactory.h
-	ComponentSystem/GASSSchemaManager.h
+	
 	Math/GASSAABox.h
 	Math/GASSAARect.h
 	Math/GASSEllipsoid.h

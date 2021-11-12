@@ -24,8 +24,8 @@
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
+#include "Sim/GASSComponentFactory.h"
+#include "Sim/GASSSceneObjectTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -82,7 +82,7 @@ namespace GASS
 
 		RegisterForPreUpdate<RaknetNetworkSceneManager>();
 		
-		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent,0));
@@ -100,7 +100,7 @@ namespace GASS
 			if(body)
 				body->SetActive(false);
 
-			ComponentContainerTemplate::ComponentVector components;
+			SceneObjectTemplate::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass<IPhysicsBodyComponent>(components,true);
 			for(size_t i = 0;  i< components.size(); i++)
 			{
@@ -163,7 +163,7 @@ namespace GASS
 	void RakNetLocationTransferComponent::OnDelete()
 	{
 
-		SceneObjectPtr parent = GASS_DYNAMIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		if(parent && m_ClientLocationMode == FORCE_ATTACHED_TO_PARENT_AND_SEND_RELATIVE)
 		{
 			parent->UnregisterForMessage(UNREG_TMESS(RakNetLocationTransferComponent::OnParentTransformationChanged,TransformationChangedEvent));

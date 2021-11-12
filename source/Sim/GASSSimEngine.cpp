@@ -25,12 +25,12 @@
 
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
 #include "Core/Utils/GASSLogger.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Utils/GASSXMLUtils.h"
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Utils/GASSSystem.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
@@ -52,7 +52,7 @@ namespace GASS
 		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
 		m_SystemManager(new SimSystemManager()),
-		m_SceneObjectTemplateManager(new ComponentContainerTemplateManager()),
+		m_SceneObjectTemplateManager(new SceneObjectTemplateManager()),
 		m_LogFolder(log_folder)
 	{
 		//Always log to file if sim is created?
@@ -255,8 +255,7 @@ namespace GASS
 
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
-		ComponentContainerPtr cc = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
-		SceneObjectPtr so = GASS_STATIC_PTR_CAST<SceneObject>(cc);
+		SceneObjectPtr so = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);
 		if (!so)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to create object from template:" + template_name, "SimEngine::CreateObjectFromTemplate");
 		so->GenerateGUID(true);

@@ -38,7 +38,7 @@ namespace GASS
 		Interface for binary serialization, classes that want to support 
 		binary serialization should be derived from this interface
 	*/
-	class GASSCoreExport ISerialize
+	class ISerialize
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(ISerialize)
 	public:

@@ -7,7 +7,7 @@
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/Math/GASSVector.h"
 #ifdef WIN32
 	#include "al.h"

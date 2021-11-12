@@ -22,7 +22,7 @@
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Core/Math/GASSPath.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -69,7 +69,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if (so)
 		{
-			ComponentContainer::ComponentVector comps;
+			SceneObject::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<IWaypointListComponent>(comps);
 			for (size_t i = 0; i < comps.size(); i++)
 			{
@@ -78,7 +78,7 @@ namespace GASS
 					WaypointListComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<IWaypointListComponent>(comps[i]);
 					if (wpl)
 					{
-						SceneObjectPtr wp_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						SceneObjectPtr wp_so = comps[i]->GetOwner();
 						ret.push_back(wp_so);
 					}
 				}
@@ -93,7 +93,7 @@ namespace GASS
 		SceneObjectPtr so = GetSceneObject();
 		if (so)
 		{
-			ComponentContainer::ComponentVector comps;
+			SceneObject::ComponentVector comps;
 			so->GetScene()->GetRootSceneObject()->GetComponentsByClass<INavigationComponent>(comps);
 			for (size_t i = 0; i < comps.size(); i++)
 			{
@@ -102,7 +102,7 @@ namespace GASS
 					NavigationComponentPtr wpl = GASS_DYNAMIC_PTR_CAST<INavigationComponent>(comps[i]);
 					if (wpl)
 					{
-						SceneObjectPtr nav_so = GASS_DYNAMIC_PTR_CAST<SceneObject>(comps[i]->GetOwner());
+						SceneObjectPtr nav_so = comps[i]->GetOwner();
 						ret.push_back(nav_so);
 					}
 				}

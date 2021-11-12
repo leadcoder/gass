@@ -59,13 +59,11 @@ namespace GASS
 
 	SceneObjectPtr SceneObjectLink::GetRoot(SceneObjectPtr obj) const
 	{
-		ComponentContainerPtr container = obj;
-
-		while(container->GetParent())
+		while(obj->GetParent())
 		{
-			container = ComponentContainerPtr(container->GetParent());
+			obj = obj->GetParent();
 		}
-		return  GASS_STATIC_PTR_CAST<SceneObject>(container);
+		return  obj;
 	}
 
 

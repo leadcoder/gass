@@ -43,7 +43,7 @@ namespace GASS
 
 
 
-	class GASSCoreExport IXMLSerialize
+	class IXMLSerialize
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(IXMLSerialize)
 	public:

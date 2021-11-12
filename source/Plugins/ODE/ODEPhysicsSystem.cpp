@@ -20,7 +20,7 @@
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSystemFactory.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSScene.h"

@@ -40,7 +40,7 @@ namespace GASS
 	GASS_FORWARD_DECL(ResourceManager)
 	GASS_FORWARD_DECL(SimSystemManager)
 	GASS_FORWARD_DECL(SystemStepper)
-	GASS_FORWARD_DECL(ComponentContainerTemplateManager)
+	GASS_FORWARD_DECL(SceneObjectTemplateManager)
 	GASS_FORWARD_DECL(SceneObject)
 	GASS_FORWARD_DECL(Scene)
 	GASS_FORWARD_DECL(ScriptManager)
@@ -121,17 +121,12 @@ namespace GASS
 		/**
 		Get the object template manager. 
 		The object template manager holds templates for sim objects that can be created.
-		See ComponentContainerTemplateManager inside the component system from more info.
+		See SceneObjectTemplateManager for more info.
 		*/
-		ComponentContainerTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
+		SceneObjectTemplateManagerPtr GetSceneObjectTemplateManager() const {return m_SceneObjectTemplateManager;}
 
 		/**
-		Return elapsed time
-		*/
-		//double GetTime() const {return m_CurrentTime;}
-		
-		/**
-			Convince function to create new objects from templates
+			Convenience function to create new objects from templates
 		*/
 		SceneObjectPtr CreateObjectFromTemplate(const std::string &template_name) const;
 
@@ -205,7 +200,7 @@ namespace GASS
 		PluginManagerPtr m_PluginManager;
 		ScriptManagerPtr m_ScriptManager;
 		SimSystemManagerPtr m_SystemManager;
-		ComponentContainerTemplateManagerPtr m_SceneObjectTemplateManager;
+		SceneObjectTemplateManagerPtr m_SceneObjectTemplateManager;
 		SystemStepperPtr m_SystemStepper;
 		ResourceManagerPtr m_ResourceManager;
 		SceneVector m_Scenes;

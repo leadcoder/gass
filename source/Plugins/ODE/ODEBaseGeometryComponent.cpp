@@ -23,8 +23,8 @@
 #include "Plugins/ODE/ODEBaseGeometryComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSComponentFactory.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSScene.h"
@@ -352,10 +352,10 @@ namespace GASS
 	SceneObjectPtr ODEBaseGeometryComponent::GetDebugObject()
 	{
 		SceneObjectPtr scene_object;
-		ComponentContainer::ComponentContainerIterator children = GetSceneObject()->GetChildren();
+		auto children = GetSceneObject()->GetChildren();
 		while(children.hasMoreElements())
 		{
-			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(children.getNext());
+			SceneObjectPtr child = children.getNext();
 			std::string::size_type pos = child->GetName().find(GetName() + "DebugPhysics");
 			if(pos  != std::string::npos)
 			{

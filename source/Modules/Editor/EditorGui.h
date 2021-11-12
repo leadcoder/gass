@@ -13,7 +13,7 @@
 #include "Sim/GASSSimEngine.h"
 #include "EditorSceneManager.h"
 #include "ToolSystem/MouseToolController.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
@@ -275,7 +275,7 @@ namespace GASS
 				{
 					for (int i = 0; i < so->GetNumChildren(); i++)
 					{
-						drawSceneObject(std::static_pointer_cast<SceneObject>(so->GetChild(i)));
+						drawSceneObject(so->GetChild(i));
 					}
 				}
 				ImGui::TreePop();

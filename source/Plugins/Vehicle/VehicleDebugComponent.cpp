@@ -20,10 +20,10 @@
 
 #include "VehicleDebugComponent.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplateManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSceneObjectTemplate.h"

@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "TemplateSourceComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"

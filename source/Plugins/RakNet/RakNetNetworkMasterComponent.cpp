@@ -24,7 +24,7 @@
 #include "Plugins/RakNet/RakNetNetworkChildComponent.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
 #include "Core/Math/GASSQuaternion.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -86,10 +86,10 @@ namespace GASS
 		RakNetNetworkChildComponentPtr comp =  obj->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 		if(comp)
 			comp->SetPartId(id);
-		ComponentContainer::ComponentContainerIterator cc_iter = obj->GetChildren();
-		while(cc_iter.hasMoreElements())
+		auto iter = obj->GetChildren();
+		while(iter.hasMoreElements())
 		{
-			SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(cc_iter.getNext());
+			SceneObjectPtr child = iter.getNext();
 			GeneratePartID(child,++id);
 		}
 	}

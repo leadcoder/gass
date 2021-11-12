@@ -3,7 +3,7 @@
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
@@ -144,10 +144,10 @@ namespace GASS
 		m_StaticObjects.insert(obj);
 		if (rec)
 		{
-			ComponentContainer::ComponentContainerIterator iter = obj->GetChildren();
+			auto iter = obj->GetChildren();
 			while (iter.hasMoreElements())
 			{
-				SceneObjectPtr child = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+				auto child = iter.getNext();
 				AddStaticObject(child, rec);
 			}
 		}

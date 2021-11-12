@@ -240,10 +240,10 @@ namespace GASS
 
 		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos, rot, scale)));
 		//send for all child transforms also?
-		GASS::ComponentContainer::ComponentContainerIterator iter = GetSceneObject()->GetChildren();
+		auto iter = GetSceneObject()->GetChildren();
 		while (iter.hasMoreElements())
 		{
-			SceneObjectPtr obj = GASS_STATIC_PTR_CAST<SceneObject>(iter.getNext());
+			SceneObjectPtr obj = iter.getNext();
 			OSGEarthGeoLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGEarthGeoLocationComponent>();
 			if (c_location && c_location->GetAttachToParent())
 				c_location->_SendTransMessage();
@@ -471,13 +471,13 @@ namespace GASS
 	OSGEarthGeoLocationComponentPtr OSGEarthGeoLocationComponent::_GetParentLocation()
 	{
 		OSGEarthGeoLocationComponentPtr parent_location;
-		SceneObjectPtr scene_obj = GASS_STATIC_PTR_CAST<SceneObject>(GetSceneObject()->GetParent());
+		auto scene_obj = GetSceneObject()->GetParent();
 		while (scene_obj && !parent_location)
 		{
 			parent_location = scene_obj->GetFirstComponentByClass<OSGEarthGeoLocationComponent>();
 			if (parent_location)
 				return parent_location;
-			scene_obj = GASS_STATIC_PTR_CAST<SceneObject>(scene_obj->GetParent());
+			scene_obj = scene_obj->GetParent();
 		}
 		return parent_location;
 	}

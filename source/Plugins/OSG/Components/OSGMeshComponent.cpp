@@ -26,6 +26,7 @@
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
 #include "Sim/GASSResourceManager.h"
+#include "Sim/GASSSceneObjectTemplateManager.h"
 
 namespace GASS
 {
@@ -324,7 +325,7 @@ namespace GASS
 		SceneObjectPtr so;
 		try
 		{
-			so = GASS_DYNAMIC_PTR_CAST<SceneObject> (SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name));
+			so = SimEngine::Get().GetSceneObjectTemplateManager()->CreateFromTemplate(template_name);
 		}
 		catch(...)
 		{

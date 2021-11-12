@@ -23,11 +23,8 @@
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSTriangle.h"
 #include "Core/Math/GASSSplineAnimation.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponent.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentContainerFactory.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSILocationComponent.h"
@@ -36,6 +33,7 @@
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
+#include "Sim/GASSComponentFactory.h"
 
 namespace GASS
 {
@@ -148,7 +146,7 @@ namespace GASS
 			}
 
 			SceneObjectPtr last_obj;
-			ComponentContainer::ComponentVector components;
+			SceneObject::ComponentVector components;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "GrassLayerComponent", true);
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClassName(components, "TreeGeometryComponent", true);
 			for(size_t i = 0 ;  i < components.size(); i++)

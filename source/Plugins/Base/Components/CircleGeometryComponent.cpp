@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #include "CircleGeometryComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSSceneObject.h"

@@ -20,8 +20,8 @@
 
 #include "PlayerInputComponent.h"
 #include "InputHandlerComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
-#include "Core/ComponentSystem/GASSComponentContainerTemplate.h"
+#include "Sim/GASSComponentFactory.h"
+#include "Sim/GASSSceneObjectTemplate.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
@@ -78,8 +78,7 @@ namespace GASS
 			LocationComponentPtr my_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 			Vec3 my_pos = my_location->GetWorldPosition();
 			//check all objects with in enter radius
-			//ComponentContainer::ComponentContainerIterator objects = GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>();
-			ComponentContainer::ComponentVector comps;
+			SceneObject::ComponentVector comps;
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<InputHandlerComponent>(comps);
 			for(size_t i = 0 ; i < comps.size();i++)
 			{
@@ -97,33 +96,10 @@ namespace GASS
 					return;
 				}
 			}
-
-			/*while(objects.hasMoreElements())
-			{
-				ComponentContainerPtr cc = objects.getNext();
-				SceneObjectPtr so = GASS_STATIC_PTR_CAST<SceneObject>(cc);
-				InputHandlerComponentPtr ihc = so->GetFirstComponentByClass<InputHandlerComponent>();
-				if(ihc)
-				{
-					LocationComponentPtr location = so->GetFirstComponentByClass<ILocationComponent>();
-					Vec3 obj_pos = location->GetWorldPosition();
-					Float dist = (my_pos-obj_pos).Length();
-					if(dist < 5)
-					{
-						//enter and return
-						MessagePtr enter_msg(new EnterVehicleMessage());
-						so->PostMessage(enter_msg);
-						m_CurrentVehicle = so;
-						m_CurrentSeat = so;
-						seat = 0;
-						return;
-					}
-				}
-			}*/
 		}
 		else if(name == "CycleVehicle" && value > 0)
 		{
-			ComponentContainerTemplate::ComponentVector components;
+			SceneObjectTemplate::ComponentVector components;
 			if(m_CurrentVehicle)
 			{
 				m_CurrentVehicle->GetComponentsByClass<InputHandlerComponent>(components);//,"InputHandlerComponent");

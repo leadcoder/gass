@@ -21,7 +21,7 @@
 
 #include "Plugins/ODE/ODEBoxGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSAABox.h"
 #include "Sim/GASSSceneObject.h"

@@ -140,7 +140,7 @@ namespace GASS
 
 			if(m_EffectJoints)
 			{
-				ComponentContainer::ComponentVector components;
+				SceneObject::ComponentVector components;
 				GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
 				
 				for(int i = 0 ; i < components.size(); i++)

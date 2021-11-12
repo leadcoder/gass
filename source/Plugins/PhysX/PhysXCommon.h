@@ -79,7 +79,7 @@
 #include "Sim/GASSSystemFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSBaseSceneManager.h"

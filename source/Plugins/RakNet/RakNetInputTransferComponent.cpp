@@ -25,7 +25,7 @@
 #include "RakNetNetworkChildComponent.h"
 #include "RakNetMasterReplica.h"
 #include "RakNetChildReplica.h"
-#include "Core/ComponentSystem/GASSComponentFactory.h"
+#include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSceneObject.h"
