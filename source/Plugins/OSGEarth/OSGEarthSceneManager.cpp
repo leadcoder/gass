@@ -381,7 +381,7 @@ namespace GASS
 	bool OSGEarthSceneManager::_GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
 		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
-		const osg::EllipsoidModel* em = mapSRS->getEllipsoid();
+		const auto* em = &mapSRS->getEllipsoid();
 		const double r = osg::minimum(em->getRadiusEquator(), em->getRadiusPolar());
 
 		// calculate the endpoints for an intersection test:
