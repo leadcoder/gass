@@ -246,7 +246,7 @@ namespace GASS
 	void OSGBillboardComponent::SetScale(float width, float height)
 	{
 		m_ScaleWidth = width;
-		m_ScaleWidth = width;
+		m_ScaleHeight = height;
 		SetSize(m_Width, m_Height);
 	}
 

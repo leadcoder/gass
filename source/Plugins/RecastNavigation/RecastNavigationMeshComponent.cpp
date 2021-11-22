@@ -851,7 +851,9 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			auto location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			if(location)
+				location->SetVisible(value);
 		}
 	}
 

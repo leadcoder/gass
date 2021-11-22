@@ -52,7 +52,7 @@ namespace GASS
 		RegisterGetSet("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
 	}
 
-	void SphereGeometryComponent::OnInitialize()
+	void SphereGeometryComponent::OnPostInitialize()
 	{
 		UpdateMesh();
 	}

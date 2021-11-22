@@ -23,6 +23,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSComponent.h"
+#include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Core/Common.h"
 #include "Sim/GASSComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -270,10 +272,19 @@ namespace GASS
 		auto iter = m_ComponentVector.begin();
 		while (iter != m_ComponentVector.end())
 		{
-			ComponentPtr bsc = *iter;
-			bsc->OnInitialize();
+			auto comp = *iter;
+			comp->OnInitialize();
 			++iter;
 		}
+
+		iter = m_ComponentVector.begin();
+		while (iter != m_ComponentVector.end())
+		{
+			auto comp = *iter;
+			comp->OnPostInitialize();
+			++iter;
+		}
+
 		MessagePtr load_msg(new PostComponentsInitializedEvent(this_obj));
 		GetScene()->m_SceneMessageManager->SendImmediate(load_msg);
 		//Pump message system, some components may use PostMessage instead of SendImmediate, 
@@ -288,9 +299,13 @@ namespace GASS
 			child->OnInitialize(scene);
 		}
 
-		MessagePtr post_load_msg(new PostSceneObjectInitializedEvent(this_obj));
-		GetScene()->m_SceneMessageManager->SendImmediate(post_load_msg);
+		
+		GetScene()->m_SceneMessageManager->SendImmediate(std::make_shared<PostSceneObjectInitializedEvent>(this_obj));
+		
+		//TODO: remove this and use OnPostInitialize instead?
 		m_MessageManager->PostMessage(std::make_shared<PostInitializedEvent>());
+
+		
 		m_Initialized = true;
 	}
 
@@ -1074,6 +1089,96 @@ namespace GASS
 		comp->SetName(comp_type);
 		AddComponent(comp);
 		return comp;
+	}
+
+	void SceneObject::SetPosition(const Vec3& value)
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::SetPosition");
+		comp->SetPosition(value);
+	}
+
+	Vec3 SceneObject::GetPosition() const
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::GetPosition");
+		return comp->GetPosition();
+	}
+
+	void SceneObject::SetWorldPosition(const Vec3& value)
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::SetWorldPosition");
+		comp->SetWorldPosition(value);
+	}
+
+	Vec3 SceneObject::GetWorldPosition() const
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::GetWorldPosition");
+		return comp->GetWorldPosition();
+
+	}
+
+	void SceneObject::SetRotation(const Quaternion& value)
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::SetRotation");
+		comp->SetRotation(value);
+	}
+
+	Quaternion SceneObject::GetRotation() const
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::GetRotation");
+		return comp->GetRotation();
+	}
+
+	void SceneObject::SetWorldRotation(const Quaternion& value)
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::SetWorldRotation");
+		comp->SetWorldRotation(value);
+	}
+
+	bool SceneObject::GetVisible() const
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::GetVisible");
+		return comp->GetVisible();
+	}
+
+	void SceneObject::SetVisible(bool value)
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::SetVisible");
+		comp->SetVisible(value);
+	}
+
+	void SceneObject::SetGeometriesVisible(bool value)
+	{
+		auto comps = GetComponentsByClass<IGeometryComponent>();
+		for (auto comp : comps)
+		{
+			comp->SetVisible(value);
+		}
+	}
+
+	Quaternion SceneObject::GetWorldRotation() const
+	{
+		auto comp = GetFirstComponentByClass<ILocationComponent>();
+		if (!comp)
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "No ILocationComponent", "SceneObject::GetWorldRotation");
+		return comp->GetWorldRotation();
 	}
 
 

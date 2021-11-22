@@ -313,6 +313,19 @@ namespace GASS
 			}
 		}
 
+		template <class T>
+		std::vector<T*> GetComponentsByClass() const
+		{
+			std::vector<T*> components;
+			for (size_t i = 0; i < m_ComponentVector.size(); i++)
+			{
+				GASS_SHARED_PTR<T> ret = GASS_DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
+				if (ret)
+					components.push_back(ret.get());
+			}
+			return components;
+		}
+
 		/**
 			Get first component of certain class. This function allow you to pass the class as a template argument
 			@recursive Indicates if we should search for component in child scene objects
@@ -419,6 +432,25 @@ namespace GASS
 
 		//serialize interface
 		bool Serialize(ISerializer* serializer) override;
+
+
+		//ILocationComponent shortcuts
+		Vec3 GetPosition() const;
+		void SetPosition(const Vec3& value);
+
+		Vec3 GetWorldPosition() const;
+		void SetWorldPosition(const Vec3& value);
+
+		Quaternion GetRotation() const;
+		void SetRotation(const Quaternion& value);
+
+		Quaternion GetWorldRotation() const;
+		void SetWorldRotation(const Quaternion& value);
+
+		bool GetVisible() const;
+		void SetVisible(bool value);
+
+		void SetGeometriesVisible(bool value);
 
 		//print object
 		void DebugPrint(int tc = 0);

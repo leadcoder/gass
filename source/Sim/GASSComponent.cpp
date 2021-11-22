@@ -115,6 +115,11 @@ namespace GASS
 
 	}
 
+	void Component::OnPostInitialize()
+	{
+
+	}
+
 	void Component::InitializePointers()
 	{
 		RTTI* p_rtti = GetRTTI();

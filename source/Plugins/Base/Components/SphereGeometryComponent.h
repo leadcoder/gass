@@ -37,9 +37,8 @@ namespace GASS
 		SphereGeometryComponent(void);
 		~SphereGeometryComponent(void) override;
 		static void RegisterReflection();
-		void OnInitialize() override;
+		void OnPostInitialize() override;
 		void OnDelete() override;
-
 		bool IsPointInside(const Vec3 &point) const override;
 		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
