@@ -36,7 +36,7 @@ namespace GASS
 		Component that handles waypoints lists. 
 	*/
 
-	class WaypointListComponent : public Reflection<WaypointListComponent,Component>, public IWaypointListComponent
+	class WaypointListComponent : public Reflection<WaypointListComponent, Component>, public IWaypointListComponent
 	{
 		friend class WaypointComponent;
 	public:
@@ -47,6 +47,14 @@ namespace GASS
 		std::vector<Vec3> GetWaypoints(bool relative_position = true) const override;
 		std::string GetWaypointTemplate() const override;
 		float GetRadius()const override;
+		void SceneManagerTick(double delta_time) override;
+		void SetDirty(bool value);
+		void SetClosed(bool value) { m_Closed = value; SetDirty(true); }
+		bool GetClosed() const { return m_Closed;}
+		void SetAutoRotateWaypoints(bool value) { m_AutoRotateWaypoints= value; SetDirty(true); }
+		bool GetAutoRotateWaypoints() const { return m_AutoRotateWaypoints; }
+		void SetShowPathLine(bool value);
+		bool GetShowPathLine() const { return m_ShowPathLine; }
 	protected:
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		void SetRadius(float radius);
@@ -63,7 +71,7 @@ namespace GASS
 		FilePath GetExport() const;
 		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
 		//Helpers
-		void UpdatePath();
+		void NotifyPathUpdated();
 
 		SceneObjectPtr GetConnectionLines() const {return m_ConnectionLines.lock();}
 
@@ -79,6 +87,7 @@ namespace GASS
 		bool m_ShowPathLine{false};
 		bool m_Closed{false};
 		bool m_AutoRotateWaypoints{false};
+		bool m_Dirty{ true };
 	};
 }
 

@@ -76,16 +76,16 @@ namespace GASS
 		else
 			std::cout << "Failed to find tangent in waypoint component\n";
 		
-		GASS_SHARED_PTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+		auto list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 		if(list)
 		{
 			bool show = list->GetShowWaypoints();
-			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(show);
+			GetSceneObject()->SetVisible(show);
 			GetSceneObject()->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 
 			if(tangent)
 			{
-				tangent->GetFirstComponentByClass<ILocationComponent>()->SetVisible(show);
+				tangent->SetVisible(show);
 				tangent->PostRequest(std::make_shared<CollisionSettingsRequest>(show));
 			}
 		}
@@ -118,7 +118,7 @@ namespace GASS
 	void WaypointComponent::Rotate(const Quaternion &rot)
 	{
 		m_TrackTransformation = false;
-		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetRotation(rot);
+		GetSceneObject()->SetRotation(rot);
 		m_TrackTransformation = true;
 	}
 
@@ -128,7 +128,7 @@ namespace GASS
 		{
 			GASS_SHARED_PTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 			if(list)
-				list->UpdatePath();
+				list->SetDirty(true);
 		}
 	}
 
@@ -142,11 +142,6 @@ namespace GASS
 		m_TangentWeight = value;
 		NotifyUpdate();
 	}
-
-	/*void WaypointComponent::SetTangentLength(Float value)
-	{
-		m_TangentWeight = value;
-	}*/
 
 	void WaypointComponent::SetTangent(const Vec3 &tangent)
 	{

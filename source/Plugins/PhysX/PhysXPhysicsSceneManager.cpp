@@ -248,11 +248,6 @@ namespace GASS
 		}
 	}
 
-	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
-	{
-
-	}
-
 	Vec3 PhysXPhysicsSceneManager::LocalToWorld(const physx::PxVec3 & local) const
 	{
 		return PxConvert::ToGASS(local) + m_Origin;

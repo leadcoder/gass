@@ -47,6 +47,7 @@ namespace GASS
 				WaypointListComponentPtr wp_list = parent_obj->GetFirstComponentByClass<IWaypointListComponent>();
 				if (m_AllowWPInsert && wp_list)
 				{
+					//NOTE: This dont work with splines, fix this!!
 					std::vector<Vec3> points = wp_list->GetWaypoints(false);
 					int index = -1;
 					if (points.size() > 1)

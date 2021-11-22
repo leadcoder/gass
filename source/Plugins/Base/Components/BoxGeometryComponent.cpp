@@ -67,6 +67,10 @@ namespace GASS
 			mat.TrackVertexColor = false;
 			gfx_sys->AddMaterial(mat);
 		}
+		
+	}
+	void BoxGeometryComponent::OnPostInitialize()
+	{
 		UpdateMesh();
 	}
 

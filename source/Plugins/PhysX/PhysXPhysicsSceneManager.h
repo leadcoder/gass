@@ -79,7 +79,6 @@ namespace GASS
 		physx::PxVec3 WorldToLocal(const Vec3 & world) const;
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
-		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		bool HasConvexMesh(const std::string &name) const;

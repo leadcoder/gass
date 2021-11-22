@@ -18,7 +18,9 @@
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
+#include "Modules/Editor/ToolSystem/CreateTool.h"
 
 
 namespace GASS
@@ -262,6 +264,14 @@ namespace GASS
 						OnAddGraphNode(so);
 					}
 				}
+				if (so->GetFirstComponentByClass<IWaypointListComponent>().get())
+				{
+					if (ImGui::MenuItem("Add Waypoint..."))
+					{
+						OnAddWaypoint(so);
+					}
+				}
+				
 
 				
 
@@ -791,6 +801,21 @@ namespace GASS
 		}
 
 
+		void OnAddWaypoint(SceneObjectPtr obj)
+		{
+			if (obj)
+			{
+				WaypointListComponentPtr wpl = obj->GetFirstComponentByClass<IWaypointListComponent>();
+				if (wpl)
+				{
+					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+					sm->GetMouseToolController()->SelectTool(TID_CREATE);
+					auto tool = static_cast<CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
+					tool->SetParentObject(obj);
+					tool->SetTemplateName(wpl->GetWaypointTemplate());
+				}
+			}
+		}
 
 		void OnAddGraphNode(SceneObjectPtr obj)
 		{

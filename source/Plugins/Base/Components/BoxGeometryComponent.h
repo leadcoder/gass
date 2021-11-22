@@ -37,6 +37,7 @@ namespace GASS
 		~BoxGeometryComponent(void) override;
 		static void RegisterReflection();
 		void OnInitialize() override;
+		void OnPostInitialize() override;
 		bool IsPointInside(const Vec3 &point) const override;
 		Vec3 GetRandomPoint() const override;
 	protected:
