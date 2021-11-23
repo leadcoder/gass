@@ -26,9 +26,7 @@
 namespace GASS
 {
 	GizmoComponent::GizmoComponent() : m_Color(1,0,0,1),
-		
 		m_Type(GT_AXIS)
-		
 	{
 
 	}

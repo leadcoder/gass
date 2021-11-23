@@ -43,9 +43,8 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
-		//void SetTangentLength(Float value);
 		void SetTangent(const Vec3 &tangent);
-		Vec3 GetTangent() const;
+		Vec3 GetTangent();
 		bool GetCustomTangent() const {return m_CustomTangent;}
 		void SetCustomTangent(bool value);
 		void Rotate(const Quaternion &rot);
@@ -53,8 +52,8 @@ namespace GASS
 	protected:
 		//@deprecated
 		void SetTangentWeight(Float value);
-		Float GetTangentWeight()const;
-
+		Float GetTangentWeight() const;
+		SceneObjectPtr GetOrCreateTangent();
 		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OnTangentTransformation(TransformationChangedEventPtr event);
@@ -67,6 +66,7 @@ namespace GASS
 		bool m_CustomTangent{false};
 		bool m_Active{true};
 		bool m_TrackTransformation{true};
+		SceneObjectWeakPtr m_TangentObject;
 	};
 
 	using WaypointComponentPtr = std::shared_ptr<WaypointComponent>;

@@ -68,7 +68,7 @@ namespace GASS
 	void WaypointComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
 	{
 		//notify parent
-		SceneObjectPtr tangent = GetSceneObject()->GetFirstChildByName("Tangent",false);
+		SceneObjectPtr tangent = GetOrCreateTangent();
 		if(tangent)
 		{
 			tangent->RegisterForMessage(REG_TMESS(WaypointComponent::OnTangentTransformation, TransformationChangedEvent,1));
@@ -126,7 +126,7 @@ namespace GASS
 	{
 		if(m_Initialized)
 		{
-			GASS_SHARED_PTR<WaypointListComponent> list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
+			auto list = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<WaypointListComponent>();
 			if(list)
 				list->SetDirty(true);
 		}
@@ -145,7 +145,7 @@ namespace GASS
 
 	void WaypointComponent::SetTangent(const Vec3 &tangent)
 	{
-		SceneObjectPtr tangent_obj = GetSceneObject()->GetFirstChildByName("Tangent", false);
+		SceneObjectPtr tangent_obj = GetOrCreateTangent();
 		if (tangent_obj && tangent_obj->GetFirstComponentByClass<ILocationComponent>())
 		{
 			m_TrackTransformation = false;
@@ -156,9 +156,9 @@ namespace GASS
 			std::cout << "Failed to find tangent in waypoint compoenent\n";
 	}
 
-	Vec3 WaypointComponent::GetTangent() const
+	Vec3 WaypointComponent::GetTangent()
 	{
-		LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>(true);
+		LocationComponentPtr t_location = GetOrCreateTangent()->GetFirstComponentByClass<ILocationComponent>(true);
 		return t_location->GetPosition()*10;
 	}
 
@@ -174,7 +174,7 @@ namespace GASS
 		if(!m_Initialized)
 			return;
 
-		LocationComponentPtr t_location = GetSceneObject()->GetFirstChildByName("Tangent",false)->GetFirstComponentByClass<ILocationComponent>(true);
+		auto t_location = GetOrCreateTangent()->GetFirstComponentByClass<ILocationComponent>(true);
 		Vec3 t_pos = t_location->GetPosition();
 
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
@@ -189,5 +189,37 @@ namespace GASS
 		pos = t_pos;
 		sub_mesh_data->PositionVector.push_back(pos);
 		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
+	}
+
+	SceneObjectPtr WaypointComponent::GetOrCreateTangent()
+	{
+		auto obj = m_TangentObject.lock();
+		if (obj)
+			return obj;
+#if 1 //Legacy
+		obj = GetSceneObject()->GetFirstChildByName("Tangent", false);
+
+		if (obj)
+		{
+			m_TangentObject = obj;
+		}
+		return obj;
+#else
+		obj = std::make_shared<SceneObject>();
+		obj->SetName("Tangent");
+		obj->SetID("TANGENT_OBJECT");
+		obj->SetSerialize(false);
+		ComponentPtr location_comp = ComponentFactory::Get().Create("LocationComponent");
+		location_comp->SetPropertyValue("AttachToParent", true);
+		obj->AddComponent(location_comp);
+		ComponentPtr bb_comp = ComponentFactory::Get().Create("BillboardComponent");
+		bb_comp->SetPropertyValue("Material", std::string("default.dds"));
+		bb_comp->SetPropertyValue("Height", 1.0f);
+		bb_comp->SetPropertyValue("Width", 1.0f);
+		obj->AddComponent(bb_comp);
+		m_TangentObject = obj;
+		GetSceneObject()->AddChildSceneObject(obj, true);
+		return obj;
+#endif
 	}
 }

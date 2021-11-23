@@ -33,7 +33,7 @@ namespace GASS
 	class SplineAnimation;
 
 	/**
-		Component that handles waypoints lists. 
+		Component that handles waypoints lists.
 	*/
 
 	class WaypointListComponent : public Reflection<WaypointListComponent, Component>, public IWaypointListComponent
@@ -49,44 +49,43 @@ namespace GASS
 		float GetRadius()const override;
 		void SceneManagerTick(double delta_time) override;
 		void SetDirty(bool value);
-		void SetClosed(bool value) { m_Closed = value; SetDirty(true); }
-		bool GetClosed() const { return m_Closed;}
-		void SetAutoRotateWaypoints(bool value) { m_AutoRotateWaypoints= value; SetDirty(true); }
-		bool GetAutoRotateWaypoints() const { return m_AutoRotateWaypoints; }
-		void SetShowPathLine(bool value);
-		bool GetShowPathLine() const { return m_ShowPathLine; }
+		void SetClosed(bool value) override { m_Closed = value; SetDirty(true); }
+		bool GetClosed() const override { return m_Closed; }
+		void SetAutoRotateWaypoints(bool value) override { m_AutoRotateWaypoints = value; SetDirty(true); }
+		bool GetAutoRotateWaypoints() const override { return m_AutoRotateWaypoints; }
+		void SetShowPathLine(bool value) override;
+		bool GetShowPathLine() const override { return m_ShowPathLine; }
 	protected:
-		void OnPostInitializedEvent(PostInitializedEventPtr message);
-		void SetRadius(float radius);
-		int GetSplineSteps()const;
-		void SetSplineSteps(int steps);
-		void SetWaypointTemplate(const std::string &name);
-		bool GetEnableSpline()const;
-		void SetEnableSpline(bool value);
+		void SetRadius(float radius) override;
+		int GetSplineSteps() const override;
+		void SetSplineSteps(int steps) override;
+		void SetWaypointTemplate(const std::string& name) override;
+		bool GetEnableSpline()const override;
+		void SetEnableSpline(bool value) override;
 		void SetShowWaypoints(bool value);
 		bool GetShowWaypoints() const;
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
-		void SetExport(const FilePath &filename);
+		void SetExport(const FilePath& filename);
 		FilePath GetExport() const;
-		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
+		void RecursiveIncreaseResolution(const Vec3& line_start, const Vec3& line_end, SplineAnimation& spline, Float min_dist) const;
 		//Helpers
 		void NotifyPathUpdated();
 
-		SceneObjectPtr GetConnectionLines() const {return m_ConnectionLines.lock();}
+		SceneObjectPtr GetConnectionLines() const { return m_ConnectionLines.lock(); }
 
-		float m_Radius{0};
-		int m_SplineSteps{10};
-		bool m_EnableSpline{false};
-		bool m_Initialized{false};
-		bool m_AutoUpdateTangents{true};
-		bool m_ShowWaypoints{true};
+		float m_Radius{ 0 };
+		int m_SplineSteps{ 10 };
+		bool m_EnableSpline{ false };
+		bool m_Initialized{ false };
+		bool m_AutoUpdateTangents{ true };
+		bool m_ShowWaypoints{ true };
 		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
 		SceneObjectWeakPtr m_ConnectionLines;
-		bool m_ShowPathLine{false};
-		bool m_Closed{false};
-		bool m_AutoRotateWaypoints{false};
+		bool m_ShowPathLine{ false };
+		bool m_Closed{ false };
+		bool m_AutoRotateWaypoints{ false };
 		bool m_Dirty{ true };
 	};
 }

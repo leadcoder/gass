@@ -4,7 +4,7 @@
 #include "imgui_stdlib.h"
 
 //#include "windows.h"
-//#include "tinyfiledialogs.h"
+#include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Math/GASSAABox.h"
 #include "Sim/GASSScene.h"
@@ -239,10 +239,43 @@ namespace GASS
 					node_deleted = true;
 				}
 
-				if (ImGui::MenuItem("Set as parent for new objects"))
+				if (ImGui::MenuItem("Make parent for dnd in scene"))
 				{
 					editor->SetObjectSite(so);
 				}
+
+				if (ImGui::MenuItem("Save..."))
+				{
+					char const* filter_patterns[2] = { "*.xml"};
+					char const* save_file_name = tinyfd_saveFileDialog(
+						"Save SceneObject",
+						"SceneObject.xml",
+						1,
+						filter_patterns,
+						nullptr);
+					if (save_file_name)
+					{
+						so->SaveToFile(save_file_name);
+					}
+				}
+				if (ImGui::MenuItem("Load..."))
+				{
+					char const* filter_patterns[2] = { "*.xml" };
+					char const* load_file_name = tinyfd_openFileDialog(
+						"Load SceneObject",
+						"",
+						1,
+						filter_patterns,
+						nullptr,
+						0);
+					if (load_file_name)
+					{
+						auto child = SceneObject::LoadFromXML(load_file_name);
+						so->AddChildSceneObject(child,true);
+					}
+				}
+
+				
 				
 				if (so->GetFirstComponentByClass<IGraphComponent>().get())
 				{

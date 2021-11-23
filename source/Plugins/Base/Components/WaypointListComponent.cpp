@@ -80,9 +80,7 @@ namespace GASS
 
 	void WaypointListComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostInitializedEvent,PostInitializedEvent,0));
 		m_ConnectionLines = GetSceneObject()->GetChildByID("WP_CONNECTION_LINES");
-
 		//create material for waypoint binding line
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		if (!gfx_sys->HasMaterial(MAT_NAME))
@@ -97,19 +95,17 @@ namespace GASS
 			gfx_sys->AddMaterial(line_mat);
 		}
 		RegisterForPostUpdate<CoreSceneManager>();
-		m_Initialized = true;
 	}
 
-
-	void WaypointListComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
+	std::string WaypointListComponent::GetWaypointTemplate() const 
 	{
-		SetShowWaypoints(m_ShowWaypoints);
+		return m_WaypointTemplate;
 	}
 
-
-
-	std::string WaypointListComponent::GetWaypointTemplate() const {return m_WaypointTemplate;}
-	void WaypointListComponent::SetWaypointTemplate(const std::string &name) {m_WaypointTemplate=name;}
+	void WaypointListComponent::SetWaypointTemplate(const std::string &name) 
+	{
+		m_WaypointTemplate=name;
+	}
 
 	void WaypointListComponent::SetShowPathLine(bool value) 
 	{ 
@@ -188,6 +184,14 @@ namespace GASS
 
 	void WaypointListComponent::SceneManagerTick(double /*delta_time*/)
 	{
+
+		if (!m_Initialized)
+		{
+			m_Initialized = true;
+			SetShowWaypoints(m_ShowWaypoints);
+		}
+		
+
 		if (m_Dirty)
 		{
 			NotifyPathUpdated();
