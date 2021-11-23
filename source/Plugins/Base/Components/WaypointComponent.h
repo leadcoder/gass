@@ -41,8 +41,6 @@ namespace GASS
 		WaypointComponent();
 		~WaypointComponent() override;
 		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
 		void SetTangent(const Vec3 &tangent);
 		Vec3 GetTangent();
 		bool GetCustomTangent() const {return m_CustomTangent;}
@@ -50,23 +48,22 @@ namespace GASS
 		void Rotate(const Quaternion &rot);
 		bool IsActive() const { return m_Active; }
 	protected:
-		//@deprecated
-		void SetTangentWeight(Float value);
-		Float GetTangentWeight() const;
+		void OnInitialize() override;
+		void OnSceneObjectInitialized() override;
+		void OnDelete() override;
 		SceneObjectPtr GetOrCreateTangent();
-		void OnPostInitializedEvent(PostInitializedEventPtr message);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OnTangentTransformation(TransformationChangedEventPtr event);
 		void UpdateTangentLine();
 		void NotifyUpdate();
-
 		Vec3 m_Tangent;
-		Float m_TangentWeight{1.0};
 		bool m_Initialized{false};
 		bool m_CustomTangent{false};
 		bool m_Active{true};
 		bool m_TrackTransformation{true};
 		SceneObjectWeakPtr m_TangentObject;
+		//@deprecated ...but not possible to remove due to exception when loading old scenarios
+		double m_TangentWeight = 0;
 	};
 
 	using WaypointComponentPtr = std::shared_ptr<WaypointComponent>;

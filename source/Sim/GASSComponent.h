@@ -182,6 +182,12 @@ namespace GASS
 		virtual void OnPostInitialize();
 
 		/**
+			Called SceneObject is initialized (children included)
+		*/
+		virtual void OnSceneObjectInitialized();
+
+
+		/**
 			Called by SceneObject when ditto deleted.
 			default implementation to minimize concrete components implementation
 		*/

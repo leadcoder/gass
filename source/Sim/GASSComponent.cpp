@@ -112,12 +112,17 @@ namespace GASS
 
 	void Component::OnInitialize()
 	{
-
+		//NOP
 	}
 
 	void Component::OnPostInitialize()
 	{
+		//NOP
+	}
 
+	void Component::OnSceneObjectInitialized()
+	{
+		//NOP
 	}
 
 	void Component::InitializePointers()

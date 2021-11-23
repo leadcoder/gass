@@ -301,11 +301,13 @@ namespace GASS
 
 		
 		GetScene()->m_SceneMessageManager->SendImmediate(std::make_shared<PostSceneObjectInitializedEvent>(this_obj));
-		
-		//TODO: remove this and use OnPostInitialize instead?
-		m_MessageManager->PostMessage(std::make_shared<PostInitializedEvent>());
-
-		
+		iter = m_ComponentVector.begin();
+		while (iter != m_ComponentVector.end())
+		{
+			auto comp = *iter;
+			comp->OnSceneObjectInitialized();
+			++iter;
+		}
 		m_Initialized = true;
 	}
 
