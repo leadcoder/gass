@@ -10,6 +10,8 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "IconsFontAwesome5.h"
+
 
 namespace GASS
 {
@@ -120,6 +122,14 @@ namespace GASS
 	{
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontDefault();
+		// merge in icons from Font Awesome
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+		FileResourcePtr font_res = rm->GetFirstResourceByName(FONT_ICON_FILE_NAME_FAS);
+		auto font_file = font_res->Path().GetFullPath();
+		io.Fonts->AddFontFromFileTTF(font_file.c_str(), 16.0f, &icons_config, icons_ranges);
 
 		io.MouseDoubleClickTime = 0.3;
 		io.MouseDoubleClickMaxDist = 6;

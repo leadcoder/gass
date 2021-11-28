@@ -21,6 +21,7 @@ set(IMGUI_HEADERS
 	imstb_truetype.h
 	backends/imgui_impl_opengl3.h
 	tinyfiledialogs.h
+	IconsFontAwesome5.h
 )
 
 
