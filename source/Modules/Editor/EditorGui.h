@@ -21,7 +21,7 @@
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
-
+#include "IconsFontAwesome5.h"
 
 namespace GASS
 {
@@ -35,16 +35,16 @@ namespace GASS
 		void DrawUi()
 		{
 			DockingBegin();
-
+			DrawMainMenu();
+			ToolbarUI();
 			if (m_ShowObjectTree)
 				DrawObjectTree();
 
 			if (m_ShowProperties)
 				DrawProperties();
-			if (m_ShowTools)
-				DrawTools();
 			if (m_ShowTemplates)
 				DrawTemplates();
+			
 		}
 	protected:
 		bool m_ShowProperties = true;
@@ -55,11 +55,107 @@ namespace GASS
 		bool m_ShowTemplates = true;
 		Scene* m_SceneSelected = nullptr;
 		std::string m_DropTemplate;
+		ImGuiID m_DockSpaceId = 0;
+
+
+		bool ToolbarButton(std::string name, const char* font_icon, bool is_active, const char* tooltip)
+		{
+			const ImVec4 col_active = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
+			const ImVec4 bg_color = is_active ? col_active : ImGui::GetStyle().Colors[ImGuiCol_Text];
+
+
+			auto frame_padding = ImGui::GetStyle().FramePadding;
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_Text, bg_color);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, ImGui::GetStyle().FramePadding.y));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, frame_padding);
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
+
+			bool ret = false;
+			if (ImGui::Button(font_icon ? font_icon : name.c_str())) {
+				ret = true;
+			}
+			ImGui::PopStyleColor(4);
+			ImGui::PopStyleVar(3);
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::TextUnformatted(tooltip);
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			return ret;
+		}
+
+		void ToolbarUI()
+		{
+
+			ScenePtr scene = GetFirstScene();
+			if (!scene)
+				return;
+			auto* esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
+			std::string active_tool_name;
+			if (auto* active_tool = esm->GetMouseToolController()->GetActiveTool())
+			{
+				active_tool_name = active_tool->GetName();
+			}
+			
+
+			//int menuBarHeight = 10;
+			int toolbarSize = 40;
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			
+			auto centralNode = ImGui::DockBuilderGetCentralNode(m_DockSpaceId);
+			if (!centralNode)
+				return;
+			ImGui::SetNextWindowPos(centralNode->Pos);
+			ImGui::SetNextWindowSize(ImVec2(centralNode->Size.x, toolbarSize));
+			ImGui::SetNextWindowViewport(viewport->ID);
+
+			ImGuiWindowFlags window_flags = 0
+				| ImGuiWindowFlags_NoDocking
+				| ImGuiWindowFlags_NoTitleBar
+				| ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoScrollbar
+				| ImGuiWindowFlags_NoSavedSettings
+				;
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+			ImGui::Begin("TOOLBAR", NULL, window_flags);
+			//ImGui::SetWindowFontScale(1);
+
+			struct ToolInfo
+			{
+				ToolInfo(std::string name, char* icon, std::string tt = "") : Name(name), Icon(icon), ToolTip(tt)
+				{
+				}
+				std::string Name;
+				char* Icon = nullptr;
+				std::string ToolTip;
+			};
+
+			std::vector<ToolInfo> tools = { {TID_SELECT,ICON_FA_MOUSE_POINTER, "Select Tool"},
+				{TID_MOVE, ICON_FA_ARROWS_ALT,"Move Tool"},
+				{TID_ROTATE,ICON_FA_REDO_ALT,"Rotate Tool"},
+				{TID_GOTO_POS,nullptr,"Go To Position Tool"},
+				{TID_BOX , nullptr, "Box tool"} };
+
+			for (size_t i = 0; i < tools.size(); i++)
+			{
+				auto &ti = tools[i];
+				bool active = ti.Name == active_tool_name;
+				if (ToolbarButton(ti.Name, ti.Icon, active, ti.ToolTip.c_str()))
+					esm->GetMouseToolController()->SelectTool(ti.Name);
+			}
+			ImGui::PopStyleVar();
+			ImGui::End();
+		}
 
 		void DrawMainMenu()
 		{
 			// Menu Bar
-			ImGui::BeginMenuBar();
+			ImGui::BeginMainMenuBar();
 			//if (open)
 			{
 				if (ImGui::BeginMenu("File"))
@@ -121,9 +217,8 @@ namespace GASS
 					ImGui::MenuItem("Log", nullptr, &m_ShowLog);
 					ImGui::EndMenu();
 				}
-
-				ImGui::EndMenuBar();
 			}
+			ImGui::EndMainMenuBar();
 
 			//ImGuiViewportP* viewport = (ImGuiViewportP*)(void*)ImGui::GetMainViewport();
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -148,7 +243,11 @@ namespace GASS
 			// ImGui code goes here...
 			//ImGui::ShowDemoWindow();
 			//return;
+			constexpr ImGuiDockNodeFlags dockspace_flags =
+				ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
+			m_DockSpaceId = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
 
+#if 0
 			ImGuiWindowFlags window_dock_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
 			ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -174,6 +273,7 @@ namespace GASS
 			}
 			DrawMainMenu();
 			ImGui::End();
+#endif
 		}
 
 
@@ -337,6 +437,7 @@ namespace GASS
 				ImGui::End();
 				return;
 			}
+			
 			DrawScene(scene.get());
 			ImGui::End();
 		}
@@ -733,6 +834,7 @@ namespace GASS
 			ImGui::End();
 		}
 
+#if 0
 		void DrawTools()
 		{
 			ScenePtr scene = GetFirstScene();
@@ -765,7 +867,7 @@ namespace GASS
 			
 			ImGui::End();
 		}
-
+#endif
 		void DrawTemplates()
 		{
 			ScenePtr scene = GetFirstScene();
