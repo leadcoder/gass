@@ -63,7 +63,7 @@ namespace GASS
 	std::vector<std::string> GetRoadMaterials()
 	{
 		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		std::vector<std::string> content = gfx_system->GetMaterialNames("GASS_ROAD_MATERIALS");
+		std::vector<std::string> content = gfx_system->GetMaterialNames("MATERIALS");
 		return content;
 	}
 
@@ -216,7 +216,6 @@ namespace GASS
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 
 		std::vector<Vec4> tex_coords;
-
 
 		sub_mesh_data->MaterialName = m_Material;
 		sub_mesh_data->Type = TRIANGLE_LIST;

@@ -94,7 +94,6 @@ namespace GASS
 				GASS_LOG(LWARNING) << "LineComponent depends on WaypointListComponent";
 			GetSceneObject()->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		}
-
 		m_Initialized = true;
 	}
 

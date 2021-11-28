@@ -353,7 +353,7 @@ namespace GASS
 				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{
 					Vec3 point =  spline.Interpolate(i, t);
-					if(point != last_point)
+					if(!point.Equal(last_point,0.01))
 						pos_vec.push_back(point);
 					last_point = point;
 				}
