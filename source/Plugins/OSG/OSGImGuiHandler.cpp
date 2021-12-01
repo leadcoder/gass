@@ -122,14 +122,22 @@ namespace GASS
 	{
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontDefault();
+
+		float font_size = 20;
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+
+		FileResourcePtr font1_res = rm->GetFirstResourceByName("Arial.ttf");
+		//FileResourcePtr font_res = rm->GetFirstResourceByName("Roboto-Medium.ttf");
+
+		
+		io.Fonts->AddFontFromFileTTF(font1_res->Path().GetFullPath().c_str(), font_size);
+		
 		// merge in icons from Font Awesome
 		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		FileResourcePtr font_res = rm->GetFirstResourceByName(FONT_ICON_FILE_NAME_FAS);
 		auto font_file = font_res->Path().GetFullPath();
-		io.Fonts->AddFontFromFileTTF(font_file.c_str(), 16.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF(font_file.c_str(), font_size, &icons_config, icons_ranges);
 
 		io.MouseDoubleClickTime = 0.3;
 		io.MouseDoubleClickMaxDist = 6;
