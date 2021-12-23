@@ -122,8 +122,6 @@ namespace GASS
 		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
 	}
 
-	
-
 	Vec3 OSGLocationComponent::WorldToLocal(const Vec3 &world_pos) const
 	{
 		if (m_AttachToParent && m_ParentLocation)

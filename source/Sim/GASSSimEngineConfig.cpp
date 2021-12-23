@@ -81,6 +81,7 @@ namespace GASS
 		}
 		conf.DataPath = "../../data/";
 		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
+		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
 		if (physics != PhysicsOptions::NONE)
 		{
 			if (physics == PhysicsOptions::PHYSX)

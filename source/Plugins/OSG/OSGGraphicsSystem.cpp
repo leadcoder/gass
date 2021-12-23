@@ -34,21 +34,22 @@
 
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Serialize/tinyxml2.h"
+#include <osgDB/WriteFile>
 
 namespace GASS
 {
 
-	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager), 
+	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager),
 		m_DebugTextBox(new TextBox()),
 		m_Viewer(nullptr),
 		m_FlipDDS(false)
 	{
-		m_UpdateGroup=UGID_POST_SIM;
+		m_UpdateGroup = UGID_POST_SIM;
 	}
 
 	OSGGraphicsSystem::~OSGGraphicsSystem(void)
 	{
-		if(m_Viewer)
+		if (m_Viewer)
 		{
 			delete m_DebugTextBox;
 			//osgDB::Registry::instance()->closeAllLibraries();
@@ -94,15 +95,15 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnSystemInit()
 	{
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized,ViewportMovedOrResizedEvent,0));
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox,CreateTextBoxRequest ,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized, ViewportMovedOrResizedEvent, 0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox, CreateTextBoxRequest, 0));
 
 #ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);
 #endif
 
 		m_Viewer = new osgViewer::CompositeViewer();
-		m_Viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded);
+		m_Viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
 		//m_Viewer->setReleaseContextAtEndOfFrameHint(false);
 
@@ -116,15 +117,15 @@ namespace GASS
 		m_DebugTextBox->setFont(font_res->Path().GetFullPath());
 		m_DebugTextBox->setTextSize(10);
 
-		
-	
+
+
 		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions();
 		if (opt == nullptr)
 		{
 			opt = new osgDB::ReaderWriter::Options();
 		}
 
-		if(m_FlipDDS)
+		if (m_FlipDDS)
 		{
 			const std::string options = opt->getOptionString();
 			opt->setOptionString("dds_flip");
@@ -140,7 +141,7 @@ namespace GASS
 		mat_trans.TrackVertexColor = true;
 		mat_trans.Transparent = 11;
 		AddMaterial(mat_trans);
-		
+
 		GraphicsMaterial mat_opaque;
 		mat_opaque.Name = "WhiteNoLighting";
 		mat_opaque.DepthTest = true;
@@ -149,6 +150,27 @@ namespace GASS
 		mat_opaque.Transparent = 0;
 		AddMaterial(mat_opaque);
 
+		if (SimEngine::Get().GetResourceManager()->HasResourceGroup("MATERIALS"))
+		{
+			auto mrg = SimEngine::Get().GetResourceManager()->GetFirstResourceGroupByName("MATERIALS");
+			auto locations = mrg->GetResourceLocations();
+			for (auto loc : locations)
+			{
+				auto res_vec = loc->GetResources();
+				for (auto res : res_vec)
+				{
+					auto name = (res.second)->Name();
+					if (name.find(".osg") != std::string::npos)
+					{
+						auto path = (res.second)->Path().GetFullPath();
+						auto node = osgDB::readNodeFile(path);
+						auto state_set = node->getStateSet();
+						if (state_set)
+							m_Materials[name] = state_set;
+					}
+				}
+			}
+		}
 		GetSimSystemManager()->SendImmediate(SystemMessagePtr(new GraphicsSystemLoadedEvent()));
 	}
 
@@ -156,14 +178,14 @@ namespace GASS
 	RenderWindowVector OSGGraphicsSystem::GetRenderWindows() const
 	{
 		RenderWindowVector ret;
-		for(size_t i = 0; i < m_Windows.size();i++)
+		for (size_t i = 0; i < m_Windows.size(); i++)
 		{
 			ret.push_back(m_Windows[i]);
 		}
 		return ret;
 	}
 
-	void OSGGraphicsSystem::PrintDebugText(const std::string &message)
+	void OSGGraphicsSystem::PrintDebugText(const std::string& message)
 	{
 		m_DebugVec.push_back(message);
 	}
@@ -171,24 +193,24 @@ namespace GASS
 	RenderWindowPtr OSGGraphicsSystem::GetMainRenderWindow() const
 	{
 		RenderWindowPtr main_win;
-		if(m_Windows.size() > 0)
-			main_win =  m_Windows[0];
+		if (m_Windows.size() > 0)
+			main_win = m_Windows[0];
 		return main_win;
 	}
 
 
-	RenderWindowPtr OSGGraphicsSystem::CreateRenderWindow(const std::string &name, int width, int height, void* external_handle)
+	RenderWindowPtr OSGGraphicsSystem::CreateRenderWindow(const std::string& name, int width, int height, void* external_handle)
 	{
 
 		osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
 		if (!wsi)
-	    {
+		{
 
-			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to get WindowingSystemInterface", "OSGGraphicsSystem::CreateRenderWindow");
-	    }
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to get WindowingSystemInterface", "OSGGraphicsSystem::CreateRenderWindow");
+		}
 
 		osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
-		
+
 		osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(ds);
 
 		traits->readDISPLAY();
@@ -199,15 +221,15 @@ namespace GASS
 		traits->height = height;
 		traits->doubleBuffer = true;
 		traits->sharedContext = nullptr;
-		
-		if(m_Windows.size() > 0)
+
+		if (m_Windows.size() > 0)
 		{
 			traits->sharedContext = m_Windows[0]->GetOSGWindow();
 		}
 
-		if(external_handle) //external window
+		if (external_handle) //external window
 		{
-            osg::ref_ptr<osg::Referenced> windata = new WindowData((WindowHandle)external_handle);
+			osg::ref_ptr<osg::Referenced> windata = new WindowData((WindowHandle)external_handle);
 			traits->windowDecoration = false;
 			traits->setInheritedWindowPixelFormat = true;
 			traits->inheritedWindowData = windata;
@@ -225,20 +247,20 @@ namespace GASS
 			//osg::notify(osg::INFO)<<"  GraphicsWindow has been created successfully."<<std::endl;
 			//need to ensure that the window is cleared make sure that the complete window is set the correct colour
 			//rather than just the parts of the window that are under the camera's viewports
-			graphics_context->setClearColor(osg::Vec4f(0.0f,0.0f,1.0f,1.0f));
+			graphics_context->setClearColor(osg::Vec4f(0.0f, 0.0f, 1.0f, 1.0f));
 			graphics_context->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			auto* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
-			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height );
+			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height);
 			graphics_context->getState()->setUseModelViewAndProjectionUniforms(true);
 		}
 		else
 		{
-			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
+			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to create createGraphicsContext for:" + name, "OSGGraphicsSystem::CreateRenderWindow");
 		}
 
-		
-		OSGRenderWindowPtr win(new  OSGRenderWindow(this,graphics_context));
+
+		OSGRenderWindowPtr win(new  OSGRenderWindow(this, graphics_context));
 		m_Windows.push_back(win);
 		return win;
 	}
@@ -249,11 +271,11 @@ namespace GASS
 		osgViewer::ViewerBase::Views views;
 		m_Viewer->getViews(views);
 		//set same size in all viewports for the moment
-		for(size_t i = 0; i < views.size(); i++)
+		for (size_t i = 0; i < views.size(); i++)
 		{
-			if(views[i]->getName() == message->GetViewportName())
+			if (views[i]->getName() == message->GetViewportName())
 			{
-				views[i]->getCamera()->setViewport(message->GetPositionX(),message->GetPositionY(),message->GetWidth(), message->GetHeight());
+				views[i]->getCamera()->setViewport(message->GetPositionX(), message->GetPositionY(), message->GetWidth(), message->GetHeight());
 			}
 		}
 	}
@@ -262,7 +284,7 @@ namespace GASS
 	{
 		//static int tick = 0;
 		GetSimSystemManager()->SendImmediate(std::make_shared<PreGraphicsSystemUpdateEvent>(delta_time));
-		if(m_Viewer->done())
+		if (m_Viewer->done())
 		{
 			return;
 		}
@@ -270,7 +292,7 @@ namespace GASS
 		std::string text;
 		for (size_t i = 0; i < m_DebugVec.size(); i++)
 		{
-			text = text + m_DebugVec[i]+ "\n";
+			text = text + m_DebugVec[i] + "\n";
 		}
 		m_DebugTextBox->setText(text);
 		m_Viewer->frame(SimEngine::Get().GetSimulationTime());
@@ -283,7 +305,7 @@ namespace GASS
 
 	void OSGGraphicsSystem::OnInitializeTextBox(CreateTextBoxRequestPtr message)
 	{
-		if(m_TextBoxes.end() == m_TextBoxes.find(message->m_BoxID))
+		if (m_TextBoxes.end() == m_TextBoxes.find(message->m_BoxID))
 		{
 			auto* text_box = new TextBox();
 
@@ -316,20 +338,21 @@ namespace GASS
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceGroupVector groups = rm->GetResourceGroups();
-		for(size_t i = 0; i < groups.size();i++)
+		for (size_t i = 0; i < groups.size(); i++)
 		{
 			ResourceGroupPtr group = groups[i];
-			if(group->GetName() == resource_group)
+			if (group->GetName() == resource_group)
 			{
 				ResourceLocationVector locations = group->GetResourceLocations();
-				for(size_t j = 0; j < locations.size(); j++)
+				for (size_t j = 0; j < locations.size(); j++)
 				{
 					ResourceLocation::ResourceMap resources = locations[j]->GetResources();
 					ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
-					while(iter != resources.end())
+					while (iter != resources.end())
 					{
 						//remove extension?
-						std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
+						//std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
+						std::string mat_name = iter->second->Name();
 						content.push_back(mat_name);
 						++iter;
 					}
@@ -339,51 +362,51 @@ namespace GASS
 		return content;
 	}
 
-	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial &material, const std::string &/*base_mat_name*/)
+	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial& material, const std::string&/*base_mat_name*/)
 	{
 		osg::ref_ptr<osg::StateSet> state_set = new osg::StateSet();
 		SetOSGStateSet(material, state_set);
 		m_Materials[material.Name] = state_set;
 	}
 
-	bool OSGGraphicsSystem::HasMaterial(const std::string &mat_name) const
+	bool OSGGraphicsSystem::HasMaterial(const std::string& mat_name) const
 	{
-		if(m_Materials.find(mat_name) ==m_Materials.end())
+		if (m_Materials.find(mat_name) == m_Materials.end())
 			return false;
 		return true;
 	}
-	void OSGGraphicsSystem::RemoveMaterial(const std::string &mat_name)
+	void OSGGraphicsSystem::RemoveMaterial(const std::string& mat_name)
 	{
 		m_Materials.erase(m_Materials.find(mat_name));
 	}
 
-	GraphicsMaterial OSGGraphicsSystem::GetMaterial(const std::string &mat_name)
+	GraphicsMaterial OSGGraphicsSystem::GetMaterial(const std::string& mat_name)
 	{
 		GraphicsMaterial ret;
-		SetGASSMaterial(m_Materials[mat_name],ret);
+		SetGASSMaterial(m_Materials[mat_name], ret);
 		return ret;
 	}
 
-	void OSGGraphicsSystem::SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set, GraphicsMaterial &material)
+	void OSGGraphicsSystem::SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set, GraphicsMaterial& material)
 	{
-		auto* mat  = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
-		const osg::Vec4 &ambient = mat->getAmbient(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4 &diffuse = mat->getDiffuse(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4 &specular = mat->getSpecular(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4 &si = mat->getEmission(osg::Material::FRONT_AND_BACK);
-		material.Ambient.Set(ambient.x(),ambient.y(),ambient.z());
-		material.Diffuse.Set(diffuse.x(),diffuse.y(),diffuse.z(),diffuse.w());
-		material.Specular.Set(specular.x(),specular.y(),specular.z());
-		material.SelfIllumination.Set(si.x(),si.y(),si.z());
+		auto* mat = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
+		const osg::Vec4& ambient = mat->getAmbient(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4& diffuse = mat->getDiffuse(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4& specular = mat->getSpecular(osg::Material::FRONT_AND_BACK);
+		const osg::Vec4& si = mat->getEmission(osg::Material::FRONT_AND_BACK);
+		material.Ambient.Set(ambient.x(), ambient.y(), ambient.z());
+		material.Diffuse.Set(diffuse.x(), diffuse.y(), diffuse.z(), diffuse.w());
+		material.Specular.Set(specular.x(), specular.y(), specular.z());
+		material.SelfIllumination.Set(si.x(), si.y(), si.z());
 		//TODO: copy textures!
 	}
 
-	osg::ref_ptr<osg::StateSet> OSGGraphicsSystem::GetStateSet(const std::string &material_name)
+	osg::ref_ptr<osg::StateSet> OSGGraphicsSystem::GetStateSet(const std::string& material_name)
 	{
 		return m_Materials[material_name];
 	}
 
-	void OSGGraphicsSystem::SetOSGStateSet(const GraphicsMaterial &material, osg::ref_ptr<osg::StateSet> state_set)
+	void OSGGraphicsSystem::SetOSGStateSet(const GraphicsMaterial& material, osg::ref_ptr<osg::StateSet> state_set)
 	{
 		ColorRGBA diffuse = material.Diffuse;
 		ColorRGB ambient = material.Ambient;
@@ -401,12 +424,12 @@ namespace GASS
 		}
 		else
 		{
-			osg::ref_ptr<osg::Material> mat (new osg::Material);
+			osg::ref_ptr<osg::Material> mat(new osg::Material);
 			mat->setDiffuse(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(diffuse));
-			mat->setAmbient(osg::Material::FRONT_AND_BACK,osg::Vec4(static_cast<float>(ambient.r), static_cast<float>(ambient.g), static_cast<float>(ambient.b),1));
-			mat->setSpecular(osg::Material::FRONT_AND_BACK,osg::Vec4(static_cast<float>(specular.r), static_cast<float>(specular.g), static_cast<float>(specular.b),1));
-			mat->setShininess(osg::Material::FRONT_AND_BACK,material.Shininess);
-			mat->setEmission(osg::Material::FRONT_AND_BACK,osg::Vec4(static_cast<float>(si.r), static_cast<float>(si.g), static_cast<float>(si.b),1));
+			mat->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(ambient.r), static_cast<float>(ambient.g), static_cast<float>(ambient.b), 1));
+			mat->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(specular.r), static_cast<float>(specular.g), static_cast<float>(specular.b), 1));
+			mat->setShininess(osg::Material::FRONT_AND_BACK, material.Shininess);
+			mat->setEmission(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(si.r), static_cast<float>(si.g), static_cast<float>(si.b), 1));
 			state_set->setAttribute(mat);
 			state_set->setAttributeAndModes(mat, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 			state_set->setMode(GL_LIGHTING, osg::StateAttribute::ON);
@@ -414,7 +437,7 @@ namespace GASS
 
 		//mat->setColorMode(osg::Material::ColorMode::DIFFUSE); //Track vertex color
 
-		if(material.DepthTest)
+		if (material.DepthTest)
 			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 		else
 		{
@@ -433,22 +456,22 @@ namespace GASS
 		if (!material.TrackVertexColor && diffuse.a < 1.0) //special handling if we have transparent a material,
 		{
 			//TODO: provide blending mode in material!
-			osg::ref_ptr<osg::BlendFunc> bf (new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,  osg::BlendFunc::ONE_MINUS_SRC_ALPHA ));
+			osg::ref_ptr<osg::BlendFunc> bf(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
 			state_set->setAttributeAndModes(bf);
 
 			// Enable blending, select transparent bin.
-			state_set->setMode( GL_BLEND, osg::StateAttribute::ON );
-			state_set->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+			state_set->setMode(GL_BLEND, osg::StateAttribute::ON);
+			state_set->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
 
 			// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
-			state_set->setMode( GL_DEPTH_TEST, osg::StateAttribute::ON );
+			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
 
 			// Conversely, disable writing to depth buffer so that
 			// a transparent polygon will allow polygons behind it to shine through.
 			// OSG renders transparent polygons after opaque ones.
-			osg::ref_ptr<osg::Depth> depth (new osg::Depth);
-			depth->setWriteMask( false );
-			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON );
+			osg::ref_ptr<osg::Depth> depth(new osg::Depth);
+			depth->setWriteMask(false);
+			state_set->setAttributeAndModes(depth, osg::StateAttribute::ON);
 		}
 	}
 }
