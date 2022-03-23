@@ -380,9 +380,9 @@ namespace GASS
 
 	bool OSGEarthSceneManager::GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
-		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
-		const osgEarth::Ellipsoid em = map_srs->getEllipsoid();
-		const double r = osg::minimum(em.getRadiusEquator(), em.getRadiusPolar());
+		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const auto* em = &mapSRS->getEllipsoid();
+		const double r = osg::minimum(em->getRadiusEquator(), em->getRadiusPolar());
 
 		// calculate the endpoints for an intersection test:
 		Vec3 start, end;
