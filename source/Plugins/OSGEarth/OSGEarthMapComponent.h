@@ -58,6 +58,13 @@ namespace GASS
 		void SetTimeOfDay(double time) override;
 		float GetMinimumAmbient() const override;
 		void SetMinimumAmbient(float value) override;
+		float GetSkyExposure() const;
+		void SetSkyExposure(float value);
+		float GetSkyContrast() const;
+		void SetSkyContrast(float value);
+		float GetSkyAmbientBoost() const;
+		void SetSkyAmbientBoost(float value);
+
 		void SetSkyLighting(bool value);
 		bool GetSkyLighting() const;
 		void SetEarthFile(const ResourceHandle &earth_file) override;
@@ -99,6 +106,9 @@ namespace GASS
 		osg::ref_ptr<OETerrainCallbackProxy> m_TerrainCallbackProxy;
 		bool m_TerrainChangedLastFrame{false};
 		bool m_AddSky = false;
+		float m_SkyExposure = 10.0f;
+		float m_SkyContrast = 2.0f;
+		float m_SkyAmbientBoost = 5;
 	};
 	using OSGEarthMapComponentPtr = std::shared_ptr<OSGEarthMapComponent>;
 }

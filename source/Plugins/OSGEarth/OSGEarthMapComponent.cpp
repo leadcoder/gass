@@ -181,6 +181,9 @@ namespace GASS
 
 		RegisterGetSet("TimeOfDay", &OSGEarthMapComponent::GetTimeOfDay, &OSGEarthMapComponent::SetTimeOfDay, PF_VISIBLE | PF_EDITABLE, "Time of day");
 		RegisterGetSet("MinimumAmbient", &OSGEarthMapComponent::GetMinimumAmbient, &OSGEarthMapComponent::SetMinimumAmbient, PF_VISIBLE | PF_EDITABLE, "Minimum ambient sky light");
+		RegisterGetSet("SkyExposure", &OSGEarthMapComponent::GetSkyExposure, &OSGEarthMapComponent::SetSkyExposure, PF_VISIBLE | PF_EDITABLE, "Sky light exposure");
+		RegisterGetSet("SkyContrast", &OSGEarthMapComponent::GetSkyContrast, &OSGEarthMapComponent::SetSkyContrast, PF_VISIBLE | PF_EDITABLE, "Sky light contrast");
+		RegisterGetSet("SkyAmbientBoost", &OSGEarthMapComponent::GetSkyAmbientBoost, &OSGEarthMapComponent::SetSkyAmbientBoost, PF_VISIBLE | PF_EDITABLE, "Sky light ambient boost fasctor, (ONeal only)");
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE, "Enable/disable sky light");
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
@@ -377,7 +380,7 @@ namespace GASS
 		//Save top node, to be used during shutdown
 		m_TopNode = osgEarth::findTopOfGraph(read_node);
 		root->addChild(m_TopNode);
-
+		
 		//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
 		osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
 		m_MapNode->setUserData(data);
@@ -451,6 +454,13 @@ namespace GASS
 			SetTimeOfDay(m_Hour);
 		}
 
+		if (m_SkyNode) //reflect our settings
+		{
+			//SetSkyExposure(m_SkyExposure);
+			//SetSkyContrast(m_SkyContrast);
+			//SetSkyAmbientBoost(m_SkyAmbientBoost);
+		}
+
 		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
 		view->setLightingMode(osg::View::SKY_LIGHT);
 
@@ -483,6 +493,8 @@ namespace GASS
 
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
+
+		osg_sm->SetMapNode(dynamic_cast<osg::Group*>(m_MapNode.get()));
 
 		//if (m_UseOcean)
 		//	{
@@ -585,6 +597,50 @@ namespace GASS
 			m_TerrainChangedLastFrame = false;
 		}
 	}
+
+
+	float OSGEarthMapComponent::GetSkyExposure() const
+	{
+		return m_SkyExposure;
+	}
+
+	void OSGEarthMapComponent::SetSkyExposure(float value)
+	{
+		m_SkyExposure = value;
+		if (m_SkyNode)
+		{
+			m_SkyNode->getOrCreateStateSet()->getOrCreateUniform("oe_sky_exposure", osg::Uniform::FLOAT)->set(value);
+		}
+	}
+
+	float OSGEarthMapComponent::GetSkyContrast() const
+	{
+		return m_SkyContrast;
+	}
+
+	void OSGEarthMapComponent::SetSkyContrast(float value)
+	{
+		m_SkyContrast = value;
+		if (m_SkyNode)
+		{
+			m_SkyNode->getOrCreateStateSet()->getOrCreateUniform("oe_sky_contrast", osg::Uniform::FLOAT)->set(value);
+		}
+	}
+
+	float OSGEarthMapComponent::GetSkyAmbientBoost() const
+	{
+		return m_SkyAmbientBoost;
+	}
+
+	void OSGEarthMapComponent::SetSkyAmbientBoost(float value)
+	{
+		m_SkyAmbientBoost = value;
+		if (m_SkyNode)
+		{
+			m_SkyNode->getOrCreateStateSet()->getOrCreateUniform("oe_sky_ambientBoostFactor", osg::Uniform::FLOAT)->set(value);
+		}
+	}
+	
 
 	void OSGEarthMapComponent::SetTimeOfDay(double hour)
 	{
