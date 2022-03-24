@@ -140,14 +140,14 @@ namespace GASS
 
 		while(comp_iter.hasMoreElements())
 		{
-			BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+			auto comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 			if(comp)
 			{
-				RTTI* pRTTI = comp->GetRTTI();
-				while(pRTTI)
+				RTTI* p_rtti = comp->GetRTTI();
+				while(p_rtti)
 				{
-					std::list<IProperty*>::iterator	iter = pRTTI->GetFirstProperty();
-					while(iter != pRTTI->GetProperties()->end())
+					auto	iter = p_rtti->GetFirstProperty();
+					while(iter != p_rtti->GetProperties()->end())
 					{
 						IProperty * prop = (*iter);
 						if(prop->GetName() == prop_name)
@@ -156,25 +156,25 @@ namespace GASS
 						}
 						++iter;
 					}
-					pRTTI = pRTTI->GetAncestorRTTI();
+					p_rtti = p_rtti->GetAncestorRTTI();
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void RakNetMasterReplica::SerializeProperties(RakNet::BitStream *bit_stream)
 	{
 		RakNetNetworkMasterComponentPtr nc = m_Owner->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		std::vector<std::string> attributes = nc->GetAttributes();
-		SerialSaver ss(NULL,0);
+		SerialSaver ss(nullptr,0);
 		//for(size_t i = 0 ;  i < attributes.size(); i++)
 		//{
 			//IProperty * prop = GetProperty(attributes[i]);
 			//prop->Serialize(&ss);
 		//}
-		unsigned long size=ss.getLength();
-		unsigned char *buffer=new unsigned char[size];
+		unsigned long size=ss.GetLength();
+		auto *buffer=new unsigned char[size];
 		SerialSaver sv(buffer,size);
 
 		//for(int i = 0 ;  i < attributes.size(); i++)

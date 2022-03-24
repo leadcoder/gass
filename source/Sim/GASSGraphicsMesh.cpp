@@ -167,19 +167,19 @@ namespace GASS
 		Float theta; //long
 		Float p[31][31][3]; //Vertex
 		Float *p1,*p2,*p3,*p4;
-		int  nSlice = segments;
-		int  nStack = segments;
+		int  n_slice = segments;
+		int  n_stack = segments;
 
-		if(nSlice > 30) nSlice = 30;
-		if(nStack > 30) nStack = 30;
+		if(n_slice > 30) n_slice = 30;
+		if(n_stack > 30) n_stack = 30;
 		Vec3 pos(0,0,0);
 		//Vertex
-		for(i = 0;i <= nSlice;i++)
+		for(i = 0;i <= n_slice;i++)
 		{
-			phi = 2.0 * GASS_PI * static_cast<double>(i) / static_cast<double>(nSlice);
-			for(j = 0;j <= nStack;j++)
+			phi = 2.0 * GASS_PI * static_cast<double>(i) / static_cast<double>(n_slice);
+			for(j = 0;j <= n_stack;j++)
 			{
-				theta = GASS_PI * static_cast<double>(j) / static_cast<double>(nStack);
+				theta = GASS_PI * static_cast<double>(j) / static_cast<double>(n_stack);
 				p[i][j][0] = (radius.x * sin(theta) * cos(phi));//x
 				p[i][j][1] = (radius.y * sin(theta) * sin(phi));//y
 				p[i][j][2] = (radius.z * cos(theta));           //z
@@ -188,7 +188,7 @@ namespace GASS
 
 		Vec3 normal;
 		//Top(j=0)
-		for(i = 0;i < nSlice; i++)
+		for(i = 0;i < n_slice; i++)
 		{
 			p1 = p[i][0];     p2 = p[i][1];
 			p3 = p[i+1][1];
@@ -215,8 +215,8 @@ namespace GASS
 			NormalVector.push_back(normal);
 		}
 		//Bottom
-		j=nStack-1;
-		for(i = 0;i < nSlice; i++)
+		j=n_stack-1;
+		for(i = 0;i < n_slice; i++)
 		{
 			p1 = p[i][j];     p2 = p[i][j+1];
 			p3 = p[i+1][j];
@@ -244,9 +244,9 @@ namespace GASS
 
 		}
 
-		for(i = 0;i < nSlice;i++)
+		for(i = 0;i < n_slice;i++)
 		{
-			for(j = 1;j < nStack-1; j++)
+			for(j = 1;j < n_stack-1; j++)
 			{
 				p1 = p[i][j];     p2 = p[i][j+1];
 				p3 = p[i+1][j+1]; p4 = p[i+1][j];
@@ -315,10 +315,10 @@ namespace GASS
 		size.x = box_size.x*0.5;
 		size.y = box_size.y*0.5;
 		std::vector<Vec3> conrners;
-		conrners.push_back(Vec3( size.x ,0 , size.y));
-		conrners.push_back(Vec3(-size.x ,0 , size.y));
-		conrners.push_back(Vec3(-size.x ,0 ,-size.y));
-		conrners.push_back(Vec3( size.x ,0 ,-size.y));
+		conrners.emplace_back( size.x ,0 , size.y);
+		conrners.emplace_back(-size.x ,0 , size.y);
+		conrners.emplace_back(-size.x ,0 ,-size.y);
+		conrners.emplace_back( size.x ,0 ,-size.y);
 
 
 
@@ -354,15 +354,15 @@ namespace GASS
 	{
 		const Vec3 size = box_size*0.5;
 		std::vector<Vec3> conrners;
-		conrners.push_back(Vec3( size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,size.y ,-size.z));
+		conrners.emplace_back( size.x ,size.y , size.z);
+		conrners.emplace_back(-size.x ,size.y , size.z);
+		conrners.emplace_back(-size.x ,size.y ,-size.z);
+		conrners.emplace_back( size.x ,size.y ,-size.z);
 
-		conrners.push_back(Vec3( size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y , size.z));
-		conrners.push_back(Vec3(-size.x ,-size.y ,-size.z));
-		conrners.push_back(Vec3( size.x ,-size.y ,-size.z));
+		conrners.emplace_back( size.x ,-size.y , size.z);
+		conrners.emplace_back(-size.x ,-size.y , size.z);
+		conrners.emplace_back(-size.x ,-size.y ,-size.z);
+		conrners.emplace_back( size.x ,-size.y ,-size.z);
 
 
 		for(int i = 0; i < 4; i++)
@@ -407,91 +407,91 @@ namespace GASS
 		const Vec3 size= box_size*0.5;
 		std::vector<Vec4> tex_coords;
 
-		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
-		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
-		PositionVector.push_back(Vec3( -size.x ,-size.y , -size.z));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
+		PositionVector.emplace_back( -size.x ,-size.y , -size.z);
+		PositionVector.emplace_back( -size.x ,-size.y , -size.z);
+		PositionVector.emplace_back( -size.x ,-size.y , -size.z);
+		tex_coords.emplace_back( 0, 0 , 0,0);
+		tex_coords.emplace_back( 0, 0 , 0,0);
+		tex_coords.emplace_back( 0, 0 , 0,0);
 
-		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
-		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
-		PositionVector.push_back(Vec3( size.x ,-size.y , -size.z));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
-
-
-		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
-		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
-		PositionVector.push_back(Vec3( size.x ,size.y , -size.z));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
+		PositionVector.emplace_back( size.x ,-size.y , -size.z);
+		PositionVector.emplace_back( size.x ,-size.y , -size.z);
+		PositionVector.emplace_back( size.x ,-size.y , -size.z);
+		tex_coords.emplace_back( 1, 0 , 0,0);
+		tex_coords.emplace_back( 1, 0 , 0,0);
+		tex_coords.emplace_back( 1, 0 , 0,0);
 
 
-		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
-		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
-		PositionVector.push_back(Vec3( -size.x ,size.y , -size.z));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
+		PositionVector.emplace_back( size.x ,size.y , -size.z);
+		PositionVector.emplace_back( size.x ,size.y , -size.z);
+		PositionVector.emplace_back( size.x ,size.y , -size.z);
+		tex_coords.emplace_back( 1, 1 , 0,0);
+		tex_coords.emplace_back( 1, 1 , 0,0);
+		tex_coords.emplace_back( 1, 1 , 0,0);
 
 
-		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
-		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
-		PositionVector.push_back(Vec3( -size.x ,-size.y , size.z));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
-		tex_coords.push_back(Vec4( 1, 0 , 0,0));
+		PositionVector.emplace_back( -size.x ,size.y , -size.z);
+		PositionVector.emplace_back( -size.x ,size.y , -size.z);
+		PositionVector.emplace_back( -size.x ,size.y , -size.z);
+		tex_coords.emplace_back( 0, 1 , 0,0);
+		tex_coords.emplace_back( 0, 1 , 0,0);
+		tex_coords.emplace_back( 0, 1 , 0,0);
 
 
-		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
-		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
-		PositionVector.push_back(Vec3( size.x ,-size.y , size.z));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
-		tex_coords.push_back(Vec4( 0, 0 , 0,0));
-
-		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
-		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
-		PositionVector.push_back(Vec3( size.x ,size.y , size.z));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
-		tex_coords.push_back(Vec4( 0, 1 , 0,0));
+		PositionVector.emplace_back( -size.x ,-size.y , size.z);
+		PositionVector.emplace_back( -size.x ,-size.y , size.z);
+		PositionVector.emplace_back( -size.x ,-size.y , size.z);
+		tex_coords.emplace_back( 1, 0 , 0,0);
+		tex_coords.emplace_back( 1, 0 , 0,0);
+		tex_coords.emplace_back( 1, 0 , 0,0);
 
 
-		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
-		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
-		PositionVector.push_back(Vec3( -size.x ,size.y , size.z));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
-		tex_coords.push_back(Vec4( 1, 1 , 0,0));
+		PositionVector.emplace_back( size.x ,-size.y , size.z);
+		PositionVector.emplace_back( size.x ,-size.y , size.z);
+		PositionVector.emplace_back( size.x ,-size.y , size.z);
+		tex_coords.emplace_back( 0, 0 , 0,0);
+		tex_coords.emplace_back( 0, 0 , 0,0);
+		tex_coords.emplace_back( 0, 0 , 0,0);
 
-		NormalVector.push_back(Vec3(0,0,-1));
-		NormalVector.push_back(Vec3(-1,0,0));
-		NormalVector.push_back(Vec3(0,-1,0));
-		NormalVector.push_back(Vec3(0,0,-1));
-		NormalVector.push_back(Vec3(1,0,0));
-		NormalVector.push_back(Vec3(0,-1,0));
-		NormalVector.push_back(Vec3(0,0,-1));
-		NormalVector.push_back(Vec3(1,0,0));
-		NormalVector.push_back(Vec3(0,1,0));
-		NormalVector.push_back(Vec3(0,0,-1));
-		NormalVector.push_back(Vec3(-1,0,0));
-		NormalVector.push_back(Vec3(0,1,0));
-		NormalVector.push_back(Vec3(0,0,1));
-		NormalVector.push_back(Vec3(-1,0,0));
-		NormalVector.push_back(Vec3(0,-1,0));
-		NormalVector.push_back(Vec3(0,0,1));
-		NormalVector.push_back(Vec3(1,-0,0));
-		NormalVector.push_back(Vec3(0,-1,0));
-		NormalVector.push_back(Vec3(0,0,1));
-		NormalVector.push_back(Vec3(1,0,0));
-		NormalVector.push_back(Vec3(0,1,0));
-		NormalVector.push_back(Vec3(-0,0,1));
-		NormalVector.push_back(Vec3(-1,-0,-0));
-		NormalVector.push_back(Vec3(0,1,0));
+		PositionVector.emplace_back( size.x ,size.y , size.z);
+		PositionVector.emplace_back( size.x ,size.y , size.z);
+		PositionVector.emplace_back( size.x ,size.y , size.z);
+		tex_coords.emplace_back( 0, 1 , 0,0);
+		tex_coords.emplace_back( 0, 1 , 0,0);
+		tex_coords.emplace_back( 0, 1 , 0,0);
+
+
+		PositionVector.emplace_back( -size.x ,size.y , size.z);
+		PositionVector.emplace_back( -size.x ,size.y , size.z);
+		PositionVector.emplace_back( -size.x ,size.y , size.z);
+		tex_coords.emplace_back( 1, 1 , 0,0);
+		tex_coords.emplace_back( 1, 1 , 0,0);
+		tex_coords.emplace_back( 1, 1 , 0,0);
+
+		NormalVector.emplace_back(0,0,-1);
+		NormalVector.emplace_back(-1,0,0);
+		NormalVector.emplace_back(0,-1,0);
+		NormalVector.emplace_back(0,0,-1);
+		NormalVector.emplace_back(1,0,0);
+		NormalVector.emplace_back(0,-1,0);
+		NormalVector.emplace_back(0,0,-1);
+		NormalVector.emplace_back(1,0,0);
+		NormalVector.emplace_back(0,1,0);
+		NormalVector.emplace_back(0,0,-1);
+		NormalVector.emplace_back(-1,0,0);
+		NormalVector.emplace_back(0,1,0);
+		NormalVector.emplace_back(0,0,1);
+		NormalVector.emplace_back(-1,0,0);
+		NormalVector.emplace_back(0,-1,0);
+		NormalVector.emplace_back(0,0,1);
+		NormalVector.emplace_back(1,-0,0);
+		NormalVector.emplace_back(0,-1,0);
+		NormalVector.emplace_back(0,0,1);
+		NormalVector.emplace_back(1,0,0);
+		NormalVector.emplace_back(0,1,0);
+		NormalVector.emplace_back(-0,0,1);
+		NormalVector.emplace_back(-1,-0,-0);
+		NormalVector.emplace_back(0,1,0);
 
 		//bottom
 		IndexVector.push_back(0);

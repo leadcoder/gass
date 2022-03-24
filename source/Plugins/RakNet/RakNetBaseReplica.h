@@ -29,7 +29,7 @@ class ReplicaManager;
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
 
 	class RakNetBaseReplica  : public Replica
 	{

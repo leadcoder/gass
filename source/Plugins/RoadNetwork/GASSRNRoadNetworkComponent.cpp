@@ -5,14 +5,15 @@
 #include "RoadEdge.h"
 #include "RoadNode.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <limits>
+#include <memory>
 
 namespace GASS
 {
-	RNRoadNetworkComponent::RNRoadNetworkComponent(void) : m_Edit(true),
-		m_ShowGraph(false),
-		m_Optimize(true)
+	RNRoadNetworkComponent::RNRoadNetworkComponent(void) 
+		
 	{
 
 	}	
@@ -25,7 +26,7 @@ namespace GASS
 	void RNRoadNetworkComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RNRoadNetworkComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadNetworkComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RNRoadNetworkComponent", OF_VISIBLE));
 
 		RegisterGetSet("ShowGraph", &RNRoadNetworkComponent::GetShowGraph, &RNRoadNetworkComponent::SetShowGraph,PF_VISIBLE | PF_EDITABLE,"");
 
@@ -96,15 +97,14 @@ namespace GASS
 				{
 					GraphicsMeshPtr mesh_data(new GraphicsMesh());
 					mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(0,1,0,1), "WhiteNoLighting",false));
-					
-					debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 				}
 			}
 			else
 			{
 				if(debug)
 				{
-					debug->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 			}
 		}
@@ -122,12 +122,12 @@ namespace GASS
 		{
 			if(value)
 			{
-				_CreateEditableFromNetwork();
+				CreateEditableFromNetwork();
 				RebuildGraph();
 			}
 			else
 			{
-				_CreateNetworkFromEditable();
+				CreateNetworkFromEditable();
 
 				//remove all nodes and edges
 				SceneObject::ComponentVector components;
@@ -142,14 +142,14 @@ namespace GASS
 				SceneObjectPtr debug = GetSceneObject()->GetChildByID("EDIT_EDGES");
 				if(debug)
 				{
-					debug->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+					debug->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 				SetShowGraph(m_ShowGraph);
 			}
 		}
 	}
 
-	void RNRoadNetworkComponent::_CreateEditableFromNetwork()
+	void RNRoadNetworkComponent::CreateEditableFromNetwork()
 	{
 		//create all nodes and  edges!
 		std::map<RoadNode*,GraphNodeComponentPtr> mapping;
@@ -255,11 +255,11 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(pos_vec, ColorRGBA(1,0,0,1), "WhiteNoLighting",false));
-			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+			debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		}
 	}
 
-	void RNRoadNetworkComponent::_CreateNetworkFromEditable()
+	void RNRoadNetworkComponent::CreateNetworkFromEditable()
 	{
 		m_Network.Clear();
 		std::map<RNRoadNodeComponentPtr,RoadNode*> node_mapping;
@@ -269,7 +269,7 @@ namespace GASS
 		{
 			RNRoadNodeComponentPtr node_comp = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(components[i]);
 			Vec3 node_pos  = node_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-			RoadNode* road_node = new RoadNode();
+			auto* road_node = new RoadNode();
 			road_node->Position = node_pos;
 			node_mapping[node_comp] = road_node; 
 			m_Network.m_Nodes.push_back(road_node);
@@ -281,7 +281,7 @@ namespace GASS
 		{
 			RNRoadEdgeComponentPtr road_comp = GASS_DYNAMIC_PTR_CAST<RNRoadEdgeComponent>(components[i]);
 			std::vector<Vec3> road_wps = road_comp->GetWaypoints();
-			RoadNode* start_node = NULL;
+			RoadNode* start_node = nullptr;
 			if(road_comp->GetStartNode())
 			{
 				RNRoadNodeComponentPtr start_rn = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(road_comp->GetStartNode());
@@ -289,7 +289,7 @@ namespace GASS
 				//Vec3 start_pos  = start_rn->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 				//road_wps.push_back(start_pos);
 			}
-			RoadNode* end_node = NULL;
+			RoadNode* end_node = nullptr;
 			if(road_comp->GetEndNode())
 			{
 				RNRoadNodeComponentPtr end_rn = GASS_DYNAMIC_PTR_CAST<RNRoadNodeComponent>(road_comp->GetEndNode());
@@ -298,7 +298,7 @@ namespace GASS
 				//road_wps.push_back(end_pos);
 			}
 		
-			RoadEdge* edge = new RoadEdge();
+			auto* edge = new RoadEdge();
 			edge->Waypoints = road_wps;
 			edge->Distance =  Path::GetPathLength(road_wps);
 			edge->StartNode = start_node;
@@ -384,7 +384,7 @@ namespace GASS
 		{
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			mesh_data->SubMeshVector.push_back(GraphicsSubMesh::GenerateLines(path, ColorRGBA(0,0,1,1), "WhiteNoLighting",true));
-			debug->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+			debug->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		}
 	}
 
@@ -408,10 +408,10 @@ namespace GASS
 	void RNRoadNetworkComponent::SaveXML(tinyxml2::XMLElement * elem)
 	{
 		if(m_Edit)
-			_CreateNetworkFromEditable();
+			CreateNetworkFromEditable();
 		m_Edit = false;
 		m_ShowGraph = false;
-		BaseSceneComponent::SaveXML(elem);
+		Component::SaveXML(elem);
 
 		tinyxml2::XMLElement *  net_elem = elem->FirstChildElement("RNRoadNetworkComponent");
 		m_Network.SaveXML(net_elem);

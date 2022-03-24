@@ -32,11 +32,11 @@
 namespace GASS
 {
 	
-	typedef std::string SystemType;
+	using SystemType = std::string;
 
 	//forward declare
 	class SimpleProfileData;
-	typedef std::map<std::string, SimpleProfileData> SimpleProfileDataMap;
+	using SimpleProfileDataMap = std::map<std::string, SimpleProfileData>;
 
 	GASS_FORWARD_DECL(SimSystem)
 
@@ -145,13 +145,12 @@ namespace GASS
 		//Move this to private
 		void SyncMessages(double delta_time);
 		void OnUpdate(double delta_time);
-	protected:
-		void _UpdateSystems(double delta_time, UpdateGroupID group);
-	protected:
+	private:
+		void UpdateSystems(double delta_time, UpdateGroupID group);
 		void OnSimulationStepRequest(TimeStepRequestPtr message);
 		size_t GetQueuedMessages() const;
 		MessageManagerPtr m_SystemMessageManager;
-		typedef std::vector<SimSystemPtr> SystemVector;
+		using SystemVector = std::vector<SimSystemPtr>;
 		SystemVector m_Systems;
 		SystemStepper m_SystemStepper;
 	};

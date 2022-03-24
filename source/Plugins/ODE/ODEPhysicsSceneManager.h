@@ -29,8 +29,8 @@ namespace GASS
 {
 	class IMeshComponent;
 	class PhysicsMesh;
-	typedef GASS_SHARED_PTR<IMeshComponent> MeshComponentPtr;
-	typedef GASS_SHARED_PTR<PhysicsMesh> PhysicsMeshPtr;
+	using MeshComponentPtr = std::shared_ptr<IMeshComponent>;
+	using PhysicsMeshPtr = std::shared_ptr<PhysicsMesh>;
 	
 	struct ODEPhysicsCollisionMesh
 	{
@@ -41,7 +41,7 @@ namespace GASS
 	class ODEPhysicsSceneManager  : public Reflection<ODEPhysicsSceneManager, BaseSceneManager> 
 	{
 	public:
-		typedef std::map<std::string,ODEPhysicsCollisionMesh> CollisionMeshMap;
+		using CollisionMeshMap = std::map<std::string, ODEPhysicsCollisionMesh>;
 	public:
 		ODEPhysicsSceneManager(SceneWeakPtr scene);
 		~ODEPhysicsSceneManager() override;
@@ -84,8 +84,8 @@ namespace GASS
 		int m_MaxSimSteps;
 		static bool m_ZUp;
 	};
-	typedef GASS_SHARED_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerPtr;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	using ODEPhysicsSceneManagerPtr = std::shared_ptr<ODEPhysicsSceneManager>;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
 	
 	
 }

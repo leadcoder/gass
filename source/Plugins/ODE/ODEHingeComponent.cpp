@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSCommon.h"
 #include "Plugins/ODE/ODEHingeComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
@@ -29,19 +31,9 @@
 
 namespace GASS
 {
-	ODEHingeComponent::ODEHingeComponent() : m_MaxTorque (0),
+	ODEHingeComponent::ODEHingeComponent() : 
 		m_Anchor (0,0,0),
-		m_Axis (0,0,0),
-		m_ODEJoint (0),
-		m_HighStop(0),
-		m_LowStop(0),
-		m_Body1Loaded(0),
-		m_Body2Loaded(0),
-		m_ODEBody1(0),
-		m_ODEBody2(0)
-		//m_SwayForce(0),
-		//m_Strength(0),
-		//m_Damping(0)
+		m_Axis (0,0,0)
 	{
 	}
 
@@ -175,7 +167,7 @@ namespace GASS
 			if(m_ODEJoint)
 				dJointDestroy(m_ODEJoint);
 
-			m_ODEJoint = dJointCreateHinge(world,0);
+			m_ODEJoint = dJointCreateHinge(world,nullptr);
 			GetSceneObject()->RegisterForMessage(REG_TMESS(ODEHingeComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 			dJointAttach(m_ODEJoint, m_ODEBody1,m_ODEBody2);
 
@@ -288,9 +280,9 @@ namespace GASS
 		ODEPhysicsHingeJointEventPtr joint_message;
 		if(m_ODEJoint)
 		{
-			float angle = static_cast<float>(dJointGetHingeAngle(m_ODEJoint));
-			float angle_rate = static_cast<float>(dJointGetHingeAngleRate(m_ODEJoint));
-			joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,angle_rate));
+			auto angle = static_cast<float>(dJointGetHingeAngle(m_ODEJoint));
+			auto angle_rate = static_cast<float>(dJointGetHingeAngleRate(m_ODEJoint));
+			joint_message = std::make_shared<ODEPhysicsHingeJointEvent>(angle,angle_rate);
 			if(joint_message)
 				GetSceneObject()->SendImmediateEvent(joint_message);
 		}

@@ -46,10 +46,10 @@ namespace GASS
 			{
 				if (ea.getKey() == _key)
 				{
-					osg::ref_ptr< osg::Node > safeNode = _canvas.get();
-					if (safeNode.valid())
+					osg::ref_ptr< osg::Node > safe_node = _canvas.get();
+					if (safe_node.valid())
 					{
-						safeNode->setNodeMask(safeNode->getNodeMask() ? 0 : ~0);
+						safe_node->setNodeMask(safe_node->getNodeMask() ? 0 : ~0);
 					}
 					return true;
 				}
@@ -109,9 +109,9 @@ namespace GASS
 		if (views.size() == 0)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find view", "OSGEarthSceneManager::OnInit");
 
-		osgViewer::View* view = dynamic_cast<osgViewer::View*>(views[0]);
+		auto* view = dynamic_cast<osgViewer::View*>(views[0]);
 
-		if (view == NULL)
+		if (view == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthSceneManager::OnInit");
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
@@ -124,10 +124,10 @@ namespace GASS
 
 		osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
 
-		osgEarth::Util::Controls::Container* mainContainer = canvas->addControl(new osgEarth::Util::Controls::VBox());
-		mainContainer->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
-		mainContainer->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
-		mainContainer->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
+		osgEarth::Util::Controls::Container* main_container = canvas->addControl(new osgEarth::Util::Controls::VBox());
+		main_container->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
+		main_container->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
+		main_container->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
 
 		IOSGGraphicsSceneManagerPtr osg_sm = GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
@@ -136,7 +136,7 @@ namespace GASS
 		canvas->setNodeMask(0);
 
 		root->addChild(canvas);
-		m_GUI = mainContainer;
+		m_GUI = main_container;
 
 
 		view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
@@ -170,7 +170,7 @@ namespace GASS
 		osgEarth::Util::EarthManipulator* manip = GetManipulator().get();
 		if (manip)
 		{
-			if (m_MapNode && map_node == NULL)
+			if (m_MapNode && map_node == nullptr)
 			{
 				m_OldVP = manip->getViewpoint();
 				manip->setNode(map_node);
@@ -184,7 +184,7 @@ namespace GASS
 			}
 			
 		}
-		if (map_node == NULL)
+		if (map_node == nullptr)
 		{ 
 			delete m_WorkingSet;
 			m_WorkingSet = nullptr;
@@ -223,7 +223,7 @@ namespace GASS
 
 			//Add dummy component for collisison
 
-			/*BaseSceneComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(ComponentFactory::Get().Create("ManualMeshComponent")));
+			/*ComponentPtr  geom_comp(GASS_DYNAMIC_PTR_CAST<Component>(ComponentFactory::Get().Create("ManualMeshComponent")));
 			OSGNodeData* data = new OSGNodeData(geom_comp);
 			m_MapNode->setUserData(data);
 			GeometryFlagsBinder flags;
@@ -348,7 +348,7 @@ namespace GASS
 		}
 	}*/
 
-	bool OSGEarthSceneManager::SceneToWGS84(const GASS::Vec3 &scene_location, GeoLocation &geo_location) const
+	bool OSGEarthSceneManager::SceneToWGS84(const Vec3 &scene_location, GeoLocation &geo_location) const
 	{
 		const osg::Vec3d osg_location = OSGConvert::ToOSG(scene_location);
 		osgEarth::GeoPoint input;
@@ -360,7 +360,7 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, GASS::Vec3 &scene_location) const
+	bool OSGEarthSceneManager::WGS84ToScene(const GeoLocation &geo_location, Vec3 &scene_location) const
 	{
 		const osgEarth::GeoPoint input(m_WGS84, geo_location.Longitude, geo_location.Latitude, geo_location.Height, osgEarth::ALTMODE_ABSOLUTE);
 		const osgEarth::GeoPoint output = input.transform(m_MapNode->getMapSRS());
@@ -378,7 +378,7 @@ namespace GASS
 	}
 
 
-	bool OSGEarthSceneManager::_GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
+	bool OSGEarthSceneManager::GetSceneHeight(const GeoLocation &location, double &height, GeometryFlags flags) const
 	{
 		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
 		const auto* em = &mapSRS->getEllipsoid();
@@ -408,10 +408,10 @@ namespace GASS
 		{
 			if (flags & GEOMETRY_FLAG_GROUND_LOD) //get terrain height at pre defined LOD
 			{
-				osgEarth::GeoPoint mapPoint(m_WGS84, location.Longitude, location.Latitude);
+				osgEarth::GeoPoint map_point(m_WGS84, location.Longitude, location.Latitude);
 				// Query the elevation at the map location:
 				osgEarth::ElevationSample sample = m_MapNode->getMap()->getElevationPool()->getSample(
-					mapPoint,
+					map_point,
 					m_WorkingSet);
 
 
@@ -430,14 +430,14 @@ namespace GASS
 				status = true;
 
 				//test model layer 
-				osgEarth::ModelLayerVector modelLayers;
-				m_MapNode->getMap()->getLayers(modelLayers);
-				for (unsigned i = 0; i < modelLayers.size(); ++i)
+				osgEarth::ModelLayerVector model_layers;
+				m_MapNode->getMap()->getLayers(model_layers);
+				for (unsigned i = 0; i < model_layers.size(); ++i)
 				{
 					double model_elevation = 0;
-					if (modelLayers[i]->getNode() && modelLayers[i]->options().terrainPatch() == true)
+					if (model_layers[i]->getNode() && model_layers[i]->options().terrainPatch() == true)
 					{
-						bool model_status = m_MapNode->getTerrain()->getHeight(modelLayers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, 0L);
+						bool model_status = m_MapNode->getTerrain()->getHeight(model_layers[i]->getNode(), m_WGS84, location.Longitude, location.Latitude, &model_elevation, nullptr);
 						if (model_status)
 						{
 							//Always use terrain patch height to support terrain mask?
@@ -451,16 +451,16 @@ namespace GASS
 			}
 			else 
 			{
-				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, 0L);
+				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, nullptr);
 			}
 
 			//include height from GASS-geometry
 			if (flags | GEOMETRY_FLAG_SCENE_OBJECTS)
 			{
 				//remove ground...checked above!
-				GeometryFlags no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);
+				auto no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);
 				double object_h =0 ;
-				if (_GetSceneHeight(location, object_h, no_ground_flags))
+				if (GetSceneHeight(location, object_h, no_ground_flags))
 				{
 					if (object_h > height)
 					{
@@ -473,7 +473,7 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetHeightAboveTerrain(const GASS::Vec3 &location, double &height, GeometryFlags flags) const
+	bool OSGEarthSceneManager::GetHeightAboveTerrain(const Vec3 &location, double &height, GeometryFlags flags) const
 	{
 		GeoLocation geo_location;
 		bool status = SceneToWGS84(location, geo_location);
@@ -493,13 +493,13 @@ namespace GASS
 		return status;
 	}
 
-	bool OSGEarthSceneManager::GetUpVector(const GASS::Vec3 &location, GASS::Vec3 &up_vec) const
+	bool OSGEarthSceneManager::GetUpVector(const Vec3 &location, Vec3 &up_vec) const
 	{
 		bool status = false;
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if(gp.fromWorld(mapSRS, osg_pos))
+		if(gp.fromWorld(map_srs, osg_pos))
 		{
 			osg::Vec3d osg_up_vec;
 			if (gp.createWorldUpVector(osg_up_vec))
@@ -514,10 +514,10 @@ namespace GASS
 	bool OSGEarthSceneManager::GetOrientation(const Vec3 &location, Quaternion &rot) const
 	{
 		bool status = false;
-		const osgEarth::SpatialReference* mapSRS = m_MapNode->getMapSRS();
+		const osgEarth::SpatialReference* map_srs = m_MapNode->getMapSRS();
 		const osg::Vec3d osg_pos = OSGConvert::ToOSG(location);
 		osgEarth::GeoPoint gp;
-		if (gp.fromWorld(mapSRS, osg_pos))
+		if (gp.fromWorld(map_srs, osg_pos))
 		{
 			osg::Matrixd local2world;
 			if (gp.createLocalToWorld(local2world))

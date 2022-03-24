@@ -24,7 +24,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 
 namespace GASS
 {
@@ -32,7 +32,7 @@ namespace GASS
 
 	class GASSExport SceneObjectLink 
 	{
-		friend class BaseSceneComponent;
+		friend class Component;
 	public:
 		SceneObjectLink();
 		SceneObjectPtr operator ->()
@@ -64,6 +64,6 @@ namespace GASS
 		SceneObjectWeakPtr m_Link;
 		SceneObjectWeakPtr m_Owner;
 		SceneObjectID m_LinkObjectID;
-		bool m_Initialized;
+		bool m_Initialized{false};
 	};
 }

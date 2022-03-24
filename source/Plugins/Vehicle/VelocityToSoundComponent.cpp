@@ -19,25 +19,24 @@
 *****************************************************************************/
 
 #include "VelocityToSoundComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 
 namespace GASS
 {
 	VelocityToSoundComponent::VelocityToSoundComponent() : 
-		m_TargetPitch(1.0),
-		m_Pitch(1.0),
-		m_Volume(1.0),
+		
 		m_MinMaxVolume(0,1),
-		m_MinMaxPitch(1,1),
-		m_VelocityLimit(16),
-		m_MaxVelRequest(0)
+		m_MinMaxPitch(1,1)
+		
 	{
 
 	}
@@ -62,7 +61,11 @@ namespace GASS
 		RegisterForPostUpdate<IMissionSceneManager>();
 
 		//Play engine sound
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+		}
 	}
 
 	void VelocityToSoundComponent::SceneManagerTick(double /*delta_time*/)
@@ -92,8 +95,12 @@ namespace GASS
 			*/
 		m_Volume = std::max<Float>(m_Volume,m_MinMaxVolume.x);
 		m_Volume = std::min<Float>(m_Volume,m_MinMaxVolume.y);
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch))));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME, static_cast<float>(m_Volume))));
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPitch(m_Pitch);
+			sound->SetVolume(m_Volume);
+		}
 		//reset!
 		m_MaxVelRequest = 0;
 	}

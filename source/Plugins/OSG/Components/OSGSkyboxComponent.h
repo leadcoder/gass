@@ -33,7 +33,7 @@ namespace osg
 
 namespace GASS
 {
-	class OSGSkyboxComponent : public Reflection<OSGSkyboxComponent,BaseSceneComponent>
+	class OSGSkyboxComponent : public Reflection<OSGSkyboxComponent,Component>
 	{
 	public:
 		OSGSkyboxComponent (void);
@@ -44,12 +44,12 @@ namespace GASS
 	protected:
 		void SetMaterial(const std::string &mat) {m_Material = mat;}
 		std::string GetMaterial()const {return m_Material;}
-		std::string _GetTexturePath(const std::string &side) const;
-		osg::TextureCubeMap* _ReadCubeMap();
-		osg::Node* _CreateSkyBox();
+		std::string GetTexturePath(const std::string &side) const;
+		osg::TextureCubeMap* ReadCubeMap();
+		osg::Node* CreateSkyBox();
 
 		std::string m_Material;
-		osg::Node* m_Node;
-		Float m_Size;
+		osg::Node* m_Node{nullptr};
+		Float m_Size{200};
 	};
 }

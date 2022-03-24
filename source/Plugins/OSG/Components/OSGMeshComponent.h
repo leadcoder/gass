@@ -30,7 +30,7 @@ namespace osg
 }
 namespace GASS
 {
-	class OSGMeshComponent : public Reflection<OSGMeshComponent,BaseSceneComponent> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
+	class OSGMeshComponent : public Reflection<OSGMeshComponent,Component> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
 	{
 	public:
 		OSGMeshComponent (void);
@@ -45,6 +45,8 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 		//IResourceComponent
 		ResourceHandle GetResource() const override {return m_MeshResource;}
@@ -70,10 +72,7 @@ namespace GASS
 		void Expand(SceneObjectPtr parent, osg::Node *node, bool load);
 		void ExpandRec(SceneObjectPtr parent, osg::Node* node, bool load);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void OnMeshFileNameMessage(MeshFileRequestPtr message);
 		void CalulateBoundingbox(osg::Node *node, const osg::Matrix& M = osg::Matrix::identity());
 		void LoadMesh(const ResourceHandle &filename);
 		void LoadMesh(const std::string &file_name);
@@ -83,19 +82,19 @@ namespace GASS
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
 
 		ResourceHandle m_MeshResource;
-		bool m_CastShadow;
-		bool m_ReceiveShadow;
+		bool m_CastShadow{false};
+		bool m_ReceiveShadow{false};
 		osg::ref_ptr<osg::Node> m_MeshNode;
 		AABox m_BBox;
-		bool m_Initlized;
-		GeometryFlags m_GeomFlags;
-		bool m_Lighting;
-		bool m_Expand;
-		bool m_Collision;
+		bool m_Initlized{false};
+		GeometryFlags m_GeomFlags{GEOMETRY_FLAG_UNKNOWN};
+		bool m_Lighting{true};
+		bool m_Expand{false};
+		bool m_Collision{true};
 		std::string m_EnumerationResourceGroup;
-		bool m_FlipDDS;
+		bool m_FlipDDS{false};
 	};
 
-	typedef GASS_SHARED_PTR<OSGMeshComponent> OSGMeshComponentPtr;
+	using OSGMeshComponentPtr = std::shared_ptr<OSGMeshComponent>;
 }
 

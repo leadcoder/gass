@@ -27,39 +27,19 @@
 #include "Core/Math/GASSMath.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSPhysicsMesh.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include <cfloat> //FLT_MIN/MAX
+#include <memory>
 
 namespace GASS
 {
 	RecastNavigationMeshComponent::RecastNavigationMeshComponent() :m_NavVisTriMesh(new GraphicsMesh()),
 		m_NavVisLineMesh(new GraphicsMesh()),
-		m_NavMesh(NULL),
-		m_ShowMeshLines(false),
-		m_ShowMeshSolid(false),
-		m_Transparency(30),
-		m_Visible(true),
-		m_Initialized(false),
-		m_AutoCollectMeshes(true),
-		m_CellSize (0.3f),
-		m_CellHeight (0.2f),
-		m_AgentHeight ( 2.0f),
-		m_AgentRadius ( 0.6f),
-		m_AgentMaxClimb ( 0.9f),
-		m_AgentMaxSlope ( 45.0f),
-		m_RegionMinSize ( 50),
-		m_RegionMergeSize ( 20),
-		m_EdgeMaxLen ( 12.0f),
-		m_EdgeMaxError ( 1.3f),
-		m_GridSize(0),
-		m_VertsPerPoly ( 6.0f),
-		m_DetailSampleDist ( 6.0f),
-		m_DetailSampleMaxError ( 1.0f),
-		m_TileSize ( 64),
+		
 		m_NavQuery ( dtAllocNavMeshQuery()),
 		m_Geom ( new InputGeom()),
 		m_Ctx( new rcContext(true)),
-		m_UseBoudingBox(true),
-		m_MonotonePartitioning ( false),
+		
 		m_LocalOrigin(0,0,0)
 	{
 		m_MeshBounding = AABox();
@@ -76,7 +56,7 @@ namespace GASS
 	{
 		ComponentFactory::GetPtr()->Register<RecastNavigationMeshComponent>();
 
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastNavigationMeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RecastNavigationMeshComponent", OF_VISIBLE));
 		RegisterMember("AutoCollectMeshes", &RecastNavigationMeshComponent::m_AutoCollectMeshes, PF_VISIBLE | PF_EDITABLE);
 		RegisterGetSet("Build", &RecastNavigationMeshComponent::GetBuild, &RecastNavigationMeshComponent::SetBuild,PF_VISIBLE | PF_EDITABLE);
 		RegisterGetSet("CellSize", &RecastNavigationMeshComponent::GetCellSize, &RecastNavigationMeshComponent::SetCellSize, PF_VISIBLE | PF_EDITABLE);
@@ -113,7 +93,7 @@ namespace GASS
 
 	void RecastNavigationMeshComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnEditPosition,EditPositionMessage,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(RecastNavigationMeshComponent::OnEditPosition,EditPositionEvent,1));
 		GetSceneObject()->GetScene()->RegisterForMessage(REG_TMESS( RecastNavigationMeshComponent::OnSceneObjectCreated,PostSceneObjectInitializedEvent,0));
 
 		const std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
@@ -124,7 +104,7 @@ namespace GASS
 			m_NavQuery->init(m_NavMesh, 2048);
 		}
 
-		std::vector<SceneObjectRef>::iterator iter = m_SelectedMeshes.begin();
+		auto iter = m_SelectedMeshes.begin();
 		//remove invalid pointers!
 		while(iter!=  m_SelectedMeshes.end())
 		{
@@ -150,21 +130,21 @@ namespace GASS
 	void RecastNavigationMeshComponent::OnDelete()
 	{
 		delete m_Geom;
-		m_Geom = NULL;
+		m_Geom = nullptr;
 		dtFreeNavMeshQuery(m_NavQuery);
-		m_NavQuery = NULL;
+		m_NavQuery = nullptr;
 		dtFreeNavMesh(m_NavMesh);
-		m_NavMesh = NULL;
+		m_NavMesh = nullptr;
 	}
 
-	void RecastNavigationMeshComponent::OnEditPosition(EditPositionMessagePtr message)
+	void RecastNavigationMeshComponent::OnEditPosition(EditPositionEventPtr message)
 	{
 		if (m_NavMesh && m_NavQuery)
 		{
 			dtQueryFilter filter;
 			float ext[3];
 			float point[3];
-			Vec3 pos = message->GetPosition();
+			Vec3 pos = message->m_Position;
 			GASSToRecast(pos,point);
 			//point[0] =pos.x; point[1] =pos.y; point[2] =pos.z;
 			ext[0] = 0.1f; ext[1] = 0.1f; ext[2] = 0.1f;
@@ -188,7 +168,7 @@ namespace GASS
 	// Quick and dirty convex hull.
 
 	// Returns true if 'c' is left of line 'a'-'b'.
-	inline bool left(const float* a, const float* b, const float* c)
+	inline bool Left(const float* a, const float* b, const float* c)
 	{
 		const float u1 = b[0] - a[0];
 		const float v1 = b[2] - a[2];
@@ -198,7 +178,7 @@ namespace GASS
 	}
 
 	// Returns true if 'a' is more lower-left than 'b'.
-	inline bool cmppt(const float* a, const float* b)
+	inline bool Cmppt(const float* a, const float* b)
 	{
 		if (a[0] < b[0]) return true;
 		if (a[0] > b[0]) return false;
@@ -342,7 +322,7 @@ namespace GASS
 		}
 	}
 
-	inline unsigned int nextPow2(unsigned int v)
+	inline unsigned int NextPow2(unsigned int v)
 	{
 		v--;
 		v |= v >> 1;
@@ -354,7 +334,7 @@ namespace GASS
 		return v;
 	}
 
-	inline unsigned int ilog2(unsigned int v)
+	inline unsigned int Ilog2(unsigned int v)
 	{
 		unsigned int r;
 		unsigned int shift;
@@ -369,11 +349,11 @@ namespace GASS
 	bool RecastNavigationMeshComponent::GenerateTiles()
 	{
 		RawNavMeshData rnm_data;
-		rnm_data.BMax = NULL;
-		rnm_data.BMin = NULL;
-		rnm_data.TriNorm = NULL;
-		rnm_data.Tris = NULL;
-		rnm_data.Area = NULL;
+		rnm_data.BMax = nullptr;
+		rnm_data.BMin = nullptr;
+		rnm_data.TriNorm = nullptr;
+		rnm_data.Tris = nullptr;
+		rnm_data.Area = nullptr;
 		rnm_data.NumTris = 0;
 		rnm_data.NumVerts = 0;
 		GetRawMeshData(rnm_data);
@@ -405,18 +385,18 @@ namespace GASS
 
 		// Max tiles and max polys affect how the tile IDs are caculated.
 		// There are 22 bits available for identifying a tile and a polygon.
-		int tileBits = rcMin((int)ilog2(nextPow2(tw*th)), 14);
-		if (tileBits > 14) tileBits = 14;
-		int polyBits = 22 - tileBits;
-		int maxTiles = 1 << tileBits;
-		int maxPolysPerTile = 1 << polyBits;
+		int tile_bits = rcMin((int)Ilog2(NextPow2(tw*th)), 14);
+		if (tile_bits > 14) tile_bits = 14;
+		int poly_bits = 22 - tile_bits;
+		int max_tiles = 1 << tile_bits;
+		int max_polys_per_tile = 1 << poly_bits;
 
 		dtNavMeshParams params;
 		rcVcopy(params.orig, rnm_data.BMin);
 		params.tileWidth = m_TileSize*m_CellSize;
 		params.tileHeight = m_TileSize*m_CellSize;
-		params.maxTiles = maxTiles;
-		params.maxPolys = maxPolysPerTile;
+		params.maxTiles = max_tiles;
+		params.maxPolys = max_polys_per_tile;
 
 		status = m_NavMesh->init(&params);
 		if (dtStatusFailed(status))
@@ -457,25 +437,25 @@ namespace GASS
 			for (int x = 0; x < tw; ++x)
 			{
 
-				float tileBmin[3];
-				float tileBmax[3];
+				float tile_bmin[3];
+				float tile_bmax[3];
 
-				tileBmin[0] = bmin[0] + x*tcs;
-				tileBmin[1] = bmin[1];
-				tileBmin[2] = bmin[2] + y*tcs;
+				tile_bmin[0] = bmin[0] + x*tcs;
+				tile_bmin[1] = bmin[1];
+				tile_bmin[2] = bmin[2] + y*tcs;
 
-				tileBmax[0] = bmin[0] + (x+1)*tcs;
-				tileBmax[1] = bmax[1];
-				tileBmax[2] = bmin[2] + (y+1)*tcs;
+				tile_bmax[0] = bmin[0] + (x+1)*tcs;
+				tile_bmax[1] = bmax[1];
+				tile_bmax[2] = bmin[2] + (y+1)*tcs;
 
-				int dataSize = 0;
-				unsigned char* data = BuildTileMesh(x, y, tileBmin, tileBmax, dataSize);
+				int data_size = 0;
+				unsigned char* data = BuildTileMesh(x, y, tile_bmin, tile_bmax, data_size);
 				if (data)
 				{
 					// Remove any previous data (navmesh owns and deletes the data).
-					m_NavMesh->removeTile(m_NavMesh->getTileRefAt(x,y,0),0,0);
+					m_NavMesh->removeTile(m_NavMesh->getTileRefAt(x,y,0),nullptr,nullptr);
 					// Let the navmesh own the data.
-					dtStatus status = m_NavMesh->addTile(data,dataSize,DT_TILE_FREE_DATA,0,0);
+					dtStatus status = m_NavMesh->addTile(data,data_size,DT_TILE_FREE_DATA,0,nullptr);
 					if (dtStatusFailed(status))
 						dtFree(data);
 				}
@@ -491,13 +471,13 @@ namespace GASS
 		if (!m_Geom || !m_Geom->getMesh() || !m_Geom->getChunkyMesh())
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Input mesh is not specified.");
-			return 0;
+			return nullptr;
 		}
 
 		const float* verts = m_Geom->getMesh()->getVerts();
 		const int nverts = m_Geom->getMesh()->getVertCount();
 		const int ntris = m_Geom->getMesh()->getTriCount();
-		const rcChunkyTriMesh* chunkyMesh = m_Geom->getChunkyMesh();
+		const rcChunkyTriMesh* chunky_mesh = m_Geom->getChunkyMesh();
 
 
 		rcConfig cfg;
@@ -545,22 +525,22 @@ namespace GASS
 		if (!solid)
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'solid'.");
-			return 0;
+			return nullptr;
 		}
 		if (!rcCreateHeightfield(m_Ctx, *solid, cfg.width, cfg.height, cfg.bmin, cfg.bmax, cfg.cs, cfg.ch))
 		{
 			//m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not create solid heightfield.");
-			return 0;
+			return nullptr;
 		}
 
 		// Allocate array that can hold triangle flags.
 		// If you have multiple meshes you need to process, allocate
 		// and array which can hold the max number of triangles you need to process.
-		unsigned char*  triareas = new unsigned char[chunkyMesh->maxTrisPerChunk];
+		auto*  triareas = new unsigned char[chunky_mesh->maxTrisPerChunk];
 		if (!triareas)
 		{
-			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'm_triareas' (%d).", chunkyMesh->maxTrisPerChunk);
-			return 0;
+			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'm_triareas' (%d).", chunky_mesh->maxTrisPerChunk);
+			return nullptr;
 		}
 
 		float tbmin[2], tbmax[2];
@@ -569,19 +549,19 @@ namespace GASS
 		tbmax[0] = cfg.bmax[0];
 		tbmax[1] = cfg.bmax[2];
 		int cid[512];// TODO: Make grow when returning too many items.
-		const int ncid = rcGetChunksOverlappingRect(chunkyMesh, tbmin, tbmax, cid, 512);
+		const int ncid = rcGetChunksOverlappingRect(chunky_mesh, tbmin, tbmax, cid, 512);
 		if (!ncid)
-			return 0;
+			return nullptr;
 
-		int tileTriCount = 0;
+		int tile_tri_count = 0;
 
 		for (int i = 0; i < ncid; ++i)
 		{
-			const rcChunkyTriMeshNode& node = chunkyMesh->nodes[cid[i]];
-			const int* ctris = &chunkyMesh->tris[node.i*3];
+			const rcChunkyTriMeshNode& node = chunky_mesh->nodes[cid[i]];
+			const int* ctris = &chunky_mesh->tris[node.i*3];
 			const int nctris = node.n;
 
-			tileTriCount += nctris;
+			tile_tri_count += nctris;
 
 			memset(triareas, 0, nctris*sizeof(unsigned char));
 			rcMarkWalkableTriangles(m_Ctx, cfg.walkableSlopeAngle,
@@ -593,7 +573,7 @@ namespace GASS
 		//if (!m_keepInterResults)
 		{
 			delete [] triareas;
-			triareas = 0;
+			triareas = nullptr;
 		}
 
 		// Once all geometry is rasterized, we do initial pass of filtering to
@@ -610,25 +590,25 @@ namespace GASS
 		if (!chf)
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'chf'.");
-			return 0;
+			return nullptr;
 		}
 		if (!rcBuildCompactHeightfield(m_Ctx, cfg.walkableHeight, cfg.walkableClimb, *solid, *chf))
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build compact data.");
-			return 0;
+			return nullptr;
 		}
 
 		//	if (!m_keepInterResults)
 		{
 			rcFreeHeightField(solid);
-			solid = 0;
+			solid = nullptr;
 		}
 
 		// Erode the walkable area by agent radius.
 		if (!rcErodeWalkableArea(m_Ctx, cfg.walkableRadius, *chf))
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not erode.");
-			return 0;
+			return nullptr;
 		}
 
 		//tessellate mesh!
@@ -665,7 +645,7 @@ namespace GASS
 			if (!rcBuildRegionsMonotone(m_Ctx, *chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
 			{
 				m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build regions.");
-				return 0;
+				return nullptr;
 			}
 		}
 		else
@@ -674,14 +654,14 @@ namespace GASS
 			if (!rcBuildDistanceField(m_Ctx, *chf))
 			{
 				m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build distance field.");
-				return 0;
+				return nullptr;
 			}
 
 			// Partition the walkable surface into simple regions without holes.
 			if (!rcBuildRegions(m_Ctx, *chf, cfg.borderSize, cfg.minRegionArea, cfg.mergeRegionArea))
 			{
 				m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build regions.");
-				return 0;
+				return nullptr;
 			}
 		}
 
@@ -693,17 +673,17 @@ namespace GASS
 		if (!cset)
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'cset'.");
-			return 0;
+			return nullptr;
 		}
 		if (!rcBuildContours(m_Ctx, *chf, cfg.maxSimplificationError, cfg.maxEdgeLen, *cset))
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not create contours.");
-			return 0;
+			return nullptr;
 		}
 
 		if (cset->nconts == 0)
 		{
-			return 0;
+			return nullptr;
 		}
 
 		// Build polygon navmesh from the contours.
@@ -713,12 +693,12 @@ namespace GASS
 		if (!pmesh)
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'pmesh'.");
-			return 0;
+			return nullptr;
 		}
 		if (!rcBuildPolyMesh(m_Ctx, *cset, cfg.maxVertsPerPoly, *pmesh))
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could not triangulate contours.");
-			return 0;
+			return nullptr;
 		}
 
 		// Build detail mesh.
@@ -726,7 +706,7 @@ namespace GASS
 		if (!dmesh)
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'dmesh'.");
-			return 0;
+			return nullptr;
 		}
 
 		//restore material ids
@@ -755,26 +735,26 @@ namespace GASS
 			*dmesh))
 		{
 			m_Ctx->log(RC_LOG_ERROR, "buildNavigation: Could build polymesh detail.");
-			return 0;
+			return nullptr;
 		}
 
 		//	if (!m_keepInterResults)
 		{
 			rcFreeCompactHeightfield(chf);
-			chf = 0;
+			chf = nullptr;
 			rcFreeContourSet(cset);
-			cset = 0;
+			cset = nullptr;
 		}
 
-		unsigned char* navData = 0;
-		int navDataSize = 0;
+		unsigned char* nav_data = nullptr;
+		int nav_data_size = 0;
 		if (cfg.maxVertsPerPoly <= DT_VERTS_PER_POLYGON)
 		{
 			if (pmesh->nverts >= 0xffff)
 			{
 				// The vertex indices are ushorts, and cannot point to more than 0xffff vertices.
 				m_Ctx->log(RC_LOG_ERROR, "Too many vertices per tile %d (max: %d).", pmesh->nverts, 0xffff);
-				return 0;
+				return nullptr;
 			}
 
 			// Update poly flags from areas.
@@ -832,10 +812,10 @@ namespace GASS
 			params.ch = cfg.ch;
 			params.buildBvTree = true;
 
-			if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
+			if (!dtCreateNavMeshData(&params, &nav_data, &nav_data_size))
 			{
 				m_Ctx->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
-				return 0;
+				return nullptr;
 			}
 		}
 		//int tileMemUsage = navDataSize/1024.0f;
@@ -851,8 +831,8 @@ namespace GASS
 
 
 //		float tileBuildTime = m_Ctx->getAccumulatedTime(RC_TIMER_TOTAL)/1000.0f;
-		dataSize = navDataSize;
-		return navData;
+		dataSize = nav_data_size;
+		return nav_data;
 	}
 
 
@@ -871,7 +851,9 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(value)));
+			auto location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
+			if(location)
+				location->SetVisible(value);
 		}
 	}
 
@@ -1005,7 +987,7 @@ namespace GASS
 		}
 	}
 
-	FilePath RecastNavigationMeshComponent::_GetFilePath() const
+	FilePath RecastNavigationMeshComponent::GetFilePath() const
 	{
 		ScenePtr  scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetSceneFolder().GetFullPath();
@@ -1023,15 +1005,15 @@ namespace GASS
 		{
 			//std::string filename = m_NavMeshFilePath + GetSceneObject()->GetName() + ".bin";
 			//SaveAllTiles(filename.c_str(),m_NavMesh);
-			SaveAllTiles(_GetFilePath().GetFullPath().c_str(),m_NavMesh);
+			SaveAllTiles(GetFilePath().GetFullPath().c_str(),m_NavMesh);
 		}
 		Component::SaveXML(obj_elem);
 	}
 
 	void RecastNavigationMeshComponent::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
-		tinyxml2::XMLDocument *rootXMLDoc = obj_elem->GetDocument();
-		m_NavMeshFilePath = rootXMLDoc->GetFileName();
+		tinyxml2::XMLDocument *root_xml_doc = obj_elem->GetDocument();
+		m_NavMeshFilePath = root_xml_doc->GetFileName();
 		m_NavMeshFilePath = FileUtils::RemoveFilename(m_NavMeshFilePath);
 		Component::LoadXML(obj_elem);
 	}
@@ -1113,8 +1095,7 @@ namespace GASS
 			GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 			for(size_t i = 0; i < components.size() ; i++)
 			{
-				BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-				objs.push_back(comp->GetSceneObject());
+				objs.emplace_back(components[i]->GetSceneObject());
 			}
 		}
 		return objs;
@@ -1169,8 +1150,7 @@ namespace GASS
 				GetSceneObject()->GetScene()->GetRootSceneObject()->GetComponentsByClass<IMeshComponent>(components, true);
 				for(size_t i = 0; i < components.size() ; i++)
 				{
-					BaseSceneComponentPtr comp = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(components[i]);
-					m_SelectedMeshes.push_back(comp->GetSceneObject());
+					m_SelectedMeshes.emplace_back(components[i]->GetSceneObject());
 				}
 			}
 		}
@@ -1234,12 +1214,12 @@ namespace GASS
 			if(tot_verts > 0 && tot_faces > 0 && sizeof(Float) == 8) //double precision
 			{
 				//copy data to float
-				float* verts = new float[tot_verts*3];
+				auto* verts = new float[tot_verts*3];
 				int* tris = new int[tot_faces*3];
-				float* trinorms = new float[tot_faces*3];
+				auto* trinorms = new float[tot_faces*3];
 
-				float* bmin = new float[3];
-				float* bmax = new float[3];
+				auto* bmin = new float[3];
+				auto* bmax = new float[3];
 
 				int face_index = 0;
 				int vert_index = 0;
@@ -1336,7 +1316,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		sub_mesh_data = GraphicsSubMeshPtr(new GraphicsSubMesh());
+		sub_mesh_data = std::make_shared<GraphicsSubMesh>();
 		m_NavVisTriMesh->SubMeshVector.push_back(sub_mesh_data);
 		sub_mesh_data->Type = TRIANGLE_LIST;
 		sub_mesh_data->MaterialName = "WhiteNoLighting";
@@ -1366,12 +1346,12 @@ namespace GASS
 			{
 				if(m_ShowMeshLines)
 				{
-					obj->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_NavVisLineMesh)));
-					obj->PostRequest(PositionRequestPtr(new PositionRequest(m_LocalOrigin)));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_NavVisLineMesh);
+					obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_LocalOrigin);
 				}
 				else
 				{
-					obj->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 				}
 			}
 		}
@@ -1388,13 +1368,13 @@ namespace GASS
 			{
 				if(m_ShowMeshSolid)
 				{
-					obj->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_NavVisTriMesh)));
-					obj->PostRequest(PositionRequestPtr(new PositionRequest(m_LocalOrigin)));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_NavVisTriMesh);
+					obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(m_LocalOrigin);
 				}
 				else
 				{
 					//Hide mesh
-					obj->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+					obj->GetFirstComponentByClass<IManualMeshComponent>()->Clear(); 
 				}
 			}
 		}
@@ -1448,10 +1428,10 @@ namespace GASS
 			const dtMeshTile* tile = mesh->getTile(i);
 			if (!tile || !tile->header || !tile->dataSize) continue;
 
-			NavMeshTileHeader tileHeader;
-			tileHeader.tileRef = mesh->getTileRef(tile);
-			tileHeader.dataSize = tile->dataSize;
-			fwrite(&tileHeader, sizeof(tileHeader), 1, fp);
+			NavMeshTileHeader tile_header;
+			tile_header.tileRef = mesh->getTileRef(tile);
+			tile_header.dataSize = tile->dataSize;
+			fwrite(&tile_header, sizeof(tile_header), 1, fp);
 
 			fwrite(tile->data, tile->dataSize, 1, fp);
 		}
@@ -1462,7 +1442,7 @@ namespace GASS
 	dtNavMesh* RecastNavigationMeshComponent::LoadAll(const char* path)
 	{
 		FILE* fp = fopen(path, "rb");
-		if (!fp) return 0;
+		if (!fp) return nullptr;
 
 		// Read header.
 		NavMeshSetHeader header;
@@ -1470,41 +1450,41 @@ namespace GASS
 		if (header.magic != NAVMESHSET_MAGIC)
 		{
 			fclose(fp);
-			return 0;
+			return nullptr;
 		}
 		if (header.version != NAVMESHSET_VERSION)
 		{
 			fclose(fp);
-			return 0;
+			return nullptr;
 		}
 
 		dtNavMesh* mesh = dtAllocNavMesh();
 		if (!mesh)
 		{
 			fclose(fp);
-			return 0;
+			return nullptr;
 		}
 		dtStatus status = mesh->init(&header.params);
 		if (dtStatusFailed(status))
 		{
 			fclose(fp);
-			return 0;
+			return nullptr;
 		}
 
 		// Read tiles.
 		for (int i = 0; i < header.numTiles; ++i)
 		{
-			NavMeshTileHeader tileHeader;
-			fread(&tileHeader, sizeof(tileHeader), 1, fp);
-			if (!tileHeader.tileRef || !tileHeader.dataSize)
+			NavMeshTileHeader tile_header;
+			fread(&tile_header, sizeof(tile_header), 1, fp);
+			if (!tile_header.tileRef || !tile_header.dataSize)
 				break;
 
-			unsigned char* data = (unsigned char*)dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
+			auto* data = (unsigned char*)dtAlloc(tile_header.dataSize, DT_ALLOC_PERM);
 			if (!data) break;
-			memset(data, 0, tileHeader.dataSize);
-			fread(data, tileHeader.dataSize, 1, fp);
+			memset(data, 0, tile_header.dataSize);
+			fread(data, tile_header.dataSize, 1, fp);
 
-			mesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
+			mesh->addTile(data, tile_header.dataSize, DT_TILE_FREE_DATA, tile_header.tileRef, nullptr);
 		}
 
 		fclose(fp);
@@ -1538,7 +1518,7 @@ namespace GASS
 	}
 
 
-	static float frand()
+	static float Frand()
 	{
 		return (float)rand()/(float)RAND_MAX;
 	}
@@ -1553,7 +1533,7 @@ namespace GASS
 			float pt[3];
 			dtPolyRef ref;
 			dtQueryFilter filter;
-			dtStatus status = m_NavQuery->findRandomPoint(&filter, frand, &ref, pt);
+			dtStatus status = m_NavQuery->findRandomPoint(&filter, Frand, &ref, pt);
 			if (dtStatusSucceed(status))
 			{
 				ret.Set(pt[0],pt[1],pt[2]);
@@ -1562,25 +1542,29 @@ namespace GASS
 		return ret;
 	}
 
-	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const
+	bool RecastNavigationMeshComponent::GetClosestPointOnMeshForPlatform(const PlatformType /*platform_type*/, const GASS::Vec2& in_pos, const float search_radius, GASS::Vec3& out_pos) const
 	{
 		if (m_NavMesh)
 		{
-			GASS::Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
+			Vec3 in_pos_v3(in_pos.x, 0, in_pos.y);
 			float recast_pos[3];
 			GASSToRecast(in_pos_v3, recast_pos);
 
 			dtQueryFilter filter;
 			dtPolyRef poly_ref = 0;
 			dtStatus ret = 0;
-			float polyPickExt[3];
-			polyPickExt[0] = search_radius;
-			polyPickExt[1] = FLT_MAX / 3.0f; //should be large enough, is later clamped to tile bounding box
-			polyPickExt[2] = search_radius;
-			ret = m_NavQuery->findNearestPoly(recast_pos, polyPickExt, &filter, &poly_ref, 0);
+			float poly_pick_ext[3];
+			poly_pick_ext[0] = search_radius;
+			poly_pick_ext[1] = FLT_MAX / 3.0f; //should be large enough, is later clamped to tile bounding box
+			poly_pick_ext[2] = search_radius;
+			ret = m_NavQuery->findNearestPoly(recast_pos, poly_pick_ext, &filter, &poly_ref, nullptr);
 			if (dtStatusFailed(ret))
 				return false;
-
+			float recast_out_pos[3];
+			if (!poly_ref)
+				return false;
+			m_NavQuery->closestPointOnPoly(poly_ref, recast_pos, recast_out_pos);
+			RecastToGASS(recast_out_pos, out_pos);
 		}
 		return true;
 	}
@@ -1613,7 +1597,7 @@ namespace GASS
 			while(dist > radius && tries < 200)
 			{
 				tries++;
-				status = m_NavQuery->findRandomPointAroundCircle(start_ref, q_pos, radius, &filter, frand, &end_ref, end_pos);
+				status = m_NavQuery->findRandomPointAroundCircle(start_ref, q_pos, radius, &filter, Frand, &end_ref, end_pos);
 				if (dtStatusSucceed(status))
 				{
 					RecastToGASS(end_pos,point);
@@ -1684,14 +1668,14 @@ namespace GASS
 	}
 
 
-	void RecastNavigationMeshComponent::GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const
+	void RecastNavigationMeshComponent::GASSToRecast(const Vec3 &in_pos, float* out_pos) const
 	{
 		out_pos[0] = static_cast<float>(in_pos.x - m_LocalOrigin.x);
 		out_pos[1] = static_cast<float>(in_pos.y - m_LocalOrigin.y);
 		out_pos[2] = static_cast<float>(in_pos.z - m_LocalOrigin.z);
 	}
 
-	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos,GASS::Vec3 &out_pos) const
+	void RecastNavigationMeshComponent::RecastToGASS(float* in_pos, Vec3 &out_pos) const
 	{
 		out_pos.x = in_pos[0] + m_LocalOrigin.x;
 		out_pos.y = in_pos[1] + m_LocalOrigin.y;
@@ -1713,8 +1697,8 @@ namespace GASS
 		float rescast_to_pos[3];
 		GASSToRecast(from,rescast_from_pos);
 		GASSToRecast(to,rescast_to_pos);
-		float polyPickExt[3];
-		polyPickExt[0] = 4; polyPickExt[1] = 4; polyPickExt[2] = 4;
+		float poly_pick_ext[3];
+		poly_pick_ext[0] = 4; poly_pick_ext[1] = 4; poly_pick_ext[2] = 4;
 
 
 		dtQueryFilter filter;
@@ -1725,12 +1709,12 @@ namespace GASS
 		dtPolyRef start_ref = 0;
 		dtPolyRef end_ref  = 0;
 		dtStatus ret  =0;
-		ret = m_NavQuery->findNearestPoly(rescast_from_pos, polyPickExt, &filter, &start_ref, 0);
+		ret = m_NavQuery->findNearestPoly(rescast_from_pos, poly_pick_ext, &filter, &start_ref, nullptr);
 		if(dtStatusFailed(ret)) //cast exception
 			GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to find start polygon","RecastNavigationMeshComponent::GetShortestPath");
 		if(start_ref)
 		{
-			ret = m_NavQuery->findNearestPoly(rescast_to_pos, polyPickExt, &filter, &end_ref, 0);
+			ret = m_NavQuery->findNearestPoly(rescast_to_pos, poly_pick_ext, &filter, &end_ref, nullptr);
 			if(dtStatusFailed(ret)) //cast exception
 				GASS_EXCEPT(GASS::Exception::ERR_ITEM_NOT_FOUND, "Failed to find end polygon","RecastNavigationMeshComponent::GetShortestPath");
 			if(end_ref)

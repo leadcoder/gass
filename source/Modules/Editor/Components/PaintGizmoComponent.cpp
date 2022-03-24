@@ -2,11 +2,14 @@
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "PaintGizmoComponent.h"
+
+#include <memory>
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 //#define GIZMO_SENDER 999
 
@@ -14,10 +17,9 @@ namespace GASS
 {
 
 	PaintGizmoComponent::PaintGizmoComponent() : m_MeshData(new GraphicsMesh), m_Color(0,1,0,1),
-		m_Size(30),
-		m_InnerSize(20),
+		
 		m_Type("follow_height"),
-		m_Active(false),
+		
 		m_Pos(1,0,0)
 	{
 
@@ -108,6 +110,6 @@ namespace GASS
 		sub_mesh_data->ColorVector.push_back(m_Color);
 		
 		
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_MeshData)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_MeshData);
 	}
 }

@@ -43,10 +43,10 @@ namespace GASS
 	}
 
 	ODEPhysicsSceneManager::ODEPhysicsSceneManager(SceneWeakPtr scene) : Reflection(scene),
-		m_Space(0),
-		m_World(0),
-		m_CollisionSpace(0),
-		m_ContactGroup (0),
+		m_Space(nullptr),
+		m_World(nullptr),
+		m_CollisionSpace(nullptr),
+		m_ContactGroup (nullptr),
 		m_Active(true),
 		m_Gravity(-9.81f),
 		m_SimulationUpdateInterval(1.0/60.0), //Locked to 60hz, if this value is changed the
@@ -64,7 +64,7 @@ namespace GASS
 		ScenePtr scene = GetScene();
 		RegisterForPreUpdate<ODEPhysicsSystem>();
 
-		m_Space = 0;
+		m_Space = nullptr;
 		m_World = dWorldCreate();
 		m_Space = dHashSpaceCreate(m_Space);
 
@@ -154,7 +154,7 @@ namespace GASS
 #define MAX_CONTACTS 25		// maximum number of contact points per body
 	void ODEPhysicsSceneManager::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	{
-		ODEPhysicsSceneManager* manager = (ODEPhysicsSceneManager*) data;
+		auto* manager = (ODEPhysicsSceneManager*) data;
 		manager->ProcessCollision(o1,o2);
 	}
 
@@ -175,8 +175,8 @@ namespace GASS
 		{
 			// check that both bodies has a geometry
 
-			BaseSceneComponent* geom1 = static_cast<BaseSceneComponent*>(dGeomGetData(o1));
-			BaseSceneComponent* geom2 = static_cast<BaseSceneComponent*>(dGeomGetData(o2));
+			auto* geom1 = static_cast<Component*>(dGeomGetData(o1));
+			auto* geom2 = static_cast<Component*>(dGeomGetData(o2));
 
 
 			if(!(geom1 && geom2))
@@ -208,8 +208,8 @@ namespace GASS
 			if(b1 && b2 && dAreConnectedExcluding(b1,b2,dJointTypeContact)) return;
 
 
-			IODEGeometryComponent* physics_geom1 = dynamic_cast<IODEGeometryComponent*>(geom1);
-			IODEGeometryComponent* physics_geom2 = dynamic_cast<IODEGeometryComponent*>(geom2);
+			auto* physics_geom1 = dynamic_cast<IODEGeometryComponent*>(geom1);
+			auto* physics_geom2 = dynamic_cast<IODEGeometryComponent*>(geom2);
 
 
 			dContact contact;
@@ -242,8 +242,8 @@ namespace GASS
 				/*if( (WantsContact(geom1, contact, geom2, o1, o2, true )) &&
 				(WantsContact(geom2, contact, geom1, o2, o1, true )) )
 				*/{
-					dJointID tempJoint = dJointCreateContact( m_World, m_ContactGroup, &contact );
-					dJointAttach( tempJoint, b1, b2 );
+					dJointID temp_joint = dJointCreateContact( m_World, m_ContactGroup, &contact );
+					dJointAttach( temp_joint, b1, b2 );
 				}
 			}
 			/*if(numc > 0)

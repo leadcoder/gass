@@ -20,7 +20,7 @@
 
 #pragma once 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
@@ -36,8 +36,8 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 
 	/**
 	An ODE geometry-object has a lot of common operations/functionality like, transformations, 
@@ -47,7 +47,7 @@ namespace GASS
 	not be instantiated in configuration files
 	*/
 
-	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,BaseSceneComponent> , public IPhysicsGeometryComponent, public IODEGeometryComponent
+	class ODEBaseGeometryComponent : public Reflection<ODEBaseGeometryComponent,Component> , public IPhysicsGeometryComponent, public IODEGeometryComponent
 	{
 	friend class ODEPhysicsSceneManager;
 	public:
@@ -66,7 +66,7 @@ namespace GASS
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 		
 		//virtual functions that derived geometry have to implement
-		virtual dGeomID CreateODEGeom() {return 0;}
+		virtual dGeomID CreateODEGeom() {return nullptr;}
 		virtual void SetSizeFromMesh(bool /*value*/) {};
 		virtual void UpdateBodyMass(){};
 
@@ -93,24 +93,23 @@ namespace GASS
 
 		//debug fucntions
 		virtual void UpdateDebug() {};
-		virtual void OnPhysicsDebug(PhysicsDebugRequestPtr message);
 		virtual void OnDebugTransformation(TransformationChangedEventPtr message);
 		virtual void SetDebug(bool value);
 		virtual bool GetDebug() const;
 		virtual SceneObjectPtr GetDebugObject();
 	protected:
-		dGeomID m_GeomID;
-		dGeomID m_TransformGeomID;
-		dSpaceID m_ODESpaceID;
-		ODEBodyComponent* m_Body; //pointer to body!
+		dGeomID m_GeomID{nullptr};
+		//dGeomID m_TransformGeomID;
+		dSpaceID m_ODESpaceID{nullptr};
+		ODEBodyComponent* m_Body{nullptr}; //pointer to body!
 		std::string m_GeometryTemplate;
 		std::string m_AddToBody;
 		Vec3 m_Offset;
-		float m_Friction;
-		unsigned long m_CollisionCategory;
-		unsigned long m_CollisionBits;
-		bool m_SizeFromMesh;
-		bool m_Debug;
+		float m_Friction{1};
+		unsigned long m_CollisionCategory{1};
+		unsigned long m_CollisionBits{1};
+		bool m_SizeFromMesh{true};
+		bool m_Debug{false};
 		ODEPhysicsSceneManagerWeakPtr m_SceneManager;
 
 	};

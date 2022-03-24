@@ -2,6 +2,8 @@
 #include "Modules/Editor/EditorMessages.h"
 #include "Modules/Editor/ToolSystem/MouseToolController.h"
 #include "GASSMultiSelectionComponent.h"
+
+#include <memory>
 #include "EditorComponent.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/GASSSceneObject.h"
@@ -9,10 +11,11 @@
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
-	MultiSelectionComponent::MultiSelectionComponent() : m_Color(1,1,1,1), m_Active(false)
+	MultiSelectionComponent::MultiSelectionComponent() : m_Color(1,1,1,1) 
 	{
 
 	}
@@ -111,8 +114,8 @@ namespace GASS
 
 			}
 		}
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-		GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(visible)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(visible);
 		
 		if(visible) //move to location
 			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(world_pos);

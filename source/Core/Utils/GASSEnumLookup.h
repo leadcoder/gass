@@ -67,7 +67,7 @@ namespace GASS
  		*/
 		int Get(const std::string &name);
 	private:
-		typedef std::map<std::string,int> ConstantMap;
+		using ConstantMap = std::map<std::string, int>;
 		int m_NumConstants = 0;
 		ConstantMap m_ConstantMap;
 	};

@@ -28,8 +28,8 @@
 
 namespace GASS
 {
-	ODECylinderGeometryComponent::ODECylinderGeometryComponent(): m_Radius(1),
-			m_Length(3)
+	ODECylinderGeometryComponent::ODECylinderGeometryComponent()
+			
 		
 	{
 
@@ -71,7 +71,7 @@ namespace GASS
 
 	dGeomID ODECylinderGeometryComponent::CreateODEGeom()
 	{
-		return dCreateCCylinder (0, m_Radius, m_Length);
+		return dCreateCCylinder (GetSpace(), m_Radius, m_Length);
 	}
 
 	void ODECylinderGeometryComponent::SetRadius(Float radius)

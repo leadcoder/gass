@@ -1,4 +1,6 @@
 #include "GoToPositionTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -40,7 +42,7 @@ namespace GASS
 
 				//Send message
 				int from_id = GASS_PTR_TO_INT(this);
-				selected->PostRequest(GotoPositionRequestPtr(new GotoPositionRequest(info.m_3DPos, from_id)));
+				selected->PostRequest(std::make_shared<GotoPositionRequest>(info.m_3DPos, from_id));
 				Vec3 dir(1,0,1);
 				dir.Normalize();
 				FaceDirectionRequestPtr fd_msg(new FaceDirectionRequest(dir,from_id));

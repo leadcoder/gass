@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "TurretComponent.h"
+
+#include <memory>
 #include "Sim/Interface/GASSIMissionSceneManager.h"
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSPlane.h"
@@ -30,24 +32,16 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 
 namespace GASS
 {
 	TurretComponent::TurretComponent()  :m_Controller("Yaw"),
-		m_MaxSteerVelocity(1),
-		m_SteerForce(10),
-		m_MaxSteerAngle(0),
-		m_MinAngle(-1000),
-		m_MaxAngle(1000),
-		m_CurrentAngle(0),
-		m_DesiredDir(0,0,-1),
-		m_Active(false),
-		m_TurnInput(0),
-		m_AngularVelocity(0),
-		m_RotValue(0)
+		
+		m_DesiredDir(0,0,-1)
+		
 	{
 		m_RelTrans.MakeIdentity();
 	}
@@ -80,8 +74,13 @@ namespace GASS
 		m_Hinge->SetDriveTargetVelocity(0);
 		//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 		//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+			sound->SetVolume(0);
+		}
 
 		RegisterForPostUpdate<IMissionSceneManager>();
 	}
@@ -153,10 +152,10 @@ namespace GASS
 	Float TurretComponent::GetAngleOnPlane(const Vec3 &plane_normal,const Vec3 &v1,const Vec3 &v2) const
 	{
 		Vec3 cross = Vec3::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
+		auto cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
-		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
+		auto angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 		if(Vec3::Dot(plane_normal,cross) > 0)
 			angle *= -1;
 		return angle;
@@ -166,10 +165,10 @@ namespace GASS
 	Float TurretComponent::GetPitchAngle(const Vec3 v1,const Vec3 v2) const
 	{
 		//Vec3 cross = Vec3::Cross(v1,v2);
-		float cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
+		auto cos_angle = static_cast<float>(Vec3::Dot(v1,v2));
 		if(cos_angle > 1) cos_angle = 1;
 		if(cos_angle < -1) cos_angle = -1;
-		float angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
+		auto angle = static_cast<float>(Math::Rad2Deg(acos(cos_angle)));
 		if(v1.y < v2.y)
 			angle *= -1;
 		return angle;
@@ -188,7 +187,11 @@ namespace GASS
 			m_Hinge->SetDriveTargetVelocity(0);
 			//GetSceneObject()->PostRequest(PhysicsHingeJointMaxTorqueRequestPtr(new PhysicsHingeJointMaxTorqueRequest(m_SteerForce)));
 			//GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(0)));
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
+			auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+			if (sound)
+			{
+				sound->SetVolume(0);
+			}
 			return;
 		}
 
@@ -199,7 +202,7 @@ namespace GASS
 		if(m_Controller == "Pitch")
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetXAxis();
-			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
+			Vec3 projected_aim = Plane(Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
@@ -212,7 +215,7 @@ namespace GASS
 		else
 		{
 			const Vec3 plane_normal = m_ParentTransformation.GetYAxis();
-			Vec3 projected_aim = Plane(GASS::Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
+			Vec3 projected_aim = Plane(Vec3(0, 0, 0), plane_normal).GetProjectedVector(desired_aim_direction);
 			projected_aim.Normalize();
 			angle_to_aim_dir = GetAngleOnPlane(plane_normal,turret_dir, projected_aim);
 
@@ -390,10 +393,10 @@ namespace GASS
 
 
 		//float turn_velocity = -angle_to_aim_dir*m_MaxSteerVelocity*4;
-		m_TurnPID.setOutputLimit(m_SteerForce*3);
-		m_TurnPID.setGain(0.00003,0.0001,0.0009);
-		m_TurnPID.set(0);
-		float turn_velocity = static_cast<float>(m_TurnPID.update(angle_to_aim_dir,delta_time));
+		m_TurnPID.SetOutputLimit(m_SteerForce*3);
+		m_TurnPID.SetGain(0.00003,0.0001,0.0009);
+		m_TurnPID.Set(0);
+		auto turn_velocity = static_cast<float>(m_TurnPID.Update(angle_to_aim_dir,delta_time));
 		//std::cout << "turn_velocity:" << turn_velocity << "\n";
 
 

@@ -24,7 +24,7 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 
 namespace GASS
 {
@@ -34,18 +34,18 @@ namespace GASS
 		SceneObjectVisitor() {};
 		virtual bool Visit(SceneObjectPtr sceneobject) = 0;
 	};
-	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr;
+	using SceneObjectVisitorPtr = std::shared_ptr<SceneObjectVisitor>;
 
 	class GASSExport ClassComponentsVisitor : public SceneObjectVisitor
 	{
 	public:
 		ClassComponentsVisitor(const std::string &component_class_name) : m_ComponentClassName(component_class_name) {}
-		virtual bool Visit(SceneObjectPtr scene_object)
+		bool Visit(SceneObjectPtr scene_object) override
 		{
 			SceneObject::ComponentIterator comp_iter = scene_object->GetComponents();
 			while(comp_iter.hasMoreElements())
 			{
-				BaseSceneComponentPtr comp = GASS_STATIC_PTR_CAST<BaseSceneComponent>(comp_iter.getNext());
+				ComponentPtr comp = comp_iter.getNext();
 				if(comp->GetRTTI()->IsDerivedFrom(m_ComponentClassName))
 				{
 					m_Components.push_back(comp);
@@ -62,7 +62,7 @@ namespace GASS
 	{
 	public:
 		TypedClassComponentsVisitor() {}
-		virtual bool Visit(SceneObjectPtr scene_object)
+		bool Visit(SceneObjectPtr scene_object) override
 		{
 			SceneObject::ComponentIterator comp_iter = scene_object->GetComponents();
 			while(comp_iter.hasMoreElements())

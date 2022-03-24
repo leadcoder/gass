@@ -28,8 +28,8 @@
 
 namespace GASS
 {
-	OSGSkyboxComponent::OSGSkyboxComponent() : m_Size(200), 
-		m_Node(NULL)
+	OSGSkyboxComponent::OSGSkyboxComponent()  
+		
 	{
 
 	}
@@ -51,7 +51,7 @@ namespace GASS
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
-		m_Node = _CreateSkyBox();
+		m_Node = CreateSkyBox();
 
 		
 		//lc->GetOSGNode()->addChild(m_Node);
@@ -68,7 +68,7 @@ namespace GASS
 		}
 	}
 
-	std::string OSGSkyboxComponent::_GetTexturePath(const std::string &side) const
+	std::string OSGSkyboxComponent::GetTexturePath(const std::string &side) const
 	{
 		std::string extension = FileUtils::GetExtension(m_Material);
 		std::string name = FileUtils::RemoveExtension(m_Material);
@@ -83,46 +83,46 @@ namespace GASS
 		return full_path;
 	}
 
-	osg::TextureCubeMap* OSGSkyboxComponent::_ReadCubeMap()
+	osg::TextureCubeMap* OSGSkyboxComponent::ReadCubeMap()
 	{
-		osg::TextureCubeMap* cubemap = new osg::TextureCubeMap();
+		auto* cubemap = new osg::TextureCubeMap();
 
-		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options("dds_flip");
-
-
-		osg::Image* imagePosX = osgDB::readImageFile(_GetTexturePath("east"),options);
-		if(!imagePosX)
-			imagePosX = osgDB::readImageFile(_GetTexturePath("rt"),options);
-
-		osg::Image* imageNegX = osgDB::readImageFile(_GetTexturePath("west"),options);
-		if(!imageNegX)
-			imageNegX = osgDB::readImageFile(_GetTexturePath("lf"),options);
-
-		osg::Image* imageNegY = osgDB::readImageFile(_GetTexturePath("up"),options);
-		if(!imageNegY)
-			imageNegY = osgDB::readImageFile(_GetTexturePath("up"),options);
-
-		osg::Image* imagePosY = osgDB::readImageFile(_GetTexturePath("down"),options);
-		if(!imagePosY)
-			imagePosY = osgDB::readImageFile(_GetTexturePath("dn"),options);
-
-		osg::Image* imagePosZ = osgDB::readImageFile(_GetTexturePath("north"),options);
-		if(!imagePosZ)
-			imagePosZ = osgDB::readImageFile(_GetTexturePath("fr"),options);
-
-		osg::Image* imageNegZ = osgDB::readImageFile(_GetTexturePath("south"),options);
-		if(!imageNegZ)
-			imageNegZ= osgDB::readImageFile(_GetTexturePath("bk"),options);
+		auto* options = new osgDB::ReaderWriter::Options("dds_flip");
 
 
-		if (imagePosX && imageNegX && imagePosY && imageNegY && imagePosZ && imageNegZ)
+		osg::Image* image_pos_x = osgDB::readImageFile(GetTexturePath("east"),options);
+		if(!image_pos_x)
+			image_pos_x = osgDB::readImageFile(GetTexturePath("rt"),options);
+
+		osg::Image* image_neg_x = osgDB::readImageFile(GetTexturePath("west"),options);
+		if(!image_neg_x)
+			image_neg_x = osgDB::readImageFile(GetTexturePath("lf"),options);
+
+		osg::Image* image_neg_y = osgDB::readImageFile(GetTexturePath("up"),options);
+		if(!image_neg_y)
+			image_neg_y = osgDB::readImageFile(GetTexturePath("up"),options);
+
+		osg::Image* image_pos_y = osgDB::readImageFile(GetTexturePath("down"),options);
+		if(!image_pos_y)
+			image_pos_y = osgDB::readImageFile(GetTexturePath("dn"),options);
+
+		osg::Image* image_pos_z = osgDB::readImageFile(GetTexturePath("north"),options);
+		if(!image_pos_z)
+			image_pos_z = osgDB::readImageFile(GetTexturePath("fr"),options);
+
+		osg::Image* image_neg_z = osgDB::readImageFile(GetTexturePath("south"),options);
+		if(!image_neg_z)
+			image_neg_z= osgDB::readImageFile(GetTexturePath("bk"),options);
+
+
+		if (image_pos_x && image_neg_x && image_pos_y && image_neg_y && image_pos_z && image_neg_z)
 		{
-			cubemap->setImage(osg::TextureCubeMap::POSITIVE_X, imagePosX);
-			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_X, imageNegX);
-			cubemap->setImage(osg::TextureCubeMap::POSITIVE_Y, imagePosY);
-			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Y, imageNegY);
-			cubemap->setImage(osg::TextureCubeMap::POSITIVE_Z, imagePosZ);
-			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Z, imageNegZ);
+			cubemap->setImage(osg::TextureCubeMap::POSITIVE_X, image_pos_x);
+			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_X, image_neg_x);
+			cubemap->setImage(osg::TextureCubeMap::POSITIVE_Y, image_pos_y);
+			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Y, image_neg_y);
+			cubemap->setImage(osg::TextureCubeMap::POSITIVE_Z, image_pos_z);
+			cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Z, image_neg_z);
 
 			cubemap->setWrap(osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE);
 			cubemap->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE);
@@ -149,18 +149,18 @@ namespace GASS
 
 		  void operator()(osg::Node* node, osg::NodeVisitor* nv) override
 		  {
-			  osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
+			  auto* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			  if (cv)
 			  {
-				  const osg::Matrixd& MV = *(cv->getModelViewMatrix());
-				  const osg::Matrixd R = osg::Matrixd::rotate( osg::DegreesToRadians(0.0f), 0.0f,0.0f,1.0f)*
+				  const osg::Matrixd& mv = *(cv->getModelViewMatrix());
+				  const osg::Matrixd r = osg::Matrixd::rotate( osg::DegreesToRadians(0.0f), 0.0f,0.0f,1.0f)*
 					  osg::Matrixd::rotate( osg::DegreesToRadians(90.0f), 1.0f,0.0f,0.0f);
 
-				  osg::Quat q = MV.getRotate();
-				  osg::Matrixd C = osg::Matrixd::rotate( q.inverse() );
+				  osg::Quat q = mv.getRotate();
+				  osg::Matrixd c = osg::Matrixd::rotate( q.inverse() );
 				  //C.setTrans(osg::Vec3d(0,0,0));
 
-				  _texMat.setMatrix( C*R );
+				  _texMat.setMatrix( c*r );
 			  }
 
 			  traverse(node,nv);
@@ -176,7 +176,7 @@ namespace GASS
 		/** Get the transformation matrix which moves from local coordinates to world coordinates.*/
 		bool computeLocalToWorldMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const override
 		{
-			osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
+			auto* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			if (cv)
 			{
 			
@@ -191,39 +191,39 @@ namespace GASS
 		/** Get the transformation matrix which moves from world coordinates to local coordinates.*/
 		bool computeWorldToLocalMatrix(osg::Matrixd& matrix,osg::NodeVisitor* nv) const override
 		{
-			osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
+			auto* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
 			if (cv)
 			{
-				const osg::Vec3d eyePointLocal = cv->getEyeLocal();
-				matrix.postMult(osg::Matrixd::translate(-eyePointLocal.x(),-eyePointLocal.y(),-eyePointLocal.z()));
+				const osg::Vec3d eye_point_local = cv->getEyeLocal();
+				matrix.postMult(osg::Matrixd::translate(-eye_point_local.x(),-eye_point_local.y(),-eye_point_local.z()));
 			}
 			return true;
 		}
 	};
 
-	osg::Node* OSGSkyboxComponent::_CreateSkyBox()
+	osg::Node* OSGSkyboxComponent::CreateSkyBox()
 	{
-		osg::StateSet* stateset = new osg::StateSet();
+		auto* stateset = new osg::StateSet();
 
-		osg::TexEnv* te = new osg::TexEnv;
+		auto* te = new osg::TexEnv;
 		te->setMode(osg::TexEnv::REPLACE);
 		stateset->setTextureAttributeAndModes(0, te, osg::StateAttribute::ON);
 
-		osg::TexGen *tg = new osg::TexGen;
+		auto *tg = new osg::TexGen;
 		tg->setMode(osg::TexGen::NORMAL_MAP);
 		stateset->setTextureAttributeAndModes(0, tg, osg::StateAttribute::ON);
 
-		osg::TexMat *tm = new osg::TexMat;
+		auto *tm = new osg::TexMat;
 		stateset->setTextureAttribute(0, tm);
 
-		osg::TextureCubeMap* skymap = _ReadCubeMap();
+		osg::TextureCubeMap* skymap = ReadCubeMap();
 		stateset->setTextureAttributeAndModes(0, skymap, osg::StateAttribute::ON);
 
 		stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 		stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
 
 		// clear the depth to the far plane.
-		osg::Depth* depth = new osg::Depth;
+		auto* depth = new osg::Depth;
 		depth->setFunction(osg::Depth::ALWAYS);
 		depth->setRange(1.0,1.0);
 		stateset->setAttributeAndModes(depth, osg::StateAttribute::ON );
@@ -238,7 +238,7 @@ namespace GASS
 		stateset->setRenderBinDetails(-1,"RenderBin");
 
 	
-		osg::Geode* geode = new osg::Geode;
+		auto* geode = new osg::Geode;
 		geode->setStateSet( stateset );
 		geode->setCullingActive(false);
 		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
@@ -250,7 +250,7 @@ namespace GASS
 		geode->addDrawable(drawable);
 		geode->setInitialBound(osg::BoundingSphere());
 
-		MyMoveEarthySkyWithEyePointTransform* sky_transform = new MyMoveEarthySkyWithEyePointTransform;
+		auto* sky_transform = new MyMoveEarthySkyWithEyePointTransform;
 		sky_transform->m_Skybox = this;
 		sky_transform->addChild(geode);
 		sky_transform->setNodeMask(~NM_RECEIVE_SHADOWS & sky_transform->getNodeMask());
@@ -258,29 +258,29 @@ namespace GASS
 		sky_transform->setCullingActive(false);
 		sky_transform->setInitialBound(osg::BoundingBox());
 
-		osg::PositionAttitudeTransform* offset_t = new osg::PositionAttitudeTransform();
+		auto* offset_t = new osg::PositionAttitudeTransform();
 		//move below ground to avoid camera intersection
 		offset_t->setPosition(osg::Vec3(0, 0, -1000));
 		offset_t->addChild(sky_transform);
 
-		osg::ClearNode* clearNode = new osg::ClearNode;
-		clearNode->setRequiresClear(false);
+		auto* clear_node = new osg::ClearNode;
+		clear_node->setRequiresClear(false);
 		
-		clearNode->setCullCallback(new TexMatCallback(*tm));
-		clearNode->addChild(offset_t);
-		clearNode->setNodeMask(~NM_RECEIVE_SHADOWS & clearNode->getNodeMask());
-		clearNode->setNodeMask(~NM_CAST_SHADOWS & clearNode->getNodeMask());
-		clearNode->setCullingActive(false);
-		clearNode->setInitialBound(osg::BoundingBox());
+		clear_node->setCullCallback(new TexMatCallback(*tm));
+		clear_node->addChild(offset_t);
+		clear_node->setNodeMask(~NM_RECEIVE_SHADOWS & clear_node->getNodeMask());
+		clear_node->setNodeMask(~NM_CAST_SHADOWS & clear_node->getNodeMask());
+		clear_node->setCullingActive(false);
+		clear_node->setInitialBound(osg::BoundingBox());
 
 		///return clearNode;
 		// A nested camera isolates the projection matrix calculations so the node won't 
 		// affect the clip planes in the rest of the scene.
-		osg::Camera* cam = new osg::Camera();
+		auto* cam = new osg::Camera();
 		cam->getOrCreateStateSet()->setRenderBinDetails(-100000, "RenderBin");
 		cam->setRenderOrder(osg::Camera::NESTED_RENDER);
 		cam->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-		cam->addChild(clearNode);
+		cam->addChild(clear_node);
 		return cam;
 	}
 }

@@ -29,15 +29,10 @@
 
 namespace GASS
 {
-	AdaptiveSteerComponent::AdaptiveSteerComponent() : m_SteerForce(100)
-		,m_MaxSteerVelocity(1)
-		,m_CurrentAngle(0)
-		,m_DesiredAngle(0)
-		,m_MaxSteerAngleAtSpeed(45,1)
+	AdaptiveSteerComponent::AdaptiveSteerComponent() : 
+		m_MaxSteerAngleAtSpeed(45,1)
 		,m_MinSteerAngleAtSpeed(45,20)
-		,m_Speed(1)
-		,m_VehicleSpeed(0)
-		,m_DynamicInputPower(4)
+		
 	{
 
 	}
@@ -89,7 +84,7 @@ namespace GASS
 
 		if (name == "Steer")
 		{
-			float interp = static_cast<float>((m_VehicleSpeed - m_MaxSteerAngleAtSpeed.y)/(m_MinSteerAngleAtSpeed.y - m_MaxSteerAngleAtSpeed.y));
+			auto interp = static_cast<float>((m_VehicleSpeed - m_MaxSteerAngleAtSpeed.y)/(m_MinSteerAngleAtSpeed.y - m_MaxSteerAngleAtSpeed.y));
 			if(interp < 0 )
 				interp = 0.0;
 			if(interp > 1)
@@ -97,13 +92,13 @@ namespace GASS
 			
 			
 			
-			float steer_angle = static_cast<float>(m_MinSteerAngleAtSpeed.x  + (1.0- interp)*(m_MaxSteerAngleAtSpeed.x - m_MinSteerAngleAtSpeed.x));
-			float rad_angle = static_cast<float>(Math::Deg2Rad(steer_angle));
+			auto steer_angle = static_cast<float>(m_MinSteerAngleAtSpeed.x  + (1.0- interp)*(m_MaxSteerAngleAtSpeed.x - m_MinSteerAngleAtSpeed.x));
+			auto rad_angle = static_cast<float>(Math::Deg2Rad(steer_angle));
 
 			if(m_DynamicInputPower > 0)
 			{
 				m_DesiredAngle = value*(1.0f-interp)* rad_angle;
-				m_DesiredAngle += pow(value,m_DynamicInputPower)*(interp)* rad_angle;
+				m_DesiredAngle += pow(value, static_cast<float>(m_DynamicInputPower))*(interp)* rad_angle;
 			}
 			else
 				m_DesiredAngle = value* rad_angle;

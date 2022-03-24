@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "OSGManualMeshComponent.h"
+
+#include <memory>
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGConvert.h"
@@ -30,10 +32,8 @@
 
 namespace GASS
 {
-	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN),
-		m_CastShadow(false),
-		m_ReceiveShadow(false),
-		m_Collision(true)
+	OSGManualMeshComponent::OSGManualMeshComponent() : m_GeometryFlagsBinder(GEOMETRY_FLAG_UNKNOWN)
+		
 	{
 
 	}
@@ -46,7 +46,7 @@ namespace GASS
 	void OSGManualMeshComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGManualMeshComponent>("ManualMeshComponent");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ManualMeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("ManualMeshComponent", OF_VISIBLE));
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterGetSet("CastShadow", &OSGManualMeshComponent::GetCastShadow, &OSGManualMeshComponent::SetCastShadow,PF_VISIBLE | PF_EDITABLE,"Should this mesh cast shadows or not");
 
@@ -59,16 +59,12 @@ namespace GASS
 	{
 		m_GFXSystem = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnDataMessage,ManualMeshDataRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnClearMessage,ClearManualMeshRequest,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGManualMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
-
+		
 		m_GeoNode = new osg::Geode();
 
 		osg::StateSet *ss = m_GeoNode->getOrCreateStateSet();
-		osg::CullFace* cull = new osg::CullFace();
+		auto* cull = new osg::CullFace();
 		cull->setMode(osg::CullFace::BACK);
 		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
 
@@ -81,17 +77,23 @@ namespace GASS
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
 
-		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		auto* node_data = new OSGNodeData(shared_from_this());
 		m_GeoNode->setUserData(node_data);
 		SetGeometryFlags(GetGeometryFlags());
 
-		BaseSceneComponent::OnInitialize();
+		Component::OnInitialize();
 	}
 
-	void OSGManualMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGManualMeshComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
-		if(visibility)
+		if (m_GeoNode)
+			return m_GeoNode->getNodeMask() > 0;
+		return false;
+	}
+
+	void OSGManualMeshComponent::SetVisible(bool value)
+	{
+		if(value)
 		{
 			m_GeoNode->setNodeMask(1);
 			//restore flags
@@ -175,28 +177,17 @@ namespace GASS
 		lc->GetOSGNode()->addChild(m_GeoNode.get());
 	}
 
-	void OSGManualMeshComponent::OnDataMessage(ManualMeshDataRequestPtr message)
-	{
-		GraphicsMeshPtr data = message->GetData();
-		SetMeshData(*data);
-	}
-
 	void OSGManualMeshComponent::SetMeshData(const GraphicsMesh &mesh)
 	{
 		Clear();
 		for (size_t i = 0; i < mesh.SubMeshVector.size(); i++)
 		{
 			GraphicsSubMeshPtr sm = mesh.SubMeshVector[i];
-			osg::ref_ptr<osg::Geometry> geom = _CreateSubMesh(sm);
+			osg::ref_ptr<osg::Geometry> geom = CreateSubMesh(sm);
 			m_OSGGeometries.push_back(geom);
 			m_GeoNode->addDrawable(geom.get());
 		}
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
-	}
-
-	void OSGManualMeshComponent::OnClearMessage(ClearManualMeshRequestPtr message)
-	{
-		Clear();
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	void OSGManualMeshComponent::Clear()
@@ -209,7 +200,7 @@ namespace GASS
 		m_OSGGeometries.clear();
 	}
 
-	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::_CreateSubMesh(GraphicsSubMeshPtr sm)
+	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::CreateSubMesh(GraphicsSubMeshPtr sm)
 	{
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 
@@ -383,11 +374,7 @@ namespace GASS
 		return mesh_data;
 	}
 
-	void OSGManualMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
-	{
-		SetSubMeshMaterial(message->GetMaterialName(), message->GetSubMeshID());
-	}
-
+	
 	void OSGManualMeshComponent::SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index)
 	{
 		if (material_name != "" && m_GFXSystem && m_GFXSystem->HasMaterial(material_name))

@@ -79,7 +79,7 @@ namespace GASS
 		int m_MaxNumThreads;
 	};
 
-	typedef GASS_SHARED_PTR<PhysXPhysicsSystem> PhysXPhysicsSystemPtr;
+	using PhysXPhysicsSystemPtr = std::shared_ptr<PhysXPhysicsSystem>;
 }
 
 #endif

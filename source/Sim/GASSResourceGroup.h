@@ -28,8 +28,8 @@
 namespace GASS
 {
 	GASS_IFORWARD_DECL(ResourceSystem)
-	typedef std::vector<FileResourcePtr> ResourceVector; 
-	typedef std::vector<ResourceLocationPtr> ResourceLocationVector;
+	using ResourceVector = std::vector<FileResourcePtr>; 
+	using ResourceLocationVector = std::vector<ResourceLocationPtr>;
 	class GASSExport ResourceGroup : public GASS_ENABLE_SHARED_FROM_THIS<ResourceGroup>
 	{
 	public:

@@ -47,7 +47,7 @@ namespace GASS
 		double m_TimeToProcess;
 		int m_MaxSimSteps;
 	};
-	typedef GASS_SHARED_PTR<RaknetNetworkSceneManager> RaknetNetworkSceneManagerPtr;
-	typedef GASS_WEAK_PTR<RaknetNetworkSceneManager> RaknetNetworkSceneManagerWeakPtr;
+	using RaknetNetworkSceneManagerPtr = std::shared_ptr<RaknetNetworkSceneManager>;
+	using RaknetNetworkSceneManagerWeakPtr = std::weak_ptr<RaknetNetworkSceneManager>;
 }
 

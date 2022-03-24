@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	SplineAnimation::SplineAnimation() : m_Length(0), m_NumericSteps(25)
+	SplineAnimation::SplineAnimation()  
 	{
 		
 		
@@ -80,8 +80,8 @@ namespace GASS
 	{
 		Mat4 transformation;
 		transformation.MakeIdentity();
-		Float time;
-		int index;
+		double time = 0;
+		int index = 0;
 		GetIndexAndTime(desired_distance,time,index);
 		const Vec3 pos = m_Spline.Interpolate(index, time);
 		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
@@ -116,8 +116,8 @@ namespace GASS
 	{
 		Mat4 transformation;
 		transformation.MakeIdentity();
-		Float time;
-		int index;
+		double time = 0;
+		int index = 0;
 		GetIndexAndTime(desired_distance,time,index);
 		const Vec3 pos = m_Spline.Interpolate(index, time);
 		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
@@ -150,8 +150,8 @@ namespace GASS
 	{
 		Mat4 transformation;
 		transformation.MakeIdentity();
-		Float time;
-		int index;
+		double time = 0;
+		int index = 0;
 		GetIndexAndTime(desired_distance,time,index);
 		const Vec3 pos = m_Spline.Interpolate(index, time);
 		const Vec3 rot_pos = m_Spline.Interpolate(index, time + 0.01);
@@ -183,8 +183,8 @@ namespace GASS
 
 	Vec3 SplineAnimation::GetPosition(Float desired_distance)
 	{
-		Float time;
-		int index;
+		Float time = 0;
+		int index = 0;
 		GetIndexAndTime(desired_distance,time,index);
 		Vec3 pos = m_Spline.Interpolate(index, time);
 		return pos;

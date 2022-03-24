@@ -15,9 +15,7 @@
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>
-		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
+		</Components>		
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="RNRoadEdge"/>
@@ -29,9 +27,6 @@
 			<LocationComponent>
 			</LocationComponent>
 		</Components>
-		<ComponentContainers>
-
-		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="RoadWP"/>
@@ -61,7 +56,7 @@
 			<LocationComponent>
 			</LocationComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="PathDebug"/>
 				<ID value="SEARCH_GRAPH"/>
@@ -101,6 +96,6 @@
 					</ManualMeshComponent>
 				</Components>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 </Templates>

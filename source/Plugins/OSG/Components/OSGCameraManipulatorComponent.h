@@ -32,7 +32,7 @@ namespace osgGA
 
 namespace GASS
 {
-	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,BaseSceneComponent> , public IOSGCameraManipulator
+	class OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,Component> , public IOSGCameraManipulator
 	{
 	public:
 		OSGCameraManipulatorComponent();
@@ -49,15 +49,15 @@ namespace GASS
 		std::string GetManipulatorName() const {return m_ManName;}
 		void SetManipulatorName(const std::string &name) {m_ManName = name;}
 	private:
-		static void _ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, GASS::Vec3 &pos, GASS::Quaternion &rot);
-		static void _SetOrbitManRotation(osgGA::OrbitManipulator* man, const GASS::Quaternion &rot);
-		static void _SetOrbitManPosition(osgGA::OrbitManipulator* man, const GASS::Vec3 &pos);
+		static void ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, Vec3 &pos, Quaternion &rot);
+		static void SetOrbitManRotation(osgGA::OrbitManipulator* man, const Quaternion &rot);
+		static void SetOrbitManPosition(osgGA::OrbitManipulator* man, const Vec3 &pos);
 		std::string m_ManName;
 		osg::ref_ptr<osgGA::OrbitManipulator> m_OrbitMan;
-		bool m_ReadyToRun;
-		bool m_UpdateCameraFromLocation;
+		bool m_ReadyToRun{false};
+		bool m_UpdateCameraFromLocation{true};
 	};
-	typedef GASS_SHARED_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentPtr;
-	typedef GASS_WEAK_PTR<OSGCameraManipulatorComponent> OSGCameraManipulatorComponentWeakPtr;
+	using OSGCameraManipulatorComponentPtr = std::shared_ptr<OSGCameraManipulatorComponent>;
+	using OSGCameraManipulatorComponentWeakPtr = std::weak_ptr<OSGCameraManipulatorComponent>;
 }
 

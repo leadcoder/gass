@@ -24,14 +24,14 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
 namespace GASS
 {
-	class GoToLocationComponent :  public Reflection<GoToLocationComponent,BaseSceneComponent>
+	class GoToLocationComponent :  public Reflection<GoToLocationComponent,Component>
 	{
 	public:
 		GoToLocationComponent();

@@ -59,41 +59,42 @@ int _getch() {
 std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 {
 	GASS::SceneObjectTemplatePtr vehicle_template(new GASS::SceneObjectTemplate);
-	vehicle_template->SetName("VehicleObject");
-	vehicle_template->SetID("VEHICLE");
-	vehicle_template->AddBaseSceneComponent("LocationComponent");
-	GASS::BaseSceneComponentPtr mmc = vehicle_template->AddBaseSceneComponent("ManualMeshComponent");
-	mmc->SetPropertyValue("CastShadow", true);
+	{
+		vehicle_template->SetName("VehicleObject");
+		vehicle_template->SetID("VEHICLE");
+		vehicle_template->AddComponent("LocationComponent");
+		GASS::ComponentPtr mmc = vehicle_template->AddComponent("ManualMeshComponent");
+		mmc->SetPropertyValue("CastShadow", true);
 
-	GASS::ComponentPtr body_comp = vehicle_template->AddBaseSceneComponent("PhysicsBodyComponent");
-	body_comp->SetPropertyValue("Mass", 1.0f);
+		GASS::ComponentPtr body_comp = vehicle_template->AddComponent("PhysicsBodyComponent");
+		body_comp->SetPropertyValue("Mass", 1.0f);
 
-	GASS::ComponentPtr geom_comp = vehicle_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-	geom_comp->SetPropertyValue<GASS::Vec3>("Offset", GASS::Vec3(0, -0.9, 0));
-	geom_comp->SetPropertyValue<GASS::Vec3>("Size", GASS::Vec3(2, 1, 4));
-	geom_comp->SetPropertyValue<bool>("SizeFromMesh", false);
+		GASS::ComponentPtr geom_comp = vehicle_template->AddComponent("PhysicsBoxGeometryComponent");
+		geom_comp->SetPropertyValue<GASS::Vec3>("Offset", GASS::Vec3(0, -0.9, 0));
+		geom_comp->SetPropertyValue<GASS::Vec3>("Size", GASS::Vec3(2, 1, 4));
+		geom_comp->SetPropertyValue<bool>("SizeFromMesh", false);
 
-	GASS::BaseSceneComponentPtr box_comp = vehicle_template->AddBaseSceneComponent("BoxGeometryComponent");
-	box_comp->SetPropertyValue("Size", GASS::Vec3(2, 1, 4));
-	box_comp->SetPropertyValue("Lines", false);
+		GASS::ComponentPtr box_comp = vehicle_template->AddComponent("BoxGeometryComponent");
+		box_comp->SetPropertyValue("Size", GASS::Vec3(2, 1, 4));
+		box_comp->SetPropertyValue("Lines", false);
 
-	engine->GetSceneObjectTemplateManager()->AddTemplate(vehicle_template);
-	
+		engine->GetSceneObjectTemplateManager()->AddTemplate(vehicle_template);
+	}
 	{
 		GASS::SceneObjectTemplatePtr wheel_template(new GASS::SceneObjectTemplate);
 		wheel_template->SetName("WheelObject");
 		wheel_template->SetID("WHEEL");
-		wheel_template->AddBaseSceneComponent("LocationComponent");
-		GASS::BaseSceneComponentPtr sphere_comp = wheel_template->AddBaseSceneComponent("SphereGeometryComponent");
+		wheel_template->AddComponent("LocationComponent");
+		GASS::ComponentPtr sphere_comp = wheel_template->AddComponent("SphereGeometryComponent");
 		sphere_comp->SetPropertyValue<GASS::Float>("Radius", 0.3);
-		GASS::BaseSceneComponentPtr psphere_comp = wheel_template->AddBaseSceneComponent("PhysicsSphereGeometryComponent");
+		GASS::ComponentPtr psphere_comp = wheel_template->AddComponent("PhysicsSphereGeometryComponent");
 		psphere_comp->SetPropertyValue<bool>("SizeFromMesh", false);
 		psphere_comp->SetPropertyValue<GASS::Float>("Radius", 0.3);
-		GASS::BaseSceneComponentPtr body_comp = wheel_template->AddBaseSceneComponent("PhysicsBodyComponent");
+		GASS::ComponentPtr body_comp = wheel_template->AddComponent("PhysicsBodyComponent");
 		body_comp->SetPropertyValue<float>("Mass", 0.1f);
-		wheel_template->AddBaseSceneComponent("ManualMeshComponent");
+		wheel_template->AddComponent("ManualMeshComponent");
 		//wheel_template->AddComponent("PhysicsHingeComponent");
-		GASS::BaseSceneComponentPtr susp_comp = wheel_template->AddBaseSceneComponent("PhysicsSuspensionComponent");
+		GASS::ComponentPtr susp_comp = wheel_template->AddComponent("PhysicsSuspensionComponent");
 		susp_comp->SetPropertyValue<float>("Damping", 8.0f);
 		susp_comp->SetPropertyValue<float>("Strength", 50.0f);
 
@@ -116,7 +117,7 @@ std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 		wheel_template->SetName("FrontLeftWheel");
 		wheel_template->SetID("FL_WHEEL");
 		wheel_template->SetInheritance("WheelObject");
-		GASS::ComponentPtr location_comp = wheel_template->AddBaseSceneComponent("LocationComponent");
+		GASS::ComponentPtr location_comp = wheel_template->AddComponent("LocationComponent");
 		GASS_DYNAMIC_PTR_CAST<GASS::ILocationComponent>(location_comp)->SetPosition(GASS::Vec3(-1, offset, -1));
 		vehicle_template->AddChild(wheel_template);
 
@@ -124,7 +125,7 @@ std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 		wheel_template->SetName("FrontRightWheel");
 		wheel_template->SetID("FR_WHEEL");
 		wheel_template->SetInheritance("WheelObject");
-		location_comp = wheel_template->AddBaseSceneComponent("LocationComponent");
+		location_comp = wheel_template->AddComponent("LocationComponent");
 		GASS_DYNAMIC_PTR_CAST<GASS::ILocationComponent>(location_comp)->SetPosition(GASS::Vec3(1, offset, -1));
 		vehicle_template->AddChild(wheel_template);
 
@@ -140,7 +141,7 @@ std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 		wheel_template->SetName("RearRightWheel");
 		wheel_template->SetID("RR_WHEEL");
 		wheel_template->SetInheritance("WheelObject");
-		location_comp = wheel_template->AddBaseSceneComponent("LocationComponent");
+		location_comp = wheel_template->AddComponent("LocationComponent");
 		GASS_DYNAMIC_PTR_CAST<GASS::ILocationComponent>(location_comp)->SetPosition(GASS::Vec3(1, offset, 1));
 		vehicle_template->AddChild(wheel_template);
 	}
@@ -184,31 +185,31 @@ std::string CreateBoxTemplate(GASS::SimEngine* engine)
 {
 	GASS::SceneObjectTemplatePtr box_template(new GASS::SceneObjectTemplate);
 	box_template->SetName("BoxObject");
-	box_template->AddBaseSceneComponent("LocationComponent");
-	GASS::BaseSceneComponentPtr mmc = box_template->AddBaseSceneComponent("ManualMeshComponent");
+	box_template->AddComponent("LocationComponent");
+	GASS::ComponentPtr mmc = box_template->AddComponent("ManualMeshComponent");
 	mmc->SetPropertyValue("CastShadow", true);
 	mmc->SetPropertyValue("ReceiveShadow", true);
 	
-	box_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-	box_template->AddBaseSceneComponent("PhysicsBodyComponent");
-	GASS::BaseSceneComponentPtr box_comp = box_template->AddBaseSceneComponent("BoxGeometryComponent");
+	box_template->AddComponent("PhysicsBoxGeometryComponent");
+	box_template->AddComponent("PhysicsBodyComponent");
+	GASS::ComponentPtr box_comp = box_template->AddComponent("BoxGeometryComponent");
 	box_comp->SetPropertyValue("Size", GASS::Vec3(1, 1, 1));
 	box_comp->SetPropertyValue("Lines", false);
 	engine->GetSceneObjectTemplateManager()->AddTemplate(box_template);
 	return box_template->GetName();
 }
 
-GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
+GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* /*engine*/)
 {
 #if 0
 	//Create bridge templates
 	GASS::SceneObjectTemplatePtr bridge_seg_template(new GASS::SceneObjectTemplate);
 	bridge_seg_template->SetName("BridgeSegment");
-	GASS::BaseSceneComponentPtr mmc = bridge_seg_template->AddBaseSceneComponent("ManualMeshComponent");
+	GASS::ComponentPtr mmc = bridge_seg_template->AddComponent("ManualMeshComponent");
 	mmc->SetPropertyValue("CastShadow", true);
-	bridge_seg_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-	bridge_seg_template->AddBaseSceneComponent("PhysicsBodyComponent");
-	GASS::BaseSceneComponentPtr box_comp = bridge_seg_template->AddBaseSceneComponent("BoxGeometryComponent");
+	bridge_seg_template->AddComponent("PhysicsBoxGeometryComponent");
+	bridge_seg_template->AddComponent("PhysicsBodyComponent");
+	GASS::ComponentPtr box_comp = bridge_seg_template->AddComponent("BoxGeometryComponent");
 	box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
 	box_comp->SetPropertyValue("Lines", false);
 	engine->GetSceneObjectTemplateManager()->AddTemplate(bridge_seg_template);
@@ -222,7 +223,7 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 		bdrige_seg_obj2->SetInheritance("BridgeSegment");
 		auto location_comp = bdrige_seg_obj2->AddComponent("LocationComponent");
 		GASS_DYNAMIC_PTR_CAST<GASS::ILocationComponent>(location_comp)->SetPosition(GASS::Vec3(10, 2, 0));
-		auto body_comp = bdrige_seg_obj2->AddBaseSceneComponent("PhysicsBodyComponent");
+		auto body_comp = bdrige_seg_obj2->AddComponent("PhysicsBodyComponent");
 		try
 		{
 			body_comp->SetPropertyValue("Kinematic", true);
@@ -236,7 +237,7 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 			auto id = "B_SEG_" + std::to_string(i);
 			bdrige_seg_obj2->SetID(id);
 			bdrige_seg_obj2->SetInheritance("BridgeSegment");
-			body_comp = bdrige_seg_obj2->AddBaseSceneComponent("PhysicsBodyComponent");
+			body_comp = bdrige_seg_obj2->AddComponent("PhysicsBodyComponent");
 			location_comp = bdrige_seg_obj2->AddComponent("LocationComponent");
 			GASS_DYNAMIC_PTR_CAST<GASS::ILocationComponent>(location_comp)->SetPosition(GASS::Vec3(10, 2, i));
 			auto bdrige_hinge_obj = std::make_shared<GASS::SceneObjectTemplate>();
@@ -261,12 +262,12 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 
 		auto base = std::make_shared<GASS::SceneObjectTemplate>();
 		base->SetName("Base");
-		//base->AddBaseSceneComponent("LocationComponent");
-		GASS::BaseSceneComponentPtr mmc = base->AddBaseSceneComponent("ManualMeshComponent");
+		//base->AddComponent("LocationComponent");
+		GASS::ComponentPtr mmc = base->AddComponent("ManualMeshComponent");
 		mmc->SetPropertyValue("CastShadow", true);
-		base->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-		base->AddBaseSceneComponent("PhysicsBodyComponent");
-		GASS::BaseSceneComponentPtr box_comp = base->AddBaseSceneComponent("BoxGeometryComponent");
+		base->AddComponent("PhysicsBoxGeometryComponent");
+		base->AddComponent("PhysicsBodyComponent");
+		GASS::ComponentPtr box_comp = base->AddComponent("BoxGeometryComponent");
 		box_comp->SetPropertyValue("Size", GASS::Vec3(1, 1, 1));
 		box_comp->SetPropertyValue("Lines", false);
 		engine->GetSceneObjectTemplateManager()->AddTemplate(base);
@@ -291,12 +292,12 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 	
 	auto bridge_seg_template = std::make_shared<GASS::SceneObject>();
 	bridge_seg_template->SetName("BridgeSegment");
-	GASS::BaseSceneComponentPtr mmc = bridge_seg_template->AddBaseSceneComponent("ManualMeshComponent");
+	GASS::ComponentPtr mmc = bridge_seg_template->AddComponent("ManualMeshComponent");
 	mmc->SetPropertyValue("CastShadow", true);
-	bridge_seg_template->AddBaseSceneComponent("LocationComponent");
-	bridge_seg_template->AddBaseSceneComponent("PhysicsBoxGeometryComponent");
-	bridge_seg_template->AddBaseSceneComponent("PhysicsBodyComponent");
-	GASS::BaseSceneComponentPtr box_comp = bridge_seg_template->AddBaseSceneComponent("BoxGeometryComponent");
+	bridge_seg_template->AddComponent("LocationComponent");
+	bridge_seg_template->AddComponent("PhysicsBoxGeometryComponent");
+	bridge_seg_template->AddComponent("PhysicsBodyComponent");
+	GASS::ComponentPtr box_comp = bridge_seg_template->AddComponent("BoxGeometryComponent");
 	box_comp->SetPropertyValue("Size", GASS::Vec3(2, 0.3, 0.6));
 	box_comp->SetPropertyValue("Lines", false);
 
@@ -305,7 +306,7 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 		GASS::SceneObjectPtr bdrige_seg_obj2 = bridge_seg_template->CreateCopy();
 		bdrige_seg_obj2->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(10, 2, 0));
 		bridge->AddChildSceneObject(bdrige_seg_obj2, false);
-		GASS::BaseSceneComponentPtr body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
+		GASS::ComponentPtr body_comp = bdrige_seg_obj2->GetComponent("PhysicsBodyComponent");
 		try
 		{
 			body_comp->SetPropertyValue("Kinematic", true);
@@ -333,7 +334,7 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* engine)
 			}
 			bridge->AddChildSceneObject(bdrige_hinge_obj, false);
 		}
-		body_comp = bdrige_seg_obj2->GetBaseSceneComponent("PhysicsBodyComponent");
+		body_comp = bdrige_seg_obj2->GetComponent("PhysicsBodyComponent");
 
 
 		try
@@ -357,7 +358,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 	//Load plugins
 	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
 	char key = static_cast<char>(_getch());
-	bool use_ode = key == 1;
+	
+	bool use_ode = (key == '1');
 
 
 	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(use_ode ? 
@@ -410,14 +412,14 @@ int main(int/*argc*/, char* /*argv[]*/)
 				key_down = true;
 				GASS::Vec3 pos = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
 				GASS::Quaternion rot = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
-				GASS::Vec3 vel = rot.GetZAxis()*-2500;
+				GASS::Vec3 vel = rot.GetZAxis()*- (GetAsyncKeyState(VK_RIGHT) ? 2500 : 1000);
 				/*
 								GASS::Mat4 rot_mat;
 								rot_mat.Identity();
 								rot.ToRotationMatrix(rot_mat);
 								GASS::Vec3 vel = rot_mat.GetZAxis()*-2500;
 				*/
-				GASS::Vec3 torq(0, 0, 2000);
+				GASS::Vec3 torq(0, 0, 0);
 				torq = rot * torq;
 				box_obj = scene->LoadObjectFromTemplate(box_template, scene->GetRootSceneObject());
 				box_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(pos);
@@ -440,7 +442,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 			if (!key_down)
 			{
 				key_down = true;
-				//				mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("wheel.3ds")));
 			}
 		}
 		else if (GetAsyncKeyState(VK_F2))
@@ -448,7 +449,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 			if (!key_down)
 			{
 				key_down = true;
-				//			mesh_obj->SendImmediate(GASS::MessagePtr(new GASS::MeshFileRequest("car.3ds")));
 			}
 		}
 		else if (GetAsyncKeyState(VK_F3))

@@ -50,7 +50,7 @@ namespace GASS
 	physx::PxShape* PhysXBoxGeometryComponent::CreateShape()
 	{
 		if(!m_Body)
-			return NULL;
+			return nullptr;
 		//Create shape
 		if(m_SizeFromMesh)
 		{

@@ -16,7 +16,6 @@ namespace GASS
 		}
 	};
 
-
 	class EditorModuleExport IMouseTool : public IMessageListener
 	{
 	public:

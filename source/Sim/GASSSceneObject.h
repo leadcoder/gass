@@ -43,24 +43,23 @@ namespace tinyxml2
 
 namespace GASS
 {
-	typedef std::string SceneObjectID;
-	typedef GASS_GUID SceneObjectGUID;
+	using SceneObjectID = std::string;
+	using SceneObjectGUID = Guid;
 	class MessageManager;
 	class Scene;
 	class SceneObject;
-	class BaseSceneComponent;
 	class SceneObjectVisitor;
 	GASS_FORWARD_DECL(Component);
 
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_WEAK_PTR<Scene> SceneWeakPtr;
-	typedef GASS_SHARED_PTR<SceneObjectVisitor> SceneObjectVisitorPtr;
+	using ScenePtr = std::shared_ptr<Scene>;
+	using SceneWeakPtr = std::weak_ptr<Scene>;
+	using SceneObjectVisitorPtr = std::shared_ptr<SceneObjectVisitor>;
 
-	typedef GASS_SHARED_PTR<MessageManager> MessageManagerPtr;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef std::vector<SceneObjectPtr> SceneObjectVector;
+	using MessageManagerPtr = std::shared_ptr<MessageManager>;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using ComponentPtr = std::shared_ptr<Component>;
+	using SceneObjectVector = std::vector<SceneObjectPtr>;
 
 
 	/**
@@ -82,11 +81,11 @@ namespace GASS
 	{
 		friend class Scene;
 	public:
-		typedef std::vector<ComponentPtr> ComponentVector;
-		typedef VectorIterator<ComponentVector>  ComponentIterator;
-		typedef ConstVectorIterator<ComponentVector>  ConstComponentIterator;
-		typedef VectorIterator<SceneObjectVector> SceneObjectIterator;
-		typedef ConstVectorIterator<SceneObjectVector> ConstSceneObjectIterator;
+		using ComponentVector = std::vector<ComponentPtr>;
+		using ComponentIterator = VectorIterator<ComponentVector>;
+		using ConstComponentIterator = ConstVectorIterator<ComponentVector>;
+		using SceneObjectIterator = VectorIterator<SceneObjectVector>;
+		using ConstSceneObjectIterator = ConstVectorIterator<SceneObjectVector>;
 
 		SceneObject();
 		static void RegisterReflection();
@@ -241,8 +240,7 @@ namespace GASS
 		*/
 		void AddComponent(ComponentPtr comp);
 		ComponentPtr AddComponent(const std::string& comp_type);
-		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
-
+		
 		/**
 			Get component by name,
 			only search this SceneObject and first one is returned
@@ -265,16 +263,12 @@ namespace GASS
 		SceneObjectPtr GetObjectUnderRoot();
 
 		bool Accept(SceneObjectVisitorPtr visitor);
-
-		/**
-			Convenience function for BaseSceneComponent's
-		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string& comp_name) const;
+		
 
 		/**
 			Function used by scripts to get components by class name, note that this will return a raw pointer!
 		*/
-		BaseSceneComponent* GetComponentByClassName(const std::string& comp_name) const;
+		Component* GetComponentByClassName(const std::string& comp_name) const;
 
 		/**
 			Get all components of certain class. This function allow you to pass the class name as a string
@@ -317,6 +311,19 @@ namespace GASS
 					child->GetComponentsByClass<T>(components,recursive);
 				}
 			}
+		}
+
+		template <class T>
+		std::vector<T*> GetComponentsByClass() const
+		{
+			std::vector<T*> components;
+			for (size_t i = 0; i < m_ComponentVector.size(); i++)
+			{
+				GASS_SHARED_PTR<T> ret = GASS_DYNAMIC_PTR_CAST<T>(m_ComponentVector[i]);
+				if (ret)
+					components.push_back(ret.get());
+			}
+			return components;
 		}
 
 		/**
@@ -426,20 +433,39 @@ namespace GASS
 		//serialize interface
 		bool Serialize(ISerializer* serializer) override;
 
+
+		//ILocationComponent shortcuts
+		Vec3 GetPosition() const;
+		void SetPosition(const Vec3& value);
+
+		Vec3 GetWorldPosition() const;
+		void SetWorldPosition(const Vec3& value);
+
+		Quaternion GetRotation() const;
+		void SetRotation(const Quaternion& value);
+
+		Quaternion GetWorldRotation() const;
+		void SetWorldRotation(const Quaternion& value);
+
+		bool GetVisible() const;
+		void SetVisible(bool value);
+
+		void SetGeometriesVisible(bool value);
+
 		//print object
 		void DebugPrint(int tc = 0);
 	private:
-		void _CheckComponentDependencies() const;
-		SceneObjectPtr _CreateSceneObjectXML(tinyxml2::XMLElement* cc_elem) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
+		void CheckComponentDependencies() const;
+		SceneObjectPtr CreateSceneObjectXml(tinyxml2::XMLElement* cc_elem) const;
+		ComponentPtr LoadComponentXml(tinyxml2::XMLElement* comp_template) const;
 		void OnDelete();
 		void OnInitialize(ScenePtr scene);
 
 		//internals
-		void _InitializePointers();
-		SceneObjectPtr _CreateCopyRec(bool copy_children_recursively) const;
-		void _RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map);
-		void _GenerateNewGUIDRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map, bool recursively);
+		void InitializePointers();
+		SceneObjectPtr CreateCopyRec(bool copy_children_recursively) const;
+		void RemapRefRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map);
+		void GenerateNewGuidRec(std::map<SceneObjectGUID,SceneObjectGUID>& ref_map, bool recursively);
 
 		ComponentVector m_ComponentVector;
 		SceneObjectVector m_Children;
@@ -451,6 +477,6 @@ namespace GASS
 		MessageManagerPtr m_MessageManager;
 		SceneObjectID m_ID;
 		SceneObjectGUID m_GUID;
-		bool m_Initialized;
+		bool m_Initialized{false};
 	};
 }

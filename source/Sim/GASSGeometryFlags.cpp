@@ -44,14 +44,14 @@ namespace GASS
 	{
 
 		GASS_LOG(LINFO) << "Start loading collision matrix file " << file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
-			delete xmlDoc;
+			delete xml_doc;
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "GeometryFlagManager::LoadMaterialFile");
 		}
 
-		tinyxml2::XMLElement *xml_geom_list = xmlDoc->FirstChildElement("GeometryList");
+		tinyxml2::XMLElement *xml_geom_list = xml_doc->FirstChildElement("GeometryList");
 		if(xml_geom_list)
 		{
 			tinyxml2::XMLElement *xml_geom = xml_geom_list->FirstChildElement("Geometry");
@@ -62,7 +62,7 @@ namespace GASS
 					geom_name = xml_geom->Attribute("Name");
 				else
 				{
-					delete xmlDoc;
+					delete xml_doc;
 					GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find Name attribute in:" + file, "GeometryFlagManager::LoadMaterialFile");
 				}
 				GeometryFlagsBinder gf;
@@ -83,6 +83,6 @@ namespace GASS
 
 			}
 		}
-		delete xmlDoc;
+		delete xml_doc;
 	}
 }

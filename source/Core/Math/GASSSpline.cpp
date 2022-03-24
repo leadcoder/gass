@@ -72,9 +72,8 @@ Vec3 Spline::Interpolate(unsigned int fromIndex, Float t) const
 
         // Float interpolation
         // Form a vector of powers of t
-        Float t2, t3;
-        t2 = t * t;
-        t3 = t2 * t;
+        const double t2 = t * t;
+		const double t3 = t2 * t;
 
 		Vec4 powers;
         powers.x = t3;
@@ -139,50 +138,39 @@ void Spline::RecalcTangents()
 	// tangent[i] = 0.5 * (point[i+1] - point[i-1])
 	//
 	// Assume endpoint tangents are parallel with line with neighbour
-
-	unsigned int i, numPoints;
-	bool isClosed;
-
-	numPoints = static_cast<unsigned int>(m_Points.size());
-	if (numPoints < 2)
+	const auto num_points = static_cast<unsigned int>(m_Points.size());
+	if (num_points < 2)
 	{
 		// Can't do anything yet
 		return;
 	}
 
 	// Closed or open?
-	if (m_Points[0] == m_Points[numPoints-1])
-	{
-		isClosed = true;
-	}
-	else
-	{
-		isClosed = false;
-	}
+	const bool is_closed = m_Points[0] == m_Points[num_points - 1];
 
-	m_Tangents.resize(numPoints);
+	m_Tangents.resize(num_points);
 
 
 
-	for(i = 0; i < numPoints; ++i)
+	for(unsigned int i = 0; i < num_points; ++i)
 	{
 		if (i == 0)
 		{
 			// Special case start
-			if (isClosed)
+			if (is_closed)
 			{
 				// Use numPoints-2 since numPoints-1 is the last point and == [0]
-				m_Tangents[i] = (m_Points[1] - m_Points[numPoints-2])*0.5;
+				m_Tangents[i] = (m_Points[1] - m_Points[num_points-2])*0.5;
 			}
 			else
 			{
 				m_Tangents[i] = (m_Points[1] - m_Points[0])* 0.5;
 			}
 		}
-		else if (i == numPoints-1)
+		else if (i == num_points-1)
 		{
 			// Special case end
-			if (isClosed)
+			if (is_closed)
 			{
 				// Use same tangent as already calculated for [0]
 				m_Tangents[i] = m_Tangents[0];

@@ -57,8 +57,8 @@ namespace GASS
 	
 		std::vector<SplineNode> m_NodeVector;
 		Spline m_Spline;
-		Float m_Length;
-		Float m_NumericSteps;
+		Float m_Length{0};
+		Float m_NumericSteps{25};
 	};
 }
 

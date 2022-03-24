@@ -107,7 +107,7 @@ namespace GASS
 	protected:
 		std::vector<DynamicModule*> m_Plugins;
 	};
-	typedef GASS_SHARED_PTR<PluginManager> PluginManagerPtr;
+	using PluginManagerPtr = std::shared_ptr<PluginManager>;
 }
 
 #endif // #ifndef PLUGINMANAGER_HH

@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "PrismaticInteractionComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -27,7 +29,7 @@
 
 namespace GASS
 {
-	PrismaticInteractionComponent::PrismaticInteractionComponent() : m_MaxVelocity(1)
+	PrismaticInteractionComponent::PrismaticInteractionComponent()  
 	{
 
 	}
@@ -64,7 +66,7 @@ namespace GASS
 
 			//MessagePtr message(new PhysicsPrismaticJointPositionRequest(pos));
 			//GetSceneObject()->PostMessage(message);
-			GetSceneObject()->PostRequest(PhysicsPrismaticJointVelocityRequestPtr(new PhysicsPrismaticJointVelocityRequest(linear_vel)));
+			GetSceneObject()->PostRequest(std::make_shared<PhysicsPrismaticJointVelocityRequest>(linear_vel));
 		}
 	}
 }

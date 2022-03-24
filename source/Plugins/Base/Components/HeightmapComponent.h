@@ -21,7 +21,7 @@
 #define HEIGHTMAP_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 
@@ -33,7 +33,7 @@ namespace GASS
 	*/
 
 	class HeightField;
-	class HeightmapComponent : public Reflection<HeightmapComponent,BaseSceneComponent> , public IHeightmapTerrainComponent, public IGeometryComponent
+	class HeightmapComponent : public Reflection<HeightmapComponent,Component> , public IHeightmapTerrainComponent, public IGeometryComponent
 	{
 	public:
 		HeightmapComponent(void);
@@ -53,6 +53,8 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override{(void) flags;}
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		bool GetVisible() const override { return false; }
+		void SetVisible(bool /*value*/) override {}
 		AABoxd GetExtent() const;
 		void SetExtent(const AABoxd& extent);
 	protected:
@@ -62,18 +64,18 @@ namespace GASS
 		void SetUpdateExtentFromGeometry(bool value);
 		
 		//internal
-		void _UpdateData();
-		FilePath _GetFilePath() const;
-		SceneObjectPtr _GetOrCreateDebugObject();
-		void _UpdateDebugObject(const AABoxd& extent);
+		void UpdateData();
+		FilePath GetFilePath() const;
+		SceneObjectPtr GetOrCreateDebugObject();
+		void UpdateDebugObject(const AABoxd& extent);
 		void SetDebug(bool value);
 		bool GetDebug() const;
 	private:
-		HeightField* m_HM;
+		HeightField* m_HM{nullptr};
 		AABoxd m_Extent;
-		double m_SampleStep;
-		bool m_AutoBBoxGeneration;
-		bool m_Debug;
+		double m_SampleStep{1.0};
+		bool m_AutoBBoxGeneration{false};
+		bool m_Debug{false};
 	};
 }
 #endif

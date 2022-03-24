@@ -34,7 +34,7 @@ namespace GASS
 	* Corresponding strings to logging levels enum.
 	* Defined in source file
 	*/
-	const extern std::string LogLevelStrings[];
+	const extern std::string LOG_LEVEL_STRINGS[];
 
 	/**
 	* Enumeration of all output modes.
@@ -64,10 +64,10 @@ namespace GASS
 		static LogLevel m_MinLogLevel; //current minimum logging level
 		static ILogListener* m_Listener;
 	protected:
-		LogLevel m_LogLevel; 
-		OutputMode m_OutputMode; 
+		LogLevel m_LogLevel{LINFO}; 
+		OutputMode m_OutputMode{STD_OUT}; 
 		std::ostringstream m_OutputStream; 
-		bool m_FreeLogging; //true implies do not automatically add endl to end of string stream
+		bool m_FreeLogging{false}; //true implies do not automatically add endl to end of string stream
 	public:
 		/**
 		* Construct a Logger object.
@@ -142,19 +142,19 @@ namespace GASS
 		* Get the time elapsed since program started (in milliseconds).
 		* @return Milliseconds elapsed since program started
 		*/
-		static double getTimeElapsed();
+		static double GetTimeElapsed();
 
 		/**
 		* Get the current date and time as a string.
 		* @return Current date and time string
 		*/
-		static std::string getDateTime();
+		static std::string GetDateTime();
 
 		/**
 		* Get the current time as a string.
 		* @return Current time string
 		*/
-		static std::string getTime();
+		static std::string GetTime();
 	};
 }
 

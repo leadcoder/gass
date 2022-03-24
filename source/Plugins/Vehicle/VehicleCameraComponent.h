@@ -23,7 +23,7 @@
 
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -31,10 +31,10 @@
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,BaseSceneComponent>
+	class VehicleCameraComponent : public Reflection<VehicleCameraComponent,Component>
 	{
 	public:
 		VehicleCameraComponent();
@@ -52,6 +52,6 @@ namespace GASS
 		std::string m_PreferredViewport;
 		SceneObjectRef m_InputHandlerObject;
 	};
-	typedef GASS_SHARED_PTR<VehicleCameraComponent> VehicleCameraComponentPtr;
+	using VehicleCameraComponentPtr = std::shared_ptr<VehicleCameraComponent>;
 }
 #endif

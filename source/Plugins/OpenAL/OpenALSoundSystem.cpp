@@ -8,7 +8,7 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
 #include "Core/Utils/GASSLogger.h"
 
@@ -20,8 +20,8 @@
 
 namespace GASS
 {
-	OpenALSoundSystem::OpenALSoundSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Context(NULL),
-		m_Device(NULL),
+	OpenALSoundSystem::OpenALSoundSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Context(nullptr),
+		m_Device(nullptr),
 		m_IsInitialised(false)
 	{
 		m_UpdateGroup = UGID_SIM;
@@ -32,13 +32,13 @@ namespace GASS
 #ifdef WIN32
 		ALFWShutdown();
 #endif
-		ALCcontext *pContext;
-		ALCdevice *pDevice;
-		pContext = alcGetCurrentContext();
-		pDevice = alcGetContextsDevice(pContext);
-		alcMakeContextCurrent(NULL);
-		alcDestroyContext(pContext);
-		alcCloseDevice(pDevice);
+		ALCcontext *p_context;
+		ALCdevice *p_device;
+		p_context = alcGetCurrentContext();
+		p_device = alcGetContextsDevice(p_context);
+		alcMakeContextCurrent(nullptr);
+		alcDestroyContext(p_context);
+		alcCloseDevice(p_device);
 	}
 
 	void OpenALSoundSystem::RegisterReflection()
@@ -55,7 +55,7 @@ namespace GASS
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OpenALSoundSystem::OnCameraChanged,CameraChangedEvent,0));
 
 		// Open an audio device
-		m_Device = alcOpenDevice( NULL ); // TODO ((ALubyte*) "DirectSound3D");
+		m_Device = alcOpenDevice( nullptr ); // TODO ((ALubyte*) "DirectSound3D");
 		// mSoundDevice = alcOpenDevice( "DirectSound3D" );
 
 		// Check for errors
@@ -64,7 +64,7 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"No sound device", "SoundManager::Init");
 		}
 
-		m_Context = alcCreateContext( m_Device, NULL );
+		m_Context = alcCreateContext( m_Device, nullptr );
 		//   if ( CheckAlError() || !mSoundContext ) // TODO seems not to work! why ?
 
 		if ( !m_Context )
@@ -127,7 +127,7 @@ namespace GASS
 	void OpenALSoundSystem::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		auto cam_obj = camera->GetSceneObject();
 
 		SceneObjectPtr current_cam_obj = m_CurrentCamera.lock();
 		if(current_cam_obj)
@@ -148,10 +148,10 @@ namespace GASS
 
 	void OpenALSoundSystem::CheckAlError(const std::string &what_class)
 	{
-		ALenum errCode;
-		if ( ( errCode = alGetError() ) != AL_NO_ERROR )
+		ALenum err_code;
+		if ( ( err_code = alGetError() ) != AL_NO_ERROR )
 		{
-			std::string error = (char*) alGetString( errCode );
+			std::string error = (char*) alGetString( err_code );
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"OpenAL error:" + error, what_class);
 		}
 	}
@@ -159,21 +159,21 @@ namespace GASS
 	void OpenALSoundSystem::UpdateListener(const Vec3 &pos, const Quaternion &rot, const Vec3 &vel)
 	{
 		// Position of the listener.
-		ALfloat ListenerPos[] = GASS_TO_OAL_VEC(pos);
+		ALfloat listener_pos[] = GASS_TO_OAL_VEC(pos);
 		// Velocity of the listener.
-		ALfloat ListenerVel[] = GASS_TO_OAL_VEC(vel);
+		ALfloat listener_vel[] = GASS_TO_OAL_VEC(vel);
 		// Orientation of the listener. (first 3 elements are "dir", second 3 are "up")
 
 		Mat4 rot_mat(rot);
 		Vec3 dir = -rot_mat.GetZAxis();
 		Vec3 up = rot_mat.GetYAxis();
 
-		ALfloat ListenerOri[] = { static_cast<ALfloat>(dir.x), static_cast<ALfloat>(dir.y), static_cast<ALfloat>(dir.z),  
+		ALfloat listener_ori[] = { static_cast<ALfloat>(dir.x), static_cast<ALfloat>(dir.y), static_cast<ALfloat>(dir.z),  
 								  static_cast<ALfloat>(up.x),  static_cast<ALfloat>(up.y),  static_cast<ALfloat>(up.z)};
 
-		alListenerfv(AL_POSITION,    ListenerPos);
-		alListenerfv(AL_VELOCITY,    ListenerVel);
-		alListenerfv(AL_ORIENTATION, ListenerOri);
+		alListenerfv(AL_POSITION,    listener_pos);
+		alListenerfv(AL_VELOCITY,    listener_vel);
+		alListenerfv(AL_ORIENTATION, listener_ori);
 	}
 
 	void OpenALSoundSystem::LoadWaveSound(const std::string &filePath,ALuint &buffer)
@@ -216,10 +216,10 @@ namespace GASS
 	{
 		std::string str = "Sound Devices available : ";
 
-		if ( alcIsExtensionPresent( NULL, "ALC_ENUMERATION_EXT" ) == AL_TRUE )
+		if ( alcIsExtensionPresent( nullptr, "ALC_ENUMERATION_EXT" ) == AL_TRUE )
 		{
 			str = "List of Devices : ";
-			str += (char*) alcGetString( NULL, ALC_DEVICE_SPECIFIER );
+			str += (char*) alcGetString( nullptr, ALC_DEVICE_SPECIFIER );
 			str += "\n";
 		}
 		else

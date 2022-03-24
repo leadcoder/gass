@@ -26,13 +26,14 @@
 #include "Core/Math/GASSMath.h"
 #include <angelscript.h>
 
+#include <memory>
+
 namespace GASS
 {
 	OSGEarthGeoLocationComponent::OSGEarthGeoLocationComponent() : m_Pos(0, 0, 0),
 		m_Rot(0, 0, 0),
-		m_Scale(1, 1, 1),
-		m_AttachToParent(false),
-		m_NodeMask(0)
+		m_Scale(1, 1, 1)
+		
 	{
 
 	}
@@ -55,7 +56,7 @@ namespace GASS
 	void OSGEarthGeoLocationComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<OSGEarthGeoLocationComponent>("GeoLocationComponent");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("Component used to handle object position, rotation and scale", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("Component used to handle object position, rotation and scale", OF_VISIBLE));
 
 		RegisterGetSet("Position", &GASS::OSGEarthGeoLocationComponent::GetPosition, &GASS::OSGEarthGeoLocationComponent::SetPosition, PF_VISIBLE | PF_EDITABLE,"Position relative to parent node");
 		RegisterGetSet("Rotation", &GASS::OSGEarthGeoLocationComponent::GetEulerRotation, &GASS::OSGEarthGeoLocationComponent::SetEulerRotation, PF_VISIBLE | PF_EDITABLE,"Rotation relative to parent node, x = heading, y=pitch, z=roll [Degrees]");
@@ -72,8 +73,8 @@ namespace GASS
 		r = engine->RegisterObjectType("LocationComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); assert(r >= 0);
 
 
-		r = engine->RegisterObjectBehaviour("BaseSceneComponent", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<BaseSceneComponent, OSGEarthGeoLocationComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "BaseSceneComponent@ f()", asFUNCTION((refCast<OSGEarthGeoLocationComponent, BaseSceneComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour("Component", asBEHAVE_REF_CAST, "LocationComponent@ f()", asFUNCTION((refCast<Component, OSGEarthGeoLocationComponent>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour("LocationComponent", asBEHAVE_IMPLICIT_REF_CAST, "Component@ f()", asFUNCTION((refCast<OSGEarthGeoLocationComponent, Component>)), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 		r = engine->RegisterObjectMethod("LocationComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod("LocationComponent", "void SetAttachToParent(bool) ", asMETHOD(OSGEarthGeoLocationComponent, SetAttachToParent), asCALL_THISCALL); assert(r >= 0);
@@ -84,15 +85,8 @@ namespace GASS
 
 	void OSGEarthGeoLocationComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnPositionMessage, PositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnRotationMessage, RotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnWorldPositionRequest, WorldPositionRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnWorldRotationMessage, WorldRotationRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnVisibilityMessage, LocationVisibilityRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnScaleMessage, ScaleRequest, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnParentChangedMessage, GASS::ParentChangedEvent, 0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnAttachToParent, GASS::AttachToParentRequest, 0));
-
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGEarthGeoLocationComponent::OnParentChanged, GASS::ParentChangedEvent, 0));
+	
 		IOSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<IOSGGraphicsSceneManager>();
 		OSGEarthMapComponentPtr map_comp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<OSGEarthMapComponent>(true);
 		//assert(scene_man);
@@ -109,7 +103,7 @@ namespace GASS
 			
 			if (m_AttachToParent)
 			{
-				OSGEarthGeoLocationComponentPtr parent = _GetParentLocation();
+				OSGEarthGeoLocationComponentPtr parent = GetParentLocation();
 				if (parent)
 				{
 					parent->GetOSGNode()->addChild(m_GeoTransform.get());
@@ -127,25 +121,21 @@ namespace GASS
 			const std::string name = GetSceneObject()->GetName();
 			m_TransformNode->setName(name);
 		}
+
+		//Set m_TransformNode position
+		SetPosition(m_Pos);
+
+		//Check if euler rotation provided
+		const Quaternion rot = (m_Rot != EulerRotation(0, 0, 0)) ? m_Rot.GetQuaternion() : m_QRot;
+
+		//Set m_TransformNode rotation
+		SetRotation(rot);
+
+		//Set m_TransformNode scale
+		SetScale(m_Scale);
+
 		LocationComponentPtr location = GASS_DYNAMIC_PTR_CAST<ILocationComponent>(shared_from_this());
-		GetSceneObject()->PostEvent(LocationLoadedEventPtr(new LocationLoadedEvent(location)));
-
-		PositionRequestPtr pos_msg(new PositionRequest(m_Pos));
-		RotationRequestPtr rot_msg;
-
-		if (m_Rot != EulerRotation(0, 0, 0))
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion()));
-		else
-			rot_msg = RotationRequestPtr(new GASS::RotationRequest(m_QRot));
-
-		GetSceneObject()->PostRequest(pos_msg);
-		GetSceneObject()->PostRequest(rot_msg);
-		GetSceneObject()->PostRequest(ScaleRequestPtr(new ScaleRequest(m_Scale)));
-	}
-
-	void OSGEarthGeoLocationComponent::OnAttachToParent(AttachToParentRequestPtr message)
-	{
-		SetAttachToParent(message->GetAttachToParent());
+		GetSceneObject()->PostEvent(std::make_shared<LocationLoadedEvent>(location));
 	}
 
 	bool OSGEarthGeoLocationComponent::HasParentLocation() const
@@ -157,42 +147,7 @@ namespace GASS
 		}*/
 		return value;
 	}
-
-	void OSGEarthGeoLocationComponent::OnPositionMessage(PositionRequestPtr message)
-	{
-		m_Pos = message->GetPosition();
-		if (m_TransformNode.valid())
-		{
-			osgEarth::GeoPoint geo_pos;
-			geo_pos.fromWorld(m_Map->getMapSRS(),OSGConvert::ToOSG(m_Pos));
-			m_GeoTransform->setPosition(geo_pos);
-			//m_TransformNode->setPosition(OSGConvert::ToOSG(m_Pos));
-			_SendTransMessage();
-		}
-	}
-
-	void OSGEarthGeoLocationComponent::OnWorldPositionRequest(WorldPositionRequestPtr message)
-	{
-		SetWorldPosition(message->GetPosition());
-	}
-
-	void OSGEarthGeoLocationComponent::OnRotationMessage(RotationRequestPtr message)
-	{
-		if (m_TransformNode.valid())
-		{
-			const osg::Quat final = OSGConvert::ToOSG(message->GetRotation());
-			m_TransformNode->setAttitude(final);
-			_SendTransMessage();
-		}
-	}
-
-	void OSGEarthGeoLocationComponent::OnWorldRotationMessage(WorldRotationRequestPtr message)
-	{
-		if (m_TransformNode.valid())
-		{
-			SetWorldRotation(message->GetRotation());
-		}
-	}
+	
 
 	void OSGEarthGeoLocationComponent::SetScale(const Vec3 &value)
 	{
@@ -214,31 +169,22 @@ namespace GASS
 		m_Pos = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(PositionRequestPtr(new PositionRequest(value)));
+			osgEarth::GeoPoint geo_pos;
+			geo_pos.fromWorld(m_Map->getMapSRS(), OSGConvert::ToOSG(m_Pos));
+			m_GeoTransform->setPosition(geo_pos);
+			SendTransMessage();
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::OnScaleMessage(ScaleRequestPtr message)
-	{
-		m_Scale = message->GetScale();
-		if (m_TransformNode.valid())
-		{
-			osg::Vec3d scale = OSGConvert::ToOSG(m_Scale);
-			double y = fabs(scale.y());
-			double z = fabs(scale.z());
-			scale.set(scale.x(), y, z);
-			m_TransformNode->setScale(scale);
-			_SendTransMessage();
-		}
-	}
+	
 
-	void OSGEarthGeoLocationComponent::_SendTransMessage()
+	void OSGEarthGeoLocationComponent::SendTransMessage()
 	{
 		const Vec3 pos = GetWorldPosition();
 		const Vec3 scale = GetScale();
 		const Quaternion rot = GetWorldRotation();
 
-		GetSceneObject()->PostEvent(TransformationChangedEventPtr(new TransformationChangedEvent(pos, rot, scale)));
+		GetSceneObject()->PostEvent(std::make_shared<TransformationChangedEvent>(pos, rot, scale));
 		//send for all child transforms also?
 		auto iter = GetSceneObject()->GetChildren();
 		while (iter.hasMoreElements())
@@ -246,7 +192,7 @@ namespace GASS
 			SceneObjectPtr obj = iter.getNext();
 			OSGEarthGeoLocationComponentPtr c_location = obj->GetFirstComponentByClass<OSGEarthGeoLocationComponent>();
 			if (c_location && c_location->GetAttachToParent())
-				c_location->_SendTransMessage();
+				c_location->SendTransMessage();
 		}
 	}
 
@@ -262,7 +208,7 @@ namespace GASS
 			osg::Vec3d new_pos = OSGConvert::ToOSG(value);
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -282,7 +228,7 @@ namespace GASS
 			m_GeoTransform->setPosition(geo_pos);
 			//m_TransformNode->setPosition(new_pos);
 			m_Pos = OSGConvert::ToGASS(new_pos);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -297,7 +243,7 @@ namespace GASS
 			world_pos = OSGConvert::ToGASS(wpos);
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -320,18 +266,16 @@ namespace GASS
 		m_QRot = value;
 		if (m_TransformNode.valid())
 		{
-			GetSceneObject()->PostRequest(RotationRequestPtr(new RotationRequest(Quaternion(value))));
+			const osg::Quat final = OSGConvert::ToOSG(value);
+			m_TransformNode->setAttitude(final);
+			SendTransMessage();
 		}
 	}
 
 	void OSGEarthGeoLocationComponent::SetEulerRotation(const EulerRotation &value)
 	{
 		m_Rot = value;
-		if (m_TransformNode.valid())
-		{
-			
-			GetSceneObject()->PostRequest(RotationRequestPtr(new GASS::RotationRequest(m_Rot.GetQuaternion())));
-		}
+		SetRotation(value.GetQuaternion());
 	}
 
 	EulerRotation OSGEarthGeoLocationComponent::GetEulerRotation() const
@@ -357,7 +301,7 @@ namespace GASS
 
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -375,7 +319,7 @@ namespace GASS
 				}
 			}
 			m_TransformNode->setAttitude(final);
-			_SendTransMessage();
+			SendTransMessage();
 		}
 	}
 
@@ -388,7 +332,7 @@ namespace GASS
 			osg::Quat rot = m_TransformNode->getAttitude();
 			if (m_TransformNode->getNumParents() > 0)
 			{
-				osg::PositionAttitudeTransform* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
+				auto* parent = dynamic_cast<osg::PositionAttitudeTransform*>(m_TransformNode->getParent(0));
 				if (parent)
 				{
 					osg::MatrixList mat_list = parent->getWorldMatrices();
@@ -414,11 +358,6 @@ namespace GASS
 		traverse(node, nv);
 	}
 
-	void OSGEarthGeoLocationComponent::OnVisibilityMessage(LocationVisibilityRequestPtr message)
-	{
-		SetVisible(message->GetValue());
-	}
-
 	void OSGEarthGeoLocationComponent::SetVisible(bool value)
 	{
 		m_NodeMask = value ? ~0u : 0u;
@@ -441,7 +380,7 @@ namespace GASS
 			if (m_TransformNode->getParent(0))
 				m_TransformNode->getParent(0)->removeChild(m_TransformNode);
 
-			OSGEarthGeoLocationComponentPtr parent = _GetParentLocation();
+			OSGEarthGeoLocationComponentPtr parent = GetParentLocation();
 			if (parent && value)
 				parent->GetOSGNode()->addChild(m_TransformNode);
 			else
@@ -458,7 +397,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::OnParentChangedMessage(ParentChangedEventPtr message)
+	void OSGEarthGeoLocationComponent::OnParentChanged(ParentChangedEventPtr message)
 	{
 		SetAttachToParent(GetAttachToParent());
 	}
@@ -468,7 +407,7 @@ namespace GASS
 		return m_AttachToParent;
 	}
 
-	OSGEarthGeoLocationComponentPtr OSGEarthGeoLocationComponent::_GetParentLocation()
+	OSGEarthGeoLocationComponentPtr OSGEarthGeoLocationComponent::GetParentLocation()
 	{
 		OSGEarthGeoLocationComponentPtr parent_location;
 		auto scene_obj = GetSceneObject()->GetParent();

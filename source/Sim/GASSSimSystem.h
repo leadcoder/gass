@@ -38,12 +38,12 @@ namespace GASS
 		virtual void OnPreSystemUpdate(double delta_time) = 0;
 		virtual void OnPostSystemUpdate(double delta_time) = 0;
 	};
-	typedef GASS_SHARED_PTR<ISystemListener> SystemListenerPtr;
-	typedef GASS_WEAK_PTR<ISystemListener> SystemListenerWeakPtr;
+	using SystemListenerPtr = std::shared_ptr<ISystemListener>;
+	using SystemListenerWeakPtr = std::weak_ptr<ISystemListener>;
 	
 	class SimSystemManager;
-	typedef GASS_SHARED_PTR<SimSystemManager> SimSystemManagerPtr;
-	typedef GASS_WEAK_PTR<SimSystemManager> SimSystemManagerWeakPtr;
+	using SimSystemManagerPtr = std::shared_ptr<SimSystemManager>;
+	using SimSystemManagerWeakPtr = std::weak_ptr<SimSystemManager>;
 
 	/** \addtogroup GASSSim
 	*  @{
@@ -79,15 +79,17 @@ namespace GASS
 		UpdateGroupIDBinder GetUpdateGroup() const {return m_UpdateGroup;}
 	
 		//internal
-		void _Update(double delta_time);
+		void Update(double delta_time);
 	protected:
-		void _PreUpdate(double delta_time);
-		void _PostUpdate(double delta_time);
+		UpdateGroupIDBinder m_UpdateGroup;
+	private:
+		void PreUpdate(double delta_time);
+		void PostUpdate(double delta_time);
 		
 		std::vector<SystemListenerWeakPtr> m_Listeners;
 		std::string m_Name;
 		SimSystemManagerWeakPtr m_Owner;
-		UpdateGroupIDBinder m_UpdateGroup;
+		
 	};
-	typedef GASS_SHARED_PTR<SimSystem> SimSystemPtr;
+	using SimSystemPtr = std::shared_ptr<SimSystem>;
 }

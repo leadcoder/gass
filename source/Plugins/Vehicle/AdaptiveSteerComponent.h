@@ -22,7 +22,7 @@
 #define ADAPTIVE_STEER_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -31,10 +31,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class AdaptiveSteerComponent :  public Reflection<AdaptiveSteerComponent,BaseSceneComponent>
+	class AdaptiveSteerComponent :  public Reflection<AdaptiveSteerComponent,Component>
 	{
 	public:
 		AdaptiveSteerComponent();
@@ -58,16 +58,16 @@ namespace GASS
 		float GetMaxSteerVelocity() const { return m_MaxSteerVelocity; }
 		void SetMaxSteerVelocity(float value) { m_MaxSteerVelocity = value; }
 
-		float m_Speed;
-		float m_SteerForce;
+		float m_Speed{1};
+		float m_SteerForce{100};
 		Vec2 m_MaxSteerAngleAtSpeed; 
 		Vec2 m_MinSteerAngleAtSpeed; 
 		
-		float m_MaxSteerVelocity;
-		float m_CurrentAngle;
-		float m_DesiredAngle;
-		float m_VehicleSpeed;
-		int m_DynamicInputPower;
+		float m_MaxSteerVelocity{1};
+		float m_CurrentAngle{0};
+		float m_DesiredAngle{0};
+		float m_VehicleSpeed{0};
+		int m_DynamicInputPower{4};
 	};
 }
 #endif

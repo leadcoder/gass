@@ -64,9 +64,9 @@ namespace GASS
 		{
 			if (m_PreSystemUpdate)
 			{
-				_UpdatePreListeners(delta_time);
+				UpdatePreListeners(delta_time);
 				OnUpdate(delta_time);
-				_UpdatePostListeners(delta_time);
+				UpdatePostListeners(delta_time);
 			}
 		}
 
@@ -74,9 +74,9 @@ namespace GASS
 		{
 			if (!m_PreSystemUpdate)
 			{
-				_UpdatePreListeners(delta_time);
+				UpdatePreListeners(delta_time);
 				OnUpdate(delta_time);
-				_UpdatePostListeners(delta_time);
+				UpdatePostListeners(delta_time);
 			}
 		}
 
@@ -102,8 +102,8 @@ namespace GASS
 			m_PreSystemUpdate = false;
 		}
 	private:
-		void _UpdatePreListeners(double delta_time);
-		void _UpdatePostListeners(double delta_time);
+		void UpdatePreListeners(double delta_time);
+		void UpdatePostListeners(double delta_time);
 		std::string m_Name;
 		SceneWeakPtr m_Scene;
 		std::vector<SceneManagerListenerWeakPtr> m_PostListeners;
@@ -111,5 +111,5 @@ namespace GASS
 		bool m_PreSystemUpdate;
 	};
 
-	typedef GASS_SHARED_PTR<BaseSceneManager> BaseSceneManagerPtr;
+	using BaseSceneManagerPtr = std::shared_ptr<BaseSceneManager>;
 }

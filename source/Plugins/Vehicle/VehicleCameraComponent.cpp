@@ -52,8 +52,8 @@ namespace GASS
 
 	void VehicleCameraComponent::OnInitialize()
 	{
-		BaseSceneComponent::InitializeSceneObjectRef();
-		BaseSceneComponent::OnInitialize();
+		Component::InitializeSceneObjectRef();
+		Component::OnInitialize();
 
 		if(!m_InputHandlerObject.IsValid())
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No InputHandlerObject found", " VehicleCameraComponent::OnInitialize");
@@ -65,7 +65,7 @@ namespace GASS
 
 	void VehicleCameraComponent::OnDelete()
 	{
-		BaseSceneComponentPtr input = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(GetSceneObject()->GetFirstParentComponentByClass<IInputComponent>());
+		auto input = GASS_DYNAMIC_PTR_CAST<Component>(GetSceneObject()->GetFirstParentComponentByClass<IInputComponent>());
 		if(input)
 		{
 			input->GetSceneObject()->UnregisterForMessage(UNREG_TMESS(VehicleCameraComponent::OnEnter,EnterVehicleRequest));
@@ -93,5 +93,4 @@ namespace GASS
 	{
 
 	}
-
 }

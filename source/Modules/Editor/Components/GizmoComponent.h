@@ -1,7 +1,7 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSceneManager.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -20,20 +20,20 @@ namespace GASS
 		BIND(GT_PLANE)
 	END_ENUM_BINDER(GizmoType, GizmoTypeBinder)
 
-	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,BaseSceneComponent>
+	class EditorModuleExport GizmoComponent : public Reflection<GizmoComponent,Component>
 	{
 	public:
 		GizmoComponent();
-		virtual ~GizmoComponent();
+		~GizmoComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		Vec3 GetPosition(const Ray &ray);
 		Quaternion GetRotation(Float detla);
 		void SetActive(bool active)  {m_Active =active;}
 		bool GetActive() const {return m_Active;}
 		GizmoEditMode GetMode() const {return m_Mode;}
-		void SceneManagerTick(double /*delta_time*/);
+		void SceneManagerTick(double /*delta_time*/) override;
 	private:
 		//getters/setter
 		GizmoTypeBinder GetType() const { return m_Type; }
@@ -55,38 +55,38 @@ namespace GASS
 		void OnEditMode(EditModeChangedEventPtr message);
 	
 		//Helpers
-		void _Move(const Vec3 &pos);
-		void _Rotate(const Quaternion &pos);
-		void _Scale(const Vec3 &scale);
-		void _UpdateScale();
-		void _BuildMesh();
-		Vec3 _ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
-		Float _SnapValue(Float value, Float snap);
-		SceneObjectPtr _GetFirstSelected();
-		void _SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
+		void Move(const Vec3 &pos);
+		void Rotate(const Quaternion &pos);
+		void Scale(const Vec3 &scale);
+		void UpdateScale();
+		void BuildMesh();
+		Vec3 ProjectPointOnAxis(const Vec3 &axis_origin, const Vec3 &axis_dir, const Vec3 &p) const;
+		Float SnapValue(Float value, Float snap);
+		SceneObjectPtr GetFirstSelected();
+		void SetSelection(const std::vector<SceneObjectWeakPtr> &selection);
 
 		Quaternion m_BaseRot;
 		ColorRGBA m_Color;
-		float m_Size;
+		float m_Size{5};
 		GizmoTypeBinder m_Type;
 		
-		Float m_LastDist;
-		bool m_Highlight;
-		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
+		Float m_LastDist{0};
+		bool m_Highlight{true};
+		SceneObjectWeakPtr m_ActiveCameraObject;
 		std::vector<SceneObjectWeakPtr> m_Selection;
-		GizmoEditMode m_Mode;
-		Float m_GridDist;
-		bool m_Active;
+		GizmoEditMode m_Mode{GM_LOCAL};
+		Float m_GridDist{1.0};
+		bool m_Active{false};
 		EditorSceneManagerPtr m_EditorSceneManager;
 		std::string m_RegularMat;
 		std::string m_HighlightMat;
-		GASS::Vec3 m_PreviousPos;
+		Vec3 m_PreviousPos;
 		Quaternion m_PreviousRot;
-		bool m_TrackTransformation;
-		bool m_TrackSelectedTransform;
+		bool m_TrackTransformation{true};
+		bool m_TrackSelectedTransform{true};
 	};
 
-	typedef GASS_SHARED_PTR<GizmoComponent> GizmoComponentPtr;
+	using GizmoComponentPtr = std::shared_ptr<GizmoComponent>;
 }
 
 

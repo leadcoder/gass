@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -32,10 +32,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class SteerComponent :  public Reflection<SteerComponent,BaseSceneComponent>
+	class SteerComponent :  public Reflection<SteerComponent,Component>
 	{
 	public:
 		SteerComponent();
@@ -54,12 +54,12 @@ namespace GASS
 		void SetSpeedMultiplier(float value) {m_Speed = value;}
 		float GetSpeedMultiplier() const {return m_Speed;}
 
-		float m_Speed;
-		float m_SteerForce;
-		float m_MaxSteerVelocity;
-		float m_MaxSteerAngle;
-		float m_CurrentAngle;
-		float m_DesiredAngle;
+		float m_Speed{1};
+		float m_SteerForce{100};
+		float m_MaxSteerVelocity{1};
+		float m_MaxSteerAngle{45};
+		float m_CurrentAngle{0};
+		float m_DesiredAngle{0};
 	};
 }
 #endif

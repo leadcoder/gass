@@ -81,7 +81,7 @@ namespace GASS
 	typedef GASS_SHARED_PTR<DetourCrowdComponent> DetourCrowdComponentPtr;
 	typedef GASS_WEAK_PTR<DetourCrowdComponent> DetourCrowdComponentWeakPtr;
 
-	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , BaseSceneComponent>, public IPlatformComponent
+	class DetourCrowdAgentComponent :  public Reflection<DetourCrowdAgentComponent , Component>, public IPlatformComponent
 
 	{
 	public:
@@ -115,7 +115,7 @@ namespace GASS
 		void OnGoToPosition(GotoPositionRequestPtr message);
 		void OnSetDesiredSpeed(DesiredSpeedMessagePtr message);
 		void UpdateGeometry();
-		void OnWorldPosition(WorldPositionRequestPtr message);
+		void OnTransformationChanged(TransformationChangedEventPtr);
 		void OnLoad(LocationLoadedEventPtr message);
 		void SetMaxAcceleration(float radius);
 		float GetMaxAcceleration() const;
@@ -139,6 +139,7 @@ namespace GASS
 		double m_AccTime;
 		Vec3f m_LastPos;
 		DetourCrowdComponentWeakPtr m_CrowdComp;
+		bool m_UpdateTransform = true;
 	};
 	typedef GASS_SHARED_PTR<DetourCrowdAgentComponent> DetourCrowdAgentComponentPtr;
 }

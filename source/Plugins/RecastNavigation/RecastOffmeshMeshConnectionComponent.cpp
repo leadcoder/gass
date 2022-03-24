@@ -19,15 +19,16 @@
 *****************************************************************************/
 
 #include "RecastOffmeshMeshConnectionComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {
 	RecastOffmeshMeshConnectionComponent::RecastOffmeshMeshConnectionComponent() : m_ConnectionLine(new GraphicsMesh()),
-		m_Initialized(false),
-		m_Visible(true),
-		m_Radius(1.0),
+		
 		m_Mode("BIDIRECTIONAL")
 	{
 
@@ -94,7 +95,7 @@ namespace GASS
 		m_Visible = value;
 		if(GetSceneObject())
 		{
-			GetSceneObject()->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(value)));
+			GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
 			if(m_Visible)
 				UpdateConnectionLine();
 		}
@@ -147,7 +148,7 @@ namespace GASS
 			sub_mesh_data->ColorVector.push_back(color);
 		}
 
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(m_ConnectionLine)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_ConnectionLine);
 
 	}
 }

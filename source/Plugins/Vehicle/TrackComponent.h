@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
@@ -32,10 +32,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class TrackComponent :  public Reflection<TrackComponent,BaseSceneComponent>
+	class TrackComponent :  public Reflection<TrackComponent,Component>
 	{
 	public:
 		TrackComponent();
@@ -53,11 +53,11 @@ namespace GASS
 		void SetAnimationSpeedFactor(const Vec2 &value){m_AnimationSpeedFactor=value;}
 		
 		SceneObjectRef m_DriveWheel;
-		bool m_Initialized;
+		bool m_Initialized{false};
 		Vec2 m_AnimationSpeedFactor;
 		Vec2 m_AnimationValue;
-		float m_ParticleEmissionFactor;
-		float m_SoundVolumeFactor;
+		float m_ParticleEmissionFactor{0.6f};
+		float m_SoundVolumeFactor{1.0f};
 	};
 }
 #endif

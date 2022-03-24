@@ -28,9 +28,21 @@ namespace GASS
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(IWaypointListComponent)
 	public:
-		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const = 0; 
-		virtual float GetRadius() const = 0; 
+		virtual std::vector<Vec3> GetWaypoints(bool relative_position = true) const = 0;
+		virtual float GetRadius() const = 0;
+		virtual void SetRadius(float radius) = 0;
 		virtual std::string GetWaypointTemplate() const = 0;
+		virtual void SetWaypointTemplate(const std::string& name) = 0;
+		virtual void SetClosed(bool value) = 0;
+		virtual bool GetClosed() const = 0;
+		virtual void SetAutoRotateWaypoints(bool value) = 0;
+		virtual bool GetAutoRotateWaypoints() const = 0;
+		virtual void SetShowPathLine(bool value) = 0;
+		virtual bool GetShowPathLine() const = 0;
+		virtual int GetSplineSteps() const = 0;
+		virtual void SetSplineSteps(int steps) = 0;
+		virtual bool GetEnableSpline()const = 0;
+		virtual void SetEnableSpline(bool value) = 0;
 	};
-	typedef GASS_SHARED_PTR<IWaypointListComponent> WaypointListComponentPtr;
+	using WaypointListComponentPtr = std::shared_ptr<IWaypointListComponent>;
 }

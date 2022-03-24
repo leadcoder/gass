@@ -111,8 +111,8 @@ namespace GASS
 			return is;
 		}
 	private:
-		void _FixPath(std::string &path) const;
-		std::string _ExpandEnvVariables(const std::string &inStr) const;
+		void FixPath(std::string &path) const;
+		std::string ExpandEnvVariables(const std::string &inStr) const;
 		std::string m_ExpandedPath;
 		std::string m_RawPath;
 	};

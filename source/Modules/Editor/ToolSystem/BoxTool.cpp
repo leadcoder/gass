@@ -1,5 +1,6 @@
 #include "BoxTool.h"
 #include <iomanip>
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
@@ -48,7 +49,7 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr box = GetOrCreateBoxObject();
-		box->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+		box->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 	}
 
 
@@ -92,19 +93,19 @@ namespace GASS
 		const auto inv_trans = transform.GetInvert();
 		const Vec3 corner = inv_trans * end;// -start;
 
-		sub_mesh_data->PositionVector.push_back(Vec3d(0, 0, 0));
+		sub_mesh_data->PositionVector.emplace_back(0, 0, 0);
 		sub_mesh_data->ColorVector.push_back(color);
 
-		sub_mesh_data->PositionVector.push_back(Vec3d(corner.x, 0, 0));
+		sub_mesh_data->PositionVector.emplace_back(corner.x, 0, 0);
 		sub_mesh_data->ColorVector.push_back(color);
 
 		sub_mesh_data->PositionVector.push_back(corner);
 		sub_mesh_data->ColorVector.push_back(color);
 
-		sub_mesh_data->PositionVector.push_back(Vec3d(0, 0, corner.z));
+		sub_mesh_data->PositionVector.emplace_back(0, 0, corner.z);
 		sub_mesh_data->ColorVector.push_back(color);
 
-		sub_mesh_data->PositionVector.push_back(Vec3d(0, 0, 0));
+		sub_mesh_data->PositionVector.emplace_back(0, 0, 0);
 		sub_mesh_data->ColorVector.push_back(color);
 
 		sub_mesh_data->IndexVector.push_back(0);
@@ -121,7 +122,7 @@ namespace GASS
 		SceneObjectPtr box_obj = m_BoxObject.lock();
 		if (!box_obj)
 		{
-			box_obj = SceneObjectPtr(new SceneObject());
+			box_obj = std::make_shared<SceneObject>();
 			box_obj->SetName("BoxObject");
 			box_obj->SetID("BOX_OBJECT");
 			box_obj->SetSerialize(false);

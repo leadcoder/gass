@@ -27,9 +27,9 @@ namespace GASS
 	class OSGNodeData : public osg::Referenced
 	{
 	public:
-		OSGNodeData(BaseSceneComponentPtr  component):m_Component(component) {}
+		OSGNodeData(ComponentPtr  component):m_Component(component) {}
 		virtual ~OSGNodeData(){}
-		BaseSceneComponentWeakPtr m_Component;
+		ComponentWeakPtr m_Component;
 	};
 
 }

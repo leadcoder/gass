@@ -1,14 +1,14 @@
 #pragma once
 #include "Sim/GASSCommon.h"
 #include "Modules/Editor/EditorSystem.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 
 namespace GASS
 {
-	class DistanceScaleComponent : public Reflection<DistanceScaleComponent,BaseSceneComponent>
+	class DistanceScaleComponent : public Reflection<DistanceScaleComponent,Component>
 	{
 	public:
 		DistanceScaleComponent();
@@ -20,8 +20,7 @@ namespace GASS
 		void OnTransformation(TransformationChangedEventPtr message);
 		void OnCameraMoved(TransformationChangedEventPtr message);
 		void OnCameraChanged(CameraChangedEventPtr message);
-		void OnCameraParameter(CameraParameterRequestPtr message);
-
+	
 		float GetMaxDistance() const{return m_MaxDistance;}
 		void SetMaxDistance(float value){m_MaxDistance =value;}
 		float GetMinDistance() const{return m_MinDistance;}
@@ -32,14 +31,14 @@ namespace GASS
 		//helpers
 		void UpdateScale();
 
-		Float m_LastDist;
+		Float m_LastDist{0};
 		GASS::SceneObjectWeakPtr m_ActiveCameraObject;
-		float m_MaxDistance;
-		float m_MinDistance;
-		bool m_ScaleLocation;
-		float m_FOV;
+		float m_MaxDistance{30000.0f};
+		float m_MinDistance{0.1f};
+		bool m_ScaleLocation{false};
+		float m_FOV{45.0f};
 	};
-	typedef GASS_SHARED_PTR<DistanceScaleComponent> DistanceScaleComponentPtr;
+	using DistanceScaleComponentPtr = std::shared_ptr<DistanceScaleComponent>;
 }
 
 

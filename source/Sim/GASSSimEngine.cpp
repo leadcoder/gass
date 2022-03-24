@@ -47,7 +47,7 @@
 
 namespace GASS
 {
-	SimEngine::SimEngine(const FilePath &log_folder) : m_CurrentTime(0),
+	SimEngine::SimEngine(const FilePath &log_folder) : 
 		m_PluginManager(new PluginManager()),
 		m_ScriptManager(new ScriptManager()),
 		m_ResourceManager(new ResourceManager()),
@@ -55,6 +55,7 @@ namespace GASS
 		m_SceneObjectTemplateManager(new SceneObjectTemplateManager()),
 		m_LogFolder(log_folder)
 	{
+		m_Instance = this;
 		//Always log to file if sim is created?
 		if (!Logger::IsInitialize())
 		{
@@ -69,16 +70,19 @@ namespace GASS
 
 	}
 
-	template<> SimEngine* Singleton<SimEngine>::m_Instance = 0;
-	SimEngine* SimEngine::GetPtr(void)
+	SimEngine* SimEngine::m_Instance = nullptr;
+	SimEngine* SimEngine::GetPtr()
 	{
-		assert(m_Instance);
+		//assert(m_Instance);
+		if (m_Instance == nullptr)
+			m_Instance = new SimEngine();
 		return m_Instance;
 	}
-
-	SimEngine& SimEngine::Get(void)
+	SimEngine& SimEngine::Get()
 	{
-		assert(m_Instance);
+		//assert(m_Instance);
+		if (m_Instance == nullptr)
+			m_Instance = new SimEngine();
 		return *m_Instance;
 	}
 
@@ -212,7 +216,7 @@ namespace GASS
 		if (!the_scene)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Scene not valid", "SimEngine::DestroyScene");
 		the_scene->OnUnload();
-		SceneVector::iterator iter = m_Scenes.begin();
+		auto iter = m_Scenes.begin();
 		while (iter != m_Scenes.end())
 		{
 			if (the_scene == *iter)

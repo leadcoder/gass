@@ -11,23 +11,22 @@ namespace GASS
 	class MouseToolController;
 	class SceneObject;
 	class IMessage;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using MessagePtr = std::shared_ptr<IMessage>;
 
 	class EditorModuleExport MoveTool : public IMouseTool 
 	{
 	public:
-		
 		MoveTool(MouseToolController* controller);
-		virtual ~MoveTool(void);
+		~MoveTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual std::string GetName() {return TID_MOVE;}
-		virtual void Stop();
-		virtual void Start();
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		std::string GetName() override {return TID_MOVE;}
+		void Stop() override;
+		void Start() override;
 	private:
 		bool CheckIfEditable(SceneObjectPtr obj) const;
 		void SetGizmoVisiblity(bool value);
@@ -42,7 +41,7 @@ namespace GASS
 		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
 		GASS::SceneObjectWeakPtr m_CurrentGizmo;
 
-		typedef std::map<GASS::SceneObjectWeakPtr, Vec3, std::owner_less<GASS::SceneObjectWeakPtr>> SelectionMap;
+		using SelectionMap = std::map<SceneObjectWeakPtr, Vec3, std::owner_less<SceneObjectWeakPtr>>;
 		SelectionMap m_SelectedLocations;
 		
 		bool m_UseGizmo;

@@ -34,5 +34,5 @@ namespace GASS
 		GASS_DECLARE_CLASS_AS_INTERFACE(IGroupComponent)
 	public:
 	};
-	typedef GASS_SHARED_PTR<IGroupComponent> GroupComponentPtr;
+	using GroupComponentPtr = std::shared_ptr<IGroupComponent>;
 }

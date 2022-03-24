@@ -22,17 +22,18 @@
 #define SOUND_VOLUME_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
 namespace GASS
 {
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	class ISoundComponent;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class SoundVolumeComponent :  public Reflection<SoundVolumeComponent,BaseSceneComponent>
+	class SoundVolumeComponent :  public Reflection<SoundVolumeComponent,Component>
 	{
 	public:
 		SoundVolumeComponent();
@@ -43,8 +44,9 @@ namespace GASS
 		void OnVelocityNotifyMessage(PhysicsVelocityEventPtr message);
 		void OnHingeUpdated(ODEPhysicsHingeJointEventPtr message);
 
-		Float m_MaxVolumeAtSpeed;
-		Float m_HingeAngle;
+		Float m_MaxVolumeAtSpeed{0.3};
+		Float m_HingeAngle{0};
+		ISoundComponent* m_Sound = nullptr;
 	};
 }
 #endif

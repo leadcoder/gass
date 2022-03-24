@@ -31,26 +31,22 @@
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Plugins/Base/CoreMessages.h"
+#include "Plugins/Base/GASSCoreSceneManager.h"
 #include "WaypointComponent.h"
+#include <memory>
 #include <sstream>
 #include <fstream>
 
 
 namespace GASS
 {
-	WaypointListComponent::WaypointListComponent() : m_Radius(0),
-		m_EnableSpline(false),
-		m_Initialized(false),
-		m_AutoUpdateTangents(true),
-		m_SplineSteps(10),
-		m_ShowWaypoints(true),
-		m_ShowPathLine(false),
+	WaypointListComponent::WaypointListComponent() : 
 		m_LineColor(0,0,1,1),
-		m_WaypointTemplate("Waypoint"),
-		m_Closed(false),
-		m_AutoRotateWaypoints(false)
+		m_WaypointTemplate("Waypoint")
+		
 	{
 
 	}
@@ -64,57 +60,66 @@ namespace GASS
 	{
 
 		std::vector<std::string> ext;
-		ext.push_back("txt");
+		ext.emplace_back("txt");
 		ComponentFactory::Get().Register<WaypointListComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("WaypointListComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("WaypointListComponent", OF_VISIBLE));
 		RegisterGetSet("Radius", &WaypointListComponent::GetRadius, &WaypointListComponent::SetRadius,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("EnableSpline", &WaypointListComponent::GetEnableSpline, &WaypointListComponent::SetEnableSpline,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("AutoUpdateTangents", &WaypointListComponent::GetAutoUpdateTangents, &WaypointListComponent::SetAutoUpdateTangents,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("ShowWaypoints", &WaypointListComponent::GetShowWaypoints, &WaypointListComponent::SetShowWaypoints,PF_VISIBLE | PF_EDITABLE,"");
-		RegisterMember("ShowPathLine", &WaypointListComponent::m_ShowPathLine,PF_VISIBLE | PF_EDITABLE,"");
+		RegisterGetSet("ShowPathLine", &WaypointListComponent::GetShowPathLine ,&WaypointListComponent::SetShowPathLine,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("SplineSteps", &WaypointListComponent::GetSplineSteps, &WaypointListComponent::SetSplineSteps,PF_VISIBLE | PF_EDITABLE,"");
 		auto prop = RegisterGetSet("Export", &WaypointListComponent::GetExport, &WaypointListComponent::SetExport, PF_VISIBLE | PF_EDITABLE, "Export this path to text file");
 		prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::EXPORT_FILE,ext));
 		RegisterGetSet("WaypointTemplate", &WaypointListComponent::GetWaypointTemplate, &WaypointListComponent::SetWaypointTemplate,PF_VISIBLE,"");
-		RegisterMember("Closed", &WaypointListComponent::m_Closed,PF_VISIBLE,"");
-		RegisterMember("AutoRotateWaypoints", &WaypointListComponent::m_AutoRotateWaypoints,PF_VISIBLE,"");
-	}
-
-	void WaypointListComponent::OnInitialize()
-	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(WaypointListComponent::OnPostInitializedEvent,PostInitializedEvent,0));
-		m_ConnectionLines = GetSceneObject()->GetChildByID("WP_CONNECTION_LINES");
+		RegisterGetSet("Closed", &WaypointListComponent::GetClosed, &WaypointListComponent::SetClosed,PF_VISIBLE,"");
+		RegisterGetSet("AutoRotateWaypoints", &WaypointListComponent::GetAutoRotateWaypoints, &WaypointListComponent::SetAutoRotateWaypoints,PF_VISIBLE,"");
 	}
 
 	static const std::string MAT_NAME = "WaypointListLine";
 
-	void WaypointListComponent::OnPostInitializedEvent(PostInitializedEventPtr message)
+	void WaypointListComponent::OnInitialize()
 	{
+		m_ConnectionLines = GetSceneObject()->GetChildByID("WP_CONNECTION_LINES");
 		//create material for waypoint binding line
 		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		if(!gfx_sys->HasMaterial(MAT_NAME))
+		if (!gfx_sys->HasMaterial(MAT_NAME))
 		{
 			GraphicsMaterial line_mat;
 			line_mat.Name = MAT_NAME;
-			line_mat.Diffuse.Set(0,0,0,1.0);
-			line_mat.Ambient.Set(0,0,0);
-			line_mat.SelfIllumination.Set(0.7,1,1);
+			line_mat.Diffuse.Set(0, 0, 0, 1.0);
+			line_mat.Ambient.Set(0, 0, 0);
+			line_mat.SelfIllumination.Set(0.7, 1, 1);
 			line_mat.DepthTest = false;
 			line_mat.DepthWrite = false;
 			gfx_sys->AddMaterial(line_mat);
 		}
-
-		//No need to be attached to parent any more
-		//GetSceneObject()->PostRequest(AttachToParentRequestPtr(new AttachToParentRequest(false)));
-		m_Initialized = true;
-
-		UpdatePath();
-		SetShowWaypoints(m_ShowWaypoints);
+		RegisterForPostUpdate<CoreSceneManager>();
 	}
 
-	std::string WaypointListComponent::GetWaypointTemplate() const {return m_WaypointTemplate;}
-	void WaypointListComponent::SetWaypointTemplate(const std::string &name) {m_WaypointTemplate=name;}
+	std::string WaypointListComponent::GetWaypointTemplate() const 
+	{
+		return m_WaypointTemplate;
+	}
 
+	void WaypointListComponent::SetWaypointTemplate(const std::string &name) 
+	{
+		m_WaypointTemplate=name;
+	}
+
+	void WaypointListComponent::SetShowPathLine(bool value) 
+	{ 
+		m_ShowPathLine = value; 
+		SetDirty(true);
+		if (!m_ShowPathLine && m_Initialized)
+		{
+			auto mm_comp = GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>();
+			if (mm_comp)
+				mm_comp->Clear();
+		}
+	}
+
+	
 	int WaypointListComponent::GetSplineSteps()const
 	{
 		return m_SplineSteps;
@@ -123,10 +128,13 @@ namespace GASS
 	void WaypointListComponent::SetSplineSteps(int steps)
 	{
 		m_SplineSteps = steps;
-		if(m_Initialized)
-			UpdatePath();
+		SetDirty(true);
 	}
 
+	void WaypointListComponent::SetDirty(bool value)
+	{
+		m_Dirty = value;
+	}
 
 	float WaypointListComponent::GetRadius()const
 	{
@@ -136,8 +144,7 @@ namespace GASS
 	void WaypointListComponent::SetRadius(float radius)
 	{
 		m_Radius = radius;
-		if(m_Initialized)
-			UpdatePath();
+		SetDirty(true);
 	}
 
 	bool WaypointListComponent::GetEnableSpline() const
@@ -148,8 +155,7 @@ namespace GASS
 	void WaypointListComponent::SetEnableSpline(bool value)
 	{
 		m_EnableSpline = value;
-		if(m_Initialized)
-			UpdatePath();
+		SetDirty(true);
 	}
 
 	bool WaypointListComponent::GetShowWaypoints() const
@@ -170,23 +176,30 @@ namespace GASS
 				WaypointComponentPtr comp = child_obj->GetFirstComponentByClass<WaypointComponent>();
 				if(comp)
 				{
-					child_obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
-					//child_obj->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-					//child_obj->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
-
-					SceneObjectPtr tangent = child_obj->GetFirstChildByName("Tangent",false);
-					if(tangent)
-					{
-						//tangent->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_ShowWaypoints);
-						//tangent->PostRequest(LocationVisibilityRequestPtr(new LocationVisibilityRequest(m_ShowWaypoints)));
-						//tangent->PostRequest(CollisionSettingsRequestPtr(new CollisionSettingsRequest(m_ShowWaypoints)));
-					}
+					child_obj->SetVisible(m_ShowWaypoints);
 				}
 			}
 		}
 	}
 
-	void WaypointListComponent::UpdatePath()
+	void WaypointListComponent::SceneManagerTick(double /*delta_time*/)
+	{
+
+		if (!m_Initialized)
+		{
+			m_Initialized = true;
+			SetShowWaypoints(m_ShowWaypoints);
+		}
+		
+
+		if (m_Dirty)
+		{
+			NotifyPathUpdated();
+			m_Dirty = false;
+		}
+	}
+
+	void WaypointListComponent::NotifyPathUpdated()
 	{
 		if(!m_Initialized)
 			return;
@@ -213,20 +226,12 @@ namespace GASS
 
 			if(sub_mesh_data->PositionVector.size() > 0)
 			{
-				/*SceneObjectPtr line_obj = _GetConnectionLines();
-				if(line_obj)
-				{
-					line->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-					//update material
-					line->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
-				}
-				else //remove this*/
-				{
-
-					GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
-					//update material
-					GetSceneObject()->PostRequest(ReplaceMaterialRequestPtr(new ReplaceMaterialRequest(MAT_NAME)));
-				}
+					auto mm_comp = GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>();
+					if (mm_comp)
+					{
+						mm_comp->SetMeshData(*mesh_data);
+						mm_comp->SetSubMeshMaterial(MAT_NAME);
+					}
 			}
 		}
 		//create absolute positions
@@ -236,7 +241,7 @@ namespace GASS
 		{
 			wps[i] += world_pos;
 		}
-		GetSceneObject()->PostEvent(WaypointListUpdatedMessagePtr(new WaypointListUpdatedMessage(wps)));
+		GetSceneObject()->PostEvent(std::make_shared<WaypointListUpdatedMessage>(wps));
 	}
 
 	std::vector<Vec3> WaypointListComponent::GetWaypoints(bool relative_position) const
@@ -320,9 +325,10 @@ namespace GASS
 
 			for(size_t  i = 0; i < spline.GetTangents().size(); i++)
 			{
-				if(!m_AutoUpdateTangents || wp_vec[i]->GetCustomTangent()) //get tangents from wp
+				const int wp_index = i % static_cast<int>(wp_vec.size());
+				if(!m_AutoUpdateTangents || wp_vec[wp_index]->GetCustomTangent()) //get tangents from wp
 				{
-					spline.GetTangents()[i] = wp_vec[i]->GetTangent();//* wp_vec[i]->GetTangentWeight();
+					spline.GetTangents()[i] = wp_vec[wp_index]->GetTangent();//* wp_vec[i]->GetTangentWeight();
 				}
 				else //auto update wp tangent from spline
 				{
@@ -334,11 +340,7 @@ namespace GASS
 						Vec3 norm_tangent = tangent*(1.0/weight);
 						spline.GetTangents()[i] = norm_tangent*m_Radius;
 					}
-					if(i < wp_vec.size())
-					{
-						wp_vec[i]->SetTangent(tangent);
-						//wp_vec[i]->SetTangentLength(weight);
-					}
+					wp_vec[wp_index]->SetTangent(tangent);
 				}
 			}
 			//update tangents
@@ -351,7 +353,7 @@ namespace GASS
 				for(double t = 0; t <= 1; t += 1.0 / steps)
 				{
 					Vec3 point =  spline.Interpolate(i, t);
-					if(point != last_point)
+					if(!point.Equal(last_point,0.01))
 						pos_vec.push_back(point);
 					last_point = point;
 				}
@@ -381,8 +383,7 @@ namespace GASS
 	void WaypointListComponent::SetAutoUpdateTangents(bool value)
 	{
 		m_AutoUpdateTangents = value;
-		if(m_Initialized)
-			UpdatePath();
+		SetDirty(true);
 	}
 
 	void WaypointListComponent::SetExport(const FilePath &filename)

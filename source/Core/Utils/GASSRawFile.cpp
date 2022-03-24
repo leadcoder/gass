@@ -4,10 +4,8 @@
 
 namespace GASS
 {
-	RawFile::RawFile() : m_Data(nullptr),
-		m_Height(0),
-		m_Width(0),
-		m_BPP(8)
+	RawFile::RawFile() 
+		
 	{
 
 	}
@@ -62,10 +60,10 @@ namespace GASS
 		const unsigned int image_size = m_Width*m_Height*m_BPP/8;
 		m_Data = new unsigned char[image_size];
 
-		if(m_Data== nullptr || fread(m_Data, 1, image_size, file) != image_size)
+		if(m_Data == nullptr || fread(m_Data, 1, image_size, file) != image_size)
 		{
 			if(m_Data!=nullptr)
-				free(m_Data);
+				delete[] m_Data;
 
 			fclose(file);
 			return false;

@@ -36,6 +36,6 @@ namespace GASS
 		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "ODECollisionSystem";}
 	};
-	typedef GASS_SHARED_PTR<ODECollisionSystem> ODECollisionSystemPtr;
+	using ODECollisionSystemPtr = std::shared_ptr<ODECollisionSystem>;
 }
 

@@ -20,6 +20,8 @@
 
 
 #include "LineGeometryComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Core/Math/GASSSplineAnimation.h"
 #include "Core/Math/GASSTriangle.h"
@@ -32,6 +34,7 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/GASSComponentFactory.h"
 
@@ -40,22 +43,18 @@ namespace GASS
 
 	std::vector<std::string> GetLineMaterials()
 	{
-		GASS::GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		std::vector<std::string> content = gfx_system->GetMaterialNames("GASS_ROAD_MATERIALS");
 		return content;
 	}
 
-	LineGeometryComponent::LineGeometryComponent() : m_Initialized(false),
-		m_Offset(0.3f),
+	LineGeometryComponent::LineGeometryComponent() : 
 		m_Material("MuddyRoadWithTracks"),
-		m_Width(10),
-		m_ClampToTerrain(true),
+		
 		m_TileScale(1,1),
-		m_FadeStart(false),
-		m_FadeEnd(false),
-		m_Color(1,1,1,1),
-		m_RotateTexture(false),
-		m_CustomDitchTexturePercent(0)
+		
+		m_Color(1,1,1,1)
+		
 	{
 
 	}
@@ -68,7 +67,7 @@ namespace GASS
 	void LineGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<LineGeometryComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LineGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("LineGeometryComponent", OF_VISIBLE));
 
 		RegisterGetSet("Width", &GASS::LineGeometryComponent::GetWidth, &GASS::LineGeometryComponent::SetWidth,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterMember("Color", &GASS::LineGeometryComponent::m_Color,PF_VISIBLE | PF_EDITABLE,"");
@@ -95,7 +94,6 @@ namespace GASS
 				GASS_LOG(LWARNING) << "LineComponent depends on WaypointListComponent";
 			GetSceneObject()->RegisterForMessage(REG_TMESS(LineGeometryComponent::OnUpdate,WaypointListUpdatedMessage,1));
 		}
-
 		m_Initialized = true;
 	}
 
@@ -318,6 +316,6 @@ namespace GASS
 			(sub_mesh_data->TangentVector[sub_mesh_data->IndexVector[i+5]]) = tangent;
 		}
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 }

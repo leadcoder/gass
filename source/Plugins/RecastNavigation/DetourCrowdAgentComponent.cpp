@@ -2,6 +2,7 @@
 #include "DetourCrowdAgentComponent.h"
 #include "DetourCrowdComponent.h"
 #include "Core/Math/GASSMath.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 
 namespace GASS
@@ -41,7 +42,7 @@ namespace GASS
 	void DetourCrowdAgentComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnLoad,LocationLoadedEvent,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnWorldPosition,WorldPositionRequest,1));
+		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnTransformationChanged, TransformationChangedEvent,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnGoToPosition,GotoPositionRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(DetourCrowdAgentComponent::OnSetDesiredSpeed,DesiredSpeedMessage,0));
 	}
@@ -271,8 +272,9 @@ namespace GASS
 				int id = GASS_PTR_TO_INT(this);
 				Vec3f current_pos(pos[0],pos[1],pos[2]);
 
-				GetSceneObject()->PostRequest(WorldPositionRequestPtr(new WorldPositionRequest(Vec3::Convert(current_pos),id)));
-
+				m_UpdateTransform = false;
+				GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(Vec3::Convert(current_pos));
+				m_UpdateTransform = true;
 				Vec3f target_dir = current_pos - Vec3::Convert(m_TargetPos);
 				float dist = target_dir.Length();
 				DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
@@ -351,23 +353,23 @@ namespace GASS
 					Vec3f right = final_dir;
 					right.x = final_dir.z;
 					right.z = -final_dir.x;
-					GASS::Mat4f rot_mat;
+					Mat4f rot_mat;
 					rot_mat.MakeIdentity();
 					rot_mat.SetRotationByAxis(right, up, final_dir);
 					Quaternionf rot;
 					rot.FromRotationMatrix(rot_mat);
-					GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(Quaterniond(rot.w, rot.x, rot.y, rot.z),id)));
+					m_UpdateTransform = false;
+					GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(Quaterniond(rot.w, rot.x, rot.y, rot.z));
+					m_UpdateTransform = true;
 				}
 				GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3::Convert(c_velocity),Vec3(0,0,0),id)));
 			}
 		}
-
 	}
 
-	void DetourCrowdAgentComponent::OnWorldPosition(WorldPositionRequestPtr message)
+	void DetourCrowdAgentComponent::OnTransformationChanged(TransformationChangedEventPtr message)
 	{
-		int id = GASS_PTR_TO_INT(this);
-		if(id != message->GetSenderID())
+		if(m_UpdateTransform)
 		{
 			Vec3f pos = Vec3::Convert(message->GetPosition());
 			DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
@@ -453,7 +455,7 @@ namespace GASS
 
 		sub_mesh_data->PositionVector.push_back(pos);
 		sub_mesh_data->ColorVector.push_back(color);
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr (new ManualMeshDataRequest(m_MeshData)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*m_MeshData);
 	}
 }
 

@@ -33,9 +33,9 @@
 namespace GASS
 {
 	class IMeshComponent;
-	typedef GASS_SHARED_PTR<IMeshComponent> MeshComponentPtr;
+	using MeshComponentPtr = std::shared_ptr<IMeshComponent>;
 	class PhysicsMesh;
-	typedef GASS_SHARED_PTR<PhysicsMesh> PhysicsMeshPtr;
+	using PhysicsMeshPtr = std::shared_ptr<PhysicsMesh>;
 
 	/**
 		Collision Scene Manager
@@ -67,9 +67,9 @@ namespace GASS
 		void OnSceneObjectInitialize(PreSceneObjectInitializedEventPtr message);
 		GASS_MUTEX& GetMutex() const {return m_Mutex;}
 	private:
-		ODECollisionMeshInfo _CreateCollisionMesh(PhysicsMeshPtr mesh) const;
+		ODECollisionMeshInfo CreateCollisionMesh(PhysicsMeshPtr mesh) const;
 
-		typedef std::map<std::string,ODECollisionMeshInfo> CollisionMeshMap;
+		using CollisionMeshMap = std::map<std::string, ODECollisionMeshInfo>;
 		mutable GASS_MUTEX m_Mutex;
 		float m_MaxRaySegment;
 		SceneWeakPtr m_Scene;
@@ -77,7 +77,7 @@ namespace GASS
 		dSpaceID m_Space;
 		
 	};
-	typedef GASS_SHARED_PTR<ODECollisionSceneManager> ODECollisionSceneManagerPtr;
+	using ODECollisionSceneManagerPtr = std::shared_ptr<ODECollisionSceneManager>;
 	
 	
 }

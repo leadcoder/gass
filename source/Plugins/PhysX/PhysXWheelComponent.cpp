@@ -29,17 +29,7 @@ using namespace physx;
 namespace GASS
 {
 	PhysXWheelComponent::PhysXWheelComponent() :
-		m_Mass(20),
-		m_MaxHandBrakeTorque(4000.0f),
-		m_MaxBrakeTorque(1500.0f),
-		m_MaxSteer(60.0f),
-		m_DampingRate(0.25f),
-		m_SuspensionMaxCompression(0.3f),
-		m_SuspensionMaxDroop(0.1f),
-		m_SuspensionSpringStrength(35000.0f),
-		m_SuspensionSpringDamperRate(4500.0f),
-		m_TireLongitudinalStiffnessPerUnitGravity(1000.0f),
-		m_Initialized(false),
+		
 		m_TireType("SLICKS")
 	{
 	
@@ -109,10 +99,10 @@ namespace GASS
 		PxF32 wheel_width;
 		PxF32 wheel_rad;
 		ComputeWheelDim(cgc->GetConvexMesh().m_ConvexMesh,wheel_width,wheel_rad);
-		PxF32 wheel_MOI = 0.5f*m_WheelData.mMass*wheel_rad*wheel_rad;
+		PxF32 wheel_moi = 0.5f*m_WheelData.mMass*wheel_rad*wheel_rad;
 	
 		m_WheelData.mRadius = wheel_rad;
-		m_WheelData.mMOI = wheel_MOI;
+		m_WheelData.mMOI = wheel_moi;
 		m_WheelData.mWidth = wheel_width;
 		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();

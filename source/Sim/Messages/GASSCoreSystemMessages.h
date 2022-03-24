@@ -32,10 +32,10 @@ namespace GASS
 	class ResourceLocation;
 	class ResourceGroup;
 	
-	typedef GASS_SHARED_PTR<Scene> ScenePtr;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_SHARED_PTR<ResourceLocation> ResourceLocationPtr;
-	typedef GASS_SHARED_PTR<ResourceGroup> ResourceGroupPtr;
+	using ScenePtr = std::shared_ptr<Scene>;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using ResourceLocationPtr = std::shared_ptr<ResourceLocation>;
+	using ResourceGroupPtr = std::shared_ptr<ResourceGroup>;
 	
 	
 	/**
@@ -49,7 +49,7 @@ namespace GASS
 		  {
 		  }
 	};
-	typedef GASS_SHARED_PTR<SystemMessage> SystemMessagePtr;
+	using SystemMessagePtr = std::shared_ptr<SystemMessage>;
 	
 	//////////////////////////
 	//request message section
@@ -64,7 +64,7 @@ namespace GASS
 
 		  }
 	};
-	typedef GASS_SHARED_PTR<SystemRequestMessage> SystemRequestMessagePtr;
+	using SystemRequestMessagePtr = std::shared_ptr<SystemRequestMessage>;
 
 	
 
@@ -80,7 +80,7 @@ namespace GASS
 	private:
 		double m_TimeStep;
 	};
-	typedef GASS_SHARED_PTR<TimeStepRequest> TimeStepRequestPtr;
+	using TimeStepRequestPtr = std::shared_ptr<TimeStepRequest>;
 
 
 	enum SimEventType
@@ -106,7 +106,7 @@ namespace GASS
 
 		  }
 	};
-	typedef GASS_SHARED_PTR<SystemEventMessage> SystemEventMessagePtr;
+	using SystemEventMessagePtr = std::shared_ptr<SystemEventMessage>;
 
 
 	/**
@@ -124,7 +124,7 @@ namespace GASS
 	private:
 		SimEventType m_EventType;
 	};
-	typedef GASS_SHARED_PTR<SimEvent> SimEventPtr;
+	using SimEventPtr = std::shared_ptr<SimEvent>;
 
 
 	/**
@@ -143,7 +143,7 @@ namespace GASS
 		ScenePtr m_Scene;
 	};
 
-	typedef GASS_SHARED_PTR<PreSceneCreateEvent> PreSceneCreateEventPtr;
+	using PreSceneCreateEventPtr = std::shared_ptr<PreSceneCreateEvent>;
 
 	/**
 		This message is posted by the Scene class after a scene is created.
@@ -159,7 +159,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef GASS_SHARED_PTR<PostSceneCreateEvent> PostSceneCreateEventPtr;
+	using PostSceneCreateEventPtr = std::shared_ptr<PostSceneCreateEvent>;
 
 
 	/**
@@ -178,7 +178,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef GASS_SHARED_PTR<PostSceneLoadEvent> PostSceneLoadEventPtr;
+	using PostSceneLoadEventPtr = std::shared_ptr<PostSceneLoadEvent>;
 
 
 	class SceneUnloadedEvent : public SystemEventMessage
@@ -192,7 +192,7 @@ namespace GASS
 	private:
 		ScenePtr m_Scene;
 	};
-	typedef GASS_SHARED_PTR<SceneUnloadedEvent> SceneUnloadedEventPtr;
+	using SceneUnloadedEventPtr = std::shared_ptr<SceneUnloadedEvent>;
 
 	class TimeStepDoneEvent : public SystemEventMessage
 	{
@@ -201,7 +201,7 @@ namespace GASS
 		{
 		}
 	};
-	typedef GASS_SHARED_PTR<TimeStepDoneEvent > TimeStepDoneEventPtr;
+	using TimeStepDoneEventPtr = std::shared_ptr<TimeStepDoneEvent>;
 
 	class InputSystemLoadedEvent : public SystemEventMessage
 	{
@@ -210,7 +210,7 @@ namespace GASS
 		{
 		}
 	};
-	typedef GASS_SHARED_PTR<InputSystemLoadedEvent> InputSystemLoadedEventPtr;
+	using InputSystemLoadedEventPtr = std::shared_ptr<InputSystemLoadedEvent>;
 
 
 	class GraphicsSystemLoadedEvent : public SystemEventMessage
@@ -220,7 +220,7 @@ namespace GASS
 		{
 		}
 	};
-	typedef GASS_SHARED_PTR<GraphicsSystemLoadedEvent> GraphicsSystemLoadedEventPtr;
+	using GraphicsSystemLoadedEventPtr = std::shared_ptr<GraphicsSystemLoadedEvent>;
 	
 	class PhysicsSystemLoadedEvent : public SystemEventMessage
 	{
@@ -229,7 +229,7 @@ namespace GASS
 		{
 		}
 	};
-	typedef GASS_SHARED_PTR<PhysicsSystemLoadedEvent> PhysicsSystemLoadedEventPtr;
+	using PhysicsSystemLoadedEventPtr = std::shared_ptr<PhysicsSystemLoadedEvent>;
 
 	class ResourceGroupCreatedEvent: public SystemEventMessage
 	{
@@ -241,7 +241,7 @@ namespace GASS
 	private:
 		ResourceGroupPtr m_Group;
 	};
-	typedef GASS_SHARED_PTR<ResourceGroupCreatedEvent> ResourceGroupCreatedEventPtr;
+	using ResourceGroupCreatedEventPtr = std::shared_ptr<ResourceGroupCreatedEvent>;
 
 	class ResourceGroupRemovedEvent: public SystemEventMessage
 	{
@@ -253,7 +253,7 @@ namespace GASS
 	private:
 		ResourceGroupPtr m_Group;
 	};
-	typedef GASS_SHARED_PTR<ResourceGroupRemovedEvent> ResourceGroupRemovedEventPtr;
+	using ResourceGroupRemovedEventPtr = std::shared_ptr<ResourceGroupRemovedEvent>;
 
 	class ResourceGroupReloadEvent : public SystemEventMessage
 	{
@@ -265,7 +265,7 @@ namespace GASS
 	private:
 		ResourceGroupPtr m_Group;
 	};
-	typedef GASS_SHARED_PTR<ResourceGroupReloadEvent> ResourceGroupReloadEventPtr;
+	using ResourceGroupReloadEventPtr = std::shared_ptr<ResourceGroupReloadEvent>;
 
 	class ResourceLocationAddedEvent  : public SystemEventMessage
 	{
@@ -277,7 +277,7 @@ namespace GASS
 	private:
 		ResourceLocationPtr m_Location;
 	};
-	typedef GASS_SHARED_PTR<ResourceLocationAddedEvent> ResourceLocationAddedEventPtr;
+	using ResourceLocationAddedEventPtr = std::shared_ptr<ResourceLocationAddedEvent>;
 
 	class ResourceLocationRemovedEvent : public SystemEventMessage
 	{
@@ -289,7 +289,7 @@ namespace GASS
 	private:
 		ResourceLocationPtr m_Location;
 	};
-	typedef GASS_SHARED_PTR<ResourceLocationRemovedEvent> ResourceLocationRemovedEventPtr;
+	using ResourceLocationRemovedEventPtr = std::shared_ptr<ResourceLocationRemovedEvent>;
 
 	class ScriptEvent : public SystemEventMessage
 	{
@@ -301,7 +301,7 @@ namespace GASS
 	private:
 		std::string m_Message;
 	};
-	typedef GASS_SHARED_PTR<ScriptEvent> ScriptEventPtr;
+	using ScriptEventPtr = std::shared_ptr<ScriptEvent>;
 
 
 }

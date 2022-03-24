@@ -44,7 +44,7 @@
 			</ManualMeshComponent>
 			<PhysicsBoxGeometryComponent/>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="Tangent"/>
 				<Components>
@@ -60,9 +60,7 @@
 					</ManualMeshComponent>
 					<PhysicsBoxGeometryComponent/>
 				</Components>
-				<ComponentContainers>
-				</ComponentContainers>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 </Templates>

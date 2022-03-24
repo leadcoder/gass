@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
@@ -34,10 +34,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class TurretComponent :  public Reflection<TurretComponent,BaseSceneComponent>
+	class TurretComponent :  public Reflection<TurretComponent,Component>
 	{
 	public:
 		TurretComponent();
@@ -68,25 +68,25 @@ namespace GASS
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		
 		std::string m_Controller;
-		float m_MaxSteerVelocity;
-		float m_MaxSteerAngle;
-		float m_SteerForce;
-		float m_CurrentAngle;
-		float m_MinAngle;
-		float m_MaxAngle;
+		float m_MaxSteerVelocity{1};
+		float m_MaxSteerAngle{0};
+		float m_SteerForce{10};
+		float m_CurrentAngle{0};
+		float m_MinAngle{-1000};
+		float m_MaxAngle{1000};
 		Mat4 m_Transformation;
 		Mat4 m_ParentTransformation;
 		Mat4 m_RelTrans;
 		Mat4 m_AimTrans;
 		Vec3 m_DesiredDir;
 		PIDControl m_TurnPID;
-		bool m_Active;
-		float m_TurnInput;
-		Float m_AngularVelocity;
-		Float m_RotValue;
+		bool m_Active{false};
+		float m_TurnInput{0};
+		Float m_AngularVelocity{0};
+		Float m_RotValue{0};
 
 		PhysicsHingeJointComponentPtr m_Hinge;
 	};
-	typedef GASS_SHARED_PTR<TurretComponent> TurretComponentPtr;
+	using TurretComponentPtr = std::shared_ptr<TurretComponent>;
 }
 #endif

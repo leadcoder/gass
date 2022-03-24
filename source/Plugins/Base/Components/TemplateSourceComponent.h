@@ -21,7 +21,7 @@
 #define I_TEMPLATE_SOURCE_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSITemplateSourceComponent.h"
 
 namespace GASS
@@ -31,7 +31,7 @@ namespace GASS
 		Component that hold a template list of scene objects that can be added as child to owner scene object
 	*/
 
-	class TemplateSourceComponent : public Reflection<TemplateSourceComponent,BaseSceneComponent>, public ITemplateSourceComponent
+	class TemplateSourceComponent : public Reflection<TemplateSourceComponent,Component>, public ITemplateSourceComponent
 	{
 	public:
 		TemplateSourceComponent(void);

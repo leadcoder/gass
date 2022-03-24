@@ -27,17 +27,10 @@
 
 namespace GASS
 {
-	PhysXPrismaticComponent::PhysXPrismaticComponent() : m_PrismaticJoint(0),
-		m_Limit(0),
-		m_EnableDrive(true),
-		m_EnableLimit(false),
+	PhysXPrismaticComponent::PhysXPrismaticComponent() : 
 		m_RotationAxis(1,0,0),
-		m_Offset(0,0,0),
-		m_Damping(0),
-		m_Spring(0),
-		m_DriveTargetVelocity(0),
-		m_DriveTargetPosition(0),
-		m_DriveForceLimit(PX_MAX_F32)
+		m_Offset(0,0,0)
+		
 	{
 
 	}

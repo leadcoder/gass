@@ -34,39 +34,39 @@ namespace GASS
 
         void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line) override
 		{
-			std::string errorCode;
+			std::string error_code;
 
 			switch (code)
 			{
 			case PxErrorCode::eINVALID_PARAMETER:
-				errorCode = "invalid parameter";
+				error_code = "invalid parameter";
 				break;
 			case PxErrorCode::eINVALID_OPERATION:
-				errorCode = "invalid operation";
+				error_code = "invalid operation";
 				break;
 			case PxErrorCode::eOUT_OF_MEMORY:
-				errorCode = "out of memory";
+				error_code = "out of memory";
 				break;
 			case PxErrorCode::eDEBUG_INFO:
-				errorCode = "info";
+				error_code = "info";
 				break;
 			case PxErrorCode::eDEBUG_WARNING:
-				errorCode = "warning";
+				error_code = "warning";
 				break;
 			default:
-				errorCode = "unknown error";
+				error_code = "unknown error";
 				break;
 			}
 			std::stringstream ss;
-			ss << "PhysX Error Callback:" << file << "(" << line << ") :" << errorCode << " : " << message << "\n";
+			ss << "PhysX Error Callback:" << file << "(" << line << ") :" << error_code << " : " << message << "\n";
 			GASS_LOG(LERROR) << ss.str();
 
 		}
 	};
 
-	PhysXPhysicsSystem::PhysXPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_DefaultMaterial(NULL),
-		m_PhysicsSDK(NULL),
-		m_Foundation(NULL)
+	PhysXPhysicsSystem::PhysXPhysicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_DefaultMaterial(nullptr),
+		m_PhysicsSDK(nullptr),
+		m_Foundation(nullptr)
 	{
 		m_UpdateGroup = UGID_SIM;
 
@@ -84,14 +84,14 @@ namespace GASS
 		RegisterMember("MaxNumThreads", &GASS::PhysXPhysicsSystem::m_MaxNumThreads);
 	}
 
-	PxGASSErrorCallback myErrorCallback;
+	PxGASSErrorCallback my_error_callback;
 	void PhysXPhysicsSystem::OnSystemInit()
 	{
-		bool recordMemoryAllocations = false;
-		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, myErrorCallback);
-		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), recordMemoryAllocations );
+		bool record_memory_allocations = false;
+		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, my_error_callback);
+		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), record_memory_allocations );
 		
-		if(m_PhysicsSDK == NULL)
+		if(m_PhysicsSDK == nullptr)
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Error creating PhysX device!", "PhysXPhysicsSystem::OnInit");
 		}
@@ -115,7 +115,7 @@ namespace GASS
 		//Create physx materials
 		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
 		IMaterialSystem::MaterialMap materials = mat_system->GetMaterials();
-		IMaterialSystem::MaterialMap::iterator iter = materials.begin();
+		auto iter = materials.begin();
 		while(iter != materials.end())
 		{
 			PhysicsMaterial mat_data = iter->second;
@@ -166,7 +166,7 @@ namespace GASS
 			{
 				if(m_Tires[j].FrictionMultipliers.end() != m_Tires[j].FrictionMultipliers.find(m_DrivableMaterialNames[i]))
 				{
-					physx::PxReal friction = static_cast<float>(m_Tires[j].FrictionMultipliers[m_DrivableMaterialNames[i]]);
+					auto friction = static_cast<float>(m_Tires[j].FrictionMultipliers[m_DrivableMaterialNames[i]]);
 					m_SurfaceTirePairs->setTypePairFriction(i,j,friction);
 				}
 				else
@@ -181,7 +181,7 @@ namespace GASS
 
 	physx::PxMaterial* PhysXPhysicsSystem::GetMaterial(const std::string &name) const
 	{
-		std::map<std::string,physx::PxMaterial*>::const_iterator iter = m_Materials.find(name);
+		auto iter = m_Materials.find(name);
 		if(iter != m_Materials.end())
 			return iter->second;
 		GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find physics material:" + name,"PhysXPhysicsSystem::GetMaterial");
@@ -200,11 +200,11 @@ namespace GASS
 	void PhysXPhysicsSystem::LoadTires(const std::string &file)
 	{
 		GASS_LOG(LINFO) << "Start loading tire settings file " << file;
-		tinyxml2::XMLDocument *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(file.c_str()) != tinyxml2::XML_NO_ERROR)
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load:" + file, "PhysXPhysicsSystem::LoadTires");
 
-		tinyxml2::XMLElement *xml_vs = xmlDoc->FirstChildElement("VehicleSettings");
+		tinyxml2::XMLElement *xml_vs = xml_doc->FirstChildElement("VehicleSettings");
 		if(xml_vs)
 		{
 			tinyxml2::XMLElement *xml_sl = xml_vs->FirstChildElement("SurfaceList");
@@ -214,7 +214,7 @@ namespace GASS
 				while(xml_ds)
 				{
 					if(xml_ds->Attribute("MaterialName"))
-						m_DrivableMaterialNames.push_back(xml_ds->Attribute("MaterialName"));
+						m_DrivableMaterialNames.emplace_back(xml_ds->Attribute("MaterialName"));
 					else
 						GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't find MaterialName attribute in:" + file, "PhysXPhysicsSystem::LoadTires");
 					xml_ds = xml_ds->NextSiblingElement("DriveableSurface");
@@ -255,6 +255,6 @@ namespace GASS
 				}
 			}
 		}
-		delete xmlDoc;
+		delete xml_doc;
 	}
 }

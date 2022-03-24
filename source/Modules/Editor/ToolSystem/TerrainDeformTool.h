@@ -12,8 +12,8 @@ namespace GASS
 	class SceneObject;
 	class MouseToolController;
 	class IMessage;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using MessagePtr = std::shared_ptr<IMessage>;
 
 
 	class EditorModuleExport TerrainDeformTool : public IMouseTool
@@ -30,17 +30,17 @@ namespace GASS
 		};
 
 		TerrainDeformTool(MouseToolController* controller);
-		virtual ~TerrainDeformTool(void);
+		~TerrainDeformTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual void Update(double delta);
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		void Update(double delta) override;
 
-		virtual std::string GetName() {return TID_TERRAIN;}
-		virtual void Stop();
-		virtual void Start();
+		std::string GetName() override {return TID_TERRAIN;}
+		void Stop() override;
+		void Start() override;
 		void SetBrushSize(float value);
 		void SetBrushInnerSize(float value);
 		float GetBrushSize() const {return m_BrushSize;}

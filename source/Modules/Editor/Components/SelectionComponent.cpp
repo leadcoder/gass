@@ -13,7 +13,7 @@
 
 namespace GASS
 {
-	SelectionComponent::SelectionComponent() : m_Color(1,1,1,1), m_Active(false)
+	SelectionComponent::SelectionComponent() : m_Color(1,1,1,1) 
 	{
 
 	}

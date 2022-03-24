@@ -122,7 +122,7 @@ namespace GASS
 					RoadNode* n1 = node_path[i];
 					RoadNode* n2 = node_path[i+1];
 					//Get edge!
-					RoadEdge* edge = NULL;
+					RoadEdge* edge = nullptr;
 					bool invert_dir = false;
 					for(size_t j = 0; j < n1->Edges.size(); j++)
 					{
@@ -197,8 +197,8 @@ namespace GASS
 			}
 
 			//remove temp nodes
-			_RemoveNode(start_node);
-			_RemoveNode(end_node);
+			RemoveNode(start_node);
+			RemoveNode(end_node);
 			from_edge->Enabled = true;
 			to_edge->Enabled = true;
 		}
@@ -228,7 +228,7 @@ namespace GASS
 		return final_path;
 	}
 
-	void RoadNetwork::_RemoveNode(RoadNode* node) const
+	void RoadNetwork::RemoveNode(RoadNode* node) const
 	{
 		std::vector<RoadEdge*> edges = node->Edges;
 		for(size_t i = 0; i < edges.size(); i++)
@@ -241,7 +241,7 @@ namespace GASS
 
 	void RoadNetwork::RemoveEdge(RoadEdge* edge)
 	{
-		std::vector<RoadEdge*>::iterator iter =  m_Edges.begin();
+		auto iter =  m_Edges.begin();
 		while(iter != m_Edges.end())
 		{
 			if(*iter == edge)
@@ -253,7 +253,7 @@ namespace GASS
 
 	void RoadNetwork::RemoveNode(RoadNode* node)
 	{
-		std::vector<RoadNode*>::iterator iter =  m_Nodes.begin();
+		auto iter =  m_Nodes.begin();
 		while(iter != m_Nodes.end())
 		{
 			if(*iter == node)
@@ -263,12 +263,12 @@ namespace GASS
 		}
 	}
 
-	void RoadNetwork::_ConvertNodeToWaypoint(RoadNode* node)
+	void RoadNetwork::ConvertNodeToWaypoint(RoadNode* node)
 	{
 		std::vector<Vec3>  wps1 = node->Edges[0]->Waypoints;
 		std::vector<Vec3>  wps2 = node->Edges[1]->Waypoints;
-		RoadNode* start_node = NULL;
-		RoadNode* end_node = NULL;
+		RoadNode* start_node = nullptr;
+		RoadNode* end_node = nullptr;
 		if(node->Edges[0]->StartNode == node)
 		{
 			std::reverse(wps1.begin(),wps1.end());
@@ -290,7 +290,7 @@ namespace GASS
 		for(size_t i= 1; i < wps2.size() ; i++)
 			final_wps.push_back(wps2[i]);
 
-		RoadEdge* edge = new RoadEdge;
+		auto* edge = new RoadEdge;
 		edge->Waypoints = final_wps;
 		edge->Distance = Path::GetPathLength(edge->Waypoints);
 		edge->StartNode = start_node;
@@ -321,7 +321,7 @@ namespace GASS
 				nodes[i]->Edges[0]->LaneWidth == nodes[i]->Edges[1]->LaneWidth &&
 				nodes[i]->Edges[0]->LeftLanes == nodes[i]->Edges[1]->LeftLanes &&
 				nodes[i]->Edges[0]->RightLanes == nodes[i]->Edges[1]->RightLanes)
-				_ConvertNodeToWaypoint(nodes[i]);
+				ConvertNodeToWaypoint(nodes[i]);
 		}
 	}
 
@@ -332,10 +332,10 @@ namespace GASS
 
 		Path::GetClosestPointOnPath(point, edge->Waypoints, seg_index, target_point);
 
-		RoadEdge* edge1 = new RoadEdge();
-		RoadEdge* edge2 = new RoadEdge();
+		auto* edge1 = new RoadEdge();
+		auto* edge2 = new RoadEdge();
 
-		RoadNode* new_node = new RoadNode();
+		auto* new_node = new RoadNode();
 		new_node->Position = target_point;
 		edge1->Waypoints.push_back(target_point);
 		edge2->Waypoints.push_back(target_point);
@@ -375,7 +375,7 @@ namespace GASS
 	RoadEdge* RoadNetwork::GetCloesestEdge(const Vec3 &point) const
 	{
 		int seg_index;
-		RoadEdge* best_edge = NULL;
+		RoadEdge* best_edge = nullptr;
 		Vec3 target_point;
 		//Vec3 best_target_point;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
@@ -397,7 +397,7 @@ namespace GASS
 
 	RoadNode* RoadNetwork::GetCloesestNode(const Vec3 &point) const
 	{
-		RoadNode* best_node = NULL;
+		RoadNode* best_node = nullptr;
 		Float min_dist  = FLT_MAX;//std::numeric_limits<Float>::max();
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{
@@ -413,37 +413,37 @@ namespace GASS
 
 	void RoadNetwork::SaveXML(tinyxml2::XMLElement * elem)
 	{
-		tinyxml2::XMLDocument *rootXMLDoc = elem->GetDocument();
-		tinyxml2::XMLElement * net_elem = rootXMLDoc->NewElement("RoadNetwork");
+		tinyxml2::XMLDocument *root_xml_doc = elem->GetDocument();
+		tinyxml2::XMLElement * net_elem = root_xml_doc->NewElement("RoadNetwork");
 		elem->LinkEndChild( net_elem);
 
-		tinyxml2::XMLElement * nodes_elem = rootXMLDoc->NewElement("Nodes");
+		tinyxml2::XMLElement * nodes_elem = root_xml_doc->NewElement("Nodes");
 		net_elem->LinkEndChild( nodes_elem);
 		for(size_t i = 0; i < m_Nodes.size();i++)
 		{
 			int id = GASS_PTR_TO_INT(m_Nodes[i]);
-			tinyxml2::XMLElement *node_prop_elem = rootXMLDoc->NewElement( "Node");
+			tinyxml2::XMLElement *node_prop_elem = root_xml_doc->NewElement( "Node");
 			nodes_elem->LinkEndChild( node_prop_elem);
 			node_prop_elem->SetAttribute("ID", id);
 			std::string pos = m_Nodes[i]->Position.ToString();
 			node_prop_elem->SetAttribute("Position",pos.c_str());
 		}
-		tinyxml2::XMLElement *edges_elem = rootXMLDoc->NewElement( "Edges");
+		tinyxml2::XMLElement *edges_elem = root_xml_doc->NewElement( "Edges");
 		net_elem->LinkEndChild( edges_elem);
 		for(size_t i = 0; i < m_Edges.size();i++)
 		{
-			tinyxml2::XMLElement *edge_prop_elem = rootXMLDoc->NewElement( "Edge");
+			tinyxml2::XMLElement *edge_prop_elem = root_xml_doc->NewElement( "Edge");
 			edges_elem->LinkEndChild( edge_prop_elem);
 			edge_prop_elem ->SetAttribute("Dir",(int) m_Edges[i]->Dir);
 			edge_prop_elem ->SetAttribute("StartNode",GASS_PTR_TO_INT(m_Edges[i]->StartNode));
 			edge_prop_elem ->SetAttribute("EndNode",GASS_PTR_TO_INT(m_Edges[i]->EndNode));
 			edge_prop_elem ->SetAttribute("Distance",m_Edges[i]->Distance);
 			edge_prop_elem ->SetAttribute("LaneWidth",m_Edges[i]->LaneWidth);
-			tinyxml2::XMLElement *wps_elem = rootXMLDoc->NewElement( "Waypoints");
+			tinyxml2::XMLElement *wps_elem = root_xml_doc->NewElement( "Waypoints");
 			edge_prop_elem->LinkEndChild( wps_elem);
 			for(size_t j = 0; j < m_Edges[i]->Waypoints.size(); j++)
 			{
-				tinyxml2::XMLElement *wp_prop_elem = rootXMLDoc->NewElement( "WP");
+				tinyxml2::XMLElement *wp_prop_elem = root_xml_doc->NewElement( "WP");
 				wps_elem->LinkEndChild( wp_prop_elem);
 				std::string pos = m_Edges[i]->Waypoints[j].ToString();
 				wp_prop_elem->SetAttribute("Position",pos.c_str());
@@ -464,7 +464,7 @@ namespace GASS
 				while(node_elem)
 				{
 					int id;
-					RoadNode* node = new RoadNode();
+					auto* node = new RoadNode();
 					node_elem->QueryIntAttribute("ID",&id);
 					std::string pos = node_elem->Attribute("Position");
 					node_elem = node_elem->NextSiblingElement();
@@ -480,7 +480,7 @@ namespace GASS
 				tinyxml2::XMLElement *edge_elem = edges_elem->FirstChildElement("Edge");
 				while(edge_elem)
 				{
-					RoadEdge* edge = new RoadEdge();
+					auto* edge = new RoadEdge();
 					int sn_id,en_id;
 					edge_elem->QueryIntAttribute("StartNode",&sn_id);
 					edge_elem->QueryIntAttribute("EndNode",&en_id);

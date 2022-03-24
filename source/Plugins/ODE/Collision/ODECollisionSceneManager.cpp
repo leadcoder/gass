@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/ODE/Collision/ODECollisionSceneManager.h"
 #include "Plugins/ODE/Collision/ODECollisionSystem.h"
 #include "Plugins/ODE/Collision/ODECollisionGeometryComponent.h"
@@ -44,7 +46,7 @@ namespace GASS
 	}
 
 	ODECollisionSceneManager::ODECollisionSceneManager(SceneWeakPtr scene) : Reflection(scene), 
-		m_Space(0) ,
+		m_Space(nullptr) ,
 		m_MaxRaySegment(50)
 	{
 
@@ -61,7 +63,7 @@ namespace GASS
 	{
 		GASS_MUTEX_LOCK(m_Mutex)
 			dSpaceDestroy(m_Space);
-		m_Space = 0;
+		m_Space = nullptr;
 		//m_RequestMap.clear();
 		//m_ResultMap.clear();
 	}
@@ -69,7 +71,7 @@ namespace GASS
 	ODECollisionSceneManager::~ODECollisionSceneManager()
 	{
 		//Fee all meshes in cache
-		CollisionMeshMap::iterator iter = m_ColMeshMap.begin();
+		auto iter = m_ColMeshMap.begin();
 		while (iter!= m_ColMeshMap.end()) //in map.
 		{
 			if(iter->second.ID)
@@ -93,7 +95,7 @@ namespace GASS
 			//don't auto add height fields?
 			if(object->GetFirstComponentByClass<IHeightmapTerrainComponent>())
 			{
-				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
+				ODECollisionGeometryComponentPtr comp = std::make_shared<ODECollisionGeometryComponent>();
 				comp->SetType(ODECollisionGeometryComponent::CGT_TERRAIN);
 				object->AddComponent(comp);
 			}
@@ -101,13 +103,13 @@ namespace GASS
 				object->GetFirstComponentByClassName("OSGBillboardComponent",false) || 
 				object->GetFirstComponentByClassName("GizmoComponent",false))
 			{
-				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
+				ODECollisionGeometryComponentPtr comp = std::make_shared<ODECollisionGeometryComponent>();
 				comp->SetType(ODECollisionGeometryComponent::CGT_BOX);
 				object->AddComponent(comp);
 			}
 			else if(object->GetFirstComponentByClass<IMeshComponent>())// && !object->GetFirstComponentByClass("OgreManualMeshComponent",false))
 			{
-				ODECollisionGeometryComponentPtr comp = ODECollisionGeometryComponentPtr(new ODECollisionGeometryComponent());
+				ODECollisionGeometryComponentPtr comp = std::make_shared<ODECollisionGeometryComponent>();
 				comp->SetType(ODECollisionGeometryComponent::CGT_MESH);
 				object->AddComponent(comp);
 			}
@@ -141,13 +143,13 @@ namespace GASS
 		{
 			return m_ColMeshMap[cache_id];
 		}
-		ODECollisionMeshInfo id = _CreateCollisionMesh(physics_mesh);
+		ODECollisionMeshInfo id = CreateCollisionMesh(physics_mesh);
 		//save to cache
 		m_ColMeshMap[cache_id] = id;
 		return id;
 	}
 
-	ODECollisionMeshInfo ODECollisionSceneManager::_CreateCollisionMesh(PhysicsMeshPtr physics_mesh) const 
+	ODECollisionMeshInfo ODECollisionSceneManager::CreateCollisionMesh(PhysicsMeshPtr physics_mesh) const 
 	{
 		if(physics_mesh->PositionVector.size() < 1 || physics_mesh->IndexVector.size() < 1)
 		{

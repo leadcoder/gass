@@ -21,24 +21,41 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSComponent.h"
 
 namespace GASS
 {
+	class NetworkPackage
+	{
+	public:
+		NetworkPackage() : Id(0)
+		{}
+		NetworkPackage(int id) : Id(id)
+		{}
+		virtual ~NetworkPackage() {}
+		virtual int GetSize() = 0;
+		virtual void Assign(char* data) = 0;
+		int Id;
+		//NetworkDataPtr Data;
+	};
+	typedef GASS_SHARED_PTR<NetworkPackage> NetworkPackagePtr;
 
-	/**
-		Network object interface that all network components should be derived from
-		
-		Note that interaction with this interface during RTC update is undefined 
-		if running GASS in multi-threaded mode. Interaction with components should 
-		instead be done through messages.
-	*/
-	
-	class INetworkComponent
+	class NetworkAddress
+	{
+	public:
+		NetworkAddress(unsigned int address = 0, unsigned int port = 0) : m_Address(address), m_Port(port) {}
+		unsigned int m_Address;
+		unsigned int m_Port;
+	};
+
+	class INetworkComponent : public Reflection<INetworkComponent, Component>
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(INetworkComponent)
 	public:
 		//indicates if this object is remote or local
 		virtual bool IsRemote() const = 0;
+		virtual void Serialize(NetworkPackagePtr package, unsigned int timeStamp, NetworkAddress address) = 0;
+		
 	};
 
 	typedef GASS_WEAK_PTR<INetworkComponent> NetworkComponentWeakPtr;

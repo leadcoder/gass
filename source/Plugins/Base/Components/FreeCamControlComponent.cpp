@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/Base/Components/FreeCamControlComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/Utils/GASSException.h"
@@ -39,28 +41,14 @@
 
 namespace GASS
 {
-	FreeCamControlComponent::FreeCamControlComponent() : m_FovChangeSpeed(10),
-		m_MaxFov(120),
-		m_MinFov(10),
-		m_RunSpeed(1000),
-		m_WalkSpeed(20),
-		m_TurnSpeed(10),
+	FreeCamControlComponent::FreeCamControlComponent() : 
 		m_ControlSettingName("FreeCameraInputSettings"),
 		m_AltControlSettingName("FreeCameraInputAltSettings"),
 		m_Pos(0,0,0),
 		m_EulerRot(0,0,0),
-		m_EnableRotInput(false),
-		m_SpeedBoostInput(false),
-		m_ThrottleInput(0),
-		m_StrafeInput(0),
-		m_PitchInput(0),
-		m_HeadingInput(0),
-		m_Active(false),
-		m_CurrentFov(45),
-		m_UpDownInput(0),
-		m_Mode(MM_AIRCRAFT),
-		m_Debug(false),
-		m_TrackTransformation(true)
+		
+		m_Mode(MM_AIRCRAFT)
+		
 	{
 
 	}
@@ -73,7 +61,7 @@ namespace GASS
 	void FreeCamControlComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<FreeCamControlComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("FreeCamControlComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("FreeCamControlComponent", OF_VISIBLE));
 		RegisterGetSet("RunSpeed", &FreeCamControlComponent::GetRunSpeed, &FreeCamControlComponent::SetRunSpeed,PF_VISIBLE | PF_EDITABLE,"Alternative Max Speed [m/s]");
 		RegisterGetSet("WalkSpeed", &FreeCamControlComponent::GetWalkSpeed, &FreeCamControlComponent::SetWalkSpeed,PF_VISIBLE | PF_EDITABLE,"Regular Max Speed [m/s]");
 		RegisterGetSet("TurnSpeed", &FreeCamControlComponent::GetTurnSpeed, &FreeCamControlComponent::SetTurnSpeed,PF_VISIBLE | PF_EDITABLE,"Angular Max Speed [m/s]");
@@ -100,7 +88,7 @@ namespace GASS
 
 	void FreeCamControlComponent::OnCameraChanged(CameraChangedEventPtr message)
 	{
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(message->GetViewport()->GetCamera())->GetSceneObject();
+		auto cam_obj = message->GetViewport()->GetCamera()->GetSceneObject();
 		if(GetSceneObject() == cam_obj)
 			m_Active = true;
 		else

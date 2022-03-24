@@ -36,33 +36,33 @@
 
 namespace GASS
 {
-VehicleWheelQueryResults* VehicleWheelQueryResults::allocate(const PxU32 maxNumWheels)
+VehicleWheelQueryResults* VehicleWheelQueryResults::Allocate(const PxU32 maxNumWheels)
 {
 	const PxU32 size = sizeof(VehicleWheelQueryResults) + sizeof(PxWheelQueryResult)*maxNumWheels;
-	VehicleWheelQueryResults* resData = (VehicleWheelQueryResults*)malloc(size);
-	resData->init();
-	PxU8* ptr = (PxU8*) resData;
+	auto* res_data = (VehicleWheelQueryResults*)malloc(size);
+	res_data->Init();
+	PxU8* ptr = (PxU8*) res_data;
 	ptr += sizeof(VehicleWheelQueryResults);
-	resData->mWheelQueryResults = (PxWheelQueryResult*)ptr;
+	res_data->m_MWheelQueryResults = (PxWheelQueryResult*)ptr;
 	//ptr +=  sizeof(PxWheelQueryResult)*maxNumWheels;
-	resData->mMaxNumWheels=maxNumWheels;
+	res_data->m_MMaxNumWheels=maxNumWheels;
 	for(PxU32 i=0;i<maxNumWheels;i++)
 	{
-		new(&resData->mWheelQueryResults[i]) PxWheelQueryResult();
+		new(&res_data->m_MWheelQueryResults[i]) PxWheelQueryResult();
 	}
-	return resData;
+	return res_data;
 }
 
-void VehicleWheelQueryResults::free()
+void VehicleWheelQueryResults::Free()
 {
 	delete (this);
 }
 
-PxWheelQueryResult* VehicleWheelQueryResults::addVehicle(const PxU32 numWheels)
+PxWheelQueryResult* VehicleWheelQueryResults::AddVehicle(const PxU32 numWheels)
 {
 	PX_ASSERT((mNumWheels + numWheels) <= mMaxNumWheels);
-	PxWheelQueryResult* r = &mWheelQueryResults[mNumWheels];
-	mNumWheels += numWheels;
+	PxWheelQueryResult* r = &m_MWheelQueryResults[m_MNumWheels];
+	m_MNumWheels += numWheels;
 	return r;
 }
 }

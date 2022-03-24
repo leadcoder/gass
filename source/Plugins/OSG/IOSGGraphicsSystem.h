@@ -35,7 +35,7 @@ namespace GASS
 		virtual ~IOSGGraphicsSystem(){};
 		virtual osgViewer::CompositeViewer*  GetViewer() const = 0;
 	};
-	typedef GASS_SHARED_PTR<IOSGGraphicsSystem> IOSGGraphicsSystemPtr;
-	typedef GASS_WEAK_PTR<IOSGGraphicsSystem> IOSGGraphicsSystemWeakPtr;
+	using IOSGGraphicsSystemPtr = std::shared_ptr<IOSGGraphicsSystem>;
+	using IOSGGraphicsSystemWeakPtr = std::weak_ptr<IOSGGraphicsSystem>;
 }
 

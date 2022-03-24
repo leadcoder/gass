@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "LookAtComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/Math/GASSMath.h"
@@ -45,7 +47,7 @@ namespace GASS
 	void LookAtComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<LookAtComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LookAtComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("LookAtComponent", OF_VISIBLE));
 		RegisterMember("LookAt", &GASS::LookAtComponent::m_LookAt);
 	}
 
@@ -72,7 +74,7 @@ namespace GASS
 		Vec3 x = Vec3::Cross(look_dir,z);
 		z.Normalize();
 		q.FromAxes(x,look_dir,z);
-		GetSceneObject()->PostRequest(WorldRotationRequestPtr(new WorldRotationRequest(q)));
+		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(q);
 	}
 
 	void LookAtComponent::OnTransformation(TransformationChangedEventPtr message)

@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/ODE/ODEBoxGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -29,6 +31,7 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 
 namespace GASS
@@ -53,7 +56,6 @@ namespace GASS
 
 	void ODEBoxGeometryComponent::OnInitialize()
 	{
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODEBoxGeometryComponent::OnGeometryScale,GeometryScaleRequest,0));
 		ODEBaseGeometryComponent::OnInitialize();
 	}
 
@@ -78,7 +80,7 @@ namespace GASS
 
 	dGeomID ODEBoxGeometryComponent::CreateODEGeom()
 	{
-		return dCreateBox(0, m_Size.x, m_Size.y, m_Size.z); 
+		return dCreateBox(GetSpace(), m_Size.x, m_Size.y, m_Size.z); 
 	}
 
 	void ODEBoxGeometryComponent::SetSize(const Vec3 &size)
@@ -123,15 +125,15 @@ namespace GASS
 		sub_mesh_data->Type = LINE_LIST;
 		std::vector<Vec3> conrners;
 
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,size.y/2.0 ,-size.z/2.0));
+		conrners.emplace_back( size.x/2.0 ,size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,size.y/2.0 ,-size.z/2.0);
+		conrners.emplace_back( size.x/2.0 ,size.y/2.0 ,-size.z/2.0);
 
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 , size.z/2.0));
-		conrners.push_back(Vec3(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
-		conrners.push_back(Vec3( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0));
+		conrners.emplace_back( size.x/2.0 ,-size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,-size.y/2.0 , size.z/2.0);
+		conrners.emplace_back(-size.x/2.0 ,-size.y/2.0 ,-size.z/2.0);
+		conrners.emplace_back( size.x/2.0 ,-size.y/2.0 ,-size.z/2.0);
 
 		Vec3 pos(0,0,0);
 		for(int i = 0; i < 4; i++)
@@ -156,19 +158,8 @@ namespace GASS
 		}
 
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		scene_object->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
-	}
-
-
-	void ODEBoxGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
-	{
-		//rescale box geom
-		m_Scale = message->GetScale();
-		if(m_GeomID)
-		{
-			SetSizeFromMesh(m_SizeFromMesh);
-		}
 	}
 
 	void ODEBoxGeometryComponent::UpdateDebug()

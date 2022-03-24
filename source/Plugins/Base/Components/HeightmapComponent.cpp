@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "HeightmapComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSHeightField.h"
 #include "Sim/GASSScene.h"
@@ -33,11 +35,9 @@
 
 namespace GASS
 {
-	HeightmapComponent::HeightmapComponent(void) : m_HM(nullptr),
-		m_Extent({0, 0, 0}, { 200, 200, 200 }),
-		m_SampleStep(1.0),
-		m_AutoBBoxGeneration(false),
-		m_Debug(false)
+	HeightmapComponent::HeightmapComponent(void) : 
+		m_Extent({0, 0, 0}, { 200, 200, 200 })
+		
 	{
 
 	}
@@ -50,7 +50,7 @@ namespace GASS
 	void HeightmapComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<HeightmapComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("HeightmapComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("HeightmapComponent", OF_VISIBLE));
 
 		RegisterGetSet("Extent", &GASS::HeightmapComponent::GetExtent, &GASS::HeightmapComponent::SetExtent, PF_VISIBLE | PF_EDITABLE,"Relative heightfield extent: <min-x min-y min-z> <max-x max-y max-z> [m]");
 		RegisterMember("SampleStep", &GASS::HeightmapComponent::m_SampleStep, PF_VISIBLE | PF_EDITABLE,"[m]");
@@ -62,17 +62,17 @@ namespace GASS
 	void HeightmapComponent::OnInitialize()
 	{
 		//Try to load from file!	
-		FilePath full_path = _GetFilePath();
+		FilePath full_path = GetFilePath();
 		if(full_path.Exist()) //Check if file exist
 		{
 			m_HM = new HeightField();
 			m_HM->Load(full_path.GetFullPath());
 			SetExtent(m_HM->GetBoundingBox());
-			GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+			GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		}
 	}
 
-	FilePath HeightmapComponent::_GetFilePath() const
+	FilePath HeightmapComponent::GetFilePath() const
 	{
 		ScenePtr scene = GetSceneObject()->GetScene();
 		std::string scene_path = scene->GetSceneFolder().GetFullPath();
@@ -83,16 +83,16 @@ namespace GASS
 
 	void HeightmapComponent::SaveXML(tinyxml2::XMLElement *obj_elem)
 	{
-		BaseSceneComponent::SaveXML(obj_elem);
+		Component::SaveXML(obj_elem);
 		if(m_HM)
 		{
-			m_HM->Save(_GetFilePath().GetFullPath());
+			m_HM->Save(GetFilePath().GetFullPath());
 		}
 	}
 
 	void HeightmapComponent::SetUpdate(bool)
 	{
-		_UpdateData();
+		UpdateData();
 	}
 
 	bool  HeightmapComponent::GetUpdate() const
@@ -107,11 +107,11 @@ namespace GASS
 
 	void HeightmapComponent::SetExtent(const AABoxd& extent)
 	{
-		_UpdateDebugObject(extent);
+		UpdateDebugObject(extent);
 		m_Extent = extent;
 	}
 
-	void HeightmapComponent::_UpdateData()
+	void HeightmapComponent::UpdateData()
 	{
 		if(!GetSceneObject())
 			return;
@@ -120,8 +120,8 @@ namespace GASS
 		const Vec3 bbsize = bbox.GetSize();
 		
 		const double inv_sample_step = 1.0/m_SampleStep;
-		const unsigned int px_width = static_cast<unsigned int>(bbsize.x * inv_sample_step);
-		const unsigned int pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
+		const auto px_width = static_cast<unsigned int>(bbsize.x * inv_sample_step);
+		const auto pz_height = static_cast<unsigned int>(bbsize.z * inv_sample_step);
 		
 		//GEOMETRY_FLAG_GROUND
 		
@@ -147,7 +147,7 @@ namespace GASS
 			return ret;
 			}();
 		m_HM = new HeightField(bbox.Min, bbox.Max, px_width, pz_height);
-		const GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
+		const auto flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_SCENE_OBJECTS | GEOMETRY_FLAG_PAGED_LOD);
 
 		for (unsigned int i = 0; i < px_width; i++)
 		{
@@ -163,8 +163,8 @@ namespace GASS
 			}
 		}
 
-		m_HM->Save(_GetFilePath().GetFullPath());
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		m_HM->Save(GetFilePath().GetFullPath());
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	Float HeightmapComponent::GetHeightAtSample(int x, int z) const
@@ -220,7 +220,7 @@ namespace GASS
 		return false;
 	}
 
-	void HeightmapComponent::SetUpdateExtentFromGeometry(bool value)
+	void HeightmapComponent::SetUpdateExtentFromGeometry(bool /*value*/)
 	{
 		if (GetSceneObject())
 		{
@@ -260,13 +260,13 @@ namespace GASS
 	{
 		if (m_Debug && !value)
 		{
-			SceneObjectPtr obj = _GetOrCreateDebugObject();
+			SceneObjectPtr obj = GetOrCreateDebugObject();
 			obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(false);
 		}
 
 		m_Debug = value;
 	
-		_UpdateDebugObject(m_Extent);
+		UpdateDebugObject(m_Extent);
 	}
 
 	bool HeightmapComponent::GetDebug() const
@@ -274,24 +274,24 @@ namespace GASS
 		return m_Debug;
 	}
 
-	void HeightmapComponent::_UpdateDebugObject(const AABoxd& extent)
+	void HeightmapComponent::UpdateDebugObject(const AABoxd& extent)
 	{
 		if (!m_Debug)
 			return;
 		if (!GetSceneObject())
 			return;
-		SceneObjectPtr obj = _GetOrCreateDebugObject();
+		SceneObjectPtr obj = GetOrCreateDebugObject();
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetVisible(m_Debug);
 		const Vec3d center = extent.Min + (extent.Max - extent.Min) * 0.5;
 		obj->GetFirstComponentByClass<ILocationComponent>()->SetPosition(center);
-		BaseSceneComponent *box_comp = obj->GetComponentByClassName("BoxGeometryComponent");
+		Component *box_comp = obj->GetComponentByClassName("BoxGeometryComponent");
 		if (box_comp)
 		{
 			box_comp->SetPropertyValue("Size", extent.GetSize());
 		}
 	}
 
-	SceneObjectPtr HeightmapComponent::_GetOrCreateDebugObject()
+	SceneObjectPtr HeightmapComponent::GetOrCreateDebugObject()
 	{
 		const std::string obj_id = "DEBUG_OBJECT";
 		SceneObjectPtr scene_object = GetSceneObject()->GetChildByID(obj_id);

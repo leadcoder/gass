@@ -21,7 +21,7 @@
 #pragma once 
 #include "Sim/GASSCommon.h"
 #include <ode/ode.h>
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
@@ -30,9 +30,9 @@ namespace GASS
 {
 	class ODEPhysicsSceneManager;
 	class ODEBodyComponent;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
 
-	class ODEHingeComponent : public Reflection<ODEHingeComponent,BaseSceneComponent>
+	class ODEHingeComponent : public Reflection<ODEHingeComponent,Component>
 	{
 	public:
 		ODEHingeComponent();
@@ -74,23 +74,23 @@ namespace GASS
 
 	private:
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
-		dJointID m_ODEJoint;
+		dJointID m_ODEJoint{nullptr};
 
 
 		SceneObjectRef m_Body1;
 		SceneObjectRef m_Body2;
-		bool m_Body1Loaded;
-		bool m_Body2Loaded;
-		dBodyID m_ODEBody1;
-		dBodyID m_ODEBody2;
+		bool m_Body1Loaded{0};
+		bool m_Body2Loaded{0};
+		dBodyID m_ODEBody1{nullptr};
+		dBodyID m_ODEBody2{nullptr};
 		
-		float m_MaxTorque;
+		float m_MaxTorque{0};
 		//float m_SwayForce;
 		//float m_Strength;
 		//float m_Damping;
 
-		float m_HighStop;
-		float m_LowStop;
+		float m_HighStop{0};
+		float m_LowStop{0};
 
 		Vec3 m_Anchor; 
 		Vec3 m_Axis;

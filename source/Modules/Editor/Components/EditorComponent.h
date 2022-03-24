@@ -1,6 +1,6 @@
 #pragma once
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Modules/Editor/EditorCommon.h"
 #include "Modules/Editor/EditorMessages.h"
@@ -9,14 +9,14 @@
 
 namespace GASS
 {
-	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,BaseSceneComponent>
+	class EditorModuleExport EditorComponent : public Reflection<EditorComponent,Component>
 	{
 	public:
 		EditorComponent();
-		virtual ~EditorComponent();
+		~EditorComponent() override;
 		static void RegisterReflection();
-		virtual void OnInitialize();
-		virtual void OnDelete();
+		void OnInitialize() override;
+		void OnDelete() override;
 		bool GetShowBBWhenSelected() const {return m_ShowBBWhenSelected;}
 		void SetShowBBWhenSelected(bool value) { m_ShowBBWhenSelected = value; }
 		std::string GetIconFile() const { return m_IconFile;}
@@ -43,22 +43,22 @@ namespace GASS
 		void SetVisibilityTransparency(float value);
 		void OnSelectionChanged(EditorSelectionChangedEventPtr message);
 		
-		bool m_EditName;
-		bool m_Lock;
-		bool m_Visible;
-		float m_VisibilityTransparency;
-		bool m_Selected;
+		bool m_EditName{true};
+		bool m_Lock{false};
+		bool m_Visible{true};
+		float m_VisibilityTransparency{0.3f};
+		bool m_Selected{false};
 		
-		bool m_ChangeMaterialWhenSelected;
-		bool m_ShowBBWhenSelected;
+		bool m_ChangeMaterialWhenSelected{false};
+		bool m_ShowBBWhenSelected{true};
 		std::string m_IconFile;
-		bool m_ShowInTree;
-		bool m_AllowRemove;
-		bool m_AllowDragAndDrop;
+		bool m_ShowInTree{false};
+		bool m_AllowRemove{false};
+		bool m_AllowDragAndDrop{false};
 		ColorRGBA m_SelectedColor;
 		EditorSceneManagerPtr m_EditorSceneManager;
 	};
-	typedef GASS_SHARED_PTR<EditorComponent> EditorComponentPtr;
+	using EditorComponentPtr = std::shared_ptr<EditorComponent>;
 }
 
 

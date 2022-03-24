@@ -39,7 +39,7 @@ namespace GASS
 
 	void OSGNodeProxyComponent::RegisterReflection()
 	{
-		GASS::ComponentFactory::GetPtr()->Register<OSGNodeProxyComponent>();
+		ComponentFactory::GetPtr()->Register<OSGNodeProxyComponent>();
 		ADD_DEPENDENCY("OSGLocationComponent")
 		RegisterGetSet("DescriptionList", &OSGNodeProxyComponent::GetDescriptionList, &OSGNodeProxyComponent::SetDescriptionList);
 	}

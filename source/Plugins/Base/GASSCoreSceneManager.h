@@ -43,5 +43,5 @@ namespace GASS
 		bool GetSerialize() const override {return false;}
 	protected:
 	};
-	typedef GASS_SHARED_PTR<CoreSceneManager> CoreSceneManagerPtr; 
+	using CoreSceneManagerPtr = std::shared_ptr<CoreSceneManager>; 
 }

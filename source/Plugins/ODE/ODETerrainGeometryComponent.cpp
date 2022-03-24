@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/ODE/ODETerrainGeometryComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
@@ -33,16 +35,8 @@
 
 namespace GASS
 {
-	ODETerrainGeometryComponent::ODETerrainGeometryComponent():
-		m_SpaceID (NULL),
-		m_Friction(1),
-		m_CollisionCategory(1),
-		m_CollisionBits(1),
-		m_GeomID(0),
-		m_Debug(false),
-		m_SampleWidth(0),
-		m_SampleHeight(0),
-		m_TerrainGeom(NULL)
+	ODETerrainGeometryComponent::ODETerrainGeometryComponent()
+		
 
 	{
 
@@ -55,7 +49,7 @@ namespace GASS
 
 	void ODETerrainGeometryComponent::RegisterReflection()
 	{
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("ODETerrainGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("ODETerrainGeometryComponent", OF_VISIBLE));
 
 		RegisterGetSet("CollisionBits", &GASS::ODETerrainGeometryComponent::GetCollisionBits, &GASS::ODETerrainGeometryComponent::SetCollisionBits);
 		RegisterGetSet("CollisionCategory", &GASS::ODETerrainGeometryComponent::GetCollisionCategory, &GASS::ODETerrainGeometryComponent::SetCollisionCategory);
@@ -104,7 +98,7 @@ namespace GASS
 		//save raw point for fast height access, not thread safe!!
 		m_TerrainGeom = terrain.get();
 
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 
 		if(terrain)
 		{
@@ -159,7 +153,7 @@ namespace GASS
 	//Not thread safe!!! TODO:Keep a copy of the terrain height map instead
 	dReal ODETerrainGeometryComponent::TerrainHeightCallback(void* data,int x,int z)
 	{
-		ODETerrainGeometryComponent* ode_terrain = (ODETerrainGeometryComponent*)data;
+		auto* ode_terrain = (ODETerrainGeometryComponent*)data;
 		return ode_terrain->GetTerrainHeight(x,z);
 	}
 
@@ -199,7 +193,7 @@ namespace GASS
 	void ODETerrainGeometryComponent::Reset()
 	{
 		if(m_SpaceID) dSpaceDestroy(m_SpaceID);
-		m_SpaceID = NULL;
+		m_SpaceID = nullptr;
 	}
 
 	void ODETerrainGeometryComponent::Disable()
@@ -228,7 +222,7 @@ namespace GASS
 
 	dSpaceID ODETerrainGeometryComponent::GetSpace()
 	{
-		if(m_SpaceID == NULL)
+		if(m_SpaceID == nullptr)
 		{
 			m_SpaceID = dSimpleSpaceCreate(ODEPhysicsSceneManagerPtr(m_SceneManager)->GetPhysicsSpace());
 		}

@@ -20,14 +20,17 @@
 
 
 #include "DebugComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
+#include "Sim/Interface/GASSITextComponent.h"
 
 namespace GASS
 {
-	DebugComponent::DebugComponent(void) : m_ShowNodeName(false)
+	DebugComponent::DebugComponent(void)  
 	{
 
 	}
@@ -50,7 +53,9 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = GetSceneObject()->GetName();
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+			auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+			if(comp)
+				comp->SetCaption(name);
 		}
 	}
 
@@ -67,12 +72,18 @@ namespace GASS
 			if(m_ShowNodeName)
 			{
 				std::string name = GetSceneObject()->GetName();
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+				auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+				if (comp)
+					comp->SetCaption(name);
+
 			}
 			else
 			{
 				std::string name = "";
-				GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(name)));
+				auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+				if (comp)
+					comp->SetCaption(name);
+
 			}
 		}
 	}
@@ -82,7 +93,10 @@ namespace GASS
 		if(m_ShowNodeName)
 		{
 			std::string name = event->GetName();
-			GetSceneObject()->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(event->GetName())));
+			auto comp = GetSceneObject()->GetFirstComponentByClass<ITextComponent>();
+			if (comp)
+				comp->SetCaption(name);
+
 		}
 	}
 }

@@ -33,8 +33,8 @@ namespace GASS
 	class IGeometryComponent;
 	class ODEBodyComponent;
 	class ODEPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<ODEPhysicsSceneManager> ODEPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using ODEPhysicsSceneManagerWeakPtr = std::weak_ptr<ODEPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 
 	class ODEBoxGeometryComponent : public Reflection<ODEBoxGeometryComponent,ODEBaseGeometryComponent>
 	{
@@ -50,7 +50,6 @@ namespace GASS
 		Vec3 GetSize() const;
 		void UpdateBodyMass() override;
 		void SetSizeFromMesh(bool value) override;
-		void OnGeometryScale(GeometryScaleRequestPtr message);
 		//debug functions
 		void CreateDebugBox(const Vec3 &size,const Vec3 &offset);
 		void UpdateDebug() override;

@@ -19,16 +19,18 @@
 *****************************************************************************/
 
 #include "TrackComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Utils/GASSException.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 namespace GASS
 {
-	TrackComponent::TrackComponent() : m_Initialized(false), m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1),m_ParticleEmissionFactor(0.6f), m_SoundVolumeFactor(1.0f)
+	TrackComponent::TrackComponent() :  m_AnimationValue(0,0), m_AnimationSpeedFactor(1,1) 
 	{
 	}
 
@@ -48,10 +50,13 @@ namespace GASS
 
 	void TrackComponent::OnInitialize()
 	{
-		BaseSceneComponent::OnInitialize();
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
-		
+		Component::OnInitialize();
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+		{
+			sound->SetPlay(true);
+			sound->SetVolume(0);
+		}
 		if(m_DriveWheel.IsValid())
 			m_DriveWheel->RegisterForMessage(REG_TMESS(TrackComponent::OnDriveWheelPhysicsMessage,PhysicsVelocityEvent,0));
 		else
@@ -67,13 +72,13 @@ namespace GASS
 		m_AnimationValue.y += (ang_vel.x*m_AnimationSpeedFactor.y);
 
 		
-		GetSceneObject()->SendImmediateRequest(TextureCoordinateRequestPtr(new TextureCoordinateRequest(m_AnimationValue)));
+		//GetSceneObject()->SendImmediateRequest(std::make_shared<TextureCoordinateRequest>(m_AnimationValue));
 
-		float emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
+		auto emission = static_cast<float>(fabs(ang_vel.x)*m_ParticleEmissionFactor);
 
 		if(emission >50)
 			emission =50;
-		GetSceneObject()->SendImmediateRequest(ParticleSystemParameterRequestPtr(new ParticleSystemParameterRequest(ParticleSystemParameterRequest::EMISSION_RATE,0,emission)));
+		//GetSceneObject()->SendImmediateRequest(std::make_shared<ParticleSystemParameterRequest>(ParticleSystemParameterRequest::EMISSION_RATE,0,emission));
 
 		//float duration = fabs(static_cast<float>(ang_vel.x))*0.05f;
 
@@ -85,7 +90,7 @@ namespace GASS
 		
 		//std::cout << "speed:" << speed.x << std::endl;
 
-		const float speed = static_cast<float>(fabs(ang_vel.x));
+		const auto speed = static_cast<float>(fabs(ang_vel.x));
 		const float max_volume_at_speed = 10;
 		float volume = m_SoundVolumeFactor;
 		if(speed < max_volume_at_speed)
@@ -94,8 +99,11 @@ namespace GASS
 			//Play engine sound
 			volume = m_SoundVolumeFactor* (speed/max_volume_at_speed);
 		}
-		GetSceneObject()->SendImmediateRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
 
+		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
+		if (sound)
+			sound->SetVolume(volume);
+	
 		if(speed > 0)
 		{
 			float pitch = 0.8f + speed*0.015f;
@@ -103,7 +111,8 @@ namespace GASS
 			if(pitch > 1.7f)
 				pitch = 1.7f;
 			//std::cout << "pitch:" << pitch << " Speed:" << speed <<"\n";
-			GetSceneObject()->SendImmediateRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH,pitch)));
+			if (sound)
+				sound->SetPitch(pitch);
 		}
 	}
 }

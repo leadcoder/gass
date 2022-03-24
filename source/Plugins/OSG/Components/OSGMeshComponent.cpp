@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -30,14 +32,8 @@
 
 namespace GASS
 {
-	OSGMeshComponent::OSGMeshComponent() : m_CastShadow (false),
-		m_ReceiveShadow  (false),
-		m_Initlized(false),
-		m_Lighting(true),
-		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
-		m_Expand(false),
-		m_FlipDDS(false),
-		m_Collision(true)
+	OSGMeshComponent::OSGMeshComponent() 
+		
 	{
 
 	}
@@ -51,7 +47,7 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<OSGMeshComponent>("MeshComponent");
 		ADD_DEPENDENCY("OSGLocationComponent")
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MeshComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("MeshComponent", OF_VISIBLE));
 		auto filename_prop = RegisterGetSet("Filename", &OSGMeshComponent::GetMeshResource, &OSGMeshComponent::SetMeshResource, PF_VISIBLE | PF_EDITABLE, "Mesh File");
 		filename_prop->SetObjectOptionsFunction(&OSGMeshComponent::GetAvailableMeshFiles);
 		RegisterMember("EnumerationResourceGroup", &OSGMeshComponent::m_EnumerationResourceGroup,PF_VISIBLE,"EnumerationResourceGroup");
@@ -64,20 +60,17 @@ namespace GASS
 		
 		auto import_mesh_prop = RegisterGetSet("ImportMesh", &OSGMeshComponent::GetImportMesh, &OSGMeshComponent::SetImportMesh, PF_VISIBLE | PF_EDITABLE, "Import new mesh");
 		std::vector<std::string> ext;
-		ext.push_back("3ds");
-		ext.push_back("flt");
-		ext.push_back("obj");
-		ext.push_back("*");
+		ext.emplace_back("3ds");
+		ext.emplace_back("flt");
+		ext.emplace_back("obj");
+		ext.emplace_back("*");
 		import_mesh_prop->SetMetaData(std::make_shared<FilePathPropertyMetaData>(FilePathPropertyMetaData::IMPORT_FILE,ext));
 	}
 
 	void OSGMeshComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMaterialMessage,ReplaceMaterialRequest,1));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnVisibilityMessage,GeometryVisibilityRequest ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGMeshComponent::OnMeshFileNameMessage,MeshFileRequest,0));
 	}
 
 	std::vector<ResourceHandle> OSGMeshComponent::GetAvailableMeshFiles() const
@@ -95,7 +88,7 @@ namespace GASS
 				group->GetResourcesByType(res_vec,"MESH");
 				for(size_t j = 0; j < res_vec.size();j++)
 				{
-					content.push_back(res_vec[j]->Name());
+					content.emplace_back(res_vec[j]->Name());
 				}
 			}
 		}
@@ -148,13 +141,6 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnMaterialMessage(ReplaceMaterialRequestPtr message)
-	{
-
-		//TODO:implement this...
-	}
-
-
 	void OSGMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
 		LoadMesh(m_MeshResource);
@@ -170,10 +156,16 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGMeshComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
-		if(visibility)
+		if (m_MeshNode)
+			return m_MeshNode->getNodeMask() > 0;
+		return false;
+	}
+
+	void OSGMeshComponent::SetVisible(bool value)
+	{
+		if(value)
 		{
 			m_MeshNode->setNodeMask(1);
 			//restore flags
@@ -261,7 +253,7 @@ namespace GASS
 		osgUtil::Optimizer optimizer;
 		optimizer.optimize(m_MeshNode.get(), osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS & ~osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS);
 
-		OSGNodeData* data = new OSGNodeData(shared_from_this());
+		auto* data = new OSGNodeData(shared_from_this());
 		m_MeshNode->setUserData(data);
 
 		SetLighting(m_Lighting);
@@ -272,7 +264,7 @@ namespace GASS
 		if(m_MeshNode.get())
 			CalulateBoundingbox(m_MeshNode.get());
 
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 
 		//expand children
 		if(m_Expand)
@@ -329,18 +321,18 @@ namespace GASS
 		}
 		catch(...)
 		{
-			so = SceneObjectPtr(new SceneObject());
+			so = std::make_shared<SceneObject>();
 		}
 
 		if (so)
 		{
 			so->SetName(node->getName());
 			so->SetID(node->getName());
-			osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+			auto* geode = dynamic_cast<osg::Geode*> (node);
 			if(geode)
 			{
 				GASS_SHARED_PTR<OSGMeshComponent> mesh_comp(new OSGMeshComponent());
-				OSGNodeData* node_data = new OSGNodeData(mesh_comp);
+				auto* node_data = new OSGNodeData(mesh_comp);
 				node->setUserData(node_data);
 				mesh_comp->SetMeshNode(node);
 				so->AddComponent(mesh_comp);
@@ -468,12 +460,6 @@ namespace GASS
 		CalulateBoundingbox(mesh.get());
 	}
 
-	void OSGMeshComponent::OnMeshFileNameMessage(MeshFileRequestPtr message)
-	{
-		ResourceHandle res(message->GetFileName());
-		SetMeshResource(res);
-	}
-
 	AABox OSGMeshComponent::GetBoundingBox() const
 	{
 		return m_BBox;
@@ -514,7 +500,7 @@ namespace GASS
 		if (!node)
 			return;
 
-		osg::Geode* geode = dynamic_cast<osg::Geode*> (node);
+		auto* geode = dynamic_cast<osg::Geode*> (node);
 		if (geode)
 		{
 			osg::BoundingBox bbox = geode->getBoundingBox();

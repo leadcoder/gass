@@ -21,23 +21,23 @@ namespace GASS
 	
 	class MouseToolController;
 	class MessageManager;
-	typedef GASS_SHARED_PTR<MouseToolController> MouseToolControllerPtr;
+	using MouseToolControllerPtr = std::shared_ptr<MouseToolController>;
 
 	class EditorModuleExport EditorSceneManager : public Reflection<EditorSceneManager, BaseSceneManager>
 	{
 	public:
-		typedef std::vector<GASS::SceneObjectWeakPtr> SelectionVector;
-		typedef std::set<GASS::SceneObjectWeakPtr, std::owner_less<GASS::SceneObjectWeakPtr> > SceneObjectSet;
+		using SelectionVector = std::vector<SceneObjectWeakPtr>;
+		using SceneObjectSet = std::set<SceneObjectWeakPtr, std::owner_less<SceneObjectWeakPtr>>;
 
 		EditorSceneManager(SceneWeakPtr scene);
-		virtual ~EditorSceneManager(void);
+		~EditorSceneManager(void) override;
 		static  void RegisterReflection();
 		void OnPostConstruction() override;
 		void OnSceneCreated() override;
 		void OnSceneShutdown() override;
-		virtual bool GetSerialize() const {return false;}
+		bool GetSerialize() const override {return false;}
 		
-		virtual void OnUpdate(double delta_time);
+		void OnUpdate(double delta_time) override;
 
 		MouseToolControllerPtr GetMouseToolController() const {return m_MouseTools;}
 		void SetSelectedObjects(const SelectionVector &selection);
@@ -80,5 +80,5 @@ namespace GASS
 		bool m_LockTerrainObjects;
 		SceneObjectWeakPtr m_CurrentSite;
 	};
-	typedef GASS_SHARED_PTR<EditorSceneManager> EditorSceneManagerPtr;
+	using EditorSceneManagerPtr = std::shared_ptr<EditorSceneManager>;
 }

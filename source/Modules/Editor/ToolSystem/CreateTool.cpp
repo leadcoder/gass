@@ -47,25 +47,30 @@ namespace GASS
 				WaypointListComponentPtr wp_list = parent_obj->GetFirstComponentByClass<IWaypointListComponent>();
 				if (m_AllowWPInsert && wp_list)
 				{
-					std::vector<Vec3> points = wp_list->GetWaypoints(false);
+					
+					//NOTE: This dont work with splines, fix this!!
 					int index = -1;
-					if (points.size() > 1)
+					if (!wp_list->GetEnableSpline())
 					{
-						Vec3 point;
-						int t_index;
-						
-						const bool is_projected = !parent_obj->GetScene()->GetGeocentric();
-						if(Path::GetClosestPointOnPath(info.m_3DPos, points, t_index, point))
+						std::vector<Vec3> points = wp_list->GetWaypoints(false);
+						if (points.size() > 1)
 						{
-							Vec3 dist_vec = (info.m_3DPos - point);
-							//if projected scene, only respect projected distance to make picking easy when line is below ground level
-							if(is_projected) 
-								dist_vec.y = 0;
-							const Float dist_to_path = dist_vec.Length();
-							const Float max_distance = 1.0f;
-							if (dist_to_path < max_distance && t_index < static_cast<int>(points.size()) - 1)
+							Vec3 point;
+							int t_index;
+
+							const bool is_projected = !parent_obj->GetScene()->GetGeocentric();
+							if (Path::GetClosestPointOnPath(info.m_3DPos, points, t_index, point))
 							{
-								index = t_index + 1;
+								Vec3 dist_vec = (info.m_3DPos - point);
+								//if projected scene, only respect projected distance to make picking easy when line is below ground level
+								if (is_projected)
+									dist_vec.y = 0;
+								const Float dist_to_path = dist_vec.Length();
+								const Float max_distance = 1.0f;
+								if (dist_to_path < max_distance && t_index < static_cast<int>(points.size()) - 1)
+								{
+									index = t_index + 1;
+								}
 							}
 						}
 					}

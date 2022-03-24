@@ -20,6 +20,8 @@
 
 
 #include "RakNetLocationTransferComponent.h"
+
+#include <memory>
 #include "Plugins/RakNet/RakNetNetworkSystem.h"
 #include "Plugins/RakNet/RakNetNetworkSceneManager.h"
 #include "Plugins/RakNet/RakNetPackageFactory.h"
@@ -42,16 +44,9 @@ namespace GASS
 {
 	RakNetLocationTransferComponent::RakNetLocationTransferComponent() : m_Velocity(0,0,0),
 		m_AngularVelocity(0,0,0),
-		m_DeadReckoning(0),
-		m_LastSerialize(0),
-		m_ParentPos(0,0,0),
-		m_UpdatePosition(true),
-		m_UpdateRotation(true),
-		m_SendFreq(0),
-		m_NumHistoryFrames(6),
-		m_ExtrapolatePosition(true),
-		m_ExtrapolateRotation(true),
-		m_ClientLocationMode(UNCHANGED)
+		
+		m_ParentPos(0,0,0)
+		
 	{
 		m_LocationHistory.resize(m_NumHistoryFrames);
 	}
@@ -94,7 +89,7 @@ namespace GASS
 		}
 		else
 		{
-			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeRequest,0));
+			GetSceneObject()->RegisterForMessage(REG_TMESS(RakNetLocationTransferComponent::OnDeserialize,NetworkDeserializeEvent,0));
 
 			PhysicsBodyComponentPtr body = GetSceneObject()->GetFirstComponentByClass<IPhysicsBodyComponent>();
 			if(body)
@@ -113,8 +108,8 @@ namespace GASS
 			{
 				//attach this to parent node
 				LocationComponentPtr location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-				BaseSceneComponentPtr base = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(location);
-				base->SetPropertyValue("AttachToParent", true);
+				auto component = GASS_DYNAMIC_PTR_CAST<Component>(location);
+				component->SetPropertyValue("AttachToParent", true);
 			}
 		}
 	}
@@ -170,13 +165,7 @@ namespace GASS
 		}
 	}
 
-	bool RakNetLocationTransferComponent::IsRemote() const
-	{
-		RakNetNetworkSystemPtr raknet = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<RakNetNetworkSystem>();
-		if(raknet && raknet->IsActive())
-			return !raknet->IsServer();
-		return false;
-	}
+	
 
 	void RakNetLocationTransferComponent::SceneManagerTick(double /*delta*/)
 	{
@@ -200,15 +189,14 @@ namespace GASS
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				GASS_SHARED_PTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
-				NetworkSerializeRequestPtr serialize_message(new NetworkSerializeRequest(NetworkAddress(address.binaryAddress,address.port),0,package));
-				GetSceneObject()->SendImmediateRequest(serialize_message);
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package,0, NetworkAddress(address.binaryAddress, address.port));
 			}
 		}
 		else //client
 		{
 			Quaternion new_rot;
 			Vec3 new_pos;
-			static RakNetTime  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
+			static auto  step_back = static_cast<RakNetTime>(raknet->GetInterpolationLag());
 #ifdef _DEBUG_LTC_
 			if(GetAsyncKeyState(VK_F2))
 				step_back--;
@@ -322,7 +310,7 @@ namespace GASS
 				}
 			}
 
-			GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(m_Velocity, m_AngularVelocity)));
+			GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(m_Velocity, m_AngularVelocity));
 
 #ifdef _DEBUG_LTC_
 			GASS_PRINT(std::string(debug_text))
@@ -331,7 +319,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeRequestPtr message)
+	void RakNetLocationTransferComponent::OnDeserialize(NetworkDeserializeEventPtr message)
 	{
 		if(message->GetPackage()->Id == TRANSFORMATION_DATA)
 		{

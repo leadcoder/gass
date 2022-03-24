@@ -7,7 +7,7 @@
 #include "Core/Math/GASSLineSegment.h"
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSSimEngine.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -61,8 +61,8 @@ namespace GASS
 				for(size_t i =  0; i < comps.size(); i++)
 				{
 					GraphEdgeComponentPtr edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
-					BaseSceneComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetStartNode());
-					BaseSceneComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetEndNode());
+					ComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetStartNode());
+					ComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetEndNode());
 					if(start_node && end_node)
 					{
 						Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
@@ -77,7 +77,7 @@ namespace GASS
 					}
 				}
 				*/
-				GraphEdgeComponentPtr edge =  _GetClosestEdge(parent_obj,info.m_3DPos , 1.0);
+				GraphEdgeComponentPtr edge =  GetClosestEdge(parent_obj,info.m_3DPos , 1.0);
 				if(edge)
 				{
 					GraphNodeComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
@@ -136,7 +136,7 @@ namespace GASS
 						current_node = current_obj->GetFirstComponentByClass<IGraphNodeComponent>();
 						GASSAssert(current_node,"Failed to find IGraphNodeComponent in GraphTool::MouseDown");
 						//auto insert?
-						_TryInsert(current_obj, info.m_3DPos, parent_obj);
+						TryInsert(current_obj, info.m_3DPos, parent_obj);
 					}
 					else
 					{
@@ -176,9 +176,9 @@ namespace GASS
 		m_MouseIsDown = false;
 	}
 
-	void GraphTool::_TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const
+	void GraphTool::TryInsert(SceneObjectPtr new_obj, const Vec3 &obj_pos, SceneObjectPtr parent_obj) const
 	{
-		GraphEdgeComponentPtr edge = _GetClosestEdge(parent_obj, obj_pos,1.0);
+		GraphEdgeComponentPtr edge = GetClosestEdge(parent_obj, obj_pos,1.0);
 		if(edge)
 		{
 			GraphNodeComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<IGraphNodeComponent>(edge->GetStartNode());
@@ -206,7 +206,7 @@ namespace GASS
 	}
 
 
-	GraphEdgeComponentPtr GraphTool::_GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const
+	GraphEdgeComponentPtr GraphTool::GetClosestEdge(SceneObjectPtr graph_obj, const Vec3 &pos, Float treshhold_dist) const
 	{
 		
 		int index = -1;
@@ -216,9 +216,9 @@ namespace GASS
 		graph_obj->GetComponentsByClass<IGraphEdgeComponent>(comps,true);
 		for(size_t i =  0; i < comps.size(); i++)
 		{
-			GraphEdgeComponentPtr edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
-			BaseSceneComponentPtr start_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetStartNode());
-			BaseSceneComponentPtr end_node = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge->GetEndNode());
+			auto edge = GASS_DYNAMIC_PTR_CAST<IGraphEdgeComponent>(comps[i]);
+			auto start_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetStartNode());
+			auto end_node = GASS_DYNAMIC_PTR_CAST<Component>(edge->GetEndNode());
 			if(start_node && end_node)
 			{
 				Vec3 start_pos  = start_node->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();

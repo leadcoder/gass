@@ -20,12 +20,12 @@ namespace GASS
 		MemoryOutputStream();
 		~MemoryOutputStream() override;
 		physx::PxU32 write(const void* src, physx::PxU32 count) override;
-		physx::PxU32 getSize() const {return m_Size;}
-		physx::PxU8* getData() const {return m_Data;}
+		physx::PxU32 GetSize() const {return m_Size;}
+		physx::PxU8* GetData() const {return m_Data;}
 	private:
-		physx::PxU8* m_Data;
-		physx::PxU32 m_Size;
-		physx::PxU32 m_Capacity;
+		physx::PxU8* m_Data{nullptr};
+		physx::PxU32 m_Size{0};
+		physx::PxU32 m_Capacity{0};
 	};
 
 	class MemoryInputData: public physx::PxInputData

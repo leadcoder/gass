@@ -29,7 +29,7 @@
 
 namespace GASS
 {
-	SteerComponent::SteerComponent() : m_SteerForce(100),m_MaxSteerVelocity(1),m_CurrentAngle(0),m_DesiredAngle(0),m_MaxSteerAngle(45),m_Speed(1)
+	SteerComponent::SteerComponent() 
 	{
 
 	}
@@ -65,7 +65,7 @@ namespace GASS
 
 		if (name == "Steer")
 		{
-			float max_rad_angle = static_cast<float>(Math::Deg2Rad(m_MaxSteerAngle));
+			auto max_rad_angle = static_cast<float>(Math::Deg2Rad(m_MaxSteerAngle));
 			m_DesiredAngle = value*max_rad_angle;
 		}
 		/*float value = GASS_ANY_CAST<float>(any_mess->GetData("Value"));

@@ -19,28 +19,22 @@ namespace GASS
 	{
 	public:
 
-		RoadEdge() : Enabled(true),
-			StartNode(NULL),
-			EndNode(NULL),
-			Distance(-1),
-			Dir(BIDIR),
-			LaneWidth(1),
-			LeftLanes(1),
-			RightLanes(1)
+		RoadEdge() 
+			
 		{
 
 		}
 		virtual ~RoadEdge();
 		
 		std::vector<Vec3> Waypoints;
-		Float Distance;
-		bool Enabled;
-		RoadDirection Dir;
-		RoadNode* StartNode;
-		RoadNode* EndNode;
-		Float LaneWidth;
-		int LeftLanes;
-		int RightLanes;
+		Float Distance{-1};
+		bool Enabled{true};
+		RoadDirection Dir{BIDIR};
+		RoadNode* StartNode{nullptr};
+		RoadNode* EndNode{nullptr};
+		Float LaneWidth{1};
+		int LeftLanes{1};
+		int RightLanes{1};
 
 		//debug
 		std::vector< std::vector<Vec3> > LLWaypoints;

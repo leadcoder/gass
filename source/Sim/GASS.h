@@ -62,7 +62,7 @@
 #include "Sim/Messages/GASSCoreSystemMessages.h"
 #include "Sim/Messages/GASSGraphicsSystemMessages.h"
 #include "Sim/Messages/GASSNetworkSystemMessages.h"
-#include "Sim/GASSBaseSceneComponent.h"
+
 #include "Sim/GASSSimSystem.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSScene.h"

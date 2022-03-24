@@ -25,6 +25,8 @@
 #include "Plugins/PhysX/PhysXStream.h"
 #include <PxPhysicsAPI.h>
 
+#include <memory>
+
 namespace GASS
 {
 
@@ -79,7 +81,7 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<PhysXPhysicsSceneManager>("PhysXPhysicsSceneManager");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PhysX Scene Manager", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("PhysX Scene Manager", OF_VISIBLE));
 		RegisterGetSet("Gravity", &PhysXPhysicsSceneManager::GetGravity, &PhysXPhysicsSceneManager::SetGravity, PF_VISIBLE | PF_EDITABLE, "Gravity");
 		RegisterGetSet("Origin", &PhysXPhysicsSceneManager::GetOrigin, &PhysXPhysicsSceneManager::SetOrigin, PF_VISIBLE | PF_EDITABLE, "Local simulation origin");
 		RegisterMember("Active", &PhysXPhysicsSceneManager::m_Active, PF_VISIBLE | PF_EDITABLE, "Enable/disable simulation");
@@ -89,9 +91,9 @@ namespace GASS
 		m_Active(true),
 		m_Init(false),
 		m_Gravity(-9.81f),
-		m_CpuDispatcher(NULL),
-		m_VehicleSceneQueryData(NULL),
-		m_WheelRaycastBatchQuery(NULL),
+		m_CpuDispatcher(nullptr),
+		m_VehicleSceneQueryData(nullptr),
+		m_WheelRaycastBatchQuery(nullptr),
 		m_Origin(0,0,0),
 		m_UpVector(0,1,0)
 	{
@@ -101,40 +103,40 @@ namespace GASS
 	void PhysXPhysicsSceneManager::OnPostConstruction()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		if (system == NULL)
+		if (system == nullptr)
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find PhysXPhysicsSystem", "PhysXPhysicsSystem::OnLoad");
 
 		RegisterForPreUpdate<PhysXPhysicsSystem>();
 
 		
-		physx::PxSceneDesc sceneDesc(system->GetPxSDK()->getTolerancesScale());
+		physx::PxSceneDesc scene_desc(system->GetPxSDK()->getTolerancesScale());
 	
-		sceneDesc.gravity = physx::PxVec3(0, m_Gravity, 0);
+		scene_desc.gravity = physx::PxVec3(0, m_Gravity, 0);
 		
-		if (!sceneDesc.cpuDispatcher)
+		if (!scene_desc.cpuDispatcher)
 		{
 			m_CpuDispatcher = physx::PxDefaultCpuDispatcherCreate(3);
 			if (!m_CpuDispatcher)
 				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "PxDefaultCpuDispatcherCreate failed", "PhysXPhysicsSystem::OnLoad");
-			sceneDesc.cpuDispatcher = m_CpuDispatcher;
+			scene_desc.cpuDispatcher = m_CpuDispatcher;
 		}
-		if (!sceneDesc.filterShader)
-			sceneDesc.filterShader = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
+		if (!scene_desc.filterShader)
+			scene_desc.filterShader = SampleVehicleFilterShader;//physx::PxDefaultSimulationFilterShader;
 
 															   //sceneDesc.flags	|= PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
 		//sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 
-		m_PxScene = system->GetPxSDK()->createScene(sceneDesc);
+		m_PxScene = system->GetPxSDK()->createScene(scene_desc);
 		
 		if (!m_PxScene)
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "createScene failed!", "PhysXPhysicsSystem::OnLoad");
 
 		//Vehicle related setup
-		m_VehicleSceneQueryData = VehicleSceneQueryData::allocate(MAX_NUM_WHEELS);
-		m_WheelRaycastBatchQuery = m_VehicleSceneQueryData->setUpBatchedSceneQuery(GetPxScene());
+		m_VehicleSceneQueryData = VehicleSceneQueryData::Allocate(MAX_NUM_WHEELS);
+		m_WheelRaycastBatchQuery = m_VehicleSceneQueryData->SetUpBatchedSceneQuery(GetPxScene());
 
 		//Data to store reports for each wheel.
-		m_WheelQueryResults = VehicleWheelQueryResults::allocate(MAX_NUM_WHEELS);
+		m_WheelQueryResults = VehicleWheelQueryResults::Allocate(MAX_NUM_WHEELS);
 
 		GASS_LOG(LINFO) << "Create  PxCreateControllerManager...";
 		m_ControllerManager = PxCreateControllerManager(*m_PxScene);
@@ -227,13 +229,13 @@ namespace GASS
 			{
 				PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 
-				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surfaceTirePairs = system->GetSurfaceTirePairs();
+				physx::PxVehicleDrivableSurfaceToTireFrictionPairs* surface_tire_pairs = system->GetSurfaceTirePairs();
 
 				
 				const physx::PxVec3 gravity = GetScene()->GetGeocentric() ? PxConvert::ToPx(m_Origin.NormalizedCopy() * m_Gravity) : physx::PxVec3(0, static_cast<float>(m_Gravity), 0);
 
-				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleSceneQueryData->getRaycastQueryResultBufferSize(), m_VehicleSceneQueryData->getRaycastQueryResultBuffer());
-				PxVehicleUpdates(static_cast<float>(delta_time), gravity, *surfaceTirePairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
+				PxVehicleSuspensionRaycasts(m_WheelRaycastBatchQuery, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleSceneQueryData->GetRaycastQueryResultBufferSize(), m_VehicleSceneQueryData->GetRaycastQueryResultBuffer());
+				PxVehicleUpdates(static_cast<float>(delta_time), gravity, *surface_tire_pairs, (int)m_Vehicles.size(), &m_Vehicles[0], m_VehicleWheelQueryResults);
 			}
 
 			m_PxScene->simulate(static_cast<float>(delta_time));
@@ -242,13 +244,8 @@ namespace GASS
 			{
 
 			}
-			GetScene()->PostMessage(PostPhysicsSceneUpdateEventPtr(new PostPhysicsSceneUpdateEvent(delta_time)));
+			GetScene()->PostMessage(std::make_shared<PostPhysicsSceneUpdateEvent>(delta_time));
 		}
-	}
-
-	void PhysXPhysicsSceneManager::OnSceneObjectLoaded(PostComponentsInitializedEventPtr message)
-	{
-
 	}
 
 	Vec3 PhysXPhysicsSceneManager::LocalToWorld(const physx::PxVec3 & local) const
@@ -264,15 +261,15 @@ namespace GASS
 	void PhysXPhysicsSceneManager::RegisterVehicle(physx::PxVehicleWheels* vehicle)
 	{
 		size_t index = m_Vehicles.size();
-		const PxU32 numWheels = vehicle->mWheelsSimData.getNbWheels();
-		m_VehicleWheelQueryResults[index].nbWheelQueryResults = numWheels;
-		m_VehicleWheelQueryResults[index].wheelQueryResults = m_WheelQueryResults->addVehicle(numWheels);
+		const PxU32 num_wheels = vehicle->mWheelsSimData.getNbWheels();
+		m_VehicleWheelQueryResults[index].nbWheelQueryResults = num_wheels;
+		m_VehicleWheelQueryResults[index].wheelQueryResults = m_WheelQueryResults->AddVehicle(num_wheels);
 		m_Vehicles.push_back(vehicle);
 	}
 
 	void PhysXPhysicsSceneManager::UnregisterVehicle(physx::PxVehicleWheels* vehicle)
 	{
-		std::vector<physx::PxVehicleWheels*>::iterator iter  = m_Vehicles.begin();
+		auto iter  = m_Vehicles.begin();
 		while(iter != m_Vehicles.end())
 		{
 			if(*iter == vehicle)
@@ -287,23 +284,23 @@ namespace GASS
 	physx::PxConvexMesh* PhysXPhysicsSceneManager::CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking)
 	{
 		// Create descriptor for convex mesh
-		physx::PxConvexMeshDesc convexDesc;
-		convexDesc.points.count			= numVerts;
-		convexDesc.points.stride		= sizeof(physx::PxVec3);
-		convexDesc.points.data			= verts;
-		convexDesc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX;
+		physx::PxConvexMeshDesc convex_desc;
+		convex_desc.points.count			= numVerts;
+		convex_desc.points.stride		= sizeof(physx::PxVec3);
+		convex_desc.points.data			= verts;
+		convex_desc.flags				= physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
-		physx::PxConvexMesh* convexMesh = NULL;
+		physx::PxConvexMesh* convex_mesh = nullptr;
 		MemoryOutputStream buf;
-		if(cooking.cookConvexMesh(convexDesc, buf))
+		if(cooking.cookConvexMesh(convex_desc, buf))
 		{
-			MemoryInputData id(buf.getData(), buf.getSize());
-			convexMesh = physics.createConvexMesh(id);
+			MemoryInputData id(buf.GetData(), buf.GetSize());
+			convex_mesh = physics.createConvexMesh(id);
 		}
-		return convexMesh;
+		return convex_mesh;
 	}
 
-	physx::PxTriangleMesh* PhysXPhysicsSceneManager::_CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount)
+	physx::PxTriangleMesh* PhysXPhysicsSceneManager::CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount)
 	{
 		PxTriangleMeshDesc desc;
 		desc.setToDefault();
@@ -315,26 +312,26 @@ namespace GASS
 		desc.triangles.stride		= 3*sizeof(PxU32);
 		desc.triangles.data			= indices32;
 
-		physx::PxTriangleMesh* triMesh = NULL;
+		physx::PxTriangleMesh* tri_mesh = nullptr;
 		MemoryOutputStream buf;
 		if(cooking.cookTriangleMesh(desc, buf))
 		{
-			MemoryInputData mid(buf.getData(), buf.getSize());
-			triMesh = physics.createTriangleMesh(mid);
-			return triMesh;
+			MemoryInputData mid(buf.GetData(), buf.GetSize());
+			tri_mesh = physics.createTriangleMesh(mid);
+			return tri_mesh;
 		}
 		GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Failed to cook triangles", "PhysXPhysicsSceneManager::CreateTriangleMesh");
 	}
 
 	bool PhysXPhysicsSceneManager::HasConvexMesh(const std::string &name) const
 	{
-		ConvexMeshMap::const_iterator iter = m_ConvexMeshMap.find(name);
+		auto iter = m_ConvexMeshMap.find(name);
 		return (iter!= m_ConvexMeshMap.end());
 	}
 
 	bool PhysXPhysicsSceneManager::HasTriangleMesh(const std::string &name) const
 	{
-		TriangleMeshMap::const_iterator iter = m_TriangleMeshMap.find(name);
+		auto iter = m_TriangleMeshMap.find(name);
 		return (iter!= m_TriangleMeshMap.end()); 
 	}
 
@@ -365,7 +362,7 @@ namespace GASS
 		//GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"Size of Float != 8", "PhysXPhysicsSystem::CreateConvexMesh");
 	}
 
-	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags, CollisionResult &result, bool return_at_first_hit) const
+	void PhysXPhysicsSceneManager::Raycast(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags /*flags*/, CollisionResult& result, bool /*return_at_first_hit*/) const
 	{
 		Float ray_length = ray_dir.Length();
 		Vec3 norm_ray_dir = ray_dir*(1.0/ray_length);
@@ -393,7 +390,7 @@ namespace GASS
 			result.CollNormal = PxConvert::ToGASS(ray_hit.block.normal);
 			result.CollDist = (ray_start - result.CollPosition).Length();
 			if(ray_hit.block.shape && ray_hit.block.shape->userData)
-				result.CollSceneObject = ((BaseSceneComponent*) ray_hit.block.shape->userData)->GetSceneObject();
+				result.CollSceneObject = ((Component*) ray_hit.block.shape->userData)->GetSceneObject();
 		}
 	}
 
@@ -418,7 +415,7 @@ namespace GASS
 			}
 			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 			GASSAssert(system,"PhysXPhysicsSceneManager::CreateTriangleMesh");
-			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = _CreateTriangleMesh( *system->GetPxSDK(), 
+			m_TriangleMeshMap[col_mesh_id].m_TriangleMesh = CreateTriangleMesh( *system->GetPxSDK(), 
 				*system->GetPxCooking(), 
 				&verts[0], 
 				static_cast<physx::PxU32>(physics_mesh->PositionVector.size()),

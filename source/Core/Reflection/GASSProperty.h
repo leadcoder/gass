@@ -67,8 +67,8 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_INVALIDPARAMS, "Failed cast owner of property:" + this->m_Name, "ObjectTypedProperty::SetValue");
 			Set(o, value);
 		}
-		typedef typename GetOptionType<MemberType>::Type OptionType;
-		typedef std::function<std::vector<OptionType>(OwnerType*)> ObjectOptionsFunction;
+		using OptionType = typename GetOptionType<MemberType>::Type;
+		using ObjectOptionsFunction = std::function<std::vector<OptionType> (OwnerType *)>;
 		void SetObjectOptionsFunction(ObjectOptionsFunction func) { m_ObjectOptionsFunction = func;}
 		bool HasObjectOptions() const { return m_ObjectOptionsFunction != nullptr;}
 		std::vector<OptionType> GetOptionsByObject(IPropertyOwner* object) const override
@@ -122,8 +122,8 @@ namespace GASS
 		class GetSetProperty : public ObjectTypedProperty<OwnerType, MemberType, GetterReturnType>
 	{
 	public:
-		typedef GetterReturnType(OwnerType::*GetterType)() const;
-		typedef SetterReturnTypeUnused(OwnerType::*SetterType)(SetterArgumentType);
+		using GetterType = GetterReturnType (OwnerType::*)() const;
+		using SetterType = SetterReturnTypeUnused (OwnerType::*)(SetterArgumentType);
 		GetSetProperty(const std::string &name,
 			GetterType getter,
 			SetterType setter,
@@ -152,7 +152,7 @@ namespace GASS
 
 	template <typename ConstType>
 	struct RemoveConstRef {
-		typedef typename std::remove_const<typename std::remove_reference<ConstType>::type>::type Type;
+		using Type = typename std::remove_const<typename std::remove_reference<ConstType>::type>::type;
 	};
 
 	template <typename OwnerType,
@@ -177,7 +177,7 @@ namespace GASS
 		class MemberProperty : public ObjectTypedProperty<OwnerType, MemberType, MemberType>
 	{
 	public:
-		typedef MemberType OwnerType::* MemberPointer;
+		using MemberPointer = MemberType OwnerType::*;
 		MemberProperty(const std::string &name,
 			MemberPointer member,
 			PropertyFlags flags,

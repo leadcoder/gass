@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "PlayerInputComponent.h"
+
+#include <memory>
 #include "InputHandlerComponent.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObjectTemplate.h"
@@ -49,7 +51,7 @@ namespace GASS
 	void PlayerInputComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<PlayerInputComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("PlayerInputComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("PlayerInputComponent", OF_VISIBLE));
 		RegisterGetSet("ControlSetting", &PlayerInputComponent::GetControlSetting, &PlayerInputComponent::SetControlSetting);
 	}
 
@@ -89,7 +91,7 @@ namespace GASS
 				if(dist < 5)
 				{
 					//enter and return
-					ihc->GetSceneObject()->PostRequest(EnterVehicleRequestPtr(new EnterVehicleRequest()));
+					ihc->GetSceneObject()->PostRequest(std::make_shared<EnterVehicleRequest>());
 					m_CurrentVehicle = ihc->GetSceneObject();
 					m_CurrentSeat = ihc->GetSceneObject();
 					seat = 0;
@@ -109,11 +111,11 @@ namespace GASS
 				{
 					if(m_CurrentSeat)
 					{
-						m_CurrentSeat->PostRequest(ExitVehicleRequestPtr (new ExitVehicleRequest()));
+						m_CurrentSeat->PostRequest(std::make_shared<ExitVehicleRequest>());
 					}
 					InputHandlerComponentPtr ih = GASS_DYNAMIC_PTR_CAST<InputHandlerComponent>(components[seat]);
 					m_CurrentSeat = ih->GetSceneObject();
-					m_CurrentSeat->PostRequest(EnterVehicleRequestPtr(new EnterVehicleRequest()));
+					m_CurrentSeat->PostRequest(std::make_shared<EnterVehicleRequest>());
 					seat++;
 				}
 			}

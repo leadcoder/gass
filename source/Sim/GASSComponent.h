@@ -25,6 +25,11 @@
 #include "Core/Reflection/GASSBaseReflectionObject.h"
 #include "Core/Serialize/GASSIXMLSerialize.h"
 #include "Core/Serialize/GASSISerialize.h"
+#include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/GASSSceneObject.h"
+#include "Sim/Interface/GASSISceneManager.h"
+#include "Sim/GASSBaseSceneManager.h"
+
 
 namespace GASS
 {
@@ -65,9 +70,11 @@ namespace GASS
 		and one for templates.
 	*/
 
-	class GASSExport Component : public Reflection<Component, BaseReflectionObject>, public IXMLSerialize, public ISerialize
+	class GASSExport Component : public Reflection<Component, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<Component>, public IXMLSerialize, public ISerialize, public IMessageListener, public ISceneManagerListener
 	{
+		friend class SceneObject;
 	public:
+	
 		static void RegisterReflection();
 		/**
 			Return the name of the component
@@ -158,11 +165,79 @@ namespace GASS
 			@return names of other components that this component require
 		*/
 		std::vector<std::string> GetDependencies() const;
+
+		/**
+		Get owner scene object.
+		Same as get owner in component
+	*/
+		SceneObjectPtr GetSceneObject() const;
+		/**
+			Called by SceneObject during initialization.
+		*/
+		virtual void OnInitialize();
+
+		/**
+			Called by SceneObject after all components got OnInitialize.
+		*/
+		virtual void OnPostInitialize();
+
+		/**
+			Called SceneObject is initialized (children included)
+		*/
+		virtual void OnSceneObjectInitialized();
+
+
+		/**
+			Called by SceneObject when ditto deleted.
+			default implementation to minimize concrete components implementation
+		*/
+		virtual void OnDelete() {};
+
+
+		//ISceneManagerListener
+		/**
+			Implements the ISceneManagerListener interface
+			Called by responsible SceneManager if components is registered as listener.
+		*/
+		void SceneManagerTick(double delta) override { (void)delta; }
+
+		/*template <typename Message>
+		int RegisterForMessage(GASS_FUNCTION message_callback, int priority = 0)
+		{
+			GASS::MessageFuncPtr mess_func(new GASS::MessageFunc<Message>(GASS_BIND(message_callback, this, GASS_PLACEHOLDERS::_1), GASSMessageHasher(#FUNCTION), shared_from_this()));
+			RegisterForMessage(typeid(Message), mess_func);
+		}*/
+
 	protected:
 		static std::map<RTTI*, std::vector<std::string> > m_Dependencies;
-	protected:
 		std::string m_Name;
 		SceneObjectWeakPtr m_Owner;
+
+		template <class T>
+		void RegisterForPreUpdate()
+		{
+			GASS_SHARED_PTR<BaseSceneManager> base_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<T>());
+			if (!base_sm)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find SceneManager", "BaseSceneManager::RegisterForPreUpdate");
+			SceneManagerListenerPtr listener = shared_from_this();
+			base_sm->RegisterPreUpdate(listener);
+		}
+		template <class T>
+		void RegisterForPostUpdate()
+		{
+
+			GASS_SHARED_PTR<BaseSceneManager> base_sm = GASS_DYNAMIC_PTR_CAST<BaseSceneManager>(GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<T>());
+			if (!base_sm)
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find SceneManager", "BaseSceneManager::RegisterForPostUpdate");
+			SceneManagerListenerPtr listener = shared_from_this();
+			base_sm->RegisterPostUpdate(listener);
+		}
+
+		void RemapReferences(const std::map<SceneObjectGUID, SceneObjectGUID>& ref_map);
+		void InitializePointers();
+		void InitializeSceneObjectRef();
+		//called by scene object to resolve SceneObjectRef 
+		void ResolveTemplateReferences(SceneObjectPtr template_root);
 	};
 	//Declare shared pointers
 	GASS_PTR_DECL(Component)

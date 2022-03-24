@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "InputHandlerComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -29,7 +31,7 @@
 
 namespace GASS
 {
-	InputHandlerComponent::InputHandlerComponent() : m_Empty(true)
+	InputHandlerComponent::InputHandlerComponent()  
 	{
 
 	}
@@ -78,13 +80,13 @@ namespace GASS
 
 		if(name == "ExitVehicle" && value > 0) //check if exit input
 		{
-			GetSceneObject()->PostRequest(ExitVehicleRequestPtr(new ExitVehicleRequest()));
+			GetSceneObject()->PostRequest(std::make_shared<ExitVehicleRequest>());
 		}
 
 		if(m_ControlSetting != message->GetSettings())
 			return;
 		//relay message
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent(message->GetSettings(),name,value,message->GetControllerType())));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>(message->GetSettings(),name,value,message->GetControllerType()));
 	}
 
 	void InputHandlerComponent::SetControlSetting(const std::string &controlsetting)

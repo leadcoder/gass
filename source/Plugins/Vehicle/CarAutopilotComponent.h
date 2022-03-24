@@ -23,7 +23,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSICollisionSceneManager.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
@@ -33,7 +33,7 @@
 namespace GASS
 {
 	
-	class CarAutopilotComponent :  public Reflection<CarAutopilotComponent,BaseSceneComponent>
+	class CarAutopilotComponent :  public Reflection<CarAutopilotComponent,Component>
 	{
 	public:
 		enum NavState
@@ -51,16 +51,16 @@ namespace GASS
 		void OnDelete() override;
 		void SceneManagerTick(double delta) override;
 	private:
-		NavState _DecideNavState(double angle_to_target_dir, double target_dist, double turn_radius) const;
-		double _UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir);
-		double _CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target);
-		void _SendInput(double steer_input, double throttle_input, double brake_input);
+		NavState DecideNavState(double angle_to_target_dir, double target_dist, double turn_radius) const;
+		double UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir);
+		double CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target);
+		void SendInput(double steer_input, double throttle_input, double brake_input);
 
 		std::string GetSteerInput() const{return m_SteerInput;}
 		void SetSteerInput(const std::string &input) {m_SteerInput = input;}
 		std::string GetThrottleInput() const{return m_ThrottleInput;}
 		void SetThrottleInput(const std::string &input) {m_ThrottleInput = input;}
-		void _UpdateDrive(double  delta_time);
+		void UpdateDrive(double  delta_time);
 		void OnPhysicsMessage(PhysicsVelocityEventPtr message);
 		void OnTransMessage(TransformationChangedEventPtr message);
 		void OnGotoPosition(GotoPositionRequestPtr message);
@@ -69,16 +69,16 @@ namespace GASS
 		void OnRadarEvent(VehicleRadarEventPtr message);
 		void OnSensorEvent(SensorMessagePtr message);
 		
-		bool m_Enable;
-		Float m_DesiredSpeed;
-		Float m_DesiredPosRadius;
+		bool m_Enable{false};
+		Float m_DesiredSpeed{0};
+		Float m_DesiredPosRadius{0};
 		PIDControl m_TurnPID;
 		PIDControl m_TrottlePID;
-		Float m_BrakeDistanceFactor;
-		bool m_InvertBackWardSteering;
-		bool m_Support3PointTurn;
-		Float m_MaxReverseDistance;
-		bool m_CollisionAvoidance;
+		Float m_BrakeDistanceFactor{1.0};
+		bool m_InvertBackWardSteering{true};
+		bool m_Support3PointTurn{true};
+		Float m_MaxReverseDistance{5};
+		bool m_CollisionAvoidance{false};
 
 		Vec3 m_AngularVelocity;
 		Vec3 m_CurrentPos;
@@ -88,14 +88,14 @@ namespace GASS
 		std::string m_SteerInput;
 		Vec3 m_VehicleSpeed;
 		Mat4 m_Transformation;
-		bool m_WPReached;
-		PlatformType m_PlatformType;
+		bool m_WPReached{false};
+		PlatformType m_PlatformType{PT_CAR};
 
 		Vec3 m_FaceDirection;
-		bool m_HasDir;
-		bool m_HasCollision;
+		bool m_HasDir{false};
+		bool m_HasCollision{false};
 		Vec3 m_CollisionPoint;
-		Float m_CollisionDist;
+		Float m_CollisionDist{0};
 		
 		DetectionVector m_ProximityData;
 

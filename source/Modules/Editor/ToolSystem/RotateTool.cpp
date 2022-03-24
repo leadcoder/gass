@@ -1,4 +1,6 @@
 #include "RotateTool.h"
+
+#include <memory>
 #include "../Components/GizmoComponent.h"
 #include "MouseToolController.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -95,7 +97,7 @@ namespace GASS
 					if (selected)
 					{
 						LocationComponentPtr location = selected->GetFirstComponentByClass<ILocationComponent>();
-						Quaternion new_rot = location->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(GASS::Vec3(0, rotation_rad_step, 0));
+						Quaternion new_rot = location->GetWorldRotation() * Quaternion::CreateFromEulerYXZ(Vec3(0, rotation_rad_step, 0));
 						location->SetWorldRotation(new_rot);
 					}
 				}
@@ -146,7 +148,7 @@ namespace GASS
 		if (!selection_mode)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+			SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 		}
 	}
@@ -174,9 +176,9 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr _CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreateRotateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
 		axis_gizmo->SetName(name);
 		axis_gizmo->SetSerialize(false);
@@ -204,9 +206,9 @@ namespace GASS
 		return axis_gizmo;
 	}
 
-	SceneObjectPtr _CreateRotateGizmo()
+	SceneObjectPtr CreateRotateGizmo()
 	{
-		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoRotateGizmo");
 		gizmo->SetID("ROTATE_GIZMO");
 		gizmo->SetSerialize(false);
@@ -220,9 +222,9 @@ namespace GASS
 		gizmo->AddComponent(editor_comp);
 
 		//Create Axis
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateRotateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateRotateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
 
 		return gizmo;
 	}
@@ -233,7 +235,7 @@ namespace GASS
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			gizmo = _CreateRotateGizmo();
+			gizmo = CreateRotateGizmo();
 			
 			//Add gizmo to scene
 			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);
@@ -286,11 +288,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetMasterGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
-			SendMessageRec(gizmo,col_msg);
-			LocationVisibilityRequestPtr vis_msg(new LocationVisibilityRequest(value,from_id));
-			SendMessageRec(gizmo,vis_msg);
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 }

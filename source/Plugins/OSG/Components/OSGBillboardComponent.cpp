@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/OSG/Components/OSGBillboardComponent.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
@@ -29,14 +31,9 @@
 
 namespace GASS
 {
-	OSGBillboardComponent::OSGBillboardComponent() : m_CastShadow(false),
-		m_OSGBillboard (NULL),
-		m_Width(1.0f),
-		m_Height(1.0f),
-		m_GroundOffset(0.1),
-		m_GeomFlags(GEOMETRY_FLAG_UNKNOWN),
-		m_Collision(true),
-		m_Geom(NULL)
+	OSGBillboardComponent::OSGBillboardComponent() : 
+		m_OSGBillboard (nullptr)
+		
 	{
 
 	}
@@ -69,10 +66,7 @@ namespace GASS
 	void OSGBillboardComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnLocationLoaded,LocationLoadedEvent,1));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnGeometryScale,GeometryScaleRequest,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnCollisionSettings,CollisionSettingsRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnVisibilityMessage,GeometryVisibilityRequest,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGBillboardComponent::OnSetColorMessage,BillboardColorRequest,0));
 	}
 
 	float OSGBillboardComponent::GetWidth() const
@@ -82,8 +76,7 @@ namespace GASS
 
 	void OSGBillboardComponent::SetWidth(float width)
 	{
-		m_Width = width;
-		_UpdateSize(m_Width,m_Height);
+		SetSize(width,m_Height);
 	}
 
 	float OSGBillboardComponent::GetHeight() const
@@ -93,8 +86,7 @@ namespace GASS
 
 	void OSGBillboardComponent::SetHeight(float height)
 	{
-		m_Height = height;
-		_UpdateSize(m_Width,m_Height);
+		SetSize(m_Width, height);
 	}
 
 	GeometryFlags OSGBillboardComponent::GetGeometryFlags() const
@@ -121,7 +113,7 @@ namespace GASS
 
 		//make offset
 		Vec3 corner = -east*0.5;
-		osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options("dds_flip");
+		auto* options = new osgDB::ReaderWriter::Options("dds_flip");
 
 		m_OSGBillboard = new osg::Billboard();
 		m_OSGBillboard->setMode(osg::Billboard::POINT_ROT_EYE);
@@ -135,7 +127,7 @@ namespace GASS
 		m_Geom = geom.get();
 
 		m_OSGBillboard->setPosition(0,osg::Vec3(0,0,static_cast<float>(m_GroundOffset)));
-		OSGNodeData* node_data = new OSGNodeData(shared_from_this());
+		auto* node_data = new OSGNodeData(shared_from_this());
 		m_OSGBillboard->setUserData(node_data);
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
@@ -148,14 +140,14 @@ namespace GASS
 
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
-		GetSceneObject()->PostEvent(GeometryChangedEventPtr(new GeometryChangedEvent(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this()))));
+		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 	}
 
 	AABox OSGBillboardComponent::GetBoundingBox() const
 	{
 		if(m_Geom)
 		{
-			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 			osg::Vec3 p_min = (*coords)[0];
 			osg::Vec3 p_max = (*coords)[2];
 			osg::Vec3 bb_size = p_max - p_min;
@@ -226,9 +218,9 @@ namespace GASS
 			osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
 			texture->setImage(image);
 
-			osg::ref_ptr<osg::AlphaFunc> alphaFunc = new osg::AlphaFunc;
-			alphaFunc->setFunction(osg::AlphaFunc::GEQUAL,0.05f);
-			stateset->setAttributeAndModes( alphaFunc.get(), osg::StateAttribute::ON );
+			osg::ref_ptr<osg::AlphaFunc> alpha_func = new osg::AlphaFunc;
+			alpha_func->setFunction(osg::AlphaFunc::GEQUAL,0.05f);
+			stateset->setAttributeAndModes( alpha_func.get(), osg::StateAttribute::ON );
 
 			stateset->setTextureAttributeAndModes(0,texture.get(),osg::StateAttribute::ON);
 			geom->setStateSet(stateset.get());
@@ -251,21 +243,23 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnGeometryScale(GeometryScaleRequestPtr message)
+	void OSGBillboardComponent::SetScale(float width, float height)
 	{
-		const Vec3 scale = message->GetScale();
-		_UpdateSize(static_cast<float>(m_Width*scale.x), 
-			        static_cast<float>(m_Height*scale.y));
+		m_ScaleWidth = width;
+		m_ScaleHeight = height;
+		SetSize(m_Width, m_Height);
 	}
 
-	void OSGBillboardComponent::_UpdateSize(float width,float height)
+	void OSGBillboardComponent::SetSize(float width,float height)
 	{
+		m_Width = width; 
+		m_Height = width;
 		if(m_OSGBillboard.valid())
 		{
-			osg::Vec3Array* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
+			auto* coords = static_cast<osg::Vec3Array*> (m_Geom->getVertexArray());
 
-			osg::Vec3f osg_height(0.0f,0.0f, height);
-			osg::Vec3f osg_width(width,0.0f,0.0f);
+			osg::Vec3f osg_height(0.0f,0.0f, m_ScaleHeight*height);
+			osg::Vec3f osg_width(m_ScaleWidth*width,0.0f,0.0f);
 			osg::Vec3f osg_corner = -osg_width*0.5f;
 
 
@@ -277,19 +271,17 @@ namespace GASS
 		}
 	}
 
-	void OSGBillboardComponent::OnSetColorMessage(BillboardColorRequestPtr message)
+	void OSGBillboardComponent::SetColor(const ColorRGBA &color)
 	{
 		if(m_Geom)
 		{
-			const ColorRGBA color = message->GetColor();
-			osg::Vec4Array* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
+			auto* colors = static_cast<osg::Vec4Array*> (m_Geom->getColorArray());
 			osg::Vec4 osg_color = OSGConvert::ToOSG(color);
 			(*colors)[0]= osg_color;
 			(*colors)[1]= osg_color;
 			(*colors)[2]= osg_color;
 			(*colors)[3]= osg_color;
 			m_Geom->setColorArray(colors);
-
 		}
 	}
 
@@ -319,13 +311,18 @@ namespace GASS
 		return m_Collision;
 	}
 
-	void OSGBillboardComponent::OnVisibilityMessage(GeometryVisibilityRequestPtr message)
+	bool OSGBillboardComponent::GetVisible() const
 	{
-		bool visibility = message->GetValue();
+		if (m_OSGBillboard)
+			return m_OSGBillboard->getNodeMask() > 0;
+		return false;
+	}
 
+	void OSGBillboardComponent::SetVisible(bool value)
+	{
 		if(m_OSGBillboard)
 		{
-			if(visibility)
+			if(value)
 			{
 				m_OSGBillboard->setNodeMask(1);
 				SetGeometryFlags(m_GeomFlags);

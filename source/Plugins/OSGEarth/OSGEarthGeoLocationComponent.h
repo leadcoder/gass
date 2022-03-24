@@ -29,10 +29,10 @@ namespace GASS
 {
 	class OSGGraphicsSceneManager;
 	class OSGEarthGeoLocationComponent;
-	typedef GASS_SHARED_PTR<OSGEarthGeoLocationComponent>  OSGEarthGeoLocationComponentPtr;
-	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;
+	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 
-	class OSGEarthGeoLocationComponent : public Reflection<OSGEarthGeoLocationComponent,BaseSceneComponent>, public ILocationComponent,  public IOSGNode, public osg::NodeCallback
+	class OSGEarthGeoLocationComponent : public Reflection<OSGEarthGeoLocationComponent,Component>, public ILocationComponent,  public IOSGNode, public osg::NodeCallback
 	{
 	public:
 		OSGEarthGeoLocationComponent();
@@ -69,20 +69,12 @@ namespace GASS
 		void operator()(osg::Node* node, osg::NodeVisitor* nv) override;
 		bool GetAttachToParent() const override;
 	protected:
-		void OnPositionMessage(PositionRequestPtr message);
-		void OnRotationMessage(RotationRequestPtr  message);
-		void OnScaleMessage(ScaleRequestPtr message);
-		void OnWorldPositionRequest(WorldPositionRequestPtr message);
-		void OnWorldRotationMessage(WorldRotationRequestPtr message);
-		void OnParentChangedMessage(ParentChangedEventPtr message);
-		void OnAttachToParent(AttachToParentRequestPtr message);
-		void OnVisibilityMessage(LocationVisibilityRequestPtr message);
-
+		void OnParentChanged(ParentChangedEventPtr message);
 		void SetAttachToParent(bool value) override;
 		
 		//helper
-		OSGEarthGeoLocationComponentPtr _GetParentLocation();
-		void _SendTransMessage();
+		OSGEarthGeoLocationComponentPtr GetParentLocation();
+		void SendTransMessage();
 		//! relative position of the scene node.
 		Vec3 m_Pos;
 		//! relative rotation of the scene node.
@@ -90,14 +82,14 @@ namespace GASS
 		Quaternion m_QRot;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
-		bool m_AttachToParent;
+		bool m_AttachToParent{false};
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
 		osg::ref_ptr<osgEarth::GeoTransform> m_GeoTransform;
 		IOSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-		int m_NodeMask;
+		int m_NodeMask{0};
 		osg::ref_ptr<osgEarth::MapNode> m_Map;
 	};
 
-	typedef GASS_WEAK_PTR<OSGEarthGeoLocationComponent> OSGEarthGeoLocationComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGEarthGeoLocationComponent> OSGEarthGeoLocationComponentPtr;	
+	using OSGEarthGeoLocationComponentWeakPtr = std::weak_ptr<OSGEarthGeoLocationComponent>;
+	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;	
 }

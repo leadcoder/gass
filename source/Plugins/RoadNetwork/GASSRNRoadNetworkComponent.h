@@ -17,9 +17,9 @@ namespace GASS
 {
 	class AIRoadLaneSectionComponent;
 
-	typedef GASS_SHARED_PTR<AIRoadLaneSectionComponent> AIRoadLaneSectionComponentPtr;
+	using AIRoadLaneSectionComponentPtr = std::shared_ptr<AIRoadLaneSectionComponent>;
 
-	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,BaseSceneComponent> , public IGraphComponent, public IRoadNavigationComponent
+	class RNRoadNetworkComponent :  public Reflection<RNRoadNetworkComponent,Component> , public IGraphComponent, public IRoadNavigationComponent
 	{
 	public:
 		RNRoadNetworkComponent(void);
@@ -40,22 +40,22 @@ namespace GASS
 		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3& from, const Vec3& to, NavigationPath& path) const override;
 		bool GetClosestRoadPoint(const Vec3 &point, Vec3 &closest_point) const override;
 	private:
-		void _CreateEditableFromNetwork();
-		void _CreateNetworkFromEditable();
+		void CreateEditableFromNetwork();
+		void CreateNetworkFromEditable();
 		bool GetShowGraph() const;
 		void SetShowGraph(bool value);
 		//void Rebuild();
 		//bool DebugSearchGraph();
 		void SaveXML(tinyxml2::XMLElement * elem) override;
 		void LoadXML(tinyxml2::XMLElement * elem) override;
-		bool m_Edit;
-		bool m_ShowGraph;
-		bool m_Optimize;
+		bool m_Edit{true};
+		bool m_ShowGraph{false};
+		bool m_Optimize{true};
 		RoadNetwork m_Network;
 		std::string m_NodeTemplate;
 		std::string m_EdgeTemplate;
 	};
-	typedef GASS_SHARED_PTR<RNRoadNetworkComponent> RNRoadNetworkComponentPtr;
+	using RNRoadNetworkComponentPtr = std::shared_ptr<RNRoadNetworkComponent>;
 
 }
 #endif

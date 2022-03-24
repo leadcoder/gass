@@ -30,13 +30,13 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 	
 	/**
 		Component that utilize physx character controller. 
 	*/
 	
-	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,BaseSceneComponent>, 
+	class PhysXCharacterComponent : public Reflection<PhysXCharacterComponent,Component>, 
 		public physx::PxControllerBehaviorCallback, 
 		public physx::PxUserControllerHitReport,
 		public IPlatformComponent
@@ -80,21 +80,21 @@ namespace GASS
 	protected:
 		bool m_Initialized;
 		PhysXPhysicsSceneManager* m_SceneManager = nullptr;
-		physx::PxRigidDynamic* m_Actor;
-		float m_ThrottleInput;
-		float m_SteerInput;
+		physx::PxRigidDynamic* m_Actor{nullptr};
+		float m_ThrottleInput{0};
+		float m_SteerInput{0};
 		float m_Mass;
-		Float m_MaxSpeed;
-		Float m_CurrentVel;
-		Float m_StandingSize;
-		Float m_Radius;
-		Float m_YawMaxVelocity;
-		Float m_Acceleration;
-		physx::PxCapsuleController* m_Controller;
-		bool m_TrackTransformation;
+		Float m_MaxSpeed{4};
+		Float m_CurrentVel{0};
+		Float m_StandingSize{1.8};
+		Float m_Radius{0.4};
+		Float m_YawMaxVelocity{2};
+		Float m_Acceleration{5.2};
+		physx::PxCapsuleController* m_Controller{nullptr};
+		bool m_TrackTransformation{true};
 		Quaternion m_Rotation = Quaternion::IDENTITY;
 		
 	};
-	typedef GASS_SHARED_PTR<PhysXCharacterComponent> PhysXCharacterComponentPtr;
+	using PhysXCharacterComponentPtr = std::shared_ptr<PhysXCharacterComponent>;
 }
 

@@ -51,7 +51,7 @@ namespace GASS
 
 	dGeomID ODEMeshGeometryComponent::CreateODEGeom()
 	{
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 		MeshComponentPtr mesh  = GASS_DYNAMIC_PTR_CAST<IMeshComponent>(GetGeometry());
 		if(mesh)
 		{
@@ -62,7 +62,7 @@ namespace GASS
 				col_mesh_id = res->GetResource().Name();
 			}
 			ODEPhysicsCollisionMesh col_mesh = ODEPhysicsSceneManagerPtr(m_SceneManager)->CreateCollisionMesh(col_mesh_id,mesh);
-			geom_id = dCreateTriMesh(0, col_mesh.ID, 0, 0, 0);
+			geom_id = dCreateTriMesh(GetSpace(), col_mesh.ID, nullptr, nullptr, nullptr);
 		}
 		return geom_id; 
 	}

@@ -40,7 +40,7 @@ namespace GASS
 	*/
 
 	template<class TYPE> class TAABox;
-	typedef TAABox<Float> AABox;
+	using AABox = TAABox<Float>;
 	
 	template<class TYPE>
 	class TSphere
@@ -57,9 +57,9 @@ namespace GASS
 		TYPE m_Radius;
 		TVec3<TYPE> m_Pos;
 	};
-	typedef TSphere<double> Sphered;
-	typedef TSphere<float> Spheref;
-	typedef TSphere<Float> Sphere;
+	using Sphered = TSphere<double>;
+	using Spheref = TSphere<float>;
+	using Sphere = TSphere<Float>;
 
 	template<class TYPE>
 	TSphere<TYPE>::TSphere(const TVec3<TYPE>& center, TYPE radius) : m_Radius (radius),

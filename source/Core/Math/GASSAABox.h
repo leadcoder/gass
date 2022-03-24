@@ -195,13 +195,13 @@ namespace GASS
 		TVec3<TYPE> Min;
 
 	private:
-		bool _LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
+		bool LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const;
 	};
 
-	typedef TAABox<Float> AABox;
-	typedef TAABox<double> AABoxd;
-	typedef TAABox<float> AABoxf;
-	typedef TAABox<int> AABoxi;
+	using AABox = TAABox<Float>;
+	using AABoxd = TAABox<double>;
+	using AABoxf = TAABox<float>;
+	using AABoxi = TAABox<int>;
 
 	template<class TYPE>
 	TAABox<TYPE>::TAABox()
@@ -364,16 +364,13 @@ namespace GASS
 		// Get polygon center
 		const TVec3<TYPE> center = poly.GetCenter();
 
-		if (PointInside(center)) return true;
+		if (PointInside(center)) 
+			return true;
 
-		const TVec3<TYPE>* p1, *p2;
 		for (i = 0; i < poly.m_VertexVector.size(); i++)
 		{
-			size_t i2;
-			if (i == poly.m_VertexVector.size() - 1) i2 = 0; else i2 = i + 1;
-			p1 = &poly.m_VertexVector[i];
-			p2 = &poly.m_VertexVector[i2];
-			if (LineIntersect(TLineSegment<TYPE>(*p1, *p2))) 
+			const size_t i2 = (i == (poly.m_VertexVector.size() - 1)) ? 0 : i + 1;
+			if (LineIntersect(TLineSegment<TYPE>(poly.m_VertexVector[i], poly.m_VertexVector[i2])))
 				return true;
 		}
 		return false;
@@ -574,20 +571,20 @@ namespace GASS
 		TYPE texit = static_cast<TYPE>(1.0);
 
 		// test X slab
-		if (!_LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
+		if (!LineSlabIntersect(Min.x, Max.x, line_seg.m_Start.x, line_seg.m_End.x, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Y slab
 
-		if (!_LineSlabIntersect(Min.y, Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
+		if (!LineSlabIntersect(Min.y, Max.y, line_seg.m_Start.y, line_seg.m_End.y, tenter, texit))
 		{
 			return false;
 		}
 
 		// test Z slab
-		if (!_LineSlabIntersect(Min.z, Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
+		if (!LineSlabIntersect(Min.z, Max.z, line_seg.m_Start.z, line_seg.m_End.z, tenter, texit))
 		{
 			return false;
 		}
@@ -604,7 +601,7 @@ namespace GASS
 	}
 
 	template<class TYPE>
-	bool TAABox<TYPE>::_LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const
+	bool TAABox<TYPE>::LineSlabIntersect(TYPE slabmin, TYPE slabmax, TYPE line_start, TYPE line_end, TYPE& tbenter, TYPE& tbexit) const
 	{
 		TYPE raydir = line_end - line_start;
 

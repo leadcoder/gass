@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , BaseSceneComponent> , public IGeometryComponent , public IManualMeshComponent
+	class OSGManualMeshComponent : public Reflection<OSGManualMeshComponent , Component> , public IGeometryComponent , public IManualMeshComponent
 	{
 	public:
 		OSGManualMeshComponent(void);
@@ -41,38 +41,35 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
 
 		//IManualMeshComponent interface
 		GraphicsMesh GetMeshData() const override;
 		void SetMeshData(const GraphicsMesh &mesh) override;
 		void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index) override;
-
+		void Clear() override;
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }
 	protected:
 		
-		osg::ref_ptr<osg::Geometry>  _CreateSubMesh(GraphicsSubMeshPtr sm);
+		osg::ref_ptr<osg::Geometry>  CreateSubMesh(GraphicsSubMeshPtr sm);
 		void SetCastShadow(bool value);
 		void SetReceiveShadow(bool value);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnDataMessage(ManualMeshDataRequestPtr message);
-		void OnClearMessage(ClearManualMeshRequestPtr message);
-		void OnMaterialMessage(ReplaceMaterialRequestPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void CreateMesh(GraphicsMeshPtr data);
-		void Clear();
+		
 		
 		std::vector<osg::ref_ptr<osg::Geometry> > m_OSGGeometries;
 		osg::ref_ptr<osg::Geode> m_GeoNode;
 		std::vector<GraphicsMesh> m_MeshData;
-		bool m_CastShadow;
-		bool m_ReceiveShadow;
+		bool m_CastShadow{false};
+		bool m_ReceiveShadow{false};
 		OSGGraphicsSystemPtr m_GFXSystem;
-		bool m_Collision;
+		bool m_Collision{true};
 		GeometryFlagsBinder m_GeometryFlagsBinder;
 	};
 
-	typedef GASS_WEAK_PTR<OSGManualMeshComponent> OSGManualMeshComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGManualMeshComponent> OSGManualMeshComponentPtr;
+	using OSGManualMeshComponentWeakPtr = std::weak_ptr<OSGManualMeshComponent>;
+	using OSGManualMeshComponentPtr = std::shared_ptr<OSGManualMeshComponent>;
 }

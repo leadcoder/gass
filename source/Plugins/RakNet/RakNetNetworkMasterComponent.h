@@ -23,7 +23,8 @@
 
 
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/Interface/GASSINetworkComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSNetworkSceneObjectMessages.h"
 #include "Sim/GASSCommon.h"
 #include "Plugins/RakNet/RakNetMessages.h"
@@ -33,11 +34,11 @@ namespace GASS
 {
 	class SceneObject;
 	class RakNetMasterReplica;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
-	typedef std::vector<NetworkPackagePtr> NetworkPackageVector;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
+	using NetworkPackageVector = std::vector<NetworkPackagePtr>;
 
-	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,BaseSceneComponent>
+	class RakNetNetworkMasterComponent : public Reflection<RakNetNetworkMasterComponent,INetworkComponent>
 	{
 	public:
 		RakNetNetworkMasterComponent();
@@ -49,18 +50,18 @@ namespace GASS
 		void SetReplica(RakNetMasterReplica* replica) {m_Replica=replica;}
 		void SetAttributes(const std::vector<std::string> &attributes){m_Attributes = attributes;}
 		std::vector<std::string> GetAttributes()const {return m_Attributes;}
+		bool IsRemote() const override;
+		void Serialize(NetworkPackagePtr package, unsigned int timeStamp, NetworkAddress address) override;
 		void Serialize(bool *sendTimestamp, RakNet::BitStream *outBitStream, RakNetTime lastSendTime, PacketPriority *priority, PacketReliability *reliability, RakNetTime currentTime, SystemAddress systemAddress, unsigned int &flags);
 		void Deserialize(RakNet::BitStream *inBitStream, RakNetTime timestamp, RakNetTime lastDeserializeTime, SystemAddress systemAddress );
-
 	private:
 		void GeneratePartID(SceneObjectPtr obj, int &id);
-		void OnSerialize(NetworkSerializeRequestPtr message);
 		void OnNetworkPostUpdate(NetworkPostUpdateEventPtr message);
-		RakNetMasterReplica* m_Replica;
+		RakNetMasterReplica* m_Replica{nullptr};
 		std::vector<std::string> m_Attributes;
 		NetworkPackageVector m_SerializePackages;
 	};
 
-	typedef GASS_SHARED_PTR<RakNetNetworkMasterComponent> RakNetNetworkMasterComponentPtr;
+	using RakNetNetworkMasterComponentPtr = std::shared_ptr<RakNetNetworkMasterComponent>;
 }
 #endif

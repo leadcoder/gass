@@ -22,7 +22,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 
 namespace GASS
@@ -30,13 +30,14 @@ namespace GASS
 	/**
 		Component that create  box geometry
 	*/
-	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,BaseSceneComponent> , public IShape
+	class BoxGeometryComponent : public Reflection<BoxGeometryComponent,Component> , public IShape
 	{
 	public:
 		BoxGeometryComponent(void);
 		~BoxGeometryComponent(void) override;
 		static void RegisterReflection();
 		void OnInitialize() override;
+		void OnPostInitialize() override;
 		bool IsPointInside(const Vec3 &point) const override;
 		Vec3 GetRandomPoint() const override;
 	protected:
@@ -46,7 +47,7 @@ namespace GASS
 		bool GetLines() const;
 		void SetLines(bool value);
 	private:
-		bool m_Lines;
+		bool m_Lines{true};
 		Vec3 m_Size;
 	};
 }

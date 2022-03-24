@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "ForceToSoundComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
@@ -27,15 +29,12 @@
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIMissionSceneManager.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 namespace GASS
 {
-	ForceToSoundComponent::ForceToSoundComponent() : 
-		m_TargetPitch(1.0),
-		m_Pitch(1.0),
-		m_MaxVelRequest(0),
-		m_MaxForce(0),
-		m_ForceLimit(300)
+	ForceToSoundComponent::ForceToSoundComponent() 
+		
 	{
 
 	}
@@ -58,13 +57,18 @@ namespace GASS
 		
 		RegisterForPostUpdate<IMissionSceneManager>();
 
-		//Play engine sound
-		
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
+		m_Sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>().get();
+		if (m_Sound)
+		{
+			m_Sound->SetPlay(true);
+		}
 	}
 
 	void ForceToSoundComponent::SceneManagerTick(double delta_time)
 	{
+
+		
+
 		//m_DT = delta_time;
 		m_TargetPitch = 1.2;
 		Float normalized_force = std::min<Float>(1.0, m_MaxForce/m_ForceLimit);
@@ -82,7 +86,9 @@ namespace GASS
 			m_Pitch += delta_time*0.5;
 		else
 			m_Pitch -= delta_time*0.5;
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PITCH, static_cast<float>(m_Pitch))));
+
+		if(m_Sound)
+			m_Sound->SetPitch(static_cast<float>(m_Pitch));
 		//reset!
 		m_MaxVelRequest = 0;
 		m_MaxForce = 0;

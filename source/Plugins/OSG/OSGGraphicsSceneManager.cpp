@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSScene.h"
 #include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
@@ -87,13 +89,13 @@ namespace GASS
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
 	{
 		if(m_ShadowedScene.valid())
-			m_ShadowedScene->setShadowTechnique(0);
+			m_ShadowedScene->setShadowTechnique(nullptr);
 	}
 
 	void OSGGraphicsSceneManager::RegisterReflection()
 	{
 		SceneManagerFactory::GetPtr()->Register<OSGGraphicsSceneManager>("OSGGraphicsSceneManager");
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("OSG Scene Manager", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("OSG Scene Manager", OF_VISIBLE));
 		RegisterGetSet("FogMode", &OSGGraphicsSceneManager::GetFogMode, &OSGGraphicsSceneManager::SetFogMode, PF_VISIBLE | PF_EDITABLE, "Fog type");
 		RegisterGetSet( "FogStart", &OSGGraphicsSceneManager::GetFogStart, &OSGGraphicsSceneManager::SetFogStart,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet( "FogEnd", &OSGGraphicsSceneManager::GetFogEnd, &OSGGraphicsSceneManager::SetFogEnd,PF_VISIBLE | PF_EDITABLE,"");
@@ -170,7 +172,7 @@ namespace GASS
 			{
 				if (!m_ShadowedScene)
 				{
-					m_ShadowedScene = _CreateShadowNode();
+					m_ShadowedScene = CreateShadowNode();
 					m_RootNode->addChild(m_ShadowedScene);
 				}
 
@@ -278,7 +280,7 @@ namespace GASS
 	}
 
 #if 1
-	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::_CreateShadowNode()
+	osg::ref_ptr<osgShadow::ShadowedScene> OSGGraphicsSceneManager::CreateShadowNode()
 	{
 		osg::ref_ptr<osgShadow::ViewDependentShadowMap> vdsm = new osgShadow::ViewDependentShadowMapExt;
 		osg::ref_ptr<osgShadow::ShadowedScene> ss = new osgShadow::ShadowedScene;
@@ -293,15 +295,15 @@ namespace GASS
 		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
 		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
-		unsigned int numShadowMaps = 2;
+		unsigned int num_shadow_maps = 2;
 		unsigned int unit = 6;
 		settings->setBaseShadowTextureUnit(unit);
-		settings->setNumShadowMapsPerLight(numShadowMaps);
+		settings->setNumShadowMapsPerLight(num_shadow_maps);
 		settings->setMultipleShadowMapHint(osgShadow::ShadowSettings::CASCADED);
 		settings->setTextureSize(osg::Vec2s(m_ShadowTextureSize, m_ShadowTextureSize));
 		//shader hint
 		std::stringstream num_shadow_maps_ss;
-		num_shadow_maps_ss << numShadowMaps;
+		num_shadow_maps_ss << num_shadow_maps;
 		ss->getOrCreateStateSet()->setDefine("OSG_NUM_SHADOW_MAPS", num_shadow_maps_ss.str());
 		
 		ss->getOrCreateStateSet()->addUniform(new osg::Uniform("osg_ShadowTextureUnit0", int(unit)));

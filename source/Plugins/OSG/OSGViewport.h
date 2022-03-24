@@ -45,5 +45,5 @@ namespace GASS
 		CameraComponentWeakPtr m_Camera;
 		osgViewer::View* m_OSGView;
 	};
-	typedef GASS_SHARED_PTR<OSGViewport> OSGViewportPtr;
+	using OSGViewportPtr = std::shared_ptr<OSGViewport>;
 }

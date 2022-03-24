@@ -41,5 +41,5 @@ namespace GASS
 		bool GetSerialize() const override {return false;}
 	protected:
 	};
-	typedef GASS_SHARED_PTR<SimulationSceneManager> SimulationSceneManagerPtr; 
+	using SimulationSceneManagerPtr = std::shared_ptr<SimulationSceneManager>; 
 }

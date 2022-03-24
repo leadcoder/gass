@@ -7,32 +7,32 @@
 
 namespace GASS
 {
-	float normalizeMouseDelta(float value)
+	float NormalizeMouseDelta(float value)
 	{
-		const float mouseSpeed = 20;
+		const float mouse_speed = 20;
 		float ret = 0;
-		if (value > mouseSpeed)
+		if (value > mouse_speed)
 			ret = 1;
-		else if (value < -mouseSpeed)
+		else if (value < -mouse_speed)
 			ret = -1;
 		else
-			ret = value / mouseSpeed;
+			ret = value / mouse_speed;
 		return ret;
 	}
 
-	MouseData getMouseData(const osgGA::GUIEventAdapter& ea, const MouseData& last_state)
+	MouseData GetMouseData(const osgGA::GUIEventAdapter& ea, const MouseData& last_state)
 	{
 		MouseData mouse_data;
 		mouse_data.XAbs = ea.getX();
 		mouse_data.YAbs = ea.getY();
-		mouse_data.XRel = normalizeMouseDelta(static_cast<float>(mouse_data.XAbs - last_state.XAbs));
-		mouse_data.YRel = normalizeMouseDelta(static_cast<float>(last_state.YAbs - mouse_data.YAbs));
+		mouse_data.XRel = NormalizeMouseDelta(static_cast<float>(mouse_data.XAbs - last_state.XAbs));
+		mouse_data.YRel = NormalizeMouseDelta(static_cast<float>(last_state.YAbs - mouse_data.YAbs));
 		mouse_data.XAbsNorm = (1.0f + ea.getXnormalized()) / 2.0f;
 		mouse_data.YAbsNorm = 1.0f - (1.0f + ea.getYnormalized()) / 2.0f;
 		return mouse_data;
 	}
 
-	std::pair<bool, MouseButtonId> getMouseButton(const osgGA::GUIEventAdapter& ea)
+	std::pair<bool, MouseButtonId> GetMouseButton(const osgGA::GUIEventAdapter& ea)
 	{
 		std::pair<bool, MouseButtonId> ret;
 		if (ea.getButtonMask() & osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
@@ -62,8 +62,8 @@ namespace GASS
 	{
 		if (ea.getHandled())
 			return false;
-		const bool wantCaptureMouse = false;
-		const bool wantCaptureKeyboard = false;
+		const bool want_capture_mouse = false;
+		const bool want_capture_keyboard = false;
 		using osgKey = osgGA::GUIEventAdapter::KeySymbol;
 		static std::map<int, int> keymap;
 		if (keymap.empty())
@@ -131,21 +131,21 @@ namespace GASS
 		case osgGA::GUIEventAdapter::KEYDOWN:
 		case osgGA::GUIEventAdapter::KEYUP:
 		{
-			const bool isKeyDown = ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN;
+			const bool is_key_down = ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN;
 			const int c = ea.getUnmodifiedKey();
-			isKeyDown ? m_IS->InjectKeyPressed(keymap[c], keymap[c]) : m_IS->InjectKeyReleased(keymap[c], keymap[c]);
-			return wantCaptureKeyboard;
+			is_key_down ? m_IS->InjectKeyPressed(keymap[c], keymap[c]) : m_IS->InjectKeyReleased(keymap[c], keymap[c]);
+			return want_capture_keyboard;
 		}
 		case (osgGA::GUIEventAdapter::RELEASE):
 		case (osgGA::GUIEventAdapter::PUSH):
 		{
-			const bool isPushed = ea.getEventType() == osgGA::GUIEventAdapter::PUSH;
-			const MouseData mouse_data = getMouseData(ea, last_data);
+			const bool is_pushed = ea.getEventType() == osgGA::GUIEventAdapter::PUSH;
+			const MouseData mouse_data = GetMouseData(ea, last_data);
 			last_data = mouse_data;
 			static std::pair<bool, MouseButtonId> button_data;
-			if (isPushed)
+			if (is_pushed)
 			{
-				button_data = getMouseButton(ea);
+				button_data = GetMouseButton(ea);
 				if (button_data.first)
 					m_IS->InjectMousePressed(mouse_data, button_data.second);
 			}
@@ -154,20 +154,20 @@ namespace GASS
 				if (button_data.first)
 					m_IS->InjectMouseReleased(mouse_data, button_data.second);
 			}
-			return wantCaptureMouse;
+			return want_capture_mouse;
 		}
 		case (osgGA::GUIEventAdapter::DRAG):
 		case (osgGA::GUIEventAdapter::MOVE):
 		{
-			const MouseData mouse_data = getMouseData(ea, last_data);
+			const MouseData mouse_data = GetMouseData(ea, last_data);
 			last_data = mouse_data;
 			m_IS->InjectMouseMoved(mouse_data);
-			return wantCaptureMouse;
+			return want_capture_mouse;
 		}
 		case (osgGA::GUIEventAdapter::SCROLL):
 		{
 			//mouseWheel_ = ea.getScrollingMotion() == osgGA::GUIEventAdapter::SCROLL_UP ? 1.0 : -1.0;
-			return wantCaptureMouse;
+			return want_capture_mouse;
 		}
 		default:
 		{
@@ -201,7 +201,7 @@ namespace GASS
 
 	void OSGInputSystem::RemoveKeyListener(IKeyListener* key_listener)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while (iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -220,7 +220,7 @@ namespace GASS
 
 	void OSGInputSystem::RemoveMouseListener(IMouseListener* mouse_listener)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while (iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -254,7 +254,7 @@ namespace GASS
 
 	void OSGInputSystem::InjectMouseMoved(const MouseData& data)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while (iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -265,7 +265,7 @@ namespace GASS
 
 	void OSGInputSystem::InjectMousePressed(const MouseData& data, MouseButtonId id)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while (iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -276,7 +276,7 @@ namespace GASS
 
 	void OSGInputSystem::InjectMouseReleased(const MouseData& data, MouseButtonId id)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while (iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -287,7 +287,7 @@ namespace GASS
 
 	void OSGInputSystem::InjectKeyPressed(int key, unsigned int text)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while (iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -298,7 +298,7 @@ namespace GASS
 
 	void OSGInputSystem::InjectKeyReleased(int key, unsigned int text)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while (iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;

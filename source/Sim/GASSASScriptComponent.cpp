@@ -24,7 +24,7 @@
 
 namespace GASS
 {
-	ASScriptComponent::ASScriptComponent() : m_ScriptObject(nullptr)
+	ASScriptComponent::ASScriptComponent()  
 	{
 	}
 

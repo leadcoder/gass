@@ -29,7 +29,7 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
 	class PhysXHingeComponent : public Reflection<PhysXHingeComponent,PhysXBaseJointComponent> , 
 		public IPhysicsHingeJointComponent
@@ -73,21 +73,21 @@ namespace GASS
 		void SetEnableDrive(bool value);
 		bool GetEnableDrive() const {return m_EnableDrive;}
 	private:
-		float m_DriveForceLimit;
-		float m_DriveTargetVelocity;
+		float m_DriveForceLimit{PX_MAX_F32};
+		float m_DriveTargetVelocity{0};
 		Vec3 m_RotationAxis;
 		Vec3 m_Offset;
 		float m_SpringJointForce;
-		float m_HighStop;
-		float m_LowStop;
-		bool m_EnableLimit;
-		bool m_EnableDrive;
-		float m_TargetAngle;
-		float m_Damping;
-		float m_Spring;
+		float m_HighStop{0};
+		float m_LowStop{0};
+		bool m_EnableLimit{false};
+		bool m_EnableDrive{true};
+		float m_TargetAngle{0};
+		float m_Damping{0};
+		float m_Spring{0};
 		
-		physx::PxD6Joint *m_RevoluteJoint;
+		physx::PxD6Joint *m_RevoluteJoint{nullptr};
 	};
-	typedef GASS_SHARED_PTR<PhysXHingeComponent> PhysXHingeComponentPtr;
+	using PhysXHingeComponentPtr = std::shared_ptr<PhysXHingeComponent>;
 }
 

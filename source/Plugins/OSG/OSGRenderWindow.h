@@ -27,12 +27,12 @@ namespace GASS
 {
 	class OSGGraphicsSystem;
 	class OSGViewport;
-	typedef GASS_SHARED_PTR<OSGViewport> OSGViewportPtr;
+	using OSGViewportPtr = std::shared_ptr<OSGViewport>;
 
 	class OSGRenderWindow  : public IRenderWindow
 	{
 	public:
-		typedef std::vector<OSGViewportPtr> OSGViewportVector;
+		using OSGViewportVector = std::vector<OSGViewportPtr>;
 
 		OSGRenderWindow(OSGGraphicsSystem* system, osg::ref_ptr<osg::GraphicsContext> win);
 		~OSGRenderWindow() override;
@@ -51,5 +51,5 @@ namespace GASS
 		ViewportVector m_Viewports;
 		OSGGraphicsSystem* m_System;
 	};
-	typedef GASS_SHARED_PTR<OSGRenderWindow> OSGRenderWindowPtr;
+	using OSGRenderWindowPtr = std::shared_ptr<OSGRenderWindow>;
 }

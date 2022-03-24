@@ -23,7 +23,7 @@
 
 namespace GASS
 {
-	class OSGEarthSkyComponent : public Reflection<OSGEarthSkyComponent,BaseSceneComponent> 
+	class OSGEarthSkyComponent : public Reflection<OSGEarthSkyComponent,Component> 
 	{
 	public:
 		OSGEarthSkyComponent();

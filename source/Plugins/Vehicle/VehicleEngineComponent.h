@@ -26,7 +26,7 @@
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSInputMessages.h"
 #include "Core/Utils/GASSPIDControl.h"
 
@@ -35,8 +35,8 @@ namespace GASS
 
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
 	class VehicleWheel :  public GASS_ENABLE_SHARED_FROM_THIS<VehicleWheel> ,public IMessageListener
 	{
@@ -51,7 +51,7 @@ namespace GASS
 		float m_Velocity;
 		float m_AngularVelocity;
 	};
-	typedef GASS_SHARED_PTR<VehicleWheel> VehicleWheelPtr;
+	using VehicleWheelPtr = std::shared_ptr<VehicleWheel>;
 
 	enum EngineType
 	{
@@ -59,7 +59,7 @@ namespace GASS
 		ET_TANK,
 	};
 
-	class VehicleEngineComponent :  public Reflection<VehicleEngineComponent,BaseSceneComponent>
+	class VehicleEngineComponent :  public Reflection<VehicleEngineComponent,Component>
 	{
 	public:
 		VehicleEngineComponent();
@@ -147,61 +147,61 @@ namespace GASS
 
 		//members attributes
 		std::string m_VehicleEngineComponentType;
-		float m_Power;
-		bool m_SmoothRPMOutput;
-		float m_MaxBrakeTorque;
-		float m_ConstantTorque;
-		float m_MinRPM;
-		float m_MaxRPM;
-		float m_WheelRPM;
-		float m_VehicleEngineRPM;
-		float m_ThrottleAccel;
+		float m_Power{0.2f};
+		bool m_SmoothRPMOutput{true};
+		float m_MaxBrakeTorque{1000};
+		float m_ConstantTorque{0};
+		float m_MinRPM{500};
+		float m_MaxRPM{4000};
+		float m_WheelRPM{0};
+		float m_VehicleEngineRPM{0};
+		float m_ThrottleAccel{2};
 		
-		float m_RPM;
+		float m_RPM{0};
 		std::string m_InputToThrottle;
 		std::string m_InputToSteer;
-		bool m_Invert;
-		float m_VehicleSpeed;
+		bool m_Invert{false};
+		float m_VehicleSpeed{0};
 
 		//input holders
-		int m_ShiftDown;
-		int m_ShiftUp;
-		float m_DesiredThrottle;
-		float m_DesiredSteer;
+		int m_ShiftDown{0};
+		int m_ShiftUp{0};
+		float m_DesiredThrottle{0};
+		float m_DesiredSteer{0};
 
 		//Auto gear shift settings
-		float m_ClutchTimeChangeGear;
-		float m_DeclutchTimeChangeGear;
-		float m_RPMGearChangeUp;
-		float m_RPMGearChangeDown;
-		bool m_Automatic;
-		float m_Clutch;
+		float m_ClutchTimeChangeGear{0.5f};
+		float m_DeclutchTimeChangeGear{0.5f};
+		float m_RPMGearChangeUp{1500};
+		float m_RPMGearChangeDown{700};
+		bool m_Automatic{1};
+		float m_Clutch{1};
 
 		//Auto gear shift helpers
-		float m_AutoClutchStart;
-		float m_AutoShiftStart;
-		int m_FutureGear;
+		float m_AutoClutchStart{0};
+		float m_AutoShiftStart{0};
+		int m_FutureGear{0};
 
 		//gear box
 		std::vector<float> m_GearBoxRatio;
-		int m_NeutralGear;
+		int m_NeutralGear{1};
 		//float m_GearBoxSpeed[MAX_GEARS];
-		int m_Gear; //current gear
-		double m_CurrentTime;
+		int m_Gear{2}; //current gear
+		double m_CurrentTime{0};
 
 		//Steering vars
 		//float m_TurnForce;
-		float m_MaxTurnForce;
-		float m_MaxTurnVel;
-		float m_TurnRPMAmount;
+		float m_MaxTurnForce{200};
+		float m_MaxTurnVel{1.0f};
+		float m_TurnRPMAmount{1.0f};
 
 		std::vector<SceneObjectRef> m_WheelObjects;
 		std::vector<VehicleWheelPtr> m_VehicleWheels;
 		Vec3 m_AngularVelocity;
 		PIDControl m_SteerCtrl;
-		bool m_Initialized;
-		bool m_Debug;
-		EngineType m_EngineType;
+		bool m_Initialized{false};
+		bool m_Debug{false};
+		EngineType m_EngineType{ET_TANK};
 
 	};
 }

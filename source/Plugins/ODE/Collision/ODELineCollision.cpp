@@ -21,14 +21,14 @@
 //#include "Plugins/ODE/Collision/ODEPhysicsSceneManager.h"
 #include "Plugins/ODE/Collision/ODELineCollision.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSimEngine.h"
 
 namespace GASS
 {
 	ODELineCollision::ODELineCollision(const Vec3 &ray_start, const Vec3 &ray_dir, GeometryFlags flags,bool return_first_collision, CollisionResult *result,dGeomID space_id, float segment_length) :m_Result(result),
 		m_Space(space_id),
-		m_RayGeom(0),
+		m_RayGeom(nullptr),
 		m_SegmentLength(segment_length),
 		m_ReturnFirstCollisionPoint(return_first_collision),
 		m_CollisionBits(flags),
@@ -58,7 +58,7 @@ namespace GASS
 			Float l = dir.Length();
 			const int segments = static_cast<int>(l / m_SegmentLength);
 
-			dGeomID ray = dCreateRay (0, m_RayLength);
+			dGeomID ray = dCreateRay (nullptr, m_RayLength);
 			dGeomSetCollideBits (ray,m_CollisionBits);
 			dGeomSetCategoryBits(ray,0);
 			double last_ray_length = m_RayLength;
@@ -75,13 +75,13 @@ namespace GASS
 				{
 					m_Result->Coll = false;
 					m_Result->CollDist = 0;
-					const Vec3 rayStart = m_RayStart + m_RayDir*(double(i)*ray_segment);
-					dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+					const Vec3 ray_start = m_RayStart + m_RayDir*(double(i)*ray_segment);
+					dGeomRaySet(ray, ray_start.x,ray_start.y,ray_start.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 					dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 
 					if(m_Result->Coll == true)
 					{
-						m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+						m_Result->CollPosition = ray_start + m_RayDir*m_Result->CollDist;
 						m_Result->CollDist = m_Result->CollDist+i*ray_segment;
 						dGeomDestroy(ray);
 						return;
@@ -93,14 +93,14 @@ namespace GASS
 			{
 				m_Result->Coll = false;
 				m_Result->CollDist = 0;
-				const Vec3 rayStart = m_RayStart + m_RayDir*(segments*ray_segment);
+				const Vec3 ray_start = m_RayStart + m_RayDir*(segments*ray_segment);
 
 				dGeomRaySetLength(ray,last_ray_length);
-				dGeomRaySet(ray, rayStart.x,rayStart.y,rayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
+				dGeomRaySet(ray, ray_start.x,ray_start.y,ray_start.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 				dSpaceCollide2(m_Space,ray,(void*) this,&ODELineCollision::Callback);
 				if(m_Result->Coll == true)
 				{
-					m_Result->CollPosition = rayStart + m_RayDir*m_Result->CollDist;
+					m_Result->CollPosition = ray_start + m_RayDir*m_Result->CollDist;
 					m_Result->CollDist = m_Result->CollDist+segments*ray_segment;
 				}
 			}
@@ -149,14 +149,14 @@ namespace GASS
 		}
 		else
 		{
-			m_RayGeom = dCreateRay (0, m_RayLength);
+			m_RayGeom = dCreateRay (nullptr, m_RayLength);
 			dGeomSetCollideBits (m_RayGeom,m_CollisionBits);
 			dGeomSetCategoryBits(m_RayGeom,m_CollisionBits);
 			dGeomRaySet(m_RayGeom, m_RayStart.x,m_RayStart.y,m_RayStart.z, m_RayDir.x,m_RayDir.y,m_RayDir.z);
 			assert(m_Result);
 			m_Result->Coll = false;
 			m_Result->CollDist = 0;
-			dGeomID geom_space = (dGeomID) m_Space;
+			auto geom_space = (dGeomID) m_Space;
 			dSpaceCollide2(geom_space,m_RayGeom,(void*) this,&ODELineCollision::Callback);
 			if(m_Result->Coll == true)
 			{
@@ -183,7 +183,7 @@ namespace GASS
 			long int col2 = dGeomGetCollideBits (o2);
 			if ((cat1 & col2) || (cat2 & col1))
 			{
-				ODELineCollision* rs = (ODELineCollision*) data;
+				auto* rs = (ODELineCollision*) data;
 				rs->ProcessCallback(o1,o2);
 			}
 		}
@@ -191,8 +191,8 @@ namespace GASS
 
 	void ODELineCollision::ProcessCallback(dGeomID o1, dGeomID o2)
 	{
-		dGeomID ray_geom =0;
-		dGeomID other_geom =0;
+		dGeomID ray_geom =nullptr;
+		dGeomID other_geom =nullptr;
 
 		if(dGeomGetClass(o1) == dRayClass)
 		{
@@ -207,7 +207,7 @@ namespace GASS
 
 		if(!dGeomIsEnabled(other_geom)) return;
 
-		BaseSceneComponent* pobj = static_cast<BaseSceneComponent*>(dGeomGetData(other_geom));
+		auto* pobj = static_cast<Component*>(dGeomGetData(other_geom));
 		SceneObjectPtr scene_object = pobj->GetSceneObject();
 
 		int num_contact_points = 10;

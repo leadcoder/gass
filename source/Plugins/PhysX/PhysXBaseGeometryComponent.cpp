@@ -25,11 +25,9 @@
 namespace GASS
 {
 
-	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :m_StaticActor(NULL),
-		m_Shape(NULL),
-		m_Offset(0,0,0),
-		m_SimulationCollision(true),
-		m_SizeFromMesh(true)
+	PhysXBaseGeometryComponent::PhysXBaseGeometryComponent() :
+		m_Offset(0,0,0)
+		
 	{
 	}
 
@@ -50,7 +48,7 @@ namespace GASS
 			if(m_Shape)
 				m_Shape->release();
 		}
-		m_Shape = NULL;
+		m_Shape = nullptr;
 	}
 
 	void PhysXBaseGeometryComponent::RegisterReflection()
@@ -97,7 +95,7 @@ namespace GASS
 			m_Shape->release();
 		m_Shape = CreateShape();
 		
-		if(m_Shape == NULL)
+		if(m_Shape == nullptr)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create shape","PhysXBaseGeometryComponent::OnLoad");
 		}
@@ -107,13 +105,13 @@ namespace GASS
 
 		//update collision flags
 		GeometryComponentPtr geom  = GetGeometry();
-		physx::PxFilterData collFilterData;
+		physx::PxFilterData coll_filter_data;
 		if(geom)
 		{
 			GeometryFlags against = GeometryFlagManager::GetMask(geom->GetGeometryFlags());
-			collFilterData.word0 = geom->GetGeometryFlags();
-			collFilterData.word1 = against;
-			m_Shape->setSimulationFilterData(collFilterData);
+			coll_filter_data.word0 = geom->GetGeometryFlags();
+			coll_filter_data.word1 = against;
+			m_Shape->setSimulationFilterData(coll_filter_data);
 		}
 		else //?
 		{
@@ -126,8 +124,8 @@ namespace GASS
 		if(m_Body)
 		{
 			physx::PxReal mass = m_Body->GetMass();
-			const physx::PxVec3 localPos = PxConvert::ToPx(m_Offset);
-			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
+			const physx::PxVec3 local_pos = PxConvert::ToPx(m_Offset);
+			physx::PxRigidBodyExt::setMassAndUpdateInertia(*m_Body->GetPxRigidDynamic(), mass,&local_pos);
 			//physx::PxRigidBodyExt::updateMassAndInertia(*m_Body->GetPxRigidDynamic(), mass,&localPos);
 		}
 	}

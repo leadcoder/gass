@@ -46,13 +46,13 @@ namespace GASS
 	};
 
 	class PhysXBodyComponent;
-	typedef GASS_SHARED_PTR<PhysXBodyComponent> PhysXBodyComponentPtr;
+	using PhysXBodyComponentPtr = std::shared_ptr<PhysXBodyComponent>;
 
 	class PhysXPhysicsSceneManager  : public Reflection<PhysXPhysicsSceneManager, BaseSceneManager>, public IPhysicsSceneManager
 	{
 	public:
-		typedef std::map<std::string,PhysXConvexMesh> ConvexMeshMap;
-		typedef std::map<std::string,PhysXTriangleMesh> TriangleMeshMap;
+		using ConvexMeshMap = std::map<std::string, PhysXConvexMesh>;
+		using TriangleMeshMap = std::map<std::string, PhysXTriangleMesh>;
 		PhysXPhysicsSceneManager(SceneWeakPtr scene);
 		~PhysXPhysicsSceneManager() override;
 		static void RegisterReflection();
@@ -79,13 +79,12 @@ namespace GASS
 		physx::PxVec3 WorldToLocal(const Vec3 & world) const;
 		physx::PxControllerManager* GetControllerManager() const {return m_ControllerManager;}
 	protected:
-		void OnSceneObjectLoaded(PostComponentsInitializedEventPtr message);
 		void SetGravity(float gravity);
 		float GetGravity() const;
 		bool HasConvexMesh(const std::string &name) const;
 		bool HasTriangleMesh(const std::string &name) const;
 		physx::PxConvexMesh* CreateConvexMesh(const physx::PxVec3* verts, const physx::PxU32 numVerts, physx::PxPhysics& physics, physx::PxCooking& cooking);
-		physx::PxTriangleMesh* _CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount);
+		physx::PxTriangleMesh* CreateTriangleMesh(physx::PxPhysics& physics, physx::PxCooking& cooking, const physx::PxVec3* verts, const physx::PxU32 numVerts,  const physx::PxU32* indices32, physx::PxU32 triCount);
 	private:
 		float m_Gravity;
 		Vec3 m_Origin;
@@ -106,5 +105,5 @@ namespace GASS
 		std::vector<physx::PxVehicleWheels*> m_Vehicles;
 		physx::PxControllerManager* m_ControllerManager;
 	};
-	typedef GASS_SHARED_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerPtr;
+	using PhysXPhysicsSceneManagerPtr = std::shared_ptr<PhysXPhysicsSceneManager>;
 }

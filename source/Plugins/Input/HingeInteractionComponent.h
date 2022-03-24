@@ -23,7 +23,7 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSInputMessages.h"
 
@@ -31,10 +31,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,BaseSceneComponent>
+	class HingeInteractionComponent :  public Reflection<HingeInteractionComponent,Component>
 	{
 	public:
 		HingeInteractionComponent();
@@ -43,7 +43,7 @@ namespace GASS
 		void OnInitialize() override;
 	private:
 		std::string m_InputMapping;
-		Float m_MaxAngularVelocity;
+		Float m_MaxAngularVelocity{5};
 		void OnInput(InputRelayEventPtr message);
 	};
 }

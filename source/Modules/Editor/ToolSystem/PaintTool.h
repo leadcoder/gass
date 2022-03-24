@@ -9,22 +9,22 @@ namespace GASS
 	class SceneObject;
 	class MouseToolController;
 	class IMessage;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_SHARED_PTR<IMessage> MessagePtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using MessagePtr = std::shared_ptr<IMessage>;
 
 	class EditorModuleExport PaintTool : public IMouseTool
 	{
 	public:
 		PaintTool(MouseToolController* controller);
-		virtual ~PaintTool(void);
+		~PaintTool(void) override;
 
 		//IMouseTool interface
-		virtual void MouseMoved(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseDown(const MouseData &data, const SceneCursorInfo &info);
-		virtual void MouseUp(const MouseData &data, const SceneCursorInfo &info);
-		virtual std::string GetName() {return TID_PAINT;}
-		virtual void Stop();
-		virtual void Start();
+		void MouseMoved(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseDown(const MouseData &data, const SceneCursorInfo &info) override;
+		void MouseUp(const MouseData &data, const SceneCursorInfo &info) override;
+		std::string GetName() override {return TID_PAINT;}
+		void Stop() override;
+		void Start() override;
 	private:
 		SceneObjectPtr GetMasterGizmo();
 		void SetGizmoVisiblity(bool value);
@@ -32,9 +32,9 @@ namespace GASS
 		void SendMessageRec(SceneObjectPtr obj,SceneObjectRequestMessagePtr msg);
 
 		bool m_MouseIsDown;
-		GASS::SceneObjectWeakPtr m_SelectedObject;
+		SceneObjectWeakPtr m_SelectedObject;
 		MouseToolController* m_Controller;
-		GASS::SceneObjectWeakPtr m_MasterGizmoObject;
+		SceneObjectWeakPtr m_MasterGizmoObject;
 		bool m_Active;
 	};
 }

@@ -8,9 +8,9 @@
 namespace GASS
 {
 
-	RoadBuilder::EdgeConnection::EdgeConnection(RoadNode* node, RoadEdge* edge): Node(node),Edge(edge)
+	RoadBuilder::EdgeConnection::EdgeConnection(RoadNode* node, RoadEdge* edge): m_Node(node),m_Edge(edge)
 	{
-		_Init();
+		Init();
 	}
 	RoadBuilder::EdgeConnection::~EdgeConnection()
 	{
@@ -19,18 +19,18 @@ namespace GASS
 
 	void RoadBuilder::EdgeConnection::ClipPaths(EdgeLine clip_left, EdgeLine clip_right)
 	{
-		for(size_t i = 0; i < Edge->LLWaypoints.size() ; i++)
+		for(size_t i = 0; i < m_Edge->LLWaypoints.size() ; i++)
 		{
-			SetLeftPath(_Clip(GetLeftPath(i), clip_left),i);
+			SetLeftPath(Clip(GetLeftPath(i), clip_left),i);
 		}
 
-		for(size_t i = 0; i < Edge->RLWaypoints.size() ; i++)
+		for(size_t i = 0; i < m_Edge->RLWaypoints.size() ; i++)
 		{
-			SetRightPath(_Clip(GetRightPath(i), clip_right),i);
+			SetRightPath(Clip(GetRightPath(i), clip_right),i);
 		}
 	}
 
-	RoadBuilder::EdgeLine RoadBuilder::EdgeConnection::_LineOffset(Float offset, const EdgeLine &line)
+	RoadBuilder::EdgeLine RoadBuilder::EdgeConnection::LineOffset(Float offset, const EdgeLine &line)
 	{
 		Vec3 dir = line.p2 - line.p1;
 		Float temp = dir.z;
@@ -44,86 +44,86 @@ namespace GASS
 		return offset_line;
 	}
 
-	void RoadBuilder::EdgeConnection::_Init()
+	void RoadBuilder::EdgeConnection::Init()
 	{
-		std::vector<Vec3> wps = Edge->Waypoints;
-		if(Node != Edge->StartNode)
+		std::vector<Vec3> wps = m_Edge->Waypoints;
+		if(m_Node != m_Edge->StartNode)
 		{
-			Center.p1 = wps[wps.size()-1];
-			Center.p2 = wps[wps.size()-2];
+			m_Center.p1 = wps[wps.size()-1];
+			m_Center.p2 = wps[wps.size()-2];
 		}
 		else
 		{
-			Center.p1 = wps[0];
-			Center.p2 = wps[1];
+			m_Center.p1 = wps[0];
+			m_Center.p2 = wps[1];
 		}
-		Vec3 dir = Center.p2 - Center.p1;
+		Vec3 dir = m_Center.p2 - m_Center.p1;
 		dir.y = 0;
 		dir.Normalize();
-		dir = dir * Edge->LaneWidth*4;
-		Center.p1 = Center.p1-dir;
+		dir = dir * m_Edge->LaneWidth*4;
+		m_Center.p1 = m_Center.p1-dir;
 		//Edge = network.m_Nodes[i]->Edges[j];
-		Angle = atan2(dir.z,dir.x);
-		LeftClip = _LineOffset(Edge->LeftLanes*Edge->LaneWidth, Center);
+		m_Angle = atan2(dir.z,dir.x);
+		m_LeftClip = LineOffset(m_Edge->LeftLanes*m_Edge->LaneWidth, m_Center);
 		//Node = network.m_Nodes[i];
-		RightClip = _LineOffset(-Edge->RightLanes*Edge->LaneWidth, Center);
+		m_RightClip = LineOffset(-m_Edge->RightLanes*m_Edge->LaneWidth, m_Center);
 	}
 
 	std::vector<Vec3> RoadBuilder::EdgeConnection::GetLeftPath(size_t i) const
 	{
-		if(Edge->StartNode == Node)
+		if(m_Edge->StartNode == m_Node)
 		{
-			std::vector<Vec3> ret = Edge->LLWaypoints[i];
+			std::vector<Vec3> ret = m_Edge->LLWaypoints[i];
 			std::reverse(ret.begin(),ret.end());
 			return ret;
 		}
 		else
 		{
-			return Edge->RLWaypoints[i];
+			return m_Edge->RLWaypoints[i];
 		}
 	}
 
 	void RoadBuilder::EdgeConnection::SetLeftPath(const std::vector<Vec3> &path, size_t i)
 	{
-		if(Edge->StartNode == Node)
+		if(m_Edge->StartNode == m_Node)
 		{
-			Edge->LLWaypoints[i] = path;
-			std::reverse(Edge->LLWaypoints[i].begin(),Edge->LLWaypoints[i].end());
+			m_Edge->LLWaypoints[i] = path;
+			std::reverse(m_Edge->LLWaypoints[i].begin(),m_Edge->LLWaypoints[i].end());
 		}
 		else
 		{
-			Edge->RLWaypoints[i] = path;
+			m_Edge->RLWaypoints[i] = path;
 		}
 	}
 
 	std::vector<Vec3> RoadBuilder::EdgeConnection::GetRightPath(size_t i) const
 	{
-		if(Edge->StartNode == Node)
+		if(m_Edge->StartNode == m_Node)
 		{
-			std::vector<Vec3> ret = Edge->RLWaypoints[i];
+			std::vector<Vec3> ret = m_Edge->RLWaypoints[i];
 			std::reverse(ret.begin(),ret.end());
 			return ret;
 		}
 		else
 		{
-			return Edge->LLWaypoints[i];
+			return m_Edge->LLWaypoints[i];
 		}
 	}
 
 	void RoadBuilder::EdgeConnection::SetRightPath(const std::vector<Vec3> &path, size_t i)
 	{
-		if(Edge->StartNode == Node)
+		if(m_Edge->StartNode == m_Node)
 		{
-			Edge->RLWaypoints[i] = path;
-			std::reverse(Edge->RLWaypoints[i].begin(),Edge->RLWaypoints[i].end());
+			m_Edge->RLWaypoints[i] = path;
+			std::reverse(m_Edge->RLWaypoints[i].begin(),m_Edge->RLWaypoints[i].end());
 		}
 		else
 		{
-			Edge->LLWaypoints[i] = path;
+			m_Edge->LLWaypoints[i] = path;
 		}
 	}
 
-	std::vector<Vec3> RoadBuilder::EdgeConnection::_Clip(std::vector<Vec3> path, EdgeLine line)
+	std::vector<Vec3> RoadBuilder::EdgeConnection::Clip(std::vector<Vec3> path, EdgeLine line)
 	{
 		std::vector<Vec3> out;
 		Vec2 p1(line.p1.x,line.p1.z);
@@ -136,7 +136,7 @@ namespace GASS
 			Vec2 isect;
 			if(LineSegment2Dd::GetIntersection(LineSegment2Dd(p1,p2), LineSegment2Dd(p3, p4), isect))
 			{
-				out.push_back(Vec3(isect.x,path[i].y,isect.y));
+				out.emplace_back(isect.x,path[i].y,isect.y);
 				break;
 			}
 			else

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SceneObject>
-<Components/>
-  <ComponentContainers>
-  <SceneObject>
-   <Name value ="TerrainObject"/>
-    <Components>
-	  <OSGEarthMapComponent>
-	     <EarthFile value="openstreetmap.earth"/>
-		 <AddSky value="false"/>
-	  </OSGEarthMapComponent>
-     </Components>
-  </SceneObject>
-  </ComponentContainers >
+	<Components/>
+	<Children>
+		<SceneObject>
+			<Name value ="TerrainObject"/>
+			<Components>
+				<OSGEarthMapComponent>
+					<EarthFile value="openstreetmap.earth"/>
+					<AddSky value="false"/>
+				</OSGEarthMapComponent>
+			</Components>
+		</SceneObject>
+	</Children>
 </SceneObject>

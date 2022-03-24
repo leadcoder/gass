@@ -19,7 +19,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 #include "Sim/GASSCommon.h"
 #include "Core/Utils/GASSColorRGBA.h"
@@ -31,15 +31,14 @@ namespace GASS
 		Component that create sphere geometry
 	*/
 
-	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,BaseSceneComponent> , public IShape
+	class SphereGeometryComponent : public Reflection<SphereGeometryComponent,Component> , public IShape
 	{
 	public:
 		SphereGeometryComponent(void);
 		~SphereGeometryComponent(void) override;
 		static void RegisterReflection();
-		void OnInitialize() override;
+		void OnPostInitialize() override;
 		void OnDelete() override;
-
 		bool IsPointInside(const Vec3 &point) const override;
 		Vec3 GetRandomPoint() const override;
 		Float GetRadius() const;
@@ -49,8 +48,8 @@ namespace GASS
 		void SetColor(const ColorRGBA  &value);
 		ColorRGBA GetColor() const {return m_Color;}
 	private:
-		bool m_Wireframe;
-		Float m_Radius;
+		bool m_Wireframe{true};
+		Float m_Radius{1};
 		ColorRGBA m_Color;
 	};
 }

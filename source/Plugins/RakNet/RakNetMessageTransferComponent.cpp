@@ -79,7 +79,6 @@ namespace GASS
 		if(message->GetSenderID() == 8888)
 			return;
 		Call("OutOfArmorMessage","");
-		
 	}
 
 	void RakNetMessageTransferComponent::Call(const std::string &message, const std::string &data)
@@ -88,14 +87,14 @@ namespace GASS
 		RakNetNetworkMasterComponentPtr comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkMasterComponent>();
 		if(comp)
 		{
-			comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),0);
+			comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),nullptr);
 		}
 		else
 		{
 			RakNetNetworkChildComponentPtr child_comp = GetSceneObject()->GetFirstComponentByClass<RakNetNetworkChildComponent>();
 			if(child_comp)
 			{
-				child_comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),0);
+				child_comp->GetReplica()->RemoteMessageWithData(message.c_str(),data.c_str(),nullptr);
 			}
 		}
 

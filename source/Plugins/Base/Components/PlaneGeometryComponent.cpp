@@ -19,17 +19,20 @@
 *****************************************************************************/
 
 #include "PlaneGeometryComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 namespace GASS
 {
-	PlaneGeometryComponent::PlaneGeometryComponent(void) : m_Size(1,1),m_Transparency(1)
+	PlaneGeometryComponent::PlaneGeometryComponent(void) : m_Size(1,1)
 	{
 
 	}
@@ -109,25 +112,25 @@ namespace GASS
 
 		std::vector<Vec4> tex_coords;
 		
-		sub_mesh_data->PositionVector.push_back(Vec3( size.x ,0 , size.y));
-		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->PositionVector.emplace_back( size.x ,0 , size.y);
+		sub_mesh_data->NormalVector.emplace_back( 0, 1, 0);
 		sub_mesh_data->ColorVector.push_back(color);
-		tex_coords.push_back(Vec4(1,1,0,0));
+		tex_coords.emplace_back(1,1,0,0);
 		
-		sub_mesh_data->PositionVector.push_back(Vec3(-size.x ,0 , size.y));
-		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->PositionVector.emplace_back(-size.x ,0 , size.y);
+		sub_mesh_data->NormalVector.emplace_back( 0, 1, 0);
 		sub_mesh_data->ColorVector.push_back(color);
-		tex_coords.push_back(Vec4(0,1,0,0));
+		tex_coords.emplace_back(0,1,0,0);
 
-		sub_mesh_data->PositionVector.push_back(Vec3(-size.x ,0 , -size.y));
-		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->PositionVector.emplace_back(-size.x ,0 , -size.y);
+		sub_mesh_data->NormalVector.emplace_back( 0, 1, 0);
 		sub_mesh_data->ColorVector.push_back(color);
-		tex_coords.push_back(Vec4(0,0,0,0));
+		tex_coords.emplace_back(0,0,0,0);
 		
-		sub_mesh_data->PositionVector.push_back(Vec3(size.x ,0 , -size.y));
-		sub_mesh_data->NormalVector.push_back(Vec3( 0, 1, 0));
+		sub_mesh_data->PositionVector.emplace_back(size.x ,0 , -size.y);
+		sub_mesh_data->NormalVector.emplace_back( 0, 1, 0);
 		sub_mesh_data->ColorVector.push_back(color);
-		tex_coords.push_back(Vec4(1,0,0,0));
+		tex_coords.emplace_back(1,0,0,0);
 		
 		sub_mesh_data->TexCoordsVector.push_back(tex_coords);
 
@@ -139,7 +142,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(2);
 		sub_mesh_data->IndexVector.push_back(0);
 
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 	
 	

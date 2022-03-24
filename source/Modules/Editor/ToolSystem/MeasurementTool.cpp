@@ -1,5 +1,6 @@
 #include "MeasurementTool.h"
 #include <iomanip>
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/EditorSceneManager.h"
@@ -10,6 +11,8 @@
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
+#include "Sim/Interface/GASSITextComponent.h"
 
 namespace GASS
 {
@@ -45,14 +48,13 @@ namespace GASS
 	{
 		m_MouseIsDown = false;
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
-		ruler->PostRequest(ClearManualMeshRequestPtr(new ClearManualMeshRequest()));
+		ruler->GetFirstComponentByClass<IManualMeshComponent>()->Clear();
 
 		ComponentPtr text(m_TextComp);
 		if(text)
 		{
-			BaseReflectionObjectPtr props = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(text);
 			std::string measurement_value = "";
-			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
+			ruler->GetFirstComponentByClass<ITextComponent>()->SetCaption(measurement_value);
 		}
 	}
 
@@ -97,7 +99,7 @@ namespace GASS
 		sub_mesh_data->IndexVector.push_back(1);
 
 		
-		ruler->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		ruler->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 
 		ComponentPtr text(m_TextComp);
 		if(text)
@@ -106,14 +108,16 @@ namespace GASS
 			std::stringstream sstream;
 			sstream << std::fixed << std::setprecision(2) << value << "m";
 			std::string measurement_value = sstream.str();
-			ruler->PostRequest(TextCaptionRequestPtr(new TextCaptionRequest(measurement_value)));
+			auto comp = ruler->GetFirstComponentByClass<ITextComponent>();
+			if (comp)
+				comp->SetCaption(measurement_value);
 			ruler->GetFirstComponentByClass<ILocationComponent>()->SetPosition(text_pos);
 		}
 	}
 
 	SceneObjectPtr MeasurementTool::GetOrCreateRulerObject() 
 	{
-		GASS::SceneObjectPtr ruler = m_RulerObject.lock();
+		SceneObjectPtr ruler = m_RulerObject.lock();
 
 		if(!ruler)
 		{

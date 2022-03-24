@@ -56,8 +56,8 @@ namespace GASS
 		std::string Name;
 		std::vector<std::string> Extensions;
 	};
-	typedef std::vector<ResourceGroupPtr> ResourceGroupVector;
-	typedef std::vector<FileResourcePtr> ResourceVector;
+	using ResourceGroupVector = std::vector<ResourceGroupPtr>;
+	using ResourceVector = std::vector<FileResourcePtr>;
 
 	/**
 		ResourceManager
@@ -152,5 +152,5 @@ namespace GASS
 		ResourceGroupVector m_ResourceGroups;
 		std::vector<ResourceType> m_ResourceTypes;
 	};
-	typedef GASS_SHARED_PTR<ResourceManager> ResourceManagerPtr;
+	using ResourceManagerPtr = std::shared_ptr<ResourceManager>;
 }

@@ -24,7 +24,7 @@
 #include "Core/Math/GASSVector.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
@@ -33,10 +33,10 @@ namespace GASS
 	class SplineAnimation;
 
 	/**
-		Component that handles waypoints lists. 
+		Component that handles waypoints lists.
 	*/
 
-	class WaypointListComponent : public Reflection<WaypointListComponent,BaseSceneComponent>, public IWaypointListComponent
+	class WaypointListComponent : public Reflection<WaypointListComponent, Component>, public IWaypointListComponent
 	{
 		friend class WaypointComponent;
 	public:
@@ -47,38 +47,46 @@ namespace GASS
 		std::vector<Vec3> GetWaypoints(bool relative_position = true) const override;
 		std::string GetWaypointTemplate() const override;
 		float GetRadius()const override;
+		void SceneManagerTick(double delta_time) override;
+		void SetDirty(bool value);
+		void SetClosed(bool value) override { m_Closed = value; SetDirty(true); }
+		bool GetClosed() const override { return m_Closed; }
+		void SetAutoRotateWaypoints(bool value) override { m_AutoRotateWaypoints = value; SetDirty(true); }
+		bool GetAutoRotateWaypoints() const override { return m_AutoRotateWaypoints; }
+		void SetShowPathLine(bool value) override;
+		bool GetShowPathLine() const override { return m_ShowPathLine; }
 	protected:
-		void OnPostInitializedEvent(PostInitializedEventPtr message);
-		void SetRadius(float radius);
-		int GetSplineSteps()const;
-		void SetSplineSteps(int steps);
-		void SetWaypointTemplate(const std::string &name);
-		bool GetEnableSpline()const;
-		void SetEnableSpline(bool value);
+		void SetRadius(float radius) override;
+		int GetSplineSteps() const override;
+		void SetSplineSteps(int steps) override;
+		void SetWaypointTemplate(const std::string& name) override;
+		bool GetEnableSpline()const override;
+		void SetEnableSpline(bool value) override;
 		void SetShowWaypoints(bool value);
 		bool GetShowWaypoints() const;
 		bool GetAutoUpdateTangents()const;
 		void SetAutoUpdateTangents(bool value);
-		void SetExport(const FilePath &filename);
+		void SetExport(const FilePath& filename);
 		FilePath GetExport() const;
-		void RecursiveIncreaseResolution(const Vec3& line_start,  const Vec3& line_end, SplineAnimation &spline, Float min_dist) const;
+		void RecursiveIncreaseResolution(const Vec3& line_start, const Vec3& line_end, SplineAnimation& spline, Float min_dist) const;
 		//Helpers
-		void UpdatePath();
+		void NotifyPathUpdated();
 
-		SceneObjectPtr _GetConnectionLines() const {return m_ConnectionLines.lock();}
+		SceneObjectPtr GetConnectionLines() const { return m_ConnectionLines.lock(); }
 
-		float m_Radius;
-		int m_SplineSteps;
-		bool m_EnableSpline;
-		bool m_Initialized;
-		bool m_AutoUpdateTangents;
-		bool m_ShowWaypoints;
+		float m_Radius{ 0 };
+		int m_SplineSteps{ 10 };
+		bool m_EnableSpline{ false };
+		bool m_Initialized{ false };
+		bool m_AutoUpdateTangents{ true };
+		bool m_ShowWaypoints{ true };
 		ColorRGBA m_LineColor;
 		std::string m_WaypointTemplate;
 		SceneObjectWeakPtr m_ConnectionLines;
-		bool m_ShowPathLine;
-		bool m_Closed;
-		bool m_AutoRotateWaypoints;
+		bool m_ShowPathLine{ false };
+		bool m_Closed{ false };
+		bool m_AutoRotateWaypoints{ false };
+		bool m_Dirty{ true };
 	};
 }
 

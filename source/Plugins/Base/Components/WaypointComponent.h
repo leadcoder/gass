@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSCoreSceneObjectMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -30,46 +30,43 @@
 namespace GASS
 {
 	class WaypointComponent;
-	typedef GASS_WEAK_PTR<WaypointComponent> WaypointComponentWeakPtr;
+	using WaypointComponentWeakPtr = std::weak_ptr<WaypointComponent>;
 
 	/**
 		Component that hold waypoint data for WaypointListComponent
 	*/
-	class WaypointComponent : public Reflection<WaypointComponent,BaseSceneComponent>
+	class WaypointComponent : public Reflection<WaypointComponent,Component>
 	{
 	public:
 		WaypointComponent();
 		~WaypointComponent() override;
 		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
-		//void SetTangentLength(Float value);
 		void SetTangent(const Vec3 &tangent);
-		Vec3 GetTangent() const;
+		Vec3 GetTangent();
 		bool GetCustomTangent() const {return m_CustomTangent;}
 		void SetCustomTangent(bool value);
 		void Rotate(const Quaternion &rot);
 		bool IsActive() const { return m_Active; }
 	protected:
-		//@deprecated
-		void SetTangentWeight(Float value);
-		Float GetTangentWeight()const;
-
-		void OnPostInitializedEvent(PostInitializedEventPtr message);
+		void OnInitialize() override;
+		void OnSceneObjectInitialized() override;
+		void OnDelete() override;
+		SceneObjectPtr GetOrCreateTangent();
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OnTangentTransformation(TransformationChangedEventPtr event);
-		void _UpdateTangentLine();
-		void _NotifyUpdate();
-
+		void UpdateTangentLine();
+		void NotifyUpdate();
 		Vec3 m_Tangent;
-		Float m_TangentWeight;
-		bool m_Initialized;
-		bool m_CustomTangent;
-		bool m_Active;
-		bool m_TrackTransformation;
+		bool m_Initialized{false};
+		bool m_CustomTangent{false};
+		bool m_Active{true};
+		bool m_TrackTransformation{true};
+		SceneObjectWeakPtr m_TangentObject;
+		//@deprecated ...but not possible to remove due to exception when loading old scenarios
+		double m_TangentWeight = 0;
 	};
 
-	typedef GASS_SHARED_PTR<WaypointComponent> WaypointComponentPtr;
+	using WaypointComponentPtr = std::shared_ptr<WaypointComponent>;
 	
 }
 

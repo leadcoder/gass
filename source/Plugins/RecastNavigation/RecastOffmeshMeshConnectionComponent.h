@@ -25,7 +25,7 @@
 
 namespace GASS
 {
-	class RecastOffmeshMeshConnectionComponent : public Reflection<RecastOffmeshMeshConnectionComponent,BaseSceneComponent>
+	class RecastOffmeshMeshConnectionComponent : public Reflection<RecastOffmeshMeshConnectionComponent,Component>
 	{
 	public:
 		RecastOffmeshMeshConnectionComponent();
@@ -45,15 +45,15 @@ namespace GASS
 		void SetRadius(float value);
 		
 		GraphicsMeshPtr m_ConnectionLine;
-		bool m_Visible;
-		bool m_Initialized;
-		float m_Radius;
+		bool m_Visible{true};
+		bool m_Initialized{false};
+		float m_Radius{1.0};
 		Vec3 m_StartPos;
 		Vec3 m_EndPos;
 		SceneObjectWeakPtr m_EndNode;
 		std::string m_Mode;
 	};
-	typedef GASS_SHARED_PTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentPtr;
-	typedef GASS_WEAK_PTR<RecastOffmeshMeshConnectionComponent> RecastOffmeshMeshConnectionComponentWeakPtr;
+	using RecastOffmeshMeshConnectionComponentPtr = std::shared_ptr<RecastOffmeshMeshConnectionComponent>;
+	using RecastOffmeshMeshConnectionComponentWeakPtr = std::weak_ptr<RecastOffmeshMeshConnectionComponent>;
 }
 

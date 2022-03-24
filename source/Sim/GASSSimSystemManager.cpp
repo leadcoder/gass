@@ -67,13 +67,13 @@ namespace GASS
 		m_SystemStepper.OnUpdate(delta_time);
 	}
 
-	void SimSystemManager::_UpdateSystems(double delta_time, UpdateGroupID group)
+	void SimSystemManager::UpdateSystems(double delta_time, UpdateGroupID group)
 	{
 		for (size_t i = 0; i < m_Systems.size(); i++)
 		{
 			if (group == m_Systems[i]->GetUpdateGroup().GetValue())
 			{
-				m_Systems[i]->_Update(delta_time);
+				m_Systems[i]->Update(delta_time);
 			}
 		}
 	}

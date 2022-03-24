@@ -19,16 +19,19 @@
 *****************************************************************************/
 
 #include "SoundVolumeComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSSoundSceneObjectMessages.h"
+#include "Sim/Interface/GASSISoundComponent.h"
 
 namespace GASS
 {
-	SoundVolumeComponent::SoundVolumeComponent() : m_MaxVolumeAtSpeed(0.3), 
-		m_HingeAngle(0)
+	SoundVolumeComponent::SoundVolumeComponent()  
+		
 	{
 
 	}
@@ -48,8 +51,13 @@ namespace GASS
 	void SoundVolumeComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(SoundVolumeComponent::OnVelocityNotifyMessage,PhysicsVelocityEvent,0));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::PLAY,0)));
-		GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,0)));
+
+		m_Sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>().get();
+		if (m_Sound)
+		{
+			m_Sound->SetVolume(0);
+			m_Sound->SetPlay(true);
+		}
 	}
 
 	void SoundVolumeComponent::OnHingeUpdated(ODEPhysicsHingeJointEventPtr message)
@@ -60,8 +68,11 @@ namespace GASS
 		if(speed < m_MaxVolumeAtSpeed)
 		{
 			//turret sound
-			const float volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume)));
+			const auto volume = static_cast<float>((speed/m_MaxVolumeAtSpeed));
+			if (m_Sound)
+			{
+				m_Sound->SetVolume(volume);
+			}
 			/*
 			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
 			*/
@@ -76,13 +87,12 @@ namespace GASS
 		{
 			
 			//turret sound
-			const float volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
+			const auto volume = static_cast<float>(speed/m_MaxVolumeAtSpeed);
 			
-			GetSceneObject()->PostRequest(SoundParameterRequestPtr(new SoundParameterRequest(SoundParameterRequest::VOLUME,volume*0.5f)));
-
-			/*
-			GASS_PRINT("Speed:"<< speed << " Volume:" << volume)
-			*/
+			if (m_Sound)
+			{
+				m_Sound->SetVolume(volume);
+			}
 		}
 		/*if(speed > 0)
 		{

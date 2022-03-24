@@ -21,7 +21,7 @@
 #define DEBUG_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 
 namespace GASS
@@ -31,7 +31,7 @@ namespace GASS
 		Debug component that show scene object name
 	*/
 
-	class DebugComponent : public Reflection<DebugComponent,BaseSceneComponent>
+	class DebugComponent : public Reflection<DebugComponent,Component>
 	{
 	public:
 		DebugComponent(void);
@@ -40,12 +40,12 @@ namespace GASS
 		void OnInitialize() override;
 	protected:
 		void OnChangeName(SceneObjectNameChangedEventPtr event);
-		bool m_ShowNodeName;
+		bool m_ShowNodeName{false};
 		bool GetShowNodeName() const;
 		void SetShowNodeName(bool value);
 	private:
 	};
 
-	typedef GASS_SHARED_PTR<DebugComponent> DebugComponentPtr;
+	using DebugComponentPtr = std::shared_ptr<DebugComponent>;
 }
 #endif

@@ -97,7 +97,7 @@ namespace GASS
 					m_VertexVector[index],
 					m_VertexVector[index + 1]);
 
-				if (tri._CheckPoint(isect_point))
+				if (tri.CheckPoint(isect_point))
 				{
 					return true;
 				}
@@ -107,9 +107,9 @@ namespace GASS
 		}
 	};
 
-	typedef TPolygon<double> Polygond;
-	typedef TPolygon<float> Polygonf;
-	typedef TPolygon<GASS::Float> Polygon;
+	using Polygond = TPolygon<double>;
+	using Polygonf = TPolygon<float>;
+	using Polygon = TPolygon<GASS::Float>;
 }
 
 #endif // #ifndef POLYGON_HH

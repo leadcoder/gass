@@ -23,14 +23,14 @@
 
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPhysicsSceneObjectMessages.h"
 
 namespace GASS
 {
-	class PhysicsReportProxyComponent :  public Reflection<PhysicsReportProxyComponent,BaseSceneComponent>
+	class PhysicsReportProxyComponent :  public Reflection<PhysicsReportProxyComponent,Component>
 	{
 	public:
 		PhysicsReportProxyComponent();

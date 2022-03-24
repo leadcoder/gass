@@ -2,6 +2,7 @@
 #include "Plugins/Base/CoreMessages.h"
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include <limits>
+#include <memory>
 
 namespace GASS
 {
@@ -18,7 +19,7 @@ namespace GASS
 	void RNRoadNodeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RNRoadNodeComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RNRoadNodeComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RNRoadNodeComponent", OF_VISIBLE));
 	}
 
 	void RNRoadNodeComponent::OnInitialize()
@@ -52,8 +53,8 @@ namespace GASS
 			if(edge)
 			{
 				//Delete edge object
-				BaseSceneComponentPtr bso = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(edge);
-				bso->GetSceneObject()->SendRemoveRequest(0);
+				auto component = GASS_DYNAMIC_PTR_CAST<Component>(edge);
+				component->GetSceneObject()->SendRemoveRequest(0);
 			}
 		}
 		//update graph
@@ -64,7 +65,7 @@ namespace GASS
 
 	void RNRoadNodeComponent::RemoveEdge(GraphEdgeComponentPtr edge)
 	{
-		std::vector<GraphEdgeComponentWeakPtr>::iterator iter = m_Edges.begin();
+		auto iter = m_Edges.begin();
 		while(iter !=m_Edges.end())
 		{
 			GraphEdgeComponentPtr edge_ptr = (*iter).lock();

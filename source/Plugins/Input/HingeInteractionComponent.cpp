@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "HingeInteractionComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSMath.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
@@ -28,7 +30,7 @@
 
 namespace GASS
 {
-	HingeInteractionComponent::HingeInteractionComponent() : m_MaxAngularVelocity(5)
+	HingeInteractionComponent::HingeInteractionComponent()  
 	{
 
 	}
@@ -57,7 +59,7 @@ namespace GASS
 		if (name == m_InputMapping)
 		{
 			float angular_vel = value * static_cast<float>(Math::Deg2Rad(m_MaxAngularVelocity));
-			GetSceneObject()->PostRequest(PhysicsHingeJointVelocityRequestPtr(new PhysicsHingeJointVelocityRequest(angular_vel)));
+			GetSceneObject()->PostRequest(std::make_shared<PhysicsHingeJointVelocityRequest>(angular_vel));
 		}
 	}
 }

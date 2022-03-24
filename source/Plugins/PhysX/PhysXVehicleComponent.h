@@ -29,10 +29,11 @@
 
 namespace GASS
 {
+	class ISoundComponent;
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,BaseSceneComponent> , public IPhysXRigidDynamic, public IPlatformComponent
+	class PhysXVehicleComponent : public Reflection<PhysXVehicleComponent,Component> , public IPhysXRigidDynamic, public IPlatformComponent
 	{
 	public:
 		PhysXVehicleComponent();
@@ -69,39 +70,40 @@ namespace GASS
 		bool& newIsMovingForwardSlowly) const;
 		bool CheckCollisions(const Vec3 &pos, const Quaternion &rot, Float speed) const;
 	protected:
-		Float m_MaxSpeed;
+		Float m_MaxSpeed{20};
 		SceneObjectRef m_FrontLeftWheel;
 		SceneObjectRef m_FrontRightWheel;
 		SceneObjectRef m_RearLeftWheel;
 		SceneObjectRef m_RearRightWheel;
 		std::vector<SceneObjectRef>m_ExtraWheels;
-		bool m_UseAutoReverse;
-		float m_ScaleMass;
-		float m_EnginePeakTorque;
-		float m_EngineMaxRotationSpeed;
-		float m_ClutchStrength;
-		float m_Mass;
-		float m_GearSwitchTime;
+		bool m_UseAutoReverse{false};
+		float m_ScaleMass{1.0};
+		float m_EnginePeakTorque{500};
+		float m_EngineMaxRotationSpeed{200};
+		float m_ClutchStrength{10};
+		float m_Mass{1500};
+		float m_GearSwitchTime{0.5};
 		std::vector<float> m_GearRatios;
-		bool m_Debug;
+		bool m_Debug{false};
 
 		std::vector<SceneObjectWeakPtr> m_AllWheels;
 		bool m_Initialized;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic* m_Actor;
-		physx::PxVehicleDrive4W* m_Vehicle;
-		float m_ThrottleInput;
-		float m_SteerInput;
-		float m_BreakInput;
-		bool m_DigBrakeInput;
-		bool m_DigAccelInput;
-		bool m_IsMovingForwardSlowly;
-		bool m_InReverseMode;
-		bool m_UseDigitalInputs;
-		bool m_TrackTransformation;
+		physx::PxRigidDynamic* m_Actor{nullptr};
+		physx::PxVehicleDrive4W* m_Vehicle{nullptr};
+		float m_ThrottleInput{0};
+		float m_SteerInput{0};
+		float m_BreakInput{0};
+		bool m_DigBrakeInput{false};
+		bool m_DigAccelInput{false};
+		bool m_IsMovingForwardSlowly{false};
+		bool m_InReverseMode{false};
+		bool m_UseDigitalInputs{false};
+		bool m_TrackTransformation{true};
 		AABox m_MeshBounds;
 		Vec3 m_ChassisDim;
+		ISoundComponent* m_Sound = nullptr;
 	};
-	typedef GASS_SHARED_PTR<PhysXVehicleComponent> PhysXVehicleComponentPtr;
+	using PhysXVehicleComponentPtr = std::shared_ptr<PhysXVehicleComponent>;
 }
 

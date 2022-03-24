@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSystemStepper.h"
 
@@ -47,7 +49,7 @@ namespace GASS
 				const double update_interval = 1.0 / m_UpdateFrequency;
 				//do some time slicing
 				m_TimeToProcess += delta_time;
-				const long long num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
+				const auto num_steps = static_cast<long long> (m_TimeToProcess / update_interval);
 				long long clamp_num_steps = num_steps;
 				
 				if (m_MaxSimulationSteps > 0 && num_steps > m_MaxSimulationSteps)
@@ -56,7 +58,7 @@ namespace GASS
 				//std::cout << "steps:" << clamp_num_steps << "\n";
 				for (int i = 0; i < clamp_num_steps; ++i)
 				{
-					m_SimSysManager->_UpdateSystems(update_interval, m_ID);
+					m_SimSysManager->UpdateSystems(update_interval, m_ID);
 					SimEngine::Get().SyncMessages(update_interval);
 					m_CurrentTime += update_interval;
 				}
@@ -64,7 +66,7 @@ namespace GASS
 			}
 			else
 			{
-				m_SimSysManager->_UpdateSystems(delta_time, m_ID);
+				m_SimSysManager->UpdateSystems(delta_time, m_ID);
 				SimEngine::Get().SyncMessages(delta_time);
 			}
 		}
@@ -138,13 +140,13 @@ namespace GASS
 		if(value && m_CurrentState == SS_RUNNING)
 		{
 			m_CurrentState = SS_PAUSED;
-			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_PAUSE)));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_PAUSE));
 			m_SimGroup.SetPaused(true);
 		}
 		else if(!value && m_CurrentState == SS_PAUSED)
 		{
 			m_CurrentState = SS_RUNNING;
-			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_RESUME)));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_RESUME));
 			m_SimGroup.SetPaused(false);
 		}
 	}
@@ -152,7 +154,7 @@ namespace GASS
 	void SystemStepper::StopSimulation()
 	{
 		m_CurrentState = SS_STOPPED;
-		m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_STOP)));
+		m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_STOP));
 		m_SimGroup.SetPaused(true);
 		m_SimGroup.ResetTime();
 	}
@@ -161,7 +163,7 @@ namespace GASS
 	{
 		if(m_CurrentState == SS_STOPPED)
 		{
-			m_SimSysManager->PostMessage(GASS::SimEventPtr(new GASS::SimEvent(GASS::SET_START)));
+			m_SimSysManager->PostMessage(std::make_shared<SimEvent>(SET_START));
 			m_SimGroup.SetPaused(false);
 			m_CurrentState = SS_RUNNING;
 		}

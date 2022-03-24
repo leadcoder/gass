@@ -1,4 +1,6 @@
 #include "TerrainDeformTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/Components/PaintGizmoComponent.h"
@@ -51,22 +53,22 @@ namespace GASS
 			HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 			if(terrain)
 			{
-				BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(terrain);
+				auto bsc = GASS_DYNAMIC_PTR_CAST<Component>(terrain);
 				SceneObjectPtr terrain_group = bsc->GetSceneObject()->GetParentSceneObject();
 
 				switch(m_TEM)
 				{
 				case TEM_DEFORM:
-					terrain_group->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_DEFORM,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_FLATTEN:
-					terrain_group->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_FLATTEN,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_SMOOTH:
-					terrain_group->PostRequest(TerrainHeightModifyRequestPtr(new TerrainHeightModifyRequest(TerrainHeightModifyRequest::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise)));
+					//terrain_group->PostRequest(std::make_shared<TerrainHeightModifyRequest>(TerrainHeightModifyRequest::MT_SMOOTH,m_CursorPos,m_BrushSize, m_BrushInnerSize,intensity,m_Noise));
 					break;
 				case TEM_LAYER_PAINT:
-					terrain_group->PostRequest(TerrainPaintRequestPtr(new TerrainPaintRequest(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise)));
+					//terrain_group->PostRequest(std::make_shared<TerrainPaintRequest>(m_CursorPos,m_BrushSize, m_BrushInnerSize,m_ActiveLayer,intensity,m_Noise));
 					break;
 				case TEM_VEGETATION_PAINT:
 					break;
@@ -79,7 +81,7 @@ namespace GASS
 				{
 					SceneObjectPtr selected = m_Selection[i].lock();
 					if(selected)
-						selected->PostRequest(GrassPaintMessagePtr(new GrassPaintMessage(m_CursorPos, m_BrushSize, m_BrushInnerSize, intensity, m_Noise)));
+						selected->PostRequest(std::make_shared<GrassPaintMessage>(m_CursorPos, m_BrushSize, m_BrushInnerSize, intensity, m_Noise));
 				}
 			}
 		}
@@ -141,8 +143,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			SendMessageRec(gizmo,LocationVisibilityRequestPtr(new LocationVisibilityRequest(value,from_id)));
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 
@@ -211,7 +217,7 @@ namespace GASS
 		HeightmapTerrainComponentPtr terrain = m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<IHeightmapTerrainComponent>(true);
 		if(terrain)
 		{
-			BaseSceneComponentPtr bsc = GASS_DYNAMIC_PTR_CAST <BaseSceneComponent>(terrain);
+			ComponentPtr bsc = GASS_DYNAMIC_PTR_CAST <Component>(terrain);
 			bsc->GetSceneObject()->PostRequest(MessagePtr(new TerrainLayerRequest(m_ActiveLayer,texture,tiling)));
 		}
 	}*/

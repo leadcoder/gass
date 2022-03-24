@@ -21,7 +21,7 @@
 #define CIRCLE_GEOMETRY_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Interface/GASSIShape.h"
 
 namespace GASS
@@ -30,7 +30,7 @@ namespace GASS
 		Component that create  circle geometry
 	*/
 
-	class CircleGeometryComponent : public Reflection<CircleGeometryComponent,BaseSceneComponent> , public IShape
+	class CircleGeometryComponent : public Reflection<CircleGeometryComponent,Component> , public IShape
 	{
 	public:
 		CircleGeometryComponent(void);
@@ -43,11 +43,11 @@ namespace GASS
 		Float GetRadius() const;
 	protected:
 		Vec3 m_Color;
-		bool m_Dashed;
+		bool m_Dashed{false};
 		void SetRadius(Float value);
 		void UpdateMesh();
 	private:
-		Float m_Radius;
+		Float m_Radius{1};
 	};
 }
 #endif

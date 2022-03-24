@@ -41,71 +41,73 @@ namespace GASS
 						"GASSPluginBase",
 						"GASSEditorModule" };
 		if (input == InputOptions::OIS)
-			conf.Plugins.push_back("GASSPluginOIS");
+			conf.Plugins.emplace_back("GASSPluginOIS");
 		if (sound == SoundOptions::OPENAL)
-			conf.Plugins.push_back("GASSPluginOpenAL");
+			conf.Plugins.emplace_back("GASSPluginOpenAL");
 		if (physics != PhysicsOptions::NONE)
 		{
-			conf.Plugins.push_back(physics == PhysicsOptions::PHYSX ? "GASSPluginPhysX" : "GASSPluginODE");
-			conf.Plugins.push_back("GASSPluginVehicle");
+			conf.Plugins.emplace_back(physics == PhysicsOptions::PHYSX ? "GASSPluginPhysX" : "GASSPluginODE");
+			conf.Plugins.emplace_back("GASSPluginVehicle");
 		}
 		if (network == NetworkOptions::RAKNET)
-			conf.Plugins.push_back("GASSPluginRaknet");
+			conf.Plugins.emplace_back("GASSPluginRaknet");
 
 		std::vector<std::string> systems;
 		
-		systems.push_back("EditorSystem");
-		systems.push_back(input == InputOptions::OSG ? "OSGInputSystem" : "OISInputSystem");
-		systems.push_back("CoreSystem");
-		systems.push_back("ControlSettingsSystem");
-		systems.push_back("SimulationSystem");
+		systems.emplace_back("EditorSystem");
+		systems.emplace_back(input == InputOptions::OSG ? "OSGInputSystem" : "OISInputSystem");
+		systems.emplace_back("CoreSystem");
+		systems.emplace_back("ControlSettingsSystem");
+		systems.emplace_back("SimulationSystem");
 
 		if (physics != PhysicsOptions::NONE)
 		{
-			systems.push_back("MaterialSystem"); //must be listed before physics system
-			systems.push_back(physics == PhysicsOptions::PHYSX ? "PhysXPhysicsSystem" : "ODEPhysicsSystem");
+			systems.emplace_back("MaterialSystem"); //must be listed before physics system
+			systems.emplace_back(physics == PhysicsOptions::PHYSX ? "PhysXPhysicsSystem" : "ODEPhysicsSystem");
 		}
 		
 		if (network == NetworkOptions::RAKNET)
-			systems.push_back("RakNetNetworkSystem");
+			systems.emplace_back("RakNetNetworkSystem");
 
-		systems.push_back("OSGGraphicsSystem");
-		systems.push_back("OSGCollisionSystem");
+		systems.emplace_back("OSGGraphicsSystem");
+		systems.emplace_back("OSGCollisionSystem");
 
 
 		for (auto system_name : systems)
 		{
-			GASS::SimSystemConfig sysc;
+			SimSystemConfig sysc;
 			sysc.Name = system_name;
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}
 		conf.DataPath = "../../data/";
-		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/gfx", true));
+		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
+		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
 		if (physics != PhysicsOptions::NONE)
 		{
-			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true));
-			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/physics", true));
+			if (physics == PhysicsOptions::PHYSX)
+				conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true);
+			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/physics", true);
 
 		}
-		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/input", true));
+		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/input", true);
 		if(sound != SoundOptions::NONE)
-			conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS", "%GASS_DATA_HOME%/sounds", true));
+			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/sounds", true);
 		
 		//templates
-		conf.ResourceConfig.ResourceLocations.push_back(GASS::ResourceLocationConfig("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true));
+		conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true);
 		return conf;
 	}
 
 	SimEngineConfig SimEngineConfig::LoadFromfile(const FilePath& filename)
 	{
 		SimEngineConfig config;
-		tinyxml2::XMLDocument xmlDoc;
-		if (xmlDoc.LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
+		tinyxml2::XMLDocument xml_doc;
+		if (xml_doc.LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Couldn't load:" + filename.GetFullPath(), "SimEngineConfig::LoadSettings");
 		}
 
-		tinyxml2::XMLElement *gass_elem = xmlDoc.FirstChildElement("GASS");
+		tinyxml2::XMLElement *gass_elem = xml_doc.FirstChildElement("GASS");
 		if (!gass_elem)
 		{
 			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Failed to find GASS tag in:" + filename.GetFullPath(), "SimEngineConfig::LoadSettings");

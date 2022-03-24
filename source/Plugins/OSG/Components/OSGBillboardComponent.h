@@ -19,6 +19,7 @@
 *****************************************************************************/
 #pragma once
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIBillboardComponent.h"
 #include "Plugins/OSG/OSGCommon.h"
 
 namespace osg
@@ -31,11 +32,11 @@ namespace osg
 
 namespace GASS
 {
-	class OSGBillboardComponent : public Reflection<OSGBillboardComponent,BaseSceneComponent> , public IGeometryComponent
+	class OSGBillboardComponent : public Reflection<OSGBillboardComponent, Component>, public IBillboardComponent
 	{
 	public:
-		OSGBillboardComponent (void);
-		~OSGBillboardComponent (void) override;
+		OSGBillboardComponent(void);
+		~OSGBillboardComponent(void) override;
 		static void RegisterReflection();
 		void OnInitialize() override;
 
@@ -47,36 +48,40 @@ namespace GASS
 		void SetGeometryFlags(GeometryFlags flags) override;
 		bool GetCollision() const override;
 		void SetCollision(bool value) override;
+		void SetVisible(bool value) override;
+		bool GetVisible() const override;
+		void SetColor(const ColorRGBA& color) override;
+		void SetSize(float width, float height) override;
+		float GetWidth() const override;
+		void SetWidth(float width) override;
+		float GetHeight() const override;
+		void SetHeight(float height) override;
+		void SetScale(float width, float height);
 	protected:
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
-		void OnVisibilityMessage(GeometryVisibilityRequestPtr message);
-		void OnSetColorMessage(BillboardColorRequestPtr message);
 		void OnLocationLoaded(LocationLoadedEventPtr message);
-		void OnGeometryScale(GeometryScaleRequestPtr message);
 
 		void SetGeometryFlagsBinder(GeometryFlagsBinder value);
 		GeometryFlagsBinder GetGeometryFlagsBinder() const;
-		float GetWidth() const;
-		void SetWidth(float width);
-		float GetHeight() const;
-		void SetHeight(float height);
-		void SetMaterial(const std::string &mat) {m_Material = mat;}
-		std::string GetMaterial()const {return m_Material;}
-		bool GetCastShadow()const {return m_CastShadow;}
+
+		void SetMaterial(const std::string& mat) { m_Material = mat; }
+		std::string GetMaterial()const { return m_Material; }
+		bool GetCastShadow()const { return m_CastShadow; }
 		void SetCastShadow(bool castShadow);
 
-		//Helpers
-		void _UpdateSize(float width,float height);
 
-		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner,const osg::Vec3& width,const osg::Vec3& height, osg::Image* image=NULL);
+		osg::ref_ptr<osg::Geometry> CreateSquare(const osg::Vec3& corner, const osg::Vec3& width, const osg::Vec3& height, osg::Image* image = nullptr);
 		std::string m_Material;
-		bool m_CastShadow;
-		float m_Width;
-		float m_Height;
+		bool m_CastShadow{ false };
+		float m_Width{ 1.0f };
+		float m_Height{ 1.0f };
+
+		float m_ScaleWidth{ 1.0f };
+		float m_ScaleHeight{ 1.0f };
 		osg::ref_ptr<osg::Billboard> m_OSGBillboard;
-		osg::Geometry* m_Geom;
-		GeometryFlags m_GeomFlags;
-		double m_GroundOffset;
-		bool m_Collision;
+		osg::Geometry* m_Geom{ nullptr };
+		GeometryFlags m_GeomFlags{ GEOMETRY_FLAG_UNKNOWN };
+		double m_GroundOffset{ 0.1 };
+		bool m_Collision{ true };
 	};
 }

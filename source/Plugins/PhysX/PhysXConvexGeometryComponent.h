@@ -30,10 +30,10 @@ namespace GASS
 {
 	class IGeometryComponent;
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
-	typedef GASS_SHARED_PTR<IGeometryComponent> GeometryComponentPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
+	using GeometryComponentPtr = std::shared_ptr<IGeometryComponent>;
 	
-	class PhysXConvexGeometryComponent : public Reflection<PhysXConvexGeometryComponent,BaseSceneComponent>
+	class PhysXConvexGeometryComponent : public Reflection<PhysXConvexGeometryComponent,Component>
 	{
 	friend class PhysXPhysicsSceneManager;
 	public:
@@ -46,10 +46,10 @@ namespace GASS
 	protected:
 		void OnGeometryChanged(GeometryChangedEventPtr message);
 	protected:
-		bool m_SimulationCollision;
-		physx::PxShape *m_Shape;
+		bool m_SimulationCollision{true};
+		physx::PxShape *m_Shape{nullptr};
 		PhysXConvexMesh m_ConvexMesh;
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
 	};
-	typedef GASS_SHARED_PTR<PhysXConvexGeometryComponent> PhysXConvexGeometryComponentPtr;
+	using PhysXConvexGeometryComponentPtr = std::shared_ptr<PhysXConvexGeometryComponent>;
 }

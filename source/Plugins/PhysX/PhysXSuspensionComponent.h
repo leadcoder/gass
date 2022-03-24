@@ -28,9 +28,9 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,BaseSceneComponent>,
+	class PhysXSuspensionComponent : public Reflection<PhysXSuspensionComponent,Component>,
 		public IPhysicsSuspensionComponent
 	{
 	public:
@@ -49,8 +49,6 @@ namespace GASS
 		void SetMaxSteerTorque(float value) override;
 		float GetMaxSteerTorque() const override { return m_MaxSteerTorque; }
 	protected:
-		void OnPositionChanged(PositionRequestPtr message);
-		void OnWorldPositionChanged(WorldPositionRequestPtr message);
 		void OnLoad(PhysicsBodyLoadedEventPtr message);
 
 		float GetRollAngle();
@@ -69,25 +67,25 @@ namespace GASS
 		void SetSteerLimit(float value);
 		void SendJointUpdate(PhysicsVelocityEventPtr message);
 	private:
-		float m_DriveMaxTorque;
-		float m_WheelJointDamping;
+		float m_DriveMaxTorque{PX_MAX_F32};
+		float m_WheelJointDamping{100};
 
-		float m_SpringJointMaxForce;
-		float m_Strength;
-		float m_Damping;
+		float m_SpringJointMaxForce{PX_MAX_F32};
+		float m_Strength{1000};
+		float m_Damping{10};
 
-		float m_MaxSteerTorque;
-		float m_SteerJointSpring;
-		float m_SteerJointDamping;
-		float m_SteerLimit;
-		float m_WheelAngularVelocity;
-		float m_AngularSteerVelocity;
+		float m_MaxSteerTorque{1000};
+		float m_SteerJointSpring{10};
+		float m_SteerJointDamping{100};
+		float m_SteerLimit{0.5};
+		float m_WheelAngularVelocity{0};
+		float m_AngularSteerVelocity{0};
 
 		PhysXPhysicsSceneManagerWeakPtr m_SceneManager;
-		physx::PxRigidDynamic *m_SuspensionActor;
-		physx::PxD6Joint *m_SuspensionJoint;
-		physx::PxD6Joint *m_WheelAxisJoint;
+		physx::PxRigidDynamic *m_SuspensionActor{nullptr};
+		physx::PxD6Joint *m_SuspensionJoint{nullptr};
+		physx::PxD6Joint *m_WheelAxisJoint{nullptr};
 	};
-	typedef GASS_SHARED_PTR<PhysXSuspensionComponent> PhysXSuspensionComponentPtr;
+	using PhysXSuspensionComponentPtr = std::shared_ptr<PhysXSuspensionComponent>;
 }
 

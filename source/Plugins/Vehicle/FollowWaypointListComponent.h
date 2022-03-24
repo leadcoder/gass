@@ -24,7 +24,7 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIGeometryComponent.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Plugins/Base/CoreMessages.h"
@@ -47,7 +47,7 @@ namespace GASS
 	END_ENUM_BINDER(PathFollowMode,PathFollowModeBinder)
 
 
-	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,BaseSceneComponent>
+	class FollowWaypointListComponent :  public Reflection<FollowWaypointListComponent,Component>
 	{
 	public:
 		FollowWaypointListComponent();
@@ -69,15 +69,15 @@ namespace GASS
 		void SetMode(const PathFollowModeBinder &mode);
 		int GetCloesetWaypoint();
 		
-		Float m_WaypointRadius;
+		Float m_WaypointRadius{ 4};
 		SceneObjectRef m_NavigationObject;
 		Vec3  m_CurrentPos;
 		std::vector<Vec3> m_Waypoints;
 		SceneObjectRef m_WaypointList;
-		float m_Direction;
-		bool m_InvertDirection;
-		bool m_HasWaypoints;
-		int m_CurrentWaypoint;
+		float m_Direction{1};
+		bool m_InvertDirection{false};
+		bool m_HasWaypoints{false};
+		int m_CurrentWaypoint{-1};
 		PathFollowModeBinder m_Mode;
 	};
 }

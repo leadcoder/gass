@@ -109,21 +109,4 @@ namespace GASS
 		  }
 	};
 	typedef GASS_SHARED_PTR<ParentChangedEvent> ParentChangedEventPtr;
-
-	/**
-		Message sent after SceneObject is initialized (children included)
-	*/
-	class PostInitializedEvent : public SceneObjectEventMessage
-	{
-	public:
-		PostInitializedEvent(SenderID sender_id = -1, double delay= 0) :   
-		  SceneObjectEventMessage(sender_id , delay)
-		  {
-
-		  }
-	};
-	typedef GASS_SHARED_PTR<PostInitializedEvent> PostInitializedEventPtr;
-
-
-	
 }

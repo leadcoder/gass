@@ -26,9 +26,9 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXWheelComponent : public Reflection<PhysXWheelComponent,BaseSceneComponent>
+	class PhysXWheelComponent : public Reflection<PhysXWheelComponent,Component>
 	{
 	public:
 		PhysXWheelComponent();
@@ -46,19 +46,19 @@ namespace GASS
 		physx::PxVehicleSuspensionData m_SuspensionData;
 		physx::PxVehicleTireData m_TireData;
 		physx::PxVehicleWheelData m_WheelData;
-		bool m_Initialized;
-		float m_Mass;
-		float m_MaxBrakeTorque;
-		float m_MaxHandBrakeTorque;
-		float m_MaxSteer;
-		float m_DampingRate;
-		float m_SuspensionMaxCompression;
-		float m_SuspensionMaxDroop;
-		float m_SuspensionSpringStrength;
-		float m_SuspensionSpringDamperRate;
-		float m_TireLongitudinalStiffnessPerUnitGravity;
+		bool m_Initialized{false};
+		float m_Mass{20};
+		float m_MaxBrakeTorque{1500.0f};
+		float m_MaxHandBrakeTorque{4000.0f};
+		float m_MaxSteer{60.0f};
+		float m_DampingRate{0.25f};
+		float m_SuspensionMaxCompression{0.3f};
+		float m_SuspensionMaxDroop{0.1f};
+		float m_SuspensionSpringStrength{35000.0f};
+		float m_SuspensionSpringDamperRate{4500.0f};
+		float m_TireLongitudinalStiffnessPerUnitGravity{1000.0f};
 		std::string m_TireType;
 	};
-	typedef GASS_SHARED_PTR<PhysXWheelComponent> PhysXWheelComponentPtr;
+	using PhysXWheelComponentPtr = std::shared_ptr<PhysXWheelComponent>;
 }
 

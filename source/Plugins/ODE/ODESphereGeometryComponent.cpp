@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/ODE/ODESphereGeometryComponent.h"
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Sim/GASSComponentFactory.h"
@@ -28,11 +30,12 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIMeshComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 
 namespace GASS
 {
-	ODESphereGeometryComponent::ODESphereGeometryComponent():
-		m_Radius(1)
+	ODESphereGeometryComponent::ODESphereGeometryComponent()
+		
 	{
 
 	}
@@ -77,7 +80,7 @@ namespace GASS
 
 	dGeomID ODESphereGeometryComponent::CreateODEGeom()
 	{
-		return dCreateSphere(0, m_Radius);
+		return dCreateSphere(GetSpace(), m_Radius);
 	}
 
 	void ODESphereGeometryComponent::SetRadius(Float value)
@@ -154,7 +157,7 @@ namespace GASS
 		}
 	
 		SceneObjectPtr scene_object = GetDebugObject();
-		scene_object->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data)));
+		scene_object->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 		scene_object->GetFirstComponentByClass<ILocationComponent>()->SetPosition(offset);
 	}
 

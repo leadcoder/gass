@@ -1,4 +1,6 @@
 #include "EditorSceneManager.h"
+
+#include <memory>
 #include "EditorSystem.h"
 #include "Core/Utils/GASSException.h"
 #include "Core/Math/GASSMath.h"
@@ -11,8 +13,9 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/Interface/GASSIViewport.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIMapCameraComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "ToolSystem/MouseToolController.h"
 #include "Components/EditorComponent.h"
 #include "Components/SelectionComponent.h"
@@ -26,7 +29,7 @@ namespace GASS
 
 	EditorSceneManager::EditorSceneManager(SceneWeakPtr scene) : Reflection(scene), m_LockTerrainObjects(true)
 	{
-		m_MouseTools = MouseToolControllerPtr(new MouseToolController(this));
+		m_MouseTools = std::make_shared<MouseToolController>(this);
 	}
 
 	void EditorSceneManager::OnPostConstruction()
@@ -53,9 +56,9 @@ namespace GASS
 		m_InvisibleObjects.clear();
 	}
 
-	SceneObjectPtr _CreateSelectionObject()
+	SceneObjectPtr CreateSelectionObject()
 	{
-		SceneObjectPtr selection_object = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr selection_object = std::make_shared<SceneObject>();
 		selection_object->SetName("SelectionObject");
 		selection_object->SetID("BB_SELECTION_OBJECT");
 		selection_object->SetSerialize(false);
@@ -85,7 +88,7 @@ namespace GASS
 	void EditorSceneManager::OnSceneCreated()
 	{
 		//Add selection object to scene
-		GetScene()->GetRootSceneObject()->AddChildSceneObject(_CreateSelectionObject(), true);
+		GetScene()->GetRootSceneObject()->AddChildSceneObject(CreateSelectionObject(), true);
 		//GetScene()->LoadObjectFromTemplate("SelectionObject", GetScene()->GetRootSceneObject());
 	}
 
@@ -124,8 +127,8 @@ namespace GASS
 
 		if (free_obj)
 		{
-			free_obj->SendImmediateRequest(PositionRequestPtr(new PositionRequest(scene->GetStartPos())));
-			free_obj->SendImmediateRequest(RotationRequestPtr(new RotationRequest(rot)));
+			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
+			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 			free_obj->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
 		}
 	}
@@ -133,7 +136,7 @@ namespace GASS
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)
 	{
 		CameraComponentPtr camera = message->GetViewport()->GetCamera();
-		SceneObjectPtr cam_obj = GASS_DYNAMIC_PTR_CAST<BaseSceneComponent>(camera)->GetSceneObject();
+		SceneObjectPtr cam_obj = camera->GetSceneObject();
 
 		m_ActiveCameraObject = cam_obj;
 		m_ActiveCamera = camera;
@@ -175,7 +178,7 @@ namespace GASS
 	
 	bool EditorSceneManager::IsSelected(SceneObjectPtr obj)
 	{
-		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		auto iter = m_SelectedObjects.begin();
 		while(iter != m_SelectedObjects.end())
 		{
 			SceneObjectPtr so = (*iter).lock();
@@ -191,7 +194,7 @@ namespace GASS
 
 	void EditorSceneManager::UnselectSceneObject(SceneObjectPtr obj)
 	{
-		std::vector<SceneObjectWeakPtr>::iterator iter = m_SelectedObjects.begin();
+		auto iter = m_SelectedObjects.begin();
 		while(iter != m_SelectedObjects.end())
 		{
 			SceneObjectPtr so = (*iter).lock();
@@ -225,7 +228,7 @@ namespace GASS
 
 	void EditorSceneManager::UnlockObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_LockedObjects.find(obj);
+		auto iter = m_LockedObjects.find(obj);
 		if (m_LockedObjects.end() != iter)
 		{
 			m_LockedObjects.erase(iter);
@@ -235,7 +238,7 @@ namespace GASS
 
 	void EditorSceneManager::LockObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_LockedObjects.find(obj);
+		auto iter = m_LockedObjects.find(obj);
 		if (m_LockedObjects.end() == iter)
 		{
 			m_LockedObjects.insert(obj);
@@ -263,7 +266,7 @@ namespace GASS
 
 	void EditorSceneManager::UnhideObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_InvisibleObjects.find(obj);
+		auto iter = m_InvisibleObjects.find(obj);
 		if (m_InvisibleObjects.end() != iter)
 		{
 			m_InvisibleObjects.erase(iter);
@@ -273,7 +276,7 @@ namespace GASS
 
 	void EditorSceneManager::HideObject(SceneObjectWeakPtr obj)
 	{
-		SceneObjectSet::iterator iter = m_InvisibleObjects.find(obj);
+		auto iter = m_InvisibleObjects.find(obj);
 		if (m_InvisibleObjects.end() == iter)
 		{
 			m_InvisibleObjects.insert(obj);
@@ -350,9 +353,10 @@ namespace GASS
 		if (cam_obj)
 		{
 			//Check if we have osgEarth manipulator component, then send fly request
-			if (cam_obj->GetFirstComponentByClassName("OSGEarthCameraManipulatorComponent"))
+			auto camera_manipulator = cam_obj->GetFirstComponentByClass<IMapCameraComponent>();
+			if (camera_manipulator)
 			{
-				cam_obj->PostRequest(CameraFlyToObjectRequestPtr(new CameraFlyToObjectRequest(obj)));
+				camera_manipulator->FlyToObject(obj);
 			}
 			else
 			{

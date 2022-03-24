@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSResourceGroup.h"
 #include "Sim/GASSSimEngine.h"
@@ -43,7 +45,7 @@ namespace GASS
 
 	bool ResourceManager::HasResourceGroup(const std::string &name)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(name == (*iter)->GetName())
@@ -66,7 +68,7 @@ namespace GASS
 
 	ResourceGroupPtr ResourceManager::GetFirstResourceGroupByName(const std::string &name)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(name == (*iter)->GetName())
@@ -81,17 +83,17 @@ namespace GASS
 	void ResourceManager::AddResourceGroup(ResourceGroupPtr group)
 	{
 		m_ResourceGroups.push_back(group);
-		SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupCreatedEventPtr(new ResourceGroupCreatedEvent(group)));
+		SimEngine::Get().GetSimSystemManager()->SendImmediate(std::make_shared<ResourceGroupCreatedEvent>(group));
 	}
 
 	void ResourceManager::RemoveResourceGroup(ResourceGroupPtr group)
 	{
-		ResourceGroupVector::iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		while(iter != m_ResourceGroups.end())
 		{
 			if(group == (*iter))
 			{
-				SimEngine::Get().GetSimSystemManager()->SendImmediate(ResourceGroupRemovedEventPtr(new ResourceGroupRemovedEvent(group)));
+				SimEngine::Get().GetSimSystemManager()->SendImmediate(std::make_shared<ResourceGroupRemovedEvent>(group));
 				iter = m_ResourceGroups.erase(iter);
 				
 			}
@@ -120,7 +122,7 @@ namespace GASS
 
 	FileResourcePtr ResourceManager::GetFirstResourceByName(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{
@@ -134,7 +136,7 @@ namespace GASS
 
 	ResourceVector ResourceManager::GetResourcesByName(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{
@@ -147,7 +149,7 @@ namespace GASS
 
 	bool ResourceManager::HasResource(const std::string &resource_name) const
 	{
-		ResourceGroupVector::const_iterator iter = m_ResourceGroups.begin();
+		auto iter = m_ResourceGroups.begin();
 		ResourceVector resources;
 		while(iter != m_ResourceGroups.end())
 		{

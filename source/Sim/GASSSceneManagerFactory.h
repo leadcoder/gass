@@ -54,12 +54,10 @@ namespace GASS
 		static SceneManagerFactory* GetPtr();
 		static SceneManagerFactory& Get();
 	protected:
-
-	protected:
 		GenericFactory<std::string, SceneManagerPtr, ScenePtr> m_Impl;
 		static SceneManagerFactory* m_Instance;
 	};
 	//smart pointer typedef
-	typedef GASS_SHARED_PTR<SceneManagerFactory> SceneManagerFactoryPtr;
+	using SceneManagerFactoryPtr = std::shared_ptr<SceneManagerFactory>;
 }
 

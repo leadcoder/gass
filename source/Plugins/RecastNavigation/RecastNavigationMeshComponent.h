@@ -78,7 +78,7 @@ namespace GASS
 		BIND(LAND_COVER_URBAN_C1)
 	END_ENUM_BINDER(LandCoverType,LandCoverTypeBinder)
 
-	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, BaseSceneComponent>, public INavigationMeshComponent
+	class RecastNavigationMeshComponent : public Reflection<RecastNavigationMeshComponent, Component>, public INavigationMeshComponent
 	{
 	public:
 		RecastNavigationMeshComponent();
@@ -91,8 +91,8 @@ namespace GASS
 		//INavigationMeshComponent
 		bool GetShortestPath(const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
 		bool GetShortestPathForPlatform(const PlatformType platform_type, const Vec3 &from, const Vec3 &to, NavigationPath &path) const override;
-		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const GASS::Vec2 &in_pos, const float search_radius, GASS::Vec3 &out_pos) const override;
-		bool Raycast(const PlatformType /*platform_type*/, const GASS::Vec3 & /*from_pos*/, const GASS::Vec3 & /*to_pos*/, GASS::Vec3 & /*hit_pos*/) const override { return false; }
+		bool GetClosestPointOnMeshForPlatform(const PlatformType platform_type, const Vec2 &in_pos, const float search_radius, Vec3 &out_pos) const override;
+		bool Raycast(const PlatformType /*platform_type*/, const Vec3 & /*from_pos*/, const Vec3 & /*to_pos*/, Vec3 & /*hit_pos*/) const override { return false; }
 		
 		Vec3 GetRandomPoint() const;
 		bool GetRandomPointInCircle(const Vec3 &circle_center, const float radius, Vec3 &point) const;
@@ -108,8 +108,8 @@ namespace GASS
 		std::vector<SceneObjectRef> GetMeshSelectionEnum();
 	protected:
 		static const int MAX_POLYS_IN_PATH = 2048;
-		void GASSToRecast(const GASS::Vec3 &in_pos, float* out_pos) const;
-		void RecastToGASS(float* in_pos, GASS::Vec3 &out_pos) const;
+		void GASSToRecast(const Vec3 &in_pos, float* out_pos) const;
+		void RecastToGASS(float* in_pos, Vec3 &out_pos) const;
 		void UpdateOffmeshConnections();
 		void UpdateConvexVolumes();
 		
@@ -178,51 +178,51 @@ namespace GASS
 		FilePath GetImportMesh() const;
 		void SetBoundingBoxFromShape(const std::string &value);
 		std::string GetBoundingBoxFromShape() const;
-		FilePath _GetFilePath() const;
+		FilePath GetFilePath() const;
 	
-		void OnEditPosition(EditPositionMessagePtr message);
+		void OnEditPosition(EditPositionEventPtr message);
 		void OnSceneObjectCreated(PostSceneObjectInitializedEventPtr message);
 
 		GraphicsMeshPtr m_NavVisTriMesh;
 		GraphicsMeshPtr m_NavVisLineMesh;
 		std::vector<SceneObjectRef> m_SelectedMeshes;
-		bool m_ShowMeshLines;
-		bool m_ShowMeshSolid;
-		bool m_Visible;
+		bool m_ShowMeshLines{false};
+		bool m_ShowMeshSolid{false};
+		bool m_Visible{true};
 		AABox m_MeshBounding;
-		int m_Transparency;
+		int m_Transparency{30};
 		std::string m_BBShape;
 		std::string m_NavMeshFilePath;
-		dtNavMesh* m_NavMesh;
+		dtNavMesh* m_NavMesh{NULL};
 		//dtTileCache* m_TileCache;
 		//settings
-		float m_CellSize;
-		float m_CellHeight;
-		float m_AgentHeight;
-		float m_AgentRadius;
-		float m_AgentMaxClimb;
-		float m_AgentMaxSlope;
-		float m_RegionMinSize;
-		float m_RegionMergeSize;
-		float m_EdgeMaxLen;
-		float m_EdgeMaxError;
-		float m_VertsPerPoly;
-		float m_DetailSampleDist;
-		float m_DetailSampleMaxError;
-		int m_GridSize;
-		int m_TileSize;
+		float m_CellSize{0.3f};
+		float m_CellHeight{0.2f};
+		float m_AgentHeight{ 2.0f};
+		float m_AgentRadius{ 0.6f};
+		float m_AgentMaxClimb{ 0.9f};
+		float m_AgentMaxSlope{ 45.0f};
+		float m_RegionMinSize{ 50};
+		float m_RegionMergeSize{ 20};
+		float m_EdgeMaxLen{ 12.0f};
+		float m_EdgeMaxError{ 1.3f};
+		float m_VertsPerPoly{ 6.0f};
+		float m_DetailSampleDist{ 6.0f};
+		float m_DetailSampleMaxError{ 1.0f};
+		int m_GridSize{0};
+		int m_TileSize{ 64};
 		dtNavMeshQuery* m_NavQuery;
 		InputGeom* m_Geom;
 		rcContext* m_Ctx;
-		bool m_MonotonePartitioning;
-		bool m_Initialized;
-		bool m_AutoCollectMeshes;
-		bool m_UseBoudingBox;
+		bool m_MonotonePartitioning{ false};
+		bool m_Initialized{false};
+		bool m_AutoCollectMeshes{true};
+		bool m_UseBoudingBox{true};
 		Vec3 m_LocalOrigin;
 
 		mutable GASS_MUTEX m_Mutex; 
 	};
-	typedef GASS_SHARED_PTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentPtr;
-	typedef GASS_WEAK_PTR<RecastNavigationMeshComponent> RecastNavigationMeshComponentWeakPtr;
+	using RecastNavigationMeshComponentPtr = std::shared_ptr<RecastNavigationMeshComponent>;
+	using RecastNavigationMeshComponentWeakPtr = std::weak_ptr<RecastNavigationMeshComponent>;
 }
 

@@ -127,7 +127,7 @@ namespace GASS
 		TVec3<TYPE> m_Origin;
 	};
 
-	typedef TPlane<float> Planef;
-	typedef TPlane<double> Planed;
-	typedef TPlane<Float> Plane;
+	using Planef = TPlane<float>;
+	using Planed = TPlane<double>;
+	using Plane = TPlane<Float>;
 }

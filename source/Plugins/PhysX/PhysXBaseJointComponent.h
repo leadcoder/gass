@@ -29,9 +29,9 @@
 namespace GASS
 {
 	class PhysXPhysicsSceneManager;
-	typedef GASS_WEAK_PTR<PhysXPhysicsSceneManager> PhysXPhysicsSceneManagerWeakPtr;
+	using PhysXPhysicsSceneManagerWeakPtr = std::weak_ptr<PhysXPhysicsSceneManager>;
 
-	class PhysXBaseJointComponent : public Reflection<PhysXBaseJointComponent,BaseSceneComponent>
+	class PhysXBaseJointComponent : public Reflection<PhysXBaseJointComponent,Component>
 	{
 	public:
 		PhysXBaseJointComponent();
@@ -53,11 +53,11 @@ namespace GASS
 
 		SceneObjectRef m_Body1;
 		SceneObjectRef m_Body2;
-		bool m_Body1Loaded;
-		bool m_Body2Loaded;
-		bool m_Report;
+		bool m_Body1Loaded{false};
+		bool m_Body2Loaded{false};
+		bool m_Report{false};
 	private:
 	};
-	typedef GASS_SHARED_PTR<PhysXBaseJointComponent> PhysXBaseJointComponentPtr;
+	using PhysXBaseJointComponentPtr = std::shared_ptr<PhysXBaseJointComponent>;
 }
 

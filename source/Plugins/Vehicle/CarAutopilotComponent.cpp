@@ -33,6 +33,8 @@
 #include "Sim/Interface/GASSIControlSettingsSystem.h"
 #include <float.h>
 
+#include <memory>
+
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 
@@ -41,27 +43,19 @@ namespace GASS
 {
 	CarAutopilotComponent::CarAutopilotComponent()  : m_ThrottleInput("Throttle"),
 		m_SteerInput("Steer"),
-		m_DesiredPosRadius(0),
+		
 		m_DesiredPos(0,0,0),
 		m_CurrentPos(0,0,0),
-		m_DesiredSpeed(0),
-		m_Enable(false),
-		m_WPReached(false),
+		
 		m_VehicleSpeed(0,0,0),
-		m_BrakeDistanceFactor(1.0),
-		m_InvertBackWardSteering(true),
-		m_Support3PointTurn(true),
+		
 		m_FaceDirection(0,0,0),
-		m_HasDir(false),
-		m_MaxReverseDistance(5),
-		m_PlatformType(PT_CAR),
-		m_HasCollision(false),
-		m_CollisionPoint(0,0,0),
-		m_CollisionDist(0),
-		m_CollisionAvoidance(false)
+		
+		m_CollisionPoint(0,0,0)
+		
 	{
-		m_TurnPID.setGain(2.0,0.02,0.01);
-		m_TrottlePID.setGain(1.0,0,0);
+		m_TurnPID.SetGain(2.0,0.02,0.01);
+		m_TrottlePID.SetGain(1.0,0,0);
 
 	}
 
@@ -73,7 +67,7 @@ namespace GASS
 	void CarAutopilotComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<CarAutopilotComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CarAutopilotComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("CarAutopilotComponent", OF_VISIBLE));
 
 		RegisterGetSet("SteerInput", &CarAutopilotComponent::GetSteerInput, &CarAutopilotComponent::SetSteerInput,PF_VISIBLE,"Input mapping for steer");
 		RegisterGetSet("ThrottleInput", &CarAutopilotComponent::GetThrottleInput, &CarAutopilotComponent::SetThrottleInput,PF_VISIBLE,"Input mapping for throttle");
@@ -154,8 +148,8 @@ namespace GASS
 		//ss << "SPeed" << message->GetSpeed();
 		//LogManager::getSingleton().logMessage(ss.str(), LML_NORMAL);
 		m_DesiredSpeed = message->GetSpeed();
-		m_TrottlePID.setIntCap(200);
-		m_TrottlePID.setIntSum(0);
+		m_TrottlePID.SetIntCap(200);
+		m_TrottlePID.SetIntSum(0);
 	}
 
 	void CarAutopilotComponent::OnTransMessage(TransformationChangedEventPtr message)
@@ -178,7 +172,7 @@ namespace GASS
 	{
 		if(m_Enable)
 		{
-			_UpdateDrive(delta);
+			UpdateDrive(delta);
 		}
 	}
 #if 0
@@ -448,7 +442,7 @@ namespace GASS
 	}
 
 
-	CarAutopilotComponent::NavState CarAutopilotComponent::_DecideNavState(const double angle_to_target_dir, const double target_dist, const double turn_radius) const
+	CarAutopilotComponent::NavState CarAutopilotComponent::DecideNavState(const double angle_to_target_dir, const double target_dist, const double turn_radius) const
 	{
 		const bool target_inside_turn_radius = target_dist < turn_radius&& fabs(angle_to_target_dir) > 45;
 		const bool target_behinde = fabs(angle_to_target_dir) > 90;
@@ -493,10 +487,10 @@ namespace GASS
 		return std::min(max_val, std::max(min_val, value));
 	}
 
-	double CarAutopilotComponent::_UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir)
+	double CarAutopilotComponent::UpdateSteerInput(const CarAutopilotComponent::NavState nav_state, const double delta_time, const double angle_to_target_dir)
 	{
-		m_TurnPID.setIntCap(60.0);
-		m_TurnPID.set(0);
+		m_TurnPID.SetIntCap(60.0);
+		m_TurnPID.Set(0);
 
 		const double reverse_angle_to_target = angle_to_target_dir > 0 ? -(angle_to_target_dir - 180) : -(angle_to_target_dir + 180);
 		const double current_speed = -m_VehicleSpeed.z;
@@ -505,19 +499,19 @@ namespace GASS
 
 		if (nav_state == FORWARD_TO_TARGET)
 		{
-			steer_input = -m_TurnPID.update(angle_to_target_dir, delta_time);
+			steer_input = -m_TurnPID.Update(angle_to_target_dir, delta_time);
 		}
 		else if (nav_state == REVERSE_TO_TARGET)
 		{
-			steer_input = m_TurnPID.update(reverse_angle_to_target, delta_time);
+			steer_input = m_TurnPID.Update(reverse_angle_to_target, delta_time);
 		}
 		else if (nav_state == FORWARD_AWAY_FROM_TARGET)
 		{
-			steer_input = m_TurnPID.update(reverse_angle_to_target, delta_time);
+			steer_input = m_TurnPID.Update(reverse_angle_to_target, delta_time);
 		}
 		else if (nav_state == REVERSE_AWAY_FROM_TARGET)
 		{
-			steer_input = -m_TurnPID.update(angle_to_target_dir, delta_time);
+			steer_input = -m_TurnPID.Update(angle_to_target_dir, delta_time);
 		}
 
 		if (m_InvertBackWardSteering && current_speed < 0) //invert reverse steering
@@ -527,7 +521,7 @@ namespace GASS
 		return steer_input;
 	}
 
-	double CarAutopilotComponent::_CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target)
+	double CarAutopilotComponent::CalcDesiredSpeed(const CarAutopilotComponent::NavState nav_state, double target_dist, double cos_angle_to_target)
 	{
 		const double current_speed = -m_VehicleSpeed.z;
 		double desired_speed = m_DesiredSpeed;
@@ -573,14 +567,14 @@ namespace GASS
 		return desired_speed;
 	}
 	
-	void CarAutopilotComponent::_SendInput(double steer_input, double throttle_input, double brake_input)
+	void CarAutopilotComponent::SendInput(double steer_input, double throttle_input, double brake_input)
 	{
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_ThrottleInput, static_cast<float>(throttle_input), CT_AXIS)));
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", m_SteerInput, static_cast<float>(steer_input), CT_AXIS)));
-		GetSceneObject()->SendImmediateEvent(InputRelayEventPtr(new InputRelayEvent("", "Break", static_cast<float>(brake_input), CT_AXIS)));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", m_ThrottleInput, static_cast<float>(throttle_input), CT_AXIS));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", m_SteerInput, static_cast<float>(steer_input), CT_AXIS));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<InputRelayEvent>("", "Break", static_cast<float>(brake_input), CT_AXIS));
 	}
 
-	void CarAutopilotComponent::_UpdateDrive(double delta_time)
+	void CarAutopilotComponent::UpdateDrive(double delta_time)
 	{
 		const Vec3d vehicle_pos = m_CurrentPos;
 		const Plane plane = [&] {
@@ -607,12 +601,12 @@ namespace GASS
 				//TODO, refactor and TEST this
 				const Vec3d face_dir = plane.GetProjectedVector(m_FaceDirection).NormalizedCopy();
 				const double angle_to_face = GetAngleOnPlane(plane.m_Normal, face_dir, vehicle_dir);
-				m_TurnPID.set(0);
-				steer_input = m_TurnPID.update(angle_to_face, delta_time);
+				m_TurnPID.Set(0);
+				steer_input = m_TurnPID.Update(angle_to_face, delta_time);
 			}
 			const double brake_input = 1.0f;
 			const double throttle_input = 0.0f;
-			_SendInput(steer_input, throttle_input, brake_input);
+			SendInput(steer_input, throttle_input, brake_input);
 		}
 		else if (target_dist > 0)
 		{
@@ -620,19 +614,19 @@ namespace GASS
 			//GASS_PRINT("angle_to_target_dir:" << angle_to_target_dir);
 			
 			const double vehicle_turn_radius = 10;
-			const NavState nav_state = _DecideNavState(angle_to_target, target_dist, vehicle_turn_radius);
-			const double steer_input = _UpdateSteerInput(nav_state, delta_time, angle_to_target);
+			const NavState nav_state = DecideNavState(angle_to_target, target_dist, vehicle_turn_radius);
+			const double steer_input = UpdateSteerInput(nav_state, delta_time, angle_to_target);
 
 			const double cos_angle_to_target = Clampd(Vec3d::Dot(vehicle_dir, target_dir), -1, 1);
-			const double desired_speed = _CalcDesiredSpeed(nav_state, target_dist, cos_angle_to_target);
-			m_TrottlePID.set(desired_speed);
-			const double throttle_input = Clampd(m_TrottlePID.update(vehicle_speed, delta_time), -1, 1);
+			const double desired_speed = CalcDesiredSpeed(nav_state, target_dist, cos_angle_to_target);
+			m_TrottlePID.Set(desired_speed);
+			const double throttle_input = Clampd(m_TrottlePID.Update(vehicle_speed, delta_time), -1, 1);
 			const double brake_input = 0.0;
-			_SendInput(steer_input, throttle_input, brake_input);
+			SendInput(steer_input, throttle_input, brake_input);
 		}
 		else
 		{
-			_SendInput(0, 0, 1);
+			SendInput(0, 0, 1);
 		}
 	}
 }

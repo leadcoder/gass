@@ -45,13 +45,11 @@
 namespace GASS
 {
 	ODECollisionGeometryComponent::ODECollisionGeometryComponent():
-		m_GeomID(0),
-		m_OffsetGeomID(0),
-		m_Type(CGT_NONE),
-		m_Offset(0,0,0),
-		m_TerrainData(NULL)
+		
+		m_Offset(0,0,0)
+		
 	{
-		m_ColMeshInfo.ID = 0;
+		m_ColMeshInfo.ID = nullptr;
 	}
 
 	ODECollisionGeometryComponent::~ODECollisionGeometryComponent()
@@ -74,7 +72,6 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryFlagsChanged,GeometryFlagsChangedEvent ,0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryChanged,GeometryChangedEvent ,0));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(ODECollisionGeometryComponent::OnGeometryScale,GeometryScaleRequest ,0));
 		m_CollisionSceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<ODECollisionSceneManager>();
 	}
 
@@ -130,10 +127,10 @@ namespace GASS
 
 		if(m_Type == CGT_PLANE)
 		{
-			if(m_GeomID == NULL) //Hack to use plane without geometry component
+			if(m_GeomID == nullptr) //Hack to use plane without geometry component
 			{
 				CreateGeometry();
-				if(m_GeomID == NULL) //Maybe geometry is found but not loaded?, ie OnGeometryChanged not called, assume plane is ground?
+				if(m_GeomID == nullptr) //Maybe geometry is found but not loaded?, ie OnGeometryChanged not called, assume plane is ground?
 					SetFlags(GEOMETRY_FLAG_GROUND);
 			}
 			return;
@@ -173,7 +170,7 @@ namespace GASS
 		if(m_GeomID)
 		{
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
-			dGeomSetBody(m_GeomID , NULL);
+			dGeomSetBody(m_GeomID , nullptr);
 			dGeomSetData(m_GeomID , (void*)this);
 		}
 
@@ -204,7 +201,7 @@ namespace GASS
 		{
 			GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 			dGeomDestroy(m_GeomID);
-			m_GeomID = 0;
+			m_GeomID = nullptr;
 		}
 	}
 
@@ -276,18 +273,13 @@ namespace GASS
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found while collision shape type is CST_BOX", "ODECollisionGeometryComponent::CreateBoxGeometry");
 		}
-
 		AABox box = geom->GetBoundingBox();
 		Vec3 size = box.Max - box.Min;
 
-		m_OffsetGeomID = dCreateBox(0, size.x, size.y, size.z);
-
-		Vec3 offset = (box.Max + box.Min)*0.5;
 		GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
-		dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
-		dGeomID gid = dCreateGeomTransform(GetCollisionSceneManager()->GetSpace());
-		dGeomTransformSetCleanup(gid, 1 );
-		dGeomTransformSetGeom(gid,m_OffsetGeomID);
+		auto gid = dCreateBox(GetCollisionSceneManager()->GetSpace(), size.x, size.y, size.z);
+		Vec3 offset = (box.Max + box.Min)*0.5;
+		dGeomSetOffsetPosition(gid, offset.x, offset.y, offset.z);
 		return gid;
 	}
 
@@ -311,7 +303,7 @@ namespace GASS
 
 	dGeomID ODECollisionGeometryComponent::CreateMeshGeometry()
 	{
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		if(mesh)
 		{
@@ -346,7 +338,7 @@ namespace GASS
 
 					col_mesh = GetCollisionSceneManager()->CreateCollisionMeshAndCache(col_mesh_id, physics_mesh);
 				}
-				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, 0, 0, 0);
+				geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), col_mesh.ID, nullptr, nullptr, nullptr);
 			}
 			else //probably manual mesh
 			{
@@ -358,8 +350,8 @@ namespace GASS
 					{
 						dGeomTriMeshDataDestroy(m_ColMeshInfo.ID);
 					}
-					m_ColMeshInfo = GetCollisionSceneManager()->_CreateCollisionMesh(physics_mesh);
-					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, 0, 0, 0);
+					m_ColMeshInfo = GetCollisionSceneManager()->CreateCollisionMesh(physics_mesh);
+					geom_id = dCreateTriMesh(GetCollisionSceneManager()->GetSpace(), m_ColMeshInfo.ID, nullptr, nullptr, nullptr);
 				}
 			}
 		}
@@ -370,13 +362,7 @@ namespace GASS
 		return geom_id;
 	}
 
-	void ODECollisionGeometryComponent::OnGeometryScale(GeometryScaleRequestPtr message)
-	{
-		//update scale
-		SetScale(message->GetScale());
-	}
-
-	void ODECollisionGeometryComponent::SetScale(const Vec3 &scale)
+	void ODECollisionGeometryComponent::SetScale(const Vec3 &/*scale*/)
 	{
 		if(m_GeomID)
 		{
@@ -394,9 +380,9 @@ namespace GASS
 
 				GASS_MUTEX_LOCK(GetCollisionSceneManager()->GetMutex());
 
-				dGeomBoxSetLengths(m_OffsetGeomID, size.x, size.y, size.z);
+				dGeomBoxSetLengths(m_GeomID, size.x, size.y, size.z);
 				Vec3 offset = (box.Max + box.Min)*0.5;
-				dGeomSetPosition(m_OffsetGeomID, offset.x, offset.y, offset.z);
+				dGeomSetOffsetPosition(m_GeomID, offset.x, offset.y, offset.z);
 
 				//also reset position, know why but offset change is not reflected otherwise
 				const dReal* pos = dGeomGetPosition(m_GeomID);
@@ -407,7 +393,7 @@ namespace GASS
 
 	bool ODECollisionGeometryComponent::IsInitialized() const
 	{
-		return (m_GeomID == 0) ? false:true;
+		return (m_GeomID == nullptr) ? false:true;
 	}
 
 	unsigned long  ODECollisionGeometryComponent::GetFlags() const
@@ -445,7 +431,7 @@ namespace GASS
 		//save raw point for fast height access, not thread safe!!
 
 
-		dGeomID geom_id = 0;
+		dGeomID geom_id = nullptr;
 
 		if(terrain)
 		{
@@ -501,7 +487,7 @@ namespace GASS
 
 	dReal ODECollisionGeometryComponent::TerrainHeightCallback(void* data,int x,int z)
 	{
-		ODECollisionGeometryComponent* ode_terrain = (ODECollisionGeometryComponent*)data;
+		auto* ode_terrain = (ODECollisionGeometryComponent*)data;
 		return ode_terrain->GetTerrainHeight(x,z);
 	}
 

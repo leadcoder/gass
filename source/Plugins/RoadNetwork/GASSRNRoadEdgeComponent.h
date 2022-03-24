@@ -9,7 +9,7 @@
 
 namespace GASS
 {
-	class RNRoadEdgeComponent :  public Reflection<RNRoadEdgeComponent,BaseSceneComponent> , public IGraphEdgeComponent
+	class RNRoadEdgeComponent :  public Reflection<RNRoadEdgeComponent,Component> , public IGraphEdgeComponent
 	{
 	public:
 		RNRoadEdgeComponent(void);
@@ -29,10 +29,10 @@ namespace GASS
 		std::vector<Vec3> GetWaypoints() const;
 	private:
 		void OnTransformation(TransformationChangedEventPtr message);
-		Float m_LaneWidth;
+		Float m_LaneWidth{2};
 		GraphNodeComponentWeakPtr m_StartNode;
 		GraphNodeComponentWeakPtr  m_EndNode;
 	};
-	typedef GASS_SHARED_PTR<RNRoadEdgeComponent> RNRoadEdgeComponentPtr;
+	using RNRoadEdgeComponentPtr = std::shared_ptr<RNRoadEdgeComponent>;
 }
 #endif

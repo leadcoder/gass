@@ -14,25 +14,25 @@ namespace GASS
 	private:
 		RoadNavigation( const RoadNavigation& );
 		void operator=( const RoadNavigation& );
-		micropather::MicroPather* pather;
+		micropather::MicroPather* m_Pather;
 	public:
 		RoadNavigation()  
 		{
-			pather = new micropather::MicroPather( this, 20 );	// Use a very small memory block to stress the pather
+			m_Pather = new micropather::MicroPather( this, 20 );	// Use a very small memory block to stress the pather
 		}
 
 		~RoadNavigation() override {
-			delete pather;
+			delete m_Pather;
 		}
 
-		unsigned int Checksum() { return static_cast<unsigned int>( pather->Checksum()); }
+		unsigned int Checksum() { return static_cast<unsigned int>( m_Pather->Checksum()); }
 
 		int GetPath( RoadNode *from_node, RoadNode* to_node, std::vector<RoadNode*>  &path ) 
 		{
 			int result = 0;
-			float totalCost;
+			float total_cost;
 			std::vector<void*> void_path;
-			result = pather->Solve( RoadNodeToVoid( from_node), RoadNodeToVoid( to_node), &void_path, &totalCost );
+			result = m_Pather->Solve( RoadNodeToVoid( from_node), RoadNodeToVoid( to_node), &void_path, &total_cost );
 
 			for(size_t i = 0; i < void_path.size(); i++)
 			{
@@ -81,15 +81,15 @@ namespace GASS
 					(edge->Dir == DOWNSTREAM && road_node == road_node->Edges[i]->StartNode) ||
 					(edge->Dir == UPSTREAM && road_node == road_node->Edges[i]->EndNode)))
 				{
-					float cost = (float) edge->Distance;
+					auto cost = (float) edge->Distance;
 					RoadNode* target_node;
 					if(road_node->Edges[i]->StartNode == road_node)
 						target_node = road_node->Edges[i]->EndNode;
 					else
 						target_node = road_node->Edges[i]->StartNode;
 
-					micropather::StateCost nodeCost = { RoadNodeToVoid(target_node), cost};
-					neighbors->push_back(nodeCost);
+					micropather::StateCost node_cost = { RoadNodeToVoid(target_node), cost};
+					neighbors->push_back(node_cost);
 				}
 			}
 		}

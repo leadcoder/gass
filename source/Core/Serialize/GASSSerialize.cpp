@@ -26,36 +26,36 @@ namespace GASS
 	template <>
 	void SerialSaver::IO<std::string>(const std::string &value)
 	{
-		if(buffer)
+		if(m_Buffer)
 		{
 			auto l = static_cast<unsigned long>(value.length());
 			IO<unsigned long>(l);
-			if(bHasOverflowed)return;
-			if(bytesUsed+l>length){bHasOverflowed=true; return; }
-			memcpy(buffer,value.c_str(),l);
-			buffer+=l; bytesUsed+=l;
+			if(m_BHasOverflowed)return;
+			if(m_BytesUsed+l>m_Length){m_BHasOverflowed=true; return; }
+			memcpy(m_Buffer,value.c_str(),l);
+			m_Buffer+=l; m_BytesUsed+=l;
 		}
 		else
 		{
 			const int type_size = sizeof(unsigned long);
-			length +=type_size;
-			length += static_cast<int>( value.length());
+			m_Length +=type_size;
+			m_Length += static_cast<int>( value.length());
 		}
 	}
 
 	template <>
 	void SerialLoader::IO<std::string>(std::string &value)
 	{
-		unsigned long l;
+		unsigned long l = 0;
 		IO<unsigned long>(l);
-		if(bHasOverflowed)return;
-		if(bytesUsed + l > length){bHasOverflowed=true; return; }
-		char *szBuf=new char[l+1];
-		szBuf[l]=0;
-		memcpy(szBuf,buffer,l);
-		value=szBuf;
-		delete[] szBuf;
-		buffer+=l; bytesUsed+=l;
+		if(m_BHasOverflowed)return;
+		if(m_BytesUsed + l > m_Length){m_BHasOverflowed=true; return; }
+		char *sz_buf=new char[l+1];
+		sz_buf[l]=0;
+		memcpy(sz_buf,m_Buffer,l);
+		value=sz_buf;
+		delete[] sz_buf;
+		m_Buffer+=l; m_BytesUsed+=l;
 	}
 
 	template <>

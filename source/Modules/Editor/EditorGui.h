@@ -4,7 +4,7 @@
 #include "imgui_stdlib.h"
 
 //#include "windows.h"
-//#include "tinyfiledialogs.h"
+#include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Math/GASSAABox.h"
 #include "Sim/GASSScene.h"
@@ -18,8 +18,10 @@
 #include "Sim/Interface/GASSIGraphComponent.h"
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
+#include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
-
+#include "Modules/Editor/ToolSystem/CreateTool.h"
+#include "IconsFontAwesome5.h"
 
 namespace GASS
 {
@@ -30,19 +32,19 @@ namespace GASS
 		{
 		}
 
-		void drawUi()
+		void DrawUi()
 		{
-			dockingBegin();
-
+			DockingBegin();
+			DrawMainMenu();
+			ToolbarUI();
 			if (m_ShowObjectTree)
-				drawObjectTree();
+				DrawObjectTree();
 
 			if (m_ShowProperties)
-				drawProperties();
-			if (m_ShowTools)
-				drawTools();
+				DrawProperties();
 			if (m_ShowTemplates)
-				drawTemplates();
+				DrawTemplates();
+
 		}
 	protected:
 		bool m_ShowProperties = true;
@@ -53,11 +55,107 @@ namespace GASS
 		bool m_ShowTemplates = true;
 		Scene* m_SceneSelected = nullptr;
 		std::string m_DropTemplate;
+		ImGuiID m_DockSpaceId = 0;
 
-		void drawMainMenu()
+
+		bool ToolbarButton(std::string name, const char* font_icon, bool is_active, const char* tooltip)
+		{
+			const ImVec4 col_active = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
+			const ImVec4 bg_color = is_active ? col_active : ImGui::GetStyle().Colors[ImGuiCol_Text];
+
+
+			auto frame_padding = ImGui::GetStyle().FramePadding;
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_Text, bg_color);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, ImGui::GetStyle().FramePadding.y));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, frame_padding);
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
+
+			bool ret = false;
+			if (ImGui::Button(font_icon ? font_icon : name.c_str())) {
+				ret = true;
+			}
+			ImGui::PopStyleColor(4);
+			ImGui::PopStyleVar(3);
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				ImGui::TextUnformatted(tooltip);
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+			return ret;
+		}
+
+		void ToolbarUI()
+		{
+
+			ScenePtr scene = GetFirstScene();
+			if (!scene)
+				return;
+			auto* esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
+			std::string active_tool_name;
+			if (auto* active_tool = esm->GetMouseToolController()->GetActiveTool())
+			{
+				active_tool_name = active_tool->GetName();
+			}
+
+
+			//int menuBarHeight = 10;
+			float toolbarSize = 40;
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+			auto centralNode = ImGui::DockBuilderGetCentralNode(m_DockSpaceId);
+			if (!centralNode)
+				return;
+			ImGui::SetNextWindowPos(centralNode->Pos);
+			ImGui::SetNextWindowSize(ImVec2(centralNode->Size.x, toolbarSize));
+			ImGui::SetNextWindowViewport(viewport->ID);
+
+			ImGuiWindowFlags window_flags = 0
+				| ImGuiWindowFlags_NoDocking
+				| ImGuiWindowFlags_NoTitleBar
+				| ImGuiWindowFlags_NoResize
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoScrollbar
+				| ImGuiWindowFlags_NoSavedSettings
+				;
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+			ImGui::Begin("TOOLBAR", NULL, window_flags);
+			//ImGui::SetWindowFontScale(1);
+
+			struct ToolInfo
+			{
+				ToolInfo(std::string name, char* icon, std::string tt = "") : Name(name), Icon(icon), ToolTip(tt)
+				{
+				}
+				std::string Name;
+				char* Icon = nullptr;
+				std::string ToolTip;
+			};
+
+			std::vector<ToolInfo> tools = { {TID_SELECT,ICON_FA_MOUSE_POINTER, "Select Tool"},
+				{TID_MOVE, ICON_FA_ARROWS_ALT,"Move Tool"},
+				{TID_ROTATE,ICON_FA_REDO_ALT,"Rotate Tool"},
+				{TID_GOTO_POS,nullptr,"Go To Position Tool"},
+				{TID_BOX , nullptr, "Box tool"} };
+
+			for (size_t i = 0; i < tools.size(); i++)
+			{
+				auto& ti = tools[i];
+				bool active = ti.Name == active_tool_name;
+				if (ToolbarButton(ti.Name, ti.Icon, active, ti.ToolTip.c_str()))
+					esm->GetMouseToolController()->SelectTool(ti.Name);
+			}
+			ImGui::PopStyleVar();
+			ImGui::End();
+		}
+
+		void DrawMainMenu()
 		{
 			// Menu Bar
-			ImGui::BeginMenuBar();
+			ImGui::BeginMainMenuBar();
 			//if (open)
 			{
 				if (ImGui::BeginMenu("File"))
@@ -65,7 +163,7 @@ namespace GASS
 					if (ImGui::MenuItem("New"))
 					{
 						m_SceneSelected = nullptr;
-						auto scene = getFirstScene();
+						auto scene = GetFirstScene();
 						if (scene)
 							SimEngine::Get().DestroyScene(scene);
 						scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
@@ -75,13 +173,13 @@ namespace GASS
 
 					if (ImGui::BeginMenu("Load Scene"))
 					{
-						auto scenes= GASS::SimEngine::Get().GetSavedScenes();
+						auto scenes = SimEngine::Get().GetSavedScenes();
 						for (size_t i = 0; i < scenes.size(); i++)
 						{
 							if (ImGui::MenuItem(scenes[i].c_str()))
 							{
 								m_SceneSelected = nullptr;
-								auto scene = getFirstScene();
+								auto scene = GetFirstScene();
 								if (scene)
 									SimEngine::Get().DestroyScene(scene);
 								scene = ScenePtr(SimEngine::Get().CreateScene(scenes[i]));
@@ -93,10 +191,10 @@ namespace GASS
 						}
 						ImGui::EndMenu();
 					}
-					
+
 					if (ImGui::MenuItem("Save", "Ctrl+S"))
 					{
-						auto scene = getFirstScene();
+						auto scene = GetFirstScene();
 						if (scene && scene->GetName() != "")
 							scene->Save(scene->GetName());
 						//char const* filterPatterns[1] = { "*.earth" };
@@ -114,14 +212,13 @@ namespace GASS
 				}
 				if (ImGui::BeginMenu("View"))
 				{
-					ImGui::MenuItem("Object Tree", NULL, &m_ShowObjectTree);
-					ImGui::MenuItem("Properties", NULL, &m_ShowProperties);
-					ImGui::MenuItem("Log", NULL, &m_ShowLog);
+					ImGui::MenuItem("Object Tree", nullptr, &m_ShowObjectTree);
+					ImGui::MenuItem("Properties", nullptr, &m_ShowProperties);
+					ImGui::MenuItem("Log", nullptr, &m_ShowLog);
 					ImGui::EndMenu();
 				}
-
-				ImGui::EndMenuBar();
 			}
+			ImGui::EndMainMenuBar();
 
 			//ImGuiViewportP* viewport = (ImGuiViewportP*)(void*)ImGui::GetMainViewport();
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -130,23 +227,27 @@ namespace GASS
 
 			if (ImGui::BeginViewportSideBar("##StatusBar", viewport, ImGuiDir_Down, height, window_flags)) {
 				if (ImGui::BeginMenuBar()) {
-					auto scene = getFirstScene();
-					if(scene)
+					auto scene = GetFirstScene();
+					if (scene)
 						ImGui::Text("Loaded Scene:%s", scene->GetName().c_str());
 					ImGui::EndMenuBar();
 				}
 				ImGui::End();
 			}
 
-			
+
 		}
 
-		void dockingBegin()
+		void DockingBegin()
 		{
 			// ImGui code goes here...
-			//ImGui::ShowDemoWindow();
+			ImGui::ShowDemoWindow();
 			//return;
+			constexpr ImGuiDockNodeFlags dockspace_flags =
+				ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
+			m_DockSpaceId = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
 
+#if 0
 			ImGuiWindowFlags window_dock_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
 			ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -170,15 +271,16 @@ namespace GASS
 				ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 			}
-			drawMainMenu();
+			DrawMainMenu();
 			ImGui::End();
+#endif
 		}
 
 
-		void drawScene(Scene* scene)
+		void DrawScene(Scene* scene)
 		{
 			bool node_open = ImGui::TreeNode(scene->GetName().c_str());
-			
+
 			if (ImGui::IsItemClicked())
 			{
 				auto editor = scene->GetFirstSceneManagerByClass<EditorSceneManager>();
@@ -188,12 +290,12 @@ namespace GASS
 
 			if (node_open)
 			{
-				drawSceneObject(scene->GetRootSceneObject());
+				DrawSceneObject(scene->GetRootSceneObject());
 				ImGui::TreePop();
 			}
 		}
 
-		void drawSceneObject(SceneObjectPtr so)
+		void DrawSceneObject(SceneObjectPtr so)
 		{
 			auto editor = so->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
 			SceneObjectPtr selected = editor->GetFirstSelectedObject();
@@ -237,11 +339,44 @@ namespace GASS
 					node_deleted = true;
 				}
 
-				if (ImGui::MenuItem("Set as parent for new objects"))
+				if (ImGui::MenuItem("Make parent for dnd in scene"))
 				{
 					editor->SetObjectSite(so);
 				}
-				
+
+				if (ImGui::MenuItem("Save..."))
+				{
+					char const* filter_patterns[2] = { "*.xml" };
+					char const* save_file_name = tinyfd_saveFileDialog(
+						"Save SceneObject",
+						"SceneObject.xml",
+						1,
+						filter_patterns,
+						nullptr);
+					if (save_file_name)
+					{
+						so->SaveToFile(save_file_name);
+					}
+				}
+				if (ImGui::MenuItem("Load..."))
+				{
+					char const* filter_patterns[2] = { "*.xml" };
+					char const* load_file_name = tinyfd_openFileDialog(
+						"Load SceneObject",
+						"",
+						1,
+						filter_patterns,
+						nullptr,
+						0);
+					if (load_file_name)
+					{
+						auto child = SceneObject::LoadFromXML(load_file_name);
+						so->AddChildSceneObject(child, true);
+					}
+				}
+
+
+
 				if (so->GetFirstComponentByClass<IGraphComponent>().get())
 				{
 					if (ImGui::MenuItem("Add Node..."))
@@ -262,8 +397,16 @@ namespace GASS
 						OnAddGraphNode(so);
 					}
 				}
+				if (so->GetFirstComponentByClass<IWaypointListComponent>().get())
+				{
+					if (ImGui::MenuItem("Add Waypoint..."))
+					{
+						OnAddWaypoint(so);
+					}
+				}
 
-				
+
+
 
 				ImGui::EndPopup();
 
@@ -275,16 +418,16 @@ namespace GASS
 				{
 					for (int i = 0; i < so->GetNumChildren(); i++)
 					{
-						drawSceneObject(so->GetChild(i));
+						DrawSceneObject(so->GetChild(i));
 					}
 				}
 				ImGui::TreePop();
 			}
 		}
 
-		void drawObjectTree()
+		void DrawObjectTree()
 		{
-			auto scene = getFirstScene();
+			auto scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -294,21 +437,22 @@ namespace GASS
 				ImGui::End();
 				return;
 			}
-			drawScene(scene.get());
+
+			DrawScene(scene.get());
 			ImGui::End();
 		}
 
 		template<typename TYPE>
-		GASS::TypedProperty<TYPE>* AsTypedProp(GASS::IProperty* prop)
+		TypedProperty<TYPE>* AsTypedProp(IProperty* prop)
 		{
 			if (*prop->GetTypeID() == typeid(TYPE))
 			{
-				return dynamic_cast<GASS::TypedProperty<TYPE>*>(prop);
+				return dynamic_cast<TypedProperty<TYPE>*>(prop);
 			}
 			return nullptr;
 		}
 
-		ScenePtr getFirstScene()
+		ScenePtr GetFirstScene()
 		{
 			ScenePtr scene;
 			SimEngine::SceneIterator iter = SimEngine::Get().GetScenes();
@@ -319,23 +463,55 @@ namespace GASS
 			return scene;
 		}
 
-		void drawProp(BaseReflectionObject* obj, IProperty* prop)
+		template <typename FUNC>
+		void DrawPropInGrid(const std::string &prop_name, FUNC func)
 		{
-			const std::string prop_name = prop->GetName();
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text(prop_name.c_str());
+			ImGui::TableSetColumnIndex(1);
+			ImGui::SetNextItemWidth(-FLT_MIN);
+			func();
+			ImGui::NextColumn();
+		}
 
-			if (prop->GetFlags() & GASS::PF_VISIBLE)
+
+		void DrawPropInGrid(BaseReflectionObject* obj, IProperty* prop)
+		{
+			if (prop->GetFlags() & PF_VISIBLE)
+			{
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::AlignTextToFramePadding();
+				const std::string prop_name = prop->GetName();
+				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+				ImGui::TreeNodeEx(prop_name.c_str(), flags);
+				//ImGui::Text(prop_name.c_str());
+				ImGui::TableSetColumnIndex(1);
+				ImGui::SetNextItemWidth(-FLT_MIN);
+				DrawProp(obj, prop);
+				ImGui::NextColumn();
+			}
+		}
+
+		void DrawProp(BaseReflectionObject* obj, IProperty* prop)
+		{
+			const std::string prop_name = "##" + prop->GetName();
+
+			if (prop->GetFlags() & PF_VISIBLE)
 			{
 				if (prop->HasMetaData())
 				{
-					GASS::PropertyMetaDataPtr meta_data = prop->GetMetaData();
-					const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
+					PropertyMetaDataPtr meta_data = prop->GetMetaData();
+					const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const std::string documentation = prop->GetDescription();
-					if (GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data))
+					if (GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data))
 					{
 						//item = m_VariantManager->addProperty(QtVariantPropertyManager::enumTypeId(), prop_name.c_str());
-						GASS::FilePathPropertyMetaDataPtr file_path_data = GASS_DYNAMIC_PTR_CAST<GASS::FilePathPropertyMetaData>(meta_data);
+						FilePathPropertyMetaDataPtr file_path_data = GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data);
 						std::vector<std::string> exts = file_path_data->GetExtensions();
-						GASS::FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
+						FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
 
 						std::string filter;
 						for (size_t i = 0; i < exts.size(); i++)
@@ -347,30 +523,30 @@ namespace GASS
 						}
 
 						std::string filename = prop->GetValueAsString(obj);
-						filename = GASS::StringUtils::Replace(filename, "/", "\\");
+						filename = StringUtils::Replace(filename, "/", "\\");
 
 						//m_VariantManager->setAttribute(item,QLatin1String("filter"),QVariant("*.png *.jpg"));
 						switch (type)
 						{
-						case GASS::FilePathPropertyMetaData::IMPORT_FILE:
+						case FilePathPropertyMetaData::IMPORT_FILE:
 							//item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
 							//item->setValue(filename.c_str());
 							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
 							break;
-						case GASS::FilePathPropertyMetaData::EXPORT_FILE:
+						case FilePathPropertyMetaData::EXPORT_FILE:
 							//item = m_VariantManager->addProperty(newFileTypeId(), prop_name.c_str());
 							//item->setValue(filename.c_str());
 							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
 							break;
-						case GASS::FilePathPropertyMetaData::PATH_SELECTION:
+						case FilePathPropertyMetaData::PATH_SELECTION:
 							break;
 						}
 					}
 				}
 				else //if (!item)
 				{
-					const bool editable = (prop->GetFlags() & GASS::PF_EDITABLE);
-					const bool multi = (prop->GetFlags() & GASS::PF_MULTI_OPTIONS);
+					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					const bool multi = (prop->GetFlags() & PF_MULTI_OPTIONS);
 					if (prop->HasOptions())
 					{
 						std::vector<std::string> options = prop->GetStringOptions();
@@ -467,7 +643,7 @@ namespace GASS
 						{
 							double value = 0;
 							obj->GetPropertyValue(prop, value);
-							if (ImGui::DragScalarN(prop_name.c_str(), ImGuiDataType_Double , &value,1, drag_speed))
+							if (ImGui::DragScalarN(prop_name.c_str(), ImGuiDataType_Double, &value, 1, drag_speed))
 							{
 								obj->SetPropertyValue(prop, value);
 							}
@@ -485,7 +661,7 @@ namespace GASS
 						{
 							Vec3d value;
 							obj->GetPropertyValue(prop, value);
-							if (ImGui::DragScalarN(prop_name.c_str(), ImGuiDataType_Double, (void*)&value.x,3, drag_speed))
+							if (ImGui::DragScalarN(prop_name.c_str(), ImGuiDataType_Double, (void*)&value.x, 3, drag_speed))
 							{
 								obj->SetPropertyValue(prop, value);
 							}
@@ -590,10 +766,10 @@ namespace GASS
 								obj->SetPropertyValue(prop, bb);
 							}
 						}
-						else if (*prop->GetTypeID() == typeid(GASS::FilePath))
+						else if (*prop->GetTypeID() == typeid(FilePath))
 						{
 							//std::string filename = prop_value;
-							//filename = GASS::StringUtils::Replace(filename, "/", "\\");
+							//filename = StringUtils::Replace(filename, "/", "\\");
 							if (ImGui::Button(prop_name.c_str()))
 							{
 
@@ -605,9 +781,9 @@ namespace GASS
 							std::string prop_value = prop->GetValueAsString(obj);
 							if (ImGui::InputText(prop_name.c_str(), &prop_value))
 							{
-								
+
 							}
-							if(ImGui::IsItemDeactivated())
+							if (ImGui::IsItemDeactivated())
 								prop->SetValueByString(obj, prop_value);
 
 						}
@@ -617,9 +793,9 @@ namespace GASS
 			}
 		}
 
-		void drawProperties()
+		void DrawProperties()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -631,68 +807,84 @@ namespace GASS
 			}
 
 			auto* so = scene->GetFirstSceneManagerByClass<EditorSceneManager>()->GetFirstSelectedObject().get();
-			
-			if (so)
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+			if (ImGui::BeginTable("split", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable))
 			{
-				m_SceneSelected = nullptr;
-				auto props = so->GetProperties();
-				for (auto prop : props)
-				{
-					drawProp(so, prop);
-				}
 
-				auto comp_iter = so->GetComponents();
-				while (comp_iter.hasMoreElements())
+				if (so)
 				{
-					GASS::ComponentPtr comp = GASS_STATIC_PTR_CAST<GASS::Component>(comp_iter.getNext());
-					std::string class_name = comp->GetRTTI()->GetClassName();
-					if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & GASS::OF_VISIBLE) //we have settings!
+					m_SceneSelected = nullptr;
+					auto props = so->GetProperties();
+
+					for (auto prop : props)
 					{
-						ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-						const bool open = ImGui::TreeNode(class_name.c_str());
-						if (open)
+						DrawPropInGrid(so, prop);
+					}
+
+					auto comp_iter = so->GetComponents();
+					while (comp_iter.hasMoreElements())
+					{
+						ComponentPtr comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
+						std::string class_name = comp->GetRTTI()->GetClassName();
+						if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
 						{
-							auto comp_props = comp->GetProperties();
-							for (auto comp_prop : comp_props)
+							ImGui::TableNextRow();
+							ImGui::TableSetColumnIndex(0);
+							ImGui::AlignTextToFramePadding();
+
+							ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+							const bool open = ImGui::TreeNode(class_name.c_str());
+							if (open)
 							{
-								drawProp(comp.get(), comp_prop);
+								auto comp_props = comp->GetProperties();
+
+								for (auto comp_prop : comp_props)
+								{
+									DrawPropInGrid(comp.get(), comp_prop);
+								}
+								ImGui::TreePop();
 							}
-							ImGui::TreePop();
 						}
 					}
 				}
-			}
-			else if (m_SceneSelected)
-			{
-				std::string scene_name = m_SceneSelected->GetName();
-				if (ImGui::InputText("Name", &scene_name))
+				else if (m_SceneSelected)
 				{
-					m_SceneSelected->SetName(scene_name);
-				}
-				auto props = m_SceneSelected->GetProperties();
-				for (auto prop : props)
-				{
-					drawProp(m_SceneSelected, prop);
-				}
-				auto sms = m_SceneSelected->GetSceneManagers();
-				for (auto sm : sms)
-				{
-					GASS::BaseReflectionObjectPtr obj = GASS_DYNAMIC_PTR_CAST<GASS::BaseReflectionObject>(sm);
-					auto sm_props = obj->GetProperties();
-					for (auto prop : sm_props)
+					std::string scene_name = m_SceneSelected->GetName();
+					DrawPropInGrid("SceneName", 
+						[&]() { if (ImGui::InputText("Name", &scene_name))
+								{
+									m_SceneSelected->SetName(scene_name);
+								}
+							}
+					);
+					auto props = m_SceneSelected->GetProperties();
+					for (auto prop : props)
 					{
-						drawProp(obj.get(), prop);
+						DrawPropInGrid(m_SceneSelected, prop);
+					}
+					auto sms = m_SceneSelected->GetSceneManagers();
+					for (auto sm : sms)
+					{
+						BaseReflectionObjectPtr obj = GASS_DYNAMIC_PTR_CAST<BaseReflectionObject>(sm);
+						auto sm_props = obj->GetProperties();
+						for (auto prop : sm_props)
+						{
+							DrawPropInGrid(obj.get(), prop);
+						}
 					}
 				}
+				ImGui::EndTable();
 			}
+			ImGui::PopStyleVar();
 
 
 			ImGui::End();
 		}
 
-		void drawTools()
+#if 0
+		void DrawTools()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -703,11 +895,11 @@ namespace GASS
 				return;
 			}
 
-			auto* esm= scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
+			auto* esm = scene->GetFirstSceneManagerByClass<EditorSceneManager>().get();
 			std::string tool_name;
 			if (auto* active_tool = esm->GetMouseToolController()->GetActiveTool())
 			{
-				tool_name =  active_tool->GetName();
+				tool_name = active_tool->GetName();
 			}
 			std::vector<std::string> tools = { TID_SELECT ,TID_MOVE,TID_ROTATE,TID_GOTO_POS,TID_BOX };
 
@@ -716,16 +908,16 @@ namespace GASS
 			{
 				if (tools[i] == tool_name)
 					e = int(i);
-				if (ImGui::RadioButton(tools[i].c_str(), &e,int(i)))
+				if (ImGui::RadioButton(tools[i].c_str(), &e, int(i)))
 					esm->GetMouseToolController()->SelectTool(tools[i]);
 			}
-			
-			ImGui::End();
-		}
 
-		void drawTemplates()
+			ImGui::End();
+				}
+#endif
+		void DrawTemplates()
 		{
-			ScenePtr scene = getFirstScene();
+			ScenePtr scene = GetFirstScene();
 			if (!scene)
 				return;
 			ImGuiWindowFlags window_flags = 0;
@@ -740,17 +932,17 @@ namespace GASS
 			//if (so == selected)
 			//base_flags |= ImGuiTreeNodeFlags_Selected;
 
-			
+
 
 			auto templates = SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplateNames();
 			for (auto temp : templates)
 			{
-				GASS::SceneObjectTemplatePtr sot = GASS_DYNAMIC_PTR_CAST<GASS::SceneObjectTemplate>(GASS::SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temp));
+				SceneObjectTemplatePtr sot = GASS_DYNAMIC_PTR_CAST<SceneObjectTemplate>(SimEngine::Get().GetSceneObjectTemplateManager()->GetTemplate(temp));
 				if (sot->GetInstantiable())
 				{
 					bool node_open = ImGui::TreeNodeEx(sot.get(), base_flags, temp.c_str());
 
-					
+
 
 					if (ImGui::BeginDragDropSource())
 					{
@@ -760,10 +952,10 @@ namespace GASS
 						ImGui::Text("Drop in scene");
 						ImGui::EndDragDropSource();
 					}
-					
+
 					if (node_open)
 						ImGui::TreePop();
-					
+
 				}
 			}
 			ImGui::End();
@@ -778,7 +970,7 @@ namespace GASS
 					ImVec2 whole_content_size = ImGui::GetIO().DisplaySize;
 					float x = float(screen_pos.x) / float(whole_content_size.x);
 					float y = float(screen_pos.y) / float(whole_content_size.y);
-					esm->GetMouseToolController()->CreateSceneObject(m_DropTemplate,Vec2(x, y));
+					esm->GetMouseToolController()->CreateSceneObject(m_DropTemplate, Vec2(x, y));
 					m_DropTemplate = "";
 					//auto so = SimEngine::Get().CreateObjectFromTemplate(m_DropTemplate);
 				}
@@ -791,24 +983,40 @@ namespace GASS
 		}
 
 
+		void OnAddWaypoint(SceneObjectPtr obj)
+		{
+			if (obj)
+			{
+				WaypointListComponentPtr wpl = obj->GetFirstComponentByClass<IWaypointListComponent>();
+				if (wpl)
+				{
+					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+					sm->GetMouseToolController()->SelectTool(TID_CREATE);
+					auto tool = static_cast<CreateTool*> (sm->GetMouseToolController()->GetTool(TID_CREATE));
+					tool->SetParentObject(obj);
+					tool->SetTemplateName(wpl->GetWaypointTemplate());
+				}
+			}
+		}
 
 		void OnAddGraphNode(SceneObjectPtr obj)
 		{
 			if (obj)
 			{
-				GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
-				if (graph)
 				{
-					EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
-					sm->GetMouseToolController()->SelectTool(TID_GRAPH);
-					GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
-					tool->SetMode(GASS::GTM_ADD);
-					tool->SetParentObject(obj);
-					tool->SetConnetionObject(SceneObjectPtr());
-					tool->SetNodeTemplateName(graph->GetNodeTemplate());
-					tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+					GraphComponentPtr graph = obj->GetFirstComponentByClass<IGraphComponent>();
+					if (graph)
+					{
+						EditorSceneManagerPtr sm = obj->GetScene()->GetFirstSceneManagerByClass<EditorSceneManager>();
+						sm->GetMouseToolController()->SelectTool(TID_GRAPH);
+						GraphTool* tool = static_cast<GraphTool*> (sm->GetMouseToolController()->GetTool(TID_GRAPH));
+						tool->SetMode(GTM_ADD);
+						tool->SetParentObject(obj);
+						tool->SetConnetionObject(SceneObjectPtr());
+						tool->SetNodeTemplateName(graph->GetNodeTemplate());
+						tool->SetEdgeTemplateName(graph->GetEdgeTemplate());
+					}
 				}
-
 				GraphNodeComponentPtr node = obj->GetFirstComponentByClass<IGraphNodeComponent>();
 				if (node)
 				{
@@ -846,5 +1054,5 @@ namespace GASS
 			}
 		}
 
-	};
-}
+			};
+		}

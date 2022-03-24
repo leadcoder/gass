@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 #include "CircleGeometryComponent.h"
+
+#include <memory>
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSColorRGBA.h"
 #include "Core/Math/GASSMath.h"
@@ -26,14 +28,15 @@
 #include "Sim/Interface/GASSIGeometryComponent.h"
 #include "Sim/GASSGraphicsMesh.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 
 
 namespace GASS
 {
-	CircleGeometryComponent::CircleGeometryComponent(void) : m_Radius(1),
-		m_Color(1,1,1),
-		m_Dashed(false)
+	CircleGeometryComponent::CircleGeometryComponent(void) : 
+		m_Color(1,1,1)
+		
 	{
 
 	}
@@ -46,7 +49,7 @@ namespace GASS
 	void CircleGeometryComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<CircleGeometryComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("CircleGeometryComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("CircleGeometryComponent", OF_VISIBLE));
 		RegisterGetSet("Radius", &GASS::CircleGeometryComponent::GetRadius, &GASS::CircleGeometryComponent::SetRadius,PF_VISIBLE | PF_EDITABLE,"Circle Radius");
 		RegisterMember("Color", &GASS::CircleGeometryComponent::m_Color);
 		RegisterMember("Dashed", &GASS::CircleGeometryComponent::m_Dashed);
@@ -96,11 +99,10 @@ namespace GASS
 			z = sin(rad*i)*m_Radius;
 			Vec3 pos(x,0,z);
 			sub_mesh_data->PositionVector.push_back(pos);
-			sub_mesh_data->ColorVector.push_back(ColorRGBA(m_Color.x,m_Color.y,m_Color.z,1));
+			sub_mesh_data->ColorVector.emplace_back(m_Color.x,m_Color.y,m_Color.z,1);
 		
 		}
-		int id = -1;
-		GetSceneObject()->PostRequest(ManualMeshDataRequestPtr(new ManualMeshDataRequest(mesh_data,id, 0.1)));
+		GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 
 	bool CircleGeometryComponent::IsPointInside(const Vec3 &point) const

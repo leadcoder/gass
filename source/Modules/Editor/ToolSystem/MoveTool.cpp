@@ -1,4 +1,6 @@
 #include "MoveTool.h"
+
+#include <memory>
 #include "MouseToolController.h"
 #include "../Components/GizmoComponent.h"
 #include "Modules/Editor/EditorSystem.h"
@@ -96,7 +98,7 @@ namespace GASS
 							SceneObjectPtr selected = m_SelectionCopy[i].lock();
 							if (selected)
 							{
-								SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+								SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(false, from_id));
 							}
 						}
 
@@ -125,7 +127,7 @@ namespace GASS
 					
 					SceneObjectPtr gizmo = GetOrCreateGizmo();
 					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+						SendMessageRec(gizmo, std::make_shared<CollisionSettingsRequest>(false, from_id));
 				}
 			}
 		}
@@ -141,7 +143,7 @@ namespace GASS
 			if(gizmo)
 			{
 				GizmoComponentPtr gc = gizmo->GetFirstComponentByClass<GizmoComponent>();
-				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<GASS::ILocationComponent>();
+				LocationComponentPtr gizmo_lc = gizmo->GetFirstComponentByClass<ILocationComponent>();
 				const Vec3 new_position = gc->GetPosition(info.m_Ray);
 				if (m_MoveUpdateCount > 0)
 				{
@@ -152,41 +154,7 @@ namespace GASS
 			}
 			else if(m_GroundSnapMove)
 			{
-#ifdef DELTA_MOVE
-				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
-				{
-					for (size_t i = 0; i < m_Selected.size(); i++)
-					{
-						SceneObjectPtr selected = m_Selected[i].lock();
-						if (selected)
-						{
-							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-						}
-					}
 
-					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
-					SceneObjectPtr gizmo = GetOrCreateGizmo();
-					if(gizmo)
-						SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
-				}
-				else
-				{
-					if(m_MoveUpdateCount > 2) //we need to wait 2 frames to get correct delta move
-					{
-						Vec3 delta_move = info.m_3DPos - m_PreviousPos;
-						for (size_t i = 0; i < m_Selected.size(); i++)
-						{
-							SceneObjectPtr selected = m_Selected[i].lock();
-							if (selected)
-							{
-								Vec3 current_pos = selected->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
-								selected->SendImmediateRequest(WorldPositionRequestPtr(new WorldPositionRequest(current_pos + delta_move, from_id)));
-							}
-						}
-					}
-					m_PreviousPos = info.m_3DPos;
-				}
-#else
 				if(m_MoveUpdateCount == 0) //we want to move object so disable collision for entire selection
 				{
 					for (size_t i = 0; i < m_Selected.size(); i++)
@@ -194,13 +162,13 @@ namespace GASS
 						SceneObjectPtr selected = m_Selected[i].lock();
 						if (selected)
 						{
-							SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+							SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(false, from_id));
 						}
 					}
 					//also disable gizmo...collision could be enabled if we have made a copy which will trig selection change event
 					SceneObjectPtr so_gizmo = GetOrCreateGizmo();
 					if(so_gizmo)
-						SendMessageRec(so_gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(false, from_id)));
+						SendMessageRec(so_gizmo, std::make_shared<CollisionSettingsRequest>(false, from_id));
 				}
 				else
 				{
@@ -241,7 +209,7 @@ namespace GASS
 					}
 					m_PreviousPos = info.m_3DPos;
 				}
-#endif
+
 			}
 
 			const double time = SimEngine::Get().GetTime();
@@ -250,16 +218,16 @@ namespace GASS
 			{
 				m_MouseMoveTime = time;
 				std::vector<std::string> attribs;
-				attribs.push_back("Position");
-				attribs.push_back("Latitude");
-				attribs.push_back("Longitude");
-				attribs.push_back("Projected");
+				attribs.emplace_back("Position");
+				attribs.emplace_back("Latitude");
+				attribs.emplace_back("Longitude");
+				attribs.emplace_back("Projected");
 				for (size_t i = 0; i < m_Selected.size(); i++)
 				{
 					SceneObjectPtr selected = m_Selected[i].lock();
 					if (selected)
 					{
-						GASS::SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id));
+						SceneMessagePtr attrib_change_msg(new ObjectAttributeChangedEvent(selected,attribs, from_id));
 						m_Controller->GetEditorSceneManager()->GetScene()->PostMessage(attrib_change_msg);
 					}
 				}
@@ -295,7 +263,7 @@ namespace GASS
 			SceneObjectPtr selected = m_Selected[i].lock();
 			if(selected && CheckIfEditable(selected))
 			{
-				SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+				SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 			}
 		}
 
@@ -304,13 +272,13 @@ namespace GASS
 			SceneObjectPtr selected = m_SelectionCopy[i].lock();
 			if(selected && CheckIfEditable(selected))
 			{
-				SendMessageRec(selected, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+				SendMessageRec(selected, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 			}
 		}
 
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo && m_Controller->GetEnableGizmo())
-			SendMessageRec(gizmo, CollisionSettingsRequestPtr(new CollisionSettingsRequest(true, GASS_PTR_TO_INT(this))));
+			SendMessageRec(gizmo, std::make_shared<CollisionSettingsRequest>(true, GASS_PTR_TO_INT(this)));
 
 		if(selection_mode) //selection mode
 		{
@@ -332,7 +300,7 @@ namespace GASS
 		if (!selection_mode)
 		{
 			int from_id = GASS_PTR_TO_INT(this);
-			GASS::SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
+			SystemMessagePtr change_msg(new SceneChangedEvent(from_id));
 			SimEngine::Get().GetSimSystemManager()->SendImmediate(change_msg);
 		}
 	}
@@ -362,9 +330,9 @@ namespace GASS
 	}
 
 
-	SceneObjectPtr _CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreateAxisGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr axis_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr axis_gizmo = std::make_shared<SceneObject>();
 
 		axis_gizmo->SetName(name);
 		axis_gizmo->SetSerialize(false);
@@ -392,9 +360,9 @@ namespace GASS
 		return axis_gizmo;
 	}
 
-	SceneObjectPtr _CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
+	SceneObjectPtr CreatePlaneGizmo(const std::string &name, const EulerRotation &rotation, const ColorRGBA &color)
 	{
-		SceneObjectPtr plane_gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr plane_gizmo = std::make_shared<SceneObject>();
 
 		plane_gizmo->SetName(name);
 		plane_gizmo->SetSerialize(false);
@@ -422,9 +390,9 @@ namespace GASS
 		return plane_gizmo;
 	}
 
-	SceneObjectPtr _CreateMoveGizmo()
+	SceneObjectPtr CreateMoveGizmo()
 	{
-		SceneObjectPtr gizmo = SceneObjectPtr(new SceneObject());
+		SceneObjectPtr gizmo = std::make_shared<SceneObject>();
 		gizmo->SetName("GizmoMoveObject");
 		gizmo->SetID("MOVE_GIZMO");
 		gizmo->SetSerialize(false);
@@ -438,14 +406,14 @@ namespace GASS
 		gizmo->AddComponent(editor_comp);
 
 		//Create Axis
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectXAxis", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectYAxis", EulerRotation(0, 0, 90), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreateAxisGizmo("GizmoObjectZAxis", EulerRotation(-90, 0, 0), ColorRGBA(0, 0, 1, 1)), false);
 
 		//Create Planes
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXZ", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneYZ", EulerRotation(0, 0, 90), ColorRGBA(0, 0, 1, 1)), false);
-		gizmo->AddChildSceneObject(_CreatePlaneGizmo("GizmoMovePlaneXY", EulerRotation(0, -90, 0), ColorRGBA(1, 0, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneXZ", EulerRotation(0, 0, 0), ColorRGBA(0, 1, 0, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneYZ", EulerRotation(0, 0, 90), ColorRGBA(0, 0, 1, 1)), false);
+		gizmo->AddChildSceneObject(CreatePlaneGizmo("GizmoMovePlaneXY", EulerRotation(0, -90, 0), ColorRGBA(1, 0, 0, 1)), false);
 
 		return gizmo;
 	}
@@ -456,7 +424,7 @@ namespace GASS
 		SceneObjectPtr gizmo = m_MasterGizmoObject.lock();
 		if(!gizmo &&  m_Controller->GetEditorSceneManager()->GetScene())
 		{
-			gizmo = _CreateMoveGizmo();
+			gizmo = CreateMoveGizmo();
 
 			//Add gizmo to scene
 			m_Controller->GetEditorSceneManager()->GetScene()->GetRootSceneObject()->AddChildSceneObject(gizmo, true);
@@ -480,11 +448,12 @@ namespace GASS
 		SceneObjectPtr gizmo = GetOrCreateGizmo();
 		if(gizmo)
 		{
-			int from_id = GASS_PTR_TO_INT(this);
-			CollisionSettingsRequestPtr col_msg(new CollisionSettingsRequest(value,from_id));
-			SendMessageRec(gizmo,col_msg);
-			LocationVisibilityRequestPtr vis_msg(new LocationVisibilityRequest(value,from_id));
-			SendMessageRec(gizmo,vis_msg);
+			auto iter = gizmo->GetChildren();
+			while (iter.hasMoreElements())
+			{
+				auto child = iter.getNext();
+				child->GetFirstComponentByClass<ILocationComponent>()->SetVisible(value);
+			}
 		}
 	}
 

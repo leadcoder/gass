@@ -53,7 +53,7 @@ namespace GASS
 	class GASSExport GraphicsSubMesh
 	{
 	public:
-		GraphicsSubMesh() : Type(TRIANGLE_LIST)
+		GraphicsSubMesh()  
 		{
 
 		}
@@ -104,7 +104,7 @@ namespace GASS
 		/**
 			Sub mesh type
 		*/
-		GraphicsSubMeshType Type;
+		GraphicsSubMeshType Type{TRIANGLE_LIST};
 
 		/** Add line ellipsoid shaped geometry*/
 		void AddWireframeEllipsoid(const Vec3 &radius, const ColorRGBA &vertex_color, int segments = 30);
@@ -152,5 +152,5 @@ namespace GASS
 		void Transform(const Mat4 &transformation );
 		std::vector<GraphicsSubMeshPtr> SubMeshVector;
 	};
-	typedef GASS_SHARED_PTR<GraphicsMesh> GraphicsMeshPtr;
+	using GraphicsMeshPtr = std::shared_ptr<GraphicsMesh>;
 }

@@ -13,8 +13,6 @@
 				<ShowBBWhenSelected value="true"/>
 			</EditorComponent>
 		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="NavigationMesh" />
@@ -30,7 +28,7 @@
 				<AgentMaxClimb value ="0.8"/>
 			</RecastNavigationMeshComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="SolidDebugObject" />
 				<ID value="SOLID_MESH_DEBUG_OBJECT"/>
@@ -38,8 +36,8 @@
 					<LocationComponent />
 					<ManualMeshComponent />
 				</Components>
-				<ComponentContainers>
-				</ComponentContainers>
+				<Children>
+				</Children>
 			</SceneObjectTemplate>
 			<SceneObjectTemplate>
 				<Name value="LineDebugObject" />
@@ -48,10 +46,8 @@
 					<LocationComponent />
 					<ManualMeshComponent />
 				</Components>
-				<ComponentContainers>
-				</ComponentContainers>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="OffmeshConnection" />
@@ -72,7 +68,7 @@
 				<Mode value="DOWN_STREAM"/>
 			</RecastOffmeshMeshConnectionComponent>
 		</Components>
-		<ComponentContainers>
+		<Children>
 			<SceneObjectTemplate>
 				<Name value="OffmeshConnectionTarget" />
 				<ID value="AI_OFF_MESH_CHILD_OBJECT"/>
@@ -88,10 +84,8 @@
 						<Height value="0.1"/>
 					</BillboardComponent>
 				</Components>
-				<ComponentContainers>
-				</ComponentContainers>
 			</SceneObjectTemplate>
-		</ComponentContainers>
+		</Children>
 	</SceneObjectTemplate>
 
 
@@ -108,8 +102,6 @@
 			<ManualMeshComponent />
 			<RecastConvexVolumeComponent/>
 		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
 	</SceneObjectTemplate>
 
 	<SceneObjectTemplate>
@@ -130,8 +122,6 @@
 				<LandCoverType value ="LAND_COVER_DEFAULT"/>
 			</RecastConvexVolumeComponent>
 		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="DetourCrowd" />
@@ -143,7 +133,7 @@
       <ManualMeshComponent />-->
 			<DetourCrowdComponent/>
 		</Components>
-		<ComponentContainers></ComponentContainers>
+		<Children></Children>
 	</SceneObjectTemplate>
 
 	<SceneObjectTemplate>
@@ -158,8 +148,6 @@
 				<MaxAcceleration value="2"/>
 			</DetourCrowdAgentComponent>
 		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
 	</SceneObjectTemplate>
 
 </Templates>

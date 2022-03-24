@@ -32,7 +32,7 @@
 
 namespace GASS
 {
-	OISInputSystem::OISInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Window(0),
+	OISInputSystem::OISInputSystem(SimSystemManagerWeakPtr manager) : Reflection(manager) , m_Window(nullptr),
 		m_Inverted (false),
 		m_KeyActive(true),
 		m_JoyActive(true),
@@ -43,9 +43,9 @@ namespace GASS
 		m_GameControllerAxisMinValue(0),
 		m_MouseWinOffsetX(0),
 		m_MouseWinOffsetY(0),
-		m_InputManager(NULL),
-		m_Keyboard(NULL),
-		m_Mouse(NULL),
+		m_InputManager(nullptr),
+		m_Keyboard(nullptr),
+		m_Mouse(nullptr),
 		m_JoystickDeviceCount(0),
 		m_MouseWinHeight(0),
 		m_MouseWinWidth(0)
@@ -93,10 +93,10 @@ namespace GASS
 		{
 			m_Window = main_win_handle;
 			OIS::ParamList pl;
-			size_t windowHnd = (size_t) m_Window;
-			std::ostringstream windowHndStr;
-			windowHndStr << windowHnd;
-			pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+			auto window_hnd = (size_t) m_Window;
+			std::ostringstream window_hnd_str;
+			window_hnd_str << window_hnd;
+			pl.insert(std::make_pair(std::string("WINDOW"), window_hnd_str.str()));
 
 			if(!m_ExclusiveMode)
 			{
@@ -115,12 +115,12 @@ namespace GASS
 			m_InputManager = OIS::InputManager::createInputSystem( pl );
 
 			//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-			bool bufferedKeys = true;
-			bool bufferedMouse = true;
-			bool bufferedJoy = false;
-			m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject( OIS::OISKeyboard, bufferedKeys ));
+			bool buffered_keys = true;
+			bool buffered_mouse = true;
+			bool buffered_joy = false;
+			m_Keyboard = static_cast<OIS::Keyboard*>(m_InputManager->createInputObject( OIS::OISKeyboard, buffered_keys ));
 			m_Keyboard->setEventCallback(this);
-			m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject( OIS::OISMouse, bufferedMouse ));
+			m_Mouse = static_cast<OIS::Mouse*>(m_InputManager->createInputObject( OIS::OISMouse, buffered_mouse ));
 			m_Mouse->setEventCallback(this);
 
 #ifdef WIN32
@@ -129,7 +129,7 @@ namespace GASS
 				try {
 					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++)
 					{
-						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, bufferedJoy ));
+						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject(OIS::OISJoyStick, buffered_joy ));
 						joy->setEventCallback(this);
 						joy->setBuffered(true);
 						joy->capture();
@@ -193,9 +193,9 @@ namespace GASS
 				m_InputManager->destroyInputObject(m_Joys[i]);
 			m_Joys.erase(m_Joys.begin(),m_Joys.end());
 			m_InputManager->destroyInputSystem(m_InputManager);
-			m_Keyboard = 0;
-			m_Mouse = 0;
-			m_InputManager = 0;
+			m_Keyboard = nullptr;
+			m_Mouse = nullptr;
+			m_InputManager = nullptr;
 		}
 	}
 
@@ -222,7 +222,7 @@ namespace GASS
 
 	void OISInputSystem::OnSystemUpdate(double /*delta_time*/)
 	{
-		if(m_Window == 0)
+		if(m_Window == nullptr)
 			return;
 
 		if(m_KeyActive)
@@ -267,7 +267,7 @@ namespace GASS
 
 	void OISInputSystem::RemoveKeyListener(IKeyListener* key_listener)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -286,7 +286,7 @@ namespace GASS
 
 	void OISInputSystem::RemoveMouseListener(IMouseListener* mouse_listener)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -305,7 +305,7 @@ namespace GASS
 
 	void OISInputSystem::RemoveGameControllerListener(IGameControllerListener* gc_listener)
 	{
-		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
+		auto iter = m_GameControllerListeners.begin();
 		while(iter != m_GameControllerListeners.end())
 		{
 			IGameControllerListener* ml = *iter;
@@ -320,7 +320,7 @@ namespace GASS
 	bool OISInputSystem::keyPressed( const OIS::KeyEvent &arg )
 	{
 
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -333,7 +333,7 @@ namespace GASS
 	bool OISInputSystem::keyReleased( const OIS::KeyEvent &arg )
 	{
 
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -367,7 +367,7 @@ namespace GASS
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -422,7 +422,7 @@ namespace GASS
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -440,7 +440,7 @@ namespace GASS
 		if(data.XAbsNorm < 0.0 || data.XAbsNorm > 1.0 || data.YAbsNorm < 0.0 || data.YAbsNorm > 1.0)
 			return false;
 
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -464,7 +464,7 @@ namespace GASS
 
 	bool OISInputSystem::buttonPressed( const OIS::JoyStickEvent &arg, int button )
 	{
-		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
+		auto iter = m_GameControllerListeners.begin();
 		while(iter != m_GameControllerListeners.end())
 		{
 			IGameControllerListener* ml = *iter;
@@ -476,7 +476,7 @@ namespace GASS
 
 	bool OISInputSystem::buttonReleased( const OIS::JoyStickEvent &arg, int button )
 	{
-		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
+		auto iter = m_GameControllerListeners.begin();
 		while(iter != m_GameControllerListeners.end())
 		{
 			IGameControllerListener* ml = *iter;
@@ -488,7 +488,7 @@ namespace GASS
 
 	bool OISInputSystem::axisMoved( const OIS::JoyStickEvent &arg, int axis )
 	{
-		std::vector<IGameControllerListener*>::iterator iter = m_GameControllerListeners.begin();
+		auto iter = m_GameControllerListeners.begin();
 		float value = (static_cast<float>(arg.state.mAxes[axis].abs)) / 32768.0f;
 
 		//Clamp axis value?
@@ -549,7 +549,7 @@ namespace GASS
 
 	void OISInputSystem::InjectMouseMoved(const MouseData &data)
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -561,7 +561,7 @@ namespace GASS
 
 	void OISInputSystem::InjectMousePressed(const MouseData &data, MouseButtonId id )
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -572,7 +572,7 @@ namespace GASS
 
 	void OISInputSystem::InjectMouseReleased(const MouseData &data, MouseButtonId id )
 	{
-		std::vector<IMouseListener*>::iterator iter = m_MouseListeners.begin();
+		auto iter = m_MouseListeners.begin();
 		while(iter != m_MouseListeners.end())
 		{
 			IMouseListener* ml = *iter;
@@ -583,7 +583,7 @@ namespace GASS
 
 	void OISInputSystem::InjectKeyPressed( int key, unsigned int text)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;
@@ -593,7 +593,7 @@ namespace GASS
 	}
 	void OISInputSystem::InjectKeyReleased( int key, unsigned int text)
 	{
-		std::vector<IKeyListener*>::iterator iter = m_KeyListeners.begin();
+		auto iter = m_KeyListeners.begin();
 		while(iter != m_KeyListeners.end())
 		{
 			IKeyListener* kl = *iter;

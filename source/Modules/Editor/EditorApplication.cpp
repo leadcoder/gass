@@ -53,11 +53,11 @@ namespace GASS
 
 		//Create main render window, this will trigger
 		const std::string render_win_name = "RenderWindow";
-		GASS::GraphicsSystemPtr gfx_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();
+		GraphicsSystemPtr gfx_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
 		RenderWindowPtr win = gfx_system->CreateRenderWindow(render_win_name,800,600,render_win_handle);
 		win->CreateViewport("MainViewport", 0, 0, 1, 1);
 	
-		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
+		InputSystemPtr input_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IInputSystem>();
 		input_system->SetMainWindowHandle(main_win_handle);
 		m_Initilized  = true;
 	}
@@ -69,17 +69,17 @@ namespace GASS
 
 	bool  EditorApplication::LoadSettings(const std::string &filename)
 	{
-		tinyxml2::XMLDocument     *xmlDoc = new tinyxml2::XMLDocument();
-		if (xmlDoc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
+		auto     *xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(filename.c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			//Fatal error, cannot load
 			return false;
 		}
-		tinyxml2::XMLElement *xSettings = 0;
-		xSettings = xmlDoc->FirstChildElement("EditorApplication");
-		tinyxml2::XMLElement *start_scene = xSettings->FirstChildElement("SceneToLoadAtStart");
-		tinyxml2::XMLElement *xnetwork = xSettings->FirstChildElement("Network");
-		tinyxml2::XMLElement *xupdate_freq = xSettings->FirstChildElement("UpdateFreq");
+		tinyxml2::XMLElement *x_settings = nullptr;
+		x_settings = xml_doc->FirstChildElement("EditorApplication");
+		tinyxml2::XMLElement *start_scene = x_settings->FirstChildElement("SceneToLoadAtStart");
+		tinyxml2::XMLElement *xnetwork = x_settings->FirstChildElement("Network");
+		tinyxml2::XMLElement *xupdate_freq = x_settings->FirstChildElement("UpdateFreq");
 
 		
 		if(xupdate_freq)
@@ -108,9 +108,9 @@ namespace GASS
 		{
 			m_StartScene = start_scene->Attribute("value");
 		}
-		xmlDoc->Clear();
+		xml_doc->Clear();
 		// Delete our allocated document and return success ;)
-		delete xmlDoc;
+		delete xml_doc;
 		return true;
 	}
 

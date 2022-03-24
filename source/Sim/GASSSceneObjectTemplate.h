@@ -36,22 +36,20 @@ namespace GASS
 	GASS_FORWARD_DECL(Component);
 	GASS_FORWARD_DECL(SceneObject);
 	GASS_FORWARD_DECL(SceneObjectTemplateManager);
-	typedef GASS_SHARED_PTR<SceneObjectTemplateManager const> SceneObjectTemplateManagerConstPtr;
-	typedef std::string SceneObjectID;
-	class BaseSceneComponent;
-	typedef GASS_SHARED_PTR<BaseSceneComponent> BaseSceneComponentPtr;
-	typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
+	using SceneObjectTemplateManagerConstPtr = std::shared_ptr<const SceneObjectTemplateManager>;
+	using SceneObjectID = std::string;
+	using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
 
 	class GASSExport SceneObjectTemplate : public Reflection<SceneObjectTemplate, BaseReflectionObject>, public GASS_ENABLE_SHARED_FROM_THIS<SceneObjectTemplate>, public IXMLSerialize, public ISerialize
 	{
 		friend class SceneObjectTemplateManager;
 	public:
 
-		typedef std::vector<ComponentPtr> ComponentVector;
-		typedef VectorIterator<ComponentVector>  ComponentIterator;
-		typedef std::vector<SceneObjectTemplatePtr> SceneObjectTemplateVector;
-		typedef VectorIterator<SceneObjectTemplateVector> SceneObjectTemplateIterator;
-		typedef ConstVectorIterator<SceneObjectTemplateVector> ConstSceneObjectTemplateIterator;
+		using ComponentVector = std::vector<ComponentPtr>;
+		using ComponentIterator = VectorIterator<ComponentVector>;
+		using SceneObjectTemplateVector = std::vector<SceneObjectTemplatePtr>;
+		using SceneObjectTemplateIterator = VectorIterator<SceneObjectTemplateVector>;
+		using ConstSceneObjectTemplateIterator = ConstVectorIterator<SceneObjectTemplateVector>;
 
 		SceneObjectTemplate();
 		static	void RegisterReflection();
@@ -59,16 +57,6 @@ namespace GASS
 		SceneObjectID GetID() const { return m_ID; }
 		void SetInstantiable(bool value) { m_Instantiable = value; }
 		bool GetInstantiable() const { return m_Instantiable; }
-		/**
-			Convenience function for BaseSceneComponent's that call AddComponent on SceneObjectTemplate
-		*/
-		BaseSceneComponentPtr AddBaseSceneComponent(const std::string& comp_name);
-
-
-		/**
-			Convenience function for BaseSceneComponent's that call GetComponent on SceneObjectTemplate
-		*/
-		BaseSceneComponentPtr GetBaseSceneComponent(const std::string& comp_name) const;
 
 		/**
 			Get SceneObject template name
@@ -181,19 +169,12 @@ namespace GASS
 		//Debug functions to print object recursivly to std::cout
 		void DebugPrint(int tc = 0);
 
-	protected:
-
-		//It's possible to override this function if custom creation process is needed.
-		//By default the factory name used is the same as the template
-		//with the Template part removed, however if thats not the case you have to
-		//override this function and supply your own instance. 
-		//Another case could be that some attributes have to be transfered 
-		//from template to instance in a custom way.
-		virtual SceneObjectPtr CreateSceneObject() const;
+	private:
+		SceneObjectPtr CreateSceneObject() const;
 
 		//Help functions during template creation
-		void _InheritComponentData(SceneObjectPtr cc) const;
-		ComponentPtr _LoadComponentXML(tinyxml2::XMLElement* comp_template) const;
+		void InheritComponentData(SceneObjectPtr cc) const;
+		ComponentPtr LoadComponentXml(tinyxml2::XMLElement* comp_template) const;
 
 		ComponentVector m_ComponentVector;
 		SceneObjectTemplateVector m_SceneObjectVector;
@@ -203,6 +184,6 @@ namespace GASS
 		SceneObjectTemplateWeakPtr m_Parent;
 	protected:
 		SceneObjectID m_ID;
-		bool m_Instantiable;
+		bool m_Instantiable{false};
 	};
 }

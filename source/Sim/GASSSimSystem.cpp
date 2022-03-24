@@ -51,7 +51,7 @@ namespace GASS
 
 	void SimSystem::UnregisterListener(SystemListenerPtr listener)
 	{
-		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
+		auto iter = m_Listeners.begin();
 		while(iter != m_Listeners.end())
 		{
 			SystemListenerPtr c_list = (*iter).lock();
@@ -62,15 +62,15 @@ namespace GASS
 		}
 	}
 
-	void SimSystem::OnSystemUpdate(double delta_time)
+	void SimSystem::OnSystemUpdate(double /*delta_time*/)
 	{
-	//	_UpdateListeners(delta_time);
+	
 	}
 
 
-	void SimSystem::_Update(double delta_time)
+	void SimSystem::Update(double delta_time)
 	{
-		std::vector<SystemListenerWeakPtr>::iterator iter = m_Listeners.begin();
+		auto iter = m_Listeners.begin();
 		//remove dead listeners
 		while (iter != m_Listeners.end())
 		{
@@ -84,12 +84,12 @@ namespace GASS
 			}
 		}
 
-		_PreUpdate(delta_time);
+		PreUpdate(delta_time);
 		OnSystemUpdate(delta_time);
-		_PostUpdate(delta_time);
+		PostUpdate(delta_time);
 	}
 
-	void SimSystem::_PreUpdate(double delta_time)
+	void SimSystem::PreUpdate(double delta_time)
 	{
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
@@ -99,7 +99,7 @@ namespace GASS
 		}
 	}
 	
-	void SimSystem::_PostUpdate(double delta_time)
+	void SimSystem::PostUpdate(double delta_time)
 	{
 		for (size_t i = 0; i < m_Listeners.size(); ++i)
 		{
@@ -111,7 +111,7 @@ namespace GASS
 
 	void SimSystem::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
-		_LoadProperties(xml_elem);
+		LoadProperties(xml_elem);
 	}
 
 	void SimSystem::SaveXML(tinyxml2::XMLElement *xml_elem)
@@ -119,7 +119,7 @@ namespace GASS
 		tinyxml2::XMLElement * this_elem;
 		this_elem = xml_elem->GetDocument()->NewElement( GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 	}
 }
 

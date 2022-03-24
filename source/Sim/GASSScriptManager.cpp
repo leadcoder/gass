@@ -30,6 +30,8 @@
 #include "Sim/GASSComponent.h"
 #include "Core/Serialize/tinyxml2.h"
 #include <angelscript.h>
+
+#include <memory>
 //addons
 #include "Sim/Utils/Script/scriptstdstring.h"
 #include "Sim/Utils/Script/scriptbuilder.h"
@@ -48,13 +50,13 @@ namespace GASS
 		//LogManager::Get().stream() << msg->section << "(" << msg->row << ", " << msg->col << ") : " << type << " : " << msg->message;
 		std::stringstream ss;
 		ss << msg->section << "(" << msg->row << ", " << msg->col << ") : " << type << " : " << msg->message;
-		SimEngine::Get().GetSimSystemManager()->PostMessage(ScriptEventPtr(new ScriptEvent(ss.str())));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(std::make_shared<ScriptEvent>(ss.str()));
 	}
 
 	// Function implementation with native calling convention
 	void PrintString(std::string &str)
 	{
-		SimEngine::Get().GetSimSystemManager()->PostMessage(ScriptEventPtr(new ScriptEvent(str)));
+		SimEngine::Get().GetSimSystemManager()->PostMessage(std::make_shared<ScriptEvent>(str));
 		//std::cout << str;
 	}
 
@@ -67,12 +69,12 @@ namespace GASS
 	ScriptManager::ScriptManager(void)
 	{
 		m_Engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-		if( m_Engine == 0 )
+		if( m_Engine == nullptr )
 		{
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to create script engine","ScriptManager::ScriptManager");
 		}
 		// The script compiler will write any compiler messages to the callback.
-		m_Engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL);
+		m_Engine->SetMessageCallback(asFUNCTION(MessageCallback), nullptr, asCALL_CDECL);
 	}
 
 	ScriptManager::~ScriptManager(void)
@@ -146,7 +148,7 @@ namespace GASS
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType script_type;
 		script_type.Name = "SCRIPT";
-		script_type.Extensions.push_back("as");
+		script_type.Extensions.emplace_back("as");
 		rm->RegisterResourceType(script_type);
 
 		m_Engine->SetEngineProperty(asEP_ALLOW_UNSAFE_REFERENCES, true);
@@ -207,12 +209,12 @@ namespace GASS
 		r = m_Engine->RegisterGlobalFunction("Vec3 MathRad2Deg(const Vec3 &in)", asFUNCTIONPR(Vec3::Rad2Deg, (const Vec3&), Vec3), asCALL_CDECL); CheckReturn(r);
 		r = m_Engine->RegisterGlobalFunction("double MathRandomValue(double, double)", asFUNCTION(Math::RandomValue<Float>), asCALL_CDECL); CheckReturn(r);
 
-		r = m_Engine->RegisterObjectType("BaseSceneComponent", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
-		r = m_Engine->RegisterObjectMethod("BaseSceneComponent", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectType("Component", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("Component", "string GetName() const", asMETHOD(Component, GetName), asCALL_THISCALL); CheckReturn(r);
 
 		r = m_Engine->RegisterObjectType("SceneObject", 0, asOBJ_REF | asOBJ_NOCOUNT); CheckReturn(r);
 		r = m_Engine->RegisterObjectMethod("SceneObject", "string GetName() const", asMETHOD(SceneObject, GetName), asCALL_THISCALL); CheckReturn(r);
-		r = m_Engine->RegisterObjectMethod("SceneObject", "BaseSceneComponent @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
+		r = m_Engine->RegisterObjectMethod("SceneObject", "Component @ GetComponentByClassName(const string &in class_name)", asMETHOD(SceneObject, GetComponentByClassName), asCALL_THISCALL); CheckReturn(r);
 	}
 
 	int ScriptManager::ExecuteCall(asIScriptContext *ctx)
@@ -289,7 +291,7 @@ namespace GASS
 
 		// If the script file doesn't exist, then there is no script controller for this type
 		FILE *f;
-		if( (f = fopen((script).c_str(), "r")) == 0 )
+		if( (f = fopen((script).c_str(), "r")) == nullptr )
 			return ScriptControllerPtr ();
 		fclose(f);
 
@@ -310,7 +312,7 @@ namespace GASS
 		m_ScriptControllers[script] = ctrl;
 
 		//return ctrl;
-		asIObjectType *type = 0;
+		asIObjectType *type = nullptr;
 		const int tc = mod->GetObjectTypeCount();
 		for( int n = 0; n < tc; n++ )
 		{
@@ -331,7 +333,7 @@ namespace GASS
 			}
 		}
 
-		if( type != NULL)
+		if( type != nullptr)
 		{
 
 			// Find the factory function
@@ -361,7 +363,7 @@ namespace GASS
 
 	asIScriptContext *ScriptManager::PrepareContextFromPool(asIScriptFunction *func)
 	{
-		asIScriptContext *ctx = 0;
+		asIScriptContext *ctx = nullptr;
 		if( m_Contexts.size() )
 		{
 			ctx = *m_Contexts.rbegin();

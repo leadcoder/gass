@@ -24,9 +24,8 @@
 
 namespace GASS
 {
-	PhysXBaseJointComponent::PhysXBaseJointComponent() : m_Body1Loaded(false),
-		m_Body2Loaded(false),
-		m_Report(false)
+	PhysXBaseJointComponent::PhysXBaseJointComponent() 
+		
 	{
 
 	}

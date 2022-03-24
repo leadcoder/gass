@@ -28,7 +28,7 @@ namespace GASS
 {
 	GASS_FORWARD_DECL(ScriptController);
 
-	class ASScriptComponent:  public Reflection<ASScriptComponent,BaseSceneComponent>
+	class ASScriptComponent:  public Reflection<ASScriptComponent,Component>
 	{
 	public:
 		ASScriptComponent();
@@ -39,7 +39,7 @@ namespace GASS
 		void SetScriptFile(const std::string &script_file);
 		std::string GetScriptFile() const;
 		std::string m_Script;
-		asIScriptObject *m_ScriptObject;
+		asIScriptObject *m_ScriptObject{nullptr};
 		ScriptControllerPtr  m_Controller;
 	};
 }

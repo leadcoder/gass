@@ -33,7 +33,7 @@ namespace osgShadow
 namespace GASS
 {
 	class OSGGraphicsSystem;
-	typedef GASS_WEAK_PTR<OSGGraphicsSystem>  OSGGraphicsSystemWeakPtr;
+	using OSGGraphicsSystemWeakPtr = std::weak_ptr<OSGGraphicsSystem>;
 
 	class OSGGraphicsSceneManager : public Reflection<OSGGraphicsSceneManager, BaseSceneManager>, public IGraphicsSceneManager, public IOSGGraphicsSceneManager
 	{
@@ -49,6 +49,8 @@ namespace GASS
 		bool GetSerialize() const override { return true; }
 		void DrawLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) override;
 		osg::ref_ptr<osg::Group> GetOSGRootNode() override { return m_RootNode; }
+		void SetMapNode(osg::Group* node) override { m_MapNode = node; }
+		osg::Group* GetMapNode() const override { return m_MapNode; }
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
 			if (m_ShadowRootNode.valid())
@@ -81,7 +83,7 @@ namespace GASS
 		bool GetEnableShadows() const;
 		void SetEnableShadows(bool value);
 	private:
-		osg::ref_ptr<osgShadow::ShadowedScene> _CreateShadowNode();
+		osg::ref_ptr<osgShadow::ShadowedScene> CreateShadowNode();
 
 		//fog
 		float m_FogDensity;
@@ -108,11 +110,12 @@ namespace GASS
 
 		OSGGraphicsSystemWeakPtr m_GFXSystem;
 		osg::ref_ptr<osg::Group> m_RootNode;
+		osg::Group* m_MapNode = nullptr;
 		osg::ref_ptr<osg::Group> m_ShadowRootNode;
 		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osg::LightModel> m_LightModel;
 	};
-	typedef GASS_SHARED_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerPtr;
-	typedef GASS_WEAK_PTR<OSGGraphicsSceneManager> OSGGraphicsSceneManagerWeakPtr;
+	using OSGGraphicsSceneManagerPtr = std::shared_ptr<OSGGraphicsSceneManager>;
+	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 }

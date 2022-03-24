@@ -54,8 +54,8 @@ namespace GASS
 
 		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 		//osg::Group* root = static_cast<osg::Group*> (message->GetUserData());
-		osgEarth::MapNode* mapNode = osgEarth::MapNode::findMapNode(root);
-		if(mapNode)
+		osgEarth::MapNode* map_node = osgEarth::MapNode::findMapNode(root);
+		if(map_node)
 		{
 			osgEarth::SkyOptions sky_options;
 			sky_options.coordinateSystem() = osgEarth::SkyOptions::COORDSYS_ECEF;

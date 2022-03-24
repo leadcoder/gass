@@ -43,7 +43,7 @@ namespace GASS
 		//debug functions
 		void UpdateDebug();
 	protected:
-		Float m_Radius;
+		Float m_Radius{1};
 		std::string m_Material;
 	};
 }

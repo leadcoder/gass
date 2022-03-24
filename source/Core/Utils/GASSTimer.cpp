@@ -26,10 +26,7 @@
 #include "GASSTimer.h"
 namespace GASS
 {
-	Timer::Timer() : m_StartTime(0)
-#ifdef WIN32
-		, m_PerfTimerStart(0)
-#endif
+	Timer::Timer() 
 	{
 #ifdef WIN32
 		
@@ -76,7 +73,7 @@ namespace GASS
 	{
 #ifdef WIN32
 
-		__int64 time;								// time Will Hold A 64 Bit Integer
+		__int64 time = 0;								// time Will Hold A 64 Bit Integer
 
 		if (m_PerfTimer)						// Are We Using The Performance Timer?
 		{

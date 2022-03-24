@@ -16,7 +16,7 @@ namespace GASS
 	
 	class MouseToolController;
 	class MessageManager;
-	typedef GASS_SHARED_PTR<MouseToolController> MouseToolControllerPtr;
+	using MouseToolControllerPtr = std::shared_ptr<MouseToolController>;
 
 	class EditorModuleExport EditorSystem :  public Reflection<EditorSystem, SimSystem>
 	{
@@ -37,5 +37,5 @@ namespace GASS
 		std::string m_DefaultCameraTemplate;
 		bool m_ShowGUI = false;
 	};
-	typedef GASS_SHARED_PTR<EditorSystem> EditorSystemPtr;
+	using EditorSystemPtr = std::shared_ptr<EditorSystem>;
 }

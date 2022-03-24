@@ -1,24 +1,20 @@
 #include "GASSLOSComponent.h"
+
+#include <memory>
 #include "Core/Math/GASSQuaternion.h"
 #include "Core/Math/GASSMath.h"
 #include "Core/MessageSystem/GASSMessageManager.h"
 #include "Core/MessageSystem/GASSIMessage.h"
+#include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 
 namespace GASS
 {
-	LOSComponent::LOSComponent(void) : m_Initialized(false),
-		m_Radius(100),
-		m_SampleDist(1),
-		m_Debug(false),
+	LOSComponent::LOSComponent(void) : 
 		m_Position(0,0,0),
-		m_ViewDir(1,0,0),
-		m_FOV(40),
-		m_AutUpdateOnTransform(true),
-		m_TargetOffset(1.7),
-		m_SourceOffset(1.7),
-		m_Transparency(0.2)
+		m_ViewDir(1,0,0)
+		
 	{
 
 	}	
@@ -31,7 +27,7 @@ namespace GASS
 	void LOSComponent::RegisterReflection()
 	{
 		ComponentFactory::Get().Register<LOSComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("LOSComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("LOSComponent", OF_VISIBLE));
 		RegisterGetSet("Radius", &GASS::LOSComponent::GetRadius, &GASS::LOSComponent::SetRadius,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("SampleDist", &GASS::LOSComponent::GetSampleDist, &GASS::LOSComponent::SetSampleDist,PF_VISIBLE | PF_EDITABLE,"");
 		RegisterGetSet("FOV", &GASS::LOSComponent::GetFOV, &GASS::LOSComponent::SetFOV,PF_VISIBLE | PF_EDITABLE,"");
@@ -87,27 +83,28 @@ namespace GASS
 						if(i == 0 && j==0)
 							end_pos = m_Position + east*(i*m_SampleDist) + north*-m_SampleDist;
 
-						end_pos.y = _GetHeight(end_pos,col_sm) + m_TargetOffset;
+						end_pos.y = GetHeight(end_pos,col_sm) + m_TargetOffset;
 
-						bool los = _CheckLOS(m_Position, end_pos, col_sm);
+						bool los = CheckLos(m_Position, end_pos, col_sm);
 						sub_mesh_data->PositionVector.push_back(end_pos);
 						if(los)
 						{
-							sub_mesh_data->ColorVector.push_back(ColorRGBA(0,1,0,m_Transparency));
+							sub_mesh_data->ColorVector.emplace_back(0,1,0,m_Transparency);
 						}
 						else
 						{
-							sub_mesh_data->ColorVector.push_back(ColorRGBA(1,0,0,m_Transparency));
+							sub_mesh_data->ColorVector.emplace_back(1,0,0,m_Transparency);
 						}
 					}
 				}
 			}
 		}
-		ManualMeshDataRequestPtr message(new ManualMeshDataRequest(mesh_data));
-		GetSceneObject()->GetChildByID("LOS_GEOM")->PostRequest(message);
+		
+		auto los_obj = GetSceneObject()->GetChildByID("LOS_GEOM");
+		los_obj->GetFirstComponentByClass<IManualMeshComponent>()->SetMeshData(*mesh_data);
 	}
 
-	bool LOSComponent::_CheckLOS(const Vec3 &start_pos, const Vec3 &end_pos, GASS::CollisionSceneManagerPtr col_sm) const
+	bool LOSComponent::CheckLos(const Vec3 &start_pos, const Vec3 &end_pos, CollisionSceneManagerPtr col_sm) const
 	{
 		Vec3 ray_direction = end_pos - start_pos;
 		CollisionResult result;
@@ -117,7 +114,7 @@ namespace GASS
 		return !result.Coll;
 	}
 
-	Float LOSComponent::_GetHeight(const Vec3 &pos, GASS::CollisionSceneManagerPtr col_sm) const
+	Float LOSComponent::GetHeight(const Vec3 &pos, CollisionSceneManagerPtr col_sm) const
 	{
 		if(col_sm)
 		{

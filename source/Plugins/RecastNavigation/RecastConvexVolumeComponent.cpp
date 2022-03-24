@@ -19,11 +19,13 @@
 *****************************************************************************/
 
 #include "RecastConvexVolumeComponent.h"
+
+#include <memory>
 #include "Core/Serialize/tinyxml2.h"
 
 namespace GASS
 {
-	RecastConvexVolumeComponent::RecastConvexVolumeComponent() : m_Initialized(false), 
+	RecastConvexVolumeComponent::RecastConvexVolumeComponent() :  
 		m_LandCoverType(LAND_COVER_DEFAULT)
 	{
 
@@ -37,7 +39,7 @@ namespace GASS
 	void RecastConvexVolumeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<RecastConvexVolumeComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("RecastConvexVolumeComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("RecastConvexVolumeComponent", OF_VISIBLE));
 		RegisterMember("LandCoverType", &RecastConvexVolumeComponent::m_LandCoverType, PF_VISIBLE, "Land Cover Type");
 	}
 

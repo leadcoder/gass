@@ -27,23 +27,23 @@ namespace GASS
 	int ProfileSample::m_LastOpenedSample=-1;
 	int ProfileSample::m_OpenSampleCount=0;
 	ProfileSample::ProfileSampleData ProfileSample::m_Samples[MAX_PROFILER_SAMPLES];
-	IProfilerOutputHandler *ProfileSample::m_OutputHandler=0;
+	IProfilerOutputHandler *ProfileSample::m_OutputHandler=nullptr;
 	double ProfileSample::m_RootBegin=0.0;
 	double ProfileSample::m_RootEnd=0.0;
 	bool ProfileSample::m_ProfilerIsRunning=true;
 	Timer* ProfileSample::m_Timer= new Timer();
 
-	ProfileSample::ProfileSample(std::string sampleName) : m_ParentIndex(0), m_SampleIndex(0)
+	ProfileSample::ProfileSample(std::string sampleName)  
 	{
 		if(!m_ProfilerIsRunning)return;
 		//find the sample
 		int i=0;
-		int storeIndex=-1;
+		int store_index=-1;
 		for(i=0;i<MAX_PROFILER_SAMPLES;++i)
 		{
 			if(!m_Samples[i].m_IsValid)
 			{
-				if(storeIndex<0)storeIndex=i;
+				if(store_index<0)store_index=i;
 			}else{
 				if(m_Samples[i].m_Name==sampleName)
 				{
@@ -68,41 +68,41 @@ namespace GASS
 		}
 		//we've not found it, so it must be a new sample
 		//use the storeIndex value to store the new sample
-		assert(storeIndex>=0 && "Profiler has run out of sample slots!");
-		m_Samples[storeIndex].m_IsValid=true;
-		m_Samples[storeIndex].m_Name=sampleName;
-		m_SampleIndex=storeIndex;
+		assert(store_index>=0 && "Profiler has run out of sample slots!");
+		m_Samples[store_index].m_IsValid=true;
+		m_Samples[store_index].m_Name=sampleName;
+		m_SampleIndex=store_index;
 		m_ParentIndex=m_LastOpenedSample;
-		m_LastOpenedSample=storeIndex;
+		m_LastOpenedSample=store_index;
 		//m_Samples[i].m_ParentCount=m_OpenSampleCount;
-		m_Samples[storeIndex].m_ParentCount = m_OpenSampleCount;
+		m_Samples[store_index].m_ParentCount = m_OpenSampleCount;
 		m_OpenSampleCount++;
-		m_Samples[storeIndex].m_IsOpen=true;
-		m_Samples[storeIndex].m_CallCount=1;
+		m_Samples[store_index].m_IsOpen=true;
+		m_Samples[store_index].m_CallCount=1;
 
-		m_Samples[storeIndex].m_TotalTime=0.0;
-		m_Samples[storeIndex].m_ChildTime=0.0;
-		m_Samples[storeIndex].m_StartTime=GetTime();
-		if(m_ParentIndex<0)m_RootBegin=m_Samples[storeIndex].m_StartTime;
+		m_Samples[store_index].m_TotalTime=0.0;
+		m_Samples[store_index].m_ChildTime=0.0;
+		m_Samples[store_index].m_StartTime=GetTime();
+		if(m_ParentIndex<0)m_RootBegin=m_Samples[store_index].m_StartTime;
 	}
 
 	ProfileSample::~ProfileSample()
 	{
 		if(!m_ProfilerIsRunning)return;
-		const double fEndTime= GetTime();
+		const double f_end_time= GetTime();
 		//phew... ok, we're done timing
 		m_Samples[m_SampleIndex].m_IsOpen=false;
 		//calculate the time taken this profile, for ease of use later on
-		const double fTimeTaken = fEndTime - m_Samples[m_SampleIndex].m_StartTime;
+		const double f_time_taken = f_end_time - m_Samples[m_SampleIndex].m_StartTime;
 
 		if(m_ParentIndex>=0)
 		{
-			m_Samples[m_ParentIndex].m_ChildTime+=fTimeTaken;
+			m_Samples[m_ParentIndex].m_ChildTime+=f_time_taken;
 		}else{
 			//no parent, so this is the end of the main loop sample
-			m_RootEnd=fEndTime;
+			m_RootEnd=f_end_time;
 		}
-		m_Samples[m_SampleIndex].m_TotalTime+=fTimeTaken;
+		m_Samples[m_SampleIndex].m_TotalTime+=f_time_taken;
 		m_LastOpenedSample=m_ParentIndex;
 		--m_OpenSampleCount;
 	}
@@ -124,16 +124,16 @@ namespace GASS
 		{
 			if(m_Samples[i].m_IsValid)
 			{
-				double sampleTime, percentage;
+				double sample_time, percentage;
 				//calculate the time spend on the sample itself (excluding children)
-				sampleTime = m_Samples[i].m_TotalTime-m_Samples[i].m_ChildTime;
-				percentage = ( sampleTime / ( m_RootEnd - m_RootBegin ) ) * 100.0f;
+				sample_time = m_Samples[i].m_TotalTime-m_Samples[i].m_ChildTime;
+				percentage = ( sample_time / ( m_RootEnd - m_RootBegin ) ) * 100.0f;
 
 				//add it to the sample's values
-				double totalPc;
-				totalPc=m_Samples[i].m_AveragePc*m_Samples[i].m_DataCount;
-				totalPc+=percentage; m_Samples[i].m_DataCount++;
-				m_Samples[i].m_AveragePc=totalPc/m_Samples[i].m_DataCount;
+				double total_pc;
+				total_pc=m_Samples[i].m_AveragePc*m_Samples[i].m_DataCount;
+				total_pc+=percentage; m_Samples[i].m_DataCount++;
+				m_Samples[i].m_AveragePc=total_pc/m_Samples[i].m_DataCount;
 				if((m_Samples[i].m_MinPc==-1)||(percentage<m_Samples[i].m_MinPc))m_Samples[i].m_MinPc=percentage;
 				if((m_Samples[i].m_MaxPc==-1)||(percentage>m_Samples[i].m_MaxPc))m_Samples[i].m_MaxPc=percentage;
 
@@ -141,7 +141,7 @@ namespace GASS
 				m_OutputHandler->Sample(percentage,m_Samples[i].m_MinPc,
 					m_Samples[i].m_AveragePc,
 					m_Samples[i].m_MaxPc,
-					sampleTime,
+					sample_time,
 					m_Samples[i].m_CallCount,
 					m_Samples[i].m_Name,
 					m_Samples[i].m_ParentCount);

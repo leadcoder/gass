@@ -28,7 +28,7 @@
 namespace GASS
 {
 	#define MAX_REF_POLYS 256
-	class RecastDoorComponent : public Reflection<RecastDoorComponent,BaseSceneComponent>
+	class RecastDoorComponent : public Reflection<RecastDoorComponent,Component>
 	{
 	public:
 		RecastDoorComponent();
@@ -43,14 +43,14 @@ namespace GASS
 		void SetOpen(bool value);
 		bool GetOpen() const;
 	
-		bool m_Initialized;
-		bool m_Open;
+		bool m_Initialized{false};
+		bool m_Open{true};
 		Vec3 m_Pos;
 		RecastNavigationMeshComponentWeakPtr m_NavMeshComp;
 		dtPolyRef m_PolyRefs[MAX_REF_POLYS];
-		int m_PolyRefCount;
+		int m_PolyRefCount{0};
 	};
-	typedef GASS_SHARED_PTR<RecastDoorComponent> RecastDoorComponentPtr;
-	typedef GASS_WEAK_PTR<RecastDoorComponent> RecastDoorComponentWeakPtr;
+	using RecastDoorComponentPtr = std::shared_ptr<RecastDoorComponent>;
+	using RecastDoorComponentWeakPtr = std::weak_ptr<RecastDoorComponent>;
 }
 

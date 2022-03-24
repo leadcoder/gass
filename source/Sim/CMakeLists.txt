@@ -7,13 +7,8 @@ if(NOT WIN32)
    	set(PLATFORM_DEPS UUID)
 endif()
 
-#gass_get_source_from_current_dir(CPP_FILES H_FILES)
-#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Source Files" FILES ${CPP_FILES})
-#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Header Files" FILES ${H_FILES})
-
 set(CPP_FILES
 	GASSASScriptComponent.cpp
-	GASSBaseSceneComponent.cpp
 	GASSBaseSceneManager.cpp
 	GASSComponent.cpp
 	GASSComponentFactory.cpp
@@ -52,7 +47,6 @@ set(CPP_FILES
 set(H_FILES
 	GASS.h
 	GASSASScriptComponent.h
-	GASSBaseSceneComponent.h
 	GASSBaseSceneManager.h
 	GASSCommon.h
 	GASSComponent.h
@@ -90,6 +84,7 @@ set(H_FILES
 	GASSSystemFactory.h
 	GASSSystemStepper.h
 	GASSThreading.h
+	Interface/GASSIBillboardComponent.h
 	Interface/GASSICameraComponent.h
 	Interface/GASSICollisionComponent.h
 	Interface/GASSICollisionSceneManager.h
@@ -133,6 +128,7 @@ set(H_FILES
 	Interface/GASSITemplateSourceComponent.h
 	Interface/GASSITerrainComponent.h
 	Interface/GASSITerrainSceneManager.h
+	Interface/GASSITextComponent.h
 	Interface/GASSIViewport.h
 	Interface/GASSIWaypointListComponent.h
 	Interface/GASSIWGS84SceneManager.h
@@ -140,7 +136,6 @@ set(H_FILES
 	Messages/GASSCoreSceneMessages.h
 	Messages/GASSCoreSceneObjectMessages.h
 	Messages/GASSCoreSystemMessages.h
-	Messages/GASSGeoSceneObjectMessages.h
 	Messages/GASSGraphicsSceneMessages.h
 	Messages/GASSGraphicsSceneObjectMessages.h
 	Messages/GASSGraphicsSystemMessages.h

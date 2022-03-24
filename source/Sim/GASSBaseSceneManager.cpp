@@ -36,9 +36,9 @@ namespace GASS
 		RegisterGetSet( "Name", &GASS::BaseSceneManager::GetName, &GASS::BaseSceneManager::SetName);
 	}
 
-	void BaseSceneManager::_UpdatePostListeners(double delta_time)
+	void BaseSceneManager::UpdatePostListeners(double delta_time)
 	{
-		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PostListeners.begin();
+		auto iter = m_PostListeners.begin();
 
 		while (iter != m_PostListeners.end())
 		{
@@ -59,9 +59,9 @@ namespace GASS
 		}
 	}
 
-	void BaseSceneManager::_UpdatePreListeners(double delta_time)
+	void BaseSceneManager::UpdatePreListeners(double delta_time)
 	{
-		std::vector<SceneManagerListenerWeakPtr>::iterator iter = m_PreListeners.begin();
+		auto iter = m_PreListeners.begin();
 
 		while (iter != m_PreListeners.end())
 		{
@@ -108,7 +108,7 @@ namespace GASS
 
 	void BaseSceneManager::LoadXML(tinyxml2::XMLElement *xml_elem)
 	{
-		_LoadProperties(xml_elem);
+		LoadProperties(xml_elem);
 	}
 
 
@@ -117,7 +117,7 @@ namespace GASS
 		tinyxml2::XMLElement * this_elem;
 		this_elem = xml_elem->GetDocument()->NewElement(GetRTTI()->GetClassName().c_str());  
 		xml_elem->LinkEndChild( this_elem );  
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 	}
 	
 }

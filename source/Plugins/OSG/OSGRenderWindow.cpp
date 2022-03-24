@@ -31,8 +31,8 @@
 
 #if defined(WIN32) && !defined(__CYGWIN__) 
 	#include <osgViewer/api/Win32/GraphicsWindowWin32>
-	typedef HWND WindowHandle; 
-	typedef osgViewer::GraphicsWindowWin32::WindowData WindowData; 
+	using WindowHandle = HWND; 
+	using WindowData = osgViewer::GraphicsWindowWin32::WindowData; 
 #elif defined(__APPLE__) // Assume using Carbon on Mac. 
 	#include <osgViewer/api/Carbon/GraphicsWindowCarbon> 
 	typedef WindowRef WindowHandle; 
@@ -58,9 +58,9 @@ namespace GASS
 
 	void* OSGRenderWindow::GetHWND() const
 	{
-		void* win_handle = NULL;
+		void* win_handle = nullptr;
 		#if defined(WIN32) && !defined(__CYGWIN__) 	
-			osgViewer::GraphicsWindowWin32* win32_window = (osgViewer::GraphicsWindowWin32*)(m_Window.get());
+			auto* win32_window = (osgViewer::GraphicsWindowWin32*)(m_Window.get());
 			win_handle = (void*) win32_window->getHWND();
 		#else
 			osgViewer::GraphicsWindowX11* x11_window = (osgViewer::GraphicsWindowX11*)(m_Window.get());
@@ -72,15 +72,15 @@ namespace GASS
 	ViewportPtr OSGRenderWindow::CreateViewport(const std::string &name, float  left, float top, float width, float height)
 	{
 		//convert dimensions normalized to pixel
-		float win_width = static_cast<float>(m_Window->getTraits()->width);
-		float win_height = static_cast<float>(m_Window->getTraits()->height);
+		auto win_width = static_cast<float>(m_Window->getTraits()->width);
+		auto win_height = static_cast<float>(m_Window->getTraits()->height);
 
 		int p_left = static_cast<int>(left*win_width);
 		int p_top = static_cast<int>(top*win_height);
 
 		int p_width = static_cast<int>(width*win_width);
 		int p_height = static_cast<int>(height*win_height);
-		osg::Viewport* osg_vp = new osg::Viewport(p_left, p_top, p_width,p_height);
+		auto* osg_vp = new osg::Viewport(p_left, p_top, p_width,p_height);
 		osg::ref_ptr<osg::Camera> camera = new osg::Camera;
 	    camera->setGraphicsContext(m_Window.get());
 		camera->setDrawBuffer(GL_BACK);
@@ -91,7 +91,7 @@ namespace GASS
 		//camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 		camera->getOrCreateStateSet()->setGlobalDefaults();
 
-		osgViewer::View* view = new osgViewer::View;
+		auto* view = new osgViewer::View;
 		view->setName(name);
 		view->setCamera(camera);
 		
@@ -104,7 +104,7 @@ namespace GASS
 		OSGGraphicsSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
 		
 		// add some OSG handlers, maybe only in first view?
-		osgViewer::StatsHandler* stats = new osgViewer::StatsHandler();
+		auto* stats = new osgViewer::StatsHandler();
 		stats->setKeyEventTogglesOnScreenStats('y');
 		stats->setKeyEventPrintsOutStats('¤');
 
@@ -117,7 +117,7 @@ namespace GASS
 
 	
 
-		osgGA::StateSetManipulator* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
+		auto* ssm =  new osgGA::StateSetManipulator(view->getCamera()->getOrCreateStateSet());
 		ssm->setKeyEventCyclePolygonMode('p');
 		ssm->setKeyEventToggleTexturing('o');
 		view->addEventHandler(ssm);

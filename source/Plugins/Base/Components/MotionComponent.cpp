@@ -19,6 +19,8 @@
 *****************************************************************************/
 
 
+#include <memory>
+
 #include "Plugins/Base/Components/MotionComponent.h"
 #include "Core/Math/GASSMath.h"
 #include "Plugins/Base/GASSCoreSceneManager.h"
@@ -44,17 +46,7 @@
 
 namespace GASS
 {
-	MotionComponent::MotionComponent() : m_Acceleration(10),
-		m_MaxSpeed(20),
-		m_MaxTurnSpeed(1),
-		m_ThrottleInput(0),
-		m_SteerInput(0),
-		m_CurrentSpeed(0),
-		m_Debug(false),
-		m_BreakInput(0),
-		m_GroundClamp(true),
-		m_HasHeight(false),
-		m_DesiredHeight(0),
+	MotionComponent::MotionComponent() : 
 		m_PlatformSize(2,1,5),
 		m_PlatformType(PT_CAR)
 	{
@@ -69,7 +61,7 @@ namespace GASS
 	void MotionComponent::RegisterReflection()                         // static
 	{
 		ComponentFactory::Get().Register<MotionComponent>();
-		GetClassRTTI()->SetMetaData(ClassMetaDataPtr(new ClassMetaData("MotionComponent", OF_VISIBLE)));
+		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("MotionComponent", OF_VISIBLE));
 		RegisterMember("PlatformType", &GASS::MotionComponent::m_PlatformType);
 		RegisterMember("Acceleration", &GASS::MotionComponent::m_Acceleration,PF_VISIBLE | PF_EDITABLE,"Acceleration [m/s2]");
 		RegisterGetSet("MaxSpeed", &GASS::MotionComponent::GetMaxSpeed, &GASS::MotionComponent::SetMaxSpeed,PF_VISIBLE | PF_EDITABLE,"Max Speed [m/s]");
@@ -97,7 +89,7 @@ namespace GASS
 			m_PlatformSize = message->GetGeometry()->GetBoundingBox().GetSize();
 	}
 
-	bool GetGroundData(ICollisionSceneManager* csm, const Vec3& pos, double vertical_ray_dist, GeometryFlags flags, Vec3& ground_pos)
+	bool GetGroundData(ICollisionSceneManager* csm, const Vec3& pos, double /*vertical_ray_dist*/, GeometryFlags flags, Vec3& ground_pos)
 	{
 		return csm->GetLocationOnTerrain(pos, flags, ground_pos);
 		/*CollisionResult result;
@@ -150,7 +142,7 @@ namespace GASS
 			const Float ray_dist = 100.0;
 
 			//check ground and static geometry for now
-			GeometryFlags flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | 
+			auto flags = static_cast<GeometryFlags>(GEOMETRY_FLAG_GROUND | 
 															GEOMETRY_FLAG_STATIC_OBJECT | 
 															GEOMETRY_FLAG_PAGED_LOD | 
 															GEOMETRY_FLAG_GROUND_LOD);
@@ -287,7 +279,7 @@ namespace GASS
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(new_rot);
 
 		int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(Vec3(0, 0, -m_CurrentSpeed), Vec3(0, 0, 0), from_id)));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0, 0, -m_CurrentSpeed), Vec3(0, 0, 0), from_id));
 		
 		if(m_Debug)
 		{

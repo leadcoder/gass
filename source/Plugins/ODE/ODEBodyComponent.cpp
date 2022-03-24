@@ -18,6 +18,8 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 
+#include <memory>
+
 #include "Plugins/ODE/ODEBodyComponent.h"
 #include "Plugins/ODE/ODEPhysicsSceneManager.h"
 #include "Core/Math/GASSAABox.h"
@@ -29,20 +31,11 @@
 namespace GASS
 {
 	ODEBodyComponent::ODEBodyComponent()
-		:m_ODESpaceID(NULL),
-		m_ODESecondarySpaceID(NULL),
-		m_ODEBodyID(0),
-		m_AutoDisable(true),
-		m_FastRotation(true),
-		m_MassRepresentation(MR_GEOMETRY),
-		m_Mass(1),
+		:
 		m_CGPosition(0,0,0),
 		m_SymmetricInertia(0,0,0),
-		m_AssymetricInertia(0,0,0),
-		m_EffectJoints(true),
-		m_Active(true),
-		m_Debug(false),
-		m_TrackTransformation(true)
+		m_AssymetricInertia(0,0,0)
+		
 	{
 	}
 
@@ -151,12 +144,12 @@ namespace GASS
 
 		SetActive(m_Active);
 
-		GetSceneObject()->SendImmediateEvent(PhysicsBodyLoadedEventPtr(new PhysicsBodyLoadedEvent()));
+		GetSceneObject()->SendImmediateEvent(std::make_shared<PhysicsBodyLoadedEvent>());
 	}
 
 	void ODEBodyComponent::BodyMovedCallback(dBodyID id)
 	{
-		ODEBodyComponent* ode_body = (ODEBodyComponent*) dBodyGetData(id);
+		auto* ode_body = (ODEBodyComponent*) dBodyGetData(id);
 		ode_body->BodyMoved();
 	}
 
@@ -167,7 +160,7 @@ namespace GASS
 		GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(GetRotation());
 		m_TrackTransformation = true;
 		const int from_id = GASS_PTR_TO_INT(this);
-		GetSceneObject()->PostEvent(PhysicsVelocityEventPtr(new PhysicsVelocityEvent(GetVelocity(true),GetAngularVelocity(true),from_id)));
+		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(GetVelocity(true),GetAngularVelocity(true),from_id));
 	}
 
 	/*	bool ODEBodyComponent::WantsContact( dContact & contact, IPhysicsObject * other, dGeomID you, dGeomID him, bool firstTest)
@@ -318,16 +311,16 @@ namespace GASS
 		{
 			return;
 		}
-		dReal const * V = dBodyGetLinearVel( body );
-		dBodyAddForce( body, vScale*V[0], vScale*V[1], vScale*V[2] );
-		dReal const * A = dBodyGetAngularVel( body );
-		dBodyAddTorque( body, aScale*A[0], aScale*A[1], aScale*A[2] );
+		dReal const * v = dBodyGetLinearVel( body );
+		dBodyAddForce( body, vScale*v[0], vScale*v[1], vScale*v[2] );
+		dReal const * a = dBodyGetAngularVel( body );
+		dBodyAddTorque( body, aScale*a[0], aScale*a[1], aScale*a[2] );
 	}
 
 	dSpaceID ODEBodyComponent::GetSpace()
 	{
 		ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
-		if(scene_manager && m_ODESpaceID == NULL)
+		if(scene_manager && m_ODESpaceID == nullptr)
 		{
 			m_ODESpaceID = scene_manager->GetPhysicsSpace();//dSimpleSpaceCreate(ODEPhysicsManager::m_Space);
 		}
@@ -336,7 +329,7 @@ namespace GASS
 
 	dSpaceID ODEBodyComponent::GetSecondarySpace()
 	{
-		if(m_ODESecondarySpaceID == 0)
+		if(m_ODESecondarySpaceID == nullptr)
 		{
 			ODEPhysicsSceneManagerPtr scene_manager = ODEPhysicsSceneManagerPtr(m_SceneManager);
 			m_ODESecondarySpaceID = dSimpleSpaceCreate(scene_manager->GetCollisionSpace());
@@ -432,7 +425,7 @@ namespace GASS
 				{
 					dJointID joint = dBodyGetJoint(m_ODEBodyID,i);
 					dBodyID b2 = dJointGetBody (joint, 1);
-					ODEBodyComponent* child_body = (ODEBodyComponent*) dBodyGetData(b2);
+					auto* child_body = (ODEBodyComponent*) dBodyGetData(b2);
 					if(child_body && child_body != this)
 					{
 						const dReal *p = dBodyGetPosition(b2);

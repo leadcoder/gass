@@ -20,7 +20,11 @@
 #include "Sim/GASSComponent.h"
 #include "Sim/GASSComponentFactory.h"
 #include "Core/Utils/GASSException.h"
+#include "Core/Utils/GASSLogger.h"
 #include "Core/Serialize/tinyxml2.h"
+//#include "Sim/GASSComponent.h"
+#include "Sim/GASSSceneObjectLink.h"
+#include "Sim/GASSSceneObjectRef.h"
 
 namespace GASS
 {
@@ -55,7 +59,7 @@ namespace GASS
 	{
 		if(serializer->Loading())
 		{
-			if(!BaseReflectionObject::_SerializeProperties(serializer))
+			if(!BaseReflectionObject::SerializeProperties(serializer))
 				return false;
 		}
 		else
@@ -63,7 +67,7 @@ namespace GASS
 			auto* saver = static_cast<SerialSaver*>(serializer);
 			std::string comp_type = GetRTTI()->GetClassName();
 			saver->IO<std::string>(comp_type);
-			if(!BaseReflectionObject::_SerializeProperties(serializer))
+			if(!BaseReflectionObject::SerializeProperties(serializer))
 				return false;
 		}
 		return true;
@@ -72,7 +76,7 @@ namespace GASS
 
 	void Component::LoadXML(tinyxml2::XMLElement *obj_elem)
 	{
-		BaseReflectionObject::_LoadProperties(obj_elem);
+		BaseReflectionObject::LoadProperties(obj_elem);
 	}
 
 	void Component::SaveXML(tinyxml2::XMLElement *xml_elem)
@@ -81,7 +85,7 @@ namespace GASS
 		const std::string factory_key = ComponentFactory::Get().GetKeyFromClassName(GetRTTI()->GetClassName());
 		this_elem = xml_elem->GetDocument()->NewElement(factory_key.c_str() );
 		xml_elem->LinkEndChild( this_elem );  
-		_SaveProperties(this_elem);
+		SaveProperties(this_elem);
 	}
 
 	ComponentPtr Component::CreateCopy()
@@ -99,6 +103,228 @@ namespace GASS
 	std::vector<std::string> Component::GetDependencies() const
 	{
 		return m_Dependencies[GetRTTI()];
+	}
+
+	SceneObjectPtr Component::GetSceneObject() const
+	{
+		return GetOwner();
+	}
+
+	void Component::OnInitialize()
+	{
+		//NOP
+	}
+
+	void Component::OnPostInitialize()
+	{
+		//NOP
+	}
+
+	void Component::OnSceneObjectInitialized()
+	{
+		//NOP
+	}
+
+	void Component::InitializePointers()
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+				if (*prop->GetTypeID() == typeid(std::vector<SceneObjectLink>))
+				{
+					std::vector<SceneObjectLink> links;
+					GetPropertyValue(prop, links);
+					for (size_t i = 0; i < links.size(); i++)
+					{
+						if (links[i].GetLinkObjectID() != UNKNOWN_LINK_ID)
+						{
+							if (!links[i].Initlize(GetSceneObject()))
+							{
+								GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+									"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + links[i].GetLinkObjectID(),
+									"Component::InitializePointers()");
+							}
+						}
+						else
+							GASS_LOG(LWARNING) << "Component:" << GetName() << " in object:" << GetSceneObject()->GetName() << " has no link id for:" << prop->GetName();
+					}
+					SetPropertyValue(prop, links);
+				}
+				else if (*prop->GetTypeID() == typeid(SceneObjectLink))
+				{
+					SceneObjectLink link;
+					GetPropertyValue(prop, link);
+					if (link.GetLinkObjectID() != UNKNOWN_LINK_ID)
+					{
+						if (!link.Initlize(GetSceneObject()))
+						{
+							GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+								"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + "failed to initilize scene object link:" + prop->GetName() + " with id:" + link.GetLinkObjectID(),
+								"Component::InitializePointers()");
+
+						}
+						GASS_ANY new_any_link(link);
+						prop->SetValueByAny(this, new_any_link);
+					}
+					else
+					{
+						GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,
+							"Component:" + GetName() + " in object:" + GetSceneObject()->GetName() + " has no link id for" + prop->GetName(),
+							"Component::InitializePointers()");
+					}
+
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+	void Component::InitializeSceneObjectRef()
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref(links[i].GetRefGUID());
+							links[i] = new_ref;
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						SceneObjectRef new_ref(old_ref.GetRefGUID());
+						GASS_ANY any_ref(new_ref);
+						prop->SetValueByAny(this, any_ref);
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+
+	void Component::ResolveTemplateReferences(SceneObjectPtr template_root)
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							SceneObjectRef new_ref = links[i];
+							new_ref.ResolveTemplateReferences(template_root);
+							links[i] = new_ref;
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef so_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						so_ref.ResolveTemplateReferences(template_root);
+						GASS_ANY any_so(so_ref);
+						prop->SetValueByAny(this, any_so);
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
+	}
+
+
+
+	void Component::RemapReferences(const std::map<SceneObjectGUID, SceneObjectGUID>& ref_map)
+	{
+		RTTI* p_rtti = GetRTTI();
+		while (p_rtti)
+		{
+			auto	iter = p_rtti->GetFirstProperty();
+			while (iter != p_rtti->GetProperties()->end())
+			{
+				IProperty* prop = (*iter);
+
+				const bool is_sor = *prop->GetTypeID() == typeid(SceneObjectRef);
+				const bool is_sor_vec = *prop->GetTypeID() == typeid(std::vector<SceneObjectRef>);
+
+				if (is_sor || is_sor_vec)
+				{
+					if (is_sor_vec)
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						std::vector<SceneObjectRef> links = GASS_ANY_CAST<std::vector<SceneObjectRef> >(any_link);
+						for (size_t i = 0; i < links.size(); i++)
+						{
+							const std::map<SceneObjectGUID, SceneObjectGUID>::const_iterator guid_iter = ref_map.find(links[i].GetRefGUID());
+							if (guid_iter != ref_map.end())
+							{
+								SceneObjectRef new_ref(guid_iter->second);
+								links[i] = new_ref;
+							}
+						}
+						GASS_ANY any_links(links);
+						prop->SetValueByAny(this, any_links);
+					}
+					else
+					{
+						GASS_ANY any_link;
+						prop->GetValueAsAny(this, any_link);
+						SceneObjectRef old_ref = GASS_ANY_CAST<SceneObjectRef>(any_link);
+						const std::map<SceneObjectGUID, SceneObjectGUID>::const_iterator guid_iter = ref_map.find(old_ref.GetRefGUID());
+						if (guid_iter != ref_map.end())
+						{
+							SceneObjectRef new_ref(guid_iter->second);
+							GASS_ANY any_ref(new_ref);
+							prop->SetValueByAny(this, any_ref);
+						}
+					}
+				}
+				++iter;
+			}
+			p_rtti = p_rtti->GetAncestorRTTI();
+		}
 	}
 }
 

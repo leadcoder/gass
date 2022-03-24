@@ -23,14 +23,14 @@
 #include "Sim/GASSCommon.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/GASSSceneObject.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 
 
 namespace GASS
 {
 	class GASSExport SceneObjectRef
 	{
-		friend class BaseSceneComponent;
+		friend class Component;
 	public:
 		SceneObjectRef();
 		SceneObjectRef(SceneObjectPtr obj);

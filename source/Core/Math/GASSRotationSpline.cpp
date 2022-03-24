@@ -84,30 +84,20 @@ namespace GASS
 		//
 		// Assume endpoint tangents are parallel with line with neighbour
 
-		unsigned int i, num_Points;
-		bool isClosed;
+		const auto num_points = static_cast<unsigned int>(m_Points.size());
 
-		num_Points = static_cast<unsigned int>(m_Points.size());
-
-		if (num_Points < 2)
+		if (num_points < 2)
 		{
 			// Can't do anything yet
 			return;
 		}
 
-		m_Tangents.resize(num_Points);
+		m_Tangents.resize(num_points);
 
-		if (m_Points[0] == m_Points[num_Points-1])
-		{
-			isClosed = true;
-		}
-		else
-		{
-			isClosed = false;
-		}
-
-		Quaternion invp, part1, part2, preExp;
-		for(i = 0; i < num_Points; ++i)
+		const bool is_closed = m_Points[0] == m_Points[num_points - 1];
+	
+		Quaternion invp, part1, part2, pre_exp;
+		for(unsigned int i = 0; i < num_points; ++i)
 		{
 			const Quaternion &p = m_Points[i];
 			invp = p.Inverse();
@@ -116,20 +106,20 @@ namespace GASS
 			{
 				// special case start
 				part1 = (invp * m_Points[i+1]).Log();
-				if (isClosed)
+				if (is_closed)
 				{
 					// Use num_Points-2 since num_Points-1 == end == start == this one
-					part2 = (invp * m_Points[num_Points-2]).Log();
+					part2 = (invp * m_Points[num_points-2]).Log();
 				}
 				else
 				{
 					part2 = (invp * p).Log();
 				}
 			}
-			else if (i == num_Points-1)
+			else if (i == num_points-1)
 			{
 				// special case end
-				if (isClosed)
+				if (is_closed)
 				{
 					// Wrap to [1] (not [0], this is the same as end == this one)
 					part1 = (invp * m_Points[1]).Log();
@@ -146,8 +136,8 @@ namespace GASS
 				part2 = (invp * m_Points[i-1]).Log();
 			}
 
-			preExp = -0.25 * (part1 + part2);
-			m_Tangents[i] = p * preExp.Exp();
+			pre_exp = -0.25 * (part1 + part2);
+			m_Tangents[i] = p * pre_exp.Exp();
 		}
 	}
 

@@ -33,7 +33,5 @@
 				<InvertBackWardSteering value="false"/>
 			</CarAutopilotComponent>
 		</Components>
-		<ComponentContainers>
-		</ComponentContainers>
 	</SceneObjectTemplate>
 </Templates>

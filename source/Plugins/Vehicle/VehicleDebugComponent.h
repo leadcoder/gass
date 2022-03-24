@@ -22,7 +22,7 @@
 #define VEHICLE_DEBUG_COMPONENT_H
 
 #include "Sim/GASSCommon.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 
@@ -30,10 +30,10 @@ namespace GASS
 {
 
 	class SceneObject;
-	typedef GASS_SHARED_PTR<SceneObject> SceneObjectPtr;
-	typedef GASS_WEAK_PTR<SceneObject> SceneObjectWeakPtr;
+	using SceneObjectPtr = std::shared_ptr<SceneObject>;
+	using SceneObjectWeakPtr = std::weak_ptr<SceneObject>;
 
-	class VehicleDebugComponent :  public Reflection<VehicleDebugComponent,BaseSceneComponent>
+	class VehicleDebugComponent :  public Reflection<VehicleDebugComponent,Component>
 	{
 	public:
 		VehicleDebugComponent();
@@ -43,7 +43,7 @@ namespace GASS
 		void OnDelete() override;
 	private:
 		void OnGotoPosition(GotoPositionRequestPtr message);
-		bool m_ShowWaypoint;
+		bool m_ShowWaypoint{true};
 		SceneObjectPtr m_WaypointObj;
 	};
 }

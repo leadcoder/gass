@@ -22,7 +22,7 @@
 #include "Core/Common.h"
 #include "Core/MessageSystem/GASSIMessage.h"
 #include "Core/Math/GASSVector.h"
-#include "Sim/GASSBaseSceneComponent.h"
+#include "Sim/GASSComponent.h"
 #include "Sim/GASSSceneObjectRef.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -35,7 +35,7 @@ namespace GASS
 		Component that create  line/path (with material and width) 
 	*/
 
-	class LineGeometryComponent : public Reflection<LineGeometryComponent,BaseSceneComponent>
+	class LineGeometryComponent : public Reflection<LineGeometryComponent,Component>
 	{
 	public:
 		LineGeometryComponent();
@@ -43,14 +43,14 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		float m_CustomDitchTexturePercent;
-		bool m_FadeStart;
-		bool m_FadeEnd;
-		bool m_ClampToTerrain;
+		float m_CustomDitchTexturePercent{0};
+		bool m_FadeStart{false};
+		bool m_FadeEnd{false};
+		bool m_ClampToTerrain{true};
 		ColorRGBA m_Color;
 		Vec2 m_TileScale;
 		SceneObjectRef m_WapointListObject;
-		bool m_RotateTexture;
+		bool m_RotateTexture{false};
 		
 		void SetWidth(float value) {m_Width = value;UpdateMesh();}
 		float GetWidth() const {return m_Width;}
@@ -67,14 +67,14 @@ namespace GASS
 		void UpdateMesh();
 		void OnUpdate(WaypointListUpdatedMessagePtr message);
 
-		bool m_Initialized;
-		float m_Width;
-		float m_Offset;
+		bool m_Initialized{false};
+		float m_Width{10};
+		float m_Offset{0.3f};
 		std::string m_Material;
 	};
 
-	typedef GASS_SHARED_PTR<LineGeometryComponent> LineComponentPtr;
-	typedef GASS_WEAK_PTR<LineGeometryComponent> LineComponentWeakPtr;
+	using LineComponentPtr = std::shared_ptr<LineGeometryComponent>;
+	using LineComponentWeakPtr = std::weak_ptr<LineGeometryComponent>;
 
 }
 

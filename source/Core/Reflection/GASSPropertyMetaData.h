@@ -28,7 +28,7 @@
 namespace GASS
 {
 	class BaseReflectionObject;
-	typedef GASS_SHARED_PTR<BaseReflectionObject> BaseReflectionObjectPtr;
+	using BaseReflectionObjectPtr = std::shared_ptr<BaseReflectionObject>;
 	
 	/**
 		Interface for all property meta data
@@ -40,7 +40,7 @@ namespace GASS
 	{
 		GASS_DECLARE_CLASS_AS_INTERFACE(IPropertyMetaData)
 	};
-	typedef GASS_SHARED_PTR<IPropertyMetaData> PropertyMetaDataPtr;
+	using PropertyMetaDataPtr = std::shared_ptr<IPropertyMetaData>;
 
 
 	/**
@@ -60,7 +60,7 @@ namespace GASS
 		Float m_Max;
 		Float m_Min;
 	};
-	typedef GASS_SHARED_PTR<FloatMaxMinPropertyMetaData> FloatMaxMinPropertyMetaDataPtr;
+	using FloatMaxMinPropertyMetaDataPtr = std::shared_ptr<FloatMaxMinPropertyMetaData>;
 
 	/**
 		Meta data class for integer properties that want to support max min values
@@ -77,7 +77,7 @@ namespace GASS
 		int m_Max;
 		int m_Min;
 	};
-	typedef GASS_SHARED_PTR<IntMaxMinPropertyMetaData> IntMaxMinPropertyMetaDataPtr;
+	using IntMaxMinPropertyMetaDataPtr = std::shared_ptr<IntMaxMinPropertyMetaData>;
 
 
 	/**
@@ -104,6 +104,6 @@ namespace GASS
 		FilePathEditType m_Type;
 		std::vector<std::string> m_Extensions;
 	};
-	typedef GASS_SHARED_PTR<FilePathPropertyMetaData> FilePathPropertyMetaDataPtr;
+	using FilePathPropertyMetaDataPtr = std::shared_ptr<FilePathPropertyMetaData>;
 
 }

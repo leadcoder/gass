@@ -20,14 +20,13 @@
 #pragma once
 
 #include "Plugins/OSG/IOSGCameraManipulator.h"
-#include "Sim/Messages/GASSGeoSceneObjectMessages.h"
 #include "Sim/GASSGeoLocation.h"
 
 namespace GASS
 {
 	class OSGEarthSceneManager;
 
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,BaseSceneComponent> , public IWorldLocationComponent
+	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
 	{
 	public:
 		OSGEarthGeoComponent();
@@ -46,19 +45,19 @@ namespace GASS
 		void SetHeightAboveGround(double value) override;
 		double GetHeightAboveGround() const override;
 	protected:
-		Vec3 _GetWorldPosition() const;
-		void _LatOrLongChanged();
-		void _SetWorldPosition(const Vec3& pos);
+		Vec3 GetWorldPosition() const;
+		void LatOrLongChanged();
+		void SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr event);
 		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG;
+		bool m_PreserveHAG{true};
 
 		GeoLocation m_Location;
-		double m_HeightAboveGround;
-		OSGEarthSceneManager* m_OESM;
-		ILocationComponent* m_LocationComp;
-		bool m_HandleTransformations;
+		double m_HeightAboveGround{0};
+		OSGEarthSceneManager* m_OESM{nullptr};
+		ILocationComponent* m_LocationComp{nullptr};
+		bool m_HandleTransformations{true};
 	};
-	typedef GASS_WEAK_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentWeakPtr;
-	typedef GASS_SHARED_PTR<OSGEarthGeoComponent> OSGEarthGeoComponentPtr;
+	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
+	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
 }
