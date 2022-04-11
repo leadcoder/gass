@@ -162,7 +162,7 @@ namespace GASS
 		m_TerrainCallbackProxy(new OETerrainCallbackProxy(this))
 		
 	{
-
+		m_ShadowRanges = { 0.0f, 100.0f, 250.0f };
 	}
 
 	OSGEarthMapComponent::~OSGEarthMapComponent()
@@ -185,6 +185,12 @@ namespace GASS
 		RegisterGetSet("SkyContrast", &OSGEarthMapComponent::GetSkyContrast, &OSGEarthMapComponent::SetSkyContrast, PF_VISIBLE | PF_EDITABLE, "Sky light contrast");
 		RegisterGetSet("SkyAmbientBoost", &OSGEarthMapComponent::GetSkyAmbientBoost, &OSGEarthMapComponent::SetSkyAmbientBoost, PF_VISIBLE | PF_EDITABLE, "Sky light ambient boost fasctor, (ONeal only)");
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE, "Enable/disable sky light");
+
+		RegisterGetSet("ShadowEnabled", &OSGEarthMapComponent::GetShadowEnabled, &OSGEarthMapComponent::SetShadowEnabled, PF_VISIBLE | PF_EDITABLE, "Enable/disable shadows");
+		RegisterGetSet("ShadowBlur", &OSGEarthMapComponent::GetShadowBlur, &OSGEarthMapComponent::SetShadowBlur, PF_VISIBLE | PF_EDITABLE, "Shadow blur factor");
+		RegisterGetSet("ShadowRanges", &OSGEarthMapComponent::GetShadowRanges, &OSGEarthMapComponent::SetShadowRanges, PF_VISIBLE | PF_EDITABLE, "Shadow ranges");
+		RegisterGetSet("ShadowColor", &OSGEarthMapComponent::GetShadowColor, &OSGEarthMapComponent::SetShadowColor, PF_VISIBLE | PF_EDITABLE, "Shadow Color");
+
 
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
 		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
@@ -379,9 +385,6 @@ namespace GASS
 			
 		}
 
-		//Save top node, to be used during shutdown
-		m_TopNode = osgEarth::findTopOfGraph(read_node);
-		root->addChild(m_TopNode);
 		
 		//Connect component with osg by adding user data, this is needed if we want to used the intersection implementated by the OSGCollisionSystem
 		osg::ref_ptr<OSGNodeData> data = new OSGNodeData(shared_from_this());
@@ -496,12 +499,49 @@ namespace GASS
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 
+		osg::Group* object_root = nullptr;
 		if (m_IsRoot)
 		{
-			auto* object_root = new osg::Group();
+			object_root = new osg::Group();
 			m_MapNode->addChild(object_root);
 			osg_sm->SetMapNode(object_root);
 		}
+
+		if (m_ShadowEnabled)
+		{
+			int unit;
+
+			if (m_MapNode->getTerrainEngine()->getResources()->reserveTextureImageUnit(unit, "ShadowCaster"))
+			{
+				// default slices:
+				m_ShadowCaster = new osgEarth::ShadowCaster();
+				m_ShadowCaster->setRanges(m_ShadowRanges);
+				m_ShadowCaster->setBlurFactor(m_ShadowBlur);
+				m_ShadowCaster->setShadowColor(m_ShadowColor);
+				m_ShadowCaster->setTextureImageUnit(unit);
+				m_ShadowCaster->setLight(view->getLight());
+				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getLayerNodeGroup());
+				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getTerrainEngine()->getNode());
+				if (object_root)
+					m_ShadowCaster->getShadowCastingGroup()->addChild(object_root);
+				if (m_MapNode->getNumParents() > 0)
+				{
+					osgEarth::insertGroup(m_ShadowCaster, m_MapNode->getParent(0));
+				}
+				else
+				{
+					m_ShadowCaster->addChild(m_MapNode);
+				}
+			}
+		}
+		else
+			m_ShadowCaster = nullptr;
+
+		//Save top node, to be used during shutdown
+		m_TopNode = osgEarth::findTopOfGraph(m_MapNode);
+		root->addChild(m_TopNode);
+
+
 
 		//if (m_UseOcean)
 		//	{
@@ -784,6 +824,31 @@ namespace GASS
 			sphere.m_Radius = bounds.radius();
 		}
 		return sphere;
+	}
+	void OSGEarthMapComponent::SetShadowEnabled(bool value)
+	{
+		m_ShadowEnabled = value;
+	}
+
+	void OSGEarthMapComponent::SetShadowBlur(float value)
+	{
+		m_ShadowBlur = value;
+		if (m_ShadowCaster)
+			m_ShadowCaster->setBlurFactor(value);
+	}
+
+	void OSGEarthMapComponent::SetShadowRanges(std::vector<float> value)
+	{
+		m_ShadowRanges = value;
+		if (m_ShadowCaster)
+			m_ShadowCaster->setRanges(value);
+	}
+
+	void OSGEarthMapComponent::SetShadowColor(float value)
+	{
+		m_ShadowColor = value;
+		if (m_ShadowCaster)
+			m_ShadowCaster->setShadowColor(value);
 	}
 }
 

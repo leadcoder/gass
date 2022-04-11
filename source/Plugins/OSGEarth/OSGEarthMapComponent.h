@@ -77,6 +77,15 @@ namespace GASS
 			osgEarth::TerrainCallbackContext& context);
 		void OnMapModelChanged(const osgEarth::MapModelChange& change);
 
+		void SetShadowEnabled(bool value);
+		bool GetShadowEnabled() const { return m_ShadowEnabled; }
+		void SetShadowBlur(float value);
+		float GetShadowBlur() const { return m_ShadowBlur; }
+		void SetShadowColor(float value);
+		float GetShadowColor() const { return m_ShadowColor; }
+
+		void SetShadowRanges(std::vector<float> value);
+		std::vector<float> GetShadowRanges() const { return m_ShadowRanges; }
 	protected:
 		void Shutdown();
 		void SetupNodeMasks();
@@ -110,6 +119,11 @@ namespace GASS
 		float m_SkyContrast = 2.0f;
 		float m_SkyAmbientBoost = 5;
 		bool m_IsRoot = false;
+		std::vector<float> m_ShadowRanges;
+		float m_ShadowBlur = 0.001f;
+		bool m_ShadowEnabled = true;
+		float m_ShadowColor = 0;
+		osgEarth::ShadowCaster* m_ShadowCaster = nullptr;
 	};
 	using OSGEarthMapComponentPtr = std::shared_ptr<OSGEarthMapComponent>;
 }

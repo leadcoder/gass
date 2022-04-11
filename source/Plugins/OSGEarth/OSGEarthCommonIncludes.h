@@ -48,6 +48,8 @@
 #include <osgEarth/MouseCoordsTool>
 #include <osgEarth/AutoClipPlaneHandler>
 #include <osgEarth/Controls>
+#include <osgEarth/Shadowing>
+#include <osgEarth/TerrainEngineNode>
 #ifdef HAS_FOG
 #include <osgEarth/Fog>
 #endif
