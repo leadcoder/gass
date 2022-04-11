@@ -400,7 +400,9 @@ namespace GASS
 			}
 			else
 			{
-				root_node = scene_man->GetOSGShadowRootNode();
+				root_node = scene_man->GetMapNode();
+				if(!root_node.valid())
+					root_node = scene_man->GetOSGShadowRootNode();
 			}
 		}
 		GASSAssert(root_node, "Failed to find osg root group in OSGLocationComponent::_GetOSGRootGroup()");

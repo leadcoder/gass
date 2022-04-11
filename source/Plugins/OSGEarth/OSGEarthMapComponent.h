@@ -109,6 +109,7 @@ namespace GASS
 		float m_SkyExposure = 10.0f;
 		float m_SkyContrast = 2.0f;
 		float m_SkyAmbientBoost = 5;
+		bool m_IsRoot = false;
 	};
 	using OSGEarthMapComponentPtr = std::shared_ptr<OSGEarthMapComponent>;
 }

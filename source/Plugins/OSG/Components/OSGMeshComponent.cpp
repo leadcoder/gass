@@ -23,6 +23,7 @@
 #include "Plugins/OSG/Components/OSGMeshComponent.h"
 #include "Plugins/OSG/Components/OSGLocationComponent.h"
 #include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/OSGGraphicsSceneManager.h"
 #include "Plugins/OSG/OSGGeometryRecorder.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
@@ -243,7 +244,12 @@ namespace GASS
 
 		options->setBuildKdTreesHint(osgDB::ReaderWriter::Options::BUILD_KDTREES);
 
-		m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name,options);
+		auto osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
+
+		if(osg_sm->GetMapNode())
+			m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name + ".osgearth_shadergen", options);
+		else
+			m_MeshNode = (osg::Group*)osgDB::readNodeFile(file_name, options);
 
 		if( ! m_MeshNode)
 		{

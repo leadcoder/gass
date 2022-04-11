@@ -190,6 +190,8 @@ namespace GASS
 		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
 
 		RegisterMember("AddSky", &OSGEarthMapComponent::m_AddSky, PF_VISIBLE , "Add sky light");
+		RegisterMember("IsRoot", &OSGEarthMapComponent::m_IsRoot, PF_VISIBLE | PF_EDITABLE, "Objects should be placed under map node");
+
 
 	}
 
@@ -494,7 +496,12 @@ namespace GASS
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 
-		osg_sm->SetMapNode(dynamic_cast<osg::Group*>(m_MapNode.get()));
+		if (m_IsRoot)
+		{
+			auto* object_root = new osg::Group();
+			m_MapNode->addChild(object_root);
+			osg_sm->SetMapNode(object_root);
+		}
 
 		//if (m_UseOcean)
 		//	{
