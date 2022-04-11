@@ -828,6 +828,9 @@ namespace GASS
 	void OSGEarthMapComponent::SetShadowEnabled(bool value)
 	{
 		m_ShadowEnabled = value;
+		if (m_ShadowCaster)
+			m_ShadowCaster->setEnabled(value);
+		
 	}
 
 	void OSGEarthMapComponent::SetShadowBlur(float value)
