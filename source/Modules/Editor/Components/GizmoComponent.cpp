@@ -18,9 +18,6 @@
 #include "Sim/Interface/GASSIManualMeshComponent.h"
 #include "Sim/Interface/GASSIGraphicsSystem.h"
 
-#define MOVMENT_EPSILON 0.0000001
-#define MAX_SCALE_DISTANCE 1000000.0 //meters
-#define MIN_SCALE_DISTANCE 0.1 //meters
 #define GIZMO_SENDER 999
 
 namespace GASS
@@ -148,8 +145,9 @@ namespace GASS
 		if (m_TrackSelectedTransform)
 		{
 			//move gizmo
+			const double GIZMO_MOVMENT_EPSILON = 0.0001;
 			LocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-			if (lc && ((lc->GetWorldPosition() - message->GetPosition()).Length()) > MOVMENT_EPSILON)
+			if (lc && ((lc->GetWorldPosition() - message->GetPosition()).Length()) > GIZMO_MOVMENT_EPSILON)
 			{
 				Move(message->GetPosition());
 			}
@@ -271,27 +269,23 @@ namespace GASS
 	void GizmoComponent::UpdateScale()
 	{
 		SceneObjectPtr camera = m_ActiveCameraObject.lock();
-		if(camera)
+		if (camera)
 		{
-			LocationComponentPtr cam_location = camera->GetFirstComponentByClass<ILocationComponent>();
-			Vec3 cam_pos = cam_location->GetWorldPosition();
-
-			LocationComponentPtr gizmo_location = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
-			Vec3 gizmo_pos = gizmo_location->GetWorldPosition();
-			Float dist = (gizmo_pos-cam_pos).Length();
-
-			if(fabs(dist - m_LastDist) > MOVMENT_EPSILON)
+			auto camera_comp = camera->GetFirstComponentByClass<ICameraComponent>();
+			if (camera_comp)
 			{
-				m_LastDist = dist;
-				//clamp
-				if(dist > MAX_SCALE_DISTANCE)
-					dist = MAX_SCALE_DISTANCE;
-				if(dist < MIN_SCALE_DISTANCE)
-					dist = MIN_SCALE_DISTANCE;
-
-				const Float scale_factor = 0.06;
-				const Vec3 scale(scale_factor * dist,scale_factor* dist,scale_factor* dist);
-				Scale(scale);
+				const double CONST_SCALE_FACTOR = 0.06; //change this to control size on screen
+				const double MAX_SCALE_DISTANCE = 1000000; //meters
+				const double MIN_SCALE_DISTANCE = 0.1; //meters
+				const Vec3 gizmo_pos = GetSceneObject()->GetWorldPosition();
+				const Vec3 camera_pos = camera->GetWorldPosition();
+				const double dist = Math::Clamp((gizmo_pos - camera_pos).Length(), MIN_SCALE_DISTANCE, MAX_SCALE_DISTANCE);
+				double scale_factor = CONST_SCALE_FACTOR * dist;
+				
+				if (!camera_comp->GetOrtho()) //also scale by fov if perspective camera
+					scale_factor *= tan(Math::Deg2Rad(camera_comp->GetFov()));
+				
+				Scale(Vec3(scale_factor, scale_factor, scale_factor));
 			}
 		}
 	}

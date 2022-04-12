@@ -70,7 +70,6 @@ namespace GASS
 		float m_Size{5};
 		GizmoTypeBinder m_Type;
 		
-		Float m_LastDist{0};
 		bool m_Highlight{true};
 		SceneObjectWeakPtr m_ActiveCameraObject;
 		std::vector<SceneObjectWeakPtr> m_Selection;
