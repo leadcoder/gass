@@ -185,20 +185,19 @@ namespace GASS
 		RegisterGetSet("SkyContrast", &OSGEarthMapComponent::GetSkyContrast, &OSGEarthMapComponent::SetSkyContrast, PF_VISIBLE | PF_EDITABLE, "Sky light contrast");
 		RegisterGetSet("SkyAmbientBoost", &OSGEarthMapComponent::GetSkyAmbientBoost, &OSGEarthMapComponent::SetSkyAmbientBoost, PF_VISIBLE | PF_EDITABLE, "Sky light ambient boost fasctor, (ONeal only)");
 		RegisterGetSet("SkyLighting", &OSGEarthMapComponent::GetSkyLighting, &OSGEarthMapComponent::SetSkyLighting, PF_VISIBLE | PF_EDITABLE, "Enable/disable sky light");
+		RegisterGetSet("SkyHazeCutoff", &OSGEarthMapComponent::GetSkyHazeCutoff, &OSGEarthMapComponent::SetSkyHazeCutoff, PF_VISIBLE | PF_EDITABLE, "SkyHazeCutoff");
+		RegisterGetSet("SkyHazeStrength", &OSGEarthMapComponent::GetSkyHazeStrength, &OSGEarthMapComponent::SetSkyHazeStrength, PF_VISIBLE | PF_EDITABLE, "SkyHazeStrength");
 
 		RegisterGetSet("ShadowEnabled", &OSGEarthMapComponent::GetShadowEnabled, &OSGEarthMapComponent::SetShadowEnabled, PF_VISIBLE | PF_EDITABLE, "Enable/disable shadows");
 		RegisterGetSet("ShadowBlur", &OSGEarthMapComponent::GetShadowBlur, &OSGEarthMapComponent::SetShadowBlur, PF_VISIBLE | PF_EDITABLE, "Shadow blur factor");
 		RegisterGetSet("ShadowRanges", &OSGEarthMapComponent::GetShadowRanges, &OSGEarthMapComponent::SetShadowRanges, PF_VISIBLE | PF_EDITABLE, "Shadow ranges");
 		RegisterGetSet("ShadowColor", &OSGEarthMapComponent::GetShadowColor, &OSGEarthMapComponent::SetShadowColor, PF_VISIBLE | PF_EDITABLE, "Shadow Color");
 
-
 		auto layers_prop = RegisterGetSet("VisibleMapLayers", &OSGEarthMapComponent::GetVisibleMapLayers, &OSGEarthMapComponent::SetVisibleMapLayers, PF_VISIBLE, "Map Layers");
 		layers_prop->SetObjectOptionsFunction(&OSGEarthMapComponent::GetMapLayerNames);
 
 		RegisterMember("AddSky", &OSGEarthMapComponent::m_AddSky, PF_VISIBLE , "Add sky light");
 		RegisterMember("IsRoot", &OSGEarthMapComponent::m_IsRoot, PF_VISIBLE | PF_EDITABLE, "Objects should be placed under map node");
-
-
 	}
 
 	void OSGEarthMapComponent::OnInitialize()
@@ -852,6 +851,20 @@ namespace GASS
 		m_ShadowColor = value;
 		if (m_ShadowCaster)
 			m_ShadowCaster->setShadowColor(value);
+	}
+
+	void OSGEarthMapComponent::SetSkyHazeCutoff(float value)
+	{
+		m_SkyHazeCutoff = value;
+		if (m_SkyNode)
+			m_SkyNode->getOrCreateStateSet()->getOrCreateUniform("atmos_haze_cutoff", osg::Uniform::FLOAT)->set(value);
+	}
+
+	void OSGEarthMapComponent::SetSkyHazeStrength(float value)
+	{
+		m_SkyHazeStrength = value;
+		if (m_SkyNode)
+			m_SkyNode->getOrCreateStateSet()->getOrCreateUniform("atmos_haze_strength", osg::Uniform::FLOAT)->set(value);
 	}
 }
 

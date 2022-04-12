@@ -86,6 +86,12 @@ namespace GASS
 
 		void SetShadowRanges(std::vector<float> value);
 		std::vector<float> GetShadowRanges() const { return m_ShadowRanges; }
+	
+		void SetSkyHazeCutoff(float value);
+		float GetSkyHazeCutoff() const { return m_SkyHazeCutoff; }
+		void SetSkyHazeStrength(float value);
+		float GetSkyHazeStrength() const { return m_SkyHazeStrength; }
+
 	protected:
 		void Shutdown();
 		void SetupNodeMasks();
@@ -118,6 +124,8 @@ namespace GASS
 		float m_SkyExposure = 10.0f;
 		float m_SkyContrast = 2.0f;
 		float m_SkyAmbientBoost = 5;
+		float m_SkyHazeStrength = 50;
+		float m_SkyHazeCutoff = 0.5;
 		bool m_IsRoot = false;
 		std::vector<float> m_ShadowRanges;
 		float m_ShadowBlur = 0.001f;
