@@ -451,11 +451,11 @@ namespace GASS
 			}
 			else 
 			{
-				status = m_MapNode->getTerrain()->getHeight(m_MapNode, m_WGS84, location.Longitude, location.Latitude, &height, nullptr);
+				status = m_MapNode->getTerrain()->getHeight(m_MapNode->getTerrain()->getGraph(), m_WGS84, location.Longitude, location.Latitude, &height, nullptr);
 			}
 
 			//include height from GASS-geometry
-			if (flags | GEOMETRY_FLAG_SCENE_OBJECTS)
+			if (flags & GEOMETRY_FLAG_SCENE_OBJECTS)
 			{
 				//remove ground...checked above!
 				auto no_ground_flags = GeometryFlags(flags & ~GEOMETRY_FLAG_GROUND);

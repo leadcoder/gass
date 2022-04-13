@@ -502,6 +502,8 @@ namespace GASS
 		if (m_IsRoot)
 		{
 			object_root = new osg::Group();
+			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_UNKNOWN, object_root);
+
 			m_MapNode->addChild(object_root);
 			osg_sm->SetMapNode(object_root);
 		}

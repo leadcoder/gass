@@ -396,7 +396,9 @@ namespace GASS
 			OSGManualMeshComponentPtr mm_comp = GetSceneObject()->GetFirstComponentByClass<OSGManualMeshComponent>();
 			if (mm_comp && !mm_comp->GetCastShadow() && !mm_comp->GetReceiveShadow())
 			{
-				root_node = scene_man->GetOSGRootNode();
+				root_node = scene_man->GetMapNode();
+				if (!root_node.valid())
+					root_node = scene_man->GetOSGRootNode();
 			}
 			else
 			{

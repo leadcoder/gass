@@ -143,6 +143,12 @@ namespace GASS
 											result->CollSceneObject = bo->GetSceneObject();
 											return;
 										}
+										else
+										{
+											//we found component but mask/flags is not valid, 
+											//this can happen if node mask dont match GeometryFlags
+											return;
+										}
 									}
 								}
 							}
