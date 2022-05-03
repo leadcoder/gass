@@ -79,7 +79,7 @@ namespace GASS
 			sysc.Name = system_name;
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}
-		conf.DataPath = "../../data/";
+		conf.DataPath = "%GASS_DATA_HOME%";
 		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
 		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
 		if (physics != PhysicsOptions::NONE)

@@ -18,7 +18,7 @@
 			<FogDensity value  = "0.1"/>
 			<FogStart value = "0"/>
 			<FogEnd value = "4000"/>
-			<FogMode value = "FM_LINEAR"/>
+			<FogMode value = "FM_NONE"/>
 			<ShadowEnabled value="false"/>
 		</OSGGraphicsSceneManager>
 	</SceneManagerSettings>

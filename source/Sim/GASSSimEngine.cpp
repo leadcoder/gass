@@ -95,11 +95,11 @@ namespace GASS
 	void SimEngine::Init(const SimEngineConfig &config)
 	{
 		GASS_LOG(LINFO) << "SimEngine Initialization Started";
+		
 		SetDataPath(FilePath(config.DataPath));
+		GASS_LOG(LINFO) << "Data Path:" << GetDataPath();
 		SetScenePath(FilePath(config.ScenePath));
-		//GetSceneObjectTemplateManager()->SetAddObjectIDToName(config.AddObjectIDToName);
-		//GetSceneObjectTemplateManager()->SetObjectIDPrefix(config.ObjectIDPrefix);
-		//GetSceneObjectTemplateManager()->SetObjectIDSuffix(config.ObjectIDSufix);
+		GASS_LOG(LINFO) << "Scene Path:" << GetScenePath();
 		
 		m_PluginManager->LoadPlugins(config.Plugins);
 		m_ResourceManager->Load(config.ResourceConfig);

@@ -64,6 +64,8 @@ int start(int argc, char* argv[])
 		GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
 			GASS::SoundOptions::NONE,
 			GASS::NetworkOptions::NONE);
+		config.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/editor", true);
+		config.SimSystemManager.MaxSimulationSteps = 1;
 		engine->Init(config);
 
 		//Get graphic system and create one main rendering window

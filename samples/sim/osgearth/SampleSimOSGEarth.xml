@@ -57,6 +57,8 @@
 		</OSGCollisionSystem>
 		<OSGGraphicsSystem>
 		</OSGGraphicsSystem>
+		<OSGEarthGraphicsSystem>
+		</OSGEarthGraphicsSystem>
 	</Systems>
 	<RTC>
 		<NumberOfThreads value="1"/>
