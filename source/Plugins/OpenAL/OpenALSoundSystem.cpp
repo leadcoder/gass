@@ -15,7 +15,7 @@
 #ifdef WIN32
 	#include "Framework/Framework.h"
 #else
-	#include <AL/alut.h>
+	#include <alut.h>
 #endif
 
 namespace GASS
