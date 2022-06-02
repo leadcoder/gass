@@ -405,6 +405,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 	{
 		engine->Update();
 		static bool key_down = false;
+		#ifdef WIN32
 		if (GetAsyncKeyState(VK_SPACE))
 		{
 			if (!key_down)
@@ -529,6 +530,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(0);
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(steer_vel);
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
+		#endif
 
 	}
 	return 0;

@@ -308,5 +308,5 @@ static NameEnumMap InitMapping()		\
 #define END_ENUM_BINDER(ENUM,ENUM_BINDER) \
 		return mapping; \
 	}							\
-	};								\
-
+	}; \
+	template class GASS::SingleEnumBinder<ENUM, ENUM_BINDER>;
