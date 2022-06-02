@@ -43,7 +43,7 @@ namespace GASS
 {
 	//template<> std::map<std::string ,TerrainLayer> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_NameToEnumMap;
 	//template<> std::map<TerrainLayer,std::string> SingleEnumBinder<TerrainLayer,TerrainLayerBinder>::m_EnumToNameMap;
-
+	template class SingleEnumBinder<TerrainLayer,TerrainLayerBinder>;
 	RoadComponent::RoadComponent() : 
 		m_Material("MuddyRoadWithTracks"),
 		

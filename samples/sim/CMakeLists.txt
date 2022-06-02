@@ -7,11 +7,12 @@ if(GASS_BUILD_PLUGIN_MYGUI)
 	ADD_SUBDIRECTORY(gui)
 endif()
 if(MSVC)
-	ADD_SUBDIRECTORY(physics)
+#	ADD_SUBDIRECTORY(physics)
 	ADD_SUBDIRECTORY(editor)
 	ADD_SUBDIRECTORY(osgearth)
 endif()
 ADD_SUBDIRECTORY(vehicle)
+ADD_SUBDIRECTORY(physics)
 
 
 #install data

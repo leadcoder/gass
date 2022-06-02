@@ -179,6 +179,8 @@ namespace GASS
 
 	void OSGManualMeshComponent::SetMeshData(const GraphicsMesh &mesh)
 	{
+		if(!m_GeoNode)
+			return;
 		Clear();
 		for (size_t i = 0; i < mesh.SubMeshVector.size(); i++)
 		{
@@ -204,7 +206,7 @@ namespace GASS
 	{
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
 
-		if(sm->MaterialName != "" && m_GFXSystem->HasMaterial(sm->MaterialName))
+		if(sm->MaterialName != "" && m_GFXSystem && m_GFXSystem->HasMaterial(sm->MaterialName))
 		{
 			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(sm->MaterialName);
 			if (!m_ReceiveShadow) //protect from shader override

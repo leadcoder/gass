@@ -5,8 +5,11 @@
 #include "Sim/GASSSimEngine.h"
 #include "Sim/GASSSimSystemManager.h"
 #include "Sim/GASSSceneObject.h"
-#include "Framework/Framework.h"
-
+#ifdef WIN32
+	#include "Framework/Framework.h"
+#else
+	#include <alut.h>
+#endif
 namespace GASS
 {
 	OpenALSoundComponent::OpenALSoundComponent()

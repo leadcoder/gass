@@ -151,7 +151,7 @@ namespace GASS
 				GASS_LOG(LINFO) << "OISInputSystem:" <<m_InputManager->getNumberOfDevices(OIS::OISJoyStick) <<  "joysticks available";
 				try {
 					for (int i = 0; i < m_InputManager->getNumberOfDevices(OIS::OISJoyStick); i++) {
-						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, bufferedJoy ));
+						OIS::JoyStick* joy = static_cast<OIS::JoyStick*>(m_InputManager->createInputObject( OIS::OISJoyStick, buffered_joy ));
 						GASS_LOG(LINFO) << "OISInputSystem: Joystick ID" << joy->getID() <<  " " << joy->vendor() << " " << joy->getNumberOfComponents(OIS::OIS_Axis) << " axes " <<  joy->getNumberOfComponents(OIS::OIS_Button) << " buttons " << joy->getNumberOfComponents(OIS::OIS_POV) << " hats";
 						joy->capture();
 						m_Joys.push_back(joy);
