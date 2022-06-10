@@ -1,8 +1,17 @@
 
+
 set(PLATFORM_DEPS "")
 if(NOT WIN32)
 	#Add dependency guid
-	find_package(UUID REQUIRED)
+	
+	#This is the corrent way but dont work, target at lack include dir and maybe more...
+	#find_package(unofficial-libuuid CONFIG)
+	#set(PLATFORM_DEPS unofficial::UUID::uuid)
+	
+	#....create our own import target 
+	find_path(UUID_INCLUDE_DIRS uuid/uuid.h)
+	find_library(UUID_LIBRARIES libuuid.a)
+	include_directories(${LIBUUID_INCLUDE_DIR})
 	gass_create_dep_target(UUID INCLUDE_DIRS ${UUID_INCLUDE_DIRS} LIBRARIES ${UUID_LIBRARIES})
    	set(PLATFORM_DEPS UUID)
 endif()

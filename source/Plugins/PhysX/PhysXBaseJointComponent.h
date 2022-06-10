@@ -39,7 +39,7 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 		virtual physx::PxJoint* GetJoint() const  = 0;
-		//virtual void SceneManagerTick(double delta_time);
+		
 	protected:
 		void OnBody1Loaded(PhysicsBodyLoadedEventPtr message);
 		void OnBody2Loaded(PhysicsBodyLoadedEventPtr message);

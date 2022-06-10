@@ -93,4 +93,4 @@ extern ALenum eXRAMSize, eXRAMFree;
 extern ALenum eXRAMAuto, eXRAMHardware, eXRAMAccessible;
 #endif
 
-#endif _FRAMEWORK_H_
+#endif //_FRAMEWORK_H_

@@ -135,7 +135,7 @@ namespace GASS
 		PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 
 		//load vehicle settings
-		FilePath path("%GASS_DATA_HOME%/Physics/VehicleSettings.xml");
+		FilePath path("%GASS_DATA_HOME%/physics/VehicleSettings.xml");
 
 		LoadTires(path.GetFullPath());
 

@@ -44,8 +44,6 @@ namespace GASS
 	void PhysXHingeComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXHingeComponent>("PhysicsHingeComponent");
-		RegisterGetSet("Body1", &GASS::PhysXHingeComponent::GetBody1, &GASS::PhysXHingeComponent::SetBody1);
-		RegisterGetSet("Body2", &GASS::PhysXHingeComponent::GetBody2, &GASS::PhysXHingeComponent::SetBody2);
 		RegisterGetSet("RotationAxis", &GASS::PhysXHingeComponent::GetRotationAxis, &GASS::PhysXHingeComponent::SetRotationAxis);
 		RegisterGetSet("DriveForceLimit", &GASS::PhysXHingeComponent::GetDriveForceLimit, &GASS::PhysXHingeComponent::SetDriveForceLimit);
 		RegisterGetSet("DriveTargetVelocity", &GASS::PhysXHingeComponent::GetDriveTargetVelocity, &GASS::PhysXHingeComponent::SetDriveTargetVelocity);

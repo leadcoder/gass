@@ -2,12 +2,9 @@ if (NOT "$ENV{PHYSX4_HOME}" STREQUAL "")
 	set (PHYSX4_INSTALL_DIR $ENV{PHYSX4_HOME})
 endif()
 
+#Only support x64
+SET( LIB "64" )
 
-IF( CMAKE_CL_64 )
-  SET( LIB "64" )
-ELSE( CMAKE_CL_64 )
-  SET( LIB "32" )
-ENDIF()
 
 
 # Look for the header file.
@@ -24,28 +21,47 @@ SET( PHYSX4_LIBS_DEBUG_FOUND 1 )
 # Decide which libraires to add
 IF ( NOT DEFINED PHYSX4_LIBS )
 
+IF(UNIX)
+  set(LIB_EXT a)
   SET( PHYSX4_LIBS 
+      #"PhysXTask_static"
+      "PhysXCommon_static"
+      "PhysXExtensions_static"
+      "PhysX_static"
+      "PhysXFoundation_static"
+      "PhysXVehicle_static"
+      "PhysXCooking_static"
+      "PhysXCharacterKinematic_static"
+      "PhysXPvdSDK_static"
+      )
+      set(LIB_TO_FIND libPhysX_static_${LIB}.a)
+else()
+      set(LIB_EXT lib)      
+      SET( PHYSX4_LIBS 
       "PhysXTask_static"
       "PhysXCommon"
       "PhysXExtensions_static"
       "PhysX"
-	  "PhysXFoundation"
+      "PhysXFoundation"
       "PhysXVehicle_static"
       "PhysXCooking"
       "PhysXCharacterKinematic_static"
       "PhysXPvdSDK_static"
       )
-
+      set(LIB_TO_FIND PhysX_${LIB}.lib)
+endif()
 ENDIF()
 
 #hack to find folder where libs are installed by vcpkg
-FIND_PATH( PHYSX4_DEBUG_LIB_DIR NAMES PhysX_${LIB}.lib
+FIND_PATH( PHYSX4_DEBUG_LIB_DIR NAMES ${LIB_TO_FIND} 
            PATHS ${PHYSX4_INCLUDE_DIR}/../../debug/lib
-			     ${PHYSX4_INCLUDE_DIR}/../debug/lib)
+			     ${PHYSX4_INCLUDE_DIR}/../debug/lib
+			     NO_DEFAULT_PATH)
 
-FIND_PATH( PHYSX4_RELEASE_LIB_DIR NAMES PhysX_${LIB}.lib
+FIND_PATH( PHYSX4_RELEASE_LIB_DIR NAMES ${LIB_TO_FIND}
            PATHS ${PHYSX4_INCLUDE_DIR}/../../lib
-			     ${PHYSX4_INCLUDE_DIR}/../lib)
+			     ${PHYSX4_INCLUDE_DIR}/../lib
+			      NO_DEFAULT_PATH)
 
 # Look for the libraries.
 FOREACH( PHYSX4_LIB ${PHYSX4_LIBS})
@@ -80,10 +96,12 @@ FOREACH( PHYSX4_LIB ${PHYSX4_LIBS})
                       
   IF( ${LIB_DEBUG_NAME} )
     IF ( UNIX )
+      
       # To avoid undefined symbols at runtime we need to include the entire static library in our shared library
       SET ( PHYSX4_${_upper_lib_name}_LIBRARY -Wl,-whole-archive ${PHYSX4_${_upper_lib_name}_LIBRARY} -Wl,-no-whole-archive )
-    ENDIF()
-    SET( PHYSX4_LIBS_DEBUG_PATHS ${PHYSX4_LIBS_DEBUG_PATHS} debug ${${LIB_DEBUG_NAME}} )
+      #message(PHYSX4_${_upper_lib_name}_LIBRARY  ${PHYSX4_${_upper_lib_name}_LIBRARY})
+      ENDIF()
+    SET( PHYSX4_LIBS_DEBUG_PATHS ${PHYSX4_LIBS_DEBUG_PATHS} debug ${${LIB_DEBUG_NAME}})
   ELSE()
     SET( PHYSX4_DEBUG_LIBS_FOUND 0 )
     SET( PHYSX4_DEBUG_LIBS_NOTFOUND ${PHYSX4_DEBUG_LIBS_NOTFOUND} ${PHYSX4_LIB} ) 

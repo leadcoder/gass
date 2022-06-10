@@ -43,8 +43,6 @@ namespace GASS
 	void PhysXPrismaticComponent::RegisterReflection()
 	{
 		ComponentFactory::GetPtr()->Register<PhysXPrismaticComponent>("PhysicsPrismaticComponent");
-		RegisterGetSet("Body1", &GASS::PhysXPrismaticComponent::GetBody1, &GASS::PhysXPrismaticComponent::SetBody1);
-		RegisterGetSet("Body2", &GASS::PhysXPrismaticComponent::GetBody2, &GASS::PhysXPrismaticComponent::SetBody2);
 		RegisterGetSet("RotationAxis", &GASS::PhysXPrismaticComponent::GetRotationAxis, &GASS::PhysXPrismaticComponent::SetRotationAxis);
 		RegisterGetSet("Spring", &GASS::PhysXPrismaticComponent::GetSpring, &GASS::PhysXPrismaticComponent::SetSpring);
 		RegisterGetSet("Damping", &GASS::PhysXPrismaticComponent::GetDamping, &GASS::PhysXPrismaticComponent::SetDamping);
