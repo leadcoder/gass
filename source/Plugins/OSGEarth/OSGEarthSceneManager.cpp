@@ -79,8 +79,8 @@ namespace GASS
 
 	void OSGEarthSceneManager::OnPostConstruction()
 	{
-		if (m_DisableGLSL)
-			_putenv("OSGEARTH_NO_GLSL=1");
+		//if (m_DisableGLSL)
+			//_putenv("OSGEARTH_NO_GLSL=1");
 		GetScene()->RegisterForMessage(REG_TMESS(OSGEarthSceneManager::OnLoadSceneObject, PreSceneObjectInitializedEvent, 0));
 	}
 

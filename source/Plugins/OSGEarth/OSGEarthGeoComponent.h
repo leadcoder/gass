@@ -49,7 +49,7 @@ namespace GASS
 		void LatOrLongChanged();
 		void SetWorldPosition(const Vec3& pos);
 		void OnTransformation(TransformationChangedEventPtr event);
-		void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event);
+		void OnTerrainChanged(TerrainChangedEventPtr event);
 		bool m_PreserveHAG{true};
 
 		GeoLocation m_Location;

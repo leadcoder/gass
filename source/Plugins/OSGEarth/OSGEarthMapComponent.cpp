@@ -782,7 +782,7 @@ namespace GASS
 				// only return layers that derive from VisibleLayer
 				if (visible_layer)
 				{
-					m_MapLayers.emplace_back(std::make_unique<OSGEarthMapLayer>(OSGEarthMapLayer(visible_layer)));
+					m_MapLayers.emplace_back(std::unique_ptr<OSGEarthMapLayer>(new OSGEarthMapLayer(visible_layer)));
 				}
 			}
 		}
