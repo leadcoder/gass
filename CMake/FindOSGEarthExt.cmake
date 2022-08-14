@@ -12,7 +12,7 @@
 #OSGEARTH_ROOT,OSGEARTHDIR,OSGEARTH_DIR or OSGEARTHHOME: Environment var holding path to osgEarth
 #OSG_DIR, OSGDIR. OSG_HOME or OSG_ROOT : Environment var holding path to osg
 
-find_package(OsgEarth)
+find_package(OSGEarth)
 
 macro(extract_version var str)
 STRING(REGEX REPLACE ".*VERSION\ *([0-9]+)" "\\1" ${var} ${str})
