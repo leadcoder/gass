@@ -93,6 +93,47 @@ namespace GASS
 		rm->RegisterResourceType(map_type);
 	}
 
+	struct MultiRealizeOperation : public osg::Operation
+	{
+		void operator()(osg::Object* obj) override
+		{
+			for (auto& op : _ops)
+				op->operator()(obj);
+		}
+		std::vector<osg::ref_ptr<osg::Operation>> _ops;
+	};
+
+	struct GL3RealizeOperation : public osg::Operation
+	{
+		void operator()(osg::Object* object) override
+		{
+			osg::GraphicsContext* gc = dynamic_cast<osg::GraphicsContext*>(object);
+			if (gc)
+			{
+				osg::State* state = gc->getState();
+
+				// force NVIDIA-style vertex attribute aliasing, since osgEarth
+				// makes use of some specific attribute registers. Later we can
+				// perhaps create a reservation system for this.
+				state->resetVertexAttributeAlias(false);
+
+				// We always want to use osg modelview and projection uniforms and vertex attribute aliasing.    
+				// Since we use modern opengl throughout even if OSG isn't explicitly built with GL3.
+				state->setUseModelViewAndProjectionUniforms(true);
+				state->setUseVertexAttributeAliasing(true);
+
+#ifndef OSG_GL_FIXED_FUNCTION_AVAILABLE
+				state->setModeValidity(GL_LIGHTING, false);
+				state->setModeValidity(GL_NORMALIZE, false);
+				state->setModeValidity(GL_RESCALE_NORMAL, false);
+				state->setModeValidity(GL_LINE_STIPPLE, false);
+				state->setModeValidity(GL_LINE_SMOOTH, false);
+#endif
+			}
+		}
+	};
+
+
 	void OSGGraphicsSystem::OnSystemInit()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized, ViewportMovedOrResizedEvent, 0));
@@ -106,8 +147,15 @@ namespace GASS
 		m_Viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
 		//m_Viewer->setReleaseContextAtEndOfFrameHint(false);
+		MultiRealizeOperation* op = new MultiRealizeOperation();
 
-		m_Viewer->setRealizeOperation(new OSGImGuiHandler::GlewInitOperation);
+		if (m_Viewer->getRealizeOperation())
+			op->_ops.push_back(m_Viewer->getRealizeOperation());
+		GL3RealizeOperation* rop = new GL3RealizeOperation();
+
+		op->_ops.push_back(rop);
+		op->_ops.push_back(new OSGImGuiHandler::GlewInitOperation);
+		m_Viewer->setRealizeOperation(op);
 
 		std::string full_path;
 
@@ -252,7 +300,6 @@ namespace GASS
 
 			auto* gw = dynamic_cast<osgViewer::GraphicsWindow*>(graphics_context.get());
 			gw->getEventQueue()->getCurrentEventState()->setWindowRectangle(0, 0, width, height);
-			graphics_context->getState()->setUseModelViewAndProjectionUniforms(true);
 		}
 		else
 		{
