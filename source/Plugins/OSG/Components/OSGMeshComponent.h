@@ -20,9 +20,11 @@
 #pragma once
 //#   pragma warning (disable : 4541)
 #include "Sim/GASS.h"
+#include "Sim/Interface/GASSIImGuiComponent.h"
 #include "Plugins/OSG/OSGCommon.h"
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/IOSGMesh.h"
+
 
 namespace osg
 {
@@ -30,7 +32,7 @@ namespace osg
 }
 namespace GASS
 {
-	class OSGMeshComponent : public Reflection<OSGMeshComponent,Component> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh
+	class OSGMeshComponent : public Reflection<OSGMeshComponent,Component> , public IMeshComponent , public IGeometryComponent, public IResourceComponent, public IOSGMesh, public IImGuiComponent
 	{
 	public:
 		OSGMeshComponent (void);
@@ -53,12 +55,16 @@ namespace GASS
 
 		//IMeshComponent
 		GraphicsMesh GetMeshData() const override;
+	
+		//IImGuiComponent
+		void DrawGui() override;
 
 		//set external mesh
 		void SetMeshNode(osg::ref_ptr<osg::Node> mesh);
 		osg::ref_ptr<osg::Node> GetNode() const override {return m_MeshNode ;}
 		std::vector<ResourceHandle> GetAvailableMeshFiles() const;
-	protected:
+		
+		protected:
 		bool GetLighting() const;
 		void SetLighting(bool value);
 		ResourceHandle GetMeshResource() const {return m_MeshResource;}
