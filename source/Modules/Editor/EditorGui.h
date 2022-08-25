@@ -19,6 +19,8 @@
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIImGuiComponent.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "IconsFontAwesome5.h"
@@ -513,15 +515,6 @@ namespace GASS
 						std::vector<std::string> exts = file_path_data->GetExtensions();
 						FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
 
-						std::string filter;
-						for (size_t i = 0; i < exts.size(); i++)
-						{
-							if (i != 0)
-								filter += " ";
-							filter += "*.";
-							filter += exts[i];
-						}
-
 						std::string filename = prop->GetValueAsString(obj);
 						filename = StringUtils::Replace(filename, "/", "\\");
 
@@ -529,9 +522,19 @@ namespace GASS
 						switch (type)
 						{
 						case FilePathPropertyMetaData::IMPORT_FILE:
-							//item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
-							//item->setValue(filename.c_str());
-							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
+							if (ImGui::Button(prop_name.c_str()))
+							{
+								std::vector<char const*> filterPatterns;
+								for (size_t i; i < exts.size(); i++)
+								{
+									filterPatterns.push_back(exts[i].c_str());
+								}
+								char const* const* const filterptr = filterPatterns.empty() ? nullptr : &filterPatterns[0];
+								if (char const* fileToLoad = tinyfd_openFileDialog("Import File", "", filterPatterns.size(), filterptr, nullptr, 0))
+								{
+									prop->SetValueByString(obj, std::string(fileToLoad));
+								}
+							}
 							break;
 						case FilePathPropertyMetaData::EXPORT_FILE:
 							//item = m_VariantManager->addProperty(newFileTypeId(), prop_name.c_str());
@@ -836,6 +839,11 @@ namespace GASS
 							const bool open = ImGui::TreeNode(class_name.c_str());
 							if (open)
 							{
+								auto imgui_comp = GASS_DYNAMIC_PTR_CAST<IImGuiComponent>(comp);
+								if (imgui_comp)
+								{
+									imgui_comp->DrawGui();
+								}
 								auto comp_props = comp->GetProperties();
 
 								for (auto comp_prop : comp_props)
