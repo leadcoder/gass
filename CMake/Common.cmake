@@ -5,12 +5,10 @@ function(gass_get_dep_binary_dirs RELASE_DIRS DEBUG_DIRS )
 		set(_VCPKG_DIR ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
 		set(_BIN_DIR_REL 
 						 "${_VCPKG_DIR}/bin"
-						 "${_VCPKG_DIR}/tools/osg"
-						 "${_VCPKG_DIR}/tools/osgearth")
+						 "${_VCPKG_DIR}/plugins")
 		set(_BIN_DIR_DBG 
 						 "${_VCPKG_DIR}/debug/bin"
-						 "${_VCPKG_DIR}/debug/tools/osg"
-						 "${_VCPKG_DIR}/debug/tools/osgearth")
+						 "${_VCPKG_DIR}/debug/plugins")
 		set(${RELASE_DIRS} ${_BIN_DIR_REL} PARENT_SCOPE)
 		set(${DEBUG_DIRS} ${_BIN_DIR_DBG} PARENT_SCOPE)
 	endif()
@@ -258,13 +256,14 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		set(_BIN_DIRS $<IF:$<CONFIG:Debug>,${BIN_DEBUG_DIRS},${BIN_RELASE_DIRS}>)
 		set(_BIN_DIRS "${_BIN_DIRS}")
 		set_target_properties(${SAMPLE_NAME} PROPERTIES 
-			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS}")
+			VS_DEBUGGER_ENVIRONMENT "PATH=${_BIN_DIRS}\nGASS_DATA_HOME=${PROJECT_SOURCE_DIR}/samples/common/data")
 			#;%PATH%")
 	endif()
 	
 	#copy configurations to enable execution from build folder
 	if(EXISTS ${SAMPLE_CONFIG})
 		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
 		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
 	endif()
 
