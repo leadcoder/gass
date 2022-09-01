@@ -236,10 +236,11 @@ namespace GASS
         stateset->setAttributeAndModes(material.get(), osg::StateAttribute::ON);
 
 		stateset->setRenderBinDetails(-1,"RenderBin");
-
+		stateset->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
 	
 		auto* geode = new osg::Geode;
-		geode->setStateSet( stateset );
+		geode->setStateSet(stateset);
+		
 		geode->setCullingActive(false);
 		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
 		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
