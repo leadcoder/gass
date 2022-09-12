@@ -65,6 +65,7 @@ namespace GASS
 	{
 		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
 		RegisterMember("FlipDDS", &GASS::OSGGraphicsSystem::m_FlipDDS);
+		RegisterMember("UseLogHandler", &GASS::OSGGraphicsSystem::m_UseLogHandler);
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";
@@ -133,11 +134,49 @@ namespace GASS
 		}
 	};
 
+	class OSGNotifyHandler : public osg::NotifyHandler
+	{
+	public:
+		void notify(osg::NotifySeverity severity, const char* message) override
+		{
+			if (message == nullptr)
+				return;
+			if (*message == '\0')
+				return;
+			switch (severity)
+			{
+				case osg::NotifySeverity::ALWAYS:
+					GASS_LOG(LINFO) << " OSG-ALWAYS:" << message;
+				break;
+				case osg::NotifySeverity::FATAL:
+					GASS_LOG(LERROR) << " OSG-FATAL:" << message;
+					break;
+				case osg::NotifySeverity::WARN:
+					GASS_LOG(LWARNING) << " OSG-WARN:" << message;
+					break;
+				case osg::NotifySeverity::NOTICE:
+					GASS_LOG(LINFO) << " OSG-NOTICE:" << message;
+					break;
+				case osg::NotifySeverity::INFO:
+					GASS_LOG(LINFO) << " OSG-INFO:" << message;
+					break;
+				case osg::NotifySeverity::DEBUG_INFO:
+					GASS_LOG(LINFO) << " OSG-DEBUG_INFO:" << message;
+					break;
+				case osg::NotifySeverity::DEBUG_FP:
+					GASS_LOG(LINFO) << " OSG-DEBUG_FP:" << message;
+					break;
+			}
+		}
+	};
 
 	void OSGGraphicsSystem::OnSystemInit()
 	{
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnViewportMovedOrResized, ViewportMovedOrResizedEvent, 0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(OSGGraphicsSystem::OnInitializeTextBox, CreateTextBoxRequest, 0));
+
+		if(m_UseLogHandler)
+			osg::setNotifyHandler(new OSGNotifyHandler());
 
 #ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);

@@ -182,6 +182,9 @@ namespace GASS
 					if(m_RootNode->containsNode(m_ShadowRootNode))
 						m_RootNode->removeChild(m_ShadowRootNode);
 				}
+
+				if (m_ShadowedScene)
+					m_ShadowedScene->setNodeMask(~0U);
 			}
 			else
 			{
@@ -189,6 +192,9 @@ namespace GASS
 					m_RootNode->addChild(m_ShadowRootNode);
 				if(m_ShadowedScene && m_ShadowedScene->containsNode(m_ShadowRootNode))
 					m_ShadowedScene->removeChild(m_ShadowRootNode);
+
+				if (m_ShadowedScene)
+					m_ShadowedScene->setNodeMask(0U);
 			}
 		}
 	}

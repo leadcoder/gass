@@ -71,6 +71,7 @@ namespace GASS
 		MaterialMap m_Materials;
 		std::vector<std::string> m_DebugVec;
 		bool m_FlipDDS;
+		bool m_UseLogHandler = true;
 		};
 	using OSGGraphicsSystemPtr = std::shared_ptr<OSGGraphicsSystem>;
 	using OSGGraphicsSystemWeakPtr = std::weak_ptr<OSGGraphicsSystem>;
