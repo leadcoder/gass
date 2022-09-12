@@ -9,8 +9,8 @@
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSEditorModule"/>
 	</Plugins>
-	<SetDataPath value="../../data/"/>
-	<ScenePath value="../../data/sceneries"/>
+	<!--<SetDataPath value="../../data/"/>-->
+	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
 	<ResourceManager>
 		<ResourceGroup name="GASS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/gfx/osg/3dmodels"  type="FileSystem" recursive="true"/>
