@@ -16,7 +16,8 @@ namespace GASS
 		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "OSGEarthGraphicsSystem";}
 	private:
+		bool m_UseLogHandler = false;
 	};
-	using OSGCollisionSystemPtr = std::shared_ptr<OSGEarthGraphicsSystem>;
+	using OSGEarthGraphicsSystemPtr = std::shared_ptr<OSGEarthGraphicsSystem>;
 }
 
