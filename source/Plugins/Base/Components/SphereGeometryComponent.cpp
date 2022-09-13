@@ -47,9 +47,9 @@ namespace GASS
 	{
 		ComponentFactory::Get().Register<SphereGeometryComponent>();
 		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("SphereGeometryComponent", OF_VISIBLE));
-		RegisterGetSet("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius);
-		RegisterMember("Wireframe", &GASS::SphereGeometryComponent::m_Wireframe);
-		RegisterGetSet("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor);
+		RegisterGetSet("Radius", &GASS::SphereGeometryComponent::GetRadius, &GASS::SphereGeometryComponent::SetRadius, PF_VISIBLE | PF_EDITABLE, "Radius");
+		RegisterMember("Wireframe", &GASS::SphereGeometryComponent::m_Wireframe, PF_VISIBLE | PF_EDITABLE, "Wireframe or solid");
+		RegisterGetSet("Color", &GASS::SphereGeometryComponent::GetColor, &GASS::SphereGeometryComponent::SetColor, PF_VISIBLE | PF_EDITABLE, "Color");
 	}
 
 	void SphereGeometryComponent::OnPostInitialize()

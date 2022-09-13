@@ -45,7 +45,6 @@ namespace GASS
 	void PhysXPlaneGeometryComponent::OnInitialize()
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-
 		//physx::PxReal d = 0.0f;
 		physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f), physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
 		m_Actor = system->GetPxSDK()->createRigidStatic(pose);

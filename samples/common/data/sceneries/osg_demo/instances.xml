@@ -1,15 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <SceneObject>
-	<Components/>
-	<Children>
-		<SceneObject from_template="TerrainObject">
-			<Components>
-				<LocationComponent>
-					<Position value = "0.0 0.0 0.0"/>
-					<Rotation value = "0.000000 0.000000 0.000000"/>
-				</LocationComponent>
-			</Components>
-		</SceneObject>
-		<SceneObject from_template="SkyObject"/>
-	</Children>
+    <Name value="Scenery"/>
+    <TemplateName value=""/>
+    <Serialize value="true"/>
+    <ID value="SCENARY_ROOT"/>
+    <GUID value="8b65099d-faa2-4c23-8db6-41087143eb79"/>
+    <Components/>
+    <Children>
+        <SceneObject>
+            <Name value="TerrainObject"/>
+            <TemplateName value="TerrainObject"/>
+            <Serialize value="true"/>
+            <ID value=""/>
+            <GUID value="8a5f3f0a-c409-4a57-a9fb-3b21c0d5c9e4"/>
+            <Components>
+                <MeshComponent>
+                    <Filename value="default-plane.obj"/>
+                    <EnumerationResourceGroup value=""/>
+                    <CastShadow value="false"/>
+                    <ReceiveShadow value="true"/>
+                    <Lighting value="true"/>
+                    <Expand value="false"/>
+                    <GeometryFlags value="GEOMETRY_FLAG_GROUND"/>
+                    <FlipDDS value="false"/>
+                    <ImportMesh value=""/>
+                    <Name value="MeshComponent"/>
+                </MeshComponent>
+                <LocationComponent>
+                    <Position value="0 0 0"/>
+                    <Rotation value="0 0 0"/>
+                    <Quaternion value="0 0 0 1"/>
+                    <Scale value="1 1 1"/>
+                    <AttachToParent value="false"/>
+                    <Name value="LocationComponent"/>
+                </LocationComponent>
+                <PhysicsPlaneGeometryComponent>
+                    <Material value="DEFAULT"/>
+                    <Name value="PhysicsPlaneGeometryComponent"/>
+                </PhysicsPlaneGeometryComponent>
+            </Components>
+            <Children/>
+        </SceneObject>
+        <SceneObject>
+            <Name value="SkyObject"/>
+            <TemplateName value="SkyObject"/>
+            <Serialize value="true"/>
+            <ID value=""/>
+            <GUID value="0ddac34f-e1a0-4214-945e-c91668d048ea"/>
+            <Components>
+                <LocationComponent>
+                    <Position value="0 0 0"/>
+                    <Rotation value="45 45 0"/>
+                    <Quaternion value="0.3535533905932743 0.3535533905932743 -0.1464466094067269 0.8535533905932731"/>
+                    <Scale value="1 1 1"/>
+                    <AttachToParent value="false"/>
+                    <Name value="LocationComponent"/>
+                </LocationComponent>
+                <LightComponent>
+                    <LightType value="LT_DIRECTIONAL"/>
+                    <AttenuationParmas value="0 1 0 20"/>
+                    <SpotlightParams value="1 30 40"/>
+                    <CastShadow value="true"/>
+                    <LightId value="0"/>
+                    <DiffuseColor value="1 1 1"/>
+                    <SpecularColor value="1 1 1"/>
+                    <AmbientColor value="0.7 0.7 0.7"/>
+                    <Name value="LightComponent"/>
+                </LightComponent>
+                <SkyboxComponent>
+                    <Material value="blue_sb_.jpg"/>
+                    <Size value="200"/>
+                    <Name value="SkyboxComponent"/>
+                </SkyboxComponent>
+            </Components>
+            <Children/>
+        </SceneObject>
+    </Children>
 </SceneObject>

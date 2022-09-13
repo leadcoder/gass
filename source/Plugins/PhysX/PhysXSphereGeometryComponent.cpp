@@ -49,32 +49,30 @@ namespace GASS
 		PhysXBaseGeometryComponent::OnInitialize();
 	}
 
-	physx::PxShape* PhysXSphereGeometryComponent::CreateShape()
+	physx::PxShape* PhysXSphereGeometryComponent::CreateShape(physx::PxRigidActor& actor)
 	{
-		if(!m_Body)
-			return nullptr;
-
 		//Create shape
 		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
 			if(geom)
 			{
-				Sphere sphere = geom->GetBoundingSphere();
-				m_Radius = sphere.m_Radius;
+				//Sphere sphere = geom->GetBoundingSphere();
+				//m_Radius = sphere.m_Radius;
+				auto size = geom->GetBoundingBox().GetSize();
+				m_Radius = std::max(size.z, std::max(size.x, size.y))/2.0;
+				//m_Radius = sphere.m_Radius;
 			}
 		}
 		Float  rad = GetRadius();
 
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		physx::PxMaterial* material = system->GetMaterial(m_Material);
-		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*m_Body->GetPxRigidDynamic(), physx::PxSphereGeometry(static_cast<float>(rad)), *material);
+		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(actor, physx::PxSphereGeometry(static_cast<float>(rad)), *material);
 		if (shape)
 			shape->setLocalPose(physx::PxTransform(physx::PxVec3(0, 0, 0)));
-
 		return shape;
 	}
-
 
 	void PhysXSphereGeometryComponent::SetRadius(Float rad)
 	{

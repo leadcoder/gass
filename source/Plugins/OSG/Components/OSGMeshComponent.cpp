@@ -663,6 +663,7 @@ namespace GASS
 	void OSGMeshComponent::DrawGui()
 	{
 		MaterialGUIVisitor matv;
-		m_MeshNode->accept(matv);
+		if(m_MeshNode)
+			m_MeshNode->accept(matv);
 	}
 }

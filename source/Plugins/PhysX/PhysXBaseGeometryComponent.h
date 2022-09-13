@@ -81,7 +81,7 @@ namespace GASS
 		void OnTransformationChanged(TransformationChangedEventPtr message);
 		void OnCollisionSettings(CollisionSettingsRequestPtr message);
 		
-		virtual physx::PxShape* CreateShape() = 0;
+		virtual physx::PxShape* CreateShape(physx::PxRigidActor& actor) = 0;
 		void SetPosition(const Vec3 &pos);
 		void SetRotation(const Quaternion &rot);
 		virtual void SetOffset(const Vec3 &value){m_Offset = value;}
@@ -90,7 +90,6 @@ namespace GASS
 		virtual void SetSizeFromMesh(bool value);
 		GeometryComponentPtr GetGeometry() const;
 
-		
 		PhysXBodyComponentPtr m_Body;		
 		Vec3 m_Offset;
 		bool m_SizeFromMesh{true};

@@ -47,11 +47,8 @@ namespace GASS
 		PhysXBaseGeometryComponent::OnInitialize();
 	}
 
-	physx::PxShape* PhysXBoxGeometryComponent::CreateShape()
+	physx::PxShape* PhysXBoxGeometryComponent::CreateShape(physx::PxRigidActor& actor)
 	{
-		if(!m_Body)
-			return nullptr;
-		//Create shape
 		if(m_SizeFromMesh)
 		{
 			GeometryComponentPtr geom  = GetGeometry();
@@ -67,17 +64,15 @@ namespace GASS
 				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"No GeometryComponent found, not possible to get size from geomtry","PhysXBoxGeometryComponent::CreateShape");
 			}
 		}
-		Vec3 size = GetSize();
-		physx::PxTransform offset = physx::PxTransform(physx::PxIdentity);
-
+		const Vec3 size = GetSize();
+		
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
-		physx::PxMaterial* material = system->GetDefaultMaterial();
-
-		physx::PxVec3 dims(static_cast<float>(size.x/2.0) , static_cast<float>(size.y/2.0) , static_cast<float>(size.z/2.0));
-
-		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(*m_Body->GetPxRigidDynamic(), physx::PxBoxGeometry(dims), *material);
-		if (shape)
-			shape->setLocalPose(offset);
+		//physx::PxMaterial* material = system->GetDefaultMaterial();
+		physx::PxMaterial* material = system->GetMaterial("DEFAULT");
+		const physx::PxVec3 dims(static_cast<float>(size.x/2.0) , static_cast<float>(size.y/2.0) , static_cast<float>(size.z/2.0));
+		physx::PxShape* shape = physx::PxRigidActorExt::createExclusiveShape(actor, physx::PxBoxGeometry(dims), *material);
+		if(shape)
+			shape->setLocalPose(physx::PxTransform(physx::PxIdentity));
 		return shape;
 	}
 
