@@ -281,8 +281,7 @@ namespace GASS
 				ColorRGBA color = sm->ColorVector[i];
 				colors->push_back(OSGConvert::ToOSG(color));
 			}
-			geom->setColorArray(colors);
-			geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+			geom->setColorArray(colors, osg::Array::BIND_PER_VERTEX);
 		}
 
 		for(size_t i = 0; i < sm->TexCoordsVector.size(); i++)

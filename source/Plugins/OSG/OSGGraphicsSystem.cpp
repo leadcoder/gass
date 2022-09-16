@@ -181,6 +181,7 @@ namespace GASS
 #ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);
 #endif
+		osg::DisplaySettings::instance()->setVertexBufferHint(osg::DisplaySettings::VERTEX_BUFFER_OBJECT);
 
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);

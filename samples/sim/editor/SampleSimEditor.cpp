@@ -243,6 +243,7 @@ int start(int argc, char* argv[])
 		{
 
 			GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
+			es->SetPropertyValue("LockTerrainObjects",false);
 			GASS::EditorSceneManager* esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>().get();
 			esm->GetMouseToolController()->SelectTool("MoveTool");
 			esm->GetMouseToolController()->SetEnableGizmo(true);

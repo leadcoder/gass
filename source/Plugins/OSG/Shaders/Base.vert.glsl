@@ -17,6 +17,8 @@ out osg_VertexData
   vec2 TexCoord0;
 } osg_out;
 
+//layout(location = 2) in vec4 color_in;
+
 void setShadowTexCoords(vec4 mv_pos)
 {
 	//generate coords for shadow mapping
@@ -55,7 +57,7 @@ void main()
 	osg_out.Normal = normalize(osg_NormalMatrix * gl_Normal);
 	gl_Position = osg_ModelViewProjectionMatrix * osg_out.Position;
 	osg_out.ModelViewPosition = osg_ModelViewMatrix * osg_out.Position;
- 	vec4 color = getDirectionalLight(0, osg_out.Normal);
+ 	vec4 color = gl_Color * getDirectionalLight(0, osg_out.Normal);
     gl_FrontColor = color;
 	setShadowTexCoords(osg_out.ModelViewPosition);
 }
