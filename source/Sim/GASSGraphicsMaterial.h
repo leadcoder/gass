@@ -31,6 +31,7 @@
 
 namespace GASS
 {
+#if 0
 	/**
 		Class holding material data used by graphic system
 	*/
@@ -73,4 +74,36 @@ namespace GASS
 		  int Transparent;
 	};
 	typedef GASS_SHARED_PTR<GraphicsMaterial> GraphicsMaterialPtr;
+#endif
+
+	class IGfxMaterialConfig
+	{
+	public:
+		virtual ~IGfxMaterialConfig()	{}
+		bool DepthTest = true;
+	};
+
+	class UnlitMaterialConfig : public IGfxMaterialConfig
+	{
+	public:
+		UnlitMaterialConfig() : Color(1,1,1,1) {}
+		UnlitMaterialConfig(const ColorRGBA &color) : Color(color){}
+		virtual ~UnlitMaterialConfig() {}
+		ColorRGBA Color;
+		bool AlphaBlend = false;
+	};
+
+	class PhongMaterialConfig : public IGfxMaterialConfig
+	{
+	public:
+		PhongMaterialConfig() {}
+		PhongMaterialConfig(const ColorRGBA& color) : Diffuse (color), Ambient(color){}
+		virtual ~PhongMaterialConfig() {}
+		ColorRGBA Diffuse = {1,1,1,1};
+		ColorRGBA Ambient = {1,1,1,1};
+		ColorRGBA Specular = {1,1,1,1};
+		ColorRGBA Emissive = {0,0,0,1 };
+		float Shininess = 20;
+	};
+
 }

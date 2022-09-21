@@ -1,19 +1,23 @@
 R"(
 #version 400 compatibility
-#pragma import_defines (OSG_LIGHTING, OSG_FOG_MODE, OSG_NUM_SHADOW_MAPS,OSG_NORMAL_MAP)
-uniform sampler2D baseTexture;
+#pragma import_defines (OSG_LIGHTING, OSG_FOG_MODE, OSG_NUM_SHADOW_MAPS, OSG_ALBEDO_MAP, OSG_NORMAL_MAP, OSG_RECEIVESHADOWS)
+
+
+#ifdef OSG_ALBEDO_MAP
+	uniform sampler2D osg_AlbedoMap;
+#endif
 
 #ifdef OSG_NORMAL_MAP
 	uniform sampler2D osg_NormalMap;
 #endif
 
 uniform sampler2DShadow osg_ShadowTexture0;
-uniform int osg_ShadowTextureUnit0;
 uniform sampler2DShadow osg_ShadowTexture1;
-uniform int osg_ShadowTextureUnit1;
 uniform vec2 osg_ShadowMaxDistance;
 uniform float osg_ShadowSoftness;
+
 uniform mat4 osg_ModelViewMatrix;
+in vec4 gass_ShadowTexCoord[2];
 
 in osg_VertexData
 {
@@ -21,6 +25,7 @@ in osg_VertexData
   vec4 ModelViewPosition;
   vec3 Normal;
   vec2 TexCoord0;
+  vec4 Color;
 } osg_in;
 
 float getPCFShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV)
@@ -63,9 +68,9 @@ float getShadowFactor(vec3 normal, float depth)
 	float shadow = 1.0;
 #ifdef OSG_NUM_SHADOW_MAPS
 #if (OSG_NUM_SHADOW_MAPS > 0)
-	shadow *= getShadowMapValue(osg_ShadowTexture0, gl_TexCoord[osg_ShadowTextureUnit0], bias);
+	shadow *= getShadowMapValue(osg_ShadowTexture0, gass_ShadowTexCoord[0], bias);
 #if (OSG_NUM_SHADOW_MAPS > 1)
-	shadow *= getShadowMapValue(osg_ShadowTexture1, gl_TexCoord[osg_ShadowTextureUnit1], bias);
+	shadow *= getShadowMapValue(osg_ShadowTexture1, gass_ShadowTexCoord[1], bias);
 #endif
 #endif
 #endif
@@ -93,7 +98,7 @@ vec4 getDirectionalLight(int index, vec3 normal)
 {
 	vec3 light_dir = normalize(gl_LightSource[index].position.xyz);
 	float NdotL = max(dot(normal, light_dir), 0.0);
- 	vec4 color = min(NdotL * gl_FrontLightProduct[index].diffuse + gl_FrontLightProduct[index].ambient, 1.0);
+ 	vec4 color = max(vec4(0), min(NdotL * gl_FrontLightProduct[index].diffuse + gl_FrontLightProduct[index].ambient, 1.0));
 	if (NdotL > 0.0)
 	{
 		float NdotHV = max(0.0, dot(normal, vec3(gl_LightSource[index].halfVector)));
@@ -130,13 +135,24 @@ vec3 getNormal()
 
 void main(void)
 {
+	vec4 color = osg_in.Color;
+#ifdef OSG_ALBEDO_MAP
+	color *= texture2D(osg_AlbedoMap, osg_in.TexCoord0.xy);
+#endif
+
+	float depth = length(osg_in.ModelViewPosition);
+
+#ifdef OSG_LIGHTING
 	vec3 normal = getNormal();
 	vec4 lit_color = getDirectionalLight(0, normal);
-    vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor + gl_FrontLightProduct[0].ambient;
-    vec4 albedo = texture2D(baseTexture, osg_in.TexCoord0.xy);
-	float depth = length(osg_in.ModelViewPosition);
+    vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;
+#ifdef OSG_RECEIVESHADOWS
     float shadow_factor = getShadowFactor(osg_in.Normal,depth);
-    vec4 color = albedo * mix(colorAmbientEmissive, lit_color, shadow_factor );
+    color *= (colorAmbientEmissive + mix(gl_FrontLightProduct[0].ambient, lit_color ,shadow_factor ));
+#else
+	color *= (colorAmbientEmissive + lit_color);
+#endif
+#endif
 	color.xyz = applyFog(color.xyz, depth);
     gl_FragColor = color;
 }

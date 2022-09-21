@@ -89,7 +89,7 @@ namespace GASS
 
 		ResourceHandle m_MeshResource;
 		bool m_CastShadow{false};
-		bool m_ReceiveShadow{false};
+		bool m_ReceiveShadow{true};
 		osg::ref_ptr<osg::Node> m_MeshNode;
 		AABox m_BBox;
 		bool m_Initlized{false};

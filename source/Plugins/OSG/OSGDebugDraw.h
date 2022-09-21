@@ -21,6 +21,7 @@
 
 #include "Sim/GASS.h"
 #include "Plugins/OSG/OSGCommon.h"
+#include "Plugins/OSG/OSGMaterial.h"
 #include "OSGConvert.h"
 namespace GASS
 {
@@ -40,7 +41,8 @@ namespace GASS
 			osg::LineWidth* linewidth = new osg::LineWidth(); 
 			linewidth->setWidth(2); 
 			ss->setAttributeAndModes(linewidth, osg::StateAttribute::ON); 
-			ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);    
+			//ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+			Material::SetLighting(ss, osg::StateAttribute::OFF);
 			ss->setAttribute(new osg::Point(10.0f), osg::StateAttribute::ON);
 			ss->setRenderingHint(osg::StateSet::DEFAULT_BIN);
 			ss->setMode(GL_BLEND,osg::StateAttribute::OVERRIDE |

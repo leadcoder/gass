@@ -86,9 +86,9 @@ namespace GASS
 		m_RootNode->addChild(m_DebugDraw->GetNode());
 
 		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
-
-		const bool enable_shader_light = true;
-		m_RootNode->getOrCreateStateSet()->setDefine("OSG_LIGHTING", enable_shader_light ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
+		
+		Material::SetLighting(m_RootNode->getOrCreateStateSet(), osg::StateAttribute::ON);
+		Material::SetReceiveShadows(m_RootNode->getOrCreateStateSet(), osg::StateAttribute::ON);
 	}
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)

@@ -525,7 +525,7 @@ namespace GASS
 							if (ImGui::Button(prop_name.c_str()))
 							{
 								std::vector<char const*> filterPatterns;
-								for (size_t i; i < exts.size(); i++)
+								for (size_t i = 0; i < exts.size(); i++)
 								{
 									filterPatterns.push_back(exts[i].c_str());
 								}

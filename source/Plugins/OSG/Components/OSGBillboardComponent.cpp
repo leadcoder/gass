@@ -26,6 +26,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Plugins/OSG/OSGMaterial.h"
 #include "Core/Math/GASSMath.h"
 
 
@@ -134,9 +135,9 @@ namespace GASS
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
 		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
-		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-		if (!m_CastShadow) //protect from shadow shader override
-			nodess->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
+		Material::SetLighting(nodess, osg::StateAttribute::OFF);
+		//if (!m_CastShadow) //protect from shadow shader override
+		//	nodess->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
 
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
@@ -191,24 +192,21 @@ namespace GASS
 		(*norms)[0] = width^height;
 		(*norms)[0].normalize();
 
-		geom->setNormalArray(norms.get());
-		geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
-
-		osg::ref_ptr<osg::Vec2Array> tcoords = new osg::Vec2Array(4);
-		(*tcoords)[0].set(0.0f,0.0f);
-		(*tcoords)[1].set(1.0f,0.0f);
-		(*tcoords)[2].set(1.0f,1.0f);
-		(*tcoords)[3].set(0.0f,1.0f);
-		geom->setTexCoordArray(0,tcoords.get());
+		geom->setNormalArray(norms.get(),osg::Array::BIND_OVERALL);
+	
+		auto tcoords = new osg::Vec4Array(4);
+		(*tcoords)[0].set(0.0f,0.0f, 0.0f, 0.0f);
+		(*tcoords)[1].set(1.0f,0.0f, 0.0f, 0.0f);
+		(*tcoords)[2].set(1.0f,1.0f, 0.0f, 0.0f);
+		(*tcoords)[3].set(0.0f,1.0f, 0.0f, 0.0f);
+		geom->setTexCoordArray(0,tcoords, osg::Array::BIND_PER_VERTEX);
 
 		osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(4);
 		(*colors)[0].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[1].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[2].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[3].set(1.0f,1.0f,1.0f,1.0f);
-		geom->setColorArray(colors);
-		geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-
+		geom->setColorArray(colors, osg::Array::BIND_PER_VERTEX);
 
 		osg::ref_ptr<osg::DrawArrays> arrays = new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4);
 		geom->addPrimitiveSet(arrays.get());

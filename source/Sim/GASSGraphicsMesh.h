@@ -89,18 +89,19 @@ namespace GASS
 		*/
 		std::vector<unsigned int> IndexVector;
 
-		/**
-			Material of used by this sub mesh, this just a shallow
-			material representation that only support som basic 
-			fixed function rendering material properties.
-		*/
-		GraphicsMaterial Material;
 
 		/**
-			The material name used in the scene graph system,
+			Name of the material to use for this submesh
 		*/
 		std::string MaterialName;
 
+
+		/**
+			Instance material from this configuration to used for this sub mesh.
+		*/
+		std::unique_ptr<IGfxMaterialConfig> MaterialConfig;
+
+		
 		/**
 			Sub mesh type
 		*/

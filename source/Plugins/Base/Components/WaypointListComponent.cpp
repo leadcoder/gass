@@ -75,25 +75,9 @@ namespace GASS
 		RegisterGetSet("Closed", &WaypointListComponent::GetClosed, &WaypointListComponent::SetClosed,PF_VISIBLE,"");
 		RegisterGetSet("AutoRotateWaypoints", &WaypointListComponent::GetAutoRotateWaypoints, &WaypointListComponent::SetAutoRotateWaypoints,PF_VISIBLE,"");
 	}
-
-	static const std::string MAT_NAME = "WaypointListLine";
-
 	void WaypointListComponent::OnInitialize()
 	{
 		m_ConnectionLines = GetSceneObject()->GetChildByID("WP_CONNECTION_LINES");
-		//create material for waypoint binding line
-		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		if (!gfx_sys->HasMaterial(MAT_NAME))
-		{
-			GraphicsMaterial line_mat;
-			line_mat.Name = MAT_NAME;
-			line_mat.Diffuse.Set(0, 0, 0, 1.0);
-			line_mat.Ambient.Set(0, 0, 0);
-			line_mat.SelfIllumination.Set(0.7, 1, 1);
-			line_mat.DepthTest = false;
-			line_mat.DepthWrite = false;
-			gfx_sys->AddMaterial(line_mat);
-		}
 		RegisterForPostUpdate<CoreSceneManager>();
 	}
 
@@ -214,7 +198,9 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-			sub_mesh_data->MaterialName = "WhiteTransparentNoLighting";
+			UnlitMaterialConfig material({ 1,1,1,1 });
+			material.DepthTest = false;
+			sub_mesh_data->MaterialConfig.reset(new UnlitMaterialConfig(material));
 			sub_mesh_data->Type = LINE_STRIP;
 
 			for(size_t i = 0; i < wps.size(); i++)
@@ -230,7 +216,6 @@ namespace GASS
 					if (mm_comp)
 					{
 						mm_comp->SetMeshData(*mesh_data);
-						mm_comp->SetSubMeshMaterial(MAT_NAME);
 					}
 			}
 		}

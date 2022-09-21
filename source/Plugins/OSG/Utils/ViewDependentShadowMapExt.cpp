@@ -766,11 +766,11 @@ namespace osgShadow
 
 
 		_uniforms.clear();
-		osg::ref_ptr<osg::Uniform> baseTextureSampler = new osg::Uniform("baseTexture", (int)_baseTextureUnit);
-		_uniforms.push_back(baseTextureSampler.get());
+		//osg::ref_ptr<osg::Uniform> baseTextureSampler = new osg::Uniform("baseTexture", (int)_baseTextureUnit);
+		//_uniforms.push_back(baseTextureSampler.get());
 
-		osg::ref_ptr<osg::Uniform> baseTextureUnit = new osg::Uniform("baseTextureUnit", (int)_baseTextureUnit);
-		_uniforms.push_back(baseTextureUnit.get());
+		//osg::ref_ptr<osg::Uniform> baseTextureUnit = new osg::Uniform("baseTextureUnit", (int)_baseTextureUnit);
+		//_uniforms.push_back(baseTextureUnit.get());
 
 		for (unsigned int sm_i = 0; sm_i < settings->getNumShadowMapsPerLight(); ++sm_i)
 		{

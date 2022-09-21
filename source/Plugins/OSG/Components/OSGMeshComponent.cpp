@@ -124,22 +124,27 @@ namespace GASS
 	void OSGMeshComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
-		if(m_CastShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(NM_CAST_SHADOWS | m_MeshNode->getNodeMask());
-		else if(m_MeshNode.valid())
+		if (m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~NM_CAST_SHADOWS & m_MeshNode->getNodeMask());
+			if (m_CastShadow)
+				m_MeshNode->setNodeMask(NM_CAST_SHADOWS | m_MeshNode->getNodeMask());
+			else
+			{
+				m_MeshNode->setNodeMask(~NM_CAST_SHADOWS & m_MeshNode->getNodeMask());
+			}
 		}
 	}
 
 	void OSGMeshComponent::SetReceiveShadow(bool value)
 	{
 		m_ReceiveShadow = value;
-		if(m_ReceiveShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(NM_RECEIVE_SHADOWS | m_MeshNode->getNodeMask());
-		else if(m_MeshNode.valid())
+		if (m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_MeshNode->getNodeMask());
+			if (m_ReceiveShadow)
+				m_MeshNode->setNodeMask(NM_RECEIVE_SHADOWS | m_MeshNode->getNodeMask());
+			else
+				m_MeshNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_MeshNode->getNodeMask());
+			Material::SetReceiveShadows(m_MeshNode->getOrCreateStateSet(), value ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
 		}
 	}
 
@@ -481,11 +486,7 @@ namespace GASS
 	{
 		m_Lighting = value;
 		if(m_MeshNode.valid())
-		{
-			osg::ref_ptr<osg::StateSet> nodess = m_MeshNode->getOrCreateStateSet();
-			if(value) nodess->setMode(GL_LIGHTING,osg::StateAttribute::ON);
-			else nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
-		}
+			Material::SetLighting(m_MeshNode->getOrCreateStateSet(), value ? osg::StateAttribute::ON: osg::StateAttribute::OFF);
 	}
 
 	Sphere OSGMeshComponent::GetBoundingSphere() const
