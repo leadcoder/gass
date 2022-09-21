@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH
   )
 
 include(CMakeDependentOption)
-include(Common)
+include(GASSCommon)
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GASS_GIT_SHA1)
 
@@ -95,8 +95,6 @@ if(GASS_BUILDTYPE_STATIC)
 else()
 	set(GASS_BUILDTYPE SHARED)
 endif()
-
-include(DepTargets)
 
 
 enable_testing()
