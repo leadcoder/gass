@@ -181,6 +181,8 @@ namespace GASS
 	{
 		// set up the Geometry.
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
+		geom->setUseDisplayList(false);
+		geom->setDataVariance(osg::Object::DYNAMIC);
 		osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(4);
 		(*coords)[0] = corner;
 		(*coords)[1] = corner+width;
@@ -260,12 +262,12 @@ namespace GASS
 			osg::Vec3f osg_width(m_ScaleWidth*width,0.0f,0.0f);
 			osg::Vec3f osg_corner = -osg_width*0.5f;
 
-
 			(*coords)[0] = osg_corner;
 			(*coords)[1] = osg_corner+osg_width;
 			(*coords)[2] = osg_corner+osg_width+osg_height;
 			(*coords)[3] = osg_corner+osg_height;
 			m_Geom->setVertexArray(coords);
+			m_Geom->getVertexArray()->dirty();
 		}
 	}
 
