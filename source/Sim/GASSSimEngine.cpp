@@ -237,26 +237,6 @@ namespace GASS
 		return scene;
 	}
 
-	std::vector<std::string> SimEngine::GetSavedScenes() const
-	{
-		std::vector<std::string> scene_names;
-		if (m_ScenePath.Exist())
-		{
-			std::vector<FilePath> folders;
-			FilePath::GetFoldersFromPath(folders, m_ScenePath, false);
-			for (size_t i = 0; i < folders.size(); ++i)
-			{
-				if (FileUtils::FileExist(folders[i].GetFullPath() + "scene.xml"))
-				{
-					//std::cout << folders[i] << "\n";
-					std::string scene_name = folders[i].GetLastFolder();
-					scene_names.push_back(scene_name);
-				}
-			}
-		}
-		return scene_names;
-	}
-
 	SceneObjectPtr SimEngine::CreateObjectFromTemplate(const std::string &template_name) const
 	{
 		SceneObjectPtr so = m_SceneObjectTemplateManager->CreateFromTemplate(template_name);

@@ -177,11 +177,6 @@ namespace GASS
 		*/
 		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
 
-		/**
-			Get all saved scene from ScenePath
-		*/
-		std::vector<std::string> GetSavedScenes() const;
-
 		/*
 			Sync messages for all systems, scenes and sceneobjects
 		*/

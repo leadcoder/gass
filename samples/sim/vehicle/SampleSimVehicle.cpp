@@ -76,7 +76,7 @@ int start(int argc, char* argv[])
 	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("new_osg_demo"));
 	
 	//Load pre-build scene from data folder
-	scene->Load("osg_demo");
+	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo/scene.xml"));
 	
 	//create free camera and add it to the scene under the root node
 	GASS::SceneObjectPtr camera_obj = engine->CreateObjectFromTemplate("FreeCameraObject");

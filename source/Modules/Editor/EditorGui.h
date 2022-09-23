@@ -164,45 +164,56 @@ namespace GASS
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						m_SceneSelected = nullptr;
 						auto scene = GetFirstScene();
 						if (scene)
-							SimEngine::Get().DestroyScene(scene);
-						scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
-						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
-						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
-					}
-
-					if (ImGui::BeginMenu("Load Scene"))
-					{
-						auto scenes = SimEngine::Get().GetSavedScenes();
-						for (size_t i = 0; i < scenes.size(); i++)
 						{
-							if (ImGui::MenuItem(scenes[i].c_str()))
-							{
-								m_SceneSelected = nullptr;
-								auto scene = GetFirstScene();
-								if (scene)
-									SimEngine::Get().DestroyScene(scene);
-								scene = ScenePtr(SimEngine::Get().CreateScene(scenes[i]));
-								scene->Load(scenes[i]);
-								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
-								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
-								break;
-							}
+							scene->New();
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
 						}
-						ImGui::EndMenu();
+						//m_SceneSelected = nullptr;
+						//auto scene = GetFirstScene();
+						//if (scene)
+						//	SimEngine::Get().DestroyScene(scene);
+						//scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
+						//scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+						//scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
 					}
 
-					if (ImGui::MenuItem("Save", "Ctrl+S"))
+					if (ImGui::MenuItem("Load Scene..."))
 					{
-						auto scene = GetFirstScene();
-						if (scene && scene->GetName() != "")
-							scene->Save(scene->GetName());
-						//char const* filterPatterns[1] = { "*.earth" };
-						//if (char const* fileToSave = tinyfd_saveFileDialog("Save File", "", 1, filterPatterns, nullptr))
+						char const* filterPatterns[1] = { "*.scene" };
+						if (char const* fileToSave = tinyfd_openFileDialog("Load Scene", "", 1, filterPatterns, nullptr,0))
 						{
+							m_SceneSelected = nullptr;
+							auto scene = GetFirstScene();
+							//if (scene)
+							//	SimEngine::Get().DestroyScene(scene);
+							//scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
+							scene->Load(FilePath(fileToSave));
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
+						}
+					}
 
+					auto scene = GetFirstScene();
+					if (scene && scene->GetSceneFile().Exist())
+					{
+						if (ImGui::MenuItem("Save", "Ctrl+S"))
+						{
+							scene->Save(scene->GetSceneFile());
+						}
+					}
+
+					if (ImGui::MenuItem("Save As...", "Ctrl+S"))
+					{
+						if (scene)
+						{
+							char const* filterPatterns[1] = { "*.scene" };
+							if (char const* fileToSave = tinyfd_saveFileDialog("Save Scene", "", 1, filterPatterns, nullptr))
+							{
+								scene->Save(FilePath(fileToSave));
+							}
 						}
 					}
 
@@ -829,7 +840,7 @@ namespace GASS
 					{
 						ComponentPtr comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 						std::string class_name = comp->GetRTTI()->GetClassName();
-						if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
+						if (true)//comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
 						{
 							ImGui::TableNextRow();
 							ImGui::TableSetColumnIndex(0);

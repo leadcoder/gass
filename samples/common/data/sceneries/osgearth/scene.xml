@@ -22,4 +22,20 @@
 			<ShadowEnabled value="false"/>
 		</OSGGraphicsSceneManager>
 	</SceneManagerSettings>
+	<TerrainObjects>
+		<SceneObject>
+			<Components/>
+			<Children>
+				<SceneObject>
+					<Name value ="TerrainObject"/>
+					<Components>
+						<OSGEarthMapComponent>
+							<EarthFile value="openstreetmap.earth"/>
+							<AddSky value="false"/>
+						</OSGEarthMapComponent>
+					</Components>
+				</SceneObject>
+			</Children>
+		</SceneObject>
+	</TerrainObjects>
 </Scene>

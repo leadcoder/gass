@@ -43,7 +43,8 @@ public:
 	  {
 		  m_Scene = GASS::SimEngine::Get().CreateScene(scene_name);
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
-		  scene->Load(scene_name);
+		  std::string fullpath = "%GASS_DATA_HOME%/sceneries/" + scene_name + "/scene.xml";
+		  scene->Load(GASS::FilePath(fullpath));
 		  
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 
@@ -78,7 +79,8 @@ public:
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Start Loading Scene:" << m_SceneName;
 		  m_Scene = m_Engine->CreateScene("NewScene");
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
-		  scene->Load(m_SceneName);
+		  std::string fullpath = "%GASS_DATA_HOME%/sceneries/" + m_SceneName + "/scene.xml";
+		  scene->Load(GASS::FilePath(fullpath));
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
 		  
 		  //create free camera and set start pos

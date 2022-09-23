@@ -31,6 +31,7 @@
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
+#include "Sim/Interface/GASSICameraComponent.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -58,13 +59,13 @@ namespace GASS
 		m_SceneMessageManager(new MessageManager())
 		
 	{
-
+		
 	}
 
 	void Scene::RegisterReflection()
 	{
 		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("The scene object", OF_VISIBLE));
-
+		//RegisterGetSet("Name", &Scene::GetName, &Scene::SetName);
 		RegisterGetSet("StartPosition", &Scene::GetStartPos, &Scene::SetStartPos);
 		RegisterGetSet("StartRotation", &Scene::GetStartRot, &Scene::SetStartRot);
 		RegisterGetSet("Geocentric", &Scene::GetGeocentric, &Scene::SetGeocentric);
@@ -73,6 +74,8 @@ namespace GASS
 
 	void Scene::OnCreate()
 	{
+		if (m_Initlized)
+			return;
 		//Create empty root node
 		m_Root = std::make_shared<SceneObject>();
 		m_Root->SetName("Root");
@@ -89,7 +92,6 @@ namespace GASS
 		ResourceGroupPtr scene_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup  = scene_group;
 		rm->AddResourceGroup(scene_group);
-
 
 		//Add all registered scene managers to the scene
 		std::vector<std::string> managers = SceneManagerFactory::GetPtr()->GetFactoryNames();
@@ -111,7 +113,6 @@ namespace GASS
 		m_Root->AddChildSceneObject(scenery,true);
 
 		//send load message
-		//m_SceneMessageManager->SendImmediate(MessagePtr(new LoadSceneManagersRequest(shared_from_this())));
 		SystemMessagePtr system_msg(new PostSceneCreateEvent(shared_from_this()));
 		SimEngine::Get().GetSimSystemManager()->SendImmediate(system_msg);
 		m_Initlized = true;
@@ -119,6 +120,8 @@ namespace GASS
 
 	void Scene::OnUnload()
 	{
+		if (!m_Initlized)
+			return;
 		m_Root->OnDelete();
 		m_Root.reset();
 		for(size_t i = 0; i < m_SceneManagers.size() ; i++)
@@ -142,6 +145,7 @@ namespace GASS
 
 	void Scene::Clear()
 	{
+		m_NameGenerator.Clear();
 		m_Root->RemoveAllChildrenNotify();
 		SceneObjectPtr  scenery = std::make_shared<SceneObject>();
 		scenery->SetName("Scenery");
@@ -150,59 +154,48 @@ namespace GASS
 		m_Root->AddChildSceneObject(scenery, true);
 	}
 
-	void Scene::Load(const std::string &name)
+	void Scene::Load(const FilePath& filename)
 	{
-		m_FolderName = name;
-		if(name == "")
+		Clear();
+		if (!filename.Exist())
 		{
 			GASS_EXCEPT(Exception::ERR_INVALID_STATE,
-				"You must provide a scene name",
+				"You must provide valid scene file",
 				"Scene::Load");
 		}
-		m_Name = name;
+		m_FolderName = filename.GetPathNoFile();
+		m_SceneFile = filename;
+		m_Name = FileUtils::RemoveExtension(filename.GetFilename());
 
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		rm->RemoveResourceGroup(ResourceGroupPtr(m_ResourceGroup));
 		ResourceGroupPtr res_group(new ResourceGroup(GetResourceGroupName()));
 		m_ResourceGroup = res_group;
-		FilePath scene_path(SimEngine::Get().GetScenePath().GetFullPath() + "/"  + name);
-		m_ResourceLocation = res_group->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		FilePath scene_path(filename.GetPathNoFile());
+		m_ResourceLocation = res_group->AddResourceLocation(scene_path, RLT_FILESYSTEM, true);
 		rm->AddResourceGroup(res_group);
-		//rs->LoadResourceGroup(GetResourceGroupName());
-
-		const FilePath filename = FilePath(scene_path.GetFullPath() + "/scene.xml");
 
 		const std::string template_file_name = scene_path.GetFullPath() + "/templates.xml";
-		if(FileUtils::FileExist(template_file_name))
+		if (FileUtils::FileExist(template_file_name))
 			SimEngine::Get().GetSceneObjectTemplateManager()->Load(scene_path.GetFullPath() + "/templates.xml");
 
-		auto *xml_doc = new tinyxml2::XMLDocument();
-		if(xml_doc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
+		auto* xml_doc = new tinyxml2::XMLDocument();
+		if (xml_doc->LoadFile(filename.GetFullPath().c_str()) != tinyxml2::XML_NO_ERROR)
 		{
 			delete xml_doc;
-			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE,"Couldn't load: " + filename.GetFullPath(), "Scene::Load");
+			GASS_EXCEPT(Exception::ERR_CANNOT_READ_FILE, "Couldn't load: " + filename.GetFullPath(), "Scene::Load");
 		}
 
-		tinyxml2::XMLElement *scene_elem = xml_doc->FirstChildElement("Scene");
-		if(scene_elem == nullptr)
+		tinyxml2::XMLElement* scene_elem = xml_doc->FirstChildElement("Scene");
+		if (scene_elem == nullptr)
 		{
 			delete xml_doc;
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Scene tag", "Scene::Load");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get Scene tag", "Scene::Load");
 		}
 		LoadXML(scene_elem);
 		xml_doc->Clear();
 		//Delete our allocated document
-		delete xml_doc;
-
-		//Create new scenery node
-		m_NameGenerator.Clear("Scenery");
-		m_Root->RemoveChildSceneObject(SceneObjectPtr(m_TerrainObjects));
-		SceneObjectPtr  scenery =  SceneObject::LoadFromXML(GetSceneFolder().GetFullPath() + "/instances.xml");
-		scenery->SetName("Scenery");
-		scenery->SetID("SCENARY_ROOT");
-		m_TerrainObjects = scenery;
-
-		m_Root->AddChildSceneObject(scenery,true);
+		delete xml_doc;		
 
 		//scene loaded!
 		SystemMessagePtr system_msg(new PostSceneLoadEvent(shared_from_this()));
@@ -266,48 +259,45 @@ namespace GASS
 		return FilePath("");
 	}
 
-	void Scene::Save(const std::string &name)
-	{
-		const FilePath scene_path = FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/"  +  name);
-		
-		if (!scene_path.Exist())
-		{
-			FileUtils::CreateDir(scene_path.GetFullPath());
-		}
 
-		else if (!scene_path.IsDir())
-		{
-			return;
-		}
-	
-		if(m_ResourceLocation.lock())//remove previous location?
+	void Scene::New()
+	{
+		Clear();
+		if (m_ResourceLocation.lock())//remove previous location?
 		{
 			ResourceGroupPtr(m_ResourceGroup)->RemoveResourceLocation(ResourceLocationPtr(m_ResourceLocation));
 		}
-		m_FolderName = name;
-		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(scene_path,RLT_FILESYSTEM,true);
+		m_Name = "MyScene";
+		m_SceneFile = FilePath("");
+		m_FolderName = "";
+	}
+
+	void Scene::Save(const FilePath& filename)
+	{
+		if (m_ResourceLocation.lock())//remove previous location?
+		{
+			ResourceGroupPtr(m_ResourceGroup)->RemoveResourceLocation(ResourceLocationPtr(m_ResourceLocation));
+		}
+		m_Name = FileUtils::RemoveExtension(filename.GetFilename());
+		m_SceneFile = filename;
+		m_FolderName = filename.GetPathNoFile();
+		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(FilePath(m_FolderName), RLT_FILESYSTEM, true);
+
+		//Save camera pos
+		if (auto camera = m_Root->GetFirstComponentByClass<ICameraComponent>(true))
+		{
+			m_StartPos = camera->GetSceneObject()->GetWorldPosition();
+			m_StartRot = EulerRotation::FromQuaternion(camera->GetSceneObject()->GetWorldRotation());
+		}
 
 		tinyxml2::XMLDocument doc;
 		tinyxml2::XMLDeclaration* decl = doc.NewDeclaration();
-		doc.LinkEndChild( decl );
+		doc.LinkEndChild(decl);
 
-		tinyxml2::XMLElement * scene_elem = doc.NewElement("Scene");
-		doc.LinkEndChild( scene_elem);
+		tinyxml2::XMLElement* scene_elem = doc.NewElement("Scene");
+		doc.LinkEndChild(scene_elem);
 		SaveXML(scene_elem);
-
-		const FilePath filename = FilePath(scene_path.GetFullPath() + "/Scene.xml");
 		doc.SaveFile(filename.GetFullPath().c_str());
-
-		if(SceneObjectPtr(m_TerrainObjects))
-			SceneObjectPtr(m_TerrainObjects)->SaveToFile(scene_path.GetFullPath() + "/instances.xml");
-
-		tinyxml2::XMLDocument template_doc;
-		tinyxml2::XMLDeclaration* template_decl = template_doc.NewDeclaration();
-		template_doc.LinkEndChild( template_decl);
-		tinyxml2::XMLElement * template_elem = template_doc.NewElement("Templates");
-		template_doc.LinkEndChild( template_elem);
-		const FilePath template_filename = FilePath(scene_path.GetFullPath() + "/Templates.xml");
-		template_doc.SaveFile(template_filename.GetFullPath().c_str());
 	}
 
 	void Scene::SyncMessages(double delta_time) const
@@ -319,51 +309,72 @@ namespace GASS
 		}
 	}
 
-	void Scene::LoadXML(tinyxml2::XMLElement *scene)
+	void Scene::LoadXML(tinyxml2::XMLElement* scene)
 	{
-		tinyxml2::XMLElement *prop = scene->FirstChildElement("Properties");
-		if(prop)
+		tinyxml2::XMLElement* prop = scene->FirstChildElement("Properties");
+		if (prop)
 			BaseReflectionObject::LoadProperties(prop);
 		else // fallback for old scenes
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get Properties tag", "Scene::LoadXML");
-		tinyxml2::XMLElement *scene_manager = scene->FirstChildElement("SceneManagerSettings");
-		if(scene_manager)
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get Properties tag", "Scene::LoadXML");
+		tinyxml2::XMLElement* scene_manager = scene->FirstChildElement("SceneManagerSettings");
+		if (scene_manager)
 		{
 			scene_manager = scene_manager->FirstChildElement();
 			//Load scene manager settings
-			while(scene_manager)
+			while (scene_manager)
 			{
 				SceneManagerPtr sm = LoadSceneManager(scene_manager);
 				scene_manager = scene_manager->NextSiblingElement();
 			}
 		}
 		else
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to get SceneManagerSettings tag", "Scene::LoadXML");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to get SceneManagerSettings tag", "Scene::LoadXML");
+	
+		//Create new scenery node
+		m_NameGenerator.Clear("Scenery");
+		m_Root->RemoveChildSceneObject(SceneObjectPtr(m_TerrainObjects));
+		
+		SceneObjectPtr  scenery = SceneObjectPtr(new SceneObject);
+		tinyxml2::XMLElement* scenery_elem = scene->FirstChildElement("TerrainObjects");
+		if (scenery_elem && scenery_elem->FirstChildElement("SceneObject"))
+			scenery->LoadXML(scenery_elem->FirstChildElement("SceneObject"));
+		scenery->SetName("Scenery");
+		scenery->SetID("SCENARY_ROOT");
+		m_TerrainObjects = scenery;
+		m_Root->AddChildSceneObject(scenery, true);
 	}
 
-	void Scene::SaveXML(tinyxml2::XMLElement *parent)
+	void Scene::SaveXML(tinyxml2::XMLElement* parent)
 	{
-		tinyxml2::XMLDocument *root_xml_doc = parent->GetDocument();
+		tinyxml2::XMLDocument* root_xml_doc = parent->GetDocument();
 		//Create
-		tinyxml2::XMLElement *prop = root_xml_doc->NewElement("Properties");
+		tinyxml2::XMLElement* prop = root_xml_doc->NewElement("Properties");
 		parent->LinkEndChild(prop);
 
 		BaseReflectionObject::SaveProperties(prop);
 
-		tinyxml2::XMLElement *sms_elem = root_xml_doc->NewElement("SceneManagerSettings");
+		tinyxml2::XMLElement* sms_elem = root_xml_doc->NewElement("SceneManagerSettings");
 		parent->LinkEndChild(sms_elem);
 
-		for(size_t i  = 0 ; i < m_SceneManagers.size();i++)
+		for (size_t i = 0; i < m_SceneManagers.size(); i++)
 		{
 			SceneManagerPtr sm = m_SceneManagers[i];
-			if(sm->GetSerialize()) //should we save this scene manager settings to scene?
+			if (sm->GetSerialize()) //should we save this scene manager settings to scene?
 			{
 				XMLSerializePtr serialize = GASS_DYNAMIC_PTR_CAST<IXMLSerialize>(sm);
-				if(serialize)
+				if (serialize)
 				{
 					serialize->SaveXML(sms_elem);
 				}
 			}
+		}
+
+		tinyxml2::XMLElement* terrrain_elem = root_xml_doc->NewElement("TerrainObjects");
+		parent->LinkEndChild(terrrain_elem);
+
+		if (SceneObjectPtr(m_TerrainObjects))
+		{
+			SceneObjectPtr(m_TerrainObjects)->SaveXML(terrrain_elem);
 		}
 	}
 

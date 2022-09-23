@@ -23,6 +23,7 @@
 #include "Core/PluginSystem/GASSPluginManager.h"
 #include "Sim/Messages/GASSPlatformMessages.h"
 #include "Sim/GASSSceneObjectTemplateManager.h"
+#include "Sim/Interface/GASSIBillboardComponent.h"
 #include "Modules/Editor/EditorSceneManager.h"
 #include "Modules/Editor/EditorSystem.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
@@ -188,6 +189,20 @@ void CreateTemps()
 		
 		GASS::SimEngine::GetPtr()->GetSceneObjectTemplateManager()->AddTemplate(sky_template);
 	}
+
+	{
+		GASS::SceneObjectTemplatePtr bb_template(new GASS::SceneObjectTemplate);
+		bb_template->SetName("Billboard");
+		bb_template->SetInstantiable(true);
+		bb_template->AddComponent("LocationComponent");
+	
+		auto bb = bb_template->AddComponent("BillboardComponent");
+		bb->SetPropertyValue("Material", std::string("checker.png"));
+		
+		bb_template->AddComponent("DistanceScaleComponent");
+
+		GASS::SimEngine::GetPtr()->GetSceneObjectTemplateManager()->AddTemplate(bb_template);
+	}
 }
 
 int start(int argc, char* argv[])
@@ -216,11 +231,15 @@ int start(int argc, char* argv[])
 		GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 		input_system->SetMainWindowHandle(win->GetHWND());
 
+		GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
+		es->SetPropertyValue("LockTerrainObjects", false);
+
+
 		//Create the scene
 		GASS::Scene* scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("new_osg_demo")).get();
 
 		//Load pre-build scene from data folder
-		scene->Load("osg_demo");
+		scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo/scene.xml"));
 		{
 			//create free camera and add it to the scene under the root node
 			GASS::SceneObjectPtr camera_obj = engine->CreateObjectFromTemplate("FreeCameraObject");
@@ -242,8 +261,6 @@ int start(int argc, char* argv[])
 		}
 		{
 
-			GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
-			es->SetPropertyValue("LockTerrainObjects",false);
 			GASS::EditorSceneManager* esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>().get();
 			esm->GetMouseToolController()->SelectTool("MoveTool");
 			esm->GetMouseToolController()->SetEnableGizmo(true);
