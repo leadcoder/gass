@@ -68,9 +68,7 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
-		auto mat = new UnlitMaterialConfig(ColorRGBA(1, 0, 0, 1));
-		mat->DepthTest = false;
-		sub_mesh_data->MaterialConfig.reset(mat);
+		sub_mesh_data->MaterialConfig.reset(new UnlitNoDTMaterialConfig(ColorRGBA(1, 0, 0, 1)));
 		sub_mesh_data->Type = LINE_STRIP;
 		ColorRGBA color(1,0,0,1);
 		

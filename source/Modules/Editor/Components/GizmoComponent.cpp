@@ -58,11 +58,9 @@ namespace GASS
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
 	
-		m_RegularMat = UnlitMaterialConfig(ColorRGBA(m_Color.r * 0.5, m_Color.g * 0.5, m_Color.b * 0.5, 1));
-		m_RegularMat.DepthTest = false;
+		m_RegularMat = UnlitNoDTMaterialConfig(ColorRGBA(m_Color.r * 0.5, m_Color.g * 0.5, m_Color.b * 0.5, 1));
 		
-		m_HighlightMat = UnlitMaterialConfig(m_Color);
-		m_HighlightMat.DepthTest = false;
+		m_HighlightMat = UnlitNoDTMaterialConfig(m_Color);
 	}
 
 	void GizmoComponent::OnLocationLoaded(LocationLoadedEventPtr message)

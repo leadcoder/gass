@@ -198,9 +198,7 @@ namespace GASS
 			GraphicsMeshPtr mesh_data(new GraphicsMesh());
 			GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 			mesh_data->SubMeshVector.push_back(sub_mesh_data);
-			UnlitMaterialConfig material({ 1,1,1,1 });
-			material.DepthTest = false;
-			sub_mesh_data->MaterialConfig.reset(new UnlitMaterialConfig(material));
+			sub_mesh_data->MaterialConfig.reset(new UnlitNoDTMaterialConfig({ 1,1,1,1 }));
 			sub_mesh_data->Type = LINE_STRIP;
 
 			for(size_t i = 0; i < wps.size(); i++)

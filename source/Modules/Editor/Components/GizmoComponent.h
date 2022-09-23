@@ -77,8 +77,8 @@ namespace GASS
 		Float m_GridDist{1.0};
 		bool m_Active{false};
 		EditorSceneManagerPtr m_EditorSceneManager;
-		UnlitMaterialConfig m_RegularMat;
-		UnlitMaterialConfig m_HighlightMat;
+		UnlitNoDTMaterialConfig m_RegularMat;
+		UnlitNoDTMaterialConfig m_HighlightMat;
 		Vec3 m_PreviousPos;
 		Quaternion m_PreviousRot;
 		bool m_TrackTransformation{true};

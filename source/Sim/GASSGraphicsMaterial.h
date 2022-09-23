@@ -93,6 +93,15 @@ namespace GASS
 		bool AlphaBlend = false;
 	};
 
+	class UnlitNoDTMaterialConfig : public UnlitMaterialConfig
+	{
+	public:
+		UnlitNoDTMaterialConfig() {}
+		UnlitNoDTMaterialConfig(const ColorRGBA& color) :UnlitMaterialConfig(color)
+		{ DepthTest = false; }
+		virtual ~UnlitNoDTMaterialConfig() {}
+	};
+
 	class PhongMaterialConfig : public IGfxMaterialConfig
 	{
 	public:
