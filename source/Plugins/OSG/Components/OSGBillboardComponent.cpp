@@ -282,6 +282,7 @@ namespace GASS
 			(*colors)[2]= osg_color;
 			(*colors)[3]= osg_color;
 			m_Geom->setColorArray(colors);
+			m_Geom->getColorArray()->dirty();
 		}
 	}
 
