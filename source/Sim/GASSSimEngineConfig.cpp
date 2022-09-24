@@ -41,6 +41,7 @@ namespace GASS
 #endif
 		SimEngineConfig conf;
 		conf.Plugins = {"GASSPluginOSG",
+						"GASSPluginOSGEarth",
 						"GASSPluginInput",
 						"GASSPluginBase",
 						editor_module_name };
@@ -75,7 +76,8 @@ namespace GASS
 
 		systems.emplace_back("OSGGraphicsSystem");
 		systems.emplace_back("OSGCollisionSystem");
-
+		systems.emplace_back("OSGEarthGraphicsSystem");
+		
 
 		for (auto system_name : systems)
 		{
