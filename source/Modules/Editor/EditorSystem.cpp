@@ -9,8 +9,7 @@
 namespace GASS
 {
 	EditorSystem::EditorSystem(SimSystemManagerWeakPtr manager) : Reflection(manager),
-		m_LockTerrainObjects(true),
-		m_DefaultCameraTemplate("FreeCameraObject")
+		m_LockTerrainObjects(true)
 	{
 		m_UpdateGroup = UGID_PRE_SIM;
 	}

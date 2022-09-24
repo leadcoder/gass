@@ -118,6 +118,11 @@ namespace GASS
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();
 		
+		if (ctn == "")
+		{
+			ctn = GetScene()->GetOSGEarth() ? "FreeCameraObject" : "OSGEarthCamera";
+		}
+
 		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate(ctn, scene->GetRootSceneObject());
 		
 		if (!free_obj)
