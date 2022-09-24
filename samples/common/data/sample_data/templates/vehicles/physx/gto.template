@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="PXGTO"/>
+		<ID value="CHASSIS"/>
+		<Serialize value="false"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="gta_chassis.mesh"/>
+				<CastShadow value="1"/>
+			</MeshComponent>
+			<PhysXVehicleComponent>
+				<Mass value="705"/>
+				<ScaleMass value="0.1"/>
+				<EnginePeakTorque value ="400"/>
+				<EngineMaxRotationSpeed value="300"/>
+				<ClutchStrength value = "10"/>
+				<MaxSpeed value= "20"/>
+				<GearRatios value="-4 0 4 2 1.5 1.1 1.0"/>
+				<UseAutoReverse value="true"/>
+				<FrontLeftWheel value="FRONT_LEFT_WHEEL"/>
+				<FrontRightWheel value="FRONT_RIGHT_WHEEL"/>
+				<RearLeftWheel value="REAR_LEFT_WHEEL"/>
+				<RearRightWheel value="REAR_RIGHT_WHEEL"/>
+			</PhysXVehicleComponent>
+			<InputHandlerComponent>
+				<ControlSetting value ="TankInputSettings"/>
+			</InputHandlerComponent>
+			<CarAutopilotComponent>
+				<TurnPID value="0.0251 0 0"/>
+				<TrottlePID value="0.251 0.01 0"/>
+				<Enable value="false"/>
+				<DesiredSpeed value="0"/>
+				<DesiredPosRadius value="1"/>
+			</CarAutopilotComponent>
+			<TextComponent>
+				<ScaleByDistance value="true"/>
+				<CharacterSize value="1"/>
+				<Offset value="0 5 0"/>
+			</TextComponent>
+		</Components>
+		<Children>
+			<SceneObjectTemplate>
+				<Name value="TLC_FL_Wheel"/>
+				<ID value="FRONT_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.73 0.321509 -1.42451"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_rwheel.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent>
+						<Mass value="20"/>
+						<MaxHandBrakeTorque value="14000.0f"/>
+						<MaxBrakeTorque value="3000"/>
+						<MaxSteer value= "60.0f"/>
+						<DampingRate value="0.25f"/>
+						<SuspensionMaxCompression value="0.3f"/>
+						<SuspensionMaxDroop value="0.1f"/>
+						<SuspensionSpringStrength value="65000.0f"/>
+						<SuspensionSpringDamperRate value="7500.0f"/>
+						<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+					</PhysXWheelComponent>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TLC_FR_Wheel"/>
+				<ID value="FRONT_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.73 0.321509 -1.42451"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_lwheel.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent>
+						<Mass value="20"/>
+						<MaxHandBrakeTorque value="14000.0f"/>
+						<MaxBrakeTorque value="3000"/>
+						<MaxSteer value= "60.0f"/>
+						<DampingRate value="0.25f"/>
+						<SuspensionMaxCompression value="0.3f"/>
+						<SuspensionMaxDroop value="0.1f"/>
+						<SuspensionSpringStrength value="65000.0f"/>
+						<SuspensionSpringDamperRate value="7500.0f"/>
+						<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+					</PhysXWheelComponent>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TLC_RL_Wheel"/>
+				<ID value="REAR_LEFT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.73 0.321509 1.37109"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_rwheel.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent>
+						<Mass value="20"/>
+						<MaxHandBrakeTorque value="14000.0f"/>
+						<MaxBrakeTorque value="3000"/>
+						<MaxSteer value= "0.0f"/>
+						<DampingRate value="0.25f"/>
+						<SuspensionMaxCompression value="0.3f"/>
+						<SuspensionMaxDroop value="0.1f"/>
+						<SuspensionSpringStrength value="65000.0f"/>
+						<SuspensionSpringDamperRate value="7500.0f"/>
+						<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+					</PhysXWheelComponent>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="TLC_RR_Wheel"/>
+				<ID value="REAR_RIGHT_WHEEL"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.73 0.321509 1.37109"/>
+						<AttachToParent value="false"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_lwheel.mesh"/>
+						<CastShadow value="1"/>
+					</MeshComponent>
+					<PhysXWheelComponent>
+						<Mass value="20"/>
+						<MaxHandBrakeTorque value="14000.0f"/>
+						<MaxBrakeTorque value="3000"/>
+						<MaxSteer value= "0.0f"/>
+						<DampingRate value="0.25f"/>
+						<SuspensionMaxCompression value="0.3f"/>
+						<SuspensionMaxDroop value="0.1f"/>
+						<SuspensionSpringStrength value="65000.0f"/>
+						<SuspensionSpringDamperRate value="7500.0f"/>
+						<TireLongitudinalStiffnessPerUnitGravity value="1000.0f"/>
+					</PhysXWheelComponent>
+					<PhysicsConvexGeometryComponent/>
+				</Components>
+			</SceneObjectTemplate>
+		</Children>
+	</SceneObjectTemplate>
+</Templates>
