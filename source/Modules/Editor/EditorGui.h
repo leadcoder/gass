@@ -254,7 +254,7 @@ namespace GASS
 		void DockingBegin()
 		{
 			// ImGui code goes here...
-			ImGui::ShowDemoWindow();
+			//ImGui::ShowDemoWindow();
 			//return;
 			constexpr ImGuiDockNodeFlags dockspace_flags =
 				ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
