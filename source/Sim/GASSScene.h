@@ -197,6 +197,7 @@ namespace GASS
 		void DrawDebugLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) const;
 		NameGenerator& GetNameGenerator() { return m_NameGenerator; }
 		void New();
+		SceneObjectWeakPtr GetOrCreateCamera(const std::string& template_name = "");
 	protected:
 
 		/**
@@ -243,6 +244,7 @@ namespace GASS
 		SceneObjectWeakPtr m_TerrainObjects;
 		ResourceGroupWeakPtr m_ResourceGroup;
 		ResourceLocationWeakPtr m_ResourceLocation;
+		SceneObjectWeakPtr m_Camera;
 
 		bool m_Initlized = false;
 		bool m_Geocentric = false;

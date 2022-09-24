@@ -25,7 +25,7 @@ protected:
 	int m_ClientPort;
 public:
 	SimApplication() :
-	  m_SceneName("osg_demo"),
+	  m_SceneName("%GASS_DATA_HOME%/sceneries/osg_demo.scene"),
 		  m_Timer(new GASS::Timer()),
 		  m_UpdateFreq(60),
 		  m_ServerPort(2005),
@@ -43,18 +43,9 @@ public:
 	  {
 		  m_Scene = GASS::SimEngine::Get().CreateScene(scene_name);
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
-		  std::string fullpath = "%GASS_DATA_HOME%/sceneries/" + scene_name + "/scene.xml";
-		  scene->Load(GASS::FilePath(fullpath));
-		  
+		  scene->Load(GASS::FilePath(scene_name));
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
-
-		  //create free camera and set start pos
-		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  if(free_obj)
-		  {
-			  free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
-			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
-		  }
+		  scene->GetOrCreateCamera();
 	  }
 
 	  //Helper function to create main window
@@ -77,20 +68,12 @@ public:
 		  _CreateMainWindow();
 		  
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Start Loading Scene:" << m_SceneName;
-		  m_Scene = m_Engine->CreateScene("NewScene");
-		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
-		  std::string fullpath = "%GASS_DATA_HOME%/sceneries/" + m_SceneName + "/scene.xml";
-		  scene->Load(GASS::FilePath(fullpath));
+		  m_Scene = m_Engine->CreateScene();
+		  auto scene = m_Scene.lock();
+		  scene->Load(GASS::FilePath(m_SceneName));
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;
-		  
-		  //create free camera and set start pos
-		  GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject",scene->GetRootSceneObject());
-		  if(free_obj)
-		  {
-			  free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
-			  free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
-		  }
-
+		  scene->GetOrCreateCamera();
+		
 		  GASS::SceneObjectPtr object  = scene->LoadObjectFromTemplate("JimTank",scene->GetRootSceneObject());
 		  
 		  if(object)

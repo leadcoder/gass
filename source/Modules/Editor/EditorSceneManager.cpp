@@ -110,32 +110,10 @@ namespace GASS
 	void EditorSceneManager::CreateCamera(const std::string &template_name)
 	{
 		std::string ctn = template_name;
-		ScenePtr scene = GetScene();
-		
-		//Vec3 pos = scene->GetStartPos();
-		Quaternion rot = scene->GetStartRot().GetQuaternion();
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();
-		
-		if (ctn == "")
-		{
-			ctn = GetScene()->GetOSGEarth() ? "FreeCameraObject" : "OSGEarthCamera";
-		}
-
-		SceneObjectPtr free_obj = scene->LoadObjectFromTemplate(ctn, scene->GetRootSceneObject());
-		
-		if (!free_obj)
-		{
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find camera template named:" + ctn, "EditorSceneManager::CreateCamera");
-		}
-
-		if (free_obj)
-		{
-			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
-			free_obj->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
-			free_obj->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
-		}
+		GetScene()->GetOrCreateCamera(ctn);
 	}
 
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)

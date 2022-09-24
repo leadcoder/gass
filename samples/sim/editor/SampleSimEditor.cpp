@@ -236,21 +236,12 @@ int start(int argc, char* argv[])
 
 
 		//Create the scene
-		GASS::Scene* scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("new_osg_demo")).get();
+		GASS::Scene* scene = GASS::SimEngine::Get().CreateScene().lock().get();
 
 		//Load pre-build scene from data folder
-		scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo/scene.xml"));
-		{
-			//create free camera and add it to the scene under the root node
-			GASS::SceneObjectPtr camera_obj = engine->CreateObjectFromTemplate("FreeCameraObject");
-			scene->GetRootSceneObject()->AddChildSceneObject(camera_obj, true);
-
-			//Set camera position
-			camera_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
-
-			//Make this the primary camera
-			viewport->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
-		}
+		scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo.scene"));
+		//create free camera and add it to the scene under the root node
+		auto camera = scene->GetOrCreateCamera();
 		{
 			//Create vehicle and add it to the root node of the scene
 			GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");

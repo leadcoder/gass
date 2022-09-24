@@ -279,7 +279,7 @@ namespace GASS
 	void ControlSettingsSystem::OnSystemInit()
 	{
 		//load default settings
-		Load(FilePath("%GASS_DATA_HOME%/config/input_control_settings.xml").GetFullPath());
+		Load(FilePath("%GASS_DATA_HOME%/engine/config/input_control_settings.xml").GetFullPath());
 	}
 
 	ControlSetting* ControlSettingsSystem::GetControlSetting(const std::string &name) const

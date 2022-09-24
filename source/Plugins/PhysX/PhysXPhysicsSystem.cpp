@@ -87,7 +87,7 @@ namespace GASS
 	PxGASSErrorCallback my_error_callback;
 	void PhysXPhysicsSystem::OnSystemInit()
 	{
-		GeometryFlagManager::LoadGeometryFlagsFile(FilePath("%GASS_DATA_HOME%/config/physics_collision_settings.xml").GetFullPath());
+		GeometryFlagManager::LoadGeometryFlagsFile(FilePath("%GASS_DATA_HOME%/engine/config/physics_collision_settings.xml").GetFullPath());
 		bool record_memory_allocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, my_error_callback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), record_memory_allocations );
@@ -132,7 +132,7 @@ namespace GASS
 		PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 
 		//load vehicle settings
-		FilePath path("%GASS_DATA_HOME%/config/physics_vehicle_settings.xml");
+		FilePath path("%GASS_DATA_HOME%/engine/config/physics_vehicle_settings.xml");
 
 		LoadTires(path.GetFullPath());
 

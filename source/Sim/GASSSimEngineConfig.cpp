@@ -86,7 +86,7 @@ namespace GASS
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}
 		conf.DataPath = "%GASS_DATA_HOME%";
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/config", true);
+		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/engine", true);
 		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
 		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
 		if (physics != PhysicsOptions::NONE)
@@ -97,9 +97,6 @@ namespace GASS
 		
 		if(sound != SoundOptions::NONE)
 			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/sounds", true);
-		
-		//templates
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true);
 		return conf;
 	}
 
@@ -123,11 +120,7 @@ namespace GASS
 		{
 			config.DataPath = XMLUtils::ReadStringAttribute(data_path_elem, "value");
 		}
-
-		const tinyxml2::XMLElement *scene_path_elem = gass_elem->FirstChildElement("ScenePath");
-		if (scene_path_elem)
-			config.ScenePath = XMLUtils::ReadStringAttribute(scene_path_elem, "value");
-
+		
 		//read SceneObjectTemplateManager settings
 		tinyxml2::XMLElement *sotm_elem = gass_elem->FirstChildElement("SceneObjectTemplateManager");
 		if (sotm_elem)

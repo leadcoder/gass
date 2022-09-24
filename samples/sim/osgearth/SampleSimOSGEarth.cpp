@@ -74,30 +74,11 @@ int run(int /*argc*/, char** /*argv[]*/)
 	input_system->SetMainWindowHandle(win->GetHWND());
 	
 	//Create the scene
-	GASS::ScenePtr scene = GASS::ScenePtr(GASS::SimEngine::Get().CreateScene("osgearth_scene"));
+	GASS::ScenePtr scene = GASS::SimEngine::Get().CreateScene().lock();
 	
 	//Load pre-build scene from data folder
-	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osgearth/scene.xml"));
-	
-	//create free camera and add it to the scene under the root node
-	GASS::SceneObjectPtr camera_obj = engine->CreateObjectFromTemplate("OSGEarthCamera");
-	scene->GetRootSceneObject()->AddChildSceneObject(camera_obj, true);
-	
-	//Set camera position
-	camera_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetWorldPosition(scene->GetStartPos());
-
-
-	//Make this the primary camera
-	vp->SetCamera(camera_obj->GetFirstComponentByClass<GASS::ICameraComponent>());
-	
-	GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
-	GASS::EditorSceneManagerPtr esm = scene->GetFirstSceneManagerByClass<GASS::EditorSceneManager>();
-	esm->GetMouseToolController()->SelectTool("MoveTool");
-	esm->GetMouseToolController()->SetEnableGizmo(true);
-
-	GASS::CreateTool* ct = (GASS::CreateTool*) esm->GetMouseToolController()->GetTool("CreateTool");
-	ct->SetTemplateName("CubeMeshObject");
-	ct->SetParentObject(scene->GetRootSceneObject());
+	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osgearth_demo.scene"));
+	scene->GetOrCreateCamera();
 	
 	//Create vehicle and add it to the root node of the scene
 	//GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
@@ -111,24 +92,6 @@ int run(int /*argc*/, char** /*argv[]*/)
 	bool running = true;
 	while(running)
 	{
-
-		if (GetAsyncKeyState(VK_F1))
-		{
-			esm->GetMouseToolController()->SelectTool("SelectTool");
-		}
-		else if (GetAsyncKeyState(VK_F2))
-		{
-			esm->GetMouseToolController()->SelectTool("RotateTool");
-		}
-		else if (GetAsyncKeyState(VK_F3))
-		{
-			esm->GetMouseToolController()->SelectTool("MoveTool");
-		}
-		else if (GetAsyncKeyState(VK_F5))
-		{
-			esm->GetMouseToolController()->SelectTool("CreateTool");
-		}
-
 		running = engine->Update();
 	}
 	return 0;

@@ -47,7 +47,7 @@ namespace GASS
 	{
 		//Load all material files from gass data path
 		std::vector<std::string> files;
-		FilePath path("%GASS_DATA_HOME%/config/physics_materials.xml");
+		FilePath path("%GASS_DATA_HOME%/engine/config/physics_materials.xml");
 		LoadMaterialFile(path.GetFullPath());
 	}
 

@@ -143,7 +143,7 @@ namespace GASS
 			Create new scene 
 			@param Unique name for this scene (will be used if the scene is saved)
 		*/
-		SceneWeakPtr CreateScene(const std::string &name);
+		SceneWeakPtr CreateScene(const std::string &name = "");
 
 		/**
 			Get const iterator to all active scenes
@@ -167,16 +167,7 @@ namespace GASS
 
 		FilePath GetDataPath() const;
 		void SetDataPath(const FilePath &data_path);
-		/**
-			Get file path where scene are stored
-		*/
-		FilePath GetScenePath() const {return m_ScenePath;}
-
-		/**
-			Set file path where scene are stored
-		*/
-		void SetScenePath(const FilePath &path) {m_ScenePath = path;}
-
+		
 		/*
 			Sync messages for all systems, scenes and sceneobjects
 		*/
@@ -200,7 +191,6 @@ namespace GASS
 		SceneVector m_Scenes;
 		double m_CurrentTime{0};
 		FilePath m_DataPath;
-		FilePath m_ScenePath;
 		FilePath m_LogFolder;
 		static SimEngine* m_Instance;
 	};

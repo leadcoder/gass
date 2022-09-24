@@ -16,6 +16,7 @@
 <ScenePath value="../../data/sceneries"/>
 <ResourceManager>
   <ResourceGroup name="GASS">
+	<ResourceLocation  path="%GASS_DATA_HOME%/engine" type="FileSystem" recursive="true"/>
     <ResourceLocation  path="%GASS_DATA_HOME%/gfx" type="FileSystem" recursive="true"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
 	<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>

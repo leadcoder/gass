@@ -27,6 +27,8 @@
 #include "Sim/GASSSceneObjectVisitors.h"
 #include "Sim/GASSSceneManagerFactory.h"
 #include "Sim/GASSComponent.h"
+#include "Sim/GASSComponentFactory.h"
+
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
@@ -50,6 +52,7 @@
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Utils/GASSFilesystem.h"
 #include "Core/Serialize/tinyxml2.h"
+#include "Core/Utils/GASSException.h"
 
 namespace GASS
 {
@@ -422,6 +425,54 @@ namespace GASS
 			if(body)
 				body->SetVelocity(message->GetVelocity(),true);
 		}
+	}
+
+	SceneObjectWeakPtr Scene::GetOrCreateCamera(const std::string& template_name)
+	{
+		SceneObjectPtr camera = m_Camera.lock();
+		if (camera)
+			return m_Camera;
+
+		if (template_name.empty())
+		{
+			if (GetOSGEarth())
+			{
+				camera = std::make_shared<SceneObject>();
+				camera->SetName("Camera");
+				camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
+				auto cam_comp = ComponentFactory::Get().Create("CameraComponent");
+				dynamic_cast<ICameraComponent*>(cam_comp.get())->SetFarClipDistance(0);
+				camera->AddComponent(cam_comp);
+				camera->AddComponent(ComponentFactory::Get().Create("OSGEarthCameraManipulatorComponent"));
+			}
+			else
+			{
+				camera = std::make_shared<SceneObject>();
+				camera->SetName("Camera");
+				camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
+				camera->AddComponent(GASS::ComponentFactory::Get().Create("CameraComponent"));
+				camera->AddComponent(GASS::ComponentFactory::Get().Create("FreeCamControlComponent"));
+				auto input_comp = GASS::ComponentFactory::Get().Create("PlayerInputComponent");
+				input_comp->SetPropertyByString("ControlSetting", std::string("FreeCameraInputSettings"));
+				camera->AddComponent(input_comp);
+			}
+		}
+		else
+		{
+			camera = SimEngine::Get().CreateObjectFromTemplate(template_name);
+			if (!camera)
+			{
+				GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find camera template named:" + template_name, "Scene::CreateCamera");
+			}
+		}
+
+		m_Root->AddChildSceneObject(camera, true);
+		Quaternion rot = GetStartRot().GetQuaternion();
+		camera->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(GetStartPos());
+		camera->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
+		camera->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
+		m_Camera = camera;
+		return camera;
 	}
 
 	SceneObjectPtr Scene::LoadObjectFromTemplate(const std::string &template_name, SceneObjectPtr parent) const

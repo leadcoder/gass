@@ -61,7 +61,6 @@ namespace GASS
 			NetworkOptions network = NetworkOptions::NONE,
 			InputOptions input = InputOptions::OSG);
 		std::string DataPath = "%GASS_DATA_HOME%";
-		std::string ScenePath = "%GASS_DATA_HOME%/sceneries/";
 		std::string LogFolder;
 		std::vector<std::string> Plugins;
 		bool AddObjectIDToName = true;

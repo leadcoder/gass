@@ -388,14 +388,9 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 	auto bridge = CreateBridge(engine);
 	scene->GetRootSceneObject()->AddChildSceneObject(bridge,true);
-
-	//create free camera and set start pos
-	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject", scene->GetRootSceneObject());
-	if (free_obj)
-	{
-		free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(0, 2, 0));
-		free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
-	}
+	
+	auto camera = scene->GetOrCreateCamera().lock().get();
+	camera->SetPosition(GASS::Vec3(0, 3, 0));
 
 	static float wheel_vel = 0;
 	static float steer_vel = 0;
@@ -411,8 +406,8 @@ int main(int/*argc*/, char* /*argv[]*/)
 			if (!key_down)
 			{
 				key_down = true;
-				GASS::Vec3 pos = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
-				GASS::Quaternion rot = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
+				GASS::Vec3 pos = camera->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
+				GASS::Quaternion rot = camera->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
 				GASS::Vec3 vel = rot.GetZAxis()*- (GetAsyncKeyState(VK_RIGHT) ? 2500 : 1000);
 				/*
 								GASS::Mat4 rot_mat;

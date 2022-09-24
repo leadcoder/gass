@@ -59,10 +59,8 @@ namespace GASS
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(LODComponent::OnObjectMoved,TransformationChangedEvent,0));
 		SimEngine::Get().GetSimSystemManager()->RegisterForMessage(REG_TMESS(LODComponent::OnCameraChanged,CameraChangedEvent,0));
-		//get active camera
-		
-		SceneObjectPtr camera = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstChildByName("FreeCamera",false);
-		m_ActiveCameraObject = camera;
+		m_ActiveCameraObject = GetSceneObject()->GetScene()->GetOrCreateCamera();
+		auto camera = m_ActiveCameraObject.lock();
 		if(!camera)
 		{
 			GASS_LOG(LWARNING) << "Failed to find free camera for LODComponent";
