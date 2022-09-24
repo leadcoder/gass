@@ -235,7 +235,6 @@ namespace GASS
 		EulerRotation m_StartRot;
 		SceneManagerVector m_SceneManagers;
 		std::string m_Name;
-		std::string m_FolderName;
 		FilePath m_SceneFile;
 		MessageManagerPtr m_SceneMessageManager;
 

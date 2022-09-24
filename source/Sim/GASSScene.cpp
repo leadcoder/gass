@@ -163,7 +163,6 @@ namespace GASS
 				"You must provide valid scene file",
 				"Scene::Load");
 		}
-		m_FolderName = filename.GetPathNoFile();
 		m_SceneFile = filename;
 		m_Name = FileUtils::RemoveExtension(filename.GetFilename());
 
@@ -254,11 +253,10 @@ namespace GASS
 
 	FilePath Scene::GetSceneFolder() const
 	{
-		if(m_FolderName != "")
-			return FilePath(SimEngine::Get().GetScenePath().GetFullPath() + "/" + m_FolderName);
+		if(m_SceneFile.Exist())
+			return FilePath(m_SceneFile.GetPathNoFile());
 		return FilePath("");
 	}
-
 
 	void Scene::New()
 	{
@@ -269,7 +267,6 @@ namespace GASS
 		}
 		m_Name = "MyScene";
 		m_SceneFile = FilePath("");
-		m_FolderName = "";
 	}
 
 	void Scene::Save(const FilePath& filename)
@@ -280,8 +277,8 @@ namespace GASS
 		}
 		m_Name = FileUtils::RemoveExtension(filename.GetFilename());
 		m_SceneFile = filename;
-		m_FolderName = filename.GetPathNoFile();
-		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(FilePath(m_FolderName), RLT_FILESYSTEM, true);
+		auto folder = filename.GetPathNoFile();
+		m_ResourceLocation = ResourceGroupPtr(m_ResourceGroup)->AddResourceLocation(FilePath(folder), RLT_FILESYSTEM, true);
 
 		//Save camera pos
 		if (auto camera = m_Root->GetFirstComponentByClass<ICameraComponent>(true))
