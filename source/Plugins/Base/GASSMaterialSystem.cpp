@@ -47,15 +47,8 @@ namespace GASS
 	{
 		//Load all material files from gass data path
 		std::vector<std::string> files;
-		FilePath path("%GASS_DATA_HOME%/physics");
-		FileUtils::GetFilesFromPath(files,path.GetFullPath(),true,true);
-		for(size_t i = 0; i< files.size(); i++)
-		{
-			if(FileUtils::GetExtension(files[i]) == "gassmat")
-				LoadMaterialFile(files[i]);
-			//else if(FileUtils::GetExtension(files[i]) == "gassgeom")
-			//	LoadGeometryFlagsFile(files[i]);
-		}
+		FilePath path("%GASS_DATA_HOME%/config/physics_materials.xml");
+		LoadMaterialFile(path.GetFullPath());
 	}
 
 	void MaterialSystem::LoadMaterialFile(const std::string &file)

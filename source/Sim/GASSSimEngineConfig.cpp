@@ -86,16 +86,15 @@ namespace GASS
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}
 		conf.DataPath = "%GASS_DATA_HOME%";
+		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/config", true);
 		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
 		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
 		if (physics != PhysicsOptions::NONE)
 		{
 			if (physics == PhysicsOptions::PHYSX)
 				conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true);
-			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/physics", true);
-
 		}
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/input", true);
+		
 		if(sound != SoundOptions::NONE)
 			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/sounds", true);
 		

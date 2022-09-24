@@ -107,17 +107,7 @@ namespace GASS
 	
 		//Initialize systems
 		m_SystemManager->Init();
-
-		//load collision masks...move this else where
-		ResourceHandle res("collision_settings.xml");
-		try
-		{
-			GeometryFlagManager::LoadGeometryFlagsFile(res.GetResource()->Path().GetFullPath());
-		}
-		catch (...)
-		{
-
-		}
+		
 		//Load templates
 		ReloadTemplates();
 

@@ -87,6 +87,7 @@ namespace GASS
 	PxGASSErrorCallback my_error_callback;
 	void PhysXPhysicsSystem::OnSystemInit()
 	{
+		GeometryFlagManager::LoadGeometryFlagsFile(FilePath("%GASS_DATA_HOME%/config/physics_collision_settings.xml").GetFullPath());
 		bool record_memory_allocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, my_error_callback);
 		m_PhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, physx::PxTolerancesScale(), record_memory_allocations );
@@ -97,8 +98,6 @@ namespace GASS
 		}
 		if(!PxInitExtensions(*m_PhysicsSDK, nullptr))
 			GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR,"PxInitExtensions failed!", "PhysXPhysicsSystem::OnInit");
-
-		//m_DefaultMaterial = m_PhysicsSDK->createMaterial(0.5,0.5,0.5);
 
 		PxTolerancesScale scale;
 		PxCookingParams params(scale);
@@ -122,9 +121,7 @@ namespace GASS
 			m_Materials[iter->first] = GetPxSDK()->createMaterial(static_cast<float>(mat_data.StaticFriction), static_cast<float>(mat_data.DynamicFriction), static_cast<float>(mat_data.Restitution));
 			++iter;
 		}
-		m_DefaultMaterial = m_Materials["DEFAULT"];
-
-
+		m_DefaultMaterial = GetMaterial("DEFAULT");
 
 		//Set the basis vectors.
 		PxVec3 up(0,1,0);
@@ -135,7 +132,7 @@ namespace GASS
 		PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 
 		//load vehicle settings
-		FilePath path("%GASS_DATA_HOME%/physics/VehicleSettings.xml");
+		FilePath path("%GASS_DATA_HOME%/config/physics_vehicle_settings.xml");
 
 		LoadTires(path.GetFullPath());
 
