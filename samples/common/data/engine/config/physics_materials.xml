@@ -3,4 +3,5 @@
 	<Material Name="DEFAULT" DynamicFriction="1.0" StaticFriction="1.0" Restitution="0.5"/>
 	<Material Name="GRASS" DynamicFriction="1.0" StaticFriction="1.0" Restitution="0.5"/>
 	<Material Name="TARMAC" DynamicFriction="1.0" StaticFriction="1.0" Restitution="0.5"/>
+	<Material Name="WHEEL" DynamicFriction="5.0" StaticFriction="5.0" Restitution="0.5"/>
 </MaterialList>

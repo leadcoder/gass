@@ -48,11 +48,9 @@ namespace GASS
 		void SetAngularSteerVelocity(float value) override;
 		void SetMaxSteerTorque(float value) override;
 		float GetMaxSteerTorque() const override { return m_MaxSteerTorque; }
+		float GetSteerAngle() const override;
 	protected:
 		void OnLoad(PhysicsBodyLoadedEventPtr message);
-
-		float GetRollAngle();
-		float GetRollAngleRate();
 		
 		//Helpers
 		void CreateJoint();
@@ -65,7 +63,6 @@ namespace GASS
 		void SetStrength(float value){m_Strength =value;}
 		float GetSteerLimit()const {return m_SteerLimit;}
 		void SetSteerLimit(float value);
-		void SendJointUpdate(PhysicsVelocityEventPtr message);
 	private:
 		float m_DriveMaxTorque{PX_MAX_F32};
 		float m_WheelJointDamping{100};

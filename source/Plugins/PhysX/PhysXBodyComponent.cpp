@@ -53,6 +53,8 @@ namespace GASS
 		RegisterMember("DisableGravity", &PhysXBodyComponent::m_DisableGravity);
 		RegisterMember("PositionIterCount", &PhysXBodyComponent::m_PositionIterCount);
 		RegisterMember("VelocityIterCount", &PhysXBodyComponent::m_VelocityIterCount);
+		RegisterGetSet("EffectJoints", &PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
+
 	}
 
 	void PhysXBodyComponent::OnInitialize()

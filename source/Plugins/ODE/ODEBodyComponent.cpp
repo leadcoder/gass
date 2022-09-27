@@ -52,7 +52,6 @@ namespace GASS
 		RegisterGetSet("AssymetricInertia",&ODEBodyComponent::GetAssymetricInertia, &ODEBodyComponent::SetAssymetricInertia);
 		RegisterGetSet("EffectJoints",&ODEBodyComponent::GetEffectJoints, &ODEBodyComponent::SetEffectJoints);
 		RegisterGetSet("Active",&ODEBodyComponent::GetActive, &ODEBodyComponent::SetActive);
-
 	}
 
 	void ODEBodyComponent::OnInitialize()

@@ -26,6 +26,7 @@
 #include "Sim/GASSScene.h"
 #include "Sim/GASSSceneObject.h"
 #include "Sim/Interface/GASSIPhysicsSuspensionComponent.h"
+#include "Sim/Interface/GASSIMissionSceneManager.h"
 
 namespace GASS
 {
@@ -55,6 +56,7 @@ namespace GASS
 		//get input from parent?
 		SceneObjectPtr parent = GetSceneObject()->GetParent();
 		parent->RegisterForMessage(REG_TMESS(SteerComponent::OnInput,InputRelayEvent,0));
+		RegisterForPostUpdate<IMissionSceneManager>();
 	}
 
 	void SteerComponent::OnInput(InputRelayEventPtr message)
@@ -79,6 +81,19 @@ namespace GASS
 			GetSceneObject()->PostMessage(force_msg);
 			GetSceneObject()->PostMessage(vel_msg);
 		}*/
+	}
+
+	void SteerComponent::SceneManagerTick(double /*delta*/)
+	{
+		PhysicsSuspensionComponentPtr suspension = GetSceneObject()->GetFirstComponentByClass<IPhysicsSuspensionComponent>();
+		m_CurrentAngle = -suspension->GetSteerAngle();
+		float angular_vel = (m_DesiredAngle - m_CurrentAngle) * m_Speed;
+		if (angular_vel > m_MaxSteerVelocity) angular_vel = m_MaxSteerVelocity;
+		if (angular_vel < -m_MaxSteerVelocity) angular_vel = -m_MaxSteerVelocity;
+		//std::cout << " " <<angular_vel << " " <<m_DesiredAngle << " " << m_CurrentAngle << std::endl;
+		suspension->SetMaxSteerTorque(m_SteerForce);
+		suspension->SetAngularSteerVelocity(angular_vel);
+
 	}
 
 	void SteerComponent::OnJointUpdate(ODEPhysicsHingeJointEventPtr message)

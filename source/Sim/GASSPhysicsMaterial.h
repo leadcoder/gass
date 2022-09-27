@@ -37,6 +37,5 @@ namespace GASS
 		double StaticFriction;
 		double DynamicFriction;
 		double Restitution;
-		//int m_Flag;
 	};
 }

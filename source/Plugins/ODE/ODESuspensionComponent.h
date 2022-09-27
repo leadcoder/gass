@@ -48,6 +48,7 @@ namespace GASS
 
 		void SetMaxDriveTorque(float value) override;
 		float GetMaxDriveTorque()const override;
+		float GetSteerAngle() const override { return 0; }
 	protected:
 		void OnBodyLoaded(PhysicsBodyLoadedEventPtr message);
 		
