@@ -146,6 +146,7 @@ namespace GASS
 						Vec3 pos = location->GetPosition();
 						pos = pos + trans_vec;
 						body->SetPosition(pos);
+						location->SetWorldPosition(pos);
 					}
 				}
 			
@@ -160,7 +161,7 @@ namespace GASS
 					{
 						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 						Vec3 pos = location->GetPosition();
-						pos = pos + trans_vec;
+						//pos = pos + trans_vec;
 						joint->SetPosition(pos);
 					}
 				}
