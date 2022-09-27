@@ -216,7 +216,7 @@ int start(int argc, char* argv[])
 		GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
 			GASS::SoundOptions::NONE,
 			GASS::NetworkOptions::NONE);
-		config.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/editor", true);
+		config.ResourceConfig.ResourceLocations.emplace_back("SAMPLE_DATA", "%GASS_DATA_HOME%/sample_data", true);
 		config.SimSystemManager.MaxSimulationSteps = 1;
 		engine->Init(config);
 		CreateTemps();
@@ -233,15 +233,16 @@ int start(int argc, char* argv[])
 
 		GASS::EditorSystemPtr es = GASS::SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<GASS::EditorSystem>();
 		es->SetPropertyValue("LockTerrainObjects", false);
-
+		es->SetShowGUI(true);
 
 		//Create the scene
 		GASS::Scene* scene = GASS::SimEngine::Get().CreateScene().lock().get();
 
 		//Load pre-build scene from data folder
-		scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo.scene"));
+		scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sample_data/sceneries/osg_demo.scene"));
 		//create free camera and add it to the scene under the root node
 		auto camera = scene->GetOrCreateCamera();
+		if(false)
 		{
 			//Create vehicle and add it to the root node of the scene
 			GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");

@@ -77,7 +77,7 @@ int run(int /*argc*/, char** /*argv[]*/)
 	GASS::ScenePtr scene = GASS::SimEngine::Get().CreateScene().lock();
 	
 	//Load pre-build scene from data folder
-	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osgearth_demo.scene"));
+	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sample_data/sceneries/osgearth_demo.scene"));
 	scene->GetOrCreateCamera();
 	
 	//Create vehicle and add it to the root node of the scene

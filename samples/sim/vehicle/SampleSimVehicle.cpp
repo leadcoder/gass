@@ -58,6 +58,7 @@ int start(int argc, char* argv[])
 	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
 		GASS::SoundOptions::NONE,
 		GASS::NetworkOptions::NONE);
+	config.ResourceConfig.ResourceLocations.emplace_back("SAMPLE_DATA", "%GASS_DATA_HOME%/sample_data", true);
 	engine->Init(config);
 	
 	//Get graphic system and create one main rendering window
@@ -75,7 +76,7 @@ int start(int argc, char* argv[])
 	auto scene = GASS::SimEngine::Get().CreateScene().lock();
 	
 	//Load pre-build scene from data folder
-	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sceneries/osg_demo.scene"));
+	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sample_data/sceneries/osg_demo.scene"));
 	scene->GetOrCreateCamera();
 
 	//Create vehicle and add it to the root node of the scene
