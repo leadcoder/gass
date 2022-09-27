@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Templates>
 	<SceneObjectTemplate>
-		<Name value="PXGTO"/>
+		<Name value="GTO"/>
 		<ID value="CHASSIS"/>
 		<Serialize value="false"/>
 		<Instantiable value= "true"/>

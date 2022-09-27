@@ -103,7 +103,7 @@ namespace GASS
 		void OnStartClient(StartClientRequestPtr message);
 		void OnConnectToServer(ConnectToServerRequestPtr message);
 		void OnPingRequest(PingRequestPtr message);
-		void OnSceneAboutToLoad(PreSceneCreateEventPtr message);
+		void OnSceneAboutToLoad(PostSceneLoadEventPtr message);
 		void OnStopServer(StopServerRequestPtr message);
 		void OnStopClient(StopClientRequestPtr message);
 		void OnTimeOfDay(TimeOfDayRequestPtr message);

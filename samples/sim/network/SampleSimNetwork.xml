@@ -5,7 +5,7 @@
   <!--<Directory Path = "GASSPlugins"/>-->
   <Plugin PluginFile = "GASSPluginOSG"/>
   <Plugin PluginFile = "GASSPluginOIS"/>
-  <Plugin PluginFile = "GASSPluginODE"/>
+  <Plugin PluginFile = "GASSPluginPhysX"/>
   <Plugin PluginFile = "GASSPluginOpenAL"/>
   <Plugin PluginFile = "GASSPluginVehicle"/>
   <Plugin PluginFile = "GASSPluginInput"/>
@@ -17,15 +17,8 @@
 <ResourceManager>
   <ResourceGroup name="GASS">
 	<ResourceLocation  path="%GASS_DATA_HOME%/engine" type="FileSystem" recursive="true"/>
-    <ResourceLocation  path="%GASS_DATA_HOME%/gfx" type="FileSystem" recursive="true"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/physics" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/input" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/sounds" type="FileSystem" recursive="true"/>
-  </ResourceGroup>
-  <ResourceGroup name="GASS_TEMPLATES">
-    <ResourceLocation  path="%GASS_DATA_HOME%/templates/vehicles/ode" type="FileSystem" recursive="false"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/templates/game" type="FileSystem" recursive="true"/>
-	<ResourceLocation  path="%GASS_DATA_HOME%/templates/camera" type="FileSystem" recursive="false"/>
+    <ResourceLocation  path="%GASS_DATA_HOME%/sample_data" type="FileSystem" recursive="true"/>
+	<!--<ResourceLocation  path="%GASS_DATA_HOME%/ode" type="FileSystem" recursive="false"/>-->
   </ResourceGroup>
 </ResourceManager>
 <SceneObjectTemplateManager>
@@ -33,10 +26,11 @@
   <ObjectIDPrefix value="["/>
   <ObjectIDSufix value="]"/>
 </SceneObjectTemplateManager>
-<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="60" MaxSimulationSteps="20">
-  <OISInputSystem>
-    <ExclusiveMode value="false"/>
-  </OISInputSystem>
+<Systems MaxUpdateFrequency="100" SimulationUpdateFrequency="60" MaxSimulationSteps="2">
+ <MaterialSystem>
+ </MaterialSystem>
+  <OSGInputSystem>
+  </OSGInputSystem>
   <ControlSettingsSystem>
   </ControlSettingsSystem>
   <CoreSystem>
@@ -48,10 +42,10 @@
   </RakNetNetworkSystem>
   <OpenALSoundSystem>
   </OpenALSoundSystem>
-  <ODEPhysicsSystem>
-  </ODEPhysicsSystem>
-  <ODECollisionSystem>
- </ODECollisionSystem>
+  <PhysXPhysicsSystem>
+  </PhysXPhysicsSystem>
+  <OSGCollisionSystem>
+ </OSGCollisionSystem>
  <OSGGraphicsSystem>
   </OSGGraphicsSystem>
 </Systems>

@@ -25,7 +25,7 @@ protected:
 	int m_ClientPort;
 public:
 	SimApplication() :
-	  m_SceneName("%GASS_DATA_HOME%/sceneries/osg_demo.scene"),
+	  m_SceneName("%GASS_DATA_HOME%/sample_data/sceneries/osg_demo.scene"),
 		  m_Timer(new GASS::Timer()),
 		  m_UpdateFreq(60),
 		  m_ServerPort(2005),
@@ -41,7 +41,7 @@ public:
 
 	  void _LoadScene(const std::string &scene_name)
 	  {
-		  m_Scene = GASS::SimEngine::Get().CreateScene(scene_name);
+		  m_Scene = GASS::SimEngine::Get().CreateScene();
 		  GASS::ScenePtr scene = GASS::ScenePtr(m_Scene);
 		  scene->Load(GASS::FilePath(scene_name));
 		  GASS_LOG(LINFO) << "SimApplication::Init -- Scene Loaded:" << m_SceneName;

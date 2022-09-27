@@ -83,7 +83,7 @@ namespace GASS
 		//Only register scene manager if system is created
 		SceneManagerFactory::GetPtr()->Register<RaknetNetworkSceneManager>("NetworkSceneManager");
 
-		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad,PreSceneCreateEvent,0));
+		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnSceneAboutToLoad, PostSceneLoadEvent,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStartServer,StartServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopServer,StopServerRequest,0));
 		GetSimSystemManager()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnStopClient,StopClientRequest,0));
@@ -444,13 +444,13 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkSystem::OnSceneAboutToLoad(PreSceneCreateEventPtr message)
+	void RakNetNetworkSystem::OnSceneAboutToLoad(PostSceneLoadEventPtr message)
 	{
 		m_Scene = message->GetScene();
 		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnTimeOfDay,TimeOfDayRequest,0));
 		message->GetScene()->RegisterForMessage(REG_TMESS(RakNetNetworkSystem::OnWeatherRequest,WeatherRequest,0));
 
-		m_ServerData->MapName =	message->GetScene()->GetName();
+		m_ServerData->MapName =	message->GetScene()->GetSceneFile().GetRawPath();
 		//std::cout << "Map to send:" << m_ServerData->MapName << std::endl;
 
 		m_SceneIsRunning = true;
