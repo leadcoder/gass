@@ -16,9 +16,6 @@
 				<CastShadow value="1"/>
 				<GeometryFlags value="GEOMETRY_FLAG_VEHICLE_CHASSIS"/>
 			</MeshComponent>
-			<!--<PhysicsBoxGeometryComponent>
-				<Offset value="0 0 0"/>
-			</PhysicsBoxGeometryComponent>-->
 			<PhysicsConvexGeometryComponent>
 				<SimulationCollision value="true"/>
 			</PhysicsConvexGeometryComponent>
@@ -150,7 +147,6 @@
 				<AttachToParent value="0"/>
 			</LocationComponent>
 			<PhysicsSphereGeometryComponent>
-				<!--<Friction value="2.0"/>-->
 				<Radius value="0.42"/>
 				<SizeFromMesh value="false"/>
 				<Material value="WHEEL"/>
@@ -162,9 +158,6 @@
 				<Strength value="20"/>
 				<Damping value="3"/>
 				<SteerLimit value="2"/>
-				<!--<SwayForce value="50"/>-->
-				<!--<HighStop value="1"/>
-				<LowStop value="-1"/>-->
 			</PhysicsSuspensionComponent>
 			<SteerComponent>
 				<SteerForce value="80"/>
@@ -189,7 +182,6 @@
 				<AttachToParent value="0"/>
 			</LocationComponent>
 			<PhysicsSphereGeometryComponent>
-				<!--<Friction value="2.0"/>-->
 				<Radius value="0.42"/>
 				<SizeFromMesh value="false"/>
 				<Material value="WHEEL"/>
@@ -201,7 +193,6 @@
 				<Strength value="20"/>
 				<Damping value="3"/>
 				<SteerLimit value="0"/>
-				<!--<SwayForce value="50"/>-->
 			</PhysicsSuspensionComponent>
 			<NetworkChildComponent>
 			</NetworkChildComponent>
