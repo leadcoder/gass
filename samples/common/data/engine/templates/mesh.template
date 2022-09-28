@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates>
 	<SceneObjectTemplate>
-		<Name value="CubeMeshObject"/>
+		<Name value="MeshObject"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<MeshComponent>
+				<Filename value="cube.obj"/>
+				<CastShadow value="true"/>
+			</MeshComponent>
+			<LocationComponent/>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PhysicsMeshObject"/>
 		<Instantiable value= "true"/>
 		<Components>
 			<MeshComponent>
