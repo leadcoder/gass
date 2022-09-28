@@ -11,7 +11,7 @@
 			</LocationComponent>
 			<BillboardComponent>
 				<Name value="NodeGeom"/>
-				<Material value="node.dds"/>
+				<Material value="default.dds"/>
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>
@@ -39,7 +39,7 @@
 			</LocationComponent>
 			<BillboardComponent>
 				<Name value="NodeGeom"/>
-				<Material value="node.dds"/>
+				<Material value="default.dds"/>
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>
