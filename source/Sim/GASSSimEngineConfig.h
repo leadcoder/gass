@@ -68,6 +68,7 @@ namespace GASS
 		std::string ObjectIDSufix;
 		ResourceManagerConfig ResourceConfig;
 		SimSystemManagerConfig SimSystemManager;
+		bool AutoLoadTemplates = true;
 	};
 }
 

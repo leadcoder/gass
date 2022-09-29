@@ -216,9 +216,17 @@ int start(int argc, char* argv[])
 		GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX,
 			GASS::SoundOptions::NONE,
 			GASS::NetworkOptions::NONE);
+		config.Plugins.push_back("GASSPluginRoadNetwork");
 		config.ResourceConfig.ResourceLocations.emplace_back("SAMPLE_DATA", "%GASS_DATA_HOME%/sample_data", true);
+		//config.Plugins.push_back("GASSPluginRaknet");
+		config.Plugins.push_back("GASSPluginRecastNavigation");
 		config.SimSystemManager.MaxSimulationSteps = 1;
+		config.AutoLoadTemplates = false;
 		engine->Init(config);
+
+		engine->GetSceneObjectTemplateManager()->Load(GASS::FilePath("%GASS_DATA_HOME%/engine/templates/road_network.template").GetFullPath());
+		engine->GetSceneObjectTemplateManager()->Load(GASS::FilePath("%GASS_DATA_HOME%/engine/templates/navigation_mesh.template").GetFullPath());
+
 		CreateTemps();
 		//Get graphic system and create one main rendering window
 		GASS::GraphicsSystemPtr gfx_sys = engine->GetSimSystemManager()->GetFirstSystemByClass<GASS::IGraphicsSystem>();

@@ -107,7 +107,8 @@ namespace GASS
 		m_SystemManager->Init();
 		
 		//Load templates
-		ReloadTemplates();
+		if(config.AutoLoadTemplates)
+			ReloadTemplates();
 
 		//initialize profiler
 		ProfileSample::m_OutputHandler = new ProfileRuntimeHandler();
