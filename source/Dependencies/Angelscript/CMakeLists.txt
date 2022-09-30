@@ -112,8 +112,15 @@ target_compile_definitions(Angelscript PRIVATE "-D_CRT_SECURE_NO_WARNINGS -DANGE
 set_target_properties(Angelscript PROPERTIES DEBUG_POSTFIX _d)
 if(MSVC)
         set_target_properties(Angelscript PROPERTIES COMPILE_FLAGS "/MP")
-		target_compile_options(Angelscript PRIVATE /W3)
-endif(MSVC)
+	target_compile_options(Angelscript PRIVATE /W3)
+else()
+        target_compile_options(Angelscript PRIVATE -Wall 
+        -Wno-long-long 
+        -Wno-unused-parameter 
+        -Wno-cast-function-type 
+        -Wno-strict-aliasing
+        -Wno-class-memaccess)
+endif()
 
 install(FILES ${ANGELSCRIPT_HEADERS} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/Dependencies/Angelscript)
 

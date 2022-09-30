@@ -87,6 +87,7 @@ distribution.
 		}
 	#endif
 #else
+    #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 	// GCC version 3 and higher
 	//#warning( "Using sn* functions." )
 	#define TIXML_SNPRINTF	snprintf

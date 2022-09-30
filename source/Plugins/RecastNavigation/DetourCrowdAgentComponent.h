@@ -45,7 +45,7 @@ namespace GASS
 
 		//to instantiate a Smoother pass it the number of samples you want
 		//to use in the smoothing, and an exampe of a 'zero' type
-		Smoother(int SampleSize, T ZeroValue):m_History(SampleSize, ZeroValue),
+		Smoother(int SampleSize, T ZeroValue):m_History(static_cast<size_t>(SampleSize), ZeroValue),
 			m_ZeroValue(ZeroValue),
 			m_iNextUpdateSlot(0)
 		{}
@@ -58,7 +58,7 @@ namespace GASS
 			m_History[m_iNextUpdateSlot++] = MostRecentValue;
 
 			//make sure m_iNextUpdateSlot wraps around.
-			if (m_iNextUpdateSlot == m_History.size()) m_iNextUpdateSlot = 0;
+			if (m_iNextUpdateSlot == static_cast<int>(m_History.size())) m_iNextUpdateSlot = 0;
 
 			//now to calculate the average of the history list
 			T sum = m_ZeroValue;
