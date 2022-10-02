@@ -119,6 +119,12 @@ namespace GASS
 			keymap[osgKey::KEY_F11] = KEY_F11;
 			keymap[osgKey::KEY_F12] = KEY_F12;
 
+			keymap[osgKey::KEY_Delete] = KEY_DELETE;
+			keymap[osgKey::KEY_Left] = KEY_LEFT;
+			keymap[osgKey::KEY_Right] = KEY_RIGHT;
+			keymap[osgKey::KEY_Up] = KEY_UP;
+			keymap[osgKey::KEY_Down] = KEY_DOWN;
+			
 			keymap[osgKey::KEY_Shift_L] = KEY_LSHIFT;
 			keymap[osgKey::KEY_Shift_R] = KEY_RSHIFT;
 			keymap[osgKey::KEY_Control_L] = KEY_LCONTROL;

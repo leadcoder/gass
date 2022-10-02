@@ -137,7 +137,7 @@ namespace GASS
 				SceneObject::ComponentVector components;
 				GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
 				
-				for(int i = 0 ; i < components.size(); i++)
+				for(size_t i = 0 ; i < components.size(); i++)
 				{
 					PhysXBodyComponentPtr body = GASS_STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 					if(body.get() != this)
@@ -154,7 +154,7 @@ namespace GASS
 				components.clear();
 				GetSceneObject()->GetComponentsByClassName(components,"PhysXSuspensionComponent");
 				
-				for(int i = 0 ; i < components.size(); i++)
+				for(size_t i = 0 ; i < components.size(); i++)
 				{
 					PhysXSuspensionComponentPtr joint = GASS_STATIC_PTR_CAST<PhysXSuspensionComponent>(components[i]);
 					//if(joint.get() != this)

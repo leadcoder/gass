@@ -198,7 +198,7 @@ namespace GASS
 		if (m_MapNode && m_MapNode->getMap())
 		{
 			//const unsigned int elev_lod = 23u;
-			const unsigned int elev_lod = 15u;
+			//const unsigned int elev_lod = 15u;
 			//Use m_WGS84 here because we ask for height in GeoCoords
 			m_WorkingSet = new osgEarth::ElevationPool::WorkingSet();
 		}

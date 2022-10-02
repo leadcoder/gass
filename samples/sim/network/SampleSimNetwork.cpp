@@ -55,7 +55,7 @@ int _getch( ) {
 
 typedef GASS_SHARED_PTR<SimApplication> SimApplicationPtr;
 
-int main(int /*argc*/, char* /*argv[]*/)
+int main(int /*argc*/, char** /*argv[]*/)
 {
 	SimApplicationPtr app;
 

@@ -145,7 +145,7 @@ namespace GASS
 			auto* samples = (physx::PxHeightFieldSample*) new physx::PxHeightFieldSample[samples_x*samples_z];//(sizeof(physx::PxHeightFieldSample)*(samples_x*samples_z));
 
 			const physx::PxReal height_scale = 0.1f;
-			memset(samples,0, samples_x * samples_z * sizeof(physx::PxHeightFieldSample));
+			//memset(samples,0, samples_x * samples_z * sizeof(physx::PxHeightFieldSample));
 
 			for(int x = 0; x < samples_x; x++)
 			{

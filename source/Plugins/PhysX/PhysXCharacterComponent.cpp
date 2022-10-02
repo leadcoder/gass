@@ -175,7 +175,7 @@ namespace GASS
 		target_displacement += forward*m_CurrentVel;
 		target_displacement += PxConvert::ToGASS(m_SceneManager->GetPxScene()->getGravity());
 		target_displacement *= delta;
-		PxControllerCollisionFlags flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(nullptr));
+		//PxControllerCollisionFlags flags = m_Controller->move(PxConvert::ToPx(target_displacement), 0.001f, static_cast<float>(delta), PxControllerFilters(nullptr));
 		GetSceneObject()->PostEvent(std::make_shared<PhysicsVelocityEvent>(Vec3(0,0,m_CurrentVel),Vec3(0,0,0),from_id));
 	}
 

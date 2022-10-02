@@ -920,7 +920,7 @@ namespace GASS
 			SceneObject::ComponentVector components;
 			GetSceneObject()->GetComponentsByClass<IPhysicsBodyComponent>(components, true);
 
-			for(int i = 0 ; i < components.size(); i++)
+			for(size_t i = 0 ; i < components.size(); i++)
 			{
 				//PhysXBodyComponentPtr body = GASS_STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 				//const Vec3 offset_to_child = body->GetPosition() - vehicle_pos;
