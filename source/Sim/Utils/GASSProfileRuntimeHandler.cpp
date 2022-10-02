@@ -3,6 +3,13 @@
 #include "Sim/GASSSimEngine.h"
 #include <string.h>
 
+
+#ifndef _MSC_VER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-overflow"
+#endif
+
+
 namespace GASS
 {
 	ProfileRuntimeHandler::ProfileRuntimeHandler()
@@ -34,10 +41,26 @@ namespace GASS
 		sprintf(time, "%3.1f", tAvg);
 		sprintf(num, "%3d", callCount);
 
-		if (strlen(avg) < 4) avg[3] = ' '; avg[4] = 0;
-		if (strlen(min) < 4) min[3] = ' '; min[4] = 0;
-		if (strlen(max) < 4) max[3] = ' '; max[4] = 0;
-		if (strlen(time) < 4) time[3] = ' '; time[4] = 0;
+		if (strlen(avg) < 4)
+		{ 
+			avg[3] = ' '; 
+			avg[4] = 0;
+		}
+		if (strlen(min) < 4) 
+		{
+			min[3] = ' '; 
+			min[4] = 0;
+			}
+		if (strlen(max) < 4) 
+		{
+			max[3] = ' '; 
+			max[4] = 0;
+		}
+		if (strlen(time) < 4) 
+		{
+			time[3] = ' '; 
+			time[4] = 0;
+		}
 
 
 		strcpy(indented_name, name.c_str());
@@ -54,3 +77,6 @@ namespace GASS
 		//Font::DebugPrint("\n");
 	}
 }
+#ifndef _MSC_VER
+#pragma GCC diagnostic pop
+#endif

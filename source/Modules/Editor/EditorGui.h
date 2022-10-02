@@ -3,7 +3,13 @@
 #include "imgui_internal.h"
 #include "imgui_stdlib.h"
 
-//#include "windows.h"
+#ifndef _MSC_VER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
+#endif
+
 #include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Math/GASSAABox.h"
@@ -334,6 +340,7 @@ namespace GASS
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TREENODE"))
 				{
+					(void) payload;
 					auto new_obj = SimEngine::Get().CreateObjectFromTemplate(m_DropTemplate);
 					so->AddChildSceneObject(new_obj, true);
 					m_DropTemplate = "";
@@ -429,7 +436,7 @@ namespace GASS
 			{
 				if (!node_deleted)
 				{
-					for (int i = 0; i < so->GetNumChildren(); i++)
+					for (unsigned int i = 0; i < so->GetNumChildren(); i++)
 					{
 						DrawSceneObject(so->GetChild(i));
 					}
@@ -517,7 +524,7 @@ namespace GASS
 				if (prop->HasMetaData())
 				{
 					PropertyMetaDataPtr meta_data = prop->GetMetaData();
-					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					//const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const std::string documentation = prop->GetDescription();
 					if (GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data))
 					{
@@ -559,7 +566,7 @@ namespace GASS
 				}
 				else //if (!item)
 				{
-					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					//const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const bool multi = (prop->GetFlags() & PF_MULTI_OPTIONS);
 					if (prop->HasOptions())
 					{
@@ -1075,3 +1082,6 @@ namespace GASS
 
 			};
 		}
+#ifndef _MSC_VER
+#pragma GCC diagnostic pop
+#endif

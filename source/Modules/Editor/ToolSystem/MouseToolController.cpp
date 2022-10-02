@@ -362,16 +362,6 @@ namespace GASS
 	{
 		if(m_ActiveTool)
 			m_ActiveTool->Update(delta);
-		
-		//debug message
-		/*
-		GASS_PRINT("Cursor pos:" << m_LastScreenPos);
-	
-		/*SceneObjectPtr obj_under_cursor(info.m_ObjectUnderCursor,NO_THROW);
-		if(obj_under_cursor)
-		{
-			GASS_PRINT("Object under cursor:" << obj_under_cursor->GetName() << "Cursor pos:" << info.m_3DPos << " 2d:" << info.m_ScreenPos)
-		}*/
 	}
 
 	void MouseToolController::SetEnableGizmo(int value)

@@ -725,7 +725,7 @@ namespace osgShadow
 	{
 		OSG_INFO << "ViewDependentShadowMap::createShaders()" << std::endl;
 
-		unsigned int _baseTextureUnit = 0;
+		//unsigned int _baseTextureUnit = 0;
 
 		OpenThreads::ScopedLock<OpenThreads::Mutex> lock(_accessUniformsAndProgramMutex);
 

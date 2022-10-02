@@ -6,3 +6,11 @@ target_sources(GASSPluginOSG PRIVATE
 	Shaders/Base.frag.glsl
 	Shaders/Base.vert.glsl)
 
+
+if(NOT MSVC)
+	target_compile_options(GASSPluginOSG PRIVATE -Wno-cast-function-type
+	-Wno-format-security)
+endif()
+
+	
+

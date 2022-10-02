@@ -2,7 +2,14 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h> // sprintf
+#ifndef _MSC_VER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
+
 #include "scriptarray.h"
+
+
 
 using namespace std;
 
@@ -192,6 +199,7 @@ void RegisterScriptArray(asIScriptEngine *engine, bool defaultArray)
 static void RegisterScriptArray_Native(asIScriptEngine *engine)
 {
 	int r;
+	(void)r;
 
 	// Register the object type user data clean up
 	engine->SetObjectTypeUserDataCleanupCallback(CleanupObjectTypeArrayCache, ARRAY_CACHE);
@@ -1777,6 +1785,7 @@ static void ScriptArrayReleaseAllHandles_Generic(asIScriptGeneric *gen)
 static void RegisterScriptArray_Generic(asIScriptEngine *engine)
 {
 	int r;
+	(void) r;
 
 	engine->SetObjectTypeUserDataCleanupCallback(CleanupObjectTypeArrayCache, ARRAY_CACHE);
 
@@ -1819,3 +1828,7 @@ static void RegisterScriptArray_Generic(asIScriptEngine *engine)
 }
 
 END_AS_NAMESPACE
+
+#ifndef _MSC_VER
+#pragma GCC diagnostic pop
+#endif

@@ -168,6 +168,11 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 					speed = -speed;
 					break;
 				}
+			case GUIEventAdapter::SCROLL_NONE:
+			case GUIEventAdapter::SCROLL_RIGHT:
+			case GUIEventAdapter::SCROLL_LEFT:
+			case GUIEventAdapter::SCROLL_2D:
+				break;
 			}
 
 
@@ -190,13 +195,13 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 
 				osg::Matrix rotation_matrix(_rotation);
 
-				osg::Vec3 dv = (osg::Vec3(0.0f,0.0f,-1.0f)*rotation_matrix)*(speed*scale);
+				osg::Vec3 dv = (osg::Vec3(0.0f, 0.0f, -1.0f) * rotation_matrix)*(speed*scale);
 
 				_center += dv;
 
 			}
 		}
-
+		break;
 
 	case(GUIEventAdapter::KEYDOWN):
 		if (ea.getKey()== GUIEventAdapter::KEY_Space)
@@ -207,6 +212,7 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 			return true;
 		}
 		return false;
+		break;
 	case(GUIEventAdapter::FRAME):
 		if (_thrown)
 		{
@@ -216,6 +222,7 @@ bool MyTrackballManipulator::handle(const GUIEventAdapter& ea,GUIActionAdapter& 
 	default:
 		return false;
 	}
+	return false;
 }
 
 

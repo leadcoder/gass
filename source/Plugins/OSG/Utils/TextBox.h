@@ -10,7 +10,12 @@
 #include <string>
 using std::string;
 
-#pragma warning(disable:4100)
+
+
+#ifdef _MSC_VER
+  #pragma warning (push)
+  #pragma warning(disable:4100)
+#endif
 #include <osgText/Text>
 #include <osg/Geode>
 #include <osg/Projection>
@@ -62,4 +67,9 @@ private:
   //  The actual osgText object that holds textual data
   osg::ref_ptr <osgText::Text> text;
 };
+
+#ifdef _MSC_VER
+  #pragma warning (pop)
+#endif
+
 #endif

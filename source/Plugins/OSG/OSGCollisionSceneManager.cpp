@@ -169,7 +169,7 @@ namespace GASS
 
 		if (m_Scene->GetGeocentric())
 		{
-			const double r = osg::WGS_84_RADIUS_EQUATOR;
+			//const double r = osg::WGS_84_RADIUS_EQUATOR;
 
 			const Vec3d up_vector = OSGConvert::ToGASS(m_EllipsoidModel.computeLocalUpVector(location.x, -location.z, location.y));
 			double latitude, longitude, height_hae;

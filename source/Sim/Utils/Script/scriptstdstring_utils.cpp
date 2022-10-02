@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 BEGIN_AS_NAMESPACE
 
 // This function takes an input string and splits it into parts by looking
@@ -114,7 +115,7 @@ static void StringJoin_Generic(asIScriptGeneric *gen)
 void RegisterStdStringUtils(asIScriptEngine *engine)
 {
 	int r;
-
+    (void)r;
 	if( strstr(asGetLibraryOptions(), "AS_MAX_PORTABILITY") )
 	{
 		r = engine->RegisterObjectMethod("string", "array<string>@ split(const string &in) const", asFUNCTION(StringSplit_Generic), asCALL_GENERIC); assert(r >= 0);
