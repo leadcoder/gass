@@ -31,7 +31,6 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_VEHICLE "Build Plugin." ON "GASS_BUILD_
 cmake_dependent_option(GASS_BUILD_PLUGIN_INPUT "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_ROADNETWORK "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OSG "Build Plugin." ON "GASS_BUILD_SIM" OFF)
-cmake_dependent_option(GASS_BUILD_PLUGIN_ODE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OIS "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OPENAL "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_RAKNET "Build Plugin." ON "GASS_BUILD_SIM" OFF)

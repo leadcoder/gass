@@ -36,7 +36,6 @@ namespace GASS
 	enum class PhysicsOptions
 	{
 		PHYSX,
-		ODE,
 		NONE
 	};
 

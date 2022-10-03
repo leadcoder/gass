@@ -30,7 +30,6 @@
 #include "Modules/Editor/ToolSystem/RotateTool.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "Modules/Editor/ToolSystem/MeasurementTool.h"
-#include "Modules/Editor/ToolSystem/TerrainDeformTool.h"
 #include "Modules/Editor/ToolSystem/GoToPositionTool.h"
 #include "Modules/Editor/ToolSystem/EditPositionTool.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
@@ -90,8 +89,6 @@ namespace GASS
 		tool = new GoToPositionTool(this);
 		AddTool(tool);
 		tool = new EditPositionTool(this);
-		AddTool(tool);
-		tool = new TerrainDeformTool(this);
 		AddTool(tool);
 		tool = new PaintTool(this);
 		AddTool(tool);

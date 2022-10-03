@@ -226,7 +226,7 @@ namespace GASS
 		return vel;
 	}
 
-	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool relative)
+	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel)
 	{
 		if(m_Actor && m_Active)
 		{
@@ -235,7 +235,7 @@ namespace GASS
 	}
 
 
-	Vec3 PhysXBodyComponent::GetAngularVelocity(bool relative) const
+	Vec3 PhysXBodyComponent::GetAngularVelocity() const
 	{
 		Vec3 vel(0,0,0);
 		if(m_Actor)

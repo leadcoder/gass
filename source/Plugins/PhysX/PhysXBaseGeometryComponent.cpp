@@ -204,7 +204,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXBaseGeometryComponent::SetScale(const Vec3 &value)
+	void PhysXBaseGeometryComponent::SetScale(const Vec3 &/*value*/)
 	{
 
 	}

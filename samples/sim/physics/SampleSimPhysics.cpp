@@ -56,7 +56,7 @@ int _getch() {
 }
 #endif
 
-std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
+std::string CreateVehicleTemplate(GASS::SimEngine* engine)
 {
 	GASS::SceneObjectTemplatePtr vehicle_template(new GASS::SceneObjectTemplate);
 	{
@@ -97,14 +97,7 @@ std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 		GASS::ComponentPtr susp_comp = wheel_template->AddComponent("PhysicsSuspensionComponent");
 		susp_comp->SetPropertyValue<float>("Damping", 8.0f);
 		susp_comp->SetPropertyValue<float>("Strength", 50.0f);
-
-		if (use_ode)
-		{
-			susp_comp->SetPropertyValue<float>("HighStop", 1.0f);
-			susp_comp->SetPropertyValue<float>("LowStop", -1.0f);
-		}
-		else
-			susp_comp->SetPropertyValue<float>("SteerLimit", 1.0f);
+		susp_comp->SetPropertyValue<float>("SteerLimit", 1.0f);
 
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 	}
@@ -362,7 +355,7 @@ public:
 		return true;
 	}
 
-	bool KeyReleased( int key, unsigned int text) override
+	bool KeyReleased( int key, unsigned int /*text*/) override
 	{
  		m_KeyDown[key] = false;
 		return true;
@@ -378,16 +371,7 @@ public:
 
 int main(int/*argc*/, char** /*argv[]*/)
 {
-	//Load plugins
-	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
-	char key = static_cast<char>(_getch());
-	
-	bool use_ode = (key == '1');
-
-
-	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(use_ode ? 
-		GASS::PhysicsOptions::ODE : 
-		GASS::PhysicsOptions::PHYSX);
+	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX);
 
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(config);
@@ -404,7 +388,7 @@ int main(int/*argc*/, char** /*argv[]*/)
 
 	GASS::ScenePtr scene(engine->CreateScene("PhysicsScene"));
 	
-	const auto vehicle_template = CreateVehicleTemplate(engine, use_ode);
+	const auto vehicle_template = CreateVehicleTemplate(engine);
 	const auto box_template = CreateBoxTemplate(engine);
 
 	scene->GetRootSceneObject()->AddChildSceneObject(CreateEnvironment(),true);

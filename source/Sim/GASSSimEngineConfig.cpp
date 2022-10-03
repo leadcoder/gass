@@ -44,6 +44,8 @@ namespace GASS
 						"GASSPluginOSGEarth",
 						"GASSPluginInput",
 						"GASSPluginBase",
+						"GASSPluginRoadNetwork",
+						"GASSPluginRecastNavigation",
 						editor_module_name };
 		if (input == InputOptions::OIS)
 			conf.Plugins.emplace_back("GASSPluginOIS");
@@ -64,6 +66,7 @@ namespace GASS
 		systems.emplace_back("CoreSystem");
 		systems.emplace_back("ControlSettingsSystem");
 		systems.emplace_back("SimulationSystem");
+
 
 		if (physics != PhysicsOptions::NONE)
 		{
