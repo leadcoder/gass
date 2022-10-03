@@ -21,20 +21,24 @@
 #pragma once
 
 #include "Sim/GASSCommon.h"
+#include "Sim/GASSSimSystem.h"
 #include "Sim/GASSPhysicsMaterial.h"
 
 namespace GASS
 {
-	class IMaterialSystem
+	class GASSExport PhysicsMaterialManager
 	{
-		GASS_DECLARE_CLASS_AS_INTERFACE(IMaterialSystem)
 	public:
-		typedef std::map<std::string, PhysicsMaterial> MaterialMap;
-		virtual void LoadMaterialFile(const std::string &file) = 0;
-		virtual void AddMaterial(const PhysicsMaterial& mat) = 0;
-		virtual bool HasMaterial(const std::string material_name) const = 0;
-		virtual PhysicsMaterial GetMaterial(const std::string material_name) const = 0;
-		virtual MaterialMap& GetMaterials() = 0;
+		typedef std::map<std::string, PhysicsMaterial> PhysicsMaterialMap;
+		PhysicsMaterialManager();
+		void LoadMaterialFile(const std::string &file);
+		void AddMaterial(const PhysicsMaterial& mat);
+		bool HasMaterial(const std::string material_name) const;
+		PhysicsMaterial GetMaterial(const std::string material_name) const;
+		PhysicsMaterialMap& GetMaterials() {return m_Materials;}
+		//experimental
+		void LoadGeometryFlagsFile(const std::string &file);
+	private:
+		PhysicsMaterialMap m_Materials;
 	};
-	typedef GASS_SHARED_PTR<IMaterialSystem> MaterialSystemPtr;
 }

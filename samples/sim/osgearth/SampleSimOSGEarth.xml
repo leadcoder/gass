@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GASS>
 	<Plugins>
-		<!-- load all from path-->
-		<!--<Directory Path = "GASSPlugins"/>-->
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
 		<Plugin PluginFile = "GASSPluginInput"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSEditorModule"/>
 	</Plugins>
-	
-	<ScenePath value="%GASS_DATA_HOME%/sceneries"/>
 	<ResourceManager>
 		<ResourceGroup name="GASS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/engine"  type="FileSystem" recursive="true"/>
@@ -23,7 +19,6 @@
 		<ObjectIDSufix value="]"/>
 	</SceneObjectTemplateManager>
 	<Systems>
-		<MaterialSystem/>
 		<EditorSystem>
 			<LockTerrainObjects value="false"/> 
 		</EditorSystem>
@@ -48,12 +43,4 @@
 		<OSGEarthGraphicsSystem>
 		</OSGEarthGraphicsSystem>
 	</Systems>
-	<RTC>
-		<NumberOfThreads value="1"/>
-		<!-- -1 == auto-->
-		<MaxUpdateFreqency value="-1"/>
-		<!-- -1 == not max update freq-->
-		<ExternalSimulationUpdate value="false"/>
-		<!-- let application trigger simulation updates PARALLEL-->
-	</RTC>
 </GASS>

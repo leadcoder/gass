@@ -19,7 +19,6 @@
 *****************************************************************************/
 
 #include "PhysXPhysicsSystem.h"
-#include "Sim/Interface/GASSIMaterialSystem.h"
 #include "Core/Serialize/tinyxml2.h"
 
 using namespace physx;
@@ -87,6 +86,9 @@ namespace GASS
 	PxGASSErrorCallback my_error_callback;
 	void PhysXPhysicsSystem::OnSystemInit()
 	{
+		//Load Materials
+		m_MaterialManager.LoadMaterialFile(FilePath("%GASS_DATA_HOME%/engine/config/physics_materials.xml").GetFullPath());
+
 		GeometryFlagManager::LoadGeometryFlagsFile(FilePath("%GASS_DATA_HOME%/engine/config/physics_collision_settings.xml").GetFullPath());
 		bool record_memory_allocations = false;
 		m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_DefaultAllocator, my_error_callback);
@@ -112,8 +114,7 @@ namespace GASS
 		PxInitVehicleSDK(*m_PhysicsSDK);
 
 		//Create physx materials
-		MaterialSystemPtr mat_system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IMaterialSystem>();
-		IMaterialSystem::MaterialMap materials = mat_system->GetMaterials();
+		auto& materials = m_MaterialManager.GetMaterials();
 		auto iter = materials.begin();
 		while(iter != materials.end())
 		{

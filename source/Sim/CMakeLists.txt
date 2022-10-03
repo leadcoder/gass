@@ -24,6 +24,7 @@ set(CPP_FILES
 	GASSGeometryFlags.cpp
 	GASSGraphicsMesh.cpp
 	GASSPhysicsMesh.cpp
+	GASSPhysicsMaterialManager.cpp
 	GASSPlatformType.cpp
 	GASSResource.cpp
 	GASSResourceGroup.cpp
@@ -67,6 +68,7 @@ set(H_FILES
 	GASSGraphicsMaterial.h
 	GASSGraphicsMesh.h
 	GASSPhysicsMaterial.h
+	GASSPhysicsMaterialManager.h
 	GASSPhysicsMesh.h
 	GASSPlatformDetectionData.h
 	GASSPlatformTeam.h
@@ -113,7 +115,6 @@ set(H_FILES
 	Interface/GASSIManualMeshComponent.h
 	Interface/GASSIMapCameraComponent.h
 	Interface/GASSIMapComponent.h
-	Interface/GASSIMaterialSystem.h
 	Interface/GASSIMeshComponent.h
 	Interface/GASSIMissionSceneManager.h
 	Interface/GASSIMissionSystem.h

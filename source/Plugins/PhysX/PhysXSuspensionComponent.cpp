@@ -99,7 +99,7 @@ namespace GASS
 
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
-		float slack = 0.01;
+		float slack = 0.01f;
 		m_SuspensionJoint->setLinearLimit(physx::PxJointLinearLimit(slack,physx::PxSpring(m_Strength, m_Damping)));
 		
 		physx::PxD6JointDrive steer_drive(m_SteerJointSpring, m_SteerJointDamping, m_MaxSteerTorque, false);

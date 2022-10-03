@@ -67,7 +67,6 @@ namespace GASS
 
 		if (physics != PhysicsOptions::NONE)
 		{
-			systems.emplace_back("MaterialSystem"); //must be listed before physics system
 			systems.emplace_back(physics == PhysicsOptions::PHYSX ? "PhysXPhysicsSystem" : "ODEPhysicsSystem");
 		}
 		

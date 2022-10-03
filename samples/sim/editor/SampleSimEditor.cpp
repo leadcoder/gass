@@ -225,7 +225,7 @@ int start(int argc, char* argv[])
 		engine->Init(config);
 
 		engine->GetSceneObjectTemplateManager()->Load(GASS::FilePath("%GASS_DATA_HOME%/engine/templates/road_network.template").GetFullPath());
-		engine->GetSceneObjectTemplateManager()->Load(GASS::FilePath("%GASS_DATA_HOME%/engine/templates/navigation_mesh.template").GetFullPath());
+		engine->GetSceneObjectTemplateManager()->Load(GASS::FilePath("%GASS_DATA_HOME%/engine/templates/recast_navigation.template").GetFullPath());
 
 		CreateTemps();
 		//Get graphic system and create one main rendering window
