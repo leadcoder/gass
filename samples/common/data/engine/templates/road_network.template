@@ -2,7 +2,7 @@
 <Templates>
 	<SceneObjectTemplate>
 		<Name value="RNRoadNode"/>
-		<Instantiable value="true"/>
+		<Instantiable value="false"/>
 		<Serialize value="false"/>
 		<Components>
 			<RNRoadNodeComponent>
@@ -11,7 +11,7 @@
 			</LocationComponent>
 			<BillboardComponent>
 				<Name value="NodeGeom"/>
-				<Material value="default.dds"/>
+				<Material value="node.png"/>
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>
@@ -19,7 +19,7 @@
 	</SceneObjectTemplate>
 	<SceneObjectTemplate>
 		<Name value="RNRoadEdge"/>
-		<Instantiable value="true"/>
+		<Instantiable value="false"/>
 		<Serialize value="false"/>
 		<Components>
 			<RNRoadEdgeComponent>
@@ -39,7 +39,7 @@
 			</LocationComponent>
 			<BillboardComponent>
 				<Name value="NodeGeom"/>
-				<Material value="default.dds"/>
+				<Material value="node.png"/>
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>

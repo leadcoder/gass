@@ -42,7 +42,7 @@
 	  </BoxGeometryComponent>-->
 			<BillboardComponent>
 				<Name value="NodeGeom"/>
-				<Material value="node.dds"/>
+				<Material value="node.png"/>
 				<Width value="0.4"/>
 				<Height value="0.4"/>
 			</BillboardComponent>
