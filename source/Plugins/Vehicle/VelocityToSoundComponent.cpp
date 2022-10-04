@@ -98,8 +98,8 @@ namespace GASS
 		auto sound = GetSceneObject()->GetFirstComponentByClass<ISoundComponent>();
 		if (sound)
 		{
-			sound->SetPitch(m_Pitch);
-			sound->SetVolume(m_Volume);
+			sound->SetPitch((float) m_Pitch);
+			sound->SetVolume((float) m_Volume);
 		}
 		//reset!
 		m_MaxVelRequest = 0;

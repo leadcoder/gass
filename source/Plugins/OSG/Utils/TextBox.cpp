@@ -76,7 +76,7 @@ void TextBox::setPosition(osg::Vec3d position)
     text->setPosition(position);
 }
 
-void TextBox::setTextSize(unsigned int size)
+void TextBox::setTextSize(float size)
 {
     text->setCharacterSize(size);
 }

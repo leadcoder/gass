@@ -43,7 +43,7 @@ public:
   //  of the wcreen; thus, any positive values for the osg::Vec3d 
   //  will offset the text to the right and/or up.
   void setPosition(osg::Vec3d position);
-  void setTextSize(unsigned int size);
+  void setTextSize(float size);
     
   osg::ref_ptr <osg::Group> getGroup() const;
     

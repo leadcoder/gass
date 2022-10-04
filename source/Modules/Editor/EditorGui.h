@@ -548,7 +548,7 @@ namespace GASS
 									filterPatterns.push_back(exts[i].c_str());
 								}
 								char const* const* const filterptr = filterPatterns.empty() ? nullptr : &filterPatterns[0];
-								if (char const* fileToLoad = tinyfd_openFileDialog("Import File", "", filterPatterns.size(), filterptr, nullptr, 0))
+								if (char const* fileToLoad = tinyfd_openFileDialog("Import File", "", (int) filterPatterns.size(), filterptr, nullptr, 0))
 								{
 									prop->SetValueByString(obj, std::string(fileToLoad));
 								}

@@ -285,7 +285,7 @@ namespace GASS
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
 	}
 
-	void OSGGraphicsSceneManager::OnUpdate(double delta_time)
+	void OSGGraphicsSceneManager::OnUpdate(double /*delta_time*/)
 	{
 		m_DebugDraw->Clear();
 	}
