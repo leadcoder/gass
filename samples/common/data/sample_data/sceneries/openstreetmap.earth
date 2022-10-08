@@ -17,11 +17,11 @@
     <options>
         <lighting>true</lighting>
         <terrain>
-            <min_tile_range_factor>14</min_tile_range_factor>
+            <min_tile_range_factor>4</min_tile_range_factor>
         </terrain>
 		
     </options>
-	<sky hours="20.0" atmospheric_lighting="true" ambient="0.3"/>
+	<!--<sky hours="20.0" atmospheric_lighting="true" ambient="0.3" quality="high"/>-->
 	<viewpoints>
 		<viewpoint>
 			<heading>8.806974516644791</heading>

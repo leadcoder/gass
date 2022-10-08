@@ -124,6 +124,7 @@ namespace GASS
 														osg::Vec3(static_cast<float>(up.x), static_cast<float>(up.y), static_cast<float>(up.z)),
 														osgDB::readImageFile(full_path,options));
 
+		
 		m_OSGBillboard->addDrawable(geom);
 		m_Geom = geom.get();
 
@@ -134,11 +135,11 @@ namespace GASS
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
-		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
-		Material::SetLighting(nodess, osg::StateAttribute::OFF);
-		//if (!m_CastShadow) //protect from shadow shader override
-		//	nodess->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
-
+		auto material = new SimpleMaterial();
+		m_OSGBillboard->setStateSet(material);
+		//osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
+		Material::SetLighting(material, osg::StateAttribute::OFF);
+	
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));

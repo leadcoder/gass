@@ -377,6 +377,20 @@ namespace GASS
 		//m_Lighting->attach(m_MapNode->getOrCreateStateSet());
 
 		m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+		if (!m_SkyNode && m_AddSky)
+		{
+			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
+			sky_options.atmosphericLighting() = true;
+			sky_options.quality() = osgEarth::SkyOptions::QUALITY_HIGH;
+			sky_options.contrast() = m_SkyContrast;
+			sky_options.exposure() = m_SkyExposure;
+			sky_options.daytimeAmbientBoost() = m_SkyAmbientBoost;
+			sky_options.atmosphereVisible() = true;
+			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
+			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
+			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+			SetTimeOfDay(m_Hour);
+		}
 		if (m_SkyNode)
 		{
 			//set default year/month and day to get good lighting
@@ -446,27 +460,7 @@ namespace GASS
 			}
 		}
 
-		if (!m_SkyNode && m_AddSky)
-		{
-			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
-			sky_options.atmosphericLighting() = false;
-			sky_options.quality() = osgEarth::SkyOptions::QUALITY_MEDIUM;
-			sky_options.contrast() = m_SkyContrast;
-			sky_options.exposure() = m_SkyExposure;
-			sky_options.daytimeAmbientBoost() = m_SkyAmbientBoost;
-			sky_options.atmosphereVisible() = true;
-			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
-			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
-			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
-			SetTimeOfDay(m_Hour);
-		}
-
-		if (m_SkyNode) //reflect our settings
-		{
-			//SetSkyExposure(m_SkyExposure);
-			//SetSkyContrast(m_SkyContrast);
-			//SetSkyAmbientBoost(m_SkyAmbientBoost);
-		}
+		
 
 		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
 		view->setLightingMode(osg::View::SKY_LIGHT);
@@ -528,6 +522,7 @@ namespace GASS
 				m_ShadowCaster->setLight(view->getLight());
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getLayerNodeGroup());
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getTerrainEngine()->getNode());
+				m_ShadowCaster->setTraversalMask(NM_CAST_SHADOWS);
 				if (object_root)
 					m_ShadowCaster->getShadowCastingGroup()->addChild(object_root);
 				

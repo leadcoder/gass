@@ -64,8 +64,8 @@
                             <ShadowRanges value="0 100 250"/>
                             <ShadowColor value="0"/>
                             <VisibleMapLayers value="OSM Imagery"/>
-                            <AddSky value="false"/>
-                            <IsRoot value="false"/>
+                            <AddSky value="true"/>
+                            <IsRoot value="true"/>
                             <Name value="OSGEarthMapComponent"/>
                         </OSGEarthMapComponent>
                     </Components>

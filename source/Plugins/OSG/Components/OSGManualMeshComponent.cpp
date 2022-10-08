@@ -71,9 +71,6 @@ namespace GASS
 		osg::ref_ptr<osg::Point> point(new osg::Point(8.0f));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON);
 
-		//m_GeoNode->setNodeMask(NM_CAST_SHADOWS | m_GeoNode->getNodeMask());
-		//m_GeoNode->setNodeMask(NM_RECEIVE_SHADOWS | m_GeoNode->getNodeMask());
-
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
 
@@ -206,16 +203,17 @@ namespace GASS
 	osg::ref_ptr<osg::Geometry>  OSGManualMeshComponent::CreateSubMesh(GraphicsSubMeshPtr sm)
 	{
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry();
+		auto material = new SimpleMaterial();
 
 		if (sm->MaterialName != "" && m_GFXSystem && m_GFXSystem->HasMaterial(sm->MaterialName))
 		{
-			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(sm->MaterialName);
-			geom->setStateSet(state_set);
+			material->merge(*m_GFXSystem->GetStateSet(sm->MaterialName));
 		}
 		else if (sm->MaterialConfig)
 		{
-			geom->setStateSet(Material::CreateFromConfig(sm->MaterialConfig.get()));
+			material->merge(*Material::CreateFromConfig(sm->MaterialConfig.get()));
 		}
+		geom->setStateSet(material);
 
 		osg::PrimitiveSet::Mode op;
 		switch (sm->Type)
@@ -388,27 +386,27 @@ namespace GASS
 	{
 		if (material_name != "" && m_GFXSystem && m_GFXSystem->HasMaterial(material_name))
 		{
-			osg::ref_ptr<osg::StateSet> state_set = m_GFXSystem->GetStateSet(material_name);
+			auto material = new SimpleMaterial();
+			material->merge(*m_GFXSystem->GetStateSet(material_name));
 			if (sub_mesh_index >= 0)
 			{
 				if (sub_mesh_index < static_cast<int>(m_OSGGeometries.size()))
-					m_OSGGeometries[sub_mesh_index]->setStateSet(state_set);
+					m_OSGGeometries[sub_mesh_index]->setStateSet(material);
 			}
 			else
 			{
 				for (size_t i = 0; i < m_OSGGeometries.size(); i++)
 				{
-					m_OSGGeometries[i]->setStateSet(state_set);
+					m_OSGGeometries[i]->setStateSet(material);
 				}
 			}
 		}
 	}
 
-	
-
 	void OSGManualMeshComponent::SetSubMeshMaterial(IGfxMaterialConfig* config, int sub_mesh_index)
 	{
-		osg::ref_ptr<osg::StateSet> material = Material::CreateFromConfig(config);
+		auto material = new SimpleMaterial();
+		material->merge(*Material::CreateFromConfig(config));
 		if (sub_mesh_index >= 0)
 		{
 			if (sub_mesh_index < static_cast<int>(m_OSGGeometries.size()))

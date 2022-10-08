@@ -45,6 +45,7 @@ namespace GASS
 		{
 			ss->setMode(GL_LIGHTING, osg::StateAttribute::ON);
 			ss->setDefine("OSG_LIGHTING", value);
+			ss->setDefine("OE_LIGHTING", value);
 		}
 
 		inline void SetCastShadows(osg::StateSet* ss, osg::StateAttribute::Values value)

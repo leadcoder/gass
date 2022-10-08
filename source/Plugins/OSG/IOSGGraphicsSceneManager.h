@@ -24,7 +24,6 @@
 
 namespace GASS
 {
-
 	class IOSGGraphicsSceneManager
 	{
 	public:
