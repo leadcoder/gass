@@ -1,11 +1,18 @@
 <map name="OpenStreetMap">
 
-	<XYZImage name="OSM Imagery">
+	<!--<XYZImage name="OSM Imagery">
         <url>http://[abc].tile.openstreetmap.org/{z}/{x}/{y}.png</url>
         <profile>spherical-mercator</profile>
         <cache_policy usage="none"/>
         <attribution>&#169;OpenStreetMap contributors</attribution>
-    </XYZImage>
+    </XYZImage>-->
+	
+	<detail>
+        <image>../../engine/3dmodels/checker.png</image>
+        <lod>16</lod>
+        <max_range>6000000</max_range>
+        <attenuation>20</attenuation>
+    </detail>
     
     <options>
         <lighting>true</lighting>

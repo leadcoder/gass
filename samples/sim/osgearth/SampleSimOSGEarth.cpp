@@ -79,14 +79,6 @@ int run(int /*argc*/, char** /*argv[]*/)
 	//Load pre-build scene from data folder
 	scene->Load(GASS::FilePath("%GASS_DATA_HOME%/sample_data/sceneries/osgearth_demo.scene"));
 	scene->GetOrCreateCamera();
-	
-	//Create vehicle and add it to the root node of the scene
-	//GASS::SceneObjectPtr vehicle_obj = engine->CreateObjectFromTemplate("PXTank");
-	//scene->GetRootSceneObject()->AddChildSceneObject(vehicle_obj, true);
-
-	//Set start position
-	//GASS::Vec3 pos = scene->GetStartPos();
-	//vehicle_obj->SendImmediateRequest(GASS::WorldPositionRequestPtr(new GASS::WorldPositionRequest(pos)));
 
 	//Update the engine forever
 	bool running = true;

@@ -34,6 +34,7 @@
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
+#include "Sim/Interface/GASSIMapCameraComponent.h"
 #include "Sim/Messages/GASSCoreSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneMessages.h"
 #include "Sim/Messages/GASSGraphicsSceneObjectMessages.h"
@@ -471,6 +472,12 @@ namespace GASS
 		camera->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(GetStartPos());
 		camera->GetFirstComponentByClass<ILocationComponent>()->SetWorldRotation(rot);
 		camera->GetFirstComponentByClass<ICameraComponent>()->ShowInViewport();
+
+		if (auto maip_comp = camera->GetFirstComponentByClass<IMapCameraComponent>())
+		{
+			maip_comp->SetPosition(GetStartPos());
+			maip_comp->SetRotation(rot);
+		}
 		m_Camera = camera;
 		return camera;
 	}

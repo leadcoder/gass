@@ -3,6 +3,9 @@
 	<Plugins>
 		<Plugin PluginFile = "GASSPluginOSG"/>
 		<Plugin PluginFile = "GASSPluginOSGEarth"/>
+		<Plugin PluginFile = "GASSPluginPhysX"/>
+		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
+		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
 		<Plugin PluginFile = "GASSPluginInput"/>
 		<Plugin PluginFile = "GASSPluginBase"/>
 		<Plugin PluginFile = "GASSEditorModule"/>
@@ -10,7 +13,7 @@
 	<ResourceManager>
 		<ResourceGroup name="GASS">
 			<ResourceLocation  path="%GASS_DATA_HOME%/engine"  type="FileSystem" recursive="true"/>
-			<ResourceLocation  path="%GASS_DATA_HOME%/sample_data" type="FileSystem" recursive="true"/>
+			<!--<ResourceLocation  path="%GASS_DATA_HOME%/sample_data" type="FileSystem" recursive="true"/>-->
 		</ResourceGroup>
 	</ResourceManager>
 	<SceneObjectTemplateManager>

@@ -59,7 +59,7 @@
                             <SkyLighting value="true"/>
                             <SkyHazeCutoff value="0.5"/>
                             <SkyHazeStrength value="50"/>
-                            <ShadowEnabled value="false"/>
+                            <ShadowEnabled value="true"/>
                             <ShadowBlur value="0.001"/>
                             <ShadowRanges value="0 100 250"/>
                             <ShadowColor value="0"/>

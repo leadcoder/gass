@@ -369,7 +369,7 @@ namespace GASS
 			m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
 		}
 
-		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 	
 		//if no sky is present (projected mode) but we still want get terrain lightning  
 		//m_Lighting = new osgEarth::PhongLightingEffect();
@@ -381,7 +381,6 @@ namespace GASS
 		{
 			//set default year/month and day to get good lighting
 			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
-			
 		}
 
 		
@@ -451,7 +450,11 @@ namespace GASS
 		{
 			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
 			sky_options.atmosphericLighting() = false;
-			
+			sky_options.quality() = osgEarth::SkyOptions::QUALITY_MEDIUM;
+			sky_options.contrast() = m_SkyContrast;
+			sky_options.exposure() = m_SkyExposure;
+			sky_options.daytimeAmbientBoost() = m_SkyAmbientBoost;
+			sky_options.atmosphereVisible() = true;
 			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
 			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
 			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
@@ -499,12 +502,14 @@ namespace GASS
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 
 		osg::Group* object_root = nullptr;
-		if (m_IsRoot)
+		//if (m_IsRoot)
 		{
 			object_root = new osg::Group();
-			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_UNKNOWN, object_root);
-
-			m_MapNode->addChild(object_root);
+			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_ALL, object_root);
+			if(m_IsRoot)
+				m_MapNode->addChild(object_root);
+			else 
+				root->addChild(object_root);
 			osg_sm->SetMapNode(object_root);
 		}
 
@@ -525,6 +530,7 @@ namespace GASS
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getTerrainEngine()->getNode());
 				if (object_root)
 					m_ShadowCaster->getShadowCastingGroup()->addChild(object_root);
+				
 				if (m_MapNode->getNumParents() > 0)
 				{
 					osgEarth::insertGroup(m_ShadowCaster, m_MapNode->getParent(0));

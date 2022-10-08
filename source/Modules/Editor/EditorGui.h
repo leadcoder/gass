@@ -177,13 +177,6 @@ namespace GASS
 							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
 							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
 						}
-						//m_SceneSelected = nullptr;
-						//auto scene = GetFirstScene();
-						//if (scene)
-						//	SimEngine::Get().DestroyScene(scene);
-						//scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
-						//scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
-						//scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
 					}
 
 					if (ImGui::MenuItem("Load Scene..."))
@@ -193,9 +186,6 @@ namespace GASS
 						{
 							m_SceneSelected = nullptr;
 							auto scene = GetFirstScene();
-							//if (scene)
-							//	SimEngine::Get().DestroyScene(scene);
-							//scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
 							scene->Load(FilePath(fileToSave));
 							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
 							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
@@ -424,9 +414,6 @@ namespace GASS
 						OnAddWaypoint(so);
 					}
 				}
-
-
-
 
 				ImGui::EndPopup();
 
