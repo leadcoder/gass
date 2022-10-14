@@ -35,10 +35,6 @@ namespace GASS
 		NetworkOptions network,
 		InputOptions input)
 	{
-		std::string editor_module_name = "GASSEditorModule";
-#ifndef WIN32
-		editor_module_name = "lib" + editor_module_name;
-#endif
 		SimEngineConfig conf;
 		conf.Plugins = {"GASSPluginOSG",
 						"GASSPluginOSGEarth",
@@ -46,7 +42,7 @@ namespace GASS
 						"GASSPluginBase",
 						"GASSPluginRoadNetwork",
 						"GASSPluginRecastNavigation",
-						editor_module_name };
+						"GASSEditorModule"};
 		if (input == InputOptions::OIS)
 			conf.Plugins.emplace_back("GASSPluginOIS");
 		if (sound == SoundOptions::OPENAL)

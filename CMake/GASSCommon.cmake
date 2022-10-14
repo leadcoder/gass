@@ -110,6 +110,7 @@ macro(gass_setup_module _MODULE_NAME)
 					SKIP_HEADER_INSTALL )
 	target_link_libraries(${_MODULE_NAME} PRIVATE GASSSim)
 	set_target_properties(${_MODULE_NAME} PROPERTIES FOLDER "Modules")
+	set_target_properties(${_MODULE_NAME} PROPERTIES PREFIX "")
 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${GASS_INSTALL_INCLUDE_DIR}/modules FILES_MATCHING PATTERN "*.h")
 endmacro()
 
@@ -262,9 +263,13 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 	
 	#copy configurations to enable execution from build folder
 	if(EXISTS ${SAMPLE_CONFIG})
-		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
-		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
-		file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		if(MSVC)
+			file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/release)
+			file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
+			file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/debug)
+		else()
+			file(COPY ${SAMPLE_CONFIG} DESTINATION  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+		endif()
 	endif()
 
 	#install executable
