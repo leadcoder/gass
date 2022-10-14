@@ -1,0 +1,48 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 22,
+    "patch": 1
+  },
+  
+  "configurePresets": [
+    {
+      "name": "default",
+      "hidden" : true,
+      "displayName": "Linux Config",
+      "description": "Linux build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-linux-dynamic",
+        "GASS_BUILD_PLUGIN_OIS": false,
+        "GASS_BUILD_PLUGIN_RAKNET": false,
+        "GASS_BUILD_PLUGIN_OSGEARTH": true,
+        "GASS_BUILD_SIM_SAMPLES": true
+      },
+      "environment": {
+        "name": "GASS_DATA_HOME",
+              "value": "${workspaceFolder}/samples/common/data/"
+      }
+    },
+    {
+      "name": "Linux Release",
+      "inherits": "default",
+      "displayName": "Linux Release Config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }      
+    },
+    {
+      "name": "Linux Debug",
+      "inherits": "default",
+      "displayName": "Linux Debug Config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ] 
+}
+
