@@ -99,7 +99,6 @@ namespace GASS
 		bool GetEnabled() const override
 		{
 			return m_Layer->isOpen();
-			//return m_Layer->getEnabled();
 		}
 
 		void SetEnabled(bool value) override
@@ -129,6 +128,20 @@ namespace GASS
 			else if (dynamic_cast<osgEarth::FeatureModelLayer*>(m_Layer))
 				layer_type = MLT_FEATURE_MODEL;
 			return layer_type;
+		}
+
+		void SetOpacity(float value) override
+		{
+			if (auto image = dynamic_cast<osgEarth::ImageLayer*>(m_Layer))
+				image->setOpacity(value);
+		}
+
+		float GetOpacity() const override
+		{
+			float value = 1.0f;
+			if (auto image = dynamic_cast<osgEarth::ImageLayer*>(m_Layer))
+				value = image->getOpacity();
+			return value;
 		}
 
 		int GetUID() const override

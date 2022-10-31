@@ -44,6 +44,8 @@ namespace GASS
 		virtual void SetEnabled(bool value) = 0;
 		virtual MapLayerType GetType() const = 0;
 		virtual int GetUID() const = 0;
+		virtual void SetOpacity(float value) = 0;
+		virtual float GetOpacity() const = 0;
 	};
 
 	typedef std::unique_ptr<IMapLayer> MapLayerPtr;
