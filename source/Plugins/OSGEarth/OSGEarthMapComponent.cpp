@@ -511,6 +511,7 @@ namespace GASS
 		osg::Group* object_root = nullptr;
 		//if (m_IsRoot)
 		{
+			osg_sm->SetMapIsRoot(m_IsRoot);
 			object_root = new osg::Group();
 			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_ALL, object_root);
 			if(m_IsRoot)

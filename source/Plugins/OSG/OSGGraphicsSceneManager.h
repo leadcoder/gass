@@ -51,6 +51,8 @@ namespace GASS
 		osg::ref_ptr<osg::Group> GetOSGRootNode() override { return m_RootNode; }
 		void SetMapNode(osg::Group* node) override { m_MapNode = node; }
 		osg::Group* GetMapNode() const override { return m_MapNode; }
+		void SetMapIsRoot(bool value) { m_MapIsRoot = value; }
+		bool GetMapIsRoot() const { return m_MapIsRoot; }
 		osg::ref_ptr<osg::Group> GetOSGShadowRootNode() override
 		{
 			if (m_ShadowRootNode.valid())
@@ -115,6 +117,7 @@ namespace GASS
 		osg::ref_ptr<OSGDebugDraw> m_DebugDraw;
 		osg::ref_ptr<osg::Fog> m_Fog;
 		osg::ref_ptr<osg::LightModel> m_LightModel;
+		bool m_MapIsRoot = false;
 	};
 	using OSGGraphicsSceneManagerPtr = std::shared_ptr<OSGGraphicsSceneManager>;
 	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;

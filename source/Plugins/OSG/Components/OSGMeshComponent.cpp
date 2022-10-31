@@ -252,7 +252,7 @@ namespace GASS
 
 		auto osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 
-		if(osg_sm->GetMapNode())
+		if(osg_sm->GetMapIsRoot() && osg_sm->GetMapNode())
 			m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name + ".osgearth_shadergen", options);
 		else
 			m_MeshNode = (osg::Group*)osgDB::readNodeFile(file_name, options);
