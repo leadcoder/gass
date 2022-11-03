@@ -50,14 +50,21 @@ namespace GASS
 		//IMapComponent
 		std::vector<std::string> GetViewpointNames() const override;
 		void SetViewpointByName(const std::string& viewpoint_name) override;
-
 		std::vector<std::string> GetMapLayerNames() const;
 		const MapLayers& GetMapLayers() const override;
-
 		double GetTimeOfDay() const override { return m_Hour; }
 		void SetTimeOfDay(double time) override;
 		float GetMinimumAmbient() const override;
 		void SetMinimumAmbient(float value) override;
+		void SetSkyLighting(bool value) override;
+		bool GetSkyLighting() const override;
+		void SetShadowEnabled(bool value) override;
+		bool GetShadowEnabled() const override { return m_ShadowEnabled; }
+
+		void SetEarthFile(const ResourceHandle &earth_file) override;
+		ResourceHandle GetEarthFile() const override { return m_EarthFile; }
+		//IMapComponent end
+
 		float GetSkyExposure() const;
 		void SetSkyExposure(float value);
 		float GetSkyContrast() const;
@@ -65,11 +72,6 @@ namespace GASS
 		float GetSkyAmbientBoost() const;
 		void SetSkyAmbientBoost(float value);
 
-		void SetSkyLighting(bool value);
-		bool GetSkyLighting() const;
-		void SetEarthFile(const ResourceHandle &earth_file) override;
-		ResourceHandle GetEarthFile() const override { return m_EarthFile; }
-		//IMapComponent end
 
 		void OnTileAdded(
 			const osgEarth::TileKey&          key,
@@ -77,8 +79,7 @@ namespace GASS
 			osgEarth::TerrainCallbackContext& context);
 		void OnMapModelChanged(const osgEarth::MapModelChange& change);
 
-		void SetShadowEnabled(bool value);
-		bool GetShadowEnabled() const { return m_ShadowEnabled; }
+		
 		void SetShadowBlur(float value);
 		float GetShadowBlur() const { return m_ShadowBlur; }
 		void SetShadowColor(float value);

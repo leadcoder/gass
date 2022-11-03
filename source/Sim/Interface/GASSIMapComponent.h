@@ -62,6 +62,11 @@ namespace GASS
 		virtual void SetTimeOfDay(double time) = 0;
 		virtual float GetMinimumAmbient() const = 0;
 		virtual void SetMinimumAmbient(float value) = 0;
+		virtual void SetSkyLighting(bool value) = 0;
+		virtual bool GetSkyLighting() const = 0;
+		virtual void SetShadowEnabled(bool value) = 0;
+		virtual bool GetShadowEnabled() const = 0;
+
 		virtual void SetEarthFile(const ResourceHandle &earth_file) = 0;
 		virtual ResourceHandle GetEarthFile() const = 0;
 	};

@@ -537,7 +537,7 @@ namespace GASS
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getLayerNodeGroup());
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getTerrainEngine()->getNode());
 				m_ShadowCaster->setTraversalMask(NM_CAST_SHADOWS);
-				if (object_root)
+				if (m_IsRoot && object_root)
 					m_ShadowCaster->getShadowCastingGroup()->addChild(object_root);
 				
 				if (m_MapNode->getNumParents() > 0)
@@ -737,6 +737,8 @@ namespace GASS
 		if (m_SkyNode)
 		{
 			m_SkyNode->setLighting(value);
+			const auto state_mode = osg::StateAttribute::OVERRIDE | (value ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
+			osgEarth::GLUtils::setLighting(m_MapNode->getOrCreateStateSet(), state_mode);
 		}
 	}
 
