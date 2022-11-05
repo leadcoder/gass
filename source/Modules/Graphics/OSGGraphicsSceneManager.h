@@ -41,6 +41,7 @@ namespace GASS
 		virtual ~OSGGraphicsSceneManager() {};
 		virtual osg::Group* GetObjectGroup() = 0;
 		virtual osg::ref_ptr<osg::Group> GetOSGRootNode() = 0;
+		virtual void PostProcess(osg::Node*) {};
 	private:
 	};
 	using OSGGraphicsSceneManagerPtr = std::shared_ptr<OSGGraphicsSceneManager>;

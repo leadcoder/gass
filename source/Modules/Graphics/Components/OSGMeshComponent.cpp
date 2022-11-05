@@ -256,7 +256,7 @@ namespace GASS
 		//	m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name + ".osgearth_shadergen", options);
 		//else
 		m_MeshNode = (osg::Group*)osgDB::readNodeFile(file_name, options);
-		//osg_sm->PostProcess(m_MeshNode.get());
+		osg_sm->PostProcess(m_MeshNode.get());
 
 		if( ! m_MeshNode)
 		{

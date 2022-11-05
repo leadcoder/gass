@@ -181,6 +181,7 @@ namespace GASS
 
 	OSGEarthGraphicsSceneManager::OSGEarthGraphicsSceneManager(SceneWeakPtr scene) : Reflection(scene)
 	{
+		m_ShadowRanges = { 100.0f, 200.0f, 400.0f};
 	}
 
 	void OSGEarthGraphicsSceneManager::LoadXML(tinyxml2::XMLElement* elem)
@@ -279,6 +280,12 @@ namespace GASS
 	void OSGEarthGraphicsSceneManager::OnSceneShutdown()
 	{
 
+	}
+
+	void OSGEarthGraphicsSceneManager::PostProcess(osg::Node* node)
+	{
+		if(m_MapIsRoot)
+			osgEarth::Registry::shaderGenerator().run(node);
 	}
 
 	void OSGEarthGraphicsSceneManager::DrawLine(const Vec3 &, const Vec3 &, const ColorRGBA &, const ColorRGBA &)
@@ -907,6 +914,8 @@ namespace GASS
 		if (m_SkyNode)
 		{
 			m_SkyNode->setLighting(value);
+			const auto state_mode = osg::StateAttribute::OVERRIDE | (value ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
+			osgEarth::GLUtils::setLighting(m_MapNode->getOrCreateStateSet(), state_mode);
 		}
 	}
 

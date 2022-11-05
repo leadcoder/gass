@@ -28,7 +28,7 @@ namespace GASS
 		void OnSceneShutdown() override;
 		void OnUpdate(double delta) override;
 		bool GetSerialize() const override { return true; }
-		
+		void PostProcess(osg::Node* node) override;
 		void DrawLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) override;
 		osg::ref_ptr<osg::Group> GetOSGRootNode() override
 		{ 
