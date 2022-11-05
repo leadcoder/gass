@@ -30,12 +30,11 @@ cmake_dependent_option(GASS_BUILD_PLUGIN_RECASTNAVIGATION "Build Plugin." ON "GA
 cmake_dependent_option(GASS_BUILD_PLUGIN_VEHICLE "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_INPUT "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_ROADNETWORK "Build Plugin." ON "GASS_BUILD_SIM" OFF)
-cmake_dependent_option(GASS_BUILD_PLUGIN_OSG "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OIS "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_OPENAL "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_RAKNET "Build Plugin." ON "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_PLUGIN_PHYSX "Build Plugin." ON "GASS_BUILD_SIM" OFF)
-cmake_dependent_option(GASS_BUILD_PLUGIN_OSGEARTH "Build Plugin" OFF "GASS_BUILD_SIM;GASS_BUILD_PLUGIN_OSG" OFF)
+cmake_dependent_option(GASS_BUILD_MODULE_OSGEARTH "Build osgEarth Module" OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_SIM_SAMPLES "Build Sim Samples" OFF "GASS_BUILD_SIM" OFF)
 cmake_dependent_option(GASS_BUILD_GASSED "Build GASSEd" OFF "GASS_BUILD_SIM" OFF)
 
