@@ -33,10 +33,9 @@ namespace GASS
 	void CreateTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr obj_under_cursor =info.m_ObjectUnderCursor.lock();
 
 		SceneObjectPtr parent_obj = m_ParentObject.lock();
-		if(obj_under_cursor && parent_obj)
+		if(info.m_HasCollision && parent_obj)
 		{
 			if (!parent_obj->GetScene())
 				GASS_EXCEPT(Exception::ERR_INTERNAL_ERROR, "Failed to get scene from parent", "MouseToolController::MouseDown");

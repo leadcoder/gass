@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GASS>
 	<Plugins>
-		<Plugin PluginFile = "GASSPluginOSG"/>
-		<Plugin PluginFile = "GASSPluginOSGEarth"/>
+		<Plugin PluginFile = "GASSModuleOSG"/>
+		<Plugin PluginFile = "GASSModuleOSGEarth"/>
 		<Plugin PluginFile = "GASSPluginPhysX"/>
 		<Plugin PluginFile = "GASSPluginRecastNavigation"/>
 		<Plugin PluginFile = "GASSPluginRoadNetwork"/>
@@ -41,8 +41,6 @@
 		</PhysXPhysicsSystem>
 		<OSGCollisionSystem>
 		</OSGCollisionSystem>
-		<OSGGraphicsSystem>
-		</OSGGraphicsSystem>
 		<OSGEarthGraphicsSystem>
 		</OSGEarthGraphicsSystem>
 	</Systems>

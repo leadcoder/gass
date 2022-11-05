@@ -7,7 +7,7 @@
         <OSGEarth value="false"/>
     </Properties>
     <SceneManagerSettings>
-        <OSGGraphicsSceneManager>
+        <OSGSimpleGraphicsSceneManager>
             <FogMode value="FM_LINEAR"/>
             <FogStart value="0"/>
             <FogEnd value="4000"/>
@@ -21,7 +21,7 @@
             <ShadowSoftness value="0"/>
             <ShadowEnabled value="true"/>
             <Name value="OSGGraphicsSceneManager"/>
-        </OSGGraphicsSceneManager>
+        </OSGSimpleGraphicsSceneManager>
         <PhysXPhysicsSceneManager>
             <Gravity value="-9.81"/>
             <Origin value="0 0 0"/>

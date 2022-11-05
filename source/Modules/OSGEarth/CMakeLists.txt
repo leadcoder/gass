@@ -1,0 +1,2 @@
+find_package(OSGEarthExt)
+gass_setup_module(GASSModuleOSGEarth PRIVATE_DEPS GASSModuleOSG osgEarth::osgEarth)

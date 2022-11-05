@@ -46,10 +46,9 @@ namespace GASS
 	void GraphTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr obj_under_cursor = info.m_ObjectUnderCursor.lock();
 
 		SceneObjectPtr parent_obj = m_ParentObject.lock();
-		if(parent_obj && obj_under_cursor)
+		if(parent_obj && info.m_HasCollision)
 		{
 			if(m_Mode == GTM_INSERT)
 			{
@@ -117,9 +116,12 @@ namespace GASS
 			}
 			else if(m_Mode == GTM_ADD)
 			{
+				auto obj_under_cursor = info.m_ObjectUnderCursor.lock();
+				if(obj_under_cursor)
 				{
 					SceneObjectPtr prev_obj = m_PrevObject.lock();
 
+					
 					//Check if object under cursor has IGraphNodeComponent to support reconnection
 					GraphNodeComponentPtr current_node = obj_under_cursor->GetFirstComponentByClass<IGraphNodeComponent>();
 					SceneObjectPtr current_obj;

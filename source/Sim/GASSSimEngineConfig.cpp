@@ -36,8 +36,8 @@ namespace GASS
 		InputOptions input)
 	{
 		SimEngineConfig conf;
-		conf.Plugins = {"GASSPluginOSG",
-						"GASSPluginOSGEarth",
+		conf.Plugins = {"GASSModuleOSG",
+				//		"GASSModuleOSGEarth",
 						"GASSPluginInput",
 						"GASSPluginBase",
 						"GASSPluginRoadNetwork",
@@ -74,7 +74,7 @@ namespace GASS
 
 		systems.emplace_back("OSGGraphicsSystem");
 		systems.emplace_back("OSGCollisionSystem");
-		systems.emplace_back("OSGEarthGraphicsSystem");
+		//systems.emplace_back("OSGEarthGraphicsSystem");
 
 		for (auto system_name : systems)
 		{

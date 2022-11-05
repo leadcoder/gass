@@ -31,9 +31,8 @@ namespace GASS
 	void EditPositionTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr object_under_cursor = info.m_ObjectUnderCursor.lock();
 		int from_id = GASS_PTR_TO_INT(this);
-		if(object_under_cursor)
+		if(info.m_HasCollision)
 		{
 			for (size_t i = 0; i< m_Selection.size(); i++)
 			{

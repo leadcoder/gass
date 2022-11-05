@@ -7,30 +7,32 @@
         <OSGEarth value="true"/>
     </Properties>
     <SceneManagerSettings>
-        <OSGGraphicsSceneManager>
-            <FogMode value="FM_NONE"/>
-            <FogStart value="0"/>
-            <FogEnd value="4000"/>
-            <FogDensity value="0.1"/>
-            <FogColor value="0.6899999999999999 0.698 0.7294"/>
-            <AmbientColor value="0.5 0.5 0.5"/>
-            <ShadowMaxFarDistance value="400"/>
-            <ShadowFadeDistanceRatio value="0.2"/>
-            <ShadowMinimumNearFarRatio value="0.1"/>
-            <ShadowTextureSize value="2048"/>
-            <ShadowSoftness value="0"/>
-            <ShadowEnabled value="false"/>
-            <Name value="OSGGraphicsSceneManager"/>
-        </OSGGraphicsSceneManager>
+        <OSGEarthGraphicsSceneManager>
+            <EarthFile value="openstreetmap.earth"/>
+			<!--<Viewpoint value=""/>-->
+                            <TimeOfDay value="11.7"/>
+                            <MinimumAmbient value="0.3"/>
+                            <SkyExposure value="1.3"/>
+                            <SkyContrast value="2"/>
+                            <SkyAmbientBoost value="5"/>
+                            <SkyLighting value="true"/>
+                            <SkyHazeCutoff value="0.5"/>
+                            <SkyHazeStrength value="50"/>
+                            <ShadowEnabled value="true"/>
+                            <ShadowBlur value="0.001"/>
+                            <ShadowRanges value="0 100 250"/>
+                            <ShadowColor value="0"/>
+                            <!--<VisibleMapLayers value="OSM Imagery"/>-->
+                            <AddSky value="true"/>
+                            <MapIsRoot value="true"/>
+                          
+        </OSGEarthGraphicsSceneManager>
         <PhysXPhysicsSceneManager>
             <Gravity value="-9.81"/>
             <Origin value="0 0 0"/>
             <Active value="true"/>
             <Name value="PhysXPhysicsSceneManager"/>
         </PhysXPhysicsSceneManager>
-        <OSGEarthSceneManager>
-            <Name value="OSGEarthSceneManager"/>
-        </OSGEarthSceneManager>
     </SceneManagerSettings>
     <TerrainObjects>
         <SceneObject>
@@ -41,7 +43,7 @@
             <GUID value="d3ee4f7b-d541-4ef6-adcf-10036463c3fc"/>
             <Components/>
             <Children>
-                <SceneObject>
+                <!--<SceneObject>
                     <Name value="TerrainObject"/>
                     <TemplateName value=""/>
                     <Serialize value="true"/>
@@ -65,12 +67,12 @@
                             <ShadowColor value="0"/>
                             <VisibleMapLayers value="OSM Imagery"/>
                             <AddSky value="true"/>
-                            <IsRoot value="true"/>
+                            <IsRoot value="false"/>
                             <Name value="OSGEarthMapComponent"/>
                         </OSGEarthMapComponent>
                     </Components>
                     <Children/>
-                </SceneObject>
+                </SceneObject>-->
                 <SceneObject>
                     <Name value="Billboard"/>
                     <TemplateName value="Billboard"/>

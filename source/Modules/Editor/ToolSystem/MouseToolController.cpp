@@ -241,13 +241,15 @@ namespace GASS
 
 		CollisionResult gizmo_result = CameraRaycast(cam, cursor_pos, raycast_distance, GEOMETRY_FLAG_GIZMO);
 
+		
 		if(gizmo_result.Coll)
 		{
+			info.m_HasCollision = gizmo_result.Coll;
+			info.m_3DPos = gizmo_result.CollPosition;
+			info.m_Normal = gizmo_result.CollNormal;
 			SceneObjectPtr col_obj = gizmo_result.CollSceneObject.lock();
 			if(col_obj)
 			{
-				info.m_3DPos = gizmo_result.CollPosition;
-				info.m_Normal = gizmo_result.CollNormal;
 				info.m_ObjectUnderCursor = gizmo_result.CollSceneObject;
 			}
 		}
@@ -256,11 +258,12 @@ namespace GASS
 			CollisionResult col_result  = CameraRaycast(cam, cursor_pos, raycast_distance, static_cast<GeometryFlags>( static_cast<int>(GEOMETRY_FLAG_SCENE_OBJECTS) | static_cast<int>(GEOMETRY_FLAG_EDITOR)));
 			if (col_result.Coll)
 			{
+				info.m_HasCollision = col_result.Coll;
+				info.m_3DPos = col_result.CollPosition;
+				info.m_Normal = col_result.CollNormal;
 				SceneObjectPtr col_obj = col_result.CollSceneObject.lock();
 				if(col_obj)
 				{
-					info.m_3DPos = col_result.CollPosition;
-					info.m_Normal = col_result.CollNormal;
 					info.m_ObjectUnderCursor = col_result.CollSceneObject;
 				}
 			}
@@ -498,16 +501,17 @@ namespace GASS
 
 	bool MouseToolController::GetMouseWorldPosAndRot(const Vec2 &mouse_pos, Vec3 &world_pos, Quaternion &world_rot) const
 	{
+		if (!m_EditorSceneManager)
+			return false;
 		SceneCursorInfo cursor_info = GetSceneCursorInfo(mouse_pos, 1000000);
-		SceneObjectPtr object_under_cursor = cursor_info.m_ObjectUnderCursor.lock();
-		if (!object_under_cursor)
+		if (!cursor_info.m_HasCollision)
 			return false;
 
 		world_pos = cursor_info.m_3DPos;
 		world_pos.x = SnapPosition(world_pos.x);
 		world_pos.y = SnapPosition(world_pos.y);
 		world_pos.z = SnapPosition(world_pos.z);
-		const CollisionSceneManagerPtr csm = object_under_cursor->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>(true);
+		const CollisionSceneManagerPtr csm = m_EditorSceneManager->GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>(true);
 		if (csm)
 		{
 			csm->GetOrientation(world_pos, world_rot);

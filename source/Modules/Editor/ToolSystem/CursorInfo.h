@@ -23,5 +23,6 @@ namespace GASS
 		Vec3 m_3DPos;
 		Vec3 m_Normal;
 		Ray m_Ray;
+		bool m_HasCollision = false;
 	};
 }
