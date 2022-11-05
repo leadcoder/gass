@@ -263,6 +263,9 @@ namespace GASS
 	void OSGEarthGraphicsSceneManager::SetShadowEnabled(bool value)
 	{
 		m_ShadowEnabled = value;
+
+		if (m_ShadowCaster)
+			m_ShadowCaster->setEnabled(value);
 	}
 
 	void OSGEarthGraphicsSceneManager::OnSceneCreated()
