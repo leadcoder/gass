@@ -51,10 +51,10 @@ namespace GASS
 	typedef std::unique_ptr<IMapLayer> MapLayerPtr;
 	typedef std::vector<MapLayerPtr> MapLayers;
 
-	class IMapComponent
+	class IEarthSceneManager
 	{
 	public:
-		virtual ~IMapComponent(){}
+		virtual ~IEarthSceneManager(){}
 		virtual std::vector<std::string> GetViewpointNames() const = 0;
 		virtual void SetViewpointByName(const std::string &viewpoint_name) = 0;
 		virtual const MapLayers& GetMapLayers() const= 0;
@@ -71,6 +71,6 @@ namespace GASS
 		virtual ResourceHandle GetEarthFile() const = 0;
 	};
 
-	typedef GASS_SHARED_PTR<IMapComponent> MapComponentPtr;
-	typedef GASS_WEAK_PTR<IMapComponent> MapComponentWeakPtr;
+	typedef GASS_SHARED_PTR<IEarthSceneManager> EarthSceneManager;
+	typedef GASS_WEAK_PTR<IEarthSceneManager> EarthSceneManagerWeakPtr;
 }

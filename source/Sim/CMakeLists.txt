@@ -101,6 +101,7 @@ set(H_FILES
 	Interface/GASSICollisionSceneManager.h
 	Interface/GASSICollisionSystem.h
 	Interface/GASSIControlSettingsSystem.h
+	Interface/GASSIEarthSceneManager.h
 	Interface/GASSIGeometryComponent.h
 	Interface/GASSIGraphComponent.h
 	Interface/GASSIGraphEdgeComponent.h
@@ -114,7 +115,6 @@ set(H_FILES
 	Interface/GASSILocationComponent.h
 	Interface/GASSIManualMeshComponent.h
 	Interface/GASSIMapCameraComponent.h
-	Interface/GASSIMapComponent.h
 	Interface/GASSIMeshComponent.h
 	Interface/GASSIMissionSceneManager.h
 	Interface/GASSIMissionSystem.h

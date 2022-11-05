@@ -4,7 +4,7 @@
 #include "Modules/Graphics/OSGGraphicsSceneManager.h"
 #include "Modules/Graphics/OSGCommon.h"
 #include "Modules/Graphics/OSGDebugDraw.h"
-#include "Sim/Interface/GASSIMapComponent.h"
+#include "Sim/Interface/GASSIEarthSceneManager.h"
 #include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Interface/GASSIWGS84SceneManager.h"
 
@@ -17,7 +17,7 @@ namespace GASS
 {
 	class OETerrainCallbackProxy;
 
-	class OSGEarthGraphicsSceneManager : public Reflection<OSGEarthGraphicsSceneManager, OSGGraphicsSceneManager>, public IWGS84SceneManager, public ITerrainSceneManager
+	class OSGEarthGraphicsSceneManager : public Reflection<OSGEarthGraphicsSceneManager, OSGGraphicsSceneManager>, public IWGS84SceneManager, public ITerrainSceneManager, public IEarthSceneManager
 	{
 	public:
 		OSGEarthGraphicsSceneManager(SceneWeakPtr scene);
@@ -64,39 +64,43 @@ namespace GASS
 		//helpers
 		bool GetHeightAboveTerrain(const GeoLocation& location, double& height, GeometryFlags flags) const;
 		bool GetTerrainHeight(const GeoLocation& location, double& height, GeometryFlags flags) const;
+
+		//IEarthSceneManager
+		std::vector<std::string> GetViewpointNames() const override;
+		void SetViewpointByName(const std::string& viewpoint_name) override;
+		const MapLayers& GetMapLayers() const override;
+		double GetTimeOfDay() const override { return m_Hour; }
+		void SetTimeOfDay(double time) override;
+		float GetMinimumAmbient() const override;
+		void SetMinimumAmbient(float value) override;
+		void SetSkyLighting(bool value) override;
+		bool GetSkyLighting() const override;
+		void SetShadowEnabled(bool value) override;
+		bool GetShadowEnabled() const override;
+
+		void SetEarthFile(const ResourceHandle& earth_file) override;
+		ResourceHandle GetEarthFile() const override { return m_EarthFile; }
+
 	private:
 		bool GetSceneHeight(const GeoLocation& location, double& height, GeometryFlags flags) const;
 
-		bool GetShadowEnabled() const;
-		void SetShadowEnabled(bool value);
 		void SetSkyHazeCutoff(float value);
 		float GetSkyHazeCutoff() const { return m_SkyHazeCutoff; }
 		void SetSkyHazeStrength(float value);
 		float GetSkyHazeStrength() const { return m_SkyHazeStrength; }
-		double GetTimeOfDay() const { return m_Hour; }
-		void SetTimeOfDay(double time) ;
-		float GetMinimumAmbient() const;
-		void SetMinimumAmbient(float value) ;
 		float GetSkyExposure() const;
 		void SetSkyExposure(float value);
 		float GetSkyContrast() const;
 		void SetSkyContrast(float value);
 		float GetSkyAmbientBoost() const;
 		void SetSkyAmbientBoost(float value);
-		void SetSkyLighting(bool value);
-		bool GetSkyLighting() const;
 		void SetShadowBlur(float value);
 		float GetShadowBlur() const { return m_ShadowBlur; }
 		void SetShadowColor(float value);
 		float GetShadowColor() const { return m_ShadowColor; }
 		void SetShadowRanges(std::vector<float> value);
 		std::vector<float> GetShadowRanges() const { return m_ShadowRanges; }
-		std::vector<std::string> GetViewpointNames() const;
-		void SetViewpointByName(const std::string& viewpoint_name);
 		std::vector<std::string> GetMapLayerNames() const;
-		const MapLayers& GetMapLayers() const;
-		void SetEarthFile(const ResourceHandle& earth_file);
-		ResourceHandle GetEarthFile() const { return m_EarthFile; }
 		void Shutdown();
 		void UpdateMapLayers();
 		void SetupNodeMasks();
