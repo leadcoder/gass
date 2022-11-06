@@ -141,7 +141,6 @@ namespace GASS
 		osgEarth::ShadowCaster* m_ShadowCaster = nullptr;
 
 		osgEarth::ElevationPool::WorkingSet* m_WorkingSet = nullptr;
-		osgEarth::Util::Controls::Container* m_GUI;
 		osgEarth::SpatialReference* m_WGS84;
 		osgEarth::Viewpoint m_OldVP;
 		ICollisionSceneManager* m_CollisionSceneManager;

@@ -11,38 +11,6 @@
 
 namespace GASS
 {
-
-	/**
-	* Toggles the main control canvas on and off.
-	*/
-	struct ToggleCanvasEventHandler : public osgGA::GUIEventHandler
-	{
-		ToggleCanvasEventHandler(osg::Node* canvas, char key) :
-			_canvas(canvas), _key(key)
-		{
-		}
-
-		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& /*aa*/) override
-		{
-			if (ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN)
-			{
-				if (ea.getKey() == _key)
-				{
-					osg::ref_ptr< osg::Node > safe_node = _canvas.get();
-					if (safe_node.valid())
-					{
-						safe_node->setNodeMask(safe_node->getNodeMask() ? 0 : ~0);
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-		osg::observer_ptr<osg::Node> _canvas;
-		char _key;
-	};
-
-
 	struct OEMapListenerProxy : public osgEarth::MapCallback
 	{
 		OEMapListenerProxy(OSGEarthGraphicsSceneManager* sm) : m_OESceneManager(sm) {}
@@ -232,23 +200,6 @@ namespace GASS
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
-
-		{ // TODO: use imgui instead!
-			osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
-
-			osgEarth::Util::Controls::Container* main_container = canvas->addControl(new osgEarth::Util::Controls::VBox());
-			main_container->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::Black, 0.8f));
-			main_container->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
-			main_container->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
-
-
-			//hide GUI by default
-			canvas->setNodeMask(0);
-
-			m_RootNode->addChild(canvas);
-			m_GUI = main_container;
-			view->addEventHandler(new ToggleCanvasEventHandler(canvas, 'x'));
-		}
 	}
 
 	OSGEarthGraphicsSceneManager::~OSGEarthGraphicsSceneManager(void)
@@ -453,11 +404,6 @@ namespace GASS
 				osgEarth::ExtensionInterface<osg::View>* view_if = osgEarth::ExtensionInterface<osg::View>::get(e);
 				if (view_if)
 					view_if->connect(view);
-
-				// Check for a Control interface:
-				//osgEarth::ExtensionInterface<osgEarth::Util::Control>* control_if = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
-				//if (control_if)
-				//	control_if->connect(GetGUI());
 			}
 		}
 
@@ -566,11 +512,6 @@ namespace GASS
 				osgEarth::ExtensionInterface<osg::View>* view_if = osgEarth::ExtensionInterface<osg::View>::get(e);
 				if (view_if && views.size() > 0)
 					view_if->disconnect(views[0]);
-
-				// Check for a Control interface:
-				//osgEarth::ExtensionInterface<osgEarth::Util::Control>* control_if = osgEarth::ExtensionInterface<osgEarth::Util::Control>::get(e);
-				//if (control_if)
-					//control_if->disconnect(m_OESceneManager->GetGUI());
 			}
 
 #ifdef HAS_FOG
