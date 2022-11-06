@@ -19,7 +19,7 @@
 *****************************************************************************/
 
 #pragma once
-#include "Modules/Graphics/Components/OSGCameraManipulatorComponent.h"
+#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
 #include "Sim/Interface/GASSIMapCameraComponent.h"
 
 namespace GASS

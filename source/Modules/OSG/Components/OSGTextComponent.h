@@ -18,46 +18,54 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
+#include "Sim/GASS.h"
+#include "Sim/Interface/GASSITextComponent.h"
+#include "Modules/OSG/OSGCommon.h"
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+namespace osg
+{
+	class Billboard;
+	class Image;
+	class Drawable;
+	class Text;
+}
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class OSGTextComponent : public Reflection<OSGTextComponent, ITextComponent>
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
+		OSGTextComponent (void);
+		~OSGTextComponent (void) override;
 		static void RegisterReflection();
 		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
+		virtual AABox GetBoundingBox()const;
+		virtual Sphere GetBoundingSphere()const;
+		virtual void GetMeshData(GraphicsMeshPtr mesh_data);
+		void SetCaption(const std::string& caption) override;
+		std::string GetCaption() const override;
 	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
+		void OnLocationLoaded(LocationLoadedEventPtr message);
+		void SetFont(const ResourceHandle &font);
+		ResourceHandle GetFont()const {return m_Font;}
+		float GetCharacterSize() const ;
+		void SetCharacterSize(float size);
+		void SetScaleByDistance(bool value) {m_ScaleByDistance = value;}
+		bool GetScaleByDistance() const {return m_ScaleByDistance;}
+		void SetOffset(const Vec3 &value) {m_Offset = value;}
+		Vec3 GetOffset() const {return m_Offset;}
+		void SetColor(const Vec4 &value) {m_Color = value;}
+		Vec4 GetColor() const {return m_Color;}
+		void SetDropShadow(bool value) {m_DropShadow = value;}
+		bool GetDropShadow() const {return m_DropShadow;}
 
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		ResourceHandle m_Font;
+		osg::ref_ptr<osgText::Text> m_OSGText;
+		osg::ref_ptr<osg::Geode> m_OSGGeode;
+		float m_CharSize{16.0f};
+		bool m_ScaleByDistance{false};
+		Vec3 m_Offset;
+		bool m_DropShadow{true};
+		Vec4 m_Color;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
 }

@@ -1,9 +1,9 @@
 #pragma once
 #include "Sim/GASS.h"
 #include "OSGEarthCommonIncludes.h"
-#include "Modules/Graphics/OSGGraphicsSceneManager.h"
-#include "Modules/Graphics/OSGCommon.h"
-#include "Modules/Graphics/OSGDebugDraw.h"
+#include "Modules/OSG/OSGGraphicsSceneManager.h"
+#include "Modules/OSG/OSGCommon.h"
+#include "Modules/OSG/OSGDebugDraw.h"
 #include "Sim/Interface/GASSIEarthSceneManager.h"
 #include "Sim/Interface/GASSITerrainSceneManager.h"
 #include "Sim/Interface/GASSIWGS84SceneManager.h"

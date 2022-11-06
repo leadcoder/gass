@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Sim/GASS.h"
-#include "Modules/Graphics/OSGGraphicsSystem.h"
+#include "Modules/OSG/OSGGraphicsSystem.h"
 
 namespace GASS
 {

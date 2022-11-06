@@ -19,45 +19,19 @@
 *****************************************************************************/
 #pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+#include "Sim/GASS.h"
+#include "Modules/OSG/OSGCommon.h"
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class OSGNodeData : public osg::Referenced
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
-
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		OSGNodeData(ComponentPtr  component):m_Component(component) {}
+		OSGNodeData(int  mask) : m_Mask(mask) {}
+		virtual ~OSGNodeData(){}
+		ComponentWeakPtr m_Component;
+		int m_Mask = -1;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+
 }

@@ -21,10 +21,10 @@
 #include "OSGEarthCommonIncludes.h"
 #include "OSGEarthSkyComponent.h"
 
-#include "Modules/Graphics/OSGNodeMasks.h"
-#include "Modules/Graphics/OSGConvert.h"
-#include "Modules/Graphics/OSGGraphicsSceneManager.h"
-#include "Modules/Graphics/OSGGraphicsSystem.h"
+#include "Modules/OSG/OSGNodeMasks.h"
+#include "Modules/OSG/OSGConvert.h"
+#include "Modules/OSG/OSGGraphicsSceneManager.h"
+#include "Modules/OSG/OSGGraphicsSystem.h"
 
 namespace GASS
 {

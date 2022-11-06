@@ -17,47 +17,39 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
 #pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+#include "Sim/Interface/GASSIRenderWindow.h"
+#include "Modules/OSG/OSGCommon.h"
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
+	class OSGGraphicsSystem;
+	class OSGViewport;
+	using OSGViewportPtr = std::shared_ptr<OSGViewport>;
 
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class OSGRenderWindow  : public IRenderWindow
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
+		using OSGViewportVector = std::vector<OSGViewportPtr>;
 
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
+		OSGRenderWindow(OSGGraphicsSystem* system, osg::ref_ptr<osg::GraphicsContext> win);
+		~OSGRenderWindow() override;
+		
+		//IRenderWindow
+		unsigned int GetWidth() const override;
+		unsigned int GetHeight() const override;
+		void* GetHWND() const override;
+		ViewportVector GetViewports() const override;
+		ViewportPtr CreateViewport(const std::string &name, float  left, float top, float width, float height) override;
 
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		OSGGraphicsSystem* GetSystem() const{return m_System;}
+		osg::ref_ptr<osg::GraphicsContext> GetOSGWindow() const {return m_Window;}
+	private:
+		osg::ref_ptr<osg::GraphicsContext> m_Window;
+		ViewportVector m_Viewports;
+		OSGGraphicsSystem* m_System;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+	using OSGRenderWindowPtr = std::shared_ptr<OSGRenderWindow>;
 }

@@ -17,47 +17,44 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+#pragma once
+#include "Sim/GASS.h"
+#include "Modules/OSG/OSGCommon.h"
+
+namespace osgGA
+{
+	class CustomTerrainManipulator;
+};
+
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class ExportOSG OSGCameraManipulatorComponent : public Reflection<OSGCameraManipulatorComponent,Component>
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
+		OSGCameraManipulatorComponent();
+		~OSGCameraManipulatorComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
+		void SceneManagerTick(double delta) override;
+		virtual osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const {return m_OrbitMan;}
 	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
-
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		void SetRotation(const Quaternion& rot);
+		void SetPosition(const Vec3& pos);
+		void OnTransformationChanged(TransformationChangedEventPtr event);
+		std::string GetManipulatorName() const {return m_ManName;}
+		void SetManipulatorName(const std::string &name) {m_ManName = name;}
+	private:
+		static void ExtractTransformationFromOrbitManipulator(osgGA::OrbitManipulator* man, Vec3 &pos, Quaternion &rot);
+		static void SetOrbitManRotation(osgGA::OrbitManipulator* man, const Quaternion &rot);
+		static void SetOrbitManPosition(osgGA::OrbitManipulator* man, const Vec3 &pos);
+		std::string m_ManName;
+		osg::ref_ptr<osgGA::OrbitManipulator> m_OrbitMan;
+		bool m_ReadyToRun{false};
+		bool m_UpdateCameraFromLocation{true};
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+	using OSGCameraManipulatorComponentPtr = std::shared_ptr<OSGCameraManipulatorComponent>;
+	using OSGCameraManipulatorComponentWeakPtr = std::weak_ptr<OSGCameraManipulatorComponent>;
 }
+

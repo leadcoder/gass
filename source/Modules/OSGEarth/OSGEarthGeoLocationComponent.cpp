@@ -21,7 +21,7 @@
 #include "OSGEarthCommonIncludes.h"
 #include "OSGEarthGeoLocationComponent.h"
 #include "OSGEarthGraphicsSceneManager.h"
-#include "Modules/Graphics/OSGConvert.h"
+#include "Modules/OSG/OSGConvert.h"
 #include "Sim/GASSScriptManager.h"
 #include "Core/Math/GASSMath.h"
 #include <angelscript.h>

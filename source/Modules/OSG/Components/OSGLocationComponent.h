@@ -19,75 +19,97 @@
 *****************************************************************************/
 
 #pragma once
-
+//#   pragma warning (disable : 4541)
 #include "Sim/GASS.h"
+#include "Sim/GASSEulerRotation.h"
 #include "Modules/OSG/OSGCommon.h"
-#include "Modules/OSG/OSGGraphicsSceneManager.h"
 
 namespace GASS
 {
 	class OSGGraphicsSceneManager;
-	class OSGEarthGeoLocationComponent;
-	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;
+	class OSGLocationComponent;
+	using OSGLocationComponentPtr = std::shared_ptr<OSGLocationComponent>;
 	using OSGGraphicsSceneManagerWeakPtr = std::weak_ptr<OSGGraphicsSceneManager>;
 
-	class OSGEarthGeoLocationComponent : public Reflection<OSGEarthGeoLocationComponent,Component>, public ILocationComponent,  public osg::NodeCallback
+	class OSGLocationComponent : public Reflection<OSGLocationComponent, Component>, public ILocationComponent, public osg::NodeCallback
 	{
 	public:
-		OSGEarthGeoLocationComponent();
-		~OSGEarthGeoLocationComponent() override;
+		OSGLocationComponent();
+		~OSGLocationComponent() override;
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
 
-		void SetScale(const Vec3 &value) override;
-		void SetPosition(const Vec3 &value) override;
+		//ILocationComponent
 		Vec3 GetPosition() const override;
-		void SetWorldPosition(const Vec3 &value) override;
+		void SetPosition(const Vec3 &value) override;
+
 		Vec3 GetWorldPosition() const override;
-		
+		void SetWorldPosition(const Vec3 &value) override;
+
 		void SetEulerRotation(const EulerRotation &value) override;
 		EulerRotation GetEulerRotation() const override;
-		void SetRotation(const Quaternion &value) override;
+
 		Quaternion GetRotation() const override;
-		void SetWorldRotation(const Quaternion &value) override;
+		void SetRotation(const Quaternion& value) override;
+
 		Quaternion GetWorldRotation() const override;
-		Vec3 GetScale() const override {return m_Scale;}
+		void SetWorldRotation(const Quaternion& value) override;
+
+		Vec3 GetScale() const override;
+		void SetScale(const Vec3 &value) override;
+
+		bool GetAttachToParent() const override;
+		void SetAttachToParent(bool value) override;
 
 		void SetVisible(bool value) override;
 		bool GetVisible() const override;
-		bool HasParentLocation() const override;
 
-		
-		osg::ref_ptr<osg::Node> GetNode()  {return m_TransformNode;}
+		bool HasParentLocation() const override;
+		//end ILocationComponent
+			
+		osg::ref_ptr<osg::Node> GetNode() {return m_TransformNode;}
 
 		//move this to private
 		osg::ref_ptr<osg::PositionAttitudeTransform> GetOSGNode() const {return m_TransformNode;}
-		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) {m_TransformNode = node;}
 		void operator()(osg::Node* node, osg::NodeVisitor* nv) override;
-		bool GetAttachToParent() const override;
 	protected:
 		void OnParentChanged(ParentChangedEventPtr message);
-		void SetAttachToParent(bool value) override;
 		
-		//helper
-		OSGEarthGeoLocationComponentPtr GetParentLocation();
-		void SendTransMessage();
+		//remove this?
+		void SetOSGNode(osg::ref_ptr<osg::PositionAttitudeTransform> node) { m_TransformNode = node; }
+
+		//Internal functions
+		OSGLocationComponent* GetParentLocation() const { return m_ParentLocation; }
+		void OnPositionUpdateRecursive(SceneObjectPtr scene_object);
+		void OnRotationUpdateRecursive(SceneObjectPtr scene_object);
+		void OnParentPositionUpdated();
+		void OnParentRotationUpdated();
+		void NotifyTransformationChange() const;
+		Vec3 LocalToWorld(const Vec3 &world_pos) const;
+		Vec3 WorldToLocal(const Vec3 &local_pos) const;
+		Quaternion WorldToLocal(const Quaternion &world_rot) const;
+		Quaternion LocalToWorld(const Quaternion &local_rot) const;
+		OSGLocationComponentPtr GetFirstParentLocation() const;
+		osg::ref_ptr<osg::Group> GetOsgRootGroup();
+		
 		//! relative position of the scene node.
-		Vec3 m_Pos;
+		Vec3 m_Position;
+		Vec3 m_WorldPosition;
 		//! relative rotation of the scene node.
-		EulerRotation m_Rot;
-		Quaternion m_QRot;
+		Quaternion m_Rotation;
+		//! relative rotation of the scene node in euler angles.
+		EulerRotation m_EulerRotation;
+		Quaternion m_WorldRotation;
 		//! relative scale of the scene node.
 		Vec3 m_Scale;
 		bool m_AttachToParent{false};
+		OSGLocationComponent* m_ParentLocation{nullptr};
 		osg::ref_ptr<osg::PositionAttitudeTransform> m_TransformNode;
-		osg::ref_ptr<osgEarth::GeoTransform> m_GeoTransform;
 		OSGGraphicsSceneManagerWeakPtr m_GFXSceneManager;
-		int m_NodeMask{0};
-		osg::ref_ptr<osgEarth::MapNode> m_Map;
+		unsigned int m_NodeMask{0};
 	};
 
-	using OSGEarthGeoLocationComponentWeakPtr = std::weak_ptr<OSGEarthGeoLocationComponent>;
-	using OSGEarthGeoLocationComponentPtr = std::shared_ptr<OSGEarthGeoLocationComponent>;	
+	using OSGLocationComponentWeakPtr = std::weak_ptr<OSGLocationComponent>;
+	using OSGLocationComponentPtr = std::shared_ptr<OSGLocationComponent>;	
 }

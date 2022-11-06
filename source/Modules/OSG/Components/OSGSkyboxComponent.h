@@ -18,46 +18,38 @@
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
 #pragma once
+#include "Sim/GASS.h"
+#include "Modules/OSG/OSGCommon.h"
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+namespace osg
+{
+	class Billboard;
+	class Image;
+	class Drawable;
+	class Geometry;
+	class TextureCubeMap;
+	class Node;
+}
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class OSGSkyboxComponent : public Reflection<OSGSkyboxComponent,Component>
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
+		OSGSkyboxComponent (void);
+		~OSGSkyboxComponent (void) override;
 		static void RegisterReflection();
 		void OnInitialize() override;
 		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
 	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
+		void SetMaterial(const std::string &mat) {m_Material = mat;}
+		std::string GetMaterial()const {return m_Material;}
+		std::string GetTexturePath(const std::string &side) const;
+		osg::TextureCubeMap* ReadCubeMap();
+		osg::Node* CreateSkyBox();
 
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		std::string m_Material;
+		osg::Node* m_Node{nullptr};
+		Float m_Size{200};
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
 }

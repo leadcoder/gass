@@ -17,47 +17,33 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
 #pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+
+#include <map>
+
+#include "Sim/GASS.h"
+#include "Modules/OSG/OSGCommon.h"
+#include "Modules/OSG/Components/OSGCameraComponent.h"
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	/**
+		Collision system implementation that use osg for intersection test
+	*/
+	class OSGCollisionSystem : public Reflection<OSGCollisionSystem , SimSystem> , public ICollisionSystem
 	{
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
 		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
-
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		OSGCollisionSystem(SimSystemManagerWeakPtr manager);
+		~OSGCollisionSystem() override;
+		void OnSystemInit() override;
+		std::string GetSystemName() const override {return "OSGCollisionSystem";}
+		bool GetReadPagedLOD() { return m_ReadPagedLOD; }
+	private:
+		bool m_ReadPagedLOD = true;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+	using OSGCollisionSystemPtr = std::shared_ptr<OSGCollisionSystem>;
 }
+

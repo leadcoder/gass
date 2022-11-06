@@ -17,47 +17,30 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
-#pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+#include "Modules/OSG/OSGCollisionSystem.h"
+#include "Modules/OSG/OSGCollisionSceneManager.h"
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	OSGCollisionSystem::OSGCollisionSystem(SimSystemManagerWeakPtr manager) : Reflection(manager)
 	{
-	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
+		m_UpdateGroup = UGID_PRE_SIM;
+	}
 
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
+	OSGCollisionSystem::~OSGCollisionSystem()
+	{
 
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
-	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+	}
+
+	void OSGCollisionSystem::RegisterReflection()
+	{
+		SystemFactory::GetPtr()->Register<OSGCollisionSystem>("OSGCollisionSystem");
+		RegisterMember("ReadPagedLOD", &OSGCollisionSystem::m_ReadPagedLOD, PF_VISIBLE, "Read PagedLod nodes on intersection test");
+	}
+
+	void OSGCollisionSystem::OnSystemInit()
+	{
+		SceneManagerFactory::GetPtr()->Register<OSGCollisionSceneManager>("OSGCollisionSceneManager");
+	}
 }

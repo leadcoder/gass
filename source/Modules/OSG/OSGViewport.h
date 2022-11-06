@@ -17,47 +17,33 @@
 * You should have received a copy of the GNU Lesser General Public License  *
 * along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
 *****************************************************************************/
+
 #pragma once
 
-#include "Modules/OSG/Components/OSGCameraManipulatorComponent.h"
-#include "Sim/GASSGeoLocation.h"
+#include "Sim/Interface/GASSIViewport.h"
+#include "Sim/Messages/GASSGraphicsSystemMessages.h"
+#include "Modules/OSG/OSGCommon.h"
+#include "Modules/OSG/OSGRenderWindow.h"
 
 namespace GASS
 {
-	class OSGEarthGraphicsSceneManager;
-
-	class OSGEarthGeoComponent : public Reflection<OSGEarthGeoComponent,Component> , public IWorldLocationComponent
+	class OSGViewport : public IViewport, public GASS_ENABLE_SHARED_FROM_THIS<OSGViewport>, public IMessageListener
 	{
+		friend class OSGRenderWindow;
 	public:
-		OSGEarthGeoComponent();
-		~OSGEarthGeoComponent() override;
-		static void RegisterReflection();
-		void OnInitialize() override;
-		void OnDelete() override;
-
-		//IWorldLocationComponent
-		double GetLatitude() const override;
-		void SetLatitude(double lat) override;
-		double GetLongitude() const override;
-		void SetLongitude(double lat) override;
-		void SetHeightAboveMSL(double value) override;
-		double GetHeightAboveMSL() const override;
-		void SetHeightAboveGround(double value) override;
-		double GetHeightAboveGround() const override;
-	protected:
-		Vec3 GetWorldPosition() const;
-		void LatOrLongChanged();
-		void SetWorldPosition(const Vec3& pos);
-		void OnTransformation(TransformationChangedEventPtr event);
-		void OnTerrainChanged(TerrainChangedEventPtr event);
-		bool m_PreserveHAG{true};
-
-		GeoLocation m_Location;
-		double m_HeightAboveGround{0};
-		OSGEarthGraphicsSceneManager* m_OESM{nullptr};
-		ILocationComponent* m_LocationComp{nullptr};
-		bool m_HandleTransformations{true};
+		OSGViewport(const std::string &name,osgViewer::View* view, OSGRenderWindow* window);
+		~OSGViewport() override;
+		CameraComponentPtr GetCamera() const override;
+		void SetCamera(CameraComponentPtr camera) override;
+		std::string GetName() const override {return m_Name;}
+		osg::Camera* GetOSGCamera() const {return m_OSGCamera;}
+	private:
+		void Init();
+		osg::ref_ptr<osg::Camera> m_OSGCamera; 
+		std::string m_Name;
+		OSGRenderWindow* m_Window;
+		CameraComponentWeakPtr m_Camera;
+		osgViewer::View* m_OSGView;
 	};
-	using OSGEarthGeoComponentWeakPtr = std::weak_ptr<OSGEarthGeoComponent>;
-	using OSGEarthGeoComponentPtr = std::shared_ptr<OSGEarthGeoComponent>;
+	using OSGViewportPtr = std::shared_ptr<OSGViewport>;
 }

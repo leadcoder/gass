@@ -5,8 +5,8 @@
 
 #include "Modules/OSGEarth/OSGEarthGraphicsSceneManager.h"
 #include "Modules/OSGEarth/OSGEarthGraphicsSystem.h"
-#include "Modules/Graphics/OSGNodeData.h"
-#include "Modules/Graphics/OSGMaterial.h"
+#include "Modules/OSG/OSGNodeData.h"
+#include "Modules/OSG/OSGMaterial.h"
 #include <osgDB/FileUtils>
 
 namespace GASS
