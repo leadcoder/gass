@@ -155,10 +155,10 @@ namespace GASS
 	dtCrowdAgentParams DetourCrowdAgentComponent::GetAgentParams() const
 	{
 		dtCrowdAgentParams ap;
+		memset(&ap, 0, sizeof(ap));
 		DetourCrowdComponentPtr crowd_comp = GetCrowdComp();
 		if(crowd_comp)
 		{
-			memset(&ap, 0, sizeof(ap));
 			ap.radius = m_Radius;
 			ap.height = m_Height;
 			ap.maxAcceleration = m_MaxAcceleration;

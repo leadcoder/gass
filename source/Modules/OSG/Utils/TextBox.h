@@ -17,6 +17,7 @@ using std::string;
   #pragma warning(disable:4100)
 #endif
 #include "Modules/OSG/OSGCommon.h"
+#include "Core/Common.h"
 
 // ####################################################################
 

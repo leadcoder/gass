@@ -440,7 +440,7 @@ namespace osgShadow
 				osg::Vec3d lightdir(0.0, 0.0, -1.0);
 
 				double dotProduct_v = lightdir * viewdir_v;
-				double angle = acosf(dotProduct_v);
+				double angle = acos(dotProduct_v);
 
 				osg::Vec3d eye_ls = eye_v * projectionMatrix;
 
@@ -754,8 +754,8 @@ namespace osgShadow
 		}
 
 #if 1
-		float factor = 1.1;
-		float units = 4.0;
+		float factor = 1.1f;
+		float units = 4.0f;
 #else
 		float factor = -1.1;
 		float units = -4.0;
