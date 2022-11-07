@@ -5,44 +5,89 @@
     "minor": 22,
     "patch": 1
   },
-  
+
   "configurePresets": [
     {
       "name": "default",
-      "hidden" : true,
-      "displayName": "Linux Config",
-      "description": "Linux build using Ninja generator",
+      "hidden": true,
+      "displayName": "Default Config",
+      "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-linux-dynamic",
         "GASS_BUILD_PLUGIN_OIS": false,
         "GASS_BUILD_PLUGIN_RAKNET": false,
+        "GASS_BUILD_PLUGIN_OPENAL": false,
         "GASS_BUILD_PLUGIN_OSGEARTH": true,
         "GASS_BUILD_SIM_SAMPLES": true
       },
       "environment": {
         "name": "GASS_DATA_HOME",
-              "value": "${workspaceFolder}/samples/common/data/"
+        "value": "${sourceDir}/samples/common/data/"
+      }
+    },
+    {
+      "name": "windows-default",
+      "inherits": "default",
+      "hidden": true,
+      "description": "Windows build using Ninja generator",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-v142"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": "Windows"
+        }
+      }
+    },
+    {
+      "name": "Windows Release",
+      "inherits": "windows-default",
+      "displayName": "Windows Release Config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "Windows Debug",
+      "inherits": "windows-default",
+      "displayName": "Windows Debug Config",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-default",
+      "inherits": "default",
+      "hidden": true,
+      "description": "Linux build using Ninja generator",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux-dynamic"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": "Linux"
+        }
       }
     },
     {
       "name": "Linux Release",
-      "inherits": "default",
+      "inherits": "linux-default",
       "displayName": "Linux Release Config",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
-      }      
+      }
     },
     {
       "name": "Linux Debug",
-      "inherits": "default",
+      "inherits": "linux-default",
       "displayName": "Linux Debug Config",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     }
-  ] 
+  ]
 }
-
