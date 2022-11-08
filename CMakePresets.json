@@ -19,7 +19,7 @@
         "GASS_BUILD_PLUGIN_OIS": false,
         "GASS_BUILD_PLUGIN_RAKNET": false,
         "GASS_BUILD_PLUGIN_OPENAL": false,
-        "GASS_BUILD_PLUGIN_OSGEARTH": true,
+        "GASS_BUILD_MODULE_OSGEARTH": true,
         "GASS_BUILD_SIM_SAMPLES": true
       },
       "environment": {
