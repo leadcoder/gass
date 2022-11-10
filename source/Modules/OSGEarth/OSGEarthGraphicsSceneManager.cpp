@@ -182,21 +182,19 @@ namespace GASS
 		m_ObjectRoot->setName("GASSObjectRootNode");
 
 
-
 		m_WGS84 = osgEarth::SpatialReference::create("wgs84");
 		OSGGraphicsSystemPtr osg_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<OSGGraphicsSystem>();
-		m_CollisionSceneManager = GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();
-
+	
 		osgViewer::ViewerBase::Views views;
 		osg_sys->GetViewer()->getViews(views);
 
 		if (views.size() == 0)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find view", "OSGEarthGraphicsSceneManager::OnSceneCreated");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find view", "OSGEarthGraphicsSceneManager::OnPostConstruction");
 
 		auto* view = dynamic_cast<osgViewer::View*>(views[0]);
 
 		if (view == nullptr)
-			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthGraphicsSceneManager::OnSceneCreated");
+			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthGraphicsSceneManager::OnPostConstruction");
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		views[0]->setCameraManipulator(m_EarthManipulator);
@@ -222,6 +220,7 @@ namespace GASS
 
 	void OSGEarthGraphicsSceneManager::OnSceneCreated()
 	{
+		m_CollisionSceneManager = GetScene()->GetFirstSceneManagerByClass<ICollisionSceneManager>().get();	
 		void* main_root = static_cast<void*>(m_RootNode.get());
 		void* shadow_node = main_root;
 		SystemMessagePtr loaded_msg(new GraphicsSceneManagerLoadedEvent(std::string("OSG"), main_root,shadow_node));

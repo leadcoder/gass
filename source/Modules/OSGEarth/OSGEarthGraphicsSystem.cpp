@@ -1,6 +1,7 @@
+#include "OSGEarthCommonIncludes.h"
 #include "OSGEarthGraphicsSystem.h"
 #include "OSGEarthGraphicsSceneManager.h"
-#include "OSGEarthCommonIncludes.h"
+
 
 namespace GASS
 {

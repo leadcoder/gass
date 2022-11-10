@@ -128,7 +128,6 @@ macro(gass_setup_lib _LIB_NAME)
 	set(ALL_FILES ${PARSED_ARGS_SOURCE_FILES} ${PARSED_ARGS_HEADER_FILES})
 	
 	add_library (${_LIB_NAME} ${PARSED_ARGS_BUILDTYPE} ${PARSED_ARGS_SOURCE_FILES} ${PARSED_ARGS_HEADER_FILES})
-	
 	foreach(INC_DIR ${PARSED_ARGS_PUBLIC_INCLUDE_DIRS})
 		target_include_directories(${_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${INC_DIR}>)
 		
@@ -221,14 +220,17 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
         "DEPS" # list of names of multi-valued arguments (output variables are lists)
         ${ARGN} # arguments of the function to parse, here we take the all original ones
     )
-	if(NOT WIN32 AND NOT APPLE)
-		#Fix dlopen linkage issue on Ubuntu:
-		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
-		set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
-	endif()
+	
 	
 	gass_get_source_from_current_dir(CPP_FILES H_FILES)
 	add_executable (${SAMPLE_NAME} ${CPP_FILES} ${H_FILES})
+	
+	if(NOT WIN32 AND NOT APPLE)
+		#Fix dlopen linkage issue on Ubuntu:
+		#https://stackoverflow.com/questions/19926466/undefined-reference-to-dlopen-since-ubuntu-upgrade
+		#set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-as-needed" )
+		#SET_TARGET_PROPERTIES(${SAMPLE_NAME} PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
+    endif()
 	
 	gass_get_header_directories(HEADER_SUBDIRS)
 	
@@ -236,12 +238,14 @@ macro(gass_setup_sim_sample SAMPLE_NAME)
 		target_include_directories(${SAMPLE_NAME} PRIVATE  $<BUILD_INTERFACE:${INC_DIR}>)
 	endforeach()
 	
+	target_link_libraries(${SAMPLE_NAME} GASSSim)
+	
 	foreach(CUR_DEP ${PARSED_ARGS_DEPS})
 		target_link_libraries(${SAMPLE_NAME} ${CUR_DEP})
 		#message("${_LIB_NAME} PUBLIC ${CUR_DEP}")
 	endforeach()
 	
-	target_link_libraries(${SAMPLE_NAME} GASSSim)
+	
 	
 	set_target_properties(${SAMPLE_NAME} PROPERTIES DEBUG_POSTFIX _d)
 	set_target_properties(${SAMPLE_NAME} PROPERTIES FOLDER "SimSamples")
