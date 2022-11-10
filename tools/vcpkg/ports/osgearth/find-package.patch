@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 76accb8..1d8b957 100644
+index 76accb871..c8f1bf65c 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -126,7 +126,7 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
@@ -69,7 +69,23 @@ index 76accb8..1d8b957 100644
  endif()
  
  if(OSGEARTH_BUILD_TRITON_NODEKIT)
-@@ -225,7 +243,8 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
+@@ -181,9 +199,13 @@ IF(SQLITE3_FOUND)
+ ENDIF(SQLITE3_FOUND)
+ 
+ # DRACO enables geometry compression sometimes used in glTF:
+-IF(draco_FOUND)
++IF(DRACO_FOUND)
++	set(draco_FOUND TRUE)
++	set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIR})
++	set(draco_LIBRARIES ${DRACO_LIBRARY})
++	set(draco_LIBRARY_DIRS ${DRACO_LIBRARY_DIR})
+     ADD_DEFINITIONS(-DOSGEARTH_HAVE_DRACO)
+-ENDIF(draco_FOUND)
++ENDIF(DRACO_FOUND)
+ 
+ if(Protobuf_FOUND)
+     add_definitions(-DOSGEARTH_HAVE_PROTOBUF)
+@@ -225,7 +247,8 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
  # TinyXML is an XML parsing library
  SET (WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use bundled or system wide version of TinyXML")
  IF (WITH_EXTERNAL_TINYXML)
@@ -79,7 +95,7 @@ index 76accb8..1d8b957 100644
  ENDIF (WITH_EXTERNAL_TINYXML)
  
  # postfix settings for various configs
-@@ -300,6 +319,7 @@ IF(OSGEARTH_BUILD_SHARED_LIBS)
+@@ -300,6 +323,7 @@ IF(OSGEARTH_BUILD_SHARED_LIBS)
      SET(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
  ELSE()
      SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
