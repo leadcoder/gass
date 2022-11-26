@@ -72,6 +72,7 @@ namespace GASS
 		virtual void AddMaterial(IGfxMaterialConfig* config, const std::string& name) = 0;
 		virtual bool HasMaterial(const std::string &mat_name) const = 0;
 	
+		virtual SceneObjectPtr CreateDefaultCamera() const = 0;
 		/**
 			Print frame based debug text to screen 
 		*/

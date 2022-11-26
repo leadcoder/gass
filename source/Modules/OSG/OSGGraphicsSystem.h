@@ -50,6 +50,7 @@ namespace GASS
 		bool HasMaterial(const std::string &mat_name) const override;
 		virtual void RemoveMaterial(const std::string &mat_name);
 		void PrintDebugText(const std::string &message) override;
+		SceneObjectPtr CreateDefaultCamera() const override;
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const {return m_Viewer ;}
@@ -70,6 +71,7 @@ namespace GASS
 		MaterialMap m_Materials;
 		std::vector<std::string> m_DebugVec;
 		bool m_FlipDDS;
+		bool m_UseFPSDefualtCamera = true;
 		
 		};
 	using OSGGraphicsSystemPtr = std::shared_ptr<OSGGraphicsSystem>;

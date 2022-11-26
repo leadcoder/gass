@@ -69,4 +69,16 @@ namespace GASS
 
 		OSGGraphicsSystem::OnSystemInit();
 	}
+
+	SceneObjectPtr OSGEarthGraphicsSystem::CreateDefaultCamera() const
+	{
+		auto camera = std::make_shared<SceneObject>();
+		camera->SetName("Camera");
+		camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
+		auto cam_comp = ComponentFactory::Get().Create("CameraComponent");
+		dynamic_cast<ICameraComponent*>(cam_comp.get())->SetFarClipDistance(0);
+		camera->AddComponent(cam_comp);
+		camera->AddComponent(ComponentFactory::Get().Create("OSGEarthCameraManipulatorComponent"));
+		return camera;
+	}
 }

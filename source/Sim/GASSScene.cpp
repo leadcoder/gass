@@ -31,6 +31,7 @@
 
 #include "Sim/Interface/GASSISceneManager.h"
 #include "Sim/Interface/GASSIGraphicsSceneManager.h"
+#include "Sim/Interface/GASSIGraphicsSystem.h"
 #include "Sim/Interface/GASSIPhysicsBodyComponent.h"
 #include "Sim/Interface/GASSILocationComponent.h"
 #include "Sim/Interface/GASSICameraComponent.h"
@@ -436,27 +437,7 @@ namespace GASS
 
 		if (template_name.empty())
 		{
-			if (GetOSGEarth())
-			{
-				camera = std::make_shared<SceneObject>();
-				camera->SetName("Camera");
-				camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
-				auto cam_comp = ComponentFactory::Get().Create("CameraComponent");
-				dynamic_cast<ICameraComponent*>(cam_comp.get())->SetFarClipDistance(0);
-				camera->AddComponent(cam_comp);
-				camera->AddComponent(ComponentFactory::Get().Create("OSGEarthCameraManipulatorComponent"));
-			}
-			else
-			{
-				camera = std::make_shared<SceneObject>();
-				camera->SetName("Camera");
-				camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
-				camera->AddComponent(GASS::ComponentFactory::Get().Create("CameraComponent"));
-				camera->AddComponent(GASS::ComponentFactory::Get().Create("FreeCamControlComponent"));
-				auto input_comp = GASS::ComponentFactory::Get().Create("PlayerInputComponent");
-				input_comp->SetPropertyByString("ControlSetting", std::string("FreeCameraInputSettings"));
-				camera->AddComponent(input_comp);
-			}
+			camera = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>()->CreateDefaultCamera();
 		}
 		else
 		{

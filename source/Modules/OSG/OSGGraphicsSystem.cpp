@@ -66,6 +66,8 @@ namespace GASS
 		SystemFactory::GetPtr()->Register<OSGGraphicsSystem>("OSGGraphicsSystem");
 		RegisterMember("FlipDDS", &GASS::OSGGraphicsSystem::m_FlipDDS);
 		RegisterMember("UseLogHandler", &GASS::OSGGraphicsSystem::m_UseLogHandler);
+		RegisterMember("UseFPSDefualtCamera", &GASS::OSGGraphicsSystem::m_UseFPSDefualtCamera);
+		
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		ResourceType mesh_type;
 		mesh_type.Name = "MESH";
@@ -463,5 +465,32 @@ namespace GASS
 	osg::ref_ptr<osg::StateSet> OSGGraphicsSystem::GetStateSet(const std::string& material_name)
 	{
 		return m_Materials[material_name];
+	}
+
+	SceneObjectPtr OSGGraphicsSystem::CreateDefaultCamera() const
+	{
+		if(m_UseFPSDefualtCamera)
+		{
+			auto camera = std::make_shared<SceneObject>();
+			camera->SetName("Camera");
+			camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
+			camera->AddComponent(GASS::ComponentFactory::Get().Create("CameraComponent"));
+			camera->AddComponent(GASS::ComponentFactory::Get().Create("FreeCamControlComponent"));
+			auto input_comp = GASS::ComponentFactory::Get().Create("PlayerInputComponent");
+			input_comp->SetPropertyByString("ControlSetting", std::string("FreeCameraInputSettings"));
+			camera->AddComponent(input_comp);
+			return camera;
+		}
+		else
+		{
+			auto camera = std::make_shared<SceneObject>();
+			camera->SetName("Camera");
+			camera->AddComponent(ComponentFactory::Get().Create("LocationComponent"));
+			auto cam_comp = ComponentFactory::Get().Create("CameraComponent");
+			dynamic_cast<ICameraComponent*>(cam_comp.get())->SetFarClipDistance(0);
+			camera->AddComponent(cam_comp);
+			camera->AddComponent(ComponentFactory::Get().Create("OSGCameraManipulatorComponent"));
+			return camera;
+		}
 	}
 }

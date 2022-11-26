@@ -107,13 +107,13 @@ namespace GASS
 		//_UpdateListeners(delta_time);
 	}
 
-	void EditorSceneManager::CreateCamera(const std::string &template_name)
+	SceneObjectWeakPtr EditorSceneManager::CreateCamera(const std::string &template_name)
 	{
 		std::string ctn = template_name;
 		EditorSystemPtr system = SimEngine::GetPtr()->GetSimSystemManager()->GetFirstSystemByClass<EditorSystem>();
 		if (ctn == "")
 			ctn = system->GetDefaultCameraTemplate();
-		GetScene()->GetOrCreateCamera(ctn);
+		return GetScene()->GetOrCreateCamera(ctn);
 	}
 
 	void EditorSceneManager::OnCameraChanged(CameraChangedEventPtr message)

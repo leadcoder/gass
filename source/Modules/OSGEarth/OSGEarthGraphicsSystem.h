@@ -16,6 +16,7 @@ namespace GASS
 		~OSGEarthGraphicsSystem() override;
 		void OnSystemInit() override;
 		std::string GetSystemName() const override {return "OSGEarthGraphicsSystem";}
+		SceneObjectPtr CreateDefaultCamera() const override;
 	private:
 		void RegisterSceneManager() override;
 	};
