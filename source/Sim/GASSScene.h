@@ -116,12 +116,12 @@ namespace GASS
 		/**
 		Load a new scene from path
 		*/
-		void Load(const std::string& name);
+		void Load(const FilePath& filename);
 
 		/**
 		Save scene to path
 		*/
-		void Save(const std::string& name);
+		void Save(const FilePath& name);
 
 		void Clear();
 
@@ -146,6 +146,7 @@ namespace GASS
 
 
 		FilePath GetSceneFolder() const;
+		FilePath GetSceneFile() const { return m_SceneFile; }
 
 		void SyncMessages(double delta_time) const;
 
@@ -195,6 +196,8 @@ namespace GASS
 		*/
 		void DrawDebugLine(const Vec3& start_point, const Vec3& end_point, const ColorRGBA& start_color, const ColorRGBA& end_color) const;
 		NameGenerator& GetNameGenerator() { return m_NameGenerator; }
+		void New();
+		SceneObjectWeakPtr GetOrCreateCamera(const std::string& template_name = "");
 	protected:
 
 		/**
@@ -216,7 +219,6 @@ namespace GASS
 		scene_elem is the should point to the SceneScene tag
 		*/
 		void LoadXML(tinyxml2::XMLElement* scene_elem);
-
 		/**
 		Save scene  from xml,
 		this method is called by the scene SaveXML method in the scene class
@@ -234,7 +236,7 @@ namespace GASS
 		EulerRotation m_StartRot;
 		SceneManagerVector m_SceneManagers;
 		std::string m_Name;
-		std::string m_FolderName;
+		FilePath m_SceneFile;
 		MessageManagerPtr m_SceneMessageManager;
 
 		//Scene root node
@@ -242,6 +244,7 @@ namespace GASS
 		SceneObjectWeakPtr m_TerrainObjects;
 		ResourceGroupWeakPtr m_ResourceGroup;
 		ResourceLocationWeakPtr m_ResourceLocation;
+		SceneObjectWeakPtr m_Camera;
 
 		bool m_Initlized = false;
 		bool m_Geocentric = false;

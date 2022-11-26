@@ -32,9 +32,8 @@ namespace GASS
 	void GoToPositionTool::MouseDown(const MouseData &/*data*/, const SceneCursorInfo &info)
 	{
 		m_MouseIsDown = true;
-		SceneObjectPtr object_under_cursor = info.m_ObjectUnderCursor.lock();
-
-		if(object_under_cursor)
+		
+		if(info.m_HasCollision)
 		{
 			for(size_t i = 0; i< m_Selection.size(); i++)
 			{

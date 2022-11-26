@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="RulerObject"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+				<GeometryFlags value="GEOMETRY_FLAG_GIZMO"/>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<TextComponent>
+				<Offset value="0 0 0"/>
+			</TextComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PointerObject"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="PaintGizmo"/>
+		<Serialize value="false"/>
+		<Components>
+			<ManualMeshComponent>
+				<GeometryFlags value="GEOMETRY_FLAG_GIZMO"/>
+			</ManualMeshComponent>
+			<LocationComponent>
+				<Position value="0 0 0"/>
+				<Rotation value="0 0 0"/>
+			</LocationComponent>
+			<PaintGizmoComponent>
+				<Type value="test"/>
+				<Color value="1 1 1 1"/>
+				<Size value ="6"/>
+			</PaintGizmoComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

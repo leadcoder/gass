@@ -24,7 +24,6 @@
 
 namespace GASS
 {
-
 	class IOSGGraphicsSceneManager
 	{
 	public:
@@ -32,6 +31,8 @@ namespace GASS
 		virtual osg::ref_ptr<osg::Group> GetOSGRootNode() = 0 ;
 		virtual void SetMapNode(osg::Group* root) = 0;
 		virtual osg::Group* GetMapNode() const= 0;
+		virtual void SetMapIsRoot(bool ) = 0;
+		virtual bool GetMapIsRoot() const = 0;
 		virtual osg::ref_ptr<osg::Group> GetOSGShadowRootNode() = 0;
 	};
 	using IOSGGraphicsSceneManagerPtr = std::shared_ptr<IOSGGraphicsSceneManager>;

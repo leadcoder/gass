@@ -48,7 +48,6 @@ namespace GASS
 	void PhysXSuspensionComponent::OnInitialize()
 	{
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::OnLoad,PhysicsBodyLoadedEvent,2));
-		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXSuspensionComponent::SendJointUpdate,PhysicsVelocityEvent,0));
 	}
 
 	void PhysXSuspensionComponent::SetAngularSteerVelocity(float value)
@@ -82,12 +81,10 @@ namespace GASS
 
 		Vec3 chassis_pos = chassis_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
 		Vec3 wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetPosition();
-		//Vec3 world_wheel_pos = wheel_comp->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
 
 		physx::PxQuat no_rot(0, physx::PxVec3(0.0f, 0.0f, 1.0f));
 
 		//Create actor to connect steer and suspension joint to
-		//m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(PxConvert::ToPx(world_wheel_pos),no_rot));
 		m_SuspensionActor = system->GetPxSDK()->createRigidDynamic(physx::PxTransform(physx::PxVec3(0, 0, 0), no_rot));
 		m_SuspensionActor->setMass(wheel_comp->GetMass());
 		sm->GetPxScene()->addActor(*m_SuspensionActor);
@@ -102,11 +99,9 @@ namespace GASS
 
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eSWING1, physx::PxD6Motion::eLIMITED);
 		m_SuspensionJoint->setMotion(physx::PxD6Axis::eY, physx::PxD6Motion::eLIMITED);
-		//m_SuspensionJoint->setLinearLimit(physx::PxJointLimit(1,0.1));
-		m_SuspensionJoint->setLinearLimit(physx::PxJointLinearLimit(1,physx::PxSpring(1,1)));
-		physx::PxD6JointDrive suspension_drive(m_Strength, m_Damping, m_SpringJointMaxForce, false);
-		m_SuspensionJoint->setDrive(physx::PxD6Drive::eY, suspension_drive);
-
+		float slack = 0.01f;
+		m_SuspensionJoint->setLinearLimit(physx::PxJointLinearLimit(slack,physx::PxSpring(m_Strength, m_Damping)));
+		
 		physx::PxD6JointDrive steer_drive(m_SteerJointSpring, m_SteerJointDamping, m_MaxSteerTorque, false);
 		m_SuspensionJoint->setDrive(physx::PxD6Drive::eSWING, steer_drive);
 		SetSteerLimit(m_SteerLimit);
@@ -115,9 +110,7 @@ namespace GASS
 			m_SuspensionActor,physx::PxTransform(physx::PxVec3(0,0,0),no_rot), //parent
 			wheel_actor, physx::PxTransform(physx::PxVec3(0,0,0), no_rot));
 		m_WheelAxisJoint->setMotion(physx::PxD6Axis::eTWIST, physx::PxD6Motion::eFREE);
-		//SetDriveVelocity(3);
 	}
-
 
 	void PhysXSuspensionComponent::SetSteerLimit(float value)
 	{
@@ -134,16 +127,6 @@ namespace GASS
 		}
 	}
 
-	float PhysXSuspensionComponent::GetRollAngle()
-	{
-		return 0;
-	}
-
-	float PhysXSuspensionComponent::GetRollAngleRate()
-	{
-		return 0;
-	}
-
 	void PhysXSuspensionComponent::UpdateMotor()
 	{
 		if(m_WheelAxisJoint)
@@ -152,6 +135,11 @@ namespace GASS
 			m_WheelAxisJoint->setDrive(physx::PxD6Drive::eTWIST, drive);
 			m_WheelAxisJoint->setDriveVelocity(physx::PxVec3(0,0,0), physx::PxVec3(m_WheelAngularVelocity,0,0));
 		}
+	}
+
+	float PhysXSuspensionComponent::GetSteerAngle() const
+	{
+		return m_SuspensionJoint->getSwingYAngle();
 	}
 
 	void PhysXSuspensionComponent::SetDriveVelocity(float velocity)
@@ -165,29 +153,4 @@ namespace GASS
 		m_DriveMaxTorque = value;
 		UpdateMotor();
 	}
-
-	void PhysXSuspensionComponent::SendJointUpdate(PhysicsVelocityEventPtr message)
-	{
-		MessagePtr joint_message;
-	/*	if(m_Joint)
-		{
-		physx::PxTransform  t1  = m_RollAxisActor->getGlobalPose();
-		physx::PxTransform  t2 = m_WheelActor->getGlobalPose();
-		//t2.q.toRadiansAndUnitAxis(angle, axis);
-		physx::PxReal angle = t1.q.getAngle(t2.q);
-
-		float angle_rate =  m_WheelActor->getAngularVelocity().x;
-
-		if(GetSceneObject()->GetName()=="JimTankWheelL1[8]")
-		std::cout << "Vel:" << m_WheelActor->getAngularVelocity().x << " " << m_WheelActor->getAngularVelocity().y << " " << m_WheelActor->getAngularVelocity().z << "\n";
-
-		//std::cout << "diff:" << angle2 << " Rad:" << angle << " Axis:" << axis.x << " " << axis.y << " " << axis.z << "\n";
-		//	float angle_rate = dJointGetHinge2Angle1Rate (m_ODEJoint);
-
-		joint_message = ODEPhysicsHingeJointEventPtr(new ODEPhysicsHingeJointEvent(angle,0));
-		if	(joint_message)
-		GetSceneObject()->SendImmediate(joint_message);
-		}*/
-	}
-
 }

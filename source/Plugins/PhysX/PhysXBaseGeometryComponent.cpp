@@ -21,7 +21,8 @@
 #include "Plugins/PhysX/PhysXBaseGeometryComponent.h"
 #include "Plugins/PhysX/PhysXBodyComponent.h"
 #include "Plugins/PhysX/PhysXPhysicsSceneManager.h"
-
+#include "Plugins/PhysX/PhysXPhysicsSystem.h"
+#include "Plugins/PhysX/PhysXVehicleSceneQuery.h"
 namespace GASS
 {
 
@@ -45,7 +46,9 @@ namespace GASS
 	{
 		if(!m_Body) // else removed by body?
 		{
-			if(m_Shape)
+			if (m_StaticActor)
+				m_StaticActor->release();
+			else if(m_Shape)
 				m_Shape->release();
 		}
 		m_Shape = nullptr;
@@ -83,7 +86,6 @@ namespace GASS
 				//	GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnLoadComponents,LoadComponentsMessage,1));
 			}
 		}
-
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnTransformationChanged,TransformationChangedEvent, 0));
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBaseGeometryComponent::OnCollisionSettings,CollisionSettingsRequest ,0));
 	}
@@ -91,10 +93,27 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::OnLoad(MessagePtr message)
 	{
-		if(m_Shape)
+		if (m_StaticActor)
+			m_StaticActor->release();
+		else if(m_Shape)
 			m_Shape->release();
-		m_Shape = CreateShape();
-		
+
+
+		if(m_Body == nullptr)
+		{
+			PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+			physx::PxTransform pose = physx::PxTransform(physx::PxVec3(0.0f, 0, 0.0f), physx::PxQuat(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f)));
+			PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
+			const Vec3 position = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldPosition();
+			const auto rot = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->GetWorldRotation();
+			pose.p = scene_manager->WorldToLocal(position);
+			pose.q = PxConvert::ToPx(rot);
+			m_StaticActor = system->GetPxSDK()->createRigidStatic(pose);
+			scene_manager->GetPxScene()->addActor(*m_StaticActor);
+		}
+
+		physx::PxRigidActor* actor = m_Body ? static_cast<physx::PxRigidActor*>(m_Body->GetPxRigidDynamic()) : static_cast<physx::PxRigidActor*>(m_StaticActor);
+		m_Shape = CreateShape(*actor);
 		if(m_Shape == nullptr)
 		{
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND,"Failed to create shape","PhysXBaseGeometryComponent::OnLoad");
@@ -102,12 +121,16 @@ namespace GASS
 
 		m_Shape->userData = this;
 		
-
 		//update collision flags
 		GeometryComponentPtr geom  = GetGeometry();
 		physx::PxFilterData coll_filter_data;
 		if(geom)
 		{
+
+			PxFilterData query_filter_data;
+			VehicleSetupDrivableShapeQueryFilterData(&query_filter_data);
+			m_Shape->setQueryFilterData(query_filter_data);
+
 			GeometryFlags against = GeometryFlagManager::GetMask(geom->GetGeometryFlags());
 			coll_filter_data.word0 = geom->GetGeometryFlags();
 			coll_filter_data.word1 = against;
@@ -166,15 +189,22 @@ namespace GASS
 
 	void PhysXBaseGeometryComponent::SetPosition(const Vec3 &pos)
 	{
-		
+		if (m_StaticActor)
+		{
+			PhysXPhysicsSceneManagerPtr scene_manager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
+			m_StaticActor->setGlobalPose(physx::PxTransform(scene_manager->WorldToLocal(pos), m_StaticActor->getGlobalPose().q));
+		}
 	}
 
 	void PhysXBaseGeometryComponent::SetRotation(const Quaternion &rot)
 	{
-		
+		if (m_StaticActor)
+		{
+			m_StaticActor->setGlobalPose(physx::PxTransform(m_StaticActor->getGlobalPose().p, PxConvert::ToPx(rot)));
+		}
 	}
 
-	void PhysXBaseGeometryComponent::SetScale(const Vec3 &value)
+	void PhysXBaseGeometryComponent::SetScale(const Vec3 &/*value*/)
 	{
 
 	}

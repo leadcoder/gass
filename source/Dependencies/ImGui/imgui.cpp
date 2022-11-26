@@ -13222,6 +13222,7 @@ static void ImGui::DockNodeRemoveWindow(ImGuiDockNode* node, ImGuiWindow* window
 
     // Remove window
     bool erased = false;
+    (void) erased;
     for (int n = 0; n < node->Windows.Size; n++)
         if (node->Windows[n] == window)
         {

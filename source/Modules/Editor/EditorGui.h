@@ -3,7 +3,13 @@
 #include "imgui_internal.h"
 #include "imgui_stdlib.h"
 
-//#include "windows.h"
+#ifndef _MSC_VER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
+#endif
+
 #include "tinyfiledialogs.h"
 #include "Core/Utils/GASSColorRGB.h"
 #include "Core/Math/GASSAABox.h"
@@ -19,6 +25,8 @@
 #include "Sim/Interface/GASSIGraphNodeComponent.h"
 #include "Sim/Interface/GASSIGraphEdgeComponent.h"
 #include "Sim/Interface/GASSIWaypointListComponent.h"
+#include "Sim/Interface/GASSIMeshComponent.h"
+#include "Sim/Interface/GASSIImGuiComponent.h"
 #include "Modules/Editor/ToolSystem/GraphTool.h"
 #include "Modules/Editor/ToolSystem/CreateTool.h"
 #include "IconsFontAwesome5.h"
@@ -162,45 +170,46 @@ namespace GASS
 				{
 					if (ImGui::MenuItem("New"))
 					{
-						m_SceneSelected = nullptr;
 						auto scene = GetFirstScene();
 						if (scene)
-							SimEngine::Get().DestroyScene(scene);
-						scene = ScenePtr(SimEngine::Get().CreateScene("NewScene"));
-						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
-						scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
-					}
-
-					if (ImGui::BeginMenu("Load Scene"))
-					{
-						auto scenes = SimEngine::Get().GetSavedScenes();
-						for (size_t i = 0; i < scenes.size(); i++)
 						{
-							if (ImGui::MenuItem(scenes[i].c_str()))
-							{
-								m_SceneSelected = nullptr;
-								auto scene = GetFirstScene();
-								if (scene)
-									SimEngine::Get().DestroyScene(scene);
-								scene = ScenePtr(SimEngine::Get().CreateScene(scenes[i]));
-								scene->Load(scenes[i]);
-								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
-								scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
-								break;
-							}
+							scene->New();
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
 						}
-						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Save", "Ctrl+S"))
+					if (ImGui::MenuItem("Load Scene..."))
 					{
-						auto scene = GetFirstScene();
-						if (scene && scene->GetName() != "")
-							scene->Save(scene->GetName());
-						//char const* filterPatterns[1] = { "*.earth" };
-						//if (char const* fileToSave = tinyfd_saveFileDialog("Save File", "", 1, filterPatterns, nullptr))
+						char const* filterPatterns[1] = { "*.scene" };
+						if (char const* fileToSave = tinyfd_openFileDialog("Load Scene", "", 1, filterPatterns, nullptr,0))
 						{
+							m_SceneSelected = nullptr;
+							auto scene = GetFirstScene();
+							scene->Load(FilePath(fileToSave));
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->SetObjectSite(scene->GetSceneryRoot());
+							scene->GetFirstSceneManagerByClass<EditorSceneManager>()->CreateCamera();
+						}
+					}
 
+					auto scene = GetFirstScene();
+					if (scene && scene->GetSceneFile().Exist())
+					{
+						if (ImGui::MenuItem("Save", "Ctrl+S"))
+						{
+							scene->Save(scene->GetSceneFile());
+						}
+					}
+
+					if (ImGui::MenuItem("Save As...", "Ctrl+S"))
+					{
+						if (scene)
+						{
+							char const* filterPatterns[1] = { "*.scene" };
+							if (char const* fileToSave = tinyfd_saveFileDialog("Save Scene", "", 1, filterPatterns, nullptr))
+							{
+								scene->Save(FilePath(fileToSave));
+							}
 						}
 					}
 
@@ -241,7 +250,7 @@ namespace GASS
 		void DockingBegin()
 		{
 			// ImGui code goes here...
-			ImGui::ShowDemoWindow();
+			//ImGui::ShowDemoWindow();
 			//return;
 			constexpr ImGuiDockNodeFlags dockspace_flags =
 				ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
@@ -321,6 +330,7 @@ namespace GASS
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TREENODE"))
 				{
+					(void) payload;
 					auto new_obj = SimEngine::Get().CreateObjectFromTemplate(m_DropTemplate);
 					so->AddChildSceneObject(new_obj, true);
 					m_DropTemplate = "";
@@ -405,9 +415,6 @@ namespace GASS
 					}
 				}
 
-
-
-
 				ImGui::EndPopup();
 
 			}
@@ -416,7 +423,7 @@ namespace GASS
 			{
 				if (!node_deleted)
 				{
-					for (int i = 0; i < so->GetNumChildren(); i++)
+					for (unsigned int i = 0; i < so->GetNumChildren(); i++)
 					{
 						DrawSceneObject(so->GetChild(i));
 					}
@@ -504,7 +511,7 @@ namespace GASS
 				if (prop->HasMetaData())
 				{
 					PropertyMetaDataPtr meta_data = prop->GetMetaData();
-					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					//const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const std::string documentation = prop->GetDescription();
 					if (GASS_DYNAMIC_PTR_CAST<FilePathPropertyMetaData>(meta_data))
 					{
@@ -513,15 +520,6 @@ namespace GASS
 						std::vector<std::string> exts = file_path_data->GetExtensions();
 						FilePathPropertyMetaData::FilePathEditType type = file_path_data->GetType();
 
-						std::string filter;
-						for (size_t i = 0; i < exts.size(); i++)
-						{
-							if (i != 0)
-								filter += " ";
-							filter += "*.";
-							filter += exts[i];
-						}
-
 						std::string filename = prop->GetValueAsString(obj);
 						filename = StringUtils::Replace(filename, "/", "\\");
 
@@ -529,9 +527,19 @@ namespace GASS
 						switch (type)
 						{
 						case FilePathPropertyMetaData::IMPORT_FILE:
-							//item = m_VariantManager->addProperty(filePathTypeId(), prop_name.c_str());
-							//item->setValue(filename.c_str());
-							//item->setAttribute(QLatin1String("filter"), QVariant(filter.c_str()));
+							if (ImGui::Button(prop_name.c_str()))
+							{
+								std::vector<char const*> filterPatterns;
+								for (size_t i = 0; i < exts.size(); i++)
+								{
+									filterPatterns.push_back(exts[i].c_str());
+								}
+								char const* const* const filterptr = filterPatterns.empty() ? nullptr : &filterPatterns[0];
+								if (char const* fileToLoad = tinyfd_openFileDialog("Import File", "", (int) filterPatterns.size(), filterptr, nullptr, 0))
+								{
+									prop->SetValueByString(obj, std::string(fileToLoad));
+								}
+							}
 							break;
 						case FilePathPropertyMetaData::EXPORT_FILE:
 							//item = m_VariantManager->addProperty(newFileTypeId(), prop_name.c_str());
@@ -545,7 +553,7 @@ namespace GASS
 				}
 				else //if (!item)
 				{
-					const bool editable = (prop->GetFlags() & PF_EDITABLE);
+					//const bool editable = (prop->GetFlags() & PF_EDITABLE);
 					const bool multi = (prop->GetFlags() & PF_MULTI_OPTIONS);
 					if (prop->HasOptions())
 					{
@@ -826,7 +834,7 @@ namespace GASS
 					{
 						ComponentPtr comp = GASS_STATIC_PTR_CAST<Component>(comp_iter.getNext());
 						std::string class_name = comp->GetRTTI()->GetClassName();
-						if (comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
+						if (true)//comp->HasMetaData() && comp->GetMetaData()->GetFlags() & OF_VISIBLE) //we have settings!
 						{
 							ImGui::TableNextRow();
 							ImGui::TableSetColumnIndex(0);
@@ -836,6 +844,11 @@ namespace GASS
 							const bool open = ImGui::TreeNode(class_name.c_str());
 							if (open)
 							{
+								auto imgui_comp = GASS_DYNAMIC_PTR_CAST<IImGuiComponent>(comp);
+								if (imgui_comp)
+								{
+									imgui_comp->DrawGui();
+								}
 								auto comp_props = comp->GetProperties();
 
 								for (auto comp_prop : comp_props)
@@ -1056,3 +1069,6 @@ namespace GASS
 
 			};
 		}
+#ifndef _MSC_VER
+#pragma GCC diagnostic pop
+#endif

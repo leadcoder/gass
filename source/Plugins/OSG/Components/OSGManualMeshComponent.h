@@ -48,6 +48,8 @@ namespace GASS
 		GraphicsMesh GetMeshData() const override;
 		void SetMeshData(const GraphicsMesh &mesh) override;
 		void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index) override;
+		void SetSubMeshMaterial(IGfxMaterialConfig* config, int sub_mesh_index)override;
+
 		void Clear() override;
 		bool GetCastShadow() const { return m_CastShadow; }
 		bool GetReceiveShadow()const { return m_ReceiveShadow; }

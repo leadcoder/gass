@@ -35,15 +35,14 @@ namespace GASS
 		NetworkOptions network,
 		InputOptions input)
 	{
-		std::string editor_module_name = "GASSEditorModule";
-#ifndef WIN32
-		editor_module_name = "lib" + editor_module_name;
-#endif
 		SimEngineConfig conf;
-		conf.Plugins = {"GASSPluginOSG",
+		conf.Plugins = {"GASSModuleOSG",
+				//		"GASSModuleOSGEarth",
 						"GASSPluginInput",
 						"GASSPluginBase",
-						editor_module_name };
+						"GASSPluginRoadNetwork",
+						"GASSPluginRecastNavigation",
+						"GASSEditorModule"};
 		if (input == InputOptions::OIS)
 			conf.Plugins.emplace_back("GASSPluginOIS");
 		if (sound == SoundOptions::OPENAL)
@@ -64,9 +63,9 @@ namespace GASS
 		systems.emplace_back("ControlSettingsSystem");
 		systems.emplace_back("SimulationSystem");
 
+
 		if (physics != PhysicsOptions::NONE)
 		{
-			systems.emplace_back("MaterialSystem"); //must be listed before physics system
 			systems.emplace_back(physics == PhysicsOptions::PHYSX ? "PhysXPhysicsSystem" : "ODEPhysicsSystem");
 		}
 		
@@ -75,7 +74,7 @@ namespace GASS
 
 		systems.emplace_back("OSGGraphicsSystem");
 		systems.emplace_back("OSGCollisionSystem");
-
+		//systems.emplace_back("OSGEarthGraphicsSystem");
 
 		for (auto system_name : systems)
 		{
@@ -84,21 +83,7 @@ namespace GASS
 			conf.SimSystemManager.Systems.push_back(sysc);
 		}
 		conf.DataPath = "%GASS_DATA_HOME%";
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/gfx", true);
-		conf.ResourceConfig.ResourceLocations.emplace_back("MATERIALS", "%GASS_DATA_HOME%/gfx/osg/materials", true);
-		if (physics != PhysicsOptions::NONE)
-		{
-			if (physics == PhysicsOptions::PHYSX)
-				conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/vehicles/physx", true);
-			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/physics", true);
-
-		}
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/input", true);
-		if(sound != SoundOptions::NONE)
-			conf.ResourceConfig.ResourceLocations.emplace_back("GASS", "%GASS_DATA_HOME%/sounds", true);
-		
-		//templates
-		conf.ResourceConfig.ResourceLocations.emplace_back("GASS_TEMPLATES", "%GASS_DATA_HOME%/templates/camera", true);
+		conf.ResourceConfig.ResourceLocations.emplace_back("ENGINE", "%GASS_DATA_HOME%/engine", true);
 		return conf;
 	}
 
@@ -122,11 +107,7 @@ namespace GASS
 		{
 			config.DataPath = XMLUtils::ReadStringAttribute(data_path_elem, "value");
 		}
-
-		const tinyxml2::XMLElement *scene_path_elem = gass_elem->FirstChildElement("ScenePath");
-		if (scene_path_elem)
-			config.ScenePath = XMLUtils::ReadStringAttribute(scene_path_elem, "value");
-
+		
 		//read SceneObjectTemplateManager settings
 		tinyxml2::XMLElement *sotm_elem = gass_elem->FirstChildElement("SceneObjectTemplateManager");
 		if (sotm_elem)

@@ -1,17 +1,47 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO leadcoder/osgearth
-    #REF 6b5fb806a9190f7425c32db65d3ea905a55a9c16 #version 3.3
-	REF abf85f18e81d3ae01d940d4e7e98b3de30af9d24
-    SHA512 41068ea3a1f58fa7e993f20dee4e1718c1c7a81aa0e6f82eec309e73ebfe66e36af2abb316a40443662ed71bcd0fac6cc109ad04f94a7b4b2951daafd2ebdbc6
-    HEAD_REF master
-    PATCHES
+# vcpkg_from_github(
+    # OUT_SOURCE_PATH SOURCE_PATH
+    # REPO leadcoder/osgearth
+	# REF abf85f18e81d3ae01d940d4e7e98b3de30af9d24
+    # SHA512 41068ea3a1f58fa7e993f20dee4e1718c1c7a81aa0e6f82eec309e73ebfe66e36af2abb316a40443662ed71bcd0fac6cc109ad04f94a7b4b2951daafd2ebdbc6
+    # HEAD_REF master
+    # PATCHES
+        # link-libraries.patch
+        # find-package.patch
+        # remove-tool-debug-suffix.patch
+		# remove-lerc.patch
+# )
+
+set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src)
+
+#remove old check out
+file(REMOVE_RECURSE ${SOURCE_PATH})
+
+#do git clone to include submodules
+find_program(GIT NAMES git git.cmd)
+vcpkg_execute_required_process(
+      COMMAND ${GIT} clone https://github.com/leadcoder/osgearth.git ${SOURCE_PATH}
+      ALLOW_IN_DOWNLOAD_MODE
+      WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
+      LOGNAME git-clone-${TARGET_TRIPLET}
+    )
+	
+#checkout commit
+vcpkg_execute_required_process(
+      ALLOW_IN_DOWNLOAD_MODE
+      COMMAND ${GIT} checkout --recurse-submodules abf85f18e81d3ae01d940d4e7e98b3de30af9d24
+      WORKING_DIRECTORY ${SOURCE_PATH}
+      LOGNAME git-checkout-${TARGET_TRIPLET}
+    )
+	
+
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PATCHES 
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
-		remove-lerc-gltf.patch
-	#	fix-osgearth-config.patch
 )
+
 
 if("tools" IN_LIST FEATURES)
 	message(STATUS "Downloading submodules")

@@ -1,1 +1,0 @@
-gass_setup_sim_sample(SampleSimGUI  DEPS MyGUI)

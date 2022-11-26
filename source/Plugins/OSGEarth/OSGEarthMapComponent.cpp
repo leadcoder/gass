@@ -99,7 +99,6 @@ namespace GASS
 		bool GetEnabled() const override
 		{
 			return m_Layer->isOpen();
-			//return m_Layer->getEnabled();
 		}
 
 		void SetEnabled(bool value) override
@@ -129,6 +128,20 @@ namespace GASS
 			else if (dynamic_cast<osgEarth::FeatureModelLayer*>(m_Layer))
 				layer_type = MLT_FEATURE_MODEL;
 			return layer_type;
+		}
+
+		void SetOpacity(float value) override
+		{
+			if (auto image = dynamic_cast<osgEarth::ImageLayer*>(m_Layer))
+				image->setOpacity(value);
+		}
+
+		float GetOpacity() const override
+		{
+			float value = 1.0f;
+			if (auto image = dynamic_cast<osgEarth::ImageLayer*>(m_Layer))
+				value = image->getOpacity();
+			return value;
 		}
 
 		int GetUID() const override
@@ -369,7 +382,7 @@ namespace GASS
 			m_MapNode->getTerrain()->addTerrainCallback(m_TerrainCallbackProxy);
 		}
 
-		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGShadowRootNode();
+		osg::ref_ptr<osg::Group> root = osg_sm->GetOSGRootNode();
 	
 		//if no sky is present (projected mode) but we still want get terrain lightning  
 		//m_Lighting = new osgEarth::PhongLightingEffect();
@@ -377,11 +390,24 @@ namespace GASS
 		//m_Lighting->attach(m_MapNode->getOrCreateStateSet());
 
 		m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+		if (!m_SkyNode && m_AddSky)
+		{
+			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
+			sky_options.atmosphericLighting() = true;
+			sky_options.quality() = osgEarth::SkyOptions::QUALITY_HIGH;
+			sky_options.contrast() = m_SkyContrast;
+			sky_options.exposure() = m_SkyExposure;
+			sky_options.daytimeAmbientBoost() = m_SkyAmbientBoost;
+			sky_options.atmosphereVisible() = true;
+			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
+			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
+			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
+			SetTimeOfDay(m_Hour);
+		}
 		if (m_SkyNode)
 		{
 			//set default year/month and day to get good lighting
 			m_SkyNode->setDateTime(osgEarth::DateTime(2017, 6, 6, m_Hour));
-			
 		}
 
 		
@@ -447,23 +473,7 @@ namespace GASS
 			}
 		}
 
-		if (!m_SkyNode && m_AddSky)
-		{
-			osgEarth::SimpleSky::SimpleSkyOptions sky_options;
-			sky_options.atmosphericLighting() = false;
-			
-			std::string ext = m_MapNode->getMapSRS()->isGeographic() ? "sky_simple" : "sky_gl";
-			m_MapNode->addExtension(osgEarth::Extension::create(ext, sky_options));
-			m_SkyNode = osgEarth::findFirstParentOfType<osgEarth::Util::SkyNode>(m_MapNode);
-			SetTimeOfDay(m_Hour);
-		}
-
-		if (m_SkyNode) //reflect our settings
-		{
-			//SetSkyExposure(m_SkyExposure);
-			//SetSkyContrast(m_SkyContrast);
-			//SetSkyAmbientBoost(m_SkyAmbientBoost);
-		}
+		
 
 		//Restore setLightingMode to sky light to get osgEarth lighting to be reflected in rest of scene
 		view->setLightingMode(osg::View::SKY_LIGHT);
@@ -499,12 +509,15 @@ namespace GASS
 		GetSceneObject()->GetScene()->PostMessage(GASS_MAKE_SHARED<TerrainChangedEvent>());
 
 		osg::Group* object_root = nullptr;
-		if (m_IsRoot)
+		//if (m_IsRoot)
 		{
+			osg_sm->SetMapIsRoot(m_IsRoot);
 			object_root = new osg::Group();
-			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_UNKNOWN, object_root);
-
-			m_MapNode->addChild(object_root);
+			OSGConvert::SetOSGNodeMask(GEOMETRY_FLAG_ALL, object_root);
+			if(m_IsRoot)
+				m_MapNode->addChild(object_root);
+			else 
+				root->addChild(object_root);
 			osg_sm->SetMapNode(object_root);
 		}
 
@@ -523,8 +536,10 @@ namespace GASS
 				m_ShadowCaster->setLight(view->getLight());
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getLayerNodeGroup());
 				m_ShadowCaster->getShadowCastingGroup()->addChild(m_MapNode->getTerrainEngine()->getNode());
-				if (object_root)
+				m_ShadowCaster->setTraversalMask(NM_CAST_SHADOWS);
+				if (m_IsRoot && object_root)
 					m_ShadowCaster->getShadowCastingGroup()->addChild(object_root);
+				
 				if (m_MapNode->getNumParents() > 0)
 				{
 					osgEarth::insertGroup(m_ShadowCaster, m_MapNode->getParent(0));
@@ -722,6 +737,8 @@ namespace GASS
 		if (m_SkyNode)
 		{
 			m_SkyNode->setLighting(value);
+			const auto state_mode = osg::StateAttribute::OVERRIDE | (value ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
+			osgEarth::GLUtils::setLighting(m_MapNode->getOrCreateStateSet(), state_mode);
 		}
 	}
 

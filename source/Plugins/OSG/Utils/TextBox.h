@@ -10,7 +10,12 @@
 #include <string>
 using std::string;
 
-#pragma warning(disable:4100)
+
+
+#ifdef _MSC_VER
+  #pragma warning (push)
+  #pragma warning(disable:4100)
+#endif
 #include <osgText/Text>
 #include <osg/Geode>
 #include <osg/Projection>
@@ -38,7 +43,7 @@ public:
   //  of the wcreen; thus, any positive values for the osg::Vec3d 
   //  will offset the text to the right and/or up.
   void setPosition(osg::Vec3d position);
-  void setTextSize(unsigned int size);
+  void setTextSize(float size);
     
   osg::ref_ptr <osg::Group> getGroup() const;
     
@@ -62,4 +67,9 @@ private:
   //  The actual osgText object that holds textual data
   osg::ref_ptr <osgText::Text> text;
 };
+
+#ifdef _MSC_VER
+  #pragma warning (pop)
+#endif
+
 #endif

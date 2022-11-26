@@ -22,6 +22,7 @@
 #define PHYS_X_PHYSICS_SYSTEM
 
 #include "PhysXCommon.h"
+#include "Sim/GASSPhysicsMaterialManager.h"
 
 
 namespace physx
@@ -41,8 +42,6 @@ namespace GASS
 
 	class PhysXPhysicsSystem : public Reflection<PhysXPhysicsSystem, SimSystem>
 	{
-	public:
-//		typedef std::map<std::string,NxCollisionMesh> CollisionMeshMap;
 	public:
 		static void RegisterReflection();
 		PhysXPhysicsSystem(SimSystemManagerWeakPtr manager);
@@ -77,6 +76,7 @@ namespace GASS
 		std::map<std::string,physx::PxMaterial*> m_Materials;
 		physx::PxVehicleDrivableSurfaceToTireFrictionPairs* m_SurfaceTirePairs;
 		int m_MaxNumThreads;
+		PhysicsMaterialManager m_MaterialManager;
 	};
 
 	using PhysXPhysicsSystemPtr = std::shared_ptr<PhysXPhysicsSystem>;

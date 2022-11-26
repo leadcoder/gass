@@ -222,7 +222,7 @@ namespace GASS
 			osg::Quat rotation,so;
 			vm.decompose(translation, rotation, scale, so );
 
-			const int id = GASS_PTR_TO_INT(this);
+			//const int id = GASS_PTR_TO_INT(this);
 			const GASS::Vec3 pos = OSGConvert::ToGASS(translation);
 			const GASS::Quaternion rot = OSGConvert::ToGASS(rotation);
 

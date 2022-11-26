@@ -29,13 +29,12 @@ namespace GASS
 		GASS_DECLARE_CLASS_AS_INTERFACE(IPhysicsSuspensionComponent)
 	public:
 		virtual void SetDriveVelocity(float velocity) = 0;
-		//virtual float GetDriveVelocity() const = 0;
 		virtual void SetMaxDriveTorque(float value) = 0;
 		virtual float GetMaxDriveTorque() const = 0;
 		virtual void SetAngularSteerVelocity(float value) = 0;
-		//virtual float GetAngularSteerVelocity() const = 0;
 		virtual void SetMaxSteerTorque(float value) = 0;
 		virtual float GetMaxSteerTorque() const = 0;
+		virtual float GetSteerAngle() const = 0;
 	};
 	typedef GASS_SHARED_PTR<IPhysicsSuspensionComponent> PhysicsSuspensionComponentPtr;
 }

@@ -29,7 +29,14 @@
 #include "Core/Utils/GASSLogger.h"
 #include "Sim/GASSComponent.h"
 #include "Core/Serialize/tinyxml2.h"
+
+#ifndef _MSC_VER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
+
 #include <angelscript.h>
+
 
 #include <memory>
 //addons
@@ -387,6 +394,9 @@ namespace GASS
 	}
 }
 
+#ifndef _MSC_VER
+#pragma GCC diagnostic pop
+#endif
 
 
 

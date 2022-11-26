@@ -1,0 +1,96 @@
+/****************************************************************************
+* This file is part of GASS.                                                *
+* See http://sourceforge.net/projects/gass/                                 *
+*                                                                           *
+* Copyright (c) 2008-2009 GASS team. See Contributors.txt for details.      *
+*                                                                           *
+* GASS is free software: you can redistribute it and/or modify              *
+* it under the terms of the GNU Lesser General Public License as published  *
+* by the Free Software Foundation, either version 3 of the License, or      *
+* (at your option) any later version.                                       *
+*                                                                           *
+* GASS is distributed in the hope that it will be useful,                   *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+* GNU Lesser General Public License for more details.                       *
+*                                                                           *
+* You should have received a copy of the GNU Lesser General Public License  *
+* along with GASS. If not, see <http://www.gnu.org/licenses/>.              *
+*****************************************************************************/
+
+#include "OSGCollisionComponent.h"
+#include "Plugins/OSG/OSGGraphicsSceneManager.h"
+#include "Plugins/OSG/OSGGraphicsSystem.h"
+#include "Plugins/OSG/Components/OSGLocationComponent.h"
+#include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/Components/OSGCollisionComponent.h"
+#include "Plugins/OSG/OSGNodeMasks.h"
+
+#include <osgDB/ReadFile> 
+#include <osgUtil/Optimizer>
+#include <osg/MatrixTransform>
+#include <osgShadow/ShadowTechnique>
+#include <osg/Material>
+#include <osg/BlendFunc>
+
+
+
+namespace GASS
+{
+
+	OSGCollisionComponent::OSGCollisionComponent() : m_Category(GT_MESH)
+	{
+		
+	}	
+
+	OSGCollisionComponent::~OSGCollisionComponent()
+	{
+
+	}
+
+	void OSGCollisionComponent::RegisterReflection()
+	{
+		GASS::ComponentFactory::GetPtr()->Register("CollisionComponent",new GASS::Creator<OSGCollisionComponent, IComponent>);
+		RegisterProperty<GeometryCategory>("GeometryCategory", &GetGeometryCategory, &SetGeometryCategory);
+	}
+
+	void OSGCollisionComponent::SetGeometryCategory(const GeometryCategory &value)
+	{
+		m_Category = value;
+		if(m_MeshNode.valid())
+		{
+			//reset 
+			m_MeshNode->setNodeMask(~(NM_MESH_GEOMETRY | NM_TERRAIN_GEOMETRY | NM_GIZMO_GEOMETRY)  &  m_MeshNode->getNodeMask());
+			switch(m_Category.Get())
+			{
+			case GT_MESH:
+				m_MeshNode->setNodeMask(NM_MESH_GEOMETRY | m_MeshNode->getNodeMask());
+				break;
+			case GT_TERRAIN:
+				m_MeshNode->setNodeMask(NM_TERRAIN_GEOMETRY | m_MeshNode->getNodeMask());
+				break;
+			case GT_GIZMO:
+				m_MeshNode->setNodeMask(NM_GIZMO_GEOMETRY | m_MeshNode->getNodeMask());
+				break;
+			}
+		}
+	}
+
+	GeometryCategory OSGCollisionComponent::GetGeometryCategory() const
+	{
+		return m_Category;
+	}
+
+	void OSGCollisionComponent::OnCreate()
+	{
+		GetSceneObject()->RegisterForMessage(REG_TMESS(OSGCollisionComponent::OnLoad,LoadGFXComponentsMessage,1));
+	}
+
+
+	void OSGCollisionComponent::OnLoad(LoadGFXComponentsMessagePtr message)
+	{
+	
+	}
+
+	
+}

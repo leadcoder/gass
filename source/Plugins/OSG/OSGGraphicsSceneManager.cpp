@@ -28,6 +28,8 @@
 #include "Plugins/OSG/OSGDebugDraw.h"
 #include "Plugins/OSG/Utils/TextBox.h"
 #include "Plugins/OSG/Utils/ViewDependentShadowMapExt.h"
+#include "Plugins/OSG/OSGMaterial.h"
+
 
 
 namespace GASS
@@ -47,6 +49,7 @@ namespace GASS
 		m_EnableShadows(true)
 	{
 	}
+	
 
 	void OSGGraphicsSceneManager::OnPostConstruction()
 	{
@@ -69,6 +72,8 @@ namespace GASS
 		SetAmbientColor(m_AmbientColor);
 		m_RootNode->getOrCreateStateSet()->setAttributeAndModes(m_LightModel, osg::StateAttribute::ON);
 
+		m_RootNode->setStateSet(new SimpleMaterial());
+
 		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
 
 		osg::StateSet* stateset = m_RootNode->getOrCreateStateSet();
@@ -81,9 +86,9 @@ namespace GASS
 		m_RootNode->addChild(m_DebugDraw->GetNode());
 
 		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
-
-		const bool enable_shader_light = true;
-		m_RootNode->getOrCreateStateSet()->setDefine("OSG_LIGHTING", enable_shader_light ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
+		
+		Material::SetLighting(m_RootNode->getOrCreateStateSet(), osg::StateAttribute::ON);
+		Material::SetReceiveShadows(m_RootNode->getOrCreateStateSet(), osg::StateAttribute::ON);
 	}
 
 	OSGGraphicsSceneManager::~OSGGraphicsSceneManager(void)
@@ -280,7 +285,7 @@ namespace GASS
 		m_DebugDraw->DrawLine(start_point, end_point, start_color, end_color);
 	}
 
-	void OSGGraphicsSceneManager::OnUpdate(double delta_time)
+	void OSGGraphicsSceneManager::OnUpdate(double /*delta_time*/)
 	{
 		m_DebugDraw->Clear();
 	}
@@ -298,7 +303,8 @@ namespace GASS
 		settings->setCastsShadowTraversalMask(NM_CAST_SHADOWS);
 		settings->setMaximumShadowMapDistance(m_ShadowMaxFarDistance);
 		settings->setComputeNearFarModeOverride(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-		settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+		//settings->setShaderHint(osgShadow::ShadowSettings::PROVIDE_VERTEX_AND_FRAGMENT_SHADER);
+		settings->setShaderHint(osgShadow::ShadowSettings::NO_SHADERS);
 		//settings->setShadowMapProjectionHint(osgShadow::ShadowSettings::ORTHOGRAPHIC_SHADOW_MAP);
 		settings->setMinimumShadowMapNearFarRatio(m_ShadowMinimumNearFarRatio);
 		unsigned int num_shadow_maps = 2;

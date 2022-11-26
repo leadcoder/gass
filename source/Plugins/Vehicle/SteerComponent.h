@@ -53,6 +53,7 @@ namespace GASS
 		float GetMaxSteerAngle() const {return m_MaxSteerAngle;}
 		void SetSpeedMultiplier(float value) {m_Speed = value;}
 		float GetSpeedMultiplier() const {return m_Speed;}
+		void SceneManagerTick(double /*delta*/);
 
 		float m_Speed{1};
 		float m_SteerForce{100};

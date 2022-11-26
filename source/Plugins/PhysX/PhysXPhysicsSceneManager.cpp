@@ -349,7 +349,7 @@ namespace GASS
 		//if(float_size == 8) //double precision
 		{
 			std::vector<physx::PxVec3> verts;
-			for(int i =0 ;i < physics_mesh->PositionVector.size();i++)
+			for(size_t i =0 ;i < physics_mesh->PositionVector.size();i++)
 			{
 				physx::PxVec3 pos = PxConvert::ToPx(physics_mesh->PositionVector[i]);
 				verts.push_back(pos);
@@ -408,7 +408,7 @@ namespace GASS
 		//if(float_size == 8) //double precision
 		{
 			std::vector<physx::PxVec3> verts;
-			for(int i =0 ;i < physics_mesh->PositionVector.size();i++)
+			for(size_t i =0 ;i < physics_mesh->PositionVector.size();i++)
 			{
 				physx::PxVec3 pos= PxConvert::ToPx(physics_mesh->PositionVector[i]);
 				verts.push_back(pos);

@@ -41,11 +41,10 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		physx::PxShape* CreateShape() override;
+		physx::PxShape* CreateShape(physx::PxRigidActor& actor) override;
 		void SetSize(const Vec3 &size);
 		Vec3 GetSize() const;
 	protected:
-		
 		Vec3 m_Size; 
 	};
 }

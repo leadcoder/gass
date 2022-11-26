@@ -82,9 +82,9 @@ namespace GASS
 			std::vector<Vec3> normal_vector;
 			std::vector<Vec4> tex_coord_vector;
 			std::vector<unsigned int > face_vector;
-			std::map<std::string, GraphicsMaterial> materials;
+			std::map<std::string, PhongMaterialConfig> materials;
 
-			GraphicsMaterial def_mat;
+			PhongMaterialConfig def_mat;
 			materials["DefaultMat"] = def_mat;
 
 			for (size_t i = 0; i < mesh_data_vec.size(); i++)
@@ -96,12 +96,12 @@ namespace GASS
 					if (sub_mesh->Type == TRIANGLE_LIST)
 					{
 
-						if (sub_mesh->MaterialName != "")
-							materials[sub_mesh->MaterialName] = sub_mesh->Material;
+						if (sub_mesh->MaterialName != "" && sub_mesh->MaterialConfig)
+							materials[sub_mesh->MaterialName] = *((PhongMaterialConfig*)sub_mesh->MaterialConfig.get());
 						else
 						{
 							sub_mesh->MaterialName = "DefaultMat";
-							sub_mesh->Material = def_mat;
+							*(sub_mesh->MaterialConfig) = def_mat;
 						}
 						for (size_t j = 0; j < sub_mesh->PositionVector.size(); j++)
 						{
@@ -133,12 +133,12 @@ namespace GASS
 						}
 
 						bool dds_tex = false;
-						if (sub_mesh->Material.Textures.size() > 0)
+						/*if (sub_mesh->Material.Textures.size() > 0)
 						{
 							std::string ext = StringUtils::ToLower(FileUtils::GetExtension(sub_mesh->Material.Textures[0]));
 							if (ext == "dds")
 								dds_tex = true;
-						}
+						}*/
 
 						if (sub_mesh->TexCoordsVector.size() > 0 && sub_mesh->TexCoordsVector[0].size() > 0)
 						{
@@ -244,14 +244,14 @@ namespace GASS
 			auto iter = materials.begin();
 			while (iter != materials.end())
 			{
-				GraphicsMaterial mat = iter->second;
+				PhongMaterialConfig mat = iter->second;
 				mtl_file_ptr << "\n";
 				mtl_file_ptr << "newmtl " << iter->first << "\n";
 				mtl_file_ptr << "Kd " << mat.Diffuse << "\n";
 				mtl_file_ptr << "Ka " << mat.Ambient << "\n";
 				mtl_file_ptr << "illum " << "1" << "\n";
-				if (mat.Textures.size() > 0 && mat.Textures[0] != "")
-					mtl_file_ptr << "map_Kd " << mat.Textures[0] << "\n";
+				//if (mat.Textures.size() > 0 && mat.Textures[0] != "")
+				//	mtl_file_ptr << "map_Kd " << mat.Textures[0] << "\n";
 				mtl_file_ptr << "\n";
 				++iter;
 			}
@@ -263,8 +263,8 @@ namespace GASS
 				iter = materials.begin();
 				while (iter != materials.end())
 				{
-					GraphicsMaterial mat = iter->second;
-					if (mat.Textures.size() > 0)
+					PhongMaterialConfig mat = iter->second;
+					/*if (mat.Textures.size() > 0)
 					{
 						std::string texture_name = mat.Textures[0];
 						ResourceHandle res(texture_name);
@@ -283,17 +283,9 @@ namespace GASS
 							std::string out_path = FileUtils::RemoveFilename(out_file);
 							out_path = out_path + texture_name;
 							FileUtils::CopyFile(full_path, out_path);
-							/*try
-							{
-								GASS_FILESYSTEM::copy_file(GASS_FILESYSTEM::path(full_path),GASS_FILESYSTEM::path(out_path),GASS_FILESYSTEM::copy_option::overwrite_if_exists);
-							}
-							catch (const GASS_FILESYSTEM::filesystem_error& e)
-							{
-								//std::cerr << "Error: " << e.what() << std::endl;
-								GASS_LOG(LWARNING) << "Failed copy texture during export:" << e.what();
-							}*/
+						
 						}
-					}
+					}*/
 					++iter;
 				}
 			}

@@ -26,6 +26,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Plugins/OSG/OSGMaterial.h"
 #include "Core/Math/GASSMath.h"
 
 
@@ -123,6 +124,7 @@ namespace GASS
 														osg::Vec3(static_cast<float>(up.x), static_cast<float>(up.y), static_cast<float>(up.z)),
 														osgDB::readImageFile(full_path,options));
 
+		
 		m_OSGBillboard->addDrawable(geom);
 		m_Geom = geom.get();
 
@@ -133,11 +135,11 @@ namespace GASS
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGBillboard.get());
 
-		osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
-		nodess->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-		if (!m_CastShadow) //protect from shadow shader override
-			nodess->setAttribute(new osg::Program(), osg::StateAttribute::PROTECTED);
-
+		auto material = new SimpleMaterial();
+		m_OSGBillboard->setStateSet(material);
+		//osg::ref_ptr<osg::StateSet> nodess (m_OSGBillboard->getOrCreateStateSet());
+		Material::SetLighting(material, osg::StateAttribute::OFF);
+	
 		SetCastShadow(m_CastShadow);
 		SetGeometryFlags(m_GeomFlags);
 		GetSceneObject()->PostEvent(std::make_shared<GeometryChangedEvent>(GASS_DYNAMIC_PTR_CAST<IGeometryComponent>(shared_from_this())));
@@ -180,6 +182,8 @@ namespace GASS
 	{
 		// set up the Geometry.
 		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
+		geom->setUseDisplayList(false);
+		geom->setDataVariance(osg::Object::DYNAMIC);
 		osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(4);
 		(*coords)[0] = corner;
 		(*coords)[1] = corner+width;
@@ -191,24 +195,21 @@ namespace GASS
 		(*norms)[0] = width^height;
 		(*norms)[0].normalize();
 
-		geom->setNormalArray(norms.get());
-		geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
-
-		osg::ref_ptr<osg::Vec2Array> tcoords = new osg::Vec2Array(4);
-		(*tcoords)[0].set(0.0f,0.0f);
-		(*tcoords)[1].set(1.0f,0.0f);
-		(*tcoords)[2].set(1.0f,1.0f);
-		(*tcoords)[3].set(0.0f,1.0f);
-		geom->setTexCoordArray(0,tcoords.get());
+		geom->setNormalArray(norms.get(),osg::Array::BIND_OVERALL);
+	
+		auto tcoords = new osg::Vec4Array(4);
+		(*tcoords)[0].set(0.0f,0.0f, 0.0f, 0.0f);
+		(*tcoords)[1].set(1.0f,0.0f, 0.0f, 0.0f);
+		(*tcoords)[2].set(1.0f,1.0f, 0.0f, 0.0f);
+		(*tcoords)[3].set(0.0f,1.0f, 0.0f, 0.0f);
+		geom->setTexCoordArray(0,tcoords, osg::Array::BIND_PER_VERTEX);
 
 		osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(4);
 		(*colors)[0].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[1].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[2].set(1.0f,1.0f,1.0f,1.0f);
 		(*colors)[3].set(1.0f,1.0f,1.0f,1.0f);
-		geom->setColorArray(colors);
-		geom->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-
+		geom->setColorArray(colors, osg::Array::BIND_PER_VERTEX);
 
 		osg::ref_ptr<osg::DrawArrays> arrays = new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4);
 		geom->addPrimitiveSet(arrays.get());
@@ -262,12 +263,12 @@ namespace GASS
 			osg::Vec3f osg_width(m_ScaleWidth*width,0.0f,0.0f);
 			osg::Vec3f osg_corner = -osg_width*0.5f;
 
-
 			(*coords)[0] = osg_corner;
 			(*coords)[1] = osg_corner+osg_width;
 			(*coords)[2] = osg_corner+osg_width+osg_height;
 			(*coords)[3] = osg_corner+osg_height;
 			m_Geom->setVertexArray(coords);
+			m_Geom->getVertexArray()->dirty();
 		}
 	}
 
@@ -282,6 +283,7 @@ namespace GASS
 			(*colors)[2]= osg_color;
 			(*colors)[3]= osg_color;
 			m_Geom->setColorArray(colors);
+			m_Geom->getColorArray()->dirty();
 		}
 	}
 

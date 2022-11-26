@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="NavBase" />
+		<Components>
+			<EditorComponent>
+				<Lock value="0"/>
+				<IconFile value="icon_gps"/>
+				<ShowInTree value ="true"/>
+				<AllowRemove value="true"/>
+				<AllowDragAndDrop value="true"/>
+				<ChangeMaterialWhenSelected value="false"/>
+				<ShowBBWhenSelected value="true"/>
+			</EditorComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="NavigationMesh" />
+		<ID value="AI_NAVIGATION_MESH"/>
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<Components>
+			<RecastNavigationMeshComponent>
+				<CellSize value ="1"/>
+				<CellHeight value ="0.5"/>
+				<AgentHeight value ="1.1"/>
+				<AgentRadius value ="2"/>
+				<AgentMaxClimb value ="0.8"/>
+			</RecastNavigationMeshComponent>
+		</Components>
+		<Children>
+			<SceneObjectTemplate>
+				<Name value="SolidDebugObject" />
+				<ID value="SOLID_MESH_DEBUG_OBJECT"/>
+				<Components>
+					<LocationComponent />
+					<ManualMeshComponent />
+				</Components>
+				<Children>
+				</Children>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="LineDebugObject" />
+				<ID value="LINE_MESH_DEBUG_OBJECT"/>
+				<Components>
+					<LocationComponent />
+					<ManualMeshComponent />
+				</Components>
+			</SceneObjectTemplate>
+		</Children>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="OffmeshConnection" />
+		<ID value="AI_OFF_MESH_OBJECT" />
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<Components>
+			<LocationComponent />
+			<BillboardComponent>
+				<Name value="NodeGeom"/>
+				<Material value="node.png"/>
+				<Width value="0.2"/>
+				<Height value="0.2"/>
+			</BillboardComponent>
+			<ManualMeshComponent/>
+			<RecastOffmeshMeshConnectionComponent>
+				<Radius value="1.0"/>
+				<Mode value="DOWN_STREAM"/>
+			</RecastOffmeshMeshConnectionComponent>
+		</Components>
+		<Children>
+			<SceneObjectTemplate>
+				<Name value="OffmeshConnectionTarget" />
+				<ID value="AI_OFF_MESH_CHILD_OBJECT"/>
+				<Inheritance value="NavBase"/>
+				<Components>
+					<LocationComponent>
+						<AttachToParent value="true"/>
+					</LocationComponent>
+					<BillboardComponent>
+						<Name value="NodeGeom"/>
+						<Material value="node.png"/>
+						<Width value="0.1"/>
+						<Height value="0.1"/>
+					</BillboardComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</Children>
+	</SceneObjectTemplate>
+
+
+	<SceneObjectTemplate>
+		<Name value="NavMeshBoxGeometry" />
+		<ID value="AI_CONVEX_VOLUME" />
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<Components>
+			<LocationComponent />
+			<BoxGeometryComponent>
+				<Size value ="5 1 5"/>
+			</BoxGeometryComponent>
+			<ManualMeshComponent />
+			<RecastConvexVolumeComponent/>
+		</Components>
+	</SceneObjectTemplate>
+
+	<SceneObjectTemplate>
+		<Name value="NavMeshDoorObject" />
+		<ID value="AI_DOOR_OBJECT" />
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<Components>
+			<LocationComponent />
+			<BoxGeometryComponent>
+				<Size value ="3 1 0.5"/>
+			</BoxGeometryComponent>
+			<ManualMeshComponent />
+			<RecastDoorComponent>
+				<Open value="true"/>
+			</RecastDoorComponent>
+			<RecastConvexVolumeComponent>
+				<LandCoverType value ="LAND_COVER_DEFAULT"/>
+			</RecastConvexVolumeComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="DetourCrowd" />
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<ID value="DETOUR_CROWD" />
+		<Components>
+			<!--<LocationComponent />
+      <ManualMeshComponent />-->
+			<DetourCrowdComponent/>
+		</Components>
+		<Children></Children>
+	</SceneObjectTemplate>
+
+	<SceneObjectTemplate>
+		<Name value="DetourAgentTest" />
+		<Inheritance value="NavBase"/>
+		<Instantiable value="true"/>
+		<ID value="DETOUR_AGENT" />
+		<Components>
+			<LocationComponent />
+			<ManualMeshComponent />
+			<DetourCrowdAgentComponent>
+				<MaxAcceleration value="2"/>
+			</DetourCrowdAgentComponent>
+		</Components>
+	</SceneObjectTemplate>
+
+</Templates>

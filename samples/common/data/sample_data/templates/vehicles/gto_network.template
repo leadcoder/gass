@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Templates>
+	<SceneObjectTemplate>
+		<Name value="GTONet"/>
+		<ID value="CHASSIS"/>
+		<Serialize value="false"/>
+		<Instantiable value= "true"/>
+		<Components>
+			<GroupComponent>
+			</GroupComponent>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<MeshComponent>
+				<Filename value="gta_chassis.mesh"/>
+				<CastShadow value="1"/>
+				<GeometryFlags value="GEOMETRY_FLAG_VEHICLE_CHASSIS"/>
+			</MeshComponent>
+			<PhysicsConvexGeometryComponent>
+				<SimulationCollision value="true"/>
+			</PhysicsConvexGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="1"/>
+				<EffectJoints value="true"/>
+			</PhysicsBodyComponent>
+			<InputHandlerComponent>
+				<ControlSetting value="TankInputSettings" />
+			</InputHandlerComponent>
+			<VehicleEngineComponent>
+				<Wheels value="WHEEL_R2 WHEEL_L2"/>
+				<EngineType value="car"/>
+				<Power value="0.1"/>
+				<InvertDrivetrainOutput value="0"/>
+				<Automatic  value="1"/>
+				<BrakeTorque  value="1"/>
+				<DeclutchTimeChangeGear value="0.1"/>
+				<ClutchTimeChangeGear value="0.1"/>
+				<MaxRPM value="4000"/>
+				<MinRPM value="500"/>
+				<RPMGearChangeUp value="3000"/>
+				<RPMGearChangeDown value="1000"/>
+				<!--<GearRatio value="-13.42 -16.42 0 16.42 12.15 11.52 11.17"/>-->
+				<GearRatio value="-14.42 -13.42 0 16.42 13.15 10.52 7.17"/>
+				<SmoothRPMOutput value="false"/>
+				<!--<TurnForce value="100"/>-->
+				<Debug value="true"/>
+			</VehicleEngineComponent>
+			<NetworkMasterComponent>
+			</NetworkMasterComponent>
+			<LocationTransferComponent>
+			</LocationTransferComponent>
+			<InputTransferComponent>
+				<ControlSetting value="TankInputSettings" />
+			</InputTransferComponent>
+			<!-- <Debug type="VehicleDebugComponent"/>-->
+		</Components>
+		<Children>
+			<SceneObjectTemplate>
+				<Name value="GTOCameraObject"/>
+				<Components>
+					<CameraComponent>
+					</CameraComponent>
+					<ChaseCameraComponent>
+						<!--<PreferredViewport value="ALL"/>-->
+						<InputHandlerObject value="CHASSIS"/>
+						<OffsetHeight value="2"/>
+						<OffsetDistance value="6"/>
+					</ChaseCameraComponent>
+					<LocationComponent>
+						<AttachToParent value ="0"/>
+						<Position value="0 0.0 0"/>
+						<Rotation value="0 0 0"/>
+					</LocationComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GTOWheelL1"/>
+				<Inheritance value ="GTOFrontWheel"/>
+				<ID value="WHEEL_L1"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.73 0.3 -1.42451"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+
+					<MeshComponent>
+						<Filename value="gta_lwheel.mesh"/>
+						<CastShadow value="1"/>
+						<GeometryFlags value="GEOMETRY_FLAG_WHEEL"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GTOWheelL2"/>
+				<Inheritance value ="GTORearWheel"/>
+				<ID value="WHEEL_L2"/>
+				<Components>
+					<LocationComponent>
+						<Position value="-0.73 0.3 1.37109"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_lwheel.mesh"/>
+						<CastShadow value="1"/>
+						<GeometryFlags value="GEOMETRY_FLAG_WHEEL"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GTOWheelR1"/>
+				<Inheritance value ="GTOFrontWheel"/>
+				<ID value="WHEEL_R1"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.73 0.3 -1.42451"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_rwheel.mesh"/>
+						<CastShadow value="1"/>
+						<GeometryFlags value="GEOMETRY_FLAG_WHEEL"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+			<SceneObjectTemplate>
+				<Name value="GTOWheelR2"/>
+				<Inheritance value ="GTORearWheel"/>
+				<ID value="WHEEL_R2"/>
+				<Components>
+					<LocationComponent>
+						<Position value="0.73 0.3 1.37109"/>
+						<AttachToParent value="0"/>
+					</LocationComponent>
+					<MeshComponent>
+						<Filename value="gta_rwheel.mesh"/>
+						<CastShadow value="1"/>
+						<GeometryFlags value="GEOMETRY_FLAG_WHEEL"/>
+					</MeshComponent>
+				</Components>
+			</SceneObjectTemplate>
+		</Children>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="GTOFrontWheel"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<PhysicsSphereGeometryComponent>
+				<Radius value="0.42"/>
+				<SizeFromMesh value="false"/>
+				<Material value="WHEEL"/>
+			</PhysicsSphereGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.1"/>
+			</PhysicsBodyComponent>
+			<PhysicsSuspensionComponent>
+				<Strength value="20"/>
+				<Damping value="3"/>
+				<SteerLimit value="2"/>
+			</PhysicsSuspensionComponent>
+			<SteerComponent>
+				<SteerForce value="80"/>
+				<MaxSteerVelocity value="90"/>
+				<MaxSteerAngle value="30"/>
+				<SpeedMultiplier value="1"/>
+			</SteerComponent>
+			<NetworkChildComponent>
+			</NetworkChildComponent>
+			<LocationTransferComponent>
+			    <UpdatePosition value="1"/>
+				<ClientLocationMode value="1"/>
+				<ExtrapolatePosition value="false"/>
+				<ExtrapolateRotation value="false"/>
+			</LocationTransferComponent>
+		</Components>
+	</SceneObjectTemplate>
+	<SceneObjectTemplate>
+		<Name value="GTORearWheel"/>
+		<Components>
+			<LocationComponent>
+				<AttachToParent value="0"/>
+			</LocationComponent>
+			<PhysicsSphereGeometryComponent>
+				<Radius value="0.42"/>
+				<SizeFromMesh value="false"/>
+				<Material value="WHEEL"/>
+			</PhysicsSphereGeometryComponent>
+			<PhysicsBodyComponent>
+				<Mass value="0.1"/>
+			</PhysicsBodyComponent>
+			<PhysicsSuspensionComponent>
+				<Strength value="20"/>
+				<Damping value="3"/>
+				<SteerLimit value="0"/>
+			</PhysicsSuspensionComponent>
+			<NetworkChildComponent>
+			</NetworkChildComponent>
+			<LocationTransferComponent>
+			    <UpdatePosition value="1"/>
+				<ClientLocationMode value="1"/>
+				<ExtrapolatePosition value="false"/>
+				<ExtrapolateRotation value="false"/>
+			</LocationTransferComponent>
+		</Components>
+	</SceneObjectTemplate>
+</Templates>

@@ -356,6 +356,8 @@ namespace GASS
 
 		ComponentPtr mesh_comp = ComponentFactory::Get().Create("ManualMeshComponent");
 		mesh_comp->SetPropertyValue("GeometryFlags", GeometryFlagsBinder(GEOMETRY_FLAG_GIZMO));
+		mesh_comp->SetPropertyValue("CastShadow", false);
+		mesh_comp->SetPropertyValue("ReceiveShadow", false);
 		axis_gizmo->AddComponent(mesh_comp);
 		return axis_gizmo;
 	}

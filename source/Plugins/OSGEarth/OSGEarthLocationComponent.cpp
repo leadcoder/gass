@@ -138,7 +138,7 @@ namespace GASS
 			 osg::Matrixd out_local2world;
 			 map_pos.createLocalToWorld(out_local2world);
 			 
-			 osg::Quat osg_rot = out_local2world.getRotate();
+			 //osg::Quat osg_rot = out_local2world.getRotate();
 			 osg::Vec3d osg_pos = out_local2world.getTrans();
 			 
 			 GetSceneObject()->GetFirstComponentByClass<ILocationComponent>()->SetWorldPosition(OSGConvert::ToGASS(osg_pos));

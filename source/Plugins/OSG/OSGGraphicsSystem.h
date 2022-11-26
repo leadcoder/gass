@@ -47,16 +47,13 @@ namespace GASS
 		RenderWindowVector GetRenderWindows() const override;
 		RenderWindowPtr CreateRenderWindow(const std::string &name, int width, int height, void* external_handle = nullptr) override;
 		std::vector<std::string> GetMaterialNames(std::string resource_group = "") const override;
-		void AddMaterial(const GraphicsMaterial &material,const std::string &base_mat_name = "") override;
+		void AddMaterial(IGfxMaterialConfig* config, const std::string &name) override;
 		bool HasMaterial(const std::string &mat_name) const override;
 		virtual void RemoveMaterial(const std::string &mat_name);
-		virtual GraphicsMaterial GetMaterial(const std::string &mat_name);
 		void PrintDebugText(const std::string &message) override;
 	public:
 		//osg specific
 		osgViewer::CompositeViewer*  GetViewer() const override {return m_Viewer ;}
-		static void SetOSGStateSet(const GraphicsMaterial &material,osg::ref_ptr<osg::StateSet> state);
-		static void SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set,GraphicsMaterial &material);
 		osg::ref_ptr<osg::StateSet> GetStateSet(const std::string &material_name);
 		TextBox* GetDebugText() const { return m_DebugTextBox; }
 	protected:

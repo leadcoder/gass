@@ -31,6 +31,7 @@
 #include "Plugins/OSG/Components/OSGCameraComponent.h"
 #include "Plugins/OSG/IOSGCameraManipulator.h"
 #include "Plugins/OSG/OSGConvert.h"
+#include "Plugins/OSG/OSGMaterial.h"
 
 #include "Core/Utils/GASSFileUtils.h"
 #include "Core/Serialize/tinyxml2.h"
@@ -181,6 +182,7 @@ namespace GASS
 #ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);
 #endif
+		osg::DisplaySettings::instance()->setVertexBufferHint(osg::DisplaySettings::VERTEX_BUFFER_OBJECT);
 
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
@@ -204,8 +206,6 @@ namespace GASS
 		m_DebugTextBox->setFont(font_res->Path().GetFullPath());
 		m_DebugTextBox->setTextSize(10);
 
-
-
 		osgDB::ReaderWriter::Options* opt = osgDB::Registry::instance()->getOptions();
 		if (opt == nullptr)
 		{
@@ -220,23 +220,13 @@ namespace GASS
 		}
 		osgDB::Registry::instance()->setBuildKdTreesHint(osgDB::Options::BUILD_KDTREES);
 
-		//add default material
-		GraphicsMaterial mat_trans;
-		mat_trans.Name = "WhiteTransparentNoLighting";
-		mat_trans.DepthTest = true;
-		mat_trans.DepthWrite = true;
-		mat_trans.TrackVertexColor = true;
-		mat_trans.Transparent = 11;
-		AddMaterial(mat_trans);
-
-		GraphicsMaterial mat_opaque;
-		mat_opaque.Name = "WhiteNoLighting";
-		mat_opaque.DepthTest = true;
-		mat_opaque.DepthWrite = true;
-		mat_opaque.TrackVertexColor = true;
-		mat_opaque.Transparent = 0;
-		AddMaterial(mat_opaque);
-
+		UnlitMaterialConfig mat_trans({1,1,1,1});
+		mat_trans.AlphaBlend = true;
+		AddMaterial(&mat_trans, "WhiteTransparentNoLighting");
+		
+		UnlitMaterialConfig mat_opaque({ 1,1,1,1 });
+		AddMaterial(&mat_opaque, "WhiteNoLighting");
+		
 		if (SimEngine::Get().GetResourceManager()->HasResourceGroup("MATERIALS"))
 		{
 			auto mrg = SimEngine::Get().GetResourceManager()->GetFirstResourceGroupByName("MATERIALS");
@@ -436,8 +426,6 @@ namespace GASS
 					ResourceLocation::ResourceMap::const_iterator iter = resources.begin();
 					while (iter != resources.end())
 					{
-						//remove extension?
-						//std::string mat_name = FileUtils::RemoveExtension(iter->second->Name());
 						std::string mat_name = iter->second->Name();
 						content.push_back(mat_name);
 						++iter;
@@ -448,11 +436,10 @@ namespace GASS
 		return content;
 	}
 
-	void OSGGraphicsSystem::AddMaterial(const GraphicsMaterial& material, const std::string&/*base_mat_name*/)
+	void OSGGraphicsSystem::AddMaterial(IGfxMaterialConfig* config, const std::string &name)
 	{
-		osg::ref_ptr<osg::StateSet> state_set = new osg::StateSet();
-		SetOSGStateSet(material, state_set);
-		m_Materials[material.Name] = state_set;
+		if(auto material = Material::CreateFromConfig(config))
+			m_Materials[name] = material;
 	}
 
 	bool OSGGraphicsSystem::HasMaterial(const std::string& mat_name) const
@@ -463,101 +450,13 @@ namespace GASS
 	}
 	void OSGGraphicsSystem::RemoveMaterial(const std::string& mat_name)
 	{
-		m_Materials.erase(m_Materials.find(mat_name));
-	}
-
-	GraphicsMaterial OSGGraphicsSystem::GetMaterial(const std::string& mat_name)
-	{
-		GraphicsMaterial ret;
-		SetGASSMaterial(m_Materials[mat_name], ret);
-		return ret;
-	}
-
-	void OSGGraphicsSystem::SetGASSMaterial(osg::ref_ptr<osg::StateSet> state_set, GraphicsMaterial& material)
-	{
-		auto* mat = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
-		const osg::Vec4& ambient = mat->getAmbient(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4& diffuse = mat->getDiffuse(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4& specular = mat->getSpecular(osg::Material::FRONT_AND_BACK);
-		const osg::Vec4& si = mat->getEmission(osg::Material::FRONT_AND_BACK);
-		material.Ambient.Set(ambient.x(), ambient.y(), ambient.z());
-		material.Diffuse.Set(diffuse.x(), diffuse.y(), diffuse.z(), diffuse.w());
-		material.Specular.Set(specular.x(), specular.y(), specular.z());
-		material.SelfIllumination.Set(si.x(), si.y(), si.z());
-		//TODO: copy textures!
+		auto iter = m_Materials.find(mat_name);
+		if(iter != m_Materials.end())
+			m_Materials.erase(iter);
 	}
 
 	osg::ref_ptr<osg::StateSet> OSGGraphicsSystem::GetStateSet(const std::string& material_name)
 	{
 		return m_Materials[material_name];
-	}
-
-	void OSGGraphicsSystem::SetOSGStateSet(const GraphicsMaterial& material, osg::ref_ptr<osg::StateSet> state_set)
-	{
-		ColorRGBA diffuse = material.Diffuse;
-		ColorRGB ambient = material.Ambient;
-		ColorRGB specular = material.Specular;
-		ColorRGB si = material.SelfIllumination;
-
-		if (material.TrackVertexColor) //Use vertex color
-		{
-			state_set->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-			if (material.Transparent > 0)
-			{
-				state_set->setAttributeAndModes(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
-				state_set->setRenderBinDetails(11, "RenderBin");
-			}
-		}
-		else
-		{
-			osg::ref_ptr<osg::Material> mat(new osg::Material);
-			mat->setDiffuse(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(diffuse));
-			mat->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(ambient.r), static_cast<float>(ambient.g), static_cast<float>(ambient.b), 1));
-			mat->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(specular.r), static_cast<float>(specular.g), static_cast<float>(specular.b), 1));
-			mat->setShininess(osg::Material::FRONT_AND_BACK, material.Shininess);
-			mat->setEmission(osg::Material::FRONT_AND_BACK, osg::Vec4(static_cast<float>(si.r), static_cast<float>(si.g), static_cast<float>(si.b), 1));
-			state_set->setAttribute(mat);
-			state_set->setAttributeAndModes(mat, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-			state_set->setMode(GL_LIGHTING, osg::StateAttribute::ON);
-		}
-
-		//mat->setColorMode(osg::Material::ColorMode::DIFFUSE); //Track vertex color
-
-		if (material.DepthTest)
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-		else
-		{
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
-			state_set->setRenderBinDetails(INT_MAX, "RenderBin");
-		}
-
-		//disabling depth write will effect GL_DEPTH_TEST some how,
-		//osg::ref_ptr<osg::Depth> depth (new osg::Depth(Depth::LEQUAL,0.0,1.0,material.DepthWrite));
-		/*	osg::ref_ptr<osg::Depth> depth (new osg::Depth());
-			depth->setWriteMask( material.DepthWrite );
-			state_set->setAttributeAndModes( depth, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-		*/
-
-		// Turn on blending
-		if (!material.TrackVertexColor && diffuse.a < 1.0) //special handling if we have transparent a material,
-		{
-			//TODO: provide blending mode in material!
-			osg::ref_ptr<osg::BlendFunc> bf(new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA));
-			state_set->setAttributeAndModes(bf);
-
-			// Enable blending, select transparent bin.
-			state_set->setMode(GL_BLEND, osg::StateAttribute::ON);
-			state_set->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-
-			// Enable depth test so that an opaque polygon will occlude a transparent one behind it.
-			state_set->setMode(GL_DEPTH_TEST, osg::StateAttribute::ON);
-
-			// Conversely, disable writing to depth buffer so that
-			// a transparent polygon will allow polygons behind it to shine through.
-			// OSG renders transparent polygons after opaque ones.
-			osg::ref_ptr<osg::Depth> depth(new osg::Depth);
-			depth->setWriteMask(false);
-			state_set->setAttributeAndModes(depth, osg::StateAttribute::ON);
-		}
 	}
 }

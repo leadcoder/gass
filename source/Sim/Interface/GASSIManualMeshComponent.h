@@ -30,6 +30,8 @@ namespace GASS
 		virtual void SetMeshData(const GraphicsMesh &mesh) = 0;
 		virtual void Clear() = 0;
 		virtual void SetSubMeshMaterial(const std::string &material_name, int sub_mesh_index = -1) = 0;
+		virtual void SetSubMeshMaterial(IGfxMaterialConfig* config, int sub_mesh_index = -1) = 0;
+
 	};
 	typedef GASS_SHARED_PTR<IManualMeshComponent> ManualMeshComponentPtr;
 }

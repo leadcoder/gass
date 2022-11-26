@@ -28,6 +28,7 @@
 #include "Plugins/OSG/OSGConvert.h"
 #include "Plugins/OSG/OSGNodeMasks.h"
 #include "Plugins/OSG/OSGNodeData.h"
+#include "Plugins/OSG/OSGUIWidgets.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSceneObjectTemplateManager.h"
 
@@ -123,22 +124,27 @@ namespace GASS
 	void OSGMeshComponent::SetCastShadow(bool value)
 	{
 		m_CastShadow = value;
-		if(m_CastShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(NM_CAST_SHADOWS | m_MeshNode->getNodeMask());
-		else if(m_MeshNode.valid())
+		if (m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~NM_CAST_SHADOWS & m_MeshNode->getNodeMask());
+			if (m_CastShadow)
+				m_MeshNode->setNodeMask(NM_CAST_SHADOWS | m_MeshNode->getNodeMask());
+			else
+			{
+				m_MeshNode->setNodeMask(~NM_CAST_SHADOWS & m_MeshNode->getNodeMask());
+			}
 		}
 	}
 
 	void OSGMeshComponent::SetReceiveShadow(bool value)
 	{
 		m_ReceiveShadow = value;
-		if(m_ReceiveShadow && m_MeshNode.valid())
-			m_MeshNode->setNodeMask(NM_RECEIVE_SHADOWS | m_MeshNode->getNodeMask());
-		else if(m_MeshNode.valid())
+		if (m_MeshNode.valid())
 		{
-			m_MeshNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_MeshNode->getNodeMask());
+			if (m_ReceiveShadow)
+				m_MeshNode->setNodeMask(NM_RECEIVE_SHADOWS | m_MeshNode->getNodeMask());
+			else
+				m_MeshNode->setNodeMask(~NM_RECEIVE_SHADOWS & m_MeshNode->getNodeMask());
+			Material::SetReceiveShadows(m_MeshNode->getOrCreateStateSet(), value ? osg::StateAttribute::ON : osg::StateAttribute::OFF);
 		}
 	}
 
@@ -246,7 +252,7 @@ namespace GASS
 
 		auto osg_sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 
-		if(osg_sm->GetMapNode())
+		if(osg_sm->GetMapIsRoot() && osg_sm->GetMapNode())
 			m_MeshNode = (osg::Group*) osgDB::readNodeFile(file_name + ".osgearth_shadergen", options);
 		else
 			m_MeshNode = (osg::Group*)osgDB::readNodeFile(file_name, options);
@@ -480,11 +486,7 @@ namespace GASS
 	{
 		m_Lighting = value;
 		if(m_MeshNode.valid())
-		{
-			osg::ref_ptr<osg::StateSet> nodess = m_MeshNode->getOrCreateStateSet();
-			if(value) nodess->setMode(GL_LIGHTING,osg::StateAttribute::ON);
-			else nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
-		}
+			Material::SetLighting(m_MeshNode->getOrCreateStateSet(), value ? osg::StateAttribute::ON: osg::StateAttribute::OFF);
 	}
 
 	Sphere OSGMeshComponent::GetBoundingSphere() const
@@ -605,4 +607,64 @@ namespace GASS
 		return m_Collision;
 	}
 
+#if 0
+	class MaterialVisitor : public osg::NodeVisitor
+	{
+	public:
+		MaterialVisitor()
+			: osg::NodeVisitor(osg::NodeVisitor::TRAVERSE_ACTIVE_CHILDREN)
+		{}
+		void apply(osg::Node& node)
+		{
+			auto state_set = node.getStateSet();
+			if (state_set)
+			{
+				GraphicsMaterial mat;
+				bool add_mat = false;
+				auto material = dynamic_cast<osg::Material*>(state_set->getAttribute(osg::StateAttribute::MATERIAL));
+				if (material)
+				{
+					mat.Name = material->getName();
+					auto a = material->getAmbient(osg::Material::FRONT);
+					mat.Ambient.Set(a.r(), a.g(), a.b());
+					auto d = material->getDiffuse(osg::Material::FRONT);
+					mat.Diffuse.Set(d.r(), d.g(), d.b(),d.a());
+					add_mat = true;
+				}
+
+				for (unsigned int i = 0; i < state_set->getTextureAttributeList().size(); ++i)
+				{
+					osg::Texture2D* texture = dynamic_cast<osg::Texture2D*>(state_set->getTextureAttribute(i, osg::StateAttribute::TEXTURE));
+
+					if (texture)
+					{
+						if (texture->getImage())
+						{
+							mat.Textures.push_back(texture->getImage()->getFileName());
+						}
+						else
+							mat.Textures.push_back(texture->getName());
+						add_mat = true;
+					}
+				}
+				if(add_mat)
+					Materials.push_back(mat);
+			}
+		}
+
+		void apply(osg::Group& node)
+		{
+				traverse(node);
+		}
+
+		std::vector<GraphicsMaterial> Materials;
+	};
+#endif
+
+	void OSGMeshComponent::DrawGui()
+	{
+		MaterialGUIVisitor matv;
+		if(m_MeshNode)
+			m_MeshNode->accept(matv);
+	}
 }

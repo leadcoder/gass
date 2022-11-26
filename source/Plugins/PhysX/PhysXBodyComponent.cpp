@@ -53,6 +53,8 @@ namespace GASS
 		RegisterMember("DisableGravity", &PhysXBodyComponent::m_DisableGravity);
 		RegisterMember("PositionIterCount", &PhysXBodyComponent::m_PositionIterCount);
 		RegisterMember("VelocityIterCount", &PhysXBodyComponent::m_VelocityIterCount);
+		RegisterGetSet("EffectJoints", &PhysXBodyComponent::GetEffectJoints, &PhysXBodyComponent::SetEffectJoints);
+
 	}
 
 	void PhysXBodyComponent::OnInitialize()
@@ -135,7 +137,7 @@ namespace GASS
 				SceneObject::ComponentVector components;
 				GetSceneObject()->GetComponentsByClassName(components,"PhysXBodyComponent");
 				
-				for(int i = 0 ; i < components.size(); i++)
+				for(size_t i = 0 ; i < components.size(); i++)
 				{
 					PhysXBodyComponentPtr body = GASS_STATIC_PTR_CAST<PhysXBodyComponent>(components[i]);
 					if(body.get() != this)
@@ -144,6 +146,7 @@ namespace GASS
 						Vec3 pos = location->GetPosition();
 						pos = pos + trans_vec;
 						body->SetPosition(pos);
+						location->SetWorldPosition(pos);
 					}
 				}
 			
@@ -151,14 +154,14 @@ namespace GASS
 				components.clear();
 				GetSceneObject()->GetComponentsByClassName(components,"PhysXSuspensionComponent");
 				
-				for(int i = 0 ; i < components.size(); i++)
+				for(size_t i = 0 ; i < components.size(); i++)
 				{
 					PhysXSuspensionComponentPtr joint = GASS_STATIC_PTR_CAST<PhysXSuspensionComponent>(components[i]);
 					//if(joint.get() != this)
 					{
 						LocationComponentPtr location = joint->GetSceneObject()->GetFirstComponentByClass<ILocationComponent>();
 						Vec3 pos = location->GetPosition();
-						pos = pos + trans_vec;
+						//pos = pos + trans_vec;
 						joint->SetPosition(pos);
 					}
 				}
@@ -223,7 +226,7 @@ namespace GASS
 		return vel;
 	}
 
-	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel, bool relative)
+	void PhysXBodyComponent::SetAngularVelocity(const Vec3 &vel)
 	{
 		if(m_Actor && m_Active)
 		{
@@ -232,7 +235,7 @@ namespace GASS
 	}
 
 
-	Vec3 PhysXBodyComponent::GetAngularVelocity(bool relative) const
+	Vec3 PhysXBodyComponent::GetAngularVelocity() const
 	{
 		Vec3 vel(0,0,0);
 		if(m_Actor)

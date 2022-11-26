@@ -61,22 +61,6 @@ namespace GASS
 
 	void MeasurementTool::UpdateLine(const Vec3 &start, const Vec3 &end)
 	{
-		const std::string mat_name = "MeasurementMaterial";
-		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		if (!gfx_sys->HasMaterial(mat_name))
-		{
-			GraphicsMaterial mat;
-			mat.Name = mat_name;
-			mat.Diffuse.Set(0, 0, 0, 1);
-			mat.Ambient.Set(0, 0, 0);
-			mat.SelfIllumination.Set(1.0, 0, 0);
-			mat.DepthTest = false;
-			mat.DepthWrite = true;
-			mat.TrackVertexColor = false;
-			gfx_sys->AddMaterial(mat, mat_name);
-		}
-
-
 		Vec3 text_pos = end;//(start + end)* 0.5; 
 		SceneObjectPtr ruler = GetOrCreateRulerObject();
 
@@ -84,7 +68,7 @@ namespace GASS
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
 	
-		sub_mesh_data->MaterialName = mat_name;
+		sub_mesh_data->MaterialConfig.reset(new UnlitNoDTMaterialConfig(ColorRGBA(1, 0, 0, 1)));
 		sub_mesh_data->Type = LINE_STRIP;
 		ColorRGBA color(1,0,0,1);
 		

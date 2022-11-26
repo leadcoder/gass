@@ -26,7 +26,7 @@
 
 namespace GASS
 {
-	class GraphicsMaterial;
+	class IGfxMaterialConfig;
 
 	/**
 		Interface that all graphics systems should be derived from.
@@ -69,9 +69,10 @@ namespace GASS
 		*/
 
 		virtual std::vector<std::string> GetMaterialNames(std::string resource_group = "") const = 0;
-		virtual void AddMaterial(const GraphicsMaterial &material, const std::string &base_mat_name ="") = 0;
+		virtual void AddMaterial(IGfxMaterialConfig* config, const std::string& name) = 0;
 		virtual bool HasMaterial(const std::string &mat_name) const = 0;
-
+	
+		virtual SceneObjectPtr CreateDefaultCamera() const = 0;
 		/**
 			Print frame based debug text to screen 
 		*/

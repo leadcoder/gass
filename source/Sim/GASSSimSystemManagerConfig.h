@@ -27,6 +27,8 @@ namespace GASS
 	class SimSystemOption
 	{
 	public:
+		SimSystemOption() {}
+		SimSystemOption(std::string name, std::string value) : Name(name), Value(value){}
 		std::string Name;
 		std::string Value;
 	};

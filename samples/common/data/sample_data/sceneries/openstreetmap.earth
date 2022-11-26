@@ -1,0 +1,37 @@
+<map name="OpenStreetMap">
+
+	<!--<XYZImage name="OSM Imagery">
+        <url>http://[abc].tile.openstreetmap.org/{z}/{x}/{y}.png</url>
+        <profile>spherical-mercator</profile>
+        <cache_policy usage="none"/>
+        <attribution>&#169;OpenStreetMap contributors</attribution>
+    </XYZImage>-->
+	
+	<detail>
+        <image>../../engine/3dmodels/checker.png</image>
+        <lod>16</lod>
+        <max_range>6000000</max_range>
+        <attenuation>20</attenuation>
+    </detail>
+    
+    <options>
+        <lighting>true</lighting>
+        <terrain>
+            <min_tile_range_factor>4</min_tile_range_factor>
+        </terrain>
+		
+    </options>
+	<!--<sky hours="20.0" atmospheric_lighting="true" ambient="0.3" quality="high"/>-->
+	<viewpoints>
+		<viewpoint>
+			<heading>8.806974516644791</heading>
+			<height>4465.397310772911</height>
+			<lat>59.649762</lat>
+			<long>17.923781</long>
+			<name>Test1</name>
+			<pitch>-34.79540299384382</pitch>
+			<range>78142.53643278375</range>
+		</viewpoint>
+	</viewpoints>
+</map>
+

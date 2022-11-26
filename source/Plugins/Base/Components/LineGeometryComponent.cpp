@@ -151,7 +151,6 @@ namespace GASS
 		sub_mesh_data->Type = TRIANGLE_LIST;
 
 
-
 		// for keeping track of the sides
 		Vec3 lr_vector;
 

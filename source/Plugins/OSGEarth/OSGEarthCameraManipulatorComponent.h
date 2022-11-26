@@ -40,12 +40,13 @@ namespace GASS
 		double GetRange() const override;
 		void SetRange(double value) override;
 		void FlyToObject(SceneObjectPtr obj) override;
+		void SetPosition(const GASS::Vec3& pos) override;
+		void SetRotation(const GASS::Quaternion& rot) override;
 
 		osg::ref_ptr<osgGA::CameraManipulator> GetManipulator() const override {return m_Manipulator;}
 		void SceneManagerTick(double delta_time) override;
 	protected:
-		void SetPosition(const GASS::Vec3 &pos);
-		void SetRotation(const GASS::Quaternion &rot);
+		
 		osgEarth::Viewpoint GetViewpoint() const;
 		void SetViewpoint(const osgEarth::Viewpoint &vp);
 

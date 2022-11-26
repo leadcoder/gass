@@ -36,7 +36,7 @@ namespace GASS
 		static void RegisterReflection();
 		void OnInitialize() override;
 	protected:
-		physx::PxShape* CreateShape() override;
+		physx::PxShape* CreateShape(physx::PxRigidActor& actor) override;
 		void SetRadius(Float radius);
 		Float GetRadius() const;
 

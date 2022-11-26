@@ -56,7 +56,7 @@ int _getch() {
 }
 #endif
 
-std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
+std::string CreateVehicleTemplate(GASS::SimEngine* engine)
 {
 	GASS::SceneObjectTemplatePtr vehicle_template(new GASS::SceneObjectTemplate);
 	{
@@ -97,14 +97,7 @@ std::string CreateVehicleTemplate(GASS::SimEngine* engine, bool use_ode)
 		GASS::ComponentPtr susp_comp = wheel_template->AddComponent("PhysicsSuspensionComponent");
 		susp_comp->SetPropertyValue<float>("Damping", 8.0f);
 		susp_comp->SetPropertyValue<float>("Strength", 50.0f);
-
-		if (use_ode)
-		{
-			susp_comp->SetPropertyValue<float>("HighStop", 1.0f);
-			susp_comp->SetPropertyValue<float>("LowStop", -1.0f);
-		}
-		else
-			susp_comp->SetPropertyValue<float>("SteerLimit", 1.0f);
+		susp_comp->SetPropertyValue<float>("SteerLimit", 1.0f);
 
 		GASS::SimEngine::Get().GetSceneObjectTemplateManager()->AddTemplate(wheel_template);
 	}
@@ -353,18 +346,32 @@ GASS::SceneObjectPtr CreateBridge(GASS::SimEngine* /*engine*/)
 #endif
 }
 
-int main(int/*argc*/, char* /*argv[]*/)
+class KeyProxy : public GASS::IKeyListener
 {
-	//Load plugins
-	std::cout << "Select physics system, press [1] for ODE , [2] for PhysX";
-	char key = static_cast<char>(_getch());
-	
-	bool use_ode = (key == '1');
+public:
+	bool KeyPressed( int key, unsigned int /*text*/) override
+	{
+		m_KeyDown[key] = true;
+		return true;
+	}
 
+	bool KeyReleased( int key, unsigned int /*text*/) override
+	{
+ 		m_KeyDown[key] = false;
+		return true;
+	}
+	bool IsDown(int key)
+	{
+		if(m_KeyDown.find(key) == m_KeyDown.end())
+			return false;
+		return  m_KeyDown[key];
+	}
+	std::map<int,bool> m_KeyDown;
+};
 
-	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(use_ode ? 
-		GASS::PhysicsOptions::ODE : 
-		GASS::PhysicsOptions::PHYSX);
+int main(int/*argc*/, char** /*argv[]*/)
+{
+	GASS::SimEngineConfig config = GASS::SimEngineConfig::Create(GASS::PhysicsOptions::PHYSX);
 
 	GASS::SimEngine* engine = new GASS::SimEngine();
 	engine->Init(config);
@@ -376,10 +383,12 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 	GASS::InputSystemPtr input_system = GASS::SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<GASS::IInputSystem>();
 	input_system->SetMainWindowHandle(win->GetHWND());
+	KeyProxy k_input;
+	input_system->AddKeyListener(&k_input);
 
 	GASS::ScenePtr scene(engine->CreateScene("PhysicsScene"));
 	
-	const auto vehicle_template = CreateVehicleTemplate(engine, use_ode);
+	const auto vehicle_template = CreateVehicleTemplate(engine);
 	const auto box_template = CreateBoxTemplate(engine);
 
 	scene->GetRootSceneObject()->AddChildSceneObject(CreateEnvironment(),true);
@@ -388,32 +397,31 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 	auto bridge = CreateBridge(engine);
 	scene->GetRootSceneObject()->AddChildSceneObject(bridge,true);
-
-	//create free camera and set start pos
-	GASS::SceneObjectPtr free_obj = scene->LoadObjectFromTemplate("FreeCameraObject", scene->GetRootSceneObject());
-	if (free_obj)
-	{
-		free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->SetPosition(GASS::Vec3(0, 2, 0));
-		free_obj->GetFirstComponentByClass<GASS::ICameraComponent>()->ShowInViewport();
-	}
+	
+	auto camera = scene->GetOrCreateCamera().lock().get();
+	camera->SetPosition(GASS::Vec3(0, 3, 0));
 
 	static float wheel_vel = 0;
 	static float steer_vel = 0;
+
+
+	
+
 
 	GASS::SceneObjectPtr box_obj;
 	while (true)
 	{
 		engine->Update();
 		static bool key_down = false;
-		#ifdef WIN32
-		if (GetAsyncKeyState(VK_SPACE))
+		//#ifdef WIN32
+		if (k_input.IsDown(GASS::KEY_SPACE))
 		{
 			if (!key_down)
 			{
 				key_down = true;
-				GASS::Vec3 pos = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
-				GASS::Quaternion rot = free_obj->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
-				GASS::Vec3 vel = rot.GetZAxis()*- (GetAsyncKeyState(VK_RIGHT) ? 2500 : 1000);
+				GASS::Vec3 pos = camera->GetFirstComponentByClass<GASS::ILocationComponent>()->GetPosition();
+				GASS::Quaternion rot = camera->GetFirstComponentByClass<GASS::ILocationComponent>()->GetRotation();
+				GASS::Vec3 vel = rot.GetZAxis()*- (k_input.IsDown(GASS::KEY_RIGHT) ? 2500 : 1000);
 				/*
 								GASS::Mat4 rot_mat;
 								rot_mat.Identity();
@@ -430,7 +438,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 
 			}
 		}
-		else if (GetAsyncKeyState(VK_DELETE))
+		else if (k_input.IsDown(GASS::KEY_DELETE))
 		{
 			if (box_obj)
 			{
@@ -438,21 +446,21 @@ int main(int/*argc*/, char* /*argv[]*/)
 				box_obj = GASS::SceneObjectPtr();
 			}
 		}
-		else if (GetAsyncKeyState(VK_F1))
+		else if (k_input.IsDown(GASS::KEY_F1))
 		{
 			if (!key_down)
 			{
 				key_down = true;
 			}
 		}
-		else if (GetAsyncKeyState(VK_F2))
+		else if (k_input.IsDown(GASS::KEY_F2))
 		{
 			if (!key_down)
 			{
 				key_down = true;
 			}
 		}
-		else if (GetAsyncKeyState(VK_F3))
+		else if (k_input.IsDown(GASS::KEY_F2))
 		{
 			if (!key_down)
 			{
@@ -460,7 +468,7 @@ int main(int/*argc*/, char* /*argv[]*/)
 				//bdrige_seg_obj2->PostMessage(GASS::MessagePtr(new GASS::MaterialMessage(GASS::Vec4(1,1,1,1),GASS::Vec3(1,1,1))));
 			}
 		}
-		else if (GetAsyncKeyState(VK_F4))
+		else if (k_input.IsDown(GASS::KEY_F4))
 		{
 			if (!key_down)
 			{
@@ -473,19 +481,19 @@ int main(int/*argc*/, char* /*argv[]*/)
 			key_down = false;
 		}
 
-		if (GetAsyncKeyState(VK_DOWN))
+		if (k_input.IsDown(GASS::KEY_DOWN))
 		{
 			wheel_vel -= 2;
 		}
-		if (GetAsyncKeyState(VK_UP))
+		if (k_input.IsDown(GASS::KEY_UP))
 		{
 			wheel_vel += 2;
 		}
-		if (GetAsyncKeyState(VK_LEFT))
+		if (k_input.IsDown(GASS::KEY_LEFT))
 		{
 			steer_vel = 2;
 		}
-		else if (GetAsyncKeyState(VK_RIGHT))
+		else if (k_input.IsDown(GASS::KEY_RIGHT))
 		{
 			steer_vel = -2;
 		}
@@ -530,7 +538,6 @@ int main(int/*argc*/, char* /*argv[]*/)
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxDriveTorque(0);
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetAngularSteerVelocity(steer_vel);
 		fl_wheel->GetFirstComponentByClass<GASS::IPhysicsSuspensionComponent>()->SetMaxSteerTorque(100);
-		#endif
 
 	}
 	return 0;

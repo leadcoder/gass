@@ -35,7 +35,6 @@
 #include "Sim/Interface/GASSIWaypointListComponent.h"
 #include "Sim/Interface/GASSITerrainComponent.h"
 #include "Sim/Interface/GASSIManualMeshComponent.h"
-#include "Sim/GASSGraphicsMaterial.h"
 #include "Sim/GASSComponentFactory.h"
 
 

@@ -49,24 +49,11 @@ namespace GASS
 		GetClassRTTI()->SetMetaData(std::make_shared<ClassMetaData>("BoxGeometryComponent", OF_VISIBLE));
 	
 		RegisterGetSet("Size", &GASS::BoxGeometryComponent::GetSize, &GASS::BoxGeometryComponent::SetSize,PF_VISIBLE | PF_EDITABLE,"Size of box");
-
 		RegisterGetSet("Lines", &BoxGeometryComponent::GetLines, &BoxGeometryComponent::SetLines, PF_VISIBLE | PF_EDITABLE, "Wireframe or solid");
 	}
 
 	void BoxGeometryComponent::OnInitialize()
 	{
-		const std::string mat_name = "BoxMaterial";
-		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		if(!gfx_sys->HasMaterial(mat_name))
-		{
-			GraphicsMaterial mat;
-			mat.Name = mat_name;
-			mat.Diffuse.Set(1,1,1,1);
-			mat.Ambient.Set(1,1,1);
-			mat.DepthTest = true;
-			mat.TrackVertexColor = false;
-			gfx_sys->AddMaterial(mat);
-		}
 		
 	}
 	void BoxGeometryComponent::OnPostInitialize()
@@ -104,8 +91,9 @@ namespace GASS
 		GraphicsMeshPtr mesh_data(new GraphicsMesh());
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh_data->SubMeshVector.push_back(sub_mesh_data);
-	
-		sub_mesh_data->MaterialName = "BoxMaterial";
+		const ColorRGBA color(1, 0, 0, 1);
+		//sub_mesh_data->MaterialConfig.reset(new UnlitMaterialConfig(color));
+		sub_mesh_data->MaterialConfig.reset(new PhongMaterialConfig(color));
 
 		if(m_Lines)
 		{

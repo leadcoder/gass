@@ -29,7 +29,6 @@
 namespace GASS
 {
 	OSGSkyboxComponent::OSGSkyboxComponent()  
-		
 	{
 
 	}
@@ -52,9 +51,6 @@ namespace GASS
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		m_Node = CreateSkyBox();
-
-		
-		//lc->GetOSGNode()->addChild(m_Node);
 		root_node->addChild(m_Node);
 	}
 
@@ -88,7 +84,6 @@ namespace GASS
 		auto* cubemap = new osg::TextureCubeMap();
 
 		auto* options = new osgDB::ReaderWriter::Options("dds_flip");
-
 
 		osg::Image* image_pos_x = osgDB::readImageFile(GetTexturePath("east"),options);
 		if(!image_pos_x)
@@ -131,45 +126,10 @@ namespace GASS
 			cubemap->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
 			cubemap->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR);
 		}
-
 		return cubemap;
 	}
 
-
-
-	// Update texture matrix for cubemaps
-	struct TexMatCallback : public osg::NodeCallback
-	{
-	public:
-
-		TexMatCallback(osg::TexMat& tm) :
-		  _texMat(tm)
-		  {
-		  }
-
-		  void operator()(osg::Node* node, osg::NodeVisitor* nv) override
-		  {
-			  auto* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
-			  if (cv)
-			  {
-				  const osg::Matrixd& mv = *(cv->getModelViewMatrix());
-				  const osg::Matrixd r = osg::Matrixd::rotate( osg::DegreesToRadians(0.0f), 0.0f,0.0f,1.0f)*
-					  osg::Matrixd::rotate( osg::DegreesToRadians(90.0f), 1.0f,0.0f,0.0f);
-
-				  osg::Quat q = mv.getRotate();
-				  osg::Matrixd c = osg::Matrixd::rotate( q.inverse() );
-				  //C.setTrans(osg::Vec3d(0,0,0));
-
-				  _texMat.setMatrix( c*r );
-			  }
-
-			  traverse(node,nv);
-		  }
-
-		  osg::TexMat& _texMat;
-	};
-
-	class MyMoveEarthySkyWithEyePointTransform : public osg::PositionAttitudeTransform
+	class MoveEarthySkyWithEyePointTransform : public osg::PositionAttitudeTransform
 	{
 	public:
 		OSGSkyboxComponent *m_Skybox;
@@ -201,20 +161,45 @@ namespace GASS
 		}
 	};
 
+	osg::ref_ptr<osg::Program> createShader(void)
+	{
+		osg::ref_ptr<osg::Program> program = new osg::Program;
+
+		// Do not use shaders if they were globally disabled.
+		if (true)
+		{
+			const char vertexSource[] = R"(
+				varying vec3 vTexCoord;
+				
+				void main(void)
+				{
+				    gl_Position = ftransform();
+				    vTexCoord = gl_Vertex.xyz;
+				}
+			)";
+
+			const char fragmentSource[] = R"(
+				uniform samplerCube uEnvironmentMap;
+				varying vec3 vTexCoord;
+				void main(void)
+				{
+				    vec3 tex = vec3(vTexCoord.x, vTexCoord.y, -vTexCoord.z);
+				    gl_FragColor = textureCube( uEnvironmentMap, tex.xzy );\
+				    gl_FragColor.a = 0.0;
+				}
+			)";
+
+			program->setName("sky_dome_shader");
+			program->addShader(new osg::Shader(osg::Shader::VERTEX, vertexSource));
+			program->addShader(new osg::Shader(osg::Shader::FRAGMENT, fragmentSource));
+		}
+
+		return program;
+	}
+
 	osg::Node* OSGSkyboxComponent::CreateSkyBox()
 	{
 		auto* stateset = new osg::StateSet();
-
-		auto* te = new osg::TexEnv;
-		te->setMode(osg::TexEnv::REPLACE);
-		stateset->setTextureAttributeAndModes(0, te, osg::StateAttribute::ON);
-
-		auto *tg = new osg::TexGen;
-		tg->setMode(osg::TexGen::NORMAL_MAP);
-		stateset->setTextureAttributeAndModes(0, tg, osg::StateAttribute::ON);
-
-		auto *tm = new osg::TexMat;
-		stateset->setTextureAttribute(0, tm);
 
 		osg::TextureCubeMap* skymap = ReadCubeMap();
 		stateset->setTextureAttributeAndModes(0, skymap, osg::StateAttribute::ON);
@@ -227,30 +212,23 @@ namespace GASS
 		depth->setFunction(osg::Depth::ALWAYS);
 		depth->setRange(1.0,1.0);
 		stateset->setAttributeAndModes(depth, osg::StateAttribute::ON );
-
-		osg::ref_ptr<osg::Material> material = new osg::Material;
-		material->setColorMode(osg::Material::DIFFUSE);
-        material->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
-        material->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1, 1, 1, 1));
-        material->setShininess(osg::Material::FRONT_AND_BACK, 64.0f);
-        stateset->setAttributeAndModes(material.get(), osg::StateAttribute::ON);
-
 		stateset->setRenderBinDetails(-1,"RenderBin");
-
-	
+		stateset->setAttributeAndModes(createShader(), osg::StateAttribute::ON);
+		
 		auto* geode = new osg::Geode;
-		geode->setStateSet( stateset );
+		geode->setStateSet(stateset);
 		geode->setCullingActive(false);
 		geode->setNodeMask(~NM_RECEIVE_SHADOWS & geode->getNodeMask());
 		geode->setNodeMask(~NM_CAST_SHADOWS & geode->getNodeMask());
-		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f), static_cast<float>(m_Size)));
-		//drawable->setCullingActive(false);
+		//osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f), static_cast<float>(m_Size)));
+		osg::Drawable* drawable = new osg::ShapeDrawable(new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f), static_cast<float>(m_Size)));
+
 		drawable->setInitialBound(osg::BoundingBox());
 
 		geode->addDrawable(drawable);
 		geode->setInitialBound(osg::BoundingSphere());
 
-		auto* sky_transform = new MyMoveEarthySkyWithEyePointTransform;
+		auto* sky_transform = new MoveEarthySkyWithEyePointTransform;
 		sky_transform->m_Skybox = this;
 		sky_transform->addChild(geode);
 		sky_transform->setNodeMask(~NM_RECEIVE_SHADOWS & sky_transform->getNodeMask());
@@ -266,7 +244,6 @@ namespace GASS
 		auto* clear_node = new osg::ClearNode;
 		clear_node->setRequiresClear(false);
 		
-		clear_node->setCullCallback(new TexMatCallback(*tm));
 		clear_node->addChild(offset_t);
 		clear_node->setNodeMask(~NM_RECEIVE_SHADOWS & clear_node->getNodeMask());
 		clear_node->setNodeMask(~NM_CAST_SHADOWS & clear_node->getNodeMask());

@@ -58,36 +58,9 @@ namespace GASS
 		GeometryComponentPtr gc = GetSceneObject()->GetFirstComponentByClass<IGeometryComponent>();
 		gc->SetGeometryFlags(GEOMETRY_FLAG_GIZMO);
 	
-		// create materials
-		m_RegularMat = GetSceneObject()->GetName() + "GizmoRegular";
-		m_HighlightMat = GetSceneObject()->GetName() + "GizmoHiglight";
-
-		GraphicsMaterial regmat;
-		regmat.Name = m_RegularMat;
-		regmat.Diffuse.Set(0,0,0,1);
-		regmat.Ambient.Set(0,0,0);
-		regmat.SelfIllumination.Set(m_Color.r*0.5,m_Color.g*0.5,m_Color.b*0.5);
-		regmat.DepthTest = false;
-		regmat.DepthWrite = true;
-		regmat.TrackVertexColor = false;
-
-
-		GraphicsMaterial hlmat;
-		hlmat.Name = m_HighlightMat;
-		hlmat.Diffuse.Set(0,0,0,1);
-		hlmat.Ambient.Set(0,0,0);
-		hlmat.SelfIllumination.Set(m_Color.r,m_Color.g,m_Color.b);
-		hlmat.DepthTest = false;
-		hlmat.DepthWrite = true;
-		hlmat.TrackVertexColor = false;
-
-
-		GraphicsSystemPtr gfx_sys = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<IGraphicsSystem>();
-		if(!gfx_sys->HasMaterial(m_RegularMat))
-			gfx_sys->AddMaterial(regmat,"GizmoArrowMat");
-
-		if(!gfx_sys->HasMaterial(m_HighlightMat))
-			gfx_sys->AddMaterial(hlmat,"GizmoArrowMat");
+		m_RegularMat = UnlitNoDTMaterialConfig(ColorRGBA(m_Color.r * 0.5, m_Color.g * 0.5, m_Color.b * 0.5, 1));
+		
+		m_HighlightMat = UnlitNoDTMaterialConfig(m_Color);
 	}
 
 	void GizmoComponent::OnLocationLoaded(LocationLoadedEventPtr message)
@@ -295,8 +268,7 @@ namespace GASS
 		GraphicsMesh mesh;
 		GraphicsSubMeshPtr sub_mesh_data(new GraphicsSubMesh());
 		mesh.SubMeshVector.push_back(sub_mesh_data);
-		sub_mesh_data->MaterialName = m_RegularMat;
-
+		sub_mesh_data->MaterialConfig.reset(new UnlitMaterialConfig(m_RegularMat));
 		//Arrow
 		if(m_Type == GT_AXIS)
 		{
@@ -472,7 +444,7 @@ namespace GASS
 		{
 			if(!m_Highlight)
 			{
-				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(m_HighlightMat);
+				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(&m_HighlightMat);
 			}
 			m_Highlight = true;
 		}
@@ -480,7 +452,7 @@ namespace GASS
 		{
 			if(m_Highlight)
 			{
-				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(m_RegularMat);
+				GetSceneObject()->GetFirstComponentByClass<IManualMeshComponent>()->SetSubMeshMaterial(&m_RegularMat);
 			}
 			m_Highlight = false;
 		}
