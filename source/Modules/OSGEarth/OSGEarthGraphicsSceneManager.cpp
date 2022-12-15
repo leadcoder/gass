@@ -197,7 +197,26 @@ namespace GASS
 			GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed find cast view", "OSGEarthGraphicsSceneManager::OnPostConstruction");
 
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
-		views[0]->setCameraManipulator(m_EarthManipulator);
+		view->setCameraManipulator(m_EarthManipulator);
+
+#if 1
+		//major hack for intel cards to get white vertex-colors on 3d-models.
+		//When using VertexAttributeAliasing we don't get vertex-color 
+		//from models processed with oe shadergenerator, instead previous/current state is used, 
+		//maybe driver bug?
+		//Temp fix is to create a geometry with color array, we use the osgEarth ControlCanvas 
+		//for this to be sure the geometry is visible/rendered every frame.
+		//Also set the color to white and alpha to one and hope that this will be used by all model nodes
+		{
+			osgEarth::Util::Controls::ControlCanvas* canvas = osgEarth::Util::Controls::ControlCanvas::getOrCreate(view);
+			osgEarth::Util::Controls::Container* main_container = canvas->addControl(new osgEarth::Util::Controls::VBox());
+			main_container->setBackColor(osgEarth::Util::Controls::Color(osgEarth::Util::Controls::Color::White,1.0f));
+			main_container->setHorizAlign(osgEarth::Util::Controls::Control::ALIGN_LEFT);
+			main_container->setVertAlign(osgEarth::Util::Controls::Control::ALIGN_BOTTOM);
+			osg::ref_ptr<osg::Group> root = GetOSGRootNode();
+			root->addChild(canvas);
+		}
+#endif
 	}
 
 	OSGEarthGraphicsSceneManager::~OSGEarthGraphicsSceneManager(void)
