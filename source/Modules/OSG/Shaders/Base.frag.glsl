@@ -1,6 +1,6 @@
 R"(
 #version 400 compatibility
-#pragma import_defines (OSG_LIGHTING, OSG_FOG_MODE, OSG_NUM_SHADOW_MAPS, OSG_ALBEDO_MAP, OSG_NORMAL_MAP, OSG_RECEIVESHADOWS)
+#pragma import_defines (OSG_LIGHTING, OSG_FOG_MODE, OSG_NUM_SHADOW_MAPS, OSG_ALBEDO_MAP, OSG_NORMAL_MAP, OSG_RECEIVESHADOWS, OSG_IS_SHADOW_CAMERA)
 
 
 #ifdef OSG_ALBEDO_MAP
@@ -58,12 +58,11 @@ float getShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV, float bias)
 
 float getShadowFactor(vec3 normal, float depth)
 {
-	const float b0 = 0.01;
-    vec3 L = normalize(gl_LightSource[0].position.xyz);
+	const float b0 = 0.00001;
+	vec3 L = normalize(gl_LightSource[0].position.xyz);
     vec3 N = normalize(normal);
     float costheta = clamp(dot(L,N), 0.0, 1.0);
     float bias = b0*tan(acos(costheta));
-	//float bias = 0.0;
 
 	float shadow = 1.0;
 #ifdef OSG_NUM_SHADOW_MAPS
@@ -135,6 +134,9 @@ vec3 getNormal()
 
 void main(void)
 {
+#ifdef OSG_IS_SHADOW_CAMERA
+	gl_FragColor = vec4(1,1,1,1);
+#else
 	vec4 color = osg_in.Color;
 #ifdef OSG_ALBEDO_MAP
 	color *= texture2D(osg_AlbedoMap, osg_in.TexCoord0.xy);
@@ -147,7 +149,7 @@ void main(void)
 	vec4 lit_color = getDirectionalLight(0, normal);
     vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;
 #ifdef OSG_RECEIVESHADOWS
-    float shadow_factor = getShadowFactor(osg_in.Normal,depth);
+    float shadow_factor = getShadowFactor(normal,depth);
     color *= (colorAmbientEmissive + mix(gl_FrontLightProduct[0].ambient, lit_color ,shadow_factor ));
 #else
 	color *= (colorAmbientEmissive + lit_color);
@@ -155,5 +157,6 @@ void main(void)
 #endif
 	color.xyz = applyFog(color.xyz, depth);
     gl_FragColor = color;
+#endif
 }
 )"
