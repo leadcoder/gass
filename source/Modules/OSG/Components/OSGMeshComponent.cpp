@@ -206,11 +206,11 @@ namespace GASS
 		FilePath temp_file_path(filename.Name());
 		const std::string extension =  temp_file_path.GetExtension();
 		std::string  mod_file_name = filename.Name();
-
+		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		//hack to support .mesh format
 		if(extension == "mesh") //this is ogre model, try to load 3ds instead
 		{
-			ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
+			
 			std::string file_name_3ds = StringUtils::Replace(mod_file_name,".mesh",".3ds");
 			std::string file_name_obj = StringUtils::Replace(mod_file_name,".mesh",".obj");
 			std::string file_name_flt = StringUtils::Replace(mod_file_name,".mesh",".flt");
@@ -222,9 +222,19 @@ namespace GASS
 				mod_file_name = file_name_flt;
 		}
 
-		ResourceHandle new_res(mod_file_name);
-		FilePath file_path = new_res.GetResource()->Path();
-		LoadMesh(file_path.GetFullPath());
+		
+		if (rm->HasResource(mod_file_name))
+		{
+			ResourceHandle new_res(mod_file_name);
+			FilePath file_path = new_res.GetResource()->Path();
+			LoadMesh(file_path.GetFullPath());
+		}
+		else
+		{
+			//try abs path
+			FilePath file_path(filename.Name());
+			LoadMesh(file_path.GetFullPath());
+		}
 	}
 
 	void OSGMeshComponent::LoadMesh(const std::string &file_name)

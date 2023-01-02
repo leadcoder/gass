@@ -281,10 +281,12 @@ namespace GASS
 		{
 			if (SimEngine::Get().GetResourceManager()->HasResource(earth_file.Name()))
 				return m_EarthFile.GetResource()->Path().GetFullPath();
-
-			if (osgDB::fileExists(m_EarthFile.Name()) && osgDB::isAbsolutePath(m_EarthFile.Name()))
+			
+			//try name
+			auto path = FilePath(m_EarthFile.Name()).GetFullPath();
+			if (osgDB::fileExists(path) && osgDB::isAbsolutePath(path))
 			{
-				return m_EarthFile.Name();
+				return path;
 			}
 			return std::string("");
 		}();
