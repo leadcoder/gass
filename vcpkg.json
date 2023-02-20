@@ -1,0 +1,12 @@
+{
+  "name": "gass",
+  "version-string": "latest",
+  "dependencies": [
+    "osg",
+    "osgearth",
+    "physx",
+    "ode",
+    "openal-soft",
+    "libuuid"
+  ]
+}
