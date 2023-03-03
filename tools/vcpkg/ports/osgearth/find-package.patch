@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 76accb871..c8f1bf65c 100755
+index 76accb871..2f33becd3 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,7 +126,7 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
+@@ -126,45 +126,63 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
  IF (OSGEARTH_USE_GLES)
      find_package(OpenGLES)
  ELSE ()
@@ -11,8 +11,28 @@ index 76accb871..c8f1bf65c 100755
  ENDIF (OSGEARTH_USE_GLES)
  
  
-@@ -144,27 +144,45 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
- endif()
+ # Update git submodules in case the user didn't do it already
+ # https://cliutils.gitlab.io/modern-cmake/chapters/projects/submodule.html
+-find_package(Git QUIET)
+-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+-    message(STATUS "Submodule update")
+-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+-        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+-    endif()
+-endif()
++#find_package(Git QUIET)
++#if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
++#    message(STATUS "Submodule update")
++#    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
++#                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
++#                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
++#    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
++#        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
++#    endif()
++#endif()
  
  # required
 -find_package(OSG REQUIRED)
