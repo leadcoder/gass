@@ -5,12 +5,14 @@
     "osg",
     "osgearth",
     "physx",
-    "ode",
-	"raknet",
-    "openal-soft",
-	{
+	  "openal-soft",
+	  {
       "name": "libuuid",
       "platform": "!windows"
+    },
+    {
+      "name": "raknet",
+      "platform": "windows"
     }
   ]
 }

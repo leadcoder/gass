@@ -35,6 +35,7 @@ vcpkg_apply_patches(
         link-libraries.patch
         find-package.patch
         remove-tool-debug-suffix.patch
+        export-plugins.patch
 )
 
 
@@ -103,21 +104,6 @@ endif()
 # Merge osgearth plugins into [/debug]/plugins/osgPlugins-${OSG_VER},
 # as a staging area for later deployment.
 set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB osg_plugins_subdir RELATIVE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/bin/osgPlugins-*")
-    list(LENGTH osg_plugins_subdir osg_plugins_subdir_LENGTH)
-    if(NOT osg_plugins_subdir_LENGTH EQUAL 1)
-        message(FATAL_ERROR "Could not determine osg plugins directory.")
-    endif()
-    file(GLOB osgearth_plugins "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}/${osg_plugin_pattern}")
-    file(INSTALL ${osgearth_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(GLOB osgearth_plugins "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}/${osg_plugin_pattern}")
-        file(INSTALL ${osgearth_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${osg_plugins_subdir}")
-    endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/${osg_plugins_subdir}" "${CURRENT_PACKAGES_DIR}/debug/bin/${osg_plugins_subdir}")
-endif()
-
 if("tools" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(GLOB osg_plugins "${CURRENT_PACKAGES_DIR}/plugins/${osg_plugins_subdir}/${osg_plugin_pattern}")
