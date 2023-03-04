@@ -1,5 +1,8 @@
 set VCPKG_HOME=d:\vcpkg
 
+set VCPKG_OVERLAY_PORTS=%~dp0\tools\vcpkg\
+set VCPKG_OVERLAY_TRIPLETS=%~dp0\tools\vcpkg\triplets
+
 rem cmake --preset "Windows Release"
 
 set GASS_GENERATOR="Visual Studio 16 2019"
