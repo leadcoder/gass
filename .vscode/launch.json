@@ -18,7 +18,7 @@
             "environment": [
                 {
                     "name": "LD_LIBRARY_PATH",
-                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.buildDirectory}/lib:${env:VCPKG_HOME}/installed/x64-linux-dynamic/debug/lib:${env:VCPKG_HOME}/installed/x64-linux-dynamic/debug/plugins"
+                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.buildDirectory}/lib:${command:cmake.buildDirectory}/vcpkg_installed/x64-linux-dynamic/debug/lib:${command:cmake.buildDirectory}/vcpkg_installed/x64-linux-dynamic/debug/plugins"
                 },
                 {
                     "name": "GASS_DATA_HOME",
@@ -57,7 +57,7 @@
             "environment": [
                 {
                     "name": "LD_LIBRARY_PATH",
-                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.buildDirectory}/lib:${env:VCPKG_HOME}/installed/x64-linux-dynamic/lib:${env:VCPKG_HOME}/installed/x64-linux-dynamic/plugins"
+                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.buildDirectory}/lib:${command:cmake.buildDirectory}/vcpkg_installed/x64-linux-dynamic/lib:${command:cmake.buildDirectory}/vcpkg_installed/x64-linux-dynamic/plugins"
                 },
                 {
                     "name": "GASS_DATA_HOME",

@@ -10,6 +10,7 @@
     "basisu",
     "cfitsio",
     "draco",
+    "blosc",
     "geos",
     "glew",
     "libwebp",
