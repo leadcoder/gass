@@ -34,7 +34,11 @@ TextBox::TextBox(): matrixTransform(new osg::MatrixTransform()),
 	textGeode->setNodeMask(~GASS::NM_CAST_SHADOWS & textGeode->getNodeMask());
 
 	osg::ref_ptr<osg::StateSet> nodess = textGeode->getOrCreateStateSet();
-	nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
+    nodess->setMode(GL_LIGHTING, osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+#endif
+
 
 	osg::Program* program = new osg::Program;
 	nodess->setAttribute(program);

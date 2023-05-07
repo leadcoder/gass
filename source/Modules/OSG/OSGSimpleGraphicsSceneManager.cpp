@@ -53,15 +53,16 @@ namespace GASS
 
 		OSGGraphicsSystemPtr gfx_sys = OSGGraphicsSystemPtr(m_GFXSystem);
 
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 		osg::StateSet* stateset = m_RootNode->getOrCreateStateSet();
 		stateset->setAttributeAndModes(m_Fog.get());
-
+#endif
 		UpdateFogSettings();
 
 		//add debug node
+
 		m_DebugDraw = new OSGDebugDraw();
 		m_RootNode->addChild(m_DebugDraw->GetNode());
-
 		m_RootNode->addChild(gfx_sys->GetDebugText()->getGroup());
 		
 		Material::SetLighting(m_RootNode->getOrCreateStateSet(), osg::StateAttribute::ON);

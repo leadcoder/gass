@@ -29,6 +29,7 @@
 #include "Modules/OSG/OSGNodeMasks.h"
 #include "Modules/OSG/OSGNodeData.h"
 #include "Modules/OSG/OSGUIWidgets.h"
+#include "Modules/OSG/OSGLighting.h"
 #include "Sim/GASSResourceManager.h"
 #include "Sim/GASSSceneObjectTemplateManager.h"
 
@@ -292,6 +293,12 @@ namespace GASS
 		//expand children
 		if(m_Expand)
 			Expand(GetSceneObject(),m_MeshNode.get(),m_Initlized);
+
+#ifndef OSG_GL_FIXED_FUNCTION_AVAILABLE
+		// generate uniforms and uniform callbacks for lighting and material elements.
+		GenerateGL3LightingUniforms generateUniforms;
+		m_MeshNode->accept(generateUniforms);
+#endif
 
 		lc->GetOSGNode()->addChild(m_MeshNode.get());
 		//update mask!
