@@ -22,6 +22,7 @@
 
 #include <memory>
 #include "Modules/OSG/OSGGraphicsSceneManager.h"
+#include "Modules/OSG/OSGLighting.h"
 #include "Modules/OSG/Components/OSGLocationComponent.h"
 
 namespace GASS
@@ -120,7 +121,11 @@ namespace GASS
 
 	void OSGLightComponent::OnLocationLoaded(LocationLoadedEventPtr message)
 	{
+#ifndef OSG_GL_FIXED_FUNCTION_AVAILABLE
+		m_OSGLight = new LightGL3;
+#else
 		m_OSGLight = new osg::Light;
+#endif
 		m_OSGLightSource = new osg::LightSource;
 
 		//udpate osg
@@ -142,10 +147,14 @@ namespace GASS
 
 		OSGLocationComponentPtr lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		lc->GetOSGNode()->addChild(m_OSGLightSource);
-
+#ifndef OSG_GL_FIXED_FUNCTION_AVAILABLE
+		m_OSGLightSource->addCullCallback(new LightSourceGL3UniformGenerator());
+#endif
 		//Always global light?
 		OSGGraphicsSceneManagerPtr  scene_man = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<OSGGraphicsSceneManager>();
 		osg::ref_ptr<osg::Group> root_node = scene_man->GetOSGRootNode();
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 		root_node->getOrCreateStateSet()->setAssociatedModes(m_OSGLight, osg::StateAttribute::ON);
+#endif
 	}
 }

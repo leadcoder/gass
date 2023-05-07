@@ -67,10 +67,10 @@ namespace GASS
 		auto* cull = new osg::CullFace();
 		cull->setMode(osg::CullFace::BACK);
 		ss->setAttributeAndModes(cull, osg::StateAttribute::ON);
-
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 		osg::ref_ptr<osg::Point> point(new osg::Point(8.0f));
 		ss->setAttributeAndModes(point, osg::StateAttribute::ON);
-
+#endif
 		SetCastShadow(m_CastShadow);
 		SetReceiveShadow(m_ReceiveShadow);
 

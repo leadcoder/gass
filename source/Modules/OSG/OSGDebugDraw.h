@@ -43,7 +43,9 @@ namespace GASS
 			ss->setAttributeAndModes(linewidth, osg::StateAttribute::ON); 
 			//ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 			Material::SetLighting(ss, osg::StateAttribute::OFF);
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 			ss->setAttribute(new osg::Point(10.0f), osg::StateAttribute::ON);
+#endif
 			ss->setRenderingHint(osg::StateSet::DEFAULT_BIN);
 			ss->setMode(GL_BLEND,osg::StateAttribute::OVERRIDE |
 				osg::StateAttribute::PROTECTED | osg::StateAttribute::OFF);

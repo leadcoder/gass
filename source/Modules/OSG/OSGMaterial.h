@@ -21,6 +21,7 @@
 #pragma once
 #include "Modules/OSG/OSGCommon.h"
 #include "Modules/OSG/OSGConvert.h"
+#include "Modules/OSG/OSGLighting.h"
 
 const std::string base_vert =
 #include "Modules/OSG/Shaders/Base.vert.glsl"
@@ -43,7 +44,9 @@ namespace GASS
 
 		inline void SetLighting(osg::StateSet* ss, osg::StateAttribute::Values value)
 		{
-			ss->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
+		   ss->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+#endif
 			ss->setDefine("OSG_LIGHTING", value);
 			ss->setDefine("OE_LIGHTING", value);
 		}
@@ -189,7 +192,13 @@ namespace GASS
 	public:
 		PhongMaterial(const PhongMaterialConfig& config)
 		{
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 			osg::ref_ptr<osg::Material> mat(new osg::Material);
+#else
+			MaterialGL3* mat = new MaterialGL3;
+			//mat->setUpdateCallback(new MaterialCallback());
+			//setDataVariance(osg::Object::DYNAMIC);
+#endif
 			mat->setDiffuse(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(config.Diffuse));
 			mat->setAmbient(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(config.Ambient));
 			mat->setSpecular(osg::Material::FRONT_AND_BACK, OSGConvert::ToOSG(config.Specular));
@@ -198,6 +207,9 @@ namespace GASS
 			setAttribute(mat);
 			setAttributeAndModes(mat, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 			Material::SetLighting(this, osg::StateAttribute::ON);
+#ifndef OSG_GL_FIXED_FUNCTION_AVAILABLE
+			MaterialCallback().operator()(mat, 0L);
+#endif
 		}
 	};
 #if 0

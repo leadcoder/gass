@@ -210,18 +210,25 @@ namespace GASS
 		(*colors)[3].set(1.0f,1.0f,1.0f,1.0f);
 		geom->setColorArray(colors, osg::Array::BIND_PER_VERTEX);
 
-		osg::ref_ptr<osg::DrawArrays> arrays = new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4);
-		geom->addPrimitiveSet(arrays.get());
+		osg::ref_ptr<osg::DrawElementsUInt> de = new osg::DrawElementsUInt(osg::PrimitiveSet::TRIANGLES);
+		de->push_back(0);
+		de->push_back(1);
+		de->push_back(2);
+		de->push_back(0);
+		de->push_back(2);
+		de->push_back(3);
+		geom->addPrimitiveSet(de);
+
 		if (image)
 		{
 			osg::ref_ptr<osg::StateSet> stateset = new osg::StateSet;
 			osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
 			texture->setImage(image);
-
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 			osg::ref_ptr<osg::AlphaFunc> alpha_func = new osg::AlphaFunc;
 			alpha_func->setFunction(osg::AlphaFunc::GEQUAL,0.05f);
 			stateset->setAttributeAndModes( alpha_func.get(), osg::StateAttribute::ON );
-
+#endif
 			stateset->setTextureAttributeAndModes(0,texture.get(),osg::StateAttribute::ON);
 			geom->setStateSet(stateset.get());
 		}

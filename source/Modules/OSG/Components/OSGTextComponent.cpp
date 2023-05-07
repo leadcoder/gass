@@ -106,8 +106,9 @@ namespace GASS
 		m_OSGGeode->setNodeMask(~NM_CAST_SHADOWS & m_OSGGeode->getNodeMask());
 
 		osg::ref_ptr<osg::StateSet> nodess = m_OSGGeode->getOrCreateStateSet();
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 		nodess->setMode(GL_LIGHTING,osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
-
+#endif
 		//skip depth test for text.
 		nodess->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED | osg::StateAttribute::OVERRIDE);
 		nodess->setRenderBinDetails(INT_MAX, "RenderBin");
