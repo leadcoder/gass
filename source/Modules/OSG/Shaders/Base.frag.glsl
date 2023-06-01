@@ -1,8 +1,10 @@
 R"(
 #version 400 compatibility
 #pragma import_defines (OSG_LIGHTING, OSG_FOG_MODE, OSG_NUM_SHADOW_MAPS, OSG_ALBEDO_MAP, OSG_NORMAL_MAP, OSG_RECEIVESHADOWS, OSG_IS_SHADOW_CAMERA)
-
-
+#pragma import_defines (OSG_NUM_LIGHTS)
+#ifndef OSG_NUM_LIGHTS
+    #define OSG_NUM_LIGHTS 1
+#endif 
 #ifdef OSG_ALBEDO_MAP
 	uniform sampler2D osg_AlbedoMap;
 #endif
@@ -27,6 +29,38 @@ in osg_VertexData
   vec2 TexCoord0;
   vec4 Color;
 } osg_in;
+
+
+// Parameters of each light:
+struct osg_LightSourceParameters 
+{   
+   vec4 ambient;
+   vec4 diffuse;
+   vec4 specular;
+   vec4 position;
+   vec3 spotDirection;
+   float spotExponent;
+   float spotCutoff;
+   float spotCosCutoff;
+   float constantAttenuation;
+   float linearAttenuation;
+   float quadraticAttenuation;
+
+   bool enabled;
+};  
+uniform osg_LightSourceParameters osg_LightSource[OSG_NUM_LIGHTS];
+
+// Surface material:
+struct osg_MaterialParameters  
+{   
+   vec4 emission;    // Ecm   
+   vec4 ambient;     // Acm   
+   vec4 diffuse;     // Dcm   
+   vec4 specular;    // Scm   
+   float shininess;  // Srm  
+};  
+uniform osg_MaterialParameters osg_FrontMaterial;
+
 
 float getPCFShadowMapValue(sampler2DShadow shadowmap, vec4 shadowUV)
 {
@@ -93,18 +127,99 @@ vec3 applyFog(vec3 color, float depth)
 	return color;
 }
 
-vec4 getDirectionalLight(int index, vec3 normal)
+vec3 getDirectionalLight(vec3 normal, vec3 vertexView)
 {
-	vec3 light_dir = normalize(gl_LightSource[index].position.xyz);
-	float NdotL = max(dot(normal, light_dir), 0.0);
- 	vec4 color = max(vec4(0), min(NdotL * gl_FrontLightProduct[index].diffuse + gl_FrontLightProduct[index].ambient, 1.0));
-	if (NdotL > 0.0)
-	{
-		float NdotHV = max(0.0, dot(normal, vec3(gl_LightSource[index].halfVector)));
-		float pf = pow(NdotHV, gl_FrontMaterial.shininess);
-		color += gl_FrontLightProduct[index].specular * pf;
-	}
-	return color;
+    // See:
+    // https://en.wikipedia.org/wiki/Phong_reflection_model
+    // https://www.opengl.org/sdk/docs/tutorials/ClockworkCoders/lighting.php
+    // https://en.wikibooks.org/wiki/GLSL_Programming/GLUT/Multiple_Lights
+
+
+    float shine = clamp(osg_FrontMaterial.shininess, 1.0, 128.0);
+    vec3 surfaceSpecularity = osg_FrontMaterial.specular.rgb;
+
+    // Accumulate the lighting, starting with material emission.
+    vec3 totalDiffuse = vec3(0.0);
+    vec3 totalAmbient = vec3(0.0);
+    vec3 totalSpecular = vec3(0.0);
+    
+    int numLights = OSG_NUM_LIGHTS; //min(osg_NumLights, MAX_LIGHTS);
+
+    for (int i=0; i<numLights; ++i)
+    {
+        if (osg_LightSource[i].enabled)
+        {
+            float attenuation = 1.0;
+
+            // L is the normalized camera-to-light vector.
+            vec3 L = normalize(osg_LightSource[i].position.xyz);
+
+            // V is the normalized vertex-to-camera vector.
+            vec3 V = -normalize(vertexView);
+
+            // point or spot light:
+            if (osg_LightSource[i].position.w != 0.0)
+            {
+                // calculate VL, the vertex-to-light vector:
+                vec4 VL = vec4(vertexView, 1.0) * osg_LightSource[i].position.w;
+                vec4 VL4 = osg_LightSource[i].position - VL;
+                L = normalize(VL4.xyz);
+
+                // calculate attenuation:
+                float distance = length(VL4);
+                attenuation = 1.0 / (
+                    osg_LightSource[i].constantAttenuation +
+                    osg_LightSource[i].linearAttenuation * distance +
+                    osg_LightSource[i].quadraticAttenuation * distance * distance);
+
+                // for a spot light, the attenuation help form the cone:
+                if (osg_LightSource[i].spotCutoff <= 90.0)
+                {
+                    vec3 D = normalize(osg_LightSource[i].spotDirection);
+                    float clampedCos = max(0.0, dot(-L,D));
+                    attenuation = clampedCos < osg_LightSource[i].spotCosCutoff ?
+                        0.0 :
+                        attenuation * pow(clampedCos, osg_LightSource[i].spotExponent);
+                }
+            }
+
+            vec3 ambientReflection =
+                attenuation
+                * osg_LightSource[i].ambient.rgb;
+
+            float NdotL = max(dot(normal,L), 0.0); 
+
+            vec3 diffuseReflection =
+                attenuation
+                * osg_LightSource[i].diffuse.rgb
+                * NdotL;
+                
+            vec3 specularReflection = vec3(0.0);
+            if (NdotL > 0.0)
+            {
+                vec3 H = reflect(-L,normal); 
+                float HdotV = max(dot(H,V), 0.0); 
+
+                specularReflection =
+                    attenuation
+                    * osg_LightSource[i].specular.rgb
+                    * surfaceSpecularity
+                    * pow(HdotV, shine);
+            }
+
+            totalDiffuse += diffuseReflection;
+            totalAmbient += ambientReflection;
+            totalSpecular += specularReflection;
+        }
+    }
+
+    vec3 lightColor =
+        osg_FrontMaterial.emission.rgb +
+        totalDiffuse * osg_FrontMaterial.diffuse.rgb +
+        totalAmbient * osg_FrontMaterial.ambient.rgb;
+
+    return min(lightColor + totalSpecular,1.0);
+    //color.rgb = color.rgb * lightColor + totalSpecular;
 }
 
 vec3 getNormal()
@@ -141,21 +256,19 @@ void main(void)
 #ifdef OSG_ALBEDO_MAP
 	color *= texture2D(osg_AlbedoMap, osg_in.TexCoord0.xy);
 #endif
-
-	float depth = length(osg_in.ModelViewPosition);
-
+	float depth = length(osg_in.ModelViewPosition.xyz);
 #ifdef OSG_LIGHTING
 	vec3 normal = getNormal();
-	vec4 lit_color = getDirectionalLight(0, normal);
-    vec4 colorAmbientEmissive = gl_FrontLightModelProduct.sceneColor;
+	vec3 lit_color = getDirectionalLight(normal,osg_in.ModelViewPosition.xyz);
+    color.rgb *= lit_color;
 #ifdef OSG_RECEIVESHADOWS
-    float shadow_factor = getShadowFactor(normal,depth);
-    color *= (colorAmbientEmissive + mix(gl_FrontLightProduct[0].ambient, lit_color ,shadow_factor ));
+    //float shadow_factor = getShadowFactor(normal,depth);
+    //color *= (colorAmbientEmissive + mix(gl_FrontLightProduct[0].ambient, lit_color ,shadow_factor ));
 #else
-	color *= (colorAmbientEmissive + lit_color);
+	//color *= (colorAmbientEmissive + lit_color);
 #endif
 #endif
-	color.xyz = applyFog(color.xyz, depth);
+	//color.xyz = applyFog(color.xyz, depth);
     gl_FragColor = color;
 #endif
 }
