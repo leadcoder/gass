@@ -37,6 +37,108 @@
 #include "Core/Serialize/tinyxml2.h"
 #include <osgDB/WriteFile>
 
+
+namespace
+{
+	struct
+	{
+		typedef void (GL_APIENTRY* DebugProc)(GLenum, GLenum, GLuint, GLenum, GLsizei, const GLchar*, const void*);
+
+		void (GL_APIENTRY* DebugMessageCallback)(DebugProc, const void*);
+		void (GL_APIENTRY* DebugMessageControl)(GLenum, GLenum, GLenum, GLsizei, const GLuint*, bool);
+		void (GL_APIENTRY* PushDebugGroup)(GLenum, GLuint, GLsizei, const char*);
+		void (GL_APIENTRY* PopDebugGroup)(void);
+
+		// NV_shader_buffer_load
+		// https://developer.download.nvidia.com/opengl/specs/GL_NV_shader_buffer_load.txt
+		void (GL_APIENTRY* MakeNamedBufferResidentNV)(GLuint name, GLenum access);
+		void (GL_APIENTRY* MakeNamedBufferNonResidentNV)(GLuint name);
+		void (GL_APIENTRY* GetNamedBufferParameterui64vNV)(GLenum name, GLenum pname, GLuint64* params);
+
+		void (GL_APIENTRY* MakeBufferResidentNV)(GLuint name, GLenum access);
+		void (GL_APIENTRY* MakeBufferNonResidentNV)(GLuint name);
+		void (GL_APIENTRY* GetBufferParameterui64vNV)(GLenum target, GLenum pname, GLuint64* params);
+
+		void (GL_APIENTRY* NamedBufferData)(GLuint name, GLsizeiptr size, const void* data, GLenum usage);
+		void (GL_APIENTRY* NamedBufferSubData)(GLuint name, GLintptr offset, GLsizeiptr size, const void* data);
+		void* (GL_APIENTRY* MapNamedBuffer)(GLuint name, GLbitfield access);
+		void* (GL_APIENTRY* MapNamedBufferRange)(GLuint name, GLintptr offset, GLsizeiptr length, GLbitfield access);
+		void (GL_APIENTRY* UnmapNamedBuffer)(GLuint name);
+
+		void (GL_APIENTRY* CopyBufferSubData)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizei size);
+		void (GL_APIENTRY* CopyNamedBufferSubData)(GLuint readName, GLuint writeName, GLintptr readOffset, GLintptr writeOffset, GLsizei size);
+		void (GL_APIENTRY* GetNamedBufferSubData)(GLuint name, GLintptr offset, GLsizei size, void*);
+
+		bool useNamedBuffers;
+
+		inline void init()
+		{
+			if (DebugMessageCallback == nullptr)
+			{
+				//Threading::setThreadName("GL");
+
+				float version = osg::getGLVersionNumber();
+
+				osg::setGLExtensionFuncPtr(DebugMessageCallback, "glDebugMessageCallback", "glDebugMessageCallbackKHR");
+				osg::setGLExtensionFuncPtr(DebugMessageControl, "glDebugMessageControl", "glDebugMessageControlKHR");
+				osg::setGLExtensionFuncPtr(PushDebugGroup, "glPushDebugGroup", "glPushDebugGroupKHR");
+				osg::setGLExtensionFuncPtr(PopDebugGroup, "glPopDebugGroup", "glPopDebugGroupKHR");
+
+				osg::setGLExtensionFuncPtr(MakeNamedBufferResidentNV, "glMakeNamedBufferResidentNV");
+				osg::setGLExtensionFuncPtr(MakeNamedBufferNonResidentNV, "glMakeNamedBufferNonResidentNV");
+				osg::setGLExtensionFuncPtr(GetNamedBufferParameterui64vNV, "glGetNamedBufferParameterui64vNV");
+
+				osg::setGLExtensionFuncPtr(MakeBufferResidentNV, "glMakeBufferResidentNV");
+				osg::setGLExtensionFuncPtr(MakeBufferNonResidentNV, "glMakeBufferNonResidentNV");
+				osg::setGLExtensionFuncPtr(GetBufferParameterui64vNV, "glGetBufferParameterui64vNV");
+
+				osg::setGLExtensionFuncPtr(CopyBufferSubData, "glCopyBufferSubData");
+
+#if 1
+				if (version >= 4.5f)
+				{
+					osg::setGLExtensionFuncPtr(NamedBufferData, "glNamedBufferData");
+					osg::setGLExtensionFuncPtr(NamedBufferSubData, "glNamedBufferSubData");
+					osg::setGLExtensionFuncPtr(MapNamedBuffer, "glMapNamedBuffer");
+					osg::setGLExtensionFuncPtr(MapNamedBufferRange, "glMapNamedBufferRange");
+					osg::setGLExtensionFuncPtr(UnmapNamedBuffer, "glUnmapNamedBuffer");
+					osg::setGLExtensionFuncPtr(CopyNamedBufferSubData, "glCopyNamedBufferSubData");
+					osg::setGLExtensionFuncPtr(GetNamedBufferSubData, "glGetNamedBufferSubData");
+				}
+#endif
+				useNamedBuffers =
+					NamedBufferData &&
+					NamedBufferSubData;
+			}
+		}
+	} osg_gl;
+
+
+	void s_osg_gldebugproc(
+		GLenum source,
+		GLenum type,
+		GLuint id,
+		GLenum severity,
+		GLsizei length,
+		const GLchar* message,
+		const void* userParam)
+	{
+		(void)type;
+		(void)id;
+		(void)userParam;
+		(void)length;
+		const std::string severities[3] = { "HIGH", "MEDIUM", "LOW" };
+
+		if (severity != GL_DEBUG_SEVERITY_NOTIFICATION &&
+			severity != GL_DEBUG_SEVERITY_LOW)
+		{
+			const std::string& s = severities[severity - GL_DEBUG_SEVERITY_HIGH];
+			std::cout << "GL (" << s << ", " << source << ") -- " << message << std::endl;
+		}
+	}
+}
+
+
 namespace GASS
 {
 	OSGGraphicsSystem::OSGGraphicsSystem(SimSystemManagerWeakPtr manager) : Reflection(manager),
@@ -132,6 +234,19 @@ namespace GASS
 				state->setModeValidity(GL_LINE_STIPPLE, false);
 				state->setModeValidity(GL_LINE_SMOOTH, false);
 #endif
+#ifdef ENABLE_OGL_DEBUG
+				osg_gl.init();
+
+				if (osg_gl.DebugMessageCallback)
+				{
+					glEnable(GL_DEBUG_OUTPUT);
+					glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+					osg_gl.DebugMessageCallback(s_osg_gldebugproc, nullptr);
+					osg_gl.DebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, nullptr, GL_TRUE);
+					osg_gl.DebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
+				}
+#endif
 			}
 		}
 	};
@@ -189,8 +304,9 @@ namespace GASS
 #ifdef WIN32
 		osg::DisplaySettings::instance()->setNumMultiSamples(4);
 #endif
+#ifdef OSG_GL_FIXED_FUNCTION_AVAILABLE
 		osg::DisplaySettings::instance()->setVertexBufferHint(osg::DisplaySettings::VERTEX_BUFFER_OBJECT);
-
+#endif
 		m_Viewer = new osgViewer::CompositeViewer();
 		m_Viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 		m_Viewer->setKeyEventSetsDone(0);
