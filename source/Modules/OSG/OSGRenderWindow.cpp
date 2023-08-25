@@ -91,6 +91,12 @@ namespace GASS
 		//camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 		camera->getOrCreateStateSet()->setGlobalDefaults();
 
+
+		//Check if we have multi-sampling enabled; if so, enable multisample rendering for this camera
+		if (osg::DisplaySettings::instance()->getMultiSamples())
+			camera->getOrCreateStateSet()->setMode(GL_MULTISAMPLE, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+
+
 		auto* view = new osgViewer::View;
 		view->setName(name);
 		view->setCamera(camera);
