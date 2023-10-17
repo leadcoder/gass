@@ -4,12 +4,20 @@
   "dependencies": [
     "osg",
     "osgearth",
-    "physx",
 	"openal-soft",
     "raknet",
+	"physx",
     {
       "name": "libuuid",
       "platform": "!windows"
     }
-  ]
+    ],
+	"builtin-baseline": "486a4640db740f5994e492eb60748111dfc48de7",
+    "overrides": [
+        { "name": "physx", "version": "4.1.2" }
+  ],
+   "vcpkg-configuration": {
+    "overlay-ports": [ "./tools/vcpkg/ports"],
+	"overlay-triplets": [ "./tools/vcpkg/triplets"]
+  }
 }
