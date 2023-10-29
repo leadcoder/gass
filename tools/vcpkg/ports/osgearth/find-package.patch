@@ -1,17 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 76accb871..2f33becd3 100755
+index dee8b6294..03b71c129 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,45 +126,63 @@ option(OSGEARTH_ENABLE_GEOCODER "Enable the geocoder (GDAL/OGR must be built wit
- IF (OSGEARTH_USE_GLES)
-     find_package(OpenGLES)
- ELSE ()
--    find_package(OpenGL)
-+    find_package(OpenGL REQUIRED)
- ENDIF (OSGEARTH_USE_GLES)
+@@ -107,33 +107,50 @@ mark_as_advanced(OSGEARTH_INSTALL_SHADERS)
  
- 
- # Update git submodules in case the user didn't do it already
+ # Update git submodules
  # https://cliutils.gitlab.io/modern-cmake/chapters/projects/submodule.html
 -find_package(Git QUIET)
 -if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -35,6 +28,7 @@ index 76accb871..2f33becd3 100755
 +#endif()
  
  # required
+ find_package(OpenGL REQUIRED)
 -find_package(OSG REQUIRED)
 +find_package(OSG NAMES unofficial-osg)
 +find_path(OSG_INCLUDE_DIR osg/Version) # For detecting the version and setting the plugin path
@@ -49,7 +43,6 @@ index 76accb871..2f33becd3 100755
 +set(OSGSHADOW_LIBRARY unofficial::osg::osgShadow)
 +set(OSGMANIPULATOR_LIBRARY unofficial::osg::osgManipulator)
 +set(OPENTHREADS_LIBRARY unofficial::osg::OpenThreads)
-+
  find_package(CURL REQUIRED)
  find_package(GDAL REQUIRED)
  
@@ -76,50 +69,51 @@ index 76accb871..2f33becd3 100755
 +find_package(BLEND2D CONFIG REQUIRED)
 +set(BLEND2D_LIBRARY blend2d::blend2d)
 +find_package(BLOSC REQUIRED)
++
+ find_package(spdlog)
  
- if(OSGEARTH_ENABLE_PROFILING)
--    find_package(Tracy)
-+    find_package(Tracy REQUIRED)
+ if(OSGEARTH_BUILD_CESIUM_NODEKIT)
+@@ -153,7 +170,8 @@ if(OSGEARTH_ENABLE_PROFILING)
  endif()
  
  if(OSGEARTH_BUILD_ZIP_PLUGIN)
--    find_package(LIBZIP)
+-    find_package(LibZip)
 +    find_package(LIBZIP CONFIG REQUIRED)
 +    set(LIBZIP_LIBRARY libzip::zip)
  endif()
  
- if(OSGEARTH_BUILD_TRITON_NODEKIT)
-@@ -181,9 +199,13 @@ IF(SQLITE3_FOUND)
- ENDIF(SQLITE3_FOUND)
+ set(WITH_EXTERNAL_DUKTAPE FALSE CACHE BOOL "Use external Duktape instead of inlining it")
+@@ -163,7 +181,8 @@ endif(WITH_EXTERNAL_DUKTAPE)
+ 
+ set(WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use external TinyXML instead of inlining it")
+ if(WITH_EXTERNAL_TINYXML)
+-    find_package(TinyXML)
++    find_package(TINYXML NAMES tinyxml REQUIRED)
++    set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
+ endif(WITH_EXTERNAL_TINYXML)
+ 
+ 
+@@ -178,9 +197,13 @@ if(SQLITE3_FOUND)
+ endif(SQLITE3_FOUND)
  
  # DRACO enables geometry compression sometimes used in glTF:
--IF(draco_FOUND)
+-if(draco_FOUND)
 +IF(DRACO_FOUND)
 +	set(draco_FOUND TRUE)
 +	set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIR})
 +	set(draco_LIBRARIES ${DRACO_LIBRARY})
 +	set(draco_LIBRARY_DIRS ${DRACO_LIBRARY_DIR})
      ADD_DEFINITIONS(-DOSGEARTH_HAVE_DRACO)
--ENDIF(draco_FOUND)
+-endif(draco_FOUND)
 +ENDIF(DRACO_FOUND)
  
  if(Protobuf_FOUND)
      add_definitions(-DOSGEARTH_HAVE_PROTOBUF)
-@@ -225,7 +247,8 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
- # TinyXML is an XML parsing library
- SET (WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use bundled or system wide version of TinyXML")
- IF (WITH_EXTERNAL_TINYXML)
--    find_package(TinyXML)
-+    find_package(TINYXML NAMES tinyxml REQUIRED)
-+    set(TINYXML_LIBRARY unofficial-tinyxml::unofficial-tinyxml)
- ENDIF (WITH_EXTERNAL_TINYXML)
- 
- # postfix settings for various configs
-@@ -300,6 +323,7 @@ IF(OSGEARTH_BUILD_SHARED_LIBS)
-     SET(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
- ELSE()
-     SET(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
+@@ -268,6 +291,7 @@ if(OSGEARTH_BUILD_SHARED_LIBS)
+     set(OSGEARTH_DYNAMIC_OR_STATIC "SHARED")
+ else()
+     set(OSGEARTH_DYNAMIC_OR_STATIC "STATIC")
 +	ADD_DEFINITIONS(-DOSGEARTH_LIBRARY_STATIC)
- ENDIF()
+ endif()
  
- 	
+ 
