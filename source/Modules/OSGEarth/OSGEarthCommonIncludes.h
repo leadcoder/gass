@@ -45,15 +45,12 @@
 #include <osgEarth/EarthManipulator>
 #include <osgEarth/LatLongFormatter>
 #include <osgEarth/MGRSFormatter>
-#include <osgEarth/MouseCoordsTool>
 #include <osgEarth/AutoClipPlaneHandler>
-#include <osgEarth/Controls>
 #include <osgEarth/Shadowing>
 #include <osgEarth/TerrainEngineNode>
 #ifdef HAS_FOG
 #include <osgEarth/Fog>
 #endif
-#include <osgEarth/Controls>
 #include <osgEarth/ViewFitter>
 
 #include <osgEarth/AnnotationData>

@@ -16,7 +16,7 @@ vcpkg_execute_required_process(
 #checkout commit
 vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} checkout gass
+      COMMAND ${GIT} checkout c88975319bfd9adb9074bdc56bc8fb65be11b5c5
       WORKING_DIRECTORY ${SOURCE_PATH}
       LOGNAME git-checkout-${TARGET_TRIPLET}
     )
@@ -32,10 +32,7 @@ vcpkg_execute_required_process(
 vcpkg_apply_patches(
     SOURCE_PATH "${SOURCE_PATH}"
     PATCHES 
-        link-libraries.patch
-        find-package.patch
-        remove-tool-debug-suffix.patch
-        export-plugins.patch
+	    export-plugins.patch
 )
 
 
@@ -96,14 +93,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/osgEarth/Export" "defined( OSGEARTH_LIBRARY_STATIC )" "1")
 endif()
 
-# Merge osgearth plugins into [/debug]/plugins/osgPlugins-${OSG_VER},
-# as a staging area for later deployment.
 set(osg_plugin_pattern "${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}osgdb*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
 if("tools" IN_LIST FEATURES)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -114,11 +109,12 @@ if("tools" IN_LIST FEATURES)
             file(INSTALL ${osg_plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/${osg_plugins_subdir}")
         endif()
     endif()
-    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_boundarygen osgearth_clamp
-        osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
+    vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
+        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_toc osgearth_version osgearth_viewer
 		osgearth_createtile osgearth_mvtindex
         AUTO_CLEAN
     )
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -199,7 +199,7 @@ namespace GASS
 		m_EarthManipulator = new osgEarth::Util::EarthManipulator();
 		view->setCameraManipulator(m_EarthManipulator);
 
-#if 1
+#if 0
 		//major hack for intel cards to get white vertex-colors on 3d-models.
 		//When using VertexAttributeAliasing we don't get vertex-color 
 		//from models processed with oe shadergenerator, instead previous/current state is used, 
