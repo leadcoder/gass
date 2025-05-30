@@ -58,7 +58,7 @@ namespace GASS
 		SetAgentMaxSpeed(message->GetSpeed());
 	}
 
-	void DetourCrowdAgentComponent::OnLoad(LocationLoadedEventPtr message)
+	void DetourCrowdAgentComponent::OnLoad(LocationLoadedEventPtr /*message*/)
 	{
 		UpdateGeometry();
 		SceneObjectPtr obj = GetSceneObject()->GetScene()->GetRootSceneObject()->GetChildByID("DETOUR_CROWD");

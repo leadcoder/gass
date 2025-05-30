@@ -78,7 +78,7 @@ namespace GASS
 		}
 	}
 
-	void OSGCameraComponent::OnTransformationChanged(TransformationChangedEventPtr message)
+	void OSGCameraComponent::OnTransformationChanged(TransformationChangedEventPtr /*message*/)
 	{
 		if(m_UpdateCameraFromLocation)
 			UpdateFromLocation();
@@ -187,7 +187,7 @@ namespace GASS
 			return false;
 	}
 
-	void OSGCameraComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGCameraComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		auto camera_man = GetSceneObject()->GetFirstComponentByClass<OSGCameraManipulatorComponent>();
 		if(camera_man)

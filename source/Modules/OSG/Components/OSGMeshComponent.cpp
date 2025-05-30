@@ -148,7 +148,7 @@ namespace GASS
 		}
 	}
 
-	void OSGMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGMeshComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		LoadMesh(m_MeshResource);
 		m_Initlized = true;

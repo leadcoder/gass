@@ -91,7 +91,7 @@ namespace GASS
 	}
 
 
-	void PhysXBaseGeometryComponent::OnLoad(MessagePtr message)
+	void PhysXBaseGeometryComponent::OnLoad(MessagePtr /*message*/)
 	{
 		if (m_StaticActor)
 			m_StaticActor->release();

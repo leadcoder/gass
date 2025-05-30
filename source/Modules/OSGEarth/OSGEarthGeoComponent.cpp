@@ -190,7 +190,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr event)
+	void OSGEarthGeoComponent::OnTerrainChanged(TerrainChangedEventPtr /*message*/)
 	{
 		if (!m_LocationComp->HasParentLocation() && m_PreserveHAG)
 		{

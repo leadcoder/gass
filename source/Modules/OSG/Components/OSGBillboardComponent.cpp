@@ -103,7 +103,7 @@ namespace GASS
 
 
 
-	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGBillboardComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		ResourceManagerPtr rm = SimEngine::Get().GetResourceManager();
 		const std::string  full_path = rm->GetFirstResourceByName(m_Material)->Path().GetFullPath();
@@ -171,7 +171,7 @@ namespace GASS
 		return Sphere();
 	}
 
-	void OSGBillboardComponent::GetMeshData(GraphicsMeshPtr mesh_data)
+	void OSGBillboardComponent::GetMeshData(GraphicsMeshPtr /*mesh_data*/)
 	{
 
 	}

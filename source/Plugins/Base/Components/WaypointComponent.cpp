@@ -88,13 +88,13 @@ namespace GASS
 		m_Initialized = false;
 	}
 
-	void WaypointComponent::OnTransformation(TransformationChangedEventPtr event)
+	void WaypointComponent::OnTransformation(TransformationChangedEventPtr /*message*/)
 	{
 		if(m_TrackTransformation)
 			NotifyUpdate();
 	}
 
-	void WaypointComponent::OnTangentTransformation(TransformationChangedEventPtr message)
+	void WaypointComponent::OnTangentTransformation(TransformationChangedEventPtr /*message*/)
 	{
 		//notify parent
 		if(m_TrackTransformation)

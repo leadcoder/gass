@@ -81,7 +81,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXWheelComponent::OnGeometryChanged,GeometryChangedEvent,1));
 	}
 
-	void PhysXWheelComponent::OnGeometryChanged(GeometryChangedEventPtr message)
+	void PhysXWheelComponent::OnGeometryChanged(GeometryChangedEventPtr /*message*/)
 	{
 		m_WheelData.mMass = m_Mass;
 		m_WheelData.mMaxBrakeTorque = m_MaxBrakeTorque;

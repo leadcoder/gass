@@ -68,7 +68,7 @@ namespace GASS
 		m_Shape = NULL;*/
 	}
 
-	void PhysXConvexGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
+	void PhysXConvexGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr /*message*/)
 	{
 		MeshComponentPtr mesh = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(mesh,"PhysXConvexGeometryComponent::OnGeometryChanged");

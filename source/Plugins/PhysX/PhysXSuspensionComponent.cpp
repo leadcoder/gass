@@ -62,7 +62,7 @@ namespace GASS
 		m_MaxSteerTorque = value;
 	}
 
-	void PhysXSuspensionComponent::OnLoad(PhysicsBodyLoadedEventPtr message)
+	void PhysXSuspensionComponent::OnLoad(PhysicsBodyLoadedEventPtr /*message*/)
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		CreateJoint();

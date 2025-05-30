@@ -436,7 +436,7 @@ namespace GASS
 		}
 	}
 
-	void OSGLocationComponent::OnParentChanged(ParentChangedEventPtr message)
+	void OSGLocationComponent::OnParentChanged(ParentChangedEventPtr /*message*/)
 	{
 		//use SetAttachToParent to reflect gass scene graph has changed
 		SetAttachToParent(GetAttachToParent());

@@ -107,7 +107,7 @@ namespace GASS
 	{
 	public:
 		ClientRemoteMessage(const std::string &client, const std::string message, const std::string data, SenderID sender_id = -1, double delay= 0) :
-		  SceneObjectRequestMessage(sender_id , delay) , m_Client(client),m_Message(message){}
+		  SceneObjectRequestMessage(sender_id , delay) , m_Client(client),m_Message(message), m_Data(data){}
 		  std::string GetClient() const {return m_Client;}
 		  std::string GetMessage() const {return m_Message;}
 		  std::string GetData() const {return m_Data;}

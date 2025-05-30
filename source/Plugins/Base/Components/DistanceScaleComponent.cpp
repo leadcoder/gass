@@ -80,12 +80,12 @@ namespace GASS
 		cam_obj->RegisterForMessage(REG_TMESS(DistanceScaleComponent::OnCameraMoved, TransformationChangedEvent,1));
 	}
 
-	void DistanceScaleComponent::OnTransformation(TransformationChangedEventPtr message)
+	void DistanceScaleComponent::OnTransformation(TransformationChangedEventPtr /*message*/)
 	{
 		UpdateScale();
 	}
 
-	void DistanceScaleComponent::OnCameraMoved(TransformationChangedEventPtr message)
+	void DistanceScaleComponent::OnCameraMoved(TransformationChangedEventPtr /*message*/)
 	{
 		UpdateScale();
 	}

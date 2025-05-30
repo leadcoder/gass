@@ -166,7 +166,7 @@ namespace GASS
 		return m_Collision;
 	}
 
-	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGManualMeshComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		OSGLocationComponentPtr  lc = GetSceneObject()->GetFirstComponentByClass<OSGLocationComponent>();
 		if (!lc)

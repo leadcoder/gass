@@ -66,12 +66,12 @@ namespace GASS
 		m_PolyRefCount = 0;
 	}
 
-	void RecastDoorComponent::OnDoorMessage(DoorMessagePtr message)
+	void RecastDoorComponent::OnDoorMessage(DoorMessagePtr /*message*/)
 	{
 		//SetOpen(message->GetOpen());
 	}
 
-	void RecastDoorComponent::OnLoad(LocationLoadedEventPtr message)
+	void RecastDoorComponent::OnLoad(LocationLoadedEventPtr /*message*/)
 	{
 		//assume only onw nav mesh
 		m_NavMeshComp = GetSceneObject()->GetScene()->GetRootSceneObject()->GetFirstComponentByClass<RecastNavigationMeshComponent>(true);

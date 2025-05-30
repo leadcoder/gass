@@ -64,7 +64,7 @@ namespace GASS
 		m_SceneManager = scene_manager;
 	}
 
-	void PhysXTerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
+	void PhysXTerrainGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr /*message*/)
 	{
 		Reset();
 		CreateTerrain();

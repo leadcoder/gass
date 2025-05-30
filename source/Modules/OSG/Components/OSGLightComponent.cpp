@@ -118,7 +118,7 @@ namespace GASS
 			m_OSGLight->setLightNum(m_LightId);
 	}
 
-	void OSGLightComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGLightComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		m_OSGLight = new osg::Light;
 		m_OSGLightSource = new osg::LightSource;

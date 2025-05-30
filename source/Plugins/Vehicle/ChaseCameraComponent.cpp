@@ -94,13 +94,13 @@ namespace GASS
 		return m_PreferredViewport;
 	}
 
-	void ChaseCameraComponent::OnEnter(EnterVehicleRequestPtr message)
+	void ChaseCameraComponent::OnEnter(EnterVehicleRequestPtr /*message*/)
 	{
 		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 		camera->ShowInViewport(m_PreferredViewport);
 	}
 
-	void ChaseCameraComponent::OnExit(ExitVehicleRequestPtr message)
+	void ChaseCameraComponent::OnExit(ExitVehicleRequestPtr /*message*/)
 	{
 
 	}

@@ -76,7 +76,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXCharacterComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void PhysXCharacterComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		m_SceneManager = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>().get();
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();

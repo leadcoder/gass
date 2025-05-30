@@ -63,7 +63,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(PhysXBodyComponent::OnTransformationChanged, TransformationChangedEvent, 0));
 	}
 
-	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void PhysXBodyComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		PhysXPhysicsSystemPtr system = SimEngine::Get().GetSimSystemManager()->GetFirstSystemByClass<PhysXPhysicsSystem>();
 		m_LocationComponent = GetSceneObject()->GetFirstComponentByClass<ILocationComponent>().get();

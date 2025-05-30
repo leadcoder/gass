@@ -95,7 +95,7 @@ namespace GASS
 		}
 	}
 
-	void RNRoadEdgeComponent::OnTransformation(TransformationChangedEventPtr message)
+	void RNRoadEdgeComponent::OnTransformation(TransformationChangedEventPtr /*message*/)
 	{
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();

@@ -395,7 +395,7 @@ namespace GASS
 		}
 	}
 
-	void OSGEarthGeoLocationComponent::OnParentChanged(ParentChangedEventPtr message)
+	void OSGEarthGeoLocationComponent::OnParentChanged(ParentChangedEventPtr /*message*/)
 	{
 		SetAttachToParent(GetAttachToParent());
 	}

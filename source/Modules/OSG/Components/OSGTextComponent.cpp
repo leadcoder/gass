@@ -70,7 +70,7 @@ namespace GASS
 		return caption;
 	}
 
-	void OSGTextComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGTextComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		m_OSGText = new osgText::Text;
 		SetFont(m_Font);
@@ -153,7 +153,7 @@ namespace GASS
 		return sphere;
 	}
 
-	void OSGTextComponent::GetMeshData(GraphicsMeshPtr mesh_data)
+	void OSGTextComponent::GetMeshData(GraphicsMeshPtr /*mesh_data*/)
 	{
 
 	}

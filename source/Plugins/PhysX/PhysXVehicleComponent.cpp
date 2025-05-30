@@ -480,7 +480,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXVehicleComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void PhysXVehicleComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		PhysXPhysicsSceneManagerPtr sm = GetSceneObject()->GetScene()->GetFirstSceneManagerByClass<PhysXPhysicsSceneManager>();
 		m_SceneManager = sm;

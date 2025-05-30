@@ -199,7 +199,7 @@ namespace GASS
 		GetSceneObject()->PostMessage(mat_mess);*/
 	}
 	
-	void ArrowGeometryComponent::OnLoad(MessagePtr message)
+	void ArrowGeometryComponent::OnLoad(MessagePtr /*message*/)
 	{
 		
 	}

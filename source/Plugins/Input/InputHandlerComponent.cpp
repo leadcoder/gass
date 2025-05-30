@@ -58,7 +58,7 @@ namespace GASS
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 	}
 
-	void InputHandlerComponent::OnEnter(EnterVehicleRequestPtr message)
+	void InputHandlerComponent::OnEnter(EnterVehicleRequestPtr /*message*/)
 	{
 		if(m_Empty)
 		{
@@ -67,7 +67,7 @@ namespace GASS
 		}
 	}
 
-	void InputHandlerComponent::OnExit(ExitVehicleRequestPtr message)
+	void InputHandlerComponent::OnExit(ExitVehicleRequestPtr /*message*/)
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(InputHandlerComponent::OnInput,ControllSettingsMessage));
 		m_Empty = true;

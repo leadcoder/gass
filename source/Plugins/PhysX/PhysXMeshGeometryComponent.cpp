@@ -73,7 +73,7 @@ namespace GASS
 		}
 	}
 
-	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr message)
+	void PhysXMeshGeometryComponent::OnGeometryChanged(GeometryChangedEventPtr /*message*/)
 	{
 		MeshComponentPtr geom = GetSceneObject()->GetFirstComponentByClass<IMeshComponent>();
 		GASSAssert(geom,"PhysXMeshGeometryComponent::OnGeometryChanged");

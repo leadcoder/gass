@@ -83,13 +83,13 @@ namespace GASS
 		return m_PreferredViewport;
 	}
 
-	void VehicleCameraComponent::OnEnter(EnterVehicleRequestPtr message)
+	void VehicleCameraComponent::OnEnter(EnterVehicleRequestPtr /*message*/)
 	{
 		CameraComponentPtr camera = GetSceneObject()->GetFirstComponentByClass<ICameraComponent>();
 		camera->ShowInViewport(m_PreferredViewport);
 	}
 
-	void VehicleCameraComponent::OnExit(ExitVehicleRequestPtr message)
+	void VehicleCameraComponent::OnExit(ExitVehicleRequestPtr /*message*/)
 	{
 
 	}

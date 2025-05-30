@@ -108,7 +108,7 @@ namespace GASS
 		return m_Material;
 	}
 
-	void LineGeometryComponent::OnUpdate(WaypointListUpdatedMessagePtr message)
+	void LineGeometryComponent::OnUpdate(WaypointListUpdatedMessagePtr /*message*/)
 	{
 		UpdateMesh();
 	}

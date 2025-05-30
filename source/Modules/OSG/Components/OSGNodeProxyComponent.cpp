@@ -52,12 +52,12 @@ namespace GASS
 		UpdateDescriptionFromNode();
 	}
 
-	void OSGNodeProxyComponent::OnLocationLoaded(LocationLoadedEventPtr message)
+	void OSGNodeProxyComponent::OnLocationLoaded(LocationLoadedEventPtr /*message*/)
 	{
 		UpdateDescriptionFromNode();
 	}
 
-	void OSGNodeProxyComponent::OnGeomChanged(GeometryChangedEventPtr message)
+	void OSGNodeProxyComponent::OnGeomChanged(GeometryChangedEventPtr /*message*/)
 	{
 		UpdateDescriptionFromNode();
 	}

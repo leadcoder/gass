@@ -189,7 +189,7 @@ namespace GASS
 	}
 
 
-	void RoadComponent::OnUpdate(WaypointListUpdatedMessagePtr message)
+	void RoadComponent::OnUpdate(WaypointListUpdatedMessagePtr /*message*/)
 	{
 		UpdateRoadMesh();
 	}

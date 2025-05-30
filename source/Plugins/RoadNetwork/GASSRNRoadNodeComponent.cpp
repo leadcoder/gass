@@ -27,7 +27,7 @@ namespace GASS
 		GetSceneObject()->RegisterForMessage(REG_TMESS(RNRoadNodeComponent::OnTransformation,TransformationChangedEvent,0));
 	}
 
-	void RNRoadNodeComponent::OnTransformation(TransformationChangedEventPtr event)
+	void RNRoadNodeComponent::OnTransformation(TransformationChangedEventPtr /*message*/)
 	{
 		//update graph
 		GraphComponentPtr graph = GetSceneObject()->GetParentSceneObject()->GetFirstComponentByClass<IGraphComponent>();

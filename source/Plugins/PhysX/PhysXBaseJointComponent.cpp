@@ -145,14 +145,14 @@ namespace GASS
 			m_Body2Loaded = false;
 	}
 
-	void PhysXBaseJointComponent::OnBody1Loaded(PhysicsBodyLoadedEventPtr message)
+	void PhysXBaseJointComponent::OnBody1Loaded(PhysicsBodyLoadedEventPtr /*message*/)
 	{
 		m_Body1Loaded = true;
 		if(m_Body2Loaded)
 			CreateJoint();
 	}
 
-	void PhysXBaseJointComponent::OnBody2Loaded(PhysicsBodyLoadedEventPtr message)
+	void PhysXBaseJointComponent::OnBody2Loaded(PhysicsBodyLoadedEventPtr /*message*/)
 	{
 		m_Body2Loaded = true;
 		if(m_Body1Loaded)
