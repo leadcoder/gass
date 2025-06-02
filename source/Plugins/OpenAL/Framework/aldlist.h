@@ -9,15 +9,15 @@
 #include <string>
 #include "LoadOAL.h"
 
-using namespace std;
+//using namespace std;
 
 typedef struct
 {
-	string			strDeviceName;
+	std::string			strDeviceName;
 	int				iMajorVersion;
 	int				iMinorVersion;
 	unsigned int	uiSourceCount;
-	vector<string>	*pvstrExtensions;
+	std::vector<std::string>	*pvstrExtensions;
 	bool			bSelected;
 } ALDEVICEINFO, *LPALDEVICEINFO;
 
@@ -25,7 +25,7 @@ class ALDeviceList
 {
 private:
 	OPENALFNTABLE	ALFunction;
-	vector<ALDEVICEINFO> vDeviceInfo;
+	std::vector<ALDEVICEINFO> vDeviceInfo;
 	int defaultDeviceIndex;
 	int filterIndex;
 
