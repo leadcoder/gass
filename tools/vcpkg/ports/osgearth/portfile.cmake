@@ -16,7 +16,7 @@ vcpkg_execute_required_process(
 #checkout commit
 vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} checkout c88975319bfd9adb9074bdc56bc8fb65be11b5c5
+      COMMAND ${GIT} checkout 67f0ca6a40fff5dcac90bf6d05b7aec5b5c3573a
       WORKING_DIRECTORY ${SOURCE_PATH}
       LOGNAME git-checkout-${TARGET_TRIPLET}
     )
@@ -32,7 +32,7 @@ vcpkg_execute_required_process(
 vcpkg_apply_patches(
     SOURCE_PATH "${SOURCE_PATH}"
     PATCHES 
-	    export-plugins.patch
+		export-plugins.patch
 )
 
 
