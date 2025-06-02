@@ -114,7 +114,7 @@ namespace GASS
 				SystemAddress address = raknet->GetRakPeer()->GetInternalID();
 				GASS_SHARED_PTR<InputPackage> package(new InputPackage(INPUT_DATA, time_stamp, address.binaryAddress, controller_index, value));
 
-				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package, 0, NetworkAddress(address.binaryAddress, address.port));
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->SerializeToNetwork(package, 0, NetworkAddress(address.binaryAddress, address.port));
 			}
 			else if (message->GetControllerType() == CT_TRIGGER)
 			{
@@ -180,7 +180,7 @@ namespace GASS
 			if (raknet->IsServer() && raknet->GetRelayInputOnServer())
 			{
 				NetworkAddress message_address = message->GetAddress();
-				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package, 0, message_address);
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->SerializeToNetwork(package, 0, message_address);
 			}
 		}
 	}

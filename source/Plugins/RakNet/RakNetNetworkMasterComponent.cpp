@@ -104,7 +104,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkMasterComponent::Serialize(NetworkPackagePtr package, unsigned int /*timeStamp*/, NetworkAddress net_address)
+	void RakNetNetworkMasterComponent::SerializeToNetwork(NetworkPackagePtr package, unsigned int /*timeStamp*/, NetworkAddress net_address)
 	{
 		bool found = false;
 		for(size_t i = 0 ; i < m_SerializePackages.size(); i++)

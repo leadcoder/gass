@@ -54,7 +54,7 @@ namespace GASS
 	public:
 		//indicates if this object is remote or local
 		virtual bool IsRemote() const = 0;
-		virtual void Serialize(NetworkPackagePtr package, unsigned int timeStamp, NetworkAddress address) = 0;
+		virtual void SerializeToNetwork(NetworkPackagePtr package, unsigned int timeStamp, NetworkAddress address) = 0;
 		
 	};
 

@@ -189,7 +189,7 @@ namespace GASS
 				//std::cout << "Time stamp:" << time_stamp << " Current time" << current_time << std::endl;
 				SystemAddress address = UNASSIGNED_SYSTEM_ADDRESS;
 				GASS_SHARED_PTR<TransformationPackage> package(new TransformationPackage(TRANSFORMATION_DATA,time_stamp,m_LocationHistory[0].Position,m_Velocity, m_LocationHistory[0].Rotation,m_AngularVelocity));
-				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->Serialize(package,0, NetworkAddress(address.binaryAddress, address.port));
+				GetSceneObject()->GetFirstComponentByClass<INetworkComponent>()->SerializeToNetwork(package,0, NetworkAddress(address.binaryAddress, address.port));
 			}
 		}
 		else //client
