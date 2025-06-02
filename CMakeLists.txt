@@ -52,7 +52,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Enable INSTALL project to be built by default. Inactivated for every configuration otherwise.
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
-set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

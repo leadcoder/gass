@@ -49,6 +49,8 @@ namespace GASS
 	class MultiEnumBinder : public IEnumBinder
 	{
 	public:
+		using NameEnumMap = std::map<std::string, ENUM >;
+
 		MultiEnumBinder(ENUM value) : m_Value(value)
 		{
 
@@ -78,8 +80,8 @@ namespace GASS
 		{
 			std::vector<std::string> types;
 
-			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
-			while(iter != m_NameToEnumMap.end())
+			typename NameEnumMap::const_iterator iter = GetMapping().begin();
+			while(iter != GetMapping().end())
 			{
 				types.push_back(iter->first);
 				++iter;
@@ -90,8 +92,8 @@ namespace GASS
 		static std::vector<CLASS> GetEnumeration()
 		{
 			std::vector<CLASS> types;
-			typename NameEnumMap::iterator iter = m_NameToEnumMap.begin();
-			while (iter != m_NameToEnumMap.end())
+			auto iter = GetMapping().begin();
+			while (iter != GetMapping().end())
 			{
 				types.push_back(iter->second);
 				++iter;
@@ -104,18 +106,27 @@ namespace GASS
 			return GetStringEnumeration();
 		}
 
+		static const NameEnumMap& GetMapping()
+		{
+			if (m_NameToEnumMap.empty())
+				m_NameToEnumMap = CLASS::InitMapping();
+			return m_NameToEnumMap;
+		}
+
 	protected:
 		void SetValueFromNames(const std::vector<std::string> &names)
 		{
 			m_Value = static_cast<ENUM>(0);
+			auto mapping = GetMapping();
 			for(size_t i=0; i< names.size() ; i++)
 			{
-				if(names[i] != "" && m_NameToEnumMap.find(names[i]) != m_NameToEnumMap.end())
-					m_Value = static_cast<ENUM>(static_cast<int>(m_Value) | static_cast<int>(m_NameToEnumMap[names[i]]));
+
+				if(names[i] != "" && mapping.find(names[i]) != mapping.end())
+					m_Value = static_cast<ENUM>(static_cast<int>(m_Value) | static_cast<int>(mapping[names[i]]));
 				else
 				{
 					const std::string class_name = typeid(CLASS).name();
-					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find enum:" + names[i] + " In class" + class_name,"SingleEnumBinder::SetValueFromName");
+					GASS_EXCEPT(Exception::ERR_ITEM_NOT_FOUND, "Failed to find enum:" + names[i] + " In class" + class_name,"MultiEnumBinder::SetValueFromName");
 				}
 			}
 		}
@@ -123,8 +134,8 @@ namespace GASS
 		std::vector<std::string> GetNamesFromValue() const
 		{
 			std::vector<std::string> types;
-			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
-			while(iter != m_NameToEnumMap.end())
+			typename NameEnumMap::const_iterator iter = GetMapping().begin();
+			while(iter != GetMapping().end())
 			{
 				if(iter->second & m_Value)
 					types.push_back(iter->first);
@@ -132,8 +143,6 @@ namespace GASS
 			}
 			return types;
 		}
-
-
 
 		friend std::ostream& operator << (std::ostream& os, const CLASS& enum_binder)
 		{
@@ -160,15 +169,15 @@ namespace GASS
 		}
 
 		ENUM m_Value;
-		typedef std::map<std::string ,ENUM > NameEnumMap;
-		static NameEnumMap m_NameToEnumMap;
+		inline static NameEnumMap m_NameToEnumMap;
 	};
-    template< class ENUM,class CLASS> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,CLASS>::m_NameToEnumMap = CLASS::InitMapping();
+    //template< class ENUM,class CLASS> std::map<std::string ,ENUM>  MultiEnumBinder<ENUM,CLASS>::m_NameToEnumMap = CLASS::InitMapping();
 
 	template< class ENUM,class CLASS>
 	class SingleEnumBinder : public IEnumBinder
 	{
 	public:
+		using NameEnumMap = std::map<std::string, ENUM >;
 		SingleEnumBinder(ENUM value) : m_Value(value)
 		{
 		}
@@ -196,8 +205,8 @@ namespace GASS
 		static std::vector<CLASS> GetEnumeration()
 		{
 			std::vector<CLASS> types;
-			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
-			while(iter != m_NameToEnumMap.end())
+			typename NameEnumMap::const_iterator  iter = GetMapping().begin();
+			while(iter != GetMapping().end())
 			{
 				types.push_back(iter->second);
 				++iter;
@@ -213,8 +222,8 @@ namespace GASS
 		static std::vector<std::string> GetStringEnumeration()
 		{
 			std::vector<std::string> types;
-			typename NameEnumMap::iterator iter =  m_NameToEnumMap.begin();
-			while(iter != m_NameToEnumMap.end())
+			typename NameEnumMap::const_iterator  iter = GetMapping().begin();
+			while(iter != GetMapping().end())
 			{
 				types.push_back(iter->first);
 				++iter;
@@ -222,11 +231,19 @@ namespace GASS
 			return types;
 		}
 
+		static const NameEnumMap& GetMapping()
+		{
+			if (m_NameToEnumMap.empty())
+				m_NameToEnumMap = CLASS::InitMapping();
+			return m_NameToEnumMap;
+		}
+
 	protected:
 		void SetValueFromName(const std::string &name)
 		{
-			if(name != "" && m_NameToEnumMap.find(name) != m_NameToEnumMap.end())
-				m_Value = m_NameToEnumMap[name];
+			auto mapping = GetMapping();
+			if(name != "" && mapping.find(name) != mapping.end())
+				m_Value = mapping[name];
 			else
 			{
 				const std::string class_name = typeid(CLASS).name();
@@ -236,8 +253,8 @@ namespace GASS
 
 		std::string GetNameFromValue() const
 		{
-			typename NameEnumMap::iterator iter = m_NameToEnumMap.begin();
-			while (iter != m_NameToEnumMap.end())
+			typename NameEnumMap::const_iterator iter = GetMapping().begin();
+			while (iter != GetMapping().end())
 			{
 				if(m_Value == iter->second)
 					return iter->first;
@@ -266,10 +283,9 @@ namespace GASS
 			return os;
 		}
 		ENUM m_Value;
-		typedef std::map<std::string ,ENUM > NameEnumMap;
-		static NameEnumMap m_NameToEnumMap;
+		inline static NameEnumMap m_NameToEnumMap;
 	};
-	template<class ENUM, class CLASS> std::map<std::string, ENUM>  SingleEnumBinder<ENUM, CLASS>::m_NameToEnumMap = CLASS::InitMapping();
+	//template<class ENUM, class CLASS> std::map<std::string, ENUM>  SingleEnumBinder<ENUM, CLASS>::m_NameToEnumMap = CLASS::InitMapping();
 }
 
 #define START_FLAG_ENUM_BINDER(ENUM,ENUM_BINDER) \
