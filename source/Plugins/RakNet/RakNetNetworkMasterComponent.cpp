@@ -195,7 +195,7 @@ namespace GASS
 	}
 
 
-	void RakNetNetworkMasterComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr message)
+	void RakNetNetworkMasterComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr /*message*/)
 	{
 		//everything is sent!
 		m_SerializePackages.clear();

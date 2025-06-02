@@ -140,12 +140,12 @@ namespace GASS
 		StartServer(message->GetServerName(),message->GetPort());
 	}
 
-	void RakNetNetworkSystem::OnStopServer(StopServerRequestPtr message)
+	void RakNetNetworkSystem::OnStopServer(StopServerRequestPtr /*message*/)
 	{
 		Stop();
 	}
 
-	void RakNetNetworkSystem::OnStopClient(StopClientRequestPtr message)
+	void RakNetNetworkSystem::OnStopClient(StopClientRequestPtr /*message*/)
 	{
 		if(m_Active)
 		{

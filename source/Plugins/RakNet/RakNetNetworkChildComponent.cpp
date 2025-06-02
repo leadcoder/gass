@@ -114,7 +114,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkChildComponent::OnGotReplica(ComponentGotReplicaEventPtr message)
+	void RakNetNetworkChildComponent::OnGotReplica(ComponentGotReplicaEventPtr /*message*/)
 	{
 		SimEngine::Get().GetSimSystemManager()->UnregisterForMessage(UNREG_TMESS(RakNetNetworkChildComponent::OnNewChildReplica,ChildReplicaCreatedEvent));
 	}
@@ -214,7 +214,7 @@ namespace GASS
 		}
 	}
 
-	void RakNetNetworkChildComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr message)
+	void RakNetNetworkChildComponent::OnNetworkPostUpdate(NetworkPostUpdateEventPtr /*message*/)
 	{
 		//everything is sent!
 		m_SerializePackages.clear();
