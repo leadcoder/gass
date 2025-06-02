@@ -150,6 +150,7 @@ macro(gass_setup_lib _LIB_NAME)
 	target_compile_definitions(${_LIB_NAME} PUBLIC ${PARSED_ARGS_PUBLIC_DEFINITIONS})
 	target_compile_definitions(${_LIB_NAME} PRIVATE ${PARSED_ARGS_PRIVATE_DEFINITIONS})
 	set_target_properties(${_LIB_NAME} PROPERTIES DEBUG_POSTFIX _d)
+	target_compile_features(${_LIB_NAME} PUBLIC cxx_std_17)
 	
 	if(NOT PARSED_ARGS_SKIP_HEADER_INSTALL)
 		#INSTALL(FILES ${PARSED_ARGS_HEADER_FILES} DESTINATION include)
