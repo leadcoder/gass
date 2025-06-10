@@ -6,6 +6,7 @@
     "osgearth",
 	"openal-soft",
     "raknet",
+	"ois",
 	"physx",
     {
       "name": "libuuid",
