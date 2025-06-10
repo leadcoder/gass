@@ -74,7 +74,7 @@ namespace GASS
 
 		void SetEnabled(bool value) override
 		{
-			m_Layer->setEnabled(value);
+			m_Layer->setOpenAutomatically(value);
 			if (value)
 			{
 				if (!m_Layer->isOpen())
